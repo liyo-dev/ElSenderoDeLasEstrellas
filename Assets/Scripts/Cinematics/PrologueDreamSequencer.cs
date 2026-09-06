@@ -350,7 +350,9 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PrologueDreamSequencer] Falta asignar magoOscuroPrefab.", this);
+#endif
         }
 
         if (willOriginalPrefab != null)
@@ -364,7 +366,9 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PrologueDreamSequencer] Falta asignar willOriginalPrefab.", this);
+#endif
         }
 
         FaceCameraFlat(_magoInstance, camPos);

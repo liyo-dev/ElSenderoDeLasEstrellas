@@ -120,7 +120,9 @@ namespace Game.NPC.Modules
             
             if (_npcManager == null) 
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ Falta NPCBehaviourManagerV2");
+#endif
                 return;
             }
             
@@ -331,7 +333,11 @@ namespace Game.NPC.Modules
                 signals.OnCustom(eventKey, handler);
 
                 if (verboseLogging || narrative.condition.debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NarrativeExecutor:{name}] 📡 Suscrito a evento custom '{eventKey}'");
+#endif
+                    }
             }
         }
 
@@ -345,7 +351,11 @@ namespace Game.NPC.Modules
             _customEventHandlers.Clear();
             SubscribeToCustomEvents();
             if (verboseLogging)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeExecutor:{name}] 🔄 Re-suscrito a eventos custom tras reset de señales");
+#endif
+                }
         }
 
         private void UnsubscribeFromCustomEvents()
@@ -816,7 +826,7 @@ namespace Game.NPC.Modules
             if (_npcManager?.SimpleAnimator != null &&
                 (_npcManager.Context == null || !_npcManager.Context.IsInCombat))
             {
-                _npcManager.SimpleAnimator.PlayOneShot("InteractWithPeople_NoWeapon");
+                _npcManager.SimpleAnimator.PlayOneShot("Talk01");
                 yield return null;
             }
 
@@ -909,10 +919,14 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteMoveNearPlayer(NarrativeChainEntry entry)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NarrativeExecutor:{name}] 🚶 MoveNearPlayer iniciado.");
+#endif
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ MoveNearPlayer: no se encontró al jugador (PlayerService).");
+#endif
                 yield break;
             }
 
@@ -936,7 +950,9 @@ namespace Game.NPC.Modules
             else
             {
                 // Fallback: posición del jugador directamente (sin NavMesh válido)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ MoveNearPlayer: NavMesh.SamplePosition falló en {desiredPos} - usando posición directa del jugador.");
+#endif
                 targetPos = player.transform.position;
             }
 
@@ -975,10 +991,14 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteTeleportNearPlayer(NarrativeChainEntry entry)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NarrativeExecutor:{name}] ⚡ TeleportNearPlayer iniciado.");
+#endif
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportNearPlayer: no se encontró al jugador (PlayerService).");
+#endif
                 yield break;
             }
 
@@ -998,7 +1018,9 @@ namespace Game.NPC.Modules
             else
             {
                 // Fallback: posición del jugador directamente (sin NavMesh válido en el área)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportNearPlayer: NavMesh.SamplePosition falló en {desiredPos} - usando posición directa del jugador.");
+#endif
                 targetPos = player.transform.position;
             }
 
@@ -1029,7 +1051,11 @@ namespace Game.NPC.Modules
                 yield return RotateToPlayer();
 
             if (verboseLogging)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeExecutor:{name}] ⚡ TeleportNearPlayer: apareció junto al jugador en {targetPos}");
+#endif
+                }
         }
 
         /// <summary>
@@ -1040,7 +1066,9 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteTeleportPlayer(NarrativeChainEntry entry)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NarrativeExecutor:{name}] 🚀 TeleportPlayer iniciado.");
+#endif
 
             // ── Resolver destino ──
             Vector3 targetPos = Vector3.zero;
@@ -1064,13 +1092,17 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: anchor '{entry.targetAnchorName}' no encontrado.");
+#endif
                     yield break;
                 }
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: no se configuró 'targetTransform' ni 'targetAnchorName'.");
+#endif
                 yield break;
             }
 
@@ -1078,7 +1110,9 @@ namespace Game.NPC.Modules
 
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: no se encontró al jugador (PlayerService).");
+#endif
                 yield break;
             }
 
@@ -1105,7 +1139,11 @@ namespace Game.NPC.Modules
 
             // ── La transición hace el fade-out automáticamente ──
             if (verboseLogging)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeExecutor:{name}] 🚀 TeleportPlayer: jugador teletransportado a {targetPos}");
+#endif
+                }
         }
 
         /// <summary>
@@ -1128,7 +1166,9 @@ namespace Game.NPC.Modules
             }
             else if (entry.targetTransform == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No hay targetAnchorName ni targetTransform asignado.");
+#endif
                 yield break;
             }
 
@@ -1136,32 +1176,42 @@ namespace Game.NPC.Modules
 
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No se encontró al jugador.");
+#endif
                 yield break;
             }
 
             var agent = _npcManager.Agent;
             if (agent == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No hay NavMeshAgent.");
+#endif
                 yield break;
             }
 
             // Reactivar el agente si fue desactivado (p.ej. por NavMeshAgentForceStop en IdleState)
             if (!agent.enabled)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ LeadPlayerToAnchor: Agente desactivado, reactivando...");
+#endif
                 agent.enabled = true;
                 yield return null; // esperar un frame para que vuelva al NavMesh
             }
 
             if (!agent.isOnNavMesh)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: Agente fuera del NavMesh (enabled={agent.enabled}). ¿Está en un NavMesh Surface?");
+#endif
                 yield break;
             }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NarrativeExecutor:{name}] 🚶 LeadPlayerToAnchor iniciado → anchor '{entry.targetAnchorName}' pos={anchorPos}");
+#endif
 
             // Activar auto-rotación para que el NPC mire hacia donde camina
             if (_npcManager?.SimpleAnimator != null)
@@ -1228,18 +1278,24 @@ namespace Game.NPC.Modules
             {
                 if (escortSeq.WaitingForRetrievedDialogue)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NarrativeExecutor:{name}] 🔔 WaitingForRetrievedDialogue=true | outOfRangeDialogue={entry.outOfRangeDialogue?.name ?? "NULL"} | lines={entry.outOfRangeDialogue?.lines?.Length ?? -1} | DM={DialogueManager.Instance != null}");
+#endif
                     if (entry.outOfRangeDialogue != null && DialogueManager.Instance != null &&
                         entry.outOfRangeDialogue.lines != null && entry.outOfRangeDialogue.lines.Length > 0)
                     {
                         if (_npcManager?.SimpleAnimator != null)
-                            _npcManager.SimpleAnimator.PlayOneShot("InteractWithPeople_NoWeapon");
+                            _npcManager.SimpleAnimator.PlayOneShot("Talk01");
 
                         bool dialogueDone = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[NarrativeExecutor:{name}] 💬 Iniciando outOfRangeDialogue: {entry.outOfRangeDialogue.name}");
+#endif
                         DialogueManager.Instance.StartDialogue(entry.outOfRangeDialogue, transform, () => dialogueDone = true);
                         while (!dialogueDone) yield return null;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[NarrativeExecutor:{name}] ✅ outOfRangeDialogue completado");
+#endif
                     }
 
                     escortSeq.AcknowledgePlayerRetrieved(_npcManager.Context);
@@ -1271,7 +1327,11 @@ namespace Game.NPC.Modules
                 _npcManager.SimpleAnimator.AllowManualRotation = true;
 
             if (verboseLogging)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeExecutor:{name}] LeadPlayer: llegado al anchor o tiempo agotado");
+#endif
+                }
         }
 
         private IEnumerator ExecuteMoveWithPlayerFollow(NarrativeChainEntry entry, Vector3 targetPos, SpawnAnchor targetAnchor)
@@ -1430,7 +1490,9 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No hay NPCPartyMember ni partyConfig configurado. No puede unirse al equipo.");
+#endif
                     yield break;
                 }
             }
@@ -1471,7 +1533,9 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No se pudo unir al equipo - PlayerParty no existe");
+#endif
                     _joinPartyFailedUntil = Time.time + JOIN_PARTY_FAILED_COOLDOWN;
                 }
             }
@@ -1489,7 +1553,9 @@ namespace Game.NPC.Modules
             var partyMember = GetComponent<Game.NPC.NPCPartyMember>();
             if (partyMember == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No hay NPCPartyMember. No puede abandonar el equipo.");
+#endif
                 yield break;
             }
             
@@ -1519,7 +1585,9 @@ namespace Game.NPC.Modules
             var questManager = QuestManager.Instance;
             if (questManager == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ QuestManager no está disponible");
+#endif
                 yield break;
             }
             
@@ -1957,7 +2025,11 @@ namespace Game.NPC.Modules
                             {
                                 narrative.MarkAsExecuted();
                                 if (verboseLogging)
+                                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                                     Debug.Log($"[NarrativeExecutor:{name}] 🔄 Catch-up: narrativa '{narrative.description}' marcada como ejecutada (quest {questState})");
+#endif
+                                    }
                             }
                         }
                     }

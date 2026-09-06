@@ -83,7 +83,9 @@ public class QuestManager : MonoBehaviour
     
     void Start()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[QuestManager] 🚀 Start - Intentando suscribirse al inventario y wardrobe");
+#endif
         // Intentar suscribirse al inventario y wardrobe
         TrySubscribeToInventory();
         TrySubscribeToWardrobe();
@@ -115,7 +117,9 @@ public class QuestManager : MonoBehaviour
     
     private void OnPlayerRegistered(GameObject player)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] 🎮 OnPlayerRegistered llamado para '{player?.name}'");
+#endif
         // Re-intentar suscripción cuando el player está disponible
         TrySubscribeToInventory();
         TrySubscribeToWardrobe();
@@ -235,7 +239,9 @@ public class QuestManager : MonoBehaviour
     /// </summary>
     private void ConsumeRequiredItems(string questId)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager.ConsumeRequiredItems] 🔍 Iniciando para quest '{questId}'");
+#endif
 
         // Idempotencia: si esta quest ya consumió sus items requeridos anteriormente
         // (p.ej. en una sesión previa), no volver a hacerlo. Sin este guard, una quest
@@ -245,70 +251,98 @@ public class QuestManager : MonoBehaviour
         // ver con la partida que se está restaurando (INC-020).
         if (_itemsConsumedForQuest.Contains(questId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.ConsumeRequiredItems] ⏭️ Quest '{questId}' ya había consumido sus items requeridos anteriormente, no se repite.");
+#endif
             return;
         }
 
         var questEntry = FindQuestChainEntry(questId);
         if (questEntry == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager.ConsumeRequiredItems] ❌ No se encontró QuestChainEntry para quest '{questId}'");
+#endif
             return;
         }
         
         if (questEntry.requiredItems == null || questEntry.requiredItems.Length == 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.ConsumeRequiredItems] ℹ️ Quest '{questId}' no tiene items requeridos");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager.ConsumeRequiredItems] Quest '{questId}' tiene {questEntry.requiredItems.Length} items requeridos");
+#endif
 
         // Obtener el inventario del jugador usando PlayerService (consistente con el resto del código)
         if (!PlayerService.TryGetComponent(out Inventory inventory, includeInactive: true, allowSceneLookup: true))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager.ConsumeRequiredItems] ❌ No se pudo obtener Inventory para consumir items de quest '{questId}'");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager.ConsumeRequiredItems] ✅ Inventario obtenido, procesando items...");
+#endif
 
         foreach (var itemReq in questEntry.requiredItems)
         {
             if (itemReq.item == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager.ConsumeRequiredItems] ⚠️ Item requerido es null en quest '{questId}'");
+#endif
                 continue;
             }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.ConsumeRequiredItems] Procesando item '{itemReq.item.itemId}' - consumeOnComplete={itemReq.consumeOnComplete}");
+#endif
             
             if (!itemReq.consumeOnComplete)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager.ConsumeRequiredItems] ⏭️ Item '{itemReq.item.itemId}' no está configurado para ser consumido (consumeOnComplete=false)");
+#endif
                 continue;
             }
 
             // Verificar que el jugador tiene suficientes items antes de consumir
             int currentCount = inventory.Count(itemReq.item.itemId);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.ConsumeRequiredItems] Cantidad en inventario de '{itemReq.item.itemId}': {currentCount}/{itemReq.amount}");
+#endif
             
             if (currentCount < itemReq.amount)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager.ConsumeRequiredItems] ⚠️ El jugador no tiene suficientes '{itemReq.item.itemId}' para consumir ({currentCount}/{itemReq.amount})");
+#endif
                 continue;
             }
 
             // Consumir los items usando TryConsume
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.ConsumeRequiredItems] Intentando consumir {itemReq.amount}x '{itemReq.item.itemId}'...");
+#endif
             
             if (inventory.TryConsume(itemReq.item, itemReq.amount, notifyChanges: true))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager.ConsumeRequiredItems] ✅ Consumido {itemReq.amount}x '{itemReq.item.itemId}' del inventario al completar quest '{questId}'");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager.ConsumeRequiredItems] ❌ Falló al consumir {itemReq.amount}x '{itemReq.item.itemId}'");
+#endif
             }
         }
 
@@ -316,7 +350,9 @@ public class QuestManager : MonoBehaviour
         // se re-completa (auto-completado al restaurar un save, dobles disparos, etc.).
         _itemsConsumedForQuest.Add(questId);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager.ConsumeRequiredItems] ✅ Proceso completado para quest '{questId}'");
+#endif
     }
 
     /// <summary>
@@ -327,7 +363,9 @@ public class QuestManager : MonoBehaviour
     {
         if (!Game.NPC.PlayerParty.HasInstance)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[QuestManager] ForceCheckPartyMembersForActiveQuests: No hay PlayerParty disponible");
+#endif
             return;
         }
 
@@ -376,7 +414,9 @@ public class QuestManager : MonoBehaviour
 
             var questEntry = FindQuestChainEntry(questId);
             var completionMode = questEntry != null ? questEntry.completionMode.ToString() : "Unknown/NoChainEntry";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager] ℹ️ Quest '{questId}' con todos los pasos completos, sin autocompletado (CompletionMode: {completionMode}).");
+#endif
         }
 
         OnQuestsChanged?.Invoke();
@@ -403,19 +443,25 @@ public class QuestManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(questId) || string.IsNullOrEmpty(stepConditionId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager] CompleteQuestStepByConditionId - questId o stepConditionId vacío");
+#endif
             return;
         }
 
         if (!_runtime.TryGetValue(questId, out var rq))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager] CompleteQuestStepByConditionId - Quest '{questId}' no existe en runtime");
+#endif
             return;
         }
 
         if (rq.Steps == null || rq.Steps.Length == 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager] CompleteQuestStepByConditionId - Quest '{questId}' no tiene steps");
+#endif
             return;
         }
 
@@ -432,12 +478,16 @@ public class QuestManager : MonoBehaviour
 
         if (stepIndex < 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager] CompleteQuestStepByConditionId - No se encontró step con conditionId '{stepConditionId}' en quest '{questId}'");
+#endif
             return;
         }
 
         // Usar el método existente para completar el step
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] ✅ Completando step '{stepConditionId}' (índice {stepIndex}) en quest '{questId}'");
+#endif
         MarkStepDone(questId, stepIndex);
     }
 
@@ -545,7 +595,9 @@ public class QuestManager : MonoBehaviour
                 EnsureRuntimeQuest(qid, out var rq);
                 if (rq == null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[QuestManager.RestoreFromProfileFlags] ⚠️ Quest '{qid}' no encontrada en catálogo aunque tiene flag QUEST_COMPLETED");
+#endif
                     continue;
                 }
                 rq.State = QuestState.Completed;
@@ -644,7 +696,9 @@ public class QuestManager : MonoBehaviour
             EnsureRuntimeQuest(qid, out var rq2);
             if (rq2 == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager.RestoreFromProfileFlags] ⚠️ Quest '{qid}' no encontrada en catálogo aunque tiene flag QUEST_STEP_DONE");
+#endif
                 continue;
             }
             if (rq2.State == QuestState.Inactive) rq2.State = QuestState.Active;
@@ -667,7 +721,9 @@ public class QuestManager : MonoBehaviour
         for (int i = 0; i < questsReadyToAutoComplete.Count; i++)
         {
             var questId = questsReadyToAutoComplete[i];
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager] 🔄 Auto-completando quest '{questId}' tras RestoreFromProfileFlags (steps ya completos).");
+#endif
             CompleteQuest(questId);
         }
 
@@ -802,7 +858,9 @@ public class QuestManager : MonoBehaviour
         if (rq == null || rq.Steps == null || rq.Steps.Length == 0)
             return;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] 🔍 CheckExistingRequirementsForQuest para quest '{rq.Id}'");
+#endif
         
         int totalStepsCompleted = 0;
         
@@ -895,20 +953,26 @@ public class QuestManager : MonoBehaviour
     private int CheckPartyMembersForQuest(RuntimeQuest rq, Game.NPC.PlayerParty party, Game.NPC.Modules.PartyMemberRequirement[] requiredMembers)
     {
         int stepsCompleted = 0;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] 🔍 CheckPartyMembersForQuest para quest '{rq.Id}': {requiredMembers.Length} requisitos, {party.Members.Count} miembros en el equipo");
+#endif
 
         foreach (var memberReq in requiredMembers)
         {
             if (string.IsNullOrEmpty(memberReq.memberId))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager] ⚠️ PartyMemberRequirement con memberId vacío en quest '{rq.Id}'");
+#endif
                 continue;
             }
 
             // Verificar si el miembro está en el equipo
             bool isInParty = party.Members.Any(m => QuestMatchingUtils.IsPartyMemberMatch(m, memberReq.memberId));
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager] Buscando miembro '{memberReq.memberId}': {(isInParty ? "✅ ENCONTRADO" : "❌ NO ENCONTRADO")}");
+#endif
             
             if (!isInParty) continue;
             
@@ -919,15 +983,21 @@ public class QuestManager : MonoBehaviour
             {
                 MarkStepDone(rq.Id, stepIdx);
                 stepsCompleted++;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager] ✅ Step {stepIdx} de quest '{rq.Id}' completado por miembro '{memberReq.memberId}' en el equipo");
+#endif
             }
             else if (stepIdx < 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager] ⚠️ No se encontró step para miembro '{memberReq.memberId}' en quest '{rq.Id}'. conditionId='{conditionId}', stepIndex={memberReq.stepIndex}");
+#endif
             }
             else if (stepIdx >= 0 && rq.Steps[stepIdx].completed)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager] ℹ️ Step {stepIdx} de quest '{rq.Id}' ya estaba completado para miembro '{memberReq.memberId}'");
+#endif
             }
         }
         return stepsCompleted;
@@ -943,23 +1013,31 @@ public class QuestManager : MonoBehaviour
         // ✅ FIX: No requiere que conditionId sea null, solo que stepIndex sea válido
         if (stepIndex >= 0 && stepIndex < rq.Steps.Length)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.FindStepIndex] Usando stepIndex directo: {stepIndex} para quest '{rq.Id}'");
+#endif
             return stepIndex;
         }
         
         // Prioridad 2: Buscar por conditionId
         if (!string.IsNullOrEmpty(conditionId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager.FindStepIndex] Buscando por conditionId: '{conditionId}' en quest '{rq.Id}'");
+#endif
             for (int i = 0; i < rq.Steps.Length; i++)
             {
                 if (rq.Steps[i].conditionId == conditionId)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestManager.FindStepIndex] ✅ Encontrado step {i} con conditionId '{conditionId}'");
+#endif
                     return i;
                 }
             }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestManager.FindStepIndex] ❌ No se encontró step con conditionId '{conditionId}' en quest '{rq.Id}'");
+#endif
         }
         
         return -1;
@@ -1183,7 +1261,9 @@ public class QuestManager : MonoBehaviour
     {
         if (member == null) 
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[QuestManager] 👥 OnPartyMemberJoined: miembro es null");
+#endif
             return;
         }
         
@@ -1191,42 +1271,58 @@ public class QuestManager : MonoBehaviour
         string persistenceId = member.NPCManager?.PersistenceId;
         string gameObjectName = member.gameObject.name;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] 👥 ===== OnPartyMemberJoined DISPARADO =====");
+#endif
         foreach (var kv in _runtime)
         {
             if (kv.Value.State != QuestState.Active) continue;
             var rq = kv.Value;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager] 👥 Verificando quest '{rq.Id}' (Estado: {rq.State})");
+#endif
             
             var questEntry = FindQuestChainEntry(rq.Id);
             if (questEntry == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestManager] 👥 ⚠️ No se encontró QuestChainEntry para quest '{rq.Id}'");
+#endif
                 continue;
             }
             
             if (questEntry.requiredPartyMembers == null || questEntry.requiredPartyMembers.Length == 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager] 👥 Quest '{rq.Id}' no tiene requiredPartyMembers");
+#endif
                 continue;
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[QuestManager] 👥 Quest '{rq.Id}' tiene {questEntry.requiredPartyMembers.Length} requiredPartyMembers");
+#endif
             
             for (int i = 0; i < questEntry.requiredPartyMembers.Length; i++)
             {
                 var memberReq = questEntry.requiredPartyMembers[i];
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestManager] 👥 [{i}] Requisito memberId='{memberReq.memberId}', stepIndex={memberReq.stepIndex}, stepConditionId='{memberReq.stepConditionId}'");
+#endif
                 
                 // Comparar con distintos formatos posibles del ID
                 bool matches = QuestMatchingUtils.IsPartyMemberMatch(member, memberReq.memberId);
                 if (matches)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestManager] 👥 ✅ Match encontrado para '{memberReq.memberId}' (persistenceId='{persistenceId}' / gameObject='{gameObjectName}')");
+#endif
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestManager] 👥 ❌ NO match: esperaba '{memberReq.memberId}', recibido persistenceId='{persistenceId}' / gameObject='{gameObjectName}'");
+#endif
                 }
                 
                 if (matches)
@@ -1236,39 +1332,55 @@ public class QuestManager : MonoBehaviour
                     // cuando el jugador efectivamente hable con el NPC dueño de la cadena.
                     if (memberReq.completeOnlyOnNpcTalk)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[QuestManager] 👥 ⏭️ '{memberReq.memberId}' tiene completeOnlyOnNpcTalk=true, se difiere a la interacción con el NPC");
+#endif
                         continue;
                     }
 
                     string conditionId = memberReq.GetStepConditionId();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestManager] 👥 Buscando step con conditionId='{conditionId}', stepIndex={memberReq.stepIndex}");
+#endif
 
                     int stepIdx = FindStepIndex(rq, conditionId, memberReq.stepIndex);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestManager] 👥 FindStepIndex devolvió: {stepIdx}");
+#endif
 
                     if (stepIdx >= 0)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[QuestManager] 👥 Step encontrado en índice {stepIdx}, completed={rq.Steps[stepIdx].completed}");
+#endif
                         
                         if (!rq.Steps[stepIdx].completed)
                         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[QuestManager] 👥 🎉 ¡COMPLETANDO STEP {stepIdx} de quest '{rq.Id}' por miembro '{memberReq.memberId}'!");
+#endif
                             MarkStepDone(rq.Id, stepIdx);
                         }
                         else
                         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[QuestManager] 👥 ℹ️ Step {stepIdx} de quest '{rq.Id}' ya estaba completado para miembro '{memberReq.memberId}'");
+#endif
                         }
                     }
                     else
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning($"[QuestManager] 👥 ⚠️ No se encontró step para miembro '{memberReq.memberId}' en quest '{rq.Id}'. conditionId='{conditionId}', stepIndex={memberReq.stepIndex}");
+#endif
                     }
                 }
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[QuestManager] 👥 ===== OnPartyMemberJoined FINALIZADO =====");
+#endif
     }
 
     #endregion

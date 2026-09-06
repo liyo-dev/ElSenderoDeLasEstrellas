@@ -19,7 +19,9 @@ public class PickupObject : MonoBehaviour
     {
         if (_interactable == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[PickupObject] Falta Interactable en {name}");
+#endif
             return;
         }
 
@@ -41,7 +43,9 @@ public class PickupObject : MonoBehaviour
 
         if (carry == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PickupObject] No se encuentra PlayerCarrySystem en {name}");
+#endif
             return;
         }
 

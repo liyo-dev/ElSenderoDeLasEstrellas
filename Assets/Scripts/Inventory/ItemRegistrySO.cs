@@ -39,7 +39,9 @@ public class ItemRegistrySO : ScriptableObject
         // Siempre reconstruir si el mapa está vacío pero tenemos items
         if (_map.Count == 0 && items != null && items.Count > 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ItemRegistrySO] Mapa vacío con {items.Count} items, reconstruyendo...");
+#endif
             Rebuild();
         }
         
@@ -51,7 +53,9 @@ public class ItemRegistrySO : ScriptableObject
         {
             if (string.Equals(kvp.Key, itemId, System.StringComparison.OrdinalIgnoreCase))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ItemRegistrySO] Item '{itemId}' encontrado con case diferente: '{kvp.Key}'. Considera corregir el itemId.");
+#endif
                 return kvp.Value;
             }
         }
@@ -72,7 +76,9 @@ public class ItemRegistrySO : ScriptableObject
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[ItemRegistrySO] No se encontró ItemRegistry en Resources/ItemRegistry. Los items no se resolverán correctamente al cargar partidas.");
+#endif
             }
         }
         return _cachedInstance;

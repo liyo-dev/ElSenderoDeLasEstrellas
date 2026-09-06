@@ -84,13 +84,17 @@ public class TeleportSystem : MonoBehaviour
     {
         if (IsTeleporting)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[TeleportSystem] Ya hay un teletransporte en progreso.");
+#endif
             return;
         }
         
         if (!TeleportRegistry.IsSystemAvailable)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[TeleportSystem] Sistema de teletransporte no disponible (menos de 2 puntos desbloqueados).");
+#endif
             return;
         }
         
@@ -99,7 +103,9 @@ public class TeleportSystem : MonoBehaviour
             teleportUI = FindAnyObjectByType<TeleportUI>();
             if (teleportUI == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[TeleportSystem] No se encontró TeleportUI en la escena.");
+#endif
                 return;
             }
         }
@@ -125,20 +131,26 @@ public class TeleportSystem : MonoBehaviour
     {
         if (IsTeleporting)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[TeleportSystem] Ya hay un teletransporte en progreso.");
+#endif
             return;
         }
         
         if (string.IsNullOrEmpty(destinationAnchorId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[TeleportSystem] destinationAnchorId es nulo o vacío.");
+#endif
             return;
         }
         
         // Verificar que el destino está desbloqueado
         if (!TeleportRegistry.IsUnlocked(destinationAnchorId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[TeleportSystem] El punto {destinationAnchorId} no está desbloqueado.");
+#endif
             return;
         }
         
@@ -162,7 +174,9 @@ public class TeleportSystem : MonoBehaviour
         
         if (player == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[TeleportSystem] No se encontró el jugador para el VFX de teletransporte.");
+#endif
             IsTeleporting = false;
             yield break;
         }
@@ -244,7 +258,9 @@ public class TeleportSystem : MonoBehaviour
         OnTeleportCompleted?.Invoke();
         _teleportCoroutine = null;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[TeleportSystem] Teletransporte completado a: {destinationAnchorId}");
+#endif
     }
     
     /// <summary>

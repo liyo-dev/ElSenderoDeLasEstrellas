@@ -165,7 +165,9 @@ public class PlayerPickupCollector : MonoBehaviour
         // wardrobeUnlock al armario en vez de la bolsa normal (punto único de control),
         // así que este pickup funciona igual sin importar el tipo de item configurado.
         inventory.Add(effect.item, quantity);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerPickupCollector] ✅ Pickup procesado: {effect.item.displayName} x{quantity}");
+#endif
 
         return true;
     }
@@ -200,7 +202,9 @@ public class PlayerPickupCollector : MonoBehaviour
     private void LogMissingComponent(string componentName)
     {
         if (!logWarnings) return;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[PlayerPickupCollector] Missing required component '{componentName}' on '{name}'.");
+#endif
     }
 
     private void PlayDrinkPotionAnimation()
@@ -224,13 +228,17 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             StopCoroutine(_drinkPotionCoroutine);
             _drinkPotionCoroutine = null;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerPickupCollector] Animación anterior de poción cancelada para iniciar nueva");
+#endif
         }
 
         // Si ya está reproduciéndose, no iniciar otra
         if (_isPlayingDrinkAnimation)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerPickupCollector] Animación de poción ya en curso - ignorando nueva solicitud");
+#endif
             return;
         }
 
@@ -258,7 +266,9 @@ public class PlayerPickupCollector : MonoBehaviour
         // Esperar 1 frame para que el Animator Controller procese el cambio antes de leer el clip
         yield return null;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerPickupCollector] Animación reproducida: {drinkPotionAnimationName} (layer {playLayer})");
+#endif
 
         // Obtener la duración del clip de animación para esperar hasta que termine
         AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(playLayer);
@@ -282,6 +292,8 @@ public class PlayerPickupCollector : MonoBehaviour
         _isPlayingDrinkAnimation = false;
         _drinkPotionCoroutine = null;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerPickupCollector] Animación de poción completada - flag limpiado");
+#endif
     }
 }

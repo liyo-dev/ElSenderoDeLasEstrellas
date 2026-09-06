@@ -71,7 +71,9 @@ public class ShopController : MonoBehaviour
             return false;
 
         int price = entry.GetBuyPrice();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ShopController] TryBuy: item={entry.item.displayName}, precio={price}, buyPriceOverride={entry.buyPriceOverride}, item.buyPrice={entry.item.buyPrice}");
+#endif
 
         if (price > 0 && !HasCurrency(price))
         {
@@ -132,13 +134,17 @@ public class ShopController : MonoBehaviour
         if (playerInventory == null)
         {
             message = Loc("SHOP_MSG_NO_INVENTORY", "No hay inventario configurado.");
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopController] No se pudo encontrar Inventory del jugador");
+#endif
             return false;
         }
         if (currencyItem == null)
         {
             message = Loc("SHOP_MSG_NO_CURRENCY_ITEM", "No se ha asignado item de monedas.");
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopController] currencyItem no está asignado en el inspector");
+#endif
             return false;
         }
         message = null;

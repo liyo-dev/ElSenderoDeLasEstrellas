@@ -47,8 +47,10 @@ namespace Game.NPC.Tools
             
             if (GUILayout.Button("📊 Print Debug Info to Console"))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log(NPCNarrativeStateManager.GetDebugInfo());
                 Debug.Log(NPCInteractiveNarrativeRegistry.GetDebugInfo());
+#endif
             }
             
             GUILayout.Space(10);
@@ -60,7 +62,9 @@ namespace Game.NPC.Tools
                 var executor = NPCInteractiveNarrativeRegistry.GetByName(npcNameToSearch);
                 if (executor != null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"✅ Found: {executor.name} at position {executor.transform.position}");
+#endif
                     // Highlight en escena
                     Debug.DrawLine(executor.transform.position, executor.transform.position + Vector3.up * 5f, Color.green, 5f);
                     
@@ -70,7 +74,9 @@ namespace Game.NPC.Tools
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"❌ Not found: '{npcNameToSearch}'");
+#endif
                 }
             }
             
@@ -81,11 +87,15 @@ namespace Game.NPC.Tools
                 var executor = NPCInteractiveNarrativeRegistry.GetById(persistenceIdToSearch);
                 if (executor != null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"✅ Found: {executor.name} (ID: {persistenceIdToSearch})");
+#endif
                     var config = executor.GetConfiguration();
                     if (config != null)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"   Config: Persist={config.persistState}, Narratives={config.conditionalNarratives?.Length ?? 0}");
+#endif
                     }
                     
                     #if UNITY_EDITOR
@@ -94,7 +104,9 @@ namespace Game.NPC.Tools
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"❌ Not found with ID: '{persistenceIdToSearch}'");
+#endif
                 }
             }
             
@@ -109,7 +121,9 @@ namespace Game.NPC.Tools
                     string id = executor.Manager?.PersistenceId ?? "N/A";
                     if (GUILayout.Button($"{executor.name} (ID: {id})"))
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"Selected: {executor.name}");
+#endif
                         #if UNITY_EDITOR
                         Selection.activeGameObject = executor.gameObject;
                         #endif
@@ -124,13 +138,17 @@ namespace Game.NPC.Tools
         [ContextMenu("Print Registry Info")]
         private void PrintRegistryInfo()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log(NPCInteractiveNarrativeRegistry.GetDebugInfo());
+#endif
         }
         
         [ContextMenu("Print NPC State Info")]
         private void PrintNPCStateInfo()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log(NPCNarrativeStateManager.GetDebugInfo());
+#endif
         }
         
         [ContextMenu("Reset All NPCs")]
@@ -143,7 +161,9 @@ namespace Game.NPC.Tools
         private void ClearRegistry()
         {
             NPCInteractiveNarrativeRegistry.Clear();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("Registry cleared manually");
+#endif
         }
         
         private void Update()

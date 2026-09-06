@@ -264,12 +264,16 @@ public class LorePopupUI : MonoBehaviour
     {
         if (popupRoot == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[LorePopupUI] ❌ 'popupRoot' no está asignado en el Inspector. El popup no será visible.");
+#endif
             yield break;
         }
         if (canvasGroup == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[LorePopupUI] ❌ 'canvasGroup' no está asignado en el Inspector. El popup no será visible.");
+#endif
             yield break;
         }
 

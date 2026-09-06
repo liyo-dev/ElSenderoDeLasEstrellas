@@ -183,7 +183,9 @@ namespace Core
             // Simplemente esperar a que esté disponible
             if (UnityEngine.Application.isPlaying)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[GamepadInputReader] PlayerInputManager aún no está disponible. Se inicializará cuando esté listo.");
+#endif
             }
         }
     }

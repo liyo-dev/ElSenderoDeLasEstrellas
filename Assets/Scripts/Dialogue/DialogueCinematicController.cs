@@ -199,14 +199,18 @@ public class DialogueCinematicController : MonoBehaviour
         // CRÍTICO: El GameObject DEBE estar activo para funcionar
         if (!gameObject.activeSelf)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[DialogueCinematicController] ❌ GameObject '{gameObject.name}' estaba DESACTIVADO - Activándolo automáticamente");
+#endif
             gameObject.SetActive(true);
         }
         
         // Singleton pattern con DontDestroyOnLoad
         if (Instance != null && Instance != this)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueCinematicController] Ya existe una instancia, destruyendo {gameObject.name}");
+#endif
             Destroy(gameObject);
             return;
         }
@@ -383,7 +387,9 @@ public class DialogueCinematicController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueCinematicController] No se encontró una CinemachineCamera de gameplay en la escena");
+#endif
         }
         
         // Desactivar todas las cámaras del pool inicialmente
@@ -444,7 +450,9 @@ public class DialogueCinematicController : MonoBehaviour
             {
                 // Si por alguna razón se desactivó, reactivarlo
                 dialogueCamera.enabled = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[DialogueCinematicController] DialogueCamera se desactivó inesperadamente - reactivando");
+#endif
             }
         }
 
@@ -630,13 +638,17 @@ public class DialogueCinematicController : MonoBehaviour
             
             if (isInCinematicMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[DialogueCinematicController] Ya está en modo cinematográfico");
+#endif
                 return;
             }
 
             if (player == null || npc == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[DialogueCinematicController] Player o NPC es null");
+#endif
                 return;
             }
 
@@ -723,7 +735,9 @@ public class DialogueCinematicController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DialogueCinematicController] ❌ dialogueCamera es NULL - no se puede activar!");
+#endif
         }
 
         // PASO 4.5: Congelar de inmediato a los NPCs ambientales cercanos que no participan
@@ -1683,7 +1697,9 @@ public class DialogueCinematicController : MonoBehaviour
 
             if (showDebugInfo)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Aplicando plano: {shot.shotType} hacia {target.name}");
+#endif
             }
         }
 
@@ -2171,28 +2187,62 @@ public class DialogueCinematicController : MonoBehaviour
             // speaker/player/NPC/party, la alejamos en pasos cortos hasta liberarse (tope de
             // seguridad para no huir indefinidamente si la sala entera es estrecha).
             {
+                // FIX 5 sep 2026 ("seguimos viendo la cabeza de Will con el Pirata" - recurrencia
+                // tras el fix del 4 sep): aquel fix hizo que un compañero SÍ cuente como obstrucción
+                // en diálogos 1:1 (correcto), pero el retroceso de aquí seguía calculando la
+                // dirección de escape alejándose del TARGET encuadrado (p.ej. el Pirata), no del
+                // obstáculo real. Un compañero suele estar de pie cerca del jugador, justo en el
+                // lado hacia el que mira esta cámara (target → jugador) - así que "alejarse del
+                // target" empujaba la cámara MÁS adentro de su cabeza en vez de sacarla, y tras
+                // agotar los pasos sin éxito no había ningún último recurso (a diferencia del modo
+                // grupal, que sí eleva la cámara si el retroceso lateral no basta). Ahora nos
+                // alejamos del propio obstáculo detectado (recalculando cada paso, por si al
+                // apartarnos rozamos otro collider distinto), y si aun así no basta, elevamos la
+                // cámara por encima de las cabezas como último recurso, igual que en modo grupal.
                 const int maxLateralBackoffSteps = 6;
                 const float lateralBackoffStep = 0.2f;
-                Vector3 escapeDir = camPos - target.position;
-                escapeDir.y = 0f;
-                if (escapeDir.sqrMagnitude > 0.0001f)
+                float embedCheckRadius = dialogueCameraSelfClearance * 0.6f;
+                int lateralSteps = 0;
+                while (lateralSteps < maxLateralBackoffSteps &&
+                       CameraPositionIsEmbedded(camPos, embedCheckRadius, target, out Vector3 obstructionPos))
                 {
-                    escapeDir.Normalize();
-                    float embedCheckRadius = dialogueCameraSelfClearance * 0.6f;
-                    int lateralSteps = 0;
-                    while (lateralSteps < maxLateralBackoffSteps && CameraPositionIsEmbedded(camPos, embedCheckRadius, target))
+                    Vector3 escapeDir = camPos - obstructionPos;
+                    escapeDir.y = 0f;
+                    if (escapeDir.sqrMagnitude < 0.0001f)
                     {
-                        camPos += escapeDir * lateralBackoffStep;
-                        lateralSteps++;
+                        // Cámara casi exactamente encima del obstáculo en horizontal (p.ej. justo
+                        // sobre su cabeza): no hay una lateral fiable de la que huir, usamos
+                        // alejarse del target encuadrado como aproximación razonable.
+                        escapeDir = camPos - target.position;
+                        escapeDir.y = 0f;
+                        if (escapeDir.sqrMagnitude < 0.0001f) escapeDir = Vector3.forward;
                     }
-                    if (showDebugInfo && lateralSteps > 0)
-                        Debug.Log($"[DialogueCinematicController] 📷 Cámara encajada en vano - {lateralSteps} paso(s) de retroceso lateral");
+                    escapeDir.Normalize();
+                    camPos += escapeDir * lateralBackoffStep;
+                    lateralSteps++;
+                }
+                if (lateralSteps >= maxLateralBackoffSteps && CameraPositionIsEmbedded(camPos, embedCheckRadius, target))
+                {
+                    // Último recurso: el retroceso lateral no ha bastado (p.ej. el compañero
+                    // bloquea el único hueco libre) - subimos la cámara por encima de las cabezas
+                    // en vez de dejarla encajada, igual que hace el modo grupal en este mismo caso.
+                    camPos.y = target.position.y + Mathf.Max(shot.Height, 1.2f) + 1.5f;
+                    if (showDebugInfo)
+                        Debug.Log("[DialogueCinematicController] 📷 Cámara encajada - retroceso lateral insuficiente, elevando por encima");
+                }
+                else if (showDebugInfo && lateralSteps > 0)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[DialogueCinematicController] 📷 Cámara encajada en vano - {lateralSteps} paso(s) de retroceso lateral");
+#endif
                 }
             }
 
             if (showDebugInfo)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Shot {shot.shotType}: Target={target.name}, CamPos={camPos}, TargetPos={basePos}");
+#endif
             }
 
             return camPos;
@@ -2206,6 +2256,18 @@ public class DialogueCinematicController : MonoBehaviour
         /// </summary>
         private bool CameraPositionIsEmbedded(Vector3 pos, float radius, Transform target)
         {
+            return CameraPositionIsEmbedded(pos, radius, target, out _);
+        }
+
+        /// <summary>
+        /// Igual que <see cref="CameraPositionIsEmbedded(Vector3, float, Transform)"/> pero además
+        /// devuelve en <paramref name="obstructionPos"/> la posición (root) del obstáculo detectado,
+        /// para que quien llame pueda apartar la cámara alejándose de ÉL en vez de alejarse a ciegas
+        /// del target encuadrado (ver FIX 5 sep 2026 en el llamador, más abajo).
+        /// </summary>
+        private bool CameraPositionIsEmbedded(Vector3 pos, float radius, Transform target, out Vector3 obstructionPos)
+        {
+            obstructionPos = pos;
             int count = Physics.OverlapSphereNonAlloc(pos, radius, _camEmbedCheckBuffer,
                 _camObstructionMask, QueryTriggerInteraction.Ignore);
             for (int i = 0; i < count; i++)
@@ -2224,6 +2286,7 @@ public class DialogueCinematicController : MonoBehaviour
                 // este es precisamente el sistema que debería apartarla, y con la exención aplicada
                 // siempre no lo hacía nunca, dejando la cámara literalmente dentro de su cabeza.
                 if (_isGroupConversation && IsPartyMember(root)) continue;
+                obstructionPos = root.position;
                 return true;
             }
             return false;

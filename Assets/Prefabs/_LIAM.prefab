@@ -7531,6 +7531,7 @@ GameObject:
   - component: {fileID: 6256429109729949984}
   - component: {fileID: 4389471102299698973}
   - component: {fileID: 2931094273191265983}
+  - component: {fileID: 4005596319935594983}
   m_Layer: 8
   m_Name: _LIAM
   m_TagString: Liam
@@ -7653,7 +7654,7 @@ MonoBehaviour:
   inputMagnitudeDampTime: 0.1
   rotationSpeed: 360
   minRotationAngle: 5
-  interactState: InteractWithPeople_NoWeapon
+  interactState: Talk01
   greetingState: Greeting01_NoWeapon
   playGreetingOnDialogueStart: 0
   greetingDialogueState: HandWave01
@@ -7723,6 +7724,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &1840189453117827499
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -7781,6 +7783,9 @@ MonoBehaviour:
   disableWander: 1
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: CHAR_LIAM
@@ -7839,6 +7844,59 @@ MonoBehaviour:
   _dustVfxPrefab: {fileID: 5610010966355794069, guid: de6677742b4849eeb27b0eeb6d434560, type: 3}
   _dustInputMagnitudeThreshold: 0.6
   _dustLifetime: 1.5
+--- !u!114 &2931094273191265983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335879819108417999}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8741762bace146908b0cb7f402091040, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.LiamIdleCommentary
+  minInterval: 30
+  maxInterval: 65
+  ambientComments:
+  - "Deber\xEDamos ir m\xE1s r\xE1pido."
+  - ...
+  - "No hace falta comentar cada cosa que vemos, \xBFsab\xE9is?"
+  - Sigo pensando que hay una ruta mejor que esta.
+  nudgeChance: 0.6
+  nudgeCooldown: 90
+  nudgeLines:
+  - Estela, levanta. No es el momento.
+  - "\xBFEn serio? Ahora no, vamos."
+  - "Ya comer\xE1s luego. Arriba."
+  estelaReplyLines:
+  - "\xA1Tengo hambre, no es mi culpa!"
+  - "Un segundo m\xE1s, pesado."
+  - "Vale, vale, ya voy... qu\xE9 genio."
+  lineDelay: 1.6
+  postReplyDelay: 1
+  bubbleDuration: 3
+  debugMode: 0
+--- !u!114 &4005596319935594983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335879819108417999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418288d8d5b4d3f48b9cdf8bd4bf4412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCObstacleAvoidance
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  lookaheadDistance: 2.2
+  castRadius: -1
+  checkInterval: 0.15
+  avoidWeight: 1.1
+  steerLerp: 8
 --- !u!1 &3341901564085152908
 GameObject:
   m_ObjectHideFlags: 0
@@ -20536,15 +20594,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2931094273191265983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3335879819108417999}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8741762bace146908b0cb7f402091040, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.LiamIdleCommentary

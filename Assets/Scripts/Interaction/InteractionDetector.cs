@@ -79,6 +79,15 @@ public class InteractionDetector : MonoBehaviour
 
     private void OnDisable()
     {
+        // FIX (2026-09-05, INC iconos "A" acumulados en la plaza / rendimiento sesion larga):
+        // si este detector se desactiva (p.ej. ActiveCharacterSwapper desactivando a Will al
+        // cambiar de personaje) mientras habia un hint visible, nadie mas lo apagaba nunca -
+        // quedaba huerfano y visible para siempre, acumulandose uno por cada cambio de
+        // personaje con un hint en pantalla. SetCurrent(null) reutiliza la misma ruta ya
+        // probada que apaga el hint y libera Interact/Jump correctamente.
+        if (current != null)
+            SetCurrent(null);
+
         if (interactAction?.action != null)
         {
             interactAction.action.performed -= OnInteract;
@@ -97,7 +106,9 @@ public class InteractionDetector : MonoBehaviour
         {
             if (current != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[InteractionDetector] 🚫 {blockedReason}, desenfocando interactable");
+#endif
             }
             
             SetCurrent(null);
@@ -158,47 +169,63 @@ public class InteractionDetector : MonoBehaviour
         // sobrecargado y detectan correctamente el objeto destruido.
         bool isCarrying = _carrySystem != null && _carrySystem.IsCarrying;
         string currentName = current != null ? current.name : "null";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[InteractionDetector] 🔘 OnInteract llamado - IsCarrying={isCarrying}, current={currentName}");
+#endif
         
         // Si está cargando algo, soltar
         if (_carrySystem != null && _carrySystem.IsCarrying)
         {
             _carrySystem.DropObject();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InteractionDetector] 📦 Objeto soltado - bloqueando interacciones por cooldown");
+#endif
             return;
         }
 
         if (IsInteractionBlocked(out string blockedReason, out bool _ignored))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InteractionDetector] 🚫 Interacción ignorada: {blockedReason}");
+#endif
             return;
         }
         if (Time.unscaledTime < _resumeAfterBlockAt)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[InteractionDetector] ⏳ Esperando retardo de reactivación del hint/interacción");
+#endif
             return;
         }
 
         // CRÍTICO: Verificar si acabamos de soltar un objeto (cooldown activo)
         if (_carrySystem != null && _carrySystem.JustDroppedObject)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InteractionDetector] ⏳ Cooldown activo después de soltar objeto - ignorando interacción");
+#endif
             return;
         }
 
         // Si no está cargando y no hay cooldown, intentar interactuar con objeto enfocado
         if (current != null && current.CanInteract(gameObject))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InteractionDetector] ✅ Interactuando con: {current.name}");
+#endif
             current.Interact(gameObject);
         }
         else if (current != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[InteractionDetector] ⚠️ {current.name} NO puede interactuar (CanInteract=false)");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[InteractionDetector] ⚠️ No hay objeto enfocado (current=null)");
+#endif
         }
     }
 

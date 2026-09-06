@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Text;
 using System.Collections.Generic;
 
@@ -13,7 +14,14 @@ public class GameBootProfileDebugger : MonoBehaviour
     public bool showDebugPanel = true;
 
     [Tooltip("Tecla para mostrar/ocultar el panel")]
-    public KeyCode toggleKey = KeyCode.F4;
+    public Key toggleKey = Key.F4;
+
+    // FIX (5 sept 2026, AGENTS.md; mismo patron que CinematicSequencerBase._simulateHotkey):
+    // UnityEngine.Input.GetKeyDown lanza InvalidOperationException con el nuevo Input System
+    // activo en exclusiva. Cambiado de KeyCode a Key - si este componente ya tenia un valor
+    // serializado del KeyCode antiguo, Unity lo conserva como int invalido; el guard de abajo
+    // avisa una vez en vez de lanzar la excepcion cada frame.
+    private bool? _toggleKeyValid;
 
     [Tooltip("Registrar historial de operaciones (save/load/reset)")]
     public bool trackHistory = true;
@@ -64,7 +72,17 @@ public class GameBootProfileDebugger : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(toggleKey))
+        if (toggleKey == Key.None) return;
+        _toggleKeyValid ??= System.Enum.IsDefined(typeof(Key), toggleKey);
+        if (_toggleKeyValid != true)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[GameBootProfileDebugger] toggleKey ({(int)toggleKey}) no es un valor valido del enum Key " +
+                "(probablemente arrastrado de una version antigua del campo, era KeyCode) - selecciona la tecla de nuevo en el Inspector.");
+#endif
+            return;
+        }
+        if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
         {
             showDebugPanel = !showDebugPanel;
         }

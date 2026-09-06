@@ -48,7 +48,9 @@ public class DialogueCinematicProfile : ScriptableObject
     {
         if (npcShots.Length == 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueCinematicProfile] No hay planos configurados para el NPC");
+#endif
             return openingShot;
         }
         

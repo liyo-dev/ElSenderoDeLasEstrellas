@@ -112,7 +112,9 @@ namespace Sendero.UI
             // Configurar Singleton
             if (Instance != null && Instance != this)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] Ya existe una instancia. Destruyendo duplicado.");
+#endif
                 Destroy(gameObject);
                 return;
             }
@@ -180,7 +182,9 @@ namespace Sendero.UI
             var player = PlayerService.Player;
             if (player == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[PlayerHUDV2] ❌ No se pudo obtener el jugador desde PlayerService");
+#endif
                 return;
             }
             
@@ -249,25 +253,33 @@ namespace Sendero.UI
             
             if (healthFillImage == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[PlayerHUDV2] ❌ healthFillImage no está asignado en el Inspector!");
+#endif
                 hasErrors = true;
             }
             
             if (manaFillImage == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[PlayerHUDV2] ❌ manaFillImage no está asignado en el Inspector!");
+#endif
                 hasErrors = true;
             }
             
             if (leftMagicSlotImage == null || rightMagicSlotImage == null || specialMagicSlotImage == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[PlayerHUDV2] ❌ Faltan referencias de slots de magia en el Inspector!");
+#endif
                 hasErrors = true;
             }
             
             if (hasErrors)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[PlayerHUDV2] ⚠️ El HUD no funcionará correctamente sin las referencias necesarias.");
+#endif
             }
         }
         
@@ -318,7 +330,9 @@ namespace Sendero.UI
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No hay ManaPool para suscribirse a OnManaChanged");
+#endif
             }
             
             // MagicCaster no tiene eventos, se actualiza cada frame en Update()
@@ -350,11 +364,15 @@ namespace Sendero.UI
             // Si Start() aún no se ha ejecutado, las referencias se configurarán ahí
             if (!_hasStarted)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[PlayerHUDV2] ⏭️ OnPresetApplied llamado antes de Start() - Se refrescará en Start()");
+#endif
                 return;
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerHUDV2] 🔄 OnPresetApplied - Refrescando HUD completo tras cargar partida");
+#endif
             
             // RE-OBTENER referencias del player actual (pueden haber cambiado)
             var player = PlayerService.Player;
@@ -375,7 +393,9 @@ namespace Sendero.UI
             // Validar que tenemos las referencias
             if (_healthSystem == null || _manaPool == null || _magicCaster == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ OnPresetApplied - Faltan referencias de componentes del player");
+#endif
                 return;
             }
             

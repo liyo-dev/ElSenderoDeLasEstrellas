@@ -147,7 +147,9 @@ public static class PlayerSettings
 
         _data = LoadFromDisk();
         _loaded = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSettings] Cargado: invertLook={_data.invertLook}, invertFlightLook={_data.invertFlightLook}");
+#endif
     }
 
     public static void SetLanguage(string locale)
@@ -224,7 +226,9 @@ public static class PlayerSettings
 
         _data.invertLook = invert;
         SaveToDisk();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSettings] InvertLook cambiado a: {invert}");
+#endif
         InvertLookChanged?.Invoke(invert);
     }
 
@@ -236,7 +240,9 @@ public static class PlayerSettings
 
         _data.invertFlightLook = invert;
         SaveToDisk();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSettings] InvertFlightLook cambiado a: {invert}");
+#endif
         InvertFlightLookChanged?.Invoke(invert);
     }
 
@@ -319,7 +325,9 @@ public static class PlayerSettings
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerSettings] Error al leer settings: {e.Message}");
+#endif
         }
 
         return new PlayerSettingsData();
@@ -334,11 +342,15 @@ public static class PlayerSettings
         {
             var json = JsonUtility.ToJson(_data, true);
             File.WriteAllText(SettingsPath, json);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerSettings] Guardado en: {SettingsPath}");
+#endif
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerSettings] Error al guardar settings: {e.Message}");
+#endif
         }
     }
 
@@ -351,6 +363,8 @@ public static class PlayerSettings
         _data = new PlayerSettingsData();
         _loaded = true;
         SaveToDisk();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerSettings] Configuración reseteada a valores por defecto.");
+#endif
     }
 }

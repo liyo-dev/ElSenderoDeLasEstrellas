@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Control manual de lluvia para demos/presentaciones en directo: evita depender del sorteo de
@@ -24,7 +25,13 @@ using UnityEngine;
 public class RainDemoTrigger : MonoBehaviour
 {
     [Tooltip("Tecla que alterna la lluvia (empieza/para) durante la demo.")]
-    public KeyCode toggleKey = KeyCode.F6;
+    public Key toggleKey = Key.F6;
+
+    // FIX (5 sept 2026, AGENTS.md; mismo patron que CinematicSequencerBase._simulateHotkey):
+    // UnityEngine.Input.GetKeyDown lanza InvalidOperationException con el nuevo Input System
+    // activo en exclusiva - y este componente corre su Update() precisamente en Editor/dev
+    // build, el caso mas probable de que alguien lo use. Cambiado de KeyCode a Key.
+    private bool? _toggleKeyValid;
 
     private DayNightCycle _cycle;
 
@@ -39,11 +46,24 @@ public class RainDemoTrigger : MonoBehaviour
     {
         if (!Application.isEditor && !Debug.isDebugBuild) return;
         if (_cycle == null) return;
+        if (toggleKey == Key.None) return;
 
-        if (Input.GetKeyDown(toggleKey))
+        _toggleKeyValid ??= System.Enum.IsDefined(typeof(Key), toggleKey);
+        if (_toggleKeyValid != true)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[RainDemoTrigger] toggleKey ({(int)toggleKey}) no es un valor valido del enum Key " +
+                "(probablemente arrastrado de una version antigua del campo, era KeyCode) - selecciona la tecla de nuevo en el Inspector.");
+#endif
+            return;
+        }
+
+        if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
         {
             _cycle.ToggleRain();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[RainDemoTrigger] Lluvia {(_cycle.IsRaining ? "activada" : "detenida")} manualmente ({toggleKey}).");
+#endif
         }
     }
 }

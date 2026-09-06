@@ -89,14 +89,18 @@ public class PlayerSaveData
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerSaveData] GameBootService.Profile es null (¿se llamó antes de OnProfileReady?)");
+#endif
             return new PlayerSaveData();
         }
 
         var preset = bootProfile.GetActivePresetResolved();
         if (preset == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerSaveData] No hay preset activo en GameBootProfile");
+#endif
             return new PlayerSaveData();
         }
 
@@ -123,12 +127,16 @@ public class PlayerSaveData
         d.completedInteractiveNarratives = preset.completedInteractiveNarratives != null ? new List<string>(preset.completedInteractiveNarratives) : new List<string>();
         
         // DEBUG: Ver qué narrativas se están guardando
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSaveData] 💾 FromGameBootProfile - completedInteractiveNarratives: {d.completedInteractiveNarratives.Count} entradas");
+#endif
         if (d.completedInteractiveNarratives.Count > 0)
         {
             foreach (var id in d.completedInteractiveNarratives)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerSaveData]   → {id}");
+#endif
             }
         }
         
@@ -138,7 +146,9 @@ public class PlayerSaveData
         if (Game.NPC.PlayerParty.HasInstance)
         {
             d.partyMemberIds = Game.NPC.PlayerParty.Instance.GetMemberIdsForSave();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerSaveData] 💾 Party guardado: {d.partyMemberIds.Count} miembros");
+#endif
         }
         else
         {
@@ -186,7 +196,9 @@ public class PlayerSaveData
         d.unlockedTeleportPoints = preset.unlockedTeleportPoints != null && preset.unlockedTeleportPoints.Count > 0
             ? new List<string>(preset.unlockedTeleportPoints)
             : TeleportRegistry.ToSaveData();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSaveData] 💾 Teleport points guardados: {d.unlockedTeleportPoints.Count}");
+#endif
 
         // === NUEVO: persistir vínculos sociales forjados en runtime entre NPCs ===
         d.npcRelationships = NPCRelationshipRegistry.ToSaveEntries();
@@ -224,14 +236,18 @@ public class PlayerSaveData
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerSaveData] GameBootService.Profile es null (¿se llamó antes de OnProfileReady?)");
+#endif
             return;
         }
 
         // Usar el método existente del GameBootProfile para aplicar los datos
         bootProfile.SetRuntimePresetFromSave(this);
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerSaveData] Datos aplicados al GameBootProfile - Level: {level}, HP: {currentHp}/{maxHp}");
+#endif
     }
 
     /// <summary>

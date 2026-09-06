@@ -91,7 +91,11 @@ namespace EasyTransition
                 // un error, así que no se loguea (evita el spam "You tried to access the instance
                 // before it exists." en cada cierre de partida).
                 if (!applicationIsQuitting)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError("You tried to access the instance before it exists.");
+#endif
+                    }
                 return null;
             }
 
@@ -111,12 +115,16 @@ namespace EasyTransition
         {
             if (transition == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("You have to assing a transition.");
+#endif
                 return;
             }
             if (runningTransition)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TransitionManager] Transition already running — ignoring new request.");
+#endif
                 return;
             }
 
@@ -134,7 +142,9 @@ namespace EasyTransition
         {
             if (transition == null || runningTransition)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("You have to assing a transition.");
+#endif
                 return;
             }
 
@@ -152,7 +162,9 @@ namespace EasyTransition
         {
             if (transition == null || runningTransition)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("You have to assing a transition.");
+#endif
                 return;
             }
 

@@ -14338,6 +14338,7 @@ GameObject:
   - component: {fileID: 2189284623597346863}
   - component: {fileID: 4060681882113047802}
   - component: {fileID: 1114897567811555624}
+  - component: {fileID: 3016803284781558853}
   m_Layer: 8
   m_Name: _ESTELA
   m_TagString: Estela
@@ -14459,7 +14460,7 @@ MonoBehaviour:
   inputMagnitudeDampTime: 0.1
   rotationSpeed: 360
   minRotationAngle: 5
-  interactState: InteractWithPeople_NoWeapon
+  interactState: Talk01
   greetingState: Greeting01_NoWeapon
   playGreetingOnDialogueStart: 0
   greetingDialogueState: HandWave01
@@ -14711,6 +14712,62 @@ MonoBehaviour:
   showAfterStep: -1
   icon: {fileID: 21300000, guid: 5fff0fe396af4674595e4938a11bd7a3, type: 3}
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &1114897567811555624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741617104233437454}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a0e9abba31af2469ca48db233027ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.EstelaIdleCommentary
+  minInterval: 25
+  maxInterval: 55
+  ambientComments:
+  - "\xBFCu\xE1nto queda ya?"
+  - "Qu\xE9 callados vais todos..."
+  - "Se est\xE1 bien caminando as\xED, \xBFeh?"
+  - "Oye, \xBFy si paramos a descansar un rato?"
+  hungryLines:
+  - Tengo hambre...
+  - "\xBFNadie m\xE1s tiene hambre? Yo s\xED."
+  - "Con lo bien que se com\xEDa en el \xFAltimo pueblo..."
+  sitDuration: 4
+  boredLines:
+  - "\xA1Me aburro! \xBFPodemos hacer algo?"
+  - "Esto es un rollo, \xBFno os parece?"
+  - "\xBFYa hemos llegado? \xBFY ahora? \xBFY ahora?"
+  blockDistanceInFront: 2.2
+  blockStandDuration: 3.5
+  blockMaxWalkDuration: 6
+  bubbleDuration: 3
+  weightComment: 3
+  weightSit: 2
+  weightBlock: 1.5
+  debugMode: 0
+--- !u!114 &3016803284781558853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741617104233437454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418288d8d5b4d3f48b9cdf8bd4bf4412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCObstacleAvoidance
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  lookaheadDistance: 2.2
+  castRadius: -1
+  checkInterval: 0.15
+  avoidWeight: 1.1
+  steerLerp: 8
 --- !u!1 &6762110793360784662
 GameObject:
   m_ObjectHideFlags: 0
@@ -20251,15 +20308,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1114897567811555624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6741617104233437454}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a0e9abba31af2469ca48db233027ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.EstelaIdleCommentary

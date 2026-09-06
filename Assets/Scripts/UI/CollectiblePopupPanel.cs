@@ -39,7 +39,9 @@ public class CollectiblePopupPanel : MonoBehaviour
         _cg = GetComponent<CanvasGroup>();
         if (_cg == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ El GameObject '{gameObject.name}' no tiene componente CanvasGroup - añadiéndolo automáticamente");
+#endif
             _cg = gameObject.AddComponent<CanvasGroup>();
         }
     }
@@ -48,7 +50,9 @@ public class CollectiblePopupPanel : MonoBehaviour
 
     public void Init(ItemData item, int amount, float displayDuration)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] Init called for {item?.displayName} amount={amount} displayDuration={displayDuration}");
+#endif
 
         _itemId = item != null ? (item.itemId ?? item.displayName) : "__null__";
         _currentAmount = amount;
@@ -78,7 +82,9 @@ public class CollectiblePopupPanel : MonoBehaviour
 
         if (amountText == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[CollectiblePopupPanel] amountText is not assigned on prefab.");
+#endif
         }
         else
         {
@@ -89,7 +95,9 @@ public class CollectiblePopupPanel : MonoBehaviour
         LayoutElement le = GetComponent<LayoutElement>();
         if (le == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ El GameObject '{gameObject.name}' no tiene componente LayoutElement - añadiéndolo automáticamente");
+#endif
             le = gameObject.AddComponent<LayoutElement>();
         }
 
@@ -112,14 +120,18 @@ public class CollectiblePopupPanel : MonoBehaviour
         // Make sure it's active and visible
         if (!gameObject.activeInHierarchy)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[CollectiblePopupPanel] GameObject not activeInHierarchy - activating");
+#endif
             gameObject.SetActive(true);
         }
         
         // Asegurar que el componente esté habilitado para ejecutar coroutines
         if (!enabled)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[CollectiblePopupPanel] Componente deshabilitado en {gameObject.name} - habilitándolo");
+#endif
             enabled = true;
         }
 
@@ -128,14 +140,20 @@ public class CollectiblePopupPanel : MonoBehaviour
         // set expiry
         _expiryTime = Time.realtimeSinceStartup + _displayDuration;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] Init() completado para {_itemId}, llamando a StartCoroutine(PlayLifecycle) - expiry: {_expiryTime}");
+#endif
         StartCoroutine(PlayLifecycle());
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] StartCoroutine(PlayLifecycle) llamado para {_itemId}");
+#endif
     }
     
     void OnDestroy()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] OnDestroy() llamado para {_itemId}");
+#endif
     }
 
     /// <summary>
@@ -149,12 +167,16 @@ public class CollectiblePopupPanel : MonoBehaviour
         if (amountText != null) amountText.text = _currentAmount > 0 ? $"+{_currentAmount}" : "";
         // extend expiry
         _expiryTime = Time.realtimeSinceStartup + _displayDuration;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] AddAmount called for {_itemId}, newAmount={_currentAmount}, extended expiry by {_displayDuration}s");
+#endif
     }
 
     private IEnumerator PlayLifecycle()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] PlayLifecycle START for {_itemId}");
+#endif
         
         // Wait a frame so layout groups can place this element correctly
         yield return null;
@@ -186,7 +208,9 @@ public class CollectiblePopupPanel : MonoBehaviour
             yield return null;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] Fade in complete for {_itemId}, waiting until expiry ({_expiryTime})");
+#endif
         
         // Wait visible until expiry time (which may be extended by AddAmount calls)
         float startWaitTime = Time.realtimeSinceStartup;
@@ -197,7 +221,9 @@ public class CollectiblePopupPanel : MonoBehaviour
             float lifetime = Time.realtimeSinceStartup - _creationTime;
             if (lifetime >= maxLifetime)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ {_itemId} alcanzó el timeout máximo de {maxLifetime}s, forzando destrucción");
+#endif
                 break;
             }
             
@@ -205,14 +231,18 @@ public class CollectiblePopupPanel : MonoBehaviour
             if (logTimer >= 1f) // Log cada segundo
             {
                 float remaining = _expiryTime - Time.realtimeSinceStartup;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[CollectiblePopupPanel] {_itemId} still waiting, {remaining:F1}s remaining until expiry (lifetime: {lifetime:F1}s)");
+#endif
                 logTimer = 0f;
             }
             yield return null;
         }
 
         float totalWaitTime = Time.realtimeSinceStartup - startWaitTime;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] Expiry reached for {_itemId} after {totalWaitTime:F2}s, starting fade out");
+#endif
 
         // fade out
         t = 0f;
@@ -225,17 +255,23 @@ public class CollectiblePopupPanel : MonoBehaviour
             yield return null;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[CollectiblePopupPanel] Fade out complete for {_itemId}, destroying GameObject");
+#endif
         
         // Asegurar que el GameObject existe antes de destruirlo
         if (gameObject != null)
         {
             Destroy(gameObject);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[CollectiblePopupPanel] GameObject destroyed for {_itemId}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[CollectiblePopupPanel] GameObject was already null for {_itemId}");
+#endif
         }
     }
 }

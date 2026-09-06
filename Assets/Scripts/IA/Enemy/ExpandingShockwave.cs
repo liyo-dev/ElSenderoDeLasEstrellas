@@ -58,7 +58,9 @@ public class ExpandingShockwave : MonoBehaviour
         {
             _useParticleSystem = true;
             _shapeModule = _particleSystem.shape;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ExpandingShockwave] 🌀 Usando Particle System para visual");
+#endif
         }
         else
         {
@@ -100,7 +102,9 @@ public class ExpandingShockwave : MonoBehaviour
                 _particleSystem.Play();
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ExpandingShockwave] 🌀 Particle System configurado (radio inicial: {_shapeModule.radius})");
+#endif
         }
         else
         {
@@ -218,7 +222,9 @@ public class ExpandingShockwave : MonoBehaviour
                 if (damageable != null && damageable.IsAlive)
                 {
                     damageable.TakeDamage(damage);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ExpandingShockwave] 💥 Daño a {target.name}: {damage}");
+#endif
                     
                     // Knockback
                     ApplyKnockback(col);
@@ -230,7 +236,9 @@ public class ExpandingShockwave : MonoBehaviour
                     if (damageable != null && damageable.IsAlive)
                     {
                         damageable.TakeDamage(damage);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[ExpandingShockwave] 💥 Daño a padre de {target.name}: {damage}");
+#endif
                         ApplyKnockback(col);
                     }
                 }

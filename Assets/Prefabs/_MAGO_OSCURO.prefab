@@ -21095,7 +21095,7 @@ MonoBehaviour:
   inputMagnitudeDampTime: 0.1
   rotationSpeed: 360
   minRotationAngle: 5
-  interactState: InteractWithPeople_NoWeapon
+  interactState: Talk01
   greetingState: Greeting01_NoWeapon
   playGreetingOnDialogueStart: 0
   greetingDialogueState: HandWave01

@@ -50,7 +50,9 @@ public class SubtitleController : MonoBehaviour
         
         if (LocalizationManager.Instance == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[SubtitleController] LocalizationManager no se inicializó en 5 segundos. Continuando sin localización.");
+#endif
             yield break;
         }
         
@@ -85,7 +87,9 @@ public class SubtitleController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(id))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[SubtitleController] ID de subtítulo vacío");
+#endif
             return;
         }
 
@@ -100,7 +104,9 @@ public class SubtitleController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[SubtitleController] LocalizationManager no disponible. Usando ID como texto: {id}");
+#endif
         }
         
         ShowLine(text);
@@ -199,13 +205,19 @@ public class SubtitleController : MonoBehaviour
     [ContextMenu("Debug Localization Status")]
     private void DebugLocalizationStatus()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[SubtitleController] LocalizationManager.Instance: {(LocalizationManager.Instance != null ? "DISPONIBLE" : "NULL")}");
+#endif
         if (LocalizationManager.Instance != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[SubtitleController] Idioma actual: {LocalizationManager.Instance.CurrentLocale}");
+#endif
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[SubtitleController] Último subtítulo ID: '{_lastSubtitleId}'");
         Debug.Log($"[SubtitleController] Canvas Group Alpha: {canvasGroup?.alpha}");
         Debug.Log($"[SubtitleController] AutoRefresh habilitado: {autoRefreshOnLanguageChange}");
+#endif
     }
 }

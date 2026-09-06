@@ -89,7 +89,9 @@ public class WardrobeInventory : MonoBehaviour
                 var item = WardrobeItemSO.Find(id);
                 if (item == null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[WardrobeInventory] Wardrobe item '{id}' no encontrado al aplicar preset.");
+#endif
                     continue;
                 }
 
@@ -171,7 +173,9 @@ public class WardrobeInventory : MonoBehaviour
     {
         if (string.IsNullOrEmpty(entry.partName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[WardrobeInventory.AddEntry] partName está vacío");
+#endif
             return false;
         }
         
@@ -221,7 +225,9 @@ public class WardrobeInventory : MonoBehaviour
     {
         if (!item)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[WardrobeInventory] WardrobeItemSO no asignado.");
+#endif
             return false;
         }
 

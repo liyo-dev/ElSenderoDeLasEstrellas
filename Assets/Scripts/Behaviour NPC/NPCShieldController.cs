@@ -139,7 +139,9 @@ public class NPCShieldController : MonoBehaviour
             GameObject resolvedShieldPrefab = ResolveShieldPrefab(shieldPrefab);
             if (resolvedShieldPrefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[NPCShieldController] ⚠️ shieldPrefab no asignado, no se puede instanciar el escudo.");
+#endif
                 return;
             }
 

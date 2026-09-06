@@ -58,7 +58,9 @@ public class UnlockTrigger : MonoBehaviour
             else
             {
                 _pendingApply = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo (OnEnable) diferido");
+#endif
             }
         }
     }
@@ -81,7 +83,9 @@ public class UnlockTrigger : MonoBehaviour
         else
         {
             _pendingApply = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo diferido hasta OnProfileReady");
+#endif
         }
     }
 
@@ -92,7 +96,9 @@ public class UnlockTrigger : MonoBehaviour
         else
         {
             _pendingApply = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo (ApplyUnlocksNow) diferido");
+#endif
         }
     }
 
@@ -106,7 +112,9 @@ public class UnlockTrigger : MonoBehaviour
         var preset = UnlockService.GetActivePreset();
         if (!preset)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[UnlockTrigger] No hay preset activo");
+#endif
             return;
         }
 
@@ -212,7 +220,9 @@ public class UnlockTrigger : MonoBehaviour
         // === Guardado ===
         if (saveAfterUnlock && needsHudRefresh)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[UnlockTrigger] Auto-guardado deshabilitado. Usa un punto de guardado para conservar los cambios.");
+#endif
         }
 
         // === Feedback y desactivación ===

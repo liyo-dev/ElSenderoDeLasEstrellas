@@ -11172,6 +11172,7 @@ GameObject:
   - component: {fileID: 892032856192410032}
   - component: {fileID: 6938378013747625067}
   - component: {fileID: 3622547188665190604}
+  - component: {fileID: 1273344385334190010}
   m_Layer: 8
   m_Name: Eldran
   m_TagString: Untagged
@@ -11293,7 +11294,7 @@ MonoBehaviour:
   inputMagnitudeDampTime: 0.1
   rotationSpeed: 360
   minRotationAngle: 5
-  interactState: InteractWithPeople_NoWeapon
+  interactState: Talk01
   greetingState: Greeting01_NoWeapon
   playGreetingOnDialogueStart: 0
   greetingDialogueState: HandWave01
@@ -11363,6 +11364,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &5674452361685196030
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -11421,6 +11423,9 @@ MonoBehaviour:
   disableWander: 1
   startInIdleState: 0
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 1
   persistenceId: NPC_Eldran
   dialogueCharacterId: CHAR_ELDRAN
@@ -11535,6 +11540,57 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EldranStaysBehindController
   leaveSignal: EVT_ARRESTADOS
+  waitingAnchorId: OutSideKingdom
+--- !u!114 &3622547188665190604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894687061216898430}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c81648c51f84d818f09c59e67dc37da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.EldranIdleCommentary
+  minInterval: 32
+  maxInterval: 70
+  ambientComments:
+  - "No os alej\xE9is demasiado, que luego cuesta reagruparse."
+  - Con estos huesos, cada paso cuenta el doble que antes.
+  - "Este camino... me recuerda a otros que ya no deber\xEDa recordar tan bien."
+  - "Mientras sigamos juntos, todo ir\xE1 bien. Eso digo yo, al menos."
+  searchLines:
+  - "Un momento... \xBFd\xF3nde he dejado el b\xE1culo?"
+  - "Jurar\xEDa que lo llevaba en la otra mano."
+  - "Ah, no, aqu\xED est\xE1. Falsa alarma."
+  - A mi edad, hasta uno mismo se pierde de vista.
+  searchGestureState: Question02
+  searchDuration: 3
+  bubbleDuration: 3
+  weightComment: 3
+  weightSearch: 2
+  debugMode: 0
+--- !u!114 &1273344385334190010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894687061216898430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418288d8d5b4d3f48b9cdf8bd4bf4412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCObstacleAvoidance
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  lookaheadDistance: 2.2
+  castRadius: -1
+  checkInterval: 0.15
+  avoidWeight: 1.1
+  steerLerp: 8
 --- !u!1 &8911537771988408263
 GameObject:
   m_ObjectHideFlags: 0
@@ -12228,15 +12284,3 @@ Transform:
   - {fileID: 3517789935099870636}
   m_Father: {fileID: 1381823610886760323}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3622547188665190604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8894687061216898430}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c81648c51f84d818f09c59e67dc37da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.EldranIdleCommentary

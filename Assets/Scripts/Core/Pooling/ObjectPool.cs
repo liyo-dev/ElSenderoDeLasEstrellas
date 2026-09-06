@@ -80,7 +80,9 @@ namespace Game.Core.Pooling
                 obj = CreateNewObject();
                 if (obj == null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[ObjectPool] No se pudo crear nuevo objeto de tipo {typeof(T).Name}");
+#endif
                     return null;
                 }
             }
@@ -106,7 +108,9 @@ namespace Game.Core.Pooling
         {
             if (obj == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ObjectPool] Intento de devolver objeto nulo al pool de {typeof(T).Name}");
+#endif
                 return;
             }
 
@@ -120,7 +124,9 @@ namespace Game.Core.Pooling
             // pool.
             if (!_inUse.Remove(obj))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ObjectPool] Objeto {obj.name} no estaba registrado como en uso (posible doble Return, ignorado)");
+#endif
                 return;
             }
 
@@ -159,7 +165,9 @@ namespace Game.Core.Pooling
             // Destruir objetos en uso (con advertencia)
             if (_inUse.Count > 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ObjectPool] Limpiando pool con {_inUse.Count} objetos aún en uso");
+#endif
                 foreach (var obj in _inUse)
                 {
                     if (obj != null)
@@ -212,7 +220,9 @@ namespace Game.Core.Pooling
         {
             if (_prefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[ObjectPool] Prefab es null, no se puede crear objeto");
+#endif
                 return null;
             }
 
@@ -222,7 +232,9 @@ namespace Game.Core.Pooling
             T component = instance.GetComponent<T>();
             if (component == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[ObjectPool] GameObject instanciado no tiene componente {typeof(T).Name}");
+#endif
                 Object.Destroy(instance);
                 return null;
             }

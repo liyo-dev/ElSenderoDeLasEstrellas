@@ -54,6 +54,16 @@ namespace Game.NPC.States
             base.OnEnter(context);
             
             context.IsInCinematic = true;
+            // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): mientras dura
+            // la cinemática, este estado es quien llama explícitamente a
+            // context.Animator.SetMovementSpeed() (ver MoveToAction/LeadPlayerToAnchorSequence).
+            // Sin esta bandera, NPCSimpleAnimator.Update() sigue llamando a
+            // SyncWithNavMeshAgent() todos los frames (no comprueba IsInCinematic) y esa función
+            // escribe su propio valor de InputMagnitude con una fórmula distinta, pisando el
+            // nuestro sin coordinación -- de ahí el aspecto de "otra animación"/"patinando sobre
+            // hielo" pese a que el Animator seguía correctamente en el estado "Free Locomotion".
+            if (context.Animator != null)
+                context.Animator.AllowManualMovement = true;
             StopMovement(context);
             
             if (_currentSequence == null)
@@ -84,6 +94,10 @@ namespace Game.NPC.States
             base.OnExit(context);
             
             context.IsInCinematic = false;
+            // FIX 5 sep 2026: devolver el control automático de InputMagnitude a
+            // NPCSimpleAnimator.SyncWithNavMeshAgent() al salir de la cinemática.
+            if (context.Animator != null)
+                context.Animator.AllowManualMovement = false;
             
             if (_currentSequence != null)
             {
@@ -304,8 +318,15 @@ namespace Game.NPC.States
             context.Log($"[CinematicSequence] Obstacle avoidance desactivado temporalmente (era: {_originalObstacleAvoidanceType})");
 
             // Asegurar que no quede la pose de interacción del diálogo al iniciar movimiento.
+            // FIX 5 sep 2026 (incidencia animación rota en escolta/movimiento cinemático): si el
+            // NPC llegó aquí con _isInBattle todavía activo (p.ej. AlertState disparó
+            // SetBattleMode(true) pero saltó directo a CinematicState sin pasar por CombatState),
+            // EndInteraction() de abajo lo mandaría a PlayBattleIdle() en vez de a idle normal, y
+            // la capa UpperBody se quedaría congelada en pose de combate durante todo el
+            // movimiento cinemático. Ver AlertState.OnExit() para el fix simétrico del origen.
             if (context.Animator != null)
             {
+                context.Animator.SetBattleMode(false);
                 context.Animator.SetTalking(false);
                 context.Animator.EndInteraction();
                 context.Animator.TransitionToLocomotion();
@@ -333,6 +354,12 @@ namespace Game.NPC.States
             // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
             float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent);
             context.Animator.SetMovementSpeed(speedFactor);
+
+            // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
+            {
+                float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+                UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][UpdateMovementAnimation] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+            }
             
             // ✅ FIX: Rotar hacia la dirección del movimiento para evitar caminar de espaldas
             if (context.Agent.velocity.sqrMagnitude > 0.01f)
@@ -820,6 +847,12 @@ namespace Game.NPC.States
                 // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
                 float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent);
                 context.Animator.SetMovementSpeed(speedFactor);
+
+                // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
+                {
+                    float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+                    UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][MoveToAction] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+                }
             }
             
             // Verificar llegada al destino
@@ -1093,6 +1126,12 @@ namespace Game.NPC.States
             if (!_initialized)
             {
                 // Salir de la pose de diálogo/idle (sin activar locomoción todavía)
+                // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): mismo
+                // motivo que en MoveToAction más arriba — si _isInBattle sigue activo (leak desde
+                // AlertState al saltar directo a CinematicState), EndInteraction() reforzaría la
+                // pose de combate en vez de volver a idle normal, y la capa UpperBody se quedaría
+                // congelada (brazos/torso fijos) durante toda la escolta.
+                context.Animator?.SetBattleMode(false);
                 context.Animator?.SetTalking(false);
                 context.Animator?.EndInteraction();
 
@@ -1204,8 +1243,17 @@ namespace Game.NPC.States
             {
                 // FIX 4 sep 2026, ver Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(): el NPC
                 // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
-                float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent);
+                // FIX 5 sep 2026: usar _baseSpeed (fija) como referencia, no context.Agent.speed
+                // (que este método va cambiando frame a frame según la distancia al jugador) — ver
+                // Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(agent, referenceSpeed).
+                float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent, _baseSpeed);
                 context.Animator.SetMovementSpeed(speedFactor);
+
+                // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
+                {
+                    UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][LeadPlayerToAnchorSequence] {context.Transform.name} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} baseSpeed={_baseSpeed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} fetching={_fetchingPlayer} distToPlayer={distToPlayer:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+                }
+
                 if (context.Agent.velocity.sqrMagnitude > 0.01f)
                     context.Animator.FaceDirection(context.Agent.velocity.normalized);
             }
@@ -1230,6 +1278,7 @@ namespace Game.NPC.States
             // FIX 4 sep 2026: usar el umbral de "caminar" (no 1f/trote), ver ComputeWalkGaitSpeedFactor.
             context.Animator?.TransitionToLocomotion();
             context.Animator?.SetMovementSpeed(Common.NavMeshAgentUtility.WalkGaitThreshold);
+            UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][AcknowledgePlayerRetrieved] {context.Transform.name} salto discreto de SetMovementSpeed a WalkGaitThreshold={Common.NavMeshAgentUtility.WalkGaitThreshold:F2} (agent.speed={agent?.speed:F2})");
         }
 
         public override void Cleanup(Common.NPCStateContext context)

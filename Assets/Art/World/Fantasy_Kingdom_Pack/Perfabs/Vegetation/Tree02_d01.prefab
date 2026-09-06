@@ -132,6 +132,7 @@ MonoBehaviour:
   interactionPoint: {fileID: 8011920592622817276}
   overrideFacing: 1
   capacity: 3
+  ownerCollider: {fileID: 0}
 --- !u!208 &2791550923341302273
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -144,7 +145,7 @@ NavMeshObstacle:
   m_Shape: 1
   m_Extents: {x: 2.7120001, y: 3.479, z: 2.7120001}
   m_MoveThreshold: 0.1
-  m_Carve: 1
+  m_Carve: 0
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 3.348, z: 0}
   m_TimeToStationary: 0.5

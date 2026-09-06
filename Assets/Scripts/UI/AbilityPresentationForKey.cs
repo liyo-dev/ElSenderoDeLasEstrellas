@@ -28,8 +28,14 @@ public static class AbilityPresentationKeyLookup
         { AbilityKey.Shield, new AbilityPresentationForKey { abilityKey = AbilityKey.Shield, title = "Escudo", description = "Levanta un escudo para bloquear ataques enemigos." } },
     };
 
+    // Mismo esquema de claves que AbilityPresentationLookup: ABILITY_<KEY EN MAYÚSCULAS>_TITLE / _DESC
+    // en ui_es.json/ui_en.json, con el texto de Defaults como fallback español.
+    static string Loc(string key, string fallback) =>
+        LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
+
     /// <summary>
-    /// Resolve presentation for an AbilityKey using a custom list first, then fallback to a simple default.
+    /// Resolve presentation for an AbilityKey using a custom list first, then fallback to a
+    /// localized default.
     /// </summary>
     public static AbilityPresentationForKey Resolve(AbilityKey key, IList<AbilityPresentationForKey> custom)
     {
@@ -43,7 +49,16 @@ public static class AbilityPresentationKeyLookup
         }
 
         if (Defaults.TryGetValue(key, out var preset))
-            return preset;
+        {
+            string keyBase = "ABILITY_" + key.ToString().ToUpperInvariant();
+            return new AbilityPresentationForKey
+            {
+                abilityKey = preset.abilityKey,
+                title = Loc(keyBase + "_TITLE", preset.title),
+                description = Loc(keyBase + "_DESC", preset.description),
+                icon = preset.icon
+            };
+        }
 
         // Fallback: basic titles based on enum name
         return new AbilityPresentationForKey

@@ -529,7 +529,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// mismo bug ya diagnosticado y resuelto para NPCs reales en otra escena de esta sesión (ver
     /// cabecera de PromoVideo01Sequencer.cs, sección "GESTOS QUE NO SE QUEDAN IDLE A MITAD DE
     /// LÍNEA") — el mecanismo que ya lo resuelve ahí es NPCSimpleAnimator.BeginInteraction(), que
-    /// dejaría al NPC en su interactState ("InteractWithPeople_NoWeapon" por defecto) en vez de caer
+    /// dejaría al NPC en su interactState ("Talk01" por defecto, tras el cambio del 5 sep 2026) en vez de caer
     /// a Idle entre gesto y gesto — simplemente no se estaba llamando desde este helper compartido.
     /// Arreglo: se llama aquí, una sola vez, para que todo bocadillo cinemático de este archivo
     /// (Mago Oscuro, Will, Estela, Liam, Eldran, etc.) quede cubierto sin tocar cada punto de

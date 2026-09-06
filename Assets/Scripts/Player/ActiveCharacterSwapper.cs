@@ -405,7 +405,9 @@ public class ActiveCharacterSwapper : MonoBehaviour
         if (!_ready || from == to) return;
 
         var registry = CharacterAppearanceRegistry.Instance;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ActiveCharacterSwapper] SwitchCharacter {from}→{to} | registry={(object)registry ?? "NULL"} | _ready={_ready}");
+#endif
 
         // Capturar posición actual del controller ANTES de teleportar, para anclar NPCs
         PlayerService.TryGetPlayer(out var playerGO);
@@ -492,7 +494,9 @@ public class ActiveCharacterSwapper : MonoBehaviour
 
             if (willPinnedOrInCinematic)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[ActiveCharacterSwapper] Will NPC anclado (modo Libre) o en cinemática — no se reposiciona al cambiar de personaje.");
+#endif
             }
             else
             {
@@ -520,7 +524,9 @@ public class ActiveCharacterSwapper : MonoBehaviour
     /// </summary>
     public void ResetState()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ActiveCharacterSwapper] 🔄 Reseteando estado.");
+#endif
         DestroyWillNpc();
 
         // FIX: red de seguridad para el bug "dos Estelas y un Will" tras Game Over. En el camino
@@ -677,14 +683,18 @@ public class ActiveCharacterSwapper : MonoBehaviour
             var npcBuilder = go.GetComponentInChildren<ModularAutoBuilder>(true);
             if (npcBuilder == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ActiveCharacterSwapper] willNpcPrefab '{go.name}' sin ModularAutoBuilder — activando partes por nombre como fallback.");
+#endif
                 ActivateWillPartsByName(go, willAppearance);
             }
             else if (willAppearance != null)
             {
                 npcBuilder.DeactivateAllCategories();
                 npcBuilder.ApplySelection(willAppearance);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ActiveCharacterSwapper] SpawnWillNpc — apariencia aplicada al NPC ({willAppearance.Count} partes).");
+#endif
             }
         }
 
@@ -1030,7 +1040,9 @@ public class ActiveCharacterSwapper : MonoBehaviour
             if (shouldBeActive) activated++;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ActiveCharacterSwapper] ActivateWillPartsByName — {activated}/{partNames.Count} partes activadas en '{npcRoot.name}'.");
+#endif
     }
 
     private void WarpNpcToPosition(NPCPartyMember npc, Vector3 pos, Quaternion rot)

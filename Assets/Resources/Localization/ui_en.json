@@ -1467,6 +1467,142 @@
         {
             "key": "WOODS_EXIT_BLOCKED",
             "value": "I should talk to that guard."
+        },
+        {
+            "key": "EQUIP_CATEGORY_WEAPONR",
+            "value": "Right-Hand Weapon"
+        },
+        {
+            "key": "EQUIP_CATEGORY_SHIELDR",
+            "value": "Left-Hand Shield"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BOW",
+            "value": "Bow"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BODY",
+            "value": "Clothing"
+        },
+        {
+            "key": "EQUIP_CATEGORY_CLOAK",
+            "value": "Cloak"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HEAD",
+            "value": "Head"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAIR",
+            "value": "Hair"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYES",
+            "value": "Eyes"
+        },
+        {
+            "key": "EQUIP_CATEGORY_MOUTH",
+            "value": "Mouth"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAT",
+            "value": "Helmet"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYEBROW",
+            "value": "Eyebrow"
+        },
+        {
+            "key": "EQUIP_CATEGORY_ACCESSORY",
+            "value": "Accessory"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_TITLE",
+            "value": "Physical Attack"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_DESC",
+            "value": "Basic melee strike."
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_TITLE",
+            "value": "Magic"
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_DESC",
+            "value": "Lets you channel and cast spells."
+        },
+        {
+            "key": "ABILITY_DASH_TITLE",
+            "value": "Dash"
+        },
+        {
+            "key": "ABILITY_DASH_DESC",
+            "value": "Quick dodge to avoid damage."
+        },
+        {
+            "key": "ABILITY_BLOCK_TITLE",
+            "value": "Block"
+        },
+        {
+            "key": "ABILITY_BLOCK_DESC",
+            "value": "Raises your guard to reduce damage."
+        },
+        {
+            "key": "ABILITY_SWIM_TITLE",
+            "value": "Swim"
+        },
+        {
+            "key": "ABILITY_SWIM_DESC",
+            "value": "Lets you move through water."
+        },
+        {
+            "key": "ABILITY_JUMP_TITLE",
+            "value": "Jump"
+        },
+        {
+            "key": "ABILITY_JUMP_DESC",
+            "value": "Basic ability to overcome obstacles."
+        },
+        {
+            "key": "ABILITY_CLIMB_TITLE",
+            "value": "Climb"
+        },
+        {
+            "key": "ABILITY_CLIMB_DESC",
+            "value": "Lets you climb vertical surfaces."
+        },
+        {
+            "key": "ABILITY_MAGIC_TITLE",
+            "value": "Magic"
+        },
+        {
+            "key": "ABILITY_MAGIC_DESC",
+            "value": "Unlocks the use of spells."
+        },
+        {
+            "key": "ABILITY_FLY_TITLE",
+            "value": "Fly"
+        },
+        {
+            "key": "ABILITY_FLY_DESC",
+            "value": "Lets you travel through the air."
+        },
+        {
+            "key": "ABILITY_SPRINT_TITLE",
+            "value": "Sprint"
+        },
+        {
+            "key": "ABILITY_SPRINT_DESC",
+            "value": "Run faster for a limited time."
+        },
+        {
+            "key": "ABILITY_SHIELD_TITLE",
+            "value": "Shield"
+        },
+        {
+            "key": "ABILITY_SHIELD_DESC",
+            "value": "Raises a shield to block enemy attacks."
         }
     ]
 }

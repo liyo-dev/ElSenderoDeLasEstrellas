@@ -104,7 +104,11 @@ public class MagicCaster : MonoBehaviour, IMagicCaster
         spawner.Spawn(slot);
 
         if (showDebugLogs) 
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MagicCaster] Lanzado {spell.displayName} - Maná restante: {manaPool.Current:F1}");
+#endif
+            }
 
         return true;
     }

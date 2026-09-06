@@ -38,7 +38,9 @@ public class DedicationController : MonoBehaviour
         // Validar referencias
         if (textLine1 == null || textLine2 == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DedicationController] ¡Error! Faltan referencias a los textos. Por favor asigna textLine1 y textLine2 en el Inspector.");
+#endif
             return;
         }
 
@@ -172,11 +174,15 @@ public class DedicationController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(mainMenuSceneName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DedicationController] ¡Error! El nombre de la escena del menú principal está vacío.");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[DedicationController] Cargando escena: {mainMenuSceneName}");
+#endif
         SceneManager.LoadScene(mainMenuSceneName);
     }
 

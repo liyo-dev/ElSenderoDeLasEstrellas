@@ -545,7 +545,9 @@ public class EnemyProjectile : MonoBehaviour
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[EnemyProjectile] No se pudo aplicar daño a {target.name}");
+#endif
     }
 
     public void DestroyProjectile()

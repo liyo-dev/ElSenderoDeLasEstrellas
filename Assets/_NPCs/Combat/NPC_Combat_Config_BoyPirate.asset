@@ -15,7 +15,7 @@ MonoBehaviour:
   moduleName: 
   description: 
   health: 100
-  detectionRange: 5
+  detectionRange: 10
   fieldOfView: 160
   minAttackDistance: 3
   maxAttackDistance: 4
@@ -34,6 +34,7 @@ MonoBehaviour:
   dialogueOnDefeat: {fileID: 0}
   dialogueAfterDefeat: {fileID: 11400000, guid: c1edb2972b0c93d44ab8f40806103ebc, type: 2}
   waitForAlertDialogue: 1
+  freezePlayerOnAlert: 1
   postDeathBehavior: 1
   postDefeatAction: 0
   postDefeatMoveAnchor: 
@@ -85,6 +86,10 @@ MonoBehaviour:
   maxCoverDistance: 15
   coverStayDuration: 4
   preferShieldOverCover: 1
+  maxConcurrentAttackersOnTarget: 0
+  difficultyLevel: 0.65
+  deceptionChance: 0.25
+  minAttacksToKeepForAmbush: 1
   activelySearchForPlayer: 1
   searchDuration: 15
   passiveSearchDuration: 8

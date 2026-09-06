@@ -361,7 +361,9 @@ public class SleepTrigger : MonoBehaviour
     {
         if (string.IsNullOrEmpty(persistenceId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[SleepTrigger] '{name}' tiene playOnlyOnce=true pero persistenceId está vacío. El trigger no se desactivará.", this);
+#endif
             return false;
         }
         var preset = GameBootService.Profile?.GetActivePresetResolved();

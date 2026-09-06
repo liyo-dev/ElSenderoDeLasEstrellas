@@ -238,7 +238,9 @@ public class EnvironmentController : MonoBehaviour
     {
         if (_cinematicOverrideActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[EnvironmentController] BeginCinematicOverride llamado pero ya hay un override activo.");
+#endif
             return;
         }
         
@@ -256,7 +258,9 @@ public class EnvironmentController : MonoBehaviour
         if (!_hasSnapshot && _mode != EnvironmentMode.Interior)
             CaptureExteriorSnapshot();
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[EnvironmentController] 🎬 Cinematic Override INICIADO - Modo guardado: {_preCinematicMode}");
+#endif
     }
     
     /// <summary>
@@ -267,12 +271,16 @@ public class EnvironmentController : MonoBehaviour
     {
         if (!_cinematicOverrideActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[EnvironmentController] EndCinematicOverride llamado pero no hay override activo.");
+#endif
             return;
         }
         
         // IMPORTANTE: Desactivar el flag DESPUÉS de aplicar, para que la protección cinemática no bloquee
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[EnvironmentController] 🎬 Cinematic Override FINALIZADO - Restaurando modo: {_preCinematicMode}");
+#endif
         
         // Restaurar el estado del entorno según el modo pre-cinemático
         // Usamos métodos de aplicación FORZADA que ignoran la protección cinemática
@@ -306,7 +314,9 @@ public class EnvironmentController : MonoBehaviour
     {
         if (!_cinematicOverrideActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[EnvironmentController] ApplyExteriorForCinematic requiere BeginCinematicOverride primero.");
+#endif
             return;
         }
         
@@ -350,7 +360,9 @@ public class EnvironmentController : MonoBehaviour
     {
         if (!_cinematicOverrideActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[EnvironmentController] ApplyInteriorForCinematic requiere BeginCinematicOverride primero.");
+#endif
             return;
         }
         
@@ -491,7 +503,9 @@ public class EnvironmentController : MonoBehaviour
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[EnvironmentController] 🔧 ForceApplyInteriorTo - Aplicando configuración completa de interior");
+#endif
 
         // Aplicar configuración de cámara (clearFlags, backgroundColor, skybox)
         if (env && env.useSolidColorBackground)
@@ -499,13 +513,17 @@ public class EnvironmentController : MonoBehaviour
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = env.interiorBgColor;
             RenderSettings.skybox = null;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[EnvironmentController] - SolidColor: {env.interiorBgColor}");
+#endif
         }
         else
         {
             cam.clearFlags = CameraClearFlags.Skybox;
             RenderSettings.skybox = (env && env.interiorSkyboxOverride) ? env.interiorSkyboxOverride : null;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[EnvironmentController] - Skybox: {(env?.interiorSkyboxOverride != null ? env.interiorSkyboxOverride.name : "null")}");
+#endif
         }
         
         // IMPORTANTE: Aplicar ajuste de clipping de cámara
@@ -517,7 +535,9 @@ public class EnvironmentController : MonoBehaviour
                 _farClipModified = true;
             }
             cam.farClipPlane = env.interiorFarClipPlane;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[EnvironmentController] - FarClipPlane ajustado a: {env.interiorFarClipPlane}");
+#endif
         }
 
         // Aplicar gestión de zonas visibles
@@ -549,7 +569,9 @@ public class EnvironmentController : MonoBehaviour
     /// </summary>
     void ForceApplyExteriorTo(Camera cam)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[EnvironmentController] 🔧 ForceApplyExteriorTo - Aplicando configuración completa de exterior");
+#endif
         
         if (cam) cam.clearFlags = _hasSnapshot ? _savedClearFlags : CameraClearFlags.Skybox;
 
@@ -579,7 +601,9 @@ public class EnvironmentController : MonoBehaviour
         {
             cam.farClipPlane = _savedFarClipPlane;
             _farClipModified = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[EnvironmentController] - FarClipPlane restaurado a: {_savedFarClipPlane}");
+#endif
         }
 
         // Restaurar zonas ocultas

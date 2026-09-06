@@ -308,7 +308,9 @@ namespace Game.Cinematics
                     if (!preset.flags.Contains(flag))
                     {
                         preset.flags.Add(flag);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[Cinematic] Marcada como vista: {id}");
+#endif
                     }
                 }
             }
@@ -319,7 +321,9 @@ namespace Game.Cinematics
             // Verificar si ya se vio y es de un solo uso
             if (singleUse && HasBeenSeen())
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Cinematic] Omitiendo cinemática '{GetPersistenceId()}' porque ya fue vista.");
+#endif
                 return;
             }
             
@@ -328,7 +332,9 @@ namespace Game.Cinematics
 
         private IEnumerator PlayRoutine()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Cinematic] Iniciando secuencia con {steps.Count} pasos.");
+#endif
             IsAnyCinematicPlaying = true;
             s_activeInstance = this; // FIX A9 (auditoría 2026-08-07)
 
@@ -384,7 +390,9 @@ namespace Game.Cinematics
                     // Si no tiene Brain y tenemos una customBrainCamera, usar esa
                     if (_brain == null && customBrainCamera != null)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log("[Cinematic] Usando Custom Brain Camera.");
+#endif
                         _brain = customBrainCamera.GetComponent<CinemachineBrain>();
                         customBrainCamera.gameObject.SetActive(true);
                         
@@ -395,7 +403,9 @@ namespace Game.Cinematics
                     
                     if (_brain == null)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning("[Cinematic] ⚠️ NO SE ENCONTRÓ CINEMACHINE BRAIN. Se forzará control directo de la cámara.");
+#endif
                         forceDirectCameraControl = true;
                     }
                 }
@@ -408,7 +418,9 @@ namespace Game.Cinematics
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[Cinematic] ❌ NO HAY MAIN CAMERA en la escena.");
+#endif
             }
             
             // 3. Desactivar la cámara virtual de gameplay de Cinemachine (si existe y usamos Cinemachine)
@@ -418,7 +430,9 @@ namespace Game.Cinematics
                 if (_mainGameplayCamera != null)
                 {
                     _originalGameplayCameraPriority = _mainGameplayCamera.Priority.Value;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[Cinematic] Desactivando cámara de gameplay Cinemachine (Priority: {_originalGameplayCameraPriority} -> 0)");
+#endif
                     _mainGameplayCamera.Priority.Value = 0;
                 }
             }
@@ -427,7 +441,9 @@ namespace Game.Cinematics
             for (int i = 0; i < steps.Count; i++)
             {
                 var step = steps[i];
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Cinematic] Ejecutando paso: {step.name}");
+#endif
 
                 // 0. Blackout INICIAL (Start With Blackout)
                 if (step.startWithBlackout) 
@@ -482,13 +498,17 @@ namespace Game.Cinematics
                     {
                         // Usar el método específico para cinemáticas que aplica skybox/exterior
                         EnvironmentController.Instance.ApplyExteriorForCinematic(activeRenderCam);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log("[Cinematic] Aplicando entorno EXTERIOR para este paso");
+#endif
                     }
                     else if (step.isInteriorStep)
                     {
                         // Usar el método específico para cinemáticas que aplica config de interior
                         EnvironmentController.Instance.ApplyInteriorForCinematic(activeRenderCam);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log("[Cinematic] Aplicando entorno INTERIOR para este paso");
+#endif
                     }
                 }
 
@@ -620,7 +640,9 @@ namespace Game.Cinematics
                             if (spawner.rotationLoops != 0)
                                 t.SetLoops(spawner.rotationLoops, spawner.rotationLoopType);
                             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[Cinematic] Animating rotation for {instance.name}: {spawner.targetRotation} over {spawner.rotationDuration}s");
+#endif
                         }
 
                         // Animación Escala
@@ -841,7 +863,9 @@ namespace Game.Cinematics
             // Reactivar la cámara de gameplay de Cinemachine (si existe)
             if (_mainGameplayCamera != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Cinematic] Restaurando cámara de gameplay Cinemachine (Priority: {_originalGameplayCameraPriority})");
+#endif
                 _mainGameplayCamera.Priority.Value = _originalGameplayCameraPriority;
             }
             
@@ -856,7 +880,9 @@ namespace Game.Cinematics
             if (singleUse) MarkAsSeen();
             
             onCinematicEnd?.Invoke();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[Cinematic] Secuencia finalizada.");
+#endif
         }
 
         // ------------------------------------------------------------------------
@@ -887,7 +913,9 @@ namespace Game.Cinematics
             var extraCam = cam.GetComponent<Camera>();
             if (extraCam != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[Cinematic] ⚠️ La cámara virtual '{cam.name}' tiene un componente Camera. Esto puede causar problemas de renderizado. Se desactivará el componente Camera.");
+#endif
                 extraCam.enabled = false;
             }
 
@@ -897,7 +925,9 @@ namespace Game.Cinematics
             {
                 lens.FarClipPlane = 5000f;
                 cam.Lens = lens;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Cinematic] 🔧 Ajustado FarClipPlane de '{cam.name}' a 5000 para asegurar visibilidad del Skybox.");
+#endif
             }
 
             if (_lastActiveCamera != null && _lastActiveCamera != cam)
@@ -909,7 +939,9 @@ namespace Game.Cinematics
             SetCameraPriority(cam, 9999);
             
             _lastActiveCamera = cam;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Cinematic] Activando cámara manual: {cam.name} (Priority 9999)");
+#endif
         }
 
         private void SetCameraPriority(CinemachineCamera cam, int priority)

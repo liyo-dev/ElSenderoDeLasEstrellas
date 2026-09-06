@@ -124,7 +124,20 @@ namespace Game.NPC.States
                     searchDuration = cc.searchDuration,
                     passiveSearchDuration = cc.passiveSearchDuration,
                     searchMovementRadius = cc.searchMovementRadius,
-                    returnToOriginAfterSearch = cc.returnToOriginAfterSearch
+                    returnToOriginAfterSearch = cc.returnToOriginAfterSearch,
+
+                    // 👥 PROPUESTA (4 sep 2026): coordinación de equipo (ver NPCAttackCoordinator) —
+                    // antes faltaba en este mapeo, así que aunque se configurara en el
+                    // NPCCombatConfig se quedaba siempre en 0 (desactivado) al llegar al Brain.
+                    maxConcurrentAttackersOnTarget = cc.maxConcurrentAttackersOnTarget,
+
+                    // 🏃 PROPUESTA (4 sep 2026): retirada táctica (ver State_TacticalRetreat) — mismo
+                    // caso que arriba: useTacticalRetreat/retreatHealthThreshold/retreatCooldown ya
+                    // existían en el NPCCombatConfig pero no llegaban al Brain, así que la retirada
+                    // (con el componente NPCTacticalRetreat.cs ya implementado) nunca se disparaba.
+                    useTacticalRetreat = cc.useTacticalRetreat,
+                    retreatHealthThreshold = cc.retreatHealthThreshold,
+                    retreatCooldown = cc.retreatCooldown
                 };
 
                 // ¡ARRANCAR LA FSM DE COMBATE!

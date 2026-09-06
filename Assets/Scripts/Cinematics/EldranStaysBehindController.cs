@@ -77,7 +77,9 @@ public class EldranStaysBehindController : MonoBehaviour
         var anchor = SpawnAnchor.FindById(waitingAnchorId);
         if (anchor == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[EldranStaysBehindController] No se encontró el anchor '{waitingAnchorId}' — Eldran se queda donde estaba.");
+#endif
             return;
         }
 

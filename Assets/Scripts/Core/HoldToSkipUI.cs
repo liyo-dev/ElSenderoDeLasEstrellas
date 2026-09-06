@@ -135,7 +135,9 @@ public class HoldToSkipUI : MonoBehaviour
             
             if (success)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[HoldToSkipUI] ✅ Input configurado exitosamente (intento {attempts + 1}/{maxAttempts})");
+#endif
                 yield break;
             }
             
@@ -143,12 +145,16 @@ public class HoldToSkipUI : MonoBehaviour
             
             if (attempts < maxAttempts)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[HoldToSkipUI] ⏳ Input no disponible, reintentando... ({attempts}/{maxAttempts})");
+#endif
                 yield return new WaitForSecondsRealtime(0.2f);
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogError($"[HoldToSkipUI] ❌ No se pudo configurar input tras {maxAttempts} intentos");
+#endif
     }
 
     private bool TryConfigureInput()
@@ -170,7 +176,9 @@ public class HoldToSkipUI : MonoBehaviour
                 holdAction.started  += OnHoldStarted;
                 holdAction.canceled += OnHoldCanceled;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[HoldToSkipUI] ✅ Usando UI/Submit desde PlayerInputManager - Enabled: {holdAction.enabled}");
+#endif
                 return true;
             }
         }
@@ -179,14 +187,18 @@ public class HoldToSkipUI : MonoBehaviour
         if (holdActionRef != null && holdActionRef.action != null)
         {
             string actionName = holdActionRef.action.name;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[HoldToSkipUI] Intentando usar InputActionReference: {actionName}");
+#endif
             
             holdAction = holdActionRef.action;
             if (!holdAction.enabled) holdAction.Enable();
             holdAction.started  += OnHoldStarted;
             holdAction.canceled += OnHoldCanceled;
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[HoldToSkipUI] ✅ Usando InputActionReference: {actionName}");
+#endif
             return true;
         }
         
@@ -203,7 +215,9 @@ public class HoldToSkipUI : MonoBehaviour
             holdAction.started  += OnHoldStarted;
             holdAction.canceled += OnHoldCanceled;
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[HoldToSkipUI] ⚠️ Usando fallback multi-input (Gamepad/Teclado)");
+#endif
             return true;
         }
         
@@ -261,13 +275,17 @@ public class HoldToSkipUI : MonoBehaviour
             // Log cada 0.25 segundos aprox
             if (Mathf.FloorToInt(heldTime * 4f) != Mathf.FloorToInt((heldTime - Time.unscaledDeltaTime) * 4f))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[HoldToSkipUI] 📊 Progreso: {t:P0} ({heldTime:F2}s / {holdSeconds:F2}s)");
+#endif
             }
 
             if (t >= 1f)
             {
                 completed = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[HoldToSkipUI] ✅ COMPLETADO - Ejecutando skip action");
+#endif
                 ExecuteSkipAction();
                 if (disableSelfOnSkip) gameObject.SetActive(false);
             }
@@ -303,7 +321,9 @@ public class HoldToSkipUI : MonoBehaviour
         if (timelineToStop != null)
         {
             timelineToStop.Stop();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[HoldToSkipUI] Timeline detenido: {timelineToStop.name}");
+#endif
         }
         else
         {
@@ -312,11 +332,15 @@ public class HoldToSkipUI : MonoBehaviour
             if (director != null)
             {
                 director.Stop();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[HoldToSkipUI] Timeline encontrado y detenido: {director.name}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[HoldToSkipUI] No se encontró ningún PlayableDirector para detener.");
+#endif
             }
         }
     }
@@ -329,7 +353,9 @@ public class HoldToSkipUI : MonoBehaviour
         if (progressCircle) progressCircle.fillAmount = 0f;
         if (showOnlyWhileHolding) targetAlpha = 1f;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[HoldToSkipUI] 🎮 Input STARTED - Botón presionado");
+#endif
     }
 
     private void OnHoldCanceled(InputAction.CallbackContext _)
@@ -342,7 +368,9 @@ public class HoldToSkipUI : MonoBehaviour
         }
         if (showOnlyWhileHolding) targetAlpha = 0f;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[HoldToSkipUI] 🎮 Input CANCELED - Botón soltado (completed={completed})");
+#endif
     }
 
     private void ResetHold()

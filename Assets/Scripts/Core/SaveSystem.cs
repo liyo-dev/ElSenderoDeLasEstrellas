@@ -51,7 +51,9 @@ public class SaveSystem : MonoBehaviour
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SaveSystem] Error al guardar: {e}");
+#endif
             return false;
         }
     }
@@ -68,7 +70,9 @@ public class SaveSystem : MonoBehaviour
         var tmpPath = SavePath + ".tmp";
         if (File.Exists(tmpPath) && LoadFromPath(tmpPath, out data))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[SaveSystem] save.json no disponible/corrupto; recuperado desde save.json.tmp de un guardado interrumpido.");
+#endif
             return true;
         }
 
@@ -103,7 +107,9 @@ public class SaveSystem : MonoBehaviour
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SaveSystem] Error al cargar ({path}): {e}");
+#endif
             data = default;
             return false;
         }
@@ -116,13 +122,17 @@ public class SaveSystem : MonoBehaviour
             if (File.Exists(SavePath))
             {
                 File.Delete(SavePath);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[SaveSystem] Partida eliminada: {SavePath}");
+#endif
             }
             return true;
         }
         catch (System.Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SaveSystem] Error al borrar: {e}");
+#endif
             return false;
         }
     }

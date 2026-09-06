@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000004, guid: 57a29d89afb64fc46b449e14b967228a, type: 2}
+  m_LightingDataAsset: {fileID: 112000002, guid: da92805480ba8884e8b8f48126457f8b, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1616,7 +1616,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_TargetDisplay: 0
 --- !u!224 &181093088
 RectTransform:
@@ -5593,7 +5593,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 50
   m_TargetDisplay: 0
 --- !u!224 &621423747
 RectTransform:
@@ -6513,7 +6513,7 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
+  excludeFromBossIntroHide: 1
 --- !u!1 &718997811
 GameObject:
   m_ObjectHideFlags: 0

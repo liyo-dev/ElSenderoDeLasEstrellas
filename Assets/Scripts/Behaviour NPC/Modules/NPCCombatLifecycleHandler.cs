@@ -159,7 +159,9 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[Lifecycle] ❌ Damageable SIGUE siendo null en Start() para {name}");
+#endif
                     return;
                 }
             }
@@ -271,8 +273,18 @@ namespace Game.NPC.Modules
             if (!isLethalHit && enableHitStop) FeedbackService.HitStop(hitStopTimeScale, hitStopDuration);
 
             // 2. Detener movimiento físico
-            bool wasMoving = _agent != null && _agent.enabled && !_agent.isStopped;
-            if (_agent && _agent.enabled) _agent.isStopped = true;
+            // ✅ FIX (04 sep 2026): mismo patrón de bug que Spider1AI.EnterChaseMode (incidencia de
+            // hoy) — tocar _agent.isStopped comprobando solo _agent.enabled no basta. Desde que
+            // NPCBehaviourManagerV2 tiene el sistema de sueño por distancia (EnterFarState/
+            // ExitFarState, hoy), un NPC recién "despertado" puede tener _agent.enabled = true un
+            // frame antes de que Unity lo haya colocado realmente en el NavMesh (isOnNavMesh sigue
+            // en false hasta que ExitFarState complete su SamplePosition/Warp). Si un proyectil de
+            // daño golpea justo en ese frame, tocar isStopped lanza "can only be called on an
+            // active agent that has been placed on a NavMesh". Se añade el mismo guard isOnNavMesh
+            // que ya usa el resto del script (DeathRoutine más abajo tenía el mismo hueco, ver fix
+            // gemelo un poco más adelante).
+            bool wasMoving = _agent != null && _agent.enabled && _agent.isOnNavMesh && !_agent.isStopped;
+            if (_agent && _agent.enabled && _agent.isOnNavMesh) _agent.isStopped = true;
 
             // 3. Esperar Stun (usar WaitForSecondsRealtime si está en slow-mo)
             if (isLethalHit && enableDeathEffects)
@@ -311,7 +323,7 @@ namespace Game.NPC.Modules
                     _animator.TransitionToIdle(); // Forzar vuelta a idle de combate
                 }
 
-                if (_agent && _agent.enabled && wasMoving) 
+                if (_agent && _agent.enabled && _agent.isOnNavMesh && wasMoving) 
                     _agent.isStopped = false;
             }
             // Si el NPC murió, NO hacer transición a Idle - DeathRoutine se encargará
@@ -393,7 +405,10 @@ namespace Game.NPC.Modules
             // el NPC podía morir a mitad de una animación de defensa y quedarse con el prefab del
             // escudo instanciado y visible sobre el cadáver.
             _shieldController?.StopDefending();
-            if (_agent && _agent.enabled) { _agent.isStopped = true; _agent.velocity = Vector3.zero; }
+            // ✅ FIX (04 sep 2026): mismo guard isOnNavMesh que en DamageSequence (ver comentario
+            // arriba) — un NPC muerto por un golpe justo al "despertar" del sueño por distancia
+            // podía llegar aquí con _agent.enabled = true pero isOnNavMesh todavía false.
+            if (_agent && _agent.enabled && _agent.isOnNavMesh) { _agent.isStopped = true; _agent.velocity = Vector3.zero; }
             if (_manager.Context != null)
             {
                 _manager.Context.IsInCombat = false;
@@ -1122,7 +1137,9 @@ namespace Game.NPC.Modules
                     // ✅ Validación exhaustiva del NavMeshAgent
                     if (!_agent.isOnNavMesh)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[Lifecycle] ❌ {name} NO está en NavMesh! Posición: {transform.position}");
+#endif
                         SetupPostCombatInteraction();
                         yield break;
                     }
@@ -1156,7 +1173,9 @@ namespace Game.NPC.Modules
                     
                     if (_agent.path.status != NavMeshPathStatus.PathComplete)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[Lifecycle] ❌ {name} no puede calcular path hacia {targetPos}! Status: {_agent.path.status}");
+#endif
                         SetupPostCombatInteraction();
                         yield break;
                     }
@@ -1408,7 +1427,9 @@ namespace Game.NPC.Modules
                     // ✅ Validación exhaustiva del NavMeshAgent
                     if (!memberAgent.isOnNavMesh)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[Lifecycle] ❌ Miembro {member.name} NO está en NavMesh! Posición: {member.transform.position}");
+#endif
                         continue; // Saltar este miembro
                     }
                     
@@ -1454,7 +1475,9 @@ namespace Game.NPC.Modules
                     
                     if (memberAgent.path.status != NavMeshPathStatus.PathComplete)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[Lifecycle] ❌ Miembro {member.name} no puede calcular path hacia {targetPos}! Status: {memberAgent.path.status}");
+#endif
                         member.PopExternalMovementOverride();
                         continue; // Saltar este miembro
                     }

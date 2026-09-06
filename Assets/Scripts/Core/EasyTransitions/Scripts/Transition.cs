@@ -41,7 +41,11 @@ namespace EasyTransition
 
             //Checking if the materials were correctly set
             if (multiplyColorMaterial == null || additiveColorMaterial == null)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("There are no color tint materials set for the transition. Changing the color tint will not affect the transition anymore!");
+#endif
+                }
 
             //Changing the color of the transition
             if (!transitionSettings.isCutoutTransition)

@@ -87,7 +87,9 @@ namespace Game.NPC
             _partyMember = GetComponent<NPCPartyMember>();
             if (_partyMember == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[CompanionFollowPrompt:{name}] NPCPartyMember no encontrado — desactivando.");
+#endif
                 enabled = false;
                 return;
             }

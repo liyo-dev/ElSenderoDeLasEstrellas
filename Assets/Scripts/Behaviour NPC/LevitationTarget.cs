@@ -424,7 +424,9 @@ public class LevitationTarget : MonoBehaviour
         }
         else if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[LevitationTarget] {name}: no se encontró NavMesh cercano tras aterrizar (radio {fallbackSampleRadius}m); el agente permanece desactivado para no congelar al NPC en el aire.");
+#endif
         }
     }
 

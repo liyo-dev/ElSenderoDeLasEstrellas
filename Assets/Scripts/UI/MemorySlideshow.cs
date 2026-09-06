@@ -59,7 +59,9 @@ public class MemorySlideshow : MonoBehaviour
         }
         else if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[MemorySlideshow:{name}] No hay imágenes hijas para mostrar");
+#endif
         }
     }
     
@@ -81,14 +83,18 @@ public class MemorySlideshow : MonoBehaviour
                 _memoryImages.Add(image);
                 if (showDebugLogs)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[MemorySlideshow:{name}] Imagen encontrada: {child.name}");
+#endif
                 }
             }
         }
         
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MemorySlideshow:{name}] Total de imágenes encontradas: {_memoryImages.Count}");
+#endif
         }
     }
     
@@ -185,7 +191,9 @@ public class MemorySlideshow : MonoBehaviour
                 
                 if (showDebugLogs)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[MemorySlideshow:{name}] Mostrando imagen {imageIndex}: {image.name}");
+#endif
                 }
                 
                 // Fade in
@@ -213,7 +221,9 @@ public class MemorySlideshow : MonoBehaviour
         
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MemorySlideshow:{name}] Slideshow finalizado");
+#endif
         }
         
         _slideshowCoroutine = null;

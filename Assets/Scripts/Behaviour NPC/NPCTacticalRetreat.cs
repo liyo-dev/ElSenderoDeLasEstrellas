@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -56,6 +56,14 @@ namespace Game.NPC
         private Transform _currentCoverObject;
         private float _coverStayTimer;
         private bool _isBehindCover;
+
+        // ✅ FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation): la llegada a
+        // cobertura se detectaba solo por distancia en línea recta (1.5m) sin mirar el propio
+        // NavMeshAgent.stoppingDistance NI tener ningún margen de seguridad — si el
+        // stoppingDistance heredado era >= 1.5m, Unity frenaba al NPC un poco antes de esos
+        // 1.5m y se quedaba "huyendo" para siempre, sin llegar nunca a _isBehindCover=true.
+        private float _retreatApproachTimer;
+        private const float RETREAT_APPROACH_MAX_TIME = 8f;
         private List<Vector3> _evaluatedPositions = new List<Vector3>();
         
         // ✅ OPTIMIZACIÓN FASE 2: Buffer reutilizable para Physics queries
@@ -83,13 +91,16 @@ namespace Game.NPC
 
             if (!FindNearestCover(out Vector3 coverPosition, out Transform coverObject))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[NPCTacticalRetreat] ❌ No se encontró cobertura disponible");
+#endif
                 return false;
             }
 
             _currentCoverPosition = coverPosition;
             _currentCoverObject = coverObject;
             _coverStayTimer = coverStayDuration;
+            _retreatApproachTimer = 0f;
             IsRetreating = true;
             _isBehindCover = false;
 
@@ -98,7 +109,9 @@ namespace Game.NPC
             {
                 _agent.isStopped = false;
                 _agent.SetDestination(coverPosition);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCTacticalRetreat] 🏃 Huyendo hacia cobertura: {coverObject?.name} en {coverPosition}");
+#endif
             }
 
             return true;
@@ -116,7 +129,9 @@ namespace Game.NPC
             _coverStayTimer = 0f;
             _evaluatedPositions.Clear();
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[NPCTacticalRetreat] 🛡️ Saliendo de cobertura, volviendo a combate");
+#endif
         }
 
         void Update()
@@ -137,12 +152,21 @@ namespace Game.NPC
             // Verificar si llegó a la cobertura
             if (_currentCoverPosition.HasValue && !_isBehindCover)
             {
+                _retreatApproachTimer += Time.deltaTime;
+
                 float distanceToCover = Vector3.Distance(transform.position, _currentCoverPosition.Value);
-                if (distanceToCover < 1.5f) // Tolerancia de llegada
+                float arriveThreshold = Mathf.Max(1.5f, (_agent != null ? _agent.stoppingDistance : 0f) + 0.1f);
+                bool agentSettled = _agent != null && !_agent.pathPending && _agent.remainingDistance <= arriveThreshold;
+
+                if (distanceToCover < 1.5f // Tolerancia de llegada (caso normal, stoppingDistance pequeño)
+                    || agentSettled // el propio agente ya se frenó cerca del destino (stoppingDistance grande)
+                    || _retreatApproachTimer >= RETREAT_APPROACH_MAX_TIME) // salvaguarda: pathing bloqueado, cobertura inalcanzable, etc.
                 {
                     _isBehindCover = true;
                     _agent.isStopped = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[NPCTacticalRetreat] ✅ Llegó a cobertura, permanecerá por " + coverStayDuration + "s");
+#endif
                 }
             }
 
@@ -152,7 +176,9 @@ namespace Game.NPC
                 // Si el jugador puede ver al NPC, la cobertura no es efectiva
                 if (HasLineOfSight(_player.position))
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NPCTacticalRetreat] ⚠️ Cobertura comprometida, jugador tiene LOS");
+#endif
                     // Podría buscar nueva cobertura aquí si se desea
                 }
             }
@@ -168,7 +194,9 @@ namespace Game.NPC
 
             if (_player == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[NPCTacticalRetreat] No hay referencia al jugador");
+#endif
                 return false;
             }
 
@@ -177,7 +205,9 @@ namespace Game.NPC
             
             if (hitCount == 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[NPCTacticalRetreat] No hay objetos cercanos que sirvan de cobertura");
+#endif
                 return false;
             }
 
@@ -234,7 +264,9 @@ namespace Game.NPC
             {
                 coverPosition = bestPosition;
                 coverObject = bestObject;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCTacticalRetreat] ✅ Cobertura encontrada: {bestObject.name} (Score: {bestScore:F2})");
+#endif
                 return true;
             }
 

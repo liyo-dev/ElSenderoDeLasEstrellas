@@ -107,14 +107,24 @@ public class NPCEmotionController : MonoBehaviour
         
         if (debugMode)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] ✅ Encontrados {_eyeMeshes.Count} meshes de ojos, {_mouthMeshes.Count} meshes de boca");
             Debug.Log($"[NPCEmotionController:{name}] 💾 Estado original configurado - Ojos: {_originalEyeMeshName ?? "auto"}, Boca: {_originalMouthMeshName ?? "auto"}");
+#endif
             
             foreach (var kvp in _eyeMeshes)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"  👁️ {kvp.Key} -> {kvp.Value.name}");
+#endif
+                }
             
             foreach (var kvp in _mouthMeshes)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"  👄 {kvp.Key} -> {kvp.Value.name}");
+#endif
+                }
         }
     }
     
@@ -157,7 +167,11 @@ public class NPCEmotionController : MonoBehaviour
             return;
         
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueStarted - Guardando estado original");
+#endif
+            }
         
         _isInDialogue = true;
         
@@ -175,7 +189,11 @@ public class NPCEmotionController : MonoBehaviour
             return;
 
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueClosed - Restaurando estado original");
+#endif
+            }
 
         _isInDialogue = false;
 
@@ -198,14 +216,22 @@ public class NPCEmotionController : MonoBehaviour
         if (!_isInDialogue)
         {
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCEmotionController:{name}] 📢 Primera línea detectada - Guardando estado original ANTES de aplicar emoción");
+#endif
+                }
             
             _isInDialogue = true;
             SaveOriginalMeshes();
         }
         
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueLineChanged - Emoción: {line.emotion}");
+#endif
+            }
 
         // La cara cambia si hay emoción explícita; None mantiene la expresión actual
         // La animación corporal (Talk01/02/03, Angry, Cheer, etc.) la gestiona DialogueManager directamente
@@ -225,7 +251,11 @@ public class NPCEmotionController : MonoBehaviour
         if (emotionProfile == null)
         {
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCEmotionController:{name}] ⚠️ No hay EmotionProfile asignado");
+#endif
+                }
             return;
         }
         
@@ -233,7 +263,11 @@ public class NPCEmotionController : MonoBehaviour
             return;
         
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] 🎭 Cambiando emoción: {_currentEmotion} -> {emotion}");
+#endif
+            }
         
         _currentEmotion = emotion;
         
@@ -258,7 +292,11 @@ public class NPCEmotionController : MonoBehaviour
         if (!meshCache.TryGetValue(meshName, out GameObject targetMesh))
         {
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCEmotionController:{name}] ⚠️ Mesh de {meshType} '{meshName}' no encontrado");
+#endif
+                }
             return;
         }
         
@@ -272,7 +310,11 @@ public class NPCEmotionController : MonoBehaviour
                 kvp.Value.SetActive(shouldBeActive);
 
                 if (debugMode && shouldBeActive)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCEmotionController:{name}] ✅ Activado {meshType}: {kvp.Key}");
+#endif
+                    }
             }
         }
     }
@@ -322,7 +364,11 @@ public class NPCEmotionController : MonoBehaviour
         }
         
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] 💾 Estado original guardado - Ojos: {_originalEyeMeshName ?? "ninguno"}, Boca: {_originalMouthMeshName ?? "ninguno"}");
+#endif
+            }
     }
     
     /// <summary>
@@ -343,7 +389,11 @@ public class NPCEmotionController : MonoBehaviour
         _currentEmotion = NPCEmotion.Neutral;
         
         if (debugMode)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCEmotionController:{name}] ↩️ Estado original restaurado");
+#endif
+            }
     }
     
     #endregion

@@ -75,7 +75,7 @@ MonoBehaviour:
   shieldMaxDuration: 5
   shieldCooldown: 10
   useTacticalRetreat: 1
-  retreatHealthThreshold: 0.3
+  retreatHealthThreshold: 0.25
   retreatCooldown: 15
   coverSearchRadius: 15
   coverLayerMask:
@@ -85,6 +85,10 @@ MonoBehaviour:
   maxCoverDistance: 15
   coverStayDuration: 4
   preferShieldOverCover: 0
+  maxConcurrentAttackersOnTarget: 1
+  difficultyLevel: 0.75
+  deceptionChance: 0.25
+  minAttacksToKeepForAmbush: 1
   activelySearchForPlayer: 1
   searchDuration: 15
   passiveSearchDuration: 8

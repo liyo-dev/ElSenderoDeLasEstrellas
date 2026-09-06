@@ -60,7 +60,9 @@ namespace Game.UI
             _combatBrain = GetComponentInParent<NPCCombatBrain>();
             if (_combatBrain == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[NPCManaBarUI] No se encontró NPCCombatBrain en los padres.");
+#endif
                 gameObject.SetActive(false);
                 return;
             }

@@ -401,7 +401,9 @@ public class CreditsFlyoutPanel : MonoBehaviour
     {
         if (string.IsNullOrEmpty(fullCreditsSceneName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[CreditsFlyoutPanel] fullCreditsSceneName vacío — no se puede abrir el crawl completo.");
+#endif
             return;
         }
 

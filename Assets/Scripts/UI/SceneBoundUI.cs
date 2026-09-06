@@ -114,6 +114,28 @@ public class SceneBoundUI : MonoBehaviour
         foreach (var inst in Instances.Values)
         {
             if (inst == null) continue;
+
+            // FIX (INC-180, 6 sept 2026): una instancia excluida de BeginBossIntro()
+            // (excludeFromBossIntroHide=true, ej. DialogueManager, DramaticTextOverlayUI) nunca
+            // pasa por la rama de BeginBossIntro que captura _preBossAlpha — se queda para
+            // siempre en su valor centinela -1. Antes de este fix, EndBossIntro() procesaba
+            // TODAS las instancias sin mirar excludeFromBossIntroHide, así que para estas
+            // instancias excluidas caía siempre en el fallback "targetAlpha = 1f" de más abajo y
+            // las forzaba a alpha=1 (visibles) en cuanto terminaba la intro de CUALQUIER boss —
+            // aunque nunca hubieran sido ocultadas por BeginBossIntro ni tuvieran contenido real
+            // asignado en ese momento. Confirmado en directo con NewTextLeakWatcher: el
+            // placeholder sin traducir "New Text" del DialogueManager (excluido a propósito, ver
+            // su Awake()) aparecía encima del HUD justo al terminar la intro de cada batalla de
+            // jefe — exactamente el patrón que describía Raúl ("solo sale con los boss"). Si
+            // esta instancia nunca fue tocada por BeginBossIntro(), EndBossIntro() no debe
+            // tocarla tampoco: su visibilidad ya la gestiona su propio sistema (p.ej.
+            // DialogueManager.StartDialogue()/Close()).
+            if (inst.excludeFromBossIntroHide)
+            {
+                inst._pendingBossIntroHide = false;
+                continue;
+            }
+
             // Si seguía pendiente de opacar (el guard bloqueó durante toda la intro, ver
             // BeginBossIntro), su CanvasGroup nunca se tocó — queda en su alpha normal, que es
             // justo el estado en el que debe quedar ahora que la intro termina. Solo hace falta

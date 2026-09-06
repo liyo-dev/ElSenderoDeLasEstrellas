@@ -2,21 +2,24 @@
 • Nuevo: paneles de Notas del Parche y de Reportar un Fallo, accesibles desde el menú principal sin salir del juego.
 • Nuevo: botón Volver en la pantalla de Ajustes.
 • Arreglado: la selección del menú ya no salta al botón equivocado al cerrar Ajustes o Controles.
-• Arreglado: los textos de los botones del menú (Créditos, Notas del Parche, Reportar un Fallo, Salir) ya no salen en mayúsculas, y el cambio de idioma español/inglés se aplica correctamente en todos los textos de las escenas.
+• Arreglado: los textos de los botones del menú (Créditos, Notas del Parche, Reportar un Fallo, Salir) ya no salen en mayúsculas.
+• Arreglado: 25 textos del Menú Principal y del panel de Ajustes que se habían quedado sin traducir (botones principales, Idioma, volúmenes, sensibilidad de cámara, invertir ejes, pantalla completa, vibración, Sí/No...) — ahora cambian de idioma correctamente e íntegramente al instante.
 • Arreglado: el indicador "PRE-ALPHA" ahora se ve con claridad bajo el logo.
 • Arreglado: el icono de "mantener pulsado para saltar" vuelve a aparecer correctamente en las builds compiladas, muestra el botón correcto según el mando o teclado que uses, y ya no aparece en diálogos normales (solo en secuencias reales).
 • Arreglado: ya no es posible despertar a Will antes de tiempo durante el Prólogo manteniendo pulsado el botón de saltar.
 • Arreglado: el aviso de tutorial inicial ya no se queda visible por encima del menú de pausa.
 • Arreglado: el campo de número de build en "Reportar un Fallo" ya no se corta y se rellena solo con tu versión.
-• Arreglado: las nubes del cielo ya son visibles mientras exploras, y el techo de nubes durante una tormenta ya no se queda "bajo" al subir de altura.
-• Arreglado: los compañeros de equipo (incluido Will, cuando no es tu personaje activo) ya caminan y animan con normalidad mientras te siguen, en vez de quedarse quietos y "teletransportarse" en saltos cerca de ti.
-• Arreglado: al esprintar, tus compañeros se quedan atrás con mucha menos frecuencia.
-• Arreglado: los compañeros ya no caminan a trompicones ni tiemblan cuando reduces la velocidad (nadando, o siguiendo a un NPC durante un pop-up de lore).
-• Arreglado: las nubes sueltas del cielo se mantienen por encima de la cámara durante los diálogos (con más margen y en mayor número).
-• Arreglado: las nubes sueltas del cielo ya no se ven flotando dentro de interiores, incluidas escenas especiales como la de la taberna.
-• Mejorado: las estrellas del cielo nocturno ahora son esferas 3D con más brillo, y ya no aparecen delante de las montañas.
-• Nuevo: constelaciones propias del juego en el cielo nocturno — la Espada, la Corona y la Estrella Guía del Sendero.
-• Arreglado: las estrellas del cielo nocturno volvían a aparecer delante de las montañas en algunas partidas nuevas; corregido de raíz, y ahora quedan más altas en el cielo.
-• Varias optimizaciones internas de rendimiento.
-• Arreglado: al comer o beber una poción (o ver a un NPC hacerlo), las piernas ya no se congelan a mitad de zancada — el gesto ahora se anima solo en el torso/brazos, y la caminata sigue con normalidad.
-• Arreglado: al saludar, reír, enfadarse o hacer otros gestos (tanto NPCs como el jugador durante diálogos), las piernas ya no se congelan si estás caminando — el gesto se anima solo en el torso/brazos.
+• Arreglado: el botón "Archivar"/"Activar" del panel de misiones ya no se muestra en español cuando el juego está en inglés.
+• Arreglado: en el panel de Controles, "the Left Stick" (inglés) y "el Joystick" (español) pasan a "Left stick"/"Stick izquierdo", a juego con "Right stick"/"Stick derecho".
+• Arreglado: las nubes del cielo ahora se mueven todas en una dirección de viento coherente, en vez de cruzarse al azar en direcciones opuestas.
+• Arreglado: Will, Liam y Estela ya no tiemblan de pie, quietos, en el Menú Principal.
+• Arreglado: ya no aparece el aviso de "Escudo desbloqueado" al hablar con Erika tras el combate (sigues obteniendo el escudo igual, solo se ha quitado el aviso).
+• Cambiado: los NPCs ya no cambian a animaciones de idle alternativas al azar — se quedan siempre con su idle normal.
+• Arreglado: los NPCs de combate en solitario (ej. el Pirata) empiezan el diálogo de alerta en cuanto llegan junto a ti, sin espera adicional.
+• Arreglado: en combates de equipo (ej. Lety y Vicky), eliminada la espera de varios segundos tras la aproximación antes de que empiece el diálogo.
+• Arreglado: corregidos varios casos en los que un NPC de combate podía quedarse atascado sin motivo aparente (huyendo a cobertura, buscando, o volviendo a su posición).
+• Arreglado: los NPCs que te guían o te siguen hacia un punto (ej. Eldran) caminan con el mismo paso normal que los personajes jugables, en vez de parecer que trotan.
+• Arreglado: la cámara ya no se queda metida dentro de la cabeza de un compañero cercano durante un diálogo 1 a 1 (ej. el del Pirata).
+• Arreglado: la pose de "pensativo" de Eldran (ej. al despertar la magia de Will) ya no se ve torcida.
+• Arreglado: durante el Despertar de la Magia de Will, el bocadillo de Eldran ya no tapa el botón que hay que pulsar.
+• Arreglado: al empezar una batalla contra un jefe, ya no suena brevemente la música equivocada antes de la de combate.

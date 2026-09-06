@@ -447,7 +447,9 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             // Solo loguear cada 60 frames para no saturar
             if (Time.frameCount % 60 == 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerTargeting] UpdateMarker: Target={CurrentTarget.name}, Pos={pos}, MarkerPos={_marker.position}");
+#endif
             }
         }
 

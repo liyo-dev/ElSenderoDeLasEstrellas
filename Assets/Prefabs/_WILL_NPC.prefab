@@ -15932,6 +15932,7 @@ GameObject:
   - component: {fileID: 1093861493971799819}
   - component: {fileID: 1613471923374371259}
   - component: {fileID: 4210016675758445095}
+  - component: {fileID: 7684833946529579901}
   m_Layer: 8
   m_Name: _WILL_NPC
   m_TagString: Untagged
@@ -16075,7 +16076,7 @@ MonoBehaviour:
   inputMagnitudeDampTime: 0.1
   rotationSpeed: 360
   minRotationAngle: 5
-  interactState: InteractWithPeople_NoWeapon
+  interactState: Talk01
   greetingState: Greeting01_NoWeapon
   playGreetingOnDialogueStart: 0
   greetingDialogueState: HandWave01
@@ -16145,6 +16146,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &2620663665016725536
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -16203,6 +16205,9 @@ MonoBehaviour:
   disableWander: 0
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: CHAR_WILL
@@ -16271,6 +16276,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ModularAutoBuilder
   randomizeAtAwake: 0
   preserveActivePartsOnAwake: 1
+--- !u!114 &4210016675758445095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699691312287338962}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8f64d5eb96442293babe934966d66f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.WillIdleCommentary
+  minInterval: 28
+  maxInterval: 60
+  ambientComments:
+  - "\xBFCu\xE1nto queda para llegar?"
+  - "Todo esto sigue pareci\xE9ndome raro, la verdad."
+  - Menos mal que no vengo solo en esto.
+  - "A veces creo que ya he estado en un sitio as\xED antes... no s\xE9 por qu\xE9."
+  searchLines:
+  - "\xBFD\xF3nde habr\xE9 puesto esto...?"
+  - "Jurar\xEDa que lo ten\xEDa aqu\xED mismo."
+  - "Qu\xE9 man\xEDa tengo de perderlo todo."
+  - Un momento... no, nada, falsa alarma.
+  searchGestureState: Question01
+  searchDuration: 3
+  bubbleDuration: 3
+  weightComment: 3
+  weightSearch: 2
+  debugMode: 0
+--- !u!114 &7684833946529579901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699691312287338962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 418288d8d5b4d3f48b9cdf8bd4bf4412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCObstacleAvoidance
+  obstacleLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  lookaheadDistance: 2.2
+  castRadius: -1
+  checkInterval: 0.15
+  avoidWeight: 1.1
+  steerLerp: 8
 --- !u!1 &6707483821792758320
 GameObject:
   m_ObjectHideFlags: 0
@@ -23313,15 +23368,3 @@ Transform:
   - {fileID: 2111759721909302532}
   m_Father: {fileID: 1988228566435264110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4210016675758445095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6699691312287338962}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef8f64d5eb96442293babe934966d66f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.WillIdleCommentary

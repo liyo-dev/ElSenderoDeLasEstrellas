@@ -54,7 +54,9 @@ namespace Game.NPC
                 
                 if (npcManager == null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[NPCItemDetector:{name}] No se encontró NPCBehaviourManagerV2");
+#endif
                 }
             }
             
@@ -105,7 +107,11 @@ namespace Game.NPC
             if (questConfig == null || !questConfig.enableItemDetection)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCItemDetector:{name}] Item detection desactivado en config");
+#endif
+                    }
                 enabled = false;
                 return;
             }
@@ -117,7 +123,11 @@ namespace Game.NPC
             _cachedQuestManager = QuestManager.Instance;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Sistema de detección activado. Radio: {detectionRadius}");
+#endif
+                }
         }
         
         void OnTriggerEnter(Collider other)
@@ -135,7 +145,11 @@ namespace Game.NPC
                 }
                 
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCItemDetector:{name}] Player entró en rango");
+#endif
+                    }
             }
         }
         
@@ -154,7 +168,11 @@ namespace Game.NPC
                 }
                 
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCItemDetector:{name}] Player salió del rango");
+#endif
+                    }
             }
         }
         
@@ -244,7 +262,11 @@ namespace Game.NPC
                 
                 // ¡Encontrado! Completar el paso
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCItemDetector:{name}] Ítem detectado para quest {questId}, completando paso {entry.itemDeliveryStepIndex}");
+#endif
+                    }
                 
                 // Marcar que estamos procesando para evitar detecciones duplicadas
                 _isProcessingDelivery = true;
@@ -286,7 +308,11 @@ namespace Game.NPC
             if (!PlayerService.TryGetComponent(out Animator playerAnimator))
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NPCItemDetector:{name}] No se pudo obtener Animator del player");
+#endif
+                    }
                 return;
             }
             
@@ -301,7 +327,11 @@ namespace Game.NPC
             TrySetAnimatorFloat(playerAnimator, "VerticalVelocity", 0f);
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Jugador forzado a idle");
+#endif
+                }
         }
         
         private void TrySetAnimatorBool(Animator anim, string paramName, bool value)
@@ -349,7 +379,11 @@ namespace Game.NPC
         private System.Collections.IEnumerator ProcessItemDelivery(GameObject itemObject, string questId, int stepIndex, Game.NPC.Modules.QuestChainEntry entry)
         {
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Iniciando ProcessItemDelivery para quest {questId}");
+#endif
+                }
             
             // 1. PRIMERO: Reproducir animación de soltar sin soltar físicamente el objeto
             if (PlayerService.TryGetComponent(out PlayerCarrySystem carrySystem))
@@ -357,7 +391,11 @@ namespace Game.NPC
                 if (carrySystem.IsCarrying && carrySystem.CarriedObject == itemObject)
                 {
                     if (debugMode)
+                        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[NPCItemDetector:{name}] Reproduciendo animación de drop");
+#endif
+                        }
                     
                     // Reproducir solo la animación de throw sin soltar el objeto
                     if (PlayerService.TryGetComponent(out Animator animator))
@@ -377,7 +415,11 @@ namespace Game.NPC
             }
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Animación completada, destruyendo objeto");
+#endif
+                }
             
             // 2. DESPUÉS: Destruir el objeto
             if (itemObject != null)
@@ -387,7 +429,11 @@ namespace Game.NPC
             yield return new WaitForSeconds(pauseBeforeComplete);
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Completando quest step");
+#endif
+                }
             
             // 4. FINALMENTE: Completar la quest (esto puede lanzar cinemática)
             var qm = QuestManager.Instance;
@@ -401,7 +447,11 @@ namespace Game.NPC
             _isProcessingDelivery = false;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] ProcessItemDelivery completado");
+#endif
+                }
         }
         
         /// <summary>
@@ -413,7 +463,11 @@ namespace Game.NPC
             carrySystem.CancelCarrySilently();
 
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCItemDetector:{name}] Estado de carrying limpiado");
+#endif
+                }
         }
         
         void OnDestroy()

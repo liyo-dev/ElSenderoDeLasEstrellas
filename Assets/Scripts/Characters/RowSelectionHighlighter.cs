@@ -26,7 +26,9 @@ public class RowSelectionHighlighter : MonoBehaviour
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"RowSelectionHighlighter: {_rowBacks.Count} filas registradas automáticamente");
+#endif
         
         // Selección inicial
         if (_rowBacks.Count > 0)

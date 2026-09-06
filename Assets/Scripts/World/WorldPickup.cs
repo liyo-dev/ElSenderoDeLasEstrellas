@@ -254,7 +254,9 @@ public class WorldPickup : MonoBehaviour
 
         if (removed > 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[WorldPickup] 🧹 Limpiados {removed} flags GUID antiguos del preset");
+#endif
         }
     }
 

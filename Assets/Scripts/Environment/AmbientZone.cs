@@ -62,6 +62,12 @@ public class AmbientZone : MonoBehaviour
     private static vThirdPersonCamera _cachedCamera;
     private static DayNightCycle _cachedDayNightCycle;
 
+    // --- Fondo de cámara (oculta huecos de skybox — 5 sep 2026, ver AmbientPreset.overrideCameraBackground) ---
+    private static Camera _cachedBackgroundCamera;
+    private static bool _backgroundOverrideActive;
+    private static CameraClearFlags _savedClearFlags;
+    private static Material _savedSkybox;
+
     private Transform _playerTransform;
     private Collider _collider;
 
@@ -81,6 +87,10 @@ public class AmbientZone : MonoBehaviour
         _cameraTween = null;
         _cachedCamera = null;
         _cachedDayNightCycle = null;
+        _cachedBackgroundCamera = null;
+        _backgroundOverrideActive = false;
+        _savedClearFlags = CameraClearFlags.Skybox;
+        _savedSkybox = null;
     }
 #endif
 
@@ -93,7 +103,9 @@ public class AmbientZone : MonoBehaviour
         if (_collider != null && !_collider.isTrigger)
         {
             _collider.isTrigger = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AmbientZone] Collider en '{gameObject.name}' configurado como trigger automáticamente");
+#endif
         }
 
         CaptureDefaults();
@@ -204,6 +216,7 @@ public class AmbientZone : MonoBehaviour
         RestorePreviousMusic();
         GetOrCacheDayNightCycle()?.SetZoneMistOverride(false);
         AmbientCloudDirector.Instance?.SetZoneCloudBoost(false);
+        RestoreCameraBackground();
     }
 
     // -------------------------------------------------------------------------
@@ -249,6 +262,7 @@ public class AmbientZone : MonoBehaviour
         // bajas' tambien sube la cadencia de nubes sueltas cruzando el cielo mientras se esta en
         // la zona, no solo la niebla de distancia.
         AmbientCloudDirector.Instance?.SetZoneCloudBoost(ambientPreset.forcesMist);
+        ApplyCameraBackgroundOverride();
     }
 
     private void TransitionToDefaultFog()
@@ -485,6 +499,54 @@ public class AmbientZone : MonoBehaviour
     }
 
     // -------------------------------------------------------------------------
+    //  Fondo de cámara (oculta huecos de skybox)
+    // -------------------------------------------------------------------------
+    // 5 sep 2026 -- ver AmbientPreset.overrideCameraBackground. Zona-específico y genérico:
+    // cualquier AmbientZone con el checkbox activo pinta un color sólido en vez de skybox
+    // mientras el jugador está dentro, y restaura el clearFlags/skybox previos al salir.
+    // No usa el sistema de interiores (AnchorEnvironment/EnvironmentController): no oculta el
+    // mundo exterior, no toca luces ni far clip plane, solo el fondo de la cámara de juego.
+
+    private static Camera GetOrCacheBackgroundCamera()
+    {
+        if (_cachedBackgroundCamera != null) return _cachedBackgroundCamera;
+        _cachedBackgroundCamera = Camera.main;
+        return _cachedBackgroundCamera;
+    }
+
+    private void ApplyCameraBackgroundOverride()
+    {
+        if (ambientPreset == null || !ambientPreset.overrideCameraBackground) return;
+
+        var cam = GetOrCacheBackgroundCamera();
+        if (cam == null) return;
+
+        if (!_backgroundOverrideActive)
+        {
+            _savedClearFlags = cam.clearFlags;
+            _savedSkybox     = RenderSettings.skybox;
+            _backgroundOverrideActive = true;
+        }
+
+        cam.clearFlags      = CameraClearFlags.SolidColor;
+        cam.backgroundColor = ambientPreset.cameraBackgroundColor;
+    }
+
+    private static void RestoreCameraBackground()
+    {
+        if (!_backgroundOverrideActive) return;
+
+        var cam = GetOrCacheBackgroundCamera();
+        if (cam != null)
+        {
+            cam.clearFlags = _savedClearFlags;
+            RenderSettings.skybox = _savedSkybox;
+        }
+
+        _backgroundOverrideActive = false;
+    }
+
+    // -------------------------------------------------------------------------
     //  Música
     // -------------------------------------------------------------------------
 
@@ -561,6 +623,7 @@ public class AmbientZone : MonoBehaviour
             RestoreDefaultsImmediate();
             GetOrCacheDayNightCycle()?.SetZoneMistOverride(false);
             AmbientCloudDirector.Instance?.SetZoneCloudBoost(false);
+            RestoreCameraBackground();
         }
     }
 

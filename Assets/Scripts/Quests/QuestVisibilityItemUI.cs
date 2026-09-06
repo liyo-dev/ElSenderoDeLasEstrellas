@@ -136,7 +136,9 @@ public class QuestVisibilityItemUI : MonoBehaviour
         if (_data == null) return;
         if (visibility == _currentVisibility) return;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"QuestVisibilityItemUI: NotifyChange for '{_data.Id}' -> {visibility}");
+#endif
 
         _currentVisibility = visibility;
         _onChange?.Invoke(_data, visibility);

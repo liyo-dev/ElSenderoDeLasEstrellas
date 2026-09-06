@@ -39,23 +39,31 @@ public class LorePopupPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[LorePopupPoint:{name}] OnTriggerEnter: '{other.name}' tag='{other.tag}' | usedThisSession={_usedThisSession} | persistenceId='{persistenceId}'");
+#endif
 
         if (_usedThisSession)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: ya usado esta sesión.");
+#endif
             return;
         }
 
         if (!other.CompareTag("Player"))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: tag '{other.tag}' no es 'Player'.");
+#endif
             return;
         }
 
         if (AlreadySeen())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: persistenceId '{persistenceId}' ya está en seenLorePopupIds.");
+#endif
             return;
         }
 
@@ -79,7 +87,9 @@ public class LorePopupPoint : MonoBehaviour
                 Debug.LogError($"[LorePopupPoint:{name}] ❌ narrativeEventKey='{narrativeEventKey}' pero DefaultNarrativeSignals.Instance es NULL.");
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[LorePopupPoint:{name}] ✅ RaiseCustom('{narrativeEventKey}')");
+#endif
                 signals.RaiseCustom(narrativeEventKey, name);
             }
         }

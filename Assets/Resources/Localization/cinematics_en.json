@@ -1,16 +1,40 @@
 {
     "subtitles": [
         {
-            "id": "CH1_01",
-            "text": "The story begins in a small kingdom."
+            "id": "APERTURA_SENDERO_01",
+            "text": "Once we cross it, according to the book, there'll be no way back until we clear every trial. There are no save points inside. Only forward."
         },
         {
-            "id": "CH1_02",
-            "text": "Here, our hero Will lives."
+            "id": "APERTURA_SENDERO_02",
+            "text": "Looks like we have to go through all three. I hope at least we can go as a group. I really don't fancy getting separated from you two in there."
         },
         {
-            "id": "CH1_04",
-            "text": "There's a letter on the table... What might it contain?"
+            "id": "APERTURA_SENDERO_03",
+            "text": "I'm not letting either of you out of my sight. Whatever's on the other side."
+        },
+        {
+            "id": "EPILOGO_ESTELA_01",
+            "text": "You're alive. You're alive, you idiot."
+        },
+        {
+            "id": "EPILOGO_LIAM_01",
+            "text": "Estela? What...?"
+        },
+        {
+            "id": "EPILOGO_LIAM_02",
+            "text": "Where's Will?"
+        },
+        {
+            "id": "EPILOGO_WILL_01",
+            "text": "Hey. I couldn't leave without saying goodbye properly."
+        },
+        {
+            "id": "EPILOGO_WILL_02",
+            "text": "Take care of your brother. Take care of him for me too. And take care of each other."
+        },
+        {
+            "id": "EPILOGO_WILL_03",
+            "text": "Thank you, for being my family, even if only for a little while."
         },
         {
             "id": "ESTELA_EXPLAINS_EPILOGUE",
@@ -149,6 +173,10 @@
             "text": "...Thank you. Okay. Let's go."
         },
         {
+            "id": "EVT_TABERNA_10",
+            "text": "Run! Flee from Estela until her anger blows over!"
+        },
+        {
             "id": "EVT_TAB_ELDRAN_01",
             "text": "We need to find out what's behind that demon appearing, and now a golem too...\nAnd why they're after you."
         },
@@ -193,10 +221,6 @@
             "text": "WHAT?!"
         },
         {
-            "id": "EVT_TABERNA_10",
-            "text": "Run! Flee from Estela until her anger blows over!"
-        },
-        {
             "id": "EVT_W1_ARANAS_ATACAD",
             "text": "Spiders, attack!"
         },
@@ -223,6 +247,166 @@
         {
             "id": "MAGOOSCURO_MONOLOGUE",
             "text": "Why do you think you're alive, boy?\nHave you never wondered why you remember nothing of yourself, or your past?\nI'll tell you why — you remember nothing of yourself, your family, or your village,\nbecause eons ago you died fighting me.\nYou died that day. You are the reincarnation of the only mage who ever managed to stop me!\nYou forced me to unleash my ultimate spell of destruction, but back then I couldn't control it.\nWhen it all slipped beyond my grasp, I bound my soul to the Path,\nwaiting for the day some other fool would clear its trials\nand wish me back to life.\nTo keep the spell from touching your family and your pitiful village,\nyou poured every last drop of magic inside you into a protective spell —\none that saved your people, but destroyed you.\nWhat I don't understand is how, after dying, you're still here…"
+        },
+        {
+            "id": "PARQUE_LIAM_01",
+            "text": "Okay, I like this a lot better."
+        },
+        {
+            "id": "PARQUE_LIAM_02",
+            "text": "Here. So you don't forget where you come from."
+        },
+        {
+            "id": "PARQUE_LIAM_03",
+            "text": "That's... surprisingly thoughtful."
+        },
+        {
+            "id": "PARQUE_LIAM_04",
+            "text": "We should do this more often. Once all this is over, I mean."
+        },
+        {
+            "id": "PARQUE_LIAM_05",
+            "text": "Minus the haunted forests. And the candy castles."
+        },
+        {
+            "id": "PARQUE_LIAM_06",
+            "text": "No golems, no demons, no—"
+        },
+        {
+            "id": "PARQUE_LIAM_07",
+            "text": "That's—"
+        },
+        {
+            "id": "PARQUE_LIAM_08",
+            "text": "It's too much like mine. Like my maze. I don't think I can go in there, Liam. I'm sorry."
+        },
+        {
+            "id": "PARQUE_LIAM_09",
+            "text": "You don't have to be sorry. This trial is mine. It makes sense I face it alone."
+        },
+        {
+            "id": "PARQUE_LIAM_10",
+            "text": "Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone. But that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out."
+        },
+        {
+            "id": "PARQUE_LIAM_11",
+            "text": "Thank you. Both of you."
+        },
+        {
+            "id": "PARQUE_LIAM_12",
+            "text": "What was the true price you paid to get this far, Mage?"
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_01",
+            "text": "Here... here it is."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_02",
+            "text": "Open it. We've come this far."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_03",
+            "text": "The ritual to open the Path of the Stars..."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_04",
+            "text": "Wait. There's more. Two spells noted in the margin, in a different hand... older."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_05",
+            "text": "The Time Spell. And... the Resurrection Spell. Forbidden. There's a note in the margin explaining why."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_06",
+            "text": "Whatever that note says... I think we should save this for when we truly need it."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_07",
+            "text": "From here on, there's no turning back, is there?"
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_08",
+            "text": "There wasn't from the start. But now... now we truly know it."
+        },
+        {
+            "id": "PRUEBA_WILL_01",
+            "text": "Wow, this is actually terrifying."
+        },
+        {
+            "id": "PRUEBA_WILL_02",
+            "text": "Don't laugh, it's horrible. I hate speaking in front of people."
+        },
+        {
+            "id": "PRUEBA_WILL_03",
+            "text": "A clumsy speech never killed anyone... though I'll admit this one was particularly bad."
+        },
+        {
+            "id": "PRUEBA_WILL_04",
+            "text": "It's only an echo. We're right here. Look at us."
+        },
+        {
+            "id": "REUNION_ESTELA_01",
+            "text": "I don't deserve you coming to find me. I hurt my own friend."
+        },
+        {
+            "id": "REUNION_ESTELA_02",
+            "text": "And Liam? After what he did..."
+        },
+        {
+            "id": "REUNION_ESTELA_03",
+            "text": "Let's go find him, then. Before this place swallows him whole."
+        },
+        {
+            "id": "REUNION_ESTELA_04",
+            "text": "Just so we're clear: this doesn't mean everything's forgiven. It just means I'm not letting him die over feeling guilty."
+        },
+        {
+            "id": "REUNION_LIAM_01",
+            "text": "After what I did..."
+        },
+        {
+            "id": "REUNION_WILL_01",
+            "text": "It was an accident. And I didn't come to judge you. I came because no one gets left behind. Not even when they mess up."
+        },
+        {
+            "id": "REUNION_WILL_02",
+            "text": "If we don't forgive him, we're no better than the man who pushed him to do it."
+        },
+        {
+            "id": "REUNION_WILL_03",
+            "text": "Get up. We're not done yet."
+        },
+        {
+            "id": "REUNION_WILL_04",
+            "text": "After what you did — and everything you've done since then to try to fix it. That counts too."
+        },
+        {
+            "id": "RUPTURA_ESTELA_01",
+            "text": "Tell me it isn't true. Tell me what we just saw isn't what it looks like."
+        },
+        {
+            "id": "RUPTURA_ESTELA_02",
+            "text": "You planned all of it. The demon in the woods. The danger. You used Will as bait from day one."
+        },
+        {
+            "id": "RUPTURA_ESTELA_03",
+            "text": "Don't you dare use that as an excuse!"
+        },
+        {
+            "id": "RUPTURA_ESTELA_04",
+            "text": "Will... I'm sorry..."
+        },
+        {
+            "id": "RUPTURA_LIAM_01",
+            "text": "My brother is dying. I was desperate. I thought if I could reach the Path..."
+        },
+        {
+            "id": "RUPTURA_LIAM_02",
+            "text": "I don't deserve to be followed."
+        },
+        {
+            "id": "RUPTURA_WILL_01",
+            "text": "Both of you, please, stop!"
         },
         {
             "id": "TIME_SPELL_TUTORIAL",

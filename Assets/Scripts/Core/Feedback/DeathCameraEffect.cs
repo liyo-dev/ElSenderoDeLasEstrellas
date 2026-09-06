@@ -64,14 +64,22 @@ namespace Sendero.Core.Feedback
             if (_isEffectActive)
             {
                 if (showDebugLogs)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[DeathCameraEffect] Efecto ya activo, ignorando nueva llamada");
+#endif
+                    }
                 return;
             }
             
             if (target == null)
             {
                 if (showDebugLogs)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError("[DeathCameraEffect] Target es null");
+#endif
+                    }
                 return;
             }
             
@@ -91,7 +99,11 @@ namespace Sendero.Core.Feedback
             if (mainCamera == null)
             {
                 if (showDebugLogs)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError("[DeathCameraEffect] Main camera no encontrada");
+#endif
+                    }
                 return;
             }
 
@@ -108,7 +120,11 @@ namespace Sendero.Core.Feedback
             _isEffectActive = true;
 
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] 🎬 Iniciando efecto de muerte - Target: {target.name}");
+#endif
+                }
 
             // ========== FASE 1: SLOWMOTION + ZOOM ==========
             // FIX C6 (auditoría 2026-08-07): antes capturaba/restauraba Time.timeScale a pelo,
@@ -117,7 +133,11 @@ namespace Sendero.Core.Feedback
             TimeScaleArbiterService.Request(this, slowMotionScale);
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] ⏱️ Slowmotion activado - TimeScale: {slowMotionScale}");
+#endif
+                }
             
             // Zoom hacia el objetivo
             float startFOV = mainCamera.fieldOfView;
@@ -125,7 +145,11 @@ namespace Sendero.Core.Feedback
             float elapsed = 0f;
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] 🔍 Zoom: {startFOV:F1}° → {targetFOV:F1}°");
+#endif
+                }
             
             // Animar zoom usando unscaledDeltaTime (no afectado por slowmotion)
             while (elapsed < zoomDuration)
@@ -140,7 +164,11 @@ namespace Sendero.Core.Feedback
             mainCamera.fieldOfView = targetFOV;
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] ✅ Zoom completado");
+#endif
+                }
             
             // ========== FASE 2: HOLD (MANTENER ZOOM Y SLOWMO) ==========
             elapsed = 0f;
@@ -151,14 +179,22 @@ namespace Sendero.Core.Feedback
             }
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] ⏸️ Hold completado ({holdDuration:F2}s)");
+#endif
+                }
             
             // ========== FASE 3: RESTAURAR TIME SCALE ==========
             // CRÍTICO: Restaurar timeScale ANTES de volver el zoom
             TimeScaleArbiterService.Release(this);
 
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] ⏱️ TimeScale restaurado: {Time.timeScale}");
+#endif
+                }
             
             // Pequeña espera para que se note la transición
             yield return new WaitForSecondsRealtime(0.05f);
@@ -168,7 +204,11 @@ namespace Sendero.Core.Feedback
             elapsed = 0f;
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] 🔄 Volviendo zoom a normal: {startFOV:F1}° → {_originalFieldOfView:F1}°");
+#endif
+                }
             
             while (elapsed < returnDuration)
             {
@@ -182,7 +222,11 @@ namespace Sendero.Core.Feedback
             mainCamera.fieldOfView = _originalFieldOfView;
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] ✅ Efecto completado - FOV restaurado: {_originalFieldOfView:F1}°");
+#endif
+                }
             
             // ========== VERIFICACIÓN FINAL ==========
             // Asegurar que todo está en su estado original
@@ -193,7 +237,11 @@ namespace Sendero.Core.Feedback
             _currentEffect = null;
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DeathCameraEffect] 🎉 Sistema completamente restaurado");
+#endif
+                }
         }
         
         /// <summary>
@@ -217,7 +265,11 @@ namespace Sendero.Core.Feedback
             _isEffectActive = false;
 
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[DeathCameraEffect] ⛔ Efecto cancelado - Todo restaurado");
+#endif
+                }
         }
         
         void OnDestroy()

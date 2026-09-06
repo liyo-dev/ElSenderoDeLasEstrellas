@@ -99,7 +99,11 @@ namespace Game.NPC.Modules
             if (singleUse && _hasBeenExecuted)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ConditionalNarrative:{description}] ❌ NO puede ejecutarse - ya fue ejecutada (singleUse=true, _hasBeenExecuted=true)");
+#endif
+                    }
                 return false;
             }
             
@@ -107,7 +111,11 @@ namespace Game.NPC.Modules
             bool conditionMet = condition.Evaluate();
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ConditionalNarrative:{description}] Evaluación - singleUse:{singleUse}, executed:{_hasBeenExecuted}, conditionMet:{conditionMet} → CanExecute:{conditionMet}");
+#endif
+                }
             
             return conditionMet;
         }
@@ -120,7 +128,11 @@ namespace Game.NPC.Modules
             _hasBeenExecuted = true;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ConditionalNarrative:{description}] Marcada como ejecutada");
+#endif
+                }
         }
         
         /// <summary>
@@ -134,7 +146,11 @@ namespace Game.NPC.Modules
             condition?.ResetCustomEventState();
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ConditionalNarrative:{description}] Estado reseteado (incluyendo eventos custom)");
+#endif
+                }
         }
         
         /// <summary>

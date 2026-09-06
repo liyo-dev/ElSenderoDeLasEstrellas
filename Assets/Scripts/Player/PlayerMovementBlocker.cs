@@ -77,7 +77,9 @@ public sealed class PlayerMovementBlocker : MonoBehaviour
 
         if (playerRoot == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerMovementBlocker] No se encontró el Player para bloquear el movimiento.");
+#endif
             return;
         }
 
@@ -131,7 +133,9 @@ public sealed class PlayerMovementBlocker : MonoBehaviour
 
         if (playerRoot == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerMovementBlocker] No se encontró el Player para bloquear el movimiento.");
+#endif
             return;
         }
 

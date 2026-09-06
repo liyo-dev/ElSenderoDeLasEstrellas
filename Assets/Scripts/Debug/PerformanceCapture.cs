@@ -244,7 +244,9 @@ public class PerformanceCapture : MonoBehaviour
         {
             _lastSaveFailed = true;
             _lastSavedPath = ex.Message;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[PerformanceCapture] ❌ No se pudo guardar la captura: {ex}");
+#endif
         }
 
         _lastSaveMessageUntil = Time.unscaledTime + 8f;

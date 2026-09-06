@@ -873,7 +873,9 @@ public class NPCAmbientBrain : MonoBehaviour
     void DebugLog(string message)
     {
         if (!logDebug) return;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[NPCAmbientBrain:{name}] {message}", this);
+#endif
     }
 
     string GetStateFor(AmbientAction action) => action switch

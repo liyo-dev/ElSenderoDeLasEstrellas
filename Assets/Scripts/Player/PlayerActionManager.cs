@@ -56,7 +56,9 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     {
         if (abilities == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerActionManager] ApplyAbilities called with null abilities!");
+#endif
             return;
         }
         // _allowPhysical = abilities.physical;
@@ -102,7 +104,9 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _anim = GetComponent<Animator>();
         if (_anim == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerActionManager] No Animator on '{name}' — animation features disabled. (Is this component on a disabled GO that never ran Awake?)", gameObject);
+#endif
         }
 
         // Guardar peso original del UpperBody

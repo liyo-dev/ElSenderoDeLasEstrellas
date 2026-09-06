@@ -295,7 +295,13 @@ public class AmbientCloudDirector : MonoBehaviour
             yield return new WaitForSeconds(UnityEngine.Random.Range(lo, hi));
 
             if (_stormActive || _hiddenByInterior)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                if (_zoneCloudBoostActive)
+                    Debug.Log($"[AmbientCloudDirector] CloudSpawnLoop salta spawn -- _stormActive={_stormActive} _hiddenByInterior={_hiddenByInterior}");
+#endif
                 continue;
+            }
 
             SpawnPassingCloud();
 
@@ -315,9 +321,23 @@ public class AmbientCloudDirector : MonoBehaviour
     void SpawnPassingCloud()
     {
         Transform followT = PlayerService.Player != null ? PlayerService.Player.transform : null;
-        if (followT == null) return;
+        if (followT == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (_zoneCloudBoostActive)
+                Debug.Log("[AmbientCloudDirector] SpawnPassingCloud: PlayerService.Player es null, se salta este ciclo.");
+#endif
+            return;
+        }
 
-        if (_free.Count == 0) return; // pool lleno de nubes ya en vuelo: se salta este ciclo.
+        if (_free.Count == 0)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (_zoneCloudBoostActive)
+                Debug.Log("[AmbientCloudDirector] SpawnPassingCloud: pool de nubes lleno, se salta este ciclo.");
+#endif
+            return; // pool lleno de nubes ya en vuelo: se salta este ciclo.
+        }
 
         var drifter = _free.Dequeue();
 
@@ -346,6 +366,10 @@ public class AmbientCloudDirector : MonoBehaviour
 
         drifter.gameObject.SetActive(true);
         drifter.Play(start, end, speed, fadeInDuration, fadeOutDuration, OnCloudFinished);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (_zoneCloudBoostActive)
+            Debug.Log("[AmbientCloudDirector] Nube ambiental generada (boost de zona activo).");
+#endif
     }
 
     void OnCloudFinished(AmbientCloudDrifter drifter)
@@ -381,7 +405,13 @@ public class AmbientCloudDirector : MonoBehaviour
     /// CloudSpawnLoop al ritmo 'nublado' (busySpawnIntervalRange) mientras dure. Así entrar en
     /// una zona de niebla nunca puede disparar lluvia por sí sola.
     /// </summary>
-    public void SetZoneCloudBoost(bool active) => _zoneCloudBoostActive = active;
+    public void SetZoneCloudBoost(bool active)
+    {
+        _zoneCloudBoostActive = active;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AmbientCloudDirector] SetZoneCloudBoost({active})");
+#endif
+    }
 
     /// <summary>
     /// FIX (25 ago 2026): visibilidad real de TODAS las nubes del pool (volando o no) = lo último

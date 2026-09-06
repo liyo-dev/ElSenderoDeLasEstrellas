@@ -112,6 +112,8 @@ public class CloudCoverSpawner : MonoBehaviour
     [SerializeField] private Vector2 scaleRange = new Vector2(0.8f, 1.5f);
     [Tooltip("Límite de seguridad de instancias, por si coverRadius/cellSize generan una rejilla enorme.")]
     [SerializeField] private int maxCloudInstances = 300;
+    [Tooltip("FIX (2026-09-05, INC-157/coste de transición de clima): instanciar hasta maxCloudInstances nubes de una sola vez en un solo frame producía un freeze de 1.8-3.5s la primera vez que llueve en cada sesión. Ahora BuildCoverIfNeeded() se reparte en una corrutina que instancia como mucho este número de nubes por frame antes de ceder — el resultado final es idéntico (misma posición/escala/orden aleatorio), solo tarda unos frames más en completarse, imperceptible porque StartFormationWave() ya revela las nubes de forma gradual después. Bajarlo reduce aún más el coste por frame a costa de tardar más frames en total.")]
+    [SerializeField] private int maxCloudsInstantiatedPerFrame = 25;
     [Tooltip("Variación aleatoria de altura (±) de cada nube respecto al plano del techo. Rompe el plano perfecto (más natural) y evita que todos los quads transparentes queden coplanares, lo que provoca artefactos de ordenación al mirarlos desde abajo.")]
     [SerializeField] private float heightJitter = 16f;
     [Tooltip("Margen mínimo, en unidades de mundo, entre el punto más bajo de la malla de nubes ya instanciada/escalada y el jugador. Tras construir el techo se mide su altura REAL (no solo cloudHeight) y si no deja este margen, se sube el techo entero lo que haga falta. Es la protección contra 'la cámara se queda dentro de la nube' si cloudHeight/scaleRange quedan mal calibrados para el prefab que uses.")]
@@ -189,6 +191,7 @@ public class CloudCoverSpawner : MonoBehaviour
     private readonly List<CloudUnit> _units = new List<CloudUnit>();
     private MaterialPropertyBlock _mpb;
     private Coroutine _formationCoroutine;
+    private Coroutine _buildCoroutine; // FIX (2026-09-05): construcción de nubes ahora repartida en varios frames
     /// <summary>0 = objetivo actual es "todas fuera/invisibles", 1 = objetivo actual es "techo formado del todo". Solo indica hacia dónde se dirige la ola en curso, no el estado real de cada nube (ver CloudUnit.formationT para eso).</summary>
     private float _targetFormation;
     private float _safetyHeightBonus;
@@ -199,6 +202,10 @@ public class CloudCoverSpawner : MonoBehaviour
     private readonly Plane[] _frustumPlanes = new Plane[6];
     private int _cullFrameCounter;
     private bool _built;
+    // FIX (2026-09-05): true mientras BuildCoverThenStartWaveRoutine() está en marcha, para no
+    // relanzar la construcción si HandleCloudsBuildingUp() se llama otra vez antes de terminar
+    // (p.ej. el evento CloudsBuildingUp y la puesta al día de OnEnable coincidiendo).
+    private bool _building;
     // FIX (16 ago 2026): "las nubes se ven en un interior" + "sigue lloviendo pero no hay nubes
     // tras teletransportarse fuera". Este componente estaba "totalmente desacoplado de
     // DayNightCycle" (ver doc de clase) a propósito, pero eso significaba que NUNCA se enteraba
@@ -277,6 +284,16 @@ public class CloudCoverSpawner : MonoBehaviour
             _recenterCoroutine = null;
         }
 
+        // FIX (2026-09-05): si la escena se desactiva/descarga a mitad de la construcción
+        // repartida en varios frames, cortarla aquí en vez de dejarla intentando seguir
+        // instanciando sobre un _root que DestroyCover() va a destruir a continuación.
+        if (_buildCoroutine != null)
+        {
+            StopCoroutine(_buildCoroutine);
+            _buildCoroutine = null;
+        }
+        _building = false;
+
         DestroyCover();
     }
 
@@ -309,14 +326,20 @@ public class CloudCoverSpawner : MonoBehaviour
     {
         if (!_built)
         {
+            if (_building) return; // ya en marcha (p.ej. evento + puesta al día de OnEnable en el mismo frame)
+
             // _followTransform solo se usa aquí, para anclar el techo la primera vez que se
             // construye. Una vez construido queda fijo en el mundo: no hay LateUpdate que lo
             // reposicione por frame (eso era lo que hacía que las nubes "acompañaran" al jugador).
             _followTransform = PlayerService.Player != null ? PlayerService.Player.transform :
                                 Camera.main != null ? Camera.main.transform : null;
-            BuildCoverIfNeeded();
+
+            _building = true;
+            _buildCoroutine = StartCoroutine(BuildCoverThenStartWaveRoutine());
+            return; // la ola de formación y el ocultado por interior se disparan al terminar de construir (ver corrutina)
         }
-        else if (_root != null)
+
+        if (_root != null)
         {
             // Pool: reactivar las mallas ya instanciadas en vez de Instantiate de nuevo.
             _root.gameObject.SetActive(true);
@@ -328,6 +351,24 @@ public class CloudCoverSpawner : MonoBehaviour
         // mientras el jugador está dentro de un interior, no revelar el techo todavía — se
         // mostrará solo, ya en el punto de la ola que le toque, en cuanto HandleInteriorExited()
         // lo reactive.
+        if (_hiddenByInterior && _root != null)
+            _root.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// FIX (2026-09-05, INC-157/coste de transición de clima): envuelve BuildCoverIfNeededRoutine()
+    /// (la construcción ahora repartida en varios frames) y solo dispara la ola de formación / el
+    /// ocultado por interior una vez que TODAS las nubes ya existen — mismo orden de operaciones
+    /// que antes tenía HandleCloudsBuildingUp() cuando BuildCoverIfNeeded() era síncrono.
+    /// </summary>
+    IEnumerator BuildCoverThenStartWaveRoutine()
+    {
+        yield return StartCoroutine(BuildCoverIfNeededRoutine());
+        _building = false;
+        _buildCoroutine = null;
+
+        StartFormationWave(1f);
+
         if (_hiddenByInterior && _root != null)
             _root.gameObject.SetActive(false);
     }
@@ -430,9 +471,9 @@ public class CloudCoverSpawner : MonoBehaviour
         _recenterCoroutine = null;
     }
 
-    void BuildCoverIfNeeded()
+    IEnumerator BuildCoverIfNeededRoutine()
     {
-        if (_built || cloudPrefabs == null || cloudPrefabs.Length == 0) return;
+        if (_built || cloudPrefabs == null || cloudPrefabs.Length == 0) yield break;
 
         _root = new GameObject("[CloudCover]").transform;
 
@@ -458,6 +499,7 @@ public class CloudCoverSpawner : MonoBehaviour
         // casi verticalmente hacia arriba en cuanto te acercabas al centro.
         float tanElev = Mathf.Tan(horizonElevationDegrees * Mathf.Deg2Rad);
         int spawned = 0;
+        int spawnedSinceYield = 0;
 
         for (int gx = -half; gx <= half && spawned < maxCloudInstances; gx++)
         {
@@ -499,6 +541,16 @@ public class CloudCoverSpawner : MonoBehaviour
                 _units.Add(unit);
 
                 spawned++;
+                spawnedSinceYield++;
+
+                // FIX (2026-09-05): cede el frame cada maxCloudsInstantiatedPerFrame instancias en
+                // vez de instanciar el techo entero (hasta maxCloudInstances) de golpe. No cambia
+                // ninguna posición/escala/orden aleatorio ya calculado, solo reparte el coste.
+                if (spawnedSinceYield >= maxCloudsInstantiatedPerFrame)
+                {
+                    spawnedSinceYield = 0;
+                    yield return null;
+                }
             }
         }
 

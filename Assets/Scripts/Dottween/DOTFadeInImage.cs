@@ -42,7 +42,9 @@ public class DOTFadeInImage : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("Image to fade is not assigned!");
+#endif
         }
     }
 }

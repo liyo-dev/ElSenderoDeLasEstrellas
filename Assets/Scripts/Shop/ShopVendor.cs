@@ -28,7 +28,9 @@ public class ShopVendor : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ShopVendor] No Interactable found to subscribe OnFinished. Shop will not open automatically.");
+#endif
         }
     }
 
@@ -37,13 +39,17 @@ public class ShopVendor : MonoBehaviour
         if (_interactable != null)
         {
             _interactable.OnFinished.RemoveListener(OnDialogueFinished);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ShopVendor] Unsubscribed from Interactable.OnFinished on {_interactable.gameObject.name}");
+#endif
         }
     }
 
     void OnDialogueFinished()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ShopVendor] OnDialogueFinished called - attempting to open shop");
+#endif
         // Cuando el diálogo del vendedor termina, abrir la tienda
         OpenShop();
     }
@@ -55,7 +61,9 @@ public class ShopVendor : MonoBehaviour
 
     System.Collections.IEnumerator OpenShopNextFrame()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ShopVendor] OpenShopNextFrame started");
+#endif
         // Esperar al final de frame para que DialogueManager termine de cerrar y libere GameState/Input
         yield return new WaitForEndOfFrame();
 
@@ -72,7 +80,9 @@ public class ShopVendor : MonoBehaviour
         {
             if (shopUIPrefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[ShopVendor] No se ha asignado el prefab de ShopUI.");
+#endif
                 yield break;
             }
             _runtimeUI = Instantiate(shopUIPrefab);
@@ -96,10 +106,14 @@ public class ShopVendor : MonoBehaviour
             }
 
             // Log why opening was denied from MenuManager side (best-effort)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ShopVendor] Attempt {attempts}: ShopUI.Open did not result in IsOpen=true. Retrying...");
+#endif
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning("[ShopVendor] Failed to open ShopUI after multiple attempts. MenuManager likely denied the open.");
+#endif
     }
 
     public void CloseShop()

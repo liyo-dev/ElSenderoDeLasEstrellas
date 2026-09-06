@@ -97,10 +97,16 @@ namespace Game.NPC.States
 
             if (context.DebugMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] ⚔️ ENTRANDO EN COMBATE - ForcedTarget: {_forcedTarget?.name ?? "NULL"}, Registry.Count: {ActiveCombatRegistry.Count}");
+#endif
                 ActiveCombatRegistry.GetAllInCombatNonAlloc(_combatNpcBuffer);
                 foreach (var npc in _combatNpcBuffer)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[AllyCombatState:{context.Transform.name}]   Registry NPC: {npc?.name ?? "NULL"} (active: {npc?.activeInHierarchy})");
+#endif
+                    }
             }
             
             context.IsInCombat = true;
@@ -291,7 +297,11 @@ namespace Game.NPC.States
                     _noEnemyTimer += Time.deltaTime;
 
                     if (context.DebugMode && (int)_noEnemyTimer != (int)(_noEnemyTimer - Time.deltaTime) && _noEnemyTimer > 1f)
+                        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏳ Sin enemigos por {_noEnemyTimer:F1}s (timeout: {NO_ENEMY_TIMEOUT}s)");
+#endif
+                        }
                     
                     UpdateMovementAnimation(context);
                     return;
@@ -679,7 +689,9 @@ namespace Game.NPC.States
             
             if (_partyMember == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay NPCPartyMember!");
+#endif
                 return;
             }
 
@@ -703,7 +715,9 @@ namespace Game.NPC.States
             
             if (spell == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay ningún hechizo configurado en PartyConfig!");
+#endif
                 return;
             }
             
@@ -763,7 +777,9 @@ namespace Game.NPC.States
         {
             if (spell == null || spell.prefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Spell o prefab es null!");
+#endif
                 return;
             }
             
@@ -860,7 +876,9 @@ namespace Game.NPC.States
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Proyectil no tiene MagicProjectile component!");
+#endif
             }
             
             _lastAttackTime = Time.time;

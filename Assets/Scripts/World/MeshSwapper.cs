@@ -116,13 +116,17 @@ namespace Game.World
         {
             if (targetMeshFilter == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[MeshSwapper:{name}] ❌ No hay MeshFilter asignado");
+#endif
                 return;
             }
 
             if (newMesh == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[MeshSwapper:{name}] ❌ No hay nuevo mesh asignado");
+#endif
                 return;
             }
 
@@ -269,7 +273,9 @@ namespace Game.World
             {
                 PlayerPrefs.DeleteKey($"MeshSwapper_{persistenceId}");
             }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MeshSwapper:{name}] Estado reseteado");
+#endif
         }
 
         #endregion

@@ -55,7 +55,9 @@ public class Inventory : MonoBehaviour
         _bag.TryGetValue(item.itemId, out int cur);
         int next = cur + amount;
         _bag[item.itemId] = next;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[Inventory:{gameObject.name}] +{amount} {item.displayName} (total {_bag[item.itemId]})");
+#endif
 
         // Notify listeners (UI, popups) about the change.
         // Call OnItemAdded first so any grouping/aggregation logic can run before any listeners processing the new total.
@@ -156,7 +158,9 @@ public class Inventory : MonoBehaviour
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[Inventory] No se pudo resolver definición para itemId '{itemSave.itemId}'");
+#endif
                 }
             }
 
@@ -258,7 +262,9 @@ public class Inventory : MonoBehaviour
         if (!item) return;
         if (string.IsNullOrEmpty(item.itemId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[Inventory:{gameObject.name}] ItemData '{item.name}' no tiene itemId asignado.");
+#endif
             return;
         }
 
@@ -274,7 +280,9 @@ public class Inventory : MonoBehaviour
             // intentar reemplazarla con la versión real del registro o la lista conocida.
             if (IsPlaceholder(existing))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Inventory] Definición existente para '{itemId}' es un placeholder, intentando actualizar...");
+#endif
                 var upgraded = TryResolveFromSources(itemId);
                 if (upgraded != null)
                 {
@@ -292,8 +300,10 @@ public class Inventory : MonoBehaviour
             return resolved;
 
         // Fallback: crear un ItemData temporal en runtime para no quedar sin referencia
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[Inventory] ⚠️ Creando placeholder temporal para item '{itemId}'. El item no se encontró en knownItems, ItemRegistry ni Resources.");
         Debug.LogWarning($"[Inventory] 💡 Para solucionar: Añade el ItemData al ItemRegistry (Resources/ItemRegistry) o a la lista knownItems del componente Inventory.");
+#endif
         var runtimeItem = ScriptableObject.CreateInstance<ItemData>();
         runtimeItem.itemId = itemId;
         runtimeItem.displayName = itemId;
@@ -312,7 +322,9 @@ public class Inventory : MonoBehaviour
                 if (!item) continue;
                 if (item.itemId == itemId)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[Inventory] Item '{itemId}' resuelto desde knownItems");
+#endif
                     RegisterDefinition(item);
                     return item;
                 }
@@ -326,7 +338,9 @@ public class Inventory : MonoBehaviour
             var resolved = registry.Get(itemId);
             if (resolved != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Inventory] Item '{itemId}' resuelto desde ItemRegistry");
+#endif
                 RegisterDefinition(resolved);
                 return resolved;
             }
@@ -337,7 +351,9 @@ public class Inventory : MonoBehaviour
         var directLoad = Resources.Load<ItemData>($"Items/{itemId}");
         if (directLoad != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Inventory] Item '{itemId}' resuelto directamente desde Resources/Items/");
+#endif
             RegisterDefinition(directLoad);
             return directLoad;
         }
@@ -349,13 +365,17 @@ public class Inventory : MonoBehaviour
         {
             if (item != null && item.itemId == itemId)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Inventory] Item '{itemId}' encontrado mediante búsqueda exhaustiva en Resources");
+#endif
                 RegisterDefinition(item);
                 return item;
             }
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[Inventory] ⚠️ No se pudo resolver el item '{itemId}' desde ninguna fuente. Verifica que el itemId coincida con el asset o que esté en el ItemRegistry.");
+#endif
         return null;
     }
 

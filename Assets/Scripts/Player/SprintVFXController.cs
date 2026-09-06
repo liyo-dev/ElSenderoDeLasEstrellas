@@ -46,7 +46,9 @@ public class SprintVFXController : MonoBehaviour
     {
         if (_animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[SprintVFXController] No se encontró Animator. Desactivando.");
+#endif
             enabled = false;
             return;
         }

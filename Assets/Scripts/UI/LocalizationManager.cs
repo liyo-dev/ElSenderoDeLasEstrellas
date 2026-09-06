@@ -63,16 +63,22 @@ public class LocalizationManager : MonoBehaviour
             var textAsset = Resources.Load<TextAsset>(path);
             if (textAsset == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[Localization] Missing catalog: {path}. Falling back to default.");
+#endif
                 var fallback = Resources.Load<TextAsset>($"Localization/{cat}_{defaultLocale}");
                 if (fallback != null) 
                 {
                     MergeJsonIntoTables(fallback.text);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[LocalizationManager] ✓ Cargado catálogo fallback: {cat}_{defaultLocale}");
+#endif
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[Localization] Missing fallback catalog as well: {cat}_{defaultLocale}");
+#endif
                 }
             }
             else
@@ -118,7 +124,9 @@ public class LocalizationManager : MonoBehaviour
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[Localization] Error parsing JSON: {e.Message}");
+#endif
         }
     }
 

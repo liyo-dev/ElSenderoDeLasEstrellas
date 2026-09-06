@@ -130,16 +130,26 @@ namespace Game.NPC.Common
         public void Log(string message)
         {
             if (DebugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPC:{Transform.name}] {message}");
+#endif
+                }
         }
         public void LogWarning(string message)
         {
             if (DebugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPC:{Transform.name}] {message}");
+#endif
+                }
         }
         public void LogError(string message)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[NPC:{Transform.name}] {message}");
+#endif
         }
     }
 }

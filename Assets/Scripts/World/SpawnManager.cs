@@ -39,7 +39,9 @@ public class SpawnManager : MonoBehaviour
     {
         if (_initialized) return;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[SpawnManager] 🔍 HandleProfileReady() llamado - GameBootService.IsAvailable: {GameBootService.IsAvailable}");
+#endif
 
         // Inicializar con el anchor del preset activo
         var bootProfile = GameBootService.Profile;
@@ -48,25 +50,33 @@ public class SpawnManager : MonoBehaviour
             var activePreset = bootProfile.GetActivePresetResolved();
             var startAnchor = bootProfile.GetStartAnchorOrDefault();
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[SpawnManager] 🔍 Profile: {bootProfile.name}");
             Debug.Log($"[SpawnManager] 🔍 ActivePreset: {(activePreset != null ? activePreset.name : "NULL")}");
             Debug.Log($"[SpawnManager] 🔍 StartAnchor obtenido: '{startAnchor}'");
             Debug.Log($"[SpawnManager] 🔍 ShouldBootFromPreset: {bootProfile.ShouldBootFromPreset()}");
             Debug.Log($"[SpawnManager] 🔍 HasLoadedSaveData: {(bootProfile.GetActivePresetResolved()?.name.Contains("Runtime") ?? false)}");
+#endif
             
             if (!string.IsNullOrEmpty(startAnchor))
             {
                 SetCurrentAnchor(startAnchor);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[SpawnManager] ✅ Anchor establecido desde profile: '{startAnchor}'");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[SpawnManager] ⚠️ Profile no tiene anchor definido - usando fallback");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SpawnManager] ❌ Profile es NULL - no se pudo establecer anchor inicial");
+#endif
         }
 
         _initialized = true;

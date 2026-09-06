@@ -204,7 +204,9 @@ public class QuestMenuManager : MonoBehaviour
 
             if (quickMenu == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[QuestMenuManager] quickMenu reference is null - cannot open quick menu.");
+#endif
                 return;
             }
 
@@ -242,7 +244,9 @@ public class QuestMenuManager : MonoBehaviour
             }
             catch (System.Exception ex)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[QuestMenuManager] Exception while showing quickMenu: {ex}");
+#endif
             }
         }
         else if (quickIsOpen && !mainIsOpen)

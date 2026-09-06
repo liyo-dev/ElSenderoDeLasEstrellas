@@ -156,9 +156,9 @@ public class DialogueManager : MonoBehaviour
     // Fallbacks para el player speaker (cuando no usa NPCSimpleAnimator)
     private static readonly string[] PlayerSpeakStateCandidates =
     {
-        "InteractWithPeople_NoWeapon",
-        "UpperBody.InteractWithPeople_NoWeapon",
-        "Base Layer.InteractWithPeople_NoWeapon",
+        "Talk01",
+        "UpperBody.Talk01",
+        "Base Layer.Talk01",
         "Greeting01_NoWeapon",
         "Greeting01",
         "UpperBody.Greeting01_NoWeapon",
@@ -200,17 +200,23 @@ public class DialogueManager : MonoBehaviour
         // Validar y forzar configuración correcta del typewriter
         if (!useTypewriter)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueManager] ⚠️ useTypewriter está DESACTIVADO en el Inspector. Forzando activación.");
+#endif
             useTypewriter = true;
         }
         if (charsPerSecond <= 0f || charsPerSecond > 100f)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] ⚠️ charsPerSecond tiene valor incorrecto ({charsPerSecond}). Ajustando a 35.");
+#endif
             charsPerSecond = 35f;
         }
         if (letterSoundFrequency < 1)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] ⚠️ letterSoundFrequency tiene valor incorrecto ({letterSoundFrequency}). Ajustando a 1.");
+#endif
             letterSoundFrequency = 1;
         }
         
@@ -222,6 +228,27 @@ public class DialogueManager : MonoBehaviour
             group.blocksRaycasts = false;
             group.interactable = false;
         }
+
+        // FIX (5 sept 2026 — incidencia Raúl: diálogo de Eldran sin cuadro/letras justo tras la
+        // presentación del demonio, reproducible saltando la cinemática previa del Despertar de la
+        // Estrella): este Canvas lleva un SceneBoundUI (uniqueId "DialogueManager") que, al no estar
+        // excluido, queda sujeto al snapshot/restauración genérico de SceneBoundUI.BeginBossIntro()/
+        // EndBossIntro() — exactamente el mismo CanvasGroup que StartDialogue()/Close() gestionan a
+        // mano con asignaciones directas (nunca tweens). EndBossIntro() lanza su propio DOTween.DOFade
+        // hacia el alpha capturado antes de la intro (0.35s por defecto) al terminar la presentación
+        // del boss; si un StartDialogue() para la línea de aviso de Eldran llega mientras ese tween
+        // sigue vivo, gana el tween en cada frame siguiente y pisa el alpha=1 recién puesto por
+        // StartDialogue() — el typewriter y el sonido letra a letra siguen su curso con normalidad
+        // (no dependen del CanvasGroup), pero el cuadro nunca llega a verse. Mismo patrón de bug ya
+        // diagnosticado y corregido para PlayerHUDV2 (ver su Awake(): "justo al entrar en combate
+        // contra un boss que arranca pegado a una cinemática") — aplicamos aquí la misma exclusión,
+        // dejando que StartDialogue()/Close() sean la única fuente de verdad sobre este CanvasGroup.
+        // NOTA: el CanvasGroup/SceneBoundUI viven en el GameObject hijo "Canvas" (donde
+        // también cuelga "Panel/boton A" = submitHint), no en el GameObject raíz de este
+        // script — a diferencia de PlayerHUDV2, donde SceneBoundUI sí vive en el mismo
+        // GameObject que el script. Por eso se consulta sobre group.gameObject, no sobre
+        // GetComponent() directo (que no encontraría nada y sería un no-op silencioso).
+        group?.GetComponent<SceneBoundUI>()?.ExcludeFromBossIntro();
 
         // Asegurar choices ocultos por defecto
         if (choicesRoot != null)
@@ -446,7 +473,9 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DialogueManager] ❌ CanvasGroup es NULL - el diálogo no se mostrará");
+#endif
         }
 
         _dreamBackground?.StartDream();
@@ -475,7 +504,9 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[DialogueManager] No se encontró el jugador para el sistema cinematográfico");
+#endif
             }
         }
         else if (useDialogueCameraLegacy && isActualNPC && DialogueCameraController.Instance != null)
@@ -498,7 +529,9 @@ public class DialogueManager : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[DialogueManager] ⚠️ Sistema cinematográfico NO activado - useCinematic={useCinematicCamera}, NPC={_currentNpc?.name ?? "NULL"}, esNPC={isActualNPC}, Controller Instance={DialogueCinematicController.Instance != null}");
+#endif
             }
         }
 
@@ -617,7 +650,9 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] ⚠️ No se encontró Animator en el jugador");
+#endif
         }
         
         // 3. EFECTOS CINEMATOGRÁFICOS DE CÁMARA
@@ -633,7 +668,9 @@ public class DialogueManager : MonoBehaviour
         }
         else if (verboseLogging)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueManager] ⏭️ Slowmo omitido (diálogo de derrota)");
+#endif
         }
         
         // Screen flash rojo sutil para tensión
@@ -909,7 +946,9 @@ public class DialogueManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] EventSystem or yesButton missing. es={(es!=null)} yes={(yesButton!=null)}");
+#endif
         }
 
         // Activar action map UI para que Navigate (joystick/dpad) y Cancel (B) funcionen
@@ -1110,7 +1149,9 @@ public class DialogueManager : MonoBehaviour
             yield return null;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[DialogueManager TypeRoutine] ✅ Completado - {shown}/{total} caracteres mostrados");
+#endif
 
         bodyText.maxVisibleCharacters = total;
         TryForceMeshUpdate();
@@ -1290,7 +1331,9 @@ public class DialogueManager : MonoBehaviour
             // Pause" activado en la consola durante el playtesting. Sigue siendo visible en la
             // consola para detectar si la capa 0 (PinSpriteTagsToExplicitAsset) deja algún caso
             // sin cubrir.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] ForceMeshUpdate() falló (bug conocido de TMP con <sprite> + fallback sprite assets, ver TDD.md § 13 U1). Texto: '{_currentText}'. Excepción: {ex}");
+#endif
             return false;
         }
     }
@@ -1336,7 +1379,9 @@ public class DialogueManager : MonoBehaviour
         // Buscar el jugador usando PlayerService
         if (!PlayerService.TryGetPlayer(out var player, allowSceneLookup: true) || player == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueManager] No se encontró el jugador para activar modo diálogo");
+#endif
             return;
         }
 
@@ -1344,7 +1389,9 @@ public class DialogueManager : MonoBehaviour
         var actionManager = player.GetComponent<PlayerActionManager>();
         if (actionManager == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueManager] El jugador no tiene PlayerActionManager, no se puede bloquear el movimiento");
+#endif
             return;
         }
 
@@ -1645,7 +1692,9 @@ public class DialogueManager : MonoBehaviour
     {
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[DialogueManager] ⚠️ ActivatePlayerInteractionAnimation: No se encontró el player");
+#endif
             return;
         }
 
@@ -1670,7 +1719,9 @@ public class DialogueManager : MonoBehaviour
         var animator = playerGo.GetComponent<Animator>() ?? playerGo.GetComponentInChildren<Animator>(true);
         if (animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[DialogueManager] ⚠️ ActivatePlayerInteractionAnimation: Player '{playerGo.name}' no tiene Animator");
+#endif
             return;
         }
 
@@ -1692,7 +1743,9 @@ public class DialogueManager : MonoBehaviour
             bool played = TryPlayAnyState(animator, PlayerLocomotionStateCandidates, out var playedState);
             if (verboseLogging && played)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueManager] 🎭 Player '{playerGo.name}' animación diálogo DESACTIVADA, retorno a '{playedState}'");
+#endif
             }
         }
     }

@@ -79,11 +79,15 @@ public class ChaserAI : MonoBehaviour
         
         if (_useNpcAnimator)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ChaserAI] Usando NPCSimpleAnimator para animaciones de {name}");
+#endif
         }
         else if (animator)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ChaserAI] Usando Animator directo con parámetro '{runAnimParam}' para {name}");
+#endif
         }
     }
 
@@ -137,7 +141,9 @@ public class ChaserAI : MonoBehaviour
     /// </summary>
     public void StartChasing()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ChaserAI] 🏃 StartChasing() llamado en {name}");
+#endif
         
         // ✅ FIX: Asegurar que tenemos el NavMeshAgent (puede haberse añadido dinámicamente)
         if (agent == null)
@@ -145,7 +151,9 @@ public class ChaserAI : MonoBehaviour
             agent = GetComponent<NavMeshAgent>();
             if (agent == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[ChaserAI] ❌ No hay NavMeshAgent en {name}. Añadiendo uno...");
+#endif
                 agent = gameObject.AddComponent<NavMeshAgent>();
             }
         }
@@ -166,11 +174,15 @@ public class ChaserAI : MonoBehaviour
             if (PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) && playerGo != null)
             {
                 target = playerGo.transform;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ChaserAI] ✅ Target encontrado: {target.name}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[ChaserAI] ❌ No se encontró al jugador para perseguir");
+#endif
                 return;
             }
         }
@@ -182,16 +194,22 @@ public class ChaserAI : MonoBehaviour
             // Verificar que el NavMeshAgent esté en NavMesh válido
             if (!agent.isOnNavMesh)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ChaserAI] ⚠️ Agent no está en NavMesh. Intentando warpar...");
+#endif
                 // Intentar colocar en NavMesh
                 if (UnityEngine.AI.NavMesh.SamplePosition(transform.position, out var hit, 5f, NavMesh.AllAreas))
                 {
                     agent.Warp(hit.position);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ChaserAI] ✅ Warpado a posición válida de NavMesh: {hit.position}");
+#endif
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError("[ChaserAI] ❌ No se encontró NavMesh cerca del perseguidor");
+#endif
                     return;
                 }
             }
@@ -210,30 +228,42 @@ public class ChaserAI : MonoBehaviour
             agent.updatePosition = true;
             agent.isStopped = false;
             agent.SetDestination(target.position);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ChaserAI] ✅ NavMeshAgent configurado. Speed: {agent.speed}, Destination: {target.position}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ChaserAI] ❌ No hay NavMeshAgent asignado");
+#endif
         }
 
         // Activar animación de correr
         if (_useNpcAnimator && _npcAnimator != null)
         {
             _npcAnimator.SetMovementSpeed(1f); // Velocidad máxima
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[ChaserAI] 🎬 Animación via NPCSimpleAnimator activada");
+#endif
         }
         else if (animator && !string.IsNullOrEmpty(runAnimParam))
         {
             animator.SetBool(runAnimParam, true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ChaserAI] 🎬 Animación via Animator activada (param: {runAnimParam})");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ChaserAI] ⚠️ No hay sistema de animación disponible");
+#endif
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ChaserAI] ¡Comenzó la persecución!");
+#endif
     }
 
     /// <summary>
@@ -259,7 +289,9 @@ public class ChaserAI : MonoBehaviour
             animator.SetBool(runAnimParam, false);
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ChaserAI] Persecución detenida.");
+#endif
     }
 
     /// <summary>
@@ -279,7 +311,9 @@ public class ChaserAI : MonoBehaviour
         }
         
         transform.rotation = _startRotation;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ChaserAI] Reiniciado a posición inicial.");
+#endif
     }
 
     /// <summary>
@@ -318,12 +352,16 @@ public class ChaserAI : MonoBehaviour
             transform.position = position;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ChaserAI] ⚡ Teletransportado a {position}");
+#endif
     }
 
     private void CatchPlayer()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ChaserAI] ¡Jugador atrapado!");
+#endif
         StopChasing();
         OnCaughtPlayer?.Invoke();
     }
@@ -347,7 +385,9 @@ public class ChaserAI : MonoBehaviour
     /// </summary>
     public void ReinitializeAfterSceneChange(Transform newTarget = null)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ChaserAI] 🔄 ReinitializeAfterSceneChange llamado en {name}");
+#endif
         
         bool wasChasing = _isChasing;
         
@@ -355,7 +395,9 @@ public class ChaserAI : MonoBehaviour
         if (newTarget != null)
         {
             target = newTarget;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ChaserAI] ✅ Target actualizado a: {target.name}");
+#endif
         }
         
         // Buscar el jugador si no hay target
@@ -364,7 +406,9 @@ public class ChaserAI : MonoBehaviour
             if (PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) && playerGo != null)
             {
                 target = playerGo.transform;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ChaserAI] ✅ Target encontrado via PlayerService: {target.name}");
+#endif
             }
         }
         
@@ -378,7 +422,9 @@ public class ChaserAI : MonoBehaviour
             // Verificar que el NavMeshAgent esté en un NavMesh válido
             if (!agent.isOnNavMesh)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ChaserAI] ⚠️ Agent no está en NavMesh después del cambio de escena");
+#endif
                 
                 // Buscar una posición válida en NavMesh
                 if (NavMesh.SamplePosition(transform.position, out var hit, 10f, NavMesh.AllAreas))
@@ -391,17 +437,23 @@ public class ChaserAI : MonoBehaviour
                     if (agent.isOnNavMesh)
                     {
                         agent.Warp(hit.position);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[ChaserAI] ✅ Warpado a NavMesh válido: {hit.position}");
+#endif
                     }
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[ChaserAI] ❌ No se encontró NavMesh cerca de {transform.position}");
+#endif
                 }
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ChaserAI] ✅ Agent ya está en NavMesh en posición: {transform.position}");
+#endif
             }
             
             // Configurar velocidad
@@ -412,7 +464,9 @@ public class ChaserAI : MonoBehaviour
             {
                 agent.isStopped = false;
                 agent.SetDestination(target.position);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ChaserAI] 🏃 Persecución retomada hacia: {target.position}");
+#endif
             }
         }
     }

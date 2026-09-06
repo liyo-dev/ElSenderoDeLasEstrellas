@@ -75,7 +75,9 @@ public static class GameLog
 
     public static void Error(string tag, string message, UnityEngine.Object ctx = null)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogError($"[{tag}] {message}", ctx);
+#endif
     }
 
     // ── Control ───────────────────────────────────────────────────────────────

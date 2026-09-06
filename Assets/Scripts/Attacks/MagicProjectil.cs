@@ -317,7 +317,9 @@ public class MagicProjectile : MonoBehaviour
         }
 
         // 🔍 DEBUG: Log de cada colisión (solo si no se ignora)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[MagicProjectile] OnHit: {objectName} (Layer: {layerName}, Tag: {other.tag})");
+#endif
 
         // ✅ PRIORIDAD 1: Detectar colisión con proyectiles enemigos (layer "ProjectileEnemy" o "EnemyProjectile")
         if (layerName == "ProjectileEnemy" || layerName == "EnemyProjectile")

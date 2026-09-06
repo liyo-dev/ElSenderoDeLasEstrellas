@@ -60,7 +60,9 @@ public class BossHealthBar : MonoBehaviour
         _bossDamageable = GetComponent<Damageable>();
         if (!_bossDamageable)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[BossHealthBar] No se encontró Damageable en el GameObject.", this);
+#endif
             enabled = false;
             return;
         }

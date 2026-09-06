@@ -302,7 +302,9 @@ public class DramaticTextOverlayUI : MonoBehaviour
     {
         if (_label == null || _textContainer == null || _rootGroup == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DramaticTextOverlayUI] ❌ Referencias UI nulas — asigna _label, _textContainer y _rootGroup en el Inspector.");
+#endif
             yield break;
         }
 

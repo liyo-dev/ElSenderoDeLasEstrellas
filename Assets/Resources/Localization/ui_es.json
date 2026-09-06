@@ -282,7 +282,7 @@
         },
         {
             "key": "GLYPH_STICK",
-            "value": "el Joystick"
+            "value": "Stick izquierdo"
         },
         {
             "key": "GLYPH_STICK_CLICK",
@@ -1467,6 +1467,142 @@
         {
             "key": "WOODS_EXIT_BLOCKED",
             "value": "Debería hablar con ese guarda."
+        },
+        {
+            "key": "EQUIP_CATEGORY_WEAPONR",
+            "value": "Arma Mano Derecha"
+        },
+        {
+            "key": "EQUIP_CATEGORY_SHIELDR",
+            "value": "Escudo Mano Izquierda"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BOW",
+            "value": "Arco"
+        },
+        {
+            "key": "EQUIP_CATEGORY_BODY",
+            "value": "Vestuario"
+        },
+        {
+            "key": "EQUIP_CATEGORY_CLOAK",
+            "value": "Capa"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HEAD",
+            "value": "Cabeza"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAIR",
+            "value": "Pelo"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYES",
+            "value": "Ojos"
+        },
+        {
+            "key": "EQUIP_CATEGORY_MOUTH",
+            "value": "Boca"
+        },
+        {
+            "key": "EQUIP_CATEGORY_HAT",
+            "value": "Casco"
+        },
+        {
+            "key": "EQUIP_CATEGORY_EYEBROW",
+            "value": "Ceja"
+        },
+        {
+            "key": "EQUIP_CATEGORY_ACCESSORY",
+            "value": "Accesorio"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_TITLE",
+            "value": "Ataque físico"
+        },
+        {
+            "key": "ABILITY_PHYSICALATTACK_DESC",
+            "value": "Golpe básico cuerpo a cuerpo."
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_TITLE",
+            "value": "Magia"
+        },
+        {
+            "key": "ABILITY_MAGICATTACK_DESC",
+            "value": "Permite canalizar y usar hechizos."
+        },
+        {
+            "key": "ABILITY_DASH_TITLE",
+            "value": "Impulso"
+        },
+        {
+            "key": "ABILITY_DASH_DESC",
+            "value": "Esquiva rápida para evitar daño."
+        },
+        {
+            "key": "ABILITY_BLOCK_TITLE",
+            "value": "Bloqueo"
+        },
+        {
+            "key": "ABILITY_BLOCK_DESC",
+            "value": "Levanta la guardia para reducir daño."
+        },
+        {
+            "key": "ABILITY_SWIM_TITLE",
+            "value": "Nadar"
+        },
+        {
+            "key": "ABILITY_SWIM_DESC",
+            "value": "Permite moverse por el agua."
+        },
+        {
+            "key": "ABILITY_JUMP_TITLE",
+            "value": "Saltar"
+        },
+        {
+            "key": "ABILITY_JUMP_DESC",
+            "value": "Habilidad básica para superar obstáculos."
+        },
+        {
+            "key": "ABILITY_CLIMB_TITLE",
+            "value": "Trepar"
+        },
+        {
+            "key": "ABILITY_CLIMB_DESC",
+            "value": "Accede a superficies verticales."
+        },
+        {
+            "key": "ABILITY_MAGIC_TITLE",
+            "value": "Magia"
+        },
+        {
+            "key": "ABILITY_MAGIC_DESC",
+            "value": "Activa el uso de hechizos."
+        },
+        {
+            "key": "ABILITY_FLY_TITLE",
+            "value": "Volar"
+        },
+        {
+            "key": "ABILITY_FLY_DESC",
+            "value": "Permite desplazarse por el aire."
+        },
+        {
+            "key": "ABILITY_SPRINT_TITLE",
+            "value": "Esprintar"
+        },
+        {
+            "key": "ABILITY_SPRINT_DESC",
+            "value": "Corre más rápido durante un tiempo limitado."
+        },
+        {
+            "key": "ABILITY_SHIELD_TITLE",
+            "value": "Escudo"
+        },
+        {
+            "key": "ABILITY_SHIELD_DESC",
+            "value": "Levanta un escudo para bloquear ataques enemigos."
         }
     ]
 }

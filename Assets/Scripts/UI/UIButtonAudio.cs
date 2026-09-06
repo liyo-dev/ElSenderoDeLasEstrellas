@@ -66,7 +66,9 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
     // Detecta selección por gamepad/teclado
     public void OnSelect(BaseEventData eventData)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[UIButtonAudio] OnSelect en {gameObject.name}, playHoverSound={playHoverSound}, MuteAll={MuteAll}");
+#endif
         if (!playHoverSound) return;
         PlaySound(hoverSoundKey, hoverVolume);
     }
@@ -75,21 +77,29 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
     {
         if (MuteAll)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[UIButtonAudio] PlaySound BLOQUEADO por MuteAll - {soundKey}");
+#endif
             return;
         }
         if (string.IsNullOrEmpty(soundKey))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[UIButtonAudio] PlaySound - soundKey vacío");
+#endif
             return;
         }
         if (AudioService.Instance == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[UIButtonAudio] AudioService.Instance es NULL");
+#endif
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[UIButtonAudio] ✅ PlaySound: {soundKey}");
+#endif
         AudioService.Instance.PlaySFX(soundKey, volume);
     }
 }

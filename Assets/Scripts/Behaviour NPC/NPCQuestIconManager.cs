@@ -37,7 +37,9 @@ namespace Game.NPC
             
             if (_npcManager == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NPCQuestIconManager:{name}] Falta NPCBehaviourManagerV2");
+#endif
                 enabled = false;
             }
         }

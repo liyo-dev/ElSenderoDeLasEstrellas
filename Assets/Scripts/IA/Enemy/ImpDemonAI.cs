@@ -86,6 +86,21 @@ public class ImpDemonAI : MonoBehaviour
     [SerializeField] private float attackRecoveryBeat = 0.45f;
     private float _lastAttackEndTime = -999f;
 
+    [Header("🏃 Anti-Kiting (Fase 1)")]
+    [Tooltip("FIX (petición Raúl, 4 sep 2026 — combate aburrido / \"te alejas un poco y lo matas "
+             + "sin esfuerzo\"): en Fase 1 el Demonio NO tiene ningún ataque a distancia a propósito "
+             + "(DecideRangedAttack está bloqueado hasta Fase 2) — si el jugador se queda fuera de "
+             + "attackRange (melee) disparando, antes el Demonio se limitaba a perseguir a velocidad "
+             + "normal, indefenso. Tras kitingLungeDelay segundos de persecución sin alcanzar rango, "
+             + "hace un lunge breve (ráfaga de velocidad) para cerrar distancia — no es el Dash "
+             + "completo de la 2ª aparición, solo una respuesta mínima para que kitear en Fase 1 no "
+             + "sea gratis.")]
+    [SerializeField] private float kitingLungeDelay = 2.5f;
+    [SerializeField] private float kitingLungeSpeedMultiplier = 1.6f;
+    [SerializeField] private float kitingLungeDuration = 0.7f;
+    private float _kitingSinceTime = -1f;
+    private bool _isLungingAtPlayer = false;
+
     [Header("DEBUG")]
     [SerializeField] private bool debugLogAnimator = false;
 
@@ -232,30 +247,40 @@ public class ImpDemonAI : MonoBehaviour
     {
         if (animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ImpDemonAI] No hay Animator asignado para inspeccionar.");
+#endif
             return;
         }
 
         var controller = animator.runtimeAnimatorController;
         string ctrlName = controller != null ? controller.name : "<null>";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ImpDemonAI] Animator Controller: {ctrlName}");
         Debug.Log($"[ImpDemonAI] Layer count: {animator.layerCount}");
+#endif
 
         if (controller != null)
         {
             var clips = controller.animationClips;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ImpDemonAI] Animation Clips ({(clips != null ? clips.Length : 0)}):");
+#endif
             if (clips != null)
             {
                 foreach (var c in clips)
                 {
                     if (c == null) continue;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($" - {c.name}");
+#endif
                 }
             }
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ImpDemonAI] Mapeo de animaciones usadas:");
+#endif
         foreach (var kv in AnimNameMap)
         {
             int hash = kv.Key;
@@ -502,6 +527,33 @@ public class ImpDemonAI : MonoBehaviour
         yield return StartCoroutine(RainAttack());
     }
 
+    // FIX (petición Raúl, 4 sep 2026): respuesta mínima anti-kiting para la Fase 1 (ver
+    // kitingLungeDelay). No es un ataque — no hace daño ni tiene animación propia — solo una
+    // ráfaga de velocidad del NavMeshAgent para cerrar distancia cuando el jugador se mantiene
+    // fuera de attackRange disparando. Restaura la velocidad original del agente al terminar,
+    // guardando el valor de partida por si ya venía escalado por un cambio de fase anterior.
+    private IEnumerator Phase1KiteLunge()
+    {
+        if (!agent || !agent.isOnNavMesh) yield break;
+
+        _isLungingAtPlayer = true;
+        float originalSpeed = agent.speed;
+        agent.speed = originalSpeed * kitingLungeSpeedMultiplier;
+
+        float elapsed = 0f;
+        while (elapsed < kitingLungeDuration && player && agent && agent.isOnNavMesh)
+        {
+            agent.SetDestination(player.position);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (agent && agent.isOnNavMesh)
+            agent.speed = originalSpeed;
+
+        _isLungingAtPlayer = false;
+    }
+
     private void UpdateBehavior()
     {
         if (isAttacking || currentState == BossState.TakingDamage) return;
@@ -520,6 +572,7 @@ public class ImpDemonAI : MonoBehaviour
 
         if (distanceToPlayer <= attackRange)
         {
+            _kitingSinceTime = -1f;
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
             if (CanStartNewAttack())
                 DecideMeleeAttack();
@@ -528,6 +581,7 @@ public class ImpDemonAI : MonoBehaviour
         }
         else if (distanceToPlayer <= projectileRange && currentPhase != BossPhase.Phase1)
         {
+            _kitingSinceTime = -1f;
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
             if (CanStartNewAttack())
                 DecideRangedAttack();
@@ -548,6 +602,19 @@ public class ImpDemonAI : MonoBehaviour
                     LookAtPlayer();
             }
             PlayAnimation(AnimFlyForward);
+
+            // FIX (petición Raúl, 4 sep 2026): ver comentario de kitingLungeDelay más arriba —
+            // solo aplica en Fase 1 (Fase 2+ ya tienen ataque a distancia propio para esto).
+            if (currentPhase == BossPhase.Phase1 && !_isLungingAtPlayer)
+            {
+                if (_kitingSinceTime < 0f) _kitingSinceTime = Time.time;
+
+                if (Time.time - _kitingSinceTime >= kitingLungeDelay)
+                {
+                    _kitingSinceTime = -1f;
+                    StartCoroutine(Phase1KiteLunge());
+                }
+            }
         }
 
         if (currentPhase == BossPhase.Phase3 && CanStartNewAttack())
@@ -1086,7 +1153,9 @@ public class ImpDemonAI : MonoBehaviour
             }
             catch (System.Exception ex)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación mapeada hash={animHash}: {ex.Message}");
+#endif
             }
         }
 
@@ -1102,13 +1171,17 @@ public class ImpDemonAI : MonoBehaviour
             }
             catch (System.Exception ex)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación hash={animHash} en capa={layerIndex}: {ex.Message}");
+#endif
             }
             return;
         }
 
         string animName = AnimNameMap.TryGetValue(animHash, out var n) ? n : animHash.ToString();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[ImpDemonAI] Estado '{animName}' no encontrado. Reproduciendo Idle como fallback.");
+#endif
         int idleLayer = AnimatorLayerContainingState(AnimIdle);
         if (idleLayer >= 0)
         {

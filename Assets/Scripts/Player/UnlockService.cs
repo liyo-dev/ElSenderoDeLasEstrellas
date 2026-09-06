@@ -13,7 +13,9 @@ public static class UnlockService
     {
         if (!GameBootService.IsAvailable || GameBootService.Profile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[UnlockService] GameBootService no está disponible todavía");
+#endif
             return null;
         }
         return GameBootService.Profile.GetActivePresetResolved();
@@ -62,7 +64,9 @@ public static class UnlockService
                     preset.maxMP = desiredMax;
                     preset.currentMP = desiredCurrent;
                     changed = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[UnlockService] MagicAttack desbloqueado: Maná seteado a {desiredCurrent}/{desiredMax} (100%)");
+#endif
                 }
 
                 // Propagar el unlock de Magic (AbilityKey) SOLO si es la primera vez
@@ -131,7 +135,9 @@ public static class UnlockService
                         preset.maxMP = newMax;
                         preset.currentMP = newCurrent;
                         changed = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[UnlockService] Magic desbloqueada: Maná seteado a {newCurrent}/{newMax} (100%)");
+#endif
                     }
                 }
                 break;
@@ -231,7 +237,9 @@ public static class UnlockService
         float oldCur = preset.currentMP;
         preset.maxMP = Mathf.Max(preset.maxMP, minMax);
         preset.currentMP = Mathf.Clamp(Mathf.Max(preset.currentMP, minCurrent), 0f, preset.maxMP);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[UnlockService] EnsureMana(minMax={minMax}, minCurrent={minCurrent}) - Antes: {oldMax}/{oldCur} -> Después: {preset.maxMP}/{preset.currentMP}");
+#endif
         return !Mathf.Approximately(oldMax, preset.maxMP) || !Mathf.Approximately(oldCur, preset.currentMP);
     }
 

@@ -49,7 +49,7 @@ MonoBehaviour:
   - emotion: 6
     eyeMeshName: Eye07
     mouthMeshName: Mouth11
-    bodyAnimStateName: InteractWithPeople_NoWeapon
+    bodyAnimStateName: Question01
   neutralBodyAnims:
   - Talk01
   - Talk02

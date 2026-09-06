@@ -31,7 +31,9 @@ public class LoadScene : MonoBehaviour
     {
         if (string.IsNullOrEmpty(sceneName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[LoadScene] No scene name specified!");
+#endif
             return;
         }
 

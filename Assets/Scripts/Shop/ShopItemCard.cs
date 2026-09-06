@@ -41,14 +41,18 @@ public class ShopItemCard : MonoBehaviour
         
         if (entry == null || entry.item == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ShopItemCard] Setup: entry o item es null");
+#endif
             return;
         }
         
         var item = entry.item;
         int price = entry.GetBuyPrice();
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ShopItemCard] Setup: {item.displayName}, precio={price}");
+#endif
         
         if (iconImage != null)
             iconImage.sprite = item.icon;
@@ -65,7 +69,9 @@ public class ShopItemCard : MonoBehaviour
             // Ya no se usa el emoji 💰 literal: el icono de moneda es ahora el sprite
             // real "coin.png" (CoinIcon) mostrado junto a este texto en el prefab.
             priceText.text = $"{price}";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ShopItemCard] PriceText actualizado a: {priceText.text}");
+#endif
         }
         else
             Debug.LogWarning("[ShopItemCard] priceText es NULL - no está asignado en el inspector");

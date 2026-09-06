@@ -23,19 +23,25 @@ public class NavMeshAgentForceStop : MonoBehaviour
         
         if (_agent == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[ForceStop:{name}] ❌ No tiene NavMeshAgent!");
+#endif
             enabled = false;
             return;
         }
         
         if (_manager == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[ForceStop:{name}] ❌ No tiene NPCBehaviourManagerV2!");
+#endif
             enabled = false;
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ForceStop:{name}] ✅ Iniciado - Modo: {(disableAgentInIdle ? "DESACTIVAR" : "FORZAR STOP")}");
+#endif
     }
     
     void LateUpdate()
@@ -50,7 +56,9 @@ public class NavMeshAgentForceStop : MonoBehaviour
             // Detectar transición a Idle
             if (!_lastWasIdle && debugMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ForceStop:{name}] 🔄 Entró en IdleState");
+#endif
             }
             
             if (disableAgentInIdle)
@@ -59,7 +67,11 @@ public class NavMeshAgentForceStop : MonoBehaviour
                 if (_agent.enabled)
                 {
                     if (debugMode)
+                        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning($"[ForceStop:{name}] ⚠️ DESACTIVANDO NavMeshAgent en IdleState");
+#endif
+                        }
                     
                     _agent.isStopped = true;
                     _agent.velocity = Vector3.zero;
@@ -77,7 +89,11 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     if (!_agent.isStopped)
                     {
                         if (debugMode)
+                            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ isStopped era FALSE, corrigiendo");
+#endif
+                            }
                         _agent.isStopped = true;
                         needsFix = true;
                     }
@@ -85,7 +101,11 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     if (_agent.velocity.sqrMagnitude > 0.01f)
                     {
                         if (debugMode)
+                            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ Velocidad residual: {_agent.velocity.magnitude:F1}, limpiando");
+#endif
+                            }
                         _agent.velocity = Vector3.zero;
                         needsFix = true;
                     }
@@ -93,14 +113,20 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     if (_agent.hasPath)
                     {
                         if (debugMode)
+                            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ Tiene path activo, reseteando");
+#endif
+                            }
                         _agent.ResetPath();
                         needsFix = true;
                     }
                     
                     if (needsFix && debugMode)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[ForceStop:{name}] 🔥 ALGUIEN ESTÁ REACTIVANDO EL AGENTE! Verificar otros scripts.");
+#endif
                     }
                 }
             }
@@ -110,14 +136,20 @@ public class NavMeshAgentForceStop : MonoBehaviour
             // Detectar transición fuera de Idle
             if (_lastWasIdle && debugMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ForceStop:{name}] 🔄 Salió de IdleState → {_manager.Brain.CurrentState.StateName}");
+#endif
             }
             
             // Reactivar el agente si estaba desactivado
             if (disableAgentInIdle && !_agent.enabled)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ForceStop:{name}] ✅ Reactivando NavMeshAgent para {_manager.Brain.CurrentState.StateName}");
+#endif
+                    }
                 _agent.enabled = true;
             }
         }

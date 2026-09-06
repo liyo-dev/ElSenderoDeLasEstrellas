@@ -25,9 +25,16 @@ public static class AbilityPresentationLookup
         { AbilityId.Block,          new AbilityPresentation { abilityId = AbilityId.Block,          title = "Bloqueo",        description = "Levanta la guardia para reducir daño." } },
     };
 
+    // Claves de localización (ui_es.json/ui_en.json): ABILITY_<ID EN MAYÚSCULAS>_TITLE / _DESC.
+    // Los valores de arriba (Defaults) se usan solo como fallback en español si LocalizationManager
+    // todavía no está listo o falta la clave — mismo patrón ya usado en el resto de la UI de
+    // inventario (ver PlayerEquipmentMenuController, clase SpellView.Loc()/EquipmentView).
+    static string Loc(string key, string fallback) =>
+        LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
+
     /// <summary>
     /// Devuelve la presentación para una habilidad usando primero la lista personalizada proporcionada.
-    /// Si no hay coincidencia se usan valores por defecto o el id como título.
+    /// Si no hay coincidencia se usan valores por defecto (localizados) o el id como título.
     /// </summary>
     public static AbilityPresentation Resolve(AbilityId abilityId, IList<AbilityPresentation> custom)
     {
@@ -45,7 +52,14 @@ public static class AbilityPresentationLookup
 
         if (Defaults.TryGetValue(abilityId, out var preset))
         {
-            return preset;
+            string keyBase = "ABILITY_" + abilityId.ToString().ToUpperInvariant();
+            return new AbilityPresentation
+            {
+                abilityId = preset.abilityId,
+                title = Loc(keyBase + "_TITLE", preset.title),
+                description = Loc(keyBase + "_DESC", preset.description),
+                icon = preset.icon
+            };
         }
 
         return new AbilityPresentation

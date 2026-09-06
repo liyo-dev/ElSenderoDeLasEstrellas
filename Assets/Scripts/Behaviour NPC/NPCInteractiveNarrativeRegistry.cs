@@ -20,7 +20,9 @@ namespace Game.NPC.Modules
         {
             if (executor == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[NPCInteractiveNarrativeRegistry] Intento de registrar executor null");
+#endif
                 return;
             }
 
@@ -48,7 +50,9 @@ namespace Game.NPC.Modules
                             // Mismo NPC, distinta instancia: ocurre al recargar escena mientras el NPC
                             // del party sigue vivo (DontDestroyOnLoad). La nueva instancia de escena
                             // reemplaza la referencia obsoleta — comportamiento esperado.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[NPCInteractiveNarrativeRegistry] ♻️ Reemplazando referencia obsoleta de '{id}' ({executor.name}) — recarga de escena");
+#endif
                         }
                         else
                         {
@@ -82,7 +86,9 @@ namespace Game.NPC.Modules
             
             if (wasInList)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCInteractiveNarrativeRegistry] ✅ Des-registrado de lista general: {executor.name}");
+#endif
             }
 
             // Remover del diccionario por ID si existe
@@ -95,7 +101,9 @@ namespace Game.NPC.Modules
                 if (_byId.TryGetValue(id, out var existing) && existing == executor)
                 {
                     _byId.Remove(id);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCInteractiveNarrativeRegistry] ✅ Des-registrado por ID '{id}': {executor.name}");
+#endif
                 }
             }
         }
@@ -168,11 +176,15 @@ namespace Game.NPC.Modules
                 // registrarse solos vía OnEnable cuando la nueva escena cargue.
                 _all.Clear();
                 _byId.Clear();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCInteractiveNarrativeRegistry] 🗑️ Registro limpiado completamente (pre-carga de escena), {resetCount} estado(s) reseteados");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCInteractiveNarrativeRegistry] 🔄 Estados reseteados en {resetCount} executor(es), registro mantiene {_all.Count} entradas");
+#endif
             }
         }
         
@@ -192,7 +204,9 @@ namespace Game.NPC.Modules
                     restored++;
                 }
             }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCInteractiveNarrativeRegistry] 🔄 Forzada restauración de estado en {restored} executor(es)");
+#endif
         }
 
         /// <summary>

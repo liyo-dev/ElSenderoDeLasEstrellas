@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using EasyTransition;
 
 [DisallowMultipleComponent]
@@ -11,7 +12,12 @@ public class TransitionPlayer : MonoBehaviour
 
     [Header("Atajos (opcionales)")]
     public bool playOnStart = false;
-    public KeyCode debugKey = KeyCode.None;  // p.ej. F9 para probar
+    public Key debugKey = Key.None;  // p.ej. F9 para probar
+
+    // FIX (5 sept 2026, AGENTS.md; mismo patron que CinematicSequencerBase._simulateHotkey):
+    // UnityEngine.Input.GetKeyDown lanza InvalidOperationException con el nuevo Input System
+    // activo en exclusiva. Cambiado de KeyCode a Key.
+    private bool? _debugKeyValid;
 
     void Start()
     {
@@ -20,7 +26,10 @@ public class TransitionPlayer : MonoBehaviour
 
     void Update()
     {
-        if (debugKey != KeyCode.None && Input.GetKeyDown(debugKey))
+        if (debugKey == Key.None) return;
+        _debugKeyValid ??= System.Enum.IsDefined(typeof(Key), debugKey);
+        if (_debugKeyValid != true) return;
+        if (Keyboard.current != null && Keyboard.current[debugKey].wasPressedThisFrame)
             Play();
     }
 
@@ -30,7 +39,9 @@ public class TransitionPlayer : MonoBehaviour
         var tm = TransitionManager.Instance();
         if (tm == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[TransitionPlayer] TransitionManager no encontrado. ¿Está Start cargada?");
+#endif
             return;
         }
         tm.Transition(settings, delay);
@@ -42,7 +53,9 @@ public class TransitionPlayer : MonoBehaviour
         var tm = TransitionManager.Instance();
         if (tm == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[TransitionPlayer] TransitionManager no encontrado. Cargo escena directa.");
+#endif
             SceneManager.LoadScene(sceneName);
             return;
         }

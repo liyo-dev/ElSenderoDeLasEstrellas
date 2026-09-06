@@ -41,7 +41,7 @@ MonoBehaviour:
     loop: 0
   ambientZones:
   - zoneId: Woods
-    music: {fileID: 8300000, guid: 15968ef8400ac3a48b0a18f1a182400d, type: 3}
+    music: {fileID: 8300000, guid: 48f0139b886c977498318294d28eff29, type: 3}
     fade: 1
     loop: 1
   - zoneId: Mountains
@@ -242,6 +242,14 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: e44bb15d0be184e228244208f1a94e2c, type: 3}
   - eventKey: SelloDelPacto
     sfx: {fileID: 8300000, guid: a9e925ca095e74c6781bc9cceafc6743, type: 3}
+  - eventKey: RuneActivate
+    sfx: {fileID: 8300000, guid: c525543468a44e9fa64e3780bfb7b14c, type: 3}
+  - eventKey: RuneFail
+    sfx: {fileID: 8300000, guid: 656c5f36464c4d00acd7072ae66e4b73, type: 3}
+  - eventKey: RuneSolved
+    sfx: {fileID: 8300000, guid: 18c03e85dd5446bba5e4cf76d8d2fad7, type: 3}
+  - eventKey: RuneGateOpen
+    sfx: {fileID: 8300000, guid: 05db446b081146fba24df777029cc1b4, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: c82b5bd2fe09f524dac157f5342aff1f, type: 3}

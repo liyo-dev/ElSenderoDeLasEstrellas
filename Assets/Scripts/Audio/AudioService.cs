@@ -70,6 +70,15 @@ public sealed class AudioService : MonoBehaviour
     int _duckCount = 0;
     Coroutine _duckRoutine;
     bool _battleActive;
+    // FIX (5 sep 2026): id de la batalla cuya música está activa ahora mismo. Ver guard
+    // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
+    // ya cableada desde el arranque + fallback directo de BossArenaController.StartBattleInternal()
+    // "por si el wiring llega tarde"), y sin este guard BeginBattleMusic() se ejecutaba las dos
+    // veces: empujaba _musicStack dos veces (una nunca se saca, deja el stack desbalanceado para
+    // el resto de la partida — lo comparten batallas y cinemáticas, ver PlaySequenceMusic/RestoreMusic)
+    // y reiniciaba el crossfade de música a mitad de camino (síntoma: se oye la música equivocada
+    // un instante justo al empezar el combate).
+    string _activeBattleId;
     bool _minigameActive;
 
     // Coroutines de música rastreadas individualmente para no matar el pool SFX
@@ -302,11 +311,18 @@ public sealed class AudioService : MonoBehaviour
     // Batallas
     void BeginBattleMusic(AudioGraphProfile.BattleRule r)
     {
+        // FIX (5 sep 2026): BATTLE_START:{id} puede llegar a este método dos veces en el mismo
+        // frame (señal narrativa en vivo + fallback directo de BossArenaController) — sin este
+        // guard, la segunda llamada volvía a empujar _musicStack (quedando desbalanceado para
+        // siempre) y reiniciaba el crossfade a mitad de camino. Idempotente por battleId: si esta
+        // misma batalla ya está activa, no hace nada.
+        if (_battleActive && _activeBattleId == r.battleId) return;
+
         var current = GetCurrentMusicClip();
         _musicStack.Push(new MusicStackItem { clip = current });
         _battleActive = true;
-        if (current != r.music) PlayMusic(r.music, r.fade);
-        else PlayMusic(r.music, r.fade); // fast-path evita reinicio si ya suena esa
+        _activeBattleId = r.battleId;
+        PlayMusic(r.music, r.fade);
     }
 
     void OnBattleWonRestoreMusic(AudioGraphProfile.BattleRule r)
@@ -314,12 +330,15 @@ public sealed class AudioService : MonoBehaviour
         // ✅ IMPORTANTE: Restaurar el loop en los AudioSource (después de música de victoria)
         _musicA.loop = true;
         _musicB.loop = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🔄 Loop restaurado en AudioSources de música");
+#endif
 
         // Contabilidad inmediata (stack de música / flag de batalla), independiente de si la
         // restauración de música se aplica ya o se difiere (ver más abajo).
         if (_musicStack.Count > 0) _musicStack.Pop();
         _battleActive = false;
+        _activeBattleId = null;
 
         // FIX: si tras derrotar al boss viene inmediatamente una cinemática (RaiseBattleWon →
         // grafo narrativo → señal de entrada del CinematicSequencerBase), esta música de mundo
@@ -337,7 +356,9 @@ public sealed class AudioService : MonoBehaviour
 
         if (CinematicSequencerBase.AnySequenceActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[AudioService] Restauración de música de mundo omitida tras la batalla: hay una cinemática activa (evita corte raro).");
+#endif
             yield break;
         }
 
@@ -348,7 +369,9 @@ public sealed class AudioService : MonoBehaviour
             var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
             if (zoneRule?.music != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[AudioService] Restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}' después de batalla");
+#endif
                 PlayMusic(zoneRule.music, fade);
                 yield break;
             }
@@ -367,7 +390,9 @@ public sealed class AudioService : MonoBehaviour
     {
         if (r.music == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] Minigame '{r.minigameId}' no tiene música configurada");
+#endif
             return;
         }
 
@@ -378,7 +403,9 @@ public sealed class AudioService : MonoBehaviour
             _musicA.loop = r.loop;
             _musicB.loop = r.loop;
             RestartMusicClipFromBeginning(r.music, r.fade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] 🔁 Música de minijuego '{r.minigameId}' reiniciada desde el inicio");
+#endif
             return;
         }
         
@@ -391,7 +418,9 @@ public sealed class AudioService : MonoBehaviour
         _musicB.loop = r.loop;
         
         PlayMusic(r.music, r.fade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' iniciada");
+#endif
     }
 
     // Para las corrutinas de música se usan referencias explícitas y nunca StopAllCoroutines,
@@ -440,14 +469,18 @@ public sealed class AudioService : MonoBehaviour
     {
         if (!_minigameActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] Minijuego '{r.minigameId}' no estaba activo, ignorando restauración");
+#endif
             return;
         }
         
         // Restaurar loop
         _musicA.loop = true;
         _musicB.loop = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🔄 Loop restaurado en AudioSources de música después de minijuego");
+#endif
         
         // PRIORIDAD 1: Si hay una AmbientZone activa, restaurar su música
         var activeAmbientZone = AmbientZone.CurrentActiveZone;
@@ -456,7 +489,9 @@ public sealed class AudioService : MonoBehaviour
             var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
             if (zoneRule?.music != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[AudioService] Restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}' después de minijuego");
+#endif
                 PlayMusic(zoneRule.music, r.fade);
                 if (_musicStack.Count > 0) _musicStack.Pop();
                 _minigameActive = false;
@@ -472,7 +507,9 @@ public sealed class AudioService : MonoBehaviour
             StopMusic(r.fade);
         }
         _minigameActive = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' finalizada, música restaurada");
+#endif
     }
     
     /// <summary>
@@ -487,7 +524,9 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] No se encontró regla de música para minijuego '{minigameId}'");
+#endif
         }
     }
     
@@ -540,7 +579,9 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] BeginBattleById: no hay BattleRule para id='{id}'.");
+#endif
         }
     }
 
@@ -553,7 +594,9 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] EndBattleById: no hay BattleRule para id='{id}'.");
+#endif
         }
     }
 
@@ -589,7 +632,9 @@ public sealed class AudioService : MonoBehaviour
 
         if (CinematicSequencerBase.AnySequenceActive)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[AudioService] RestoreAfterBattle: restauración de música omitida, hay una cinemática activa (evita corte raro).");
+#endif
             yield break;
         }
 
@@ -599,7 +644,9 @@ public sealed class AudioService : MonoBehaviour
             var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
             if (zoneRule?.music != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[AudioService] RestoreAfterBattle: restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}'");
+#endif
                 PlayMusic(zoneRule.music, fade);
                 yield break;
             }
@@ -621,7 +668,9 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] BeginAlertById: no hay BattleRule/music para id='{id}'.");
+#endif
         }
     }
 
@@ -629,12 +678,16 @@ public sealed class AudioService : MonoBehaviour
     // Si holdSeconds <= 0, NO restaura automáticamente (control manual)
     public void PlayVictoryForBattle(string battleId, string victoryId, float holdSeconds = 2f)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🎵 PlayVictoryForBattle LLAMADO - battleId: '{battleId}', victoryId: '{victoryId}', holdSeconds: {holdSeconds}");
+#endif
         
         // ✅ Cancelar cualquier corrutina de restauración anterior
         if (_victoryRestoreCoroutine != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] ⚠️ Cancelando corrutina de restauración anterior - evitando doble restauración");
+#endif
             StopCoroutine(_victoryRestoreCoroutine);
             _victoryRestoreCoroutine = null;
         }
@@ -643,7 +696,9 @@ public sealed class AudioService : MonoBehaviour
         var victoryRule = FindBattleRuleForId(victoryId);
         if (victoryRule != null && victoryRule.music != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] ✅ Reproduciendo música de victoria: {victoryRule.music.name}");
+#endif
 
             // BUGFIX (repetición del jingle de victoria): antes, si holdSeconds <= 0 (restauración
             // MANUAL, la hace el lifecycle handler del NPC al cerrar el diálogo post-derrota) se
@@ -660,33 +715,45 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] PlayVictoryForBattle: no hay música de victoria para id='{victoryId}'.");
+#endif
         }
         
         // ✅ Solo programar restauración automática si holdSeconds > 0
         if (holdSeconds > 0f && battleRule != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] 🔄 Programando restauración automática de música después de {holdSeconds}s");
+#endif
             _victoryRestoreCoroutine = StartCoroutine(RestoreAfterVictoryDelay(battleRule, holdSeconds));
         }
         else if (holdSeconds <= 0f)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] ⏸️ Restauración automática deshabilitada (holdSeconds={holdSeconds}) - se requiere llamada manual a RestoreBattleMusic()");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] ⚠️ No se encontró battleRule para '{battleId}' - no se restaurará música");
+#endif
         }
     }
 
     IEnumerator RestoreAfterVictoryDelay(AudioGraphProfile.BattleRule battleRule, float holdSeconds)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] ⏱️ RestoreAfterVictoryDelay iniciado - esperando {holdSeconds}s");
+#endif
         
         if (holdSeconds > 0f)
             yield return new WaitForSecondsRealtime(holdSeconds);
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[AudioService] 🔄 Restaurando música después de victoria");
+#endif
         OnBattleWonRestoreMusic(battleRule);
         
         // ✅ Limpiar referencia de corrutina
@@ -913,7 +980,9 @@ public sealed class AudioService : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] SFX no encontrado para clave '{eventKey}'.");
+#endif
         }
     }
     
@@ -999,7 +1068,9 @@ public sealed class AudioService : MonoBehaviour
         AudioClip clip = FindSfxClipByKey(eventKey);
         if (clip == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[AudioService] SFX en loop no encontrado para clave '{eventKey}'.");
+#endif
             return;
         }
 
@@ -1194,6 +1265,7 @@ public sealed class AudioService : MonoBehaviour
     {
         _musicStack.Clear();
         _battleActive = false;
+        _activeBattleId = null;
     }
 
     /// <summary>
@@ -1251,7 +1323,9 @@ public sealed class AudioService : MonoBehaviour
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[AudioService] No se encontró música para restaurar en la escena actual");
+#endif
         return false;
     }
 

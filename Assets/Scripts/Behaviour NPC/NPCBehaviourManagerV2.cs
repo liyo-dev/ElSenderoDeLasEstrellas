@@ -153,7 +153,9 @@ namespace Game.NPC
             // 1. Validación de Configuración
             if (!configuration.Validate(out string errors))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NPCBehaviourV2:{name}] ❌ ERROR DE CONFIG:\n{errors}");
+#endif
             }
             
             // 2. Obtener Componentes Core
@@ -407,6 +409,35 @@ namespace Game.NPC
                 return;
             }
 
+            // FIX 04 sep 2026 (Raúl: Eldran "da saltitos y a veces no anima las piernas" al
+            // guiar al jugador a un punto de guardado tras un boss, incluso siendo la MISMA
+            // secuencia -LeadPlayerToAnchorSequence, sin cambios de código- que "antes funcionaba").
+            // Este método dormía al NPC (EnterFarState desactiva agent.enabled) SOLO por distancia
+            // al jugador, sin comprobar HasActiveAiExemption() -combate/cinemática/interacción-.
+            // HasActiveAiExemption() solo se consultaba en Update(), UN FRAME DESPUÉS, para decidir
+            // si despertarlo de nuevo — es decir, con dos sistemas independientes tocando el mismo
+            // NavMeshAgent: este chequeo de distancia (ciego a la cinemática) y la secuencia de
+            // escolta (que asume el agente siempre habilitado). Durante una escolta como la de
+            // Eldran, si el jugador se queda un poco atrás (fácil cerca de las montañas, con más
+            // desnivel/rodeos), este método desactivaba el agente ese mismo frame -antes de que
+            // Update() llegara a comprobar la exención- y solo se reactivaba el frame siguiente:
+            // ese frame de agente desactivado es exactamente el "se mueve sin animar piernas"
+            // (velocity cae a 0 con el agente off) y el Warp de vuelta al reactivarlo es el
+            // "saltito". Si el jugador se quedaba atrás más de un frame, el NPC directamente
+            // dejaba de moverse del todo mientras la secuencia seguía llamando a un agente inerte.
+            // Con esta comprobación, un NPC con exención activa nunca llega a dormirse por
+            // distancia, y si ya estaba dormido al activarse la exención, se despierta aquí mismo
+            // en vez de esperar al chequeo de Update().
+            if (HasActiveAiExemption())
+            {
+                if (_isFarFromPlayer)
+                {
+                    _isFarFromPlayer = false;
+                    ExitFarState();
+                }
+                return;
+            }
+
             float distSqr = (transform.position - _player.position).sqrMagnitude;
             float sleepThreshold = aiUpdateDistance + aiWakeUpMargin;
 
@@ -473,17 +504,23 @@ namespace Game.NPC
         {
             if (_agent != null && !_agent.enabled)
             {
-                _agent.enabled = true;
-
-                // El NPC no se mueve mientras está dormido, así que esto no debería hacer falta
-                // en el caso normal — pero por seguridad ante teleports externos, cambios de
-                // escena u otras manipulaciones mientras estaba desactivado, si el transform
-                // quedó fuera del NavMesh lo recolocamos en el punto transitable más cercano en
-                // vez de dejar el agente habilitado pero inválido.
-                if (!_agent.isOnNavMesh && NavMesh.SamplePosition(transform.position, out var hit, 5f, NavMesh.AllAreas))
-                {
-                    _agent.Warp(hit.position);
-                }
+                // ✅ FIX (04 sep 2026): antes se hacía "_agent.enabled = true" a secas y solo
+                // DESPUÉS se comprobaba isOnNavMesh para recolocar con Warp. Unity valida
+                // transform.position en el instante mismo de poner enabled = true — si el NPC
+                // llevaba dormido un rato (agent deshabilitado) y su transform quedó fuera del
+                // NavMesh mientras tanto (p.ej. el jugador se teletransportó o el NPC se movió por
+                // GameBootProfile.ApplyNpcPositionsToScene con el agent aún desactivado), ese
+                // "enabled = true" a secas ya loggeaba "Failed to create agent because it is not
+                // close enough to the NavMesh" aunque el Warp de la línea siguiente corrigiera la
+                // posición de inmediato — el mismo patrón que NavMeshAgentUtility.SafeEnable()
+                // documenta y que este mismo fichero ya evita en ApplyLastPositionIfNeeded (más abajo).
+                // Esto explica el spam masivo de ese warning "nada más darle a Play": con el
+                // sistema de sueño por distancia (añadido hoy) TODOS los NPCs lejos del jugador al
+                // cargar la escena entran en EnterFarState/ExitFarState mientras las posiciones se
+                // estabilizan, y cada ExitFarState con el transform aún fuera de sitio disparaba el
+                // warning. SafeEnable recoloca el transform en un punto válido del NavMesh ANTES de
+                // habilitar, evitando el falso error en vez de corregirlo tarde.
+                NavMeshAgentUtility.SafeEnable(_agent, transform, transform.position);
             }
 
             // No hace falta nada más aquí: el próximo Update() ya llama a _brain.Update() con
@@ -510,7 +547,11 @@ namespace Game.NPC
                 if (!_agent.isStopped || _agent.velocity.sqrMagnitude > 0.01f)
                 {
                     if (debugMode)
+                        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning($"[NPCManager:{name}] ⚠️ LateUpdate Safety: Agent no detenido en IdleState (isStopped={_agent.isStopped}, vel={_agent.velocity.magnitude:F1})");
+#endif
+                        }
                     
                     _agent.isStopped = true;
                     _agent.velocity = Vector3.zero;
@@ -833,11 +874,15 @@ namespace Game.NPC
             bool success = JoinPlayerParty();
             if (success)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCManager:{name}] ✅ AddToParty exitoso");
+#endif
             }
             else if (debugMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCManager:{name}] ⚠️ AddToParty falló - ¿Tiene Companion behaviour configurado?");
+#endif
             }
         }
         
@@ -850,7 +895,9 @@ namespace Game.NPC
             bool success = LeavePlayerParty();
             if (!success && debugMode)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCManager:{name}] ⚠️ RemoveFromParty falló");
+#endif
             }
         }
 

@@ -66,7 +66,9 @@ public class PressurePlate : MonoBehaviour
             {
                 col[0].isTrigger = true;
                 _trigger = col[0];
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PressurePlate] {name}: ningún collider era trigger, se configuró automáticamente.");
+#endif
             }
         }
     }

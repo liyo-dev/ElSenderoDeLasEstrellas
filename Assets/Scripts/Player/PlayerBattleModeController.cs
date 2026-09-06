@@ -221,11 +221,15 @@ namespace Game.Player
         /// <param name="battleId">ID del combate para restaurar la música después de la victoria</param>
         public void PlayVictory(string battleId = null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerBattleMode] 🎯 PlayVictory() LLAMADO - _isPlayingVictory: {_isPlayingVictory}, battleId: {battleId ?? "null"}");
+#endif
             
             if (_isPlayingVictory)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ Victoria ya en reproducción - ignorando llamada duplicada (battleId: {battleId ?? "null"})");
+#endif
                 return;
             }
             
@@ -483,17 +487,23 @@ namespace Game.Player
             _isPlayingVictory = true;
             GameplayEventLog.Log("Victoria", _currentBattleId);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerBattleMode] 🎉 ✅ INICIANDO ANIMACIÓN DE VICTORIA");
+#endif
 
             // Deshabilitar control del jugador temporalmente usando campos públicos de Invector
             if (controller != null)
             {
                 controller.enabled = false; // Deshabilitar completamente el controlador
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerBattleMode] 🎮 Controlador del jugador deshabilitado");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ Controller es NULL - no se puede deshabilitar");
+#endif
             }
 
             // Bloquear input mientras dura la victoria (patrón oficial del proyecto: pila de modos)
@@ -510,16 +520,22 @@ namespace Game.Player
                 if (animator.HasState(0, _victoryHash))
                 {
                     animator.CrossFadeInFixedTime(_victoryHash, 0.2f, 0);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[PlayerBattleMode] 🎬 ✅ Reproduciendo animación de victoria: {victoryStateName}");
+#endif
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[PlayerBattleMode] ⚠️ Estado '{victoryStateName}' NO encontrado en Animator");
+#endif
                 }
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[PlayerBattleMode] ❌ Animator es NULL");
+#endif
             }
             
             // Reproducir música de victoria usando el sistema de audio centralizado
@@ -529,15 +545,21 @@ namespace Game.Player
                 // IMPORTANTE: holdSeconds = 0 significa que NO se restaura automáticamente
                 // El NPCCombatLifecycleHandler se encargará de restaurar la música después del diálogo post-derrota
                 AudioService.Instance.PlayVictoryForBattle(_currentBattleId ?? "", victorySfxKey, holdSeconds: 0f);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerBattleMode] 🎵 ✅ Reproduciendo música de victoria: {victorySfxKey} (battleId: {_currentBattleId ?? "null"}) - Restauración manual por lifecycle handler");
+#endif
             }
             else if (string.IsNullOrEmpty(victorySfxKey))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ victorySfxKey está vacío - no se reproduce audio");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ AudioService.Instance es NULL - no se puede reproducir música");
+#endif
             }
             
             // Esperar a que la cámara de victoria termine su blend de entrada antes de avisar de que
@@ -549,10 +571,14 @@ namespace Game.Player
             }
 
             // Esperar duración de la animación
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerBattleMode] ⏱️ Esperando {victoryAnimationDuration}s (duración de animación de victoria)");
+#endif
             yield return new WaitForSeconds(Mathf.Max(0f, victoryAnimationDuration - (_victoryCameraActive ? victoryCamBlendSeconds : 0f)));
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerBattleMode] 🔄 Terminando animación de victoria - restaurando control del jugador");
+#endif
 
             // IMPORTANTE: Resetear el flag ANTES de re-habilitar el control
             // Esto permite que el Update() vuelva a funcionar normalmente
@@ -570,14 +596,20 @@ namespace Game.Player
             if (controller != null)
             {
                 controller.enabled = true; // Re-habilitar completamente el controlador
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerBattleMode] 🎮 Controlador del jugador RE-HABILITADO - Animator manejará transición automática");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ Controller es NULL - no se pudo re-habilitar");
+#endif
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerBattleMode] ✅ Secuencia de victoria COMPLETADA - Animator transicionará automáticamente a locomotion");
+#endif
         }
         
         // Debug Gizmos

@@ -142,7 +142,9 @@ public class MinimapUIController : MonoBehaviour
 
         if (iconsParent == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[MinimapUIController] iconsParent no asignado. Asígnalo en el Inspector.");
+#endif
             return;
         }
 

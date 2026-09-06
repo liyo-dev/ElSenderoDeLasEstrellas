@@ -1,4 +1,4 @@
-using Invector;
+﻿using Invector;
 using UnityEngine;
 
 public class vThirdPersonCamera : MonoBehaviour
@@ -265,10 +265,21 @@ public class vThirdPersonCamera : MonoBehaviour
             transform.position = camPos;
         }
         
-        // Mirar siempre al pivote
+        // Mirar siempre al pivote. FIX (tirones/saltos de cámara al cerrar menús e inventario,
+        // 4 sep 2026): antes se calculaba la rotación mirando desde transform.position, que
+        // durante el SmoothDamp de _doSmoothSnap (ver OnEnable/LateUpdate, se dispara cada vez
+        // que este componente se reactiva tras el menú de equipamiento/inventario, o cada vez
+        // que se sale de un lockCameraForCinematic como el de la cámara de diálogo que abre la
+        // tienda) va cambiando de frame en frame mientras la posición aún converge hacia camPos.
+        // Como la rotación no se suavizaba (era instantánea cada frame), mirar desde una posición
+        // en movimiento producía un bamboleo/tirón visible durante esos ~0.15s, aunque la
+        // posición en sí se veía suave. Usar siempre camPos (destino final de este frame) en vez
+        // de transform.position mantiene la rotación estable y mirando al pivote durante todo el
+        // SmoothDamp; en los frames normales (sin _doSmoothSnap) camPos y transform.position ya
+        // son el mismo valor, así que no cambia el comportamiento existente.
         var lookPoint = current_cPos + targetLookAt.forward * 2f;
         lookPoint += (targetLookAt.right * Vector3.Dot(finalCamDir * (distance), targetLookAt.right));
-        transform.rotation = Quaternion.LookRotation((lookPoint) - transform.position);
+        transform.rotation = Quaternion.LookRotation((lookPoint) - camPos);
 
         // Oclusión (desactivada en interiores: las paredes no deben desaparecer)
         if (_occlusionFader != null)

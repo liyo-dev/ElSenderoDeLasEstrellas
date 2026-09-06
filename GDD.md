@@ -218,15 +218,73 @@ Estas dos escenas ya no son dos beats separados como en el guión original: est�
 - Texto: el grupo llega al lugar sagrado. Tal como indicó el hechicero, Will recita el conjuro frente a la piedra. La realidad se resquebraja y un Guardián surge para proteger el secreto.
 - Gameplay: combate contra el Jefe. Al derrotarlo, el libro aparece entre las ruinas. Al abrirlo, descubren el hechizo para abrir el portal, además del "Hechizo del Tiempo" y el "Hechizo de Resurrección".
 
+**Diálogo propuesto (5 sept 2026, tras relectura del capítulo XVI de la novela a petición de Raúl — el capítulo no tiene diálogo directo, todo narrado, así que estas líneas son propuesta nueva fiel a la narración, no traducción literal; pendiente de aprobación de Raúl; claves con prefijo `PIEDRA_ANCESTRAL_`):**
+
+| Clave | ES | EN |
+|---|---|---|
+| `PIEDRA_ANCESTRAL_01` | Aquí... aquí está. | Here... here it is. |
+| `PIEDRA_ANCESTRAL_02` | Ábrelo. Ya hemos llegado hasta aquí. | Open it. We've come this far. |
+| `PIEDRA_ANCESTRAL_03` | El ritual para abrir el Sendero de las Estrellas... | The ritual to open the Path of the Stars... |
+| `PIEDRA_ANCESTRAL_04` | Espera. Hay más. Dos hechizos anotados en el margen, con otra letra... más antigua. | Wait. There's more. Two spells noted in the margin, in a different hand... older. |
+| `PIEDRA_ANCESTRAL_05` | El Hechizo del Tiempo. Y... el Hechizo de Resurrección. Prohibido. Hay una nota al margen que explica por qué. | The Time Spell. And... the Resurrection Spell. Forbidden. There's a note in the margin explaining why. |
+| `PIEDRA_ANCESTRAL_06` | Sea lo que sea que diga esa nota... creo que deberíamos guardarnos esto para cuando de verdad lo necesitemos. | Whatever that note says... I think we should save this for when we truly need it. |
+| `PIEDRA_ANCESTRAL_07` | A partir de aquí ya no hay vuelta atrás, ¿verdad? | From here on, there's no turning back, is there? |
+| `PIEDRA_ANCESTRAL_08` | No la había desde el principio. Pero ahora... ahora ya lo sabemos de verdad. | There wasn't from the start. But now... now we truly know it. |
+
+Encontrar el libro con el Hechizo del Tiempo y el Hechizo de Resurrección anotados al margen es la primera vez que el jugador oye hablar de ambos — referencia directa a `TIME_SPELL_TUTORIAL` (escena 20) y al hechizo de Resurrección que Will usará en el Sacrificio/Epílogo (escena 22).
+
 ### 17. El Sendero de las Estrellas
 
 - Contexto: abren el portal. Se crea un punto de guardado entre el mundo real y el del sendero situado en el cielo entre las estrellas. Una vez se atraviesa el portal ya no se puede guardar la partida hasta superar cada prueba.
+
+**Diálogo propuesto (5 sept 2026, cita textual del capítulo XVII de la novela; pendiente de aprobación de Raúl; claves con prefijo `APERTURA_SENDERO_`):**
+
+| Clave | ES | EN |
+|---|---|---|
+| `APERTURA_SENDERO_01` | Una vez que lo crucemos, según el libro, ya no habrá forma de volver atrás hasta superar cada prueba. No hay puntos de guardado dentro. Solo hay avanzar. | Once we cross it, according to the book, there'll be no way back until we clear every trial. There are no save points inside. Only forward. |
+| `APERTURA_SENDERO_02` | Parece que hay que pasar por las tres. Espero que al menos se pueda ir en grupo. No me apetece nada separarme de vosotros aquí dentro. | Looks like we have to go through all three. I hope at least we can go as a group. I really don't fancy getting separated from you two in there. |
+| `APERTURA_SENDERO_03` | No pienso soltaros de vista. Sea lo que sea que haya al otro lado. | I'm not letting either of you out of my sight. Whatever's on the other side. |
+
 - **Corrección de canon (30 ago 2026, aclarada por Raúl y ya aplicada en la novela — ver `novela/manuscrito-novela-completo.md`): las tres pruebas NO son caminos solitarios paralelos.** La versión anterior de este guión (heredada del Google Doc v1.0) describía "Prueba 1 de Will", "Prueba 2 de Estela", "Prueba 3 de Liam" como si cada personaje las afrontara en solitario — no es así:
   - **Prueba 1 (el laberinto de los miedos de Will) y Prueba 2 (Chuchelandia, de Estela) las vive el grupo entero, juntos**, aunque cada una esté centrada en un personaje — los otros dos acompañan y participan, no se quedan fuera.
   - **Prueba 3 (la de Liam) es la única donde el grupo se separa, y de forma distinta a como decía la versión anterior.** Antes del laberinto, los tres pasan por un parque de atracciones donde se relajan y estrechan su amistad (noria, juego de anillas, mareo de Will, los tres compartiendo helado). Al fondo del parque aparece la entrada a un laberinto de espejos oscuro. Will decide no entrar — le remueve algo demasiado parecido a su propia prueba. Estela elige quedarse fuera con él en vez de entrar sola o forzarlo. **Liam entra solo.** Will y Estela ven desde fuera, como en una pantalla, lo que le ocurre a Liam dentro — así es como descubren su traición en tiempo real, en vez de que Liam se lo cuente después.
 - Prueba 1: laberinto con puzzles y jefes para que Will venza sus miedos (Estela y Liam presentes, acompañando).
+
+**Diálogo propuesto (5 sept 2026, propuesta nueva adaptada de la novela; pendiente de aprobación de Raúl; claves con prefijo `PRUEBA_WILL_`):**
+
+| Clave | ES | EN |
+|---|---|---|
+| `PRUEBA_WILL_01` | Madre mía, esto sí que da miedo. | Wow, this is actually terrifying. |
+| `PRUEBA_WILL_02` | No te rías, que es horrible. Odio hablar delante de la gente. | Don't laugh, it's horrible. I hate speaking in front of people. |
+| `PRUEBA_WILL_03` | Un discurso torpe no mata a nadie... aunque reconozco que este en concreto ha estado especialmente mal. | A clumsy speech never killed anyone... though I'll admit this one was particularly bad. |
+| `PRUEBA_WILL_04` | Es solo un eco. Nosotros estamos aquí. Míranos. | It's only an echo. We're right here. Look at us. |
+
+`PRUEBA_WILL_01-03` acompañan el primer recuerdo (un discurso torpe en la plaza del Reino, tono cómico, sin combate); `PRUEBA_WILL_04` es una línea de apoyo de Estela justo antes de que el jugador entre en el combate del recuerdo posterior (la pesadilla del hechizo).
+
 - Prueba 2: Chuchelandia. Estela odia las chuches, odia lo cursi y detesta la purpurina; se enfrenta a una historia donde debe ser reina del mundo de las chuches (Will y Liam presentes).
+
+Diálogo: **ya es contenido real e implementado**, no propuesta — 17 líneas (`DLG_CANDYLAND_01` a `DLG_CANDYLAND_17`), localizadas en ES/EN, con personajes nuevos Duque de Regaliz y Criatura de Mazapán. Solo pendiente de que Raúl ejecute el `[MenuItem]` del Editor que coloca `CandylandClimaxBuilder.cs` en la escena. No se duplica la tabla aquí — ver el guion de doblaje para el texto completo.
+
 - Prueba 3 (el laberinto de espejos/de los ecos, gameplay narrativo y exploración — Liam en solitario, Will y Estela observan desde fuera): Liam entra solo en el laberinto ilusorio y debe sacrificar recuerdos dolorosos para avanzar. El laberinto comienza a proyectar "ecos" de sus mentiras. Al llegar a la última puerta, que sella la salida, una Voz Ancestral lanza la pregunta final: *"¿Cuál fue el precio real que pagaste para llegar hasta aquí, Mago?"*. La magia de la puerta arranca la verdad de la mente de Liam, proyectando un holograma gigante: el recuerdo de Liam orquestando la emboscada mortal contra Will al principio de la aventura — visible también para Will y Estela, que lo observan desde fuera del laberinto (no dentro, como decía la versión anterior de este guión). La puerta se abre. El grupo se reencuentra en el nexo del Sendero en absoluto silencio.
+
+**Diálogo propuesto (5 sept 2026, adaptado de la novela — el parque de atracciones es propuesta nueva fiel a la narración, y la pregunta de la Voz Ancestral es cita textual del capítulo XVII; pendiente de aprobación de Raúl; claves con prefijo `PARQUE_LIAM_`):**
+
+| Clave | ES | EN |
+|---|---|---|
+| `PARQUE_LIAM_01` | Vale, esto me gusta bastante más. | Okay, I like this a lot better. |
+| `PARQUE_LIAM_02` | Toma. Para que no se te olvide de dónde vienes. | Here. So you don't forget where you come from. |
+| `PARQUE_LIAM_03` | Qué considerado. | That's... surprisingly thoughtful. |
+| `PARQUE_LIAM_04` | Deberíamos hacer esto más a menudo. Cuando todo esto termine, digo. | We should do this more often. Once all this is over, I mean. |
+| `PARQUE_LIAM_05` | Sin bosques embrujados de por medio. Ni castillos de caramelo. | Minus the haunted forests. And the candy castles. |
+| `PARQUE_LIAM_06` | Sin gólems, ni demonios, ni— | No golems, no demons, no— |
+| `PARQUE_LIAM_07` | Eso es— | That's— |
+| `PARQUE_LIAM_08` | Se parece demasiado a lo mío. A mi laberinto. No creo que pueda entrar ahí, Liam. Lo siento. | It's too much like mine. Like my maze. I don't think I can go in there, Liam. I'm sorry. |
+| `PARQUE_LIAM_09` | No hace falta que lo sientas. Esta prueba es mía. Tiene sentido que la haga yo solo. | You don't have to be sorry. This trial is mine. It makes sense I face it alone. |
+| `PARQUE_LIAM_10` | Entonces yo tampoco entro. Si Will se queda, yo me quedo con él. No pienso dejarlo solo aquí fuera. Pero eso no significa que te dejemos solo a ti tampoco, ¿entendido? Estaremos aquí, esperando, cuando salgas. | Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone. But that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out. |
+| `PARQUE_LIAM_11` | Gracias. A los dos. | Thank you. Both of you. |
+| `PARQUE_LIAM_12` (Voz Ancestral) | ¿Cuál fue el precio real que pagaste para llegar hasta aquí, Mago? | What was the true price you paid to get this far, Mage? |
+
+Personaje nuevo en `PARQUE_LIAM_12`: **Voz Ancestral** — no confundir con "La Voz" de la visión final de Will (escena 20); son entidades distintas, revisar casting de ambas.
 
 ### 18. La Ruptura: la Furia de Estela
 

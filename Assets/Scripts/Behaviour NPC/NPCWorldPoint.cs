@@ -143,6 +143,16 @@ public class NPCWorldPoint : MonoBehaviour
             if (wp == null || wp._isOccupied) continue;
             if (activityFilter != NPCAmbientActivity.None && wp.activityType != activityFilter) continue;
 
+            // FIX INC-130 (5 sept 2026): no ofrecer puntos cuya actividad todavía no tiene clips de
+            // animación reales asignados en el Animator Controller (ver
+            // NPCSimpleAnimator.HasWorkingAnimation). Sin este filtro, el NPC camina hasta el banco,
+            // PlayAmbientActivity ahora rechaza la actividad, pero WalkToActivityState.Arrive() ya
+            // había teleportado el transform a la altura del asiento — el NPC se queda de pie
+            // flotando sobre el banco en vez de sentado ("se sientan en el aire"). Filtrando aquí,
+            // el NPC ni siquiera camina hacia ese punto: sigue vagando con normalidad hasta que se
+            // importen los clips y HasWorkingAnimation() vuelva a dar true para esta actividad.
+            if (!NPCSimpleAnimator.HasWorkingAnimation(wp.activityType)) continue;
+
             float sqr = (wp.InteractionPosition - position).sqrMagnitude;
             if (sqr < bestSqr)
             {

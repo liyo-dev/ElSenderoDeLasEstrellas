@@ -39,7 +39,7 @@ MonoBehaviour:
     textId: LORE_ESCOLTA_GUARDIA_5
     text: 
     duration: 4
-  - speakerNameId: CHAR_ELDRAN
+  - speakerNameId: CHAR_ESTELA
     speakerName: 
     textId: LORE_ESCOLTA_GUARDIA_6
     text: 
@@ -49,7 +49,7 @@ MonoBehaviour:
     textId: LORE_ESCOLTA_GUARDIA_7
     text: 
     duration: 4
-  - speakerNameId: CHAR_ELDRAN
+  - speakerNameId: CHAR_WILL
     speakerName: 
     textId: LORE_ESCOLTA_GUARDIA_8
     text: 

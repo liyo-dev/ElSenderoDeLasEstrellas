@@ -290,7 +290,9 @@ namespace Game.NPC.Common
         {
             if (iconPrefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAlertIconController:{name}] IconPrefab es null");
+#endif
                 return;
             }
             
@@ -321,7 +323,9 @@ namespace Game.NPC.Common
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ alertPrefab no proporcionado");
+#endif
             }
         }
         
@@ -336,7 +340,9 @@ namespace Game.NPC.Common
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ questionPrefab no proporcionado");
+#endif
             }
         }
         
@@ -359,7 +365,11 @@ namespace Game.NPC.Common
             iconOffset = new Vector3(offset.x, 0.2f, offset.z);
             
             if (showDebugLogs) 
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCAlertIcon:{name}] SetIconOffset: altura deseada={offset.y}, fallbackHeight={fallbackHeight}");
+#endif
+                }
         }
         
         /// <summary>
@@ -381,7 +391,11 @@ namespace Game.NPC.Common
             }
             
             if (showDebugLogs)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCAlertIcon:{name}] SetIconHeight: {height}");
+#endif
+                }
         }
         
         /// <summary>
@@ -395,7 +409,9 @@ namespace Game.NPC.Common
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ exclamationPrefab no proporcionado");
+#endif
             }
         }
         
@@ -407,7 +423,9 @@ namespace Game.NPC.Common
         {
             if (iconPrefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAlertIconController:{name}] ⚠️ persistentIconPrefab es null");
+#endif
                 return;
             }
             

@@ -49,19 +49,17 @@ namespace Game.NPC.States
         // ✅ MEJORA (1 sep 2026, petición de Raúl): el diálogo de alerta (y por tanto el corte a
         // la cámara de diálogo) arrancaba en el mismo frame que el icono de detección y la
         // animación SenseSomethingStart_NoWeapon, cortándolos a medias. Se retrasó el arranque
-        // del diálogo hasta que ambos hubieran tenido tiempo de verse.
+        // del diálogo hasta que ambos hubieran tenido tiempo de verse — primero nivelando la
+        // espera con combatConfig.alertIconDuration (hasta 2s), luego (4 sep 2026) recortada a una
+        // pausa fija de 0.4s.
         //
-        // ✅ FIX 4 sep 2026 (petición de Raúl: "tarda muchísimo en empezar el diálogo, hay que
-        // acortarlo"): aquel retraso se nivelaba con combatConfig.alertIconDuration (2s por
-        // defecto), pero eso ya NO hace falta — desde que existe la fase de aproximación
-        // (_hasArrivedForDialogue arriba), el icono y la animación de sobresalto tienen de sobra
-        // los 1.2s de SENSE_DURATION iniciales MÁS todo lo que dura la caminata hacia el jugador
-        // para completarse, antes de que este contador siquiera empiece a correr. Reutilizar
-        // alertIconDuration aquí sumaba hasta 2s más de espera, quieto, innecesarios. Se sustituye
-        // por una pausa fija breve (POST_ARRIVAL_DIALOGUE_DELAY) — un respiro para que se note la
-        // llegada antes de hablar, sin la espera larga.
-        private const float POST_ARRIVAL_DIALOGUE_DELAY = 0.4f;
-        private float _dialogueStartDelay;
+        // ✅ FIX 4 sep 2026 (petición de Raúl, tras probar la pausa de 0.4s: "KO, vamos a quitar el
+        // retraso aquí también, lo dejamos como en el resto"): se elimina la pausa por completo —
+        // el diálogo arranca en el mismo frame en que el NPC llega a distancia de diálogo (o de
+        // inmediato si no camina), igual que ya hacía NPCCombatTeam.Co_DetectAndEngage para los
+        // equipos. El corte "a medias" que motivó la pausa original ya no puede pasar de todos
+        // modos: para cuando se llega aquí, el icono y la animación de sobresalto llevan de sobra
+        // los 1.2s de SENSE_DURATION iniciales, más todo lo que dure la caminata, ya completos.
         private bool _dialogueStarted;
 
         public AlertState(float duration = 2f, bool walk = true, float stopDist = 3f, bool skipDialogue = false)
@@ -138,10 +136,9 @@ namespace Game.NPC.States
             _hasArrivedForDialogue = false;
             _approachTimer = 0f;
 
-            // 5. Iniciar Diálogo (si existe) — retrasado hasta llegar a distancia de diálogo (o de
-            // inmediato si no camina), ver _dialogueStartDelay más arriba. No se llama a
-            // StartAlertDialogue aquí directamente: se dispara desde OnUpdate.
-            _dialogueStartDelay = POST_ARRIVAL_DIALOGUE_DELAY;
+            // 5. Iniciar Diálogo (si existe) — en cuanto se llega a distancia de diálogo (o de
+            // inmediato si no camina), sin pausa adicional (ver FIX 4 sep 2026 más arriba). No se
+            // llama a StartAlertDialogue aquí directamente: se dispara desde OnUpdate.
             _dialogueStarted = false;
         }
 
@@ -190,23 +187,19 @@ namespace Game.NPC.States
                 }
             }
 
-            // A.2. Retraso previo al inicio del diálogo/cámara de batalla (ver _dialogueStartDelay,
-            // calculado en OnEnter). Se cuenta desde que se llega a distancia de diálogo (punto
-            // A.1) o desde el principio si el NPC no camina. Mientras no transcurra, el NPC solo
-            // mira al jugador: no acumula _timer y no arranca el diálogo.
+            // A.2. Inicio del diálogo/cámara de batalla en cuanto se llega a distancia de diálogo
+            // (punto A.1) o de inmediato si el NPC no camina.
+            //
+            // FIX 4 sep 2026 (petición de Raúl, tras probar el ajuste anterior de 2s a 0.4s: "KO,
+            // vamos a quitar el retraso aquí también, lo dejamos como en el resto"): se quita la
+            // pausa post-llegada por completo en vez de seguir ajustándola, para que un NPC en
+            // solitario (walk=true, p.ej. Boy_Pirate) se comporte igual que un equipo
+            // (NPCCombatTeam.Co_DetectAndEngage/Co_ApproachFormation), que ya arrancaba el diálogo
+            // inmediatamente al llegar, sin ninguna espera fija de por medio.
             if (!_dialogueStarted)
             {
-                _dialogueStartDelay -= Time.deltaTime;
-                if (_dialogueStartDelay <= 0f)
-                {
-                    _dialogueStarted = true;
-                    StartAlertDialogue(context);
-                }
-                else
-                {
-                    FacePlayer(context);
-                    return;
-                }
+                _dialogueStarted = true;
+                StartAlertDialogue(context);
             }
 
             // ✅ FIX: Si el NPC pertenece a un equipo que está reagrupándose,
@@ -245,6 +238,19 @@ namespace Game.NPC.States
         public override void OnExit(NPCStateContext context)
         {
             context.Log("[AlertState] Fin de alerta.");
+
+            // FIX 5 sep 2026 (incidencia animación rota en escolta Eldran/guardia): si el jugador
+            // llega a distancia de diálogo y AlertState dispara PlayChallengingForBattle()/
+            // SetBattleMode(true) (arriba, tras _senseTimer), pero luego CheckTransitions() salta
+            // directo a CinematicState (context.IsInCinematic) SIN pasar por CombatState, el
+            // _isInBattle / la capa UpperBody del Animator se quedan encendidos para siempre: ni
+            // CombatState.OnExit ni AllyCombatState.OnExit (los únicos sitios que hacían
+            // SetBattleMode(false)) llegan a ejecutarse. Resultado: el NPC escolta al jugador con
+            // la capa UpperBody congelada en la pose de combate (brazos/torso fijos) mientras las
+            // piernas sí siguen el blend tree de Walk — de ahí el aspecto de "otra animación" /
+            // "patinando sobre hielo". Si de verdad va a combate, CombatState.OnEnter vuelve a
+            // activar el modo batalla ese mismo frame, así que este reset es seguro siempre.
+            context.Animator?.SetBattleMode(false);
 
             if (_playerFrozenByAlert && global::Core.PlayerInputManager.Instance != null)
             {

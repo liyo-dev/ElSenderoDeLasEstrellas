@@ -40,7 +40,11 @@ public static class ServiceLocator
     {
         if (TryGet(out T service)) return service;
         if (logIfMissing)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ServiceLocator] No se encontró servicio de tipo {typeof(T).Name}.");
+#endif
+            }
         return null;
     }
 

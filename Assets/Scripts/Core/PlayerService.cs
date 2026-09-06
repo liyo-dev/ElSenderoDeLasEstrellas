@@ -62,7 +62,9 @@ public sealed class PlayerService : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerService] Instancia duplicada detectada en '{name}'. Se destruye el duplicado.");
+#endif
             Destroy(gameObject);
             return;
         }

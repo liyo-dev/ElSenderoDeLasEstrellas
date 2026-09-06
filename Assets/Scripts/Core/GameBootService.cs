@@ -154,7 +154,9 @@ public class GameBootService : MonoBehaviour
 #endif
         if (_profile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[GameBootService] GameBootProfile no encontrado. Asígnalo en el Inspector del componente GameBootService en la escena 'Start'.");
+#endif
             return;
         }
 
@@ -166,7 +168,9 @@ public class GameBootService : MonoBehaviour
             _saveSystem = saveGo.AddComponent<SaveSystem>();
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 🎮 GameBootProfile '{_profile.name}' cacheado - Preparando preset...");
+#endif
         
         // Preparar el runtimePreset según reglas: preset de test -> save -> default
         PrepareActivePreset();
@@ -190,7 +194,9 @@ public class GameBootService : MonoBehaviour
     private IEnumerator NotifyProfileReadyDelayed()
     {
         yield return null; // Esperar un frame
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 📢 Disparando OnProfileReady (componentes listos para recibir)");
+#endif
         OnProfileReady?.Invoke();
         
         var diagnostics = FindAnyObjectByType<ProfileReadyDiagnostics>();
@@ -262,11 +268,15 @@ public class GameBootService : MonoBehaviour
                         qm.RestoreFromProfileFlags(preset.flags);
                 }
                 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService] 🧪 Modo testeo inicializado desde bootPreset '{_profile.bootPreset.name}' - El runtime ahora evolucionará libremente");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService] 🧪 Escena '{scene.name}' cargada → Manteniendo runtime evolucionado (modo testeo persistente)");
+#endif
             }
         }
     }
@@ -275,23 +285,31 @@ public class GameBootService : MonoBehaviour
     #region Preset and Save Loading
     private void PrepareActivePreset()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 🚀 PrepareActivePreset() iniciado");
+#endif
         
         if (_profile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[GameBootService] _profile es null. No se puede preparar preset.");
+#endif
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 🔍 SaveSystem: {(_saveSystem != null ? "Disponible" : "NO Disponible")}");
         Debug.Log($"[GameBootService] 🔍 SaveSystem.HasSave(): {_saveSystem?.HasSave()}");
         Debug.Log($"[GameBootService] 🔍 Profile.ShouldBootFromPreset(): {_profile.ShouldBootFromPreset()}");
         Debug.Log($"[GameBootService] 🔍 Profile.bootPreset: {(_profile.bootPreset != null ? _profile.bootPreset.name : "NULL")}");
+#endif
 
         // 1) MODO TESTING: El preset de testeo actúa COMO SI FUERA una partida cargada
         if (_profile.ShouldBootFromPreset())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService] 📋 MODO TESTING - Usando bootPreset: '{_profile.bootPreset.name}'");
+#endif
             _profile.EnsureRuntimePresetFromTemplate(_profile.bootPreset);
             
             // En modo testeo el preset define el estado exacto del juego.
@@ -299,12 +317,16 @@ public class GameBootService : MonoBehaviour
             
             // ✅ CRÍTICO: Aplicar el preset de testeo usando la misma lógica que LoadProfile
             ApplyPresetAsLoadedGame(_profile);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameBootService] ✅ Inicializado desde bootPreset (testing mode) - Aplicados todos los sistemas como si fuera una partida cargada");
+#endif
         }
         // 2) Intentar cargar partida si existe (SOLO si NO hay preset de testeo)
         else if (_saveSystem != null && _saveSystem.HasSave())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameBootService] 💾 Cargando partida desde save JSON...");
+#endif
             // FIX A4 (auditoría 2026-08-07): antes se ignoraba el valor de retorno de
             // LoadProfile. Si el JSON está corrupto (p.ej. cierre forzado a mitad de escritura),
             // LoadProfile devuelve false y no había ningún fallback: el juego arrancaba con el
@@ -312,7 +334,9 @@ public class GameBootService : MonoBehaviour
             // exactamente a la misma rama de "sin save" que el caso 3) de abajo.
             if (!_profile.LoadProfile(_saveSystem))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[GameBootService] ⚠️ El save existe pero no se pudo cargar (JSON corrupto/inválido). Usando preset por defecto.");
+#endif
                 if (_profile.defaultPlayerPreset)
                 {
                     _profile.EnsureRuntimePresetFromTemplate(_profile.defaultPlayerPreset);
@@ -320,14 +344,18 @@ public class GameBootService : MonoBehaviour
                 else
                 {
                     _profile.EnsureRuntimePreset();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[GameBootService] No hay defaultPlayerPreset. Se crea runtimePreset vacío.");
+#endif
                 }
             }
         }
         // 3) Si no, usar preset por defecto
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameBootService] 📄 No hay save - Usando preset por defecto");
+#endif
             if (_profile.defaultPlayerPreset)
             {
                 _profile.EnsureRuntimePresetFromTemplate(_profile.defaultPlayerPreset);
@@ -335,7 +363,9 @@ public class GameBootService : MonoBehaviour
             else
             {
                 _profile.EnsureRuntimePreset();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[GameBootService] No hay defaultPlayerPreset. Se crea runtimePreset vacío.");
+#endif
             }
         }
 
@@ -366,12 +396,14 @@ public class GameBootService : MonoBehaviour
         var preset = profile.GetActivePresetResolved();
         if (preset == null) return;
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 🎮 Aplicando preset de testeo como partida cargada...");
         
         // 1. Restaurar anchor de spawn
         // ✅ MOVIDO: SpawnManager.HandleProfileReady() se encarga de esto ahora
         // El anchor se establece DESPUÉS cuando SpawnManager recibe OnProfileReady
         Debug.Log($"[GameBootService]   ⏭️ Spawn anchor se establecerá por SpawnManager: {preset.spawnAnchorId}");
+#endif
         
         // 2. Restaurar progreso de bosses
         // ⚠️ NOTA: NO cargar aquí porque BossArenaController.OnEnable() aún no se ha ejecutado
@@ -380,7 +412,9 @@ public class GameBootService : MonoBehaviour
         if (BossProgressTracker.TryGetInstance(out var tracker))
         {
             // tracker.LoadFromSnapshot(preset.defeatedBossIds); // ← COMENTADO
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService]   ⏭️ Boss progress se cargará por BossProgressPersistenceBridge (cuando componentes estén listos)");
+#endif
         }
         
         // 3. Restaurar estado de quests desde flags
@@ -388,7 +422,9 @@ public class GameBootService : MonoBehaviour
         if (questManager != null)
         {
             questManager.RestoreFromProfileFlags(preset.flags);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService]   ✅ Quests restauradas desde {preset.flags?.Count ?? 0} flags");
+#endif
         }
         else
         {
@@ -403,11 +439,15 @@ public class GameBootService : MonoBehaviour
         if (!profile.ShouldBootFromPreset())
         {
             profile.ApplyNpcPositionsToScene(preset);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService]   ✅ Posiciones de NPCs aplicadas: {preset.npcPositions?.Count ?? 0}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService]   ⏭️ Posiciones de NPCs se aplicarán por WorldBootstrap (modo preset)");
+#endif
         }
         
         // 5. Resetear sistema de narrativas para el perfil cargado
@@ -415,45 +455,63 @@ public class GameBootService : MonoBehaviour
         
         // 6. Limpiar registro de narrativas interactivas para que se re-registren
         Game.NPC.Modules.NPCInteractiveNarrativeRegistry.Clear();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService]   ✅ NPCInteractiveNarrativeRegistry limpiado");
+#endif
         
         // 7. Restaurar puntos de teletransporte desbloqueados
         TeleportRegistry.LoadFromSaveData(preset.unlockedTeleportPoints);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService]   ✅ Teleport points restaurados desde preset: {preset.unlockedTeleportPoints?.Count ?? 0}");
+#endif
 
         // 7b. Restaurar vínculos sociales dinámicos entre NPCs (mismo patrón que TeleportRegistry).
         // Necesario también en modo testeo: SetRuntimePresetFromSave (donde se recarga para partidas
         // reales) no se llama aquí — el bootPreset nunca pasa por el save JSON (Regla 1, CLAUDE.md).
         NPCRelationshipRegistry.LoadFromSaveEntries(preset.npcRelationships);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService]   ✅ Relaciones de NPCs restauradas desde preset: {preset.npcRelationships?.Count ?? 0}");
+#endif
 
         // 8. Restaurar blackboards narrativos si existen
         if (preset.narrativeBlackboards != null && preset.narrativeBlackboards.Count > 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameBootService] 📖 Intentando restaurar {preset.narrativeBlackboards.Count} blackboards narrativos...");
+#endif
             
             // Intentar restauración inmediata
             var hub = NarrativeGraphHub.Instance;
             if (hub != null)
             {
                 var runners = hub.GetAllRunners();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService] 🔍 NarrativeGraphHub disponible con {runners?.Count ?? 0} runners");
+#endif
                 
                 hub.RestoreBlackboards(preset.narrativeBlackboards);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService]   ✅ Blackboards narrativos restaurados: {preset.narrativeBlackboards.Count}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[GameBootService]   ⏳ NarrativeGraphHub.Instance es NULL - diferiendo restauración de {preset.narrativeBlackboards.Count} blackboards");
+#endif
                 StartCoroutine(RestoreBlackboardsWhenHubReady(preset.narrativeBlackboards));
             }
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameBootService]   ℹ️ No hay blackboards narrativos en el preset para restaurar");
+#endif
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameBootService] 🎮 Preset de testeo aplicado como partida cargada - Sistema completo inicializado");
+#endif
     }
 
     private IEnumerator RestoreQuestsWhenReady(IReadOnlyList<string> flags)
@@ -464,12 +522,16 @@ public class GameBootService : MonoBehaviour
             if (QuestManager.Instance != null)
             {
                 QuestManager.Instance.RestoreFromProfileFlags(flags);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService]   ✅ (Diferido) Quests restauradas desde {flags?.Count ?? 0} flags");
+#endif
                 yield break;
             }
             yield return wait;
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogError("[GameBootService] Timeout esperando a QuestManager.Instance");
+#endif
     }
 
     private IEnumerator RestoreBlackboardsWhenHubReady(List<PlayerSaveData.NarrativeBlackboardSnapshot> blackboards)
@@ -480,12 +542,16 @@ public class GameBootService : MonoBehaviour
             if (NarrativeGraphHub.Instance != null)
             {
                 NarrativeGraphHub.Instance.RestoreBlackboards(blackboards);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameBootService]   ✅ (Diferido) Blackboards narrativos restaurados: {blackboards.Count}");
+#endif
                 yield break;
             }
             yield return wait;
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogError("[GameBootService] Timeout esperando a NarrativeGraphHub.Instance");
+#endif
     }
     #endregion
 
@@ -504,7 +570,9 @@ public class GameBootService : MonoBehaviour
 
     private void ReloadTestPresetInternal()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[GameBootService] 🔄 ReloadTestPreset — descartando sesión anterior y recargando bootPreset...");
+#endif
         
         // 1. Detener todos los grafos narrativos para evitar runners huérfanos
         if (NarrativeGraphHub.Instance != null)
@@ -525,7 +593,9 @@ public class GameBootService : MonoBehaviour
         // 4. Forzar que todos los sistemas suscritos a OnProfileReady se re-inicialicen
         OnProfileReady?.Invoke();
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[GameBootService] ✅ Test preset recargado — sistema reiniciado como primera carga");
+#endif
     }
 
     /// <summary>
@@ -540,7 +610,9 @@ public class GameBootService : MonoBehaviour
         if (_profile.ShouldBootFromPreset() && _profile.bootPreset != null)
         {
             _profile.EnsureRuntimePresetFromTemplate(_profile.bootPreset);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameBootService] NewGameReset llamado con testing mode activo → Manteniendo bootPreset");
+#endif
         }
         else
         {

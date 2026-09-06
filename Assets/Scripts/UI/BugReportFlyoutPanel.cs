@@ -809,7 +809,9 @@ public class BugReportFlyoutPanel : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[BugReportFlyoutPanel] Fallo al enviar el reporte: {request.error} (código {request.responseCode})");
+#endif
                 ShowStatus(Loc("BugReport_Error", "No se pudo enviar. Comprueba tu conexión e inténtalo de nuevo."), isError: true);
             }
         }

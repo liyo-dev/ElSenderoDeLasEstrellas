@@ -180,7 +180,9 @@ public class PlayerShieldController : MonoBehaviour
     {
         if (shieldPrefab == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerShieldController] shieldPrefab no asignado, no se puede instanciar el escudo.");
+#endif
             return;
         }
 

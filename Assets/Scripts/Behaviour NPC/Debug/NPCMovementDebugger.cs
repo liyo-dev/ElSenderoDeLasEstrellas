@@ -28,12 +28,16 @@ public class NPCMovementDebugger : MonoBehaviour
         
         if (_agent == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[MovementDebugger:{name}] ❌ No tiene NavMeshAgent!");
+#endif
             enabled = false;
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[MovementDebugger:{name}] ✅ Iniciado - Monitoreando movimiento");
+#endif
     }
     
     void Update()
@@ -82,7 +86,9 @@ public class NPCMovementDebugger : MonoBehaviour
             if (stateInfo != _lastStateName)
             {
                 _stateChangeCount++;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[MovementDebugger:{name}] 🔄 CAMBIO DE ESTADO #{_stateChangeCount}: '{_lastStateName}' → '{stateInfo}' (tipo: {stateType})");
+#endif
                 _lastStateName = stateInfo;
             }
         }

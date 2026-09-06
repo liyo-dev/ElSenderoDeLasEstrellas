@@ -312,6 +312,17 @@ namespace Game.NPC.Modules
         [Tooltip("Si true, prioriza usar escudo sobre buscar cobertura")]
         public bool preferShieldOverCover = false;
 
+        [Header("👥 Coordinación de Equipo (opcional)")]
+        [Tooltip("PROPUESTA (4 sep 2026, inspirado en el patrón 'Attack Slot' de juegos de acción con "
+                 + "varios enemigos): máximo de compañeros de equipo que pueden estar atacando al MISMO "
+                 + "objetivo a la vez. 0 = sin límite (comportamiento idéntico al de antes). Solo tiene "
+                 + "efecto real en NPCs que comparten objetivo dentro de un NPCCombatTeam (p.ej. Lety+"
+                 + "Vicky vs. el jugador): con un valor de 1, no atacan a la vez — el que no consigue "
+                 + "turno flanquea en vez de sumarse al aluvión o quedarse plantado. Recomendado: 1 para "
+                 + "equipos de 2, 2 para equipos de 3-4.")]
+        [Range(0, 4)]
+        public int maxConcurrentAttackersOnTarget = 0;
+
         [Header("🎭 Dificultad y Engaño Táctico")]
         [Range(0f, 1f)]
         [Tooltip("Nivel de dificultad táctica del NPC (0=Torpe, 1=Experto). Afecta el tiempo de reacción,\n" +
@@ -392,7 +403,9 @@ namespace Game.NPC.Modules
             // Advertencia si no hay spell1 (hechizo básico)
             if (spell1Prefab == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCCombatConfig] ⚠️ Spell1 (básico) no configurado. Se recomienda siempre tener al menos el hechizo básico.");
+#endif
             }
             
             // Normalizar probabilidades (advertencia si no suman 1.0)

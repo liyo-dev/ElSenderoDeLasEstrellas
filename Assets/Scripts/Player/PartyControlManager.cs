@@ -148,7 +148,9 @@ public class PartyControlManager : MonoBehaviour
         if (_switchingLocked) { Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}"); return; }
         if (!IsSwapAllowedByCurrentMode()) { Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite swap ({_actionManager?.Top})."); return; }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchLeft — _activeIndex={_activeIndex}");
+#endif
         for (int i = _activeIndex - 1; i >= 0; i--)
         {
             if (IsSlotAvailable(i))
@@ -157,7 +159,9 @@ public class PartyControlManager : MonoBehaviour
                 return;
             }
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchLeft — no hay slot disponible a la izquierda de {_activeIndex}");
+#endif
     }
 
     private void TrySwitchRight()
@@ -165,7 +169,9 @@ public class PartyControlManager : MonoBehaviour
         if (_switchingLocked) { Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}"); return; }
         if (!IsSwapAllowedByCurrentMode()) { Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite swap ({_actionManager?.Top})."); return; }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchRight — _activeIndex={_activeIndex}");
+#endif
         for (int i = _activeIndex + 1; i <= 2; i++)
         {
             if (IsSlotAvailable(i))
@@ -174,7 +180,9 @@ public class PartyControlManager : MonoBehaviour
                 return;
             }
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchRight — no hay slot disponible a la derecha de {_activeIndex}");
+#endif
     }
 
     private void SetSwitchingLocked(bool locked)
@@ -199,12 +207,16 @@ public class PartyControlManager : MonoBehaviour
         var swapper = ActiveCharacterSwapper.Instance;
         if (swapper == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.Instance es null. _activeIndex NO modificado.");
+#endif
             return;
         }
         if (!swapper.IsReady)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.IsReady=false. _activeIndex NO modificado.");
+#endif
             return;
         }
 
@@ -310,7 +322,9 @@ public class PartyControlManager : MonoBehaviour
 
     private void HandleProfileReady()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] 🔄 GameBootService.OnProfileReady recibido. _activeIndex={_activeIndex} ({(CharacterSlot)_activeIndex}). Reinicializando estado del party.");
+#endif
 
         // Cancelar cualquier restauración diferida de una sesión anterior
         PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
@@ -343,7 +357,9 @@ public class PartyControlManager : MonoBehaviour
         if (ActiveCharacterSwapper.Instance == null || !ActiveCharacterSwapper.Instance.IsReady) return;
 
         PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] Party listo. Restaurando personaje guardado: {(CharacterSlot)_pendingSlotToRestore}");
+#endif
         int slotToRestore = _pendingSlotToRestore;
         _pendingSlotToRestore = -1;
         SwitchToCharacter(slotToRestore);

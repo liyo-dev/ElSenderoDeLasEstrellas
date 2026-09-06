@@ -179,11 +179,15 @@ public class BossArenaController : MonoBehaviour
         {
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing != this)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[BossArenaController] BattleId '{battleId}' ya registrado por otro BossArenaController. Sobrescribiendo registro.");
+#endif
             }
             s_arenaRegistry[battleId] = this;
             // Diagnostic log: confirmar registro en runtime (útil para debugging)
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] Registrada arena con BattleId='{battleId}' en scene='{gameObject.scene.name}' (active={gameObject.activeInHierarchy}, enabled={this.enabled}).");
+#endif
         }
     }
 
@@ -202,7 +206,9 @@ public class BossArenaController : MonoBehaviour
             {
                 if (s_arenaRegistry.TryGetValue(key, out var existing) && existing != this)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[BossArenaController] OnEnable: BattleId '{key}' ya registrado por otro BossArenaController. Sobrescribiendo registro.");
+#endif
                 }
                 s_arenaRegistry[key] = this;
                 //Debug.Log($"[BossArenaController] OnEnable: Registrada arena con BattleId='{key}' (scene='{gameObject.scene.name}', active={gameObject.activeInHierarchy}).");
@@ -237,14 +243,18 @@ public class BossArenaController : MonoBehaviour
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing == this)
             {
                 s_arenaRegistry.Remove(battleId);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[BossArenaController] Desregistrada arena con BattleId='{battleId}' en OnDisable.");
+#endif
             }
         }
     }
 
     void Start()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] 🎬 Start() - Arena BattleId='{battleId}', BossId='{bossId}', ProfileReady={_profileReady}");
+#endif
         
         // ✅ CRÍTICO: Solo verificar el estado del boss si el perfil ya está listo
         // Si no está listo, HandleProfileReady() lo verificará cuando se dispare OnProfileReady
@@ -254,7 +264,9 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⏳ Esperando a que el perfil esté listo para verificar el estado del boss");
+#endif
         }
     }
 
@@ -265,12 +277,16 @@ public class BossArenaController : MonoBehaviour
     {
         if (_profileReady)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⚠️ HandleProfileReady llamado múltiples veces para '{bossId}' - ignorando");
+#endif
             return;
         }
         
         _profileReady = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] ✅ Perfil listo para '{bossId}' - verificando estado del boss");
+#endif
         
         // Desuscribirse para no recibir más notificaciones
         GameBootService.OnProfileReady -= HandleProfileReady;
@@ -285,42 +301,58 @@ public class BossArenaController : MonoBehaviour
     void CheckBossStateAndApply()
     {
         bool isDefeated = IsBossAlreadyDefeated();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] 🔍 IsBossAlreadyDefeated() = {isDefeated} para BossId='{bossId}'");
+#endif
         
         if (isDefeated)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ✅ Boss '{bossId}' ya fue derrotado - desbloqueando área sin spawnearlo");
+#endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⚔️ Boss '{bossId}' NO ha sido derrotado - esperando trigger del player");
+#endif
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] 🚪 OnTriggerEnter - Tag: {other.tag}, Started: {started}, BossDefeated: {_bossDefeatHandled}, StartOnEnter: {startBarrierOnPlayerEnter}");
+#endif
         
         if (started || _bossDefeatHandled) return;
         if (!other.CompareTag(playerTag)) return;
         if (!startBarrierOnPlayerEnter) 
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⏸️ StartBarrierOnPlayerEnter está desactivado - no se inicia batalla automáticamente");
+#endif
             return;
         }
 
         bool isDefeated = IsBossAlreadyDefeated();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] 🔍 Player entró al trigger - IsBossAlreadyDefeated={isDefeated}");
+#endif
         
         if (isDefeated)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ✅ Boss ya derrotado - aplicando estado cleared");
+#endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] ⚔️ Iniciando batalla con boss '{bossId}'");
+#endif
         // Usamos el método centralizado para iniciar la batalla
         StartBattleInternal();
     }
@@ -427,7 +459,9 @@ public class BossArenaController : MonoBehaviour
 
         if (!boss)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[BossArenaController] No hay boss para esta sala.");
+#endif
             started = false;
             
             // Destruir el portal si no hay boss
@@ -462,12 +496,16 @@ public class BossArenaController : MonoBehaviour
         // Iniciar presentación o colocar directamente en el suelo
         if (bossIntroPresentation != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ✅ BossIntroPresentation asignado para '{boss.name}'. Iniciando presentación...");
+#endif
             StartCoroutine(PlayPresentationAndPlaceBoss(boss));
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⚠️ No hay BossIntroPresentation asignado para '{boss.name}'. Colocando boss directamente.");
+#endif
             PlaceBossOnFloor(boss);
             EnableBossCombat(boss);
             _activeBossHealthBar?.Show();
@@ -481,13 +519,17 @@ public class BossArenaController : MonoBehaviour
         
         if (bossCamera == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[BossArenaController] ❌ No se encontró cámara en el boss '{boss.name}' (ni activa ni inactiva). Saltando presentación.");
+#endif
             PlaceBossOnFloor(boss);
             EnableBossCombat(boss);
             yield break;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] 📷 Cámara encontrada: '{bossCamera.name}' en boss '{boss.name}'");
+#endif
         
         // Configurar y reproducir presentación
         bossIntroPresentation.SetupBoss(boss.transform, bossCamera, GetLocalizedBossName());
@@ -514,7 +556,9 @@ public class BossArenaController : MonoBehaviour
         if (impDemonAI != null)
         {
             impDemonAI.canStartCombat = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[BossArenaController] Combate del boss (ImpDemon) activado.");
+#endif
             return;
         }
         
@@ -522,7 +566,9 @@ public class BossArenaController : MonoBehaviour
         if (golemBossAI != null)
         {
             golemBossAI.canStartCombat = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[BossArenaController] Combate del boss (Golem) activado.");
+#endif
             return;
         }
 
@@ -543,19 +589,27 @@ public class BossArenaController : MonoBehaviour
             if (enemyLayer != -1)
             {
                 boss.layer = enemyLayer;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[BossArenaController] Layer del boss cambiado a 'Enemy' para permitir recibir daño.");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[BossArenaController] No se encontró el layer 'Enemy' en el proyecto; el boss podría no recibir daño.");
+#endif
             }
 
             npcManager.EnterCombat();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[BossArenaController] Combate del boss (NPCBehaviourManagerV2) activado.");
+#endif
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning("[BossArenaController] No se encontró componente de IA compatible en el boss.");
+#endif
     }
 
     private void PlaceBossOnFloor(GameObject boss)
@@ -567,7 +621,9 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[BossArenaController] No se encontró Floor debajo del boss en {boss.transform.position}");
+#endif
         }
     }
 
@@ -604,7 +660,9 @@ public class BossArenaController : MonoBehaviour
                 player.position += direction * 2f;
             }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[BossArenaController] Jugador empujado de vuelta al área del boss.");
+#endif
         }
     }
 
@@ -684,7 +742,9 @@ public class BossArenaController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(bossId))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] ⚠️ IsBossAlreadyDefeated: bossId está vacío para battleId='{battleId}'");
+#endif
             return false;
         }
         
@@ -692,11 +752,15 @@ public class BossArenaController : MonoBehaviour
         {
             bool defeated = tracker.IsDefeated(bossId);
             var allDefeated = tracker.DefeatedBossIds;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[BossArenaController] 🔍 Tracker encontrado - BossId='{bossId}', IsDefeated={defeated}, DefeatedBossIds=[{string.Join(", ", allDefeated)}]");
+#endif
             return defeated;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[BossArenaController] ⚠️ BossProgressTracker no encontrado - asumiendo boss NO derrotado");
+#endif
         return false;
     }
 
@@ -752,7 +816,9 @@ public class BossArenaController : MonoBehaviour
             }
             catch (Exception ex)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[BossArenaController] Error notificando BattleWon: {ex.Message}");
+#endif
             }
         }
 
@@ -788,7 +854,9 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[BossArenaController] Solo se soportan BoxCollider para las barreras visuales. Creando barrera genérica.");
+#endif
             CreateGenericBarrier(bounds, height);
         }
     }
@@ -895,7 +963,9 @@ public class BossArenaController : MonoBehaviour
                 barrier.Show();
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[BossArenaController] Área del boss bloqueada.");
+#endif
     }
 
     private void UnlockArea()
@@ -910,7 +980,9 @@ public class BossArenaController : MonoBehaviour
                 barrier.Hide();
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[BossArenaController] Área del boss desbloqueada.");
+#endif
     }
 
     // =========================== Battle toggles ===========================
@@ -963,7 +1035,9 @@ public class BossArenaController : MonoBehaviour
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing == this)
             {
                 s_arenaRegistry.Remove(battleId);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[BossArenaController] Desregistrada arena con BattleId='{battleId}' en OnDestroy.");
+#endif
             }
         }
     }
@@ -993,7 +1067,9 @@ public class BossArenaController : MonoBehaviour
                 {
                     if (kvp.Value != null)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning($"[BossArenaController] TryTriggerBattleById: Lookup directo falló para '{id}', usando fallback con key registrada '{kvp.Key}'.");
+#endif
                         kvp.Value.TriggerStartBattle();
                         return true;
                     }
@@ -1002,7 +1078,9 @@ public class BossArenaController : MonoBehaviour
         }
         catch (Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[BossArenaController] Error durante fallback de búsqueda de BattleId '{id}': {ex.Message}");
+#endif
         }
 
         // Diagnostic: si no se encuentra, mostrar los ids registrados (útil para debugging)
@@ -1010,17 +1088,23 @@ public class BossArenaController : MonoBehaviour
         {
             if (s_arenaRegistry.Count == 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[BossArenaController] Intento de activar BattleId '{id}' pero el registry está vacío.");
+#endif
             }
             else
             {
                 var keys = string.Join(", ", s_arenaRegistry.Keys);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[BossArenaController] Intento de activar BattleId '{id}' pero no se encontró. Keys registradas: {keys}");
+#endif
             }
         }
         catch (Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[BossArenaController] Error al listar ids registrados: {ex.Message}");
+#endif
         }
 
         return false;

@@ -44187,7 +44187,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7947486230458501707, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8136900788614217912, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
@@ -97506,6 +97506,7 @@ MonoBehaviour:
   jitter: 0.5
   scaleRange: {x: 5, y: 9}
   maxCloudInstances: 300
+  maxCloudsInstantiatedPerFrame: 25
   heightJitter: 16
   minClearanceAboveFollowTarget: 25
   horizonElevationDegrees: 30

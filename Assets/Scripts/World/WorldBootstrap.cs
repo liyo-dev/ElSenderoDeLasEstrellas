@@ -85,7 +85,9 @@ public class WorldBootstrap : MonoBehaviour
 
     private void InitializeWorld()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[WorldBootstrap] 🌍 InitializeWorld() - Iniciando configuración del mundo");
+#endif
 
         // BUGFIX: al inicializar el mundo siempre estamos en gameplay normal (nunca a mitad de
         // una cinemática), así que este es un punto seguro para tirar de golpe cualquier flag de
@@ -98,11 +100,15 @@ public class WorldBootstrap : MonoBehaviour
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[WorldBootstrap] ¡No se encontró GameBootProfile en GameBootService!");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[WorldBootstrap] Profile encontrado - ShouldBootFromPreset: {bootProfile.ShouldBootFromPreset()}");
+#endif
 
         // Refugio de lluvia: (re)enganchar el relay de clima al DayNightCycle de esta escena.
         // Ver NPCWeatherAwareness — evita que cada NPC haga su propio FindAnyObjectByType.
@@ -115,7 +121,9 @@ public class WorldBootstrap : MonoBehaviour
 
             // ✅ El anchor ya fue establecido por SpawnManager.HandleProfileReady()
             var anchor = bootProfile.GetStartAnchorOrDefault();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[WorldBootstrap] 📍 Modo PRESET - Anchor desde profile: '{anchor}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
+#endif
 
             var testPreset = bootProfile.GetActivePresetResolved();
             if (testPreset != null)
@@ -131,7 +139,9 @@ public class WorldBootstrap : MonoBehaviour
                 // GameBootService.ApplyPresetAsLoadedGame() se ejecuta ANTES de que MainWorld cargue
                 // En ese momento los NPCs no existen, por lo que NO se pueden posicionar
                 // AHORA es el momento correcto porque MainWorld está cargada y los NPCs existen
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[WorldBootstrap] 🎯 Aplicando posiciones de {testPreset.npcPositions?.Count ?? 0} NPCs desde preset (modo testeo)");
+#endif
                 bootProfile.ApplyNpcPositionsToScene(testPreset);
             }
 
@@ -146,7 +156,9 @@ public class WorldBootstrap : MonoBehaviour
         // 2) Flujo normal: El runtimePreset ya está configurado por GameBootService.PrepareActivePreset()
         // Simplemente aplicar el preset al jugador sin recargar el save
         string anchorId = bootProfile.GetStartAnchorOrDefault();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[WorldBootstrap] 📍 Modo NORMAL - Anchor desde profile: '{anchorId}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
+#endif
         
         var runtimePreset = bootProfile.GetActivePresetResolved();
         if (runtimePreset != null)
@@ -220,7 +232,9 @@ public class WorldBootstrap : MonoBehaviour
 
         if (player == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[WorldBootstrap] No se encontró el jugador via PlayerService.");
+#endif
             yield break;
         }
 
@@ -242,7 +256,9 @@ public class WorldBootstrap : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[WorldBootstrap] ⚠️ Jugador no activo, programando teleport diferido a '{anchorId}'");
+#endif
             SpawnManager.SetCurrentAnchor(anchorId);
             StartCoroutine(TeleportWhenActive(player, anchorId));
         }

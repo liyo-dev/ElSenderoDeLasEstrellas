@@ -156,7 +156,9 @@ namespace Game.NPC
             
             if (_npcManager == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NPCPartyMember] {name} requiere NPCBehaviourManagerV2");
+#endif
             }
         }
 
@@ -180,7 +182,11 @@ namespace Game.NPC
             if (!NPCInitializer.IsNPCReady(_npcManager, out string reason))
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[NPCPartyMember:{name}] No listo para auto-join: {reason}. Reintentando en Update.");
+#endif
+                    }
                 
                 // Si no está listo AHORA, lo intentaremos en Update hasta que lo esté
                 return;
@@ -578,18 +584,24 @@ namespace Game.NPC
         /// </summary>
         internal void OnPlayerEnteredCombat(Transform enemy)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCPartyMember:{name}] 🔔 OnPlayerEnteredCombat - Enemigo: {enemy?.name}");
+#endif
 
             if (_npcManager?.Brain == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NPCPartyMember:{name}] ⚠️ _npcManager.Brain es NULL!");
+#endif
                 return;
             }
 
             // No interrumpir si el jugador está controlando directamente este NPC
             if (ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.HiddenNpc == this)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCPartyMember:{name}] ℹ️ Ignorando combate: personaje bajo control del jugador");
+#endif
                 return;
             }
             
@@ -603,7 +615,9 @@ namespace Game.NPC
             {
                 // Pasar el enemigo al constructor para que lo ataque directamente
                 _npcManager.Brain.ChangeState(new States.AllyCombatState(enemy));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCPartyMember:{name}] ⚔️ CAMBIADO A AllyCombatState con target: {enemy?.name}");
+#endif
             }
         }
 
@@ -722,7 +736,9 @@ namespace Game.NPC
 
         private void LogWarning(string message)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[NPCPartyMember:{name}] ⚠️ {message}");
+#endif
         }
         #endregion
 

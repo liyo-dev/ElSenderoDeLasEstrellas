@@ -45,7 +45,9 @@ public class NPCAnimationDebugger : MonoBehaviour
                 fsmState = _behaviourManager.Brain.CurrentState.StateName;
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCAnimDebug:{name}] 🎭 Animator: '{currentStateName}' | FSM: '{fsmState}' | IsInParty: {IsInParty()}");
+#endif
             _lastStateName = currentStateName;
         }
     }
@@ -76,7 +78,9 @@ public class NPCAnimationDebugger : MonoBehaviour
     {
         if (_animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[NPCAnimDebug:{name}] No hay Animator");
+#endif
             return;
         }
         
@@ -89,6 +93,7 @@ public class NPCAnimationDebugger : MonoBehaviour
             fsmState = _behaviourManager.Brain.CurrentState.StateName;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[NPCAnimDebug:{name}] 📊 ESTADO ACTUAL:");
         Debug.Log($"  - Animator State: '{currentStateName}'");
         Debug.Log($"  - FSM State: '{fsmState}'");
@@ -96,5 +101,6 @@ public class NPCAnimationDebugger : MonoBehaviour
         Debug.Log($"  - Animator Speed: {_animator.speed}");
         Debug.Log($"  - Normalized Time: {stateInfo.normalizedTime}");
         Debug.Log($"  - Is Looping: {stateInfo.loop}");
+#endif
     }
 }

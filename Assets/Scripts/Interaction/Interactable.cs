@@ -314,21 +314,29 @@ public class Interactable : MonoBehaviour
             var config = narrativeExecutor.GetConfiguration();
             if (config != null && config.HasAvailableNarrative())
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Interactable:{name}] 🎭 Delegando a NPCInteractiveNarrativeExecutor (tiene narrativas condicionales disponibles)");
+#endif
                 bool success = narrativeExecutor.TryExecuteNarrative();
                 if (success)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[Interactable:{name}] ✅ Narrativa condicional ejecutada exitosamente");
+#endif
                     return; // ✅ Salir - no ejecutar el diálogo por defecto
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[Interactable:{name}] ⚠️ TryExecuteNarrative() falló, usando diálogo por defecto");
+#endif
                 }
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Interactable:{name}] ℹ️ NPCInteractiveNarrativeExecutor existe pero no hay narrativas disponibles, usando diálogo por defecto");
+#endif
             }
         }
         
@@ -360,7 +368,9 @@ public class Interactable : MonoBehaviour
     {
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[Interactable] Could not locate Player for interaction via PlayerService.");
+#endif
             return false;
         }
 
@@ -409,7 +419,9 @@ public class Interactable : MonoBehaviour
 
     void StartDialogue()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[Interactable:{name}] 📖 StartDialogue - dialogue={dialogue?.name}");
+#endif
         
         // ✅ REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
         var npcAnimator = GetComponent<NPCSimpleAnimator>();
@@ -419,14 +431,18 @@ public class Interactable : MonoBehaviour
             if (_npcManager.Context == null || !_npcManager.Context.IsInCombat)
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción");
+#endif
             }
         }
         
         var dm = DialogueManager.Instance;
         if (dialogue && dm != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Interactable:{name}] ✅ Iniciando diálogo: {dialogue.name}");
+#endif
             OnStarted?.Invoke();
             GameState.Push(GamePhase.Dialogue);
 
@@ -439,7 +455,9 @@ public class Interactable : MonoBehaviour
             // ✅ NPCSimpleAnimator maneja la rotación del NPC (suscrito a eventos de DialogueManager)
             dm.StartDialogue(dialogue, transform, () =>
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Interactable:{name}] 🔚 Diálogo terminado");
+#endif
                 SetNpcInteracting(false);
                 OnFinished?.Invoke();
                 if (GameState.Is(GamePhase.Dialogue)) GameState.Pop(GamePhase.Dialogue);
@@ -448,7 +466,9 @@ public class Interactable : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[Interactable] No DialogueAsset o DialogueManager en {name}.");
+#endif
             AfterUse();
         }
     }
@@ -459,7 +479,7 @@ public class Interactable : MonoBehaviour
     private System.Collections.IEnumerator PlayInteractionAnimation(NPCSimpleAnimator npcAnimator)
     {
         // Reproducir animación de interacción
-        npcAnimator.PlayOneShot("InteractWithPeople_NoWeapon", 0, onComplete: null);
+        npcAnimator.PlayOneShot("Talk01", 0, onComplete: null);
         
         // Esperar un frame
         yield return null;
@@ -475,14 +495,18 @@ public class Interactable : MonoBehaviour
             if (_npcManager.Context == null || !_npcManager.Context.IsInCombat)
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción (con opciones)");
+#endif
             }
         }
         
         var dm = DialogueManager.Instance;
         if (dm == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[Interactable] DialogueManager no disponible.");
+#endif
             return;
         }
 
@@ -516,7 +540,9 @@ public class Interactable : MonoBehaviour
         }
         catch (System.Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[Interactable] ShowWithChoices failed: {ex.Message}\n{ex.StackTrace}");
+#endif
             if (GameState.Is(GamePhase.SavePrompt)) GameState.Pop(GamePhase.SavePrompt);
             SetNpcInteracting(false);
         }
@@ -541,7 +567,9 @@ public class Interactable : MonoBehaviour
         var popup = ConfirmationPopupUI.Instance;
         if (popup == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[Interactable:{name}] ConfirmationPopupUI.Instance es null (¿Start.unity no está cargada?). Usando diálogo con opciones como fallback.");
+#endif
             StartDialogueWithOptions();
             return;
         }

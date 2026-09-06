@@ -95,7 +95,9 @@ public class GameOverManager : MonoBehaviour
         }
         catch (System.Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[GameOverManager] EnsurePersistentIfPlacedInStartScene failed: {ex}");
+#endif
         }
     }
 
@@ -105,7 +107,9 @@ public class GameOverManager : MonoBehaviour
         
         if (Instance != null && Instance != this)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameOverManager] Destruyendo duplicado");
+#endif
             Destroy(gameObject);
             return;
         }
@@ -118,13 +122,17 @@ public class GameOverManager : MonoBehaviour
         if (transform.parent == null)
         {
             DontDestroyOnLoad(gameObject);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameOverManager] Marcado como DontDestroyOnLoad");
+#endif
         }
         else
         {
             // Si tiene padre, persistir el root
             DontDestroyOnLoad(transform.root.gameObject);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameOverManager] Root '{transform.root.name}' marcado como DontDestroyOnLoad");
+#endif
         }
     }
 
@@ -186,11 +194,15 @@ public class GameOverManager : MonoBehaviour
     /// </param>
     public void ShowGameOver(PlayerHealthSystem deadPlayer = null)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] ShowGameOver() - _isGameOverActive={_isGameOverActive}");
+#endif
 
         if (_isGameOverActive || _gameOverCoroutine != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameOverManager] ShowGameOver() IGNORADO - ya activo");
+#endif
             return;
         }
 
@@ -201,7 +213,9 @@ public class GameOverManager : MonoBehaviour
     private System.Collections.IEnumerator GameOverSequence()
     {
         _isGameOverActive = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[GameOverManager] 💀 Iniciando secuencia de Game Over cinematográfica");
+#endif
         
         // DialogueManager.Close() hace Pop de UIMode y de ActionMode.Cinematic si estaban activos.
         DialogueManager.Instance?.Close();
@@ -218,7 +232,9 @@ public class GameOverManager : MonoBehaviour
         if (enableDeathFlash)
         {
             FeedbackService.ScreenFlash(deathFlashColor, deathFlashDuration);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[GameOverManager] 🔴 Flash de muerte activado");
+#endif
         }
 
         // 1b. Limpiar el estado de cambio de personaje (destruye el NPC instanciado de Will si
@@ -263,7 +279,9 @@ public class GameOverManager : MonoBehaviour
         // cortar a la transición, usando tiempo real porque Time.timeScale está modificado
         yield return WaitForPlayerToLand();
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[GameOverManager] ⏳ Secuencia cinematográfica completada, iniciando transición al menú");
+#endif
 
         // 7. Restaurar Time.timeScale antes de la transición
         Time.timeScale = 1f;
@@ -286,7 +304,9 @@ public class GameOverManager : MonoBehaviour
             if (!string.IsNullOrEmpty(gameOverAudioEvent))
             {
                 AudioService.Instance.PlaySFX(gameOverAudioEvent);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[GameOverManager] 🔊 Audio '{gameOverAudioEvent}' reproducido");
+#endif
             }
         }
     }
@@ -299,11 +319,15 @@ public class GameOverManager : MonoBehaviour
         {
             _originalFOV = _mainCamera.fieldOfView;
             _thirdPersonCamera = _mainCamera.GetComponent<vThirdPersonCamera>();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[GameOverManager] 📷 Cámara configurada - FOV original: {_originalFOV}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[GameOverManager] ⚠️ No se encontró Camera.main");
+#endif
         }
     }
 
@@ -327,7 +351,9 @@ public class GameOverManager : MonoBehaviour
         float playerYaw = _deadPlayer.transform.eulerAngles.y;
         _thirdPersonCamera.SetAngles(playerYaw + deathShotYawOffset, deathShotPitch);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] 🎥 Cámara enfocada en el jugador (yaw={playerYaw + deathShotYawOffset:F0}°, pitch={deathShotPitch:F0}°)");
+#endif
     }
 
     /// <summary>
@@ -363,7 +389,9 @@ public class GameOverManager : MonoBehaviour
             yield return null;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] 🧍 Jugador en el suelo (esperado {safety:F2}s tras el ramp) -> transición de pantalla");
+#endif
 
         // Pequeño respiro tras aterrizar antes de cortar a la transición.
         yield return new WaitForSecondsRealtime(landingSettleDelay);
@@ -371,7 +399,9 @@ public class GameOverManager : MonoBehaviour
 
     private void StartSlowMotion()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] 🐌 Iniciando slow-mo: {Time.timeScale} -> {slowMotionScale} en {slowMotionRampDuration}s");
+#endif
         
         // Usar DOTween para animar el timeScale
         DOTween.To(
@@ -387,7 +417,9 @@ public class GameOverManager : MonoBehaviour
         if (_mainCamera == null) return;
 
         float targetFOV = _originalFOV * zoomFactor;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] 🔍 Iniciando zoom FOV: {_originalFOV} -> {targetFOV} en {zoomDuration}s");
+#endif
 
         _zoomTween?.Kill();
         _zoomTween = DOTween.To(
@@ -400,7 +432,9 @@ public class GameOverManager : MonoBehaviour
 
     private void TransitionToMainMenu()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[GameOverManager] 🚪 Transición al menú principal: '{mainMenuScene}'");
+#endif
 
         MainMenuController.RequestInputDebounce();
 
@@ -411,7 +445,9 @@ public class GameOverManager : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[GameOverManager] TransitionManager o settings no disponibles, carga directa");
+#endif
             SceneManager.LoadScene(mainMenuScene);
         }
     }
@@ -436,7 +472,9 @@ public class GameOverManager : MonoBehaviour
         }
         catch (System.Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[GameOverManager] TransitionManager.Instance() falló: {ex.Message}");
+#endif
         }
 
         return transitionManager;
@@ -452,7 +490,9 @@ public class GameOverManager : MonoBehaviour
     /// </param>
     public static void NotifyGameOver(PlayerHealthSystem deadPlayer = null)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[GameOverManager] 💀 NotifyGameOver() llamado");
+#endif
         
         if (Instance == null)
         {
@@ -474,23 +514,31 @@ public class GameOverManager : MonoBehaviour
                 {
                     Instance = found;
                     ServiceLocator.Register(found);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[GameOverManager] ✅ Instancia encontrada (estaba inactiva o no registrada)");
+#endif
                 }
                 else
                 {
                     // Crear instancia de emergencia
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[GameOverManager] ⚠️ No se encontró instancia, creando una de emergencia...");
+#endif
                     var emergencyGO = new GameObject("[GameOverManager_Emergency]");
                     Instance = emergencyGO.AddComponent<GameOverManager>();
                     DontDestroyOnLoad(emergencyGO);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[GameOverManager] ✅ Instancia de emergencia creada");
+#endif
                 }
             }
         }
 
         if (Instance == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[GameOverManager] ❌ No se pudo crear/encontrar ninguna instancia.");
+#endif
             // Fallback: cargar menú principal directamente
             Time.timeScale = 1f;
             SceneManager.LoadScene("MainMenu");

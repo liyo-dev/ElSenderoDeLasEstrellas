@@ -412,7 +412,9 @@ public class MainMenuController : MonoBehaviour
         {
             // MODO TESTING: Descartar avances de la sesión y recargar el bootPreset desde cero.
             // Esto detiene corrutinas huérfanas, resetea el runtimePreset y re-aplica todos los sistemas.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[MainMenu] CONTINUE en modo preset/test → Recargando bootPreset desde cero");
+#endif
             GameBootService.ReloadTestPreset();
         }
         else if (hasSave)
@@ -427,7 +429,9 @@ public class MainMenuController : MonoBehaviour
             if (bootProfile != null)
             {
                 bootProfile.LoadProfile(saveSystem);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] CONTINUE → Perfil recargado desde disco");
+#endif
 
                 // FIX: sin esto, PartyControlManager.HandleProfileReady() (que resetea
                 // _activeIndex a Will y llama a ActiveCharacterSwapper.ResetState()) nunca se
@@ -442,7 +446,9 @@ public class MainMenuController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[MainMenu] CONTINUE pulsado sin save disponible → usando preset por defecto");
+#endif
         }
 
         LoadContinueScene();
@@ -450,7 +456,9 @@ public class MainMenuController : MonoBehaviour
 
     public void OnClickNewGame()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[MainMenu] ========== NUEVA PARTIDA SOLICITADA ==========");
+#endif
 
         if (_isLoading || !_inputArmed)
         {
@@ -500,21 +508,31 @@ public class MainMenuController : MonoBehaviour
         if (forcePreset)
         {
             // MODO TESTING: El preset de testeo controla TODO - no hace falta resetear ni borrar saves
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[MainMenu] NEW GAME en modo preset/test → Save NO se borra, bootPreset tiene control absoluto");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[MainMenu] NEW GAME → Reseteando perfil y borrando save");
+#endif
 
             if (GameBootService.IsAvailable)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] Llamando a GameBootService.NewGameReset()...");
+#endif
                 GameBootService.NewGameReset();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] GameBootService.NewGameReset() completado");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[MainMenu] GameBootService no esta listo; se borra el save directamente.");
+#endif
                 if (saveSystem != null)
                 {
                     bool ok = saveSystem.Delete();
@@ -533,7 +551,9 @@ public class MainMenuController : MonoBehaviour
             AudioService.MuteNextBaseSceneMusic = true;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[MainMenu] Cargando escena de Nueva Partida...");
+#endif
         LoadNewGameScene();
     }
 
@@ -578,7 +598,9 @@ public class MainMenuController : MonoBehaviour
         if (!settingsMenu)
         {
             settingsMenu = ServiceLocator.Get<SettingsMenuController>(false);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MainMenu] OnClickSettings fallback ServiceLocator -> {(settingsMenu != null ? settingsMenu.name : "<null>")}");
+#endif
         }
 
         if (settingsMenu != null)
@@ -613,7 +635,9 @@ public class MainMenuController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[MainMenu] No se encontró SettingsMenuController en la jerarquía ni en la escena.");
+#endif
         }
     }
 
@@ -629,7 +653,9 @@ public class MainMenuController : MonoBehaviour
         if (!controlsMenu)
         {
             controlsMenu = ServiceLocator.Get<ControlsMenuController>(false);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[MainMenu] OnClickControls fallback ServiceLocator -> {(controlsMenu != null ? controlsMenu.name : "<null>")}");
+#endif
         }
 
         if (controlsMenu != null)
@@ -662,7 +688,9 @@ public class MainMenuController : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[MainMenu] No se encontró ControlsMenuController en la jerarquía ni en la escena.");
+#endif
         }
     }
 
@@ -703,7 +731,9 @@ public class MainMenuController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nextSceneContinue))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[MainMenu] nextSceneContinue no está configurado.");
+#endif
             _isLoading = false;
             return;
         }
@@ -715,7 +745,9 @@ public class MainMenuController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nextSceneNewGame))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[MainMenu] nextSceneNewGame no está configurado.");
+#endif
             _isLoading = false;
             return;
         }
@@ -786,7 +818,9 @@ public class MainMenuController : MonoBehaviour
     {
         if (!btn)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[MainMenu] Botón {label} no asignado/encontrado.");
+#endif
             return;
         }
 

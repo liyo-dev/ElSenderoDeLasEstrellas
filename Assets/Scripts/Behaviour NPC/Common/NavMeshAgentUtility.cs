@@ -159,5 +159,54 @@ namespace Game.NPC.Common
             float raw = ComputeSpeedFactor(agent);
             return raw > 0f ? Mathf.Min(raw, WalkGaitThreshold) : 0f;
         }
+
+        // FIX 5 sep 2026 (incidencia saltitos/animación mal en escolta de Eldran): variante que
+        // calcula el factor contra una velocidad de referencia FIJA en vez de agent.speed. Hace
+        // falta cuando el propio llamador cambia agent.speed dinámicamente frame a frame (ver
+        // CinematicState.LeadPlayerToAnchorSequence, que reduce agent.speed progresivamente
+        // cuando el jugador se queda atrás) — en ese caso velocidad_actual/agent.speed da casi
+        // siempre ~1.0 (el NavMeshAgent converge su velocidad real al valor de agent.speed casi
+        // al instante), así que ComputeWalkGaitSpeedFactor(agent) se queda pegado en
+        // WalkGaitThreshold SIEMPRE, sin reflejar que el NPC está yendo mucho más despacio en
+        // términos absolutos. Confirmado con logs: agent.speed bajando de 3.5 a 1.1 y el factor
+        // recortado se quedaba fijo en 0.5 todo el tiempo. Usar la velocidad base (constante,
+        // capturada una vez al iniciar la secuencia) como referencia soluciona esto: ahora el
+        // factor sí baja cuando el NPC va más despacio de lo normal.
+        public static float ComputeWalkGaitSpeedFactor(NavMeshAgent agent, float referenceSpeed)
+        {
+            if (agent == null || !agent.isOnNavMesh) return 0f;
+            if (referenceSpeed <= 0.01f) return 0f;
+
+            float vel = agent.velocity.magnitude;
+            float refSpeed = vel >= 0.05f ? Mathf.Max(vel, agent.desiredVelocity.magnitude) : vel;
+
+            // FIX 5 sep 2026 (v2 -- incidencia "otra animación"/pose de andar distinta durante
+            // TODA la escolta, no solo al pararse): la versión anterior de este método normalizaba
+            // refSpeed contra referenceSpeed COMPLETO (el 100% de la velocidad base del escolta).
+            // Eso arregló los "saltitos", pero introdujo un problema nuevo: en
+            // LeadPlayerToAnchorSequence, agent.speed se reduce CONTINUAMENTE con un Lerp según lo
+            // lejos que esté el jugador (100% cuando está pegado, hasta 20% cuando está a
+            // _escortMaxDist) -- y ESO ES LO NORMAL EN CUALQUIER ESCOLTA, no un caso raro, porque
+            // el jugador casi nunca camina pegado del todo al NPC. Con el 100% de referenceSpeed
+            // como divisor, en cuanto el jugador se quedaba a una distancia media/grande (la
+            // mayor parte del tiempo) el factor se quedaba muy por debajo de WalkGaitThreshold
+            // (p.ej. ~0.2 en vez de 0.5), y el blend tree mostraba una mezcla débil entre Idle y
+            // Walk -- piernas casi sin zancada, brazos pegados al cuerpo -- que Raúl describió como
+            // "otra animación"/pose distinta, confirmado visualmente comparando con Will (que sí
+            // llega a un blend confiado). Ver claude/incidencia-eldran-... para el video de
+            // comparación.
+            //
+            // Fix: solo exigimos que refSpeed supere una FRACCIÓN pequeña (25%) de referenceSpeed
+            // para considerar que el NPC "está caminando de verdad" y mostrar el paso completo
+            // (WalkGaitThreshold) -- ese 25% ya cubre el mínimo real de la Lerp de ritmo de la
+            // escolta (20%), así que durante el ritmo normal (20%-100%) el blend se queda
+            // confiadamente en WalkGaitThreshold, igual que como camina Will. Por debajo de ese
+            // 25% (parándose de verdad, llegando al anchor, esperando al jugador) SÍ interpolamos
+            // hacia Idle de forma gradual -- conserva el objetivo original del fix de "saltitos":
+            // que nunca salte de golpe de caminar a Idle en un solo frame.
+            float walkConfidenceFloor = Mathf.Max(0.05f, referenceSpeed * 0.25f);
+            float raw = Mathf.Clamp01(refSpeed / walkConfidenceFloor);
+            return raw > 0f ? Mathf.Min(raw, WalkGaitThreshold) : 0f;
+        }
     }
 }

@@ -15,11 +15,15 @@ namespace Game.NPC
         /// </summary>
         public static void ResetAllNPCs()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[NPCNarrativeStateManager] 🔄 Iniciando reset de todos los NPCs...");
+#endif
             
             var allExecutors = NPCInteractiveNarrativeRegistry.GetAll();
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCNarrativeStateManager] 📋 Encontrados {allExecutors.Count} executors en el registro");
+#endif
             
             int resetCount = 0;
             int failedCount = 0;
@@ -30,24 +34,32 @@ namespace Game.NPC
                 {
                     try
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[NPCNarrativeStateManager] 🔄 Reseteando: {executor.name}");
+#endif
                         executor.ResetState();
                         resetCount++;
                     }
                     catch (System.Exception ex)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[NPCNarrativeStateManager] ❌ Error al resetear {executor.name}: {ex.Message}");
+#endif
                         failedCount++;
                     }
                 }
                 else
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NPCNarrativeStateManager] ⚠️ Executor null en la lista");
+#endif
                     failedCount++;
                 }
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCNarrativeStateManager] ✅ Reset completado: {resetCount} NPCs reseteados, {failedCount} fallos");
+#endif
         }
         
         /// <summary>
@@ -60,11 +72,15 @@ namespace Game.NPC
             if (executor != null)
             {
                 executor.ResetState();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCNarrativeStateManager] 🔄 NPC '{npcName}' reseteado");
+#endif
                 return true;
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[NPCNarrativeStateManager] ⚠️ No se encontró NPC con nombre '{npcName}'");
+#endif
             return false;
         }
         
@@ -73,7 +89,9 @@ namespace Game.NPC
         /// </summary>
         public static void ClearAllSavedStates()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[NPCNarrativeStateManager] 🗑️ Iniciando limpieza de estados guardados...");
+#endif
             
             // Buscar todas las claves que empiezan con "NarrativeState_"
             int clearedCount = 0;
@@ -121,7 +139,9 @@ namespace Game.NPC
                             bool removed = preset.completedInteractiveNarratives.Remove(pId);
                             if (removed)
                             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                                 Debug.Log($"[NPCNarrativeStateManager] Removido '{pId}' de GameBootService.Profile");
+#endif
                             }
                         }
                     }
@@ -129,7 +149,9 @@ namespace Game.NPC
             }
             
             PlayerPrefs.Save();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCNarrativeStateManager] ✅ Limpieza completada: {clearedCount} estados de PlayerPrefs limpiados");
+#endif
         }
         
         /// <summary>

@@ -18,13 +18,17 @@ public class Spider1AI : MonoBehaviour
     [Header("Comportamiento")]
     [SerializeField] private float detectionRange = 8f;
     [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float patrolRadius = 5f;
-    [SerializeField] private float idleTime = 2f;
+    [Tooltip("Radio de patrulla alrededor del punto de spawn. Antes era muy pequeño (5) y las arañas se veían encerradas en una zona diminuta; ahora patrullan una zona bastante más amplia.")]
+    [SerializeField] private float patrolRadius = 18f;
+    [Tooltip("Tiempo BASE de pausa entre tramos de patrulla. La pausa real se aleatoriza (ver RandomIdleTime) entre un 25% y un 100% de este valor para que no se vean todas las arañas paradas el mismo tiempo exacto.")]
+    [SerializeField] private float idleTime = 1f;
     [SerializeField] private bool patrolEnabled = true;
 
     [Header("Combate")]
-    [SerializeField] private float damage = 5f;
-    [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private float damage = 8f;
+    [SerializeField] private float attackCooldown = 1f;
+    [Tooltip("Pequeño impulso hacia el jugador al iniciar el golpe, para que el ataque se sienta con más impacto ('chicha') en vez de golpear en seco desde parado.")]
+    [SerializeField, Min(0f)] private float attackLungeDistance = 0.4f;
     [SerializeField] private LayerMask playerLayer;
 
     [Header("Reacción al daño")]
@@ -127,7 +131,7 @@ public class Spider1AI : MonoBehaviour
         else
         {
             currentState = SpiderState.Idle;
-            idleTimer = idleTime;
+            idleTimer = RandomIdleTime();
         }
     }
 
@@ -219,7 +223,7 @@ public class Spider1AI : MonoBehaviour
                 }
                 else
                 {
-                    idleTimer = idleTime;
+                    idleTimer = RandomIdleTime();
                 }
             }
 
@@ -233,7 +237,7 @@ public class Spider1AI : MonoBehaviour
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
                 {
                     currentState = SpiderState.Idle;
-                    idleTimer = idleTime;
+                    idleTimer = RandomIdleTime();
                 }
                 else
                 {
@@ -254,6 +258,16 @@ public class Spider1AI : MonoBehaviour
                 }
             }
         }
+    }
+
+    /// <summary>
+    /// Pausa de idle aleatorizada a partir de idleTime, para que las arañas no se vean todas
+    /// "congeladas" el mismo tiempo exacto entre tramos de patrulla (petición Raúl, 4 sep 2026:
+    /// "no tienen que estar quietas").
+    /// </summary>
+    private float RandomIdleTime()
+    {
+        return idleTime * Random.Range(0.25f, 1f);
     }
 
     private void SetNewPatrolTarget()
@@ -279,7 +293,7 @@ public class Spider1AI : MonoBehaviour
         {
             // Si no encuentra punto, quedarse idle
             currentState = SpiderState.Idle;
-            idleTimer = idleTime;
+            idleTimer = RandomIdleTime();
         }
     }
 
@@ -290,7 +304,13 @@ public class Spider1AI : MonoBehaviour
         if (agent)
         {
             agent.speed = originalSpeed * chaseSpeedMultiplier;
-            agent.isStopped = false;
+            // FIX (Raúl, 4 sep 2026): faltaba comprobar agent.isOnNavMesh antes de tocar isStopped.
+            // Si EnterChaseMode() se disparaba en el mismo frame en que el agente aún no se había
+            // registrado en el NavMesh (recién instanciado/reactivado), Unity lanzaba el error
+            // "'Resume' can only be called on an active agent that has been placed on a NavMesh."
+            // Con la comprobación, ese frame simplemente no toca isStopped; en cuanto isOnNavMesh
+            // pasa a true, ChasePlayer()/UpdatePatrolBehavior() ya arrancan el movimiento normal.
+            if (agent.isOnNavMesh) agent.isStopped = false;
         }
 
         // Activar el marker de objetivo del jugador (ver PlayerTargeting.Scan)
@@ -323,7 +343,7 @@ public class Spider1AI : MonoBehaviour
         else
         {
             currentState = SpiderState.Idle;
-            idleTimer = idleTime;
+            idleTimer = RandomIdleTime();
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
         }
 
@@ -353,6 +373,26 @@ public class Spider1AI : MonoBehaviour
 
         LookAtPlayer();
         PlayAnimation(AnimAttack);
+
+        // Impulso corto hacia el jugador al arrancar el golpe: sensación de más "chicha" en vez de
+        // golpear en seco desde parado (petición Raúl, 4 sep 2026).
+        if (attackLungeDistance > 0f && player)
+        {
+            Vector3 lungeDir = (player.position - transform.position); lungeDir.y = 0f;
+            float currentDist = lungeDir.magnitude;
+            if (currentDist > 0.0001f)
+            {
+                lungeDir /= currentDist;
+                // No avanzar más allá de dejar el margen del attackRange, para no meterse dentro del jugador.
+                float lungeDist = Mathf.Clamp(currentDist - attackRange * 0.5f, 0f, attackLungeDistance);
+                if (lungeDist > 0f)
+                {
+                    Vector3 lungeTarget = transform.position + lungeDir * lungeDist;
+                    if (agent && agent.isOnNavMesh) agent.Warp(lungeTarget);
+                    else transform.position = lungeTarget;
+                }
+            }
+        }
 
         // Esperar al momento del golpe (mitad de la animación)
         yield return new WaitForSeconds(0.3f);
@@ -388,7 +428,9 @@ public class Spider1AI : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(dmg);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Spider1AI] Infligió {dmg} de daño al jugador");
+#endif
             return;
         }
 
@@ -397,7 +439,9 @@ public class Spider1AI : MonoBehaviour
         if (damageable != null && damageable.IsAlive)
         {
             damageable.TakeDamage(dmg);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[Spider1AI] Infligió {dmg} de daño al jugador");
+#endif
         }
     }
 
@@ -520,7 +564,7 @@ public class Spider1AI : MonoBehaviour
         else
         {
             // Volver al estado anterior/patrulla de forma segura
-            if (patrolEnabled) SetNewPatrolTarget(); else { currentState = SpiderState.Idle; idleTimer = idleTime; }
+            if (patrolEnabled) SetNewPatrolTarget(); else { currentState = SpiderState.Idle; idleTimer = RandomIdleTime(); }
         }
     }
 

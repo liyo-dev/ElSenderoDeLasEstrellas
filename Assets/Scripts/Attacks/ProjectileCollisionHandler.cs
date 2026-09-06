@@ -111,7 +111,9 @@ public static class ProjectileCollisionHandler
     {
         var config = GetConfig();
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 💥 Colisión detectada en {collisionPoint}");
+#endif
 
         // FIX (balance, 2026-08-13): antes se sumaba el daño de AMBOS hechizos (el propio del
         // jugador + el del enemigo), lo que penalizaba doblemente al jugador por su propio
@@ -162,7 +164,9 @@ public static class ProjectileCollisionHandler
     {
         if (config.collisionVFX == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ProjectileCollision] No hay VFX configurado para la colisión");
+#endif
             return;
         }
         
@@ -172,7 +176,9 @@ public static class ProjectileCollisionHandler
         float destroyTime = config.vfxLifetime > 0f ? config.vfxLifetime : 3f; // 3s por defecto
         Object.Destroy(vfx, destroyTime);
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] ✨ VFX spawneado en {position}");
+#endif
     }
     
     private static void PlayCollisionSound(CollisionConfig config)
@@ -183,7 +189,9 @@ public static class ProjectileCollisionHandler
         if (AudioService.Instance != null)
         {
             AudioService.Instance.PlaySFX(config.collisionSFXKey);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] 🔊 SFX reproducido: {config.collisionSFXKey}");
+#endif
         }
     }
     
@@ -195,7 +203,9 @@ public static class ProjectileCollisionHandler
                 config.cameraShakeIntensity, 
                 config.cameraShakeDuration);
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] 📹 Camera shake aplicado: {config.cameraShakeIntensity}");
+#endif
         }
     }
     
@@ -210,15 +220,21 @@ public static class ProjectileCollisionHandler
     /// </summary>
     private static void ApplyPlayerReaction(float enemyDamage, CollisionConfig config)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🎬 ApplyPlayerReaction INICIADO (usePlayerAerialLaunch={config.usePlayerAerialLaunch}, enemyDamage={enemyDamage})");
+#endif
 
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ProjectileCollision] ⚠️ Player NO encontrado");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] ✅ Player encontrado: '{playerGo.name}'");
+#endif
 
         if (config.usePlayerAerialLaunch)
         {
@@ -229,12 +245,16 @@ public static class ProjectileCollisionHandler
         var playerHealth = playerGo.GetComponent<PlayerHealthSystem>() ?? playerGo.GetComponentInParent<PlayerHealthSystem>();
         if (playerHealth == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ProjectileCollision] ⚠️ Player '{playerGo.name}' no tiene PlayerHealthSystem, no se puede aplicar daño de choque de hechizos");
+#endif
             return;
         }
 
         bool applied = playerHealth.TakeDamage(enemyDamage);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 💥 Choque de hechizos: {enemyDamage} de daño (solo hechizo enemigo) {(applied ? "aplicado" : "IGNORADO (invulnerable/muerto/god mode)")} al jugador");
+#endif
     }
 
     /// <summary>
@@ -243,19 +263,25 @@ public static class ProjectileCollisionHandler
     /// </summary>
     private static void PlayAnimationOnTarget(GameObject target, string animationName, string targetType, CollisionConfig config)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🎬 PlayAnimationOnTarget INICIADO para {targetType}");
         Debug.Log($"[ProjectileCollision]   - Target: {(target != null ? $"'{target.name}'" : "NULL")}");
         Debug.Log($"[ProjectileCollision]   - Animation: '{animationName}'");
+#endif
         
         if (string.IsNullOrEmpty(animationName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ProjectileCollision] ⚠️ No hay animación configurada para {targetType}");
+#endif
             return;
         }
         
         if (target == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ProjectileCollision] ⚠️ Target {targetType} es null");
+#endif
             return;
         }
         
@@ -263,24 +289,32 @@ public static class ProjectileCollisionHandler
         var animator = target.GetComponent<Animator>();
         if (animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] No hay Animator en root, buscando en hijos...");
+#endif
             animator = target.GetComponentInChildren<Animator>();
         }
         
         if (animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[ProjectileCollision] ❌ {targetType} '{target.name}' NO TIENE ANIMATOR en ninguna parte");
+#endif
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] ✅ Animator encontrado en '{animator.gameObject.name}'");
         Debug.Log($"[ProjectileCollision]   - Animator enabled: {animator.enabled}");
         Debug.Log($"[ProjectileCollision]   - Animator isActiveAndEnabled: {animator.isActiveAndEnabled}");
+#endif
         
         // Reproducir la animación usando PlayInFixedTime para forzar reproducción inmediata
         animator.PlayInFixedTime(animationName, 0, 0f);
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🎬✅ Animación '{animationName}' REPRODUCIDA en {targetType} '{target.name}'");
+#endif
 
         // ✅ El JUGADOR sale volando hacia atrás por el aire (ver AerialKnockbackReceiver);
         // el resto de objetivos (NPCs, si algún día se reactiva) usan el desplazamiento simple.
@@ -312,7 +346,9 @@ public static class ProjectileCollisionHandler
             config.playerAerialKnockbackHeight,
             config.playerAerialKnockbackDuration);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🚀 Lanzamiento aéreo hacia atrás aplicado al jugador (distancia={config.playerAerialKnockbackDistance}m, altura={config.playerAerialKnockbackHeight}m)");
+#endif
     }
 
     /// <summary>
@@ -331,7 +367,9 @@ public static class ProjectileCollisionHandler
         var agent = target.GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] 🏃 Aplicando desplazamiento a {targetType} con NavMeshAgent");
+#endif
             
             // Validar posición en NavMesh
             if (UnityEngine.AI.NavMesh.SamplePosition(targetPos, out var hit, knockbackDistance + 2f, UnityEngine.AI.NavMesh.AllAreas))
@@ -363,7 +401,9 @@ public static class ProjectileCollisionHandler
         var controller = target.GetComponent<CharacterController>();
         if (controller != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] 🏃 Aplicando desplazamiento a {targetType} con CharacterController");
+#endif
             
             // Mover el transform directamente (CharacterController se ajustará)
             target.transform.DOMove(targetPos, knockbackDuration).SetEase(Ease.OutQuad);
@@ -374,13 +414,17 @@ public static class ProjectileCollisionHandler
         var rb = target.GetComponent<Rigidbody>();
         if (rb != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] 🏃 Aplicando impulso a {targetType} con Rigidbody");
+#endif
             rb.AddForce(backwardDirection * knockbackDistance * 2f, ForceMode.Impulse);
             return;
         }
         
         // Último recurso: mover el transform directamente con DOTween
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🏃 Moviendo {targetType} directamente con Transform");
+#endif
         target.transform.DOMove(targetPos, knockbackDuration).SetEase(Ease.OutQuad);
     }
     
@@ -393,13 +437,17 @@ public static class ProjectileCollisionHandler
     {
         if (enemyProjectile == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ProjectileCollision] ⚠️ Proyectil enemigo es null, no se puede buscar NPC");
+#endif
             return null;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ProjectileCollision] 🔍 FindNearbyNPC: Buscando NPC en combate cercano a '{enemyProjectile.name}'");
         Debug.Log($"[ProjectileCollision]   - Posición proyectil: {enemyProjectile.transform.position}");
         Debug.Log($"[ProjectileCollision]   - NPCs registrados en combate: {ActiveCombatRegistry.Count}");
+#endif
         
         // ✅ Usar el registro de combate para encontrar NPCs activos
         GameObject npc = ActiveCombatRegistry.GetClosestCombatNPC(
@@ -410,14 +458,18 @@ public static class ProjectileCollisionHandler
         if (npc != null)
         {
             float dist = Vector3.Distance(npc.transform.position, enemyProjectile.transform.position);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[ProjectileCollision] ✅ NPC en combate encontrado: '{npc.name}' a {dist:F1}m");
             Debug.Log($"[ProjectileCollision]   - Posición NPC: {npc.transform.position}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[ProjectileCollision] ⚠️ NO hay NPCs en combate cerca del proyectil");
             Debug.LogWarning($"[ProjectileCollision]   - Verifica que el NPC haya llamado a EnterCombat()");
             Debug.LogWarning($"[ProjectileCollision]   - Verifica que el NPC tenga NPCBehaviourManagerV2");
+#endif
         }
         
         return npc;
@@ -462,16 +514,22 @@ public static class ProjectileCollisionHandler
                 knockback = knockback.normalized * force;
                 
                 rb.AddForce(knockback, ForceMode.Impulse);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[ProjectileCollision] 👊 Knockback aplicado al NPC '{closestNPC.name}': {knockback}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ProjectileCollision] El NPC '{closestNPC.name}' no tiene Rigidbody o es kinematic");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ProjectileCollision] No se encontró NPC cercano para aplicar knockback");
+#endif
         }
     }
     
@@ -489,7 +547,9 @@ public static class ProjectileCollisionHandler
                 Object.Destroy(playerProjectile);
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[ProjectileCollision] 💀 Proyectil del jugador destruido");
+#endif
         }
         
         if (enemyProjectile != null)
@@ -504,7 +564,9 @@ public static class ProjectileCollisionHandler
                 Object.Destroy(enemyProjectile);
             }
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[ProjectileCollision] 💀 Proyectil del enemigo destruido");
+#endif
         }
     }
 }

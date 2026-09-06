@@ -27,18 +27,28 @@ public class CreatorGamepadController : MonoBehaviour
     void Start()
     {
         // Selección visual inicial
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"Start - Highlighter: {(highlighter != null ? "OK" : "NULL")}");
+#endif
         if (highlighter)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"Highlighter Count: {highlighter.Count}");
+#endif
+            }
         
         if (highlighter && highlighter.Count > 0) 
         {
             highlighter.SetSelected(0);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("Selección inicial establecida en 0");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("ERROR: Highlighter es null o no tiene filas registradas!");
+#endif
         }
     }
 
@@ -58,39 +68,55 @@ public class CreatorGamepadController : MonoBehaviour
         // Abajo: categoría siguiente
         if (nav.y < -0.5f && _lastNavY >= -0.5f)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("Abajo detectado");
             Debug.Log($"Highlighter null? {highlighter == null}");
+#endif
             if (highlighter)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Highlighter.Count = {highlighter.Count}");
                 Debug.Log($"SelectedIndex actual = {highlighter.SelectedIndex}");
+#endif
             }
             
             if (highlighter && highlighter.Count > 0)
             {
                 int newIndex = highlighter.SelectedIndex + 1;
                 if (newIndex >= highlighter.Count) newIndex = 0;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Intentando cambiar a índice: {newIndex}");
+#endif
                 highlighter.SetSelected(newIndex);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Nueva selección: {newIndex}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("No se puede cambiar selección: highlighter null o sin filas");
+#endif
             }
         }
         
         // Arriba: categoría anterior
         if (nav.y > 0.5f && _lastNavY <= 0.5f)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("Arriba detectado");
+#endif
             if (highlighter && highlighter.Count > 0)
             {
                 int newIndex = highlighter.SelectedIndex - 1;
                 if (newIndex < 0) newIndex = highlighter.Count - 1;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Intentando cambiar a índice: {newIndex}");
+#endif
                 highlighter.SetSelected(newIndex);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Nueva selección: {newIndex}");
+#endif
             }
         }
         
@@ -102,21 +128,27 @@ public class CreatorGamepadController : MonoBehaviour
         // --- A = Siguiente variante (derecha) ---
         if (controls.UI.Submit.WasPressedThisFrame())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"A presionado - Next en {cat}");
+#endif
             builder.Next(cat);
         }
 
         // --- X = Variante anterior (izquierda) ---
         if (controls.GamePlay.AttackMagicWest.WasPressedThisFrame())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"X presionado - Prev en {cat}");
+#endif
             builder.Prev(cat);
         }
 
         // --- B = Toggle on/off ---
         if (controls.UI.Cancel.WasPressedThisFrame())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"B presionado - Toggle {cat}");
+#endif
             var sel = builder.GetSelection();
             if (sel.ContainsKey(cat))
                 builder.SetByName(cat, null);          // apagar

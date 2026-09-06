@@ -60,7 +60,9 @@ public class PlatformElevator : MonoBehaviour
         // Si está marcado en Inspector pero no está en posición elevada, teletransportar
         if (isRaised)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlatformElevator] {name} está marcado como 'Is Raised', teletransportando a posición elevada");
+#endif
             transform.position = _raisedPosition;
             _originalPosition = _raisedPosition - Vector3.up * raiseHeight; // Recalcular posición original
         }
@@ -81,7 +83,9 @@ public class PlatformElevator : MonoBehaviour
         if (Vector3.Distance(transform.position, _raisedPosition) < 0.1f)
         {
             isRaised = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlatformElevator] {name} ya está en posición elevada");
+#endif
             return;
         }
         
@@ -90,7 +94,9 @@ public class PlatformElevator : MonoBehaviour
             StopCoroutine(_moveCoroutine);
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlatformElevator] {name} - Elevando a {_raisedPosition} (desde {transform.position})");
+#endif
         _moveCoroutine = StartCoroutine(MovePlatform(_raisedPosition, true, isReversion));
     }
 
@@ -107,7 +113,9 @@ public class PlatformElevator : MonoBehaviour
         if (Vector3.Distance(transform.position, _originalPosition) < 0.1f)
         {
             isRaised = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlatformElevator] {name} ya está en posición original");
+#endif
             return;
         }
         
@@ -116,7 +124,9 @@ public class PlatformElevator : MonoBehaviour
             StopCoroutine(_moveCoroutine);
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlatformElevator] {name} - Bajando a {_originalPosition} (desde {transform.position})");
+#endif
         _moveCoroutine = StartCoroutine(MovePlatform(_originalPosition, false, isReversion));
     }
 
@@ -246,7 +256,9 @@ public class PlatformElevator : MonoBehaviour
     /// </summary>
     protected virtual void OnMovementComplete(bool wasRaised)
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlatformElevator] {name} completó movimiento. Elevada: {wasRaised}");
+#endif
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.NPC.Common;
@@ -8,6 +8,67 @@ using UnityEngine.AI;
 
 namespace Game.NPC
 {
+    /// <summary>
+    /// PROPUESTA (4 sep 2026, investigación de IA de combate de referencia — patrón "Attack Slot"
+    /// usado en juegos de acción con varios enemigos, ver incidencia del mismo día): registro
+    /// estático que limita cuántos NPCs pueden estar atacando al MISMO objetivo a la vez, para que
+    /// un equipo (p.ej. Lety+Vicky) no descargue todos sus ataques en el mismo instante. Reservas
+    /// con autoexpiración (no dependen de que cada NPC llame a Release en todos sus caminos de
+    /// salida — si algo interrumpe el ataque a mitad, la reserva libera sola pasado
+    /// ReservationLifetime en vez de quedar bloqueada para siempre).
+    /// </summary>
+    public static class NPCAttackCoordinator
+    {
+        private class Reservation
+        {
+            public NPCCombatBrain owner;
+            public float expiresAt;
+        }
+
+        private static readonly Dictionary<Transform, List<Reservation>> _reservationsByTarget = new();
+
+        // Cubre windup + disparo + pausa post-ataque de un NPC (ver State_Attack) con margen.
+        private const float ReservationLifetime = 1.5f;
+
+        /// <summary>
+        /// Intenta reservar un "turno" de ataque sobre <paramref name="target"/> para
+        /// <paramref name="requester"/>. Devuelve true si hay hueco (o si ya tenía reserva activa,
+        /// que se renueva) y false si ya hay maxConcurrent compañeros atacando ese objetivo ahora.
+        /// </summary>
+        public static bool TryReserve(Transform target, NPCCombatBrain requester, int maxConcurrent)
+        {
+            if (target == null) return true;
+
+            if (!_reservationsByTarget.TryGetValue(target, out var list))
+            {
+                list = new List<Reservation>();
+                _reservationsByTarget[target] = list;
+            }
+
+            list.RemoveAll(r => r.owner == null || Time.time >= r.expiresAt);
+
+            var existing = list.Find(r => r.owner == requester);
+            if (existing != null)
+            {
+                existing.expiresAt = Time.time + ReservationLifetime;
+                return true;
+            }
+
+            if (list.Count >= Mathf.Max(1, maxConcurrent))
+                return false;
+
+            list.Add(new Reservation { owner = requester, expiresAt = Time.time + ReservationLifetime });
+            return true;
+        }
+
+        /// <summary>Libera la reserva antes de que expire sola (opcional, solo optimiza el turno del siguiente).</summary>
+        public static void Release(Transform target, NPCCombatBrain requester)
+        {
+            if (target != null && _reservationsByTarget.TryGetValue(target, out var list))
+                list.RemoveAll(r => r.owner == requester);
+        }
+    }
+
     /// <summary>
     /// Cerebro de Combate Táctico con FSM (Evaluate -> Reposition -> Attack -> Defense).
     /// Soporta Cobertura, Escudos y Dificultad Dinámica.
@@ -81,6 +142,25 @@ namespace Game.NPC
             [Range(0f, 1f)] public float deceptionChance; // Chance de usar estrategia de engaño
             [Tooltip("Mínimo de ataques que debe conservar cuando finge (ej: 1 = guarda al menos 1 ataque)")]
             [Range(1, 3)] public int minAttacksToKeepForAmbush; // Ataques que reserva para emboscada
+
+            [Header("🏃 Retirada Táctica (huida a cobertura con poca vida)")]
+            [Tooltip("PROPUESTA (4 sep 2026): NPCTacticalRetreat.cs y estos 3 campos de NPCCombatConfig "
+                     + "ya existían completamente implementados, pero nunca se llamaban desde ningún sitio "
+                     + "del Brain — la retirada nunca se disparaba en la práctica. false = comportamiento "
+                     + "idéntico al de antes (ningún NPC existente cambia salvo que se active a propósito).")]
+            public bool useTacticalRetreat;
+            [Range(0.1f, 0.5f)] public float retreatHealthThreshold;
+            public float retreatCooldown;
+
+            [Header("👥 Coordinación de Equipo (opcional)")]
+            [Tooltip("PROPUESTA (4 sep 2026, inspirado en el patrón 'Attack Slot' de juegos de acción "
+                     + "con varios enemigos): máximo de compañeros que pueden estar atacando al MISMO "
+                     + "objetivo a la vez. 0 = sin límite (comportamiento idéntico al de antes — todos los "
+                     + "NPCs existentes que no configuren este campo no cambian). Solo tiene efecto real "
+                     + "cuando varios NPCs comparten objetivo (p.ej. Lety+Vicky vs. el jugador): con un "
+                     + "valor de 1, no atacan a la vez — el que no consigue turno flanquea en vez de "
+                     + "sumarse al aluvión o quedarse plantado.")]
+            public int maxConcurrentAttackersOnTarget;
         }
         #endregion
 
@@ -98,8 +178,16 @@ namespace Game.NPC
         // ✅ FIX #15 (auditoría combate, 15 ago 2026): antes se llamaba GetComponent<LevitationTarget>()
         // cada vez que corría la corrutina State_Attack. Se cachea en Initialize() como el resto de deps.
         LevitationTarget _levitationTarget;
+        // PROPUESTA (4 sep 2026 — "hit-stagger"): ver OnDamageTakenDuringAttack() más abajo.
+        Damageable _damageable;
+        private bool _hitDuringAttackWindup;
+        // PROPUESTA (4 sep 2026 — retirada táctica): ver State_TacticalRetreat() más abajo.
+        NPCTacticalRetreat _tacticalRetreat;
+        // FIX (5 sep 2026 — hit-stagger pisaba la animación de daño): ver DoDodge() más abajo.
+        Modules.NPCCombatLifecycleHandler _lifecycleHandler;
+        private float _retreatCooldownUntil = -999f;
         // FSM State
-        public enum CombatState { EVALUATE, REPOSITION, ATTACK, DEFENSE, SEARCHING, HIDING_TO_RECHARGE }
+        public enum CombatState { EVALUATE, REPOSITION, ATTACK, DEFENSE, SEARCHING, HIDING_TO_RECHARGE, TACTICAL_RETREAT }
         [SerializeField, ReadOnly] private CombatState _currentState; // Visible debug
 
         // Cooldowns
@@ -121,6 +209,13 @@ namespace Game.NPC
         // 🎭 ESTRATEGIA DE ENGAÑO
         private bool _isUsingDeceptionStrategy; // ¿Está fingiendo quedarse sin magia?
         private int _attacksReservedForAmbush; // Número de ataques que guarda para emboscada
+
+        // PROPUESTA (4 sep 2026 — generalización del anti-kiting de Golem/Demonio, ver incidencia
+        // del mismo día): mientras se acerca sin alcanzar maxDistance, si el jugador se mantiene
+        // fuera de rango mucho tiempo (kiteando a walkSpeed, la misma vulnerabilidad que tenían los
+        // jefes), escala a runSpeed para cerrar distancia en vez de perseguir despacio para siempre.
+        private float _approachKitingSinceTime = -1f;
+        [SerializeField] private float approachKitingSpeedUpDelay = 3f;
         
         // Line of Sight & Searching
         bool _hasLineOfSight;
@@ -179,6 +274,14 @@ namespace Game.NPC
             _shieldController = GetComponent<NPCShieldController>();
             _levitationTarget = GetComponent<LevitationTarget>();
             _projectileThreatMask = LayerMask.GetMask("PlayerProjectile", "Projectile", "ProjectilePlayer", "MagicProjectile");
+
+            // PROPUESTA (4 sep 2026 — "hit-stagger"): desuscribir antes por si Initialize() se
+            // llamara más de una vez sobre el mismo NPC (evita duplicar la suscripción).
+            if (_damageable != null) _damageable.OnDamaged -= OnDamageTakenDuringAttack;
+            _damageable = GetComponent<Damageable>();
+            if (_damageable != null) _damageable.OnDamaged += OnDamageTakenDuringAttack;
+            _tacticalRetreat = GetComponent<NPCTacticalRetreat>();
+            _lifecycleHandler = GetComponent<Modules.NPCCombatLifecycleHandler>();
 
             // Configurar NavMesh para movimiento fluido
             _agent.updateRotation = false; // Controlamos la rotación manualmente para encarar al player
@@ -469,6 +572,10 @@ namespace Game.NPC
                     case CombatState.HIDING_TO_RECHARGE:
                         yield return State_HidingToRecharge();
                         break;
+
+                    case CombatState.TACTICAL_RETREAT:
+                        yield return State_TacticalRetreat();
+                        break;
                 }
                 yield return null;
             }
@@ -503,6 +610,31 @@ namespace Game.NPC
 
             float dist = Vector3.Distance(transform.position, _player.position);
 
+            // 🏃 PROPUESTA (4 sep 2026): retirada táctica a cobertura con poca vida — ver el
+            // comentario de useTacticalRetreat en Settings más arriba. Prioridad alta (antes de la
+            // huida normal por distancia) porque, a diferencia de esa, esto sí busca cobertura real
+            // en vez de solo alejarse en línea recta.
+            if (settings.useTacticalRetreat && _tacticalRetreat != null && _damageable != null &&
+                Time.time >= _retreatCooldownUntil)
+            {
+                float healthPercent = _damageable.Max > 0f ? _damageable.Current / _damageable.Max : 1f;
+                if (healthPercent <= settings.retreatHealthThreshold)
+                {
+                    if (_tacticalRetreat.StartRetreat(_player))
+                    {
+                        _retreatCooldownUntil = Time.time + Mathf.Max(1f, settings.retreatCooldown);
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[CombatBrain:{gameObject.name}] 🏃 Vida baja ({healthPercent:P0}) - retirada táctica a cobertura");
+                        #endif
+                        _currentState = CombatState.TACTICAL_RETREAT;
+                        yield break;
+                    }
+
+                    // No encontró cobertura - no reintentar cada tick, pero tampoco esperar el cooldown completo
+                    _retreatCooldownUntil = Time.time + 2f;
+                }
+            }
+
             // ✅ B. Si está demasiado cerca (zona de peligro) → HUIR
             if (dist < settings.minSafeDistance)
             {
@@ -517,10 +649,26 @@ namespace Game.NPC
             if (HasIncomingProjectileThreat())
             {
                 bool canShieldNow = settings.useShield && _shieldController != null && _shieldCd <= 0f;
-                _currentState = canShieldNow ? CombatState.DEFENSE : CombatState.REPOSITION;
+                if (canShieldNow)
+                {
+                    _currentState = CombatState.DEFENSE;
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[CombatBrain:{gameObject.name}] ⚡ Amenaza entrante detectada - defensa con escudo");
+                    #endif
+                    yield break;
+                }
+
+                // FIX (petición Raúl, 4 sep 2026 — "dodge/parry reactivo"): sin escudo, esto antes
+                // pasaba a REPOSITION y confiaba en que State_Reposition() hiciera algo — pero esa
+                // función solo actúa si el jugador está demasiado cerca o sin línea de fuego clara;
+                // si la amenaza llegaba en distancia/ángulo "normales" (el caso más común), no
+                // hacía NADA para esquivar pese a que el propio log de aquí decía "esquiva/
+                // reposición". Ahora esquiva de verdad, reutilizando el DoDodge() ya existente.
                 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[CombatBrain:{gameObject.name}] ⚡ Amenaza entrante detectada - {(canShieldNow ? "defensa con escudo" : "esquiva/reposición")}");
+                Debug.Log($"[CombatBrain:{gameObject.name}] 🤸 Amenaza entrante detectada - esquivando");
                 #endif
+                yield return DoDodge();
+                _currentState = CombatState.EVALUATE;
                 yield break;
             }
             
@@ -597,6 +745,7 @@ namespace Game.NPC
                 if (dist <= settings.maxDistance && _globalCd <= 0)
                 {
                     // En rango y sin cooldown global → ATACAR
+                    _approachKitingSinceTime = -1f;
                     #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[CombatBrain:{gameObject.name}] ⚔️ Atacando - {attacksReady} ataques disponibles{(_isUsingDeceptionStrategy ? " (EMBOSCADA EN CURSO)" : "")}");
                     #endif
@@ -605,16 +754,24 @@ namespace Game.NPC
                 }
                 else if (dist > settings.maxDistance)
                 {
-                    // Muy lejos → Acercarse primero
+                    // Muy lejos → Acercarse primero. FIX (petición Raúl, 4 sep 2026): antes esto
+                    // era siempre walkSpeed — la misma vulnerabilidad al kiting que tenían Golem y
+                    // el Demonio antes de su fix (ver incidencia del mismo día): si el jugador se
+                    // mantiene fuera de maxDistance disparando, perseguir despacio para siempre lo
+                    // deja indefenso. Tras approachKitingSpeedUpDelay segundos acercándose sin
+                    // conseguirlo, escala a runSpeed.
+                    if (_approachKitingSinceTime < 0f) _approachKitingSinceTime = Time.time;
+                    bool kitingTooLong = Time.time - _approachKitingSinceTime >= approachKitingSpeedUpDelay;
                     #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log($"[CombatBrain:{gameObject.name}] 🚶 Acercándose al player ({dist:F1}m > {settings.maxDistance}m)");
+                    Debug.Log($"[CombatBrain:{gameObject.name}] 🚶 Acercándose al player ({dist:F1}m > {settings.maxDistance}m){(kitingTooLong ? " - ¡ACELERANDO, demasiado tiempo kiteado!" : "")}");
                     #endif
-                    MoveTo(_player.position, settings.walkSpeed);
+                    MoveTo(_player.position, kitingTooLong ? settings.runSpeed : settings.walkSpeed);
                     yield return new WaitForSeconds(0.5f);
                 }
                 else if (_globalCd > 0)
                 {
                     // En cooldown global → Esperar un momento
+                    _approachKitingSinceTime = -1f;
                     yield return new WaitForSeconds(0.3f);
                 }
             }
@@ -1079,6 +1236,22 @@ namespace Game.NPC
                 yield break;
             }
             
+            // PROPUESTA (4 sep 2026): coordinación de equipo — ver NPCAttackCoordinator más arriba.
+            // maxConcurrentAttackersOnTarget = 0 (valor por defecto) desactiva esto por completo,
+            // así que ningún NPC existente cambia de comportamiento salvo que se configure a propósito.
+            if (settings.maxConcurrentAttackersOnTarget > 0 && _combatTarget != null &&
+                !NPCAttackCoordinator.TryReserve(_combatTarget, this, settings.maxConcurrentAttackersOnTarget))
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[CombatBrain:{gameObject.name}] 👥 Compañero ya atacando a este objetivo - flanqueando en vez de sumarme al aluvión");
+                #endif
+                Vector3 waitFlankPos = GetFlankPosition();
+                MoveTo(waitFlankPos, settings.walkSpeed);
+                yield return new WaitForSeconds(0.4f);
+                _currentState = CombatState.EVALUATE;
+                yield break;
+            }
+
             StopMove(); // Quieto para disparar
             _animator.FaceTarget(_combatTarget.position);
 
@@ -1089,7 +1262,29 @@ namespace Game.NPC
             if (found)
             {
                 // Windup (preparación)
-                yield return new WaitForSeconds(UnityEngine.Random.Range(0.2f, 0.5f));
+                // FIX (petición Raúl, 4 sep 2026 — "hit-stagger"): antes esto era un WaitForSeconds
+                // ciego e ininterrumpible — el NPC completaba siempre su preparación aunque el
+                // jugador ya le hubiera golpeado a mitad. Ahora, si OnDamageTakenDuringAttack()
+                // marca _hitDuringAttackWindup mientras espera, el golpe cancela el ataque (sin
+                // gastar maná, que todavía no se ha consumido a estas alturas) en vez de ignorarlo.
+                _hitDuringAttackWindup = false;
+                float windupDuration = UnityEngine.Random.Range(0.2f, 0.5f);
+                float windupElapsed = 0f;
+                while (windupElapsed < windupDuration)
+                {
+                    if (_hitDuringAttackWindup)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[CombatBrain:{gameObject.name}] 💥 Ataque interrumpido - golpeado durante el windup");
+                        #endif
+                        _hitDuringAttackWindup = false;
+                        yield return DoDodge();
+                        _currentState = CombatState.EVALUATE;
+                        yield break;
+                    }
+                    windupElapsed += Time.deltaTime;
+                    yield return null;
+                }
                 
                 // ✅ Verificar visión de nuevo antes de ejecutar el ataque
                 if (!_hasLineOfSight)
@@ -1200,6 +1395,39 @@ namespace Game.NPC
             _currentState = CombatState.EVALUATE;
         }
 
+        // PROPUESTA (4 sep 2026 — "hit-stagger"): los jefes (Golem/Demonio) YA descartan a propósito
+        // el hit-react mientras atacan (su OnDamageTaken hace "if (isAttacking) return;") — diseño
+        // deliberado, no tocado. Los NPCs humanoides de esta FSM no tenían NINGÚN sistema de
+        // reacción al daño; este handler solo marca la bandera que consume el windup en
+        // State_Attack de más arriba, no interrumpe nada fuera de esa ventana.
+        private void OnDamageTakenDuringAttack(float amount)
+        {
+            if (_currentState == CombatState.ATTACK)
+                _hitDuringAttackWindup = true;
+        }
+
+        // PROPUESTA (4 sep 2026): retirada táctica — delega todo el movimiento/temporizador de
+        // cobertura al componente NPCTacticalRetreat.cs ya existente (StartRetreat ya se llamó
+        // desde State_Evaluate); este estado solo espera a que termine por sí solo.
+        IEnumerator State_TacticalRetreat()
+        {
+            const float safetyTimeout = 12f; // por si algo deja IsRetreating colgado (cobertura destruida, etc.)
+            float elapsed = 0f;
+            while (_tacticalRetreat != null && _tacticalRetreat.IsRetreating && elapsed < safetyTimeout)
+            {
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            if (_tacticalRetreat != null && _tacticalRetreat.IsRetreating)
+                _tacticalRetreat.StopRetreat();
+
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[CombatBrain:{gameObject.name}] 🛡️ Retirada táctica terminada - volviendo a combate");
+            #endif
+            _currentState = CombatState.EVALUATE;
+        }
+
         // 4. DEFENSA: La lógica inteligente basada en dificultad
         IEnumerator State_Defense()
         {
@@ -1213,11 +1441,18 @@ namespace Game.NPC
                 _shieldController.StartDefending(settings.shieldDuration);
                 _shieldCd = settings.shieldCooldown + settings.shieldDuration;
                 
-                // Mientras defiende puede moverse: retrocede si está muy cerca o se desplaza lateralmente.
+                // FIX (petición Raúl, 4 sep 2026 — "a veces se quedan con el escudo puesto y
+                // andando lento sin sentido"): antes, mientras defendía, se recalculaba cada 0.35s
+                // un desplazamiento lateral aleatorio (o de retirada) a walkSpeed*0.55/0.65 — se lee
+                // como un arrastrarse sin propósito, más aún porque la dirección de strafe solo
+                // cambiaba un 20% de las veces y el escudo dura hasta 5s. Ahora solo se mueve
+                // cuando hay un motivo real (el jugador demasiado cerca): retrocede con paso
+                // decidido a velocidad normal; a distancia segura planta el escudo quieto, como un
+                // bloqueo real y legible, en vez de deambular sin razón aparente.
                 float defendTime = settings.shieldDuration;
                 float elapsed = 0f;
                 float repathTimer = 0f;
-                Vector3 strafeDirection = Vector3.zero;
+                bool wasMoving = false;
                 while (elapsed < defendTime)
                 {
                     if (_player != null)
@@ -1228,26 +1463,17 @@ namespace Game.NPC
                             Vector3 toPlayer = _player.position - transform.position;
                             toPlayer.y = 0f;
                             float dist = toPlayer.magnitude;
-                            if (dist > 0.01f)
+                            if (dist > 0.01f && dist < settings.minSafeDistance * 0.8f)
                             {
-                                Vector3 targetPos;
-                                if (dist < settings.minSafeDistance * 0.8f)
-                                {
-                                    Vector3 retreatDir = -toPlayer.normalized;
-                                    targetPos = transform.position + retreatDir * 2f;
-                                    MoveTo(targetPos, settings.walkSpeed * 0.55f);
-                                }
-                                else
-                                {
-                                    if (strafeDirection == Vector3.zero || UnityEngine.Random.value < 0.2f)
-                                    {
-                                        Vector3 right = Vector3.Cross(Vector3.up, toPlayer.normalized);
-                                        strafeDirection = UnityEngine.Random.value < 0.5f ? right : -right;
-                                    }
-
-                                    targetPos = transform.position + strafeDirection * 1.5f;
-                                    MoveTo(targetPos, settings.walkSpeed * 0.65f);
-                                }
+                                Vector3 retreatDir = -toPlayer.normalized;
+                                Vector3 targetPos = transform.position + retreatDir * 2f;
+                                MoveTo(targetPos, settings.walkSpeed);
+                                wasMoving = true;
+                            }
+                            else if (wasMoving)
+                            {
+                                StopMove();
+                                wasMoving = false;
                             }
 
                             repathTimer = 0.35f;
@@ -1867,6 +2093,17 @@ namespace Game.NPC
 
         private IEnumerator DoDodge()
         {
+            // FIX (5 sep 2026, incidencia "Erika no hacía animación de daño" en combate): si el
+            // golpe que disparó esta esquiva (p.ej. hit-stagger interrumpiendo un windup, ver
+            // OnDamageTakenDuringAttack()) también dejó al NPC aturdido, NPCCombatLifecycleHandler.
+            // DamageSequence() ya está reproduciendo la animación de "recibir golpe" y frenando al
+            // agente durante damageStunDuration. Sin esta espera, MoveTo() de más abajo reactivaba
+            // el agente y le metía velocidad al Animator UN FRAME después de empezar esa animación,
+            // pisando el crossfade antes de que llegara a verse. Se espera a que termine el aturdimiento
+            // antes de mover al NPC — la esquiva sigue ocurriendo, solo que después de la reacción de daño.
+            while (_lifecycleHandler != null && _lifecycleHandler.IsStunned)
+                yield return null;
+
             // Esquiva lateral simple
             Vector3 side = UnityEngine.Random.value > 0.5f ? transform.right : -transform.right;
             Vector3 dest = transform.position + side * settings.dodgeDistance;
@@ -1878,10 +2115,22 @@ namespace Game.NPC
 
         private Vector3 GetFlankPosition()
         {
-            // Moverse 45 grados a un lado
+            // PROPUESTA (4 sep 2026): antes siempre giraba al mismo lado con el mismo ángulo/
+            // distancia fijos (45°, 4m) — con dos compañeros atacando al mismo objetivo (p.ej.
+            // Lety+Vicky) terminaban flanqueando prácticamente al mismo punto, superpuestos. El
+            // lado se decide por un hash estable de este NPC (mismo NPC siempre el mismo lado,
+            // compañeros distintos tienden a lados opuestos) y el ángulo/distancia varían un poco
+            // para que el reposicionamiento no se vea siempre idéntico.
+            // FIX (compilador, tras probarlo Raúl en el Editor): GetInstanceID() está obsoleto en
+            // esta versión de Unity (CS0619) - se sustituye por gameObject.GetHashCode(), un hash
+            // de identidad normal de .NET (no una API de Unity que pueda volver a quedar obsoleta),
+            // igual de estable para este uso (solo necesitamos "el mismo NPC siempre el mismo lado").
             Vector3 dir = (_player.position - transform.position).normalized;
-            Vector3 flankDir = Quaternion.Euler(0, 45, 0) * dir;
-            return transform.position + flankDir * 4f;
+            float side = (gameObject.GetHashCode() % 2 == 0) ? 1f : -1f;
+            float angle = side * UnityEngine.Random.Range(35f, 60f);
+            float distance = UnityEngine.Random.Range(3.5f, 5f);
+            Vector3 flankDir = Quaternion.Euler(0, angle, 0) * dir;
+            return transform.position + flankDir * distance;
         }
 
         /// <summary>
@@ -2317,9 +2566,13 @@ namespace Game.NPC
                         MoveTo(navHit.position, settings.walkSpeed);
                         
                         // ✅ DURANTE EL MOVIMIENTO: Verificar constantemente
+                        // FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation y
+                        // NPCTacticalRetreat): el umbral de 1m no miraba el stoppingDistance real
+                        // del agente — si era mayor, el bucle siempre agotaba el moveTimeout.
                         float moveTimeout = 5f;
                         float moveTimer = 0f;
-                        while (_agent.enabled && _agent.isOnNavMesh && (_agent.pathPending || (_agent.remainingDistance > 1f && moveTimer < moveTimeout)))
+                        float searchArriveThreshold = Mathf.Max(1f, _agent.stoppingDistance + 0.1f);
+                        while (_agent.enabled && _agent.isOnNavMesh && (_agent.pathPending || (_agent.remainingDistance > searchArriveThreshold && moveTimer < moveTimeout)))
                         {
                             // Si encontramos al jugador durante el movimiento
                             if (_hasLineOfSight)
@@ -2449,8 +2702,17 @@ namespace Game.NPC
                 MoveTo(_combatStartPosition, settings.walkSpeed);
                 
                 // Esperar a llegar al origen
-                while (_agent.enabled && _agent.isOnNavMesh && (_agent.pathPending || _agent.remainingDistance > 1.5f))
+                // FIX (4 sep 2026, mismo patrón que NPCCombatTeam.Co_ApproachFormation y
+                // NPCTacticalRetreat): el umbral fijo de 1.5m no miraba el stoppingDistance real
+                // del agente, y este bucle no tenía NINGÚN margen de seguridad de tiempo — si el
+                // stoppingDistance heredado era >= 1.5m, el NPC se quedaba parado "volviendo al
+                // origen" para siempre sin completar nunca el regreso.
+                float returnArriveThreshold = Mathf.Max(1.5f, _agent.stoppingDistance + 0.1f);
+                float returnTimer = 0f;
+                const float RETURN_TO_ORIGIN_MAX_TIME = 8f;
+                while (_agent.enabled && _agent.isOnNavMesh && (_agent.pathPending || (_agent.remainingDistance > returnArriveThreshold && returnTimer < RETURN_TO_ORIGIN_MAX_TIME)))
                 {
+                    returnTimer += Time.deltaTime;
                     // Si encuentra al jugador durante el regreso, retomar combate inmediatamente
                     if (_hasLineOfSight)
                     {

@@ -260,7 +260,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (_instance != null && _instance != this)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerEquipmentMenuController] Instancia duplicada detectada en '{gameObject.name}', destruyendo...");
+#endif
             Destroy(gameObject);
             return;
         }
@@ -278,27 +280,35 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (canvas == null)
         {
             canvas = GetComponentInChildren<Canvas>(true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerEquipmentMenuController] Canvas encontrado: {(canvas != null ? canvas.gameObject.name : "NULL")}");
+#endif
         }
         
         if (canvasGroup == null)
         {
             canvasGroup = GetComponentInChildren<CanvasGroup>(true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerEquipmentMenuController] CanvasGroup encontrado: {(canvasGroup != null ? "Sí" : "No")}");
+#endif
         }
         
         if (windowRoot == null && canvas != null)
         {
             windowRoot = canvas.gameObject;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerEquipmentMenuController] WindowRoot asignado automáticamente a Canvas: '{windowRoot.name}'");
+#endif
         }
         
         // Verificar si tenemos lo mínimo necesario
         if (canvas == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[PlayerEquipmentMenuController] âš ï¸ No se encontró Canvas en '{gameObject.name}'");
             Debug.LogError("   El menú de equipamiento NO funcionará correctamente.");
             Debug.LogError("   Asegúrate de que el PlayerEquipmentMenuController esté en un GameObject con Canvas configurado.");
+#endif
             // No desactivar el componente para que se pueda configurar después
             enabled = false;
             return;
@@ -318,8 +328,10 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // EnsureViews retorna false si no hay vistas configuradas
         if (!EnsureViews())
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerEquipmentMenuController] âš ï¸ No se pudo inicializar ninguna vista del menú");
             Debug.LogError("   El menú no podrá abrirse hasta que se configuren las vistas en el Inspector.");
+#endif
             // No desactivar el componente para que se pueda configurar después
         }
         
@@ -486,9 +498,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 // Manejar Submit (A button)
                 if (GamepadInputReader.SubmitPressed)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[PlayerEquipmentMenu] â­ Submit detectado en inventario!");
+#endif
                     bool handled = _inventoryView?.TryHandleSubmit() ?? false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[PlayerEquipmentMenu] Submit handled: {handled}");
+#endif
                 }
 
                 // Manejar Cancel (B button) - pero solo si el inventario no lo maneja primero
@@ -638,62 +654,82 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     {
         if (TagMinigameController.IsAnyMinigameActive)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerEquipmentMenu] OpenMenu() bloqueado — minijuego activo");
+            #endif
             return;
         }
 
         // Reproducir sonido de apertura de menú
         GamepadInputReader.PlayUISound("UI_Submit");
 
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] OpenMenu() llamado");
+        #endif
         
         // Verificación temprana: Â¿tenemos Canvas?
         if (canvas == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerEquipmentMenu] âŒ No se puede abrir - Canvas es NULL");
             Debug.LogError("   El PlayerEquipmentMenuController no está correctamente configurado.");
             Debug.LogError("   Debe estar en un GameObject con un Canvas configurado.");
+            #endif
             return;
         }
         
         // Verificación temprana: Â¿hay al menos una vista configurada?
         if (_inventoryView == null && _spellView == null && _equipmentView == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerEquipmentMenu] âŒ No se puede abrir - NINGUNA VISTA CONFIGURADA");
             Debug.LogError("   Configura al menos una vista (Inventory, Spell o Equipment) en el Inspector.");
             Debug.LogError("   Revisa los logs anteriores de EnsureViews() para más detalles.");
+            #endif
             return;
         }
         
         if (!GameState.CanOpenInventory)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenu] No se puede abrir - GameState.CanOpenInventory = false");
+            #endif
             return;
         }
         
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenu] No se puede abrir - Diálogo activo");
+            #endif
             return;
         }
 
         // Ask central manager for permission to open
         if (!MenuManager.TryOpen(MenuKind.Equipment))
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenuController] Apertura denegada por MenuManager");
+            #endif
             return;
         }
 
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] MenuManager permitió la apertura, verificando vistas...");
+        #endif
         
         if (!EnsureViews())
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerEquipmentMenu] EnsureViews() retornó false - cerrando menú");
+            #endif
             MenuManager.Close(MenuKind.Equipment);
             return;
         }
 
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] Vistas verificadas, inicializando ActionManager...");
+        #endif
         
         EnsureActionManager();
         if (_actionManager != null)
@@ -702,7 +738,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _actionModeActive = true;
         }
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] Llamando a EnterUiInputScope()");
+        #endif
         EnterUiInputScope();
 
         // FIX INC-2026-09-01: antes se capturaba Time.timeScale y se pisaba directo a 0, sin
@@ -721,10 +759,14 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         {
             _storedAnimatorUpdateMode = _playerAnimator.updateMode;
             _playerAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenu] Animator cambiado a UnscaledTime para mantener animaciones en el menú");
+            #endif
         }
 
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] Configurando canvas y pestañas...");
+        #endif
         SetCanvasState(true);
         dreamBackground?.StartDream();
         dreamSparkles?.StartSparkles();
@@ -756,7 +798,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         GameState.Push(GamePhase.Equipment);
         SelectInitial();
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] Activando cámara de equipamiento...");
+        #endif
         // Activar la cámara de equipamiento siempre que el menú esté abierto
         SetEquipmentCameraActive(true);
 
@@ -764,7 +808,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         _openedAt = Time.unscaledTime;
         _cancelRequested = false; // Limpiar cualquier cancel previo para evitar cierres inmediatos.
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] Menú abierto completamente");
+        #endif
     }
 
     void CloseMenu(bool playSound = true)
@@ -801,7 +847,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (_playerAnimator != null)
         {
             _playerAnimator.updateMode = _storedAnimatorUpdateMode;
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenu] Animator restaurado a su UpdateMode original");
+            #endif
         }
         
         // Resetear estado de órbita para que se recalcule la próxima vez
@@ -825,7 +873,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void OnQuitToMainMenu()
     {
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenuController] Iniciando transición al Main Menu");
+        #endif
 
         // Cerrar el menú SIN reproducir sonido (ya sonó UI_Cancel arriba)
         if (_isOpen)
@@ -845,15 +895,25 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         var tm = ResolveTransitionManager();
         if (tm != null && mainMenuTransitionSettings != null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenuController] Usando transición con settings configurados");
+            #endif
             tm.Transition("MainMenu", mainMenuTransitionSettings, mainMenuTransitionDelay);
         }
         else
         {
             if (tm == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] TransitionManager no disponible, cargando escena directamente");
+                #endif
+            }
             else
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] MainMenuTransitionSettings no configurado, cargando escena directamente");
+                #endif
+            }
             
             SceneManager.LoadScene("MainMenu");
         }
@@ -882,7 +942,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         }
         catch (Exception ex)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerEquipmentMenuController] TransitionManager.Instance() falló: {ex.Message}");
+            #endif
         }
 
         return transitionManager;
@@ -948,14 +1010,18 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void EnterUiInputScope()
     {
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] EnterUiInputScope() - Cambiando a modo UI");
+        #endif
         _inputScope?.Dispose();
         _inputScope = InputActionMapScope.EnterUiScope();
         
         // Asegurar que los eventos de input están suscritos (para sonidos automáticos de LB/RB)
         GamepadInputReader.EnsureInputEventsSubscribed();
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerEquipmentMenu] InputScope creado");
+        #endif
     }
 
     void ExitUiInputScope()
@@ -1033,11 +1099,15 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _playerAnimator = _playerPreviewTarget.GetComponentInChildren<Animator>();
             if (_playerAnimator != null)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerEquipmentMenuController] Animator del player encontrado: {_playerAnimator.name}");
+                #endif
             }
             else
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] No se encontró Animator en el player. Las animaciones no funcionarán en el menú.");
+                #endif
             }
         }
 
@@ -1049,7 +1119,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             TrySetAnimatorFloat(AnimHash_Speed, 0f);
             TrySetAnimatorFloat(AnimHash_VerticalVelocity, 0f);
 
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerEquipmentMenuController] Animator forzado a idle");
+            #endif
         }
 
         _previewPlayerYaw = 0f;
@@ -1101,7 +1173,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         EnsureMainCameraRefs();
         if (mainThirdPersonCamera == null || _mainCamera == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerEquipmentMenuController] No se encontró la cámara principal (vThirdPersonCamera). No se puede desplazar para el menú de equipamiento.");
+            #endif
             return;
         }
         if (_mainCameraOffsetActive) return;
@@ -1299,7 +1373,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         InputActionMapScope()
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[InputActionMapScope] Constructor - Iniciando");
+            #endif
             
             GamepadInputReader.PushGameplaySuppression(this);
             GamepadInputReader.PushUiNavigationScope();
@@ -1307,13 +1383,19 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Cambiar a modo UI centralizado
             if (ServiceLocator.TryGet(out Core.PlayerInputManager pim))
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[InputActionMapScope] PlayerInputManager encontrado, llamando a PushUIMode()");
+                #endif
                 pim.PushUIMode();
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[InputActionMapScope] PushUIMode ejecutado. IsInUIMode: {pim.IsInUIMode}");
+                #endif
             }
             else
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("[InputActionMapScope] PlayerInputManager NO encontrado en ServiceLocator!");
+                #endif
             }
         }
 
@@ -1377,7 +1459,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     void SelectInitial()
     {
         var finalTarget = ResolveInitialTarget();
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerEquipmentMenu] SelectInitial tab={_activeTab} default={finalTarget?.name ?? "null"} rows={_inventoryView?.RowCount.ToString() ?? "-"} override={initialSelectionOverride?.name ?? "null"} -> target={finalTarget?.name ?? "null"}");
+        #endif
 
         if (finalTarget != null)
             StartCoroutine(SelectOnNextFrame(finalTarget));
@@ -1611,6 +1695,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedInventory)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] Inventario no configurado:");
                 Debug.LogWarning($"  - root: {(inventoryUI.root != null ? "OK" : "FALTA")}");
                 Debug.LogWarning($"  - rowsParent: {(inventoryUI.rowsParent != null ? "OK" : "FALTA")}");
@@ -1619,6 +1704,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 Debug.LogWarning($"  - itemDescription: {(inventoryUI.itemDescription != null ? "OK" : "FALTA")}");
                 Debug.LogWarning($"  - itemCount: {(inventoryUI.itemCount != null ? "OK" : "FALTA")}");
                 Debug.LogWarning($"  - feedbackText: {(inventoryUI.feedbackText != null ? "OK" : "FALTA")}");
+                #endif
                 _warnedInventory = true;
             }
         }
@@ -1639,7 +1725,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedSpells)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] Vista de hechizos no configurada: asigna root, botones de slots, contenedor y prefab de filas.");
+                #endif
                 _warnedSpells = true;
             }
         }
@@ -1664,7 +1752,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedEquipment)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerEquipmentMenuController] Vista de equipamiento no configurada: añade filas con categoría y botones.");
+                #endif
                 _warnedEquipment = true;
             }
         }
@@ -1678,6 +1768,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (!anyViewConfigured)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerEquipmentMenuController] âŒ NINGUNA VISTA ESTÃ CONFIGURADA");
             Debug.LogError("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—");
             Debug.LogError("â•‘ SOLUCIÃ“N: El PlayerEquipmentMenuController necesita un Canvas UI  â•‘");
@@ -1692,6 +1783,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             Debug.LogError("â•‘ 4. El controller debe estar en la escena Start o como DontDestroy â•‘");
             Debug.LogError("â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•");
             Debug.LogError($"GameObject actual: '{gameObject.name}' (Canvas: {(canvas != null ? "Sí" : "No")}, WindowRoot: {(windowRoot != null ? "Sí" : "No")})");
+            #endif
         }
         
         return anyViewConfigured;
@@ -1957,7 +2049,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 }
                 else if (_scrollRect == null)
                 {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[InventoryView] ⚠️ No se puede añadir ScrollOnSelectRelay: ScrollRect es null");
+#endif
                 }
 
                 // RegisterClickHandler/RegisterSelectedHandler reasignan el delegate (y hacen
@@ -2043,7 +2137,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (widget == null) return;
             if (_scrollRect == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[InventoryView] ScrollRect no encontrado en el padre de rowsParent. Verifica que el contenedor esté bajo un ScrollRect.");
+#endif
                 return;
             }
             var rect = widget.GetComponent<RectTransform>();
@@ -2130,7 +2226,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         {
             if (!IsInventoryInputContextValid())
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[InventoryView] Ignorando UseSelectedItem fuera del tab de inventario.");
+#endif
                 return;
             }
 
@@ -2327,7 +2425,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 yield return null;
                 HandleRowActivated(first, first.Item, true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerEquipmentMenu] Inventario - Seleccionado: {first.Item?.displayName}");
+#endif
             }
         }
 
@@ -2368,13 +2468,17 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (_ui.useButton == null) return;
             if (_selectedItem == null || !_selectedItem.usableFromInventory) return;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[InventoryView] FocusUseButton - Cambiando estado a UseButtonFocused");
+#endif
             _interactionState = InventoryInteractionState.UseButtonFocused;
 
             // Habilitar el botón si no lo está
             if (!_ui.useButton.interactable)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[InventoryView] Habilitando botón useButton");
+#endif
                 _ui.useButton.interactable = true;
             }
 
@@ -2384,7 +2488,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Reproducir sonido de selección/confirmación
             GamepadInputReader.PlayUISound("UI_Select");
             
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InventoryView] FocusUseButton completado - Estado final: {_interactionState}");
+#endif
         }
 
         void ExitUseButtonFocus(bool restoreSelection)
@@ -2416,7 +2522,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 // ⭐ SOLUCIÓN SIMPLE: Cambiar el color del Image directamente
                 buttonImage.color = yellowColor;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[InventoryView] Color amarillo aplicado directamente al Image");
+#endif
             }
 
             // Animación de escala simple
@@ -2470,12 +2578,16 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (!IsInventoryInputContextValid())
                 return false;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[InventoryView] TryHandleSubmit - Estado: {_interactionState}, SelectedRow: {(_lastSelectedRow != null ? "OK" : "NULL")}, SelectedItem: {(_selectedItem != null ? _selectedItem.displayName : "NULL")}");
+#endif
             
             if (_interactionState == InventoryInteractionState.UseButtonFocused)
             {
                 // Segunda pulsación: Usar el item
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[InventoryView] Segunda pulsación - Usando item");
+#endif
                 UseSelectedItem();
                 return true;
             }
@@ -2483,13 +2595,19 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (_lastSelectedRow != null && _selectedItem != null)
             {
                 // Primera pulsación: Enfocar botón de usar
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[InventoryView] Primera pulsación - Enfocando botón de usar");
+#endif
                 HandleRowSubmit();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[InventoryView] Después de HandleRowSubmit - Estado: {_interactionState}");
+#endif
                 return true;
             }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[InventoryView] TryHandleSubmit - No hay nada que hacer");
+#endif
             return false;
         }
     }
@@ -2835,7 +2953,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (_scrollRect == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[SpellView] ⚠️ No se puede añadir ScrollOnSelectRelay: ScrollRect es null");
+#endif
             }
 
             _rows.Add(rowEntry);
@@ -3702,7 +3822,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Forzar selección al botón previous/next de la misma fila
             if (fallbackButton != null && fallbackButton.IsInteractable())
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[EquipmentView.Clear] Moviendo selección a {fallbackButton.name}");
+#endif
                 EventSystem.current?.SetSelectedGameObject(null);
                 EventSystem.current?.SetSelectedGameObject(fallbackButton.gameObject);
                 
@@ -3843,7 +3965,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 var row = kvp.Value;
                 if (row?.label == null) continue;
 
-                string value = "Sin asignar";
+                string value = LocalizationManager.Instance != null
+                    ? LocalizationManager.Instance.Get("SPELL_UNASSIGNED_SHORT", "Sin asignar")
+                    : "Sin asignar";
                 string partName = null;
                 if (selection != null && selection.TryGetValue(kvp.Key, out var part) && !string.IsNullOrEmpty(part))
                 {
@@ -3942,16 +4066,22 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         void HandleWardrobeChanged()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[EquipmentView] 📢 HandleWardrobeChanged - Evento recibido, refrescando opciones disponibles");
+#endif
             
             // Log del wardrobe actual
             if (_wardrobe != null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[EquipmentView] Wardrobe encontrado: {_wardrobe.GetType().Name}");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[EquipmentView] ⚠️ Wardrobe es NULL en HandleWardrobeChanged!");
+#endif
             }
             
             Refresh();
@@ -3961,7 +4091,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         void UpdateAllRowsUI()
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[EquipmentView] UpdateAllRowsUI - Actualizando todas las filas visualmente");
+#endif
             UpdateLabels();
             
             // Forzar recálculo de interactividad de todos los botones
@@ -4012,22 +4144,30 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
         }
 
+        // Antes: switch con los 12 literales en español a pelo, sin pasar nunca por
+        // LocalizationManager — por eso el inventario/vestuario se veía siempre en español
+        // aunque el idioma del juego estuviera en inglés (ver incidencia
+        // "literales-inventario-sin-traducir"). Mismo patrón de claves que el resto del
+        // catálogo (ui_es.json/ui_en.json): EQUIP_CATEGORY_<NOMBRE>.
         string FormatCategory(PartCategory cat)
         {
+            string EquipLoc(string key, string fallbackEs) =>
+                LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallbackEs) : fallbackEs;
+
             return cat switch
             {
-                PartCategory.WeaponR => "Arma Mano Derecha",
-                PartCategory.ShieldR => "Escudo Mano Izquierda",
-                PartCategory.Bow => "Arco",
-                PartCategory.Body => "Vestuario",
-                PartCategory.Cloak => "Capa",
-                PartCategory.Head => "Cabeza",
-                PartCategory.Hair => "Pelo",
-                PartCategory.Eyes => "Ojos",
-                PartCategory.Mouth => "Boca",
-                PartCategory.Hat => "Casco",
-                PartCategory.Eyebrow => "Ceja",
-                PartCategory.Accessory => "Accesorio",
+                PartCategory.WeaponR => EquipLoc("EQUIP_CATEGORY_WEAPONR", "Arma Mano Derecha"),
+                PartCategory.ShieldR => EquipLoc("EQUIP_CATEGORY_SHIELDR", "Escudo Mano Izquierda"),
+                PartCategory.Bow => EquipLoc("EQUIP_CATEGORY_BOW", "Arco"),
+                PartCategory.Body => EquipLoc("EQUIP_CATEGORY_BODY", "Vestuario"),
+                PartCategory.Cloak => EquipLoc("EQUIP_CATEGORY_CLOAK", "Capa"),
+                PartCategory.Head => EquipLoc("EQUIP_CATEGORY_HEAD", "Cabeza"),
+                PartCategory.Hair => EquipLoc("EQUIP_CATEGORY_HAIR", "Pelo"),
+                PartCategory.Eyes => EquipLoc("EQUIP_CATEGORY_EYES", "Ojos"),
+                PartCategory.Mouth => EquipLoc("EQUIP_CATEGORY_MOUTH", "Boca"),
+                PartCategory.Hat => EquipLoc("EQUIP_CATEGORY_HAT", "Casco"),
+                PartCategory.Eyebrow => EquipLoc("EQUIP_CATEGORY_EYEBROW", "Ceja"),
+                PartCategory.Accessory => EquipLoc("EQUIP_CATEGORY_ACCESSORY", "Accesorio"),
                 _ => cat.ToString()
             };
         }

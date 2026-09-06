@@ -116,7 +116,9 @@ namespace Game.NPC
         
         if (_leaderManager == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[NPCCombatTeam] {name}: No se encontró NPCBehaviourManagerV2 en este GameObject!");
+#endif
             enabled = false;
             return;
         }
@@ -187,7 +189,9 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCCombatTeam] {name}: Combate global activo, se cancela nueva detección del equipo.");
+#endif
             }
             // ✅ FIX (auditoría combate, 15 ago 2026): antes esto era void y el llamador se
             // quedaba con _hasNotifiedTeam=true para siempre aunque la notificación se
@@ -198,7 +202,9 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: ¡Jugador detectado! Iniciando secuencia de equipo...");
+#endif
         }
 
         StartCoroutine(Co_DetectAndEngage(player, detector));
@@ -237,7 +243,9 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCCombatTeam] {name}: NotifyPostDefeatDialogueFinished llamado múltiples veces - ignorando");
+#endif
             }
             return;
         }
@@ -245,7 +253,9 @@ namespace Game.NPC
         IsPostDefeatDialogueFinished = true;
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: Diálogo post-derrota finalizado. Notificando al equipo.");
+#endif
         }
     }
     
@@ -309,7 +319,9 @@ namespace Game.NPC
         
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: Miembro {member.name} derrotado ({_defeatedCount}/{_allMembers.Count})");
+#endif
         }
         
         // Verificar si todo el equipo ha sido derrotado
@@ -317,7 +329,9 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCCombatTeam] {name}: ¡Todo el equipo ha sido derrotado!");
+#endif
             }
             
             _isTeamInCombat = false;
@@ -474,7 +488,11 @@ namespace Game.NPC
         _currentTarget = player;
 
         if (showDebugLogs)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: ¡Jugador detectado! Deteniendo y encarando al equipo...");
+#endif
+            }
 
         // Congelar al jugador en el instante de la detección (mismo mecanismo que AlertState.cs
         // usa para los NPCs en solitario, ver NPCCombatConfig.freezePlayerOnAlert) - se hace UNA
@@ -551,11 +569,17 @@ namespace Game.NPC
             }
 
             if (showDebugLogs && isFirstLine) // nadie llegó a hablar (ningún dialogueOnAlert configurado)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCCombatTeam] {name}: Ningún miembro tiene dialogueOnAlert configurado — se pasa directo a combate.");
+#endif
+                }
         }
         else if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: DialogueManager no disponible — se pasa directo a combate.");
+#endif
         }
 
         // Soltar al jugador justo antes de que arranque el combate de verdad (mismo punto que
@@ -579,7 +603,11 @@ namespace Game.NPC
         }
 
         if (showDebugLogs)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: Equipo en combate.");
+#endif
+            }
 
         OnTeamCombatStarted?.Invoke();
     }
@@ -637,8 +665,32 @@ namespace Game.NPC
                     ctx.Animator.SetMovementSpeed(speedFactor);
                 }
 
-                float dist = Vector3.Distance(member.transform.position, approachDestinations[i]);
-                if (dist > APPROACH_ARRIVE_DIST)
+                // ✅ FIX (4 sep 2026, "caminan hacia ti y luego hay que esperar ~5s" — Lety/Vicky):
+                // antes se comparaba la distancia en línea recta del NPC al punto de destino
+                // contra APPROACH_ARRIVE_DIST (0.5m) sin mirar el propio NavMeshAgent. Si el
+                // agente tenía un stoppingDistance heredado (de combate u otro estado previo)
+                // mayor que 0.5m, Unity lo frenaba antes de llegar a esos 0.5m exactos — el
+                // chequeo nunca se cumplía y el equipo se quedaba plantado, sin hablar, hasta
+                // agotar siempre el margen de seguridad APPROACH_MAX_TIME (8s) completo: eso es
+                // la "espera" que se veía tras la caminata visible. Ahora se usa el mismo
+                // criterio de "llegé" que ya usa el resto del codebase (NPCStateBase.
+                // HasReachedDestination, NPCCombatLifecycleHandler, AmbientAgent, etc.):
+                // remainingDistance <= stoppingDistance del propio agente (con pathPending
+                // descartando falsos positivos mientras se calcula la ruta), sin dejar de aceptar
+                // también la distancia en línea recta como respaldo.
+                bool memberArrived;
+                if (ctx.Agent.pathPending)
+                {
+                    memberArrived = false;
+                }
+                else
+                {
+                    float arriveThreshold = Mathf.Max(APPROACH_ARRIVE_DIST, ctx.Agent.stoppingDistance + 0.1f);
+                    float straightDist = Vector3.Distance(member.transform.position, approachDestinations[i]);
+                    memberArrived = ctx.Agent.remainingDistance <= arriveThreshold || straightDist <= APPROACH_ARRIVE_DIST;
+                }
+
+                if (!memberArrived)
                     allArrived = false;
             }
 
@@ -700,7 +752,9 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: Resucitando equipo...");
+#endif
         }
 
         ResetTeamState();
@@ -721,7 +775,9 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCCombatTeam] {name}: ¡Equipo resucitado!");
+#endif
         }
 
         _isResurrecting = false; // ✅ FIX #21

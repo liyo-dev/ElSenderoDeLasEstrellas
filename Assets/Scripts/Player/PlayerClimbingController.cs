@@ -336,7 +336,9 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (debugLogs && _lastMissingStateWarn != "_layer")
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerClimbingController] Layer de escalada inválido (" + climbAnimatorLayer + ")");
+#endif
                 _lastMissingStateWarn = "_layer";
             }
             return;
@@ -354,7 +356,9 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (debugLogs && _lastMissingStateWarn != targetState)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerClimbingController] Estado de animación no encontrado: " + targetState + " en capa " + climbAnimatorLayer);
+#endif
                 _lastMissingStateWarn = targetState;
             }
             return;

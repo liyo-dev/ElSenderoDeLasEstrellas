@@ -289,7 +289,9 @@ public class ShopUI : MonoBehaviour
         // Ask central MenuManager for permission
         if (!MenuManager.TryOpen(MenuKind.Shop))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[ShopUI] Apertura denegada por MenuManager");
+#endif
             return;
         }
         _isOpen = true;
@@ -309,7 +311,9 @@ public class ShopUI : MonoBehaviour
         
         if (shopController == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopUI] No se encontró ShopController en este GameObject ni en sus hijos.");
+#endif
         }
         
         RefreshUI();
@@ -339,7 +343,9 @@ public class ShopUI : MonoBehaviour
         // Pero permitir navegación UI (D-Pad, joystick, submit, cancel)
         GamepadInputReader.PushGameplaySuppression(this);
         GamepadInputReader.PushUiNavigationScope();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ShopUI] Gameplay suprimido - Solo inputs UI permitidos");
+#endif
     }
 
     public void Close()
@@ -375,7 +381,9 @@ public class ShopUI : MonoBehaviour
         // Restaurar los inputs de gameplay después del retraso
         GamepadInputReader.PopUiNavigationScope();
         GamepadInputReader.PopGameplaySuppression(this);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[ShopUI] Gameplay restaurado - Inputs de gameplay desbloqueados (con retraso)");
+#endif
     }
 
     void RefreshUI()
@@ -431,19 +439,25 @@ public class ShopUI : MonoBehaviour
     {
         if (shopController == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopUI] RebuildItemList: shopController es NULL");
+#endif
             return;
         }
 
         if (itemCardPrefab == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopUI] RebuildItemList: itemCardPrefab es NULL");
+#endif
             return;
         }
 
         if (itemListContainer == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[ShopUI] RebuildItemList: itemListContainer es NULL");
+#endif
             return;
         }
 
@@ -461,7 +475,9 @@ public class ShopUI : MonoBehaviour
             var entry = shopController.Stock[i];
             if (entry == null || entry.item == null)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ShopUI] Item en índice {i} es null o no tiene ItemData");
+#endif
                 continue;
             }
 
@@ -486,7 +502,9 @@ public class ShopUI : MonoBehaviour
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[ShopUI] itemCardPrefab no tiene componente ShopItemCard");
+#endif
             }
 
             // Conectar el auto-scroll: al seleccionar esta card (mando/teclado) o pasar el ratón

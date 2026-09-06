@@ -87,12 +87,16 @@ public class FallingPathBuilder : MonoBehaviour
 
         if (doorW == null || doorE == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[FallingPathBuilder] No encuentro Door_W/Door_E. Asigna referencias o nómbralas así.");
+#endif
             return;
         }
         if (tilePrefab == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[FallingPathBuilder] Falta tilePrefab.");
+#endif
             return;
         }
         if (pathContainer == null)

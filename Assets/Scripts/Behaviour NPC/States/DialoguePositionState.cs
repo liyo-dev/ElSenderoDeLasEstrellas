@@ -118,7 +118,9 @@ namespace Game.NPC.States
                 // ✅ Girar hacia el NPC con quien el player está hablando (rotación inicial)
                 RotateTowardsTarget(context);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialoguePositionState:{context.Transform.name}] ✅ Llegó a posición de diálogo");
+#endif
             }
             // Si tarda demasiado, teletransportar
             else if (!_hasTeleported && _elapsedTime > _maxTime && distanceToTarget > ARRIVAL_THRESHOLD)
@@ -148,7 +150,9 @@ namespace Game.NPC.States
                 // ✅ Girar hacia el NPC (rotación inicial)
                 RotateTowardsTarget(context);
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialoguePositionState:{context.Transform.name}] ⚡ Teletransportado a posición de diálogo (tardó {_elapsedTime:F1}s)");
+#endif
             }
             // Actualizar animación mientras se mueve
             else if (!_hasReachedPosition)
@@ -176,7 +180,9 @@ namespace Game.NPC.States
                 if (dirToNpc.sqrMagnitude > 0.01f)
                 {
                     context.Transform.rotation = Quaternion.LookRotation(dirToNpc);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[DialoguePositionState:{context.Transform.name}] 👁️ Mirando hacia {_npcTarget.name}");
+#endif
                 }
             }
             else if (PlayerService.TryGetPlayer(out var playerGo))

@@ -85,6 +85,10 @@ MonoBehaviour:
   maxCoverDistance: 15
   coverStayDuration: 4
   preferShieldOverCover: 0
+  maxConcurrentAttackersOnTarget: 0
+  difficultyLevel: 0.65
+  deceptionChance: 0.25
+  minAttacksToKeepForAmbush: 1
   activelySearchForPlayer: 1
   searchDuration: 15
   passiveSearchDuration: 8

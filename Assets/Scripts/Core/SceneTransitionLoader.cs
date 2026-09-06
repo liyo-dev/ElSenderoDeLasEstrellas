@@ -110,7 +110,9 @@ public static class SceneTransitionLoader
 
             if (!ui)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[SceneTransitionLoader] No se encontró LoadingScreenController en '{overlayScene}'. Progreso no visible.");
+#endif
             }
             else
             {
@@ -128,7 +130,9 @@ public static class SceneTransitionLoader
         var op = SceneManager.LoadSceneAsync(targetScene);
         if (op == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SceneTransitionLoader] No se pudo iniciar la carga de '{targetScene}'");
+#endif
 
             // Apagar overlay si estaba
             if (ui != null)
@@ -242,7 +246,9 @@ public static class SceneTransitionLoader
         }
         catch (System.MissingMethodException)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[SceneTransitionLoader] TransitionManager encontrado, pero no tiene método Transition(TransitionSettings, float). Ajusta TryPlayExternalTransition().");
+#endif
         }
     }
 

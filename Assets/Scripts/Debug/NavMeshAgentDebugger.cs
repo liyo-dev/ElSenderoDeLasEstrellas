@@ -121,61 +121,85 @@ public class NavMeshAgentDebugger : MonoBehaviour
     /// </summary>
     public void FullDiagnostic()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"=== DIAGNÓSTICO COMPLETO: {name} ===\n");
+#endif
         
         // 1. NavMeshAgent
         if (_agent == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("❌ No se encontró NavMeshAgent!");
+#endif
             return;
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"✅ NavMeshAgent encontrado");
+#endif
         
         // 2. NavMesh
         if (!_agent.isOnNavMesh)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"❌ El NPC NO está sobre NavMesh! Posición: {transform.position}");
+#endif
             
             // Intentar encontrar punto más cercano en NavMesh
             if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"💡 Punto más cercano en NavMesh: {hit.position} (distancia: {Vector3.Distance(transform.position, hit.position):F2}m)");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError("❌ No hay NavMesh en 5m alrededor!");
+#endif
             }
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"✅ NPC está sobre NavMesh");
+#endif
         }
         
         // 3. Path
         if (_agent.hasPath)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"✅ Tiene path - Status: {_agent.path.status} - Corners: {_agent.path.corners.Length}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"⚠️ No tiene path activo");
+#endif
         }
         
         // 4. Velocidad
         if (_agent.velocity.magnitude > 0.01f)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"✅ Moviéndose - Velocity: {_agent.velocity.magnitude:F2}");
+#endif
         }
         else
         {
             if (!_agent.isStopped && _agent.remainingDistance > _agent.stoppingDistance + 0.5f)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"❌ PROBLEMA: Velocity = 0 pero debería moverse (remainingDistance: {_agent.remainingDistance:F2})");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"✅ Parado correctamente (isStopped: {_agent.isStopped}, remainingDistance: {_agent.remainingDistance:F2})");
+#endif
             }
         }
         
@@ -183,13 +207,19 @@ public class NavMeshAgentDebugger : MonoBehaviour
         var animator = GetComponent<Animator>();
         if (animator != null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"✅ Animator encontrado - Speed: {animator.speed} - InputMagnitude: {animator.GetFloat("InputMagnitude"):F2}");
+#endif
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"⚠️ No se encontró Animator");
+#endif
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"=== FIN DIAGNÓSTICO ===\n");
+#endif
     }
 }

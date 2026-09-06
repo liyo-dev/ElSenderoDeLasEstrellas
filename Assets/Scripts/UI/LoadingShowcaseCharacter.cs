@@ -53,7 +53,9 @@ public class LoadingShowcaseCharacter : MonoBehaviour
         _animator = GetComponentInChildren<Animator>(true);
         if (!_animator)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[LoadingShowcaseCharacter] {name}: no se encontró Animator en la jerarquía.");
+#endif
             return;
         }
         _animator.applyRootMotion = false;
@@ -67,7 +69,9 @@ public class LoadingShowcaseCharacter : MonoBehaviour
         int layer = LayerMask.NameToLayer(renderLayerName);
         if (layer < 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[LoadingShowcaseCharacter] {name}: la layer '{renderLayerName}' no existe en el proyecto.");
+#endif
             return;
         }
         SetLayerRecursive(transform, layer);

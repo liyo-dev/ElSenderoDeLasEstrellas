@@ -17,16 +17,22 @@ public static class WardrobeService
             return false;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[WardrobeService] Intentando desbloquear item: {item.WardrobeId} (Category: {item.Category}, PartName: {item.PartName})");
+#endif
 
         if (PlayerService.TryGetComponent(out WardrobeInventory wardrobe, includeInactive: true, allowSceneLookup: true))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[WardrobeService] WardrobeInventory encontrado, desbloqueando...");
+#endif
             bool changed = wardrobe.Unlock(item, persistToPreset: true);
             if (changed)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[WardrobeService] ✅ Item '{item.WardrobeId}' desbloqueado correctamente");
                 Debug.Log($"[WardrobeService] 📢 Invocando OnWardrobeItemUnlocked para '{item.WardrobeId}'");
+#endif
                 OnWardrobeItemUnlocked?.Invoke(item);
                 TryShowPopup(item);
                 
@@ -43,24 +49,32 @@ public static class WardrobeService
                         if (result != null)
                         {
                             var count = (int)result.GetType().GetProperty("Count").GetValue(result);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[WardrobeService] Tras desbloquear, categoría {categoryName} tiene {count} items");
+#endif
                         }
                     }
                     catch (System.Exception ex)
                     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogError($"[WardrobeService] Error al verificar opciones desbloqueadas: {ex.Message}");
+#endif
                     }
                 }
             }
             else if (logWarnings)
             {
                 // Cambiado a Log normal para evitar spam de warnings cuando se recarga una escena o save
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[WardrobeService] El item '{item.WardrobeId}' ya estaba desbloqueado.");
+#endif
             }
             return changed;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning("[WardrobeService] No se encontró WardrobeInventory en el player, guardando directamente al preset");
+#endif
 
         var preset = UnlockService.GetActivePreset();
         if (!preset)
@@ -81,7 +95,9 @@ public static class WardrobeService
         }
 
         preset.unlockedWardrobeIds.Add(item.WardrobeId);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[WardrobeService] ✅ Item '{item.WardrobeId}' añadido al preset");
+#endif
         OnWardrobeItemUnlocked?.Invoke(item);
         TryShowPopup(item);
         return true;

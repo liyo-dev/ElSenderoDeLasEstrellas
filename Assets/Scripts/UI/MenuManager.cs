@@ -89,11 +89,15 @@ public static class MenuManager
     {
         if (IsOpen(kind))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[MenuManager] Menú ya está abierto: " + kind);
+#endif
             return true;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[MenuManager] Intentando abrir menú: " + kind);
+#endif
 
         // Clean up stale registrations by validating known menu instances.
         // If a menu was marked open in s_open but the actual UI reports closed,
@@ -133,12 +137,16 @@ public static class MenuManager
                     break;
             }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[MenuManager] Estado de menú " + k + ": " + stillOpen);
+#endif
 
             if (!stillOpen)
             {
                 s_open[k] = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[MenuManager] Cleared stale registration for {k}");
+#endif
             }
         }
 
@@ -147,13 +155,17 @@ public static class MenuManager
         {
             if (kv.Value)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[MenuManager] Deny open {kind} because {kv.Key} is open");
+#endif
                 return false;
             }
         }
 
         s_open[kind] = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[MenuManager] Opened {kind}");
+#endif
         MenuOpened?.Invoke(kind);
         return true;
     }
@@ -193,7 +205,9 @@ public static class MenuManager
     /// </summary>
     public static void ForceFullRecovery()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning("[MenuManager] ForceFullRecovery: limpiando estado completo de menus y input.");
+#endif
 
         // 1. Limpiar el registro de menús abiertos
         s_open.Clear();
@@ -215,6 +229,8 @@ public static class MenuManager
         // 5. Restaurar timeScale por si algún menú pausó el tiempo
         Time.timeScale = 1f;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning("[MenuManager] ForceFullRecovery completado.");
+#endif
     }
 }

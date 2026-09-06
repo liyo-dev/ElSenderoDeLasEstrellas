@@ -113,7 +113,11 @@ namespace Game.NPC.Modules
                     // puede desincronizarse del resto del sistema de eventos.
                     result = _customEventReceived || CustomEventReceivedGlobally;
                     if (debugMode)
+                        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[NarrativeCondition] Custom('{customEventKey}') = {result} (local={_customEventReceived}, global={CustomEventReceivedGlobally})");
+#endif
+                        }
                     break;
                 
                 default:
@@ -124,7 +128,9 @@ namespace Game.NPC.Modules
             if (debugMode)
             {
                 string questName = targetQuest != null ? targetQuest.questId : "N/A";
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] Evaluate: Type={conditionType}, Quest={questName}, Result={result}");
+#endif
             }
             
             return result;
@@ -135,7 +141,11 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestNotStarted: targetQuest es null");
+#endif
+                    }
                 return false;
             }
             
@@ -143,7 +153,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
             
@@ -151,7 +165,11 @@ namespace Game.NPC.Modules
             bool result = state == QuestState.Inactive;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestNotStarted('{targetQuest.questId}') = {result} (state={state})");
+#endif
+                }
             
             return result;
         }
@@ -161,7 +179,11 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestStarted: targetQuest es null");
+#endif
+                    }
                 return false;
             }
             
@@ -169,7 +191,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
             
@@ -177,7 +203,11 @@ namespace Game.NPC.Modules
             bool result = state == QuestState.Active || state == QuestState.Completed;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestStarted('{targetQuest.questId}') = {result} (state={state})");
+#endif
+                }
             
             return result;
         }
@@ -187,7 +217,11 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestCompleted: targetQuest es null");
+#endif
+                    }
                 return false;
             }
             
@@ -195,7 +229,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
             
@@ -203,7 +241,11 @@ namespace Game.NPC.Modules
             bool result = state == QuestState.Completed;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestCompleted('{targetQuest.questId}') = {result} (state={state})");
+#endif
+                }
             
             return result;
         }
@@ -213,7 +255,11 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestActive: targetQuest es null");
+#endif
+                    }
                 return false;
             }
             
@@ -221,7 +267,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
             
@@ -229,7 +279,11 @@ namespace Game.NPC.Modules
             bool result = state == QuestState.Active;
             
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestActive('{targetQuest.questId}') = {result} (state={state})");
+#endif
+                }
             
             return result;
         }
@@ -239,7 +293,11 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestNotCompleted: targetQuest es null");
+#endif
+                    }
                 return false;
             }
 
@@ -247,7 +305,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
 
@@ -255,7 +317,11 @@ namespace Game.NPC.Modules
             bool result = state != QuestState.Completed;
 
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestNotCompleted('{targetQuest.questId}') = {result} (state={state})");
+#endif
+                }
 
             return result;
         }
@@ -265,14 +331,22 @@ namespace Game.NPC.Modules
             if (targetQuest == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestStepCompleted: targetQuest es null");
+#endif
+                    }
                 return false;
             }
 
             if (string.IsNullOrEmpty(targetStepConditionId))
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestStepCompleted: targetStepConditionId está vacío");
+#endif
+                    }
                 return false;
             }
 
@@ -280,7 +354,11 @@ namespace Game.NPC.Modules
             if (questManager == null)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
+#endif
+                    }
                 return false;
             }
 
@@ -288,14 +366,22 @@ namespace Game.NPC.Modules
             if (idx < 0)
             {
                 if (debugMode)
+                    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NarrativeCondition] QuestStepCompleted: step '{targetStepConditionId}' no encontrado en '{targetQuest.questId}'");
+#endif
+                    }
                 return false;
             }
 
             bool result = questManager.IsStepCompleted(targetQuest.questId, idx);
 
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] QuestStepCompleted('{targetQuest.questId}', step='{targetStepConditionId}', idx={idx}) = {result}");
+#endif
+                }
 
             return result;
         }
@@ -357,7 +443,11 @@ namespace Game.NPC.Modules
         {
             _customEventReceived = true;
             if (debugMode)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NarrativeCondition] ✅ Evento custom '{customEventKey}' recibido");
+#endif
+                }
         }
         
         /// <summary>

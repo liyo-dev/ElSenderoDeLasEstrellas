@@ -169,7 +169,9 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         else
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerHealthSystem] No se encontró preset válido, usando valores por defecto");
+#endif
             _maxHp = 100f;
             _currentHp = 100f;
             _isDead = false;
@@ -280,7 +282,9 @@ public class PlayerHealthSystem : MonoBehaviour
         string selectedDamageAnim = GetRandomDamageAnimation();
         if (!string.IsNullOrEmpty(selectedDamageAnim))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerHealthSystem] 💥 Reproduciendo animación de daño: '{selectedDamageAnim}' ({damageAnimationNames?.Length ?? 0} variantes disponibles)");
+#endif
             TriggerAnimation(selectedDamageAnim);
         }
         
@@ -347,7 +351,9 @@ public class PlayerHealthSystem : MonoBehaviour
         OnHealed?.Invoke(actualHeal, _currentHp);
         UpdateUI();
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerHealth] Jugador curado {actualHeal}. Vida: {_currentHp}/{_maxHp} - Estado: {(_currentHp > 0 ? "VIVO" : "MUERTO")}");
+#endif
         
         return true;
     }
@@ -470,10 +476,14 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar eventos de muerte: {e}");
+#endif
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerHealth] ¡El jugador ha muerto!");
+#endif
 
         // Intentar ejecutar efectos (animación/sonido) de forma segura; si fallan, no impedimos la notificación de GameOver
         try
@@ -483,7 +493,9 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealth] Error al reproducir animación/sonido de muerte: {e}");
+#endif
         }
 
         try
@@ -495,7 +507,9 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception e)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealth] Error notificando GameOver: {e}");
+#endif
         }
     }
 
@@ -546,16 +560,22 @@ public class PlayerHealthSystem : MonoBehaviour
             if (!string.IsNullOrEmpty(SpawnManager.CurrentAnchorId))
             {
                 SpawnManager.TeleportToCurrent(true);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[PlayerHealth] Revivido y teletransportado al último punto de partida guardado");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[PlayerHealth] Revivido pero no hay anchor guardado (CurrentAnchorId vacío)");
+#endif
             }
         }
         catch (Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealth] Error al teletransportar en ReviveInternal: {ex.Message}");
+#endif
         }
 
         // Actualizar profile/UI para asegurar que la HUD muestra el estado correcto
@@ -569,10 +589,14 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar OnPlayerRevived: {ex.Message}");
+#endif
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerHealth] ¡El jugador ha revivido!");
+#endif
     }
     
     private void StartInvulnerability()
@@ -738,7 +762,9 @@ public class PlayerHealthSystem : MonoBehaviour
             }
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("[PlayerHealthSystem] Materiales restaurados al color original");
+#endif
     }
     
     private void SpawnVFX(GameObject vfxPrefab)
@@ -766,7 +792,9 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (damageAnimationNames == null || damageAnimationNames.Length == 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerHealthSystem] ⚠️ No hay animaciones de daño configuradas en el array damageAnimationNames");
+#endif
             return null;
         }
         
@@ -779,7 +807,9 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (_animator == null || string.IsNullOrEmpty(animationName))
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealthSystem] No se puede reproducir animación - Animator: {(_animator != null ? "OK" : "NULL")}, AnimationName: '{animationName}'");
+#endif
             return;
         }
 
@@ -803,11 +833,15 @@ public class PlayerHealthSystem : MonoBehaviour
             int hash = _stateHash[animationName];
             int layer = _stateLayer[animationName];
             _animator.Play(hash, layer, 0f);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerHealthSystem] Reproduciendo animación (Play por hash): {animationName} en layer {layer}");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.LogWarning($"[PlayerHealthSystem] No se encontró el estado '{animationName}' en Animator. Asegúrate del nombre EXACTO o usa la ruta completa (p. ej. 'Base Layer.NombreEstado').");
+#endif
     }
 
     // ===== Helpers para resolución segura de estados en el Animator =====
@@ -867,11 +901,15 @@ public class PlayerHealthSystem : MonoBehaviour
         // Depuración: listar candidatos probados (solo si no se encontró)
         try
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: no se encontró '{nameOrPath}'. Candidatos probados: {string.Join(", ", candidates)}");
+#endif
         }
         catch (Exception ex)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: excepción al listar candidatos: {ex.Message}");
+#endif
         }
 
         return false;
@@ -882,18 +920,24 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (_animator == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerHealthSystem] DumpAnimatorStates: Animator es null");
+#endif
             return;
         }
 
         var rc = _animator.runtimeAnimatorController;
         if (rc == null)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerHealthSystem] DumpAnimatorStates: runtimeAnimatorController es null");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerHealthSystem] Runtime clips ({rc.animationClips.Length}): {string.Join(", ", Array.ConvertAll(rc.animationClips, c => c.name))}");
+#endif
 
         // Probar las mismas variantes que EnsureResolved para cada layer
         string[] suffixes = new string[] { "", "_NoWeapon", "-NoWeapon" };
@@ -922,7 +966,9 @@ public class PlayerHealthSystem : MonoBehaviour
             {
                 int h = Animator.StringToHash(cand);
                 bool has = _animator.HasState(layer, h);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[PlayerHealthSystem] Layer {layer} ('{layerName}') - HasState('{cand}') = {has}");
+#endif
             }
         }
     }
@@ -975,6 +1021,8 @@ public class PlayerHealthSystem : MonoBehaviour
     public void SetGodMode(bool isEnabled)
     {
         godMode = isEnabled;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PlayerHealth] God Mode: {(isEnabled ? "ACTIVADO" : "DESACTIVADO")}");
+#endif
     }
 }

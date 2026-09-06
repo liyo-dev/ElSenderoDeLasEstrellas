@@ -125,12 +125,16 @@ public class ModularAutoBuilder : MonoBehaviour
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ModularAutoBuilder] Total detectadas: {activePartsDetected.Count} partes activas");
+#endif
         
         // Si no se detectó nada activo, no hagas nada (deja todo como está)
         if (activePartsDetected.Count == 0)
         {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ModularAutoBuilder] No se detectaron partes activas. Dejando todo como está.");
+#endif
             return;
         }
         
@@ -155,7 +159,9 @@ public class ModularAutoBuilder : MonoBehaviour
                     EnsureAncestorsActive(go.transform);
                     go.SetActive(true);
                     idx[cat] = index;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ModularAutoBuilder] Reactivado {cat}: {go.name} (índice {index})");
+#endif
                 }
             }
         }
@@ -262,7 +268,9 @@ public class ModularAutoBuilder : MonoBehaviour
 
     public void DeactivateAllCategories()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[ModularAutoBuilder] DeactivateAllCategories llamado desde:\n{System.Environment.StackTrace}");
+#endif
         foreach (var list in parts.Values)
             foreach (var go in list)
                 go.SetActive(false);
@@ -516,20 +524,26 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print Current State")]
     void DebugCurrentState()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("=== CURRENT STATE ===");
         Debug.Log($"Cached categories: {parts.Count}");
         Debug.Log($"Active selections: {idx.Count}");
+#endif
         
         foreach (var cat in Enum.GetValues(typeof(PartCategory)).Cast<PartCategory>())
         {
             if (parts.TryGetValue(cat, out var list) && list.Count > 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"\n{cat} - {list.Count} total parts:");
+#endif
                 foreach (var go in list)
                 {
                     bool isActive = go.activeSelf;
                     bool isSelected = idx.TryGetValue(cat, out var selIdx) && list[selIdx] == go;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"  {go.name}: active={isActive}, selected={isSelected}");
+#endif
                 }
             }
         }
@@ -544,7 +558,9 @@ public class ModularAutoBuilder : MonoBehaviour
             if (t != transform && t.name.StartsWith("Head", StringComparison.OrdinalIgnoreCase))
             {
                 var r = t.GetComponent<Renderer>();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Head {t.name} | activeSelf={t.gameObject.activeSelf} | rend={(r!=null)} | layer={t.gameObject.layer}");
+#endif
             }
         }
     }
@@ -552,23 +568,31 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print active Weapons")]
     void DebugWeapons()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("=== WEAPON DEBUG START ===");
+#endif
         
         // Mostrar qué hay en caché
         foreach (var cat in WeaponCats.Concat(new[] { PartCategory.Arrows }))
         {
             if (parts.TryGetValue(cat, out var list))
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Category {cat}: {list.Count} items cached");
+#endif
                 foreach (var go in list)
                 {
                     var hand = handOf.TryGetValue(go, out var h) ? h : Hand.None;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"  - {go.name} | hand={hand}");
+#endif
                 }
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("\n=== ACTIVE WEAPONS IN HIERARCHY ===");
+#endif
         var trs = GetComponentsInChildren<Transform>(true);
         foreach (var t in trs)
         {
@@ -582,20 +606,28 @@ public class ModularAutoBuilder : MonoBehaviour
                 var r = t.GetComponent<Renderer>();
                 var rends = t.GetComponentsInChildren<Renderer>(true);
                 var path = GetPath(t);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"Weapon {t.name} | activeSelf={t.gameObject.activeSelf} | activeInHierarchy={t.gameObject.activeInHierarchy} | hasRenderer={r!=null} | childRenderers={rends.Length} | layer={LayerMask.LayerToName(t.gameObject.layer)} | path={path}");
+#endif
             }
         }
         
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("\n=== CURRENT SELECTION ===");
+#endif
         foreach (var cat in WeaponCats.Concat(new[] { PartCategory.Arrows }))
         {
             if (idx.TryGetValue(cat, out var i) && parts.TryGetValue(cat, out var list) && i < list.Count)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"{cat}: {list[i].name} (index {i})");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"{cat}: NONE");
+#endif
             }
         }
     }
@@ -603,16 +635,22 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print all cached parts")]
     void DebugAllParts()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log("=== ALL CACHED PARTS ===");
+#endif
         foreach (var cat in Enum.GetValues(typeof(PartCategory)).Cast<PartCategory>())
         {
             if (parts.TryGetValue(cat, out var list) && list.Count > 0)
             {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"\n{cat} ({list.Count} items):");
+#endif
                 foreach (var go in list)
                 {
                     var path = GetPath(go.transform);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"  - {go.name} | path={path}");
+#endif
                 }
             }
         }
