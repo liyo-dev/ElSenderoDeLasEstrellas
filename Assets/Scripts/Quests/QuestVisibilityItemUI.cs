@@ -28,6 +28,15 @@ public class QuestVisibilityItemUI : MonoBehaviour
     private Action<QuestManager.RuntimeQuest, QuestVisibility> _onChange;
     private QuestVisibility _currentVisibility;
     private ScrollRect _scrollRect;
+    // PERF (7 sept 2026): con el pool nuevo de QuestMainMenuUI.Rebuild() esta fila puede
+    // reutilizarse entre misiones con distinto QuestState -- antes (Destroy+Instantiate
+    // en cada apertura) cada fila arrancaba siempre con el sprite por defecto del prefab,
+    // asi que un estado sin sprite propio (Inactive/Failed) nunca se notaba. Se guarda el
+    // sprite original del prefab la primera vez para poder volver a el cuando el estado
+    // actual no tiene sprite dedicado, y que una fila reciclada no se quede pegada al
+    // sprite (p.ej. "Completada") de la mision que tenia antes.
+    private Sprite _defaultStatePillSprite;
+    private bool _defaultStatePillCaptured;
     
     public Button GetArchiveButton() => archiveButton;
     public Button GetActivateButton() => activateButton;
@@ -64,16 +73,27 @@ public class QuestVisibilityItemUI : MonoBehaviour
         // Aplicar sprite del state pill según el estado
         if (statePillBg != null)
         {
+            if (!_defaultStatePillCaptured)
+            {
+                _defaultStatePillSprite = statePillBg.sprite;
+                _defaultStatePillCaptured = true;
+            }
+
             switch (data.State)
             {
                 case QuestState.Active:
-                    if (statePillSpriteActive != null)
-                        statePillBg.sprite = statePillSpriteActive;
+                    statePillBg.sprite = statePillSpriteActive != null ? statePillSpriteActive : _defaultStatePillSprite;
                     break;
-                
+
                 case QuestState.Completed:
-                    if (statePillSpriteCompleted != null)
-                        statePillBg.sprite = statePillSpriteCompleted;
+                    statePillBg.sprite = statePillSpriteCompleted != null ? statePillSpriteCompleted : _defaultStatePillSprite;
+                    break;
+
+                default:
+                    // Inactive/Failed no tienen sprite dedicado -- volver al de fabrica
+                    // del prefab en vez de dejar el de la mision anterior en esta fila
+                    // reciclada.
+                    statePillBg.sprite = _defaultStatePillSprite;
                     break;
             }
         }

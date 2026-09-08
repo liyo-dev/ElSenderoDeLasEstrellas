@@ -190,21 +190,29 @@ public class QuestMainMenuUI : MonoBehaviour
             return;
         }
 
-        ClearContainer(visibleContentRoot);
-        if (hiddenContentRoot != null)
-            ClearContainer(hiddenContentRoot);
-
+        // PERF (revision rendimiento 7 sept 2026): antes se hacia ClearContainer()
+        // (Destroy de todas las filas) + Instantiate() por mision en CADA apertura del
+        // menu -- pico medido de 1333ms en una captura F9 real con pocas misiones en la
+        // partida. Mismo patron de pool ya usado en ShopUI.RebuildItemList() /
+        // PlayerEquipmentMenuController: se reutilizan los GameObjects hijos ya existentes
+        // de cada contenedor (visible/oculto) en vez de destruir y recrear.
         var quests = QuestManager.Instance.GetAll()
             .OrderBy(q => q.Data.GetLocalizedName());
 
         int visibleCount = 0;
         int hiddenCount = 0;
+        int usedVisible = 0;
+        int usedHidden = 0;
 
         foreach (var rq in quests)
         {
             var visibility = NormalizeVisibility(rq.Id, QuestManager.Instance.GetVisibility(rq.Id), persist: true);
-            var parent = visibility == QuestVisibility.Hidden && hiddenContentRoot != null ? hiddenContentRoot : visibleContentRoot;
-            var item = Instantiate(itemPrefab, parent);
+            bool goesHidden = visibility == QuestVisibility.Hidden && hiddenContentRoot != null;
+            var parent = goesHidden ? hiddenContentRoot : visibleContentRoot;
+
+            QuestVisibilityItemUI item = goesHidden
+                ? GetOrCreatePooledItem(hiddenContentRoot, ref usedHidden)
+                : GetOrCreatePooledItem(visibleContentRoot, ref usedVisible);
 
             item.Bind(rq, visibility, OnVisibilityChanged);
             var scroll = parent == hiddenContentRoot ? hiddenScrollRect : visibleScrollRect;
@@ -215,6 +223,13 @@ public class QuestMainMenuUI : MonoBehaviour
             else
                 visibleCount++;
         }
+
+        // Ocultar (no destruir) las filas del pool sobrantes de un rebuild anterior con
+        // mas misiones en ese contenedor -- se reactivan solas en el proximo rebuild que
+        // las necesite.
+        DeactivatePooledExtras(visibleContentRoot, usedVisible);
+        if (hiddenContentRoot != null)
+            DeactivatePooledExtras(hiddenContentRoot, usedHidden);
 
         if (headerText)
         {
@@ -247,6 +262,40 @@ public class QuestMainMenuUI : MonoBehaviour
     void OnVisibilityChanged(QuestManager.RuntimeQuest rq, QuestVisibility vis)
     {
         QuestManager.Instance?.SetVisibility(rq.Id, NormalizeVisibility(rq.Id, vis, persist: true));
+    }
+
+    /// <summary>
+    /// Pool por contenedor: reutiliza el hijo en la posicion `used` si ya existe
+    /// (reactivandolo), o instancia uno nuevo si el pool se ha quedado corto. `used` se
+    /// incrementa por referencia para que el llamador sepa cuantos hijos ha consumido ya
+    /// en este rebuild.
+    /// </summary>
+    QuestVisibilityItemUI GetOrCreatePooledItem(RectTransform container, ref int used)
+    {
+        QuestVisibilityItemUI item;
+        if (used < container.childCount)
+        {
+            var child = container.GetChild(used);
+            child.gameObject.SetActive(true);
+            item = child.GetComponent<QuestVisibilityItemUI>();
+        }
+        else
+        {
+            item = Instantiate(itemPrefab, container);
+        }
+        used++;
+        return item;
+    }
+
+    /// <summary>
+    /// Desactiva (sin destruir) los hijos del pool a partir del indice `used` -- filas
+    /// que sobraron porque esta vez hay menos misiones en este contenedor que la ultima.
+    /// </summary>
+    void DeactivatePooledExtras(Transform container, int used)
+    {
+        if (container == null) return;
+        for (int i = used; i < container.childCount; i++)
+            container.GetChild(i).gameObject.SetActive(false);
     }
 
 
@@ -358,13 +407,6 @@ public class QuestMainMenuUI : MonoBehaviour
     {
         if (_currentTween != null && _currentTween.IsActive()) _currentTween.Kill();
         _currentTween = null;
-    }
-
-    void ClearContainer(Transform container)
-    {
-        if (container == null) return;
-        for (int i = container.childCount - 1; i >= 0; i--)
-            Destroy(container.GetChild(i).gameObject);
     }
 
     void UpdateTabVisibility()

@@ -113,18 +113,58 @@ public class QuestLogListUI : MonoBehaviour
         if (!contentRoot || itemPrefab == null) return;
         if (QuestManager.Instance == null) return; // por si se descargó la escena
 
-        // limpiar
-        for (int i = contentRoot.childCount - 1; i >= 0; i--)
-            Destroy(contentRoot.GetChild(i).gameObject);
+        // PERF (7 sept 2026): antes se hacia Destroy+Instantiate de TODAS las filas en
+        // cada evento OnQuestsChanged (arranque/paso/archivado de CUALQUIER quest, no
+        // solo al abrir un menu -- este tracker esta activo en juego normal todo el
+        // rato). Mismo patron de pool que QuestMainMenuUI.Rebuild()/ShopUI.RebuildItemList().
+        // QuestLogItemUI.ResetVisualState() ya existia preparada para esto exacto
+        // (deshace la animacion de "completado" antes de reutilizar la fila) pero nadie
+        // la llamaba porque Rebuild() seguia destruyendo y recreando todo.
+        int used = 0;
 
-        // poblar
         foreach (var rq in QuestManager.Instance.GetAll())
         {
             if (QuestManager.Instance.GetVisibility(rq.Id) == QuestVisibility.Hidden) continue;
             if (!showInactive && rq.State == QuestState.Inactive) continue;
-            var go = Instantiate(itemPrefab, contentRoot);
-            go.Bind(rq); // el propio item gestiona nulls internos
+
+            QuestLogItemUI item;
+            if (used < contentRoot.childCount)
+            {
+                var child = contentRoot.GetChild(used);
+                child.gameObject.SetActive(true);
+                item = child.GetComponent<QuestLogItemUI>();
+                KillItemTweens(item);
+                item.ResetVisualState();
+            }
+            else
+            {
+                item = Instantiate(itemPrefab, contentRoot);
+            }
+            used++;
+
+            item.Bind(rq); // el propio item gestiona nulls internos
         }
+
+        // Ocultar (no destruir) las filas sobrantes de un rebuild anterior con mas quests.
+        for (int i = used; i < contentRoot.childCount; i++)
+            contentRoot.GetChild(i).gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Corta en seco cualquier tween de AnimateQuestCompletion() que pudiera seguir activo
+    /// sobre esta fila antes de reutilizarla para otra quest -- sin esto, un Rebuild()
+    /// disparado a mitad del fade de salida (p.ej. dos quests completandose casi a la vez)
+    /// dejaria el tween antiguo peleando un frame contra los valores que ResetVisualState()
+    /// acaba de fijar.
+    /// </summary>
+    void KillItemTweens(QuestLogItemUI item)
+    {
+        if (item == null) return;
+        item.transform.DOKill();
+        var image = item.GetComponent<Image>();
+        if (image != null) image.DOKill();
+        var canvasGroup = item.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.DOKill();
     }
 
     void OnQuestStarted(string questId)

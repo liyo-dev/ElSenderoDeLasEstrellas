@@ -5069,6 +5069,8 @@ MonoBehaviour:
   altitudeJitter: 8
   horizonElevationDegrees: 30
   speedRange: {x: 3, y: 6}
+  windDirectionDegrees: 45
+  windDirectionJitterDegrees: 20
   fadeInDuration: 6
   fadeOutDuration: 6
   clusterChance: 0.5
@@ -5140,6 +5142,7 @@ MonoBehaviour:
   jitter: 0.5
   scaleRange: {x: 10, y: 18}
   maxCloudInstances: 380
+  maxCloudsInstantiatedPerFrame: 25
   heightJitter: 12
   minClearanceAboveFollowTarget: 25
   horizonElevationDegrees: 30
@@ -5766,7 +5769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7947486230458501707, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8872017054573630166, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
