@@ -70,7 +70,13 @@ public class LoadingScreenController : MonoBehaviour, ILoadingUI
 
     public void ShowImmediate()
     {
-        if (!panel) { Debug.LogWarning("[LoadingScreen] Panel not assigned."); return; }
+        if (!panel)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[LoadingScreen] Panel not assigned.");
+            #endif
+            return;
+        }
         panel.gameObject.SetActive(true);
         panel.alpha = 1f;
         _lastProgress = 0f;

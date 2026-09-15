@@ -25,12 +25,24 @@
             "value": "That nightmare again."
         },
         {
+            "key": "TUTORIAL_MINIMAP_BOX",
+            "value": "Follow the minimap marker to find the box.\nPress {BOTON} to view the full map."
+        },
+        {
             "key": "TUTORIAL_MOVE_INSPECT",
             "value": "Use {BOTON} to move Will. Inspect the room."
         },
         {
+            "key": "TUTORIAL_NPC_TALK_ICON",
+            "value": "When the icon above a character's head changes like this,\nit means you should talk to them."
+        },
+        {
             "key": "TUTORIAL_WAKE_UP",
             "value": "Press {BOTON} to wake up Will"
+        },
+        {
+            "key": "QUEST_STARTED_BANNER",
+            "value": "New quest: {0}"
         }
     ]
 }

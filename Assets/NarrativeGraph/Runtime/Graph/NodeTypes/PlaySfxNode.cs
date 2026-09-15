@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Audio y cine", "Efecto de sonido", "")]
 public sealed class PlaySfxNode : NarrativeNode
 {
     public AudioClip clip;

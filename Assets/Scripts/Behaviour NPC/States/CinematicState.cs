@@ -358,7 +358,9 @@ namespace Game.NPC.States
             // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
             {
                 float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][UpdateMovementAnimation] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+                #endif
             }
             
             // ✅ FIX: Rotar hacia la dirección del movimiento para evitar caminar de espaldas
@@ -851,7 +853,9 @@ namespace Game.NPC.States
                 // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
                 {
                     float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][MoveToAction] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+                    #endif
                 }
             }
             
@@ -1103,7 +1107,9 @@ namespace Game.NPC.States
             // Validación de requisitos críticos
             if (agent == null || _player == null)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Requisito nulo: agent={agent != null}, player={_player != null}. Abortando.");
+                #endif
                 IsCompleted = true; return;
             }
 
@@ -1111,14 +1117,18 @@ namespace Game.NPC.States
             // reactivarlo y esperar un frame para que vuelva al NavMesh.
             if (!agent.enabled)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ NavMeshAgent desactivado, reactivando...");
+                #endif
                 agent.enabled = true;
                 return;
             }
 
             if (!agent.isOnNavMesh)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Agente fuera del NavMesh (enabled={agent.enabled}). Abortando.");
+                #endif
                 IsCompleted = true; return;
             }
 
@@ -1159,7 +1169,11 @@ namespace Game.NPC.States
                     _startupDone = true;
                     agent.isStopped = false;
                     if (!agent.SetDestination(_anchorPos))
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
                         UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ SetDestination falló para {_anchorPos}. El anchor puede estar fuera del NavMesh o en una superficie no conectada.");
+                        #endif
+                    }
                     context.Log($"[LeadPlayerToAnchorSequence] Startup completado, iniciando marcha al anchor.");
                     context.Animator?.TransitionToLocomotion();
                 }
@@ -1170,7 +1184,11 @@ namespace Game.NPC.States
             if (_timer == 0f && !agent.pathPending)
             {
                 if (!agent.hasPath)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ No hay ruta válida al anchor {_anchorPos}. Comprueba que el anchor esté en el NavMesh y conectado con la posición actual del guardia.");
+                    #endif
+                }
                 else
                     context.Log($"[LeadPlayerToAnchorSequence] Ruta calculada. Distancia NavMesh={agent.remainingDistance:F1}m");
             }
@@ -1178,7 +1196,9 @@ namespace Game.NPC.States
             _timer += Time.deltaTime;
             if (_timer >= _maxDuration)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⏱️ Tiempo agotado ({_maxDuration}s).");
+                #endif
                 IsCompleted = true; return;
             }
 
@@ -1251,7 +1271,9 @@ namespace Game.NPC.States
 
                 // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
                 {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][LeadPlayerToAnchorSequence] {context.Transform.name} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} baseSpeed={_baseSpeed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} fetching={_fetchingPlayer} distToPlayer={distToPlayer:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
+                    #endif
                 }
 
                 if (context.Agent.velocity.sqrMagnitude > 0.01f)
@@ -1278,7 +1300,9 @@ namespace Game.NPC.States
             // FIX 4 sep 2026: usar el umbral de "caminar" (no 1f/trote), ver ComputeWalkGaitSpeedFactor.
             context.Animator?.TransitionToLocomotion();
             context.Animator?.SetMovementSpeed(Common.NavMeshAgentUtility.WalkGaitThreshold);
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][AcknowledgePlayerRetrieved] {context.Transform.name} salto discreto de SetMovementSpeed a WalkGaitThreshold={Common.NavMeshAgentUtility.WalkGaitThreshold:F2} (agent.speed={agent?.speed:F2})");
+            #endif
         }
 
         public override void Cleanup(Common.NPCStateContext context)

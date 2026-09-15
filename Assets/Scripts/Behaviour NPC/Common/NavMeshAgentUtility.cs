@@ -208,5 +208,28 @@ namespace Game.NPC.Common
             float raw = Mathf.Clamp01(refSpeed / walkConfidenceFloor);
             return raw > 0f ? Mathf.Min(raw, WalkGaitThreshold) : 0f;
         }
+
+        // FIX 9 sept 2026 (incidencia "tirones" en Estela/Liam siguiendo al jugador, reportado
+        // en contraste directo con el guardia -LeadPlayerToAnchorSequence-, que sí anima limpio
+        // desde el fix de arriba): mismo diagnóstico que ComputeWalkGaitSpeedFactor(agent,
+        // referenceSpeed) -- FollowPlayerState reasigna agent.speed cada frame (salto discreto
+        // entre velocidad de caminar y una "velocidad de catch-up" dinámica que además varía con
+        // _smoothedPlayerSpeed), así que usar agent.speed como divisor de ComputeSpeedFactor()
+        // produce saltos en el factor de animación aunque la velocidad real del NavMeshAgent no
+        // haya cambiado todavía (necesita tiempo para acelerar). A diferencia de
+        // ComputeWalkGaitSpeedFactor, aquí NO se satura a WalkGaitThreshold: el compañero sí debe
+        // llegar a mostrar la animación de correr al alcanzar al jugador, así que el llamador debe
+        // pasar una referencia ya SUAVIZADA (no agent.speed en crudo) para obtener un resultado
+        // estable en todo el rango 0-1.
+        public static float ComputeSpeedFactor(NavMeshAgent agent, float referenceSpeed)
+        {
+            if (agent == null || !agent.isOnNavMesh) return 0f;
+            if (referenceSpeed <= 0.01f) return 0f;
+
+            float vel = agent.velocity.magnitude;
+            float refSpeed = vel >= 0.05f ? Mathf.Max(vel, agent.desiredVelocity.magnitude) : vel;
+
+            return Mathf.Clamp01(refSpeed / referenceSpeed);
+        }
     }
 }

@@ -179,8 +179,10 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // estado final real en vez de un intento del primer frame.
         if (!TryWireCreditsButton())
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[CreditsFlyoutPanel] No se encontró el botón CRÉDITOS automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Credits Button Override' a mano en el Inspector.");
+            #endif
         }
     }
 

@@ -444,6 +444,11 @@ public class CombatCameraTargeting : MonoBehaviour
 
     private void Log(string message)
     {
-        if (showDebugLogs) Debug.Log($"[CombatCameraTargeting] {message}");
+        if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[CombatCameraTargeting] {message}");
+            #endif
+        }
     }
 }

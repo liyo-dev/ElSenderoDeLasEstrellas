@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8e06c90f7704958a0df37dea96290e2, type: 3}
   m_Name: AmbientPreset_Woods
   m_EditorClassIdentifier: Assembly-CSharp::FogPreset
-  forcesMist: 1
-  overrideCameraBackground: 1
+  forcesMist: 0
+  overrideCameraBackground: 0
   cameraBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
   controlAmbientLight: 1
   ambientLightColor: {r: 1, g: 1, b: 1, a: 1}

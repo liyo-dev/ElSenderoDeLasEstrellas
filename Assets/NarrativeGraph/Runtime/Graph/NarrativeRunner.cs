@@ -49,6 +49,52 @@ public class NarrativeRunner : MonoBehaviour
     // garantizar: nada queda escuchando tras parar la ejecución de este runner.
     readonly HashSet<NarrativeNode> _activeBranchNodes = new();
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Puertos con nombre (Septiembre 2026 — sistema narrativo único).
+    // Un nodo con GetOutputPorts() != null elige su salida con SelectOutput(); el runner
+    // consume esa elección justo al avanzar (TakeSelectedOutput). Vive por runner (no en el
+    // asset compartido) para no repetir el problema de estado runtime en ScriptableObjects.
+    // ─────────────────────────────────────────────────────────────────────────
+    readonly Dictionary<NarrativeNode, int> _selectedOutputs = new();
+
+    /// <summary>Registra por qué puerto quiere avanzar un nodo con puertos con nombre.</summary>
+    public void SelectOutput(NarrativeNode node, int portIndex)
+    {
+        if (node == null) return;
+        _selectedOutputs[node] = portIndex;
+    }
+
+    int TakeSelectedOutput(NarrativeNode node)
+    {
+        if (node != null && _selectedOutputs.TryGetValue(node, out var idx))
+        {
+            _selectedOutputs.Remove(node);
+            return idx;
+        }
+        return 0; // sin elección explícita → primer puerto
+    }
+
+    /// <summary>
+    /// Resuelve el siguiente nodo para un nodo con puertos con nombre. Devuelve null cuando el
+    /// puerto elegido no está conectado: una salida sin conectar es un fin de flujo legítimo.
+    /// </summary>
+    NarrativeNode ResolveNamedOutput(NarrativeNode node, out int chosenPort)
+    {
+        chosenPort = TakeSelectedOutput(node);
+        var guid = node.GetOutputGuid(chosenPort);
+        if (string.IsNullOrEmpty(guid))
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[Narrative] '{node.GetType().Name}' salió por el puerto {chosenPort} sin conectar. Flujo detenido.");
+#endif
+            return null;
+        }
+        var next = graph.FindNode(guid);
+        if (next == null)
+            Debug.LogError($"[Narrative] No existe nodo con guid={guid} (puerto {chosenPort} de {node.GetType().Name}).");
+        return next;
+    }
+
     // ✅ API pública para acceder al nodo actual y su estado
     public NarrativeNode CurrentNode => _current;
     public bool IsCurrentNodeBlockingSave => _current != null && _current.blockSaving;
@@ -79,6 +125,7 @@ public class NarrativeRunner : MonoBehaviour
             }
         }
         _activeBranchNodes.Clear();
+        _selectedOutputs.Clear();
     }
 
     /// <summary>
@@ -219,6 +266,20 @@ public class NarrativeRunner : MonoBehaviour
         }
 
         var outs = _current.outputs;
+
+        // Nodos con puertos con nombre: bifurcación real, nunca fork (ver NarrativeNode.GetOutputPorts).
+        if (_current.HasNamedOutputs)
+        {
+            var chosen = ResolveNamedOutput(_current, out _);
+            if (chosen == null)
+            {
+                Blackboard.Set("__currentNodeGuid", string.Empty);
+                return;
+            }
+            GoTo(chosen);
+            return;
+        }
+
         if (outs == null || outs.Count == 0)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -357,8 +418,9 @@ public class NarrativeRunner : MonoBehaviour
 
         while (node != null)
         {
-            // Detectar fork anidado ya ejecutado ANTES de hacer Enter para evitar re-ejecutar el nodo
-            if (node.outputs != null && node.outputs.Count > 1)
+            // Detectar fork anidado ya ejecutado ANTES de hacer Enter para evitar re-ejecutar el nodo.
+            // Los nodos con puertos con nombre nunca son fork aunque tengan varias salidas.
+            if (!node.HasNamedOutputs && node.outputs != null && node.outputs.Count > 1)
             {
                 var nestedForkKey = $"__forked_{node.guid}";
                 if (Blackboard.Get<bool>(nestedForkKey, false))
@@ -445,6 +507,21 @@ public class NarrativeRunner : MonoBehaviour
             }
 
             var outs = node.outputs;
+
+            // Nodos con puertos con nombre dentro de una rama: seguir el puerto elegido, sin fork.
+            if (node.HasNamedOutputs)
+            {
+                var chosen = ResolveNamedOutput(node, out _);
+                if (chosen == null)
+                {
+                    if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
+                    yield break;
+                }
+                node = chosen;
+                if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
+                continue;
+            }
+
             if (outs == null || outs.Count == 0)
             {
                 if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");

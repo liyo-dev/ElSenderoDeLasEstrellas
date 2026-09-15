@@ -226,7 +226,12 @@ public class BossArenaController : MonoBehaviour
         if (_pendingStartBattle)
         {
             _pendingStartBattle = false;
-            if (showDebugLogs) Debug.Log("[BossArenaController] OnEnable: procesando StartBattle pendiente.");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[BossArenaController] OnEnable: procesando StartBattle pendiente.");
+                #endif
+            }
             StartBattleInternal();
         }
     }
@@ -381,7 +386,12 @@ public class BossArenaController : MonoBehaviour
         if (!isActiveAndEnabled)
         {
             _pendingStartBattle = true;
-            if (showDebugLogs) Debug.Log("[BossArenaController] StartBattleInternal deferred: component inactive; will start on OnEnable.");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[BossArenaController] StartBattleInternal deferred: component inactive; will start on OnEnable.");
+                #endif
+            }
             return;
         }
 
@@ -432,12 +442,20 @@ public class BossArenaController : MonoBehaviour
             {
                 portalPosition = hit.point;
                 if (showDebugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[BossArenaController] Portal de aparición colocado en el suelo: {portalPosition}");
+                    #endif
+                }
             }
             portalVFX = Instantiate(portalPrefab, portalPosition, portalSpawn.rotation, transform.parent);
             
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[BossArenaController] Portal de aparición instanciado en {portalPosition}");
+                #endif
+            }
         }
 
         // Instanciar VFX de aparición adicional si está configurado
@@ -447,7 +465,11 @@ public class BossArenaController : MonoBehaviour
             GameObject vfx = Instantiate(bossSpawnVFXPrefab, vfxPosition, spawnRotation);
             Destroy(vfx, bossSpawnVFXDuration);
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[BossArenaController] VFX de aparición instanciado en {vfxPosition}, se destruirá en {bossSpawnVFXDuration}s");
+                #endif
+            }
         }
 
         GameObject boss = null;
@@ -476,7 +498,11 @@ public class BossArenaController : MonoBehaviour
         {
             Destroy(portalVFX, bossSpawnVFXDuration);
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[BossArenaController] Portal se destruirá en {bossSpawnVFXDuration}s");
+                #endif
+            }
         }
 
         // Preparar referencias para escuchar la derrota real del boss

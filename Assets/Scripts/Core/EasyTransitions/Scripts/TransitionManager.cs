@@ -12,6 +12,11 @@ namespace EasyTransition
 
         private bool runningTransition;
 
+        // FIX (14 sep 2026): referencia a la instancia de Transition (overlay visual) actualmente
+        // en juego, para poder forzar su cierre desde fuera si queda huérfana — ver
+        // ForceCompleteCurrentTransition() y Transition.ForceComplete() más abajo.
+        private Transition currentTransition;
+
         public UnityAction onTransitionBegin;
         public UnityAction onTransitionCutPointReached;
         public UnityAction onTransitionEnd;
@@ -104,7 +109,27 @@ namespace EasyTransition
 
         public bool IsRunning => runningTransition;
 
-        public void ForceResetTransition() => runningTransition = false;
+        public void ForceResetTransition()
+        {
+            runningTransition = false;
+            ForceCompleteCurrentTransition();
+        }
+
+        /// <summary>
+        /// FIX (14 sep 2026, ver comentario de Transition.ForceComplete()): fuerza el cierre del
+        // overlay visual de la transición en curso si quedó huérfano (p. ej. porque la corrutina
+        // Timer() de abajo se interrumpió por una carga/descarga aditiva de escena a mitad de
+        // camino). Sin esto, resetear solo los flags lógicos (como hacía este método antes) dejaba
+        // la pantalla tapada o a medio revelar aunque el resto del juego ya estuviera desbloqueado.
+        /// </summary>
+        public void ForceCompleteCurrentTransition()
+        {
+            if (currentTransition != null)
+            {
+                currentTransition.ForceComplete();
+                currentTransition = null;
+            }
+        }
 
         /// <summary>
         /// Starts a transition without loading a new level.

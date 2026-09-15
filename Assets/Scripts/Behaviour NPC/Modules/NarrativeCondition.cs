@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — parte del motor Interactive, mismo estado que
+    // NPCInteractiveNarrativeExecutor. Sustituto en el grafo: BranchQuestStateNode
+    // / BranchFlagNode. No usar para contenido nuevo de la maqueta.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Tipos de condiciones para narrativas
     /// </summary>

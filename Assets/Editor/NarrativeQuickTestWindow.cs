@@ -7,30 +7,80 @@ using System.Linq;
 /// Quick Test System — Configura el juego para arrancar desde un nodo específico del grafo narrativo.
 /// Genera automáticamente un preset temporal con el blackboard configurado para que el NarrativeRunner
 /// continúe desde el nodo seleccionado, y lanza Play Mode.
-/// 
+///
+/// FAST-FORWARD (2026-09-15): el tool SIMULA el camino desde el inicio del grafo hasta el nodo
+/// objetivo (sin ejecutar Enter() de ningún nodo real, solo leyendo sus campos serializados) y aplica
+/// al preset temporal los efectos de los nodos que cambian estado: StartQuestNode, CompleteQuestStepsNode,
+/// GiveInventoryItemNode, UnlockAbilitiesNode y SetFlagNode. Los nodos puramente presentacionales
+/// (Wait*, diálogos, cinemáticas, textos, etc.) se ignoran. Si el camino pasa por una bifurcación real
+/// (BranchFlagNode, BranchQuestStateNode, DialogueChoiceNode, RequireInventoryItemNode, o cualquier nodo
+/// con varias salidas sin nombrar que no sea un ForkNode explícito) la simulación se PARA ahí y lo avisa
+/// en vez de adivinar qué rama seguir — hay que resolverlo a mano (flag, quest, etc.) antes de lanzar.
+/// Se puede desactivar con el checkbox correspondiente para volver al comportamiento anterior (progreso
+/// vacío/neutro). Además, independientemente del Fast-Forward, el tool siempre:
+///   1. Coloca el grafo en el nodo elegido (vía blackboard "__currentNodeGuid").
+///   2. Coloca físicamente al jugador en el Spawn Anchor indicado (independiente del nodo del
+///      grafo — si no coinciden, el grafo estará en el punto correcto pero aparecerás en otro sitio).
+///   3. Aplica el estado de habilidades/hechizos que marques a mano ADEMÁS de lo que aporte el
+///      Fast-Forward (para forzar algo que la historia todavía no te habría dado).
+///
 /// Flujo:
-/// 1. Seleccionar grafo + nodo objetivo + preset base
-/// 2. Click "Play desde aquí"
-/// 3. Se crea/actualiza un PlayerPresetSO temporal
-/// 4. Se configura GameBootProfile con usePresetInsteadOfSave = true
-/// 5. Se entra en Play Mode
-/// 6. Al salir de Play Mode, se restaura el bootPreset original
+/// 1. Seleccionar grafo + nodo objetivo + habilidades/hechizos equipados
+/// 2. (Opcional) "Vista previa Fast-Forward" para revisar bifurcaciones sin entrar en Play Mode
+/// 3. Click "Play desde aquí"
+/// 4. Se crea/actualiza un PlayerPresetSO temporal (progreso previo + ajustes manuales)
+/// 5. Se configura GameBootProfile con usePresetInsteadOfSave = true
+/// 6. Se entra en Play Mode
+/// 7. Al salir de Play Mode, se restaura el bootPreset original
 /// </summary>
 public class NarrativeQuickTestWindow : EditorWindow
 {
     // Selection
     private NarrativeGraph _targetGraph;
     private string _targetNodeGuid;
-    private string _graphLabel = "Historia Principal - Cap 1";
-    private PlayerPresetSO _basePreset;
+    private string _graphLabel = "Cap1";
 
     // Graph label options — deben coincidir con los labels reales del NarrativeGraphHub en Start.unity.
     // Actualizado tras dividir "Historia Principal" en capítulos (ChapterSplitWindow).
+    // ⚠️ Estos labels deben coincidir EXACTAMENTE con los "label" reales de los GraphSlot del
+    // NarrativeGraphHub en Assets/Scenes/Systems/Start.unity (búscalos ahí, no los inventes aquí).
+    // Hasta el 15 sept 2026 solo hay 2 grafos registrados de verdad en el Hub: "Cap1" y
+    // "Misiones Secundarias" (Cap 2-6 todavía no existen como grafos nuevos, ver
+    // claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 5). Antes esta lista tenía
+    // "Historia Principal - Cap 1".."Cap 6", que NO EXISTEN en el Hub — eso hacía que
+    // RestoreBlackboards() nunca encontrara el runner (label no coincide), así que __currentNodeGuid
+    // nunca se restauraba: el grafo arrancaba desde su StartNode real (prólogo, tutorial...) en vez
+    // de desde el nodo elegido, y se quedaba esperando el primer WaitCustomEventNode del camino real
+    // (p.ej. "Recoge la caja") sin que Quick Test avisara del problema.
     private static readonly string[] KnownGraphLabels = {
-        "Historia Principal - Cap 1", "Historia Principal - Cap 2", "Historia Principal - Cap 3",
-        "Historia Principal - Cap 4", "Historia Principal - Cap 5", "Historia Principal - Cap 6",
-        "Misiones Secundarias"
+        "Cap1", "Misiones Secundarias"
     };
+
+    // Punto de aparición física (independiente del nodo del grafo)
+    private string _spawnAnchorId = "Bedroom";
+    private string[] _detectedAnchors = new string[0];
+
+    // Estado del jugador para la prueba (sustituye a "Base Preset")
+    private int _level = 1;
+    private float _maxHP = 100;
+    private float _maxMP = 50;
+    private bool _abilitySwim;
+    private bool _abilityJump;
+    private bool _abilityClimb;
+    private bool _abilityMagic;
+    private bool _abilityFly;
+    private bool _abilitySprint;
+    private bool _abilityShield;
+    private SpellId _leftSpellId = SpellId.None;
+    private SpellId _rightSpellId = SpellId.None;
+    private SpellId _specialSpellId = SpellId.None;
+
+    // Fast-Forward (progreso previo simulado desde el inicio del grafo)
+    private bool _fastForward = true;
+    private bool _fastForwardPreviewRan;
+    private bool _fastForwardReachedTarget;
+    private readonly List<string> _fastForwardWarnings = new List<string>();
+    private Dictionary<string, QuestData> _questCatalogCache;
 
     // State
     private int _selectedNodeIndex;
@@ -50,7 +100,7 @@ public class NarrativeQuickTestWindow : EditorWindow
     {
         var w = GetWindow<NarrativeQuickTestWindow>();
         w.titleContent = new GUIContent("Quick Test");
-        w.minSize = new Vector2(400, 350);
+        w.minSize = new Vector2(400, 480);
         w.Show();
     }
 
@@ -110,10 +160,33 @@ public class NarrativeQuickTestWindow : EditorWindow
         }
 
         // Graph label
-        int labelIdx = System.Array.IndexOf(KnownGraphLabels, _graphLabel);
-        if (labelIdx < 0) labelIdx = 0;
-        labelIdx = EditorGUILayout.Popup("Graph Label", labelIdx, KnownGraphLabels);
-        _graphLabel = KnownGraphLabels[labelIdx];
+        // FIX (15 sept 2026): antes, si _graphLabel no estaba en KnownGraphLabels (p.ej. porque
+        // TryAutoDetectLabel() lo había puesto correctamente a "Cap1" leyendo el Hub real, o
+        // porque el Hub tiene un label nuevo que esta lista aún no conoce), labelIdx daba -1 y
+        // el código lo pisaba silenciosamente con KnownGraphLabels[0] en el siguiente repintado —
+        // exactamente el bug que hacía que Quick Test lanzara con un label que no existe en el
+        // Hub. Ahora, si _graphLabel no está en la lista conocida, se añade como opción extra en
+        // vez de descartarlo.
+        var popupOptions = KnownGraphLabels;
+        int labelIdx = System.Array.IndexOf(popupOptions, _graphLabel);
+        if (labelIdx < 0 && !string.IsNullOrEmpty(_graphLabel))
+        {
+            popupOptions = KnownGraphLabels.Append(_graphLabel).ToArray();
+            labelIdx = popupOptions.Length - 1;
+        }
+        else if (labelIdx < 0)
+        {
+            labelIdx = 0;
+        }
+        labelIdx = EditorGUILayout.Popup("Graph Label", labelIdx, popupOptions);
+        _graphLabel = popupOptions[labelIdx];
+        if (!KnownGraphLabels.Contains(_graphLabel))
+        {
+            EditorGUILayout.HelpBox(
+                $"'{_graphLabel}' no está en la lista de labels conocidos del Hub (revisa " +
+                "Start.unity o actualiza KnownGraphLabels si es un grafo nuevo legítimo).",
+                MessageType.Warning);
+        }
 
         EditorGUILayout.Space(4);
 
@@ -156,30 +229,100 @@ public class NarrativeQuickTestWindow : EditorWindow
 
         EditorGUILayout.Space(8);
 
-        // Base preset
-        EditorGUILayout.LabelField("Preset Base", EditorStyles.boldLabel);
+        // Punto de aparición
+        EditorGUILayout.LabelField("Punto de aparición (Spawn Anchor)", EditorStyles.boldLabel);
         EditorGUILayout.LabelField(
-            "El preset base define el estado del jugador (inventario, stats, flags, etc.) " +
-            "desde el que arrancará la prueba.", EditorStyles.wordWrappedMiniLabel);
-        _basePreset = (PlayerPresetSO)EditorGUILayout.ObjectField(
-            "Base Preset", _basePreset, typeof(PlayerPresetSO), false);
-
-        if (_basePreset == null)
+            "Independiente del nodo del grafo: decide dónde aparece Will físicamente. Si no coincide " +
+            "con la zona del nodo, el grafo estará en el punto correcto pero aparecerás en otro sitio.",
+            EditorStyles.wordWrappedMiniLabel);
+        EditorGUILayout.BeginHorizontal();
+        _spawnAnchorId = EditorGUILayout.TextField("Spawn Anchor ID", _spawnAnchorId);
+        if (GUILayout.Button("Detectar en escena abierta", GUILayout.Width(170)))
         {
-            // Try auto-find default
-            var defaultPreset = FindDefaultPreset();
-            if (defaultPreset != null)
-            {
-                EditorGUILayout.HelpBox(
-                    $"No hay preset base seleccionado. Se usará '{defaultPreset.name}' (defaultPlayerPreset del profile).",
-                    MessageType.Info);
-            }
-            else
-            {
-                EditorGUILayout.HelpBox(
-                    "No hay preset base. Se creará uno vacío.",
-                    MessageType.Warning);
-            }
+            RefreshDetectedAnchors();
+        }
+        EditorGUILayout.EndHorizontal();
+
+        if (_detectedAnchors.Length > 0)
+        {
+            int detectedIdx = System.Array.IndexOf(_detectedAnchors, _spawnAnchorId);
+            int newIdx = EditorGUILayout.Popup("Anchors detectados", detectedIdx < 0 ? 0 : detectedIdx, _detectedAnchors);
+            if (newIdx >= 0 && newIdx < _detectedAnchors.Length)
+                _spawnAnchorId = _detectedAnchors[newIdx];
+        }
+
+        EditorGUILayout.Space(8);
+
+        // Estado del jugador (sustituye a "Base Preset")
+        EditorGUILayout.LabelField("Estado del jugador (manual, además del Fast-Forward)", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField(
+            "Esto se aplica SIEMPRE, tanto si el Fast-Forward está activo como si no. Úsalo para forzar " +
+            "algo extra que la historia todavía no te habría dado en este punto (o, si desactivas el " +
+            "Fast-Forward, para marcar a mano todo lo que necesites).",
+            EditorStyles.wordWrappedMiniLabel);
+
+        EditorGUILayout.Space(4);
+        EditorGUILayout.BeginHorizontal();
+        _level = EditorGUILayout.IntField("Nivel", _level, GUILayout.Width(200));
+        EditorGUILayout.EndHorizontal();
+        _maxHP = EditorGUILayout.FloatField("Vida máxima", _maxHP);
+        _maxMP = EditorGUILayout.FloatField("Maná máximo", _maxMP);
+
+        EditorGUILayout.Space(6);
+        EditorGUILayout.LabelField("Habilidades de movimiento / combate", EditorStyles.boldLabel);
+        EditorGUILayout.BeginHorizontal();
+        _abilityJump = EditorGUILayout.ToggleLeft("Saltar", _abilityJump, GUILayout.Width(120));
+        _abilitySwim = EditorGUILayout.ToggleLeft("Nadar", _abilitySwim, GUILayout.Width(120));
+        _abilityClimb = EditorGUILayout.ToggleLeft("Trepar", _abilityClimb, GUILayout.Width(120));
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
+        _abilityFly = EditorGUILayout.ToggleLeft("Volar", _abilityFly, GUILayout.Width(120));
+        _abilitySprint = EditorGUILayout.ToggleLeft("Sprint", _abilitySprint, GUILayout.Width(120));
+        _abilityShield = EditorGUILayout.ToggleLeft("Escudo", _abilityShield, GUILayout.Width(120));
+        EditorGUILayout.EndHorizontal();
+        _abilityMagic = EditorGUILayout.ToggleLeft("Magia (casts)", _abilityMagic, GUILayout.Width(150));
+
+        EditorGUILayout.Space(6);
+        EditorGUILayout.LabelField("Hechizos equipados", EditorStyles.boldLabel);
+        _leftSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Izquierdo", _leftSpellId);
+        _rightSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Derecho", _rightSpellId);
+        _specialSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Especial", _specialSpellId);
+
+        EditorGUILayout.Space(8);
+
+        // Fast-Forward
+        EditorGUILayout.LabelField("Fast-Forward (progreso previo)", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField(
+            "Simula el camino desde el inicio del grafo hasta el nodo objetivo y aplica automáticamente " +
+            "quests iniciadas/completadas, objetos entregados, habilidades/hechizos desbloqueados y flags. " +
+            "Si el camino pasa por una bifurcación (flag, estado de quest, diálogo con opciones, objeto " +
+            "requerido...) la simulación se para ahí y te lo avisa en vez de adivinar qué rama seguir.",
+            EditorStyles.wordWrappedMiniLabel);
+        _fastForward = EditorGUILayout.ToggleLeft("Autocompletar progreso previo (Fast-Forward)", _fastForward);
+
+        if (GUILayout.Button("Vista previa Fast-Forward (sin lanzar Play)"))
+        {
+            PreviewFastForward();
+        }
+
+        if (_fastForwardWarnings.Count > 0)
+        {
+            var msg = (_fastForwardReachedTarget
+                ? "Se alcanzó el nodo objetivo, pero se encontraron bifurcaciones en el camino explorado " +
+                  "(puede que alguna no afecte a este nodo en concreto — revisa si están antes o después " +
+                  "del punto que quieres probar):\n\n"
+                : "No se pudo llegar automáticamente al nodo objetivo: el camino pasa por una bifurcación " +
+                  "que no se puede resolver sola. Resuélvela a mano (pon el flag, avanza la quest, etc.) " +
+                  "antes de lanzar, o el progreso aplicado será parcial:\n\n") +
+                string.Join("\n\n", _fastForwardWarnings);
+            EditorGUILayout.HelpBox(msg, _fastForwardReachedTarget ? MessageType.Warning : MessageType.Error);
+        }
+        else if (_fastForwardPreviewRan)
+        {
+            EditorGUILayout.HelpBox(_fastForwardReachedTarget
+                ? "Camino simulado sin bifurcaciones. El progreso previo se aplicará automáticamente al lanzar."
+                : "El nodo objetivo no parece alcanzable desde el inicio del grafo (revisa las conexiones).",
+                _fastForwardReachedTarget ? MessageType.Info : MessageType.Warning);
         }
 
         EditorGUILayout.Space(4);
@@ -244,10 +387,7 @@ public class NarrativeQuickTestWindow : EditorWindow
         _originalUsePreset = profile.usePresetInsteadOfSave;
         _needsRestore = _autoRestore;
 
-        // 3. Determine base preset
-        var basePreset = _basePreset ?? profile.defaultPlayerPreset;
-
-        // 4. Create/update temp preset
+        // 3. Create/update temp preset
         var tempPreset = AssetDatabase.LoadAssetAtPath<PlayerPresetSO>(QuickTestPresetPath);
         if (tempPreset == null)
         {
@@ -255,10 +395,32 @@ public class NarrativeQuickTestWindow : EditorWindow
             AssetDatabase.CreateAsset(tempPreset, QuickTestPresetPath);
         }
 
-        // Copy base preset data
-        if (basePreset != null)
-            CopyPresetData(basePreset, tempPreset);
+        // 4. Rellenar el preset temporal solo con lo que se configura en esta ventana.
+        //    Deliberadamente NO se copia ningún "Base Preset": el progreso de historia previo
+        //    (flags, misiones, items, bosses, etc.) se deja vacío/neutro. La apariencia/vestuario
+        //    se hereda del defaultPlayerPreset del profile solo por motivos cosméticos (para no
+        //    aparecer con el aspecto por defecto/sin ropa), nunca su progreso narrativo.
+        ApplyPlayerStateToPreset(tempPreset, profile.defaultPlayerPreset);
         tempPreset.name = "QuickTest_Temp";
+
+        // 4b. Fast-Forward: simula el camino desde el inicio del grafo y aplica el progreso previo
+        //     (quests, items, habilidades/hechizos, flags) ENCIMA del estado manual de arriba.
+        if (_fastForward)
+        {
+            RunFastForward(tempPreset);
+            _fastForwardPreviewRan = true;
+
+            if (_fastForwardWarnings.Count > 0)
+            {
+                Debug.LogWarning($"[QuickTest] Fast-Forward encontró {_fastForwardWarnings.Count} bifurcación(es):\n" +
+                    string.Join("\n", _fastForwardWarnings));
+            }
+            if (!_fastForwardReachedTarget)
+            {
+                Debug.LogWarning("[QuickTest] Fast-Forward no llegó al nodo objetivo automáticamente " +
+                    "(revisa las bifurcaciones). Se lanzará igualmente con el progreso parcial acumulado.");
+            }
+        }
 
         // 5. Set up narrative blackboard to start from the target node
         var bbSnapshot = new PlayerSaveData.NarrativeBlackboardSnapshot
@@ -275,12 +437,7 @@ public class NarrativeQuickTestWindow : EditorWindow
             }
         };
 
-        // Keep existing blackboard entries for other graphs, replace for target graph
-        if (tempPreset.narrativeBlackboards == null)
-            tempPreset.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
-
-        tempPreset.narrativeBlackboards.RemoveAll(s => s.graphLabel == _graphLabel);
-        tempPreset.narrativeBlackboards.Add(bbSnapshot);
+        tempPreset.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot> { bbSnapshot };
 
         EditorUtility.SetDirty(tempPreset);
 
@@ -295,11 +452,69 @@ public class NarrativeQuickTestWindow : EditorWindow
             ? $"{selectedNode.GetType().Name} \"{selectedNode.displayTitle}\""
             : _targetNodeGuid;
 
-        _status = $"Lanzando Play desde {nodeDesc} en {_graphLabel}...";
-        Debug.Log($"[QuickTest] Configurado: grafo='{_graphLabel}', nodo='{nodeDesc}', preset base='{basePreset?.name ?? "vacío"}'");
+        _status = $"Lanzando Play desde {nodeDesc} en {_graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
+        Debug.Log($"[QuickTest] Configurado: grafo='{_graphLabel}', nodo='{nodeDesc}', anchor='{tempPreset.spawnAnchorId}', " +
+            $"habilidades=(swim:{_abilitySwim}, jump:{_abilityJump}, climb:{_abilityClimb}, magic:{_abilityMagic}, fly:{_abilityFly}, sprint:{_abilitySprint}, shield:{_abilityShield}), " +
+            $"hechizos=(L:{_leftSpellId}, R:{_rightSpellId}, Esp:{_specialSpellId})");
 
         // 7. Enter Play Mode
         EditorApplication.isPlaying = true;
+    }
+
+    /// <summary>
+    /// Aplica a <paramref name="dst"/> el nivel/vida/maná/habilidades/hechizos configurados en la
+    /// ventana. El progreso de historia (flags, misiones, inventario de quest, bosses, etc.) se deja
+    /// vacío a propósito — este tool no simula partidas avanzadas, solo coloca el grafo en un nodo y
+    /// te da el "cuerpo" (habilidades/hechizos) necesario para probarlo.
+    /// <paramref name="cosmeticBase"/> (normalmente el defaultPlayerPreset del profile) se usa
+    /// únicamente para apariencia/vestuario, nunca para progreso.
+    /// </summary>
+    private void ApplyPlayerStateToPreset(PlayerPresetSO dst, PlayerPresetSO cosmeticBase)
+    {
+        dst.spawnAnchorId = string.IsNullOrEmpty(_spawnAnchorId) ? "Bedroom" : _spawnAnchorId;
+
+        dst.level = _level;
+        dst.maxHP = _maxHP;
+        dst.currentHP = _maxHP;
+        dst.maxMP = _maxMP;
+        dst.currentMP = _maxMP;
+
+        dst.abilities = new PlayerAbilities
+        {
+            swim = _abilitySwim,
+            jump = _abilityJump,
+            climb = _abilityClimb,
+            magic = _abilityMagic,
+            fly = _abilityFly,
+            sprint = _abilitySprint,
+            shield = _abilityShield
+        };
+        dst.unlockedAbilities = new List<AbilityId>();
+
+        dst.leftSpellId = _leftSpellId;
+        dst.rightSpellId = _rightSpellId;
+        dst.specialSpellId = _specialSpellId;
+        dst.unlockedSpells = new[] { _leftSpellId, _rightSpellId, _specialSpellId }
+            .Where(id => id != SpellId.None)
+            .Distinct()
+            .ToList();
+
+        // Cosmético únicamente — apariencia/vestuario del preset por defecto, para no aparecer
+        // con el aspecto en blanco. No incluye progreso.
+        dst.appearance = new List<AppearanceEntry>(cosmeticBase?.appearance ?? new List<AppearanceEntry>());
+        dst.unlockedWardrobeIds = new List<string>(cosmeticBase?.unlockedWardrobeIds ?? new List<string>());
+
+        // Progreso de historia: siempre vacío/neutro en Quick Test.
+        dst.flags = new List<string>();
+        dst.inventoryItems = new List<InventoryItemSave>();
+        dst.defeatedBossIds = new List<string>();
+        dst.consumedInteractableIds = new List<string>();
+        dst.completedInteractiveNarratives = new List<string>();
+        dst.seenLorePopupIds = new List<string>();
+        dst.partyMemberIds = new List<string>();
+        dst.activeCharacterSlot = 1;
+        dst.unlockedTeleportPoints = new List<string>();
+        dst.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
     }
 
     private static void RestoreOriginalBootPreset()
@@ -324,16 +539,318 @@ public class NarrativeQuickTestWindow : EditorWindow
         _needsRestore = false;
     }
 
-    private static PlayerPresetSO FindDefaultPreset()
+    /// <summary>
+    /// Busca componentes SpawnAnchor en las escenas actualmente abiertas en el editor (no requiere
+    /// Play Mode: son GameObjects normales de la escena) y ofrece sus anchorId como sugerencias.
+    /// Si la escena del nodo objetivo no está abierta, no aparecerá aquí — hay que abrirla primero.
+    /// </summary>
+    private void RefreshDetectedAnchors()
     {
-        var profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>("Assets/_BootProfile/GameBootProfile.asset");
-        if (profile == null)
+        var anchors = Object.FindObjectsByType<SpawnAnchor>(FindObjectsSortMode.None);
+        _detectedAnchors = anchors
+            .Select(a => a.anchorId)
+            .Where(id => !string.IsNullOrEmpty(id))
+            .Distinct()
+            .OrderBy(id => id)
+            .ToArray();
+
+        if (_detectedAnchors.Length == 0)
         {
-            var guids = AssetDatabase.FindAssets("t:GameBootProfile");
-            if (guids.Length > 0)
-                profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>(AssetDatabase.GUIDToAssetPath(guids[0]));
+            _status = "No se han encontrado SpawnAnchor en las escenas abiertas. Abre la escena del nodo objetivo primero.";
         }
-        return profile?.defaultPlayerPreset;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Fast-Forward: simula el camino Start → nodo objetivo y aplica el progreso
+    // previo (quests/items/habilidades/flags) a un PlayerPresetSO. NUNCA invoca
+    // Enter() de un nodo real (dispararía diálogos/señales de verdad fuera de
+    // Play Mode) — solo lee los campos serializados de cada nodo.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Ejecuta el Fast-Forward sobre un preset "de mentira" solo para revisar si hay bifurcaciones,
+    /// sin tocar el preset real ni entrar en Play Mode.
+    /// </summary>
+    private void PreviewFastForward()
+    {
+        if (_targetGraph == null || string.IsNullOrEmpty(_targetNodeGuid))
+        {
+            _status = "Selecciona grafo y nodo objetivo antes de previsualizar.";
+            return;
+        }
+
+        var scratch = ScriptableObject.CreateInstance<PlayerPresetSO>();
+        scratch.flags = new List<string>();
+        scratch.inventoryItems = new List<InventoryItemSave>();
+        scratch.unlockedSpells = new List<SpellId>();
+        scratch.abilities = new PlayerAbilities();
+        try
+        {
+            RunFastForward(scratch);
+            _fastForwardPreviewRan = true;
+        }
+        finally
+        {
+            DestroyImmediate(scratch);
+        }
+        Repaint();
+    }
+
+    /// <summary>
+    /// Recorre el grafo en anchura desde <see cref="NarrativeGraph.startNodeGuid"/> aplicando a
+    /// <paramref name="dst"/> el efecto de los nodos que cambian estado (StartQuestNode,
+    /// CompleteQuestStepsNode, GiveInventoryItemNode, UnlockAbilitiesNode, SetFlagNode). El resto de
+    /// nodos son presentacionales y se ignoran a propósito.
+    ///
+    /// Un ForkNode expande TODAS sus salidas (son paralelas de verdad, todas se ejecutan en juego real).
+    /// Cualquier otro nodo con más de una salida — con nombre (BranchFlagNode, BranchQuestStateNode,
+    /// DialogueChoiceNode...) o sin nombre pero con varias aristas (RequireInventoryItemNode y similares) —
+    /// se trata como una bifurcación real: no se sigue explorando por ahí, se registra un aviso, y el
+    /// resto de la búsqueda continúa por las otras ramas ya encoladas. Nunca se adivina una rama.
+    /// </summary>
+    private void RunFastForward(PlayerPresetSO dst)
+    {
+        _fastForwardWarnings.Clear();
+        _fastForwardReachedTarget = false;
+        _questCatalogCache = null;
+
+        if (_targetGraph == null || string.IsNullOrEmpty(_targetGraph.startNodeGuid) || string.IsNullOrEmpty(_targetNodeGuid))
+            return;
+
+        var byGuid = _targetGraph.nodes
+            .Where(n => n != null && !string.IsNullOrEmpty(n.guid))
+            .GroupBy(n => n.guid)
+            .ToDictionary(g => g.Key, g => g.First());
+
+        var visited = new HashSet<string>();
+        var queue = new Queue<string>();
+        queue.Enqueue(_targetGraph.startNodeGuid);
+
+        while (queue.Count > 0)
+        {
+            var guid = queue.Dequeue();
+            if (!visited.Add(guid)) continue;
+            if (!byGuid.TryGetValue(guid, out var node) || node == null) continue;
+
+            ApplyNodeEffect(node, dst);
+
+            if (guid == _targetNodeGuid)
+            {
+                _fastForwardReachedTarget = true;
+                break;
+            }
+
+            bool isFork = node is ForkNode;
+            bool isDecision = node.HasNamedOutputs || (!isFork && node.outputs != null && node.outputs.Count > 1);
+
+            if (isDecision)
+            {
+                _fastForwardWarnings.Add(DescribeBifurcation(node));
+                continue; // no se sigue explorando por este nodo; el resto de la cola continúa
+            }
+
+            if (node.outputs == null) continue;
+            foreach (var outGuid in node.outputs)
+            {
+                if (!string.IsNullOrEmpty(outGuid) && !visited.Contains(outGuid))
+                    queue.Enqueue(outGuid);
+            }
+        }
+    }
+
+    private static string DescribeBifurcation(NarrativeNode node)
+    {
+        switch (node)
+        {
+            case BranchFlagNode bf:
+                return $"Bifurcación \"Según flag\" (\"{bf.displayTitle}\", guid {bf.guid}): comprueba el flag " +
+                    $"'{bf.flagKey}'{(bf.invert ? " (invertido)" : "")}. Salidas: Sí / No.";
+            case BranchQuestStateNode bq:
+                return $"Bifurcación \"Según estado de quest\" (\"{bq.displayTitle}\", guid {bq.guid}): " +
+                    $"quest '{bq.questId}'. Salidas: No iniciada / Activa / Pasos listos / Completada.";
+            case DialogueChoiceNode dc:
+                return $"Pregunta con respuestas (\"{dc.displayTitle}\", guid {dc.guid}): " +
+                    $"\"{(string.IsNullOrEmpty(dc.promptText) ? dc.promptTextId : dc.promptText)}\" → " +
+                    $"opciones '{dc.optionAText}' / '{dc.optionBText}'.";
+            case RequireInventoryItemNode ri:
+                return $"Requiere objeto (\"{ri.displayTitle}\", guid {ri.guid}): necesita " +
+                    $"'{(ri.item != null ? ri.item.itemId : "<sin item>")}' x{ri.requiredAmount}.";
+            default:
+                return $"{node.GetType().Name} (\"{node.displayTitle}\", guid {node.guid}) tiene " +
+                    $"{node.outputs?.Count ?? 0} salidas sin nombrar — no se puede decidir automáticamente qué rama seguir.";
+        }
+    }
+
+    private void ApplyNodeEffect(NarrativeNode node, PlayerPresetSO dst)
+    {
+        switch (node)
+        {
+            case StartQuestNode sq:
+                if (!string.IsNullOrEmpty(sq.questId) && !HasFlag(dst, $"QUEST_COMPLETED:{sq.questId}"))
+                    AddFlagIfMissing(dst, $"QUEST_ACTIVE:{sq.questId}");
+                break;
+
+            case CompleteQuestStepsNode cs:
+                ApplyCompleteQuestSteps(cs, dst);
+                break;
+
+            case GiveInventoryItemNode gi:
+                ApplyGiveItem(gi, dst);
+                break;
+
+            case UnlockAbilitiesNode ua:
+                ApplyUnlockAbilities(ua, dst);
+                break;
+
+            case SetFlagNode sf:
+                if (!string.IsNullOrWhiteSpace(sf.flagKey))
+                {
+                    if (sf.value) AddFlagIfMissing(dst, sf.flagKey);
+                    else RemoveFlagIfPresent(dst, sf.flagKey);
+                }
+                break;
+
+            // Resto de tipos (Wait*, diálogos, cinemáticas, cámara, audio, etc.): puramente
+            // presentacionales para el propósito del Fast-Forward — se ignoran a propósito.
+        }
+    }
+
+    private void ApplyCompleteQuestSteps(CompleteQuestStepsNode node, PlayerPresetSO dst)
+    {
+        if (string.IsNullOrWhiteSpace(node.questId)) return;
+
+        bool alreadyCompleted = HasFlag(dst, $"QUEST_COMPLETED:{node.questId}");
+        if (!alreadyCompleted)
+            AddFlagIfMissing(dst, $"QUEST_ACTIVE:{node.questId}");
+
+        if (node.stepConditionIds != null && node.stepConditionIds.Count > 0)
+        {
+            var qd = FindQuestData(node.questId);
+            if (qd == null || qd.steps == null)
+            {
+                _fastForwardWarnings.Add($"CompleteQuestStepsNode (\"{node.displayTitle}\", guid {node.guid}): " +
+                    $"no se encontró el QuestData de '{node.questId}' en el proyecto; no se pudieron aplicar " +
+                    "los pasos por Condition ID.");
+            }
+            else
+            {
+                foreach (var conditionId in node.stepConditionIds)
+                {
+                    if (string.IsNullOrWhiteSpace(conditionId)) continue;
+                    int idx = System.Array.FindIndex(qd.steps, s => s.conditionId == conditionId);
+                    if (idx < 0)
+                    {
+                        _fastForwardWarnings.Add($"CompleteQuestStepsNode (\"{node.displayTitle}\", guid {node.guid}): " +
+                            $"el Condition ID '{conditionId}' no existe en los steps de '{node.questId}'.");
+                        continue;
+                    }
+                    AddFlagIfMissing(dst, $"QUEST_STEP_DONE:{node.questId}:{idx}");
+                }
+            }
+        }
+        else if (node.steps != null && node.steps.Count > 0)
+        {
+            foreach (var idx in node.steps)
+                if (idx >= 0) AddFlagIfMissing(dst, $"QUEST_STEP_DONE:{node.questId}:{idx}");
+        }
+
+        if (node.completeQuest)
+            AddFlagIfMissing(dst, $"QUEST_COMPLETED:{node.questId}");
+    }
+
+    private static void ApplyGiveItem(GiveInventoryItemNode node, PlayerPresetSO dst)
+    {
+        if (node.item == null || node.amount <= 0) return;
+
+        dst.inventoryItems ??= new List<InventoryItemSave>();
+        int idx = dst.inventoryItems.FindIndex(e => e.itemId == node.item.itemId);
+        if (idx >= 0)
+        {
+            var entry = dst.inventoryItems[idx];
+            entry.count += node.amount;
+            dst.inventoryItems[idx] = entry;
+        }
+        else
+        {
+            dst.inventoryItems.Add(new InventoryItemSave { itemId = node.item.itemId, count = node.amount });
+        }
+    }
+
+    private static void ApplyUnlockAbilities(UnlockAbilitiesNode node, PlayerPresetSO dst)
+    {
+        dst.abilities ??= new PlayerAbilities();
+
+        if (node.abilityKeysToUnlock != null)
+        {
+            foreach (var key in node.abilityKeysToUnlock)
+            {
+                switch (key)
+                {
+                    case AbilityKey.Swim: dst.abilities.swim = true; break;
+                    case AbilityKey.Jump: dst.abilities.jump = true; break;
+                    case AbilityKey.Climb: dst.abilities.climb = true; break;
+                    case AbilityKey.Magic: dst.abilities.magic = true; break;
+                    case AbilityKey.Fly: dst.abilities.fly = true; break;
+                    case AbilityKey.Sprint: dst.abilities.sprint = true; break;
+                    case AbilityKey.Shield: dst.abilities.shield = true; break;
+                }
+            }
+        }
+
+        if (node.spellsToUnlock != null)
+        {
+            dst.unlockedSpells ??= new List<SpellId>();
+            foreach (var spell in node.spellsToUnlock)
+            {
+                if (spell == SpellId.None) continue;
+                if (!dst.unlockedSpells.Contains(spell)) dst.unlockedSpells.Add(spell);
+
+                if (node.assignSpellsToEmptySlot)
+                {
+                    bool alreadyEquipped = dst.leftSpellId == spell || dst.rightSpellId == spell || dst.specialSpellId == spell;
+                    if (!alreadyEquipped)
+                    {
+                        if (dst.leftSpellId == SpellId.None) dst.leftSpellId = spell;
+                        else if (dst.rightSpellId == SpellId.None) dst.rightSpellId = spell;
+                        else if (dst.specialSpellId == SpellId.None) dst.specialSpellId = spell;
+                    }
+                }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(node.oneShotFlag))
+            AddFlagIfMissing(dst, node.oneShotFlag);
+    }
+
+    private static void AddFlagIfMissing(PlayerPresetSO dst, string flag)
+    {
+        dst.flags ??= new List<string>();
+        if (!dst.flags.Contains(flag)) dst.flags.Add(flag);
+    }
+
+    private static void RemoveFlagIfPresent(PlayerPresetSO dst, string flag)
+    {
+        dst.flags?.Remove(flag);
+    }
+
+    private static bool HasFlag(PlayerPresetSO dst, string flag) => dst.flags != null && dst.flags.Contains(flag);
+
+    /// <summary>Busca el QuestData de un questId en todo el proyecto (cacheado por ejecución de Fast-Forward).</summary>
+    private QuestData FindQuestData(string questId)
+    {
+        if (_questCatalogCache == null)
+        {
+            _questCatalogCache = new Dictionary<string, QuestData>();
+            var guids = AssetDatabase.FindAssets("t:QuestData");
+            foreach (var g in guids)
+            {
+                var qd = AssetDatabase.LoadAssetAtPath<QuestData>(AssetDatabase.GUIDToAssetPath(g));
+                if (qd != null && !string.IsNullOrEmpty(qd.questId) && !_questCatalogCache.ContainsKey(qd.questId))
+                    _questCatalogCache[qd.questId] = qd;
+            }
+        }
+        _questCatalogCache.TryGetValue(questId, out var result);
+        return result;
     }
 
     private void TryAutoDetectLabel(NarrativeGraph graph)
@@ -367,86 +884,6 @@ public class NarrativeQuickTestWindow : EditorWindow
                     _graphLabel = labelLine;
                     return;
                 }
-            }
-        }
-    }
-
-    private static void CopyPresetData(PlayerPresetSO src, PlayerPresetSO dst)
-    {
-        if (src == null || dst == null) return;
-
-        dst.spawnAnchorId = src.spawnAnchorId;
-        dst.level = src.level;
-        dst.maxHP = src.maxHP;
-        dst.currentHP = src.currentHP;
-        dst.maxMP = src.maxMP;
-        dst.currentMP = src.currentMP;
-        dst.unlockedAbilities = new List<AbilityId>(src.unlockedAbilities ?? new List<AbilityId>());
-        dst.unlockedSpells = new List<SpellId>(src.unlockedSpells ?? new List<SpellId>());
-        dst.leftSpellId = src.leftSpellId;
-        dst.rightSpellId = src.rightSpellId;
-        dst.specialSpellId = src.specialSpellId;
-        dst.flags = new List<string>(src.flags ?? new List<string>());
-        dst.abilities = new PlayerAbilities
-        {
-            swim = src.abilities?.swim ?? false,
-            jump = src.abilities?.jump ?? false,
-            climb = src.abilities?.climb ?? false,
-            magic = src.abilities?.magic ?? false,
-            fly = src.abilities?.fly ?? false
-        };
-        dst.appearance = new List<AppearanceEntry>(src.appearance ?? new List<AppearanceEntry>());
-        dst.unlockedWardrobeIds = new List<string>(src.unlockedWardrobeIds ?? new List<string>());
-        dst.inventoryItems = new List<InventoryItemSave>(src.inventoryItems ?? new List<InventoryItemSave>());
-        dst.defeatedBossIds = new List<string>(src.defeatedBossIds ?? new List<string>());
-        dst.consumedInteractableIds = new List<string>(src.consumedInteractableIds ?? new List<string>());
-        dst.completedInteractiveNarratives = new List<string>(src.completedInteractiveNarratives ?? new List<string>());
-        dst.seenLorePopupIds = new List<string>(src.seenLorePopupIds ?? new List<string>());
-        dst.partyMemberIds = new List<string>(src.partyMemberIds ?? new List<string>());
-        dst.activeCharacterSlot = src.activeCharacterSlot;
-        dst.unlockedTeleportPoints = new List<string>(src.unlockedTeleportPoints ?? new List<string>());
-
-        // Copy narrative blackboards
-        dst.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
-        if (src.narrativeBlackboards != null)
-        {
-            foreach (var bb in src.narrativeBlackboards)
-            {
-                var copy = new PlayerSaveData.NarrativeBlackboardSnapshot
-                {
-                    graphLabel = bb.graphLabel,
-                    blackboardData = new List<SimpleBlackboard.Entry>()
-                };
-                if (bb.blackboardData != null)
-                {
-                    foreach (var entry in bb.blackboardData)
-                    {
-                        copy.blackboardData.Add(new SimpleBlackboard.Entry
-                        {
-                            key = entry.key,
-                            value = entry.value,
-                            type = entry.type
-                        });
-                    }
-                }
-                dst.narrativeBlackboards.Add(copy);
-            }
-        }
-
-        // Copy NPC positions
-        dst.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
-        if (src.npcPositions != null)
-        {
-            foreach (var npc in src.npcPositions)
-            {
-                dst.npcPositions.Add(new PlayerPresetSO.NpcPosEntry
-                {
-                    npcId = npc.npcId,
-                    position = npc.position,
-                    rotation = npc.rotation,
-                    hasActiveState = npc.hasActiveState,
-                    isActive = npc.isActive
-                });
             }
         }
     }

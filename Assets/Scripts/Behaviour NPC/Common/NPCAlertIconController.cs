@@ -82,6 +82,16 @@ namespace Game.NPC.Common
         {
             DialogueManager.OnDialogueStarted -= OnDialogueStarted;
             DialogueManager.OnDialogueClosed -= OnDialogueClosed;
+
+            // FIX INC-184 (9 sept 2026): el icono se instancia sin padre (Instantiate(iconPrefab)
+            // en ShowIconRoutine/ShowPersistentIconRoutine) y solo se sigue posicionando/destruyendo
+            // desde la propia corrutina de este componente. Si el NPC que lo muestra se desactiva
+            // SIN ser destruido (p. ej. durante la secuencia de Game Over, que no pasa por
+            // AlertState.OnExit), la corrutina se detiene a mitad y el icono queda huérfano: visible
+            // y congelado en su última posición para siempre, porque nada vuelve a tocarlo. Mismo
+            // patrón exacto ya diagnosticado y corregido en InteractionDetector.OnDisable() (ver
+            // incidencia de los iconos "A" acumulados, 5 sept 2026) — mismo fix aquí.
+            HideAlertIconImmediate();
         }
         
         /// <summary>
@@ -99,7 +109,12 @@ namespace Game.NPC.Common
                 _headBone = animator.GetBoneTransform(HumanBodyBones.Head);
                 if (_headBone != null)
                 {
-                    if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada via Animator: {_headBone.name}");
+                    if (showDebugLogs)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada via Animator: {_headBone.name}");
+                        #endif
+                    }
                     return;
                 }
             }
@@ -110,12 +125,22 @@ namespace Game.NPC.Common
                 _headBone = FindChildRecursive(transform, boneName);
                 if (_headBone != null)
                 {
-                    if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada por nombre: {_headBone.name}");
+                    if (showDebugLogs)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada por nombre: {_headBone.name}");
+                        #endif
+                    }
                     return;
                 }
             }
             
-            if (showDebugLogs) Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ No se encontró hueso de cabeza, usando fallback height={fallbackHeight}");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ No se encontró hueso de cabeza, usando fallback height={fallbackHeight}");
+                #endif
+            }
         }
         
         private Transform FindChildRecursive(Transform parent, string name)
@@ -182,7 +207,12 @@ namespace Game.NPC.Common
                     .SetUpdate(true)
                     .SetId(this);
                     
-                if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] 🔇 Ocultando icono durante diálogo");
+                if (showDebugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCAlertIcon:{name}] 🔇 Ocultando icono durante diálogo");
+                    #endif
+                }
             }
         }
         
@@ -230,7 +260,12 @@ namespace Game.NPC.Common
                     .SetId(this)
                     .OnComplete(() => _hiddenDuringDialogue = false); // Reanudar updates DESPUÉS de la animación
 
-                if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] 🔊 Restaurando icono tras diálogo (después de {restoreAfterDialogueDelay}s de delay)");
+                if (showDebugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCAlertIcon:{name}] 🔊 Restaurando icono tras diálogo (después de {restoreAfterDialogueDelay}s de delay)");
+                    #endif
+                }
             }
             else
             {
@@ -309,7 +344,12 @@ namespace Game.NPC.Common
             
             _iconRoutine = StartCoroutine(ShowIconRoutine(iconPrefab, useDuration));
             
-            if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] 🔔 Mostrando icono por {useDuration}s");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCAlertIcon:{name}] 🔔 Mostrando icono por {useDuration}s");
+                #endif
+            }
         }
 
         /// <summary>
@@ -447,7 +487,12 @@ namespace Game.NPC.Common
 
             _iconRoutine = StartCoroutine(ShowPersistentIconRoutine(iconPrefab));
             
-            if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] 📌 Mostrando icono persistente");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCAlertIcon:{name}] 📌 Mostrando icono persistente");
+                #endif
+            }
         }
         
         /// <summary>
@@ -511,7 +556,12 @@ namespace Game.NPC.Common
             hideSeq.SetId(this);
             _currentTween = hideSeq;
             
-            if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] 🔕 Ocultando icono con animación");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCAlertIcon:{name}] 🔕 Ocultando icono con animación");
+                #endif
+            }
         }
         
         /// <summary>
@@ -537,7 +587,12 @@ namespace Game.NPC.Common
             _isHiding = false;
             _hiddenDuringDialogue = false;
             
-            if (showDebugLogs) Debug.Log($"[NPCAlertIcon:{name}] ⚡ Icono eliminado inmediatamente");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCAlertIcon:{name}] ⚡ Icono eliminado inmediatamente");
+                #endif
+            }
         }
         
         private IEnumerator ShowIconRoutine(GameObject iconPrefab, float duration, System.Action<GameObject> onInstanceCreated = null)

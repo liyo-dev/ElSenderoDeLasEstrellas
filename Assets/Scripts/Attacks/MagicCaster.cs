@@ -66,21 +66,36 @@ public class MagicCaster : MonoBehaviour, IMagicCaster
         var spell = GetSpellForSlot(slot);
         if (!CanCastSpell(slot, spell, out string reason))
         {
-            if (showDebugLogs) Debug.Log($"[MagicCaster] No se puede lanzar {slot}: {reason}");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MagicCaster] No se puede lanzar {slot}: {reason}");
+                #endif
+            }
             return false;
         }
 
         // Los hechizos de Levitación se manejan por PlayerLevitationController, no aquí
         if (spell.kind == MagicKind.Levitation)
         {
-            if (showDebugLogs) Debug.Log($"[MagicCaster] Hechizo {spell.displayName} es de tipo Levitación, ignorando (manejado por PlayerLevitationController)");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MagicCaster] Hechizo {spell.displayName} es de tipo Levitación, ignorando (manejado por PlayerLevitationController)");
+                #endif
+            }
             return false;
         }
 
         // Consumir maná
         if (!manaPool.TrySpend(spell.manaCost))
         {
-            if (showDebugLogs) Debug.Log($"[MagicCaster] Sin maná suficiente para {spell.displayName} (costo: {spell.manaCost})");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MagicCaster] Sin maná suficiente para {spell.displayName} (costo: {spell.manaCost})");
+                #endif
+            }
             return false;
         }
 
@@ -88,7 +103,12 @@ public class MagicCaster : MonoBehaviour, IMagicCaster
         {
             if (!specialChargeMeter.TryConsume())
             {
-                if (showDebugLogs) Debug.LogWarning("[MagicCaster] Fallo el consumo de carga especial.");
+                if (showDebugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.LogWarning("[MagicCaster] Fallo el consumo de carga especial.");
+                    #endif
+                }
                 if (manaPool) manaPool.Refill(spell.manaCost);
                 return false;
             }

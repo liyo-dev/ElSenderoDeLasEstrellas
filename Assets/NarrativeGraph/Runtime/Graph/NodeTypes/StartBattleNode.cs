@@ -10,6 +10,7 @@ using UnityEngine.Serialization;
 /// - Opcionalmente completa/avanza una misión/step cuando se gana la batalla.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Combate", "Iniciar batalla", "Arranca una arena de batalla y espera la victoria.")]
 public sealed class StartBattleNode : NarrativeNode
 {
     [Tooltip("ID de la batalla (coincide con BossArenaController.BattleId).")]

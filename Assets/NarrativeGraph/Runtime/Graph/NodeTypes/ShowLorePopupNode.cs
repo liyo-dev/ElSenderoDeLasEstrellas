@@ -7,6 +7,7 @@ using UnityEngine;
 /// El grafo espera a que termine la secuencia automática para continuar.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Diálogo", "Popup de lore", "")]
 public sealed class ShowLorePopupNode : NarrativeNode
 {
     [Tooltip("Configuración del popup: entradas con retrato, hablante y texto.")]

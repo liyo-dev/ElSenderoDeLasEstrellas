@@ -77,7 +77,12 @@ public class PlayerPickupCollector : MonoBehaviour
 
         if (!effect.item)
         {
-            if (logWarnings) Debug.LogWarning("[PlayerPickupCollector] Currency pickup has no ItemData assigned.");
+            if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[PlayerPickupCollector] Currency pickup has no ItemData assigned.");
+                #endif
+            }
             return false;
         }
 
@@ -154,7 +159,12 @@ public class PlayerPickupCollector : MonoBehaviour
 
         if (!effect.item)
         {
-            if (logWarnings) Debug.LogWarning("[PlayerPickupCollector] AddToInventory pickup has no ItemData assigned.");
+            if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[PlayerPickupCollector] AddToInventory pickup has no ItemData assigned.");
+                #endif
+            }
             return false;
         }
 
@@ -177,7 +187,12 @@ public class PlayerPickupCollector : MonoBehaviour
     {
         if (effect.item == null || effect.item.wardrobeUnlock == null)
         {
-            if (logWarnings) Debug.LogWarning("[PlayerPickupCollector] UnlockWardrobeItem pickup has no ItemData or WardrobeItemSO assigned.");
+            if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[PlayerPickupCollector] UnlockWardrobeItem pickup has no ItemData or WardrobeItemSO assigned.");
+                #endif
+            }
             return false;
         }
 
@@ -192,9 +207,17 @@ public class PlayerPickupCollector : MonoBehaviour
         CharacterAppearanceRegistry.Instance.UpdatePart(activeCharacter, wardrobeItem.Category, wardrobeItem.PartName);
 
         if (unlocked)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerPickupCollector] ✅ Item de equipo '{effect.item.displayName}' desbloqueado y añadido al wardrobe.");
+            #endif
+        }
         else if (logWarnings)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[PlayerPickupCollector] Item de equipo '{effect.item.displayName}' ya estaba desbloqueado o no pudo añadirse.");
+            #endif
+        }
 
         return unlocked;
     }
@@ -212,14 +235,22 @@ public class PlayerPickupCollector : MonoBehaviour
         if (animator == null)
         {
             if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerPickupCollector] No se puede reproducir animación de poción: Animator no encontrado.");
+                #endif
+            }
             return;
         }
 
         if (string.IsNullOrEmpty(drinkPotionAnimationName))
         {
             if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerPickupCollector] No se puede reproducir animación de poción: nombre de animación vacío.");
+                #endif
+            }
             return;
         }
 

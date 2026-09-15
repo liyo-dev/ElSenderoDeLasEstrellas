@@ -37,6 +37,17 @@ public class MinimapController : MonoBehaviour
              "para mostrar más área del mundo que el zoom normal (defaultZoom/worldBounds).")]
     [SerializeField] float bigMapZoom = 60f;
 
+    [Header("Agua en el minimapa")]
+    [Tooltip("El agua del mundo (mar, ríos) usa shaders pensados para verse a ras de suelo (reflejos, " +
+             "espuma, profundidad calculada a partir de la textura de profundidad de la propia cámara) " +
+             "que, vistos desde la cámara ortográfica del minimapa a 200 m de altura, se leen como una " +
+             "mancha plana sin detalle — y si el terreno de alrededor queda por debajo del nivel del mar " +
+             "en algún punto, esa mancha puede llegar a tapar terreno e iconos (INC-197, 12 sept 2026). " +
+             "Con esto activo, mientras renderiza esta cámara se sustituye el material de esas superficies " +
+             "por uno plano y simple (Resources/Shaders/Mat_MinimapAgua), pensado para leerse bien desde " +
+             "arriba, sin tocar su aspecto en la cámara principal.")]
+    [SerializeField] bool overrideWaterOnMinimap = true;
+
     Transform _playerTransform;
     bool _hiddenByInterior;
     bool _hiddenByBattle;
@@ -45,6 +56,12 @@ public class MinimapController : MonoBehaviour
     float _normalOrthoSize;
     bool _fogWasEnabledBeforeMinimap;
     bool _minimapFogOverrideActive;
+
+    Renderer[] _waterRenderers;
+    Material[] _waterOriginalMaterials;
+    Material _minimapWaterMaterial;
+    bool _waterCacheReady;
+    bool _minimapWaterOverrideActive;
 
     // ── API para MinimapUIController ─────────────────────────────────────────
     public Vector3 PlayerPosition => _playerTransform != null ? _playerTransform.position : Vector3.zero;
@@ -220,14 +237,91 @@ public class MinimapController : MonoBehaviour
         _fogWasEnabledBeforeMinimap = RenderSettings.fog;
         RenderSettings.fog = false;
         _minimapFogOverrideActive = true;
+
+        if (overrideWaterOnMinimap)
+        {
+            CacheWaterRenderersOnce();
+            ApplyMinimapWaterOverride();
+        }
     }
 
     void OnEndCameraRendering(ScriptableRenderContext context, Camera camera)
     {
-        if (camera != minimapCamera || !_minimapFogOverrideActive) return;
+        if (camera != minimapCamera) return;
 
-        RenderSettings.fog = _fogWasEnabledBeforeMinimap;
-        _minimapFogOverrideActive = false;
+        if (_minimapFogOverrideActive)
+        {
+            RenderSettings.fog = _fogWasEnabledBeforeMinimap;
+            _minimapFogOverrideActive = false;
+        }
+
+        RestoreMinimapWaterOverride();
+    }
+
+    // ── Agua "plana" solo para el minimapa (INC-197) ───────────────────────────
+    // Los shaders de agua del mundo (mar/ríos de la maqueta de Eldoria, y el agua base de MainWorld)
+    // están pensados para verse a ras de suelo y, en algunos casos, leen la textura de profundidad de
+    // la propia cámara para teñir orilla/espuma — algo que en la cámara ortográfica del minimapa (200 m
+    // de altura, sin relación con la vista normal) se lee como una mancha plana y, si el terreno de
+    // alrededor queda por debajo del nivel del mar en algún punto, puede tapar terreno e iconos que
+    // deberían verse. Se detecta una sola vez (no en Update) cualquier Renderer cuyo material use un
+    // shader de agua conocido del proyecto, y se sustituye su material SOLO mientras renderiza esta
+    // cámara por uno plano (Resources/Shaders/Mat_MinimapAgua) — igual de "agua" a simple vista, pero
+    // sin depender de la cámara que lo mira.
+    static bool EsShaderDeAgua(Shader shader)
+    {
+        if (shader == null) return false;
+        var nombre = shader.name;
+        return nombre.Contains("Eldoria/Agua") || nombre.Contains("WaterURP");
+    }
+
+    void CacheWaterRenderersOnce()
+    {
+        if (_waterCacheReady) return;
+        _waterCacheReady = true;
+
+        _minimapWaterMaterial = Resources.Load<Material>("Shaders/Mat_MinimapAgua");
+        if (_minimapWaterMaterial == null)
+        {
+            _waterRenderers = System.Array.Empty<Renderer>();
+            return;
+        }
+
+        var encontrados = new System.Collections.Generic.List<Renderer>();
+        foreach (var renderer in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+        {
+            if (EsShaderDeAgua(renderer.sharedMaterial != null ? renderer.sharedMaterial.shader : null))
+                encontrados.Add(renderer);
+        }
+        _waterRenderers = encontrados.ToArray();
+        _waterOriginalMaterials = new Material[_waterRenderers.Length];
+    }
+
+    void ApplyMinimapWaterOverride()
+    {
+        if (_minimapWaterOverrideActive || _waterRenderers == null || _minimapWaterMaterial == null) return;
+
+        for (int i = 0; i < _waterRenderers.Length; i++)
+        {
+            var renderer = _waterRenderers[i];
+            if (renderer == null) continue; // pudo destruirse tras el cacheo inicial
+            _waterOriginalMaterials[i] = renderer.sharedMaterial;
+            renderer.sharedMaterial = _minimapWaterMaterial;
+        }
+        _minimapWaterOverrideActive = true;
+    }
+
+    void RestoreMinimapWaterOverride()
+    {
+        if (!_minimapWaterOverrideActive) return;
+
+        for (int i = 0; i < _waterRenderers.Length; i++)
+        {
+            var renderer = _waterRenderers[i];
+            if (renderer == null) continue;
+            renderer.sharedMaterial = _waterOriginalMaterials[i];
+        }
+        _minimapWaterOverrideActive = false;
     }
 
     /// <summary>

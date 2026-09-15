@@ -2204,8 +2204,10 @@ public class TagMinigameController : MonoBehaviour
         chaser.CatchDistance = catchDistance;
         chaser.Acceleration = chaserAcceleration;
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[TagMinigame] ⚡ Dificultad aplicada: Velocidad {_originalChaserSpeed} → {chaserSpeed}, " +
                   $"Captura {_originalCatchDistance} → {catchDistance}, Aceleración: {chaserAcceleration}");
+        #endif
     }
     
     /// <summary>
@@ -2372,7 +2374,11 @@ public class TagMinigameController : MonoBehaviour
         else
         {
             if (angerVFXPrefab == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TagMinigame] ⚠️ No hay prefab de VFX (angerVFXPrefab) asignado");
+                #endif
+            }
         }
         
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

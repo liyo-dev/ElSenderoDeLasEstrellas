@@ -267,7 +267,12 @@ namespace Game.NPC
     {
         if (!IsPostDefeatDialogueFinished)
         {
-            if (showDebugLogs) Debug.LogWarning($"[NPCCombatTeam] {name}: ⚠️ FORZANDO finalización de diálogo post-derrota");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning($"[NPCCombatTeam] {name}: ⚠️ FORZANDO finalización de diálogo post-derrota");
+                #endif
+            }
             IsPostDefeatDialogueFinished = true;
             
             // Cancelar dizzy en todos los miembros para que procedan
@@ -534,24 +539,30 @@ namespace Game.NPC
         // ve primero habla primero, luego el resto — así se siente como un equipo sin necesitar
         // un único diálogo compartido escrito a mano para cada combinación posible". Antes solo
         // sonaba leaderConfig.dialogueOnAlert (la frase del líder, siempre, sin importar quién
-        // detectó); ahora se recorre el equipo completo empezando por el detector.
+        // detectó); se pasó a recorrer el equipo completo empezando por el detector.
         //
-        // 2. Orden de habla: detector primero (si está vivo y tiene dialogueOnAlert), luego el
-        // resto del equipo en el orden en que fueron añadidos (líder incluido si no fue él quien
-        // detectó). La cámara se mantiene enfocando a TODO el equipo durante toda la secuencia
-        // (mismo _groupFocusAnchor, sin cortes) — solo cambia el ORDEN de las líneas, no el estilo
-        // de cámara.
+        // 🔧 FIX (9 sept 2026): "detector primero" rompía el guion en Lety+Vicky. Sus líneas de
+        // alerta están escritas dando por hecho un orden fijo — las de Lety son la apertura
+        // ("Mira Vicky, una presa fácil"), las de Vicky son una RESPUESTA que nombra a Lety
+        // explícitamente ("Ya veo Lety... atento muchacho..."). Cuando quien detectaba primero al
+        // jugador era Vicky (depende de la posición/orientación de cada una, no es controlable),
+        // sus líneas de respuesta sonaban primero, como si Lety no llegara a hablar — exactamente
+        // lo que reportó Raúl ("empieza directamente con 'ya veo lety...'"). Las dos SÍ hablaban,
+        // solo que en el orden equivocado para este guion concreto.
+        //
+        // 2. Orden de habla: ahora siempre el orden de la lista del equipo (líder primero, luego
+        // el resto en el orden en que fueron añadidos) — ya NO depende de quién detectó al
+        // jugador. Sigue siendo "cada NPC con su propia frase", solo que el orden es estable y
+        // predecible en vez de variar según quién detecta. La cámara se mantiene enfocando a TODO
+        // el equipo durante toda la secuencia (mismo _groupFocusAnchor, sin cortes).
         if (DialogueManager.Instance != null)
         {
             UpdateGroupFocusAnchor();
 
             var speakOrder = new List<NPCBehaviourManagerV2>(_allMembers.Count);
-            if (detector != null && _allMembers.Contains(detector) && detector.gameObject.activeInHierarchy)
-                speakOrder.Add(detector);
             foreach (var member in _allMembers)
             {
                 if (member == null || !member.gameObject.activeInHierarchy) continue;
-                if (member == detector) continue; // ya añadido primero
                 speakOrder.Add(member);
             }
 

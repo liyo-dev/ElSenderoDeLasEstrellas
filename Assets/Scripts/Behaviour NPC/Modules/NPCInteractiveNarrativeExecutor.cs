@@ -9,6 +9,17 @@ using Invector.vCharacterController;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO desde antes de esta sesión (CLAUDE.md § 5 / TDD § 10) — NO
+    // añadir NarrativeActionType nuevos ni NPCs nuevos a su catálogo. Sustituto
+    // en el grafo: WaitNpcInteractionNode (reentrante) + BranchQuestStateNode/
+    // BranchFlagNode + PlayDialogueNode/DialogueChoiceNode. Las acciones únicas
+    // que este motor cubre y el grafo aún no (LeadPlayerToAnchor, MoveNearPlayer,
+    // TeleportNearPlayer, JoinParty/LeaveParty, bucle ambiental) son el hueco
+    // real nº 1 del catálogo (falta NpcActionNode). Sigue vivo, sin excepciones,
+    // en MainWorld_old.unity.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2 y § 5.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Ejecutor de cadenas narrativas interactivas.
     /// Procesa secuencialmente acciones (Hablar, Moverse, Combatir) configuradas en NPCInteractiveNarrativeConfig.
@@ -19,6 +30,12 @@ namespace Game.NPC.Modules
 
         #region 🔌 Dependencies
         private NPCBehaviourManagerV2 _npcManager;
+        // Campos de detección/icono narrativo movidos aquí desde NPCBehaviourManagerV2 el 12 sept
+        // 2026 (ver NarrativeActor.cs) — NPCBehaviourManagerV2.EnsureRequiredComponents() garantiza
+        // que exista en cualquier NPC con este módulo activo, pero se admite null por seguridad
+        // (con los valores por defecto que tenían los campos originales) para prefabs antiguos que
+        // no hayan vuelto a pasar por Awake() con el código nuevo.
+        private NarrativeActor _narrativeActor;
         private NPCInteractiveNarrativeConfig _config;
         private NPCAlertIconController _alertIconController;
         private Interactable _interactable; // Caché del componente
@@ -116,9 +133,10 @@ namespace Game.NPC.Modules
         private void Awake()
         {
             _npcManager = GetComponent<NPCBehaviourManagerV2>();
+            _narrativeActor = GetComponent<NarrativeActor>();
             _interactable = GetComponent<Interactable>();
-            
-            if (_npcManager == null) 
+
+            if (_npcManager == null)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ Falta NPCBehaviourManagerV2");
@@ -242,7 +260,12 @@ namespace Game.NPC.Modules
 
                 if (narrative.CanExecute())
                 {
-                    if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque step {stepIndex} de quest '{questId}' fue completado");
+                    if (verboseLogging)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque step {stepIndex} de quest '{questId}' fue completado");
+                        #endif
+                    }
                     StartCoroutine(AutoExecuteNarrative(narrative));
                     return;
                 }
@@ -270,7 +293,12 @@ namespace Game.NPC.Modules
                 // Verificar si puede ejecutarse (condición cumplida y no usada si es singleUse)
                 if (narrative.CanExecute())
                 {
-                    if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque quest '{questId}' cumplió condición {expectedConditionType}");
+                    if (verboseLogging)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque quest '{questId}' cumplió condición {expectedConditionType}");
+                        #endif
+                    }
                     
                     // Ejecutar la narrativa
                     StartCoroutine(AutoExecuteNarrative(narrative));
@@ -389,7 +417,12 @@ namespace Game.NPC.Modules
             // Esto previene que eventos pendientes de sesiones anteriores reactiven narrativas ya completadas
             if (narrative.singleUse && narrative.HasBeenExecuted)
             {
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya fue ejecutada (singleUse)");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya fue ejecutada (singleUse)");
+                    #endif
+                }
                 // FIX A5 (auditoría 2026-08-07): este ejecutor puede suscribirse a la señal ANTES
                 // que el WaitCustomEventNode del grafo narrativo (orden de carga: el executor se
                 // re-suscribe en OnSignalsReset antes de que los runners restauren blackboards).
@@ -410,7 +443,12 @@ namespace Game.NPC.Modules
                     string narrativeId = GetConditionalNarrativeId(System.Array.IndexOf(_config.conditionalNarratives, narrative));
                     if (preset.completedInteractiveNarratives.Contains(narrativeId))
                     {
-                        if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya completada en preset");
+                        if (verboseLogging)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya completada en preset");
+                            #endif
+                        }
                         // FIX A5 (auditoría 2026-08-07): mismo razonamiento que arriba.
                         DefaultNarrativeSignals.Instance?.RequeueCustom(eventKey);
                         return;
@@ -421,14 +459,24 @@ namespace Game.NPC.Modules
             // Marcar que el evento fue recibido
             narrative.condition.MarkCustomEventReceived();
             
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 📨 Evento custom '{eventKey}' recibido para narrativa '{narrative.description}'");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor:{name}] 📨 Evento custom '{eventKey}' recibido para narrativa '{narrative.description}'");
+                #endif
+            }
             
             // Si tiene autoExecuteOnQuestConditionMet, auto-ejecutar (el bucle ambiental no bloquea esto)
             if (narrative.autoExecuteOnQuestConditionMet && !IsBusyWithRealNarrative())
             {
                 if (narrative.CanExecute())
                 {
-                    if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' por evento custom '{eventKey}'");
+                    if (verboseLogging)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' por evento custom '{eventKey}'");
+                        #endif
+                    }
                     StartCoroutine(AutoExecuteNarrative(narrative));
                 }
             }
@@ -541,7 +589,7 @@ namespace Game.NPC.Modules
 
                 if (needsIconController
                     || _npcManager.Configuration.combatConfig?.alertIconPrefab != null
-                    || _npcManager.NarrativeAlertIconPrefab != null
+                    || _narrativeActor?.NarrativeAlertIconPrefab != null
                     || _config.alertIconPrefab != null)
                 {
                     _alertIconController = gameObject.AddComponent<NPCAlertIconController>();
@@ -729,7 +777,12 @@ namespace Game.NPC.Modules
                 var entry = chain[i];
                 _currentActionIndex = i;
                 
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] -> Executing Action #{i}: {entry.actionType}");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] -> Executing Action #{i}: {entry.actionType}");
+                    #endif
+                }
 
                 if (entry.sendNarrativeEvent && entry.sendEventOnStart)
                     SendNarrativeEvent(entry.narrativeEventKey);
@@ -789,7 +842,12 @@ namespace Game.NPC.Modules
             if (!wasAmbientLoop)
             {
                 _lastExecutionEndTime = Time.time;
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ⏱️ Narrativa finalizada - Cooldown activo hasta {_lastExecutionEndTime + POST_EXECUTION_COOLDOWN:F2}s");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ⏱️ Narrativa finalizada - Cooldown activo hasta {_lastExecutionEndTime + POST_EXECUTION_COOLDOWN:F2}s");
+                    #endif
+                }
             }
         }
 
@@ -1159,8 +1217,10 @@ namespace Game.NPC.Modules
                 var foundAnchor = SpawnAnchor.FindById(entry.targetAnchorName);
                 if (foundAnchor == null)
                 {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No se encontró anchor con ID '{entry.targetAnchorName}'. " +
                                    $"Anchors registrados: [{string.Join(", ", AnchorRegistry.All.Keys)}]");
+                    #endif
                     yield break;
                 }
             }
@@ -1467,7 +1527,12 @@ namespace Game.NPC.Modules
                 gameObject.AddComponent<NPCCombatLifecycleHandler>();
             }
             
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor] ✅ NPC preparado para combate - esperando detección natural del jugador");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor] ✅ NPC preparado para combate - esperando detección natural del jugador");
+                #endif
+            }
             yield break;
         }
 
@@ -1476,7 +1541,12 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteJoinParty()
         {
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🤝 Intentando unir al party...");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor:{name}] 🤝 Intentando unir al party...");
+                #endif
+            }
             
             var partyMember = GetComponent<Game.NPC.NPCPartyMember>();
             if (partyMember == null)
@@ -1486,7 +1556,12 @@ namespace Game.NPC.Modules
                 {
                     partyMember = gameObject.AddComponent<Game.NPC.NPCPartyMember>();
                     partyMember.SetConfig(_npcManager.Configuration.partyConfig);
-                    if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🤝 NPCPartyMember creado dinámicamente");
+                    if (verboseLogging)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NarrativeExecutor:{name}] 🤝 NPCPartyMember creado dinámicamente");
+                        #endif
+                    }
                 }
                 else
                 {
@@ -1500,12 +1575,22 @@ namespace Game.NPC.Modules
             // ✅ NUEVO: Verificar si YA está en el party antes de intentar unirse
             if (partyMember.IsInParty)
             {
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} YA está en el party, acción JoinParty ignorada");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} YA está en el party, acción JoinParty ignorada");
+                    #endif
+                }
                 
                 // ✅ FIX: Activar cooldown largo para evitar que la narrativa se ejecute en bucle
                 // Si ya está en el party, no tiene sentido seguir intentándolo
                 _joinPartyFailedUntil = Time.time + JOIN_PARTY_FAILED_COOLDOWN;
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ⏰ Cooldown de {JOIN_PARTY_FAILED_COOLDOWN}s activado (ya en party)");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ⏰ Cooldown de {JOIN_PARTY_FAILED_COOLDOWN}s activado (ya en party)");
+                    #endif
+                }
                 
                 yield break;
             }
@@ -1513,7 +1598,12 @@ namespace Game.NPC.Modules
             bool success = partyMember.JoinParty();
             if (success)
             {
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ✨ {name} se unió al equipo del jugador");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ✨ {name} se unió al equipo del jugador");
+                    #endif
+                }
                 // ✅ Resetear cooldown de fallo si logra unirse
                 _joinPartyFailedUntil = -999f;
             }
@@ -1523,10 +1613,12 @@ namespace Game.NPC.Modules
                 if (Game.NPC.PlayerParty.HasInstance)
                 {
                     var party = Game.NPC.PlayerParty.Instance;
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No se pudo unir al equipo. " +
                         $"Miembros actuales: {party.MemberCount}/{party.MaxSize}. " +
                         $"¿Está lleno? {party.IsFull}. " +
                         $"⏰ Cooldown de {JOIN_PARTY_FAILED_COOLDOWN}s activado.");
+                    #endif
                     
                     // ✅ NUEVO: Activar cooldown largo para evitar spam de reintentos
                     _joinPartyFailedUntil = Time.time + JOIN_PARTY_FAILED_COOLDOWN;
@@ -1548,7 +1640,12 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteLeaveParty()
         {
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 👋 Intentando abandonar el party...");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor:{name}] 👋 Intentando abandonar el party...");
+                #endif
+            }
             
             var partyMember = GetComponent<Game.NPC.NPCPartyMember>();
             if (partyMember == null)
@@ -1561,14 +1658,24 @@ namespace Game.NPC.Modules
             
             if (!partyMember.IsInParty)
             {
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} no está en el equipo");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} no está en el equipo");
+                    #endif
+                }
                 yield break;
             }
             
             bool success = partyMember.LeaveParty();
             if (success)
             {
-                if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 👋 {name} abandonó el equipo del jugador");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NarrativeExecutor:{name}] 👋 {name} abandonó el equipo del jugador");
+                    #endif
+                }
             }
             
             yield return null;
@@ -1580,7 +1687,12 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteCheckPartyMembers()
         {
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] 🔍 Verificando party members para quests activas...");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor:{name}] 🔍 Verificando party members para quests activas...");
+                #endif
+            }
             
             var questManager = QuestManager.Instance;
             if (questManager == null)
@@ -1642,7 +1754,12 @@ namespace Game.NPC.Modules
                 yield break;
             }
             
-            if (verboseLogging) Debug.Log($"[NarrativeExecutor:{name}] ✅ Executing PostNarrativeState: {narrativeData.postNarrativeState} for narrative '{narrativeData.description}'");
+            if (verboseLogging)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NarrativeExecutor:{name}] ✅ Executing PostNarrativeState: {narrativeData.postNarrativeState} for narrative '{narrativeData.description}'");
+                #endif
+            }
             
             switch (narrativeData.postNarrativeState)
             {
@@ -1686,7 +1803,8 @@ namespace Game.NPC.Modules
                 if (_player != null)
                 {
                     float dist = Vector3.Distance(transform.position, _player.position);
-                    if (dist <= _npcManager.NarrativeDetectionRange)
+                    float detectionRange = _narrativeActor != null ? _narrativeActor.NarrativeDetectionRange : 10f;
+                    if (dist <= detectionRange)
                     {
                         _hasDetectedPlayer = true;
 
@@ -1808,20 +1926,23 @@ namespace Game.NPC.Modules
             var combatConfig = _npcManager.Configuration.combatConfig;
             float alertDuration = combatConfig?.alertIconDuration ?? 1f;
 
-            if (_npcManager.WalkTowardsPlayerOnAlert && _player != null)
+            bool walkTowardsPlayerOnAlert = _narrativeActor == null || _narrativeActor.WalkTowardsPlayerOnAlert;
+            float stopDistanceFromPlayer = _narrativeActor != null ? _narrativeActor.StopDistanceFromPlayer : 2f;
+
+            if (walkTowardsPlayerOnAlert && _player != null)
             {
                 var agent = _npcManager.Agent;
                 if (agent && agent.isOnNavMesh)
                 {
                     agent.isStopped = false;
-                    agent.stoppingDistance = _npcManager.StopDistanceFromPlayer;
+                    agent.stoppingDistance = stopDistanceFromPlayer;
                     float t = 0;
 
                     while (t < alertDuration)
                     {
                         agent.SetDestination(_player.position);
                         _npcManager.SimpleAnimator?.SetMovementSpeed(agent.velocity.magnitude / agent.speed);
-                        if (Vector3.Distance(transform.position, _player.position) <= _npcManager.StopDistanceFromPlayer) break;
+                        if (Vector3.Distance(transform.position, _player.position) <= stopDistanceFromPlayer) break;
                         t += Time.deltaTime;
                         yield return null;
                     }

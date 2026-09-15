@@ -145,8 +145,20 @@ public class PartyControlManager : MonoBehaviour
 
     private void TrySwitchLeft()
     {
-        if (_switchingLocked) { Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}"); return; }
-        if (!IsSwapAllowedByCurrentMode()) { Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite swap ({_actionManager?.Top})."); return; }
+        if (_switchingLocked)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}");
+            #endif
+            return;
+        }
+        if (!IsSwapAllowedByCurrentMode())
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
+            #endif
+            return;
+        }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchLeft — _activeIndex={_activeIndex}");
@@ -166,8 +178,20 @@ public class PartyControlManager : MonoBehaviour
 
     private void TrySwitchRight()
     {
-        if (_switchingLocked) { Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}"); return; }
-        if (!IsSwapAllowedByCurrentMode()) { Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite swap ({_actionManager?.Top})."); return; }
+        if (_switchingLocked)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}");
+            #endif
+            return;
+        }
+        if (!IsSwapAllowedByCurrentMode())
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
+            #endif
+            return;
+        }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[PartyControlManager] TrySwitchRight — _activeIndex={_activeIndex}");

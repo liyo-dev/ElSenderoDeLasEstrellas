@@ -35,6 +35,45 @@ public abstract class NarrativeNode
 
     public abstract void Enter(NarrativeContext ctx, Action onReadyToAdvance);
     public virtual void Exit(NarrativeContext ctx) {}
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Puertos de salida con nombre (Septiembre 2026 — sistema narrativo único)
+    //
+    // Hasta ahora un nodo tenía UN solo puerto de salida y varias aristas desde él
+    // significaban FORK (todas las ramas corren en paralelo). Eso hacía imposible
+    // expresar una bifurcación real ("si la quest está activa → A, si no → B").
+    //
+    // Un nodo que devuelva aquí un array de nombres declara N puertos de salida
+    // independientes: `outputs[i]` es el destino del puerto i (cadena vacía = sin
+    // conectar). El nodo elige por qué puerto avanzar llamando a
+    // AdvanceThrough(ctx, ready, i). El runner NUNCA trata esos nodos como fork.
+    //
+    // null (por defecto) = comportamiento legacy: un puerto, multi-arista = fork.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Nombres de los puertos de salida, o null si el nodo usa el puerto único legacy.</summary>
+    public virtual string[] GetOutputPorts() => null;
+
+    /// <summary>true si el nodo declara puertos con nombre (bifurcación real, nunca fork).</summary>
+    public bool HasNamedOutputs => GetOutputPorts() != null;
+
+    /// <summary>Destino (guid) del puerto i, o null si no está conectado.</summary>
+    public string GetOutputGuid(int portIndex)
+    {
+        if (outputs == null || portIndex < 0 || portIndex >= outputs.Count) return null;
+        var g = outputs[portIndex];
+        return string.IsNullOrEmpty(g) ? null : g;
+    }
+
+    /// <summary>
+    /// Avanza por el puerto indicado. Registra la elección en el runner y luego invoca
+    /// el callback de "listo para avanzar" que recibió Enter().
+    /// </summary>
+    protected void AdvanceThrough(NarrativeContext ctx, Action onReadyToAdvance, int portIndex)
+    {
+        ctx?.Runner?.SelectOutput(this, portIndex);
+        onReadyToAdvance?.Invoke();
+    }
 }
 
 public sealed class NarrativeContext

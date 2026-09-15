@@ -18,13 +18,19 @@ EditorBuildSettings:
     path: Assets/Scenes/Systems/LoadingScreen.unity
     guid: 5cb44718191ab514b97c5d316490f097
   - enabled: 1
-    path: Assets/Scenes/Worlds/MainWorld.unity
-    guid: dc950ffe35d587b4cb76b17b86c42275
-  - enabled: 1
     path: Assets/Scenes/Worlds/CandyLand.unity
     guid: f95ca88fd3371d848bbceaa2f36fad80
   - enabled: 1
     path: Assets/Scenes/Systems/Credits.unity
     guid: 6a1c80849cb11764a88ff809dd3b48bd
+  - enabled: 1
+    path: Assets/Scenes/Worlds/Sendero_PruebaWill.unity
+    guid: 570448328f0a8b04c974125e8c484df1
+  - enabled: 1
+    path: Assets/Scenes/Worlds/MainWorld.unity
+    guid: 4847edc72f9f7ce49a94d9e03f0992ef
+  - enabled: 1
+    path: Assets/Scenes/Interior/WillHouse.unity
+    guid: 01da7ed29631ca74da182db312170889
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

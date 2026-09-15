@@ -68,6 +68,23 @@ using UnityEngine.Rendering;
 /// distancia. <see cref="departureAlphaFraction"/> queda SIN USO por el mismo motivo que
 /// <see cref="syncWithRainDarken"/>/<see cref="fadeDuration"/> (se deja serializado para no perder
 /// el valor ya ajustado en las escenas existentes). Ver <see cref="cutDepartingCloudsOutsideCamera"/>.
+///
+/// 12 sep 2026 — INCIDENCIA "el sistema de lluvia es un horror, las nubes van muy rápido y llegan
+/// hasta muy lejos" (Raúl): revisado en el Inspector real de MainWorld.unity (DayNightSystem →
+/// Cloud Cover Spawner). Causa raíz encontrada: <see cref="scaleRange"/> estaba en (10, 18) en vez
+/// de (0.8, 1.5) — con los prefabs QuibliRainCloud3D normalizados a ~25-33 unidades de ancho a
+/// escala 1, eso escalaba cada nube a 250-600 unidades: nubes gigantescas, de ahí la sensación de
+/// "llegan hasta muy lejos" y de movimiento muy rápido (un objeto tan grande recorriendo su
+/// trayecto en los mismos segundos de siempre se percibe mucho más veloz). El mismo bug explica el
+/// warning constante de <see cref="ApplySafetyClearance"/> en consola: con nubes tan grandes,
+/// <see cref="cloudHeight"/> (que además estaba en 85, no en el 130 ya documentado más abajo) se
+/// quedaba corto casi siempre. Corregido directamente en la escena (scaleRange 0.8-1.5, cloudHeight
+/// 140) y aquí en los valores por defecto, y además se ha alargado la transición de llegada/partida
+/// (<see cref="waveSpreadDuration"/> 14→20, <see cref="perCloudTravelDuration"/> 9→13,
+/// <see cref="departureDurationMultiplier"/> 1.3→1.5, <see cref="arrivalExtraDistance"/> 220→170)
+/// para que tanto empezar como dejar de llover se note más gradual. Se añade <see cref="OnValidate"/>
+/// para que un futuro despiste de este tipo (un multiplicador tecleado como si fuera un porcentaje
+/// entero) avise en vez de pasar desapercibido hasta verse en juego.
 /// </summary>
 public class CloudCoverSpawner : MonoBehaviour
 {
@@ -100,15 +117,15 @@ public class CloudCoverSpawner : MonoBehaviour
     [Header("Nubes")]
     [Tooltip("Prefabs de nube a repartir por el techo. Recomendado: QuibliRainCloud3D_1..4 (Assets/Prefabs/VFX/), mallas Cloud3D de Quibli como las del [Demo] SampleSceneWithQuibli. Se elige uno al azar por instancia.")]
     [SerializeField] private GameObject[] cloudPrefabs;
-    [Tooltip("Altura sobre el jugador a la que se coloca el CENTRO del techo de nubes la PRIMERA vez que se construye (después el techo queda fijo en el mundo, no vuelve a recalcularse aunque el jugador se mueva). Las nubes NO tienen collider, así que si el jugador puede volar (PlayerFlyingController) las atraviesa sin más: por debajo se ve el cielo cubierto, por encima el cielo/skybox normal (el skybox nunca se toca, así que el sol sigue ahí arriba). Si minClearanceAboveFollowTarget detecta que esta altura no basta para las mallas ya escaladas, se sube automáticamente. 25 ago 2026: subido de 90 a 130 (con heightJitter 12→16 y arrivalExtraHeight 50→65 en la misma proporción) — Raúl reportó que las nubes de tormenta se seguían viendo demasiado bajas/raras al llover incluso tras el fix del 24 ago (INC-098, que era otro sistema, el de nubes ambientales sueltas). Puramente estético: si sigue sin verse bien, seguir subiendo este valor (y los otros dos en proporción) es directo, no hace falta tocar más código.")]
-    [SerializeField] private float cloudHeight = 130f;
+    [Tooltip("Altura sobre el jugador a la que se coloca el CENTRO del techo de nubes la PRIMERA vez que se construye (después el techo queda fijo en el mundo, no vuelve a recalcularse aunque el jugador se mueva). Las nubes NO tienen collider, así que si el jugador puede volar (PlayerFlyingController) las atraviesa sin más: por debajo se ve el cielo cubierto, por encima el cielo/skybox normal (el skybox nunca se toca, así que el sol sigue ahí arriba). Si minClearanceAboveFollowTarget detecta que esta altura no basta para las mallas ya escaladas, se sube automáticamente. 25 ago 2026: subido de 90 a 130 (con heightJitter 12→16 y arrivalExtraHeight 50→65 en la misma proporción) — Raúl reportó que las nubes de tormenta se seguían viendo demasiado bajas/raras al llover incluso tras el fix del 24 ago (INC-098, que era otro sistema, el de nubes ambientales sueltas). Puramente estético: si sigue sin verse bien, seguir subiendo este valor (y los otros dos en proporción) es directo, no hace falta tocar más código. 12 sep 2026: subido a 140 al arreglar el bug real de scaleRange (ver tooltip de scaleRange) — la escena tenía este valor pisado a 85, muy por debajo incluso del 130 ya documentado aquí, lo que sumado al scaleRange desbocado disparaba SIEMPRE la corrección de ApplySafetyClearance.")]
+    [SerializeField] private float cloudHeight = 140f;
     [Tooltip("Radio horizontal alrededor del jugador que cubre el techo de nubes. Cuanto más grande, menos se nota el borde del área cubierta, pero más instancias hacen falta.")]
     [SerializeField] private float coverRadius = 150f;
     [Tooltip("Separación aproximada entre nubes de la rejilla. Más bajo = más denso = tapa mejor el cielo, pero más nubes instanciadas (y más overdraw con quads transparentes).")]
     [SerializeField] private float cellSize = 30f;
     [Tooltip("Variación aleatoria de posición dentro de cada celda de la rejilla, para que no se note el patrón regular.")]
     [SerializeField, Range(0f, 1f)] private float jitter = 0.5f;
-    [Tooltip("Escala mínima/máxima aplicada a cada nube, MULTIPLICANDO la escala base del prefab (los QuibliRainCloud3D_X ya vienen normalizados a ~25-33 unidades de ancho a escala 1). Con 0.8-1.5 y cellSize 30 las nubes se tocan/solapan lo justo para leerse como un techo de tormenta sin dejar huecos grandes. minClearanceAboveFollowTarget protege contra el caso de que la cámara acabe dentro de una nube.")]
+    [Tooltip("Escala mínima/máxima aplicada a cada nube, MULTIPLICANDO la escala base del prefab (los QuibliRainCloud3D_X ya vienen normalizados a ~25-33 unidades de ancho a escala 1). Con 0.8-1.5 y cellSize 30 las nubes se tocan/solapan lo justo para leerse como un techo de tormenta sin dejar huecos grandes. minClearanceAboveFollowTarget protege contra el caso de que la cámara acabe dentro de una nube. BUG encontrado y corregido 12 sep 2026: en MainWorld.unity este campo estaba en (10, 18) en vez de (0.8, 1.5) — casi 15x el valor pensado, probablemente tecleado como si fuera un porcentaje entero en vez del multiplicador real. Con eso cada nube salía escalada a 250-600 unidades de ancho: nubes gigantescas que 'llegaban muy lejos' y se veían moverse rapidísimo (un objeto tan grande cruzando su trayecto en los mismos segundos de siempre se percibe mucho más rápido), y que además obligaban a ApplySafetyClearance() a subir el techo automáticamente CADA VEZ (de ahí el warning constante en consola). Ver OnValidate() más abajo, que ahora avisa si esto vuelve a pasar.")]
     [SerializeField] private Vector2 scaleRange = new Vector2(0.8f, 1.5f);
     [Tooltip("Límite de seguridad de instancias, por si coverRadius/cellSize generan una rejilla enorme.")]
     [SerializeField] private int maxCloudInstances = 300;
@@ -143,18 +160,18 @@ public class CloudCoverSpawner : MonoBehaviour
     [SerializeField] private bool billboard = true;
 
     [Header("Llegada y partida (nubes progresivas)")]
-    [Tooltip("Distancia EXTRA (más allá de su hueco en la rejilla, medida en horizontal desde el centro del techo) a la que espera cada nube antes de que le toque formarse, y hasta la que se aleja al irse. Así las nubes 'vienen de lejos' hacia su sitio en vez de aparecer ya puestas.")]
-    [SerializeField] private float arrivalExtraDistance = 220f;
+    [Tooltip("Distancia EXTRA (más allá de su hueco en la rejilla, medida en horizontal desde el centro del techo) a la que espera cada nube antes de que le toque formarse, y hasta la que se aleja al irse. Así las nubes 'vienen de lejos' hacia su sitio en vez de aparecer ya puestas. 12 sep 2026: bajado de 220 a 170 al corregir el bug de scaleRange (ver su tooltip) — con las nubes ya en su tamaño real (no 15x de más), 220 unidades de viaje extra hacían el trayecto más largo de lo que hacía falta para leerse bien; ajustar junto con waveSpreadDuration/perCloudTravelDuration si se quiere que la llegada se note más o menos lenta.")]
+    [SerializeField] private float arrivalExtraDistance = 170f;
     [Tooltip("Altura EXTRA sobre su posición final desde la que desciende cada nube al llegar (y a la que vuelve a subir al irse), para reforzar la sensación de que vienen 'de lo alto y lejos' en vez de solo cruzar en horizontal.")]
     [SerializeField] private float arrivalExtraHeight = 65f;
-    [Tooltip("Cuánto tarda en completarse la OLA de llegada/partida a lo largo de TODA la rejilla: la primera nube empieza a moverse en el instante 0, la última 'waveSpreadDuration' segundos después. Cuanto más alto, más se nota que las nubes se van acumulando una a una en vez de aparecer todas a la vez. Campo nuevo — no lo pisa ninguna escena existente, así que este valor por defecto ya se aplica tal cual.")]
-    [SerializeField] private float waveSpreadDuration = 14f;
-    [Tooltip("Cuánto tarda CADA nube, individualmente, en recorrer su propio trayecto lejos→hueco (o hueco→lejos al irse) una vez le toca el turno dentro de la ola. Se multiplica por un factor aleatorio por nube (ver durationJitter) para que no todas tarden exactamente lo mismo. Campo nuevo, mismo motivo que el anterior.")]
-    [SerializeField] private float perCloudTravelDuration = 9f;
+    [Tooltip("Cuánto tarda en completarse la OLA de llegada/partida a lo largo de TODA la rejilla: la primera nube empieza a moverse en el instante 0, la última 'waveSpreadDuration' segundos después. Cuanto más alto, más se nota que las nubes se van acumulando una a una en vez de aparecer todas a la vez. 12 sep 2026: subido de 14 a 20 — Raúl reportó que tanto el inicio como el fin de la lluvia se veían demasiado rápidos (ver también el bug de scaleRange, que agravaba la sensación de velocidad al mover nubes gigantescas).")]
+    [SerializeField] private float waveSpreadDuration = 20f;
+    [Tooltip("Cuánto tarda CADA nube, individualmente, en recorrer su propio trayecto lejos→hueco (o hueco→lejos al irse) una vez le toca el turno dentro de la ola. Se multiplica por un factor aleatorio por nube (ver durationJitter) para que no todas tarden exactamente lo mismo. 12 sep 2026: subido de 9 a 13, mismo motivo que waveSpreadDuration.")]
+    [SerializeField] private float perCloudTravelDuration = 13f;
     [Tooltip("Variación aleatoria (±) del factor que multiplica perCloudTravelDuration en cada nube, para romper la sincronía perfecta entre nubes.")]
     [SerializeField, Range(0f, 0.9f)] private float durationJitter = 0.35f;
-    [Tooltip("Multiplicador de perCloudTravelDuration SOLO al irse (tras RainStopped), para que la despedida se sienta un poco más pausada que la llegada ('se van yendo poco a poco'). 1 = misma duración que al llegar.")]
-    [SerializeField, Range(1f, 3f)] private float departureDurationMultiplier = 1.3f;
+    [Tooltip("Multiplicador de perCloudTravelDuration SOLO al irse (tras RainStopped), para que la despedida se sienta un poco más pausada que la llegada ('se van yendo poco a poco'). 1 = misma duración que al llegar. 12 sep 2026: subido de 1.3 a 1.5 junto con el resto de ajustes de velocidad.")]
+    [SerializeField, Range(1f, 3f)] private float departureDurationMultiplier = 1.5f;
 
     [Header("Corte por cámara (fix real de 'las nubes desaparecen de golpe', 2ª pasada)")]
     [Tooltip("Sustituye a departureAlphaFraction (ver comentario de clase): en vez de adivinar con un porcentaje fijo cuándo una nube en PARTIDA va a salir del encuadre, se comprueba de verdad cada 'cameraCullCheckEveryNFrames' frames si su Bounds sigue dentro del frustum de la cámara de juego (Camera.main). En cuanto deja de estarlo, esa nube completa su formationT al instante (nadie puede ver el salto). Si se desactiva, las nubes en partida vuelven a animar alfa y posición 1:1 hasta el final de su trayecto SIN corte alguno — solo apto si algún día se resuelve lo del FOV limitado por otra vía (p.ej. una cámara de juego que sí mire hacia arriba sin límite).")]
@@ -224,6 +241,25 @@ public class CloudCoverSpawner : MonoBehaviour
 
         _mpb = new MaterialPropertyBlock();
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// FIX (12 sep 2026): protección de Inspector contra el bug real encontrado en MainWorld.unity
+    /// (ver comentario de clase) — <see cref="scaleRange"/> en (10, 18) en vez de (0.8, 1.5), casi
+    /// 15x el multiplicador pensado, probablemente tecleado como si fuera un porcentaje entero. Con
+    /// los prefabs de nube ya normalizados a ~25-33 unidades de ancho a escala 1, cualquier valor
+    /// por encima de este umbral produce nubes de cientos de unidades de ancho — nunca intencional
+    /// para este componente. Solo avisa (no fuerza el valor) para no pisar un ajuste artístico
+    /// deliberado que de verdad quiera nubes enormes en otra escena/prefab.
+    /// </summary>
+    void OnValidate()
+    {
+        if (scaleRange.x > 5f || scaleRange.y > 5f)
+        {
+            Debug.LogWarning($"[CloudCoverSpawner] scaleRange ({scaleRange.x:F2}, {scaleRange.y:F2}) parece demasiado alto: los prefabs de nube ya vienen normalizados a ~25-33 unidades de ancho a escala 1, así que valores como (10, 18) producen nubes de 250-600 unidades — probablemente un despiste (multiplicador tecleado como porcentaje entero). Si no es intencional, prueba algo en torno a (0.8, 1.5).", this);
+        }
+    }
+#endif
 
     void OnEnable()
     {

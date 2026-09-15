@@ -2731,6 +2731,18 @@ MonoBehaviour:
   _khOffsetY: 22
   _khCharScaleFrom: 1.35
   _khContainerZoom: 1.06
+  _letterFlyInOrigin: {x: 0, y: -220}
+  _letterFlyInScaleFrom: 2.2
+  _letterFlyInSpeed: 14
+  _letterFlyInCharDuration: 0.35
+  _irisMaterial: {fileID: 2100000, guid: ff622672aa0c418f833c59a866fbf027, type: 2}
+  _irisStartRadius: 0.05
+  _irisEndRadius: 0.85
+  _irisHoldDuration: 0.6
+  _irisGrowDuration: 1.1
+  _irisGrowEase: 7
+  _irisSoftness: 0.015
+  _irisCenter: {x: 0.5, y: 0.62}
 --- !u!1 &275104448
 GameObject:
   m_ObjectHideFlags: 0
@@ -12034,7 +12046,7 @@ GameObject:
   - component: {fileID: 1346714842}
   - component: {fileID: 1346714844}
   m_Layer: 0
-  m_Name: NarrativeSystem
+  m_Name: _NarrativeSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12068,8 +12080,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraphHub
   graphs:
-  - label: Historia Principal
-    graph: {fileID: 11400000, guid: b7b7637be2dc369419dbdc79e516e99d, type: 2}
+  - label: Cap1
+    graph: {fileID: 11400000, guid: 0ccd7df8706176c4d977297bc16d7e1c, type: 2}
     initialBlackboardValues: []
   - label: Misiones Secundarias
     graph: {fileID: 11400000, guid: 80e12093d4aa66c4385381a1e9909060, type: 2}

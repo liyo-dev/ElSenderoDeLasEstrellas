@@ -250,8 +250,10 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
     private void ApplyAlreadyPlayedState(string checkpoint)
     {
         bool seen = HasSequencePlayed();
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[EstelaAppearsSequencer] Comprobación 'secuencia ya vista' en {checkpoint}: {seen}. " +
             $"Arañas/guerreros deberían quedar {(seen ? "OCULTOS" : "visibles (sin cambios)")}.");
+        #endif
 
         if (!seen) return;
 

@@ -6,6 +6,7 @@ using UnityEngine;
 /// Si duration > 0 y waitForCompletion, el grafo espera a que se oculte automáticamente.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Diálogo", "Bocadillo", "Frase corta sobre la cabeza de un personaje.")]
 public sealed class ShowSpeechBubbleNode : NarrativeNode
 {
     [Tooltip("Tag del GameObject sobre el que aparece el bocadillo (ej: 'Player').")]
@@ -15,6 +16,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
     public string text;
 
     [Tooltip("ID de localización. Si no está vacío, sobreescribe 'text'.")]
+    [NarrativeKey(NarrativeKeyKind.LocKey)]
     public string textId;
 
     [Tooltip("Segundos antes de que el bocadillo desaparezca automáticamente. 0 = permanece.")]

@@ -25,9 +25,16 @@ public class AnchorEnvironment : MonoBehaviour
     
     [Tooltip("Si true, oculta automáticamente el mundo exterior (busca 'WorldRoot' o similar)")]
     public bool hideExteriorWorld = true;
-    
-    [Tooltip("Tag o nombre del GameObject raíz del mundo exterior (para ocultarlo automáticamente)")]
+
+    [Tooltip("OBSOLETO (14 sep 2026): ya no se lee. ApplyZoneVisibility() ahora oculta TODOS los " +
+             "ExteriorWorldRoot registrados en la escena automáticamente — basta con poner ese " +
+             "componente en el GameObject, no hace falta además listarlo aquí por nombre (ver " +
+             "EnvironmentController.cs). Se mantiene el campo, sin usarlo, para no perder el valor " +
+             "ya serializado en anchors existentes; puedes vaciarlo con tranquilidad.")]
     public string exteriorWorldRootName = "ExteriorWorld";
+
+    [Tooltip("OBSOLETO (14 sep 2026): ya no se lee, mismo motivo que exteriorWorldRootName de arriba.")]
+    public string[] exteriorWorldRootNames;
     
     [Header("Culling de Cámara")]
     [Tooltip("Si true, ajusta el far clip plane de la cámara para limitar qué se ve")]

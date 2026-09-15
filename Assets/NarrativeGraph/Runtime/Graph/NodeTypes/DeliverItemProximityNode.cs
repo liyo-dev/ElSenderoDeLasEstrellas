@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Objetos", "Entregar objeto por proximidad (legacy)", "")]
 [Obsolete("DeliverItemProximityNode eliminado - ya no usar. Sustituye por nodos específicos.")]
 public sealed class DeliverItemProximityNode : NarrativeNode
 {

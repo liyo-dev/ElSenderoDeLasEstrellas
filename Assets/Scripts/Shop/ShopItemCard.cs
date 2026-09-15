@@ -57,12 +57,20 @@ public class ShopItemCard : MonoBehaviour
         if (iconImage != null)
             iconImage.sprite = item.icon;
         else
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ShopItemCard] iconImage es null");
+            #endif
+        }
         
         if (nameText != null)
             nameText.text = item.GetLocalizedName();
         else
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ShopItemCard] nameText es null");
+            #endif
+        }
         
         if (priceText != null)
         {
@@ -74,7 +82,11 @@ public class ShopItemCard : MonoBehaviour
 #endif
         }
         else
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[ShopItemCard] priceText es NULL - no está asignado en el inspector");
+            #endif
+        }
 
         if (stockText != null)
         {

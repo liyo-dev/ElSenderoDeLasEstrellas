@@ -5,6 +5,7 @@ using UnityEngine;
 /// Añade un item al inventario del jugador desde el grafo narrativo.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Objetos", "Dar objeto", "Añade un objeto al inventario del jugador.")]
 public sealed class GiveInventoryItemNode : NarrativeNode
 {
     [Header("Item")]

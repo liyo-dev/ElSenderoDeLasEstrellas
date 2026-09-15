@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 /// El rollback narrativo (nodo al que volver si se aborta) se configura en el TagMinigameController.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Minijuegos", "Minijuego pilla-pilla", "")]
 public sealed class StartTagMinigameNode : NarrativeNode
 {
     [Tooltip("ID del minijuego (coincide con TagMinigameController.MinigameId).")]

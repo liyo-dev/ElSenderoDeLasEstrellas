@@ -152,17 +152,32 @@ namespace Game.NPC
         {
             if (!IsEligibleNow())
             {
-                if (debugMode) Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam no está libre para reaccionar ahora mismo.");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam no está libre para reaccionar ahora mismo.");
+                    #endif
+                }
                 return;
             }
             if (Time.time < _nextNudgeAllowedTime)
             {
-                if (debugMode) Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam ya reaccionó hace poco (cooldown).");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam ya reaccionó hace poco (cooldown).");
+                    #endif
+                }
                 return;
             }
             if (UnityEngine.Random.value > nudgeChance)
             {
-                if (debugMode) Debug.Log("[LiamIdleCommentary] Estela se sentó, pero esta vez Liam pasa de largo (tirada de dado).");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[LiamIdleCommentary] Estela se sentó, pero esta vez Liam pasa de largo (tirada de dado).");
+                    #endif
+                }
                 return;
             }
 
@@ -173,7 +188,12 @@ namespace Game.NPC
 
             string liamLine = PickLine(nudgeLines);
             string estelaLine = PickLine(estelaReplyLines);
-            if (debugMode) Debug.Log($"[LiamIdleCommentary] Reacciona a Estela sentada: Liam \"{liamLine}\" → Estela \"{estelaLine}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[LiamIdleCommentary] Reacciona a Estela sentada: Liam \"{liamLine}\" → Estela \"{estelaLine}\"");
+                #endif
+            }
 
             var sequence = new CompositeSequence();
             sequence.AddAction(new LiamNudgeEstelaAction(
@@ -241,7 +261,12 @@ namespace Game.NPC
             string line = PickLine(ambientComments);
             if (string.IsNullOrEmpty(line)) return;
 
-            if (debugMode) Debug.Log($"[LiamIdleCommentary] Comentario suelto: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[LiamIdleCommentary] Comentario suelto: \"{line}\"");
+                #endif
+            }
             SpeechBubbleUI.Instance?.Show(transform, line, bubbleDuration);
         }
 

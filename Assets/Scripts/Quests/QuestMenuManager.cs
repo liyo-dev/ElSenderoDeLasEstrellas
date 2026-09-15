@@ -186,7 +186,10 @@ public class QuestMenuManager : MonoBehaviour
         if (autoShowDelay > 0f)
             yield return new WaitForSecondsRealtime(autoShowDelay);
 
-        quickMenu.ShowPanel(true, ignoreRestrictions: true);
+        // isAutoToast:true -- este auto-show no debe registrarse como un menú real (ver
+        // QuestLogListUI.IsAutoToast e INC-199): si no, el minimapa y demás UI in-world se
+        // ocultarían solos cada vez que arranca una misión nueva.
+        quickMenu.ShowPanel(true, ignoreRestrictions: true, isAutoToast: true);
         _autoShowRoutine = null;
     }
 
@@ -350,7 +353,11 @@ public class QuestMenuManager : MonoBehaviour
 
     void RefreshMenuRegistration()
     {
-        bool anyOpen = (mainMenu != null && mainMenu.IsOpen) || (quickMenu != null && quickMenu.IsVisible);
+        // El aviso automático de "nueva misión" (quickMenu.IsAutoToast) NO cuenta como menú real:
+        // solo lo abierto a mano por el jugador (D-pad arriba) registra MenuKind.Mission y oculta
+        // el minimapa/UI in-world (INC-199 -- antes se ocultaban también con el aviso automático).
+        bool quickMenuIsRealMenu = quickMenu != null && quickMenu.IsVisible && !quickMenu.IsAutoToast;
+        bool anyOpen = (mainMenu != null && mainMenu.IsOpen) || quickMenuIsRealMenu;
         bool mainMenuOpen = mainMenu != null && mainMenu.IsOpen;
 
         if (anyOpen)

@@ -1,5 +1,14 @@
 using UnityEngine;
 
+// ───────────────────────────────────────────────────────────────────────────
+// CONGELADO (12 sept 2026) — uno de los 7 micro-componentes de quest legacy.
+// Sustituto: BranchQuestStateNode del grafo decidiendo, + el propio grafo
+// desactivando el GO (hoy no hay nodo directo "desactivar GO por condición" —
+// se resuelve con ActivateGameObjectNode, pero ese está Obsolete; de momento
+// sin equivalente 1:1 en el grafo — usar con criterio si hace falta ahora
+// mismo). Sigue vivo en MainWorld_old.unity.
+// Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+// ───────────────────────────────────────────────────────────────────────────
 /// <summary>
 /// Destruye o desactiva un objeto cuando se cumple el requisito de quest configurado.
 /// Suscribe a QuestManager.OnQuestsChanged para reaccionar automáticamente.

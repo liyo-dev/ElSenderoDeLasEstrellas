@@ -56,6 +56,22 @@ namespace Game.NPC.States
         private Vector3 _prevPlayerPosForSpeed;
         private float _smoothedPlayerSpeed;
         private bool _speedSampleInitialized;
+
+        // FIX (9 sept 2026) — incidencia "tirones"/animación a trompicones en Estela y Liam
+        // siguiendo al jugador, en contraste con el guardia (LeadPlayerToAnchorSequence, que ya
+        // anima limpio desde el fix del 5 sept). Causa raíz: UpdateMovementAnimation() (heredado
+        // de NPCStateBase) usa NavMeshAgentUtility.ComputeSpeedFactor(agent) sin más, que divide
+        // por agent.speed -- y agent.speed se reasigna cada frame más abajo (SetAgentSpeed),
+        // saltando de golpe entre walkSpeed y una velocidad de catch-up dinámica. La velocidad
+        // REAL del NavMeshAgent tarda en alcanzar ese nuevo valor (acelera progresivamente), así
+        // que justo tras el salto el cociente vel/agent.speed se desestabiliza un instante --
+        // exactamente el mismo mecanismo ya diagnosticado y arreglado para la escolta de Eldran
+        // (ver ComputeWalkGaitSpeedFactor(agent, referenceSpeed) en NavMeshAgentUtility.cs), pero
+        // nunca portado a este script. _gaitReferenceSpeed es una copia de la velocidad objetivo
+        // que se deja acelerar/decelerar progresivamente (mismo ritmo que agent.acceleration, el
+        // que de verdad usa el NavMeshAgent) en vez de saltar de golpe, y se usa como divisor en
+        // vez de agent.speed -- ver UpdateFollowGaitAnimation().
+        private float _gaitReferenceSpeed;
         private const float PLAYER_SPEED_SMOOTH_RATE = 6f;   // /s, más alto = se adapta más rápido
         // Deltas de posición del jugador por encima de esta velocidad implícita se consideran un
         // teletransporte/warp (no locomoción real) y se ignoran para no disparar la media hacia un
@@ -190,6 +206,7 @@ namespace Game.NPC.States
             _isFollowingSticky   = false;
             _speedSampleInitialized = false;
             _smoothedPlayerSpeed = 0f;
+            _gaitReferenceSpeed = 0f;
 
             // Ver NPCStateContext.IsActivelyFollowingPlayer: cubre también a compañeros
             // temporales (p.ej. el NPC de Will) que nunca pasan por PlayerParty.AddMember, para
@@ -382,7 +399,15 @@ namespace Game.NPC.States
                 float catchUpT = Mathf.Clamp01((distance - runDist) / Mathf.Max(1f, catchUpDistance - runDist));
                 float speedMargin = Mathf.Lerp(1.15f, 1.6f, catchUpT);
                 float dynamicRunSpeed = Mathf.Clamp(_smoothedPlayerSpeed * speedMargin, runSpeed, runSpeed * 2.5f);
-                SetAgentSpeed(context.Agent, distance > runDist ? dynamicRunSpeed : walkSpeed);
+                float targetAgentSpeed = distance > runDist ? dynamicRunSpeed : walkSpeed;
+                SetAgentSpeed(context.Agent, targetAgentSpeed);
+
+                // _gaitReferenceSpeed sigue a targetAgentSpeed con el mismo ritmo de aceleración
+                // que acaba de recibir el propio NavMeshAgent (SetAgentSpeed ya escala
+                // agent.acceleration junto con la velocidad) en vez de saltar de golpe -- ver
+                // comentario de la declaración del campo, más arriba.
+                _gaitReferenceSpeed = Mathf.MoveTowards(_gaitReferenceSpeed, targetAgentSpeed,
+                    context.Agent.acceleration * Time.deltaTime);
 
                 _pathUpdateTimer += Time.deltaTime;
                 if (_pathUpdateTimer >= PATH_UPDATE_INTERVAL)
@@ -402,7 +427,27 @@ namespace Game.NPC.States
                 context.Animator?.SetMovementSpeed(0f);
             }
 
-            UpdateMovementAnimation(context);
+            UpdateFollowGaitAnimation(context);
+        }
+
+        /// <summary>
+        /// Igual que NPCStateBase.UpdateMovementAnimation(), pero usando _gaitReferenceSpeed (una
+        /// velocidad de referencia suavizada) en vez de agent.speed en crudo como divisor -- ver
+        /// comentario de _gaitReferenceSpeed. Solo para el seguimiento normal por NavMesh; el
+        /// seguimiento especial (vuelo/nado/escalada/plataformas) ya tiene su propio cálculo en
+        /// UpdateSpecialModeAnimation().
+        /// </summary>
+        private void UpdateFollowGaitAnimation(NPCStateContext context)
+        {
+            if (context.Agent == null || !context.Agent.isOnNavMesh || context.Animator == null)
+                return;
+
+            float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent, _gaitReferenceSpeed);
+            if (context.Config != null && speedFactor > 0f)
+            {
+                speedFactor = Mathf.Max(speedFactor, context.Config.minAnimSpeed);
+            }
+            context.Animator.SetMovementSpeed(speedFactor);
         }
 
         // =========================================================================

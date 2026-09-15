@@ -122,7 +122,11 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         {
             PlayDenied();
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DuoSpecial] Bloqueado: barra de {companion} no llena ({meter?.Normalized:P0})");
+                #endif
+            }
             return;
         }
 
@@ -131,7 +135,11 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         {
             PlayDenied();
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DuoSpecial] Bloqueado: {companion} no está en rango ({attack.companionMaxDistance}m)");
+                #endif
+            }
             return;
         }
 
@@ -191,7 +199,11 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         }
 
         if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DuoSpecial] AoE aplicado: {count} objetivos en radio {attack.aoeRadius}m");
+            #endif
+        }
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────

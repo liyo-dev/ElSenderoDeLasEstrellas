@@ -171,7 +171,11 @@ public class PortalTrigger : MonoBehaviour
                 if (consumeItemOnEnter)
                 {
                     if (!inventory.TryConsume(requiredItem, requiredItemAmount))
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.LogWarning($"[PortalTrigger] No se pudo consumir '{requiredItem.itemId}' pese a que el conteo era suficiente.");
+                        #endif
+                    }
                 }
             }
         }

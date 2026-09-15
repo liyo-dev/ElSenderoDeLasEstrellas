@@ -2,9 +2,11 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Señales", "Esperar señal", "Espera una señal custom (sticky: si ya se disparó, pasa de largo).")]
 [SavePoint("Seguro guardar mientras espera eventos")]
 public sealed class WaitCustomEventNode : NarrativeNode
 {
+    [NarrativeKey(NarrativeKeyKind.Signal)]
     public string eventKey;
 
     public override void Enter(NarrativeContext ctx, Action ready)

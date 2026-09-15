@@ -75,7 +75,12 @@ public class MenuNavigator : MonoBehaviour
         if (isVerticalNav)
         {
             // El sonido ya se reproduce en GamepadInputReader, pero podemos añadir feedback extra aquí si queremos
-            if (debugLogs) Debug.Log("[MenuNavigator] Navegación vertical detectada");
+            if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[MenuNavigator] Navegación vertical detectada");
+                #endif
+            }
         }
     }
 
@@ -123,7 +128,12 @@ public class MenuNavigator : MonoBehaviour
                 if (EventSystem.current != null)
                     EventSystem.current.SetSelectedGameObject(btn.gameObject);
                 
-                if (debugLogs) Debug.Log($"[MenuNavigator] Primer botón seleccionado: {btn.name}");
+                if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MenuNavigator] Primer botón seleccionado: {btn.name}");
+                    #endif
+                }
                 return;
             }
         }
@@ -152,7 +162,12 @@ public class MenuNavigator : MonoBehaviour
         // Aplicar nudge
         textTransform.DOAnchorPosX(nudge, nudgeTime).SetEase(Ease.OutCubic).SetUpdate(true);
         
-        if (debugLogs) Debug.Log($"[MenuNavigator] Nudge aplicado a: {button.name}");
+        if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[MenuNavigator] Nudge aplicado a: {button.name}");
+            #endif
+        }
     }
 }
 

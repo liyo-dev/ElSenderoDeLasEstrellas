@@ -195,11 +195,23 @@ namespace Sendero.UI
 
             // Validar componentes críticos
             if (_healthSystem == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró PlayerHealthSystem en el jugador");
+                #endif
+            }
             if (_manaPool == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró ManaPool en el jugador");
+                #endif
+            }
             if (_magicCaster == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró MagicCaster en el jugador");
+                #endif
+            }
 
             // Suscribirse a eventos
             SubscribeToEvents();

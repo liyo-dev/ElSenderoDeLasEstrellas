@@ -287,9 +287,17 @@ public class ImpDemonAI : MonoBehaviour
             string animLabel = kv.Value;
             int layer = AnimatorLayerContainingState(hash);
             if (layer >= 0)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($" - '{animLabel}' -> encontrada en capa {layer}");
+                #endif
+            }
             else
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($" - '{animLabel}' -> NO encontrada");
+                #endif
+            }
 
             if (controller != null)
             {
@@ -300,7 +308,11 @@ public class ImpDemonAI : MonoBehaviour
                     {
                         if (c == null) continue;
                         if (c.name.IndexOf(animLabel, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"    Clip coincidente: {c.name}");
+                            #endif
+                        }
                     }
                 }
             }

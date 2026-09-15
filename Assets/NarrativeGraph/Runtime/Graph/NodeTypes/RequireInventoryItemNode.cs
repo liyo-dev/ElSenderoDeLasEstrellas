@@ -6,6 +6,7 @@ using UnityEngine;
 /// Puede derivar el flujo a otra salida cuando falta el item.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Objetos", "Requiere objeto", "Comprueba/consume un objeto del inventario; salida alternativa si falta.")]
 public sealed class RequireInventoryItemNode : NarrativeNode
 {
     [Header("Item requerido")]
@@ -16,6 +17,7 @@ public sealed class RequireInventoryItemNode : NarrativeNode
 
     [Header("Quest")]
     [Tooltip("Quest a actualizar cuando el jugador entrega el item.")]
+    [NarrativeKey(NarrativeKeyKind.Quest)]
     public string questId;
     [Tooltip("Step a marcar como completado (opcional).")]
     public int questStepIndex = -1;

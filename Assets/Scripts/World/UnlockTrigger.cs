@@ -1,6 +1,12 @@
 ﻿﻿using System.Collections.Generic;
 using UnityEngine;
 
+// ───────────────────────────────────────────────────────────────────────────
+// CONGELADO (12 sept 2026) — no usar en contenido nuevo de la maqueta. Sustituto:
+// UnlockAbilitiesNode del grafo (mismos campos, más completo: assignSpellsToEmptySlot,
+// applyPresetAfterUnlock, saveAfterUnlock). Sigue vivo en MainWorld_old.unity.
+// Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+// ───────────────────────────────────────────────────────────────────────────
 [RequireComponent(typeof(Collider))]
 public class UnlockTrigger : MonoBehaviour
 {

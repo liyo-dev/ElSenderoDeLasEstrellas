@@ -10,6 +10,8 @@ namespace Sendero.Narrative.Editor
         public System.Action<Edge> OnEdgeLinked;
         public System.Action<Edge> OnEdgeUnlinked;
         public System.Action<NodeView> OnNodeDeleted;
+        public System.Action<List<NodeView>> OnNodesMoved;
+        public System.Action<Vector2> OnRequestCreateAt; // doble clic en lienzo vacío
 
         public NarrativeGraphView()
         {
@@ -17,18 +19,27 @@ namespace Sendero.Narrative.Editor
             Insert(0, grid);
             grid.StretchToParentSize();
 
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            SetupZoom(0.15f, 2.5f);
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
 
             var mini = new MiniMap { anchored = true };
-            mini.SetPosition(new Rect(10, 30, 180, 120));
+            mini.SetPosition(new Rect(10, 10, 200, 130));
+            mini.AddToClassList("narrative-minimap");
             Add(mini);
 
             style.flexGrow = 1f;
-
             graphViewChanged = GraphChanged;
+
+            RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.clickCount == 2 && evt.button == 0 && evt.target == this)
+                {
+                    OnRequestCreateAt?.Invoke(contentViewContainer.WorldToLocal(evt.mousePosition));
+                    evt.StopPropagation();
+                }
+            });
         }
 
         GraphViewChange GraphChanged(GraphViewChange changes)
@@ -45,13 +56,19 @@ namespace Sendero.Narrative.Editor
 
             if (changes.elementsToRemove != null)
             {
+                // Primero aristas, luego nodos (los nodos borrados ya limpian sus referencias).
                 foreach (var el in changes.elementsToRemove)
-                {
-                    if (el is Edge ed)
-                        OnEdgeUnlinked?.Invoke(ed);
-                    else if (el is NodeView nv)
-                        OnNodeDeleted?.Invoke(nv);  
-                }
+                    if (el is Edge ed) OnEdgeUnlinked?.Invoke(ed);
+                foreach (var el in changes.elementsToRemove)
+                    if (el is NodeView nv) OnNodeDeleted?.Invoke(nv);
+            }
+
+            if (changes.movedElements != null && changes.movedElements.Count > 0)
+            {
+                var moved = new List<NodeView>();
+                foreach (var el in changes.movedElements)
+                    if (el is NodeView nv) moved.Add(nv);
+                if (moved.Count > 0) OnNodesMoved?.Invoke(moved);
             }
 
             return changes;

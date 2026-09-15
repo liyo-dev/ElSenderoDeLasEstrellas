@@ -17,8 +17,8 @@ MonoBehaviour:
     textId: PRLG_WILL_WAKE_UP
     style: 2
     background: 2
-    entryAnim: 6
-    exitAnim: 0
+    entryAnim: 8
+    exitAnim: 5
     duration: 2.5
     voiceClip: {fileID: 0}
     waitForAudio: 0
@@ -27,4 +27,4 @@ MonoBehaviour:
     moveTo: {x: 0, y: 0}
     disableDreamTextEffect: 0
   pauseBetween: 0.15
-  dreamMode: 1
+  dreamMode: 0

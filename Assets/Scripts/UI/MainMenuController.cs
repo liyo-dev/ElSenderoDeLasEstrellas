@@ -394,7 +394,11 @@ public class MainMenuController : MonoBehaviour
         if (_isLoading || !_inputArmed)
         {
             if (!_inputArmed)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] Ignorando Continue mientras el menú arma la entrada.");
+                #endif
+            }
             return;
         }
         _isLoading = true;
@@ -463,7 +467,11 @@ public class MainMenuController : MonoBehaviour
         if (_isLoading || !_inputArmed)
         {
             if (!_inputArmed)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] Ignorando New Game mientras el menú arma la entrada.");
+                #endif
+            }
             return;
         }
 
@@ -536,7 +544,12 @@ public class MainMenuController : MonoBehaviour
                 if (saveSystem != null)
                 {
                     bool ok = saveSystem.Delete();
-                    if (!ok) Debug.LogWarning("[MainMenu] SaveSystem.Delete() devolvio false (algun fichero no se pudo borrar).");
+                    if (!ok)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.LogWarning("[MainMenu] SaveSystem.Delete() devolvio false (algun fichero no se pudo borrar).");
+                        #endif
+                    }
                 }
             }
 
@@ -675,7 +688,11 @@ public class MainMenuController : MonoBehaviour
                 if (buttonPanel != null)
                     buttonPanel.SetActive(true);
                 else
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning("[MainMenu-Debug] buttonPanel es NULL en el callback de cierre de Controles");
+                    #endif
+                }
 
                 LogMenuState("OnClickControls-AfterReopen");
 
@@ -713,7 +730,11 @@ public class MainMenuController : MonoBehaviour
         if (_isLoading || !_inputArmed)
         {
             if (!_inputArmed)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[MainMenu] Ignorando Exit mientras el menú arma la entrada.");
+                #endif
+            }
             return;
         }
 
@@ -828,10 +849,18 @@ public class MainMenuController : MonoBehaviour
         btn.onClick.AddListener(action);
 
         if (!btn.interactable)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[MainMenu] Botón {label} no está interactable.");
+            #endif
+        }
 
         if (!btn.gameObject.activeInHierarchy)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[MainMenu] Botón {label} está inactivo en jerarquía.");
+            #endif
+        }
     }
 
     Button TryFindNewGameButton()

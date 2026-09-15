@@ -4,6 +4,15 @@ using Game.NPC.Modules;
 
 namespace Game.NPC
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO (12 sept 2026) — no ampliar para contenido nuevo de la maqueta.
+    // Sustituto: NarrativeActor.ShowQuestIcon()/HideQuestIcon(), llamado desde
+    // WaitNpcInteractionNode.Enter()/Exit() vía su campo questIcon (INC-196).
+    // No depende de Configuration.questConfig ni del flag Quest — el propio nodo
+    // del grafo decide si mostrar el icono. Sigue vivo en MainWorld_old y en
+    // cualquier NPC de la maqueta con Quest+questConfig aún sin migrar.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Gestiona el icono persistente de quest sobre la cabeza del NPC.
     /// Se anade automaticamente cuando el NPC tiene un NPCQuestConfig configurado.

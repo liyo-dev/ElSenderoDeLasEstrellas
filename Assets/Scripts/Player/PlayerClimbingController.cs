@@ -150,12 +150,22 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (!_actionManager.CanClimb())
             {
-                if (debugLogs) Debug.Log("[PlayerClimbingController] Climb bloqueado por ActionManager");
+                if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[PlayerClimbingController] Climb bloqueado por ActionManager");
+                    #endif
+                }
                 return false;
             }
             if (_actionManager.IsInMode(ActionMode.Swimming) || _actionManager.IsInMode(ActionMode.Flying))
             {
-                if (debugLogs) Debug.Log("[PlayerClimbingController] Climb bloqueado por modo Swimming/Flying");
+                if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[PlayerClimbingController] Climb bloqueado por modo Swimming/Flying");
+                    #endif
+                }
                 return false;
             }
         }
@@ -268,7 +278,11 @@ public class PlayerClimbingController : MonoBehaviour
         catch { }
 
         if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerClimbingController] Enter Climb");
+            #endif
+        }
     }
 
     private void HandleClimbMovement()
@@ -407,7 +421,11 @@ public class PlayerClimbingController : MonoBehaviour
         catch { }
 
         if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerClimbingController] Exit Climb");
+            #endif
+        }
     }
 
     /// <summary>

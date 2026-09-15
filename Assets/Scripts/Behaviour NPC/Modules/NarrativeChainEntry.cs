@@ -4,6 +4,11 @@ using EasyTransition;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — parte del motor Interactive, mismo estado que
+    // NPCInteractiveNarrativeExecutor. No añadir NarrativeActionType nuevos.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Tipos de acciones que se pueden encadenar en una narrativa interactiva
     /// </summary>

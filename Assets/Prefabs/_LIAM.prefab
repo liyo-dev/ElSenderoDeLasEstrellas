@@ -7897,6 +7897,7 @@ MonoBehaviour:
   checkInterval: 0.15
   avoidWeight: 1.1
   steerLerp: 8
+  maxContinuousAvoidSeconds: 1.5
 --- !u!1 &3341901564085152908
 GameObject:
   m_ObjectHideFlags: 0

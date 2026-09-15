@@ -19,6 +19,7 @@ using Sendero.UI;
 /// al cruzar el límite del Reino.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Mundo", "Transición salida del Reino", "")]
 public sealed class KingdomExitTransitionNode : NarrativeNode
 {
     [Header("Cámara")]

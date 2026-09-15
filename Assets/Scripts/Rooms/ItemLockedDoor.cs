@@ -108,7 +108,11 @@ public class ItemLockedDoor : MonoBehaviour
             if (consumeItemOnUnlock)
             {
                 if (!inventory.TryConsume(requiredItem, requiredItemAmount))
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[ItemLockedDoor] No se pudo consumir '{requiredItem.itemId}'.");
+                    #endif
+                }
             }
         }
 

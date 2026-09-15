@@ -57,7 +57,11 @@ public class PerformanceCapture : MonoBehaviour
     [Header("Overlay en pantalla")]
     [SerializeField] private bool showOnScreenIndicator = true;
 
-    const int MaxSpikesRecorded = 40;
+    // Antes en 40: en una sesión larga (varias veces se ha grabado más de 1600s) se agotaba pronto
+    // y la segunda mitad de la sesión se quedaba sin ningún pico listado (ver incidencia "La lista
+    // de picos del F9 se corta a los 40" en registro-tecnico-incidencias.md). Subido a 200 y,
+    // más importante, cambiado el criterio de qué picos se conservan: ver SampleFrame().
+    const int MaxSpikesRecorded = 200;
     const float BucketDurationSeconds = 1f;
 
     static PerformanceCapture _instance;
@@ -77,8 +81,19 @@ public class PerformanceCapture : MonoBehaviour
 
     List<float> _allFrameMsSamples;
     List<PerfBucket> _buckets;
-    List<string> _spikes;
+    List<SpikeEntry> _spikeEntries;
     bool _spikesCapped;
+
+    // Antes se guardaban directamente como string, en orden de llegada, y una vez lleno el cupo
+    // se descartaba todo lo que llegara después (ver comentario en MaxSpikesRecorded). Guardar el
+    // valor en ms además del texto permite, una vez lleno el cupo, sustituir el pico más leve ya
+    // guardado por uno nuevo más grave en vez de descartarlo — así una sesión larga conserva los
+    // picos más importantes de principio a fin, no solo los primeros 200.
+    struct SpikeEntry
+    {
+        public float TiempoSegundos;
+        public float Ms;
+    }
 
     float _memStartMB, _memPeakMB;
 
@@ -142,7 +157,7 @@ public class PerformanceCapture : MonoBehaviour
 
         _allFrameMsSamples = new List<float>(Mathf.CeilToInt(maxDurationSeconds * 90f));
         _buckets = new List<PerfBucket>(Mathf.CeilToInt(maxDurationSeconds));
-        _spikes = new List<string>();
+        _spikeEntries = new List<SpikeEntry>(MaxSpikesRecorded);
         _spikesCapped = false;
 
         _memStartMB = _bucketAllocStart / (1024f * 1024f);
@@ -181,13 +196,25 @@ public class PerformanceCapture : MonoBehaviour
 
         if (dtMs >= hitchThresholdMs)
         {
-            if (_spikes.Count < MaxSpikesRecorded)
+            float t = Time.unscaledTime - _recordingStartRealtime;
+            if (_spikeEntries.Count < MaxSpikesRecorded)
             {
-                float t = Time.unscaledTime - _recordingStartRealtime;
-                _spikes.Add($"{t:0.0}s → frame de {dtMs:0}ms");
+                _spikeEntries.Add(new SpikeEntry { TiempoSegundos = t, Ms = dtMs });
             }
             else
             {
+                // Cupo lleno: si este pico es más grave que el más leve ya guardado, lo sustituye
+                // en vez de descartarse — así se conservan los N picos más graves de toda la
+                // sesión, no solo los N primeros que aparecieron.
+                int minIndex = 0;
+                float minMs = _spikeEntries[0].Ms;
+                for (int i = 1; i < _spikeEntries.Count; i++)
+                {
+                    if (_spikeEntries[i].Ms < minMs) { minMs = _spikeEntries[i].Ms; minIndex = i; }
+                }
+                if (dtMs > minMs)
+                    _spikeEntries[minIndex] = new SpikeEntry { TiempoSegundos = t, Ms = dtMs };
+
                 _spikesCapped = true;
             }
         }
@@ -340,12 +367,21 @@ public class PerformanceCapture : MonoBehaviour
             memoriaPicoMB = _memPeakMB,
         };
 
+        // Las sustituciones de SampleFrame() pueden dejar _spikeEntries fuera de orden cronológico
+        // (se añaden por gravedad, no por tiempo, una vez lleno el cupo) — se reordena por tiempo
+        // aquí, una sola vez, para que el .json siga leyéndose de principio a fin como antes.
+        var picosOrdenados = new List<SpikeEntry>(_spikeEntries);
+        picosOrdenados.Sort((a, b) => a.TiempoSegundos.CompareTo(b.TiempoSegundos));
+        var picosDetectados = new List<string>(picosOrdenados.Count);
+        foreach (var s in picosOrdenados)
+            picosDetectados.Add($"{s.TiempoSegundos:0.0}s → frame de {s.Ms:0}ms");
+
         return new PerformanceCaptureData
         {
             meta = meta,
             resumen = resumen,
             muestrasPorSegundo = _buckets,
-            picosDetectados = _spikes,
+            picosDetectados = picosDetectados,
             eventos = eventos,
         };
     }

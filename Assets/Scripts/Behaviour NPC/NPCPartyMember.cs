@@ -731,7 +731,12 @@ namespace Game.NPC
 
         private void Log(string message)
         {
-            if (debugMode) Debug.Log($"[NPCPartyMember:{name}] {message}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCPartyMember:{name}] {message}");
+                #endif
+            }
         }
 
         private void LogWarning(string message)

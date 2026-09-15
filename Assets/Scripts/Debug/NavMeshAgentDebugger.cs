@@ -89,6 +89,7 @@ public class NavMeshAgentDebugger : MonoBehaviour
         
         string status = GetAgentStatusEmoji();
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"{status} NavMeshAgent Debug [{name}]:\n" +
                  $"  Enabled: {_agent.enabled}\n" +
                  $"  Is On NavMesh: {_agent.isOnNavMesh}\n" +
@@ -104,6 +105,7 @@ public class NavMeshAgentDebugger : MonoBehaviour
                  $"  Angular Speed: {_agent.angularSpeed:F1}°/s\n" +
                  $"  Has Path: {_agent.hasPath}\n" +
                  $"  Position: {transform.position}");
+        #endif
     }
     
     private string GetAgentStatusEmoji()

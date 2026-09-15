@@ -232,7 +232,11 @@ public class TeleportSystem : MonoBehaviour
         yield return new WaitUntil(() => transitionEnded || Time.unscaledTime - waitStartedAt > TeleportEndTimeout);
         TeleportService.OnTeleportEnded -= onTransitionEnd;
         if (!transitionEnded)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[TeleportSystem] Timeout esperando OnTeleportEnded para '{destinationAnchorId}' — se fuerza el cierre del teletransporte para no dejar al jugador bloqueado.");
+            #endif
+        }
 
         // Reproducir SFX de llegada
         PlayerService.TryGetPlayer(out player, allowSceneLookup: true);

@@ -771,8 +771,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (vfxPrefab != null)
         {
-            var vfx = Instantiate(vfxPrefab, transform.position, transform.rotation);
-            Destroy(vfx, 3f);
+            VfxPoolService.Instance.Play(vfxPrefab, transform.position, transform.rotation, 3f);
         }
     }
     

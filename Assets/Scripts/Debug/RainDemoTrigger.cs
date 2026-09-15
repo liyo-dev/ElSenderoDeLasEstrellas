@@ -39,7 +39,11 @@ public class RainDemoTrigger : MonoBehaviour
     {
         _cycle = FindAnyObjectByType<DayNightCycle>();
         if (_cycle == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[RainDemoTrigger] No se encontró ningún DayNightCycle en esta escena — la tecla de lluvia de demo no hará nada aquí.");
+            #endif
+        }
     }
 
     void Update()

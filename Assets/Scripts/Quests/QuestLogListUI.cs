@@ -169,8 +169,9 @@ public class QuestLogListUI : MonoBehaviour
 
     void OnQuestStarted(string questId)
     {
-        // Mostrar automáticamente el panel cuando aparece una nueva misión
-        ShowPanel(true, ignoreRestrictions: true);
+        // Mostrar automáticamente el panel cuando aparece una nueva misión (aviso "toast",
+        // NO un menú real -- por eso isAutoToast:true, ver comentario de IsAutoToast e INC-199).
+        ShowPanel(true, ignoreRestrictions: true, isAutoToast: true);
         RestartAutoHide();
     }
 
@@ -200,7 +201,17 @@ public class QuestLogListUI : MonoBehaviour
         ShowPanel(!_isPanelVisible);
     }
 
-    public void ShowPanel(bool show, bool ignoreRestrictions = false)
+    /// <summary>
+    /// True mientras el panel está visible SOLO como aviso automático de "nueva misión" (toast),
+    /// no porque el jugador lo haya abierto a mano con el D-pad. QuestMenuManager.RefreshMenuRegistration()
+    /// usa esto para no registrar este aviso como un menú real en MenuManager -- si no, el minimapa y
+    /// el resto de UI in-world (SpeechBubbleUI, BossHealthBar, LorePopupUI, AbilityUnlockPopupUI,
+    /// TutorialPromptUI: todos suscritos a MenuManager.MenuOpened) se ocultaban solos cada vez que
+    /// arrancaba una misión nueva, aunque el jugador no hubiera abierto ningún menú (INC-199).
+    /// </summary>
+    public bool IsAutoToast { get; private set; }
+
+    public void ShowPanel(bool show, bool ignoreRestrictions = false, bool isAutoToast = false)
     {
         if (show && !ignoreRestrictions)
         {
@@ -209,6 +220,7 @@ public class QuestLogListUI : MonoBehaviour
         }
 
         _isPanelVisible = show;
+        IsAutoToast = show && isAutoToast;
 
         if (_isPanelVisible)
             AnimateShow();
@@ -276,6 +288,7 @@ public class QuestLogListUI : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(hideAfterSeconds);
         _isPanelVisible = false;
+        IsAutoToast = false;
         AnimateHide();
         UpdateHelpText();
     }

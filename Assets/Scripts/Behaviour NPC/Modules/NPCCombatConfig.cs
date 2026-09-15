@@ -412,8 +412,10 @@ namespace Game.NPC.Modules
             float totalChance = spell1Chance + spell2Chance + spell3Chance;
             if (Mathf.Abs(totalChance - 1f) > 0.01f && totalChance > 0f)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCCombatConfig] Las probabilidades de hechizos suman {totalChance:F2} en lugar de 1.0. " +
                     "Se normalizarán automáticamente en runtime, pero considera ajustarlas manualmente.");
+                #endif
             }
             
             return true;

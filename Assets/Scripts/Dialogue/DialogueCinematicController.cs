@@ -285,7 +285,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
 
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCinematicController] ClearFlags → {dialogueCamera.clearFlags} (EntornoActual: {envCtrl.CurrentMode})");
+            #endif
+        }
     }
 
     /// <summary>
@@ -581,7 +585,11 @@ public class DialogueCinematicController : MonoBehaviour
             if (activeSwapper != null && activeSwapper.HiddenNpc != null && npc == activeSwapper.HiddenNpc.transform)
             {
                 if (showDebugInfo)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[DialogueCinematicController] NPC '{npc.name}' es el personaje activo oculto - redirigiendo a '{player.name}' para el montaje/cámara");
+                    #endif
+                }
                 npc = player;
             }
 
@@ -589,7 +597,11 @@ public class DialogueCinematicController : MonoBehaviour
             if (isPendingEnd && pendingEndCinematicCoroutine != null)
             {
                 if (showDebugInfo)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[DialogueCinematicController] Diálogo encadenado detectado - cancelando apagado pendiente");
+                    #endif
+                }
                 
                 StopCoroutine(pendingEndCinematicCoroutine);
                 pendingEndCinematicCoroutine = null;
@@ -599,7 +611,11 @@ public class DialogueCinematicController : MonoBehaviour
                 if (isInCinematicMode && currentNPC == npc && currentPlayer == player)
                 {
                     if (showDebugInfo)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log("[DialogueCinematicController] Reutilizando cinematográfica activa para diálogo encadenado");
+                        #endif
+                    }
 
                     // Resetear índice de línea para el nuevo diálogo
                     currentLineIndex = 0;
@@ -691,7 +707,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
 
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCinematicController] Iniciando cinematográfica con {npc.name}");
+            #endif
+        }
 
         // PASO 0: Ocultar el HUD con fade suave
         HideHUD();
@@ -713,7 +733,11 @@ public class DialogueCinematicController : MonoBehaviour
         if (mainGameplayCamera != null)
         {
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Desactivando cámara de gameplay Cinemachine (Priority: {mainGameplayCamera.Priority.Value} → 0)");
+                #endif
+            }
             
             mainGameplayCamera.Priority.Value = 0;
         }
@@ -894,7 +918,11 @@ public class DialogueCinematicController : MonoBehaviour
             isPendingEnd = true;
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Iniciando apagado con delay de {chainDialogueGracePeriod}s");
+                #endif
+            }
             
             // Esperar el período de gracia
             yield return new WaitForSeconds(chainDialogueGracePeriod);
@@ -904,7 +932,11 @@ public class DialogueCinematicController : MonoBehaviour
             pendingEndCinematicCoroutine = null;
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[DialogueCinematicController] Finalizando cinematográfica (sin encadenamiento detectado)");
+                #endif
+            }
 
             EndCinematicImmediate();
         }
@@ -917,7 +949,11 @@ public class DialogueCinematicController : MonoBehaviour
             if (!isInCinematicMode) return;
 
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[DialogueCinematicController] Apagando cinematográfica inmediatamente");
+                #endif
+            }
 
         // Ver comentario en StartCinematic: revierte la ocultación de nubes ambientales que
         // hicimos al entrar en modo cinematográfico, para que vuelvan a verse con normalidad
@@ -945,13 +981,21 @@ public class DialogueCinematicController : MonoBehaviour
         if (mainGameplayCamera != null)
         {
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Restaurando cámara de gameplay Cinemachine (Priority: {originalGameplayCameraPriority})");
+                #endif
+            }
             
             mainGameplayCamera.Priority.Value = originalGameplayCameraPriority;
             
             // Verificar que se aplicó correctamente
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] ✓ Cámara restaurada. Priority actual: {mainGameplayCamera.Priority.Value}");
+                #endif
+            }
         }
 
         // CRÍTICO PARA URP: Reactivar la cámara principal de Unity
@@ -1039,7 +1083,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
         
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCinematicController] Player ocultado - {playerRenderers.Length} renderers desactivados");
+            #endif
+        }
     }
     
     /// <summary>
@@ -1060,7 +1108,11 @@ public class DialogueCinematicController : MonoBehaviour
             }
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Player restaurado - {playerRenderers.Length} renderers reactivados");
+                #endif
+            }
             
             // Limpiar referencias
             playerRenderers = null;
@@ -1079,7 +1131,11 @@ public class DialogueCinematicController : MonoBehaviour
             }
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] Player restaurado (forzado) - {renderers.Length} renderers activados");
+                #endif
+            }
         }
     }
     
@@ -1118,7 +1174,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
         
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCinematicController] NPC ocultado - {npcRenderers.Length} renderers desactivados");
+            #endif
+        }
     }
     
     /// <summary>
@@ -1139,7 +1199,11 @@ public class DialogueCinematicController : MonoBehaviour
             }
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] NPC restaurado - {npcRenderers.Length} renderers reactivados");
+                #endif
+            }
             
             // Limpiar referencias
             npcRenderers = null;
@@ -1158,7 +1222,11 @@ public class DialogueCinematicController : MonoBehaviour
             }
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] NPC restaurado (forzado) - {renderers.Length} renderers activados");
+                #endif
+            }
         }
     }
 
@@ -1913,7 +1981,11 @@ public class DialogueCinematicController : MonoBehaviour
                             groupCamPos.y = groupCenter.y + groupCameraDistance;
                         }
                         if (showDebugInfo && backoffSteps > 0)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.Log($"[DialogueCinematicController] 📷 Cámara de grupo encajada en vano - {backoffSteps} paso(s) de retroceso lateral");
+                            #endif
+                        }
                     }
                 }
 
@@ -1956,7 +2028,11 @@ public class DialogueCinematicController : MonoBehaviour
                 fromOther = (target.position - currentNPC.position).normalized;
                 
                 if (showDebugInfo)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[DialogueCinematicController] 🎬 Party member detectado: calculando dirección desde {currentNPC.name} hacia {target.name}");
+                    #endif
+                }
             }
             else
             {
@@ -2087,7 +2163,11 @@ public class DialogueCinematicController : MonoBehaviour
                             towardsOther = (currentNPC.position - target.position).normalized;
                             
                             if (showDebugInfo)
+                            {
+                                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                                 Debug.Log($"[DialogueCinematicController] 📷 CloseUp/Medium para Party Member: cámara desde dirección del NPC hacia {target.name}");
+                                #endif
+                            }
                         }
                         else
                         {
@@ -2172,7 +2252,11 @@ public class DialogueCinematicController : MonoBehaviour
                     float clearDist = Mathf.Max(dialogueCameraSelfClearance + obstructionHit.distance - 0.3f, dialogueCameraMinDistance);
                     camPos = headPos + dir * clearDist;
                     if (showDebugInfo)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log($"[DialogueCinematicController] 📷 Obstrucción detectada ({obstructionHit.collider.name}) - cámara reubicada a {clearDist:F2}m");
+                        #endif
+                    }
                 }
             }
 
@@ -2228,7 +2312,11 @@ public class DialogueCinematicController : MonoBehaviour
                     // en vez de dejarla encajada, igual que hace el modo grupal en este mismo caso.
                     camPos.y = target.position.y + Mathf.Max(shot.Height, 1.2f) + 1.5f;
                     if (showDebugInfo)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
                         Debug.Log("[DialogueCinematicController] 📷 Cámara encajada - retroceso lateral insuficiente, elevando por encima");
+                        #endif
+                    }
                 }
                 else if (showDebugInfo && lateralSteps > 0)
                 {
@@ -2383,7 +2471,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
 
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCinematicController] Pool de {maxPooledCameras} cámaras inicializado en canal 1");
+            #endif
+        }
     }
 
     /// <summary>
@@ -2534,7 +2626,11 @@ public class DialogueCinematicController : MonoBehaviour
             speaker.rotation = targetRotation;
             
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[DialogueCinematicController] 👀 {speaker.name} ahora mira hacia {currentNPC.name}");
+                #endif
+            }
         }
     }
 
@@ -2695,7 +2791,11 @@ public class DialogueCinematicController : MonoBehaviour
         }
         
         if (showDebugInfo)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[DialogueCinematicController] Todas las cámaras de diálogo desactivadas");
+            #endif
+        }
     }
     
     /// <summary>
@@ -2709,7 +2809,11 @@ public class DialogueCinematicController : MonoBehaviour
         {
             hud.HideHUD();
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[DialogueCinematicController] 🎬 HUD ocultado con fade");
+                #endif
+            }
         }
     }
     
@@ -2724,7 +2828,11 @@ public class DialogueCinematicController : MonoBehaviour
         {
             hud.ShowHUD();
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[DialogueCinematicController] 🎬 HUD mostrado con fade");
+                #endif
+            }
         }
     }
 

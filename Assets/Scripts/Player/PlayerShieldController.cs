@@ -257,7 +257,11 @@ public class PlayerShieldController : MonoBehaviour
             if (layer >= 0)
                 _blockedLayers.Add(layer);
             else
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerShieldController] No se encontró la capa '{name}'.");
+                #endif
+            }
         }
     }
 

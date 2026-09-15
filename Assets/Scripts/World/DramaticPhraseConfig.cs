@@ -31,7 +31,20 @@ public enum DramaticEntryAnimation
     Instant,        // Sin animación
     SlideFromLeft,  // Entra deslizándose desde el borde izquierdo
     SlideFromRight, // Entra deslizándose desde el borde derecho
-    KingdomHearts   // Letra a letra: fade+escala por carácter, zoom suave del contenedor
+    KingdomHearts,  // Letra a letra: fade+escala por carácter, zoom suave del contenedor
+    // Añadido 11/09/2026: para "Will, ¡DESPIERTA!" — KingdomHearts se lee como el título de una
+    // novela/videojuego (pedido explícito de Raúl: no quiere ese efecto aquí). Shake aparece de
+    // golpe (fade casi instantáneo) y sacude el texto con un temblor que decae — más parecido a
+    // que alguien te esté zarandeando para despertarte que a una presentación épica.
+    // SUPERSEDIDO 12/09/2026: probado en juego, Raúl reporta que "no funciona" — se deja el valor
+    // por compatibilidad (no se borra ningún dato serializado) pero ya no se usa en "Will,
+    // ¡DESPIERTA!"; ver LetterFlyIn más abajo.
+    Shake,
+    // Añadido 12/09/2026 (pedido explícito de Raúl, sustituye a Shake en "Will, ¡DESPIERTA!"):
+    // letra a letra, cada carácter "vuela" desde un punto de origen compartido (grande, como
+    // viniendo hacia el espectador desde el fondo de la pantalla) hasta su posición final en el
+    // texto — ver DramaticTextOverlayUI.LetterFlyInRoutine / _letterFlyInOrigin.
+    LetterFlyIn
 }
 
 public enum DramaticExitAnimation
@@ -40,7 +53,13 @@ public enum DramaticExitAnimation
     ScaleUp,      // Crece y desvanece (épico que se disuelve)
     Instant,      // Corte directo
     SlideToLeft,  // Sale deslizándose por el borde izquierdo
-    SlideToRight  // Sale deslizándose por el borde derecho
+    SlideToRight, // Sale deslizándose por el borde derecho
+    // Añadido 12/09/2026 (pedido explícito de Raúl, para "Will, ¡DESPIERTA!"): iris circular —
+    // el fondo (opaco) se recorta con un círculo pequeño centrado que crece hasta cubrir toda la
+    // pantalla. Propio de este overlay (DramaticTextOverlayUI._irisMaterial), NO reutiliza el
+    // sistema de transición compartido (EasyTransition/TransitionManager, pensado para cargas de
+    // escena) — ver DramaticTextOverlayUI.CircleIrisExit.
+    CircleIris
 }
 
 [System.Serializable]

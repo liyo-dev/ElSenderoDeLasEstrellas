@@ -1,6 +1,7 @@
 using System;
 
 [Serializable]
+[NarrativeNodeInfo("Audio y cine", "Silenciar", "")]
 public sealed class MuteAudioNode : NarrativeNode
 {
     public AudioBus bus = AudioBus.Master;

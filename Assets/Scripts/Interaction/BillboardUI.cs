@@ -61,8 +61,10 @@ public class BillboardUI : MonoBehaviour
         var shader = Shader.Find("UI/HintAlwaysOnTop");
         if (shader == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[BillboardUI] Shader 'UI/HintAlwaysOnTop' no encontrado; los iconos de interacción " +
                               "seguirán pudiendo recortarse contra geometría cercana a la cámara.");
+            #endif
             return null;
         }
 

@@ -76,11 +76,21 @@ namespace Game.World
         {
             if (_hasSwapped)
             {
-                if (debugMode) Debug.Log($"[MeshSwapper:{name}] Ya fue cambiado anteriormente, ignorando");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MeshSwapper:{name}] Ya fue cambiado anteriormente, ignorando");
+                    #endif
+                }
                 return;
             }
 
-            if (debugMode) Debug.Log($"[MeshSwapper:{name}] 💥 Ejecutando swap...");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MeshSwapper:{name}] 💥 Ejecutando swap...");
+                #endif
+            }
 
             if (useGameObjectSwap)
             {
@@ -106,7 +116,12 @@ namespace Game.World
             // Disparar evento
             OnMeshSwapped?.Invoke();
 
-            if (debugMode) Debug.Log($"[MeshSwapper:{name}] ✅ Swap completado");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MeshSwapper:{name}] ✅ Swap completado");
+                #endif
+            }
         }
 
         /// <summary>
@@ -140,11 +155,21 @@ namespace Game.World
                 if (meshCollider != null)
                 {
                     meshCollider.sharedMesh = newMesh;
-                    if (debugMode) Debug.Log($"[MeshSwapper:{name}] MeshCollider actualizado");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[MeshSwapper:{name}] MeshCollider actualizado");
+                        #endif
+                    }
                 }
             }
 
-            if (debugMode) Debug.Log($"[MeshSwapper:{name}] Mesh cambiado a '{newMesh.name}'");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MeshSwapper:{name}] Mesh cambiado a '{newMesh.name}'");
+                #endif
+            }
         }
 
         /// <summary>
@@ -155,13 +180,23 @@ namespace Game.World
             if (objectToDeactivate != null)
             {
                 objectToDeactivate.SetActive(false);
-                if (debugMode) Debug.Log($"[MeshSwapper:{name}] '{objectToDeactivate.name}' desactivado");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MeshSwapper:{name}] '{objectToDeactivate.name}' desactivado");
+                    #endif
+                }
             }
 
             if (objectToActivate != null)
             {
                 objectToActivate.SetActive(true);
-                if (debugMode) Debug.Log($"[MeshSwapper:{name}] '{objectToActivate.name}' activado");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MeshSwapper:{name}] '{objectToActivate.name}' activado");
+                    #endif
+                }
             }
         }
 
@@ -209,13 +244,23 @@ namespace Game.World
                 // Aplicar offset
                 targetPosition += effectsPositionOffset;
                 
-                if (debugMode) Debug.Log($"[MeshSwapper:{name}] 💨 Instanciando {effectsOnSwap.Length} efectos en posición {targetPosition}");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MeshSwapper:{name}] 💨 Instanciando {effectsOnSwap.Length} efectos en posición {targetPosition}");
+                    #endif
+                }
                 
                 foreach (var effect in effectsOnSwap)
                 {
                     if (effect == null) continue;
                     Instantiate(effect.gameObject, targetPosition, effect.transform.rotation);
-                    if (debugMode) Debug.Log($"[MeshSwapper:{name}] ✅ Efecto '{effect.name}' instanciado en {targetPosition}");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[MeshSwapper:{name}] ✅ Efecto '{effect.name}' instanciado en {targetPosition}");
+                        #endif
+                    }
                 }
             }
 
@@ -231,7 +276,12 @@ namespace Game.World
         {
             PlayerPrefs.SetInt($"MeshSwapper_{persistenceId}", _hasSwapped ? 1 : 0);
             PlayerPrefs.Save();
-            if (debugMode) Debug.Log($"[MeshSwapper:{name}] Estado guardado: {_hasSwapped}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MeshSwapper:{name}] Estado guardado: {_hasSwapped}");
+                #endif
+            }
         }
 
         private void RestoreState()
@@ -240,7 +290,12 @@ namespace Game.World
             
             if (wasSwapped)
             {
-                if (debugMode) Debug.Log($"[MeshSwapper:{name}] Restaurando estado: ya estaba swapped");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[MeshSwapper:{name}] Restaurando estado: ya estaba swapped");
+                    #endif
+                }
                 
                 // Aplicar el swap silenciosamente (sin efectos)
                 if (useGameObjectSwap)
@@ -308,7 +363,12 @@ namespace Game.World
         /// </summary>
         public void OnNotify(Playable origin, INotification notification, object context)
         {
-            if (debugMode) Debug.Log($"[MeshSwapper:{name}] 📡 Signal recibido de Timeline: {notification}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MeshSwapper:{name}] 📡 Signal recibido de Timeline: {notification}");
+                #endif
+            }
             Swap();
         }
         

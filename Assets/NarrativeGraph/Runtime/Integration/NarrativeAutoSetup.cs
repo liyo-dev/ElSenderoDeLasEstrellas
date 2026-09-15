@@ -1,6 +1,17 @@
 using System.Reflection;
 using UnityEngine;
 
+// ───────────────────────────────────────────────────────────────────────────
+// CONGELADO (12 sept 2026) — no usar para grafos nuevos. Sustituto:
+// NarrativeGraphHub + NarrativeGraphStarter (patrón multi-grafo por etiqueta,
+// el único de los dos que soporta más de un grafo activo a la vez — necesario
+// en cuanto haya un grafo de Cap1 de la maqueta además de "Historia Principal").
+// SIGUE VIVO: es el arrancador real de "Historia Principal" hoy — no se puede
+// retirar todavía sin migrar antes ese grafo al Hub (fuera de alcance aquí).
+// Nota aparte: inyecta signalsProvider por reflection — contra CLAUDE.md § 2
+// (no reflection en runtime); no tocar sin plan de retirada completo.
+// Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+// ───────────────────────────────────────────────────────────────────────────
 [DisallowMultipleComponent]
 [DefaultExecutionOrder(-1000)]
 public class NarrativeAutoSetup : MonoBehaviour

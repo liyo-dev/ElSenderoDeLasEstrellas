@@ -8,4 +8,7 @@ public interface IQuestService
     void StartQuest(string questId);
     void CompleteStep(string questId, int stepIndex);
     void CompleteStepByConditionId(string questId, string stepConditionId);
+
+    /// <summary>Estado detallado (NotStarted / Active / StepsReady / Completed).</summary>
+    NarrativeQuestState GetState(string questId);
 }

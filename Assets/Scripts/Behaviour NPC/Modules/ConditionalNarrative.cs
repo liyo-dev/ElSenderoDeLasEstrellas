@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — parte del motor Interactive, mismo estado que
+    // NPCInteractiveNarrativeExecutor. No usar para contenido nuevo de la maqueta.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Narrativa condicional: Define una cadena narrativa que se ejecuta solo si se cumple una condición.
     /// Cada narrativa tiene su propia configuración de ejecución (singleUse, autoStart, postState).

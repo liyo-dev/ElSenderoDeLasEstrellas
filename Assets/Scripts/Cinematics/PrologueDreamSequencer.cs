@@ -172,8 +172,8 @@ public class PrologueDreamSequencer : CinematicSequencerBase
     [SerializeField] private float shockWeightMin = 0.35f;
     [SerializeField] private float shockWeightMax = 0.85f;
 
-    [Header("Fase E — Flashes de guerra (opcional; si se deja vacío, usa como fallback lightImpactVfx/darkImpactVfx)")]
-    [Tooltip("Si se asigna a mano, estos GameObjects ya colocados en la escena se activan uno a uno (comportamiento original). Si se deja vacío (caso por defecto hoy), Co_WarFlashes() cae en un fallback: reutiliza lightImpactVfx/darkImpactVfx (los mismos VFX que ya dispara Co_Collision) como 2-3 destellos de choque extra, vía VfxPoolService — sin necesidad de colocar nada a mano en el Editor. Decisión 4 sep 2026.")]
+    [Header("Fase E — Flashes de guerra: la 'sucesión de rayos' cuando se miran por primera vez (opcional; si se deja vacío, usa como fallback lightImpactVfx/darkImpactVfx)")]
+    [Tooltip("REDEFINIDO (12/09/2026, pedido de Raúl: 'el rayo solo sale cuando ambos personajes se miran por primera vez... una sucesion de rayos con sfx.. entonces cada uno lanza el hechizo. Ambos hechizos impactan y vemos una explosion'): este es el momento del rayo/trueno — el cara a cara ANTES de lanzar nada, no el impacto (Co_Collision ahora es solo la explosión). Si se asigna a mano, estos GameObjects ya colocados en la escena se activan uno a uno (comportamiento original). Si se deja vacío (caso por defecto hoy), Co_WarFlashes() cae en un fallback: reutiliza lightImpactVfx/darkImpactVfx (VFX_RayoColision_*) como una sucesión de varios destellos de rayo con trueno, vía VfxPoolService — sin necesidad de colocar nada a mano en el Editor.")]
     [SerializeField] private GameObject[] warFlashVisuals;
     [SerializeField] private float flashOnDuration      = 0.15f;
     [SerializeField] private float backToActorsDuration = 0.10f;
@@ -193,15 +193,24 @@ public class PrologueDreamSequencer : CinematicSequencerBase
     [SerializeField] private float mutualCastShakeMaxIntensity = 0.3f;
 
     [Header("Fase E — Colisión de hechizos (origen y punto de choque calculados por código)")]
-    [Tooltip("VFX de energía clara, ej. Light Orb — sale desde Will Original.")]
+    [Tooltip("REDEFINIDO (12/09/2026, pedido de Raúl: 'ambos hechizos impactan y vemos una explosion'): estos dos prefabs (VFX_RayoColision_Claro/Oscuro) YA NO se usan aquí — el rayo vive en Co_WarFlashes, el cara a cara ANTES de lanzar nada. Se mantienen como campos porque Co_WarFlashes los reutiliza como fallback para su 'sucesión de rayos'. El proyectil que viaja (SpawnAndLaunchMutualVfx) usa magoOscuroLoadVfx/willLoadVfx, no esto.")]
     [SerializeField] private GameObject lightImpactVfx;
-    [Tooltip("VFX de energía oscura, ej. Plasma Sphere Cinematic — sale desde el Mago Oscuro.")]
+    [Tooltip("Lado del Mago Oscuro (VFX_RayoColision_Oscuro). Mismo criterio que lightImpactVfx de arriba — ver Co_WarFlashes.")]
     [SerializeField] private GameObject darkImpactVfx;
     [SerializeField] private Color lightFlashColor = new Color(1f, 0.95f, 0.75f, 1f);
     [SerializeField] private Color darkFlashColor  = new Color(0.25f, 0f, 0.4f, 1f);
     [SerializeField] private float collisionHoldDuration = 1.2f;
     [SerializeField] private float collisionZoomFovFactor = 0.6f;
     [SerializeField] private float collisionZoomDuration  = 0.4f;
+
+    [Header("Fase E — Colisión: explosión (12/09/2026, pedido de Raúl 'ambos hechizos impactan y vemos una explosion')")]
+    [Tooltip("AJUSTE (12/09/2026, feedback de Raúl: el burst procedural (VFX_ExplosionRayos) no convencía — pide reutilizar 'la explosion que usamos en la secuencia de will cuando despierta la magia, cuando el hechizo choca contra el plasma del enemigo'. Asignar aquí Assets/VFX/100BestEffectPack/Effects/ExplosionEffect/ExplosionEffect5.prefab — el mismo prefab wireado en StarAwakeningSequencer.explosionVFX. Se reproduce con duración fija de 3s (ver Co_Collision), independiente de collisionHoldDuration. Además de esto, en el punto de choque salen dos rayos verticales cortos (lightImpactVfx/darkImpactVfx) justo antes de la explosión.")]
+    [SerializeField] private GameObject explosionBurstVfx;
+    [Tooltip("Cuántos rayos extra —además de los de la sucesión principal— se lanzan dispersos alrededor del punto de choque en Co_WarFlashes, en posiciones aleatorias — 'meter más rayos' en la sucesión, no en el impacto. Reducido de 3 a 2 (12/09/2026, feedback de Raúl: 'no todos') para que la sucesión no se sienta excesiva.")]
+    [SerializeField] private int extraCollisionBoltCount = 2;
+    [SerializeField] private float extraCollisionBoltSpread = 0.9f;
+    [Tooltip("Clave del Audio Graph Profile para el trueno/crash — suena en cada destello de la sucesión de rayos (Co_WarFlashes), no en el impacto — dejar vacío para omitir.")]
+    [SerializeField] private string thunderCrackSfxKey = "Prologue_ThunderCrack";
 
     // ── Audio (opcional) ─────────────────────────────────────────────────────
 
@@ -264,9 +273,22 @@ public class PrologueDreamSequencer : CinematicSequencerBase
 
     protected override void Awake()
     {
-        base.Awake();
+        // FIX (12 sept 2026): construir el escenario ANTES de suscribirse a la señal de entrada
+        // (base.Awake()), no después. DefaultNarrativeSignals.OnCustom() invoca el callback DE
+        // FORMA SÍNCRONA, en el mismo frame, si la señal ya estaba pendiente/raised al
+        // suscribirse (p. ej. tras un reset suave, o si el grafo la disparó un frame antes de que
+        // este objeto llegara a Awake()). Ese callback llama a StartCoroutine(Co_SequenceGuarded()),
+        // que en Unity ejecuta la corrutina de forma síncrona hasta el primer yield real — y si
+        // FeedbackService.IsScreenFaded ya es true (pantalla ya en negro) y _entryTransition no
+        // está asignado en el Inspector (no lo está: ver comentario al principio de Co_Sequence()),
+        // Co_Transition() no llega a suspenderse en ningún punto y ejecuta additionalOnCut() —
+        // _stageCamera.gameObject.SetActive(true) — en el mismo Awake(), antes de que BuildStage()
+        // (más abajo, con el orden antiguo) hubiera tenido ocasión de crear _stageCamera. De ahí el
+        // NullReferenceException en PrologueDreamSequencer.cs:570. Con el escenario ya construido
+        // antes de suscribirse, ese posible disparo síncrono encuentra _stageCamera ya asignada.
         EnsureDreamCanvas();
         BuildStage();
+        base.Awake();
     }
 
     /// `_dreamBackground`/`_dreamSparkles` son RectTransforms colocados como hijos de este mismo
@@ -1140,9 +1162,21 @@ public class PrologueDreamSequencer : CinematicSequencerBase
     /// Instancia el hechizo de cada uno EN ESTE INSTANTE — no antes — y lo lanza directo al punto
     /// de colisión. Antes se instanciaba ya en BeginMutualPreparation y se le veía "cargando" en la
     /// mano durante todo el plano cerrado y el zoom out; ahora solo se ve la pose de preparación
-    /// hasta este momento, en el que aparece y sale disparado para los dos a la vez. Usa el mismo
-    /// prefab "de carga" (magoOscuroLoadVfx/willLoadVfx) que antes seguía la mano; si no está
-    /// asignado, cae de vuelta a darkImpactVfx/lightImpactVfx como fallback.
+    /// hasta este momento, en el que aparece y sale disparado para los dos a la vez.
+    ///
+    /// CAMBIO (11 sep 2026, pedido de Raúl): antes reutilizaba el mismo prefab "de carga"
+    /// (magoOscuroLoadVfx/willLoadVfx — el que ya se vio brillando en la mano durante las Fases
+    /// B/D y toda la preparación de la Fase E) también como el proyectil que viaja al centro, y
+    /// caía a darkImpactVfx/lightImpactVfx solo si no había prefab de carga asignado.
+    ///
+    /// REVERTIDO (12 sep 2026, pedido de Raúl): con lightImpactVfx/darkImpactVfx ahora apuntando al
+    /// rayo (VFX_RayoColision_*, ver cambio del propio 12/09), la prioridad de arriba hacía que el
+    /// PROYECTIL que viajaba de la mano al centro también saliera como rayo — "cuando ambos
+    /// personajes lanzan el hechizo deben lanzar el que había antes, son dos cosas distintas". El
+    /// rayo es EXCLUSIVO del impacto en el centro (Co_Collision); el proyectil vuelve a usar
+    /// PRIORITARIAMENTE magoOscuroLoadVfx/willLoadVfx (el mismo VFX que ya se ve cargando en la
+    /// mano durante toda la preparación — "lo que había antes"), con darkImpactVfx/lightImpactVfx
+    /// solo como fallback si no hay prefab de carga asignado.
     private void SpawnAndLaunchMutualVfx(Vector3 collisionPoint)
     {
         if (magoOscuroLoadVfx != null && _magoAnimator != null)
@@ -1158,8 +1192,10 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         else if (darkImpactVfx != null)
         {
             Transform hand = GetHandBone(_magoAnimator);
-            Vector3 spawnPos = hand != null ? hand.position : _magoInstance.transform.position + Vector3.up * 1.4f;
-            _magoChargingVfxInstance = Instantiate(darkImpactVfx, spawnPos, Quaternion.identity);
+            Vector3 spawnPos = hand != null ? hand.position + magoOscuroLoadVfxOffset
+                                             : _magoInstance.transform.position + Vector3.up * 1.4f + magoOscuroLoadVfxOffset;
+            _magoChargingVfxInstance = Instantiate(darkImpactVfx, spawnPos, Quaternion.identity, _stageRoot);
+            PlaySpellInstantiate();
             StartCoroutine(Co_TravelToPoint(_magoChargingVfxInstance.transform, spawnPos, collisionPoint, mutualCastTravelDuration));
         }
 
@@ -1175,8 +1211,9 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         else if (lightImpactVfx != null)
         {
             Transform hand = GetHandBone(_willAnimator);
-            Vector3 spawnPos = hand != null ? hand.position : _willInstance.transform.position + Vector3.up * 1.4f;
-            _willChargingVfxInstance = Instantiate(lightImpactVfx, spawnPos, Quaternion.identity);
+            Vector3 spawnPos = hand != null ? hand.position + willLoadVfxOffset
+                                             : _willInstance.transform.position + Vector3.up * 1.4f + willLoadVfxOffset;
+            _willChargingVfxInstance = Instantiate(lightImpactVfx, spawnPos, Quaternion.identity, _stageRoot);
             StartCoroutine(Co_TravelToPoint(_willChargingVfxInstance.transform, spawnPos, collisionPoint, mutualCastTravelDuration));
         }
     }
@@ -1215,17 +1252,32 @@ public class PrologueDreamSequencer : CinematicSequencerBase
             yield break;
         }
 
-        // FALLBACK (4 sep 2026): sin warFlashVisuals asignado a mano en el Editor, reutiliza los
-        // mismos VFX de energía que ya se ven en esta cinemática (lightImpactVfx/darkImpactVfx —
-        // los mismos que dispara Co_Collision) como destellos de "choque" extra durante el plano
-        // cerrado, en vez de dejar el efecto completamente desactivado. Mantiene coherencia
-        // visual con el resto de la secuencia sin requerir colocar nada a mano en el Editor. Si
-        // en el futuro se asigna warFlashVisuals desde el Inspector, el camino de arriba vuelve a
-        // tener prioridad automáticamente.
+        // FALLBACK / REDEFINIDO (12 sep 2026, pedido de Raúl: "el rayo solo sale cuando ambos
+        // personajes se miran por primera vez... una sucesion de rayos con sfx.. entonces cada uno
+        // lanza el hechizo. Ambos hechizos impactan y vemos una explosion"): este es el momento del
+        // rayo — el cara a cara ANTES de lanzar nada (se llega aquí desde Co_DualBlurredCollision,
+        // justo tras FaceEachOther/BeginMutualPreparation). Ya NO vive en el impacto (Co_Collision,
+        // que ahora es solo la explosión) ni en el proyectil (SpawnAndLaunchMutualVfx sigue usando
+        // magoOscuroLoadVfx/willLoadVfx, el hechizo de siempre). Reutiliza lightImpactVfx/
+        // darkImpactVfx (VFX_RayoColision_*) como una sucesión real de varios rayos con trueno.
         if ((lightImpactVfx == null && darkImpactVfx == null) || VfxPoolService.Instance == null) yield break;
 
-        GameObject[] fallbackFlashPrefabs = { lightImpactVfx, darkImpactVfx, lightImpactVfx };
         Vector3 flashCenter = stageAnchorPosition + Vector3.up * cameraHeight;
+
+        // Puñado de rayos dispersos antes de la sucesión principal — "meter más rayos" — para que
+        // no se lea como dos flashes sueltos sino como una tormenta de verdad.
+        for (int i = 0; i < extraCollisionBoltCount; i++)
+        {
+            GameObject boltPrefab = (i % 2 == 0 && lightImpactVfx != null) ? lightImpactVfx
+                                   : (darkImpactVfx != null ? darkImpactVfx : lightImpactVfx);
+            Vector3 offset = Random.insideUnitSphere * extraCollisionBoltSpread;
+            offset.y = Mathf.Abs(offset.y); // que no aparezcan por debajo del suelo del escenario
+            VfxPoolService.Instance.Play(boltPrefab, flashCenter + offset, Quaternion.identity, flashOnDuration);
+        }
+
+        // Recortado de 4 a 3 (12/09/2026, feedback de Raúl: "no todos") — sigue leyéndose como
+        // sucesión, sin sentirse excesivo.
+        GameObject[] fallbackFlashPrefabs = { lightImpactVfx, darkImpactVfx, lightImpactVfx };
 
         for (int i = 0; i < fallbackFlashPrefabs.Length; i++)
         {
@@ -1237,6 +1289,7 @@ public class PrologueDreamSequencer : CinematicSequencerBase
             // flashOnDuration segundos igualmente).
             VfxPoolService.Instance.Play(prefab, flashCenter, Quaternion.identity, flashOnDuration);
             FeedbackService.CameraShake(_stageCamera, flashShakeIntensity, flashOnDuration);
+            PlayThunder();
             PlayRandomStinger();
 
             yield return new WaitForSecondsRealtime(flashOnDuration);
@@ -1263,23 +1316,45 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         }
         _stageCamera.fieldOfView = targetFov;
 
+        Vector3 collisionPoint = Vector3.Lerp(_magoInstance.transform.position, _willInstance.transform.position, 0.5f)
+                                 + Vector3.up * 1.2f;
+
+        // REDEFINIDO (12 sep 2026, pedido de Raúl: "el rayo solo sale cuando ambos personajes se
+        // miran por primera vez... entonces cada uno lanza el hechizo. Ambos hechizos impactan y
+        // vemos una explosion"): el grueso de los rayos vive en Co_WarFlashes, durante el cara a
+        // cara — aquí no se repite esa sucesión completa.
+        //
+        // AJUSTE (12 sep 2026, feedback de Raúl tras probar: "el vfx de la explosion... deja si
+        // quieres los rayos o alguno no todos y verticales y añadele una explosion, la que usamos
+        // en la secuencia de will cuando despierta la magia"): se añaden aquí SOLO dos rayos
+        // verticales (uno claro, uno oscuro — mismos prefabs que Co_WarFlashes, ya son verticales
+        // de por sí) justo en el punto de choque, y el burst de partículas genérico
+        // (ProceduralSparkBurstVfx) se sustituye por el mismo prefab de explosión ya probado en
+        // StarAwakeningSequencer.TriggerExplosion() (Despertar de la Magia, choque del hechizo de
+        // Will contra el proyectil/"plasma" enemigo) — Assets/VFX/100BestEffectPack/Effects/
+        // ExplosionEffect/ExplosionEffect5.prefab — en vez del VFX_ExplosionRayos genérico.
         _shockVolume.weight = 1f;
         PlayTinnitus(); // pico del pitido, coincide con el choque
         PlayExplosion();
         FeedbackService.CameraShake(_stageCamera, 0.4f, collisionHoldDuration);
-
-        Vector3 collisionPoint = Vector3.Lerp(_magoInstance.transform.position, _willInstance.transform.position, 0.5f)
-                                 + Vector3.up * 1.2f;
-
-        if (lightImpactVfx != null)
-            VfxPoolService.Instance.Play(lightImpactVfx, collisionPoint, Quaternion.identity, collisionHoldDuration);
-        if (darkImpactVfx != null)
-            VfxPoolService.Instance.Play(darkImpactVfx, collisionPoint, Quaternion.identity, collisionHoldDuration);
-
         FeedbackService.ScreenFlash(lightFlashColor, collisionHoldDuration * 0.4f);
+
+        if (VfxPoolService.Instance != null)
+        {
+            if (lightImpactVfx != null)
+                VfxPoolService.Instance.Play(lightImpactVfx, collisionPoint, Quaternion.identity, flashOnDuration);
+            if (darkImpactVfx != null)
+                VfxPoolService.Instance.Play(darkImpactVfx, collisionPoint, Quaternion.identity, flashOnDuration);
+        }
+
+        // Duración fija (no collisionHoldDuration): el prefab reutilizado es un ParticleSystem real
+        // (no el burst procedural anterior) y necesita su propio tiempo de vida en pantalla — mismo
+        // valor (3s) que ya usa StarAwakeningSequencer.TriggerExplosion() para este mismo prefab.
+        if (explosionBurstVfx != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(explosionBurstVfx, collisionPoint, Quaternion.identity, 3f);
+
         yield return new WaitForSecondsRealtime(collisionHoldDuration * 0.4f);
         FeedbackService.ScreenFlash(darkFlashColor, collisionHoldDuration * 0.6f);
-
         yield return new WaitForSecondsRealtime(collisionHoldDuration * 0.6f);
     }
 
@@ -1398,6 +1473,16 @@ public class PrologueDreamSequencer : CinematicSequencerBase
     {
         if (AudioService.Instance == null || string.IsNullOrWhiteSpace(explosionSfxKey)) return;
         AudioService.Instance.PlaySFX(explosionSfxKey);
+    }
+
+    // FIX (12 sep 2026, pedido de Raúl "dar más miedo"): trueno/crash propio del impacto de los
+    // rayos, distinto de explosionSfxKey. Sigue el mismo patrón defensivo: si no hay AudioService
+    // o no se ha asignado clave todavía, no hace nada (mismo hueco pendiente que Prologue_Heartbeat
+    // — hay que dar de alta "Prologue_ThunderCrack" en AudioGraphProfile.asset).
+    private void PlayThunder()
+    {
+        if (AudioService.Instance == null || string.IsNullOrWhiteSpace(thunderCrackSfxKey)) return;
+        AudioService.Instance.PlaySFX(thunderCrackSfxKey);
     }
 
     private void SetActorsVisible(bool visible)

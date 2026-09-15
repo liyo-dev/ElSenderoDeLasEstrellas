@@ -25,16 +25,26 @@ using UnityEngine;
 ///      desde aquí dónde hay hueco libre entre los 568 árboles sin abrir el Editor).
 ///   2) Ajustar a ojo la posición/escala de la roca bloqueadora para que realmente tape el paso
 ///      hacia el cofre (se coloca con un tamaño de partida razonable, sin ver la geometría real).
-///   3) Asignar el ItemData de la recompensa en el WorldPickup del cofre (Effects → Item) — se
-///      deja el efecto en tipo "Currency" con cantidad 25 pero SIN ItemData asignado porque no
-///      se ha podido localizar con garantías el asset de la moneda del juego desde aquí; con
-///      Item vacío, PlayerPickupCollector.ApplyCurrency avisa por consola y no da nada.
+///   3) [Resuelto — ya no hace falta a mano] El WorldPickup del cofre asigna automáticamente
+///      IT_Coin.asset (25 unidades) como recompensa. Si algún día cambia la ruta del asset de
+///      moneda, actualiza CoinItemPath más abajo.
 ///   4) Dar de alta las claves de audio nuevas en AudioService/AudioGraphProfile si quieres SFX
 ///      real: "RuneActivate", "RuneFail", "RuneSolved" (mismo patrón que castSFXKey en los
 ///      hechizos de Liam — sin la clave dada de alta, simplemente no suena nada, no rompe nada).
-///   5) Playtest: acercarse activa la demostración (las piedras correctas se encienden en orden
-///      una vez); repetir el mismo orden interactuando con ellas abre el paso; equivocarse
-///      reinicia y repite la demostración.
+///   5) Opcional: el cofre se genera oculto hasta resolver el puzle (PuzzleRewardGate.
+///      chestToReveal) y aparece con un "pop" de escala. Si quieres además un destello/VFX al
+///      aparecer, asigna PuzzleRewardGate.revealVfxPrefab a mano (p. ej. algo de
+///      Assets/VFX/100BestEffectPack/Effects/OtherMagicEffect o HolyEffect) — se deja sin
+///      asignar por el mismo motivo que el ItemData: elegirlo viendo el resultado en el Editor.
+///   6) [Resuelto — ya no hace falta a mano] El cofre ya no desaparecía como una moneda al
+///      recogerlo: el WorldPickup se generaba con collectOnTrigger/destroyOnCollect en sus
+///      valores por defecto (true), pensados para un pickup de suelo, no para un cofre. Ahora el
+///      generador los deja en false — hay que interactuar (no basta acercarse) y el cofre se
+///      queda en la escena, abierto, igual que el resto de cofres del juego.
+///   7) Playtest: acercarse activa la demostración (las piedras correctas se encienden en orden
+///      una vez); repetir el mismo orden interactuando con ellas abre el paso y revela el cofre;
+///      interactuar con el cofre lo abre (tapa) y da la recompensa sin que desaparezca;
+///      equivocarse con las piedras reinicia y repite la demostración.
 /// </summary>
 public class ForbiddenForestPuzzleBuilder : EditorWindow
 {
@@ -42,11 +52,18 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
 
     // Props ya existentes en el proyecto — Fantasy_Kingdom_Pack (mismo pack que el resto del
     // Bosque Prohibido: árboles, montañas de dressing, arenas de combate).
+    //
+    // FIX (10 sept 2026): Stone02_a01 se ha quitado de la rotación — Raúl, jugando la demo, vio
+    // que en el juego esa variante no se lee como una piedra rúnica sino como una rueda (su malla
+    // es un disco plano con lo que parece un eje/palo, no una roca irregular como Stone01_a01/a02).
+    // Rompía la coherencia visual del puzle "Sello de las Piedras" (que las 4 piedras del
+    // semicírculo se vean todas como piedras). Con 2 variantes en vez de 3 el semicírculo se
+    // genera igual (el índice cicla con % StonePrefabPaths.Count), solo que ahora alterna
+    // Stone01_a01/Stone01_a02 en vez de meter la que no encajaba.
     static readonly string[] StonePrefabPaths =
     {
         "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Engineering/Stone01_a01.prefab",
         "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Engineering/Stone01_a02.prefab",
-        "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Engineering/Stone02_a01.prefab",
     };
     const string BlockerRockPrefabPath = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Rock/Rock04_a01.prefab";
     const string ChestPrefabPath = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Goods/Chest01.prefab";
@@ -220,6 +237,18 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
 
         ConfigureCurrencyEffect(chestPickup, _rewardQuantity);
 
+        // FIX (9 sept 2026): un cofre debe comportarse como el resto de cofres del juego —
+        // interactuar con él (tapa se abre) y quedarse ahí, no como una moneda suelta. Los dos
+        // valores por defecto de WorldPickup son los pensados para un pickup de suelo, no para un
+        // cofre con su propio Interactable/ChestInteractable encima:
+        //   - collectOnTrigger=true habría recogido la recompensa en cuanto el jugador entrara en
+        //     el radio del SphereCollider (1.2m), SIN pasar por ChestInteractable.OnInteract() ni
+        //     por la animación de tapa — se sentía exactamente como recoger una moneda al pisarla.
+        //   - destroyOnCollect=true destruye el GameObject entero tras recoger la recompensa —
+        //     el cofre desaparecía del todo en vez de quedarse abierto y vacío en la escena.
+        SetPrivateField(chestPickup, "collectOnTrigger", false);
+        SetPrivateField(chestPickup, "destroyOnCollect", false);
+
         // Intento de encontrar la tapa real del prefab (Chest01_a02, confirmado leyendo el
         // .prefab) para la animación de apertura de ChestInteractable — si el nombre no coincide
         // en otra variante de cofre, el campo se queda vacío y ChestInteractable simplemente
@@ -233,6 +262,11 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
         Undo.RegisterCreatedObjectUndo(gateGO, "Generar Puzle de Runas");
         var gate = gateGO.AddComponent<PuzzleRewardGate>();
         SetPrivateField(gate, "blocker", blockerInstance.transform);
+        // El cofre se queda oculto hasta resolver el puzle y aparece con un pequeño "pop" al
+        // llamar a Open() (ver PuzzleRewardGate.cs) — el VFX de aparición se deja sin asignar
+        // a propósito, igual que el ItemData: elegirlo a mano en el Editor entre las opciones
+        // de Assets/VFX/100BestEffectPack en vez de a ciegas por GUID.
+        SetPrivateField(gate, "chestToReveal", chestInstance);
 
         // ── Controlador del puzle ──
         var puzzleGO = new GameObject("RuneSequencePuzzle");
@@ -267,6 +301,8 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
         return indices.ToArray();
     }
 
+    const string CoinItemPath = "Assets/_ITEMS/IT_Coin.asset";
+
     static void ConfigureCurrencyEffect(WorldPickup pickup, int quantity)
     {
         var so = new SerializedObject(pickup);
@@ -276,7 +312,18 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
         var elem = effects.GetArrayElementAtIndex(0);
         elem.FindPropertyRelative("effectType").enumValueIndex = (int)PickupEffectType.Currency;
         elem.FindPropertyRelative("quantity").intValue = quantity;
-        // 'item' (ItemData) se deja sin asignar a propósito — ver pendiente #3 en la cabecera.
+
+        var coinItem = AssetDatabase.LoadAssetAtPath<ItemData>(CoinItemPath);
+        if (coinItem != null)
+        {
+            elem.FindPropertyRelative("item").objectReferenceValue = coinItem;
+        }
+        else
+        {
+            Debug.LogWarning($"[ForbiddenForestPuzzleBuilder] No se pudo cargar '{CoinItemPath}' " +
+                              "— el efecto de recompensa se deja sin ItemData, asígnalo a mano " +
+                              "(WorldPickup del cofre, Effects → Item).");
+        }
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
@@ -300,6 +347,9 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
                 break;
             case SerializedPropertyType.Integer:
                 prop.intValue = (int)value;
+                break;
+            case SerializedPropertyType.Boolean:
+                prop.boolValue = (bool)value;
                 break;
             default:
                 Debug.LogWarning($"[ForbiddenForestPuzzleBuilder] Tipo de campo no soportado para '{fieldName}'.");

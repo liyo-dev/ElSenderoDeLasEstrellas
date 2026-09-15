@@ -74,7 +74,11 @@ public class LorePopupPoint : MonoBehaviour
         if (loreConfig != null)
         {
             if (LorePopupUI.Instance == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[LorePopupPoint:{name}] ❌ loreConfig asignado pero LorePopupUI.Instance es NULL. Añade un LorePopupUI al Canvas de la escena.");
+                #endif
+            }
             else
                 LorePopupUI.Instance.Show(loreConfig, null);
         }
@@ -84,7 +88,11 @@ public class LorePopupPoint : MonoBehaviour
         {
             var signals = DefaultNarrativeSignals.Instance;
             if (signals == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[LorePopupPoint:{name}] ❌ narrativeEventKey='{narrativeEventKey}' pero DefaultNarrativeSignals.Instance es NULL.");
+                #endif
+            }
             else
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -95,7 +103,11 @@ public class LorePopupPoint : MonoBehaviour
         }
 
         if (loreConfig == null && string.IsNullOrEmpty(narrativeEventKey))
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[LorePopupPoint:{name}] ⚠️ Ni loreConfig ni narrativeEventKey están asignados. El trigger no hace nada.");
+            #endif
+        }
 
         if (disableAfterUse)
             gameObject.SetActive(false);

@@ -4,6 +4,11 @@ using UnityEngine.Events;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO (12 sept 2026) — parte de NPCQuestConfig, mismo estado que él:
+    // no ampliar para contenido nuevo de la maqueta. Sigue vivo en MainWorld_old.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Representa una entrada en la cadena de misiones de un NPC.
     /// Contiene toda la información de una quest: datos, modo de completado, detección, diálogos, etc.

@@ -3,6 +3,7 @@ using System;
 
 [Obsolete("UnlockTriggerNode está obsoleto. Usa UnlockAbilitiesNode u otros mecanismos para desbloquear triggers.")]
 [Serializable]
+[NarrativeNodeInfo("Jugador", "Desbloquear trigger (legacy)", "")]
 public sealed class UnlockTriggerNode : NarrativeNode
 {
     public string triggerKey;

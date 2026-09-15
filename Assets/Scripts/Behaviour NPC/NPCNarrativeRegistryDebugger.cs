@@ -182,8 +182,9 @@ namespace Game.NPC.Tools
                         var config = executor.GetConfiguration();
                         if (config != null)
                         {
-                            // Dibujar el rango de detección
-                            float range = executor.Manager?.NarrativeDetectionRange ?? 10f;
+                            // Dibujar el rango de detección (campo movido de NPCBehaviourManagerV2
+                            // a NarrativeActor el 12 sept 2026, ver NarrativeActor.cs)
+                            float range = executor.GetComponent<NarrativeActor>()?.NarrativeDetectionRange ?? 10f;
                             Debug.DrawRay(executor.transform.position, Vector3.forward * range, Color.yellow);
                         }
                     }

@@ -196,6 +196,27 @@ namespace EasyTransition
             //Destroying the transition
             Destroy(gameObject, destroyTime);
         }
+
+        // FIX (14 sep 2026, reporte de Raúl — "al salir de la casa de Will la transición se queda
+        // pillada casi terminando, efecto muy feo"): hasta ahora, si esta instancia quedaba
+        // huérfana a mitad de su revelado (p. ej. por la carrera con la descarga aditiva del
+        // interior descrita en incidencia-transicion-pillada-interiores-aditivo-2026-09-12), el
+        // watchdog de TeleportService solo podía resetear los flags lógicos
+        // (_sTransitionInProgress / runningTransition) — no tenía forma de tocar ESTE overlay
+        // concreto, así que la pantalla se quedaba visualmente atascada aunque el jugador y los
+        // teleports futuros ya estuvieran desbloqueados (limitación conocida, documentada en esa
+        // misma incidencia). Este método, llamado desde
+        // TransitionManager.ForceCompleteCurrentTransition() cuando el watchdog se dispara, oculta
+        // los paneles a mano y se autodestruye, sin depender de que la animación de revelado (que
+        // corre en tiempo escalado por Animator, no en el WaitForSecondsRealtime de la corrutina de
+        // TransitionManager) llegue a completarse por su cuenta.
+        public void ForceComplete()
+        {
+            hasTransitionTriggeredOnce = true;
+            if (transitionPanelIN) transitionPanelIN.gameObject.SetActive(false);
+            if (transitionPanelOUT) transitionPanelOUT.gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
     }
 
 }

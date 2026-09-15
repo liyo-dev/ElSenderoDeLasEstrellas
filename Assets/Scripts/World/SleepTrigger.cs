@@ -43,6 +43,7 @@ public class SleepTrigger : MonoBehaviour
 
     private bool isSleeping = false;
     private float _sleepStartTime = -999f;
+    private int _sleepStateHash = -1;
 
     private Animator playerAnimator;
     private PlayerActionManager playerActionManager;
@@ -95,14 +96,65 @@ public class SleepTrigger : MonoBehaviour
         {
             try { playerAnimator.SetBool(vAnimatorParameters.IsGrounded, true); } catch { }
             try { playerAnimator.SetFloat(vAnimatorParameters.GroundDistance, 0f); } catch { }
+
+            // FIX (12 sep 2026): "Will sigue de pie en la cama" — reportado con sleepOnStart (Will
+            // ya duerme al cargar la escena, antes de que arranque el sueño del prólogo) y, a
+            // diferencia del bug del 15 ago (Animator sin el estado — eso ya deja su propio
+            // Debug.LogError si vuelve a pasar), esta vez SetupSleep() sí consigue reproducir
+            // 'sleepAnimationState' sin error. Hipótesis de Raúl: "es por temas de tiempos" — y
+            // encaja con el propio comentario de más abajo en SetupSleep() sobre WorldBootstrap
+            // pudiendo aplicar la apariencia del personaje activo DESPUÉS del Play() de aquí (mismo
+            // orden de ejecución que ya causó el bug de "cae encima de la cama" con IsGrounded, ver
+            // el FIX del 15 ago un poco más arriba en este archivo): un Rebind/reasignación de
+            // Animator Controller en ese punto devuelve al Animator a su estado de entrada por
+            // defecto (de pie), pisando el Play() que ya se había hecho. playerAnimator.Play() es
+            // un one-shot, no algo que se reafirme solo — así que, igual que ya hacemos con
+            // IsGrounded arriba, se vigila aquí CADA FRAME mientras isSleeping siga activo y se
+            // fuerza de vuelta si algo externo lo saca del estado de dormir.
+            if (_sleepStateHash != -1)
+            {
+                var stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.shortNameHash != _sleepStateHash && !playerAnimator.IsInTransition(0))
+                {
+                    playerAnimator.Play(_sleepStateHash, 0, 0f);
+                }
+            }
         }
     }
 
     IEnumerator ForceSleepNextFrame()
     {
-        yield return null;
-        var playerGO = player != null ? player : PlayerService.Player;
-        if (playerGO != null) ForceSleep(playerGO);
+        // FIX (11 sep 2026): "Will sigue sin salir acostado" — antes esto esperaba UN solo frame e
+        // intentaba resolver al jugador UNA sola vez ('player' o PlayerService.Player); si en ese
+        // frame el jugador todavía no estaba listo (p. ej. WorldBootstrap sigue cargando la escena
+        // aditiva de esta habitación y/o esperando a que el jugador exista antes de teletransportarlo
+        // — puede tardar varios frames), fallaba en silencio y Will nunca se dormía. Ahora reintenta
+        // con un timeout, sondeando solo PlayerService.Player (referencia ya cacheada, sin
+        // FindObjectOfType ni GameObject.Find — ver AGENTS.md § 2).
+        const float maxWait = 5f;
+        float elapsed = 0f;
+        GameObject playerGO = null;
+
+        while (elapsed < maxWait)
+        {
+            playerGO = player != null ? player : PlayerService.Player;
+            if (playerGO != null) break;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerGO != null)
+        {
+            ForceSleep(playerGO);
+        }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        else
+        {
+            Debug.LogError($"[SleepTrigger] '{name}': sleepOnStart=true pero no se pudo resolver el " +
+                $"jugador tras {maxWait:F0}s (ni 'player' ni PlayerService.Player). Will no se ha " +
+                $"dormido al arrancar la escena.", this);
+        }
+#endif
     }
 
     /// <summary>Pone a Will a dormir desde código (ej: llamado por el grafo narrativo o sleepOnStart).</summary>
@@ -135,9 +187,11 @@ public class SleepTrigger : MonoBehaviour
 
         if (playerGO == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SleepTrigger] '{name}': no se pudo resolver el GameObject real del " +
                 $"jugador (ni PlayerService.Player ni CharacterController en los padres de " +
                 $"'{other.name}'). Abortando para no operar sobre el objeto equivocado.", this);
+            #endif
             return;
         }
 
@@ -195,16 +249,21 @@ public class SleepTrigger : MonoBehaviour
         // se pruebe, con el nombre real del controller puesto — no hace falta adivinar más.
         if (playerAnimator != null)
         {
-            int stateHash = Animator.StringToHash(sleepAnimationState);
-            if (!playerAnimator.HasState(0, stateHash))
+            _sleepStateHash = Animator.StringToHash(sleepAnimationState);
+            if (!playerAnimator.HasState(0, _sleepStateHash))
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogError($"[SleepTrigger] El Animator Controller activo en '{playerGO.name}' " +
                     $"('{playerAnimator.runtimeAnimatorController?.name ?? "ninguno"}') NO tiene un " +
                     $"estado llamado '{sleepAnimationState}' en el layer 0 — por eso Will se queda de " +
                     $"pie en vez de tumbarse. El clip existe en NoWeaponStanceExtraAnim.controller; " +
                     $"revisa si es ese el controller que debería estar asignado aquí.", playerGO);
+                #endif
+                // Sin estado en el controller no hay nada que reafirmar en LateUpdate() — desactiva
+                // el guard de más abajo para no gastar GetCurrentAnimatorStateInfo() cada frame en vano.
+                _sleepStateHash = -1;
             }
-            playerAnimator.Play(sleepAnimationState);
+            playerAnimator.Play(_sleepStateHash != -1 ? _sleepStateHash : Animator.StringToHash(sleepAnimationState));
         }
 
         if (sleepEmotion != NPCEmotion.None)

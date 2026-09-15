@@ -62,11 +62,13 @@ public class NPCMovementDebugger : MonoBehaviour
             {
                 if (_agent.velocity.sqrMagnitude > 0.01f || _agent.hasPath)
                 {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[MovementDebugger:{name}] ⚠️ ¡MOVIMIENTO NO DESEADO EN IDLE!\n" +
                                    $"Velocity: {_agent.velocity}\n" +
                                    $"HasPath: {_agent.hasPath}\n" +
                                    $"IsStopped: {_agent.isStopped}\n" +
                                    $"RemainingDistance: {_agent.remainingDistance}");
+                    #endif
                 }
             }
         }
@@ -124,6 +126,7 @@ public class NPCMovementDebugger : MonoBehaviour
             }
         }
         
+        #if UNITY_EDITOR || DEVELOPMENT_BUILD
         Debug.Log($"[MovementDebugger:{name}] 📊 Estado:\n" +
                  $"  FSM State: {stateInfo} (tipo: {stateType})\n" +
                  $"  Party Status: {partyInfo}\n" +
@@ -136,6 +139,7 @@ public class NPCMovementDebugger : MonoBehaviour
                  $"  Animator InputMagnitude: {animSpeed:F3}\n" +
                  $"  Position: {transform.position}\n" +
                  $"  State Changes: {_stateChangeCount}");
+        #endif
     }
     
     void OnDrawGizmos()

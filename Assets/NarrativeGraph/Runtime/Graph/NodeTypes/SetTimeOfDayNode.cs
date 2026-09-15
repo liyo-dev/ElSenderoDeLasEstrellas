@@ -6,6 +6,7 @@ using UnityEngine;
 /// Avanza inmediatamente; la transición de luz/cielo ocurre en paralelo.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Mundo", "Hora del día", "")]
 public sealed class SetTimeOfDayNode : NarrativeNode
 {
     [Tooltip("Periodo del día al que transicionar.")]

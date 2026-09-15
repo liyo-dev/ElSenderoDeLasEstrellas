@@ -216,9 +216,11 @@ public class PlayerPresetService : MonoBehaviour
         if (entries == null || entries.Count == 0)
         {
             var currentSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[PlayerPresetService] ⚠️ Preset '{preset.name}' sin apariencia definida (activeSlot={currentSlot}). " +
                 "Se omite la aplicación al builder para evitar invisibilidad. " +
                 "Define la apariencia en el Inspector del preset para control preciso.");
+            #endif
             return;
         }
 
@@ -333,9 +335,11 @@ public class PlayerPresetService : MonoBehaviour
         // activo es Will, ver comentario ahí — por diseño debería llegar limpio).
         if (LooksLikeOtherCharacter(willSnap, estelaApp, liamApp))
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PlayerPresetService] ⚠️ El pre-snapshot de Will coincide con la " +
                 "apariencia de Estela/Liam — no es una referencia fiable para detectar corrupción " +
                 "(bug 'dos Estelas y un Will'). Se omite la comprobación y se confía en preset.appearance.");
+            #endif
             return false;
         }
 
@@ -615,14 +619,47 @@ public class PlayerPresetService : MonoBehaviour
         var right = rightId == SpellId.None ? null : spellLibrary.Get(rightId);
         var special = specialId == SpellId.None ? null : spellLibrary.Get(specialId);
 
-        if (leftId != SpellId.None && left == null) Debug.LogWarning($"[PlayerPresetService] Left ID {leftId} no está en SpellLibrary");
-        if (rightId != SpellId.None && right == null) Debug.LogWarning($"[PlayerPresetService] Right ID {rightId} no está en SpellLibrary");
-        if (specialId != SpellId.None && special == null) Debug.LogWarning($"[PlayerPresetService] Special ID {specialId} no está en SpellLibrary");
+        if (leftId != SpellId.None && left == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PlayerPresetService] Left ID {leftId} no está en SpellLibrary");
+            #endif
+        }
+        if (rightId != SpellId.None && right == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PlayerPresetService] Right ID {rightId} no está en SpellLibrary");
+            #endif
+        }
+        if (specialId != SpellId.None && special == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[PlayerPresetService] Special ID {specialId} no está en SpellLibrary");
+            #endif
+        }
 
         // Validar tipos de slot
-        if (left && left.slotType == SpellSlotType.SpecialOnly) { Debug.LogWarning("[PlayerPresetService] Left es SpecialOnly, se descarta"); left = null; }
-        if (right && right.slotType == SpellSlotType.SpecialOnly) { Debug.LogWarning("[PlayerPresetService] Right es SpecialOnly, se descarta"); right = null; }
-        if (special && special.slotType != SpellSlotType.SpecialOnly) { Debug.LogWarning("[PlayerPresetService] Special no es SpecialOnly, se descarta"); special = null; }
+        if (left && left.slotType == SpellSlotType.SpecialOnly)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[PlayerPresetService] Left es SpecialOnly, se descarta");
+            #endif
+            left = null;
+        }
+        if (right && right.slotType == SpellSlotType.SpecialOnly)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[PlayerPresetService] Right es SpecialOnly, se descarta");
+            #endif
+            right = null;
+        }
+        if (special && special.slotType != SpellSlotType.SpecialOnly)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[PlayerPresetService] Special no es SpecialOnly, se descarta");
+            #endif
+            special = null;
+        }
 
         // Evitar duplicados en slots izq/der (limpieza automática, normal en transiciones)
         if (left && right && leftId == rightId) 

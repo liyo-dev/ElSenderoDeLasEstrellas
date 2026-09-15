@@ -196,6 +196,18 @@ public class StarAwakeningSequencer : CinematicSequencerBase
         _collisionTriggered = false;
         _sequenceFailed     = false;
 
+        // FIX (14 sept 2026 — "se ve por debajo del mundo"): en vez de tener que colocar a mano un
+        // set de "fly points" de cámara distinto para cada sitio donde pueda dispararse esta
+        // cinemática, se recoloca TODO el molde de planos (willAnchor + los 5 camShotXXX + el spawn
+        // del proyectil) sobre la posición/rotación REAL de Will en este instante — donde lo haya
+        // dejado el jugador — conservando los offsets relativos con los que se diseñó cada plano.
+        // Antes willAnchor tenía una posición fija grabada en el editor y Will se teleportaba A ELLA
+        // (ver más abajo, Fase 1): en cuanto esa posición fija queda desincronizada del sitio real
+        // donde ocurre la cinemática (terreno remodelado, disparador movido, etc.) toda la
+        // cinemática se reproduce en el punto fijo antiguo, que puede haber quedado por debajo del
+        // terreno actual. Debe ser lo PRIMERO que pase, antes de usar camShotEldran como corte inicial.
+        AlignSequenceRigToWill();
+
         // FIX: FaceTarget se aplica en el cut point (pantalla cubierta por la transición de
         // entrada), igual que el teleport de Will a willAnchor en Fase 1. Antes se llamaba
         // después de que Co_BeginCinematicWithTransition devolviera el control, es decir con la
@@ -216,7 +228,11 @@ public class StarAwakeningSequencer : CinematicSequencerBase
 
         yield return FeedbackService.ScreenFadeAsync(Color.black, fadeToBlackDuration, fadeIn: true);
 
-        // Pantalla en negro: teleportar a Will al anchor para que los planos siempre encajen
+        // Pantalla en negro: willAnchor ya se realineó con la posición/rotación REALES de Will en
+        // AlignSequenceRigToWill() (primera línea de Co_Sequence), así que este teleport es ahora un
+        // no-op de seguridad — deja a Will exactamente donde estaba, no lo salta a ningún punto fijo
+        // del mapa. Se mantiene por si algo entre medias (FaceTarget en el cut point, de momento el
+        // único caso) ha tocado su rotación y hace falta re-encajarla con la del molde de planos.
         if (willAnchor != null && willTransform != null)
         {
             if (_willCC) _willCC.enabled = false;
@@ -585,6 +601,54 @@ public class StarAwakeningSequencer : CinematicSequencerBase
     // ══════════════════════════════════════════════════════════════════════════
     // Helpers
     // ══════════════════════════════════════════════════════════════════════════
+
+    // ── Realineado del rig de cámara a la posición real de Will ────────────────
+    //
+    // Todos estos objetos (willAnchor + los 5 camShotXXX + projectileSpawnPoint) se colocaron UNA
+    // VEZ a mano en el editor, cada uno con una posición/rotación de mundo concreta pensada como
+    // offset relativo a willAnchor (el "molde" del plano: dónde debía estar Will para que todos los
+    // planos encajaran). En vez de teleportar a Will hasta ese molde fijo — lo que rompe en cuanto
+    // el terreno cambia de altura, se mueve el disparador de la cinemática, o simplemente el jugador
+    // ya no llega desde el mismo sitio de siempre — aquí se mueve el MOLDE ENTERO como un cuerpo
+    // rígido (solo rotación en Y + traslación, nunca tilt/roll) hasta la posición/rotación reales de
+    // Will ahora mismo. Los offsets relativos de cada plano respecto al molde se conservan tal cual
+    // se diseñaron, así que la composición de cada plano no cambia — sólo el sitio del mundo donde
+    // ocurre. Así no hace falta ir colocando un set de "fly points" distinto para cada ubicación
+    // posible: uno solo, diseñado una vez, sirve para cualquier sitio donde el jugador esté cuando
+    // arranque la secuencia.
+    //
+    // Nota: asume que willAnchor/camShotXXX/projectileSpawnPoint NO son hijos unos de otros en la
+    // jerarquía (todos world-space, hermanos). Si en el editor resulta que alguno cuelga de
+    // willAnchor como padre, hay que sacarlo de ahí (mantener posición de mundo) o esta función
+    // movería ese objeto dos veces.
+    private void AlignSequenceRigToWill()
+    {
+        if (willAnchor == null || willTransform == null) return;
+
+        Vector3 moldAnchorPos = willAnchor.position;
+        float   moldAnchorYaw = willAnchor.eulerAngles.y;
+
+        Vector3 realWillPos = willTransform.position;
+        float   realWillYaw = willTransform.eulerAngles.y;
+
+        Quaternion deltaRot = Quaternion.Euler(0f, realWillYaw - moldAnchorYaw, 0f);
+
+        RepositionRigMember(willAnchor,           moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(camShotEldran,        moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(camShotWillProfile,   moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(camShotProjectile,    moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(camShotTwoShot,       moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(camShotWillFinal,     moldAnchorPos, deltaRot, realWillPos);
+        RepositionRigMember(projectileSpawnPoint, moldAnchorPos, deltaRot, realWillPos);
+    }
+
+    private static void RepositionRigMember(Transform t, Vector3 moldAnchorPos, Quaternion deltaRot, Vector3 realWillPos)
+    {
+        if (t == null) return;
+        Vector3 offsetFromMold = t.position - moldAnchorPos;
+        t.position = realWillPos + deltaRot * offsetFromMold;
+        t.rotation = deltaRot * t.rotation;
+    }
 
     private void TriggerExplosion()
     {

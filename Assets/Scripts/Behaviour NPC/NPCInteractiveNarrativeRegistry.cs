@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — soporte del motor Interactive. Sigue vivo mientras
+    // NPCInteractiveNarrativeExecutor lo esté (MainWorld_old). No tiene
+    // sustituto propio: NPCRegistry ya cumple ese rol para el grafo nuevo.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Registro estático y optimizado de NPCInteractiveNarrativeExecutor.
     /// Evita el uso de FindObjectsByType() para mejor rendimiento.
@@ -57,10 +63,12 @@ namespace Game.NPC.Modules
                         else
                         {
                             // IDs iguales en NPCs DISTINTOS: esto sí es un error de configuración.
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
                             Debug.LogError($"[NPCInteractiveNarrativeRegistry] ERROR CRÍTICO: persistenceId DUPLICADO '{id}'\n" +
                                            $"  → NPC existente: '{existing.name}'\n" +
                                            $"  → NPC nuevo: '{executor.name}'\n" +
                                            $"  SOLUCIÓN: Asigna un persistenceId ÚNICO en NPCBehaviourManagerV2.");
+                            #endif
                         }
                     }
                     // Si es el mismo executor, solo actualizamos (re-registro)

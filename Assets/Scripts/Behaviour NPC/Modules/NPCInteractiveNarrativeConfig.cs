@@ -14,6 +14,11 @@ namespace Game.NPC.Modules
     /// Los campos legacy se mantienen [HideInInspector] para deserialización de .asset existentes.
     /// Ejecutar El Sendero → NPCs → Migrar NarrativeConfig para copiarlos al MonoBehaviour.
     /// </summary>
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — mismo estado que NPCInteractiveNarrativeExecutor (CLAUDE.md
+    // § 5 / TDD § 10). No crear entradas nuevas para NPCs de la maqueta.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     [CreateAssetMenu(fileName = "NPC_InteractiveNarrative_Config", menuName = "El Sendero/NPCs/Módulos/Interactive Narrative Config", order = 5)]
     public class NPCInteractiveNarrativeConfig : NPCModuleConfigBase
     {

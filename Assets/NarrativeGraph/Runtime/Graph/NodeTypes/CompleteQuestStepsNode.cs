@@ -8,14 +8,17 @@ using UnityEngine;
 /// Ahora soporta completar steps por Condition ID (recomendado) o por índice.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Quests", "Completar pasos de quest", "Marca pasos como hechos y, opcionalmente, cierra la quest.")]
 public sealed class CompleteQuestStepsNode : NarrativeNode
 {
     [Header("Quest")]
     [Tooltip("ID de la quest que se actualizará.")]
+    [NarrativeKey(NarrativeKeyKind.Quest)]
     public string questId;
 
     [Header("Completar Steps por Condition ID (Recomendado)")]
     [Tooltip("Lista de Step Condition IDs que se marcarán como completados. Ej: 'QUEST_ELDRAN_MISSION5_STEP_00'")]
+    [NarrativeKey(NarrativeKeyKind.QuestStep, "questId")]
     public List<string> stepConditionIds = new();
 
     [Header("Completar Steps por Índice (Legacy)")]

@@ -10,6 +10,7 @@ using UnityEngine;
 /// la cámara cinematográfica y las animaciones de diálogo.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Diálogo", "Diálogo", "Reproduce un DialogueAsset (con cámara sobre el NPC si se indica npcId).")]
 public sealed class PlayDialogueNode : NarrativeNode
 {
     [Header("Diálogo")]
@@ -19,6 +20,7 @@ public sealed class PlayDialogueNode : NarrativeNode
     [Header("NPC (opcional)")]
     [Tooltip("ID narrativo del NPC interlocutor (para cámara y animaciones). " +
              "Si está vacío, el diálogo se muestra sin cámara cinematográfica.")]
+    [NarrativeKey(NarrativeKeyKind.Actor)]
     public string npcId;
 
     [Header("One-shot (opcional)")]

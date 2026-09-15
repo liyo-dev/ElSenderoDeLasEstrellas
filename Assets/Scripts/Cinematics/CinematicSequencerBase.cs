@@ -450,6 +450,24 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     {
         if (AudioService.Instance == null) return;
         float fadeDur = MusicRule?.fadeOut ?? 0.8f;
+
+        // FIX INC-185 (9 sept 2026): antes esto restauraba siempre la música de ESCENA por
+        // defecto, sin comprobar si el jugador está dentro de una AmbientZone con música propia
+        // (p. ej. el Bosque Prohibido) — al terminar una cinemática ahí (EstelaAppearsSequencer)
+        // se perdía la música de zona y volvía la de mundo. Mismo criterio de prioridad que ya
+        // usan AudioService.RestoreAfterBattle/OnBattleWonRestoreMusic/RestoreAfterMinigame:
+        // si hay una AmbientZone activa con música propia, restaurar esa antes que la de escena.
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = AudioService.Instance.profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+                AudioService.Instance.PlayMusic(zoneRule.music, fadeDur);
+                return;
+            }
+        }
+
         if (!AudioService.Instance.RestoreSceneMusic(fadeDur))
             AudioService.Instance.StopMusic(fadeDur);
     }
@@ -494,11 +512,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         // diferencia para no repetir la misma investigación cada vez.
         if (GameBootService.Profile == null)
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[CinematicSequencerBase] HasCinematicBeenSeen('{id}'): GameBootService.Profile " +
                 "es null, así que no se puede saber si esta cinemática ya se vio (se asume que no). Si esperabas " +
                 "que sus actores ya estuvieran ocultos, probablemente entraste en Play Mode directamente sobre " +
                 "esta escena en vez de por 'Start.unity' — revisa la consola por '[AutoBootstrapOnPlay]' o " +
                 "arranca desde 'Start.unity'/el flujo normal del menú. No es un fallo del guardado/carga real.");
+            #endif
             return false;
         }
 

@@ -6,6 +6,7 @@ using UnityEngine;
 /// Configura un DramaticPhraseConfig con las frases, estilos, animaciones y audio de cada frase.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Diálogo", "Texto dramático", "Texto a pantalla completa (sueños, títulos).")]
 public sealed class DramaticTextNode : NarrativeNode
 {
     [Tooltip("Secuencia de frases dramáticas a mostrar.")]

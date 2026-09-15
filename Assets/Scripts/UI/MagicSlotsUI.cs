@@ -81,7 +81,11 @@ public class MagicSlotsUI : MonoBehaviour
         if (!_magicCaster || !_manaPool)
         {
             if (showDebugInfo)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[MagicSlotsUI] No se encontraron MagicCaster o ManaPool. Buscando en toda la escena...");
+                #endif
+            }
             StartCoroutine(FindComponentsDelayed());
         }
     }
@@ -236,8 +240,18 @@ public class MagicSlotsUI : MonoBehaviour
 
         if (showDebugInfo)
         {
-            if (_magicCaster) Debug.Log("[MagicSlotsUI] MagicCaster encontrado");
-            if (_manaPool) Debug.Log("[MagicSlotsUI] ManaPool encontrado");
+            if (_magicCaster)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[MagicSlotsUI] MagicCaster encontrado");
+                #endif
+            }
+            if (_manaPool)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[MagicSlotsUI] ManaPool encontrado");
+                #endif
+            }
         }
     }
 

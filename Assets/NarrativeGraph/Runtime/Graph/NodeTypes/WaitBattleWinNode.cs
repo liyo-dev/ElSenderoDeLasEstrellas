@@ -3,6 +3,7 @@ using System;
 
 [Obsolete("WaitBattleWinNode está obsoleto. Usa StartBattleNode que combina Start+Wait, o usa señales directamente.")]
 [Serializable]
+[NarrativeNodeInfo("Combate", "Esperar victoria", "")]
 public sealed class WaitBattleWinNode : NarrativeNode
 {
     [NonSerialized] public object arenaContext; // si quieres pasar una referencia/ID; tipo 'object' nunca fue serializable por Unity

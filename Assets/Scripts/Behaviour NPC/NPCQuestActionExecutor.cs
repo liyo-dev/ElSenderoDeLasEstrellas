@@ -6,6 +6,13 @@ using Game.NPC.States;
 
 namespace Game.NPC
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO (12 sept 2026) — no ampliar para contenido nuevo de la maqueta.
+    // Sustituto parcial en el grafo: los nodos que ya cubren combate/diálogo
+    // (StartBattleNode, PlayDialogueNode). Mover/teleportar a un NPC todavía NO
+    // tiene nodo — hueco real nº 1, ver el catálogo. Sigue vivo en MainWorld_old.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2 y § 5.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Ejecutor de acciones post-quest integrado con el sistema de quests.
     /// Lee la configuración directamente del QuestChainEntry y ejecuta la acción correspondiente.
@@ -46,12 +53,22 @@ namespace Game.NPC
 
         void Start()
         {
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] Start - Inicializando componente");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] Start - Inicializando componente");
+                #endif
+            }
 
             // Suscribirse al evento global de QuestManager para detectar cuando se completan quests
             SubscribeToQuestManager();
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] Start completado - npcManager={(npcManager != null ? "OK" : "NULL")}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] Start completado - npcManager={(npcManager != null ? "OK" : "NULL")}");
+                #endif
+            }
         }
 
         void OnDestroy()
@@ -107,7 +124,12 @@ namespace Game.NPC
             var questManager = QuestManager.Instance;
             if (questManager == null)
             {
-                if (debugMode) Debug.LogWarning($"[NPCQuestActionExecutor:{name}] QuestManager.Instance no disponible todavía, reintentando...");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.LogWarning($"[NPCQuestActionExecutor:{name}] QuestManager.Instance no disponible todavía, reintentando...");
+                    #endif
+                }
                 if (_subscribeRetryRoutine == null)
                     _subscribeRetryRoutine = StartCoroutine(RetrySubscribeToQuestManager());
                 return;
@@ -137,7 +159,12 @@ namespace Game.NPC
         /// </summary>
         private void HandleQuestCompleted(string questId)
         {
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] HandleQuestCompleted recibido para quest '{questId}'");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] HandleQuestCompleted recibido para quest '{questId}'");
+                #endif
+            }
 
             if (npcManager == null || npcManager.Configuration == null)
             {
@@ -333,7 +360,12 @@ namespace Game.NPC
                 return;
             }
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ▶️ ExecutePostQuestAction - questIndex={questIndex}, actionType={action.actionType}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] ▶️ ExecutePostQuestAction - questIndex={questIndex}, actionType={action.actionType}");
+                #endif
+            }
 
             // Ejecutar la acción con bloqueo
             StartCoroutine(ExecuteActionCoroutine(action, questIndex));
@@ -343,7 +375,12 @@ namespace Game.NPC
         {
             _isExecutingPostAction = true;
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🎬 ExecuteActionCoroutine - actionType={action.actionType}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] 🎬 ExecuteActionCoroutine - actionType={action.actionType}");
+                #endif
+            }
 
             // Esperar un frame para asegurar que todos los callbacks de CompleteQuest han terminado
             yield return null;
@@ -411,7 +448,12 @@ namespace Game.NPC
                 }
                 else if (dialogueManager != null)
                 {
-                    if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 💬 Reproduciendo diálogo pre-acción");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCQuestActionExecutor:{name}] 💬 Reproduciendo diálogo pre-acción");
+                        #endif
+                    }
 
                     // ✅ FIX: Pasar el transform del NPC para activar la cámara cinematográfica
                     dialogueManager.StartDialogue(action.dialogueBeforeAction, transform);
@@ -421,19 +463,34 @@ namespace Game.NPC
                         yield return null;
                     }
                     
-                    if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Diálogo pre-acción completado");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Diálogo pre-acción completado");
+                        #endif
+                    }
                 }
             }
 
             // 2. Espera opcional
             if (action.delayBeforeAction > 0f)
             {
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ⏳ Esperando {action.delayBeforeAction}s");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] ⏳ Esperando {action.delayBeforeAction}s");
+                    #endif
+                }
                 yield return new WaitForSeconds(action.delayBeforeAction);
             }
 
             // 3. Ejecutar acción según tipo
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ⚙️ Ejecutando acción: {action.actionType}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] ⚙️ Ejecutando acción: {action.actionType}");
+                #endif
+            }
 
             switch (action.actionType)
             {
@@ -458,13 +515,23 @@ namespace Game.NPC
                     break;
             }
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Acción {action.actionType} completada");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Acción {action.actionType} completada");
+                #endif
+            }
 
             // Asegurar que el NPC vuelva a Idle después de la acción
             if (npcManager != null)
             {
                 npcManager.ForceIdle();
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🔄 NPC forzado a estado Idle");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] 🔄 NPC forzado a estado Idle");
+                    #endif
+                }
             }
 
             // Disparar evento onPostActionCompleted si está configurado
@@ -476,19 +543,34 @@ namespace Game.NPC
                     var entry = questConfig.questChain[questIndex];
                     // onPostActionCompleted ya es un UnityEvent público en QuestChainEntry — sin reflection.
                     entry.onPostActionCompleted?.Invoke();
-                    if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 📣 Evento onPostActionCompleted disparado");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCQuestActionExecutor:{name}] 📣 Evento onPostActionCompleted disparado");
+                        #endif
+                    }
 
                     // ✅ NUEVO: Encadenar siguiente quest si está configurado
                     if (action.chainNextQuestAfterAction)
                     {
-                        if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 chainNextQuestAfterAction activado - iniciando siguiente quest");
+                        if (debugMode)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 chainNextQuestAfterAction activado - iniciando siguiente quest");
+                            #endif
+                        }
                         StartCoroutine(ChainNextQuestDelayed(questConfig, questIndex, action.chainDelay));
                     }
                 }
             }
 
             _isExecutingPostAction = false;
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ✨ Post-action {questIndex} COMPLETADA");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] ✨ Post-action {questIndex} COMPLETADA");
+                #endif
+            }
         }
         
         /// <summary>
@@ -505,7 +587,12 @@ namespace Game.NPC
             int nextIndex = currentQuestIndex + 1;
             if (nextIndex >= questConfig.questChain.Length)
             {
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 No hay más quests en la cadena (index {nextIndex} >= {questConfig.questChain.Length})");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 No hay más quests en la cadena (index {nextIndex} >= {questConfig.questChain.Length})");
+                    #endif
+                }
                 yield break;
             }
             
@@ -531,7 +618,12 @@ namespace Game.NPC
             var nextState = qm.GetState(nextEntry.questData.questId);
             if (nextState != QuestState.Inactive)
             {
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 Quest '{nextEntry.questData.questId}' ya está en estado {nextState}");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] 🔗 Quest '{nextEntry.questData.questId}' ya está en estado {nextState}");
+                    #endif
+                }
                 yield break;
             }
             
@@ -869,7 +961,12 @@ namespace Game.NPC
 
         private IEnumerator ExecuteTeleportAction(QuestPostAction action)
         {
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🌀 ExecuteTeleportAction iniciado");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] 🌀 ExecuteTeleportAction iniciado");
+                #endif
+            }
 
             // Verificar que tenemos un anchor válido
             if (string.IsNullOrEmpty(action.targetAnchorName))
@@ -890,13 +987,23 @@ namespace Game.NPC
                 yield break;
             }
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 📍 Anchor encontrado: '{action.targetAnchorName}' en {targetAnchor.transform.position}");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] 📍 Anchor encontrado: '{action.targetAnchorName}' en {targetAnchor.transform.position}");
+                #endif
+            }
 
             // 1. Teletransportar al PLAYER usando TeleportService
             var player = PlayerService.Player;
             if (player != null)
             {
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 🎮 Teletransportando PLAYER a anchor '{action.targetAnchorName}'");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] 🎮 Teletransportando PLAYER a anchor '{action.targetAnchorName}'");
+                    #endif
+                }
                 
                 // Usar el sistema de teletransporte existente con TransitionSettings
                 var teleportService = TeleportService.Inst;
@@ -911,7 +1018,12 @@ namespace Game.NPC
                     if (useTransitionForPlayer && action.transitionSettings != null)
                     {
                         float totalTransitionTime = action.transitionDelay + action.transitionSettings.transitionTime + action.transitionSettings.destroyTime;
-                        if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ⏳ Esperando transición del player ({totalTransitionTime:F2}s)");
+                        if (debugMode)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            Debug.Log($"[NPCQuestActionExecutor:{name}] ⏳ Esperando transición del player ({totalTransitionTime:F2}s)");
+                            #endif
+                        }
                         yield return new WaitForSeconds(totalTransitionTime);
                     }
                 }
@@ -932,7 +1044,12 @@ namespace Game.NPC
             }
 
             // 2. Teletransportar al NPC al mismo anchor
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 👤 Teletransportando NPC a anchor '{action.targetAnchorName}'");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] 👤 Teletransportando NPC a anchor '{action.targetAnchorName}'");
+                #endif
+            }
 
             PlaceNpcAtPosition(
                 targetAnchor.transform.position,
@@ -941,14 +1058,24 @@ namespace Game.NPC
                 "acción Teleport"
             );
 
-            if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Teletransporte completado - Player y NPC en anchor '{action.targetAnchorName}'");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCQuestActionExecutor:{name}] ✅ Teletransporte completado - Player y NPC en anchor '{action.targetAnchorName}'");
+                #endif
+            }
             
             // Persistir la nueva posición del NPC
             if (npcManager != null && npcManager.persistLastPosition)
             {
                 npcManager.lastPosition = transform.position; // Actualizar lastPosition
                 // npcManager.SaveCurrentPosition(); // Método no existe en V2
-                if (debugMode) Debug.Log($"[NPCQuestActionExecutor:{name}] 💾 Posición de teletransporte guardada en runtimePreset");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCQuestActionExecutor:{name}] 💾 Posición de teletransporte guardada en runtimePreset");
+                    #endif
+                }
             }
 
             yield return null;

@@ -134,6 +134,22 @@ public class QuestManager : MonoBehaviour
 
     public IEnumerable<RuntimeQuest> GetAll() => _runtime.Values;
 
+    /// <summary>
+    /// Datos de diseño (QuestData) de una quest por su ID, sin pasar por GetAll()+LINQ. Pensado
+    /// para UI que solo necesita el nombre/descripción localizados (p.ej. QuestStartedBannerUI),
+    /// no el estado de progreso -- ver INC-199.
+    /// </summary>
+    public bool TryGetQuestData(string questId, out QuestData data)
+    {
+        if (_runtime.TryGetValue(questId, out var rq) && rq.Data != null)
+        {
+            data = rq.Data;
+            return true;
+        }
+        data = null;
+        return false;
+    }
+
     public QuestVisibility GetVisibility(string questId)
     {
         if (string.IsNullOrEmpty(questId)) return QuestVisibility.Visible;

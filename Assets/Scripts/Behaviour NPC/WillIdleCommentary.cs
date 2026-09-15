@@ -193,14 +193,24 @@ namespace Game.NPC
             string line = PickLine(ambientComments);
             if (string.IsNullOrEmpty(line)) return;
 
-            if (debugMode) Debug.Log($"[WillIdleCommentary] Comentario suelto: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[WillIdleCommentary] Comentario suelto: \"{line}\"");
+                #endif
+            }
             SpeechBubbleUI.Instance?.Show(transform, line, bubbleDuration);
         }
 
         private void TriggerSearch()
         {
             string line = PickLine(searchLines);
-            if (debugMode) Debug.Log($"[WillIdleCommentary] Se para a rebuscar: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[WillIdleCommentary] Se para a rebuscar: \"{line}\"");
+                #endif
+            }
 
             var sequence = new CompositeSequence();
             sequence.AddAction(new WillSearchAction(searchDuration, searchGestureState, line, bubbleDuration));

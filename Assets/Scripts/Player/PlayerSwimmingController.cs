@@ -300,7 +300,11 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         if (_actionManager != null && !_actionManager.CanSwim())
         {
             if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log("[PlayerSwimmingController] Entrada al agua bloqueada: nado no desbloqueado.");
+                #endif
+            }
             return;
         }
 
@@ -349,7 +353,11 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         }
 
         if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerSwimmingController] Enter Swimming");
+            #endif
+        }
     }
 
     void ExitSwimming(bool force = false)
@@ -390,7 +398,11 @@ public sealed class PlayerSwimmingController : MonoBehaviour
         }
 
         if (wasSwimming && debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerSwimmingController] Exit Swimming");
+            #endif
+        }
     }
 
     void SampleBody(out float feet, out float head, out float chest, out float hips)

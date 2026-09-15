@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Jugador", "Desbloquear vestuario", "")]
 public sealed class UnlockWardrobeItemNode : NarrativeNode
 {
     [Header("Vestuario")]

@@ -183,8 +183,10 @@ public class SavePoint : MonoBehaviour
             {
                 if (wasTestingMode)
                 {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log("[SavePoint] 🧪 Partida guardada en MODO TESTEO - El estado runtime actual se ha guardado en el JSON. " +
                               "Ahora puedes desactivar 'usePresetInsteadOfSave' para continuar desde aquí.");
+                    #endif
                 }
                 else
                 {

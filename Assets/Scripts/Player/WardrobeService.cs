@@ -13,7 +13,11 @@ public static class WardrobeService
         if (!item)
         {
             if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[WardrobeService] Wardrobe item no asignado.");
+                #endif
+            }
             return false;
         }
 
@@ -80,7 +84,11 @@ public static class WardrobeService
         if (!preset)
         {
             if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[WardrobeService] No hay preset activo para registrar el desbloqueo.");
+                #endif
+            }
             return false;
         }
 
@@ -90,7 +98,11 @@ public static class WardrobeService
         if (preset.unlockedWardrobeIds.Contains(item.WardrobeId))
         {
             if (logWarnings)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[WardrobeService] El item '{item.WardrobeId}' ya estaba en el preset.");
+                #endif
+            }
             return false;
         }
 

@@ -184,7 +184,12 @@ public class PlayerFlyingController : MonoBehaviour
                     if (_animator.HasState(layer, hash))
                     {
                         locomotionLayerIndex = layer;
-                        if (debugLogs) Debug.Log($"[PlayerFlyingController] Detected flight state '{s}' on animator layer {layer}. Using that layer for flight animations.");
+                        if (debugLogs)
+                        {
+                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            Debug.Log($"[PlayerFlyingController] Detected flight state '{s}' on animator layer {layer}. Using that layer for flight animations.");
+                            #endif
+                        }
                         return;
                     }
                 }
@@ -266,7 +271,12 @@ public class PlayerFlyingController : MonoBehaviour
         // wait until the player is airborne then auto-enter flight.
         if (!_isFlying && _pendingEnterFlight)
         {
-            if (debugLogs) Debug.Log($"[PlayerFlyingController] Pending check now={Time.time:F2} flightArmUntil={_flightArmUntil:F2} IsGrounded={IsGrounded()} CanEnter={CanEnterFlight()}");
+            if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[PlayerFlyingController] Pending check now={Time.time:F2} flightArmUntil={_flightArmUntil:F2} IsGrounded={IsGrounded()} CanEnter={CanEnterFlight()}");
+                #endif
+            }
             // clear pending if window expired
             if (_flightArmUntil > 0f && Time.time > _flightArmUntil)
             {
@@ -328,7 +338,12 @@ public class PlayerFlyingController : MonoBehaviour
     {
         if (_inputManager != null && !_inputManager.CanProcess(PlayerAbility.Jump))
         {
-            if (debugLogs) Debug.Log("[PlayerFlyingController] Salto ignorado: acción bloqueada por PlayerActionManager.");
+            if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[PlayerFlyingController] Salto ignorado: acción bloqueada por PlayerActionManager.");
+                #endif
+            }
             return;
         }
 
@@ -346,7 +361,12 @@ public class PlayerFlyingController : MonoBehaviour
         {
             if (CanEnterFlight())
             {
-                if (debugLogs) Debug.Log("[PlayerFlyingController] Jump performed while airborne -> EnterFlight immediate.");
+                if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log("[PlayerFlyingController] Jump performed while airborne -> EnterFlight immediate.");
+                    #endif
+                }
                 EnterFlight();
                 return;
             }
@@ -355,7 +375,12 @@ public class PlayerFlyingController : MonoBehaviour
         // Arm or attempt to enter flight. We allow the first press (from ground) to arm
         // and the second press while airborne to actually enter flight.
         float now = Time.time;
-        if (debugLogs) Debug.Log($"[PlayerFlyingController] OnJumpPerformed now={now:F2} flightArmUntil={_flightArmUntil:F2} isGrounded={IsGrounded()} pending={_pendingEnterFlight} armed={_flightArmed}");
+        if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerFlyingController] OnJumpPerformed now={now:F2} flightArmUntil={_flightArmUntil:F2} isGrounded={IsGrounded()} pending={_pendingEnterFlight} armed={_flightArmed}");
+            #endif
+        }
 
         bool inDoubleTapWindow = now <= _flightArmUntil;
         bool armedAndAirborne = _flightArmed && !IsGrounded() && now <= _flightArmedExpires;
@@ -376,7 +401,12 @@ public class PlayerFlyingController : MonoBehaviour
                 // when the player becomes airborne we enter flight automatically.
                 _pendingEnterFlight = true;
                 _flightArmUntil = now + doubleTapWindow; // extend window while pending
-                if (debugLogs) Debug.Log($"[PlayerFlyingController] Second jump but can't enter yet. Marked pending. new flightArmUntil={_flightArmUntil:F2}");
+                if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[PlayerFlyingController] Second jump but can't enter yet. Marked pending. new flightArmUntil={_flightArmUntil:F2}");
+                    #endif
+                }
             }
         }
         else
@@ -386,7 +416,12 @@ public class PlayerFlyingController : MonoBehaviour
             _pendingEnterFlight = false;
             _flightArmed = true;
             _flightArmedExpires = now + flightArmedDuration;
-            if (debugLogs) Debug.Log($"[PlayerFlyingController] First jump pressed - armed flight (expires {_flightArmedExpires:F2}) and window until {_flightArmUntil:F2}");
+            if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[PlayerFlyingController] First jump pressed - armed flight (expires {_flightArmedExpires:F2}) and window until {_flightArmUntil:F2}");
+                #endif
+            }
         }
     }
 
@@ -495,7 +530,11 @@ public class PlayerFlyingController : MonoBehaviour
         }
 
         if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerFlyingController] Enter Flight");
+            #endif
+        }
     }
 
     private void ExitFlight(bool force = false)
@@ -569,7 +608,11 @@ public class PlayerFlyingController : MonoBehaviour
         }
 
         if (wasFlying && debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[PlayerFlyingController] Exit Flight");
+            #endif
+        }
 
         if (_animator != null)
             _animator.applyRootMotion = _animRootMotionPrev;

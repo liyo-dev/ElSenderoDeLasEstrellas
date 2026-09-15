@@ -2,9 +2,11 @@
 using System;
 
 [Serializable]
+[NarrativeNodeInfo("Quests", "Esperar quest completada", "Se queda esperando hasta que la quest esté completada.")]
 [SavePoint("Seguro guardar mientras espera quests")]
 public sealed class WaitQuestCompleteNode : NarrativeNode
 {
+    [NarrativeKey(NarrativeKeyKind.Quest)]
     public string questId;
     Action _cb;
     public bool debugLogs = false;

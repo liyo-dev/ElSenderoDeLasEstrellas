@@ -249,6 +249,22 @@
             "text": "¿Por qué crees que estás vivo, muchacho?\n¿No te has preguntado nunca por qué no recuerdas nada de ti o tu pasado?\nTe lo diré yo, no recuerdas nada de ti, ni de tu familia ni de tu pueblo\nporque tú hace eones moriste luchando contra mí.\nTú moriste ese día. ¡Eres la reencarnación del único mago que logró detenerme!\nMe obligaste a usar el super hechizo de destrucción, pero entonces no fui capaz de controlarlo.\nCuando todo escapó de mi alcance pude ligar mi alma al sendero\npara cuando otro idiota superase las pruebas volver a pedir un deseo:\nmi regreso a la vida.\nPara que el hechizo no afectara a tu familia y estúpido pueblo\nutilizaste toda la magia de tu interior para crear un hechizo protector\nque pudo proteger a tu pueblo pero te destruyó a ti.\nLo que no entiendo es cómo después de haber muerto sigues aquí…"
         },
         {
+            "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
+            "text": "Ah, pues nada... por si se te ha olvidado que te conozco:"
+        },
+        {
+            "id": "OLIVER_GREETING_NEW_SPELL_INTRO",
+            "text": "He aprendido un hechizo nuevo, mira esto:"
+        },
+        {
+            "id": "OLIVER_GREETING_OUT_OF_BREATH",
+            "text": "Ay... ay que me ahogo..."
+        },
+        {
+            "id": "OLIVER_GREETING_SPOT_WILL",
+            "text": "¡WILL! ¡Eh, Will, espera!"
+        },
+        {
             "id": "PARQUE_LIAM_01",
             "text": "Vale, esto me gusta bastante más."
         },
@@ -443,6 +459,10 @@
         {
             "id": "WILL_FLASHBACK_REVELATION",
             "text": "Ahora... ahora lo recuerdo todo.\nEl hechizo de protección. Mis padres. Mi pueblo…\n¿Pero qué hago aquí? ¿Cómo es posible? Y en este cuerpo…"
+        },
+        {
+            "id": "WILL_GREETING_OLIVER_CUT_OFF",
+            "text": "Jaja, tú siempre igual, Oliver... Oye, que tengo prisa, que Eldran me necesita."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",

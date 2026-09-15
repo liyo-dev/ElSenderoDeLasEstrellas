@@ -127,7 +127,11 @@ public class DialogueCameraController : MonoBehaviour
         isInDialogueMode = true;
 
         if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCameraController] Enfocando NPC en movimiento: {npcTransform.name}");
+            #endif
+        }
     }
 
     /// <summary>
@@ -145,7 +149,11 @@ public class DialogueCameraController : MonoBehaviour
         if (playerObj == null)
         {
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[DialogueCameraController] No se encontró el player.");
+                #endif
+            }
             return;
         }
 
@@ -162,7 +170,11 @@ public class DialogueCameraController : MonoBehaviour
         if (thirdPersonCamera == null)
         {
             if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[DialogueCameraController] No se encontró vThirdPersonCamera.");
+                #endif
+            }
             return;
         }
 
@@ -194,7 +206,11 @@ public class DialogueCameraController : MonoBehaviour
         }
 
         if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[DialogueCameraController] Iniciando cámara de diálogo con {npcTransform.name}");
+            #endif
+        }
 
         // Calcular y aplicar la posición de cámara lateral
         CalculateDialogueCameraTransform();
@@ -213,7 +229,11 @@ public class DialogueCameraController : MonoBehaviour
         if (!isInDialogueMode) return;
 
         if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log("[DialogueCameraController] Finalizando cámara de diálogo");
+            #endif
+        }
 
         // Soltar el candado real (ver comentario en FocusOnNPC). Con la ventana de gracia de
         // CameraDirectorService: si justo después otro sistema reclama la cámara, no se llega

@@ -69,13 +69,21 @@ namespace Quests
         private void Log(string message)
         {
             if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestPartyMemberChecker:{gameObject.name}] {message}");
+                #endif
+            }
         }
         
         private void LogWarning(string message)
         {
             if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestPartyMemberChecker:{gameObject.name}] ⚠️ {message}");
+                #endif
+            }
         }
     }
 }

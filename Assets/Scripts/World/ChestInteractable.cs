@@ -176,8 +176,7 @@ public class ChestInteractable : MonoBehaviour
             // optional vfx at coin position
             if (coinVfxPrefab != null)
             {
-                var v = Instantiate(coinVfxPrefab, c.position, Quaternion.identity);
-                Destroy(v, 2f);
+                VfxPoolService.Instance.Play(coinVfxPrefab, c.position, Quaternion.identity, 2f);
             }
             c.DOScale(Vector3.zero, coinDisappearDuration).SetEase(Ease.InBack).SetDelay(i * coinStagger).OnComplete(() => {
                 c.gameObject.SetActive(false);

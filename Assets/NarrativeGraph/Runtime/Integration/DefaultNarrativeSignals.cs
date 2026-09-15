@@ -312,6 +312,16 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         QS?.CompleteStepByConditionId(questId, stepConditionId);
     }
 
+    /// <summary>Estado detallado de la quest para los nodos de bifurcación (BranchQuestStateNode).</summary>
+    public NarrativeQuestState GetQuestState(string questId)
+        => QS != null ? QS.GetState(questId) : NarrativeQuestState.NotStarted;
+
+    /// <summary>
+    /// Descarta una señal pendiente sin consumirla (ver INarrativeSignals.ClearPendingCustom).
+    /// No toca _everRaised: "ya pasó alguna vez" sigue siendo verdad.
+    /// </summary>
+    public void ClearPendingCustom(string key) => UnraiseCustom(key);
+
     // ============= CUSTOM (sticky) =============
     public void RaiseCustom(string key) => RaiseCustom(key, null);
 

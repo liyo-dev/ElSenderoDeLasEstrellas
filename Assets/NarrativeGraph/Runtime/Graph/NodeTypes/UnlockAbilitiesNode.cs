@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Jugador", "Desbloquear habilidades", "Desbloquea habilidades y hechizos.")]
 public sealed class UnlockAbilitiesNode : NarrativeNode
 {
     [Header("Internal Unlock - Abilities & Spells")]

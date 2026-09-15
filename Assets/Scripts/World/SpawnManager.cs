@@ -118,7 +118,13 @@ public class SpawnManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(anchorId)) return;
         var player = PlayerService.Player;
-        if (!player) { Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte"); return; }
+        if (!player)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte");
+            #endif
+            return;
+        }
         TeleportService.TeleportToAnchor(player, anchorId, useTransition);
     }
 
@@ -127,7 +133,13 @@ public class SpawnManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(CurrentAnchorId)) return;
         var player = PlayerService.Player;
-        if (!player) { Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte"); return; }
+        if (!player)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte");
+            #endif
+            return;
+        }
         TeleportService.TeleportToAnchor(player, CurrentAnchorId, useTransition);
     }
 }

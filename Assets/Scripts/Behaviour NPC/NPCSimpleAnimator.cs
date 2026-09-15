@@ -1400,7 +1400,12 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (_player == null)
         {
-            if (debugMode) Debug.LogWarning($"[NPCAnimator:{name}] KeepLookingAtPlayerDuringDialogue - No se encontró el jugador");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning($"[NPCAnimator:{name}] KeepLookingAtPlayerDuringDialogue - No se encontró el jugador");
+                #endif
+            }
             yield break;
         }
         
@@ -1482,7 +1487,12 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (_player == null)
         {
-            if (debugMode) Debug.LogWarning($"[NPCAnimator:{name}] FacePlayerInstantly: No se encontró jugador");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning($"[NPCAnimator:{name}] FacePlayerInstantly: No se encontró jugador");
+                #endif
+            }
             return false;
         }
         
@@ -2128,6 +2138,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             {
                 Vector3 forward = transform.forward;
                 float angleDiff = Vector3.Angle(forward, direction);
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[NPCAnimator] ROTACIÓN DEBUG:\n" +
                          $"  Transform.forward: {forward}\n" +
                          $"  NavAgent.velocity: {navAgent.velocity}\n" +
@@ -2135,6 +2146,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                          $"  Angle diff: {angleDiff:F1}°\n" +
                          $"  updateRotation: {navAgent.updateRotation}\n" +
                          $"  _disableAutoRotation: {_disableAutoRotation}");
+                #endif
             }
             
             FaceDirection(direction);
@@ -2156,11 +2168,13 @@ public class NPCSimpleAnimator : MonoBehaviour
         // ✅ DEBUG: Log aplicación de rotación
         if (debugMode && Time.frameCount % 60 == 0) // Cada 60 frames
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[NPCAnimator] APLICANDO ROTACIÓN:\n" +
                      $"  Current: {transform.rotation.eulerAngles}\n" +
                      $"  Target: {_targetRotation.eulerAngles}\n" +
                      $"  Angle diff: {angle:F1}°\n" +
                      $"  Speed: {rotationSpeed}°/s");
+            #endif
         }
         
         // Apply smooth rotation

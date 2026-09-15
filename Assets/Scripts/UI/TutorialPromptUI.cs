@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,9 +38,46 @@ public class TutorialPromptUI : MonoBehaviour
     Sprite _fallbackIcon;
 
     // Si hay un Show() activo (independiente del alpha real, que puede estar en 0 mientras
-    // _hiddenByMenu lo tiene tapado) y si lo ocultamos temporalmente por un menú abierto encima.
+    // _hiddenByMenu/_hiddenByDialogue lo tiene tapado) y si lo ocultamos temporalmente por un
+    // menú o un diálogo abierto encima. Son dos flags independientes (no una sola "tapado por
+    // algo") porque un diálogo puede empezar y terminar mientras un menú sigue abierto o
+    // viceversa — solo se restaura el prompt cuando NINGUNO de los dos sigue tapándolo.
     bool _isShowing;
     bool _hiddenByMenu;
+    bool _hiddenByDialogue;
+
+    // Si el aviso activo permite cerrarse desde este botón de la esquina (allowManualClose de
+    // Show()). Se guarda aparte del contenido real del botón porque este último también depende
+    // de la familia de dispositivo activa (ver RefreshCloseButton): en KeyboardMouse se ve la X de
+    // toda la vida (clic de ratón); en mando, al no haber cursor virtual en el proyecto, se
+    // sustituye por el icono del botón Cancelar real. INC-201b (15 sept 2026, Raúl): primero la X
+    // se quedaba fija sin adaptarse al cambiar de mando/teclado; después, al ocultarla sin más en
+    // mando, el jugador se quedaba sin ninguna pista de cómo cerrar el aviso.
+    bool _allowManualClose;
+
+    // ── Botón de cerrar (X, esquina superior derecha) ───────────────────────
+    //
+    // Petición de Raúl (15 sept 2026): los avisos de tutorial se cerraban con el mismo botón que
+    // avanza diálogo (Confirmar/A/Espacio) — si el aviso aparecía justo después de una conversación,
+    // el jugador lo cerraba sin querer, por inercia, sin llegar a leerlo. Solución de dos partes:
+    // TutorialPromptNode puede pedir cerrar con Cancelar (mando) en vez de Confirmar — ver
+    // dismissWithCancel ahí — y, para PC/ratón, este botón "X" que aparece en la esquina superior
+    // derecha del aviso, como el cierre de un popup normal.
+    //
+    // Se construye por código en Awake, igual que el patrón ya usado para el botón "X" de
+    // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs — no hace falta editar
+    // TutorialPromptUI.prefab a mano en el Editor para añadirlo.
+    [Header("Botón de cerrar (X) — solo clic de ratón, ver TutorialPromptNode.dismissWithCancel")]
+    [SerializeField] float _closeButtonSize = 28f;
+    [SerializeField] float _closeButtonMargin = 6f;
+
+    Button _closeButton;
+    TextMeshProUGUI _closeLabel;
+    Image _closeIcon;
+
+    /// <summary>Se dispara al hacer clic en la X. TutorialPromptNode se suscribe solo cuando el
+    /// aviso activo usa dismissWithCancel — el resto de avisos no muestran la X (ver Show()).</summary>
+    public event Action CloseButtonClicked;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────
 
@@ -51,6 +89,8 @@ public class TutorialPromptUI : MonoBehaviour
 
         _rootGroup.alpha = 0f;
         _rootGroup.blocksRaycasts = false;
+
+        BuildCloseButton();
     }
 
     void OnEnable()
@@ -64,6 +104,17 @@ public class TutorialPromptUI : MonoBehaviour
         // (pausa incluida) y restaurarse al cerrar el último.
         MenuManager.MenuOpened += OnMenuOpened;
         MenuManager.MenuClosed += OnMenuClosed;
+
+        // INC (12 sep 2026, captura de Raúl): el prompt de movimiento ("Usa WASD para mover a
+        // Will. Inspecciona la habitación.") se quedaba superpuesto al mensaje bloqueante de
+        // RoomExitBlocker ("Antes de salir necesitas leer la carta que hay sobre la mesita.") al
+        // intentar salir de la habitación sin haber leído la carta. RoomExitBlocker muestra ese
+        // mensaje vía DialogueManager.StartDialogue(), un sistema totalmente independiente de
+        // MenuManager — este prompt no estaba suscrito a los eventos de diálogo, así que el aviso
+        // se dibujaba encima en vez de taparlo. Mismo patrón ocultar/restaurar que con los menús,
+        // con su propio flag (_hiddenByDialogue) para no interferir si además hay un menú abierto.
+        DialogueManager.OnDialogueStarted += HandleDialogueStarted;
+        DialogueManager.OnDialogueClosed += HandleDialogueClosed;
     }
 
     void OnDisable()
@@ -71,6 +122,8 @@ public class TutorialPromptUI : MonoBehaviour
         InputGlyphService.FamilyChanged -= HandleFamilyChanged;
         MenuManager.MenuOpened -= OnMenuOpened;
         MenuManager.MenuClosed -= OnMenuClosed;
+        DialogueManager.OnDialogueStarted -= HandleDialogueStarted;
+        DialogueManager.OnDialogueClosed -= HandleDialogueClosed;
     }
 
     void OnDestroy()
@@ -87,6 +140,12 @@ public class TutorialPromptUI : MonoBehaviour
         // Solo recalcular si el prompt activo usa resolución dinámica (Show con buttonName) — el
         // Show(text, icon) "de toda la vida" deja _textTemplate a null y no debe tocarse aquí.
         if (_textTemplate != null) RefreshContent();
+
+        // La X (clic de ratón) solo tiene sentido en KeyboardMouse — recalcular su visibilidad
+        // cada vez que cambia el dispositivo activo, para que se oculte sola al pasar a mando
+        // (y reaparezca al volver a teclado/ratón) en vez de quedarse fija a lo que había cuando
+        // se llamó a Show().
+        RefreshCloseButton();
     }
 
     // ── API pública ───────────────────────────────────────────────────────
@@ -104,7 +163,7 @@ public class TutorialPromptUI : MonoBehaviour
     /// compatibilidad con llamadas que ya traen su propio sprite resuelto; para prompts que dependen
     /// del botón/tecla real activa (la inmensa mayoría) usar el overload con <c>buttonName</c>.
     /// </summary>
-    public void Show(string text, Sprite icon = null)
+    public void Show(string text, Sprite icon = null, bool allowManualClose = false)
     {
         _textTemplate = null;
         _buttonName = null;
@@ -113,6 +172,8 @@ public class TutorialPromptUI : MonoBehaviour
 
         _label.text = text;
         SetIcon(icon);
+        _allowManualClose = allowManualClose;
+        RefreshCloseButton();
         FadeIn();
     }
 
@@ -126,7 +187,7 @@ public class TutorialPromptUI : MonoBehaviour
     /// <paramref name="fallbackIcon"/> se usa únicamente si no hay sprite resuelto para la familia
     /// activa (p.ej. mientras no exista arte de teclado todavía para ese botón concreto).
     /// </summary>
-    public void Show(string textTemplate, string buttonName, Sprite fallbackIcon = null)
+    public void Show(string textTemplate, string buttonName, Sprite fallbackIcon = null, bool allowManualClose = false)
     {
         _textTemplate = textTemplate;
         _buttonName = buttonName;
@@ -134,14 +195,18 @@ public class TutorialPromptUI : MonoBehaviour
         _isShowing = true;
 
         RefreshContent();
+        _allowManualClose = allowManualClose;
+        RefreshCloseButton();
         FadeIn();
     }
 
     public void Hide()
     {
         _isShowing = false;
+        _allowManualClose = false;
         _rootGroup.DOKill();
         _rootGroup.DOFade(0f, _fadeOutDuration).SetUpdate(true);
+        SetCloseButtonVisible(false);
     }
 
     // ── MenuManager (pausa / cualquier menú) ────────────────────────────────
@@ -163,7 +228,34 @@ public class TutorialPromptUI : MonoBehaviour
         if (MenuManager.AnyOpen()) return; // todavía queda otro menú abierto
         _hiddenByMenu = false;
 
+        if (_hiddenByDialogue) return; // sigue tapado por un diálogo en curso (p.ej. RoomExitBlocker)
         if (!_isShowing || _rootGroup == null) return; // se ocultó por otro motivo (Hide()) mientras tanto
+        _rootGroup.DOKill();
+        _rootGroup.DOFade(1f, _fadeInDuration).SetUpdate(true);
+        _rootGroup.blocksRaycasts = false;
+    }
+
+    // ── DialogueManager (mensajes de diálogo, incl. avisos bloqueantes tipo RoomExitBlocker) ──
+
+    /// <summary>Oculta el prompt de tutorial mientras haya un diálogo (incluidos avisos como el de
+    /// RoomExitBlocker) en pantalla, para no superponerse con el cuadro de texto.</summary>
+    void HandleDialogueStarted(Transform npc)
+    {
+        if (!_isShowing || _hiddenByDialogue || _rootGroup == null) return;
+        _hiddenByDialogue = true;
+        _rootGroup.DOKill();
+        _rootGroup.DOFade(0f, _fadeOutDuration).SetUpdate(true);
+        _rootGroup.blocksRaycasts = false;
+    }
+
+    /// <summary>Restaura el prompt al cerrarse el diálogo, si seguía activo y no hay además un menú abierto.</summary>
+    void HandleDialogueClosed(Transform npc)
+    {
+        if (!_hiddenByDialogue) return;
+        _hiddenByDialogue = false;
+
+        if (_hiddenByMenu) return; // sigue tapado por un menú abierto
+        if (!_isShowing || _rootGroup == null) return;
         _rootGroup.DOKill();
         _rootGroup.DOFade(1f, _fadeInDuration).SetUpdate(true);
         _rootGroup.blocksRaycasts = false;
@@ -204,5 +296,116 @@ public class TutorialPromptUI : MonoBehaviour
         _rootGroup.DOKill();
         _rootGroup.DOFade(1f, _fadeInDuration).SetUpdate(true);
         _rootGroup.blocksRaycasts = false;
+    }
+
+    void SetCloseButtonVisible(bool visible)
+    {
+        if (_closeButton != null) _closeButton.gameObject.SetActive(visible);
+    }
+
+    // La X de toda la vida (texto "X", clic de ratón) solo tiene sentido en KeyboardMouse. En
+    // mando no hay cursor virtual en el proyecto para poder pulsarla — así que, en vez de
+    // ocultar el botón sin más (versión anterior de este fix, INC-201b), mostramos en su lugar
+    // el icono real del botón que SÍ cierra el aviso en mando: Cancelar, que en las 3 familias es
+    // físicamente el mismo botón que East/Ataque mágico derecho (B Xbox, Círculo PS, A Switch —
+    // ver PlayerControls.inputactions → UI/Cancel y el comentario de dismissWithCancel en
+    // TutorialPromptNode). Así el jugador siempre ve QUÉ pulsar, en vez de un hueco vacío sin
+    // ninguna pista (reporte de Raúl, 15 sept 2026: "no aparece el boton de cerrar el pop up"
+    // jugando con mando).
+    void RefreshCloseButton()
+    {
+        if (_closeButton == null) return;
+
+        _closeButton.gameObject.SetActive(_allowManualClose);
+        if (!_allowManualClose) return;
+
+        bool isKeyboardMouse = InputGlyphService.CurrentFamily == InputGlyphDeviceFamily.KeyboardMouse;
+        if (isKeyboardMouse)
+        {
+            if (_closeLabel != null) _closeLabel.gameObject.SetActive(true);
+            if (_closeIcon != null) _closeIcon.gameObject.SetActive(false);
+            return;
+        }
+
+        Sprite cancelSprite = InputGlyphService.GetSprite(InputGlyphNames.East);
+        bool hasCancelArt = cancelSprite != null;
+        if (_closeIcon != null)
+        {
+            _closeIcon.sprite = cancelSprite;
+            _closeIcon.gameObject.SetActive(hasCancelArt);
+        }
+        // Sin arte de Cancelar para esta familia todavía: mejor no mostrar ni la X (no se puede
+        // pulsar con mando) ni el icono (quedaría en blanco) que confundir con un botón muerto.
+        if (_closeLabel != null) _closeLabel.gameObject.SetActive(false);
+    }
+
+    void BuildCloseButton()
+    {
+        var rootRt = (RectTransform)_rootGroup.transform;
+
+        var closeGo = new GameObject("CloseButton", typeof(RectTransform));
+        closeGo.transform.SetParent(rootRt, false);
+        var closeRt = (RectTransform)closeGo.transform;
+        closeRt.anchorMin = new Vector2(1f, 1f);
+        closeRt.anchorMax = new Vector2(1f, 1f);
+        closeRt.pivot = new Vector2(1f, 1f);
+        closeRt.sizeDelta = new Vector2(_closeButtonSize, _closeButtonSize);
+        closeRt.anchoredPosition = new Vector2(-_closeButtonMargin, -_closeButtonMargin);
+
+        closeGo.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.12f);
+        _closeButton = closeGo.AddComponent<Button>();
+        _closeButton.onClick.AddListener(() => CloseButtonClicked?.Invoke());
+
+        var labelGo = new GameObject("Label", typeof(RectTransform));
+        labelGo.transform.SetParent(closeRt, false);
+        var labelRt = (RectTransform)labelGo.transform;
+        labelRt.anchorMin = Vector2.zero;
+        labelRt.anchorMax = Vector2.one;
+        labelRt.offsetMin = Vector2.zero;
+        labelRt.offsetMax = Vector2.zero;
+
+        _closeLabel = labelGo.AddComponent<TextMeshProUGUI>();
+        _closeLabel.text = "X";
+        _closeLabel.fontSize = _closeButtonSize * 0.6f;
+        _closeLabel.color = Color.white;
+        _closeLabel.fontStyle = FontStyles.Bold;
+        _closeLabel.alignment = TextAlignmentOptions.Center;
+        _closeLabel.raycastTarget = false;
+        if (_label != null && _label.font != null) _closeLabel.font = _label.font;
+
+        CenterGlyphOnRenderedInk(_closeLabel);
+
+        // Icono alternativo para mando (ver RefreshCloseButton) — mismo rect que el Label de
+        // arriba, con un pequeño margen para que el glifo no toque el borde del cuadrado de fondo.
+        var iconGo = new GameObject("Icon", typeof(RectTransform));
+        iconGo.transform.SetParent(closeRt, false);
+        var iconRt = (RectTransform)iconGo.transform;
+        iconRt.anchorMin = Vector2.zero;
+        iconRt.anchorMax = Vector2.one;
+        float iconInset = _closeButtonSize * 0.12f;
+        iconRt.offsetMin = new Vector2(iconInset, iconInset);
+        iconRt.offsetMax = new Vector2(-iconInset, -iconInset);
+
+        _closeIcon = iconGo.AddComponent<Image>();
+        _closeIcon.preserveAspect = true;
+        _closeIcon.raycastTarget = false;
+        iconGo.SetActive(false);
+
+        // Oculto por defecto: solo Show(..., allowManualClose: true) lo activa — en los avisos que
+        // piden pulsar el botón de una mecánica real (p.ej. "Pulsa {BOTON} para despertar") cerrar
+        // con un clic de ratón se saltaría esa mecánica sin querer.
+        closeGo.SetActive(false);
+    }
+
+    // Centra un TMP_Text por la tinta que realmente pinta (bounds del mesh generado), no por las
+    // métricas de fuente — mismo fix ya aplicado a la "X" de cerrar en
+    // BugReportFlyoutPanel/CreditsFlyoutPanel/PatchNotesFlyoutPanel.cs (24 ago 2026): centrar por
+    // métricas dejaba el glifo descuadrado según fuente/carácter.
+    static void CenterGlyphOnRenderedInk(TextMeshProUGUI label)
+    {
+        Canvas.ForceUpdateCanvases();
+        label.ForceMeshUpdate(true, true);
+        Vector3 inkCenter = label.textBounds.center;
+        label.rectTransform.anchoredPosition -= new Vector2(inkCenter.x, inkCenter.y);
     }
 }

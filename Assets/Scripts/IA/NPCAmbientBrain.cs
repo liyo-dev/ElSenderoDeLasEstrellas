@@ -361,7 +361,11 @@ public class NPCAmbientBrain : MonoBehaviour
                 animator.SetLayerWeight(1, 1f);
 
             if (!CrossFade(state, 0.08f, actionLayer))
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[NPCAmbientBrain] No se encontró el estado '{state}'.", this);
+                #endif
+            }
 
             if (IsLoopingAction(action))
             {

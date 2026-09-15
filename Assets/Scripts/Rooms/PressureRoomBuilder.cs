@@ -87,8 +87,20 @@ public class PressureRoomBuilder : MonoBehaviour
         if (!roomGoal)        roomGoal        = GetComponent<RoomGoal>();
         if (!puzzleController) puzzleController = GetComponentInChildren<PressurePuzzleController>(true);
 
-        if (!doorW || !doorE) { Debug.LogError("[PressureRoomBuilder] Falta Door_W/Door_E"); return; }
-        if (!platePrefab)     { Debug.LogError("[PressureRoomBuilder] Falta platePrefab"); return; }
+        if (!doorW || !doorE)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogError("[PressureRoomBuilder] Falta Door_W/Door_E");
+            #endif
+            return;
+        }
+        if (!platePrefab)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogError("[PressureRoomBuilder] Falta platePrefab");
+            #endif
+            return;
+        }
 
         ClearContainers();
 
@@ -97,7 +109,13 @@ public class PressureRoomBuilder : MonoBehaviour
         a.y = b.y = transform.position.y;
         Vector3 dir = (b - a); dir.y = 0f;
         float dist = dir.magnitude;
-        if (dist < 0.1f) { Debug.LogWarning("[PressureRoomBuilder] Puertas demasiado juntas."); return; }
+        if (dist < 0.1f)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[PressureRoomBuilder] Puertas demasiado juntas.");
+            #endif
+            return;
+        }
         dir.Normalize();
         Vector3 right = new Vector3(-dir.z, 0f, dir.x);
 

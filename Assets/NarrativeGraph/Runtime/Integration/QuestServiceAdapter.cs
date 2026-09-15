@@ -126,6 +126,24 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         try { return Qm.GetState(questId) == QuestState.Completed; } catch { return false; }
     }
 
+    /// <summary>
+    /// Estado detallado para BranchQuestStateNode. "StepsReady" = activa y con todos los pasos
+    /// completados pero sin entregar (QuestManager.AreAllStepsCompleted).
+    /// </summary>
+    public NarrativeQuestState GetState(string questId)
+    {
+        if (Qm == null || string.IsNullOrEmpty(questId)) return NarrativeQuestState.NotStarted;
+        try
+        {
+            var st = Qm.GetState(questId);
+            if (st == QuestState.Completed) return NarrativeQuestState.Completed;
+            if (st == QuestState.Active)
+                return Qm.AreAllStepsCompleted(questId) ? NarrativeQuestState.StepsReady : NarrativeQuestState.Active;
+            return NarrativeQuestState.NotStarted;
+        }
+        catch { return NarrativeQuestState.NotStarted; }
+    }
+
     public void OnCompleted(string questId, Action cb)
     {
         if (cb == null || string.IsNullOrEmpty(questId)) return;

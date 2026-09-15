@@ -2,7 +2,7 @@
 
 **Versión:** 2.0 (migrado desde el Google Doc original "GDD" v1.0)
 **Autor original:** Raúl Báez Amate — Liyodev
-**Última revisión:** 1 de septiembre de 2026 — ver [Registro de cambios](#registro-de-cambios) al final del documento.
+**Última revisión:** 10 de septiembre de 2026 — ver [Registro de cambios](#registro-de-cambios) al final del documento.
 
 ---
 
@@ -201,7 +201,7 @@ Estas dos escenas ya no son dos beats separados como en el guión original: est�
 - **Confirmado: `ReinoExitBanterSequencer.cs` SÍ es esta transición** (corrige la sección "sin mapeo claro" de la revisión anterior): `StartQuestNode(ELDRAN_MISSION14)` → `WaitCustomEventNode` "Salimos del Reino al pueblo" (`eventKey: EVT_REINO_EXIT_BOUNDARY`) → `RaiseCustomEventNode(EVT_REINOEXIT_BANTER_START)` → `WaitCustomEventNode(EVT_REINOEXIT_BANTER_DONE)`. Confirmado tal cual se sospechaba: el grupo se para nada más cruzar el límite del Reino, Will confiesa que tiene miedo, Estela lo anima, Liam le recuerda que no está solo — justo antes de partir hacia el Fuego Fatuo.
 - **Contenido nuevo, no presente en el guión original:** tras el banter, un `KingdomExitTransitionNode` dedicado — plano de paisaje (`ReinoExit_LandscapeShot`), fade de ambiente, silencio de 0.75s, sube el tema musical principal (fade de 6s) y aparece el **logo del juego** en pantalla (fade in 1.75s, hold 3.5s, fade out 1.25s) antes de volver a la cámara de juego. Tiene campos `closeDemoAfterLogo`/`closeDemoTargetScene: Credits` **configurados pero desactivados (`closeDemoAfterLogo: 0`)** — es decir, este nodo está preparado para poder cerrar la demo aquí mismo mostrando los créditos, aunque ahora mismo no lo hace. Es un fuerte indicio de que este es el punto de corte pensado para la demo actual (ver nota de "hasta dónde llega el contenido implementado" al final del guión).
 - Después del `KingdomExitTransitionNode`: `WaitCustomEventNode` "Espero a que entren en la zona a inspeccionar" (`eventKey: EVT_WILL_LIAM`) → `ShowLorePopupNode` **"Will y Liam hablan sobre el pasado de Will"** — esto es la "Fase Will y Liam" del guión ("charlan sobre el origen de Will"), confirmada.
-- **Aquí termina el contenido autorado visible del grafo narrativo** (ver nota al final del guión técnico) — el resto del puzzle del Fuego Fatuo (fase Estela con las provisiones, el rastreo del fatuo por el bosque, el acorralamiento) no tiene más nodos después de este punto en `MainNarrative_Cap6.asset`. Puede que exista como gameplay libre no gateado por el grafo, o que sea contenido todavía por construir — sin confirmar, preguntar a Raúl.
+- **Alcance de la revisión del grafo del 24 de agosto:** se verificó hasta el diálogo de lore Will/Liam. El contenido interno del Fuego Fatuo y su conexión completa con la continuación siguen necesitando una comprobación específica; esta revisión documental no los da por terminados ni por ausentes.
 
 ### 15. El Hechicero Amigo de Eldran — Fusionada con la escena 14 en la implementación (ver nota arriba)
 
@@ -210,7 +210,7 @@ Estas dos escenas ya no son dos beats separados como en el guión original: est�
 - Gameplay: misión de exploración e interacción dentro del pueblo. Tras cumplir la tarea, el hechicero les explica el ritual: deben ir a una zona apartada y recitar un conjuro ante una piedra ancestral.
 - *Nota:* como se explica en la escena 14, esta escena no tiene misión propia en el grafo — es la segunda mitad de `ELDRAN_MISSION14`/`FUEGOFATUO_1`. No hay nodos del grafo que cubran específicamente "llegar al pueblo, encontrar al hechicero, favor personal, explicación del ritual" — contenido pendiente de construir o de verificar por otra vía (código de misión, no el grafo).
 
-> **Hasta dónde llega el contenido narrativo implementado (confirmado revisando `MainNarrative_Cap1.asset` a `Cap6.asset` completos, 24 ago 2026):** el grafo autorado real llega hasta el final de la escena 14 (justo después del `KingdomExitTransitionNode` y el diálogo de lore Will/Liam), y ahí se corta — no hay ni un nodo más en `Cap6.asset`. Las escenas 15 (segunda mitad, el pueblo/hechicero) a 22 (todo el tramo del Sendero, la Ruptura, el final) **no tienen presencia en el grafo narrativo actual**. Esto no significa necesariamente que no exista nada de ese contenido en el proyecto (podría haber trabajo suelto en otros sistemas), pero si se busca "qué queda por construir de la historia principal", este es el punto de corte real, no una suposición.
+> **Estado de implementación revisado el 10 de septiembre de 2026:** la revisión completa de los seis capítulos realizada el 24 de agosto verificó el recorrido hasta la escena 14. Ese alcance no describe por sí solo todo el contenido actual: ya existen `CandyLand.unity`, `Sendero.unity`, `Sendero_PruebaWill.unity` y herramientas como `CandylandClimaxBuilder.cs` y `WillTrialMazeBuilder.cs`. Este último incluye una revisión del 9 de septiembre para generar el laberinto y sus espejos. `CandyLand` y `Sendero_PruebaWill` figuran habilitadas en Build Settings. Su existencia no acredita que la continuación desde la escena 14 esté conectada y sea jugable de principio a fin. Consultar `TRACKER.md` (INC-160, INC-161 e INC-162) para implementación y validación; queda pendiente comprobar el recorrido completo en Unity.
 
 ### 16. La Piedra Ancestral
 
@@ -502,6 +502,10 @@ Tampoco existía esta sección en el GDD original. De momento no hay ningún sit
 
 ## Registro de Cambios
 
+**10 de septiembre de 2026 — Codex, nivelación documental solicitada por Raúl.**
+
+Actualizado el resumen de implementación para distinguir el alcance de la revisión del grafo de agosto de las escenas y herramientas existentes en septiembre. No se modifican el canon, los diálogos ni los estados de validación en juego. Seguimiento: INC-187 en `TRACKER.md`.
+
 **1 de septiembre de 2026 — Claude (Cowork), a petición de Raúl ("nivela la novela con el GDD, revisa los diálogos del juego contra la novela, y completa el GDD con diálogos y gameplay de lo que falta").**
 
 - **Nivelado "La Historia" (resumen del principio del documento) con "La Verdadera Historia de Will" y con la novela.** El resumen seguía con el planteamiento heredado del Google Doc v1.0 ("los dioses sellaron el Sendero... ocultaron sus secretos en un libro prohibido"), que nunca se corrigió cuando se escribió la versión detallada y ya correcta de más abajo (ni cuando la novela fijó el mismo canon: sin dioses, el Mago Oscuro queda sellado dentro del propio Sendero por el choque de su hechizo con la Protección Absoluta del mago del valle). Reescrito el resumen para que cuente la misma historia que el resto del documento. Ver `INC-152` en `TRACKER.md`.
@@ -557,3 +561,25 @@ Se leyeron enteros los 6 capítulos de `Assets/NarrativeGraph/MainNarrative_Cap1
 **30 de agosto de 2026 — Claude (Cowork), a petición de Raúl (nivelar el guión con la novela ya corregida).**
 
 - Corregida la escena 17 (El Sendero de las Estrellas): el guión describía las tres pruebas como caminos solitarios ("Prueba 1 de Will", "Prueba 2 de Estela", "Prueba 3 de Liam"), heredado sin cambios del Google Doc v1.0. Esto ya no coincidía con la corrección de canon que Raúl aclaró y que la novela (`novela/manuscrito-novela-completo.md`) ya refleja: las pruebas 1 y 2 las vive el grupo entero junto; solo la prueba 3 separa al grupo, y lo hace de otra forma (parque de atracciones + laberinto de espejos donde Will y Estela se quedan fuera viendo la traición de Liam desde fuera, no entrando los tres juntos como decía la versión anterior). Ver `INC-126` en `TRACKER.md`. Sin impacto en el juego implementado: las escenas 15-22 siguen sin ningún nodo en el grafo narrativo actual (ver nota de "hasta dónde llega el contenido implementado" más arriba), así que es una corrección puramente de diseño/documentación.
+
+### Cobertura espacial de la maqueta Eldoria — propuesta de nivel, 10 septiembre de 2026
+
+Revisión solicitada por Raúl tras probar la maqueta (INC-188). Esta tabla aplica a las variantes Eldoria Codex, no al estado de las misiones en MainWorld. Las posiciones son propuestas de composición; no cambian la historia ni requieren alterar la novela. Una reserva espacial no acredita que existan NPCs, disparadores, colisiones transitables o navegación conectados.
+
+| Necesidad del guión | Situación en la maqueta / trabajo pendiente |
+|---|---|
+| Casa de Will, encuentro con Eldran y caja en el linde (3) | Pueblo inicial conservado; falta asignar casas, entrada y punto del encargo a los objetos narrativos. |
+| Despertar y Demonio 1 (4–5) | Pradera de encuentro propuesta junto al pueblo; faltan conexión al combate, actores y posición protegida para Eldran. |
+| Victoria, pociones y entrenamiento con Erika (6) | Hay edificios, pero faltan asignación de comercios y patio de entrenamiento. |
+| Bosque Prohibido y claro de Estela (7) | Masa forestal, sendas y claro propuesto con troncos quemados; faltan puesta en escena y actores. |
+| Golem durante el regreso (8) | Ensanchamiento propuesto en el camino de vuelta; falta conectarlo al combate. |
+| Taberna, persecución y destrucción de montaña (9) | Taberna propuesta y plaza baja del barrio. La destrucción debe ser un estado posterior al evento; no se representa permanentemente al comenzar la maqueta. Falta montar la persecución. |
+| Reino, audiencia y calabozo (10–11) | Castillo y explanada exterior reorganizados; sala del trono y calabozo no construidos en esta maqueta. |
+| Demonio 2 y reunión exterior (12–13) | Explanada propuesta delante del castillo, pendiente de adaptar al combate y actores. |
+| Fuego Fatuo y charla de Will/Liam (14) | Bosque oriental y ruta con curvas; falta el circuito de ilusión, flancos y conexiones de misión. |
+| Pueblo del hechicero (15) | La propuesta espacial de Claude del 11 septiembre separa el pueblo vecino, en terraza interior, de la casa del hechicero en su isla de jungla. Esta distribución sustituye la ubicación anterior de la casa dentro del pueblo; misión y transporte pendientes de integrar. |
+| Piedra ancestral, Guardián y ruinas (16) | La revisión espacial de Claude del 11 septiembre traslada el recinto a una isla propia al sureste, separado del Bosque Prohibido. Se conservan monolito, ruinas y ruta marítima propuesta. Faltan adaptación al combate, Guardián y aparición del libro; no se acredita navegación jugable. |
+| Sendero y pruebas (17 y siguientes) | Se mantienen como espacios separados; no se incorporan artificialmente a la isla. Revisar sus conexiones al integrar el recorrido completo. |
+| Puerto pesquero y playas | Ambientación del mapa de referencia. Puerto rehecho con viviendas y embarcadero; playas despejadas de falsos edificios. No se inventan misiones para justificar estos lugares. |
+
+Prioridad siguiente de diseño: recorrido continuo a pie y escala de jugador; después claros/arenas y servicios del pueblo; por último conexión de eventos e interiores. La revisión visual por capturas no sustituye esa prueba jugable.

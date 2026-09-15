@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Audio y cine", "Volumen", "")]
 public sealed class SetAudioVolumeNode : NarrativeNode
 {
     public AudioBus bus = AudioBus.Master;

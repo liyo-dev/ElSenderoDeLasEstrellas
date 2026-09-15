@@ -422,15 +422,35 @@ namespace Game.Player
             EnsureVictoryCamera();
             if (_victoryVcam == null) return;
 
+            // Girar al jugador para que quede de cara a la cámara de gameplay activa en el
+            // momento de la victoria, en vez de dejarlo con la orientación que tuviera al
+            // terminar el combate (que puede ser cualquiera: de lado, de espaldas, a medio
+            // esquivar...). Sin esto, colocar la cámara relativa a un "forward" arbitrario no
+            // garantiza una pose de cara -- solo evita quedar exactamente detrás (bug anterior).
+            // Con el jugador ya orientado hacia la cámara, el offset de victoryCamYawOffsetDeg
+            // sí produce el 3/4 de cara buscado de forma consistente.
+            Camera refCam = Camera.main;
+            if (refCam != null)
+            {
+                Vector3 camForward = refCam.transform.forward;
+                camForward.y = 0f;
+                if (camForward.sqrMagnitude > 0.0001f)
+                {
+                    camForward.Normalize();
+                    transform.rotation = Quaternion.LookRotation(-camForward, Vector3.up);
+                }
+            }
+
             Vector3 flatForward = transform.forward;
             flatForward.y = 0f;
             if (flatForward.sqrMagnitude < 0.0001f) flatForward = Vector3.forward;
             flatForward.Normalize();
 
-            // La cámara se coloca EN LA DIRECCIÓN a la que mira el jugador (no detrás), para que
-            // el plano quede de frente/3-4 y se vea la cara durante la pose de victoria. Con
-            // "-flatForward" (bug histórico, INC pendiente) la cámara quedaba detrás del personaje
-            // mirando en la misma dirección que él, dejándolo de espaldas a cámara.
+            // La cámara se coloca EN LA DIRECCIÓN a la que mira el jugador (ya girado hacia
+            // cámara arriba), para que el plano quede de frente/3-4 y se vea la cara durante la
+            // pose de victoria. Con "-flatForward" (bug histórico, INC pendiente) la cámara
+            // quedaba detrás del personaje mirando en la misma dirección que él, dejándolo de
+            // espaldas a cámara.
             Quaternion yaw = Quaternion.AngleAxis(victoryCamYawOffsetDeg, Vector3.up);
             Vector3 offsetDir = yaw * flatForward;
             Vector3 camPos = transform.position + offsetDir * victoryCamDistance + Vector3.up * victoryCamHeight;

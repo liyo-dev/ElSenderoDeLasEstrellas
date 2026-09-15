@@ -56,17 +56,23 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: d5bb22677ff496a4a89fd8ea69ddf48a, type: 3}
     fade: 1
     loop: 1
+  - zoneId: WillTown
+    music: {fileID: 8300000, guid: 70f0ce25b256f314d820e189ba62c4e5, type: 3}
+    fade: 1
+    loop: 1
   sceneMusic:
   - sceneName: MainMenu
     music: {fileID: 8300000, guid: 785493ca564adeb44bb1c68fa22f00ab, type: 3}
   - sceneName: MainWorld
-    music: {fileID: 8300000, guid: 325160c1b0f253a44aabf1e5bc2334fd, type: 3}
+    music: {fileID: 8300000, guid: 920a9fdc4dced024ca2b9bfd43ef957a, type: 3}
   - sceneName: Credits
     music: {fileID: 8300000, guid: e4417147d8027ae48a5ef706f52635d8, type: 3}
   - sceneName: Sendero
     music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
   - sceneName: CandyLand
     music: {fileID: 8300000, guid: 187aae3a437affa4eaf8dd12c5d4b5ea, type: 3}
+  - sceneName: WillHouse
+    music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
   eventSfx:
   - eventKey: UI_Navigate
     sfx: {fileID: 8300000, guid: c83e31fc92bdc722b8d62fa8ebea0722, type: 3}

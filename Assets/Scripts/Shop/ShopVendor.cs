@@ -101,7 +101,11 @@ public class ShopVendor : MonoBehaviour
             if (_runtimeUI.IsOpen)
             {
                 if (attempts > 1)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[ShopVendor] Shop opened after {attempts} attempts.");
+                    #endif
+                }
                 yield break;
             }
 

@@ -122,7 +122,13 @@ public class FallingPathBuilder : MonoBehaviour
         Vector3 dir = (b - a);
         dir.y = 0f;
         float dist = dir.magnitude;
-        if (dist < 0.1f) { Debug.LogWarning("[FallingPathBuilder] Puertas demasiado juntas."); return; }
+        if (dist < 0.1f)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[FallingPathBuilder] Puertas demasiado juntas.");
+            #endif
+            return;
+        }
         dir.Normalize();
 
         // corredor útil (quitamos margen cerca de puertas)

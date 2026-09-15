@@ -14,6 +14,13 @@ using UnityEngine;
 /// hablado con el NPC que la ofrece), así que es seguro dejarlo en el prefab del
 /// enemigo de forma permanente.
 /// </summary>
+// ───────────────────────────────────────────────────────────────────────────
+// CONGELADO (12 sept 2026) — uno de los 7 micro-componentes de quest legacy.
+// Sustituto: SignalEmitter(trigger=OnEnemyDied) + CompleteQuestStepsNode del
+// grafo (o RaiseCustom + un contador si hace falta acumular). Sigue vivo y en
+// uso en MainWorld_old.unity — no tocar su comportamiento.
+// Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+// ───────────────────────────────────────────────────────────────────────────
 [RequireComponent(typeof(Damageable))]
 public class QuestKillContributor : MonoBehaviour
 {
@@ -59,7 +66,11 @@ public class QuestKillContributor : MonoBehaviour
         if (string.IsNullOrEmpty(questId))
         {
             if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestKillContributor:{name}] ❌ questId vacío en el prefab — esta muerte no cuenta para ninguna quest.");
+                #endif
+            }
             return;
         }
 
@@ -67,21 +78,33 @@ public class QuestKillContributor : MonoBehaviour
         if (qm == null)
         {
             if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[QuestKillContributor:{name}] ❌ QuestManager.Instance es null.");
+                #endif
+            }
             return;
         }
 
         if (onlyIfQuestActive && qm.GetState(questId) != QuestState.Active)
         {
             if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestKillContributor:{name}] ℹ️ Quest '{questId}' no está Activa (estado actual: {qm.GetState(questId)}) — esta muerte no cuenta.");
+                #endif
+            }
             return;
         }
 
         if (qm.AreAllStepsCompleted(questId))
         {
             if (debugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[QuestKillContributor:{name}] ℹ️ Quest '{questId}' ya no tiene steps pendientes — esta muerte no cuenta.");
+                #endif
+            }
             return; // nada pendiente para esta quest (p.ej. ya se mataron todos los enemigos requeridos)
         }
 
@@ -98,7 +121,11 @@ public class QuestKillContributor : MonoBehaviour
 
                 qm.MarkStepDone(questId, i);
                 if (debugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[QuestKillContributor:{name}] ✅ Step {i} de '{questId}' completado por esta muerte.");
+                    #endif
+                }
                 return;
             }
 
@@ -106,6 +133,10 @@ public class QuestKillContributor : MonoBehaviour
         }
 
         if (debugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning($"[QuestKillContributor:{name}] ⚠️ Quest '{questId}' no se encontró en qm.GetAll() (¿questId con typo o quest nunca añadida vía AddQuest/StartQuest?).");
+            #endif
+        }
     }
 }

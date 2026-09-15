@@ -836,10 +836,11 @@ public class GolemBossAI : MonoBehaviour
         
         if (rockPickupVFX)
         {
-            // TODO: Usar un sistema de pooling para evitar Instantiate/Destroy
-            GameObject dustVFX = Instantiate(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-            dustVFX.transform.localScale = Vector3.one * 1.5f;
-            Destroy(dustVFX, 2f);
+            // FIX (10 sept 2026): sustituye Instantiate/Destroy por VfxPoolService (pool de VFX de
+            // un solo uso, ver Core/Pooling/VfxPoolService.cs — patrón obligatorio de CLAUDE.md § 2,
+            // ya resolvía exactamente este TODO). Mismo lifetime (2s), mismo resultado visual.
+            Transform dustVFX = VfxPoolService.Instance.Play(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), 2f);
+            if (dustVFX) dustVFX.localScale = Vector3.one * 1.5f;
         }
         
         // Crear la roca en la mano
@@ -989,10 +990,10 @@ public class GolemBossAI : MonoBehaviour
         
         if (rockPickupVFX)
         {
-            // TODO: Usar un sistema de pooling
-            GameObject dustVFX = Instantiate(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
-            dustVFX.transform.localScale = Vector3.one * 1.5f;
-            Destroy(dustVFX, 2f);
+            // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+            // RockThrowAttack(). Mismo lifetime (2s).
+            Transform dustVFX = VfxPoolService.Instance.Play(rockPickupVFX, groundPos, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), 2f);
+            if (dustVFX) dustVFX.localScale = Vector3.one * 1.5f;
         }
         
         // Crear la roca
@@ -1088,9 +1089,9 @@ public class GolemBossAI : MonoBehaviour
             // VFX de advertencia en el suelo
             if (rockWarningVFX)
             {
-                // TODO: Usar un sistema de pooling
-                GameObject warning = Instantiate(rockWarningVFX, targetPos + Vector3.up * 0.1f, Quaternion.Euler(90f, 0f, 0f));
-                Destroy(warning, 1.5f);
+                // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+                // RockThrowAttack(). Mismo lifetime (1.5s).
+                VfxPoolService.Instance.Play(rockWarningVFX, targetPos + Vector3.up * 0.1f, Quaternion.Euler(90f, 0f, 0f), 1.5f);
             }
 
             // Gesto de invocación (planta los pies, alterna mano) en vez del saltito de antes
@@ -1124,9 +1125,9 @@ public class GolemBossAI : MonoBehaviour
         Transform handPoint = _useLeftHand && rockHandPointLeft ? rockHandPointLeft : rockHandPoint;
         if (rockPickupVFX && handPoint)
         {
-            // TODO: Usar un sistema de pooling
-            GameObject castVFX = Instantiate(rockPickupVFX, handPoint.position, Quaternion.identity);
-            Destroy(castVFX, 1f);
+            // FIX (10 sept 2026): VfxPoolService en vez de Instantiate/Destroy — ver nota en
+            // RockThrowAttack(). Mismo lifetime (1s).
+            VfxPoolService.Instance.Play(rockPickupVFX, handPoint.position, Quaternion.identity, 1f);
         }
 
         float elapsed = 0f;

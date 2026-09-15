@@ -5,6 +5,7 @@ using UnityEngine.Playables;
 
 [Obsolete("PlayTimelineNode está obsoleto. Usa PlayTimeline via Timeline/PlayableDirector directamente o nodos alternativos.")]
 [Serializable]
+[NarrativeNodeInfo("Audio y cine", "Timeline (legacy)", "")]
 public sealed class PlayTimelineNode : NarrativeNode
 {
     // No referenciamos PlayableDirector por ExposedReference para evitar drag&drop de escena.

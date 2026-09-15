@@ -1107,10 +1107,14 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
         textRt.anchoredPosition = new Vector2(0f, -220f);
 
         if (_logoSprite == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[PromoVideo01Sequencer] _logoSprite no está asignado — la tarjeta de cierre " +
                               "se verá solo con el texto, sin el logo del juego. Reejecuta el builder " +
                               "('El Sendero → Marketing → Crear Escena de Estudio (Vídeos Promo)') para que " +
                               "se autoasigne, o arrástralo a mano en el Inspector.");
+            #endif
+        }
     }
 
     /// Deja la tarjeta de cierre invisible (fondo y contenido a alpha 0). Se llama al empezar cada

@@ -1884,9 +1884,17 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 _scrollRect = _ui.rowsParent.GetComponentInParent<ScrollRect>();
                 if (_scrollRect != null)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[InventoryView] ✅ ScrollRect encontrado automáticamente: {_scrollRect.name}");
+                    #endif
+                }
                 else
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[InventoryView] ⚠️ ScrollRect NO encontrado. Asigna manualmente el ScrollRect en el Inspector (Inventory UI → Scroll Rect) o verifica que '{_ui.rowsParent.name}' esté bajo un GameObject con ScrollRect.");
+                    #endif
+                }
             }
 
             if (_ui.useButton != null)
@@ -2717,9 +2725,17 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 _scrollRect = _ui.rowsParent.GetComponentInParent<ScrollRect>();
                 if (_scrollRect != null)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.Log($"[SpellView] ✅ ScrollRect encontrado automáticamente: {_scrollRect.name}");
+                    #endif
+                }
                 else
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
                     Debug.LogWarning($"[SpellView] ⚠️ ScrollRect NO encontrado. Asigna manualmente el ScrollRect en el Inspector (Spell UI → Scroll Rect) o verifica que '{_ui.rowsParent.name}' esté bajo un GameObject con ScrollRect.");
+                    #endif
+                }
             }
         }
 

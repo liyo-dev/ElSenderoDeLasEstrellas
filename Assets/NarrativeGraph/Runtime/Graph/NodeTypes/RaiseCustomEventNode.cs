@@ -7,9 +7,11 @@ using UnityEngine;
 /// Ejemplo: EVT_MOUNTAIN, EVT_BOSS_DEFEATED, etc.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Señales", "Emitir señal", "Emite una señal custom que escuchan nodos, sequencers y triggers.")]
 public sealed class RaiseCustomEventNode : NarrativeNode
 {
     [Tooltip("Clave del evento a emitir (ej: EVT_MOUNTAIN, EVT_BOSS_DEFEATED)")]
+    [NarrativeKey(NarrativeKeyKind.Signal)]
     public string eventKey;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

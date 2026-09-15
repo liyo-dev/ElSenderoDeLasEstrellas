@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Audio y cine", "Música", "")]
 public sealed class PlayMusicNode : NarrativeNode
 {
     public AudioClip clip;

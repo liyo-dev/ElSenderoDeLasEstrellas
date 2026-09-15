@@ -3,6 +3,12 @@ using Game.NPC.Modules;
 
 namespace Game.NPC
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO — utilidad de reset del motor Interactive/PlayerPrefs
+    // NarrativeState_* legacy. No tiene sustituto activo: el grafo nuevo no
+    // necesita nada equivalente (persiste vía blackboard/preset, sin PlayerPrefs).
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Manager que resetea el estado de todos los NPCs con narrativas interactivas.
     /// Llamar NPCNarrativeStateManager.ResetAllNPCs() al iniciar una nueva partida.

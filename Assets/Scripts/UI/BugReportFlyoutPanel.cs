@@ -178,8 +178,10 @@ public class BugReportFlyoutPanel : MonoBehaviour
 
         if (!TryWireBugReportButton())
         {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogWarning("[BugReportFlyoutPanel] No se encontró el botón REPORTAR UN FALLO automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Bug Report Button Override' a mano en el Inspector.");
+            #endif
         }
     }
 

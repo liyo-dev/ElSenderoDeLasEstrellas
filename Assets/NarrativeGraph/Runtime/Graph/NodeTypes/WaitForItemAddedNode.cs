@@ -6,6 +6,7 @@ using UnityEngine;
 /// Útil para completar misiones cuando el jugador recoge/compra un item.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Objetos", "Esperar objeto", "Espera a que el jugador consiga un objeto.")]
 [SavePoint("Seguro guardar mientras espera item")]
 public sealed class WaitForItemAddedNode : NarrativeNode
 {

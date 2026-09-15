@@ -134,7 +134,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     
     private void OnCurrentTargetDied()
     {
-        if (verboseLogging) Debug.Log($"[PlayerTargeting] Target '{_currentTargetDamageable.name}' muerto, limpiando.");
+        if (verboseLogging)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerTargeting] Target '{_currentTargetDamageable.name}' muerto, limpiando.");
+            #endif
+        }
         if (_isManualTargetActive)
         {
             ClearManualTarget();
@@ -170,7 +175,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
         UpdateMarker();
         
-        if (verboseLogging) Debug.Log($"[PlayerTargeting] Target MANUAL establecido: {(target ? target.name : "NULL")}");
+        if (verboseLogging)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerTargeting] Target MANUAL establecido: {(target ? target.name : "NULL")}");
+            #endif
+        }
     }
 
     void ConfigureMarkerVisuals(GameObject markerRoot)
@@ -233,7 +243,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             CurrentTarget = null;
             OnTargetChanged(null);
         }
-        if (verboseLogging) Debug.Log($"[PlayerTargeting] Target manual liberado.");
+        if (verboseLogging)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerTargeting] Target manual liberado.");
+            #endif
+        }
     }
 
     public void ForceVisualRefresh()
@@ -251,7 +266,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     {
         if (_autoScanSuppressed == suppressed) return;
         _autoScanSuppressed = suppressed;
-        if (verboseLogging) Debug.Log($"[PlayerTargeting] Auto-scan suprimido: {suppressed}");
+        if (verboseLogging)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerTargeting] Auto-scan suprimido: {suppressed}");
+            #endif
+        }
     }
 
     void Update()
@@ -260,7 +280,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         {
             if (CurrentTarget == null || !CurrentTarget.gameObject.activeInHierarchy || (_currentTargetDamageable != null && !_currentTargetDamageable.IsAlive))
             {
-                if (verboseLogging) Debug.Log($"[PlayerTargeting] Target manual inválido, limpiando.");
+                if (verboseLogging)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[PlayerTargeting] Target manual inválido, limpiando.");
+                    #endif
+                }
                 ClearManualTarget();
             }
             return;
@@ -372,7 +397,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
     void OnTargetChanged(Transform newT)
     {
-        if (verboseLogging) Debug.Log($"[PlayerTargeting] OnTargetChanged: {(newT ? newT.name : "NULL")}");
+        if (verboseLogging)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[PlayerTargeting] OnTargetChanged: {(newT ? newT.name : "NULL")}");
+            #endif
+        }
 
         if (_currentTargetDamageable != null) _currentTargetDamageable.OnDied -= OnCurrentTargetDied;
 

@@ -4,6 +4,7 @@ using UnityEngine;
 using Sendero.Core.Feedback;
 
 [Serializable]
+[NarrativeNodeInfo("Mundo", "Fundido de pantalla", "")]
 public sealed class ScreenFadeNode : NarrativeNode
 {
     public Color color = Color.black;

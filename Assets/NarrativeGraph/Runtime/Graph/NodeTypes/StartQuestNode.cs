@@ -2,8 +2,10 @@ using System;
 using UnityEngine;
 
 [Serializable]
+[NarrativeNodeInfo("Quests", "Iniciar quest", "Arranca la quest en el QuestManager (aparece en el diario).")]
 public sealed class StartQuestNode : NarrativeNode
 {
+    [NarrativeKey(NarrativeKeyKind.Quest)]
     public string questId;
 
     public override void Enter(NarrativeContext ctx, Action ready)

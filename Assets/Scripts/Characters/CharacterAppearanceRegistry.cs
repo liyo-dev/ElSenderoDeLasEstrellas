@@ -92,7 +92,13 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance ENTER — slot={slot}, _builder={(object)_builder ?? "null"}, Instance={(object)Instance ?? "null"}");
 #endif
         var b = Builder;
-        if (b == null) { Debug.LogWarning($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) abortado — Builder null."); return; }
+        if (b == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) abortado — Builder null.");
+            #endif
+            return;
+        }
 
         EnsureWillSnapshot(b);
         var app = _appearances[(int)slot];

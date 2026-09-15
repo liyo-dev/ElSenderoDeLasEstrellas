@@ -12,9 +12,17 @@ using UnityEngine;
 /// siendo la fuente de verdad; el catálogo simplemente los documenta y
 /// proporciona metadatos para el editor.
 ///
+/// MARCADO OBSOLETE (12 sept 2026): confirmado dos veces (auditoría de julio y
+/// de septiembre 2026) que ningún código de runtime ni de editor lo lee — es
+/// documentación sin consumidor. No crear ni usar instancias nuevas. Candidato
+/// futuro es que NarrativeProjectIndex (el índice del editor de grafo) absorba
+/// este rol, pero no está construido. Ver
+/// claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+///
 /// Crear: Assets → Create → Narrative → Fact Catalog
 /// </summary>
-[CreateAssetMenu(menuName = "El Sendero/Narrativa/Fact Catalog", fileName = "NarrativeFactCatalog")]
+[Obsolete("NarrativeFactCatalog no tiene ningún consumidor (confirmado jul. y sept. 2026) — no crear ni usar instancias nuevas. Ver catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md.")]
+[CreateAssetMenu(menuName = "El Sendero/Narrativa/Fact Catalog (OBSOLETE)", fileName = "NarrativeFactCatalog")]
 public class NarrativeFactCatalog : ScriptableObject
 {
     public enum FactCategory

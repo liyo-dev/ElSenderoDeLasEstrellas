@@ -194,14 +194,24 @@ namespace Game.NPC
             string line = PickLine(ambientComments);
             if (string.IsNullOrEmpty(line)) return;
 
-            if (debugMode) Debug.Log($"[EldranIdleCommentary] Comentario suelto: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[EldranIdleCommentary] Comentario suelto: \"{line}\"");
+                #endif
+            }
             SpeechBubbleUI.Instance?.Show(transform, line, bubbleDuration);
         }
 
         private void TriggerSearch()
         {
             string line = PickLine(searchLines);
-            if (debugMode) Debug.Log($"[EldranIdleCommentary] Se para a cachearse el báculo: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[EldranIdleCommentary] Se para a cachearse el báculo: \"{line}\"");
+                #endif
+            }
 
             var sequence = new CompositeSequence();
             sequence.AddAction(new EldranSearchAction(searchDuration, searchGestureState, line, bubbleDuration));

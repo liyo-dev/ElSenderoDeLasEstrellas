@@ -3,6 +3,14 @@ using System.Linq;
 
 namespace Game.NPC.Modules
 {
+    // ───────────────────────────────────────────────────────────────────────
+    // CONGELADO (12 sept 2026) — no ampliar ni usar para NPCs/quests nuevas de
+    // la maqueta de Eldoria (MainWorld.unity). Sustituto en el grafo narrativo:
+    // WaitNpcInteractionNode + BranchQuestStateNode + PlayDialogueNode/
+    // DialogueChoiceNode + StartQuestNode/CompleteQuestStepsNode.
+    // Sigue en uso tal cual en MainWorld_old.unity — no tocar su comportamiento.
+    // Ver claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md § 2.
+    // ───────────────────────────────────────────────────────────────────────
     /// <summary>
     /// Configuración de misiones para NPCs.
     /// Aquí se configura la cadena de misiones (Quest Chain) que ofrece el NPC.
@@ -278,7 +286,13 @@ namespace Game.NPC.Modules
             for (int i = questChain.Length - 1; i >= 0; i--)
             {
                 var entry = questChain[i];
-                if (entry?.questData == null) { Debug.Log($"  [{i}] questData NULL - skip"); continue; }
+                if (entry?.questData == null)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"  [{i}] questData NULL - skip");
+                    #endif
+                    continue;
+                }
 
                 var questId = entry.questData.questId;
                 var state = qm.GetState(questId);

@@ -23,6 +23,7 @@ using Sendero.Core.Feedback;
 /// no se ve afectada y todo vuelve exactamente como estaba al terminar el foco.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Mundo", "Enfocar cámara", "Mueve la cámara a un punto de interés.")]
 public sealed class FocusCameraNode : NarrativeNode
 {
     [Tooltip("focusId del CameraFocusPoint en escena al que cortar la cámara.")]

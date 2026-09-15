@@ -212,8 +212,10 @@ namespace Core
         {
             if (_uiModeRefCount > 0)
             {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[PlayerInputManager] ForceRestoreGameplayMode: resetando refCount {_uiModeRefCount} → 0. " +
                                   "Algún PushUIMode no tuvo su PopUIMode correspondiente.");
+                #endif
             }
             _uiModeRefCount = 0;
             _isInUIMode = false;

@@ -25,12 +25,24 @@
             "value": "Otra vez esa pesadilla."
         },
         {
+            "key": "TUTORIAL_MINIMAP_BOX",
+            "value": "Sigue el marcador del minimapa para encontrar la caja.\nPulsa {BOTON} para ver el mapa completo."
+        },
+        {
             "key": "TUTORIAL_MOVE_INSPECT",
             "value": "Usa {BOTON} para mover a Will. Inspecciona la habitación."
         },
         {
+            "key": "TUTORIAL_NPC_TALK_ICON",
+            "value": "Cuando el icono sobre la cabeza de un personaje cambie así,\nsignifica que debes hablar con él."
+        },
+        {
             "key": "TUTORIAL_WAKE_UP",
             "value": "Pulsa {BOTON} para despertar a Will"
+        },
+        {
+            "key": "QUEST_STARTED_BANNER",
+            "value": "Nueva misión: {0}"
         }
     ]
 }

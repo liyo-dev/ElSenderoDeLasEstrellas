@@ -121,6 +121,20 @@ public sealed class AudioService : MonoBehaviour
         // Escenas
         SceneManager.sceneLoaded   += OnSceneLoaded;
 
+        // FIX (12 sep 2026, reporte de Raúl — "he añadido música para WillHouse pero sigue sonando
+        // la de MainWorld"): OnSceneLoaded ignora a propósito las escenas cargadas en aditivo (ver
+        // comentario ahí — "feature de cinemáticas aditivas eliminada"), pero los interiores
+        // cargados en aditivo (InteriorPortalTrigger, p.ej. WillHouse.unity) SÍ deben poder tener
+        // música de escena propia (AudioGraphProfile.sceneMusic), igual que cualquier escena base.
+        // En vez de tocar esa guarda de OnSceneLoaded (y arriesgarnos a resucitar el bug que la
+        // motivó), nos enganchamos a los eventos de EnvironmentController.OnInteriorEntered/
+        // OnInteriorExited — ya existen, los dispara TeleportService.ApplyEnvironmentForAnchor en
+        // cualquier flujo de entrada/salida de interior (andando o por InteriorPortalTrigger), y ya
+        // los consume MinimapController para lo mismo (activar/desactivar el minimapa). Escalable a
+        // cualquier interior futuro con su propia música, sin parche específico de WillHouse.
+        EnvironmentController.OnInteriorEntered += HandleInteriorEntered;
+        EnvironmentController.OnInteriorExited  += HandleInteriorExited;
+
         // Pisadas del jugador: FootstepHandler detecta la pisada (huesos de los pies) y solo
         // levanta un evento — el propio AudioService es quien decide qué suena, igual que con las
         // señales del grafo narrativo. Antes nadie escuchaba este evento y las pisadas eran mudas
@@ -146,6 +160,8 @@ public sealed class AudioService : MonoBehaviour
     void OnDestroy()
     {
         SceneManager.sceneLoaded   -= OnSceneLoaded;
+        EnvironmentController.OnInteriorEntered -= HandleInteriorEntered;
+        EnvironmentController.OnInteriorExited  -= HandleInteriorExited;
         FootstepHandler.OnFootstep -= HandlePlayerFootstep;
 
         if (_signals != null)
@@ -305,6 +321,91 @@ public sealed class AudioService : MonoBehaviour
             }
         }
         // si ninguna regla coincide, _lastRequestedSceneClip se queda null
+    }
+
+    /// <summary>
+    /// Busca en profile.sceneMusic una regla cuyo sceneName aparezca en sceneName (mismo criterio
+    /// de coincidencia por subcadena que OnSceneLoaded/RestoreSceneMusic).
+    /// </summary>
+    bool TryGetSceneMusicRule(string sceneName, out AudioClip clip)
+    {
+        clip = null;
+        if (profile == null || string.IsNullOrEmpty(sceneName)) return false;
+
+        foreach (var rule in profile.sceneMusic)
+        {
+            if (rule != null && !string.IsNullOrEmpty(rule.sceneName) && rule.music != null &&
+                sceneName.IndexOf(rule.sceneName, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                clip = rule.music;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Al entrar en un interior (andando o vía InteriorPortalTrigger): si ese interior vive en su
+    /// propia escena con música configurada en AudioGraphProfile.sceneMusic (p. ej. "WillHouse"),
+    /// la reproduce. Para los interiores "clásicos" que viven dentro de MainWorld.unity (mismo
+    /// nombre de escena que el mundo), esto resuelve a la propia música de MainWorld — no-op si ya
+    /// está sonando, gracias al guard de PlayMusic más abajo.
+    /// </summary>
+    void HandleInteriorEntered()
+    {
+        // FIX (12 sep 2026, reporte de Raúl — "ha sonado la música de la casa de will durante la
+        // secuencia del prólogo"): el jugador puede empezar la partida directamente dentro de un
+        // interior (WorldBootstrap resuelve el anchor de arranque 'Bedroom' → WillHouse), y ese
+        // mismo instante coincide con el arranque de una cinemática (PrologueDreamSequencer) que
+        // gestiona su propia música (heartbeat, "MAGOOSCURO_VISION"...). Si HandleInteriorEntered
+        // reproduce la música del interior ahí mismo, pisa por completo lo que la cinemática está
+        // montando. Mismo guard que ya usa el resto del archivo (Co_RestoreWorldMusicAfterBattle,
+        // RestoreAfterBattle) para no chocar con una cinemática en curso — cuando termine, su propio
+        // RestoreMusic()/RestoreSceneMusic() se encargará de poner la música del interior (ver FIX
+        // gemelo en RestoreSceneMusic(), más abajo).
+        if (CinematicSequencerBase.AnySequenceActive) return;
+        if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
+
+        var env = EnvironmentController.Instance ? EnvironmentController.Instance.CurrentInterior : null;
+        if (!env) return;
+
+        string interiorSceneName = env.gameObject.scene.name;
+        if (TryGetSceneMusicRule(interiorSceneName, out var clip) && GetCurrentMusicClip() != clip)
+        {
+            PlayMusic(clip, defaultFade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] Música de interior '{interiorSceneName}' → '{clip.name}'");
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Al salir de un interior: mismo criterio de prioridad que el resto de puntos de restauración
+    /// del archivo (RestoreAfterBattle/RestoreAfterMinigame/CinematicSequencerBase.RestoreMusic) —
+    /// si el punto de salida cae dentro de una AmbientZone activa, su música manda; si no, se
+    /// restaura la música de la escena base (RestoreSceneMusic ya resuelve esto sin verse afectado
+    /// por el interior aditivo, porque _lastRequestedSceneClip nunca lo tocó — ver HandleInteriorEntered).
+    /// </summary>
+    void HandleInteriorExited()
+    {
+        if (profile == null) return;
+
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = profile.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+                PlayMusic(zoneRule.music, defaultFade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] Al salir del interior: música de AmbientZone '{activeAmbientZone.MusicZoneId}'");
+#endif
+                return;
+            }
+        }
+
+        if (!RestoreSceneMusic(defaultFade))
+            StopMusic(defaultFade);
     }
 
     // ===========================================================
@@ -1298,7 +1399,31 @@ public sealed class AudioService : MonoBehaviour
     public bool RestoreSceneMusic(float fadeDuration = -1f)
     {
         if (fadeDuration < 0f) fadeDuration = defaultFade;
-        
+
+        // FIX (12 sep 2026, reporte de Raúl — "la música de MainWorld sonó dentro de la casa de
+        // Will"): RestoreSceneMusic() es el punto de restauración compartido por
+        // CinematicSequencerBase.RestoreMusic()/RestoreAfterBattle/RestoreAfterMinigame — todos
+        // ellos, hasta ahora, ignoraban por completo si el jugador sigue dentro de un interior con
+        // música propia (AudioGraphProfile.sceneMusic para la escena de ese interior, ver
+        // HandleInteriorEntered) y restauraban sin más la última música de la escena BASE
+        // (MainWorld) — que nunca cambia mientras un interior aditivo está cargado encima (ver
+        // AudioService.OnSceneLoaded). Esto no se notaba porque, hasta ahora, ningún interior tenía
+        // música propia — con WillHouse ya configurada, hacía falta esta prioridad extra, más
+        // específica que la escena base: si seguimos en modo Interior, su música manda.
+        var ec = EnvironmentController.Instance;
+        if (ec != null && ec.CurrentMode == EnvironmentMode.Interior && ec.CurrentInterior)
+        {
+            string interiorScene = ec.CurrentInterior.gameObject.scene.name;
+            if (TryGetSceneMusicRule(interiorScene, out var interiorClip))
+            {
+                PlayMusic(interiorClip, fadeDuration);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] RestoreSceneMusic: seguimos en interior '{interiorScene}' → '{interiorClip.name}'");
+#endif
+                return true;
+            }
+        }
+
         // Intentar restaurar la última música de escena solicitada
         if (_lastRequestedSceneClip != null)
         {

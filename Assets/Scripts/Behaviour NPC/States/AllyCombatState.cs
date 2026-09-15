@@ -153,7 +153,12 @@ namespace Game.NPC.States
             if (_forcedTarget != null && _forcedTarget.gameObject != null)
             {
                 _currentTarget = _forcedTarget;
-                if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target forzado: {_forcedTarget.name}");
+                if (context.DebugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target forzado: {_forcedTarget.name}");
+                    #endif
+                }
             }
             else
             {
@@ -182,7 +187,12 @@ namespace Game.NPC.States
             // Parar movimiento inicial
             StopMovement(context);
 
-            if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] OnEnter completado - Target: {_currentTarget?.name ?? "NINGUNO"}");
+            if (context.DebugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] OnEnter completado - Target: {_currentTarget?.name ?? "NINGUNO"}");
+                #endif
+            }
         }
 
         public override void OnUpdate(NPCStateContext context)
@@ -209,7 +219,12 @@ namespace Game.NPC.States
                 }
                 else
                 {
-                    if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target forzado {_forcedTarget.name} está muerto, liberando target...");
+                    if (context.DebugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target forzado {_forcedTarget.name} está muerto, liberando target...");
+                        #endif
+                    }
                     _forcedTarget = null;
                     _forcedTargetName = null;
                     _currentTarget = null;
@@ -247,7 +262,12 @@ namespace Game.NPC.States
                 }
                 if (_currentTargetDamageable != null && _currentTargetDamageable.Current <= 0)
                 {
-                    if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target {_currentTarget.name} murió, buscando otro...");
+                    if (context.DebugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target {_currentTarget.name} murió, buscando otro...");
+                        #endif
+                    }
                     _currentTarget = null;
                     _currentTargetDamageable = null;
                     _damageableCachedFor = null;
@@ -279,7 +299,12 @@ namespace Game.NPC.States
                             _currentTarget = npc.transform;
                             _forcedTarget = npc.transform;
                             _forcedTargetName = npc.name;
-                            if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target encontrado en Registry: {npc.name}");
+                            if (context.DebugMode)
+                            {
+                                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                                Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target encontrado en Registry: {npc.name}");
+                                #endif
+                            }
                             break;
                         }
                     }
@@ -501,7 +526,12 @@ namespace Game.NPC.States
             _shieldController = null;
 
             StopMovement(context);
-            if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] 🏳️ Saliendo de combate");
+            if (context.DebugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AllyCombatState:{context.Transform.name}] 🏳️ Saliendo de combate");
+                #endif
+            }
             base.OnExit(context);
         }
 
@@ -513,7 +543,12 @@ namespace Game.NPC.States
             // 2. Si no hay enemigos por mucho tiempo, volver a seguir (victoria)
             if (_noEnemyTimer > NO_ENEMY_TIMEOUT)
             {
-                if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏰ Timeout sin enemigos, volviendo a seguir al jugador.");
+                if (context.DebugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏰ Timeout sin enemigos, volviendo a seguir al jugador.");
+                    #endif
+                }
                 _exitingAsVictory = true;
                 return new FollowPlayerState(_partyMember);
             }
@@ -561,7 +596,12 @@ namespace Game.NPC.States
 
             if (_currentTarget != null)
             {
-                if (context.DebugMode) Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Registry: {_currentTarget.name}");
+                if (context.DebugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Registry: {_currentTarget.name}");
+                    #endif
+                }
                 return;
             }
 
@@ -583,8 +623,18 @@ namespace Game.NPC.States
 
             if (context.DebugMode)
             {
-                if (_currentTarget != null) Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Layer: {_currentTarget.name}");
-                else Debug.Log($"[AllyCombatState:{context.Transform.name}] ❌ Sin enemigos (Registry:{_combatNpcBuffer.Count}, Layers:{hitCount})");
+                if (_currentTarget != null)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Layer: {_currentTarget.name}");
+                    #endif
+                }
+                else
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[AllyCombatState:{context.Transform.name}] ❌ Sin enemigos (Registry:{_combatNpcBuffer.Count}, Layers:{hitCount})");
+                    #endif
+                }
             }
         }
         

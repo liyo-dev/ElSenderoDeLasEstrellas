@@ -249,6 +249,22 @@
             "text": "Why do you think you're alive, boy?\nHave you never wondered why you remember nothing of yourself, or your past?\nI'll tell you why — you remember nothing of yourself, your family, or your village,\nbecause eons ago you died fighting me.\nYou died that day. You are the reincarnation of the only mage who ever managed to stop me!\nYou forced me to unleash my ultimate spell of destruction, but back then I couldn't control it.\nWhen it all slipped beyond my grasp, I bound my soul to the Path,\nwaiting for the day some other fool would clear its trials\nand wish me back to life.\nTo keep the spell from touching your family and your pitiful village,\nyou poured every last drop of magic inside you into a protective spell —\none that saved your people, but destroyed you.\nWhat I don't understand is how, after dying, you're still here…"
         },
         {
+            "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
+            "text": "Ah, well then... in case you forgot you know me:"
+        },
+        {
+            "id": "OLIVER_GREETING_NEW_SPELL_INTRO",
+            "text": "I've learned a new spell, check this out:"
+        },
+        {
+            "id": "OLIVER_GREETING_OUT_OF_BREATH",
+            "text": "Ugh... ugh, I can't breathe..."
+        },
+        {
+            "id": "OLIVER_GREETING_SPOT_WILL",
+            "text": "WILL! Hey, Will, wait up!"
+        },
+        {
             "id": "PARQUE_LIAM_01",
             "text": "Okay, I like this a lot better."
         },
@@ -443,6 +459,10 @@
         {
             "id": "WILL_FLASHBACK_REVELATION",
             "text": "Now... now I remember it all.\nThe protective spell. My parents. My village…\nBut what am I doing here? How is this possible? And in this body…"
+        },
+        {
+            "id": "WILL_GREETING_OLIVER_CUT_OFF",
+            "text": "Ha, you never change, Oliver... Hey, I'm in a hurry, Eldran needs me."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",

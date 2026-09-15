@@ -181,7 +181,11 @@ public class GameOverManager : MonoBehaviour
         _deadPlayer = null;
 
         if (!string.IsNullOrEmpty(reason))
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log(reason);
+            #endif
+        }
     }
 
     /// <summary>

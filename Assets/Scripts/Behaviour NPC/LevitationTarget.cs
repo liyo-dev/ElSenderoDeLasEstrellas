@@ -168,7 +168,12 @@ public class LevitationTarget : MonoBehaviour
         SpawnLevitationVFX();
         OnAnyLevitationStarted?.Invoke();
 
-        if (showDebugLogs) Debug.Log($"[LevitationTarget] {name} comenzando levitación");
+        if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[LevitationTarget] {name} comenzando levitación");
+            #endif
+        }
     }
 
     // ── Actualización cada frame ─────────────────────────────────────────────
@@ -380,7 +385,12 @@ public class LevitationTarget : MonoBehaviour
         }
 
         OnAnyLevitationEnded?.Invoke();
-        if (showDebugLogs) Debug.Log($"[LevitationTarget] {name} estado normal restaurado");
+        if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[LevitationTarget] {name} estado normal restaurado");
+            #endif
+        }
     }
 
     /// <summary>
@@ -460,7 +470,12 @@ public class LevitationTarget : MonoBehaviour
                 _hitReactionCoroutine = StartCoroutine(Co_PlayHitReaction());
             }
 
-            if (showDebugLogs) Debug.Log($"[LevitationTarget] {name} rebote en pared → {speed:F1}m/s");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[LevitationTarget] {name} rebote en pared → {speed:F1}m/s");
+                #endif
+            }
             return;
         }
 
@@ -473,7 +488,12 @@ public class LevitationTarget : MonoBehaviour
         var shield = GetComponent<NPCShieldController>() ?? GetComponentInParent<NPCShieldController>();
         if (shield != null && shield.IsDefending)
         {
-            if (showDebugLogs) Debug.Log($"[LevitationTarget] {name} impacto bloqueado por escudo");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[LevitationTarget] {name} impacto bloqueado por escudo");
+                #endif
+            }
             return;
         }
 
@@ -482,7 +502,12 @@ public class LevitationTarget : MonoBehaviour
         if (dmg != null && dmg.IsAlive)
         {
             dmg.TakeDamage(damage);
-            if (showDebugLogs) Debug.Log($"[LevitationTarget] {name} impacto pared → {impactSpeed:F1}m/s, daño={damage:F0}");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[LevitationTarget] {name} impacto pared → {impactSpeed:F1}m/s, daño={damage:F0}");
+                #endif
+            }
         }
 
         if (impactVFXPrefab != null)

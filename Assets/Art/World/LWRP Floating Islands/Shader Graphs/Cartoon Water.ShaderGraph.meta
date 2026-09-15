@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 95164e51d6c570143bad1a40027d68fc
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 625f186215c104763be7675aa2d941aa, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 162431
+  packageName: LWRP/URP Low Poly Floating Islands
+  packageVersion: 1.0
+  assetPath: Assets/New folder/LWRP Floating Islands/Shader Graphs/Cartoon Water.ShaderGraph
+  uploadId: 351423

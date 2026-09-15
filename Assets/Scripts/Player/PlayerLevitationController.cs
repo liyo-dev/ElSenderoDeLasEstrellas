@@ -83,7 +83,11 @@ public class PlayerLevitationController : MonoBehaviour
     void Start()
     {
         if (!magicCaster)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[PlayerLevitationController] No se encontró MagicCaster.");
+            #endif
+        }
     }
 
     void Update()
@@ -133,7 +137,12 @@ public class PlayerLevitationController : MonoBehaviour
 
         if (manaPool != null && !manaPool.TrySpend(spell.manaCost))
         {
-            if (showDebugLogs) Debug.Log("[Levitation] Maná insuficiente");
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log("[Levitation] Maná insuficiente");
+                #endif
+            }
             return false;
         }
 
@@ -160,7 +169,12 @@ public class PlayerLevitationController : MonoBehaviour
         if (!string.IsNullOrEmpty(spell.castSFXKey) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(spell.castSFXKey);
 
-        if (showDebugLogs) Debug.Log($"[Levitation] Iniciando con {targets.Count} objetivos");
+        if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[Levitation] Iniciando con {targets.Count} objetivos");
+            #endif
+        }
         return true;
     }
 
@@ -194,7 +208,12 @@ public class PlayerLevitationController : MonoBehaviour
                 foreach (var t in newTargets)
                     t.BeginLevitation(this, _activeSpell);
                 FeedbackService.CameraShake(_activeSpell.levitationCaptureShakeIntensity, _activeSpell.levitationCaptureShakeDuration);
-                if (showDebugLogs) Debug.Log($"[Levitation] Objetivo capturado durante hold: {newTargets.Count}");
+                if (showDebugLogs)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[Levitation] Objetivo capturado durante hold: {newTargets.Count}");
+                    #endif
+                }
             }
         }
 
@@ -252,7 +271,12 @@ public class PlayerLevitationController : MonoBehaviour
         _activeSpell = null;
         _currentTargets.Clear();
 
-        if (showDebugLogs) Debug.Log("[Levitation] Lanzamiento ejecutado");
+        if (showDebugLogs)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log("[Levitation] Lanzamiento ejecutado");
+            #endif
+        }
     }
 
     void CancelLevitationNoMana()

@@ -68,10 +68,20 @@ public class CollectiblePopupPanel : MonoBehaviour
 
         if (item != null)
         {
-            if (nameText == null) Debug.LogWarning("[CollectiblePopupPanel] nameText is not assigned on prefab.");
+            if (nameText == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[CollectiblePopupPanel] nameText is not assigned on prefab.");
+                #endif
+            }
             else nameText.text = item.GetLocalizedName();
 
-            if (iconImage == null) Debug.LogWarning("[CollectiblePopupPanel] iconImage is not assigned on prefab.");
+            if (iconImage == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning("[CollectiblePopupPanel] iconImage is not assigned on prefab.");
+                #endif
+            }
             else iconImage.sprite = item.icon;
         }
         else

@@ -58,7 +58,13 @@ public class EnvironmentController : MonoBehaviour
 
     // Gestión de zonas visibles
     GameObject[] _hiddenZones;       // zonas que ocultamos al entrar
-    GameObject _hiddenExterior;      // mundo exterior ocultado
+    // FIX (12 sep 2026, pedido de Raúl): el mundo exterior de MainWorld está repartido en más de un
+    // GameObject de nivel superior (p. ej. "WORLD" para terreno/edificios y "AI" para los NPCs) en
+    // vez de uno solo. Antes solo se podía ocultar UN root (exteriorWorldRootName, string). Ahora se
+    // oculta la unión de exteriorWorldRootName (compatibilidad con anchors ya configurados, p. ej.
+    // el de WillHouse.unity) + exteriorWorldRootNames (array nuevo, para el resto).
+    ExteriorWorldRoot[] _hiddenExteriors;   // mundo exterior ocultado (uno o varios roots) —
+                                      // solo controla renderizado, ver ExteriorWorldRoot.SetVisible
     float _savedFarClipPlane;        // far clip original de la cámara
     bool _farClipModified;
 
@@ -450,18 +456,41 @@ public class EnvironmentController : MonoBehaviour
             }
         }
 
-        if (env.hideExteriorWorld && !string.IsNullOrEmpty(env.exteriorWorldRootName))
+        // FIX (11 sep 2026): antes usaba GameObject.Find(...)/GameObject.FindWithTag(...) aquí —
+        // un recorrido completo de la escena en CADA cruce de anchor, prohibido por AGENTS.md § 2 /
+        // TDD.md § 12 ("usar registros" en vez de Find). Además FindWithTag lanza excepción si el
+        // string no es un Tag registrado, y con "ExteriorWorld" como nombre normal esa llamada
+        // podía fallar en silencio o con excepción no capturada, dejando _hiddenExteriors en null y
+        // rompiendo también la restauración al salir (RestoreZoneVisibility depende de esta misma
+        // referencia). Se resuelve por registro (ExteriorWorldRoot, O(1), sin recorrer la escena).
+        //
+        // FIX (14 sep 2026, pedido de Raúl): entre el 11 y el 12 sept esto pasó a resolverse por
+        // NOMBRE — cada AnchorEnvironment tenía que listar a mano, en exteriorWorldRootName/
+        // exteriorWorldRootNames, cada GameObject raíz que quisiera ocultar. Frágil: un
+        // ExteriorWorldRoot nuevo en la escena (con el componente puesto y todo) se quedaba fuera
+        // en silencio si nadie se acordaba de añadir también su nombre a la lista de cada anchor/
+        // cinemática — pasó de verdad con "CAPITULOS": tenía el componente pero ningún anchor lo
+        // listaba, así que su Rigidbody seguía simulando cuando el resto del mundo se ocultaba
+        // durante una secuencia, y una caja de quest caía al vacío (ver
+        // incidencia-caja-eldran-cae-sin-parar-2026-09-14.md). Ahora, si hideExteriorWorld está
+        // activo, se ocultan TODOS los ExteriorWorldRoot registrados en la escena, sin excepción —
+        // el propio componente ya es la marca de "esto es mundo exterior, ocúltame"; no hace falta
+        // ninguna lista de nombres en ningún sitio más. exteriorWorldRootName/exteriorWorldRootNames
+        // en AnchorEnvironment.cs quedan sin uso (no se han borrado para no perder los valores ya
+        // serializados en anchors existentes, pero pueden vaciarse con tranquilidad).
+        // FIX (15 sep 2026, pedido de Raúl): antes se ocultaba cada root con SetActive(false),
+        // lo que además de dejar de renderizarlo paraba TODA su simulación (Update, NavMeshAgent,
+        // coroutines) — causaba p. ej. que una coroutine de cinemática en curso sobre un NPC del
+        // root "AI" (Oliver) no pudiera pararse ni relanzarse limpiamente al saltarla
+        // ("Coroutine couldn't be started because the game object 'Oliver' is inactive"). Ahora
+        // se llama a SetVisible(false), que solo apaga Renderer/Light — el mundo exterior sigue
+        // sin verse desde el interior, pero su simulación no se congela. Ver ExteriorWorldRoot.cs.
+        if (env.hideExteriorWorld)
         {
-            _hiddenExterior = GameObject.Find(env.exteriorWorldRootName);
-            if (_hiddenExterior == null)
-            {
-                var tagged = GameObject.FindWithTag(env.exteriorWorldRootName);
-                if (tagged) _hiddenExterior = tagged;
-            }
-            if (_hiddenExterior && _hiddenExterior.activeSelf)
-            {
-                _hiddenExterior.SetActive(false);
-            }
+            var resolved = ExteriorWorldRoot.AllRegistered();
+            foreach (var exterior in resolved)
+                exterior.SetVisible(false);
+            _hiddenExteriors = resolved.ToArray();
         }
     }
 
@@ -483,10 +512,11 @@ public class EnvironmentController : MonoBehaviour
             _hiddenZones = null;
         }
 
-        if (_hiddenExterior && !_hiddenExterior.activeSelf)
+        if (_hiddenExteriors != null)
         {
-            _hiddenExterior.SetActive(true);
-            _hiddenExterior = null;
+            foreach (var exterior in _hiddenExteriors)
+                if (exterior) exterior.SetVisible(true);
+            _hiddenExteriors = null;
         }
     }
 

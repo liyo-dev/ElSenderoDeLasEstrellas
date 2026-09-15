@@ -44,13 +44,17 @@ Toda la documentación técnica del proyecto vive en un único documento — sin
 | Documento | Contenido |
 |---|---|
 | **[TDD.md](TDD.md)** | Documento técnico de diseño completo y **fuente de verdad única**: arquitectura, API interna de cada sistema, reglas de código no negociables, invariantes del grafo narrativo, bugs conocidos, troubleshooting, diseños en curso, checklist de publicación en Steam y auditorías del proyecto. |
+| **[GDD.md](GDD.md)** | Diseño, historia, personajes, hechizos y estado del contenido narrativo. |
+| **[TRACKER.md](TRACKER.md)** | Incidencias, estado de implementación y validación pendiente. |
 | **README.md** (este archivo) | Portada del repositorio — overview rápido para quien llega nuevo. |
 
 Ante cualquier duda de arquitectura, se consulta `TDD.md` primero. Si vas a añadir documentación nueva de sustancia (una auditoría, un diseño, un checklist), añádela como sección de `TDD.md` en vez de crear otro `.md` suelto — la convención está descrita en `TDD.md` § 20.
 
 ## ✅ Estado del proyecto
 
-La auditoría de seguimiento más reciente (`TDD.md` § 19.4, 12 de agosto de 2026) confirma que el código sigue en muy buen estado: los 19 bugs críticos/altos de la auditoría anterior (§ 19.1) están corregidos y verificados línea a línea, y la identidad de build ya está configurada. Lo que falta para nivel "estudio" sigue sin ser bugs de código sino ausencias de proceso — tests automatizados, CI, arquitectura de compilación (`.asmdef`) — priorizado en `TDD.md` § 19.2 y § 19.4.
+Estado revisado el **10 de septiembre de 2026**: el trabajo reciente combina mejoras de rendimiento hacia 60 FPS estables, correcciones de combate/diálogo/audio y construcción de contenido del Sendero y Candyland. Los detalles y las comprobaciones pendientes están en `TRACKER.md`; un arreglo aplicado no implica que esté confirmado en juego.
+
+La última auditoría general documentada es la del 12 de agosto (`TDD.md` § 19.4); sus conclusiones corresponden a esa fecha. Ya existe `Assets/Scripts/Editor/Tests/PlayerActionManagerTests.cs`. Esta revisión documental no ejecuta tests ni certifica una build; tampoco verifica que todo el contenido nuevo esté conectado a la historia principal.
 
 ## 🚀 Quick start
 
@@ -79,16 +83,15 @@ Detalle completo de cada sistema, reglas de rendimiento y bugs conocidos: ver `T
 Assets/
 ├── Scenes/
 │   ├── Systems/        ← Start, MainMenu, LoadingScreen
-│   ├── Main World/     ← MainWorld y escenas de mundo
+│   ├── Worlds/         ← MainWorld y escenas de mundo
 │   ├── Cinematics/     ← cinemáticas y prólogo
 │   └── Test/           ← escenas de prueba
 ├── Scripts/
 │   ├── Core/               ← GameBootService, ServiceLocator, PlayerService, SaveSystem
 │   ├── Behaviour NPC/      ← FSM de NPCs
-│   ├── NarrativeGraph/     ← grafo narrativo (nodos, runner)
 │   ├── Narrative/          ← sistema legacy "Interactive"
 │   ├── Quests/, Dialogue/, Audio/, Inventory/, Puzzle/, UI/, ...
-├── NarrativeGraph/      ← assets runtime del grafo (MainNarrative.asset, etc.)
+├── NarrativeGraph/      ← Runtime/, Editor/ y assets del grafo (MainNarrative*.asset)
 ├── _BootProfile/        ← presets de testing (ScriptableObjects)
 ├── Resources/Localization/  ← JSON de localización (ES/EN)
 └── Plugins/             ← Invector 3rd Person Controller, DOTween, etc.

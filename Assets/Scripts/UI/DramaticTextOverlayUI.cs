@@ -90,6 +90,58 @@ public class DramaticTextOverlayUI : MonoBehaviour
     [Tooltip("Escala inicial del contenedor completo (zoom suave hacia 1.0 mientras aparecen las letras).")]
     [Range(1f, 1.5f)] [SerializeField] float _khContainerZoom = 1.06f;
 
+    [Header("Letter Fly-In (12/09/2026 — sustituye a Shake en 'Will, ¡DESPIERTA!')")]
+    [Tooltip("Punto de origen COMPARTIDO (offset en unidades de canvas respecto al centro de cada letra) desde el que 'vuela' cada carácter hasta su posición final. Ej: (0,-220) hace que las letras avancen hacia el espectador y suban hasta su sitio, en vez de caer una a una como en KingdomHearts.")]
+    [SerializeField] Vector2 _letterFlyInOrigin = new Vector2(0f, -220f);
+    [Tooltip("Escala inicial de cada letra en su punto de origen. >1 = empieza más grande (sensación de venir hacia cámara).")]
+    [Range(0.3f, 4f)] [SerializeField] float _letterFlyInScaleFrom = 2.2f;
+    [Tooltip("Caracteres por segundo — cada letra empieza su vuelo este intervalo después que la anterior.")]
+    [SerializeField] float _letterFlyInSpeed = 14f;
+    [Tooltip("Duración del vuelo de UNA letra sola, independiente del intervalo entre letras.")]
+    [SerializeField] float _letterFlyInCharDuration = 0.35f;
+
+    [Header("Iris circular (12/09/2026 — 'Will, ¡DESPIERTA!', ver DramaticExitAnimation.CircleIris)")]
+    [Tooltip("Material que usa el shader 'Sendero/UI/CircleIrisCutout'. Se instancia en runtime (Instantiate de Material), el asset compartido del proyecto nunca se modifica. Si se deja vacío, CircleIris cae a un FadeOut normal (ver CircleIrisExit) en vez de romper la secuencia.")]
+    [SerializeField] Material _irisMaterial;
+    [Tooltip("Radio inicial (espacio UV, 0 = agujero cerrado del todo) — el 'ojo de cerradura' pequeño sobre la cara de Will dormido.")]
+    [SerializeField] float _irisStartRadius = 0.05f;
+    // FIX (14 sep 2026, vídeo de Raúl — "la transición se queda pillada casi terminando" justo
+    // después del prólogo, sigue pasando igual tras cambiar el ease): la causa real no era el ease
+    // (la escena ya tenía InCubic, que ACELERA hacia el final — cambiar el ease no podía arreglar
+    // esto y así fue). Es geometría del shader (CircleIrisCutout.shader): _Radius se compara contra
+    // `dist = length(uv - _Center)` con `uv.x` ya multiplicado por `_Aspect` (1.7778). Con
+    // `_Center = (0.5, 0.62)` (movido hacia arriba el 12 sep para encuadrar la cara de Will), la
+    // esquina más lejana del centro queda a distancia ≈1.084 en ese espacio — por encima del
+    // `_irisEndRadius` de 0.85 que llevaba desde antes de mover el centro. El shader nunca llega a
+    // taparlas... o mejor dicho, nunca llega a DEStaparlas del todo: el tween completa sus 1.1s con
+    // normalidad y se queda quieto en 0.85 para siempre, con las esquinas más alejadas del centro
+    // permanentemente veladas — de ahí que se vea "pillado casi terminando" indefinidamente, no un
+    // frame más lento de lo normal. Es una regresión: _irisEndRadius=0.85 bastaba de sobra cuando
+    // _Center estaba en (0.5, 0.5) (distancia a la esquina más lejana ≈1.02 con centro exacto NO
+    // hubiera bastado tampoco, en realidad — este valor ya se quedaba corto incluso antes de mover
+    // el centro; simplemente con el centro movido se nota mucho más porque una de las dos esquinas
+    // inferiores queda aún más lejos, 1.084 en vez de 1.02). 1.15 cubre ambas esquinas con margen
+    // (incluye el softness). Si en el futuro se vuelve a mover _irisCenter, recalcular la distancia
+    // a la esquina más lejana (fórmula: length((esquina - _irisCenter) * (aspect, 1)) para las 4
+    // esquinas UV (0,0)/(1,0)/(0,1)/(1,1)) y subir _irisEndRadius por encima de la mayor + softness.
+    [Tooltip("Radio final — tiene que cubrir toda la pantalla incluidas las esquinas (la más lejana del centro, no el borde). Con _irisCenter en (0.5, 0.62) y aspect 16:9, la esquina más lejana está a ~1.084 — 0.85 se quedaba corto y dejaba esas esquinas veladas para siempre. Recalcular si se mueve _irisCenter o cambia el aspect objetivo (ver comentario FIX 14/09/2026 arriba).")]
+    [SerializeField] float _irisEndRadius = 1.15f;
+    [Tooltip("Cuánto se mantiene visible el círculo pequeño (tiempo real) antes de empezar a crecer.")]
+    [SerializeField] float _irisHoldDuration = 0.6f;
+    [Tooltip("Duración del crecimiento del círculo hasta cubrir toda la pantalla.")]
+    [SerializeField] float _irisGrowDuration = 1.1f;
+    [SerializeField] Ease _irisGrowEase = Ease.InCubic;
+    [Tooltip("Suavizado del borde del círculo, en unidades UV.")]
+    [SerializeField] float _irisSoftness = 0.015f;
+    [Tooltip("FIX (12/09/2026, pedido de Raúl: 'el circulo debe enfocar la cara de will que esta un poco mas arriba', y después 'se supone que el circulo cubre la cara de will pero no, esta mas a la izquierda'): centro del iris en espacio UV de pantalla (0.5, 0.5 = centro exacto). UV: X: 0 = borde izquierdo, 1 = borde derecho; Y: 0 = borde inferior, 1 = borde superior. Primer ajuste (Y por encima de 0.5) confirmado bien; segundo ajuste: X movido a la derecha porque el círculo caía a la izquierda de la cara — sigue siendo aproximado, ajusta en Play viendo el resultado en la Game view.")]
+    [SerializeField] Vector2 _irisCenter = new Vector2(0.62f, 0.62f);
+
+    Material _irisMaterialInstance;
+    static readonly int IrisRadiusId   = Shader.PropertyToID("_Radius");
+    static readonly int IrisSoftnessId = Shader.PropertyToID("_Softness");
+    static readonly int IrisAspectId   = Shader.PropertyToID("_Aspect");
+    static readonly int IrisCenterId   = Shader.PropertyToID("_Center");
+
     static readonly Color _dreamBgDark  = new Color(0.03f, 0.05f, 0.16f, 1f);
     static readonly Color _dreamBgLight = new Color(0.06f, 0.09f, 0.24f, 1f);
 
@@ -125,11 +177,23 @@ public class DramaticTextOverlayUI : MonoBehaviour
         GetComponentInParent<SceneBoundUI>(true)?.ExcludeFromBossIntro();
 
         if (_rootGroup == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DramaticTextOverlayUI] ❌ _rootGroup no asignado en el Inspector.", this);
+            #endif
+        }
         if (_label == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DramaticTextOverlayUI] ❌ _label (TextMeshProUGUI) no asignado en el Inspector.", this);
+            #endif
+        }
         if (_textContainer == null)
+        {
+            #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError("[DramaticTextOverlayUI] ❌ _textContainer (RectTransform) no asignado en el Inspector.", this);
+            #endif
+        }
 
         if (_rootGroup != null)
         {
@@ -269,10 +333,23 @@ public class DramaticTextOverlayUI : MonoBehaviour
                 bool screenAlreadyCovered = i == 0 && currentFullBlack && FeedbackService.IsScreenFaded;
 
                 // Si venimos de FullBlack y la actual también lo es, no hacer fade de entrada.
-                // KingdomHearts tiene su propia gestión de visibilidad (vértices en alpha=0),
-                // por eso nunca salta aunque la pantalla ya esté en negro.
+                // KingdomHearts y LetterFlyIn tienen su propia gestión de visibilidad (vértices en
+                // alpha=0 hasta que cada letra "entra"), por eso nunca saltan aunque la pantalla ya
+                // esté en negro — el letreo/vuelo carácter a carácter ES el contenido del plano.
+                //
+                // FIX (12 sep 2026): "Will, ¡DESPIERTA!" sale de golpe, sin letreo — reportado por
+                // Raúl con captura + log confirmando 'Anim: LetterFlyIn' disparándose igualmente.
+                // Causa: esta condición solo eximía a KingdomHearts. La frase del prólogo llega con
+                // la pantalla ya en negro (Co_Awaken de PrologueDreamSequencer termina en fundido a
+                // negro, screenAlreadyCovered=true) y su propio fondo es FullBlack, así que
+                // skipEntry daba true y ShowPhrase() saltaba directo a la rama skipEntry de abajo
+                // (snap instantáneo del texto, sin pasar por EntryAnimation()/LetterFlyInRoutine en
+                // absoluto) — de ahí "sale como el sistema viejo": ni siquiera llegaba a ejecutarse
+                // el código nuevo, pese a que el log ya mostraba 'Anim: LetterFlyIn' (ese log se
+                // imprime antes de esta rama, no confirma que se haya reproducido).
                 bool skipEntry = (prevFullBlack || screenAlreadyCovered) && currentFullBlack
-                                 && current.entryAnim != DramaticEntryAnimation.KingdomHearts;
+                                 && current.entryAnim != DramaticEntryAnimation.KingdomHearts
+                                 && current.entryAnim != DramaticEntryAnimation.LetterFlyIn;
                 bool skipExit  = currentFullBlack && nextFullBlack;
 
                 yield return ShowPhrase(current, skipEntry, skipExit, screenAlreadyCovered);
@@ -471,6 +548,25 @@ public class DramaticTextOverlayUI : MonoBehaviour
             case DramaticEntryAnimation.KingdomHearts:
                 yield return KingdomHeartsRoutine(text, preset, basePos, releaseScreenFadeOnOpaque);
                 break;
+
+            // Aparece casi de golpe (fade muy corto, nada de letreo/zoom "de título") y sacude el
+            // contenedor con un temblor que decae — pensado para "Will, ¡DESPIERTA!": la sensación
+            // de que alguien te zarandea, no la de una presentación épica.
+            case DramaticEntryAnimation.Shake:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = basePos;
+                _rootGroup.alpha = 0f;
+                _rootGroup.DOFade(1f, Mathf.Min(preset.entryDuration * 0.25f, 0.08f)).SetUpdate(true);
+                yield return _textContainer
+                    .DOShakeAnchorPos(preset.entryDuration, strength: new Vector2(22f, 14f), vibrato: 20, randomness: 90, fadeOut: true)
+                    .SetUpdate(true).WaitForCompletion();
+                _textContainer.anchoredPosition = basePos;
+                break;
+
+            case DramaticEntryAnimation.LetterFlyIn:
+                yield return LetterFlyInRoutine(text, preset, basePos, releaseScreenFadeOnOpaque);
+                break;
         }
     }
 
@@ -518,9 +614,95 @@ public class DramaticTextOverlayUI : MonoBehaviour
                 _rootGroup.alpha = 0f;
                 break;
             }
+
+            case DramaticExitAnimation.CircleIris:
+                // CircleIris gestiona _rootGroup/_background a su manera (ver CircleIrisExit) —
+                // no caer por el "_rootGroup.blocksRaycasts = false" genérico de abajo hasta que
+                // haya terminado, por eso vive en su propio método y se retorna aquí.
+                yield return CircleIrisExit(preset);
+                yield break;
         }
 
         _rootGroup.blocksRaycasts = false;
+    }
+
+    // ── Iris circular (12/09/2026) ────────────────────────────────────────
+
+    /// <summary>
+    /// Recorta el fondo opaco con un círculo pequeño centrado (el "ojo de cerradura" sobre la cara
+    /// de Will dormido — en este instante SleepTrigger sigue con isSleeping=true y la cámara
+    /// enganchada a sleepCameraAnchor en plano cenital, así que lo que se ve DENTRO del círculo ya
+    /// es esa cámara real: no hace falta ninguna cámara secundaria ni RenderTexture, el círculo es
+    /// literalmente un agujero creciente en este mismo fondo del overlay) y lo hace crecer hasta
+    /// cubrir toda la pantalla. Deliberadamente NO reutiliza el sistema de transición compartido
+    /// (EasyTransition/TransitionManager, pensado para cargas de escena completas) — es propio y
+    /// exclusivo de este overlay, pedido explícito de Raúl para este momento en concreto.
+    /// </summary>
+    IEnumerator CircleIrisExit(DramaticStylePreset preset)
+    {
+        // El texto sale de en medio rápido — el protagonismo pasa al círculo, no al texto.
+        yield return FadeLabelAlpha(Mathf.Min(preset.exitDuration, 0.25f));
+
+        if (_background == null || _irisMaterial == null)
+        {
+            // Sin material asignado en el Inspector: fallback a un fundido normal en vez de dejar
+            // la secuencia rota o la pantalla en un estado raro.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (_irisMaterial == null)
+                Debug.LogWarning("[DramaticTextOverlayUI] CircleIris pedido pero _irisMaterial no está asignado en el Inspector — usando FadeOut normal como fallback.", this);
+#endif
+            yield return _rootGroup.DOFade(0f, preset.exitDuration).SetUpdate(true).WaitForCompletion();
+            _rootGroup.blocksRaycasts = false;
+            yield break;
+        }
+
+        if (_irisMaterialInstance == null)
+            _irisMaterialInstance = new Material(_irisMaterial);
+
+        Color    prevColor    = _background.color;
+        Material prevMaterial = _background.material;
+
+        _background.color    = Color.black;
+        _background.material = _irisMaterialInstance;
+        _irisMaterialInstance.SetFloat(IrisAspectId,   (float)Screen.width / Mathf.Max(1, Screen.height));
+        _irisMaterialInstance.SetFloat(IrisSoftnessId, _irisSoftness);
+        _irisMaterialInstance.SetFloat(IrisRadiusId,   _irisStartRadius);
+        _irisMaterialInstance.SetVector(IrisCenterId,  new Vector4(_irisCenter.x, _irisCenter.y, 0f, 0f));
+
+        // Círculo pequeño, quieto un instante — "vemos en un circulito pequeño la cara de Will
+        // dormido, como si le estuviéramos mirando desde arriba" (pedido de Raúl).
+        yield return new WaitForSecondsRealtime(_irisHoldDuration);
+
+        // Y ahora el círculo crece hasta que ya vemos la escena entera.
+        yield return DOTween.To(
+                () => _irisMaterialInstance.GetFloat(IrisRadiusId),
+                r => _irisMaterialInstance.SetFloat(IrisRadiusId, r),
+                _irisEndRadius, _irisGrowDuration)
+            .SetEase(_irisGrowEase).SetUpdate(true).WaitForCompletion();
+
+        _rootGroup.alpha = 0f;
+        _rootGroup.blocksRaycasts = false;
+        _background.material = prevMaterial;
+        _background.color    = prevColor;
+    }
+
+    /// Fundido manual del alpha del label (sin depender de que exista un DOFade para TMP).
+    IEnumerator FadeLabelAlpha(float duration)
+    {
+        if (_label == null) yield break;
+        Color c = _label.color;
+        float startA = c.a;
+        float t = 0f;
+        duration = Mathf.Max(duration, 0.01f);
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            c.a = Mathf.Lerp(startA, 0f, t / duration);
+            _label.color = c;
+            yield return null;
+        }
+        c.a = 0f;
+        _label.color = c;
     }
 
     // ── Kingdom Hearts ────────────────────────────────────────────────────
@@ -610,6 +792,95 @@ public class DramaticTextOverlayUI : MonoBehaviour
     }
 
     static float KhEaseOutQuart(float t) => 1f - Mathf.Pow(1f - t, 4f);
+
+    // ── Letter Fly-In (12/09/2026) ────────────────────────────────────────
+
+    /// <summary>
+    /// Letra a letra, como KingdomHeartsRoutine (mismo patrón de vértices/timing por carácter),
+    /// pero en vez de caer cada letra desde un pequeño offset propio, TODAS parten de un mismo
+    /// punto de origen compartido (_letterFlyInOrigin) y más grandes (_letterFlyInScaleFrom) —
+    /// "letra a letra, avanzando desde la pantalla hasta su posición" (pedido de Raúl, sustituye a
+    /// Shake). Sin el zoom del contenedor completo de KingdomHearts a propósito: eso es justo lo
+    /// que hacía que se leyera como el título de una novela/videojuego.
+    /// </summary>
+    IEnumerator LetterFlyInRoutine(string text, DramaticStylePreset preset, Vector2 basePos,
+                                    bool releaseScreenFadeOnOpaque = false)
+    {
+        _label.color = preset.textColor;
+        _label.text = text;
+        _label.ForceMeshUpdate();
+
+        _textContainer.anchoredPosition = basePos;
+        _textContainer.localScale = Vector3.one;
+        _rootGroup.alpha = 1f;
+        _rootGroup.blocksRaycasts = true;
+
+        // Mismo momento que la rama skipEntry de ShowPhrase / KingdomHeartsRoutine: el fondo ya es
+        // opaco en cuanto el CanvasGroup pasa a alpha=1 arriba, aunque el letreo tarde más.
+        if (releaseScreenFadeOnOpaque)
+            FeedbackService.SetScreenFadeImmediate(Color.clear);
+
+        var textInfo = _label.textInfo;
+        int charCount = textInfo.characterCount;
+        if (charCount == 0) yield break;
+
+        int matCount = textInfo.materialCount;
+        var originalVerts = new Vector3[matCount][];
+        for (int m = 0; m < matCount; m++)
+            originalVerts[m] = (Vector3[])textInfo.meshInfo[m].vertices.Clone();
+
+        Color32 targetCol = preset.textColor;
+        float delayPerChar = 1f / Mathf.Max(_letterFlyInSpeed, 1f);
+        float charDuration = Mathf.Max(_letterFlyInCharDuration, 0.05f);
+        float totalDuration = charCount * delayPerChar + charDuration;
+
+        Vector3 originOffset = new Vector3(_letterFlyInOrigin.x, _letterFlyInOrigin.y, 0f);
+
+        float elapsed = 0f;
+        bool done = false;
+
+        while (!done)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            done = elapsed >= totalDuration;
+            float tGlobal = Mathf.Min(elapsed, totalDuration);
+
+            for (int i = 0; i < charCount; i++)
+            {
+                var charInfo = textInfo.characterInfo[i];
+                if (!charInfo.isVisible) continue;
+
+                int matIdx = charInfo.materialReferenceIndex;
+                int vIdx   = charInfo.vertexIndex;
+
+                float t    = Mathf.Clamp01((tGlobal - i * delayPerChar) / charDuration);
+                float ease = KhEaseOutQuart(t);
+                byte  alpha = (byte)(ease * targetCol.a);
+
+                Color32 col = new Color32(targetCol.r, targetCol.g, targetCol.b, alpha);
+                var colors = textInfo.meshInfo[matIdx].colors32;
+                colors[vIdx + 0] = col;
+                colors[vIdx + 1] = col;
+                colors[vIdx + 2] = col;
+                colors[vIdx + 3] = col;
+
+                var  verts = textInfo.meshInfo[matIdx].vertices;
+                var  origV = originalVerts[matIdx];
+                Vector3 center = (origV[vIdx] + origV[vIdx+1] + origV[vIdx+2] + origV[vIdx+3]) * 0.25f;
+                float   scale  = Mathf.Lerp(_letterFlyInScaleFrom, 1f, ease);
+                // Todas las letras "vuelan" desde el MISMO originOffset hasta su propia posición
+                // final (offset cero) — a diferencia de KingdomHearts, que solo desplaza cada letra
+                // un poco en Y desde SU PROPIA posición.
+                Vector3 flyOffset = Vector3.Lerp(originOffset, Vector3.zero, ease);
+
+                for (int k = 0; k < 4; k++)
+                    verts[vIdx + k] = center + flyOffset + (origV[vIdx + k] - center) * scale;
+            }
+
+            _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32 | TMP_VertexDataUpdateFlags.Vertices);
+            yield return null;
+        }
+    }
 
     // ── Boss Name ──────────────────────────────────────────────────────────
 

@@ -258,14 +258,24 @@ namespace Game.NPC
             string line = PickLine(ambientComments);
             if (string.IsNullOrEmpty(line)) return;
 
-            if (debugMode) Debug.Log($"[EstelaIdleCommentary] Comentario suelto: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[EstelaIdleCommentary] Comentario suelto: \"{line}\"");
+                #endif
+            }
             SpeechBubbleUI.Instance?.Show(transform, line, bubbleDuration);
         }
 
         private void TriggerSit()
         {
             string line = PickLine(hungryLines);
-            if (debugMode) Debug.Log($"[EstelaIdleCommentary] Se sienta a quejarse de hambre: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[EstelaIdleCommentary] Se sienta a quejarse de hambre: \"{line}\"");
+                #endif
+            }
 
             var action = new EstelaSitAction(sitDuration, line, bubbleDuration);
             _activeSitAction = action;
@@ -292,7 +302,12 @@ namespace Game.NPC
             }
 
             string line = PickLine(boredLines);
-            if (debugMode) Debug.Log($"[EstelaIdleCommentary] Se planta delante a molestar: \"{line}\"");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[EstelaIdleCommentary] Se planta delante a molestar: \"{line}\"");
+                #endif
+            }
 
             var sequence = new CompositeSequence();
             sequence.AddAction(new EstelaBlockPlayerAction(hit.position, player, blockStandDuration, line, bubbleDuration, blockMaxWalkDuration));

@@ -17,6 +17,7 @@ using Sendero.UI;
 /// Push/Pop sin coordinarse con los demás sistemas que también ocultan el HUD.
 /// </summary>
 [Serializable]
+[NarrativeNodeInfo("Jugador", "Bloquear / soltar jugador", "Bloquea o libera el control del jugador.")]
 public sealed class LockPlayerNode : NarrativeNode
 {
     public bool bloquear = true;

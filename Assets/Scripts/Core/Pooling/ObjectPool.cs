@@ -89,8 +89,10 @@ namespace Game.Core.Pooling
             else
             {
                 // Pool agotado y no puede expandirse
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[ObjectPool] Pool de {typeof(T).Name} agotado! " +
                                 $"(InUse: {InUseCount}, Max: {_maxSize})");
+                #endif
                 return null;
             }
 

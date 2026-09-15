@@ -72,21 +72,11 @@ namespace Game.NPC
         [Tooltip("¿Cambiar automáticamente a la capa 'Enemy' cuando se inicie un combate (acción StartCombat)?")]
         [SerializeField] private bool switchToEnemyLayerOnCombat = true;
 
-        [Header("Detección Narrativa")]
-        [Tooltip("Rango de detección del jugador para narrativas con autoStartOnDetection=true")]
-        [Min(1f)]
-        [SerializeField] private float narrativeDetectionRange = 10f;
-
-        [Tooltip("¿El NPC camina hacia el jugador durante la alerta narrativa?")]
-        [SerializeField] private bool walkTowardsPlayerOnAlert = true;
-
-        [Tooltip("Distancia mínima para detenerse al acercarse al jugador")]
-        [Min(0.5f)]
-        [SerializeField] private float stopDistanceFromPlayer = 2f;
-
-        [Tooltip("Icono que aparece sobre el NPC al detectar al jugador (para narrativas sin combate). " +
-                 "Se usa cuando el chain entry tiene 'Show Alert Icon' activo pero no tiene su propio prefab asignado.")]
-        [SerializeField] private GameObject narrativeAlertIconPrefab;
+        // Los campos de "Detección Narrativa" (narrativeDetectionRange, walkTowardsPlayerOnAlert,
+        // stopDistanceFromPlayer, narrativeAlertIconPrefab) vivían aquí y se movieron a
+        // NarrativeActor.cs el 12 sept 2026 — solo los usa NPCInteractiveNarrativeExecutor
+        // (sistema Interactive, congelado). EnsureRequiredComponents() más abajo garantiza que
+        // cualquier NPC que active ese módulo tenga también NarrativeActor.
         #endregion
 
         #region 🔌 Core Components
@@ -141,11 +131,6 @@ namespace Game.NPC
         public Modules.LayerMode InitialLayer => initialLayer;
         public bool SwitchToEnemyLayerOnCombat => switchToEnemyLayerOnCombat;
 
-        // Detección Narrativa
-        public float NarrativeDetectionRange => narrativeDetectionRange;
-        public bool WalkTowardsPlayerOnAlert => walkTowardsPlayerOnAlert;
-        public float StopDistanceFromPlayer => stopDistanceFromPlayer;
-        public GameObject NarrativeAlertIconPrefab => narrativeAlertIconPrefab;
         #endregion
 
         void Awake()
@@ -580,26 +565,45 @@ namespace Game.NPC
         
         private void EnsureRequiredComponents()
         {
-            if (debugMode) Debug.Log($"[NPCManager] 🔧 Verificando módulos...");
+            if (debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCManager] 🔧 Verificando módulos...");
+                #endif
+            }
             
             // 1. QUEST MODULE
             if (configuration.HasBehaviour(NPCBehaviourType.Quest) && configuration.questConfig != null)
             {
-                if (!GetComponent<NPCQuestActionExecutor>()) 
+                // NarrativeActor antes que nada: NPCQuestConfig.autoStartOnDetection y el propio
+                // NPCQuestActionExecutor pueden necesitar los campos de detección/icono que ahora
+                // vive ahí (movidos desde este archivo el 12 sept 2026).
+                if (!GetComponent<NarrativeActor>())
+                    gameObject.AddComponent<NarrativeActor>();
+
+                if (!GetComponent<NPCQuestActionExecutor>())
                     gameObject.AddComponent<NPCQuestActionExecutor>();
                 
                 // Añadir gestor de iconos de quest
                 if (!GetComponent<NPCQuestIconManager>())
                 {
                     gameObject.AddComponent<NPCQuestIconManager>();
-                    if (debugMode) Debug.Log($"[NPCManager] 🎯 NPCQuestIconManager añadido para {name}");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCManager] 🎯 NPCQuestIconManager añadido para {name}");
+                        #endif
+                    }
                 }
             }
             
             // 2. INTERACTIVE NARRATIVE
             if (configuration.HasBehaviour(NPCBehaviourType.InteractiveNarrative) && configuration.interactiveNarrativeConfig != null)
             {
-                if (!GetComponent<NPCInteractiveNarrativeExecutor>()) 
+                if (!GetComponent<NarrativeActor>())
+                    gameObject.AddComponent<NarrativeActor>();
+
+                if (!GetComponent<NPCInteractiveNarrativeExecutor>())
                     gameObject.AddComponent<NPCInteractiveNarrativeExecutor>();
             }
 
@@ -618,7 +622,12 @@ namespace Game.NPC
                     // El LifecycleHandler controlará la muerte manualmente
                     dmg.SetDestroyOnDeath(false);
                     
-                    if (debugMode) Debug.Log($"[NPCManager] 🛡️ Damageable añadido (Pre-Combate) - destroyOnDeath=false");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCManager] 🛡️ Damageable añadido (Pre-Combate) - destroyOnDeath=false");
+                        #endif
+                    }
                 }
 
                 // B. CombatLifecycleHandler (Gestión de muerte/stun)
@@ -636,7 +645,12 @@ namespace Game.NPC
                 if (!GetComponent<Targetable>())
                 {
                     gameObject.AddComponent<Targetable>();
-                    if (debugMode) Debug.Log($"[NPCManager] 🎯 Targetable añadido (Pre-Combate)");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCManager] 🎯 Targetable añadido (Pre-Combate)");
+                        #endif
+                    }
                 }
                 
                 // D. NPCHealthBarSpawner (Barra de vida)
@@ -656,7 +670,12 @@ namespace Game.NPC
                 {
                     var partyMember = gameObject.AddComponent<NPCPartyMember>();
                     partyMember.SetConfig(configuration.partyConfig);
-                    if (debugMode) Debug.Log($"[NPCManager] 🤝 NPCPartyMember añadido para {name}");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCManager] 🤝 NPCPartyMember añadido para {name}");
+                        #endif
+                    }
                 }
 
                 // Prompt "Sígueme": se muestra cuando el jugador se acerca y el equipo está disuelto
@@ -694,7 +713,12 @@ namespace Game.NPC
                 // NO registrar en ActiveCombatRegistry (eso es para enemigos)
                 if (!(_brain.CurrentState is States.AllyCombatState))
                 {
-                    if (debugMode) Debug.Log($"[NPCManager] 🤝 {name} entrando en AllyCombatState (es aliado)");
+                    if (debugMode)
+                    {
+                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log($"[NPCManager] 🤝 {name} entrando en AllyCombatState (es aliado)");
+                        #endif
+                    }
                     _brain.ChangeState(new States.AllyCombatState());
                 }
                 return; // No continuar con lógica de enemigos
@@ -766,7 +790,12 @@ namespace Game.NPC
             // Forzar cambio a estado de combate
             if (!(_brain.CurrentState is States.CombatState))
             {
-                if (debugMode) Debug.Log($"[NPCManager] ⚔️ {name} forzado a entrar en combate contra {target.name}");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCManager] ⚔️ {name} forzado a entrar en combate contra {target.name}");
+                    #endif
+                }
                 _brain.ForceState(new States.CombatState());
             }
         }
@@ -820,7 +849,12 @@ namespace Game.NPC
         {
             if (_cachedPartyMember == null)
             {
-                if (debugMode) Debug.LogWarning($"[NPCManager] {name} no tiene NPCPartyMember. Asegúrate de configurar Companion behaviour.");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.LogWarning($"[NPCManager] {name} no tiene NPCPartyMember. Asegúrate de configurar Companion behaviour.");
+                    #endif
+                }
                 return false;
             }
 
@@ -832,7 +866,12 @@ namespace Game.NPC
                 onJoinedParty?.Invoke();
                 OnJoinedParty?.Invoke();
                 
-                if (debugMode) Debug.Log($"[NPCManager:{name}] ✅ Se unió al party - Eventos disparados");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCManager:{name}] ✅ Se unió al party - Eventos disparados");
+                    #endif
+                }
             }
             
             return success;
@@ -853,7 +892,12 @@ namespace Game.NPC
                 onLeftParty?.Invoke();
                 OnLeftParty?.Invoke();
                 
-                if (debugMode) Debug.Log($"[NPCManager:{name}] 👋 Abandonó el party - Eventos disparados");
+                if (debugMode)
+                {
+                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[NPCManager:{name}] 👋 Abandonó el party - Eventos disparados");
+                    #endif
+                }
             }
             
             return success;
@@ -999,7 +1043,12 @@ namespace Game.NPC
                 transform.position = lastPosition;
             }
 
-            if(debugMode) Debug.Log($"[NPCManager] 📍 Posición restaurada: {lastPosition}");
+            if(debugMode)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[NPCManager] 📍 Posición restaurada: {lastPosition}");
+                #endif
+            }
         }
         
         public void HandleInteraction(GameObject interactor)

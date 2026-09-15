@@ -36,6 +36,8 @@ MonoBehaviour:
   - rid: 1078245657900615900
   - rid: 1788894763175737732
   - rid: 1479465354230462173
+  - rid: 5983492470211221218
+  - rid: 526820858001539260
   applicableSceneNames:
   - MainWorld
   references:
@@ -126,6 +128,7 @@ MonoBehaviour:
         - c3149093-4f7b-48e2-81e1-8bbaba2350f2
         - b38702f2-1671-472b-b58d-ce3a8050f085
         - db4b04b0-fed3-4756-b4d8-6a01b4459193
+        - a468c3fc-72f5-4541-b174-81017ba71bc2
     - rid: 5623891481250759595
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -413,3 +416,35 @@ MonoBehaviour:
         amount: 15
         logWarnings: 0
         onlyOnce: 1
+    - rid: 5983492470211221218
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Will sale de casa -> Oliver saluda
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: a468c3fc-72f5-4541-b174-81017ba71bc2
+        position: {x: 399, y: 2600}
+        outputs:
+        - 32febd1e-bce7-478d-aab9-792eddddd73d
+        eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
+    - rid: 526820858001539260
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Oliver saluda a Will (OliverSaludoSequencer)
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 32febd1e-bce7-478d-aab9-792eddddd73d
+        position: {x: 871, y: 2600}
+        outputs: []
+        cinematicName: Oliver saluda a Will
+        signalIn: OLIVER_GREETING_START
+        signalDone: OLIVER_GREETING_DONE
+        signalFailed: 

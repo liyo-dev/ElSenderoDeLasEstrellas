@@ -278,7 +278,7 @@ public static class CandylandClimaxBuilder
 
     private static void FixDayNightCycleLight(List<string> log)
     {
-        var cycle = Object.FindFirstObjectByType<DayNightCycle>();
+        var cycle = Object.FindAnyObjectByType<DayNightCycle>();
         if (cycle == null)
         {
             log.Add("AVISO: no se encontró ningún DayNightCycle en la escena.");

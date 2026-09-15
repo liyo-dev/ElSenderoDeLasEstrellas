@@ -1,4 +1,5 @@
 // Scripts/World/TeleportService.cs
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using EasyTransition;
@@ -220,13 +221,29 @@ public class TeleportService : MonoBehaviour
         if (!canTransition && wantTransition)
         {
             if (_sTransitionInProgress)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TeleportService] Una transición ya está en curso (local). Se hace teletransporte inmediato para evitar el error del plugin.");
+                #endif
+            }
             else if (pluginBusy)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TeleportService] TransitionManager está ocupado con otra transición. Teletransporte inmediato.");
+                #endif
+            }
             else if (teleportTransition == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TeleportService] No hay TransitionSettings asignado. Se hace teletransporte inmediato.");
+                #endif
+            }
             else if (tm == null)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning("[TeleportService] No se encontró TransitionManager. Se hace teletransporte inmediato.");
+                #endif
+            }
         }
 
         if (canTransition) TeleportWithTransition(player, pos, rot, anchor);
@@ -288,6 +305,72 @@ public class TeleportService : MonoBehaviour
 
         // OJO: usamos la versión SIN cambio de escena del plugin (la estable)
         tm.Transition(teleportTransition, transitionDelay);
+
+        // FIX (12 sep 2026, reporte de Raúl — "la transición se queda pillada al entrar/salir de
+        // interiores, ahora que son cargas aditivas"): _sTransitionInProgress SOLO se libera en el
+        // callback tm.onTransitionEnd (ver comentario de ForceResetTransitionLock más arriba). Si
+        // ese callback nunca llega a dispararse — p. ej. porque InteriorPortalTrigger descarga en
+        // aditivo la propia escena del interior (WillHouse) mientras la corrutina Timer() de
+        // TransitionManager sigue en marcha, y esa corrutina (o el propio TransitionManager, o el
+        // GameObject de Transition instanciado) acaba destruyéndose por una carrera con esa
+        // descarga — el flag se queda "colgado" en true para siempre: todos los teleports con
+        // fundido futuros de TODA la sesión caen en silencio a "teletransporte inmediato"
+        // (canTransition=false más arriba), y si además el overlay visual de EasyTransition se
+        // quedó a mitad de tapar la pantalla, el jugador ve la transición congelada ahí. Antes de
+        // este fix, el único punto que liberaba el flag a mano era
+        // GameBootService.ResetTransientSessionState() (solo al (re)iniciar partida vía
+        // WorldBootstrap) — nada lo recuperaba durante la sesión en curso.
+        // Igual que el timeout de cinemática de arranque que ya usa WorldBootstrap
+        // (bootCinematicTimeout/WaitForBootCinematicOrTimeout), esta corrutina vive en
+        // TeleportService (que sigue vivo mientras la escena de mundo persistente — MainWorld —
+        // esté cargada, algo que las cargas/descargas aditivas de interiores nunca tocan) y no
+        // depende de que TransitionManager siga vivo para poder actuar.
+        StartCoroutine(Co_TransitionWatchdog(tm, teleportTransition));
+    }
+
+    /// <summary>
+    /// Red de seguridad: si la transición en curso no termina (tm.onTransitionEnd nunca se
+    /// dispara) dentro de un margen generoso, fuerza el reset de los flags de "transición en
+    /// curso" y desbloquea al jugador — para no dejar la sesión entera sin fundidos futuros (o al
+    /// jugador congelado) por una transición que quedó huérfana a causa de una carga/descarga
+    /// aditiva de escena. No sustituye investigar la causa raíz si esto llega a dispararse: solo
+    /// evita que el síntoma se quede pillado para siempre.
+    /// </summary>
+    private IEnumerator Co_TransitionWatchdog(TransitionManager tm, TransitionSettings settings)
+    {
+        float expected = settings.transitionTime;
+        if (settings.autoAdjustTransitionTime && settings.transitionSpeed > 0f)
+            expected /= settings.transitionSpeed;
+        float timeout = expected + settings.destroyTime + 3f; // +3s de colchón de seguridad
+
+        float elapsed = 0f;
+        while (_sTransitionInProgress && elapsed < timeout)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (!_sTransitionInProgress) yield break; // terminó con normalidad, nada que hacer
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.LogWarning($"[TeleportService] Watchdog: la transición no terminó tras {timeout:0.0}s " +
+                          "(probable interrupción por carga/descarga aditiva de escena a mitad de la " +
+                          "transición). Forzando reset y liberando al jugador.");
+#endif
+
+        if (tm != null)
+        {
+            if (_activeCutHandler != null) tm.onTransitionCutPointReached -= _activeCutHandler;
+            if (_activeEndHandler != null) tm.onTransitionEnd -= _activeEndHandler;
+            tm.ForceResetTransition();
+        }
+        _activeCutHandler = null;
+        _activeEndHandler = null;
+        _sTransitionInProgress = false;
+
+        // Por si el corte (OnCut) nunca llegó a ejecutarse, asegurar que el jugador quedó movido
+        // y el entorno aplicado antes de devolver el control — mismo camino que el modo inmediato.
+        InvokeEvent(OnTeleportEnded, nameof(OnTeleportEnded));
     }
 
     private void MoveNow(GameObject player, Vector3 pos, Quaternion rot, Transform anchorForEnv)

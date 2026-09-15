@@ -50,6 +50,14 @@ public class DreamSparkleOverlay : MonoBehaviour
     void Awake()
     {
         _rect        = GetComponent<RectTransform>();
+        // FIX (11 sep 2026): mismo problema y mismo arreglo que en DreamBackgroundController —
+        // "el fondo solo se ve en el lado izquierdo". Se fuerza el RectTransform a pantalla
+        // completa en código, sin depender del anchor/tamaño que tenga configurado en el Editor.
+        _rect.anchorMin = Vector2.zero;
+        _rect.anchorMax = Vector2.one;
+        _rect.offsetMin = Vector2.zero;
+        _rect.offsetMax = Vector2.zero;
+        _rect.pivot     = new Vector2(0.5f, 0.5f);
         _glowSprite  = BuildGlowSprite(64);
         _starSprite  = BuildStarSprite(64);
 
