@@ -211,7 +211,17 @@ public class QuestManager : MonoBehaviour
         if (!_runtime.TryGetValue(questId, out var rq))
         {
             var data = questCatalog.FirstOrDefault(q => q && q.questId == questId);
-            if (!data) return;
+            if (!data)
+            {
+                // FIX (21 sep 2026, Raul: "las misiones no estan empezando" -- este metodo no
+                // dejaba NINGUN rastro en consola cuando el questId no estaba en questCatalog, asi
+                // que "el grafo llamo a StartQuest pero la mision no aparecio" era indistinguible de
+                // "StartQuest ni se llamo" con solo mirar el log. Ahora avisa.
+                Debug.LogWarning($"[QuestManager] StartQuest('{questId}') ignorado: no existe ninguna " +
+                    "QuestData con ese questId en questCatalog. Revisa que el asset de la mision este " +
+                    "arrastrado a la lista questCatalog del QuestManager de la escena.");
+                return;
+            }
 
             rq = new RuntimeQuest(data);
             _runtime[questId] = rq;
@@ -229,7 +239,16 @@ public class QuestManager : MonoBehaviour
             
             OnQuestStarted?.Invoke(questId);
             OnQuestsChanged?.Invoke();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[QuestManager] ✅ Quest iniciada: '{questId}' ({rq.Data?.displayNameId})");
+#endif
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        else
+        {
+            Debug.Log($"[QuestManager] StartQuest('{questId}') ignorado: ya estaba en estado {rq.State} (no Inactive).");
+        }
+#endif
     }
 
     public void CompleteQuest(string questId)

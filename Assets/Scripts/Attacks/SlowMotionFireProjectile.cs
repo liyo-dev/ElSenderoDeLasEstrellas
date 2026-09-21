@@ -30,6 +30,7 @@ public class SlowMotionFireProjectile : MonoBehaviour
     private bool _ended;
     private bool _paused;
     private float _spawnUnscaledTime;
+    private float _pausedAtUnscaled;
     private Collider _col;
     private TrailRenderer _trail;
     private Light _light;
@@ -118,6 +119,7 @@ public class SlowMotionFireProjectile : MonoBehaviour
     /// Congela el proyectil en el aire; útil durante el panic input.
     public void Pause()
     {
+        if (!_paused) _pausedAtUnscaled = Time.unscaledTime;
         _paused = true;
         // Deshabilitar collider para que el fireball de Will no lo detone al spawnear cerca
         if (_col) _col.enabled = false;
@@ -127,8 +129,20 @@ public class SlowMotionFireProjectile : MonoBehaviour
     /// para dar tiempo a que los dos proyectiles se separen antes de poder colisionar.
     public void Resume()
     {
+        // El tiempo congelado no cuenta para la vida del proyectil. Si no se descuenta, un
+        // proyectil pausado durante una cinemática se autodestruye al reanudarse porque el reloj
+        // ha seguido corriendo mientras estaba quieto en el aire.
+        if (_paused) _spawnUnscaledTime += Time.unscaledTime - _pausedAtUnscaled;
         _paused = false;
         StartCoroutine(ReenableCollider());
+    }
+
+    /// Cambia el tope de vida desde código. Lo usan las cinemáticas: ahí el proyectil puede pasar
+    /// minutos en pantalla (cámara lenta, esperas por input del jugador) y el tope pensado para
+    /// combate lo haría desaparecer en mitad de la escena, sin explosión y sin un solo aviso.
+    public void SetMaxLifetime(float seconds)
+    {
+        maxLifetimeSeconds = Mathf.Max(1f, seconds);
     }
 
     private System.Collections.IEnumerator ReenableCollider()

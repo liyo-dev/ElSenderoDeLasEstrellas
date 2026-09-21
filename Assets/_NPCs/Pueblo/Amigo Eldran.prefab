@@ -17567,6 +17567,7 @@ GameObject:
   - component: {fileID: 6990511486444565414}
   - component: {fileID: 5754641635668119669}
   - component: {fileID: 8978651127361507927}
+  - component: {fileID: 8878236582584285255}
   m_Layer: 8
   m_Name: Amigo Eldran
   m_TagString: Untagged
@@ -17780,6 +17781,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &5754641635668119669
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -17838,6 +17840,9 @@ MonoBehaviour:
   disableWander: 1
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: 
@@ -17845,16 +17850,30 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8878236582584285255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6710409334593512001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 2398529147392573965}
+  originalMouthMesh: {fileID: 3003975807087921037}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &6838384546141495042
 GameObject:
   m_ObjectHideFlags: 0

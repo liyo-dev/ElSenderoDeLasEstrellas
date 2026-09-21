@@ -541,7 +541,24 @@ public class CloudCoverSpawner : MonoBehaviour
         {
             for (int gz = -half; gz <= half && spawned < maxCloudInstances; gz++)
             {
-                float baseX = gx * cellSize;
+                // FIX (17 sep 2026, INC-244): filas alternas desplazadas medio cellSize en X
+                // ("stagger", patrón de ladrillo/panal, en vez de rejilla cuadrada pura).
+                // Raúl reportó (con la lluvia ya asentada, sin cambios con el tiempo -- no era
+                // la ola de formación en marcha) que seguía viendo trozos de cielo despejado
+                // entre las nubes. Causa: en una rejilla cuadrada cada nube sólo toca de verdad
+                // a sus 4 vecinas ortogonales (separadas cellSize); a las 4 vecinas en diagonal
+                // las separa cellSize*sqrt(2) (~1.41x cellSize), hueco que scaleRange (pensado
+                // para cubrir la distancia ortogonal, no la diagonal) no llega a cerrar de forma
+                // fiable -- ahí es donde se ve el hueco en forma de rombo entre cuatro nubes.
+                // Con el stagger, la distancia máxima de cualquier punto del techo a la nube más
+                // cercana baja de ~0.71x cellSize a ~0.56x cellSize (peor caso ~1.118x cellSize
+                // entre diagonales de filas contiguas, en vez de 1.41x) -- mismo número de nubes
+                // (mismo límite maxCloudInstances, cero coste extra), sólo mejor repartidas.
+                // Si tras esto siguen viéndose huecos sueltos, el siguiente ajuste (en el
+                // Inspector, sin tocar código) es subir el mínimo de scaleRange (hoy pensado
+                // para la distancia ortogonal, no para la diagonal ya reducida) o bajar cellSize.
+                int staggerRow = (((gz % 2) + 2) % 2); // 0/1 normalizado (válido con gz negativo)
+                float baseX = gx * cellSize + staggerRow * (cellSize * 0.5f);
                 float baseZ = gz * cellSize;
                 if (baseX * baseX + baseZ * baseZ > radiusSqr) continue;
 

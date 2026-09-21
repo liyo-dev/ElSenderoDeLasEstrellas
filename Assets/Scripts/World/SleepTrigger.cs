@@ -84,7 +84,21 @@ public class SleepTrigger : MonoBehaviour
             player.transform.rotation = bedPosition.rotation;
         }
 
-        if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null)
+        // FIX (18 sep 2026): mientras Will duerme (sleepOnStart, p. ej. el anchor 'Bedroom'), este
+        // LateUpdate clavaba la cámara en sleepCameraAnchor CADA FRAME sin saber si algún sistema
+        // cinemático (CinematicCameraDriver vía CameraDirectorService, p. ej. SEQ_Prologo_UltimaNoche)
+        // tenía la cámara reclamada para sus propios planos — el mismo tipo de choque entre dos
+        // sistemas de cámara que no se conocen que motivó crear CameraDirectorService. Resultado real:
+        // la cinemática del prólogo calculaba y aplicaba bien sus planos (el panadero, el horno...),
+        // pero este trigger los pisaba el mismo frame o el siguiente, así que en pantalla nunca se
+        // veía nada más que a Will dormido. isSleeping sigue en true durante toda la cinemática a
+        // propósito (WakeUp() se ignora mientras CinematicSequencerBase.AnySequenceActive, ver
+        // HandleGamepadInput/INC-084) — así que sin este guard no había forma de que la cinemática
+        // ganara la cámara ni un solo frame. Cede el control mientras alguien la tenga reclamada;
+        // en cuanto se libera (fin de la cinemática, con su margen de gracia), este trigger retoma
+        // el plano cenital como antes.
+        if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null
+            && !CameraDirectorService.HasOwner)
         {
             _mainCamera.transform.position = sleepCameraAnchor.position;
             _mainCamera.transform.rotation = sleepCameraAnchor.rotation;

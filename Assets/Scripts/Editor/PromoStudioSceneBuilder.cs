@@ -819,7 +819,7 @@ public static class PromoStudioSceneBuilder
         // Layer (misma corrección de arriba) y encaja mucho mejor con "practicando un espadazo" que
         // la pose de guardia que se usaba antes.
         SetStringIfEmptyOrEquals(so, "_animWillPracticando", "Defend_NoWeapon", "Attack2");
-        SetStringIfEmpty(so, "_animWillPillado", "Fear01");
+        SetStringIfEmpty(so, "_animWillPillado", "Beg01");
         SetStringIfEmptyOrEquals(so, "_animWill01", "InteractWithPeople_NoWeapon", "Talk01");
         SetStringIfEmpty(so, "_animWill02", "HeadShake01");
         SetStringIfEmpty(so, "_animWill03", "HandWave02");

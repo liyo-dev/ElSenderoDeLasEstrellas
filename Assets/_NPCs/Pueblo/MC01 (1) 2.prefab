@@ -11937,6 +11937,7 @@ GameObject:
   - component: {fileID: 3335203596110548184}
   - component: {fileID: 3010302564997021012}
   - component: {fileID: 3141471802953668306}
+  - component: {fileID: 4186682924875715962}
   m_Layer: 8
   m_Name: MC01 (1) 2
   m_TagString: Untagged
@@ -12150,6 +12151,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &3010302564997021012
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -12208,6 +12210,9 @@ MonoBehaviour:
   disableWander: 0
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: 
@@ -12215,16 +12220,30 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4186682924875715962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4544204193422550353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 6381330553406264793}
+  originalMouthMesh: {fileID: 4201392418961885870}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &4575387140086124632
 GameObject:
   m_ObjectHideFlags: 0

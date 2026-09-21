@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -562,6 +562,40 @@ public class AmbientZone : MonoBehaviour
         // sonando. RestorePreviousMusic() tiene el mismo guard para el camino de salida.
         if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0) return;
 
+        // FIX 16 sep 2026 (Raúl: "sigue sin sonar la música de la secuencia de Oliver"). Mismo
+        // criterio que el guard de combate de aquí al lado: durante una cinemática manda SU música.
+        //
+        // Este era el sistema que pisaba la música de la secuencia de Oliver, confirmado con el log
+        // de una partida real: la música de secuencia arrancaba bien ('La Marcha del Heroe Torpe' (antes 'Bumbling Hero's March')), y
+        // dos segundos después sonaba 'El Hogar de Will' (antes 'Cozy Village Loop'). El orden exacto: el jugador cruza la
+        // puerta, la secuencia arranca y pone su música -> el InteriorPortalTrigger TERMINA el
+        // teletransporte y descarga 'WillHouse' -> el jugador aparece dentro del trigger de la
+        // AmbientZone del pueblo, que se auto-activa al detectar que ya estaba dentro (ver el log
+        // "Jugador ya estaba dentro ... activando sin esperar OnTriggerEnter") y pone su música
+        // encima de la nuestra.
+        //
+        // AudioService ya tenía este guard en cuatro sitios (HandleInteriorEntered,
+        // HandleInteriorExited, y las dos restauraciones tras batalla), pero la zona no pasa por
+        // ninguno de ellos: llama a PlayMusic() directamente. Al terminar la cinemática, su
+        // RestoreMusic() ya da prioridad a la AmbientZone activa (FIX INC-185), así que la música
+        // de zona entra igual, solo que cuando toca.
+        if (CinematicSequencerBase.AnySequenceActive)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (showDebugLogs)
+                Debug.Log($"[AmbientZone] '{gameObject.name}': música de zona omitida, hay una cinemática activa (manda la suya).");
+#endif
+            return;
+        }
+
+        // (21 sep) Con la pantalla en negro retenida (arranque, carga) la música de zona espera a
+        // que se vea la escena. Ver Telon y AudioService.HandleTelonAbierto.
+        if (Telon.Cerrado)
+        {
+            audioService.PedirMusicaAlAbrirseElTelon();
+            return;
+        }
+
         _previousMusic   = audioService.CurrentMusicClip;
         _wasMusicPlaying = _previousMusic != null;
 
@@ -591,6 +625,16 @@ public class AmbientZone : MonoBehaviour
         // manda. AudioService.EndBattleMusic ya se encarga de restaurar la música de zona
         // correcta cuando el combate termine de verdad (ver Co_RestoreAfterBattleDeferred).
         if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0)
+        {
+            _previousMusic   = null;
+            _wasMusicPlaying = false;
+            return;
+        }
+
+        // FIX 16 sep 2026: mismo motivo que en TransitionToZoneMusic() — salir de una zona a mitad
+        // de una cinemática no debe devolver la música anterior por encima de la suya. Cuando la
+        // cinemática acabe, su RestoreMusic() pondrá lo que toque.
+        if (CinematicSequencerBase.AnySequenceActive)
         {
             _previousMusic   = null;
             _wasMusicPlaying = false;

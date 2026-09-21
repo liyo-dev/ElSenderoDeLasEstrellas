@@ -47,7 +47,7 @@ public class ChestMonsterBuilder : EditorWindow
     float _moveSpeed = 3.2f;
     int _rewardQuantity = 40;
 
-    [MenuItem("El Sendero/Mundo/Colocar Cofre Embrujado (Bosque Prohibido)...")]
+    [MenuItem("El Sendero/Archivo/Mundo/Colocar Cofre Embrujado (Bosque Prohibido)...")]
     public static void ShowWindow()
     {
         var window = GetWindow<ChestMonsterBuilder>("Cofre Embrujado");

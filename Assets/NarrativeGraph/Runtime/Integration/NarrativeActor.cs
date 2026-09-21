@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Game.NPC;
 using Game.NPC.Common;
 
@@ -73,6 +73,22 @@ public class NarrativeActor : MonoBehaviour
     private NPCBehaviourManagerV2 _manager;
     private NPCAlertIconController _iconController;
 
+    // --- Supresión del icono de quest durante diálogo/cinemática (ver INC pendiente en TRACKER.md,
+    // "icono de quest visible durante diálogo/cinemática con el NPC") ------------------------------
+    // ShowQuestIcon()/HideQuestIcon() ya no pintan directamente: solo actualizan "qué se quiere
+    // mostrar" (_iconWanted/_lastRequestedIconPrefab) y delegan en ApplyIconState(), que decide si
+    // el icono puede pintarse de verdad según _isInDialogue/_cinematicActive. Así WaitNpcInteractionNode
+    // sigue llamando a la misma API pública sin cambios, pero el icono queda forzado a oculto
+    // mientras dura el diálogo/cinemática con ESTE NPC y se restaura solo si seguía "querido" al
+    // terminar — mismo patrón que ya usaba NPCQuestIconManager (legacy, congelado) con
+    // DialogueManager.OnDialogueStarted/OnDialogueClosed y CinematicSequencerBase.AnySequenceActive.
+    private bool _iconWanted;
+    private GameObject _lastRequestedIconPrefab;
+    private bool _isInDialogue;
+    private bool _cinematicActive;
+
+    private bool IsIconSuppressed => _isInDialogue || _cinematicActive;
+
     /// <summary>El persistenceId de <see cref="NPCBehaviourManagerV2"/> — no hay dos identidades.</summary>
     public string ActorId => _manager != null ? _manager.PersistenceId : null;
 
@@ -90,24 +106,72 @@ public class NarrativeActor : MonoBehaviour
 #endif
     }
 
-    /// <summary>Gira al NPC para mirar hacia un punto del mundo (usa NPCSimpleAnimator.FaceTarget).</summary>
-    public void Face(Vector3 worldPosition) => _manager?.SimpleAnimator?.FaceTarget(worldPosition);
+    private void OnEnable()
+    {
+        // Estado inicial por si ya hay una cinemática en curso cuando este NPC se activa (p. ej.
+        // un NPC que entra en escena mientras una cinemática global ya está corriendo).
+        _cinematicActive = CinematicSequencerBase.AnySequenceActive;
+        // Mismo motivo para el diálogo: si este NPC se activa con una conversación ya en pantalla,
+        // el evento OnDialogueStarted ya pasó y no volverá — hay que leer el estado actual.
+        _isInDialogue = DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
 
-    /// <summary>Activa/desactiva la pose de "hablando" (usada durante diálogos del grafo).</summary>
-    public void Talk(bool isTalking) => _manager?.SimpleAnimator?.SetTalking(isTalking);
+        DialogueManager.OnDialogueStarted += HandleDialogueStarted;
+        DialogueManager.OnDialogueClosed += HandleDialogueClosed;
+        CinematicSequencerBase.OnAnySequenceActiveChanged += HandleCinematicActiveChanged;
+    }
 
-    /// <summary>Reproduce un gesto social por nombre de estado de animación.</summary>
-    public void PlayGesture(string stateName, System.Action onComplete = null) =>
-        _manager?.SimpleAnimator?.PlaySocialGesture(stateName, onComplete);
+    private void OnDisable()
+    {
+        DialogueManager.OnDialogueStarted -= HandleDialogueStarted;
+        DialogueManager.OnDialogueClosed -= HandleDialogueClosed;
+        CinematicSequencerBase.OnAnySequenceActiveChanged -= HandleCinematicActiveChanged;
+    }
 
-    /// <summary>Reproduce una emoción corporal (ver NPCEmotion).</summary>
-    public void SetEmotion(NPCEmotion emotion) => _manager?.SimpleAnimator?.PlayBodyEmotion(emotion);
+    private void HandleDialogueStarted(Transform npcInvolved)
+    {
+        // FIX (16 sept 2026): antes esto solo suprimía el icono si el diálogo era con ESTE NPC
+        // (npcInvolved == transform, criterio heredado de NPCQuestIconManager). Bastaba con que el
+        // transform emitido no coincidiera exactamente con el del NarrativeActor — otra instancia
+        // del mismo NPC registrada en NPCRegistry, un diálogo lanzado sin npcId desde el grafo, o
+        // el personaje oculto de ActiveCharacterSwapper — para que la supresión no se activara
+        // nunca y el icono se quedara visible durante toda la conversación. Como el jugador no
+        // puede hablar con dos NPCs a la vez, cualquier diálogo abierto suprime el icono: es lo
+        // mismo que ya hacía NPCAlertIconController por su cuenta y no depende de identificar bien
+        // al interlocutor.
+        _isInDialogue = true;
+        ApplyIconState();
+    }
 
-    // TODO (pendiente del punto 4 del plan — NpcActionNode): MoveToAnchor / TeleportToAnchor /
-    // JoinParty / LeaveParty. No se exponen todavía porque requieren revisar primero
-    // MoveToPositionSequence/LeadPlayerToAnchorSequence y NPCPartyMember con más detalle — mejor
-    // no adivinar su contrato. Se añaden en la Fase 2, cuando el NpcActionNode los necesite de
-    // verdad.
+    private void HandleDialogueClosed(Transform npcInvolved)
+    {
+        _isInDialogue = DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
+        ApplyIconState();
+    }
+
+    private void HandleCinematicActiveChanged(bool active)
+    {
+        _cinematicActive = active;
+        ApplyIconState();
+    }
+
+    /// <summary>
+    /// Único punto que pinta/oculta de verdad el icono, según lo último pedido
+    /// (_iconWanted/_lastRequestedIconPrefab) y si está suprimido ahora mismo.
+    /// </summary>
+    private void ApplyIconState()
+    {
+        if (_manager == null && _iconController == null && !_iconWanted)
+            return; // nada que hacer todavía (aún no se pidió mostrar nada)
+
+        if (IsIconSuppressed || !_iconWanted)
+        {
+            ExecuteHideQuestIcon();
+        }
+        else
+        {
+            ExecuteShowQuestIcon(_lastRequestedIconPrefab);
+        }
+    }
 
     /// <summary>
     /// Muestra un icono persistente sobre la cabeza del NPC y su marcador en el minimapa.
@@ -124,8 +188,27 @@ public class NarrativeActor : MonoBehaviour
     /// <c>null</c>): si no se especifica, se cae a <see cref="defaultQuestIconPrefab"/> — así un
     /// NPC con el icono por defecto puesto en su prefab sale correcto en cualquier nodo de
     /// cualquier grafo sin tener que repetir la asignación en cada uno.
+    ///
+    /// No pinta directamente: solo registra lo que se quiere mostrar y delega en
+    /// <see cref="ApplyIconState"/>, que lo respeta o lo mantiene oculto si hay un diálogo o
+    /// una cinemática en curso con este NPC (ver campos _isInDialogue/_cinematicActive arriba).
     /// </summary>
     public void ShowQuestIcon(GameObject iconPrefab)
+    {
+        _iconWanted = true;
+        _lastRequestedIconPrefab = iconPrefab;
+        ApplyIconState();
+    }
+
+    /// <summary>Oculta el icono de cabeza y el marcador de minimapa mostrados por <see cref="ShowQuestIcon"/>.</summary>
+    public void HideQuestIcon()
+    {
+        _iconWanted = false;
+        ApplyIconState();
+    }
+
+    /// <summary>Pintado real del icono — solo debe llamarse desde <see cref="ApplyIconState"/>.</summary>
+    private void ExecuteShowQuestIcon(GameObject iconPrefab)
     {
         var resolvedPrefab = iconPrefab != null ? iconPrefab : defaultQuestIconPrefab;
         if (resolvedPrefab == null) return;
@@ -154,11 +237,30 @@ public class NarrativeActor : MonoBehaviour
         marker.SetVisible(true);
     }
 
-    /// <summary>Oculta el icono de cabeza y el marcador de minimapa mostrados por <see cref="ShowQuestIcon"/>.</summary>
-    public void HideQuestIcon()
+    /// <summary>Ocultado real del icono — solo debe llamarse desde <see cref="ApplyIconState"/>.</summary>
+    private void ExecuteHideQuestIcon()
     {
         if (_iconController != null && _iconController.HasPersistentIcon)
             _iconController.HideAlertIcon();
         GetComponent<MinimapMarker>()?.SetVisible(false);
     }
+
+    /// <summary>Gira al NPC para mirar hacia un punto del mundo (usa NPCSimpleAnimator.FaceTarget).</summary>
+    public void Face(Vector3 worldPosition) => _manager?.SimpleAnimator?.FaceTarget(worldPosition);
+
+    /// <summary>Activa/desactiva la pose de "hablando" (usada durante diálogos del grafo).</summary>
+    public void Talk(bool isTalking) => _manager?.SimpleAnimator?.SetTalking(isTalking);
+
+    /// <summary>Reproduce un gesto social por nombre de estado de animación.</summary>
+    public void PlayGesture(string stateName, System.Action onComplete = null) =>
+        _manager?.SimpleAnimator?.PlaySocialGesture(stateName, onComplete);
+
+    /// <summary>Reproduce una emoción corporal (ver NPCEmotion).</summary>
+    public void SetEmotion(NPCEmotion emotion) => _manager?.SimpleAnimator?.PlayBodyEmotion(emotion);
+
+    // TODO (pendiente del punto 4 del plan — NpcActionNode): MoveToAnchor / TeleportToAnchor /
+    // JoinParty / LeaveParty. No se exponen todavía porque requieren revisar primero
+    // MoveToPositionSequence/LeadPlayerToAnchorSequence y NPCPartyMember con más detalle — mejor
+    // no adivinar su contrato. Se añaden en la Fase 2, cuando el NpcActionNode los necesite de
+    // verdad.
 }

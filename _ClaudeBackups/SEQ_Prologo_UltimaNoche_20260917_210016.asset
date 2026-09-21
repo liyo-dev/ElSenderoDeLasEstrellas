@@ -1,0 +1,977 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Prologo_UltimaNoche
+  m_EditorClassIdentifier: 
+  displayName: El Prologo -- La Ultima Noche del Archimago
+  summary: 'La pesadilla de Will, jugable: el Archimago resuelve tres encargos triviales
+    en el valle (horno, carreta -- sustituye a la vaca, globo del campanario -- sustituye
+    a la cometa), desayuna con Liora y no llega a responder la carta de la academia,
+    evacua el valle sin poder salvar a todos, se despide de Liora, y se enfrenta
+    al Mago Oscuro en un duelo que no puede ganar: solo redirigir el hechizo (destierro
+    al Sendero) funciona de verdad. Termina con el corte a Will despertando, que
+    gestiona la fase siguiente del grafo (Cap1) al recibir PROLOGUE_DONE. Sustituye
+    a PrologueDreamSequencer.'
+  signalIn: PROLOGUE_START
+  signalOut: PROLOGUE_DONE
+  musicId: 
+  openingShotName: 
+  openingShot:
+    type: 0
+    subjectId: NPC_Archimago
+    secondaryId: 
+    heightBias: 2.2
+    distanceScale: 3.4
+    fovOverride: 0
+    crossTheLine: 0
+    headroom: 1
+  endStayBlack: 1
+  phases:
+  - name: 1 - La mañana
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000001
+    - rid: 9100000000000000002
+    - rid: 9100000000000000003
+    - rid: 9100000000000000004
+    - rid: 9100000000000000005
+    - rid: 9100000000000000006
+    - rid: 9100000000000000007
+    - rid: 9100000000000000008
+    - rid: 9100000000000000009
+    - rid: 9100000000000000010
+    - rid: 9100000000000000011
+    - rid: 9100000000000000012
+    - rid: 9100000000000000013
+    - rid: 9100000000000000014
+    - rid: 9100000000000000015
+    - rid: 9100000000000000016
+    - rid: 9100000000000000017
+    - rid: 9100000000000000018
+    - rid: 9100000000000000019
+    - rid: 9100000000000000020
+    - rid: 9100000000000000021
+    - rid: 9100000000000000022
+  - name: 1b - El globo se libera bien
+    onlyIfFlag: manana_globo_ok
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000023
+    - rid: 9100000000000000024
+  - name: 1c - El globo revienta
+    onlyIfFlag: 
+    skipIfFlag: manana_globo_ok
+    beats:
+    - rid: 9100000000000000025
+    - rid: 9100000000000000026
+  - name: 2 - La carta
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000027
+    - rid: 9100000000000000028
+    - rid: 9100000000000000029
+    - rid: 9100000000000000030
+    - rid: 9100000000000000031
+    - rid: 9100000000000000032
+    - rid: 9100000000000000033
+    - rid: 9100000000000000034
+  - name: 3 - La hora concedida
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000035
+    - rid: 9100000000000000036
+    - rid: 9100000000000000037
+    - rid: 9100000000000000038
+    - rid: 9100000000000000039
+    - rid: 9100000000000000040
+    - rid: 9100000000000000041
+  - name: 4 - La despedida
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000042
+    - rid: 9100000000000000043
+    - rid: 9100000000000000044
+    - rid: 9100000000000000045
+    - rid: 9100000000000000046
+    - rid: 9100000000000000047
+    - rid: 9100000000000000048
+    - rid: 9100000000000000049
+    - rid: 9100000000000000050
+  - name: 5 - El duelo
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000051
+    - rid: 9100000000000000052
+    - rid: 9100000000000000053
+    - rid: 9100000000000000054
+    - rid: 9100000000000000055
+    - rid: 9100000000000000056
+    - rid: 9100000000000000057
+    - rid: 9100000000000000058
+    - rid: 9100000000000000059
+    - rid: 9100000000000000060
+    - rid: 9100000000000000061
+    - rid: 9100000000000000062
+    - rid: 9100000000000000063
+    - rid: 9100000000000000064
+  - name: 6 - Deja que elija
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 9100000000000000065
+    - rid: 9100000000000000066
+    - rid: 9100000000000000067
+    - rid: 9100000000000000068
+  references:
+    version: 2
+    RefIds:
+    - rid: 9100000000000000001
+      type: {class: SetActionAxisBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La camara entra por el este. Todo el decorado esta compuesto para ese lado: la iglesia, el pueblo y las lomas quedan al oeste, que es adonde miran catorce de los dieciseis encuadres.
+        sideDegrees: 90
+    - rid: 9100000000000000002
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Amanece. Se lo pide al DayNightCycle y se restaura solo al terminar.
+        timeOfDay: 6
+        immediate: 1
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000003
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Mirando su valle desde la plaza.
+        actorId: NPC_Archimago
+        markName: M_Apertura
+        faceTowardsMark: 
+        faceTowardsActor: 
+    - rid: 9100000000000000004
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Establecer: el valle entero por la mañana, con el Archimago pequeno en cuadro. Es lo primero que ve el jugador del juego.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: 
+          heightBias: 2.2
+          distanceScale: 3.4
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 3.0
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000005
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Amanece. Se lo pide al DayNightCycle y se restaura solo al terminar.
+        timeOfDay: 6
+        immediate: 1
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000006
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte a la panaderia.
+        actorId: NPC_Archimago
+        markName: M_Horno
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Horno
+    - rid: 9100000000000000007
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El mago y el horno, con la iglesia al fondo (la camara mira a 288 grados y la iglesia esta a 288).
+        shotName: 
+        framing: 
+          type: 1
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Horno
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.8
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000008
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Establecer: el valle entero por la mañana, con el Archimago pequeno en cuadro. Es lo primero que ve el jugador del juego.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: 
+          heightBias: 2.2
+          distanceScale: 3.4
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 3.0
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000009
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_MANANA_INTRO
+        pageDuration: 3.2
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000010
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Sobre el hombro del mago: se ve prender el horno. Sin esto el favor ocurre fuera de cuadro.
+        shotName: 
+        framing: 
+          type: 2
+          subjectId: PROP_Horno
+          secondaryId: NPC_Archimago
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000011
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte a la panaderia.
+        actorId: NPC_Archimago
+        markName: M_Horno
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Horno
+    - rid: 9100000000000000012
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte a la carreta atascada.
+        actorId: NPC_Archimago
+        markName: M_Carreta
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Carreta
+    - rid: 9100000000000000013
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Los dos en cuadro: se ve que la carreta esta volcada y por donde hay que empujarla.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Carreta
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.7
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000014
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Calentar el horno sosteniendo el gesto.
+        mode: 1
+        actionRef: {fileID: 4603114644073994948, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 8
+        windowSeconds: 2.5
+        holdSeconds: 1.5
+        maxHoldSeconds: 2.5
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: 
+        successFlag: manana_horno_ok
+        tolerant: 1
+    - rid: 9100000000000000015
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        gesture: MagicLeft
+        repeats: 1
+        holdSeconds: 1
+        returnToNormalAfter: 0
+    - rid: 9100000000000000016
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El esfuerzo.
+        shotName: 
+        framing: 
+          type: 4
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Carreta
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000017
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Reconstruido: faltaba en el asset (referenciado sin RefId).
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_MANANA_CARRETA
+        pageDuration: 2.4
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000018
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte al campanario.
+        actorId: NPC_Archimago
+        markName: M_Globo
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Globo
+    - rid: 9100000000000000019
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo enganchado arriba del campanario. El campanario es la unica silueta vertical del valle.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: PROP_Globo
+          secondaryId: NPC_Archimago
+          heightBias: 0.8
+          distanceScale: 1.7
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.9
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000020
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Contraplano: el mago mirando hacia arriba.
+        shotName: 
+        framing: 
+          type: 3
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Globo
+          heightBias: 0.35
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000021
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte a la carreta atascada.
+        actorId: NPC_Archimago
+        markName: M_Carreta
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Carreta
+    - rid: 9100000000000000022
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Los dos en cuadro: se ve que la carreta esta volcada y por donde hay que empujarla.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Carreta
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.7
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000023
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo se va.
+        propId: PROP_Globo
+        active: 0
+    - rid: 9100000000000000024
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Empujar la carreta en el momento justo.
+        mode: 3
+        actionRef: {fileID: 4603114644073994948, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 1
+        windowSeconds: 2
+        holdSeconds: 1.5
+        maxHoldSeconds: 2.5
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: 
+        successFlag: manana_carreta_ok
+        tolerant: 1
+    - rid: 9100000000000000025
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo revienta.
+        propId: PROP_Globo
+        active: 0
+    - rid: 9100000000000000026
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: "Push_InPlace_NoWeapon solo existe en el controlador de Will, no en
+          el de NPC -- se usa CarryStart como aproximaci\xF3n, igual que recomienda
+          el an\xE1lisis del 17 sep."
+        actorId: NPC_Archimago
+        gesture: CarryStart_NoWeapon
+        repeats: 1
+        holdSeconds: 0.8
+        returnToNormalAfter: 0
+    - rid: 9100000000000000027
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La mesa del desayuno, junto al rio.
+        actorId: NPC_Archimago
+        markName: M_Mesa
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Liora
+    - rid: 9100000000000000028
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Liora
+        markName: M_Mesa_Liora
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Archimago
+    - rid: 9100000000000000029
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El esfuerzo.
+        shotName: 
+        framing: 
+          type: 4
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Carreta
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000030
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Reconstruido: faltaba en el asset (referenciado sin RefId).
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_MANANA_CARRETA
+        pageDuration: 2.4
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000031
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corte al campanario.
+        actorId: NPC_Archimago
+        markName: M_Globo
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Globo
+    - rid: 9100000000000000032
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo enganchado arriba del campanario. El campanario es la unica silueta vertical del valle.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: PROP_Globo
+          secondaryId: NPC_Archimago
+          heightBias: 0.8
+          distanceScale: 1.7
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.9
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000033
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Contraplano: el mago mirando hacia arriba.
+        shotName: 
+        framing: 
+          type: 3
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Globo
+          heightBias: 0.35
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000034
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La luz empieza a caer MIENTRAS sostiene la carta que no va a contestar. No se espera a la transicion: cambia por debajo de la escena.
+        timeOfDay: 8
+        immediate: 0
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000035
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El valle empieza a arder: fuegos, humo y sus luces.
+        propId: PROP_Incendio
+        active: 1
+    - rid: 9100000000000000036
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La viga caida sobre la calle.
+        actorId: NPC_Archimago
+        markName: M_Viga
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Viga
+    - rid: 9100000000000000037
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La calle con la viga cruzada y el pueblo ardiendo al fondo.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Viga
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 2.2
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000038
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        gesture: MagicRight
+        repeats: 1
+        holdSeconds: 0.6
+        returnToNormalAfter: 0
+    - rid: 9100000000000000039
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo se va.
+        propId: PROP_Globo
+        active: 0
+    - rid: 9100000000000000040
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Contrapicado: la camara por debajo de los ojos hace que aguantar parezca costar.
+        shotName: 
+        framing: 
+          type: 4
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Viga
+          heightBias: -0.3
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.7
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000041
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_MANANA_GLOBO_OK
+        pageDuration: 2.6
+        gesture: Cheer01
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000042
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Ya es de noche. El incendio es la unica luz.
+        timeOfDay: 7
+        immediate: 0
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000043
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: En el puente, a la salida del valle.
+        actorId: NPC_Archimago
+        markName: M_Despedida_Mago
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Liora
+    - rid: 9100000000000000044
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Liora
+        markName: M_Despedida_Liora
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Archimago
+    - rid: 9100000000000000045
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El globo revienta.
+        propId: PROP_Globo
+        active: 0
+    - rid: 9100000000000000046
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_MANANA_GLOBO_ROTO
+        pageDuration: 2.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000047
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La mesa del desayuno, junto al rio.
+        actorId: NPC_Archimago
+        markName: M_Mesa
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Liora
+    - rid: 9100000000000000048
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El que escucha. Detras de el, el pueblo ardiendo.
+        shotName: 
+        framing: 
+          type: 5
+          subjectId: NPC_Archimago
+          secondaryId: NPC_Liora
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.7
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000049
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Liora
+        markName: M_Mesa_Liora
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Archimago
+    - rid: 9100000000000000050
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: "Desayuno junto al r\xEDo."
+        shotName: 
+        framing:
+          type: 1
+          subjectId: NPC_Archimago
+          secondaryId: NPC_Liora
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 1
+        duration: 2
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000051
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La plaza.
+        actorId: NPC_Archimago
+        markName: M_Duelo_Mago
+        faceTowardsMark: 
+        faceTowardsActor: NPC_MagoOscuro
+    - rid: 9100000000000000052
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_MagoOscuro
+        markName: M_Duelo_Oscuro
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Archimago
+    - rid: 9100000000000000053
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Liora
+        markName: 
+        textKey: PROLOGO_CARTA_LIORA
+        pageDuration: 3
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Liora
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000054
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La carta de la academia.
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Archimago
+          secondaryId: NPC_Liora
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000055
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Mirar la carta -- decorativo, sin rama: no llega a responderla de
+          todas formas.'
+        mode: 3
+        actionRef: {fileID: 4603114644073994948, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 1
+        windowSeconds: 2
+        holdSeconds: 1.5
+        maxHoldSeconds: 2.5
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: 
+        successFlag: 
+        tolerant: 1
+    - rid: 9100000000000000056
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_CARTA_ARCHIMAGO
+        pageDuration: 3
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000057
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La luz empieza a caer MIENTRAS sostiene la carta que no va a contestar. No se espera a la transicion: cambia por debajo de la escena.
+        timeOfDay: 8
+        immediate: 0
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000058
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El valle empieza a arder: fuegos, humo y sus luces.
+        propId: PROP_Incendio
+        active: 1
+    - rid: 9100000000000000059
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La viga caida sobre la calle.
+        actorId: NPC_Archimago
+        markName: M_Viga
+        faceTowardsMark: 
+        faceTowardsActor: PROP_Viga
+    - rid: 9100000000000000060
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El Mago Oscuro entiende que el hechizo ha cambiado, un segundo antes de que pase.
+        shotName: 
+        framing: 
+          type: 3
+          subjectId: NPC_MagoOscuro
+          secondaryId: NPC_Archimago
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.2
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000061
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La calle con la viga cruzada y el pueblo ardiendo al fondo.
+        shotName: 
+        framing: 
+          type: 0
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Viga
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 2.2
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000062
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_HORA_ARCHIMAGO
+        pageDuration: 2.2
+        gesture: HandWave01
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000063
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Sostener la puerta mientras pasa la gente. No hay rama: el contador
+          no llega a cero de ninguna forma.'
+        mode: 0
+        actionRef: {fileID: 4603114644073994948, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 10
+        windowSeconds: 3
+        holdSeconds: 1.5
+        maxHoldSeconds: 2.5
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: 
+        successFlag: 
+        tolerant: 1
+    - rid: 9100000000000000064
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Contrapicado: la camara por debajo de los ojos hace que aguantar parezca costar.
+        shotName: 
+        framing: 
+          type: 4
+          subjectId: NPC_Archimago
+          secondaryId: PROP_Viga
+          heightBias: -0.3
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.7
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000065
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La ultima cara que se ve antes del negro.
+        shotName: 
+        framing: 
+          type: 4
+          subjectId: NPC_MagoOscuro
+          secondaryId: NPC_Archimago
+          heightBias: -0.2
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.6
+        waitForArrival: 1
+        live: 0
+    - rid: 9100000000000000066
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Archimago
+        markName: 
+        textKey: PROLOGO_HORA_REACCION
+        pageDuration: 3.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Archimago
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 9100000000000000067
+      type: {class: TimeOfDayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Ya es de noche. El incendio es la unica luz.
+        timeOfDay: 7
+        immediate: 0
+        waitForTransition: 0
+        transitionSeconds: 2
+    - rid: 9100000000000000068
+      type: {class: PlaceAtMarkBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: En el puente, a la salida del valle.
+        actorId: NPC_Archimago
+        markName: M_Despedida_Mago
+        faceTowardsMark: 
+        faceTowardsActor: NPC_Liora

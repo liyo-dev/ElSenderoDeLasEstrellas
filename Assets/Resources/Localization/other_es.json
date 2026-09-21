@@ -25,12 +25,16 @@
             "value": "Otra vez esa pesadilla."
         },
         {
+            "key": "TUTORIAL_MARKET",
+            "value": "Prueba a comprar algo en el puesto del mercado."
+        },
+        {
             "key": "TUTORIAL_MINIMAP_BOX",
             "value": "Sigue el marcador del minimapa para encontrar la caja.\nPulsa {BOTON} para ver el mapa completo."
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Usa {BOTON} para mover a Will. Inspecciona la habitación."
+            "value": "Usa {BOTON} para mover a Will.\nSal de la habitación a ver qué pasa."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
@@ -43,6 +47,10 @@
         {
             "key": "QUEST_STARTED_BANNER",
             "value": "Nueva misión: {0}"
+        },
+        {
+            "key": "TUTORIAL_MINIMAP_ELDRAN",
+            "value": "Sigue el marcador del minimapa para encontrar a Eldran.\nPulsa {BOTON} para ver el mapa completo."
         }
     ]
 }

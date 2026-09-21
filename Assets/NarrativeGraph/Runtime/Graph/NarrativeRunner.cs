@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -408,6 +408,24 @@ public class NarrativeRunner : MonoBehaviour
     /// Ejecuta una rama de nodos secuencialmente a partir de 'start'.
     /// Rastrea el progreso en el blackboard para permitir guardar y reanudar.
     /// </summary>
+    /// <summary>
+    /// Llama a Exit() de un nodo al abandonarlo, igual que hace GoTo() en el flujo principal.
+    /// FIX (16 sept 2026): RunSubGraph avanzaba de nodo SIN llamar a Exit(), así que cualquier
+    /// limpieza de nodo (desuscripciones, y sobre todo WaitNpcInteractionNode.HideIcon()) no se
+    /// ejecutaba nunca dentro de una rama de fork. Consecuencia visible: el icono de quest sobre la
+    /// cabeza del NPC se quedaba "pedido" para siempre y reaparecía solo al cerrarse cada diálogo
+    /// — incidencia "icono de quest visible durante la conversación".
+    /// </summary>
+    void ExitNodeSafe(NarrativeNode node)
+    {
+        if (node == null || _ctx == null) return;
+        try { node.Exit(_ctx); }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[NarrativeRunner] Exit() falló en {node.GetType().Name} '{node.displayTitle}': {ex.Message}");
+        }
+    }
+
     System.Collections.IEnumerator RunSubGraph(NarrativeNode start, string forkGuid, int branchIndex, int forkGeneration = 0)
     {
         bool track = !string.IsNullOrEmpty(forkGuid) && branchIndex >= 0;
@@ -517,6 +535,7 @@ public class NarrativeRunner : MonoBehaviour
                     if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
                     yield break;
                 }
+                ExitNodeSafe(node);
                 node = chosen;
                 if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
                 continue;
@@ -542,6 +561,7 @@ public class NarrativeRunner : MonoBehaviour
                     if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", "__DONE__");
                     yield break;
                 }
+                ExitNodeSafe(node);
                 node = next;
                 if (track) Blackboard.Set($"__fork_{forkGuid}_{branchIndex}_node", node.guid);
                 continue;

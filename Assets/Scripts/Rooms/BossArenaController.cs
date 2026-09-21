@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -69,9 +69,12 @@ public class BossArenaController : MonoBehaviour
     /// <summary>Obtiene el nombre localizado del boss (usa bossDisplayNameId si está definido).</summary>
     public string GetLocalizedBossName()
     {
-        if (!string.IsNullOrEmpty(bossDisplayNameId) && LocalizationManager.Instance != null)
-            return LocalizationManager.Instance.Get(bossDisplayNameId, bossDisplayName);
-        return bossDisplayName;
+        string id = (_activeEncounter != null && !string.IsNullOrEmpty(_activeEncounter.displayNameId)) ? _activeEncounter.displayNameId : bossDisplayNameId;
+        string fallback = (_activeEncounter != null && !string.IsNullOrEmpty(_activeEncounter.displayName)) ? _activeEncounter.displayName : bossDisplayName;
+
+        if (!string.IsNullOrEmpty(id) && LocalizationManager.Instance != null)
+            return LocalizationManager.Instance.Get(id, fallback);
+        return fallback;
     }
 
     [Header("Refs")]
@@ -133,6 +136,33 @@ public class BossArenaController : MonoBehaviour
     [Header("Activacion manual")]
     [Tooltip("Cuando es true, al entrar el jugador se inicia la batalla (verifica si el boss ya fue derrotado).")]
     [SerializeField] private bool startBarrierOnPlayerEnter;
+
+    [Header("Modo Radio alrededor del jugador (INC-207)")]
+    [Tooltip("Si es true (o si el nodo del grafo asigna un BattleEncounterSO), la arena usa un radio calculado dinámicamente alrededor de la posición del jugador al empezar la batalla, en vez de puertas o de un área delimitada por collider. Tiene prioridad sobre useDoorMode/areaBarrierCollider cuando está activo.")]
+    [SerializeField] private bool useRadiusMode = false;
+
+    [Tooltip("Radio en metros (solo si useRadiusMode = true y no hay BattleEncounterSO asignado desde el nodo — la SO trae su propio radio).")]
+    [SerializeField, Min(1f)] private float radiusMeters = 15f;
+
+    [Tooltip("Cada cuántos segundos se comprueba si el jugador ha cruzado el radio. Throttled a propósito (igual que NPCObstacleAvoidance) — nunca por frame.")]
+    [SerializeField, Min(0.05f)] private float radiusCheckInterval = 0.2f;
+
+    [Tooltip("Clave de localización del mensaje mostrado (vía HudToastService) si el jugador intenta cruzar el radio.")]
+    [SerializeField] private string cannotFleeLocKey = "BATTLE_CANNOT_FLEE";
+
+    /// Segundos que dura en pantalla el aviso de "no puedes huir" y, a la vez, tiempo mínimo
+    /// entre dos avisos consecutivos (ver Co_EnforceRadius).
+    private const float CannotFleeToastDuration = 3f;
+
+    // Estado del modo radio — no serializado: se fija en tiempo de ejecución al empezar la batalla.
+    private BattleEncounterSO _activeEncounter;
+    private int _activeSpawnProfileIndex;
+    private Vector3 _arenaCenter;
+    private Quaternion _arenaPlayerRotation = Quaternion.identity;
+    private float _effectiveRadius;
+    private bool _radiusLocked;
+    private Coroutine _radiusEnforceRoutine;
+    private LayerMask _activeFloorLayer;
 
     bool started = false;
     bool _bossDefeatHandled = false;
@@ -362,6 +392,20 @@ public class BossArenaController : MonoBehaviour
         StartBattleInternal();
     }
 
+    /// <summary>
+    /// Igual que <see cref="TriggerStartBattle()"/>, pero con un BattleEncounterSO (INC-207): sus
+    /// datos (prefab, nombre, radio, VFX) sustituyen a los campos configurados a mano en esta
+    /// arena para esta batalla concreta, y fuerza el modo radio aunque useRadiusMode esté en
+    /// false. Pensado para llamarse desde StartBattleNode cuando el nodo lleva un encounter
+    /// asignado.
+    /// </summary>
+    public void TriggerStartBattle(BattleEncounterSO encounter, int spawnProfileIndex = 0)
+    {
+        _activeEncounter = encounter;
+        _activeSpawnProfileIndex = spawnProfileIndex;
+        TriggerStartBattle();
+    }
+
     // Método público para permitir que la cinemática u otros sistemas inicien la batalla
     // Se puede enlazar directamente al UnityEvent onCinematicFinished (sin parámetros)
     public void TriggerStartBattle()
@@ -400,8 +444,13 @@ public class BossArenaController : MonoBehaviour
 
         OnAnyBattleStarted?.Invoke();
 
-        // Puertas o barrera
-        if (useDoorMode)
+        // Puertas, área delimitada, o radio alrededor del jugador (INC-207)
+        bool radiusModeActive = useRadiusMode || _activeEncounter != null;
+        if (radiusModeActive)
+        {
+            LockRadiusArea();
+        }
+        else if (useDoorMode)
         {
             if (doorWest) doorWest.Close();
         }
@@ -429,16 +478,55 @@ public class BossArenaController : MonoBehaviour
 
     private void SpawnBoss()
     {
-        Vector3 spawnPosition = bossSpawn ? bossSpawn.position : transform.position;
-        Quaternion spawnRotation = bossSpawn ? bossSpawn.rotation : transform.rotation;
+        bool useEncounterData = _activeEncounter != null;
+
+        Vector3 spawnPosition;
+        Quaternion spawnRotation;
+
+        if (useEncounterData && _radiusLocked)
+        {
+            // Posición calculada a partir del radio de la arena y la posición del jugador al
+            // empezar la batalla (INC-207) — ya no depende de un Transform bossSpawn colocado a
+            // mano en la escena.
+            spawnPosition = _activeEncounter.ComputeSpawnPosition(_arenaCenter, _arenaPlayerRotation, _activeSpawnProfileIndex);
+
+            // El punto se calcula a ciegas (a X metros por delante del jugador), así que puede
+            // caer dentro de un edificio, en el agua o simplemente fuera del NavMesh. Se proyecta
+            // sobre la malla ANTES de instanciar: si no, el NavMeshAgent del enemigo falla al
+            // crearse ("Failed to create agent because it is not close enough to the NavMesh") y
+            // el boss se queda clavado en el sitio sin poder perseguir al jugador.
+            spawnPosition = ResolveSpawnOnNavMesh(spawnPosition);
+
+            Vector3 toCenter = _arenaCenter - spawnPosition;
+            toCenter.y = 0f;
+            spawnRotation = toCenter.sqrMagnitude > 0.01f ? Quaternion.LookRotation(toCenter.normalized) : transform.rotation;
+        }
+        else
+        {
+            spawnPosition = bossSpawn ? bossSpawn.position : transform.position;
+            spawnRotation = bossSpawn ? bossSpawn.rotation : transform.rotation;
+        }
+
+        GameObject usedPortalPrefab = useEncounterData && _activeEncounter.portalPrefab != null ? _activeEncounter.portalPrefab : portalPrefab;
+        GameObject usedSpawnVfxPrefab = useEncounterData && _activeEncounter.spawnVfxPrefab != null ? _activeEncounter.spawnVfxPrefab : bossSpawnVFXPrefab;
+        float usedSpawnVfxDuration = useEncounterData ? _activeEncounter.spawnVfxDuration : bossSpawnVFXDuration;
+        float usedSpawnVfxHeightOffset = useEncounterData ? _activeEncounter.spawnVfxHeightOffset : bossSpawnVFXHeightOffset;
+        _activeFloorLayer = (useEncounterData && _activeEncounter.floorLayer.value != 0) ? _activeEncounter.floorLayer : floorLayer;
 
         // Instanciar portal de aparición si está configurado
         GameObject portalVFX = null;
-        if (portalPrefab != null && portalSpawn != null)
+        if (usedPortalPrefab != null)
         {
-            Vector3 portalPosition = portalSpawn.position;
+            Vector3 portalPosition = spawnPosition;
+            Quaternion portalRotation = spawnRotation;
+            if (!useEncounterData && portalSpawn != null)
+            {
+                portalPosition = portalSpawn.position;
+                portalRotation = portalSpawn.rotation;
+            }
+
             // Calcular posición del portal en el suelo usando raycast
-            if (Physics.Raycast(portalSpawn.position, Vector3.down, out RaycastHit hit, 100f, floorLayer))
+            if (Physics.Raycast(portalPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f, _activeFloorLayer))
             {
                 portalPosition = hit.point;
                 if (showDebugLogs)
@@ -448,7 +536,7 @@ public class BossArenaController : MonoBehaviour
                     #endif
                 }
             }
-            portalVFX = Instantiate(portalPrefab, portalPosition, portalSpawn.rotation, transform.parent);
+            portalVFX = Instantiate(usedPortalPrefab, portalPosition, portalRotation, transform.parent);
             
             if (showDebugLogs)
             {
@@ -459,23 +547,24 @@ public class BossArenaController : MonoBehaviour
         }
 
         // Instanciar VFX de aparición adicional si está configurado
-        if (bossSpawnVFXPrefab != null)
+        if (usedSpawnVfxPrefab != null)
         {
-            Vector3 vfxPosition = spawnPosition + Vector3.up * bossSpawnVFXHeightOffset;
-            GameObject vfx = Instantiate(bossSpawnVFXPrefab, vfxPosition, spawnRotation);
-            Destroy(vfx, bossSpawnVFXDuration);
+            Vector3 vfxPosition = spawnPosition + Vector3.up * usedSpawnVfxHeightOffset;
+            GameObject vfx = Instantiate(usedSpawnVfxPrefab, vfxPosition, spawnRotation);
+            Destroy(vfx, usedSpawnVfxDuration);
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[BossArenaController] VFX de aparición instanciado en {vfxPosition}, se destruirá en {bossSpawnVFXDuration}s");
+                Debug.Log($"[BossArenaController] VFX de aparición instanciado en {vfxPosition}, se destruirá en {usedSpawnVfxDuration}s");
                 #endif
             }
         }
 
         GameObject boss = null;
+        GameObject prefabToSpawn = useEncounterData && _activeEncounter.enemyPrefab != null ? _activeEncounter.enemyPrefab : bossPrefab;
 
-        if (bossPrefab)
-            boss = Instantiate(bossPrefab, spawnPosition, spawnRotation, transform.parent);
+        if (prefabToSpawn)
+            boss = Instantiate(prefabToSpawn, spawnPosition, spawnRotation, transform.parent);
         else
             boss = FindExistingBossInRoom();
 
@@ -496,11 +585,11 @@ public class BossArenaController : MonoBehaviour
         // Destruir el portal después de la duración del VFX
         if (portalVFX != null)
         {
-            Destroy(portalVFX, bossSpawnVFXDuration);
+            Destroy(portalVFX, usedSpawnVfxDuration);
             if (showDebugLogs)
             {
                 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[BossArenaController] Portal se destruirá en {bossSpawnVFXDuration}s");
+                Debug.Log($"[BossArenaController] Portal se destruirá en {usedSpawnVfxDuration}s");
                 #endif
             }
         }
@@ -519,18 +608,19 @@ public class BossArenaController : MonoBehaviour
 
         _activeBossHealthBar = boss.GetComponent<BossHealthBar>();
 
-        // Iniciar presentación o colocar directamente en el suelo
-        if (bossIntroPresentation != null)
+        // Iniciar presentación (componente propio de la arena si lo tiene asignado, o si no el
+        // servicio global BossIntroPresentationService — INC-207) o colocar directamente en el suelo
+        if (bossIntroPresentation != null || BossIntroPresentationService.Instance != null)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[BossArenaController] ✅ BossIntroPresentation asignado para '{boss.name}'. Iniciando presentación...");
+            Debug.Log($"[BossArenaController] ✅ Presentación de boss disponible para '{boss.name}'. Iniciando presentación...");
 #endif
             StartCoroutine(PlayPresentationAndPlaceBoss(boss));
         }
         else
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[BossArenaController] ⚠️ No hay BossIntroPresentation asignado para '{boss.name}'. Colocando boss directamente.");
+            Debug.Log($"[BossArenaController] ⚠️ No hay presentación de boss disponible para '{boss.name}'. Colocando boss directamente.");
 #endif
             PlaceBossOnFloor(boss);
             EnableBossCombat(boss);
@@ -557,9 +647,26 @@ public class BossArenaController : MonoBehaviour
         Debug.Log($"[BossArenaController] 📷 Cámara encontrada: '{bossCamera.name}' en boss '{boss.name}'");
 #endif
         
-        // Configurar y reproducir presentación
-        bossIntroPresentation.SetupBoss(boss.transform, bossCamera, GetLocalizedBossName());
-        yield return StartCoroutine(bossIntroPresentation.PlayIntroduction());
+        // Configurar y reproducir presentación: componente propio de la arena si lo tiene
+        // asignado (comportamiento sin cambios), o si no el servicio global (INC-207).
+        if (bossIntroPresentation != null)
+        {
+            bossIntroPresentation.SetupBoss(boss.transform, bossCamera, GetLocalizedBossName());
+            yield return StartCoroutine(bossIntroPresentation.PlayIntroduction());
+        }
+        else
+        {
+            // IMPORTANTE (INC-207 hotfix 2026-09-15): arrancar esta corrutina en el propio
+            // servicio (persistente, DontDestroyOnLoad), no en "this" (la arena). Si se arranca
+            // en la arena y la arena se desactiva/destruye a media presentación (cambio de
+            // escena, ApplyBattleDisables, etc.), Unity aborta la corrutina sin pasar por su
+            // finally — _isPlaying del servicio se queda en true para siempre y ninguna futura
+            // batalla del juego vuelve a revelar la pantalla. Arrancarla en el propio servicio
+            // hace que sobreviva a la arena y garantiza que su finally (fundido de emergencia
+            // incluido) siempre se ejecute.
+            yield return BossIntroPresentationService.Instance.StartCoroutine(
+                BossIntroPresentationService.Instance.PlayIntroduction(boss.transform, bossCamera, GetLocalizedBossName()));
+        }
         
         // Después de la presentación:
         // 1. Desactivar la cámara del boss
@@ -573,6 +680,19 @@ public class BossArenaController : MonoBehaviour
 
         // 4. Mostrar barra de vida del boss con DOTween
         _activeBossHealthBar?.Show();
+
+        // 5. Avisar de que la presentación ha TERMINADO.
+        //
+        // Hasta aquí la pantalla es del jefe: cámara propia, nombre en grande, su propia
+        // transición. Cualquier bocadillo lanzado antes de este punto se lo come esa puesta en
+        // escena o directamente no se ve. Quien quiera hablar justo después del jefe —hoy Eldran,
+        // explicando la mecánica nueva en el primer combate del juego— escucha esta señal.
+        //
+        // Se levantan las dos: la genérica, para quien solo quiera saber "ya ha terminado una
+        // presentación", y la que lleva el id, para quien tenga que distinguir DE QUÉ jefe.
+        DefaultNarrativeSignals.Instance?.RaiseCustom("BOSS_INTRO_DONE", name);
+        if (!string.IsNullOrEmpty(BattleId))
+            DefaultNarrativeSignals.Instance?.RaiseCustom($"BOSS_INTRO_DONE:{BattleId}", name);
     }
 
     private void EnableBossCombat(GameObject boss)
@@ -638,17 +758,98 @@ public class BossArenaController : MonoBehaviour
 #endif
     }
 
+    /// <summary>
+    /// Proyecta sobre el NavMesh la posición de spawn calculada por <see cref="BattleEncounterSO.ComputeSpawnPosition"/>.
+    /// Si el punto exacto no vale, prueba otros ángulos alrededor del centro de la arena (de 45º
+    /// en 45º) y, si tampoco, acercándose al centro. Si no encuentra nada, devuelve la posición
+    /// original con un aviso — mejor un boss mal colocado que ninguna batalla.
+    /// </summary>
+    private Vector3 ResolveSpawnOnNavMesh(Vector3 desired)
+    {
+        const float SampleRadius = 3f;
+
+        if (NavMesh.SamplePosition(desired, out NavMeshHit hit, SampleRadius, NavMesh.AllAreas))
+            return hit.position;
+
+        Vector3 offset = desired - _arenaCenter;
+        offset.y = 0f;
+        float distance = offset.magnitude;
+        if (distance < 0.01f) return desired;
+
+        Vector3 dir = offset / distance;
+
+        // Mismo criterio que NPCObstacleAvoidance: barrido acotado y determinista, sin bucles
+        // abiertos. 3 distancias x 8 ángulos = 24 sondeos como mucho, una sola vez por batalla.
+        float[] distanceFactors = { 1f, 0.7f, 0.45f };
+        for (int d = 0; d < distanceFactors.Length; d++)
+        {
+            float dist = distance * distanceFactors[d];
+            for (int angle = 0; angle < 360; angle += 45)
+            {
+                if (d == 0 && angle == 0) continue; // ya probado arriba
+
+                Vector3 candidate = _arenaCenter + (Quaternion.Euler(0f, angle, 0f) * dir) * dist;
+                if (NavMesh.SamplePosition(candidate, out hit, SampleRadius, NavMesh.AllAreas))
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[BossArenaController] Spawn calculado fuera del NavMesh: reubicado a {hit.position} (giro {angle}º, {distanceFactors[d]:P0} de la distancia original).");
+#endif
+                    return hit.position;
+                }
+            }
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.LogWarning($"[BossArenaController] No se encontró NavMesh cerca de la posición de spawn calculada ({desired}). El enemigo aparecerá ahí igualmente, pero puede que no pueda moverse. Revisa el bakeado de NavMesh en esa zona.");
+#endif
+        return desired;
+    }
+
+    // Buffer pre-alocado para el raycast de asentado del boss (regla de CLAUDE.md § 2: nada de
+    // Physics.RaycastAll ni arrays nuevos en caliente). 8 impactos son de sobra: solo se usa una
+    // vez por batalla.
+    private static readonly RaycastHit[] s_floorHits = new RaycastHit[8];
+
     private void PlaceBossOnFloor(GameObject boss)
     {
-        // Raycast hacia abajo para encontrar el suelo
-        if (Physics.Raycast(boss.transform.position, Vector3.down, out RaycastHit hit, 100f, floorLayer))
+        // _activeFloorLayer se resuelve en SpawnBoss() (encounter si lo trae, si no el campo floorLayer de siempre).
+        LayerMask layerToUse = _activeFloorLayer.value != 0 ? _activeFloorLayer : floorLayer;
+
+        // Raycast hacia abajo para encontrar el suelo. Se usa la versión NonAlloc y se descartan
+        // los impactos contra el propio boss: su raíz está en la capa Enemy, pero muchos de sus
+        // hijos (hitboxes, props) están en Default, así que un Raycast simple podía devolver su
+        // propio collider y "asentarlo" sobre sí mismo, dejándolo flotando. Los triggers se
+        // ignoran a propósito (zonas de ambiente, portales, etc. no son suelo).
+        Vector3 origin = boss.transform.position + Vector3.up * 2f;
+        int count = Physics.RaycastNonAlloc(origin, Vector3.down, s_floorHits, 102f, layerToUse.value, QueryTriggerInteraction.Ignore);
+
+        Transform bossRoot = boss.transform;
+        float bestDistance = float.MaxValue;
+        Vector3 bestPoint = Vector3.zero;
+        bool found = false;
+
+        for (int i = 0; i < count; i++)
         {
-            boss.transform.position = hit.point;
+            Collider col = s_floorHits[i].collider;
+            if (col == null) continue;
+            if (col.transform == bossRoot || col.transform.IsChildOf(bossRoot)) continue;
+
+            if (s_floorHits[i].distance < bestDistance)
+            {
+                bestDistance = s_floorHits[i].distance;
+                bestPoint = s_floorHits[i].point;
+                found = true;
+            }
+        }
+
+        if (found)
+        {
+            boss.transform.position = bestPoint;
         }
         else
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning($"[BossArenaController] No se encontró Floor debajo del boss en {boss.transform.position}");
+            Debug.LogWarning($"[BossArenaController] No se encontró Floor debajo del boss en {boss.transform.position} (máscara={layerToUse.value}). Se queda a la altura calculada.");
 #endif
         }
     }
@@ -740,6 +941,20 @@ public class BossArenaController : MonoBehaviour
         ApplyBossClearedState(invokeUnityEvents: true, markDefeatedInTracker: true);
     }
 
+    /// Final alternativo (Paso 6 del refactor Tramo 1, RuneCollar): cierra la arena/batalla
+    /// exactamente igual que una derrota real del boss (abre puertas o desbloquea el radio, para
+    /// la música de jefe, marca bossId como derrotado en el tracker, dispara onBossDefeated y
+    /// RaiseBattleWon) pero SIN pasar por Damageable.OnDied -- el propio boss decide no llamar a
+    /// Damageable.Kill() para poder quedarse en escena tras el combate (ver
+    /// ImpDemonAI.ForceFallenByCollarBreak, que es quien llama a esto). ApplyBossClearedState ya
+    /// es idempotente (_bossDefeatHandled), así que si el boss también llegara a morir por HP
+    /// normal casi a la vez, la segunda llamada no hace nada.
+    public void NotifyBossDefeatedByAlternateEnding()
+    {
+        _bossDeathConfirmed = true;
+        ApplyBossClearedState(invokeUnityEvents: true, markDefeatedInTracker: true);
+    }
+
     void CleanupBossSubscriptions()
     {
         if (_activeBossMarker != null)
@@ -798,7 +1013,11 @@ public class BossArenaController : MonoBehaviour
 
         CleanupBossSubscriptions();
 
-        if (useDoorMode)
+        if (_radiusLocked)
+        {
+            UnlockRadiusArea();
+        }
+        else if (useDoorMode)
         {
             if (doorWest) doorWest.Open();
             if (doorEast) doorEast.Open();
@@ -1011,6 +1230,95 @@ public class BossArenaController : MonoBehaviour
 #endif
     }
 
+    // =========================== Radio alrededor del jugador (INC-207) ===========================
+
+    private void LockRadiusArea()
+    {
+        Transform playerT = ResolvePlayerTransform();
+        _arenaCenter = playerT != null ? playerT.position : transform.position;
+        _arenaPlayerRotation = playerT != null ? playerT.rotation : transform.rotation;
+        _effectiveRadius = (_activeEncounter != null && _activeEncounter.arenaRadius > 0f) ? _activeEncounter.arenaRadius : radiusMeters;
+        _radiusLocked = true;
+
+        if (_radiusEnforceRoutine == null)
+            _radiusEnforceRoutine = StartCoroutine(Co_EnforceRadius());
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[BossArenaController] Arena en modo radio: centro={_arenaCenter}, radio={_effectiveRadius}m.");
+#endif
+    }
+
+    private void UnlockRadiusArea()
+    {
+        _radiusLocked = false;
+        if (_radiusEnforceRoutine != null)
+        {
+            StopCoroutine(_radiusEnforceRoutine);
+            _radiusEnforceRoutine = null;
+        }
+    }
+
+    private static Transform ResolvePlayerTransform()
+    {
+        var playerGo = PlayerService.Player;
+        return playerGo != null ? playerGo.transform : null;
+    }
+
+    // Throttled (radiusCheckInterval, no cada frame — mismo criterio que NPCObstacleAvoidance):
+    // comprueba si el jugador ha cruzado el radio y, si es así, lo empuja de vuelta y muestra el
+    // aviso de que no puede huir de la batalla.
+    private IEnumerator Co_EnforceRadius()
+    {
+        var wait = new WaitForSeconds(radiusCheckInterval);
+
+        // El empuje se aplica en cada comprobación (si no, el jugador se escaparía entre una y
+        // otra), pero el aviso NO: como tras el empuje el jugador queda justo sobre el borde,
+        // seguir andando hacia fuera vuelve a cumplir la condición cada radiusCheckInterval
+        // (0,2 s por defecto) y el toast se reiniciaría sin parar. Se limita a uno cada
+        // CannotFleeToastDuration segundos, que es justo lo que dura el mensaje en pantalla.
+        float nextToastTime = 0f;
+
+        while (_radiusLocked)
+        {
+            Transform playerT = ResolvePlayerTransform();
+            if (playerT != null)
+            {
+                Vector3 toPlayer = playerT.position - _arenaCenter;
+                toPlayer.y = 0f;
+                float dist = toPlayer.magnitude;
+
+                if (dist > _effectiveRadius && dist > 0.0001f)
+                {
+                    Vector3 clampedXZ = _arenaCenter + toPlayer.normalized * _effectiveRadius;
+                    Vector3 clamped = new Vector3(clampedXZ.x, playerT.position.y, clampedXZ.z);
+
+                    CharacterController cc = playerT.GetComponent<CharacterController>();
+                    if (cc)
+                    {
+                        cc.enabled = false;
+                        playerT.position = clamped;
+                        cc.enabled = true;
+                    }
+                    else
+                    {
+                        playerT.position = clamped;
+                    }
+
+                    if (Time.time >= nextToastTime)
+                    {
+                        HudToastService.Instance?.Show(cannotFleeLocKey, CannotFleeToastDuration);
+                        nextToastTime = Time.time + CannotFleeToastDuration;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        Debug.Log("[BossArenaController] Jugador intentó cruzar el radio de la arena — empujado de vuelta.");
+#endif
+                    }
+                }
+            }
+            yield return wait;
+        }
+    }
+
     // =========================== Battle toggles ===========================
 
     private void ApplyBattleDisables()
@@ -1042,6 +1350,8 @@ public class BossArenaController : MonoBehaviour
 
     void OnDestroy()
     {
+        UnlockRadiusArea();
+
         // Restaurar objetos desactivados si quedara algo pendiente.
         // Si la escena se estǭ descargando, los objetos del mismo scene tambiǭn se destruyen,
         // y Unity lanza un error al intentar reactivarlos.
@@ -1142,4 +1452,94 @@ public class BossArenaController : MonoBehaviour
         if (string.IsNullOrEmpty(id)) return false;
         return s_arenaRegistry.TryGetValue(id, out arena) && arena != null;
     }
+
+    // =================== Arena creada en runtime (INC-207, "nada en la escena") ===================
+
+    /// <summary>True si esta arena fue creada en runtime por <see cref="CreateRuntimeArena"/>.</summary>
+    public bool IsRuntimeArena => _isRuntimeArena;
+    private bool _isRuntimeArena;
+
+    /// <summary>
+    /// Crea en runtime una arena mínima a partir de un <see cref="BattleEncounterSO"/>, sin
+    /// necesidad de que exista ningún GameObject de arena en la escena (INC-207: todo lo
+    /// configurable vive en el grafo, la escena solo lleva diseño).
+    ///
+    /// La arena creada se coloca en la posición del jugador y arranca siempre en modo radio: el
+    /// centro, el radio y la posición de spawn del enemigo se calculan a partir de la posición
+    /// del jugador al empezar la batalla y de los datos de la SO, así que no hace falta ni
+    /// collider de área, ni barreras visuales, ni Transform de bossSpawn.
+    ///
+    /// Se configura con el GameObject desactivado a propósito: así Awake()/OnEnable() (que son
+    /// los que registran la arena en s_arenaRegistry y crean la barrera visual si hay collider)
+    /// se ejecutan con battleId/bossId ya puestos y con useDoorMode/areaBarrierCollider ya
+    /// limpiados.
+    /// </summary>
+    /// <param name="battleId">Id de la batalla (el mismo que usa StartBattleNode para suscribirse a OnBattleWon).</param>
+    /// <param name="encounter">Configuración del encuentro (prefab del enemigo, nombre, radio, VFX).</param>
+    /// <returns>La arena creada, o null si faltan datos imprescindibles.</returns>
+    public static BossArenaController CreateRuntimeArena(string battleId, BattleEncounterSO encounter)
+    {
+        if (string.IsNullOrEmpty(battleId))
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[BossArenaController] CreateRuntimeArena: battleId vacío. No se crea arena.");
+#endif
+            return null;
+        }
+
+        if (encounter == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[BossArenaController] CreateRuntimeArena('{battleId}'): no hay BattleEncounterSO. Sin SO no hay datos de enemigo, así que no se crea arena.");
+#endif
+            return null;
+        }
+
+        if (encounter.enemyPrefab == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[BossArenaController] CreateRuntimeArena('{battleId}'): la SO '{encounter.name}' no tiene enemyPrefab asignado. La batalla no tendría enemigo.");
+#endif
+            return null;
+        }
+
+        Transform playerT = ResolvePlayerTransform();
+        Vector3 center = playerT != null ? playerT.position : Vector3.zero;
+
+        var go = new GameObject($"BattleArena_Runtime_{battleId}");
+        go.SetActive(false); // configurar ANTES de que corran Awake/OnEnable
+        go.transform.SetPositionAndRotation(center, playerT != null ? playerT.rotation : Quaternion.identity);
+
+        var arena = go.AddComponent<BossArenaController>();
+        arena._isRuntimeArena = true;
+        arena.battleId = battleId;
+        arena.bossId = battleId;
+
+        // Modo radio puro: ni puertas, ni collider de área, ni barrera visual, ni bossSpawn.
+        arena.useDoorMode = false;
+        arena.areaBarrierCollider = null;
+        arena.useRadiusMode = true;
+        arena.radiusMeters = encounter.arenaRadius > 0f ? encounter.arenaRadius : arena.radiusMeters;
+        arena.startBarrierOnPlayerEnter = false;
+        arena.bossSpawn = null;
+        arena.bossPrefab = null;     // el prefab lo aporta la SO
+        arena.portalSpawn = null;
+        arena.roomGoal = null;
+        arena.bossIntroPresentation = null; // → usa BossIntroPresentationService (servicio global)
+
+        // Capa de suelo para asentar al enemigo tras la presentación. Si la SO trae la suya,
+        // SpawnBoss() la usa y esto no se llega a mirar; esto es solo el fallback.
+        int floorLayerIndex = LayerMask.NameToLayer("Floor");
+        int mask = 1 << 0; // Default
+        if (floorLayerIndex >= 0) mask |= 1 << floorLayerIndex;
+        arena.floorLayer = mask;
+
+        go.SetActive(true); // Awake + OnEnable → queda registrada en s_arenaRegistry
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[BossArenaController] 🏟️ Arena creada en runtime para battleId='{battleId}' (encounter='{encounter.name}', radio={arena.radiusMeters}m, centro={center}). No hacía falta ningún objeto de arena en la escena.");
+#endif
+        return arena;
+    }
+
 }

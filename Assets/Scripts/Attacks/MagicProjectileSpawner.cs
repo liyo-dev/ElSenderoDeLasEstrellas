@@ -354,7 +354,8 @@ public class MagicProjectileSpawner : MonoBehaviour
                 impactVFX      = spell.impactVFX,
                 despawnVFX     = spell.despawnVFX,
                 vfxLifetime    = spell.vfxLifetime,
-                impactSFXKey   = spell.impactSFXKey
+                impactSFXKey   = spell.impactSFXKey,
+                isPrecise      = spell.isRuntimePreciseInstance
             };
             mp.Configure(cfg, instigator);
             mp.SetKinematic(true);
@@ -577,7 +578,8 @@ public class MagicProjectileSpawner : MonoBehaviour
                 despawnVFX     = spell.despawnVFX,
                 vfxLifetime    = spell.vfxLifetime,
                 impactSFXKey   = spell.impactSFXKey,
-                element        = spell.element
+                element        = spell.element,
+                isPrecise      = spell.isRuntimePreciseInstance
             };
             mp.Configure(cfg, instigatorOverride ? instigatorOverride : gameObject);
         }
@@ -611,6 +613,12 @@ public class MagicProjectileSpawner : MonoBehaviour
         controller = c;
         if (controller) controller.OnMagicSlotCast += HandleSlotCast;
     }
+
+    /// Origen (mano izq/dcha/especial) de un slot, para quien necesite spawnear con SpawnNow/
+    /// SpawnForCinematic en vez de Spawn(slot) -- caso de PlayerPreciseAimController, que
+    /// necesita el punto de spawn correcto para su variante 'precisa' construida en runtime
+    /// (MagicSpellSO.BuildPreciseVariant), no la mano llegada del transform por defecto.
+    public Transform GetOrigin(MagicSlot slot) => GetSpellAndOrigin(slot).Item2;
 
     // === Helpers ===============================================================
     (MagicSpellSO, Transform) GetSpellAndOrigin(MagicSlot slot)

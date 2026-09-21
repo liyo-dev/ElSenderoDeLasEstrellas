@@ -532,6 +532,7 @@ GameObject:
   - component: {fileID: -7878082306358449269}
   - component: {fileID: -991897092605276619}
   - component: {fileID: -5767674429649978831}
+  - component: {fileID: 7805247831699481201}
   m_Layer: 7
   m_Name: Lety
   m_TagString: Untagged
@@ -792,10 +793,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -852,6 +849,24 @@ MonoBehaviour:
   deathVFXLifetime: 3
   invulnerabilitySeconds: 0
   debugLogs: 0
+--- !u!114 &7805247831699481201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3140315364509225030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 5783241618440504993}
+  originalMouthMesh: {fileID: 7505607594903340354}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &3232156999025113350
 GameObject:
   m_ObjectHideFlags: 0

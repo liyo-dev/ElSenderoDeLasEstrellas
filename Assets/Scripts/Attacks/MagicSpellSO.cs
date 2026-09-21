@@ -60,6 +60,54 @@ public class MagicSpellSO : ScriptableObject
     public float manaCost = 5f;
     public float cooldown = 0.25f;
 
+    [Header("Modo preciso (Paso 5 del refactor Tramo 1, mantener el botón)")]
+    [Tooltip("Si está activo, mantener pulsado el botón de este hechizo (en vez de tocarlo) " +
+             "lanza la variante 'precisa': más fina, más rápida y más débil. Por defecto " +
+             "desactivado -- todos los hechizos existentes se comportan exactamente igual que " +
+             "hasta ahora salvo que se active explícitamente aquí. Solo funciona en los slots " +
+             "Left/Right (PlayerPreciseAimController); Special ya tiene su propio mecanismo de " +
+             "carga (chargeTime) y no está cableado a esto.")]
+    public bool supportsPreciseMode = false;
+    [Tooltip("Segundos que hay que mantener pulsado antes de comprometerse al modo preciso. Por " +
+             "debajo de esto, soltar lanza el hechizo normal -- un toque sigue siendo un toque.")]
+    [Min(0f)] public float preciseHoldThreshold = 0.18f;
+    [Tooltip("Multiplicador de daño de la variante precisa sobre 'damage'.")]
+    [Min(0f)] public float preciseDamageMultiplier = 0.5f;
+    [Tooltip("Multiplicador de velocidad de la variante precisa sobre 'initialSpeed'.")]
+    [Min(0f)] public float preciseSpeedMultiplier = 1.3f;
+    [Tooltip("Multiplicador de escala visual de la variante precisa (se aplica sobre " +
+             "'scaleOverride' si 'useScaleOverride' está activo, o sobre la escala 1 del prefab " +
+             "si no).")]
+    [Min(0.01f)] public float preciseScaleMultiplier = 0.4f;
+
+    /// Marca, SOLO en el clon devuelto por BuildPreciseVariant(), que este MagicSpellSO en
+    /// concreto es la variante precisa de un disparo -- 'supportsPreciseMode' no sirve para esto
+    /// porque Instantiate() lo copia igual en el clon (sigue siendo true en ambos), así que no
+    /// distingue "este hechizo admite modo preciso" de "este disparo concreto es el preciso".
+    /// MagicProjectileSpawner lee este campo al construir el ProjectileConfig del proyectil
+    /// (Paso 6 del refactor Tramo 1, RuneCollar: el aro del demonio solo se rompe con disparos que
+    /// lleguen con MagicProjectile.IsPrecise = true). [System.NonSerialized] porque es un dato de
+    /// instancia en memoria, nunca algo que deba guardarse en el asset .asset original.
+    [System.NonSerialized] public bool isRuntimePreciseInstance = false;
+
+    /// Crea, en runtime, una copia de este hechizo con daño/velocidad/escala ajustados según los
+    /// multiplicadores 'precise*' de arriba -- para MagicCaster.CastResolvedSpell(slot, precise:
+    /// true). No toca el asset original (Instantiate crea un ScriptableObject nuevo en memoria,
+    /// se descarta solo tras el disparo). Si 'supportsPreciseMode' está desactivado, devuelve
+    /// this sin clonar -- no debería llamarse en ese caso, pero así no rompe nada si se hiciera.
+    public MagicSpellSO BuildPreciseVariant()
+    {
+        if (!supportsPreciseMode) return this;
+
+        var clone = Instantiate(this);
+        clone.damage = damage * preciseDamageMultiplier;
+        clone.initialSpeed = initialSpeed * preciseSpeedMultiplier;
+        clone.useScaleOverride = true;
+        clone.scaleOverride = (useScaleOverride ? scaleOverride : Vector3.one) * preciseScaleMultiplier;
+        clone.isRuntimePreciseInstance = true;
+        return clone;
+    }
+
     [Header("Zona (solo para MagicKind.Zone)")]
     [Tooltip("Radio (metros) del área de efecto de la zona.")]
     [Min(0.1f)] public float zoneRadius = 4f;

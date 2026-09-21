@@ -306,7 +306,7 @@
         },
         {
             "key": "DLG_CANDYLAND_09",
-            "value": "Eso es lo más triste que he oído nunca. Y eso que yo como fatal cuando estoy triste. No pienso fingir ser \"dulce\" para nadie. Nunca lo he sido y no pienso empezar hoy."
+            "value": "Eso es lo más triste que he oído nunca. Y eso que yo como fatal cuando estoy triste.\nNo pienso fingir ser \"dulce\" para nadie. Nunca lo he sido y no pienso empezar hoy."
         },
         {
             "key": "DLG_CANDYLAND_10",
@@ -1026,11 +1026,11 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_01",
-            "value": "Por fin apareces..."
+            "value": "Que no, que no te vas a librar de mí tan fácil. Dos cosas rápidas y te dejo ir."
         },
         {
             "key": "DLG_OLIVER_MENUS_02",
-            "value": "Estoy recordando a todo el mundo como podemos abrir los menús del juego."
+            "value": "Porque te veo cara de no saber ni cómo se abre el menú del juego."
         },
         {
             "key": "DLG_OLIVER_MENUS_03",
@@ -1038,19 +1038,19 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_04",
-            "value": "Ahí podrás pausar el juego, volver al menú..."
+            "value": "Ahí puedes pausar, volver al menú de inicio, mirar tu inventario..."
         },
         {
             "key": "DLG_OLIVER_MENUS_05",
-            "value": "ver tu inventario, y más cosillas que no te cuento para no enrollarme."
+            "value": "...y un par de cosillas más que no te cuento para no enrollarme. Ya las irás viendo."
         },
         {
             "key": "DLG_OLIVER_MENUS_06",
-            "value": "Por último cuando quieras ver las misiones que tienes pendiente puedes usar <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>."
+            "value": "Y si quieres ver las misiones que tienes pendientes, usa <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>."
         },
         {
             "key": "DLG_OLIVER_MENUS_07",
-            "value": "Con el menú de misiones abierto podrás editarlas si pulsas de nuevo <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>."
+            "value": "Con el menú de misiones abierto, si vuelves a pulsar <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly> puedes editarlas. ¡Ale, corre, que te espera Eldran!"
         },
         {
             "key": "DLG_PIRATE_01",

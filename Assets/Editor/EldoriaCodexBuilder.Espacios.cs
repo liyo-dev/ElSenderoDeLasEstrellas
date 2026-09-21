@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -11,9 +11,11 @@ public static partial class EldoriaCodexBuilder
     static readonly List<MeshCollider> tablerosPuentes=new List<MeshCollider>();
     static readonly List<Vector3[]> callesUrbanas=new List<Vector3[]>();
 
+    static readonly List<Vector3> jardinesUrbanos=new List<Vector3>();
+
     static void PrepararEspacios()
     {
-        piedraRuinas=null;tablerosPuentes.Clear();callesUrbanas.Clear();
+        piedraRuinas=null;tablerosPuentes.Clear();callesUrbanas.Clear();jardinesUrbanos.Clear();
         // Chaikin mueve los nodos interiores: los ramales se unen a la línea suavizada real.
         Vector3 Empalme(Vector3[] ruta,Vector3 p)
         {
@@ -31,7 +33,15 @@ public static partial class EldoriaCodexBuilder
         Plaza(new Vector3(300,23,-140),new Vector2(12,9),"Huerto del pueblo vecino");
         Plaza(new Vector3(360,23,-92),new Vector2(10,9),"Huerto del pueblo vecino 2");
         Plaza(new Vector3(-30,SueloBarrio(240),240),new Vector2(12,9),"Huerto del Reino — terraza baja");
-        CompletarCasas(Zonas[5],new Vector2(-88,246),new Vector2(96,342),26,811); // revisión 23: más casas, dentro de la muralla
+        // Red del barrio diseñada y validada como el resto de caminos principales.
+        var callesReino=new List<Vector3[]>(rutasSuaves);
+        callesReino.Add(new[]{new Vector3(-54,112,284),new Vector3(-54,112,339)});
+        callesReino.Add(new[]{new Vector3(54,112,284),new Vector3(54,112,339)});
+        callesReino.Add(new[]{new Vector3(-85,112,300),new Vector3(50,112,300)});
+        callesReino.Add(new[]{new Vector3(-85,104,259),new Vector3(-85,112,300)});
+        var llegada=Empalme(rutasSuaves[9],new Vector3(95,104,259));
+        callesReino.Add(new[]{new Vector3(-85,104,259),new Vector3(54,104,259),llegada});
+        rutasSuaves=callesReino.ToArray();
         CompletarCasas(Zonas[1],new Vector2(220,-437),new Vector2(320,-395),8,812);
         CompletarCasas(Zonas[4],new Vector2(289,-150),new Vector2(371,-78),6,813);
         foreach(var solar in solares)
@@ -42,6 +52,14 @@ public static partial class EldoriaCodexBuilder
             {
                 float t;float d=DistanciaSegmento(new Vector2(inicio.x,inicio.z),new Vector2(ruta[i-1].x,ruta[i-1].z),new Vector2(ruta[i].x,ruta[i].z),out t);
                 if(d<distancia){distancia=d;fin=Vector3.Lerp(ruta[i-1],ruta[i],t);}
+            }
+            // La plaza más próxima también es destino de acceso: evita casas aisladas del espacio público.
+            foreach(var plaza in solares)
+            {
+                if(!plaza.plaza||plaza.natural)continue;
+                var punto=plaza.limites.ClosestPoint(inicio);punto.y=plaza.cota;
+                float d=Vector2.Distance(new Vector2(inicio.x,inicio.z),new Vector2(punto.x,punto.z));
+                if(d<distancia&&d>1&&Mathf.Abs(solar.cota-punto.y)/d<=.2f){distancia=d;fin=punto;}
             }
             if(distancia>=60||distancia<1||Mathf.Abs(solar.cota-fin.y)/distancia>.20f)continue;
             bool libre=true;
@@ -54,6 +72,18 @@ public static partial class EldoriaCodexBuilder
             if(libre)callesUrbanas.Add(new[]{inicio,fin});
         }
         informe.AppendLine("Calles secundarias pintadas sin atravesar otras viviendas: "+callesUrbanas.Count+".");
+        // Jardines longitudinales entre las fachadas; reservados desde el trazado del barrio.
+        foreach(float x in new[]{-17f,17f})foreach(float z in new[]{324f,333f,342f})
+        {
+            // La huella del castillo excluye estos puntos; aquí solo se aceptan laterales libres.
+            float lateral=x<0?-87:87;
+            var p=new Vector3(lateral,0,z);
+            bool libre=true;foreach(var solar in solares)if(PesoSolar(solar,p.x,p.z,5)>.01f){libre=false;break;}
+            if(!libre||DistanciaCaminos(p.x,p.z)<7)continue;
+            jardinesUrbanos.Add(p);despejes.Add(new Vector3(p.x,p.z,6));
+        }
+
+
     }
 
     static void CompletarCasas(Zona zona,Vector2 min,Vector2 max,int cantidad,int semilla)
@@ -158,6 +188,46 @@ public static partial class EldoriaCodexBuilder
         informe.AppendLine("Santuario ancestral: monolito de piedra, muro derruido con entrada y espacio central; retirado el cristal rosa provisional. Guardián y libro pendientes de conexión.");
     }
 
+    static void VestirJardinesUrbanos(Transform grupo)
+    {
+        var bordillo=Material("Bordes de jardín — caliza",new Color(.48f,.49f,.42f));
+        int puestos=0;
+        var aceptados=new List<Vector3>();
+        foreach(var centro in jardinesUrbanos)
+        {
+            var p=centro;p.y=terreno.SampleHeight(p)+terreno.transform.position.y;
+            float minimo=p.y,maximo=p.y;
+            for(int i=0;i<8;i++){var q=p+new Vector3(Mathf.Cos(i*Mathf.PI/4)*4,0,Mathf.Sin(i*Mathf.PI/4)*4);float h=terreno.SampleHeight(q)+terreno.transform.position.y;minimo=Mathf.Min(minimo,h);maximo=Mathf.Max(maximo,h);}
+            if(maximo-minimo>2.5f)continue;
+            aceptados.Add(p);
+            PiezaUrbana(grupo,Pack+"Vegetation/Tree04_a01.prefab","Árbol de jardín del Reino",p,Vector3.back,false,5);
+            for(int i=0;i<20;i++)
+            {
+                float a=i*Mathf.PI*2/20;var q=p+new Vector3(Mathf.Cos(a)*3.3f,0,Mathf.Sin(a)*3.3f);
+                q.y=terreno.SampleHeight(q)+terreno.transform.position.y;
+                PiezaUrbana(grupo,Pack+"Vegetation/Flower02_a01.prefab","Flores del parterre",q,Vector3.back,false,.85f);
+                q=p+new Vector3(Mathf.Cos(a)*4.2f,0,Mathf.Sin(a)*4.2f);q.y=terreno.SampleHeight(q)+terreno.transform.position.y;
+                var borde=BloqueUrbano(grupo,"Borde bajo del parterre",q+Vector3.up*.09f,new Vector3(1.34f,.18f,.28f),bordillo);
+                borde.transform.rotation=Quaternion.Euler(0,-a*Mathf.Rad2Deg,0);
+            }
+            puestos++;
+        }
+        // Solo se pinta donde realmente se ha podido construir el parterre.
+        var datos=terreno.terrainData;int res=datos.alphamapResolution;
+        var pesos=datos.GetAlphamaps(0,0,res,res);
+        foreach(var p in aceptados)
+        {
+            int cx=Mathf.RoundToInt((p.x+650)/1300*(res-1)),cz=Mathf.RoundToInt((p.z+650)/1300*(res-1));
+            for(int z=Mathf.Max(0,cz-4);z<=Mathf.Min(res-1,cz+4);z++)for(int x=Mathf.Max(0,cx-4);x<=Mathf.Min(res-1,cx+4);x++)
+            {
+                float d=Vector2.Distance(new Vector2(x/(float)(res-1)*1300-650,z/(float)(res-1)*1300-650),new Vector2(p.x,p.z));
+                MezclarSuelo(pesos,z,x,12,(1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(3,5,d)))*.65f);
+            }
+        }
+        datos.SetAlphamaps(0,0,pesos);
+        informe.AppendLine("Jardines del Reino: "+puestos+" parterres arbolados, fuera de caminos y explanadas; pendientes fuertes excluidas.");
+    }
+
     static void VestirEspacios()
     {
         var grupo=new GameObject("Vida de los pueblos — huertas, enseres y claros").transform;grupo.SetParent(raiz);
@@ -196,6 +266,7 @@ public static partial class EldoriaCodexBuilder
         Huerto(grupo,"Huerto del pueblo vecino",new Vector3(300,0,-140),12,9,0);
         Huerto(grupo,"Huerto del pueblo vecino 2",new Vector3(360,0,-92),10,9,20);
         Huerto(grupo,"Huerto del Reino — terraza baja",new Vector3(-30,0,240),12,9,0);
+        VestirJardinesUrbanos(grupo);
         MurallaDelReino(grupo); // revisión 23
         var roca=Material("Roca chamuscada del claro",new Color(.20f,.23f,.22f));
         for(int i=0;i<8;i++)

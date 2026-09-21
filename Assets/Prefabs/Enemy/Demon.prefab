@@ -5477,6 +5477,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4471585553519078841}
   - {fileID: 2891793588820163563}
   - {fileID: 957278983845717927}
   - {fileID: 4268438450664222200}
@@ -5563,8 +5564,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4fad89a3ff4600bf9b5379a88fe8c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
-  bossName: Boss Demonio
   bossNameId: BOSS_DEMONIO_HEALTHBAR_NAME
+  bossName: Boss Demonio
   barSize: {x: 400, y: 40}
   barPosition: {x: 0, y: -30}
   healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
@@ -5574,6 +5575,8 @@ MonoBehaviour:
   criticalThreshold: 0.25
   animateHealthChanges: 1
   animationSpeed: 5
+  fadeInDuration: 0.4
+  fadeOutDuration: 0.5
 --- !u!114 &4847328099168740309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5620,6 +5623,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
   projectileSpawnPoint: {fileID: 2156623539970524872}
   spellEffectPrefab: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
+  rangedTelegraphPrefab: {fileID: 0}
+  rangedTelegraphDuration: 0.4
   slashCooldown: 2
   stabCooldown: 3
   projectileCooldown: 4
@@ -5627,6 +5632,7 @@ MonoBehaviour:
   undergroundCooldown: 15
   phase2HealthPercent: 0.66
   phase3HealthPercent: 0.33
+  enrageAuraVFXPrefab: {fileID: 0}
   isSecondEncounter: 0
   secondCooldownMultiplier: 0.65
   phase3HealthPercentSecond: 0.5
@@ -5642,8 +5648,13 @@ MonoBehaviour:
   rainImpactRadius: 1.8
   rainDamage: 20
   rainCooldown: 22
+  attackRecoveryBeat: 0.45
+  kitingLungeDelay: 2.5
+  kitingLungeSpeedMultiplier: 1.6
+  kitingLungeDuration: 0.7
   debugLogAnimator: 0
   canStartCombat: 0
+  fallenDarkenFactor: 0.35
 --- !u!114 &6837251540150738088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6858,6 +6869,83 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7225740941071032150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7386095046584494530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4471585553519078841}
+  - component: {fileID: 8490333820320634127}
+  - component: {fileID: 6858374992456824358}
+  m_Layer: 7
+  m_Name: RuneCollar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4471585553519078841
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7386095046584494530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.89, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9078184341422911886}
+  m_Father: {fileID: 5683733078082542254}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &8490333820320634127
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7386095046584494530}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.4
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6858374992456824358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7386095046584494530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c09a6b4628b5e7f489de511e17eecedb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RuneCollar
+  demonAI: {fileID: 3281919030301970391}
+  hitsToBreak: 3
+  glowVisuals:
+  - {fileID: 8980258423120404539}
+  OnCollarBroken:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPreciseHitRegistered:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7522497642354841275
 GameObject:
   m_ObjectHideFlags: 0
@@ -7494,3 +7582,86 @@ Transform:
   - {fileID: 6169292123661852790}
   m_Father: {fileID: 9174846601099342368}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &5716647480068771254
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4471585553519078841}
+    m_Modifications:
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_Name
+      value: RuneCollar_Glow
+      objectReference: {fileID: 0}
+    - target: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+--- !u!1 &8980258423120404539 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  m_PrefabInstance: {fileID: 5716647480068771254}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9078184341422911886 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3650638188812647480, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  m_PrefabInstance: {fileID: 5716647480068771254}
+  m_PrefabAsset: {fileID: 0}

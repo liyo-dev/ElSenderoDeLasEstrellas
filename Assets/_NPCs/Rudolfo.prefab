@@ -80,6 +80,7 @@ GameObject:
   - component: {fileID: 3451600089544343385}
   - component: {fileID: 2085083583302660588}
   - component: {fileID: 7726230802788636818}
+  - component: {fileID: 5316834469505585427}
   m_Layer: 8
   m_Name: Rudolfo
   m_TagString: Untagged
@@ -231,6 +232,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &3451600089544343385
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -341,6 +343,9 @@ MonoBehaviour:
   disableWander: 0
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: CHAR_RUDOLFO
@@ -348,16 +353,30 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5316834469505585427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 571374797890102318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 0}
+  originalMouthMesh: {fileID: 7289332306931828326}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &1100543303406463527
 GameObject:
   m_ObjectHideFlags: 0

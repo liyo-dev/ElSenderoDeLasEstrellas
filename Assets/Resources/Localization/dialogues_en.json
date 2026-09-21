@@ -130,7 +130,7 @@
         },
         {
             "key": "DG_LIAM_ARRESTO_01",
-            "value": "You! This is all your fault! I was about to take the perfect bite of my food and you just had to come and ruin it! If you hadn't interrupted, we wouldn't be locked up in this dump."
+            "value": "You! This is all your fault!\nI was about to take the perfect bite of my food and you just had to come and ruin it! If you hadn't interrupted, we wouldn't be locked up in this dump."
         },
         {
             "key": "DG_LIAM_ARRESTO_02",
@@ -138,7 +138,7 @@
         },
         {
             "key": "DG_LIAM_ARRESTO_03",
-            "value": "Stop crying over a plate of food and wake up. The King considers you terrorists, and me your accomplice. Even if we break out of here, you will be fugitives forever. You have no home to go back to."
+            "value": "Stop crying over a plate of food and wake up. The King considers you terrorists, and me your accomplice.\nEven if we break out of here, you will be fugitives forever. You have no home to go back to."
         },
         {
             "key": "DG_LIAM_ARRESTO_04",
@@ -306,7 +306,7 @@
         },
         {
             "key": "DLG_CANDYLAND_09",
-            "value": "That's the saddest thing I've ever heard. And believe me, I eat terribly when I'm sad. I'm not pretending to be \"sweet\" for anyone. I never have been, and I'm not starting today."
+            "value": "That's the saddest thing I've ever heard. And believe me, I eat terribly when I'm sad.\nI'm not pretending to be \"sweet\" for anyone. I never have been, and I'm not starting today."
         },
         {
             "key": "DLG_CANDYLAND_10",
@@ -1026,11 +1026,11 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_01",
-            "value": "Finally you show up..."
+            "value": "Nope, you're not getting rid of me that easy. Two quick things and I'll let you go."
         },
         {
             "key": "DLG_OLIVER_MENUS_02",
-            "value": "I'm reminding everyone how we can open the game menus."
+            "value": "Because you've got the face of someone who doesn't even know how to open the game menu."
         },
         {
             "key": "DLG_OLIVER_MENUS_03",
@@ -1038,19 +1038,19 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_04",
-            "value": "There you can pause the game, go back to the menu..."
+            "value": "In there you can pause, go back to the title screen, check your inventory..."
         },
         {
             "key": "DLG_OLIVER_MENUS_05",
-            "value": "see your inventory, and more things I won't list so I don't ramble on."
+            "value": "...and a couple more things I won't list so I don't ramble on. You'll find them."
         },
         {
             "key": "DLG_OLIVER_MENUS_06",
-            "value": "Lastly, when you want to see your pending quests you can use <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly>."
+            "value": "And if you want to see your pending quests, use <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly>."
         },
         {
             "key": "DLG_OLIVER_MENUS_07",
-            "value": "With the quest menu open, you can edit them if you press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again."
+            "value": "With the quest menu open, press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again to edit them. Now go on, Eldran's waiting!"
         },
         {
             "key": "DLG_PIRATE_01",

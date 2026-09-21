@@ -136,6 +136,8 @@ MonoBehaviour:
         battleId: Demon_1
         bossArena: {fileID: 7011547886733809324, guid: 769f5ac03b30de34483ebc089acc4ef7, type: 3}
         useBattleById: 1
+        encounter: {fileID: 0}
+        spawnProfileIndex: 0
         completeMission: 0
         missionStringId: 
         missionId: 0
@@ -251,6 +253,7 @@ MonoBehaviour:
         textId: TUTORIAL_WAKE_UP
         icon: {fileID: 21300000, guid: 2cbc9eb9e96b499bb24695fdc2c2f515, type: 3}
         buttonName: interactable_confirm
+        dismissWithCancel: 0
     - rid: 5290829725662445728
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
@@ -269,6 +272,7 @@ MonoBehaviour:
         textId: TUTORIAL_MOVE_INSPECT
         icon: {fileID: 21300000, guid: 7ee57509d79a49b0adec369729ca33c2, type: 3}
         buttonName: interactable_Joystick
+        dismissWithCancel: 0
     - rid: 5290829725662445729
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -296,7 +300,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c262d6ef-64b3-4bad-8119-d8217b5bee6d
-        position: {x: 0, y: 2323}
+        position: {x: 0, y: 2336}
         outputs:
         - d038b916-5571-48b0-a896-7dbc2af3e05c
         eventKey: AWAKEN_DONE
@@ -311,7 +315,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 9958f726-fded-4988-b74e-a7675ae1429d
-        position: {x: 0, y: 1563}
+        position: {x: 0, y: 1576}
         outputs:
         - 14dab578-84ac-40c4-8874-1f724ff76437
         eventKey: AWAKEN_FAILED
@@ -326,7 +330,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18aa49d4-a672-4844-bac4-2840003a4232
-        position: {x: 0, y: 1753}
+        position: {x: 0, y: 1766}
         outputs:
         - 6313acc2-8288-4d53-bc62-770a2a36f1be
         eventKey: LIAM_CRYSTAL_START
@@ -341,7 +345,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 6313acc2-8288-4d53-bc62-770a2a36f1be
-        position: {x: 0, y: 1943}
+        position: {x: 0, y: 1956}
         outputs:
         - b9aed13d-e410-467b-a7ec-5c3e949debbf
         eventKey: LIAM_CRYSTAL_DONE
@@ -356,6 +360,6 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: b9eca9e9-959b-4d6b-8bf1-ebcbefc451a1
-        position: {x: 0, y: 2133}
+        position: {x: 0, y: 2146}
         outputs: []
         eventKey: CH_Cap1_BACK_1

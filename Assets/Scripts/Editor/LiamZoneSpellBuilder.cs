@@ -76,7 +76,7 @@ public static class LiamZoneSpellBuilder
     private const string SpawnVfxGuid   = "895c6d094b6b213418cddcfb520298e9";
     private const string DespawnVfxGuid = "dcd90c4976197424b9958a7c54b6bb8c";
 
-    [MenuItem("El Sendero/Magia/Crear Hechizo de Liam (Sello del Pacto)")]
+    [MenuItem("El Sendero/Archivo/Magia/Crear Hechizo de Liam (Sello del Pacto)")]
     public static void CreateSelloDelPacto()
     {
         GameObject prefab = CreateOrRepairPrefab();

@@ -602,11 +602,22 @@ public class NarrativeQuickTestWindow : EditorWindow
     /// CompleteQuestStepsNode, GiveInventoryItemNode, UnlockAbilitiesNode, SetFlagNode). El resto de
     /// nodos son presentacionales y se ignoran a propósito.
     ///
-    /// Un ForkNode expande TODAS sus salidas (son paralelas de verdad, todas se ejecutan en juego real).
-    /// Cualquier otro nodo con más de una salida — con nombre (BranchFlagNode, BranchQuestStateNode,
-    /// DialogueChoiceNode...) o sin nombre pero con varias aristas (RequireInventoryItemNode y similares) —
-    /// se trata como una bifurcación real: no se sigue explorando por ahí, se registra un aviso, y el
-    /// resto de la búsqueda continúa por las otras ramas ya encoladas. Nunca se adivina una rama.
+    /// Qué cuenta como bifurcación y qué como fork — MISMA REGLA QUE EL RUNTIME (corregido 16 sept 2026,
+    /// INC-219). El criterio lo manda NarrativeRunner.RunSubGraph(), que trata cualquier nodo con varias
+    /// salidas SIN NOMBRE como un fork implícito y lanza todas sus ramas en paralelo:
+    ///   - ForkNode y cualquier nodo con varias salidas sin nombre → fork: se expanden TODAS las salidas.
+    ///   - Nodos con puertos con nombre (BranchFlagNode, BranchQuestStateNode, DialogueChoiceNode,
+    ///     PlayCinematicNode...) → bifurcación real: no se sigue explorando por ahí, se registra un aviso.
+    ///   - RequireInventoryItemNode → bifurcación real pese a no tener puertos con nombre: es el único
+    ///     nodo del proyecto que redirige el flujo por índice (ForceJumpToOutput) desde Enter().
+    /// Nunca se adivina una rama de una bifurcación real.
+    ///
+    /// Antes de este arreglo, CUALQUIER nodo con varias salidas sin nombre se trataba como bifurcación
+    /// irresoluble. Como un StartQuestNode en mitad del camino principal de Cap1 tiene una segunda salida
+    /// hacia una rama paralela (el saludo de Oliver), el Fast-Forward abandonaba el recorrido ahí y el
+    /// preset salía con una sola flag (QUEST_ACTIVE de la primera misión): el grafo arrancaba en el nodo
+    /// correcto pero la UI de misiones mostraba una misión atrasada, y los CompleteQuestStepsNode
+    /// posteriores no hacían nada porque esas quests nunca se habían iniciado en el QuestManager.
     /// </summary>
     private void RunFastForward(PlayerPresetSO dst)
     {
@@ -640,8 +651,16 @@ public class NarrativeQuickTestWindow : EditorWindow
                 break;
             }
 
-            bool isFork = node is ForkNode;
-            bool isDecision = node.HasNamedOutputs || (!isFork && node.outputs != null && node.outputs.Count > 1);
+            // Nodo terminal: no hay nada que seguir ni que decidir. Sin este guard, un nodo con puertos
+            // con nombre y ninguna salida conectada (p.ej. el PlayCinematicNode final de una rama
+            // paralela) se contaba como "bifurcación sin resolver" y ensuciaba el aviso al usuario.
+            bool hasAnyOutput = node.outputs != null && node.outputs.Any(o => !string.IsNullOrEmpty(o));
+            if (!hasAnyOutput) continue;
+
+            // Bifurcación real = puertos con nombre, o RequireInventoryItemNode (única excepción sin
+            // nombrar que redirige por índice). Todo lo demás con varias salidas es un fork implícito,
+            // igual que en NarrativeRunner.RunSubGraph() — ver comentario de RunFastForward.
+            bool isDecision = node.HasNamedOutputs || node is RequireInventoryItemNode;
 
             if (isDecision)
             {
@@ -649,7 +668,6 @@ public class NarrativeQuickTestWindow : EditorWindow
                 continue; // no se sigue explorando por este nodo; el resto de la cola continúa
             }
 
-            if (node.outputs == null) continue;
             foreach (var outGuid in node.outputs)
             {
                 if (!string.IsNullOrEmpty(outGuid) && !visited.Contains(outGuid))

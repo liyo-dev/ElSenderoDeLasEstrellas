@@ -942,6 +942,38 @@ public class DialogueCinematicController : MonoBehaviour
         }
         
         /// <summary>
+        /// Apaga el modo cinematográfico YA, sin esperar el período de gracia.
+        ///
+        /// FIX 16 sep 2026 (Raúl: "se sigue viendo la cabeza de Will al final"). EndCinematic() no
+        /// apaga nada: lanza EndCinematicDelayed(), que espera `chainDialogueGracePeriod` (0,5 s en
+        /// Start.unity) por si viene otro diálogo encadenado. Durante ese medio segundo la cámara de
+        /// diálogo SIGUE SIENDO LA ACTIVA, congelada donde se quedó — y si ese último encuadre era
+        /// un plano corto del oyente, se ve su cabeza a bocajarro con el diálogo ya cerrado.
+        ///
+        /// Ese período de gracia tiene todo el sentido en una conversación suelta, donde no se sabe
+        /// si viene otra detrás. Pero dentro de una secuencia cinemática SÍ se sabe: la secuencia
+        /// tiene su propio guion y es ella quien decide el plano siguiente. Por eso puede pedir el
+        /// apagado inmediato y recuperar el control de la cámara sin esperar.
+        ///
+        /// Lo usa SequenceBeat -> DialogueBeat al terminar su diálogo. No cambia nada para los
+        /// diálogos normales del juego, que siguen llamando a EndCinematic() y conservando su
+        /// período de gracia.
+        /// </summary>
+        public void EndCinematicNow()
+        {
+            if (!isInCinematicMode) return;
+
+            if (pendingEndCinematicCoroutine != null)
+            {
+                StopCoroutine(pendingEndCinematicCoroutine);
+                pendingEndCinematicCoroutine = null;
+            }
+            isPendingEnd = false;
+
+            EndCinematicImmediate();
+        }
+
+        /// <summary>
         /// Apaga inmediatamente el modo cinematográfico (sin delay)
         /// </summary>
         private void EndCinematicImmediate()

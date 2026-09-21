@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -50,7 +50,7 @@ public static partial class EldoriaCodexBuilder
 
     static void Plaza(Vector3 centro,Vector2 tamano,string nombre)
     {
-        solares.Add(new Solar{limites=new Bounds(centro,new Vector3(tamano.x,1,tamano.y)),cota=centro.y,plaza=true,natural=nombre.StartsWith("Claro")||nombre.StartsWith("Descanso")||nombre.StartsWith("Pradera")||nombre.StartsWith("Huerto")}); // revisión 22: los huertos son "naturales" (prado, no empedrado)
+        solares.Add(new Solar{limites=new Bounds(centro,new Vector3(tamano.x,1,tamano.y)),cota=centro.y,plaza=true,natural=nombre.StartsWith("Claro")||nombre.StartsWith("Descanso")||nombre.StartsWith("Pradera")||nombre.StartsWith("Huerto")||nombre.StartsWith("Huerta")}); // revisión 22: los huertos son "naturales" (prado, no empedrado)
         var reserva=new GameObject(nombre);reserva.transform.SetParent(raiz);reserva.transform.position=centro;
         informe.AppendLine($"Espacio reservado: {nombre}, {tamano.x:0} × {tamano.y:0} m en {centro}. Geometría, sin disparadores narrativos.");
     }
@@ -132,7 +132,10 @@ public static partial class EldoriaCodexBuilder
     static void ConstruirBarrioMontana(Zona zona)
     {
         zona.centro=new Vector3(0,112,295);zona.mitad=new Vector2(127,100);
-        zona.relieve=(x,z,h)=>SueloBarrio(z);
+        zona.relieve=(x,z,h)=>Mathf.Lerp(SueloBarrio(z),z<276?104:112,
+            (1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(78,100,Mathf.Abs(x))))*
+            Mathf.SmoothStep(0,1,Mathf.InverseLerp(230,244,z))*
+            (z<276?1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(268,276,z)):Mathf.SmoothStep(0,1,Mathf.InverseLerp(276,283,z))));
         zona.grupo=new GameObject("Reino — barrio de montaña y explanada real").transform;zona.grupo.SetParent(raiz);
         PiezaUrbana(zona.grupo,Pack+"Main Structures/Wall/Castle01_a01.prefab","Castillo — entrada despejada",new Vector3(0,112,338),Vector3.back,true,44);
         // Revisión 23: muralla con torres y puerta (Raúl: "sigue sin gustarme el Reino" — un llano con casitas sueltas no
@@ -140,16 +143,23 @@ public static partial class EldoriaCodexBuilder
         // reserva el trazado para que las casas complementarias no la pisen.
         foreach(var q in MurallaTrazado){despejesMuralla.Add(new Vector3(q.x,SueloBarrio(q.y),q.y));}
         Plaza(new Vector3(0,112,299),new Vector2(40,28),"Plaza real — audiencia exterior y Demonio 2 (GDD 10–13)");
-        Plaza(new Vector3(0,104,259),new Vector2(38,20),"Plaza de la taberna — encuentro y persecución (GDD 9)");
-        var posiciones=new[]{new Vector2(-33,299),new Vector2(-46,280),new Vector2(-66,295),new Vector2(-65,265),
-            new Vector2(33,281),new Vector2(51,275),new Vector2(38,253),new Vector2(55,315),new Vector2(-54,317),new Vector2(37,333)};
-        for(int i=0;i<posiciones.Length;i++)
+        Plaza(new Vector3(0,104,259),new Vector2(48,24),"Plaza de la taberna — encuentro y persecución (GDD 9)");
+        // Manzanas trazadas: fachadas a calles paralelas y plaza central libre.
+        string[] casasReino={"BuildingAT01","BuildingAT07","BuildingAT12","BuildingAT17","BuildingAT23"};
+        int vivienda=0;
+        foreach(float x in new[]{-72f,-36f,36f,72f})foreach(float z in new[]{286f,316f,337f})
         {
-            var p=posiciones[i];var frente=p.x<0?Vector3.right:Vector3.left;
-            PiezaUrbana(zona.grupo,Pack+"Building Combination/"+Viviendas[i%Viviendas.Length]+".prefab","Vivienda del Reino "+(i+1),new Vector3(p.x,SueloBarrio(p.y),p.y),frente);
+            float sentido=Mathf.Abs(x)>50?-Mathf.Sign(x):Mathf.Sign(x);
+            PiezaUrbana(zona.grupo,Pack+"Building Combination/"+casasReino[vivienda%casasReino.Length]+".prefab",
+                "Casa de la calle "+(x<0?"occidental ":"oriental ")+(++vivienda),new Vector3(x,112,z),Vector3.right*sentido);
         }
-        PiezaUrbana(zona.grupo,Pack+"Building Combination/BuildingAT10.prefab","Taberna del Reino — emplazamiento propuesto",new Vector3(-30,104,261),Vector3.right);
-        PiezaUrbana(zona.grupo,Tiny+"BuildingUtilityDeco/Well01.prefab","Pozo de la plaza baja",new Vector3(14,104,262),Vector3.back);
+        foreach(var p in new[]{new Vector2(-70,249),new Vector2(-70,272),new Vector2(70,249),new Vector2(70,273),new Vector2(39,247),new Vector2(39,274)})
+            PiezaUrbana(zona.grupo,Pack+"Building Combination/"+casasReino[vivienda++%casasReino.Length]+".prefab",
+                "Casa del mercado "+vivienda,new Vector3(p.x,104,p.y),p.y<260?Vector3.forward:Vector3.back);
+        PiezaUrbana(zona.grupo,Pack+"Building Combination/BuildingAT10.prefab","Taberna del mercado",new Vector3(-39,104,260),Vector3.right);
+        PiezaUrbana(zona.grupo,Tiny+"BuildingUtilityDeco/Well01.prefab","Pozo de la plaza baja",new Vector3(15,104,263),Vector3.back);
+        foreach(float x in new[]{-14f,0f,14f})
+            PiezaUrbana(zona.grupo,Pack+"Main Structures/Tent/Tent02_a01.prefab","Puesto del mercado",new Vector3(x,104,247),Vector3.forward,true,6);
         // Se reservan los accesos interiores, sin simular que el castillo ya contiene esas escenas.
         var interior=new GameObject("PENDIENTE — sala del trono y calabozo (GDD 10–11)");interior.transform.SetParent(zona.grupo);interior.transform.position=new Vector3(0,112,355);
         informe.AppendLine("Montaña: viviendas reales a escala nativa, explanada de 40×28 m libre frente al castillo y ascenso mediante calles en curva; retirados los anillos concéntricos.");
@@ -240,54 +250,66 @@ public static partial class EldoriaCodexBuilder
         }
     }
 
+    // Mezcla convexa: cada aplicación conserva pesos positivos cuya suma es uno.
+    static void MezclarSuelo(float[,,] pesos,int z,int x,int capa,float peso)
+    {
+        peso=Mathf.Clamp01(peso);
+        for(int c=0;c<pesos.GetLength(2);c++)pesos[z,x,c]*=1-peso;
+        pesos[z,x,capa]+=peso;
+    }
+
     static void PintarPlazas(float[,,] pesos)
     {
-        int res=pesos.GetLength(0),capas=pesos.GetLength(2);
+        int res=pesos.GetLength(0);
         for(int z=0;z<res;z++)for(int x=0;x<res;x++)
         {
             float wx=x/(float)(res-1)*1300-650,wz=z/(float)(res-1)*1300-650;
-            float w=0;int capaSuelo=4;
-            foreach(var solar in solares)if(solar.plaza){float peso=PesoSolar(solar,wx,wz,5)*(solar.natural?.55f:.88f);if(peso>w){w=peso;capaSuelo=solar.natural?6:(capas>7?7:4);}} // revisión 22: plazas urbanas empedradas (capa 7)
-            if(w<=0)continue;
-            for(int c=0;c<capas;c++)pesos[z,x,c]*=1-w;
-            pesos[z,x,capaSuelo]+=w;
+            foreach(var solar in solares)
+            {
+                if(!solar.plaza)continue;
+                float peso=PesoSolar(solar,wx,wz,3);
+                if(peso<=0)continue;
+                bool reino=Mathf.Abs(solar.limites.center.x)<120&&solar.limites.center.z>235;
+                int capa=solar.natural?10:8;
+                // Marco pétreo y paño claro en las plazas del castillo.
+                if(reino&&!solar.natural)
+                {
+                    var b=solar.limites;
+                    float borde=Mathf.Min(b.extents.x-Mathf.Abs(wx-b.center.x),b.extents.z-Mathf.Abs(wz-b.center.z));
+                    MezclarSuelo(pesos,z,x,8,peso*.98f);
+                    MezclarSuelo(pesos,z,x,11,Mathf.SmoothStep(0,1,Mathf.InverseLerp(2,4,borde))*.9f);
+                }
+                else MezclarSuelo(pesos,z,x,capa,peso*(solar.natural?.65f:.92f));
+            }
         }
     }
 
-    // Revisión 22: suelo de los pueblos hechos a mano (puerto, pueblo vecino, Reino, granjas, claros de las islas). Hasta
-    // ahora solo el pueblo inicial tenía suelo "chulo" porque se copiaba la pintura del Terrain de la demo 09; el resto
-    // era hierba lisa y leía como placeholder. Aquí: tierra pisada (capa 4) alrededor de cada casa y en manchas por el
-    // pueblo, prado (capa 6) en el resto, y empedrado (capa 7) en un anillo junto a las viviendas.
     static void PintarPueblos(float[,,] pesos)
     {
-        int res=pesos.GetLength(0),capas=pesos.GetLength(2);if(capas<8)return;
-        int pintadas=0;
+        int res=pesos.GetLength(0),pintadas=0;
         for(int z=0;z<res;z++)for(int x=0;x<res;x++)
         {
-            float wx=x/(float)(res-1)*1300-650,wz=z/(float)(res-1)*1300-650;
-            float w=0;
+            float wx=x/(float)(res-1)*1300-650,wz=z/(float)(res-1)*1300-650,w=0;
             foreach(var zona in Zonas)
             {
                 if(zona.demo!=null||zona.esPoza||zona.mitad.x<1)continue;
                 float r=new Vector2((wx-zona.centro.x)/zona.mitad.x,(wz-zona.centro.z)/zona.mitad.y).magnitude;
-                r+=(Mathf.PerlinNoise(wx*.05f+3,wz*.05f+9)-.5f)*.25f; // borde irregular, no una elipse perfecta
-                w=Mathf.Max(w,1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.85f,1.15f,r)));
+                w=Mathf.Max(w,1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.8f,1.12f,r)));
             }
             if(w<=.01f)continue;
-            // Cerca de las casas: tierra pisada fuerte y un poco de empedrado; lejos: manchas de tierra y prado.
-            float junto=0;foreach(var solar in solares)if(solar.edificio!=null)junto=Mathf.Max(junto,PesoSolar(solar,wx,wz,6));
-            float mancha=Mathf.PerlinNoise(wx*.09f+21,wz*.09f+4);
-            float tierra=Mathf.Max(junto*.85f,Mathf.SmoothStep(0,1,Mathf.InverseLerp(.55f,.75f,mancha))*.6f);
-            float empedrado=junto*Mathf.SmoothStep(0,1,Mathf.InverseLerp(.45f,.65f,Mathf.PerlinNoise(wx*.13f+8,wz*.13f+31)))*.7f;
-            float prado=(1-tierra-empedrado)*.5f;
-            // Revisión 23: dentro de la muralla del Reino el suelo base es empedrado, no prado.
-            if(Mathf.Abs(wx)<105&&wz>238&&wz<350){empedrado=Mathf.Max(empedrado,.55f);prado=(1-tierra-empedrado)*.3f;}
-            float total=Mathf.Clamp01((tierra+empedrado+prado)*w);
-            for(int c=0;c<capas;c++)pesos[z,x,c]*=1-total;
-            pesos[z,x,4]+=tierra*w;pesos[z,x,7]+=empedrado*w;pesos[z,x,6]+=prado*w;
+            bool reino=Mathf.Abs(wx)<125&&wz>235&&wz<370;
+            float junto=0;
+            foreach(var solar in solares)if(solar.edificio!=null)junto=Mathf.Max(junto,PesoSolar(solar,wx,wz,4));
+            float distancia=DistanciaCaminos(wx,wz);
+            float calle=1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(2.5f,5.3f,distancia));
+            // Patios de tierra y accesos usados; los espacios entre barrios conservan vegetación.
+            MezclarSuelo(pesos,z,x,10,junto*w*.85f);
+            MezclarSuelo(pesos,z,x,reino?8:9,calle*w*.96f);
+            // Umbrales pétreos cosen las viviendas al espacio público sin pavimentar todo el recinto.
+            MezclarSuelo(pesos,z,x,reino?8:9,junto*w*(reino?.65f:.38f));
             pintadas++;
         }
-        informe.AppendLine($"Suelo de pueblos hechos a mano: {pintadas} celdas pintadas (tierra pisada junto a las casas, empedrado y prado).");
+        informe.AppendLine($"Suelo urbano: {pintadas} celdas; piedra en calles del Reino, plazas enmarcadas, tierra y adoquín en pueblos. Capas reales del pack; mezclas convexas.");
     }
 
     // Revisión 22: huerto vallado — cultivos en filas (mismo prefab que las huertas del pueblo inicial) y cerca de madera

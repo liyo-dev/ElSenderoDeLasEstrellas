@@ -12,9 +12,14 @@ using DG.Tweening;
 ///
 /// Mismo patrón que AbilityUnlockPopupUI (CanvasGroup + DOTween, auto-dismiss, se oculta si hay un
 /// menú/cinemática encima) pero animación de entrada tipo "rebote" (Ease.OutBack) en vez de slide
-/// lateral, y sin bloquear nada -- coexiste con el aviso lateral existente, no lo sustituye. NO
-/// oculta el minimapa ni el resto de HUD (a diferencia del panel rápido, ver INC-199): este banner
-/// vive fuera del sistema de registro de menús de QuestMenuManager a propósito.
+/// lateral, y sin bloquear nada. NO oculta el minimapa ni el resto de HUD (a diferencia del panel
+/// rápido, ver INC-199): este banner vive fuera del sistema de registro de menús de QuestMenuManager
+/// a propósito.
+///
+/// ACTUALIZACIÓN (21 sept 2026, INC-350): Raúl pidió que este banner sea el ÚNICO aviso automático de
+/// "nueva misión" -- el panel rápido de misiones (QuestLogListUI/QuickQuestMenu) ya NO se auto-muestra
+/// como "toast" al arrancar una misión (se quitó de QuestLogListUI.OnQuestStarted() y de
+/// QuestMenuManager.HandleQuestStarted()); ese panel ahora solo se abre a mano (D-pad arriba).
 ///
 /// Debe vivir en el Canvas del HUD persistente (Start.unity), igual que AbilityUnlockPopupUI.
 /// </summary>

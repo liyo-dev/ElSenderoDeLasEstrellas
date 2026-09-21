@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf90e6e1689baa4c800a76593a7cc4d, type: 3}
+  m_Name: NpcRoster_PrologoValle
+  m_EditorClassIdentifier: Assembly-CSharp::NpcRosterSO
+  rosterId: PrologoValle
+  entries:
+  - enabled: 1
+    spawnId: SPAWN_NPC_Archimago
+    prefab: {fileID: 8920793767228678463, guid: 0697f276b63523d4cad83528e85e3df2, type: 3}
+    gameObjectName: NPC_Archimago
+    persistenceId: NPC_Archimago
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Liora
+    prefab: {fileID: 8726245353716293871, guid: 8fa16dcdaf0691c4f85b29439cf26073, type: 3}
+    gameObjectName: NPC_Liora
+    persistenceId: NPC_Liora
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_MagoOscuro
+    prefab: {fileID: 8330914016721479921, guid: 0c3083176c02e614e8880d526d2db878, type: 3}
+    gameObjectName: NPC_MagoOscuro
+    persistenceId: NPC_MagoOscuro
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_01
+    prefab: {fileID: 8425639728064558454, guid: 9f2c9678fe93a9c4d98ca69239aa067a, type: 3}
+    gameObjectName: NPC_Aldeano_01
+    persistenceId: NPC_Aldeano_01
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_02
+    prefab: {fileID: 7493850517061140294, guid: 1fd86138e57b8c8439951702d8ca2ac8, type: 3}
+    gameObjectName: NPC_Aldeano_02
+    persistenceId: NPC_Aldeano_02
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_03
+    prefab: {fileID: 1150190662881946246, guid: d9b831915a2bb9348b5a0b6080365620, type: 3}
+    gameObjectName: NPC_Aldeano_03
+    persistenceId: NPC_Aldeano_03
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_04
+    prefab: {fileID: 5671056401679501667, guid: 40a14953d0f047649a713ea54efbebab, type: 3}
+    gameObjectName: NPC_Aldeano_04
+    persistenceId: NPC_Aldeano_04
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_05
+    prefab: {fileID: 155446013677349852, guid: cf238184c47ecac4eaa0b17f192b66bc, type: 3}
+    gameObjectName: NPC_Aldeano_05
+    persistenceId: NPC_Aldeano_05
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_06
+    prefab: {fileID: 1889624232851469255, guid: 9c50f99f7b950044bb165dca64995693, type: 3}
+    gameObjectName: NPC_Aldeano_06
+    persistenceId: NPC_Aldeano_06
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_07
+    prefab: {fileID: 9021833770519181494, guid: 6ed71529e105681499f0cd13e43b6ba9, type: 3}
+    gameObjectName: NPC_Aldeano_07
+    persistenceId: NPC_Aldeano_07
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_08
+    prefab: {fileID: 2950907903947790267, guid: b48da0f38e8e65142b7dfcb206203106, type: 3}
+    gameObjectName: NPC_Aldeano_08
+    persistenceId: NPC_Aldeano_08
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_09
+    prefab: {fileID: 3770335084438096160, guid: 8574b03d70826064fa2638219333654c, type: 3}
+    gameObjectName: NPC_Aldeano_09
+    persistenceId: NPC_Aldeano_09
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_NPC_Aldeano_10
+    prefab: {fileID: 1745983615537989187, guid: aa3e29ab032434b4c8828bd987d64f23, type: 3}
+    gameObjectName: NPC_Aldeano_10
+    persistenceId: NPC_Aldeano_10
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0

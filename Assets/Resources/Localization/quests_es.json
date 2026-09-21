@@ -54,15 +54,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Ve a hablar con Eldran en la entrada del reino"
+            "value": "Ve a ver qué está pasando con Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "Ha llegado un nuevo día. Sal de casa y dirígete a la entrada del Reino, donde Eldran te está esperando para hablar contigo. Sigue el camino principal hasta llegar a las puertas del Reino."
+            "value": "Oliver te ha pedido que vayas a ver qué está pasando con Eldran. Sigue el marcador del minimapa hasta encontrarlo."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
-            "value": "De buena mañana"
+            "value": "Busca a Eldran"
         },
         {
             "key": "QUEST_ELDRAN_MISSION10_DESC",
@@ -459,6 +459,18 @@
         {
             "key": "QUEST_TENDERA_ALGAS_STEP01_DESC",
             "value": "Consigue 2 pociones de magia y entrégaselas a Bárbara."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_DESC",
+            "value": "Sal de casa y averigua qué son esos gritos."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_DETAIL",
+            "value": "Fuera de la casa alguien está discutiendo a voces. Sal a la calle y comprueba qué está pasando."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_NAME",
+            "value": "Sal a ver qué pasa"
         },
         {
             "key": "READ_THE_LETTER_DESC",

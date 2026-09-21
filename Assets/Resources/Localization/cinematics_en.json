@@ -250,7 +250,15 @@
         },
         {
             "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
-            "text": "Ah, well then... in case you forgot you know me:"
+            "text": "Ugh, again? Those two have been like that for a while...\nWe'll go see later, don't worry. But first, before I forget, that's what I came for:"
+        },
+        {
+            "id": "OLIVER_GREETING_PERAS_HANDOFF",
+            "text": "Alright, let's go see what's going on with those two!"
+        },
+        {
+            "id": "WILL_GREETING_PERAS_HANDOFF",
+            "text": "Let's go."
         },
         {
             "id": "OLIVER_GREETING_NEW_SPELL_INTRO",
@@ -294,7 +302,7 @@
         },
         {
             "id": "PARQUE_LIAM_08",
-            "text": "It's too much like mine. Like my maze. I don't think I can go in there, Liam. I'm sorry."
+            "text": "It's too much like mine. Like my maze.\nI don't think I can go in there, Liam. I'm sorry."
         },
         {
             "id": "PARQUE_LIAM_09",
@@ -302,7 +310,7 @@
         },
         {
             "id": "PARQUE_LIAM_10",
-            "text": "Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone. But that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out."
+            "text": "Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone.\nBut that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out."
         },
         {
             "id": "PARQUE_LIAM_11",
@@ -330,7 +338,7 @@
         },
         {
             "id": "PIEDRA_ANCESTRAL_05",
-            "text": "The Time Spell. And... the Resurrection Spell. Forbidden. There's a note in the margin explaining why."
+            "text": "The Time Spell. And... the Resurrection Spell.\nForbidden. There's a note in the margin explaining why."
         },
         {
             "id": "PIEDRA_ANCESTRAL_06",
@@ -382,7 +390,7 @@
         },
         {
             "id": "REUNION_WILL_01",
-            "text": "It was an accident. And I didn't come to judge you. I came because no one gets left behind. Not even when they mess up."
+            "text": "It was an accident. And I didn't come to judge you.\nI came because no one gets left behind. Not even when they mess up."
         },
         {
             "id": "REUNION_WILL_02",
@@ -402,7 +410,7 @@
         },
         {
             "id": "RUPTURA_ESTELA_02",
-            "text": "You planned all of it. The demon in the woods. The danger. You used Will as bait from day one."
+            "text": "You planned all of it. The demon in the woods.\nThe danger. You used Will as bait from day one."
         },
         {
             "id": "RUPTURA_ESTELA_03",
@@ -462,7 +470,7 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "Ha, you never change, Oliver... Hey, I'm in a hurry, Eldran needs me."
+            "text": "Ha, you never change, Oliver... Hey, do you know what's going on with Eldran and Victoria? I just heard them arguing."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -479,6 +487,174 @@
         {
             "id": "WILL_VISION_WHERE_AM_I",
             "text": "Where am I?"
+        },
+        {
+            "id": "PROLOGO_BAILE",
+            "text": "Keep it up. I want to hear you from the bridge."
+        },
+        {
+            "id": "PROLOGO_CARRETA_GRACIAS",
+            "text": "Thank you so much, master!"
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
+            "text": "Right behind you. As soon as I can."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
+            "text": "I have no idea, Liora. Get them out of here. I'll distract him."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ELEGIR",
+            "text": "Two tomorrow. You owe me."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA",
+            "text": "Come back soon."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA_1",
+            "text": "What's going on?"
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA_2",
+            "text": "And you?"
+        },
+        {
+            "id": "PROLOGO_DUELO_ARCHIMAGO",
+            "text": "No. But I can send you somewhere you will never hurt anyone again."
+        },
+        {
+            "id": "PROLOGO_DUELO_MAGO",
+            "text": "Are you going to save them all, mage?"
+        },
+        {
+            "id": "PROLOGO_DUELO_MAGO_2",
+            "text": "You cannot even save yourself."
+        },
+        {
+            "id": "PROLOGO_EVACUACION_LIORA",
+            "text": "Everyone, come with me! To the bridge, quickly!"
+        },
+        {
+            "id": "PROLOGO_FAVOR_CARRETA",
+            "text": "Master! It's tipped over again. And I was going slowly this time."
+        },
+        {
+            "id": "PROLOGO_FAVOR_GLOBO",
+            "text": "It's stuck right at the top!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_1",
+            "text": "Whoa! It's finally flying!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_2",
+            "text": "Look, look how high it goes!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_3",
+            "text": "It's going all the way up to the clouds!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO",
+            "text": "ABSOLUTE!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO_1",
+            "text": "Protection...!"
+        },
+        {
+            "id": "PROLOGO_HORA_ARCHIMAGO",
+            "text": "To the bridge! All of you, now!"
+        },
+        {
+            "id": "PROLOGO_IRRUPCION_MAGO",
+            "text": "Kneel. I haven't come for you — but you're in the way."
+        },
+        {
+            "id": "PROLOGO_MANANA_GLOBO_OK",
+            "text": "Careful..."
+        },
+        {
+            "id": "PROLOGO_MANANA_GLOBO_ROTO",
+            "text": "...Right, that was too much. Sorry, everyone."
+        },
+        {
+            "id": "PROLOGO_MANANA_INTRO",
+            "text": "Morning, valley. Let's see what's broken today."
+        },
+        {
+            "id": "PROLOGO_PLAZA_ARCHIMAGO",
+            "text": "Today I pushed a cart and popped a balloon. That practically counts as a holiday."
+        },
+        {
+            "id": "PROLOGO_PLAZA_LIORA_1",
+            "text": "You don't take a single day off, do you?"
+        },
+        {
+            "id": "PROLOGO_PLAZA_LIORA_2",
+            "text": "Then let's see you pop two tomorrow."
+        },
+        {
+            "id": "PERAS_01",
+            "text": "Come on! The pears get crushed if you put them in there, Victoria."
+        },
+        {
+            "id": "PERAS_02",
+            "text": "I've been selling fruit longer than you've been arguing, Eldran. I know what I'm doing."
+        },
+        {
+            "id": "PERAS_03",
+            "text": "Fine, fine... you win. Like always."
+        },
+        {
+            "id": "PERAS_04",
+            "text": "Like always. Go on, say hello to your boy, he's been standing there a while."
+        },
+        {
+            "id": "PERAS_05",
+            "text": "Will! Sorry about the show, you know how market days are."
+        },
+        {
+            "id": "PERAS_06",
+            "text": "By the way, since you're here: I left a box under a tree a few days ago and haven't been able to go get it. Would you mind looking for it?"
+        },
+        {
+            "id": "PERAS_07",
+            "text": "It shouldn't be far. Follow the path and look for the big trees, you'll know it when you see it."
+        },
+        {
+            "id": "PERAS_08",
+            "text": "Here, for the road. And thank you, really."
+        },
+        {
+            "id": "PERAS_09",
+            "text": "You can count on me, Eldran."
+        },
+        {
+            "id": "HOOK_DISCUSION_01",
+            "text": "Victoria, the pears don't go in that crate, they'll get bruised!"
+        },
+        {
+            "id": "HOOK_DISCUSION_02",
+            "text": "The crate's mine, Eldran, I'll put whatever I like in it!"
+        },
+        {
+            "id": "HOOK_DISCUSION_03",
+            "text": "It may be yours, but I brought those pears myself this morning!"
+        },
+        {
+            "id": "HOOK_DISCUSION_04",
+            "text": "...The fruit crates again? I wonder what's going on out there."
+        },
+        {
+            "id": "PERAS_OLIVER_VOY",
+            "text": "Will, I'm coming with you!"
+        },
+        {
+            "id": "PERAS_VICTORIA_QUEDATE",
+            "text": "No, no, you're staying right here with me, I need the help with these boxes."
         }
     ]
 }

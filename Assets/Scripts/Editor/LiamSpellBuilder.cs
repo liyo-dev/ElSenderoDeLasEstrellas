@@ -50,7 +50,7 @@ public static class LiamSpellBuilder
     private const string ImpactVfxGuid  = "67a684e320da6e7439421a07e3fa265c";
     private const string DespawnVfxGuid = "dcd90c4976197424b9958a7c54b6bb8c";
 
-    [MenuItem("El Sendero/Magia/Crear Hechizo de Liam (Garra del Pacto)")]
+    [MenuItem("El Sendero/Archivo/Magia/Crear Hechizo de Liam (Garra del Pacto)")]
     public static void CreateGarraDelPacto()
     {
         GameObject prefab = CreateOrRepairPrefab();

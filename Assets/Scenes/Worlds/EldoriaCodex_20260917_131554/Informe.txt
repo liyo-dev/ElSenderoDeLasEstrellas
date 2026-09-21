@@ -1,0 +1,181 @@
+Eldoria Codex — maqueta de composición, no integración de gameplay.
+Retirada plataforma decorativa de césped: Hill02_c01 (2)
+Retirada plataforma decorativa de césped: Hill02_b01
+Retirada plataforma decorativa de césped: Hill02_a01 (1)
+Retirada plataforma decorativa de césped: Hill02_c01 (1)
+Retirada plataforma decorativa de césped: Hill02_e01 (2)
+Retirada plataforma decorativa de césped: Hill02_f01
+Retirada plataforma decorativa de césped: Hill02_e01 (1)
+Retirada plataforma decorativa de césped: Hill02_a01
+Retirada plataforma decorativa de césped: Hill02_h01 (1)
+Retirada plataforma decorativa de césped: Hill02_d01
+Retirada plataforma decorativa de césped: Hill02_e01
+Retirada plataforma decorativa de césped: Hill02_c01
+Retirada plataforma decorativa de césped: Hill02_h01
+Retirada plataforma decorativa de césped: Hill02_g01
+Retirada plataforma decorativa de césped: Ground01_c01
+Retirada plataforma decorativa de césped: Hill02_e01 (3)
+Retirada plataforma decorativa de césped: Hill02_f01 (1)
+Retirada plataforma decorativa de césped: Hill02_h01 (2)
+Retirada plataforma decorativa de césped: Hill02_c01 (3)
+Demo 09: Terrain 'Terrain' (600×600 m) reservado para copiar su pintura.
+Retirada plataforma decorativa de césped: Hill02_c01 (4)
+Retirada plataforma decorativa de césped: Hill02_e01 (4)
+Retirada plataforma decorativa de césped: Hill02_f01 (2)
+Demo 09: huella (123.63, 13.37, 122.66); centro (0.00, 24.00, -130.00); 49 muestras de relieve capturadas del terreno de origen. Comprobar uniones, suelo y acceso en vista de jugador.
+Espacio reservado: Plaza del puerto — acceso al embarcadero, 24 × 31 m en (270.00, 5.00, -433.00). Geometría, sin disparadores narrativos.
+Puerto reconstruido: ocho viviendas a escala nativa, calle a tierra, pasarela central con muelle transversal, pilotes hasta el fondo y dos embarcaciones separadas.
+Poza de la cascada en (191.00, 42.00, 249.00), radio 14 m.
+Claro 'Piedra Ancestral — Ruinas del Libro (isla, se llega en barco)' en (565.00, 18.00, -505.00).
+Espacio reservado: Plaza del pueblo vecino — GDD 15, 30 × 24 m en (330.00, 23.00, -115.00). Geometría, sin disparadores narrativos.
+Pueblo vecino: seis viviendas identificadas, plaza y acceso desde la arboleda oriental. La playa queda libre de cercados y accesorios usados como falsas casas. Revisión 18: la casa del hechicero ya no está aquí — vive exiliado en la isla-jungla de enfrente.
+Espacio reservado: Plaza real — audiencia exterior y Demonio 2 (GDD 10–13), 40 × 28 m en (0.00, 112.00, 299.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Plaza de la taberna — encuentro y persecución (GDD 9), 38 × 20 m en (0.00, 104.00, 259.00). Geometría, sin disparadores narrativos.
+Montaña: viviendas reales a escala nativa, explanada de 40×28 m libre frente al castillo y ascenso mediante calles en curva; retirados los anillos concéntricos.
+Isla del hechicero: claro de ~40 m a 16 m con cabaña y pozo en (545.00, 16.00, -180.00); playa hacia el continente (a nado, ~50 m de agua), acantilado en el resto, jungla turquesa por toda la isla.
+Isla secreta: en (560.00, 14.00, 470.00), detrás del macizo, playa hacia mar abierto; cabaña y barriles. Solo un marcador — el mito (3 versiones en la taberna) y la condición de acceso son guion/gameplay.
+Espacio reservado: Huerto grande — campo de Erika, 22 × 12 m en (254.00, 38.00, 166.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto de la casa 1, 12 × 10 m en (208.00, 38.00, 142.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto junto al arroyo, 14 × 10 m en (274.00, 38.00, 154.00). Geometría, sin disparadores narrativos.
+Granjas de la cascada en (250.00, 38.00, 150.00): dos casas, pozo y huertos vallados (los huertos se plantan tras el terreno, en `VestirEspacios`).
+Caminos recortados en el borde de los pueblos: 5 extremos.
+Espacio reservado: Claro de Estela — escenario GDD 7, 34 × 30 m en (-330.00, 36.00, 65.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Descanso del camino — arena Golem GDD 8, 36 × 28 m en (-95.00, 32.00, 65.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Pradera del despertar — arena Demonio 1 GDD 4–5, 32 × 25 m en (-62.00, 25.00, -61.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerta del pueblo 1, 12 × 24 m en (84.00, 24.00, -177.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerta del pueblo 2, 12 × 24 m en (102.00, 24.00, -177.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerta del pueblo 3, 12 × 24 m en (120.00, 24.00, -177.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto del puerto, 12 × 9 m en (232.00, 5.00, -405.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto del pueblo vecino, 12 × 9 m en (300.00, 23.00, -140.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto del pueblo vecino 2, 10 × 9 m en (360.00, 23.00, -92.00). Geometría, sin disparadores narrativos.
+Espacio reservado: Huerto del Reino — terraza baja, 12 × 9 m en (-30.00, 97.74, 240.00). Geometría, sin disparadores narrativos.
+Pueblo de la Montaña — construido a mano: 23 viviendas adicionales, con separación de parcelas y calles.
+Pueblo pesquero — muelles y viviendas: 7 viviendas adicionales, con separación de parcelas y calles.
+Pueblo vecino — terraza oriental: 6 viviendas adicionales, con separación de parcelas y calles.
+Calles secundarias pintadas sin atravesar otras viviendas: 38.
+Demo 09: alturas copiadas en 3745 celdas del heightmap.
+Demo 09: 4 capas de textura copiadas en 3287 celdas (total de capas ahora 17).
+Suelo urbano: 12096 celdas; piedra en calles del Reino, plazas enmarcadas, tierra y adoquín en pueblos. Capas reales del pack; mezclas convexas.
+Demo 09: 19 capas de detalle (flores/hierba) copiadas, 10138 celdas.
+Praderas: 401202 celdas de hierba/flores repartidas por la isla con 4 prototipos de la demo.
+Agua: material de MainWorld Assets/Art/World/ithappy/Sweet_Land/Materials/Water.mat
+Cascada: acantilado de 18 m en (181,269); la lámina del arroyo hace de cascada; poza con agua a 40,8 m.
+Cascada — VFX de partículas: velo de 9 m de ancho (vida 1,4 s) y salpicadura en la poza. Material propio (Particles/Unlit de URP) aplicado.
+Hoguera apagada — mirador: en (167,262), base a 51,9 m, tamaño (1.72, 1.10, 1.72) (escala ×0,59). Revisar tamaño y apoyo en Unity.
+Barril de provisiones — mirador: en (169,263), base a 51,9 m, tamaño (1.18, 1.00, 1.18) (escala ×1,24). Revisar tamaño y apoyo en Unity.
+Mirador de la cascada: repisa de piedra a 9,9 m sobre el nivel del pueblo (mitad del salto), 15 m al lado del velo de agua — vista a la poza, el mar y los islotes de enfrente. Acceso: trepa de 7 rocas desde la ladera. Hoguera apagada y barril como detalle narrativo, no recompensa real. Revisar en el Editor: la altura aquí sale de la fórmula del salto (no de muestrear el terreno, porque el acantilado se talla aparte), así que puede no apoyar exactamente en roca — y que la barandilla quede en el borde real, no en el aire.
+Piedra ancestral — monolito: en (565,-505), base a 18,0 m, tamaño (2.96, 4.20, 3.37) (escala ×0,96). Revisar tamaño y apoyo en Unity.
+Santuario ancestral: monolito de piedra, muro derruido con entrada y espacio central; retirado el cristal rosa provisional. Guardián y libro pendientes de conexión.
+Velero fondeado — El Rompiente: en (351,-559), base a -0,8 m, tamaño (11.80, 13.99, 19.23) (escala ×1,67). Revisar tamaño y apoyo en Unity.
+Pasarela derrumbable 1 (gameplay: cae al cruzarla): 17,8 m, de (395,-561) a (412,-554), desnivel 1,1 m.
+Pasarela derrumbable 2 (gameplay: cae al cruzarla): 14,2 m, de (419,-552) a (432,-547), desnivel 2,0 m.
+Pasarela derrumbable 3 (gameplay: cae al cruzarla): 12,7 m, de (438,-545) a (450,-539), desnivel 0,1 m.
+Pasarela derrumbable 4 (gameplay: cae al cruzarla): 37,0 m, de (454,-536) a (469,-502), desnivel 3,7 m.
+Ruta a las Ruinas: velero fondeado en El Rompiente (385,-565), 4 pasarelas entre escollos hasta la playa. Las pasarelas son estáticas en la maqueta; el derrumbe es gameplay.
+Pecio encallado en el arrecife: en (535,-640), base a -4,5 m, tamaño (18.15, 15.54, 20.61) (escala ×1,86). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (279,-520), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (274,-510), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (247,-531), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (254,-516), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (288,-524), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Barril a la deriva: en (278,-512), base a -0,4 m, tamaño (1.20, 1.10, 1.20) (escala ×1,37). Revisar tamaño y apoyo en Unity.
+Arrecife: 90 rocas asomando alrededor de las Ruinas y del Rompiente (playa y cala del velero libres); pecio encallado al sur; barriles a la deriva junto al puerto.
+Cofre — Hermana mayor (marcador provisional): en (-496,473), base a 14,0 m, tamaño (1.14, 1.30, 1.14) (escala ×1,50). Revisar tamaño y apoyo en Unity.
+Altar — Hermana del altar (hechizo/mejora, marcador): en (-580,380), base a 16,0 m, tamaño (2.56, 3.50, 3.20) (escala ×2,85). Revisar tamaño y apoyo en Unity.
+Cofre — Hermana pequeña (marcador provisional): en (-423,562), base a 12,0 m, tamaño (1.14, 1.30, 1.14) (escala ×1,50). Revisar tamaño y apoyo en Unity.
+Hoguera — guarida del Gigante: en (-560,-560), base a 13,0 m, tamaño (1.86, 1.60, 1.86) (escala ×0,86). Revisar tamaño y apoyo en Unity.
+Calavera — guarida del Gigante: en (-555,-564), base a 13,0 m, tamaño (2.52, 1.40, 2.49) (escala ×2,58). Revisar tamaño y apoyo en Unity.
+Las Hermanas: cofres en la mayor y la pequeña, altar (cristal) en la del altar, hoguera y calavera en la Isla del Gigante (boss extra). Marcadores, no recompensas reales.
+Barca varada — playa de las Ruinas: en (489,-489), base a 4,3 m, tamaño (4.30, 1.54, 6.52) (escala ×1,92). Revisar tamaño y apoyo en Unity.
+Faro (torre vigía) — cabo del puerto: en (365,-470), base a 12,0 m, tamaño (11.60, 18.00, 12.07) (escala ×2,90). Revisar tamaño y apoyo en Unity.
+Faro apoyado sobre basamento de radio 8,0 m, cota 15,7 m.
+Velero: en (-470,-450), base a -0,8 m, tamaño (19.28, 13.99, 13.11) (escala ×1,67). Revisar tamaño y apoyo en Unity.
+Puente_camino_2: ancho útil 4 m, longitud 24,0 m, pendiente 6,5 %; unión al terreno 0,025 m en ambos extremos. Colisión continua sin escalones entre tablones.
+Puente_camino_4: ancho útil 4 m, longitud 38,5 m, pendiente 1,8 %; unión al terreno 0,025 m en ambos extremos. Colisión continua sin escalones entre tablones.
+Puente_camino_5: ancho útil 4 m, longitud 29,0 m, pendiente 4,6 %; unión al terreno 0,025 m en ambos extremos. Colisión continua sin escalones entre tablones.
+Puente_camino_8: ancho útil 4 m, longitud 29,0 m, pendiente 1,7 %; unión al terreno 0,025 m en ambos extremos. Colisión continua sin escalones entre tablones.
+Transición de pueblos: 81 árboles de las hileras de las demos 05/06 retirados de la copia. Jardines de la demo 09 conservados.
+Pieza amplia demo: BuildingAT35, tamaño (11.83, 3.61, 16.49), centro (13.44, 27.62, -159.41).
+Pieza amplia demo: Flag04_a10, tamaño (9.66, 2.27, 5.89), centro (8.76, 31.81, -116.62).
+Pieza amplia demo: Flag04_a13, tamaño (12.68, 3.36, 2.43), centro (1.99, 31.07, -128.65).
+Pieza amplia demo: BuildingAT01, tamaño (8.58, 5.01, 9.46), centro (-5.18, 28.55, -134.44).
+Pieza amplia demo: BuildingAT05, tamaño (9.94, 6.18, 9.94), centro (-11.78, 29.14, -146.33).
+Pieza amplia demo: BuildingAT09, tamaño (11.80, 7.04, 12.00), centro (2.67, 29.57, -118.08).
+Pieza amplia demo: BuildingAT16, tamaño (15.11, 8.19, 15.54), centro (22.82, 30.03, -125.24).
+Pieza amplia demo: BuildingAT30 (1), tamaño (14.71, 5.43, 23.44), centro (4.89, 28.49, -156.32).
+Demo 09: 558 piezas asentadas en el terreno.
+Rocas colocadas: 201 (costa e islotes), normalizadas a 3-7 m.
+Arboledas por paraje: 1679 árboles — Bosque Prohibido 740 (verde denso, 15–23 m), Fuego Fatuo 198 (verde oscuro), isla del hechicero 95 (turquesa/lima, 12–19 m), isla de las Ruinas 53 (rojo/otoñal, 9–15 m), isla secreta 37 (lima), Las Hermanas 79 (verde claro y flores), campo 477 (verde claro, 10–17 m).
+Suelo vegetal: 1679 piezas — Bosque Prohibido 700, Fuego Fatuo 200, jungla 133, Ruinas 51 (setas azul-gris/violeta junto a la Piedra), campo 250.
+Pueblo de la cascada: 84 pinos en la ladera de detrás y rocas en la ceja del acantilado.
+Apoyo de vegetación: 1977 árboles asentados por base visible; 26 retirados de taludes o parcelas.
+Jardines del Reino: 4 parterres arbolados, fuera de caminos y explanadas; pendientes fuertes excluidas.
+Muralla del Reino: 92 lienzos macizos Wall02 de 6 m de altura, en tramos de hasta 6 m; torres Tower01 de 9,5 m. Abertura sobre la vía principal, sin verja gigante.
+Camino 1, pendiente REAL sobre terreno/tablero: 7,9 % en (198.13, 11.62, -335.00).
+Camino 2, pendiente REAL sobre terreno/tablero: 8,3 % en (242.88, 41.69, 204.38).
+Camino 3, pendiente REAL sobre terreno/tablero: 21,7 % en (-116.16, 68.94, 171.38).
+Camino 4, pendiente REAL sobre terreno/tablero: 11,0 % en (-291.70, 37.55, 86.59).
+Camino 5, pendiente REAL sobre terreno/tablero: 7,1 % en (-222.73, 12.05, -277.67).
+Camino 6, pendiente REAL sobre terreno/tablero: 12,9 % en (338.61, 23.49, -86.15).
+Camino 7, pendiente REAL sobre terreno/tablero: 8,6 % en (-326.35, 36.58, 70.83).
+Camino 8, pendiente REAL sobre terreno/tablero: 15,1 % en (34.69, 47.07, 84.06).
+Camino 9, pendiente REAL sobre terreno/tablero: 7,7 % en (-84.28, 25.00, -98.78).
+Camino 10, pendiente REAL sobre terreno/tablero: 21,3 % en (92.46, 104.63, 250.94).
+Urbanismo: 94 parcelas/explanadas, 0 comprobaciones pendientes. Las comprobaciones geométricas no sustituyen el recorrido del jugador.
+Gálibo de caminos: 5932 muestras cada 0,5 m, 0 colisionadores a revisar, 0 consultas saturadas. No equivale a una prueba en Play.
+Camino 1: pendiente máxima de diseño 7,6 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 2: pendiente máxima de diseño 6,5 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 3: pendiente máxima de diseño 21,1 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 4: pendiente máxima de diseño 10,8 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 5: pendiente máxima de diseño 6,9 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 6: pendiente máxima de diseño 6,4 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 7: pendiente máxima de diseño 8,5 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 8: pendiente máxima de diseño 12,2 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 9: pendiente máxima de diseño 0,0 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Camino 10: pendiente máxima de diseño 21,1 %. Colisiones y pasos por los pueblos pendientes de recorrido en Unity.
+Cauce principal: profundidad mínima central 1,79 m en (185.00, 0.00, -520.00); 0 muestras con menos de 0,1 m de agua.
+Cauce oriental: profundidad mínima central 1,84 m en (167.06, 59.13, 296.06); 0 muestras con menos de 0,1 m de agua.
+REVISAR: 20 puntos del terreno (fuera de costa e islotes) quedan a menos de 0,3 m sobre el nivel del mar — el peor, a -2,79 m, en (230,-470). El plano "Mar" (Y=0, 2400x2400 m) asoma ahí por encima del terreno; en el minimapa se ve como una mancha plana tapando esa zona (INC-197). Revisar el relieve de esa zona en concreto antes de dar la maqueta por buena.
+Relieve revisado: cauce curvo, valle ancho, tres picos y ensenada. Verificaciones numéricas superadas; no equivalen a validación visual ni de navegación.
+Validación Interactive/Grafo: 0 errores, 40 advertencias.
+Quest 'ELDRAN_MISSION2' referenciada tanto por el grafo narrativo (Cap1:StartQuestNode, Cap1:CompleteQuestStepsNode, MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap1:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION3' referenciada tanto por el grafo narrativo (Cap1:StartQuestNode, Cap1:CompleteQuestStepsNode, MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap1:StartQuestNode, MainNarrative_Cap1:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain, NPC_InteractiveNarrative_Config_Eldran.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_RUDOLFO' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Rudolfo.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_NIÑOPEZ' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Pez.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ROBERTO_MISION1' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Roberto.questChain, NPC_InteractiveNarrative_Config_Roberto.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_NIÑOPEZ_CARACOLA' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Pez.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_GUARDIABOSQUE_ARANAS' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_GuardiaBosque.questChain, NPC_InteractiveNarrative_Config_GuardiaBosque.narrativeChain.questToStart). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_TENDERA_ALGAS' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Tendera.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_TABERNERA_ALGAS' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Tabernera.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_MANUEL_POCIONES' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Manuel.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'Q_NORA_POCIONES' referenciada tanto por el grafo narrativo (Secundary:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_Nora.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION1' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap1:StartQuestNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION5' referenciada tanto por el grafo narrativo (MainNarrative:CompleteQuestStepsNode, MainNarrative:WaitQuestCompleteNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap2:CompleteQuestStepsNode, MainNarrative_Cap2:WaitQuestCompleteNode, MainNarrative_Cap2:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain, NPC_InteractiveNarrative_Config_Erika.condition.targetQuest, NPC_InteractiveNarrative_Config_Erika.condition.targetQuest, NPC_InteractiveNarrative_Config_Victoria.condition.targetQuest, NPC_InteractiveNarrative_Config_Victoria.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION4' referenciada tanto por el grafo narrativo (MainNarrative:WaitQuestCompleteNode, MainNarrative:StartQuestNode, MainNarrative_Cap2:WaitQuestCompleteNode, MainNarrative_Cap2:StartQuestNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION5_2' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:WaitQuestCompleteNode, MainNarrative_Cap2:StartQuestNode, MainNarrative_Cap2:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION6' referenciada tanto por el grafo narrativo (MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap3:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain, NPC_InteractiveNarrative_Config_Estela.condition.targetQuest, NPC_InteractiveNarrative_Config_GuardiaBosque.condition.targetQuest, NPC_InteractiveNarrative_Config_GuardiaBosque.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION7' referenciada tanto por el grafo narrativo (MainNarrative:WaitQuestCompleteNode, MainNarrative_Cap3:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain, NPC_InteractiveNarrative_Config_Liam.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION8' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap3:StartQuestNode, MainNarrative_Cap4:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_InteractiveNarrative_Config_Liam.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION9' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap4:StartQuestNode, MainNarrative_Cap4:CompleteQuestStepsNode, MainNarrative_Cap4:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_InteractiveNarrative_Config_Estela.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION10' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap5:StartQuestNode, MainNarrative_Cap5:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_InteractiveNarrative_Config_King.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION12' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:CompleteQuestStepsNode, MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap5:StartQuestNode, MainNarrative_Cap5:CompleteQuestStepsNode, MainNarrative_Cap5:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_InteractiveNarrative_Config_King.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION13' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative:WaitQuestCompleteNode, MainNarrative_Cap5:StartQuestNode, MainNarrative_Cap6:WaitQuestCompleteNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_ELDRAN.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'ELDRAN_MISSION14' referenciada tanto por el grafo narrativo (MainNarrative:StartQuestNode, MainNarrative_Cap6:StartQuestNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_AmigoEldran.questChain, NPC_InteractiveNarrative_Config_AmigoEldran.condition.targetQuest, NPC_InteractiveNarrative_Config_Eldran.condition.targetQuest, NPC_InteractiveNarrative_Config_Estela.condition.targetQuest). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Quest 'FUEGOFATUO_1' referenciada tanto por el grafo narrativo (MainNarrative:CompleteQuestStepsNode, MainNarrative_Cap6:CompleteQuestStepsNode) como por el sistema Interactive/QuestConfig (NPC_Quest_Config_SOFIA.questChain). No es necesariamente un error, pero confirma que ambos no compiten por iniciar/completar la misma quest sin saberlo el uno del otro (mismo patrón que INC-020).
+Evento custom 'AWAKEN_DONE' esperado por WaitCustomEventNode en [Cap1, MainNarrative, MainNarrative_Cap1] y también usado por el sistema Interactive (NPC_InteractiveNarrative_Config_Eldran.condition.customEventKey (escucha)). Verifica que no son dos reacciones independientes al mismo disparo.
+Evento custom 'ADD_CLOAK' esperado por WaitCustomEventNode en [MainNarrative, MainNarrative_Cap2] y también usado por el sistema Interactive (NPC_InteractiveNarrative_Config_Victoria.narrativeEventKey (emite)). Verifica que no son dos reacciones independientes al mismo disparo.
+Evento custom 'ERIKA_FIGHT' esperado por WaitCustomEventNode en [MainNarrative, MainNarrative_Cap2] y también usado por el sistema Interactive (NPC_InteractiveNarrative_Config_Erika.narrativeEventKey (emite)). Verifica que no son dos reacciones independientes al mismo disparo.
+Evento custom 'AWAKEN_START' se emite desde RaiseCustomEventNode en [Cap1, MainNarrative, MainNarrative_Cap1] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'LIAM_CRYSTAL_START' se emite desde RaiseCustomEventNode en [Cap1, MainNarrative, MainNarrative_Cap1] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'PROLOGUE_START' se emite desde RaiseCustomEventNode en [Cap1] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'HOOK_DISCUSION_START' se emite desde RaiseCustomEventNode en [Cap1] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'PERAS_START' se emite desde RaiseCustomEventNode en [Cap1] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'OPEN_THE_DOORS' se emite desde RaiseCustomEventNode en [MainNarrative, MainNarrative_Cap6] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'ESTELA_APPEARS_START' se emite desde RaiseCustomEventNode en [MainNarrative, MainNarrative_Cap3] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'LIAM_GOLEM_SUMMON_START' se emite desde RaiseCustomEventNode en [MainNarrative, MainNarrative_Cap3] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'TABERNA_START' se emite desde RaiseCustomEventNode en [MainNarrative, MainNarrative_Cap3] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'MOUNTAIN_START' se emite desde RaiseCustomEventNode en [MainNarrative] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'EVT_REINOEXIT_BANTER_START' se emite desde RaiseCustomEventNode en [MainNarrative, MainNarrative_Cap6] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'PROLOGUE_DREAM_START' se emite desde RaiseCustomEventNode en [MainNarrative] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Evento custom 'CH_Cap3_BACK_1' se emite desde RaiseCustomEventNode en [MainNarrative_Cap3] pero ningún WaitCustomEventNode del grafo ni ninguna NarrativeCondition del sistema Interactive lo espera. Puede ser intencional; si no, es un evento huérfano.
+Capturas guardadas: Vista_mapa, Vista_puerto, Vista_castillo, Vista_vecino, Vista_pueblo, Vista_ruinas, Vista_jungla, Vista_bosque, Vista_ruta, Vista_hermanas, Vista_granjas, Vista_secreta, Vista_puente, Vista_valle y Vista_mirador (.png). Revisarlas antes de aceptar la composición.

@@ -68,6 +68,14 @@ public class DialogueManager : MonoBehaviour
     [Header("Cámara de Diálogo")]
     [Tooltip("Si está activo, usa el sistema cinematográfico avanzado con múltiples planos")]
     [SerializeField] private bool useCinematicCamera = true;
+
+    /// Mientras esté a true, los diálogos NO encienden su cámara cinemática: se ven con la cámara
+    /// que ya hubiera. Lo pone un DialogueBeat cuando la secuencia quiere seguir con su propio
+    /// plano (el general de perfil de Oliver y Will, INC-357: «prefiero que se vean los dos»).
+    /// Lo apaga el mismo DialogueBeat al terminar, y también el cierre de la secuencia.
+    public bool ConservarCamaraDeSecuencia { get; set; }
+
+    private bool UsaCamaraCinematica => useCinematicCamera && !ConservarCamaraDeSecuencia;
     
     [Tooltip("Perfil cinematográfico para diálogos (define los planos y transiciones)")]
     [SerializeField] private DialogueCinematicProfile cinematicProfile;
@@ -524,7 +532,7 @@ public class DialogueManager : MonoBehaviour
         // Activar sistema cinematográfico SOLO si es un NPC real (no objetos como cartas, save points, etc.)
         bool isActualNPC = IsActualNPC(_currentNpc);
         
-        if (useCinematicCamera && isActualNPC && DialogueCinematicController.Instance != null)
+        if (UsaCamaraCinematica && isActualNPC && DialogueCinematicController.Instance != null)
         {
             GameObject playerObj = PlayerService.Player;
             if (playerObj != null)
@@ -544,7 +552,7 @@ public class DialogueManager : MonoBehaviour
 #endif
             }
         }
-        else if (useDialogueCameraLegacy && isActualNPC && DialogueCameraController.Instance != null)
+        else if (useDialogueCameraLegacy && !ConservarCamaraDeSecuencia && isActualNPC && DialogueCameraController.Instance != null)
         {
             // Fallback al sistema antiguo si no está el nuevo
             if (verboseLogging)
@@ -572,7 +580,7 @@ public class DialogueManager : MonoBehaviour
                 _hudHiddenForNonCinematicDialogue = true;
                 Sendero.UI.PlayerHUDV2.Instance?.HideHUD();
             }
-            else
+            else if (!ConservarCamaraDeSecuencia)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.LogWarning($"[DialogueManager] ⚠️ Sistema cinematográfico NO activado - useCinematic={useCinematicCamera}, NPC={_currentNpc?.name ?? "NULL"}, esNPC={isActualNPC}, Controller Instance={DialogueCinematicController.Instance != null}");
@@ -625,7 +633,7 @@ public class DialogueManager : MonoBehaviour
         // (misma condición que activa StartCinematic en StartDialogue(asset): cámara activada,
         // NPC real y controller vivo — si no se cumple, se mantiene el posicionamiento genérico)
         bool groupStagingHandledByCinematic = asset != null && asset.isGroupConversation
-            && useCinematicCamera && DialogueCinematicController.Instance != null
+            && UsaCamaraCinematica && DialogueCinematicController.Instance != null
             && npcForPositioning != null && IsActualNPC(npcForPositioning);
         if (!groupStagingHandledByCinematic && Game.NPC.PlayerParty.HasInstance)
         {
@@ -826,7 +834,7 @@ public class DialogueManager : MonoBehaviour
         _dreamSparkles?.StopSparkles();
 
         // Desactivar sistema cinematográfico
-        if (useCinematicCamera && DialogueCinematicController.Instance != null)
+        if (UsaCamaraCinematica && DialogueCinematicController.Instance != null)
         {
             DialogueCinematicController.Instance.EndCinematic();
         }
@@ -1095,7 +1103,7 @@ public class DialogueManager : MonoBehaviour
         OnDialogueLineChanged?.Invoke(line, _currentNpc);
         
         // Notificar al sistema cinematográfico del cambio de línea
-        if (useCinematicCamera && DialogueCinematicController.Instance != null)
+        if (UsaCamaraCinematica && DialogueCinematicController.Instance != null)
         {
             DialogueCinematicController.Instance.OnDialogueLineAdvanced(
                 _index, 

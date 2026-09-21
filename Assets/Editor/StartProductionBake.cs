@@ -51,7 +51,7 @@ public class StartProductionBake : EditorWindow
         EditorApplication.Beep();
     }
 
-    [MenuItem("El Sendero/Lighting/Cancel Baking")]
+    [MenuItem("El Sendero/Archivo/Lighting/Cancel Baking")]
     public static void CancelBaking()
     {
         if (Lightmapping.isRunning)
@@ -65,7 +65,7 @@ public class StartProductionBake : EditorWindow
         }
     }
 
-    [MenuItem("El Sendero/Lighting/Show Baking Progress")]
+    [MenuItem("El Sendero/Archivo/Lighting/Show Baking Progress")]
     public static void ShowProgress()
     {
         if (Lightmapping.isRunning)

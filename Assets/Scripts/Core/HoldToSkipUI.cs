@@ -3,14 +3,16 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using UnityEngine.Playables;
+using UnityEngine.Serialization;
 using Core.InputGlyphs;
 
 [DisallowMultipleComponent]
 public class HoldToSkipUI : MonoBehaviour
 {
     [Header("Referencias UI")]
-    [SerializeField] private Image buttonIcon;      // tu sprite del botón (opcional) — usado como fallback si InputGlyphService no tiene sprite para la familia activa (ver RefreshIcon)
-    [SerializeField] private Image progressCircle;  // Image con Type=Filled (Radial)
+    [SerializeField] private Image buttonIcon;      // capa de "reposo": el mismo sprite del botón, atenuado (ver IdleIconAlpha) — fallback si InputGlyphService no tiene sprite para la familia activa (ver RefreshIcon)
+    [FormerlySerializedAs("progressCircle")]
+    [SerializeField] private Image fillOverlayIcon; // copia exacta de buttonIcon encima, Type=Filled — se "rellena" de opaco sobre el propio icono en vez de usar una barra aparte (ver FIX 15/09/2026, 3ª pasada)
     [SerializeField] private CanvasGroup group;     // opcional
 
     [Header("Comportamiento")]
@@ -19,6 +21,8 @@ public class HoldToSkipUI : MonoBehaviour
     [SerializeField] private float fadeIn = 0.12f;
     [SerializeField] private float fadeOut = 0.12f;
     [SerializeField] private bool disableSelfOnSkip = true;
+    [SerializeField, Range(0f, 1f), Tooltip("Alfa del icono en reposo (sin pulsar) — el overlay lo va tapando con opacidad completa según se mantiene pulsado.")]
+    private float idleIconAlpha = 0.45f;
 
     [Header("Input")]
     [Tooltip("Acción a mantener. ASÍG-NALA: UI/Submit o la que quieras. (Si queda vacío, usa <Gamepad>/buttonSouth)")]
@@ -64,24 +68,51 @@ public class HoldToSkipUI : MonoBehaviour
 
         if (buttonIcon) _fallbackButtonIcon = buttonIcon.sprite;
 
-        if (!progressCircle)
+        if (!fillOverlayIcon)
         {
-            // intenta encontrar una Image "circular"
+            // intenta encontrar una Image en modo Filled entre los hijos (la copia "de relleno")
             foreach (var img in GetComponentsInChildren<Image>(true))
             {
                 if (img == buttonIcon) continue;
-                if (img.type == Image.Type.Filled) { progressCircle = img; break; }
+                if (img.type == Image.Type.Filled) { fillOverlayIcon = img; break; }
             }
         }
 
-        if (progressCircle)
+        // FIX (15/09/2026): antes era un aro Radial360 pensado para envolver un icono circular
+        // (botón de mando, A/Cross). Con teclado el icono es la tecla Espacio (sprite rectangular)
+        // y el aro circular alrededor de un rectángulo quedaba descuadrado (ver incidencia). Se
+        // sustituyó por una barra de progreso horizontal simple, válida para cualquier forma de
+        // icono (rectangular o circular) sin depender de la familia de input activa.
+        //
+        // FIX (15/09/2026, 2ª pasada): esa barra era un rectángulo plano sin sprite (Image.sprite
+        // vacío) flotando desconectado del icono — y en Start.unity el ProgressBar tenía además un
+        // override de posición roto que lo dejaba pegado a la esquina, por ENCIMA del icono. Se
+        // probó a sustituirla por una pastilla (hp_bar_bg.png + hp_bar_fill.png, la misma pareja que
+        // las barras de HP/MP) pero Raúl la vio descentrada respecto al icono y sin encajar del
+        // todo con el conjunto — una barra aparte, aunque esté bien hecha, sigue siendo un segundo
+        // elemento que hay que alinear a mano contra el primero.
+        //
+        // FIX (15/09/2026, 3ª pasada — diseño final): se elimina la barra por completo. Ahora hay
+        // dos copias superpuestas del MISMO sprite de botón: `buttonIcon` de fondo, atenuada a
+        // `idleIconAlpha`, y `fillOverlayIcon` encima, en Type=Filled/Horizontal, tapando el icono de
+        // fondo con opacidad completa de izquierda a derecha según se mantiene pulsado. Al ser el
+        // propio icono el que "se rellena" (en vez de una barra separada), no hay nada que centrar ni
+        // alinear: comparten el mismo RectTransform y encajan automáticamente con cualquier forma de
+        // icono (pastilla de Espacio en teclado, círculo de A/Cross en mando), sin arte nuevo.
+        if (fillOverlayIcon)
         {
-            progressCircle.type = Image.Type.Filled;
-            if (progressCircle.fillMethod != Image.FillMethod.Radial360)
-                progressCircle.fillMethod = Image.FillMethod.Radial360;
-            progressCircle.fillOrigin = 2;
-            progressCircle.fillClockwise = true;
-            progressCircle.fillAmount = 0f;
+            fillOverlayIcon.type = Image.Type.Filled;
+            if (fillOverlayIcon.fillMethod != Image.FillMethod.Horizontal)
+                fillOverlayIcon.fillMethod = Image.FillMethod.Horizontal;
+            fillOverlayIcon.fillOrigin = (int)Image.OriginHorizontal.Left;
+            fillOverlayIcon.fillAmount = 0f;
+        }
+
+        if (buttonIcon)
+        {
+            var c = buttonIcon.color;
+            c.a = idleIconAlpha;
+            buttonIcon.color = c;
         }
 
         targetAlpha = showOnlyWhileHolding ? 0f : 1f;
@@ -116,12 +147,15 @@ public class HoldToSkipUI : MonoBehaviour
     /// TutorialPromptUI para "Pulsa {BOTON} para despertar" — por eso reutiliza el mismo nombre de
     /// glifo, InputGlyphNames.Confirm (Espacio/Enter en teclado; en mando es físicamente el mismo
     /// botón South que Interactuar, así que InputGlyphService ya lo resuelve solo a A/Cross/B).
+    /// Actualiza las DOS copias (icono de fondo atenuado + overlay de relleno) para que sigan siendo
+    /// pixel a pixel el mismo dibujo si el jugador cambia de mando/teclado con el aviso ya visible.
     /// </summary>
     private void RefreshIcon()
     {
-        if (!buttonIcon) return;
         var dynamicIcon = InputGlyphService.GetSprite(InputGlyphNames.Confirm);
-        buttonIcon.sprite = dynamicIcon != null ? dynamicIcon : _fallbackButtonIcon;
+        var resolved = dynamicIcon != null ? dynamicIcon : _fallbackButtonIcon;
+        if (buttonIcon) buttonIcon.sprite = resolved;
+        if (fillOverlayIcon) fillOverlayIcon.sprite = resolved;
     }
 
     private System.Collections.IEnumerator InitializeInputWithRetry()
@@ -270,7 +304,7 @@ public class HoldToSkipUI : MonoBehaviour
         {
             heldTime += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(heldTime / holdSeconds);
-            if (progressCircle) progressCircle.fillAmount = t;
+            if (fillOverlayIcon) fillOverlayIcon.fillAmount = t;
 
             // Log cada 0.25 segundos aprox
             if (Mathf.FloorToInt(heldTime * 4f) != Mathf.FloorToInt((heldTime - Time.unscaledDeltaTime) * 4f))
@@ -350,7 +384,7 @@ public class HoldToSkipUI : MonoBehaviour
         holding = true;
         heldTime = 0f;
         completed = false;
-        if (progressCircle) progressCircle.fillAmount = 0f;
+        if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
         if (showOnlyWhileHolding) targetAlpha = 1f;
         
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -364,7 +398,7 @@ public class HoldToSkipUI : MonoBehaviour
         if (!completed)
         {
             heldTime = 0f;
-            if (progressCircle) progressCircle.fillAmount = 0f;
+            if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
         }
         if (showOnlyWhileHolding) targetAlpha = 0f;
         
@@ -378,7 +412,7 @@ public class HoldToSkipUI : MonoBehaviour
         holding = false;
         completed = false;
         heldTime = 0f;
-        if (progressCircle) progressCircle.fillAmount = 0f;
+        if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
         targetAlpha = showOnlyWhileHolding ? 0f : 1f;
         ApplyAlphaInstant(targetAlpha);
     }
@@ -393,7 +427,11 @@ public class HoldToSkipUI : MonoBehaviour
 
     // API
     public void SetHoldSeconds(float seconds) => holdSeconds = Mathf.Max(0.2f, seconds);
-    public void SetIcon(Sprite s) { if (buttonIcon) buttonIcon.sprite = s; }
+    public void SetIcon(Sprite s)
+    {
+        if (buttonIcon) buttonIcon.sprite = s;
+        if (fillOverlayIcon) fillOverlayIcon.sprite = s;
+    }
     public void SetSkipAction(SkipAction action) => skipAction = action;
     public void SetTimelineToStop(PlayableDirector director) => timelineToStop = director;
 }

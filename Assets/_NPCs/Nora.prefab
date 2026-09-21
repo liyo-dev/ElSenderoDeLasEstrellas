@@ -18736,6 +18736,7 @@ GameObject:
   - component: {fileID: 5484778573963360926}
   - component: {fileID: 2630653519091179174}
   - component: {fileID: 9221139903341811251}
+  - component: {fileID: 5843342185955581126}
   m_Layer: 8
   m_Name: Nora
   m_TagString: Untagged
@@ -18928,9 +18929,9 @@ MonoBehaviour:
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
-  persistentIdOverride:
+  persistentIdOverride: 
   includeSceneInPersistentId: 1
-  dialogueCharacterId:
+  dialogueCharacterId: 
   dialogue: {fileID: 0}
   yesOption: {fileID: 0}
   noOption: {fileID: 0}
@@ -18951,6 +18952,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &2630653519091179174
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -19009,6 +19011,9 @@ MonoBehaviour:
   disableWander: 0
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: CHAR_NORA
@@ -19016,16 +19021,30 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5843342185955581126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7142834533965333703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 1488999698718331825}
+  originalMouthMesh: {fileID: 6039252006020234271}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &7148122524445131945
 GameObject:
   m_ObjectHideFlags: 0

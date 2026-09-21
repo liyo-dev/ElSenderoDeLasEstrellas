@@ -37,6 +37,12 @@ public class MagicProjectile : MonoBehaviour
         
         // Elemento de magia (para interacciones con puzzle)
         public MagicElement element;     // Fire, Ice, etc.
+
+        // Modo preciso (Paso 5/6 del refactor Tramo 1): true si este proyectil concreto es la
+        // variante "precisa" de un hechizo con MagicSpellSO.supportsPreciseMode (mantener el
+        // botón), construida por MagicSpellSO.BuildPreciseVariant(). La lee, por ejemplo,
+        // RuneCollar (Paso 6) para decidir si un impacto rompe el aro del demonio o no.
+        public bool isPrecise;
     }
 
     // ==== Estado ===============================================================
@@ -53,6 +59,10 @@ public class MagicProjectile : MonoBehaviour
 
     /// <summary>Daño configurado de este proyectil (usado p. ej. por ProjectileCollisionHandler al sumar daños en un choque de hechizos).</summary>
     public float Damage => _cfg.damage;
+
+    /// <summary>true si este proyectil es la variante precisa de un hechizo con modo preciso (ver
+    /// ProjectileConfig.isPrecise / MagicSpellSO.BuildPreciseVariant). Usado por RuneCollar.</summary>
+    public bool IsPrecise => _cfg.isPrecise;
     
     // Buffer reutilizable para AOE
     private Collider[] _aoeHitBuffer = new Collider[32];

@@ -246,16 +246,29 @@ public class NPCEmotionController : MonoBehaviour
     /// <summary>
     /// Establece la emoción del NPC, activando los meshes correspondientes.
     /// </summary>
+    private bool _avisadoSinPerfil;
+
     public void SetEmotion(NPCEmotion emotion)
     {
         if (emotionProfile == null)
         {
-            if (debugMode)
-                {
+            // Este aviso NO va detrás de debugMode (INC-316). Sin EmotionProfile este método no
+            // hace absolutamente nada, y como el fallo es silencioso el síntoma que se ve es
+            // "los personajes no cambian nunca de expresión, solo de animación" — que es
+            // exactamente lo que Raúl reportó tras la novena grabación, con 57 beats de cara
+            // puestos en la secuencia del prólogo y ni uno surtiendo efecto.
+            //
+            // Un método que no puede hacer su trabajo tiene que decirlo. Se avisa una vez por
+            // personaje, no una por llamada, para no inundar la consola.
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[NPCEmotionController:{name}] ⚠️ No hay EmotionProfile asignado");
+            if (!_avisadoSinPerfil)
+            {
+                _avisadoSinPerfil = true;
+                Debug.LogWarning($"[NPCEmotionController:{name}] No tiene EmotionProfile asignado, " +
+                    "así que NINGÚN cambio de expresión de este personaje va a verse. Se le asigna " +
+                    "en el Inspector, en el componente NPCEmotionController del prefab.", this);
+            }
 #endif
-                }
             return;
         }
         

@@ -54,15 +54,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Go talk to Eldran at the kingdom entrance"
+            "value": "Go see what's going on with Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "A new day has begun. Head out and make your way to the entrance of the Kingdom, where Eldran is waiting to talk to you. Follow the main path until you reach the Kingdom gates."
+            "value": "Oliver has asked you to go see what's going on with Eldran. Follow the minimap marker until you find him."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
-            "value": "Early Morning"
+            "value": "Find Eldran"
         },
         {
             "key": "QUEST_ELDRAN_MISSION10_DESC",
@@ -459,6 +459,18 @@
         {
             "key": "QUEST_TENDERA_ALGAS_STEP01_DESC",
             "value": "Get 2 magic potions and give them to Barbara."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_DESC",
+            "value": "Leave the house and find out what that shouting is about."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_DETAIL",
+            "value": "Someone outside is arguing loudly. Go out and see what's happening."
+        },
+        {
+            "key": "QUEST_WILL_MISSION0_NAME",
+            "value": "Go see what's going on"
         },
         {
             "key": "READ_THE_LETTER_DESC",

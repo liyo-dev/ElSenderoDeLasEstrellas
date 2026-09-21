@@ -677,8 +677,109 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             StopCoroutine(_oneShotCoroutine);
         }
+
+        // Y cualquier pose sostenida: un gesto nuevo manda sobre la pose que hubiera.
+        PararLaPose();
         
         _oneShotCoroutine = StartCoroutine(PlayOneShotCoroutine(stateName, layer, onComplete));
+    }
+
+    // ── Poses sostenidas ──────────────────────────────────────────────────────────────────────
+    //
+    // Un gesto es un DISPARO: se reproduce y, al acabar el clip, PlayOneShotCoroutine llama a
+    // TransitionToIdle(). Para saludar está bien. Para una pose que tiene que DURAR —volar,
+    // sostener un hechizo, quedarse en el aire— es exactamente lo contrario de lo que hace falta,
+    // y es lo que Raúl veía en el prólogo: «cuando se encadenan varias animaciones, por ejemplo
+    // salto y vuelo y disparo, o si se tiene que quedar volando, hay momentos donde pasa a idle».
+    //
+    // Antes esto se apañaba repitiendo el gesto N veces, y salían las dos formas del mismo fallo:
+    // si la repetición llegaba antes de acabar el clip, la animación se reiniciaba desde el
+    // fotograma 0 (el tirón, «parece que se ha quedado pillado»); si llegaba después, se colaba un
+    // idle. Y la última repetición terminaba su corrutina en pleno vuelo y mandaba a idle a un
+    // personaje que estaba a veinte metros de altura.
+    //
+    // HoldPose no repite nada: cruza UNA vez y se queda vigilando. Solo vuelve a cruzar si el
+    // Animator se ha salido de la pose (porque otro sistema le ha mandado a idle o a locomoción),
+    // así que en el caso normal el clip no se reinicia nunca. Un clip cíclico se ve en bucle; uno
+    // que no lo es se queda congelado en su último fotograma, que para una pose en el aire es
+    // justo lo que se quiere.
+    private Coroutine _poseCoroutine;
+    private string _poseSostenida;
+
+    /// ¿Hay ahora mismo una pose sostenida? Lo pregunta quien podría pisarla sin querer — el
+    /// relanzador de gestos de hablar de SayBeat, sin ir más lejos.
+    public bool SosteniendoPose => _poseCoroutine != null && !string.IsNullOrEmpty(_poseSostenida);
+
+    /// Mantiene una pose hasta que alguien diga lo contrario. Idempotente: pedir la pose que ya
+    /// está puesta no la reinicia.
+    public void HoldPose(string stateName, int layer = -1)
+    {
+        if (string.IsNullOrEmpty(stateName) || animator == null || _currentState == AnimationState.Dead)
+            return;
+
+        if (_poseSostenida == stateName && _poseCoroutine != null) return;
+
+        if (layer < 0) layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
+        if (layer < 0)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[NPCAnimator:{gameObject.name}] HoldPose('{stateName}'): ese estado no " +
+                "existe en ningún layer de este Animator Controller. La pose no se va a ver.");
+#endif
+            return;
+        }
+
+        if (_oneShotCoroutine != null) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
+        PararLaPose();
+
+        _poseSostenida = stateName;
+        _poseCoroutine = StartCoroutine(SostenerPose(stateName, layer));
+    }
+
+    /// Suelta la pose. Por defecto devuelve al personaje a su pose normal; con `aIdle` a false lo
+    /// deja donde esté, que es lo que hace falta cuando lo siguiente es otro gesto y no se quiere
+    /// un idle de un fotograma entre medias.
+    public void ReleasePose(bool aIdle = true)
+    {
+        if (_poseCoroutine == null && string.IsNullOrEmpty(_poseSostenida)) return;
+
+        PararLaPose();
+
+        if (aIdle && _currentState != AnimationState.Dead)
+        {
+            _currentState = AnimationState.Idle;
+            TransitionToIdle();
+        }
+    }
+
+    private void PararLaPose()
+    {
+        if (_poseCoroutine != null) StopCoroutine(_poseCoroutine);
+        _poseCoroutine = null;
+        _poseSostenida = null;
+    }
+
+    private IEnumerator SostenerPose(string stateName, int layer)
+    {
+        _currentState = AnimationState.OneShot;
+        animator.speed = 1f;
+        if (layer > 0 && layer < animator.layerCount) animator.SetLayerWeight(layer, 1f);
+
+        CrossFadeToState(stateName, 0.12f, layer);
+        yield return null;
+
+        while (true)
+        {
+            yield return null;
+            if (animator == null) yield break;
+
+            // Solo se recruza si se ha salido de verdad. Mientras esté en la pose —o entrando en
+            // ella— no se toca, que es lo que evita el reinicio del clip.
+            if (animator.IsInTransition(layer)) continue;
+            if (animator.GetCurrentAnimatorStateInfo(layer).IsName(stateName)) continue;
+
+            CrossFadeToState(stateName, 0.12f, layer);
+        }
     }
     
     private IEnumerator PlayOneShotCoroutine(string stateName, int layer, Action onComplete)
@@ -776,7 +877,19 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// <summary>
     /// Inicia una interacción
     /// </summary>
-    public void BeginInteraction()
+    public void BeginInteraction() => BeginInteraction(girarAlJugador: true);
+
+    /// <param name="girarAlJugador">
+    /// Girarse hacia el jugador al empezar a hablar. En el juego es lo correcto: te acercas a un
+    /// NPC y se vuelve hacia ti. En una CINEMÁTICA es un fallo (INC-318), y de los gordos: el
+    /// jugador está donde esté —en el prólogo, Will está durmiendo al otro lado del pueblo— así
+    /// que cada personaje que abre la boca se gira hacia allí.
+    ///
+    /// Eso explica, de una vez, todos los «se gira y mira a nadie» del prólogo: el Archimago al
+    /// decir «con cuidado», Liora al decir «no te tomas ni un día libre», el Mago Oscuro al decir
+    /// «arrodillaos», y los dos girados en la última conversación. Ninguno era del encuadre.
+    /// </param>
+    public void BeginInteraction(bool girarAlJugador)
     {
         if (_isInteracting)
             return;
@@ -788,7 +901,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         // ✅ FIX: Solo girar hacia el jugador si la rotación automática NO está deshabilitada
         // Si DialogueManager ya controló la rotación, no interferir
-        if (_player != null && !_disableAutoRotation)
+        if (girarAlJugador && _player != null && !_disableAutoRotation)
         {
             FaceTarget(_player.position);
         }
@@ -1571,18 +1684,83 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// emociones que solo cambian la cara, sin tocar el cuerpo).
     /// Solo actúa si el NPC está en estado Interacting.
     /// </summary>
+    // ── La cara, no solo el cuerpo (FIX 16 sep 2026) ─────────────────────────
+    //
+    // Raúl: "no veo que se cambie la cara de Will... cuando Oliver durante la explicación del menú
+    // tampoco las cambia". Causa raíz: PlayBodyEmotion() solo tocaba el CUERPO. La cara
+    // (NPCEmotionController.SetEmotion, que intercambia los meshes de ojos y boca) no la llamaba
+    // NADIE en el camino de diálogo -- solo la llamaban a mano los sequencers escritos uno a uno
+    // (EstelaAppears, LiamCrystalBall, MagoOscuro...). Es decir: en TODO el juego, ningún diálogo
+    // normal ha cambiado nunca una cara, aunque su DialogueLine llevara emoción.
+    //
+    // Lo delata el propio comentario de ResolveBodyAnimStateName más abajo: habla de "emociones que
+    // solo cambian la cara" y devuelve cadena vacía para ellas... pero como la cara no se tocaba,
+    // esas emociones no hacían absolutamente nada.
+    //
+    // Se arregla aquí, en el punto por el que ya pasa todo el mundo, en vez de en cada llamador.
+    private NPCEmotionController _emotionControllerCached;
+    private bool _emotionControllerResolved;
+
+    /// Resolución PEREZOSA a propósito: ver el comentario de EmotionControllerResolver — en Awake()
+    /// el criterio todavía no es fiable porque depende de datos que cada controlador rellena en su
+    /// propio Awake(), y el orden entre componentes del mismo GameObject no está garantizado.
+    private NPCEmotionController ResolvedEmotionController
+    {
+        get
+        {
+            if (!_emotionControllerResolved)
+            {
+                _emotionControllerResolved = true;
+                _emotionControllerCached = Game.NPC.Common.EmotionControllerResolver.Resolve(gameObject);
+            }
+            return _emotionControllerCached;
+        }
+    }
+
+    /// Cambia la cara del personaje. None = sin cambio (se mantiene la que tenga puesta).
+    public void SetFaceEmotion(NPCEmotion emotion)
+    {
+        if (emotion == NPCEmotion.None) return;
+        ResolvedEmotionController?.SetEmotion(emotion);
+    }
+
     public void PlayBodyEmotion(NPCEmotion emotion)
     {
-        if (!_isInteracting || _currentState == AnimationState.Dead)
+        if (_currentState == AnimationState.Dead)
+            return;
+
+        // La cara se cambia SIEMPRE, incluso si el personaje no está en modo interacción o si esta
+        // emoción no tiene animación corporal asignada: son dos cosas independientes y hasta hoy la
+        // segunda se comía a la primera.
+        SetFaceEmotion(emotion);
+
+        if (!_isInteracting)
             return;
 
         string stateName = ResolveBodyAnimStateName(emotion);
         if (string.IsNullOrEmpty(stateName))
             return; // Emoción sin animación corporal asignada: se mantiene la pose actual
 
-        // Los gestos corporales de diálogo (Talk01-03, Angry01-02, Cry01, Laugh01, Fear01, etc.)
+        // Los gestos corporales de diálogo (Talk01-03, Angry01-02, Cry01, Laugh01, Beg01, etc.)
         // viven en UpperBody layer para no congelar las piernas del NPC mientras gesticula.
-        PlayOneShot(stateName, upperBodyLayer, () =>
+        //
+        // FIX (17 sep 2026): antes se forzaba upperBodyLayer a pelo. Un estado que NO está en esa
+        // capa —y hay unos cuantos en NPC_NoWeapon: Idle02, Pain01, Victory_NoWeapon, Fidget…—
+        // no se reproducía y no avisaba de nada: el NPC se quedaba con la cara puesta y el cuerpo
+        // quieto, y desde fuera parecía que el mapeo de la emoción no servía. Ahora se resuelve la
+        // capa de verdad (preferimos UpperBody; si el estado solo existe en Base Layer, se usa esa).
+        int layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
+        if (layer < 0)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[NPCSimpleAnimator:{name}] La emoción {emotion} está mapeada a " +
+                $"'{stateName}', que no existe en ninguna capa del Animator. Revisa el " +
+                "EmotionProfile: ese nombre no hace nada.", this);
+#endif
+            return;
+        }
+
+        PlayOneShot(stateName, layer, () =>
         {
             if (_isInteracting && _currentState != AnimationState.Dead)
                 CrossFadeToState(interactState, 0.15f);
@@ -1597,6 +1775,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// (no hay fallback a Talk01, para no forzar un gesto en emociones que solo cambian la cara).
     /// Solo si no hay EmotionProfile asignado se usa un fallback de seguridad.
     /// </summary>
+    /// Contador que reparte las variantes de gesto de cada emoción. Uno por NPC, así que dos
+    /// personajes en la misma conversación no caen en el mismo gesto a la vez.
+    private int _emotionRotation;
+
     private string ResolveBodyAnimStateName(NPCEmotion emotion)
     {
         string[] neutralAnims = (_emotionProfile != null && _emotionProfile.neutralBodyAnims is { Length: > 0 })
@@ -1612,7 +1794,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (_emotionProfile != null)
         {
             var data = _emotionProfile.GetEmotionData(emotion);
-            return data.bodyAnimStateName; // puede venir vacío a propósito: "sin cambio"
+            // Si la emoción tiene repertorio, se va rotando: dos NPCs enfadados, o el mismo dos
+            // frases seguidas, no repiten el mismo gesto. Puede venir vacío a propósito, que el
+            // llamador interpreta como "sin cambio".
+            _emotionRotation++;
+            return data.PickBodyAnim(_emotionRotation);
         }
 
         return neutralAnims[0];

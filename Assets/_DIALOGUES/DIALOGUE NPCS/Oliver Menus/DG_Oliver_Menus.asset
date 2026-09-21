@@ -17,27 +17,48 @@ MonoBehaviour:
     textId: DLG_OLIVER_MENUS_01
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 8
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_02
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 8
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_03
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_04
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_05
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 8
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_06
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 0
   - speakerNameId: CHAR_OLIVER
     textId: DLG_OLIVER_MENUS_07
     text: 
     portrait: {fileID: 0}
+    isPlayerSpeaking: 0
+    lookAtOverrideId: 
+    emotion: 1

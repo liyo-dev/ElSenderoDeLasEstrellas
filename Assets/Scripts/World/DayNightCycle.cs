@@ -97,13 +97,26 @@ public class DayNightCycle : MonoBehaviour
     // es un manager persistente de Start.unity).
     public static Transform Sun { get; private set; }
 
-    #if UNITY_EDITOR
+    /// El ciclo día/noche de la partida, o null si no hay ninguno cargado (escenas de prueba,
+    /// interiores sueltos). Lo necesitan las cinemáticas que cambian la hora del día a propósito
+    /// (ver CinematicTimeOfDay): antes solo se podía llegar aquí con un FindObjectOfType.
+    public static DayNightCycle Instance { get; private set; }
+
+#if UNITY_EDITOR
+    // FIX (17 sep 2026): este archivo llegó a tener DOS 'ResetStatics' (error CS0111 al recompilar,
+    // misma familia que INC-238). El que se quedó es este, que limpia las dos estáticas; el otro,
+    // más abajo entre 'AutoAdvance' y el enum 'TimeOfDay', era anterior y solo limpiaba 'Sun'.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics()
+    static void ResetStatics() { Instance = null; Sun = null; }
+#endif
+
+    /// Si el ciclo avanza solo con el tiempo. Se apaga mientras una cinemática manda sobre la hora
+    /// del día, para que no se le cambie el cielo a mitad de plano.
+    public bool AutoAdvance
     {
-        Sun = null;
+        get => autoAdvance;
+        set => autoAdvance = value;
     }
-    #endif
 
     public enum TimeOfDay
     {
@@ -259,6 +272,12 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float rainMinLightIntensity = 0.28f;
     [Tooltip("Segundos que tarda el cielo en nublarse (oscurecer + espesar niebla + cubrirse de nubes 3D) ANTES de que arranque la lluvia, y lo que tarda en despejarse otra vez al terminar. La lluvia no empieza a caer hasta que termina esta transición.")]
     [SerializeField] private float rainDarkenTransitionDuration = 4f;
+    [Tooltip("Color hacia el que se tiñe el ÚNICO skybox (_Tint) mientras llueve a tope (mezclado según rainSkyboxTintBlend). Por defecto un gris azulado apagado: sin esto, el cielo entre nubes se queda con el tinte brillante/saturado del periodo del día (Mediodía, Amanecer...) aunque esté lloviendo, porque el ciclo día/noche solo pinta el skybox por franja horaria, ajeno al clima.")]
+    [SerializeField] private Color rainSkyboxTint = new Color(0.55f, 0.58f, 0.62f);
+    [Tooltip("Cuánto se mezcla rainSkyboxTint sobre el tinte base del periodo, con lluvia a tope (0 = no se nota, 1 = sustituye del todo al tinte del periodo).")]
+    [Range(0f, 1f)] [SerializeField] private float rainSkyboxTintBlend = 0.6f;
+    [Tooltip("Multiplicador de _Intensity del skybox mientras llueve a tope (1 = sin cambio). Baja el brillo del cielo para que combine con la luz direccional atenuada (rainLightIntensityMultiplier) en vez de quedarse tan luminoso como en un periodo despejado.")]
+    [SerializeField, Range(0f, 1f)] private float rainSkyboxIntensityMultiplier = 0.6f;
 
     [Header("Clima - Niebla ocasional")]
     [Tooltip("Prefab opcional de niebla volumétrica (partículas) para el evento de niebla ocasional. Si es null, solo se espesa la niebla global (RenderSettings.fog), sin partículas.")]
@@ -453,6 +472,13 @@ public class DayNightCycle : MonoBehaviour
     // cuestión de segundos.
     private float _baseFogDensity;
     private Color _baseFogColor;
+    // Mismos motivos que _baseFogDensity/_baseFogColor (ver comentario ahí): LateUpdate() recalcula
+    // el tinte/intensidad del skybox SIEMPRE a partir de esta base cacheada, nunca leyendo de vuelta
+    // el valor que el propio LateUpdate ya mutó el frame anterior — eso compondría geométricamente
+    // (rainSkyboxIntensityMultiplier aplicado sobre sí mismo cada frame) hasta apagar el cielo del
+    // todo en un puñado de frames.
+    private Color _baseSkyboxTint;
+    private float _baseSkyboxIntensity;
 
     // Suprime la lluvia y la niebla VISUALMENTE mientras el jugador está en un interior
     // (AnchorEnvironment.isInterior), sin tocar el ciclo lógico (IsRaining/IsMisty, temporizadores)
@@ -474,6 +500,14 @@ public class DayNightCycle : MonoBehaviour
     // justo antes de que el jugador entrara en el minijuego.
     private bool _wasMinigameActive;
 
+    /// El material de skybox vivo, el que el ciclo va tintando por franja horaria. Lo necesita
+    /// CinematicTimeOfDay.MostrarExterior: una cinemática que transcurre a cielo abierto mientras el
+    /// jugador está dentro de una casa tiene que poder recuperar el cielo, y el snapshot que guarda
+    /// EnvironmentController no sirve cuando el jugador ENTRÓ en el interior antes de que existiera
+    /// snapshot alguno — que es justo lo que pasa en el prólogo, donde Will se acuesta y sueña.
+    /// Null si no hay sharedSkyboxMaterial asignado (entonces no hay nada que recuperar).
+    public Material SkyboxEnUso => _runtimeSkybox != null ? _runtimeSkybox : sharedSkyboxMaterial;
+
     void Awake()
     {
         if (timeSettings == null || timeSettings.Length == 0)
@@ -486,6 +520,8 @@ public class DayNightCycle : MonoBehaviour
         }
 
         _currentIndex = Mathf.Clamp(startingTimeIndex, 0, timeSettings.Length - 1);
+
+        Instance = this;
 
         _mainCamera = Camera.main;
         Sun = directionalLight != null ? directionalLight.transform : null;
@@ -519,6 +555,8 @@ public class DayNightCycle : MonoBehaviour
 
     void OnDestroy()
     {
+        if (Instance == this) Instance = null;
+
         if (Sun == (directionalLight != null ? directionalLight.transform : null)) Sun = null;
         // _runtimeSkybox es una copia en memoria de sharedSkyboxMaterial (ver Awake), no el asset
         // compartido: hay que liberarla explícitamente o queda huérfana hasta la siguiente carga
@@ -703,6 +741,21 @@ public class DayNightCycle : MonoBehaviour
             // dejar la luz casi a cero. Nunca baja de rainMinLightIntensity.
             float floored = Mathf.Max(darkened, rainMinLightIntensity);
             directionalLight.intensity = Mathf.Lerp(baseIntensity, floored, _rainDarkenAmount);
+        }
+
+        if (_rainDarkenAmount > 0f && _runtimeSkybox != null)
+        {
+            // Mismo patrón que la niebla (_baseFogDensity/_baseFogColor): se parte SIEMPRE de
+            // _baseSkyboxTint/_baseSkyboxIntensity (la base cacheada del periodo actual), nunca de
+            // GetColor/GetFloat sobre _runtimeSkybox, que ya estaría mutado por este mismo bloque
+            // en el frame anterior y compondría geométricamente hasta apagar el cielo del todo.
+            // Sin esto, el cielo entre las nubes se quedaba con el look brillante/saturado del
+            // periodo (p.ej. Mediodía) aunque estuviera lloviendo a tope, porque el ciclo día/noche
+            // nunca conocía el estado de lluvia al pintar el skybox.
+            Color rainedTint = Color.Lerp(_baseSkyboxTint, rainSkyboxTint, rainSkyboxTintBlend);
+            float rainedIntensity = _baseSkyboxIntensity * rainSkyboxIntensityMultiplier;
+            _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(_baseSkyboxTint, rainedTint, _rainDarkenAmount));
+            _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(_baseSkyboxIntensity, rainedIntensity, _rainDarkenAmount));
         }
 
         if (controlFog)
@@ -1128,6 +1181,43 @@ public class DayNightCycle : MonoBehaviour
         // ninguna transición de periodo interrumpe ni fuerza clima por sí sola.
     }
 
+#if UNITY_EDITOR
+    /// Aplica una hora del día AHORA, fuera de Play, para poder ver en el Editor cómo queda una
+    /// escena a esa luz — y para que las herramientas que renderizan planos (SequenceShotCapture)
+    /// capturen con la luz que va a tener el plano de verdad y no con la que hubiera guardada en
+    /// la escena.
+    ///
+    /// Fuera de Play no se ha ejecutado Awake, así que no existe la copia del skybox: se crea aquí
+    /// una temporal (HideAndDontSave, no se guarda en la escena ni ensucia el asset compartido).
+    /// Quien llame a esto es responsable de restaurar RenderSettings si no quiere dejar la escena
+    /// cambiada.
+    public void PreviewTimeOfDay(TimeOfDay hora)
+    {
+        if (timeSettings == null) return;
+
+        for (int i = 0; i < timeSettings.Length; i++)
+        {
+            if (timeSettings[i].timeOfDay != hora) continue;
+
+            if (_runtimeSkybox == null && sharedSkyboxMaterial != null)
+            {
+                _runtimeSkybox = new Material(sharedSkyboxMaterial) { hideFlags = HideFlags.HideAndDontSave };
+                RenderSettings.skybox = _runtimeSkybox;
+            }
+
+            if (controlAmbientLight) RenderSettings.ambientMode = AmbientMode.Flat;
+            RenderSettings.fog = controlFog;
+
+            _currentIndex = i;
+            CurrentTimeOfDay = hora;
+            ApplySettingsImmediate(timeSettings[i]);
+            return;
+        }
+
+        Debug.LogWarning($"[DayNightCycle] No hay ningún periodo '{hora}' configurado; no se puede previsualizar.");
+    }
+#endif
+
     void ApplySettingsImmediate(TimeOfDaySettings settings)
     {
         if (_runtimeSkybox != null)
@@ -1137,6 +1227,8 @@ public class DayNightCycle : MonoBehaviour
             _runtimeSkybox.SetFloat(SkyboxExponentId, settings.skyboxExponent);
             _runtimeSkybox.SetFloat(SkyboxDirectionYawId, settings.skyboxDirectionYaw);
             _runtimeSkybox.SetFloat(SkyboxDirectionPitchId, settings.skyboxDirectionPitch);
+            _baseSkyboxTint = settings.skyboxTint;
+            _baseSkyboxIntensity = settings.skyboxIntensity;
 
             // No pisar la REFERENCIA de RenderSettings.skybox si un interior (real o cinemático)
             // tiene el control ahora mismo — ver IsSkyboxLockedByEnvironment. Los valores de arriba
@@ -1236,8 +1328,17 @@ public class DayNightCycle : MonoBehaviour
 
             if (_runtimeSkybox != null)
             {
-                _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(startSkyboxTint, target.skyboxTint, t));
-                _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(startSkyboxIntensity, target.skyboxIntensity, t));
+                Color lerpedSkyboxTint     = Color.Lerp(startSkyboxTint, target.skyboxTint, t);
+                float lerpedSkyboxIntensity = Mathf.Lerp(startSkyboxIntensity, target.skyboxIntensity, t);
+
+                // Misma razón que _baseFogColor/_baseFogDensity un poco más arriba: si hay
+                // lluvia activa en este mismo frame, LateUpdate() (que corre después) debe
+                // oscurecer a partir de ESTA base ya actualizada, no de la del frame anterior.
+                _baseSkyboxTint      = lerpedSkyboxTint;
+                _baseSkyboxIntensity = lerpedSkyboxIntensity;
+
+                _runtimeSkybox.SetColor(SkyboxTintId, lerpedSkyboxTint);
+                _runtimeSkybox.SetFloat(SkyboxIntensityId, lerpedSkyboxIntensity);
                 _runtimeSkybox.SetFloat(SkyboxExponentId, Mathf.Lerp(startSkyboxExponent, target.skyboxExponent, t));
                 _runtimeSkybox.SetFloat(SkyboxDirectionYawId, Mathf.Lerp(startSkyboxYaw, target.skyboxDirectionYaw, t));
                 _runtimeSkybox.SetFloat(SkyboxDirectionPitchId, Mathf.Lerp(startSkyboxPitch, target.skyboxDirectionPitch, t));

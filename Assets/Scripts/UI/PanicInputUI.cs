@@ -140,7 +140,15 @@ public class PanicInputUI : MonoBehaviour
         rt.anchorMax        = new Vector2(0.5f, 0.5f);
         rt.pivot            = new Vector2(0.5f, 0.5f);
         rt.anchoredPosition = new Vector2(0f, 0f);
-        rt.sizeDelta        = new Vector2(1000f, 1000f);
+        // FIX (17 sep 2026, Raúl: "los iconos salen ocupando toda la pantalla" -- prólogo, primer
+        // uso real de este fallback en runtime). 1000x1000 px de canvas es casi toda la altura de
+        // una referencia 1920x1080 -- se veía un panel gigante centrado (fondo semitransparente +
+        // icono) tapando media pantalla. StarAwakeningModule nunca lo sufrió porque trae su PROPIO
+        // PanicInputUI ya colocado a mano en el prefab de esa escena (GetOrCreate() ni se llama);
+        // este tamaño solo lo usa una secuencia que NO trae ninguno, como el prólogo. Bajado a un
+        // tamaño de icono de HUD normal -- icono arriba + barra de progreso debajo, misma
+        // proporción de siempre (ver anchors de iconRT/sliderRT más abajo, sin tocar).
+        rt.sizeDelta        = new Vector2(220f, 260f);
 
         var cg = root.AddComponent<CanvasGroup>();
 

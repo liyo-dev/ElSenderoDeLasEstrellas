@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Core;
@@ -18,7 +17,6 @@ public class QuestMenuManager : MonoBehaviour
     [SerializeField] private float autoShowDelay = 0.35f;
     [SerializeField] private float holdTimeForMainMenu = 0.6f;
 
-    private Coroutine _autoShowRoutine;
     private QuestManager _lastQuestManager;
     private float _dpadHoldTime;
     private bool _dpadUpHeld;
@@ -173,24 +171,15 @@ public class QuestMenuManager : MonoBehaviour
 
     private void HandleQuestStarted(string questId)
     {
-        if (!autoShowQuickOnQuestInit || quickMenu == null) return;
-
-        if (_autoShowRoutine != null)
-            StopCoroutine(_autoShowRoutine);
-
-        _autoShowRoutine = StartCoroutine(AutoShowQuickMenu());
-    }
-
-    private IEnumerator AutoShowQuickMenu()
-    {
-        if (autoShowDelay > 0f)
-            yield return new WaitForSecondsRealtime(autoShowDelay);
-
-        // isAutoToast:true -- este auto-show no debe registrarse como un menú real (ver
-        // QuestLogListUI.IsAutoToast e INC-199): si no, el minimapa y demás UI in-world se
-        // ocultarían solos cada vez que arranca una misión nueva.
-        quickMenu.ShowPanel(true, ignoreRestrictions: true, isAutoToast: true);
-        _autoShowRoutine = null;
+        // FIX (21 sept 2026, Raul: "debe salir SOLO el pop up nuevo, no el menu de misiones" --
+        // INC-346). Este metodo abria el QuickQuestMenu solo (con un retardo de autoShowDelay)
+        // CADA VEZ que arrancaba una mision, duplicando el aviso propio que QuestLogListUI.
+        // OnQuestStarted() ya hacía sin ningun retardo -- dos aperturas automaticas de la misma
+        // ventana por el mismo evento, una de ellas encima con delay (de ahi que el jugador viera
+        // "tarda mucho en salir"). Ahora el unico aviso automatico de "nueva mision" es el banner
+        // centrado (QuestStartedBannerUI); este menu solo se abre a mano (D-pad arriba). Se deja
+        // el metodo (vacio) y la suscripcion tal cual para no tocar el wiring de la escena; los
+        // campos autoShowQuickOnQuestInit/autoShowDelay quedan sin uso a proposito.
     }
 
     private void HandleDpadUpPressed()

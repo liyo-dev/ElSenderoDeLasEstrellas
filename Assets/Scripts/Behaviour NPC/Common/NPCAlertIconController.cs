@@ -189,12 +189,30 @@ namespace Game.NPC.Common
             return targetPos + iconOffset;
         }
         
+        /// <summary>¿Hay un diálogo en pantalla ahora mismo? (fuente de verdad, no un flag propio)</summary>
+        private static bool IsDialogueOpenNow() =>
+            DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
+
         /// <summary>
         /// Cuando inicia un diálogo, ocultar el icono temporalmente
         /// </summary>
         private void OnDialogueStarted(Transform npcInvolved)
         {
-            if (_currentIconInstance != null && !_isHiding && !_hiddenDuringDialogue)
+            // FIX (16 sept 2026): antes esto salía de vacío si _hiddenDuringDialogue ya era true.
+            // Con dos diálogos seguidos (p. ej. el turn-in de una misión y la oferta de la
+            // siguiente, ambos del grafo, separados por un frame), el flag todavía valía true del
+            // diálogo anterior — porque solo se baja al TERMINAR la animación de restauración, que
+            // tiene 0.5s de retardo — así que el diálogo nuevo no ocultaba nada Y ADEMÁS la
+            // restauración pendiente saltaba 0.5s después, ya con el diálogo nuevo en pantalla:
+            // el icono aparecía en medio de la conversación. Ahora se cancela la restauración
+            // pendiente y se oculta siempre que haya un icono visible.
+            if (_restoreAfterDialogueCoroutine != null)
+            {
+                StopCoroutine(_restoreAfterDialogueCoroutine);
+                _restoreAfterDialogueCoroutine = null;
+            }
+
+            if (_currentIconInstance != null && !_isHiding)
             {
                 _hiddenDuringDialogue = true;
                 
@@ -714,14 +732,31 @@ namespace Game.NPC.Common
             
             DOTween.Kill(this);
 
-            Sequence showSeq = DOTween.Sequence();
-            showSeq.Append(iconTransform.DOScale(_targetScale, showAnimDuration).SetEase(Ease.OutBack));
-            showSeq.Join(iconTransform.DOMove(targetPos, showAnimDuration).SetEase(Ease.OutBack));
-            showSeq.SetUpdate(true);
-            showSeq.SetId(this);
-            _currentTween = showSeq;
+            // FIX (16 sept 2026): si el icono se crea CON UN DIÁLOGO YA ABIERTO (el evento
+            // OnDialogueStarted ya pasó, así que nadie va a ocultarlo), nace oculto y se queda
+            // esperando a OnDialogueClosed para restaurarse, en vez de animarse hacia arriba en
+            // mitad de la conversación.
+            bool bornDuringDialogue = IsDialogueOpenNow();
+            if (bornDuringDialogue)
+            {
+                // Nace oculto: se queda a escala 0 en su sitio y espera a OnDialogueClosed, que
+                // dispara la restauración normal. El bucle de abajo sigue corriendo (respeta
+                // _hiddenDuringDialogue), así que el icono queda bien colocado al reaparecer.
+                _hiddenDuringDialogue = true;
+                iconTransform.position = targetPos;
+                iconTransform.localScale = Vector3.zero;
+            }
+            else
+            {
+                Sequence showSeq = DOTween.Sequence();
+                showSeq.Append(iconTransform.DOScale(_targetScale, showAnimDuration).SetEase(Ease.OutBack));
+                showSeq.Join(iconTransform.DOMove(targetPos, showAnimDuration).SetEase(Ease.OutBack));
+                showSeq.SetUpdate(true);
+                showSeq.SetId(this);
+                _currentTween = showSeq;
 
-            yield return new WaitForSecondsRealtime(showAnimDuration);
+                yield return new WaitForSecondsRealtime(showAnimDuration);
+            }
 
             float baseTime = Time.unscaledTime;
 

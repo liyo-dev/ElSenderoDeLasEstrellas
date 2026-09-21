@@ -2233,6 +2233,7 @@ GameObject:
   - component: {fileID: 2097140776324860532}
   - component: {fileID: 1165701030903493255}
   - component: {fileID: 4335349407365795960}
+  - component: {fileID: 4424460848909321129}
   m_Layer: 8
   m_Name: Victoria
   m_TagString: Untagged
@@ -2436,6 +2437,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!114 &2097140776324860532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2509,20 +2511,37 @@ MonoBehaviour:
   disableWander: 1
   startInIdleState: 1
   forceKinematicRigidbody: 1
-  persistLastPosition: 0
-  persistenceId: 
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
+  persistLastPosition: 1
+  persistenceId: NPC_Victoria
   dialogueCharacterId: CHAR_VICTORIA
   rotateToPlayerOnInteract: 1
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
   onLeftParty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4424460848909321129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9091734439753928547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 6473983573517248277}
+  originalMouthMesh: {fileID: 4711719332229859548}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0

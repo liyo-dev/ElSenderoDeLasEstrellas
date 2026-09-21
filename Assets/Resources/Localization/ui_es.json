@@ -9,6 +9,10 @@
             "value": "Maná: {0}/{1}"
         },
         {
+            "key": "BATTLE_CANNOT_FLEE",
+            "value": "No puedes huir de la batalla."
+        },
+        {
             "key": "BOSS_DEMONIO_HEALTHBAR_NAME",
             "value": "Boss Demonio"
         },
@@ -731,6 +735,10 @@
         {
             "key": "ITEM_KEY_NAME",
             "value": "Llave"
+        },
+        {
+            "key": "ITEM_MERMELADA_NAME",
+            "value": "Mermelada"
         },
         {
             "key": "ITEM_POCIONMAGIA_DESC",

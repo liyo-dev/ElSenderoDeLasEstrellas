@@ -95,6 +95,12 @@ public static class CameraDirectorService
     public static void Claim(object owner)
     {
         if (owner == null) return;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (s_currentOwner != null && !Equals(s_currentOwner, owner))
+            Debug.Log($"[CameraDirectorService] '{Describe(owner)}' reclama la cámara mientras seguía " +
+                $"marcada como de '{Describe(s_currentOwner)}' (con o sin liberación pendiente) — relevo " +
+                "normal entre sistemas, no un error por sí solo.");
+#endif
         CancelPendingRelease();
         s_currentOwner = owner;
         vThirdPersonCamera.lockCameraForCinematic = true;
@@ -106,7 +112,27 @@ public static class CameraDirectorService
     /// siguiente Claim() a coalescer con este handoff.
     public static void Release(object owner)
     {
-        if (owner == null || !Equals(s_currentOwner, owner)) return;
+        if (owner == null) return;
+
+        // DIAGNÓSTICO (20 sept 2026, Raúl: "al terminar todas las secuencias siempre se queda
+        // mal la cámara y debe cambiar a la de gameplay"): por lectura de código no se ha
+        // encontrado ningún sistema que reclame la cámara sin pasar por Claim()/Release() (salvo
+        // KingdomExitTransitionNode, a propósito, documentado arriba) — pero SI un segundo owner
+        // se hubiera colado como dueño actual sin que este owner se enterase, Release() haría
+        // aquí un `return` COMPLETAMENTE SILENCIOSO y el flag se quedaría bloqueado para
+        // siempre, con "cámara que nunca vuelve al gameplay" como único síntoma visible. Este
+        // aviso hace ruidoso justo ese caso, en vez de dejarlo pasar sin rastro: si aparece en
+        // consola, apunta directamente a quién es el dueño real que está bloqueando la cámara.
+        if (!Equals(s_currentOwner, owner))
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[CameraDirectorService] Release() IGNORADO: '{Describe(owner)}' pide soltar la " +
+                $"cámara, pero el dueño actual es '{Describe(s_currentOwner)}'. Si la cámara se queda bloqueada " +
+                "en modo cinemático a partir de aquí, el dueño real es este, no quien intentó soltarla.");
+#endif
+            return;
+        }
+
         CancelPendingRelease();
         EnsureRunner();
         s_pendingRelease = s_runner.StartCoroutine(Co_DeferredRelease(owner));
@@ -120,9 +146,30 @@ public static class CameraDirectorService
         {
             s_currentOwner = null;
             vThirdPersonCamera.lockCameraForCinematic = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[CameraDirectorService] Cámara devuelta al gameplay (dueño soltado: '{Describe(owner)}').");
+#endif
         }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        else
+        {
+            Debug.Log($"[CameraDirectorService] Liberación de '{Describe(owner)}' superada por un Claim() " +
+                $"nuevo de '{Describe(s_currentOwner)}' durante la ventana de gracia — coalescido sin soltar " +
+                "el flag, comportamiento esperado.");
+        }
+#endif
         s_pendingRelease = null;
     }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private static string Describe(object owner)
+    {
+        if (owner == null) return "(nadie)";
+        if (owner is UnityEngine.Object uo)
+            return uo == null ? $"{owner.GetType().Name} (destruido)" : $"{owner.GetType().Name} '{uo.name}'";
+        return owner.GetType().Name;
+    }
+#endif
 
     private static void CancelPendingRelease()
     {

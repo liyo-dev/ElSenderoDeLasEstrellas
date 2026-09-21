@@ -1,0 +1,1324 @@
+{
+    "texts": [
+        {
+            "key": "CHAR_AMIGAPEZ",
+            "value": "Fish Kid's Friend"
+        },
+        {
+            "key": "CHAR_DUQUE_REGALIZ",
+            "value": "Duke of Licorice"
+        },
+        {
+            "key": "CHAR_ELDRAN",
+            "value": "Eldran"
+        },
+        {
+            "key": "CHAR_ESTELA",
+            "value": "Estela"
+        },
+        {
+            "key": "CHAR_GUARD",
+            "value": "Guard"
+        },
+        {
+            "key": "CHAR_GUARDIA_BOSQUE",
+            "value": "Forest Guard"
+        },
+        {
+            "key": "CHAR_GUERRERACHINA",
+            "value": "Erika"
+        },
+        {
+            "key": "CHAR_KING",
+            "value": "King"
+        },
+        {
+            "key": "CHAR_LEONARDO",
+            "value": "Leonardo"
+        },
+        {
+            "key": "CHAR_LETY",
+            "value": "Lety"
+        },
+        {
+            "key": "CHAR_LETY_VICKY",
+            "value": "Lety & Vicky"
+        },
+        {
+            "key": "CHAR_LIAM",
+            "value": "Liam"
+        },
+        {
+            "key": "CHAR_MAGO",
+            "value": "Magician"
+        },
+        {
+            "key": "CHAR_MANUEL",
+            "value": "Manuel"
+        },
+        {
+            "key": "CHAR_MAZAPAN",
+            "value": "Marzipan Creature"
+        },
+        {
+            "key": "CHAR_NIÑOPEZ",
+            "value": "Fish Kid"
+        },
+        {
+            "key": "CHAR_NORA",
+            "value": "Nora"
+        },
+        {
+            "key": "CHAR_OLIVER",
+            "value": "Oliver"
+        },
+        {
+            "key": "CHAR_PATRICIA",
+            "value": "Patricia"
+        },
+        {
+            "key": "CHAR_PIRATA",
+            "value": "Pirate"
+        },
+        {
+            "key": "CHAR_ROBERTO",
+            "value": "Robert"
+        },
+        {
+            "key": "CHAR_RUDOLFO",
+            "value": "Rudolph"
+        },
+        {
+            "key": "CHAR_SARA",
+            "value": "Sarah"
+        },
+        {
+            "key": "CHAR_SOFIA",
+            "value": "Sofia"
+        },
+        {
+            "key": "CHAR_TABERNERA",
+            "value": "Rosa"
+        },
+        {
+            "key": "CHAR_TENDERA",
+            "value": "Bárbara"
+        },
+        {
+            "key": "CHAR_VERONICA",
+            "value": "Veronica"
+        },
+        {
+            "key": "CHAR_VICKY",
+            "value": "Vicky"
+        },
+        {
+            "key": "CHAR_VICTORIA",
+            "value": "Victoria"
+        },
+        {
+            "key": "CHAR_WILL",
+            "value": "Will"
+        },
+        {
+            "key": "DG_AMIGOELDRAN_BEFORE",
+            "value": "Hello there, I can see you have ranged magic."
+        },
+        {
+            "key": "DG_AMIGOELDRAN_TURNIN",
+            "value": "Excuse me, can I help you?"
+        },
+        {
+            "key": "DG_LIAM_ARRESTO_01",
+            "value": "You! This is all your fault! I was about to take the perfect bite of my food and you just had to come and ruin it! If you hadn't interrupted, we wouldn't be locked up in this dump."
+        },
+        {
+            "key": "DG_LIAM_ARRESTO_02",
+            "value": "Estela, please... There was no need to blow up half a mountain over a plate of food either. But she's right, kid, you've gotten us into a massive mess."
+        },
+        {
+            "key": "DG_LIAM_ARRESTO_03",
+            "value": "Stop crying over a plate of food and wake up. The King considers you terrorists, and me your accomplice. Even if we break out of here, you will be fugitives forever. You have no home to go back to."
+        },
+        {
+            "key": "DG_LIAM_ARRESTO_04",
+            "value": "But Liam... Back in the hallway, you mentioned the Path of the Stars. If it's actually real, why do you need us? What do we even gain by going there?"
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_01",
+            "value": "Excuse me, are you Eldran's friend? He sent us, we need your help."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_02",
+            "value": "Eldran? What is my old friend up to now..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_03",
+            "value": "We know you have information about the Book of Forbidden Spells."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_04",
+            "value": "Quiet, boy! Don't say that out loud..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_05",
+            "value": "Do you know how dangerous what you're asking is?"
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_06",
+            "value": "Yes, we know, but it's more dangerous to do nothing and let them keep attacking the Kingdom..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_07",
+            "value": "They've attacked the Kingdom?"
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_08",
+            "value": "Yes... and if we don't do something, who knows what might happen..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_09",
+            "value": "Well, all I know is that it's guarded by a guardian. At the end of the Rocky Path there are some Ruins..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_10",
+            "value": "It's said that a guardian there watches over an important book of spells, but no one has ever managed to get it, and little by little people stopped visiting the temple."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_11",
+            "value": "Sorry, what are you talking about? I was just thinking about going to that tavern over there and I lost track..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_12",
+            "value": "Forgive her... the poor thing can't help it..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_13",
+            "value": "What was that, Liam? You feel like eating a fireball?"
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_14",
+            "value": "Don't start again..."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_15",
+            "value": "He started it."
+        },
+        {
+            "key": "DG_LIBROHECHIZOS_16",
+            "value": "Mi mi mi mi..."
+        },
+        {
+            "key": "DLG_AMIGAPEZ_01",
+            "value": "Are you looking for my friend? He always hides near the sea."
+        },
+        {
+            "key": "DLG_AMIGAPEZ_02",
+            "value": "If you find his blue shell, tell him quick."
+        },
+        {
+            "key": "DLG_AMIGAPEZ_03",
+            "value": "Sometimes it camouflages with Seaweed <sprite name=\"algas\">."
+        },
+        {
+            "key": "DLG_AMIGAPEZ_04",
+            "value": "If he asks you for them, you can ask around the kingdom's shops."
+        },
+        {
+            "key": "DLG_AMIGAPEZ_05",
+            "value": "Sometimes they have plenty left over and might even give them to you for free."
+        },
+        {
+            "key": "DLG_ANTIPATICO_01",
+            "value": "What are you staring at?"
+        },
+        {
+            "key": "DLG_ANTIPATICO_02",
+            "value": "I'm busy ignoring people."
+        },
+        {
+            "key": "DLG_ANTIPATICO_03",
+            "value": "If you didn't bring something useful, don't talk."
+        },
+        {
+            "key": "DLG_ANTIPATICO_04",
+            "value": "...Still here? Impressive."
+        },
+        {
+            "key": "DLG_ANTIPATICO_05",
+            "value": "Look, let's make a deal: if you find my Boots <sprite name=\"boots\"> you can keep them."
+        },
+        {
+            "key": "DLG_ANTIPATICO_06",
+            "value": "I was swimming and forgot to put them on."
+        },
+        {
+            "key": "DLG_ANTIPATICO_07",
+            "value": "Come see me if you find them and I'll tell you a secret."
+        },
+        {
+            "key": "DLG_ANTIPATICO_IN_PROGRESS",
+            "value": "Look for the Boots <sprite name=\"boots\"> near the sea. I was swimming around there."
+        },
+        {
+            "key": "DLG_ANTIPATICO_TURNIN_01",
+            "value": "Oh well, look at that, you found them."
+        },
+        {
+            "key": "DLG_ANTIPATICO_TURNIN_02",
+            "value": "You know what? I didn't think you'd make it. Here's the secret:"
+        },
+        {
+            "key": "DLG_ANTIPATICO_TURNIN_03",
+            "value": "With them, you'll be able to jump. You're welcome, kid... Now get out of my sight."
+        },
+        {
+            "key": "DLG_CANDYLAND_01",
+            "value": "Everyone, rise! Candyland welcomes its new sovereign... the smiling Queen Estela!"
+        },
+        {
+            "key": "DLG_CANDYLAND_02",
+            "value": "His Grace the Duke of Licorice has spoken. Bow, commoners. I've already bowed three times myself, just in case."
+        },
+        {
+            "key": "DLG_CANDYLAND_03",
+            "value": "Liam? Since when do you talk... like that?"
+        },
+        {
+            "key": "DLG_CANDYLAND_04",
+            "value": "Since they gave me this doublet and a spun-sugar wig. It works."
+        },
+        {
+            "key": "DLG_CANDYLAND_05",
+            "value": "Smile, Your Majesty. NO ONE frowns here. Constant joy, article one of my kingdom."
+        },
+        {
+            "key": "DLG_CANDYLAND_06",
+            "value": "Excuse me? I don't smile on command, not for an entire kingdom of whipped cream."
+        },
+        {
+            "key": "DLG_CANDYLAND_07",
+            "value": "You dare defy me? Look closely at what awaits those who don't smile enough."
+        },
+        {
+            "key": "DLG_CANDYLAND_08",
+            "value": "I've... I've been trying to smile harder for three days..."
+        },
+        {
+            "key": "DLG_CANDYLAND_09",
+            "value": "That's the saddest thing I've ever heard. And believe me, I eat terribly when I'm sad. I'm not pretending to be \"sweet\" for anyone. I never have been, and I'm not starting today."
+        },
+        {
+            "key": "DLG_CANDYLAND_10",
+            "value": "That's the Estela we know."
+        },
+        {
+            "key": "DLG_CANDYLAND_11",
+            "value": "(quietly, dropping the courtier voice) For once, I agree with the plan to stop pretending. Though I'm keeping the doublet, it really does suit me."
+        },
+        {
+            "key": "DLG_CANDYLAND_12",
+            "value": "This is treason against the Crown of Candy! Guards... marzipan guards, arrest her!"
+        },
+        {
+            "key": "DLG_CANDYLAND_13",
+            "value": "Not a chance. No more pretending."
+        },
+        {
+            "key": "DLG_CANDYLAND_14",
+            "value": "Free! Finally I can frown in peace!"
+        },
+        {
+            "key": "DLG_CANDYLAND_15",
+            "value": "No... my kingdom of lies... it's crumbling..."
+        },
+        {
+            "key": "DLG_CANDYLAND_16",
+            "value": "One less kingdom faking it. Now... is anyone else hungry? All this licorice talk gave me a terrible craving."
+        },
+        {
+            "key": "DLG_CANDYLAND_17",
+            "value": "I'm going to pretend I didn't hear that."
+        },
+        {
+            "key": "DLG_ELDRAN_ARRESTO_DESPEDIDA",
+            "value": "I'll wait for you out here. I'll try to talk to someone to get you out... though, knowing you're going in with Estela, I doubt you'll last long in there."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION1_01",
+            "value": "I see you read my letter..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION1_BEFORE_01",
+            "value": "Have you read the letter I left you on the nightstand?"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_01",
+            "value": "Well, we can finally breathe easy... though I have to admit that was a very convenient coincidence"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_01_02",
+            "value": "Too convenient if you ask me. That demon attacked at just the right time to save our necks. It almost seemed tamed."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_01_03",
+            "value": "T-the Kingdom is under attack, it was only a matter of time before they reached the castle. What matters is that we're free now and the King trusts us."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_02",
+            "value": "Liam's right, we've been lucky, let's make the most of it. So Liam, what do we need to do to reach the Path?"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_03",
+            "value": "Well, to open the portal we need an ancient book of spells..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_04",
+            "value": "But I don't know its location."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_05",
+            "value": "Maybe a friend of mine can lend us a hand."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_06",
+            "value": "Besides, he lives nearby. Right in the next village."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_07",
+            "value": "So we look for the old geezer, find the book, and open the portal?"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_08",
+            "value": "Yeah, something like that, Estela..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_09",
+            "value": "Be careful. I'll be around the Kingdom as always..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_10",
+            "value": "This is where our paths split. Will, I hope you can find answers in the Path."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_11",
+            "value": "Are we going or what? Let Operation Ostrich 2.0 begin!"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION13_TURNIN_12",
+            "value": "Confirmed. She's silly."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_INPROGRESS_01",
+            "value": "The crate should be near a tree."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_INPROGRESS_02",
+            "value": "Look for it around this area, it shouldn't be too far away."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_OFFER_01",
+            "value": "Thanks for coming."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_OFFER_02",
+            "value": "I've been gathering fruits in the forest..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_OFFER_03",
+            "value": "And now the crate is too heavy for me to carry alone."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_OFFER_04",
+            "value": "Could you go to the forest and find it?"
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_OFFER_05",
+            "value": "And then bring it back to me, please."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_TURNIN_01",
+            "value": "Excellent! You managed to bring the crate."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_TURNIN_02",
+            "value": "I knew I could count on you."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION2_TURNIN_03",
+            "value": "Here, some coins for your help."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION3_COMEWITHME_01",
+            "value": "Well done, Will! By the way... come with me, there's something I want to show you before I go."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION3_COMPLETE",
+            "value": "Well done, Will... truly. But we'll talk about it calmly later. Now come with me — I want to show you something before we go."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_01",
+            "value": "Will, the demon's threat has awakened the magic inside you."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_02",
+            "value": "But there's something I don't like..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_03",
+            "value": "It's been ages since our kingdom faced a threat like this."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_04",
+            "value": "I don't understand what's changed for that demon to appear now."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_05",
+            "value": "Let's not say anything for now so we don't upset the townspeople."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_06",
+            "value": "But I need you to go to the forbidden forest and look for Estela, a magician I've heard about."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_07",
+            "value": "Although first you'll need a few things so the guard lets you pass."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_08",
+            "value": "The first thing is a magician's cloak. Look for Victoria at the clothing shop and tell her you come on my behalf. She'll give it to you."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_09",
+            "value": "Then buy a Health Potion <sprite name=\"lifePotion\"> at any shop."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_OFFER_10",
+            "value": "Finally, talk to Erika and ask her to train you. You need training before going out to face the world."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_PROGRESS_01",
+            "value": "I remind you that you can get the cloak by asking Victoria at the clothing shop."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_PROGRESS_02",
+            "value": "You can find the Health Potion <sprite name=\"lifePotion\"> at any shop in the kingdom."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_PROGRESS_03",
+            "value": "Talk to Erika, she usually wears green and should be around the Kingdom."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION5_TURNIN",
+            "value": "You've got everything, and very fast."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_01",
+            "value": "Well done Will, now you can put on the magician's cloak from the menu."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_02",
+            "value": "Press the DPad Down button and navigate with RB to Equipment."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_03",
+            "value": "Go down to the cloaks section and equip it."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_04",
+            "value": "Now, whenever you get any new clothing item, you can change your appearance from this menu."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_05",
+            "value": "But anyway, back to what matters..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_06",
+            "value": "Leave the Kingdom and head towards the forbidden forest."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_07",
+            "value": "I don't know much about her, but she's famous throughout the Kingdom as the most powerful mage in the region."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_08",
+            "value": "Once you are in the forest, find Estela and come back."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_OFFER_09",
+            "value": "Will, this is where your adventure begins."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_PROGRESS_01",
+            "value": "Look for Estela in the forbidden forest."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_PROGRESS_02",
+            "value": "Come see me as soon as possible."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_TURNIN_01",
+            "value": "It's great to have you back here..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_TURNIN_02",
+            "value": "It was a piece of cake..."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_TURNIN_03",
+            "value": "Yeah right, especially the Golem part."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION6_TURNIN_04",
+            "value": "Well, we better not talk here, see you at the tavern."
+        },
+        {
+            "key": "DLG_ELDRAN_SAVEPOINT_01",
+            "value": "This is a Save Point, Will."
+        },
+        {
+            "key": "DLG_ELDRAN_SAVEPOINT_02",
+            "value": "Here you can save your game and rest to recover your health and mana, so don't hesitate to use it whenever you need to."
+        },
+        {
+            "key": "DLG_ELDRAN_SAVEPOINT_03",
+            "value": "Well, now you know what matters. I'll let you keep exploring."
+        },
+        {
+            "key": "DLG_ELDRAN_SAVEPOINT_TURNIN_01",
+            "value": "Take care, Will. See you soon."
+        },
+        {
+            "key": "DLG_ESTELA_ARRESTO_INDIGNADA",
+            "value": "What?! That's not fair, we were all there!"
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_00",
+            "value": "You must be Estela... Eldran sent me. A demon has appeared and we need your help."
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_01",
+            "value": "Wow! Sounds like an ultra-secret and super dangerous mission."
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_02",
+            "value": "Count me in!"
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_03",
+            "value": "By the way, you're not planning on walking back, are you?"
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_04",
+            "value": "At that save point you can now use teleport by pressing the <sprite name=\"interactable_teleport\"> button"
+        },
+        {
+            "key": "DLG_ESTELA_BOSQUE_05",
+            "value": "And now, thanks to me, you can also switch characters. Press <sprite name=\"interactable_dpad_right\"> to the right to switch."
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_02",
+            "value": "Leave it to me, I'll blow this place sky-high."
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_06",
+            "value": "So we start operation explosive..."
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_07",
+            "value": "No! Listen..."
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_10",
+            "value": "So we start operation Ostrich!"
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_11",
+            "value": "Why 'ostrich'?"
+        },
+        {
+            "key": "DLG_ESTELA_PRISION_12",
+            "value": "This girl is silly"
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_01",
+            "value": "Please, help me!"
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_02",
+            "value": "What's wrong? Calm down."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_03",
+            "value": "It turns out it's impossible to cross to the other side to reach the village at night..."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_04",
+            "value": "A strange being appears, and just when you think you're about to arrive, suddenly you're back at the entrance."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_05",
+            "value": "There are a lot of people who work during the day and need to get back home, and they're trapped."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_06",
+            "value": "We were just heading that way."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_07",
+            "value": "Don't worry, we'll help you with that strange being."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_08",
+            "value": "Thank you so much! Come see me if you manage it, I'll give you something in return..."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_09",
+            "value": "Well, since we have to wait for nightfall, how about I go get some supplies?"
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_10",
+            "value": "Will, what do you say you and I scout the path, so when night falls we already know what it's like"
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_11",
+            "value": "Perfect. Estela, see you in a bit, here at the entrance."
+        },
+        {
+            "key": "DLG_FUEGO_FATUO_12",
+            "value": "Will, once the party splits up, you can now walk up to Estela or me and ask us to follow you."
+        },
+        {
+            "key": "DLG_GUARD_01",
+            "value": "Hold it right there... do you think you can just go around destroying mountains like it's nothing?"
+        },
+        {
+            "key": "DLG_GUARD_02",
+            "value": "By order of his majesty, you three must come with me."
+        },
+        {
+            "key": "DLG_GUARD_03",
+            "value": "Who did this?"
+        },
+        {
+            "key": "DLG_GUARD_04",
+            "value": "His majesty doesn't like to be kept waiting."
+        },
+        {
+            "key": "DLG_GUARD_05",
+            "value": "Go on in, his majesty is expecting you."
+        },
+        {
+            "key": "DLG_GUARD_06",
+            "value": "Follow me, and don't lag behind."
+        },
+        {
+            "key": "DLG_GUARDIABOSQUE_01",
+            "value": "This forest used to be peaceful... until the spiders took over the paths."
+        },
+        {
+            "key": "DLG_GUARDIABOSQUE_02",
+            "value": "Clear them out and you'll have my gratitude. And something more."
+        },
+        {
+            "key": "DLG_GUARDIABOSQUE_03",
+            "value": "You can still hear spiders among the trees. Don't let your guard down."
+        },
+        {
+            "key": "DLG_GUARDIABOSQUE_04",
+            "value": "The forest breathes easy again. Here, you've earned this."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_01",
+            "value": "So, you're Will… Eldran told me about you."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_02",
+            "value": "If he sent you here, it means he believes you can still improve."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_03",
+            "value": "I’m going to teach you a new attack and a protection technique."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_04",
+            "value": "It won’t be easy; you’ll have to push yourself harder than ever."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_05",
+            "value": "You can use PROTECTION if <kbonly>you hold down <sprite name=\"interactable_lt\"></kbonly><gpadonly>you press <sprite name=\"interactable_lt\"> and <sprite name=\"interactable_rt\"> at the same time</gpadonly>."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_06",
+            "value": "I'm going to give you a new spell: PRISM BALL. Use <sprite name=\"interactable_b\"> and attack me with it."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_07",
+            "value": "Lastly, I hope you brought at least one LIFE POTION. You can use it from the inventory menu to restore health."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_08",
+            "value": "Get ready, Will. Training starts now."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_AFTER",
+            "value": "That's how it's done."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_BEFORE",
+            "value": "Welcome to the training grounds. We only do this with magicians, sorry."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_DEFEAT",
+            "value": "Keep training to become a great wizard."
+        },
+        {
+            "key": "DLG_GUERRERACHINA_TARGETLOCK",
+            "value": "You can also press F or click the right stick during any fight to lock or release your target — useful if you need to look away from your enemy."
+        },
+        {
+            "key": "DLG_KING_01",
+            "value": "So, you are the ones who destroyed the mountain."
+        },
+        {
+            "key": "DLG_KING_02",
+            "value": "Well, actually it was her..."
+        },
+        {
+            "key": "DLG_KING_03",
+            "value": "Just wait until I catch you."
+        },
+        {
+            "key": "DLG_KING_04",
+            "value": "I'm afraid that won't happen here. For the safety of our citizens, I am forced to detain you."
+        },
+        {
+            "key": "DLG_KING_05",
+            "value": "Excuse me, majesty... there is a more important matter you should know about."
+        },
+        {
+            "key": "DLG_KING_06",
+            "value": "I'm afraid it will have to wait until tomorrow."
+        },
+        {
+            "key": "DLG_KING_07",
+            "value": "Guards! Arrest them."
+        },
+        {
+            "key": "DLG_KING_08",
+            "value": "Halt! Where do you think you're going?"
+        },
+        {
+            "key": "DLG_KING_09",
+            "value": "Damn it."
+        },
+        {
+            "key": "DLG_KING_10",
+            "value": "If I don't do something now, I'm done for."
+        },
+        {
+            "key": "DLG_KING_11",
+            "value": "I can't believe what just happened..."
+        },
+        {
+            "key": "DLG_KING_12",
+            "value": "That's what we were trying to tell you..."
+        },
+        {
+            "key": "DLG_KING_13",
+            "value": "Forgive me, I didn't listen to you..."
+        },
+        {
+            "key": "DLG_KING_14",
+            "value": "I think that in exchange for what you've done for me, we can forget about the whole mountain thing..."
+        },
+        {
+            "key": "DLG_KING_15",
+            "value": "What I will ask of you is that you don't mention any of this around the Kingdom..."
+        },
+        {
+            "key": "DLG_KING_16",
+            "value": "Don't worry, we won't say a word..."
+        },
+        {
+            "key": "DLG_KING_17",
+            "value": "Don't worry, Your Majesty. We'll take care of finding out what's going on."
+        },
+        {
+            "key": "DLG_KING_18",
+            "value": "Accept this spell as a token of my gratitude."
+        },
+        {
+            "key": "DLG_KING_19",
+            "value": "I'll be waiting for you on the outskirts of the Kingdom. Meet me there when you're ready."
+        },
+        {
+            "key": "DLG_LEONARDO_01",
+            "value": "Talk to Erika, she usually wears green and should be around the Kingdom."
+        },
+        {
+            "key": "DLG_LEONARDO_02",
+            "value": "To open the Pause menu, do it with <sprite name=\"start\">."
+        },
+        {
+            "key": "DLG_LEONARDO_03",
+            "value": "To open the quest menu, press <sprite name=\"interactable_dpad_up\"> twice."
+        },
+        {
+            "key": "DLG_LEONARDO_04",
+            "value": "To open the inventory panel, press <sprite name=\"interactable_dpad_up\">."
+        },
+        {
+            "key": "DLG_LETTER_INTRO_01",
+            "value": "Will, come see me when you wake up."
+        },
+        {
+            "key": "DLG_LETTER_INTRO_02",
+            "value": "I will wait for you at the kingdom entrance."
+        },
+        {
+            "key": "DLG_LETY_ALERT_01",
+            "value": "Look Vicky, an easy target."
+        },
+        {
+            "key": "DLG_LETY_ALERT_02",
+            "value": "Let's have some fun with you."
+        },
+        {
+            "key": "DLG_LETY_DIZZY",
+            "value": "Run Vicky, run..."
+        },
+        {
+            "key": "DLG_LETY_VICKY_ALERT_01",
+            "value": "Look Vicky, an easy target."
+        },
+        {
+            "key": "DLG_LETY_VICKY_ALERT_02",
+            "value": "I see, Lety... watch out boy, here comes our dual attack."
+        },
+        {
+            "key": "DLG_LETY_VICKY_ALERT_03",
+            "value": "By the way, kid, whenever you want to change your attack focus..."
+        },
+        {
+            "key": "DLG_LETY_VICKY_ALERT_04",
+            "value": "You can press <sprite name=\"interactable_rb\"> or <sprite name=\"interactable_lb\">"
+        },
+        {
+            "key": "DLG_LETY_VICKY_DEFEATED",
+            "value": "Run Vicky, run..."
+        },
+        {
+            "key": "DLG_LIAM_ARRESTO_ACUSA",
+            "value": "Yeah, it was her!"
+        },
+        {
+            "key": "DLG_MAGO#1_ALERT",
+            "value": "You shouldn't be here."
+        },
+        {
+            "key": "DLG_MAGO#1_DEFEATED",
+            "value": "Ouch! That hurt."
+        },
+        {
+            "key": "DLG_MAGO#2_ALERT",
+            "value": "Stop right there! A toll is collected here, boy."
+        },
+        {
+            "key": "DLG_MAGO#2_DEFEATED",
+            "value": "I'll keep training to be at your level."
+        },
+        {
+            "key": "DLG_MAGO#3_ALERT",
+            "value": "Show me your power."
+        },
+        {
+            "key": "DLG_MAGO#3_DEFEATED",
+            "value": "Well, you certainly are strong."
+        },
+        {
+            "key": "DLG_MANUEL_01",
+            "value": "What you see between those pillars is a save point. Approach it and you can save your game."
+        },
+        {
+            "key": "DLG_MANUEL_POCIONES_01",
+            "value": "Good thing you're here. My grandmother has been very weak for days and I can't find health potions anywhere."
+        },
+        {
+            "key": "DLG_MANUEL_POCIONES_02",
+            "value": "Could you get me 2 health potions? I'll give you something special in return, I promise."
+        },
+        {
+            "key": "DLG_MANUEL_POCIONES_03",
+            "value": "Do you have the potions yet? My grandmother needs them as soon as possible."
+        },
+        {
+            "key": "DLG_MANUEL_POCIONES_04",
+            "value": "Thank you so much! This will help her a lot. Here, I wanted you to have this — it'll look great on you."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_01",
+            "value": "Glub! Sorry, sometimes I forget to speak air."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_02",
+            "value": "Have you seen my blue conch shell? I use it to call my marine friends."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_03",
+            "value": "But I can't get in the water without my camouflage Seaweed <sprite name=\"algas\">,"
+        },
+        {
+            "key": "DLG_NIÑOPEZ_04",
+            "value": "I'm sure my friend took them."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_05",
+            "value": "If you find her, I'll tell you how you can help me look for my conch."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_ALGAS_PROGRRESS",
+            "value": "I'm sure someone in the Kingdom has Seaweed <sprite name=\"algas\">..."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_CARACOLA_01",
+            "value": "Please look for my conch."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_CARACOLA_TURNIN",
+            "value": "Thank you, you're my hero."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_CARACOLA_TURNIN_02",
+            "value": "In exchange, I'll give you this accessory — I don't use it."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_TURNIN_01",
+            "value": "Oh thank you so much, now that I have my Seaweed <sprite name=\"algas\"> I can go into the sea."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_TURNIN_02",
+            "value": "It's very easy, you just have to move your arms to swim."
+        },
+        {
+            "key": "DLG_NIÑOPEZ_TURNIN_03",
+            "value": "Try it out and help me look for my conch shell."
+        },
+        {
+            "key": "DLG_NORA_01",
+            "value": "I love warm hugs."
+        },
+        {
+            "key": "DLG_NORA_POCIONES_01",
+            "value": "Great timing! I've been wanting to try a new spell for days, but I need more magic energy than I have."
+        },
+        {
+            "key": "DLG_NORA_POCIONES_02",
+            "value": "If you get me 3 magic potions, I'll make it worth your while, I promise!"
+        },
+        {
+            "key": "DLG_NORA_POCIONES_03",
+            "value": "Do you have the 3 magic potions yet? I can't wait to try the spell."
+        },
+        {
+            "key": "DLG_NORA_POCIONES_04",
+            "value": "Great, now I can try it! Here, this is for you, for the trouble."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_01",
+            "value": "Finally you show up..."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_02",
+            "value": "I'm reminding everyone how we can open the game menus."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_03",
+            "value": "Whenever you want to open the MAIN MENU press <sprite name=\"start\">"
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_04",
+            "value": "There you can pause the game, go back to the menu..."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_05",
+            "value": "see your inventory, and more things I won't list so I don't ramble on."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_06",
+            "value": "Lastly, when you want to see your pending quests you can use <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly>."
+        },
+        {
+            "key": "DLG_OLIVER_MENUS_07",
+            "value": "With the quest menu open, you can edit them if you press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again."
+        },
+        {
+            "key": "DLG_PIRATE_01",
+            "value": "See this eye?"
+        },
+        {
+            "key": "DLG_PIRATE_02",
+            "value": "A wolf took it from me..."
+        },
+        {
+            "key": "DLG_PIRATE_03",
+            "value": "I underestimated you, cabin boy."
+        },
+        {
+            "key": "DLG_PIRATE_04",
+            "value": "Keep it up and you'll be a great magician."
+        },
+        {
+            "key": "DLG_ROBERTO_01",
+            "value": "Oh, I feel so dizzy..."
+        },
+        {
+            "key": "DLG_ROBERTO_02",
+            "value": "If you bring me a Health Potion <sprite name=\"lifePotion\"> I can give you something you'll like..."
+        },
+        {
+            "key": "DLG_ROBERTO_03",
+            "value": "I hope you can get a Health Potion <sprite name=\"lifePotion\"> for my dizziness."
+        },
+        {
+            "key": "DLG_ROBERTO_04",
+            "value": "Oh thank you so much, I feel much better now."
+        },
+        {
+            "key": "DLG_RUDOLFO_COMPLETE_01",
+            "value": "Are you here to bother me?"
+        },
+        {
+            "key": "DLG_RUDOLFO_COMPLETE_02",
+            "value": "I'm not giving you anything else..."
+        },
+        {
+            "key": "DLG_RUDOLFO_COMPLETE_03",
+            "value": "I hope my Boots <sprite name=\"boots\"> fit you well. Bye."
+        },
+        {
+            "key": "DLG_SARA_01",
+            "value": "I love you."
+        },
+        {
+            "key": "DLG_TABERNERA_ALGAS_01",
+            "value": "Ugh, my head... Last night's party at the tavern ran way too long. I need to make my hangover remedy, but I'm out of seaweed."
+        },
+        {
+            "key": "DLG_TABERNERA_ALGAS_02",
+            "value": "Could you bring me 2 seaweed? I'll pay you well for it, I promise."
+        },
+        {
+            "key": "DLG_TABERNERA_ALGAS_03",
+            "value": "Do you have the seaweed yet? I need it for the remedy, the sooner the better."
+        },
+        {
+            "key": "DLG_TABERNERA_ALGAS_04",
+            "value": "Perfect, just what I needed! Here, this is for you. Now I can finally cure this hangover."
+        },
+        {
+            "key": "DLG_TENDERA_01",
+            "value": "The shop is closed for now."
+        },
+        {
+            "key": "DLG_TENDERA_02",
+            "value": "But take some Seaweed <sprite name=\"algas\">, I have plenty to spare."
+        },
+        {
+            "key": "DLG_TENDERA_ALGAS_01",
+            "value": "I need a couple of magic potions for my remedies, and I’ve run out at the shop."
+        },
+        {
+            "key": "DLG_TENDERA_ALGAS_02",
+            "value": "Bring me two magic potions and I’ll give you fresh algae in return — I have plenty."
+        },
+        {
+            "key": "DLG_TENDERA_ALGAS_03",
+            "value": "Do you have the magic potions yet? I need them for my remedies."
+        },
+        {
+            "key": "DLG_TENDERA_ALGAS_04",
+            "value": "Just what I needed. Here, the algae are yours — good trade."
+        },
+        {
+            "key": "DLG_VERONICA_01",
+            "value": "There is a legend that says..."
+        },
+        {
+            "key": "DLG_VERONICA_02",
+            "value": "that if you say my name three times"
+        },
+        {
+            "key": "DLG_VERONICA_03",
+            "value": "in front of a mirror...."
+        },
+        {
+            "key": "DLG_VERONICA_04",
+            "value": "A ghost appears!"
+        },
+        {
+            "key": "DLG_VERONICA_05",
+            "value": "Better not try it..."
+        },
+        {
+            "key": "DLG_VICKY_ALERT_01",
+            "value": "I see, Lety... watch out boy, here comes our dual attack."
+        },
+        {
+            "key": "DLG_VICKY_ALERT_02",
+            "value": "By the way, kid, whenever you want to change your attack focus..."
+        },
+        {
+            "key": "DLG_VICKY_ALERT_03",
+            "value": "You can press <sprite name=\"interactable_rb\"> or <sprite name=\"interactable_lb\">"
+        },
+        {
+            "key": "DLG_VICKY_DIZZY",
+            "value": "No... Lety, be careful, you're on your own now."
+        },
+        {
+            "key": "DLG_VICTORIA_01",
+            "value": "So Eldran sent you... what could he be up to now..."
+        },
+        {
+            "key": "DLG_VICTORIA_02",
+            "value": "Well, don't you worry, darling, Victoria is here to help you."
+        },
+        {
+            "key": "DLG_VICTORIA_03",
+            "value": "A wizard cloak? Of course, I'll bring it right to you."
+        },
+        {
+            "key": "DLG_VICTORIA_04",
+            "value": "Though I have a feeling this cloak is for a promising future wizard, isn't it?"
+        },
+        {
+            "key": "DLG_VICTORIA_05",
+            "value": "Give Eldran my regards."
+        },
+        {
+            "key": "DLG_VICTORIA_BEFORE",
+            "value": "My shop is closed. Come back later."
+        },
+        {
+            "key": "DLG_WILL_ARRESTO_ACUSA",
+            "value": "It was her!"
+        },
+        {
+            "key": "DLG_WOODS_GUARD",
+            "value": "Only wizards are allowed into the forbidden forest."
+        },
+        {
+            "key": "LORE_CELDA_1",
+            "value": "You! This is all your fault! I was about to eat and you had to come and ruin it! If you hadn't interrupted, we wouldn't be in this pigsty."
+        },
+        {
+            "key": "LORE_CELDA_10",
+            "value": "Will, why don't you check if there's something that can open that door?"
+        },
+        {
+            "key": "LORE_CELDA_11",
+            "value": "I think if we split up we can move faster, each of us can handle something different."
+        },
+        {
+            "key": "LORE_CELDA_12",
+            "value": "Press  <sprite name=\"interactable_dpad_down\"> <gpadonly>DOWN</gpadonly> to join or split up the party."
+        },
+        {
+            "key": "LORE_CELDA_3",
+            "value": "Stop crying over a plate of food. "
+        },
+        {
+            "key": "LORE_CELDA_4",
+            "value": "Okay, calm down... Liam, why don't you finish telling us about the Path? "
+        },
+        {
+            "key": "LORE_CELDA_5",
+            "value": "The Path is nothing more than a portal that leads to a world located somewhere among the stars."
+        },
+        {
+            "key": "LORE_CELDA_6",
+            "value": "Inside that world you'll have to pass certain trials. One for each person who enters."
+        },
+        {
+            "key": "LORE_CELDA_7",
+            "value": "If all the trials are passed, the Path can grant a single wish at the end."
+        },
+        {
+            "key": "LORE_CELDA_8",
+            "value": "I think that's super interesting. "
+        },
+        {
+            "key": "LORE_CELDA_9",
+            "value": "Well, first things first, let's get out of here. We can't waste time with demons roaming the Kingdom."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_1",
+            "value": "Seriously, over a mountain? Talk about overreacting."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_10",
+            "value": "Whether you believe it or not, your answers might be right there... "
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_11",
+            "value": "Though I don't think this is the time to talk about it."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_2",
+            "value": "Well, right now the important thing is getting out of this mess."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_3",
+            "value": "Hey Liam, what were you going to tell us back at the tavern?"
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_4",
+            "value": "Well, I couldn't help but overhear your conversation."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_5",
+            "value": "Do you really think the Golem and the Demon were just a coincidence?"
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_6",
+            "value": "Certainly not, kid."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_7",
+            "value": "Do you know the legend of the Path of the Stars?"
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_8",
+            "value": "I've heard something about it once."
+        },
+        {
+            "key": "LORE_ESCOLTA_GUARDIA_9",
+            "value": "A children's fairy tale?"
+        },
+        {
+            "key": "LORE_WILL_LIAM_01",
+            "value": "Hey Will, have you always been with Eldran?"
+        },
+        {
+            "key": "LORE_WILL_LIAM_02",
+            "value": "No... honestly, I don't remember anything before that."
+        },
+        {
+            "key": "LORE_WILL_LIAM_03",
+            "value": "I just know I woke up one rainy night... and Eldran was already there."
+        },
+        {
+            "key": "LORE_WILL_LIAM_04",
+            "value": "Nothing at all? Not even a name, a face?"
+        },
+        {
+            "key": "LORE_WILL_LIAM_05",
+            "value": "Nothing. Sometimes I think that's the day I started to exist."
+        },
+        {
+            "key": "QUEST_ELDRAN_MISSION12_DESC_02",
+            "value": "Talk to the King."
+        }
+    ]
+}

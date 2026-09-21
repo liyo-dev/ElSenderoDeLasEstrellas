@@ -38,16 +38,24 @@ public class EmotionProfileEditor : Editor
             
             profile.emotions = new EmotionMeshData[]
             {
-                new EmotionMeshData { emotion = NPCEmotion.Neutral,   eyeMeshName = "Eye01", mouthMeshName = "Mouth01", bodyAnimStateName = "" },
-                new EmotionMeshData { emotion = NPCEmotion.Happy,     eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Cheer01" },
-                new EmotionMeshData { emotion = NPCEmotion.Sad,       eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
-                new EmotionMeshData { emotion = NPCEmotion.Angry,     eyeMeshName = "Eye04", mouthMeshName = "Mouth04", bodyAnimStateName = "Angry01" },
-                new EmotionMeshData { emotion = NPCEmotion.Surprised, eyeMeshName = "Eye05", mouthMeshName = "Mouth05", bodyAnimStateName = "Question02" },
-                new EmotionMeshData { emotion = NPCEmotion.Scared,    eyeMeshName = "Eye06", mouthMeshName = "Mouth06", bodyAnimStateName = "Fear01" },
-                new EmotionMeshData { emotion = NPCEmotion.Thinking,  eyeMeshName = "Eye07", mouthMeshName = "Mouth07", bodyAnimStateName = "Question01" },
-                new EmotionMeshData { emotion = NPCEmotion.Tired,     eyeMeshName = "Eye08", mouthMeshName = "Mouth08", bodyAnimStateName = "Talk02" },
-                new EmotionMeshData { emotion = NPCEmotion.Smirk,     eyeMeshName = "Eye09", mouthMeshName = "Mouth09", bodyAnimStateName = "Laugh01" },
+                new EmotionMeshData { emotion = NPCEmotion.Neutral,    eyeMeshName = "Eye01", mouthMeshName = "Mouth01", bodyAnimStateName = "" },
+                new EmotionMeshData { emotion = NPCEmotion.Happy,      eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "HeadNod01" },
+                new EmotionMeshData { emotion = NPCEmotion.Sad,        eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
+                new EmotionMeshData { emotion = NPCEmotion.Angry,      eyeMeshName = "Eye04", mouthMeshName = "Mouth04", bodyAnimStateName = "Angry02" },
+                new EmotionMeshData { emotion = NPCEmotion.Surprised,  eyeMeshName = "Eye05", mouthMeshName = "Mouth05", bodyAnimStateName = "SenseSomethingStart_NoWeapon" },
+                new EmotionMeshData { emotion = NPCEmotion.Scared,     eyeMeshName = "Eye06", mouthMeshName = "Mouth06", bodyAnimStateName = "Beg01" },
+                new EmotionMeshData { emotion = NPCEmotion.Thinking,   eyeMeshName = "Eye07", mouthMeshName = "Mouth07", bodyAnimStateName = "Question01" },
+                new EmotionMeshData { emotion = NPCEmotion.Tired,      eyeMeshName = "Eye08", mouthMeshName = "Mouth08", bodyAnimStateName = "IdleWounded01" },
+                new EmotionMeshData { emotion = NPCEmotion.Smirk,      eyeMeshName = "Eye09", mouthMeshName = "Mouth09", bodyAnimStateName = "Laugh01" },
+                new EmotionMeshData { emotion = NPCEmotion.Worried,    eyeMeshName = "Eye02", mouthMeshName = "Mouth08", bodyAnimStateName = "HeadShake02" },
+                new EmotionMeshData { emotion = NPCEmotion.Determined, eyeMeshName = "Eye04", mouthMeshName = "Mouth01", bodyAnimStateName = "Challenging_NoWeapon" },
+                new EmotionMeshData { emotion = NPCEmotion.Relieved,   eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
+                new EmotionMeshData { emotion = NPCEmotion.Confused,   eyeMeshName = "Eye05", mouthMeshName = "Mouth07", bodyAnimStateName = "Question02" },
+                new EmotionMeshData { emotion = NPCEmotion.Excited,    eyeMeshName = "Eye05", mouthMeshName = "Mouth03", bodyAnimStateName = "Cheer02" },
+                new EmotionMeshData { emotion = NPCEmotion.Annoyed,    eyeMeshName = "Eye04", mouthMeshName = "Mouth07", bodyAnimStateName = "HeadShake01" },
+                new EmotionMeshData { emotion = NPCEmotion.Grateful,   eyeMeshName = "Eye03", mouthMeshName = "Mouth09", bodyAnimStateName = "Reverence01" },
             };
+
             profile.neutralBodyAnims = new[] { "Talk01", "Talk02", "Talk03" };
             
             EditorUtility.SetDirty(profile);
@@ -82,6 +90,11 @@ public class EmotionProfileEditor : Editor
                 EditorGUILayout.PropertyField(eyeProp,      new GUIContent("👁 Mesh Ojos"));
                 EditorGUILayout.PropertyField(mouthProp,    new GUIContent("👄 Mesh Boca"));
                 EditorGUILayout.PropertyField(bodyAnimProp, new GUIContent("🏃 Anim Corporal (jugador)"));
+
+                var variantsProp = element.FindPropertyRelative("bodyAnimVariants");
+                if (variantsProp != null)
+                    EditorGUILayout.PropertyField(variantsProp, new GUIContent("🎲 Variantes"), true);
+
                 EditorGUI.indentLevel--;
             }
 
@@ -125,6 +138,13 @@ public class EmotionProfileEditor : Editor
             case NPCEmotion.Thinking: return "🤔 Thinking (Pensativo)";
             case NPCEmotion.Tired: return "😴 Tired (Cansado)";
             case NPCEmotion.Smirk: return "😏 Smirk (Sonrisa pícara)";
+            case NPCEmotion.Worried: return "😟 Worried (Preocupado)";
+            case NPCEmotion.Determined: return "😤 Determined (Decidido)";
+            case NPCEmotion.Relieved: return "😌 Relieved (Aliviado)";
+            case NPCEmotion.Confused: return "😕 Confused (Confuso)";
+            case NPCEmotion.Excited: return "🤩 Excited (Emocionado)";
+            case NPCEmotion.Annoyed: return "🙄 Annoyed (Molesto)";
+            case NPCEmotion.Grateful: return "🙏 Grateful (Agradecido)";
             default: return emotion.ToString();
         }
     }
@@ -174,6 +194,20 @@ public class NPCEmotionControllerEditor : Editor
             if (GUILayout.Button("Scared")) controller.SetEmotion(NPCEmotion.Scared);
             if (GUILayout.Button("Thinking")) controller.SetEmotion(NPCEmotion.Thinking);
             if (GUILayout.Button("Tired")) controller.SetEmotion(NPCEmotion.Tired);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Smirk")) controller.SetEmotion(NPCEmotion.Smirk);
+            if (GUILayout.Button("Worried")) controller.SetEmotion(NPCEmotion.Worried);
+            if (GUILayout.Button("Determined")) controller.SetEmotion(NPCEmotion.Determined);
+            if (GUILayout.Button("Relieved")) controller.SetEmotion(NPCEmotion.Relieved);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Confused")) controller.SetEmotion(NPCEmotion.Confused);
+            if (GUILayout.Button("Excited")) controller.SetEmotion(NPCEmotion.Excited);
+            if (GUILayout.Button("Annoyed")) controller.SetEmotion(NPCEmotion.Annoyed);
+            if (GUILayout.Button("Grateful")) controller.SetEmotion(NPCEmotion.Grateful);
             EditorGUILayout.EndHorizontal();
             
             if (GUILayout.Button("↩ Restaurar Original"))

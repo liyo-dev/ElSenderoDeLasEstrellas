@@ -35,7 +35,7 @@ public static class NPCObstacleAvoidanceSetup
         "Assets/Prefabs/_WILL_NPC.prefab",
     };
 
-    [MenuItem("El Sendero/NPCs/Esquiva de Obstáculos/Añadir a Prefabs de NPC conocidos")]
+    [MenuItem("El Sendero/Archivo/NPCs/Esquiva de Obstáculos/Añadir a Prefabs de NPC conocidos")]
     public static void AddToKnownPrefabs()
     {
         int added = 0, alreadyHad = 0, missing = 0;

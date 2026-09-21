@@ -565,7 +565,10 @@ public class NPCEmotionTesterWindow : EditorWindow
             emotion = _selectedEmotion,
             eyeMeshName = _selectedEye,
             mouthMeshName = _selectedMouth,
-            bodyAnimStateName = _selectedBodyState
+            bodyAnimStateName = _selectedBodyState,
+            // Las variantes de gesto de esa emoción se conservan: esta ventana ajusta la cara y la
+            // animación PRINCIPAL, y montar un dato nuevo desde cero las borraría en silencio.
+            bodyAnimVariants = index >= 0 ? emotions[index].bodyAnimVariants : null
         };
 
         if (index >= 0)

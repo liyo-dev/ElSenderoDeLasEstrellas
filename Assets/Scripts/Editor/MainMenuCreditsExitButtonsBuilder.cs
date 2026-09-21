@@ -67,7 +67,7 @@ public static class MainMenuCreditsExitButtonsBuilder
         ("BotonSalir", "Salir", "MainMenu_Exit"),
     };
 
-    [MenuItem("El Sendero/Controles/Añadir Botones Créditos + Salir al Main Menu")]
+    [MenuItem("El Sendero/Archivo/Controles/Añadir Botones Créditos + Salir al Main Menu")]
     public static void AddButtons()
     {
         if (EditorApplication.isPlaying)

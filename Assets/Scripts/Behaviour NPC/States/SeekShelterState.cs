@@ -45,11 +45,17 @@ namespace Game.NPC.States
         private const float MinGestureInterval = 4f;
         private const float MaxGestureInterval = 9f;
 
-        // "Fear01" aparece dos veces a propósito: es el gesto principal de "tener frío" bajo la
-        // lluvia, el resto son variaciones sueltas para que no todos los NPCs hagan lo mismo.
+        // "Fidget" aparece dos veces a propósito: es el gesto principal de "tener frío" bajo la
+        // lluvia (moverse en el sitio, encogerse), el resto son variaciones sueltas para que no
+        // todos los NPCs hagan lo mismo.
+        //
+        // CAMBIO (17 sep 2026): el principal era "Fear01", retirado de todo el juego. Ese clip es
+        // del pack de animaciones humanas, con proporciones realistas, y al retargetearlo sobre
+        // estos cuerpos —cabeza de media altura— el retroceso de cabeza queda roto: parece que al
+        // personaje se le parte el cuello. Ver INC-223.
         private static readonly string[] ColdGestures =
         {
-            "Fear01", "Fear01", "Fidget", "FidgetIndex", "HeadShake01", "HeadShake02", "Question01"
+            "Fidget", "Fidget", "FidgetIndex", "HeadShake01", "HeadShake02", "Question01", "Beg01"
         };
 
         private NPCShelterPoint _shelterPoint;

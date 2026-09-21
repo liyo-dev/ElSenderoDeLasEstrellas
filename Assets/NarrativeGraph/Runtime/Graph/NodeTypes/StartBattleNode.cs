@@ -22,6 +22,13 @@ public sealed class StartBattleNode : NarrativeNode
     [Tooltip("Si true, intenta activar por battleId primero.")]
     public bool useBattleById = true;
 
+    [Header("Encuentro (SO opcional, INC-207)")]
+    [Tooltip("Si se asigna, sustituye los datos de spawn configurados a mano en la arena (prefab, nombre, radio, VFX) por los de este ScriptableObject, y fuerza el modo radio alrededor del jugador. Si se deja vacío, la arena mantiene su comportamiento actual sin cambios.")]
+    public BattleEncounterSO encounter;
+
+    [Tooltip("Índice del perfil de spawn de la SO a usar (ver BattleEncounterSO.spawnProfiles). Pensado para poder variar por dificultad más adelante.")]
+    public int spawnProfileIndex = 0;
+
     [Header("Misión opcional al ganar la batalla")]
     [FormerlySerializedAs("startMission")]
     public bool completeMission = false;
@@ -138,6 +145,17 @@ public sealed class StartBattleNode : NarrativeNode
             targetArena = bossArena;
         }
 
+        // 3b) Nada en la escena: si el nodo trae un BattleEncounterSO, creamos la arena en
+        //     runtime alrededor del jugador (INC-207 — "todo lo configurable vive en el grafo").
+        //     Esto es lo que permite borrar por completo el GameObject de arena de la escena:
+        //     sin esto, quitar la arena de la escena hace que el nodo no encuentre nada, se
+        //     desuscriba y avance sin batalla.
+        if (targetArena == null && encounter != null)
+        {
+            string runtimeId = !string.IsNullOrEmpty(battleId) ? battleId : derivedId;
+            targetArena = BossArenaController.CreateRuntimeArena(runtimeId, encounter);
+        }
+
         // 4) Verificar si la batalla ya fue ganada (al restaurar desde save)
         if (targetArena != null && IsBattleAlreadyWon(targetArena))
         {
@@ -163,7 +181,10 @@ public sealed class StartBattleNode : NarrativeNode
 
         if (!triggered)
         {
-            Debug.LogWarning("[StartBattleNode] No se activó la arena (id vacío/no encontrada y sin fallback). Desuscribo y avanzo.");
+            Debug.LogWarning($"[StartBattleNode] No se activó la arena para battleId='{battleId}' " +
+                              $"(encounter={(encounter != null ? encounter.name : "NINGUNO")}). " +
+                              "No hay arena en la escena y no se ha podido crear una en runtime — " +
+                              "asigna un BattleEncounterSO con enemyPrefab en el nodo, o deja una arena en la escena con ese battleId. Desuscribo y avanzo.");
             SafeUnsubscribe(ctx);
             onReadyToAdvance?.Invoke();
         }
@@ -191,8 +212,16 @@ public sealed class StartBattleNode : NarrativeNode
         if (arena == null) return false;
         try
         {
-            arena.TriggerStartBattle();
-            Debug.Log("[StartBattleNode] TriggerStartBattle() ejecutado en arena encontrada.");
+            if (encounter != null)
+            {
+                arena.TriggerStartBattle(encounter, spawnProfileIndex);
+                Debug.Log($"[StartBattleNode] TriggerStartBattle(encounter='{encounter.name}') ejecutado en arena encontrada.");
+            }
+            else
+            {
+                arena.TriggerStartBattle();
+                Debug.Log("[StartBattleNode] TriggerStartBattle() ejecutado en arena encontrada.");
+            }
             return true;
         }
         catch (Exception ex)

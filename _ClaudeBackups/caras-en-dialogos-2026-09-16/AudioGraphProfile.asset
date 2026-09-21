@@ -1,0 +1,311 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3770fbd868330b148805ba2ad4c4af7f, type: 3}
+  m_Name: AudioGraphProfile
+  m_EditorClassIdentifier: Assembly-CSharp::AudioGraphProfile
+  battles:
+  - battleId: Demon_1
+    music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
+    fade: 0
+  - battleId: Npc_Battle
+    music: {fileID: 8300000, guid: 316cecf77c02820419a4df496695d01f, type: 3}
+    fade: 0
+  - battleId: Npc_Battle_Alert
+    music: {fileID: 8300000, guid: 62b4431cd362b8c48af97e06e697bb25, type: 3}
+    fade: 0
+  - battleId: Npc_Battle_Victory
+    music: {fileID: 8300000, guid: 5470781b602096348900f3a6c00ac749, type: 3}
+    fade: 0
+  - battleId: Golem_1
+    music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
+    fade: 0
+  - battleId: Demon_2
+    music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
+    fade: 0
+  - battleId: MagoOscuro
+    music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
+    fade: 0
+  minigames:
+  - minigameId: TAG_MINIGAME_01
+    music: {fileID: 8300000, guid: 7eb1b7c0d589a3b458134ef956f69bb2, type: 3}
+    fade: 0
+    loop: 0
+  ambientZones:
+  - zoneId: Woods
+    music: {fileID: 8300000, guid: 48f0139b886c977498318294d28eff29, type: 3}
+    fade: 1
+    loop: 1
+  - zoneId: Mountains
+    music: {fileID: 8300000, guid: 962ab2ced719b6d49a59008f80d9e59c, type: 3}
+    fade: 1
+    loop: 1
+  - zoneId: Dungeon
+    music: {fileID: 8300000, guid: d14a0334429e49247b2605c6709ac87a, type: 3}
+    fade: 1
+    loop: 1
+  - zoneId: Castle
+    music: {fileID: 8300000, guid: d5bb22677ff496a4a89fd8ea69ddf48a, type: 3}
+    fade: 1
+    loop: 1
+  - zoneId: WillTown
+    music: {fileID: 8300000, guid: 70f0ce25b256f314d820e189ba62c4e5, type: 3}
+    fade: 1
+    loop: 1
+  sceneMusic:
+  - sceneName: MainMenu
+    music: {fileID: 8300000, guid: 785493ca564adeb44bb1c68fa22f00ab, type: 3}
+  - sceneName: MainWorld
+    music: {fileID: 8300000, guid: 920a9fdc4dced024ca2b9bfd43ef957a, type: 3}
+  - sceneName: Credits
+    music: {fileID: 8300000, guid: e4417147d8027ae48a5ef706f52635d8, type: 3}
+  - sceneName: Sendero
+    music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
+  - sceneName: CandyLand
+    music: {fileID: 8300000, guid: 187aae3a437affa4eaf8dd12c5d4b5ea, type: 3}
+  - sceneName: WillHouse
+    music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
+  eventSfx:
+  - eventKey: UI_Navigate
+    sfx: {fileID: 8300000, guid: c83e31fc92bdc722b8d62fa8ebea0722, type: 3}
+  - eventKey: UI_Submit
+    sfx: {fileID: 8300000, guid: 43ccdaf4e06a1324fa8c6defac11f3fe, type: 3}
+  - eventKey: UI_Cancel
+    sfx: {fileID: 8300000, guid: 67c7dcab9e8a0eb459186be18c72da79, type: 3}
+  - eventKey: UI_MenuOpen
+    sfx: {fileID: 8300000, guid: 89ae9828e2f8913779b44d7d553bad9a, type: 3}
+  - eventKey: UI_TabChange
+    sfx: {fileID: 8300000, guid: 43ccdaf4e06a1324fa8c6defac11f3fe, type: 3}
+  - eventKey: UI_DialogueLetter
+    sfx: {fileID: 8300000, guid: 526eefc86463358579585529cc578a9c, type: 3}
+  - eventKey: Chest
+    sfx: {fileID: 8300000, guid: fd8d9eef98a47b148af17b768903835c, type: 3}
+  - eventKey: Coin
+    sfx: {fileID: 8300000, guid: fd8d9eef98a47b148af17b768903835c, type: 3}
+  - eventKey: GameOverMenu
+    sfx: {fileID: 8300000, guid: 2f07c3b7706a64f489133201c2342886, type: 3}
+  - eventKey: BolaPrisma
+    sfx: {fileID: 8300000, guid: a2ae90e42daaf4723a539c25867d37fd, type: 3}
+  - eventKey: LlamaAstral
+    sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
+  - eventKey: CorazonEstelar
+    sfx: {fileID: 8300000, guid: 4253ea676060e49dd9488f73d692ea2a, type: 3}
+  - eventKey: Impact1
+    sfx: {fileID: 8300000, guid: 4e7a7e55b33e3e526a00fcc81ee4a7dc, type: 3}
+  - eventKey: PlasmaSphere
+    sfx: {fileID: 8300000, guid: 96a146f9cdecc2e718b1d0395e94cb48, type: 3}
+  - eventKey: UI_Open
+    sfx: {fileID: 8300000, guid: 89ae9828e2f8913779b44d7d553bad9a, type: 3}
+  - eventKey: UI_Confirm
+    sfx: {fileID: 8300000, guid: 43ccdaf4e06a1324fa8c6defac11f3fe, type: 3}
+  - eventKey: ui_denied
+    sfx: {fileID: 8300000, guid: b9bfb56d2cc92cb56b9040e1af715ab4, type: 3}
+  - eventKey: puzzle_done
+    sfx: {fileID: 8300000, guid: c7883abfc4284bb20a731c9cfffe9802, type: 3}
+  - eventKey: Object_Burn
+    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+  - eventKey: Door_Open
+    sfx: {fileID: 8300000, guid: 35516e4b9e78e6452a3ea26209b1aa61, type: 3}
+  - eventKey: orbSpawn
+    sfx: {fileID: 8300000, guid: bc199d6e558713e42b289920a0b0135d, type: 3}
+  - eventKey: orbAttract
+    sfx: {fileID: 8300000, guid: 79e20d4314e5328e782a9b6f6b2b71b8, type: 3}
+  - eventKey: rain
+    sfx: {fileID: 8300000, guid: b289d41cd1e67ee46bb53d07586b58c3, type: 3}
+  - eventKey: Tinnitus
+    sfx: {fileID: 8300000, guid: 9eef1c33f912005488b95f153354d36d, type: 3}
+  - eventKey: Prologue_Tinnitus
+    sfx: {fileID: 8300000, guid: 9eef1c33f912005488b95f153354d36d, type: 3}
+  - eventKey: Prologue_ActorAppear
+    sfx: {fileID: 8300000, guid: b999992b1fb1d614aa52bad8cf206c09, type: 3}
+  - eventKey: Prologue_SpellInstantiate
+    sfx: {fileID: 8300000, guid: f78fcbdc996e86fd5a014c167ce81d43, type: 3}
+  - eventKey: Prologue_SpellChargeLoop
+    sfx: {fileID: 8300000, guid: 227f48e154680468099e647c940e95f7, type: 3}
+  - eventKey: Prologue_SpellRelease
+    sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
+  - eventKey: Prologue_Explosion
+    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+  - eventKey: Prologue_WarClashStinger_A
+    sfx: {fileID: 8300000, guid: 0c3a043231d545f43824cdc8e35d93c6, type: 3}
+  - eventKey: Prologue_WarClashStinger_B
+    sfx: {fileID: 8300000, guid: ad5214a44455017afb1d4b9c21d768b6, type: 3}
+  - eventKey: Prologue_Heartbeat
+    sfx: {fileID: 0}
+  - eventKey: Boss_Roar
+    sfx: {fileID: 8300000, guid: f0f99efc445f4a9498022edafe5c6057, type: 3}
+  - eventKey: Player_Damage
+    sfx: {fileID: 8300000, guid: 78f91d28ee28c016a8a54ffe9a5cb431, type: 3}
+  - eventKey: Player_Heal
+    sfx: {fileID: 8300000, guid: b7a29b1ccf0d999bf9fba0b0719181c6, type: 3}
+  - eventKey: Player_Death
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: Mesh_Swap_Break
+    sfx: {fileID: 8300000, guid: 403265845d490ff05a69f5508c799b5b, type: 3}
+  - eventKey: Torch_Ignite
+    sfx: {fileID: 8300000, guid: a89a5340c4fbfa7ea9d1eeb3500640c7, type: 3}
+  - eventKey: Teleport_Start
+    sfx: {fileID: 8300000, guid: b999992b1fb1d614aa52bad8cf206c09, type: 3}
+  - eventKey: Teleport_End
+    sfx: {fileID: 8300000, guid: 267e4ede3fe71b344bd46ae34a6baaba, type: 3}
+  - eventKey: ProjectileClash
+    sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
+  - eventKey: SpecialAttack_Liam
+    sfx: {fileID: 8300000, guid: ceede7a829d41470a86526620500b878, type: 3}
+  - eventKey: SpecialAttack_Estela
+    sfx: {fileID: 8300000, guid: 63ab46d1f43f673338691ce52bb3f9ee, type: 3}
+  - eventKey: Levitation_Cast
+    sfx: {fileID: 8300000, guid: 330f38e71fb1bcf2dbb5e9e33b155cbd, type: 3}
+  - eventKey: Levitation_Impact
+    sfx: {fileID: 8300000, guid: b98d26291f45312b2a28153c30771658, type: 3}
+  - eventKey: Orb_Bounce
+    sfx: {fileID: 8300000, guid: f610393378cfa32a99e88c4e5d9af93b, type: 3}
+  - eventKey: RockProjectile_Throw
+    sfx: {fileID: 8300000, guid: 2ed3b609f1f7f2b24b0b4a77a64475a7, type: 3}
+  - eventKey: RockProjectile_Impact
+    sfx: {fileID: 8300000, guid: 2f22547848f7d1ca8a6e49da19fdaa6e, type: 3}
+  - eventKey: SmokeVortex_Spawn
+    sfx: {fileID: 8300000, guid: 904aab8dd539b6339b59bc7bbcce3d9c, type: 3}
+  - eventKey: Weather_CloudsBuildingUp
+    sfx: {fileID: 8300000, guid: 78445ad04988deebc8dab480cc805ed2, type: 3}
+  - eventKey: Weather_WindStarted
+    sfx: {fileID: 8300000, guid: a812a3d9ad10a968dbf300f765adfd5b, type: 3}
+  - eventKey: Weather_MistStarted
+    sfx: {fileID: 8300000, guid: 61b85a9f921d76faface6e1dfe190aa9, type: 3}
+  - eventKey: Weather_MistStopped
+    sfx: {fileID: 8300000, guid: 859447f3da3b289058c65926ab3e1f51, type: 3}
+  - eventKey: FootStep00
+    sfx: {fileID: 8300000, guid: 22b5b26c3429f42c482afafb562afc2a, type: 3}
+  - eventKey: FootStep01
+    sfx: {fileID: 8300000, guid: a948133482bd9461cbcb85c1b36c59b7, type: 3}
+  - eventKey: FootStep02
+    sfx: {fileID: 8300000, guid: 8033517be0e2b4a939b3f8ffacc6f4d5, type: 3}
+  - eventKey: FootStep03
+    sfx: {fileID: 8300000, guid: f65c4ff197551410b9f70b804410c961, type: 3}
+  - eventKey: FootStep04
+    sfx: {fileID: 8300000, guid: c71a1656ec801453da6b0fc7884f77fe, type: 3}
+  - eventKey: Star_ProjectileIncoming
+    sfx: {fileID: 8300000, guid: cadebfea8b8a85ff6a9db0f5d84195ad, type: 3}
+  - eventKey: Star_Collision
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: Star_SpellCast
+    sfx: {fileID: 8300000, guid: f78fcbdc996e86fd5a014c167ce81d43, type: 3}
+  - eventKey: Mountain_Impact
+    sfx: {fileID: 8300000, guid: bcfbeb9b952f6e7438a735235f30be91, type: 3}
+  - eventKey: Mountain_FireShot
+    sfx: {fileID: 8300000, guid: a2ae90e42daaf4723a539c25867d37fd, type: 3}
+  - eventKey: EstelaAppears_SpiderKill
+    sfx: {fileID: 8300000, guid: 78f91d28ee28c016a8a54ffe9a5cb431, type: 3}
+  - eventKey: EstelaAppears_FireShot
+    sfx: {fileID: 8300000, guid: a2ae90e42daaf4723a539c25867d37fd, type: 3}
+  - eventKey: EstelaAppears_ShieldBlock
+    sfx: {fileID: 8300000, guid: 80d0aeca31f805fb7962f298d997123b, type: 3}
+  - eventKey: EstelaAppears_Bow
+    sfx: {fileID: 8300000, guid: 7e41ebba04479919cbf4850960cd7b28, type: 3}
+  - eventKey: CrystalBall_EvilPulse
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: CrystalBall_Activate
+    sfx: {fileID: 8300000, guid: 4d1251d3584f3534a9287fc24218f233, type: 3}
+  - eventKey: CrystalBall_PulseLoop
+    sfx: {fileID: 8300000, guid: 3a0b38879a9bf57a8966252994de74dd, type: 3}
+  - eventKey: CrystalBall_Deactivate
+    sfx: {fileID: 8300000, guid: 53b8ec30283a23c4daf60d1b88d06ed5, type: 3}
+  - eventKey: GolemSummon_Invoke
+    sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
+  - eventKey: Taberna_StomachRumble
+    sfx: {fileID: 8300000, guid: 9543059881e0a353f9d851984b73e3d9, type: 3}
+  - eventKey: Taberna_FoodArrives
+    sfx: {fileID: 8300000, guid: 79e20d4314e5328e782a9b6f6b2b71b8, type: 3}
+  - eventKey: Taberna_EatLoop
+    sfx: {fileID: 8300000, guid: d138b2942a4c882fca232772dffdbfcc, type: 3}
+  - eventKey: Taberna_RageAura
+    sfx: {fileID: 8300000, guid: 227f48e154680468099e647c940e95f7, type: 3}
+  - eventKey: Taberna_Lightning
+    sfx: {fileID: 8300000, guid: 2a83d37b0efdcd38995e24281bf94c8c, type: 3}
+  - eventKey: ReinoExit_PetalAmbience
+    sfx: {fileID: 8300000, guid: a812a3d9ad10a968dbf300f765adfd5b, type: 3}
+  - eventKey: AuraEstelar
+    sfx: {fileID: 8300000, guid: 1e7cf86b0eaa41c49d070d110c2037f5, type: 3}
+  - eventKey: BolaFuego
+    sfx: {fileID: 8300000, guid: f18a0dcd1bbc4ee69cbc9056c3e13f00, type: 3}
+  - eventKey: Tornado
+    sfx: {fileID: 8300000, guid: b99f5f9d19da49380b531e1d6649a8de, type: 3}
+  - eventKey: GarraDelPacto
+    sfx: {fileID: 8300000, guid: d6195cb91af5b1db781bf8564703f1cd, type: 3}
+  - eventKey: Huracan
+    sfx: {fileID: 8300000, guid: 16cb1d54cff244feba29ad024e74a5a1, type: 3}
+  - eventKey: MagoOscuroGolpe
+    sfx: {fileID: 8300000, guid: 427e63a95b2a495298b2fd808a9d1b78, type: 3}
+  - eventKey: MagoOscuroGrieta
+    sfx: {fileID: 8300000, guid: e44bb15d0be184e228244208f1a94e2c, type: 3}
+  - eventKey: SelloDelPacto
+    sfx: {fileID: 8300000, guid: a9e925ca095e74c6781bc9cceafc6743, type: 3}
+  - eventKey: RuneActivate
+    sfx: {fileID: 8300000, guid: c525543468a44e9fa64e3780bfb7b14c, type: 3}
+  - eventKey: RuneFail
+    sfx: {fileID: 8300000, guid: 656c5f36464c4d00acd7072ae66e4b73, type: 3}
+  - eventKey: RuneSolved
+    sfx: {fileID: 8300000, guid: 18c03e85dd5446bba5e4cf76d8d2fad7, type: 3}
+  - eventKey: RuneGateOpen
+    sfx: {fileID: 8300000, guid: 05db446b081146fba24df777029cc1b4, type: 3}
+  sequences:
+  - sequenceId: PROLOGUE_DREAM
+    music: {fileID: 8300000, guid: c82b5bd2fe09f524dac157f5342aff1f, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: AWAKEN
+    music: {fileID: 8300000, guid: a6d965cd64d1ef040986deabe19c2107, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: LIAM_CRYSTAL
+    music: {fileID: 8300000, guid: fe45a7da307add14a9f93158f047bc7c, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: ESTELA_APPEARS
+    music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: TABERNA
+    music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: COMER
+    music: {fileID: 8300000, guid: f1b6b495ea9afd54ca743f778e2c2e4a, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: REINO_EXIT
+    music: {fileID: 8300000, guid: 781689e46248308499a3914697668573, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: PROMO_1
+    music: {fileID: 8300000, guid: 6904c00d6a7aa0848aa3348ca1abb7b4, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: MAGOOSCURO_REVEAL
+    music: {fileID: 8300000, guid: 2b6499ae1b7898d41ad775bffb9b370b, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: MAGOOSCURO_VISION
+    music: {fileID: 8300000, guid: 3cc104b44c356344eab24aa874ae8bb8, type: 3}
+    fadeIn: 1
+    fadeOut: 0.5
+  - sequenceId: MAGOOSCURO_CLIMAX
+    music: {fileID: 8300000, guid: 026414a9a7500f74aa7c0a445d2dca9e, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: EPILOGUE
+    music: {fileID: 8300000, guid: a3cc4bb37e6b3b14885e644f20e9271a, type: 3}
+    fadeIn: 1
+    fadeOut: 0.5
+  - sequenceId: OLIVER_1
+    music: {fileID: 8300000, guid: c11b574e92002c44a92772ec8eb12331, type: 3}
+    fadeIn: 1
+    fadeOut: 0.5

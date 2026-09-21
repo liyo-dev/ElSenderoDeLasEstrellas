@@ -15,16 +15,10 @@ MonoBehaviour:
   startNodeGuid: 9e38723a-5600-4f47-8ee5-8bb367338d1c
   nodes:
   - rid: 6000000000000000001
-  - rid: 6000000000000000002
+  - rid: 7428272459180934008
   - rid: 6000000000000000003
   - rid: 6000000000000000004
   - rid: 6000000000000000005
-  - rid: 6000000000000000006
-  - rid: 6000000000000000007
-  - rid: 6000000000000000008
-  - rid: 6000000000000000010
-  - rid: 6000000000000000011
-  - rid: 6000000000000000012
   - rid: 6000000000000000013
   - rid: 6000000000000000014
   - rid: 6000000000000000015
@@ -46,10 +40,62 @@ MonoBehaviour:
   - rid: 6000000000000000031
   - rid: 6000000000000000032
   - rid: 6000000000000000033
+  - rid: 6000000000000000034
+  - rid: 6000000000000000035
+  - rid: 6000000000000000036
+  - rid: 6000000000000000037
+  - rid: 6000000000000000038
+  - rid: 6000000000000000039
+  - rid: 6000000000000000040
+  - rid: 6000000000000000041
+  - rid: 6000000000000000042
+  - rid: 6000000000000000043
+  - rid: 5983492470211221218
+  - rid: 526820858001539260
+  - rid: 7428272359979352335
+  - rid: 7428272359979352336
+  - rid: 6000000000000000044
+  - rid: 6000000000000000045
+  - rid: 6000000000000000046
+  - rid: 6000000000000000047
+  - rid: 6000000000000000048
   applicableSceneNames: []
   references:
     version: 2
     RefIds:
+    - rid: 526820858001539260
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14.- Oliver saluda a Will (SEQ_OliverSaludo)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 32febd1e-bce7-478d-aab9-792eddddd73d
+        position: {x: 5700, y: 0}
+        outputs:
+        - aaccfcd4-a7bc-4732-b4b6-86e6c183db03
+        cinematicName: Oliver saluda a Will
+        signalIn: OLIVER_GREETING_START
+        signalDone: OLIVER_GREETING_DONE
+        signalFailed: 
+    - rid: 5983492470211221218
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 13.- Will se acerca -> Oliver saluda (WILL_EXITS_HOUSE_OLIVER_GREETING)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: a468c3fc-72f5-4541-b174-81017ba71bc2
+        position: {x: 5320, y: 0}
+        outputs:
+        - 32febd1e-bce7-478d-aab9-792eddddd73d
+        eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
     - rid: 6000000000000000001
       type: {class: StartNode, ns: , asm: Assembly-CSharp}
       data:
@@ -63,29 +109,11 @@ MonoBehaviour:
         guid: 9e38723a-5600-4f47-8ee5-8bb367338d1c
         position: {x: 0, y: 0}
         outputs:
-        - 5fa39087-b517-4cc6-b333-0841e33ef2aa
-    - rid: 6000000000000000002
-      type: {class: DramaticTextNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Recuerdos prologo
-        chapter: Cap. 1
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 85279f14-0f9a-4376-8ca3-126ecb12b966
-        position: {x: 1140, y: 0}
-        outputs:
-        - d206615e-7e83-4d62-bd5a-d6e04d6b237b
-        config: {fileID: 11400000, guid: 4f5bc1f242806ed4cb58a981bc5d5b7f, type: 2}
-        waitForCompletion: 1
-        restoreSceneMusicWhenDone: 1
-        restoreMusicFade: 2
+        - 28e514c7-46f5-45ec-bd9b-3aa29d2317b5
     - rid: 6000000000000000003
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Pulsar A para despertar
+        displayTitle: 5.- Pulsar A para despertar
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -93,7 +121,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d206615e-7e83-4d62-bd5a-d6e04d6b237b
-        position: {x: 1520, y: 0}
+        position: {x: 2280, y: 0}
         outputs:
         - 95228e84-0a1a-4e3b-9ef9-e36ad502e222
         action: 0
@@ -105,7 +133,7 @@ MonoBehaviour:
     - rid: 6000000000000000004
       type: {class: ShowSpeechBubbleNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Pensamiento Will
+        displayTitle: 6.- Pensamiento Will
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -113,9 +141,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 95228e84-0a1a-4e3b-9ef9-e36ad502e222
-        position: {x: 1900, y: 0}
+        position: {x: 2660, y: 0}
         outputs:
-        - 05d8c990-c631-4ddd-8aff-4092490214c8
+        - 80e2bd55-eb2e-4c36-b5cf-a789104718aa
         targetTag: Player
         text: Otra vez esa pesadilla.
         textId: NIGHTMARE_AGAIN
@@ -127,7 +155,7 @@ MonoBehaviour:
     - rid: 6000000000000000005
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 'Mueve el Joystick '
+        displayTitle: '7.- Mueve el Joystick '
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -135,119 +163,19 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 05d8c990-c631-4ddd-8aff-4092490214c8
-        position: {x: 2280, y: 0}
+        position: {x: 4180, y: 0}
         outputs:
-        - c679c077-f77a-47f6-a008-a0241d66da48
+        - 81686a85-c370-4681-974b-777faf8b089b
         action: 0
         text: "Usa {BOTON} para mover a Will. Inspecciona la habitaci\xF3n."
         textId: TUTORIAL_MOVE_INSPECT
         icon: {fileID: 21300000, guid: 7ee57509d79a49b0adec369729ca33c2, type: 3}
         buttonName: interactable_Joystick
         dismissWithCancel: 1
-    - rid: 6000000000000000006
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 1.- CUANDO LEE LA CARTA
-        chapter: Cap. 1
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c679c077-f77a-47f6-a008-a0241d66da48
-        position: {x: 2660, y: 0}
-        outputs:
-        - 4019f0d0-7735-47c1-92e2-1a5a5e716721
-        eventKey: LETTER_START
-    - rid: 6000000000000000007
-      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 2.- TIENE QUE HABLAR CON ELDRAN
-        chapter: Cap. 1
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 4019f0d0-7735-47c1-92e2-1a5a5e716721
-        position: {x: 3040, y: 0}
-        outputs:
-        - c23cba16-bb8d-4653-ba25-2dfab7a0e2f6
-        questId: ELDRAN_MISSION1
-    - rid: 6000000000000000008
-      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Habla con Eldran (1)
-        chapter: Cap. 1
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c23cba16-bb8d-4653-ba25-2dfab7a0e2f6
-        position: {x: 3420, y: 0}
-        outputs:
-        - e1086dd2-6a9d-4b9b-9691-b9fc2b31fd56
-        npcId: NPC_Eldran
-        acceptEarlierInteraction: 0
-        questIcon: {fileID: 0}
-    - rid: 6000000000000000010
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: DLG_ELDRAN_MISSION1_TURNIN
-        chapter: Cap. 1
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: e1086dd2-6a9d-4b9b-9691-b9fc2b31fd56
-        position: {x: 3800, y: 0}
-        outputs:
-        - a78082c3-3926-4397-8d89-b948d28d1b87
-        dialogue: {fileID: 11400000, guid: bb063e1aaebef4842be88c93c3db8609, type: 2}
-        npcId: NPC_Eldran
-        oneShotFlag: 
-    - rid: 6000000000000000011
-      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Completa ELDRAN_MISSION1
-        chapter: Cap. 1
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: a78082c3-3926-4397-8d89-b948d28d1b87
-        position: {x: 4180, y: 0}
-        outputs:
-        - a678c9c3-f226-4d45-934c-2b5ae13b0fa1
-        questId: ELDRAN_MISSION1
-        stepConditionIds: []
-        steps: 
-        completeQuest: 1
-        logWarnings: 0
-    - rid: 6000000000000000012
-      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: DLG_ELDRAN_MISSION2_OFFER
-        chapter: Cap. 1
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: a678c9c3-f226-4d45-934c-2b5ae13b0fa1
-        position: {x: 4560, y: 0}
-        outputs:
-        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        dialogue: {fileID: 11400000, guid: 74b615978e6874d49b627e67dbba67ce, type: 2}
-        npcId: NPC_Eldran
-        oneShotFlag: 
     - rid: 6000000000000000013
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 3.- HAY QUE BUSCAR LA CAJA BAJO UN ARBOL
+        displayTitle: 21.- HAY QUE BUSCAR LA CAJA BAJO UN ARBOL
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -255,14 +183,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        position: {x: 4940, y: 0}
+        position: {x: 8360, y: 0}
         outputs:
         - 0d50f50f-4be3-434d-a6b4-fa6ce0694d8f
         questId: ELDRAN_MISSION2
     - rid: 6000000000000000014
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Recoge la caja
+        displayTitle: 23.- Recoge la caja
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -270,14 +198,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        position: {x: 5700, y: 0}
+        position: {x: 9120, y: 0}
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
     - rid: 6000000000000000015
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Habla con Eldran (2, entrega)
+        displayTitle: 26.- Habla con Eldran (entrega)
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -285,7 +213,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        position: {x: 6840, y: 0}
+        position: {x: 10260, y: 0}
         outputs:
         - e10bdcbf-059f-40f6-bfcf-7799abe09913
         npcId: NPC_Eldran
@@ -294,7 +222,7 @@ MonoBehaviour:
     - rid: 6000000000000000016
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: DLG_ELDRAN_MISSION2_TURNIN
+        displayTitle: 27.- DLG_ELDRAN_MISSION2_TURNIN
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -302,7 +230,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e10bdcbf-059f-40f6-bfcf-7799abe09913
-        position: {x: 7220, y: 0}
+        position: {x: 10640, y: 0}
         outputs:
         - bfb7330e-0489-4388-bcab-d6305b68a97a
         dialogue: {fileID: 11400000, guid: ccf34efc36cfcf24caa59ea5fe1817a5, type: 2}
@@ -311,7 +239,7 @@ MonoBehaviour:
     - rid: 6000000000000000017
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Completa ELDRAN_MISSION2
+        displayTitle: 28.- Completa ELDRAN_MISSION2
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -319,9 +247,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bfb7330e-0489-4388-bcab-d6305b68a97a
-        position: {x: 7600, y: 0}
+        position: {x: 11020, y: 0}
         outputs:
-        - 041162d9-cc08-4d17-ae7c-6067257e952b
+        - 0a923444-f2e4-42d4-be51-49d30c40e362
         questId: ELDRAN_MISSION2
         stepConditionIds: []
         steps: 
@@ -330,7 +258,7 @@ MonoBehaviour:
     - rid: 6000000000000000018
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "A\xF1ado al inventario"
+        displayTitle: 18.- La moneda de Eldran, adelantada (IT_Coin x1)
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -338,17 +266,17 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 041162d9-cc08-4d17-ae7c-6067257e952b
-        position: {x: 7980, y: 0}
+        position: {x: 7220, y: 0}
         outputs:
-        - 0a923444-f2e4-42d4-be51-49d30c40e362
+        - a856e804-7ab5-4aaf-a241-774bce56c27f
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
-        amount: 20
+        amount: 1
         logWarnings: 0
         onlyOnce: 1
     - rid: 6000000000000000019
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 4.- DESPERTAR MAGICO (AWAKEN_START)
+        displayTitle: 29.- DESPERTAR MAGICO (AWAKEN_START)
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -356,7 +284,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 8360, y: 0}
+        position: {x: 11400, y: 0}
         outputs:
         - 88fa9b85-47c6-4a3c-94b2-a475fd7f264c
         - 1a4732ed-b210-48be-8603-cb824988a90f
@@ -372,7 +300,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 88fa9b85-47c6-4a3c-94b2-a475fd7f264c
-        position: {x: 8740, y: 0}
+        position: {x: 11780, y: 0}
         outputs:
         - e7e8e2f2-6e54-4490-97b1-fd48323945a4
         eventKey: AWAKEN_DONE
@@ -387,14 +315,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 1a4732ed-b210-48be-8603-cb824988a90f
-        position: {x: 8740, y: 190}
+        position: {x: 11780, y: 190}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
         eventKey: AWAKEN_FAILED
     - rid: 6000000000000000022
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: SE DESBLOQUEA EL ATAQUE MAGICO Y LA BOLA DE FUEGO
+        displayTitle: 30.- SE DESBLOQUEA EL ATAQUE MAGICO Y LA BOLA DE FUEGO
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -402,7 +330,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 9120, y: 0}
+        position: {x: 12160, y: 0}
         outputs:
         - d1785c09-9503-4d7b-a24e-682424ca83a7
         abilityKeysToUnlock: 03000000
@@ -416,7 +344,7 @@ MonoBehaviour:
     - rid: 6000000000000000023
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 5.- HAY QUE DERROTAR AL DEMONIO
+        displayTitle: 31.- HAY QUE DERROTAR AL DEMONIO
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -424,14 +352,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d1785c09-9503-4d7b-a24e-682424ca83a7
-        position: {x: 9500, y: 0}
+        position: {x: 12540, y: 0}
         outputs:
         - 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
         questId: ELDRAN_MISSION3
     - rid: 6000000000000000024
       type: {class: StartBattleNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: '5.1.- ARENA DE BATALLA: DEMONIO'
+        displayTitle: '32.- ARENA DE BATALLA: DEMONIO'
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -439,12 +367,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 9880, y: 0}
+        position: {x: 12920, y: 0}
         outputs:
         - a1032a1a-451d-410d-bccc-2c33329d00f3
         battleId: Demon_1
         bossArena: {fileID: 0}
         useBattleById: 1
+        encounter: {fileID: 11400000, guid: 1e1446cf72914a07a5046fab09197876, type: 2}
+        spawnProfileIndex: 0
         completeMission: 0
         missionStringId: 
         missionId: 0
@@ -460,7 +390,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a1032a1a-451d-410d-bccc-2c33329d00f3
-        position: {x: 10260, y: 0}
+        position: {x: 13300, y: 0}
         outputs:
         - fcfe6d87-7d52-4b68-930c-ec6807fa381c
         eventKey: LIAM_CRYSTAL_START
@@ -475,14 +405,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: fcfe6d87-7d52-4b68-930c-ec6807fa381c
-        position: {x: 10640, y: 0}
+        position: {x: 13680, y: 0}
         outputs:
         - dedc7fec-da78-4587-82a4-341ca93c8eaa
         eventKey: LIAM_CRYSTAL_DONE
     - rid: 6000000000000000027
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 7.- ELDRAN SE VA A CASA DE WILL
+        displayTitle: 33.- ELDRAN SE VA A CASA DE WILL
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -490,7 +420,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: dedc7fec-da78-4587-82a4-341ca93c8eaa
-        position: {x: 11020, y: 0}
+        position: {x: 14060, y: 0}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
         questId: ELDRAN_MISSION3
@@ -509,13 +439,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 11400, y: 0}
+        position: {x: 14440, y: 0}
         outputs: []
         eventKey: CH_Cap1_BACK_1
     - rid: 6000000000000000029
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 0.- ARRANCA EL SUENO DEL PROLOGO (PROLOGUE_DREAM_START)
+        displayTitle: 2.- ARRANCA EL SUENO DEL PROLOGO (PROLOGUE_START)
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -523,14 +453,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5fa39087-b517-4cc6-b333-0841e33ef2aa
-        position: {x: 380, y: 0}
+        position: {x: 760, y: 0}
         outputs:
         - 413efe3c-2b7f-4292-b70b-c48b3b78f39a
-        eventKey: PROLOGUE_DREAM_START
+        eventKey: PROLOGUE_START
     - rid: 6000000000000000030
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Espera fin del sueno (PROLOGUE_DREAM_DONE)
+        displayTitle: 3.- Espera fin del sueno (PROLOGUE_DONE)
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -538,14 +468,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 413efe3c-2b7f-4292-b70b-c48b3b78f39a
-        position: {x: 760, y: 0}
+        position: {x: 1140, y: 0}
         outputs:
-        - 85279f14-0f9a-4376-8ca3-126ecb12b966
-        eventKey: PROLOGUE_DREAM_DONE
+        - 72854966-4210-4108-aa56-b1f0cb33d3bb
+        eventKey: PROLOGUE_DONE
     - rid: 6000000000000000031
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Tutorial minimapa (caja de Eldran)
+        displayTitle: 22.- Tutorial minimapa (caja de Eldran)
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -553,7 +483,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0d50f50f-4be3-434d-a6b4-fa6ce0694d8f
-        position: {x: 5320, y: 0}
+        position: {x: 8740, y: 0}
         outputs:
         - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
         action: 0
@@ -566,7 +496,7 @@ MonoBehaviour:
     - rid: 6000000000000000032
       type: {class: WaitItemDeliveryNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Entrega la caja a Eldran
+        displayTitle: 24.- Entrega la caja a Eldran
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -574,7 +504,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 6080, y: 0}
+        position: {x: 9500, y: 0}
         outputs:
         - da4a9b32-670c-4724-ab44-6743e2c728d1
         npcId: NPC_Eldran
@@ -588,7 +518,7 @@ MonoBehaviour:
     - rid: 6000000000000000033
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: Tutorial icono 'habla conmigo' (caja de Eldran)
+        displayTitle: 25.- Tutorial icono 'habla conmigo' (caja de Eldran)
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -596,7 +526,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 6460, y: 0}
+        position: {x: 9880, y: 0}
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         action: 0
@@ -606,3 +536,303 @@ MonoBehaviour:
         icon: {fileID: 0}
         buttonName: interactable_select
         dismissWithCancel: 1
+    - rid: 6000000000000000034
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 8.- LA DISCUSION EN LA VENTANA (HOOK_DISCUSION_START)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 80e2bd55-eb2e-4c36-b5cf-a789104718aa
+        position: {x: 3040, y: 0}
+        outputs:
+        - bab7b6d6-bc6c-4021-890e-2617155a6862
+        eventKey: HOOK_DISCUSION_START
+    - rid: 6000000000000000035
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 9.- Espera fin de la discusion (HOOK_DISCUSION_DONE)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: bab7b6d6-bc6c-4021-890e-2617155a6862
+        position: {x: 3420, y: 0}
+        outputs:
+        - c748956c-7df0-4031-8789-65aab639f278
+        eventKey: HOOK_DISCUSION_DONE
+    - rid: 6000000000000000036
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 10.- SAL A VER QUE PASA (WILL_MISSION0)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c748956c-7df0-4031-8789-65aab639f278
+        position: {x: 3800, y: 0}
+        outputs:
+        - 05d8c990-c631-4ddd-8aff-4092490214c8
+        questId: WILL_MISSION0
+    - rid: 6000000000000000037
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 11.- Will sale de casa (WILL_EXITS_HOUSE)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 81686a85-c370-4681-974b-777faf8b089b
+        position: {x: 4560, y: 0}
+        outputs:
+        - f1f3bb59-d765-41ae-a849-2b3035f2b905
+        eventKey: WILL_EXITS_HOUSE
+    - rid: 6000000000000000038
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 12.- Completa WILL_MISSION0
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: f1f3bb59-d765-41ae-a849-2b3035f2b905
+        position: {x: 4940, y: 0}
+        outputs:
+        - a468c3fc-72f5-4541-b174-81017ba71bc2
+        questId: WILL_MISSION0
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 0
+    - rid: 6000000000000000039
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 15.- LA DISCUSION SE RESUELVE (PERAS_START)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: d8370db5-0930-49a6-b96c-70e9f05977bd
+        position: {x: 6080, y: 0}
+        outputs:
+        - 18a57f1d-20e3-4539-b920-ac49b3750703
+        eventKey: PERAS_START
+    - rid: 6000000000000000040
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 16.- Espera fin de SEQ_PerasEldran (PERAS_DONE)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 18a57f1d-20e3-4539-b920-ac49b3750703
+        position: {x: 6460, y: 0}
+        outputs:
+        - 721fd475-997e-4f7d-b54b-cedcbb5c1c2e
+        eventKey: PERAS_DONE
+    - rid: 6000000000000000041
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 17.- Primer objeto del bolsillo (IT_Mermelada)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 721fd475-997e-4f7d-b54b-cedcbb5c1c2e
+        position: {x: 6840, y: 0}
+        outputs:
+        - 041162d9-cc08-4d17-ae7c-6067257e952b
+        item: {fileID: 11400000, guid: ed49627c2362432a9b8d1f43f02b23c1, type: 2}
+        amount: 1
+        logWarnings: 0
+        onlyOnce: 1
+    - rid: 6000000000000000042
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 19.- Tutorial puesto del mercado (TUTORIAL_MARKET)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: a856e804-7ab5-4aaf-a241-774bce56c27f
+        position: {x: 7600, y: 0}
+        outputs:
+        - 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
+        action: 0
+        text: Prueba a comprar algo en el puesto del mercado.
+        textId: TUTORIAL_MARKET
+        icon: {fileID: 0}
+        buttonName: interactable_select
+        dismissWithCancel: 1
+    - rid: 6000000000000000043
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20.- Espera compra en el mercado (MARKET_DONE)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
+        position: {x: 7980, y: 0}
+        outputs:
+        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        eventKey: MARKET_DONE
+    - rid: 6000000000000000044
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14b.- Busca a Eldran (ELDRAN_MISSION1)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: aaccfcd4-a7bc-4732-b4b6-86e6c183db03
+        position: {x: 5780, y: 120}
+        outputs:
+        - 486dfd45-dc63-438c-ae05-f2f8a045b36a
+        questId: ELDRAN_MISSION1
+    - rid: 6000000000000000045
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14c.- Oliver se une al grupo (OLIVER_JOIN_PARTY)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 486dfd45-dc63-438c-ae05-f2f8a045b36a
+        position: {x: 5860, y: 120}
+        outputs:
+        - 36c16794-69b8-4e90-bb85-dc80d58b76ae
+        eventKey: OLIVER_JOIN_PARTY
+    - rid: 6000000000000000046
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14d.- Tutorial minimapa (busca a Eldran)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 36c16794-69b8-4e90-bb85-dc80d58b76ae
+        position: {x: 5940, y: 120}
+        outputs:
+        - aede8111-3544-4dfc-a11e-bd1189819797
+        action: 0
+        text: Sigue el marcador del minimapa para encontrar a Eldran. Pulsa {BOTON}
+          para ver el mapa completo.
+        textId: TUTORIAL_MINIMAP_ELDRAN
+        icon: {fileID: 0}
+        buttonName: interactable_select
+        dismissWithCancel: 1
+    - rid: 6000000000000000047
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14e.- Will llega hasta Eldran (WILL_REACHED_ELDRAN)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: aede8111-3544-4dfc-a11e-bd1189819797
+        position: {x: 6020, y: 120}
+        outputs:
+        - ce67dfa7-968b-420d-87e6-f46ad317d154
+        eventKey: WILL_REACHED_ELDRAN
+    - rid: 6000000000000000048
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 14f.- Completa ELDRAN_MISSION1
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: ce67dfa7-968b-420d-87e6-f46ad317d154
+        position: {x: 6100, y: 120}
+        outputs:
+        - d8370db5-0930-49a6-b96c-70e9f05977bd
+        questId: ELDRAN_MISSION1
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 0
+    - rid: 7428272359979352335
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 1.- Carga el valle del prologo (Prologo_Valle)
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 28e514c7-46f5-45ec-bd9b-3aa29d2317b5
+        position: {x: 380, y: 0}
+        outputs:
+        - 5fa39087-b517-4cc6-b333-0841e33ef2aa
+        operacion: 0
+        sceneName: Prologo_Valle
+        waitForCompletion: 1
+    - rid: 7428272359979352336
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 3b.- Descarga el valle del prologo
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 72854966-4210-4108-aa56-b1f0cb33d3bb
+        position: {x: 1520, y: 0}
+        outputs:
+        - 85279f14-0f9a-4376-8ca3-126ecb12b966
+        operacion: 1
+        sceneName: Prologo_Valle
+        waitForCompletion: 1
+    - rid: 7428272459180934008
+      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 4.- Se destapa la habitacion de Will
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 85279f14-0f9a-4376-8ca3-126ecb12b966
+        position: {x: 1900, y: 0}
+        outputs:
+        - d206615e-7e83-4d62-bd5a-d6e04d6b237b
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.8
+        fadeIn: 0
+        restaurarMusicaDeEscena: 1
+        fundidoDeMusica: 2

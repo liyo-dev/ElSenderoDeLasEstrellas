@@ -36,8 +36,6 @@ MonoBehaviour:
   - rid: 1078245657900615900
   - rid: 1788894763175737732
   - rid: 1479465354230462173
-  - rid: 5983492470211221218
-  - rid: 526820858001539260
   applicableSceneNames:
   - MainWorld
   references:
@@ -54,10 +52,125 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e14cad4b-3e1f-4d63-aec7-b992b768fb01
-        position: {x: 1713, y: -310}
+        position: {x: 1520, y: 0}
         outputs: []
         wardrobeItem: {fileID: 11400000, guid: e57680d74430c0041b9f24ed7e99989d, type: 2}
         logWarnings: 1
+    - rid: 1033424269097474018
+      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: El remedio contra la resaca (Tabernera)
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c3149093-4f7b-48e2-81e1-8bbaba2350f2
+        position: {x: 380, y: 1657}
+        outputs:
+        - 1769126c-f9bd-455f-b76f-96f0d096bac6
+        questId: Q_TABERNERA_ALGAS
+        debugLogs: 0
+    - rid: 1078245657900615900
+      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Suministros para el hechizo (Nora)
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: db4b04b0-fed3-4756-b4d8-6a01b4459193
+        position: {x: 380, y: 388}
+        outputs:
+        - b4502fed-c3e7-4fe9-a48a-d3151dd615da
+        questId: Q_NORA_POCIONES
+        debugLogs: 0
+    - rid: 1328963130609840822
+      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Recibo orejas de conejo
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 231b6f08-67fc-47a5-b544-7b88b4a36290
+        position: {x: 760, y: 1488}
+        outputs: []
+        wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
+        logWarnings: 1
+    - rid: 1479465354230462173
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nos da 15 monedas
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 9f7e4a93-96a1-45e9-9426-6a214f7c837f
+        position: {x: 1140, y: 198}
+        outputs: []
+        item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
+        amount: 15
+        logWarnings: 0
+        onlyOnce: 1
+    - rid: 1635490750706514273
+      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Pociones para la abuela (Manuel)
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: b38702f2-1671-472b-b58d-ce3a8050f085
+        position: {x: 380, y: 1855}
+        outputs:
+        - 231b6f08-67fc-47a5-b544-7b88b4a36290
+        questId: Q_MANUEL_POCIONES
+        debugLogs: 0
+    - rid: 1788894763175737732
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nos da 3 pociones de vida
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: b4502fed-c3e7-4fe9-a48a-d3151dd615da
+        position: {x: 760, y: 404}
+        outputs:
+        - 9f7e4a93-96a1-45e9-9426-6a214f7c837f
+        item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
+        amount: 3
+        logWarnings: 0
+        onlyOnce: 1
+    - rid: 1827795099163868709
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Nos da 25 monedas
+        chapter: 
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 1769126c-f9bd-455f-b76f-96f0d096bac6
+        position: {x: 760, y: 1318}
+        outputs: []
+        item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
+        amount: 25
+        logWarnings: 0
+        onlyOnce: 1
     - rid: 2337184645389222053
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -69,7 +182,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 19e6376b-e48c-41d5-bf3a-aa9beef62892
-        position: {x: 1307, y: -310}
+        position: {x: 1140, y: 0}
         outputs:
         - e14cad4b-3e1f-4d63-aec7-b992b768fb01
         questId: "Q_NI\xD1OPEZ_CARACOLA"
@@ -85,7 +198,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 099fe10e-98f2-475b-ae44-0f435002ee2c
-        position: {x: 399, y: -678}
+        position: {x: 380, y: 0}
         outputs:
         - a5b0ec64-4604-458f-baa2-4363bad5d765
         eventKey: ALGAS_INVENTORY
@@ -100,7 +213,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a5b0ec64-4604-458f-baa2-4363bad5d765
-        position: {x: 770, y: -678}
+        position: {x: 760, y: 0}
         outputs: []
         item: {fileID: 11400000, guid: bb3bcf64887e34149b4ee8bb86b1a155, type: 2}
         amount: 1
@@ -109,7 +222,7 @@ MonoBehaviour:
     - rid: 5623891259268006325
       type: {class: StartNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: MISIONES CAPITULO 1
+        displayTitle: MISIONES SECUNDARIAS
         chapter: 
         blockSaving: 0
         inputAnchor: 0
@@ -117,7 +230,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 434108a8-8f50-407a-b807-74d22ff2a5ac
-        position: {x: -499, y: 44}
+        position: {x: -1, y: 0}
         outputs:
         - 099fe10e-98f2-475b-ae44-0f435002ee2c
         - 00079bce-e03b-4fa9-bf56-051f0f3b427c
@@ -128,7 +241,6 @@ MonoBehaviour:
         - c3149093-4f7b-48e2-81e1-8bbaba2350f2
         - b38702f2-1671-472b-b58d-ce3a8050f085
         - db4b04b0-fed3-4756-b4d8-6a01b4459193
-        - a468c3fc-72f5-4541-b174-81017ba71bc2
     - rid: 5623891481250759595
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -140,7 +252,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 29625f69-6406-4f2c-a5b7-4f2351d2a8d1
-        position: {x: 399, y: 220}
+        position: {x: 380, y: 586}
         outputs:
         - f01dc9e7-de62-484e-8166-01c99735cb97
         questId: Q_RUDOLFO
@@ -156,12 +268,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f01dc9e7-de62-484e-8166-01c99735cb97
-        position: {x: 871, y: 220}
+        position: {x: 760, y: 574}
         outputs: []
         abilityKeysToUnlock: 01000000
         abilitiesToUnlock: 
         spellsToUnlock: 
         assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 1
@@ -176,7 +289,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: fa24c4e1-e60f-4788-b4c0-a6d276e5cddb
-        position: {x: 399, y: -310}
+        position: {x: 380, y: 190}
         outputs:
         - 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
         questId: "Q_NI\xD1OPEZ"
@@ -192,13 +305,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 98f9b923-1d1f-443b-9cf7-cfcfd55dc1ea
-        position: {x: 871, y: -310}
+        position: {x: 760, y: 170}
         outputs:
         - 19e6376b-e48c-41d5-bf3a-aa9beef62892
         abilityKeysToUnlock: 00000000
         abilitiesToUnlock: 
         spellsToUnlock: 
         assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
         applyPresetAfterUnlock: 1
         saveAfterUnlock: 1
@@ -213,7 +327,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 00079bce-e03b-4fa9-bf56-051f0f3b427c
-        position: {x: 399, y: 786}
+        position: {x: 380, y: 784}
         outputs:
         - b3cc61c7-023e-47cc-865a-06c7e4c93ab5
         questId: ROBERTO_MISION1
@@ -229,7 +343,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: b3cc61c7-023e-47cc-865a-06c7e4c93ab5
-        position: {x: 871, y: 786}
+        position: {x: 760, y: 808}
         outputs: []
         item: {fileID: 11400000, guid: e420f009517398f4aa2f67aed445c278, type: 2}
         amount: 5
@@ -239,14 +353,14 @@ MonoBehaviour:
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "La plaga de ara\xF1as (Guardia del Bosque)"
-        chapter:
+        chapter: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 1f4a2b3c-5d6e-4f70-8a91-b2c3d4e5f601
-        position: {x: 399, y: 1100}
+        position: {x: 380, y: 982}
         outputs:
         - 2a5b3c4d-6e7f-4081-9a02-c3d4e5f60712
         questId: Q_GUARDIABOSQUE_ARANAS
@@ -255,14 +369,14 @@ MonoBehaviour:
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Nos da 30 monedas
-        chapter:
+        chapter: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 2a5b3c4d-6e7f-4081-9a02-c3d4e5f60712
-        position: {x: 871, y: 1100}
+        position: {x: 760, y: 978}
         outputs: []
         item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
         amount: 30
@@ -272,14 +386,14 @@ MonoBehaviour:
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "El remedio de B\xE1rbara (Tendera)"
-        chapter:
+        chapter: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 3b6c4d5e-7f80-4192-ab13-d4e5f6071823
-        position: {x: 399, y: 1400}
+        position: {x: 380, y: 1446}
         outputs:
         - 4c7d5e6f-8091-42a3-bc24-e5f607182934
         questId: Q_TENDERA_ALGAS
@@ -288,163 +402,16 @@ MonoBehaviour:
       type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: Nos da 3 algas
-        chapter:
+        chapter: 
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 4c7d5e6f-8091-42a3-bc24-e5f607182934
-        position: {x: 871, y: 1400}
+        position: {x: 760, y: 1148}
         outputs: []
         item: {fileID: 11400000, guid: bb3bcf64887e34149b4ee8bb86b1a155, type: 2}
         amount: 3
         logWarnings: 0
         onlyOnce: 1
-    - rid: 1033424269097474018
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: El remedio contra la resaca (Tabernera)
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c3149093-4f7b-48e2-81e1-8bbaba2350f2
-        position: {x: 399, y: 1700}
-        outputs:
-        - 1769126c-f9bd-455f-b76f-96f0d096bac6
-        questId: Q_TABERNERA_ALGAS
-        debugLogs: 0
-    - rid: 1827795099163868709
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Nos da 25 monedas
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 1769126c-f9bd-455f-b76f-96f0d096bac6
-        position: {x: 871, y: 1700}
-        outputs: []
-        item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
-        amount: 25
-        logWarnings: 0
-        onlyOnce: 1
-    - rid: 1635490750706514273
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Pociones para la abuela (Manuel)
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: b38702f2-1671-472b-b58d-ce3a8050f085
-        position: {x: 399, y: 2000}
-        outputs:
-        - 231b6f08-67fc-47a5-b544-7b88b4a36290
-        questId: Q_MANUEL_POCIONES
-        debugLogs: 0
-    - rid: 1328963130609840822
-      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Recibo orejas de conejo
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 231b6f08-67fc-47a5-b544-7b88b4a36290
-        position: {x: 871, y: 2000}
-        outputs: []
-        wardrobeItem: {fileID: 11400000, guid: 3cfc9393280d2da4fa5680d5fbd21f36, type: 2}
-        logWarnings: 1
-    - rid: 1078245657900615900
-      type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Suministros para el hechizo (Nora)
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: db4b04b0-fed3-4756-b4d8-6a01b4459193
-        position: {x: 399, y: 2300}
-        outputs:
-        - b4502fed-c3e7-4fe9-a48a-d3151dd615da
-        questId: Q_NORA_POCIONES
-        debugLogs: 0
-    - rid: 1788894763175737732
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Nos da 3 pociones de vida
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: b4502fed-c3e7-4fe9-a48a-d3151dd615da
-        position: {x: 871, y: 2300}
-        outputs:
-        - 9f7e4a93-96a1-45e9-9426-6a214f7c837f
-        item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
-        amount: 3
-        logWarnings: 0
-        onlyOnce: 1
-    - rid: 1479465354230462173
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Nos da 15 monedas
-        chapter:
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 9f7e4a93-96a1-45e9-9426-6a214f7c837f
-        position: {x: 1343, y: 2300}
-        outputs: []
-        item: {fileID: 11400000, guid: 25c804f6289cb4945a3a9761b8e94e96, type: 2}
-        amount: 15
-        logWarnings: 0
-        onlyOnce: 1
-    - rid: 5983492470211221218
-      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Will sale de casa -> Oliver saluda
-        chapter: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: a468c3fc-72f5-4541-b174-81017ba71bc2
-        position: {x: 399, y: 2600}
-        outputs:
-        - 32febd1e-bce7-478d-aab9-792eddddd73d
-        eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
-    - rid: 526820858001539260
-      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: Oliver saluda a Will (OliverSaludoSequencer)
-        chapter: 
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 32febd1e-bce7-478d-aab9-792eddddd73d
-        position: {x: 871, y: 2600}
-        outputs: []
-        cinematicName: Oliver saluda a Will
-        signalIn: OLIVER_GREETING_START
-        signalDone: OLIVER_GREETING_DONE
-        signalFailed: 

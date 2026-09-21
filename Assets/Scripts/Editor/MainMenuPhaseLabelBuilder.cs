@@ -59,7 +59,7 @@ public static class MainMenuPhaseLabelBuilder
     static readonly Vector2 AnchoredPosition = new Vector2(0f, -355f);
     static readonly Vector2 SizeDelta = new Vector2(0f, 48f);
 
-    [MenuItem("El Sendero/Controles/Añadir Etiqueta de Fase (PRE-ALPHA) al Main Menu")]
+    [MenuItem("El Sendero/Archivo/Controles/Añadir Etiqueta de Fase (PRE-ALPHA) al Main Menu")]
     public static void AddPhaseLabel()
     {
         if (EditorApplication.isPlaying)

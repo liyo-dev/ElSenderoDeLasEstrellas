@@ -34,7 +34,7 @@ public static class SenderoHubSetDressing
     const string PackRoot = "Assets/Art/World/RPG Tiny Fantasy World 01 PBR";
     const string OutputMatFolder = "Assets/_SET_DRESSING/SenderoHub/Materials";
 
-    [MenuItem("El Sendero/Escena/Crear Set Dressing del Hub (Altar, Puertas, Camino)")]
+    [MenuItem("El Sendero/Archivo/Escena/Crear Set Dressing del Hub (Altar, Puertas, Camino)")]
     public static void CreateSetDressing()
     {
         var scene = EditorSceneManager.GetActiveScene();

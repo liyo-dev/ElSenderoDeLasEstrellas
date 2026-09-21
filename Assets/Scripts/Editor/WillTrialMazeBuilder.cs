@@ -89,7 +89,7 @@ public static class WillTrialMazeBuilder
         public int connections; // bitmask N/E/S/W
     }
 
-    [MenuItem("El Sendero/Escena/Generar Laberinto de la Prueba de Will")]
+    [MenuItem("El Sendero/Archivo/Escena/Generar Laberinto de la Prueba de Will")]
     public static void GenerateMaze()
     {
         Scene scene = OpenOrCreateScene();

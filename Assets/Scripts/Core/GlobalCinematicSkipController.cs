@@ -73,6 +73,14 @@ public class GlobalCinematicSkipController : MonoBehaviour
 
     private static GlobalCinematicSkipController _instance;
 
+    /// Acceso publico de solo lectura a la instancia persistente, para que otros sistemas
+    /// (InputPromptBeat, 17 sep 2026) puedan pedir Suppress()/Unsuppress() sin tener que
+    /// arrastrar una referencia de Inspector hasta este objeto DontDestroyOnLoad. Null hasta
+    /// que Awake() corre (o si el controlador no esta en la escena, p.ej. tests aislados) --
+    /// quien lo use debe usar el operador ?. igual que ya hace el resto del proyecto con
+    /// otros singletons (ver DefaultNarrativeSignals.Instance).
+    public static GlobalCinematicSkipController Instance => _instance;
+
     private void Awake()
     {
         // Mismo patrón que CoreSystems.cs: instancia única persistente. Necesario porque este

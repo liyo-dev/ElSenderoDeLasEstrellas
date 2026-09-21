@@ -7,7 +7,9 @@ using UnityEngine.UI;
 /// <summary>
 /// Muestra u oculta el TutorialPromptUI.
 /// Show: el grafo ESPERA hasta que el jugador pulse la acción indicada (A/Submit/Interact) y
-/// entonces oculta el prompt antes de avanzar.
+/// entonces oculta el prompt antes de avanzar. Excepción: si dismissWithCancel es true (aviso
+/// puramente informativo, ver ese campo), el grafo YA NO espera — ver comentario en
+/// _detachedInformational.
 /// Hide: oculta inmediatamente y avanza.
 /// </summary>
 [Serializable]
@@ -56,7 +58,17 @@ public sealed class TutorialPromptNode : NarrativeNode
              "conversación (petición de Raúl, 15 sept 2026). Dejar en 'false' (por defecto, " +
              "comportamiento de siempre) para avisos que piden pulsar el botón de una mecánica real " +
              "(p.ej. 'Pulsa {BOTON} para despertar'): ahí cerrar tiene que seguir exigiendo ESE " +
-             "botón, o el texto dejaría de coincidir con lo que hace falta pulsar.")]
+             "botón, o el texto dejaría de coincidir con lo que hace falta pulsar.\n\n" +
+             "IMPORTANTE (INC-201d, 15 sept 2026): al activar esto, el grafo YA NO espera a que el " +
+             "jugador cierre el aviso — avanza de inmediato al mostrarlo (ver _detachedInformational " +
+             "en el código). Antes de este cambio, el propio cierre del aviso era lo único que hacía " +
+             "avanzar el grafo, y como este aviso no bloquea el movimiento ni la interacción, un " +
+             "jugador que siguiera jugando en vez de cerrarlo (algo perfectamente normal, es la " +
+             "conducta esperada de un aviso no bloqueante) dejaba el grafo parado ahí para siempre. " +
+             "Si el siguiente nodo del grafo es un WaitCustomEventNode que depende de algo que el " +
+             "jugador puede disparar mientras el aviso sigue en pantalla (p.ej. leer la carta justo " +
+             "después del tutorial de movimiento), el evento se perdía sin más — ver " +
+             "incidencia-carta-no-activa-mision-tutorial-cierre-informativo-2026-09-15.md.")]
     public bool dismissWithCancel = false;
 
     [System.NonSerialized]
@@ -65,6 +77,18 @@ public sealed class TutorialPromptNode : NarrativeNode
     private Action _closeButtonHandler;
     [System.NonSerialized]
     private Action _teleportHandler;
+
+    // INC-201d (15 sept 2026): true mientras este nodo ha avanzado el grafo de inmediato
+    // (dismissWithCancel=true) pero el aviso sigue en pantalla, aún sin cerrar a mano. GoTo()
+    // llama a Exit() de este nodo de forma SÍNCRONA, anidada dentro de la propia llamada a
+    // onReadyToAdvance() (antes de que Enter() siquiera termine de ejecutarse) — así que si Exit()
+    // limpiase las suscripciones y ocultara la UI como hace siempre, el aviso desaparecería de
+    // golpe en el mismo instante de mostrarse. Con esta bandera, Exit() no toca nada mientras el
+    // cierre siga pendiente: las suscripciones (Cancelar/X/teletransporte) y la propia UI quedan
+    // desligadas del ciclo de vida del nodo, y son ellas mismas quienes se limpian cuando el
+    // jugador cierra el aviso (ver CloseInformationalPrompt más abajo).
+    [System.NonSerialized]
+    private bool _detachedInformational;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
@@ -99,7 +123,7 @@ public sealed class TutorialPromptNode : NarrativeNode
         // ese campo.
         ui.Show(resolved, buttonName, icon, allowManualClose: dismissWithCancel);
 
-        void Finish()
+        void CloseInformationalPrompt()
         {
             if (_waitHandler != null)
             {
@@ -117,62 +141,76 @@ public sealed class TutorialPromptNode : NarrativeNode
                 _teleportHandler = null;
             }
             TutorialPromptUI.Instance?.Hide();
+        }
+
+        if (dismissWithCancel)
+        {
+            // Informativo: el jugador puede cerrarlo a mano (Cancelar en mando, X en teclado/ratón,
+            // o queda cerrado igualmente al teletransportarse — ver comentario original más abajo),
+            // pero el GRAFO no espera a que lo haga (ver _detachedInformational arriba). Las
+            // suscripciones se montan igual que siempre; lo único que cambia es que su limpieza ya
+            // no está ligada a Exit() de este nodo, sino a que el propio jugador cierre el aviso.
+            _detachedInformational = true;
+
+            _waitHandler = (GamepadInputReader.InputEvent evt) =>
+            {
+                if (evt.Phase != UnityEngine.InputSystem.InputActionPhase.Performed) return;
+                bool triggered = evt.Type == GamepadInputReader.InputEventType.Cancel
+                               && InputGlyphService.CurrentFamily != InputGlyphDeviceFamily.KeyboardMouse;
+                if (!triggered) return;
+                CloseInformationalPrompt();
+            };
+            GamepadInputReader.OnInput += _waitHandler;
+
+            _closeButtonHandler = CloseInformationalPrompt;
+            ui.CloseButtonClicked += _closeButtonHandler;
+
+            // Mismo salvavidas que antes: si el jugador se va de la zona sin cerrar el aviso, un
+            // teletransporte lo cierra igualmente para que no se quede pegado en pantalla en la
+            // escena siguiente (ver comentario histórico de INC-201c). Ya no hace falta como
+            // salvavidas del GRAFO (que ya avanzó), solo de la UI.
+            _teleportHandler = CloseInformationalPrompt;
+            TeleportService.OnTeleportEnded += _teleportHandler;
+
+            onReadyToAdvance?.Invoke();
+            return;
+        }
+
+        // Comportamiento de siempre (dismissWithCancel = false): el grafo SÍ espera. Dos modos:
+        // - Interactuar del GamePlay map, o Submit como fallback cuando el mapa GamePlay está
+        //   deshabilitado (p.ej. ActionMode.Cinematic) — el botón de siempre, el mismo que avanza
+        //   diálogo.
+        void Finish()
+        {
+            CloseInformationalPrompt();
             onReadyToAdvance?.Invoke();
         }
 
-        // Esperar la confirmación del jugador. Dos modos, según dismissWithCancel:
-        // - false (por defecto): Interact del GamePlay map, o Submit como fallback cuando el mapa
-        //   GamePlay está deshabilitado (p.ej. ActionMode.Cinematic) — el botón de siempre, el mismo
-        //   que avanza diálogo.
-        // - true: Cancelar (mando: Este/B — distinto del botón de diálogo, sin colisión posible) más
-        //   el clic en la X (ver más abajo). En TECLADO, Cancel también se dispara con Escape, que a
-        //   la vez abre el menú de pausa (comparten tecla física) — para no cerrar el aviso Y pausar
-        //   el juego de golpe, en teclado/ratón el aviso NO se cierra por Cancel, solo con la X.
         _waitHandler = (GamepadInputReader.InputEvent evt) =>
         {
             if (evt.Phase != UnityEngine.InputSystem.InputActionPhase.Performed) return;
 
-            bool triggered;
-            if (dismissWithCancel)
-            {
-                triggered = evt.Type == GamepadInputReader.InputEventType.Cancel
-                         && InputGlyphService.CurrentFamily != InputGlyphDeviceFamily.KeyboardMouse;
-            }
-            else
-            {
-                triggered = evt.Type == GamepadInputReader.InputEventType.Interact
-                         || evt.Type == GamepadInputReader.InputEventType.Submit;
-            }
+            bool triggered = evt.Type == GamepadInputReader.InputEventType.Interact
+                           || evt.Type == GamepadInputReader.InputEventType.Submit;
             if (!triggered) return;
 
             Finish();
         };
         GamepadInputReader.OnInput += _waitHandler;
-
-        if (dismissWithCancel)
-        {
-            _closeButtonHandler = Finish;
-            ui.CloseButtonClicked += _closeButtonHandler;
-
-            // INC-201c (15 sept 2026, Raúl): un aviso informativo (dismissWithCancel=true) podía
-            // quedarse esperando para siempre si el jugador salía de la casa/habitación sin
-            // cerrarlo antes (p.ej. sin fijarse en el icono de cerrar) — el grafo no avanzaba Y el
-            // aviso seguía dibujándose encima de la escena siguiente, porque TutorialPromptUI es un
-            // singleton persistente sin ningún vínculo con la escena en la que se mostró.
-            // TeleportService.OnTeleportEnded se dispara con CUALQUIER teletransporte del juego
-            // (entrar/salir de interiores, puntos de guardado...), así que sirve como señal
-            // genérica de "hemos cambiado de sitio" sin tener que enseñarle a este nodo la
-            // escena/anchor concretos de cada aviso. Solo se engancha aquí, nunca para los avisos
-            // que exigen pulsar el botón de una mecánica real (dismissWithCancel=false, p.ej.
-            // "Pulsa {BOTON} para despertar"): esos SÍ deben seguir bloqueando hasta que se pulse
-            // ese botón exacto.
-            _teleportHandler = Finish;
-            TeleportService.OnTeleportEnded += _teleportHandler;
-        }
     }
 
     public override void Exit(NarrativeContext ctx)
     {
+        if (_detachedInformational)
+        {
+            // El aviso y su cierre (Cancelar/X/teletransporte) siguen vivos, desligados de este
+            // nodo — ver _detachedInformational. No tocar nada aquí: Exit() se llama de forma
+            // síncrona nada más invocar onReadyToAdvance() en Enter(), así que limpiar aquí
+            // cerraría el aviso en el mismo instante de mostrarse.
+            _detachedInformational = false;
+            return;
+        }
+
         if (_waitHandler != null)
         {
             GamepadInputReader.OnInput -= _waitHandler;

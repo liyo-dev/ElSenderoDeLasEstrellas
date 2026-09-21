@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,6 +53,29 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected AudioGraphProfile.SequenceRule MusicRule { get; private set; }
 
     private Action _signalInHandler;
+
+    // ── Señales por dato en vez de por Inspector (16 sep 2026) ────────────────
+    //
+    // _signalIn/_signalOut siguen siendo campos del Inspector y no cambia nada para los sequencers
+    // existentes. Estas dos propiedades permiten que una subclase los saque de otro sitio — el caso
+    // real es SequencePlayer, que los lee de su SequenceDefinition para que una secuencia entera
+    // (contenido Y enganche con el grafo narrativo) se pueda escribir como datos, sin tocar la
+    // escena. Devolver null o vacío = usar el campo del Inspector, como siempre.
+    protected virtual string SignalInOverride => null;
+    protected virtual string SignalOutOverride => null;
+
+    // Señal de entrada efectiva, resuelta UNA vez en Awake. Se guarda porque OnDestroy tiene que
+    // desuscribir exactamente la misma con la que se suscribió: si la subclase cambiara de
+    // definición en caliente, recalcularla en OnDestroy dejaría el handler colgado para siempre.
+    private string _resolvedSignalIn;
+
+    /// Señal de entrada efectiva (override de la subclase si la hay, si no la del Inspector).
+    protected string ResolvedSignalIn =>
+        string.IsNullOrEmpty(SignalInOverride) ? _signalIn : SignalInOverride;
+
+    /// Señal de salida efectiva (override de la subclase si la hay, si no la del Inspector).
+    protected string ResolvedSignalOut =>
+        string.IsNullOrEmpty(SignalOutOverride) ? _signalOut : SignalOutOverride;
 
     // FIX INC-059: contador estático de cinemáticas activas (puede haber más de un sequencer
     // encadenado). Otros sistemas (ej: NPCQuestIconManager) lo consultan para ocultar iconos de
@@ -142,13 +165,14 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             if (_sequenceRunning)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: señal de entrada '{_signalIn}' recibida mientras la secuencia ya está en curso — ignorada para evitar solapamiento y un Push/Pop de ActionMode.Cinematic desbalanceado.");
+                Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: señal de entrada '{ResolvedSignalIn}' recibida mientras la secuencia ya está en curso — ignorada para evitar solapamiento y un Push/Pop de ActionMode.Cinematic desbalanceado.");
 #endif
                 return;
             }
             _activeSequenceCoroutine = StartCoroutine(Co_SequenceGuarded());
         };
-        DefaultNarrativeSignals.EnsureInstance().OnCustom(_signalIn, _signalInHandler);
+        _resolvedSignalIn = ResolvedSignalIn;
+        DefaultNarrativeSignals.EnsureInstance().OnCustom(_resolvedSignalIn, _signalInHandler);
     }
 
     /// Envuelve Co_Sequence() para garantizar que el HUD/minimapa/modo Cinematic se restauran
@@ -166,6 +190,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             _sequenceRunning = false;
             _activeSequenceCoroutine = null;
             s_runningSequences.Remove(this);
+            Telon.Soltar(ClaveTelon);   // red de seguridad: idempotente
             if (_cinematicLocked)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -179,9 +204,26 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected virtual void OnDestroy()
     {
         FeedbackService.CancelAllShakes();
-        DefaultNarrativeSignals.Instance?.OffCustom(_signalIn, _signalInHandler);
+        DefaultNarrativeSignals.Instance?.OffCustom(_resolvedSignalIn, _signalInHandler);
 
         // FIX A7 (auditoría 2026-08-07): ver comentario de _activeTransitionCutHandler/_activeTransitionEndHandler.
+        ClearTransitionHandlers();
+    }
+
+    /// Suelta los handlers que esta secuencia tenga enganchados al TransitionManager.
+    ///
+    /// FIX (auditoría 17 sep 2026): esto solo se hacía en OnDestroy, y eso deja un agujero grave en
+    /// el camino de SKIP. Los handlers se enganchan al empezar una transición y solo se quitan
+    /// solos al dispararse; si el jugador salta la secuencia mientras la transición está a medias,
+    /// se quedan pegados a un TransitionManager que es DontDestroyOnLoad — es decir, para toda la
+    /// partida. La siguiente transición de CUALQUIER otro sistema (cruzar una puerta, cambiar de
+    /// escena) ejecutaría el handler viejo, que llama a BeginCinematic() y con él a
+    /// CinematicCameraDriver.Activate(): la cámara se queda secuestrada en pleno gameplay y nadie
+    /// la suelta, porque el EndCinematic() correspondiente ya no va a llegar nunca.
+    ///
+    /// Idempotente: se puede llamar las veces que haga falta.
+    protected void ClearTransitionHandlers()
+    {
         var tm = TransitionManager.Instance();
         if (tm != null)
         {
@@ -219,7 +261,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Activa la cámara cinemática y prepara la regla de música. Se llama en el cut point de la transición.
     protected void BeginCinematic()
     {
-        MusicRule = _audioProfile?.GetSequenceRule(_sequenceMusicId);
+        MusicRule = ResolveAudioProfile()?.GetSequenceRule(_sequenceMusicId);
         if (_interiorAnchor != null) EnvironmentController.Instance?.BeginCinematicOverride();
         // Null-safe: secuencias que no transcurren en el mundo (ej. PrologueDreamSequencer, un
         // "sueño" fuera de cualquier localización real) no necesitan controlar la cámara de mundo
@@ -230,6 +272,10 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Restaura el estado de gameplay: cancela shakes, desactiva la cámara, muestra el HUD/minimapa y desbloquea input.
     protected void EndCinematic()
     {
+        // Si se cierra sin haber llegado a enseñar nada (un skip antes del primer plano), el
+        // telón no puede quedarse retenido por ella.
+        Telon.Soltar(ClaveTelon);
+
         if (!_cinematicLocked) return; // Ya restaurado (evita Pop/ShowHUD duplicados si se llama dos veces)
         _cinematicLocked = false;
         s_activeSequenceCount = Mathf.Max(0, s_activeSequenceCount - 1);
@@ -319,8 +365,39 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Si settings es null, llama onCutPoint de inmediato sin animación.
     private IEnumerator Co_Transition(TransitionSettings settings, Action onCutPoint)
     {
+        // (21 sep) EL TELÓN. Si la pantalla ya está en negro y retenida (arranque de partida, una
+        // carga de escena, otra escena cargándose en aditivo), esta cinemática NO hace su propia
+        // transición: tapar desde lo que hay en pantalla es enseñar lo que hay en pantalla, y
+        // destapar al acabar la transición es enseñar la escena antes de que los primeros beats
+        // la hayan montado. Recoge el telón, hace el cut point a oscuras, y lo suelta cuando ya
+        // hay algo que ver (ver SueltaElTelonEnSuPrimerPlano).
+        if (Telon.Cerrado)
+        {
+            Telon.Cerrar(ClaveTelon);
+            onCutPoint?.Invoke();
+            if (!SueltaElTelonEnSuPrimerPlano) StartCoroutine(Co_SoltarTelonTrasUnFotograma());
+            yield break;
+        }
+
         var tm = TransitionManager.Instance();
-        if (settings == null || tm == null)
+        // FIX 15 sep 2026 (Raúl: "las cámaras no funcionan" en OliverSaludoSequencer, confirmado
+        // con log de consola real — "se queda en la vista normal" del jugador). Causa raíz: esta
+        // corrutina se suscribe a tm.onTransitionCutPointReached/onTransitionEnd y LUEGO llama
+        // tm.Transition(settings, 0f) — pero si TransitionManager.Transition() encuentra
+        // runningTransition == true (otra transición ya en marcha, p. ej. la del teletransporte
+        // al salir de casa, que puede solaparse con el trigger que arranca esta cinemática justo
+        // al cruzar la puerta) se limita a hacer `return;` y loguear "Transition already running
+        // — ignoring new request", SIN disparar ninguno de los dos eventos. Los handlers de abajo
+        // quedan suscritos para siempre esperando un evento que nunca llega, `done` nunca pasa a
+        // true, y `yield return new WaitUntil(() => done);` bloquea esta corrutina — y por tanto
+        // TODA la cinemática que la llama (Co_BeginCinematicWithTransition) — para siempre: la
+        // cámara nunca corta, el resto de la secuencia nunca se ejecuta, y el input del jugador
+        // (ya bloqueado por LockCinematic() antes de este punto) se queda bloqueado sin remedio.
+        // Mismo fallback ya usado dos líneas más abajo para "no hay TransitionSettings/Manager":
+        // si ya hay una transición en marcha, no intentamos encolar otra — aplicamos el cut point
+        // al instante, sin el fundido de pantalla (se pierde la suavidad visual en ese caso raro
+        // de colisión, pero nunca nos quedamos colgados).
+        if (settings == null || tm == null || tm.IsRunning)
         {
             onCutPoint?.Invoke();
             yield break;
@@ -354,6 +431,22 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         yield return new WaitUntil(() => done);
     }
 
+    // ── Telón ────────────────────────────────────────────────────────────────
+
+    /// La clave con la que esta cinemática retiene el telón.
+    protected string ClaveTelon => "cine:" + name;
+
+    /// Si la cinemática recogió el telón al empezar, ¿lo suelta ella misma al llegar a su primer
+    /// plano? Si no (lo normal en los sequencers escritos a mano), se suelta un fotograma después
+    /// del cut point. SequencePlayer lo sobreescribe: sabe cuál es su primer plano.
+    protected virtual bool SueltaElTelonEnSuPrimerPlano => false;
+
+    private IEnumerator Co_SoltarTelonTrasUnFotograma()
+    {
+        yield return null;
+        Telon.Soltar(ClaveTelon);
+    }
+
     // ── Skip ("saltar cinemática") ───────────────────────────────────────────
 
     [Header("Skip")]
@@ -375,6 +468,10 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         if (_activeSequenceCoroutine != null)
             StopCoroutine(_activeSequenceCoroutine);
         _activeSequenceCoroutine = null;
+
+        // Ver ClearTransitionHandlers: si la transición estaba a medias, sus handlers se quedarían
+        // enganchados al TransitionManager persistente para el resto de la partida.
+        ClearTransitionHandlers();
 
         _sequenceRunning = false;
         s_runningSequences.Remove(this);
@@ -439,11 +536,63 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             AudioService.Instance.PlayMusic(MusicRule.music, MusicRule.fadeIn);
     }
 
+    /// Perfil de audio efectivo: el del Inspector de este sequencer si lo tiene, y si no el que ya
+    /// usa el propio AudioService.
+    ///
+    /// FIX 16 sep 2026 (Raúl: "sigue sin sonar la música de la secuencia de Oliver"): _audioProfile
+    /// es un campo de Inspector que hay que arrastrar a mano en CADA sequencer, aunque siempre
+    /// acabe siendo el mismo asset global — el que AudioService ya tiene puesto y expone como
+    /// público. Olvidarlo (o, como aquí, que se copie vacío al montar un componente nuevo) deja la
+    /// música muda sin ningún error. No tiene sentido que una referencia global dependa de que
+    /// alguien se acuerde: si el campo está vacío, se usa el del AudioService.
+    protected AudioGraphProfile ResolveAudioProfile()
+        => _audioProfile != null ? _audioProfile
+         : (AudioService.Instance != null ? AudioService.Instance.profile : null);
+
+    /// Reproduce la música de una regla de secuencia del AudioGraphProfile.
+    ///
+    /// Antes fallaba EN SILENCIO de tres formas distintas (sin perfil, sin regla con ese id, sin
+    /// AudioService) y las tres se veían igual desde fuera: no suena nada. Ahora cada una lo dice.
     protected void PlaySequenceMusic(string sequenceId)
     {
-        var rule = _audioProfile?.GetSequenceRule(sequenceId);
-        if (rule?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(rule.music, rule.fadeIn);
+        if (string.IsNullOrEmpty(sequenceId)) return;
+
+        var profile = ResolveAudioProfile();
+        if (profile == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: no hay AudioGraphProfile " +
+                $"(ni en el Inspector de este componente ni en AudioService) — la música '{sequenceId}' " +
+                "no puede sonar.");
+#endif
+            return;
+        }
+
+        var rule = profile.GetSequenceRule(sequenceId);
+        if (rule?.music == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: el AudioGraphProfile " +
+                $"'{profile.name}' no tiene ninguna regla de secuencia con id '{sequenceId}' (o la " +
+                "tiene sin clip asignado). Revisa la lista de Sequence Rules del perfil.");
+#endif
+            return;
+        }
+
+        if (AudioService.Instance == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: AudioService.Instance es " +
+                $"null — la música '{sequenceId}' no puede sonar. ¿Arrancaste desde Start.unity?");
+#endif
+            return;
+        }
+
+        AudioService.Instance.PlayMusic(rule.music, rule.fadeIn);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[CinematicSequencerBase] {GetType().Name}: música de secuencia '{sequenceId}' → " +
+            $"'{rule.music.name}' (fadeIn {rule.fadeIn}s).");
+#endif
     }
 
     protected void RestoreMusic()
@@ -475,7 +624,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // ── Señales ───────────────────────────────────────────────────────────────
 
     protected void RaiseSignalOut() =>
-        DefaultNarrativeSignals.EnsureInstance().RaiseCustom(_signalOut);
+        DefaultNarrativeSignals.EnsureInstance().RaiseCustom(ResolvedSignalOut);
 
     protected void RaiseSignal(string signal) =>
         DefaultNarrativeSignals.EnsureInstance().RaiseCustom(signal);
@@ -750,6 +899,6 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
     [ContextMenu("Simular secuencia")]
     protected void SimulateSequence() =>
-        DefaultNarrativeSignals.EnsureInstance().RaiseCustom(_signalIn);
+        DefaultNarrativeSignals.EnsureInstance().RaiseCustom(ResolvedSignalIn);
 #endif
 }

@@ -397,7 +397,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
              "Defend_NoWeapon que se usaba antes — pendiente de revisión visual igualmente.")]
     [SerializeField] private string _animWillPracticando = "Attack2";
     [Tooltip("Reacción de 'me han pillado' justo al girarse.")]
-    [SerializeField] private string _animWillPillado = "Fear01";
+    [SerializeField] private string _animWillPillado = "Beg01";
     [Tooltip("'Eh... hola. Soy Will...' — Talk01, mismo estado real de 'hablar' que usa Estela03 (no " +
              "pasa nada por repetirlo entre personajes distintos que no hablan seguidos).")]
     [SerializeField] private string _animWill01 = "Talk01";

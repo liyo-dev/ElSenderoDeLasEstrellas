@@ -36,7 +36,7 @@ public static class NPCIdleVariationSetup
     private static readonly string[] BrokenIdleVariationDefault = { "Idle02_NoWeapon", "Idle03_NoWeapon" };
     private static readonly string[] FixedIdleVariationStates = { "Idle01", "Idle02", "Idle03" };
 
-    [MenuItem("El Sendero/NPCs/Setup/Añadir Idle03 y arreglar variaciones de Idle")]
+    [MenuItem("El Sendero/Archivo/NPCs/Setup/Añadir Idle03 y arreglar variaciones de Idle")]
     public static void Run()
     {
         var allLogLines = new List<string>();

@@ -109,6 +109,14 @@
         /// </summary>
         public static void SetScreenFadeImmediate(Color color)
         {
+            // Con el telón cerrado nadie destapa (ver Telon). Tapar sí se puede siempre.
+            if (color.a < 0.99f && Telon.Cerrado)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[FeedbackService] Destape inmediato ignorado: el telón está cerrado ({Telon.Describir()}).");
+#endif
+                return;
+            }
             EnsureInstance();
             var root = EnsureFadeRoot();
             if (root?.Image != null) root.Image.color = color;
@@ -131,22 +139,43 @@
             
             var img = root.Image;
             float elapsed = 0f;
-            
+
+            // Con el telón cerrado nadie destapa: un fundido de salida pedido ahora se ignora. El
+            // telón destapará él solo cuando ya nadie lo retenga (ver Telon).
+            if (!fadeIn && Telon.Cerrado)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[FeedbackService] Fundido de salida ignorado: el telón está cerrado ({Telon.Describir()}).");
+#endif
+                yield break;
+            }
+
+            // Se parte de LO QUE HAY EN PANTALLA, no de cero (INC-323).
+            //
+            // Cubrir la pantalla arrancando siempre en alfa 0 significa que, si ya estaba negra,
+            // el primer fotograma la deja transparente y se ve la escena antes de volver a
+            // taparla. Es exactamente lo que Raul reporto en la novena grabacion: «cuando nos
+            // vamos a negro vuelve a enfocarse la escena por un momento».
+            //
+            // Pasaba porque hay DOS fundidos seguidos y nadie lo habia mirado: el de la secuencia
+            // (fase 8, «A NEGRO, y la explosion se oye DESPUES») y, detras, el cierre del propio
+            // sistema —`Co_EndCinematicStayBlack`, que vuelve a llamar aqui con fadeIn: true para
+            // garantizar que la cinematica termina en negro—. El segundo rebobinaba al primero.
+            //
+            // Partir del alfa actual es lo correcto en todos los casos: cubrir nunca puede
+            // destapar. Y si ya esta cubierta, el fundido no hace nada visible, que es lo suyo.
+            float desde = fadeIn ? img.color.a : color.a;
+            float hasta = fadeIn ? color.a : 0f;
+
             while (elapsed < duration)
             {
+                // Si a mitad de un destape alguien cierra el telón, se deja de destapar.
+                if (!fadeIn && Telon.Cerrado) yield break;
+
                 float t = elapsed / duration;
                 var c = color;
-                
-                if (fadeIn)
-                {
-                    // De transparente a color (fade IN a negro)
-                    c.a = Mathf.Lerp(0f, color.a, t);
-                }
-                else
-                {
-                    // De color a transparente (fade OUT desde negro)
-                    c.a = Mathf.Lerp(color.a, 0f, t);
-                }
+
+                c.a = Mathf.Lerp(desde, hasta, t);
                 
                 img.color = c;
                 elapsed += Time.unscaledDeltaTime;
@@ -155,7 +184,7 @@
             
             // Estado final
             var final = color;
-            final.a = fadeIn ? color.a : 0f;
+            final.a = hasta;
             img.color = final;
 
             _activeFadeRoutine = null;

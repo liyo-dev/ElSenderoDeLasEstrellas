@@ -15,6 +15,9 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class ShopUI : MonoBehaviour
 {
+    /// Se dispara cuando el jugador cierra la tienda. Pensado para narrativa (p. ej. MARKET_DONE en Cap1.asset via ShopMarketSignal) sin acoplar ShopUI al NarrativeGraph.
+    public event System.Action OnClosed;
+
     [Header("Referencias")]
     [SerializeField] private ShopController shopController;
     
@@ -374,6 +377,8 @@ public class ShopUI : MonoBehaviour
         
         // Restaurar inputs de gameplay con un pequeño retraso
         Invoke(nameof(RestoreGameplayInputs), 0.2f);
+
+        OnClosed?.Invoke();
     }
 
     private void RestoreGameplayInputs()

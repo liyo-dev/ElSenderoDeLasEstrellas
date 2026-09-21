@@ -77,7 +77,7 @@ public class ForbiddenForestPuzzleBuilder : EditorWindow
     int _rewardQuantity = 25;
     int _seed = 20260905;
 
-    [MenuItem("El Sendero/Mundo/Crear Puzle de Runas (Bosque Prohibido)...")]
+    [MenuItem("El Sendero/Archivo/Mundo/Crear Puzle de Runas (Bosque Prohibido)...")]
     public static void ShowWindow()
     {
         var window = GetWindow<ForbiddenForestPuzzleBuilder>("Puzle de Runas");

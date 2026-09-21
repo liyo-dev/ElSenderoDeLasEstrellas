@@ -65,13 +65,13 @@ public class MountainSequencer : CinematicSequencerBase
     [Tooltip("Tiempo máximo de la huida antes de continuar aunque alguien no haya llegado")]
     [SerializeField] private float _fleeTimeout = 4f;
     [Tooltip("Animación de miedo que hacen los tres tras el corte al plano de huida")]
-    [SerializeField] private string _animFear   = "Fear01";
+    [SerializeField] private string _animFear   = "Beg01";
     [Tooltip("Tiempo en el plano de huida viendo las poses de miedo antes del primer plano")]
     [SerializeField] private float _fleeSettleBeat = 3.0f;
 
     [Tooltip("Clave de localización del grito de Eldran al arrancar la huida. Vacío = sin bocadillo.")]
     [SerializeField] private string _keyLineEldranRun = "EVT_MOUNTAIN_ELDRAN_RUN";
-    [SerializeField] private string _animLineEldranRun = "Fear01";
+    [SerializeField] private string _animLineEldranRun = "Beg01";
     [SerializeField] private float  _lineDurationEldranRun = 1.8f;
 
     // ── Fase 2 — Ráfaga en primer plano ───────────────────────────────────────
@@ -415,7 +415,11 @@ public class MountainSequencer : CinematicSequencerBase
     {
         if (_estelaAgent != null) _estelaAgent.enabled = false;
         _estelaSimpleAnim?.DisableAutoRotation();
-        _estelaSimpleAnim?.SetMovementSpeed(0f);
+        // FIX 16 sep 2026 (mismo bug latente que en OliverSaludoSequencer/MagoOscuro):
+        // SetMovementSpeed(0f) amortigua InputMagnitude en vez de ponerlo a 0, y aqui ademas se
+        // desactiva el NavMeshAgent justo despues, asi que nadie va a volver a escribir ese
+        // parametro nunca -- Estela se quedaba con la animacion de andar puesta estando congelada.
+        _estelaSimpleAnim?.ResetMovement();
     }
 
     private void UnfreezeEstela()

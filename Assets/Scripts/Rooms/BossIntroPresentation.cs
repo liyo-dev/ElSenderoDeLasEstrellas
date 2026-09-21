@@ -68,6 +68,7 @@ public class BossIntroPresentation : MonoBehaviour
         if (_isPlaying || bossCamera == null || _mainCamera == null) yield break;
 
         _isPlaying = true;
+        bool cameraSwapped = false;
 
         if (PlayerLockService.HasInstance) PlayerLockService.Instance.Acquire(this);
 
@@ -104,6 +105,7 @@ public class BossIntroPresentation : MonoBehaviour
             }
             _mainCamera.gameObject.SetActive(false);
             bossCamera.gameObject.SetActive(true);
+            cameraSwapped = true;
 
             // 3. Revelar cámara del boss
             yield return FeedbackService.ScreenFadeAsync(fadeColor, cameraFadeDuration, fadeIn: false);
@@ -159,6 +161,7 @@ public class BossIntroPresentation : MonoBehaviour
             // 7. Restaurar cámara principal
             bossCamera.gameObject.SetActive(false);
             _mainCamera.gameObject.SetActive(true);
+            cameraSwapped = false;
 
             if (bossNameCanvas != null) bossNameCanvas.SetActive(false);
 
@@ -167,6 +170,21 @@ public class BossIntroPresentation : MonoBehaviour
         }
         finally
         {
+            // Red de seguridad (INC-207 hotfix 2026-09-15): si cualquier paso anterior lanzó una
+            // excepción a mitad de la presentación, NUNCA dejar la pantalla en negro ni la cámara
+            // del boss activa para siempre. yield no está permitido dentro de un finally, así que
+            // la restauración aquí es siempre instantánea (sin fundido) — mejor un corte brusco
+            // que una pantalla negra permanente que obligue a reiniciar el juego.
+            if (cameraSwapped)
+            {
+                if (bossCamera != null) bossCamera.gameObject.SetActive(false);
+                if (_mainCamera != null) _mainCamera.gameObject.SetActive(true);
+            }
+            if (FeedbackService.IsScreenFaded)
+            {
+                FeedbackService.SetScreenFadeImmediate(Color.clear);
+            }
+
             // Restaurar toda la UI persistente con fade, pase lo que pase durante la presentación.
             SceneBoundUI.EndBossIntro(0.35f);
             PlayerHUDV2.Instance?.ShowHUD(0.35f);

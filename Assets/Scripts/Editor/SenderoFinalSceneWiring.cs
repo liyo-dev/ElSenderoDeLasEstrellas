@@ -47,7 +47,7 @@ using UnityEngine;
 /// </summary>
 public static class SenderoFinalSceneWiring
 {
-    [MenuItem("El Sendero/Escena/Rellenar Referencias de la Batalla Final")]
+    [MenuItem("El Sendero/Archivo/Escena/Rellenar Referencias de la Batalla Final")]
     public static void WireScene()
     {
         var scene = EditorSceneManager.GetActiveScene();

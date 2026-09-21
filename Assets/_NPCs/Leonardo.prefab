@@ -1753,6 +1753,7 @@ GameObject:
   - component: {fileID: 8026005672056920095}
   - component: {fileID: 3068033752680666427}
   - component: {fileID: 2026690195902510469}
+  - component: {fileID: 7906560774796584646}
   m_Layer: 8
   m_Name: Leonardo
   m_TagString: Untagged
@@ -1944,6 +1945,25 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
+--- !u!114 &7906560774796584646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7074026284966629448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 7845683834980311198}
+  originalMouthMesh: {fileID: 161537065726533627}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &7141586729292998549
 GameObject:
   m_ObjectHideFlags: 0

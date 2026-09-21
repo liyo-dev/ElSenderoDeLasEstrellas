@@ -53,13 +53,7 @@ public enum DramaticExitAnimation
     ScaleUp,      // Crece y desvanece (épico que se disuelve)
     Instant,      // Corte directo
     SlideToLeft,  // Sale deslizándose por el borde izquierdo
-    SlideToRight, // Sale deslizándose por el borde derecho
-    // Añadido 12/09/2026 (pedido explícito de Raúl, para "Will, ¡DESPIERTA!"): iris circular —
-    // el fondo (opaco) se recorta con un círculo pequeño centrado que crece hasta cubrir toda la
-    // pantalla. Propio de este overlay (DramaticTextOverlayUI._irisMaterial), NO reutiliza el
-    // sistema de transición compartido (EasyTransition/TransitionManager, pensado para cargas de
-    // escena) — ver DramaticTextOverlayUI.CircleIrisExit.
-    CircleIris
+    SlideToRight  // Sale deslizándose por el borde derecho
 }
 
 [System.Serializable]

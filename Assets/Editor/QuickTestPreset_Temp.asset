@@ -23,10 +23,7 @@ MonoBehaviour:
   leftSpellId: 0
   rightSpellId: 0
   specialSpellId: 0
-  flags:
-  - QUEST_ACTIVE:ELDRAN_MISSION1
-  - QUEST_COMPLETED:ELDRAN_MISSION1
-  - QUEST_ACTIVE:ELDRAN_MISSION2
+  flags: []
   abilities:
     swim: 0
     jump: 0
@@ -51,11 +48,11 @@ MonoBehaviour:
   inventoryItems: []
   defeatedBossIds: []
   narrativeBlackboards:
-  - graphLabel: Historia Principal - Cap 1
+  - graphLabel: Cap1
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
+      value: d206615e-7e83-4d62-bd5a-d6e04d6b237b
   npcPositions: []
   npcRelationships: []
   consumedInteractableIds: []

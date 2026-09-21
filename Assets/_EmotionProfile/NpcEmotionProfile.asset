@@ -14,42 +14,109 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmotionProfile
   transitionDuration: 0.1
   emotions:
+  - emotion: 0
+    eyeMeshName: Eye07
+    mouthMeshName: Mouth02
+    bodyAnimStateName: 
+    bodyAnimVariants: []
   - emotion: 1
     eyeMeshName: Eye07
     mouthMeshName: Mouth09
     bodyAnimStateName: HeadNod01
+    bodyAnimVariants:
+    - Cheer01
+    - HandClap01
   - emotion: 2
     eyeMeshName: Eye10
     mouthMeshName: Mouth05
     bodyAnimStateName: Cry01
+    bodyAnimVariants:
+    - HeadShake01
   - emotion: 3
     eyeMeshName: Eye04
     mouthMeshName: Mouth05
     bodyAnimStateName: Angry02
-  - emotion: 0
-    eyeMeshName: Eye07
-    mouthMeshName: Mouth02
-    bodyAnimStateName: Idle02
+    bodyAnimVariants:
+    - Angry01
+    - Challenging_NoWeapon
   - emotion: 4
     eyeMeshName: Eye05
     mouthMeshName: Mouth07
     bodyAnimStateName: SenseSomethingStart_NoWeapon
+    bodyAnimVariants:
+    - FoundSomething_NoWeapon
+    - Question02
   - emotion: 5
     eyeMeshName: Eye09
     mouthMeshName: Mouth08
-    bodyAnimStateName: Fear01
-  - emotion: 7
-    eyeMeshName: Eye09
-    mouthMeshName: Mouth12
-    bodyAnimStateName: IdleWounded01
-  - emotion: 8
-    eyeMeshName: Eye09
-    mouthMeshName: Mouth06
-    bodyAnimStateName: Talk03
+    bodyAnimStateName: Beg01
+    bodyAnimVariants:
+    - Defend_NoWeapon
+    - HeadShake02
   - emotion: 6
     eyeMeshName: Eye07
     mouthMeshName: Mouth11
     bodyAnimStateName: Question01
+    bodyAnimVariants:
+    - Question02
+    - SenseSomethingSearching_NoWeapon
+  - emotion: 7
+    eyeMeshName: Eye09
+    mouthMeshName: Mouth12
+    bodyAnimStateName: IdleWounded01
+    bodyAnimVariants:
+    - Talk02
+  - emotion: 8
+    eyeMeshName: Eye09
+    mouthMeshName: Mouth06
+    bodyAnimStateName: Talk03
+    bodyAnimVariants:
+    - Laugh01
+  - emotion: 9
+    eyeMeshName: Eye10
+    mouthMeshName: Mouth08
+    bodyAnimStateName: HeadShake02
+    bodyAnimVariants:
+    - Question01
+    - Talk02
+  - emotion: 10
+    eyeMeshName: Eye04
+    mouthMeshName: Mouth02
+    bodyAnimStateName: Challenging_NoWeapon
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 11
+    eyeMeshName: Eye07
+    mouthMeshName: Mouth03
+    bodyAnimStateName: Talk02
+    bodyAnimVariants:
+    - HeadNod01
+  - emotion: 12
+    eyeMeshName: Eye05
+    mouthMeshName: Mouth11
+    bodyAnimStateName: Question02
+    bodyAnimVariants:
+    - HeadShake01
+    - Question01
+  - emotion: 13
+    eyeMeshName: Eye05
+    mouthMeshName: Mouth09
+    bodyAnimStateName: Cheer02
+    bodyAnimVariants:
+    - Cheer01
+    - HandClap01
+  - emotion: 14
+    eyeMeshName: Eye04
+    mouthMeshName: Mouth11
+    bodyAnimStateName: HeadShake01
+    bodyAnimVariants:
+    - Angry01
+  - emotion: 15
+    eyeMeshName: Eye07
+    mouthMeshName: Mouth09
+    bodyAnimStateName: Reverence01
+    bodyAnimVariants:
+    - HeadNod01
   neutralBodyAnims:
   - Talk01
   - Talk02

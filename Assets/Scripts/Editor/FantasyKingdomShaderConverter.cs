@@ -33,7 +33,7 @@ public static class FantasyKingdomShaderConverter
     private const string MaterialsFolder = "Assets/Art/World/Fantasy_Kingdom_Pack/Materials";
     private const string QuibliShaderGuid = "2a230514c860643f69b6a4d1871d3825";
 
-    [MenuItem("El Sendero/Materiales/Convertir Fantasy Kingdom Pack a Quibli StylizedLit")]
+    [MenuItem("El Sendero/Archivo/Materiales/Convertir Fantasy Kingdom Pack a Quibli StylizedLit")]
     public static void ConvertAll()
     {
         string shaderPath = AssetDatabase.GUIDToAssetPath(QuibliShaderGuid);

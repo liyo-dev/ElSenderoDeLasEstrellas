@@ -1,0 +1,1507 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+using Game.Player;
+
+[DisallowMultipleComponent]
+public sealed class AudioService : MonoBehaviour
+{
+    public static AudioService Instance { get; private set; }
+
+    #if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        Instance = null;
+        MuteNextBaseSceneMusic = false;
+    }
+    #endif
+
+    [Header("Perfil de reglas")]
+    [SerializeField] public AudioGraphProfile profile;
+
+    [Header("Mixer (grupos opcionales)")]
+    public AudioMixer mixer;
+    public AudioMixerGroup musicGroup;
+    public AudioMixerGroup sfxGroup;
+    public AudioMixerGroup uiGroup;
+    public AudioMixerGroup ambienceGroup;
+    public AudioMixerGroup dialogueGroup;
+
+    [Header("Parámetros del Mixer")]
+    [SerializeField] private string masterVolumeParam = "MasterVol";
+    [SerializeField] private string musicVolumeParam = "MusicVol";
+    [SerializeField] private string sfxVolumeParam = "SfxVol";
+    [SerializeField] private string dialogueVolumeParam = "DialogVol";
+
+    [Header("Música")]
+    [Min(0f)] public float defaultFade = 0.75f;
+
+    [Header("Pool SFX")]
+    [Min(1)] public int pool2DSize = 16;
+    [Min(1)] public int pool3DSize = 16;
+
+    // --- motor interno ---
+    AudioSource _musicA, _musicB;
+    AudioSource _voiceSource;
+    bool _musicATurn; // false => current=_musicA, true => current=_musicB
+    readonly Queue<AudioSource> _pool2D = new();
+    readonly Queue<AudioSource> _pool3D = new();
+
+    // --- señales / handlers ---
+    DefaultNarrativeSignals _signals;
+    readonly Dictionary<string, Action> _sfxHandlers = new();          // key → handler (OnCustom)
+    readonly Dictionary<string, Action> _battleStartHandlers = new();  // $"BATTLE_START:{id}" → handler (OnCustom)
+    readonly Dictionary<object, Action> _battleWinHandlers = new();    // battleId → handler (OnBattleWon)
+    readonly Dictionary<string, Action> _minigameStartHandlers = new(); // $"MINIGAME_START:{id}" → handler (OnCustom)
+    readonly Dictionary<string, Action> _minigameEndHandlers = new();   // $"MINIGAME_{id}_WON" → handler (OnCustom)
+
+    // --- estado cinemáticas / ducking / stack de música ---
+    struct MusicStackItem { public AudioClip clip; }
+    readonly Stack<MusicStackItem> _musicStack = new();
+    bool _isCinematicMode;
+
+    // --- control de música de victoria ---
+    Coroutine _victoryRestoreCoroutine;
+    float _duckTarget = 1f;
+    int _duckCount = 0;
+    Coroutine _duckRoutine;
+    bool _battleActive;
+    // FIX (5 sep 2026): id de la batalla cuya música está activa ahora mismo. Ver guard
+    // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
+    // ya cableada desde el arranque + fallback directo de BossArenaController.StartBattleInternal()
+    // "por si el wiring llega tarde"), y sin este guard BeginBattleMusic() se ejecutaba las dos
+    // veces: empujaba _musicStack dos veces (una nunca se saca, deja el stack desbalanceado para
+    // el resto de la partida — lo comparten batallas y cinemáticas, ver PlaySequenceMusic/RestoreMusic)
+    // y reiniciaba el crossfade de música a mitad de camino (síntoma: se oye la música equivocada
+    // un instante justo al empezar el combate).
+    string _activeBattleId;
+    bool _minigameActive;
+
+    // Coroutines de música rastreadas individualmente para no matar el pool SFX
+    Coroutine _crossfadeRoutine;
+    Coroutine _fadeOutRoutine;
+    // FIX INC-056: durante un crossfade ambas fuentes (_musicA y _musicB) pueden estar sonando a
+    // la vez. _fadeOutRoutine solo cubría una; esta segunda referencia permite parar la otra
+    // también (ver StopMusic).
+    Coroutine _fadeOutRoutineB;
+    Coroutine _setVolumeRoutine;
+
+    // Recuerdo qué clip pidió la última escena base (no aditiva)
+    AudioClip _lastRequestedSceneClip;
+
+    // Cuando se sabe que una escena aditiva con música propia va a cargarse justo después,
+    // se activa este flag para que OnSceneLoaded(Single) registre el clip pero no lo reproduzca.
+    public static bool MuteNextBaseSceneMusic;
+    
+    // --- Footstep alternation ---
+    int _footstepIndex = 0;
+
+    // --- reintentos de wiring de señales ---
+    bool _signalsWired = false;
+    Coroutine _ensureSignalsCoro;
+
+    // ===========================================================
+    void Awake()
+    {
+        if (Instance != null) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
+        // Fuentes
+        _musicA = CreateChildSource("MusicA", musicGroup, spatial:false, loop:true);
+        _musicB = CreateChildSource("MusicB", musicGroup, spatial:false, loop:true);
+        _voiceSource = CreateChildSource("Voice", dialogueGroup, spatial:false, loop:false);
+        for (int i = 0; i < pool2DSize; i++) _pool2D.Enqueue(CreateChildSource($"SFX2D_{i}", sfxGroup, spatial:false));
+        for (int i = 0; i < pool3DSize; i++) _pool3D.Enqueue(CreateChildSource($"SFX3D_{i}", sfxGroup, spatial:true));
+
+        // Escenas
+        SceneManager.sceneLoaded   += OnSceneLoaded;
+
+        // FIX (12 sep 2026, reporte de Raúl — "he añadido música para WillHouse pero sigue sonando
+        // la de MainWorld"): OnSceneLoaded ignora a propósito las escenas cargadas en aditivo (ver
+        // comentario ahí — "feature de cinemáticas aditivas eliminada"), pero los interiores
+        // cargados en aditivo (InteriorPortalTrigger, p.ej. WillHouse.unity) SÍ deben poder tener
+        // música de escena propia (AudioGraphProfile.sceneMusic), igual que cualquier escena base.
+        // En vez de tocar esa guarda de OnSceneLoaded (y arriesgarnos a resucitar el bug que la
+        // motivó), nos enganchamos a los eventos de EnvironmentController.OnInteriorEntered/
+        // OnInteriorExited — ya existen, los dispara TeleportService.ApplyEnvironmentForAnchor en
+        // cualquier flujo de entrada/salida de interior (andando o por InteriorPortalTrigger), y ya
+        // los consume MinimapController para lo mismo (activar/desactivar el minimapa). Escalable a
+        // cualquier interior futuro con su propia música, sin parche específico de WillHouse.
+        EnvironmentController.OnInteriorEntered += HandleInteriorEntered;
+        EnvironmentController.OnInteriorExited  += HandleInteriorExited;
+
+        // Pisadas del jugador: FootstepHandler detecta la pisada (huesos de los pies) y solo
+        // levanta un evento — el propio AudioService es quien decide qué suena, igual que con las
+        // señales del grafo narrativo. Antes nadie escuchaba este evento y las pisadas eran mudas
+        // (StarWorldFootprintPool solo generaba la huella visual).
+        FootstepHandler.OnFootstep += HandlePlayerFootstep;
+
+        // Señales (incluye inactivos)
+        _signals = DefaultNarrativeSignals.Instance
+                   ?? ServiceLocator.Get<DefaultNarrativeSignals>(false)
+                   ?? DefaultNarrativeSignals.EnsureInstance();
+
+        EnsureSignalsAndWireNow();
+        if (!_signalsWired && _ensureSignalsCoro == null)
+            _ensureSignalsCoro = StartCoroutine(EnsureSignalsRoutine());
+
+        // Música para la escena actual
+        OnSceneLoaded(SceneManager.GetActiveScene(), LoadSceneMode.Single);
+
+        // Aplicar preferencias persistidas
+        PlayerSettings.ApplyAudioToService(this);
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded   -= OnSceneLoaded;
+        EnvironmentController.OnInteriorEntered -= HandleInteriorEntered;
+        EnvironmentController.OnInteriorExited  -= HandleInteriorExited;
+        FootstepHandler.OnFootstep -= HandlePlayerFootstep;
+
+        if (_signals != null)
+        {
+            foreach (var kv in _sfxHandlers)         _signals.OffCustom(kv.Key, kv.Value);
+            foreach (var kv in _battleStartHandlers) _signals.OffCustom(kv.Key, kv.Value);
+            foreach (var kv in _battleWinHandlers)   _signals.OffBattleWon(kv.Key, kv.Value);
+            foreach (var kv in _minigameStartHandlers) _signals.OffCustom(kv.Key, kv.Value);
+            foreach (var kv in _minigameEndHandlers)   _signals.OffCustom(kv.Key, kv.Value);
+        }
+
+        _sfxHandlers.Clear();
+        _battleStartHandlers.Clear();
+        _battleWinHandlers.Clear();
+        _minigameStartHandlers.Clear();
+        _minigameEndHandlers.Clear();
+    }
+
+    // ===========================================================
+    // Señales (wiring robusto)
+    void EnsureSignalsAndWireNow()
+    {
+        if (_signals == null)
+        {
+            _signals = DefaultNarrativeSignals.Instance
+                       ?? ServiceLocator.Get<DefaultNarrativeSignals>(false)
+                       ?? DefaultNarrativeSignals.EnsureInstance();
+            if (_signals == null) return; // aún no disponible
+        }
+        if (_signalsWired) return;
+
+        WireEventSfx();
+        WireBattleStarts();
+        WireBattleWins();
+        WireMinigames();
+        _signalsWired = true;
+        // Debug.Log("[AudioService] Señales conectadas (SFX, BattleStarts, BattleWins, Minigames).");
+    }
+
+    IEnumerator EnsureSignalsRoutine()
+    {
+        const float timeout = 5f;
+        float t = 0f;
+        while (!_signalsWired && t < timeout)
+        {
+            EnsureSignalsAndWireNow();
+            if (_signalsWired) yield break;
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+    }
+
+    void WireEventSfx()
+    {
+        if (_signals == null || profile == null || profile.eventSfx == null) return;
+        if (_sfxHandlers.Count > 0) return;
+
+        for (int i = 0; i < profile.eventSfx.Count; i++)
+        {
+            var r = profile.eventSfx[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.eventKey) || r.sfx == null) continue;
+
+            string key = r.eventKey;
+            Action h = () => PlaySfxForKey(key);
+            _signals.OnCustom(key, h);
+            _sfxHandlers[key] = h;
+        }
+    }
+
+    void WireBattleStarts()
+    {
+        if (_signals == null || profile == null || profile.battles == null) return;
+        if (_battleStartHandlers.Count > 0) return;
+
+        for (int i = 0; i < profile.battles.Count; i++)
+        {
+            var r = profile.battles[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.battleId) || r.music == null) continue;
+
+            string key = $"BATTLE_START:{r.battleId}";
+            Action h = () => BeginBattleMusic(r);
+            _signals.OnCustom(key, h);
+            _battleStartHandlers[key] = h;
+        }
+    }
+
+    void WireBattleWins()
+    {
+        if (_signals == null || profile == null || profile.battles == null) return;
+        if (_battleWinHandlers.Count > 0) return;
+
+        for (int i = 0; i < profile.battles.Count; i++)
+        {
+            var r = profile.battles[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.battleId)) continue;
+
+            object key = r.battleId; // coincide con RaiseBattleWon(battleId)
+            Action h = () => OnBattleWonRestoreMusic(r);
+            _signals.OnBattleWon(key, h);
+            _battleWinHandlers[key] = h;
+        }
+    }
+
+    void WireMinigames()
+    {
+        if (_signals == null || profile == null || profile.minigames == null) return;
+        if (_minigameStartHandlers.Count > 0) return;
+
+        for (int i = 0; i < profile.minigames.Count; i++)
+        {
+            var r = profile.minigames[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.minigameId)) continue;
+
+            // Evento de inicio: MINIGAME_START:{id}
+            string startKey = $"MINIGAME_START:{r.minigameId}";
+            Action startHandler = () => BeginMinigameMusic(r);
+            _signals.OnCustom(startKey, startHandler);
+            _minigameStartHandlers[startKey] = startHandler;
+
+            // Evento de victoria/fin: MINIGAME_{id}_WON (el TagMinigameController emite esto)
+            string endKey = $"MINIGAME_{r.minigameId}_WON";
+            Action endHandler = () => OnMinigameEndRestoreMusic(r);
+            _signals.OnCustom(endKey, endHandler);
+            _minigameEndHandlers[endKey] = endHandler;
+        }
+    }
+
+    // ===========================================================
+    // Escenas
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        EnsureSignalsAndWireNow();
+        if (profile == null) return;
+
+        // Las escenas aditivas no disparan música propia (feature de cinemáticas aditivas eliminada).
+        if (mode == LoadSceneMode.Additive)
+        {
+            return;
+        }
+
+        // Escena base (no aditiva): elige la primera coincidencia
+        _lastRequestedSceneClip = null;
+        bool suppressMusic = MuteNextBaseSceneMusic;
+        MuteNextBaseSceneMusic = false; // consumir siempre, haya o no coincidencia
+
+        for (int i = 0; i < profile.sceneMusic.Count; i++)
+        {
+            var r = profile.sceneMusic[i];
+            if (r != null &&
+                !string.IsNullOrEmpty(r.sceneName) &&
+                r.music != null &&
+                scene.name.IndexOf(r.sceneName, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                _lastRequestedSceneClip = r.music;
+                if (!suppressMusic && GetCurrentMusicClip() != r.music) PlayMusic(r.music);
+                return;
+            }
+        }
+        // si ninguna regla coincide, _lastRequestedSceneClip se queda null
+    }
+
+    /// <summary>
+    /// Busca en profile.sceneMusic una regla cuyo sceneName aparezca en sceneName (mismo criterio
+    /// de coincidencia por subcadena que OnSceneLoaded/RestoreSceneMusic).
+    /// </summary>
+    bool TryGetSceneMusicRule(string sceneName, out AudioClip clip)
+    {
+        clip = null;
+        if (profile == null || string.IsNullOrEmpty(sceneName)) return false;
+
+        foreach (var rule in profile.sceneMusic)
+        {
+            if (rule != null && !string.IsNullOrEmpty(rule.sceneName) && rule.music != null &&
+                sceneName.IndexOf(rule.sceneName, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                clip = rule.music;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Al entrar en un interior (andando o vía InteriorPortalTrigger): si ese interior vive en su
+    /// propia escena con música configurada en AudioGraphProfile.sceneMusic (p. ej. "WillHouse"),
+    /// la reproduce. Para los interiores "clásicos" que viven dentro de MainWorld.unity (mismo
+    /// nombre de escena que el mundo), esto resuelve a la propia música de MainWorld — no-op si ya
+    /// está sonando, gracias al guard de PlayMusic más abajo.
+    /// </summary>
+    void HandleInteriorEntered()
+    {
+        // FIX (12 sep 2026, reporte de Raúl — "ha sonado la música de la casa de will durante la
+        // secuencia del prólogo"): el jugador puede empezar la partida directamente dentro de un
+        // interior (WorldBootstrap resuelve el anchor de arranque 'Bedroom' → WillHouse), y ese
+        // mismo instante coincide con el arranque de una cinemática (PrologueDreamSequencer) que
+        // gestiona su propia música (heartbeat, "MAGOOSCURO_VISION"...). Si HandleInteriorEntered
+        // reproduce la música del interior ahí mismo, pisa por completo lo que la cinemática está
+        // montando. Mismo guard que ya usa el resto del archivo (Co_RestoreWorldMusicAfterBattle,
+        // RestoreAfterBattle) para no chocar con una cinemática en curso — cuando termine, su propio
+        // RestoreMusic()/RestoreSceneMusic() se encargará de poner la música del interior (ver FIX
+        // gemelo en RestoreSceneMusic(), más abajo).
+        if (CinematicSequencerBase.AnySequenceActive) return;
+        if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
+
+        var env = EnvironmentController.Instance ? EnvironmentController.Instance.CurrentInterior : null;
+        if (!env) return;
+
+        string interiorSceneName = env.gameObject.scene.name;
+        if (TryGetSceneMusicRule(interiorSceneName, out var clip) && GetCurrentMusicClip() != clip)
+        {
+            PlayMusic(clip, defaultFade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] Música de interior '{interiorSceneName}' → '{clip.name}'");
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Al salir de un interior: mismo criterio de prioridad que el resto de puntos de restauración
+    /// del archivo (RestoreAfterBattle/RestoreAfterMinigame/CinematicSequencerBase.RestoreMusic) —
+    /// si el punto de salida cae dentro de una AmbientZone activa, su música manda; si no, se
+    /// restaura la música de la escena base (RestoreSceneMusic ya resuelve esto sin verse afectado
+    /// por el interior aditivo, porque _lastRequestedSceneClip nunca lo tocó — ver HandleInteriorEntered).
+    /// </summary>
+    void HandleInteriorExited()
+    {
+        if (profile == null) return;
+
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = profile.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+                PlayMusic(zoneRule.music, defaultFade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] Al salir del interior: música de AmbientZone '{activeAmbientZone.MusicZoneId}'");
+#endif
+                return;
+            }
+        }
+
+        if (!RestoreSceneMusic(defaultFade))
+            StopMusic(defaultFade);
+    }
+
+    // ===========================================================
+    // Batallas
+    void BeginBattleMusic(AudioGraphProfile.BattleRule r)
+    {
+        // FIX (5 sep 2026): BATTLE_START:{id} puede llegar a este método dos veces en el mismo
+        // frame (señal narrativa en vivo + fallback directo de BossArenaController) — sin este
+        // guard, la segunda llamada volvía a empujar _musicStack (quedando desbalanceado para
+        // siempre) y reiniciaba el crossfade a mitad de camino. Idempotente por battleId: si esta
+        // misma batalla ya está activa, no hace nada.
+        if (_battleActive && _activeBattleId == r.battleId) return;
+
+        var current = GetCurrentMusicClip();
+        _musicStack.Push(new MusicStackItem { clip = current });
+        _battleActive = true;
+        _activeBattleId = r.battleId;
+        PlayMusic(r.music, r.fade);
+    }
+
+    void OnBattleWonRestoreMusic(AudioGraphProfile.BattleRule r)
+    {
+        // ✅ IMPORTANTE: Restaurar el loop en los AudioSource (después de música de victoria)
+        _musicA.loop = true;
+        _musicB.loop = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🔄 Loop restaurado en AudioSources de música");
+#endif
+
+        // Contabilidad inmediata (stack de música / flag de batalla), independiente de si la
+        // restauración de música se aplica ya o se difiere (ver más abajo).
+        if (_musicStack.Count > 0) _musicStack.Pop();
+        _battleActive = false;
+        _activeBattleId = null;
+
+        // FIX: si tras derrotar al boss viene inmediatamente una cinemática (RaiseBattleWon →
+        // grafo narrativo → señal de entrada del CinematicSequencerBase), esta música de mundo
+        // se solapaba con la que pone la cinemática (PlaySequenceMusic) casi en el mismo frame,
+        // produciendo un corte raro (la música de mundo entra a medias y se corta enseguida).
+        // Diferimos un frame: esa cadena de señales es síncrona con RaiseBattleWon, así que si
+        // hay una cinemática arrancando, para entonces ya estará activa (LockCinematic ya habrá
+        // corrido) y podemos omitir por completo la música de mundo.
+        StartCoroutine(Co_RestoreWorldMusicAfterBattle(r.fade));
+    }
+
+    IEnumerator Co_RestoreWorldMusicAfterBattle(float fade)
+    {
+        yield return null;
+
+        if (CinematicSequencerBase.AnySequenceActive)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log("[AudioService] Restauración de música de mundo omitida tras la batalla: hay una cinemática activa (evita corte raro).");
+#endif
+            yield break;
+        }
+
+        // PRIORIDAD 1: Si hay una AmbientZone activa, restaurar su música (no usar el stack)
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] Restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}' después de batalla");
+#endif
+                PlayMusic(zoneRule.music, fade);
+                yield break;
+            }
+        }
+
+        // PRIORIDAD 2: Restaurar música de la escena (Gameplay)
+        if (!RestoreSceneMusic(fade))
+        {
+            StopMusic(fade);
+        }
+    }
+    
+    // ===========================================================
+    // Minijuegos
+    void BeginMinigameMusic(AudioGraphProfile.MinigameRule r)
+    {
+        if (r.music == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] Minigame '{r.minigameId}' no tiene música configurada");
+#endif
+            return;
+        }
+
+        // Si el minijuego ya está activo (reinicio de ronda), no apilar de nuevo:
+        // simplemente reiniciar la pista desde el inicio.
+        if (_minigameActive)
+        {
+            _musicA.loop = r.loop;
+            _musicB.loop = r.loop;
+            RestartMusicClipFromBeginning(r.music, r.fade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] 🔁 Música de minijuego '{r.minigameId}' reiniciada desde el inicio");
+#endif
+            return;
+        }
+        
+        var current = GetCurrentMusicClip();
+        _musicStack.Push(new MusicStackItem { clip = current });
+        _minigameActive = true;
+        
+        // Configurar loop según la regla
+        _musicA.loop = r.loop;
+        _musicB.loop = r.loop;
+        
+        PlayMusic(r.music, r.fade);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' iniciada");
+#endif
+    }
+
+    // Para las corrutinas de música se usan referencias explícitas y nunca StopAllCoroutines,
+    // porque éste mataría las corrutinas ReturnWhenDone del pool SFX.
+    void StopMusicCoroutines()
+    {
+        if (_crossfadeRoutine != null) { StopCoroutine(_crossfadeRoutine); _crossfadeRoutine = null; }
+        if (_fadeOutRoutine   != null) { StopCoroutine(_fadeOutRoutine);   _fadeOutRoutine   = null; }
+        if (_fadeOutRoutineB  != null) { StopCoroutine(_fadeOutRoutineB);  _fadeOutRoutineB  = null; }
+        if (_setVolumeRoutine != null) { StopCoroutine(_setVolumeRoutine); _setVolumeRoutine = null; }
+    }
+
+    void RestartMusicClipFromBeginning(AudioClip clip, float fadeSeconds)
+    {
+        if (clip == null) return;
+        if (fadeSeconds < 0f) fadeSeconds = defaultFade;
+
+        var current = _musicATurn ? _musicB : _musicA;
+        var other = _musicATurn ? _musicA : _musicB;
+
+        // Seleccionar la fuente que está realmente sonando ahora.
+        AudioSource active = current.isPlaying ? current : (other.isPlaying ? other : current);
+
+        // Si por algún motivo no sonaba el clip esperado, delegar al flujo estándar.
+        if (active.clip != clip)
+        {
+            PlayMusic(clip, fadeSeconds);
+            return;
+        }
+
+        StopMusicCoroutines();
+        active.Stop();
+        active.timeSamples = 0;
+        active.volume = GetDuckedVolume(1f);
+        active.Play();
+
+        // Evitar duplicados en la otra fuente.
+        if (other != active && other.isPlaying && other.clip == clip)
+        {
+            other.Stop();
+            other.timeSamples = 0;
+        }
+    }
+
+    void OnMinigameEndRestoreMusic(AudioGraphProfile.MinigameRule r)
+    {
+        if (!_minigameActive)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] Minijuego '{r.minigameId}' no estaba activo, ignorando restauración");
+#endif
+            return;
+        }
+        
+        // Restaurar loop
+        _musicA.loop = true;
+        _musicB.loop = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🔄 Loop restaurado en AudioSources de música después de minijuego");
+#endif
+        
+        // PRIORIDAD 1: Si hay una AmbientZone activa, restaurar su música
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] Restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}' después de minijuego");
+#endif
+                PlayMusic(zoneRule.music, r.fade);
+                if (_musicStack.Count > 0) _musicStack.Pop();
+                _minigameActive = false;
+                return;
+            }
+        }
+        
+        // PRIORIDAD 2: Restaurar música del stack o de la escena
+        if (_musicStack.Count > 0) _musicStack.Pop();
+        
+        if (!RestoreSceneMusic(r.fade))
+        {
+            StopMusic(r.fade);
+        }
+        _minigameActive = false;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' finalizada, música restaurada");
+#endif
+    }
+    
+    /// <summary>
+    /// Inicia la música de un minijuego por ID (llamado manualmente si no se usa señales)
+    /// </summary>
+    public void BeginMinigameById(string minigameId)
+    {
+        var rule = profile?.GetMinigameRule(minigameId);
+        if (rule != null)
+        {
+            BeginMinigameMusic(rule);
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] No se encontró regla de música para minijuego '{minigameId}'");
+#endif
+        }
+    }
+    
+    /// <summary>
+    /// Finaliza la música de un minijuego por ID (llamado manualmente si no se usa señales)
+    /// </summary>
+    public void EndMinigameById(string minigameId)
+    {
+        var rule = profile?.GetMinigameRule(minigameId);
+        if (rule != null)
+        {
+            OnMinigameEndRestoreMusic(rule);
+        }
+    }
+    
+    // --- Helpers para lookup de batallas por id (exacto y fallback substring) ---
+    AudioGraphProfile.BattleRule FindBattleRuleForId(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id) || profile == null || profile.battles == null) return null;
+        string key = id.Trim();
+
+        // 1) match exacto (case-insensitive)
+        for (int i = 0; i < profile.battles.Count; i++)
+        {
+            var r = profile.battles[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.battleId)) continue;
+            if (string.Equals(r.battleId.Trim(), key, StringComparison.OrdinalIgnoreCase))
+                return r;
+        }
+
+        // 2) fallback: substring por si el id viene con prefijos/sufijos
+        for (int i = 0; i < profile.battles.Count; i++)
+        {
+            var r = profile.battles[i];
+            if (r == null || string.IsNullOrWhiteSpace(r.battleId)) continue;
+            if (key.IndexOf(r.battleId.Trim(), StringComparison.OrdinalIgnoreCase) >= 0)
+                return r;
+        }
+
+        return null;
+    }
+
+// --- API opcional llamada desde BossArenaController ---
+    public void BeginBattleById(string id)
+    {
+        var rule = FindBattleRuleForId(id);
+        if (rule != null)
+        {
+            BeginBattleMusic(rule); // apila la música actual y pone la del boss
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] BeginBattleById: no hay BattleRule para id='{id}'.");
+#endif
+        }
+    }
+
+    public void EndBattleById(string id)
+    {
+        var rule = FindBattleRuleForId(id);
+        if (rule != null)
+        {
+            OnBattleWonRestoreMusic(rule); // restaura la música previa a la batalla
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] EndBattleById: no hay BattleRule para id='{id}'.");
+#endif
+        }
+    }
+
+    /// <summary>
+    /// Restaura la música después de una batalla sin necesitar una BattleRule específica.
+    /// Úsalo cuando el NPC no tiene battleMusicId configurado pero sí reproduce música de victoria.
+    /// </summary>
+    public void RestoreAfterBattle(float fade = -1f)
+    {
+        if (fade < 0f) fade = defaultFade;
+
+        _musicA.loop = true;
+        _musicB.loop = true;
+
+        // BUGFIX: solo tocar la pila si ESTE combate llegó a apilar algo. Los enemigos
+        // sin battleMusicId nunca pasan por BeginBattleMusic (no cambian de música al
+        // empezar), así que _battleActive sigue en false aquí; hacer Pop() igualmente
+        // robaba la entrada de otro sistema (cinemática aditiva, minijuego) que sí la
+        // había apilado legítimamente y aún no le tocaba restaurarse.
+        bool wasBattleActive = _battleActive;
+        if (wasBattleActive && _musicStack.Count > 0) _musicStack.Pop();
+        _battleActive = false;
+
+        // FIX: mismo caso que OnBattleWonRestoreMusic — si justo después del combate arranca una
+        // cinemática (misma cadena síncrona de señales), evitamos poner la música de mundo para
+        // que no se corte casi al instante con la de la cinemática. Diferimos un frame.
+        StartCoroutine(Co_RestoreAfterBattleDeferred(fade, wasBattleActive));
+    }
+
+    IEnumerator Co_RestoreAfterBattleDeferred(float fade, bool wasBattleActive)
+    {
+        yield return null;
+
+        if (CinematicSequencerBase.AnySequenceActive)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log("[AudioService] RestoreAfterBattle: restauración de música omitida, hay una cinemática activa (evita corte raro).");
+#endif
+            yield break;
+        }
+
+        var activeAmbientZone = AmbientZone.CurrentActiveZone;
+        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
+        {
+            var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
+            if (zoneRule?.music != null)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] RestoreAfterBattle: restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}'");
+#endif
+                PlayMusic(zoneRule.music, fade);
+                yield break;
+            }
+        }
+
+        if (wasBattleActive && !RestoreSceneMusic(fade))
+            StopMusic(fade);
+    }
+
+    // ===========================================================
+    // Alerta (no inicia estado de batalla; solo cambia música)
+    public void BeginAlertById(string id)
+    {
+        var rule = FindBattleRuleForId(id);
+        if (rule != null && rule.music != null)
+        {
+            // No alterar _battleActive ni apilar stack: es solo una alerta temporal
+            PlayMusic(rule.music, rule.fade);
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] BeginAlertById: no hay BattleRule/music para id='{id}'.");
+#endif
+        }
+    }
+
+    // Inicia música de victoria y tras un tiempo restaura a la escena actual
+    // Si holdSeconds <= 0, NO restaura automáticamente (control manual)
+    public void PlayVictoryForBattle(string battleId, string victoryId, float holdSeconds = 2f)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🎵 PlayVictoryForBattle LLAMADO - battleId: '{battleId}', victoryId: '{victoryId}', holdSeconds: {holdSeconds}");
+#endif
+        
+        // ✅ Cancelar cualquier corrutina de restauración anterior
+        if (_victoryRestoreCoroutine != null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] ⚠️ Cancelando corrutina de restauración anterior - evitando doble restauración");
+#endif
+            StopCoroutine(_victoryRestoreCoroutine);
+            _victoryRestoreCoroutine = null;
+        }
+        
+        var battleRule = FindBattleRuleForId(battleId);
+        var victoryRule = FindBattleRuleForId(victoryId);
+        if (victoryRule != null && victoryRule.music != null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] ✅ Reproduciendo música de victoria: {victoryRule.music.name}");
+#endif
+
+            // BUGFIX (repetición del jingle de victoria): antes, si holdSeconds <= 0 (restauración
+            // MANUAL, la hace el lifecycle handler del NPC al cerrar el diálogo post-derrota) se
+            // ponía el AudioSource en loop=true para "aguantar" sonando mientras duraba el diálogo.
+            // Como el diálogo casi siempre dura más que el jingle, el clip se reiniciaba desde el
+            // principio una y otra vez — el jugador lo oía sonar dos (o más) veces.
+            // Ahora el jingle de victoria NUNCA hace loop: suena una sola vez y se para solo. Si el
+            // diálogo dura más que el clip, se queda en silencio hasta que llega la restauración
+            // manual — preferible a repetir el jingle completo.
+            _musicA.loop = false;
+            _musicB.loop = false;
+
+            PlayMusic(victoryRule.music, victoryRule.fade);
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] PlayVictoryForBattle: no hay música de victoria para id='{victoryId}'.");
+#endif
+        }
+        
+        // ✅ Solo programar restauración automática si holdSeconds > 0
+        if (holdSeconds > 0f && battleRule != null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] 🔄 Programando restauración automática de música después de {holdSeconds}s");
+#endif
+            _victoryRestoreCoroutine = StartCoroutine(RestoreAfterVictoryDelay(battleRule, holdSeconds));
+        }
+        else if (holdSeconds <= 0f)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[AudioService] ⏸️ Restauración automática deshabilitada (holdSeconds={holdSeconds}) - se requiere llamada manual a RestoreBattleMusic()");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] ⚠️ No se encontró battleRule para '{battleId}' - no se restaurará música");
+#endif
+        }
+    }
+
+    IEnumerator RestoreAfterVictoryDelay(AudioGraphProfile.BattleRule battleRule, float holdSeconds)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] ⏱️ RestoreAfterVictoryDelay iniciado - esperando {holdSeconds}s");
+#endif
+        
+        if (holdSeconds > 0f)
+            yield return new WaitForSecondsRealtime(holdSeconds);
+        
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[AudioService] 🔄 Restaurando música después de victoria");
+#endif
+        OnBattleWonRestoreMusic(battleRule);
+        
+        // ✅ Limpiar referencia de corrutina
+        _victoryRestoreCoroutine = null;
+    }
+
+
+    // ===========================================================
+    // Música
+    public void PlayMusic(AudioClip clip, float fadeSeconds = -1f)
+    {
+        if (!clip) return;
+        if (fadeSeconds < 0f) fadeSeconds = defaultFade;
+
+        // Fuente "actual": la que está sonando ahora mismo
+        var current = _musicATurn ? _musicB : _musicA;
+        var other   = _musicATurn ? _musicA : _musicB;
+
+        // 1) Si YA está sonando este mismo clip, no reiniciamos.
+        //    Solo aseguramos volumen (con ducking aplicado) y salimos.
+        if (current.clip == clip)
+        {
+            float target = GetDuckedVolume(1f);
+
+            // si por lo que sea está parado (pausa/crossfade previo), reanudar sin resetear tiempo
+            if (!current.isPlaying)
+                current.Play();
+
+            // llevar al volumen objetivo suavemente (sin cambiar de fuente)
+            StopMusicCoroutines();
+            _duckRoutine = null;
+
+            // BUGFIX: StopMusicCoroutines() solo mata la corrutina de crossfade/fade-out en
+            // curso, no la fuente en sí. Si 'other' venía de un crossfade interrumpido a medias
+            // se queda sonando su clip anterior indefinidamente, mezclado con 'current' (esto es
+            // lo que producía "suena la música de gameplay Y la de la zona a la vez"). Si 'other'
+            // no comparte el clip que queremos, hay que silenciarla explícitamente aquí.
+            if (other.isPlaying && other.clip != clip)
+            {
+                other.Stop();
+                other.volume = 0f;
+            }
+
+            _setVolumeRoutine = StartCoroutine(SetMusicVolumeTo(target, fadeSeconds));
+            return;
+        }
+
+        // 2) Si estaba en la otra fuente el mismo clip (por un crossfade previo a medias),
+        //    también evitamos reiniciar y nos quedamos con esa.
+        if (other.clip == clip && other.isPlaying)
+        {
+            float target = GetDuckedVolume(1f);
+            StopMusicCoroutines();
+            _duckRoutine = null;
+
+            // BUGFIX: 'other' es la fuente que de verdad queremos activa a partir de ahora.
+            // Antes no se actualizaba _musicATurn, así que SetMusicVolumeTo seguía tratando a
+            // 'current' (el clip viejo) como la fuente "actual" y la subía al volumen objetivo
+            // en vez de pararla — dejando el clip viejo y el nuevo sonando a la vez. Alineamos
+            // el turno con la realidad y silenciamos 'current' si quedó con un clip distinto.
+            if (current.isPlaying && current.clip != clip)
+            {
+                current.Stop();
+                current.volume = 0f;
+            }
+            _musicATurn = !_musicATurn;
+
+            _setVolumeRoutine = StartCoroutine(SetMusicVolumeTo(target, fadeSeconds));
+            return;
+        }
+
+        // 3) Clip distinto → crossfade normal alternando fuentes
+        var from = current;
+        var to   = other;
+
+        to.clip = clip;
+        to.volume = GetDuckedVolume(0f);
+        to.timeSamples = 0;             // nuevo clip, empieza de inicio
+        if (!to.isPlaying) to.Play();
+
+        if (from.isPlaying)
+        {
+            StopMusicCoroutines();
+            _duckRoutine = null;
+            _crossfadeRoutine = StartCoroutine(Crossfade(from, to, fadeSeconds));
+        }
+        else
+        {
+            to.volume = GetDuckedVolume(1f);
+        }
+
+        // Alternamos el turno después de preparar el crossfade
+        _musicATurn = !_musicATurn;
+    }
+
+    public void StopMusic(float fadeOut = -1f)
+    {
+        if (fadeOut < 0f) fadeOut = defaultFade;
+
+        // FIX INC-056: antes solo se paraba la fuente "current" según el flag _musicATurn. Si
+        // había un crossfade en curso (ej: música de batalla del Golem empezando a sonar mientras
+        // la anterior aún no había terminado de apagarse) las DOS fuentes (_musicA y _musicB)
+        // podían estar sonando a la vez, y esta función dejaba la otra sonando de fondo — al
+        // morir, la música principal seguía escuchándose mezclada con la de Game Over. Ahora se
+        // paran ambas fuentes si están sonando, en vez de asumir que solo una lo está.
+        if (!_musicA.isPlaying && !_musicB.isPlaying) return;
+
+        StopMusicCoroutines();
+        _duckRoutine = null;
+
+        if (_musicA.isPlaying) _fadeOutRoutine  = StartCoroutine(FadeOutAndStop(_musicA, fadeOut, isSecondary: false));
+        if (_musicB.isPlaying) _fadeOutRoutineB = StartCoroutine(FadeOutAndStop(_musicB, fadeOut, isSecondary: true));
+    }
+
+    IEnumerator Crossfade(AudioSource from, AudioSource to, float seconds)
+    {
+        if (seconds <= 0f) { from.Stop(); to.volume = GetDuckedVolume(1f); _crossfadeRoutine = null; yield break; }
+        float t = 0f;
+        float startFrom = from.volume;
+        float targetTo  = GetDuckedVolume(1f);
+        while (t < seconds)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(t / seconds);
+            from.volume = Mathf.Lerp(startFrom, 0f, k);
+            to.volume   = Mathf.Lerp(0f, targetTo, k);
+            yield return null;
+        }
+        from.Stop();
+        to.volume = targetTo;
+        _crossfadeRoutine = null;
+    }
+
+    IEnumerator FadeOutAndStop(AudioSource src, float seconds, bool isSecondary = false)
+    {
+        if (seconds <= 0f)
+        {
+            src.Stop();
+            if (isSecondary) _fadeOutRoutineB = null; else _fadeOutRoutine = null;
+            yield break;
+        }
+        float start = src.volume, t = 0f;
+        while (t < seconds)
+        {
+            t += Time.unscaledDeltaTime;
+            src.volume = Mathf.Lerp(start, 0f, t / seconds);
+            yield return null;
+        }
+        src.Stop();
+        src.volume = GetDuckedVolume(1f);
+        if (isSecondary) _fadeOutRoutineB = null; else _fadeOutRoutine = null;
+    }
+
+    // Ducking simple (para cinemáticas aditivas duckInsteadOfReplace)
+    void StartDuck(float duckTo, float fade)
+    {
+        _duckCount++;
+        _duckTarget = Mathf.Clamp01(duckTo);
+        if (_duckRoutine != null) StopCoroutine(_duckRoutine);
+        _duckRoutine = StartCoroutine(SetMusicVolumeTo(_duckTarget, fade));
+    }
+
+    void StopDuck(float fade)
+    {
+        _duckCount = Mathf.Max(0, _duckCount - 1);
+        float target = (_duckCount == 0) ? 1f : _duckTarget;
+        if (_duckRoutine != null) StopCoroutine(_duckRoutine);
+        _duckRoutine = StartCoroutine(SetMusicVolumeTo(target, fade));
+    }
+
+    float GetDuckedVolume(float baseVol) => baseVol * (_duckCount > 0 ? _duckTarget : 1f);
+
+    IEnumerator SetMusicVolumeTo(float target, float fade)
+    {
+        var current = _musicATurn ? _musicB : _musicA;
+        var other   = _musicATurn ? _musicA : _musicB;
+        float t = 0f;
+        float a0 = current.volume;
+        float b0 = other.volume;
+        if (fade <= 0f) fade = 0.0001f;
+
+        // BUGFIX: antes 'other' se interpolaba desde a0 (volumen de 'current') hacia el mismo
+        // target que 'current', sin usar b0 nunca. Si 'other' tenía un clip distinto sonando
+        // (p.ej. un crossfade interrumpido) esto la subía al mismo volumen que la música actual
+        // en vez de apagarla — dos pistas distintas sonando a la vez indefinidamente. Ahora
+        // 'other' solo comparte el target si de verdad es el mismo clip (ducking normal);
+        // si no, se apaga hacia 0 desde su propio volumen real (b0) y se para al terminar.
+        bool sameClip = other.clip == current.clip;
+        float otherTarget = sameClip ? target : 0f;
+
+        while (t < fade)
+        {
+            t += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(t / fade);
+            current.volume = Mathf.Lerp(a0, target, k);
+            other.volume   = Mathf.Lerp(b0, otherTarget, k);
+            yield return null;
+        }
+        current.volume = target;
+        other.volume   = otherTarget;
+        if (!sameClip && other.isPlaying) other.Stop();
+        _duckRoutine = null;
+        _setVolumeRoutine = null;
+    }
+
+    // ===========================================================
+    // SFX - API pública para reproducir efectos de sonido
+    
+    /// <summary>
+    /// Reproduce un SFX por clave de evento configurada en el AudioGraphProfile.
+    /// Ejemplo: PlaySFX("Ambience_Cave"), PlaySFX("Spell01"), PlaySFX("FootStep00")
+    /// </summary>
+    public void PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null)
+    {
+        if (string.IsNullOrWhiteSpace(eventKey)) return;
+        
+        AudioClip clip = FindSfxClipByKey(eventKey);
+        if (clip != null)
+        {
+            if (worldPosition.HasValue)
+                PlaySFXAt(clip, worldPosition.Value, volume);
+            else
+                PlaySFX(clip, volume);
+        }
+        else
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] SFX no encontrado para clave '{eventKey}'.");
+#endif
+        }
+    }
+    
+    /// <summary>
+    /// Reproduce un footstep alternando automáticamente entre FootStep00-04.
+    /// Llama desde el controlador de movimiento cada vez que el pie toca el suelo.
+    /// </summary>
+    public void PlayFootstep(float volume = 1f, Vector3? worldPosition = null)
+    {
+        string key = $"FootStep0{_footstepIndex}";
+        _footstepIndex = (_footstepIndex + 1) % 5; // Alterna entre 0-4
+        PlaySFX(key, volume, worldPosition);
+    }
+
+    /// Handler de FootstepHandler.OnFootstep (ver suscripción en Awake). worldPos ya viene
+    /// calculado por FootstepHandler (punto de impacto del raycast al suelo bajo el pie).
+    void HandlePlayerFootstep(Vector3 worldPos) => PlayFootstep(1f, worldPos);
+    
+    /// <summary>
+    /// Reproduce un spell SFX por número.
+    /// Ejemplo: PlaySpell(2) → reproduce Spell_02
+    /// </summary>
+    public void PlaySpell(int spellNumber, float volume = 1f, Vector3? worldPosition = null)
+    {
+        string key = $"Spell0{spellNumber}";
+        PlaySFX(key, volume, worldPosition);
+    }
+    
+    /// <summary>
+    /// Reproduce un SFX de ambiente por clave.
+    /// Ejemplo: PlayAmbience("Ambience_Cave")
+    /// </summary>
+    public void PlayAmbience(string ambienceKey, float volume = 1f, Vector3? worldPosition = null)
+    {
+        PlaySFX(ambienceKey, volume, worldPosition);
+    }
+    
+    /// <summary>
+    /// Busca un AudioClip en el profile por clave de evento.
+    /// </summary>
+    AudioClip FindSfxClipByKey(string key)
+    {
+        if (profile == null || string.IsNullOrWhiteSpace(key)) return null;
+        
+        for (int i = 0; i < profile.eventSfx.Count; i++)
+        {
+            var r = profile.eventSfx[i];
+            if (r != null &&
+                !string.IsNullOrWhiteSpace(r.eventKey) &&
+                string.Equals(r.eventKey, key, StringComparison.OrdinalIgnoreCase) &&
+                r.sfx != null)
+            {
+                return r.sfx;
+            }
+        }
+        return null;
+    }
+    
+    // ===========================================================
+    // SFX en loop con clave propia (loopId) — para ambientes que deben poder
+    // pararse antes de que termine el clip. PlaySFX/PlaySFXAt son "dispara y
+    // olvida": el AudioSource vuelve solo al pool cuando el clip termina
+    // (ReturnWhenDone), así que si el clip es una pista de ambiente larga
+    // (p. ej. rain-sfx.mp3) suena hasta agotarse aunque el evento lógico
+    // (IsRaining) ya haya terminado. PlayLoopingSFX usa una fuente dedicada
+    // por loopId, fuera del pool, que solo se detiene cuando se llama
+    // explícitamente a StopLoopingSFX.
+    readonly Dictionary<string, AudioSource> _loopingSfxSources = new();
+    // FIX M4 (auditoría 2026-08-07): fade-out en curso por loopId, para poder cancelarlo si el
+    // mismo loop se reinicia (PlayLoopingSFX) o si se pide otro StopLoopingSFX antes de que
+    // termine el anterior. Antes, un fade-out viejo seguía corriendo tras rearrancar el loop y
+    // acababa cortando en seco el loop nuevo cuando el temporizador viejo llegaba a cero.
+    readonly Dictionary<string, Coroutine> _loopFadeRoutines = new();
+
+    /// <summary>
+    /// Arranca (o reinicia) en loop el SFX asociado a eventKey en el AudioGraphProfile, bajo la
+    /// clave lógica loopId. Llamar a StopLoopingSFX con el mismo loopId para detenerlo.
+    /// </summary>
+    public void PlayLoopingSFX(string loopId, string eventKey, float volume = 1f)
+    {
+        if (string.IsNullOrWhiteSpace(loopId) || string.IsNullOrWhiteSpace(eventKey)) return;
+
+        AudioClip clip = FindSfxClipByKey(eventKey);
+        if (clip == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AudioService] SFX en loop no encontrado para clave '{eventKey}'.");
+#endif
+            return;
+        }
+
+        if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null)
+        {
+            src = CreateChildSource($"LoopSFX_{loopId}", sfxGroup, spatial: false, loop: true);
+            _loopingSfxSources[loopId] = src;
+        }
+
+        // FIX M4: si había un fade-out en curso para este loopId (StopLoopingSFX con fadeOut>0
+        // seguido de un reinicio), cancelarlo — si no, el fade viejo termina llamando src.Stop()
+        // sobre el loop recién reiniciado.
+        if (_loopFadeRoutines.TryGetValue(loopId, out var pendingFade) && pendingFade != null)
+        {
+            StopCoroutine(pendingFade);
+            _loopFadeRoutines.Remove(loopId);
+        }
+
+        src.loop = true;
+        src.clip = clip;
+        src.volume = Mathf.Clamp01(volume);
+        src.Play();
+    }
+
+    /// <summary>
+    /// Detiene el SFX en loop asociado a loopId (ver PlayLoopingSFX). Con fadeOut > 0 hace un
+    /// fundido de salida antes de pararlo; con 0 (o por defecto) lo corta en seco.
+    /// </summary>
+    public void StopLoopingSFX(string loopId, float fadeOut = 0f)
+    {
+        if (string.IsNullOrWhiteSpace(loopId)) return;
+        if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null) return;
+        if (!src.isPlaying) return;
+
+        // FIX M4: cancelar cualquier fade-out previo de este mismo loopId antes de arrancar uno
+        // nuevo (o un Stop en seco), para no dejar dos corrutinas escribiendo src.volume a la vez.
+        if (_loopFadeRoutines.TryGetValue(loopId, out var existingFade) && existingFade != null)
+        {
+            StopCoroutine(existingFade);
+            _loopFadeRoutines.Remove(loopId);
+        }
+
+        if (fadeOut > 0f)
+            _loopFadeRoutines[loopId] = StartCoroutine(FadeOutAndStopLoop(loopId, src, fadeOut));
+        else
+            src.Stop();
+    }
+
+    /// <summary>
+    /// Silencia (o restaura) en el sitio el SFX en loop asociado a loopId, sin detenerlo ni
+    /// perder su posición de reproducción — a diferencia de StopLoopingSFX, pensado para
+    /// suspensiones temporales y reversibles (p.ej. lluvia/viento de ambiente mientras el
+    /// jugador está en un interior, ver DayNightCycle.SetWeatherAudioSuppressed). No hace nada
+    /// si el loopId no tiene una fuente activa todavía (PlayLoopingSFX aún no se ha llamado).
+    /// </summary>
+    public void SetLoopingSFXMuted(string loopId, bool muted)
+    {
+        if (string.IsNullOrWhiteSpace(loopId)) return;
+        if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null) return;
+        src.mute = muted;
+    }
+
+    IEnumerator FadeOutAndStopLoop(string loopId, AudioSource src, float duration)
+    {
+        float startVolume = src.volume;
+        float elapsed = 0f;
+        while (elapsed < duration && src != null)
+        {
+            elapsed += Time.deltaTime;
+            src.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+            yield return null;
+        }
+        if (src != null)
+        {
+            src.Stop();
+            src.volume = startVolume;
+        }
+        _loopFadeRoutines.Remove(loopId);
+    }
+
+    // ===========================================================
+    // SFX (métodos internos y legacy)
+    public void PlaySFX(AudioClip clip, float volume = 1f)
+    {
+        if (!clip) return;
+        var src = Rent2D();
+        src.transform.localPosition = Vector3.zero;
+        src.volume = Mathf.Clamp01(volume);
+        src.clip = clip;
+        src.Play();
+        StartCoroutine(ReturnWhenDone(src, _pool2D));
+    }
+
+    public void PlaySFXAt(AudioClip clip, Vector3 worldPos, float volume = 1f)
+    {
+        if (!clip) return;
+        var src = Rent3D();
+        src.transform.position = worldPos;
+        src.volume = Mathf.Clamp01(volume);
+        src.clip = clip;
+        src.Play();
+        StartCoroutine(ReturnWhenDone(src, _pool3D));
+    }
+
+    void PlaySfxForKey(string key)
+    {
+        if (profile == null || string.IsNullOrEmpty(key)) return;
+        for (int i = 0; i < profile.eventSfx.Count; i++)
+        {
+            var r = profile.eventSfx[i];
+            if (r != null &&
+                !string.IsNullOrWhiteSpace(r.eventKey) &&
+                string.Equals(r.eventKey, key, StringComparison.OrdinalIgnoreCase) &&
+                r.sfx != null)
+            {
+                PlaySFX(r.sfx);
+                break;
+            }
+        }
+    }
+
+    // ===========================================================
+    // Mixer + utilidades
+    public void SetExposedVolume(string exposedParam, float linear01)
+    {
+        if (!mixer || string.IsNullOrEmpty(exposedParam)) return;
+        float dB = Mathf.Lerp(-80f, 0f, Mathf.Clamp01(linear01));
+        mixer.SetFloat(exposedParam, dB);
+    }
+
+    public float GetExposedVolume01(string exposedParam, float def01 = 1f)
+    {
+        if (!mixer || string.IsNullOrEmpty(exposedParam)) return def01;
+        return mixer.GetFloat(exposedParam, out float dB) ? Mathf.InverseLerp(-80f, 0f, dB) : def01;
+    }
+
+    AudioSource CreateChildSource(string name, AudioMixerGroup group, bool spatial, bool loop=false)
+    {
+        var go = new GameObject(name);
+        go.transform.SetParent(transform, false);
+        var src = go.AddComponent<AudioSource>();
+        src.playOnAwake = false;
+        src.loop = loop;
+        src.outputAudioMixerGroup = group ? group : null;
+        src.spatialBlend = spatial ? 1f : 0f;
+        if (spatial) { src.rolloffMode = AudioRolloffMode.Linear; src.minDistance = 2f; src.maxDistance = 30f; }
+        return src;
+    }
+
+    AudioSource Rent2D() => _pool2D.Count > 0 ? _pool2D.Dequeue() : CreateChildSource("SFX2D_dyn", sfxGroup, spatial:false);
+    AudioSource Rent3D() => _pool3D.Count > 0 ? _pool3D.Dequeue() : CreateChildSource("SFX3D_dyn", sfxGroup, spatial:true);
+
+    IEnumerator ReturnWhenDone(AudioSource src, Queue<AudioSource> pool)
+    {
+        // FIX M4 (auditoría 2026-08-07): WaitForSeconds está escalado por Time.timeScale. En
+        // pausa (timeScale=0) esta corrutina nunca avanza, así que la fuente SFX nunca vuelve al
+        // pool y Rent2D/Rent3D siguen creando "SFX2D_dyn"/"SFX3D_dyn" sin límite mientras dure la
+        // pausa. WaitForSecondsRealtime no depende de timeScale.
+        float wait = src.clip ? Mathf.Max(0.02f, src.clip.length / Mathf.Max(0.01f, src.pitch)) : 1f;
+        yield return new WaitForSecondsRealtime(wait);
+        src.Stop(); src.clip = null; pool.Enqueue(src);
+    }
+
+    AudioClip GetCurrentMusicClip()
+    {
+        var c = _musicATurn ? _musicB : _musicA;
+        return c ? c.clip : null;
+    }
+    
+    /// <summary>
+    /// Propiedad pública para obtener el clip de música actual
+    /// </summary>
+    public AudioClip CurrentMusicClip => GetCurrentMusicClip();
+
+    /// <summary>
+    /// True mientras la música de combate está activa (entre BeginBattleMusic y EndBattleMusic).
+    /// Usado por sistemas externos (p. ej. AmbientZone) para no pisar la música de combate
+    /// con transiciones ambientales mientras el combate sigue en curso.
+    /// </summary>
+    public bool IsBattleActive => _battleActive;
+
+    /// <summary>
+    /// Fuerza el fin de cualquier estado de batalla pendiente (flag _battleActive + stack de
+    /// música). Necesario en salidas anómalas del combate (Game Over) donde nunca se llega a
+    /// llamar a EndBattleById/RestoreAfterBattle/OnBattleWonRestoreMusic porque el jugador
+    /// murió en vez de ganar. Sin esto, _battleActive se queda a true indefinidamente —
+    /// AudioService es DontDestroyOnLoad y sobrevive al viaje Game Over → MainMenu → Continuar—
+    /// y AmbientZone.TransitionToZoneMusic/RestorePreviousMusic usan IsBattleActive como guard
+    /// para no pisar música de combate, bloqueando la música de zona para siempre tras morir.
+    /// </summary>
+    public void ForceEndBattleState()
+    {
+        _musicStack.Clear();
+        _battleActive = false;
+        _activeBattleId = null;
+    }
+
+    /// <summary>
+    /// Activa o desactiva el loop de las dos fuentes de música. Útil para temas que deben sonar
+    /// una sola vez y terminar (p.ej. el tema de créditos, ver CreditsSceneController), en vez de
+    /// heredar el loop=true por defecto que usa la música de ambiente/gameplay.
+    /// </summary>
+    public void SetMusicLooping(bool loop)
+    {
+        if (_musicA != null) _musicA.loop = loop;
+        if (_musicB != null) _musicB.loop = loop;
+    }
+
+    /// <summary>
+    /// Segundos que quedan del clip de música actualmente en reproducción (fuente activa).
+    /// Devuelve -1 si no hay música sonando o si esa fuente tiene loop activo (no tiene un
+    /// "final" con sentido). Pensado para sincronizar UI con el final de un tema no-loop.
+    /// </summary>
+    public float GetMusicRemainingSeconds()
+    {
+        var active = _musicATurn ? _musicB : _musicA;
+        if (active == null || active.clip == null || !active.isPlaying || active.loop)
+            return -1f;
+        return Mathf.Max(0f, active.clip.length - active.time);
+    }
+    
+    /// <summary>
+    /// Restaura la música de la escena actual (según las reglas del profile)
+    /// </summary>
+    public bool RestoreSceneMusic(float fadeDuration = -1f)
+    {
+        if (fadeDuration < 0f) fadeDuration = defaultFade;
+
+        // FIX (12 sep 2026, reporte de Raúl — "la música de MainWorld sonó dentro de la casa de
+        // Will"): RestoreSceneMusic() es el punto de restauración compartido por
+        // CinematicSequencerBase.RestoreMusic()/RestoreAfterBattle/RestoreAfterMinigame — todos
+        // ellos, hasta ahora, ignoraban por completo si el jugador sigue dentro de un interior con
+        // música propia (AudioGraphProfile.sceneMusic para la escena de ese interior, ver
+        // HandleInteriorEntered) y restauraban sin más la última música de la escena BASE
+        // (MainWorld) — que nunca cambia mientras un interior aditivo está cargado encima (ver
+        // AudioService.OnSceneLoaded). Esto no se notaba porque, hasta ahora, ningún interior tenía
+        // música propia — con WillHouse ya configurada, hacía falta esta prioridad extra, más
+        // específica que la escena base: si seguimos en modo Interior, su música manda.
+        var ec = EnvironmentController.Instance;
+        if (ec != null && ec.CurrentMode == EnvironmentMode.Interior && ec.CurrentInterior)
+        {
+            string interiorScene = ec.CurrentInterior.gameObject.scene.name;
+            if (TryGetSceneMusicRule(interiorScene, out var interiorClip))
+            {
+                PlayMusic(interiorClip, fadeDuration);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[AudioService] RestoreSceneMusic: seguimos en interior '{interiorScene}' → '{interiorClip.name}'");
+#endif
+                return true;
+            }
+        }
+
+        // Intentar restaurar la última música de escena solicitada
+        if (_lastRequestedSceneClip != null)
+        {
+            PlayMusic(_lastRequestedSceneClip, fadeDuration);
+            return true;
+        }
+        
+        // Si no hay, buscar en las reglas del profile para la escena actual
+        if (profile != null)
+        {
+            string currentScene = SceneManager.GetActiveScene().name;
+            foreach (var rule in profile.sceneMusic)
+            {
+                if (!string.IsNullOrEmpty(rule.sceneName) && currentScene.Contains(rule.sceneName))
+                {
+                    if (rule.music != null)
+                    {
+                        PlayMusic(rule.music, fadeDuration);
+                        return true;
+                    }
+                }
+            }
+        }
+        
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log("[AudioService] No se encontró música para restaurar en la escena actual");
+#endif
+        return false;
+    }
+
+    // ===========================================================
+    // API compatible con AudioManager (para narrative nodes)
+
+    public void SetVolume(AudioBus bus, float volume01)
+    {
+        if (mixer == null) return;
+        string param = bus switch
+        {
+            AudioBus.Master => masterVolumeParam,
+            AudioBus.Music => musicVolumeParam,
+            AudioBus.Sfx => sfxVolumeParam,
+            AudioBus.Dialogue => dialogueVolumeParam,
+            _ => null
+        };
+        if (!string.IsNullOrEmpty(param))
+            SetExposedVolume(param, volume01);
+    }
+
+    public float GetVolume(AudioBus bus)
+    {
+        if (mixer == null) return 1f;
+        string param = bus switch
+        {
+            AudioBus.Master => masterVolumeParam,
+            AudioBus.Music => musicVolumeParam,
+            AudioBus.Sfx => sfxVolumeParam,
+            AudioBus.Dialogue => dialogueVolumeParam,
+            _ => null
+        };
+        return !string.IsNullOrEmpty(param) ? GetExposedVolume01(param) : 1f;
+    }
+
+    public void Mute(AudioBus bus, bool mute)
+    {
+        SetVolume(bus, mute ? 0f : 1f);
+    }
+
+    public void PlayVoice(AudioClip clip, float volume = 1f)
+    {
+        if (_voiceSource == null || clip == null) return;
+        _voiceSource.Stop();
+        _voiceSource.clip = clip;
+        _voiceSource.volume = Mathf.Clamp01(volume);
+        _voiceSource.Play();
+    }
+
+    public void PlaySfx(AudioClip clip, float volume = 1f)
+    {
+        PlaySFX(clip, volume);
+    }
+}

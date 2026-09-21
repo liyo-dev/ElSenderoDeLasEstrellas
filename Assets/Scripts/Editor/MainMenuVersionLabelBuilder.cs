@@ -46,7 +46,7 @@ public static class MainMenuVersionLabelBuilder
     const float FontSize = 22f;
     static readonly Color LabelColor = new Color(1f, 1f, 1f, 0.55f);
 
-    [MenuItem("El Sendero/Controles/Añadir Etiqueta de Versión al Main Menu")]
+    [MenuItem("El Sendero/Archivo/Controles/Añadir Etiqueta de Versión al Main Menu")]
     public static void AddVersionLabel()
     {
         if (EditorApplication.isPlaying)

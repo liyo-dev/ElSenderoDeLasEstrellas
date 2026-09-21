@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bf90e6e1689baa4c800a76593a7cc4d, type: 3}
+  m_Name: NpcRoster_MainWorld
+  m_EditorClassIdentifier: Assembly-CSharp::NpcRosterSO
+  rosterId: MainWorld
+  entries:
+  - enabled: 1
+    spawnId: SPAWN_Oliver
+    prefab: {fileID: 1853791838701468352, guid: e0894dee39ded2d46b11e352e83ab82b, type: 3}
+    gameObjectName: Oliver
+    persistenceId: NPC_Oliver
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN__LIAM
+    prefab: {fileID: 3335879819108417999, guid: de7b566c44b3b6949964c333227535b2, type: 3}
+    gameObjectName: _LIAM
+    persistenceId: 
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Eldran
+    prefab: {fileID: 8894687061216898430, guid: f0876891958f7ac4da3278374a2e7b2e, type: 3}
+    gameObjectName: Eldran
+    persistenceId: NPC_Eldran
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Tabernera
+    prefab: {fileID: 7094584979795662136, guid: e1b6f416f1a0b4c499ae3c9f26318f13, type: 3}
+    gameObjectName: Tabernera
+    persistenceId: 
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Victoria
+    prefab: {fileID: 9091734439753928547, guid: 7c5203c6842c1184db2ce618207f3165, type: 3}
+    gameObjectName: Victoria
+    persistenceId: NPC_Victoria
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: 
+    invertCondition: 0

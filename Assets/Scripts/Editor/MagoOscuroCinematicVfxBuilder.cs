@@ -80,7 +80,7 @@ public static class MagoOscuroCinematicVfxBuilder
             "Destrucción final del Sendero, tras completarse el sacrificio. Fuente: GabrielAguiarProductions/FreeQuickEffectsVol1 vfx_Shockwave_01. Escalar a mano al tamaño real de la escena."),
     };
 
-    [MenuItem("El Sendero/VFX/Crear VFX Cinematicos de la Batalla Final")]
+    [MenuItem("El Sendero/Archivo/VFX/Crear VFX Cinematicos de la Batalla Final")]
     public static void CreateCinematicVfx()
     {
         if (!AssetDatabase.IsValidFolder(RootFolder))

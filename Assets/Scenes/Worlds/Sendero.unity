@@ -263,7 +263,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &113064755
 Transform:
   m_ObjectHideFlags: 0
@@ -336,6 +336,10 @@ MonoBehaviour:
   toDisableDuringBattle:
   - {fileID: 275996199}
   startBarrierOnPlayerEnter: 0
+  useRadiusMode: 0
+  radiusMeters: 15
+  radiusCheckInterval: 0.2
+  cannotFleeLocKey: BATTLE_CANNOT_FLEE
 --- !u!114 &113064757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2401,6 +2405,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65d3d431d187054dba6ab3981376743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldBootstrap
+  bootFadeInDuration: 0.35
+  bootCinematicTimeout: 5
 --- !u!114 &804717413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3356,12 +3362,40 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8330914016721479921, guid: 0c3083176c02e614e8880d526d2db878, type: 3}
       insertIndex: -1
       addedObject: {fileID: 918273645}
+    - targetCorrespondingSourceObject: {fileID: 8330914016721479921, guid: 0c3083176c02e614e8880d526d2db878, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1139368757}
   m_SourcePrefab: {fileID: 100100000, guid: 0c3083176c02e614e8880d526d2db878, type: 3}
 --- !u!4 &1139368756 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9132289899736596217, guid: 0c3083176c02e614e8880d526d2db878, type: 3}
   m_PrefabInstance: {fileID: 1139368755}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1139368757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918273644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb4fad89a3ff4600bf9b5379a88fe8c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
+  bossNameId: 
+  bossName: Boss Demonio
+  barSize: {x: 400, y: 40}
+  barPosition: {x: 0, y: -30}
+  healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
+  warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  criticalColor: {r: 1, g: 0, b: 0, a: 1}
+  warningThreshold: 0.5
+  criticalThreshold: 0.25
+  animateHealthChanges: 1
+  animationSpeed: 5
+  fadeInDuration: 0.4
+  fadeOutDuration: 0.5
 --- !u!1 &1139744720
 GameObject:
   m_ObjectHideFlags: 0
@@ -5341,6 +5375,9 @@ MonoBehaviour:
   rainFogColorBlend: 0.5
   rainMinLightIntensity: 0.28
   rainDarkenTransitionDuration: 4
+  rainSkyboxTint: {r: 0.55, g: 0.58, b: 0.62, a: 1}
+  rainSkyboxTintBlend: 0.6
+  rainSkyboxIntensityMultiplier: 0.6
   mistPrefab: {fileID: 0}
   mistDurationRange: {x: 20, y: 45}
   mistFadeOutTime: 4
@@ -5636,8 +5673,8 @@ MonoBehaviour:
   _willActor: {fileID: 2135521185}
   _estelaActor: {fileID: 1285412153}
   _magoOscuroActor: {fileID: 1139368756}
-  _portalTransform: {fileID: 0}
-  _portalExitPoint: {fileID: 0}
+  _portalTransform: {fileID: 2146444357}
+  _portalExitPoint: {fileID: 1955523360}
   _shotMagoDefeat: {fileID: 1828811067}
   _shotWillEstelaClose: {fileID: 1638791604}
   _shotPortalCollapse: {fileID: 359338642}
@@ -5793,7 +5830,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2052766923886183289, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3714833892687663537, guid: 392e26f6a7263c241a8673d723f24f9a, type: 3}
       propertyPath: m_IsActive

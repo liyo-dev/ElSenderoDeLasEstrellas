@@ -121,6 +121,32 @@ namespace Game.NPC
 
         // Identidad NPC (migrado desde NPCInteractiveNarrativeConfig)
         public string PersistenceId => persistenceId;
+
+        /// <summary>
+        /// Sobrescribe el persistenceId del prefab. SOLO es válido ANTES de Awake(): el registro
+        /// en NPCRegistry ocurre dentro de Awake(), así que llamarlo después no cambia con qué id
+        /// quedó registrado el NPC.
+        ///
+        /// Lo usa <see cref="NpcSpawner"/>, que instancia el prefab dentro de un contenedor
+        /// desactivado justo para poder llamar aquí antes de que Unity ejecute Awake().
+        /// </summary>
+        public void OverrideIdentityBeforeAwake(string newPersistenceId)
+        {
+            if (string.IsNullOrEmpty(newPersistenceId)) return;
+
+            if (_identityRegistered)
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogError($"[NPCBehaviourV2:{name}] OverrideIdentityBeforeAwake('{newPersistenceId}') llamado DESPUÉS de Awake(). " +
+                               $"El NPC ya está registrado como '{persistenceId}' y este cambio no tendrá efecto en NPCRegistry.");
+#endif
+                return;
+            }
+
+            persistenceId = newPersistenceId;
+        }
+
+        private bool _identityRegistered;
         public string DialogueCharacterId => dialogueCharacterId;
 
         // Interacción
@@ -983,6 +1009,26 @@ namespace Game.NPC
         public void StartCinematicSequence(States.CinematicSequence sequence)
         {
             if (sequence == null) return;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            // FIX 15 sep 2026 (Raúl: "ahora se pone a andar en mitad de la conversación del
+            // tutorial de menús", OliverSaludoSequencer) -- ForceState() de más abajo NO
+            // comprueba si ya hay una CinematicState activa: si dos sistemas distintos llaman a
+            // StartCinematicSequence() sobre el mismo NPC (p.ej. un sequencer nuevo tipo
+            // OliverSaludoSequencer Y el legacy NPCInteractiveNarrativeExecutor.MoveToPosition
+            // ambos a la vez), el segundo pisa silenciosamente al primero -- la CinematicState
+            // vieja recibe OnExit() (AllowManualMovement=false) sin que el código dueño de la
+            // primera secuencia se entere, y el NPC puede echarse a andar a mitad de lo que ese
+            // primer sistema creía que seguía bajo su control. Este aviso deja constancia en
+            // consola de cualquier caso así, con el nombre del NPC y el tipo de las dos
+            // secuencias en conflicto, para poder localizar quién está pisando a quién sin tener
+            // que adivinar por lectura de código.
+            if (_brain.CurrentState is States.CinematicState)
+            {
+                Debug.LogWarning($"[NPCBehaviourManagerV2:{name}] StartCinematicSequence({sequence.GetType().Name}) " +
+                    "llamado mientras YA había una CinematicState activa -- la secuencia anterior va a ser " +
+                    "desalojada sin avisar a quien la lanzo (ForceState no comprueba solapes).");
+            }
+#endif
             var state = new States.CinematicState();
             state.StartSequence(sequence);
             _brain.ForceState(state);
@@ -1087,6 +1133,7 @@ namespace Game.NPC
 
         private void RegisterNarrativeIdentity()
         {
+            _identityRegistered = true;
             string registryId = !string.IsNullOrEmpty(persistenceId) ? persistenceId : null;
 
             if (registryId == null)

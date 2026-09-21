@@ -82,7 +82,7 @@ public class StarAwakeningSequencer : CinematicSequencerBase
     [Header("Fase 1 — Will reacciona al proyectil")]
     [SerializeField] private string     keyWillSurprise    = "EVT_AWAKEN_02";
     [SerializeField] private NPCEmotion faceWillSurprise   = NPCEmotion.Surprised;
-    [SerializeField] private string     animWillSurprise   = "Fear01";
+    [SerializeField] private string     animWillSurprise   = "Beg01";
     [SerializeField] private float      willSurpriseDuration = 1.2f;
 
     // ── Fase 2 — Hint de Eldran + Panic input ────────────────────────────────

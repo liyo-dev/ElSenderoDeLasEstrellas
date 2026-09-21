@@ -33,7 +33,7 @@ public static class ControlsMenuSceneBuilder
     const string RowPrefabPath = RowPrefabFolder + "/ControlRow.prefab";
     const string RowGlassSpritePath = "Assets/Art/UI/Menu/menu_row_glass.png"; // mismo sprite que usan los botones del menú principal
 
-    [MenuItem("El Sendero/Controles/Construir pantalla de Controles en MainMenu")]
+    [MenuItem("El Sendero/Archivo/Controles/Construir pantalla de Controles en MainMenu")]
     public static void Build()
     {
         if (EditorApplication.isPlaying)

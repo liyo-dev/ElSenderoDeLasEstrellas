@@ -67,6 +67,31 @@ public class VfxPoolService : MonoBehaviour
         Instance = this;
     }
 
+    /// <summary>
+    /// Devuelve YA una instancia al pool, sin esperar a que expire su lifetime.
+    ///
+    /// Hace falta para los VFX cuya duración no se conoce al lanzarlos: un proyectil que viaja
+    /// hasta un objetivo tarda lo que tarde, así que se lanza con un lifetime de seguridad
+    /// generoso y se recoge aquí en cuanto impacta. Sin esto, el proyectil se queda parado en el
+    /// punto de impacto hasta que caduca — que es exactamente lo que se ve en la décima grabación
+    /// del prólogo: los hechizos llegan y no desaparecen.
+    ///
+    /// Es idempotente: recoger algo que ya no está activo no hace nada.
+    /// </summary>
+    public void Recoger(Transform instancia)
+    {
+        if (instancia == null) return;
+
+        for (int i = _active.Count - 1; i >= 0; i--)
+        {
+            if (_active[i].instance != instancia) continue;
+
+            ReturnInternal(instancia);
+            _active.RemoveAt(i);
+            return;
+        }
+    }
+
     private void Update()
     {
         float now = Time.time;

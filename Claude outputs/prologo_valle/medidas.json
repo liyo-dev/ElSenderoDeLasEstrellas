@@ -1,0 +1,75 @@
+{
+ "Tree01_a01": null,
+ "Tree02_a01": null,
+ "Tree03_a01": null,
+ "Tree05_a01": null,
+ "Tree06_a01": null,
+ "Tree07_b01": null,
+ "Plant01_a01": null,
+ "Plant02_a01": null,
+ "Rock01_a04": null,
+ "Rock02_a03": null,
+ "Cart06": null,
+ "Cart01": null,
+ "Hay01_a01": null,
+ "Barrel01_a01": null,
+ "Table01_a01": null,
+ "Chair01_a01": null,
+ "Railing01_a01": null,
+ "Signpost02_a01": null,
+ "Wood02_a01": null,
+ "Vane01_a01": null,
+ "Fence01_a01": null,
+ "Stairs01_a01": null,
+ "Bread01_a01": {
+  "x": 0.37,
+  "y": 0.21,
+  "z": 0.88,
+  "base": -0.0
+ },
+ "Bowl01_a01": {
+  "x": 0.65,
+  "y": 0.36,
+  "z": 0.65,
+  "base": -0.0
+ },
+ "Milk01_a01": {
+  "x": 0.22,
+  "y": 0.46,
+  "z": 0.26,
+  "base": 0.0
+ },
+ "Chest01": null,
+ "Box01_a01": null,
+ "Ladder01_a01": {
+  "x": 0.9,
+  "y": 2.16,
+  "z": 0.13,
+  "base": -0.0
+ },
+ "Flag03_a01": {
+  "x": 0.32,
+  "y": 1.57,
+  "z": 1.88,
+  "base": -1.41
+ },
+ "Smith01_a01": {
+  "x": 1.09,
+  "y": 0.91,
+  "z": 0.58,
+  "base": -0.0
+ },
+ "Trough01_a01": {
+  "x": 1.31,
+  "y": 0.42,
+  "z": 0.71,
+  "base": -0.0
+ },
+ "Henhouse01_a01": null,
+ "Vegetables02_a01": {
+  "x": 0.3,
+  "y": 0.27,
+  "z": 0.12,
+  "base": -0.03
+ }
+}

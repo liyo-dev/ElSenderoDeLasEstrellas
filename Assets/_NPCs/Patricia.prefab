@@ -1067,6 +1067,7 @@ GameObject:
   - component: {fileID: 6933653523399855016}
   - component: {fileID: 1556899006718849410}
   - component: {fileID: 8969114490556385591}
+  - component: {fileID: 2466567310380111711}
   m_Layer: 8
   m_Name: Patricia
   m_TagString: Untagged
@@ -1258,6 +1259,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!114 &8969114490556385591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1271,6 +1273,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopVendor
   shopUIPrefab: {fileID: 5163754287949728197, guid: d2da76088af70754b9bca08a82ae1d6e, type: 3}
+--- !u!114 &2466567310380111711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903978137244161971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 219794431368654857}
+  originalMouthMesh: {fileID: 8867372128071033227}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &4330525534949924715
 GameObject:
   m_ObjectHideFlags: 0

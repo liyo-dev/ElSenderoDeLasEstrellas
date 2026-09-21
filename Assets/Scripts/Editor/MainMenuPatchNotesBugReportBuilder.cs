@@ -56,7 +56,7 @@ public static class MainMenuPatchNotesBugReportBuilder
         ("BotonBugReport", "Reportar un Fallo", "MainMenu_BugReport"),
     };
 
-    [MenuItem("El Sendero/Controles/Añadir Patch Notes + Bug Report al Main Menu")]
+    [MenuItem("El Sendero/Archivo/Controles/Añadir Patch Notes + Bug Report al Main Menu")]
     public static void AddButtonsAndComponents()
     {
         if (EditorApplication.isPlaying)

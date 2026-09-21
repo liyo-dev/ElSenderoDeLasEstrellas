@@ -820,6 +820,7 @@ GameObject:
   - component: {fileID: 1495092821517079582}
   - component: {fileID: -4300026040696661042}
   - component: {fileID: -7875629393453793110}
+  - component: {fileID: 1938064489790380030}
   m_Layer: 7
   m_Name: Mago #2
   m_TagString: Untagged
@@ -1094,10 +1095,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -1136,6 +1133,24 @@ MonoBehaviour:
   deathVFXLifetime: 3
   invulnerabilitySeconds: 0
   debugLogs: 0
+--- !u!114 &1938064489790380030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2924676094345795985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da121c18fee445abbd93a480699e2e65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
+  emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
+  originalEyeMesh: {fileID: 3783770636460911154}
+  originalMouthMesh: {fileID: 264827077257644916}
+  eyePrefix: Eye
+  mouthPrefix: Mouth
+  debugMode: 0
 --- !u!1 &3195551634104779513
 GameObject:
   m_ObjectHideFlags: 0

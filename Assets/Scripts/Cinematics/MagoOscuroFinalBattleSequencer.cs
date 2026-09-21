@@ -113,7 +113,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
     [SerializeField] private float _visionZoomHoldDuration = 1f;
     [Tooltip("Duración de cada uno de los fundidos a blanco de FeedbackService.ScreenFadeAsync que cubren los cortes de escenario/cámara de la visión (entrada, y vuelta a la realidad).")]
     [SerializeField] private float _visionFadeDuration = 0.9f;
-    [Tooltip("sequenceId de música durante la visión (Assets/_AUDIOPROFILE/AudioGraphProfile.asset) — 'Vast Silent Wonder', el mismo tema ambiente por defecto de Sendero.unity (sceneMusic), reutilizado aquí porque encaja con el 'vacío suave, casi acogedor' del capítulo XX de la novela. Al terminar la visión se restaura _magoMonologueMusicId ('MAGOOSCURO_REVEAL').")]
+    [Tooltip("sequenceId de música durante la visión (Assets/_AUDIOPROFILE/AudioGraphProfile.asset) — 'Umbral Entre Estrellas' (antes 'Vast Silent Wonder'), el mismo tema ambiente por defecto de Sendero.unity (sceneMusic), reutilizado aquí porque encaja con el 'vacío suave, casi acogedor' del capítulo XX de la novela. Al terminar la visión se restaura _magoMonologueMusicId ('MAGOOSCURO_REVEAL').")]
     [SerializeField] private string _visionMusicId = "MAGOOSCURO_VISION";
     [Tooltip("Copia de Will para la visión (NO el actor real de la arena — se instancia y se destruye al terminar). Auto-wireado por SenderoFinalSceneWiring si se deja vacío (Assets/Prefabs/_WILL.prefab).")]
     [SerializeField] private GameObject _willVisionPrefab;
@@ -1028,7 +1028,12 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         }
 
         actor.position = targetPos;
-        anim?.SetMovementSpeed(0f);
+        // FIX 16 sep 2026 (mismo bug latente encontrado en OliverSaludoSequencer, ver alli el
+        // comentario largo al final de Co_ApproachWill): SetMovementSpeed(0f) escribe
+        // InputMagnitude CON DAMPING, asi que una sola llamada no lo lleva a 0 -- y como
+        // Idle_Normal_NoWeapon cae sin condiciones al blend tree "Free Locomotion" al terminar su
+        // ciclo, el NPC acaba "andando en el sitio". ResetMovement() lo pone a 0 de golpe.
+        anim?.ResetMovement();
         anim?.TransitionToIdle();
 
         if (agentWasEnabled)

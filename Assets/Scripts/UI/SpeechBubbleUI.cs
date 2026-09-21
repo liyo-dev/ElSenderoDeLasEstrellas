@@ -57,6 +57,12 @@ public class SpeechBubbleUI : MonoBehaviour
     // que SkipCurrent() pueda invocarlo desde fuera sin depender de la corrutina.
     Action _pendingOnComplete;
 
+    // Offset por llamada, para cuando el punto de anclaje ya está a la altura que toca (una marca
+    // de posición colocada a mano, en vez de la cabeza de un personaje) y sumar el offset de
+    // siempre lo dejaría demasiado alto. Null = usar '_worldOffset' de siempre, sin cambiar nada
+    // del comportamiento existente. Ver SayBeat.overrideBubbleOffset (17 sep 2026).
+    Vector3? _offsetOverride;
+
     // Oculto temporalmente porque hay un menú (pausa, equipo, tienda...) abierto encima.
     bool _hiddenByMenu;
 
@@ -115,12 +121,44 @@ public class SpeechBubbleUI : MonoBehaviour
     {
         if (!_isShowing || _target == null || _cam == null || _parentCanvasRect == null) return;
 
-        Vector3 screenPos = _cam.WorldToScreenPoint(_target.position + _worldOffset);
+        Vector3 offset = _offsetOverride ?? _worldOffset;
+        Vector3 screenPos = _cam.WorldToScreenPoint(_target.position + offset);
         if (screenPos.z < 0f) return;
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 _parentCanvasRect, screenPos, null, out Vector2 local))
-            _bubbleRect.anchoredPosition = local;
+            _bubbleRect.anchoredPosition = ClampToCanvas(local);
+    }
+
+    /// FIX (17 sep 2026, Raúl: "los bocadillos se cortan por arriba" -- prólogo, planos cerrados
+    /// nuevos generados por ShotComposer). Antes esta posición se aplicaba sin límites: con poco
+    /// headroom (un CloseUp, por ejemplo) la cabeza del personaje queda cerca del borde superior
+    /// de la pantalla, y el bocadillo -- que crece HACIA ARRIBA desde el punto de anclaje, con el
+    /// pico apuntando hacia abajo a la cabeza -- se salía por encima del canvas. Nunca se había
+    /// visto porque las secuencias antiguas (Discusión Ventana, Despertar de la Estrella) siempre
+    /// enmarcan con más aire por encima; el prólogo es el primer sitio que pide planos cerrados de
+    /// verdad con este sistema. Se calcula el margen a partir del tamaño real del bocadillo (que ya
+    /// cambia con el texto, ver Show()) y de su propio pivote, así que funciona igual sin importar
+    /// si el pivote está abajo (como parece, por el pico) o en cualquier otro punto.
+    Vector2 ClampToCanvas(Vector2 local)
+    {
+        if (_parentCanvasRect == null || _bubbleRect == null) return local;
+
+        Rect canvasRect = _parentCanvasRect.rect;
+        float halfWidth    = _bubbleRect.rect.width * 0.5f;
+        float bottomMargin = _bubbleRect.rect.height * _bubbleRect.pivot.y;
+        float topMargin    = _bubbleRect.rect.height * (1f - _bubbleRect.pivot.y);
+
+        float minX = canvasRect.xMin + halfWidth;
+        float maxX = canvasRect.xMax - halfWidth;
+        float minY = canvasRect.yMin + bottomMargin;
+        float maxY = canvasRect.yMax - topMargin;
+
+        // Si el bocadillo es más grande que el propio canvas (no debería pasar nunca, pero por si
+        // acaso) min > max invertiría el clamp -- se deja sin tocar ese eje en vez de forzarlo.
+        if (minX <= maxX) local.x = Mathf.Clamp(local.x, minX, maxX);
+        if (minY <= maxY) local.y = Mathf.Clamp(local.y, minY, maxY);
+        return local;
     }
 
     // ── API pública ───────────────────────────────────────────────────────────
@@ -149,13 +187,21 @@ public class SpeechBubbleUI : MonoBehaviour
     /// llamadas ya lo pasan) por si en el futuro sirve para otra cosa, pero ya no se antepone al
     /// texto — no tocar esto de nuevo sin que el usuario lo pida explícitamente.
     /// </param>
+    /// <param name="worldOffset">
+    /// Sustituye, solo para esta llamada, el offset vertical de siempre (_worldOffset, 2,2 m).
+    /// Null (por defecto) = comportamiento de siempre. Pensado para SayBeat.markName (17 sep
+    /// 2026): una marca de posición ya colocada a la altura que toca no debería tener que
+    /// enterrarse 2,2 m bajo el suelo solo para compensar el offset pensado para cabezas de
+    /// personaje.
+    /// </param>
     public void Show(Transform target, string text, float duration = 0f,
                      Action onComplete = null, string animTrigger = null, bool emphasis = false,
-                     string speakerName = null)
+                     string speakerName = null, Vector3? worldOffset = null)
     {
         if (_autoHideRoutine != null) { StopCoroutine(_autoHideRoutine); _autoHideRoutine = null; }
 
         _target = target;
+        _offsetOverride = worldOffset;
         _isShowing = true;
         _label.text = text;
 

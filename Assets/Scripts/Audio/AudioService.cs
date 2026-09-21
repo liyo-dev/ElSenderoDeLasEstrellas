@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -134,6 +134,7 @@ public sealed class AudioService : MonoBehaviour
         // cualquier interior futuro con su propia música, sin parche específico de WillHouse.
         EnvironmentController.OnInteriorEntered += HandleInteriorEntered;
         EnvironmentController.OnInteriorExited  += HandleInteriorExited;
+        Telon.AlAbrirse += HandleTelonAbierto;
 
         // Pisadas del jugador: FootstepHandler detecta la pisada (huesos de los pies) y solo
         // levanta un evento — el propio AudioService es quien decide qué suena, igual que con las
@@ -162,6 +163,7 @@ public sealed class AudioService : MonoBehaviour
         SceneManager.sceneLoaded   -= OnSceneLoaded;
         EnvironmentController.OnInteriorEntered -= HandleInteriorEntered;
         EnvironmentController.OnInteriorExited  -= HandleInteriorExited;
+        Telon.AlAbrirse -= HandleTelonAbierto;
         FootstepHandler.OnFootstep -= HandlePlayerFootstep;
 
         if (_signals != null)
@@ -316,6 +318,9 @@ public sealed class AudioService : MonoBehaviour
                 scene.name.IndexOf(r.sceneName, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 _lastRequestedSceneClip = r.music;
+                // Con el telón cerrado (arranque, carga) la música de la escena espera a que se
+                // vea la escena. Ver HandleTelonAbierto.
+                if (!suppressMusic && Telon.Cerrado) { _musicaEsperandoAlTelon = true; return; }
                 if (!suppressMusic && GetCurrentMusicClip() != r.music) PlayMusic(r.music);
                 return;
             }
@@ -344,6 +349,27 @@ public sealed class AudioService : MonoBehaviour
         return false;
     }
 
+    // ── Telón ──────────────────────────────────────────────────────────────────
+    // Mientras la pantalla está en negro retenida (ver Telon) no arranca música de escena, de
+    // interior ni de zona: se apunta que alguien la pidió y se pone cuando el telón se abre, a la
+    // vez que se destapa la imagen. Si para entonces hay una cinemática, manda la suya.
+    bool _musicaEsperandoAlTelon;
+
+    /// Para quien quiere poner música de escena/zona con el telón cerrado (AmbientZone): se apunta
+    /// y se resuelve al abrirse, con la misma prioridad de siempre (interior, zona, escena).
+    public void PedirMusicaAlAbrirseElTelon() => _musicaEsperandoAlTelon = true;
+
+    void HandleTelonAbierto()
+    {
+        if (!_musicaEsperandoAlTelon) return;
+        _musicaEsperandoAlTelon = false;
+        if (CinematicSequencerBase.AnySequenceActive) return;
+
+        var env = EnvironmentController.Instance ? EnvironmentController.Instance.CurrentInterior : null;
+        if (env) HandleInteriorEntered();
+        else HandleInteriorExited();
+    }
+
     /// <summary>
     /// Al entrar en un interior (andando o vía InteriorPortalTrigger): si ese interior vive en su
     /// propia escena con música configurada en AudioGraphProfile.sceneMusic (p. ej. "WillHouse"),
@@ -365,6 +391,10 @@ public sealed class AudioService : MonoBehaviour
         // gemelo en RestoreSceneMusic(), más abajo).
         if (CinematicSequencerBase.AnySequenceActive) return;
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
+
+        // (21 sep) Con la pantalla en negro no suena la música del interior: es lo que hacía sonar
+        // la habitación de Will al empezar partida nueva, antes del prólogo. Espera al telón.
+        if (Telon.Cerrado) { _musicaEsperandoAlTelon = true; return; }
 
         var env = EnvironmentController.Instance ? EnvironmentController.Instance.CurrentInterior : null;
         if (!env) return;
@@ -389,6 +419,26 @@ public sealed class AudioService : MonoBehaviour
     void HandleInteriorExited()
     {
         if (profile == null) return;
+
+        // FIX 16 sep 2026: mismo guard que ya tenía su gemelo HandleInteriorEntered y que faltaba
+        // aquí. Si hay una cinemática en curso, es ella quien manda sobre la música — al terminar,
+        // su propio RestoreMusic()/RestoreSceneMusic() pondrá lo que toque. Sin esto, salir de un
+        // interior a mitad de una secuencia le pisaba la música.
+        //
+        // OJO, esto NO arregla por sí solo el caso de "salgo de casa y suena un segundo la música
+        // del mundo antes que la de la secuencia": ahí el orden es al revés (la puerta levanta
+        // OnInteriorExited ANTES de que el grafo dispare la cinemática, así que todavía no hay
+        // cinemática activa que detectar). Eso se ataca desde el otro lado, arrancando la música
+        // de la secuencia en su primer frame — ver SequencePlayer.Co_Play().
+        if (CinematicSequencerBase.AnySequenceActive)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log("[AudioService] Al salir del interior: música omitida, hay una cinemática activa (manda la suya).");
+#endif
+            return;
+        }
+
+        if (Telon.Cerrado) { _musicaEsperandoAlTelon = true; return; }
 
         var activeAmbientZone = AmbientZone.CurrentActiveZone;
         if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))

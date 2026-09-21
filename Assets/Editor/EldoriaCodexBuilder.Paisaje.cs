@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
@@ -547,6 +547,8 @@ public static partial class EldoriaCodexBuilder
             Foto("Vista_mapa",new Vector3(0,1100,-1000),new Vector3(0,35,0),true,630);
             Foto("Vista_puerto",new Vector3(345,55,-530),new Vector3(270,5,-449),false,0);
             Foto("Vista_castillo",new Vector3(110,155,185),new Vector3(0,109,300),false,0);
+            Foto("Vista_castillo_planta",new Vector3(0,380,295),new Vector3(0,105,296),true,110);
+            Foto("Vista_mercado",new Vector3(42,119,231),new Vector3(-5,106,263),false,0);
             Foto("Vista_vecino",new Vector3(420,75,-210),new Vector3(330,23,-115),false,0);
             Foto("Vista_pueblo",new Vector3(100,80,-240),new Vector3(0,24,-130),false,0);
             Foto("Vista_ruinas",new Vector3(IsloteRuinas.x+RuinasPlaya.x*240,70,IsloteRuinas.y+RuinasPlaya.y*240),new Vector3(IsloteRuinas.x,RuinasCota,IsloteRuinas.y),false,0); // revisión 19: desde el mar, por la playa

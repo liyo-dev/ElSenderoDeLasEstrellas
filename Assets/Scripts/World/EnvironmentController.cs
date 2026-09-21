@@ -211,6 +211,29 @@ public class EnvironmentController : MonoBehaviour
         // Capturamos el “exterior” una sola vez, antes de forzar interior
         if (!_hasSnapshot) CaptureExteriorSnapshot();
 
+        // ── EL CIELO NEGRO DEL PRÓLOGO (20 sep 2026) ──────────────────────────────────────────
+        //
+        // Si una cinemática tiene el control del entorno, aquí se ANOTA a dónde ha entrado el
+        // jugador, pero no se pinta nada. Esto es lo que llevaba cinco grabaciones tapando el
+        // cielo del prólogo, y el orden de los hechos es el que lo delata:
+        //
+        //   1. Arranca el sueño → MostrarExterior() deja el cielo y la cámara bien puestos.
+        //   2. DESPUÉS se carga WillHouse en aditivo y el jugador aparece en el anchor 'Bedroom'.
+        //   3. Ese anchor llama aquí, y esto hacía RenderSettings.skybox = null y la cámara a
+        //      color sólido — correcto cuando entras andando en una casa, y desastroso cuando lo
+        //      que se está rodando es un valle a cielo abierto.
+        //
+        // El dormitorio ganaba la discusión porque llegaba el último. El modo queda guardado en
+        // _preCinematic*, que es justo lo que EndCinematicOverride re-aplica al terminar: cuando
+        // Will despierta, su habitación vuelve a mandar, como debe.
+        if (_cinematicOverrideActive)
+        {
+            _preCinematicMode = EnvironmentMode.Interior;
+            _preCinematicInterior = env;
+            OnInteriorEntered?.Invoke();
+            return;
+        }
+
         var cam = ResolveCamera();
         ApplyInteriorTo(cam, env);   // si cam es null, haremos reapply cuando exista
         OnInteriorEntered?.Invoke();
@@ -220,6 +243,18 @@ public class EnvironmentController : MonoBehaviour
     {
         _mode = EnvironmentMode.Exterior;
         _currentInterior = null;
+
+        // Misma regla que en ApplyInterior: con una cinemática al mando se anota, no se pinta.
+        // Aquí el daño es menor (el exterior no apaga el cielo), pero el skybox y los clearFlags
+        // que restauraría son los del SNAPSHOT, que puede ser de otra hora del día y romper la
+        // continuidad de luz a mitad de un plano.
+        if (_cinematicOverrideActive)
+        {
+            _preCinematicMode = EnvironmentMode.Exterior;
+            _preCinematicInterior = null;
+            OnInteriorExited?.Invoke();
+            return;
+        }
 
         var cam = ResolveCamera();
         ApplyExteriorTo(cam);
@@ -413,6 +448,12 @@ public class EnvironmentController : MonoBehaviour
     // === implementación ===
     void Reapply(Camera cam)
     {
+        // La segunda puerta por la que se colaba el interior sobre la cinemática: al cargar una
+        // escena, OnSceneChanged pone _cam y _appliedCam a null, y en el Update siguiente la cámara
+        // "ha cambiado" y se vuelve a aplicar el modo actual. Con WillHouse cargándose en mitad del
+        // prólogo eso repintaba el dormitorio encima del valle un fotograma después.
+        if (_cinematicOverrideActive) return;
+
         if (_mode == EnvironmentMode.Interior)
         {
             // _currentInterior puede haber sido destruida al descargar la escena anterior.
@@ -677,18 +718,31 @@ public class EnvironmentController : MonoBehaviour
         // si no hay cámara aún, marca para re-aplicar cuando aparezca
         if (!cam)
         {
-            // al menos quita el skybox global para mitigar
-            RenderSettings.skybox = (env && env.interiorSkyboxOverride) ? env.interiorSkyboxOverride : null;
+            // ...salvo que mande una cinemática. Quitar el skybox global aquí era la tercera vía
+            // por la que el dormitorio de Will apagaba el cielo del prólogo: esta rama corre ANTES
+            // de la protección cinemática de abajo, así que se la saltaba entera.
+            if (!_cinematicOverrideActive)
+                RenderSettings.skybox = (env && env.interiorSkyboxOverride) ? env.interiorSkyboxOverride : null;
+
             _needReapply = true;
             return;
         }
 
         // --- PROTECCIÓN CINEMÁTICA ---
-        // Si estamos en modo cinemático (DialogueCinematicController o SimpleCinematicDirector),
-        // NO modificar la cámara principal, ya que los sistemas de cinemática tienen su propia gestión.
-        // Esto evita conflictos de ClearFlags y Skybox.
+        // Si estamos en modo cinemático, NO modificar la cámara principal ni el skybox: los
+        // sistemas de cinemática tienen su propia gestión. Esto evita conflictos de ClearFlags y
+        // Skybox.
         bool isCinematicActive = false;
-        
+
+        // El override de entorno (BeginCinematicOverride). Es el que usa el sistema de SECUENCIAS
+        // —CinematicTimeOfDay.MostrarExterior—, y FALTABA en esta lista: por eso el prólogo, que
+        // se rueda a cielo abierto mientras Will duerme en su cama, se quedaba sin cielo en cuanto
+        // se cargaba WillHouse y su anchor llamaba aquí. Cinco grabaciones con el fondo negro.
+        if (_cinematicOverrideActive)
+        {
+            isCinematicActive = true;
+        }
+
         // Verificar DialogueCinematicController
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode)
         {

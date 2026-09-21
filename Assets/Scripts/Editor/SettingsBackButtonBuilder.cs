@@ -32,7 +32,7 @@ public static class SettingsBackButtonBuilder
     const string ButtonName = "BotonVolver";
     const string LocalizationKey = "Settings_Back";
 
-    [MenuItem("El Sendero/Controles/Añadir Botón Volver a Ajustes")]
+    [MenuItem("El Sendero/Archivo/Controles/Añadir Botón Volver a Ajustes")]
     public static void Build()
     {
         if (EditorApplication.isPlaying)

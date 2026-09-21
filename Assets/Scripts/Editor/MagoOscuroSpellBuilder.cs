@@ -74,7 +74,7 @@ public static class MagoOscuroSpellBuilder
     private const string ImpactVfxGuid  = "67a684e320da6e7439421a07e3fa265c";
     private const string DespawnVfxGuid = "dcd90c4976197424b9958a7c54b6bb8c";
 
-    [MenuItem("El Sendero/Magia/Crear Hechizos del Mago Oscuro (Batalla Final)")]
+    [MenuItem("El Sendero/Archivo/Magia/Crear Hechizos del Mago Oscuro (Batalla Final)")]
     public static void CreateMagoOscuroSpells()
     {
         var golpePrefab = CreateOrRepairGolpePrefab();

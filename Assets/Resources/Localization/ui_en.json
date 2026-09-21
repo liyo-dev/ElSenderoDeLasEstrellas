@@ -9,6 +9,10 @@
             "value": "Mana: {0}/{1}"
         },
         {
+            "key": "BATTLE_CANNOT_FLEE",
+            "value": "You can't flee the battle."
+        },
+        {
             "key": "BOSS_DEMONIO_HEALTHBAR_NAME",
             "value": "Demon Boss"
         },
@@ -731,6 +735,10 @@
         {
             "key": "ITEM_KEY_NAME",
             "value": "Key"
+        },
+        {
+            "key": "ITEM_MERMELADA_NAME",
+            "value": "Jam"
         },
         {
             "key": "ITEM_POCIONMAGIA_DESC",

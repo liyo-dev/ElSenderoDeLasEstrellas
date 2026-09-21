@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioGraphProfile
   battles:
   - battleId: Demon_1
-    music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
+    music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
     fade: 0
   - battleId: Npc_Battle
     music: {fileID: 8300000, guid: 316cecf77c02820419a4df496695d01f, type: 3}
@@ -29,7 +29,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
     fade: 0
   - battleId: Demon_2
-    music: {fileID: 8300000, guid: 07cc773f0bc0bdc4c81aa750fc13c0f0, type: 3}
+    music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
     fade: 0
   - battleId: MagoOscuro
     music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
@@ -49,7 +49,7 @@ MonoBehaviour:
     fade: 1
     loop: 1
   - zoneId: Dungeon
-    music: {fileID: 8300000, guid: b7d879b37c2696b448f8e1a9b249f3bd, type: 3}
+    music: {fileID: 8300000, guid: d14a0334429e49247b2605c6709ac87a, type: 3}
     fade: 1
     loop: 1
   - zoneId: Castle
@@ -60,9 +60,13 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 70f0ce25b256f314d820e189ba62c4e5, type: 3}
     fade: 1
     loop: 1
+  - zoneId: VillageSea
+    music: {fileID: 8300000, guid: 69254880821b66243bf69daed1f0521f, type: 3}
+    fade: 1
+    loop: 1
   sceneMusic:
   - sceneName: MainMenu
-    music: {fileID: 8300000, guid: 785493ca564adeb44bb1c68fa22f00ab, type: 3}
+    music: {fileID: 8300000, guid: 002d60cb5e26cc940a716634e0927b6b, type: 3}
   - sceneName: MainWorld
     music: {fileID: 8300000, guid: 920a9fdc4dced024ca2b9bfd43ef957a, type: 3}
   - sceneName: Credits
@@ -100,6 +104,8 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 4253ea676060e49dd9488f73d692ea2a, type: 3}
   - eventKey: Impact1
     sfx: {fileID: 8300000, guid: 4e7a7e55b33e3e526a00fcc81ee4a7dc, type: 3}
+  - eventKey: SpellFail
+    sfx: {fileID: 8300000, guid: 9fd65274b44f2bcd585c5f233d3dd77d, type: 3}
   - eventKey: PlasmaSphere
     sfx: {fileID: 8300000, guid: 96a146f9cdecc2e718b1d0395e94cb48, type: 3}
   - eventKey: UI_Open
@@ -258,11 +264,19 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 05db446b081146fba24df777029cc1b4, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
-    music: {fileID: 8300000, guid: c82b5bd2fe09f524dac157f5342aff1f, type: 3}
+    music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: MAGOOSCURO_REVEAL
+    music: {fileID: 8300000, guid: 63822d4492ee1954abc25f7aa03af997, type: 3}
+    fadeIn: 0.5
+    fadeOut: 0.5
+  - sequenceId: MAGOOSCURO_CLIMAX
+    music: {fileID: 8300000, guid: 0ba4e6cc6b6573a4d97ac1c6ec57b8ec, type: 3}
     fadeIn: 0.5
     fadeOut: 0.5
   - sequenceId: AWAKEN
-    music: {fileID: 8300000, guid: a6d965cd64d1ef040986deabe19c2107, type: 3}
+    music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
     fadeIn: 0.5
     fadeOut: 0.5
   - sequenceId: LIAM_CRYSTAL
@@ -289,19 +303,15 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 6904c00d6a7aa0848aa3348ca1abb7b4, type: 3}
     fadeIn: 0.5
     fadeOut: 0.5
-  - sequenceId: MAGOOSCURO_REVEAL
-    music: {fileID: 8300000, guid: 2b6499ae1b7898d41ad775bffb9b370b, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
   - sequenceId: MAGOOSCURO_VISION
     music: {fileID: 8300000, guid: 3cc104b44c356344eab24aa874ae8bb8, type: 3}
     fadeIn: 1
     fadeOut: 0.5
-  - sequenceId: MAGOOSCURO_CLIMAX
-    music: {fileID: 8300000, guid: 026414a9a7500f74aa7c0a445d2dca9e, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
   - sequenceId: EPILOGUE
     music: {fileID: 8300000, guid: a3cc4bb37e6b3b14885e644f20e9271a, type: 3}
+    fadeIn: 1
+    fadeOut: 0.5
+  - sequenceId: OLIVER_1
+    music: {fileID: 8300000, guid: c11b574e92002c44a92772ec8eb12331, type: 3}
     fadeIn: 1
     fadeOut: 0.5

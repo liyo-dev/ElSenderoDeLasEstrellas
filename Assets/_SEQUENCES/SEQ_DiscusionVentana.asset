@@ -1,0 +1,158 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_DiscusionVentana
+  m_EditorClassIdentifier: 
+  displayName: La discusion de la ventana
+  summary: Will oye a Eldran y Victoria discutiendo fuera por las cajas de fruta
+    del mercado, sin verlos todavia (dos voces ancladas a marcas de la ventana, sin
+    actores en escena). Reacciona con curiosidad y corta a su plano de siempre. Gancho
+    hacia Eldran/Victoria como personajes reales del Paso 4 (SEQ_PerasEldran).
+  signalIn: HOOK_DISCUSION_START
+  signalOut: HOOK_DISCUSION_DONE
+  musicId: 
+  openingShotName: 
+  openingShot:
+    type: 3
+    subjectId: 
+    secondaryId: 
+    heightBias: 0
+    distanceScale: 1
+    fovOverride: 0
+    crossTheLine: 0
+    headroom: 1
+    encara: 1
+  endStayBlack: 0
+  phases:
+  - name: 1 - Los gritos de fuera
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000009
+    - rid: 7428272459180934006
+    - rid: 8000000000000000001
+    - rid: 8000000000000000002
+    - rid: 8000000000000000006
+    - rid: 7428272459180934007
+    - rid: 8000000000000000008
+  references:
+    version: 2
+    RefIds:
+    - rid: 7428272459180934006
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'CARA (INC-361): sorpresa al primer grito.'
+        actorId: Player
+        emotion: 4
+        revertAfter: 0
+    - rid: 7428272459180934007
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'CARA (INC-361): media sonrisa, ya les conoce.'
+        actorId: Player
+        emotion: 8
+        revertAfter: 0
+    - rid: 8000000000000000001
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran, desde fuera - las cajas de fruta
+        actorId: 
+        markName: VentanaIzq
+        textKey: HOOK_DISCUSION_01
+        pageDuration: 2.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000002
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Victoria le responde
+        actorId: 
+        markName: VentanaDcha
+        textKey: HOOK_DISCUSION_02
+        pageDuration: 2.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000003
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran insiste - esta linea va en paralelo con la reaccion de Will
+        actorId: 
+        markName: VentanaIzq
+        textKey: HOOK_DISCUSION_03
+        pageDuration: 2.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000004
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'REACCION: Will escucha con curiosidad mientras Eldran sigue'
+        actorId: Player
+        gesture: Question01
+        repeats: 1
+        holdSeconds: 0
+        returnToNormalAfter: 0
+    - rid: 8000000000000000005
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'REACCION: cara pensativa de Will'
+        actorId: Player
+        emotion: 12
+        revertAfter: 0
+    - rid: 8000000000000000006
+      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran sigue discutiendo y Will reacciona a la vez
+        beats:
+        - rid: 8000000000000000003
+        - rid: 8000000000000000004
+        - rid: 8000000000000000005
+        waitForAll: 1
+    - rid: 8000000000000000008
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Will comenta la escena - remate, deja claro que ya les conoce
+        actorId: Player
+        markName: 
+        textKey: HOOK_DISCUSION_04
+        pageDuration: 2.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000009
+      type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO (peticion Raul 21 sep 2026, ajustado tras probar en Play --
+          "se gira muy tarde a escuchar lo que pasa"): Will gira hacia la ventana
+          ANTES de la primera linea de dialogo (Eldran, rid 001), no durante la reaccion
+          de mitad de fase -- para que ya este mirando cuando empiezan los gritos,
+          en vez de reaccionar 5s tarde'
+        actorId: Player
+        targetActorId: 
+        markName: VentanaIzq
+        lookAway: 0
+        mutual: 0
+        turnDuration: 0.4

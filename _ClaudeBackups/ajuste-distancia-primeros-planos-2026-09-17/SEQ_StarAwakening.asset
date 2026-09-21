@@ -1,0 +1,640 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_StarAwakening
+  m_EditorClassIdentifier: 
+  displayName: El Despertar de la Estrella
+  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo
+    a esconderse gritandole que se aparte, y Will se queda solo: primer plano de
+    su cara, la camara retrocede hasta verle entero y se planta en pose de combate.
+    El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta,
+    devuelve el golpe; si falla, el grafo vuelve al dialogo con Eldran. Ningun plano
+    esta colocado a mano.'
+  signalIn: AWAKEN_START
+  signalOut: AWAKEN_DONE
+  musicId: AWAKEN
+  openingShotName: 
+  openingShot:
+    type: 3
+    subjectId: NPC_Eldran
+    secondaryId: Player
+    heightBias: 0
+    distanceScale: 1
+    fovOverride: 0
+    crossTheLine: 0
+    headroom: 1
+  endStayBlack: 1
+  phases:
+  - name: 1 - Eldran avisa
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000001
+    - rid: 8000000000000000002
+    - rid: 8000000000000000003
+  - name: 2 - Will ve el proyectil
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000010
+    - rid: 8000000000000000011
+    - rid: 8000000000000000012
+    - rid: 8000000000000000013
+    - rid: 8000000000000000014
+    - rid: 8000000000000000015
+    - rid: 8000000000000000016
+    - rid: 8000000000000000017
+    - rid: 8000000000000000018
+    - rid: 8000000000000000019
+    - rid: 8000000000000000020
+    - rid: 8000000000000000021
+  - name: 3 - Eldran sale corriendo
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000036
+    - rid: 8000000000000000034
+    - rid: 8000000000000000030
+    - rid: 8000000000000000031
+    - rid: 8000000000000000035
+  - name: 4 - El despertar
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000040
+    - rid: 8000000000000000041
+  - name: 5 - Gameplay, el boton
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000050
+    - rid: 8000000000000000037
+    - rid: 8000000000000000051
+  - name: 6 - Will contraataca
+    onlyIfFlag: panicSuperado
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000090
+    - rid: 8000000000000000060
+    - rid: 8000000000000000061
+    - rid: 8000000000000000064
+    - rid: 8000000000000000065
+    - rid: 8000000000000000066
+    - rid: 8000000000000000067
+  - name: 7 - Despues del impacto
+    onlyIfFlag: panicSuperado
+    skipIfFlag: 
+    beats:
+    - rid: 8000000000000000070
+    - rid: 8000000000000000071
+    - rid: 8000000000000000072
+    - rid: 8000000000000000073
+    - rid: 8000000000000000074
+    - rid: 8000000000000000075
+    - rid: 8000000000000000076
+    - rid: 8000000000000000077
+  - name: 8 - Si Will no reacciona a tiempo
+    onlyIfFlag: 
+    skipIfFlag: panicSuperado
+    beats:
+    - rid: 8000000000000000080
+    - rid: 8000000000000000081
+    - rid: 8000000000000000082
+    - rid: 8000000000000000083
+    - rid: 8000000000000000084
+    - rid: 8000000000000000085
+    - rid: 8000000000000000086
+  references:
+    version: 2
+    RefIds:
+    - rid: 8000000000000000001
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Eldran
+        emotion: 4
+        revertAfter: 0
+    - rid: 8000000000000000002
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Temblor sordo de fondo: algo viene.'
+        intensity: 0.06
+        duration: 1.8
+        waitForEnd: 0
+    - rid: 8000000000000000003
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: EVT_AWAKEN_01 = Will, cuidado!
+        actorId: NPC_Eldran
+        textKey: EVT_AWAKEN_01
+        pageDuration: 1.8
+        gesture: Question01
+        gestureRepeats: 1
+        speakerNameKey: Eldran
+    - rid: 8000000000000000010
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Camara lenta, de golpe.
+        timeScale: 0.2
+        rampDuration: 0
+    - rid: 8000000000000000011
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Tapar mientras aparece el proyectil.
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.2
+        waitForEnd: 1
+    - rid: 8000000000000000012
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El proyectil aparece alrededor de Will y pasa a ser un actor mas.
+        routine: LanzarProyectil
+        waitForEnd: 1
+    - rid: 8000000000000000013
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Will en primer plano con el proyectil de referencia. Se corta con la
+          pantalla cubierta. (Antes era plano medio, geometricamente casi igual al
+          openingShot con Eldran, asi que el corte no se notaba pese a la pantalla
+          en negro. Primer plano cambia el tamano de encuadre y rompe el parecido.)
+        shotName: 
+        framing:
+          type: 4
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000014
+      type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Respiro en negro.
+        seconds: 0.3
+        unscaled: 1
+    - rid: 8000000000000000015
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 0
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.35
+        waitForEnd: 1
+    - rid: 8000000000000000016
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Golpe seco al descubrir.
+        intensity: 0.08
+        duration: 0.25
+        waitForEnd: 0
+    - rid: 8000000000000000017
+      type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Will se gira y lo ve. Interpolado: el giro se ve.'
+        actorId: Player
+        targetActorId: Proyectil
+        markName: 
+        lookAway: 0
+        mutual: 0
+        turnDuration: 0.4
+    - rid: 8000000000000000018
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        emotion: 4
+        revertAfter: 0
+    - rid: 8000000000000000019
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: EVT_AWAKEN_02 = ...! Will se queda mudo.
+        actorId: Player
+        textKey: EVT_AWAKEN_02
+        pageDuration: 1
+        gesture: Angry02
+        gestureRepeats: 1
+        speakerNameKey: Will
+    - rid: 8000000000000000020
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Vistazo a la amenaza.
+        shotName: 
+        framing:
+          type: 6
+          subjectId: Proyectil
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.4
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 0
+        smooth: 1
+        duration: 0.5
+        waitForArrival: 1
+        live: 1
+    - rid: 8000000000000000021
+      type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Que se vea venir, sin pasarse.
+        seconds: 0.4
+        unscaled: 1
+    - rid: 8000000000000000030
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La camara sigue a Eldran mientras huye.
+        shotName: 
+        framing:
+          type: 6
+          subjectId: NPC_Eldran
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 1
+    - rid: 8000000000000000031
+      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Corre y grita a la vez. Si al hablar se para, hay que separarlos.
+        beats:
+        - rid: 8000000000000000032
+        - rid: 8000000000000000033
+        waitForAll: 1
+    - rid: 8000000000000000032
+      type: {class: TakeCoverBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Busca un arbol a la redonda y se esconde detras. Sin marcas colocadas.
+        actorId: NPC_Eldran
+        awayFromActorId: Player
+        searchRadius: 14
+        minCoverHeight: 1.6
+        speed: 4
+        timeout: 5
+        peekAfterArriving: 1
+    - rid: 8000000000000000033
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: EVT_AWAKEN_06 = Will apartate! Ya existia en el json y nadie lo usaba.
+        actorId: NPC_Eldran
+        textKey: EVT_AWAKEN_06
+        pageDuration: 1.6
+        gesture: 
+        gestureRepeats: 1
+        speakerNameKey: Eldran
+        playGestures: 0
+    - rid: 8000000000000000034
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El tiempo vuelve a la normalidad para que Eldran corra corriendo de
+          verdad. En camara lenta un anciano huyendo despavorido parece que hace
+          taichi.
+        timeScale: 1
+        rampDuration: 0.25
+    - rid: 8000000000000000035
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Y se vuelve a parar el tiempo para el despertar, que es el momento
+          que la camara lenta tiene que subrayar. Si el proyectil llega demasiado
+          pronto por este tramo a velocidad normal, subir Spawn Distance en el modulo.
+        timeScale: 0.2
+        rampDuration: 0.25
+    - rid: 8000000000000000040
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La cara de Will. De aqui arranca el movimiento.
+        shotName: 
+        framing:
+          type: 4
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000041
+      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'La camara se aleja MIENTRAS Will se planta. El gesto y el movimiento
+          tienen que ir juntos: es el mismo momento.'
+        beats:
+        - rid: 8000000000000000042
+        - rid: 8000000000000000043
+        - rid: 8000000000000000044
+        waitForAll: 1
+    - rid: 8000000000000000042
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La camara retrocede hasta verle entero. Es el plano del despertar.
+        shotName: 
+        framing:
+          type: 3
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1.15
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 1
+        duration: 1.8
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000043
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Pose de combate. Se queda puesta a proposito: Will ya no es el que
+          se asustaba hace dos segundos. OJO (17 sept): holdSeconds corre en tiempo
+          ESCALADO (para ir sincronizado con la animacion, que tambien va escalada) y
+          aqui seguimos a camara lenta (timeScale 0.2, puesto en el rid35 de la fase
+          anterior) -- 1.8 escalados son 9 segundos REALES de espera antes de que salga
+          el boton, que es el salto que reporto Raul (se queda demasiado tiempo ahi).
+          Bajado a 0.4 (2 segundos reales): se sigue leyendo como una pose que se
+          aguanta, sin ser un paron.'
+        actorId: Player
+        gesture: Idle_Battle_NoWeapon
+        repeats: 1
+        holdSeconds: 0.4
+        returnToNormalAfter: 0
+    - rid: 8000000000000000044
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: De la sorpresa a la determinacion.
+        actorId: Player
+        emotion: 3
+        revertAfter: 0
+    - rid: 8000000000000000050
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Se abre a general para el gameplay. Con el proyectil de segundo sujeto:
+          el general lo calcula el solver a partir de la separacion entre los dos, asi que
+          la amenaza NO se sale de cuadro (era el fallo: la bola desaparecia al cambiar de
+          plano y el jugador perdia de vista lo que le viene encima).'
+        shotName: 
+        framing:
+          type: 0
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0.35
+          distanceScale: 1.1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000051
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'El panic input. Sin frase de Eldran: no sabe que Will tiene magia,
+          y el icono del boton ya lo dice todo.'
+        routine: PanicInput
+        waitForEnd: 1
+    - rid: 8000000000000000090
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Nuevo (17 sept, Raul: "no veo que will dispare el hechizo"). La fase 6
+          no tenia NINGUN ShotBeat propio -- la camara se quedaba en el plano general
+          de la fase 5 (el de "Wide" para el QTE, pensado para ver venir la amenaza, no
+          para ver a Will lanzar). Primer plano aqui, con el Proyectil de referencia
+          (no Eldran: Will ya esta girado hacia el proyectil desde la fase 2 gracias al
+          FaceBeat, asi que usarlo de referencia coincide con hacia donde mira de
+          verdad -- al reves que en rid70, ver esa nota).'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000060
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Rabia, no alegria: la frase es un NOO.'
+        actorId: Player
+        emotion: 3
+        revertAfter: 0
+    - rid: 8000000000000000061
+      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Grita y lanza a la vez.
+        beats:
+        - rid: 8000000000000000062
+        - rid: 8000000000000000063
+        waitForAll: 1
+    - rid: 8000000000000000062
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: EVT_AWAKEN_03 = NOO!
+        actorId: Player
+        textKey: EVT_AWAKEN_03
+        pageDuration: 1.5
+        gesture: Angry02
+        gestureRepeats: 1
+        speakerNameKey: Will
+    - rid: 8000000000000000063
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El disparo real con el sistema de magia del jugador.
+        routine: WillContraataca
+        waitForEnd: 1
+    - rid: 8000000000000000064
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Vision estrechada y sordera al maximo.
+        routine: Aturdimiento
+        waitForEnd: 1
+    - rid: 8000000000000000065
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El golpe de verdad.
+        intensity: 0.35
+        duration: 0.5
+        waitForEnd: 0
+    - rid: 8000000000000000066
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 0.6, b: 0.2, a: 1}
+        duration: 0.25
+    - rid: 8000000000000000067
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El tiempo vuelve poco a poco.
+        timeScale: 1
+        rampDuration: 0.9
+    - rid: 8000000000000000070
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Primer plano: que acabo de hacer. Algo de contrapicado. OJO (17 sept):
+          llevaba NPC_Eldran de referencia -- para que el angulo no repitiera el de la
+          tension -- pero ComputeThreeQuarter usa la posicion del actor de referencia
+          para decidir donde esta "delante" del sujeto (linea 408 de ShotComposer.cs,
+          pensado para dos personajes charlando de frente). Eldran esta a cubierto
+          "detras de WORLD" desde la fase 3, en una posicion que ya no tiene nada que
+          ver con hacia donde mira Will al lanzar el contraataque -- as que el plano
+          acababa resolviendose por detras de Will (Raul: "se queda de espalda").
+          Quitada la referencia: sin ella, ComputeThreeQuarter usa el propio forward de
+          Will, que es lo que hace falta para verle la cara en su propia reaccion. Se
+          pierde la garantia de no repetir angulo con el plano de la tension -- si el
+          solver avisa de plano repetido aqui, tocaria diferenciarlo con el tipo de
+          plano en vez de con la referencia.'
+        shotName: 
+        framing:
+          type: 5
+          subjectId: Player
+          secondaryId: 
+          heightBias: -0.12
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000071
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Se le cae la pose de combate: vuelve a ser un crio.'
+        actorId: Player
+        gesture: Question01
+        repeats: 1
+        holdSeconds: 0.4
+        returnToNormalAfter: 1
+    - rid: 8000000000000000072
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        emotion: 6
+        revertAfter: 0
+    - rid: 8000000000000000073
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: EVT_AWAKEN_05 = Que... que acabo de hacer?
+        actorId: Player
+        textKey: EVT_AWAKEN_05
+        pageDuration: 2.5
+        gesture: Question01
+        gestureRepeats: 1
+        speakerNameKey: Will
+    - rid: 8000000000000000074
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: A negro para el remate.
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.2
+        waitForEnd: 1
+    - rid: 8000000000000000075
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El pitido en los oidos.
+        routine: Tinnitus
+        waitForEnd: 1
+    - rid: 8000000000000000076
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Silencio: la intro del jefe trae su propia musica.'
+        musicId: 
+        fadeOut: 0.5
+    - rid: 8000000000000000077
+      type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Negro con el pitido antes de levantar AWAKEN_DONE.
+        seconds: 1.2
+        unscaled: 1
+    - rid: 8000000000000000080
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Stinger de denegado como sonido de fallo.
+        eventKey: ui_denied
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 1
+    - rid: 8000000000000000081
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Tapar antes de retirar el proyectil.
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.2
+        waitForEnd: 1
+    - rid: 8000000000000000082
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El proyectil desaparece sin explotar.
+        routine: RetirarProyectil
+        waitForEnd: 1
+    - rid: 8000000000000000083
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Fuera la camara lenta.
+        timeScale: 1
+        rampDuration: 0
+    - rid: 8000000000000000084
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        musicId: 
+        fadeOut: 0.5
+    - rid: 8000000000000000085
+      type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        seconds: 0.4
+        unscaled: 1
+    - rid: 8000000000000000086
+      type: {class: EndSequenceBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Rama de fallo. Aqui SI se descubre la pantalla.
+        signalOutOverride: AWAKEN_FAILED
+        screen: 1
+    - rid: 8000000000000000036
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Congelar el proyectil. La camara se va con Eldran y nadie lo esta mirando, asi que
+          no tiene por que comerse la distancia mientras. Ademas, Pause() le quita el collider, con
+          lo que tampoco puede detonar por accidente.'
+        routine: PausarProyectil
+        waitForEnd: 1
+    - rid: 8000000000000000037
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Y vuelve la amenaza, ya con el plano general establecido: primero se ve donde
+          estamos, y entonces el peligro se reanuda y toca reaccionar.'
+        routine: ReanudarProyectil
+        waitForEnd: 1

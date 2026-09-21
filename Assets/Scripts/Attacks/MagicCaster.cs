@@ -87,6 +87,85 @@ public class MagicCaster : MonoBehaviour, IMagicCaster
             return false;
         }
 
+        // Modo preciso (Paso 5 del refactor Tramo 1, INC-237): estos hechizos se lanzan al
+        // SOLTAR el botón, no al pulsar -- los gestiona PlayerPreciseAimController, que llama a
+        // CastResolvedSpell directamente con la decisión ya tomada (toque corto = normal,
+        // mantenido = preciso). Mismo patrón que el early-out de Levitación de arriba: este
+        // método no hace nada al pulsar, y quien SÍ decide es otro componente.
+        if (spell.supportsPreciseMode)
+        {
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MagicCaster] Hechizo {spell.displayName} tiene modo preciso, ignorando (manejado por PlayerPreciseAimController)");
+                #endif
+            }
+            return false;
+        }
+
+        if (!ConsumeCastResources(slot, spell)) return false;
+
+        // Lanzar el hechizo usando el spawner existente
+        spawner.Spawn(slot);
+
+        if (showDebugLogs) 
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[MagicCaster] Lanzado {spell.displayName} - Maná restante: {manaPool.Current:F1}");
+#endif
+            }
+
+        return true;
+    }
+
+    /// Lanza un hechizo ya resuelto como normal o preciso -- lo usa PlayerPreciseAimController
+    /// para los slots con MagicSpellSO.supportsPreciseMode, en el momento de soltar el botón.
+    /// Aplica EXACTAMENTE las mismas reglas de maná/cooldown que TryCastSpell (mismo helper,
+    /// ConsumeCastResources) -- el modo preciso no cambia lo que cuesta ni el cooldown, solo el
+    /// proyectil que sale (más fino y débil, MagicSpellSO.BuildPreciseVariant).
+    public bool CastResolvedSpell(MagicSlot slot, bool precise)
+    {
+        var spell = GetSpellForSlot(slot);
+        if (!CanCastSpell(slot, spell, out string reason))
+        {
+            if (showDebugLogs)
+            {
+                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.Log($"[MagicCaster] No se puede lanzar {slot} (preciso={precise}): {reason}");
+                #endif
+            }
+            return false;
+        }
+
+        if (!ConsumeCastResources(slot, spell)) return false;
+
+        if (precise)
+        {
+            var preciseSpell = spell.BuildPreciseVariant();
+            var origin = spawner.GetOrigin(slot);
+            spawner.SpawnNow(preciseSpell, origin);
+        }
+        else
+        {
+            spawner.Spawn(slot);
+        }
+
+        if (showDebugLogs)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[MagicCaster] Lanzado {spell.displayName} (preciso={precise}) - Maná restante: {manaPool.Current:F1}");
+#endif
+        }
+
+        return true;
+    }
+
+    /// Consume maná/carga especial y activa el cooldown. Compartido por TryCastSpell (toque
+    /// normal) y CastResolvedSpell (modo preciso) para que ambos caminos apliquen exactamente las
+    /// mismas reglas de coste -- solo cambia el momento del lanzamiento y qué proyectil se
+    /// spawnea, nunca lo que cuesta.
+    private bool ConsumeCastResources(MagicSlot slot, MagicSpellSO spell)
+    {
         // Consumir maná
         if (!manaPool.TrySpend(spell.manaCost))
         {
@@ -119,17 +198,6 @@ public class MagicCaster : MonoBehaviour, IMagicCaster
         _slotCooldowns[slot] = spell.cooldown;
 
         _castingUntil = Time.time + GetCastingLockDuration(spell);
-
-        // Lanzar el hechizo usando el spawner existente
-        spawner.Spawn(slot);
-
-        if (showDebugLogs) 
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[MagicCaster] Lanzado {spell.displayName} - Maná restante: {manaPool.Current:F1}");
-#endif
-            }
-
         return true;
     }
 

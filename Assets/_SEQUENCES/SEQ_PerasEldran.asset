@@ -1,0 +1,478 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_PerasEldran
+  m_EditorClassIdentifier:
+  displayName: La discusion de las peras, resuelta
+  summary: 'Will llega hasta donde discutian Eldran y Victoria por las cajas de fruta
+    (gancho de SEQ_DiscusionVentana). Se resuelve la discusion con humor, Eldran saluda
+    a Will y le pide que busque una caja que dejo bajo un arbol, y se despiden. Sustituye
+    a DLG_ELDRAN_MISSION1_TURNIN/DLG_ELDRAN_MISSION2_OFFER como forma de dar la mision
+    ELDRAN_MISSION2 - esos dialogos quedan archivados sin usar, ver TRACKER INC-235.'
+  signalIn: PERAS_START
+  signalOut: PERAS_DONE
+  musicId:
+  openingShotName: 
+  openingShot:
+    type: 0
+    subjectId: NPC_Eldran
+    secondaryId: NPC_Victoria
+    heightBias: 0
+    distanceScale: 1.1
+    fovOverride: 0
+    crossTheLine: 0
+    headroom: 1
+    encara: 1
+  phases:
+  - name: 1 - La discusion, de cerca
+    beats:
+    - rid: 8000000000000000101
+    - rid: 8000000000000000001
+    - rid: 8000000000000000102
+    - rid: 8000000000000000002
+    - rid: 8000000000000000103
+    - rid: 8000000000000000003
+    - rid: 8000000000000000104
+    - rid: 8000000000000000004
+  - name: 2 - Eldran ve a Will
+    beats:
+    - rid: 8000000000000000005
+    - rid: 8000000000000000105
+    - rid: 8000000000000000006
+    - rid: 8000000000000000110
+    - rid: 8000000000000000111
+    - rid: 8000000000000000112
+    - rid: 8000000000000000113
+    - rid: 8000000000000000106
+    - rid: 8000000000000000010
+    - rid: 8000000000000000108
+    - rid: 8000000000000000011
+  - name: 3 - Despedida
+    beats:
+    - rid: 8000000000000000109
+    - rid: 8000000000000000012
+    - rid: 8000000000000000013
+    - rid: 8000000000000000014
+  references:
+    version: 2
+    RefIds:
+    - rid: 8000000000000000001
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran sigue con lo de las cajas
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_01
+        pageDuration: 2.6
+        gesture: Angry01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000002
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Victoria no da su brazo a torcer
+        actorId: NPC_Victoria
+        markName:
+        textKey: PERAS_02
+        pageDuration: 2.6
+        gesture: Angry02
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000003
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran cede, entre risas
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_03
+        pageDuration: 2.6
+        gesture: Laugh01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000004
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Victoria tambien se rie y avisa de que Will esta esperando
+        actorId: NPC_Victoria
+        markName:
+        textKey: PERAS_04
+        pageDuration: 2.6
+        gesture: Laugh01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000005
+      type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran se gira hacia Will
+        actorId: NPC_Eldran
+        targetActorId: Player
+        markName:
+        lookAway: 0
+        mutual: 0
+    - rid: 8000000000000000006
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran saluda a Will
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_05
+        pageDuration: 2.6
+        gesture: HandWave01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000110
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Oliver se ofrece a acompanar a Will'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Oliver
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000111
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Oliver se apunta a ir con Will'
+        actorId: NPC_Oliver
+        markName: 
+        textKey: PERAS_OLIVER_VOY
+        pageDuration: 2.2
+        gesture: Cheer01
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000112
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Victoria corta a Oliver'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Victoria
+          secondaryId: NPC_Oliver
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000113
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Victoria se queda con Oliver, no hace falta marca para el -- se une
+          al grupo por sistema de party y se coloca solo junto a Will'
+        actorId: NPC_Victoria
+        markName: 
+        textKey: PERAS_VICTORIA_QUEDATE
+        pageDuration: 3.0
+        gesture: Angry02
+        gestureRepeats: 1
+        speakerNameKey: 
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000007
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Eldran pide el favor de la caja - reemplaza a DLG_ELDRAN_MISSION2_OFFER'
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_06
+        pageDuration: 3.2
+        gesture: Cheer01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000008
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'REACCION: Will asiente mientras Eldran explica'
+        actorId: Player
+        gesture: HeadNod01
+        repeats: 1
+        holdSeconds: 0
+        returnToNormalAfter: 0
+    - rid: 8000000000000000009
+      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'REACCION: cara de Will contenta'
+        actorId: Player
+        emotion: 1
+        revertAfter: 0
+    - rid: 8000000000000000010
+      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran explica el favor, Will reacciona, y Oliver tambien (NUEVO)
+        beats:
+        - rid: 8000000000000000007
+        - rid: 8000000000000000008
+        - rid: 8000000000000000009
+        - rid: 8000000000000000107
+        waitForAll: 1
+    - rid: 8000000000000000011
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Eldran da la pista de donde esta la caja
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_07
+        pageDuration: 3.2
+        gesture:
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000012
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Eldran ''le da'' la moneda (la entrega real la hace el GiveInventoryItemNode
+          justo despues de PERAS_DONE en Cap1.asset, no este beat)'
+        actorId: NPC_Eldran
+        markName:
+        textKey: PERAS_08
+        pageDuration: 2.6
+        gesture: HandClap01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000013
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Migrado a plano calculado (antes CutBeat(willClose), que ademas tomaba prestado
+          un plano de SEQ_OliverSaludo -- ya no hace falta compartir nada entre secuencias)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: Player
+          secondaryId: NPC_Eldran
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000014
+      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Will cierra la escena
+        actorId: Player
+        markName:
+        textKey: PERAS_09
+        pageDuration: 2.6
+        gesture: HeadNod01
+        gestureRepeats: 1
+        speakerNameKey:
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
+    - rid: 8000000000000000101
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: contraplano de Eldran para la discusion (PERAS_01)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Eldran
+          secondaryId: NPC_Victoria
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000102
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: contraplano de Victoria para la discusion (PERAS_02)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Victoria
+          secondaryId: NPC_Eldran
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000103
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: vuelta a Eldran, que cede entre risas (PERAS_03)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Eldran
+          secondaryId: NPC_Victoria
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000104
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Victoria remata riendo y avisa de que Will espera (PERAS_04)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Victoria
+          secondaryId: NPC_Eldran
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000105
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: plano general al girarse Eldran, revela a Will (y Oliver) esperando'
+        shotName: 
+        framing:
+          type: 0
+          subjectId: NPC_Eldran
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 0
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000106
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: primer plano de Eldran saludando a Will (PERAS_05)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Eldran
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000107
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Oliver tambien reacciona mientras Eldran explica el favor -- sin dialogo
+          nuevo, solo gesto'
+        actorId: NPC_Oliver
+        gesture: HeadNod01
+        repeats: 1
+        holdSeconds: 0
+        returnToNormalAfter: 0
+    - rid: 8000000000000000108
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Eldran da la pista de la caja (PERAS_07)'
+        shotName: 
+        framing:
+          type: 3
+          subjectId: NPC_Eldran
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0
+    - rid: 8000000000000000109
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'NUEVO: Eldran entrega la moneda (PERAS_08)'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: NPC_Eldran
+          secondaryId: Player
+          heightBias: 0
+          distanceScale: 1.35
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        live: 0

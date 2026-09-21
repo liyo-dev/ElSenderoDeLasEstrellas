@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sendero.Core.Feedback;
 
@@ -49,6 +49,8 @@ public class WorldBootstrap : MonoBehaviour
 
     private bool _initialized;
 
+    private string ClaveTelon => "mundo:" + gameObject.scene.name;
+
     void OnEnable()
     {
         // Cubrir la pantalla de negro YA, antes de que se procese nada más este frame — ver el
@@ -56,7 +58,12 @@ public class WorldBootstrap : MonoBehaviour
         // hacer el fade de entrada cuando el jugador ya está colocado (o de restaurar la
         // visibilidad igualmente si algo falla antes de llegar ahí, ver los early-return de
         // InitializeWorld()).
-        FeedbackService.SetScreenFadeImmediate(Color.black);
+        //
+        // (21 sep) Por el Telón: el negro ya no lo pone y lo quita WorldBootstrap por su cuenta,
+        // lo RETIENE hasta que el jugador está colocado, y lo suelta. Si detrás viene una
+        // cinemática o el grafo está cargando otra escena, ellos lo retienen también y la pantalla
+        // no se destapa hasta que acabe el último.
+        Telon.Cerrar(ClaveTelon);
 
         GameBootService.OnProfileReady += HandleProfileReady;
         ProfileReadyDiagnostics.RegisterSubscriber(nameof(WorldBootstrap));
@@ -114,6 +121,7 @@ public class WorldBootstrap : MonoBehaviour
     void OnDisable()
     {
         GameBootService.OnProfileReady -= HandleProfileReady;
+        Telon.Soltar(ClaveTelon);   // red de seguridad: idempotente
     }
 
     private void HandleProfileReady()
@@ -155,7 +163,7 @@ public class WorldBootstrap : MonoBehaviour
             // No vamos a llegar a EnsureAnchorSceneAndSpawn (que es quien normalmente deshace el
             // fade de OnEnable) — restaurar la visibilidad aquí para no dejar la pantalla en negro
             // para siempre ante este error.
-            FeedbackService.ScreenFade(Color.black, bootFadeInDuration, fadeIn: false);
+            Telon.Soltar(ClaveTelon);
             return;
         }
 
@@ -166,6 +174,22 @@ public class WorldBootstrap : MonoBehaviour
         // Refugio de lluvia: (re)enganchar el relay de clima al DayNightCycle de esta escena.
         // Ver NPCWeatherAwareness — evita que cada NPC haga su propio FindAnyObjectByType.
         NPCWeatherAwareness.Resubscribe();
+
+        // Spawn de NPCs por datos (NpcRosterSO + NpcSpawnPoint).
+        //
+        // ⚠️ ORDEN CRÍTICO: tiene que ir ANTES de las llamadas a ApplyNpcPositionsToScene() que
+        // hay más abajo en las dos ramas (modo preset y modo normal). Esa función resuelve los
+        // NPCs con un FindObjectsByType EN VIVO, así que un NPC instanciado aquí ya entra en la
+        // consulta y recibe su posición guardada. Ese es todo el enganche con el guardado: el
+        // marcador dice dónde EMPIEZA un NPC y, si hay save para él, el save manda.
+        //
+        // Llegamos aquí después del 'yield return null' de InitializeWorldDelayed(), así que los
+        // NpcSpawnPoint ya se han registrado en su OnEnable — la misma espera que ya servía para
+        // los SpawnAnchor.
+        //
+        // Sin rosters en Resources/NpcRosters esto no hace absolutamente nada.
+        NpcSpawner.Reset();
+        NpcSpawner.SpawnAllFromResources();
 
         // 1) Modo PRESET (test): SIEMPRE tiene prioridad sobre saves
         if (bootProfile.ShouldBootFromPreset())
@@ -259,9 +283,19 @@ public class WorldBootstrap : MonoBehaviour
             yield return WaitForBootCinematicOrTimeout();
             if (CinematicSequencerBase.AnySequenceActive)
             {
-                // Ya hay una cinemática de arranque en marcha (ej. PrologueDreamSequencer) — es
-                // ella quien decide cuándo y cómo revelar la pantalla (fade-in propio si hiciera
-                // falta + su propio fade-out cuando toque mostrar la escena). No la pisamos.
+                // Ya hay una cinemática de arranque en marcha (ej. PrologueDreamSequencer). La
+                // cinemática decide el CUÁNDO y el CÓMO de su propia puesta en escena (su
+                // transición de entrada vía TransitionManager/EasyTransitions), pero ese sistema
+                // es independiente del overlay negro que WorldBootstrap puso en OnEnable() a
+                // través de FeedbackService. Si no lo quitamos aquí, nadie más lo hace y la
+                // pantalla se queda negra para siempre aunque la cinemática se vea "bien" en su
+                // propia capa de transición. Lo revelamos igualmente — no pisa nada de la
+                // cinemática, solo destapa la cámara del jugador.
+                //
+                // (21 sep) Ya NO se destapa aquí: eso es lo que enseñaba la habitación de Will y
+                // el valle a medio montar. Se suelta, y como la cinemática ya retiene el telón
+                // (lo recoge al empezar si estaba cerrado), se destapa en su primer plano.
+                Telon.Soltar(ClaveTelon);
                 yield break;
             }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -269,7 +303,7 @@ public class WorldBootstrap : MonoBehaviour
 #endif
         }
 
-        yield return FeedbackService.ScreenFadeAsync(Color.black, bootFadeInDuration, fadeIn: false);
+        Telon.Soltar(ClaveTelon);
     }
 
     /// <summary>

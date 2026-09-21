@@ -126,7 +126,7 @@ public static class Stylized3DMonsterShaderConverter
     private const string QuibliShaderGuid = "2a230514c860643f69b6a4d1871d3825";
     private const string PvfxShaderPrefix = "PVFX/PVFX_URP_";
 
-    [MenuItem("El Sendero/Materiales/Convertir Stylized3DMonster (37-38-39) a Quibli StylizedLit")]
+    [MenuItem("El Sendero/Archivo/Materiales/Convertir Stylized3DMonster (37-38-39) a Quibli StylizedLit")]
     public static void ConvertAll()
     {
         // NO se llama aquí a AssetDatabase.Refresh() a propósito — ver punto 9 de la cabecera:

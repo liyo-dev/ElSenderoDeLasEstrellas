@@ -12237,6 +12237,7 @@ GameObject:
   - component: {fileID: 4916995738179263480}
   - component: {fileID: 1307908492277444293}
   - component: {fileID: 3717333352082569263}
+  - component: {fileID: 9097071684793695612}
   m_Layer: 3
   m_Name: vBasicController_MaleCharacterPBR
   m_TagString: Player
@@ -12551,6 +12552,7 @@ MonoBehaviour:
   jumpAction: {fileID: -4604816535962114212, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
   disableJumpWhenFocused: 1
   hintReappearDelay: 0.15
+  updatesPerSecond: 10
 --- !u!114 &6570775665125871610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12765,6 +12767,7 @@ MonoBehaviour:
   specialChargeMeter: {fileID: 0}
   animator: {fileID: 0}
   drinkPotionAnimationName: DrinkPotion_NoWeapon
+  upperBodyLayer: 1
   logWarnings: 0
   onEffectApplied:
     m_PersistentCalls:
@@ -13083,6 +13086,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAmbientActivityHandler
   cancelAction: {fileID: -4604816535962114212, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+  upperBodyLayer: 1
+--- !u!114 &9097071684793695612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83d29ba268b9d3043840b4ef9ed06b92, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPreciseAimController
+  magicCaster: {fileID: 4974162908857341787}
+  showDebugLogs: 0
 --- !u!1 &4956991213707944661
 GameObject:
   m_ObjectHideFlags: 0

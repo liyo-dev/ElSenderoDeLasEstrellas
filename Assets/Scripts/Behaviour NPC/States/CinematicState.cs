@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -350,18 +350,19 @@ namespace Game.NPC.States
             if (_hasTeleported || context.Agent == null || context.Animator == null)
                 return;
             
-            // FIX 4 sep 2026, ver Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(): el NPC
-            // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
-            float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent);
+            // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
+            // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
+            // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
+            // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
+            // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
+            // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
+            // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
+            // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
+            // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
+            // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
+            // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
+            float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
             context.Animator.SetMovementSpeed(speedFactor);
-
-            // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
-            {
-                float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][UpdateMovementAnimation] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
-                #endif
-            }
             
             // ✅ FIX: Rotar hacia la dirección del movimiento para evitar caminar de espaldas
             if (context.Agent.velocity.sqrMagnitude > 0.01f)
@@ -845,18 +846,19 @@ namespace Game.NPC.States
             // Actualizar animación de movimiento
             if (context.Agent != null && context.Animator != null)
             {
-                // FIX 4 sep 2026, ver Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(): el NPC
-                // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
-                float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent);
+                // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
+                // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
+                // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
+                // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
+                // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
+                // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
+                // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
+                // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
+                // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
+                // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
+                // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
+                float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
                 context.Animator.SetMovementSpeed(speedFactor);
-
-                // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
-                {
-                    float rawDbg = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][MoveToAction] {context.Transform.name} raw={rawDbg:F3} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
-                    #endif
-                }
             }
             
             // Verificar llegada al destino
@@ -1261,20 +1263,24 @@ namespace Game.NPC.States
             // Animación de movimiento
             if (context.Animator != null && context.Agent != null)
             {
-                // FIX 4 sep 2026, ver Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(): el NPC
-                // debe caminar con el mismo paso que enseñan los personajes jugables al andar, no trotar.
-                // FIX 5 sep 2026: usar _baseSpeed (fija) como referencia, no context.Agent.speed
-                // (que este método va cambiando frame a frame según la distancia al jugador) — ver
-                // Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(agent, referenceSpeed).
-                float speedFactor = Common.NavMeshAgentUtility.ComputeWalkGaitSpeedFactor(context.Agent, _baseSpeed);
+                // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
+                // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
+                // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
+                // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
+                // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
+                // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
+                // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
+                // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
+                // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
+                // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
+                // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
+                // Se mantiene _baseSpeed (fija) como referencia en vez de context.Agent.speed: este
+                // método reduce agent.speed frame a frame según lo lejos que esté el jugador, y
+                // normalizar contra un divisor que se mueve daría casi siempre ~1.0 (FIX 5 sep 2026).
+                // Lo único que cambia es el helper: la variante SIN tope, la misma que ya usa
+                // FollowPlayerState desde el 9 sep.
+                float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent, _baseSpeed);
                 context.Animator.SetMovementSpeed(speedFactor);
-
-                // DEBUG TEMPORAL (5 sep 2026, incidencia saltitos Eldran) - quitar tras diagnosticar.
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][LeadPlayerToAnchorSequence] {context.Transform.name} clamped={speedFactor:F3} agent.speed={context.Agent.speed:F2} baseSpeed={_baseSpeed:F2} vel={context.Agent.velocity.magnitude:F2} desiredVel={context.Agent.desiredVelocity.magnitude:F2} fetching={_fetchingPlayer} distToPlayer={distToPlayer:F2} isInBattle={context.Animator.IsInBattle} | {context.Animator.DebugLocomotionStateCheck()}");
-                    #endif
-                }
 
                 if (context.Agent.velocity.sqrMagnitude > 0.01f)
                     context.Animator.FaceDirection(context.Agent.velocity.normalized);
@@ -1296,13 +1302,15 @@ namespace Game.NPC.States
                 agent.ResetPath(); // Limpiar ruta de fetch antes de volver al anchor
                 agent.SetDestination(_anchorPos);
             }
-            // Arrancar animación de andar inmediatamente sin esperar a que agent.velocity tenga magnitud.
-            // FIX 4 sep 2026: usar el umbral de "caminar" (no 1f/trote), ver ComputeWalkGaitSpeedFactor.
+            // Arrancar la locomoción ya, sin esperar a que agent.velocity tenga magnitud.
+            //
+            // FIX 16 sep 2026: antes esto además daba un salto discreto de InputMagnitude a 0.5
+            // (WalkGaitThreshold). Con el rango completo ese salto es contraproducente: la rampa real
+            // del agente (aceleración 8) llega sola y de forma continua en menos de medio segundo, y
+            // un valor impuesto por encima de la velocidad real produce un pequeño bache cuando el
+            // cálculo por frame lo alcanza. Se deja solo la transición de estado y que la rampa haga
+            // su trabajo -- que es justo lo que hace que el movimiento se vea limpio.
             context.Animator?.TransitionToLocomotion();
-            context.Animator?.SetMovementSpeed(Common.NavMeshAgentUtility.WalkGaitThreshold);
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            UnityEngine.Debug.Log($"[ELDRAN_ANIM_DEBUG][AcknowledgePlayerRetrieved] {context.Transform.name} salto discreto de SetMovementSpeed a WalkGaitThreshold={Common.NavMeshAgentUtility.WalkGaitThreshold:F2} (agent.speed={agent?.speed:F2})");
-            #endif
         }
 
         public override void Cleanup(Common.NPCStateContext context)

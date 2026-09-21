@@ -1,0 +1,702 @@
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
+using DG.Tweening;
+
+public enum ZoneCameraMode
+{
+    SoloDistancia,
+    Plataformas2D,
+    TopDown,
+    Isometrico,
+    CorredorEstrecho,
+    PanoramicoLejano,
+}
+
+/// <summary>
+/// Zona ambiental: aplica un AmbientPreset al entrar y lo revierte al salir.
+/// Requiere un Collider configurado como trigger.
+/// </summary>
+[RequireComponent(typeof(Collider))]
+public class AmbientZone : MonoBehaviour
+{
+    [Header("Preset")]
+    [Tooltip("Preset con toda la configuración ambiental de la zona.")]
+    [FormerlySerializedAs("ambientPreset")]
+    [SerializeField] private AmbientPreset ambientPreset;
+
+    [Header("Niebla de Pies")]
+    [Tooltip("GameObjects (planos/cubos con material de niebla) hijos de esta zona que cubren los pies del jugador. Se activan/desactivan todos juntos al entrar/salir de la zona. Fijos en su sitio, no se reparentan al jugador.")]
+    [SerializeField] private GameObject[] footFogObjects;
+
+    [Header("Prioridad")]
+    [SerializeField] private int priority = 0;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs = false;
+#endif
+
+    // --- Defaults globales ---
+    private static Color _defaultAmbientColor;
+    private static float _defaultAmbientIntensity;
+    private static bool _defaultsCaptured;
+
+    // --- Estado activo ---
+    private static AmbientZone _currentActiveZone;
+    private static Tween _currentTween;
+    private static Tween _overlayTween;
+    private static AudioClip _previousMusic;
+    private static bool _wasMusicPlaying;
+
+    // --- Camera overlay ---
+    private static CanvasGroup _fogCanvasGroup;
+    private static Image _fogImage;
+
+    // --- Cámara ---
+    private struct CameraState { public float distance, height, yMin, yMax; }
+    private static CameraState _defaultCameraState;
+    private static bool _cameraDefaultsCaptured;
+    private static Tween _cameraTween;
+    private static vThirdPersonCamera _cachedCamera;
+    private static DayNightCycle _cachedDayNightCycle;
+
+    // --- Fondo de cámara (oculta huecos de skybox — 5 sep 2026, ver AmbientPreset.overrideCameraBackground) ---
+    private static Camera _cachedBackgroundCamera;
+    private static bool _backgroundOverrideActive;
+    private static CameraClearFlags _savedClearFlags;
+    private static Material _savedSkybox;
+
+    private Transform _playerTransform;
+    private Collider _collider;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        _defaultsCaptured = false;
+        _currentActiveZone = null;
+        _currentTween = null;
+        _overlayTween = null;
+        _previousMusic = null;
+        _wasMusicPlaying = false;
+        _fogCanvasGroup = null;
+        _fogImage = null;
+        _cameraDefaultsCaptured = false;
+        _cameraTween = null;
+        _cachedCamera = null;
+        _cachedDayNightCycle = null;
+        _cachedBackgroundCamera = null;
+        _backgroundOverrideActive = false;
+        _savedClearFlags = CameraClearFlags.Skybox;
+        _savedSkybox = null;
+    }
+#endif
+
+    public static AmbientZone CurrentActiveZone => _currentActiveZone;
+    public string MusicZoneId => ambientPreset != null ? ambientPreset.musicZoneId : "";
+
+    private void Awake()
+    {
+        _collider = GetComponent<Collider>();
+        if (_collider != null && !_collider.isTrigger)
+        {
+            _collider.isTrigger = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AmbientZone] Collider en '{gameObject.name}' configurado como trigger automáticamente");
+#endif
+        }
+
+        CaptureDefaults();
+    }
+
+    private void Start()
+    {
+        // BUGFIX: si el jugador ya está dentro del collider al cargar la escena (spawn dentro
+        // de una zona, p. ej. ambien_woods cubre buena parte del mapa exterior), Unity nunca
+        // dispara OnTriggerEnter porque el solapamiento ya existía cuando el trigger se activó.
+        // Sin este chequeo la niebla de pies (y el resto del preset) se queda desactivada hasta
+        // que el jugador sale y vuelve a entrar en la zona. Se difiere un frame para dar tiempo
+        // a que PlayerService/el sistema de spawn haya colocado al jugador en su posición final.
+        StartCoroutine(CheckInitialOverlapNextFrame());
+    }
+
+    private System.Collections.IEnumerator CheckInitialOverlapNextFrame()
+    {
+        yield return null;
+        if (_playerTransform == null)
+            CheckInitialPlayerOverlap();
+    }
+
+    private void CheckInitialPlayerOverlap()
+    {
+        if (_collider == null) return;
+
+        var player = PlayerService.PlayerTransform;
+        if (player == null) return;
+
+        if (!_collider.bounds.Contains(player.position)) return;
+
+        if (_currentActiveZone != null && _currentActiveZone.priority > priority)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (showDebugLogs)
+                Debug.Log($"[AmbientZone] '{gameObject.name}' ignorada en chequeo inicial — '{_currentActiveZone.gameObject.name}' tiene mayor prioridad");
+#endif
+            return;
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (showDebugLogs)
+            Debug.Log($"[AmbientZone] Jugador ya estaba dentro de '{gameObject.name}' al cargar la escena — activando sin esperar OnTriggerEnter");
+#endif
+
+        _playerTransform = player;
+        _currentActiveZone = this;
+        ApplyZoneTransition();
+        StartCoroutine(DeferredMusicTransition());
+    }
+
+    private static void CaptureDefaults()
+    {
+        if (_defaultsCaptured) return;
+
+        _defaultAmbientColor     = RenderSettings.ambientLight;
+        _defaultAmbientIntensity = RenderSettings.ambientIntensity;
+        _defaultsCaptured = true;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        _playerTransform = other.transform;
+
+        if (_currentActiveZone != null && _currentActiveZone.priority > priority)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (showDebugLogs)
+                Debug.Log($"[AmbientZone] '{gameObject.name}' ignorada — '{_currentActiveZone.gameObject.name}' tiene mayor prioridad");
+#endif
+            return;
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (showDebugLogs)
+            Debug.Log($"[AmbientZone] Jugador entró en '{gameObject.name}'");
+#endif
+
+        _currentActiveZone = this;
+        ApplyZoneTransition();
+        StartCoroutine(DeferredMusicTransition());
+    }
+
+    private System.Collections.IEnumerator DeferredMusicTransition()
+    {
+        yield return null;
+        TransitionToZoneMusic();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!other.CompareTag("Player")) return;
+        if (_currentActiveZone != this) return;
+        _playerTransform = null;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (showDebugLogs)
+            Debug.Log($"[AmbientZone] Jugador salió de '{gameObject.name}'");
+#endif
+
+        _currentActiveZone = null;
+        StopFootFog();
+        HideCameraOverlay();
+        RestoreCameraDefaults();
+        TransitionToDefaultFog();
+        RestorePreviousMusic();
+        GetOrCacheDayNightCycle()?.SetZoneMistOverride(false);
+        AmbientCloudDirector.Instance?.SetZoneCloudBoost(false);
+        RestoreCameraBackground();
+    }
+
+    // -------------------------------------------------------------------------
+    //  Fog lejano + luz ambiente
+    // -------------------------------------------------------------------------
+
+    private void ApplyZoneTransition()
+    {
+        if (ambientPreset == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[AmbientZone] '{gameObject.name}' no tiene AmbientPreset asignado.");
+#endif
+            PlayFootFog();
+            GetOrCacheDayNightCycle()?.SetZoneMistOverride(false);
+            AmbientCloudDirector.Instance?.SetZoneCloudBoost(false);
+            return;
+        }
+
+        _currentTween?.Kill();
+
+        Color targetAmbient  = ambientPreset.controlAmbientLight ? ambientPreset.ambientLightColor     : _defaultAmbientColor;
+        float targetAmbientI = ambientPreset.controlAmbientLight ? ambientPreset.ambientLightIntensity : _defaultAmbientIntensity;
+
+        Color startAmbient  = RenderSettings.ambientLight;
+        float startAmbientI = RenderSettings.ambientIntensity;
+
+        _currentTween = DOTween.To(
+            () => 0f,
+            t => {
+                RenderSettings.ambientLight     = Color.Lerp(startAmbient,  targetAmbient,                  t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(startAmbientI, targetAmbientI,                 t);
+            },
+            1f,
+            ambientPreset.transitionDuration
+        ).SetEase(ambientPreset.transitionEase).SetUpdate(true);
+
+        PlayFootFog();
+        ShowCameraOverlay();
+        ApplyCameraTransition();
+        GetOrCacheDayNightCycle()?.SetZoneMistOverride(ambientPreset.forcesMist);
+        // 1 sep 2026 -- ver AmbientCloudDirector.SetZoneCloudBoost: el mismo checkbox 'nubes
+        // bajas' tambien sube la cadencia de nubes sueltas cruzando el cielo mientras se esta en
+        // la zona, no solo la niebla de distancia.
+        AmbientCloudDirector.Instance?.SetZoneCloudBoost(ambientPreset.forcesMist);
+        ApplyCameraBackgroundOverride();
+    }
+
+    private void TransitionToDefaultFog()
+    {
+        _currentTween?.Kill();
+
+        float dur  = ambientPreset != null ? ambientPreset.transitionDuration : 1.5f;
+        Ease  ease = ambientPreset != null ? ambientPreset.transitionEase      : Ease.InOutSine;
+
+        Color startAmbient  = RenderSettings.ambientLight;
+        float startAmbientI = RenderSettings.ambientIntensity;
+
+        _currentTween = DOTween.To(
+            () => 0f,
+            t => {
+                RenderSettings.ambientLight     = Color.Lerp(startAmbient,  _defaultAmbientColor,     t);
+                RenderSettings.ambientIntensity = Mathf.Lerp(startAmbientI, _defaultAmbientIntensity, t);
+            },
+            1f,
+            dur
+        ).SetEase(ease).SetUpdate(true);
+    }
+
+    // -------------------------------------------------------------------------
+    //  Niebla de pies
+    // -------------------------------------------------------------------------
+
+    private void PlayFootFog()
+    {
+        if (footFogObjects == null) return;
+
+        // Solo activar los GO en su sitio: no se reparentan al jugador (eso movía el plano de
+        // niebla de sitio, comportamiento no deseado). Cada plano/cubo se queda fijo donde el
+        // diseñador lo colocó en la zona.
+        foreach (var go in footFogObjects)
+        {
+            if (go != null && !go.activeSelf)
+                go.SetActive(true);
+        }
+    }
+
+    private void StopFootFog()
+    {
+        if (footFogObjects == null) return;
+
+        foreach (var go in footFogObjects)
+        {
+            if (go != null && go.activeSelf)
+                go.SetActive(false);
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    //  Camera overlay
+    // -------------------------------------------------------------------------
+
+    private static void EnsureFogCanvas()
+    {
+        if (_fogCanvasGroup != null) return;
+
+        var go = new GameObject("[AmbientZone_CameraFog]");
+        Object.DontDestroyOnLoad(go);
+
+        var canvas = go.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 999;
+        go.AddComponent<CanvasScaler>();
+
+        _fogCanvasGroup = go.AddComponent<CanvasGroup>();
+        _fogCanvasGroup.alpha = 0f;
+        _fogCanvasGroup.blocksRaycasts = false;
+        _fogCanvasGroup.interactable = false;
+
+        var imgGo = new GameObject("FogImage");
+        imgGo.transform.SetParent(go.transform, false);
+        _fogImage = imgGo.AddComponent<Image>();
+        _fogImage.raycastTarget = false;
+
+        var rect = _fogImage.rectTransform;
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.offsetMin = rect.offsetMax = Vector2.zero;
+    }
+
+    private void ShowCameraOverlay()
+    {
+        if (ambientPreset == null || !ambientPreset.enableCameraOverlay) return;
+
+        EnsureFogCanvas();
+        _fogImage.color = ambientPreset.overlayColor;
+
+        _overlayTween?.Kill();
+        _overlayTween = _fogCanvasGroup
+            .DOFade(ambientPreset.overlayMaxAlpha, ambientPreset.transitionDuration)
+            .SetEase(ambientPreset.transitionEase).SetUpdate(true);
+    }
+
+    private void HideCameraOverlay()
+    {
+        if (_fogCanvasGroup == null) return;
+
+        float dur  = ambientPreset != null ? ambientPreset.transitionDuration : 1.5f;
+        Ease  ease = ambientPreset != null ? ambientPreset.transitionEase      : Ease.InOutSine;
+
+        _overlayTween?.Kill();
+        _overlayTween = _fogCanvasGroup.DOFade(0f, dur).SetEase(ease).SetUpdate(true);
+    }
+
+    // -------------------------------------------------------------------------
+    //  Cámara
+    // -------------------------------------------------------------------------
+
+    private void ApplyCameraTransition()
+    {
+        if (ambientPreset == null || !ambientPreset.controlCamera) return;
+
+        var cam = GetOrCacheCamera();
+        if (cam == null) return;
+
+        if (!_cameraDefaultsCaptured)
+        {
+            _defaultCameraState = new CameraState
+            {
+                distance = cam.defaultDistance,
+                height   = cam.height,
+                yMin     = cam.yMinLimit,
+                yMax     = cam.yMaxLimit
+            };
+            _cameraDefaultsCaptured = true;
+        }
+
+        float targetDist   = ambientPreset.cameraDistance;
+        float targetHeight = _defaultCameraState.height;
+        float targetYMin, targetYMax;
+        bool  lockRot    = false;
+        float lockMouseX = ambientPreset.cameraHorizontalAngle;
+        float lockMouseY = 0f;
+
+        switch (ambientPreset.cameraMode)
+        {
+            case ZoneCameraMode.Plataformas2D:
+                targetYMin = 5f;   targetYMax = 15f;
+                lockRot = true;    lockMouseY = 10f;
+                break;
+            case ZoneCameraMode.TopDown:
+                targetYMin = 60f;  targetYMax = 85f;
+                lockRot = true;    lockMouseY = 80f;
+                break;
+            case ZoneCameraMode.Isometrico:
+                targetHeight = 2f;
+                targetYMin = 30f;  targetYMax = 50f;
+                lockRot = true;    lockMouseY = 35f;
+                break;
+            case ZoneCameraMode.CorredorEstrecho:
+                targetHeight = 1.2f;
+                targetYMin = -20f; targetYMax = 60f;
+                break;
+            case ZoneCameraMode.PanoramicoLejano:
+                targetHeight = 2f;
+                targetYMin = -30f; targetYMax = 70f;
+                break;
+            default: // SoloDistancia
+                targetYMin = _defaultCameraState.yMin;
+                targetYMax = _defaultCameraState.yMax;
+                break;
+        }
+
+        cam.yMinLimit = targetYMin;
+        cam.yMaxLimit = targetYMax;
+
+        if (lockRot)
+            cam.SetZoneRotation(lockMouseX, lockMouseY);
+        else
+            cam.ClearZoneRotation();
+
+        _cameraTween?.Kill();
+        float sd = cam.defaultDistance, sh = cam.height;
+        float ed = targetDist,          eh = targetHeight;
+
+        _cameraTween = DOTween.To(
+            () => 0f,
+            t =>
+            {
+                cam.defaultDistance = Mathf.Lerp(sd, ed, t);
+                cam.height          = Mathf.Lerp(sh, eh, t);
+            },
+            1f, ambientPreset.transitionDuration
+        ).SetEase(ambientPreset.transitionEase).SetUpdate(true);
+    }
+
+    private void RestoreCameraDefaults()
+    {
+        if (ambientPreset == null || !ambientPreset.controlCamera || !_cameraDefaultsCaptured) return;
+        var cam = GetOrCacheCamera();
+        if (cam == null) return;
+        DoRestoreCamera(cam, ambientPreset.transitionDuration, ambientPreset.transitionEase);
+    }
+
+    private static void DoRestoreCamera(vThirdPersonCamera cam, float dur, Ease ease)
+    {
+        cam.ClearZoneRotation();
+        cam.yMinLimit = _defaultCameraState.yMin;
+        cam.yMaxLimit = _defaultCameraState.yMax;
+
+        _cameraTween?.Kill();
+        float sd = cam.defaultDistance, sh = cam.height;
+        float ed = _defaultCameraState.distance, eh = _defaultCameraState.height;
+
+        _cameraTween = DOTween.To(
+            () => 0f,
+            t =>
+            {
+                cam.defaultDistance = Mathf.Lerp(sd, ed, t);
+                cam.height          = Mathf.Lerp(sh, eh, t);
+            },
+            1f, dur
+        ).SetEase(ease).SetUpdate(true);
+    }
+
+    private static vThirdPersonCamera GetOrCacheCamera()
+    {
+        if (_cachedCamera != null) return _cachedCamera;
+        _cachedCamera = Object.FindAnyObjectByType<vThirdPersonCamera>();
+        return _cachedCamera;
+    }
+
+    // 30 ago 2026 — enlace con el sistema de clima (ver AmbientPreset.forcesMist /
+    // DayNightCycle.SetZoneMistOverride). Mismo patrón de caché estático que GetOrCacheCamera.
+    private static DayNightCycle GetOrCacheDayNightCycle()
+    {
+        if (_cachedDayNightCycle != null) return _cachedDayNightCycle;
+        _cachedDayNightCycle = Object.FindAnyObjectByType<DayNightCycle>();
+        return _cachedDayNightCycle;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Fondo de cámara (oculta huecos de skybox)
+    // -------------------------------------------------------------------------
+    // 5 sep 2026 -- ver AmbientPreset.overrideCameraBackground. Zona-específico y genérico:
+    // cualquier AmbientZone con el checkbox activo pinta un color sólido en vez de skybox
+    // mientras el jugador está dentro, y restaura el clearFlags/skybox previos al salir.
+    // No usa el sistema de interiores (AnchorEnvironment/EnvironmentController): no oculta el
+    // mundo exterior, no toca luces ni far clip plane, solo el fondo de la cámara de juego.
+
+    private static Camera GetOrCacheBackgroundCamera()
+    {
+        if (_cachedBackgroundCamera != null) return _cachedBackgroundCamera;
+        _cachedBackgroundCamera = Camera.main;
+        return _cachedBackgroundCamera;
+    }
+
+    private void ApplyCameraBackgroundOverride()
+    {
+        if (ambientPreset == null || !ambientPreset.overrideCameraBackground) return;
+
+        var cam = GetOrCacheBackgroundCamera();
+        if (cam == null) return;
+
+        if (!_backgroundOverrideActive)
+        {
+            _savedClearFlags = cam.clearFlags;
+            _savedSkybox     = RenderSettings.skybox;
+            _backgroundOverrideActive = true;
+        }
+
+        cam.clearFlags      = CameraClearFlags.SolidColor;
+        cam.backgroundColor = ambientPreset.cameraBackgroundColor;
+    }
+
+    private static void RestoreCameraBackground()
+    {
+        if (!_backgroundOverrideActive) return;
+
+        var cam = GetOrCacheBackgroundCamera();
+        if (cam != null)
+        {
+            cam.clearFlags = _savedClearFlags;
+            RenderSettings.skybox = _savedSkybox;
+        }
+
+        _backgroundOverrideActive = false;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Música
+    // -------------------------------------------------------------------------
+
+    private void TransitionToZoneMusic()
+    {
+        if (ambientPreset == null || !ambientPreset.changeMusic || string.IsNullOrEmpty(ambientPreset.musicZoneId)) return;
+
+        var audioService = AudioService.Instance;
+        if (audioService == null) return;
+
+        // No pisar la música de combate: si hay batalla en curso (p. ej. el jugador cruza el
+        // borde del trigger de la zona durante un combate), dejar que la música de combate siga
+        // sonando. RestorePreviousMusic() tiene el mismo guard para el camino de salida.
+        if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0) return;
+
+        _previousMusic   = audioService.CurrentMusicClip;
+        _wasMusicPlaying = _previousMusic != null;
+
+        if (audioService.profile == null) return;
+
+        var rule = audioService.profile.GetAmbientZoneRule(ambientPreset.musicZoneId);
+        if (rule?.music != null)
+        {
+            audioService.PlayMusic(rule.music, rule.fade);
+        }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        else if (showDebugLogs)
+        {
+            Debug.LogWarning($"[AmbientZone] No se encontró música para musicZoneId '{ambientPreset.musicZoneId}'");
+        }
+#endif
+    }
+
+    private void RestorePreviousMusic()
+    {
+        if (ambientPreset == null || !ambientPreset.changeMusic) return;
+
+        var audioService = AudioService.Instance;
+        if (audioService == null) return;
+
+        // Mismo guard que TransitionToZoneMusic(): con combate activo, la música de combate
+        // manda. AudioService.EndBattleMusic ya se encarga de restaurar la música de zona
+        // correcta cuando el combate termine de verdad (ver Co_RestoreAfterBattleDeferred).
+        if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0)
+        {
+            _previousMusic   = null;
+            _wasMusicPlaying = false;
+            return;
+        }
+
+        float fade = audioService.profile?.GetAmbientZoneRule(ambientPreset.musicZoneId)?.fade ?? 1.5f;
+
+        if (_wasMusicPlaying && _previousMusic != null)
+            audioService.PlayMusic(_previousMusic, fade);
+        else
+            audioService.RestoreSceneMusic(fade);
+
+        _previousMusic   = null;
+        _wasMusicPlaying = false;
+    }
+
+    // -------------------------------------------------------------------------
+    //  Ciclo de vida
+    // -------------------------------------------------------------------------
+
+    private void OnDestroy()
+    {
+        if (_currentActiveZone == this)
+        {
+            _currentActiveZone = null;
+            _playerTransform = null;
+            StopFootFog();
+            HideCameraOverlay();
+            RestoreDefaultsImmediate();
+            GetOrCacheDayNightCycle()?.SetZoneMistOverride(false);
+            AmbientCloudDirector.Instance?.SetZoneCloudBoost(false);
+            RestoreCameraBackground();
+        }
+    }
+
+    public static void RestoreDefaultsImmediate()
+    {
+        _currentTween?.Kill();
+        _overlayTween?.Kill();
+        _cameraTween?.Kill();
+        if (_fogCanvasGroup != null) _fogCanvasGroup.alpha = 0f;
+        if (!_defaultsCaptured) return;
+
+        RenderSettings.ambientLight     = _defaultAmbientColor;
+        RenderSettings.ambientIntensity = _defaultAmbientIntensity;
+
+        if (_cameraDefaultsCaptured && _cachedCamera != null)
+        {
+            _cachedCamera.defaultDistance = _defaultCameraState.distance;
+            _cachedCamera.height          = _defaultCameraState.height;
+            _cachedCamera.yMinLimit       = _defaultCameraState.yMin;
+            _cachedCamera.yMaxLimit       = _defaultCameraState.yMax;
+            _cachedCamera.ClearZoneRotation();
+        }
+    }
+
+    public static void RecaptureDefaults()
+    {
+        _defaultsCaptured = false;
+        CaptureDefaults();
+    }
+
+    // -------------------------------------------------------------------------
+    //  Editor
+    // -------------------------------------------------------------------------
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        var col = GetComponent<Collider>();
+        if (col == null) return;
+
+        Color gizmoColor = ambientPreset != null && ambientPreset.forcesMist
+            ? new Color(0.75f, 0.8f, 0.85f)
+            : Color.gray;
+        Gizmos.color = new Color(gizmoColor.r, gizmoColor.g, gizmoColor.b, 0.25f);
+
+        if (col is BoxCollider box)
+        {
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawCube(box.center, box.size);
+            Gizmos.DrawWireCube(box.center, box.size);
+        }
+        else if (col is SphereCollider sphere)
+        {
+            Gizmos.DrawSphere(transform.position + sphere.center, sphere.radius);
+            Gizmos.DrawWireSphere(transform.position + sphere.center, sphere.radius);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        string presetInfo = ambientPreset != null ? ambientPreset.name : "Sin preset";
+        string footInfo   = footFogObjects != null && footFogObjects.Length > 0 ? $"Niebla pies x{footFogObjects.Length}" : "";
+
+        string[] parts = System.Array.FindAll(
+            new[] { presetInfo, footInfo },
+            s => !string.IsNullOrEmpty(s)
+        );
+
+        UnityEditor.Handles.Label(
+            transform.position + Vector3.up * 2f,
+            $"AmbientZone: {gameObject.name}\n{string.Join(" | ", parts)}\nPrioridad: {priority}"
+        );
+    }
+
+#endif
+}

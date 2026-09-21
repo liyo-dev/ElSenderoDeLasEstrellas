@@ -40,7 +40,7 @@ public static class LanguageSelectPanelBuilder
         ("BotonIngles", "en", "English"),
     };
 
-    [MenuItem("El Sendero/Controles/Construir Selector de Idioma en MainMenu")]
+    [MenuItem("El Sendero/Archivo/Controles/Construir Selector de Idioma en MainMenu")]
     public static void Build()
     {
         if (EditorApplication.isPlaying)

@@ -578,7 +578,7 @@ public static class NuevoMundoTerrenoBuilder
 
     private class CeldaBosque { public bool visitada; public int conexiones; }
 
-    [MenuItem("El Sendero/Mundo Nuevo/Paso 1 - Terreno y Zonas")]
+    [MenuItem("El Sendero/Archivo/Mundo Nuevo/Paso 1 - Terreno y Zonas")]
     public static void GenerarMundoNuevoPaso1()
     {
         var log = new System.Text.StringBuilder();

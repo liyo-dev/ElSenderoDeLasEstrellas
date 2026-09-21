@@ -320,6 +320,18 @@ namespace Sendero.Narrative.Editor
             // Escenas y prefabs (YAML): _signalIn/_signalOut de sequencers, eventKey de emisores, anchorId de SpawnAnchor
             ScanYamlAssets();
 
+            // Secuencias reutilizables (SequenceDefinition.asset): a diferencia de los sequencers antiguos
+            // (que guardan _signalIn/_signalOut como campos propios en la escena, capturados arriba por
+            // ScanYamlAssets), SequencePlayer deja esos campos heredados vacíos a propósito y en su lugar lee
+            // signalIn/signalOut de un SequenceDefinition compartido (ver CinematicSequencerBase.SignalInOverride
+            // / SequencePlayer.SignalInOverride), para poder reutilizar el mismo componente en varias secuencias.
+            // FIX (17 sep 2026, Raúl: "mira el grafo" -- PROLOGUE_START salía como "nadie la escucha" y
+            // PROLOGUE_DONE como "nadie la emite" pese a que SEQ_Prologo_UltimaNoche.asset sí los declara y
+            // SequencePlayer sí los escucha/emite en runtime): sin este escaneo el índice nunca se enteraba de
+            // estas señales, porque ScanYamlAssets() solo mira dentro de escenas/prefabs y las señales de un
+            // SequenceDefinition viven en un .asset (ScriptableObject) aparte, que nunca se recorría.
+            ScanSequenceDefinitions();
+
             // Código C#: RaiseCustom("LITERAL") en scripts del juego (sequencers, triggers)
             ScanScriptsForSignals();
 
@@ -462,6 +474,20 @@ namespace Sendero.Narrative.Editor
                 foreach (var k in entry.signalOut) GetSignal(k).emitters.Add($"Sequencer en {label}");
                 foreach (var k in entry.eventKeys) GetSignal(k).emitters.Add($"Emisor en {label}");
                 foreach (var k in entry.anchors) _anchors.Add(k);
+            }
+        }
+
+        static void ScanSequenceDefinitions()
+        {
+            foreach (var guid in AssetDatabase.FindAssets("t:SequenceDefinition"))
+            {
+                var path = AssetDatabase.GUIDToAssetPath(guid);
+                if (ShouldSkipPath(path)) continue;
+                var def = AssetDatabase.LoadAssetAtPath<SequenceDefinition>(path);
+                if (def == null) continue;
+                string label = string.IsNullOrEmpty(def.name) ? Path.GetFileNameWithoutExtension(path) : def.name;
+                if (!string.IsNullOrEmpty(def.signalIn)) GetSignal(def.signalIn).listeners.Add($"SequencePlayer con {label}");
+                if (!string.IsNullOrEmpty(def.signalOut)) GetSignal(def.signalOut).emitters.Add($"SequencePlayer con {label}");
             }
         }
 

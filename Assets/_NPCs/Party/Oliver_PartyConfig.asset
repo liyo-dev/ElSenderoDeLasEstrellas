@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d087000332e4358971d6ff73011ab93, type: 3}
+  m_Name: Oliver_PartyConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCPartyConfig
+  moduleName: Oliver
+  description: 
+  displayName: Oliver
+  distanciaParaPararse: 3
+  distanciaParaCorrer: 4
+  distanciaParaTeletransporte: 25
+  velocidadCaminando: 5
+  velocidadCorriendo: 10
+  quedarseDetras: 1
+  offsetLateral: {x: 2, y: 1}
+  tiempoIdleMinimo: 1
+  tiempoIdleMaximo: 3
+  puedeVagarCerca: 0
+  radioVagabundeo: 2
+  autoUnirseACombate: 0
+  rangoAsistenciaCombate: 0
+  maxHP: 100
+  maxMP: 100
+  useShield: 0
+  shieldPrefab: {fileID: 0}
+  shieldMinDuration: 2
+  shieldMaxDuration: 4
+  spellLeft: {fileID: 0}
+  spellRight: {fileID: 0}
+  spellSpecial: {fileID: 0}
+  distanciaMinimaAtaque: 2
+  distanciaMaximaAtaque: 15
+  followPromptIconPrefab: {fileID: 0}
+  stopFollowIconPrefab: {fileID: 0}
+  posicionarseDuranteDialogos: 1
+  ladoPreferidoDialogo: 0
+  distanciaLateralDialogo: 1.5
+  offsetDelanteDialogo: -0.3
+  tiempoMaximoMovimientoDialogo: 2
+  footVfxPrefab: {fileID: 4033412786151888123, guid: 9861333859a526c4fb6c99da1752e3d4, type: 3}
+  flightFormationSpread: 1.5
+  flightBobAmplitude: 0.18
+  flightBobFrequency: 1.2

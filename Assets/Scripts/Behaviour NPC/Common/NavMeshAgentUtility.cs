@@ -152,6 +152,15 @@ namespace Game.NPC.Common
         // usar en las secuencias donde el NPC debe caminar con paso normal (nunca correr) sin
         // tocar ComputeSpeedFactor en sí -otros llamadores (p.ej. combate/persecución) sí pueden
         // querer el rango completo 0-1 para mostrar una marcha más rápida-.
+        // ESTADO 16 sep 2026: este tope YA NO SE USA en ningún sitio del proyecto. Raúl pidió
+        // ese día que todos los NPCs se movieran como Oliver ("Oliver va genial y me parece más
+        // limpio"), y eso significa rango completo 0-1: la rampa Idle→Walk→Run que da la
+        // aceleración real del agente, en vez de un salto de 0 a 0.5 que se queda clavado ahí.
+        // Todos los llamadores de CinematicState pasaron a ComputeSpeedFactor.
+        //
+        // Se conserva a propósito, no es código muerto por descuido: es la vuelta atrás si algún
+        // día reaparece el "trotan en vez de caminar" del 4 sep en alguna escena concreta. En ese
+        // caso se cambia SOLO esa llamada, no todas.
         public const float WalkGaitThreshold = 0.5f;
 
         public static float ComputeWalkGaitSpeedFactor(NavMeshAgent agent)

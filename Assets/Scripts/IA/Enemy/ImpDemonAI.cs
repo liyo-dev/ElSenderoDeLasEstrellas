@@ -108,6 +108,14 @@ public class ImpDemonAI : MonoBehaviour
     [Tooltip("Permite iniciar el combate. Se activa externamente después de la presentación.")]
     public bool canStartCombat = false;
 
+    [Header("Aro de runas / final alternativo (Paso 6 del refactor Tramo 1)")]
+    [Tooltip("Al romper RuneCollar el demonio queda 'caído' en vez de morir (ver " +
+             "ForceFallenByCollarBreak): se atenúa el color de todos sus materiales y se apaga " +
+             "cualquier emisión, vía MaterialPropertyBlock -- no toca los materiales compartidos " +
+             "del prefab, así que es seguro aunque el shader no tenga alguna de las propiedades " +
+             "buscadas (_Color/_BaseColor/_EmissionColor). 1 = sin cambio, 0 = negro.")]
+    [SerializeField, Range(0f, 1f)] private float fallenDarkenFactor = 0.35f;
+
     // Estado interno
     private enum BossPhase { Phase1, Phase2, Phase3 }
     private enum BossState { Idle, Chasing, Attacking, CastingSpell, Underground, TakingDamage, Dead }
@@ -1259,6 +1267,80 @@ public class ImpDemonAI : MonoBehaviour
 
         isDead = true;
         currentState = BossState.Dead;
+        StopCombatAndPlayDeathPose();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log("[ImpDemonAI] Boss derrotado!");
+#endif
+    }
+
+    /// Final alternativo del combate (Paso 6 del refactor Tramo 1, RuneCollar, análisis
+    /// claude/analisis-refactor-tramo1-hasta-demonio-2026-09-17.md §6): al romper el aro de runas
+    /// a base de disparos precisos durante la ventana de ataque, el demonio queda "caído" en vez
+    /// de morir -- misma parada de IA/animación que OnDeath() (StopCombatAndPlayDeathPose,
+    /// compartido), pero deliberadamente SIN pasar por Damageable.Kill()/Die(): así OrbDropper
+    /// (que escucha Damageable.OnDied) no suelta orbes -- este final es de compasión, no de
+    /// saqueo -- y Damageable.Die() nunca decide destruir el GameObject, así que el demonio se
+    /// queda en escena, tumbado, para que Eldran narre lo que había debajo. Idempotente: si ya
+    /// estaba muerto (por HP normal) no hace nada -- gana quien llegue primero.
+    public void ForceFallenByCollarBreak()
+    {
+        if (isDead) return;
+
+        isDead = true;
+        currentState = BossState.Dead;
+
+        // Se desconecta de Damageable ANTES de nada: si algún proyectil en vuelo todavía impacta
+        // este mismo frame, no debe disparar OnDamageTaken/OnDeath por detrás de este camino.
+        if (damageable)
+        {
+            damageable.OnDamaged -= OnDamageTaken;
+            damageable.OnDied    -= OnDeath;
+        }
+
+        StopCombatAndPlayDeathPose();
+        ApplyFallenDarkenVisual();
+
+        var healthBar = GetComponent<BossHealthBar>();
+        if (healthBar) healthBar.Hide();
+
+        // La arena/batalla no se entera de esto por Damageable.OnDied (nunca se dispara aquí) --
+        // hay que avisarla explícitamente para que abra la salida, pare la música de jefe y marque
+        // la batalla como ganada exactamente igual que con una muerte normal.
+        var arena = FindObjectOfType<BossArenaController>();
+        if (arena != null) arena.NotifyBossDefeatedByAlternateEnding();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        else Debug.LogWarning("[ImpDemonAI] Aro roto pero no se encontró ningún BossArenaController en la escena -- la arena no se desbloqueará.");
+#endif
+
+        OnFellByCollarBreak?.Invoke();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log("[ImpDemonAI] Aro de runas roto -- demonio caído (final alternativo, sin orbes).");
+#endif
+    }
+
+    /// Se dispara justo después de ForceFallenByCollarBreak(), por si algo más (p. ej. una
+    /// secuencia de Eldran narrando lo que había debajo) necesita reaccionar sin sondear isDead.
+    public event System.Action OnFellByCollarBreak;
+
+    /// Ventana de ataque actual (Paso 6, RuneCollar): true mientras el demonio está ejecutando
+    /// cualquiera de sus corrutinas de ataque (SlashAttack, StabAttack, ProjectileAttack, etc.).
+    /// El aro solo se ilumina y solo puede romperse mientras esto es true -- fuera de la ventana
+    /// de ataque, ignora cualquier impacto preciso.
+    public bool IsAttacking => isAttacking;
+
+    /// true en cuanto el combate termina, por CUALQUIER camino (HP a 0 vía OnDeath, o el aro roto
+    /// vía ForceFallenByCollarBreak). RuneCollar lo consulta para dejar de trabajar en cuanto el
+    /// jefe cae por el otro camino -- gana quien llegue primero, sin necesitar un evento propio.
+    public bool IsDead => isDead;
+
+    /// Detiene IA/física/colisiones y reproduce la pose de "Die" -- compartido por una muerte
+    /// normal (OnDeath) y por el final alternativo del aro roto (ForceFallenByCollarBreak). El
+    /// único estado que cada llamante gestiona por separado es qué pasa con Damageable/OrbDropper
+    /// y con el GameObject (destruirlo o dejarlo tumbado en escena).
+    private void StopCombatAndPlayDeathPose()
+    {
         UnregisterFromCombatRegistry();
 
         if (agent && agent.isOnNavMesh)
@@ -1279,10 +1361,32 @@ public class ImpDemonAI : MonoBehaviour
             Destroy(_enrageAuraInstance);
             _enrageAuraInstance = null;
         }
+    }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Debug.Log("[ImpDemonAI] Boss derrotado!");
-#endif
+    /// Atenúa el color de todos los materiales del demonio y apaga cualquier emisión, vía
+    /// MaterialPropertyBlock (nunca toca los materiales compartidos del prefab). Cubre tanto
+    /// shaders Standard (_Color/_EmissionColor) como URP/Lit (_BaseColor) -- HasProperty() hace
+    /// que sea un no-op seguro si el shader del demonio no usa alguno de estos nombres.
+    private void ApplyFallenDarkenVisual()
+    {
+        var renderers = GetComponentsInChildren<Renderer>(true);
+        var mpb = new MaterialPropertyBlock();
+
+        foreach (var r in renderers)
+        {
+            if (!r || !r.sharedMaterial) continue;
+
+            r.GetPropertyBlock(mpb);
+
+            if (r.sharedMaterial.HasProperty("_Color"))
+                mpb.SetColor("_Color", r.sharedMaterial.GetColor("_Color") * fallenDarkenFactor);
+            if (r.sharedMaterial.HasProperty("_BaseColor"))
+                mpb.SetColor("_BaseColor", r.sharedMaterial.GetColor("_BaseColor") * fallenDarkenFactor);
+            if (r.sharedMaterial.HasProperty("_EmissionColor"))
+                mpb.SetColor("_EmissionColor", Color.black);
+
+            r.SetPropertyBlock(mpb);
+        }
     }
 
     // ========== DEBUG ==========

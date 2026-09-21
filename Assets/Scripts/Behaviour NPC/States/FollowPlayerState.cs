@@ -163,7 +163,6 @@ namespace Game.NPC.States
         private static readonly int HashSwimFloat  = Animator.StringToHash("Swimming_Floating_NoWeapon");
         private static readonly int HashClimbUp    = Animator.StringToHash("ClimbUp_RM_NoWeapon");
         private static readonly int HashClimbDown  = Animator.StringToHash("ClimbDown_RM_NoWeapon");
-        private static readonly int HashClimbIdle  = Animator.StringToHash("ClimbIdle_RM_NoWeapon");
         private static readonly int HashIsFlying   = Animator.StringToHash("isFlying");
         private static readonly int HashIsGrounded = Animator.StringToHash("IsGrounded");
         private static readonly int HashGroundDist = Animator.StringToHash("GroundDistance");
@@ -627,7 +626,15 @@ namespace Game.NPC.States
                         _storedAnimSpeed = anim.speed;
                         _animSpeedStored = true;
                     }
-                    TryPlay(anim, HashClimbIdle, 0);
+                    // Antes esto reproducía `ClimbIdle_RM_NoWeapon`, que NO EXISTE: ni en el
+                    // controller de los NPCs, ni en el del jugador, ni hay clip suyo en el
+                    // proyecto (20 sep 2026, comparando los dos controllers estado por estado).
+                    // O sea que este Play no ha hecho nada nunca y el NPC se congelaba en la pose
+                    // que llevara puesta, normalmente la de andar. Se usa `ClimbUp` congelado, que
+                    // es la misma idea y el mismo resultado que se buscaba: la línea de abajo lo
+                    // deja a velocidad 0, y el bucle de seguimiento ya alterna entre ClimbUp y
+                    // ClimbDown en cuanto hay movimiento vertical.
+                    TryPlay(anim, HashClimbUp, 0);
                     if (anim != null) anim.speed = 0f;
                     break;
 

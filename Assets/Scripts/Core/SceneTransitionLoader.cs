@@ -1,4 +1,4 @@
-// Assets/Scripts/Core/SceneTransitionLoader.cs
+﻿// Assets/Scripts/Core/SceneTransitionLoader.cs
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -145,6 +145,7 @@ public static class SceneTransitionLoader
         }
 
         op.allowSceneActivation = false;
+        bool telonCerrado = false;
 
         float shownAt = Time.unscaledTime;
 
@@ -176,8 +177,16 @@ public static class SceneTransitionLoader
                 // Poner pantalla en negro ANTES de activar la escena para evitar el parpadeo:
                 // la overlay de carga sigue encima en este punto, así que no se ve nada raro
                 // mientras se crea el canvas. Cuando la escena destino active, ya estará cubierta.
-                if (hasOverlay && PostLoadFadeDuration > 0f)
-                    FeedbackService.SetScreenFadeImmediate(PostLoadFadeColor);
+                // El telón se cierra ANTES de activar la escena y lo suelta este mismo loader al
+                // final. Si la escena nueva necesita más tiempo (WorldBootstrap colocando al
+                // jugador, el grafo cargando otra escena, una cinemática de arranque), lo habrá
+                // pedido ella mientras tanto y la pantalla no se destapa hasta que acabe. Antes
+                // esto destapaba por su cuenta 0,15 s después de activar, sin saber nada de nadie.
+                if (!telonCerrado && (hasOverlay || FeedbackService.IsScreenFaded))
+                {
+                    Telon.Cerrar(ClaveTelon(targetScene));
+                    telonCerrado = true;
+                }
 
                 op.allowSceneActivation = true;
             }
@@ -213,15 +222,8 @@ public static class SceneTransitionLoader
         // 6) Fade-out suave desde negro (revela la escena)
         // Se activa si hubo overlay, o si la pantalla ya estaba en negro al iniciar la carga
         // (p.ej. el minijuego hace fade a negro antes de llamar a Load).
-        if ((hasOverlay || FeedbackService.IsScreenFaded) && PostLoadFadeDuration > 0f)
-        {
-            // Pequeña pausa para que la escena se estabilice
-            yield return new WaitForSecondsRealtime(0.15f);
-
-            // Fade-out desde negro (revela la escena)
-            yield return EnsureRunner().StartCoroutine(
-                FeedbackService.ScreenFadeAsync(PostLoadFadeColor, PostLoadFadeDuration, fadeIn: false));
-        }
+        // Ya no se destapa aquí: se suelta el telón y destapa él cuando nadie más lo retenga.
+        if (telonCerrado) Telon.Soltar(ClaveTelon(targetScene));
 
         yield break;
     }
@@ -253,5 +255,7 @@ public static class SceneTransitionLoader
     }
 
     /// <summary>Runner persistente (host de coroutines) para no depender de objetos que se destruyen al cambiar de escena.</summary>
+    private static string ClaveTelon(string escena) => "carga:" + escena;
+
     private sealed class LoaderRunner : MonoBehaviour { }
 }
