@@ -100,6 +100,18 @@ public static class ConstruirPrologoUltimaNoche
     {
         Fase("1 - Un dia cualquiera", "", "", new List<SequenceBeat>
         {
+            new SetPropActiveBeat
+            {
+                note = "Fuera las nubes de escena del primer intento de apertura: la apertura ya las cuelga de la lente y estas se quedaban quietas en el cielo.",
+                propId = "PROP_Nube_Oeste",
+                active = false,
+            },
+            new SetPropActiveBeat
+            {
+                note = "",
+                propId = "PROP_Nube_Este",
+                active = false,
+            },
             new PlaceAtMarkBeat
             {
                 note = "FUERA DE ESCENA. Su SpawnPoint esta en mitad de la plaza, asi que sin esto se pasa los dos primeros minutos de pie entre los vecinos que bailan. Aparece en la fase 4, no antes.",
@@ -151,23 +163,34 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "VISTA DE PAJARO. La camara catorce metros por encima del pueblo, mirandolo desde arriba, y desde ahi baja sola hasta el. El valle primero, el hombre despues.",
+                note = "ARRIBA, DE GOLPE (prologo17). Corte seco a veinte metros sobre el pueblo, con las nubes cerradas delante en el mismo fotograma. Antes era un viaje de 4,5 s desde donde estuviera la camara, mirando al cielo: ese era el tramo azul.",
                 shotName = "",
-                smooth = true,
+                smooth = false,
                 duration = 4.5f,
-                waitForArrival = true,
+                waitForArrival = false,
                 live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Liora",
-                    heightBias = 14.0f,
-                    distanceScale = 1.6f,
+                    heightBias = 20.0f,
+                    distanceScale = 1.8f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
                 },
+            },
+            new NubesDeAperturaBeat
+            {
+                note = "Y SE ABREN, despacio, desde el primer fotograma y mientras la camara ya baja.",
+                nube = Prefab("bca0e32ecbad95342a83b9dae7fb5a97"),
+                distancia = 4.5f,
+                separacionInicial = 1.6f,
+                separacionFinal = 18.0f,
+                escala = 9.0f,
+                segundos = 5.5f,
+                esperar = false,
             },
             new ParallelBeat
             {
@@ -326,12 +349,6 @@ public static class ConstruirPrologoUltimaNoche
                         markNames = new List<string> { "M_Horno" },
                     },
                 },
-            },
-            new WaitBeat
-            {
-                note = "Dejar respirar la plaza antes de que nadie hable.",
-                seconds = 1.0f,
-                unscaled = true,
             },
             new ParallelBeat
             {
@@ -523,10 +540,10 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Y baja hasta el, sin cortar: el descenso ES el enganche con su frase.",
+                note = "Y BAJA hasta el sin parar (prologo17): arranca en el mismo fotograma que las nubes, ya en marcha, y sigue bajando cuando ya se han abierto. El descenso ES el enganche con su frase.",
                 shotName = "",
                 smooth = true,
-                duration = 3.2f,
+                duration = 8.5f,
                 waitForArrival = true,
                 live = false,
                 framing = new ShotFraming
@@ -540,6 +557,8 @@ public static class ConstruirPrologoUltimaNoche
                     crossTheLine = false,
                     headroom = true,
                 },
+                arrancaLanzado = true,
+                entrarDesdeArriba = true,
             },
             new WaitBeat
             {
@@ -716,8 +735,8 @@ public static class ConstruirPrologoUltimaNoche
                     type = ShotType.TwoShot,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Aldeano_06",
-                    heightBias = 0.0f,
-                    distanceScale = 1.1f,
+                    heightBias = 0.7f,
+                    distanceScale = 1.5f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -759,7 +778,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Levitation_Cast",
+                eventKey = "Prologo_MagiaLevitar",
                 clip = null,
                 atActorId = "NPC_Archimago",
                 markName = "",
@@ -796,6 +815,18 @@ public static class ConstruirPrologoUltimaNoche
                     headroom = true,
                 },
             },
+            new PropMoveBeat
+            {
+                note = "Y volcada OTRA VEZ, al instante, con la camara ya encima: asi lo que se ve es enderezarse. Antes, si algo la habia tocado antes, la camara la pillaba ya derecha y solo se veia un giro raro.",
+                propId = "PROP_Carreta",
+                deltaPosicion = new Vector3(0.0f, 0.0f, 0.0f),
+                deltaRotacion = new Vector3(0.0f, 0.0f, 62.0f),
+                segundos = 0.0f,
+                suavizar = true,
+                esperar = true,
+                desdeDondeEstaba = true,
+                apoyarEnElSuelo = true,
+            },
             new VfxBeat
             {
                 note = "El aura prende en la carreta.",
@@ -821,7 +852,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Levitation_Impact",
+                eventKey = "Prologo_CarretaCae",
                 clip = null,
                 atActorId = "PROP_Carreta",
                 markName = "",
@@ -927,7 +958,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "La cara del vecino mirando hacia arriba.",
+                note = "El vecino Y la carreta (prologo18): la carreta baja al suelo en este plano, y sin ella en cuadro no se veia bajar. El vecino se gira hacia ella.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
@@ -935,14 +966,15 @@ public static class ConstruirPrologoUltimaNoche
                 live = false,
                 framing = new ShotFraming
                 {
-                    type = ShotType.Reaction,
+                    type = ShotType.Wide,
                     subjectId = "NPC_Aldeano_06",
                     secondaryId = "PROP_Carreta",
-                    heightBias = 0.3f,
-                    distanceScale = 1.0f,
+                    heightBias = 0.6f,
+                    distanceScale = 1.1f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
+                    encara = true,
                 },
             },
             new EmotionBeat
@@ -954,7 +986,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new PropMoveBeat
             {
-                note = "Y la posa: vuelve EXACTA a como estaba, derecha y apoyada en el suelo. No se resta lo que se sumo -- se recuerda donde estaba.",
+                note = "Y la posa EN EL SUELO. Volver a «donde estaba» no bastaba: donde estaba es la pose con la que se guardo la escena, y esa flota un metro.",
                 propId = "PROP_Carreta",
                 deltaPosicion = new Vector3(0.0f, 0.0f, 0.0f),
                 deltaRotacion = new Vector3(0.0f, 0.0f, 0.0f),
@@ -962,6 +994,7 @@ public static class ConstruirPrologoUltimaNoche
                 suavizar = true,
                 esperar = true,
                 desdeDondeEstaba = true,
+                apoyarEnElSuelo = true,
             },
             new SayBeat
             {
@@ -990,7 +1023,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Levitation_Impact",
+                eventKey = "Prologo_CarretaCae",
                 clip = null,
                 atActorId = "PROP_Carreta",
                 markName = "",
@@ -1014,7 +1047,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "El corro que celebra, y el llegando por la izquierda.",
+                note = "El corro, de cerca (prologo18): antes era un general con el Archimago, que aun venia de lejos, y la camara se iba a la otra punta. El entra en cuadro al llegar.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
@@ -1024,13 +1057,13 @@ public static class ConstruirPrologoUltimaNoche
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Aldeano_03",
-                    secondaryId = "NPC_Archimago",
+                    secondaryId = "NPC_Aldeano_01",
                     heightBias = 0.3f,
-                    distanceScale = 1.0f,
+                    distanceScale = 0.7f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
-                    encara = true,
+                    encara = false,
                 },
             },
             new ParallelBeat
@@ -1116,6 +1149,26 @@ public static class ConstruirPrologoUltimaNoche
                 timeout = 14.0f,
                 faceEachOtherOnArrival = false,
                 settleOnArrival = 0.0f,
+            },
+            new FaceBeat
+            {
+                note = "Toca palmas MIRANDO al que baila (prologo18).",
+                actorId = "NPC_Aldeano_08",
+                targetActorId = "NPC_Aldeano_03",
+                markName = "",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.3f,
+            },
+            new FaceBeat
+            {
+                note = "Y el vecino de la carreta igual.",
+                actorId = "NPC_Aldeano_06",
+                targetActorId = "NPC_Aldeano_03",
+                markName = "",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.3f,
             },
             new ParallelBeat
             {
@@ -1244,30 +1297,33 @@ public static class ConstruirPrologoUltimaNoche
                 holdSeconds = 0.8f,
                 returnToNormalAfter = false,
             },
-            new ShotBeat
+            new FaceBeat
             {
-                note = "El campanario con el globo enganchado, en contrapicado, y el vecino debajo. Encuadrado sobre EL GLOBO: antes iba sobre el vecino con el Archimago de secundario y la camara se iba hacia el, a encuadrar tejados.",
-                shotName = "",
-                smooth = false,
-                duration = 1.4f,
-                waitForArrival = true,
-                live = false,
-                framing = new ShotFraming
-                {
-                    type = ShotType.Wide,
-                    subjectId = "PROP_Globo",
-                    secondaryId = "NPC_Aldeano_05",
-                    heightBias = -1.8f,
-                    distanceScale = 1.15f,
-                    fovOverride = 0.0f,
-                    crossTheLine = false,
-                    headroom = true,
-                    encara = true,
-                },
+                note = "Se lo dice A EL (prologo18).",
+                actorId = "NPC_Aldeano_01",
+                targetActorId = "NPC_Archimago",
+                markName = "",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.3f,
+            },
+            new SayBeat
+            {
+                note = "Antes solo gesticulaba hablando, sin bocadillo: «le esta diciendo algo al Archimago pero no le sale el bocadillo».",
+                actorId = "NPC_Aldeano_01",
+                markName = "",
+                textKey = "PROLOGO_BAILE_RESPUESTA",
+                pageDuration = 2.2f,
+                gesture = "Talk01",
+                gestureRepeats = 1,
+                speakerNameKey = "Vecino",
+                playGestures = true,
+                overrideBubbleOffset = false,
+                bubbleOffset = new Vector3(0.0f, 0.0f, 0.0f),
             },
             new ParallelBeat
             {
-                note = "Los de la plaza, mientras tanto.",
+                note = "Los de la plaza, mientras tanto: se rien y aplauden. Nadie HABLA sin bocadillo (prologo18).",
                 waitForAll = false,
                 beats = new List<SequenceBeat>
                 {
@@ -1280,17 +1336,8 @@ public static class ConstruirPrologoUltimaNoche
                     new GestureBeat
                     {
                         note = "",
-                        actorId = "NPC_Aldeano_01",
-                        gesture = "Talk01",
-                        repeats = 2,
-                        holdSeconds = 2.2f,
-                        returnToNormalAfter = false,
-                    },
-                    new GestureBeat
-                    {
-                        note = "",
                         actorId = "NPC_Aldeano_02",
-                        gesture = "Talk02",
+                        gesture = "Laugh01",
                         repeats = 2,
                         holdSeconds = 2.2f,
                         returnToNormalAfter = false,
@@ -1299,7 +1346,7 @@ public static class ConstruirPrologoUltimaNoche
                     {
                         note = "",
                         actorId = "NPC_Aldeano_03",
-                        gesture = "Talk03",
+                        gesture = "HandClap01",
                         repeats = 2,
                         holdSeconds = 2.2f,
                         returnToNormalAfter = false,
@@ -1456,18 +1503,90 @@ public static class ConstruirPrologoUltimaNoche
                     },
                 },
             },
-            new MoveToBeat
+            new TimeOfDayBeat
             {
-                note = "Hasta el campanario.",
-                actorId = "NPC_Archimago",
-                towardsActorId = "",
-                markName = "M_Globo",
-                stopDistance = 0.4f,
-                approachAngle = 0.0f,
-                speedOverride = 1.6f,
-                timeout = 14.0f,
-                faceEachOtherOnArrival = false,
-                settleOnArrival = 0.0f,
+                note = "El sol sube mientras cruza la plaza. Doce segundos: la luz cambia sola, sin que nadie se pare a mirarla.",
+                timeOfDay = DayNightCycle.TimeOfDay.AfterNoon,
+                immediate = false,
+                waitForTransition = false,
+                transitionSeconds = 12.0f,
+                esLaHoraDeVolver = false,
+            },
+            new ShotBeat
+            {
+                note = "AEREA del camino: el y la vecina que le espera al pie del campanario. Con el globo dentro, la camara se iba tan lejos que era el pueblo entero (prologo20).",
+                shotName = "",
+                smooth = false,
+                duration = 1.4f,
+                waitForArrival = true,
+                live = false,
+                framing = new ShotFraming
+                {
+                    type = ShotType.Wide,
+                    subjectId = "NPC_Archimago",
+                    secondaryId = "NPC_Aldeano_05",
+                    heightBias = 6.0f,
+                    distanceScale = 1.1f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = false,
+                },
+            },
+            new ParallelBeat
+            {
+                note = "Mientras cruza, a los 2,2 s, corte a la vecina: llega a su plano en vez de cruzar el pueblo entero en uno (prologo20).",
+                waitForAll = true,
+                beats = new List<SequenceBeat>
+                {
+                    new MoveToBeat
+                    {
+                        note = "Hasta el campanario, a paso vivo y por debajo de una aerea: a ras de suelo este tramo eran quince segundos de fachadas.",
+                        actorId = "NPC_Archimago",
+                        towardsActorId = "",
+                        markName = "M_Globo",
+                        stopDistance = 0.4f,
+                        approachAngle = 0.0f,
+                        speedOverride = 3.2f,
+                        timeout = 14.0f,
+                        faceEachOtherOnArrival = false,
+                        settleOnArrival = 0.0f,
+                    },
+                    new SerieBeat
+                    {
+                        note = "",
+                        beats = new List<SequenceBeat>
+                        {
+                            new WaitBeat
+                            {
+                                note = "",
+                                seconds = 2.2f,
+                                unscaled = true,
+                            },
+                            new ShotBeat
+                            {
+                                note = "La vecina esperandole al pie del campanario; el entra en cuadro.",
+                                shotName = "",
+                                smooth = false,
+                                duration = 1.4f,
+                                waitForArrival = true,
+                                live = false,
+                                framing = new ShotFraming
+                {
+                    type = ShotType.Wide,
+                    subjectId = "NPC_Aldeano_05",
+                    secondaryId = "NPC_Archimago",
+                    heightBias = 0.4f,
+                    distanceScale = 1.0f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = false,
+                },
+                            },
+                        },
+                    },
+                },
             },
             new FaceBeat
             {
@@ -1545,7 +1664,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Contraplano - el mago mirando hacia arriba.",
+                note = "El, lanzando, con la vecina: general BAJO. Era un plano medio con el globo dentro y la camara acababa detras del tejado de enfrente: «se ve media casa» (prologo20).",
                 shotName = "",
                 smooth = false,
                 duration = 1.6f,
@@ -1553,11 +1672,11 @@ public static class ConstruirPrologoUltimaNoche
                 live = false,
                 framing = new ShotFraming
                 {
-                    type = ShotType.Medium,
+                    type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
-                    secondaryId = "PROP_Globo",
-                    heightBias = 0.35f,
-                    distanceScale = 1.0f,
+                    secondaryId = "NPC_Aldeano_05",
+                    heightBias = -0.4f,
+                    distanceScale = 0.9f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -1576,7 +1695,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Levitation_Cast",
+                eventKey = "Prologo_MagiaLevitar",
                 clip = null,
                 atActorId = "NPC_Archimago",
                 markName = "",
@@ -1645,19 +1764,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Contrapicado fuerte, camara quieta, con el vecino abajo del cuadro. El globo se va por arriba y el plano se queda -- que es lo que hace que se vea SUBIR.",
+                note = "El globo subiendo, con la camara POR ENCIMA de los tejados y siguiendole: se va contra el cielo. Desde el suelo lo tapaba el alero de enfrente: «cuando sube el globo no se ve, le tapa algo» (prologo21).",
                 shotName = "",
                 smooth = false,
                 duration = 2.2f,
                 waitForArrival = true,
-                live = false,
+                live = true,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "PROP_Globo",
-                    secondaryId = "NPC_Archimago",
-                    heightBias = -2.4f,
-                    distanceScale = 1.6f,
+                    secondaryId = "",
+                    heightBias = 4.0f,
+                    distanceScale = 1.8f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -1942,21 +2061,46 @@ public static class ConstruirPrologoUltimaNoche
         }),
         Fase("2 - El rio", "", "", new List<SequenceBeat>
         {
+            new TimeOfDayBeat
+            {
+                note = "Y baja el sol mientras ellos bajan al rio.",
+                timeOfDay = DayNightCycle.TimeOfDay.Sunset,
+                immediate = false,
+                waitForTransition = false,
+                transitionSeconds = 10.0f,
+                esLaHoraDeVolver = false,
+            },
+            new PlaceAtMarkBeat
+            {
+                note = "Elipsis: en el corte ya estan cerca de la orilla. Nueve segundos de aereo mientras cruzaban el pueblo eran «demasiado largo» (prologo20).",
+                actorId = "NPC_Archimago",
+                markName = "M_Rio_Mago",
+                faceTowardsMark = "M_Rio_Fin_Mago",
+                faceTowardsActor = "",
+            },
+            new PlaceAtMarkBeat
+            {
+                note = "",
+                actorId = "NPC_Liora",
+                markName = "M_Rio_Liora",
+                faceTowardsMark = "M_Rio_Fin_Liora",
+                faceTowardsActor = "",
+            },
             new ShotBeat
             {
-                note = "Bajando hacia el rio, EN PICADO desde doce metros. A ras de suelo este tramo eran veinticinco segundos de fachadas: el pueblo se mete en medio haga lo que haga la camara. Desde arriba se les ve a ellos, el pueblo y a donde van.",
+                note = "Bajando hacia el rio: aereo FIJO y abierto (prologo19). El vivo les perseguia y cada tejado o arbol que se cruzaba lo movia: «hace saltos todavia».",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Liora",
-                    heightBias = 12.0f,
-                    distanceScale = 1.0f,
+                    heightBias = 6.0f,
+                    distanceScale = 1.3f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -1971,7 +2115,7 @@ public static class ConstruirPrologoUltimaNoche
                 {
                     new WalkPathBeat
                     {
-                        note = "Paso normal. A 1,3 m/s bajaban al rio como en una procesion.",
+                        note = "Los ultimos seis metros, paseando (prologo20).",
                         actorId = "NPC_Archimago",
                         speed = 1.9f,
                         stickToGround = true,
@@ -1980,11 +2124,11 @@ public static class ConstruirPrologoUltimaNoche
                         animarAndando = true,
                         encadenarCon = "",
                         retraso = 0.0f,
-                        markNames = new List<string> { "M_Rio_Camino", "M_Rio_Fin_Mago" },
+                        markNames = new List<string> { "M_Rio_Fin_Mago" },
                     },
                     new WalkPathBeat
                     {
-                        note = "Paso normal. A 1,3 m/s bajaban al rio como en una procesion.",
+                        note = "Los ultimos seis metros, paseando (prologo20).",
                         actorId = "NPC_Liora",
                         speed = 1.9f,
                         stickToGround = true,
@@ -1993,7 +2137,7 @@ public static class ConstruirPrologoUltimaNoche
                         animarAndando = true,
                         encadenarCon = "",
                         retraso = 0.0f,
-                        markNames = new List<string> { "M_Rio_Camino", "M_Rio_Fin_Liora" },
+                        markNames = new List<string> { "M_Rio_Fin_Liora" },
                     },
                 },
             },
@@ -2001,6 +2145,19 @@ public static class ConstruirPrologoUltimaNoche
             {
                 note = "La camara al oeste: el agua y el puente detras de ellos.",
                 sideDegrees = 270.0f,
+            },
+            new SolDeFondoBeat
+            {
+                note = "El sol EN CUADRO, por encima de la cresta de detras, y poniendose mientras hablan (prologo20): a 7° en el mundo lo tapaban las montanas.",
+                colocar = true,
+                ladoDeLaCamara = 270.0f,
+                elevacion = 7.0f,
+                segundos = 2.0f,
+                enCuadro = true,
+                posicionX = 0.72f,
+                alturaDeSalida = 0.88f,
+                alturaDePuesta = 0.42f,
+                puesta = 19.0f,
             },
             new ParallelBeat
             {
@@ -2316,6 +2473,13 @@ public static class ConstruirPrologoUltimaNoche
                 seconds = 1.8f,
                 unscaled = true,
             },
+            new EmotionBeat
+            {
+                note = "Preocupada desde que el cielo cambia: estaba poniendo cara de felicidad mientras caia el rayo.",
+                actorId = "NPC_Liora",
+                emotion = (NPCEmotion)9,
+                revertAfter = 0.0f,
+            },
             new WeatherBeat
             {
                 note = "El viento agita la plaza.",
@@ -2332,11 +2496,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new TimeOfDayBeat
             {
-                note = "La luz cae.",
-                timeOfDay = DayNightCycle.TimeOfDay.Sunset,
+                note = "Noche cerrada. Ya lo era antes del trueno; esto solo remata lo que la tormenta tapa.",
+                timeOfDay = DayNightCycle.TimeOfDay.Night,
                 immediate = false,
                 waitForTransition = false,
-                transitionSeconds = 2.0f,
+                transitionSeconds = 3.0f,
+            },
+            new SolDeFondoBeat
+            {
+                note = "Y el sol se devuelve al ciclo DESPUES de pedir la noche, en ocho segundos: la luz se funde con la transicion y el disco ya lo tapan las nubes (prologo20: «sale el sol como si amaneciera»).",
+                colocar = false,
+                ladoDeLaCamara = 0.0f,
+                elevacion = 0.0f,
+                segundos = 8.0f,
             },
             new ShotBeat
             {
@@ -2380,12 +2552,12 @@ public static class ConstruirPrologoUltimaNoche
             {
                 note = "La musica de la manana se apaga con el trueno. Desde aqui hasta que aparece el, silencio: es lo que da tension.",
                 musicId = "",
-                fadeOut = 2.0f,
+                fadeOut = 3.0f,
             },
             new SfxBeat
             {
                 note = "Trueno seco.",
-                eventKey = "Prologue_Explosion",
+                eventKey = "Prologo_Trueno",
                 clip = null,
                 atActorId = "",
                 markName = "",
@@ -2638,19 +2810,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Los dos vuelven corriendo al pueblo, EN PICADO desde cinco metros, como la bajada al rio. A ras de suelo, entre casas, la camara saltaba de angulo cada vez que una fachada se metia en medio.",
+                note = "Los dos vuelven corriendo al pueblo. Plano FIJO y alto: se ve el camino entero. El vivo les perseguia entre casas y saltaba de angulo.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Tracking,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Liora",
-                    heightBias = 5.0f,
-                    distanceScale = 1.4f,
+                    heightBias = 8.0f,
+                    distanceScale = 1.7f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -2667,7 +2839,7 @@ public static class ConstruirPrologoUltimaNoche
                     {
                         note = "",
                         actorId = "NPC_Archimago",
-                        speed = 3.4f,
+                        speed = 4.0f,
                         stickToGround = true,
                         groundOffset = 0.0f,
                         faceTravelDirection = true,
@@ -2678,16 +2850,50 @@ public static class ConstruirPrologoUltimaNoche
                     },
                     new WalkPathBeat
                     {
-                        note = "",
+                        note = "Ella sale medio segundo despues y va mas despacio: detras de el, sin empujarse en el punto del camino.",
                         actorId = "NPC_Liora",
-                        speed = 3.2f,
+                        speed = 3.6f,
                         stickToGround = true,
                         groundOffset = 0.0f,
                         faceTravelDirection = true,
                         animarAndando = true,
                         encadenarCon = "",
-                        retraso = 0.0f,
+                        retraso = 0.6f,
                         markNames = new List<string> { "M_Rio_Camino", "M_Plaza_Liora" },
+                    },
+                    new SerieBeat
+                    {
+                        note = "Al segundo y medio, a la plaza: si no, la camara se quedaba mirando el puente vacio (prologo19).",
+                        beats = new List<SequenceBeat>
+                        {
+                            new WaitBeat
+                            {
+                                note = "",
+                                seconds = 1.5f,
+                                unscaled = true,
+                            },
+                            new ShotBeat
+                            {
+                                note = "La plaza, a donde llegan corriendo.",
+                                shotName = "",
+                                smooth = false,
+                                duration = 1.4f,
+                                waitForArrival = true,
+                                live = false,
+                                framing = new ShotFraming
+                {
+                    type = ShotType.Wide,
+                    subjectId = "NPC_Aldeano_05",
+                    secondaryId = "NPC_Archimago",
+                    heightBias = 1.5f,
+                    distanceScale = 1.2f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = false,
+                },
+                            },
+                        },
                     },
                 },
             },
@@ -2712,10 +2918,17 @@ public static class ConstruirPrologoUltimaNoche
                 faceTowardsMark = "M_Apertura",
                 faceTowardsActor = "",
             },
+            new EmotionBeat
+            {
+                note = "Y con miedo en cuanto el se planta en la plaza.",
+                actorId = "NPC_Liora",
+                emotion = (NPCEmotion)5,
+                revertAfter = 0.0f,
+            },
             new SfxBeat
             {
                 note = "EL GOLPE. Es esto lo que corta la musica -- no un fundido, un impacto.",
-                eventKey = "Prologue_Explosion",
+                eventKey = "Prologo_Golpe",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -2731,7 +2944,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_ActorAppear",
+                eventKey = "Prologo_PresenciaOscura",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -2753,6 +2966,27 @@ public static class ConstruirPrologoUltimaNoche
                 mutual = false,
                 turnDuration = 0.0f,
             },
+            new ShotBeat
+            {
+                note = "El, en la cresta, desde abajo (prologo20). Hasta ahora nadie le encuadraba: el plano era el de la plaza, y a ochenta metros la niebla de la tormenta se lo comia.",
+                shotName = "",
+                smooth = false,
+                duration = 1.4f,
+                waitForArrival = true,
+                live = false,
+                framing = new ShotFraming
+                {
+                    type = ShotType.Medium,
+                    subjectId = "NPC_MagoOscuro",
+                    secondaryId = "",
+                    heightBias = -0.6f,
+                    distanceScale = 1.2f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = true,
+                },
+            },
             new EmotionBeat
             {
                 note = "",
@@ -2763,7 +2997,44 @@ public static class ConstruirPrologoUltimaNoche
             new WaitBeat
             {
                 note = "",
-                seconds = 1.2f,
+                seconds = 1.8f,
+                unscaled = true,
+            },
+            new FaceBeat
+            {
+                note = "",
+                actorId = "NPC_Liora",
+                targetActorId = "",
+                markName = "M_Cresta",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.3f,
+            },
+            new ShotBeat
+            {
+                note = "Liora, con miedo, mirandole (prologo20). El corte que esconde que el baja de la cresta a la ladera.",
+                shotName = "",
+                smooth = false,
+                duration = 1.4f,
+                waitForArrival = true,
+                live = false,
+                framing = new ShotFraming
+                {
+                    type = ShotType.Medium,
+                    subjectId = "NPC_Liora",
+                    secondaryId = "",
+                    heightBias = 0.0f,
+                    distanceScale = 1.1f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = true,
+                },
+            },
+            new WaitBeat
+            {
+                note = "",
+                seconds = 1.0f,
                 unscaled = true,
             },
             new PlaceAtMarkBeat
@@ -2774,41 +3045,63 @@ public static class ConstruirPrologoUltimaNoche
                 faceTowardsMark = "M_Apertura",
                 faceTowardsActor = "",
             },
-            new ShotBeat
+            new WeatherBeat
             {
-                note = "Y ahora si, un plano que le SIGUE mientras baja los ultimos metros hacia la camara.",
-                shotName = "",
-                smooth = false,
-                duration = 1.6f,
-                waitForArrival = true,
-                live = true,
-                framing = new ShotFraming
+                note = "Y rompe a llover mientras baja. Con transicion: la lluvia arrecia con el, no aparece de golpe.",
+                fenomeno = WeatherBeat.Fenomeno.Lluvia,
+                encender = true,
+                immediate = false,
+            },
+            new ParallelBeat
+            {
+                note = "Echa a andar y, un instante despues, el corte: cuando le vemos ya viene andando (prologo19).",
+                waitForAll = true,
+                beats = new List<SequenceBeat>
                 {
-                    type = ShotType.Tracking,
+                    new WalkPathBeat
+                    {
+                        note = "Baja los ultimos metros andando, de frente a la camara. A 1,5 m/s eran trece segundos de figura pequena en una ladera marron.",
+                        actorId = "NPC_MagoOscuro",
+                        speed = 2.4f,
+                        stickToGround = true,
+                        groundOffset = 0.0f,
+                        faceTravelDirection = true,
+                        markNames = new List<string> { "M_Entrada_Villa" },
+                    },
+                    new SerieBeat
+                    {
+                        note = "",
+                        beats = new List<SequenceBeat>
+                        {
+                            new WaitBeat
+                            {
+                                note = "",
+                                seconds = 0.35f,
+                                unscaled = true,
+                            },
+                            new ShotBeat
+                            {
+                                note = "Le SIGUE mientras baja, DE FRENTE: plano medio vivo sin secundario (mira hacia donde anda). Era un Tracking, que puede rodar hasta la nuca: salia de espaldas (prologo20). Sin hueco para bocadillo (aqui no habla), mas abierto y mas bajo: se salia por abajo del cuadro (prologo21).",
+                                shotName = "",
+                                smooth = false,
+                                duration = 1.6f,
+                                waitForArrival = true,
+                                live = true,
+                                framing = new ShotFraming
+                {
+                    type = ShotType.Medium,
                     subjectId = "NPC_MagoOscuro",
-                    secondaryId = "NPC_Archimago",
-                    heightBias = -1.0f,
-                    distanceScale = 1.05f,
+                    secondaryId = "",
+                    heightBias = -0.3f,
+                    distanceScale = 1.4f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
-                    headroom = true,
+                    headroom = false,
                 },
-            },
-            new WaitBeat
-            {
-                note = "Un latido antes de que eche a andar.",
-                seconds = 0.8f,
-                unscaled = true,
-            },
-            new WalkPathBeat
-            {
-                note = "Baja los ultimos metros andando, de frente a la camara. A 1,5 m/s eran trece segundos de figura pequena en una ladera marron.",
-                actorId = "NPC_MagoOscuro",
-                speed = 2.4f,
-                stickToGround = true,
-                groundOffset = 0.0f,
-                faceTravelDirection = true,
-                markNames = new List<string> { "M_Entrada_Villa" },
+                            },
+                        },
+                    },
+                },
             },
             new FaceBeat
             {
@@ -2897,10 +3190,17 @@ public static class ConstruirPrologoUltimaNoche
         }),
         Fase("5 - La orden de evacuar", "", "", new List<SequenceBeat>
         {
+            new EmotionBeat
+            {
+                note = "Sigue con miedo mientras saca a la gente.",
+                actorId = "NPC_Liora",
+                emotion = (NPCEmotion)5,
+                revertAfter = 0.0f,
+            },
             new TimeOfDayBeat
             {
-                note = "Cae la tarde y el valle se pone rojo. El incendio hace el resto.",
-                timeOfDay = DayNightCycle.TimeOfDay.Sunset,
+                note = "De noche y ardiendo: el rojo del valle lo pone el incendio, no el atardecer.",
+                timeOfDay = DayNightCycle.TimeOfDay.Night,
                 immediate = false,
                 waitForTransition = false,
                 transitionSeconds = 2.0f,
@@ -2935,7 +3235,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_Explosion",
+                eventKey = "Prologo_Trueno",
                 clip = null,
                 atActorId = "",
                 markName = "",
@@ -3300,6 +3600,75 @@ public static class ConstruirPrologoUltimaNoche
                 emotion = (NPCEmotion)5,
                 revertAfter = 0.0f,
             },
+            new ParallelBeat
+            {
+                note = "LA PLAZA NO ESPERA QUIETA. Mientras ellos se despiden: uno recoge lo suyo y vuelve a entrar, otro se asoma al puente y se vuelve, otra llama a los que faltan y el cuarto no quita ojo al cielo. Ninguno se va: esperan la orden.",
+                waitForAll = false,
+                beats = new List<SequenceBeat>
+                {
+                    new WaitBeat
+                    {
+                        note = "Para que el Parallel no retenga la escena.",
+                        seconds = 0.1f,
+                        unscaled = true,
+                    },
+                    new WalkPathBeat
+                    {
+                        note = "Se asoma al puente y se vuelve a por los suyos.",
+                        actorId = "NPC_Aldeano_07",
+                        speed = 2.6f,
+                        stickToGround = true,
+                        groundOffset = 0.0f,
+                        faceTravelDirection = true,
+                        animarAndando = true,
+                        encadenarCon = "",
+                        retraso = 0.0f,
+                        markNames = new List<string> { "M_Puente_Ent", "M_Huida_07" },
+                    },
+                    new WalkPathBeat
+                    {
+                        note = "Entra a por lo que puede cargar y sale con ello.",
+                        actorId = "NPC_Aldeano_08",
+                        speed = 2.2f,
+                        stickToGround = true,
+                        groundOffset = 0.0f,
+                        faceTravelDirection = true,
+                        animarAndando = true,
+                        encadenarCon = "",
+                        retraso = 0.8f,
+                        markNames = new List<string> { "M_Horno", "M_Huida_08" },
+                    },
+                    new WalkPathBeat
+                    {
+                        note = "Recoge lo de la mesa.",
+                        actorId = "NPC_Aldeano_09",
+                        speed = 2.2f,
+                        stickToGround = true,
+                        groundOffset = 0.0f,
+                        faceTravelDirection = true,
+                        animarAndando = true,
+                        encadenarCon = "",
+                        retraso = 1.6f,
+                        markNames = new List<string> { "M_Mesa", "M_Huida_09" },
+                    },
+                    new GestureBeat
+                    {
+                        note = "Mira al cielo, que es de donde vino.",
+                        actorId = "NPC_Aldeano_10",
+                        gesture = "Question01",
+                        repeats = 1,
+                        holdSeconds = 0.0f,
+                        returnToNormalAfter = false,
+                    },
+                    new EmotionBeat
+                    {
+                        note = "Asustado.",
+                        actorId = "NPC_Aldeano_10",
+                        emotion = (NPCEmotion)5,
+                        revertAfter = 0.0f,
+                    },
+                },
+            },
             new SayBeat
             {
                 note = "",
@@ -3355,6 +3724,56 @@ public static class ConstruirPrologoUltimaNoche
                 playGestures = true,
                 overrideBubbleOffset = false,
                 bubbleOffset = new Vector3(0.0f, 0.0f, 0.0f),
+            },
+            new ParallelBeat
+            {
+                note = "Se buscan unos a otros: nadie se queda mirando al frente.",
+                waitForAll = false,
+                beats = new List<SequenceBeat>
+                {
+                    new WaitBeat
+                    {
+                        note = "",
+                        seconds = 0.1f,
+                        unscaled = true,
+                    },
+                    new GestureBeat
+                    {
+                        note = "Llama a los que faltan.",
+                        actorId = "NPC_Aldeano_07",
+                        gesture = "HandWave01",
+                        repeats = 1,
+                        holdSeconds = 0.0f,
+                        returnToNormalAfter = false,
+                    },
+                    new GestureBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_08",
+                        gesture = "Beg01",
+                        repeats = 1,
+                        holdSeconds = 0.0f,
+                        returnToNormalAfter = false,
+                    },
+                    new GestureBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_09",
+                        gesture = "HeadShake01",
+                        repeats = 1,
+                        holdSeconds = 0.0f,
+                        returnToNormalAfter = false,
+                    },
+                    new GestureBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_10",
+                        gesture = "Beg01",
+                        repeats = 1,
+                        holdSeconds = 0.0f,
+                        returnToNormalAfter = false,
+                    },
+                },
             },
             new ShotBeat
             {
@@ -3492,21 +3911,89 @@ public static class ConstruirPrologoUltimaNoche
                     },
                 },
             },
+            new ParallelBeat
+            {
+                note = "Y al llegar al otro lado se quedan MIRANDO. Cruzar y seguir de espaldas era lo que hacia que la plaza pareciera vacia justo cuando pasa lo importante.",
+                waitForAll = true,
+                beats = new List<SequenceBeat>
+                {
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_01",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_02",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_03",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_04",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_05",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_06",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                },
+            },
             new ShotBeat
             {
-                note = "La plaza vaciandose hacia el puente.",
+                note = "La plaza vaciandose hacia el puente. -- FIJO (prologo15): vivo, la camara cambiaba de orbita cada vez que una casa se metia por medio.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Liora",
                     heightBias = 1.6f,
-                    distanceScale = 2.0f,
+                    distanceScale = 1.3f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -3780,21 +4267,79 @@ public static class ConstruirPrologoUltimaNoche
                     },
                 },
             },
+            new ParallelBeat
+            {
+                note = "Y al llegar al otro lado se quedan MIRANDO. Cruzar y seguir de espaldas era lo que hacia que la plaza pareciera vacia justo cuando pasa lo importante.",
+                waitForAll = true,
+                beats = new List<SequenceBeat>
+                {
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Liora",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_07",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_08",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_09",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_10",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.0f,
+                    },
+                },
+            },
             new ShotBeat
             {
-                note = "La plaza vaciandose hacia el puente, y el quieto en medio.",
+                note = "La plaza vaciandose hacia el puente, y el quieto en medio. -- FIJO (prologo15): vivo, la camara cambiaba de orbita cada vez que una casa se metia por medio.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_Liora",
                     heightBias = 1.8f,
-                    distanceScale = 2.2f,
+                    distanceScale = 1.3f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -3809,19 +4354,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "LA FILA EN EL PUENTE. El puente se nombra tres veces en la fase y no se veia ni una. Encuadrado sobre Liora, que va la primera, y desde cuatro metros y medio de alto: asi entran el tablero, el agua y los que todavia estan cruzando. VIVO, porque van andando.",
+                note = "LA FILA EN EL PUENTE. El puente se nombra tres veces en la fase y no se veia ni una. Encuadrado sobre Liora, que va la primera, y desde cuatro metros y medio de alto: asi entran el tablero, el agua y los que todavia estan cruzando. VIVO, porque van andando. -- FIJO (prologo15): vivo, la camara cambiaba de orbita cada vez que una casa se metia por medio.",
                 shotName = "",
                 smooth = false,
                 duration = 2.0f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Liora",
                     secondaryId = "NPC_Aldeano_07",
                     heightBias = 4.5f,
-                    distanceScale = 1.5f,
+                    distanceScale = 1.25f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -3864,11 +4409,136 @@ public static class ConstruirPrologoUltimaNoche
         }),
         Fase("7 - El duelo", "", "", new List<SequenceBeat>
         {
+            new EmotionBeat
+            {
+                note = "Enfadado desde que empieza el duelo: estaba con cara de contento (prologo19).",
+                actorId = "NPC_Archimago",
+                emotion = (NPCEmotion)3,
+                revertAfter = 0.0f,
+            },
+            new ParallelBeat
+            {
+                note = "Los de la otra orilla se vuelven hacia la plaza al empezar el duelo (prologo19).",
+                waitForAll = false,
+                beats = new List<SequenceBeat>
+                {
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_01",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_02",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_03",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_04",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_05",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_06",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_07",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_08",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_09",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_10",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Liora",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                },
+            },
             new MusicBeat
             {
-                note = "Silencio antes del duelo: su tema se apaga mientras entra en la plaza vacia.",
-                musicId = "",
-                fadeOut = 2.0f,
+                note = "El tema del duelo entra YA, cortando en seco el del Mago Oscuro. Antes entraba tres frases despues, con un silencio en medio que solo servia para que se notara el cambio.",
+                musicId = "MAGOOSCURO_CLIMAX",
+                fadeOut = 0.0f,
             },
             new SetActionAxisBeat
             {
@@ -3877,7 +4547,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Le vemos entrar en la plaza vacia. De frente: el Archimago de secundario fija la direccion de la camara, asi que no gira con el.",
+                note = "Le vemos entrar en la plaza vacia. De frente: el Archimago de secundario fija la direccion de la camara, asi que no gira con el. -- VIVO otra vez (prologo16): desde INC-386 un plano vivo ya no cambia de angulo, solo se aparta; fijo se quedaba vacio al irse el personaje.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
@@ -3889,7 +4559,7 @@ public static class ConstruirPrologoUltimaNoche
                     subjectId = "NPC_MagoOscuro",
                     secondaryId = "NPC_Archimago",
                     heightBias = -0.9f,
-                    distanceScale = 1.4f,
+                    distanceScale = 1.3f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -4009,12 +4679,6 @@ public static class ConstruirPrologoUltimaNoche
                 overrideBubbleOffset = false,
                 bubbleOffset = new Vector3(0.0f, 0.0f, 0.0f),
             },
-            new MusicBeat
-            {
-                note = "El climax entra DESPUES de «¿Vas a salvarlos a todos, mago?», que se dice en silencio.",
-                musicId = "MAGOOSCURO_CLIMAX",
-                fadeOut = 0.5f,
-            },
             new ShotBeat
             {
                 note = "El lanza.",
@@ -4047,7 +4711,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_SpellInstantiate",
+                eventKey = "Prologo_BolaDeFuego",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -4125,7 +4789,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "EstelaAppears_ShieldBlock",
+                eventKey = "Prologo_EscudoBloquea",
                 clip = null,
                 atActorId = "NPC_Archimago",
                 markName = "",
@@ -4224,8 +4888,8 @@ public static class ConstruirPrologoUltimaNoche
                 vfxEnLaMano = Prefab("895c6d094b6b213418cddcfb520298e9"),
                 vfxProyectil = Prefab("eccbc655050af0b4f81d8db39f84a58e"),
                 vfxImpacto = Prefab("67a684e320da6e7439421a07e3fa265c"),
-                sfxLanzamiento = "Star_SpellCast",
-                sfxImpacto = "Impact1",
+                sfxLanzamiento = "Prologo_HechizoArchimago",
+                sfxImpacto = "Prologo_ImpactoHechizo",
                 alturaDeLaMano = 1.15f,
                 separacionDelCuerpo = 0.45f,
                 velocidad = 14.0f,
@@ -4345,7 +5009,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_SpellChargeLoop",
+                eventKey = "Prologo_Carga",
                 clip = null,
                 atActorId = "",
                 markName = "",
@@ -4416,7 +5080,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "ProjectileClash",
+                eventKey = "Prologo_Choque",
                 clip = null,
                 atActorId = "",
                 markName = "",
@@ -4583,7 +5247,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "MagoOscuroGrieta",
+                eventKey = "Prologo_SueloSeAbre",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -4661,6 +5325,7 @@ public static class ConstruirPrologoUltimaNoche
                 poseCaida = "",
                 parabola = true,
                 poseEnElSuelo = "Pain01",
+                alturaMaximaDeAterrizaje = 0.3f,
             },
             new WaitBeat
             {
@@ -4683,26 +5348,6 @@ public static class ConstruirPrologoUltimaNoche
                 emotion = (NPCEmotion)4,
                 revertAfter = 0.0f,
             },
-            new ShotBeat
-            {
-                note = "El escudo, arriba, parpadeando. Es el cronometro de la escena - lo que se esta jugando no es el, es eso.",
-                shotName = "",
-                smooth = false,
-                duration = 1.8f,
-                waitForArrival = true,
-                live = false,
-                framing = new ShotFraming
-                {
-                    type = ShotType.Wide,
-                    subjectId = "PROP_Escudo",
-                    secondaryId = "",
-                    heightBias = 1.4f,
-                    distanceScale = 1.3f,
-                    fovOverride = 0.0f,
-                    crossTheLine = false,
-                    headroom = true,
-                },
-            },
             new VfxBeat
             {
                 note = "",
@@ -4715,36 +5360,47 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "El avanza sobre el caido. VIVO: la camara le acompana mientras anda, en vez de cortar, moverle y volver a cortar -- que es el parpadeo que se veia.",
+                note = "El avanza sobre el caido: general FIJO de los dos. El vivo le seguia y se metia en una pared; con el del escudo delante eran tres cortes en dos segundos (prologo20).",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
-                    type = ShotType.Tracking,
+                    type = ShotType.Wide,
                     subjectId = "NPC_MagoOscuro",
                     secondaryId = "NPC_Archimago",
-                    heightBias = -0.6f,
+                    heightBias = 0.6f,
                     distanceScale = 1.2f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
+                    encara = false,
                 },
             },
             new MoveToBeat
             {
-                note = "",
+                note = "HACIA el Archimago, y se para delante. Iba a M_Duelo3_Mago — la marca del Archimago — con parada a 0,4 m: le atravesaba (prologo20).",
                 actorId = "NPC_MagoOscuro",
-                towardsActorId = "",
-                markName = "M_Duelo3_Mago",
-                stopDistance = 0.4f,
+                towardsActorId = "NPC_Archimago",
+                markName = "",
+                stopDistance = 2.4f,
                 approachAngle = 0.0f,
                 speedOverride = 1.3f,
                 timeout = 6.0f,
                 faceEachOtherOnArrival = false,
                 settleOnArrival = 0.0f,
+            },
+            new FaceBeat
+            {
+                note = "Y le mira desde arriba.",
+                actorId = "NPC_MagoOscuro",
+                targetActorId = "NPC_Archimago",
+                markName = "",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.3f,
             },
             new WaitBeat
             {
@@ -4906,6 +5562,124 @@ public static class ConstruirPrologoUltimaNoche
         }),
         Fase("8 - El ultimo hechizo", "", "", new List<SequenceBeat>
         {
+            new ParallelBeat
+            {
+                note = "Los de la otra orilla se vuelven hacia la plaza al empezar el ultimo hechizo (prologo19).",
+                waitForAll = false,
+                beats = new List<SequenceBeat>
+                {
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_01",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_02",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_03",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_04",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_05",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_06",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_07",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_08",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_09",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Aldeano_10",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                    new FaceBeat
+                    {
+                        note = "",
+                        actorId = "NPC_Liora",
+                        targetActorId = "NPC_Archimago",
+                        markName = "",
+                        lookAway = false,
+                        mutual = false,
+                        turnDuration = 0.4f,
+                    },
+                },
+            },
             new ShotBeat
             {
                 note = "El, desde abajo, antes de despegar.",
@@ -4961,7 +5735,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_SpellRelease",
+                eventKey = "Prologo_Despegue",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -5040,7 +5814,7 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "EL PLANAZO. Desde el suelo, hacia arriba, con el recortado contra el cielo.",
+                note = "EL PLANAZO, a su altura y no desde los pies: el valle ardiendo detras dice mas que el cielo vacio.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
@@ -5051,8 +5825,8 @@ public static class ConstruirPrologoUltimaNoche
                     type = ShotType.Wide,
                     subjectId = "NPC_MagoOscuro",
                     secondaryId = "",
-                    heightBias = -5.0f,
-                    distanceScale = 1.6f,
+                    heightBias = 2.2f,
+                    distanceScale = 1.35f,
                     fovOverride = 58.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -5097,8 +5871,8 @@ public static class ConstruirPrologoUltimaNoche
                         vfxEnLaMano = Prefab("895c6d094b6b213418cddcfb520298e9"),
                         vfxProyectil = Prefab("232bdd92f4fb5f642bb0d7a40d53380f"),
                         vfxImpacto = Prefab("67a684e320da6e7439421a07e3fa265c"),
-                        sfxLanzamiento = "Prologue_SpellInstantiate",
-                        sfxImpacto = "Impact1",
+                        sfxLanzamiento = "Prologo_BolaDeFuego",
+                        sfxImpacto = "Prologo_ImpactoHechizo",
                         alturaDeLaMano = 1.15f,
                         separacionDelCuerpo = 0.45f,
                         velocidad = 13.0f,
@@ -5178,6 +5952,7 @@ public static class ConstruirPrologoUltimaNoche
                 poseSubida = "JumpStart_InPlace_NoWeapon",
                 poseAire = "JumpAirSpin_InPlace_NoWeapon",
                 poseCaida = "JumpEnd_InPlace_NoWeapon",
+                alturaMaximaDeAterrizaje = 0.3f,
             },
             new WaitBeat
             {
@@ -5237,8 +6012,8 @@ public static class ConstruirPrologoUltimaNoche
                         vfxEnLaMano = Prefab("895c6d094b6b213418cddcfb520298e9"),
                         vfxProyectil = Prefab("eccbc655050af0b4f81d8db39f84a58e"),
                         vfxImpacto = Prefab("67a684e320da6e7439421a07e3fa265c"),
-                        sfxLanzamiento = "Star_SpellCast",
-                        sfxImpacto = "ProjectileClash",
+                        sfxLanzamiento = "Prologo_HechizoArchimago",
+                        sfxImpacto = "Prologo_GolpeEnElAire",
                         alturaDeLaMano = 1.15f,
                         separacionDelCuerpo = 0.45f,
                         velocidad = 15.0f,
@@ -5424,7 +6199,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "MagoOscuroGrieta",
+                eventKey = "Prologo_SueloSeAbre",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -5542,19 +6317,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "Le sigue mientras vuela. VIVO, general y un poco alto: se tiene que ver entera la parabola y donde cae.",
+                note = "El momento en que el escudo se rompe, de lado: se ve el golpe, el escudo saltando en pedazos y los tres metros que retrocede.",
                 shotName = "",
                 smooth = false,
                 duration = 1.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Wide,
                     subjectId = "NPC_Archimago",
                     secondaryId = "",
                     heightBias = 1.2f,
-                    distanceScale = 1.3f,
+                    distanceScale = 1.25f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -5563,25 +6338,26 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ParallelBeat
             {
-                note = "Sale despedido; el otro toma tierra.",
+                note = "El escudo se rompe y le echa hacia atras; el otro toma tierra.",
                 waitForAll = true,
                 beats = new List<SequenceBeat>
                 {
                     new SaltoBeat
                     {
-                        note = "Le rompe el escudo y le LANZA en parabola, cayendo con Die01 (el derribo del pack: de pie a tirado). Se queda en su ultimo fotograma hasta GetUp.",
+                        note = "Le rompe el escudo y le hace RETROCEDER: encaja el golpe de pie y resbala tres metros hacia atras. Ni parabola ni derribo -- lo de caer tirado y levantarse duraba una eternidad y le quitaba la escena.",
                         actorId = "NPC_Archimago",
-                        altura = 2.2f,
-                        desplazamiento = -2.8f,
+                        altura = 0.35f,
+                        desplazamiento = -0.8f,
                         haciaElLado = false,
-                        subida = 0.42f,
+                        subida = 0.14f,
                         sostener = 0.0f,
-                        caida = 0.55f,
-                        poseSubida = "Die01_NoWeapon",
-                        poseAire = "Die01_NoWeapon",
+                        caida = 0.3f,
+                        poseSubida = "DefendHit_NoWeapon",
+                        poseAire = "DefendHit_NoWeapon",
                         poseCaida = "",
-                        parabola = true,
-                        poseEnElSuelo = "Die01_NoWeapon",
+                        parabola = false,
+                        poseEnElSuelo = "",
+                        alturaMaximaDeAterrizaje = 0.3f,
                     },
                     new GestureBeat
                     {
@@ -5594,33 +6370,60 @@ public static class ConstruirPrologoUltimaNoche
                     },
                 },
             },
-            new WaitBeat
-            {
-                note = "En el suelo, un momento.",
-                seconds = 0.6f,
-                unscaled = true,
-            },
             new PoseBeat
             {
-                note = "Y se levanta. GetUp arranca justo de la pose de tirado en el suelo, y sin bucle se queda de pie en su ultimo fotograma.",
+                note = "Le duele: doblado, la mano al estomago (prologo19).",
                 actorId = "NPC_Archimago",
-                pose = "GetUp_NoWeapon",
+                pose = "IdleWounded01",
                 soltar = false,
                 volverAIdle = true,
             },
+            new EmotionBeat
+            {
+                note = "",
+                actorId = "NPC_Archimago",
+                emotion = (NPCEmotion)7,
+                revertAfter = 0.0f,
+            },
             new WaitBeat
             {
-                note = "Lo que dura levantarse (25 fotogramas).",
-                seconds = 1.0f,
+                note = "Lo que le cuesta rehacerse.",
+                seconds = 1.4f,
                 unscaled = true,
             },
             new PoseBeat
             {
-                note = "De pie otra vez.",
+                note = "Se endereza.",
                 actorId = "NPC_Archimago",
                 pose = "",
                 soltar = true,
                 volverAIdle = true,
+            },
+            new FaceBeat
+            {
+                note = "Y le MIRA.",
+                actorId = "NPC_Archimago",
+                targetActorId = "NPC_MagoOscuro",
+                markName = "",
+                lookAway = false,
+                mutual = false,
+                turnDuration = 0.35f,
+            },
+            new EmotionBeat
+            {
+                note = "",
+                actorId = "NPC_Archimago",
+                emotion = (NPCEmotion)3,
+                revertAfter = 0.0f,
+            },
+            new GestureBeat
+            {
+                note = "Con rabia.",
+                actorId = "NPC_Archimago",
+                gesture = "Angry01",
+                repeats = 1,
+                holdSeconds = 0.0f,
+                returnToNormalAfter = false,
             },
             new GestureBeat
             {
@@ -5698,7 +6501,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Prologue_SpellChargeLoop",
+                eventKey = "Prologo_HechizoGrande",
                 clip = null,
                 atActorId = "NPC_MagoOscuro",
                 markName = "",
@@ -5771,6 +6574,135 @@ public static class ConstruirPrologoUltimaNoche
                 note = "",
                 seconds = 1.0f,
                 unscaled = true,
+            },
+            new ShotBeat
+            {
+                note = "EL PLANO DE LA PLEGARIA. Quieto y cerrado: las manos juntas, los ojos cerrados, y el valle ardiendo detras mientras el otro carga. Es lo unico que pide en todo el prologo -- y lo pide ANTES, no mientras le esta cayendo encima.",
+                shotName = "",
+                smooth = false,
+                duration = 2.2f,
+                waitForArrival = true,
+                live = false,
+                framing = new ShotFraming
+                {
+                    type = ShotType.CloseUp,
+                    subjectId = "NPC_Archimago",
+                    secondaryId = "",
+                    heightBias = -0.1f,
+                    distanceScale = 1.35f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = false,
+                },
+            },
+            new PoseBeat
+            {
+                note = "Las manos juntas: es el ultimo fotograma de aplaudir, sostenido.",
+                actorId = "NPC_Archimago",
+                pose = "HandClap01",
+                soltar = false,
+                volverAIdle = true,
+            },
+            new VfxBeat
+            {
+                note = "Un circulo magico a sus pies mientras reza (prologo23): «puede quedar mas espectacular».",
+                vfxPrefab = Prefab("12a56ee4630040c4eb17ae9707ed4cef"),
+                atActorId = "NPC_Archimago",
+                markName = "",
+                offset = new Vector3(0.0f, 0.05f, 0.0f),
+                lifetime = 9.0f,
+                earlyDespawn = 0.0f,
+                seguirAlActor = false,
+            },
+            new SfxBeat
+            {
+                note = "",
+                eventKey = "Prologo_MagiaLevitar",
+                clip = null,
+                atActorId = "NPC_Archimago",
+                markName = "",
+                volume = 0.8f,
+            },
+            new EmotionBeat
+            {
+                note = "Los ojos cerrados.",
+                actorId = "NPC_Archimago",
+                emotion = (NPCEmotion)7,
+                revertAfter = 0.0f,
+            },
+            new SayBeat
+            {
+                note = "Lo pide, no lo ordena.",
+                actorId = "NPC_Archimago",
+                markName = "",
+                textKey = "PROLOGO_HECHIZO_PLEGARIA",
+                pageDuration = 4.2f,
+                gesture = "",
+                gestureRepeats = 1,
+                speakerNameKey = "Archimago",
+                playGestures = true,
+                overrideBubbleOffset = false,
+                bubbleOffset = new Vector3(0.0f, 0.0f, 0.0f),
+            },
+            new VfxBeat
+            {
+                note = "Y un segundo circulo, mas grande, cuando termina de pedirlo.",
+                vfxPrefab = Prefab("a2a060732547fe64581bb0cb3c2bdf1d"),
+                atActorId = "NPC_Archimago",
+                markName = "",
+                offset = new Vector3(0.0f, 0.08f, 0.0f),
+                lifetime = 5.0f,
+                earlyDespawn = 0.0f,
+                seguirAlActor = false,
+            },
+            new ShotBeat
+            {
+                note = "El circulo entero, desde arriba: el primer plano de la plegaria no enseña el suelo.",
+                shotName = "",
+                smooth = false,
+                duration = 1.4f,
+                waitForArrival = true,
+                live = false,
+                framing = new ShotFraming
+                {
+                    type = ShotType.Wide,
+                    subjectId = "NPC_Archimago",
+                    secondaryId = "",
+                    heightBias = 3.2f,
+                    distanceScale = 0.9f,
+                    fovOverride = 0.0f,
+                    crossTheLine = false,
+                    headroom = true,
+                    encara = false,
+                },
+            },
+            new WaitBeat
+            {
+                note = "",
+                seconds = 1.2f,
+                unscaled = true,
+            },
+            new WaitBeat
+            {
+                note = "Y el silencio justo antes de abrir los ojos.",
+                seconds = 0.5f,
+                unscaled = true,
+            },
+            new EmotionBeat
+            {
+                note = "Abre los ojos, decidido.",
+                actorId = "NPC_Archimago",
+                emotion = (NPCEmotion)10,
+                revertAfter = 0.0f,
+            },
+            new PoseBeat
+            {
+                note = "Suelta las manos y echa a correr.",
+                actorId = "NPC_Archimago",
+                pose = "",
+                soltar = true,
+                volverAIdle = true,
             },
             new ShotBeat
             {
@@ -5853,19 +6785,19 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ShotBeat
             {
-                note = "CORTE al Archimago. Le sigue mientras corre, con el Mago Oscuro de secundario para que la camara no gire con el.",
+                note = "CORTE al Archimago, con el hechizo ya en el aire. FIJO y abierto: el vivo le perdia justo cuando grita, y la frase se oia sobre un plano vacio.",
                 shotName = "",
                 smooth = false,
-                duration = 1.4f,
+                duration = 3.4f,
                 waitForArrival = true,
-                live = true,
+                live = false,
                 framing = new ShotFraming
                 {
                     type = ShotType.Tracking,
                     subjectId = "NPC_Archimago",
                     secondaryId = "NPC_MagoOscuro",
-                    heightBias = -0.5f,
-                    distanceScale = 1.4f,
+                    heightBias = 2.0f,
+                    distanceScale = 1.5f,
                     fovOverride = 0.0f,
                     crossTheLine = false,
                     headroom = true,
@@ -5917,7 +6849,7 @@ public static class ConstruirPrologoUltimaNoche
             new SfxBeat
             {
                 note = "",
-                eventKey = "Star_SpellCast",
+                eventKey = "Prologo_ProteccionAbsoluta",
                 clip = null,
                 atActorId = "NPC_Archimago",
                 markName = "",
@@ -5963,6 +6895,7 @@ public static class ConstruirPrologoUltimaNoche
                 poseSubida = "JumpStart_InPlace_NoWeapon",
                 poseAire = "JumpAir_InPlace_NoWeapon",
                 poseCaida = "JumpEnd_InPlace_NoWeapon",
+                alturaMaximaDeAterrizaje = 0.3f,
             },
             new PoseBeat
             {
@@ -6028,10 +6961,10 @@ public static class ConstruirPrologoUltimaNoche
             },
             new ScreenFadeBeat
             {
-                note = "A NEGRO, y la explosion se oye DESPUES. Ver lo que pasa seria menos que imaginarlo: lo que hay al otro lado del negro es el valle entero.",
+                note = "La luz del escudo llena la pantalla y SE QUEDA (prologo24): el prologo acaba en blanco, y de ese blanco sale la manana del cuarto de Will, vista desde sus ojos.",
                 fadeIn = true,
-                color = Color.black,
-                duration = 0.7f,
+                color = Color.white,
+                duration = 1.2f,
                 waitForEnd = true,
             },
             new TimeScaleBeat
@@ -6049,6 +6982,15 @@ public static class ConstruirPrologoUltimaNoche
         }),
         Fase("9 - La explosion", "", "", new List<SequenceBeat>
         {
+            new TimeOfDayBeat
+            {
+                note = "Y el mundo se queda AMANECIENDO: la pesadilla acaba de noche y Will se despierta con el dia empezando.",
+                timeOfDay = DayNightCycle.TimeOfDay.Morning,
+                immediate = true,
+                waitForTransition = false,
+                transitionSeconds = 2.0f,
+                esLaHoraDeVolver = true,
+            },
             new SfxBeat
             {
                 note = "LA EXPLOSION, sobre negro. Y el negro se queda: de aqui se sale ya en la habitacion de Will, sin volver a ensenar el valle.",

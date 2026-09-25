@@ -138,6 +138,11 @@ public class Interactable : MonoBehaviour
         // limpiar las fases que este Interactable pudo haber empujado sin hacer Pop.
         if (GameState.Is(GamePhase.Dialogue)) GameState.Pop(GamePhase.Dialogue);
         if (GameState.Is(GamePhase.SavePrompt)) GameState.Pop(GamePhase.SavePrompt);
+
+        // Si el que se va era el del hint encendido, que no se quede la plaza cogida para siempre
+        // (ver SetHintVisible): el siguiente no podría encender el suyo sin apagar a un fantasma.
+        if (_hintEncendido == this) _hintEncendido = null;
+        if (hint != null && _hintVisible) { _hintVisible = false; hint.SetActive(false); }
     }
 
     void HandlePresetApplied()
@@ -166,6 +171,14 @@ public class Interactable : MonoBehaviour
         _hintIcon.preserveAspect = true;
     }
 
+    /// El único interactuable con el hint encendido ahora mismo. Ver SetHintVisible.
+    private static Interactable _hintEncendido;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetHintEstatico() { _hintEncendido = null; }
+#endif
+
     public void SetHintVisible(bool visible, GameObject interactor = null)
     {
         if (hint == null) return;
@@ -177,7 +190,28 @@ public class Interactable : MonoBehaviour
         if (canShow == _hintVisible) return;
         
         _hintVisible = canShow;
-        
+
+        // ── Solo puede haber UN hint en pantalla (INC-381) ──────────────────────────────────
+        //
+        // «El icono de interactuar sale dos veces.» Con dos interactuables cerca (un pozo y un
+        // buzón, dos NPCs pegados) cada uno encendía el suyo, porque cada Interactable maneja su
+        // propio `hint` y nadie llevaba la cuenta de los demás. Barrer los de alrededor desde
+        // InteractionDetector no bastaba: solo veía los que caían dentro de su esfera y solo
+        // cuando él era quien lo encendía.
+        //
+        // Aquí no hay forma de escaparse: el que se enciende apaga al anterior, lo encienda quien
+        // lo encienda y esté donde esté.
+        if (canShow)
+        {
+            if (_hintEncendido != null && _hintEncendido != this)
+                _hintEncendido.SetHintVisible(false);
+            _hintEncendido = this;
+        }
+        else if (_hintEncendido == this)
+        {
+            _hintEncendido = null;
+        }
+
         // Matar cualquier tween anterior
         _hintTween?.Kill();
         

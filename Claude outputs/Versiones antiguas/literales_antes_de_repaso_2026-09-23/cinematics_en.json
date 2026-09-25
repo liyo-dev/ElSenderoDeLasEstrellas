@@ -1,0 +1,660 @@
+{
+    "subtitles": [
+        {
+            "id": "APERTURA_SENDERO_01",
+            "text": "Once we cross it, according to the book, there'll be no way back until we clear every trial. There are no save points inside. Only forward."
+        },
+        {
+            "id": "APERTURA_SENDERO_02",
+            "text": "Looks like we have to go through all three. I hope at least we can go as a group. I really don't fancy getting separated from you two in there."
+        },
+        {
+            "id": "APERTURA_SENDERO_03",
+            "text": "I'm not letting either of you out of my sight. Whatever's on the other side."
+        },
+        {
+            "id": "EPILOGO_ESTELA_01",
+            "text": "You're alive. You're alive, you idiot."
+        },
+        {
+            "id": "EPILOGO_LIAM_01",
+            "text": "Estela? What...?"
+        },
+        {
+            "id": "EPILOGO_LIAM_02",
+            "text": "Where's Will?"
+        },
+        {
+            "id": "EPILOGO_WILL_01",
+            "text": "Hey. I couldn't leave without saying goodbye properly."
+        },
+        {
+            "id": "EPILOGO_WILL_02",
+            "text": "Take care of your brother. Take care of him for me too. And take care of each other."
+        },
+        {
+            "id": "EPILOGO_WILL_03",
+            "text": "Thank you, for being my family, even if only for a little while."
+        },
+        {
+            "id": "ESTELA_EXPLAINS_EPILOGUE",
+            "text": "Before he destroyed the Path, he used the forbidden spell of resurrection.\nThat's why you're alive. That's why... he's gone."
+        },
+        {
+            "id": "ESTELA_PROTEST_PORTAL",
+            "text": "Will, what are you doing? Get out of there!"
+        },
+        {
+            "id": "EVT_08",
+            "text": "Will! Use your magic, press <sprite name=\"interactable_x\"> and defeat the demon!"
+        },
+        {
+            "id": "EVT_09",
+            "text": "How interesting!"
+        },
+        {
+            "id": "EVT_10",
+            "text": "The demon's attack has awakened your magic."
+        },
+        {
+            "id": "EVT_11",
+            "text": "Will! Use it against the demon, press <sprite name=\"interactable_x\"> and defeat him."
+        },
+        {
+            "id": "EVT_AWAKEN_01",
+            "text": "Will, watch out!"
+        },
+        {
+            "id": "EVT_AWAKEN_02",
+            "text": "...!"
+        },
+        {
+            "id": "EVT_AWAKEN_03",
+            "text": "Take that!"
+        },
+        {
+            "id": "EVT_AWAKEN_05",
+            "text": "What... what was that?"
+        },
+        {
+            "id": "EVT_AWAKEN_06",
+            "text": "Will, get out of the way!"
+        },
+        {
+            "id": "EVT_ELDRAN_CHEER_01",
+            "text": "That's it, Will! You've got this!"
+        },
+        {
+            "id": "EVT_ELDRAN_CHEER_02",
+            "text": "Come on, boy! I know you can do it!"
+        },
+        {
+            "id": "EVT_ELDRAN_CHEER_03",
+            "text": "Don't give up! Finish it once and for all!"
+        },
+        {
+            "id": "EVT_ESTELA_ARAÑA_1",
+            "text": "That's for being ugly."
+        },
+        {
+            "id": "EVT_ESTELA_ARAÑA_2",
+            "text": "Oh, didn't see that coming?"
+        },
+        {
+            "id": "EVT_ESTELA_ARAÑA_3",
+            "text": "Poor little thing."
+        },
+        {
+            "id": "EVT_ESTELA_ARAÑA_4",
+            "text": "You're sooo boring..."
+        },
+        {
+            "id": "EVT_ESTELA_DRAMATIC",
+            "text": "Oh nooo, please... someone help me!\n...these two big strong muscular warriors...\n...are going to rob a helpless little princess like me..."
+        },
+        {
+            "id": "EVT_ESTELA_ESO_ERA",
+            "text": "...Was that it?"
+        },
+        {
+            "id": "EVT_ESTELA_PANCOMI",
+            "text": "Piece of cake!"
+        },
+        {
+            "id": "EVT_GOLEM_01",
+            "text": "That fool is going to ruin my plans..."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_01",
+            "text": "So… that's the pure-hearted boy who will open the Path."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_02",
+            "text": "I'm glad that demon managed to awaken his magic."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_03",
+            "text": "Ha… ha ha…"
+        },
+        {
+            "id": "EVT_LIAM_GOLEM_01",
+            "text": "Let's see if this golem is enough..."
+        },
+        {
+            "id": "EVT_LIAM_GOLEM_02",
+            "text": "If not... I'll have to step in myself."
+        },
+        {
+            "id": "EVT_MOUNTAIN_01",
+            "text": "Nobody interrupts me while I'm eating!"
+        },
+        {
+            "id": "EVT_MOUNTAIN_ELDRAN_RUN",
+            "text": "RUUUUUN!!!"
+        },
+        {
+            "id": "EVT_REINOEXIT_ESTELA_01",
+            "text": "The first time I cast a spell, I nearly singed my own eyebrows off.\nAnd look at me now... an actual prodigy.\nFear isn't the problem, kiddo.\nThe problem would be if you stopped trying. And I'm not letting that happen."
+        },
+        {
+            "id": "EVT_REINOEXIT_LIAM_01",
+            "text": "Will... what's wrong?"
+        },
+        {
+            "id": "EVT_REINOEXIT_LIAM_02",
+            "text": "You won't be facing this alone.\nWhatever happens."
+        },
+        {
+            "id": "EVT_REINOEXIT_WILL_01",
+            "text": "It's the first time I've ever left home.\nMy whole life has been back there.\nI'm scared, Liam. What if I can't control this?\nWhat if out there, what I am just isn't enough... and it all goes wrong?"
+        },
+        {
+            "id": "EVT_REINOEXIT_WILL_02",
+            "text": "...Thank you. Okay. Let's go."
+        },
+        {
+            "id": "EVT_TABERNA_10",
+            "text": "Run! Flee from Estela until her anger blows over!"
+        },
+        {
+            "id": "EVT_TAB_ELDRAN_01",
+            "text": "We need to find out what's behind that demon appearing, and now a golem too...\nAnd why they're after you."
+        },
+        {
+            "id": "EVT_TAB_ELDRAN_02",
+            "text": "I think I've lost my appetite."
+        },
+        {
+            "id": "EVT_TAB_ESTELA_01",
+            "text": "Yes, yes, very insightful. And when is the food coming?"
+        },
+        {
+            "id": "EVT_TAB_ESTELA_02",
+            "text": "That... wasn't me."
+        },
+        {
+            "id": "EVT_TAB_ESTELA_03",
+            "text": "FINALLY!"
+        },
+        {
+            "id": "EVT_TAB_ESTELA_RAGE",
+            "text": "NOBODY interrupts me when I'm eating!"
+        },
+        {
+            "id": "EVT_TAB_ESTELA_SEVAENTERAR",
+            "text": "This guy's going to get it!"
+        },
+        {
+            "id": "EVT_TAB_LIAM_01",
+            "text": "Pardon the interruption...\nMy name is Liam, and I couldn't help overhearing your conversation.\nI think I have information that might interest you."
+        },
+        {
+            "id": "EVT_TAB_WILL_01",
+            "text": "And what it has to do with my magic..."
+        },
+        {
+            "id": "EVT_TAB_WILL_02",
+            "text": "Estela... do you really eat like that?"
+        },
+        {
+            "id": "EVT_TAB_WILL_03",
+            "text": "WHAT?!"
+        },
+        {
+            "id": "EVT_W1_ARANAS_ATACAD",
+            "text": "Spiders, attack!"
+        },
+        {
+            "id": "EVT_W1_PANCOMI",
+            "text": "Piece of cake? Let's see if our technique is that easy to handle..."
+        },
+        {
+            "id": "EVT_W1_PRINCEFEA",
+            "text": "Little princess? More like little ugly, don't you think?"
+        },
+        {
+            "id": "EVT_W2_AMENAZA",
+            "text": "Hand over everything you've got and we won't hurt you."
+        },
+        {
+            "id": "EVT_WILL_MADREMIA",
+            "text": "Good grief..."
+        },
+        {
+            "id": "LIAM_LAST_WORDS",
+            "text": "Take care of my brother."
+        },
+        {
+            "id": "MAGOOSCURO_MONOLOGUE",
+            "text": "Why do you think you're alive, boy?\nHave you never wondered why you remember nothing of yourself, or your past?\nI'll tell you why — you remember nothing of yourself, your family, or your village,\nbecause eons ago you died fighting me.\nYou died that day. You are the reincarnation of the only mage who ever managed to stop me!\nYou forced me to unleash my ultimate spell of destruction, but back then I couldn't control it.\nWhen it all slipped beyond my grasp, I bound my soul to the Path,\nwaiting for the day some other fool would clear its trials\nand wish me back to life.\nTo keep the spell from touching your family and your pitiful village,\nyou poured every last drop of magic inside you into a protective spell —\none that saved your people, but destroyed you.\nWhat I don't understand is how, after dying, you're still here…"
+        },
+        {
+            "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
+            "text": "Ugh, again? Those two have been like that for a while...\nWe'll go see later, don't worry. But first, before I forget, that's what I came for:"
+        },
+        {
+            "id": "OLIVER_GREETING_PERAS_HANDOFF",
+            "text": "Alright, let's go see what's going on with those two!"
+        },
+        {
+            "id": "WILL_GREETING_PERAS_HANDOFF",
+            "text": "Let's go."
+        },
+        {
+            "id": "OLIVER_GREETING_NEW_SPELL_INTRO",
+            "text": "I've learned a new spell, check this out:"
+        },
+        {
+            "id": "OLIVER_GREETING_OUT_OF_BREATH",
+            "text": "Ugh... ugh, I can't breathe..."
+        },
+        {
+            "id": "OLIVER_GREETING_SPOT_WILL",
+            "text": "WILL! Hey, Will, wait up!"
+        },
+        {
+            "id": "PARQUE_LIAM_01",
+            "text": "Okay, I like this a lot better."
+        },
+        {
+            "id": "PARQUE_LIAM_02",
+            "text": "Here. So you don't forget where you come from."
+        },
+        {
+            "id": "PARQUE_LIAM_03",
+            "text": "That's... surprisingly thoughtful."
+        },
+        {
+            "id": "PARQUE_LIAM_04",
+            "text": "We should do this more often. Once all this is over, I mean."
+        },
+        {
+            "id": "PARQUE_LIAM_05",
+            "text": "Minus the haunted forests. And the candy castles."
+        },
+        {
+            "id": "PARQUE_LIAM_06",
+            "text": "No golems, no demons, no—"
+        },
+        {
+            "id": "PARQUE_LIAM_07",
+            "text": "That's—"
+        },
+        {
+            "id": "PARQUE_LIAM_08",
+            "text": "It's too much like mine. Like my maze.\nI don't think I can go in there, Liam. I'm sorry."
+        },
+        {
+            "id": "PARQUE_LIAM_09",
+            "text": "You don't have to be sorry. This trial is mine. It makes sense I face it alone."
+        },
+        {
+            "id": "PARQUE_LIAM_10",
+            "text": "Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone.\nBut that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out."
+        },
+        {
+            "id": "PARQUE_LIAM_11",
+            "text": "Thank you. Both of you."
+        },
+        {
+            "id": "PARQUE_LIAM_12",
+            "text": "What was the true price you paid to get this far, Mage?"
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_01",
+            "text": "Here... here it is."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_02",
+            "text": "Open it. We've come this far."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_03",
+            "text": "The ritual to open the Path of the Stars..."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_04",
+            "text": "Wait. There's more. Two spells noted in the margin, in a different hand... older."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_05",
+            "text": "The Time Spell. And... the Resurrection Spell.\nForbidden. There's a note in the margin explaining why."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_06",
+            "text": "Whatever that note says... I think we should save this for when we truly need it."
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_07",
+            "text": "From here on, there's no turning back, is there?"
+        },
+        {
+            "id": "PIEDRA_ANCESTRAL_08",
+            "text": "There wasn't from the start. But now... now we truly know it."
+        },
+        {
+            "id": "PRUEBA_WILL_01",
+            "text": "Wow, this is actually terrifying."
+        },
+        {
+            "id": "PRUEBA_WILL_02",
+            "text": "Don't laugh, it's horrible. I hate speaking in front of people."
+        },
+        {
+            "id": "PRUEBA_WILL_03",
+            "text": "A clumsy speech never killed anyone... though I'll admit this one was particularly bad."
+        },
+        {
+            "id": "PRUEBA_WILL_04",
+            "text": "It's only an echo. We're right here. Look at us."
+        },
+        {
+            "id": "REUNION_ESTELA_01",
+            "text": "I don't deserve you coming to find me. I hurt my own friend."
+        },
+        {
+            "id": "REUNION_ESTELA_02",
+            "text": "And Liam? After what he did..."
+        },
+        {
+            "id": "REUNION_ESTELA_03",
+            "text": "Let's go find him, then. Before this place swallows him whole."
+        },
+        {
+            "id": "REUNION_ESTELA_04",
+            "text": "Just so we're clear: this doesn't mean everything's forgiven. It just means I'm not letting him die over feeling guilty."
+        },
+        {
+            "id": "REUNION_LIAM_01",
+            "text": "After what I did..."
+        },
+        {
+            "id": "REUNION_WILL_01",
+            "text": "It was an accident. And I didn't come to judge you.\nI came because no one gets left behind. Not even when they mess up."
+        },
+        {
+            "id": "REUNION_WILL_02",
+            "text": "If we don't forgive him, we're no better than the man who pushed him to do it."
+        },
+        {
+            "id": "REUNION_WILL_03",
+            "text": "Get up. We're not done yet."
+        },
+        {
+            "id": "REUNION_WILL_04",
+            "text": "After what you did — and everything you've done since then to try to fix it. That counts too."
+        },
+        {
+            "id": "RUPTURA_ESTELA_01",
+            "text": "Tell me it isn't true. Tell me what we just saw isn't what it looks like."
+        },
+        {
+            "id": "RUPTURA_ESTELA_02",
+            "text": "You planned all of it. The demon in the woods.\nThe danger. You used Will as bait from day one."
+        },
+        {
+            "id": "RUPTURA_ESTELA_03",
+            "text": "Don't you dare use that as an excuse!"
+        },
+        {
+            "id": "RUPTURA_ESTELA_04",
+            "text": "Will... I'm sorry..."
+        },
+        {
+            "id": "RUPTURA_LIAM_01",
+            "text": "My brother is dying. I was desperate. I thought if I could reach the Path..."
+        },
+        {
+            "id": "RUPTURA_LIAM_02",
+            "text": "I don't deserve to be followed."
+        },
+        {
+            "id": "RUPTURA_WILL_01",
+            "text": "Both of you, please, stop!"
+        },
+        {
+            "id": "TIME_SPELL_TUTORIAL",
+            "text": "Forbidden Spell: Temporal Regression!\nTurn back time... and this time, dodge it."
+        },
+        {
+            "id": "VOICE_VISION_EXPLANATION",
+            "text": "Your magic, in the moment of your death,\nsearched through time and space\nfor a vessel to hold your soul.\nYour wish to protect your people, your family,\nto end that man's tyranny,\nled you to a sick boy\nwhose heart had just stopped beating,\nright as your soul arrived."
+        },
+        {
+            "id": "VOICE_VISION_MUST_END_SENDERO",
+            "text": "You must end the Path.\nThere is no other way to stop mages like him\nfrom using this place for their own gain, ever again."
+        },
+        {
+            "id": "VOICE_VISION_PROTECT_THEM",
+            "text": "You must protect them.\nThem, and all of humanity that comes after.\nOnly then will you truly prove, once and for all, who you really are."
+        },
+        {
+            "id": "VOICE_VISION_REASSURANCE",
+            "text": "No, Will. You are here, and there.\nYou are wherever you want to be.\nThis is only your power, your magic,\nthe fruit of the good you have done throughout your life."
+        },
+        {
+            "id": "WILL_CALM_REPLY",
+            "text": "It's all right, Estela. Don't worry... I've got it all figured out."
+        },
+        {
+            "id": "WILL_FAREWELL",
+            "text": "Take care of each other. I've already made it home."
+        },
+        {
+            "id": "WILL_FINAL_WISH",
+            "text": "Heal his brother. That's the only thing I ask."
+        },
+        {
+            "id": "WILL_FLASHBACK_REVELATION",
+            "text": "Now... now I remember it all.\nThe protective spell. My parents. My village…\nBut what am I doing here? How is this possible? And in this body…"
+        },
+        {
+            "id": "WILL_GREETING_OLIVER_CUT_OFF",
+            "text": "Ha, you never change, Oliver... Hey, do you know what's going on with Eldran and Victoria? I just heard them arguing."
+        },
+        {
+            "id": "WILL_VISION_AM_I_DEAD",
+            "text": "Have I gotten my memory back… and I'm dead?"
+        },
+        {
+            "id": "WILL_VISION_THEN_I",
+            "text": "Then I…"
+        },
+        {
+            "id": "WILL_VISION_WHAT_ABOUT_FRIENDS",
+            "text": "Destroy the Path… What about Estela? And Liam?"
+        },
+        {
+            "id": "WILL_VISION_WHERE_AM_I",
+            "text": "Where am I?"
+        },
+        {
+            "id": "PROLOGO_BAILE",
+            "text": "Keep it up. I want to hear you from the bridge."
+        },
+        {
+            "id": "PROLOGO_CARRETA_GRACIAS",
+            "text": "Thank you so much, master!"
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
+            "text": "Right behind you. As soon as I can."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
+            "text": "I have no idea, Liora. Get them out of here. I'll distract him."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_ELEGIR",
+            "text": "Two tomorrow. You owe me."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA",
+            "text": "Come back soon."
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA_1",
+            "text": "What's going on?"
+        },
+        {
+            "id": "PROLOGO_DESPEDIDA_LIORA_2",
+            "text": "And you?"
+        },
+        {
+            "id": "PROLOGO_DUELO_ARCHIMAGO",
+            "text": "No. But I can send you somewhere you will never hurt anyone again."
+        },
+        {
+            "id": "PROLOGO_DUELO_MAGO",
+            "text": "Are you going to save them all, mage?"
+        },
+        {
+            "id": "PROLOGO_DUELO_MAGO_2",
+            "text": "You cannot even save yourself."
+        },
+        {
+            "id": "PROLOGO_EVACUACION_LIORA",
+            "text": "Everyone, come with me! To the bridge, quickly!"
+        },
+        {
+            "id": "PROLOGO_FAVOR_CARRETA",
+            "text": "Master! It's tipped over again. And I was going slowly this time."
+        },
+        {
+            "id": "PROLOGO_FAVOR_GLOBO",
+            "text": "It's stuck right at the top!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_1",
+            "text": "Whoa! It's finally flying!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_2",
+            "text": "Look, look how high it goes!"
+        },
+        {
+            "id": "PROLOGO_GLOBO_VECINO_3",
+            "text": "It's going all the way up to the clouds!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO",
+            "text": "ABSOLUTE!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO_1",
+            "text": "Protection...!"
+        },
+        {
+            "id": "PROLOGO_HORA_ARCHIMAGO",
+            "text": "To the bridge! All of you, now!"
+        },
+        {
+            "id": "PROLOGO_IRRUPCION_MAGO",
+            "text": "Kneel. I haven't come for you — but you're in the way."
+        },
+        {
+            "id": "PROLOGO_MANANA_GLOBO_OK",
+            "text": "Careful..."
+        },
+        {
+            "id": "PROLOGO_MANANA_GLOBO_ROTO",
+            "text": "...Right, that was too much. Sorry, everyone."
+        },
+        {
+            "id": "PROLOGO_MANANA_INTRO",
+            "text": "Morning, valley. Let's see what's broken today."
+        },
+        {
+            "id": "PROLOGO_PLAZA_ARCHIMAGO",
+            "text": "Today I pushed a cart and popped a balloon. That practically counts as a holiday."
+        },
+        {
+            "id": "PROLOGO_PLAZA_LIORA_1",
+            "text": "You don't take a single day off, do you?"
+        },
+        {
+            "id": "PROLOGO_PLAZA_LIORA_2",
+            "text": "Then let's see you pop two tomorrow."
+        },
+        {
+            "id": "PERAS_01",
+            "text": "Come on! The pears get crushed if you put them in there, Victoria."
+        },
+        {
+            "id": "PERAS_02",
+            "text": "I've been selling fruit longer than you've been arguing, Eldran. I know what I'm doing."
+        },
+        {
+            "id": "PERAS_03",
+            "text": "Fine, fine... you win. Like always."
+        },
+        {
+            "id": "PERAS_04",
+            "text": "Like always. Go on, say hello to your boy, he's been standing there a while."
+        },
+        {
+            "id": "PERAS_05",
+            "text": "Will! Sorry about the show, you know how market days are."
+        },
+        {
+            "id": "PERAS_06",
+            "text": "By the way, since you're here: I left a box under a tree a few days ago and haven't been able to go get it. Would you mind looking for it?"
+        },
+        {
+            "id": "PERAS_07",
+            "text": "It shouldn't be far. Follow the path and look for the big trees, you'll know it when you see it."
+        },
+        {
+            "id": "PERAS_08",
+            "text": "Here, for the road. And thank you, really."
+        },
+        {
+            "id": "PERAS_09",
+            "text": "You can count on me, Eldran."
+        },
+        {
+            "id": "HOOK_DISCUSION_01",
+            "text": "Victoria, the pears don't go in that crate, they'll get bruised!"
+        },
+        {
+            "id": "HOOK_DISCUSION_02",
+            "text": "The crate's mine, Eldran, I'll put whatever I like in it!"
+        },
+        {
+            "id": "HOOK_DISCUSION_03",
+            "text": "It may be yours, but I brought those pears myself this morning!"
+        },
+        {
+            "id": "HOOK_DISCUSION_04",
+            "text": "...The fruit crates again? I wonder what's going on out there."
+        },
+        {
+            "id": "PERAS_OLIVER_VOY",
+            "text": "Will, I'm coming with you!"
+        },
+        {
+            "id": "PERAS_VICTORIA_QUEDATE",
+            "text": "No, no, you're staying right here with me, I need the help with these boxes."
+        }
+    ]
+}

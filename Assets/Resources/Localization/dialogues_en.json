@@ -77,6 +77,22 @@
             "value": "Patricia"
         },
         {
+            "key": "CHAR_TOMASA",
+            "value": "Tomasa"
+        },
+        {
+            "key": "TOMASA_ESTRELLA_1",
+            "value": "The star? It's badly carved. It's no use for anything, I'm warning you."
+        },
+        {
+            "key": "WILL_ESTRELLA_1",
+            "value": "That's why. I was told to buy something useless."
+        },
+        {
+            "key": "TOMASA_ESTRELLA_2",
+            "value": "Then you chose well. Take care of it for me."
+        },
+        {
             "key": "CHAR_PIRATA",
             "value": "Pirate"
         },
@@ -119,6 +135,30 @@
         {
             "key": "CHAR_WILL",
             "value": "Will"
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_01",
+            "value": "By the way, what would you like for your eighteenth?"
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_02",
+            "value": "That's ages away. And I don't need anything."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_03",
+            "value": "I didn't ask what you need."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_04",
+            "value": "..."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_05",
+            "value": "Here. Buy yourself something useless."
+        },
+        {
+            "key": "DLG_ELDRAN_REGALO_06",
+            "value": "Thanks, Eldran. And count me in for the crate."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",

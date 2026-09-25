@@ -473,6 +473,18 @@
             "value": "Go see what's going on"
         },
         {
+            "key": "QUEST_WILL_MISSION1_DESC",
+            "value": "Spend Eldran's coin on something useless."
+        },
+        {
+            "key": "QUEST_WILL_MISSION1_DETAIL",
+            "value": "Eldran gave you a coin and an odd request: buy yourself something with no use at all. In the market, Tomasa sells wooden figurines."
+        },
+        {
+            "key": "QUEST_WILL_MISSION1_NAME",
+            "value": "Something useless"
+        },
+        {
             "key": "READ_THE_LETTER_DESC",
             "value": "Read the letter on the side table."
         }

@@ -21,6 +21,212 @@ using UnityEngine.AI;
 /// CinematicTimeOfDay.Restore(), al que ya llama el SequencePlayer al terminar, al saltar y al
 /// fallar — nunca un beat final, porque un beat final no se ejecuta cuando el jugador se salta la
 /// escena.
+/// Dos nubes que se abren DELANTE DE LA LENTE (INC-373).
+///
+/// «El prólogo abre con una aérea y quiero meter las nubes abriéndose.» El primer intento fueron
+/// dos nubes colocadas en la escena sobre la plaza, y no se vieron: la cámara del plano la resuelve
+/// el buscador, así que dónde cae exactamente no lo sabe nadie de antemano y cualquier coordenada
+/// escrita a mano es una apuesta.
+///
+/// Esto no apuesta: las cuelga de la PROPIA CÁMARA de la cinemática, a los metros que se le digan
+/// por delante, una a cada lado. Estén donde estén los personajes y resuelva el plano donde
+/// resuelva, las nubes tapan el cuadro y se abren. Se destruyen solas al terminar.
+[Serializable]
+public class NubesDeAperturaBeat : SequenceBeat
+{
+    [Tooltip("Prefab de nube. Se instancian dos, una a cada lado.")]
+    public GameObject nube;
+
+    [Tooltip("Metros por delante de la lente.")]
+    public float distancia = 6f;
+
+    [Tooltip("Separación inicial respecto al centro del cuadro, en metros. Pequeña: tienen que " +
+             "taparlo casi todo al empezar.")]
+    public float separacionInicial = 2.2f;
+
+    [Tooltip("Separación final: a dónde se van al abrirse.")]
+    public float separacionFinal = 16f;
+
+    [Tooltip("Escala de cada nube. Solo se usa si 'escalaAutomatica' está desmarcado.")]
+    public float escala = 7f;
+
+    [Tooltip("Calcular el tamaño y la separación a partir de lo que de verdad SE VE por la lente " +
+             "(el campo de visión de la cámara y el tamaño real del prefab), en vez de fiarse de " +
+             "los números de arriba. Con esto, dos nubes tapan la pantalla entera se use el prefab " +
+             "que se use.")]
+    public bool escalaAutomatica = true;
+
+    [Tooltip("Segundos que tarda en abrirse.")]
+    public float segundos = 3.4f;
+
+    [Tooltip("Esperar a que acabe de abrirse antes de seguir. Desmarcado, la escena sigue " +
+             "mientras se abren, que es lo normal: la cámara ya está bajando.")]
+    public bool esperar = false;
+
+    public override string Describe() => $"Nubes que se abren ({segundos:F1}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        // LA CÁMARA DE VERDAD (INC-385). `ActiveCamera` es el DRIVER, y su transform es el
+        // GameObject del sequencer — que vive en MainWorld. Colgadas de ahí, las dos nubes
+        // aparecían flotando en la aldea, a cuatro metros de un objeto que no es la lente: es
+        // literalmente lo que dijo Raúl («las nubes del principio creo que están saliendo en
+        // MainWorld»). Lo que hay que usar es la Camera que mueve ese driver.
+        var lente = ctx?.Player != null
+            ? (ctx.Player.CachedCamera != null ? ctx.Player.CachedCamera.transform : null)
+            : null;
+        if (lente == null && ctx?.Player != null && ctx.Player.ActiveCamera != null)
+            lente = ctx.Player.ActiveCamera.transform;
+
+        if (nube == null || lente == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[NubesDeApertura] Sin prefab de nube o sin cámara cinemática ({note}).");
+#endif
+            yield break;
+        }
+
+        var rutina = ctx.Player.StartCoroutine(Co_Abrir(ctx, lente, ctx.Player.CachedCamera));
+        ctx.Player.TrackBackgroundRoutine(rutina);
+        if (esperar) yield return rutina;
+    }
+
+    private IEnumerator Co_Abrir(SequenceContext ctx, Transform camara, Camera lente)
+    {
+        var izq = UnityEngine.Object.Instantiate(nube, camara);
+        var der = UnityEngine.Object.Instantiate(nube, camara);
+        izq.name = "_NubeIzquierda";
+        der.name = "_NubeDerecha";
+        izq.transform.localRotation = Quaternion.identity;
+        der.transform.localRotation = Quaternion.identity;
+        izq.transform.localScale = Vector3.one;
+        der.transform.localScale = Vector3.one;
+
+        // ── Que TAPEN la pantalla (INC-394) ──────────────────────────────────────────────────
+        //
+        // «No salen las nubes, se ve azul nada más; lo que sí veo aparecer es una nube al rato.»
+        // Estaban puestas, colgadas de la lente y con material: lo que fallaba es el TAMAÑO. Una
+        // escala fija (9) no significa nada sin saber cuánto mide el prefab ni cuánto se ve por
+        // la lente a esa distancia — y este prefab es un «MeshCarrier», que a escala 1 mide poco
+        // más de un metro. Dos nubes de nueve metros a cuatro metros y medio de la cámara tapan
+        // un trozo del centro, no el cuadro.
+        //
+        // Así que se mide: lo que se ve de alto y de ancho a esa distancia sale del campo de
+        // visión de la cámara, y el tamaño real del prefab, de su Renderer. Con esas dos cosas,
+        // la escala y la separación salen solas y da igual qué nube se use.
+        float dist = Mathf.Max(distancia, lente != null ? lente.nearClipPlane * 3f : 0.3f);
+        float escalaFinal = escala;
+        float sepInicial = separacionInicial;
+        float sepFinal = separacionFinal;
+
+        var pinta = izq.GetComponentInChildren<Renderer>();
+
+        // Tamaño y centro EN LOS EJES DE LA NUBE, no del mundo (INC-395). `bounds` es una caja
+        // alineada con el mundo: con la cámara mirando hacia abajo (la vista de pájaro), la nube
+        // va girada con ella y esa caja sale bastante más grande que la nube de verdad — así que
+        // la escala calculada se quedaba corta. `localBounds` es la caja del propio mesh.
+        //
+        // Y el centro importa porque este mesh no tiene el pivote en el medio: colocando el
+        // pivote a ±x, una nube quedaba más cerca del centro que la otra y por el hueco se veía
+        // el valle desde el primer fotograma. Se descuenta al colocarlas.
+        Vector3 tamUnidad = Vector3.one;
+        Vector3 centroUnidad = Vector3.zero;
+        if (pinta != null)
+        {
+            if (pinta.transform == izq.transform)
+            {
+                tamUnidad = pinta.localBounds.size;
+                centroUnidad = pinta.localBounds.center;
+            }
+            else
+            {
+                tamUnidad = camara.InverseTransformVector(pinta.bounds.size);
+                tamUnidad = new Vector3(Mathf.Abs(tamUnidad.x), Mathf.Abs(tamUnidad.y), Mathf.Abs(tamUnidad.z));
+                centroUnidad = camara.InverseTransformVector(pinta.bounds.center - izq.transform.position);
+            }
+        }
+
+        if (escalaAutomatica && lente != null && pinta != null && tamUnidad.x > 0.001f)
+        {
+            float alto = 2f * dist * Mathf.Tan(lente.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            float ancho = alto * lente.aspect;
+
+            // Cada nube cubre bastante más de media pantalla de ancho y la pantalla entera de
+            // alto, y juntas SOLAPAN en el centro: el borde de este mesh es deshilachado, y con
+            // un solape justo se colaba el cielo por los flecos (INC-395, «un tramo azul»).
+            escalaFinal = Mathf.Max((ancho * 0.85f) / tamUnidad.x, (alto * 1.5f) / tamUnidad.y);
+            sepInicial = tamUnidad.x * escalaFinal * 0.28f;
+            sepFinal = ancho * 0.5f + tamUnidad.x * escalaFinal * 0.65f;  // fuera del cuadro del todo
+        }
+
+        // Aplastadas en profundidad (INC-395). El mesh es casi tan hondo como ancho: escalado para
+        // tapar la pantalla, medía más de fondo que la distancia a la lente, así que la cámara
+        // quedaba DENTRO de la nube y lo que se veía era su interior, un azul plano. Una cortina
+        // de nube no necesita fondo: se deja en un grosor que nunca llegue a la lente.
+        float fondo = tamUnidad.z * escalaFinal;
+        float aplastado = fondo > 0.001f ? Mathf.Clamp01((dist * 1.1f) / fondo) : 1f;
+
+        Vector3 escalaNube = new Vector3(escalaFinal, escalaFinal, escalaFinal * aplastado);
+        izq.transform.localScale = escalaNube;
+        der.transform.localScale = escalaNube;
+        Vector3 desfase = Vector3.Scale(centroUnidad, escalaNube);
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // Diagnostico (INC-383): si las nubes no se ven, esta linea dice si es que no se han
+        // creado, si se han creado detras de la camara o si se han creado sin nada que pintar.
+        Debug.Log($"[NubesDeApertura] '{nube.name}' x2 en '{camara.name}' a {dist:F1} m. " +
+                  $"El prefab mide {tamUnidad.ToString("F2")} a escala 1 → escala {escalaFinal:F1} " +
+                  $"(fondo x{aplastado:F2}), separación {sepInicial:F1}→{sepFinal:F1} en {segundos:F1}s. " +
+                  $"Pinta: {(pinta != null ? pinta.sharedMaterial != null ? pinta.sharedMaterial.name : "SIN MATERIAL" : "SIN RENDERER")}. " +
+                  $"Lente: fov {(lente != null ? lente.fieldOfView : 0f):F0}, near {(lente != null ? lente.nearClipPlane : 0f):F2}.");
+#endif
+
+        // Se registran para que el cierre de la secuencia (o el salto) las barra igual que todo
+        // lo demás: nadie se puede quedar con dos nubes pegadas a la cara.
+        ctx.Player.RegisterCleanup(() =>
+        {
+            if (izq != null) UnityEngine.Object.Destroy(izq);
+            if (der != null) UnityEngine.Object.Destroy(der);
+        });
+
+        float t = 0f;
+        float duracion = Mathf.Max(0.1f, segundos);
+
+        // Se colocan cerradas ANTES del primer yield: así el primer fotograma que se pinta ya es
+        // de nube, nunca de valle ni de cielo.
+        Colocar(izq, der, sepInicial, 0f, dist, desfase);
+
+        while (t < duracion)
+        {
+            if (izq == null || der == null) yield break;
+
+            // Se abren DESPACIO y por igual (INC-395, «cuando se separan, más lentito»). Antes la
+            // curva era rápida al principio: en el primer medio segundo ya se había ido una cuarta
+            // parte, y lo que se veía era un tirón. Con arranque y frenada suaves se ve abrirse.
+            float k = t / duracion;
+            k = k * k * (3f - 2f * k);
+            float x = Mathf.Lerp(sepInicial, sepFinal, k);
+            float subida = Mathf.Lerp(0f, escalaFinal * tamUnidad.y * 0.12f, k);
+
+            Colocar(izq, der, x, subida, dist, desfase);
+
+            t += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        if (izq != null) UnityEngine.Object.Destroy(izq);
+        if (der != null) UnityEngine.Object.Destroy(der);
+    }
+
+    /// Las dos nubes a ±x del centro del cuadro, contando con que su centro no está en el pivote.
+    private static void Colocar(GameObject izq, GameObject der, float x, float subida, float dist,
+        Vector3 desfase)
+    {
+        izq.transform.localPosition = new Vector3(-x, subida, dist) - desfase;
+        der.transform.localPosition = new Vector3(x, subida, dist) - desfase;
+    }
+}
+
 [Serializable]
 public class WeatherBeat : SequenceBeat
 {
@@ -66,6 +272,9 @@ public class WeatherBeat : SequenceBeat
 /// había la primera vez que se toca y lo devuelve al terminar.
 public static class CinematicWeather
 {
+    /// Lo que dura una tormenta o una lluvia puesta por una cinemática: más que cualquier escena.
+    private const float DuracionDeEscena = 3600f;
+
     private static bool _guardado;
     private static bool _lluviaPrevia;
     private static bool _nieblaPrevia;
@@ -91,11 +300,14 @@ public static class CinematicWeather
         }
 
         Guardar(ciclo);
+        DayNightCycle.SorteoDeClimaEnPausa = true;
 
         switch (fenomeno)
         {
+            // Duración larga a propósito (INC-409): sin ella la tormenta sorteaba la suya y en
+            // prologo17 dejó de llover a mitad del duelo. La quita Restore() al acabar la escena.
             case WeatherBeat.Fenomeno.Tormenta:
-                if (encender) ciclo.StartThunderstorm(null, immediate); else ciclo.StopThunderstorm();
+                if (encender) ciclo.StartThunderstorm(DuracionDeEscena, immediate); else ciclo.StopThunderstorm();
                 break;
 
             case WeatherBeat.Fenomeno.Viento:
@@ -103,7 +315,7 @@ public static class CinematicWeather
                 break;
 
             case WeatherBeat.Fenomeno.Lluvia:
-                if (encender) ciclo.StartRain(null, immediate); else ciclo.StopRain();
+                if (encender) ciclo.StartRain(DuracionDeEscena, immediate); else ciclo.StopRain();
                 break;
 
             case WeatherBeat.Fenomeno.Niebla:
@@ -559,7 +771,20 @@ public class WalkPathBeat : SequenceBeat
             Vector3 dir = plano.normalized;
             Vector3 siguiente = pos + dir * (v * Time.deltaTime);
 
-            if (pegarAlSuelo) siguiente = PegarAlSuelo(actor.Transform, siguiente);
+            // Espacio personal (INC-406): apartarse de lado de quien tenga delante, en vez de
+            // atravesarle. Solo andando por el suelo.
+            Vector3 aparte = (pegarAlSuelo && animarAndando)
+                ? Apartarse(actor.Transform, pos, dir) * (v * Time.deltaTime)
+                : Vector3.zero;
+
+            if (pegarAlSuelo)
+            {
+                Vector3 conApartarse = PegarAlSuelo(actor.Transform, siguiente + aparte);
+                // Apartarse nunca vale si es para caerse de algo (el borde del puente).
+                siguiente = aparte != Vector3.zero && conApartarse.y > pos.y - 0.4f
+                    ? conApartarse
+                    : PegarAlSuelo(actor.Transform, siguiente);
+            }
             else siguiente.y = Mathf.MoveTowards(pos.y, destino.y, v * Time.deltaTime);
 
             siguiente.y += alturaExtra;
@@ -611,6 +836,54 @@ public class WalkPathBeat : SequenceBeat
                 "secuencia sigue desde donde esté. Suele significar que está demasiado lejos para " +
                 "la velocidad puesta.");
 #endif
+    }
+
+    // ── Espacio personal ──────────────────────────────────────────────────────────────────────
+    //
+    // «Los NPCs se siguen atravesando», «Liora atraviesa a la gente en el puente» (prologo16).
+    // Este beat mueve el transform a mano con el agente apagado — a propósito, para que el montaje
+    // mande sobre el sitio exacto y la hora de llegada — y por eso el esquive del NavMesh (INC-400)
+    // no le alcanza: quien andaba con WalkPathBeat cruzaba a través de los demás.
+    //
+    // Esto es lo mínimo que lo evita sin quitarle al montaje el control: cuando alguien queda
+    // delante o al lado a menos de un metro, el que anda se desvía DE LADO, más cuanto más cerca.
+    // Nunca frena ni retrocede, así que llega a su marca a la misma hora que antes.
+
+    private const float RadioPersonal = 1.0f;
+    private static readonly Collider[] s_vecinos = new Collider[16];
+
+    /// Dirección lateral (sin normalizar, 0..~1) en la que apartarse de quien estorbe.
+    private static Vector3 Apartarse(Transform yo, Vector3 pos, Vector3 dir)
+    {
+        // Con disparadores incluidos: hay NPCs cuyo único collider es el de interacción. Lo que
+        // cuenta después es la distancia a SU posición, no el tamaño del collider.
+        int n = Physics.OverlapSphereNonAlloc(pos + Vector3.up, RadioPersonal, s_vecinos, ~0,
+            QueryTriggerInteraction.Collide);
+        if (n == 0) return Vector3.zero;
+
+        Vector3 perp = new Vector3(dir.z, 0f, -dir.x);   // a la derecha del avance
+        float lateral = 0f;
+        for (int i = 0; i < n; i++)
+        {
+            var c = s_vecinos[i];
+            if (c == null || c.transform.IsChildOf(yo)) continue;
+            // Personajes y geometría viven en la misma capa: lo que distingue a un personaje es
+            // el NPCSimpleAnimator (CLAUDE.md § 2).
+            var otro = c.GetComponentInParent<NPCSimpleAnimator>();
+            if (otro == null || otro.transform == yo) continue;
+
+            Vector3 rel = otro.transform.position - pos;
+            rel.y = 0f;
+            float d = rel.magnitude;
+            if (d > RadioPersonal || d < 0.001f) continue;
+            if (Vector3.Dot(rel, dir) < -0.2f * d) continue;   // ya lo ha dejado atrás
+
+            float fuerza = 1f - d / RadioPersonal;
+            // Si el otro queda a la derecha, a la izquierda; y al revés. De frente, a la derecha.
+            float lado = Vector3.Dot(rel, perp);
+            lateral += (lado >= 0f ? -1f : 1f) * fuerza;
+        }
+        return perp * Mathf.Clamp(lateral, -0.9f, 0.9f);
     }
 
     /// Baja el punto hasta el suelo que tenga debajo. El propio actor no cuenta como suelo.
@@ -709,6 +982,12 @@ public class SaltoBeat : SequenceBeat
              "que es lo que hace alguien que salta.")]
     public bool parabola = false;
 
+    [Tooltip("Metros por encima del punto de salida que puede tener el sitio donde aterriza. Con " +
+             "el valor de siempre (-1 = el de WalkPathBeat) se puede acabar de pie encima de una " +
+             "carreta, que es lo que pasaba al salir despedido en la plaza. Bajarlo a 0,3 obliga a " +
+             "caer al suelo de verdad.")]
+    public float alturaMaximaDeAterrizaje = -1f;
+
     [Tooltip("Pose que se queda puesta al tocar el suelo, en vez de volver a idle. Para acabar " +
              "tirado en el suelo ('Die01Stay_NoWeapon') y que el beat siguiente le levante.")]
     public string poseEnElSuelo = "";
@@ -720,6 +999,38 @@ public class SaltoBeat : SequenceBeat
     public override string Describe()
         => $"Salto: {actorId} {altura:F1} m" + (Mathf.Abs(desplazamiento) > 0.01f
             ? $" y {desplazamiento:F1} m {(haciaElLado ? "de lado" : "al frente")}" : "");
+
+    /// Que un salto no acabe DENTRO de nada (INC-405). «Cuando el Mago Oscuro dispara al
+    /// Archimago, este se mete dentro del carro»: el salto de lado y el retroceso al romperse el
+    /// escudo iban una distancia fija en una dirección fija, sin mirar qué había allí. Ahora se
+    /// comprueba con el NavMesh — que ya tiene talladas la carreta, las casas y las farolas — si
+    /// se puede llegar andando del sitio de salida al de caída. Si no, se prueba hacia el otro
+    /// lado; si tampoco, más corto; y si nada cabe, se salta en el sitio.
+    private static Vector3 LadoLibre(Vector3 salida, Vector3 lado, string quien)
+    {
+        if (!UnityEngine.AI.NavMesh.SamplePosition(salida, out var enSuelo, 1.0f, UnityEngine.AI.NavMesh.AllAreas))
+            return lado;   // no está sobre el NavMesh (vuela, o fuera): no hay con qué comprobar
+
+        Vector3[] intentos = { lado, -lado, lado * 0.5f, -lado * 0.5f, lado * 0.25f, -lado * 0.25f };
+        foreach (var v in intentos)
+        {
+            Vector3 destino = enSuelo.position + v;
+            if (!UnityEngine.AI.NavMesh.SamplePosition(destino, out var hit, 0.35f, UnityEngine.AI.NavMesh.AllAreas))
+                continue;
+            if (UnityEngine.AI.NavMesh.Raycast(enSuelo.position, hit.position, out _, UnityEngine.AI.NavMesh.AllAreas))
+                continue;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (v != lado)
+                Debug.Log($"[SaltoBeat] '{quien}' iba a caer dentro de algo; salta {v.magnitude:F1} m " +
+                          $"{(Vector3.Dot(v, lado) < 0f ? "hacia el otro lado" : "más corto")}.");
+#endif
+            return v;
+        }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[SaltoBeat] '{quien}' no tiene sitio libre a ningún lado: salta en el sitio.");
+#endif
+        return Vector3.zero;
+    }
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -745,6 +1056,7 @@ public class SaltoBeat : SequenceBeat
             if (frente.sqrMagnitude < 0.0001f) frente = Vector3.forward;
             frente.Normalize();
             lado = (haciaElLado ? Vector3.Cross(Vector3.up, frente) : frente) * desplazamiento;
+            lado = LadoLibre(salida, lado, actor.Id);
         }
 
         // `altura` a 0 (o menos) significa NO SUBIR: esto es una CAÍDA, no un salto. Se usa cuando
@@ -777,7 +1089,7 @@ public class SaltoBeat : SequenceBeat
             {
                 // El suelo se BUSCA, no se supone. Es lo que impide aterrizar sobre un tejado.
                 Vector3 abajo = cima + ladoAbajo;
-                abajo.y = SueloBajo(abajo, salida.y);
+                abajo.y = SueloBajo(abajo, salida.y, alturaMaximaDeAterrizaje);
 
                 if (anim != null && !string.IsNullOrEmpty(poseCaida)) anim.HoldPose(poseCaida);
 
@@ -843,7 +1155,7 @@ public class SaltoBeat : SequenceBeat
 
     /// La Y del suelo bajo un punto. Si no encuentra nada, devuelve la altura de la que salió: es
     /// mejor volver de donde vino que caer al vacío.
-    private static float SueloBajo(Vector3 punto, float porDefecto)
+    private static float SueloBajo(Vector3 punto, float porDefecto, float margen = -1f)
     {
         // Todos los impactos, no solo el primero: el primero puede ser un tejado o una viga entre
         // la cima del salto y el suelo. Vale el más alto que NO esté por encima de donde despegó
@@ -853,7 +1165,7 @@ public class SaltoBeat : SequenceBeat
             ~0, QueryTriggerInteraction.Ignore);
 
         // Cualificada: la constante vive en WalkPathBeat y esto es otra clase.
-        float techo = porDefecto + WalkPathBeat.AlturaQueSePuedeSubir;
+        float techo = porDefecto + (margen >= 0f ? margen : WalkPathBeat.AlturaQueSePuedeSubir);
         float mejor = float.NegativeInfinity;
 
         for (int i = 0; i < n; i++)
@@ -865,5 +1177,100 @@ public class SaltoBeat : SequenceBeat
         }
 
         return float.IsNegativeInfinity(mejor) ? porDefecto : mejor;
+    }
+}
+
+/// El sol, donde lo quiere el plano (INC-408).
+///
+/// «Quiero que en el plano cuando Liora y el Archimago hablan en el río se vea el sol al fondo
+/// poniéndose, rollo atardecer.» El ciclo día/noche tiene cuatro franjas y en la de «Atardecer» la
+/// luz está casi vertical (rotación X 95°): el color es de atardecer, pero el sol no está en el
+/// horizonte, y además cae donde cae, no detrás de nadie.
+///
+/// Este beat COLOCA el sol durante un rato: a una altura dada sobre el horizonte y en una
+/// dirección del mundo (mismo criterio de grados que el eje de acción: 0 = +Z, 90 = +X). Con la
+/// cámara del lado de `ladoDeLaCamara`, se pone justo enfrente — detrás de los personajes. No
+/// pelea con el ciclo: se aplica en LateUpdate encima de lo que el ciclo haya puesto, y al
+/// soltarlo se funde de vuelta, así que la transición a la noche que viene después sale sola.
+[Serializable]
+public class SolDeFondoBeat : SequenceBeat
+{
+    [Tooltip("Marcado = colocar el sol. Desmarcado = soltarlo (se funde de vuelta al ciclo).")]
+    public bool colocar = true;
+
+    [Tooltip("De qué lado está la cámara, en grados del mundo (el mismo valor que el " +
+             "SetActionAxisBeat de la escena). El sol se pone en el lado CONTRARIO: al fondo.")]
+    [Range(0f, 360f)]
+    public float ladoDeLaCamara = 0f;
+
+    [Tooltip("Grados sobre el horizonte. 4-10 es un sol poniéndose que entra en un plano medio.")]
+    public float elevacion = 7f;
+
+    [Tooltip("Segundos que tarda en colocarse (o en soltarse).")]
+    public float segundos = 2f;
+
+    [Header("En cuadro (INC-411)")]
+    [Tooltip("Colocar el sol respecto a la CÁMARA que rueda, no al mundo: dentro del encuadre, " +
+             "cerca del borde de arriba, y bajando por el cuadro hasta que lo tapan las montañas. " +
+             "Se recoloca en cada corte. Si está marcado, ladoDeLaCamara y elevacion no se usan.")]
+    public bool enCuadro = false;
+
+    [Tooltip("Dónde, a lo ancho del encuadre: 0 = borde izquierdo, 1 = derecho.")]
+    [Range(0f, 1f)] public float posicionX = 0.72f;
+
+    [Tooltip("A qué altura del encuadre sale: 0 = borde de abajo, 1 = de arriba. Cerca de arriba, " +
+             "que en un plano de conversación siempre es cielo.")]
+    [Range(0f, 1f)] public float alturaDeSalida = 0.84f;
+
+    [Tooltip("Hasta qué altura del encuadre baja. Por el camino lo esconden las montañas.")]
+    [Range(0f, 1f)] public float alturaDePuesta = 0.42f;
+
+    [Tooltip("Segundos que tarda en ponerse.")]
+    public float puesta = 20f;
+
+    public override string Describe() => !colocar
+        ? "Sol: devolverlo al ciclo"
+        : enCuadro
+            ? $"Sol: en cuadro, poniéndose en {puesta:F0} s"
+            : $"Sol: al fondo, a {elevacion:F0}° (cámara a {ladoDeLaCamara:F0}°)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var luz = DayNightCycle.Sun;
+        if (luz == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning("[SolDeFondo] No hay sol del ciclo día/noche (¿MainWorld cargada?).");
+#endif
+            yield break;
+        }
+
+        var forzado = luz.GetComponent<SolForzado>();
+        if (!colocar)
+        {
+            if (forzado != null) forzado.Soltar(segundos);
+            yield break;
+        }
+
+        if (forzado == null) forzado = luz.gameObject.AddComponent<SolForzado>();
+        ctx?.Player?.RegisterCleanup(() => { if (forzado != null) forzado.Soltar(0f); });
+
+        if (enCuadro)
+        {
+            forzado.ColocarEnCuadro(posicionX, alturaDeSalida, alturaDePuesta, puesta, segundos);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[SolDeFondo] Sol en cuadro (x={posicionX:F2}), poniéndose en {puesta:F0} s.");
+#endif
+            yield break;
+        }
+
+        // El sol, en el lado contrario a la cámara; la luz apunta DESDE él, así que su forward
+        // va hacia la cámara y hacia abajo.
+        float yawSol = ladoDeLaCamara + 180f;
+        Vector3 haciaElSol = Quaternion.Euler(-elevacion, yawSol, 0f) * Vector3.forward;
+        forzado.Colocar(Quaternion.LookRotation(-haciaElSol, Vector3.up), segundos);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[SolDeFondo] Sol a {elevacion:F0}° sobre el horizonte, hacia {Mathf.Repeat(yawSol, 360f):F0}°.");
+#endif
     }
 }

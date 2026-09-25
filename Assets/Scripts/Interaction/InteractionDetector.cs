@@ -237,12 +237,24 @@ public class InteractionDetector : MonoBehaviour
             // Esto soluciona casos donde se oculta por diálogo/cooldown y no vuelve al terminar.
             if (current)
                 current.SetHintVisible(true, gameObject);
+
+            // Y apagar a los demás TAMBIÉN aquí (INC-375): el icono doble del 23 sep seguía
+            // saliendo porque el foco no cambiaba —los dos NPCs estaban juntos y el elegido era
+            // siempre el mismo—, así que el barrido de abajo no llegaba a ejecutarse nunca.
+            ApagarOtrosHints();
             return;
         }
 
         if (current) current.SetHintVisible(false);
         current = next;
         if (current) current.SetHintVisible(true, gameObject);
+
+        // Y NINGÚN otro. En la partida del 23 sep salían dos iconos de interactuar a la vez sobre
+        // dos NPCs pegados: basta con que alguien deje un hint encendido por otro camino (un
+        // diálogo que se cierra, un NPC que se desactiva a mitad de animación) para que se queden
+        // dos en pantalla. El foco es uno, así que aquí se apagan todos los demás que estén en
+        // rango — es barato y no depende de por dónde se haya encendido el otro (INC-366).
+        ApagarOtrosHints();
 
         EnableInteractAction(current != null);
 
@@ -253,6 +265,24 @@ public class InteractionDetector : MonoBehaviour
                 jumpAction.action.Disable();
             else if (!current && !jumpAction.action.enabled && !(DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)) 
                 jumpAction.action.Enable();
+        }
+    }
+
+    /// Apaga el hint de cualquier otro interactuable que esté cerca. Solo puede haber uno
+    /// encendido: el que tiene el foco.
+    private void ApagarOtrosHints()
+    {
+        Vector3 origin = transform.position;
+        int n = Physics.OverlapSphereNonAlloc(origin, range * 1.5f, _interactableBuffer,
+            interactableMask, QueryTriggerInteraction.Collide);
+
+        for (int i = 0; i < n; i++)
+        {
+            var c = _interactableBuffer[i];
+            if (c == null) continue;
+            var otro = c.GetComponentInParent<Interactable>();
+            if (otro == null || otro == current) continue;
+            otro.SetHintVisible(false);
         }
     }
 

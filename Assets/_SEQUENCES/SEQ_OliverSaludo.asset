@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_OliverSaludo
   m_EditorClassIdentifier: 
   displayName: Oliver saluda a Will
-  summary: Oliver ve a Will al salir de casa, corre hacia el sin aliento, le ensena
-    un hechizo nuevo que le estalla en la cara a los dos, se rien, y encadena con
-    la explicacion de menus. Primera secuencia montada con el sistema de datos.
+  summary: Oliver ve a Will al salir de casa, corre hacia el sin aliento, le ensena un hechizo nuevo que le estalla en la cara a los dos, se rien, y encadena con la explicacion de menus. Primera secuencia montada con el sistema de datos.
   signalIn: OLIVER_GREETING_START
   signalOut: OLIVER_GREETING_DONE
   musicId: OLIVER_1
@@ -79,8 +77,7 @@ MonoBehaviour:
     - rid: 7428272459180934003
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: "AEREO (INC-357): desde arriba, siguiendo a Oliver mientras corre hacia
-          Will. Mismo encuadre que el de apertura, as\xED que no se nota el paso."
+        note: "AEREO (INC-357): desde arriba, siguiendo a Oliver mientras corre hacia Will. Mismo encuadre que el de apertura, as\xED que no se nota el paso."
         shotName: 
         framing:
           type: 0
@@ -95,12 +92,13 @@ MonoBehaviour:
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 1
     - rid: 7428272459180934004
       type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'ENCARAR (INC-357): se miran los dos. Es lo que hace que el general
-          salga de perfil.'
+        note: 'ENCARAR (INC-357): se miran los dos. Es lo que hace que el general salga de perfil.'
         actorId: NPC_Oliver
         targetActorId: Player
         markName: 
@@ -110,8 +108,7 @@ MonoBehaviour:
     - rid: 7428272459180934005
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'PERFIL (INC-357): general abierto, los dos de perfil. Se queda quieto
-          hasta el final.'
+        note: 'PERFIL (INC-357): general abierto, los dos de perfil. Se queda quieto hasta el final.'
         shotName: 
         framing:
           type: 1
@@ -126,6 +123,8 @@ MonoBehaviour:
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000001
       type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
@@ -140,8 +139,7 @@ MonoBehaviour:
     - rid: 8000000000000000002
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Cheer02 dos veces - el primer ciclo se pierde con la transicion de
-          entrada
+        note: Cheer02 dos veces - el primer ciclo se pierde con la transicion de entrada
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_SPOT_WILL
@@ -221,10 +219,7 @@ MonoBehaviour:
     - rid: 8000000000000000012
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Lanza el hechizo. FIX 16 sep: Attack2 NO existe en NPC_NoWeapon.controller
-          (es un estado solo del controller del jugador), asi que PlaySocialGesture
-          no hacia nada y Oliver no llegaba a lanzar nada. MagicSpecial si existe
-          y es de los NPCs.'
+        note: 'Lanza el hechizo. FIX 16 sep: Attack2 NO existe en NPC_NoWeapon.controller (es un estado solo del controller del jugador), asi que PlaySocialGesture no hacia nada y Oliver no llegaba a lanzar nada. MagicSpecial si existe y es de los NPCs.'
         actorId: NPC_Oliver
         gesture: MagicSpecial
         repeats: 1
@@ -250,10 +245,7 @@ MonoBehaviour:
     - rid: 8000000000000000015
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Sonido del hechizo fallido. Clave SpellFail, anadida el 16 sep 2026
-          al AudioGraphProfile apuntando a cartoon_trumpet_fail(5).wav. Alternativas
-          ya en el proyecto si no convence: Cartoon_Metallic_Boing(6), Balloon_Pop-003,
-          RuneFail. Se cambia el clip en el perfil, sin tocar esta secuencia.'
+        note: 'Sonido del hechizo fallido. Clave SpellFail, anadida el 16 sep 2026 al AudioGraphProfile apuntando a cartoon_trumpet_fail(5).wav. Alternativas ya en el proyecto si no convence: Cartoon_Metallic_Boing(6), Balloon_Pop-003, RuneFail. Se cambia el clip en el perfil, sin tocar esta secuencia.'
         eventKey: SpellFail
         clip: {fileID: 0}
         atActorId: NPC_Oliver
@@ -394,8 +386,7 @@ MonoBehaviour:
     - rid: 8000000000000000033
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Will pregunta por Eldran y Victoria - gancho hacia SEQ_PerasEldran
-          (cambia el motivo de antes, ya no es Eldran quien le necesita)
+        note: Will pregunta por Eldran y Victoria - gancho hacia SEQ_PerasEldran (cambia el motivo de antes, ya no es Eldran quien le necesita)
         actorId: Player
         markName: 
         textKey: WILL_GREETING_OLIVER_CUT_OFF
@@ -426,8 +417,7 @@ MonoBehaviour:
     - rid: 8000000000000000037
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Oliver confirma lo de Eldran/Victoria, promete ir luego, y engancha
-          con la explicacion de menus (doblaje ya grabado, sin tocar)
+        note: Oliver confirma lo de Eldran/Victoria, promete ir luego, y engancha con la explicacion de menus (doblaje ya grabado, sin tocar)
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_BEFORE_MENUS_HANDOFF
@@ -441,8 +431,7 @@ MonoBehaviour:
     - rid: 8000000000000000039
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: DG_Oliver_Menus - doblaje ya grabado, avance manual. Will reacciona
-          linea a linea.
+        note: DG_Oliver_Menus - doblaje ya grabado, avance manual. Will reacciona linea a linea.
         dialogue: {fileID: 11400000, guid: 7c65ee26279935f4088d248d716cb1ce, type: 2}
         actorId: NPC_Oliver
         endDialogueCameraImmediately: 1
@@ -454,23 +443,17 @@ MonoBehaviour:
           - Question01
           - HeadNod01
           - HeadNod01
-          emotions: 0100000000000000
+          emotions: 0100000000000000i
     - rid: 8000000000000000901
       type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Margen corto para que el plano abierto se asiente antes del fundido
-          de salida. Era 0.4 cuando servia para intentar (sin exito) esperar al periodo
-          de gracia de la camara de dialogo; ahora esa camara se apaga al instante,
-          asi que solo hace falta un respiro.
+        note: Margen corto para que el plano abierto se asiente antes del fundido de salida. Era 0.4 cuando servia para intentar (sin exito) esperar al periodo de gracia de la camara de dialogo; ahora esa camara se apaga al instante, asi que solo hace falta un respiro.
         seconds: 0.25
         unscaled: 0
     - rid: 8000000000000000902
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'NUEVO (adapta el gancho): Oliver se anima a ir con Will, en vez del
-          viejo "por si se te ha olvidado que te conozco" desconectado de la discusion.
-          Engancha directo con PERAS_START (OLIVER_GREETING_DONE se levanta al terminar
-          la secuencia).'
+        note: 'NUEVO (adapta el gancho): Oliver se anima a ir con Will, en vez del viejo "por si se te ha olvidado que te conozco" desconectado de la discusion. Engancha directo con PERAS_START (OLIVER_GREETING_DONE se levanta al terminar la secuencia).'
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_PERAS_HANDOFF

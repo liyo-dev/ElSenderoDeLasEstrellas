@@ -169,10 +169,62 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 #endif
                 return;
             }
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log($"[Secuencia:{name}] Recibida '{_resolvedSignalIn}': empieza.");
+#endif
             _activeSequenceCoroutine = StartCoroutine(Co_SequenceGuarded());
         };
         _resolvedSignalIn = ResolvedSignalIn;
-        DefaultNarrativeSignals.EnsureInstance().OnCustom(_resolvedSignalIn, _signalInHandler);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // INC-430: una secuencia sin señal de entrada no se entera de nada y antes no lo decía.
+        if (string.IsNullOrEmpty(_resolvedSignalIn))
+            Debug.LogWarning($"[Secuencia:{name}] No tiene señal de entrada: no va a arrancar " +
+                             "nunca por el grafo narrativo.", this);
+#endif
+        Suscribir();
+        if (isActiveAndEnabled) StartCoroutine(Co_VigilarLaSuscripcion());
+    }
+
+    /// Se engancha a la señal de entrada, y se vuelve a enganchar si hace falta (INC-387).
+    ///
+    /// «La misión de Eldran sigue sin empezar»: en el log del 23 sep se ve PERAS_START emitida con
+    /// oyentes (Oliver se va del grupo) y SEQ_PerasEldran sin enterarse. Este sequencer se
+    /// suscribe en Awake, y ahí `DefaultNarrativeSignals.EnsureInstance()` puede crear una
+    /// instancia automática (en el log sale un objeto llamado «DefaultNarrativeSignals (Auto)»)
+    /// que más tarde es sustituida por la de la escena: el handler se queda colgado de la vieja y
+    /// no lo llama nadie nunca más. Por eso ahora se comprueba en cada OnEnable y en Start que se
+    /// sigue estando enganchado a la instancia VIVA, y si no, se vuelve a enganchar.
+    private void Suscribir()
+    {
+        if (string.IsNullOrEmpty(_resolvedSignalIn)) return;
+
+        var señales = DefaultNarrativeSignals.EnsureInstance();
+        if (señales == null || señales == _señalesSuscritas) return;
+
+        if (_señalesSuscritas != null)
+            _señalesSuscritas.OffCustom(_resolvedSignalIn, _signalInHandler);
+
+        señales.OnCustom(_resolvedSignalIn, _signalInHandler);
+        _señalesSuscritas = señales;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[Secuencia:{name}] A la espera de '{_resolvedSignalIn}' " +
+                  $"(y avisará con '{ResolvedSignalOut}') en '{señales.name}'.");
+#endif
+    }
+
+    private DefaultNarrativeSignals _señalesSuscritas;
+
+    /// Durante el arranque la instancia de señales puede cambiar (la automática por la de la
+    /// escena), así que los primeros segundos se comprueba de vez en cuando. Después, nunca más.
+    private IEnumerator Co_VigilarLaSuscripcion()
+    {
+        var espera = new WaitForSecondsRealtime(0.25f);
+        for (int i = 0; i < 12; i++)
+        {
+            yield return espera;
+            Suscribir();
+        }
     }
 
     /// Envuelve Co_Sequence() para garantizar que el HUD/minimapa/modo Cinematic se restauran
@@ -204,7 +256,9 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected virtual void OnDestroy()
     {
         FeedbackService.CancelAllShakes();
-        DefaultNarrativeSignals.Instance?.OffCustom(_resolvedSignalIn, _signalInHandler);
+        if (_señalesSuscritas != null) _señalesSuscritas.OffCustom(_resolvedSignalIn, _signalInHandler);
+        else DefaultNarrativeSignals.Instance?.OffCustom(_resolvedSignalIn, _signalInHandler);
+        _señalesSuscritas = null;
 
         // FIX A7 (auditoría 2026-08-07): ver comentario de _activeTransitionCutHandler/_activeTransitionEndHandler.
         ClearTransitionHandlers();
@@ -356,7 +410,10 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// para evitar el parpadeo de la cámara del jugador entre la secuencia y la intro del boss.
     protected IEnumerator Co_EndCinematicStayBlack(Action additionalOnCut = null, float fadeDuration = 0.3f)
     {
-        yield return FeedbackService.ScreenFadeAsync(Color.black, fadeDuration, fadeIn: true);
+        // Si la escena ya dejó la pantalla cubierta (el prólogo acaba en BLANCO, INC-424), se deja
+        // como está: repintarla de negro borraba el blanco del que sale el despertar de Will.
+        if (!FeedbackService.IsScreenFaded)
+            yield return FeedbackService.ScreenFadeAsync(Color.black, fadeDuration, fadeIn: true);
         additionalOnCut?.Invoke();
         EndCinematic();
     }
@@ -598,7 +655,9 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected void RestoreMusic()
     {
         if (AudioService.Instance == null) return;
-        float fadeDur = MusicRule?.fadeOut ?? 0.8f;
+        // Nunca en seco (INC-421): al acabar una cinemática la música de la escena entra fundida,
+        // por lo menos dos segundos, aunque la regla pida menos.
+        float fadeDur = Mathf.Max(MusicRule?.fadeOut ?? 0.8f, 2f);
 
         // FIX INC-185 (9 sept 2026): antes esto restauraba siempre la música de ESCENA por
         // defecto, sin comprobar si el jugador está dentro de una AmbientZone con música propia

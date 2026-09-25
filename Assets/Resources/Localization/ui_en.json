@@ -741,6 +741,50 @@
             "value": "Jam"
         },
         {
+            "key": "ITEM_ESTRELLA_TORCIDA_NAME",
+            "value": "Crooked star"
+        },
+        {
+            "key": "ITEM_ESTRELLA_TORCIDA_DESC",
+            "value": "A badly carved wooden star. It's no use at all, and it's yours."
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_NAME",
+            "value": "Paper lantern"
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_DESC",
+            "value": "For festival nights in the square."
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_NAME",
+            "value": "Wooden bird"
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_DESC",
+            "value": "Carved from a single piece. It almost looks ready to sing."
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_NAME",
+            "value": "Bunting garland"
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_DESC",
+            "value": "Colours to brighten up any window."
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_NAME",
+            "value": "Wind chime"
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_DESC",
+            "value": "It rings with the valley breeze."
+        },
+        {
+            "key": "SHOP_TOMASA_SALUDO",
+            "value": "Wooden figurines, carved by hand. Well... most of them carved properly."
+        },
+        {
             "key": "ITEM_POCIONMAGIA_DESC",
             "value": "A potion that restores magic when consumed. Restores 25 MP."
         },

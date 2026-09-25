@@ -262,56 +262,90 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 18c03e85dd5446bba5e4cf76d8d2fad7, type: 3}
   - eventKey: RuneGateOpen
     sfx: {fileID: 8300000, guid: 05db446b081146fba24df777029cc1b4, type: 3}
+  - eventKey: Prologo_MagiaLevitar
+    sfx: {fileID: 8300000, guid: 1e7cf86b0eaa41c49d070d110c2037f5, type: 3}
+  - eventKey: Prologo_CarretaCae
+    sfx: {fileID: 8300000, guid: 94c903b0eac2ca271b3077c4709d4db0, type: 3}
+  - eventKey: Prologo_Trueno
+    sfx: {fileID: 8300000, guid: 5dd0aff0efee43cc83efa393513723b1, type: 3}
+  - eventKey: Weather_Thunder
+    sfx: {fileID: 8300000, guid: 72d91bb92d4c44488a6ea681cfdef106, type: 3}
+  - eventKey: Prologo_Golpe
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: Prologo_PresenciaOscura
+    sfx: {fileID: 8300000, guid: dacadfd86bc4d50a488d378400c7254b, type: 3}
+  - eventKey: Prologo_BolaDeFuego
+    sfx: {fileID: 8300000, guid: f18a0dcd1bbc4ee69cbc9056c3e13f00, type: 3}
+  - eventKey: Prologo_EscudoBloquea
+    sfx: {fileID: 8300000, guid: 4d1251d3584f3534a9287fc24218f233, type: 3}
+  - eventKey: Prologo_HechizoArchimago
+    sfx: {fileID: 8300000, guid: a2ae90e42daaf4723a539c25867d37fd, type: 3}
+  - eventKey: Prologo_ImpactoHechizo
+    sfx: {fileID: 8300000, guid: 63ab46d1f43f673338691ce52bb3f9ee, type: 3}
+  - eventKey: Prologo_Carga
+    sfx: {fileID: 8300000, guid: 4253ea676060e49dd9488f73d692ea2a, type: 3}
+  - eventKey: Prologo_Choque
+    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+  - eventKey: Prologo_SueloSeAbre
+    sfx: {fileID: 8300000, guid: ad5214a44455017afb1d4b9c21d768b6, type: 3}
+  - eventKey: Prologo_Despegue
+    sfx: {fileID: 8300000, guid: cadebfea8b8a85ff6a9db0f5d84195ad, type: 3}
+  - eventKey: Prologo_GolpeEnElAire
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: Prologo_HechizoGrande
+    sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
+  - eventKey: Prologo_ProteccionAbsoluta
+    sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1.5
+    fadeOut: 3
   - sequenceId: MAGOOSCURO_REVEAL
     music: {fileID: 8300000, guid: 63822d4492ee1954abc25f7aa03af997, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2.5
   - sequenceId: MAGOOSCURO_CLIMAX
     music: {fileID: 8300000, guid: 0ba4e6cc6b6573a4d97ac1c6ec57b8ec, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 2
+    fadeOut: 3
   - sequenceId: AWAKEN
     music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: LIAM_CRYSTAL
     music: {fileID: 8300000, guid: fe45a7da307add14a9f93158f047bc7c, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: ESTELA_APPEARS
     music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: TABERNA
     music: {fileID: 8300000, guid: 3016e07caab81b34486bedfdbbd140d6, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: COMER
     music: {fileID: 8300000, guid: f1b6b495ea9afd54ca743f778e2c2e4a, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: REINO_EXIT
     music: {fileID: 8300000, guid: 781689e46248308499a3914697668573, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: PROMO_1
     music: {fileID: 8300000, guid: 6904c00d6a7aa0848aa3348ca1abb7b4, type: 3}
-    fadeIn: 0.5
-    fadeOut: 0.5
+    fadeIn: 1
+    fadeOut: 2
   - sequenceId: MAGOOSCURO_VISION
     music: {fileID: 8300000, guid: 3cc104b44c356344eab24aa874ae8bb8, type: 3}
     fadeIn: 1
-    fadeOut: 0.5
+    fadeOut: 2
   - sequenceId: EPILOGUE
     music: {fileID: 8300000, guid: a3cc4bb37e6b3b14885e644f20e9271a, type: 3}
     fadeIn: 1
-    fadeOut: 0.5
+    fadeOut: 2
   - sequenceId: OLIVER_1
     music: {fileID: 8300000, guid: c11b574e92002c44a92772ec8eb12331, type: 3}
-    fadeIn: 1
-    fadeOut: 0.5
+    fadeIn: 1.5
+    fadeOut: 2.5

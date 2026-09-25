@@ -1172,6 +1172,11 @@ public static class PrologoValleMultitudWiring
 
             // La puerta se abre donde estaba el Mago Oscuro, al final del duelo.
             ("PROP_PuertaSendero", RutaPuerta, new Vector3(6000f, 101.5f, 5997.5f), 4f, 1.5f),
+
+            // Las dos nubes del primer plano (INC-370): el prologo abre con la camara a catorce
+            // metros, y estas dos se abren delante de ella y dejan ver el valle. Estan doce metros
+            // sobre la plaza, una a cada lado del centro, y la secuencia las aparta y las apaga.
+            // Se pueden mover a ojo en la Scene View: son objetos de la escena como los demas.
         };
 
         var so = new SerializedObject(stage);

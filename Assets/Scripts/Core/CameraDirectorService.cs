@@ -41,8 +41,23 @@ public static class CameraDirectorService
     private const float ReleaseGraceSeconds = 0.15f;
 
     private static object s_currentOwner;
+    private static bool s_saliendo;
     private static Coroutine s_pendingRelease;
     private static Runner s_runner;
+
+    // ── FOV de juego (INC-415) ────────────────────────────────────────────────────────────────
+    // Las cinemáticas escriben el FOV de cada plano directamente en la cámara de juego
+    // (CinematicCameraDriver.Cut/MoveTo/SetPose) y nadie lo devolvía: tras el saludo de Oliver la
+    // cámara de gameplay se quedaba con el FOV del último plano (~49° en vez de los 60° del
+    // prefab). Además de verse más cerrada, eso desalineaba la «Hint Camera» (overlay de _WILL,
+    // FOV 60 fijo) respecto a la cámara base, y como las dos pintan la capa InteractHint, cada
+    // icono sobre una cabeza salía DOS veces (ver OverlayCameraLensSync). Se guarda el FOV al
+    // reclamar la cámara el primero de una cadena de relevos, y se devuelve al soltarla de verdad.
+    private const float DuracionDevolverFov = 0.35f;
+    private static Camera s_camaraDeJuego;
+    private static float s_fovDeJuego;
+    private static bool s_hayFovGuardado;
+    private static Coroutine s_devolviendoFov;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -51,6 +66,10 @@ public static class CameraDirectorService
         s_currentOwner = null;
         s_pendingRelease = null;
         s_runner = null;
+        s_saliendo = false;
+        s_camaraDeJuego = null;
+        s_hayFovGuardado = false;
+        s_devolviendoFov = null;
     }
 #endif
 
@@ -67,8 +86,14 @@ public static class CameraDirectorService
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Bootstrap()
     {
+        s_saliendo = false;
+        Application.quitting -= AlSalir;
+        Application.quitting += AlSalir;
         EnsureRunner();
     }
+
+    /// En el Editor, `Application.quitting` también salta al salir de Play.
+    private static void AlSalir() => s_saliendo = true;
 
     /// True si hay algún owner con el control reclamado en este momento (incluida la ventana de gracia).
     public static bool HasOwner => s_currentOwner != null;
@@ -87,6 +112,7 @@ public static class CameraDirectorService
         CancelPendingRelease();
         s_currentOwner = null;
         vThirdPersonCamera.lockCameraForCinematic = false;
+        DevolverFovAlInstante();
     }
 
     /// Reclama el control de la cámara cinemática para <paramref name="owner"/>. Cancela
@@ -101,6 +127,9 @@ public static class CameraDirectorService
                 $"marcada como de '{Describe(s_currentOwner)}' (con o sin liberación pendiente) — relevo " +
                 "normal entre sistemas, no un error por sí solo.");
 #endif
+        // Primer dueño de la cadena: lo que tiene ahora la cámara es el FOV de juego. En un relevo
+        // (o dentro de la ventana de gracia) sigue habiendo dueño y se conserva el ya guardado.
+        if (s_currentOwner == null) GuardarFovDeJuego();
         CancelPendingRelease();
         s_currentOwner = owner;
         vThirdPersonCamera.lockCameraForCinematic = true;
@@ -135,6 +164,17 @@ public static class CameraDirectorService
 
         CancelPendingRelease();
         EnsureRunner();
+
+        // Cerrando la escena o saliendo de Play no hay runner (ni debe crearse, ver EnsureRunner):
+        // se suelta al instante, que es lo único que tiene sentido sin frames por delante.
+        if (s_runner == null)
+        {
+            s_currentOwner = null;
+            vThirdPersonCamera.lockCameraForCinematic = false;
+            DevolverFovAlInstante();
+            return;
+        }
+
         s_pendingRelease = s_runner.StartCoroutine(Co_DeferredRelease(owner));
     }
 
@@ -146,6 +186,7 @@ public static class CameraDirectorService
         {
             s_currentOwner = null;
             vThirdPersonCamera.lockCameraForCinematic = false;
+            DevolverFov();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[CameraDirectorService] Cámara devuelta al gameplay (dueño soltado: '{Describe(owner)}').");
 #endif
@@ -171,6 +212,66 @@ public static class CameraDirectorService
     }
 #endif
 
+    // ── FOV de juego (INC-415) ────────────────────────────────────────────────────────────────
+
+    private static void GuardarFovDeJuego()
+    {
+        // Si aún se estaba devolviendo el FOV de la cinemática anterior, la cámara está a medio
+        // camino: el FOV de juego bueno es el que ya estaba guardado, no el de ahora.
+        if (s_devolviendoFov != null)
+        {
+            if (s_runner != null) s_runner.StopCoroutine(s_devolviendoFov);
+            s_devolviendoFov = null;
+            if (s_hayFovGuardado && s_camaraDeJuego != null) return;
+        }
+
+        var cam = Camera.main;
+        s_hayFovGuardado = cam != null;
+        if (cam == null) return;
+        s_camaraDeJuego = cam;
+        s_fovDeJuego = cam.fieldOfView;
+    }
+
+    /// Devuelve el FOV de juego con una transición corta (el sitio de la cámara también vuelve
+    /// suavizado, con el _doSmoothSnap de vThirdPersonCamera).
+    private static void DevolverFov()
+    {
+        if (!s_hayFovGuardado || s_camaraDeJuego == null) { s_hayFovGuardado = false; return; }
+        if (Mathf.Approximately(s_camaraDeJuego.fieldOfView, s_fovDeJuego)) { s_hayFovGuardado = false; return; }
+        if (s_runner == null) { DevolverFovAlInstante(); return; }
+
+        if (s_devolviendoFov != null) s_runner.StopCoroutine(s_devolviendoFov);
+        s_devolviendoFov = s_runner.StartCoroutine(Co_DevolverFov());
+    }
+
+    private static IEnumerator Co_DevolverFov()
+    {
+        var cam = s_camaraDeJuego;
+        float desde = cam.fieldOfView;
+        float hasta = s_fovDeJuego;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[CameraDirectorService] FOV de juego devuelto: {desde:0.#}° → {hasta:0.#}° " +
+                  "(lo había cambiado la cinemática).");
+#endif
+        for (float t = 0f; t < DuracionDevolverFov; t += Time.unscaledDeltaTime)
+        {
+            if (cam == null) break;
+            cam.fieldOfView = Mathf.Lerp(desde, hasta, Mathf.SmoothStep(0f, 1f, t / DuracionDevolverFov));
+            yield return null;
+        }
+        if (cam != null) cam.fieldOfView = hasta;
+        s_hayFovGuardado = false;
+        s_devolviendoFov = null;
+    }
+
+    private static void DevolverFovAlInstante()
+    {
+        if (s_devolviendoFov != null && s_runner != null) s_runner.StopCoroutine(s_devolviendoFov);
+        s_devolviendoFov = null;
+        if (s_hayFovGuardado && s_camaraDeJuego != null) s_camaraDeJuego.fieldOfView = s_fovDeJuego;
+        s_hayFovGuardado = false;
+    }
+
     private static void CancelPendingRelease()
     {
         if (s_pendingRelease != null && s_runner != null)
@@ -181,6 +282,15 @@ public static class CameraDirectorService
     private static void EnsureRunner()
     {
         if (s_runner != null) return;
+
+        // INC-401: «al parar la escena siempre sale "Some objects were not cleaned up…
+        // CameraDirectorService"». El runner se crea al arrancar (Bootstrap), pero al salir de
+        // Play Unity destruye primero los DontDestroyOnLoad; luego el CinematicCameraDriver llama
+        // a Release() desde su OnDestroy, el runner ya está destruido (== null) y aquí se creaba
+        // OTRO en pleno cierre. Un runner que existió y ya no existe significa exactamente eso:
+        // se está cerrando todo. No se recrea.
+        if (!ReferenceEquals(s_runner, null) || s_saliendo || !Application.isPlaying) return;
+
         var go = new GameObject("CameraDirectorService");
         Object.DontDestroyOnLoad(go);
         s_runner = go.AddComponent<Runner>();

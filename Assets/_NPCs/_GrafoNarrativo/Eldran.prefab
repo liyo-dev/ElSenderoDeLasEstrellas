@@ -2275,7 +2275,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 4
+  m_Radius: 2.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6227967088864134847
 MonoBehaviour:
@@ -2293,7 +2293,9 @@ MonoBehaviour:
   trigger: 2
   requiredTag: Player
   once: 1
-  onlyIfListening: 1
+  onlyIfListening: 0
+  soloConLaMision: ELDRAN_MISSION1
+  radioDeProximidad: 2.5
   debugLogs: 0
 --- !u!1 &1705803614977813850
 GameObject:
@@ -11246,6 +11248,7 @@ GameObject:
   - component: {fileID: 1273344385334190010}
   - component: {fileID: -3515351438986721694}
   - component: {fileID: 2800408138201363408}
+  - component: {fileID: 9173539135787210561}
   m_Layer: 8
   m_Name: Eldran
   m_TagString: Untagged
@@ -11695,6 +11698,31 @@ MonoBehaviour:
   showAfterStep: -1
   icon: {fileID: 0}
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!114 &9173539135787210561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8894687061216898430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34220a1bb1b608f458183f69d0320227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.DiscusionEnBucle
+  miId: NPC_Eldran
+  conQuienId: NPC_Victoria
+  empiezaCon: OLIVER_GREETING_START
+  oConLaMision: ELDRAN_MISSION1
+  terminaCon: PERAS_START
+  enfado:
+  - Angry01
+  - Angry02
+  hablar:
+  - Talk01
+  - Talk02
+  turno: 1.8
+  iconoDePelea: {fileID: 6303534759802428624, guid: 78a8e5377ab84fef8b9cbe15dff078a6, type: 3}
 --- !u!1 &8911537771988408263
 GameObject:
   m_ObjectHideFlags: 0

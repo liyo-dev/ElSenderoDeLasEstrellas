@@ -60,6 +60,24 @@ namespace Game.NPC.Common
         private Tween _currentTween;
         private Transform _headBone;
         private bool _headBoneSearched;
+
+        // El NPC sobre cuya cabeza va el icono. Por defecto, este mismo objeto; SeguirA() permite
+        // vivir en un hijo dedicado (como hace NPCQuestIconManager, para no pisarse con otro
+        // controlador del raíz) y aun así encontrar la cabeza del NPC (INC-429).
+        private Transform _ancla;
+        private Transform Ancla => _ancla != null ? _ancla : transform;
+
+        /// Si es false, el icono sigue visible mientras hay un diálogo abierto (INC-429: el
+        /// bocadillo de pelea de Eldran y Victoria tiene que verse mientras Oliver habla).
+        public bool OcultarDuranteDialogos { get; set; } = true;
+
+        /// Coloca el icono sobre la cabeza de 'npc' aunque este componente viva en otro objeto.
+        public void SeguirA(Transform npc)
+        {
+            _ancla = npc;
+            _headBone = null;
+            _headBoneSearched = false;
+        }
         
         // Estado
         private bool _isHiding;
@@ -103,7 +121,7 @@ namespace Game.NPC.Common
             _headBoneSearched = true;
             
             // Buscar Animator primero
-            var animator = GetComponentInChildren<Animator>();
+            var animator = Ancla.GetComponentInChildren<Animator>();
             if (animator != null && animator.isHuman)
             {
                 _headBone = animator.GetBoneTransform(HumanBodyBones.Head);
@@ -122,7 +140,7 @@ namespace Game.NPC.Common
             // Buscar por nombre de hueso
             foreach (string boneName in headBoneNames)
             {
-                _headBone = FindChildRecursive(transform, boneName);
+                _headBone = FindChildRecursive(Ancla, boneName);
                 if (_headBone != null)
                 {
                     if (showDebugLogs)
@@ -164,7 +182,7 @@ namespace Game.NPC.Common
         private Vector3 GetIconWorldPosition()
         {
             // Posición base: pies del NPC
-            Vector3 feetPosition = transform.position;
+            Vector3 feetPosition = Ancla.position;
             
             // La altura configurada (alertIconHeight) se usa directamente
             Vector3 targetPos = feetPosition + Vector3.up * fallbackHeight;
@@ -198,6 +216,8 @@ namespace Game.NPC.Common
         /// </summary>
         private void OnDialogueStarted(Transform npcInvolved)
         {
+            if (!OcultarDuranteDialogos) return;
+
             // FIX (16 sept 2026): antes esto salía de vacío si _hiddenDuringDialogue ya era true.
             // Con dos diálogos seguidos (p. ej. el turn-in de una misión y la oferta de la
             // siguiente, ambos del grafo, separados por un frame), el flag todavía valía true del
@@ -736,7 +756,7 @@ namespace Game.NPC.Common
             // OnDialogueStarted ya pasó, así que nadie va a ocultarlo), nace oculto y se queda
             // esperando a OnDialogueClosed para restaurarse, en vez de animarse hacia arriba en
             // mitad de la conversación.
-            bool bornDuringDialogue = IsDialogueOpenNow();
+            bool bornDuringDialogue = OcultarDuranteDialogos && IsDialogueOpenNow();
             if (bornDuringDialogue)
             {
                 // Nace oculto: se queda a escala 0 en su sitio y espera a OnDialogueClosed, que

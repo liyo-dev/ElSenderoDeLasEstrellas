@@ -96,6 +96,22 @@ public static class NpcSpawner
                     continue;
                 }
 
+                // Si ya hay en el mundo un NPC con esa identidad —colocado a mano en la escena, o
+                // de una herramienta de montaje—, no se crea otro encima. Dos iguales en el mismo
+                // sitio son dos iconos de interactuar, dos cerebros y un NPCRegistry que se queda
+                // con el último (INC-364).
+                if (!string.IsNullOrEmpty(entry.persistenceId) && NPCRegistry.HasInstance
+                    && NPCRegistry.Instance.GetNPCByID(entry.persistenceId) != null)
+                {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    var ya = NPCRegistry.Instance.GetNPCByID(entry.persistenceId);
+                    Debug.LogWarning($"[NpcSpawner] '{entry.spawnId}': ya hay un '{entry.persistenceId}' en el mundo " +
+                                     $"('{ya.name}', escena '{ya.gameObject.scene.name}'). No se crea otro: quítalo de la escena " +
+                                     "si debe venir del roster.", ya);
+#endif
+                    continue;
+                }
+
                 if (SpawnOne(entry, point, holder.transform))
                     created++;
             }

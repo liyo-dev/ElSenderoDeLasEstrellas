@@ -24,6 +24,7 @@ public static class PrologoPrepararTodo
 {
     private const string RutaSecuencia = "Assets/_SEQUENCES/SEQ_Prologo_UltimaNoche.asset";
     private const string EscenaPrologo = "Prologo_Valle";
+    private const string EscenaMundo = "MainWorld";
 
     [MenuItem("El Sendero/Secuencias/Prólogo: PREPARAR TODO (escena + animación + secuencia)", priority = 0)]
     public static void Ejecutar()
@@ -51,6 +52,21 @@ public static class PrologoPrepararTodo
         // Despertar sin iris, Oliver al grupo, Eldran y la ventana (INC-358..361).
         ArreglosCapitulo1.Ejecutar(avisar: false);
 
+        // El sol, la luna y la lluvia se cablean en la escena que tenga el ciclo día/noche, que
+        // hoy es MainWorld. PREPARAR TODO **no la abre** (a petición de Raúl, 24 sep): si está
+        // abierta se cablea, y si no, se avisa y ya está. Para hacerlo a mano están sus dos menús
+        // en «El Sendero → Mundo».
+        int conAstros = SolYLunaWiring.Ejecutar(avisar: false);
+        int conLluvia = ClimaDelCicloWiring.Ejecutar(avisar: false);
+
+        if (conAstros == 0 && conLluvia == 0 && SceneManager.GetSceneByName(EscenaMundo).isLoaded == false)
+            Debug.Log($"[PrepararTodo] '{EscenaMundo}' no está abierta, así que no he tocado el sol, " +
+                "la luna ni la lluvia (viven en el ciclo día/noche, que está allí). Si hace falta, " +
+                "ábrela y usa los dos menús de «El Sendero → Mundo».");
+        else
+            Debug.Log($"[PrepararTodo] Cielo: sol y luna añadidos en {conAstros} escena(s), lluvia " +
+                $"asignada en {conLluvia}. (Cero puede ser que ya lo tuvieran.)");
+
         if (!escena.IsValid() || !escena.isLoaded)
         {
             Debug.LogError($"[PrepararTodo] No he podido abrir la escena '{EscenaPrologo}'. Lo de " +
@@ -59,8 +75,31 @@ public static class PrologoPrepararTodo
             return;
         }
 
+        // Caras que no podían cambiar (INC-404): Liora y los aldeanos traían una sola malla de
+        // ojos y otra de boca, así que ninguna emoción de la secuencia se veía en ellos.
+        CompletarCarasDeNpc.EjecutarRosterDelPrologo();
+
         Debug.Log("[PrepararTodo] 3/4 — la escena del prólogo.");
         PrologoValleMultitudWiring.Ejecutar();
+        PrologoValleTerrenoWiring.Ejecutar();
+
+        // El NavMesh del valle, cada vez (INC-399). Antes quedaba fuera a propósito («hornear
+        // tarda»), y el resultado fue un NavMesh viejo que solo cubría el camino: la multitud de
+        // arriba pega a la gente al NavMesh MÁS CERCANO, así que toda la plaza acababa en el
+        // borde del camino. Ahora: el terreno se trata como suelo, se hornea, y la multitud se
+        // vuelve a colocar sobre el NavMesh bueno (es idempotente: solo recoloca).
+        // Los objetos que mueve la secuencia (carreta, globo...) tienen que ser los que SE VEN
+        // (INC-403): con el decorado duplicado dentro de la isla, apuntaban a la copia apagada.
+        RepararPropsDelEscenario.Ejecutar(escena);
+
+        NavMeshDelPrologo.ArreglarSuelosConObstaculo(escena);
+        int superficies = NavMeshDelPrologo.RehornearEscena(escena);
+        Debug.Log($"[PrepararTodo] NavMesh del valle rehorneado ({superficies} superficie/s); " +
+                  "vuelvo a colocar la multitud sobre él.");
+        PrologoValleMultitudWiring.Ejecutar();
+
+        // El «look» de sueño del prólogo (INC-422): un Volume global en el valle.
+        PrologoPostprocesoSueno.Ejecutar(escena);
 
         Debug.Log("[PrepararTodo] 4/4 — la secuencia del prólogo.");
         ConstruirPrologoUltimaNoche.Ejecutar();
@@ -73,15 +112,18 @@ public static class PrologoPrepararTodo
 
     /// Devuelve Prologo_Valle cargada: la que ya estuviera abierta o, si no, la abre en aditivo
     /// sin cerrar lo que haya (MainWorld sigue abierta y sin tocar).
-    private static Scene AbrirEscenaDelPrologo()
+    private static Scene AbrirEscenaDelPrologo() => AbrirEscena(EscenaPrologo);
+
+    /// Abre una escena en ADITIVO si no lo estaba ya, sin cerrar nada.
+    private static Scene AbrirEscena(string nombre)
     {
-        var escena = SceneManager.GetSceneByName(EscenaPrologo);
+        var escena = SceneManager.GetSceneByName(nombre);
         if (escena.IsValid() && escena.isLoaded) return escena;
 
-        foreach (var guid in AssetDatabase.FindAssets($"{EscenaPrologo} t:Scene"))
+        foreach (var guid in AssetDatabase.FindAssets($"{nombre} t:Scene"))
         {
             string ruta = AssetDatabase.GUIDToAssetPath(guid);
-            if (System.IO.Path.GetFileNameWithoutExtension(ruta) != EscenaPrologo) continue;
+            if (System.IO.Path.GetFileNameWithoutExtension(ruta) != nombre) continue;
 
             Debug.Log($"[PrepararTodo] Abro '{ruta}' en aditivo.");
             return UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ruta,

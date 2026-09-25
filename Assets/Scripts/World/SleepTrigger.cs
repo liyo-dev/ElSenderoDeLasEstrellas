@@ -4,6 +4,8 @@ using Core;
 using System.Collections;
 using Invector.vCharacterController;
 
+// Después de las cámaras (INC-426): mientras Will duerme, el plano lo pone este LateUpdate.
+[DefaultExecutionOrder(500)]
 public class SleepTrigger : MonoBehaviour
 {
     [Header("Referencia al jugador")]
@@ -28,6 +30,12 @@ public class SleepTrigger : MonoBehaviour
     public Transform wakeUpPosition;
     [Tooltip("Rotación de referencia para la cámara al despertar (solo se usa euler.y → horizontal, euler.x → vertical). Evita que la cámara aparezca detrás de una pared.")]
     public Transform wakeUpCameraAnchor;
+
+    [Header("Despertar subjetivo (INC-424)")]
+    [Tooltip("Solo con sleepOnStart: al acabar el sueño la cámara está EN los ojos de Will, mirando " +
+             "al techo, con los párpados pesados y dos parpadeos. El botón de despertar abre los ojos " +
+             "del todo y le incorpora; después, el control normal.")]
+    public bool despertarSubjetivo = true;
 
     [Header("Narrativa")]
     [Tooltip("Si true, Will empieza dormido en esta cama al arrancar la escena sin necesidad de entrar al trigger.")]
@@ -97,7 +105,26 @@ public class SleepTrigger : MonoBehaviour
         // ganara la cámara ni un solo frame. Cede el control mientras alguien la tenga reclamada;
         // en cuanto se libera (fin de la cinemática, con su margen de gracia), este trigger retoma
         // el plano cenital como antes.
-        if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null
+        // El despertar subjetivo es el FINAL de un sueño: solo cuando ya ha pasado una secuencia
+        // mientras dormía (el prólogo). Antes de eso, el plano de siempre.
+        if (isSleeping && (CameraDirectorService.HasOwner || CinematicSequencerBase.AnySequenceActive))
+            _vioUnaSecuencia = true;
+
+        if (UsaDespertarSubjetivo && _vioUnaSecuencia && _mainCamera != null && _cameraCoroutine == null
+            && !CameraDirectorService.HasOwner)
+        {
+            // Nadie más mueve esta cámara mientras Will abre los ojos (INC-426): al acabar el prólogo
+            // algo vuelve a encender la cámara de juego, y su LateUpdate y este se pisaban el sitio
+            // fotograma a fotograma — «la cámara hace algo raro, como si hubiese alguna en conflicto».
+            if (_tpsCamera != null && _tpsCamera.enabled) _tpsCamera.enabled = false;
+
+            if (PoseSubjetiva(out var pos, out var rot, respirando: !_abriendoLosOjos, _incorporado))
+            {
+                _mainCamera.transform.SetPositionAndRotation(pos, rot);
+                EmpezarDespertarSubjetivoSiToca();
+            }
+        }
+        else if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null
             && !CameraDirectorService.HasOwner)
         {
             _mainCamera.transform.position = sleepCameraAnchor.position;
@@ -349,6 +376,7 @@ public class SleepTrigger : MonoBehaviour
     {
         if (!isSleeping) return;
         isSleeping = false;
+        TerminarDespertarSubjetivo();
 
         // Forzar ángulo de cámara antes de re-habilitarla (evita que aparezca detrás de la pared)
         if (wakeUpCameraAnchor != null && _tpsCamera != null)
@@ -423,6 +451,14 @@ public class SleepTrigger : MonoBehaviour
         // Grace period: ignorar input del primer segundo para evitar despertar inmediato al cargar escena
         if (Time.time - _sleepStartTime < 1f) return;
 
+        if (UsaDespertarSubjetivo && _subjetivoEmpezado && _mainCamera != null)
+        {
+            if (_abriendoLosOjos) return;
+            _abriendoLosOjos = true;
+            StartCoroutine(Co_AbrirLosOjos());
+            return;
+        }
+
         WakeUp();
     }
 
@@ -475,6 +511,17 @@ public class SleepTrigger : MonoBehaviour
         _tpsCamera.enabled = false;
 
         if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
+
+        // FIX INC-397 (24 sep 2026): el mismo choque que el del LateUpdate (18 sep), pero por la
+        // otra puerta. Con el prólogo, WillHouse se carga DESPUÉS de que la cinemática haya
+        // empezado y puesto su primer plano: este viaje de medio segundo cogía la cámara desde
+        // el cielo del valle y la dejaba clavada en el plano cenital de la cama. Mientras la
+        // secuencia usaba un travelling largo (que reescribe la cámara cada frame) no se notaba;
+        // con un corte seco se quedaba ahí hasta el plano siguiente — «lo de las nubes sale en la
+        // habitación de Will». Si alguien tiene la cámara reclamada, no se toca: el LateUpdate ya
+        // pone el plano de la cama en cuanto la suelte.
+        if (CameraDirectorService.HasOwner) return;
+
         _cameraCoroutine = StartCoroutine(TransitionCamera(
             _mainCamera.transform.position, _mainCamera.transform.rotation,
             sleepCameraAnchor.position,     sleepCameraAnchor.rotation));
@@ -495,6 +542,9 @@ public class SleepTrigger : MonoBehaviour
 
         while (elapsed < duration)
         {
+            // Si una cinemática reclama la cámara a mitad del viaje, se le deja (INC-397).
+            if (CameraDirectorService.HasOwner) { _cameraCoroutine = null; yield break; }
+
             elapsed += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
             _mainCamera.transform.position = Vector3.Lerp(fromPos, toPos, t);
@@ -505,5 +555,252 @@ public class SleepTrigger : MonoBehaviour
         _mainCamera.transform.position = toPos;
         _mainCamera.transform.rotation = toRot;
         _cameraCoroutine = null;
+    }
+
+    // ── Despertar subjetivo (INC-424) ─────────────────────────────────────────────────────────
+    //
+    // «La transición a despertar a Will no termina de convencerme» → opción B, «el sueño se
+    // deshace». El prólogo acaba en BLANCO (el escudo llena la pantalla); ese blanco se funde
+    // en la luz de la mañana y lo que se ve es el techo del cuarto, desde los ojos de Will, con
+    // los párpados todavía pesados. Dos parpadeos. El botón abre los ojos del todo; al incorporarse
+    // cierra los ojos y los abre ya de pie, en la cámara de juego (INC-434: sin barrido de cámara).
+
+    private bool UsaDespertarSubjetivo => despertarSubjetivo && sleepOnStart && isSleeping;
+
+    private bool _subjetivoEmpezado;
+    private bool _vioUnaSecuencia;
+    private bool _abriendoLosOjos;
+    private bool _cerrandoParaLevantarse;
+    private Coroutine _parpadeos;
+    private float _incorporado;                 // 0 = tumbado, 1 = sentado (lo lee LateUpdate)
+    private const string LoopLluviaDespertar = "Despertar_Lluvia";
+    private Coroutine _tormenta;
+    private bool _hudOcultado;
+    private float _apertura = 0.25f;           // 0 = ojos cerrados, 1 = abiertos del todo
+    private GameObject _parpados;
+    private RectTransform _parpadoArriba, _parpadoAbajo;
+    private Renderer[] _rendersOcultos;
+
+    /// Dónde están los ojos de Will tumbado y hacia dónde mira. Duerme DE LADO, mirando a la
+    /// pared (INC-426): «es mejor que lo que enfoquemos sea la pared hacia la que mira». La cara se
+    /// saca del propio esqueleto — hombros y columna — así que vale para cualquier postura de
+    /// dormir: adelante = hombro izquierdo→derecho × cadera→cabeza.
+    private bool PoseSubjetiva(out Vector3 pos, out Quaternion rot, bool respirando, float incorporado = 0f)
+    {
+        pos = default; rot = default;
+        if (playerAnimator == null || !playerAnimator.isHuman) return false;
+        Transform cabeza = playerAnimator.GetBoneTransform(HumanBodyBones.Head);
+        Transform cadera = playerAnimator.GetBoneTransform(HumanBodyBones.Hips);
+        Transform hIzq = playerAnimator.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+        Transform hDer = playerAnimator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+        if (cabeza == null || cadera == null || hIzq == null || hDer == null) return false;
+
+        Vector3 ojos = cabeza.position;
+        Vector3 arribaDelCuerpo = (cabeza.position - cadera.position).normalized;
+        Vector3 cara = Vector3.Cross(hDer.position - hIzq.position, arribaDelCuerpo).normalized;
+        if (cara.sqrMagnitude < 0.5f) return false;
+
+        // Tumbado: justo delante de la cara, mirando hacia donde mira él (la pared), con el
+        // horizonte algo ladeado —está tumbado— pero sin llegar a los 90°, que marean.
+        // En prologo20 la cara del esqueleto apuntaba bastante hacia arriba y el plano salía
+        // mirando a la esquina del techo, ladeado unos 30° (INC-434): la mirada se aplana hacia
+        // la horizontal y el ladeo baja a la mitad.
+        Vector3 caraPlana = new Vector3(cara.x, 0f, cara.z);
+        Vector3 mirada = caraPlana.sqrMagnitude > 0.01f
+            ? Vector3.Slerp(caraPlana.normalized, cara, 0.2f).normalized
+            : cara;
+        Vector3 arribaTumbado = Vector3.Slerp(Vector3.up, arribaDelCuerpo, 0.15f);
+        Vector3 posTumbado = ojos + cara * 0.12f;
+        Quaternion rotTumbado = Quaternion.LookRotation(mirada, arribaTumbado);
+
+        // Incorporado: sentado, la cabeza más alta, se vuelve hacia el cuarto (de espaldas a la
+        // pared) y mira un pelo hacia abajo.
+        Vector3 cuarto = -new Vector3(cara.x, 0f, cara.z);
+        if (cuarto.sqrMagnitude < 0.0001f) cuarto = Vector3.forward;
+        cuarto.Normalize();
+        Vector3 posSentado = new Vector3(ojos.x, ojos.y + 0.45f, ojos.z) + cuarto * 0.2f;
+        Quaternion rotSentado = Quaternion.LookRotation((cuarto - Vector3.up * 0.15f).normalized, Vector3.up);
+
+        float k = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(incorporado));
+        pos = Vector3.Lerp(posTumbado, posSentado, k);
+        rot = Quaternion.Slerp(rotTumbado, rotSentado, k);
+
+        if (respirando)
+            pos += Vector3.up * (Mathf.Sin(Time.time * 1.6f) * 0.006f);
+        return true;
+    }
+
+    /// Arranca los párpados la primera vez que la cámara es suya: al acabar el prólogo, con la
+    /// pantalla todavía en blanco.
+    private void EmpezarDespertarSubjetivoSiToca()
+    {
+        if (_subjetivoEmpezado) return;
+        if (CinematicSequencerBase.AnySequenceActive) return;
+        _subjetivoEmpezado = true;
+
+        // Will no se ve desde dentro de sus propios ojos: el pelo taparía el techo.
+        _rendersOcultos = player != null ? player.GetComponentsInChildren<Renderer>(false) : null;
+        if (_rendersOcultos != null) foreach (var r in _rendersOcultos) if (r != null) r.forceRenderingOff = true;
+
+        // Nada de HUD mientras se despierta: aparece cuando ya está de pie.
+        if (Sendero.UI.PlayerHUDV2.Instance != null) { Sendero.UI.PlayerHUDV2.Instance.HideHUD(0.05f); _hudOcultado = true; }
+
+        CrearParpados();
+        _parpadeos = StartCoroutine(Co_Parpadeos());
+        _tormenta = StartCoroutine(Co_TormentaAlDespertar());
+    }
+
+    private IEnumerator Co_Parpadeos()
+    {
+        PonerApertura(0.25f);
+
+        // Que el blanco se vaya fundiendo antes del primer parpadeo.
+        float tope = Time.unscaledTime + 6f;
+        while (Sendero.Core.Feedback.FeedbackService.IsScreenFaded && Time.unscaledTime < tope) yield return null;
+        yield return new WaitForSecondsRealtime(1.0f);
+
+        if (_abriendoLosOjos) yield break;
+        yield return Parpado(0.55f, 0.8f);
+        yield return new WaitForSecondsRealtime(0.4f);
+        if (_abriendoLosOjos) yield break;
+        yield return Parpado(0f, 0.12f);                       // primer parpadeo
+        yield return new WaitForSecondsRealtime(0.15f);
+        yield return Parpado(0.7f, 0.35f);
+        yield return new WaitForSecondsRealtime(0.6f);
+        if (_abriendoLosOjos) yield break;
+        yield return Parpado(0f, 0.1f);                        // segundo parpadeo
+        yield return new WaitForSecondsRealtime(0.12f);
+        yield return Parpado(0.45f, 0.45f);                    // y se quedan pesados
+    }
+
+    /// El botón: abre los ojos del todo, se queda un momento mirando la pared, y al incorporarse
+    /// cierra los ojos (un parpadeo largo) y los abre ya de pie, en la cámara de juego.
+    ///
+    /// Antes la cámara se incorporaba con él y giraba media vuelta hacia el cuarto en 1,3 s. En
+    /// prologo20 eso se veía como la cámara barriendo la habitación ladeada, pegada a la pared y a
+    /// la ventana, y después el corte a la cámara de juego — «algo pasa con la cámara» (INC-434).
+    /// Con el parpadeo no hay ningún movimiento de cámara que ver: tumbado → negro → de pie.
+    private IEnumerator Co_AbrirLosOjos()
+    {
+        if (_parpadeos != null) { StopCoroutine(_parpadeos); _parpadeos = null; }
+        _incorporado = 0f;
+
+        yield return Parpado(1f, 0.45f);                       // abre los ojos del todo
+        yield return new WaitForSecondsRealtime(0.7f);          // la pared, un momento
+
+        _cerrandoParaLevantarse = true;                         // este cierre sí se deja hacer
+        yield return Parpado(0f, 0.35f);                        // se incorpora con los ojos cerrados
+        yield return Sendero.Core.Feedback.FeedbackService.ScreenFadeAsync(Color.black, 0.12f, true);
+
+        WakeUp();
+        // La cámara de juego necesita unos fotogramas para colocarse detrás de él; que lo haga
+        // con la pantalla en negro.
+        yield return null;
+        yield return null;
+        yield return new WaitForSecondsRealtime(0.25f);
+        yield return Sendero.Core.Feedback.FeedbackService.ScreenFadeAsync(Color.black, 0.6f, false);
+    }
+
+    /// La tormenta del sueño todavía se oye al abrir los ojos (INC-427): lluvia contra la ventana,
+    /// un relámpago que ilumina el cuarto y su trueno, y otro más lejos. Al levantarse, la lluvia
+    /// se va apagando: era el sueño.
+    private IEnumerator Co_TormentaAlDespertar()
+    {
+        var audio = AudioService.Instance;
+        audio?.PlayLoopingSFX(LoopLluviaDespertar, "rain", 0.22f);   // desde dentro, contra la ventana (INC-433)
+
+        yield return new WaitForSecondsRealtime(2.2f);
+        Relampago(0.5f);
+        yield return new WaitForSecondsRealtime(0.08f);
+        Relampago(0.3f);
+        yield return new WaitForSecondsRealtime(0.9f);
+        audio?.PlaySFX("Prologo_Trueno", 0.8f);
+
+        yield return new WaitForSecondsRealtime(6.5f);
+        Relampago(0.25f);
+        yield return new WaitForSecondsRealtime(1.8f);
+        audio?.PlaySFX("Weather_Thunder", 0.6f);
+        _tormenta = null;
+    }
+
+    private static void Relampago(float fuerza)
+        => Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, fuerza), 0.14f);
+
+    private IEnumerator Parpado(float hasta, float segundos)
+    {
+        float desde = _apertura, t = 0f;
+        while (t < segundos)
+        {
+            // Si ya se está despertando, los parpadeos del sueño no le cierran los ojos; el cierre
+            // de levantarse (Co_AbrirLosOjos) sí.
+            if (_abriendoLosOjos && !_cerrandoParaLevantarse && hasta < _apertura) yield break;
+            t += Time.unscaledDeltaTime;
+            PonerApertura(Mathf.Lerp(desde, hasta, Mathf.SmoothStep(0f, 1f, t / segundos)));
+            yield return null;
+        }
+        PonerApertura(hasta);
+    }
+
+    private void CrearParpados()
+    {
+        if (_parpados != null) return;
+        _parpados = new GameObject("[Parpados de Will]");
+        var canvas = _parpados.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 30000;
+        _parpados.AddComponent<UnityEngine.UI.CanvasScaler>();
+
+        // Borde difuminado: el párpado no es una persiana.
+        var tex = new Texture2D(1, 64, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+        for (int y = 0; y < 64; y++)
+        {
+            float a = Mathf.SmoothStep(0f, 1f, y / 63f);
+            tex.SetPixel(0, y, new Color(0.02f, 0.01f, 0.02f, a));
+        }
+        tex.Apply();
+        var sprite = Sprite.Create(tex, new Rect(0, 0, 1, 64), new Vector2(0.5f, 0.5f));
+
+        _parpadoArriba = CrearParpado("Arriba", sprite, arriba: true);
+        _parpadoAbajo = CrearParpado("Abajo", sprite, arriba: false);
+    }
+
+    private RectTransform CrearParpado(string nombre, Sprite sprite, bool arriba)
+    {
+        var go = new GameObject(nombre, typeof(RectTransform), typeof(UnityEngine.UI.Image));
+        go.transform.SetParent(_parpados.transform, false);
+        var img = go.GetComponent<UnityEngine.UI.Image>();
+        img.sprite = sprite;
+        img.raycastTarget = false;
+        var rt = go.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0f, arriba ? 1f : 0f);
+        rt.anchorMax = new Vector2(1f, arriba ? 1f : 0f);
+        rt.pivot = new Vector2(0.5f, arriba ? 1f : 0f);
+        // El degradado va de transparente (y=0) a opaco (y=1): el de abajo se da la vuelta.
+        rt.localScale = new Vector3(1f, arriba ? 1f : -1f, 1f);
+        if (!arriba) rt.pivot = new Vector2(0.5f, 1f);
+        return rt;
+    }
+
+    private void PonerApertura(float a)
+    {
+        _apertura = Mathf.Clamp01(a);
+        if (_parpadoArriba == null) return;
+        float alto = ((RectTransform)_parpados.transform).rect.height;
+        if (alto <= 1f) alto = Screen.height;
+        float h = (1f - _apertura) * (alto * 0.5f + alto * 0.08f);   // +8 %: el borde suave se solapa al cerrar
+        _parpadoArriba.sizeDelta = new Vector2(0f, h);
+        _parpadoAbajo.sizeDelta = new Vector2(0f, h);
+    }
+
+    private void TerminarDespertarSubjetivo()
+    {
+        if (_tormenta != null) { StopCoroutine(_tormenta); _tormenta = null; }
+        if (_subjetivoEmpezado) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 5f);
+        if (_parpados != null) Destroy(_parpados);
+        _parpados = null;
+        if (_rendersOcultos != null) foreach (var r in _rendersOcultos) if (r != null) r.forceRenderingOff = false;
+        _rendersOcultos = null;
+        if (_hudOcultado && Sendero.UI.PlayerHUDV2.Instance != null) Sendero.UI.PlayerHUDV2.Instance.ShowHUD();
+        _hudOcultado = false;
     }
 }

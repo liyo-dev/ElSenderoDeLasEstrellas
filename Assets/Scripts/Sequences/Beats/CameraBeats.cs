@@ -45,6 +45,17 @@ public class ShotBeat : SequenceBeat
              "fondo mientras alguien habla.")]
     public bool waitForArrival = true;
 
+    [Tooltip("Solo con 'smooth'. Marcado, la cámara sale ya en marcha desde el primer fotograma " +
+             "y solo frena al llegar, en vez de arrancar despacio. Es para una apertura que viene " +
+             "bajando desde el cielo (INC-395): con el arranque suave, el primer segundo de un " +
+             "travelling largo parece un plano quieto.")]
+    public bool arrancaLanzado = false;
+
+    [Tooltip("Solo con 'smooth'. Si la línea recta hasta el plano atraviesa el decorado, en vez " +
+             "de hacer corte seco la cámara entra DESDE ARRIBA: una curva que pasa por encima " +
+             "del destino y cae sobre él. Para aperturas que bajan del cielo a la plaza (INC-397).")]
+    public bool entrarDesdeArriba = false;
+
     [Header("Sujetos en movimiento")]
     [Tooltip("Recalcula el plano CADA FRAME, para seguir a alguien que se mueve (un personaje " +
              "corriendo, un proyectil en vuelo). Se mantiene hasta el siguiente beat de cámara o " +
@@ -121,16 +132,31 @@ public class ShotBeat : SequenceBeat
         // corte — que además es lo que pide una conversación.
         bool viaja = smooth && ShotComposer.IsPathClear(driver.CurrentPosition, shotSolution.position);
 
+        // Entrar desde arriba (INC-397). En la grabación del 24 sep la bajada de la apertura se
+        // quedó en corte seco: la recta desde el cielo hasta el Archimago rozaba un tejado. Una
+        // bajada no tiene por qué ser recta — se prueba una curva que pasa por encima del
+        // destino y cae sobre él, que además es como se «entra» en una escena.
+        Vector3? porEncima = null;
+        if (smooth && !viaja && entrarDesdeArriba)
+        {
+            porEncima = BuscarCurvaPorArriba(driver.CurrentPosition, shotSolution);
+            viaja = porEncima.HasValue;
+        }
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (smooth && !viaja)
             Debug.Log($"[ShotBeat] El movimiento hasta '{framing.Describe()}' atravesaría el " +
                 "escenario, así que se hace corte seco. Si el movimiento importaba, hay que " +
                 "acercar los dos planos o poner uno intermedio.");
+        else if (porEncima.HasValue)
+            Debug.Log($"[ShotBeat] La recta hasta '{framing.Describe()}' chocaba: se entra desde " +
+                      $"arriba, pasando por {porEncima.Value.ToString("F1")}.");
 #endif
 
         if (viaja)
         {
-            driver.MoveTo(shotSolution.position, shotSolution.rotation, shotSolution.fieldOfView, duration);
+            driver.MoveTo(shotSolution.position, shotSolution.rotation, shotSolution.fieldOfView, duration,
+                arrancaLanzado, porEncima);
             if (waitForArrival && duration > 0f)
                 yield return new WaitForSecondsRealtime(duration);
         }
@@ -143,6 +169,48 @@ public class ShotBeat : SequenceBeat
         // TODOS los planos para poder ver el efecto del deslizador de distancia sin recompilar ni
         // volver a lanzar la secuencia.
         if (live || player.LivePreviewEnabled) player.StartShotTracking(framing);
+    }
+
+    /// Un punto de control para una curva que llega al plano desde arriba, o null si ninguna
+    /// de las candidatas está despejada. La curva es una Bézier cuadrática (la misma que dibuja
+    /// el driver), y se comprueba tramo a tramo contra el decorado.
+    private static Vector3? BuscarCurvaPorArriba(Vector3 desde, ShotSolution destino)
+    {
+        Vector3 hasta = destino.position;
+        float alto = Mathf.Max(desde.y, hasta.y + 6f);
+        Vector3 atras = destino.rotation * Vector3.back;
+        atras.y = 0f;
+        atras = atras.sqrMagnitude > 0.001f ? atras.normalized : Vector3.zero;
+
+        // 1) Justo encima del destino: la cámara llega por el cielo y cae en vertical.
+        // 2) Encima y un poco por detrás: cae siguiendo la dirección en la que mira el plano.
+        // 3) Lo mismo, más alto.
+        Vector3[] candidatas =
+        {
+            new Vector3(hasta.x, alto, hasta.z),
+            new Vector3(hasta.x, alto, hasta.z) + atras * 6f,
+            new Vector3(hasta.x, alto + 8f, hasta.z) + atras * 3f,
+        };
+
+        foreach (var c in candidatas)
+            if (CurvaDespejada(desde, c, hasta)) return c;
+
+        return null;
+    }
+
+    private static bool CurvaDespejada(Vector3 a, Vector3 c, Vector3 b)
+    {
+        const int tramos = 16;
+        Vector3 previo = a;
+        for (int i = 1; i <= tramos; i++)
+        {
+            float t = i / (float)tramos;
+            float u = 1f - t;
+            Vector3 punto = u * u * a + 2f * u * t * c + t * t * b;
+            if (!ShotComposer.IsPathClear(previo, punto)) return false;
+            previo = punto;
+        }
+        return true;
     }
 
     /// Gira al sujeto hacia el secundario, si el encuadre lo pide y tiene a quién mirar.

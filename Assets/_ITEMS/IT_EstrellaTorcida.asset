@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9201a7fb4aa9c454bbc45285f1dc4852, type: 3}
+  m_Name: IT_EstrellaTorcida
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: estrella_torcida
+  displayNameId: ITEM_ESTRELLA_TORCIDA_NAME
+  displayName: Estrella torcida
+  icon: {fileID: 21300000, guid: 9d98a169df39481eba77de8649105dfe, type: 3}
+  usableFromInventory: 0
+  useEffects: []
+  useDescriptionId: ITEM_ESTRELLA_TORCIDA_DESC
+  useDescription:
+  usageKind: 0
+  buyPrice: 1
+  sellValue: 0
+  wardrobeUnlock: {fileID: 0}

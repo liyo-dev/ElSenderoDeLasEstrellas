@@ -1,6 +1,6 @@
 # CLAUDE.md — El Sendero de las Estrellas
 
-RPG de acción/aventura en Unity 6 (6000.5.4f1) + URP 17.5. Proyecto indie en solitario (Raúl Báez).
+RPG de acción/aventura en Unity 6 (6000.6.2f1) + URP 17.6. Proyecto indie en solitario (Raúl Báez).
 
 **Toda la documentación técnica detallada vive en `TDD.md` — fuente de verdad única.** Este archivo es un resumen corto de lo no negociable para quien (humano o IA) toque código; no sustituye a TDD.md, y si algo de aquí y de TDD.md alguna vez difieren, manda TDD.md. Detalle completo de cada punto de abajo, con ejemplos y contexto: ver la sección de TDD.md indicada entre paréntesis.
 

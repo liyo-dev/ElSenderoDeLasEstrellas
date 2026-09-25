@@ -6,7 +6,7 @@
 
 RPG de acción/aventura en 3D, desarrollado en solitario por [Raúl Báez](https://github.com/liyo-dev).
 
-**Motor:** Unity 6 (6000.5.4f1) · **Render pipeline:** URP 17.5 · **Estado:** en desarrollo activo
+**Motor:** Unity 6 (6000.6.2f1) · **Render pipeline:** URP 17.6 · **Estado:** en desarrollo activo
 
 <!--
 TODO: capturas de pantalla / GIF de gameplay aquí.
@@ -58,7 +58,7 @@ La última auditoría general documentada es la del 12 de agosto (`TDD.md` § 19
 
 ## 🚀 Quick start
 
-1. Abre el proyecto con **Unity 6 (6000.5.4f1)** o superior.
+1. Abre el proyecto con **Unity 6 (6000.6.2f1)** o superior.
 2. La escena de entrada es `Assets/Scenes/Systems/Start.unity` — contiene todos los managers persistentes (`DontDestroyOnLoad`) y siempre debe estar cargada.
 3. Para testear cualquier otra escena (mundo, cinemática, etc.), ábrela directamente y dale a Play: `AutoBootstrapOnPlay.cs` detecta que no es `Start` y la carga aditivamente antes de entrar en PlayMode. No hace falta configuración manual.
 

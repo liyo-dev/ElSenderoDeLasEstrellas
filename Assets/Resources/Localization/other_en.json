@@ -25,10 +25,6 @@
             "value": "That nightmare again."
         },
         {
-            "key": "TUTORIAL_MARKET",
-            "value": "Try buying something at the market stall."
-        },
-        {
             "key": "TUTORIAL_MINIMAP_BOX",
             "value": "Follow the minimap marker to find the box.\nPress {BOTON} to view the full map."
         },
@@ -42,7 +38,7 @@
         },
         {
             "key": "TUTORIAL_WAKE_UP",
-            "value": "Press {BOTON} to wake up Will"
+            "value": "Press {BOTON} to open your eyes"
         },
         {
             "key": "QUEST_STARTED_BANNER",

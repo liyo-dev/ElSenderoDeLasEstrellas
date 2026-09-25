@@ -179,6 +179,15 @@ public class SequencePlayer : CinematicSequencerBase
     /// puede pasar es que el sujeto se salga del cuadro mientras la cámara se recoloca.
     private const float GiroDelPlanoVivo = 9f;
 
+    /// Metros de diferencia a partir de los cuales una pose nueva NO es el mismo plano refrescado,
+    /// sino otro sitio: el buscador ha rodeado un obstáculo o se ha ido al lado contrario.
+    private const float SaltoDelPlanoVivo = 2.5f;
+
+    /// Segundos que tiene que MANTENERSE esa pose nueva para aceptarla. Menos de esto y es un
+    /// parpadeo —una esquina que entra y sale del rayo de visión— y se ignora: «los planos aéreos
+    /// hacen en momentos concretos cambios rápidos que parecen fallos» (23 sep).
+    private const float AguantarAntesDeSaltar = 0.6f;
+
     private IEnumerator Co_TrackShot(ShotFraming framing)
     {
         var driver = ActiveCamera;
@@ -194,6 +203,15 @@ public class SequencePlayer : CinematicSequencerBase
         // teletransportarse a ella: un cambio de ángulo se ve como un movimiento, no como un tic.
         Vector3 velocidad = Vector3.zero;
 
+        // Histéresis (23 sep): la pose que se persigue solo cambia de sitio cuando el cambio se
+        // mantiene. Si no, un obstáculo que entra y sale del rayo de visión hace ir y venir a la
+        // cámara varias veces por segundo, y eso se lee como un fallo, no como un plano.
+        bool hayObjetivo = false;
+        Vector3 objetivoPos = Vector3.zero;
+        Quaternion objetivoRot = Quaternion.identity;
+        float objetivoFov = 0f;
+        float discrepando = 0f;
+
         while (true)
         {
             // El driver puede desaparecer si su escena se descarga a mitad de secuencia.
@@ -205,11 +223,35 @@ public class SequencePlayer : CinematicSequencerBase
             if (ShotComposer.TrySolve(_context, framing, CameraAspect, out ShotSolution s, isCut: false))
             {
                 float dt = Time.unscaledDeltaTime;
-                Vector3 pos = Vector3.SmoothDamp(driver.CurrentPosition, s.position, ref velocidad,
+
+                if (!hayObjetivo)
+                {
+                    objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
+                    hayObjetivo = true;
+                    discrepando = 0f;
+                }
+                else if (Vector3.Distance(s.position, objetivoPos) > SaltoDelPlanoVivo)
+                {
+                    // Sitio distinto: solo se acepta si se mantiene. Un parpadeo no mueve la cámara.
+                    discrepando += dt;
+                    if (discrepando >= AguantarAntesDeSaltar)
+                    {
+                        objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
+                        discrepando = 0f;
+                    }
+                }
+                else
+                {
+                    // El mismo sitio, corregido: se sigue sin más.
+                    objetivoPos = s.position; objetivoRot = s.rotation; objetivoFov = s.fieldOfView;
+                    discrepando = 0f;
+                }
+
+                Vector3 pos = Vector3.SmoothDamp(driver.CurrentPosition, objetivoPos, ref velocidad,
                     SuavizadoDelPlanoVivo, Mathf.Infinity, dt);
-                Quaternion rot = Quaternion.Slerp(driver.CurrentRotation, s.rotation,
+                Quaternion rot = Quaternion.Slerp(driver.CurrentRotation, objetivoRot,
                     1f - Mathf.Exp(-GiroDelPlanoVivo * dt));
-                driver.SetPose(pos, rot, s.fieldOfView);
+                driver.SetPose(pos, rot, objetivoFov);
                 fallosSeguidos = 0;
             }
             else if (++fallosSeguidos >= 10)
@@ -311,6 +353,17 @@ public class SequencePlayer : CinematicSequencerBase
             _cinematicCamera = _stage.CameraDriver;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        // INC-430 (24 sep 2026): sin definición no hay señal de entrada (sale del asset), así que
+        // la secuencia no escucha NADA y el grafo se queda esperando su señal de salida para
+        // siempre, sin un solo error. Fue la causa real de «las peras no arrancan» (INC-387 lo
+        // atribuyó a la suscripción): el SequencePlayer de SEQ_PerasEldran en MainWorld tenía el
+        // campo Definition vacío. Ahora lo dice en rojo al arrancar.
+        if (_definition == null)
+            Debug.LogError($"[SequencePlayer:{name}] No tiene asignado ningún SequenceDefinition " +
+                "(campo 'Definition', abajo del todo en el Inspector). Sin él esta secuencia no " +
+                "escucha ninguna señal y no arrancará nunca: el grafo narrativo se quedará esperando. " +
+                "Arrastra aquí su asset de Assets/_SEQUENCES y guarda la escena.", this);
+
         if (_cinematicCamera == null)
             Debug.LogWarning($"[SequencePlayer:{name}] Sin CinematicCameraDriver (ni en el Inspector " +
                 "ni en el SequenceStage) — ningún corte de cámara de esta secuencia hará nada.");

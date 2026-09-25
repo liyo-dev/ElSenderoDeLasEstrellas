@@ -288,6 +288,13 @@ def _emite_beat(b, ind):
             for h in b.hijos:
                 out.append(_emite_beat(h, ind + 8) + ",")
             out.append(f"{p}    }},")
+    # Un bloque con hijos pero SIN waitForAll (SerieBeat, INC-407): la lista va al final.
+    if b.hijos is not None and not any(k == "waitForAll" for k, _ in b.campos):
+        out.append(f"{p}    beats = new List<SequenceBeat>")
+        out.append(f"{p}    {{")
+        for h in b.hijos:
+            out.append(_emite_beat(h, ind + 8) + ",")
+        out.append(f"{p}    }},")
     cierre = f"{p}}}"
     if b.envoltura:
         cierre += b.envoltura[1] + ")"

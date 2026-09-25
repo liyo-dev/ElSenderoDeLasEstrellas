@@ -173,7 +173,8 @@ public static class DialogueIconsAtlasMerger
         }
 
         // 5) Material nuevo para DialogueIcons.asset apuntando al atlas.
-        ShaderUtilities.GetShaderPropertyIDs(); // asegura que ID_MainTex esté inicializado
+        // (Ya no hace falta llamar a ShaderUtilities.GetShaderPropertyIDs(): desde Unity 6000.6 TMP
+        //  inicializa los IDs solo, y la llamada es error de compilación.)
         Shader shader = main.material != null ? main.material.shader : Shader.Find("TextMeshPro/Sprite");
         var newMaterial = new Material(shader) { name = "DialogueIcons Atlas Material" };
         newMaterial.SetTexture(ShaderUtilities.ID_MainTex, atlasTexture);

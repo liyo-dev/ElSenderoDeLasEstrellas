@@ -1,6 +1,6 @@
 # TDD — El Sendero de las Estrellas
 
-**Motor:** Unity 6 (6000.5.4f1)  
+**Motor:** Unity 6 (6000.6.2f1)  
 **Pipeline:** URP  
 **Input:** Unity Input System (nuevo) + Invector (movimiento base del jugador)  
 **Última revisión documental:** 10 de septiembre de 2026 (nivelación de resumen y rutas; no es una nueva auditoría de código).
@@ -38,7 +38,7 @@
 
 ### Iniciar el proyecto
 
-1. Abre Unity 6 (6000.5.4f1) o superior.
+1. Abre Unity 6 (6000.6.2f1) o superior.
 2. La escena de entrada es `Assets/Scenes/Systems/Start.unity`.
 3. Todos los managers persistentes viven en Start.
 

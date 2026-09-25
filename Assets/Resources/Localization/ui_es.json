@@ -741,6 +741,50 @@
             "value": "Mermelada"
         },
         {
+            "key": "ITEM_ESTRELLA_TORCIDA_NAME",
+            "value": "Estrella torcida"
+        },
+        {
+            "key": "ITEM_ESTRELLA_TORCIDA_DESC",
+            "value": "Una estrella de madera mal tallada. No sirve para nada, y es tuya."
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_NAME",
+            "value": "Farolillo de papel"
+        },
+        {
+            "key": "ITEM_FAROLILLO_PAPEL_DESC",
+            "value": "Para las noches de fiesta en la plaza."
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_NAME",
+            "value": "Pájaro de madera"
+        },
+        {
+            "key": "ITEM_PAJARO_MADERA_DESC",
+            "value": "Tallado en una sola pieza. Casi parece que va a cantar."
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_NAME",
+            "value": "Guirnalda de banderines"
+        },
+        {
+            "key": "ITEM_GUIRNALDA_BANDERINES_DESC",
+            "value": "Colores para alegrar cualquier ventana."
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_NAME",
+            "value": "Campanilla de viento"
+        },
+        {
+            "key": "ITEM_CAMPANILLA_VIENTO_DESC",
+            "value": "Suena con la brisa del valle."
+        },
+        {
+            "key": "SHOP_TOMASA_SALUDO",
+            "value": "Figuritas de madera, talladas a mano. Bueno... casi todas bien talladas."
+        },
+        {
             "key": "ITEM_POCIONMAGIA_DESC",
             "value": "Poción que recupera magia al consumirla. Recupera 25 MP."
         },

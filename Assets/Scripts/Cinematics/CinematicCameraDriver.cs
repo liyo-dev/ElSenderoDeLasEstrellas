@@ -148,18 +148,27 @@ public class CinematicCameraDriver : MonoBehaviour
 
     /// Movimiento suave hasta una pose calculada. Igual que MoveTo(Transform) pero con destino
     /// fijo en coordenadas.
+    ///
+    /// `arrancaLanzado` (INC-395): el movimiento normal arranca y frena despacio (smoothstep), así
+    /// que durante el primer segundo de un travelling largo la cámara casi no se mueve. Para una
+    /// apertura que «ya viene bajando» eso se lee como un plano quieto. Marcado, la cámara sale
+    /// del primer fotograma ya en marcha y solo frena al llegar.
+    ///
+    /// `porEncima` (INC-397): si se da, el recorrido no es recto sino una curva (Bézier cuadrática)
+    /// que tira hacia ese punto — para entrar en un plano desde arriba cuando la recta atraviesa
+    /// el decorado.
     public Coroutine MoveTo(Vector3 position, Quaternion rotation, float fieldOfView,
-        float duration = -1f)
+        float duration = -1f, bool arrancaLanzado = false, Vector3? porEncima = null)
     {
         StopFollow();
         StopMove();
         _moveRoutine = StartCoroutine(Co_MoveToPose(position, rotation, fieldOfView,
-            duration < 0f ? defaultMoveDuration : duration));
+            duration < 0f ? defaultMoveDuration : duration, arrancaLanzado, porEncima));
         return _moveRoutine;
     }
 
     private IEnumerator Co_MoveToPose(Vector3 targetPos, Quaternion targetRot, float targetFov,
-        float duration)
+        float duration, bool arrancaLanzado = false, Vector3? porEncima = null)
     {
         var cam = MainCamera;
         if (!cam) yield break;
@@ -177,9 +186,19 @@ public class CinematicCameraDriver : MonoBehaviour
             // tarda cinco veces más de lo escrito.
             elapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            float st = t * t * (3f - 2f * t);
+            float st = arrancaLanzado
+                ? 1f - (1f - t) * (1f - t)   // sale en marcha y frena al llegar
+                : t * t * (3f - 2f * t);
             if (!cam) yield break;
-            cam.transform.position = Vector3.Lerp(startPos, targetPos, st);
+            if (porEncima.HasValue)
+            {
+                float u = 1f - st;
+                cam.transform.position = u * u * startPos + 2f * u * st * porEncima.Value + st * st * targetPos;
+            }
+            else
+            {
+                cam.transform.position = Vector3.Lerp(startPos, targetPos, st);
+            }
             cam.transform.rotation = Quaternion.Slerp(startRot, targetRot, st);
             cam.fieldOfView        = Mathf.Lerp(startFov, targetFov, st);
             yield return null;

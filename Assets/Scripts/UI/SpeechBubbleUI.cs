@@ -44,6 +44,19 @@ public class SpeechBubbleUI : MonoBehaviour
     [Tooltip("Margen interno horizontal del texto (izquierda y derecha).")]
     [SerializeField] float _labelHorizontalMargin = 44f;
 
+    [Header("Páginas (INC-435)")]
+    [Tooltip("Máximo de líneas por bocadillo. Regla de Raúl (25 sep 2026): «los textos de los " +
+             "bocadillos no pueden ser de más de tres líneas; si es así hay que paginar la frase en " +
+             "TODO EL JUEGO». Una frase que ocupa más se parte en páginas que salen una detrás de otra " +
+             "en el mismo bocadillo, cortando por el final de una frase siempre que se pueda.")]
+    [SerializeField, Min(1)] int _maxLineas = 3;
+    [Tooltip("Caracteres por segundo de lectura cómoda. Ninguna página dura menos de lo que se tarda " +
+             "en leerla, aunque quien llama pida menos tiempo: en prologo/peras, líneas de 130 " +
+             "caracteres salían 3 s y no daba tiempo a leerlas.")]
+    [SerializeField, Min(1f)] float _caracteresPorSegundo = 15f;
+    [Tooltip("Ninguna página dura menos que esto.")]
+    [SerializeField, Min(0.5f)] float _lecturaMinima = 1.6f;
+
     [Header("Posición")]
     [SerializeField] Vector3 _worldOffset = new Vector3(0f, 2.2f, 0f);
 
@@ -203,7 +216,12 @@ public class SpeechBubbleUI : MonoBehaviour
         _target = target;
         _offsetOverride = worldOffset;
         _isShowing = true;
-        _label.text = text;
+
+        // Frases de más de _maxLineas líneas: páginas (INC-435).
+        List<string> paginas = Paginar(text);
+        if (paginas.Count == 0) paginas.Add(text ?? string.Empty);
+        string primera = paginas[0];
+        _label.text = primera;
 
         GameplayEventLog.Log("Dialogo", !string.IsNullOrEmpty(speakerName) ? speakerName : target != null ? target.name : null);
 
@@ -238,15 +256,7 @@ public class SpeechBubbleUI : MonoBehaviour
         {
             _label.textWrappingMode = TextWrappingModes.Normal;
 
-            Vector2 singleLineSize = _label.GetPreferredValues(text, 0f, 0f);
-            float desiredWidth = singleLineSize.x + _labelHorizontalMargin * 2f;
-            float bubbleWidth = Mathf.Clamp(desiredWidth, _bubbleMinWidth, _bubbleMaxWidth);
-
-            Vector2 sd = _bubbleRect.sizeDelta;
-            sd.x = bubbleWidth;
-            _bubbleRect.sizeDelta = sd;
-
-            LayoutRebuilder.ForceRebuildLayoutImmediate(_bubbleRect);
+            AjustarAncho(primera);
         }
 
         if (_bubbleImage != null)
@@ -289,8 +299,155 @@ public class SpeechBubbleUI : MonoBehaviour
                    .SetUpdate(true);
 
         _pendingOnComplete = onComplete;
-        if (duration > 0f)
-            _autoHideRoutine = StartCoroutine(AutoHide(duration, onComplete));
+        if (paginas.Count > 1)
+            _autoHideRoutine = StartCoroutine(Co_Paginas(paginas, duration, onComplete));
+        else if (duration > 0f)
+            _autoHideRoutine = StartCoroutine(AutoHide(Mathf.Max(duration, TiempoDeLectura(primera)), onComplete));
+    }
+
+    /// Cuánto tiene que estar en pantalla una página para poder leerla (INC-435).
+    public float TiempoDeLectura(string pagina)
+        => Mathf.Max(_lecturaMinima, 0.6f + (pagina?.Length ?? 0) / Mathf.Max(1f, _caracteresPorSegundo));
+
+    /// Parte un texto en páginas de como mucho `_maxLineas` líneas, medidas con el bocadillo de
+    /// verdad (fuente, tamaño, márgenes y ancho máximo). Corta por el final de una frase (. ! ? …)
+    /// siempre que pueda; si una frase sola ya no cabe, por palabras. Un texto que cabe entero
+    /// devuelve una sola página, igual que antes. Lo usa Show() y también SayBeat, que da a cada
+    /// página su propio tiempo (INC-435).
+    public List<string> Paginar(string text)
+    {
+        var paginas = new List<string>();
+        if (string.IsNullOrWhiteSpace(text) || _label == null || _bubbleRect == null)
+        {
+            if (!string.IsNullOrWhiteSpace(text)) paginas.Add(text.Trim());
+            return paginas;
+        }
+        text = text.Trim();
+
+        PrepararLabel();
+        float anchoGuardado = _bubbleRect.sizeDelta.x;
+        AjustarAncho(text);
+        float ancho = _label.rectTransform.rect.width - _label.margin.x - _label.margin.z;
+        if (ancho < 50f) ancho = _bubbleMaxWidth - _labelHorizontalMargin * 2f;
+        float altoMaximo = _label.GetPreferredValues(RenglonesDePrueba(_maxLineas), ancho, 0f).y + 0.5f;
+        bool Cabe(string s) => _label.GetPreferredValues(s, ancho, 0f).y <= altoMaximo;
+
+        if (Cabe(text))
+        {
+            paginas.Add(text);
+        }
+        else
+        {
+            string actual = "";
+            foreach (string frase in Frases(text))
+            {
+                string junto = actual.Length == 0 ? frase : actual + " " + frase;
+                if (Cabe(junto)) { actual = junto; continue; }
+                if (actual.Length > 0) { paginas.Add(actual); actual = ""; }
+                if (Cabe(frase)) { actual = frase; continue; }
+
+                // Una frase que sola ya pasa de las líneas: por palabras.
+                foreach (string palabra in frase.Split(' '))
+                {
+                    if (palabra.Length == 0) continue;
+                    string prueba = actual.Length == 0 ? palabra : actual + " " + palabra;
+                    if (actual.Length > 0 && !Cabe(prueba)) { paginas.Add(actual); actual = palabra; }
+                    else actual = prueba;
+                }
+            }
+            if (actual.Length > 0) paginas.Add(actual);
+        }
+
+        // El ancho de verdad lo pone Show() con la página que toque; aquí solo se ha medido.
+        Vector2 sd = _bubbleRect.sizeDelta; sd.x = anchoGuardado; _bubbleRect.sizeDelta = sd;
+        return paginas;
+    }
+
+    static string RenglonesDePrueba(int n)
+    {
+        var sb = new System.Text.StringBuilder("Ágj");
+        for (int i = 1; i < n; i++) sb.Append("\nÁgj");
+        return sb.ToString();
+    }
+
+    /// Frases de un texto, con su puntuación final pegada («¿Qué?», «Vale...», «¡Ya!»).
+    static List<string> Frases(string text)
+    {
+        var frases = new List<string>();
+        var sb = new System.Text.StringBuilder();
+        for (int i = 0; i < text.Length; i++)
+        {
+            char c = text[i];
+            sb.Append(c);
+            bool fin = c == '.' || c == '!' || c == '?' || c == '…' || c == '\n';
+            bool siguienteEsEspacio = i + 1 >= text.Length || char.IsWhiteSpace(text[i + 1]);
+            if (fin && siguienteEsEspacio)
+            {
+                string f = sb.ToString().Trim();
+                if (f.Length > 0) frases.Add(f);
+                sb.Clear();
+            }
+        }
+        string resto = sb.ToString().Trim();
+        if (resto.Length > 0) frases.Add(resto);
+        return frases;
+    }
+
+    void PrepararLabel()
+    {
+        _label.alignment = TextAlignmentOptions.Center;
+        _label.margin = new Vector4(_labelHorizontalMargin, _label.margin.y,
+                                    _labelHorizontalMargin, _label.margin.w);
+        _label.textWrappingMode = TextWrappingModes.Normal;
+    }
+
+    /// El ancho del bocadillo para un texto: el que ocuparía en una línea, entre el mínimo y el
+    /// máximo (ver el comentario largo de Show()). El alto lo recalcula el layout del prefab.
+    void AjustarAncho(string texto)
+    {
+        Vector2 singleLineSize = _label.GetPreferredValues(texto, 0f, 0f);
+        float desiredWidth = singleLineSize.x + _labelHorizontalMargin * 2f;
+        float bubbleWidth = Mathf.Clamp(desiredWidth, _bubbleMinWidth, _bubbleMaxWidth);
+
+        Vector2 sd = _bubbleRect.sizeDelta;
+        sd.x = bubbleWidth;
+        _bubbleRect.sizeDelta = sd;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(_bubbleRect);
+    }
+
+    /// Las páginas de una frase larga, una detrás de otra en el mismo bocadillo: cambia el texto
+    /// con un pequeño rebote (no se cierra y se vuelve a abrir). El tiempo total se reparte según
+    /// lo largo de cada página, y ninguna dura menos de lo que se tarda en leerla. Sin duración
+    /// (duration <= 0, el bocadillo lo cierra quien lo abrió) las páginas pasan solas a ritmo de
+    /// lectura y la última se queda.
+    IEnumerator Co_Paginas(List<string> paginas, float duration, Action onComplete)
+    {
+        int total = 0;
+        foreach (var p in paginas) total += Mathf.Max(1, p.Length);
+
+        for (int i = 0; i < paginas.Count; i++)
+        {
+            if (i > 0)
+            {
+                _label.text = paginas[i];
+                AjustarAncho(paginas[i]);
+                _bubbleRect.DOKill();
+                _bubbleRect.localScale = Vector3.one;
+                _bubbleRect.DOPunchScale(Vector3.one * 0.06f, 0.2f, 6, 0.6f).SetUpdate(true);
+            }
+
+            bool ultima = i == paginas.Count - 1;
+            if (ultima && duration <= 0f) { _autoHideRoutine = null; yield break; }
+
+            float reparto = duration > 0f ? duration * Mathf.Max(1, paginas[i].Length) / total : 0f;
+            yield return new WaitForSecondsRealtime(Mathf.Max(reparto, TiempoDeLectura(paginas[i])));
+        }
+
+        _autoHideRoutine = null;
+        Hide();
+        _pendingOnComplete = null;
+        onComplete?.Invoke();
     }
 
     /// Fuerza el cierre inmediato del bocadillo con auto-hide en curso, como si su duración ya

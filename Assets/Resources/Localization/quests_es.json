@@ -473,6 +473,18 @@
             "value": "Sal a ver qué pasa"
         },
         {
+            "key": "QUEST_WILL_MISSION1_DESC",
+            "value": "Gasta la moneda de Eldran en algo inútil."
+        },
+        {
+            "key": "QUEST_WILL_MISSION1_DETAIL",
+            "value": "Eldran te ha dado una moneda y un encargo raro: que te compres algo que no sirva para nada. En el mercado, Tomasa vende figuritas de madera."
+        },
+        {
+            "key": "QUEST_WILL_MISSION1_NAME",
+            "value": "Algo inútil"
+        },
+        {
             "key": "READ_THE_LETTER_DESC",
             "value": "leer la carta que hay sobre la mesita."
         }

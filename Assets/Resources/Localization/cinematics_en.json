@@ -266,7 +266,7 @@
         },
         {
             "id": "OLIVER_GREETING_OUT_OF_BREATH",
-            "text": "Ugh... ugh, I can't breathe..."
+            "text": "Ugh... hang on... I can't breathe."
         },
         {
             "id": "OLIVER_GREETING_SPOT_WILL",
@@ -470,7 +470,7 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "Ha, you never change, Oliver... Hey, do you know what's going on with Eldran and Victoria? I just heard them arguing."
+            "text": "Ha, you never change... Hey, what's up with Eldran and Victoria? I heard them arguing."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -493,8 +493,12 @@
             "text": "Keep it up. I want to hear you from the bridge."
         },
         {
+            "id": "PROLOGO_BAILE_RESPUESTA",
+            "text": "You got it, master!"
+        },
+        {
             "id": "PROLOGO_CARRETA_GRACIAS",
-            "text": "Thank you so much, master!"
+            "text": "Thank you, master! Not one pear on the ground this time."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
@@ -502,11 +506,11 @@
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
-            "text": "I have no idea, Liora. Get them out of here. I'll distract him."
+            "text": "I don't know, Liora. Take them to the bridge. I'll hold him."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ELEGIR",
-            "text": "Two tomorrow. You owe me."
+            "text": "And tomorrow you take that day off. You owe me."
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA",
@@ -514,7 +518,7 @@
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA_1",
-            "text": "What's going on?"
+            "text": "Who is he? What does he want?"
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA_2",
@@ -522,11 +526,11 @@
         },
         {
             "id": "PROLOGO_DUELO_ARCHIMAGO",
-            "text": "No. But I can send you somewhere you will never hurt anyone again."
+            "text": "No. But I can send you where you will never touch anyone again."
         },
         {
             "id": "PROLOGO_DUELO_MAGO",
-            "text": "Are you going to save them all, mage?"
+            "text": "Are you going to save them all by yourself?"
         },
         {
             "id": "PROLOGO_DUELO_MAGO_2",
@@ -534,35 +538,39 @@
         },
         {
             "id": "PROLOGO_EVACUACION_LIORA",
-            "text": "Everyone, come with me! To the bridge, quickly!"
+            "text": "With me! To the bridge, quickly, and don't look back!"
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
-            "text": "Master! It's tipped over again. And I was going slowly this time."
+            "text": "Master! It's tipped over again... and I was going slowly, honest."
         },
         {
             "id": "PROLOGO_FAVOR_GLOBO",
-            "text": "It's stuck right at the top!"
+            "text": "Master, it's stuck right at the top!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_1",
-            "text": "Whoa! It's finally flying!"
+            "text": "Whoa, it's flying!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_2",
-            "text": "Look, look how high it goes!"
+            "text": "Look at it go!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_3",
-            "text": "It's going all the way up to the clouds!"
+            "text": "It'll reach the clouds!"
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "ABSOLUTE!"
+            "text": "ALL OF THEM!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO_PLEGARIA",
+            "text": "Whoever is listening... give me the strength to save them. Whatever happens to me."
         },
         {
             "id": "PROLOGO_HECHIZO_1",
-            "text": "Protection...!"
+            "text": "PROTECT THEM...!"
         },
         {
             "id": "PROLOGO_HORA_ARCHIMAGO",
@@ -570,15 +578,15 @@
         },
         {
             "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Kneel. I haven't come for you — but you're in the way."
+            "text": "This valley is mine from today. Kneel... or be erased."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
-            "text": "Careful..."
+            "text": "Right... easy now."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "...Right, that was too much. Sorry, everyone."
+            "text": "...Right. Too much. Sorry, everyone."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
@@ -586,15 +594,15 @@
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
-            "text": "Today I pushed a cart and popped a balloon. That practically counts as a holiday."
+            "text": "A cart and a balloon. For this village, today was a holiday."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_1",
-            "text": "You don't take a single day off, do you?"
+            "text": "Not even one day off?"
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_2",
-            "text": "Then let's see you pop two tomorrow."
+            "text": "Then let them break two tomorrow, so you finally rest."
         },
         {
             "id": "PERAS_01",
@@ -625,14 +633,6 @@
             "text": "It shouldn't be far. Follow the path and look for the big trees, you'll know it when you see it."
         },
         {
-            "id": "PERAS_08",
-            "text": "Here, for the road. And thank you, really."
-        },
-        {
-            "id": "PERAS_09",
-            "text": "You can count on me, Eldran."
-        },
-        {
             "id": "HOOK_DISCUSION_01",
             "text": "Victoria, the pears don't go in that crate, they'll get bruised!"
         },
@@ -646,7 +646,7 @@
         },
         {
             "id": "HOOK_DISCUSION_04",
-            "text": "...The fruit crates again? I wonder what's going on out there."
+            "text": "...The fruit crates again? Let's see what's going on out there."
         },
         {
             "id": "PERAS_OLIVER_VOY",

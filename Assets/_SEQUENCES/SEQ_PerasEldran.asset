@@ -59,9 +59,7 @@ MonoBehaviour:
   - name: 3 - Despedida
     beats:
     - rid: 8000000000000000109
-    - rid: 8000000000000000012
-    - rid: 8000000000000000013
-    - rid: 8000000000000000014
+    - rid: 8000000000000000205
   references:
     version: 2
     RefIds:
@@ -265,55 +263,6 @@ MonoBehaviour:
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 8000000000000000012
-      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Eldran ''le da'' la moneda (la entrega real la hace el GiveInventoryItemNode
-          justo despues de PERAS_DONE en Cap1.asset, no este beat)'
-        actorId: NPC_Eldran
-        markName:
-        textKey: PERAS_08
-        pageDuration: 2.6
-        gesture: HandClap01
-        gestureRepeats: 1
-        speakerNameKey:
-        playGestures: 1
-        overrideBubbleOffset: 0
-        bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 8000000000000000013
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Migrado a plano calculado (antes CutBeat(willClose), que ademas tomaba prestado
-          un plano de SEQ_OliverSaludo -- ya no hace falta compartir nada entre secuencias)'
-        shotName: 
-        framing:
-          type: 4
-          subjectId: Player
-          secondaryId: NPC_Eldran
-          heightBias: 0
-          distanceScale: 1.35
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-          encara: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        live: 0
-    - rid: 8000000000000000014
-      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Will cierra la escena
-        actorId: Player
-        markName:
-        textKey: PERAS_09
-        pageDuration: 2.6
-        gesture: HeadNod01
-        gestureRepeats: 1
-        speakerNameKey:
-        playGestures: 1
-        overrideBubbleOffset: 0
-        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000101
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -460,10 +409,10 @@ MonoBehaviour:
     - rid: 8000000000000000109
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'NUEVO: Eldran entrega la moneda (PERAS_08)'
+        note: 'Los dos, para la conversacion del regalo (DG_ELDRAN_REGALO, INC-436)'
         shotName: 
         framing:
-          type: 4
+          type: 1
           subjectId: NPC_Eldran
           secondaryId: Player
           heightBias: 0
@@ -476,3 +425,28 @@ MonoBehaviour:
         duration: 1.4
         waitForArrival: 1
         live: 0
+    - rid: 8000000000000000205
+      type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'El regalo de los dieciocho y la moneda (novela, cap. I). Caja de dialogo, avanza el jugador (INC-436).'
+        dialogue: {fileID: 11400000, guid: d84ef9cd40bb43749b1e0bd5236fb73a, type: 2}
+        actorId: NPC_Eldran
+        endDialogueCameraImmediately: 1
+        conservarCamaraDeLaSecuencia: 1
+        reactions:
+        - actorId: Player
+          gestures:
+          - Question01
+          - 
+          - HeadNod01
+          - 
+          - HeadNod01
+          - 
+        - actorId: NPC_Eldran
+          gestures:
+          - 
+          - HeadShake01
+          - 
+          - Laugh01
+          - 
+          - HeadNod01

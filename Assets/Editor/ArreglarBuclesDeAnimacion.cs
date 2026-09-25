@@ -29,6 +29,10 @@ public static class ArreglarBuclesDeAnimacion
         "Assets/Art/Characters/RPG Tiny Hero Duo/Animation/NoWeapon/GetHit02_NoWeapon.fbx",
         // Levantarse es una acción: en bucle, se volvería a tirar al suelo para levantarse otra vez.
         "Assets/Art/Characters/RPG Tiny Hero Duo/Animation/NoWeapon/GetUp_NoWeapon.fbx",
+        // Aplaudir se usa como GESTO suelto y, sostenido, es «las manos juntas» de la plegaria
+        // (INC-374). En bucle se quedaba aplaudiendo mientras reza. El clip es del pack de Kevin
+        // Iglesias, que es de donde salen los gestos sociales de este controller.
+        "Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Conversation/HumanM@HandClap01.fbx",
 
         // Los brazos levantados del final del prologo: «cuando dice ABSOLUTA la animacion debe ser
         // la de found something y que se quede con los brazos arriba». Ciclico se le caerian y

@@ -266,7 +266,7 @@
         },
         {
             "id": "OLIVER_GREETING_OUT_OF_BREATH",
-            "text": "Ay... ay que me ahogo..."
+            "text": "Ay... espera... que me ahogo."
         },
         {
             "id": "OLIVER_GREETING_SPOT_WILL",
@@ -470,7 +470,7 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "Jaja, tú siempre igual, Oliver... Oye, ¿tú sabes qué le pasa a Eldran con Victoria? Los acabo de oír discutiendo."
+            "text": "Jaja, no cambias... Oye, ¿qué les pasa a Eldran y a Victoria? Los he oído discutir."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -493,8 +493,12 @@
             "text": "Seguid así. Que se os oiga desde el puente."
         },
         {
+            "id": "PROLOGO_BAILE_RESPUESTA",
+            "text": "¡Eso está hecho, maestro!"
+        },
+        {
             "id": "PROLOGO_CARRETA_GRACIAS",
-            "text": "¡Muchas gracias, maestro!"
+            "text": "¡Gracias, maestro! Esta vez ni una pera en el suelo."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
@@ -502,11 +506,11 @@
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
-            "text": "No tengo ni idea, Liora. Llévatelos fuera. Yo le distraigo."
+            "text": "No lo sé, Liora. Llévatelos al puente. Yo le entretengo."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ELEGIR",
-            "text": "Mañana rompes dos. Me lo debes."
+            "text": "Y mañana te tomas ese día libre. Me lo debes."
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA",
@@ -514,7 +518,7 @@
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA_1",
-            "text": "¿Qué está pasando?"
+            "text": "¿Quién es? ¿Qué quiere?"
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA_2",
@@ -522,47 +526,51 @@
         },
         {
             "id": "PROLOGO_DUELO_ARCHIMAGO",
-            "text": "No. Pero puedo mandarte a un sitio donde nunca vuelvas a hacer daño a nadie."
+            "text": "No. Pero puedo mandarte donde no vuelvas a tocar a nadie."
         },
         {
             "id": "PROLOGO_DUELO_MAGO",
-            "text": "¿Vas a salvarlos a todos, mago?"
+            "text": "¿Vas a salvarlos a todos tú solo?"
         },
         {
             "id": "PROLOGO_DUELO_MAGO_2",
-            "text": "Ni siquiera puedes salvarte tú."
+            "text": "Ni a ti mismo puedes salvarte."
         },
         {
             "id": "PROLOGO_EVACUACION_LIORA",
-            "text": "¡Todos, venid conmigo! ¡Al puente, deprisa!"
+            "text": "¡Conmigo! ¡Al puente, deprisa, y no miréis atrás!"
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
-            "text": "¡Maestro! Se me ha vuelto a volcar. Y eso que hoy iba despacio."
+            "text": "¡Maestro! Que se me ha vuelto a volcar... y hoy iba despacio y todo."
         },
         {
             "id": "PROLOGO_FAVOR_GLOBO",
-            "text": "¡Se ha enganchado arriba del todo!"
+            "text": "¡Maestro, que se ha enganchado arriba del todo!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_1",
-            "text": "¡Ala! ¡Por fin vuela!"
+            "text": "¡Ala, ya vuela!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_2",
-            "text": "¡Mira, mira cómo sube!"
+            "text": "¡Mira cómo sube!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_3",
-            "text": "¡Que llega hasta las nubes!"
+            "text": "¡Si llega hasta las nubes!"
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "¡ABSOLUTA!"
+            "text": "¡A TODOS!"
+        },
+        {
+            "id": "PROLOGO_HECHIZO_PLEGARIA",
+            "text": "Quienquiera que me escuche... dame fuerza para salvarlos. No importa lo que me pase a mí."
         },
         {
             "id": "PROLOGO_HECHIZO_1",
-            "text": "¡Protección...!"
+            "text": "¡PROTÉGELOS...!"
         },
         {
             "id": "PROLOGO_HORA_ARCHIMAGO",
@@ -570,15 +578,15 @@
         },
         {
             "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Arrodillaos. No he venido a por vosotros — pero estáis en medio."
+            "text": "Este valle es mío desde hoy. Arrodillaos... o sed borrados."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
-            "text": "Con cuidado..."
+            "text": "A ver... con cuidado."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "...Vale, eso ha sido demasiada fuerza. Lo siento, chicos."
+            "text": "...Vale. Demasiada fuerza. Lo siento, chicos."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
@@ -586,15 +594,15 @@
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
-            "text": "Hoy solo he empujado una carreta y roto un globo. Casi cuenta como fiesta."
+            "text": "Una carreta y un globo. Para lo que se rompe aquí, hoy ha sido fiesta."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_1",
-            "text": "No te tomas ni un día libre, ¿eh?"
+            "text": "¿Ni un día libre te tomas?"
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_2",
-            "text": "Pues a ver si mañana rompes dos."
+            "text": "Pues que mañana rompan dos, a ver si descansas."
         },
         {
             "id": "PERAS_01",
@@ -625,14 +633,6 @@
             "text": "No debería estar lejos. Sigue el camino y fíjate en los árboles grandes, la reconocerás en cuanto la veas."
         },
         {
-            "id": "PERAS_08",
-            "text": "Toma, para el camino. Y gracias, de verdad."
-        },
-        {
-            "id": "PERAS_09",
-            "text": "Cuenta conmigo, Eldran."
-        },
-        {
             "id": "HOOK_DISCUSION_01",
             "text": "¡Victoria, las peras no van en esa caja, que se van a magullar!"
         },
@@ -646,7 +646,7 @@
         },
         {
             "id": "HOOK_DISCUSION_04",
-            "text": "...¿Otra vez con las cajas de fruta? ¿Qué estará pasando ahí fuera?"
+            "text": "...¿Otra vez las cajas? A ver qué pasa ahí fuera."
         },
         {
             "id": "PERAS_OLIVER_VOY",

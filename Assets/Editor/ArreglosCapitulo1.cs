@@ -54,6 +54,7 @@ public static class ArreglosCapitulo1
             OliverCompanero(),
             EldranLlegadaYMarcador(),
             CaraEnLaVentana(),
+            DiscusionDeEldranYVictoria(),
         };
         AssetDatabase.SaveAssets();
         string r = string.Join("\n", informe);
@@ -166,19 +167,40 @@ public static class ArreglosCapitulo1
 
             // Llegada: una esfera de 4 m que avisa SOLO si el grafo está esperando (onlyIfListening),
             // para que pasar por delante de Eldran antes de tiempo no deje el aviso pendiente.
-            if (go.transform.Find(NombreLlegada) == null)
+            var llegada = go.transform.Find(NombreLlegada);
+            if (llegada == null)
             {
                 var hijo = new GameObject(NombreLlegada);
                 hijo.transform.SetParent(go.transform, false);
                 var esfera = hijo.AddComponent<SphereCollider>();
                 esfera.isTrigger = true;
-                esfera.radius = 4f;
-                var emisor = hijo.AddComponent<SignalEmitter>();
+                esfera.radius = 2.5f;   // Eldran queda a cuatro metros del puesto de Oliver: el aviso tiene que ser de LLEGAR (INC-382).
+                hijo.AddComponent<SignalEmitter>();
+                llegada = hijo.transform;
+                cambiado = true;
+            }
+
+            // La guarda es LA MISIÓN, no «que alguien esté escuchando» (INC-365): el grafo no se
+            // pone a esperar WILL_REACHED_ELDRAN hasta que el jugador cierra el tutorial del
+            // minimapa, así que con onlyIfListening se podía llegar hasta Eldran y no pasar nada.
+            var esferaYa = llegada.GetComponent<SphereCollider>();
+            if (esferaYa != null && esferaYa.radius > 2.51f) { esferaYa.radius = 2.5f; cambiado = true; }
+
+            var emisor = llegada.GetComponent<SignalEmitter>();
+            if (emisor != null && (emisor.eventKey != "WILL_REACHED_ELDRAN"
+                                   || emisor.soloConLaMision != "ELDRAN_MISSION1"
+                                   || emisor.radioDeProximidad > 2.51f || emisor.radioDeProximidad < 0.01f
+                                   || emisor.onlyIfListening))
+            {
                 emisor.eventKey = "WILL_REACHED_ELDRAN";
                 emisor.trigger = SignalEmitter.TriggerType.PhysicsTrigger;
                 emisor.requiredTag = "Player";
                 emisor.once = true;
-                emisor.onlyIfListening = true;
+                emisor.onlyIfListening = false;
+                emisor.soloConLaMision = "ELDRAN_MISSION1";
+                // Y por distancia además del trigger (INC-376): que llegar hasta Eldran arranque
+                // la escena no puede depender de que un collider dispare bien.
+                emisor.radioDeProximidad = 2.5f;
                 cambiado = true;
             }
 
@@ -200,6 +222,41 @@ public static class ArreglosCapitulo1
             if (!cambiado) return "(3) Eldran ya tenía su aviso de llegada y su marcador.";
             PrefabUtility.SaveAsPrefabAsset(raiz, RutaEldran);
             return "(3) Eldran (el del roster): aviso WILL_REACHED_ELDRAN a 4 m y marcador en el minimapa con ELDRAN_MISSION1.";
+        }
+        finally { PrefabUtility.UnloadPrefabContents(raiz); }
+    }
+
+    // ── 5 ─────────────────────────────────────────────────────────────────────────────────────
+    private const string RutaIconoPelea = "Assets/_NPCs/OverHead/Canvas Fight!.prefab";
+
+    /// Eldran y Victoria discuten en bucle desde el saludo de Oliver hasta PERAS_START (INC-363).
+    private static string DiscusionDeEldranYVictoria()
+    {
+        var icono = AssetDatabase.LoadAssetAtPath<GameObject>(RutaIconoPelea);
+        var raiz = PrefabUtility.LoadPrefabContents(RutaEldran);
+        if (raiz == null) return $"(5) No encuentro {RutaEldran}.";
+        try
+        {
+            var manager = raiz.GetComponentInChildren<NPCBehaviourManagerV2>(true);
+            var go = manager != null ? manager.gameObject : raiz;
+            var d = go.GetComponent<DiscusionEnBucle>();
+            bool nuevo = d == null;
+            if (nuevo) d = go.AddComponent<DiscusionEnBucle>();
+
+            var so = new SerializedObject(d);
+            var campo = so.FindProperty("iconoDePelea");
+            bool cambiado = nuevo;
+            if (campo != null && campo.objectReferenceValue != icono)
+            {
+                campo.objectReferenceValue = icono;
+                cambiado = true;
+            }
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            if (!cambiado) return "(5) Eldran y Victoria ya discutían en bucle.";
+            PrefabUtility.SaveAsPrefabAsset(raiz, RutaEldran);
+            return "(5) Eldran y Victoria discuten en bucle (enfado/hablar alternados, icono de pelea) hasta PERAS_START." +
+                   (icono == null ? $" OJO: no encuentro {RutaIconoPelea}, van sin icono." : "");
         }
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }

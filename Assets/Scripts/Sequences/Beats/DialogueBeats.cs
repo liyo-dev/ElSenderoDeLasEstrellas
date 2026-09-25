@@ -137,16 +137,26 @@ public class SayBeat : SequenceBeat
         else if (actor != null) offsetOverride = new Vector3(0f, actor.HeadTopHeight + 0.30f, 0f);
         else offsetOverride = null;
 
-        string[] pages = text.Split('\n');
-        foreach (string raw in pages)
+        // Páginas: los saltos de línea del texto, y además ninguna de más de tres líneas en el
+        // bocadillo (INC-435): SpeechBubbleUI las mide con la fuente y el ancho de verdad. Cada
+        // página dura lo que pide el beat, pero nunca menos de lo que se tarda en leerla.
+        var bubble = SpeechBubbleUI.Instance;
+        var pages = new System.Collections.Generic.List<string>();
+        foreach (string raw in text.Split('\n'))
         {
-            string page = raw.Trim();
+            string trozo = raw.Trim();
+            if (!string.IsNullOrEmpty(trozo)) pages.AddRange(bubble.Paginar(trozo));
+        }
+
+        foreach (string page in pages)
+        {
             if (string.IsNullOrEmpty(page)) continue;
 
             bool done = false;
             string trigger = animar ? NextGesture(ref specificFired, ref talkIndex) : null;
+            float duracion = Mathf.Max(pageDuration, bubble.TiempoDeLectura(page));
 
-            SpeechBubbleUI.Instance.Show(anchor, page, pageDuration, () => done = true,
+            bubble.Show(anchor, page, duracion, () => done = true,
                 trigger, speakerName: speakerName, worldOffset: offsetOverride);
 
             // Tope de seguridad (auditoría 17 sep 2026). SpeechBubbleUI.Show() y Hide() matan el
@@ -157,7 +167,7 @@ public class SayBeat : SequenceBeat
             //
             // Y solapar dos bocadillos es fácil de hacer sin querer: basta con meter dos beats de
             // hablar en el mismo Parallel, que es algo que el propio catálogo anima a hacer.
-            float limite = pageDuration + 2f;
+            float limite = duracion + 2f;
             float esperado = 0f;
             float sinceRetrigger = 0f;
 

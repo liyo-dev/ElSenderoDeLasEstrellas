@@ -19,6 +19,16 @@ public class ShopController : MonoBehaviour
     public IReadOnlyList<ShopItemEntry> Stock => stock;
 
     public event Action OnStockChanged;
+
+    /// Cualquier compra hecha en cualquier tienda: quién vendió y qué (INC-436). Estático para que
+    /// quien espere una compra concreta (SenalDeCompra) no tenga que encontrar la tienda: las
+    /// ShopUI se instancian al abrirlas y el controlador vive en un prefab.
+    public static event Action<ShopController, ItemData> CompraRealizada;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { CompraRealizada = null; }
+#endif
     private Inventory playerInventory;
 
     void Awake()
@@ -88,6 +98,7 @@ public class ShopController : MonoBehaviour
 
         entry.ConsumeOne();
         OnStockChanged?.Invoke();
+        CompraRealizada?.Invoke(this, entry.item);
         return true;
     }
 

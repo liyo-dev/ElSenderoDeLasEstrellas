@@ -465,7 +465,14 @@ public class SequenceActor
         _agentOverridden = true;
 
         if (speedOverride > 0f) Agent.speed = speedOverride;
-        Agent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.NoObstacleAvoidance;
+
+        // Quien ANDA esquiva; quien está parado no se aparta (INC-400). Antes la caminata iba sin
+        // esquivar, y en la grabación del 24 sep un aldeano atraviesa a otro al empezar: «los
+        // NPCs no se pueden atravesar entre sí». En el crowd de Unity un agente sin avoidance
+        // sigue contando como obstáculo para los que sí esquivan, así que basta con que esquive
+        // el que se mueve: rodea a los parados, y los parados (sin avoidance, ver Hold) no se
+        // apartan a empujones, que era lo que arreglaba INC-301.
+        Agent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.HighQualityObstacleAvoidance;
     }
 
     /// Devuelve al agente su velocidad y su obstacle avoidance originales. Idempotente: se llama
@@ -482,6 +489,7 @@ public class SequenceActor
             // El avoidance solo se devuelve si el actor ya no está retenido por la secuencia. Si
             // lo sigue estando, mandan las reglas del candado (ver Hold): nadie se aparta solo.
             if (_hold == null) Agent.obstacleAvoidanceType = _savedAvoidance;
+            else Agent.obstacleAvoidanceType = UnityEngine.AI.ObstacleAvoidanceType.NoObstacleAvoidance;
         }
 
         _savedAgentSpeed = -1f;

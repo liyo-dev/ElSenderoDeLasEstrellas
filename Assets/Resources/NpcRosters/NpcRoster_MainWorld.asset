@@ -59,3 +59,12 @@ MonoBehaviour:
     requireNavMesh: 1
     requiredFlag: 
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Tomasa
+    prefab: {fileID: 3903978137244161971, guid: d41bcce00d0041cda9e971025744b474, type: 3}
+    gameObjectName: Tomasa
+    persistenceId: NPC_Tomasa
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0

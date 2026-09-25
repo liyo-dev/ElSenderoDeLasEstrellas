@@ -312,6 +312,7 @@ public static class ShotComposer
         if (ctx == null || framing == null) return false;
 
         s_ctx = ctx;
+        s_esCorte = isCut;
 
         // Cuánto se alejan todos los planos de esta secuencia. Es un ajuste de gusto y vive en la
         // escena, donde se puede mover en pleno Play. Ver SequenceStage.DistanceMultiplier.
@@ -344,7 +345,12 @@ public static class ShotComposer
         ShotSolution best = Compute(subject, secondary, framing, side, aspect, globalScale);
         float bestClearance = Clearance(best);
 
-        if (bestClearance < MinSubjectDistance * 1.6f)
+        // En un plano VIVO no se cruza el eje a mitad de plano (INC-378). Cruzarlo es cambiar la
+        // cámara de lado del camino: ciento ochenta grados de golpe, y eso es exactamente el
+        // «cambio brusco que parece un fallo» que se ve en la bajada al río y en la aérea de
+        // Oliver. En un corte sí se puede elegir el lado que respire mejor; una vez elegido, el
+        // plano se queda ahí hasta el corte siguiente.
+        if (isCut && bestClearance < MinSubjectDistance * 1.6f)
         {
             ShotSolution mirrored = Compute(subject, secondary, framing, -side, aspect, globalScale);
             if (Clearance(mirrored) > bestClearance * 1.5f)
@@ -744,6 +750,16 @@ public static class ShotComposer
     //
     // Así que el ángulo se recuerda: mientras siga despejado, se conserva aunque el de partida
     // también lo esté. Solo se busca otro cuando el recordado lleva varios fotogramas tapado.
+    /// ¿Lo que se está resolviendo es un CORTE o el refresco de un plano vivo? En un refresco, la
+    /// cámara ya está puesta y moverla es un movimiento que se ve, así que se aguanta mucho más
+    /// antes de cambiarla de sitio (INC-378).
+    /// Por dónde se aparta un plano VIVO cuando se le tapa: más lejos y más alto, SIEMPRE por el
+    /// mismo ángulo. Ver la nota de INC-386 más abajo.
+    private static readonly float[] EscapesDeRadio = { 1f, 1.2f, 1.45f, 1.75f };
+    private static readonly float[] EscapesDeAltura = { 0f, 0.9f, 2f, 3.5f };
+
+    private static bool s_esCorte = true;
+
     private static float s_anguloRecordado;
     private static float s_alturaRecordada;
     // Multiplicador de radio: 1 en el caso normal, y el de s_radiosDeRescate cuando el plano ha
@@ -810,7 +826,13 @@ public static class ShotComposer
             Vector3 recordada = LiftOffGround(
                 target + dirRecordada * (radio * s_radioRecordado) + Vector3.up * (altura + s_alturaRecordada));
 
-            if (Penalizacion(target, recordada, sujeto, secundario) == 0)
+            int penalizacionRecordada = Penalizacion(target, recordada, sujeto, secundario);
+
+            // En un corte se exige un plano impecable. En un plano VIVO basta con que se siga
+            // VIENDO al sujeto (menos de 1000, que es lo que vale «tapado del todo»): mover la
+            // cámara porque una esquina roza el cuadro se ve como un tirón, y el tirón es peor
+            // que la esquina.
+            if (penalizacionRecordada == 0 || (!s_esCorte && penalizacionRecordada < 1000))
             {
                 s_fotogramasTapado = 0;
                 return recordada;
@@ -818,7 +840,49 @@ public static class ShotComposer
 
             // Tapado, pero puede ser una rama pasando. Se aguanta unos fotogramas antes de mover
             // la cámara: un plano tapado un instante se perdona, un salto de cámara no.
-            if (++s_fotogramasTapado < AguantarTapadoFotogramas) return recordada;
+            int aguante = s_esCorte ? AguantarTapadoFotogramas : AguantarTapadoFotogramas * 4;
+            if (++s_fotogramasTapado < aguante) return recordada;
+
+            // ── En un plano VIVO el ÁNGULO no se cambia nunca (INC-386) ───────────────────────
+            //
+            // «Me gusta la aérea que baja girando, pero si durante esa bajada cambia a otros
+            // planos parece que está rota.» No cambiaba de plano: era este buscador, que al
+            // encontrar el ángulo tapado se iba a otra órbita -- 65° a un lado, luego -45° -- a
+            // mitad del movimiento. Visto desde el sofá, eso es la cámara teleportándose.
+            //
+            // Así que cuando el plano está vivo se prueba a APARTARSE por el mismo ángulo (más
+            // lejos y más alto) y, si aun así no hay nada limpio, se aguanta el plano tapado. Una
+            // esquina de casa delante durante medio segundo es mucho menos malo que un salto.
+            if (!s_esCorte)
+            {
+                Vector3 mejorIgualAngulo = recordada;
+                int mejorPena = penalizacionRecordada;
+                float radioElegido = s_radioRecordado, alturaElegida = s_alturaRecordada;
+
+                foreach (float masRadio in EscapesDeRadio)
+                {
+                    foreach (float masAlto in EscapesDeAltura)
+                    {
+                        Vector3 c = LiftOffGround(target + dirRecordada * (radio * masRadio)
+                                                  + Vector3.up * (altura + s_alturaRecordada + masAlto));
+                        int pena = Penalizacion(target, c, sujeto, secundario);
+                        if (pena < mejorPena)
+                        {
+                            mejorPena = pena;
+                            mejorIgualAngulo = c;
+                            radioElegido = masRadio;
+                            alturaElegida = s_alturaRecordada + masAlto;
+                        }
+                        if (mejorPena == 0) break;
+                    }
+                    if (mejorPena == 0) break;
+                }
+
+                s_radioRecordado = radioElegido;
+                s_alturaRecordada = alturaElegida;
+                s_fotogramasTapado = 0;
+                return mejorIgualAngulo;
+            }
         }
 
         // La menos mala encontrada dentro del arco, por si no hay ninguna impecable. Vale más un
@@ -1012,6 +1076,7 @@ public static class ShotComposer
         if (!IsPathClear(target, camara, sujeto, secundario)) return 1000;
         if (CamaraMetidaEnAlguien(camara, sujeto, secundario)) puntos += 500;
         if (ElSecundarioSeComeElCuadro(camara, target, secundario)) puntos += 400;
+        else if (AlguienSeComeElCuadro(camara, target, sujeto, secundario)) puntos += 250;
         if (LenteContraElDecorado(camara, target, sujeto, secundario)) puntos += 100;
         if (puntos >= 500) return puntos;
 
@@ -1119,6 +1184,31 @@ public static class ShotComposer
     private static bool ElSecundarioSeComeElCuadro(Vector3 camara, Vector3 lookAt, SequenceActor secundario)
     {
         if (!s_secundarioNoSale || secundario?.Transform == null) return false;
+        return LaCabezaSeComeElCuadro(camara, lookAt, secundario);
+    }
+
+    /// Un TERCERO plantado delante de la cámara (23 sep): «cuando habla con el NPC que le pide lo
+    /// del carro se ve una cabeza en medio». El plano solo declara sujeto y secundario, así que
+    /// cualquier otro vecino del corro es, para el buscador, parte del decorado — y a metro y
+    /// medio de la lente un vecino no es decorado, es una cabeza tapando la conversación. Se
+    /// penaliza igual que al secundario, un poco menos, para que el buscador prefiera rodearle.
+    private static bool AlguienSeComeElCuadro(Vector3 camara, Vector3 lookAt,
+        SequenceActor sujeto, SequenceActor secundario)
+    {
+        if (s_ctx == null) return false;
+
+        foreach (var actor in s_ctx.Actores)
+        {
+            if (actor?.Transform == null) continue;
+            if (actor == sujeto || actor == secundario) continue;
+            if (LaCabezaSeComeElCuadro(camara, lookAt, actor)) return true;
+        }
+        return false;
+    }
+
+    private static bool LaCabezaSeComeElCuadro(Vector3 camara, Vector3 lookAt, SequenceActor quien)
+    {
+        var secundario = quien;
 
         Vector3 adelante = lookAt - camara;
         if (adelante.sqrMagnitude < 0.0001f) return false;

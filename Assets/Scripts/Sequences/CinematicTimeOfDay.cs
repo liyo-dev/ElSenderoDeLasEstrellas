@@ -23,6 +23,12 @@ using UnityEngine.SceneManagement;
 /// Una pesadilla no puede dejar el mundo anocheciendo.
 public static class CinematicTimeOfDay
 {
+    /// La hora con la que se queda el MUNDO cuando acaba la cinemática, si la escena lo pide
+    /// (ver TimeOfDayBeat.esLaHoraDeVolver). Sin esto se devuelve la que había, y el prólogo
+    /// terminaba dejando la aldea como estaba: «cuando acaba el prólogo en MainWorld debe estar
+    /// amaneciendo».
+    public static DayNightCycle.TimeOfDay? HoraAlVolver { get; set; }
+
     private static bool _guardado;
     private static DayNightCycle.TimeOfDay _horaPrevia;
     private static bool _avanceAutomaticoPrevio;
@@ -33,7 +39,7 @@ public static class CinematicTimeOfDay
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { _guardado = false; _escenaCambiada = false; _exteriorForzado = false; }
+    static void ResetStatics() { _guardado = false; _escenaCambiada = false; _exteriorForzado = false; HoraAlVolver = null; }
 #endif
 
     /// Pone la hora del día que pide la cinemática. La primera vez guarda la que había.
@@ -60,7 +66,22 @@ public static class CinematicTimeOfDay
         // Mientras manda la escena, el reloj no corre: si no, el ciclo puede cambiar de periodo a
         // mitad de un plano y deshacer lo que acaba de pedir la cinemática.
         ciclo.AutoAdvance = false;
+        // Ni se sortea clima nuevo (INC-409): el tiempo de una cinemática lo pone la cinemática.
+        DayNightCycle.SorteoDeClimaEnPausa = true;
         ciclo.SetTimeOfDay(hora, immediate);
+
+        // Y que el cielo sea el del ciclo, pase lo que pase (INC-380). Mientras hay un override de
+        // entorno, DayNightCycle NO toca RenderSettings.skybox a propósito
+        // (IsSkyboxLockedByEnvironment): está pensado para que un interior no se llene de cielo.
+        // Aquí es al revés — la cámara está en el valle —, así que el material que el ciclo va
+        // tintando por horas tiene que ser el que se pinta, o el atardecer y la noche se quedan
+        // solo en la niebla y la luz, que es exactamente lo que se veía.
+        var cielo = ciclo.SkyboxEnUso;
+        if (cielo != null && RenderSettings.skybox != cielo)
+        {
+            RenderSettings.skybox = cielo;
+            DynamicGI.UpdateEnvironment();
+        }
     }
 
     /// Marca como ACTIVA la escena donde ocurre la cinemática, y la devuelve al terminar.
@@ -151,6 +172,11 @@ public static class CinematicTimeOfDay
         // ejemplo si el corte todavía no ha resuelto cuál es la cámara de la escena).
         if (camara != null) camara.clearFlags = CameraClearFlags.Skybox;
 
+        // La lluvia, la niebla y el viento se cuelgan de ESTA cámara mientras dura la cinemática
+        // (ver DayNightCycle.AnclaDeClima). Sin esto caen sobre el jugador, que en el prólogo está
+        // dormido en su casa, y además nacen apagadas por estar él en un interior.
+        if (camara != null) DayNightCycle.AnclaDeClima = camara.transform;
+
         Diagnostico("exterior forzado", camara);
     }
 
@@ -189,6 +215,11 @@ public static class CinematicTimeOfDay
     /// el jugador se salta la escena.
     public static void Restore()
     {
+        // Lo primero: el clima vuelve a colgar del jugador (ver DayNightCycle.AnclaDeClima), y
+        // vuelve a sortearse (INC-409).
+        DayNightCycle.AnclaDeClima = null;
+        DayNightCycle.SorteoDeClimaEnPausa = false;
+
         // El tiempo atmosférico se devuelve SIEMPRE, y antes que nada: una secuencia puede haber
         // encendido una tormenta sin tocar la hora del día, y entonces la guarda de abajo saldría
         // por la puerta dejando al jugador bajo la lluvia del prólogo. Son dos cosas
@@ -216,7 +247,15 @@ public static class CinematicTimeOfDay
         var ciclo = DayNightCycle.Instance;
         if (ciclo == null) return;
 
-        ciclo.SetTimeOfDay(_horaPrevia, immediate: true);
+        var vuelta = HoraAlVolver ?? _horaPrevia;
+        HoraAlVolver = null;
+
+        ciclo.SetTimeOfDay(vuelta, immediate: true);
         ciclo.AutoAdvance = _avanceAutomaticoPrevio;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log($"[CinematicTimeOfDay] Fin de cinemática: el mundo se queda en {vuelta} " +
+                  $"(antes era {_horaPrevia}).");
+#endif
     }
 }

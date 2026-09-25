@@ -125,6 +125,22 @@ def esperar(segundos, note="", sinEscalar=True):
 def a_la_vez(note, hijos, esperarATodos=True):
     return Beat("ParallelBeat", [("note", s(note)), ("waitForAll", b(esperarATodos))], hijos)
 
+def sol_de_fondo(note="", colocar=True, ladoCamara=0.0, elevacion=7.0, segundos=2.0):
+    """Coloca el sol a una altura dada, al fondo del plano (SolDeFondoBeat), o lo suelta."""
+    return _beat("SolDeFondoBeat", note, [
+        ("colocar", b(colocar)), ("ladoDeLaCamara", f(ladoCamara)),
+        ("elevacion", f(elevacion)), ("segundos", f(segundos)),
+    ])
+
+def pose(actor, nombre, note="", soltar=False, volverAIdle=True):
+    return _beat("PoseBeat", note, [
+        ("actorId", s(actor)), ("pose", s(nombre)), ("soltar", b(soltar)), ("volverAIdle", b(volverAIdle)),
+    ])
+
+def en_serie(note, hijos):
+    """Beats uno detras de otro, como un bloque (SerieBeat). Para meter una secuencia dentro de un a_la_vez."""
+    return Beat("SerieBeat", [("note", s(note))], hijos)
+
 def mantener(actor, pose, note=""):
     """
     Mantiene una pose hasta que algo la pise. Lo contrario de un gesto.
@@ -245,15 +261,27 @@ def mover_prop(propId, note="", dPos=(0, 0, 0), dRot=(0, 0, 0), segundos=1.0,
 def musica(idMusica, note="", fundidoSalida=0.5):
     return _beat("MusicBeat", note, [("musicId", s(idMusica)), ("fadeOut", f(fundidoSalida))])
 
-def hora(cual, note="", inmediato=False, esperarTransicion=False, segundos=2.0):
+def hora(cual, note="", inmediato=False, esperarTransicion=False, segundos=2.0,
+         esLaDeVolver=False):
+    """`esLaDeVolver`: el MUNDO se queda con esta hora al acabar la cinematica."""
     return _beat("TimeOfDayBeat", note, [
         ("timeOfDay", f"DayNightCycle.TimeOfDay.{cual}"), ("immediate", b(inmediato)),
         ("waitForTransition", b(esperarTransicion)), ("transitionSeconds", f(segundos)),
+        ("esLaHoraDeVolver", b(esLaDeVolver)),
+    ])
+
+def nubes_de_apertura(guid, note="", distancia=6.0, separacionInicial=2.2,
+                      separacionFinal=16.0, escala=7.0, segundos=3.4, esperar=False):
+    """Dos nubes colgadas de la lente que se abren. No dependen de donde caiga la camara."""
+    return _beat("NubesDeAperturaBeat", note, [
+        ("nube", f'Prefab("{guid}")'), ("distancia", f(distancia)),
+        ("separacionInicial", f(separacionInicial)), ("separacionFinal", f(separacionFinal)),
+        ("escala", f(escala)), ("segundos", f(segundos)), ("esperar", b(esperar)),
     ])
 
 def clima(fenomeno, note="", encender=True, inmediato=False):
     return _beat("WeatherBeat", note, [
-        ("fenomeno", f"Fenomeno.{fenomeno}"), ("encender", b(encender)), ("immediate", b(inmediato)),
+        ("fenomeno", f"WeatherBeat.Fenomeno.{fenomeno}"), ("encender", b(encender)), ("immediate", b(inmediato)),
     ])
 
 def bandera(nombre, valor=True, note=""):

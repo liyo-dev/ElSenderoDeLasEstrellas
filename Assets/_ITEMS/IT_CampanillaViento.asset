@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9201a7fb4aa9c454bbc45285f1dc4852, type: 3}
+  m_Name: IT_CampanillaViento
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: campanilla_viento
+  displayNameId: ITEM_CAMPANILLA_VIENTO_NAME
+  displayName: Campanilla de viento
+  icon: {fileID: 21300000, guid: 27abc9ac6f9041598ba17106f11cea1d, type: 3}
+  usableFromInventory: 0
+  useEffects: []
+  useDescriptionId: ITEM_CAMPANILLA_VIENTO_DESC
+  useDescription:
+  usageKind: 0
+  buyPrice: 12
+  sellValue: 0
+  wardrobeUnlock: {fileID: 0}

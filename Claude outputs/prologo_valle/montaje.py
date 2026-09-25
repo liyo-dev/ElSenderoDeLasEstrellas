@@ -573,6 +573,10 @@ VFX_BOLA        = "5ee28f65ca127db42a9a46da980189d4"
 VFX_CARGA       = "a2a060732547fe64581bb0cb3c2bdf1d"
 VFX_APARICION   = "e824247f4f364400b0475f062217a915"
 VFX_ESCUDO      = "b99922c2f59b1a542bdd06ae8bee47ae"
+# La nube: un mesh de nube de verdad, no la esfera (INC-383). El guid que habia aqui no existe
+# en el proyecto -- el beat se encontraba `nube = null`, avisaba por consola y se iba sin hacer
+# nada, y de ahi el «no he visto las nubes del principio» de las dos ultimas grabaciones.
+VFX_NUBE        = "bca0e32ecbad95342a83b9dae7fb5a97"   # Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01
 VFX_COLUMNA     = "6555300494081614fa6b6a823cca9f64"
 VFX_ESTALLIDO   = "41494896fc96c9748b81d3356632794e"
 VFX_IMPACTO     = "df9374346b76e444dbbb2b019de4da25"
@@ -1656,6 +1660,19 @@ def main():
     pase_silencios(fases)
     pase_duelo_fluido(fases)
     pase_prologo12(fases)
+    pase_prologo13(fases)
+    pase_cielo(fases)
+    pase_prologo14(fases)
+    pase_prologo15(fases)
+    pase_prologo16(fases)
+    pase_prologo17(fases)
+    pase_prologo18(fases)
+    pase_prologo19(fases)
+    pase_prologo20(fases)
+    pase_prologo21(fases)
+    pase_prologo22(fases)
+    pase_prologo23(fases)
+    pase_prologo24(fases)
 
     salida = p3.emite(cab, fases, pie)
     io.open(p3.RUTA_CS, "w", encoding="utf-8").write(salida)
@@ -2346,6 +2363,1119 @@ def pase_prologo12(fases):
     F[i_abs].set("altura", f(6.0))
     F[i_abs].set("subida", f(1.0))
     return fases
+
+
+def pase_prologo13(fases):
+    """
+    Grabacion 13 (23 sep).
+
+    1. «Cuando hace la magia al carro se queda en el aire y no baja.» La carreta vuelve a «donde
+       estaba», y donde estaba es la pose con la que se guardo la escena, que esta un metro por
+       encima del suelo. Ahora al posarla se BUSCA el suelo (apoyarEnElSuelo), como ya se hace al
+       volcarla.
+    2. «Cuando habla con el NPC que le pide lo del carro se ve una cabeza en medio.» El plano se
+       abre y se sube un poco; ademas el buscador ya penaliza a cualquier tercero que se plante
+       delante de la lente (INC-367).
+    3. «Los tramos de trayecto largo, acortarlos: una aerea y luego el plano.» Los dos que dijo:
+       al campanario del globo y la bajada al rio. Se anda mas rapido y el tramo va debajo de una
+       aerea que no esta enganchada a nadie, en vez de veinte segundos de fachadas.
+    4. «Los NPCs se quedan mucho tiempo en idle, sobre todo en la conversacion con Liora cuando
+       aparece el Mago Oscuro.» La plaza, mientras ellos se despiden: los que quedan recogen, se
+       asoman, tiran de los ninos y miran al puente -- pero no se van hasta que Liora lo dice.
+    5. «Cuando el Mago Oscuro esta en el aire enfocamos desde abajo y no me gusta.» El planazo
+       pasa a estar a su altura, con el valle ardiendo detras.
+    6. Al salir despedido ya no se queda de pie encima de una carreta: el aterrizaje solo vale a
+       ras de suelo.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    rio = por_nombre(fases, "2 - El rio")
+    evacuar = por_nombre(fases, "5 - La orden de evacuar")
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+    M = manana.beats
+
+    # 1. La carreta baja de verdad.
+    posar = _uno(manana, lambda b: b.tipo == "PropMoveBeat" and "Y la posa" in _nota(b), "posar la carreta")
+    M[posar].set("apoyarEnElSuelo", "true")
+    M[posar].set("note", s("Y la posa EN EL SUELO. Volver a «donde estaba» no bastaba: donde estaba "
+                           "es la pose con la que se guardo la escena, y esa flota un metro."))
+
+    # 2. El plano del favor de la carreta, mas abierto y un poco mas alto.
+    dos = _plano_con(manana, "Los dos, con la carreta volcada")
+    M[dos].set_framing("distanceScale", f(1.5))
+    M[dos].set_framing("heightBias", f(0.7))
+
+    # 3a. Al campanario: aerea + paso vivo.
+    ir_globo = _uno(manana, lambda b: b.tipo == "MoveToBeat" and b.get("markName") == s("M_Globo"), "ida al globo")
+    M[ir_globo].set("speedOverride", f(2.8))
+    M[ir_globo].set("note", s("Hasta el campanario, a paso vivo y por debajo de una aerea: a ras de "
+                              "suelo este tramo eran quince segundos de fachadas."))
+    M.insert(ir_globo, plano("AEREA. El pueblo entero mientras cruza: el trayecto se ve de un vistazo "
+                             "en vez de seguirle entre casas.", "Wide", "NPC_Archimago",
+                             secundario="PROP_Globo", altura=9.0, distancia=1.5, encara=False))
+
+    # 3b. La bajada al rio: el mismo criterio, y mas rapido.
+    for h in rio.beats[1].hijos:
+        if h.tipo == "WalkPathBeat":
+            h.set("speed", f(2.6))
+    rio.beats[0].set("note", s("Bajando hacia el rio, en picado. VIVO pero con histeresis: la camara "
+                               "ya no cambia de sitio porque una esquina entre y salga del rayo."))
+
+    # 4. La plaza, mientras se despiden. Los cuatro que quedan (07..10) no se van hasta la orden.
+    E = evacuar.beats
+    i_primera = _uno(evacuar, lambda b: b.tipo == "SayBeat"
+                     and b.get("textKey") == s("PROLOGO_DESPEDIDA_LIORA_1"), "primera frase de Liora")
+    E.insert(i_primera, a_la_vez(
+        "LA PLAZA NO ESPERA QUIETA. Mientras ellos se despiden: uno recoge lo suyo y vuelve a "
+        "entrar, otro se asoma al puente y se vuelve, otra llama a los que faltan y el cuarto no "
+        "quita ojo al cielo. Ninguno se va: esperan la orden.", [
+            esperar(0.1, "Para que el Parallel no retenga la escena."),
+            andar("NPC_Aldeano_07", ["M_Puente_Ent", "M_Huida_07"], "Se asoma al puente y se vuelve "
+                  "a por los suyos.", velocidad=2.6),
+            andar("NPC_Aldeano_08", ["M_Horno", "M_Huida_08"], "Entra a por lo que puede cargar y "
+                  "sale con ello.", velocidad=2.2, retraso=0.8),
+            andar("NPC_Aldeano_09", ["M_Mesa", "M_Huida_09"], "Recoge lo de la mesa.",
+                  velocidad=2.2, retraso=1.6),
+            gesto("NPC_Aldeano_10", "Question01", "Mira al cielo, que es de donde vino."),
+            emocion("NPC_Aldeano_10", 5, "Asustado."),
+        ], esperarATodos=False))
+
+    # Y mientras hablan, los que quedan no se quedan de piedra.
+    i_tras = _uno(evacuar, lambda b: b.tipo == "SayBeat"
+                  and b.get("textKey") == s("PROLOGO_DESPEDIDA_ARCHIMAGO_1"), "Llevatelos fuera") + 1
+    E.insert(i_tras, a_la_vez("Se buscan unos a otros: nadie se queda mirando al frente.", [
+        esperar(0.1),
+        gesto("NPC_Aldeano_07", "HandWave01", "Llama a los que faltan."),
+        gesto("NPC_Aldeano_08", "Beg01"),
+        gesto("NPC_Aldeano_09", "HeadShake01"),
+        gesto("NPC_Aldeano_10", "Beg01"),
+    ], esperarATodos=False))
+
+    # 5. El planazo, a su altura.
+    planazo = _plano_con(final, "EL PLANAZO. Desde el suelo")
+    final.beats[planazo].set_framing("heightBias", f(2.2))
+    final.beats[planazo].set_framing("distanceScale", f(1.35))
+    final.beats[planazo].set("note", s("EL PLANAZO, a su altura y no desde los pies: el valle "
+                                       "ardiendo detras dice mas que el cielo vacio."))
+
+    # 6. Salir despedido es caer AL SUELO, no encima de una carreta.
+    def sin_carretas(beats):
+        for b in beats:
+            if b.tipo == "SaltoBeat" and b.get("actorId") == s("NPC_Archimago"):
+                b.set("alturaMaximaDeAterrizaje", f(0.3))
+            if b.hijos:
+                sin_carretas(b.hijos)
+    for fs in fases:
+        sin_carretas(fs.beats)
+    return fases
+
+
+def pase_cielo(fases):
+    """
+    El cielo cuenta la historia (INC-370), 23 sep:
+
+    «Me gustaria un sol que se vea como se va poniendo hasta que en el rio se hace de noche y
+    vemos el cielo estrellado que ya tenemos. Y cuando el mago esta bajando debe nublarse y
+    empezar a llover, eso le dara fuerza. Y lo del efecto de las nubes tambien para la cinematica.»
+
+    Entonces el prologo pasa de la manana a la noche a la vista, sin cortes:
+
+        manana (plaza)  ->  mediodia (el globo)  ->  atardecer (bajando al rio)
+        ->  noche estrellada (la conversacion en la orilla)  ->  tormenta  ->  lluvia (el baja)
+
+    Cada cambio va con transicion larga y SIN esperar: la luz cambia mientras la escena sigue, que
+    es justo lo que hace que se note el paso del dia sin que nadie se pare a mirarlo.
+
+    Y la apertura: dos nubes delante de la camara que se abren y dejan ver el valle.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    rio = por_nombre(fases, "2 - El rio")
+    cielo = por_nombre(fases, "3 - Algo cambia en el cielo")
+    llegada = por_nombre(fases, "4 - La llegada")
+    evacuar = por_nombre(fases, "5 - La orden de evacuar")
+    M = manana.beats
+
+    # ── Las nubes de la apertura ────────────────────────────────────────────────────────────
+    # Colgadas de la LENTE, no de la plaza (INC-373): el primer intento fueron dos nubes puestas
+    # en la escena sobre el pueblo y no se vieron, porque donde cae exactamente la camara de un
+    # plano calculado no lo sabe nadie de antemano. Asi tapan el cuadro caiga donde caiga.
+    i_pajaro = _plano_con(manana, "VISTA DE PAJARO")
+    M.insert(i_pajaro + 1, nubes_de_apertura(
+        VFX_NUBE, "Y SE ABREN. El valle aparece entre las dos, sin cortar el plano.",
+        distancia=4.5, separacionInicial=1.6, separacionFinal=18.0, escala=9.0, segundos=3.6))
+
+    # ── El sol, a la vista ──────────────────────────────────────────────────────────────────
+    # Mediodia mientras lo del globo: doce segundos de transicion, que no se vea el salto.
+    i_globo = _uno(manana, lambda b: b.tipo == "ShotBeat" and "AEREA" in _nota(b), "aerea del campanario")
+    M.insert(i_globo, hora("AfterNoon", "El sol sube mientras cruza la plaza. Doce segundos: la "
+                           "luz cambia sola, sin que nadie se pare a mirarla.", segundos=12.0))
+
+    # Atardecer bajando al rio, y noche cerrada ya en la orilla.
+    rio.beats.insert(0, hora("Sunset", "Y baja el sol mientras ellos bajan al rio.", segundos=10.0))
+    i_orilla = _plano_con(rio, "Y ya en la orilla, el general")
+    rio.beats.insert(i_orilla, hora("Night", "Se hace de noche en la orilla: el cielo estrellado "
+                                    "entra mientras hablan, que es cuando se puede mirar.",
+                                    segundos=12.0))
+
+    # La tormenta llega de noche: lo que cae ya no es la luz, es el cielo.
+    i_luz = _uno(cielo, lambda b: b.tipo == "TimeOfDayBeat", "la hora de la tormenta")
+    cielo.beats[i_luz].set("timeOfDay", "DayNightCycle.TimeOfDay.Night")
+    cielo.beats[i_luz].set("transitionSeconds", f(3.0))
+    cielo.beats[i_luz].set("note", s("Noche cerrada. Ya lo era antes del trueno; esto solo remata "
+                                     "lo que la tormenta tapa."))
+
+    i_tarde = _uno(evacuar, lambda b: b.tipo == "TimeOfDayBeat", "la hora de la evacuacion")
+    evacuar.beats[i_tarde].set("timeOfDay", "DayNightCycle.TimeOfDay.Night")
+    evacuar.beats[i_tarde].set("note", s("De noche y ardiendo: el rojo del valle lo pone el "
+                                         "incendio, no el atardecer."))
+
+    # ── El plano muerto del campanario ──────────────────────────────────────────────────────
+    #
+    # «Este plano sigue estando y se queda ahi un rato»: un general del campanario con el globo
+    # (un punto verde a cien metros) puesto ANTES de que nadie hable y de que el llegue, mientras
+    # los vecinos gesticulan fuera de cuadro. No cuenta nada. El globo ya tiene su plano bueno
+    # despues, cerrado y en contrapicado, cuando el vecino lo senala.
+    i_muerto = _plano_con(manana, "El campanario con el globo enganchado")
+    del M[i_muerto]
+
+    # ── Y empieza a llover mientras el baja ─────────────────────────────────────────────────
+    i_baja = _plano_con(llegada, "un plano que le SIGUE mientras baja")
+    llegada.beats.insert(i_baja, clima("Lluvia", "Y rompe a llover mientras baja. Con transicion: "
+                                       "la lluvia arrecia con el, no aparece de golpe."))
+    return fases
+
+
+def pase_prologo14(fases):
+    """
+    Grabacion del 23 sep por la tarde.
+
+    1. «Cuando el Archimago va con Liora a ver que esta pasando, las camaras fatal y ademas ellos
+       dos se pisan.» Volvian corriendo los dos a la vez y por el mismo punto intermedio, asi que
+       se empujaban; y el plano era vivo, persiguiendoles entre casas. Ahora ella sale medio
+       segundo despues y mas despacio -- va detras de el, que es lo que cuenta la escena -- y el
+       plano es fijo y alto: se ve el camino entero sin que la camara corra detras de nadie.
+
+    2. «Proteccion Absoluta es una muestra superior de su poder: un plano con las manos cerradas,
+       los ojos cerrados, diciendo algo parecido a "quienquiera que me escuche, dame el poder para
+       salvarlos, no importa lo que me pase"; y que acabe diciendo PROTEGELOS y, en el aire, A
+       TODOS.» Eso es: antes de echar a correr hay un plano quieto de el, con las manos juntas
+       (el ultimo fotograma de HandClap01) y los ojos cerrados, pidiendolo. Y las dos mitades del
+       hechizo cambian de texto.
+    """
+    cielo = por_nombre(fases, "3 - Algo cambia en el cielo")
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+
+    # ── 1. La vuelta corriendo ──────────────────────────────────────────────────────────────
+    i_vuelta = _plano_con(cielo, "vuelven corriendo al pueblo")
+    v = cielo.beats[i_vuelta]
+    v.set("live", "false")
+    v.set_framing("heightBias", f(8.0))
+    v.set_framing("distanceScale", f(1.7))
+    v.set("note", s("Los dos vuelven corriendo al pueblo. Plano FIJO y alto: se ve el camino "
+                    "entero. El vivo les perseguia entre casas y saltaba de angulo."))
+
+    corren = cielo.beats[i_vuelta + 1]
+    assert corren.tipo == "ParallelBeat"
+    for h in corren.hijos:
+        if h.tipo == "WalkPathBeat" and h.get("actorId") == s("NPC_Liora"):
+            h.set("retraso", f(0.6))
+            h.set("speed", f(3.0))
+            h.set("note", s("Ella sale medio segundo despues y va mas despacio: detras de el, sin "
+                            "empujarse en el punto del camino."))
+
+    # ── 2. La plegaria ──────────────────────────────────────────────────────────────────────
+    F = final.beats
+    i_corre = _uno(final, lambda b: b.tipo == "ParallelBeat" and "Lo grita corriendo" in _nota(b),
+                   "la carrera del hechizo")
+
+    F[i_corre:i_corre] = [
+        plano("EL PLANO DE LA PLEGARIA. Quieto y cerrado: las manos juntas, los ojos cerrados, y el "
+              "valle ardiendo detras. Es lo unico que pide en todo el prologo.",
+              "CloseUp", "NPC_Archimago", altura=-0.1, distancia=1.35, encara=False, duracion=2.2),
+        mantener("NPC_Archimago", "HandClap01", "Las manos juntas: es el ultimo fotograma de "
+                 "aplaudir, sostenido."),
+        emocion("NPC_Archimago", 7, "Los ojos cerrados."),
+        decir("NPC_Archimago", "PROLOGO_HECHIZO_PLEGARIA", "Archimago", duracion=4.2,
+              note="Lo pide, no lo ordena."),
+        esperar(0.5, "Y el silencio justo antes de abrir los ojos."),
+        emocion("NPC_Archimago", 10, "Abre los ojos, decidido."),
+        soltar("NPC_Archimago", "Suelta las manos y echa a correr."),
+    ]
+    return fases
+
+
+def pase_prologo15(fases):
+    """
+    Grabacion prologo14 (23 sep, noche). Cuatro cosas, y la primera explica media lista de
+    quejas de las cinco ultimas grabaciones.
+
+    1. «Los planos que estaban mal del prologo siguen mal; los de Oliver, geniales.» La
+       diferencia entre unos y otros es una sola casilla: los de Oliver son planos FIJOS. Un
+       plano VIVO re-resuelve el encuadre mientras el actor se mueve, y en cuanto una esquina de
+       casa se mete en medio, el solucionador se va a otra orbita -- eso es el salto. Con
+       hysteresis se salta menos, pero se sigue saltando. Asi que los seis planos vivos que
+       quedaban en sitios de los que se queja (la bajada al rio, la plaza vaciandose, la fila
+       del puente, la entrada del Mago Oscuro y su avance sobre el caido) pasan a fijos. Siguen
+       vivos SOLO los del vuelo y los saltos, donde el actor sale del cuadro de verdad.
+
+    2. «Cuidado que el Archimago recibe un golpe mientras pide el hechizo.» Lo recibia, si: el
+       hechizo grande del Mago Oscuro salia ANTES de la plegaria y le llegaba justo encima de
+       «no importa lo que me pase a mi». La plegaria se mueve delante: el pide mientras el otro
+       CARGA, y el hechizo sale despues. Que es ademas el orden que cuenta la escena.
+
+    3. «La caida al suelo no me gusta, podemos hacer otra cosa.» Fuera el derribo. Ahora le
+       rompen el escudo y le hacen RETROCEDER: encaja el golpe de pie, resbala tres metros
+       hacia atras y se queda tambaleandose (Dizzy) hasta que se recompone. No hay parabola,
+       no hay tirado en el suelo y no hay levantarse -- que era lo que duraba una eternidad.
+
+    4. El «¡PROTEGELOS...!» se decia sobre un plano vacio: el corte al Archimago era VIVO y con
+       el hechizo cayendo no acertaba a encuadrarle. Fijo y un poco mas abierto.
+    """
+    # ── 1. Los planos vivos que saltan, a fijos ─────────────────────────────────────────────
+    #
+    # Cada entrada: (fase, un trozo de la nota, a que distancia se abre). Se abren un poco al
+    # fijarlos porque un plano quieto tiene que aguantar todo el movimiento de la accion dentro
+    # del cuadro: es lo mismo que se hizo con los de Oliver.
+    fijar = [
+        ("2 - El rio",               "Bajando hacia el rio",          1.35),
+        ("5 - La orden de evacuar",  "La plaza vaciandose hacia el puente.", 1.3),
+        ("5 - La orden de evacuar",  "y el quieto en medio",          1.3),
+        ("5 - La orden de evacuar",  "LA FILA EN EL PUENTE",          1.25),
+        ("7 - El duelo",             "Le vemos entrar en la plaza",   1.3),
+        ("7 - El duelo",             "El avanza sobre el caido",      1.2),
+    ]
+    for nombre, trozo, abrir in fijar:
+        fase = por_nombre(fases, nombre)
+        i = _plano_con(fase, trozo)
+        b = fase.beats[i]
+        b.set("live", "false")
+        b.set_framing("distanceScale", f(abrir))
+        b.set("note", s(_nota(b).strip('"') + " -- FIJO (prologo15): vivo, la camara cambiaba de "
+                        "orbita cada vez que una casa se metia por medio."))
+
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+    F = final.beats
+
+    # ── 2. La plegaria, antes de que el otro suelte el hechizo ──────────────────────────────
+    i_plegaria = _plano_con(final, "EL PLANO DE LA PLEGARIA")
+    bloque = F[i_plegaria:i_plegaria + 7]
+    assert bloque[-1].tipo == "PoseBeat", [x.tipo for x in bloque]
+    del F[i_plegaria:i_plegaria + 7]
+
+    i_suelta = _plano_con(final, "Y lo suelta")
+    F[i_suelta:i_suelta] = bloque
+    F[i_suelta].set("note", s("EL PLANO DE LA PLEGARIA. Quieto y cerrado: las manos juntas, los "
+                              "ojos cerrados, y el valle ardiendo detras mientras el otro carga. "
+                              "Es lo unico que pide en todo el prologo -- y lo pide ANTES, no "
+                              "mientras le esta cayendo encima."))
+
+    # ── 3. El corte al Archimago: fijo ──────────────────────────────────────────────────────
+    i_corte = _plano_con(final, "CORTE al Archimago")
+    c = F[i_corte]
+    c.set("live", "false")
+    c.set_framing("distanceScale", f(1.5))
+    c.set_framing("heightBias", f(2.0))
+    c.set("duration", f(3.4))
+    c.set("note", s("CORTE al Archimago, con el hechizo ya en el aire. FIJO y abierto: el vivo "
+                    "le perdia justo cuando grita, y la frase se oia sobre un plano vacio."))
+
+    # ── 4. El escudo roto: retrocede, no cae ────────────────────────────────────────────────
+    i_lanza = _uno(final, lambda b: b.tipo == "ParallelBeat" and "Sale despedido" in _nota(b),
+                   "el escudo roto")
+    par = F[i_lanza]
+    salto = next(h for h in par.hijos if h.tipo == "SaltoBeat")
+    salto.set("altura", f(0.35))
+    salto.set("desplazamiento", f(-3.0))
+    salto.set("subida", f(0.14))
+    salto.set("caida", f(0.3))
+    salto.set("parabola", "false")
+    salto.set("poseSubida", s("DefendHit_NoWeapon"))
+    salto.set("poseAire", s("DefendHit_NoWeapon"))
+    salto.set("poseCaida", s(""))
+    salto.set("poseEnElSuelo", s(""))
+    salto.set("note", s("Le rompe el escudo y le hace RETROCEDER: encaja el golpe de pie y "
+                        "resbala tres metros hacia atras. Ni parabola ni derribo -- lo de caer "
+                        "tirado y levantarse duraba una eternidad y le quitaba la escena."))
+    par.set("note", s("El escudo se rompe y le echa hacia atras; el otro toma tierra."))
+
+    # El plano que le seguia volando ya no tiene vuelo que seguir.
+    plano_vuelo = F[i_lanza - 1]
+    if plano_vuelo.tipo == "ShotBeat":
+        plano_vuelo.set("live", "false")
+        plano_vuelo.set_framing("distanceScale", f(1.25))
+        plano_vuelo.set("note", s("El momento en que el escudo se rompe, de lado: se ve el golpe, "
+                                  "el escudo saltando en pedazos y los tres metros que retrocede."))
+
+    # Y lo que venia despues: nada de levantarse del suelo.
+    i_get = _uno(final, lambda b: b.tipo == "PoseBeat" and b.get("pose") == s("GetUp_NoWeapon"),
+                 "GetUp")
+    assert F[i_get - 1].tipo == "WaitBeat" and F[i_get + 1].tipo == "WaitBeat"
+    F[i_get - 1:i_get + 2] = [
+        mantener("NPC_Archimago", "Dizzy_NoWeapon",
+                 "Tambaleandose: le han roto el escudo, no la espalda."),
+        esperar(1.3, "Lo que tarda en recomponerse -- de pie, que es como sigue la escena."),
+    ]
+    return fases
+
+
+
+def pase_prologo16(fases):
+    """
+    Grabacion prologo15 (23 sep, noche). La lista de Raul, por orden.
+
+    1. «La musica del duelo, antes, y que corte a la anterior.» El tema del duelo entraba DESPUES
+       de «¿Vas a salvarlos a todos, mago?»; ahora entra en cuanto empieza la fase, cortando en
+       seco el tema del Mago Oscuro. Se va el silencio de en medio, que no aportaba nada.
+
+    2. «El carro: cuando se le vuelve a enfocar se ve como gira pero ya estando bien puesto; se
+       tiene que seguir viendo inclinado y ponerse derecho.» La volcada se vuelve a aplicar,
+       al instante, JUSTO DESPUES del corte a la carreta: pase lo que pase antes, cuando la
+       camara la mira esta volcada, y lo que se ve es enderezarse.
+
+    3. «Cuando esta atacando el Mago Oscuro la cara de Liora es feliz.» Cara de preocupacion en
+       cuanto el cielo cambia, y de miedo cuando el se planta en la plaza.
+
+    4. «Cuando cruzan deben quedarse mirando lo que esta ocurriendo.» Al final de las dos oleadas
+       del puente, todos se giran hacia la plaza.
+
+    5. «En las partes donde grabamos desplazamientos hay que acortarlas mas todavia.» El camino
+       del rio y la vuelta, mas rapidos.
+
+    6. «El Archimago se mete en el carro.» Retrocedia tres metros al romperse el escudo y acababa
+       dentro de la carreta: dos y poco.
+
+    7. «Cuando acaba el prologo, en MainWorld debe estar amaneciendo.» La ultima hora de la
+       secuencia se marca como la hora CON LA QUE SE QUEDA el mundo.
+
+    8. Y los planos de seguir a una persona andando vuelven a ser VIVOS: con INC-386 un plano vivo
+       ya no puede cambiar de angulo a mitad, que era lo que los rompia. Fijos se quedaban
+       vacios en cuanto el personaje se iba del cuadro -- «hay momentos donde la camara se queda
+       vacia sin enfocar a nadie».
+    """
+    import copy
+
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    rio    = por_nombre(fases, "2 - El rio")
+    cielo  = por_nombre(fases, "3 - Algo cambia en el cielo")
+    llega  = por_nombre(fases, "4 - La llegada")
+    orden  = por_nombre(fases, "5 - La orden de evacuar")
+    duelo  = por_nombre(fases, "7 - El duelo")
+    final  = por_nombre(fases, "8 - El ultimo hechizo")
+
+    # ── 1. La musica del duelo, ya ──────────────────────────────────────────────────────────
+    i_clima = _uno(duelo, lambda b: b.tipo == "MusicBeat" and "Silencio antes del duelo" in _nota(b),
+                   "el silencio del duelo")
+    i_climax = _uno(duelo, lambda b: b.tipo == "MusicBeat"
+                    and b.get("musicId") == s("MAGOOSCURO_CLIMAX"), "el climax")
+    climax = duelo.beats.pop(i_climax)
+    climax.set("fadeOut", f(0.0))
+    climax.set("note", s("El tema del duelo entra YA, cortando en seco el del Mago Oscuro. Antes "
+                         "entraba tres frases despues, con un silencio en medio que solo servia "
+                         "para que se notara el cambio."))
+    duelo.beats[i_clima] = climax
+
+    # ── 2. La carreta, volcada cuando la camara la mira ─────────────────────────────────────
+    vuelca = next(b for b in manana.beats
+                  if b.tipo == "PropMoveBeat" and "VOLCADA" in _nota(b))
+    i_plano_carreta = _plano_con(manana, "EL PLANO QUE FALTABA")
+    otra = copy.deepcopy(vuelca)
+    otra.set("note", s("Y volcada OTRA VEZ, al instante, con la camara ya encima: asi lo que se ve "
+                       "es enderezarse. Antes, si algo la habia tocado antes, la camara la pillaba "
+                       "ya derecha y solo se veia un giro raro."))
+    manana.beats.insert(i_plano_carreta + 1, otra)
+
+    # ── 3. La cara de Liora ─────────────────────────────────────────────────────────────────
+    cielo.beats.insert(1, emocion("NPC_Liora", 9, "Preocupada desde que el cielo cambia: estaba "
+                                  "poniendo cara de felicidad mientras caia el rayo."))
+    llega.beats.insert(1, emocion("NPC_Liora", 5, "Y con miedo en cuanto el se planta en la plaza."))
+    orden.beats.insert(0, emocion("NPC_Liora", 5, "Sigue con miedo mientras saca a la gente."))
+
+    # ── 4. Los que cruzan se quedan mirando ─────────────────────────────────────────────────
+    oleadas = [i for i, b in enumerate(orden.beats)
+               if b.tipo == "ParallelBeat"
+               and ("Primera oleada" in _nota(b) or "Y salen con ella" in _nota(b))]
+    assert len(oleadas) == 2, oleadas
+    for i in sorted(oleadas, reverse=True):
+        quienes = [h.get("actorId").strip('"') for h in orden.beats[i].hijos
+                   if h.tipo == "WalkPathBeat"]
+        orden.beats.insert(i + 1, a_la_vez(
+            "Y al llegar al otro lado se quedan MIRANDO. Cruzar y seguir de espaldas era lo que "
+            "hacia que la plaza pareciera vacia justo cuando pasa lo importante.",
+            [mirar(q, hacia="NPC_MagoOscuro", note="") for q in quienes]))
+
+    # ── 5. Los trayectos, mas cortos ────────────────────────────────────────────────────────
+    for b in _beats_recursivos(rio):
+        if b.tipo == "WalkPathBeat": b.set("speed", f(3.6))
+    for b in _beats_recursivos(cielo):
+        if b.tipo == "WalkPathBeat" and b.get("actorId") == s("NPC_Archimago"): b.set("speed", f(4.0))
+        if b.tipo == "WalkPathBeat" and b.get("actorId") == s("NPC_Liora"): b.set("speed", f(3.6))
+
+    # ── 6. El escudo roto: que no acabe dentro de la carreta ────────────────────────────────
+    i_lanza = _uno(final, lambda b: b.tipo == "ParallelBeat" and "El escudo se rompe" in _nota(b),
+                   "el escudo roto")
+    salto = next(h for h in final.beats[i_lanza].hijos if h.tipo == "SaltoBeat")
+    salto.set("desplazamiento", f(-2.2))
+
+    # ── 7. Que el mundo amanezca ────────────────────────────────────────────────────────────
+    explosion = por_nombre(fases, "9 - La explosion")
+    # «Morning» es el AMANECER en este ciclo (el InspectorName del enum lo dice: «Amanecer»).
+    explosion.beats.insert(0, hora("Morning", "Y el mundo se queda AMANECIENDO: la pesadilla acaba "
+                                   "de noche y Will se despierta con el dia empezando.",
+                                   inmediato=True, esLaDeVolver=True))
+
+    # ── 8. Los planos de seguir a alguien andando, vivos otra vez ───────────────────────────
+    for nombre, trozo in [("2 - El rio", "Bajando hacia el rio"),
+                          ("7 - El duelo", "Le vemos entrar en la plaza"),
+                          ("7 - El duelo", "El avanza sobre el caido")]:
+        fase = por_nombre(fases, nombre)
+        b = fase.beats[_plano_con(fase, trozo)]
+        b.set("live", "true")
+        b.set("note", s(_nota(b).strip('"').replace(" -- FIJO (prologo15): vivo, la camara cambiaba "
+                                                    "de orbita cada vez que una casa se metia por medio.", "")
+                        + " -- VIVO otra vez (prologo16): desde INC-386 un plano vivo ya no cambia "
+                          "de angulo, solo se aparta; fijo se quedaba vacio al irse el personaje."))
+    return fases
+
+
+def pase_prologo17(fases):
+    """
+    Grabacion del 24 sep, por la manana. La apertura:
+
+    «Las nubes salen muy tarde y al principio se ve un tramo azul de pantalla que no entiendo,
+    deberian ser las nubes. Cuando se separan, mas lentito, y nada mas separarse que empiece a
+    bajar la camara. Lo suyo seria que la camara ya este bajando y que las nubes se abran desde el
+    minuto 0, para dar el efecto de meternos en la escena.»
+
+    El azul era el VIAJE de la camara: la vista de pajaro era un movimiento suave de 4,5 s desde
+    donde estuviera la camara (mirando al cielo) y ESPERABA a llegar. Las nubes iban despues, asi
+    que salian al quinto segundo, con la camara ya parada arriba. Luego un segundo quieta, y solo
+    entonces empezaba a bajar.
+
+    Ahora es un solo movimiento:
+
+      0 s   CORTE a lo alto (mas arriba que antes), con las dos nubes cerradas delante de la lente
+            en ese mismo fotograma.
+      0 s   las nubes empiezan a abrirse, despacio (5,5 s, arranque y frenada suaves).
+      0 s   la camara empieza a BAJAR a la vez -- ya en marcha desde el primer fotograma -- y no
+            para hasta el Archimago (8,5 s). Cuando las nubes acaban de abrirse, sigue bajando.
+
+    La plaza (gestos, paseos, caras) arranca en el segundo 0 como antes; lo unico que se va es el
+    segundo de espera «para dejar respirar la plaza», que ahora es el propio descenso.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    M = manana.beats
+
+    # 1. Arriba, de golpe.
+    i_pajaro = _plano_con(manana, "VISTA DE PAJARO")
+    alto = M[i_pajaro]
+    alto.set("smooth", "false")
+    alto.set("waitForArrival", "false")
+    alto.set_framing("heightBias", f(20.0))
+    alto.set_framing("distanceScale", f(1.8))
+    alto.set("note", s("ARRIBA, DE GOLPE (prologo17). Corte seco a veinte metros sobre el pueblo, con "
+                       "las nubes cerradas delante en el mismo fotograma. Antes era un viaje de 4,5 s "
+                       "desde donde estuviera la camara, mirando al cielo: ese era el tramo azul."))
+
+    # 2. Las nubes, desde el primer fotograma y despacio.
+    i_nubes = _uno(manana, lambda b: b.tipo == "NubesDeAperturaBeat", "las nubes")
+    if i_nubes != i_pajaro + 1:
+        raise RuntimeError("pase_prologo17: las nubes tienen que ir justo detras del plano alto")
+    nubes = M[i_nubes]
+    nubes.set("segundos", f(5.5))
+    nubes.set("note", s("Y SE ABREN, despacio, desde el primer fotograma y mientras la camara ya baja."))
+
+    # 3. El descenso sale de aqui mismo: se lleva detras de la plaza (que no espera a nada) y
+    #    se quita el segundo de espera que habia antes de el.
+    i_espera = _uno(manana, lambda b: b.tipo == "WaitBeat"
+                    and "Dejar respirar la plaza antes de que nadie hable" in _nota(b),
+                    "el respiro de la plaza")
+    del M[i_espera]
+
+    i_baja = _plano_con(manana, "Y baja hasta el, sin cortar")
+    baja = M[i_baja]
+    # Entre las nubes y el descenso solo puede haber cosas que no esperan: si alguien mete ahi un
+    # beat que bloquea, la camara se quedaria parada arriba y esto tiene que saltar.
+    for b in M[i_nubes + 1:i_baja]:
+        if b.tipo == "WaitBeat" or (b.tipo == "ParallelBeat" and b.get("waitForAll") == "true") \
+                or b.tipo in ("SayBeat", "ShotBeat", "MoveToBeat", "WalkPathBeat"):
+            raise RuntimeError(f"pase_prologo17: '{b.tipo}' bloquea entre las nubes y el descenso")
+    baja.set("duration", f(8.5))
+    baja.set("waitForArrival", "true")
+    baja.set("arrancaLanzado", "true")
+    # Grabacion de las 07:03: la recta desde el cielo hasta el Archimago rozaba un tejado y el
+    # descenso se quedo en corte seco. Si la recta choca, entra desde arriba (curva que cae sobre
+    # el plano) en vez de cortar.
+    baja.set("entrarDesdeArriba", "true")
+    baja.set("note", s("Y BAJA hasta el sin parar (prologo17): arranca en el mismo fotograma que las "
+                       "nubes, ya en marcha, y sigue bajando cuando ya se han abierto. El descenso "
+                       "ES el enganche con su frase."))
+    return fases
+
+
+def pase_prologo18(fases):
+    """
+    Grabacion del 24 sep, 08:03 («ya sale bien, te voy pasando correcciones»):
+
+    1. «El plano de cuando la carreta baja al suelo se pierde porque se enfoca al NPC: deberiamos
+       tener un plano con el NPC y la carreta para que se vea bajando.» La carreta se posaba
+       mientras la camara estaba en la cara del vecino (un plano de REACCION). Ahora es un plano
+       con los dos: el vecino mirandola y la carreta encima, y se ve como baja.
+
+    2. «Cuando bailan el plano esta muy lejos.» Era un general del corro CON el Archimago, que aun
+       venia de lejos: para meter a los dos la camara se iba a la otra punta. Ahora el plano es
+       del corro (dos de los que bailan), mas cerrado; el entra en el cuadro al llegar.
+
+    3. «Hay dos NPCs que se ponen a tocar las palmas pero no estan mirando a la gente que baila.»
+       Los dos que tocan palmas (Aldeano_08 y _06) se giran antes hacia el corro.
+
+    4. «Luego hay un NPC que le esta diciendo algo al Archimago pero no le sale el bocadillo.»
+       Tras «Seguid asi...», tres vecinos hacian gestos de HABLAR sin texto. El que se lo dice a
+       el (Aldeano_01) tiene ya su frase; los otros dos se rien y aplauden en vez de hablar al
+       aire.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    M = manana.beats
+
+    # 1. La carreta bajando, con el vecino.
+    i = _plano_con(manana, "La cara del vecino mirando hacia arriba")
+    p = M[i]
+    p.set_framing("type", "ShotType.Wide")
+    p.set_framing("subjectId", s("NPC_Aldeano_06"))
+    p.set_framing("secondaryId", s("PROP_Carreta"))
+    p.set_framing("heightBias", f(0.6))
+    p.set_framing("distanceScale", f(1.1))
+    p.set_framing("encara", "true")
+    p.set("note", s("El vecino Y la carreta (prologo18): la carreta baja al suelo en este plano, y "
+                    "sin ella en cuadro no se veia bajar. El vecino se gira hacia ella."))
+
+    # 2. El baile, mas cerca y del corro.
+    i = _plano_con(manana, "El corro que celebra")
+    p = M[i]
+    p.set_framing("secondaryId", s("NPC_Aldeano_01"))
+    p.set_framing("distanceScale", f(0.7))
+    p.set_framing("encara", "false")
+    p.set("note", s("El corro, de cerca (prologo18): antes era un general con el Archimago, que aun "
+                    "venia de lejos, y la camara se iba a la otra punta. El entra en cuadro al llegar."))
+
+    # 3. Los de las palmas, mirando a los que bailan.
+    i = _uno(manana, lambda b: b.tipo == "ParallelBeat" and "El corro ENTERO" in _nota(b), "el corro entero")
+    M[i:i] = [mirar("NPC_Aldeano_08", hacia="NPC_Aldeano_03", giro=0.3,
+                    note="Toca palmas MIRANDO al que baila (prologo18)."),
+              mirar("NPC_Aldeano_06", hacia="NPC_Aldeano_03", giro=0.3,
+                    note="Y el vecino de la carreta igual.")]
+
+    # 4. Quien le habla al Archimago, con bocadillo.
+    i = _uno(manana, lambda b: b.tipo == "SayBeat" and b.get("textKey") == s("PROLOGO_BAILE"),
+             "Seguid asi")
+    j = i + 1
+    if M[j].tipo != "GestureBeat" or M[j].get("actorId") != s("NPC_Aldeano_01"):
+        raise RuntimeError("pase_prologo18: esperaba el Cheer02 de Aldeano_01 detras de 'Seguid asi'")
+    M[j + 1:j + 1] = [
+        mirar("NPC_Aldeano_01", hacia="NPC_Archimago", giro=0.3,
+              note="Se lo dice A EL (prologo18)."),
+        decir("NPC_Aldeano_01", "PROLOGO_BAILE_RESPUESTA", "Vecino", duracion=2.2, gest="Talk01",
+              note="Antes solo gesticulaba hablando, sin bocadillo: «le esta diciendo algo al "
+                   "Archimago pero no le sale el bocadillo»."),
+    ]
+    k = _uno(manana, lambda b: b.tipo == "ParallelBeat" and "Los de la plaza, mientras tanto" in _nota(b),
+             "los de la plaza")
+    hijos = M[k].hijos
+    hijos[:] = [h for h in hijos if not (h.tipo == "GestureBeat" and h.get("actorId") == s("NPC_Aldeano_01"))]
+    for h in hijos:
+        if h.tipo == "GestureBeat" and h.get("actorId") == s("NPC_Aldeano_02"):
+            h.set("gesture", s("Laugh01"))
+        if h.tipo == "GestureBeat" and h.get("actorId") == s("NPC_Aldeano_03"):
+            h.set("gesture", s("HandClap01"))
+    M[k].set("note", s("Los de la plaza, mientras tanto: se rien y aplauden. Nadie HABLA sin "
+                       "bocadillo (prologo18)."))
+    return fases
+
+
+def pase_prologo19(fases):
+    """
+    Grabacion prologo16 (24 sep, 12:16). La lista de Raul, lo que es de montaje:
+
+    1. «Se ve siempre una nube quieta por ahi, creo que es la que usamos para el principio.» Son
+       PROP_Nube_Oeste y PROP_Nube_Este, las nubes de escena del primer intento de apertura: la
+       apertura ya las cuelga de la lente (INC-373) y estas dos se quedaron encendidas. Se apagan
+       en el primer beat.
+
+    2. «Los giros de camara cuando el Archimago va a hablar con Liora al rio hay que mejorarlo,
+       hace saltos todavia.» Era un plano VIVO desde doce metros que les perseguia mientras bajaban:
+       cada casa o arbol que se cruzaba lo movia. Ahora es un aereo FIJO y mas abierto; ellos
+       cruzan el cuadro hasta la orilla.
+
+    3. «Quiero que en el plano cuando Liora y el Archimago hablan en el rio se vea el sol al fondo
+       poniendose, rollo atardecer.» Se queda el atardecer (fuera la noche que entraba mientras
+       hablaban) y el sol se coloca bajo, al fondo, en el lado contrario a la camara (SolDeFondoBeat).
+       La noche llega con la tormenta, como el resto del cielo, y el sol se suelta ahi.
+
+    4. «Cuando el Archimago y Liora corren por el estruendo y salen del plano del rio, se queda la
+       camara enfocando al puente.» Mientras corren, al segundo y medio se corta a la plaza, que es
+       a donde llegan.
+
+    5. «Cuando enfocamos al Mago Oscuro esta quieto y empieza a andar: hay que enfocarle y que este
+       andando ya.» Echa a andar un instante ANTES del corte.
+
+    6. «La cara del Archimago durante la batalla esta contento.» Enfadado desde que empieza el
+       duelo (y Liora, con caras nuevas, ya puede poner cara de preocupacion: INC-404).
+
+    7. «Cuando el Mago Oscuro ataca al Archimago podria hacer la animacion de cansado, la que
+       parece que le duele el estomago; entonces le mira y hace la de angry.» Y «se mete dentro
+       del carro»: el retroceso baja de 2,2 m a 0,8 (y SaltoBeat ya comprueba donde cae,
+       INC-405). Despues: IdleWounded01 sostenido, le mira, cara de enfado y Angry01.
+
+    8. «La gente esta en la montana de espaldas cuando deberian estar mirando.» Al llegar al otro
+       lado miraban al Mago Oscuro, que en ese momento esta en la ladera — de espaldas a la plaza.
+       Ahora miran al Archimago, que es donde pasa todo, y se vuelven a girar al empezar el duelo
+       y el ultimo hechizo.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    rio = por_nombre(fases, "2 - El rio")
+    cielo = por_nombre(fases, "3 - Algo cambia en el cielo")
+    llega = por_nombre(fases, "4 - La llegada")
+    orden = por_nombre(fases, "5 - La orden de evacuar")
+    duelo = por_nombre(fases, "7 - El duelo")
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+
+    # 1. Las nubes quietas.
+    manana.beats[0:0] = [
+        prop("PROP_Nube_Oeste", False, "Fuera las nubes de escena del primer intento de apertura: "
+             "la apertura ya las cuelga de la lente y estas se quedaban quietas en el cielo."),
+        prop("PROP_Nube_Este", False, ""),
+    ]
+
+    # 2. La bajada al rio, fija.
+    i = _plano_con(rio, "Bajando hacia el rio")
+    p = rio.beats[i]
+    p.set("live", "false")
+    p.set_framing("distanceScale", f(2.2))
+    p.set("note", s("Bajando hacia el rio: aereo FIJO y abierto (prologo19). El vivo les perseguia y "
+                    "cada tejado o arbol que se cruzaba lo movia: «hace saltos todavia»."))
+
+    # 3. El sol al fondo, y sin noche mientras hablan.
+    i_eje = _uno(rio, lambda b: b.tipo == "SetActionAxisBeat", "el eje del rio")
+    lado = float(rio.beats[i_eje].get("sideDegrees").rstrip("f"))
+    rio.beats.insert(i_eje + 1, sol_de_fondo(
+        "El sol, bajo y al fondo, detras de ellos (prologo19): «que se vea el sol al fondo "
+        "poniendose, rollo atardecer».", True, lado, 7.0, 3.0))
+    i_noche = _uno(rio, lambda b: b.tipo == "TimeOfDayBeat" and (b.get("timeOfDay") or "").endswith(".Night"),
+                   "la noche del rio")
+    del rio.beats[i_noche]
+
+    i_luz = _uno(cielo, lambda b: b.tipo == "TimeOfDayBeat", "la hora de la tormenta")
+    cielo.beats.insert(i_luz, sol_de_fondo("Y el sol se suelta con la tormenta: la noche entra "
+                                           "desde el atardecer.", False, 0.0, 0.0, 3.0))
+
+    # 4. La carrera de vuelta: corte a la plaza.
+    i = _uno(cielo, lambda b: b.tipo == "ParallelBeat" and "Vuelven corriendo" in _nota(b), "la carrera")
+    cielo.beats[i].hijos.append(en_serie("Al segundo y medio, a la plaza: si no, la camara se "
+                                         "quedaba mirando el puente vacio (prologo19).", [
+        esperar(1.5),
+        plano("La plaza, a donde llegan corriendo.", "Wide", "NPC_Aldeano_05", "NPC_Archimago",
+              altura=1.5, distancia=1.2, encara=False),
+    ]))
+
+    # 5. El Mago Oscuro, ya andando.
+    i_plano = _plano_con(llega, "un plano que le SIGUE mientras baja")
+    i_espera = i_plano + 1
+    i_anda = i_plano + 2
+    if llega.beats[i_espera].tipo != "WaitBeat" or llega.beats[i_anda].tipo != "WalkPathBeat":
+        raise RuntimeError("pase_prologo19: esperaba plano, espera y caminata del Mago Oscuro")
+    plano_mago = llega.beats[i_plano]
+    anda = llega.beats[i_anda]
+    llega.beats[i_plano:i_anda + 1] = [a_la_vez(
+        "Echa a andar y, un instante despues, el corte: cuando le vemos ya viene andando "
+        "(prologo19).", [anda, en_serie("", [esperar(0.35), plano_mago])], True)]
+
+    # 6. Caras de duelo.
+    duelo.beats.insert(0, emocion("NPC_Archimago", 3, "Enfadado desde que empieza el duelo: "
+                                  "estaba con cara de contento (prologo19)."))
+
+    # 7. El golpe al romperse el escudo.
+    i = _uno(final, lambda b: b.tipo == "ParallelBeat" and "El escudo se rompe" in _nota(b), "el escudo roto")
+    salto = next(h for h in final.beats[i].hijos if h.tipo == "SaltoBeat")
+    salto.set("desplazamiento", f(-0.8))
+    i_dizzy = _uno(final, lambda b: b.tipo == "PoseBeat" and b.get("pose") == s("Dizzy_NoWeapon"), "el mareo")
+    i_pie = _uno(final, lambda b: b.tipo == "PoseBeat" and "De pie otra vez" in _nota(b), "de pie otra vez")
+    final.beats[i_dizzy:i_pie + 1] = [
+        pose("NPC_Archimago", "IdleWounded01", "Le duele: doblado, la mano al estomago (prologo19)."),
+        emocion("NPC_Archimago", 7, ""),
+        esperar(1.4, "Lo que le cuesta rehacerse."),
+        soltar("NPC_Archimago", "Se endereza."),
+        mirar("NPC_Archimago", hacia="NPC_MagoOscuro", giro=0.35, note="Y le MIRA."),
+        emocion("NPC_Archimago", 3, ""),
+        gesto("NPC_Archimago", "Angry01", "Con rabia."),
+    ]
+
+    # 8. La gente de la otra orilla, mirando a la batalla.
+    for b in _beats_recursivos(orden):
+        if b.tipo == "FaceBeat" and b.get("targetActorId") == s("NPC_MagoOscuro") \
+                and b.get("actorId") != s("NPC_Archimago"):
+            b.set("targetActorId", s("NPC_Archimago"))
+    todos = [f"NPC_Aldeano_{k:02d}" for k in range(1, 11)] + ["NPC_Liora"]
+    for fase, cuando in ((duelo, "el duelo"), (final, "el ultimo hechizo")):
+        fase.beats.insert(1 if fase is duelo else 0, a_la_vez(
+            f"Los de la otra orilla se vuelven hacia la plaza al empezar {cuando} (prologo19).",
+            [mirar(q, hacia="NPC_Archimago", giro=0.4) for q in todos], False))
+    return fases
+
+
+
+def pase_prologo20(fases):
+    """
+    Grabacion prologo17 (24 sep, 13:33). La lista de Raul, lo que es de montaje (lo de sistema va
+    en INC-409 a INC-412):
+
+    1. «El sol sigue sin salir a modo de atardecer en la parte de Liora y el Archimago en el rio.»
+       Estaba a 7° en el mundo, y a 7° lo tapan las montanas del fondo. Ahora va EN CUADRO: por
+       encima de la cresta que hay detras de ellos en cada plano, y se pone mientras hablan
+       (SolDeFondoBeat.enCuadro, INC-411).
+
+    2. «Justo cuando sale la tormenta y Liora cambia la cara, sale el sol como si amaneciera, y a
+       una velocidad.» Al soltarlo en tres segundos volvia a donde lo tiene el ciclo en el
+       atardecer: casi en lo alto. Ahora las nubes de la tormenta tapan el disco (INC-410) y el sol
+       se suelta DESPUES de pedir la noche, en ocho segundos, fundido con su transicion.
+
+    3. «Cuando el Archimago va a arreglar el globo, el plano esta muy lejos y demasiado largo.»
+       El aereo encuadraba al Archimago y al globo, en lo alto del campanario: seis segundos de
+       pueblo entero. Ahora el aereo encuadra el camino (el y la vecina que le espera), y a los
+       2,2 s se corta a la vecina, con el llegando.
+
+    4. «Cuando lanza la magia para desatrancar el globo se ve media casa.» Era un plano medio de
+       el CON el globo: para meter el globo la camara se iba detras del tejado de enfrente (el
+       rescate del ShotComposer, «abierto a 1,9× y 2,7 m mas alto»). Ahora es un general bajo de el
+       y la vecina; el globo ya tiene su plano, justo antes.
+
+    5. «Cuando caminan para el puente, el enfoque lejano de camara demasiado largo.» Nueve
+       segundos de aereo mientras cruzaban treinta metros. Ahora hay elipsis: en el corte ya
+       estan cerca de la orilla y bajan los ultimos seis metros paseando, con el aereo mas cerca.
+
+    6. «El Mago Oscuro atraviesa al Archimago.» Iba a la marca M_Duelo3_Mago — la del ARCHIMAGO —
+       con parada a 0,4 m. Ahora va hacia el Archimago y se para a 2,4 m, y le mira.
+
+    7. «Hay varios cambios de camara en ese momento que son feos.» Fuera el plano del escudo
+       entre el golpe y el avance, y el avance deja de ser un plano vivo (la camara le seguia y se
+       metia en una pared): es un general fijo de los dos.
+
+    8. «Despues se queda el Mago Oscuro a las espaldas y esta mal esa parte.» El two-shot se
+       resolvia con el Mago ya pasado de largo, dando la espalda. Con la parada buena, el two-shot
+       sale de perfil. Y su bajada de la montana (fase 4) era un Tracking, que puede rodar hasta la
+       nuca: ahora es un plano medio vivo, que no pasa de 80°.
+
+    Y lo que no dijo pero sale de lo mismo: en la fase 4 nadie encuadraba al Mago Oscuro en la
+    cresta (el plano era el de la plaza, y a ochenta metros la niebla de la tormenta se lo come).
+    Ahora hay un plano suyo en la cresta, un corte a la cara de Liora, y la bajada.
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    rio = por_nombre(fases, "2 - El rio")
+    cielo = por_nombre(fases, "3 - Algo cambia en el cielo")
+    llega = por_nombre(fases, "4 - La llegada")
+    duelo = por_nombre(fases, "7 - El duelo")
+
+    # 1. El sol del rio, en cuadro y poniendose.
+    i = _uno(rio, lambda x: x.tipo == "SolDeFondoBeat", "el sol del rio")
+    sol = rio.beats[i]
+    sol.set("segundos", f(2.0))
+    sol.set("enCuadro", "true")
+    sol.set("posicionX", f(0.72))
+    sol.set("alturaDeSalida", f(0.84))
+    sol.set("alturaDePuesta", f(0.42))
+    sol.set("puesta", f(17.0))
+    sol.set("note", s("El sol EN CUADRO, por encima de la cresta de detras, y poniendose mientras "
+                      "hablan (prologo20): a 7° en el mundo lo tapaban las montanas."))
+
+    # 2. Soltarlo despues de la noche, despacio.
+    i = _uno(cielo, lambda x: x.tipo == "SolDeFondoBeat", "el sol de la tormenta")
+    suelta = cielo.beats.pop(i)
+    suelta.set("segundos", f(8.0))
+    suelta.set("note", s("Y el sol se devuelve al ciclo DESPUES de pedir la noche, en ocho segundos: "
+                         "la luz se funde con la transicion y el disco ya lo tapan las nubes "
+                         "(prologo20: «sale el sol como si amaneciera»)."))
+    i_noche = _uno(cielo, lambda x: x.tipo == "TimeOfDayBeat", "la noche de la tormenta")
+    cielo.beats.insert(i_noche + 1, suelta)
+
+    # 3. El camino al campanario: aereo del camino y corte a la vecina.
+    i_aereo = _plano_con(manana, "AEREA. El pueblo entero mientras cruza")
+    aereo = manana.beats[i_aereo]
+    aereo.set_framing("secondaryId", s("NPC_Aldeano_05"))
+    aereo.set_framing("heightBias", f(6.0))
+    aereo.set_framing("distanceScale", f(1.1))
+    aereo.set("note", s("AEREA del camino: el y la vecina que le espera al pie del campanario. Con el "
+                        "globo dentro, la camara se iba tan lejos que era el pueblo entero (prologo20)."))
+    i_va = i_aereo + 1
+    va = manana.beats[i_va]
+    if va.tipo != "MoveToBeat" or va.get("markName") != s("M_Globo"):
+        raise RuntimeError("pase_prologo20: esperaba el MoveTo al globo detras del aereo")
+    va.set("speedOverride", f(3.2))
+    manana.beats[i_va] = a_la_vez("Mientras cruza, a los 2,2 s, corte a la vecina: llega a su plano "
+                                  "en vez de cruzar el pueblo entero en uno (prologo20).", [
+        va,
+        en_serie("", [
+            esperar(2.2),
+            plano("La vecina esperandole al pie del campanario; el entra en cuadro.", "Wide",
+                  "NPC_Aldeano_05", "NPC_Archimago", altura=0.4, distancia=1.0, encara=False),
+        ]),
+    ], True)
+
+    # 4. El hechizo del globo, sin media casa.
+    i = _plano_con(manana, "Contraplano - el mago mirando hacia arriba")
+    p = manana.beats[i]
+    p.set_framing("type", "ShotType.Wide")
+    p.set_framing("secondaryId", s("NPC_Aldeano_05"))
+    p.set_framing("heightBias", f(-0.4))
+    p.set_framing("distanceScale", f(0.9))
+    p.set_framing("encara", "false")
+    p.set("note", s("El, lanzando, con la vecina: general BAJO. Era un plano medio con el globo dentro "
+                    "y la camara acababa detras del tejado de enfrente: «se ve media casa» (prologo20)."))
+
+    # 5. Al rio: elipsis y paseo corto.
+    i_bajada = _plano_con(rio, "Bajando hacia el rio")
+    bajada = rio.beats[i_bajada]
+    bajada.set_framing("heightBias", f(6.0))
+    bajada.set_framing("distanceScale", f(1.3))
+    i_andan = _uno(rio, lambda x: x.tipo == "ParallelBeat" and "Bajan juntos" in _nota(x), "la bajada al rio")
+    for h in rio.beats[i_andan].hijos:
+        quien = h.get("actorId")
+        fin = "M_Rio_Fin_Mago" if quien == s("NPC_Archimago") else "M_Rio_Fin_Liora"
+        h.set("markNames", lst(fin))
+        h.set("speed", f(1.9))
+        h.set("note", s("Los ultimos seis metros, paseando (prologo20)."))
+    rio.beats[i_bajada:i_bajada] = [
+        colocar("NPC_Archimago", "M_Rio_Mago", "Elipsis: en el corte ya estan cerca de la orilla. "
+                "Nueve segundos de aereo mientras cruzaban el pueblo eran «demasiado largo» (prologo20).",
+                haciaMarca="M_Rio_Fin_Mago"),
+        colocar("NPC_Liora", "M_Rio_Liora", "", haciaMarca="M_Rio_Fin_Liora"),
+    ]
+
+    # 6-8. El duelo: el avance, la parada y los cortes.
+    i = _plano_con(duelo, "El escudo, arriba, parpadeando")
+    del duelo.beats[i]
+    i_avance = _plano_con(duelo, "El avanza sobre el caido")
+    avance = duelo.beats[i_avance]
+    avance.set("live", "false")
+    avance.set_framing("type", "ShotType.Wide")
+    avance.set_framing("heightBias", f(0.6))
+    avance.set_framing("distanceScale", f(1.2))
+    avance.set_framing("encara", "false")
+    avance.set("note", s("El avanza sobre el caido: general FIJO de los dos. El vivo le seguia y se "
+                         "metia en una pared; con el del escudo delante eran tres cortes en dos "
+                         "segundos (prologo20)."))
+    va = duelo.beats[i_avance + 1]
+    if va.tipo != "MoveToBeat" or va.get("actorId") != s("NPC_MagoOscuro"):
+        raise RuntimeError("pase_prologo20: esperaba el MoveTo del Mago Oscuro detras del avance")
+    va.set("markName", s(""))
+    va.set("towardsActorId", s("NPC_Archimago"))
+    va.set("stopDistance", f(2.4))
+    va.set("note", s("HACIA el Archimago, y se para delante. Iba a M_Duelo3_Mago — la marca del "
+                     "Archimago — con parada a 0,4 m: le atravesaba (prologo20)."))
+    duelo.beats.insert(i_avance + 2, mirar("NPC_MagoOscuro", hacia="NPC_Archimago", giro=0.3,
+                                           note="Y le mira desde arriba."))
+
+    # 8b. La bajada de la montana: plano medio vivo, de frente.
+    # (el plano esta dentro del a_la_vez de prologo19, en su en_serie)
+    encontrado = False
+    for x in _beats_recursivos(llega):
+        if x.tipo == "ShotBeat" and "un plano que le SIGUE mientras baja" in _nota(x):
+            x.set_framing("type", "ShotType.Medium")
+            x.set_framing("secondaryId", s(""))
+            x.set_framing("heightBias", f(0.3))
+            x.set("note", s("Le SIGUE mientras baja, DE FRENTE: plano medio vivo sin secundario "
+                            "(mira hacia donde anda). Era un Tracking, que puede rodar hasta la "
+                            "nuca: salia de espaldas (prologo20)."))
+            encontrado = True
+    if not encontrado:
+        raise RuntimeError("pase_prologo20: no encuentro el plano de la bajada del Mago Oscuro")
+
+    # 9. La cresta: que se le vea, y la cara de Liora antes de la bajada.
+    i_cara = _uno(llega, lambda x: x.tipo == "FaceBeat" and "Mira al valle desde el primer fotograma" in _nota(x),
+                  "el Mago mirando al valle")
+    llega.beats.insert(i_cara + 1, plano(
+        "El, en la cresta, desde abajo (prologo20). Hasta ahora nadie le encuadraba: el plano era el "
+        "de la plaza, y a ochenta metros la niebla de la tormenta se lo comia.", "Medium",
+        "NPC_MagoOscuro", "", altura=-0.6, distancia=1.2))
+    i_espera = next(k for k in range(i_cara + 2, len(llega.beats)) if llega.beats[k].tipo == "WaitBeat")
+    llega.beats[i_espera].set("seconds", f(1.8))
+    i_baja = _uno(llega, lambda x: x.tipo == "PlaceAtMarkBeat" and "Otro corte" in _nota(x), "el salto a la ladera")
+    llega.beats[i_baja:i_baja] = [
+        mirar("NPC_Liora", marca="M_Cresta", giro=0.3),
+        plano("Liora, con miedo, mirandole (prologo20). El corte que esconde que el baja de la cresta "
+              "a la ladera.", "Medium", "NPC_Liora", "", altura=0.0, distancia=1.1),
+        esperar(1.0),
+    ]
+    return fases
+
+
+def pase_prologo21(fases):
+    """
+    Grabacion prologo18 (24 sep, 16:53). «Ya la tenemos casi perfecta.» Lo de montaje:
+
+    1. «Cuando sube el globo no se ve, le tapa algo.» El contrapicado desde el suelo quedaba
+       debajo del alero de la casa de enfrente, y el globo subia por detras del tejado. Ahora la
+       camara esta POR ENCIMA de los tejados (4 m) y le sigue mientras sube: el globo se va contra
+       el cielo.
+
+    2. «Cuando se enfoca la bajada del Mago Oscuro se sale un poco de camara.» El plano medio vivo
+       dejaba el hueco del bocadillo (headroom) en un plano en el que no habla, y bajando la ladera
+       hacia la camara se quedaba en el borde de abajo. Sin headroom, un poco mas abierto y mas bajo.
+
+    (El sol del rio es de sistema: INC-413.)
+    """
+    manana = por_nombre(fases, "1 - Un dia cualquiera")
+    llega = por_nombre(fases, "4 - La llegada")
+
+    i = _plano_con(manana, "Contrapicado fuerte, camara quieta")
+    p = manana.beats[i]
+    p.set("live", "true")
+    p.set_framing("type", "ShotType.Wide")
+    p.set_framing("subjectId", s("PROP_Globo"))
+    p.set_framing("secondaryId", s(""))
+    p.set_framing("heightBias", f(4.0))
+    p.set_framing("distanceScale", f(1.8))
+    p.set("note", s("El globo subiendo, con la camara POR ENCIMA de los tejados y siguiendole: se va "
+                    "contra el cielo. Desde el suelo lo tapaba el alero de enfrente: «cuando sube el "
+                    "globo no se ve, le tapa algo» (prologo21)."))
+
+    encontrado = False
+    for x in _beats_recursivos(llega):
+        if x.tipo == "ShotBeat" and "Le SIGUE mientras baja, DE FRENTE" in _nota(x):
+            x.set_framing("headroom", "false")
+            x.set_framing("heightBias", f(-0.3))
+            x.set_framing("distanceScale", f(1.4))
+            x.set("note", s(_nota(x).strip('"') + " Sin hueco para bocadillo (aqui no habla), mas "
+                            "abierto y mas bajo: se salia por abajo del cuadro (prologo21)."))
+            encontrado = True
+    if not encontrado:
+        raise RuntimeError("pase_prologo21: no encuentro el plano de la bajada del Mago Oscuro")
+    return fases
+
+
+def pase_prologo22(fases):
+    """
+    24 sep, tras prologo18: «los sfx, repasalos todos porque no estan bien elegidos».
+
+    El prologo usaba claves de gameplay (Levitation_Cast, Star_SpellCast, Impact1...) que suenan a
+    otra cosa: una bomba de aire de ciencia ficcion para la levitacion, cargas electronicas para
+    las bolas de fuego, un golpe de 8 bits para los impactos, un choque de espadas para el escudo,
+    y la MISMA explosion para el trueno, la llegada del Mago Oscuro, el rayo en la casa y la
+    explosion final. Ahora el prologo tiene sus propias claves (Prologo_*, en AudioGraphProfile), asi
+    que se puede cambiar cada sonido sin tocar el del gameplay. Ver la tabla en el doc del proyecto.
+    """
+    global_ = {
+        "Levitation_Cast": "Prologo_MagiaLevitar",
+        "Levitation_Impact": "Prologo_CarretaCae",
+        "Prologue_ActorAppear": "Prologo_PresenciaOscura",
+        "Prologue_SpellInstantiate": "Prologo_BolaDeFuego",
+        "EstelaAppears_ShieldBlock": "Prologo_EscudoBloquea",
+        "Star_SpellCast": "Prologo_HechizoArchimago",
+        "Impact1": "Prologo_ImpactoHechizo",
+        "MagoOscuroGrieta": "Prologo_SueloSeAbre",
+        "Prologue_SpellRelease": "Prologo_Despegue",
+    }
+    por_fase = {
+        "3 - Algo cambia en el cielo": {"Prologue_Explosion": "Prologo_Trueno"},
+        "4 - La llegada": {"Prologue_Explosion": "Prologo_Golpe"},
+        "5 - La orden de evacuar": {"Prologue_Explosion": "Prologo_Trueno"},
+        "7 - El duelo": {"Prologue_SpellChargeLoop": "Prologo_Carga", "ProjectileClash": "Prologo_Choque"},
+        "8 - El ultimo hechizo": {"Prologue_SpellChargeLoop": "Prologo_HechizoGrande",
+                                  "ProjectileClash": "Prologo_GolpeEnElAire"},
+    }
+    cambios = 0
+    for fase in fases:
+        nombre = fase.nombre.strip('"')
+        mapa = dict(global_)
+        mapa.update(por_fase.get(nombre, {}))
+        for x in _beats_recursivos(fase):
+            if x.tipo == "SfxBeat":
+                campos = ("eventKey",)
+            elif x.tipo == "SpellBeat":
+                campos = ("sfxLanzamiento", "sfxImpacto")
+            else:
+                continue
+            for c in campos:
+                v = (x.get(c) or "").strip('"')
+                nuevo = mapa.get(v)
+                # La proteccion absoluta del final no es un hechizo cualquiera.
+                if x.tipo == "SfxBeat" and v == "Star_SpellCast" and nombre.startswith("8 -"):
+                    nuevo = "Prologo_ProteccionAbsoluta"
+                if nuevo:
+                    x.set(c, s(nuevo))
+                    cambios += 1
+    if cambios < 20:
+        raise RuntimeError(f"pase_prologo22: solo {cambios} sonidos cambiados, esperaba unos 25")
+    return fases
+
+
+VFX_CIRCULO_SANADOR = "12a56ee4630040c4eb17ae9707ed4cef"   # Hovl: Healing circle (en bucle)
+VFX_CIRCULO_MAGICO = "a2a060732547fe64581bb0cb3c2bdf1d"    # Hovl: Magic circle (el del duelo)
+
+
+def pase_prologo23(fases):
+    """
+    Grabacion prologo19 (24 sep, 17:35).
+
+    1. «Cuando el Archimago esta conjurando al final, antes de saltar, que esta haciendo la
+       plegaria, ponle un circulo magico: puede quedar mas espectacular.» Circulo sanador a sus
+       pies desde que junta las manos hasta que echa a correr, y al acabar la plegaria un plano
+       general desde arriba para que se vea entero (el de la plegaria es un primer plano: el suelo
+       no entra).
+
+    2. El sol del rio: sale un poco mas arriba del cuadro (88 %) y se pone en 19 s, que es lo que
+       dura la conversacion desde que se plantan hasta el trueno. (La causa de que no se viera era
+       de sistema, INC-419.)
+
+    3. Musica: los cortes de la tormenta, mas largos (3 s).
+    """
+    rio = por_nombre(fases, "2 - El rio")
+    cielo = por_nombre(fases, "3 - Algo cambia en el cielo")
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+
+    # 1. El circulo de la plegaria.
+    i_pose = _uno(final, lambda x: x.tipo == "PoseBeat" and "Las manos juntas" in _nota(x), "las manos juntas")
+    final.beats[i_pose + 1:i_pose + 1] = [
+        vfx(VFX_CIRCULO_SANADOR, "Un circulo magico a sus pies mientras reza (prologo23): «puede "
+            "quedar mas espectacular».", actor="NPC_Archimago", offset=(0, 0.05, 0), vida=9.0),
+        sfx("Prologo_MagiaLevitar", "", actor="NPC_Archimago", volumen=0.8),
+    ]
+    i_say = _uno(final, lambda x: x.tipo == "SayBeat" and x.get("textKey") == s("PROLOGO_HECHIZO_PLEGARIA"),
+                 "la plegaria")
+    final.beats[i_say + 1:i_say + 1] = [
+        vfx(VFX_CIRCULO_MAGICO, "Y un segundo circulo, mas grande, cuando termina de pedirlo.",
+            actor="NPC_Archimago", offset=(0, 0.08, 0), vida=5.0),
+        plano("El circulo entero, desde arriba: el primer plano de la plegaria no enseña el suelo.",
+              "Wide", "NPC_Archimago", "", altura=3.2, distancia=0.9, encara=False),
+        esperar(1.2),
+    ]
+
+    # 2. El sol del rio.
+    i = _uno(rio, lambda x: x.tipo == "SolDeFondoBeat", "el sol del rio")
+    rio.beats[i].set("alturaDeSalida", f(0.88))
+    rio.beats[i].set("puesta", f(19.0))
+
+    # 3. El corte de musica del trueno, mas largo.
+    for x in _beats_recursivos(cielo):
+        if x.tipo == "MusicBeat" and (x.get("musicId") or '""') == '""':
+            x.set("fadeOut", f(3.0))
+    return fases
+
+
+def pase_prologo24(fases):
+    """
+    El despertar, opcion B («el sueno se deshace», INC-424): el prologo ya no acaba en NEGRO sino
+    en BLANCO. La luz del escudo llena la pantalla y se queda; ese blanco es el que el grafo funde
+    despues en la luz de la manana del cuarto de Will (Cap1, nodo 4), visto desde sus ojos.
+    """
+    final = por_nombre(fases, "8 - El ultimo hechizo")
+    hits = [k for k, x in enumerate(final.beats)
+            if x.tipo == "ScreenFadeBeat" and x.get("fadeIn") == "true" and x.get("color") == "Color.black"]
+    if not hits:
+        raise RuntimeError("pase_prologo24: no encuentro el fundido a negro del final")
+    x = final.beats[hits[-1]]
+    x.set("color", "Color.white")
+    x.set("duration", f(1.2))
+    x.set("note", s("La luz del escudo llena la pantalla y SE QUEDA (prologo24): el prologo acaba en "
+                    "blanco, y de ese blanco sale la manana del cuarto de Will, vista desde sus ojos."))
+    return fases
+
 
 if __name__ == "__main__":
     main()

@@ -402,7 +402,7 @@ public sealed class AudioService : MonoBehaviour
         string interiorSceneName = env.gameObject.scene.name;
         if (TryGetSceneMusicRule(interiorSceneName, out var clip) && GetCurrentMusicClip() != clip)
         {
-            PlayMusic(clip, defaultFade);
+            PlayMusic(clip, FundidoDeLugar);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"[AudioService] Música de interior '{interiorSceneName}' → '{clip.name}'");
 #endif
@@ -446,7 +446,7 @@ public sealed class AudioService : MonoBehaviour
             var zoneRule = profile.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
             if (zoneRule?.music != null)
             {
-                PlayMusic(zoneRule.music, defaultFade);
+                PlayMusic(zoneRule.music, FundidoDeLugar);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
                 Debug.Log($"[AudioService] Al salir del interior: música de AmbientZone '{activeAmbientZone.MusicZoneId}'");
 #endif
@@ -454,9 +454,13 @@ public sealed class AudioService : MonoBehaviour
             }
         }
 
-        if (!RestoreSceneMusic(defaultFade))
-            StopMusic(defaultFade);
+        if (!RestoreSceneMusic(FundidoDeLugar))
+            StopMusic(FundidoDeLugar);
     }
+
+    /// Fundido al cambiar de música por entrar o salir de un sitio (INC-421): «las canciones no
+    /// pueden acabar en seco». defaultFade (0,75 s) se queda para lo demás.
+    float FundidoDeLugar => Mathf.Max(defaultFade, 1.8f);
 
     // ===========================================================
     // Batallas
@@ -1029,8 +1033,10 @@ public sealed class AudioService : MonoBehaviour
         {
             t += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(t / seconds);
-            from.volume = Mathf.Lerp(startFrom, 0f, k);
-            to.volume   = Mathf.Lerp(0f, targetTo, k);
+            // Fundido de potencia constante (INC-421): con dos rectas, a mitad de camino las dos
+            // pistas suenan a la mitad y se oye un hueco entre canción y canción.
+            from.volume = startFrom * Mathf.Cos(k * Mathf.PI * 0.5f);
+            to.volume   = targetTo  * Mathf.Sin(k * Mathf.PI * 0.5f);
             yield return null;
         }
         from.Stop();

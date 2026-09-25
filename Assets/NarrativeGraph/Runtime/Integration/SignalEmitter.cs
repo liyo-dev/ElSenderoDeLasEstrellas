@@ -53,6 +53,18 @@ public class SignalEmitter : MonoBehaviour
              "sticky) para hechos que deben recordarse pase lo que pase, como contar muertes o recogidas.")]
     public bool onlyIfListening = false;
 
+    [Tooltip("Si se rellena, solo emite mientras esa misión esté ACTIVA. Es la guarda buena para " +
+             "un trigger de llegada: pasar por delante antes de tiempo no emite nada, y cuando la " +
+             "misión está en marcha emite aunque el grafo todavía no haya llegado a esperarla " +
+             "(INC-365).")]
+    public string soloConLaMision = "";
+
+    [Tooltip("Metros. Si es mayor que cero, además del trigger físico se mira la distancia al " +
+             "jugador cuatro veces por segundo y se emite al acercarse. Es la red de seguridad " +
+             "para un aviso de llegada: no depende de tags, ni de capas, ni de que el collider " +
+             "del jugador dispare el OnTriggerEnter (INC-376).")]
+    public float radioDeProximidad = 0f;
+
     [Header("Debug")]
     [SerializeField] private bool debugLogs = false;
 
@@ -98,6 +110,62 @@ public class SignalEmitter : MonoBehaviour
     {
         if (trigger == TriggerType.SendNow)
             StartCoroutine(SendWhenReady());
+
+        if (radioDeProximidad > 0.01f) StartCoroutine(Co_VigilarDistancia());
+    }
+
+    /// Mira la distancia al jugador cuatro veces por segundo. Se apaga sola en cuanto emite (o si
+    /// el emisor ya está gastado), así que no cuesta nada el resto de la partida.
+    private IEnumerator Co_VigilarDistancia()
+    {
+        var espera = new WaitForSeconds(0.25f);
+
+        // ── Hay que LLEGAR, no estar ya (INC-382) ───────────────────────────────────────────
+        //
+        // «Me acerco a Eldran y no ocurre nada» era, en realidad, lo contrario: pasaba todo de
+        // golpe. Will termina de hablar con Oliver a cuatro metros de Eldran, así que en cuanto
+        // la misión se activaba el vigilante ya estaba dentro del radio y emitía
+        // WILL_REACHED_ELDRAN en el mismo cuarto de segundo — en el log del 23 sep el aviso sale
+        // una línea después de que el grafo se suscriba. La misión empezaba y se completaba sin
+        // que nadie se moviera, y la discusión de Eldran y Victoria se acababa antes de empezar.
+        //
+        // Un aviso de llegada solo significa algo si hay un ACERCAMIENTO. Así que se mide desde
+        // que el emisor pasa a contar (la misión activa), y solo se arma cuando el jugador se ha
+        // acercado de verdad -- dos metros menos que donde estaba -- o cuando ha estado lejos y
+        // vuelve. Mientras la misión no esté activa no se guarda nada: si no, la referencia
+        // sería la habitación de Will, a media aldea de aquí, y todo volvería a dispararse solo.
+        bool armado = false;
+        float dReferencia = -1f;
+
+        while (!(_used && once))
+        {
+            yield return espera;
+
+            var jugador = PlayerService.Player;
+            if (jugador == null) continue;
+
+            bool cuenta = string.IsNullOrEmpty(soloConLaMision) || _signals == null
+                          || _signals.GetQuestState(soloConLaMision) == NarrativeQuestState.Active;
+            if (!cuenta) { armado = false; dReferencia = -1f; continue; }
+
+            float d = Vector3.Distance(jugador.transform.position, transform.position);
+            if (dReferencia < 0f) dReferencia = d;
+
+            if (!armado)
+            {
+                if (d <= dReferencia - 2f || d >= radioDeProximidad * 2.5f)
+                {
+                    armado = true;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    Debug.Log($"[SignalEmitter:{name}] Armado a {d:F1} m (empezó a {dReferencia:F1} m): " +
+                              $"a partir de ahora, acercarse a {radioDeProximidad:F1} m emite '{eventKey}'.");
+#endif
+                }
+                continue;
+            }
+
+            if (d <= radioDeProximidad) Send();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -167,6 +235,16 @@ public class SignalEmitter : MonoBehaviour
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.LogError($"[SignalEmitter:{name}] No hay DefaultNarrativeSignals.");
+#endif
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(soloConLaMision)
+            && _signals.GetQuestState(soloConLaMision) != NarrativeQuestState.Active)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (debugLogs)
+                Debug.Log($"[SignalEmitter:{name}] Ignorado: '{soloConLaMision}' no está activa.");
 #endif
             return;
         }

@@ -63,9 +63,11 @@ namespace Sendero.Narrative.Editor
         }
 
         [UnityEditor.Callbacks.OnOpenAsset]
-        static bool OnOpenAsset(int instanceId, int line)
+        // Unity 6000.6: la conversión int → EntityId es error de compilación; el callback ya
+        // recibe el EntityId directamente.
+        static bool OnOpenAsset(EntityId entityId, int line)
         {
-            var g = EditorUtility.EntityIdToObject(instanceId) as NarrativeGraph;
+            var g = EditorUtility.EntityIdToObject(entityId) as NarrativeGraph;
             if (g == null) return false;
             OpenGraph(g);
             return true;

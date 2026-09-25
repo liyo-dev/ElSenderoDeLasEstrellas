@@ -50,6 +50,7 @@ MonoBehaviour:
   - rid: 6000000000000000041
   - rid: 6000000000000000042
   - rid: 6000000000000000043
+  - rid: 6000000000000000049
   - rid: 5983492470211221218
   - rid: 526820858001539260
   - rid: 7428272359979352335
@@ -664,11 +665,11 @@ MonoBehaviour:
         logWarnings: 0
         onlyOnce: 1
     - rid: 6000000000000000042
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 19.- Tutorial puesto del mercado (TUTORIAL_MARKET)
+        displayTitle: 19.- Mision algo inutil, aprender a comprar (WILL_MISSION1)
         chapter: Cap. 1
-        blockSaving: 1
+        blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
@@ -677,16 +678,11 @@ MonoBehaviour:
         position: {x: 7600, y: 0}
         outputs:
         - 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
-        action: 0
-        text: Prueba a comprar algo en el puesto del mercado.
-        textId: TUTORIAL_MARKET
-        icon: {fileID: 0}
-        buttonName: interactable_select
-        dismissWithCancel: 1
+        questId: WILL_MISSION1
     - rid: 6000000000000000043
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 20.- Espera compra en el mercado (MARKET_DONE)
+        displayTitle: 20.- Espera a que compre la estrella torcida (ESTRELLA_COMPRADA)
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -696,8 +692,27 @@ MonoBehaviour:
         guid: 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
         position: {x: 7980, y: 0}
         outputs:
+        - f393b1c0-87f6-4793-a705-a151a01af989
+        eventKey: ESTRELLA_COMPRADA
+    - rid: 6000000000000000049
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20b.- Completa WILL_MISSION1 (estrella comprada)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: f393b1c0-87f6-4793-a705-a151a01af989
+        position: {x: 7980, y: 200}
+        outputs:
         - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        eventKey: MARKET_DONE
+        questId: WILL_MISSION1
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 0
     - rid: 6000000000000000044
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
@@ -831,8 +846,8 @@ MonoBehaviour:
         position: {x: 1900, y: 0}
         outputs:
         - d206615e-7e83-4d62-bd5a-d6e04d6b237b
-        color: {r: 0, g: 0, b: 0, a: 1}
-        duration: 0.8
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 2.8
         fadeIn: 0
         restaurarMusicaDeEscena: 1
-        fundidoDeMusica: 2
+        fundidoDeMusica: 3

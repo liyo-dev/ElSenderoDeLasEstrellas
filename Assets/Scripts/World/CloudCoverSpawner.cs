@@ -282,7 +282,7 @@ public class CloudCoverSpawner : MonoBehaviour
         // dentro de un interior), arrancar ya suprimidos — mismo criterio que usa
         // DayNightCycle.OnEnable() para _outdoorWeatherSuppressedIndoors.
         var ec = EnvironmentController.Instance;
-        _hiddenByInterior = ec != null && ec.IsEffectivelyInterior;
+        _hiddenByInterior = ec != null && ec.IsEffectivelyInterior && DayNightCycle.AnclaDeClima == null; // con una cinemática rodando fuera, el dormitorio no cuenta (INC-416)
 
         // FIX "sigue lloviendo pero no hay nubes tras teletransportarse": este componente vive en
         // la escena de mundo y se destruye/recrea con ella (ver DestroyCover() en OnDisable()).
@@ -358,6 +358,18 @@ public class CloudCoverSpawner : MonoBehaviour
         return false;
     }
 
+    /// Sobre quién se forma el techo de nubes (INC-416). Normalmente, el jugador. Pero en una
+    /// cinemática manda DayNightCycle.AnclaDeClima (la cámara que rueda): en el prólogo el jugador
+    /// está dormido en su casa, a kilómetros del valle, y las nubes de la tormenta se formaban
+    /// encima del dormitorio — «si llueve, el cielo tiene que nublarse» (prologo18). La lluvia ya
+    /// colgaba del ancla desde INC-380; las nubes no se habían enterado.
+    Transform AQuienSigue()
+    {
+        if (DayNightCycle.AnclaDeClima != null) return DayNightCycle.AnclaDeClima;
+        if (PlayerService.Player != null) return PlayerService.Player.transform;
+        return Camera.main != null ? Camera.main.transform : null;
+    }
+
     void HandleCloudsBuildingUp()
     {
         if (!_built)
@@ -367,8 +379,7 @@ public class CloudCoverSpawner : MonoBehaviour
             // _followTransform solo se usa aquí, para anclar el techo la primera vez que se
             // construye. Una vez construido queda fijo en el mundo: no hay LateUpdate que lo
             // reposicione por frame (eso era lo que hacía que las nubes "acompañaran" al jugador).
-            _followTransform = PlayerService.Player != null ? PlayerService.Player.transform :
-                                Camera.main != null ? Camera.main.transform : null;
+            _followTransform = AQuienSigue();
 
             _building = true;
             _buildCoroutine = StartCoroutine(BuildCoverThenStartWaveRoutine());
@@ -457,7 +468,7 @@ public class CloudCoverSpawner : MonoBehaviour
     /// </summary>
     void CheckRecenter()
     {
-        Transform playerT = PlayerService.Player != null ? PlayerService.Player.transform : _followTransform;
+        Transform playerT = AQuienSigue() ?? _followTransform;
         if (playerT == null) return;
 
         Vector3 rootPos = _root.position;

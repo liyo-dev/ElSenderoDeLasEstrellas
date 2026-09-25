@@ -97,17 +97,66 @@ public class DayNightCycle : MonoBehaviour
     // es un manager persistente de Start.unity).
     public static Transform Sun { get; private set; }
 
+    /// DE QUIÉN CUELGAN la lluvia, la niebla y el viento (INC-380).
+    ///
+    /// Normalmente, del jugador: los efectos de clima son una cajita de partículas alrededor de
+    /// quien mira, no una tormenta simulada sobre el valle entero. Pero en una cinemática el
+    /// jugador NO es quien mira — en el prólogo está dormido en su habitación mientras la cámara
+    /// rueda en el valle —, así que la lluvia caía dentro de la casa de Will y encima se creaba
+    /// APAGADA, porque el interior bloquea el cielo (ver IsSkyboxLockedByEnvironment). De ahí el
+    /// «cuando salió el Mago Oscuro no empezó a llover»: llovía, pero en el dormitorio y apagada.
+    ///
+    /// Lo pone y lo quita CinematicTimeOfDay, que es quien sabe con qué cámara se está rodando.
+    public static Transform AnclaDeClima
+    {
+        get => s_anclaDeClima;
+        set
+        {
+            if (s_anclaDeClima == value) return;
+            s_anclaDeClima = value;
+            if (Instance != null) Instance.ReanclarClima();
+        }
+    }
+    private static Transform s_anclaDeClima;
+
+    /// Recoloca lo que ya estuviera lloviendo/soplando cuando cambia el ancla, y lo ENCIENDE si
+    /// se había creado apagado por estar el jugador en un interior. Sin esto, una tormenta que
+    /// empezó antes de la cinemática se queda en el sitio de antes toda la escena.
+    private void ReanclarClima()
+    {
+        foreach (var efecto in new[] { _activeRainInstance, _activeMistInstance, _activeWindInstance })
+        {
+            if (efecto == null) continue;
+            if (s_anclaDeClima != null)
+            {
+                efecto.transform.SetParent(s_anclaDeClima, false);
+                efecto.transform.localPosition = Vector3.zero;
+                efecto.SetActive(true);
+            }
+            else if (IsSkyboxLockedByEnvironment())
+            {
+                efecto.SetActive(false);
+            }
+        }
+    }
+
     /// El ciclo día/noche de la partida, o null si no hay ninguno cargado (escenas de prueba,
     /// interiores sueltos). Lo necesitan las cinemáticas que cambian la hora del día a propósito
     /// (ver CinematicTimeOfDay): antes solo se podía llegar aquí con un FindObjectOfType.
     public static DayNightCycle Instance { get; private set; }
+
+    /// Mientras una cinemática manda en el cielo, el clima NO se sortea (INC-409). En la grabación
+    /// prologo17 salió una niebla ocasional a mitad del prólogo: ×4 sobre la noche con tormenta
+    /// (densidad 0,16) y dos planos enteros sin verse nada. La ponen a true CinematicTimeOfDay y
+    /// CinematicWeather, y la devuelve a false CinematicTimeOfDay.Restore().
+    public static bool SorteoDeClimaEnPausa;
 
 #if UNITY_EDITOR
     // FIX (17 sep 2026): este archivo llegó a tener DOS 'ResetStatics' (error CS0111 al recompilar,
     // misma familia que INC-238). El que se quedó es este, que limpia las dos estáticas; el otro,
     // más abajo entre 'AutoAdvance' y el enum 'TimeOfDay', era anterior y solo limpiaba 'Sun'.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { Instance = null; Sun = null; }
+    static void ResetStatics() { Instance = null; Sun = null; s_anclaDeClima = null; SorteoDeClimaEnPausa = false; }
 #endif
 
     /// Si el ciclo avanza solo con el tiempo. Se apaga mientras una cinemática manda sobre la hora
@@ -340,6 +389,8 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private string cloudsBuildingUpSfxKey;
     [Tooltip("Event Key del AudioGraphProfile del SFX/ambiente de lluvia. Se reproduce en LOOP (vía AudioService.PlayLoopingSFX) desde que arranca la lluvia de verdad hasta que para, no como one-shot: así no importa si el clip asignado es más largo o más corto que la lluvia real.")]
     [SerializeField] private string rainStartedSfxKey;
+    [Tooltip("Volumen del loop de lluvia (0-1). A 1 tapaba la música y los diálogos del prólogo: «el sfx de lluvia está demasiado fuerte» (prologo20, INC-433).")]
+    [SerializeField, Range(0f, 1f)] private float rainLoopVolume = 0.3f;
     [Tooltip("Event Key opcional del AudioGraphProfile para un one-shot adicional cuando para de llover (p.ej. un cue corto de viento amainando). El loop de rainStartedSfxKey se detiene siempre, tenga o no clave este campo.")]
     [SerializeField] private string rainStoppedSfxKey;
     /// <summary>Clave interna usada en AudioService.PlayLoopingSFX/StopLoopingSFX para el loop de ambiente de lluvia.</summary>
@@ -420,6 +471,15 @@ public class DayNightCycle : MonoBehaviour
     private Coroutine _rainFadeCoroutine;
     private Coroutine _rainDarkenCoroutine;
     private float _rainDarkenAmount;
+
+    /// Cuánto tapan las nubes de lluvia/tormenta el cielo ahora mismo (0-1). Lo lee
+    /// SolYLunaEnElCielo para esconder el sol y la luna detrás de la tormenta (INC-410).
+    public float Nublado => _rainDarkenAmount;
+
+    /// Cuánto es de noche (0-1), fundido con las transiciones. De noche la luz direccional hace de
+    /// LUNA: en el periodo Night apunta desde 30° sobre el horizonte, y sin esto
+    /// SolYLunaEnElCielo pintaba ahí un SOL en plena noche (INC-410).
+    public float PesoDeNoche { get; private set; }
 
     // True mientras el cielo se está nublando (nubes 3D de CloudCoverSpawner + oscurecimiento) pero
     // la lluvia todavía no ha empezado a caer (IsRaining sigue en false hasta que termina la transición).
@@ -644,6 +704,7 @@ public class DayNightCycle : MonoBehaviour
     {
         if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm) return;
         if (TagMinigameController.IsAnyMinigameActive) return;
+        if (SorteoDeClimaEnPausa) return;
 
         // Zona con niebla forzada (30 ago 2026, ver SetZoneMistOverride): nada de sorteo nuevo
         // (ni lluvia, ni tormenta, ni viento) mientras esté activa, solo se asegura de que la
@@ -875,7 +936,10 @@ public class DayNightCycle : MonoBehaviour
         // de interior, la lluvia seguía cayendo "dentro" durante toda la secuencia. Sondeamos aquí
         // IsEffectivelyInterior (que sí tiene en cuenta el override cinemático) y sincronizamos la
         // supresión con el mismo patrón edge-triggered que ya usa el resto de este método.
-        bool effectivelyInteriorNow = ec != null && ec.IsEffectivelyInterior;
+        // Con la cámara de una cinemática al mando (AnclaDeClima), el interior del jugador no cuenta
+        // (INC-427): el loop de lluvia se quedaba MUDO durante todo el prólogo porque Will duerme
+        // en su casa — «me faltan sfx de lluvia».
+        bool effectivelyInteriorNow = ec != null && ec.IsEffectivelyInterior && AnclaDeClima == null;
         if (effectivelyInteriorNow != _outdoorWeatherSuppressedIndoors)
         {
             _outdoorWeatherSuppressedIndoors = effectivelyInteriorNow;
@@ -1248,6 +1312,7 @@ public class DayNightCycle : MonoBehaviour
             directionalLight.intensity = settings.lightIntensity;
             directionalLight.transform.eulerAngles = new Vector3(settings.sunRotationX, settings.sunRotationY, 0f);
         }
+        PesoDeNoche = settings.timeOfDay == TimeOfDay.Night ? 1f : 0f;
 
         if (controlAmbientLight)
             RenderSettings.ambientLight = settings.ambientColor * settings.ambientIntensity;
@@ -1291,11 +1356,15 @@ public class DayNightCycle : MonoBehaviour
         float startSkyboxYaw = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxDirectionYawId) : target.skyboxDirectionYaw;
         float startSkyboxPitch = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxDirectionPitchId) : target.skyboxDirectionPitch;
 
+        float startNoche = PesoDeNoche;
+        float targetNoche = target.timeOfDay == TimeOfDay.Night ? 1f : 0f;
+
         float elapsed = 0f;
         while (elapsed < transitionDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / transitionDuration));
+            PesoDeNoche = Mathf.Lerp(startNoche, targetNoche, t);
 
             if (light != null)
             {
@@ -1478,7 +1547,8 @@ public class DayNightCycle : MonoBehaviour
             }
         }
 
-        Transform parent = PlayerService.Player != null ? PlayerService.Player.transform :
+        Transform parent = AnclaDeClima != null ? AnclaDeClima :
+                           PlayerService.Player != null ? PlayerService.Player.transform :
                            Camera.main != null ? Camera.main.transform : null;
 
         if (parent != null)
@@ -1496,7 +1566,8 @@ public class DayNightCycle : MonoBehaviour
 
         // Si el jugador ya está en un interior (real o cinemático) cuando empieza a llover, que no
         // se vea/oiga hasta que salga (evita el problema de "llueve dentro de la casa").
-        if (IsSkyboxLockedByEnvironment())
+        // Ver AnclaDeClima: con la cámara de una cinemática al mando, el interior no cuenta.
+        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             _activeRainInstance.SetActive(false);
 
         IsRaining = true;
@@ -1509,12 +1580,13 @@ public class DayNightCycle : MonoBehaviour
         // StopRain(), eso deja el SFX sonando de fondo mucho después de que IsRaining ya es false
         // (bug reportado: "ha terminado de llover y no ha parado el sfx"). PlayLoopingSFX usa una
         // fuente dedicada que solo se detiene explícitamente en BeginRainFadeOut vía StopLoopingSFX.
-        AudioService.Instance?.PlayLoopingSFX(RainWeatherSfxLoopId, rainStartedSfxKey);
+        AudioService.Instance?.PlayLoopingSFX(RainWeatherSfxLoopId,
+            string.IsNullOrWhiteSpace(rainStartedSfxKey) ? "rain" : rainStartedSfxKey, rainLoopVolume);
         // FIX (30 ago 2026): el comentario de arriba ("que no se vea/oiga hasta que salga") solo se
         // cumplía a medias — _activeRainInstance.SetActive(false) oculta el visual, pero el loop de
         // audio arrancaba igual de audible aunque el jugador ya estuviera dentro de un interior (o de
         // una cinemática con override de interior) en el instante exacto en que empieza a llover.
-        if (IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, true);
         // El oscurecimiento (luz + niebla) y la cobertura de nubes ya se aplicaron durante la
         // nubosidad previa (CloudBuildUpRoutine) o de golpe si immediate=true, así que aquí solo
@@ -1619,7 +1691,8 @@ public class DayNightCycle : MonoBehaviour
 
         if (mistPrefab != null)
         {
-            Transform parent = PlayerService.Player != null ? PlayerService.Player.transform :
+            Transform parent = AnclaDeClima != null ? AnclaDeClima :
+                               PlayerService.Player != null ? PlayerService.Player.transform :
                                Camera.main != null ? Camera.main.transform : null;
 
             if (parent != null)
@@ -1637,7 +1710,9 @@ public class DayNightCycle : MonoBehaviour
 
             // Igual que con la lluvia: si el jugador ya está en un interior (real o cinemático),
             // que no se vea hasta salir.
-            if (IsSkyboxLockedByEnvironment())
+            // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
+            // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
+            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
                 _activeMistInstance.SetActive(false);
         }
 
@@ -1774,7 +1849,8 @@ public class DayNightCycle : MonoBehaviour
 
         if (windPrefab != null)
         {
-            Transform parent = PlayerService.Player != null ? PlayerService.Player.transform :
+            Transform parent = AnclaDeClima != null ? AnclaDeClima :
+                               PlayerService.Player != null ? PlayerService.Player.transform :
                                Camera.main != null ? Camera.main.transform : null;
 
             if (parent != null)
@@ -1790,7 +1866,9 @@ public class DayNightCycle : MonoBehaviour
 #endif
             }
 
-            if (IsSkyboxLockedByEnvironment())
+            // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
+            // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
+            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
                 _activeWindInstance.SetActive(false);
         }
 
@@ -1803,7 +1881,7 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId, windStartedSfxKey);
         // FIX (30 ago 2026): mismo hueco que ActivateRain (ver comentario ahí) — silenciar también
         // si ya estamos en un interior/cinemática cuando arranca el viento.
-        if (IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, true);
     }
 
@@ -1958,7 +2036,10 @@ public class DayNightCycle : MonoBehaviour
             }
             else
             {
-                float wait = UnityEngine.Random.Range(thunderstormLightningIntervalRange.x, thunderstormLightningIntervalRange.y);
+                // En una cinemática, más seguidos (INC-432): los planos duran pocos segundos y con
+                // 8-22 s entre rayo y rayo casi todos caían entre dos cortes o fuera de cuadro.
+                float wait = AnclaDeClima != null ? UnityEngine.Random.Range(5f, 11f)
+                           : UnityEngine.Random.Range(thunderstormLightningIntervalRange.x, thunderstormLightningIntervalRange.y);
                 yield return new WaitForSeconds(wait);
             }
             first = false;
@@ -1991,7 +2072,21 @@ public class DayNightCycle : MonoBehaviour
         if (_lightningBoltMaterial == null)
             return;
 
-        Transform reference = PlayerService.Player != null ? PlayerService.Player.transform :
+        // En una cinemática, el rayo se coloca EN EL PLANO (INC-432), como el sol en cuadro.
+        if (AnclaDeClima != null && RayoEnCuadro())
+            return;
+
+        // En una cinemática (INC-420 → INC-427): con el ancla en la cámara, el zigzag caía a 18-55 m
+        // y se veía como una barra blanca fija («se ve una cosa blanca»). Quitarlo dejó la tormenta
+        // sin rayos («me faltan rayos de tormenta»). Ahora, en cinemática, el rayo cae LEJOS (al
+        // fondo del valle, contra el cielo), más quebrado, y PARPADEA dos o tres veces en vez de
+        // quedarse quieto: es lo que hace que se lea como un rayo y no como un palo.
+        bool enCinematica = AnclaDeClima != null;
+
+        // Con una cinemática rodando, el rayo cae donde está la cámara, no donde duerme el jugador
+        // (INC-417; mismo patrón que la lluvia, INC-380).
+        Transform reference = AnclaDeClima != null ? AnclaDeClima :
+                              PlayerService.Player != null ? PlayerService.Player.transform :
                               Camera.main != null ? Camera.main.transform : transform;
 
         // Sesgado hacia donde mira la cámara (±65°) en vez de 360° completos — con ángulo
@@ -1999,13 +2094,15 @@ public class DayNightCycle : MonoBehaviour
         // imposible verlos por pura geometría, sin que hubiera nada mal en el material/shader.
         float cameraYaw = Camera.main != null ? Camera.main.transform.eulerAngles.y : reference.eulerAngles.y;
         float boltYaw = cameraYaw + UnityEngine.Random.Range(-65f, 65f);
-        float distance = UnityEngine.Random.Range(thunderstormBoltDistanceRange.x, thunderstormBoltDistanceRange.y);
+        float distance = enCinematica ? UnityEngine.Random.Range(110f, 230f)
+                                      : UnityEngine.Random.Range(thunderstormBoltDistanceRange.x, thunderstormBoltDistanceRange.y);
         Vector3 horizontalOffset = (Quaternion.Euler(0f, boltYaw, 0f) * Vector3.forward) * distance;
 
         Vector3 groundPoint = reference.position + horizontalOffset;
         Vector3 topPoint = groundPoint + Vector3.up * thunderstormBoltHeight;
 
-        int segments = Mathf.Max(2, thunderstormBoltSegments);
+        int segments = enCinematica ? 11 : Mathf.Max(2, thunderstormBoltSegments);
+        float jitter = enCinematica ? 16f : thunderstormBoltJitter;
 
         var boltObj = new GameObject("[ThunderstormLightningBolt]");
         var line = boltObj.AddComponent<LineRenderer>();
@@ -2013,7 +2110,12 @@ public class DayNightCycle : MonoBehaviour
         line.material = _lightningBoltMaterial;
         line.startColor = thunderstormBoltColor;
         line.endColor = thunderstormBoltColor;
-        line.widthMultiplier = thunderstormBoltWidth;
+        line.widthMultiplier = enCinematica ? 2.4f : thunderstormBoltWidth;
+        if (enCinematica)
+        {
+            // Más fino abajo, como los de verdad.
+            line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.35f));
+        }
         line.numCapVertices = 2;
         line.positionCount = segments + 1;
 
@@ -2026,15 +2128,128 @@ public class DayNightCycle : MonoBehaviour
             // zigzag va solo en los puntos intermedios.
             if (i != 0 && i != segments)
             {
-                float jitterX = UnityEngine.Random.Range(-thunderstormBoltJitter, thunderstormBoltJitter);
-                float jitterZ = UnityEngine.Random.Range(-thunderstormBoltJitter, thunderstormBoltJitter);
+                float jitterX = UnityEngine.Random.Range(-jitter, jitter);
+                float jitterZ = UnityEngine.Random.Range(-jitter, jitter);
                 point += new Vector3(jitterX, 0f, jitterZ);
             }
 
             line.SetPosition(i, point);
         }
 
-        Destroy(boltObj, Mathf.Max(0.05f, thunderstormBoltVisibleDuration));
+        if (enCinematica) StartCoroutine(Co_ParpadeoDelRayo(line, boltObj));
+        else Destroy(boltObj, Mathf.Max(0.05f, thunderstormBoltVisibleDuration));
+    }
+
+    /// El rayo de una cinemática, colocado en el ENCUADRE (INC-432).
+    ///
+    /// En prologo20 «los rayos no los he visto»: caían a 110-230 m en una dirección al azar de
+    /// ±65° alrededor de la cámara, con un campo de visión de unos ±40°, y en planos que cambian
+    /// cada pocos segundos; los que entraban en cuadro quedaban detrás de casas o montañas, o eran
+    /// una raya de pocos píxeles que duraba dos décimas. Ahora se cuelga del plano que se está
+    /// rodando: baja desde encima del borde de arriba hasta el tercio de abajo del cielo, a un lado
+    /// del cuadro (el centro es de los personajes), lejos, con un halo azulado alrededor del trazo
+    /// y una rama. Si la cámara mira muy hacia abajo (no hay cielo en el plano), no se cuelga y
+    /// cae como siempre.
+    bool RayoEnCuadro()
+    {
+        Camera cam = SolYLunaEnElCielo.CamaraActual();
+        if (cam == null) cam = Camera.main;
+        if (cam == null || !cam.isActiveAndEnabled) return false;
+        if (cam.transform.forward.y < -0.45f) return false;
+
+        float lejos = Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
+        if (lejos < 30f) return false;
+
+        float x = UnityEngine.Random.value < 0.5f ? UnityEngine.Random.Range(0.10f, 0.36f)
+                                                  : UnityEngine.Random.Range(0.64f, 0.90f);
+        Vector3 arriba = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.05f, 0.05f), 1.10f, lejos));
+        Vector3 abajo = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.12f, 0.12f),
+                                                             UnityEngine.Random.Range(0.30f, 0.48f), lejos));
+        if (arriba.y < abajo.y + 15f) return false;   // el plano no tiene cielo de verdad
+
+        Vector3 lado = cam.transform.right;
+        float largo = Vector3.Distance(arriba, abajo);
+        var raiz = new GameObject("[Rayo en cuadro]");
+
+        // Trazo principal, quebrado: cada tramo se desvía algo del anterior, no al azar puro.
+        const int tramos = 12;
+        var puntos = new Vector3[tramos + 1];
+        float desvio = 0f;
+        for (int i = 0; i <= tramos; i++)
+        {
+            float t = (float)i / tramos;
+            if (i != 0 && i != tramos) desvio = desvio * 0.35f + UnityEngine.Random.Range(-1f, 1f) * largo * 0.06f;
+            else desvio = 0f;
+            puntos[i] = Vector3.Lerp(arriba, abajo, t) + lado * desvio;
+        }
+        float grosor = lejos * 0.0065f;
+        TrazoDelRayo(raiz, puntos, grosor * 4.5f, new Color(0.55f, 0.65f, 1f, 0.22f), -1);   // halo
+        TrazoDelRayo(raiz, puntos, grosor, new Color(1f, 1f, 1f, 1f), 0);                     // núcleo
+
+        // Una rama, desde el primer tercio, hacia fuera del cuadro.
+        int desde = UnityEngine.Random.Range(tramos / 4, tramos / 2);
+        float haciaFuera = x < 0.5f ? -1f : 1f;
+        var rama = new Vector3[6];
+        rama[0] = puntos[desde];
+        Vector3 bajada = (abajo - arriba).normalized * (largo * 0.07f);
+        for (int i = 1; i < rama.Length; i++)
+            rama[i] = rama[i - 1] + bajada + lado * (haciaFuera * largo * UnityEngine.Random.Range(0.02f, 0.06f));
+        TrazoDelRayo(raiz, rama, grosor * 2.6f, new Color(0.55f, 0.65f, 1f, 0.15f), -1);
+        TrazoDelRayo(raiz, rama, grosor * 0.55f, new Color(1f, 1f, 1f, 0.9f), 0);
+
+        StartCoroutine(Co_ParpadeoDelRayoEnCuadro(raiz));
+        Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, 0.16f), 0.12f);
+        return true;
+    }
+
+    void TrazoDelRayo(GameObject raiz, Vector3[] puntos, float ancho, Color color, int orden)
+    {
+        var go = new GameObject("Trazo");
+        go.transform.SetParent(raiz.transform, false);
+        var line = go.AddComponent<LineRenderer>();
+        line.useWorldSpace = true;
+        line.material = _lightningBoltMaterial;
+        line.startColor = color;
+        line.endColor = color;
+        line.widthMultiplier = ancho;
+        line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.4f));
+        line.numCapVertices = 2;
+        line.numCornerVertices = 1;
+        line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        line.receiveShadows = false;
+        line.sortingOrder = orden;
+        line.positionCount = puntos.Length;
+        line.SetPositions(puntos);
+    }
+
+    /// Como un rayo de verdad: destello, se apaga, vuelve más fuerte, se apaga, un último latido.
+    IEnumerator Co_ParpadeoDelRayoEnCuadro(GameObject raiz)
+    {
+        float[] pasos = { 0.08f, 0.05f, 0.13f, 0.06f, 0.16f };
+        bool on = true;
+        foreach (float p in pasos)
+        {
+            if (raiz == null) yield break;
+            raiz.SetActive(on);
+            yield return new WaitForSeconds(p);
+            on = !on;
+        }
+        if (raiz != null) Destroy(raiz);
+    }
+
+    /// Encendido, apagado, encendido, apagado, un último destello: así parpadea un rayo.
+    IEnumerator Co_ParpadeoDelRayo(LineRenderer line, GameObject bolt)
+    {
+        float[] pasos = { 0.07f, 0.05f, 0.09f, 0.06f, 0.05f };
+        bool on = true;
+        foreach (float p in pasos)
+        {
+            if (line == null) yield break;
+            line.enabled = on;
+            yield return new WaitForSeconds(p);
+            on = !on;
+        }
+        if (bolt != null) Destroy(bolt);
     }
 
     IEnumerator FlashLightningRoutine()
@@ -2057,8 +2272,12 @@ public class DayNightCycle : MonoBehaviour
 
         float thunderDelay = UnityEngine.Random.Range(thunderstormThunderDelayRange.x, thunderstormThunderDelayRange.y);
         yield return new WaitForSeconds(thunderDelay);
-        PlayWeatherSfx(thunderstormThunderSfxKey);
+        // Sin clave puesta en el Inspector, el trueno de siempre (INC-417): la tormenta del prólogo
+        // destellaba sin que se oyera nada — «vamos a añadir de vez en cuando un trueno».
+        PlayWeatherSfx(string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey);
     }
+
+    const string TruenoPorDefecto = "Weather_Thunder";
 
     // 30 ago 2026 — Raúl pidió botones de prueba en el Inspector ("testeos") para poder forzar cada
     // periodo del día y el clima sin esperar al ciclo automático, sobre todo para probar cambios de

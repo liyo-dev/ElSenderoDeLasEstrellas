@@ -323,6 +323,26 @@ public class ParallelBeat : SequenceBeat
     }
 }
 
+/// Varios beats UNO DETRÁS DE OTRO, como un bloque (INC-407). Sirve sobre todo dentro de un
+/// ParallelBeat: «mientras corren, espera un segundo y corta a la plaza» es un Wait y un Shot en
+/// serie que tienen que ir a la vez que la carrera, y un Parallel solo sabe lanzar cosas a la vez.
+[Serializable]
+public class SerieBeat : SequenceBeat
+{
+    [Tooltip("Los beats, en orden.")]
+    [SerializeReference]
+    public List<SequenceBeat> beats = new();
+
+    public override string Describe() => $"En serie ({(beats != null ? beats.Count : 0)} beats)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (beats == null) yield break;
+        foreach (var beat in beats)
+            if (beat != null) yield return beat.Run(ctx);
+    }
+}
+
 
 /// Cambia la hora del día durante la cinemática: amanece, atardece, anochece.
 ///
@@ -350,10 +370,17 @@ public class TimeOfDayBeat : SequenceBeat
     [Tooltip("Segundos que se espera si 'waitForTransition' está puesto.")]
     public float transitionSeconds = 2f;
 
-    public override string Describe() => $"Hora del día: {timeOfDay}" + (immediate ? " (de golpe)" : "");
+    [Tooltip("Marcado, esta es la hora con la que se QUEDA el mundo cuando acabe la cinemática, " +
+             "en vez de la que había antes. Para el prólogo: la pesadilla acaba de noche y Will " +
+             "se despierta al amanecer, así que el mundo tiene que amanecer con él.")]
+    public bool esLaHoraDeVolver = false;
+
+    public override string Describe() => $"Hora del día: {timeOfDay}" + (immediate ? " (de golpe)" : "")
+        + (esLaHoraDeVolver ? " (y es con la que se queda el mundo)" : "");
 
     public override IEnumerator Run(SequenceContext ctx)
     {
+        if (esLaHoraDeVolver) CinematicTimeOfDay.HoraAlVolver = timeOfDay;
         CinematicTimeOfDay.Apply(timeOfDay, immediate);
 
         // El cielo se vuelve a contar despues de cada cambio de hora: la franja horaria y el clima

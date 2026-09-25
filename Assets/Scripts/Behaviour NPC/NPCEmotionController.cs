@@ -272,9 +272,11 @@ public class NPCEmotionController : MonoBehaviour
             return;
         }
         
-        if (_currentEmotion == emotion)
-            return;
-        
+        // Antes: `if (_currentEmotion == emotion) return;`. Pero la cara puede haber cambiado por
+        // otro camino (RestoreOriginalMeshes al cerrar un diálogo, el prefab arrancando con su
+        // malla por defecto mientras _currentEmotion ya dice Neutral...) y entonces pedir otra vez
+        // la misma emoción NO la volvía a poner: la cara se quedaba en la de antes (INC-404).
+        // Encender una malla que ya está encendida no cuesta nada (ActivateMesh mira activeSelf).
         if (debugMode)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
