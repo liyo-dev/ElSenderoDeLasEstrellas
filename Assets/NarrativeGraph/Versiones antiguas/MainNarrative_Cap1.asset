@@ -48,7 +48,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 78455749-f638-46de-a00c-c00cb1e61e5d
-        position: {x: 380, y: 218}
+        position: {x: 380, y: 202}
         outputs:
         - 16d41261-7e42-42bb-b91a-1cab8d52164e
         eventKey: LETTER_START
@@ -96,9 +96,9 @@ MonoBehaviour:
         position: {x: 0, y: 383}
         outputs:
         - da331290-6f7e-4aa3-937d-83cb066bbfe7
-        abilityKeysToUnlock: 03000000
-        abilitiesToUnlock: 01000000
-        spellsToUnlock: 01000000
+        abilityKeysToUnlock: 03000000i
+        abilitiesToUnlock: 01000000i
+        spellsToUnlock: 01000000i
         assignSpellsToEmptySlot: 1
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 
@@ -254,6 +254,9 @@ MonoBehaviour:
         icon: {fileID: 21300000, guid: 2cbc9eb9e96b499bb24695fdc2c2f515, type: 3}
         buttonName: interactable_confirm
         dismissWithCancel: 0
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
     - rid: 5290829725662445728
       type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
       data:
@@ -273,6 +276,9 @@ MonoBehaviour:
         icon: {fileID: 21300000, guid: 7ee57509d79a49b0adec369729ca33c2, type: 3}
         buttonName: interactable_Joystick
         dismissWithCancel: 0
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 0
     - rid: 5290829725662445729
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:

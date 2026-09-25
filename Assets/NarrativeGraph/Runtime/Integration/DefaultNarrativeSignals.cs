@@ -229,6 +229,23 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         ResetState(preservePending: false);
     }
 
+    /// Olvida las señales de la partida anterior (emitidas, pendientes y batallas) sin tocar a los
+    /// suscriptores: las secuencias y nodos que ya escuchan siguen escuchando. Es lo que necesita
+    /// «Nueva partida» sin cerrar el juego (INC-448): sin esto, la partida nueva consumía señales
+    /// de la vieja (NPC_INTERACT_*, ESTRELLA_COMPRADA…).
+    public void OlvidarSenalesDePartida()
+    {
+        _pending.Clear();
+        _battlePending.Clear();
+        _raised.Clear();
+        _everRaised.Clear();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Record("__RESET__", SignalStatus.Reset, "Nueva partida: señales olvidadas, suscriptores intactos");
+#endif
+        try { OnAfterReset?.Invoke(); }
+        catch (Exception e) { Debug.LogError($"[Signals] Error en OnAfterReset: {e}"); }
+    }
+
     /// <summary>
     /// Resetea el estado de señales.
     /// Si preservePending es true, mantiene los eventos pendientes (útil al cargar partida).

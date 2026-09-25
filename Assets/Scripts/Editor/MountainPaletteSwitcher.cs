@@ -32,10 +32,10 @@ public static class MountainPaletteSwitcher
 
     private static readonly Regex NombrePrefab = new Regex(@"^(CPT|MT)_Mountain_(S|M|L)_([a-e])_(\d+)$");
 
-    [MenuItem("El Sendero/Mundo/Probar Paleta MT en Montañas de MainWorld")]
+    [MenuItem("El Sendero/Archivo/Mundo/Probar Paleta MT en Montañas de MainWorld")]
     public static void ProbarPaletaMT() => CambiarPaleta("MT");
 
-    [MenuItem("El Sendero/Mundo/Volver a Paleta CPT en Montañas de MainWorld")]
+    [MenuItem("El Sendero/Archivo/Mundo/Volver a Paleta CPT en Montañas de MainWorld")]
     public static void VolverAPaletaCPT() => CambiarPaleta("CPT");
 
     private static void CambiarPaleta(string catalogoDestino)

@@ -258,7 +258,7 @@ namespace Invector.vCharacterController
             // Protección: evitar división por cero en Time.deltaTime
             if (Time.deltaTime <= Mathf.Epsilon)
             {
-                Debug.LogWarning("[vThirdPersonMotor] DeltaTime ~ 0 when computing targetVelocity. Skipping velocity assignment.");
+                // Juego en pausa (timeScale 0): es normal, no se avisa.
                 return;
             }
 

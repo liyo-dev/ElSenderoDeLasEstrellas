@@ -26,19 +26,19 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_BOX",
-            "value": "Follow the minimap marker to find the box.\nPress {BOTON} to view the full map."
+            "value": "Follow the marker to the crate.\nPress {BOTON} to open the full map."
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Use {BOTON} to move Will.\nLeave the room and see what's going on."
+            "value": "Move Will with {BOTON}. Read the letter on the table before you leave."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
-            "value": "When the icon above a character's head changes like this,\nit means you should talk to them."
+            "value": "When a character’s icon changes like this, talk to them."
         },
         {
             "key": "TUTORIAL_WAKE_UP",
-            "value": "Press {BOTON} to open your eyes"
+            "value": "Press {BOTON} to wake Will up."
         },
         {
             "key": "QUEST_STARTED_BANNER",
@@ -46,7 +46,7 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_ELDRAN",
-            "value": "Follow the minimap marker to find Eldran.\nPress {BOTON} to view the full map."
+            "value": "Follow the minimap marker to Eldran.\nPress {BOTON} to open the full map."
         }
     ]
 }

@@ -48,7 +48,7 @@ public static class QuibliBushDresser
     private const float EscalaMin = 0.8f;
     private const float EscalaMax = 1.3f;
 
-    [MenuItem("El Sendero/Mundo/Añadir Arbustos junto a Árboles (Quibli)")]
+    [MenuItem("El Sendero/Archivo/Mundo/Añadir Arbustos junto a Árboles (Quibli)")]
     public static void AnadirArbustos()
     {
         GameObject grupoArboles = BuscarEnEscenaActiva(TreesGroupName);

@@ -177,7 +177,7 @@ public static class NpcPrefabFolders
 
     // ── Reorganización ───────────────────────────────────────────────────────
 
-    [MenuItem("El Sendero/NPCs/Setup/Reorganizar prefabs del sistema nuevo")]
+    [MenuItem("El Sendero/Archivo/NPCs/Setup/Reorganizar prefabs del sistema nuevo")]
     public static void Reorganize()
     {
         var sb = new StringBuilder("=== Reorganización de prefabs de NPC ===\n\n");

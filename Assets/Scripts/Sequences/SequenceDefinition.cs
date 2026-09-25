@@ -57,6 +57,12 @@ public class SequenceDefinition : ScriptableObject
              "nada detrás que revele, esto deja la pantalla en negro para siempre.")]
     public bool endStayBlack = false;
 
+    [Tooltip("Prefab con los SequenceModule que necesita esta secuencia (mecánicas en C#, p. ej. el " +
+             "panic input del Despertar). Solo se usa cuando la secuencia se monta en vivo desde " +
+             "PlayCinematicNode: se instancia dentro del SequencePlayer y sus módulos se añaden al " +
+             "escenario. Vacío = la secuencia no usa módulos.")]
+    public UnityEngine.GameObject modulos;
+
     [Header("Contenido")]
     [Tooltip("Los tramos de la escena, en orden. Los beats de cada fase se ejecutan en orden y las " +
              "fases se encadenan: dividir en fases no cambia el resultado, solo hace la secuencia " +

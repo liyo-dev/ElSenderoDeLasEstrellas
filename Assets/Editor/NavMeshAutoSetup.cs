@@ -65,8 +65,28 @@ public static class NavMeshAutoSetup
         EditorApplication.update += OnEditorUpdate;
     }
 
+    // La clasificación automática modificaba las escenas en silencio en cada cambio de jerarquía
+    // (así llegó el valle del prólogo a 669 obstáculos con Carve, que multiplicaban los avisos de
+    // NavMesh). Desde INC-448 está APAGADA por defecto: se usa el menú «Clasificar obstáculos
+    // ahora», o se enciende aquí a propósito.
+    private const string ClaveAutomatico = "NavMeshAutoSetup.Automatico";
+    private const string MenuAutomatico = "El Sendero/Navegación/Clasificar obstáculos automáticamente (al cambiar la jerarquía)";
+
+    [MenuItem(MenuAutomatico)]
+    private static void AlternarAutomatico() =>
+        EditorPrefs.SetBool(ClaveAutomatico, !EditorPrefs.GetBool(ClaveAutomatico, false));
+
+    [MenuItem(MenuAutomatico, true)]
+    private static bool AlternarAutomaticoValidar()
+    {
+        Menu.SetChecked(MenuAutomatico, EditorPrefs.GetBool(ClaveAutomatico, false));
+        return true;
+    }
+
     private static void OnHierarchyChanged()
     {
+        if (!EditorPrefs.GetBool(ClaveAutomatico, false)) return;
+
         // No tocar nada mientras se compila o se entra/sale de Play.
         if (EditorApplication.isCompiling || EditorApplication.isPlayingOrWillChangePlaymode)
             return;

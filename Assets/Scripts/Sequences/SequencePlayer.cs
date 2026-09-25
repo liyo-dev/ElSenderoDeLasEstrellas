@@ -151,6 +151,49 @@ public class SequencePlayer : CinematicSequencerBase
     /// lectura y existen para las herramientas de Editor (ver SequenceShotCapture), que necesitan
     /// recorrer los beats y resolver los planos sin entrar en Play.
     public SequenceDefinition Definition => _definition;
+
+    /// Monta en tiempo de ejecución un SequencePlayer para 'definicion' con los mismos ajustes que
+    /// 'plantilla' (cámara, perfil de audio, transiciones, escenario…), sin tener que añadirlo a
+    /// mano a la escena (INC-445: MainWorld está en binario y cada secuencia nueva obligaba a
+    /// montarla en el Editor). No clona el GameObject de la plantilla —podría arrastrar hijos con
+    /// disparadores propios—: crea uno vacío y copia solo los campos serializados de sus dos
+    /// componentes. Se crea apagado y se enciende al final, para que Awake ya vea la definición.
+    public static SequencePlayer CrearCopiaPara(SequenceDefinition definicion, SequencePlayer plantilla)
+    {
+        if (definicion == null || plantilla == null) return null;
+
+        var go = new GameObject(definicion.name + " (en vivo)");
+        go.SetActive(false);
+        if (plantilla.gameObject.scene.IsValid())
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(go, plantilla.gameObject.scene);
+        go.transform.SetPositionAndRotation(plantilla.transform.position, plantilla.transform.rotation);
+
+        SequenceStage escenario = null;
+        var escenarioPlantilla = plantilla._stage != null ? plantilla._stage : plantilla.GetComponent<SequenceStage>();
+        if (escenarioPlantilla != null)
+        {
+            escenario = go.AddComponent<SequenceStage>();
+            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(escenarioPlantilla), escenario);
+        }
+
+        if (definicion.modulos != null)
+        {
+            if (escenario == null) escenario = go.AddComponent<SequenceStage>();
+            var instancia = Instantiate(definicion.modulos, go.transform);
+            instancia.name = definicion.modulos.name;
+            escenario.AgregarModulos(instancia.GetComponentsInChildren<SequenceModule>(true));
+        }
+
+        var sp = go.AddComponent<SequencePlayer>();
+        JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(plantilla), sp);
+        sp._definition = definicion;
+        sp._stage = escenario;
+#if UNITY_EDITOR
+        sp._startAtPhase = null;
+#endif
+        go.SetActive(true);
+        return sp;
+    }
     public SequenceStage Stage => _stage;
 
     /// Empieza a recalcular un plano cada frame, para seguir a alguien que se mueve. Lo llama
@@ -764,7 +807,9 @@ public class SequencePlayer : CinematicSequencerBase
         // El cierre genérico de skip deja la pantalla cubierta a propósito. Estas secuencias no
         // tienen ningún sistema siguiente que la revele, así que la revelan ellas — si no, saltar
         // una secuencia deja la pantalla en negro para siempre (INC-208).
-        StartCoroutine(Co_RevealAfterSkip());
+        // Si el objeto se está apagando (se descarga su escena), no puede arrancar corrutinas, y
+        // la pantalla es de quien venga después: el prólogo acaba en blanco y lo destapa el grafo.
+        if (isActiveAndEnabled) StartCoroutine(Co_RevealAfterSkip());
     }
 
     private IEnumerator Co_RevealAfterSkip()

@@ -23,7 +23,7 @@ using UnityEngine.SceneManagement;
 /// apagados ELLOS MISMOS, así que no se tocan.
 public static class RepararPropsDelEscenario
 {
-    [MenuItem("El Sendero/Prólogo: apuntar los objetos del escenario al decorado que se ve", priority = 33)]
+    [MenuItem("El Sendero/Archivo/Prólogo: apuntar los objetos del escenario al decorado que se ve", priority = 33)]
     public static void Menu()
     {
         int n = 0;

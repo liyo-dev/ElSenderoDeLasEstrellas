@@ -40,7 +40,7 @@ public static class NPCFacePartsSetup
         public Vector3 localScale;
     }
 
-    [MenuItem("El Sendero/NPCs/Setup/Completar partes de cara (Eye/Mouth) desde Eldran")]
+    [MenuItem("El Sendero/Archivo/NPCs/Setup/Completar partes de cara (Eye/Mouth) desde Eldran")]
     public static void Run()
     {
         var eldran = AssetDatabase.LoadAssetAtPath<GameObject>(EldranPath);

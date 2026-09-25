@@ -50,15 +50,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION0_DETAIL",
-            "value": "Sobre la mesita de tu habitación hay una carta esperando a que la leas. Acércate y ábrela para descubrir cómo empieza tu aventura."
+            "value": "Lee la carta de la mesita."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Ve a ver qué está pasando con Eldran."
+            "value": "Averigua qué ocurre con Eldran y Victoria."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "Oliver te ha pedido que vayas a ver qué está pasando con Eldran. Sigue el marcador del minimapa hasta encontrarlo."
+            "value": "Oliver te ha pedido que averigües qué ocurre entre Eldran y Victoria. Sigue el marcador del minimapa hasta encontrarlos."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
@@ -142,15 +142,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DESC",
-            "value": "Encuentra la caja de frutas en el bosque y llévasela a Eldran"
+            "value": "Encuentra la caja de manzanas en el bosque y llévasela a Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DETAIL",
-            "value": "Eldran necesita una caja de frutas que se ha quedado perdida en el bosque. Adéntrate entre los árboles y explora la zona hasta encontrarla; una vez la tengas en tu poder, vuelve al Reino y entrégasela a Eldran."
+            "value": "Eldran dejó una caja de manzanas junto al bosque. Sigue el marcador hasta encontrarla y llévasela de vuelta."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_NAME",
-            "value": "A por la caja de frutas"
+            "value": "A por la caja de manzanas"
         },
         {
             "key": "QUEST_ELDRAN_MISSION3_DESC",
@@ -478,7 +478,7 @@
         },
         {
             "key": "QUEST_WILL_MISSION1_DETAIL",
-            "value": "Eldran te ha dado una moneda y un encargo raro: que te compres algo que no sirva para nada. En el mercado, Tomasa vende figuritas de madera."
+            "value": "Eldran te ha dado una moneda y un encargo extraño: cómprate algo que no sirva para nada. Tomasa vende figuritas de madera en el mercado."
         },
         {
             "key": "QUEST_WILL_MISSION1_NAME",

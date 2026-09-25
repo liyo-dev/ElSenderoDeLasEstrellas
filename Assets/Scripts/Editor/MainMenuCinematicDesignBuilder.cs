@@ -29,7 +29,7 @@ public static class MainMenuCinematicDesignBuilder
     static readonly Color32 StarColor = new Color32(255, 240, 190, 255);
     static readonly Color32 PortalColor = new Color32(255, 218, 138, 255);
 
-    [MenuItem("El Sendero/MainMenu/Crear vista previa cinemática (segura)")]
+    [MenuItem("El Sendero/Archivo/MainMenu/Crear vista previa cinemática (segura)")]
     public static void CreateSafePreview()
     {
         if (!CanOpenAndSave()) return;
@@ -80,7 +80,7 @@ public static class MainMenuCinematicDesignBuilder
         }
     }
 
-    [MenuItem("El Sendero/MainMenu/Aplicar diseño cinemático al menú funcional")]
+    [MenuItem("El Sendero/Archivo/MainMenu/Aplicar diseño cinemático al menú funcional")]
     public static void ApplyToMainMenu()
     {
         if (!CanOpenAndSave()) return;

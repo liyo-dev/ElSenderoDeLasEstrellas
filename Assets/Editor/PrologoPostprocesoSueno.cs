@@ -32,7 +32,7 @@ public static class PrologoPostprocesoSueno
     private const string RutaPerfil = Carpeta + "/Prologo_Sueno_Volume.asset";
     private const string NombreObjeto = "POSTPROCESO_SUENO";
 
-    [MenuItem("El Sendero/Prólogo: post-procesado de sueño (Quibli)", priority = 34)]
+    [MenuItem("El Sendero/Archivo/Prólogo: post-procesado de sueño (Quibli)", priority = 34)]
     public static void Menu()
     {
         var escena = SceneManager.GetSceneByName("Prologo_Valle");

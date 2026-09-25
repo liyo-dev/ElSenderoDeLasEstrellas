@@ -56,7 +56,7 @@ public static class QuibliGrassDresser
         public float RadioExclusion;
     }
 
-    [MenuItem("El Sendero/Mundo/Vestir Árboles con Hierba (Quibli)")]
+    [MenuItem("El Sendero/Archivo/Mundo/Vestir Árboles con Hierba (Quibli)")]
     public static void VestirArbolesConHierba()
     {
         GameObject grupoArboles = BuscarEnEscenaActiva(TreesGroupName);

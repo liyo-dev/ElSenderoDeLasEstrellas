@@ -301,7 +301,7 @@ public class SolYLunaEnElCielo : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
-            foreach (var l in FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None))
+            foreach (var l in FindObjectsByType<Light>(FindObjectsInactive.Exclude))
                 if (l.type == LightType.Directional && l.isActiveAndEnabled) return l.transform;
         }
         return null;

@@ -47,7 +47,7 @@ public static class PegarMarcasAlSuelo
     [MenuItem("El Sendero/Prólogo: diagnóstico de marcas y marcadores", priority = 30)]
     public static void Diagnostico() => Ejecutar(arreglar: false);
 
-    [MenuItem("El Sendero/Prólogo: pegar marcas y marcadores al suelo", priority = 31)]
+    [MenuItem("El Sendero/Archivo/Prólogo: pegar marcas y marcadores al suelo", priority = 31)]
     public static void Arreglar() => Ejecutar(arreglar: true);
 
     private static void Ejecutar(bool arreglar)

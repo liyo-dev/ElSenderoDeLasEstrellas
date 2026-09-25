@@ -158,7 +158,7 @@
         },
         {
             "key": "DLG_ELDRAN_REGALO_06",
-            "value": "Thanks, Eldran. And count me in for the crate."
+            "value": "Thanks, Eldran."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",
@@ -450,11 +450,11 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_INPROGRESS_01",
-            "value": "The crate should be near a tree."
+            "value": "The crate is at the foot of an ash tree."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_INPROGRESS_02",
-            "value": "Look for it around this area, it shouldn't be too far away."
+            "value": "Follow the path; it can’t be far."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_01",
@@ -462,23 +462,23 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_02",
-            "value": "I've been gathering fruits in the forest..."
+            "value": "I picked some apples in the forest..."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_03",
-            "value": "And now the crate is too heavy for me to carry alone."
+            "value": "The crate is too heavy for me to carry alone."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_04",
-            "value": "Could you go to the forest and find it?"
+            "value": "Could you help me bring it back?"
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_05",
-            "value": "And then bring it back to me, please."
+            "value": "I left it at the foot of an ash tree."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_01",
-            "value": "Excellent! You managed to bring the crate."
+            "value": "Perfect! You brought the apples back safe and sound."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_02",
@@ -914,7 +914,7 @@
         },
         {
             "key": "DLG_LETTER_INTRO_02",
-            "value": "I will wait for you at the kingdom entrance."
+            "value": "I’ll be waiting at the village entrance."
         },
         {
             "key": "DLG_LETY_ALERT_01",
@@ -1066,31 +1066,31 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_01",
-            "value": "Nope, you're not getting rid of me that easy. Two quick things and I'll let you go."
+            "value": "You can’t get rid of me that easily. Two quick things, then you’re free to go."
         },
         {
             "key": "DLG_OLIVER_MENUS_02",
-            "value": "Because you've got the face of someone who doesn't even know how to open the game menu."
+            "value": "You look like you don’t even know how to open the menu."
         },
         {
             "key": "DLG_OLIVER_MENUS_03",
-            "value": "Whenever you want to open the MAIN MENU press <sprite name=\"start\">"
+            "value": "Press <sprite name=\"start\"> to open the MAIN MENU."
         },
         {
             "key": "DLG_OLIVER_MENUS_04",
-            "value": "In there you can pause, go back to the title screen, check your inventory..."
+            "value": "From there, you can pause, return to the title screen, or check your inventory."
         },
         {
             "key": "DLG_OLIVER_MENUS_05",
-            "value": "...and a couple more things I won't list so I don't ramble on. You'll find them."
+            "value": "You’ll find a few other options there, too. Take a look whenever you like."
         },
         {
             "key": "DLG_OLIVER_MENUS_06",
-            "value": "And if you want to see your pending quests, use <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly>."
+            "value": "Press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> to see your missions."
         },
         {
             "key": "DLG_OLIVER_MENUS_07",
-            "value": "With the quest menu open, press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again to edit them. Now go on, Eldran's waiting!"
+            "value": "Press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again to edit the active mission. Now hurry, Eldran’s waiting!"
         },
         {
             "key": "DLG_PIRATE_01",
@@ -1359,6 +1359,26 @@
         {
             "key": "QUEST_ELDRAN_MISSION12_DESC_02",
             "value": "Talk to the King."
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_LLAMADA",
+            "value": "Will! Wait!"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_01",
+            "value": "Good thing I caught up with you. All these pears nearly made me forget something."
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_02",
+            "value": "I left a crate of apples under a tree in the forest. Could you go and get it?"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_03",
+            "value": "Of course. Where should I look?"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_04",
+            "value": "It’s at the foot of an ash tree, beside the path."
         }
     ]
 }

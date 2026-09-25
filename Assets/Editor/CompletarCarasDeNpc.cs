@@ -28,7 +28,7 @@ public static class CompletarCarasDeNpc
     private static readonly Regex Ojo = new(@"^Eye\d+$");
     private static readonly Regex Boca = new(@"^Mouth\d+$");
 
-    [MenuItem("El Sendero/Prólogo: completar las caras de los NPCs (emociones)", priority = 34)]
+    [MenuItem("El Sendero/Archivo/Prólogo: completar las caras de los NPCs (emociones)", priority = 34)]
     public static void Menu()
     {
         int n = EjecutarRosterDelPrologo();

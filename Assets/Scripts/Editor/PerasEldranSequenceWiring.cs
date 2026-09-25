@@ -82,7 +82,7 @@ public static class PerasEldranSequenceWiring
     private const string TriggerEventKey = "WILL_REACHED_ELDRAN";
     private const float TriggerRadius = 2.5f;
 
-    [MenuItem("El Sendero/Secuencias/Montar SEQ_PerasEldran (MainWorld)")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Montar SEQ_PerasEldran (MainWorld)")]
     public static void Wire()
     {
         var log = new StringBuilder();
@@ -229,7 +229,7 @@ public static class PerasEldranSequenceWiring
         // ── 6) Enlazar SequenceStage ───────────────────────────────────────────
         var soStage = new SerializedObject(stage);
 
-        var existingDriver = Object.FindFirstObjectByType<CinematicCameraDriver>(FindObjectsInactive.Include);
+        var existingDriver = Object.FindAnyObjectByType<CinematicCameraDriver>(FindObjectsInactive.Include);
         soStage.FindProperty("_cameraDriver").objectReferenceValue = existingDriver;
         if (existingDriver == null)
             warnings.Add("No hay ningún CinematicCameraDriver en la escena -- ningún plano calculado " +

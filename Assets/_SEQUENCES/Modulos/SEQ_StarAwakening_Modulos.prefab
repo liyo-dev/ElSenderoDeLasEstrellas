@@ -1,0 +1,186 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3468072592841052729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4749176542339580}
+  - component: {fileID: 7808316938202738570}
+  - component: {fileID: 1536150387625788468}
+  - component: {fileID: 712089295218325241}
+  m_Layer: 0
+  m_Name: SEQ_StarAwakening_Modulos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4749176542339580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468072592841052729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8288314738104671664}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7808316938202738570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468072592841052729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65474a97811a3704599dccb4adad72a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StarAwakeningModule
+  incomingProjectilePrefab: {fileID: -8345083249935470978, guid: 5ee28f65ca127db42a9a46da980189d4, type: 3}
+  projectileSpawnPoint: {fileID: 0}
+  spawnDistance: 18
+  spawnAngle: 160
+  spawnHeight: 1.5
+  cinematicProjectileLifetime: 120
+  explosionVFX: {fileID: 100010, guid: 6abcdaf8c8fd61b4697e96e8a1138d29, type: 3}
+  playerSpawner: {fileID: 0}
+  castSlot: 1
+  cinematicSpellFallback: {fileID: 11400000, guid: d45589ea2589f21499b4b61ab8d6f54b, type: 2}
+  willCastOrigin: {fileID: 0}
+  castHeightOffset: 0.45
+  castForwardOffset: 0.5
+  castAnimState: MagicRight
+  willUpperBodyLayer: 1
+  castAnimDelay: 0.3
+  collisionWaitUnscaled: 3
+  panicInputDetector: {fileID: 1536150387625788468}
+  panicInputUI: {fileID: 0}
+  panicButtonSprite: {fileID: 21300000, guid: cf629afeef7445d1b12313c98a1a2631, type: 3}
+  interactIconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
+  shockEffects: {fileID: 712089295218325241}
+  approachShakeMin: 0.02
+  approachShakeMax: 0.15
+  approachShakeRampSeconds: 4
+  approachShakeInterval: 0.15
+--- !u!114 &1536150387625788468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468072592841052729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 674d65bcbe174d8469bb8608e811d7a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PanicInputDetector
+  mode: 0
+  panicAction: {fileID: 3179225871509790519, guid: fc9f9f1bd7ce1874fb152afa8758ce88, type: 3}
+  pressesRequired: 8
+  windowSeconds: 5
+  holdSeconds: 1.5
+  maxHoldSeconds: 2.5
+  directionAction: {fileID: 0}
+  expectedDirection: {x: 0, y: 1}
+  directionAngleTolerance: 45
+  directionHoldSeconds: 0.15
+--- !u!114 &712089295218325241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468072592841052729}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac55a1e5da97f754aaaac9d2afce5ed4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShockEffectsController
+  shockVolume: {fileID: 336796965127288903}
+  tinnitusSfxKey: 
+  tinnitusVolume: 0.6
+  shockDuration: 2
+  recoveryCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &7500011779169939435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8288314738104671664}
+  - component: {fileID: 336796965127288903}
+  m_Layer: 0
+  m_Name: ShockVolume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8288314738104671664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7500011779169939435}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4749176542339580}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &336796965127288903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7500011779169939435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 10
+  blendDistance: 0
+  weight: 0
+  sharedProfile: {fileID: 11400000, guid: 7e8296045f544d338d35ca62cdd12a18, type: 2}

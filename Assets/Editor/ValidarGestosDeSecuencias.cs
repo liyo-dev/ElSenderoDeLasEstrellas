@@ -519,7 +519,7 @@ public static class ValidarGestosDeSecuencias
         // Y las ESCENAS ABIERTAS, para los actores que sí están puestos a mano. Van después del
         // roster porque el roster es quien manda sobre lo que se instancia al jugar.
         foreach (var npc in UnityEngine.Object.FindObjectsByType<NPCBehaviourManagerV2>(
-                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+                     FindObjectsInactive.Include))
         {
             string id = npc.PersistenceId;
             if (string.IsNullOrEmpty(id) || mapa.ContainsKey(id)) continue;

@@ -25,10 +25,12 @@ public class ShopController : MonoBehaviour
     /// ShopUI se instancian al abrirlas y el controlador vive en un prefab.
     public static event Action<ShopController, ItemData> CompraRealizada;
 
-#if UNITY_EDITOR
+    /// Sube en cada arranque del juego: el stock de las entradas se reinicia al consultarlo
+    /// (ver ShopItemEntry.AsegurarStock), también en el Editor sin recarga de dominio.
+    static int s_partida;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { CompraRealizada = null; }
-#endif
+    static void ResetStatics() { CompraRealizada = null; s_partida++; }
     private Inventory playerInventory;
 
     void Awake()
@@ -200,18 +202,32 @@ public class ShopController : MonoBehaviour
         public bool limitedStock;
         [Min(0)] public int startingStock = 1;
         int _runtimeStock;
+        [NonSerialized] int _partida = -1;
 
-        public bool HasStock => !limitedStock || _runtimeStock > 0;
+        // INC-440: la tienda de Tomasa apunta al ShopController de un PREFAB (no a una copia en la
+        // escena), y a un prefab nunca le llega Awake: _runtimeStock se quedaba en 0 y la estrella,
+        // única con stock limitado, salía «agotada» sin haberla comprado nadie. Ahora el stock se
+        // inicializa la primera vez que se consulta en cada partida, venga de donde venga.
+        void AsegurarStock()
+        {
+            if (_partida == s_partida) return;
+            _partida = s_partida;
+            _runtimeStock = startingStock;
+        }
+
+        public bool HasStock { get { AsegurarStock(); return !limitedStock || _runtimeStock > 0; } }
         public int GetBuyPrice() => buyPriceOverride >= 0 ? buyPriceOverride : (item != null ? Mathf.Max(0, item.buyPrice) : 0);
         public int GetSellPrice() => sellPriceOverride >= 0 ? sellPriceOverride : (item != null ? Mathf.Max(0, item.sellValue) : 0);
 
         public void ResetRuntime()
         {
+            _partida = s_partida;
             _runtimeStock = startingStock;
         }
 
         public void ConsumeOne()
         {
+            AsegurarStock();
             if (!limitedStock) return;
             if (_runtimeStock > 0)
                 _runtimeStock--;

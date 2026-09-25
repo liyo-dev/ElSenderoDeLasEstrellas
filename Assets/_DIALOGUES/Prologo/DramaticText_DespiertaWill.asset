@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcee71a4a66e72d469df9ee68f6b57de, type: 3}
+  m_Name: DramaticText_DespiertaWill
+  m_EditorClassIdentifier: Assembly-CSharp::DramaticPhraseConfig
+  phrases:
+  - text: "Will, \xA1despierta!"
+    textId: PRLG_WILL_WAKE_UP
+    style: 2
+    background: 2
+    entryAnim: 8
+    exitAnim: 5
+    duration: 2.5
+    voiceClip: {fileID: 0}
+    waitForAudio: 0
+    positionOffset: {x: 0, y: 0}
+    useMovement: 1
+    moveTo: {x: 0, y: 0}
+    disableDreamTextEffect: 0
+  pauseBetween: 0.15
+  dreamMode: 0

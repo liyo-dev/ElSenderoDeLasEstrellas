@@ -16,7 +16,7 @@ public static class MainMenuSelectionGlowRemover
 {
     const string ScenePath = "Assets/Scenes/Systems/MainMenu.unity";
 
-    [MenuItem("El Sendero/Controles/Quitar Brillo de Selección (revertir)")]
+    [MenuItem("El Sendero/Archivo/Controles/Quitar Brillo de Selección (revertir)")]
     public static void RemoveSelectionGlow()
     {
         if (EditorApplication.isPlaying)

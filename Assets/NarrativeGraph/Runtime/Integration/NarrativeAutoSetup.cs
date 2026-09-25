@@ -96,7 +96,15 @@ public class NarrativeAutoSetup : MonoBehaviour
 
     public static void ResetForNewGame()
     {
-        if (_instance == null) return;
+        if (_instance == null)
+        {
+            // Este componente ya no está montado en ninguna escena (el arranque lo hace
+            // NarrativeGraphHub + NarrativeGraphStarter), así que antes esta llamada no hacía nada
+            // y la partida nueva heredaba las señales de la anterior. Al menos eso se limpia aquí.
+            var senales = DefaultNarrativeSignals.Instance;
+            if (senales != null) senales.OlvidarSenalesDePartida();
+            return;
+        }
         _instance.HandleReset("ResetForNewGame", clearBlackboard: true, restartGraph: true);
     }
 

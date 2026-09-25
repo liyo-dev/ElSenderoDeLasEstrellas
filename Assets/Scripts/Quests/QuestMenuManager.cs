@@ -224,12 +224,6 @@ public class QuestMenuManager : MonoBehaviour
                 }
             }
 
-            // Attach ActiveStateDebugger to help detect who disables the GO
-            if (quickMenu.gameObject.GetComponent<ActiveStateDebugger>() == null)
-            {
-                quickMenu.gameObject.AddComponent<ActiveStateDebugger>();
-            }
-
             try
             {
                 quickMenu.ShowPanel(true, ignoreRestrictions: true);

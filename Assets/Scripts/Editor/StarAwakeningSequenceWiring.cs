@@ -68,14 +68,14 @@ public static class StarAwakeningSequenceWiring
         "approachShakeMin", "approachShakeMax", "approachShakeRampSeconds", "approachShakeInterval",
     };
 
-    [MenuItem("El Sendero/Secuencias/Montar Despertar de la Estrella (sistema nuevo)")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Montar Despertar de la Estrella (sistema nuevo)")]
     public static void Wire()
     {
         var log = new StringBuilder();
         var warnings = new List<string>();
 
         // ── 1) Localizar el sequencer viejo ──────────────────────────────────
-        var legacy = Object.FindFirstObjectByType<StarAwakeningSequencer>(FindObjectsInactive.Include);
+        var legacy = Object.FindAnyObjectByType<StarAwakeningSequencer>(FindObjectsInactive.Include);
         if (legacy == null)
         {
             EditorUtility.DisplayDialog("Montar el Despertar de la Estrella",
@@ -429,7 +429,7 @@ public static class StarAwakeningSequenceWiring
     private static void CheckEldranId(List<string> warnings, StringBuilder log)
     {
         var managers = Object.FindObjectsByType<Game.NPC.NPCBehaviourManagerV2>(
-            FindObjectsInactive.Include, FindObjectsSortMode.None);
+            FindObjectsInactive.Include);
 
         var ids = new List<string>();
         bool found = false;

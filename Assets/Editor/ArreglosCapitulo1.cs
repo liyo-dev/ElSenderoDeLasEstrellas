@@ -39,7 +39,7 @@ public static class ArreglosCapitulo1
 
     private const int FlagCompanion = 1 << 6;
 
-    [MenuItem("El Sendero/Capítulo 1: arreglos (despertar, Oliver, Eldran, ventana)")]
+    [MenuItem("El Sendero/Archivo/Capítulo 1: arreglos (despertar, Oliver, Eldran, ventana)")]
     public static void Menu()
     {
         string r = Ejecutar(avisar: true);

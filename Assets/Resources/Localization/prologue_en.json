@@ -2,15 +2,19 @@
     "subtitles": [
         {
             "id": "PRLG_01",
-            "text": "Eons ago, a mage walked the Path of the Stars and, before its altar, wished for a power nothing in Creation could rival."
+            "text": "Eons ago, a mage reached the altar of the Path of the Stars and wished for unrivaled power."
+        },
+        {
+            "id": "PRLG_01_2",
+            "text": "The Path granted his wish."
         },
         {
             "id": "PRLG_02",
-            "text": "The wish was granted, and his ambition unleashed a March of Conquest that swept through kingdom after kingdom."
+            "text": "His ambition unleashed the March of Conquest, sweeping from kingdom to kingdom."
         },
         {
             "id": "PRLG_03",
-            "text": "One lone mage, without an army or a title, stood before him to protect his people. The clash of both spells sealed the Dark Mage within the Path itself."
+            "text": "A nameless mage stood against him to protect his people. Their spells clashed, sealing the Dark Mage within the Path."
         },
         {
             "id": "PRLG_04",
@@ -18,7 +22,7 @@
         },
         {
             "id": "PRLG_WILL_WAKE_UP",
-            "text": "Will, WAKE UP!"
+            "text": "Will, wake up!"
         }
     ]
 }

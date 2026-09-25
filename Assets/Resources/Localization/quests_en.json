@@ -50,15 +50,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION0_DETAIL",
-            "value": "There's a letter waiting for you on the small table in your room. Walk up to it and read it to find out how your adventure begins."
+            "value": "Read the letter on the bedside table."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Go see what's going on with Eldran."
+            "value": "Find out what’s going on between Eldran and Victoria."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "Oliver has asked you to go see what's going on with Eldran. Follow the minimap marker until you find him."
+            "value": "Oliver asked you to find out what’s going on between Eldran and Victoria. Follow the minimap marker to them."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
@@ -142,15 +142,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DESC",
-            "value": "Find the fruit crate in the forest and bring it to Eldran"
+            "value": "Find the crate of apples in the forest and bring it to Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DETAIL",
-            "value": "Eldran needs a crate of fruit that got left behind in the forest. Head into the trees and search the area until you find it; once you have it, return to the Kingdom and hand it over to Eldran."
+            "value": "Eldran left a crate of apples near the forest. Follow the marker to find it and bring it back to him."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_NAME",
-            "value": "Get the Fruit Crate"
+            "value": "Get the Apple Crate"
         },
         {
             "key": "QUEST_ELDRAN_MISSION3_DESC",

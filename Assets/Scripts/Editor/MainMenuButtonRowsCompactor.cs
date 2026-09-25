@@ -33,7 +33,7 @@ public static class MainMenuButtonRowsCompactor
     const float TargetRowHeight = 42f;     // antes: 65.6
     const float MinFontSize = 15f;         // suelo de auto-sizing, para que el texto siga siendo legible
 
-    [MenuItem("El Sendero/Controles/Compactar Filas del Main Menu (para que quepan todas)")]
+    [MenuItem("El Sendero/Archivo/Controles/Compactar Filas del Main Menu (para que quepan todas)")]
     public static void CompactRows()
     {
         if (EditorApplication.isPlaying)

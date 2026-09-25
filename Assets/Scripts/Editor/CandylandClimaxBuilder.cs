@@ -83,7 +83,7 @@ public static class CandylandClimaxBuilder
         new Color(0.80f, 0.65f, 0.45f),
     };
 
-    [MenuItem("El Sendero/Escena/Construir Clímax de Candyland (Duque de Regaliz)")]
+    [MenuItem("El Sendero/Archivo/Escena/Construir Clímax de Candyland (Duque de Regaliz)")]
     public static void BuildClimax()
     {
         if (!System.IO.File.Exists(ScenePath))

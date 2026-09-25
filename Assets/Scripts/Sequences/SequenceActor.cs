@@ -98,7 +98,7 @@ public class SequenceActor
         if (manager == null && !Application.isPlaying)
         {
             foreach (var candidato in Object.FindObjectsByType<NPCBehaviourManagerV2>(
-                         FindObjectsInactive.Include, FindObjectsSortMode.None))
+                         FindObjectsInactive.Include))
             {
                 if (candidato != null && candidato.PersistenceId == actorId) { manager = candidato; break; }
             }

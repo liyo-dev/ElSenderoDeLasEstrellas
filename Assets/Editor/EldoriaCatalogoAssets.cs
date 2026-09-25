@@ -32,7 +32,7 @@ public static class EldoriaCatalogoAssets
         Tiny+"BuildingUtilityDeco/WatchTower01.prefab", Tiny+"BuildingUtilityDeco/Pillar01.prefab", Tiny+"BuildingUtilityDeco/Stair01.prefab"
     };
 
-    [MenuItem("El Sendero/Eldoria Codex/Catálogo de assets de muralla y ciudad")]
+    [MenuItem("El Sendero/Archivo/Eldoria Codex/Catálogo de assets de muralla y ciudad")]
     public static void Catalogar()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Salir de Play antes.");

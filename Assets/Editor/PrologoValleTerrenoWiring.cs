@@ -46,7 +46,7 @@ public static class PrologoValleTerrenoWiring
         new(-112f, 47f, 20f, 30f, 34f),
     };
 
-    [MenuItem("El Sendero/Escenario/Prólogo: esculpir valle con Quibli", priority = 20)]
+    [MenuItem("El Sendero/Archivo/Escenario/Prólogo: esculpir valle con Quibli", priority = 20)]
     public static void Ejecutar()
     {
         Scene escena = ObtenerEscenaAbierta();
@@ -203,7 +203,7 @@ public static class PrologoValleTerrenoWiring
             "Revisa la escena en perspectiva y guarda con Ctrl+S.");
     }
 
-    [MenuItem("El Sendero/Escenario/Prólogo: armonizar color de la colina", priority = 21)]
+    [MenuItem("El Sendero/Archivo/Escenario/Prólogo: armonizar color de la colina", priority = 21)]
     public static void ArmonizarColorColina()
     {
         Scene escena = ObtenerEscenaAbierta();

@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: da92805480ba8884e8b8f48126457f8b, type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -2735,6 +2735,14 @@ MonoBehaviour:
   _letterFlyInScaleFrom: 2.2
   _letterFlyInSpeed: 14
   _letterFlyInCharDuration: 0.35
+  _irisMaterial: {fileID: 2100000, guid: ff622672aa0c418f833c59a866fbf027, type: 2}
+  _irisStartRadius: 0.05
+  _irisEndRadius: 1.15
+  _irisHoldDuration: 0.6
+  _irisGrowDuration: 1.1
+  _irisGrowEase: 8
+  _irisSoftness: 0.015
+  _irisCenter: {x: 0.62, y: 0.62}
 --- !u!1 &275104448
 GameObject:
   m_ObjectHideFlags: 0
@@ -16636,6 +16644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInputManager
   dontDestroyOnLoad: 1
   debugLogs: 0
+  logDiagnostico: 0
 --- !u!1 &1800513507
 GameObject:
   m_ObjectHideFlags: 0

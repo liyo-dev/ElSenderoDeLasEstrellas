@@ -34,7 +34,14 @@ public class QuestObjectiveMarker : MonoBehaviour
     [SerializeField] private Sprite icon;
     [SerializeField] private Color color = Color.yellow;
 
+    [Header("Icono sobre la cabeza (opcional)")]
+    [Tooltip("Icono que flota sobre este objeto mientras el marcador está visible, además del punto " +
+             "del minimapa (p. ej. 'Canvas OverHere' sobre el NPC al que hay que ir). Vacío = solo minimapa.")]
+    [SerializeField] private GameObject iconoSobreLaCabeza;
+
     private MinimapMarker _marker;
+    private Game.NPC.Common.NPCAlertIconController _icono;
+    private bool _iconoVisible;
 
     #region Unity
 
@@ -108,7 +115,39 @@ public class QuestObjectiveMarker : MonoBehaviour
     private void Refresh()
     {
         if (_marker == null) return;
-        _marker.SetVisible(EvalVisibility());
+        bool visible = EvalVisibility();
+        _marker.SetVisible(visible);
+        ActualizarIcono(visible);
+    }
+
+    /// El icono sobre la cabeza usa el sistema de iconos de siempre (mismo patrón que
+    /// DiscusionEnBucle y NPCQuestIconManager): un NPCAlertIconController en un hijo propio que
+    /// sigue a este objeto. Se oculta solo durante los diálogos. INC-439.
+    private void ActualizarIcono(bool visible)
+    {
+        if (iconoSobreLaCabeza == null || visible == _iconoVisible) return;
+        _iconoVisible = visible;
+
+        if (visible)
+        {
+            if (_icono == null)
+            {
+                var hijo = transform.Find("_IconoDeObjetivo");
+                if (hijo == null)
+                {
+                    hijo = new GameObject("_IconoDeObjetivo").transform;
+                    hijo.SetParent(transform, false);
+                }
+                if (!hijo.TryGetComponent(out _icono))
+                    _icono = hijo.gameObject.AddComponent<Game.NPC.Common.NPCAlertIconController>();
+                _icono.SeguirA(transform);
+            }
+            _icono.ShowPersistentIcon(iconoSobreLaCabeza);
+        }
+        else if (_icono != null)
+        {
+            _icono.HideAlertIcon();
+        }
     }
 
     private bool EvalVisibility()

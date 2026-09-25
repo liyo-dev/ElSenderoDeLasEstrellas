@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: NatureScene_Grass_Long
-  m_Shader: {fileID: -6465566751694194690, guid: 55d33328ab3ba4efca3c7706d97d8ee8,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 55d33328ab3ba4efca3c7706d97d8ee8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -66,6 +65,7 @@ Material:
     - _GustFrequency: 0.5
     - _GustIntensity: 0.25
     - _GustSpeed: 0.5
+    - _LightContrib: 0
     - _PatchesAmount: 0.25
     - _PatchesBluriness: 0.04
     - _PatchesEnabled: 1

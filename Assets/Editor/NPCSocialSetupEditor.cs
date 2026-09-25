@@ -110,7 +110,7 @@ public static class NPCSocialSetupEditor
     };
 
     // ─── Punto de entrada ─────────────────────────────────────────────────────
-    [MenuItem("El Sendero/NPCs/Setup Social Profiles")]
+    [MenuItem("El Sendero/Archivo/NPCs/Setup Social Profiles")]
     public static void SetupSocialProfiles()
     {
         // 1. Garantizar que la carpeta existe

@@ -63,7 +63,7 @@ public static class QuibliSunRayDresser
     private const float AnchoMin = 1.6f, AnchoMax = 2.6f;
     private const float LargoMin = 11f, LargoMax = 17f;
 
-    [MenuItem("El Sendero/Mundo/Añadir Rayos de Sol junto a Árboles (Quibli)")]
+    [MenuItem("El Sendero/Archivo/Mundo/Añadir Rayos de Sol junto a Árboles (Quibli)")]
     public static void AnadirRayosDeSol()
     {
         GameObject grupoArboles = BuscarEnEscenaActiva(TreesGroupName);

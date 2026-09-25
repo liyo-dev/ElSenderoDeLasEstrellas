@@ -62,7 +62,7 @@ public static class QuestCatalogAudit
         }
 
         // ── 2) QuestManager(s) en las escenas abiertas ───────────────────────
-        var managers = Object.FindObjectsByType<QuestManager>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var managers = Object.FindObjectsByType<QuestManager>(FindObjectsInactive.Include);
         if (managers.Length == 0)
         {
             Debug.LogWarning("[QuestCatalogAudit] No se ha encontrado ningún QuestManager en las escenas abiertas.");

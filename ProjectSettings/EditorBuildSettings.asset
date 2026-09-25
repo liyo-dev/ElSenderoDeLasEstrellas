@@ -35,5 +35,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Worlds/Prologo_Valle.unity
     guid: f0c5618f545f4a74b92e9f0b224d5d3e
+  - enabled: 1
+    path: Assets/Scenes/Test/CombatLab.unity
+    guid: de3bc77e9db160247ab0ca8342756a33
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

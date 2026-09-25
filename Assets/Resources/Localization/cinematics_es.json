@@ -250,11 +250,11 @@
         },
         {
             "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
-            "text": "Uf, ¿otra vez? Llevan así un buen rato esos dos...\nLuego vamos a ver, tranquilo. Pero antes, que no se me olvide, que para eso he venido:"
+            "text": "¿Otra vez discutiendo? Llevan así un buen rato...\nLuego veremos qué pasa. Antes quería enseñarte una cosa."
         },
         {
             "id": "OLIVER_GREETING_PERAS_HANDOFF",
-            "text": "¡Venga, vamos a ver qué pasa con esos dos!"
+            "text": "¡Vamos a ver qué se traen esos dos!"
         },
         {
             "id": "WILL_GREETING_PERAS_HANDOFF",
@@ -266,7 +266,7 @@
         },
         {
             "id": "OLIVER_GREETING_OUT_OF_BREATH",
-            "text": "Ay... espera... que me ahogo."
+            "text": "Uf, espera... me falta el aire."
         },
         {
             "id": "OLIVER_GREETING_SPOT_WILL",
@@ -470,7 +470,7 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "Jaja, no cambias... Oye, ¿qué les pasa a Eldran y a Victoria? Los he oído discutir."
+            "text": "¡Ja, no cambias! ¿Qué les pasa a Eldran y a Victoria? Los oigo discutir."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -502,15 +502,15 @@
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
-            "text": "Detrás de vosotros. En cuanto pueda."
+            "text": "Iré detrás de vosotros en cuanto pueda."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
-            "text": "No lo sé, Liora. Llévatelos al puente. Yo le entretengo."
+            "text": "No lo sé, Liora. Llévatelos al puente. Yo lo entretendré."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ELEGIR",
-            "text": "Y mañana te tomas ese día libre. Me lo debes."
+            "text": "Intenta volver. No te olvides también de cuidarte."
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA",
@@ -526,7 +526,7 @@
         },
         {
             "id": "PROLOGO_DUELO_ARCHIMAGO",
-            "text": "No. Pero puedo mandarte donde no vuelvas a tocar a nadie."
+            "text": "No puedo vencerte. Pero puedo devolverte al Sendero."
         },
         {
             "id": "PROLOGO_DUELO_MAGO",
@@ -542,15 +542,15 @@
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
-            "text": "¡Maestro! Que se me ha vuelto a volcar... y hoy iba despacio y todo."
+            "text": "¡Maestro! ¡La carreta se me ha volcado otra vez! Y eso que hoy iba despacio."
         },
         {
             "id": "PROLOGO_FAVOR_GLOBO",
-            "text": "¡Maestro, que se ha enganchado arriba del todo!"
+            "text": "¡Maestro, el globo se ha quedado enganchado allá arriba!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_1",
-            "text": "¡Ala, ya vuela!"
+            "text": "¡Hala, ya vuela!"
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_2",
@@ -566,7 +566,7 @@
         },
         {
             "id": "PROLOGO_HECHIZO_PLEGARIA",
-            "text": "Quienquiera que me escuche... dame fuerza para salvarlos. No importa lo que me pase a mí."
+            "text": "Quienquiera que me escuche... dame fuerza para protegerlos. Quiero volver con Liora."
         },
         {
             "id": "PROLOGO_HECHIZO_1",
@@ -578,7 +578,7 @@
         },
         {
             "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Este valle es mío desde hoy. Arrodillaos... o sed borrados."
+            "text": "Arrodillaos y tendréis una hora para evacuar el valle. Resistid y lo borraré todo."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
@@ -586,51 +586,51 @@
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "...Vale. Demasiada fuerza. Lo siento, chicos."
+            "text": "...Vale. Me he pasado de fuerza. Lo siento, chicos."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
-            "text": "Buenos días, valle. A ver qué se ha roto hoy."
+            "text": "Buenos días, valle. A ver qué necesita arreglo hoy."
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
-            "text": "Una carreta y un globo. Para lo que se rompe aquí, hoy ha sido fiesta."
+            "text": "Pensaba contestarla hoy. Pero siempre surge algo en el valle."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_1",
-            "text": "¿Ni un día libre te tomas?"
+            "text": "¿Y la carta de la academia? Llevas semanas sin responder."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_2",
-            "text": "Pues que mañana rompan dos, a ver si descansas."
+            "text": "Si te quedas, que sea porque lo eliges. No porque te cueste decir que no."
         },
         {
             "id": "PERAS_01",
-            "text": "¡Y dale! Las peras se aplastan si las metes ahí, Victoria."
+            "text": "¡Y dale! Si apilas las peras ahí, se aplastan, Victoria."
         },
         {
             "id": "PERAS_02",
-            "text": "Llevo vendiendo fruta más años que tú discutiendo, Eldran. Sé lo que hago."
+            "text": "Llevo años vendiendo fruta, Eldran. Sé cómo guardarla."
         },
         {
             "id": "PERAS_03",
-            "text": "Está bien, está bien... tú ganas. Como siempre."
+            "text": "Está bien, está bien... Tú ganas, como siempre."
         },
         {
             "id": "PERAS_04",
-            "text": "Como siempre. Anda, saluda a tu chico, que lleva ahí plantado un buen rato."
+            "text": "Como siempre. Anda, saluda a Will, que lleva un buen rato esperando."
         },
         {
             "id": "PERAS_05",
-            "text": "¡Will! Perdona el numerito, ya sabes cómo es esto los días de mercado."
+            "text": "¡Will! Perdona el numerito. Ya sabes cómo discutimos los días de mercado."
         },
         {
             "id": "PERAS_06",
-            "text": "Por cierto, ya que estás aquí: dejé una caja bajo un árbol hace unos días y aún no he podido ir a por ella. ¿Te importaría buscarla?"
+            "text": "Dejé una caja de manzanas bajo un árbol del bosque. ¿Puedes ir a buscarla?"
         },
         {
             "id": "PERAS_07",
-            "text": "No debería estar lejos. Sigue el camino y fíjate en los árboles grandes, la reconocerás en cuanto la veas."
+            "text": "Está al pie de un fresno, junto al camino."
         },
         {
             "id": "HOOK_DISCUSION_01",
@@ -654,7 +654,7 @@
         },
         {
             "id": "PERAS_VICTORIA_QUEDATE",
-            "text": "No, no, tú te quedas aquí conmigo, que buena falta me haces con estas cajas."
+            "text": "No, Oliver. Te quedas; necesito ayuda con estas cajas."
         }
     ]
 }

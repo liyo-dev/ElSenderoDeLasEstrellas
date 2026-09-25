@@ -53,7 +53,8 @@ public enum DramaticExitAnimation
     ScaleUp,      // Crece y desvanece (épico que se disuelve)
     Instant,      // Corte directo
     SlideToLeft,  // Sale deslizándose por el borde izquierdo
-    SlideToRight  // Sale deslizándose por el borde derecho
+    SlideToRight, // Sale deslizándose por el borde derecho
+    CircleIris    // El fondo se abre en un círculo que crece y deja ver la escena (ver DramaticTextOverlayUI.CircleIrisExit)
 }
 
 [System.Serializable]

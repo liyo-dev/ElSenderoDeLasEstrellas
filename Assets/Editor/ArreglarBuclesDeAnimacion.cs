@@ -41,7 +41,7 @@ public static class ArreglarBuclesDeAnimacion
         "Assets/Art/Characters/RPG Tiny Hero Duo/Animation/NoWeapon/FoundSomething_NoWeapon.fbx",
     };
 
-    [MenuItem("El Sendero/Animaciones/Arreglar bucles de los clips de una sola vez")]
+    [MenuItem("El Sendero/Archivo/Animaciones/Arreglar bucles de los clips de una sola vez")]
     public static void Arreglar()
     {
         int tocados = Ejecutar(avisar: true);

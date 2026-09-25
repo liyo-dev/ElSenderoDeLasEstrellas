@@ -55,7 +55,7 @@ public static class MigrarNpcsPrologoASpawnSystem
         new NpcInfo("NPC_MagoOscuro", "NPC_MagoOscuro", true),
     };
 
-    [MenuItem("El Sendero/Prólogo/Migrar NPCs del prólogo a NpcRosterSO")]
+    [MenuItem("El Sendero/Archivo/Prólogo/Migrar NPCs del prólogo a NpcRosterSO")]
     public static void Migrate()
     {
         if (EditorApplication.isPlaying)

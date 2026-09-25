@@ -38,9 +38,20 @@ public class SenalDeCompra : MonoBehaviour
     [SerializeField, Min(0f)] private float segundosPorFrase = 0f;
 
     private bool _comprado;
+    private bool _eventoEmitido;
+    private PlayerActionManager _bloqueo;
 
     void OnEnable() => ShopController.CompraRealizada += AlComprar;
-    void OnDisable() => ShopController.CompraRealizada -= AlComprar;
+
+    // Si el vendedor desaparece a mitad de las frases (cambio de escena, carga, roster), las
+    // corrutinas mueren sin llegar a su final: aquí se suelta al jugador y se avisa igualmente al
+    // grafo, para que el capítulo no se quede esperando una compra que ya se hizo.
+    void OnDisable()
+    {
+        ShopController.CompraRealizada -= AlComprar;
+        SoltarJugador();
+        if (_comprado && !_eventoEmitido) Emitir();
+    }
 
     private void AlComprar(ShopController tienda, ItemData item)
     {
@@ -53,6 +64,18 @@ public class SenalDeCompra : MonoBehaviour
     private IEnumerator Co_TrasLaCompra()
     {
         while (MenuManager.AnyOpen()) yield return null;
+
+        // INC-445: «mientras Tomasa habla me puedo ir». Will se queda quieto durante las frases,
+        // mirando a la vendedora, igual que en cualquier conversación.
+        if (PlayerService.Player != null)
+        {
+            _bloqueo = PlayerService.Player.GetComponent<PlayerActionManager>();
+            _bloqueo?.PushMode(ActionMode.Cinematic);
+            Vector3 hacia = transform.position - PlayerService.Player.transform.position; hacia.y = 0f;
+            if (hacia.sqrMagnitude > 0.01f)
+                PlayerService.Player.transform.rotation = Quaternion.LookRotation(hacia.normalized, Vector3.up);
+        }
+
         yield return new WaitForSecondsRealtime(0.35f);
 
         var bocadillo = SpeechBubbleUI.Instance;
@@ -81,7 +104,22 @@ public class SenalDeCompra : MonoBehaviour
             }
         }
 
-        if (!string.IsNullOrEmpty(eventoNarrativo))
-            DefaultNarrativeSignals.Instance?.RaiseCustom(eventoNarrativo, name);
+        SoltarJugador();
+        Emitir();
+    }
+
+    private void SoltarJugador()
+    {
+        if (_bloqueo == null) return;
+        _bloqueo.PopMode(ActionMode.Cinematic);
+        _bloqueo = null;
+    }
+
+    private void Emitir()
+    {
+        _eventoEmitido = true;
+        var senales = DefaultNarrativeSignals.Instance;
+        if (!string.IsNullOrEmpty(eventoNarrativo) && senales != null)
+            senales.RaiseCustom(eventoNarrativo, name);
     }
 }

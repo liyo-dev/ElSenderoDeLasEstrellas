@@ -53,7 +53,7 @@ public static class PrologoMontanaWiring
     /// Lado de la celda, en metros. Grande a propósito: es lo que da el facetado.
     private const float LadoCelda = 3f;
 
-    [MenuItem("El Sendero/Secuencias/Prólogo: crear la montaña del Mago Oscuro")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Prólogo: crear la montaña del Mago Oscuro")]
     public static void Ejecutar()
     {
         Scene escena = SceneManager.GetSceneByName(EscenaPrologo);

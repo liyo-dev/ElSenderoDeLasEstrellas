@@ -24,7 +24,7 @@ public static class ArreglarCarasDeLosAldeanos
     private const int CuantosAldeanos = 10;
     private const string CampoPerfil = "emotionProfile";
 
-    [MenuItem("El Sendero/Prólogo: arreglar las caras de los aldeanos")]
+    [MenuItem("El Sendero/Archivo/Prólogo: arreglar las caras de los aldeanos")]
     public static void Arreglar()
     {
         int tocados = Ejecutar(avisar: true);

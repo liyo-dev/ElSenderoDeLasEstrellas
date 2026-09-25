@@ -64,10 +64,10 @@ namespace Game.NPC.Common
                 return true;
             }
 
-            // No se encontró NavMesh cerca: habilitar igual para no romper el flujo existente.
-            // El código llamante debe seguir comprobando agent.isOnNavMesh tras esta llamada.
-            agent.enabled = true;
-            return agent.isOnNavMesh;
+            // Sin NavMesh cerca no se habilita: Unity escribiría «Failed to create agent» en
+            // cada intento (y lo reintenta cada vez que se rehace el NavMesh). Se queda apagado
+            // hasta que un intento posterior encuentre malla (INC-448).
+            return false;
         }
 
         public static void SafeSetStopped(NavMeshAgent agent, bool stopped)

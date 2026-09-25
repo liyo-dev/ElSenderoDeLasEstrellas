@@ -35,7 +35,7 @@ public static class PrologoSceneNodesWiring
     private const string SenalInicio = "PROLOGUE_START";
     private const string SenalFin = "PROLOGUE_DONE";
 
-    [MenuItem("El Sendero/Narrativa/Prólogo: insertar nodos de carga/descarga de Prologo_Valle")]
+    [MenuItem("El Sendero/Archivo/Narrativa/Prólogo: insertar nodos de carga/descarga de Prologo_Valle")]
     public static void Insertar()
     {
         var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(Ruta);

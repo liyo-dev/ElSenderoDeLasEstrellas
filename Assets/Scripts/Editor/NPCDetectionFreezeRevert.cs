@@ -54,7 +54,7 @@ public static class NPCDetectionFreezeRevert
     private const string LetyPrefabPath = "Assets/_NPCs/Combat/Lety.prefab";
     private const string LetyVickyNarrativeConfigPath = "Assets/_NPCs/Narrative/NPC_InteractiveNarrative_Config_Lety_Vicky.asset";
 
-    [MenuItem("El Sendero/NPCs/Revertir Cableado Narrativo (Boy Pirate, Magos, Lety)")]
+    [MenuItem("El Sendero/Archivo/NPCs/Revertir Cableado Narrativo (Boy Pirate, Magos, Lety)")]
     public static void RevertAll()
     {
         foreach (var entry in SoloEntries)

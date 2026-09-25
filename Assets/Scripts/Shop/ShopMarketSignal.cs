@@ -27,7 +27,7 @@ public class ShopMarketSignal : MonoBehaviour
 
     void OnEnable()
     {
-        if (shopUI == null) shopUI = FindObjectOfType<ShopUI>();
+        if (shopUI == null) shopUI = FindAnyObjectByType<ShopUI>();
         if (shopUI != null) shopUI.OnClosed += HandleShopClosed;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         else Debug.LogWarning($"[ShopMarketSignal:{name}] No se encontró ninguna ShopUI a la que engancharse.");

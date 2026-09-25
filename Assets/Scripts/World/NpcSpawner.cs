@@ -101,10 +101,9 @@ public static class NpcSpawner
                 // sitio son dos iconos de interactuar, dos cerebros y un NPCRegistry que se queda
                 // con el último (INC-364).
                 if (!string.IsNullOrEmpty(entry.persistenceId) && NPCRegistry.HasInstance
-                    && NPCRegistry.Instance.GetNPCByID(entry.persistenceId) != null)
+                    && NPCRegistry.Instance.TryGetNPCByID(entry.persistenceId, out var ya))
                 {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    var ya = NPCRegistry.Instance.GetNPCByID(entry.persistenceId);
                     Debug.LogWarning($"[NpcSpawner] '{entry.spawnId}': ya hay un '{entry.persistenceId}' en el mundo " +
                                      $"('{ya.name}', escena '{ya.gameObject.scene.name}'). No se crea otro: quítalo de la escena " +
                                      "si debe venir del roster.", ya);
@@ -147,6 +146,13 @@ public static class NpcSpawner
         // 3) Colocarlo YA, antes de que Awake() corra, para que el NavMeshAgent y el FSM
         //    arranquen viéndose en su sitio definitivo y no en el origen.
         go.transform.SetPositionAndRotation(position, rotation);
+
+        // 3b) Sin NavMesh debajo (NPCs quietos con requireNavMesh = false, como un vendedor en su
+        //     puesto), el NavMeshAgent se apaga antes de que Awake lo encienda: si no, Unity escribe
+        //     «Failed to create agent» al crearlo y otra vez cada vez que se rehace el NavMesh.
+        var agente = go.GetComponent<NavMeshAgent>();
+        if (agente != null && agente.enabled && !NavMesh.SamplePosition(position, out _, 1f, NavMesh.AllAreas))
+            agente.enabled = false;
 
         // 4) Identidad narrativa, si el roster la sobrescribe.
         if (!string.IsNullOrEmpty(entry.persistenceId))

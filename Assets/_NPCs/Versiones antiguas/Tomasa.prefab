@@ -2499,3 +2499,4 @@ MonoBehaviour:
   showAfterStep: -1
   icon: {fileID: 0}
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  iconoSobreLaCabeza: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}

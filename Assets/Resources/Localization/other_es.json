@@ -26,19 +26,19 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_BOX",
-            "value": "Sigue el marcador del minimapa para encontrar la caja.\nPulsa {BOTON} para ver el mapa completo."
+            "value": "Sigue el marcador hasta la caja.\nPulsa {BOTON} para abrir el mapa completo."
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Usa {BOTON} para mover a Will.\nSal de la habitación a ver qué pasa."
+            "value": "Mueve a Will con {BOTON}. Lee la carta de la mesita antes de salir."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
-            "value": "Cuando el icono sobre la cabeza de un personaje cambie así,\nsignifica que debes hablar con él."
+            "value": "Si el icono sobre un personaje cambia así, habla con él."
         },
         {
             "key": "TUTORIAL_WAKE_UP",
-            "value": "Pulsa {BOTON} para abrir los ojos"
+            "value": "Pulsa {BOTON} para despertar a Will."
         },
         {
             "key": "QUEST_STARTED_BANNER",
@@ -46,7 +46,7 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_ELDRAN",
-            "value": "Sigue el marcador del minimapa para encontrar a Eldran.\nPulsa {BOTON} para ver el mapa completo."
+            "value": "Sigue el marcador del minimapa hasta Eldran.\nPulsa {BOTON} para abrir el mapa completo."
         }
     ]
 }

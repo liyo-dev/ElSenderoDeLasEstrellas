@@ -28,7 +28,7 @@ public class SolDeEscenaAditiva : MonoBehaviour
         }
 
         // Si no hay ciclo, vale cualquier otra direccional encendida que no sea esta.
-        foreach (var otra in FindObjectsByType<Light>(FindObjectsSortMode.None))
+        foreach (var otra in FindObjectsByType<Light>())
         {
             if (otra == mia || otra.type != LightType.Directional || !otra.isActiveAndEnabled) continue;
             Apagar(mia, "otra luz direccional de la escena (" + otra.name + ")");

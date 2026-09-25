@@ -44,7 +44,7 @@ public static class OliverSequenceWiring
     private const string PlayerObjectName = "SEQ_OliverSaludo";
     private const string ExpectedOliverId = "NPC_Oliver";
 
-    [MenuItem("El Sendero/Secuencias/Montar secuencia de Oliver (sistema nuevo)")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Montar secuencia de Oliver (sistema nuevo)")]
     public static void Wire()
     {
         var log = new StringBuilder();
@@ -56,7 +56,7 @@ public static class OliverSequenceWiring
         // falta para nada), este script ya no tiene de dónde copiar referencias. En ese caso no
         // hay que bloquear con un error: se comprueba si "SEQ_OliverSaludo" (el nuevo) ya existe y
         // ya está enlazado, y si no, se intenta recuperar lo que se pueda sin el viejo.
-        var legacy = Object.FindFirstObjectByType<OliverSaludoSequencer>(FindObjectsInactive.Include);
+        var legacy = Object.FindAnyObjectByType<OliverSaludoSequencer>(FindObjectsInactive.Include);
         if (legacy == null)
         {
             WireWithoutLegacy(log, warnings);
@@ -201,7 +201,7 @@ public static class OliverSequenceWiring
     {
         Game.NPC.NPCBehaviourManagerV2 oliver = null;
         foreach (var m in Object.FindObjectsByType<Game.NPC.NPCBehaviourManagerV2>(
-                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+                     FindObjectsInactive.Include))
         {
             string id = new SerializedObject(m).FindProperty("persistenceId")?.stringValue;
             if (id == ExpectedOliverId) { oliver = m; break; }
@@ -255,7 +255,7 @@ public static class OliverSequenceWiring
     private static void CheckOliverId(List<string> warnings, StringBuilder log)
     {
         var managers = Object.FindObjectsByType<Game.NPC.NPCBehaviourManagerV2>(
-            FindObjectsInactive.Include, FindObjectsSortMode.None);
+            FindObjectsInactive.Include);
 
         var ids = new List<string>();
         bool found = false;
@@ -294,7 +294,7 @@ public static class OliverSequenceWiring
     {
         GameObject go = null;
         foreach (var candidate in Object.FindObjectsByType<SequencePlayer>(
-                     FindObjectsInactive.Include, FindObjectsSortMode.None))
+                     FindObjectsInactive.Include))
         {
             if (candidate.gameObject.name == PlayerObjectName) { go = candidate.gameObject; break; }
         }
@@ -326,7 +326,7 @@ public static class OliverSequenceWiring
             var cameraProp = soStage.FindProperty("_cameraDriver");
             if (cameraProp.objectReferenceValue == null)
             {
-                var sharedDriver = Object.FindFirstObjectByType<CinematicCameraDriver>(
+                var sharedDriver = Object.FindAnyObjectByType<CinematicCameraDriver>(
                     FindObjectsInactive.Include);
                 if (sharedDriver != null)
                 {

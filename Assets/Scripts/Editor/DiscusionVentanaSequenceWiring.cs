@@ -60,7 +60,7 @@ public static class DiscusionVentanaSequenceWiring
     private const float WillCloseHeadHeight = 1.2f;
     private const float WillCloseFov = 30f;
 
-    [MenuItem("El Sendero/Secuencias/Montar SEQ_DiscusionVentana (WillHouse)")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Montar SEQ_DiscusionVentana (WillHouse)")]
     public static void Wire()
     {
         var log = new StringBuilder();
@@ -154,7 +154,7 @@ public static class DiscusionVentanaSequenceWiring
         SetNamedTransform(soStage, "_shots", 0, ShotVentanaName, ventanaShot.transform);
         SetNamedTransform(soStage, "_shots", 1, ShotWillCloseName, willClose.transform);
 
-        var existingDriver = Object.FindFirstObjectByType<CinematicCameraDriver>(FindObjectsInactive.Include);
+        var existingDriver = Object.FindAnyObjectByType<CinematicCameraDriver>(FindObjectsInactive.Include);
         soStage.FindProperty("_cameraDriver").objectReferenceValue = existingDriver;
         if (existingDriver == null)
             warnings.Add("No hay ningún CinematicCameraDriver en la escena -- ningún corte de cámara " +

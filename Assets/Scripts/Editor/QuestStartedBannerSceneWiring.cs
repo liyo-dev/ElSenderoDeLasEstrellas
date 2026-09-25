@@ -30,7 +30,7 @@ public static class QuestStartedBannerSceneWiring
     private const string HeaderPillSpriteGuid = "cf70966e009f4a8181df8ac98c68a807"; // Assets/Art/UI/Misiones/header_pill_bg.png
     private const string TitleFontGuid = "21a67e0dff06da94d848f1cf0d0074f8"; // misma fuente TMP que AbilityUnlockPopupUI.abilityTitleText
 
-    [MenuItem("El Sendero/UI/Crear Banner Nueva Misión")]
+    [MenuItem("El Sendero/Archivo/UI/Crear Banner Nueva Misión")]
     public static void CreateBanner()
     {
         var scene = EditorSceneManager.GetActiveScene();

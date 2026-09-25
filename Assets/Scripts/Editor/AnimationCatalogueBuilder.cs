@@ -102,7 +102,7 @@ public static class AnimationCatalogueBuilder
 
         var so = new SerializedObject(runner);
         so.FindProperty("animator").objectReferenceValue = animator;
-        so.FindProperty("camera").objectReferenceValue   = Object.FindFirstObjectByType<Camera>();
+        so.FindProperty("camera").objectReferenceValue   = Object.FindAnyObjectByType<Camera>();
 
         var lista = so.FindProperty("entradas");
         lista.arraySize = entradas.Count;

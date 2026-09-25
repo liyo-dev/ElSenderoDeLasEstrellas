@@ -43,7 +43,7 @@ public class SequenceShotCapture : EditorWindow
     private void AutoPick()
     {
         if (_player != null) return;
-        var candidatos = FindObjectsByType<SequencePlayer>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        var candidatos = FindObjectsByType<SequencePlayer>(FindObjectsInactive.Include);
         if (candidatos.Length > 0) _player = candidatos[0];
     }
 
@@ -197,7 +197,7 @@ public class SequenceShotCapture : EditorWindow
         // La luz: si hay un ciclo día/noche abierto, los beats de hora del día se aplican de verdad
         // para que el PNG tenga el cielo y el sol que tendrá el plano en partida. Se guarda todo lo
         // que se toca y se restaura al final: esta herramienta no puede dejar la escena cambiada.
-        var ciclo = FindFirstObjectByType<DayNightCycle>(FindObjectsInactive.Include);
+        var ciclo = FindAnyObjectByType<DayNightCycle>(FindObjectsInactive.Include);
         bool avisadoSinCiclo = false;
 
         var skyboxPrevio = RenderSettings.skybox;
@@ -211,7 +211,7 @@ public class SequenceShotCapture : EditorWindow
         Color solColorPrevio = Color.white;
         float solIntensidadPrevia = 1f;
         Quaternion solRotacionPrevia = Quaternion.identity;
-        foreach (var luz in FindObjectsByType<Light>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        foreach (var luz in FindObjectsByType<Light>(FindObjectsInactive.Include))
         {
             if (luz.type != LightType.Directional) continue;
             solPrevio = luz;

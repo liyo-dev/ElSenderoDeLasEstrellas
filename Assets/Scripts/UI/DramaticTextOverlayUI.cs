@@ -100,6 +100,29 @@ public class DramaticTextOverlayUI : MonoBehaviour
     [Tooltip("Duración del vuelo de UNA letra sola, independiente del intervalo entre letras.")]
     [SerializeField] float _letterFlyInCharDuration = 0.35f;
 
+    [Header("Iris circular (salida CircleIris: «Will, ¡despierta!»)")]
+    [Tooltip("Material con el shader 'Sendero/UI/CircleIrisCutout' (Mat_CircleIrisCutout). Se instancia en runtime; el asset no se toca. Vacío = la salida CircleIris hace un FadeOut normal.")]
+    [SerializeField] Material _irisMaterial;
+    [Tooltip("Radio inicial en UV (0 = cerrado): el círculo pequeño sobre la cara de Will dormido.")]
+    [SerializeField] float _irisStartRadius = 0.05f;
+    [Tooltip("Radio final. Tiene que pasar de la esquina de pantalla más lejana a _irisCenter (con 16:9 y centro (0.62, 0.62), ~1.08) más el suavizado; si no, esas esquinas se quedan veladas.")]
+    [SerializeField] float _irisEndRadius = 1.15f;
+    [Tooltip("Tiempo (real) que el círculo pequeño se queda quieto antes de crecer.")]
+    [SerializeField] float _irisHoldDuration = 0.6f;
+    [Tooltip("Duración del crecimiento del círculo hasta cubrir la pantalla.")]
+    [SerializeField] float _irisGrowDuration = 1.1f;
+    [SerializeField] Ease _irisGrowEase = Ease.InCubic;
+    [Tooltip("Suavizado del borde del círculo, en UV.")]
+    [SerializeField] float _irisSoftness = 0.015f;
+    [Tooltip("Centro del iris en UV de pantalla (0.5, 0.5 = centro; Y crece hacia arriba). Donde cae la cara de Will en el plano cenital de la cama.")]
+    [SerializeField] Vector2 _irisCenter = new Vector2(0.62f, 0.62f);
+
+    Material _irisMaterialInstance;
+    static readonly int IrisRadiusId   = Shader.PropertyToID("_Radius");
+    static readonly int IrisSoftnessId = Shader.PropertyToID("_Softness");
+    static readonly int IrisAspectId   = Shader.PropertyToID("_Aspect");
+    static readonly int IrisCenterId   = Shader.PropertyToID("_Center");
+
 
     static readonly Color _dreamBgDark  = new Color(0.03f, 0.05f, 0.16f, 1f);
     static readonly Color _dreamBgLight = new Color(0.06f, 0.09f, 0.24f, 1f);
@@ -574,9 +597,59 @@ public class DramaticTextOverlayUI : MonoBehaviour
                 break;
             }
 
+            case DramaticExitAnimation.CircleIris:
+                // Gestiona _rootGroup y _background a su manera: no pasa por el final genérico.
+                yield return CircleIrisExit(preset);
+                yield break;
         }
 
         _rootGroup.blocksRaycasts = false;
+    }
+
+    /// El fondo opaco se recorta con un círculo pequeño y el círculo crece hasta destapar toda la
+    /// pantalla. Lo que se ve dentro es la cámara real: con Will dormido, el plano cenital de
+    /// SleepTrigger.sleepCameraAnchor. No usa el TransitionManager (cargas de escena): es propio
+    /// de este overlay.
+    IEnumerator CircleIrisExit(DramaticStylePreset preset)
+    {
+        yield return FadeLabelAlpha(Mathf.Min(preset.exitDuration, 0.25f));
+
+        if (_background == null || _irisMaterial == null)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (_irisMaterial == null)
+                Debug.LogWarning("[DramaticTextOverlayUI] Salida CircleIris sin _irisMaterial asignado: hago un FadeOut normal.", this);
+#endif
+            yield return _rootGroup.DOFade(0f, preset.exitDuration).SetUpdate(true).WaitForCompletion();
+            _rootGroup.blocksRaycasts = false;
+            yield break;
+        }
+
+        if (_irisMaterialInstance == null)
+            _irisMaterialInstance = new Material(_irisMaterial);
+
+        Color    prevColor    = _background.color;
+        Material prevMaterial = _background.material;
+
+        _background.color    = Color.black;
+        _background.material = _irisMaterialInstance;
+        _irisMaterialInstance.SetFloat(IrisAspectId,   (float)Screen.width / Mathf.Max(1, Screen.height));
+        _irisMaterialInstance.SetFloat(IrisSoftnessId, _irisSoftness);
+        _irisMaterialInstance.SetFloat(IrisRadiusId,   _irisStartRadius);
+        _irisMaterialInstance.SetVector(IrisCenterId,  new Vector4(_irisCenter.x, _irisCenter.y, 0f, 0f));
+
+        yield return new WaitForSecondsRealtime(_irisHoldDuration);
+
+        yield return DOTween.To(
+                () => _irisMaterialInstance.GetFloat(IrisRadiusId),
+                r => _irisMaterialInstance.SetFloat(IrisRadiusId, r),
+                _irisEndRadius, _irisGrowDuration)
+            .SetEase(_irisGrowEase).SetUpdate(true).WaitForCompletion();
+
+        _rootGroup.alpha = 0f;
+        _rootGroup.blocksRaycasts = false;
+        _background.material = prevMaterial;
+        _background.color    = prevColor;
     }
 
     /// Fundido manual del alpha del label (sin depender de que exista un DOFade para TMP).

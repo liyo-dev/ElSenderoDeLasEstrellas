@@ -38,6 +38,8 @@ namespace Core
         
 #if UNITY_EDITOR
         [SerializeField] private bool debugLogs = true;
+        [Tooltip("Traza detallada del modo UI/juego ([PIM-Debug]). Apagada: solo para depurar el input.")]
+        [SerializeField] private bool logDiagnostico = false;
 #endif
 
         private PlayerControls _controls;
@@ -187,7 +189,7 @@ namespace Core
                 _controls?.GamePlay.Enable();
                 ScheduleEnableControls(); // aplicará también UI.Disable() de forma diferida
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PIM-Debug] PopUIMode → refCount=0, STACK:\n{System.Environment.StackTrace}");
+                if (logDiagnostico) Debug.Log("[PIM-Debug] PopUIMode → refCount=0");
 #endif
 
 #if UNITY_EDITOR
@@ -243,7 +245,7 @@ namespace Core
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             bool uiWasEnabled   = _controls?.UI.enabled   ?? false;
             bool gpWasEnabled   = _controls?.GamePlay.enabled ?? false;
-            Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode ANTES — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode ANTES — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
                       $"UI.enabled={uiWasEnabled}, GamePlay.enabled={gpWasEnabled}");
 #endif
 
@@ -257,7 +259,7 @@ namespace Core
             }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode DESPUÉS — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode DESPUÉS — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}");
 #endif
         }
@@ -340,7 +342,7 @@ namespace Core
             _connectedEventSystem = es;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PIM-Debug] ConnectToEventSystemModule OK — ES='{es.name}', " +
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] ConnectToEventSystemModule OK — ES='{es.name}', " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}");
 #endif
         }
@@ -355,7 +357,7 @@ namespace Core
             if (_controls == null) return;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PIM-Debug] EnableControls — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] EnableControls — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
 #endif
             // Restaurar el modo correcto según el estado
             if (_isInUIMode)
@@ -384,7 +386,7 @@ namespace Core
             InputSystem.onAfterUpdate -= ApplyPendingControlsUpdate;
             _pendingControlsUpdate = false;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PIM-Debug] ApplyPendingControlsUpdate disparado — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] ApplyPendingControlsUpdate disparado — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
 #endif
             EnableControls();
         }
@@ -420,7 +422,7 @@ namespace Core
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PIM-Debug] OnSceneLoaded '{scene.name}' — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}, " +
+            if (logDiagnostico) Debug.Log($"[PIM-Debug] OnSceneLoaded '{scene.name}' — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}, " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}, " +
                       $"EventSystem.current={EventSystem.current?.name ?? "NULL"}, " +
                       $"_connectedES={_connectedEventSystem?.name ?? "NULL"}");
@@ -441,7 +443,7 @@ namespace Core
             if (EventSystem.current != null && EventSystem.current != _connectedEventSystem)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PIM-Debug] OnSceneLoaded → ReconnectEventSystemNextFrame (ES cambió a '{EventSystem.current.name}')");
+                if (logDiagnostico) Debug.Log($"[PIM-Debug] OnSceneLoaded → ReconnectEventSystemNextFrame (ES cambió a '{EventSystem.current.name}')");
 #endif
                 StartCoroutine(ReconnectEventSystemNextFrame());
             }

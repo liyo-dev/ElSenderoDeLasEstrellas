@@ -313,7 +313,7 @@ public static class PrologoValleMultitudWiring
         ("M_Aire_Mago_1",      new Vector3(6009.5f, 102.2f, 5995.5f)),
     };
 
-    [MenuItem("El Sendero/Secuencias/Prólogo: preparar la escena del storyboard")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Prólogo: preparar la escena del storyboard")]
     public static void Ejecutar()
     {
         Scene escena = SceneManager.GetSceneByName(EscenaPrologo);
@@ -682,7 +682,7 @@ public static class PrologoValleMultitudWiring
     /// Donde van los PNG de color plano. Uno por color, con el color en el nombre.
     private const string CarpetaPlanos = "Assets/Art/World/Prologo_Valle/Materials/Planos";
 
-    [MenuItem("El Sendero/Secuencias/Prólogo: devolver el suelo a su material original")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Prólogo: devolver el suelo a su material original")]
     public static void DevolverElSueloAlOriginal()
     {
         Scene escena = SceneManager.GetSceneByName(EscenaPrologo);

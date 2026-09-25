@@ -2,15 +2,19 @@
     "subtitles": [
         {
             "id": "PRLG_01",
-            "text": "Hace eones, un mago recorrió el Sendero de las Estrellas y, ante su altar, pidió un poder que nada en la Creación pudiera igualar."
+            "text": "Hace eones, un mago llegó al altar del Sendero de las Estrellas y pidió un poder sin igual."
+        },
+        {
+            "id": "PRLG_01_2",
+            "text": "El Sendero concedió su deseo."
         },
         {
             "id": "PRLG_02",
-            "text": "El deseo se cumplió, y su ambición desató una Marcha de Conquista que arrasó reino tras reino."
+            "text": "Su ambición desató la Marcha de Conquista y arrasó reino tras reino."
         },
         {
             "id": "PRLG_03",
-            "text": "Un único mago, sin ejército ni título, se plantó ante él para proteger a su pueblo. El choque de ambos hechizos selló al Mago Oscuro dentro del propio Sendero."
+            "text": "Un mago sin título se interpuso para proteger a su pueblo. El choque de ambos hechizos selló al Mago Oscuro en el Sendero."
         },
         {
             "id": "PRLG_04",
@@ -18,7 +22,7 @@
         },
         {
             "id": "PRLG_WILL_WAKE_UP",
-            "text": "Will, ¡DESPIERTA!"
+            "text": "Will, ¡despierta!"
         }
     ]
 }

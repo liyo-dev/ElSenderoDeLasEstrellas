@@ -88,7 +88,7 @@ public static class NPCObstacleAvoidanceSetup
             return;
         }
 
-        var agents = Object.FindObjectsByType<NavMeshAgent>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var agents = Object.FindObjectsByType<NavMeshAgent>(FindObjectsInactive.Exclude);
         int added = 0, alreadyHad = 0;
 
         foreach (var agent in agents)

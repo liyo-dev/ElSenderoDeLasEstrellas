@@ -119,7 +119,7 @@ public static class DevolverMarcasASuSitio
         new Marca("SpawnPoint_NPC_Aldeano_10", new Vector3(5990.9f, 100.2f, 6004.2f), new Vector3(5990.9f, 100.1f, 6001.6f)),
     };
 
-    [MenuItem("El Sendero/Prólogo: devolver las marcas a su sitio (deshacer el pegado del 23 sep)", priority = 32)]
+    [MenuItem("El Sendero/Archivo/Prólogo: devolver las marcas a su sitio (deshacer el pegado del 23 sep)", priority = 32)]
     public static void Menu()
     {
         var porNombre = new Dictionary<string, List<Transform>>();

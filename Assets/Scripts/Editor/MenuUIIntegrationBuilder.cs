@@ -59,7 +59,7 @@ public static class MenuUIIntegrationBuilder
         Integrate();
     }
 
-    [MenuItem("El Sendero/Controles/Integrar Cursor + Panel de Créditos")]
+    [MenuItem("El Sendero/Archivo/Controles/Integrar Cursor + Panel de Créditos")]
     public static void Integrate()
     {
         if (EditorApplication.isPlaying)

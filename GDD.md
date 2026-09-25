@@ -1,8 +1,8 @@
 # GDD — El Sendero de las Estrellas
 
-**Versión:** 2.0 (migrado desde el Google Doc original "GDD" v1.0)
+**Versión:** 2.6 (auditoría de sistemas y montaje del laboratorio de combate)
 **Autor original:** Raúl Báez Amate — Liyodev
-**Última revisión:** 10 de septiembre de 2026 — ver [Registro de cambios](#registro-de-cambios) al final del documento.
+**Última revisión:** 25 de septiembre de 2026 — ver [Registro de cambios](#registro-de-cambios).
 
 ---
 
@@ -17,7 +17,7 @@ El Google Doc original quedó congelado en "Versión 1.0" mientras el juego segu
 - `GDD.md` (este archivo) — historia, guión, fichas de personaje, balance de hechizos/contenido, estado de diálogos.
 - `CLAUDE.md` / `AGENTS.md` — resumen corto de ambos para que las IA lo carguen sin gastar espacio de más.
 
-**Regla añadida el 30 de agosto de 2026, a petición de Raúl — la novela también es canon:** la novela (`novela/manuscrito-novela-completo.md`, proyecto de Cowork "El Sendero de las Estrellas") no es solo material de marketing, es la otra fuente narrativa del universo. Cualquier corrección de historia/canon que se haga en uno de los dos (la novela o este GDD) debe revisarse y, si aplica, reflejarse también en el otro — no dejar que se desalineen en silencio, mismo criterio que ya se aplica entre `GDD.md`/`TDD.md`/`TRACKER.md`. Precedente: `INC-126` en `TRACKER.md` (escena 17, las tres pruebas del Sendero) fue justo un desnivel de este tipo, encontrado porque la novela ya tenía la corrección y el GDD no.
+**Canon narrativo:** la novela también es fuente del universo. La versión revisada está en el proyecto complementario, en Novela/tmp/build_final/epub/libro.md. Toda corrección de historia se contrasta con ese manuscrito; si no se edita la novela, el GDD debe dejar claro que la modificación es una adaptación de juego y no un cambio de canon.
 
 ---
 
@@ -29,478 +29,564 @@ El Google Doc original quedó congelado en "Versión 1.0" mientras el juego segu
 4. [Fichas de Personajes](#fichas-de-personajes)
 5. [Estado de Balance de Hechizos](#estado-de-balance-de-hechizos)
 6. [Estado de Diálogos](#estado-de-diálogos)
-7. [Registro de Cambios](#registro-de-cambios)
+7. [Cobertura espacial de Eldoria](#cobertura-espacial-de-la-maqueta-eldoria--base-del-10-requisitos-revisados-el-25-de-septiembre-de-2026)
+8. [Registro de Cambios](#registro-de-cambios)
 
 ---
 
 ## La Historia
 
-Hace mucho tiempo, un mago recorrió el Sendero de las Estrellas, una sucesión de portales mágicos capaces de conceder un deseo a quien logre superar sus pruebas. Ante el altar final, pidió que ningún poder en la Creación pudiera oponérsele — y el Sendero se lo concedió. Su ambición desató una Marcha de Conquista que arrasó reino tras reino, hasta que un único mago, sin ejército ni título, se plantó ante él para proteger a su gente. El choque de ambos hechizos no lo mató: quedó sellado dentro del propio Sendero que había corrompido con su deseo. Siglos después, la humanidad ha olvidado esta leyenda.
+Hace siglos, un mago recorrió el Sendero de las Estrellas y pidió un poder al que nadie pudiera oponerse. Al regresar al mundo, inició una Marcha de Conquista. Un mago del valle se enfrentó a él para proteger a su gente; el choque entre el hechizo destructivo del invasor y la Protección Absoluta del defensor selló al Mago Oscuro dentro del Sendero y acabó con la vida del héroe. Su alma sobrevivió y, con el tiempo, se unió a la de un joven llamado Will cuando este murió de una fiebre.
 
-En la era actual, Liam, un mago que cuida de su hermano enfermo, descubre **referencias y fragmentos antiguos** sobre el Sendero. Está convencido de que es su única salvación, pero los textos están incompletos. Sabe que existe un **Libro de los Hechizos Prohibidos** que tiene el ritual, pero no sabe dónde está. Lo que sí ha descubierto en sus investigaciones es que el Sendero solo responde ante un "corazón puro". Tras rastrear linajes y señales, localiza a Will. Para confirmar que Will es quien busca y forzarlo a usar su poder, Liam orquesta los ataques iniciales.
+En el presente, Liam busca una cura para Tobías, su hermano menor. Sus investigaciones apuntan al Sendero y al poder de su altar, pero necesita a alguien capaz de abrirlo. Liam encuentra a Will y provoca el ataque del bosque para despertar su magia. Will cree al principio que viaja para aprender a controlarla; Liam no le revela el motivo ni la medida de la manipulación.
 
-Su búsqueda lo guía hasta el reino del joven elegido, pero pronto descubre un obstáculo insalvable: el muchacho ignora por completo su propio don. Sin tiempo que perder, Liam orquesta una amenaza mortal, empujándolo al límite para que su magia despierte por puro instinto de supervivencia.
+Estela se une al viaje. Los tres atraviesan el Reino, recuperan las partes que faltan en el Libro y abren el Sendero juntos. Allí superan en grupo la prueba de Will y la de Estela, descansan en una feria y llegan a la Caja, la prueba de Liam. La Caja muestra a Will y Estela la verdad sobre la emboscada. Liam asume sus decisiones, pero la confianza queda rota y el grupo se separa.
 
-El elegido resulta ser Will, un joven de vida sencilla en un mundo donde el poder arcano es un privilegio de pocos. Su tranquilidad se rompe cuando, en medio de una tarea cotidiana, cae en la emboscada sobrenatural preparada por Liam. Ante el peligro inminente, el instinto de Will toma el control: una energía abrasadora estalla en su interior, materializándose en una bola de fuego que repele a la bestia atacante.
+Will elige continuar por convicción propia. Encuentra de nuevo a Estela y ambos rescatan a Liam, sin fingir que la traición o el golpe accidental de Estela no ocurrieron. Antes del combate final acuerdan límites y preparan un plan conjunto. En la biblioteca del Mago Oscuro entienden cómo los deseos se tuercen cuando pretenden sustituir las decisiones de las personas.
 
-Aprovechando el caos y el terror del muchacho ante su propio poder, Liam lo manipula, convenciéndolo de que viajar al Sendero es la única vía para controlar esa fuerza y proteger su hogar. En la travesía se les une Estela, una hechicera tan talentosa como imprudente, con quien Will forja un vínculo inquebrantable. Juntos alcanzan la entrada mística, donde finalmente la nobleza del corazón de Will logra lo imposible: abrir el portal.
+El Mago Oscuro revela que Will es la reencarnación del mago que lo detuvo. Los tres luchan juntos. Will emplea el Hechizo del Tiempo y queda exhausto; Liam se interpone en el ataque que iba a matarlo. Estela comparte su energía con Will y los dos cortan el vínculo de sombra que sostenía al Mago Oscuro.
 
-Dentro del Sendero, el grupo enfrenta tortuosos desafíos físicos y mentales. La presión empuja a Liam al borde de la traición, desesperado por la salud de su hermano, pero su conciencia lo frena en el último segundo. Tras confesar sus verdaderos motivos y su manipulación inicial, el grupo decide perdonarlo, comprendiendo que solo unidos podrán sobrevivir.
-
-Al final del camino no hallan un tesoro, sino al Mago Oscuro. Aquel ser legendario no murió, sino que ancló su alma al Sendero, aguardando durante eones la llegada de una víctima propicia para reencarnar. Se desata una batalla feroz donde, entre hechizos, el villano revela el secreto final: Will es la reencarnación del héroe que lo detuvo siglos atrás. Al escuchar la verdad, el sello en la mente de Will se hace pedazos, devolviéndole los recuerdos de su vida pasada y liberando su verdadero potencial ancestral.
-
-En un último intento por aferrarse a la vida, el Mago Oscuro lanza un conjuro letal para drenar la energía de Will. Liam, buscando redención, intercepta el ataque y sacrifica su vida para proteger a su amigo. Enfurecido y con su poder restaurado, Will combate junto a Estela hasta destruir al espectro, superando así la Cuarta y última Prueba.
-
-Victorioso pero con el corazón roto, Will se acerca al Altar. No pide nada para sí mismo, sino que cumple la promesa de su amigo caído: la curación de su hermano. Al concederse el deseo, la muerte del Mago Oscuro desestabiliza el Sendero, que comienza a colapsar violentamente.
-
-Cargando el cuerpo de Liam, corren hacia la salida. En el umbral, Will toma su decisión final: empuja a Estela hacia la seguridad del mundo real y se sella dentro. Solo en la oscuridad, ejecuta el Prohibido Hechizo de Resurrección, entregando su propia alma para devolver la vida a Liam y detonar la energía restante para destruir el Sendero para siempre.
-
-En el mundo real, Liam despierta ileso junto a Estela. El Universo, reconociendo el sacrificio supremo, libera el espíritu de Will. Su esencia se manifiesta por última vez con la silueta del legendario Archimago, uniéndose a las luces de su antigua familia y encontrando, tras siglos de espera, la paz eterna.
-
----
+Will pide al altar que cure a Tobías sin alterar su voluntad, sus recuerdos ni trasladar el daño a nadie. Después usa el Hechizo de Resurrección para devolver la vida a Liam, entregando la suya y destruyendo el Sendero. Liam despierta junto a Estela en el mundo real. El espíritu de Will se despide de ambos y se reúne con su familia bajo las estrellas.
 
 ## La Verdadera Historia de Will
 
-Tras conquistar el Sendero hace eones, el deseo del Mago Oscuro le otorgó un poder casi divino. Al regresar al mundo físico, inició su "Marcha de Conquista". Reino tras reino, su ultimátum era absoluto: *"Arrodillaos o sed borrados de la existencia"*.
+El Mago Oscuro obtuvo en el Sendero el poder de que nadie pudiera oponérsele. Su Marcha de Conquista avanzó de reino en reino. En el valle, el Will original —un mago que usaba su don para sanar y ayudar— fue el único que se interpuso entre el ejército invasor y su gente.
 
-Su ejército de sombras llegó finalmente al pacífico valle donde vivía el Will original, un mago local que dedicaba su humilde magia a sanar y ayudar a sus vecinos. Mientras los reyes huían, Will fue el único que no se arrodilló. Se plantó solo entre el ejército invasor y su gente, convirtiéndose en el último bastión de luz.
+El Mago Oscuro lanzó un hechizo prohibido para borrar el valle. Al perder el control de la energía, amenazó con desgarrar la realidad. Will respondió con la Protección Absoluta para contener la explosión y salvar a los habitantes, no para salvarse a sí mismo. El choque los separó: el Mago Oscuro quedó ligado y sellado dentro del Sendero; Will murió, pero su alma sobrevivió al sacrificio.
 
-El Mago Oscuro, frustrado porque Will lograba bloquear sus ataques con escudos de luz pura, dejó que la soberbia lo cegara. Decidió invocar un **Hechizo Prohibido de Aniquilación** para borrar el valle entero de la faz de la tierra. Pero su arrogancia fue su perdición: acumuló demasiada energía y perdió el control. Al ver que la realidad misma estaba a punto de rasgarse, Will lanzó un contrahechizo de **Protección Absoluta**. No para salvarse a sí mismo, sino para contener la explosión y salvar a su pueblo.
-
-El choque de ambas energías provocó una paradoja mágica.
-
-- El **Mago Oscuro** no murió, sino que fue arrastrado y sellado dentro del Sendero que él mismo había corrompido, atrapado en su propia ambición.
-- **Will** falleció físicamente al recibir el impacto, pero la pureza de su sacrificio impidió que su alma se desvaneciera. En lugar de cruzar al más allá, su espíritu quedó vagando a través del tiempo y el espacio, buscando un nuevo recipiente digno de terminar lo que empezó.
-
-Siglos después, en la era actual, un joven bondadoso sucumbió a una fiebre mortal. En el preciso instante en que el corazón del chico dejó de latir, el alma errante del héroe encontró una afinidad perfecta. Se fundió con el cuerpo vacío, devolviéndole el aliento de vida. El "nuevo" Will despertó sin recuerdos de su vida pasada, creyendo ser simplemente un chico que sobrevivió milagrosamente a una enfermedad, sin saber que en su interior dormía el poder necesario para salvar al mundo una vez más.
-
----
+Siglos después, un joven llamado Will enfermó de gravedad. Cuando su corazón dejó de latir, el alma del antiguo mago encontró en él un recipiente compatible y lo devolvió a la vida. El muchacho creció sin recordar su vida anterior. La pesadilla recurrente del prólogo es el primer eco de aquel enfrentamiento.
 
 ## Guión Técnico
 
-> **Nota de estado (24 ago 2026, revisada dos veces tras avisos de Raúl):** las escenas de abajo son el guión de diseño original (Google Doc v1.0), corregido escena por escena contra el código real de `Assets/Scripts/Cinematics/` **y contra los 6 capítulos completos del grafo narrativo real** (`Assets/NarrativeGraph/MainNarrative_Cap1.asset` a `Cap6.asset`) — no contra suposiciones. Las escenas 1 a 14 están confirmadas nodo por nodo contra el grafo; las escenas 15 (segunda mitad) a 22 **no tienen ningún nodo en el grafo actual** — es el punto real donde se corta el contenido narrativo implementado (ver nota de "Hasta dónde llega el contenido narrativo implementado" tras la escena 15). Quedan solo 2 puntos abiertos en todo el guión (marcados donde corresponde): si `PrologueDreamSequencer` ya sustituyó al `DramaticTextNode` viejo del Prólogo (parece que no, el grafo todavía dispara el nodo viejo), y un enlace roto/huérfano dentro del `WaitCustomEventNode` de la escena 10 (`EVT_ARRESTADOS`) que apunta a un nodo inexistente.
->
-> **Cambio de pipeline de cinemáticas (confirmado por Raúl, 24 ago 2026):** el guión original de abajo se escribió pensando en el sistema viejo de cinemáticas — `DramaticTextNode` (nodo del grafo narrativo) disparando `DramaticTextOverlayUI`, un overlay de pantalla completa de frases dramáticas animadas sobre un fondo genérico de "modo sueño" (nebulosa + chispas), sin actores ni escenario real. Ese sistema **se ha sustituido por escenas reales** construidas con `CinematicSequencerBase` (una subclase `XxxSequencer` por escena — actores de verdad, `CinematicCameraDriver`, animaciones, VFX, bocadillos de diálogo). Por eso varias escenas de abajo ya no se corresponden 1:1 con lo que hay implementado: algunas se han fusionado en una sola secuencia, otras se han partido en dos, y hay contenido implementado que no estaba en el guión original. Ver las notas de implementación en cada escena y la sección nueva al final del guión ("Escenas encontradas en el código sin mapeo claro al guión original").
->
-> `SimpleCinematicDirector.cs` es un tercer sistema, más antiguo, de cinemáticas por lista de steps (animación/cámara/audio/subtítulos) — sigue en el proyecto pero está catalogado en `TDD.md` como código legacy con bugs conocidos (§13, §19.4). No confirmado a qué escena(s) concretas de este guión sirve todavía.
+> **Alcance y fuentes de estado (25 sep 2026):** el grafo activo de esta revisión es Assets/NarrativeGraph/Cap1.asset, junto con Secundary.asset. Los archivos MainNarrative_Cap2.asset a Cap6.asset están en Assets/NarrativeGraph/Versiones antiguas y no se tratan como flujo vigente. Para confirmar implementación se contrastan el grafo activo, los assets de secuencia y las quests; para fijar canon se usa la novela completa.
 
-### 1-2. Prólogo + La Casa de Will — ✅ Implementada como una sola secuencia
+> **Lectura del texto en pantalla:** cada turno en un bocadillo debe tener como máximo tres frases y ocupar una unidad de sentido completa. Si no cabe, se reescribe o se divide con una reacción/pausa natural. No dejar una palabra sola en la página siguiente. La revisión de frases y el ajuste visual son tareas distintas; las páginas solo se consideran revisadas al verlas en la interfaz real del juego.
 
-Estas dos escenas ya no son dos beats separados como en el guión original: están implementadas como **una sola secuencia real**, `PrologueDreamSequencer.cs`. El Prólogo ya no es pantalla en negro con solo audio — es una escena visual completa que dramatiza el enfrentamiento antiguo entre el Mago Oscuro y el Will original (ver "La Verdadera Historia de Will" más arriba), y termina con el propio `Co_Awaken()` de la secuencia, que es literalmente el momento "Will, despierta" enlazando directo con la escena de la casa. Cabecera del script: *"Orquestador del prólogo — el sueño de Will. Sustituye al `DramaticText_Prolog` (solo texto) por una escena real (...) Punto de integración: sustituye al `DramaticTextNode` que hoy dispara `DramaticText_Prolog` en `MainNarrative.asset` (...) antes de continuar hacia 'La Casa de Will'"*.
+### 1. Prólogo: la última noche del Archimago
 
-**Pendiente de confirmar:** si `MainNarrative.asset` ya dispara este sequencer en vez del `DramaticTextNode` viejo, o si la sustitución sigue sin cablear en el grafo (el propio comentario describe el punto de integración como algo a hacer, no necesariamente ya hecho).
+El arranque actual es la secuencia jugable SEQ_Prologo_UltimaNoche, disparada mediante PROLOGUE_START y cerrada con PROLOGUE_DONE en Cap1.asset. La secuencia cuenta la última noche del Archimago antes de convertirse en la pesadilla recurrente de Will. El jugador resuelve tres encargos cotidianos en el valle —el horno, una carreta y un globo atascado en el campanario—, comparte el desayuno con Liora y ve la carta de la academia que el Archimago no alcanza a responder. Después ayuda a evacuar el valle; no puede salvar a todo el mundo, se despide de Liora y se enfrenta al Mago Oscuro.
 
-**Estructura real de `PrologueDreamSequencer.cs` (6 planos, cada uno separado por corte a negro), sin diálogo ni texto — todo el peso es visual y sonoro:**
+El duelo no se gana por daño: el jugador debe redirigir el hechizo del Mago Oscuro hacia el Sendero. La secuencia termina en el corte al despertar de Will. Es una pesadilla jugable que anticipa el sacrificio antiguo, sin explicar aún la reencarnación ni el parentesco del héroe con Will.
 
-- A) Primer plano estático de la cara del Mago Oscuro, borroso y tembloroso.
-- B) Mago Oscuro a la izquierda del encuadre, slow-mo, conjurando el hechizo en sus manos.
-- C) Media cara de Will (el original) a la derecha del encuadre, grande, borrosa.
-- D) Will a lo lejos y centrado, slow-mo, preparando el hechizo (no llega a lanzarlo).
-- E) Enfrentados de perfil, muy cerca, borroso; el zoom se aleja y los dos lanzan a la vez, uno hacia el otro — colisión/explosión central.
-- F) Corte a negro y despertar (`Co_Awaken`) → transición a "La Casa de Will".
+**Estado:** la secuencia y sus señales están en assets y conectadas desde el Capítulo 1 activo. Sustituye la descripción antigua de seis planos de PrologueDreamSequencer; esa secuencia anterior ya no describe el contenido actual.
 
-**Tras el Prólogo (escena de la casa, gameplay):** Will despierta en su cama. Sobre la mesa hay una carta de Eldran. El jugador lo controla por la habitación, se acerca a la mesa e interactúa para leerla. *(Pendiente de confirmar en el Editor si esta parte de "la casa" sigue siendo un beat de `PlayDialogueNode`/gameplay normal aparte del sequencer, o si `PrologueDreamSequencer` también la cubre — el propio comentario del script solo detalla los 6 planos del sueño, no la parte de la casa.)*
+### 2. La mañana de Will: casa, Oliver y Eldran
 
-*Sin confirmar: si las líneas de audio del guión original ("Rendíos ante mí", "Deja en paz a mi pueblo...", "Will, ¡DESPIERTA!") se siguen usando como voces sobre esta nueva escena visual, o si se sustituyeron también — el comentario del script dice "sin diálogo ni texto", pero no aclara si hay líneas de voz sin texto en pantalla.*
+Will despierta tras la pesadilla. La carta de Eldran lo pone en marcha. Al salir de casa se encuentra con Oliver, que llega corriendo, sin aliento, le enseña un hechizo nuevo y provoca un estallido que les salpica a ambos. La secuencia termina con una transición a los menús y al control del grupo.
 
-### 3. El Reino y el Primer Encargo
+El jugador recorre el pueblo y presencia la discusión de Eldran y Victoria por las cajas de fruta. La intervención de Will resuelve la disputa y enlaza con un regalo: una estrella de madera. La discusión no es una exposición de lore; establece la familiaridad entre los vecinos y el tono cotidiano del pueblo antes de que aparezca el primer peligro.
 
-- Tipo: Gameplay.
-- Gameplay: Will sale de casa y explora el pueblo. Habla con Eldran en la entrada. Eldran le pide que vaya al linde del bosque a recuperar una caja de frutas que pesa mucho para él. Will va al marcador, recoge la caja y regresa.
+**Estado:** SEQ_OliverSaludo y SEQ_PerasEldran están en Assets/_SEQUENCES; Cap1 contiene sus señales de entrada y salida, la incorporación de Oliver al grupo y el tutorial de minimapa para encontrar a Eldran.
 
-### 4. El Despertar de una Estrella — ✅ Implementada, ver `StarAwakeningSequencer.cs`
+### 3. La caja de fruta: encargo y control del mapa
 
-- Tipo: Gameplay Inmersivo.
-- Al llegar al punto del evento, el tiempo entra en Slow-motion automático. Un proyectil de fuego se dirige a Will. Interacción: el jugador debe realizar un "Input de Pánico" (pulsar repetidamente el botón de acción) para activar el escudo instintivo. Narrativa: efecto visual de desenfoque y audio distorsionado (tinnitus) para transmitir shock. Transición: tras activar el escudo, el tiempo vuelve a la normalidad y el demonio emerge directamente en el gameplay, iniciando el combate.
-- *Confirmado en código:* `StarAwakeningSequencer.cs` orquesta esta escena. Señal de entrada `AWAKEN_START`, señal de salida en éxito `AWAKEN_DONE` (arranca el combate), señal de salida en fallo `AWAKEN_FAILED` (el grafo vuelve al diálogo con Eldran — así que el "Input de Pánico" sí puede fallarse). Estructura interna: `Co_PreDialogue` → `Co_EldranHintDelayed` (Eldran da una pista si tarda) → `Co_WillFiresBack` / `Co_FailedSequence` → `Co_ReturnTime` / `Co_ApproachTension`.
-- *Confirmado contra `MainNarrative_Cap1.asset` (grafo real, no supuesto):* la cadena de nodos es `GiveInventoryItemNode` (recompensa de la escena 3, "Añado al inventario") → `RaiseCustomEventNode(AWAKEN_START)` → `WaitCustomEventNode(AWAKEN_DONE)` en paralelo con `WaitCustomEventNode(AWAKEN_FAILED)`. Si falla, el grafo vuelve literalmente al nodo `WaitQuestCompleteNode` de la escena 3 ("HAY QUE BUSCAR LA CAJA BAJO UN ARBOL") — confirma que un fallo del Input de Pánico no avanza nada y el jugador reintenta desde ahí.
+Tras comprar el objeto inútil que Eldran pidió, SEQ_EldranCaja hace que Eldran llame a Will desde lejos, se acerque y le encargue recuperar la caja que dejó bajo un árbol. El jugador sigue el marcador del minimapa hasta la caja, la recoge y la devuelve. El marcador y el tutorial sirven para enseñar exploración y entrega de objetos antes del Despertar de la Estrella.
 
-### 5. El Demonio — ✅ Confirmado en el grafo: combate normal, no cinemática
+**Estado:** SEQ_EldranCaja está en Assets/_SEQUENCES y el grafo activo Cap1 incluye la llamada de Eldran, el tutorial de minimapa y la entrega. La petición de la caja se presenta como encargo cotidiano: conservarla como vínculo con la novela y no añadir una explicación profética antes de tiempo.
 
-- Tipo: Gameplay Inmersivo.
-- Gameplay: mientras Will lucha contra el Demonio, Eldran, parapetado en una posición cercana, guía a Will con gritos animándolo. El jugador debe aprender a disparar magia básica mientras esquiva los ataques del enemigo en tiempo real.
-- **Confirmado contra el grafo real (`MainNarrative_Cap1.asset`), resuelto el punto que quedaba en el aire:** tras `AWAKEN_DONE`, la cadena de nodos es: `UnlockAbilitiesNode` ("SE DESBLOQUEA EL ATAQUE MAGICO Y LA BOLA DE FUEGO") → `StartQuestNode` ("5.- HAY QUE DERROTAR AL DEMONIO", quest `ELDRAN_MISSION3`) → `StartBattleNode` ("5.1.- ARENA DE BATALLA: DEMONIO", `battleId: Demon_1`). Es decir: el combate contra el Demonio **es gameplay normal vía `StartBattleNode`, no una cinemática ni un `CinematicSequencerBase`** — confirmado, no una suposición.
-- **El "barrido de cámara hacia Liam observando" del guión original SÍ tiene su propia escena, y va justo después del combate, no durante:** al salir del `StartBattleNode` (victoria), el siguiente nodo es un `RaiseCustomEventNode` titulado literalmente **"Los planes de Liam"** con `eventKey: LIAM_CRYSTAL_START`, seguido de un `WaitCustomEventNode(LIAM_CRYSTAL_DONE)` — esto es `LiamCrystalBallSequencer.cs` (la escena de Liam mirando la bola de cristal, revelando que el demonio fue cosa suya y que Will es el chico de corazón puro). Confirmado: no es un simple barrido de cámara dentro de esta escena, es una escena propia entre el combate y el regreso a casa. Se ha quitado de la sección "sin mapeo claro" del final del guión porque ya tiene posición confirmada.
-- **Transición confirmada:** tras `LIAM_CRYSTAL_DONE`, el siguiente y último nodo del tramo es un `CompleteQuestStepsNode` titulado **"7.- ELDRAN SE VA A CASA DE WILL"** (completa `ELDRAN_MISSION3`). Según Raúl, en ese punto **Eldran lleva a Will a un punto de guardado** — el grafo no modela el punto de guardado como nodo propio (no existe un tipo `SavePointNode`; los puntos de guardado son objetos de mundo, no nodos del grafo), así que esa parte del blocking no se ve reflejada aquí, solo la finalización de la quest. El título del nodo ("se va a casa de Will") y el punto de guardado no son necesariamente contradictorios — probablemente el punto de guardado está de camino a o dentro de la casa — pero si no es así, el título del nodo en el grafo está desactualizado y convendría renombrarlo para que no lleve a error en el futuro.
+### 4. El Despertar de una Estrella
 
-### 6. La Preparación del Héroe — ✅ Confirmada contra `MainNarrative_Cap2.asset` (2 de 3 tareas)
+Eldran avisa a Will cuando el proyectil mágico se dirige hacia él. La secuencia ralentiza el tiempo y deja al jugador responder bajo presión. Si Will no consigue activar el escudo instintivo, la secuencia reinicia el mismo evento; al completarlo, se desbloquean el ataque mágico y Bola de Fuego.
 
-- Tipo: Gameplay.
-- Tras el combate, Eldran explica que necesitan ayuda experta. Envía a Will a buscar a la hechicera Estela al Bosque Prohibido. Antes de ir, Will debe cumplir tres tareas: conseguir una capa de mago de Victoria, comprar una poción de vida y entrenar con Erika (tutorial de batalla).
-- **Confirmado en el grafo:** tras completar `ELDRAN_MISSION4` ("hablar con Eldran"), se abren **tres ramas en paralelo** — pero el grafo solo modela dos de las tres tareas del guión como nodos propios:
-  - **Capa de Victoria:** `WaitCustomEventNode` "9.1.- HABLO CON VICTORIA" (`eventKey: ADD_CLOAK`) → `UnlockWardrobeItemNode` "RECIBO CAPA DE MAGO" → completa el paso `QUEST_ELDRAN_MISSION5_STEP_00`.
-  - **Entrenar con Erika:** `WaitCustomEventNode` "LUCHAMOS CON ERIKA" (`eventKey: ERIKA_FIGHT`) → `UnlockAbilitiesNode` "DESBLOQUEAMOS EL HECHIZO BOLA PRISMA" (Plasmaball) → `WaitCustomEventNode` "GANAMOS LA BATALLA CON ERIKA" (`ERIKA_BATTLE_WON`) → completa el paso `QUEST_ELDRAN_MISSION5_STEP_02`. Es decir: entrenar con Erika **desbloquea directamente el hechizo Bola Prisma**, no es solo un tutorial — confirma y afina el balance: Bola Prisma llega justo después de Bola de Fuego, en el segundo capítulo.
-  - **Poción de vida:** no aparece como nodo propio en el grafo — probablemente una compra libre en una tienda (no gateada por quest), sin confirmar.
-  - Las dos tareas confirmadas son requisito para completar `ELDRAN_MISSION5` del todo (necesita ambos `stepConditionIds`), que a su vez desbloquea `ELDRAN_MISSION5_2` ("hay que hablar con Eldran" de nuevo) antes de cerrar el capítulo 2.
+**Confirmado en los assets vigentes:** SEQ_StarAwakening usa AWAKEN_START y emite AWAKEN_DONE o AWAKEN_FAILED. Cap1.asset espera ambos resultados; el fallo vuelve a iniciar el evento. La victoria desbloquea habilidades antes de iniciar la misión del Demonio.
 
-### 7. El Bosque Prohibido — ✅ Implementada, ver `EstelaAppearsSequencer.cs`
+### 5. El Demonio y los planes de Liam
 
-- Tipo: Gameplay Inmersivo.
-- Gameplay: Will atraviesa el bosque encontrando los restos del paso de Estela (daños mágicos en el entorno, árboles chamuscados). Al llegar al claro central, el jugador presencia en tiempo real a Estela lanzando un hechizo masivo que destruye a las arañas restantes.
-- Transición: tras el despliegue de poder de Estela, el jugador recupera el control total y debe acercarse a ella para iniciar el diálogo, donde ella reacciona a la llegada de Will.
-- *Confirmado en código, con más detalle que el guión original:* `EstelaAppearsSequencer.cs` (señal de entrada `ESTELA_APPEARS_START`, salida `ESTELA_APPEARS_DONE`) monta la escena en 7 beats: 1) un guerrero ordena a las arañas atacar, 2) Estela las elimina, 3) los guerreros la amenazan y le exigen todo lo que lleva, 4) Estela finge ser una princesita asustada, 5) los guerreros se burlan llamándola "princefea" y ella pierde los papeles, 6) ráfaga de proyectiles y los guerreros huyen, 7) Will aplaude, Estela hace una reverencia ("¿Eso era todo?"). El guión original no menciona ni a los guerreros ni el insulto "princefea" — es contenido añadido/expandido respecto al Doc v1.0, no un error.
+El enfrentamiento contra el primer Demonio es un combate normal de gameplay, no una cinemática. El jugador aprende magia básica, se mueve por la arena y combate mientras Eldran lo anima desde una posición cercana.
 
-### 8. El Golem — ✅ Confirmada contra `MainNarrative_Cap3.asset`
+**Confirmado en Cap1.asset:** tras AWAKEN_DONE se desbloquea el ataque mágico y Bola de Fuego; comienza ELDRAN_MISSION3 y se lanza el combate Demon_1. Después de la victoria se dispara la secuencia de Liam con la bola de cristal, mediante LIAM_CRYSTAL_START y LIAM_CRYSTAL_DONE. Es un beat aparte del combate y revela que Liam está observando a Will.
 
-- Tipo: Cinemática / Gameplay Inmersivo (Intrusión Psicológica).
-- Gameplay: mientras Will y Estela regresan al Reino, al llegar a la zona de combate, el entorno se altera: la pantalla sufre temblores violentos y distorsiones de color (glitch visual), simulando una intromisión mágica externa.
-- Narrativa: se escucha de fondo la voz distorsionada de Liam ("Esta estúpida va a arruinar mis planes...") y las frases aparecen directamente en pantalla (texto diegético). Esto ocurre mientras el Golem emerge orgánicamente del terreno. El jugador mantiene el control en todo momento.
-- Transición: tras derrotar al Golem, el jugador continúa caminando.
-- **Confirmado en el grafo, con un detalle que no está en el guión original:** tras salir del bosque (`EXIT_FROM_WOODS_ESTELA`), el nodo que dispara la invocación se titula literalmente **"LIAM AMENAZADO POR ESTELA"** (`eventKey: LIAM_GOLEM_SUMMON_START`) — sugiere que lo que hace saltar a Liam a invocar al Golem no es solo paranoia suya, sino que Estela lo amenaza o confronta de algún modo justo antes. El guión original no menciona esa interacción directa entre ambos; convendría que Raúl confirme si es así o si el título del nodo es solo una etiqueta interna sin peso narrativo real.
-- **Confirmado:** `LIAM_GOLEM_SUMMON_DONE` (fin de `LiamGolemSummonSequencer.cs`) → `StartBattleNode` "ARENA DE BATALLA: GOLEM" (`battleId: Golem_1`) — el combate en sí es gameplay normal vía `StartBattleNode`, igual que el Demonio de la escena 5, no parte de la cinemática.
+Al concluir, el grafo completa la misión ELDRAN_MISSION3. El nodo se titula «ELDRAN SE VA A CASA DE WILL»; la ubicación del punto de guardado depende del montaje de escena y no se infiere solo por el título.
 
-### 9. En la Taberna — ✅ Implementada, en dos sequencers separados
+### Estado de la adaptación a partir del Demonio — revisión del 25 de septiembre de 2026
 
-- Tipo: Cinemática / Minijuego.
-- Texto: Eldran, Will y Estela discuten sobre lo ocurrido. El estómago de Estela ruge y al llegar la comida, devora todo de forma grotesca. Liam intenta acercarse, pero Estela, enfadada por la interrupción, conjura una bola de fuego. Eldran: "¡Corred! Huid de Estela hasta que se le pase el enfado."
-- Gameplay: minijuego de huir de Estela. Hay que proteger a la gente del Reino antes de que se acabe el tiempo. Al terminar, cinemática de Estela lanzando una bola de fuego colosal que destruye la mitad de una montaña ("¡Así que comete esta!").
-- *Confirmado en código:* la escena se implementó en **dos** sequencers distintos, no uno solo. `TabernaSequencer.cs` cubre la parte de diálogo/rugido de estómago/minijuego de huida (el rugido `Taberna_StomachRumble` se reutiliza ya en el vídeo promo de marketing, ver el proyecto de Cowork). El desenlace de la bola de fuego colosal es un sequencer aparte, `MountainSequencer.cs`: Estela dice su frase y queda congelada; Will, Eldran y Liam corren a sus puntos de huida (Eldran grita "¡CORREEEEDDDDD!"); plano de Estela lanzando la ráfaga; flash + shake + SFX `Mountain_Impact` → fundido a negro (la explosión sigue sonando durante el negro).
-- **Corregido tras revisar el grafo real:** en la pasada anterior se dijo que `MOUNTAIN_START`/`MOUNTAIN_DONE` estaban conectados como nodos del grafo — no es así. Esas dos señales **no aparecen como `RaiseCustomEventNode`/`WaitCustomEventNode` en ningún capítulo** (`MainNarrative_Cap1` a `Cap6`), así que `MountainSequencer` debe dispararse directamente desde código (probablemente al terminar el minijuego de huida — ver escena siguiente) y no desde el grafo narrativo. Lo único que sí aparece en el grafo es, al principio del Capítulo 4, un `FocusCameraNode` **"LA CAMARA ENFOCA A LA MONTAÑA"** con `focusId: MOUNTAIN_EXPLOSION_EVENT` (`holdDuration: 3`) — el grafo espera ahí a que ese punto de foco de cámara esté listo, de forma desacoplada del patrón `WaitCustomEventNode` que usa el resto de escenas.
-- **El minijuego de huida es un `StartTagMinigameNode` real**, confirmado en `MainNarrative_Cap3.asset`: "ESTELA FURIOSA" (`minigameId: TAG_MINIGAME_01`), disparado en paralelo a `StartQuestNode` "Huye de Estela" (`ELDRAN_MISSION8`) justo al terminar `TabernaSequencer` (`TABERNA_DONE`). Cierra el Capítulo 3.
+El orden de abajo sigue la novela como canon y traduce cada bloque a una experiencia de juego. Las mecánicas son objetivos de diseño, no funciones aprobadas por el mero hecho de aparecer aquí.
 
+**Estado de implementación:** la carpeta activa Assets/NarrativeGraph contiene Cap1.asset y Secundary.asset; los antiguos MainNarrative_Cap2.asset a Cap6.asset están en Versiones antiguas. Por tanto, aquellas comprobaciones de agosto contra seis capítulos describen una versión archivada del grafo y no prueban el estado actual del juego. Los assets de secuencia, quests, escenas y localización prueban que existe contenido preparado, pero no que el recorrido posterior al Demonio esté conectado y sea jugable de principio a fin. Cada estado de abajo distingue esos casos.
 
+**Alcance de la refactorización actual:** la base de gameplay se da por trabajada hasta la Caja. Las secciones 16–21 describen el recorrido posterior a esa prueba y se desarrollan abajo con objetivos jugables, puzles, combates, descansos y uso de habilidades. Esta ampliación no sustituye la verificación posterior en Unity.
 
-### 10. El Arresto — ✅ Confirmada contra `MainNarrative_Cap4.asset`
+**Criterio para textos en bocadillo:** un bocadillo no debe pasar de tres frases. Si una intervención necesita más, se convierte en dos turnos con una pausa, reacción o cambio de plano que justifique el relevo. No se parte una frase para dejar una palabra suelta en el bocadillo siguiente ni se fuerza una página manual: se ajusta la redacción al espacio real del cuadro. Si aun así no cabe, se recorta o se divide en una unidad de sentido completa. Las líneas largas existentes en localización se consideran pendientes de adaptación a esta pauta.
 
-- Tipo: Cinemática / Gameplay.
-- Texto: todos discuten por lo que acaba de pasar con Estela. Liam le echa la culpa a Estela y Estela a Liam cuando llega un guardia y les dice que por órdenes del Rey deben acompañarle hasta palacio.
-- Gameplay: hay que seguir al guardia hasta palacio. Entrar y hablar con el Rey. Durante el camino los personajes hablan. Liam da más información al grupo acerca del Sendero.
-- **Confirmado en el grafo:** el Capítulo 4 arranca con el `FocusCameraNode` de la montaña (ver escena 9) y sigue con `WaitCustomEventNode` "Termina el diálogo con el guardia" (`eventKey: EVT_ARRESTADOS`), que abre **tres ramas en paralelo**: `StartQuestNode` "Sigue al guardia" (`ELDRAN_MISSION9`), un `ShowLorePopupNode` **"CONVERSACION MIENTRAS SIGO AL GUARDIA"** (esto es "Liam da más información al grupo acerca del Sendero" del guión, confirmado), y una tercera salida cuyo GUID de destino (`3e012768-…`) **no corresponde a ningún nodo de este capítulo** — parece un enlace roto/huérfano en el grafo (posible resto de una edición anterior). No es bloqueante porque las otras dos ramas sí conectan, pero conviene que Raúl lo revise en el Editor del grafo narrativo por higiene.
-- Sigue: "Sigue al guardia" → se abren las puertas (`EVT_ARRESTADOS_OK`) → completa un paso de `ELDRAN_MISSION9` → `WaitCustomEventNode` **"Hablamos con el Rey. Evento que lanza el Rey"** (`eventKey: TALK_KING`) → completa `ELDRAN_MISSION9` del todo → `WaitCustomEventNode` **"Hay que escapar de la prisión. Evento que lanza Estela"** (`eventKey: WE_HAVE_TO_SCAPE`) → fin del Capítulo 4. Es decir: hablar con el Rey **no termina en indulto inmediato** como podría sugerir el guión original — deriva directamente en la necesidad de escapar de la prisión, que es la escena 11.
+### 6. La preparación y el camino a Estela — novelas IV–VII
 
-### 11. El Calabozo — ✅ Confirmada contra `MainNarrative_Cap5.asset`
+Tras el primer Demonio, Eldran explica que el grupo necesita ayuda experta. Will se prepara para salir del Reino y buscar a Estela en el Bosque Prohibido. La capa de Victoria, la poción y el entrenamiento con Erika pueden funcionar como tareas opcionales o como objetivos de preparación; la progresión debe enseñar equipo, consumibles y combate sin detener la aventura con tres recados equivalentes.
 
-- Tipo: Gameplay.
-- Gameplay: el jugador toma el control en el calabozo. Debe resolver un puzzle en la celda para escapar. Se activa la función de disolver el equipo. Hay que cambiar de personaje para resolver el puzzle.
-- **Confirmado en el grafo:** el Capítulo 5 arranca directamente con `StartQuestNode` **"MISIÓN 10: Escapar de la mazmorra"** (`ELDRAN_MISSION10`) → `WaitCustomEventNode` "Encuentran la llave y escapan de la mazmorra" (`eventKey: WE_HAVE_ESCAPE`) → completa la misión 10.
+**Diseño jugable:** presentar las tareas en paralelo y permitir que el jugador elija el orden. El entrenamiento con Erika introduce la Bola Prisma si esa progresión se conserva. El bosque conduce a la presentación de Estela y a un combate cooperativo contra el Gólem. El incidente deja claro que el grupo ya no viaja solo con Will y Eldran.
 
-### 12. La Emboscada y el Perdón — ✅ Confirmada, con una recompensa nueva no documentada en el guión original
+**Canon que debe conservarse:** la novela muestra el miedo de Will a no estar a la altura, los planes de Liam y la desconfianza de Estela hacia su conducta controladora. La invocación del Gólem es una acción de Liam; el título antiguo del nodo «LIAM AMENAZADO POR ESTELA» no basta para establecer que Estela amenazara a Liam.
 
-- Tipo: Cinemática / Gameplay.
-- Texto: al salir el Rey les pilla así que a escondidas, Liam invoca a un Demonio para crear un ataque al castillo. Tras vencer, el Rey les agradece haberlos salvado y les perdona su condena, pidiéndoles que investiguen por qué el reino está bajo ataque. Eldran propone reunirse fuera del castillo para discutir la estrategia, permitiendo un momento de calma para el jugador.
-- Gameplay: boss fight contra el Demonio invocado por Liam.
-- **Confirmado en el grafo:** tras escapar de la mazmorra, `StartQuestNode` "Misión 11: Salir del castillo" → `WaitCustomEventNode` **"Hablan con el Rey y empieza la batalla"** (`eventKey: Battle_Demon_2`) → `StartBattleNode` "Batalla contra el demonio 2" (`battleId: Demon_2` — un segundo boss fight distinto del Demonio de la escena 5, `Demon_1`) → completa misión 11.
-- **Contenido nuevo, no presente en el guión original v1.0:** tras ganar la batalla, `WaitCustomEventNode` **"Recompensa por matar al demonio que nos da el rey"** (`eventKey: CORAZON_ESTELAR`) → `UnlockAbilitiesNode` **"Aprendo Corazón Estelar"**. El guión original solo dice que el Rey "les agradece y les perdona su condena" — en el juego real, el agradecimiento del Rey incluye enseñarles/concederles el hechizo Corazón Estelar (el de mayor daño de todos, 100 — ver "Estado de Balance de Hechizos"). Vale la pena añadir esta recompensa al guión narrativo si Raúl la confirma como intencional (parece coherente: un regalo real por salvar el castillo).
-
-### 13. La Reunión Estratégica — ✅ Confirmada, contenido probablemente diálogo normal
-
-- Tipo: Gameplay.
-- Texto: al salir del castillo para reorganizarse, Eldran y Estela comentan la "increíble casualidad" de que el demonio atacara el castillo justo a tiempo para salvarles del arresto. Liam, ocultando que él invocó al demonio, se pone a la defensiva y desvía el tema. Will, siempre conciliador, calma los ánimos y centra al grupo en el objetivo principal. Liam revela que necesitan el Libro de los Hechizos Prohibidos, y Eldran propone buscar a un antiguo amigo hechicero en el pueblo vecino.
-- Gameplay: reunirse con Eldran en las afueras del Reino.
-- **Confirmado en el grafo:** tras el reward de Corazón Estelar, `StartQuestNode` **"Misión 13: Reunirse con Eldran"** (`ELDRAN_MISSION13`) → el Capítulo 6 espera a que esa misión se complete (`WaitQuestCompleteNode`) y solo entonces sigue con "Reabrir puertas del castillo (fin misión 13)". El contenido de la escena (el diálogo sobre "la casualidad", Liam a la defensiva, etc.) ocurre **dentro** de esa misión, gateado por finalización de quest — no hay ningún `RaiseCustomEventNode`/sequencer propio asociado, así que es casi con toda seguridad diálogo normal vía `DialogueManager`, no una cinemática dedicada. Esto también encaja con la nota de `TDD.md` sobre el bug de cámara corregido el 20 ago 2026 en "la escena grupal de los 'arrestados'".
-- **Confirmado y ya no es una suposición:** `ReinoExitBanterSequencer.cs` **no** es esta escena — ver la nota confirmada en la escena 14-15 más abajo, donde sí tiene su lugar real (justo al salir del Reino hacia la misión 14, no aquí).
+**Estado:** el guion y los assets antiguos describen misiones, secuencias y desbloqueos para este tramo. La conexión vigente debe comprobarse en las escenas y quests actuales antes de marcarlo como jugable. La secuencia de aparición de Estela y el combate contra el Gólem no se dan por confirmados a partir del grafo archivado.
 
-### 14. El Fuego Fatuo — 🚧 Arranque confirmado, contenido interno del puzzle sin verificar
-
-- Tipo: Gameplay.
-- Contexto: una aldeana asustada llega al Reino advirtiendo que el camino hacia el pueblo vecino está bloqueado por un Fuego Fatuo que engaña a los viajeros durante la noche, atrapándolos en un bucle espacial. Will decide intervenir para despejar el camino. Como hay que esperar a que se haga de noche, Estela decide ir a por provisiones y Will y Liam deben inspeccionar la zona para tener claro el camino.
-- Gameplay (Fase Estela): el estómago de Estela vuelve a rugir. El jugador debe usar la mecánica de "disolver equipo" para controlar únicamente a Estela. Su misión es volver a los mercaderes del Reino para intentar acaparar cantidades ingentes de provisiones.
-- Gameplay (Fase Will y Liam): el control pasa a Will. Se desbloquea la función de "Sígueme". Will debe acercarse a Liam y pedirle que le siga para explorar la zona. Durante la exploración charlan sobre el origen de Will. La relación entre ambos personajes se intensifica.
-- Gameplay (Todos): el grupo entra en una zona de colinas y arboledas. Si el jugador intenta avanzar en línea recta, una niebla mágica lo teletransporta al inicio de la zona. Para avanzar, debe encontrar al Fuego Fatuo y seguir exactamente su rastro luminoso entre los árboles, evitando ser engañado por luces de colores falsas (el verdadero fatuo brilla en azul). Al llegar cerca de la salida, el Fuego Fatuo se pone a dar vueltas a gran velocidad. El jugador debe usar nuevamente la disolución de equipo, posicionando a Liam en un flanco y a Will en el otro para acorralar a la entidad. Al atraparlo, la ilusión se disipa, abriendo el camino hacia el pueblo.
-- **Confirmado en el grafo — hallazgo importante: las escenas 14 y 15 están fusionadas en una sola misión implementada.** Tras "Reunión Estratégica" (misión 13), el Capítulo 6 lanza `StartQuestNode` **"Misión 14: Buscar al amigo de Eldran"** (`ELDRAN_MISSION14`) — el nombre de la misión es el objetivo final de la escena 15, pero sus pasos internos se rastrean con el `questId` **`FUEGOFATUO_1`** (visible en el `CompleteQuestStepsNode` final del tramo, condición `FUEGOFATUO_02`) — confirma que en la implementación, "encontrar al Fuego Fatuo" y "encontrar al hechicero amigo" son una sola misión con un nombre y un tracking de pasos distintos, no dos escenas separadas.
-- **Confirmado: `ReinoExitBanterSequencer.cs` SÍ es esta transición** (corrige la sección "sin mapeo claro" de la revisión anterior): `StartQuestNode(ELDRAN_MISSION14)` → `WaitCustomEventNode` "Salimos del Reino al pueblo" (`eventKey: EVT_REINO_EXIT_BOUNDARY`) → `RaiseCustomEventNode(EVT_REINOEXIT_BANTER_START)` → `WaitCustomEventNode(EVT_REINOEXIT_BANTER_DONE)`. Confirmado tal cual se sospechaba: el grupo se para nada más cruzar el límite del Reino, Will confiesa que tiene miedo, Estela lo anima, Liam le recuerda que no está solo — justo antes de partir hacia el Fuego Fatuo.
-- **Contenido nuevo, no presente en el guión original:** tras el banter, un `KingdomExitTransitionNode` dedicado — plano de paisaje (`ReinoExit_LandscapeShot`), fade de ambiente, silencio de 0.75s, sube el tema musical principal (fade de 6s) y aparece el **logo del juego** en pantalla (fade in 1.75s, hold 3.5s, fade out 1.25s) antes de volver a la cámara de juego. Tiene campos `closeDemoAfterLogo`/`closeDemoTargetScene: Credits` **configurados pero desactivados (`closeDemoAfterLogo: 0`)** — es decir, este nodo está preparado para poder cerrar la demo aquí mismo mostrando los créditos, aunque ahora mismo no lo hace. Es un fuerte indicio de que este es el punto de corte pensado para la demo actual (ver nota de "hasta dónde llega el contenido implementado" al final del guión).
-- Después del `KingdomExitTransitionNode`: `WaitCustomEventNode` "Espero a que entren en la zona a inspeccionar" (`eventKey: EVT_WILL_LIAM`) → `ShowLorePopupNode` **"Will y Liam hablan sobre el pasado de Will"** — esto es la "Fase Will y Liam" del guión ("charlan sobre el origen de Will"), confirmada.
-- **Alcance de la revisión del grafo del 24 de agosto:** se verificó hasta el diálogo de lore Will/Liam. El contenido interno del Fuego Fatuo y su conexión completa con la continuación siguen necesitando una comprobación específica; esta revisión documental no los da por terminados ni por ausentes.
-
-### 15. El Hechicero Amigo de Eldran — Fusionada con la escena 14 en la implementación (ver nota arriba)
-
-- Tipo: Gameplay.
-- Texto: el grupo viaja al pueblo vecino. Tras buscar por la zona, encuentran al hechicero amigo de Eldran. Este hombre, receloso, accede a darles la información, pero solo si le ayudan a resolver un favor personal (misión de recadero o recuperación de un objeto perdido).
-- Gameplay: misión de exploración e interacción dentro del pueblo. Tras cumplir la tarea, el hechicero les explica el ritual: deben ir a una zona apartada y recitar un conjuro ante una piedra ancestral.
-- *Nota:* como se explica en la escena 14, esta escena no tiene misión propia en el grafo — es la segunda mitad de `ELDRAN_MISSION14`/`FUEGOFATUO_1`. No hay nodos del grafo que cubran específicamente "llegar al pueblo, encontrar al hechicero, favor personal, explicación del ritual" — contenido pendiente de construir o de verificar por otra vía (código de misión, no el grafo).
+### 7. La taberna, el arresto y la deuda del Rey — novelas IX–XII
 
-> **Estado de implementación revisado el 10 de septiembre de 2026:** la revisión completa de los seis capítulos realizada el 24 de agosto verificó el recorrido hasta la escena 14. Ese alcance no describe por sí solo todo el contenido actual: ya existen `CandyLand.unity`, `Sendero.unity`, `Sendero_PruebaWill.unity` y herramientas como `CandylandClimaxBuilder.cs` y `WillTrialMazeBuilder.cs`. Este último incluye una revisión del 9 de septiembre para generar el laberinto y sus espejos. `CandyLand` y `Sendero_PruebaWill` figuran habilitadas en Build Settings. Su existencia no acredita que la continuación desde la escena 14 esté conectada y sea jugable de principio a fin. Consultar `TRACKER.md` (INC-160, INC-161 e INC-162) para implementación y validación; queda pendiente comprobar el recorrido completo en Unity.
+La escena de la taberna combina un respiro cómico con una persecución de Estela que pone al pueblo en peligro. La explosión que daña la montaña tiene que sentirse como consecuencia de la persecución, no como un gag aislado: el jugador ayuda a evacuar o proteger a los vecinos antes del remate de la secuencia.
 
-### 16. La Piedra Ancestral
+Después, la guardia conduce al grupo ante el Rey. La tensión por los daños y la sospecha sobre Liam llevan al arresto; escapar del calabozo exige usar el cambio de personaje y cooperar. Al salir, el grupo ayuda a defender el Reino del segundo Demonio. Tras la victoria, el Rey reconoce que los juzgó mal y anula la condena. Después les permite consultar los archivos y enseña a Will Corazón Estelar: una magia de energía compartida que nadie puede imponer a otra persona.
 
-- Tipo: Gameplay.
-- Texto: el grupo llega al lugar sagrado. Tal como indicó el hechicero, Will recita el conjuro frente a la piedra. La realidad se resquebraja y un Guardián surge para proteger el secreto.
-- Gameplay: combate contra el Jefe. Al derrotarlo, el libro aparece entre las ruinas. Al abrirlo, descubren el hechizo para abrir el portal, además del "Hechizo del Tiempo" y el "Hechizo de Resurrección".
+**Adaptación jugable:** persecución con rutas y rescate de civiles; audiencia que establezca la condena; puzzle de celda basado en habilidades complementarias; defensa del castillo como combate distinto del primer Demonio. Separar claramente los dos jefes y dar a la victoria una consecuencia narrativa visible.
 
-**Diálogo propuesto (5 sept 2026, tras relectura del capítulo XVI de la novela a petición de Raúl — el capítulo no tiene diálogo directo, todo narrado, así que estas líneas son propuesta nueva fiel a la narración, no traducción literal; pendiente de aprobación de Raúl; claves con prefijo `PIEDRA_ANCESTRAL_`):**
+**Estado:** estas escenas están descritas en la novela y en documentación de versiones previas del grafo. Su cableado actual y el evento de aprendizaje de Corazón Estelar necesitan confirmación contra los assets activos. El perdón del Rey ocurre después de defender el castillo, no durante la audiencia ni al salir del calabozo. La deuda del título del capítulo incluye la condena que el Rey retira y el coste de reparar los daños.
 
-| Clave | ES | EN |
-|---|---|---|
-| `PIEDRA_ANCESTRAL_01` | Aquí... aquí está. | Here... here it is. |
-| `PIEDRA_ANCESTRAL_02` | Ábrelo. Ya hemos llegado hasta aquí. | Open it. We've come this far. |
-| `PIEDRA_ANCESTRAL_03` | El ritual para abrir el Sendero de las Estrellas... | The ritual to open the Path of the Stars... |
-| `PIEDRA_ANCESTRAL_04` | Espera. Hay más. Dos hechizos anotados en el margen, con otra letra... más antigua. | Wait. There's more. Two spells noted in the margin, in a different hand... older. |
-| `PIEDRA_ANCESTRAL_05` | El Hechizo del Tiempo. Y... el Hechizo de Resurrección. Prohibido. Hay una nota al margen que explica por qué. | The Time Spell. And... the Resurrection Spell. Forbidden. There's a note in the margin explaining why. |
-| `PIEDRA_ANCESTRAL_06` | Sea lo que sea que diga esa nota... creo que deberíamos guardarnos esto para cuando de verdad lo necesitemos. | Whatever that note says... I think we should save this for when we truly need it. |
-| `PIEDRA_ANCESTRAL_07` | A partir de aquí ya no hay vuelta atrás, ¿verdad? | From here on, there's no turning back, is there? |
-| `PIEDRA_ANCESTRAL_08` | No la había desde el principio. Pero ahora... ahora ya lo sabemos de verdad. | There wasn't from the start. But now... now we truly know it. |
+### 8. La biblioteca y la salida del Reino — novelas XIII–XV
 
-Encontrar el libro con el Hechizo del Tiempo y el Hechizo de Resurrección anotados al margen es la primera vez que el jugador oye hablar de ambos — referencia directa a `TIME_SPELL_TUTORIAL` (escena 20) y al hechizo de Resurrección que Will usará en el Sacrificio/Epílogo (escena 22).
+En la biblioteca real, el grupo investiga las versiones contradictorias del Sendero y las referencias a deseos de curación. Liam oculta para quién busca una cura; Will acaba preguntándoselo directamente. Antes de partir, una conversación con Tobías a través del espejo conecta la aventura con la persona concreta que Liam intenta salvar. La escena importa porque Liam deja de ser solo «el compañero misterioso»: el jugador ve el vínculo fraternal y lo que está en juego.
 
-### 17. El Sendero de las Estrellas
+Durante el viaje, el grupo aprende a leer rastros mágicos. La ruta del Fuego Fatuo puede convertirse en un segmento de exploración nocturna: seguir señales auténticas, comparar rastros y reconocer los engaños del entorno. La charla de camino deja que los tres se conozcan y marca que protección y control pueden parecerse, pero no son lo mismo.
 
-- Contexto: abren el portal. Se crea un punto de guardado entre el mundo real y el del sendero situado en el cielo entre las estrellas. Una vez se atraviesa el portal ya no se puede guardar la partida hasta superar cada prueba.
+**Diseño jugable:** intercalar búsqueda de información, conversación opcional y exploración; evitar que el Fuego Fatuo sea únicamente un puzzle de seguir un color. Las pistas deben poder leerse por forma, movimiento o reacción del entorno, además del color, y el jugador debe poder recuperarse de una ruta falsa sin reiniciar un tramo largo.
 
-**Diálogo propuesto (5 sept 2026, cita textual del capítulo XVII de la novela; pendiente de aprobación de Raúl; claves con prefijo `APERTURA_SENDERO_`):**
+**Estado:** existen claves de diálogo para la conversación de Will y Liam, y hay contenido de quests de Fuego Fatuo y del amigo de Eldran en el proyecto. Esto acredita material preparado, no la secuencia completa ni el estado de integración.
 
-| Clave | ES | EN |
-|---|---|---|
-| `APERTURA_SENDERO_01` | Una vez que lo crucemos, según el libro, ya no habrá forma de volver atrás hasta superar cada prueba. No hay puntos de guardado dentro. Solo hay avanzar. | Once we cross it, according to the book, there'll be no way back until we clear every trial. There are no save points inside. Only forward. |
-| `APERTURA_SENDERO_02` | Parece que hay que pasar por las tres. Espero que al menos se pueda ir en grupo. No me apetece nada separarme de vosotros aquí dentro. | Looks like we have to go through all three. I hope at least we can go as a group. I really don't fancy getting separated from you two in there. |
-| `APERTURA_SENDERO_03` | No pienso soltaros de vista. Sea lo que sea que haya al otro lado. | I'm not letting either of you out of my sight. Whatever's on the other side. |
-
-- **Corrección de canon (30 ago 2026, aclarada por Raúl y ya aplicada en la novela — ver `novela/manuscrito-novela-completo.md`): las tres pruebas NO son caminos solitarios paralelos.** La versión anterior de este guión (heredada del Google Doc v1.0) describía "Prueba 1 de Will", "Prueba 2 de Estela", "Prueba 3 de Liam" como si cada personaje las afrontara en solitario — no es así:
-  - **Prueba 1 (el laberinto de los miedos de Will) y Prueba 2 (Chuchelandia, de Estela) las vive el grupo entero, juntos**, aunque cada una esté centrada en un personaje — los otros dos acompañan y participan, no se quedan fuera.
-  - **Prueba 3 (la de Liam) es la única donde el grupo se separa, y de forma distinta a como decía la versión anterior.** Antes del laberinto, los tres pasan por un parque de atracciones donde se relajan y estrechan su amistad (noria, juego de anillas, mareo de Will, los tres compartiendo helado). Al fondo del parque aparece la entrada a un laberinto de espejos oscuro. Will decide no entrar — le remueve algo demasiado parecido a su propia prueba. Estela elige quedarse fuera con él en vez de entrar sola o forzarlo. **Liam entra solo.** Will y Estela ven desde fuera, como en una pantalla, lo que le ocurre a Liam dentro — así es como descubren su traición en tiempo real, en vez de que Liam se lo cuente después.
-- Prueba 1: laberinto con puzzles y jefes para que Will venza sus miedos (Estela y Liam presentes, acompañando).
-
-**Diálogo propuesto (5 sept 2026, propuesta nueva adaptada de la novela; pendiente de aprobación de Raúl; claves con prefijo `PRUEBA_WILL_`):**
-
-| Clave | ES | EN |
-|---|---|---|
-| `PRUEBA_WILL_01` | Madre mía, esto sí que da miedo. | Wow, this is actually terrifying. |
-| `PRUEBA_WILL_02` | No te rías, que es horrible. Odio hablar delante de la gente. | Don't laugh, it's horrible. I hate speaking in front of people. |
-| `PRUEBA_WILL_03` | Un discurso torpe no mata a nadie... aunque reconozco que este en concreto ha estado especialmente mal. | A clumsy speech never killed anyone... though I'll admit this one was particularly bad. |
-| `PRUEBA_WILL_04` | Es solo un eco. Nosotros estamos aquí. Míranos. | It's only an echo. We're right here. Look at us. |
-
-`PRUEBA_WILL_01-03` acompañan el primer recuerdo (un discurso torpe en la plaza del Reino, tono cómico, sin combate); `PRUEBA_WILL_04` es una línea de apoyo de Estela justo antes de que el jugador entre en el combate del recuerdo posterior (la pesadilla del hechizo).
-
-- Prueba 2: Chuchelandia. Estela odia las chuches, odia lo cursi y detesta la purpurina; se enfrenta a una historia donde debe ser reina del mundo de las chuches (Will y Liam presentes).
-
-Diálogo: **ya es contenido real e implementado**, no propuesta — 17 líneas (`DLG_CANDYLAND_01` a `DLG_CANDYLAND_17`), localizadas en ES/EN, con personajes nuevos Duque de Regaliz y Criatura de Mazapán. Solo pendiente de que Raúl ejecute el `[MenuItem]` del Editor que coloca `CandylandClimaxBuilder.cs` en la escena. No se duplica la tabla aquí — ver el guion de doblaje para el texto completo.
-
-- Prueba 3 (el laberinto de espejos/de los ecos, gameplay narrativo y exploración — Liam en solitario, Will y Estela observan desde fuera): Liam entra solo en el laberinto ilusorio y debe sacrificar recuerdos dolorosos para avanzar. El laberinto comienza a proyectar "ecos" de sus mentiras. Al llegar a la última puerta, que sella la salida, una Voz Ancestral lanza la pregunta final: *"¿Cuál fue el precio real que pagaste para llegar hasta aquí, Mago?"*. La magia de la puerta arranca la verdad de la mente de Liam, proyectando un holograma gigante: el recuerdo de Liam orquestando la emboscada mortal contra Will al principio de la aventura — visible también para Will y Estela, que lo observan desde fuera del laberinto (no dentro, como decía la versión anterior de este guión). La puerta se abre. El grupo se reencuentra en el nexo del Sendero en absoluto silencio.
+### 9. Silas y el hechizo del tiempo — novela XVI
 
-**Diálogo propuesto (5 sept 2026, adaptado de la novela — el parque de atracciones es propuesta nueva fiel a la narración, y la pregunta de la Voz Ancestral es cita textual del capítulo XVII; pendiente de aprobación de Raúl; claves con prefijo `PARQUE_LIAM_`):**
+El amigo de Eldran se llama Silas. Su petición no es un favor de recadero: el grupo recupera un reloj perdido en un taller atrapado en un ciclo de cuarenta segundos. Resolverlo requiere observar qué cambia, recordar qué persiste entre ciclos y combinar las capacidades de Will, Estela y Liam. La historia revela la amistad de juventud entre Silas y Eldran y el duelo de Eldran por Selene, que explica parte de su sobreprotección.
 
-| Clave | ES | EN |
-|---|---|---|
-| `PARQUE_LIAM_01` | Vale, esto me gusta bastante más. | Okay, I like this a lot better. |
-| `PARQUE_LIAM_02` | Toma. Para que no se te olvide de dónde vienes. | Here. So you don't forget where you come from. |
-| `PARQUE_LIAM_03` | Qué considerado. | That's... surprisingly thoughtful. |
-| `PARQUE_LIAM_04` | Deberíamos hacer esto más a menudo. Cuando todo esto termine, digo. | We should do this more often. Once all this is over, I mean. |
-| `PARQUE_LIAM_05` | Sin bosques embrujados de por medio. Ni castillos de caramelo. | Minus the haunted forests. And the candy castles. |
-| `PARQUE_LIAM_06` | Sin gólems, ni demonios, ni— | No golems, no demons, no— |
-| `PARQUE_LIAM_07` | Eso es— | That's— |
-| `PARQUE_LIAM_08` | Se parece demasiado a lo mío. A mi laberinto. No creo que pueda entrar ahí, Liam. Lo siento. | It's too much like mine. Like my maze. I don't think I can go in there, Liam. I'm sorry. |
-| `PARQUE_LIAM_09` | No hace falta que lo sientas. Esta prueba es mía. Tiene sentido que la haga yo solo. | You don't have to be sorry. This trial is mine. It makes sense I face it alone. |
-| `PARQUE_LIAM_10` | Entonces yo tampoco entro. Si Will se queda, yo me quedo con él. No pienso dejarlo solo aquí fuera. Pero eso no significa que te dejemos solo a ti tampoco, ¿entendido? Estaremos aquí, esperando, cuando salgas. | Then I'm not going in either. If Will stays, I stay with him. I'm not leaving him out here alone. But that doesn't mean we're leaving you alone either, understood? We'll be right here, waiting, when you come out. |
-| `PARQUE_LIAM_11` | Gracias. A los dos. | Thank you. Both of you. |
-| `PARQUE_LIAM_12` (Voz Ancestral) | ¿Cuál fue el precio real que pagaste para llegar hasta aquí, Mago? | What was the true price you paid to get this far, Mage? |
+Silas explica el ritual para llegar a la Piedra y la regla del Sendero: no premia una etiqueta de «bueno», sino que pone a prueba si cada viajero puede reconocer aquello que corrompería su deseo. También describe la regresión temporal como una oportunidad breve con coste, no como un reinicio gratuito.
 
-Personaje nuevo en `PARQUE_LIAM_12`: **Voz Ancestral** — no confundir con "La Voz" de la visión final de Will (escena 20); son entidades distintas, revisar casting de ambas.
+**Diseño jugable:** puzzle de bucle corto con intentos rápidos, pistas persistentes y coste legible. El jugador debe aprender una regla y aplicarla, no repetir la misma secuencia hasta acertar. Mantener las heridas, el agotamiento o el recurso gastado al volver atrás, según lo que permita el sistema final.
 
-### 18. La Ruptura: la Furia de Estela
+**Estado:** capítulo canónico de la novela. La misión del reloj, la conversación de Silas y la explicación del hechizo siguen pendientes de confirmar en la versión jugable actual.
 
-- Tipo: Cinemática y Evento de Historia (QTE o Pelea Scriptada).
-- Texto / Narrativa: el silencio se rompe cuando Estela estalla. Se siente traicionada y utilizada. Grita a Liam, acusándolo de haber usado a Will como carnada. Liam, abrumado por la culpa, intenta justificarse hablando de su hermano enfermo, pero Estela no escucha. La discusión escala y Estela, impulsiva, ataca a Liam con magia. Will intenta separarlos, pero recibe daño accidentalmente. Estela, asustada por haber lastimado a Will y asqueada con Liam, se marcha corriendo y se pierde por uno de los senderos oscuros. Liam, consumido por la vergüenza y creyendo que no merece la salvación, se aleja en dirección opuesta, rindiéndose a la oscuridad del Sendero. El grupo se ha roto.
-- Gameplay: breve combate interactivo o Quick Time Event (QTE) donde el jugador (como Will) intenta frenar los ataques mágicos de Estela usando sus escudos, pero falla por el descontrol emocional de la escena.
+### 10. El precio pequeño: Risco y Vega — novela XVII
 
-**Diálogo propuesto (1 sept 2026, adaptado del capítulo XVIII de la novela — pendiente de aprobación de Raúl; claves de localización sugeridas, mismo prefijo `RUPTURA_` que no colisiona con ninguna clave existente):**
+Antes de llegar a la Piedra, Will y sus amigos encuentran dos aldeas que comparten un manantial. Una construyó la presa; la otra depende del agua. Ambas tienen documentos que justifican sus reclamos. Liam propone resolverlo con persuasión mágica; Estela se opone a decidir por la gente. Will propone investigar y negociar, aunque no exista una solución perfecta ni todos queden satisfechos.
 
-| Clave | ES | EN |
-|---|---|---|
-| `RUPTURA_ESTELA_01` | Dime que no es verdad. Dime que lo que acabamos de ver no es lo que parece. | Tell me it isn't true. Tell me what we just saw isn't what it looks like. |
-| `RUPTURA_ESTELA_02` | Lo orquestaste todo. El demonio del bosque. El peligro. Usaste a Will como cebo desde el primer día. | You planned all of it. The demon in the woods. The danger. You used Will as bait from day one. |
-| `RUPTURA_LIAM_01` | Mi hermano se está muriendo. Estaba desesperado. Pensé que si llegaba al Sendero... | My brother is dying. I was desperate. I thought if I could reach the Path... |
-| `RUPTURA_ESTELA_03` | ¡No te atrevas a usar eso como excusa! | Don't you dare use that as an excuse! |
-| `RUPTURA_WILL_01` | ¡Parad los dos, por favor! | Both of you, please, stop! |
-| `RUPTURA_ESTELA_04` | Will... lo siento... | Will... I'm sorry... |
-| `RUPTURA_LIAM_02` | No merezco que me sigáis. | I don't deserve to be followed. |
+**Diseño jugable:** misión sistémica breve con tres fuentes de información: medir la fuga de la presa, escuchar a las familias de Vega y acompañar la apertura de las compuertas de Risco. El jugador reúne pruebas y ayuda a establecer un reparto y una revisión futura. Evitar un diálogo de elección binaria que finja que una aldea tiene toda la razón: la salida debe depender de comprender el problema y pactar condiciones.
 
-`RUPTURA_WILL_01` no está en la novela — es una línea nueva, necesaria porque el gameplay (Will intentando frenar el ataque y recibiendo daño) es un beat que la novela no tiene por ser un medio sin combate jugable. Revisar con Raúl junto con el resto.
+Este episodio es una prueba del carácter de Will antes de la prueba mágica. El «precio pequeño» es aceptar que un acuerdo imperfecto puede ser mejor que imponer una solución definitiva.
 
-**Gameplay (detalle propuesto):** el QTE de Will debe leerse claramente como "no ganable" para que el jugador no lo sienta como un fallo propio — mismo criterio de telegrafía honesta que ya se aplica a los jefes (ver `propuesta-diseno-fases-boss.md`, proyecto Cowork). Sugerencia concreta: el prompt de bloqueo aparece con timing normal, pero el propio Estela lo consigue esquivar/romper con un ataque "más rápido que de costumbre" (line de diseño, no de código) — así el jugador ve que lo intentó bien y que el fallo es de la ficción, no de su ejecución. Tras esto, Estela huye por un sendero y Liam por el opuesto — dos triggers de salida de escena separados, sin combate real (es un momento de ruptura emocional, no un desafío de habilidad).
+**Estado:** canon de la novela. La misión no aparece en el guion antiguo del juego; debe añadirse o descartarse deliberadamente al convertir esta parte en nivel jugable.
 
-### 19. El Corazón de Will: la Reunión
+### 11. La Piedra Ancestral y el acceso al Sendero — novela XVIII
 
-- Tipo: Gameplay (Acción/Aventura).
-- Texto / Narrativa: Will se queda completamente solo. El Sendero, al percibir la desunión, comienza a volverse hostil e inestable, plagado de bestias de las sombras. En lugar de guardar rencor, Will entiende que el amor de Liam por su hermano lo llevó a la desesperación. Fiel a su corazón puro, decide que nadie se queda atrás. Primero localiza a Estela y la rescata. Will le dice: *"Si no lo perdonamos, no somos mejores que él"*. Juntos, van a buscar a Liam. Lo encuentran rodeado de bestias, esperando su fin. Will y Estela lo salvan en el último segundo. Will le extiende la mano a Liam, validando su amistad por encima de la traición. El grupo recupera sus poderes definitivos (Sinergia Total).
-- Gameplay: Fase 1: el jugador controla a Will en solitario, luchando contra las defensas del Sendero hasta encontrar a Estela. Fase 2: Will y Estela unen fuerzas (mecánicas cooperativas) para buscar a Liam. Clímax: batalla final de la zona para salvar a Liam, donde el grupo recupera el 100% de su magia.
+El camino atraviesa ruinas donde quienes llegaron antes dejaron sus nombres y motivos. La cámara de la Piedra solo se ve reflejada en el agua; el grupo debe avanzar confiando en ese reflejo. Al recitar Will el conjuro de Silas, aparece el Guardián. El combate se gana cooperando: Will sostiene la línea, Estela presiona y Liam encuentra puntos débiles con su magia de pacto.
 
-**Diálogo propuesto (1 sept 2026, adaptado del capítulo XIX de la novela — pendiente de aprobación de Raúl; claves sugeridas con prefijo `REUNION_`):**
+Tras la victoria, las copias incompletas del Libro encajan con las inscripciones del pedestal. El grupo obtiene el ritual de apertura y las fórmulas del Hechizo del Tiempo y del Hechizo de Resurrección. La segunda exige una vida voluntaria a cambio de otra recién perdida. El coste debe explicarse con claridad antes de que la historia llegue al sacrificio; no presentarlo como una sorpresa mecánica.
 
-| Clave | ES | EN |
-|---|---|---|
-| `REUNION_ESTELA_01` | No merezco que vengas a buscarme. Le hice daño a mi propio amigo. | I don't deserve you coming to find me. I hurt my own friend. |
-| `REUNION_WILL_01` | Fue un accidente. Y no vine a buscarte para juzgarte. Vine porque nadie se queda atrás. Ni siquiera cuando se equivoca. | It was an accident. And I didn't come to judge you. I came because no one gets left behind. Not even when they mess up. |
-| `REUNION_ESTELA_02` | ¿Y Liam? Después de lo que hizo... | And Liam? After what he did... |
-| `REUNION_WILL_02` | Si no lo perdonamos, no somos mejores que el hombre que lo empujó a hacerlo. | If we don't forgive him, we're no better than the man who pushed him to do it. |
-| `REUNION_ESTELA_03` | Vamos a buscarlo, entonces. Antes de que este sitio se lo trague del todo. | Let's go find him, then. Before this place swallows him whole. |
-| `REUNION_ESTELA_04` | Que quede claro: esto no significa que esté todo perdonado. Solo que no pienso dejar que se muera por seguir sintiéndose culpable. | Just so we're clear: this doesn't mean everything's forgiven. It just means I'm not letting him die over feeling guilty. |
-| `REUNION_WILL_03` | Levántate. Todavía no hemos terminado. | Get up. We're not done yet. |
-| `REUNION_LIAM_01` | Después de lo que hice... | After what I did... |
-| `REUNION_WILL_04` | Después de lo que hiciste, y de todo lo que has hecho desde entonces para intentar arreglarlo. Eso también cuenta. | After what you did — and everything you've done since then to try to fix it. That counts too. |
+El grupo estudia las reglas, acuerda señales y un punto de reunión y decide cruzar juntos. El acceso puede ser el último punto de guardado seguro antes de entrar.
 
-Estas 9 líneas son una adaptación casi literal de la novela (menos reescritura que en la escena 18, porque aquí la novela ya tiene el ritmo de diálogo corto que necesita el juego). Tras `REUNION_WILL_04` y el gesto de aceptar la mano de Liam, dispara el momento de "Sinergia Total" (ver Gameplay): sugerencia de puesta en escena — destello dorado compartido entre los tres, más que un simple aumento de números, para que el jugador LEA el reencuentro igual que ya se exige para los cambios de fase de jefe (`propuesta-diseno-fases-boss.md`: "un momento real, no decoración").
+**Diseño jugable:** navegación por reflejos, jefe con funciones complementarias y un momento de preparación en el que se revisan controles, consumibles y reglas del Sendero. El jugador debe entender que el hechizo temporal no cura ni revierte el coste de sus acciones y que el de resurrección intercambia vidas.
 
-**Gameplay (detalle propuesto):** Fase 1 (Will en solitario) debe sentirse deliberadamente más débil/vulnerable que el resto del juego — sin apoyo de compañeros, es el único tramo donde el jugador experimenta mecánicamente el coste de la ruptura del grupo, no solo narrativamente. Fase 2 (Will+Estela) introduce alguna mecánica cooperativa de dos personajes simultáneos si el sistema de combate lo permite (p. ej. un ataque combinado que solo existe estando ambos activos), reservada para este tramo y la batalla final de la escena 20, para que se sienta como una recompensa nueva y no un simple relleno. El clímax (romper el cerco de bestias alrededor de Liam) es buen candidato a un patrón ya usado en el proyecto: acorralamiento breve resuelto con `OverlapSphereNonAlloc` + un pulso de daño en área al conectar el "gesto de la mano" (evitar `Physics.OverlapSphere` sin pool, ver TDD.md §12).
+**Estado:** los diálogos localizados PIEDRA_ANCESTRAL_01–08 y APERTURA_SENDERO_01–03 existen en los archivos de localización. Su puesta en escena, asignación de voces y conexión en el juego aún requieren verificación. La descripción antigua del GDD no mencionaba la obtención de las fórmulas en la Piedra; queda sustituida por esta versión de la novela.
 
-### 20. El Mago Oscuro y la Verdad
+### 12. Entrada al Sendero y prueba de Will — novelas XIX–XX
 
-- Tipo: Cinemática + Gameplay.
-- Cinemática: llegan al final. Ven el altar para pedir el deseo y volver al mundo real, pero en ese momento aparece el Mago Oscuro del prólogo.
-- Texto: Mago Oscuro: *"¿Por qué crees que estás vivo? ¿No te has preguntado nunca por qué no recuerdas nada de ti o tu pasado? Te lo diré yo, no recuerdas nada de ti, ni de tu familia ni de tu pueblo porque tú hace eones moriste luchando contra mí. Tú moriste ese día. ¡Eres la reencarnación del único mago que logró detenerme! Me obligaste a usar el super hechizo de destrucción, pero entonces no fui capaz de controlarlo. Cuando todo escapó de mi alcance pude ligar mi alma al sendero para cuando otro idiota superase las pruebas volver a pedir un deseo: mi regreso a la vida. Para que el hechizo no afectara a tu familia y estúpido pueblo utilizaste toda la magia de tu interior para crear un hechizo protector que pudo proteger a tu pueblo pero te destruyó a ti. Lo que no entiendo es cómo después de haber muerto sigues aquí…"*
-- Vemos cómo Will tiene flashbacks de su pasado. Will: *"Ahora... ahora lo recuerdo todo." "El hechizo de protección. Mis padres. Mi pueblo…" "¿Pero qué hago aquí?" "¿Cómo es posible?" "Y en este cuerpo…"*
-- En ese momento vemos cómo el corazón de Will brilla. Recupera todo su potencial y toda su magia. En la cinemática vemos a Will en un espacio donde no hay nada. Donde una voz le habla.
-- Will: *"¿Dónde estoy?" "¿He recuperado la memoria y estoy muerto?"*
-- Voz: *"No Will. Estás aquí, y allí. Estás donde quieras estar. Esto es solo tu poder, tu magia, fruto del bien que has hecho a lo largo de tu vida. Tu magia en el momento de tu muerte buscó por el tiempo y el espacio un recipiente donde meter tu alma. Tu deseo de proteger a tu pueblo y familia y acabar con la tiranía del Mago Oscuro hicieron que encontraras a Will. Este chico estaba enfermo y justo cuando ocupaba su cuerpo falleció por un fallo en su corazón. Will, debes acabar con el sendero. No hay otra forma de evitar que magos como este quieran poder y lo utilicen para su beneficio y hacer el mal."*
-- Will: *"Destruir el sendero… pero ¿y Estela y Liam?"*
-- Voz: *"Debes protegerlos y a la humanidad. Solo así demostrarás, de una vez por todas, quién eres de verdad."*
-- Gameplay (Batalla Final Épica y la Mecánica del Tiempo):
-  - Fase 1: combate cooperativo estándar donde Will usa su poder desbloqueado.
-  - Fase 2 (El Hechizo Prohibido del Tiempo): el Mago Oscuro, viéndose acorralado, lanza un ataque cataclísmico ineludible que barre todo el escenario. El juego se congela justo antes del impacto. Se activa el tutorial final: "Hechizo Prohibido: Regresión Temporal". El jugador debe usar este hechizo para retroceder el tiempo 10 segundos en tiempo real. Al retroceder, el jugador ahora sabe dónde caerá el ataque mortal. Usando esta ventaja temporal, Will puede posicionarse en el único punto ciego del ataque y lanzar un contrahechizo crítico que debilita al jefe.
-- Cinemática: furioso por el uso de la magia temporal, el Mago Oscuro lanza un ataque traicionero directo al corazón de Will, que está agotado por el retroceso del tiempo. Liam se interpone entre Will y el ataque perdiendo su vida. En su lecho de muerte le pide a Will que cuide de su hermano. Estela y Will se quedan solos ante el peligro final.
+Los tres cruzan juntos. La primera prueba enfrenta a Will con recuerdos, no con una sucesión de caminos individuales para cada personaje. Al principio el laberinto convierte una vergüenza social en humor; después llega a la pesadilla recurrente y a recuerdos que alimentan el miedo de Will a no llegar a tiempo. Estela y Liam lo acompañan hasta que el Sendero los separa y Will debe dejar de obedecer cada llamada de auxilio ilusoria. La salida consiste en reconocer que no puede salvar a todo el mundo y aun así elegir a quién escuchar.
 
-### 21. El Final: el Sacrificio
+**Diseño jugable:** laberinto de recuerdos con cambios de tono y una mecánica de priorización. Las voces falsas reutilizan patrones aprendidos, pero el jugador obtiene señales para distinguirlas. No castigar la exploración con un fallo terminal por atender a una ilusión; el conflicto debe expresar el límite emocional de Will, no parecer una trampa arbitraria.
 
-- Tipo: Cinemática.
-- Texto: (vencen al Mago Oscuro y Will pide el deseo de salvar al hermano de Liam. Ahora deben salir del sendero. Will empuja a Estela fuera del portal que colapsa). Estela: *"¡Will, ¿qué haces? sal de ahí!"* Will: *"Tranquila, Estela. No te preocupes... Lo tengo todo calculado."* (Will ejecuta el hechizo prohibido entregando su vida para revivir a Liam y destruir el Sendero).
+**Diálogo:** las líneas PRUEBA_WILL_01–04 están en cinemáticas localizadas. Deben distribuirse entre Estela, Will y Liam según la escena; no poner en una misma caja la broma y la confesión emocional. Mantener cada bocadillo por debajo de tres frases y comprobar que no quede una palabra aislada en una página.
 
-**Completado 1 sept 2026 — desglose por fases + resolución de la derrota del Mago Oscuro (era una pregunta abierta en `guion-tecnico-batalla-final-2026-08-30.md`, proyecto Cowork, punto 3 de "Preguntas concretas"). Todo lo de esta sección es PROPUESTA, pendiente de aprobación de Raúl — no promover a canon confirmado sin su ok.**
+**Estado:** texto localizado presente; secuencia jugable y acompañamiento de los otros personajes pendientes de comprobación.
 
-**A. Derrota del Mago Oscuro (propuesta de resolución visual):** la novela deja claro que no tiene cuerpo — es una consciencia atada al Sendero que él mismo corrompió con su deseo original (`plan-revision-estructural-novela-2026-08-30.md`, Regla 7), así que "cae al suelo" no encaja. Propuesta: al recibir el golpe final, no se desvanece como un enemigo normal — se disuelve en las mismas partículas de luz que forman el propio Sendero, y es ese mismo instante el que dispara el colapso de la fase C (causa y efecto en la misma imagen, no dos beats sueltos): su derrota y la inestabilidad del Sendero son la misma cosa, porque él era parte de lo que lo mantenía corrompido y en pie. Técnicamente: retintar el mismo VFX de "carga/impacto" que hoy comparten Will y el Mago Oscuro en `PrologueDreamSequencer` (ver el hallazgo de la escena 20 sobre VFX sin diferenciar luz/oscuridad) pero en reversa — implosión en vez de explosión, violeta/negro disolviéndose hacia el blanco/dorado del propio Sendero.
-- **B. El deseo:** Will: *"Cura a su hermano. Es lo único que pido."* (`WILL_FINAL_WISH`, ya en `dialogues`/`cinematics_es.json`/`cinematics_en.json` — reutilizar la clave existente, no crear una nueva).
-- **C. Colapso del Sendero:** temblor, grietas de luz que se propagan desde el punto donde se disolvió el Mago Oscuro (ver punto A).
-- **D. Will empuja a Estela fuera del portal:** Estela: *"¡Will, ¿qué haces?! ¡Sal de ahí!"* (`ESTELA_PROTEST_PORTAL`, ya existente). Will: *"Tranquila, Estela. No te preocupes... Lo tengo todo calculado."* (`WILL_CALM_REPLY`, ya existente). **Nota de continuidad ya presente en el juego, digna de conservar tal cual:** esta línea es un eco deliberado de la broma de Estela tras el Gólem (`EVT_GOLEM_END_02`, *"Lo tenía todo calculado"*) — Will le devuelve su propia frase en el peor y más sereno momento posible. Si se toca esta línea en el futuro, no perder ese eco.
-- **E. Will solo, ejecuta el Hechizo de Resurrección:** efecto de luz consumiéndose a sí mismo, el Sendero se destruye. Will sereno y decidido en todo momento — nada de pánico en actuación/cámara (la propia novela insiste en que es un sacrificio deliberado, no reactivo).
+### 13. Chuchelandia — novela XXI
 
-**Gameplay (detalle propuesto):** escena mayoritariamente cinemática, tal y como ya la describía el guión técnico de la batalla final — no forzar interactividad donde la propia novela y el ritmo emocional piden un remate contemplativo. Si se quiere un mínimo de agencia del jugador (opcional, a decidir con Raúl), un único input contextual sereno en la fase E (mantener pulsado un botón mientras el hechizo se completa, sin posibilidad de fallo) puede ayudar a que el jugador sienta que "acompaña" la decisión de Will en vez de solo verla — nunca un QTE con posibilidad de fallo, rompería el tono de sacrificio sereno.
+La segunda prueba pertenece a Estela, pero el grupo la afronta unido. El reino obliga a sus habitantes a declararse felices y castiga cualquier muestra de tristeza. A Estela le asignan el papel de reina; Will y Liam quedan disfrazados y pueden investigar el palacio y ayudar a quienes esconden lo que sienten. El antagonista no es solo un reino cursi: es una falsa misericordia que evita el dolor borrando la libertad de sentirlo.
 
-### 22. Epílogo: el Adiós
+Estela debe enfrentarse a la pérdida de su hermana Mara y a la culpa que arrastra. El duelo contra el Duque de Regaliz y el Gólem de azúcar no la «cura» ni elimina su tristeza: le permite recordar a Mara sin fingir que solo existe el último día. La criatura de gominola es parte de ese conflicto y del desenlace del combate; no reducirla a un chiste o a un objeto coleccionable.
 
-- Tipo: Cinemática.
-- Texto: Liam revive. El fantasma de Will aparece. Estela le explica a Liam que antes de destruir el sendero Will utilizó el hechizo prohibido de resurrección y destruyó el sendero. Ambos entienden por qué lo hizo. En el final ven a Will como fantasma se despide de él y ven cómo Will vuelve con su familia en el cielo.
+**Diseño jugable:** exploración social con disfraces, pistas y personajes que necesitan ayuda; jefe de varias fases que conecta las mecánicas aprendidas por Estela con el apoyo de Will y Liam. Tras la victoria, dejar un momento jugable y tranquilo para hablar de Mara y permitir que los habitantes decidan si salen del reino.
 
-**Completado 1 sept 2026 — diálogo completo por fases. La mayoría de estas líneas YA EXISTEN implementadas en `cinematics_es.json`/`cinematics_en.json` (marcadas "ya existente" abajo) — lo que faltaba era el tramo de conexión al principio (Liam despertando) y al final (despedida completa de Will), que aquí se propone como contenido nuevo. Pendiente de aprobación de Raúl.**
+**Estado:** DLG_CANDYLAND_01–17 está localizado en ES/EN y existe trabajo de construcción de la escena. El bloque actual de 17 líneas es una adaptación de juego, pero no cubre por sí solo todo el conflicto de la novela; completar el arco del osito, la criatura de mazapán, la jaula y Mara antes de dar el nivel por narrativamente equivalente.
 
-| Fase | Clave | ES | EN |
+### 14. La feria y la pausa del grupo — novela XXII
+
+Después de las pruebas, los amigos descansan en una isla segura y luego visitan una feria. Comparten atracciones, comida y conversación. Will recibe un peluche con forma de bola de fuego. La feria ofrece al jugador un respiro real: lavar ropa, reparar equipo, jugar y conversar sin una amenaza inmediata. Durante esta pausa Liam se acerca a confesar algo, pero aún no se atreve a decirlo.
+
+**Diseño jugable:** zona opcional de interacción y preparación, con actividades cortas que refuercen lo que cada personaje sabe de los otros. Las conversaciones no deben adelantar falsamente la confesión completa. El regalo y las rutinas compartidas deben regresar visual o mecánicamente más tarde como recuerdos, no como pistas obligatorias para resolver un puzzle.
+
+**Estado:** PARQUE_LIAM_01–12 está localizado. La clave PARQUE_LIAM_10 contiene actualmente cinco frases largas; dividirla en dos turnos completos y localizar ambos como frases con sentido. No conservar una página que termine con «entendido» o cualquier otro fragmento aislado.
+
+### 15. La Caja: prueba de Liam — novela XXIII
+
+La tercera prueba es la única que separa al grupo. Liam entra solo en la Caja, un laberinto de espejos; Will y Estela ven parte de la prueba desde fuera a través de una superficie de luz. La Caja muestra primero un recuerdo feliz de Liam con Tobías y después el deterioro de sus decisiones: el diagnóstico, el libro robado, el pacto y el uso de Will como cebo.
+
+Liam se enfrenta a una sombra que representa sus propias decisiones. La salida no consiste en negar la desesperación ni culpar a una parte separada de sí mismo: debe reconocer que fue él quien tomó esas decisiones y rechazar la última oportunidad de volver a sacrificar a Will a cambio de salvar a Tobías. La Voz Ancestral pregunta por el precio real. La visión revela al grupo la emboscada del bosque y las manipulaciones posteriores.
+
+**Diseño jugable:** tramo de Liam en solitario que combina navegación, combate y recuerdos interactivos. Cada espejo ofrece contexto y también una decisión de Liam. Evitar que el combate venza a la responsabilidad moral: la sombra se supera admitiendo la autoría de los actos. Alternar control de Liam con la observación de Will y Estela solo en momentos que añadan contexto.
+
+**Estado:** PARQUE_LIAM_12 está localizado y coincide con la pregunta de la novela. El resto del nivel, el recuerdo feliz, la sombra y la proyección de la verdad necesitan guion y validación de implementación. Las escenas 14 y 15 del guion antiguo se consideraban una misión fusionada; esa nota dependía de Cap6 archivado y se retira como estado actual.
+
+### 16. La ruptura y sus consecuencias — novela XXIV
+
+Al salir Liam, Estela exige una explicación. Will pregunta directamente si Liam pensaba matarlo; Liam admite que quiso usar su poder para abrir el altar y que se dijo que evitaría su muerte. No consigue justificar haberle quitado la posibilidad de elegir. Estela ataca impulsivamente; Will recibe parte del golpe al interponerse. Estela se marcha y Liam se aleja por otro camino.
+
+No resolver el conflicto con una sola disculpa ni con un QTE que haga creer que el jugador podía evitar la ruptura. Después, Will permanece solo y se permite estar enfadado. Decide continuar por un motivo propio: detener al Mago Oscuro y buscar cómo volver, sin prometer entregar su vida.
+
+**Diseño jugable:** conversación con interrupciones breves y actuación, seguida de una separación espacial real. Como transición, dar al jugador control de Will para vendarse, revisar sus objetos y decidir continuar. La violencia de Estela debe ser accidental y no premiada; su propia historia y el daño a Will se abordan después.
+
+**Estado:** RUPTURA_ESTELA_01–04, RUPTURA_LIAM_01–02 y RUPTURA_WILL_01 están en localización. El texto abreviado actual debe revisarse frente al intercambio completo de la novela: Will pide hechos, Liam asume responsabilidad y Estela no abandona la escena sin que se vea el daño que causó.
+
+### 17. Reunión con límites y confianza reconstruida — novela XXV
+
+Will encuentra primero a Estela y reconoce que ella le hizo daño; decide acompañarla sin exigir que finja estar bien. Juntos rescatan a Liam de las bestias. Will le ofrece la mano, pero el reencuentro no borra la traición: el grupo acuerda reglas concretas. Liam responde preguntas, no toma decisiones por ellos y no usa magia oscura sin consentimiento; Estela no tiene que declarar perdón inmediato. Los tres vuelven a cooperar porque eligen hacerlo con límites claros.
+
+**Diseño jugable:** dos tramos de combate y exploración —Will solo, luego Will y Estela— que culminan en rescatar a Liam. La recuperación de poder puede expresarse como coordinación de equipo, pero no como borrón y cuenta nueva ni como aprobación retroactiva del engaño. Después del rescate, el jugador ayuda a elegir qué equipo y qué información se comparte para preparar el tramo final.
+
+**Estado:** REUNION_* está localizado; el texto de la localización no refleja del todo la versión canónica más reciente, donde Will aún está enfadado y dice que todavía no sabe si puede perdonarlo. Revisar antes de reutilizar las frases como diálogo final.
+
+### 18. Biblioteca del Mago Oscuro y preparación — novela XXVI
+
+Antes del altar, el grupo encuentra una biblioteca de deseos cumplidos de forma literal y dañina. El Mago Oscuro conserva esos ejemplos para defender su visión absoluta del poder. Will entiende que un deseo no puede reemplazar las decisiones que siguen. Los tres preparan el combate, acuerdan señales de retirada y reglas para no tratar a nadie como sacrificable. Hablan de la posibilidad de que el altar separe al Archimago de Will y de la cura de Tobías.
+
+**Diseño jugable:** explorar la biblioteca como una serie de viñetas interactivas breves. Cada deseo se presenta con su intención y su consecuencia; el jugador debe poder inspeccionar ambas. Luego se prepara una estrategia flexible con rutas y roles, no una secuencia de pasos perfecta que el combate desautorice al primer cambio.
+
+**Estado:** la conversación y la biblioteca son canon de la novela; el GDD anterior saltaba directamente del Sendero a la revelación del villano. Incorporar este bloque antes de la confrontación. No consta aquí una secuencia activa de juego.
+
+### 19. El Mago Oscuro y la batalla final — novelas XXVI–XXVII
+
+El grupo llega junto al altar y se enfrenta al Mago Oscuro. La verdad sobre la vida pasada de Will se revela durante el conflicto; no convertir una explicación monologada en una cinemática interminable. Repartir la revelación entre líneas y recuerdos breves que permitan al jugador conservar orientación y control.
+
+El combate tiene cooperación real entre los tres. El Mago Oscuro deforma el espacio y cambia sus patrones. En su ataque de área, Will usa el Hechizo del Tiempo y retrocede diez segundos: conserva el agotamiento y las heridas, pero obtiene conocimiento para encontrar un resquicio. Después, debilitado, Will queda expuesto al ataque final y Liam se interpone. Sus últimas palabras piden a Will que cuide de Tobías.
+
+Estela comparte la energía restante con Will. Corazón Estelar se convierte en una aguja de luz que corta el conducto de sombra que une el deseo del Mago Oscuro con el altar. El Mago se deshace cuando pierde ese vínculo; no es la muerte de Liam ni una victoria del jefe lo que por sí solo derrumba el Sendero.
+
+**Diseño jugable:** jefe por patrones y lectura del escenario; tutorial de tiempo integrado en el ataque inevitable y repetición limitada por recurso. La estrategia incluye cambiar de plan cuando el jefe altera la arena. Tras la muerte de Liam, una acción compartida de Estela y Will corta el conducto, respetando el acuerdo previo del grupo de que el poder de otra persona requiere consentimiento.
+
+**Estado:** el GDD antiguo proponía un jefe final centrado en la Regresión Temporal y situaba el sacrificio de Liam antes de vencer al Mago. Queda sustituido por el orden de la novela. Las secuencias y mecánicas finales no se marcan como implementadas sin evidencia en los assets activos.
+
+### 20. El deseo, el derrumbe y el sacrificio de Will — novela XXVII
+
+Will llega al altar con el cuerpo de Liam y pide una cura precisa para Tobías, sin alterar su memoria, su voluntad ni trasladar el daño a otra persona. El altar cura a Tobías; no resucita a Liam. Will sabe que esa frontera exige el Hechizo de Resurrección, cuyo precio es su propia vida. Mientras el Sendero colapsa, usa el conjuro para devolver a Liam la vida y abrir una salida para él. Will se queda dentro y muere al destruir el Sendero.
+
+No reutilizar la versión anterior del GDD donde Will revive a Liam antes del deseo, empuja a Estela fuera del portal y se sacrifica en una escena aislada. En la novela, Liam muere durante la batalla final; Estela y Will vencen juntos; Will pide por Tobías y luego paga voluntariamente la resurrección.
+
+**Diseño jugable:** separar con claridad las dos decisiones: el deseo por Tobías y el intercambio vital por Liam. No usar un QTE con posibilidad de fallo para la decisión final. Mantener la agencia antes de la elección y dejar que el jugador confirme la decisión de Will mediante una acción deliberada sin penalización por tardar.
+
+**Estado:** los textos existentes de deseo/sacrificio deben cotejarse con esta continuidad antes de cerrar subtítulos. La secuencia de colapso, la decisión y el uso del hechizo requieren implementación y revisión emocional en juego.
+
+### 21. Epílogo: la despedida — novela XXVIII
+
+Liam despierta junto a la Piedra apagada y pregunta por Will. Estela le explica que usó el hechizo de resurrección para salvarlo y que el Sendero desapareció con Will dentro. El espíritu de Will aparece con la silueta del antiguo Archimago. Se despide de ambos, pide a Liam que cuide de Tobías y les agradece haber sido su familia. Su espíritu se reúne con su familia bajo las estrellas. Liam no queda curado de culpa en un instante; decide cargar con ella y vivir de otra manera.
+
+**Diseño jugable:** epílogo cinemático breve, claro y sin volver a explicar información que el jugador acaba de ver. Dejar respirar la respuesta de Liam, las líneas de Will y el plano final del cielo. Los silencios y las miradas cuentan; no añadir una cadena de frases para verbalizar cada emoción.
+
+**Estado:** EPILOGO_LIAM_01–02, EPILOGO_ESTELA_01, EPILOGO_WILL_01–03, ESTELA_EXPLAINS_EPILOGUE y WILL_FAREWELL existen en localización. Hay que ordenar esas líneas conforme a la novela, evitar duplicar «cuida de tu hermano» y revisar la puntuación. La despedida no está confirmada como secuencia conectada.
+
+### Correspondencia de hitos narrativos
+
+| Tramo de juego | Canon de la novela | Función de juego | Estado actual |
 |---|---|---|---|
-| A. Liam despierta | `EPILOGO_LIAM_01` *(nueva)* | ¿Estela? ¿Qué...? | Estela? What...? |
-| A. Liam despierta | `EPILOGO_ESTELA_01` *(nueva)* | Estás vivo. Estás vivo, idiota. | You're alive. You're alive, you idiot. |
-| A. Liam despierta | `EPILOGO_LIAM_02` *(nueva)* | ¿Dónde está Will? | Where's Will? |
-| B. Estela explica | `ESTELA_EXPLAINS_EPILOGUE` *(ya existente)* | Antes de destruir el Sendero, usó el hechizo prohibido de resurrección. Por eso estás vivo. Por eso... ya no está. | Before he destroyed the Path, he used the forbidden spell of resurrection. That's why you're alive. That's why... he's gone. |
-| C. Aparece el espíritu de Will | `EPILOGO_WILL_01` *(nueva)* | Hola. No podía iros sin despedirme como es debido. | Hey. I couldn't leave without saying goodbye properly. |
-| D. Despedida — a Liam | `LIAM_LAST_WORDS` *(ya existente, reutilizada aquí como recuerdo/eco, no repetida literal)* — sustituir por línea propia de despedida: `EPILOGO_WILL_02` *(nueva)* | Cuida de tu hermano. Cuídalo de mi parte también. Y cuidaos el uno al otro. | Take care of your brother. Take care of him for me too. And take care of each other. |
-| D. Despedida — cierre | `WILL_FAREWELL` *(ya existente)* | Cuidaos el uno al otro. Ya he vuelto a casa. | Take care of each other. I've already made it home. |
-| E. Último gesto antes de disolverse | `EPILOGO_WILL_03` *(nueva)* | Gracias, por haber sido mi familia, aunque fuera solo por un ratito. | Thank you, for being my family, even if only for a little while. |
+| Preparación, bosque y Gólem | IV–VIII | Aprendizaje, presentación de Estela y cooperación | Contenido descrito; integración actual por verificar |
+| Taberna, arresto y Reino | IX–XII | Humor, puzzle de prisión y defensa del Reino | Contenido descrito; grafo citado anteriormente está archivado |
+| Biblioteca, viaje y Silas | XIII–XVI | Pistas sobre Liam y aprendizaje del tiempo | Hay claves/quests; recorrido completo por verificar |
+| Risco, Vega y Piedra | XVII–XVIII | Decisión social, puzzle de reflejo y jefe cooperativo | Canon novelado; adaptar e implementar |
+| Pruebas de Will y Estela | XIX–XXI | Recuerdo, exploración y combate narrativo | Candyland tiene 17 líneas localizadas; arco entero por completar |
+| Feria, Caja y ruptura | XXII–XXIV | Pausa, prueba de Liam, revelación y separación | Claves localizadas; secuencia por verificar/revisar contra canon |
+| Reunión, biblioteca y final | XXV–XXVIII | Confianza con límites, jefe, sacrificio y despedida | Narrativa actualizada; contenido de juego por implementar/verificar |
 
-**Nota sobre `WILL_FAREWELL` vs `EPILOGO_WILL_02`:** con la línea nueva añadida antes, `WILL_FAREWELL` ("Cuidaos el uno al otro. Ya he vuelto a casa.") deja de sonar repetida — pasa a ser el cierre corto después del encargo más largo sobre el hermano de Liam, en vez de la única frase de despedida. No hace falta tocar la clave ya existente, solo añadir las nuevas alrededor.
+### Refactorización de gameplay desde la Caja — diseño propuesto
 
-**Gameplay (detalle propuesto):** cinemática pura, sin input del jugador — es el único punto de la historia donde la propia narrativa pide desconexión total de la mecánica (todo lo demás en el juego, incluida la escena 21, deja alguna forma de agencia). Cierre sugerido: no cortar directamente a créditos sobre negro — un último plano fijo de Liam y Estela mirando al cielo nocturno (mismo tipo de plano que ya usa `PrologueDreamSequencer`/`Co_MemoryVision` para el "stage" alejado de la geometría real) antes del fundido a créditos, para que el corte no se sienta abrupto tras un momento tan cargado.
+**Punto de corte:** el contenido hasta la prueba de la Caja (novela XXIII) se considera la base de gameplay ya trabajada. Esta sección convierte el resto de la historia —ruptura, reencuentro, biblioteca, batalla final, sacrificio y epílogo— en una propuesta de recorrido jugable. No afirma que esos niveles estén implementados. Los beats y nombres de sistema son guía para diseño; cualquier mecánica nueva queda pendiente de prototipo y validación.
 
-### Sequencers ya resueltos contra el grafo real (histórico, sección cerrada)
+#### Objetivos de experiencia
 
-Esta sección listaba antes `ReinoExitBanterSequencer.cs` y `LiamCrystalBallSequencer.cs` como sequencers "sin mapeo claro" al guión original. Tras revisar los 6 capítulos completos de `MainNarrative_*.asset`, ambos tienen ya posición confirmada: `LiamCrystalBallSequencer.cs` en la escena 5 (justo tras vencer al Demonio) y `ReinoExitBanterSequencer.cs` en la escena 14 (al cruzar el límite del Reino hacia la misión de Fuego Fatuo). No queda ningún sequencer de `Assets/Scripts/Cinematics/` sin posición conocida en el guión — el único sistema todavía sin escena concreta asignada es `SimpleCinematicDirector.cs` (ver nota de pipeline al principio de este guión técnico).
+- Cada zona posterior a la Caja debe tener una acción dominante distinta: sobrevivir solo, coordinarse, interpretar consecuencias, dominar un combate por patrones y, finalmente, elegir qué significa salvar a alguien.
+- Alternar presión y descanso. Tras una secuencia emocional intensa, devolver control al jugador en un espacio pequeño, con una tarea sencilla y sin urgencia, antes de pedir otra decisión dramática.
+- Evitar el recado de ir y volver como objetivo principal. Una misión secundaria debe aportar un personaje, una mecánica, una historia local o una recompensa útil y visible.
+- Aprovechar cambio de personaje, compañeros controlados por IA y ataques especiales conjuntos ya presentes. Los puzles y jefes deben poder leerse sin cambiar de personaje, pero cambiar debe dar una ventaja clara, no ser un requisito opaco.
+- Mantener diálogos de bocadillo en un máximo de tres frases. Cada cambio de página debe cerrar una idea o coincidir con una reacción, movimiento o cambio de escena; no dejar una palabra o coletilla aislada. La comprobación final requiere ver cada idioma dentro de la interfaz real.
 
----
+#### Ruta jugable posterior a la Caja
+
+| Nivel / tramo | Recorrido y actividad principal | Puzle, minijuego o combate | Uso de habilidades y recompensa narrativa | Ritmo y estado |
+|---|---|---|---|---|
+| 1. Salida de la Caja y ruptura | La revelación termina; el jugador recupera el control de Will para recorrer el borde de la sala, atender la herida y decidir cuándo avanzar. La discusión sucede en un espacio legible y sin amenaza activa. | No hay combate ni QTE para impedir la ruptura. La acción interactiva es atender a Will y abrir el camino de salida cuando esté listo. | Movimiento e inventario devuelven agencia después de la escena. La recompensa es una motivación propia de Will, no un objeto ni una aprobación del grupo. | Beat breve y emocional. La ruptura ocurre por las decisiones ya tomadas; el jugador puede respirar, pero no revertir el canon con una pulsación. |
+| 2. Camino en solitario | Tramo compacto con tres zonas conectadas: orientación, obstáculo y emboscada. Will encuentra rastros de Estela y señales de Liam; la ruta avanza por lectura del terreno, no por una cadena de marcadores. | Encuentros cortos que enseñan a sobrevivir solo: enemigos que obligan a moverse, un bloqueo del camino que se abre con magia y un combate de desgaste contra un grupo pequeño. Sin oleadas repetidas. | Fuego resuelve objetivos a distancia; levitación/desplazamiento y hechizos de área se usan si están disponibles. El juego comunica qué herramienta sirve antes de castigar un intento. | Presión moderada con punto seguro al final. Diseñar como nivel breve, no como zona abierta para farmear. |
+| 3. Reencuentro con Estela | Will la alcanza; una ruta compartida conduce al rastro de Liam. El jugador alterna exploración y conversaciones opcionales que muestran que Estela sigue dolida y se hace cargo de haber herido a Will. | Combate de pareja con objetivos simultáneos: contener a las bestias que bloquean el camino y liberar a Liam de la zona de peligro. Una bestia cambia de objetivo para premiar proteger al compañero. | Cambio de personaje y colocación de compañeros presentan cooperación práctica. Al rescatar a Liam, el equipo vuelve por elección; se comunica el acuerdo de límites antes del siguiente tramo. | Liberación tras el segmento en solitario. No convertir la reconciliación en una barra de amistad ni exigir perdón instantáneo. |
+| 4. Puesto de preparación | Área segura junto al acceso a la biblioteca. El jugador revisa objetos, hechizos y miembros del grupo; puede escuchar una charla opcional y entrar cuando quiera. | Preparación libre; sin combate obligatorio, puzle de confirmación ni temporizador. | Permitir equipar los hechizos que ya se poseen. El grupo verbaliza señales de combate y consentimiento para usar la magia de los demás. | Pausa explícita tras el rescate. Guardado recomendado antes del bloque final si la progresión actual lo permite. |
+| 4A. Simulacro de señales (opcional) | En el puesto hay tres blancos de práctica y cada compañero explica una señal: ataque entrante, objetivo marcado y ventana de castigo. | Minijuego de coordinación en tres rondas cortas: cambiar al personaje indicado, esquivar/defender la señal y golpear el blanco cuando queda expuesto. La secuencia no usa cuenta atrás estricta y se puede repetir al instante. | Enseña cambio de personaje, lectura de telegráficos y oportunidad para cargar/activar un especial conjunto. Recompensa: diálogo de equipo y comentarios distintos durante el jefe, sin ventaja estadística exclusiva. | Actividad opcional y autocontenida; saltarla no penaliza ni bloquea el acceso a la biblioteca. |
+| 5. Biblioteca de los deseos | Explorar tres salas cortas. Cada sala presenta un deseo, la interpretación literal que recibió y a quién dañó. Se reconstruye la relación causa–efecto con objetos y testimonios, no con texto expositivo largo. | Tres viñetas-puzle: emparejar intención y consecuencia; reconstruir una sala tras una alteración; descubrir qué testimonio falta antes de salir. Fallar ofrece una pista nueva, no reinicia el nivel. | Inspección, levitación y control de área ofrecen formas distintas de revelar objetos. La conclusión prepara al jugador para atacar el vínculo del jefe, no para encontrar una “respuesta moral correcta”. | Exploración silenciosa con salida clara. Limitar cada viñeta a una idea y devolver control entre ellas. |
+| 6. Acceso al altar y batalla final | Aproximación corta que anticipa cambios de arena. El Mago Oscuro revela el pasado de Will en fragmentos durante el combate; el jugador nunca recibe un monólogo largo mientras no puede actuar. | Jefe en tres fases: (1) patrones reconocibles y esquiva; (2) altera plataformas y obliga a reposicionarse; (3) expone conductos de sombra y convoca amenazas para distraer. Cada fase introduce una regla, la demuestra y deja practicarla. | Will castiga aperturas a distancia; Estela despeja enemigos menores/controla espacio; Liam coloca trampas o interrumpe al jefe. Alternar personaje mejora la respuesta. El especial conjunto es opción táctica, no puerta de progreso. | No subir solo la vida del jefe: cambiar patrones. Punto de guardado antes y repetición desde fase/ataque corto. La muerte de Liam sucede en el beat de la novela, no por daño aleatorio ni por fallar un QTE. |
+| 7. Cortar el vínculo y colapso | Tras el sacrificio de Liam, Will y Estela actúan juntos para romper el conducto de sombra. Empieza el derrumbe y el jugador conduce a Estela hacia la salida mientras Will queda atrás por decisión propia. | Escape breve con dos obstáculos que reutilizan habilidades conocidas y una última acción conjunta de Corazón Estelar. El reto es comprender el plan; no poner un cronómetro estricto sobre el duelo. | Corazón Estelar expresa energía compartida solo con acuerdo explícito de Estela. El Hechizo del Tiempo permite aprender de un ataque decisivo según las reglas de Silas, pero no borra heridas ni coste. | Clímax jugable seguido de secuencia narrativa. No hacer repetir la muerte de Liam ni la elección de Will. |
+| 8. Deseo, resurrección y epílogo | El deseo por Tobías y el intercambio de vida por Liam se presentan como dos hechos distintos. Después, el jugador acompaña unos instantes a Estela y Liam en el mundo real antes del adiós de Will. | Sin puzle, jefe, fallo ni recompensa coleccionable después de la batalla. La interacción confirma la decisión de Will sin cuenta atrás ni consecuencias alternativas que contradigan la novela. | El altar cura a Tobías sin alterar su voluntad ni trasladar el daño. Resurrección devuelve a Liam la vida a cambio de Will y destruye el Sendero. | Cierre contemplativo. Silencios, miradas y el plano del cielo sustituyen diálogo redundante. El epílogo no reabre objetivos. |
+
+#### Revisión de misiones secundarias existentes
+
+La carpeta activa contiene misiones de entrega y exploración que sirven para poblar el Reino, pero varias comparten la misma estructura: hablar, conseguir objetos y volver. Deben revisarse como contenido opcional y evitar que su suma interrumpa la ruta principal. Las propuestas siguientes son de diseño; no cambian automáticamente los assets ni las claves de localización.
+
+| Misión / NPC | Estructura actual observada | Problema de diseño | Refactorización propuesta |
+|---|---|---|---|
+| Roberto — mareo | Pide una poción de vida y la devuelve con una recompensa. | Repite el intercambio de consumible y el síntoma no genera juego. | Desafío opcional de orientación: seguir indicaciones contradictorias por un camino corto y encontrar la causa del mareo. La poción puede ser solución rápida; investigar añade diálogo/recompensa. |
+| Manuel — abuela débil | Pide dos pociones de vida a cambio de una recompensa de vestuario. | Recado de compra; se solapa con Roberto. | Tarea de cuidado: revisar qué necesita la abuela, entregar el remedio y recibir un cambio visible en su estado o una escena familiar. No exigir comprar consumibles que el jugador quizá ya gastó. |
+| Nora — experimento mágico | Pide tres pociones de maná para probar un hechizo. | La prueba no es jugable. | Minijuego de control mágico: estabilizar tres focos usando disparos de precisión y control de área. Las pociones pasan a ser una vía alternativa, no una barrera. |
+| Tabernera — remedio de resaca | Pide dos algas y ofrece pago. | Colección plana, sin consecuencia. | Ruta costera corta con una elección de calidad/cantidad y un gag de preparación del remedio. Sin combate obligatorio. |
+| Tendera — remedios | Pide dos pociones de maná a cambio de algas; también entrega algas en otra interacción. | Intercambio circular y posible duplicidad con tabernera. | Unificar ambos pedidos como encargo de abastecimiento del mercado: el jugador decide si intercambia algas o las guarda para el Niño Pez. Mostrar qué desbloquea cada opción. |
+| Guardia del Bosque — plaga de arañas | El asset contiene veinte pasos consecutivos. | Fragmenta una actividad y puede volverse limpieza repetitiva. | Agrupar en tres actos: localizar nidos con señales ambientales; elegir quemar, atraer o desviar arañas; cerrar con pelea contra la reina/nido. Conservar progreso y premiar con una herramienta/ruta útil del bosque. |
+| Niño Pez — algas y caracola (carpeta PRINCIPALES) | Cadena que entrega algas para poder nadar y después busca una caracola. | El contenido parece lateral, pero el desbloqueo de nado es una habilidad de recorrido y puede sentirse imprescindible. | Decidir expresamente si el nado pertenece a la progresión principal. Dejar la caracola como actividad lateral submarina con corriente, ruta corta y recompensa cosmética o de colección. No clasificar la cadena como secundaria mientras siga en PRINCIPALES. |
+| Rudolfo — salto (carpeta PRINCIPALES) | Reto de salto con recompensa de botas según el nombre/configuración de quest. | La recompensa y su pertenencia a progresión principal no quedan claras solo por la configuración observada. | Circuito contrarreloj opcional con atajos y puntos de control; enseñar el salto antes del cronómetro y mostrar la mejora de botas después. Revisar si debe moverse a SECUNDARIA; no asumirlo por su tono de reto. |
+
+**Reglas para cerrar secundarias:** ninguna recompensa básica detrás de muchos objetos aleatorios; no pedir lo mismo en la misma zona sin compartir progreso; permitir volver rápido al NPC; premiar con algo perceptible (ruta, interacción, herramienta, personalización o cambio visible), no solo monedas. Ninguna secundaria será necesaria para comprender el objetivo principal.
+
+#### Papel de las habilidades y lectura del combate
+
+El proyecto ya tiene cambio entre Will, Liam y Estela, aliados con IA y ataques especiales conjuntos con cargas separadas. La refactorización debe dar motivos concretos para usarlos. La asignación siguiente es una función de diseño, no una confirmación de balance o desbloqueo por capítulo.
+
+| Herramienta | Función legible | Uso destacado | Ajuste / cautela |
+|---|---|---|---|
+| Bola de Fuego | Ataque rápido de alcance medio para iniciar un encuentro. | Enemigos pequeños, blancos expuestos y, si el entorno lo admite, objetos inflamables. | Mantenerla como referencia básica; no hacerla la mejor en daño, control y coste a la vez. |
+| Bola Prisma | Golpe pesado para castigar una ventana o romper defensa. | Gólem, Guardián y fases que exponen un punto débil. | Los 25 de daño y 10 de maná son datos del asset; balancear junto con cadencia, alcance y facilidad de impacto. |
+| Levitation | Manipular la posición/altura de un objetivo o resolver obstáculos. | Puzles del taller y biblioteca, control de enemigos ligeros. | Comunicar rango/peso y mostrar qué responde. No debe invalidar a todos los enemigos voladores. |
+| Tornado / Aura Estelar | Controlar el espacio y separar grupos. | Defensa de civiles, enemigos que rodean y reposicionamiento. | Evitar que se sientan como dos áreas con distinto daño. Dar a uno desplazamiento/interrupción y al otro protección/apoyo si el sistema lo permite. |
+| Huracán | Especial de alto impacto para grupo o apertura grande. | Oleadas o fase de jefe con varios blancos. | El coste y la recarga deben justificar el impacto; no diseñar jefes que solo admitan esta habilidad. |
+| Garra / Sello del Pacto | Herramientas de Liam para enganchar, marcar o interrumpir. | Trampas, enemigos que preparan ataque y anclajes del Mago Oscuro. | Aclarar diferencia: si ambos solo hacen daño, no sostienen una identidad táctica. |
+| Corazón Estelar | El relato lo define como energía compartida voluntariamente; su versión de combate debe expresar apoyo/cooperación. | Ruptura del conducto final y, si se implementa antes, defensa de aliados o ataque combinado. | El asset actual registra 100 de daño, 25 de maná y slot especial. Decidir si es ataque, apoyo o dos usos diferenciados; no equiparar automáticamente stats y función narrativa. |
+| Hechizo del Tiempo | Repetir un momento corto para leer un patrón, manteniendo el coste. | Ataque de área anunciado como inevitable y demostración previa con Silas. | No cura, resucita ni borra decisiones. Una repetición tutorializada basta; evitar rebobinado gratuito en cada error. |
+| Especiales de Liam y Estela | Remate coordinado que recompensa combatir junto al aliado correspondiente. | Jefes y oleadas donde el jugador prepara carga y escoge el momento. | Aviso visual/audio de carga y oportunidades claras para usar cada especial. No esconder la carga tras atacar solo con un compañero inactivo. |
+
+**Patrón de encuentros recomendado:** señal clara antes del ataque peligroso; presentar una regla nueva en baja presión; combinarla luego con una conocida; cambiar geometría u objetivo antes de subir mucho la vida; cerrar con una ventana de castigo. Alternar combate, exploración, conversación y descanso. Si una habilidad no resuelve, facilita o cambia ninguna situación durante varios niveles, revisar su coste, función y tutorial antes de añadir más hechizos.
+
+**Ritmo anti-repetición:** como objetivo de diseño inicial, cada tramo principal debe cambiar la actividad dominante antes de que el jugador repita por tercera vez el mismo patrón. Para cada zona, diseño anotará: verbo principal, novedad, reutilización, respiro y recompensa. Un minijuego sirve si comunica carácter o enseña una habilidad; un puzle si cambia cómo se lee el espacio; una batalla si exige una decisión distinta de la anterior.
+
+#### Dirección de rediseño del combate — auditoría del 25 de septiembre de 2026
+
+La meta de sensación es acción mágica fluida y espectacular, inspirada por lo que Raúl valora de *Hogwarts Legacy* y *Kingdom Hearts*, con una identidad propia que todavía no está elegida. Los combos de hechizos, los cambios de estado y los ataques de grupo ya aparecen en juegos publicados; no se registran como la novedad por sí mismos. [Gameplay de Hogwarts Legacy](https://blog.playstation.com/2022/03/17/hogwarts-legacy-your-first-look-at-extended-gameplay/), [sistema de elementos de Magicka 2](https://store.steampowered.com/app/238370/Magicka_2/) y [manual oficial de Kingdom Hearts 2.5](https://www.kingdomhearts.com/kh25manual/kingdom_hearts_25_manual_us.pdf).
+
+**Fantasía que vamos a evaluar:** el jugador se mueve, lanza magia con respuesta inmediata, siente los impactos, decide el siguiente paso sin salir del flujo y puede pasar la iniciativa entre Will, Liam y Estela. Esta es una dirección de prueba, no una mecánica aprobada.
+
+**Lo que hay en el proyecto (lectura estática, sin prueba en ejecución):**
+
+- `NPCCombatBrain` contiene evaluación, reposicionamiento, ataque, defensa, búsqueda, retirada para recuperar maná y retirada táctica; también comprueba proyectiles entrantes, distancia, visión y línea de tiro. Esa complejidad está concentrada en lógica general y selección de ranura; no garantiza que un tipo de enemigo tenga identidad reconocible.
+- La selección de ataque del NPC humanoide prioriza el especial y después las ranuras derecha/izquierda. Aunque sus hechizos tengan datos distintos, la decisión no está descrita como una elección por función táctica o estado del objetivo.
+- `ImpDemonAI` sí tiene ataques por fases, tiempos de recuperación y avisos para ataques a distancia/lluvia. El `RuneCollar` ofrece un punto débil que solo se puede romper con un disparo preciso durante su ventana activa: es un buen ejemplo de ataque, señal y respuesta con relación clara.
+- El jugador tiene proyectiles, una defensa sostenida que consume maná, levitación y carga para ataques especiales de Liam/Estela. `Bola de Fuego` admite un disparo preciso con menos daño, más velocidad y menor tamaño. No hay ataque cuerpo a cuerpo general.
+- `MagicElement` etiqueta hechizos, y ciertos objetos (`Burnable`) reaccionan al elemento, pero `Damageable` aplica salud numérica y eventos; no se observa una capa central de ventajas elementales y estados de combate para todos los enemigos. Por eso cambiar Fire por Storm no debe prometer por sí solo una estrategia distinta.
+- Varias diferencias actuales se expresan principalmente con daño, coste y recarga. Ejemplo de configuración: Bola de Fuego hace 10 de daño por 5 de maná; Bola Prisma 25 por 10; Tornado y Aura Estelar hacen 30 por 5/10 respectivamente. Estos datos no bastan para decidir balance sin medir impacto, cadencia y control en juego.
+
+**Riesgos de experiencia que hay que comprobar al jugar:**
+
+1. Que los NPC humanoides esquiven o bloqueen tantos proyectiles que el jugador perciba sus hechizos como ignorados.
+2. Que los enemigos se acerquen, se aparten o se retiren sin una señal clara que permita al jugador anticiparlo.
+3. Que mantener el escudo sea la respuesta óptima mientras se espera a que vuelva el maná, convirtiendo el combate en aguante.
+4. Que apuntar a cualquier enemigo y repetir el proyectil más eficiente sea suficiente para casi todos los encuentros.
+5. Que cambiar de personaje y cargar especiales añada botones al combate, pero no decisiones que alteren el resultado.
+
+Estos cinco puntos son hipótesis de diseño derivadas de la arquitectura y los datos actuales; no se declaran defectos confirmados en partida hasta probarlos.
+
+#### Referencias de sensación e identidad propia
+
+La dirección buscada combina la lectura y variedad de hechizos en tiempo real que atraen de *Hogwarts Legacy* con el ritmo, la movilidad, los relevos y la espectacularidad de *Kingdom Hearts*. Son referencias de sensación, no una plantilla para copiar sistemas, controles ni contenido.
+
+El laboratorio debe averiguar qué combinación de decisiones produce una identidad reconocible para *El Sendero de las Estrellas*. No se da por hecho que exista una mecánica única que lo diferencie, ni que haya que inventar una novedad por obligación. Se buscará si las interacciones entre magia, compañeros, enemigos y espacio crean momentos propios que se entienden mientras se juega. Cada prototipo se compara primero con la base actual; la originalidad se evalúa después por lo que el jugador puede hacer y decide, no por el nombre llamativo de la mecánica.
+
+#### Banco de experimentos — ideas, no decisiones
+
+Cada idea se prototipa por separado y se compara con el combate actual. El banco no presupone que haya que implementarlas todas. Las combinaciones se prueban solo después de seleccionar ideas que funcionen individualmente.
+
+| ID | Área | Opción a probar | Pregunta que debe contestar el prototipo |
+|---|---|---|---|
+| CMB-01 | Sensación | Más respuesta al impacto: hit stop corto, reacción corporal, sonido y VFX que confirmen el acierto. | ¿Cada hechizo se siente contundente sin frenar el ritmo? |
+| CMB-02 | Magia | Hechizos con efectos de control diferentes: interrumpir, desplazar, elevar, marcar o crear zona. | ¿El jugador cambia de hechizo por la situación y no solo por el número de daño? |
+| CMB-03 | Magia | Interacciones de dos hechizos/estados (p. ej. elevar y rematar, agrupar y golpear, marcar y activar). | ¿Las combinaciones surgen de forma intuitiva sin memorizar recetas ni añadir una tabla elemental? |
+| CMB-04 | Magia / defensa | Desviar, capturar o transformar un proyectil enemigo usando magia o escudo. | ¿Transformar la amenaza es más divertido que limitarse a bloquearla o esquivarla? |
+| CMB-05 | Puntería | Comparar disparo rápido, apuntado preciso y carga/soltado de hechizo. | ¿El modo de apuntar añade una decisión útil sin volver torpe el control? |
+| CMB-06 | Entorno | Levantar y lanzar objetos o usar elementos de la arena contra enemigos. | ¿El escenario añade soluciones expresivas o distrae del combate principal? |
+| CMB-07 | Personajes | Cambiar de personaje durante una acción y continuar una secuencia con su hechizo. | ¿El cambio se siente fluido, legible y suficientemente distinto para justificarlo? |
+| CMB-08 | Cooperación | Compañero IA que remata una apertura vs. especial conjunto activado manualmente. | ¿Qué grado de autonomía mantiene al jugador al mando y hace que el grupo importe? |
+| CMB-09 | IA | Ataques enemigos con anticipación y recuperación claramente visibles. | ¿Mejora la lectura sin hacer el combate lento o demasiado predecible? |
+| CMB-10 | IA | Enemigos con roles distintos: perseguidor, tirador, guardián, controlador o apoyo. | ¿Se reconoce qué hace cada enemigo y cambia la prioridad de objetivos? |
+| CMB-11 | IA grupal | Turnos de ataque, flanqueos y presión limitada cuando hay varios enemigos. | ¿El jugador recibe presión interesante sin sufrir ataques simultáneos inevitables? |
+| CMB-12 | IA reactiva | Enemigos que responden a repetir una misma táctica, con límites claros y sin contrarrestar todo. | ¿La adaptación invita a variar o se percibe como trampa/injusticia? |
+| CMB-13 | Recursos | Comparar maná regenerativo, coste del escudo sostenido y recompensa por defensa puntual. | ¿El maná anima a tomar decisiones o fuerza a esperar y protegerse? |
+| CMB-14 | Jefes | Puntos débiles, partes/runa expuestas, patrones que cambian el espacio y fases con reglas distintas. | ¿El jefe pide aprender y ejecutar algo diferente sin convertirse en una barra larga? |
+
+#### Escena común de pruebas: CombatLab
+
+Construir una escena de test independiente y reutilizable, no un nivel narrativo. Debe permitir cambiar entre variantes sin retocar MainWorld ni los niveles de historia. La escena tendrá un estado base para comparar y estaciones activables para probar una sola idea cada vez:
+
+1. **Hechizos y objetivos:** blancos quietos, móviles y con defensa; maná/cooldowns reiniciables.
+2. **Duelo:** un enemigo humanoide y un enemigo de avance directo, con perfiles de IA intercambiables.
+3. **Grupo:** dos o tres enemigos para observar coordinación, presión y cambio de objetivo.
+4. **Entorno:** cobertura, desnivel, objeto levantable y obstáculo reutilizable para desvío/impacto.
+5. **Jefe:** arena pequeña con el Gólem o Demonio, vida/fase reiniciable y punto débil visible.
+6. **Pareja:** Will, Liam y Estela disponibles para swap, seguimiento IA y especiales.
+
+Cada estación debe reiniciar vida, maná, cooldowns, fase del jefe, objetivos y posición; mostrar qué variante está activa; y permitir repetir el mismo escenario con el sistema base y con un único cambio. No se juzga una mecánica combinada con otras seis novedades en la misma pasada.
+
+**Montaje inicial del laboratorio (25 sep 2026):** el generador de Editor está en `Assets/Scripts/Editor/CombatLabBuilder.cs`; crea `Assets/Scenes/Test/CombatLab.unity`, una arena aislada con blanco de práctica, coberturas y NavMesh. El suelo usa la layer `Floor`, y el generador conserva esa asignación al recrear la escena. Will y el preset activo se cargan desde `_WILL.prefab`. Estela y Liam se instancian al iniciar desde los prefabs reales, referenciados por `Resources/CombatLab/CombatLabConfig.asset`, fuera de la progresión normal. El montaje evita `WorldBootstrap` para no poblar el laboratorio con el roster de NPCs del mundo. Las opciones de grupo son temporales y deben restaurar los IDs de la partida al cambiar de composición o salir; no se desbloquean personajes en la campaña. La entrada de Build Settings y los materiales generados son temporales y se revisarán en la limpieza final.
+
+**Prueba de estaciones (25 sep 2026):** el HUD del laboratorio presenta botones para Base, Duelo, Grupo, Jefe y Reiniciar; estos controles permiten probar aunque el foco de teclado no llegue a las teclas de función. Verificado en Play Mode: Grupo activa y muestra Arañas y Demonio; Jefe muestra al Gólem; Reiniciar vuelve a Base y reaplica el preset; en Duelo la Araña se acerca al jugador. El bootstrap conserva el AudioListener de Will y desactiva los demás listeners del laboratorio, evitando la advertencia de listeners duplicados que provocaban algunos prefabs. **Límites y siguiente ajuste:** no se han evaluado hechizos, ventanas de ataque, defensa, NavMesh de todos los arquetipos ni coordinación de grupo; el Gólem queda demasiado cerca y ocupa casi toda la cámara, así que hay que ajustar su encuadre antes de juzgar el experimento CMB-14. La exploración CMB-01–14 sigue pendiente, sin aprobaciones ni descartes.
+
+**Carga de magia, habilidades y grupo en CombatLab (25 sep 2026):** tras aplicar el preset, el bootstrap habilita Magia y Escudo en el `PlayerActionManager` de la instancia de Will; de lo contrario el preset puede bloquear los ataques. En el panel se puede alternar Magia, Salto y Vuelo durante la prueba. Ninguno de esos cambios modifica desbloqueos, habilidades guardadas ni la partida. El panel modal equipa hechizos compatibles desde `SpellLibrary` en las ranuras Izquierda, Derecha y Especial; también rellena maná/carga y reinicia cooldowns. Mientras está abierto, el input de juego se suspende: hay que pulsar «Cerrar panel y probar habilidades» para jugar. El propio panel recuerda los controles: Espacio salta y, al pulsarlo de nuevo en el aire, activa o desactiva el vuelo; clic izquierdo/derecho lanza hechizos y Q usa el especial. Al cerrar el panel, su resumen muestra si detectó la última pulsación mágica y si el slot estaba listo o qué bloqueo encontró; en Editor también deja ese resultado en la consola. `M` o clic central en el resumen de carga deberían reabrirlo; falta verificar esos atajos en Play Mode. El panel Party se añade al arrancar la escena existente e instancia prefabs configurados por `Resources/CombatLab/CombatLabConfig.asset`, así que no necesita regenerar la escena binaria. En la arena se puede elegir Will solo, Will+Estela, Will+Liam o los tres. Los compañeros usan seguimiento y lógica de combate existentes. Cada unión de prueba pasa por el party real, pero restaura los IDs guardados del preset; hay que verificar en ejecución que se incorporen y ataquen, y que el jugador pueda volver a Solo sin dejar datos de laboratorio en la partida. El reparto final de controles de magia, especiales y habilidades sigue pendiente de validación con teclado y mando. La opción Solo informa que Will combate sin compañeros y no muestra un estado de preparación.
+
+#### Auditoría de reutilización antes de prototipar
+
+La inspección de código y assets encuentra estas piezas reutilizables. Esta tabla evita reescribir lo que ya existe y separa hechos de código de resultados todavía no comprobados jugando:
+
+| Candidato | Ya existe y puede servir de base | Qué debe comprobar o prototipar CombatLab | Estado de auditoría |
+|---|---|---|---|
+| CMB-01 | Daño, animaciones de reacción y servicio central de feedback/VFX; `NPCCombatLifecycleHandler` ya combina animación de impacto, sacudida de cámara y hit-stop. | En la estación Base, repetir el mismo hechizo contra el mismo blanco y distancia. Tomar la respuesta actual como referencia; después cambiar una sola variable por pasada (hit-stop, reacción o sacudida), y comparar finalmente un perfil diferenciado por familia de hechizo. Mantener daño, cadencia y coste sin cambios para no confundir el resultado. Registrar si el golpe se lee, se siente contundente y permite continuar controlando a Will; no aceptar el perfil más intenso si entorpece apuntado o encadena pausas. | Sistemas identificados y protocolo aislado; prueba jugable de variantes pendiente. |
+| CMB-02 | Proyectiles, zonas, levitación, empuje/atracción y escudo. | Comprobar si cada hechizo cambia la situación y si el efecto se entiende con varios enemigos. | Capacidades identificadas; roles redundantes posibles, pendientes de medir. |
+| CMB-03 | Levitación y algunos efectos de área permiten preparar posiciones y remates. | Probar pares de interacciones, uno por uno; el proyecto no muestra una matriz global que se deba ampliar sin prueba. | Interacciones candidatas, sin sistema nuevo aprobado. |
+| CMB-04 | Escudo sostenido y proyectiles enemigos. | Ver si una defensa puntual puede devolver, capturar o alterar una amenaza con una ventana legible. | El reflejo universal no está confirmado en los sistemas revisados. |
+| CMB-05 | `PlayerPreciseAimController` y modo preciso ya soportado por Bola de Fuego. | Comparar toque normal, mantener para precisión y carga, con el mismo blanco y distancia. | Base funcional existente; balance/claridad pendientes de juego. |
+| CMB-06 | Levitación puede mover y lanzar objetivos; el mundo tiene objetos con reacciones elementales. | Ver qué props existentes pueden entrar en combate y si usarlos resulta útil sin preparar una arena especial. | Reutilización probable; no asumir que cualquier objeto admite interacción. |
+| CMB-07 | `PartyControlManager`, cambio de personaje activo y prefabs de Liam/Estela. | Comparar Solo / +Estela / +Liam / ambos con el mismo enemigo; después medir el relevo durante acción y diferencia de kits. | El montaje de compañeros está en progreso; join/NavMesh/combate y swap requieren validación en Play Mode. |
+| CMB-08 | `DuoSpecialAttackSystem` y carga de especiales de Estela/Liam. | Comparar ayuda automática del compañero con especial conjunto activado por el jugador en cada composición. | Sistema existente; autonomía y control pendientes de juego. |
+| CMB-09 | `NPCCombatBrain` y `ImpDemonAI` tienen estados, avisos y recuperaciones; el Demonio avisa varios ataques. | Comparar cuánto se leen los avisos y cuánto dura la recuperación frente al ritmo de ataque. | Diferencias entre enemigos confirmadas en código; justicia/ritmo pendientes de juego. |
+| CMB-10 | Prefabs de Araña, Demonio, Demonio 2 y Gólem, además de la FSM táctica humanoide. | Comparar roles y amenazas; retirar o diferenciar los enemigos que no generen decisiones distintas. | Variedad existente identificada; arquetipos efectivos pendientes de jugar. |
+| CMB-11 | `NPCAttackCoordinator` limita reservas de ataque simultáneas. | Probar la presión real de 2–3 rivales, flanqueo y seguridad de las ventanas de acción. | Coordinador existente; utilidad y límites pendientes de jugar. |
+| CMB-12 | La FSM incluye reposicionamiento, retirada táctica, búsqueda y ajuste de frecuencia/dificultad. | Comprobar si responde a tácticas repetidas sin cancelar toda respuesta del jugador. | Adaptación específica no confirmada en los sistemas revisados. |
+| CMB-13 | `ManaPool` regenera; el escudo y la levitación pueden consumir maná. | Medir espera y gasto en secuencias comparables; probar defensa puntual frente a escudo sostenido. | Base existente; economía y riesgo de espera pendientes de jugar. |
+| CMB-14 | Demonio con fases y collar rúnico de punto débil; Gólem con ataques de área y fase. | Comparar punto débil, cambio de patrón y uso del espacio en un mismo jefe. | Dos bases identificadas; profundidad de encuentro pendiente de jugar. |
+
+**Primera pasada construible:** la escena permite comparar base, duelo, grupo de enemigos, jefe y cuatro composiciones de party con los mismos encuentros. El cambio de personaje y los especiales siguen siendo pruebas separadas, porque no basta con que la etiqueta del grupo cambie: los compañeros deben unirse a la IA de combate y el intercambio debe funcionar. Cada variante nueva vive en archivos propios de CombatLab o bajo una bandera de experimento, y su ficha registra qué se añadió para poder retirarlo si se descarta.
+
+#### Cómo evaluar y decidir
+
+Después de cada experimento, registrar una ficha corta: ID, variante probada, qué se cambió, qué pasó, qué confundió, mejor momento, peor momento y decisión **conservar / ajustar / descartar**. Puntuar de 1 a 5: diversión, claridad, sensación de control, impacto mágico, variedad y ganas de volver a usarlo. Añadir una observación libre del jugador; las cifras ayudan a comparar, pero no deciden solas.
+
+**Primera pasada:** implementar y probar cada candidato por separado en CombatLab; no integrarlo aún en la campaña. En esta pasada se mide si la acción es satisfactoria, legible y controlable, sin exigir que cada candidato sea novedoso por sí solo. **Segunda pasada:** seleccionar las ideas con mejor resultado y probarlas juntas para detectar conflictos de controles, ritmo, balance o legibilidad, y comprobar si su interacción produce una identidad propia frente a las referencias. **Tercera pasada:** llevar únicamente la combinación elegida a un encuentro real del juego y comprobar que encaja con la historia, el tono, el coste de producción y las habilidades disponibles.
+
+Una idea se descarta si solo funciona cuando se explica, si domina a todas las otras opciones, si hace perder control de cámara/personaje, si necesita demasiado arte nuevo para comunicar lo que hace o si la IA la ejecuta mejor que el jugador. Una idea se conserva si se entiende durante la acción, produce una decisión voluntaria, crea una reacción vistosa y deja más de una respuesta viable.
+
+#### Papel de las habilidades en los experimentos
+
+Las asignaciones siguientes son hipótesis que deben entrar al banco de pruebas, no funciones aprobadas:
+
+| Hechizo / familia | Hipótesis funcional | Candidato relacionado |
+|---|---|---|
+| Bola de Fuego | Proyectil rápido; modo preciso contra blancos/puntos débiles. | CMB-01, CMB-05 |
+| Bola Prisma | Interrupción o ruptura de guardia durante una preparación visible. | CMB-02, CMB-09 |
+| Levitation | Mover/enlazar enemigo u objeto y aprovechar altura/posición. | CMB-02, CMB-03, CMB-06 |
+| Tornado / Aura Estelar | Desplazar, agrupar, proteger o interactuar con proyectiles; probar para que no sean redundantes. | CMB-02, CMB-03, CMB-04 |
+| Garra / Sello del Pacto | Marcar, interrumpir o preparar una zona/trampa para el siguiente golpe. | CMB-02, CMB-03 |
+| Huracán | Impacto de área de coste alto contra grupo/apertura. | CMB-01, CMB-03 |
+| Corazón Estelar | Cooperación/energía compartida según canon; probar por separado su uso jugable frente al asset ofensivo actual. | CMB-08 |
+| Especiales de Liam y Estela | Ataques de relevo o remate manual. | CMB-07, CMB-08 |
+| Hechizo del Tiempo | Alterar/repetir un instante con coste, si puede implementarse sin borrar consecuencias ni trivializar errores. | CMB-04, CMB-14 |
+
+Los hechizos actuales tienen distintos daños, costes, cadencias, zonas y control, pero no se reajustan sus valores hasta que CombatLab permita comparar impactos y frecuencia con datos consistentes.
 
 ## Fichas de Personajes
 
-### Vista General del Reparto
+### Vista general del reparto
 
-| Nombre | Rol | Habilidades | Motivación | Relación |
-|---|---|---|---|---|
-| **Will** | Protagonista | Luz, Fuego, Tiempo | Proteger y honrar | Héroe |
-| **Liam** | Estratega | Intelecto, Trampas, Invocación (Pacto) | Salvar a su hermano | Mentor/Amigo |
-| **Estela** | Maga prodigio | Magia de área (Storm), imprudencia | Vivir con intensidad, proteger al grupo | Compañera / apoyo incondicional |
-| **Eldran** | Guardián | Guía, lore, soporte narrativo | Proteger a Will hasta que esté listo | Mentor inicial |
-| **El Mago del Cataclismo** | Antagonista final | Corrupción del escenario, daño masivo, alteración de controles | Recuperar su poder y regresar a la vida | Villano / espejo oscuro de Liam |
+| Personaje | Función narrativa | Función jugable | Arco |
+|---|---|---|---|
+| Will | Protagonista y reencarnación del mago que detuvo al Mago Oscuro | Magia de fuego/luz, combate adaptable y decisiones de equipo | Aprende a actuar por convicción propia y a no confundir bondad con sacrificarse siempre |
+| Liam | Amigo y mago de pacto que manipuló los ataques para llegar al Sendero | Invocación, trampas, lectura de patrones y apoyo táctico | Reconoce que la desesperación no le daba derecho a decidir por Will; se redime asumiendo sus actos |
+| Estela | Hechicera prodigio y compañera | Daño de área y control de grupos | Aprende a contenerse sin negar su duelo por Mara y a reparar el daño que causa |
+| Eldran | Mentor y protector de Will | Guía, misiones iniciales y punto de apoyo | Su sobreprotección nace en parte del duelo por Selene; debe dejar que Will elija |
+| Silas | Antiguo amigo de Eldran y guía hacia la Piedra | Encargo del reloj y enseñanza del hechizo temporal | Reabre su vínculo con Eldran y entrega al grupo reglas, no una solución milagrosa |
+| Mago Oscuro | Antagonista ligado al Sendero por su deseo de poder absoluto | Jefe final que altera el espacio y exige cooperación | Es derrotado al cortar el vínculo entre su deseo y el altar |
 
-*(La tabla original del GDD v1.0 solo listaba a Will y Liam; el resto del reparto tenía ficha completa más abajo pero se había quedado fuera de la tabla. Completada el 24 ago 2026.)*
+### Will
 
-### Will (El Portador de la Luz)
+Will es un joven de buen corazón, pero el juego no debe convertirlo en un héroe que acepta cualquier daño sin preguntarse qué quiere. Su conflicto abarca el miedo a fallar, la revelación de su vida anterior y el aprendizaje de elegir por sí mismo. Su bondad se expresa al escuchar, pedir consentimiento y ofrecer ayuda, no en renunciar automáticamente a su propia vida.
 
-- **Perfil de Diseño:** héroe clásico en viaje de maduración. Es el núcleo emocional del juego y el personaje más equilibrado mecánicamente.
-- **Propósito en el Gameplay:** personaje principal. Combina el combate a distancia con el control del entorno (congelación del tiempo) y ráfagas de daño (bolas de fuego). Su habilidad de regresar el tiempo es la mecánica clave para resolver los puzles más avanzados y superar los picos de dificultad del juego (como el combate final).
-- **Evolución Narrativa:** comienza como un chaval humilde forzado a actuar por el caos que le rodea. Su arco se centra en la pérdida de la inocencia tras descubrir que Liam lo manipulaba, teniendo que asumir un liderazgo real basado en la compasión y el sacrificio, contrapuesto al egoísmo del Mago del Cataclismo.
+En combate comienza con magia de fuego y desarrolla herramientas de luz y tiempo. El Hechizo del Tiempo permite retroceder un intervalo corto, pero conserva el coste físico y mágico. El Hechizo de Resurrección requiere entregar voluntariamente una vida a cambio de otra recién perdida. Son reglas narrativas centrales y deben ser coherentes con los sistemas de juego.
 
-### Liam (El Estratega / El Viajero)
+### Liam
 
-- **Perfil de Diseño:** antagonista trágico y mentor de "filosofía gris". No es malvado por placer, sino por desesperación familiar.
-- **Propósito en el Gameplay:** sus mecánicas en los enfrentamientos o como aliado se basan en el uso de herramientas, trampas, el entorno y los potentes hechizos escritos en su Grimorio — invocación (demonios, gólem), no solo apoyo táctico. Esto aporta variedad al diseño de niveles y combates (un enemigo que piensa e invoca, en lugar de solo lanzar proyectiles).
-- **Evolución Narrativa:** su arco es el motor que desata la historia. Su conflicto interno (el cariño real que le coge a Will vs. la necesidad de salvar a su hermano) añade una enorme carga emocional. Su sacrificio final interponiéndose para salvar la vida de Will cierra perfectamente su redención.
+Liam ama a su hermano Tobías y teme perderlo. Esa desesperación explica su conducta, pero no la absuelve: organizó los ataques y utilizó a Will sin contarle la verdad. La prueba de la Caja le obliga a reconocer que esas decisiones fueron suyas, sin culpar a una sombra ni a su necesidad de curar a Tobías.
 
-> **Corrección de lore (confirmada por Raúl el 23 ago 2026):** la versión original de esta ficha (v1.0 del GDD) describía a Liam como alguien "sin magia innata" que solo usaba trampas, entorno y los hechizos de su Grimorio. Eso es incorrecto y queda corregido aquí: **Liam sí tiene magia propia** — de hecho es quien invoca al demonio y al gólem en la historia (escenas 4-5 y 8 del guión técnico). Lo que realmente le falta no es magia, sino un "corazón puro": necesita a alguien así (Will) para poder abrir el portal al Sendero. Su magia puede ser tan real y potente como la de Will/Estela, solo que de corte oscuro/pacto (invocación, gólem, ligada a su Grimorio), y su límite narrativo es el portal, no el combate. Tener esto en cuenta para cualquier diseño futuro de habilidades/hechizos de Liam.
+Liam posee magia propia, centrada en pactos, invocación y trampas. El límite narrativo que lo lleva a buscar a Will es que no puede abrir el Sendero por sí solo, no que carezca de magia. Tras la revelación, su redención es gradual: responde preguntas, acepta límites y deja de decidir por el grupo.
 
-### Estela (La Maga Prodigio)
+### Estela
 
-- **Perfil de Diseño:** "cañón de cristal" (alto daño, poca resistencia). Aporta la chispa de energía y desparpajo al grupo.
-- **Propósito en el Gameplay:** especialista en daño mágico en área (AoE). Su "Tormenta de faroles" visualmente debe ser espectacular (ideal para efectos de partículas pixel art/cartoon). Es vital para limpiar salas llenas de enemigos menores y resolver puzles basados en encendido de mecanismos o fuego.
-- **Evolución Narrativa:** pasa de considerar la magia un juego divertido a comprender que el poder sin control es destructivo. El viaje junto a Will la obliga a madurar a marchas forzadas, convirtiéndose en el apoyo incondicional del protagonista cuando el mundo se desmorona y Liam falta.
-- **Gag canon (ya en juego):** el estómago de Estela ruge en momentos de tensión/presentación — usado en la escena de la Taberna (§9) y reciclado en material de marketing (vídeo promo "en personaje").
+Estela es una hechicera prodigiosa, impulsiva y franca. Su humor y su hambre alivian la tensión, pero no sustituyen su historia de duelo. La muerte de su hermana Mara sigue afectándola, en especial ante el azúcar caliente y la criatura de gominola de Chuchelandia.
 
-### Eldran (El Guardián)
+Su poder de área debe sentirse fuerte sin presentar el descontrol como algo inocuo. En la ruptura hiere accidentalmente a Will; después se responsabiliza del daño y decide no huir. El arco no exige que deje de estar triste, sino que pueda recordar a Mara sin reducir su vida al día en que murió.
 
-- **Perfil de Diseño:** el arquetipo del anciano sabio, mentor inicial y ancla con el pasado.
-- **Propósito en el Gameplay:** principalmente un PNJ (NPC) de soporte y lore. Funciona como el catalizador del tutorial o la fase inicial de aprendizaje en el bosque, introduciendo al jugador a las mecánicas básicas y sirviendo de punto de guardado o base segura.
-- **Evolución Narrativa:** es el recordatorio de que las leyendas son reales. Su tono irónico alivia la tensión de la historia, pero su verdadera función es proteger a Will hasta que este esté listo para heredar su destino, guardando verdades sobre el peligro del Sendero para no infundir miedo antes de tiempo.
+### Eldran
 
-### El Mago del Cataclismo (La Sombra del Pasado)
+Eldran cuidó de Will y lo protegió durante años. Su cautela se relaciona con la pérdida de Selene y con la creencia de que más conocimientos le habrían permitido salvarla. Quiere evitar que Will sufra, pero esa intención puede limitar la capacidad de Will para elegir. Su relación con Silas da contexto a su juventud y a la persona que era antes de cerrarse al mundo.
 
-- **Perfil de Diseño:** la amenaza definitiva. El jefe final imponente cuyas habilidades deben desafiar todo lo aprendido por el jugador.
-- **Propósito en el Gameplay:** es el obstáculo definitivo en el gameplay. Su set de movimientos debe incluir corrupción del escenario, fases de daño masivo y alteración de los controles del jugador, forzando el uso obligatorio de la mecánica de "Regresión Temporal" de Will para encontrar sus puntos ciegos.
-- **Evolución Narrativa:** es la advertencia viviente de lo que ocurre cuando la ambición rompe el equilibrio natural. Sirve como el espejo oscuro de lo que Liam podría haber llegado a ser si no se hubiese redimido, y el peligro latente al que Will se enfrenta si flaquea en su pureza de corazón.
+En juego es mentor inicial y apoyo narrativo. Si actúa como guía o punto seguro, no debe resolver las decisiones que corresponden al jugador.
 
----
+### Silas
+
+Silas es un hechicero, antiguo amigo de Eldran y dueño de una colección de relojes que no miden el tiempo de la misma manera. Ayuda al grupo tras recuperar su reloj en un bucle temporal. Enseña el ritual de la Piedra y explica el coste de la magia temporal.
+
+### Mago Oscuro
+
+El Mago Oscuro es el mago que pidió un poder al que nadie pudiera oponerse. Su deseo desató la Marcha de Conquista. El choque con la Protección Absoluta del mago del valle lo dejó ligado al Sendero; no es un archienemigo que simplemente vuelva a la vida en un cuerpo físico. Su fuerza final depende del vínculo entre su deseo corrompido y el altar.
+
+La denominación «Mago del Cataclismo» que aparece en perfiles antiguos se retira para evitar que parezca un personaje distinto. Usar «Mago Oscuro» en guion, localización y documentación, salvo que se defina otro nombre de forma expresa.
 
 ## Estado de Balance de Hechizos
 
-Esta sección no existía en el GDD original — se añade el 24 ago 2026 porque, hasta ahora, el balance de cada hechizo vivía solo disperso en los assets `MagicSpellSO` de `Assets/_SPELLS/`, sin ningún sitio que lo recogiera todo junto para poder juzgar el conjunto. Los valores de abajo son una lectura directa de esos assets en esta fecha — si los retocas en el Editor, esta tabla se queda desactualizada hasta la próxima pasada (no hay sincronización automática).
+Los valores de esta tabla se han vuelto a leer directamente de los MagicSpellSO actuales en Assets/_SPELLS, el 25 de septiembre de 2026. La lista describe configuración de assets, no balance aprobado ni quién equipa cada hechizo en cada capítulo.
 
-| Hechizo | `SpellId` | Elemento | Daño | Maná | Cooldown | Slot | Notas |
-|---|---|---|---|---|---|---|---|
-| Bola de Fuego | Fireball | Fire | 10 | 5 | 0.5s | Any | — |
-| Llama Astral | Fireball ⚠️ | Fire | 10 | 5 | 0.5s | Any | Mismas stats que Bola de Fuego, con el mismo `SpellId` — ver aviso abajo |
-| Bola Prisma | Plasmaball | Storm | 25 | 10 | 1s | Any | — |
-| Corazón Estelar | CorazonEstelar | Light | 100 | 25 | 3s | SpecialOnly | El hechizo de mayor daño con diferencia |
-| Levitation | Levitation | Mind | 10 | 5 | 0.5s | Any | Vida útil larga (8s) — es una habilidad de movimiento, no de daño puro |
-| Aura Estelar | AuraEstelar | Storm | 30 | 10 | 1s | Any | — |
-| Cycloneburst (Tornado) | Cycloneburst | Storm | 30 | 5 | 1s | Any | `castSFXKey` apunta a `LlamaAstral` — ver aviso abajo |
-| Garra del Pacto (Liam) | GarraDelPacto | Mind | 35 | 15 | 1.2s | Any | Añadido 23 ago 2026. Icono y clave de audio propia pendientes |
-| Huracán | Huracan | Storm | 55 | 20 | 3s | SpecialOnly | Añadido 23 ago 2026 como hechizo de reserva/backup, no de uso libre. Icono propio pendiente (usa el de Tornado) |
+| Hechizo | ID | Elemento | Daño | Maná | Recarga | Slot | Observaciones |
+|---|---:|---|---:|---:|---:|---|---|
+| Bola de Fuego | 1 | Fuego | 10 | 5 | 0,5 s | Cualquiera | Velocidad inicial 20 |
+| Llama Astral | 1 | Fuego | 10 | 5 | 0,5 s | Cualquiera | Comparte ID con Bola de Fuego; velocidad inicial 10 |
+| Bola Prisma | 2 | Tormenta | 25 | 10 | 1 s | Cualquiera | — |
+| Corazón Estelar | 3 | Luz | 100 | 25 | 3 s | Especial | En la novela también expresa un vínculo de energía compartida y voluntaria; ese uso cooperativo no queda demostrado por las stats del asset. |
+| Levitation | 4 | Mental | 10 | 5 | 0,5 s | Cualquiera | Vida del proyectil 8 s; herramienta de movimiento/control |
+| Aura Estelar | 5 | Tormenta | 30 | 10 | 1 s | Cualquiera | — |
+| Tornado | 6 | Tormenta | 30 | 5 | 1 s | Cualquiera | Clave de audio actual: Tornado |
+| Garra del Pacto | 7 | Mental | 35 | 15 | 1,2 s | Cualquiera | — |
+| Huracán | 8 | Tormenta | 55 | 20 | 3 s | Cualquiera | — |
+| Sello del Pacto | 9 | Mental | 12 | 25 | 7 s | Especial | — |
+| Golpe del Mago Oscuro | 10 | Oscuridad | 25 | 20 | 2,2 s | Cualquiera | — |
+| Grieta del Mago Oscuro | 11 | Oscuridad | 15 | 30 | 8 s | Cualquiera | — |
 
-**Avisos abiertos (sin decidir/corregir aún):**
+**Puntos de diseño por resolver:**
 
-- **`Bola de Fuego` y `Llama Astral` comparten el mismo `SpellId` (Fireball) y stats casi idénticas** (solo cambia `initialSpeed`: 20 vs 10) — parecen dos assets para el mismo hechizo, uno posiblemente residual. Revisar si `Llama Astral` es un duplicado a eliminar, una variante pensada para otro propósito (¿otro personaje?), o si el `SpellId` compartido es un bug a corregir con un ID propio (mismo patrón ya aplicado a Huracán el 23 ago).
-- **`Cycloneburst` (`Tornado.asset`) tiene `castSFXKey: LlamaAstral`**, no una clave propia de tornado/viento. Cuando se corrigió `Huracan.asset` (que partió de una copia de `Tornado.asset`) el 23 ago 2026, se documentó esto como "bug heredado" y se arregló solo en la copia — el original (`Tornado.asset`) lo sigue teniendo.
-- **No hay sistema de progresión/experiencia de personaje visible en el código auditado.** El enum `UITextId` (`Assets/Scripts/Core/Identifiers.cs`) ya declara `UILevel` y `UIExperience` como claves de localización, lo que sugiere que en algún momento se planeó un sistema de nivel/XP — pero no se ha encontrado ningún sistema de progresión implementado que las use. Si la intención sigue en pie, falta diseñarlo (¿nivel de personaje? ¿nivel de hechizo individual, como sugiere el propio comentario del usuario que originó esta sección? ¿ambos?) y documentarlo aquí.
-- **No hay ninguna referencia central de "qué hechizo tiene quién" para Liam y Estela.** Will, Liam y Estela usan el mismo `MagicCaster`/slots (`Left`/`Right`/`Special`), y para Will ya se puede reconstruir el orden narrativo completo (ver tabla de abajo) — pero qué `MagicSpellSO` lleva Liam o Estela por defecto no aparece en ningún nodo del grafo, solo en los assets de escena/inventario. Sería el siguiente paso natural para poder juzgar si el reparto de daño entre los tres personajes está equilibrado.
+- Bola de Fuego y Llama Astral mantienen el mismo ID numérico (1) y stats similares. Confirmar si son dos variantes que deben coexistir; si lo son, asignarles IDs diferenciados antes de depender de ese ID en inventario, guardado o desbloqueos.
+- Los assets de Tornado y Huracán ya tienen claves de audio propias. Se retira el aviso anterior de que Tornado heredaba la clave LlamaAstral.
+- Hay hechizos de Will, Liam y del Mago Oscuro en la misma carpeta. Esta tabla no les asigna dueño por sí sola; vincular cada uno con personaje, desbloqueo y escena cuando esté confirmado en las escenas activas.
 
-### Orden de desbloqueo narrativo (confirmado contra el grafo, 24 ago 2026)
+### Disponibilidad narrativa de hechizos
 
-Reconstruido revisando `UnlockAbilitiesNode` en los 6 capítulos de `MainNarrative_*.asset` — todos pertenecen a Will, es el único de los tres con progresión de hechizos gateada por el grafo:
-
-| Orden | Hechizo | Capítulo | Disparador narrativo |
-|---|---|---|---|
-| 1 | Bola de Fuego (Fireball) | Cap. 1 | Justo tras superar el "Input de Pánico" del Despertar de la Estrella (escena 4), antes del combate contra el primer Demonio |
-| 2 | Bola Prisma (Plasmaball) | Cap. 2 | Al ganar el combate de entrenamiento con Erika (escena 6) |
-| 3 | Corazón Estelar | Cap. 5 | Regalo del Rey tras derrotar al segundo Demonio invocado por Liam (escena 12) — contenido no documentado en el guión original, ver esa escena |
-
-No hay más `UnlockAbilitiesNode` en el grafo actual (que llega hasta la escena 14) — así que, dentro de lo implementado, Will solo tiene desbloqueados estos 3 hechizos a estas alturas de la historia. El resto de la tabla de arriba (Levitation, Aura Estelar, Cycloneburst, Garra del Pacto, Huracán) no tiene un punto de desbloqueo narrativo confirmado — probablemente porque pertenecen a Liam/Estela (que no dependen del grafo para desbloquear magia) o porque se desbloquean más adelante, en contenido todavía sin construir.
-
----
+Los desbloqueos que describía la tabla anterior se dedujeron de MainNarrative_Cap1 a Cap6. Como Cap2–Cap6 están ahora archivados en Versiones antiguas, esa tabla no es prueba de la progresión vigente. Los assets actuales confirman que existen Bola de Fuego, Bola Prisma, Corazón Estelar y otros hechizos; no confirman en qué misión se desbloquean. Conservar como hipótesis de trabajo la progresión Bola de Fuego → Bola Prisma → Corazón Estelar, pendiente de contrastarla con el grafo y las quests activas.
 
 ## Estado de Diálogos
 
-Tampoco existía esta sección en el GDD original. De momento no hay ningún sitio (ni aquí, ni en el Tracker de Sheets, ni en TDD.md) que lleve la cuenta de qué diálogos están escritos, revisados o con contenido definitivo frente a los que siguen siendo placeholder — así que, más que un estado real, esto es el punto de partida para empezar a llevarlo.
+El estado distingue entre **cadena localizada** y **secuencia conectada/revisada en juego**. La presencia de una clave en JSON no demuestra que el juego la llame, que el diálogo esté aprobado o que quepa en su interfaz.
 
-**Bugs técnicos conocidos que afectan a la experiencia de diálogo** (documentados en `TDD.md` §8, no duplicados aquí en detalle):
+| Tramo / claves | Texto disponible | Alineación con canon | Estado en juego / acción |
+|---|---|---|---|
+| Prólogo y casa | Claves de prologue, cinemáticas y diálogos iniciales | La leyenda, el sueño y el despertar siguen la biografía del Mago Oscuro y del Will original | SEQ_Prologo_UltimaNoche y sus señales conectadas a Cap1 se confirmaron en assets; falta revisar la caja en ejecución |
+| Preparación–Reino | Diálogos de quests, cinemáticas y escenas iniciales | Adaptar las tareas del tutorial y el incidente del primer Demonio al orden de la novela | Revisar en el juego; no usar los antiguos Cap2–Cap6 como estado actual |
+| Piedra / apertura | PIEDRA_ANCESTRAL_01–08, APERTURA_SENDERO_01–03 | Texto localizado; cotejar fórmulas, coste y partida del grupo con novela XVIII–XIX | Conexión y presentación visual por verificar |
+| Prueba de Will | PRUEBA_WILL_01–04 | Líneas cortas presentes; mantener el cambio de humor a miedo | Secuencia y voces por verificar |
+| Chuchelandia | DLG_CANDYLAND_01–17 | El bloque no narra por sí solo el arco de Mara, la gominola y la libertad de sentir | Completar/contrastar antes de cerrar el nivel |
+| Feria / Caja | PARQUE_LIAM_01–12 | Incluye la pausa y la pregunta de la Voz; no incluye por sí sola toda la prueba de Liam | PARQUE_LIAM_10 supera tres frases; dividir en dos intervenciones localizadas |
+| Ruptura / reencuentro | RUPTURA_* y REUNION_* | Revisar contra capítulos XXIV–XXV: Will se enfada, Estela asume el daño y el perdón no es instantáneo | Varias líneas están resumidas respecto de la novela; no marcar como finales hasta reescribir |
+| Verdad / sacrificio / epílogo | MAGOOSCURO_MONOLOGUE, WILL_FLASHBACK_REVELATION, VOICE_VISION_*, claves de final y EPILOGO_* | Las localizaciones conservan el monólogo heredado y todavía no siguen el orden de la revelación, la muerte de Liam, el deseo por Tobías y la resurrección | Reescribir y reordenar antes de conectar la secuencia final |
 
-- El *grace period* de 0.3s tras abrir un diálogo se resetea en cada línea, no solo al abrir — se percibe como input poco responsivo en frases cortas.
-- `ActivateSpeakerTalkAnimation()` no cachea `GetComponent<NPCSimpleAnimator>()`/`GetComponent<Animator>()`, llamándolos en cada línea.
+### Hallazgos de lectura del texto localizado
 
-**Plantilla propuesta para empezar a llevar el estado de contenido** (rellenar según se revise cada escena del guión técnico de arriba). Sembrada el 24 ago 2026 con los nodos de texto/diálogo reales confirmados al revisar el grafo narrativo completo — "Escrito" confirma que el nodo y su config existen en el grafo, no que el texto final esté aprobado:
+- MAGOOSCURO_MONOLOGUE tiene ocho frases y unos 800 caracteres: no funciona como un único turno. Reescribirlo como intercambio con pausas, recuerdos y control jugable; cada bocadillo/subtítulo debe tener como máximo tres frases.
+- PARQUE_LIAM_10 tiene cinco frases y pide dos turnos completos. PARQUE_LIAM_08 y REUNION_WILL_01 reúnen más de tres ideas/frases; volver a puntuar y separar donde la escena permita una respiración natural.
+- EVT_REINOEXIT_ESTELA_01, EVT_REINOEXIT_WILL_01, EVT_ESTELA_DRAMATIC, OLIVER_GREETING_BEFORE_MENUS_HANDOFF, VOICE_VISION_REASSURANCE y WILL_FLASHBACK_REVELATION también acumulan más de tres frases o ideas en un turno. Dividirlos en beats con sentido. Revisar en especial que la actuación de Estela en el bosque no se convierta en una página entera de parodia antes de que el jugador pueda responder.
+- PIEDRA_ANCESTRAL_05 agrupa varios fragmentos cortos en una sola intervención; comprobar el ritmo y no dejar una palabra suelta en el cambio de página. VOICE_VISION_EXPLANATION no excede tres frases gramaticales, pero ronda los 315 caracteres y debe dividirse o condensarse.
+- DLG_CANDYLAND_09 es una respuesta larga aunque tenga pocas frases; revisar su extensión en la caja real. La cantidad de frases no sustituye la prueba de lectura.
+- Los puntos suspensivos pueden hacer que un contador automático detecte frases que no existen. La decisión final se toma leyendo el ritmo y comprobando la caja real.
 
-| Escena / diálogo | Escrito | Revisado en juego | Voces/audio | Notas |
-|---|---|---|---|---|
-| 1-2. "Recuerdos prólogo" (`DramaticTextNode`) | Sí (config asignado) | Sin revisar | Sin confirmar | Sistema viejo, pendiente de sustituir por `PrologueDreamSequencer` — ver guión técnico |
-| 1-2. "Otra vez esa pesadilla" (`ShowSpeechBubbleNode`, Will) | Sí, `textId: NIGHTMARE_AGAIN` | Sin revisar | Sin confirmar | — |
-| 10. "Conversación mientras sigo al guardia" (`ShowLorePopupNode`, Liam) | Sí (config asignado) | Sin revisar | Sin confirmar | Contenido del popup no leído en esta revisión, solo confirmada su existencia y posición |
-| 14. "Will y Liam hablan sobre el pasado de Will" (`ShowLorePopupNode`) | Sí (config asignado) | Sin revisar | Sin confirmar | Ídem — contenido del popup no leído |
-| *(resto de escenas)* | | | | Pendiente de rellenar según se revisen |
+**Regla de revisión:** mostrar el texto en la caja real, en español e inglés, con el tamaño de fuente y resolución objetivo. Si la última página queda con una palabra o un fragmento, reescribir o dividir el turno en un punto de respiración natural. No declarar esa revisión hecha hasta ver el render dentro del juego.
 
-**Sugerencia:** en vez de intentar rellenar las 22 escenas de golpe, ir marcando esta tabla cada vez que se juegue/revise una escena de verdad — igual que `TDD.md` documenta bugs a medida que se encuentran, no de forma preventiva. Las 4 filas de arriba solo confirman que el nodo existe y está enlazado en el sitio correcto del grafo — no que el texto dentro del `DramaticPhraseConfig`/`LorePopupConfig` esté leído, revisado o sea el definitivo (esos `.asset` de config no se han abierto en esta pasada).
-
----
+**Incidencias de contenido:** esta revisión actualiza el documento, no modifica las tablas de localización ni crea una incidencia nueva. Al editar las claves para alinearlas con la novela y la pauta de bocadillos, actualizar los JSON español e inglés y registrar el cambio de contenido en el flujo habitual.
 
 ## Registro de Cambios
+
+**25 de septiembre de 2026 — Codex, banco de experimentos de combate solicitado por Raúl.**
+
+Se retiró la Reescritura del Hilo como mecánica protagonista elegida y se convirtió en una de varias ideas candidatas. El GDD propone catorce experimentos independientes, fija Hogwarts Legacy y Kingdom Hearts como referencias de sensación, y deja que la identidad propia emerja al probar interacciones en una segunda pasada. Se añadió la auditoría de sistemas reutilizables, el diseño de CombatLab y criterios para conservar o retirar prototipos con evidencia. La escena compila y arranca; se verificaron los botones de estación, el reinicio, la activación de encuentros y el seguimiento de Will por la Araña. Se agregaron controles visibles de HUD y se desactivaron listeners sobrantes en la escena de prueba. El encuadre del Gólem y las pruebas CMB-01–14 quedan pendientes. Los archivos y la entrada temporal de Build Settings siguen anotados para su limpieza cuando se elija el modo final.
+
+**25 de septiembre de 2026 — Codex, dirección de rediseño de combate solicitada por Raúl.**
+
+Se auditó estáticamente `NPCCombatBrain`, las IA del Demonio/Gólem, la defensa del jugador, la configuración de hechizos, `Damageable` y los ataques especiales conjuntos. Se añadió al GDD una dirección para que el combate gire en torno a leer señales, provocar aperturas y combinar efectos mágicos; incluye arquetipos enemigos, papeles propuestos para los hechizos y una secuencia pequeña de prototipos. La auditoría separa observaciones del código de hipótesis de sensación que requieren jugarse. No se modificó el comportamiento de combate ni se declararon balanceados los valores actuales.
+
+**25 de septiembre de 2026 — Codex, ajuste de identidad de combate tras referencias aportadas por Raúl.**
+
+Se alineó la meta de sensación con acción mágica fluida y espectacular inspirada por *Hogwarts Legacy* y *Kingdom Hearts*, sin copiarlos. El contraste documental confirmó que las combinaciones de hechizos, los cambios de estado y los ataques de grupo ya existen en referentes publicados; por eso no se presentan como la novedad del juego. Se sustituyó la mecánica candidata de encadenar marcas por la «Reescritura del Hilo»: alterar trayectoria, objetivo o zona de un ataque enemigo y usar esa intervención como inicio de un relevo mágico entre personajes. Se añadieron ejemplos con el Gólem y el Mago Oscuro y se cambió el plan de prototipo para validar primero un ataque reescribible. Sigue siendo una hipótesis de diseño, no una afirmación de novedad de mercado ni una implementación.
+
+**25 de septiembre de 2026 — Codex, refactorización de gameplay posterior a la Caja solicitada por Raúl.**
+
+Se tomó la Caja (novela XXIII) como corte de la base jugable existente y se diseñó el recorrido desde la ruptura hasta el epílogo como niveles y actividades concretas. Se añadieron propuestas para el tramo de Will en solitario, el reencuentro y rescate de Liam, la biblioteca de deseos, el jefe por fases, la rotura del vínculo, el colapso y el cierre. Se revisaron las misiones laterales observadas en los assets, identificando recados repetidos y la cadena de veinte pasos de arañas, y se anotó la clasificación actual de Niño Pez y Rudolfo. También se asignaron funciones de diseño a las habilidades y se añadieron criterios de variedad y ritmo alrededor del cambio de personaje y los especiales conjuntos existentes. Son propuestas para GDD, no cambios de assets ni confirmación de niveles implementados.
+
+**25 de septiembre de 2026 — Codex, actualización integral solicitada por Raúl.**
+
+Se actualizó el prólogo jugable y el tramo inicial hasta la caja contra Cap1.asset y las secuencias actuales. Se rehízo el guion posterior al Demonio según la novela completa, incorporando Silas, el bucle del reloj, Risco y Vega, las reglas de la Piedra, el orden de las pruebas, la Caja y la secuencia actual del final. Se ajustaron las fichas al canon, se volvió a leer el inventario de hechizos y se retiraron como estado vigente las conclusiones basadas en Cap2–Cap6, que hoy están en Versiones antiguas. Se documentaron la pauta de tres frases por bocadillo y los literales que requieren división o reescritura. Este cambio actualiza el GDD; no reescribe los JSON ni confirma la integración del contenido posterior al Capítulo 1.
+
+**Nota histórica:** las entradas anteriores conservan el registro de decisiones de su fecha. Sus afirmaciones de implementación no prevalecen sobre el estado actual descrito arriba.
+
 
 **10 de septiembre de 2026 — Codex, nivelación documental solicitada por Raúl.**
 
@@ -562,24 +648,25 @@ Se leyeron enteros los 6 capítulos de `Assets/NarrativeGraph/MainNarrative_Cap1
 
 - Corregida la escena 17 (El Sendero de las Estrellas): el guión describía las tres pruebas como caminos solitarios ("Prueba 1 de Will", "Prueba 2 de Estela", "Prueba 3 de Liam"), heredado sin cambios del Google Doc v1.0. Esto ya no coincidía con la corrección de canon que Raúl aclaró y que la novela (`novela/manuscrito-novela-completo.md`) ya refleja: las pruebas 1 y 2 las vive el grupo entero junto; solo la prueba 3 separa al grupo, y lo hace de otra forma (parque de atracciones + laberinto de espejos donde Will y Estela se quedan fuera viendo la traición de Liam desde fuera, no entrando los tres juntos como decía la versión anterior). Ver `INC-126` en `TRACKER.md`. Sin impacto en el juego implementado: las escenas 15-22 siguen sin ningún nodo en el grafo narrativo actual (ver nota de "hasta dónde llega el contenido implementado" más arriba), así que es una corrección puramente de diseño/documentación.
 
-### Cobertura espacial de la maqueta Eldoria — propuesta de nivel, 10 septiembre de 2026
+## Cobertura espacial de la maqueta Eldoria — base del 10, requisitos revisados el 25 de septiembre de 2026
 
-Revisión solicitada por Raúl tras probar la maqueta (INC-188). Esta tabla aplica a las variantes Eldoria Codex, no al estado de las misiones en MainWorld. Las posiciones son propuestas de composición; no cambian la historia ni requieren alterar la novela. Una reserva espacial no acredita que existan NPCs, disparadores, colisiones transitables o navegación conectados.
+La composición espacial se propuso para las variantes Eldoria Codex (INC-188), no para el estado de las misiones en MainWorld. La revisión narrativa añade necesidades que aún no tienen ubicación asignada. Las posiciones son propuestas de composición: una reserva espacial no acredita que existan NPCs, disparadores, colisiones transitables, navegación o una misión conectada.
 
-| Necesidad del guión | Situación en la maqueta / trabajo pendiente |
+| Necesidad de nivel | Situación y trabajo pendiente |
 |---|---|
-| Casa de Will, encuentro con Eldran y caja en el linde (3) | Pueblo inicial conservado; falta asignar casas, entrada y punto del encargo a los objetos narrativos. |
-| Despertar y Demonio 1 (4–5) | Pradera de encuentro propuesta junto al pueblo; faltan conexión al combate, actores y posición protegida para Eldran. |
-| Victoria, pociones y entrenamiento con Erika (6) | Hay edificios, pero faltan asignación de comercios y patio de entrenamiento. |
-| Bosque Prohibido y claro de Estela (7) | Masa forestal, sendas y claro propuesto con troncos quemados; faltan puesta en escena y actores. |
-| Golem durante el regreso (8) | Ensanchamiento propuesto en el camino de vuelta; falta conectarlo al combate. |
-| Taberna, persecución y destrucción de montaña (9) | Taberna propuesta y plaza baja del barrio. La destrucción debe ser un estado posterior al evento; no se representa permanentemente al comenzar la maqueta. Falta montar la persecución. |
-| Reino, audiencia y calabozo (10–11) | Castillo y explanada exterior reorganizados; sala del trono y calabozo no construidos en esta maqueta. |
-| Demonio 2 y reunión exterior (12–13) | Explanada propuesta delante del castillo, pendiente de adaptar al combate y actores. |
-| Fuego Fatuo y charla de Will/Liam (14) | Bosque oriental y ruta con curvas; falta el circuito de ilusión, flancos y conexiones de misión. |
-| Pueblo del hechicero (15) | La propuesta espacial de Claude del 11 septiembre separa el pueblo vecino, en terraza interior, de la casa del hechicero en su isla de jungla. Esta distribución sustituye la ubicación anterior de la casa dentro del pueblo; misión y transporte pendientes de integrar. |
-| Piedra ancestral, Guardián y ruinas (16) | La revisión espacial de Claude del 11 septiembre traslada el recinto a una isla propia al sureste, separado del Bosque Prohibido. Se conservan monolito, ruinas y ruta marítima propuesta. Faltan adaptación al combate, Guardián y aparición del libro; no se acredita navegación jugable. |
-| Sendero y pruebas (17 y siguientes) | Se mantienen como espacios separados; no se incorporan artificialmente a la isla. Revisar sus conexiones al integrar el recorrido completo. |
+| Prólogo del valle | La secuencia usa un escenario aparte del pueblo jugable. El valle necesita encargos legibles, ruta de evacuación, la despedida de Liora y arena del Mago Oscuro. Comprobar que sus transiciones respetan el final jugable del prólogo. |
+| Casa de Will, Oliver, Eldran y caja de fruta | Pueblo inicial conservado; falta asignar casas, entrada, mercado, disputa de las cajas de fruta y punto del encargo a los objetos narrativos. |
+| Despertar y primer Demonio | Pradera propuesta junto al pueblo; faltan conexión al combate, actores, salida del proyectil y posición protegida de Eldran. |
+| Preparación, comercios y Erika | Hay edificios, pero faltan asignación de comercios, objetos de preparación y patio de entrenamiento. |
+| Bosque Prohibido, Estela y Gólem | Masa forestal, sendas y claro propuesto con troncos quemados; falta montar aparición de Estela, invocación y combate. |
+| Taberna y montaña | Taberna propuesta y plaza baja del barrio. La montaña destruida debe ser un estado posterior al evento, no una ruina presente desde el inicio. Falta el recorrido de la persecución. |
+| Castillo, calabozo y segundo Demonio | Castillo y explanada exterior reorganizados; sala del trono y calabozo no construidos en esta maqueta. La arena debe admitir la defensa de guardias y población. |
+| Biblioteca real y espejo de Tobías | Sin ubicación asignada en la propuesta de Eldoria. Reservar espacio interior para investigación y conversación íntima antes del viaje. |
+| Ruta del Fuego Fatuo y pueblo vecino | Bosque oriental y ruta con curvas propuestos. Falta diseñar lectura de rastros y ubicar el pueblo del amigo de Eldran; la casa de Silas y su taller de bucle temporal aún no están representados. |
+| Risco, Vega y el manantial | No hay ubicación asignada. Requiere dos aldeas, presa, cauce compartido y rutas entre zonas agrícolas; mantener separadas sus necesidades sin inventar un atajo mágico que resuelva el conflicto. |
+| Piedra Ancestral y ruinas | La propuesta del 11 de septiembre la traslada a una isla propia al sureste, separada del Bosque Prohibido. Se conservan monolito, ruinas y ruta marítima propuesta. Faltan adaptación al combate del Guardián y el retorno seguro; no se acredita navegación jugable. |
+| Sendero, pruebas y Caja | Se mantienen como espacios separados de Eldoria. Candyland y la feria requieren zonas propias; la Caja necesita un espacio que permita a Will y Estela observar la prueba de Liam sin entrar en ella. Revisar conexiones cuando se integre el recorrido. |
+| Biblioteca final, altar y salida | Necesidades de diseño nuevas del tramo final: deseos conservados, arena del Mago Oscuro, conducto hacia el altar y salida de resurrección. No tienen aún propuesta espacial ni integración confirmada. |
 | Puerto pesquero y playas | Ambientación del mapa de referencia. Puerto rehecho con viviendas y embarcadero; playas despejadas de falsos edificios. No se inventan misiones para justificar estos lugares. |
 
-Prioridad siguiente de diseño: recorrido continuo a pie y escala de jugador; después claros/arenas y servicios del pueblo; por último conexión de eventos e interiores. La revisión visual por capturas no sustituye esa prueba jugable.
+Prioridad de trabajo: primero comprobar recorrido continuo a pie y escala de jugador; después resolver accesos, interiores y arenas; por último conectar personajes, misiones y eventos. La revisión visual por capturas no sustituye la prueba jugable.

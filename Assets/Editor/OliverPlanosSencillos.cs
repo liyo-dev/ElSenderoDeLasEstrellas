@@ -31,7 +31,7 @@ public static class OliverPlanosSencillos
     private const string NotaPerfil = "PERFIL (INC-357)";
     private const string NotaEncarar = "ENCARAR (INC-357)";
 
-    [MenuItem("El Sendero/Secuencias/Oliver: dos planos (aéreo + perfil)")]
+    [MenuItem("El Sendero/Archivo/Secuencias/Oliver: dos planos (aéreo + perfil)")]
     public static void Menu()
     {
         string r = Ejecutar(avisar: true);

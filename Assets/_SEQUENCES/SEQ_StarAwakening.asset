@@ -13,12 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_StarAwakening
   m_EditorClassIdentifier: 
   displayName: El Despertar de la Estrella
-  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo
-    a esconderse gritandole que se aparte, y Will se queda solo: primer plano de
-    su cara, la camara retrocede hasta verle entero y se planta en pose de combate.
-    El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta,
-    devuelve el golpe; si falla, el grafo vuelve al dialogo con Eldran. Ningun plano
-    esta colocado a mano.'
+  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo a esconderse gritandole que se aparte, y Will se queda solo: primer plano de su cara, la camara retrocede hasta verle entero y se planta en pose de combate. El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta, devuelve el golpe; si falla, el grafo vuelve al dialogo con Eldran. Ningun plano esta colocado a mano.'
   signalIn: AWAKEN_START
   signalOut: AWAKEN_DONE
   musicId: AWAKEN
@@ -32,7 +27,9 @@ MonoBehaviour:
     fovOverride: 0
     crossTheLine: 0
     headroom: 1
+    encara: 1
   endStayBlack: 1
+  modulos: {fileID: 3468072592841052729, guid: 9c4f628711288c3498f463432caf410a, type: 3}
   phases:
   - name: 1 - Eldran avisa
     onlyIfFlag: 
@@ -136,11 +133,15 @@ MonoBehaviour:
       data:
         note: EVT_AWAKEN_01 = Will, cuidado!
         actorId: NPC_Eldran
+        markName: 
         textKey: EVT_AWAKEN_01
         pageDuration: 1.8
         gesture: Question01
         gestureRepeats: 1
         speakerNameKey: Eldran
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000010
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -164,10 +165,7 @@ MonoBehaviour:
     - rid: 8000000000000000013
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Will en primer plano con el proyectil de referencia. Se corta con la
-          pantalla cubierta. (Antes era plano medio, geometricamente casi igual al
-          openingShot con Eldran, asi que el corte no se notaba pese a la pantalla
-          en negro. Primer plano cambia el tamano de encuadre y rompe el parecido.)
+        note: Will en primer plano con el proyectil de referencia. Se corta con la pantalla cubierta. (Antes era plano medio, geometricamente casi igual al openingShot con Eldran, asi que el corte no se notaba pese a la pantalla en negro. Primer plano cambia el tamano de encuadre y rompe el parecido.)
         shotName: 
         framing:
           type: 4
@@ -178,9 +176,12 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000014
       type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
@@ -225,11 +226,15 @@ MonoBehaviour:
       data:
         note: EVT_AWAKEN_02 = ...! Will se queda mudo.
         actorId: Player
+        markName: 
         textKey: EVT_AWAKEN_02
         pageDuration: 1
         gesture: Angry02
         gestureRepeats: 1
         speakerNameKey: Will
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000020
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -244,9 +249,12 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 0
+          encara: 1
         smooth: 1
         duration: 0.5
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 1
     - rid: 8000000000000000021
       type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
@@ -268,9 +276,12 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 1
     - rid: 8000000000000000031
       type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
@@ -296,28 +307,39 @@ MonoBehaviour:
       data:
         note: EVT_AWAKEN_06 = Will apartate! Ya existia en el json y nadie lo usaba.
         actorId: NPC_Eldran
+        markName: 
         textKey: EVT_AWAKEN_06
         pageDuration: 1.6
         gesture: 
         gestureRepeats: 1
         speakerNameKey: Eldran
         playGestures: 0
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000034
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: El tiempo vuelve a la normalidad para que Eldran corra corriendo de
-          verdad. En camara lenta un anciano huyendo despavorido parece que hace
-          taichi.
+        note: El tiempo vuelve a la normalidad para que Eldran corra corriendo de verdad. En camara lenta un anciano huyendo despavorido parece que hace taichi.
         timeScale: 1
         rampDuration: 0.25
     - rid: 8000000000000000035
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: Y se vuelve a parar el tiempo para el despertar, que es el momento
-          que la camara lenta tiene que subrayar. Si el proyectil llega demasiado
-          pronto por este tramo a velocidad normal, subir Spawn Distance en el modulo.
+        note: Y se vuelve a parar el tiempo para el despertar, que es el momento que la camara lenta tiene que subrayar. Si el proyectil llega demasiado pronto por este tramo a velocidad normal, subir Spawn Distance en el modulo.
         timeScale: 0.2
         rampDuration: 0.25
+    - rid: 8000000000000000036
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Congelar el proyectil. La camara se va con Eldran y nadie lo esta mirando, asi que no tiene por que comerse la distancia mientras. Ademas, Pause() le quita el collider, con lo que tampoco puede detonar por accidente.
+        routine: PausarProyectil
+        waitForEnd: 1
+    - rid: 8000000000000000037
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Y vuelve la amenaza, ya con el plano general establecido: primero se ve donde estamos, y entonces el peligro se reanuda y toca reaccionar.'
+        routine: ReanudarProyectil
+        waitForEnd: 1
     - rid: 8000000000000000040
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -332,15 +354,17 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000041
       type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'La camara se aleja MIENTRAS Will se planta. El gesto y el movimiento
-          tienen que ir juntos: es el mismo momento.'
+        note: 'La camara se aleja MIENTRAS Will se planta. El gesto y el movimiento tienen que ir juntos: es el mismo momento.'
         beats:
         - rid: 8000000000000000042
         - rid: 8000000000000000043
@@ -360,21 +384,17 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 1
         duration: 1.8
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000043
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Pose de combate. Se queda puesta a proposito: Will ya no es el que
-          se asustaba hace dos segundos. OJO (17 sept): holdSeconds corre en tiempo
-          ESCALADO (para ir sincronizado con la animacion, que tambien va escalada) y
-          aqui seguimos a camara lenta (timeScale 0.2, puesto en el rid35 de la fase
-          anterior) -- 1.8 escalados son 9 segundos REALES de espera antes de que salga
-          el boton, que es el salto que reporto Raul (se queda demasiado tiempo ahi).
-          Bajado a 0.4 (2 segundos reales): se sigue leyendo como una pose que se
-          aguanta, sin ser un paron.'
+        note: 'Pose de combate. Se queda puesta a proposito: Will ya no es el que se asustaba hace dos segundos. OJO (17 sept): holdSeconds corre en tiempo ESCALADO (para ir sincronizado con la animacion, que tambien va escalada) y aqui seguimos a camara lenta (timeScale 0.2, puesto en el rid35 de la fase anterior) -- 1.8 escalados son 9 segundos REALES de espera antes de que salga el boton, que es el salto que reporto Raul (se queda demasiado tiempo ahi). Bajado a 0.4 (2 segundos reales): se sigue leyendo como una pose que se aguanta, sin ser un paron.'
         actorId: Player
         gesture: Idle_Battle_NoWeapon
         repeats: 1
@@ -390,10 +410,7 @@ MonoBehaviour:
     - rid: 8000000000000000050
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Se abre a general para el gameplay. Con el proyectil de segundo sujeto:
-          el general lo calcula el solver a partir de la separacion entre los dos, asi que
-          la amenaza NO se sale de cuadro (era el fallo: la bola desaparecia al cambiar de
-          plano y el jugador perdia de vista lo que le viene encima).'
+        note: 'Se abre a general para el gameplay. Con el proyectil de segundo sujeto: el general lo calcula el solver a partir de la separacion entre los dos, asi que la amenaza NO se sale de cuadro (era el fallo: la bola desaparecia al cambiar de plano y el jugador perdia de vista lo que le viene encima).'
         shotName: 
         framing:
           type: 0
@@ -404,66 +421,19 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000051
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'El panic input. Sin frase de Eldran: no sabe que Will tiene magia,
-          y el icono del boton ya lo dice todo.'
+        note: 'El panic input. Sin frase de Eldran: no sabe que Will tiene magia, y el icono del boton ya lo dice todo.'
         routine: PanicInput
         waitForEnd: 1
-    - rid: 8000000000000000090
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Nuevo (17 sept, Raul: "no veo que will dispare el hechizo"). La fase 6
-          no tenia NINGUN ShotBeat propio -- la camara se quedaba en el plano general
-          de la fase 5 (el de "Wide" para el QTE, pensado para ver venir la amenaza, no
-          para ver a Will lanzar). Primer plano aqui, con el Proyectil de referencia
-          (no Eldran: Will ya esta girado hacia el proyectil desde la fase 2 gracias al
-          FaceBeat, asi que usarlo de referencia coincide con hacia donde mira de
-          verdad -- al reves que en rid70, ver esa nota).'
-        shotName: 
-        framing:
-          type: 4
-          subjectId: Player
-          secondaryId: Proyectil
-          heightBias: 0
-          distanceScale: 1.3
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        live: 0
-    - rid: 8000000000000000091
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Nuevo (17 sept, tras probar rid90): Raul dice que ahora se ve todo demasiado
-          cerca y que no se aprecia la explosion de los dos hechizos. Causa: rid90 es el
-          UNICO plano de la fase 6 y no tiene seguimiento (live: 0) -- se queda congelado
-          en primer plano desde el corte hasta la fase 7, sin reencuadrar mientras los
-          proyectiles vuelan y chocan en otro punto del espacio. Este plano abre a Wide
-          justo cuando arranca el contraataque real (rid61) y con live activado sigue a
-          Player y Proyectil cada frame mientras se acercan, para que el choque quede
-          dentro de cuadro.'
-        shotName: 
-        framing:
-          type: 0
-          subjectId: Player
-          secondaryId: Proyectil
-          heightBias: 0
-          distanceScale: 1
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        live: 1
     - rid: 8000000000000000060
       type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -484,11 +454,15 @@ MonoBehaviour:
       data:
         note: EVT_AWAKEN_03 = NOO!
         actorId: Player
+        markName: 
         textKey: EVT_AWAKEN_03
         pageDuration: 1.5
         gesture: Angry02
         gestureRepeats: 1
         speakerNameKey: Will
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000063
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -523,19 +497,7 @@ MonoBehaviour:
     - rid: 8000000000000000070
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Primer plano: que acabo de hacer. Algo de contrapicado. OJO (17 sept):
-          llevaba NPC_Eldran de referencia -- para que el angulo no repitiera el de la
-          tension -- pero ComputeThreeQuarter usa la posicion del actor de referencia
-          para decidir donde esta "delante" del sujeto (linea 408 de ShotComposer.cs,
-          pensado para dos personajes charlando de frente). Eldran esta a cubierto
-          "detras de WORLD" desde la fase 3, en una posicion que ya no tiene nada que
-          ver con hacia donde mira Will al lanzar el contraataque -- as que el plano
-          acababa resolviendose por detras de Will (Raul: "se queda de espalda").
-          Quitada la referencia: sin ella, ComputeThreeQuarter usa el propio forward de
-          Will, que es lo que hace falta para verle la cara en su propia reaccion. Se
-          pierde la garantia de no repetir angulo con el plano de la tension -- si el
-          solver avisa de plano repetido aqui, tocaria diferenciarlo con el tipo de
-          plano en vez de con la referencia.'
+        note: 'Primer plano: que acabo de hacer. Algo de contrapicado. OJO (17 sept): llevaba NPC_Eldran de referencia -- para que el angulo no repitiera el de la tension -- pero ComputeThreeQuarter usa la posicion del actor de referencia para decidir donde esta "delante" del sujeto (linea 408 de ShotComposer.cs, pensado para dos personajes charlando de frente). Eldran esta a cubierto "detras de WORLD" desde la fase 3, en una posicion que ya no tiene nada que ver con hacia donde mira Will al lanzar el contraataque -- as que el plano acababa resolviendose por detras de Will (Raul: "se queda de espalda"). Quitada la referencia: sin ella, ComputeThreeQuarter usa el propio forward de Will, que es lo que hace falta para verle la cara en su propia reaccion. Se pierde la garantia de no repetir angulo con el plano de la tension -- si el solver avisa de plano repetido aqui, tocaria diferenciarlo con el tipo de plano en vez de con la referencia.'
         shotName: 
         framing:
           type: 5
@@ -546,9 +508,12 @@ MonoBehaviour:
           fovOverride: 0
           crossTheLine: 0
           headroom: 1
+          encara: 1
         smooth: 0
         duration: 1.4
         waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
         live: 0
     - rid: 8000000000000000071
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
@@ -571,11 +536,15 @@ MonoBehaviour:
       data:
         note: EVT_AWAKEN_05 = Que... que acabo de hacer?
         actorId: Player
+        markName: 
         textKey: EVT_AWAKEN_05
         pageDuration: 2.5
         gesture: Question01
         gestureRepeats: 1
         speakerNameKey: Will
+        playGestures: 1
+        overrideBubbleOffset: 0
+        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000074
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -649,18 +618,45 @@ MonoBehaviour:
         note: Rama de fallo. Aqui SI se descubre la pantalla.
         signalOutOverride: AWAKEN_FAILED
         screen: 1
-    - rid: 8000000000000000036
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+    - rid: 8000000000000000090
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Congelar el proyectil. La camara se va con Eldran y nadie lo esta mirando, asi que
-          no tiene por que comerse la distancia mientras. Ademas, Pause() le quita el collider, con
-          lo que tampoco puede detonar por accidente.'
-        routine: PausarProyectil
-        waitForEnd: 1
-    - rid: 8000000000000000037
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+        note: 'Nuevo (17 sept, Raul: "no veo que will dispare el hechizo"). La fase 6 no tenia NINGUN ShotBeat propio -- la camara se quedaba en el plano general de la fase 5 (el de "Wide" para el QTE, pensado para ver venir la amenaza, no para ver a Will lanzar). Primer plano aqui, con el Proyectil de referencia (no Eldran: Will ya esta girado hacia el proyectil desde la fase 2 gracias al FaceBeat, asi que usarlo de referencia coincide con hacia donde mira de verdad -- al reves que en rid70, ver esa nota).'
+        shotName: 
+        framing:
+          type: 4
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1.3
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
+        live: 0
+    - rid: 8000000000000000091
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Y vuelve la amenaza, ya con el plano general establecido: primero se ve donde
-          estamos, y entonces el peligro se reanuda y toca reaccionar.'
-        routine: ReanudarProyectil
-        waitForEnd: 1
+        note: 'Nuevo (17 sept, tras probar rid90): Raul dice que ahora se ve todo demasiado cerca y que no se aprecia la explosion de los dos hechizos. Causa: rid90 es el UNICO plano de la fase 6 y no tiene seguimiento (live: 0) -- se queda congelado en primer plano desde el corte hasta la fase 7, sin reencuadrar mientras los proyectiles vuelan y chocan en otro punto del espacio. Este plano abre a Wide justo cuando arranca el contraataque real (rid61) y con live activado sigue a Player y Proyectil cada frame mientras se acercan, para que el choque quede dentro de cuadro.'
+        shotName: 
+        framing:
+          type: 0
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
+        live: 1

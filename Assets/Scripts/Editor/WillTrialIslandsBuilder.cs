@@ -50,7 +50,7 @@ public static class WillTrialIslandsBuilder
     static Transform raiz; static System.Text.StringBuilder informe; static string carpeta;
     static readonly Dictionary<GameObject, Bounds> medidas = new Dictionary<GameObject, Bounds>();
 
-    [MenuItem("El Sendero/Escena/Generar Prueba de Will — islas flotantes (maqueta)")]
+    [MenuItem("El Sendero/Archivo/Escena/Generar Prueba de Will — islas flotantes (maqueta)")]
     public static void Crear()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Salir de Play antes de generar.");

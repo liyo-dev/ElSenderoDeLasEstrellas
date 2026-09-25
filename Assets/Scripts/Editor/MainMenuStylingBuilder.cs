@@ -45,7 +45,7 @@ public static class MainMenuStylingBuilder
         ("Assets/Prefabs/_WILL.prefab", 2.4f, 4.5f, 0.5f),
     };
 
-    [MenuItem("El Sendero/Controles/Estilizar Main Menu (nubes, cámara, personajes, botones)")]
+    [MenuItem("El Sendero/Archivo/Controles/Estilizar Main Menu (nubes, cámara, personajes, botones)")]
     public static void Style()
     {
         if (EditorApplication.isPlaying)
@@ -103,7 +103,7 @@ public static class MainMenuStylingBuilder
     // código, porque no hay nada que pueda pisarlo.
     const string MenuSkyboxMaterialPath = "Assets/Plugins/Quibli/Demos/City/Materials/City_Skybox.mat";
 
-    [MenuItem("El Sendero/Controles/Fijar Skybox del Menú (City_Skybox)")]
+    [MenuItem("El Sendero/Archivo/Controles/Fijar Skybox del Menú (City_Skybox)")]
     public static void SetMenuSkybox()
     {
         if (EditorApplication.isPlaying)
@@ -159,7 +159,7 @@ public static class MainMenuStylingBuilder
     const float SubtlePitchAmplitudeDegrees = 0.12f;
     const float SubtlePitchSpeed = 0.35f;
 
-    [MenuItem("El Sendero/Controles/Ajustar Oscilación de Vuelo (más sutil)")]
+    [MenuItem("El Sendero/Archivo/Controles/Ajustar Oscilación de Vuelo (más sutil)")]
     public static void MakeFlyingMotionMoreSubtle()
     {
         if (EditorApplication.isPlaying)

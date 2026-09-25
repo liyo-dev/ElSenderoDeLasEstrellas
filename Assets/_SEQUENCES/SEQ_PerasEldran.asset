@@ -15,9 +15,9 @@ MonoBehaviour:
   displayName: La discusion de las peras, resuelta
   summary: 'Will llega hasta donde discutian Eldran y Victoria por las cajas de fruta
     (gancho de SEQ_DiscusionVentana). Se resuelve la discusion con humor, Eldran saluda
-    a Will y le pide que busque una caja que dejo bajo un arbol, y se despiden. Sustituye
-    a DLG_ELDRAN_MISSION1_TURNIN/DLG_ELDRAN_MISSION2_OFFER como forma de dar la mision
-    ELDRAN_MISSION2 - esos dialogos quedan archivados sin usar, ver TRACKER INC-235.'
+    a Will y le pregunta que quiere por sus dieciocho: le da una moneda para que se compre
+    algo inutil (DG_ELDRAN_REGALO). La caja bajo el arbol ya no se pide aqui: Eldran se la
+    pide a Will despues de comprar la estrella (Cap1, nodo 20d, INC-439).'
   signalIn: PERAS_START
   signalOut: PERAS_DONE
   musicId:
@@ -53,9 +53,6 @@ MonoBehaviour:
     - rid: 8000000000000000112
     - rid: 8000000000000000113
     - rid: 8000000000000000106
-    - rid: 8000000000000000010
-    - rid: 8000000000000000108
-    - rid: 8000000000000000011
   - name: 3 - Despedida
     beats:
     - rid: 8000000000000000109
@@ -209,60 +206,6 @@ MonoBehaviour:
         playGestures: 1
         overrideBubbleOffset: 0
         bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 8000000000000000007
-      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'Eldran pide el favor de la caja - reemplaza a DLG_ELDRAN_MISSION2_OFFER'
-        actorId: NPC_Eldran
-        markName:
-        textKey: PERAS_06
-        pageDuration: 3.2
-        gesture: Cheer01
-        gestureRepeats: 1
-        speakerNameKey:
-        playGestures: 1
-        overrideBubbleOffset: 0
-        bubbleOffset: {x: 0, y: 0, z: 0}
-    - rid: 8000000000000000008
-      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'REACCION: Will asiente mientras Eldran explica'
-        actorId: Player
-        gesture: HeadNod01
-        repeats: 1
-        holdSeconds: 0
-        returnToNormalAfter: 0
-    - rid: 8000000000000000009
-      type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'REACCION: cara de Will contenta'
-        actorId: Player
-        emotion: 1
-        revertAfter: 0
-    - rid: 8000000000000000010
-      type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Eldran explica el favor, Will reacciona, y Oliver tambien (NUEVO)
-        beats:
-        - rid: 8000000000000000007
-        - rid: 8000000000000000008
-        - rid: 8000000000000000009
-        - rid: 8000000000000000107
-        waitForAll: 1
-    - rid: 8000000000000000011
-      type: {class: SayBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Eldran da la pista de donde esta la caja
-        actorId: NPC_Eldran
-        markName:
-        textKey: PERAS_07
-        pageDuration: 3.2
-        gesture:
-        gestureRepeats: 1
-        speakerNameKey:
-        playGestures: 1
-        overrideBubbleOffset: 0
-        bubbleOffset: {x: 0, y: 0, z: 0}
     - rid: 8000000000000000101
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -365,35 +308,6 @@ MonoBehaviour:
         shotName: 
         framing:
           type: 4
-          subjectId: NPC_Eldran
-          secondaryId: Player
-          heightBias: 0
-          distanceScale: 1.35
-          fovOverride: 0
-          crossTheLine: 0
-          headroom: 1
-          encara: 1
-        smooth: 0
-        duration: 1.4
-        waitForArrival: 1
-        live: 0
-    - rid: 8000000000000000107
-      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'NUEVO: Oliver tambien reacciona mientras Eldran explica el favor -- sin dialogo
-          nuevo, solo gesto'
-        actorId: NPC_Oliver
-        gesture: HeadNod01
-        repeats: 1
-        holdSeconds: 0
-        returnToNormalAfter: 0
-    - rid: 8000000000000000108
-      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 'NUEVO: Eldran da la pista de la caja (PERAS_07)'
-        shotName: 
-        framing:
-          type: 3
           subjectId: NPC_Eldran
           secondaryId: Player
           heightBias: 0

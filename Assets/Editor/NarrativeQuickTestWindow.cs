@@ -546,7 +546,7 @@ public class NarrativeQuickTestWindow : EditorWindow
     /// </summary>
     private void RefreshDetectedAnchors()
     {
-        var anchors = Object.FindObjectsByType<SpawnAnchor>(FindObjectsSortMode.None);
+        var anchors = Object.FindObjectsByType<SpawnAnchor>();
         _detectedAnchors = anchors
             .Select(a => a.anchorId)
             .Where(id => !string.IsNullOrEmpty(id))

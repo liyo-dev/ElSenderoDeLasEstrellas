@@ -1307,7 +1307,7 @@ public class ImpDemonAI : MonoBehaviour
         // La arena/batalla no se entera de esto por Damageable.OnDied (nunca se dispara aquí) --
         // hay que avisarla explícitamente para que abra la salida, pare la música de jefe y marque
         // la batalla como ganada exactamente igual que con una muerte normal.
-        var arena = FindObjectOfType<BossArenaController>();
+        var arena = FindAnyObjectByType<BossArenaController>();
         if (arena != null) arena.NotifyBossDefeatedByAlternateEnding();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         else Debug.LogWarning("[ImpDemonAI] Aro roto pero no se encontró ningún BossArenaController en la escena -- la arena no se desbloqueará.");

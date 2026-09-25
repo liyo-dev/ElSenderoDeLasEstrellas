@@ -325,7 +325,7 @@ public static partial class EldoriaCodexBuilder
     static Transform raiz;
     static System.Text.StringBuilder informe;
 
-    [MenuItem("El Sendero/Eldoria Codex/Crear nueva maqueta del mapa")]
+    [MenuItem("El Sendero/Archivo/Eldoria Codex/Crear nueva maqueta del mapa")]
     public static void Crear()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Salir de Play antes de crear la maqueta.");

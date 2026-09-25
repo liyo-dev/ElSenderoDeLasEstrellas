@@ -32,7 +32,7 @@ public static class SenderoPruebaWillPortalWiring
     private const string TargetSceneName = "Sendero_PruebaWill";
     private const string TriggerChildName = "Trigger_EntradaPruebaWill";
 
-    [MenuItem("El Sendero/Escena/Enganchar Portal de la Prueba de Will")]
+    [MenuItem("El Sendero/Archivo/Escena/Enganchar Portal de la Prueba de Will")]
     public static void WirePortal()
     {
         var scene = EditorSceneManager.GetActiveScene();

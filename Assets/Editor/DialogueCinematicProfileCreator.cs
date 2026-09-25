@@ -7,7 +7,7 @@ using System.IO;
 /// </summary>
 public class DialogueCinematicProfileCreator
 {
-    [MenuItem("El Sendero/Diálogos/Create Default Cinematic Profile")]
+    [MenuItem("El Sendero/Archivo/Diálogos/Create Default Cinematic Profile")]
     public static void CreateDefaultProfile()
     {
         string path = "Assets/Scripts/Dialogue/DefaultDialogueCinematic.asset";

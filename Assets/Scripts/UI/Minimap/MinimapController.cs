@@ -288,7 +288,7 @@ public class MinimapController : MonoBehaviour
         }
 
         var encontrados = new System.Collections.Generic.List<Renderer>();
-        foreach (var renderer in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+        foreach (var renderer in FindObjectsByType<Renderer>())
         {
             if (EsShaderDeAgua(renderer.sharedMaterial != null ? renderer.sharedMaterial.shader : null))
                 encontrados.Add(renderer);

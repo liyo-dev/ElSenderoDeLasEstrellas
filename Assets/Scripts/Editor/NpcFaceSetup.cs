@@ -48,7 +48,7 @@ public static class NpcFaceSetup
     /// mano: así, si algún día Eldran gana o pierde variantes, el informe sigue diciendo la verdad.
     private static int _referencePairs = -1;
 
-    [MenuItem("El Sendero/NPCs/Setup/Montar sistema de caras en TODOS los NPCs")]
+    [MenuItem("El Sendero/Archivo/NPCs/Setup/Montar sistema de caras en TODOS los NPCs")]
     public static void SetupAll()
     {
         var profile = AssetDatabase.LoadAssetAtPath<EmotionProfile>(EmotionProfilePath);

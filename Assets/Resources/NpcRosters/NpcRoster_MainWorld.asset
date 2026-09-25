@@ -61,7 +61,7 @@ MonoBehaviour:
     invertCondition: 0
   - enabled: 1
     spawnId: SPAWN_Tomasa
-    prefab: {fileID: 3903978137244161971, guid: d41bcce00d0041cda9e971025744b474, type: 3}
+    prefab: {fileID: 6941739730369371496, guid: c820cd752e15df74e860eeb697d328db, type: 3}
     gameObjectName: Tomasa
     persistenceId: NPC_Tomasa
     startActive: 1

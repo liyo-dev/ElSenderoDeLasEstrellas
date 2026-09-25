@@ -37,7 +37,7 @@ public static class MountainVarietyBuilder
         ("e", 4),
     };
 
-    [MenuItem("El Sendero/Mundo/Variar Montañas de MainWorld")]
+    [MenuItem("El Sendero/Archivo/Mundo/Variar Montañas de MainWorld")]
     public static void VariarMontañas()
     {
         GameObject grupo = BuscarEnEscenaActiva(MountainsGroupName);

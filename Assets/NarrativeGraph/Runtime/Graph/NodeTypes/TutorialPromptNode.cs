@@ -71,6 +71,32 @@ public sealed class TutorialPromptNode : NarrativeNode
              "incidencia-carta-no-activa-mision-tutorial-cierre-informativo-2026-09-15.md.")]
     public bool dismissWithCancel = false;
 
+    [Header("Cierre automático (solo avisos informativos)")]
+    [Tooltip("Señal que significa «ya has hecho lo que dice el aviso» (p. ej. WILL_REACHED_ELDRAN para " +
+             "«Sigue el marcador para encontrar a Eldran»). Al emitirse, el aviso se quita solo. Si ya " +
+             "se había emitido antes de mostrarlo, el aviso ni siquiera sale. No consume la señal: el " +
+             "nodo que la espera la sigue recibiendo. Solo aplica con dismissWithCancel. INC-442.")]
+    [NarrativeKey(NarrativeKeyKind.Signal)]
+    public string cerrarConSenal;
+
+    [Tooltip("Quitar el aviso en cuanto empiece una cinemática: el momento ya ha pasado y en mitad de " +
+             "una escena queda raro. Solo aplica con dismissWithCancel. INC-442.")]
+    public bool cerrarAlEmpezarCinematica = true;
+
+    [Tooltip("Quitar el aviso cuando se abra cualquier diálogo (p. ej. «habla con quien lleva el icono»: " +
+             "en cuanto hablas, ya está hecho). Solo aplica con dismissWithCancel. INC-442.")]
+    public bool cerrarAlEmpezarDialogo = false;
+
+    [System.NonSerialized]
+    private Action<Transform> _dialogueHandler;
+
+    [System.NonSerialized]
+    private Action _signalHandler;
+    [System.NonSerialized]
+    private string _signalKey;
+    [System.NonSerialized]
+    private Action<bool> _cinematicHandler;
+
     [System.NonSerialized]
     private Action<GamepadInputReader.InputEvent> _waitHandler;
     [System.NonSerialized]
@@ -111,6 +137,14 @@ public sealed class TutorialPromptNode : NarrativeNode
             return;
         }
 
+        // Si lo que pide el aviso ya está hecho (su señal de cierre ya se emitió y sigue esperando
+        // a quien la recoja), no tiene sentido enseñarlo. INC-442.
+        if (dismissWithCancel && !string.IsNullOrEmpty(cerrarConSenal) && SenalYaEmitida(cerrarConSenal))
+        {
+            onReadyToAdvance?.Invoke();
+            return;
+        }
+
         string resolved = string.IsNullOrEmpty(textId)
             ? text
             : LocalizationManager.Instance?.Get(textId, text) ?? text;
@@ -140,6 +174,7 @@ public sealed class TutorialPromptNode : NarrativeNode
                 TeleportService.OnTeleportEnded -= _teleportHandler;
                 _teleportHandler = null;
             }
+            QuitarCierresAutomaticos();
             TutorialPromptUI.Instance?.Hide();
         }
 
@@ -172,6 +207,25 @@ public sealed class TutorialPromptNode : NarrativeNode
             _teleportHandler = CloseInformationalPrompt;
             TeleportService.OnTeleportEnded += _teleportHandler;
 
+            // INC-442: «o lo cierra el jugador, o se quita solo cuando se cumple lo que dice».
+            var senales = DefaultNarrativeSignals.Instance;
+            if (!string.IsNullOrEmpty(cerrarConSenal) && senales != null && !SenalYaEmitida(cerrarConSenal))
+            {
+                _signalKey = cerrarConSenal;
+                _signalHandler = CloseInformationalPrompt;
+                senales.OnCustom(_signalKey, _signalHandler);
+            }
+            if (cerrarAlEmpezarDialogo)
+            {
+                _dialogueHandler = _ => CloseInformationalPrompt();
+                DialogueManager.OnDialogueStarted += _dialogueHandler;
+            }
+            if (cerrarAlEmpezarCinematica)
+            {
+                _cinematicHandler = activa => { if (activa) CloseInformationalPrompt(); };
+                CinematicSequencerBase.OnAnySequenceActiveChanged += _cinematicHandler;
+            }
+
             onReadyToAdvance?.Invoke();
             return;
         }
@@ -197,6 +251,37 @@ public sealed class TutorialPromptNode : NarrativeNode
             Finish();
         };
         GamepadInputReader.OnInput += _waitHandler;
+    }
+
+    /// La señal ya se emitió y nadie la ha recogido todavía. Se mira sin suscribirse: OnCustom
+    /// consumiría la señal pendiente y el nodo que de verdad la espera se quedaría sin ella.
+    private static bool SenalYaEmitida(string key)
+    {
+        var s = DefaultNarrativeSignals.Instance;
+        if (s == null) return false;
+        foreach (var k in s.CurrentPending) if (k == key) return true;
+        foreach (var k in s.CurrentRaised) if (k == key) return true;
+        return false;
+    }
+
+    private void QuitarCierresAutomaticos()
+    {
+        if (_signalHandler != null)
+        {
+            DefaultNarrativeSignals.Instance?.OffCustom(_signalKey, _signalHandler);
+            _signalHandler = null;
+            _signalKey = null;
+        }
+        if (_cinematicHandler != null)
+        {
+            CinematicSequencerBase.OnAnySequenceActiveChanged -= _cinematicHandler;
+            _cinematicHandler = null;
+        }
+        if (_dialogueHandler != null)
+        {
+            DialogueManager.OnDialogueStarted -= _dialogueHandler;
+            _dialogueHandler = null;
+        }
     }
 
     public override void Exit(NarrativeContext ctx)
@@ -226,6 +311,7 @@ public sealed class TutorialPromptNode : NarrativeNode
             TeleportService.OnTeleportEnded -= _teleportHandler;
             _teleportHandler = null;
         }
+        QuitarCierresAutomaticos();
         TutorialPromptUI.Instance?.Hide();
     }
 }

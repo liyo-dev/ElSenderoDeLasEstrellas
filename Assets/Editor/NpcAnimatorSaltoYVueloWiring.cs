@@ -210,7 +210,7 @@ public static class NpcAnimatorSaltoYVueloWiring
         ("JumpAirDoubleJump_NoWeapon", "JumpAirDoubleJump_InPlace_NoWeapon"),
     };
 
-    [MenuItem("El Sendero/Animación/Dar de alta salto y vuelo en los controllers")]
+    [MenuItem("El Sendero/Archivo/Animación/Dar de alta salto y vuelo en los controllers")]
     public static void Ejecutar()
     {
         bool algoCambiado = false;

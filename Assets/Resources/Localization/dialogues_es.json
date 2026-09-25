@@ -158,7 +158,7 @@
         },
         {
             "key": "DLG_ELDRAN_REGALO_06",
-            "value": "Gracias, Eldran. Y cuenta conmigo para lo de la caja."
+            "value": "Gracias, Eldran."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",
@@ -450,11 +450,11 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_INPROGRESS_01",
-            "value": "La caja debe estar cerca de un árbol."
+            "value": "La caja está al pie de un fresno."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_INPROGRESS_02",
-            "value": "Búscala por esta zona no debe andar muy lejos."
+            "value": "Sigue el camino; no debe andar lejos."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_01",
@@ -462,23 +462,23 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_02",
-            "value": "He estado recogiendo frutas en el bosque..."
+            "value": "He recogido manzanas en el bosque..."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_03",
-            "value": "Y ahora la caja pesa demasiado para que yo la traiga solo."
+            "value": "La caja pesa demasiado para que la lleve solo."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_04",
-            "value": "¿Podrías ir al bosque a buscarla?"
+            "value": "¿Me ayudas a traerla?"
         },
         {
             "key": "DLG_ELDRAN_MISSION2_OFFER_05",
-            "value": "Y luego traérmela aquí, por favor."
+            "value": "La dejé al pie de un fresno."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_01",
-            "value": "¡Excelente! Conseguiste traer la caja."
+            "value": "¡Perfecto! Has traído las manzanas sanas y salvas."
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_02",
@@ -910,11 +910,11 @@
         },
         {
             "key": "DLG_LETTER_INTRO_01",
-            "value": "Will ven a verme cuando despiertes."
+            "value": "Will, ven a verme cuando despiertes."
         },
         {
             "key": "DLG_LETTER_INTRO_02",
-            "value": "Te espero en la entrada del reino."
+            "value": "Te espero en la entrada del pueblo."
         },
         {
             "key": "DLG_LETY_ALERT_01",
@@ -1066,31 +1066,31 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_01",
-            "value": "Que no, que no te vas a librar de mí tan fácil. Dos cosas rápidas y te dejo ir."
+            "value": "No te libras de mí tan fácil. Dos cosas rápidas y te dejo ir."
         },
         {
             "key": "DLG_OLIVER_MENUS_02",
-            "value": "Porque te veo cara de no saber ni cómo se abre el menú del juego."
+            "value": "Tienes cara de no saber ni abrir el menú."
         },
         {
             "key": "DLG_OLIVER_MENUS_03",
-            "value": "Cuando quieras abrir el MENÚ PRINCIPAL pulsa <sprite name=\"start\">"
+            "value": "Para abrir el MENÚ PRINCIPAL, pulsa <sprite name=\"start\">."
         },
         {
             "key": "DLG_OLIVER_MENUS_04",
-            "value": "Ahí puedes pausar, volver al menú de inicio, mirar tu inventario..."
+            "value": "Desde ahí puedes pausar, volver al inicio o revisar el inventario."
         },
         {
             "key": "DLG_OLIVER_MENUS_05",
-            "value": "...y un par de cosillas más que no te cuento para no enrollarme. Ya las irás viendo."
+            "value": "También encontrarás otras opciones. Échales un vistazo cuando quieras."
         },
         {
             "key": "DLG_OLIVER_MENUS_06",
-            "value": "Y si quieres ver las misiones que tienes pendientes, usa <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>."
+            "value": "Para ver tus misiones, pulsa <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly>."
         },
         {
             "key": "DLG_OLIVER_MENUS_07",
-            "value": "Con el menú de misiones abierto, si vuelves a pulsar <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly> puedes editarlas. ¡Ale, corre, que te espera Eldran!"
+            "value": "Pulsa <sprite name=\"interactable_dpad_up\"> <gpadonly>ARRIBA</gpadonly> otra vez para editar la misión activa. ¡Ahora corre, que Eldran te espera!"
         },
         {
             "key": "DLG_PIRATE_01",
@@ -1359,6 +1359,26 @@
         {
             "key": "QUEST_ELDRAN_MISSION12_DESC_02",
             "value": "Habla con el Rey."
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_LLAMADA",
+            "value": "¡Will! ¡Espera!"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_01",
+            "value": "Menos mal que te alcanzo. Con las peras casi se me olvida otra cosa."
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_02",
+            "value": "Dejé una caja de manzanas bajo un árbol del bosque. ¿Puedes ir a buscarla?"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_03",
+            "value": "Claro. ¿Dónde la busco?"
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_04",
+            "value": "Está al pie de un fresno, junto al camino."
         }
     ]
 }

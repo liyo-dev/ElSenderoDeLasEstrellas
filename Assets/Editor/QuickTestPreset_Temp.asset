@@ -23,7 +23,8 @@ MonoBehaviour:
   leftSpellId: 0
   rightSpellId: 0
   specialSpellId: 0
-  flags: []
+  flags:
+  - QUEST_ACTIVE:WILL_MISSION0
   abilities:
     swim: 0
     jump: 0
@@ -52,7 +53,7 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: d206615e-7e83-4d62-bd5a-d6e04d6b237b
+      value: c748956c-7df0-4031-8789-65aab639f278
   npcPositions: []
   npcRelationships: []
   consumedInteractableIds: []

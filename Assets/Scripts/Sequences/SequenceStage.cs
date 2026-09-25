@@ -119,6 +119,15 @@ public class SequenceStage : MonoBehaviour
 
     public IReadOnlyList<SequenceModule> Modules => _modules;
 
+    /// Añade módulos al escenario (los del prefab 'modulos' de una secuencia montada en vivo).
+    public void AgregarModulos(IEnumerable<SequenceModule> modulos)
+    {
+        if (modulos == null) return;
+        _modules ??= new List<SequenceModule>();
+        foreach (var m in modulos)
+            if (m != null && !_modules.Contains(m)) _modules.Add(m);
+    }
+
     /// El módulo que sabe ejecutar esa rutina, o null (con aviso) si no hay ninguno.
     public SequenceModule GetModuleFor(string routine)
     {

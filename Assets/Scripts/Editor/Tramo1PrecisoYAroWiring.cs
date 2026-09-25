@@ -50,7 +50,7 @@ public static class Tramo1PrecisoYAroWiring
     private const float RuneCollarColliderRadius = 0.4f;
     private const float RuneCollarVfxScale = 0.35f;
 
-    [MenuItem("El Sendero/Tramo 1/Paso 5+6: Modo preciso en Will + Aro de runas en Demonio")]
+    [MenuItem("El Sendero/Archivo/Tramo 1/Paso 5+6: Modo preciso en Will + Aro de runas en Demonio")]
     public static void Wire()
     {
         var log = new StringBuilder();

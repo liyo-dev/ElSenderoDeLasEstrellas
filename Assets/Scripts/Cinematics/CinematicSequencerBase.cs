@@ -253,6 +253,37 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         }
     }
 
+    // Al salir del juego (o del Play en el Editor) no se restaura nada: los servicios ya se
+    // están destruyendo y no hay partida que proteger.
+    private static bool s_saliendoDelJuego;
+
+    [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void EscucharSalidaDelJuego()
+    {
+        s_saliendoDelJuego = false;
+        Application.quitting -= MarcarSalida;
+        Application.quitting += MarcarSalida;
+    }
+
+    private static void MarcarSalida() => s_saliendoDelJuego = true;
+
+    /// Si el objeto se apaga o se destruye con la secuencia en marcha (se descarga su escena, se
+    /// carga partida), Unity para sus corrutinas SIN ejecutar el finally de Co_SequenceGuarded:
+    /// el cierre se hace aquí. Idempotente, igual que el camino de skip (INC-448).
+    protected virtual void OnDisable()
+    {
+        if (s_saliendoDelJuego || (!_sequenceRunning && !_cinematicLocked)) return;
+
+        _sequenceRunning = false;
+        _activeSequenceCoroutine = null;
+        s_runningSequences.Remove(this);
+        try { OnSkipCleanup(); }
+        catch (Exception e) { Debug.LogException(e); }
+        Telon.Soltar(ClaveTelon);
+        ClearTransitionHandlers();
+        if (_cinematicLocked) EndCinematic();
+    }
+
     protected virtual void OnDestroy()
     {
         FeedbackService.CancelAllShakes();

@@ -136,6 +136,14 @@ namespace Game.NPC
 #endif
             }
         }
+        /// Como GetNPCByID pero sin avisar si no existe: para comprobar antes de registrar o crear.
+        public bool TryGetNPCByID(string narrativeID, out NPCBehaviourManagerV2 npc)
+        {
+            npc = null;
+            if (string.IsNullOrWhiteSpace(narrativeID)) return false;
+            return _npcsByID.TryGetValue(narrativeID, out npc) && npc != null;
+        }
+
         public NPCBehaviourManagerV2 GetNPCByID(string narrativeID)
         {
             if (string.IsNullOrWhiteSpace(narrativeID))
