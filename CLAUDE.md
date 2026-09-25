@@ -74,6 +74,29 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Grafo narrativo (runtime) | `Assets/NarrativeGraph/Runtime/` |
 | Debug visual en runtime | F3 (NPCs), F4 (panel general) |
 
+## 8. Reglas de trabajo para sesiones de IA (desde el 25 sep 2026 — auditoría INC-447)
+
+1. **Assets que Unity puede tener abiertos** (grafos `.asset`, escenas, prefabs): se modifican con un menú de Editor que use `AssetDatabase` (`SetDirty` + `SaveAssets`), **nunca escribiendo su YAML por fuera** — Unity guarda su copia en memoria encima (INC-441).
+2. **Antes de crear un sistema, nodo o componente nuevo, buscar el oficial** (tabla de abajo) y extenderlo. No se añade una segunda forma de hacer lo mismo.
+3. **Lo que un cambio deja sin uso se quita en el mismo cambio** (a `Versiones antiguas/` de la raíz, fuera de Assets). Nada de dejar huérfanos «por si acaso».
+4. **Comentarios: qué hace y por qué, en presente.** Sin diario: nada de fechas, «Raúl: …», «antes/ahora», ni historia de arreglos — eso va en `TRACKER.md`. Como mucho `// Ver INC-###`. Los `[Tooltip]` describen el campo, sin historia.
+5. **Logs:** los de diagnóstico se quitan al cerrar la incidencia que los motivó; nunca trazas de pila por defecto; nada de logs por frame.
+6. **Compilar antes de entregar:** tras cada tanda, leer `Logs/Editor.log` (errores `error CS`) antes de pedir a Raúl que pruebe.
+7. **`PushMode`/`PopMode`, suscripciones y bloqueos** se liberan también en `OnDisable`/`Exit()`: un `finally` de corrutina no se ejecuta si se para o se destruye el objeto.
+8. **Menús de un solo uso:** evitarlos; si hacen falta, pasan a `El Sendero/Archivo/` en cuanto se han ejecutado.
+
+**Sistema oficial por responsabilidad** (lo demás está congelado: se mantiene, no se amplía):
+
+| Responsabilidad | Oficial | Congelado / a retirar |
+|---|---|---|
+| Historia, misiones, señales | `NarrativeGraph` (StartQuestNode, CompleteQuestStepsNode, Wait*/Raise*) | `NPCInteractiveNarrativeExecutor`, `NPCQuestConfig`, `NPCQuestActionExecutor`, micro-componentes `Quest*` |
+| Cinemáticas | `SequencePlayer` + `SequenceDefinition`, lanzadas con `PlayCinematicNode` (campo `secuencia` para montarlas en vivo) | `*Sequencer.cs` escritos a mano, `SimpleCinematicDirector` |
+| Cámara | `CameraDirectorService` (Claim/Release) | apagar `Camera.main` o `vThirdPersonCamera` a mano |
+| Mover / girar NPCs en escenas | `SequenceActor` + `SequenceMovement` | helpers propios en cada sistema |
+| Iconos sobre la cabeza | `NPCAlertIconController` (quests vía `NarrativeActor`) | `NPCQuestIconManager`, `NPCPersistentIconController` |
+| Texto | `SpeechBubbleUI` (cinemática, auto) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
+| Tiempo (`timeScale`) | `TimeScaleArbiterService` | escribir `Time.timeScale` directamente |
+
 ---
 
 **Nota de mantenimiento:** este archivo (y su gemelo `AGENTS.md`) es un resumen deliberadamente corto para que herramientas de IA lo carguen como contexto sin gastar espacio de más. Si cambia una regla no negociable o un invariante narrativo en `TDD.md`, algo estructural en `GDD.md` (personajes, sistemas de balance), o el criterio de seguimiento de incidencias en `TRACKER.md`, actualizar el resumen aquí también — no dejar que se desincronicen.
