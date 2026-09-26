@@ -76,6 +76,10 @@ namespace Game.NPC.Common
                 agent.isStopped = stopped;
         }
 
+        /// Velocidad mínima, en m/s, a la que va un NPC cuando anda. Por debajo, el paso del blend
+        /// tree se queda tan corto que parece que no mueve las piernas. Ver INC-464.
+        public const float VelocidadMinimaAndando = 2.0f;
+
         public static void HardStop(NavMeshAgent agent)
         {
             if (agent == null)
@@ -115,130 +119,47 @@ namespace Game.NPC.Common
             agent.SetDestination(destination);
         }
 
-        public static float ComputeSpeedFactor(NavMeshAgent agent)
-        {
-            if (agent == null || !agent.isOnNavMesh)
-                return 0f;
-
-            if (agent.speed <= 0.01f)
-                return 0f;
-
-            float vel = agent.velocity.magnitude;
-
-            // Usar desiredVelocity solo cuando el agente ya está en movimiento real.
-            // Evita mostrar animación de caminar cuando el agente está bloqueado
-            // (desiredVelocity > 0 pero velocity ≈ 0).
-            float refSpeed = vel >= 0.05f ? Mathf.Max(vel, agent.desiredVelocity.magnitude) : vel;
-
-            return Mathf.Clamp01(refSpeed / agent.speed);
-        }
-
-        // FIX 4 sep 2026 (petición de Raúl: "cuando eldran camina... antes hacia la animación
-        // correcta ahora los npcs... cuando les tengo que seguir del punto A al punto B están
-        // haciendo una animación de andar que no es la que toca, deben hacer la que hagan los
-        // personajes principales"): el Animator Controller genérico de los NPCs (NPC_NoWeapon,
-        // usado por Eldran y compañía) resultó ser LITERALMENTE el mismo blend tree "Free
-        // Locomotion" y los mismos clips que usa el propio Invector@BasicLocomotion.controller de
-        // los personajes jugables (mismos guids de WalkFWD_RM en el umbral 0.5 y MoveFWD_Normal_RM
-        // en el umbral 1) — no son sistemas de animación distintos como se sospechaba al principio.
-        // El problema es de CALIBRACIÓN: ComputeSpeedFactor (arriba) devuelve
-        // velocidad_actual/agent.speed, así que en cuanto un NavMeshAgent alcanza su velocidad
-        // configurada -algo casi inmediato al hacer SetDestination en una secuencia de "sígueme",
-        // ver CinematicState.MoveToPositionSequence/MoveToAction/LeadPlayerToAnchorSequence- el
-        // valor llega a ~1.0, que en el blend tree cae en el tramo de MoveFWD_Normal (el mismo
-        // clip que el jugador solo enseña esprintando), no en WalkFWD (umbral 0.5, lo que el
-        // jugador enseña al caminar con normalidad). De ahí que estos NPCs parecieran "trotar" en
-        // vez de caminar. Este helper satura el resultado al tramo de caminar del blend tree, para
-        // usar en las secuencias donde el NPC debe caminar con paso normal (nunca correr) sin
-        // tocar ComputeSpeedFactor en sí -otros llamadores (p.ej. combate/persecución) sí pueden
-        // querer el rango completo 0-1 para mostrar una marcha más rápida-.
-        // ESTADO 16 sep 2026: este tope YA NO SE USA en ningún sitio del proyecto. Raúl pidió
-        // ese día que todos los NPCs se movieran como Oliver ("Oliver va genial y me parece más
-        // limpio"), y eso significa rango completo 0-1: la rampa Idle→Walk→Run que da la
-        // aceleración real del agente, en vez de un salto de 0 a 0.5 que se queda clavado ahí.
-        // Todos los llamadores de CinematicState pasaron a ComputeSpeedFactor.
+        // ── Animación de andar: UN solo criterio para todos los NPCs (INC-466) ─────────────────
         //
-        // Se conserva a propósito, no es código muerto por descuido: es la vuelta atrás si algún
-        // día reaparece el "trotan en vez de caminar" del 4 sep en alguna escena concreta. En ese
-        // caso se cambia SOLO esa llamada, no todas.
-        public const float WalkGaitThreshold = 0.5f;
+        // Raúl, 26 sep 2026, viendo a Oliver deslizarse sin mover las piernas junto a Eldran y
+        // Will: «¿ves cómo se mueven Eldran y Will, que dan como saltitos al andar? Así debe ser
+        // siempre, y si no, con la animación de andar sin saltitos, pero que ande».
+        //
+        // Hasta hoy cada sistema traducía la velocidad del agente a su manera (velocidad/agent.speed,
+        // velocidad/una referencia suavizada, velocidad/referencia al 25 %, dos tramos con la
+        // velocidad de andar y correr del animador...), y dos de ellos podían escribir a la vez en
+        // el mismo NPC. Con cualquiera de esas cuentas, un NPC que anda más despacio que «su»
+        // referencia caía entre Idle (0) y Andar (0,5) del blend tree: se desliza con las piernas
+        // casi quietas. Ahora todos llaman aquí, y la cuenta usa la velocidad REAL, en m/s:
+        //   - parado (menos de VelocidadParado): 0, idle;
+        //   - moviéndose: nunca menos de 0,5, la animación de andar;
+        //   - de VelocidadTrote en adelante: 1, el trote con saltitos de Will y Eldran.
+        // Entre VelocidadAndar y VelocidadTrote pasa de uno a otro sin saltos.
 
-        public static float ComputeWalkGaitSpeedFactor(NavMeshAgent agent)
+        /// Por debajo de esto, en m/s, el NPC está quieto.
+        public const float VelocidadParado = 0.15f;
+        /// Hasta esto, en m/s, anda (0,5 en el blend tree).
+        public const float VelocidadAndar = 1.0f;
+        /// Desde esto, en m/s, trota con saltitos (1 en el blend tree).
+        public const float VelocidadTrote = 1.8f;
+
+        /// Valor de InputMagnitude (blend tree «Free Locomotion») para lo que el agente se mueve.
+        public static float FactorDeLocomocion(NavMeshAgent agent)
         {
-            float raw = ComputeSpeedFactor(agent);
-            return raw > 0f ? Mathf.Min(raw, WalkGaitThreshold) : 0f;
+            if (agent == null || !agent.enabled || !agent.isOnNavMesh) return 0f;
+            float vel = agent.velocity.magnitude;
+            // Mientras acelera, lo que quiere andar adelanta la animación; si está bloqueado
+            // (quiere andar pero no se mueve), se queda quieto.
+            if (vel >= 0.05f) vel = Mathf.Max(vel, agent.desiredVelocity.magnitude);
+            return FactorDeLocomocion(vel);
         }
 
-        // FIX 5 sep 2026 (incidencia saltitos/animación mal en escolta de Eldran): variante que
-        // calcula el factor contra una velocidad de referencia FIJA en vez de agent.speed. Hace
-        // falta cuando el propio llamador cambia agent.speed dinámicamente frame a frame (ver
-        // CinematicState.LeadPlayerToAnchorSequence, que reduce agent.speed progresivamente
-        // cuando el jugador se queda atrás) — en ese caso velocidad_actual/agent.speed da casi
-        // siempre ~1.0 (el NavMeshAgent converge su velocidad real al valor de agent.speed casi
-        // al instante), así que ComputeWalkGaitSpeedFactor(agent) se queda pegado en
-        // WalkGaitThreshold SIEMPRE, sin reflejar que el NPC está yendo mucho más despacio en
-        // términos absolutos. Confirmado con logs: agent.speed bajando de 3.5 a 1.1 y el factor
-        // recortado se quedaba fijo en 0.5 todo el tiempo. Usar la velocidad base (constante,
-        // capturada una vez al iniciar la secuencia) como referencia soluciona esto: ahora el
-        // factor sí baja cuando el NPC va más despacio de lo normal.
-        public static float ComputeWalkGaitSpeedFactor(NavMeshAgent agent, float referenceSpeed)
+        /// Valor de InputMagnitude para una velocidad en m/s. Ver el comentario de arriba.
+        public static float FactorDeLocomocion(float velocidad)
         {
-            if (agent == null || !agent.isOnNavMesh) return 0f;
-            if (referenceSpeed <= 0.01f) return 0f;
-
-            float vel = agent.velocity.magnitude;
-            float refSpeed = vel >= 0.05f ? Mathf.Max(vel, agent.desiredVelocity.magnitude) : vel;
-
-            // FIX 5 sep 2026 (v2 -- incidencia "otra animación"/pose de andar distinta durante
-            // TODA la escolta, no solo al pararse): la versión anterior de este método normalizaba
-            // refSpeed contra referenceSpeed COMPLETO (el 100% de la velocidad base del escolta).
-            // Eso arregló los "saltitos", pero introdujo un problema nuevo: en
-            // LeadPlayerToAnchorSequence, agent.speed se reduce CONTINUAMENTE con un Lerp según lo
-            // lejos que esté el jugador (100% cuando está pegado, hasta 20% cuando está a
-            // _escortMaxDist) -- y ESO ES LO NORMAL EN CUALQUIER ESCOLTA, no un caso raro, porque
-            // el jugador casi nunca camina pegado del todo al NPC. Con el 100% de referenceSpeed
-            // como divisor, en cuanto el jugador se quedaba a una distancia media/grande (la
-            // mayor parte del tiempo) el factor se quedaba muy por debajo de WalkGaitThreshold
-            // (p.ej. ~0.2 en vez de 0.5), y el blend tree mostraba una mezcla débil entre Idle y
-            // Walk -- piernas casi sin zancada, brazos pegados al cuerpo -- que Raúl describió como
-            // "otra animación"/pose distinta, confirmado visualmente comparando con Will (que sí
-            // llega a un blend confiado). Ver claude/incidencia-eldran-... para el video de
-            // comparación.
-            //
-            // Fix: solo exigimos que refSpeed supere una FRACCIÓN pequeña (25%) de referenceSpeed
-            // para considerar que el NPC "está caminando de verdad" y mostrar el paso completo
-            // (WalkGaitThreshold) -- ese 25% ya cubre el mínimo real de la Lerp de ritmo de la
-            // escolta (20%), así que durante el ritmo normal (20%-100%) el blend se queda
-            // confiadamente en WalkGaitThreshold, igual que como camina Will. Por debajo de ese
-            // 25% (parándose de verdad, llegando al anchor, esperando al jugador) SÍ interpolamos
-            // hacia Idle de forma gradual -- conserva el objetivo original del fix de "saltitos":
-            // que nunca salte de golpe de caminar a Idle en un solo frame.
-            float walkConfidenceFloor = Mathf.Max(0.05f, referenceSpeed * 0.25f);
-            float raw = Mathf.Clamp01(refSpeed / walkConfidenceFloor);
-            return raw > 0f ? Mathf.Min(raw, WalkGaitThreshold) : 0f;
-        }
-
-        // FIX 9 sept 2026 (incidencia "tirones" en Estela/Liam siguiendo al jugador, reportado
-        // en contraste directo con el guardia -LeadPlayerToAnchorSequence-, que sí anima limpio
-        // desde el fix de arriba): mismo diagnóstico que ComputeWalkGaitSpeedFactor(agent,
-        // referenceSpeed) -- FollowPlayerState reasigna agent.speed cada frame (salto discreto
-        // entre velocidad de caminar y una "velocidad de catch-up" dinámica que además varía con
-        // _smoothedPlayerSpeed), así que usar agent.speed como divisor de ComputeSpeedFactor()
-        // produce saltos en el factor de animación aunque la velocidad real del NavMeshAgent no
-        // haya cambiado todavía (necesita tiempo para acelerar). A diferencia de
-        // ComputeWalkGaitSpeedFactor, aquí NO se satura a WalkGaitThreshold: el compañero sí debe
-        // llegar a mostrar la animación de correr al alcanzar al jugador, así que el llamador debe
-        // pasar una referencia ya SUAVIZADA (no agent.speed en crudo) para obtener un resultado
-        // estable en todo el rango 0-1.
-        public static float ComputeSpeedFactor(NavMeshAgent agent, float referenceSpeed)
-        {
-            if (agent == null || !agent.isOnNavMesh) return 0f;
-            if (referenceSpeed <= 0.01f) return 0f;
-
-            float vel = agent.velocity.magnitude;
-            float refSpeed = vel >= 0.05f ? Mathf.Max(vel, agent.desiredVelocity.magnitude) : vel;
-
-            return Mathf.Clamp01(refSpeed / referenceSpeed);
+            if (velocidad < VelocidadParado) return 0f;
+            if (velocidad <= VelocidadAndar) return 0.5f;
+            return Mathf.Lerp(0.5f, 1f, Mathf.InverseLerp(VelocidadAndar, VelocidadTrote, velocidad));
         }
     }
 }

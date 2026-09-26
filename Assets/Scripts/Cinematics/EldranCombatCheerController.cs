@@ -13,12 +13,15 @@ public class EldranCombatCheerController : MonoBehaviour
     [SerializeField] private Transform willTransform;
 
     [Header("Señales narrativas")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string startSignal = "AWAKEN_DONE";
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string stopSignal  = "AWAKEN_COMBAT_END";
 
     [Tooltip("La levanta BossArenaController al TERMINAR la presentación del jefe. Es la que " +
              "dispara la intervención de abajo: antes de esto la pantalla es del jefe y meter " +
              "un bocadillo ahí sería pisarle la entrada.")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string bossIntroDoneSignal = "BOSS_INTRO_DONE";
 
     [Header("Intervención tras la presentación del jefe")]
@@ -58,6 +61,15 @@ public class EldranCombatCheerController : MonoBehaviour
     [SerializeField] private Damageable willDamageable;
     [SerializeField] private float collarHintFallbackSeconds = 8f;
 
+    [Header("Pistas de las reglas del combate (INC-469)")]
+    [Tooltip("La primera vez que Will le da al jefe cuando NO está expuesto (sin el aro encendido) y " +
+             "el jefe se cura. Vacío = sin pista.")]
+    [SerializeField] private string golpeSinAroKey = "EVT_ELDRAN_HINT_SIN_ARO";
+    [SerializeField] private string golpeSinAroAnim = "HeadShake01";
+    [Tooltip("La primera vez que el jefe suelta orbes al recibir un golpe: qué son y para qué sirven.")]
+    [SerializeField] private string orbesKey = "EVT_ELDRAN_HINT_ORBES";
+    [SerializeField] private string orbesAnim = "FoundSomething_NoWeapon";
+
     [Header("Timings")]
     [SerializeField] private float firstDelay  = 2.5f;
     [SerializeField] private float minInterval = 6f;
@@ -74,6 +86,10 @@ public class EldranCombatCheerController : MonoBehaviour
     private bool              _lookingAtWill;
     private bool              _introDicha;
     private bool              _collarHintDicha;
+    private bool              _golpeSinAroDicho;
+    private bool              _orbesDichos;
+    private readonly System.Collections.Generic.List<(string key, string anim)> _pistasPendientes = new();
+    private Coroutine         _pistasCoroutine;
 
     void Awake()
     {
@@ -98,6 +114,10 @@ public class EldranCombatCheerController : MonoBehaviour
         signals.OnCustom(stopSignal,  StopCheering);
         if (!string.IsNullOrEmpty(bossIntroDoneSignal))
             signals.OnCustom(bossIntroDoneSignal, LanzarIntervencion);
+        SoloDanoCuandoExpuesto.AlCurarsePorGolpe += AlGolpeSinAro;
+        OrbDropper.AlSoltarOrbes += AlSoltarOrbes;
+        // En cuanto se gana, se calla: la pantalla es de la celebración de Will (INC-470).
+        BossArenaController.OnAnyBattleEnded += StopCheering;
     }
 
     void OnDisable()
@@ -112,9 +132,51 @@ public class EldranCombatCheerController : MonoBehaviour
                 signals.OffCustom(bossIntroDoneSignal, LanzarIntervencion);
         }
         if (willDamageable != null) willDamageable.OnDamaged -= HandleWillDamagedForCollarHint;
+        SoloDanoCuandoExpuesto.AlCurarsePorGolpe -= AlGolpeSinAro;
+        OrbDropper.AlSoltarOrbes -= AlSoltarOrbes;
+        BossArenaController.OnAnyBattleEnded -= StopCheering;
     }
 
     void OnDestroy() => StopCheering();
+
+    // ── Pistas de las reglas (una vez cada una, solo durante este combate) ─────
+
+    private void AlGolpeSinAro(SoloDanoCuandoExpuesto _, float __)
+    {
+        if (_golpeSinAroDicho || !_lookingAtWill || string.IsNullOrEmpty(golpeSinAroKey)) return;
+        _golpeSinAroDicho = true;
+        // Es la regla que explica el aro: si aún no se había dicho la pista del aro, ya no hace falta.
+        _collarHintDicha = true;
+        EncolarPista(golpeSinAroKey, golpeSinAroAnim);
+    }
+
+    private void AlSoltarOrbes(OrbDropper _, OrbType __)
+    {
+        if (_orbesDichos || !_lookingAtWill || string.IsNullOrEmpty(orbesKey)) return;
+        _orbesDichos = true;
+        EncolarPista(orbesKey, orbesAnim);
+    }
+
+    /// Las pistas esperan a que acabe la intervención inicial (SpeechBubbleUI solo enseña un
+    /// bocadillo: si hablaran a la vez, se pisarían) y se dicen una detrás de otra.
+    private void EncolarPista(string key, string anim)
+    {
+        _pistasPendientes.Add((key, anim));
+        if (_pistasCoroutine == null) _pistasCoroutine = StartCoroutine(Co_Pistas());
+    }
+
+    private IEnumerator Co_Pistas()
+    {
+        while (_pistasPendientes.Count > 0)
+        {
+            while (!_introDicha || _introCoroutine != null) yield return null;
+            var (key, anim) = _pistasPendientes[0];
+            _pistasPendientes.RemoveAt(0);
+            Decir(key, anim);
+            yield return new WaitForSeconds(bubbleDuration + 0.25f);
+        }
+        _pistasCoroutine = null;
+    }
 
     // LateUpdate con DefaultExecutionOrder(100) corre después de NPCSimpleAnimator,
     // sobreescribiendo cualquier rotación que el sistema NPC haya aplicado ese frame.
@@ -142,6 +204,8 @@ public class EldranCombatCheerController : MonoBehaviour
         // botón pulsar), y solo cuando esa termina empiezan. Si los dos sistemas hablaran a la vez
         // se pisarían el bocadillo — SpeechBubbleUI solo muestra uno.
         _introDicha = false;
+        _golpeSinAroDicho = false;
+        _orbesDichos = false;
         _introCoroutine = StartCoroutine(Co_EsperarIntervencion());
 
         if (willTransform != null && eldranTransform != null)
@@ -156,6 +220,8 @@ public class EldranCombatCheerController : MonoBehaviour
         if (_cheerCoroutine != null) { StopCoroutine(_cheerCoroutine); _cheerCoroutine = null; }
         if (_introCoroutine != null) { StopCoroutine(_introCoroutine); _introCoroutine = null; }
         if (_collarHintCoroutine != null) { StopCoroutine(_collarHintCoroutine); _collarHintCoroutine = null; }
+        if (_pistasCoroutine != null) { StopCoroutine(_pistasCoroutine); _pistasCoroutine = null; }
+        _pistasPendientes.Clear();
         if (willDamageable != null) willDamageable.OnDamaged -= HandleWillDamagedForCollarHint;
         _lookingAtWill = false;
         _npcAnim?.EnableAutoRotation();

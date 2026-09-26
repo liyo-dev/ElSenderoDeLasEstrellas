@@ -16,13 +16,18 @@ MonoBehaviour:
     type: 3}
   displayNameId: BOSS_DEMONIO_NAME
   displayName: DEMONIO
-  arenaRadius: 15
+  arenaRadius: 25
   floorLayer:
     serializedVersion: 2
     m_Bits: 1025
+  premioEstadisticas:
+    vida: 10
+    magia: 10
+    ataque: 2
+    defensa: 2
   spawnProfiles:
   - label: Por defecto
-    distanceFactor: 0.85
+    distanceFactor: 0.5
     angleDegrees: 0
     relativeToPlayerFacing: 1
   spawnVfxPrefab: {fileID: 0}

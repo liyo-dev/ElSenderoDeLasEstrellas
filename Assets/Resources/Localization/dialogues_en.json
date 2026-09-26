@@ -82,15 +82,15 @@
         },
         {
             "key": "TOMASA_ESTRELLA_1",
-            "value": "The star? It's badly carved. It's no use for anything, I'm warning you."
+            "value": "This star? It’s badly carved and no use to anyone."
         },
         {
             "key": "WILL_ESTRELLA_1",
-            "value": "That's why. I was told to buy something useless."
+            "value": "Perfect. Eldran told me to buy something useless."
         },
         {
             "key": "TOMASA_ESTRELLA_2",
-            "value": "Then you chose well. Take care of it for me."
+            "value": "Then you picked the right one. Look after it."
         },
         {
             "key": "CHAR_PIRATA",
@@ -138,27 +138,27 @@
         },
         {
             "key": "DLG_ELDRAN_REGALO_01",
-            "value": "By the way, what would you like for your eighteenth?"
+            "value": "When you turn eighteen, what would you like me to get you?"
         },
         {
             "key": "DLG_ELDRAN_REGALO_02",
-            "value": "That's ages away. And I don't need anything."
+            "value": "Eighteen’s still a long way off. You don’t have to get me anything."
         },
         {
             "key": "DLG_ELDRAN_REGALO_03",
-            "value": "I didn't ask what you need."
+            "value": "Here. Buy yourself something silly. It’s an early birthday present."
         },
         {
             "key": "DLG_ELDRAN_REGALO_04",
-            "value": "..."
+            "value": "Why would I want that?"
         },
         {
             "key": "DLG_ELDRAN_REGALO_05",
-            "value": "Here. Buy yourself something useless."
+            "value": "Because I want you to have something for yourself, even if it’s something silly."
         },
         {
             "key": "DLG_ELDRAN_REGALO_06",
-            "value": "Thanks, Eldran."
+            "value": "Well, let’s see what I can find."
         },
         {
             "key": "DG_AMIGOELDRAN_BEFORE",
@@ -389,10 +389,6 @@
             "value": "I see you read my letter..."
         },
         {
-            "key": "DLG_ELDRAN_MISSION1_BEFORE_01",
-            "value": "Have you read the letter I left you on the nightstand?"
-        },
-        {
             "key": "DLG_ELDRAN_MISSION13_TURNIN_01",
             "value": "Well, we can finally breathe easy... though I have to admit that was a very convenient coincidence"
         },
@@ -494,7 +490,7 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION3_COMPLETE",
-            "value": "Well done, Will... truly. But we'll talk about it calmly later. Now come with me — I want to show you something before we go."
+            "value": "Well done, Will... truly. But we'll talk about it calmly later. I'll wait for you at your house."
         },
         {
             "key": "DLG_ELDRAN_MISSION5_OFFER_01",
@@ -618,7 +614,7 @@
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_02",
-            "value": "Here you can save your game and rest to recover your health and mana, so don't hesitate to use it whenever you need to."
+            "value": "Here you can save your game and rest to get your strength back, so don't hesitate to use it whenever you need to."
         },
         {
             "key": "DLG_ELDRAN_SAVEPOINT_03",
@@ -627,6 +623,14 @@
         {
             "key": "DLG_ELDRAN_SAVEPOINT_TURNIN_01",
             "value": "Take care, Will. See you soon."
+        },
+        {
+            "key": "DLG_ELDRAN_SAVEPOINT_04",
+            "value": "Come on, let's keep going. We're nearly there."
+        },
+        {
+            "key": "DLG_OLIVER_SAVEPOINT_01",
+            "value": "I stop here every time a spell goes wrong. So... pretty often."
         },
         {
             "key": "DLG_ESTELA_ARRESTO_INDIGNADA",
@@ -909,14 +913,6 @@
             "value": "To open the inventory panel, press <sprite name=\"interactable_dpad_up\">."
         },
         {
-            "key": "DLG_LETTER_INTRO_01",
-            "value": "Will, come see me when you wake up."
-        },
-        {
-            "key": "DLG_LETTER_INTRO_02",
-            "value": "I’ll be waiting at the village entrance."
-        },
-        {
             "key": "DLG_LETY_ALERT_01",
             "value": "Look Vicky, an easy target."
         },
@@ -1066,11 +1062,11 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_01",
-            "value": "You can’t get rid of me that easily. Two quick things, then you’re free to go."
+            "value": "Before you go, let me explain a couple of things."
         },
         {
             "key": "DLG_OLIVER_MENUS_02",
-            "value": "You look like you don’t even know how to open the menu."
+            "value": "It’s simple, you’ll see."
         },
         {
             "key": "DLG_OLIVER_MENUS_03",
@@ -1082,7 +1078,7 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_05",
-            "value": "You’ll find a few other options there, too. Take a look whenever you like."
+            "value": "There are a few more options, too. You’ll find them as you go."
         },
         {
             "key": "DLG_OLIVER_MENUS_06",
@@ -1090,7 +1086,7 @@
         },
         {
             "key": "DLG_OLIVER_MENUS_07",
-            "value": "Press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again to edit the active mission. Now hurry, Eldran’s waiting!"
+            "value": "Press <sprite name=\"interactable_dpad_up\"> <gpadonly>UP</gpadonly> again to change the active mission. Now go see Eldran!"
         },
         {
             "key": "DLG_PIRATE_01",
@@ -1366,11 +1362,11 @@
         },
         {
             "key": "DLG_ELDRAN_CAJA_01",
-            "value": "Good thing I caught up with you. All these pears nearly made me forget something."
+            "value": "Good thing I caught up with you. All that talk about the pears nearly made me forget something."
         },
         {
             "key": "DLG_ELDRAN_CAJA_02",
-            "value": "I left a crate of apples under a tree in the forest. Could you go and get it?"
+            "value": "I left a crate of apples in there, in the forest. Could you fetch it for me?"
         },
         {
             "key": "DLG_ELDRAN_CAJA_03",
@@ -1378,7 +1374,11 @@
         },
         {
             "key": "DLG_ELDRAN_CAJA_04",
-            "value": "It’s at the foot of an ash tree, beside the path."
+            "value": "At the foot of an ash tree by the path. I'll wait for you here."
+        },
+        {
+            "key": "DLG_ELDRAN_CAJA_05",
+            "value": "Come, follow me."
         }
     ]
 }

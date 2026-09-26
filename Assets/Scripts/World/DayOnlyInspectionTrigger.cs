@@ -15,6 +15,7 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
 {
     [Header("Evento narrativo")]
     [Tooltip("Clave del evento a enviar al grafo cuando el jugador entra durante el día.")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     [SerializeField] private string narrativeEventKey;
 
     [Header("Requisito de misión")]

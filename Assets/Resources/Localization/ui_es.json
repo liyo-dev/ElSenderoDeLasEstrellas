@@ -13,6 +13,26 @@
             "value": "No puedes huir de la batalla."
         },
         {
+            "key": "BATTLE_REPORT_TITLE",
+            "value": "¡Victoria!"
+        },
+        {
+            "key": "STAT_VIDA",
+            "value": "Vida"
+        },
+        {
+            "key": "STAT_MAGIA",
+            "value": "Magia"
+        },
+        {
+            "key": "STAT_ATAQUE",
+            "value": "Ataque"
+        },
+        {
+            "key": "STAT_DEFENSA",
+            "value": "Defensa"
+        },
+        {
             "key": "BOSS_DEMONIO_HEALTHBAR_NAME",
             "value": "Boss Demonio"
         },
@@ -858,7 +878,7 @@
         },
         {
             "key": "ROOM_EXIT_BLOCKED",
-            "value": "Antes de salir necesitas leer la carta que hay sobre la mesita."
+            "value": "Por ahí no puedes pasar todavía."
         },
         {
             "key": "ROOM_EXIT_NEEDS",

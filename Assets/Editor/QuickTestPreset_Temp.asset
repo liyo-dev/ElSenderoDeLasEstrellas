@@ -25,6 +25,10 @@ MonoBehaviour:
   specialSpellId: 0
   flags:
   - QUEST_ACTIVE:WILL_MISSION0
+  - QUEST_COMPLETED:WILL_MISSION0
+  - QUEST_ACTIVE:ELDRAN_MISSION1
+  - QUEST_COMPLETED:ELDRAN_MISSION1
+  - QUEST_ACTIVE:WILL_MISSION1
   abilities:
     swim: 0
     jump: 0
@@ -46,14 +50,18 @@ MonoBehaviour:
     partName: Mouth01
   unlockedWardrobeIds:
   - Body05
-  inventoryItems: []
+  inventoryItems:
+  - itemId: mermelada
+    count: 1
+  - itemId: coin
+    count: 1
   defeatedBossIds: []
   narrativeBlackboards:
   - graphLabel: Cap1
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: c748956c-7df0-4031-8789-65aab639f278
+      value: a856e804-7ab5-4aaf-a241-774bce56c27f
   npcPositions: []
   npcRelationships: []
   consumedInteractableIds: []

@@ -1439,9 +1439,12 @@ namespace Game.NPC
 
             Vector3 targetPos = GetFormationPosition(index);
 
-            // Buscar posición válida en el NavMesh antes de hacer Warp
-            if (NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                targetPos = hit.position;
+            // Sin NavMesh cerca del destino (jugador aún cargando o en una zona sin malla) no se
+            // teletransporta: el agente quedaría fuera de malla. Se reintenta en la siguiente
+            // comprobación de distancias. Ver INC-454.
+            if (!NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
+                return;
+            targetPos = hit.position;
 
             // FIX (17 ago 2026): mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
             // no gatear Warp() detrás de isOnNavMesh, porque si da false en ese instante deja al

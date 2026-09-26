@@ -36,6 +36,11 @@ public sealed class CombatLabBootstrap : MonoBehaviour
     private IEnumerator Start()
     {
         yield return null;
+
+        // El HUD oficial se oculta en escenas fuera de campaña. Se habilita aquí en runtime,
+        // sin cambiar su configuración persistente ni guardar esta excepción en la partida.
+        SceneBoundUI.AllowSceneFor("PlayerHUD_UI", "CombatLab");
+
         if (player == null) yield break;
 
         var presetService = player.GetComponentInChildren<PlayerPresetService>(true);

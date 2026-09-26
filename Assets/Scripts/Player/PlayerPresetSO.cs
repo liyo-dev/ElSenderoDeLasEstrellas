@@ -14,6 +14,10 @@ public class PlayerPresetSO : ScriptableObject
     public float maxHP = 100, currentHP = 100;
     public float maxMP = 50,  currentMP = 50;
 
+    [Tooltip("Ataque y defensa de Will, sin el equipo (la vida y la magia son maxHP y maxMP). Suben " +
+             "al ganar combates. 0 = aún sin inicializar: se pone el valor inicial (ver EstadisticasDeWill, INC-470).")]
+    public float ataque, defensa;
+
     [Header("Desbloqueos")]
     [HideInInspector] public List<AbilityId> unlockedAbilities = new();
     public List<SpellId>   unlockedSpells    = new();

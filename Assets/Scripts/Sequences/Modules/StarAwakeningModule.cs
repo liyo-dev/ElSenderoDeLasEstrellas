@@ -49,8 +49,15 @@ public class StarAwakeningModule : SequenceModule
              "momento de verdad y no un trámite. Con el proyectil de frente, Will estaría mirándolo " +
              "todo el rato sin reaccionar.")]
     [SerializeField] private float spawnAngle = 160f;
-    [Tooltip("Altura a la que vuela, sobre el suelo de Will.")]
+    [Tooltip("Altura a la que vuela, sobre el suelo de Will. Si la bola es tan grande que a esta " +
+             "altura tocaría el suelo, se sube lo justo para que no lo toque.")]
     [SerializeField] private float spawnHeight = 1.5f;
+    [Tooltip("Si el camino hasta Will está tapado (una casa, un puesto, una farola), se prueban " +
+             "ángulos a un lado y a otro de 'spawnAngle', de este tanto en este tanto, hasta " +
+             "encontrar uno despejado. 0 = no buscar.")]
+    [SerializeField] private float clearPathStepDegrees = 20f;
+    [Tooltip("Cuántos pasos a cada lado se prueban como mucho.")]
+    [SerializeField] private int clearPathMaxSteps = 4;
     [Tooltip("Segundos reales que puede vivir el proyectil durante la cinemática. Sustituye al " +
              "tope del prefab, que está calibrado para combate y aquí se queda corto.")]
     [SerializeField] private float cinematicProjectileLifetime = 120f;
@@ -171,23 +178,24 @@ public class StarAwakeningModule : SequenceModule
             yield break;
         }
 
-        Vector3 origin;
-        if (projectileSpawnPoint != null)
-        {
-            origin = projectileSpawnPoint.position;
-        }
-        else
-        {
-            Vector3 dir = Quaternion.AngleAxis(spawnAngle, Vector3.up) * will.Transform.forward;
-            origin = will.Transform.position + dir.normalized * spawnDistance + Vector3.up * spawnHeight;
-        }
-
-        Vector3 target = will.Transform.position + Vector3.up * (will.EyeHeight * 0.85f);
-        Quaternion rotation = Quaternion.LookRotation((target - origin).normalized, Vector3.up);
-
         _collisionTriggered = false;
-        _projectile = Instantiate(incomingProjectilePrefab, origin, rotation);
+        _projectile = Instantiate(incomingProjectilePrefab, will.Transform.position, Quaternion.identity);
         _projectile.OnHitByPlayerFireball += OnPhysicsCollision;
+
+        // La altura depende del tamaño de la bola: el centro va lo bastante alto para que la
+        // parte de abajo no toque el suelo, ni al salir ni al llegar a Will. Ver INC-458.
+        float flightHeight = Mathf.Max(spawnHeight, will.EyeHeight * 0.85f, _projectile.MinCenterHeight);
+        _projectile.SetAimHeight(flightHeight);
+
+        Vector3 target = will.Transform.position + Vector3.up * flightHeight;
+        Vector3 origin = projectileSpawnPoint != null
+            ? projectileSpawnPoint.position
+            : BuscarSalidaDespejada(will.Transform, target, flightHeight, _projectile.Radius);
+
+        _projectile.transform.SetPositionAndRotation(origin,
+            Quaternion.LookRotation((target - origin).normalized, Vector3.up));
+        _projectile.KeepAboveGround();
+        origin = _projectile.transform.position;
 
         // El tope de vida del prefab está pensado para combate (12 s reales). Aquí el proyectil
         // vive una escena entera en cámara lenta y encima espera a que el jugador reaccione, así
@@ -205,6 +213,61 @@ public class StarAwakeningModule : SequenceModule
         ctx.RegisterActor(ProjectileActorId, _projectile.transform);
 
         if (_tension == null) _tension = StartCoroutine(Co_Tension());
+    }
+
+    /// Punto de salida alrededor de Will a 'spawnDistance'. Empieza por 'spawnAngle' y, si entre
+    /// ese punto y Will hay decorado, prueba ángulos a un lado y a otro hasta dar con un camino
+    /// libre. Si no hay ninguno, se queda con 'spawnAngle'. Ver INC-458.
+    private Vector3 BuscarSalidaDespejada(Transform will, Vector3 target, float flightHeight, float radius)
+    {
+        Vector3 PuntoEn(float angle)
+        {
+            Vector3 dir = Quaternion.AngleAxis(angle, Vector3.up) * will.forward;
+            return will.position + dir.normalized * spawnDistance + Vector3.up * flightHeight;
+        }
+
+        Vector3 first = PuntoEn(spawnAngle);
+        if (clearPathStepDegrees <= 0f || clearPathMaxSteps <= 0) return first;
+
+        int mask = ~LayerMask.GetMask("Ignore Raycast", "UI");
+        for (int step = 0; step <= clearPathMaxSteps; step++)
+        {
+            for (int side = 0; side < (step == 0 ? 1 : 2); side++)
+            {
+                float angle = spawnAngle + (side == 0 ? step : -step) * clearPathStepDegrees;
+                Vector3 from = PuntoEn(angle);
+                if (CaminoDespejado(from, target, radius, will, mask)) return from;
+            }
+        }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.LogWarning("[StarAwakeningModule] No hay ningún ángulo con el camino despejado hasta " +
+            "Will; la bola sale por 'spawnAngle' y puede atravesar decorado.");
+#endif
+        return first;
+    }
+
+    private static readonly RaycastHit[] s_pathHits = new RaycastHit[16];
+
+    /// Camino libre para la bola: un SphereCast desde la salida hasta poco antes de Will que
+    /// ignora a Will, a los personajes y los triggers. Se usa medio radio: la bola es un efecto
+    /// y rozar una rama con el borde no se nota.
+    private static bool CaminoDespejado(Vector3 from, Vector3 to, float radius, Transform will, int mask)
+    {
+        Vector3 delta = to - from;
+        float dist = delta.magnitude - radius - 1f;
+        if (dist <= 0f) return true;
+
+        int n = Physics.SphereCastNonAlloc(from, radius * 0.5f, delta.normalized, s_pathHits, dist,
+            mask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++)
+        {
+            var h = s_pathHits[i];
+            if (h.transform.IsChildOf(will)) continue;
+            if (h.collider.GetComponentInParent<NPCSimpleAnimator>() != null) continue;
+            return false;
+        }
+        return true;
     }
 
     /// Da el control al jugador: aparece el botón y hay que pulsarlo a tiempo. Deja puesta la

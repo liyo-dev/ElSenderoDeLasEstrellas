@@ -17,6 +17,14 @@ Shader "Quibli/Skybox"
         // pintar un unico gradiente (p.ej. City_Skybox) de distintos colores por franja horaria
         // desde DayNightCycle, sin cambiar de Material ni de textura de gradiente. Blanco = sin cambio.
         _Tint ("Tint", Color) = (1, 1, 1, 1)
+
+        [Space]
+        // Anadido para El Sendero de las Estrellas: cielo encapotado de lluvia. _Tint solo
+        // multiplica el gradiente (un gris sobre un azul da un azul mas oscuro, nunca gris);
+        // _Overcast mezcla hacia _OvercastColor, plano con una ligera variacion vertical sacada
+        // del brillo del gradiente. Lo anima DayNightCycle con la lluvia. Ver INC-456.
+        _Overcast ("Overcast", Range (0, 1)) = 0
+        _OvercastColor ("Overcast color", Color) = (0.5, 0.52, 0.56, 1)
     }
 
     CGINCLUDE
@@ -42,6 +50,8 @@ Shader "Quibli/Skybox"
     float _Intensity;
     float _Exponent;
     fixed4 _Tint;
+    float _Overcast;
+    fixed4 _OvercastColor;
 
     v2f vert(appdata v) {
         v2f o;
@@ -64,7 +74,11 @@ Shader "Quibli/Skybox"
         const float3 direction = float3(sin(pitch) * sin(yaw), cos(pitch), sin(pitch) * cos(yaw));
         const float d = dot(normalize(i.texcoord), direction) * 0.5f + 0.5f;
         const float alpha = pow(d, _Exponent);
-        return UNITY_SAMPLE_TEX2D(_Gradient, float2(alpha, 0.5f)) * _Intensity * _Tint;
+        fixed4 col = UNITY_SAMPLE_TEX2D(_Gradient, float2(alpha, 0.5f)) * _Intensity * _Tint;
+        const float lum = dot(col.rgb, float3(0.2126f, 0.7152f, 0.0722f));
+        const float3 overcast = _OvercastColor.rgb * (0.75f + 0.5f * saturate(lum));
+        col.rgb = lerp(col.rgb, overcast, _Overcast);
+        return col;
     }
     ENDCG
 

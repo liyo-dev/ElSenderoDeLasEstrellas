@@ -39,6 +39,19 @@ public class SlowMotionFireProjectile : MonoBehaviour
     [Tooltip("Offset vertical sobre la posición del target (ajustar si el proyectil apunta demasiado bajo)")]
     [SerializeField] private float aimHeightOffset = 0.9f;
 
+    [Header("Suelo")]
+    [Tooltip("Hueco mínimo, en metros, entre la parte de abajo de la bola y el suelo que tiene " +
+             "debajo. Si el terreno sube o el objetivo está bajo, la bola se eleva en vez de " +
+             "atravesarlo. 0 = sin comprobación.")]
+    [SerializeField] private float groundClearance = 0.3f;
+
+    // Capas que cuentan como suelo: las mismas que usa AerialKnockbackReceiver.
+    private int _groundMask;
+    private float _radius = 0.5f;
+
+    /// Radio visible de la bola en metros, medido de sus mallas al crearla.
+    public float Radius => _radius;
+
     void Awake()
     {
         _col = GetComponent<Collider>();
@@ -56,6 +69,51 @@ public class SlowMotionFireProjectile : MonoBehaviour
         _light = GetComponentInChildren<Light>();
         if (_light == null && autoGlow)
             _light = CreateAutoGlow();
+
+        _groundMask = LayerMask.GetMask("Floor", "Obstacle");
+        _radius = MeasureRadius();
+    }
+
+    /// El radio sale de las mallas y no del collider: el collider del prefab es más grande que
+    /// la bola que se ve, y lo que no debe tocar el suelo es lo que se ve.
+    private float MeasureRadius()
+    {
+        float r = 0f;
+        foreach (var mr in GetComponentsInChildren<MeshRenderer>())
+        {
+            Vector3 e = mr.bounds.extents;
+            r = Mathf.Max(r, Mathf.Max(e.x, Mathf.Max(e.y, e.z)));
+        }
+        return r > 0f ? r : 0.5f;
+    }
+
+    /// Altura mínima del centro de la bola sobre el suelo para que no lo toque.
+    public float MinCenterHeight => _radius + groundClearance;
+
+    /// Cambia la altura a la que apunta sobre el objetivo. La secuencia la sube para que la bola
+    /// llegue a Will sin rozar el suelo.
+    public void SetAimHeight(float metres)
+    {
+        aimHeightOffset = metres;
+    }
+
+    /// Sube la bola si el suelo que tiene debajo la alcanza. Ver INC-458.
+    public void KeepAboveGround()
+    {
+        if (groundClearance <= 0f || _groundMask == 0) return;
+
+        Vector3 pos = transform.position;
+        float probeUp = _radius + 4f;
+        if (!Physics.Raycast(pos + Vector3.up * probeUp, Vector3.down, out RaycastHit hit,
+                probeUp + _radius + groundClearance + 4f, _groundMask, QueryTriggerInteraction.Ignore))
+            return;
+
+        float minY = hit.point.y + MinCenterHeight;
+        if (pos.y < minY)
+        {
+            pos.y = minY;
+            transform.position = pos;
+        }
     }
 
     // Genera un rastro básico (core brillante → transparente) para que el proyectil se lea como
@@ -187,6 +245,8 @@ public class SlowMotionFireProjectile : MonoBehaviour
         {
             transform.position += transform.forward * speed * Time.deltaTime;
         }
+
+        KeepAboveGround();
 
     }
 

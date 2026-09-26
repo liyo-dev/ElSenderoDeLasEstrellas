@@ -333,7 +333,7 @@ namespace Game.NPC.States
 
                     // Sync Animación - NPCSimpleAnimator se encargará de rotar correctamente
                     if (context.Animator != null)
-                        context.Animator.SetMovementSpeed(context.Agent.velocity.magnitude / context.Agent.speed);
+                        context.Animator.SetMovementSpeed(Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent));
                 }
             }
             else

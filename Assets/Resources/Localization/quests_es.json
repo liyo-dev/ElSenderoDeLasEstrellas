@@ -49,20 +49,16 @@
             "value": "El remedio de Bárbara."
         },
         {
-            "key": "QUEST_ELDRAN_MISSION0_DETAIL",
-            "value": "Lee la carta de la mesita."
-        },
-        {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Averigua qué ocurre con Eldran y Victoria."
+            "value": "Ve a ver qué pasa entre Eldran y Victoria."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "Oliver te ha pedido que averigües qué ocurre entre Eldran y Victoria. Sigue el marcador del minimapa hasta encontrarlos."
+            "value": "Oliver te ha dicho que Eldran y Victoria están discutiendo. Sigue el marcador hasta el mercado."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
-            "value": "Busca a Eldran"
+            "value": "La discusión del mercado"
         },
         {
             "key": "QUEST_ELDRAN_MISSION10_DESC",
@@ -142,11 +138,11 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DESC",
-            "value": "Encuentra la caja de manzanas en el bosque y llévasela a Eldran."
+            "value": "Ve a buscar la caja de manzanas y llévasela a Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DETAIL",
-            "value": "Eldran dejó una caja de manzanas junto al bosque. Sigue el marcador hasta encontrarla y llévasela de vuelta."
+            "value": "Eldran la dejó al pie de un fresno. Sigue el marcador hasta encontrarla y llévasela."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_NAME",
@@ -478,15 +474,11 @@
         },
         {
             "key": "QUEST_WILL_MISSION1_DETAIL",
-            "value": "Eldran te ha dado una moneda y un encargo extraño: cómprate algo que no sirva para nada. Tomasa vende figuritas de madera en el mercado."
+            "value": "Eldran te ha dado una moneda para que compres algo inútil. Busca a Tomasa en el mercado: tiene figuritas de madera."
         },
         {
             "key": "QUEST_WILL_MISSION1_NAME",
             "value": "Algo inútil"
-        },
-        {
-            "key": "READ_THE_LETTER_DESC",
-            "value": "leer la carta que hay sobre la mesita."
         }
     ]
 }

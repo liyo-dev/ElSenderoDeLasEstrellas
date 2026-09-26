@@ -29,6 +29,7 @@ public class SenalDeCompra : MonoBehaviour
 
     [Tooltip("Evento del grafo (RaiseCustom) que se lanza cuando el jugador lo ha comprado y han " +
              "terminado las frases.")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     [SerializeField] private string eventoNarrativo = "ESTRELLA_COMPRADA";
 
     [Tooltip("Lo que se dice al salir de la tienda después de comprarlo, en orden.")]
@@ -40,6 +41,8 @@ public class SenalDeCompra : MonoBehaviour
     private bool _comprado;
     private bool _eventoEmitido;
     private PlayerActionManager _bloqueo;
+    private bool _saltado;
+    private Action _alSaltar;
 
     void OnEnable() => ShopController.CompraRealizada += AlComprar;
 
@@ -49,6 +52,7 @@ public class SenalDeCompra : MonoBehaviour
     void OnDisable()
     {
         ShopController.CompraRealizada -= AlComprar;
+        DejarDeSerSaltable();
         SoltarJugador();
         if (_comprado && !_eventoEmitido) Emitir();
     }
@@ -76,6 +80,17 @@ public class SenalDeCompra : MonoBehaviour
                 PlayerService.Player.transform.rotation = Quaternion.LookRotation(hacia.normalized, Vector3.up);
         }
 
+        // Las frases se pueden saltar con el mismo botón que las secuencias (NarrativeSkipHub).
+        // Saltar solo corta las frases: al jugador se le suelta y el evento se lanza igual.
+        // Ver INC-461.
+        _saltado = false;
+        _alSaltar = () =>
+        {
+            _saltado = true;
+            SpeechBubbleUI.Instance?.SkipCurrent();
+        };
+        NarrativeSkipHub.RegisterSkipHandler(_alSaltar);
+
         yield return new WaitForSecondsRealtime(0.35f);
 
         var bocadillo = SpeechBubbleUI.Instance;
@@ -83,6 +98,7 @@ public class SenalDeCompra : MonoBehaviour
         {
             foreach (var r in reacciones)
             {
+                if (_saltado) break;
                 if (r == null || string.IsNullOrEmpty(r.textKey)) continue;
                 Transform quien = r.diceElJugador
                     ? (PlayerService.Player != null ? PlayerService.Player.transform : null)
@@ -100,12 +116,20 @@ public class SenalDeCompra : MonoBehaviour
                 // Tope por si otro bocadillo pisa este y su aviso no llega nunca (mismo motivo que
                 // el tope de SayBeat).
                 float tope = bocadillo.TiempoDeLectura(texto) * 4f + 10f;
-                while (!fin && tope > 0f) { tope -= Time.unscaledDeltaTime; yield return null; }
+                while (!fin && !_saltado && tope > 0f) { tope -= Time.unscaledDeltaTime; yield return null; }
             }
         }
 
+        DejarDeSerSaltable();
         SoltarJugador();
         Emitir();
+    }
+
+    private void DejarDeSerSaltable()
+    {
+        if (_alSaltar == null) return;
+        NarrativeSkipHub.UnregisterSkipHandler(_alSaltar);
+        _alSaltar = null;
     }
 
     private void SoltarJugador()

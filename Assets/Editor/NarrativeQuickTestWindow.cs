@@ -77,9 +77,10 @@ public class NarrativeQuickTestWindow : EditorWindow
 
     // Fast-Forward (progreso previo simulado desde el inicio del grafo)
     private bool _fastForward = true;
-    private bool _fastForwardPreviewRan;
-    private bool _fastForwardReachedTarget;
-    private readonly List<string> _fastForwardWarnings = new List<string>();
+    // Serializados para que el resultado de la vista previa sobreviva a la recarga de dominio al entrar en Play.
+    [SerializeField] private bool _fastForwardPreviewRan;
+    [SerializeField] private bool _fastForwardReachedTarget;
+    [SerializeField] private List<string> _fastForwardWarnings = new List<string>();
     private Dictionary<string, QuestData> _questCatalogCache;
 
     // State
@@ -606,8 +607,9 @@ public class NarrativeQuickTestWindow : EditorWindow
     /// INC-219). El criterio lo manda NarrativeRunner.RunSubGraph(), que trata cualquier nodo con varias
     /// salidas SIN NOMBRE como un fork implícito y lanza todas sus ramas en paralelo:
     ///   - ForkNode y cualquier nodo con varias salidas sin nombre → fork: se expanden TODAS las salidas.
-    ///   - Nodos con puertos con nombre (BranchFlagNode, BranchQuestStateNode, DialogueChoiceNode,
-    ///     PlayCinematicNode...) → bifurcación real: no se sigue explorando por ahí, se registra un aviso.
+    ///   - PlayCinematicNode → se sigue por «Hecho», que es el camino normal; «Fallo» es la rama de error.
+    ///   - Resto de nodos con puertos con nombre (BranchFlagNode, BranchQuestStateNode,
+    ///     DialogueChoiceNode...) → bifurcación real: no se sigue explorando por ahí, se registra un aviso.
     ///   - RequireInventoryItemNode → bifurcación real pese a no tener puertos con nombre: es el único
     ///     nodo del proyecto que redirige el flujo por índice (ForceJumpToOutput) desde Enter().
     /// Nunca se adivina una rama de una bifurcación real.
@@ -660,6 +662,13 @@ public class NarrativeQuickTestWindow : EditorWindow
             // Bifurcación real = puertos con nombre, o RequireInventoryItemNode (única excepción sin
             // nombrar que redirige por índice). Todo lo demás con varias salidas es un fork implícito,
             // igual que en NarrativeRunner.RunSubGraph() — ver comentario de RunFastForward.
+            if (node is PlayCinematicNode)
+            {
+                var hecho = node.GetOutputGuid(0);
+                if (hecho != null && !visited.Contains(hecho)) queue.Enqueue(hecho);
+                continue;
+            }
+
             bool isDecision = node.HasNamedOutputs || node is RequireInventoryItemNode;
 
             if (isDecision)

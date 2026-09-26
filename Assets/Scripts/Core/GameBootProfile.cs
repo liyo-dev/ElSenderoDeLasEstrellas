@@ -53,6 +53,7 @@ public class GameBootProfile : ScriptableObject
         dst.level = src.level;
         dst.maxHP = src.maxHP; dst.currentHP = src.currentHP;
         dst.maxMP = src.maxMP; dst.currentMP = src.currentMP;
+        dst.ataque = src.ataque; dst.defensa = src.defensa;
         dst.unlockedAbilities = new List<AbilityId>(src.unlockedAbilities ?? new List<AbilityId>());
         dst.unlockedSpells    = new List<SpellId>(src.unlockedSpells    ?? new List<SpellId>());
         dst.leftSpellId = src.leftSpellId;
@@ -187,6 +188,7 @@ public class GameBootProfile : ScriptableObject
         p.level      = data.level;
         p.maxHP      = data.maxHp;     p.currentHP = Mathf.Clamp(data.currentHp, 0f, data.maxHp);
         p.maxMP      = data.maxMp;     p.currentMP = Mathf.Clamp(data.currentMp, 0f, data.maxMp);
+        p.ataque = data.ataque; p.defensa = data.defensa;
         p.unlockedAbilities = new List<AbilityId>(data.abilities ?? new List<AbilityId>());
         p.unlockedSpells    = new List<SpellId>(data.spells    ?? new List<SpellId>());
         p.flags             = new List<string>(data.flags      ?? new List<string>());
@@ -349,6 +351,7 @@ public class GameBootProfile : ScriptableObject
         data.currentHp = activePreset.currentHP;
         data.maxMp = activePreset.maxMP;
         data.currentMp = activePreset.currentMP;
+        data.ataque = activePreset.ataque; data.defensa = activePreset.defensa;
         data.abilities = new List<AbilityId>(activePreset.unlockedAbilities ?? new List<AbilityId>());
         data.spells = new List<SpellId>(activePreset.unlockedSpells ?? new List<SpellId>());
         data.flags = new List<string>(activePreset.flags ?? new List<string>());
@@ -566,7 +569,8 @@ public class GameBootProfile : ScriptableObject
         var playerHealthSystem = FindAnyObjectByType<PlayerHealthSystem>();
         if (playerHealthSystem != null)
         {
-            p.maxHP = playerHealthSystem.MaxHealth;
+            // Sin lo que suma el equipo: eso no se guarda, lo vuelve a poner quien lo da (INC-470).
+            p.maxHP = playerHealthSystem.MaxHealth - EstadisticasDeWill.Bonos.vida;
             p.currentHP = playerHealthSystem.CurrentHealth;
             syncedSystems.Add($"Health({p.currentHP:F0}/{p.maxHP:F0})");
         }
@@ -575,7 +579,7 @@ public class GameBootProfile : ScriptableObject
         var manaPool = FindAnyObjectByType<ManaPool>();
         if (manaPool != null)
         {
-            p.maxMP = manaPool.Max;
+            p.maxMP = manaPool.Max - EstadisticasDeWill.Bonos.magia;
             p.currentMP = manaPool.Current;
             syncedSystems.Add($"Mana({p.currentMP:F0}/{p.maxMP:F0})");
         }
@@ -1261,6 +1265,7 @@ public class GameBootProfile : ScriptableObject
         p.level = 1;
         p.maxHP = 100f; p.currentHP = 100f;
         p.maxMP = 50f;  p.currentMP = 50f;
+        p.ataque = 0f;  p.defensa = 0f;   // se inicializan en EstadisticasDeWill
         p.unlockedAbilities = new List<AbilityId>();
         p.unlockedSpells = new List<SpellId>();
         p.leftSpellId = SpellId.None;

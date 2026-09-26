@@ -47,7 +47,7 @@ namespace Game.NPC.States
         {
             if (!IsAgentValid(context) || context.Animator == null)
                 return;
-            float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+            float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
             if (context.Config != null && speedFactor > 0f)
             {
                 speedFactor = Mathf.Max(speedFactor, context.Config.minAnimSpeed);

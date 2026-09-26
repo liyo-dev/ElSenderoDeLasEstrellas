@@ -221,6 +221,10 @@ public class SpeechBubbleUI : MonoBehaviour
         List<string> paginas = Paginar(text);
         if (paginas.Count == 0) paginas.Add(text ?? string.Empty);
         string primera = paginas[0];
+        // Los mismos iconos que los diálogos: «presiona <sprite name="interactable_x">» sin esto
+        // salía como «?» en el bocadillo (INC-468).
+        var iconos = Core.InputGlyphs.InputGlyphService.IconosDeTexto;
+        if (iconos != null && _label.spriteAsset != iconos) _label.spriteAsset = iconos;
         _label.text = primera;
 
         GameplayEventLog.Log("Dialogo", !string.IsNullOrEmpty(speakerName) ? speakerName : target != null ? target.name : null);

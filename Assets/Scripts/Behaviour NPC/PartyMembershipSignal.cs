@@ -21,6 +21,7 @@ namespace Game.NPC
         }
 
         [Tooltip("Clave del evento narrativo que dispara la accion (RaiseCustomEventNode en el grafo)")]
+        [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
         [SerializeField] private string narrativeEventKey;
 
         [SerializeField] private NPCPartyMember partyMember;

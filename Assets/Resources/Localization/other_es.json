@@ -26,15 +26,15 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_BOX",
-            "value": "Sigue el marcador hasta la caja.\nPulsa {BOTON} para abrir el mapa completo."
+            "value": "Sigue el marcador hasta la caja.\nPulsa {BOTON} para abrir el mapa."
         },
         {
             "key": "TUTORIAL_MOVE_INSPECT",
-            "value": "Mueve a Will con {BOTON}. Lee la carta de la mesita antes de salir."
+            "value": "Usa {BOTON} para moverte.\nSe oye jaleo fuera. Sal a ver qué pasa."
         },
         {
             "key": "TUTORIAL_NPC_TALK_ICON",
-            "value": "Si el icono sobre un personaje cambia así, habla con él."
+            "value": "Cuando veas este icono sobre un personaje, habla con él."
         },
         {
             "key": "TUTORIAL_WAKE_UP",
@@ -46,7 +46,7 @@
         },
         {
             "key": "TUTORIAL_MINIMAP_ELDRAN",
-            "value": "Sigue el marcador del minimapa hasta Eldran.\nPulsa {BOTON} para abrir el mapa completo."
+            "value": "Sigue el marcador hasta Eldran.\nPulsa {BOTON} para abrir el mapa."
         }
     ]
 }

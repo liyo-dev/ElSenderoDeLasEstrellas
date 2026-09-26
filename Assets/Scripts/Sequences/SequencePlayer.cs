@@ -782,6 +782,15 @@ public class SequencePlayer : CinematicSequencerBase
         foreach (var actor in _context.ResolvedActors)
         {
             actor.EndAgentOverride();
+
+            // Si otro sistema ya se lo ha llevado (el grafo lo manda a guiar al jugador en cuanto
+            // se levanta la señal de salida), pararlo aquí le rompería el camino. Ver INC-461.
+            if (actor.LoHaTomadoOtroSistema)
+            {
+                actor.Release();
+                continue;
+            }
+
             actor.StopMovement();
             // Cierra cualquier animación de cuerpo entero que se haya quedado puesta — ver
             // PlayerDialogueAnimator.ReturnToLocomotion (el caso de Dizzy_NoWeapon en Will).

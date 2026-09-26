@@ -163,6 +163,7 @@ public class BossArenaController : MonoBehaviour
     private bool _radiusLocked;
     private Coroutine _radiusEnforceRoutine;
     private LayerMask _activeFloorLayer;
+    private LimiteDeArena _limite; // anillo sutil en el suelo que marca el borde (ver LimiteDeArena)
 
     bool started = false;
     bool _bossDefeatHandled = false;
@@ -1052,23 +1053,47 @@ public class BossArenaController : MonoBehaviour
 
             try
             {
-                // Usar BattleId (fallback a bossId ya fue aplicado en Awake)
-                DefaultNarrativeSignals.Instance?.RaiseBattleWon(BattleId);
-                
                 if (!string.IsNullOrEmpty(BattleId) && AudioService.Instance != null)
                     AudioService.Instance.EndBattleById(BattleId);
-
             }
             catch (Exception ex)
             {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[BossArenaController] Error notificando BattleWon: {ex.Message}");
+                Debug.LogWarning($"[BossArenaController] Error cerrando la música de batalla: {ex.Message}");
 #endif
             }
+
+            // Victoria de verdad: antes de avisar al grafo, el cierre de batalla (premios,
+            // celebración de Will, informe). Ver CierreDeBatalla, INC-470.
+            if (invokeUnityEvents && isActiveAndEnabled)
+                StartCoroutine(Co_CerrarYAvisarVictoria());
+            else
+                AvisarBatallaGanada();
         }
 
         RestoreBattleDisables();
         // Portal ya no se spawneea al final, solo al inicio de la batalla
+    }
+
+    private IEnumerator Co_CerrarYAvisarVictoria()
+    {
+        yield return CierreDeBatalla.Ejecutar(new ResultadoDeBatalla(BattleId, _activeEncounter));
+        AvisarBatallaGanada();
+    }
+
+    private void AvisarBatallaGanada()
+    {
+        try
+        {
+            // Usar BattleId (fallback a bossId ya fue aplicado en Awake)
+            DefaultNarrativeSignals.Instance?.RaiseBattleWon(BattleId);
+        }
+        catch (Exception ex)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.LogWarning($"[BossArenaController] Error notificando BattleWon: {ex.Message}");
+#endif
+        }
     }
 
     // =========================== Visual Barrier ===========================
@@ -1240,6 +1265,8 @@ public class BossArenaController : MonoBehaviour
         _effectiveRadius = (_activeEncounter != null && _activeEncounter.arenaRadius > 0f) ? _activeEncounter.arenaRadius : radiusMeters;
         _radiusLocked = true;
 
+        if (_limite == null) _limite = LimiteDeArena.Crear(transform, _arenaCenter, _effectiveRadius);
+
         if (_radiusEnforceRoutine == null)
             _radiusEnforceRoutine = StartCoroutine(Co_EnforceRadius());
 
@@ -1251,6 +1278,7 @@ public class BossArenaController : MonoBehaviour
     private void UnlockRadiusArea()
     {
         _radiusLocked = false;
+        if (_limite != null) { _limite.Retirar(); _limite = null; }
         if (_radiusEnforceRoutine != null)
         {
             StopCoroutine(_radiusEnforceRoutine);

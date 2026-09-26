@@ -104,7 +104,7 @@ public static class SequenceMovement
                     break;
 
                 // El animator LEE la velocidad real del agente, ya normalizada 0-1. Nada de m/s.
-                anim?.SetMovementSpeed(NavMeshAgentUtility.ComputeSpeedFactor(agent));
+                anim?.SetMovementSpeed(NavMeshAgentUtility.FactorDeLocomocion(agent));
 
                 // Rotación continua hacia la dirección real de avance, para que nunca se le vea
                 // caminar de lado o de espaldas cuando la ruta gira.

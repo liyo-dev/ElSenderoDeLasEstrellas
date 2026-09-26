@@ -71,6 +71,36 @@ namespace Game.NPC.Common
         /// bocadillo de pelea de Eldran y Victoria tiene que verse mientras Oliver habla).
         public bool OcultarDuranteDialogos { get; set; } = true;
 
+        /// Si es true (por defecto), un icono PERSISTENTE (misión, «!», seguir...) se esconde
+        /// mientras hay una secuencia en curso y vuelve al acabar. Solo se pone a false cuando el
+        /// icono forma parte de la propia escena, como el de pelea de DiscusionEnBucle, que tiene
+        /// que verse durante la secuencia de Oliver. Ver INC-457.
+        public bool OcultarDuranteSecuencias { get; set; } = true;
+
+        /// ¿Hay una secuencia en curso? SequencePlayer (vía CinematicSequencerBase) o cualquier
+        /// cosa que retenga al jugador en modo Cinematic: bocadillos tras una compra, un NPC que
+        /// viene a hablarte, LockPlayer del grafo, la caja de diálogo...
+        public static bool HaySecuenciaEnCurso()
+        {
+            if (CinematicSequencerBase.AnySequenceActive) return true;
+
+            if (s_accionesJugador == null)
+            {
+                if (!PlayerService.HasInstance) return false;
+                var jugador = PlayerService.Player;
+                if (jugador == null) return false;
+                s_accionesJugador = jugador.GetComponent<PlayerActionManager>();
+                if (s_accionesJugador == null) return false;
+            }
+            return s_accionesJugador.IsInMode(ActionMode.Cinematic);
+        }
+        private static PlayerActionManager s_accionesJugador;
+
+#if UNITY_EDITOR
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() { s_accionesJugador = null; }
+#endif
+
         /// Coloca el icono sobre la cabeza de 'npc' aunque este componente viva en otro objeto.
         public void SeguirA(Transform npc)
         {
@@ -82,6 +112,7 @@ namespace Game.NPC.Common
         // Estado
         private bool _isHiding;
         private bool _hiddenDuringDialogue;
+        private bool _hiddenDuringSequence;
         private Vector3 _targetScale;
         
         private void Start()
@@ -281,6 +312,14 @@ namespace Game.NPC.Common
             yield return new WaitForSecondsRealtime(restoreAfterDialogueDelay);
 
             _restoreAfterDialogueCoroutine = null;
+
+            // Si sigue habiendo una secuencia en curso, el icono sigue escondido: lo sacará el
+            // bucle del icono persistente cuando la secuencia acabe.
+            if (_hiddenDuringSequence)
+            {
+                _hiddenDuringDialogue = false;
+                yield break;
+            }
 
             // Verificar que el icono aún existe y debe mostrarse
             if (_currentIconInstance != null && !_isHiding)
@@ -554,6 +593,7 @@ namespace Game.NPC.Common
 
             _isHiding = true;
             _hiddenDuringDialogue = false;
+            _hiddenDuringSequence = false;
             
             // Matar todos los tweens de este objeto
             DOTween.Kill(this);
@@ -624,6 +664,7 @@ namespace Game.NPC.Common
             
             _isHiding = false;
             _hiddenDuringDialogue = false;
+            _hiddenDuringSequence = false;
             
             if (showDebugLogs)
             {
@@ -757,7 +798,16 @@ namespace Game.NPC.Common
             // esperando a OnDialogueClosed para restaurarse, en vez de animarse hacia arriba en
             // mitad de la conversación.
             bool bornDuringDialogue = OcultarDuranteDialogos && IsDialogueOpenNow();
-            if (bornDuringDialogue)
+            bool bornDuringSequence = OcultarDuranteSecuencias && HaySecuenciaEnCurso();
+            if (bornDuringSequence && !bornDuringDialogue)
+            {
+                // Igual que el caso del diálogo: nace a escala 0 y el bucle de abajo lo saca
+                // cuando la secuencia termine.
+                _hiddenDuringSequence = true;
+                iconTransform.position = targetPos;
+                iconTransform.localScale = Vector3.zero;
+            }
+            else if (bornDuringDialogue)
             {
                 // Nace oculto: se queda a escala 0 en su sitio y espera a OnDialogueClosed, que
                 // dispara la restauración normal. El bucle de abajo sigue corriendo (respeta
@@ -783,6 +833,8 @@ namespace Game.NPC.Common
             // Loop de actualización infinito (hasta que se llame HideAlertIcon)
             while (_currentIconInstance != null && !_isHiding)
             {
+                ActualizarOcultoPorSecuencia();
+
                 if (!_hiddenDuringDialogue)
                 {
                     Vector3 newTargetPos = GetIconWorldPosition();
@@ -801,6 +853,49 @@ namespace Game.NPC.Common
             }
         }
         
+        /// Esconde el icono persistente al empezar una secuencia y lo vuelve a sacar al acabar
+        /// (INC-457). Mismo gesto que con los diálogos: se encoge sin destruirse, así que al
+        /// terminar reaparece el mismo icono en su sitio.
+        private void ActualizarOcultoPorSecuencia()
+        {
+            bool ocultar = OcultarDuranteSecuencias && HaySecuenciaEnCurso();
+            if (ocultar == _hiddenDuringSequence || _currentIconInstance == null) return;
+            _hiddenDuringSequence = ocultar;
+
+            var icono = _currentIconInstance.transform;
+            DOTween.Kill(this);
+
+            if (ocultar)
+            {
+                // Si estaba a punto de volver tras un diálogo, esa vuelta se cancela: matar su
+                // tween dejaría _hiddenDuringDialogue en true para siempre (lo baja su OnComplete)
+                // y el icono no volvería a salir. Lo sacará esta misma función al acabar.
+                if (_restoreAfterDialogueCoroutine != null)
+                {
+                    StopCoroutine(_restoreAfterDialogueCoroutine);
+                    _restoreAfterDialogueCoroutine = null;
+                }
+                if (!IsDialogueOpenNow()) _hiddenDuringDialogue = false;
+
+                icono.DOScale(Vector3.zero, 0.1f)
+                    .SetEase(Ease.InBack)
+                    .SetUpdate(true)
+                    .SetId(this);
+                return;
+            }
+
+            // Si además hay un diálogo abierto, lo saca la restauración del diálogo al cerrarse.
+            if (_hiddenDuringDialogue) return;
+
+            icono.position = GetIconWorldPosition();
+            icono.localScale = Vector3.zero;
+            ApplyBillboard(icono);
+            icono.DOScale(_targetScale, 0.2f)
+                .SetEase(Ease.OutBack)
+                .SetUpdate(true)
+                .SetId(this);
+        }
+
         private void OnDestroy()
         {
             DOTween.Kill(this);

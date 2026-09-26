@@ -61,6 +61,12 @@ public class NPCObstacleAvoidance : MonoBehaviour
     private int _effectiveObstacleLayers; // obstacleLayers sin la capa "Floor" (ver FIX 6 sept 2026 en Awake)
     private float _avoidingSince = -1f; // Time.time en que empezó a esquivar sin interrupción, -1 = no esquivando
 
+    /// Está desviando al agente ahora mismo para rodear algo que tiene delante.
+    public bool Esquivando => _avoiding;
+
+    /// El último objeto de escenario que le hizo esquivar (para diagnósticos).
+    public Collider UltimoObstaculo { get; private set; }
+
     void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -164,6 +170,7 @@ public class NPCObstacleAvoidance : MonoBehaviour
             }
 
             if (!_avoiding) _avoidingSince = Time.time;
+            UltimoObstaculo = hit.collider;
             _avoidLateral = rightBlocked ? -lateral : lateral;
             _avoiding = true;
         }

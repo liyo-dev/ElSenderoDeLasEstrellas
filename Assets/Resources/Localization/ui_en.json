@@ -13,6 +13,26 @@
             "value": "You can't flee the battle."
         },
         {
+            "key": "BATTLE_REPORT_TITLE",
+            "value": "Victory!"
+        },
+        {
+            "key": "STAT_VIDA",
+            "value": "Health"
+        },
+        {
+            "key": "STAT_MAGIA",
+            "value": "Magic"
+        },
+        {
+            "key": "STAT_ATAQUE",
+            "value": "Attack"
+        },
+        {
+            "key": "STAT_DEFENSA",
+            "value": "Defense"
+        },
+        {
             "key": "BOSS_DEMONIO_HEALTHBAR_NAME",
             "value": "Demon Boss"
         },
@@ -858,7 +878,7 @@
         },
         {
             "key": "ROOM_EXIT_BLOCKED",
-            "value": "Before leaving, you need to read the letter on the side table."
+            "value": "You can’t go through there yet."
         },
         {
             "key": "ROOM_EXIT_NEEDS",

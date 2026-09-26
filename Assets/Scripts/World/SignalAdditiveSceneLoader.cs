@@ -23,12 +23,14 @@ using UnityEngine.SceneManagement;
 public class SignalAdditiveSceneLoader : MonoBehaviour
 {
     [Tooltip("Señal que dispara la carga (el mismo nombre que levanta un RaiseCustomEventNode del grafo, o un SignalBeat de una secuencia).")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string _loadOnSignal;
 
     [Tooltip("Nombre de la escena a cargar en aditivo. Debe estar en Build Settings.")]
     [SerializeField] private string _sceneToLoad;
 
     [Tooltip("Señal que dispara la descarga. Vacío = esta escena no se descarga sola (para escenas persistentes que solo se cargan una vez).")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string _unloadOnSignal;
 
     [Tooltip("Escena a descargar. Vacío = se descarga la misma que se cargó ('_sceneToLoad').")]

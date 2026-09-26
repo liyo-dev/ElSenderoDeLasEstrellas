@@ -7,6 +7,7 @@ using UnityEngine;
 public class CastleNarrativeEventListener : MonoBehaviour
 {
     [Tooltip("Clave del evento narrativo que dispara la apertura (debe coincidir con narrativeEventKey del NPC)")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string narrativeEventKey;
 
     [SerializeField] private CastleDoorController doorController;

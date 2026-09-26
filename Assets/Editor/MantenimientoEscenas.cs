@@ -54,16 +54,23 @@ public static class MantenimientoEscenas
         if (abiertaAqui) EditorSceneManager.CloseScene(start, true);
     }
 
-    [MenuItem("El Sendero/Archivo/Mantenimiento/Guardar MainWorld y Sendero_PruebaWill en texto")]
+    /// ForceReserializeAssets no convierte escenas (se probó: siguen en binario). Lo que sí lo hace
+    /// es abrirlas y guardarlas: al guardar, Unity usa el modo del proyecto (Force Text).
+    [MenuItem("El Sendero/Mantenimiento/Guardar MainWorld y Sendero_PruebaWill en texto")]
     public static void GuardarEnTexto()
     {
+        if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            EditorUtility.DisplayDialog("Mantenimiento", "Sal del Play antes de lanzar esto.", "Vale");
+            return;
+        }
         if (EditorSettings.serializationMode != SerializationMode.ForceText)
         {
             EditorUtility.DisplayDialog("Mantenimiento", "El proyecto no está en Force Text (Project Settings ▸ Editor ▸ Asset Serialization). No hago nada.", "Vale");
             return;
         }
 
-        // Una escena abierta con cambios sin guardar se perdería o se mezclaría: primero guardar.
+        // Una escena abierta con cambios sin guardar se guardaría con ellos: primero que los guarde él.
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             var s = SceneManager.GetSceneAt(i);
@@ -75,13 +82,41 @@ public static class MantenimientoEscenas
         }
 
         if (!EditorUtility.DisplayDialog("Mantenimiento",
-                "Se van a volver a guardar en TEXTO:\n\n" + string.Join("\n", EscenasBinarias) +
+                "Se van a abrir y volver a guardar en TEXTO:\n\n" + string.Join("\n", EscenasBinarias) +
                 "\n\nEl contenido no cambia, solo el formato del archivo (ocupará más). Conviene tener " +
                 "hecho un commit antes. ¿Seguimos?", "Guardar en texto", "Cancelar"))
             return;
 
-        AssetDatabase.ForceReserializeAssets(EscenasBinarias, ForceReserializeAssetsOptions.ReserializeAssets);
-        Debug.Log("[Mantenimiento] ✓ Reserializadas en texto: " + string.Join(", ", EscenasBinarias));
+        var log = new System.Text.StringBuilder("[Mantenimiento] Escenas en texto\n");
+        foreach (var ruta in EscenasBinarias)
+        {
+            var escena = SceneManager.GetSceneByPath(ruta);
+            bool abiertaAqui = false;
+            if (!escena.isLoaded)
+            {
+                escena = EditorSceneManager.OpenScene(ruta, OpenSceneMode.Additive);
+                abiertaAqui = true;
+            }
+            EditorSceneManager.MarkSceneDirty(escena);
+            bool ok = EditorSceneManager.SaveScene(escena);
+            if (abiertaAqui) EditorSceneManager.CloseScene(escena, true);
+
+            bool texto = EsTexto(ruta);
+            log.AppendLine(ok && texto ? $"✓ {ruta}" : $"✗ {ruta}: {(ok ? "sigue en binario" : "no se pudo guardar")}");
+        }
+        AssetDatabase.Refresh();
+        Debug.Log(log.ToString());
+    }
+
+    private static bool EsTexto(string ruta)
+    {
+        try
+        {
+            using var f = System.IO.File.OpenRead(ruta);
+            var cabecera = new byte[5];
+            return f.Read(cabecera, 0, 5) == 5 && System.Text.Encoding.ASCII.GetString(cabecera) == "%YAML";
+        }
+        catch { return false; }
     }
 
     /// Lo que el MainWorld de hoy todavía usa de carpetas «viejas», a su sitio (INC-448). Se mueve
@@ -94,7 +129,7 @@ public static class MantenimientoEscenas
     ///  - Las dos copias de la maqueta del mapa (Eldoria_Codex.unity) no las usa nadie: salen de
     ///    Assets a «Versiones antiguas/Maquetas del mapa (2026-09-17)».
     /// Después, Auditoría ▸ Sacar de Assets… ya puede sacar el resto de MainWorld_old.
-    [MenuItem("El Sendero/Mantenimiento/Rescatar lo que se usa de MainWorld_old y ordenar los recursos del mundo")]
+    [MenuItem("El Sendero/Archivo/Mantenimiento/Rescatar lo que se usa de MainWorld_old y ordenar los recursos del mundo")]
     public static void RescatarYOrdenar()
     {
         var log = new System.Text.StringBuilder("[Mantenimiento] Rescate y orden\n");

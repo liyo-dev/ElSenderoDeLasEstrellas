@@ -16,6 +16,7 @@ public class ShopMarketSignal : MonoBehaviour
     [SerializeField] private ShopUI shopUI;
 
     [Tooltip("Clave del evento a disparar en el grafo narrativo al cerrar la tienda (RaiseCustom).")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     [SerializeField] private string narrativeEventKey;
 
     [Tooltip("Si true, solo dispara la primera vez que se cierra la tienda en esta sesión. Si " +

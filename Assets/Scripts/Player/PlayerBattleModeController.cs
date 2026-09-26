@@ -72,6 +72,20 @@ namespace Game.Player
         [Tooltip("Duración del blend de entrada/salida de la cámara de victoria")]
         [SerializeField] private float victoryCamBlendSeconds = 0.4f;
 
+        [Header("Celebración de victoria (INC-470)")]
+        [Tooltip("Salto antes de la pose de victoria. Vacío = sin salto. Si el Animator no tiene el estado, se salta.")]
+        [SerializeField] private string victoryJumpStateName = "JumpFullSpin_InPlace_NoWeapon";
+        [Tooltip("Tope de segundos del salto (por si el estado no termina nunca).")]
+        [SerializeField] private float victoryJumpMaxSeconds = 1.8f;
+        [Tooltip("La cámara de victoria arranca más lejos y más alta, de lado, y se acerca girando hasta el plano final en estos segundos.")]
+        [SerializeField] private float victoryCamMoveSeconds = 3f;
+        [SerializeField] private float victoryCamStartDistance = 6.5f;
+        [SerializeField] private float victoryCamStartHeight = 3f;
+        [Tooltip("Ángulo de salida respecto al jugador (el de llegada es victoryCamYawOffsetDeg).")]
+        [SerializeField] private float victoryCamStartYawOffsetDeg = -110f;
+        [Tooltip("En las batallas con cierre (jefes), segundos que se deja ver la derrota del enemigo antes de celebrarlo.")]
+        [SerializeField] private float victoryDelayAfterDefeat = 1.5f;
+
 #if UNITY_EDITOR
         [Header("Debug")]
         [SerializeField] private bool debugMode;
@@ -81,7 +95,6 @@ namespace Game.Player
         private bool _isPlayingVictory;
         private float _timeSinceLastEnemyDetected;
         private int _battleIdleHash;
-        private int _victoryHash;
         
         // Estado de la capa
         private float _currentLayerWeight;
@@ -125,7 +138,6 @@ namespace Game.Player
             
             // Cachear hashes de estados
             _battleIdleHash = Animator.StringToHash(battleIdleStateName);
-            _victoryHash = Animator.StringToHash(victoryStateName);
             
             // Asegurar que la capa empieza desactivada
             if (animator != null && animator.layerCount > upperBodyLayerIndex)
@@ -137,9 +149,14 @@ namespace Game.Player
             _targetLayerWeight = 0f;
         }
         
+        private PasoCelebracionDeVictoria _pasoDeCierre;
+
         void OnEnable()
         {
-            // El NPCCombatLifecycleHandler llamará directamente a PlayVictory()
+            // El NPCCombatLifecycleHandler llamará directamente a PlayVictory(). En las batallas
+            // de arena, la celebración es un paso del cierre de batalla (INC-470).
+            _pasoDeCierre ??= new PasoCelebracionDeVictoria(this, victoryDelayAfterDefeat);
+            CierreDeBatalla.Registrar(_pasoDeCierre);
             
             // Suscribirse al evento de fin de animación de magia para restaurar battle idle
             if (controller != null)
@@ -150,6 +167,8 @@ namespace Game.Player
         
         void OnDisable()
         {
+            if (_pasoDeCierre != null) CierreDeBatalla.Quitar(_pasoDeCierre);
+
             // Desactivar la capa al deshabilitarse
             if (animator != null && animator.layerCount > upperBodyLayerIndex)
             {
@@ -504,60 +523,34 @@ namespace Game.Player
         /// </summary>
         IEnumerator PlayVictorySequence()
         {
+            yield return CelebrarVictoria(_currentBattleId);
+            TerminarVictoria();
+        }
+
+        /// <summary>
+        /// La celebración de victoria sin devolver nada: bloquea el control, cámara que se acerca
+        /// girando hasta Will, salto, pose de victoria y música. Termina cuando acaba la pose,
+        /// con la cámara aún enfocando a Will. Lo devuelve todo TerminarVictoria(). Así el cierre
+        /// de batalla (CierreDeBatalla) puede enseñar el informe con este mismo plano antes de
+        /// devolver el control. INC-470.
+        /// </summary>
+        public IEnumerator CelebrarVictoria(string battleId)
+        {
             _isPlayingVictory = true;
+            _currentBattleId = battleId;
             GameplayEventLog.Log("Victoria", _currentBattleId);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerBattleMode] 🎉 ✅ INICIANDO ANIMACIÓN DE VICTORIA");
-#endif
-
-            // Deshabilitar control del jugador temporalmente usando campos públicos de Invector
-            if (controller != null)
-            {
-                controller.enabled = false; // Deshabilitar completamente el controlador
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PlayerBattleMode] 🎮 Controlador del jugador deshabilitado");
-#endif
-            }
-            else
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[PlayerBattleMode] ⚠️ Controller es NULL - no se puede deshabilitar");
-#endif
-            }
+            // Deshabilitar control del jugador mientras dura (campos públicos de Invector)
+            if (controller != null) controller.enabled = false;
 
             // Bloquear input mientras dura la victoria (patrón oficial del proyecto: pila de modos)
             if (actionManager != null)
                 actionManager.PushMode(ActionMode.Cinematic);
 
-            // Enfocar la cámara en el jugador para que se vea bien la animación de victoria
-            // y quede espacio en pantalla para los pop-ups de recompensa (próximo scope)
+            // Cámara: arranca lejos y de lado y se acerca girando hasta el plano de 3/4 de Will.
             ActivateVictoryCamera();
+            if (_victoryCameraActive) _victoryCamMove = StartCoroutine(Co_MoverCamaraDeVictoria());
 
-            // Reproducir animación de victoria
-            if (animator != null)
-            {
-                if (animator.HasState(0, _victoryHash))
-                {
-                    animator.CrossFadeInFixedTime(_victoryHash, 0.2f, 0);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log($"[PlayerBattleMode] 🎬 ✅ Reproduciendo animación de victoria: {victoryStateName}");
-#endif
-                }
-                else
-                {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.LogWarning($"[PlayerBattleMode] ⚠️ Estado '{victoryStateName}' NO encontrado en Animator");
-#endif
-                }
-            }
-            else
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogError($"[PlayerBattleMode] ❌ Animator es NULL");
-#endif
-            }
-            
             // Reproducir música de victoria usando el sistema de audio centralizado
             if (!string.IsNullOrEmpty(victorySfxKey) && AudioService.Instance != null)
             {
@@ -582,54 +575,113 @@ namespace Game.Player
 #endif
             }
             
-            // Esperar a que la cámara de victoria termine su blend de entrada antes de avisar de que
-            // ya está enfocando al jugador (el sistema de recompensas del próximo scope usará esto)
+            // Salto y, al caer, la pose de victoria.
+            if (animator != null && !string.IsNullOrEmpty(victoryJumpStateName) && TryPlayState(victoryJumpStateName, 0.15f, out int capaSalto))
+            {
+                int hashSalto = Animator.StringToHash(victoryJumpStateName);
+                float tope = Time.time + Mathf.Max(0.3f, victoryJumpMaxSeconds);
+                float empezar = Time.time + 0.3f;
+                while (Time.time < tope)
+                {
+                    var info = animator.GetCurrentAnimatorStateInfo(capaSalto);
+                    bool enSalto = info.shortNameHash == hashSalto;
+                    if (enSalto && info.normalizedTime >= 0.92f) break;
+                    if (!enSalto && Time.time > empezar) break;   // ya ha salido del salto
+                    yield return null;
+                }
+            }
+
+            float empiezaPose = Time.time;
+            if (animator == null || !TryPlayState(victoryStateName, 0.2f, out _))
+            {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                Debug.LogWarning($"[PlayerBattleMode] ⚠️ Estado '{victoryStateName}' NO encontrado en el Animator");
+#endif
+            }
+
+            // Aviso de «ya enfoca al jugador» (tras el blend de entrada de la cámara)
             if (_victoryCameraActive)
             {
                 yield return new WaitForSeconds(victoryCamBlendSeconds);
                 OnVictoryCameraFocused?.Invoke();
             }
 
-            // Esperar duración de la animación
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerBattleMode] ⏱️ Esperando {victoryAnimationDuration}s (duración de animación de victoria)");
-#endif
-            yield return new WaitForSeconds(Mathf.Max(0f, victoryAnimationDuration - (_victoryCameraActive ? victoryCamBlendSeconds : 0f)));
+            // Lo que dura la pose, y que la cámara haya llegado a su sitio.
+            float fin = Mathf.Max(empiezaPose + victoryAnimationDuration, Time.time);
+            float topeCamara = Time.time + victoryCamMoveSeconds + 2f;
+            while (Time.time < fin || (_victoryCamMove != null && Time.time < topeCamara)) yield return null;
+        }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerBattleMode] 🔄 Terminando animación de victoria - restaurando control del jugador");
-#endif
-
-            // IMPORTANTE: Resetear el flag ANTES de re-habilitar el control
-            // Esto permite que el Update() vuelva a funcionar normalmente
+        /// <summary>
+        /// Devuelve lo que tomó CelebrarVictoria: cámara de gameplay, input y controlador.
+        /// Idempotente.
+        /// </summary>
+        public void TerminarVictoria()
+        {
+            if (!_isPlayingVictory) return;
+            // IMPORTANTE: resetear el flag ANTES de re-habilitar el control (Update vuelve a correr)
             _isPlayingVictory = false;
 
-            // Liberar la cámara de victoria y el bloqueo de input, en orden inverso a como se activaron
+            if (_victoryCamMove != null) { StopCoroutine(_victoryCamMove); _victoryCamMove = null; }
             DeactivateVictoryCamera();
             if (actionManager != null)
                 actionManager.PopMode(ActionMode.Cinematic);
 
-            // Re-habilitar control del jugador
-            // La animación de victoria tiene exit time configurado en el Animator
-            // que automáticamente transiciona a locomotion, por lo que NO necesitamos
-            // forzar ninguna transición manualmente
-            if (controller != null)
+            // La pose de victoria tiene exit time a locomoción en el Animator: no hace falta forzarla.
+            if (controller != null) controller.enabled = true;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            Debug.Log("[PlayerBattleMode] ✅ Victoria terminada: control devuelto.");
+#endif
+        }
+
+        private Coroutine _victoryCamMove;
+
+        /// Plano de victoria con movimiento: de lejos, alto y de lado, a 3/4 de frente y cerca,
+        /// girando alrededor de Will y sin perderlo de vista.
+        private IEnumerator Co_MoverCamaraDeVictoria()
+        {
+            if (_victoryVcam == null) { _victoryCamMove = null; yield break; }
+
+            Vector3 frente = transform.forward; frente.y = 0f;
+            if (frente.sqrMagnitude < 0.0001f) frente = Vector3.forward;
+            frente.Normalize();
+
+            float dur = Mathf.Max(0.1f, victoryCamMoveSeconds);
+            float t = 0f;
+            while (t < 1f && _victoryVcam != null && _victoryCameraActive)
             {
-                controller.enabled = true; // Re-habilitar completamente el controlador
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PlayerBattleMode] 🎮 Controlador del jugador RE-HABILITADO - Animator manejará transición automática");
-#endif
+                t = Mathf.Min(1f, t + Time.deltaTime / dur);
+                float k = Mathf.SmoothStep(0f, 1f, t);
+
+                float yaw = Mathf.Lerp(victoryCamStartYawOffsetDeg, victoryCamYawOffsetDeg, k);
+                float dist = Mathf.Lerp(victoryCamStartDistance, victoryCamDistance, k);
+                float alto = Mathf.Lerp(victoryCamStartHeight, victoryCamHeight, k);
+
+                Vector3 dir = Quaternion.AngleAxis(yaw, Vector3.up) * frente;
+                Vector3 pos = transform.position + dir * dist + Vector3.up * alto;
+                Vector3 mira = transform.position + Vector3.up * victoryCamLookHeight;
+
+                _victoryVcam.transform.SetPositionAndRotation(pos, Quaternion.LookRotation((mira - pos).normalized, Vector3.up));
+                yield return null;
             }
-            else
+            _victoryCamMove = null;
+        }
+
+        /// Reproduce un estado del Animator en la primera capa que lo tenga.
+        private bool TryPlayState(string stateName, float fade, out int layer)
+        {
+            layer = -1;
+            if (animator == null || string.IsNullOrEmpty(stateName)) return false;
+            int hash = Animator.StringToHash(stateName);
+            for (int i = 0; i < animator.layerCount; i++)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[PlayerBattleMode] ⚠️ Controller es NULL - no se pudo re-habilitar");
-#endif
+                if (!animator.HasState(i, hash)) continue;
+                animator.CrossFadeInFixedTime(hash, fade, i);
+                layer = i;
+                return true;
             }
-            
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerBattleMode] ✅ Secuencia de victoria COMPLETADA - Animator transicionará automáticamente a locomotion");
-#endif
+            return false;
         }
         
         // Debug Gizmos

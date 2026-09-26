@@ -49,11 +49,8 @@ namespace Game.NPC.Modules
 
         [Header("=== POSICIONAMIENTO ===")]
         
-        [Tooltip("Intentar quedarse DETRÁS del jugador")]
+        [Tooltip("Marcado: sigue DETRÁS del jugador, en abanico con el resto del grupo. Desmarcado: va A SU LADO, en el lado y a la distancia de «Lado preferido» y «Distancia lateral» (sección de diálogos), al paso de Will.")]
         public bool quedarseDetras = true;
-        
-        [Tooltip("Offset lateral (para que no esté exactamente detrás)")]
-        public Vector2 offsetLateral = new Vector2(-1f, 1f);
 
         [Header("=== COMPORTAMIENTO IDLE ===")]
         
@@ -192,7 +189,6 @@ namespace Game.NPC.Modules
         
         // Posicionamiento
         public bool preferBehindPlayer => quedarseDetras;
-        public Vector2 lateralOffsetRange => offsetLateral;
         
         // Idle
         public float minIdleTime => tiempoIdleMinimo;

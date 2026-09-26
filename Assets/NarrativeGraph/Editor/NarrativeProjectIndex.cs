@@ -346,11 +346,11 @@ namespace Sendero.Narrative.Editor
         // fecha de modificación; si no han cambiado, no se vuelve a abrir el archivo.
 
         const string CachePath = "Library/NarrativeProjectIndex.cache.json";
-        const int CacheVersion = 1;
+        const int CacheVersion = 2;
 
-        [Serializable] class YamlCacheEntry { public string path; public long size; public long mtime; public string[] signalIn = Array.Empty<string>(); public string[] signalOut = Array.Empty<string>(); public string[] eventKeys = Array.Empty<string>(); public string[] anchors = Array.Empty<string>(); }
+        [Serializable] class YamlCacheEntry { public string path; public long size; public long mtime; public string[] signalIn = Array.Empty<string>(); public string[] signalOut = Array.Empty<string>(); public string[] eventKeys = Array.Empty<string>(); public string[] anchors = Array.Empty<string>(); public string[] escucha = Array.Empty<string>(); public string[] emite = Array.Empty<string>(); }
         [Serializable] class PrefabCacheEntry { public string path; public long size; public long mtime; public string displayName; public string[] ids = Array.Empty<string>(); }
-        [Serializable] class CacheFile { public int version; public List<YamlCacheEntry> yaml = new(); public List<PrefabCacheEntry> prefabs = new(); }
+        [Serializable] class CacheFile { public int version; public string campos; public List<YamlCacheEntry> yaml = new(); public List<PrefabCacheEntry> prefabs = new(); }
 
         static Dictionary<string, YamlCacheEntry> _yamlCache;
         static Dictionary<string, PrefabCacheEntry> _prefabCache;
@@ -383,7 +383,7 @@ namespace Sendero.Narrative.Editor
             {
                 if (!File.Exists(CachePath)) return;
                 var data = JsonUtility.FromJson<CacheFile>(File.ReadAllText(CachePath));
-                if (data == null || data.version != CacheVersion) return;
+                if (data == null || data.version != CacheVersion || data.campos != CamposConRol.Firma) return;
                 foreach (var e in data.yaml) if (e != null && !string.IsNullOrEmpty(e.path)) _yamlCache[e.path] = e;
                 foreach (var e in data.prefabs) if (e != null && !string.IsNullOrEmpty(e.path)) _prefabCache[e.path] = e;
             }
@@ -400,7 +400,7 @@ namespace Sendero.Narrative.Editor
             _cacheChanged = false;
             try
             {
-                var data = new CacheFile { version = CacheVersion, yaml = _yamlCache.Values.ToList(), prefabs = _prefabCache.Values.ToList() };
+                var data = new CacheFile { version = CacheVersion, campos = CamposConRol.Firma, yaml = _yamlCache.Values.ToList(), prefabs = _prefabCache.Values.ToList() };
                 Directory.CreateDirectory(Path.GetDirectoryName(CachePath));
                 File.WriteAllText(CachePath, JsonUtility.ToJson(data));
             }
@@ -473,6 +473,8 @@ namespace Sendero.Narrative.Editor
                 foreach (var k in entry.signalIn) GetSignal(k).listeners.Add($"Sequencer en {label}");
                 foreach (var k in entry.signalOut) GetSignal(k).emitters.Add($"Sequencer en {label}");
                 foreach (var k in entry.eventKeys) GetSignal(k).emitters.Add($"Emisor en {label}");
+                foreach (var k in entry.emite) GetSignal(k).emitters.Add($"Emisor en {label}");
+                foreach (var k in entry.escucha) GetSignal(k).listeners.Add($"Componente en {label}");
                 foreach (var k in entry.anchors) _anchors.Add(k);
             }
         }
@@ -488,8 +490,22 @@ namespace Sendero.Narrative.Editor
                 string label = string.IsNullOrEmpty(def.name) ? Path.GetFileNameWithoutExtension(path) : def.name;
                 if (!string.IsNullOrEmpty(def.signalIn)) GetSignal(def.signalIn).listeners.Add($"SequencePlayer con {label}");
                 if (!string.IsNullOrEmpty(def.signalOut)) GetSignal(def.signalOut).emitters.Add($"SequencePlayer con {label}");
+
+                // Señales que levantan sus beats: SignalBeat (a mitad de secuencia) y EndSequenceBeat
+                // con otra salida (p. ej. AWAKEN_FAILED en la rama de fallo del Despertar).
+                try
+                {
+                    foreach (var linea in File.ReadLines(path))
+                    {
+                        var m = YamlBeatSignal.Match(linea);
+                        if (m.Success) GetSignal(Clean(m.Groups[1].Value)).emitters.Add($"SequencePlayer con {label}");
+                    }
+                }
+                catch { /* ilegible: se queda con las señales de entrada y salida */ }
             }
         }
+
+        static readonly Regex YamlBeatSignal = new(@"^\s*(?:signal|signalOutOverride):\s*(\S+)\s*$", RegexOptions.Compiled);
 
         static YamlCacheEntry GetYamlEntry(string path)
         {
@@ -503,13 +519,32 @@ namespace Sendero.Narrative.Editor
             _scannedFiles++;
             var signalIn = new List<string>(); var signalOut = new List<string>();
             var eventKeys = new List<string>(); var anchors = new List<string>();
+            var escucha = new List<string>(); var emite = new List<string>();
             try
             {
                 using var reader = new StreamReader(path);
                 string line;
+                Dictionary<string, SignalRole> camposDelBloque = null;   // campos con rol del componente en curso
                 while ((line = reader.ReadLine()) != null)
                 {
+                    if (line.StartsWith("--- ", StringComparison.Ordinal)) { camposDelBloque = null; continue; }
                     if (line.Length > 200 || line.IndexOf(':') < 0) continue;
+                    if (line.StartsWith("  m_Script:", StringComparison.Ordinal))
+                    {
+                        var sm = YamlScriptGuid.Match(line);
+                        camposDelBloque = sm.Success ? CamposConRol.De(sm.Groups[1].Value) : null;
+                        continue;
+                    }
+                    if (camposDelBloque != null)
+                    {
+                        var fm = YamlCampo.Match(line);
+                        if (fm.Success && camposDelBloque.TryGetValue(fm.Groups[1].Value, out var rol))
+                        {
+                            var v = Clean(fm.Groups[2].Value);
+                            if (!string.IsNullOrEmpty(v)) (rol == SignalRole.Escucha ? escucha : emite).Add(v);
+                            continue;   // declarado con su rol: no pasa por la deducción por nombre
+                        }
+                    }
                     // Filtro barato antes de las regex: la inmensa mayoría de líneas no contienen ninguna de estas claves.
                     if (line.IndexOf("_signal", StringComparison.Ordinal) < 0 && line.IndexOf("ventKey", StringComparison.Ordinal) < 0 && line.IndexOf("anchorId", StringComparison.Ordinal) < 0) continue;
                     Match m;
@@ -524,11 +559,56 @@ namespace Sendero.Narrative.Editor
             var entry = new YamlCacheEntry
             {
                 path = path, size = size, mtime = mtime,
-                signalIn = signalIn.ToArray(), signalOut = signalOut.ToArray(), eventKeys = eventKeys.ToArray(), anchors = anchors.ToArray()
+                signalIn = signalIn.ToArray(), signalOut = signalOut.ToArray(), eventKeys = eventKeys.ToArray(), anchors = anchors.ToArray(),
+                escucha = escucha.ToArray(), emite = emite.ToArray()
             };
             _yamlCache[path] = entry;
             _cacheChanged = true;
             return entry;
+        }
+
+        static readonly Regex YamlScriptGuid = new(@"guid:\s*([0-9a-f]{32})", RegexOptions.Compiled);
+        static readonly Regex YamlCampo = new(@"^  (\w+):\s*(\S*)\s*$", RegexOptions.Compiled);
+
+        /// Campos de componentes marcados con [NarrativeKey(Signal, Rol = Emite/Escucha)], por GUID
+        /// de su script. Así el índice sabe que el narrativeEventKey de PartyMembershipSignal ESCUCHA
+        /// (se une al grupo) y el de un emisor EMITE, aunque el campo se llame igual.
+        static class CamposConRol
+        {
+            static Dictionary<string, Dictionary<string, SignalRole>> _porGuid;
+            static string _firma;
+
+            public static string Firma { get { Construir(); return _firma; } }
+
+            public static Dictionary<string, SignalRole> De(string guid)
+            {
+                Construir();
+                return _porGuid.TryGetValue(guid, out var d) ? d : null;
+            }
+
+            static void Construir()
+            {
+                if (_porGuid != null) return;
+                _porGuid = new Dictionary<string, Dictionary<string, SignalRole>>(StringComparer.Ordinal);
+                var firma = new List<string>();
+                foreach (var campo in TypeCache.GetFieldsWithAttribute<NarrativeKeyAttribute>())
+                {
+                    var attr = (NarrativeKeyAttribute)Attribute.GetCustomAttribute(campo, typeof(NarrativeKeyAttribute));
+                    if (attr == null || attr.Kind != NarrativeKeyKind.Signal || attr.Rol == SignalRole.Ninguno) continue;
+                    var tipo = campo.DeclaringType;
+                    if (tipo == null || !typeof(MonoBehaviour).IsAssignableFrom(tipo)) continue;
+                    foreach (var g in AssetDatabase.FindAssets($"t:MonoScript {tipo.Name}"))
+                    {
+                        var ms = AssetDatabase.LoadAssetAtPath<MonoScript>(AssetDatabase.GUIDToAssetPath(g));
+                        if (ms == null || ms.GetClass() != tipo) continue;
+                        if (!_porGuid.TryGetValue(g, out var d)) _porGuid[g] = d = new Dictionary<string, SignalRole>(StringComparer.Ordinal);
+                        d[campo.Name] = attr.Rol;
+                        firma.Add($"{g}.{campo.Name}={attr.Rol}");
+                    }
+                }
+                firma.Sort(StringComparer.Ordinal);
+                _firma = string.Join(";", firma);
+            }
         }
 
         static readonly Regex CsRaise = new(@"RaiseCustom\(\s*""([A-Za-z0-9_:\-]+)""", RegexOptions.Compiled);

@@ -60,6 +60,29 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
     /// <summary>ISceneBoundUIHideGuard: mientras el popup esté en pantalla, no se apaga por cambio de escena.</summary>
     public bool BlocksSceneHide() => _isShowing;
 
+    /// El popup activo, para enseñar en él otros avisos (el informe de fin de batalla, INC-470).
+    public static AbilityUnlockPopupUI Instancia { get; private set; }
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetInstancia() => Instancia = null;
+#endif
+
+    public bool EstaEnPantalla => _isShowing;
+
+    /// <summary>
+    /// Enseña en este mismo popup un aviso cualquiera (título, texto, icono opcional) durante
+    /// 'segundos'. Lo usan otros sistemas para no crear un popup nuevo con el mismo aspecto
+    /// (INC-470: el informe de fin de batalla). No guarda flag de «ya visto».
+    /// </summary>
+    public void MostrarAviso(string titulo, string texto, Sprite icono, float segundos)
+    {
+        _pendingAbility = null;
+        _pendingAbilityKey = null;
+        _pendingSpell = null;
+        SetTexts(titulo, texto, icono);
+        AnimateIn(segundos);
+    }
+
     void Awake()
     {
         _sceneBoundUI = GetComponent<SceneBoundUI>();
@@ -69,6 +92,7 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     void OnEnable()
     {
+        Instancia = this;
         ProfileReadyDiagnostics.RegisterSubscriber(nameof(AbilityUnlockPopupUI));
         GameBootService.OnProfileReady += HandleProfileReady;
         UnlockService.OnAbilityUnlocked += HandleAbilityUnlocked;
@@ -84,6 +108,7 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     void OnDisable()
     {
+        if (Instancia == this) Instancia = null;
         GameBootService.OnProfileReady -= HandleProfileReady;
         UnlockService.OnAbilityUnlocked -= HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey -= HandleAbilityUnlockedKey;
@@ -251,7 +276,9 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (abilityIcon != null) { abilityIcon.sprite = icon; abilityIcon.enabled = icon != null; }
     }
 
-    private void AnimateIn()
+    private void AnimateIn() => AnimateIn(displayDuration);
+
+    private void AnimateIn(float segundos)
     {
         if (popupRoot == null)
         {
@@ -276,12 +303,12 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (popupCanvasGroup != null)
             popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
 
-        _autoDismissCoroutine = StartCoroutine(AutoDismiss());
+        _autoDismissCoroutine = StartCoroutine(AutoDismiss(segundos));
     }
 
-    private IEnumerator AutoDismiss()
+    private IEnumerator AutoDismiss(float segundos)
     {
-        yield return new WaitForSecondsRealtime(displayDuration);
+        yield return new WaitForSecondsRealtime(segundos);
         HidePopup();
     }
 

@@ -159,12 +159,6 @@ public class NPCSimpleAnimator : MonoBehaviour
     private Quaternion _targetRotation;
     private float _rotationVelocity;
 
-    // Velocidades del NPC para normalizar InputMagnitude con mapa de dos segmentos:
-    //   agentSpeed == walkSpeed → 0.5 (zona walk del blend tree)
-    //   agentSpeed == runSpeed  → 1.0 (zona run del blend tree)
-    private float _walkSpeed = 1.5f;
-    private float _runSpeed  = 4f;
-
     // ✅ Anti-spam para animaciones de idle
     private float _lastBattleIdleTime = -999f;
     private const float BattleIdleCooldown = 0.5f; // Mínimo 0.5s entre llamadas (antes 0.3s)
@@ -348,28 +342,10 @@ public class NPCSimpleAnimator : MonoBehaviour
         _lastPosition = transform.position;
         _targetRotation = transform.rotation;
 
-        var behaviourMgr = GetComponent<Game.NPC.NPCBehaviourManagerV2>();
-        if (behaviourMgr != null && behaviourMgr.Configuration != null)
-        {
-            // FIX (1 sep 2026) — INC-096/INC-097 seguían reproduciéndose en juego pese al fix del
-            // 25 ago: el blend walk/run se normalizaba contra Configuration.walkSpeed/runSpeed
-            // (1.5/4 en los prefabs de party — Estela, Liam), pensados para NPCs ambientales, y
-            // nunca se sincronizó con las velocidades reales que FollowPlayerState usa para mover
-            // al NavMeshAgent de un compañero (NPCPartyConfig.velocidadCaminando/velocidadCorriendo
-            // = 5/10, y hasta 25 durante el catch-up dinámico de sprint). Con el techo del blend en
-            // 4, cualquier velocidad real por encima de eso — que es casi siempre que el compañero
-            // se mueve, incluso andando — se clampaba (Mathf.Clamp01 en SyncWithNavMeshAgent) a
-            // normalizedSpeed=1.0: las piernas animan al ritmo fijo de "correr al máximo" mientras
-            // el cuerpo se desliza por el NavMesh a una velocidad mucho más alta y variable — el
-            // patinazo/trompicón reportado tanto andando despacio como esprintando. Si el NPC tiene
-            // partyConfig asignado, usamos sus velocidades reales de seguimiento en vez de las
-            // genéricas de Configuration.
-            var partyCfg = behaviourMgr.Configuration.partyConfig;
-            float walkSrc = partyCfg != null ? partyCfg.walkSpeed : behaviourMgr.Configuration.walkSpeed;
-            float runSrc  = partyCfg != null ? partyCfg.runSpeed  : behaviourMgr.Configuration.runSpeed;
-            _walkSpeed = Mathf.Max(0.1f, walkSrc);
-            _runSpeed  = Mathf.Max(_walkSpeed + 0.1f, runSrc);
-        }
+        // La animación de andar ya no depende de las velocidades de la configuración (walkSpeed,
+        // runSpeed, partyConfig): se calcula con la velocidad real en m/s, igual para todos. Con
+        // las de party (5 y 10 m/s), Oliver andando a 2 m/s daba 0,2 en el blend tree y se
+        // deslizaba sin mover las piernas. Ver NavMeshAgentUtility.FactorDeLocomocion (INC-466).
 
         // Bind to interactable if exists
         if (_interactable != null)
@@ -2288,16 +2264,11 @@ public class NPCSimpleAnimator : MonoBehaviour
 
         if (!AllowManualMovement)
         {
-            // Mapa de dos segmentos para que el blend tree reciba valores correctos:
-            //   0 m/s        → 0.0  (idle)
-            //   walkSpeed    → 0.5  (zona walk del blend tree)
-            //   runSpeed     → 1.0  (zona run del blend tree)
-            float normalizedSpeed;
-            if (agentSpeed <= _walkSpeed)
-                normalizedSpeed = (agentSpeed / _walkSpeed) * 0.5f;
-            else
-                normalizedSpeed = 0.5f + ((agentSpeed - _walkSpeed) / (_runSpeed - _walkSpeed)) * 0.5f;
-            normalizedSpeed = Mathf.Clamp01(normalizedSpeed);
+            // El mismo criterio que todos los estados y secuencias: ver
+            // NavMeshAgentUtility.FactorDeLocomocion (INC-466). Antes aquí había un mapa propio con
+            // la velocidad de andar y correr del animador, que peleaba cada frame con el de
+            // FollowPlayerState y dejaba a Oliver deslizándose con las piernas casi quietas.
+            float normalizedSpeed = Game.NPC.Common.NavMeshAgentUtility.FactorDeLocomocion(navAgent);
 
             // Apply to animation
             SetMovementSpeed(normalizedSpeed);

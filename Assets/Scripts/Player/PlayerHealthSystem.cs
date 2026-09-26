@@ -92,6 +92,9 @@ public class PlayerHealthSystem : MonoBehaviour
     private float _lastNotifiedHealth;
     
     // Propiedades públicas usando GameBootProfile
+    // Lista reutilizada para no reservar memoria en cada golpe.
+    private readonly System.Collections.Generic.List<IFiltroDeDano> _filtrosDeDano = new();
+
     public bool IsAlive => _currentHp > 0 && !_isDead;
     public bool IsInvulnerable => _isInvulnerable || Time.time < _invulnerableUntil;
     public float CurrentHealth => _currentHp;
@@ -268,6 +271,14 @@ public class PlayerHealthSystem : MonoBehaviour
         // una secuencia que se supone segura.
         if (_actionManager != null && _actionManager.Top == ActionMode.Cinematic) return false;
         if (IsInvulnerable && !ignoreInvulnerability) return false;
+
+        // Reglas del jugador sobre el golpe (su defensa, ver CombateDeWill; INC-470). Como en
+        // Damageable, pero aquí un golpe nunca cura: si queda en 0 o menos, no hace nada.
+        GetComponentsInParent(true, _filtrosDeDano);
+        for (int i = 0; i < _filtrosDeDano.Count; i++)
+            damageAmount = _filtrosDeDano[i].Filtrar(damageAmount, null);
+        _filtrosDeDano.Clear();
+        if (damageAmount <= 0f) return false;
 
         float oldHealth = _currentHp;
         _currentHp = Mathf.Max(0f, oldHealth - damageAmount);

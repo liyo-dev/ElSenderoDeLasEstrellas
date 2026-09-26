@@ -181,7 +181,8 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         if (GUI.Button(new Rect(x + 198f, 226f, 176f, 28f), "Reiniciar cooldowns"))
             _caster.ResetAllCooldowns();
 
-        GUI.Label(new Rect(x + 16f, 258f, PanelWidth - 32f, 22f), "HABILIDADES DE PRUEBA · solo afectan a Will aquí");
+        GUI.Label(new Rect(x + 16f, 258f, PanelWidth - 32f, 22f),
+            $"HABILIDADES DE PRUEBA · Maná: {GetManaReadout()}");
         bool canEditAbilities = _actionManager != null;
         GUI.enabled = canEditAbilities;
         DrawAbilityToggle(new Rect(x + 16f, 282f, 108f, 30f), "Magia", 0);
@@ -278,9 +279,34 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
 
     private void RefillTestResources()
     {
-        if (_manaPool != null) _manaPool.Refill(_manaPool.Max);
+        if (_manaPool != null)
+        {
+            if (_manaPool.Max <= 0f)
+            {
+                float highestEquippedCost = 0f;
+                for (int i = 0; i < _equipped.Length; i++)
+                {
+                    if (_equipped[i] != null)
+                        highestEquippedCost = Mathf.Max(highestEquippedCost, _equipped[i].manaCost);
+                }
+
+                float testMaxMana = Mathf.Max(50f, highestEquippedCost * 2f);
+                _manaPool.Init(testMaxMana, testMaxMana);
+            }
+            else
+            {
+                _manaPool.Refill(_manaPool.Max);
+            }
+        }
+
         if (_specialCharge != null) _specialCharge.SetCharge(_specialCharge.MaxCharge);
-        _status = "Maná y carga especial restaurados.";
+        _status = $"Recursos listos · Maná {GetManaReadout()}.";
+    }
+
+    private string GetManaReadout()
+    {
+        if (_manaPool == null) return "sin ManaPool";
+        return $"{Mathf.CeilToInt(_manaPool.Current)}/{Mathf.CeilToInt(_manaPool.Max)}";
     }
 
     private void SetOpen(bool open)

@@ -327,6 +327,10 @@ public class DayNightCycle : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] private float rainSkyboxTintBlend = 0.6f;
     [Tooltip("Multiplicador de _Intensity del skybox mientras llueve a tope (1 = sin cambio). Baja el brillo del cielo para que combine con la luz direccional atenuada (rainLightIntensityMultiplier) en vez de quedarse tan luminoso como en un periodo despejado.")]
     [SerializeField, Range(0f, 1f)] private float rainSkyboxIntensityMultiplier = 0.6f;
+    [Tooltip("Cuánto se encapota el cielo con lluvia a tope (_Overcast del shader Quibli/Skybox): 0 = el degradado del periodo, solo más oscuro; 1 = gris plano de cielo de lluvia. rainSkyboxTint solo multiplica el degradado, así que por sí solo no lo vuelve gris.")]
+    [SerializeField, Range(0f, 1f)] private float rainSkyOvercast = 0.9f;
+    [Tooltip("Color del cielo encapotado con lluvia a tope. Se escala con el brillo del periodo (tinte e intensidad base × rainSkyboxIntensityMultiplier), así que de noche sale oscuro y a mediodía un gris medio.")]
+    [SerializeField] private Color rainSkyOvercastColor = new Color(0.62f, 0.66f, 0.72f);
 
     [Header("Clima - Niebla ocasional")]
     [Tooltip("Prefab opcional de niebla volumétrica (partículas) para el evento de niebla ocasional. Si es null, solo se espesa la niebla global (RenderSettings.fog), sin partículas.")]
@@ -461,6 +465,11 @@ public class DayNightCycle : MonoBehaviour
     private Material _runtimeSkybox;
     private static readonly int SkyboxTintId = Shader.PropertyToID("_Tint");
     private static readonly int SkyboxIntensityId = Shader.PropertyToID("_Intensity");
+    private static readonly int SkyboxOvercastId = Shader.PropertyToID("_Overcast");
+    private static readonly int SkyboxOvercastColorId = Shader.PropertyToID("_OvercastColor");
+    // Último _Overcast escrito, para dejarlo a 0 una sola vez cuando deja de llover (LateUpdate
+    // sale antes de tiempo sin lluvia ni niebla y si no se quedaría el último valor pequeño).
+    private float _lastSkyOvercast;
     private static readonly int SkyboxExponentId = Shader.PropertyToID("_Exponent");
     private static readonly int SkyboxDirectionYawId = Shader.PropertyToID("_DirectionYaw");
     private static readonly int SkyboxDirectionPitchId = Shader.PropertyToID("_DirectionPitch");
@@ -792,6 +801,12 @@ public class DayNightCycle : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
+        if (_rainDarkenAmount <= 0f && _lastSkyOvercast > 0f && _runtimeSkybox != null)
+        {
+            _runtimeSkybox.SetFloat(SkyboxOvercastId, 0f);
+            _lastSkyOvercast = 0f;
+        }
+
         if (_rainDarkenAmount <= 0f && _mistAmount <= 0f) return;
 
         if (_rainDarkenAmount > 0f && directionalLight != null)
@@ -817,6 +832,14 @@ public class DayNightCycle : MonoBehaviour
             float rainedIntensity = _baseSkyboxIntensity * rainSkyboxIntensityMultiplier;
             _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(_baseSkyboxTint, rainedTint, _rainDarkenAmount));
             _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(_baseSkyboxIntensity, rainedIntensity, _rainDarkenAmount));
+
+            // Encapotado: el tinte de arriba solo oscurece el azul; esto lo lleva a gris.
+            float periodBrightness = (0.2126f * _baseSkyboxTint.r + 0.7152f * _baseSkyboxTint.g + 0.0722f * _baseSkyboxTint.b) * rainedIntensity;
+            Color overcastColor = rainSkyOvercastColor * periodBrightness;
+            overcastColor.a = 1f;
+            _lastSkyOvercast = rainSkyOvercast * _rainDarkenAmount;
+            _runtimeSkybox.SetColor(SkyboxOvercastColorId, overcastColor);
+            _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
         }
 
         if (controlFog)

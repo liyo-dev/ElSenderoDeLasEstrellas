@@ -176,6 +176,7 @@ namespace Game.NPC
 
             icono.SeguirA(npc);
             icono.OcultarDuranteDialogos = false; // se discute mientras Oliver habla
+            icono.OcultarDuranteSecuencias = false; // y la discusión forma parte de su secuencia
             icono.ShowPersistentIcon(iconoDePelea);
             return icono;
         }

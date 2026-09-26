@@ -28,8 +28,17 @@ public class Damageable : MonoBehaviour, IDamageable
     public event Action<float>            OnDamaged;   // amount aplicado
     public event Action<float, GameObject> OnDamagedBy; // amount + instigador (puede ser null)
     public event Action                    OnDied;
+    /// Se ha curado (cantidad realmente recuperada). Para barras de vida y efectos.
+    public event Action<float>             OnHealed;
 
-    void Awake() => Current = Mathf.Max(1f, maxHealth);
+    // Reglas de «qué pasa con un golpe» de este mismo objeto (ver IFiltroDeDano).
+    private IFiltroDeDano[] _filtros;
+
+    void Awake()
+    {
+        Current = Mathf.Max(1f, maxHealth);
+        _filtros = GetComponents<IFiltroDeDano>();
+    }
 
     public void TakeDamage(float amount) => TakeDamage(amount, null);
 
@@ -50,6 +59,18 @@ public class Damageable : MonoBehaviour, IDamageable
             Debug.Log($"[Damageable:{name}] 🛡️ Ignorando daño - invulnerable hasta {_invulnerableUntil - Time.time:F2}s");
 #endif
             return;
+        }
+
+        // Reglas del propio objeto: pueden cambiar el golpe, anularlo o convertirlo en curación.
+        if (_filtros != null)
+        {
+            for (int i = 0; i < _filtros.Length; i++)
+            {
+                if (_filtros[i] == null) continue;
+                amount = _filtros[i].Filtrar(amount, instigator);
+                if (amount < 0f) { Heal(-amount); return; }
+                if (amount == 0f) return;
+            }
         }
 
         float oldHealth = Current;
@@ -91,10 +112,12 @@ public class Damageable : MonoBehaviour, IDamageable
         if (!IsAlive) return;
         if (amount <= 0f) return;
 
+        float antes = Current;
         Current = Mathf.Min(Max, Current + amount);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (debugLogs) Debug.Log($"[Damageable:{name}] +{amount:0.##} -> {Current:0.##}/{Max}");
 #endif
+        if (Current > antes) OnHealed?.Invoke(Current - antes);
     }
 
     /// <summary>Método para que PlayerState pueda establecer máximo y actual simultáneamente</summary>

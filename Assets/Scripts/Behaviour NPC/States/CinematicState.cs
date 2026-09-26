@@ -350,18 +350,8 @@ namespace Game.NPC.States
             if (_hasTeleported || context.Agent == null || context.Animator == null)
                 return;
             
-            // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
-            // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
-            // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
-            // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
-            // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
-            // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
-            // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
-            // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
-            // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
-            // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
-            // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
-            float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+            // Mismo criterio de animación para todos los NPCs: NavMeshAgentUtility.FactorDeLocomocion (INC-466).
+            float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
             context.Animator.SetMovementSpeed(speedFactor);
             
             // ✅ FIX: Rotar hacia la dirección del movimiento para evitar caminar de espaldas
@@ -846,18 +836,8 @@ namespace Game.NPC.States
             // Actualizar animación de movimiento
             if (context.Agent != null && context.Animator != null)
             {
-                // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
-                // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
-                // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
-                // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
-                // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
-                // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
-                // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
-                // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
-                // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
-                // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
-                // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
-                float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent);
+                // Mismo criterio de animación para todos los NPCs: NavMeshAgentUtility.FactorDeLocomocion (INC-466).
+                float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
                 context.Animator.SetMovementSpeed(speedFactor);
             }
             
@@ -1062,27 +1042,43 @@ namespace Game.NPC.States
     
     /// <summary>
     /// Secuencia de escolta: el NPC camina hacia un anchor mientras el jugador le sigue.
-    /// Si el jugador se aleja, el NPC para y vuelve a buscarle antes de reanudar.
+    /// Puede llevar puntos de paso: pasa por ellos en orden antes de ir al destino (el último de
+    /// la ruta), para que siga el camino que se quiere y no el atajo que encuentre el NavMesh.
+    /// Si el jugador se queda atrás, el NPC se para, le mira y le llama (WaitingForRetrievedDialogue)
+    /// cada pocos segundos, y sigue cuando llega. Si el jugador va por delante, no frena.
     /// Se ejecuta dentro de CinematicState para que el Brain no interfiera con el agente.
     /// </summary>
     public class LeadPlayerToAnchorSequence : CinematicSequence
     {
-        private readonly Vector3 _anchorPos;
+        // Puntos por los que pasa, en orden; el último es el destino. Ver INC-465.
+        private readonly Vector3[] _ruta;
+        private int _tramo;
+        private Vector3 _anchorPos => _ruta[_tramo];
+        private bool EnElUltimoTramo => _tramo >= _ruta.Length - 1;
+        // A esta distancia de un punto de paso, en metros, se da por pasado y sigue hacia el
+        // siguiente sin frenar.
+        private const float RADIO_PUNTO_DE_PASO = 1.5f;
         private readonly Transform _player;
         private readonly float _maxDuration;
         private readonly float _escortMaxDist;
         private readonly float _escortResumeDist;
 
         private float _timer;
-        private float _fetchUpdateTimer;
         private float _startupTimer;
         private bool _initialized;
         private bool _startupDone;
-        private bool _fetchingPlayer;
         private float _baseSpeed;
 
-        // Segundos que el guardia espera mirando al jugador antes de empezar a caminar.
-        private const float STARTUP_WAIT = 1.5f;
+        // Segundos que el NPC se queda mirando al jugador antes de echar a andar: lo justo para
+        // que se lea el giro, sin que parezca que no pasa nada. Ver INC-465.
+        private const float STARTUP_WAIT = 0.3f;
+
+        // Si el jugador se queda atrás, el NPC se para, le mira y le llama cada pocos segundos,
+        // y sigue cuando llega. No vuelve andando a buscarle. Ver INC-465.
+        private bool _esperandoAlJugador;
+        private float _siguienteRuta;
+        private float _siguienteLlamada;
+        private const float INTERVALO_LLAMADA = 6f;
 
         /// <summary>
         /// Verdadero cuando el NPC acaba de recuperar al jugador y está esperando que se reproduzca el diálogo.
@@ -1092,8 +1088,16 @@ namespace Game.NPC.States
 
         public LeadPlayerToAnchorSequence(Vector3 anchorPos, Transform player,
             float maxDuration, float escortMaxDist, float escortResumeDist)
+            : this(new[] { anchorPos }, player, maxDuration, escortMaxDist, escortResumeDist) { }
+
+        /// <param name="ruta">Puntos de paso en orden; el último es el destino. No puede estar vacía.</param>
+        public LeadPlayerToAnchorSequence(IReadOnlyList<Vector3> ruta, Transform player,
+            float maxDuration, float escortMaxDist, float escortResumeDist)
         {
-            _anchorPos      = anchorPos;
+            if (ruta == null || ruta.Count == 0)
+                throw new ArgumentException("La ruta de la escolta necesita al menos el destino.", nameof(ruta));
+            _ruta = new Vector3[ruta.Count];
+            for (int i = 0; i < ruta.Count; i++) _ruta[i] = ruta[i];
             _player         = player;
             _maxDuration    = maxDuration;
             _escortMaxDist  = escortMaxDist;
@@ -1209,82 +1213,127 @@ namespace Game.NPC.States
 
             float distToPlayer = Vector3.Distance(context.Transform.position, _player.position);
 
-            if (!_fetchingPlayer)
+            // Punto de paso alcanzado: al siguiente, sin frenar.
+            float distToAnchor = Vector3.Distance(context.Transform.position, _anchorPos);
+            if (!EnElUltimoTramo && distToAnchor < RADIO_PUNTO_DE_PASO)
             {
-                // Comprobar llegada al anchor
-                bool navArrived  = !agent.pathPending && agent.hasPath && agent.remainingDistance < 0.6f;
-                float distToAnchor = Vector3.Distance(context.Transform.position, _anchorPos);
-                bool realArrived = distToAnchor < 0.8f;
-                if (navArrived && realArrived)
-                {
-                    context.Log($"[LeadPlayerToAnchorSequence] Llegada al anchor (navDist={agent.remainingDistance:F2}, realDist={distToAnchor:F2})");
-                    IsCompleted = true; return;
-                }
+                _tramo++;
+                distToAnchor = Vector3.Distance(context.Transform.position, _anchorPos);
+                if (!_esperandoAlJugador) agent.SetDestination(_anchorPos);
+            }
 
-                // Jugador demasiado lejos → ir a buscarlo
-                if (distToPlayer > _escortMaxDist)
+            // Comprobar llegada al anchor
+            bool navArrived  = EnElUltimoTramo && !agent.pathPending && agent.hasPath && agent.remainingDistance < 0.6f;
+            bool realArrived = EnElUltimoTramo && distToAnchor < 0.8f;
+            if (navArrived && realArrived)
+            {
+                context.Log($"[LeadPlayerToAnchorSequence] Llegada al anchor (navDist={agent.remainingDistance:F2}, realDist={distToAnchor:F2})");
+                IsCompleted = true; return;
+            }
+
+            // El jugador va por delante, camino del destino: ni se le espera ni se frena.
+            bool jugadorPorDelante = JugadorPorDelante(context.Transform.position);
+
+            if (_esperandoAlJugador)
+            {
+                if (distToPlayer <= _escortResumeDist || jugadorPorDelante)
                 {
-                    _fetchingPlayer = true;
+                    _esperandoAlJugador = false;
                     agent.speed = _baseSpeed;
-                    // Limpiar la ruta anterior antes de cambiar destino.
-                    // Sin ResetPath el agente navega desde un waypoint intermedio
-                    // de la ruta vieja, provocando el snap visual ("teleport").
-                    agent.ResetPath();
-                    agent.SetDestination(_player.position);
+                    agent.isStopped = false;
+                    agent.SetDestination(_anchorPos);
+                    context.Animator?.TransitionToLocomotion();
                 }
                 else
                 {
-                    // Reducir velocidad progresivamente cuando el jugador se va quedando atrás.
-                    // distToPlayer == _escortResumeDist → velocidad máxima
-                    // distToPlayer == _escortMaxDist   → velocidad mínima (20 %)
-                    float t = Mathf.Clamp01((distToPlayer - _escortResumeDist) / (_escortMaxDist - _escortResumeDist));
-                    agent.speed = Mathf.Lerp(_baseSpeed, _baseSpeed * 0.2f, t);
+                    Vector3 haciaJugador = _player.position - context.Transform.position;
+                    haciaJugador.y = 0f;
+                    if (haciaJugador.sqrMagnitude > 0.01f)
+                        context.Animator?.FaceDirection(haciaJugador.normalized);
+                    if (Time.time >= _siguienteLlamada)
+                        Llamar(context);
+                    return;
                 }
             }
-            else
+            else if (distToPlayer > _escortMaxDist && !jugadorPorDelante)
             {
-                // Actualizar destino hacia el jugador 4 veces/s
-                _fetchUpdateTimer += Time.deltaTime;
-                if (_fetchUpdateTimer >= 0.25f)
-                {
-                    agent.SetDestination(_player.position);
-                    _fetchUpdateTimer = 0f;
-                }
-
-                // Jugador cerca de nuevo → parar y señalar al executor para el diálogo
-                if (distToPlayer <= _escortResumeDist)
-                {
-                    _fetchingPlayer = false;
-                    WaitingForRetrievedDialogue = true;
-                    agent.isStopped = true;
-                }
+                // Se ha quedado atrás: parar, esperarle y llamarle. Ver INC-465.
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                UnityEngine.Debug.Log($"[LeadPlayerToAnchorSequence] '{context.Transform.name}' se para a esperar al jugador: " +
+                    $"está a {distToPlayer:F1} m (máximo {_escortMaxDist:F1}) y a {Vector3.Distance(_player.position, _anchorPos):F1} m " +
+                    $"de la marca, el NPC a {distToAnchor:F1} m. Sigue cuando el jugador esté a {_escortResumeDist:F1} m o por delante.");
+#endif
+                _esperandoAlJugador = true;
+                agent.isStopped = true;
+                context.Animator?.ResetMovement();
+                Llamar(context);
+                return;
             }
+
+            // Si algo le ha quitado la ruta por el camino (otro sistema que le para, un Warp, un
+            // cambio del NavMesh), se la vuelve a pedir en vez de quedarse quieto para siempre.
+            if (!agent.pathPending && !agent.hasPath && Time.time >= _siguienteRuta)
+            {
+                _siguienteRuta = Time.time + 1f;
+                agent.isStopped = false;
+                agent.SetDestination(_anchorPos);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+                UnityEngine.Debug.Log($"[LeadPlayerToAnchorSequence] '{context.Transform.name}' se había quedado sin ruta a mitad de camino; se le vuelve a pedir. Ver INC-465.");
+#endif
+            }
+
+            // Afloja según se va quedando atrás el jugador: a _escortResumeDist, velocidad
+            // normal; a _escortMaxDist, la mínima de andar (más despacio parece que no mueve las
+            // piernas, INC-464). Si el jugador va por delante, velocidad normal.
+            float t = jugadorPorDelante ? 0f
+                : Mathf.Clamp01((distToPlayer - _escortResumeDist) / (_escortMaxDist - _escortResumeDist));
+            float lento = Mathf.Min(_baseSpeed, Mathf.Max(_baseSpeed * 0.2f,
+                Common.NavMeshAgentUtility.VelocidadMinimaAndando));
+            agent.speed = Mathf.Lerp(_baseSpeed, lento, t);
 
             // Animación de movimiento
             if (context.Animator != null && context.Agent != null)
             {
-                // FIX 16 sep 2026 (Raúl: "sí deberían ir igual porque Oliver va genial y me
-                // parece más limpio"): se quita el tope de ComputeWalkGaitSpeedFactor y se pasa
-                // al rango completo, igual que SequenceMovement (el camino que Raúl aprobó ese
-                // mismo día viendo a Oliver). El FIX del 4 sep saturaba el factor a 0.5 para
-                // forzar el clip de caminar, pero ese tope tenía un efecto secundario: el valor
-                // saltaba de 0 a 0.5 en un frame y se quedaba clavado ahí, sin la rampa
-                // Idle→Walk→Run que da la aceleración real del agente. Esa rampa es justo lo que
-                // hace que Oliver se vea bien. Eldran tiene la misma configuración de agente que
-                // Oliver (speed 3.5, acceleration 8, angularSpeed 120), así que debería quedar
-                // idéntico. Si volviera el "trotan en vez de caminar", el tope sigue disponible
-                // en NavMeshAgentUtility.ComputeWalkGaitSpeedFactor().
-                // Se mantiene _baseSpeed (fija) como referencia en vez de context.Agent.speed: este
-                // método reduce agent.speed frame a frame según lo lejos que esté el jugador, y
-                // normalizar contra un divisor que se mueve daría casi siempre ~1.0 (FIX 5 sep 2026).
-                // Lo único que cambia es el helper: la variante SIN tope, la misma que ya usa
-                // FollowPlayerState desde el 9 sep.
-                float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent, _baseSpeed);
+                // Mismo criterio de animación para todos los NPCs: NavMeshAgentUtility.FactorDeLocomocion (INC-466).
+                float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
                 context.Animator.SetMovementSpeed(speedFactor);
 
                 if (context.Agent.velocity.sqrMagnitude > 0.01f)
                     context.Animator.FaceDirection(context.Agent.velocity.normalized);
             }
+        }
+
+        // Gesto con el que el NPC llama al jugador que se ha quedado atrás: levanta el brazo
+        // mientras dice su frase («¡Por aquí, Will!»). Vive en la capa UpperBody del Animator de
+        // los NPCs (NPC_NoWeapon). Raúl, 26 sep 2026: «cuando el NPC al que tengo que seguir diga
+        // "por aquí" o lo que toque, que haga la animación de levantar el brazo».
+        private const string GESTO_LLAMADA = "HandWave01";
+
+        /// El NPC se ha parado a esperar: llama al jugador (frase del executor + brazo en alto).
+        private void Llamar(Common.NPCStateContext context)
+        {
+            WaitingForRetrievedDialogue = true;
+            _siguienteLlamada = Time.time + INTERVALO_LLAMADA;
+            context.Animator?.PlaySocialGesture(GESTO_LLAMADA);
+        }
+
+        /// Lo que le queda de ruta a quien está en 'pos' si va por el punto de paso 'desde' y
+        /// sigue la ruta hasta el destino (en línea recta entre puntos).
+        private float RestoDeRuta(Vector3 pos, int desde)
+        {
+            float d = Vector3.Distance(pos, _ruta[desde]);
+            for (int i = desde + 1; i < _ruta.Length; i++) d += Vector3.Distance(_ruta[i - 1], _ruta[i]);
+            return d;
+        }
+
+        /// El jugador va por delante si le queda menos camino hasta el destino que al NPC, aunque
+        /// se haya saltado algún punto de paso.
+        private bool JugadorPorDelante(Vector3 posNpc)
+        {
+            float npc = RestoDeRuta(posNpc, _tramo);
+            for (int k = _tramo; k < _ruta.Length; k++)
+                if (RestoDeRuta(_player.position, k) < npc) return true;
+            return false;
         }
 
         /// <summary>
@@ -1294,6 +1343,8 @@ namespace Game.NPC.States
         public void AcknowledgePlayerRetrieved(Common.NPCStateContext context)
         {
             WaitingForRetrievedDialogue = false;
+            // Esperando parado a que llegue el jugador: la llamada ya se ha hecho, sigue esperando.
+            if (_esperandoAlJugador) return;
             var agent = context.Agent;
             if (agent != null && agent.enabled && agent.isOnNavMesh)
             {

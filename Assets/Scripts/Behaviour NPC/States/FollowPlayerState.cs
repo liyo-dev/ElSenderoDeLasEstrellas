@@ -57,21 +57,10 @@ namespace Game.NPC.States
         private float _smoothedPlayerSpeed;
         private bool _speedSampleInitialized;
 
-        // FIX (9 sept 2026) — incidencia "tirones"/animación a trompicones en Estela y Liam
-        // siguiendo al jugador, en contraste con el guardia (LeadPlayerToAnchorSequence, que ya
-        // anima limpio desde el fix del 5 sept). Causa raíz: UpdateMovementAnimation() (heredado
-        // de NPCStateBase) usa NavMeshAgentUtility.ComputeSpeedFactor(agent) sin más, que divide
-        // por agent.speed -- y agent.speed se reasigna cada frame más abajo (SetAgentSpeed),
-        // saltando de golpe entre walkSpeed y una velocidad de catch-up dinámica. La velocidad
-        // REAL del NavMeshAgent tarda en alcanzar ese nuevo valor (acelera progresivamente), así
-        // que justo tras el salto el cociente vel/agent.speed se desestabiliza un instante --
-        // exactamente el mismo mecanismo ya diagnosticado y arreglado para la escolta de Eldran
-        // (ver ComputeWalkGaitSpeedFactor(agent, referenceSpeed) en NavMeshAgentUtility.cs), pero
-        // nunca portado a este script. _gaitReferenceSpeed es una copia de la velocidad objetivo
-        // que se deja acelerar/decelerar progresivamente (mismo ritmo que agent.acceleration, el
-        // que de verdad usa el NavMeshAgent) en vez de saltar de golpe, y se usa como divisor en
-        // vez de agent.speed -- ver UpdateFollowGaitAnimation().
-        private float _gaitReferenceSpeed;
+
+        // Frenado automático del agente tal y como estaba al entrar (se apaga al ir al lado de Will).
+        private bool _autoBrakingOriginal;
+        private bool _autoBrakingGuardado;
         private const float PLAYER_SPEED_SMOOTH_RATE = 6f;   // /s, más alto = se adapta más rápido
         // Deltas de posición del jugador por encima de esta velocidad implícita se consideran un
         // teletransporte/warp (no locomoción real) y se ignoran para no disparar la media hacia un
@@ -179,6 +168,12 @@ namespace Game.NPC.States
 
         public override void OnEnter(NPCStateContext context)
         {
+            if (context.Agent != null)
+            {
+                _autoBrakingOriginal = context.Agent.autoBraking;
+                _autoBrakingGuardado = true;
+            }
+
             base.OnEnter(context);
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -205,7 +200,6 @@ namespace Game.NPC.States
             _isFollowingSticky   = false;
             _speedSampleInitialized = false;
             _smoothedPlayerSpeed = 0f;
-            _gaitReferenceSpeed = 0f;
 
             // Ver NPCStateContext.IsActivelyFollowingPlayer: cubre también a compañeros
             // temporales (p.ej. el NPC de Will) que nunca pasan por PlayerParty.AddMember, para
@@ -305,6 +299,11 @@ namespace Game.NPC.States
             }
 
             float distance  = Vector3.Distance(context.Transform.position, context.Player.position);
+            // Al lado del jugador (quedarseDetras = false): las distancias se miden a su puesto
+            // junto a Will, no a Will; si no, se para a distanciaParaPararse de él y se queda atrás.
+            bool alLado = _config != null && !_config.quedarseDetras;
+            float alPuesto = alLado ? DistanciaPlana(context.Transform.position, PuestoAlLado(context)) : distance;
+            bool jugadorQuieto = _smoothedPlayerSpeed < 0.3f;
             float stopDist  = _config?.distanciaParaPararse ?? DEFAULT_STOP_DISTANCE;
             float runDist   = _config?.distanciaParaCorrer  ?? DEFAULT_RUN_DISTANCE;
             float walkSpeed = _config?.velocidadCaminando   ?? DEFAULT_WALK_SPEED;
@@ -336,7 +335,7 @@ namespace Game.NPC.States
                 }
             }
 
-            if (distance <= stopDist)
+            if (alLado ? (jugadorQuieto && alPuesto <= PUESTO_LLEGADA) : distance <= stopDist)
             {
                 _isFollowingSticky = false; // alcanzado al jugador: rearma la histéresis de arranque
                 if (!context.Agent.isStopped || context.Agent.updatePosition)
@@ -366,7 +365,8 @@ namespace Game.NPC.States
             _isFollowingSticky = _isFollowingSticky
                 ? true // seguimos moviéndonos: la rama "distance <= stopDist" de más arriba ya
                        // corta el movimiento en cuanto realmente se alcanza al jugador
-                : (playerIsMoving || distance > stopDist * 1.2f);
+                : (alLado ? (playerIsMoving || alPuesto > PUESTO_LLEGADA * 1.5f)
+                          : (playerIsMoving || distance > stopDist * 1.2f));
 
             if (_isFollowingSticky)
             {
@@ -399,14 +399,22 @@ namespace Game.NPC.States
                 float speedMargin = Mathf.Lerp(1.15f, 1.6f, catchUpT);
                 float dynamicRunSpeed = Mathf.Clamp(_smoothedPlayerSpeed * speedMargin, runSpeed, runSpeed * 2.5f);
                 float targetAgentSpeed = distance > runDist ? dynamicRunSpeed : walkSpeed;
+                if (alLado && alPuesto <= runDist)
+                {
+                    // Al paso de Will, un poco más rápido cuanto más lejos de su puesto: con
+                    // velocidadCaminando fija o se adelanta y frena, o se queda atrás.
+                    targetAgentSpeed = jugadorQuieto
+                        ? walkSpeed
+                        : Mathf.Clamp(_smoothedPlayerSpeed * Mathf.Lerp(1f, 1.4f, alPuesto / Mathf.Max(0.5f, runDist)),
+                                      Common.NavMeshAgentUtility.VelocidadMinimaAndando,
+                                      Mathf.Max(walkSpeed, dynamicRunSpeed));
+                }
                 SetAgentSpeed(context.Agent, targetAgentSpeed);
 
-                // _gaitReferenceSpeed sigue a targetAgentSpeed con el mismo ritmo de aceleración
-                // que acaba de recibir el propio NavMeshAgent (SetAgentSpeed ya escala
-                // agent.acceleration junto con la velocidad) en vez de saltar de golpe -- ver
-                // comentario de la declaración del campo, más arriba.
-                _gaitReferenceSpeed = Mathf.MoveTowards(_gaitReferenceSpeed, targetAgentSpeed,
-                    context.Agent.acceleration * Time.deltaTime);
+                // Al lado de Will el destino es un puesto que se mueve con él y está siempre a
+                // uno o dos metros: con el frenado automático del agente, iba frenando todo el
+                // rato y avanzaba arrastrando los pies. Ver INC-464.
+                if (alLado) context.Agent.autoBraking = false;
 
                 _pathUpdateTimer += Time.deltaTime;
                 if (_pathUpdateTimer >= PATH_UPDATE_INTERVAL)
@@ -430,18 +438,16 @@ namespace Game.NPC.States
         }
 
         /// <summary>
-        /// Igual que NPCStateBase.UpdateMovementAnimation(), pero usando _gaitReferenceSpeed (una
-        /// velocidad de referencia suavizada) en vez de agent.speed en crudo como divisor -- ver
-        /// comentario de _gaitReferenceSpeed. Solo para el seguimiento normal por NavMesh; el
-        /// seguimiento especial (vuelo/nado/escalada/plataformas) ya tiene su propio cálculo en
-        /// UpdateSpecialModeAnimation().
+        /// Animación del seguimiento normal por NavMesh, con el criterio común de
+        /// NavMeshAgentUtility.FactorDeLocomocion (INC-466). El seguimiento especial
+        /// (vuelo/nado/escalada/plataformas) tiene su propio cálculo en UpdateSpecialModeAnimation().
         /// </summary>
         private void UpdateFollowGaitAnimation(NPCStateContext context)
         {
             if (context.Agent == null || !context.Agent.isOnNavMesh || context.Animator == null)
                 return;
 
-            float speedFactor = Common.NavMeshAgentUtility.ComputeSpeedFactor(context.Agent, _gaitReferenceSpeed);
+            float speedFactor = Common.NavMeshAgentUtility.FactorDeLocomocion(context.Agent);
             if (context.Config != null && speedFactor > 0f)
             {
                 speedFactor = Mathf.Max(speedFactor, context.Config.minAnimSpeed);
@@ -476,8 +482,12 @@ namespace Game.NPC.States
 
                     if (context.Agent != null && context.Agent.isActiveAndEnabled)
                     {
-                        if (context.Agent.isOnNavMesh) context.Agent.ResetPath();
-                        context.Agent.isStopped = true;
+                        // isStopped solo es válido con el agente colocado en el NavMesh (ver INC-454).
+                        if (context.Agent.isOnNavMesh)
+                        {
+                            context.Agent.ResetPath();
+                            context.Agent.isStopped = true;
+                        }
                         context.Agent.updatePosition = false;
                         context.Agent.updateRotation = false;
                     }
@@ -785,7 +795,7 @@ namespace Game.NPC.States
                     context.Agent.nextPosition = context.Transform.position;
                 }
 
-                context.Agent.isStopped = true;
+                if (context.Agent.isOnNavMesh) context.Agent.isStopped = true;
                 context.Agent.updateRotation = false;
             }
         }
@@ -945,6 +955,27 @@ namespace Game.NPC.States
                 Mathf.Clamp01(PLAYER_SPEED_SMOOTH_RATE * dt));
         }
 
+        private const float PUESTO_LLEGADA = 0.7f;
+
+        /// Puesto junto al jugador cuando el compañero va a su lado: en el lado y a la distancia
+        /// de ladoPreferidoDialogo / distanciaLateralDialogo, algo adelantado según lo rápido que
+        /// va Will para que no llegue siempre tarde.
+        private Vector3 PuestoAlLado(NPCStateContext context)
+        {
+            Transform p = context.Player;
+            float lado = _config.ladoPreferidoDialogo == DialoguePositionSide.Left ? -1f : 1f;
+            Vector3 derecha = p.right; derecha.y = 0f; derecha.Normalize();
+            Vector3 frente = p.forward; frente.y = 0f; frente.Normalize();
+            float adelanto = Mathf.Min(_smoothedPlayerSpeed * 0.35f, 1.5f);
+            return p.position + derecha * (lado * _config.distanciaLateralDialogo) + frente * adelanto;
+        }
+
+        private static float DistanciaPlana(Vector3 a, Vector3 b)
+        {
+            a.y = 0f; b.y = 0f;
+            return Vector3.Distance(a, b);
+        }
+
         private void RotateTowardsPlayer(NPCStateContext context)
         {
             if (context.Player == null) return;
@@ -961,16 +992,18 @@ namespace Game.NPC.States
         private void UpdateDestination(NPCStateContext context, float followDist)
         {
             bool preferBehind = _config?.quedarseDetras ?? true;
+            if (!preferBehind && _config != null)
+            {
+                Vector3 puesto = PuestoAlLado(context);
+                if (NavMesh.SamplePosition(puesto, out NavMeshHit hitLado, 2f, NavMesh.AllAreas))
+                {
+                    if (Vector3.Distance(context.Agent.destination, hitLado.position) > 0.3f)
+                        context.Agent.SetDestination(hitLado.position);
+                    return;
+                }
+            }
 
-            // FIX: este cálculo daba el MISMO punto exacto detrás del jugador a todos los
-            // compañeros (sin spread por índice), a diferencia de PlayerParty.GetFormationPosition
-            // (ya usado para teletransportar al equipo en formación — TeleportMemberToPlayer), que sí
-            // reparte a cada miembro en abanico (±60° detrás del jugador, vía CalculateFormationAngle).
-            // NPCPartyConfig.offsetLateral existía para esto mismo ("para que no esté exactamente
-            // detrás") pero nunca se leía en ningún sitio. Con 2+ compañeros siguiendo a pie
-            // convergían en el mismo punto y se empujaban/superponían entre sí — visualmente uno
-            // parecía ir "a cuestas" del otro. Se reutiliza la formación ya validada en vez de
-            // reimplementar el cálculo aquí.
+            // Detrás: el puesto de cada uno en la formación del grupo (abanico), no todos al mismo punto.
             Vector3 targetPos = preferBehind && _partyMember != null
                 ? _partyMember.GetFormationPosition()
                 : context.Player.position + (context.Transform.position - context.Player.position).normalized * followDist;
@@ -1025,6 +1058,11 @@ namespace Game.NPC.States
         public override void OnExit(NPCStateContext context)
         {
             context.IsActivelyFollowingPlayer = false;
+            if (_autoBrakingGuardado && context.Agent != null)
+            {
+                context.Agent.autoBraking = _autoBrakingOriginal;
+                _autoBrakingGuardado = false;
+            }
 
             if (_inSpecialFollow)
             {

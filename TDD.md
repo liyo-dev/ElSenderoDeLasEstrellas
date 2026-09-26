@@ -2811,6 +2811,56 @@ Contexto: el commit `a0f8c1851` (posterior) sí creó una copia de los valores d
 
 ---
 
+### 19.5 Auditoría de rendimiento, buenas prácticas y mantenimiento — 26 de septiembre de 2026
+
+**Ámbito:** estado del árbol de trabajo del 26 sep 2026. Se revisaron estáticamente los patrones de rendimiento de los callbacks por frame en Assets/Scripts y NarrativeGraph/Runtime, las reglas de AGENTS.md y TDD.md § 10/§ 12, y manualmente los flujos de escolta narrativa y cierre de combate añadidos o modificados en esta tanda. Assets/Scripts contiene 618 archivos C# y 169.302 líneas. El árbol ya tenía 87 archivos versionados modificados (1.938 inserciones y 959 borrados), además de archivos nuevos sin seguimiento; los hallazgos corresponden a ese snapshot, que puede incluir cambios aún en curso.
+
+**Método y límites:** barrido de llamadas de búsqueda, física, componentes, asignaciones, corrutinas, logs y SetActive dentro de Update/LateUpdate/FixedUpdate; lectura de los flujos referenciados abajo; consulta de Logs/Editor.log y del ensamblado generado. No se ejecutaron pruebas ni se midió un Player con Unity Profiler, así que esta pasada identifica riesgos estáticos pero no atribuye milisegundos ni consumo de memoria a una escena real. El validador cruzado Interactive ↔ Grafo no se pudo ejecutar: la sesión no expone ventanas nativas de Unity. Su código se comprobó como lectura de AssetDatabase más salida a consola/diálogo, sin escrituras.
+
+#### Veredicto
+
+No apareció ningún Physics.OverlapSphere asignador en el runtime auditado. El único RaycastAll encontrado está dentro de un diagnóstico de Editor/Development al inicializar NPCs con actividad fija, fuera de los callbacks por frame. Las búsquedas de escena que aparecieron en callbacks están acotadas o cacheadas salvo BillboardUI.LateUpdate: si no encuentra una cámara, vuelve a buscar Camera.main cada frame. INC-474 también recoge el coste repetido de la UI del minimapa y MenuNavigator.
+
+El ensamblado Assembly-CSharp.dll se actualizó a las 14:02, después de la última edición de scripts observada a las 14:00, y el Editor.log no contiene errores CS posteriores. El mismo log conserva un fallo anterior CS1739 en GuiarJugadorNode por el argumento esperaInicial, que ya no aparece en el código actual. La compilación actual aún deja avisos de APIs de Unity obsoletas, directivas DEVELOPMENT_BUILD obsoletas y campos serializados sin uso; se registran como deuda menor en INC-476.
+
+#### Hallazgos nuevos
+
+##### Alta — INC-471: una interrupción del cierre de batalla puede dejar el control bloqueado
+
+Assets/Scripts/Battle/CierreDeBatalla.cs ejecuta los pasos secuencialmente y solo llama a Terminar al llegar al final normal del enumerador. BossArenaController inicia ese enumerador en una corrutina suya; si se desactiva o descarga el GameObject que posee la corrutina, Unity puede detenerla antes del bucle final. La celebración ya ha deshabilitado el controlador del jugador, activado la cámara de victoria y hecho PushMode(Cinematic). PlayerBattleModeController.OnDisable solo quita el paso del registro y no llama a TerminarVictoria, por lo que la pila de modos y el control pueden quedar sin restaurar. La limpieza debe cubrir cancelación y desactivación, no solo el fin normal.
+
+##### Media — INC-472: parar el grafo no cancela la escolta que inició un nodo
+
+NarrativeRunner.StopExecution llama a Exit del nodo activo. GuiarJugadorNode.Exit detiene su corrutina y devuelve la velocidad del agente, pero no conserva ni cancela el LeadPlayerToAnchorSequence iniciado mediante NPCBehaviourManagerV2.StartCinematicSequence. La secuencia vive en la FSM del NPC y puede seguir andando después de que el grafo se detenga o se reinicie. Además, el nodo cambia AllowManualRotation y NavMeshAgent.updatePosition sin guardar sus valores previos ni restaurarlos en Exit. Hay que cancelar la secuencia y devolver todo el estado modificado en las salidas normales e interrumpidas.
+
+##### Media — INC-473: logs de diagnóstico sin guarda en el servicio de bloqueos
+
+PlayerLockService.Acquire/Release y ApplyHardLock/ReleaseHardLock escriben logs incondicionales en transiciones normales de diálogo y bloqueo. Las interpolaciones de Acquire/Release generan strings en cada transición y los mensajes llegan también a builds de producción. Esto incumple TDD § 12 y añade asignaciones y ruido de consola. Los logs de diagnóstico deben estar bajo la guarda de compilación o detrás de un modo de diagnóstico desactivado por defecto.
+
+##### Baja — INC-474: trabajo redundante en dos callbacks de UI
+
+MinimapUIController.LateUpdate llama a SetActive(visible) para cada icono en cada frame, aunque su estado no haya cambiado. MenuNavigator.Update vuelve a ejecutar selected.GetComponent<Button>() mientras el mismo objeto siga seleccionado. BillboardUI.LateUpdate vuelve a consultar Camera.main en cada frame mientras cam sea null. El coste crece con los marcadores activos y la frecuencia de actualización; aplicar SetActive solo ante cambios, cachear el botón seleccionado y limitar la búsqueda de cámara a una ruta de resolución acotada elimina las llamadas repetidas.
+
+##### Baja — INC-475: comentarios de código conservan historia de arreglos
+
+El barrido encontró 317 líneas de código que contienen marcas de diario como FIX con fecha, atribuciones a Raúl o explicaciones en pasado de lo que ocurría antes. Ejemplos recientes aparecen en CinematicState.cs, NPCBehaviourManagerV2.cs y SoloDanoCuandoExpuesto.cs. AGENTS.md § 8 pide que los comentarios describan en presente qué hace el código y por qué; la historia y el contexto del arreglo deben estar en TRACKER.md. Conviene limpiar los comentarios al tocar esos archivos, sin borrar explicación técnica vigente.
+
+##### Baja — INC-476: avisos de compatibilidad y configuración muerta
+
+La compilación señala llamadas obsoletas en herramientas de Editor (FindObjectsByType con FindObjectsSortMode, StaticEditorFlags.NavigationStatic, NarrativeFactCatalog marcado obsolete), usos de AppDomain.GetAssemblies advertidos por Unity, y campos serializados asignados pero no leídos. No bloquean la compilación ni afectan al frame runtime en los casos citados, pero aumentan el riesgo de rotura al actualizar Unity y dejan ajustes engañosos en el Inspector. Sustituir las APIs y retirar o reconectar los campos en cambios acotados.
+
+##### Baja — INC-477: MirrorReflection no tiene referencias serializadas en Assets
+
+La búsqueda del GUID de MirrorReflection.cs en escenas y prefabs de Assets no encontró referencias; tampoco hay consumidores C# que lo añadan en runtime o en herramientas de Editor. El comentario de la clase dice que se coloca en varios puntos de Sendero_PruebaWill, pero la escena y los prefabs actuales no lo respaldan. Confirmar si sigue siendo un sistema previsto y, si no, retirarlo a Versiones antiguas según AGENTS.md § 8; si sí, volver a montar las referencias desde Unity.
+
+#### Riesgos y cobertura restante
+
+- MainWorld.unity pasó de 10.351.319 a 27.849.750 bytes en el árbol actual (+17.498.431 bytes, aproximadamente +16,7 MiB). Git presenta el cambio como binario, así que no se pudo revisar por línea. Por su coincidencia con el ajuste de obstáculos/NavMesh documentado en INC-463, puede ser parte esperada del cambio, pero conviene comprobar el payload en Unity y medir carga/memoria antes de cerrar la tanda.
+- La suite propia sigue teniendo cinco tests EditMode en un solo archivo, PlayerActionManagerTests.cs; no hay pruebas PlayMode de cancelación de narrativa, cierre de batalla o restauración de estado. La limitación de infraestructura ya está recogida en INC-447/INC-448; esta auditoría la confirma como riesgo vigente.
+- Falta pasar en Unity el validador cruzado de narrativa exigido por AGENTS.md § 5 y hacer un recorrido PlayMode de la escolta y la victoria. No se puede concluir aquí si el incremento de escena afecta al tiempo de carga, memoria, CPU o GPU.
+
+---
+
 ## 20. Convenciones de documentación del proyecto
 
 Desde el 12 de agosto de 2026, este proyecto mantiene su documentación en un único sitio para que no se disperse en archivos `.md` sueltos que nadie vuelve a mirar. La regla, a partir de ahora:

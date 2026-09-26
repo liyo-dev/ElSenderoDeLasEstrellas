@@ -83,9 +83,19 @@ public class OrbDropper : MonoBehaviour
         }
     }
 
+    /// Un enemigo ha soltado orbes al recibir un golpe (quién, de qué tipo). Para que otros
+    /// sistemas reaccionen: Eldran explica qué son la primera vez (INC-469).
+    public static event System.Action<OrbDropper, OrbType> AlSoltarOrbes;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => AlSoltarOrbes = null;
+#endif
+
     private void SpawnBurst(GameObject prefab, OrbType type, int count)
     {
         for (int i = 0; i < count; i++) SpawnOrb(prefab, type);
+        if (count > 0 && prefab != null) AlSoltarOrbes?.Invoke(this, type);
     }
 
     private void SpawnOrb(GameObject prefab, OrbType orbType)

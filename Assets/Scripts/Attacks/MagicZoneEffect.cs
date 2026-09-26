@@ -99,7 +99,7 @@ public class MagicZoneEffect : MonoBehaviour
             alreadyHit ??= new HashSet<Damageable>();
             if (!alreadyHit.Add(d)) continue; // evita doble tick si el enemigo tiene varios colliders
 
-            d.TakeDamage(_cfg.damagePerTick, _instigator);
+            d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damagePerTick), _instigator);
             hitSomething = true;
 
             if (_cfg.knockbackForce > 0f)

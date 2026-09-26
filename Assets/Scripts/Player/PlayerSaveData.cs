@@ -10,6 +10,7 @@ public class PlayerSaveData
     public int level;
     public float maxHp, currentHp;
     public float maxMp, currentMp;
+    public float ataque, defensa; // INC-470; 0 en partidas anteriores (se inicializan al cargar)
 
     // Hechizos/skills
     public List<AbilityId> abilities = new();
@@ -114,6 +115,8 @@ public class PlayerSaveData
         d.currentHp = preset.currentHP;
         d.maxMp = preset.maxMP;
         d.currentMp = preset.currentMP;
+        d.ataque = preset.ataque;
+        d.defensa = preset.defensa;
 
         d.abilities = new List<AbilityId>(preset.unlockedAbilities ?? new List<AbilityId>());
         d.spells = new List<SpellId>(preset.unlockedSpells ?? new List<SpellId>());

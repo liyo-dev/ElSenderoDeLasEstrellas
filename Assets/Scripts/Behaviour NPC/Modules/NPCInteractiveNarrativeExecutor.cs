@@ -1426,7 +1426,7 @@ namespace Game.NPC.Modules
 
                 if (!waiting)
                 {
-                    _npcManager.SimpleAnimator?.SetMovementSpeed(agent.velocity.magnitude / agent.speed);
+                    _npcManager.SimpleAnimator?.SetMovementSpeed(Game.NPC.Common.NavMeshAgentUtility.FactorDeLocomocion(agent));
                     
                     // ✅ FIX: Rotar hacia la dirección del movimiento
                     if (agent.velocity.sqrMagnitude > 0.01f && _npcManager?.SimpleAnimator != null)
@@ -1941,7 +1941,7 @@ namespace Game.NPC.Modules
                     while (t < alertDuration)
                     {
                         agent.SetDestination(_player.position);
-                        _npcManager.SimpleAnimator?.SetMovementSpeed(agent.velocity.magnitude / agent.speed);
+                        _npcManager.SimpleAnimator?.SetMovementSpeed(Game.NPC.Common.NavMeshAgentUtility.FactorDeLocomocion(agent));
                         if (Vector3.Distance(transform.position, _player.position) <= stopDistanceFromPlayer) break;
                         t += Time.deltaTime;
                         yield return null;

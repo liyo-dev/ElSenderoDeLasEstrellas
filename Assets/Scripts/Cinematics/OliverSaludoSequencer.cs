@@ -591,7 +591,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
                 break;
 
             // El animator LEE la velocidad real del agente, ya normalizada 0-1. Nada de m/s.
-            anim?.SetMovementSpeed(NavMeshAgentUtility.ComputeSpeedFactor(agent));
+            anim?.SetMovementSpeed(NavMeshAgentUtility.FactorDeLocomocion(agent));
 
             // Rotación continua hacia la dirección REAL de avance (esta vez de verdad, no solo en
             // el comentario) — así nunca se le ve caminar de lado o de espaldas al girar la ruta.

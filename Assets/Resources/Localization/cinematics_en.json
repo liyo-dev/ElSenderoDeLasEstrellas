@@ -93,6 +93,22 @@
             "text": "Don't give up! Finish it once and for all!"
         },
         {
+            "id": "EVT_ELDRAN_HINT_ARO",
+            "text": "Look at the rune ring! You can only hurt him while it glows: attack then!"
+        },
+        {
+            "id": "EVT_ELDRAN_HINT_SIN_ARO",
+            "text": "Not like that! Hit him while the ring isn't glowing and he heals. Wait for it to light up!"
+        },
+        {
+            "id": "EVT_ELDRAN_HINT_ORBES",
+            "text": "He drops orbs when you hit him! Orange ones heal you, blue ones restore your magic. Grab them!"
+        },
+        {
+            "id": "EVT_ELDRAN_GUIA_LLAMADA",
+            "text": "This way, Will!"
+        },
+        {
             "id": "EVT_ESTELA_ARAÑA_1",
             "text": "That's for being ugly."
         },
@@ -250,11 +266,11 @@
         },
         {
             "id": "OLIVER_GREETING_BEFORE_MENUS_HANDOFF",
-            "text": "Arguing again? They’ve been at it for a while...\nWe’ll see what’s going on later. First, I wanted to show you something."
+            "text": "Are they still arguing? They’ve been at it for a while...\nBefore we go and see what’s happening, I wanted to show you something."
         },
         {
             "id": "OLIVER_GREETING_PERAS_HANDOFF",
-            "text": "Let’s see what those two are arguing about!"
+            "text": "Let’s go see what’s going on."
         },
         {
             "id": "WILL_GREETING_PERAS_HANDOFF",
@@ -262,15 +278,15 @@
         },
         {
             "id": "OLIVER_GREETING_NEW_SPELL_INTRO",
-            "text": "I've learned a new spell, check this out:"
+            "text": "I’ve learned a new spell. Watch."
         },
         {
             "id": "OLIVER_GREETING_OUT_OF_BREATH",
-            "text": "Ugh, wait... I’m out of breath."
+            "text": "Wait a moment... I need to catch my breath."
         },
         {
             "id": "OLIVER_GREETING_SPOT_WILL",
-            "text": "WILL! Hey, Will, wait up!"
+            "text": "Will! Wait up!"
         },
         {
             "id": "PARQUE_LIAM_01",
@@ -470,7 +486,7 @@
         },
         {
             "id": "WILL_GREETING_OLIVER_CUT_OFF",
-            "text": "Ha, you never change! What are Eldran and Victoria up to? I hear them arguing."
+            "text": "You haven’t changed a bit! What are Eldran and Victoria arguing about? I can hear them from here."
         },
         {
             "id": "WILL_VISION_AM_I_DEAD",
@@ -490,27 +506,27 @@
         },
         {
             "id": "PROLOGO_BAILE",
-            "text": "Keep it up. I want to hear you from the bridge."
+            "text": "That’s it. Let them hear you from the bridge."
         },
         {
             "id": "PROLOGO_BAILE_RESPUESTA",
-            "text": "You got it, master!"
+            "text": "You got it!"
         },
         {
             "id": "PROLOGO_CARRETA_GRACIAS",
-            "text": "Thank you, master! Not one pear on the ground this time."
+            "text": "Thanks, master! I couldn't have righted it on my own."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO",
-            "text": "I’ll follow as soon as I can."
+            "text": "Go. I’ll handle him."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ARCHIMAGO_1",
-            "text": "I don’t know, Liora. Take them to the bridge. I’ll hold him off."
+            "text": "I don’t know. Get them to the bridge, quickly."
         },
         {
             "id": "PROLOGO_DESPEDIDA_ELEGIR",
-            "text": "Try to come back. Don’t forget to take care of yourself, too."
+            "text": "And when you get back, no more errands. You need a rest."
         },
         {
             "id": "PROLOGO_DESPEDIDA_LIORA",
@@ -526,27 +542,27 @@
         },
         {
             "id": "PROLOGO_DUELO_ARCHIMAGO",
-            "text": "I can’t defeat you. But I can send you back to the Path."
+            "text": "As long as I stand, you won’t reach them."
         },
         {
             "id": "PROLOGO_DUELO_MAGO",
-            "text": "Are you going to save them all by yourself?"
+            "text": "Do you think you can save them all on your own?"
         },
         {
             "id": "PROLOGO_DUELO_MAGO_2",
-            "text": "You cannot even save yourself."
+            "text": "You can’t even save yourself."
         },
         {
             "id": "PROLOGO_EVACUACION_LIORA",
-            "text": "With me! To the bridge, quickly, and don't look back!"
+            "text": "Everyone, to the bridge! Quickly, don’t look back!"
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
-            "text": "Master! The cart tipped over again! And I was going slowly this time."
+            "text": "Master! My cart’s tipped over again. And I was going slowly this time."
         },
         {
             "id": "PROLOGO_FAVOR_GLOBO",
-            "text": "Master, the balloon is stuck way up there!"
+            "text": "Master! The balloon is stuck at the top of the bell tower."
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_1",
@@ -558,19 +574,19 @@
         },
         {
             "id": "PROLOGO_GLOBO_VECINO_3",
-            "text": "It'll reach the clouds!"
+            "text": "It’s going to reach the clouds!"
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "ALL OF THEM!"
+            "text": "All of them!"
         },
         {
             "id": "PROLOGO_HECHIZO_PLEGARIA",
-            "text": "Whoever is listening... give me the strength to protect them. I want to come back to Liora."
+            "text": "If anyone can hear me, give me the strength to protect the valley. I want to get back to Liora."
         },
         {
             "id": "PROLOGO_HECHIZO_1",
-            "text": "PROTECT THEM...!"
+            "text": "Protect them...!"
         },
         {
             "id": "PROLOGO_HORA_ARCHIMAGO",
@@ -578,51 +594,51 @@
         },
         {
             "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Kneel, and you’ll have one hour to flee the valley. Resist, and I’ll erase it all."
+            "text": "Kneel. You have one hour to leave the valley. Resist, and I’ll raze it all."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
-            "text": "Right... easy now."
+            "text": "Carefully... That’s it."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "...Right. I used too much force. Sorry, everyone."
+            "text": "Whoops! I went too far. Sorry, everyone."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
-            "text": "Good morning, valley. Let’s see what needs fixing today."
+            "text": "Good morning, valley. What needs fixing today?"
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
-            "text": "I meant to answer it today. But something always comes up in the valley."
+            "text": "I meant to answer today. But something always comes up in the valley."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_1",
-            "text": "What about the academy letter? You haven’t answered in weeks."
+            "text": "Have you decided what to tell the academy? You’ve had that letter for weeks."
         },
         {
             "id": "PROLOGO_PLAZA_LIORA_2",
-            "text": "If you stay, let it be because you choose to. Not because you can’t say no."
+            "text": "You don’t have to stay just because they need you here. What do you want?"
         },
         {
             "id": "PERAS_01",
-            "text": "Here we go again! If you stack the pears there, they’ll get bruised, Victoria."
+            "text": "I told you the pears should go on top."
         },
         {
             "id": "PERAS_02",
-            "text": "I’ve sold fruit for years, Eldran. I know how to store it."
+            "text": "And I told you there wasn’t another crate. Look, they’re fine."
         },
         {
             "id": "PERAS_03",
-            "text": "All right, all right... You win, as usual."
+            "text": "Well, they’re still intact. Maybe you were right."
         },
         {
             "id": "PERAS_04",
-            "text": "As usual. Go say hello to Will; he’s been waiting a while."
+            "text": "See? Nothing to worry about. Go say hello to Will; he’s been waiting a while."
         },
         {
             "id": "PERAS_05",
-            "text": "Will! Sorry about the show. You know how market days get."
+            "text": "Will! Sorry about the fuss. You know what we’re like when it comes to packing fruit."
         },
         {
             "id": "PERAS_06",
@@ -634,27 +650,27 @@
         },
         {
             "id": "HOOK_DISCUSION_01",
-            "text": "Victoria, the pears don't go in that crate, they'll get bruised!"
+            "text": "Victoria, careful! Put the apples on top and you’ll bruise the pears."
         },
         {
             "id": "HOOK_DISCUSION_02",
-            "text": "The crate's mine, Eldran, I'll put whatever I like in it!"
+            "text": "There isn’t another crate, Eldran. This way, it all fits."
         },
         {
             "id": "HOOK_DISCUSION_03",
-            "text": "It may be yours, but I brought those pears myself this morning!"
+            "text": "Then put the pears on top, like we always do."
         },
         {
             "id": "HOOK_DISCUSION_04",
-            "text": "...The fruit crates again? Let's see what's going on out there."
+            "text": "Arguing over crates again... I’d better see what’s going on."
         },
         {
             "id": "PERAS_OLIVER_VOY",
-            "text": "Will, I'm coming with you!"
+            "text": "Need a hand with the crates?"
         },
         {
             "id": "PERAS_VICTORIA_QUEDATE",
-            "text": "No, Oliver. You’re staying; I need help with these boxes."
+            "text": "Yes, please. Help me stack them before you two go."
         }
     ]
 }

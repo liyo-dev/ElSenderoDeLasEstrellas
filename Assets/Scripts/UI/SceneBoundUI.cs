@@ -57,6 +57,19 @@ public class SceneBoundUI : MonoBehaviour
     /// </summary>
     public static event System.Action OnBossIntroEnded;
 
+    /// <summary>Permite una escena solo durante la sesión actual y reaplica su visibilidad.</summary>
+    public static bool AllowSceneFor(string id, string sceneName)
+    {
+        if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(sceneName)) return false;
+        if (!Instances.TryGetValue(id, out var inst) || inst == null) return false;
+
+        if (!inst.allowedScenes.Contains(sceneName))
+            inst.allowedScenes.Add(sceneName);
+
+        inst.ApplySceneState();
+        return true;
+    }
+
     #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()

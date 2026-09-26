@@ -69,6 +69,7 @@ public class BossHealthBar : MonoBehaviour
         CreateBossHealthBarUI();
 
         _bossDamageable.OnDamaged += OnBossDamaged;
+        _bossDamageable.OnHealed  += OnBossHealed;
         _bossDamageable.OnDied   += OnBossDied;
         UpdateHealthBar();
         // No auto-mostrar — BossArenaController llama a Show() cuando corresponde
@@ -92,6 +93,7 @@ public class BossHealthBar : MonoBehaviour
         if (_bossDamageable)
         {
             _bossDamageable.OnDamaged -= OnBossDamaged;
+            _bossDamageable.OnHealed  -= OnBossHealed;
             _bossDamageable.OnDied   -= OnBossDied;
         }
         if (_canvas != null && _canvas.gameObject != null)
@@ -159,6 +161,22 @@ public class BossHealthBar : MonoBehaviour
         FlashDamage();
     }
 
+    // Se ha curado (p. ej. un golpe a destiempo, ver SoloDanoCuandoExpuesto): la barra sube y
+    // parpadea en verde, para que se lea que ese golpe le ha venido bien al jefe.
+    private Color? _colorFondoOriginal;
+
+    private void OnBossHealed(float _)
+    {
+        UpdateHealthBar();
+        if (_healthBarBackground == null) return;
+        _colorFondoOriginal ??= _healthBarBackground.color;
+        Color orig = _colorFondoOriginal.Value;
+        _healthBarBackground.DOKill();
+        _healthBarBackground.DOColor(new Color(0.35f, 1f, 0.45f, 0.9f), 0.08f)
+            .SetUpdate(true)
+            .OnComplete(() => _healthBarBackground.DOColor(orig, 0.2f).SetUpdate(true));
+    }
+
     private void OnBossDied()
     {
         UpdateHealthBar();
@@ -182,7 +200,9 @@ public class BossHealthBar : MonoBehaviour
     private void FlashDamage()
     {
         if (_healthBarBackground == null) return;
-        Color orig = _healthBarBackground.color;
+        _colorFondoOriginal ??= _healthBarBackground.color;
+        Color orig = _colorFondoOriginal.Value;
+        _healthBarBackground.DOKill();
         _healthBarBackground.DOColor(new Color(1f, 0.3f, 0.3f, 0.9f), 0.08f)
             .SetUpdate(true)
             .OnComplete(() => _healthBarBackground.DOColor(orig, 0.15f).SetUpdate(true));

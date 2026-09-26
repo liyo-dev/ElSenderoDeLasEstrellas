@@ -35,7 +35,6 @@ MonoBehaviour:
   - rid: 6000000000000000028
   - rid: 6000000000000000029
   - rid: 6000000000000000030
-  - rid: 6000000000000000031
   - rid: 6000000000000000032
   - rid: 6000000000000000033
   - rid: 6000000000000000034
@@ -59,6 +58,10 @@ MonoBehaviour:
   - rid: 6000000000000000048
   - rid: 6000000000000000049
   - rid: 7428272542014767947
+  - rid: 7428272564026736784
+  - rid: 7428272564026736785
+  - rid: 7428272564026736786
+  - rid: 7428272564026736787
   applicableSceneNames: []
   references:
     version: 2
@@ -194,9 +197,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        position: {x: 11020, y: 0}
+        position: {x: 12540, y: 0}
         outputs:
-        - 0d50f50f-4be3-434d-a6b4-fa6ce0694d8f
+        - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
         questId: ELDRAN_MISSION2
     - rid: 6000000000000000014
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
@@ -209,7 +212,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        position: {x: 11780, y: 0}
+        position: {x: 13300, y: 0}
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
@@ -224,12 +227,12 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        position: {x: 12920, y: 0}
+        position: {x: 14440, y: 0}
         outputs:
         - e10bdcbf-059f-40f6-bfcf-7799abe09913
         npcId: NPC_Eldran
         acceptEarlierInteraction: 0
-        questIcon: {fileID: 0}
+        questIcon: {fileID: 6303534759802428624, guid: e3166847a7c81b443bdbe623a681ae52, type: 3}
     - rid: 6000000000000000016
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -241,7 +244,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e10bdcbf-059f-40f6-bfcf-7799abe09913
-        position: {x: 13300, y: 0}
+        position: {x: 14820, y: 0}
         outputs:
         - bfb7330e-0489-4388-bcab-d6305b68a97a
         dialogue: {fileID: 11400000, guid: ccf34efc36cfcf24caa59ea5fe1817a5, type: 2}
@@ -258,7 +261,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bfb7330e-0489-4388-bcab-d6305b68a97a
-        position: {x: 13680, y: 0}
+        position: {x: 15200, y: 0}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
         questId: ELDRAN_MISSION2
@@ -295,7 +298,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 14440, y: 0}
+        position: {x: 15960, y: 0}
         outputs:
         - d1785c09-9503-4d7b-a24e-682424ca83a7
         abilityKeysToUnlock: 03000000i
@@ -317,7 +320,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d1785c09-9503-4d7b-a24e-682424ca83a7
-        position: {x: 14820, y: 0}
+        position: {x: 16340, y: 0}
         outputs:
         - 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
         questId: ELDRAN_MISSION3
@@ -332,7 +335,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 15200, y: 0}
+        position: {x: 16720, y: 0}
         outputs:
         - a1032a1a-451d-410d-bccc-2c33329d00f3
         battleId: Demon_1
@@ -355,7 +358,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a1032a1a-451d-410d-bccc-2c33329d00f3
-        position: {x: 15580, y: 0}
+        position: {x: 17100, y: 0}
         outputs:
         - fcfe6d87-7d52-4b68-930c-ec6807fa381c
         eventKey: LIAM_CRYSTAL_START
@@ -370,7 +373,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: fcfe6d87-7d52-4b68-930c-ec6807fa381c
-        position: {x: 15960, y: 0}
+        position: {x: 17480, y: 0}
         outputs:
         - dedc7fec-da78-4587-82a4-341ca93c8eaa
         eventKey: LIAM_CRYSTAL_DONE
@@ -385,7 +388,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: dedc7fec-da78-4587-82a4-341ca93c8eaa
-        position: {x: 16340, y: 0}
+        position: {x: 17860, y: 0}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
         questId: ELDRAN_MISSION3
@@ -404,7 +407,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 16720, y: 0}
+        position: {x: 18240, y: 0}
         outputs: []
         eventKey: CH_Cap1_BACK_1
     - rid: 6000000000000000029
@@ -437,29 +440,6 @@ MonoBehaviour:
         outputs:
         - 72854966-4210-4108-aa56-b1f0cb33d3bb
         eventKey: PROLOGUE_DONE
-    - rid: 6000000000000000031
-      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 22.- Tutorial minimapa (caja de Eldran)
-        chapter: Cap. 1
-        blockSaving: 1
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 0d50f50f-4be3-434d-a6b4-fa6ce0694d8f
-        position: {x: 11400, y: 0}
-        outputs:
-        - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        action: 0
-        text: Sigue el marcador del minimapa para encontrar la caja. Pulsa {BOTON} para ver el mapa completo.
-        textId: TUTORIAL_MINIMAP_BOX
-        icon: {fileID: 0}
-        buttonName: interactable_select
-        dismissWithCancel: 1
-        cerrarConSenal: CAP1_CAJA_ELDRAN
-        cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 0
     - rid: 6000000000000000032
       type: {class: WaitItemDeliveryNode, ns: , asm: Assembly-CSharp}
       data:
@@ -471,7 +451,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 12160, y: 0}
+        position: {x: 13680, y: 0}
         outputs:
         - da4a9b32-670c-4724-ab44-6743e2c728d1
         npcId: NPC_Eldran
@@ -493,14 +473,14 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 12540, y: 0}
+        position: {x: 14060, y: 0}
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         action: 0
         text: Cuando el icono sobre la cabeza de un personaje cambie asi, significa que debes hablar con el.
         textId: TUTORIAL_NPC_TALK_ICON
-        icon: {fileID: 0}
-        buttonName: interactable_select
+        icon: {fileID: 21300000, guid: 7193393970ac6314784af948391ee381, type: 3}
+        buttonName: 
         dismissWithCancel: 1
         cerrarConSenal: NPC_INTERACT_NPC_Eldran
         cerrarAlEmpezarCinematica: 1
@@ -805,7 +785,7 @@ MonoBehaviour:
     - rid: 7428272542014767947
       type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 20c.- Eldran le llama y viene a pedir la caja (SEQ_EldranCaja)
+        displayTitle: "20c.- Eldran le llama: \xABVen, s\xEDgueme\xBB (SEQ_EldranCaja)"
         chapter: Cap. 1
         blockSaving: 1
         inputAnchor: 0
@@ -815,7 +795,7 @@ MonoBehaviour:
         guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
         position: {x: 10640, y: 0}
         outputs:
-        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
         cinematicName: Eldran viene a pedir la caja
         signalIn: ELDRAN_CAJA_START
         signalDone: ELDRAN_CAJA_DONE
@@ -836,7 +816,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 14060, y: 0}
+        position: {x: 15580, y: 0}
         outputs:
         - e7e8e2f2-6e54-4490-97b1-fd48323945a4
         - 0a923444-f2e4-42d4-be51-49d30c40e362
@@ -867,3 +847,85 @@ MonoBehaviour:
         waitForCompletion: 1
         restoreSceneMusicWhenDone: 1
         restoreMusicFade: 3
+    - rid: 7428272564026736784
+      type: {class: GuiarJugadorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20d.- Sigue a Eldran hasta el punto de guardado de la entrada
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
+        position: {x: 11020, y: 0}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
+        npcId: NPC_Eldran
+        anchorId: Eldran_PuntoGuardado
+        puntosDePaso: []
+        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
+        duracionLlamada: 2.2
+        distanciaMaxima: 9
+        distanciaReanudar: 3
+        radioLlegada: 4
+        velocidad: 2.6
+        duracionMaxima: 240
+    - rid: 7428272564026736785
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20d2.- Eldran explica el punto de guardado (DG_ELDRAN_PUNTO_GUARDADO)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
+        position: {x: 11400, y: 0}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
+        dialogue: {fileID: 11400000, guid: 0666c4491bbda38479c192cdef5bb094, type: 2}
+        npcId: NPC_Eldran
+        oneShotFlag: 
+    - rid: 7428272564026736786
+      type: {class: GuiarJugadorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20d3.- Sigue a Eldran hasta el bosque
+        chapter: Cap. 1
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
+        position: {x: 11780, y: 0}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
+        npcId: NPC_Eldran
+        anchorId: Eldran_Bosque
+        puntosDePaso: []
+        llamadaKey: EVT_ELDRAN_GUIA_LLAMADA
+        duracionLlamada: 2.2
+        distanciaMaxima: 9
+        distanciaReanudar: 3
+        radioLlegada: 4
+        velocidad: 2.6
+        duracionMaxima: 240
+    - rid: 7428272564026736787
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20e.- En el bosque, Eldran pide la caja (DG_ELDRAN_CAJA)
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
+        position: {x: 12160, y: 0}
+        outputs:
+        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        dialogue: {fileID: 11400000, guid: aa47a70e31624274ab9b052905b3fc79, type: 2}
+        npcId: NPC_Eldran
+        oneShotFlag: 

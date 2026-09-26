@@ -449,7 +449,7 @@ namespace Game.NPC
 
                 if (agent != null && context.Animator != null)
                 {
-                    float speedFactor = NavMeshAgentUtility.ComputeSpeedFactor(agent);
+                    float speedFactor = NavMeshAgentUtility.FactorDeLocomocion(agent);
                     context.Animator.SetMovementSpeed(speedFactor);
                     if (agent.velocity.sqrMagnitude > 0.01f)
                         context.Animator.FaceDirection(agent.velocity.normalized);

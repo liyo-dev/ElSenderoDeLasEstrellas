@@ -254,6 +254,12 @@ public class Interactable : MonoBehaviour
             return false;
         if (singleUse && used)
             return false;
+
+        // Un NPC en cinemática (una secuencia lo retiene, o guía al jugador a un sitio) no se
+        // puede interrumpir: ni botón A ni acción. Ver INC-462.
+        if (_npcManager != null && _npcManager.Context != null && _npcManager.Context.IsInCinematic)
+            return false;
+
         // Los NPCs en el equipo no deben ser interactuables (sin botón A ni acción),
         // excepto cuando están en estado "Sígueme"/"Dejar de seguir".
         // Usamos CanShowFollowPrompt() en lugar de IsShowingPrompt para evitar dependencia circular:

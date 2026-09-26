@@ -473,7 +473,8 @@ public class MagicProjectile : MonoBehaviour
 
             if (d != null)
             {
-                d.TakeDamage(_cfg.damage, _instigator);
+                // Con el ataque de quien lo lanzó (FormulasDeCombate, INC-470).
+                d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damage), _instigator);
             }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             else

@@ -35,6 +35,7 @@ using Game.NPC;
 public class EldranStaysBehindController : MonoBehaviour
 {
     [Header("Señal narrativa")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Escucha)]
     [SerializeField] private string leaveSignal = "EVT_ARRESTADOS";
 
     [Header("Punto de espera (INC-114)")]

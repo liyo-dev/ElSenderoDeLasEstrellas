@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_EldranCaja
   m_EditorClassIdentifier: 
   displayName: Eldran viene a pedir la caja
-  summary: 'Nada mas comprar la estrella, Eldran llama a Will desde lejos, se acerca como
-    Oliver en SEQ_OliverSaludo y le pide que busque la caja que dejo bajo un arbol (caja de
-    dialogo, avanza el jugador). No vive en la escena: la lanza el nodo ReproducirSecuenciaNode
-    del grafo clonando un SequencePlayer ya montado (INC-445).'
+  summary: Nada mas comprar la estrella, Eldran llama a Will desde lejos, se acerca como Oliver en SEQ_OliverSaludo y le dice que le siga (caja de dialogo, avanza el jugador). Por el camino paran en el punto de guardado de la entrada del reino y la caja se la pide ya en el bosque (Cap1 20d-20e).
   signalIn: ELDRAN_CAJA_START
   signalOut: ELDRAN_CAJA_DONE
   musicId: 
@@ -32,6 +29,7 @@ MonoBehaviour:
     headroom: 1
     encara: 0
   endStayBlack: 0
+  modulos: {fileID: 0}
   phases:
   - name: 1 - Eldran le llama
     onlyIfFlag: 
@@ -39,6 +37,7 @@ MonoBehaviour:
     beats:
     - rid: 9100000000000000001
     - rid: 9100000000000000002
+    - rid: 7428272542014767967
   - name: 2 - Se acerca
     onlyIfFlag: 
     skipIfFlag: 
@@ -55,6 +54,16 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 7428272542014767967
+      type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Will se gira al oirle: asi Eldran se para delante de el y no al lado de Tomasa'
+        actorId: Player
+        targetActorId: NPC_Eldran
+        markName: 
+        lookAway: 0
+        mutual: 0
+        turnDuration: 0.4
     - rid: 9100000000000000001
       type: {class: FaceBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -68,7 +77,7 @@ MonoBehaviour:
     - rid: 9100000000000000002
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Will, espera! - Cheer01 dos veces, el primer ciclo se pierde con la transicion de entrada (como Oliver)'
+        note: Will, espera! - Cheer01 dos veces, el primer ciclo se pierde con la transicion de entrada (como Oliver)
         actorId: NPC_Eldran
         markName: 
         textKey: DLG_ELDRAN_CAJA_LLAMADA
@@ -103,7 +112,7 @@ MonoBehaviour:
     - rid: 9100000000000000004
       type: {class: MoveToBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Camino canonico por NavMesh (INC-209). Si venia de muy lejos, ReproducirSecuenciaNode ya lo acerco fuera de camara'
+        note: Camino por NavMesh. Si venia de muy lejos, PlayCinematicNode ya lo acerco fuera de camara
         actorId: NPC_Eldran
         towardsActorId: Player
         markName: 
@@ -126,7 +135,7 @@ MonoBehaviour:
     - rid: 9100000000000000006
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'Los dos, para la charla de la caja'
+        note: Los dos, para la charla de la caja
         shotName: 
         framing:
           type: 1
@@ -147,8 +156,8 @@ MonoBehaviour:
     - rid: 9100000000000000007
       type: {class: DialogueBeat, ns: , asm: Assembly-CSharp}
       data:
-        note: 'La caja bajo el arbol. Caja de dialogo, avanza el jugador (INC-439/445).'
-        dialogue: {fileID: 11400000, guid: aa47a70e31624274ab9b052905b3fc79, type: 2}
+        note: Menos mal que te he alcanzado + Ven, sigueme. La caja se pide en el bosque (Cap1 20e). Caja de dialogo, avanza el jugador.
+        dialogue: {fileID: 11400000, guid: e95f2e8ac600c88479cb370df86865e2, type: 2}
         actorId: NPC_Eldran
         endDialogueCameraImmediately: 1
         conservarCamaraDeLaSecuencia: 1
@@ -156,12 +165,10 @@ MonoBehaviour:
         - actorId: Player
           gestures:
           - 
-          - Question01
-          - 
           - HeadNod01
+          emotions: 
         - actorId: NPC_Eldran
           gestures:
           - 
           - 
-          - HeadNod01
-          - 
+          emotions: 

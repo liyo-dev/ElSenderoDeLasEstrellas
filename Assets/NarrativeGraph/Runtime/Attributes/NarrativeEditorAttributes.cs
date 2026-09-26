@@ -50,6 +50,20 @@ public enum NarrativeKeyKind
 }
 
 /// <summary>
+/// Qué hace con la señal el componente que tiene el campo. Lo lee el índice del grafo para saber
+/// quién escucha y quién emite cada señal desde escenas y prefabs.
+/// </summary>
+public enum SignalRole
+{
+    /// <summary>No se declara (el índice lo deduce por el nombre del campo, como antes).</summary>
+    Ninguno,
+    /// <summary>El componente levanta esta señal.</summary>
+    Emite,
+    /// <summary>El componente espera esta señal.</summary>
+    Escucha
+}
+
+/// <summary>
 /// Marca un campo string como "clave de X": el editor lo dibuja con un desplegable
 /// alimentado por el índice del proyecto, y el validador comprueba que resuelve.
 /// </summary>
@@ -62,6 +76,12 @@ public sealed class NarrativeKeyAttribute : PropertyAttribute
     /// Para <see cref="NarrativeKeyKind.QuestStep"/>: nombre del campo hermano que contiene el questId.
     /// </summary>
     public string QuestIdField { get; }
+
+    /// <summary>
+    /// Para <see cref="NarrativeKeyKind.Signal"/> en componentes de escena o prefab: si el campo es
+    /// una señal que el componente emite o escucha.
+    /// </summary>
+    public SignalRole Rol { get; set; }
 
     public NarrativeKeyAttribute(NarrativeKeyKind kind, string questIdField = null)
     {

@@ -36,6 +36,7 @@ public class SleepTrigger : MonoBehaviour
     [Tooltip("Si true, Will empieza dormido en esta cama al arrancar la escena sin necesidad de entrar al trigger.")]
     public bool sleepOnStart = false;
     [Tooltip("Evento que se dispara al despertar. Compatible con WaitCustomEventNode.")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     public string wakeNarrativeEvent = "";
 
     [Header("Uso único")]

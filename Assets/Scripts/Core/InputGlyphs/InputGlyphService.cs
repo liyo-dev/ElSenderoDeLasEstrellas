@@ -139,6 +139,22 @@ namespace Core.InputGlyphs
 
         // ── API pública ───────────────────────────────────────────────────────
 
+        /// <summary>
+        /// Sprite asset de iconos para cualquier texto TMP que lleve &lt;sprite name="..."&gt; (botones
+        /// con el glifo del mando/teclado activo, objetos, monedas...). Es el mismo DialogueIcons.asset
+        /// de los diálogos: cualquier texto que lo use ve los mismos iconos. Sin él, TMP no encuentra
+        /// el sprite y pinta un «?» (INC-468, «Eldran dice que pulse X pero sale una interrogación»).
+        /// </summary>
+        public static TMP_SpriteAsset IconosDeTexto
+        {
+            get
+            {
+                if (_dialogueIcons != null) return _dialogueIcons;
+                var link = Resources.Load<DialogueIconsResourceLink>("DialogueIconsLink");
+                return link != null ? link.dialogueIcons : null;
+            }
+        }
+
         /// <summary>Sprite suelto (para <see cref="UnityEngine.UI.Image"/>) del botón <paramref name="name"/>
         /// (usar las constantes de <see cref="InputGlyphNames"/>) en la familia actualmente activa.</summary>
         public static Sprite GetSprite(string name)

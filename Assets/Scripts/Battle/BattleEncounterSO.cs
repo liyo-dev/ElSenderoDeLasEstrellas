@@ -31,6 +31,11 @@ public class BattleEncounterSO : ScriptableObject
     [Tooltip("Capa de suelo usada para asentar al enemigo en el terreno tras calcular su posición (raycast hacia abajo). Si se deja en 'Nothing', se usa la capa de suelo configurada en el BossArenaController de la escena.")]
     public LayerMask floorLayer;
 
+    [Header("Premio al ganar (INC-470)")]
+    [Tooltip("Lo que suben las estadísticas de Will al ganar este combate. Se suma una sola vez por " +
+             "batalla ganada y sale en el informe final.")]
+    public Estadisticas premioEstadisticas;
+
     [Header("Perfiles de spawn")]
     [Tooltip("Dónde aparece el enemigo dentro del radio de la arena. Pensado para poder variar por dificultad más adelante (varios perfiles, seleccionables por índice desde el nodo) sin tocar código.")]
     public SpawnProfile[] spawnProfiles = new SpawnProfile[]

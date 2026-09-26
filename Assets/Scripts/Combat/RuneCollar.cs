@@ -21,8 +21,11 @@ using UnityEngine.Events;
 /// opcional aparte, nunca sustituye a Damageable ni reduce su vida.
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Collider))]
-public class RuneCollar : MonoBehaviour
+public class RuneCollar : MonoBehaviour, IExpuestoAlDano
 {
+    /// El aro brilla: es el momento de hacerle daño al jefe (ver SoloDanoCuandoExpuesto, INC-469).
+    public bool Expuesto => !_broken && demonAI != null && !demonAI.IsDead && demonAI.IsAttacking;
+
     [Header("Referencias")]
     [Tooltip("Si se deja vacío, se busca en los padres (el aro es normalmente un hijo del jefe).")]
     [SerializeField] private ImpDemonAI demonAI;

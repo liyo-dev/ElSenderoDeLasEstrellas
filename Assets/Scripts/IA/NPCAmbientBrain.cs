@@ -213,7 +213,7 @@ public class NPCAmbientBrain : MonoBehaviour
     {
         if (animator != null && _agent != null)
         {
-            float speed = NavMeshAgentUtility.ComputeSpeedFactor(_agent);
+            float speed = NavMeshAgentUtility.FactorDeLocomocion(_agent);
             animator.SetFloat(_inputMagHash, speed, 0.1f, Time.deltaTime);
         }
 

@@ -38,12 +38,24 @@ public class SequenceActor
 
     public bool IsHeld => _hold != null;
 
+    /// Otro sistema ha puesto al NPC en otro estado mientras la secuencia lo retenía (por ejemplo,
+    /// el grafo lo manda a guiar al jugador justo al acabar la escena). Al soltarlo, la secuencia
+    /// no debe pararlo: lo que hace ahora ya no es suyo. Ver INC-461.
+    public bool LoHaTomadoOtroSistema => _hold != null && _hold.Desalojada;
+
     /// Secuencia "vacía" de CinematicState: no hace nada cada frame, solo existe para que la FSM
     /// del NPC sepa que está ocupado y no vuelva a Idle/Wander por su cuenta. Mismo truco que
     /// usaba OliverSaludoSequencer a mano; aquí vive una sola vez para todas las secuencias.
     private class HoldSequence : Game.NPC.States.CinematicSequence
     {
+        /// La FSM ha salido de este CinematicState sin que la secuencia lo soltara.
+        public bool Desalojada { get; private set; }
+
         public override void Update(Game.NPC.Common.NPCStateContext context) { }
+        public override void Cleanup(Game.NPC.Common.NPCStateContext context)
+        {
+            if (!IsCompleted) Desalojada = true;
+        }
         public void Finish() => IsCompleted = true;
     }
 

@@ -24,7 +24,7 @@ public static class Cap1RecuperarDespiertaWill
     private const string Nodo4 = "85279f14-0f9a-4376-8ca3-126ecb12b966";
     private const string Nodo5 = "d206615e-7e83-4d62-bd5a-d6e04d6b237b";
 
-    [MenuItem("El Sendero/Narrativa/Cap1: recuperar «Will, ¡despierta!» (iris sobre Will dormido)")]
+    [MenuItem("El Sendero/Archivo/Narrativa/Cap1: recuperar «Will, ¡despierta!» (iris sobre Will dormido)")]
     public static void Aplicar()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

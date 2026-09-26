@@ -127,6 +127,8 @@ public class CloudCoverSpawner : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float jitter = 0.5f;
     [Tooltip("Escala mínima/máxima aplicada a cada nube, MULTIPLICANDO la escala base del prefab (los QuibliRainCloud3D_X ya vienen normalizados a ~25-33 unidades de ancho a escala 1). Con 0.8-1.5 y cellSize 30 las nubes se tocan/solapan lo justo para leerse como un techo de tormenta sin dejar huecos grandes. minClearanceAboveFollowTarget protege contra el caso de que la cámara acabe dentro de una nube. BUG encontrado y corregido 12 sep 2026: en MainWorld.unity este campo estaba en (10, 18) en vez de (0.8, 1.5) — casi 15x el valor pensado, probablemente tecleado como si fuera un porcentaje entero en vez del multiplicador real. Con eso cada nube salía escalada a 250-600 unidades de ancho: nubes gigantescas que 'llegaban muy lejos' y se veían moverse rapidísimo (un objeto tan grande cruzando su trayecto en los mismos segundos de siempre se percibe mucho más rápido), y que además obligaban a ApplySafetyClearance() a subir el techo automáticamente CADA VEZ (de ahí el warning constante en consola). Ver OnValidate() más abajo, que ahora avisa si esto vuelve a pasar.")]
     [SerializeField] private Vector2 scaleRange = new Vector2(0.8f, 1.5f);
+    [Tooltip("Ancho mínimo de cada nube en planta, en múltiplos de cellSize. Si con scaleRange una nube sale más estrecha, se ensancha solo en horizontal (X/Z) hasta ese ancho, para que se solape con sus vecinas y desde abajo formen una capa continua sin que baje el techo. Por encima de 1 porque el shader Cloud3D recorta el borde (_AlphaThreshold) y la silueta visible es menor que la malla. 0 = sin ensanchar.")]
+    [SerializeField, Range(0f, 3f)] private float minFootprintInCells = 1.6f;
     [Tooltip("Límite de seguridad de instancias, por si coverRadius/cellSize generan una rejilla enorme.")]
     [SerializeField] private int maxCloudInstances = 300;
     [Tooltip("FIX (2026-09-05, INC-157/coste de transición de clima): instanciar hasta maxCloudInstances nubes de una sola vez en un solo frame producía un freeze de 1.8-3.5s la primera vez que llueve en cada sesión. Ahora BuildCoverIfNeeded() se reparte en una corrutina que instancia como mucho este número de nubes por frame antes de ceder — el resultado final es idéntico (misma posición/escala/orden aleatorio), solo tarda unos frames más en completarse, imperceptible porque StartFormationWave() ya revela las nubes de forma gradual después. Bajarlo reduce aún más el coste por frame a costa de tardar más frames en total.")]
@@ -592,6 +594,7 @@ public class CloudCoverSpawner : MonoBehaviour
                 instance.transform.localPosition = targetLocalPos;
                 instance.transform.localRotation = CloudRotation();
                 instance.transform.localScale = prefab.transform.localScale * UnityEngine.Random.Range(scaleRange.x, scaleRange.y);
+                EnsureMinFootprint(instance.transform);
 
                 var unit = new CloudUnit
                 {
@@ -644,6 +647,40 @@ public class CloudCoverSpawner : MonoBehaviour
         }
 
         _built = true;
+    }
+
+    /// <summary>
+    /// Ensancha la nube en horizontal (X/Z) si su malla, ya escalada, mide en planta
+    /// menos de <see cref="minFootprintInCells"/> × <see cref="cellSize"/>. Mide la malla en sus
+    /// propios ejes (sharedMesh.bounds × escala), no la caja de mundo, que el giro aleatorio en Y
+    /// inflaría. La altura no se toca: el techo no baja y ApplySafetyClearance no tiene que subirlo.
+    /// </summary>
+    void EnsureMinFootprint(Transform cloud)
+    {
+        if (minFootprintInCells <= 0f || cloudShaderMode == CloudShaderMode.QuibliCloud2D) return;
+
+        var filters = cloud.GetComponentsInChildren<MeshFilter>();
+        float sizeX = 0f, sizeZ = 0f;
+        for (int i = 0; i < filters.Length; i++)
+        {
+            var mf = filters[i];
+            if (mf == null || mf.sharedMesh == null) continue;
+            Vector3 size = mf.sharedMesh.bounds.size;
+            Vector3 scale = mf.transform.lossyScale;
+            sizeX = Mathf.Max(sizeX, size.x * Mathf.Abs(scale.x));
+            sizeZ = Mathf.Max(sizeZ, size.z * Mathf.Abs(scale.z));
+        }
+        if (sizeX <= 0.01f || sizeZ <= 0.01f) return;
+
+        // Cada eje por separado: las mallas son alargadas (Cloud_01 mide ~33 × 15 en planta) y
+        // escalar las dos por el eje estrecho haría nubes enormes en el otro.
+        float wanted = minFootprintInCells * cellSize;
+        float kx = Mathf.Max(1f, wanted / sizeX);
+        float kz = Mathf.Max(1f, wanted / sizeZ);
+        if (kx <= 1f && kz <= 1f) return;
+
+        Vector3 local = cloud.localScale;
+        cloud.localScale = new Vector3(local.x * kx, local.y, local.z * kz);
     }
 
     /// <summary>

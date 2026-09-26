@@ -49,20 +49,16 @@
             "value": "Barbara's Remedy."
         },
         {
-            "key": "QUEST_ELDRAN_MISSION0_DETAIL",
-            "value": "Read the letter on the bedside table."
-        },
-        {
             "key": "QUEST_ELDRAN_MISSION1_DESC",
-            "value": "Find out what’s going on between Eldran and Victoria."
+            "value": "Go see what’s going on between Eldran and Victoria."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_DETAIL",
-            "value": "Oliver asked you to find out what’s going on between Eldran and Victoria. Follow the minimap marker to them."
+            "value": "Oliver said Eldran and Victoria are arguing. Follow the marker to the market."
         },
         {
             "key": "QUEST_ELDRAN_MISSION1_NAME",
-            "value": "Find Eldran"
+            "value": "The market argument"
         },
         {
             "key": "QUEST_ELDRAN_MISSION10_DESC",
@@ -142,15 +138,15 @@
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DESC",
-            "value": "Find the crate of apples in the forest and bring it to Eldran."
+            "value": "Find the crate of apples and take it back to Eldran."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_DETAIL",
-            "value": "Eldran left a crate of apples near the forest. Follow the marker to find it and bring it back to him."
+            "value": "Eldran left it at the foot of an ash tree. Follow the marker to find it, then take it back to him."
         },
         {
             "key": "QUEST_ELDRAN_MISSION2_NAME",
-            "value": "Get the Apple Crate"
+            "value": "Fetch the apple crate"
         },
         {
             "key": "QUEST_ELDRAN_MISSION3_DESC",
@@ -474,19 +470,15 @@
         },
         {
             "key": "QUEST_WILL_MISSION1_DESC",
-            "value": "Spend Eldran's coin on something useless."
+            "value": "Spend Eldran’s coin on something useless."
         },
         {
             "key": "QUEST_WILL_MISSION1_DETAIL",
-            "value": "Eldran gave you a coin and an odd request: buy yourself something with no use at all. In the market, Tomasa sells wooden figurines."
+            "value": "Eldran gave you a coin and asked you to buy something useless. Find Tomasa in the market; she sells wooden figurines."
         },
         {
             "key": "QUEST_WILL_MISSION1_NAME",
             "value": "Something useless"
-        },
-        {
-            "key": "READ_THE_LETTER_DESC",
-            "value": "Read the letter on the side table."
         }
     ]
 }

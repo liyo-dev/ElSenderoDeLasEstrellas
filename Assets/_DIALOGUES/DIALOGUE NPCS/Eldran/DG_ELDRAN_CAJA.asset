@@ -14,13 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueAsset
   lines:
   - speakerNameId: CHAR_ELDRAN
-    textId: DLG_ELDRAN_CAJA_01
-    text: 
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 0
-  - speakerNameId: CHAR_ELDRAN
     textId: DLG_ELDRAN_CAJA_02
     text: 
     portrait: {fileID: 0}
@@ -41,3 +34,4 @@ MonoBehaviour:
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
+  isGroupConversation: 0

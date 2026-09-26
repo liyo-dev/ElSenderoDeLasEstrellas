@@ -167,7 +167,7 @@ public static class NavMeshAutoSetup
 
                 var obstacle = Undo.AddComponent<NavMeshObstacle>(go);
                 obstacle.carving = true;
-                obstacle.shape = (col is BoxCollider) ? NavMeshObstacleShape.Box : NavMeshObstacleShape.Capsule;
+                AjustarAlPie(obstacle, col);
                 added++;
             }
         }
@@ -182,6 +182,284 @@ public static class NavMeshAutoSetup
             else
                 Debug.Log("[NavMeshAutoSetup] Nada que clasificar ni limpiar — todo estaba ya al día.");
         }
+    }
+
+    // Altura, en metros sobre la base del objeto, de lo que cuenta como obstáculo para andar: la
+    // de un personaje (la altura de agente del NavMesh). Lo que queda por encima (una copa alta,
+    // el dintel de un arco) no corta el paso; lo que queda por debajo (las ramas bajas de un
+    // pino) sí, para que los NPCs rodeen los árboles en vez de meterse entre las ramas (INC-465).
+    private static float AlturaDelPie
+    {
+        get
+        {
+            float h = NavMesh.GetSettingsCount() > 0 ? NavMesh.GetSettingsByIndex(0).agentHeight : 0f;
+            return h > 0.5f ? h : 2f;
+        }
+    }
+
+    [MenuItem("El Sendero/Navegación/Ajustar obstáculos a lo que ocupan en el suelo")]
+    public static void AjustarObstaculosMenu()
+    {
+        int ajustados = 0, sinCollider = 0;
+        var escenas = new HashSet<UnityEngine.SceneManagement.Scene>();
+        foreach (var o in Object.FindObjectsByType<NavMeshObstacle>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            // Las cajas por apoyo de una pasada anterior las rehace (o las borra) su padre dentro
+            // de este mismo bucle: pueden estar ya destruidas cuando llega su turno.
+            if (o == null || o.name.StartsWith(PrefijoCajaHija)) continue;
+            if (!o.carving) continue;
+            var col = o.GetComponent<Collider>();
+            if (col == null || col.isTrigger) { sinCollider++; continue; }
+            Undo.RecordObject(o, "Ajustar obstáculos a lo que ocupan en el suelo");
+            if (AjustarAlPie(o, col))
+            {
+                ajustados++;
+                escenas.Add(o.gameObject.scene);
+            }
+        }
+        foreach (var e in escenas)
+            if (e.IsValid()) UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(e);
+
+        Debug.Log($"[NavMeshAutoSetup] {ajustados} obstáculo(s) ajustados a lo que ocupan hasta {AlturaDelPie} m del suelo " +
+                  $"({sinCollider} sin collider sólido, sin tocar). Guarda la escena. Ver INC-463.");
+    }
+
+    /// Ajusta el obstáculo a lo que el objeto ocupa hasta la altura de un personaje, en su propio
+    /// espacio local (así una valla larga es una caja larga y estrecha, y un pino, su tronco y sus
+    /// ramas bajas).
+    /// Antes se usaba una cápsula del tamaño del objeto entero: la copa de un árbol o el largo de
+    /// una valla tallaban un círculo enorme, y en la puerta del reino cerraban el paso. Ver INC-463.
+    /// Devuelve true si ha cambiado algo.
+    private static bool AjustarAlPie(NavMeshObstacle o, Collider col)
+    {
+        var shapeAntes = o.shape; var centroAntes = o.center; var tamAntes = o.size;
+        var radioAntes = o.radius; var altoAntes = o.height;
+
+        // Lo que se VE, no el collider: los árboles del pack llevan un collider que es solo el
+        // tronco, y con él los NPCs pasaban entre las ramas bajas. Si el objeto tiene malla
+        // visible, manda ella; si no, el collider.
+        var mf = o.GetComponent<MeshFilter>();
+        var mallaVisible = mf != null ? mf.sharedMesh : null;
+        if (mallaVisible != null)
+        {
+            var cajasVisibles = CajasDelPie(mallaVisible, o.transform);
+            if (cajasVisibles.Count > 0)
+            {
+                o.shape = NavMeshObstacleShape.Box;
+                o.center = cajasVisibles[0].center;
+                o.size = cajasVisibles[0].size;
+                if (PonerCajasHijas(o, cajasVisibles)) return true;
+                return o.shape != shapeAntes || o.center != centroAntes || o.size != tamAntes;
+            }
+        }
+
+        switch (col)
+        {
+            case BoxCollider box:
+                o.shape = NavMeshObstacleShape.Box;
+                o.center = box.center;
+                o.size = box.size;
+                break;
+
+            case CapsuleCollider cap when cap.direction == 1:
+                o.shape = NavMeshObstacleShape.Capsule;
+                o.center = cap.center;
+                o.radius = cap.radius;
+                o.height = cap.height;
+                break;
+
+            case SphereCollider sph:
+                o.shape = NavMeshObstacleShape.Capsule;
+                o.center = sph.center;
+                o.radius = sph.radius;
+                o.height = sph.radius * 2f;
+                break;
+
+            case MeshCollider mc when mc.sharedMesh != null:
+                var cajas = CajasDelPie(mc.sharedMesh, o.transform);
+                if (cajas.Count == 0) return false;
+                o.shape = NavMeshObstacleShape.Box;
+                o.center = cajas[0].center;
+                o.size = cajas[0].size;
+                // Un arco o una valla con hueco apoyan en el suelo por varios sitios: cada apoyo
+                // lleva su propia caja (hijos «NavObstáculo pie N»), para que el hueco quede libre.
+                bool cambioHijos = PonerCajasHijas(o, cajas);
+                if (cambioHijos) return true;
+                break;
+
+            default:
+                return false;
+        }
+
+        return o.shape != shapeAntes || o.center != centroAntes || o.size != tamAntes ||
+               !Mathf.Approximately(o.radius, radioAntes) || !Mathf.Approximately(o.height, altoAntes);
+    }
+
+    private const string PrefijoCajaHija = "NavObstáculo pie ";
+    // Separación mínima, en metros, entre dos apoyos para tratarlos como cajas distintas.
+    private const float HuecoEntreApoyos = 0.8f;
+
+    /// Cajas locales de lo que la malla ocupa hasta AlturaDelPie (en el mundo) sobre su punto más
+    /// bajo: una por apoyo, separando los apoyos a lo largo del eje horizontal más largo (los dos
+    /// pies de un arco). Funciona aunque el objeto esté girado. En el Editor la malla siempre se
+    /// puede leer, aunque no tenga Read/Write. Ver INC-463/465.
+    ///
+    /// Los huecos se miden con los TRIÁNGULOS recortados a esa altura, no con los vértices: el
+    /// travesaño de una valla es una pieza larga con vértices solo en los extremos, y midiendo
+    /// vértices parecía que entre poste y poste no había nada. Así se abrieron agujeros en todas
+    /// las vallas y Eldran se metía por los campos de flores (INC-465, vídeo de las 10:31).
+    private static List<Bounds> CajasDelPie(Mesh mesh, Transform t)
+    {
+        var cajas = new List<Bounds>();
+        Vector3[] v; int[] tri;
+        try { v = mesh.vertices; tri = mesh.triangles; }
+        catch { return cajas; }
+        if (v == null || v.Length == 0 || tri == null || tri.Length < 3) return cajas;
+
+        float minY = float.MaxValue;
+        var alto = new float[v.Length];
+        for (int i = 0; i < v.Length; i++)
+        {
+            alto[i] = t.TransformPoint(v[i]).y;
+            if (alto[i] < minY) minY = alto[i];
+        }
+        float techo = minY + AlturaDelPie;
+
+        // Cada triángulo, recortado a lo que queda por debajo del techo (en local).
+        var trozos = new List<List<Vector3>>();
+        var entrada = new List<(Vector3 p, float y)>(3);
+        for (int k = 0; k + 2 < tri.Length; k += 3)
+        {
+            entrada.Clear();
+            for (int j = 0; j < 3; j++) entrada.Add((v[tri[k + j]], alto[tri[k + j]]));
+            var trozo = RecortarPorDebajo(entrada, techo);
+            if (trozo.Count > 0) trozos.Add(trozo);
+        }
+        if (trozos.Count == 0) return cajas;
+
+        // Eje local que apunta hacia arriba y eje horizontal más largo.
+        Vector3 arribaLocal = t.InverseTransformDirection(Vector3.up);
+        int eje = Mathf.Abs(arribaLocal.x) > Mathf.Abs(arribaLocal.y)
+            ? (Mathf.Abs(arribaLocal.x) > Mathf.Abs(arribaLocal.z) ? 0 : 2)
+            : (Mathf.Abs(arribaLocal.y) > Mathf.Abs(arribaLocal.z) ? 1 : 2);
+        Vector3 esc = new Vector3(Mathf.Abs(t.lossyScale.x), Mathf.Abs(t.lossyScale.y), Mathf.Abs(t.lossyScale.z));
+        var todo = new Bounds(trozos[0][0], Vector3.zero);
+        foreach (var trozo in trozos) foreach (var p in trozo) todo.Encapsulate(p);
+        int largo = -1; float mejor = -1f;
+        for (int k = 0; k < 3; k++)
+        {
+            if (k == eje) continue;
+            float mundoK = todo.size[k] * esc[k];
+            if (mundoK > mejor) { mejor = mundoK; largo = k; }
+        }
+
+        // Cada trozo cubre un tramo del eje largo; los tramos que se tocan (o casi) son un apoyo.
+        var cajasTrozo = new List<Bounds>(trozos.Count);
+        foreach (var trozo in trozos)
+        {
+            var bt = new Bounds(trozo[0], Vector3.zero);
+            foreach (var p in trozo) bt.Encapsulate(p);
+            cajasTrozo.Add(bt);
+        }
+        cajasTrozo.Sort((x, y) => x.min[largo].CompareTo(y.min[largo]));
+
+        float hueco = HuecoEntreApoyos / Mathf.Max(0.0001f, esc[largo]);
+        var actual = cajasTrozo[0];
+        for (int i = 1; i < cajasTrozo.Count; i++)
+        {
+            if (cajasTrozo[i].min[largo] - actual.max[largo] > hueco)
+            {
+                cajas.Add(Rellenar(actual, eje, arribaLocal[eje], esc));
+                actual = cajasTrozo[i];
+            }
+            else actual.Encapsulate(cajasTrozo[i]);
+        }
+        cajas.Add(Rellenar(actual, eje, arribaLocal[eje], esc));
+        return cajas;
+    }
+
+    /// Recorta un polígono (puntos locales con su altura en el mundo) a lo que queda en o por
+    /// debajo de 'techo'. Devuelve los puntos locales del trozo, o ninguno.
+    private static List<Vector3> RecortarPorDebajo(List<(Vector3 p, float y)> poli, float techo)
+    {
+        var salida = new List<Vector3>(4);
+        for (int i = 0; i < poli.Count; i++)
+        {
+            var a = poli[i];
+            var b = poli[(i + 1) % poli.Count];
+            bool aDentro = a.y <= techo, bDentro = b.y <= techo;
+            if (aDentro) salida.Add(a.p);
+            if (aDentro != bDentro)
+            {
+                float f = (techo - a.y) / (b.y - a.y);
+                salida.Add(Vector3.Lerp(a.p, b.p, f));
+            }
+        }
+        return salida;
+    }
+
+    /// Da a la caja la altura de un personaje por el eje que apunta hacia arriba y un grosor
+    /// mínimo en los otros dos.
+    private static Bounds Rellenar(Bounds b, int eje, float signoArriba, Vector3 esc)
+    {
+        Vector3 min = b.min, max = b.max;
+        float altoLocal = AlturaDelPie / Mathf.Max(0.0001f, esc[eje]);
+        if (max[eje] - min[eje] < altoLocal)
+        {
+            if (signoArriba >= 0f) max[eje] = min[eje] + altoLocal;
+            else min[eje] = max[eje] - altoLocal;
+        }
+        for (int k = 0; k < 3; k++)
+        {
+            if (k == eje) continue;
+            float minimo = 0.1f / Mathf.Max(0.0001f, esc[k]);
+            if (max[k] - min[k] < minimo)
+            {
+                float c = (min[k] + max[k]) * 0.5f;
+                min[k] = c - minimo * 0.5f; max[k] = c + minimo * 0.5f;
+            }
+        }
+        return new Bounds((min + max) * 0.5f, max - min);
+    }
+
+    /// Deja un hijo con su NavMeshObstacle por cada caja a partir de la segunda, y quita los que
+    /// sobren de pasadas anteriores. Devuelve true si ha cambiado algo.
+    private static bool PonerCajasHijas(NavMeshObstacle o, List<Bounds> cajas)
+    {
+        var existentes = new List<Transform>();
+        foreach (Transform hijo in o.transform)
+            if (hijo.name.StartsWith(PrefijoCajaHija)) existentes.Add(hijo);
+
+        bool cambio = false;
+        for (int i = 1; i < cajas.Count; i++)
+        {
+            string nombre = PrefijoCajaHija + (i + 1);
+            Transform hijo = existentes.Find(h => h.name == nombre);
+            if (hijo == null)
+            {
+                var go = new GameObject(nombre);
+                Undo.RegisterCreatedObjectUndo(go, "Cajas de apoyo del obstáculo");
+                go.transform.SetParent(o.transform, false);
+                go.layer = o.gameObject.layer;
+                hijo = go.transform;
+                cambio = true;
+            }
+            existentes.Remove(hijo);
+            var obs = hijo.GetComponent<NavMeshObstacle>();
+            if (obs == null) { obs = Undo.AddComponent<NavMeshObstacle>(hijo.gameObject); cambio = true; }
+            else Undo.RecordObject(obs, "Cajas de apoyo del obstáculo");
+            obs.carving = true;
+            obs.shape = NavMeshObstacleShape.Box;
+            if (obs.center != cajas[i].center || obs.size != cajas[i].size) cambio = true;
+            obs.center = cajas[i].center;
+            obs.size = cajas[i].size;
+        }
+        foreach (var sobra in existentes)
+        {
+            Undo.DestroyObjectImmediate(sobra.gameObject);
+            cambio = true;
+        }
+        return cambio;
     }
 
     /// <summary>
