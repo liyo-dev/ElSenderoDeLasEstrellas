@@ -581,7 +581,7 @@ public class DayNightCycle : MonoBehaviour
     {
         if (timeSettings == null || timeSettings.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[DayNightCycle] No hay periodos configurados en timeSettings.");
 #endif
             enabled = false;
@@ -600,7 +600,7 @@ public class DayNightCycle : MonoBehaviour
             _runtimeSkybox = new Material(sharedSkyboxMaterial);
             RenderSettings.skybox = _runtimeSkybox;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning("[DayNightCycle] No hay sharedSkyboxMaterial asignado (recomendado: Assets/Plugins/Quibli/Demos/City/Materials/City_Skybox.mat); el ciclo día/noche no podrá animar el skybox único y se queda con el que ya hubiera en RenderSettings.skybox.");
@@ -1055,7 +1055,7 @@ public class DayNightCycle : MonoBehaviour
                 return;
             }
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[DayNightCycle] TimeOfDay '{timeOfDay}' no encontrado en la configuración.");
 #endif
     }
@@ -1066,7 +1066,7 @@ public class DayNightCycle : MonoBehaviour
     {
         if (index < 0 || index >= timeSettings.Length)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[DayNightCycle] Índice {index} fuera de rango.");
 #endif
             return;
@@ -1090,14 +1090,14 @@ public class DayNightCycle : MonoBehaviour
     {
         if (rainPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DayNightCycle] StartRain() no ha hecho nada: rainPrefab no está asignado en este GameObject/escena.");
 #endif
             return;
         }
         if (IsRaining || _isCloudBuildingUp)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartRain() no ha hecho nada: ya está lloviendo o nublándose (IsRaining/_isCloudBuildingUp). Usa StopRain() primero si quieres reiniciarla.");
 #endif
             return;
@@ -1108,7 +1108,7 @@ public class DayNightCycle : MonoBehaviour
         // una llamada manual/narrativa a StartRain o ToggleRain.
         if (TagMinigameController.IsAnyMinigameActive)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartRain() no ha hecho nada: hay un minijuego activo (TagMinigameController.IsAnyMinigameActive).");
 #endif
             return;
@@ -1191,7 +1191,7 @@ public class DayNightCycle : MonoBehaviour
     {
         if (_zoneMistForced == active) return;
         _zoneMistForced = active;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[DayNightCycle] SetZoneMistOverride({active})");
 #endif
 
@@ -1216,7 +1216,7 @@ public class DayNightCycle : MonoBehaviour
         if (!_zoneMistForced) return;
         if (IsMisty || IsRaining || _isCloudBuildingUp || IsThunderstorm)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DayNightCycle] TryActivateZoneMist() bloqueado -- IsMisty={IsMisty} IsRaining={IsRaining} isCloudBuildingUp={_isCloudBuildingUp} IsThunderstorm={IsThunderstorm}");
 #endif
             return;
@@ -1227,7 +1227,7 @@ public class DayNightCycle : MonoBehaviour
             _mistCoroutine = null;
         }
         ActivateMist();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[DayNightCycle] TryActivateZoneMist() -> ActivateMist() ejecutado (niebla de zona activa).");
 #endif
     }
@@ -1582,7 +1582,7 @@ public class DayNightCycle : MonoBehaviour
         else
         {
             _activeRainInstance = Instantiate(rainPrefab, transform.position, Quaternion.identity);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DayNightCycle] No se encontró jugador ni cámara, lluvia instanciada sin padre.");
 #endif
         }
@@ -1726,7 +1726,7 @@ public class DayNightCycle : MonoBehaviour
             else
             {
                 _activeMistInstance = Instantiate(mistPrefab, transform.position, Quaternion.identity);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DayNightCycle] No se encontró jugador ni cámara, niebla instanciada sin padre.");
 #endif
             }
@@ -1884,7 +1884,7 @@ public class DayNightCycle : MonoBehaviour
             else
             {
                 _activeWindInstance = Instantiate(windPrefab, transform.position, Quaternion.identity);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DayNightCycle] No se encontró jugador ni cámara, viento instanciado sin padre.");
 #endif
             }
@@ -1960,21 +1960,21 @@ public class DayNightCycle : MonoBehaviour
     {
         if (IsThunderstorm)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartThunderstorm() no ha hecho nada: ya hay una tormenta activa.");
 #endif
             return;
         }
         if (IsRaining || _isCloudBuildingUp)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartThunderstorm() no ha hecho nada: ya está lloviendo o nublándose por otro motivo (StartRain/StartThunderstorm no se pueden solapar). Usa StopRain() primero si quieres forzar la tormenta.");
 #endif
             return;
         }
         if (TagMinigameController.IsAnyMinigameActive)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartThunderstorm() no ha hecho nada: hay un minijuego activo.");
 #endif
             return;

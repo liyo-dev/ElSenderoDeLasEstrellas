@@ -75,13 +75,13 @@ public class PlayerHealthUI : MonoBehaviour
             _playerHealthSystem.OnHealthChanged.AddListener(UpdateHealthBar);
             _playerHealthSystem.OnDamageTaken.AddListener(OnDamageTaken);
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerHealthUI] Conectado al sistema de salud del jugador");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerHealthUI] No se encontró PlayerHealthSystem");
 #endif
         }

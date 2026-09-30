@@ -54,11 +54,24 @@ public class MagicProjectile : MonoBehaviour
     ProjectileConfig _cfg;
     GameObject       _instigator;
 
+    // Proyectil mejorado (INC-497): rebote, perforar y zona al impactar.
+    int          _bouncesLeft;
+    float        _bounceRange;
+    int          _pierceLeft;
+    MagicSpellSO _impactZone;
+    MagicSpellSO _statusSpell;   // estado que pone al impactar (INC-499)
+    LayerMask    _zoneLayers;
+    float        _zoneDamageMultiplier = 1f;
+    readonly System.Collections.Generic.HashSet<Transform> _alreadyHit = new System.Collections.Generic.HashSet<Transform>();
+    static readonly Collider[] s_bounceBuffer = new Collider[24];
+
     Vector3 _spawnPos;
     float   _spawnTime;
 
     /// <summary>Daño configurado de este proyectil (usado p. ej. por ProjectileCollisionHandler al sumar daños en un choque de hechizos).</summary>
     public float Damage => _cfg.damage;
+    /// <summary>Quién lanzó el proyectil (puede ser null). Lo usa el contraataque (INC-493).</summary>
+    public GameObject Instigator => _instigator;
 
     /// <summary>true si este proyectil es la variante precisa de un hechizo con modo preciso (ver
     /// ProjectileConfig.isPrecise / MagicSpellSO.BuildPreciseVariant). Usado por RuneCollar.</summary>
@@ -181,6 +194,86 @@ public class MagicProjectile : MonoBehaviour
     /// <summary>
     /// Lanza el proyectil en la dirección dada aplicando velocidad/rotación.
     /// </summary>
+    /// <summary>
+    /// Opciones del proyectil mejorado sacadas del hechizo (INC-497). La llama el spawner tras
+    /// Configure. 'zoneLayers' = capas que daña la zona que deja al impactar.
+    /// </summary>
+    public void ConfigureExtras(MagicSpellSO spell, LayerMask zoneLayers, float damageMultiplier)
+    {
+        if (spell == null) return;
+        _bouncesLeft = spell.bounceCount;
+        _bounceRange = spell.bounceRange;
+        _pierceLeft = spell.pierceCount;
+        _impactZone = spell.impactZone != null && spell.impactZone.kind == MagicKind.Zone ? spell.impactZone : null;
+        _zoneLayers = zoneLayers;
+        _zoneDamageMultiplier = damageMultiplier;
+        _statusSpell = spell.statusEffect != EstadoDeCombate.Ninguno ? spell : null;
+    }
+
+    static Transform HitRoot(Collider c)
+    {
+        if (c == null) return null;
+        var d = c.GetComponentInParent<Damageable>();
+        if (d != null) return d.transform;
+        return c.attachedRigidbody ? c.attachedRigidbody.transform : c.transform.root;
+    }
+
+    bool IsAlreadyHit(Collider c)
+    {
+        if (_alreadyHit.Count == 0) return false;
+        Transform root = HitRoot(c);
+        return root != null && _alreadyHit.Contains(root);
+    }
+
+    /// <summary>
+    /// Tras dar a un enemigo: rebota al siguiente o sigue atravesando si le quedan. True = el
+    /// proyectil sigue vivo.
+    /// </summary>
+    bool TryContinueAfterHit(Collider hit, Vector3 hitPoint)
+    {
+        Transform hitRoot = HitRoot(hit);
+        if (hitRoot != null) _alreadyHit.Add(hitRoot);
+
+        if (_bouncesLeft > 0)
+        {
+            Transform next = FindNextBounceTarget(hitPoint);
+            if (next != null)
+            {
+                _bouncesLeft--;
+                Vector3 aim = next.position + Vector3.up * 1f;
+                float speed = _cfg.initialSpeed;
+                if (_rb != null && !_rb.isKinematic) speed = Mathf.Max(speed, _rb.linearVelocity.magnitude);
+                Launch(aim - transform.position, speed, false);
+                return true;
+            }
+        }
+
+        if (_pierceLeft != 0)
+        {
+            if (_pierceLeft > 0) _pierceLeft--;
+            return true;
+        }
+        return false;
+    }
+
+    Transform FindNextBounceTarget(Vector3 from)
+    {
+        int mask = LayerMask.GetMask("Enemy", "Boss");
+        int n = Physics.OverlapSphereNonAlloc(from, _bounceRange, s_bounceBuffer, mask, QueryTriggerInteraction.Collide);
+        Transform best = null;
+        float bestSqr = float.MaxValue;
+        for (int i = 0; i < n; i++)
+        {
+            Transform root = HitRoot(s_bounceBuffer[i]);
+            if (root == null || _alreadyHit.Contains(root)) continue;
+            var d = root.GetComponentInChildren<Damageable>();
+            if (d != null && !d.IsAlive) continue;
+            float sqr = (root.position - from).sqrMagnitude;
+            if (sqr < bestSqr) { bestSqr = sqr; best = root; }
+        }
+        return best;
+    }
+
     public void Launch(Vector3 direction, float speed, bool useGravity)
     {
         Vector3 normalizedDirection = direction.sqrMagnitude > 0.0001f ? direction.normalized : transform.forward;
@@ -246,7 +339,7 @@ public class MagicProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // DEBUG TEMPORAL (quitar tras diagnosticar el bug de arañas sin daño a corta distancia):
         // registra CADA overlap de trigger que recibe el proyectil, incluso los que la grace
         // period va a descartar, para ver si OnTriggerEnter llega a dispararse a bocajarro.
@@ -282,7 +375,7 @@ public class MagicProjectile : MonoBehaviour
 
     void ResolveHit(Collider other, Vector3 hitPoint)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // DEBUG TEMPORAL (quitar tras diagnosticar el bug de arañas sin daño a corta distancia):
         // registra CADA llamada a ResolveHit, incluso las que se van a filtrar más abajo, con
         // los motivos exactos por los que se ignora (_ended/null aquí; shouldIgnore/escudo más abajo).
@@ -309,7 +402,7 @@ public class MagicProjectile : MonoBehaviour
 
         bool shouldIgnore = isBattleArena || isTransparentOrIgnored || isOtherProjectile;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[DEBUG-HIT] '{objectName}' layer={layerName} isBattleArena={isBattleArena} " +
                   $"isTransparentOrIgnored={isTransparentOrIgnored} isOtherProjectile={isOtherProjectile} " +
                   $"shouldIgnore={shouldIgnore}");
@@ -320,21 +413,38 @@ public class MagicProjectile : MonoBehaviour
         // Escudo NPC activo: bloquear antes de cualquier lógica de daño.
         if (TryHandleNpcShieldBlock(other, hitPoint))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DEBUG-HIT] Bloqueado por TryHandleNpcShieldBlock contra '{objectName}'");
 #endif
             return;
         }
 
+        // Magia enemiga contra el jugador: solo si 'hitLayers' incluye expresamente la capa del
+        // jugador (los hechizos del jugador y de sus aliados nunca la incluyen). El jugador no usa
+        // Damageable, sino PlayerHealthSystem (con su defensa y su escudo). Ver INC-509.
+        if (_cfg.hitLayers.value != 0 && ((1 << otherLayer) & _cfg.hitLayers.value) != 0)
+        {
+            var saludJugador = other.GetComponentInParent<PlayerHealthSystem>();
+            if (saludJugador != null)
+            {
+                if (_instigator != null && saludJugador.gameObject == _instigator) return;
+                if (IsAlreadyHit(other)) return;
+                saludJugador.TakeDamage(_cfg.damage);
+                SpawnImpactEffects(hitPoint);
+                if (_cfg.destroyOnHit) End(true);
+                return;
+            }
+        }
+
         // 🔍 DEBUG: Log de cada colisión (solo si no se ignora)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MagicProjectile] OnHit: {objectName} (Layer: {layerName}, Tag: {other.tag})");
 #endif
 
         // ✅ PRIORIDAD 1: Detectar colisión con proyectiles enemigos (layer "ProjectileEnemy" o "EnemyProjectile")
         if (layerName == "ProjectileEnemy" || layerName == "EnemyProjectile")
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MagicProjectile] 💥 Colisión con proyectil enemigo detectada!");
 #endif
             ProjectileCollisionHandler.HandleCollision(gameObject, other.gameObject, hitPoint);
@@ -350,11 +460,13 @@ public class MagicProjectile : MonoBehaviour
         if (isEnemy)
         {
             if (!TryMarkHit(other)) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (IsAlreadyHit(other)) return; // al atravesar o rebotar no se daña dos veces al mismo (INC-497)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MagicProjectile] 🎯 IMPACTO CONTRA ENEMIGO: {other.gameObject.name}!");
 #endif
             ApplyDamageAndKnockback(other, hitPoint);
             SpawnImpactEffects(hitPoint);
+            if (TryContinueAfterHit(other, hitPoint)) return;
             if (_cfg.destroyOnHit) End(true);
             return;
         }
@@ -382,6 +494,7 @@ public class MagicProjectile : MonoBehaviour
             {
                 return; // No dañarse a sí mismo
             }
+            if (IsAlreadyHit(other)) return; // INC-497
 
             // FIX M8 (auditoría 2026-08-07): _cfg.hitLayers se leía del SO pero nunca se
             // comprobaba — el impacto directo y, sobre todo, el AOE de abajo aplicaban daño a
@@ -394,7 +507,7 @@ public class MagicProjectile : MonoBehaviour
                 return;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MagicProjectile] 🎯 Impacto contra {other.gameObject.name} - Aplicando {_cfg.damage} de daño via Damageable");
 #endif
 
@@ -420,6 +533,7 @@ public class MagicProjectile : MonoBehaviour
             }
             
             SpawnImpactEffects(hitPoint);
+            if (TryContinueAfterHit(other, hitPoint)) return;
             if (_cfg.destroyOnHit) End(true);
             return;
         }
@@ -475,8 +589,12 @@ public class MagicProjectile : MonoBehaviour
             {
                 // Con el ataque de quien lo lanzó (FormulasDeCombate, INC-470).
                 d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damage), _instigator);
+                if (_statusSpell != null)
+                    EstadosDeCombate.Aplicar(d, _statusSpell.statusEffect, _statusSpell.statusDuration,
+                                             _statusSpell.statusStrength, hitPoint != Vector3.zero ? hitPoint : transform.position,
+                                             _statusSpell.statusVFX);
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
             {
                 Debug.LogWarning($"[MagicProjectile] ⚠️ Impacto en '{col.gameObject.name}' pero no se encontró Damageable en su jerarquía - no se aplicó daño.");
@@ -506,6 +624,9 @@ public class MagicProjectile : MonoBehaviour
         if (_ended) return;
         _ended = true;
 
+        // Zona al impactar (INC-497): fuego en el suelo, etc.
+        if (byImpact && _impactZone != null)
+            MagicProjectileSpawner.SpawnZoneAt(_impactZone, transform.position, _instigator, _zoneLayers, _zoneDamageMultiplier);
 
         // Si muere sin impactar (TTL o rango), dispara VFX de despawn (pooled)
         if (!byImpact && _cfg.despawnVFX)
@@ -526,7 +647,7 @@ public class MagicProjectile : MonoBehaviour
         shieldController.OnShieldHit();
         SpawnImpactEffects(hitPoint);
         End(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MagicProjectile] 🛡️ Bloqueado por escudo NPC: {shieldController.gameObject.name}");
 #endif
         return true;

@@ -210,7 +210,7 @@ namespace Game.NPC.Modules
             {
                 if (enableDetailedLogs)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCInteractiveNarrativeConfig] ℹ️ conditionalNarratives está vacío");
 #endif
                     }
@@ -225,7 +225,7 @@ namespace Game.NPC.Modules
             
             if (enableDetailedLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCInteractiveNarrativeConfig:{name}] 🔍 Evaluando {_sortedNarrativesCache.Length} narrativas condicionales");
 #endif
                 }
@@ -244,7 +244,7 @@ namespace Game.NPC.Modules
                 {
                     if (enableDetailedLogs)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCInteractiveNarrativeConfig:{name}] ✅ Narrativa seleccionada: '{narrative.description}' (priority={narrative.priority})");
 #endif
                         }
@@ -254,7 +254,7 @@ namespace Game.NPC.Modules
 
             if (enableDetailedLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCInteractiveNarrativeConfig:{name}] ❌ No hay narrativas disponibles para ejecutar");
 #endif
                 }

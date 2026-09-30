@@ -20,7 +20,7 @@ public class LoadingCharacterStage : MonoBehaviour
 
     bool _revealed;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     // DIAGNÓSTICO TEMPORAL (20 ago 2026): investigando el bug "solo aparece Will en la pantalla
     // de carga al abortar el minijuego de Estela". Todo el cableado estático de la escena
     // (array 'characters', capas, Avatar/Controller, materiales) se revisó y está correcto, así
@@ -43,7 +43,7 @@ public class LoadingCharacterStage : MonoBehaviour
         if (characters == null) return;
         for (int i = 0; i < characters.Length; i++)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!characters[i])
             {
                 Debug.LogWarning($"[LoadingCharacterStage] ResetToRunning: characters[{i}] es null.");
@@ -63,7 +63,7 @@ public class LoadingCharacterStage : MonoBehaviour
         if (characters == null) return;
         for (int i = 0; i < characters.Length; i++)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!characters[i])
             {
                 Debug.LogWarning($"[LoadingCharacterStage] PlayReveal: characters[{i}] es null.");

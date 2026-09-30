@@ -39,7 +39,7 @@ public class SpawnManager : MonoBehaviour
     {
         if (_initialized) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SpawnManager] 🔍 HandleProfileReady() llamado - GameBootService.IsAvailable: {GameBootService.IsAvailable}");
 #endif
 
@@ -50,7 +50,7 @@ public class SpawnManager : MonoBehaviour
             var activePreset = bootProfile.GetActivePresetResolved();
             var startAnchor = bootProfile.GetStartAnchorOrDefault();
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SpawnManager] 🔍 Profile: {bootProfile.name}");
             Debug.Log($"[SpawnManager] 🔍 ActivePreset: {(activePreset != null ? activePreset.name : "NULL")}");
             Debug.Log($"[SpawnManager] 🔍 StartAnchor obtenido: '{startAnchor}'");
@@ -61,20 +61,20 @@ public class SpawnManager : MonoBehaviour
             if (!string.IsNullOrEmpty(startAnchor))
             {
                 SetCurrentAnchor(startAnchor);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[SpawnManager] ✅ Anchor establecido desde profile: '{startAnchor}'");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SpawnManager] ⚠️ Profile no tiene anchor definido - usando fallback");
 #endif
             }
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SpawnManager] ❌ Profile es NULL - no se pudo establecer anchor inicial");
 #endif
         }
@@ -120,7 +120,7 @@ public class SpawnManager : MonoBehaviour
         var player = PlayerService.Player;
         if (!player)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte");
             #endif
             return;
@@ -135,7 +135,7 @@ public class SpawnManager : MonoBehaviour
         var player = PlayerService.Player;
         if (!player)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SpawnManager] No se encontró player para teletransporte");
             #endif
             return;

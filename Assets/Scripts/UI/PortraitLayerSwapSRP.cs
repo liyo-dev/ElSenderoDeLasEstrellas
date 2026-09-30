@@ -26,7 +26,7 @@ public class PortraitLayerSwapSRP : MonoBehaviour
         _portraitLayer = LayerMask.NameToLayer(portraitLayerName);
         if (_portraitLayer < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PortraitLayerSwapSRP] Layer '{portraitLayerName}' no existe. Por favor créala en el proyecto.");
 #endif
             enabled = false;

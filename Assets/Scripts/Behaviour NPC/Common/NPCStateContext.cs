@@ -131,7 +131,7 @@ namespace Game.NPC.Common
         {
             if (DebugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPC:{Transform.name}] {message}");
 #endif
                 }
@@ -140,14 +140,14 @@ namespace Game.NPC.Common
         {
             if (DebugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPC:{Transform.name}] {message}");
 #endif
                 }
         }
         public void LogError(string message)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[NPC:{Transform.name}] {message}");
 #endif
         }

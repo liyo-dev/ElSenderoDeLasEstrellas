@@ -18,17 +18,19 @@ MonoBehaviour:
   currentHP: 100
   maxMP: 50
   currentMP: 50
+  ataque: 0
+  defensa: 0
   unlockedAbilities: 
   unlockedSpells: 
-  leftSpellId: 0
-  rightSpellId: 0
-  specialSpellId: 0
+  basicSpellIds: 
+  companionBasics: []
   flags:
   - QUEST_ACTIVE:WILL_MISSION0
   - QUEST_COMPLETED:WILL_MISSION0
   - QUEST_ACTIVE:ELDRAN_MISSION1
   - QUEST_COMPLETED:ELDRAN_MISSION1
   - QUEST_ACTIVE:WILL_MISSION1
+  - QUEST_COMPLETED:WILL_MISSION1
   abilities:
     swim: 0
     jump: 0
@@ -61,9 +63,10 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: a856e804-7ab5-4aaf-a241-774bce56c27f
+      value: 004d01ec-565b-4943-8661-88335a7b0057
   npcPositions: []
   npcRelationships: []
+  objetosDelMundo: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
   seenLorePopupIds: []

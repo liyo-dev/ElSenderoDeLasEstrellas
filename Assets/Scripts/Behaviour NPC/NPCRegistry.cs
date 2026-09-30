@@ -86,7 +86,7 @@ namespace Game.NPC
         {
             if (npc == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[NPCRegistry] Intento de registrar NPC null");
 #endif
                 return;
@@ -95,12 +95,12 @@ namespace Game.NPC
             {
                 if (_npcsByID.ContainsKey(narrativeID))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCRegistry] NPC con ID {narrativeID} ya está registrado. Se sobrescribe.");
 #endif
                 }
                 _npcsByID[narrativeID] = npc;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCRegistry] NPC registrado con ID: {narrativeID}");
 #endif
             }
@@ -113,7 +113,7 @@ namespace Game.NPC
                 if (!_npcsByTag[narrativeTag].Contains(npc))
                 {
                     _npcsByTag[narrativeTag].Add(npc);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCRegistry] NPC registrado con Tag: {narrativeTag}");
 #endif
                 }
@@ -124,14 +124,14 @@ namespace Game.NPC
             if (!string.IsNullOrWhiteSpace(narrativeID) && _npcsByID.ContainsKey(narrativeID))
             {
                 _npcsByID.Remove(narrativeID);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCRegistry] NPC des-registrado con ID: {narrativeID}");
 #endif
             }
             if (!string.IsNullOrWhiteSpace(narrativeTag) && _npcsByTag.ContainsKey(narrativeTag))
             {
                 _npcsByTag[narrativeTag].RemoveAll(n => n == null);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCRegistry] NPC des-registrado con Tag: {narrativeTag}");
 #endif
             }
@@ -152,7 +152,7 @@ namespace Game.NPC
             {
                 return npc;
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCRegistry] No se encontró NPC con ID: {narrativeID}");
 #endif
             return null;
@@ -177,7 +177,7 @@ namespace Game.NPC
         {
             _npcsByID.Clear();
             _npcsByTag.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[NPCRegistry] Registro limpiado");
 #endif
         }

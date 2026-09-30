@@ -28,14 +28,14 @@ public class NPCMovementDebugger : MonoBehaviour
         
         if (_agent == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[MovementDebugger:{name}] ❌ No tiene NavMeshAgent!");
 #endif
             enabled = false;
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MovementDebugger:{name}] ✅ Iniciado - Monitoreando movimiento");
 #endif
     }
@@ -62,7 +62,7 @@ public class NPCMovementDebugger : MonoBehaviour
             {
                 if (_agent.velocity.sqrMagnitude > 0.01f || _agent.hasPath)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[MovementDebugger:{name}] ⚠️ ¡MOVIMIENTO NO DESEADO EN IDLE!\n" +
                                    $"Velocity: {_agent.velocity}\n" +
                                    $"HasPath: {_agent.hasPath}\n" +
@@ -88,7 +88,7 @@ public class NPCMovementDebugger : MonoBehaviour
             if (stateInfo != _lastStateName)
             {
                 _stateChangeCount++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[MovementDebugger:{name}] 🔄 CAMBIO DE ESTADO #{_stateChangeCount}: '{_lastStateName}' → '{stateInfo}' (tipo: {stateType})");
 #endif
                 _lastStateName = stateInfo;
@@ -126,7 +126,7 @@ public class NPCMovementDebugger : MonoBehaviour
             }
         }
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MovementDebugger:{name}] 📊 Estado:\n" +
                  $"  FSM State: {stateInfo} (tipo: {stateType})\n" +
                  $"  Party Status: {partyInfo}\n" +

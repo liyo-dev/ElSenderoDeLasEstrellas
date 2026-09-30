@@ -40,6 +40,8 @@ public class EnemyProjectile : MonoBehaviour
 
     /// <summary>Daño configurado de este proyectil (usado p. ej. por ProjectileCollisionHandler al sumar daños en un choque de hechizos).</summary>
     public float Damage => damage;
+    /// <summary>Dirección de vuelo. Lo usa el contraataque para devolverlo por donde vino (INC-493).</summary>
+    public Vector3 Direction => rb != null && rb.linearVelocity.sqrMagnitude > 0.01f ? rb.linearVelocity.normalized : direction;
     private bool hasHit = false;
     private float _spawnTime;
     private Rigidbody rb;
@@ -142,7 +144,7 @@ public class EnemyProjectile : MonoBehaviour
         _spawnTime = Time.time;
         _hasLastCheckedPosition = false; // reinicia el sweep de proximidad (INC-027)
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[EnemyProjectile] Inicializado — daño: {damage}, velocidad: {EffectiveSpeed}");
 #endif
 
@@ -231,7 +233,7 @@ public class EnemyProjectile : MonoBehaviour
             var shield = hit.GetComponentInParent<PlayerShieldController>();
             if (shield != null && shield.IsDefending)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[EnemyProjectile] 🛡️ AoE de lluvia bloqueado por escudo");
 #endif
                 continue;
@@ -240,7 +242,7 @@ public class EnemyProjectile : MonoBehaviour
             var playerHealth = hit.GetComponent<PlayerHealthSystem>() ?? hit.GetComponentInParent<PlayerHealthSystem>();
             if (playerHealth != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EnemyProjectile] 💥 AoE lluvia: {_aoeDamage} daño (ignora iframes)");
 #endif
                 playerHealth.TakeDamage(_aoeDamage, ignoreInvulnerability: true);
@@ -354,7 +356,7 @@ public class EnemyProjectile : MonoBehaviour
             if (shield != null && shield.IsDefending)
             {
                 hasHit = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[EnemyProjectile] 🛡️ Bloqueado por escudo (proximity)");
 #endif
                 DestroyProjectile();
@@ -362,7 +364,7 @@ public class EnemyProjectile : MonoBehaviour
             }
 
             hasHit = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[EnemyProjectile] 🎯 Impacto JUGADOR por proximidad: {damage} daño");
 #endif
             playerHealth.TakeDamage(damage, _bypassInvulnerabilityOnHit);
@@ -407,7 +409,7 @@ public class EnemyProjectile : MonoBehaviour
         // FIX INC-082 (diagnóstico): log de cada impacto real para poder ver en Console, sin abrir el
         // profiler ni instrumentar nada, contra qué layer/trigger está chocando cada roca — pensado
         // para confirmar de una vez si el suelo de la sala del Golem tiene un layer/trigger inesperado.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[EnemyProjectile] OnTriggerEnter '{other.name}' layer={LayerMask.LayerToName(otherLayer)} isTrigger={other.isTrigger}");
 #endif
         if (other.CompareTag("Enemy") || other.CompareTag("Boss") || otherLayer == _enemyLayer)
@@ -485,7 +487,7 @@ public class EnemyProjectile : MonoBehaviour
         {
             if (other.isTrigger)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EnemyProjectile] '{other.name}' es suelo (layer {LayerMask.LayerToName(otherLayer)}) pero SU collider es trigger — impacto de suelo ignorado, sin VFX ni AoE.");
 #endif
                 return;
@@ -504,7 +506,7 @@ public class EnemyProjectile : MonoBehaviour
             if (_dealAoEOnImpact) ApplyAoEImpact();
             DestroyProjectile();
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             // Ni jugador, ni Default, ni ningún layer ignorado explícitamente, y el collider de
@@ -545,7 +547,7 @@ public class EnemyProjectile : MonoBehaviour
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[EnemyProjectile] No se pudo aplicar daño a {target.name}");
 #endif
     }

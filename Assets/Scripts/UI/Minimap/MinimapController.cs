@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -21,13 +22,21 @@ public class MinimapController : MonoBehaviour
     [Header("Cámara")]
     [SerializeField] Camera minimapCamera;
     [SerializeField] RenderTexture renderTexture;
+    [Tooltip("Altura mínima de la cámara. Si hay terreno más alto, la cámara se coloca por encima de él " +
+             "(más Margen Sobre Terreno): lo que queda por encima de la cámara no se dibuja y por el hueco " +
+             "se vería lo que hay debajo, normalmente el mar. Ver INC-505.")]
     [SerializeField] float cameraHeight = 200f;
+    [Tooltip("Metros que la cámara queda por encima del punto más alto del terreno cargado.")]
+    [SerializeField] float margenSobreTerreno = 20f;
     [SerializeField] float defaultZoom = 25f;
 
     [Header("UI")]
     [SerializeField] GameObject minimapRoot;
     [SerializeField] RawImage minimapImage;
     [SerializeField] RectTransform playerArrow;
+
+    [Tooltip("Lado de la flecha del jugador en el minimapa normal (px).")]
+    [SerializeField] float playerArrowSize = 36f;
 
     [Header("Bounds (opcional)")]
     [SerializeField] MinimapBounds worldBounds;
@@ -37,10 +46,23 @@ public class MinimapController : MonoBehaviour
              "para mostrar más área del mundo que el zoom normal (defaultZoom/worldBounds).")]
     [SerializeField] float bigMapZoom = 60f;
 
+    [Tooltip("Zoom más cercano al que se puede acercar el mapa grande (tamaño ortográfico).")]
+    [SerializeField] float bigMapZoomMin = 20f;
+
+    [Tooltip("Zoom más lejano al que se puede alejar el mapa grande (tamaño ortográfico).")]
+    [SerializeField] float bigMapZoomMax = 160f;
+
+    [Tooltip("Distancia máxima (m) a la que se puede desplazar la vista del mapa grande desde el jugador.")]
+    [SerializeField] float bigMapMaxPan = 250f;
+
+    [Tooltip("Tamaño en pantalla de la flecha y los iconos en el mapa grande, respecto al minimapa normal. " +
+             "El mapa se amplía, pero ellos no crecen con él.")]
+    [SerializeField] float bigMapMarkerScale = 1.4f;
+
     [Header("Agua en el minimapa")]
     [Tooltip("El agua del mundo (mar, ríos) usa shaders pensados para verse a ras de suelo (reflejos, " +
              "espuma, profundidad calculada a partir de la textura de profundidad de la propia cámara) " +
-             "que, vistos desde la cámara ortográfica del minimapa a 200 m de altura, se leen como una " +
+             "que, vistos desde la cámara ortográfica del minimapa, se leen como una " +
              "mancha plana sin detalle — y si el terreno de alrededor queda por debajo del nivel del mar " +
              "en algún punto, esa mancha puede llegar a tapar terreno e iconos (INC-197, 12 sept 2026). " +
              "Con esto activo, mientras renderiza esta cámara se sustituye el material de esas superficies " +
@@ -49,6 +71,10 @@ public class MinimapController : MonoBehaviour
     [SerializeField] bool overrideWaterOnMinimap = true;
 
     Transform _playerTransform;
+    float _alturaCamara;
+    bool _bigMapMode;
+    float _rootScale = 1f;
+    Vector2 _panOffset;
     bool _hiddenByInterior;
     bool _hiddenByBattle;
     bool _hiddenByMenu;
@@ -67,6 +93,17 @@ public class MinimapController : MonoBehaviour
     public Vector3 PlayerPosition => _playerTransform != null ? _playerTransform.position : Vector3.zero;
     public float OrthoSize => minimapCamera != null ? minimapCamera.orthographicSize : 0f;
 
+    /// <summary>Punto del mundo en el centro del minimapa (el jugador, más el desplazamiento del mapa grande).</summary>
+    public Vector3 ViewCenter => PlayerPosition + new Vector3(_panOffset.x, 0f, _panOffset.y);
+
+    /// <summary>
+    /// Escala local que deben llevar flecha e iconos para verse a su tamaño correcto:
+    /// 1 en el minimapa; en el mapa grande compensa la ampliación del mapa.
+    /// </summary>
+    public float MarkerScale => _bigMapMode ? bigMapMarkerScale / Mathf.Max(0.01f, _rootScale) : 1f;
+
+    float MapRadius => minimapImage != null ? minimapImage.rectTransform.rect.width * 0.5f : 0f;
+
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -82,8 +119,13 @@ public class MinimapController : MonoBehaviour
         MenuManager.MenuClosed                  += OnMenuClosed;
         RenderPipelineManager.beginCameraRendering += OnBeginCameraRendering;
         RenderPipelineManager.endCameraRendering   += OnEndCameraRendering;
+        SceneManager.sceneLoaded                   += OnSceneLoaded;
+        SceneManager.sceneUnloaded                 += OnSceneUnloaded;
 
         SetupCamera();
+
+        if (playerArrow != null)
+            playerArrow.sizeDelta = Vector2.one * playerArrowSize;
     }
 
     void OnDestroy()
@@ -96,6 +138,8 @@ public class MinimapController : MonoBehaviour
         MenuManager.MenuClosed                  -= OnMenuClosed;
         RenderPipelineManager.beginCameraRendering -= OnBeginCameraRendering;
         RenderPipelineManager.endCameraRendering   -= OnEndCameraRendering;
+        SceneManager.sceneLoaded                   -= OnSceneLoaded;
+        SceneManager.sceneUnloaded                 -= OnSceneUnloaded;
     }
 
     void Start()
@@ -130,18 +174,87 @@ public class MinimapController : MonoBehaviour
         }
 
         _normalOrthoSize = minimapCamera.orthographicSize;
+        RecalcularAlturaCamara();
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) => RecalcularAlturaCamara();
+    void OnSceneUnloaded(Scene scene) => RecalcularAlturaCamara();
+
+    /// <summary>
+    /// Coloca la cámara por encima del terreno más alto cargado y alarga el plano lejano hasta el más
+    /// bajo. El terreno que queda por encima de la cámara no se dibuja, y por ese hueco se ve lo que hay
+    /// debajo (el plano del mar), con la forma de la curva de nivel. Solo se calcula al cargar o
+    /// descargar escenas. Ver INC-505.
+    /// </summary>
+    void RecalcularAlturaCamara()
+    {
+        _alturaCamara = cameraHeight;
+        if (minimapCamera == null) return;
+
+        float techo = float.NegativeInfinity;
+        float suelo = float.PositiveInfinity;
+        foreach (var terreno in Terrain.activeTerrains)
+        {
+            if (terreno == null || terreno.terrainData == null) continue;
+            var limites = terreno.terrainData.bounds;
+            float baseY = terreno.GetPosition().y;
+            techo = Mathf.Max(techo, baseY + limites.max.y);
+            suelo = Mathf.Min(suelo, baseY + limites.min.y);
+        }
+        if (float.IsInfinity(techo)) return;
+
+        _alturaCamara = Mathf.Max(cameraHeight, techo + margenSobreTerreno);
+        minimapCamera.farClipPlane = Mathf.Max(minimapCamera.farClipPlane, _alturaCamara - suelo + margenSobreTerreno);
     }
 
     /// <summary>
-    /// Activa/desactiva el zoom ampliado de la cámara para el mapa grande (ver BigMapController).
-    /// Al desactivarlo restaura el zoom normal (el mismo que calculó SetupCamera a partir de
-    /// worldBounds o defaultZoom).
+    /// Entra o sale del modo mapa grande (ver BigMapController). <paramref name="rootScale"/> es
+    /// cuánto se ha ampliado la UI del minimapa, para que flecha e iconos no crezcan con ella.
+    /// Al entrar y al salir la vista vuelve a centrarse en el jugador.
     /// </summary>
-    public void SetBigMapMode(bool active)
+    public void SetBigMapMode(bool active, float rootScale)
     {
-        if (minimapCamera == null) return;
-        minimapCamera.orthographicSize = active ? bigMapZoom : _normalOrthoSize;
+        _bigMapMode = active;
+        _rootScale = active ? rootScale : 1f;
+        _panOffset = Vector2.zero;
+
+        if (minimapCamera != null)
+            minimapCamera.orthographicSize = active ? Mathf.Clamp(bigMapZoom, bigMapZoomMin, bigMapZoomMax) : _normalOrthoSize;
+
+        if (playerArrow != null)
+        {
+            playerArrow.localScale = Vector3.one * MarkerScale;
+            playerArrow.anchoredPosition = Vector2.zero;
+        }
     }
+
+    /// <summary>Desplaza la vista del mapa grande (metros en X/Z del mundo).</summary>
+    public void PanBigMap(Vector2 worldDelta)
+    {
+        if (!_bigMapMode) return;
+        _panOffset = Vector2.ClampMagnitude(_panOffset + worldDelta, bigMapMaxPan);
+    }
+
+    /// <summary>Desplaza la vista del mapa grande según un arrastre en píxeles de pantalla.</summary>
+    public void PanBigMapByScreenDelta(Vector2 screenDelta)
+    {
+        if (!_bigMapMode || minimapImage == null || minimapCamera == null) return;
+
+        float radiusOnScreen = MapRadius * minimapImage.rectTransform.lossyScale.x;
+        if (radiusOnScreen <= 0f) return;
+
+        PanBigMap(screenDelta * (minimapCamera.orthographicSize / radiusOnScreen));
+    }
+
+    /// <summary>Multiplica el zoom del mapa grande (&lt;1 acerca, &gt;1 aleja), dentro de sus límites.</summary>
+    public void ZoomBigMap(float factor)
+    {
+        if (!_bigMapMode || minimapCamera == null || factor <= 0f) return;
+        minimapCamera.orthographicSize = Mathf.Clamp(minimapCamera.orthographicSize * factor, bigMapZoomMin, bigMapZoomMax);
+    }
+
+    /// <summary>Vuelve a centrar el mapa grande en el jugador.</summary>
+    public void RecenterBigMap() => _panOffset = Vector2.zero;
 
 
     void Update()
@@ -155,15 +268,19 @@ public class MinimapController : MonoBehaviour
 
         if (_playerTransform == null) return;
 
-        // Seguir al jugador en XZ
-        minimapCamera.transform.position = new Vector3(
-            _playerTransform.position.x,
-            cameraHeight,
-            _playerTransform.position.z);
+        // Seguir al jugador en XZ (más el desplazamiento del mapa grande)
+        Vector3 center = ViewCenter;
+        minimapCamera.transform.position = new Vector3(center.x, _alturaCamara, center.z);
 
         // Rotar la flecha según la orientación Y del jugador (offset 90° porque el sprite apunta a la derecha)
         if (playerArrow != null)
+        {
             playerArrow.localEulerAngles = new Vector3(0f, 0f, 90f - _playerTransform.eulerAngles.y);
+
+            // Con la vista desplazada, la flecha se queda sobre el jugador (la máscara la recorta si sale).
+            if (_bigMapMode && minimapCamera.orthographicSize > 0f)
+                playerArrow.anchoredPosition = -_panOffset * (MapRadius / minimapCamera.orthographicSize);
+        }
     }
 
     void ResolvePlayer()
@@ -272,7 +389,7 @@ public class MinimapController : MonoBehaviour
     {
         if (shader == null) return false;
         var nombre = shader.name;
-        return nombre.Contains("Eldoria/Agua") || nombre.Contains("WaterURP");
+        return nombre.Contains("Eldoria/Agua") || nombre.Contains("WaterURP") || nombre.Contains("Water_Final");
     }
 
     void CacheWaterRenderersOnce()

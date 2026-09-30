@@ -830,7 +830,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
         var bocadillo = SpeechBubbleUI.Instance;
         if (hablante == null || bocadillo == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PromoVideo01Sequencer] No se puede mostrar la línea de {nombre} " +
                 (hablante == null
                     ? "porque su Transform no está asignado en el Inspector."
@@ -914,7 +914,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
         int capa = AnimatorLayerUtil.ResolveLayer(animator, estado, CapaUpperBody);
         if (capa < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!string.IsNullOrEmpty(estado))
                 Debug.LogWarning($"[PromoVideo01Sequencer] El Animator Controller de '{animator.name}' no tiene " +
                     $"ningún estado llamado '{estado}' ni en su Base Layer ni en su UpperBody layer — el gesto " +
@@ -1108,7 +1108,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
 
         if (_logoSprite == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PromoVideo01Sequencer] _logoSprite no está asignado — la tarjeta de cierre " +
                               "se verá solo con el texto, sin el logo del juego. Reejecuta el builder " +
                               "('El Sendero → Marketing → Crear Escena de Estudio (Vídeos Promo)') para que " +

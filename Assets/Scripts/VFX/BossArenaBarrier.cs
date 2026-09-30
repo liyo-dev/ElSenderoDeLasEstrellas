@@ -49,7 +49,7 @@ public class BossArenaBarrier : MonoBehaviour
         // 1) Renderer
         if (!_r && !TryGetComponent(out _r))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[BossArenaBarrier] No hay MeshRenderer en " + name);
 #endif
             enabled = false;
@@ -59,7 +59,7 @@ public class BossArenaBarrier : MonoBehaviour
         // 2) Material asset
         if (!sourceMat)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[BossArenaBarrier] Falta barrierMaterial (asigna el .mat en BossArenaController).");
 #endif
             enabled = false;

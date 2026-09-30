@@ -56,15 +56,15 @@ public class GameBootProfile : ScriptableObject
         dst.ataque = src.ataque; dst.defensa = src.defensa;
         dst.unlockedAbilities = new List<AbilityId>(src.unlockedAbilities ?? new List<AbilityId>());
         dst.unlockedSpells    = new List<SpellId>(src.unlockedSpells    ?? new List<SpellId>());
-        dst.leftSpellId = src.leftSpellId;
-        dst.rightSpellId = src.rightSpellId;
-        dst.specialSpellId = src.specialSpellId;
+        dst.basicSpellIds = new List<SpellId>(src.basicSpellIds ?? new List<SpellId>());
+        dst.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(src.companionBasics);
         dst.flags = new List<string>(src.flags ?? new List<string>());
         dst.appearance = new List<AppearanceEntry>(src.appearance ?? new List<AppearanceEntry>());
         dst.unlockedWardrobeIds = new List<string>(src.unlockedWardrobeIds ?? new List<string>());
         dst.inventoryItems = new List<InventoryItemSave>(src.inventoryItems ?? new List<InventoryItemSave>());
         dst.defeatedBossIds = new List<string>(src.defeatedBossIds ?? new List<string>());
         dst.consumedInteractableIds = new List<string>(src.consumedInteractableIds ?? new List<string>());
+        dst.objetosDelMundo = new List<ObjetoPersistente.Estado>(src.objetosDelMundo ?? new List<ObjetoPersistente.Estado>());
         dst.completedInteractiveNarratives = new List<string>(src.completedInteractiveNarratives ?? new List<string>());
         dst.seenLorePopupIds = new List<string>(src.seenLorePopupIds ?? new List<string>());
         dst.partyMemberIds = new List<string>(src.partyMemberIds ?? new List<string>());
@@ -198,6 +198,7 @@ public class GameBootProfile : ScriptableObject
         p.defeatedBossIds   = data.defeatedBossIds != null ? new List<string>(data.defeatedBossIds) : new List<string>();
         p.narrativeBlackboards = data.narrativeBlackboards != null ? new List<PlayerSaveData.NarrativeBlackboardSnapshot>(data.narrativeBlackboards) : new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
         p.consumedInteractableIds = data.consumedInteractables != null ? new List<string>(data.consumedInteractables) : new List<string>();
+        p.objetosDelMundo = data.objetosDelMundo != null ? new List<ObjetoPersistente.Estado>(data.objetosDelMundo) : new List<ObjetoPersistente.Estado>();
         p.seenLorePopupIds = data.seenLorePopupIds != null ? new List<string>(data.seenLorePopupIds) : new List<string>();
 
         // === CRÍTICO: Restaurar narrativas interactivas completadas desde el save ===
@@ -206,7 +207,7 @@ public class GameBootProfile : ScriptableObject
         p.completedInteractiveNarratives = data.completedInteractiveNarratives != null 
             ? new List<string>(data.completedInteractiveNarratives) 
             : new List<string>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GameBootProfile] 📜 Restauradas {p.completedInteractiveNarratives.Count} narrativas completadas desde save");
 #endif
 
@@ -215,7 +216,7 @@ public class GameBootProfile : ScriptableObject
             ? new List<string>(data.partyMemberIds) 
             : new List<string>();
         p.activeCharacterSlot = data.activeCharacterSlot;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GameBootProfile] 🤝 Party: {p.partyMemberIds.Count} miembros a restaurar");
 #endif
 
@@ -253,42 +254,33 @@ public class GameBootProfile : ScriptableObject
         if (!string.IsNullOrEmpty(data.lastSpawnAnchorId))
         {
             p.spawnAnchorId = data.lastSpawnAnchorId;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] 📍 Anchor establecido desde save: '{data.lastSpawnAnchorId}'");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GameBootProfile] ⚠️ Save no tiene lastSpawnAnchorId - anchor quedará como estaba: '{p.spawnAnchorId}'");
 #endif
         }
 
-        // Slots: si el save trae slots, usarlos (validando); si no, fallback al comportamiento anterior
+        // Hechizos básicos: los del save, solo si están desbloqueados. Una partida anterior a
+        // INC-486 trae ranuras izquierda/derecha en su lugar; sin nada, el primer desbloqueado.
         var unlocked = p.unlockedSpells ?? new List<SpellId>();
-        SpellId Validate(SpellId id) => (id != SpellId.None && unlocked.Contains(id)) ? id : SpellId.None;
-        bool hasAnySavedSlot = data.leftSpellId != SpellId.None || data.rightSpellId != SpellId.None || data.specialSpellId != SpellId.None;
-
-        if (hasAnySavedSlot)
+        var savedBasics = data.basicSpellIds != null && data.basicSpellIds.Count > 0
+            ? data.basicSpellIds
+            : new List<SpellId> { data.leftSpellId, data.rightSpellId };
+        p.basicSpellIds = new List<SpellId>();
+        foreach (var id in savedBasics)
         {
-            p.leftSpellId    = Validate(data.leftSpellId);
-            p.rightSpellId   = Validate(data.rightSpellId);
-            p.specialSpellId = Validate(data.specialSpellId);
+            if (id == SpellId.None || !unlocked.Contains(id) || p.basicSpellIds.Contains(id)) continue;
+            if (p.basicSpellIds.Count >= MagicCaster.BasicSlotCount) break;
+            p.basicSpellIds.Add(id);
         }
-        else
-        {
-            // Fallback: mantener compatibilidad con saves antiguos (sin slots); solo asignar izquierdo si hay alguno desbloqueado
-            if (unlocked.Count > 0)
-            {
-                p.leftSpellId = unlocked[0];
-            }
-            else
-            {
-                p.leftSpellId = SpellId.None;
-            }
-            p.rightSpellId = SpellId.None;
-            p.specialSpellId = SpellId.None;
-        }
+        if (p.basicSpellIds.Count == 0 && unlocked.Count > 0)
+            p.basicSpellIds.Add(unlocked[0]);
+        p.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(data.companionBasics); // INC-503
 
         // === NUEVO: restaurar permisos de abilities desde el save (si existen) ===
         if (p.abilities == null) p.abilities = new PlayerAbilities();
@@ -305,7 +297,7 @@ public class GameBootProfile : ScriptableObject
             p.unlockedTeleportPoints = new List<string>(data.unlockedTeleportPoints);
             // Sincronizar con TeleportRegistry
             TeleportRegistry.LoadFromSaveData(data.unlockedTeleportPoints);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] 🚀 Teleport points restaurados: {data.unlockedTeleportPoints.Count}");
 #endif
         }
@@ -363,6 +355,7 @@ public class GameBootProfile : ScriptableObject
         data.seenLorePopupIds = activePreset.seenLorePopupIds != null
             ? new List<string>(activePreset.seenLorePopupIds)
             : new List<string>();
+        data.objetosDelMundo = new List<ObjetoPersistente.Estado>(activePreset.objetosDelMundo ?? new List<ObjetoPersistente.Estado>());
         data.inventory = SanitizeInventorySnapshot(activePreset.inventoryItems);
         data.defeatedBossIds = activePreset.defeatedBossIds != null ? new List<string>(activePreset.defeatedBossIds) : new List<string>();
         
@@ -371,10 +364,8 @@ public class GameBootProfile : ScriptableObject
             ? new List<string>(activePreset.completedInteractiveNarratives) 
             : new List<string>();
         
-        // Guardar slots actuales
-        data.leftSpellId = activePreset.leftSpellId;
-        data.rightSpellId = activePreset.rightSpellId;
-        data.specialSpellId = activePreset.specialSpellId;
+        data.basicSpellIds = new List<SpellId>(activePreset.basicSpellIds ?? new List<SpellId>());
+        data.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(activePreset.companionBasics);
 
         // === NUEVO: incluir permisos de abilities en el save ===
         if (activePreset.abilities != null)
@@ -536,7 +527,7 @@ public class GameBootProfile : ScriptableObject
             // fullClear=true porque LoadProfile() siempre precede a una carga de escena:
             // los executors volverán a llamar OnEnable y se re-registrarán solos.
             Game.NPC.Modules.NPCInteractiveNarrativeRegistry.Clear(fullClear: true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] 🔄 NPCInteractiveNarrativeRegistry limpiado para carga de partida");
 #endif
 
@@ -570,7 +561,7 @@ public class GameBootProfile : ScriptableObject
         if (playerHealthSystem != null)
         {
             // Sin lo que suma el equipo: eso no se guarda, lo vuelve a poner quien lo da (INC-470).
-            p.maxHP = playerHealthSystem.MaxHealth - EstadisticasDeWill.Bonos.vida;
+            p.maxHP = playerHealthSystem.MaxHealth - EstadisticasDelPersonaje.Bonos.vida;
             p.currentHP = playerHealthSystem.CurrentHealth;
             syncedSystems.Add($"Health({p.currentHP:F0}/{p.maxHP:F0})");
         }
@@ -579,7 +570,7 @@ public class GameBootProfile : ScriptableObject
         var manaPool = FindAnyObjectByType<ManaPool>();
         if (manaPool != null)
         {
-            p.maxMP = manaPool.Max - EstadisticasDeWill.Bonos.magia;
+            p.maxMP = manaPool.Max - EstadisticasDelPersonaje.Bonos.magia;
             p.currentMP = manaPool.Current;
             syncedSystems.Add($"Mana({p.currentMP:F0}/{p.maxMP:F0})");
         }
@@ -607,7 +598,7 @@ public class GameBootProfile : ScriptableObject
 
             // Log detallado de quests activas/completadas para debug
             var questFlags = newFlags.FindAll(f => f.StartsWith("QUEST_"));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] Quest flags al guardar: {string.Join(", ", questFlags)}");
 #endif
 
@@ -644,14 +635,14 @@ public class GameBootProfile : ScriptableObject
         {
             p.unlockedWardrobeIds = wardrobe.GetUnlockedIds();
             syncedSystems.Add($"Wardrobe({p.unlockedWardrobeIds?.Count ?? 0})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] Wardrobe sincronizado al preset: {p.unlockedWardrobeIds?.Count ?? 0} items desbloqueados");
 #endif
         }
         else
         {
             p.unlockedWardrobeIds = new List<string>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[GameBootProfile] WardrobeInventory no disponible - Wardrobe guardado vacío");
 #endif
         }
@@ -675,7 +666,7 @@ public class GameBootProfile : ScriptableObject
                 {
                     // Registry sin datos de Will: no actualizar para evitar guardar la apariencia
                     // del personaje activo (Estela/Liam) como si fuera la de Will.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[GameBootProfile] ⚠️ Registry sin apariencia de Will — preset.appearance se mantiene sin cambios para evitar corrupción.");
 #endif
                     skipAppearanceUpdate = true;
@@ -703,13 +694,13 @@ public class GameBootProfile : ScriptableObject
                         });
                     }
                     syncedSystems.Add($"Appearance({p.appearance.Count})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GameBootProfile] Apariencia sincronizada: {p.appearance.Count} partes [{string.Join(", ", p.appearance.ConvertAll(a => $"{a.category}:{a.partName}"))}]");
 #endif
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[GameBootProfile] ModularAutoBuilder.GetSelection() devolvió null");
 #endif
                     p.appearance = new List<AppearanceEntry>();
@@ -718,7 +709,7 @@ public class GameBootProfile : ScriptableObject
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[GameBootProfile] ModularAutoBuilder no encontrado - Apariencia guardada vacía");
 #endif
             p.appearance = new List<AppearanceEntry>();
@@ -738,21 +729,23 @@ public class GameBootProfile : ScriptableObject
         if (npcCount >= 0)
             syncedSystems.Add($"NPCs({npcCount})");
 
+        syncedSystems.Add($"Objetos({ObjetoPersistente.CapturarEstado(p)})");
+
         // Capturar estado de los grafos narrativos
         if (NarrativeGraphHub.Instance != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] === CAPTURANDO BLACKBOARDS ===");
 #endif
             p.narrativeBlackboards = NarrativeGraphHub.Instance.CaptureBlackboards();
             syncedSystems.Add($"Narratives({p.narrativeBlackboards?.Count ?? 0})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] Blackboards capturados: {p.narrativeBlackboards?.Count ?? 0}");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[GameBootProfile] NarrativeGraphHub.Instance es NULL - no se pueden guardar blackboards");
 #endif
             p.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
@@ -765,14 +758,14 @@ public class GameBootProfile : ScriptableObject
             var partyIds = party.GetMemberIdsForSave();
             p.partyMemberIds = partyIds;
             syncedSystems.Add($"Party({partyIds.Count})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] Party sincronizado al preset: {partyIds.Count} miembros [{string.Join(", ", partyIds)}]");
 #endif
         }
         else
         {
             p.partyMemberIds = new List<string>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[GameBootProfile] PlayerParty no disponible - Party guardado vacío");
 #endif
         }
@@ -793,7 +786,7 @@ public class GameBootProfile : ScriptableObject
         p.unlockedTeleportPoints = TeleportRegistry.ToSaveData();
         syncedSystems.Add($"Teleports({p.unlockedTeleportPoints?.Count ?? 0})");
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GameBootProfile] RuntimePreset actualizado - Anchor: {p.spawnAnchorId}, HP: {p.currentHP}/{p.maxHP}, MP: {p.currentMP}/{p.maxMP}");
 #endif
         GameBootProfileDebugger.Log("UpdateRuntimePreset", $"? Sincronizados: {string.Join(", ", syncedSystems)}", LogType.Log);
@@ -842,7 +835,7 @@ public class GameBootProfile : ScriptableObject
                     if (Vector3.Distance(existing.position, position) > 0.01f)
                     {
                         existing.position = position;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         // PERF (revisión rendimiento 24/08): este log corre una vez por NPC persistido
                         // en cada guardado — en build final no aporta nada y solo genera basura de Gen0.
                         Debug.Log($"[GameBootProfile] Actualizada posición de NPC '{npcId}' desde lastPosition/transform: {position}");
@@ -929,7 +922,7 @@ public class GameBootProfile : ScriptableObject
         var npcs = ServiceLocator.GetAll<NPCBehaviourManagerV2>();
         if (npcs == null || npcs.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GameBootProfile] ApplyNpcPositionsToScene: no se encontraron NPCBehaviourManagerV2 en escena. Las posiciones no se aplicarán.");
 #endif
             return;
@@ -969,14 +962,14 @@ public class GameBootProfile : ScriptableObject
                 else if (Physics.Raycast(pos + Vector3.up * 5f, Vector3.down, out var groundHit, 20f))
                 {
                     targetPos = groundHit.point;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[GameBootProfile] Posición persistida de NPC '{id}' no está sobre NavMesh; ajustada al suelo más cercano ({pos} → {targetPos}).");
 #endif
                 }
                 else
                 {
                     targetPos = npc.transform.position;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[GameBootProfile] Posición persistida de NPC '{id}' inválida (sin NavMesh ni suelo cerca de {pos}); se mantiene la posición actual en escena para no dejarlo flotando.");
 #endif
                 }
@@ -1070,7 +1063,7 @@ public class GameBootProfile : ScriptableObject
                 // Actualizar el lastPosition del NPC para futuras capturas
                 npc.lastPosition = pos;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 // PERF (revisión rendimiento 24/08): este log corre una vez por NPC reposicionado en
                 // cada carga de escena/partida — en build final no aporta nada y solo genera basura
                 // de Gen0 justo en el momento en que ya hay más carga por la propia activación de escena.
@@ -1079,7 +1072,7 @@ public class GameBootProfile : ScriptableObject
             }
             catch (Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[GameBootProfile] No se pudo reposicionar NPC '{id}': {ex.Message}");
 #endif
             }
@@ -1089,7 +1082,7 @@ public class GameBootProfile : ScriptableObject
         {
             if (!matched.Contains(key))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[GameBootProfile] npcId '{key}' en preset no encontrado en escena — ¿NPC renombrado?");
 #endif
                 }
@@ -1107,7 +1100,7 @@ public class GameBootProfile : ScriptableObject
 
         if (context == SaveRequestContext.Auto && !allowAutoSaves)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] Auto-guardado omitido (allowAutoSaves = false)." );
 #endif
             GameBootProfileDebugger.Log("SaveCurrentGameState", "?? Auto-guardado omitido (allowAutoSaves = false)", LogType.Warning);
@@ -1130,7 +1123,7 @@ public class GameBootProfile : ScriptableObject
     /// </summary>
     public void NewGameReset(SaveSystem saveSystem = null)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] ===== NUEVA PARTIDA - RESETEANDO TODO =====");
 #endif
         
@@ -1138,7 +1131,7 @@ public class GameBootProfile : ScriptableObject
 
         if (defaultPlayerPreset)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GameBootProfile] Copiando desde defaultPlayerPreset: {defaultPlayerPreset.name}");
 #endif
             EnsureRuntimePresetFromTemplate(defaultPlayerPreset);
@@ -1146,7 +1139,7 @@ public class GameBootProfile : ScriptableObject
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[GameBootProfile] No hay defaultPlayerPreset - Creando preset vacío");
 #endif
             EnsureRuntimePreset();
@@ -1156,7 +1149,7 @@ public class GameBootProfile : ScriptableObject
 
         // Garantizar que la magia arranca bloqueada en partidas nuevas, incluso si el preset
         // por defecto tuviera valores residuales (por testing o saves previos).
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] Bloqueando magia para nueva partida");
 #endif
         LockMagicForNewGame(runtimePreset);
@@ -1195,7 +1188,7 @@ public class GameBootProfile : ScriptableObject
         {
             NarrativeGraphHub.Instance.StopAllRunners();
             NarrativeGraphHub.Instance.ClearAllBlackboards();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] Runners detenidos y blackboards narrativos limpiados para Nueva Partida");
 #endif
         }
@@ -1204,7 +1197,7 @@ public class GameBootProfile : ScriptableObject
         if (runtimePreset != null && runtimePreset.narrativeBlackboards != null)
         {
             runtimePreset.narrativeBlackboards.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] Snapshots narrativos del preset limpiados para Nueva Partida");
 #endif
         }
@@ -1213,7 +1206,7 @@ public class GameBootProfile : ScriptableObject
         if (runtimePreset != null && runtimePreset.completedInteractiveNarratives != null)
         {
             runtimePreset.completedInteractiveNarratives.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[GameBootProfile] ✅ Narrativas interactivas limpiadas para Nueva Partida");
 #endif
         }
@@ -1227,7 +1220,7 @@ public class GameBootProfile : ScriptableObject
         
         // ✅ Limpiar el registro de NPCs narrativos para que se re-registren frescos
         Game.NPC.Modules.NPCInteractiveNarrativeRegistry.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] 🔄 NPCInteractiveNarrativeRegistry limpiado para Nueva Partida");
 #endif
 
@@ -1237,7 +1230,7 @@ public class GameBootProfile : ScriptableObject
         {
             runtimePreset.unlockedTeleportPoints.Clear();
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] 🚀 TeleportRegistry y preset limpiados para Nueva Partida");
 #endif
 
@@ -1246,13 +1239,13 @@ public class GameBootProfile : ScriptableObject
         {
             runtimePreset.partyMemberIds.Clear();
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] 🤝 Party limpiado en preset para Nueva Partida");
 #endif
 
         NarrativeAutoSetup.ResetForNewGame();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[GameBootProfile] Reset realizado para Nueva Partida (runtimePreset -> default)");
 #endif
         GameBootProfileDebugger.Log("NewGameReset", "? Reset completado - sistemas reiniciados", LogType.Log);
@@ -1265,17 +1258,17 @@ public class GameBootProfile : ScriptableObject
         p.level = 1;
         p.maxHP = 100f; p.currentHP = 100f;
         p.maxMP = 50f;  p.currentMP = 50f;
-        p.ataque = 0f;  p.defensa = 0f;   // se inicializan en EstadisticasDeWill
+        p.ataque = 0f;  p.defensa = 0f;   // se inicializan en EstadisticasDelPersonaje
         p.unlockedAbilities = new List<AbilityId>();
         p.unlockedSpells = new List<SpellId>();
-        p.leftSpellId = SpellId.None;
-        p.rightSpellId = SpellId.None;
-        p.specialSpellId = SpellId.None;
+        p.basicSpellIds = new List<SpellId>();
+        p.companionBasics = new List<PlayerPresetSO.BasicosDeCompanero>();
         p.flags = new List<string>();
         p.appearance = new List<AppearanceEntry>();
         p.inventoryItems = new List<InventoryItemSave>();
         p.defeatedBossIds = new List<string>();
         p.consumedInteractableIds = new List<string>();
+        p.objetosDelMundo = new List<ObjetoPersistente.Estado>();
         p.seenLorePopupIds = new List<string>();
         // === NUEVO: resetear abilities ===
         p.abilities = new PlayerAbilities();
@@ -1299,9 +1292,8 @@ public class GameBootProfile : ScriptableObject
         // Limpiar hechizos y slots asociados para que no aparezcan en UI.
         preset.unlockedSpells ??= new List<SpellId>();
         preset.unlockedSpells.Clear();
-        preset.leftSpellId = SpellId.None;
-        preset.rightSpellId = SpellId.None;
-        preset.specialSpellId = SpellId.None;
+        preset.basicSpellIds ??= new List<SpellId>();
+        preset.basicSpellIds.Clear();
 
         // Sin magia, el man debe iniciar en 0 para evitar mostrar barra llena.
         preset.maxMP = 0f;

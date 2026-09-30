@@ -67,33 +67,41 @@ namespace Game.Core.Pooling
         /// </summary>
         public T Get()
         {
-            T obj;
+            T obj = null;
 
-            // Intentar obtener del pool
-            if (_available.Count > 0)
+            // Intentar obtener del pool.
+            // FIX INC-544: saltar las instancias que Unity ya destruyó mientras esperaban en
+            // la pila (p. ej. un VFX que se devolvió colgando de un padre ajeno y ese padre murió
+            // después). Antes se devolvía la referencia "fake-null" y el SetActive de abajo
+            // lanzaba MissingReferenceException. Una instancia muerta simplemente se descarta:
+            // ya no cuenta ni como disponible ni como en uso.
+            while (_available.Count > 0)
             {
-                obj = _available.Pop();
+                T candidate = _available.Pop();
+                if (candidate != null) { obj = candidate; break; }
             }
-            else if (_expandable && (_maxSize == 0 || TotalCount < _maxSize))
+
+            if (obj == null)
             {
+                if (!_expandable || (_maxSize != 0 && TotalCount >= _maxSize))
+                {
+                    // Pool agotado y no puede expandirse
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogWarning($"[ObjectPool] Pool de {typeof(T).Name} agotado! " +
+                                    $"(InUse: {InUseCount}, Max: {_maxSize})");
+#endif
+                    return null;
+                }
+
                 // Pool vacío pero puede expandirse
                 obj = CreateNewObject();
                 if (obj == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError($"[ObjectPool] No se pudo crear nuevo objeto de tipo {typeof(T).Name}");
 #endif
                     return null;
                 }
-            }
-            else
-            {
-                // Pool agotado y no puede expandirse
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[ObjectPool] Pool de {typeof(T).Name} agotado! " +
-                                $"(InUse: {InUseCount}, Max: {_maxSize})");
-                #endif
-                return null;
             }
 
             // Activar y registrar como en uso
@@ -110,7 +118,7 @@ namespace Game.Core.Pooling
         {
             if (obj == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ObjectPool] Intento de devolver objeto nulo al pool de {typeof(T).Name}");
 #endif
                 return;
@@ -126,7 +134,7 @@ namespace Game.Core.Pooling
             // pool.
             if (!_inUse.Remove(obj))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ObjectPool] Objeto {obj.name} no estaba registrado como en uso (posible doble Return, ignorado)");
 #endif
                 return;
@@ -167,7 +175,7 @@ namespace Game.Core.Pooling
             // Destruir objetos en uso (con advertencia)
             if (_inUse.Count > 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ObjectPool] Limpiando pool con {_inUse.Count} objetos aún en uso");
 #endif
                 foreach (var obj in _inUse)
@@ -222,7 +230,7 @@ namespace Game.Core.Pooling
         {
             if (_prefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[ObjectPool] Prefab es null, no se puede crear objeto");
 #endif
                 return null;
@@ -234,7 +242,7 @@ namespace Game.Core.Pooling
             T component = instance.GetComponent<T>();
             if (component == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[ObjectPool] GameObject instanciado no tiene componente {typeof(T).Name}");
 #endif
                 Object.Destroy(instance);

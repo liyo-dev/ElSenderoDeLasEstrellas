@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Objetos", "Dar objeto", "Añade un objeto al inventario del jugador.")]
-public sealed class GiveInventoryItemNode : NarrativeNode
+public sealed class GiveInventoryItemNode : NarrativeNode, INarrativeStateEffect
 {
     [Header("Item")]
     public ItemData item;
@@ -15,6 +15,11 @@ public sealed class GiveInventoryItemNode : NarrativeNode
     public bool logWarnings = true;
     [Tooltip("Deprecated: el nodo ya es idempotente por defecto usando Blackboard.")]
     public bool onlyOnce = true; // mantenido por compatibilidad visual en el inspector
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (item != null && amount > 0) state.AddItem(item.itemId, amount);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

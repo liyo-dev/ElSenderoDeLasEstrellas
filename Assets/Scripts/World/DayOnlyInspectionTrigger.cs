@@ -111,7 +111,7 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
 
         if (isNight)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DayOnlyInspectionTrigger:{name}] Bloqueado: es de noche ({_dayNightCycle.CurrentTimeOfDay}).");
 #endif
             if (!string.IsNullOrEmpty(blockedNightMessageKey))
@@ -151,13 +151,13 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
             var signals = DefaultNarrativeSignals.Instance;
             if (signals != null)
                 signals.RaiseCustom(narrativeEventKey, name);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
                 Debug.LogError($"[DayOnlyInspectionTrigger:{name}] DefaultNarrativeSignals.Instance es null al intentar emitir '{narrativeEventKey}'.");
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[DayOnlyInspectionTrigger:{name}] Zona inspeccionada ({_dayNightCycle?.CurrentTimeOfDay}) → evento '{narrativeEventKey}' enviado.");
 #endif
 

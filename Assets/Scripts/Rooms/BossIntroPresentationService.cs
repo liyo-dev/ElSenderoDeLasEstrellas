@@ -84,7 +84,7 @@ public class BossIntroPresentationService : MonoBehaviour
         CameraDirectorService.Claim(this);
 
         SceneBoundUI.BeginBossIntro(0.25f);
-        PlayerHUDV2.Instance?.HideHUD(0.25f);
+        PlayerHUDV2.Instance?.HideHUD(this, 0.25f);
 
         // Todo lo que sigue va envuelto en try/finally: si un boss concreto lanza una excepción a
         // mitad de la presentación, el HUD/UI se restaura igualmente en vez de quedar oculto para
@@ -169,7 +169,7 @@ public class BossIntroPresentationService : MonoBehaviour
             }
 
             SceneBoundUI.EndBossIntro(0.35f);
-            PlayerHUDV2.Instance?.ShowHUD(0.35f);
+            PlayerHUDV2.Instance?.ShowHUD(this, 0.35f);
 
             if (PlayerLockService.HasInstance) PlayerLockService.Instance.Release(this);
 

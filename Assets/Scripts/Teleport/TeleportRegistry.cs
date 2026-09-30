@@ -38,7 +38,7 @@ public static class TeleportRegistry
     {
         if (point == null || string.IsNullOrEmpty(point.anchorId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportRegistry] Intento de registrar un punto inválido.");
 #endif
             return false;
@@ -52,7 +52,7 @@ public static class TeleportRegistry
         }
         
         _unlockedPoints[point.anchorId] = point;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportRegistry] ✨ Nuevo punto de teletransporte desbloqueado: {point.displayName} ({point.anchorId})");
 #endif
         
@@ -118,7 +118,7 @@ public static class TeleportRegistry
     {
         _unlockedPoints.Clear();
         OnRegistryChanged?.Invoke();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TeleportRegistry] Registro limpiado.");
 #endif
     }
@@ -130,7 +130,7 @@ public static class TeleportRegistry
         
         if (unlockedAnchorIds == null || unlockedAnchorIds.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TeleportRegistry] No hay puntos de teletransporte guardados.");
 #endif
             return;
@@ -145,7 +145,7 @@ public static class TeleportRegistry
             _unlockedPoints[anchorId] = point;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportRegistry] Cargados {_unlockedPoints.Count} puntos de teletransporte.");
 #endif
         OnRegistryChanged?.Invoke();
@@ -222,14 +222,14 @@ public static class TeleportRegistry
             if (preset != null)
             {
                 preset.unlockedTeleportPoints = ToSaveData();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TeleportRegistry] 🔄 Sincronizado con preset: {preset.unlockedTeleportPoints.Count} puntos");
 #endif
             }
         }
         catch (System.Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TeleportRegistry] Error sincronizando con preset: {ex.Message}");
 #endif
         }

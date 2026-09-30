@@ -135,6 +135,9 @@ namespace Game.NPC.Common
         //   - moviéndose: nunca menos de 0,5, la animación de andar;
         //   - de VelocidadTrote en adelante: 1, el trote con saltitos de Will y Eldran.
         // Entre VelocidadAndar y VelocidadTrote pasa de uno a otro sin saltos.
+        //
+        // El jugador también lo usa cuando va con tope de velocidad (TopeDeVelocidadDelJugador,
+        // p. ej. siguiendo a Eldran): así se mueve igual que el NPC al que sigue. INC-545.
 
         /// Por debajo de esto, en m/s, el NPC está quieto.
         public const float VelocidadParado = 0.15f;

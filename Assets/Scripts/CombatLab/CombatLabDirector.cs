@@ -49,6 +49,33 @@ public sealed class CombatLabDirector : MonoBehaviour
             if (station.activeSelf != shouldBeActive)
                 station.SetActive(shouldBeActive);
         }
+        DarLaSalida();
+        ActualizarGuia();
+    }
+
+    /// Los enemigos de la estación abierta pelean ya, como tras la presentación en una arena.
+    private void DarLaSalida()
+    {
+        var station = stations[_activeStation];
+        if (station == null) return;
+        foreach (var inicio in station.GetComponentsInChildren<IInicioDeCombate>())
+            inicio.EmpezarCombate();
+    }
+
+    /// En la estación del jefe arranca la guía del combate (quien habla y qué dice sale de
+    /// CombatLabConfig.guionJefe), como haría la arena en el juego. En las demás, se calla.
+    private void ActualizarGuia()
+    {
+        var guiaActual = GetComponent<GuiaDeCombate>();
+        if (guiaActual != null) guiaActual.Parar();
+
+        var station = _activeStation < stations.Length ? stations[_activeStation] : null;
+        var jefe = station != null ? station.GetComponentInChildren<IJefeConFases>(true) as Component : null;
+        if (jefe == null) return;
+
+        var config = Resources.Load<CombatLabConfig>("CombatLab/CombatLabConfig");
+        var guia = GuiaDeCombate.Empezar(gameObject, config != null ? config.guionJefe : null, jefe.gameObject);
+        if (guia != null) guia.LanzarIntervencion();
     }
 
     private void OnGUI()

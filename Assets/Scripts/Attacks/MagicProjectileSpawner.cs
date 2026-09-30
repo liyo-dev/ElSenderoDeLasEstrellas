@@ -1,13 +1,19 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using Invector.vCharacterController;
 
+/// <summary>
+/// Materializa hechizos: proyectiles (con o sin carga en la mano) y zonas. No guarda qué hechizos
+/// lleva equipados el jugador ni cobra nada: eso es de <see cref="MagicCaster"/>, que decide qué
+/// sale y desde qué mano, y llama a <see cref="Cast"/>. Las cinemáticas usan
+/// <see cref="SpawnForCinematic"/>.
+/// </summary>
 [DisallowMultipleComponent]
 public class MagicProjectileSpawner : MonoBehaviour
 {
     /// <summary>
-    /// Evento estático que se dispara cuando el jugador lanza un hechizo.
-    /// Los compañeros del party pueden suscribirse para entrar en modo alerta/combate.
+    /// Se lanza cada vez que el jugador lanza un hechizo. Los compañeros del grupo lo escuchan para
+    /// entrar en combate.
     /// </summary>
     public static event System.Action OnPlayerAttacked;
 
@@ -19,28 +25,17 @@ public class MagicProjectileSpawner : MonoBehaviour
     }
 #endif
 
-    [Header("Listen")]
-    [SerializeField] private vThirdPersonController controller;
-    [SerializeField] private PlayerTargeting targeting;  // <- NUEVO
-    
+    [Header("Referencias")]
+    [SerializeField] private PlayerTargeting targeting;
+
     [Header("Configuración Global")]
     [SerializeField] private ProjectileSettingsSO projectileSettings;
 
-    [Header("Orígenes (mano izq/dcha/especial)")]
+    [Header("Orígenes (mano izquierda, derecha y centro)")]
     [SerializeField] private Transform leftOrigin;
     [SerializeField] private Transform rightOrigin;
+    [Tooltip("Origen de los lanzamientos a dos manos (tercer golpe de la serie, combos).")]
     [SerializeField] private Transform specialOrigin;
-
-    private MagicSpellSO leftSpell, rightSpell, specialSpell;
-
-    // FIX M8 (auditoría 2026-08-07): mientras Co_SpawnWithCharge espera chargeTime, el proyectil
-    // vive parenteado a la mano (followOriginDuringCharge) y en kinematic. Si este spawner se
-    // desactiva a mitad de la carga (p.ej. el player se desactiva por cinemática/muerte/cambio de
-    // escena), Unity aborta la corrutina sin ejecutar el resto — el proyectil se queda pegado a la
-    // mano para siempre, sobre todo si spell.lifeTime==0 (nunca arranca su temporizador porque
-    // Launch() nunca llega a llamarse). OnDisable limpia cualquier proyectil que se haya quedado
-    // a medio cargar.
-    private readonly System.Collections.Generic.List<GameObject> _chargingProjectiles = new System.Collections.Generic.List<GameObject>();
 
     [Header("Opciones")]
     [SerializeField] private bool ignoreCasterColliders = true;
@@ -52,7 +47,13 @@ public class MagicProjectileSpawner : MonoBehaviour
     [Tooltip("Multiplicador de velocidad del proyectil mientras el jugador está esprintando (en tierra).")]
     [SerializeField] private float sprintSpeedMultiplier = 1.3f;
 
-    // Referencias para detectar vuelo/sprint (mismo criterio que SprintVFXController)
+    // Proyectiles cargando en la mano (followOriginDuringCharge, kinematic). Si el componente se
+    // desactiva a mitad de la carga, la corrutina no llega a soltarlos: OnDisable los destruye
+    // para que no se queden pegados a la mano.
+    private readonly List<GameObject> _chargingProjectiles = new List<GameObject>();
+
+    // Vuelo y sprint se leen como SprintVFXController: parámetros del Animator de Invector y
+    // PlayerFlyingController.
     private Animator _animator;
     private PlayerFlyingController _flyingController;
     private static readonly int HashInputMagnitude = Animator.StringToHash("InputMagnitude");
@@ -60,97 +61,14 @@ public class MagicProjectileSpawner : MonoBehaviour
 
     void Awake()
     {
-        if (!controller) controller = GetComponentInParent<vThirdPersonController>();
         if (!targeting)  targeting  = GetComponentInParent<PlayerTargeting>();
         if (!instigatorOverride) instigatorOverride = gameObject;
-
         if (!_animator) _animator = GetComponentInParent<Animator>();
         if (!_flyingController) _flyingController = GetComponentInParent<PlayerFlyingController>();
     }
 
-    /// <summary>
-    /// FIX INC-049: los hechizos deben ir más rápido que el player mientras vuela, y también
-    /// más rápido mientras esprinta. Usa el mismo criterio que SprintVFXController (parámetros
-    /// del Animator de Invector) para detectar sprint, y PlayerFlyingController para el vuelo.
-    /// </summary>
-    private float GetSpeedMultiplier()
-    {
-        if (_flyingController != null && _flyingController.IsFlying)
-            return flyingSpeedMultiplier;
-
-        if (_animator != null)
-        {
-            bool isGrounded = _animator.GetBool(HashIsGrounded);
-            float inputMag  = _animator.GetFloat(HashInputMagnitude);
-            if (isGrounded && inputMag > 1.05f) // InputMagnitude > 1.0 = sprint en Invector
-                return sprintSpeedMultiplier;
-        }
-
-        return 1f;
-    }
-
-    // ClearSpawnPosition eliminado: ya no se ajusta el spawn dinámicamente
-
-    void IgnoreCollisionsBetween(GameObject projectile, GameObject instigator)
-    {
-        if (!ignoreCasterColliders || projectile == null || instigator == null) return;
-
-        // Obtener TODOS los colliders del proyectil
-        var projCols = projectile.GetComponentsInChildren<Collider>(true);
-
-        // Obtener TODOS los colliders del instigator (jugador) y sus hijos
-        var instigatorCols = instigator.GetComponentsInChildren<Collider>(true);
-
-        // CRITICO: Deshabilitar colliders del proyectil temporalmente
-        foreach (var pc in projCols)
-        {
-            if (pc) pc.enabled = false;
-        }
-
-        // Ignorar colisiones entre todos ellos
-        foreach (var pc in projCols)
-        {
-            if (!pc) continue;
-            foreach (var ic in instigatorCols)
-            {
-                if (ic)
-                    Physics.IgnoreCollision(pc, ic, true);
-            }
-        }
-
-        // Reactivar colliders después de un frame (asegurar que la física procese la ignoración)
-        StartCoroutine(ReenableCollidersNextFrame(projCols));
-    }
-
-    System.Collections.IEnumerator ReenableCollidersNextFrame(Collider[] colliders)
-    {
-        yield return new WaitForFixedUpdate();
-        foreach (var pc in colliders)
-        {
-            if (pc) pc.enabled = true;
-        }
-    }
-
-    LayerMask GetDamageLayers()
-    {
-        if (projectileSettings != null)
-            return projectileSettings.damageableLayers;
-
-        return LayerMask.GetMask("Enemy", "Boss");
-    }
-
-    void OnEnable()
-    {
-        if (controller) controller.OnMagicSlotCast += HandleSlotCast; // 0=L,1=R,2=S
-    }
-
     void OnDisable()
     {
-        if (controller) controller.OnMagicSlotCast -= HandleSlotCast;
-
-        // FIX M8: ver comentario en _chargingProjectiles. La corrutina de carga se aborta al
-        // desactivarse este componente sin llegar a soltar el proyectil; lo destruimos aquí para
-        // no dejarlo pegado a la mano indefinidamente.
         for (int i = 0; i < _chargingProjectiles.Count; i++)
         {
             var go = _chargingProjectiles[i];
@@ -163,79 +81,33 @@ public class MagicProjectileSpawner : MonoBehaviour
         _chargingProjectiles.Clear();
     }
 
-    private void HandleSlotCast(int slotId)
+    // === API ==================================================================
+
+    /// <summary>
+    /// Lanza un hechizo desde una mano: suena al instante, espera castDelaySeconds (para
+    /// sincronizar con la animación) y lo materializa. 'damageMultiplier' escala el daño (golpe
+    /// final de la serie). No comprueba ni cobra nada.
+    /// </summary>
+    public void Cast(MagicSpellSO spell, CastHand hand, float damageMultiplier = 1f)
     {
-        var slot = slotId == 0 ? MagicSlot.Left
-                 : slotId == 1 ? MagicSlot.Right
-                 : MagicSlot.Special;
-
-        var (spell, origin) = GetSpellAndOrigin(slot);
         if (!spell || !spell.prefab) return;
-
-        // 🔔 Notificar a compañeros que el jugador atacó
         OnPlayerAttacked?.Invoke();
-
-        StartCoroutine(Co_SpawnAfterDelay(spell, origin));
+        StartCoroutine(Co_SpawnAfterDelay(spell, GetOrigin(hand), damageMultiplier));
     }
 
-    private IEnumerator Co_SpawnAfterDelay(MagicSpellSO spell, Transform origin)
+    /// <summary>
+    /// Disparo de cinemática: sin maná, enfriamientos ni permisos. 'directionOverride' fuerza una
+    /// dirección exacta. Devuelve el objeto creado (null si el hechizo no tiene prefab).
+    /// </summary>
+    public GameObject SpawnForCinematic(MagicSpellSO spell, CastHand hand, Transform originOverride = null, Vector3? directionOverride = null)
     {
-        // ⭐ Reproducir SFX INMEDIATAMENTE al iniciar el cast (antes del delay de animación)
-        if (!string.IsNullOrEmpty(spell.castSFXKey) && AudioService.Instance != null)
-        {
-            AudioService.Instance.PlaySFX(spell.castSFXKey);
-        }
-        
-        float d = Mathf.Max(0f, spell.castDelaySeconds);
-        if (d > 0f) yield return new WaitForSeconds(d);
-
-        if (spell.kind == MagicKind.Zone)
-        {
-            // Los hechizos de zona no cargan ni vuelan: se materializan al instante en el punto
-            // de impacto calculado (ver SpawnZoneNow). El SFX de casteo ya sonó arriba.
-            SpawnZoneNow(spell, origin);
-        }
-        else if (spell.chargeTime > 0f)
-            yield return Co_SpawnWithCharge(spell, origin);
-        else
-            SpawnNow(spell, origin, playSFX: false); // SFX ya se reprodujo arriba
-    }
-
-    public void SpawnLeft()    => Spawn(MagicSlot.Left);
-    public void SpawnRight()   => Spawn(MagicSlot.Right);
-    public void SpawnSpecial() => Spawn(MagicSlot.Special);
-
-    public void SpawnByIndex(int slotIndex)
-    {
-        var slot = slotIndex == 0 ? MagicSlot.Left
-                 : slotIndex == 1 ? MagicSlot.Right
-                 : MagicSlot.Special;
-        Spawn(slot);
-    }
-
-    public void Spawn(MagicSlot slot)
-    {
-        var (spell, origin) = GetSpellAndOrigin(slot);
-        if (!spell || !spell.prefab) return;
-        StartCoroutine(Co_SpawnAfterDelay(spell, origin));
-    }
-
-    /// Disparo cinemático: ignora maná, cooldowns y ActionManager.
-    /// Usa el hechizo del slot si está equipado; si no, usa <paramref name="fallbackSpell"/>.
-    /// <paramref name="directionOverride"/> permite forzar una dirección exacta ignorando el sistema de targeting.
-    /// Devuelve el GameObject del proyectil spawneado (puede ser null si el hechizo no tiene prefab).
-    /// Llamar desde secuenciadores de cinemáticas — nunca desde gameplay normal.
-    public GameObject SpawnForCinematic(MagicSlot slot, MagicSpellSO fallbackSpell, Transform originOverride = null, Vector3? directionOverride = null)
-    {
-        var (slotSpell, slotOrigin) = GetSpellAndOrigin(slot);
-        MagicSpellSO spell  = (slotSpell != null && slotSpell.prefab != null) ? slotSpell : fallbackSpell;
-        Transform    origin = originOverride != null ? originOverride : slotOrigin;
-
         if (spell == null || spell.prefab == null) return null;
+        Transform origin = originOverride != null ? originOverride : GetOrigin(hand);
         return SpawnNow(spell, origin, directionOverride: directionOverride);
     }
 
-    public GameObject SpawnNow(MagicSpellSO spell, Transform originOverride = null, bool playSFX = true, Vector3? directionOverride = null)
+    /// <summary>Materializa un hechizo en el acto, sin retraso de animación.</summary>
+    public GameObject SpawnNow(MagicSpellSO spell, Transform originOverride = null, bool playSFX = true, Vector3? directionOverride = null, float damageMultiplier = 1f)
     {
         if (!spell || !spell.prefab) return null;
 
@@ -245,119 +117,171 @@ public class MagicProjectileSpawner : MonoBehaviour
             AudioService.Instance.PlaySFX(spell.castSFXKey);
 
         if (spell.kind == MagicKind.Zone)
-            return SpawnZoneNow(spell, origin, directionOverride);
+            return SpawnZoneNow(spell, origin, directionOverride, damageMultiplier);
+        if (spell.kind == MagicKind.Teleport)
+        {
+            Teleport(spell);
+            return null;
+        }
 
-        return LaunchProjectile(spell, origin, directionOverride);
+        return LaunchProjectile(spell, origin, directionOverride, damageMultiplier);
     }
 
-    private IEnumerator Co_SpawnWithCharge(MagicSpellSO spell, Transform originOverride)
+    /// <summary>Punto de salida de una mano (el propio transform si no está asignado).</summary>
+    public Transform GetOrigin(CastHand hand)
+    {
+        Transform t = hand switch
+        {
+            CastHand.Left  => leftOrigin,
+            CastHand.Right => rightOrigin,
+            _              => specialOrigin
+        };
+        return t ? t : transform;
+    }
+
+    public void SetInstigator(GameObject instigator) => instigatorOverride = instigator;
+
+    // === Lanzamiento ==========================================================
+
+    private IEnumerator Co_SpawnAfterDelay(MagicSpellSO spell, Transform origin, float damageMultiplier)
+    {
+        // El sonido sale al empezar el gesto, no cuando aparece el proyectil.
+        if (!string.IsNullOrEmpty(spell.castSFXKey) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(spell.castSFXKey);
+
+        float d = Mathf.Max(0f, spell.castDelaySeconds);
+        if (d > 0f) yield return new WaitForSeconds(d);
+
+        if (spell.kind == MagicKind.Zone)
+            SpawnZoneNow(spell, origin, null, damageMultiplier);
+        else if (spell.kind == MagicKind.Teleport)
+            Teleport(spell);
+        else if (spell.chargeTime > 0f)
+            yield return Co_SpawnWithCharge(spell, origin, damageMultiplier);
+        else
+            SpawnNow(spell, origin, playSFX: false, damageMultiplier: damageMultiplier);
+    }
+
+    private float GetSpeedMultiplier()
+    {
+        if (_flyingController != null && _flyingController.IsFlying)
+            return flyingSpeedMultiplier;
+
+        if (_animator != null)
+        {
+            bool isGrounded = _animator.GetBool(HashIsGrounded);
+            float inputMag  = _animator.GetFloat(HashInputMagnitude);
+            if (isGrounded && inputMag > 1.05f) // InputMagnitude > 1 = sprint en Invector
+                return sprintSpeedMultiplier;
+        }
+
+        return 1f;
+    }
+
+    private GameObject Instigator => instigatorOverride ? instigatorOverride : gameObject;
+
+    private LayerMask GetDamageLayers()
+    {
+        if (projectileSettings != null)
+            return projectileSettings.damageableLayers;
+        return LayerMask.GetMask("Enemy", "Boss");
+    }
+
+    private MagicProjectile.ProjectileConfig BuildProjectileConfig(MagicSpellSO spell, float speed, float damageMultiplier)
+    {
+        return new MagicProjectile.ProjectileConfig
+        {
+            damage          = spell.damage * damageMultiplier,
+            aoeRadius       = spell.aoeRadius,
+            knockbackForce  = spell.knockbackForce,
+            hitLayers       = GetDamageLayers(),
+            collisionLayers = GetDamageLayers(),
+            destroyOnHit    = spell.destroyOnHit,
+            lifeTime        = spell.lifeTime,
+            maxRange        = spell.maxRange,
+            initialSpeed    = speed,
+            useGravity      = spell.useGravity,
+            impactVFX       = spell.impactVFX,
+            despawnVFX      = spell.despawnVFX,
+            vfxLifetime     = spell.vfxLifetime,
+            impactSFXKey    = spell.impactSFXKey,
+            element         = spell.element,
+            isPrecise       = spell.isRuntimePreciseInstance
+        };
+    }
+
+    /// Posición de salida: el origen, adelantado forwardOffset en la dirección de tiro, más
+    /// positionOffset (Y en mundo; X y Z en el espacio local del origen).
+    private static Vector3 ComputeSpawnPosition(MagicSpellSO spell, Transform origin, Vector3 dir)
+    {
+        Vector3 spawnPos = origin.position + dir * spell.forwardOffset;
+        if (spell.positionOffset != Vector3.zero)
+        {
+            spawnPos.y += spell.positionOffset.y;
+            if (spell.positionOffset.x != 0f || spell.positionOffset.z != 0f)
+                spawnPos += origin.TransformDirection(new Vector3(spell.positionOffset.x, 0f, spell.positionOffset.z));
+        }
+        return spawnPos;
+    }
+
+    private void PlaySpawnVfx(MagicSpellSO spell, Vector3 position, Quaternion rotation)
+    {
+        if (!spell.spawnVFX) return;
+        float lifetime = spell.vfxLifetime > 0f ? spell.vfxLifetime : 3f;
+        var fx = VfxPoolService.Instance.Play(spell.spawnVFX, position, rotation, lifetime);
+        if (spell.useScaleOverride && fx != null)
+            fx.localScale = spell.scaleOverride;
+    }
+
+    private GameObject InstantiateSpellPrefab(MagicSpellSO spell, Vector3 position, Quaternion rotation)
+    {
+        GameObject go = Instantiate(spell.prefab, position, rotation);
+        if (spell.useScaleOverride)
+            go.transform.localScale = spell.scaleOverride;
+        return go;
+    }
+
+    private IEnumerator Co_SpawnWithCharge(MagicSpellSO spell, Transform originOverride, float damageMultiplier)
     {
         if (!spell || !spell.prefab) yield break;
 
-        // FIX INC-049: velocidad efectiva ajustada si el player vuela o esprinta.
-        float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
-
         Transform origin = originOverride ? originOverride : transform;
-
-        // Dirección y rotación inicial
-        Vector3 baseForward = transform.forward;
-        Vector3 dir = (targeting != null)
-            ? targeting.GetAimDirectionFrom(origin ? origin : transform, baseForward)
-            : baseForward;
-        dir = spell.flattenDirection ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
-        if (dir.sqrMagnitude < 0.001f) dir = baseForward;
-
-        Vector3 spawnPos = (origin ? origin.position : transform.position) + dir * spell.forwardOffset;
-        
-        // Aplicar offset de posición adicional
-        // Y siempre es vertical (arriba/abajo en espacio mundial)
-        // X y Z respetan la rotación del caster (derecha/adelante en espacio local)
-        if (spell.positionOffset != Vector3.zero)
-        {
-            Transform casterTransform = origin ? origin : transform;
-            
-            // Y es siempre arriba/abajo (espacio mundial)
-            spawnPos.y += spell.positionOffset.y;
-            
-            // X (derecha) y Z (adelante) en espacio local del caster
-            if (spell.positionOffset.x != 0f || spell.positionOffset.z != 0f)
-            {
-                Vector3 localOffset = new Vector3(spell.positionOffset.x, 0f, spell.positionOffset.z);
-                spawnPos += casterTransform.TransformDirection(localOffset);
-            }
-        }
-        
-        // Evitar que el proyectil nazca dentro de colliders del jugador (mano/cuerpo)
-        // Usar posición de spawn original definida por el caster/spell
+        Vector3 dir = ResolveProjectileDirection(spell, origin, null);
+        Vector3 spawnPos = ComputeSpawnPosition(spell, origin, dir);
         Quaternion spawnRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
-        if (spell.spawnVFX)
-        {
-            // FIX (auditoría 2026-08-12): VfxPoolService en vez de Instantiate+Destroy directo
-            // (regla del proyecto — AGENTS.md §2, VFX de un solo uso siempre por pool).
-            float destroyTime = spell.vfxLifetime > 0f ? spell.vfxLifetime : 3f; // 3s por defecto
-            var fxTransform = VfxPoolService.Instance.Play(spell.spawnVFX, spawnPos, spawnRt, destroyTime);
-            if (spell.useScaleOverride && fxTransform != null)
-                fxTransform.localScale = spell.scaleOverride;
-        }
-
-        GameObject go = Instantiate(spell.prefab, spawnPos, spawnRt);
-        if (spell.useScaleOverride)
-            go.transform.localScale = spell.scaleOverride;
+        PlaySpawnVfx(spell, spawnPos, spawnRt);
+        GameObject go = InstantiateSpellPrefab(spell, spawnPos, spawnRt);
         if (go == null) yield break;
 
-        // FIX M8: registrar como "cargando" hasta que se suelte (o hasta OnDisable, ver arriba).
         _chargingProjectiles.Add(go);
 
-        // Pausar física mientras carga
+        // Física en pausa mientras carga (kinematic; no se toca la velocidad de un cuerpo kinematic).
         Rigidbody cachedRb = null;
         bool cachedKinematic = false;
-        bool cachedUseGravity = false;
-        if (go != null && go.TryGetComponent<Rigidbody>(out var rbDuringCharge))
+        if (go.TryGetComponent<Rigidbody>(out var rbDuringCharge))
         {
             cachedRb = rbDuringCharge;
             cachedKinematic = rbDuringCharge.isKinematic;
-            cachedUseGravity = rbDuringCharge.useGravity;
             rbDuringCharge.isKinematic = true;
             rbDuringCharge.useGravity = false;
-                // Poner kinematic durante la carga para pausar la física.
-                // NO toques `velocity` ni `angularVelocity` mientras sea kinematic
-                // porque Unity lanza warnings y no aplica cambios a cuerpos kinematic.
         }
 
         Transform previousParent = null;
-        if (go != null && spell.followOriginDuringCharge && origin != null)
+        if (spell.followOriginDuringCharge)
         {
             previousParent = go.transform.parent;
             go.transform.SetParent(origin, worldPositionStays: true);
         }
 
-        GameObject instigator = instigatorOverride ? instigatorOverride : gameObject;
-        if (go != null) IgnoreCollisionsBetween(go, instigator);
+        IgnoreCollisionsBetween(go, Instigator);
 
         MagicProjectile mp = null;
-        if (go != null && go.TryGetComponent<MagicProjectile>(out var proj))
+        if (go.TryGetComponent<MagicProjectile>(out var proj))
         {
             mp = proj;
-            var cfg = new MagicProjectile.ProjectileConfig
-            {
-                damage         = spell.damage,
-                aoeRadius      = spell.aoeRadius,
-                knockbackForce = spell.knockbackForce,
-                hitLayers      = GetDamageLayers(),
-                collisionLayers = GetDamageLayers(),
-                destroyOnHit   = spell.destroyOnHit,
-                lifeTime       = spell.lifeTime,
-                maxRange       = spell.maxRange,
-                initialSpeed   = effectiveSpeed,
-                useGravity     = spell.useGravity,
-                impactVFX      = spell.impactVFX,
-                despawnVFX     = spell.despawnVFX,
-                vfxLifetime    = spell.vfxLifetime,
-                impactSFXKey   = spell.impactSFXKey,
-                isPrecise      = spell.isRuntimePreciseInstance
-            };
-            mp.Configure(cfg, instigator);
+            mp.Configure(BuildProjectileConfig(spell, spell.initialSpeed * GetSpeedMultiplier(), damageMultiplier), Instigator);
+            mp.ConfigureExtras(spell, GetDamageLayers(), damageMultiplier);
             mp.SetKinematic(true);
         }
 
@@ -370,35 +294,24 @@ public class MagicProjectileSpawner : MonoBehaviour
             if (go == null) yield break;
         }
 
-        if (go != null && spell.followOriginDuringCharge && origin != null)
+        if (spell.followOriginDuringCharge)
             go.transform.SetParent(previousParent, worldPositionStays: true);
 
-        // FIX M8: ya se va a soltar (Launch/velocity más abajo) — deja de estar "cargando".
         _chargingProjectiles.Remove(go);
 
-        // FIX INC-049: recalcular la velocidad justo antes de soltar el proyectil, no al
-        // empezar la carga. Con hechizos con chargeTime > 0 el jugador puede empezar a volar
-        // o esprintar (o dejar de hacerlo) DURANTE la carga; usar el valor capturado al inicio
-        // dejaba el proyectil con la velocidad "de a pie" aunque se soltara volando/esprintando.
-        effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
+        // La velocidad se calcula al soltar: durante la carga el jugador puede empezar o dejar de
+        // volar o esprintar (INC-049).
+        float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
 
         if (mp != null)
         {
             mp.SetKinematic(false);
             mp.Launch(dir, effectiveSpeed, spell.useGravity);
         }
-        else if (go != null && go.TryGetComponent<Rigidbody>(out var rb))
-        {
-            rb.isKinematic = false;
-            rb.useGravity = spell.useGravity;
-            rb.angularVelocity = Vector3.zero;
-            rb.linearVelocity = dir * Mathf.Max(0f, effectiveSpeed);
-        }
         else if (cachedRb != null)
         {
             cachedRb.isKinematic = cachedKinematic;
             cachedRb.useGravity = spell.useGravity;
-            // Si el cuerpo quedó dinámico tras restaurar, aplicamos velocidad limpia
             if (!cachedRb.isKinematic)
             {
                 cachedRb.angularVelocity = Vector3.zero;
@@ -407,21 +320,31 @@ public class MagicProjectileSpawner : MonoBehaviour
         }
     }
 
+    /// Dirección de salida de un proyectil. Con objetivo va a su centro en 3D (también desde el
+    /// aire o hacia un saliente); sin objetivo, o con dirección forzada, respeta
+    /// flattenDirection. Ver INC-484.
+    private Vector3 ResolveProjectileDirection(MagicSpellSO spell, Transform origin, Vector3? directionOverride)
+    {
+        Vector3 baseForward = transform.forward;
+        bool aimAtTarget = directionOverride == null && targeting != null && targeting.CurrentTarget != null;
+        Vector3 dir = directionOverride ?? ((targeting != null)
+            ? targeting.GetAimDirectionFrom(origin, baseForward)
+            : baseForward);
+        dir = (spell.flattenDirection && !aimAtTarget) ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
+        return dir.sqrMagnitude < 0.001f ? baseForward : dir;
+    }
+
     /// <summary>
-    /// Materializa un hechizo de MagicKind.Zone: reproduce el VFX de casteo en la mano (mismo
-    /// camino visual que un proyectil, para aprovechar la animación de casteo existente — "sale
-    /// de la mano") y, al instante, instancia el prefab de la zona ya en su posición final —
-    /// centrada en el objetivo fijado si 'zoneSnapToTarget' lo permite y hay uno, o a
-    /// 'zoneRange' metros delante del lanzador en la dirección de apuntado. Un raycast hacia
-    /// abajo apoya la zona sobre el suelo real para que no quede flotando en terreno irregular.
+    /// Hechizo de MagicKind.Zone: VFX de lanzamiento en la mano y la zona, al instante, en su
+    /// sitio: centrada en el objetivo si 'zoneSnapToTarget' y hay uno, o a 'zoneRange' metros
+    /// delante. Un raycast hacia abajo la apoya en el suelo real.
     /// </summary>
-    private GameObject SpawnZoneNow(MagicSpellSO spell, Transform origin, Vector3? directionOverride = null)
+    private GameObject SpawnZoneNow(MagicSpellSO spell, Transform origin, Vector3? directionOverride, float damageMultiplier)
     {
         if (!spell || !spell.prefab) return null;
 
         Transform o = origin ? origin : transform;
 
-        // Dirección de apuntado: mismo criterio que un proyectil (usa el target fijado si lo hay).
         Vector3 baseForward = transform.forward;
         Vector3 dir = directionOverride ?? ((targeting != null)
             ? targeting.GetAimDirectionFrom(o, baseForward)
@@ -429,52 +352,31 @@ public class MagicProjectileSpawner : MonoBehaviour
         dir = spell.flattenDirection ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
         if (dir.sqrMagnitude < 0.001f) dir = baseForward;
 
-        // Punto donde aparece la zona.
         Vector3 zonePos;
-        if (spell.zoneSnapToTarget && targeting != null && targeting.TryGetTarget(out Transform aimedTarget) && aimedTarget != null)
-        {
+        if (spell.zoneOnCaster)
+            zonePos = Instigator.transform.position;   // Nova de Luz, Brisa Sanadora (INC-500/501)
+        else if (spell.zoneSnapToTarget && targeting != null && targeting.TryGetTarget(out Transform aimedTarget) && aimedTarget != null)
             zonePos = aimedTarget.position;
-        }
         else
-        {
             zonePos = o.position + dir * spell.zoneRange;
-        }
 
-        // Apoyar la zona sobre el suelo real (raycast hacia abajo desde bien arriba del punto).
-        // Se eleva 'zoneGroundOffset' sobre el punto de impacto: exactamente a la altura del
-        // suelo, el VFX se mezcla/hace z-fighting con la geometría (mismo problema visual que
-        // tenían los puntos de guardado).
+        // Se eleva zoneGroundOffset sobre el suelo: a ras, el VFX hace z-fighting con la geometría.
         Vector3 rayStart = zonePos + Vector3.up * 25f;
         if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit groundHit, 60f, spell.zoneGroundLayers, QueryTriggerInteraction.Ignore))
-        {
             zonePos.y = groundHit.point.y + spell.zoneGroundOffset;
-        }
         else
-        {
-            zonePos.y = o.position.y + spell.zoneGroundOffset; // fallback: altura del lanzador si no hay suelo detectado
-        }
+            zonePos.y = o.position.y + spell.zoneGroundOffset;
 
-        // VFX de casteo en la mano — el "sale de la mano" del pedido de diseño, aunque el
-        // hechizo en sí se materialice a distancia.
-        if (spell.spawnVFX)
-        {
-            float handFxLifetime = spell.vfxLifetime > 0f ? spell.vfxLifetime : 3f;
-            Quaternion handRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
-            var fxTransform = VfxPoolService.Instance.Play(spell.spawnVFX, o.position + dir * spell.forwardOffset, handRt, handFxLifetime);
-            if (spell.useScaleOverride && fxTransform != null)
-                fxTransform.localScale = spell.scaleOverride;
-        }
+        Quaternion handRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
+        PlaySpawnVfx(spell, o.position + dir * spell.forwardOffset, handRt);
 
-        GameObject go = Instantiate(spell.prefab, zonePos, Quaternion.identity);
-        if (spell.useScaleOverride)
-            go.transform.localScale = spell.scaleOverride;
+        GameObject go = InstantiateSpellPrefab(spell, zonePos, Quaternion.identity);
 
-        GameObject instigator = instigatorOverride ? instigatorOverride : gameObject;
         if (go.TryGetComponent<MagicZoneEffect>(out var zone))
         {
             var cfg = new MagicZoneEffect.ZoneConfig
             {
-                damagePerTick  = spell.damage,
+                damagePerTick  = spell.damage * damageMultiplier,
                 tickInterval   = spell.zoneTickInterval,
                 radius         = spell.zoneRadius,
                 duration       = spell.zoneDuration,
@@ -482,106 +384,189 @@ public class MagicProjectileSpawner : MonoBehaviour
                 hitLayers      = GetDamageLayers(),
                 tickSFXKey     = spell.impactSFXKey,
                 despawnVFX     = spell.despawnVFX,
-                vfxLifetime    = spell.vfxLifetime
+                vfxLifetime    = spell.vfxLifetime,
+                status         = spell.statusEffect,
+                statusDuration = spell.statusDuration,
+                statusStrength = spell.statusStrength,
+                statusVFX      = spell.statusVFX,
+                healPerTick        = spell.healPerTick,
+                groupShieldSeconds = spell.groupShieldSeconds,
+                groupShieldFactor  = spell.groupShieldDamageFactor,
+                groupShieldVFX     = spell.groupShieldVFX,
+                teamGaugeGain      = spell.teamGaugeGain
             };
-            zone.Configure(cfg, instigator);
+            zone.Configure(cfg, Instigator);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
-            Debug.LogWarning($"[MagicProjectileSpawner] El prefab de '{spell.displayName}' es MagicKind.Zone pero no tiene MagicZoneEffect — no hará nada.");
+            Debug.LogWarning($"[MagicProjectileSpawner] El prefab de '{spell.displayName}' es MagicKind.Zone pero no tiene MagicZoneEffect.");
         }
 #endif
 
         return go;
     }
 
-    private GameObject LaunchProjectile(MagicSpellSO spell, Transform origin, Vector3? directionOverride)
+    // === Paso corto (INC-502) ===================================================
+
+    static readonly RaycastHit[] s_teleportHits = new RaycastHit[16];
+
+    /// <summary>
+    /// Teletransporta al lanzador hasta spell.teleportDistance metros hacia donde apunta (el
+    /// objetivo o su frente). Prueba de lejos a cerca y se queda con el primer punto que tenga suelo
+    /// de NavMesh, no esté detrás de una pared y no cambie mucho de altura. Efecto en la salida
+    /// (spawnVFX) y en la llegada (prefab del hechizo).
+    /// </summary>
+    private void Teleport(MagicSpellSO spell)
+    {
+        GameObject body = Instigator;
+        if (body == null) return;
+        Transform t = body.transform;
+
+        Vector3 dir = targeting != null ? targeting.GetAimDirectionFrom(t, t.forward) : t.forward;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) dir = t.forward;
+        dir.Normalize();
+
+        Vector3 from = t.position;
+        Vector3 chest = from + Vector3.up * 1f;
+        float max = Mathf.Max(1f, spell.teleportDistance);
+        Vector3? destino = null;
+
+        for (float d = max; d >= 1f; d -= 0.5f)
+        {
+            Vector3 candidate = from + dir * d;
+            if (!UnityEngine.AI.NavMesh.SamplePosition(candidate, out var nav, 1.2f, UnityEngine.AI.NavMesh.AllAreas)) continue;
+            if (Mathf.Abs(nav.position.y - from.y) > 2f) continue;
+            if (HayParedEntre(chest, nav.position + Vector3.up * 1f, body)) continue;
+            destino = nav.position;
+            break;
+        }
+
+        if (destino == null)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[MagicProjectileSpawner] {spell.displayName}: no hay sitio libre delante; no se mueve.");
+#endif
+            return;
+        }
+
+        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+        if (spell.spawnVFX) VfxPoolService.Instance.Play(spell.spawnVFX, from, rot, spell.vfxLifetime > 0f ? spell.vfxLifetime : 2f);
+
+        var rb = body.GetComponent<Rigidbody>();
+        var cc = body.GetComponentInChildren<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        t.SetPositionAndRotation(destino.Value, rot);
+        if (rb != null)
+        {
+            rb.position = destino.Value;
+            if (!rb.isKinematic) rb.linearVelocity = Vector3.zero;
+        }
+        if (cc != null) cc.enabled = true;
+
+        if (spell.prefab)
+        {
+            var arrival = Instantiate(spell.prefab, destino.Value, rot);
+            Destroy(arrival, spell.vfxLifetime > 0f ? spell.vfxLifetime : 2f);
+        }
+    }
+
+    private static bool HayParedEntre(Vector3 a, Vector3 b, GameObject ignorar)
+    {
+        Vector3 delta = b - a;
+        float dist = delta.magnitude;
+        if (dist < 0.01f) return false;
+        int n = Physics.SphereCastNonAlloc(a, 0.3f, delta / dist, s_teleportHits, dist, ~0, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < n; i++)
+        {
+            var c = s_teleportHits[i].collider;
+            if (c == null) continue;
+            if (ignorar != null && (c.transform == ignorar.transform || c.transform.IsChildOf(ignorar.transform))) continue;
+            if (c.attachedRigidbody != null && !c.attachedRigidbody.isKinematic) continue; // objetos sueltos, enemigos con física
+            if (c.GetComponentInParent<Damageable>() != null) continue;                     // enemigos y compañeros no son pared
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Pone una zona (MagicKind.Zone) en un punto, sin gesto ni coste: la que deja un proyectil al
+    /// impactar (INC-497). Se apoya en el suelo que haya debajo.
+    /// </summary>
+    public static GameObject SpawnZoneAt(MagicSpellSO spell, Vector3 position, GameObject instigator, LayerMask hitLayers, float damageMultiplier = 1f)
+    {
+        if (spell == null || spell.prefab == null || spell.kind != MagicKind.Zone) return null;
+
+        Vector3 pos = position;
+        if (Physics.Raycast(position + Vector3.up * 3f, Vector3.down, out RaycastHit hit, 15f, spell.zoneGroundLayers, QueryTriggerInteraction.Ignore))
+            pos.y = hit.point.y + spell.zoneGroundOffset;
+
+        GameObject go = Instantiate(spell.prefab, pos, Quaternion.identity);
+        if (spell.useScaleOverride) go.transform.localScale = spell.scaleOverride;
+
+        if (go.TryGetComponent<MagicZoneEffect>(out var zone))
+        {
+            zone.Configure(new MagicZoneEffect.ZoneConfig
+            {
+                damagePerTick  = spell.damage * damageMultiplier,
+                tickInterval   = spell.zoneTickInterval,
+                radius         = spell.zoneRadius,
+                duration       = spell.zoneDuration,
+                knockbackForce = spell.knockbackForce,
+                hitLayers      = hitLayers,
+                tickSFXKey     = spell.impactSFXKey,
+                despawnVFX     = spell.despawnVFX,
+                vfxLifetime    = spell.vfxLifetime,
+                status         = spell.statusEffect,
+                statusDuration = spell.statusDuration,
+                statusStrength = spell.statusStrength,
+                statusVFX      = spell.statusVFX,
+                healPerTick        = spell.healPerTick,
+                groupShieldSeconds = spell.groupShieldSeconds,
+                groupShieldFactor  = spell.groupShieldDamageFactor,
+                groupShieldVFX     = spell.groupShieldVFX,
+                teamGaugeGain      = spell.teamGaugeGain
+            }, instigator);
+        }
+        return go;
+    }
+
+    private GameObject LaunchProjectile(MagicSpellSO spell, Transform origin, Vector3? directionOverride, float damageMultiplier)
     {
         if (!spell || !spell.prefab) return null;
 
-        // FIX INC-049: velocidad efectiva ajustada si el player vuela o esprinta.
-        float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
+        Transform o = origin ? origin : transform;
+        Vector3 baseDir = ResolveProjectileDirection(spell, o, directionOverride);
 
-        // === Dirección: si hay targeting activo, usa la dirección de APUNTADO ===
-        Vector3 baseForward = transform.forward;
-        Vector3 dir = directionOverride ?? ((targeting != null)
-            ? targeting.GetAimDirectionFrom(origin ? origin : transform, baseForward)
-            : baseForward);
-
-        // Respeta la nivelación definida por el hechizo
-        dir = spell.flattenDirection ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
-        if (dir.sqrMagnitude < 0.001f) dir = baseForward;
-
-        // Posición/rotación finales
-        // Configurar colisiones - ignorar jugador y todos sus hijos
-        GameObject instigator = instigatorOverride ? instigatorOverride : gameObject;
-        Vector3 spawnPos = (origin ? origin.position : transform.position) + dir * spell.forwardOffset;
-        
-        // Aplicar offset de posición adicional
-        // Y siempre es vertical (arriba/abajo en espacio mundial)
-        // X y Z respetan la rotación del caster (derecha/adelante en espacio local)
-        if (spell.positionOffset != Vector3.zero)
+        // Abanico (INC-497): N proyectiles repartidos en spreadAngle alrededor de la dirección.
+        int count = Mathf.Max(1, spell.spreadCount);
+        GameObject first = null;
+        for (int i = 0; i < count; i++)
         {
-            Transform casterTransform = origin ? origin : transform;
-            
-            // Y es siempre arriba/abajo (espacio mundial)
-            spawnPos.y += spell.positionOffset.y;
-            
-            // X (derecha) y Z (adelante) en espacio local del caster
-            if (spell.positionOffset.x != 0f || spell.positionOffset.z != 0f)
-            {
-                Vector3 localOffset = new Vector3(spell.positionOffset.x, 0f, spell.positionOffset.z);
-                spawnPos += casterTransform.TransformDirection(localOffset);
-            }
+            float angle = count == 1 ? 0f : Mathf.Lerp(-spell.spreadAngle * 0.5f, spell.spreadAngle * 0.5f, i / (float)(count - 1));
+            Vector3 d = Quaternion.AngleAxis(angle, Vector3.up) * baseDir;
+            GameObject one = LaunchOne(spell, o, d, damageMultiplier);
+            if (first == null) first = one;
         }
-        
-        // Evitar que el proyectil nazca dentro de colliders del jugador
-        // Usar posición de spawn original definida por el caster/spell
+        return first;
+    }
+
+    private GameObject LaunchOne(MagicSpellSO spell, Transform o, Vector3 dir, float damageMultiplier)
+    {
+        float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
+        Vector3 spawnPos = ComputeSpawnPosition(spell, o, dir);
         Quaternion spawnRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
-        if (spell.spawnVFX)
-        {
-            // FIX (auditoría 2026-08-12): VfxPoolService en vez de Instantiate+Destroy directo
-            // (regla del proyecto — AGENTS.md §2, VFX de un solo uso siempre por pool).
-            float destroyTime = spell.vfxLifetime > 0f ? spell.vfxLifetime : 3f; // 3s por defecto
-            var fxTransform = VfxPoolService.Instance.Play(spell.spawnVFX, spawnPos, spawnRt, destroyTime);
-            if (spell.useScaleOverride && fxTransform != null)
-            {
-                fxTransform.localScale = spell.scaleOverride;
-            }
-        }
+        PlaySpawnVfx(spell, spawnPos, spawnRt);
+        GameObject go = InstantiateSpellPrefab(spell, spawnPos, spawnRt);
 
-        GameObject go = Instantiate(spell.prefab, spawnPos, spawnRt);
-        if (spell.useScaleOverride)
-        {
-            go.transform.localScale = spell.scaleOverride;
-        }
-
-        IgnoreCollisionsBetween(go, instigator);
+        IgnoreCollisionsBetween(go, Instigator);
 
         if (go.TryGetComponent<MagicProjectile>(out var mp))
         {
-            var cfg = new MagicProjectile.ProjectileConfig
-            {
-                damage         = spell.damage,
-                aoeRadius      = spell.aoeRadius,
-                knockbackForce = spell.knockbackForce,
-                hitLayers      = GetDamageLayers(),
-                collisionLayers = GetDamageLayers(),
-                destroyOnHit   = spell.destroyOnHit,
-                lifeTime       = spell.lifeTime,
-                maxRange       = spell.maxRange,
-                initialSpeed   = effectiveSpeed,
-                useGravity     = spell.useGravity,
-                impactVFX      = spell.impactVFX,
-                despawnVFX     = spell.despawnVFX,
-                vfxLifetime    = spell.vfxLifetime,
-                impactSFXKey   = spell.impactSFXKey,
-                element        = spell.element,
-                isPrecise      = spell.isRuntimePreciseInstance
-            };
-            mp.Configure(cfg, instigatorOverride ? instigatorOverride : gameObject);
+            mp.Configure(BuildProjectileConfig(spell, effectiveSpeed, damageMultiplier), Instigator);
+            mp.ConfigureExtras(spell, GetDamageLayers(), damageMultiplier);
         }
 
         if (go.TryGetComponent<Rigidbody>(out var rb))
@@ -598,44 +583,38 @@ public class MagicProjectileSpawner : MonoBehaviour
         return go;
     }
 
-    // === Setters para servicios ===============================================
-    public void SetSpells(MagicSpellSO left, MagicSpellSO right, MagicSpellSO special)
-    { leftSpell = left; rightSpell = right; specialSpell = special; }
-
-    public void SetOrigins(Transform left, Transform right, Transform special)
-    { leftOrigin = left; rightOrigin = right; specialOrigin = special; }
-
-    public void SetInstigator(GameObject instigator) => instigatorOverride = instigator;
-
-    public void SetController(vThirdPersonController c)
+    // Ignora las colisiones del proyectil con el lanzador. Los colliders del proyectil se apagan
+    // un paso de física para que el motor procese el IgnoreCollision antes del primer contacto.
+    private void IgnoreCollisionsBetween(GameObject projectile, GameObject instigator)
     {
-        if (controller) controller.OnMagicSlotCast -= HandleSlotCast;
-        controller = c;
-        if (controller) controller.OnMagicSlotCast += HandleSlotCast;
+        if (!ignoreCasterColliders || projectile == null || instigator == null) return;
+
+        var projCols = projectile.GetComponentsInChildren<Collider>(true);
+        var instigatorCols = instigator.GetComponentsInChildren<Collider>(true);
+
+        foreach (var pc in projCols)
+            if (pc) pc.enabled = false;
+
+        foreach (var pc in projCols)
+        {
+            if (!pc) continue;
+            foreach (var ic in instigatorCols)
+                if (ic) Physics.IgnoreCollision(pc, ic, true);
+        }
+
+        StartCoroutine(ReenableCollidersNextFrame(projCols));
     }
 
-    /// Origen (mano izq/dcha/especial) de un slot, para quien necesite spawnear con SpawnNow/
-    /// SpawnForCinematic en vez de Spawn(slot) -- caso de PlayerPreciseAimController, que
-    /// necesita el punto de spawn correcto para su variante 'precisa' construida en runtime
-    /// (MagicSpellSO.BuildPreciseVariant), no la mano llegada del transform por defecto.
-    public Transform GetOrigin(MagicSlot slot) => GetSpellAndOrigin(slot).Item2;
-
-    // === Helpers ===============================================================
-    (MagicSpellSO, Transform) GetSpellAndOrigin(MagicSlot slot)
+    private IEnumerator ReenableCollidersNextFrame(Collider[] colliders)
     {
-        switch (slot)
-        {
-            case MagicSlot.Left:    return (leftSpell,    leftOrigin    ? leftOrigin    : transform);
-            case MagicSlot.Right:   return (rightSpell,   rightOrigin   ? rightOrigin   : transform);
-            case MagicSlot.Special: return (specialSpell, specialOrigin ? specialOrigin : transform);
-            default:                return (null, transform);
-        }
+        yield return new WaitForFixedUpdate();
+        foreach (var pc in colliders)
+            if (pc) pc.enabled = true;
     }
 
 #if UNITY_EDITOR
     void OnValidate()
     {
-        if (!controller) controller = GetComponentInParent<vThirdPersonController>();
         if (!targeting)  targeting  = GetComponentInParent<PlayerTargeting>();
         if (!instigatorOverride) instigatorOverride = gameObject;
     }

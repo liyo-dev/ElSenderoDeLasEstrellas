@@ -64,13 +64,13 @@ public class SenderoBattleAutoStart : MonoBehaviour
 
         if (string.IsNullOrEmpty(_startSignal))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SenderoBattleAutoStart] _startSignal está vacío — no se lanza ninguna señal. Rellénalo en el Inspector (por defecto \"SENDERO_FINAL_START\").");
 #endif
             yield break;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SenderoBattleAutoStart] Lanzando señal de entrada '{_startSignal}' para arrancar la Batalla Final.");
 #endif
         DefaultNarrativeSignals.EnsureInstance().RaiseCustom(_startSignal);

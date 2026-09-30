@@ -25,18 +25,28 @@ public class ConfirmationPopupUI : MonoBehaviour
     [SerializeField] private Button cancelButton;
     [SerializeField] private TextMeshProUGUI cancelLabel;
 
+    [Header("Botones")]
+    [SerializeField, Min(0f), Tooltip("Margen a cada lado del texto dentro de un botón, en unidades del canvas. " +
+             "Si el texto más su margen no cabe en el ancho del botón, el botón se ensancha.")]
+    private float margenTextoBoton = 26f;
+
     [Header("Input")]
     [SerializeField, Min(0f), Tooltip("Tiempo mínimo tras abrir antes de aceptar input de confirmar/cancelar. Evita que la misma pulsación que abrió el popup (p.ej. botón Sur del gamepad) lo confirme instantáneamente en el mismo frame.")]
     private float inputGracePeriod = 0.15f;
 
     private Action _onConfirm;
     private Action _onCancel;
+    private bool _cancelWithBack = true;
     private bool _isShown;
     private float _savedTimeScale;
     private bool _confirmSelected = false;
     private Coroutine _blinkRoutine;
     private float _shownAt;
     private GameObject _previousSelected;
+
+    // Ancho y tamaño de letra con los que está diseñado cada botón; son el mínimo al ajustarlo.
+    private float _anchoBaseConfirmar, _anchoBaseCancelar;
+    private float _letraBaseConfirmar, _letraBaseCancelar;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -48,15 +58,25 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+        PrepararBoton(confirmButton, confirmLabel, out _anchoBaseConfirmar, out _letraBaseConfirmar);
+        PrepararBoton(cancelButton, cancelLabel, out _anchoBaseCancelar, out _letraBaseCancelar);
         if (panel) panel.SetActive(false);
     }
 
-    public void Show(string message, Action onConfirm, Action onCancel = null)
+    /// <param name="confirmText">Texto del botón de confirmar. Vacío = «Sí».</param>
+    /// <param name="cancelText">Texto del botón de cancelar. Vacío = «No».</param>
+    /// <param name="selectConfirm">Abrir con el foco en confirmar en vez de en cancelar.</param>
+    /// <param name="cancelWithBack">Si el botón Atrás (Este / Escape) elige cancelar. Apagarlo cuando
+    /// cancelar no es «no hacer nada» y ese botón se usa para otra cosa justo antes de abrir.</param>
+    public void Show(string message, Action onConfirm, Action onCancel = null,
+                     string confirmText = null, string cancelText = null,
+                     bool selectConfirm = false, bool cancelWithBack = true)
     {
         if (_isShown) return;
 
         _onConfirm = onConfirm;
         _onCancel = onCancel;
+        _cancelWithBack = cancelWithBack;
         _savedTimeScale = Time.timeScale;
         Time.timeScale = 0f;
 
@@ -89,19 +109,93 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (messageText) messageText.text = message;
 
         var loc = LocalizationManager.Instance;
-        if (confirmLabel) confirmLabel.text = loc != null ? loc.Get("COMMON_YES", "Sí") : "Sí";
-        if (cancelLabel)  cancelLabel.text  = loc != null ? loc.Get("COMMON_NO",  "No") : "No";
+        if (confirmLabel) confirmLabel.text = !string.IsNullOrEmpty(confirmText) ? confirmText
+            : loc != null ? loc.Get("COMMON_YES", "Sí") : "Sí";
+        if (cancelLabel)  cancelLabel.text  = !string.IsNullOrEmpty(cancelText) ? cancelText
+            : loc != null ? loc.Get("COMMON_NO",  "No") : "No";
 
         if (confirmButton) { confirmButton.onClick.RemoveAllListeners(); confirmButton.onClick.AddListener(Confirm); }
         if (cancelButton)  { cancelButton.onClick.RemoveAllListeners();  cancelButton.onClick.AddListener(Cancel);  }
 
         _isShown = true;
-        _confirmSelected = false;
+        _confirmSelected = selectConfirm;
         _shownAt = Time.unscaledTime;
         if (panel) panel.SetActive(true);
+        AjustarBotonesAlTexto();
 
         SelectButton(_confirmSelected);
         StartBlink();
+    }
+
+    // ── Botones que se ajustan a su texto ─────────────────────────────────────
+    // Cada llamada puede traer sus propios textos («Continuar», «Salir al menú»...). El botón
+    // conserva su tamaño de diseño como mínimo y se ensancha lo que haga falta para que el texto
+    // quepa con su margen; si ni ocupando su mitad de la fila cabe, la letra se encoge. Ver INC-531.
+
+    static void PrepararBoton(Button boton, TextMeshProUGUI texto, out float anchoBase, out float letraBase)
+    {
+        anchoBase = 0f;
+        letraBase = texto != null ? texto.fontSize : 0f;
+        if (boton == null) return;
+
+        var rt = (RectTransform)boton.transform;
+        anchoBase = rt.rect.width > 0f ? rt.rect.width : rt.sizeDelta.x;
+
+        // Para ensancharse sin deformar los extremos redondeados, la imagen pasa a 9-slice con la
+        // misma escala que tiene a su tamaño de diseño (así, a ese tamaño se ve idéntica).
+        var imagen = boton.targetGraphic as Image;
+        if (imagen == null) imagen = boton.GetComponent<Image>();
+        float alto = rt.rect.height > 0f ? rt.rect.height : rt.sizeDelta.y;
+        if (imagen == null || imagen.sprite == null || imagen.type != Image.Type.Simple || alto <= 0f) return;
+        if (imagen.sprite.border.x <= 0f && imagen.sprite.border.z <= 0f) return;
+
+        var canvas = boton.GetComponentInParent<Canvas>(true);
+        float refPpu = canvas != null ? canvas.referencePixelsPerUnit : 100f;
+        float altoSpriteEnUnidades = imagen.sprite.rect.height * refPpu / imagen.sprite.pixelsPerUnit;
+        imagen.type = Image.Type.Sliced;
+        imagen.fillCenter = true;
+        imagen.pixelsPerUnitMultiplier = altoSpriteEnUnidades / alto;
+    }
+
+    void AjustarBotonesAlTexto()
+    {
+        var fila = confirmButton != null ? confirmButton.transform.parent as RectTransform : null;
+        float anchoMax = 0f;
+        if (fila != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            float espacio = 0f, relleno = 0f;
+            var grupo = fila.GetComponent<HorizontalLayoutGroup>();
+            if (grupo != null) { espacio = grupo.spacing; relleno = grupo.padding.horizontal; }
+            anchoMax = (fila.rect.width - relleno - espacio) * 0.5f;
+        }
+
+        AjustarBoton(confirmButton, confirmLabel, _anchoBaseConfirmar, _letraBaseConfirmar, anchoMax);
+        AjustarBoton(cancelButton, cancelLabel, _anchoBaseCancelar, _letraBaseCancelar, anchoMax);
+
+        if (fila != null) LayoutRebuilder.ForceRebuildLayoutImmediate(fila);
+    }
+
+    void AjustarBoton(Button boton, TextMeshProUGUI texto, float anchoBase, float letraBase, float anchoMax)
+    {
+        if (boton == null || texto == null || anchoBase <= 0f) return;
+
+        texto.enableAutoSizing = false;
+        if (letraBase > 0f) texto.fontSize = letraBase;
+        texto.margin = Vector4.zero;
+        float anchoTexto = texto.GetPreferredValues(texto.text, float.PositiveInfinity, float.PositiveInfinity).x;
+        texto.margin = new Vector4(margenTextoBoton, 0f, margenTextoBoton, 0f);
+
+        float ancho = Mathf.Max(anchoBase, anchoTexto + margenTextoBoton * 2f);
+        if (anchoMax > 0f && ancho > anchoMax)
+        {
+            ancho = Mathf.Max(anchoBase, anchoMax);
+            texto.enableAutoSizing = true;
+            texto.fontSizeMax = letraBase;
+            texto.fontSizeMin = Mathf.Min(letraBase, 14f);
+        }
+
+        ((RectTransform)boton.transform).SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, ancho);
     }
 
     void Update()
@@ -118,7 +212,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (gp != null)
         {
             if (gp.buttonSouth.wasPressedThisFrame)  { ActivateSelected(); return; }
-            if (gp.buttonEast.wasPressedThisFrame)   { Cancel();  return; }
+            if (_cancelWithBack && gp.buttonEast.wasPressedThisFrame) { Cancel(); return; }
             if (gp.dpad.left.wasPressedThisFrame || gp.leftStick.left.wasPressedThisFrame)
                 ToggleSelection();
             if (gp.dpad.right.wasPressedThisFrame || gp.leftStick.right.wasPressedThisFrame)
@@ -128,13 +222,13 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (kb != null)
         {
             if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) { ActivateSelected(); return; }
-            if (kb.escapeKey.wasPressedThisFrame) { Cancel(); return; }
+            if (_cancelWithBack && kb.escapeKey.wasPressedThisFrame) { Cancel(); return; }
             if (kb.leftArrowKey.wasPressedThisFrame || kb.rightArrowKey.wasPressedThisFrame || kb.tabKey.wasPressedThisFrame)
                 ToggleSelection();
         }
 #else
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter)) { ActivateSelected(); return; }
-        if (Input.GetKeyDown(KeyCode.Escape)) { Cancel(); return; }
+        if (_cancelWithBack && Input.GetKeyDown(KeyCode.Escape)) { Cancel(); return; }
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Tab))
             ToggleSelection();
 #endif

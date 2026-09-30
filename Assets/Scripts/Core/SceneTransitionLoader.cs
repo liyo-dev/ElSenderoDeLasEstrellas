@@ -26,6 +26,32 @@ public static class SceneTransitionLoader
     // Configuración del fade-in post-carga
     public static float PostLoadFadeDuration = 0.5f;
     public static Color PostLoadFadeColor = Color.black;
+
+    /// <summary>
+    /// True mientras la pantalla de carga está en pantalla. La UI del mundo (SceneBoundUI con
+    /// escenas asignadas: HUD, reloj, coleccionables...) se oculta mientras tanto: la pantalla de
+    /// carga se pinta con su propia cámara y cualquier canvas de pantalla quedaría encima. Ver INC-532.
+    /// </summary>
+    public static bool PantallaDeCargaVisible { get; private set; }
+
+    /// <summary>Se dispara cada vez que cambia <see cref="PantallaDeCargaVisible"/>.</summary>
+    public static event System.Action PantallaDeCargaCambiada;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        PantallaDeCargaVisible = false;
+        PantallaDeCargaCambiada = null;
+    }
+#endif
+
+    private static void MarcarPantallaDeCarga(bool visible)
+    {
+        if (PantallaDeCargaVisible == visible) return;
+        PantallaDeCargaVisible = visible;
+        PantallaDeCargaCambiada?.Invoke();
+    }
     // ====================== API PÚBLICA ======================
 
     /// <summary>Carga una escena por nombre, sin overlay de progreso.</summary>
@@ -55,6 +81,19 @@ public static class SceneTransitionLoader
         EnsureRunner().StartCoroutine(LoadRoutine(targetScene, overlayScene, fade, fadeDelay));
     }
 
+    /// <summary>
+    /// Como LoadWithOverlay, pero con el mundo actual descargado ANTES de cargar el destino: con la
+    /// overlay ya tapando la pantalla, se descargan todas las escenas salvo la overlay, se llama a
+    /// 'conElMundoVacio' y después se carga el destino. Es el orden del menú principal (el mundo no
+    /// existe mientras se prepara la partida), para cargar partida desde dentro del mundo.
+    /// </summary>
+    public static void LoadWithOverlay(string targetScene,
+                                       string overlayScene,
+                                       System.Action conElMundoVacio)
+    {
+        EnsureRunner().StartCoroutine(LoadRoutine(targetScene, overlayScene, null, 0f, conElMundoVacio));
+    }
+
     // ====================== Núcleo ======================
 
     private static LoaderRunner _runner;
@@ -72,7 +111,8 @@ public static class SceneTransitionLoader
     private static IEnumerator LoadRoutine(string targetScene,
                                            string overlayScene, // null o vacío => sin overlay
                                            TransitionSettings fade,
-                                           float fadeDelay)
+                                           float fadeDelay,
+                                           System.Action conElMundoVacio = null)
     {
         bool hasOverlay = !string.IsNullOrEmpty(overlayScene);
 
@@ -110,7 +150,7 @@ public static class SceneTransitionLoader
 
             if (!ui)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SceneTransitionLoader] No se encontró LoadingScreenController en '{overlayScene}'. Progreso no visible.");
 #endif
             }
@@ -121,16 +161,30 @@ public static class SceneTransitionLoader
 
                 loadingUI = ui;
                 ui.ShowImmediate();
+                MarcarPantallaDeCarga(true);
                 // Fade-in de la UI desde el runner persistente
                 yield return EnsureRunner().StartCoroutine(ui.Fade(0f, 1f));
             }
+        }
+
+        // 2b) Descargar el mundo actual, si lo piden, y avisar con él ya fuera
+        if (conElMundoVacio != null)
+        {
+            if (overlayLoaded.IsValid() && overlayLoaded.isLoaded)
+                yield return DescargarTodoSalvo(overlayLoaded);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            else
+                Debug.LogWarning("[SceneTransitionLoader] Sin overlay no se puede vaciar el mundo antes de cargar; se avisa con él cargado.");
+#endif
+            try { conElMundoVacio(); }
+            catch (System.Exception e) { Debug.LogException(e); }
         }
 
         // 3) Carga asíncrona de la escena destino
         var op = SceneManager.LoadSceneAsync(targetScene);
         if (op == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SceneTransitionLoader] No se pudo iniciar la carga de '{targetScene}'");
 #endif
 
@@ -139,6 +193,7 @@ public static class SceneTransitionLoader
             {
                 yield return EnsureRunner().StartCoroutine(ui.Fade(1f, 0f));
                 ui.HideImmediate();
+                MarcarPantallaDeCarga(false);
                 Object.Destroy(ui.gameObject);
             }
             yield break;
@@ -209,6 +264,7 @@ public static class SceneTransitionLoader
             yield return new WaitForSecondsRealtime(0.1f);
             yield return EnsureRunner().StartCoroutine(ui.Fade(1f, 0f));
             ui.HideImmediate();
+            MarcarPantallaDeCarga(false);
             Object.Destroy(ui.gameObject);
         }
 
@@ -226,6 +282,25 @@ public static class SceneTransitionLoader
         if (telonCerrado) Telon.Soltar(ClaveTelon(targetScene));
 
         yield break;
+    }
+
+    /// Descarga todas las escenas cargadas menos 'conservar', que pasa a ser la activa.
+    private static IEnumerator DescargarTodoSalvo(Scene conservar)
+    {
+        SceneManager.SetActiveScene(conservar);
+
+        var aDescargar = new System.Collections.Generic.List<Scene>();
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            var s = SceneManager.GetSceneAt(i);
+            if (s.isLoaded && s != conservar) aDescargar.Add(s);
+        }
+
+        foreach (var s in aDescargar)
+        {
+            var op = SceneManager.UnloadSceneAsync(s);
+            while (op != null && !op.isDone) yield return null;
+        }
     }
 
     /// <summary>
@@ -248,7 +323,7 @@ public static class SceneTransitionLoader
         }
         catch (System.MissingMethodException)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SceneTransitionLoader] TransitionManager encontrado, pero no tiene método Transition(TransitionSettings, float). Ajusta TryPlayExternalTransition().");
 #endif
         }

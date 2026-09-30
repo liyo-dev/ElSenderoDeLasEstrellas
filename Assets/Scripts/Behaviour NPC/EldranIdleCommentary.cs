@@ -71,7 +71,7 @@ namespace Game.NPC
         private float _nextTriggerTime;
         private bool _timerArmed;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private float _nextDiagnosticLogTime;
 #endif
 
@@ -86,7 +86,7 @@ namespace Game.NPC
             _partyMember = GetComponent<NPCPartyMember>();
             _npcManager = GetComponent<NPCBehaviourManagerV2>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[EldranIdleCommentary:{name}] Componente activo. partyMember={(_partyMember != null)}, npcManager={(_npcManager != null)}.");
 #endif
         }
@@ -167,7 +167,7 @@ namespace Game.NPC
             return true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private void LogIneligible(string reason)
         {
             if (Time.time < _nextDiagnosticLogTime) return;
@@ -196,7 +196,7 @@ namespace Game.NPC
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EldranIdleCommentary] Comentario suelto: \"{line}\"");
                 #endif
             }
@@ -208,7 +208,7 @@ namespace Game.NPC
             string line = PickLine(searchLines);
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EldranIdleCommentary] Se para a cachearse el báculo: \"{line}\"");
                 #endif
             }

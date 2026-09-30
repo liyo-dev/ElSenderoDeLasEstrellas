@@ -26,7 +26,7 @@ public sealed class CheckpointNode : NarrativeNode
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CheckpointNode:{guid}] ⚑ {checkpointId}");
 #endif
         ready?.Invoke();

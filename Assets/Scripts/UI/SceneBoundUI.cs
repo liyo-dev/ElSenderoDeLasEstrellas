@@ -180,6 +180,10 @@ public class SceneBoundUI : MonoBehaviour
     private bool IsAllowedInCurrentScene()
     {
         if (allowedScenes.Count == 0) return allowWhenListEmpty;
+
+        // UI ligada al mundo: no se pinta encima de la pantalla de carga (INC-532). La que no tiene
+        // escenas asignadas (diálogos, popups, texto dramático) gestiona su propia visibilidad.
+        if (SceneTransitionLoader.PantallaDeCargaVisible) return false;
         for (int i = 0; i < SceneManager.sceneCount; i++)
             if (allowedScenes.Contains(SceneManager.GetSceneAt(i).name))
                 return true;
@@ -207,6 +211,7 @@ public class SceneBoundUI : MonoBehaviour
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+        SceneTransitionLoader.PantallaDeCargaCambiada += ApplySceneState;
         ApplySceneState();
     }
 
@@ -218,6 +223,7 @@ public class SceneBoundUI : MonoBehaviour
         SceneManager.activeSceneChanged -= OnActiveSceneChanged;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneUnloaded -= OnSceneUnloaded;
+        SceneTransitionLoader.PantallaDeCargaCambiada -= ApplySceneState;
     }
 
     private void OnActiveSceneChanged(Scene _, Scene newScene) => ApplySceneState();

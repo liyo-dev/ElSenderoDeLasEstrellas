@@ -13,7 +13,7 @@ using UnityEngine.AI;
 [Serializable]
 [NarrativeNodeInfo("Cinemáticas", "Reproducir cinemática", "Emite la señal de entrada de un Sequencer y espera su señal de fin (Hecho) o de fallo.")]
 [UnsafeForSave("Cinemática en curso")]
-public sealed class PlayCinematicNode : NarrativeNode
+public sealed class PlayCinematicNode : NarrativeNode, INarrativeStateEffect
 {
     [Tooltip("Nombre legible (solo para el editor): 'Despertar de la estrella', 'Taberna'...")]
     public string cinematicName;
@@ -48,6 +48,16 @@ public sealed class PlayCinematicNode : NarrativeNode
 
     static readonly string[] Ports = { "Hecho", "Fallo" };
     public override string[] GetOutputPorts() => Ports;
+
+    /// La proyección sigue por «Hecho»: «Fallo» es la rama de error.
+    public override int ProjectionPort => 0;
+
+    /// Lo que deja cambiado la secuencia, con sus marcas ligadas a ella (o a la plantilla, si se
+    /// monta en vivo y usa su escenario).
+    public void Project(INarrativeStateWriter state)
+    {
+        if (secuencia != null) secuencia.Project(new ScopedNarrativeStateWriter(state, secuencia.name, plantillaDeAjustes));
+    }
 
     [NonSerialized] private INarrativeSignals _signals;
     [NonSerialized] private Action _onDone;
@@ -86,7 +96,7 @@ public sealed class PlayCinematicNode : NarrativeNode
         _onDone = () =>
         {
             Unsubscribe();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayCinematicNode:{guid}] ✅ '{cinematicName}' terminada ({signalDone})");
 #endif
             AdvanceThrough(ctx, ready, 0);
@@ -98,7 +108,7 @@ public sealed class PlayCinematicNode : NarrativeNode
             _onFailed = () =>
             {
                 Unsubscribe();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayCinematicNode:{guid}] ⚠ '{cinematicName}' falló ({signalFailed})");
 #endif
                 AdvanceThrough(ctx, ready, 1);
@@ -106,7 +116,7 @@ public sealed class PlayCinematicNode : NarrativeNode
             _signals.OnCustom(signalFailed, _onFailed);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayCinematicNode:{guid}] ▶ '{cinematicName}': emitiendo {signalIn}, esperando {signalDone}");
 #endif
         _signals.RaiseCustom(signalIn, $"[PlayCinematicNode] {cinematicName}");
@@ -133,7 +143,7 @@ public sealed class PlayCinematicNode : NarrativeNode
         }
         var copia = SequencePlayer.CrearCopiaPara(secuencia, molde);
         if (copia != null) copia.RegisterCleanup(() => UnityEngine.Object.Destroy(copia.gameObject, 6f));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayCinematicNode] '{secuencia.name}' montada en vivo con los ajustes de '{molde.name}'.");
 #endif
     }

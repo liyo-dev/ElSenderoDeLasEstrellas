@@ -11,7 +11,7 @@ public class CinematicShotPreview : MonoBehaviour
     [SerializeField] private CinematicCameraDriver driver;
     [SerializeField] private Transform[]           shots;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private int  _current = -1;
     private bool _active;
 

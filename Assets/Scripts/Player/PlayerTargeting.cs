@@ -136,7 +136,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     {
         if (verboseLogging)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerTargeting] Target '{_currentTargetDamageable.name}' muerto, limpiando.");
             #endif
         }
@@ -177,7 +177,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         
         if (verboseLogging)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerTargeting] Target MANUAL establecido: {(target ? target.name : "NULL")}");
             #endif
         }
@@ -245,7 +245,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         }
         if (verboseLogging)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerTargeting] Target manual liberado.");
             #endif
         }
@@ -268,7 +268,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         _autoScanSuppressed = suppressed;
         if (verboseLogging)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerTargeting] Auto-scan suprimido: {suppressed}");
             #endif
         }
@@ -282,7 +282,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[PlayerTargeting] Target manual inválido, limpiando.");
                     #endif
                 }
@@ -326,7 +326,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
                 var damageable = h.GetComponentInParent<Damageable>();
                 if (damageable == null || !damageable.IsAlive)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: sin Damageable vivo (damageable={(damageable == null ? "NULL" : "existe")}, alive={(damageable != null && damageable.IsAlive)})");
 #endif
                     continue;
@@ -341,7 +341,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             var cfg = h.GetComponentInParent<Targetable>();
             if (cfg && !cfg.isInActiveCombat)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: Targetable.isInActiveCombat=false");
 #endif
                 continue;
@@ -349,7 +349,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             float allowedRadius = (cfg && cfg.targetingRadius > 0) ? cfg.targetingRadius : radius;
             if (dist > allowedRadius)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: dist={dist:F2} > allowedRadius={allowedRadius:F2}");
 #endif
                 continue;
@@ -359,7 +359,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             float angle = Vector3.Angle(fwd, dir);
             if (angle > fovDegrees * 0.5f)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: fuera de FOV (angle={angle:F1} > {fovDegrees * 0.5f:F1}) fwd={fwd} dir={dir}");
 #endif
                 continue;
@@ -370,7 +370,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
                 Vector3 vp = _cam.WorldToViewportPoint(center);
                 if (vp.z <= 0f || vp.x < screenEdgePadding || vp.x > 1f - screenEdgePadding || vp.y < screenEdgePadding || vp.y > 1f - screenEdgePadding)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: fuera de pantalla (viewport={vp})");
 #endif
                     continue;
@@ -379,7 +379,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
             if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) && rh.collider.transform.root != h.transform.root)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: línea de visión bloqueada por '{rh.collider.gameObject.name}' (root='{rh.collider.transform.root.name}') a {rh.distance:F2}m de {dist:F2}m totales");
 #endif
                 continue;
@@ -389,7 +389,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             if (score > bestScore) { bestScore = score; best = h.transform; }
         }
         CurrentTarget = best;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (hitCount > 0)
             Debug.Log($"[DEBUG-AIM] Scan() candidatos={hitCount} CurrentTarget={(best ? best.name : "NULL")}");
 #endif
@@ -399,7 +399,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     {
         if (verboseLogging)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerTargeting] OnTargetChanged: {(newT ? newT.name : "NULL")}");
             #endif
         }
@@ -477,7 +477,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             // Solo loguear cada 60 frames para no saturar
             if (Time.frameCount % 60 == 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerTargeting] UpdateMarker: Target={CurrentTarget.name}, Pos={pos}, MarkerPos={_marker.position}");
 #endif
             }
@@ -495,17 +495,9 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
     public Vector3 GetAimDirectionFrom(Transform origin, Vector3 fallbackForward)
     {
+        // Se apunta al centro del cuerpo del objetivo, no al marcador que flota sobre su cabeza.
         if (CurrentTarget)
-        {
-            Vector3 targetPos = GetTargetCenter(CurrentTarget) + markerOffset;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[DEBUG-AIM] GetAimDirectionFrom: usando CurrentTarget='{CurrentTarget.name}' targetPos={targetPos} dir={(targetPos - origin.position).normalized}");
-#endif
-            return (targetPos - origin.position).normalized;
-        }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Debug.Log($"[DEBUG-AIM] GetAimDirectionFrom: CurrentTarget=NULL, usando fallbackForward={fallbackForward}");
-#endif
+            return (GetTargetCenter(CurrentTarget) - origin.position).normalized;
         return fallbackForward;
     }
 

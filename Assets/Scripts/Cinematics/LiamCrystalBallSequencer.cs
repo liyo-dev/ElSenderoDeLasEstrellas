@@ -172,7 +172,7 @@ public class LiamCrystalBallSequencer : CinematicSequencerBase
 
         if ((liamTransform.position - _liamDesignPosition).sqrMagnitude > 0.0001f)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LiamCrystalBallSequencer] Liam se había desplazado de su posición diseñada " +
                 $"({liamTransform.position} → objetivo {_liamDesignPosition}), probablemente por corrección " +
                 $"automática del NavMeshAgent al activarse. Restaurando.");

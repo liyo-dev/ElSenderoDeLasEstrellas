@@ -122,7 +122,7 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
 
         if (!TryWirePatchNotesButton())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PatchNotesFlyoutPanel] No se encontró el botón NOTAS DEL PARCHE automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Patch Notes Button Override' a mano en el Inspector.");
             #endif
@@ -470,7 +470,7 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
 
         if (string.IsNullOrEmpty(bullets))
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PatchNotesFlyoutPanel] Resources/PatchNotes/CurrentEntryBullets.txt " +
                               "está vacío — la entrada más reciente se mostrará sin contenido. En un " +
                               "build real esto no debería pasar nunca (PatchNotesBuildGuard cancela el " +
@@ -487,7 +487,7 @@ public class PatchNotesFlyoutPanel : MonoBehaviour
         var asset = Resources.Load<TextAsset>(resourcePath);
         if (asset == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PatchNotesFlyoutPanel] No se encontró el recurso de texto " +
                               $"'{resourcePath}'. Revisa que exista el .txt correspondiente en " +
                               "Assets/Resources/PatchNotes/.");

@@ -178,7 +178,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
 
         if (!TryWireBugReportButton())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BugReportFlyoutPanel] No se encontró el botón REPORTAR UN FALLO automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Bug Report Button Override' a mano en el Inspector.");
             #endif
@@ -811,7 +811,7 @@ public class BugReportFlyoutPanel : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[BugReportFlyoutPanel] Fallo al enviar el reporte: {request.error} (código {request.responseCode})");
 #endif
                 ShowStatus(Loc("BugReport_Error", "No se pudo enviar. Comprueba tu conexión e inténtalo de nuevo."), isError: true);

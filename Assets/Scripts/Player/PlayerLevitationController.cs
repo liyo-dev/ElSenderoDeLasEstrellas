@@ -8,11 +8,9 @@ using Core;
 /// <summary>
 /// Controlador de levitación del jugador (y de Liam como aliado IA).
 ///
-/// Flujo:
-///   1. Mantener el botón de magia → agarra los NPCs del cono y los levita (con drenaje de maná).
-///   2. Soltar el botón → los lanza hacia adelante.
-///
-/// Para la IA aliada: llamar TriggerAILevitation(slot, spell).
+/// Flujo, con la levitación como hechizo básico activo:
+///   1. Mantener la X → agarra los NPCs del cono y los levita (con drenaje de maná).
+///   2. Soltar la X → los lanza hacia adelante.
 /// </summary>
 [DisallowMultipleComponent]
 public class PlayerLevitationController : MonoBehaviour
@@ -42,14 +40,13 @@ public class PlayerLevitationController : MonoBehaviour
     private enum LevitationPhase { Idle, Levitating }
     private LevitationPhase _phase = LevitationPhase.Idle;
 
-    private MagicSlot _activeSlot;
+
     private MagicSpellSO _activeSpell;
     private readonly List<LevitationTarget> _currentTargets = new List<LevitationTarget>();
     private float _levitationStartTime;
 
     // Evita re-entrar mientras el botón sigue pulsado
-    private bool _leftButtonWasDown;
-    private bool _rightButtonWasDown;
+    private bool _buttonWasDown;
 
     // ── Animación ───────────────────────────────────────────────────────────
     private readonly int _upperBodyLayerIndex = 1;
@@ -67,7 +64,6 @@ public class PlayerLevitationController : MonoBehaviour
 
     // ── API pública ──────────────────────────────────────────────────────────
     public bool IsLevitating => _phase == LevitationPhase.Levitating;
-    public MagicSlot ActiveSlot => _activeSlot;
     public IReadOnlyList<LevitationTarget> CurrentTargets => _currentTargets;
 
     // ────────────────────────────────────────────────────────────────────────
@@ -84,7 +80,7 @@ public class PlayerLevitationController : MonoBehaviour
     {
         if (!magicCaster)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerLevitationController] No se encontró MagicCaster.");
             #endif
         }
@@ -107,39 +103,27 @@ public class PlayerLevitationController : MonoBehaviour
     {
         if (!magicCaster) return;
 
-        bool leftHeld  = GetLeftHeld();
-        bool rightHeld = GetRightHeld();
+        bool held = GamepadInputReader.AttackMagicLeftHeld;
+        if (!held) _buttonWasDown = false;
+        if (ComboCastController.IsComposing) { if (held) _buttonWasDown = true; return; } // la X es parte del combo (INC-494)
 
-        if (!leftHeld)  _leftButtonWasDown  = false;
-        if (!rightHeld) _rightButtonWasDown = false;
-
-        var leftSpell = magicCaster.GetSpellForSlot(MagicSlot.Left);
-        if (leftSpell != null && leftSpell.kind == MagicKind.Levitation
-            && leftHeld && !_leftButtonWasDown)
+        var spell = magicCaster.ActiveBasic;
+        if (spell != null && spell.kind == MagicKind.Levitation && held && !_buttonWasDown)
         {
-            _leftButtonWasDown = true;
-            TryStartLevitation(MagicSlot.Left, leftSpell);
-            return;
-        }
-
-        var rightSpell = magicCaster.GetSpellForSlot(MagicSlot.Right);
-        if (rightSpell != null && rightSpell.kind == MagicKind.Levitation
-            && rightHeld && !_rightButtonWasDown)
-        {
-            _rightButtonWasDown = true;
-            TryStartLevitation(MagicSlot.Right, rightSpell);
+            _buttonWasDown = true;
+            TryStartLevitation(spell);
         }
     }
 
-    bool TryStartLevitation(MagicSlot slot, MagicSpellSO spell)
+    bool TryStartLevitation(MagicSpellSO spell)
     {
-        if (!magicCaster.CanCastSpell(slot)) return false;
+        if (!magicCaster.CanCast(spell)) return false;
 
         if (manaPool != null && !manaPool.TrySpend(spell.manaCost))
         {
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[Levitation] Maná insuficiente");
                 #endif
             }
@@ -149,7 +133,6 @@ public class PlayerLevitationController : MonoBehaviour
         var targets = FindTargetsInCone(spell);
 
         _phase               = LevitationPhase.Levitating;
-        _activeSlot          = slot;
         _activeSpell         = spell;
         _levitationStartTime = Time.time;
 
@@ -159,7 +142,7 @@ public class PlayerLevitationController : MonoBehaviour
         foreach (var t in targets)
             t.BeginLevitation(this, spell);
 
-        PlayHoldAnimation(slot);
+        PlayHoldAnimation();
         SpawnHoldVFX(spell);
         SpawnRangeIndicators(spell);
 
@@ -171,7 +154,7 @@ public class PlayerLevitationController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Levitation] Iniciando con {targets.Count} objetivos");
             #endif
         }
@@ -210,7 +193,7 @@ public class PlayerLevitationController : MonoBehaviour
                 FeedbackService.CameraShake(_activeSpell.levitationCaptureShakeIntensity, _activeSpell.levitationCaptureShakeDuration);
                 if (showDebugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[Levitation] Objetivo capturado durante hold: {newTargets.Count}");
                     #endif
                 }
@@ -235,12 +218,7 @@ public class PlayerLevitationController : MonoBehaviour
 
     void CheckForRelease()
     {
-        bool released  = (_activeSlot == MagicSlot.Left  && GetLeftReleased()) ||
-                         (_activeSlot == MagicSlot.Right && GetRightReleased());
-        bool stillHeld = (_activeSlot == MagicSlot.Left  && GetLeftHeld()) ||
-                         (_activeSlot == MagicSlot.Right && GetRightHeld());
-
-        if (released || !stillHeld)
+        if (GamepadInputReader.AttackMagicLeftReleased || !GamepadInputReader.AttackMagicLeftHeld)
             EndLevitation();
     }
 
@@ -273,7 +251,7 @@ public class PlayerLevitationController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[Levitation] Lanzamiento ejecutado");
             #endif
         }
@@ -297,25 +275,6 @@ public class PlayerLevitationController : MonoBehaviour
         _activeSpell = null;
         _currentTargets.Clear();
     }
-
-    // ── API para IA aliada ───────────────────────────────────────────────────
-
-    /// <summary>
-    /// Ejecuta levitación desde la IA aliada. Si hay objetivos en el cono,
-    /// los levita hasta que se llame EndLevitation (o se agote el maná).
-    /// Devuelve true si se inició con éxito.
-    /// </summary>
-    public bool TriggerAILevitation(MagicSlot slot, MagicSpellSO spell)
-    {
-        if (_phase != LevitationPhase.Idle) return false;
-        if (spell == null || spell.kind != MagicKind.Levitation) return false;
-        return TryStartLevitation(slot, spell);
-    }
-
-    /// <summary>
-    /// Fuerza el lanzamiento (para la IA, que decide cuándo soltar).
-    /// </summary>
-    public void AIEndLevitation() => EndLevitation();
 
     // ── Detección de objetivos ───────────────────────────────────────────────
 
@@ -345,11 +304,11 @@ public class PlayerLevitationController : MonoBehaviour
 
     // ── Animación ────────────────────────────────────────────────────────────
 
-    void PlayHoldAnimation(MagicSlot slot)
+    void PlayHoldAnimation()
     {
         if (animator == null) return;
 
-        _currentMagicStatePath = slot == MagicSlot.Left ? "UpperBody.Magic.MagicLeft" : "UpperBody.Magic.MagicRight";
+        _currentMagicStatePath = "UpperBody.Magic.MagicLeft";
         _currentMagicStateHash = Animator.StringToHash(_currentMagicStatePath);
 
         animator.SetLayerWeight(_upperBodyLayerIndex, 1f);
@@ -479,13 +438,6 @@ public class PlayerLevitationController : MonoBehaviour
         if (_activeSpell.vfxLifetime > 0f) Destroy(vfx, _activeSpell.vfxLifetime);
     }
 
-    // ── Input ────────────────────────────────────────────────────────────────
-
-    bool GetLeftHeld()      => GamepadInputReader.AttackMagicLeftHeld;
-    bool GetLeftReleased()  => GamepadInputReader.AttackMagicLeftReleased;
-    bool GetRightHeld()     => GamepadInputReader.AttackMagicRightHeld;
-    bool GetRightReleased() => GamepadInputReader.AttackMagicRightReleased;
-
     // ── Ciclo de vida ────────────────────────────────────────────────────────
 
     void OnDisable()
@@ -505,8 +457,7 @@ public class PlayerLevitationController : MonoBehaviour
 
         _phase = LevitationPhase.Idle;
         _currentTargets.Clear();
-        _leftButtonWasDown  = false;
-        _rightButtonWasDown = false;
+        _buttonWasDown = false;
     }
 
 #if UNITY_EDITOR
@@ -514,13 +465,7 @@ public class PlayerLevitationController : MonoBehaviour
     {
         if (!showDebugGizmos) return;
 
-        MagicSpellSO spell = null;
-        if (Application.isPlaying && magicCaster != null)
-        {
-            spell = magicCaster.GetSpellForSlot(MagicSlot.Left);
-            if (spell == null || spell.kind != MagicKind.Levitation)
-                spell = magicCaster.GetSpellForSlot(MagicSlot.Right);
-        }
+        MagicSpellSO spell = Application.isPlaying && magicCaster != null ? magicCaster.ActiveBasic : null;
         if (spell == null || spell.kind != MagicKind.Levitation) return;
 
         Vector3 origin    = transform.position + Vector3.up * detectionHeightOffset;

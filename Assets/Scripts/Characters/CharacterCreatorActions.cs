@@ -16,7 +16,7 @@ public class CharacterCreatorActions : MonoBehaviour
         Transform actionsRow = transform.Find("Panel_Left/Row_Actions");
         if (!actionsRow)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("No se encontró Row_Actions");
 #endif
             return;
@@ -31,7 +31,7 @@ public class CharacterCreatorActions : MonoBehaviour
             {
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(OnRandomClick);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("Botón Random conectado");
 #endif
             }
@@ -56,14 +56,14 @@ public class CharacterCreatorActions : MonoBehaviour
 
     void OnRandomClick()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("Random presionado");
 #endif
         if (ui)
             ui.RandomizeAll();
         else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("UI no asignado en CharacterCreatorActions");
 #endif
             }

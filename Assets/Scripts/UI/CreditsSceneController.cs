@@ -132,7 +132,7 @@ public class CreditsSceneController : MonoBehaviour
             _pushedUIMode = true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[CreditsSceneController] OnEnable() -> arrancando coroutine Run().");
 #endif
         _scrollRoutine = StartCoroutine(Run());
@@ -167,7 +167,7 @@ public class CreditsSceneController : MonoBehaviour
 
         if (_scrollRoutine != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[CreditsSceneController] OnDisable() -> cancelando _scrollRoutine que seguía en marcha (el scroll NO había terminado).");
 #endif
             StopCoroutine(_scrollRoutine);
@@ -182,7 +182,7 @@ public class CreditsSceneController : MonoBehaviour
         var controls = Core.PlayerInputManager.Instance != null ? Core.PlayerInputManager.Instance.Controls : null;
         if (controls != null && controls.UI.Submit.WasPressedThisFrame())
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[CreditsSceneController] Salto manual detectado (UI/Submit) en Update().");
 #endif
             FinishAndGoToTitle();
@@ -291,7 +291,7 @@ public class CreditsSceneController : MonoBehaviour
             ConfigureLabel(titleLabel, "EL SENDERO DE LAS ESTRELLAS", _fontSize * 1.3f);
             titleLabel.fontStyle = FontStyles.Bold;
             titleGo.AddComponent<LayoutElement>().preferredWidth = _textWidth;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CreditsSceneController] _logoSprite no asignado — usando título de texto de respaldo.");
 #endif
         }
@@ -333,7 +333,7 @@ public class CreditsSceneController : MonoBehaviour
         ConfigureLabel(_thankYouLabel, _thankYouText, _fontSize * _thankYouFontScale);
         _thankYouLabel.alignment = TextAlignmentOptions.Center;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CreditsSceneController] ThankYouText construido. text='{_thankYouText}'");
 #endif
     }
@@ -380,7 +380,7 @@ public class CreditsSceneController : MonoBehaviour
         float duration  = distance / _scrollSpeed;
         float elapsed   = 0f;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CreditsSceneController] Run() -> blockHeight={blockHeight:F0}, distance={distance:F0}, scrollSpeed={_scrollSpeed:F0}, duration={duration:F2}s. Empieza el scroll.");
         float _nextHeartbeat = 2f;
 #endif
@@ -390,7 +390,7 @@ public class CreditsSceneController : MonoBehaviour
             elapsed += Time.unscaledDeltaTime;
             float y = Mathf.Lerp(startY, endY, Mathf.Clamp01(elapsed / duration));
             _scrollRect.anchoredPosition = new Vector2(0f, y);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (elapsed >= _nextHeartbeat)
             {
                 Debug.Log($"[CreditsSceneController] Run() en marcha: {elapsed:F1}/{duration:F1}s.");
@@ -400,7 +400,7 @@ public class CreditsSceneController : MonoBehaviour
             yield return null;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[CreditsSceneController] Run() -> bucle de scroll terminado, entrando a ShowThankYouUntilMusicEnds().");
 #endif
 
@@ -416,7 +416,7 @@ public class CreditsSceneController : MonoBehaviour
     /// </summary>
     IEnumerator ShowThankYouUntilMusicEnds()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CreditsSceneController] Scroll terminado. _thankYouGroup={(_thankYouGroup != null)}, iniciando fade de {_thankYouFadeInSeconds}s.");
 #endif
         yield return FadeThankYouLabel(0f, 1f, _thankYouFadeInSeconds);
@@ -425,7 +425,7 @@ public class CreditsSceneController : MonoBehaviour
         float wait = musicRemaining < 0f ? _tailHoldSeconds : musicRemaining;
         wait = Mathf.Min(wait, _maxThankYouWaitSeconds);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CreditsSceneController] ThankYou visible. AudioService.Instance={(AudioService.Instance != null)}, " +
                   $"musicRemaining={musicRemaining:F2}, esperando {wait:F2}s antes de continuar a '{_nextSceneName}'.");
 #endif
@@ -454,7 +454,7 @@ public class CreditsSceneController : MonoBehaviour
     {
         if (_finished) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // El stack trace de este log dice quién llamó: si viene de Update() fue un salto manual;
         // si viene de Run()/ShowThankYouUntilMusicEnds() fue el flujo normal tras la música.
         Debug.Log("[CreditsSceneController] FinishAndGoToTitle() invocado.");
@@ -475,7 +475,7 @@ public class CreditsSceneController : MonoBehaviour
     {
         yield return FeedbackService.ScreenFadeAsync(Color.black, _exitFadeSeconds, fadeIn: true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CreditsSceneController] Créditos terminados → cargando '{_nextSceneName}'.");
 #endif
         SceneTransitionLoader.Load(_nextSceneName);

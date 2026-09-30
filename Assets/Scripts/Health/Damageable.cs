@@ -20,7 +20,7 @@ public class Damageable : MonoBehaviour, IDamageable
     [SerializeField] private float invulnerabilitySeconds = 0f;
     float _invulnerableUntil = -999f;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Debug")]
     [SerializeField] private bool debugLogs = false;
 #endif
@@ -31,6 +31,15 @@ public class Damageable : MonoBehaviour, IDamageable
     /// Se ha curado (cantidad realmente recuperada). Para barras de vida y efectos.
     public event Action<float>             OnHealed;
 
+    /// Cualquier Damageable ha recibido daño: quién, cuánto y quién lo ha hecho (puede ser null).
+    /// Para sistemas globales que cuentan el daño del grupo (la carga de equipo, INC-491).
+    public static event Action<Damageable, float, GameObject> AlRecibirDanoCualquiera;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => AlRecibirDanoCualquiera = null;
+#endif
+
     // Reglas de «qué pasa con un golpe» de este mismo objeto (ver IFiltroDeDano).
     private IFiltroDeDano[] _filtros;
 
@@ -40,13 +49,16 @@ public class Damageable : MonoBehaviour, IDamageable
         _filtros = GetComponents<IFiltroDeDano>();
     }
 
+    /// Vuelve a leer las reglas de daño del objeto; para las que se añaden en juego (EscudoTemporal, INC-500).
+    public void RefrescarFiltros() => _filtros = GetComponents<IFiltroDeDano>();
+
     public void TakeDamage(float amount) => TakeDamage(amount, null);
 
     public void TakeDamage(float amount, GameObject instigator)
     {
         if (!IsAlive)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Damageable:{name}] ⚠️ Ignorando daño - ya está muerto (Current: {Current})");
 #endif
             return;
@@ -55,7 +67,7 @@ public class Damageable : MonoBehaviour, IDamageable
 
         if (Time.time < _invulnerableUntil)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Damageable:{name}] 🛡️ Ignorando daño - invulnerable hasta {_invulnerableUntil - Time.time:F2}s");
 #endif
             return;
@@ -75,12 +87,13 @@ public class Damageable : MonoBehaviour, IDamageable
 
         float oldHealth = Current;
         Current = Mathf.Max(0f, Current - amount);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLogs) Debug.Log($"[Damageable:{name}] -{amount:0.##} -> {Current:0.##}/{Max}");
 #endif
 
         OnDamaged?.Invoke(amount);
         OnDamagedBy?.Invoke(amount, instigator);
+        AlRecibirDanoCualquiera?.Invoke(this, amount, instigator);
 
         if (invulnerabilitySeconds > 0f)
             _invulnerableUntil = Time.time + invulnerabilitySeconds;
@@ -88,7 +101,7 @@ public class Damageable : MonoBehaviour, IDamageable
         if (Current <= 0f)
         {
             Current = 0f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Damageable:{name}] 💀 VIDA AGOTADA - Llamando a Die() (vida anterior: {oldHealth:F1})");
 #endif
             Die();
@@ -114,7 +127,7 @@ public class Damageable : MonoBehaviour, IDamageable
 
         float antes = Current;
         Current = Mathf.Min(Max, Current + amount);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLogs) Debug.Log($"[Damageable:{name}] +{amount:0.##} -> {Current:0.##}/{Max}");
 #endif
         if (Current > antes) OnHealed?.Invoke(Current - antes);
@@ -126,7 +139,7 @@ public class Damageable : MonoBehaviour, IDamageable
         maxHealth = Mathf.Max(1f, newMax);
         Current = Mathf.Clamp(newCurrent, 0f, maxHealth);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLogs) Debug.Log($"[Damageable:{name}] SetMaxAndCurrent -> {Current:0.##}/{maxHealth}");
 #endif
     }
@@ -159,12 +172,12 @@ public class Damageable : MonoBehaviour, IDamageable
 
     void Die()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Damageable:{name}] 💀💀💀 Die() llamado - Invocando OnDied (suscriptores: {OnDied?.GetInvocationList().Length ?? 0})");
 #endif
         OnDied?.Invoke();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Damageable:{name}] OnDied invocado - destroyOnDeath: {destroyOnDeath}");
 #endif
 

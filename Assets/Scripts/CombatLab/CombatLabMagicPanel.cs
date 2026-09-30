@@ -5,17 +5,20 @@ using Core;
 
 /// <summary>
 /// Selector de hechizos exclusivo de CombatLab. Cambia el loadout en runtime y no escribe
-/// en PlayerPresetSO ni en la partida guardada.
+/// en PlayerPresetSO ni en la partida guardada. Al entrar aprende el grimorio entero (todos los
+/// hechizos de todos los personajes) en el preset de la sesión (copia en memoria), para poder
+/// equipar cualquiera desde el menú de Start.
 /// </summary>
 public sealed class CombatLabMagicPanel : MonoBehaviour
 {
     private const float PanelWidth = 390f;
-    private const float PanelHeight = 402f;
+    private const float PanelHeight = 520f;
+    private const float RowHeight = 40f;
 
-    private readonly List<MagicSpellSO> _regularSpells = new();
-    private readonly List<MagicSpellSO> _specialSpells = new();
-    private readonly MagicSpellSO[] _equipped = new MagicSpellSO[3];
-    private readonly int[] _selection = new int[3];
+    // Candidatos por ranura básica; el primero (null) deja la ranura vacía.
+    private readonly List<MagicSpellSO> _basicCandidates = new() { null };
+    private readonly MagicSpellSO[] _equipped = new MagicSpellSO[MagicCaster.BasicSlotCount];
+    private readonly int[] _selection = new int[MagicCaster.BasicSlotCount];
 
     private MagicCaster _caster;
     private PlayerActionManager _actionManager;
@@ -36,7 +39,7 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         _actionManager = player.GetComponentInChildren<PlayerActionManager>(true);
         _presetService = player.GetComponentInChildren<PlayerPresetService>(true);
         _manaPool = player.GetComponentInChildren<ManaPool>(true);
-        _specialCharge = player.GetComponentInChildren<SpecialChargeMeter>(true);
+        PlayerService.TryGetComponent(out _specialCharge, allowSceneLookup: false);   // del grupo, INC-484
         _inputManager = Core.PlayerInputManager.Instance;
 
         if (_caster == null || _presetService == null || _presetService.SpellLibrary == null)
@@ -50,49 +53,28 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         {
             var spell = spells[i];
             if (spell == null || (spell.prefab == null && spell.kind != MagicKind.Levitation)) continue;
-
-            if (spell.slotType == SpellSlotType.SpecialOnly)
-                _specialSpells.Add(spell);
-            else
-                _regularSpells.Add(spell);
+            if (spell.slotType == SpellSlotType.SpecialOnly || !GrimorioDelPersonaje.EsDelGrimorio(spell)) continue;
+            _basicCandidates.Add(spell);
         }
 
-        _equipped[0] = ChooseStartingSpell(MagicSlot.Left, _regularSpells);
-        _equipped[1] = ChooseStartingSpell(MagicSlot.Right, _regularSpells);
-        if (_equipped[1] == _equipped[0])
-            _equipped[1] = FindAlternative(_regularSpells, _equipped[0]);
-        _equipped[2] = ChooseStartingSpell(MagicSlot.Special, _specialSpells);
+        // Empieza con lo que ya lleva Will; si no lleva nada, con los primeros hechizos de la lista.
+        var current = _caster.BasicSpells;
+        bool any = false;
+        for (int i = 0; i < _equipped.Length; i++)
+        {
+            _equipped[i] = i < current.Count ? current[i] : null;
+            any |= _equipped[i] != null;
+        }
+        if (!any)
+            for (int i = 0; i < _equipped.Length && i + 1 < _basicCandidates.Count; i++)
+                _equipped[i] = _basicCandidates[i + 1];
         SyncSelectionIndices();
         ApplyLoadout();
-        EnableLabAbilities();
 
-        _caster.ResetAllCooldowns();
         RefillTestResources();
+        AprenderGrimorioEntero();   // en el laboratorio todo viene aprendido (INC-494)
         _initialized = true;
         SetOpen(true);
-    }
-
-    private MagicSpellSO ChooseStartingSpell(MagicSlot slot, List<MagicSpellSO> candidates)
-    {
-        var current = _caster.GetSpellForSlot(slot);
-        if (current != null && Contains(candidates, current)) return current;
-        return candidates.Count > 0 ? candidates[0] : null;
-    }
-
-    private void EnableLabAbilities()
-    {
-        if (_actionManager == null) return;
-
-        _actionManager.ApplyAbilities(new PlayerAbilities
-        {
-            swim = _actionManager.AllowSwim,
-            jump = _actionManager.AllowJump,
-            climb = _actionManager.AllowClimb,
-            fly = _actionManager.AllowFly,
-            sprint = _actionManager.AllowSprint,
-            magic = true,
-            shield = true
-        });
     }
 
     private void Update()
@@ -106,14 +88,10 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         if (_isOpen) return;
 
         if (GamepadInputReader.AttackMagicLeftPressed)
-            ReportMagicInput(MagicSlot.Left, "Clic izquierdo");
-        else if (GamepadInputReader.AttackMagicRightPressed)
-            ReportMagicInput(MagicSlot.Right, "Clic derecho");
-        else if (GamepadInputReader.AttackMagicSpecialPressed)
-            ReportMagicInput(MagicSlot.Special, "Q / especial");
+            ReportMagicInput("X / clic izquierdo");
     }
 
-    private void ReportMagicInput(MagicSlot slot, string inputName)
+    private void ReportMagicInput(string inputName)
     {
         if (_caster == null)
         {
@@ -125,16 +103,16 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         }
         else
         {
-            bool ready = _caster.CanCastSpell(slot, _caster.GetSpellForSlot(slot), out string reason);
+            var spell = _caster.ActiveBasic;
+            bool ready = _caster.CanCast(spell, out string reason);
+            string name = spell != null ? spell.GetLocalizedName() : "sin hechizo";
             if (ready)
-                _status = $"{inputName} detectado · slot listo.";
-            else if (reason.StartsWith("Cooldown activo"))
-                _status = $"{inputName} detectado · lanzamiento iniciado.";
+                _status = $"{inputName} · {name} listo.";
             else
-                _status = $"{inputName} detectado · {reason}.";
+                _status = $"{inputName} · {name}: {reason}.";
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CombatLab] {_status}");
 #endif
     }
@@ -160,10 +138,11 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
             }
 
             GUI.Box(compactBounds, "MAGIA LAB");
+            var active = _caster.ActiveBasic;
             GUI.Label(new Rect(x + 14f, 38f, PanelWidth - 28f, 18f),
-                $"Izq: {_equipped[0]?.GetLocalizedName() ?? "—"}  ·  Der: {_equipped[1]?.GetLocalizedName() ?? "—"}");
+                $"Activo (X): {(active != null ? active.GetLocalizedName() : "—")}  ·  LB: siguiente");
             GUI.Label(new Rect(x + 14f, 55f, PanelWidth - 28f, 18f),
-                $"Especial: {_equipped[2]?.GetLocalizedName() ?? "—"}  ·  M o clic central: editar");
+                $"Serie: golpe {_caster.NextSeriesStep + 1} de 3  ·  M o clic central: editar");
             GUI.Label(new Rect(x + 14f, 72f, PanelWidth - 28f, 20f), _status);
             return;
         }
@@ -172,28 +151,32 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         GUI.Label(new Rect(x + 16f, 48f, PanelWidth - 32f, 34f),
             "Magia y escudo habilitados solo aquí. Hechizos y desbloqueos no modifican tu perfil ni la partida.");
 
-        DrawSlotRow(x, 89f, 0, "IZQUIERDA", _regularSpells);
-        DrawSlotRow(x, 135f, 1, "DERECHA", _regularSpells);
-        DrawSlotRow(x, 181f, 2, "ESPECIAL", _specialSpells);
+        float y = 89f;
+        for (int i = 0; i < _equipped.Length; i++, y += RowHeight)
+            DrawSlotRow(x, y, i, $"BÁSICO {i + 1}");
 
-        if (GUI.Button(new Rect(x + 16f, 226f, 172f, 28f), "Recargar maná y especial"))
+        if (GUI.Button(new Rect(x + 16f, y + 4f, 175f, 28f), "Recargar maná y carga"))
             RefillTestResources();
-        if (GUI.Button(new Rect(x + 198f, 226f, 176f, 28f), "Reiniciar cooldowns"))
-            _caster.ResetAllCooldowns();
+        if (GUI.Button(new Rect(x + 199f, y + 4f, 175f, 28f), "Aprender grimorio entero"))
+            AprenderGrimorioEntero();
+        y += 36f;
 
-        GUI.Label(new Rect(x + 16f, 258f, PanelWidth - 32f, 22f),
+        GUI.Label(new Rect(x + 16f, y, PanelWidth - 32f, 22f),
             $"HABILIDADES DE PRUEBA · Maná: {GetManaReadout()}");
         bool canEditAbilities = _actionManager != null;
         GUI.enabled = canEditAbilities;
-        DrawAbilityToggle(new Rect(x + 16f, 282f, 108f, 30f), "Magia", 0);
-        DrawAbilityToggle(new Rect(x + 132f, 282f, 108f, 30f), "Salto", 1);
-        DrawAbilityToggle(new Rect(x + 248f, 282f, 126f, 30f), "Vuelo", 2);
+        DrawAbilityToggle(new Rect(x + 16f, y + 24f, 108f, 30f), "Magia", 0);
+        DrawAbilityToggle(new Rect(x + 132f, y + 24f, 108f, 30f), "Salto", 1);
+        DrawAbilityToggle(new Rect(x + 248f, y + 24f, 126f, 30f), "Vuelo", 2);
         GUI.enabled = true;
+        y += 68f;
 
-        if (GUI.Button(new Rect(x + 16f, 326f, 358f, 26f), "Cerrar panel y probar habilidades"))
+        if (GUI.Button(new Rect(x + 16f, y, 358f, 26f), "Cerrar panel y probar habilidades"))
             SetOpen(false);
-        GUI.Label(new Rect(x + 16f, 356f, PanelWidth - 32f, 40f),
-            "En juego: ESPACIO salta; púlsalo otra vez en el aire para volar. Clic izq./der. lanza hechizos y Q usa el especial. M abre/cierra este panel.");
+        GUI.Label(new Rect(x + 16f, y + 30f, PanelWidth - 32f, 96f),
+            "En juego: X / clic izq. = serie de tres; mantener = preciso. LB / rueda abajo = siguiente básico. " +
+            "Y / Q = combo (teclea la secuencia con A B X Y). B / clic der.: en el momento justo = contraataque; mantener = escudo. LT+RT / Ctrl = ataque de equipo con quien esté cerca (uno: dúo, 1 tramo; los dos y carga llena: trío). " +
+            "ESPACIO salta. M abre/cierra.");
     }
 
     private void DrawAbilityToggle(Rect bounds, string label, int abilityIndex)
@@ -217,9 +200,11 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         }
     }
 
+    /// Las habilidades se guardan también en el preset de la sesión: si no, la siguiente
+    /// re-aplicación del preset (p. ej. equipar en el menú de Start) las devolvería a lo de antes.
     private void ApplyLabAbilities(bool magic, bool jump, bool fly)
     {
-        _actionManager.ApplyAbilities(new PlayerAbilities
+        var abilities = new PlayerAbilities
         {
             swim = _actionManager.AllowSwim,
             jump = jump,
@@ -228,53 +213,76 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
             sprint = _actionManager.AllowSprint,
             magic = magic,
             shield = _actionManager.AllowShield
-        });
+        };
+        _actionManager.ApplyAbilities(abilities);
+
+        var preset = UnlockService.GetActivePreset();
+        if (preset != null) preset.abilities = abilities;
 
         _status = $"Habilidades de prueba: Magia {(magic ? "SI" : "NO")}, Salto {(jump ? "SI" : "NO")}, Vuelo {(fly ? "SI" : "NO")}.";
     }
 
-    private void DrawSlotRow(float x, float y, int slotIndex, string label, List<MagicSpellSO> candidates)
+    private void DrawSlotRow(float x, float y, int slotIndex, string label)
     {
-        GUI.Label(new Rect(x + 16f, y + 5f, 74f, 24f), label);
-        bool hasChoices = candidates.Count > 0;
-        GUI.enabled = hasChoices;
+        bool isActive = _caster.ActiveBasicIndex == slotIndex && _equipped[slotIndex] != null;
+        GUI.Label(new Rect(x + 16f, y + 5f, 80f, 24f), isActive ? label + " ▶" : label);
 
-        if (GUI.Button(new Rect(x + 92f, y, 30f, 28f), "‹"))
-            SelectRelative(slotIndex, candidates, -1);
+        if (GUI.Button(new Rect(x + 96f, y, 30f, 28f), "‹"))
+            SelectRelative(slotIndex, -1);
 
-        string spellName = _equipped[slotIndex] != null
-            ? _equipped[slotIndex].GetLocalizedName()
-            : "Sin hechizo compatible";
-        GUI.Label(new Rect(x + 126f, y + 4f, 205f, 22f), spellName);
+        string spellName = _equipped[slotIndex] != null ? _equipped[slotIndex].GetLocalizedName() : "Vacío";
+        GUI.Label(new Rect(x + 130f, y + 4f, 200f, 22f), spellName);
 
         if (GUI.Button(new Rect(x + 334f, y, 40f, 28f), "›"))
-            SelectRelative(slotIndex, candidates, 1);
-
-        GUI.enabled = true;
+            SelectRelative(slotIndex, 1);
     }
 
-    private void SelectRelative(int slotIndex, List<MagicSpellSO> candidates, int direction)
+    private void SelectRelative(int slotIndex, int direction)
     {
-        if (candidates.Count == 0) return;
-
-        int index = _selection[slotIndex];
-        index = (index + direction + candidates.Count) % candidates.Count;
+        int count = _basicCandidates.Count;
+        int index = (_selection[slotIndex] + direction + count) % count;
         _selection[slotIndex] = index;
-        _equipped[slotIndex] = candidates[index];
+        _equipped[slotIndex] = _basicCandidates[index];
         ApplyLoadout();
-        _status = $"{SlotName(slotIndex)}: {_equipped[slotIndex].GetLocalizedName()}";
+        _status = $"Básico {slotIndex + 1}: {(_equipped[slotIndex] != null ? _equipped[slotIndex].GetLocalizedName() : "vacío")}";
     }
 
+    /// Equipa los básicos en Will y los apunta en el preset de la sesión, para que el menú de
+    /// Start enseñe lo mismo y una re-aplicación del preset no los cambie.
     private void ApplyLoadout()
     {
-        _caster.SetSpells(_equipped[0], _equipped[1], _equipped[2]);
+        _caster.SetBasicSpells(_equipped);
+
+        var preset = UnlockService.GetActivePreset();
+        if (preset == null) return;
+        preset.basicSpellIds ??= new List<SpellId>();
+        preset.basicSpellIds.Clear();
+        for (int i = 0; i < _equipped.Length; i++)
+            if (_equipped[i] != null && !preset.basicSpellIds.Contains(_equipped[i].spellId))
+                preset.basicSpellIds.Add(_equipped[i].spellId);
     }
 
     private void SyncSelectionIndices()
     {
-        _selection[0] = FindIndex(_regularSpells, _equipped[0]);
-        _selection[1] = FindIndex(_regularSpells, _equipped[1]);
-        _selection[2] = FindIndex(_specialSpells, _equipped[2]);
+        for (int i = 0; i < _equipped.Length; i++)
+            _selection[i] = FindIndex(_basicCandidates, _equipped[i]);
+    }
+
+    /// Aprende todos los hechizos de la biblioteca, de Will, Estela y Liam, como si el grimorio
+    /// estuviera completo: básicos para equipar desde el menú de Start y combos para la Y. No
+    /// equipa nada (lo equipado se elige en el menú o en este panel). Solo toca el preset de la
+    /// sesión, que es una copia en memoria (INC-494).
+    private void AprenderGrimorioEntero()
+    {
+        if (_presetService == null || _presetService.SpellLibrary == null || _presetService.SpellLibrary.Spells == null) return;
+        int n = 0;
+        foreach (var spell in _presetService.SpellLibrary.Spells)
+        {
+            if (!GrimorioDelPersonaje.EsDelGrimorio(spell)) continue;
+            UnlockService.UnlockSpell(spell.spellId, assignToEmptySlot: false);
+            n++;
+        }
+        _status = n > 0 ? $"Grimorio entero: {n} hechizos. Equípalos en Start ▸ Hechizos." : "La biblioteca de hechizos está vacía.";
     }
 
     private void RefillTestResources()
@@ -299,6 +307,8 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
             }
         }
 
+        // La carga de equipo es del grupo, que puede registrarse después que el panel (INC-491).
+        if (_specialCharge == null) PlayerService.TryGetComponent(out _specialCharge, allowSceneLookup: true);
         if (_specialCharge != null) _specialCharge.SetCharge(_specialCharge.MaxCharge);
         _status = $"Recursos listos · Maná {GetManaReadout()}.";
     }
@@ -343,24 +353,4 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         return 0;
     }
 
-    private static MagicSpellSO FindAlternative(List<MagicSpellSO> list, MagicSpellSO current)
-    {
-        for (int i = 0; i < list.Count; i++)
-            if (list[i] != current) return list[i];
-        return current;
-    }
-
-    private static bool Contains(List<MagicSpellSO> list, MagicSpellSO spell)
-    {
-        for (int i = 0; i < list.Count; i++)
-            if (list[i] == spell) return true;
-        return false;
-    }
-
-    private static string SlotName(int slotIndex) => slotIndex switch
-    {
-        0 => "Izquierda",
-        1 => "Derecha",
-        _ => "Especial"
-    };
 }

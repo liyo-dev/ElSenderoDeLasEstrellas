@@ -46,7 +46,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
             // ✅ CRÍTICO: Si no hay GameBootService (inicio directo desde MainWorld en editor),
             // inicializar de todas formas para permitir testing
             // Cambiado a Log normal para evitar spam de warnings en modo testing
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[BossProgressPersistenceBridge] GameBootService no disponible - Modo testing directo desde MainWorld");
 #endif
             StartCoroutine(WaitForTrackerAndInitialize());
@@ -64,7 +64,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
         // Esperar un frame adicional para asegurar que todas las arenas se hayan registrado
         yield return null;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[BossProgressPersistenceBridge] ✅ BossProgressTracker listo - Inicializando estado vacío para testing");
 #endif
     }

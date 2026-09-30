@@ -14,6 +14,11 @@ public sealed class NarrativeGraphHub : MonoBehaviour
     static NarrativeGraphHub _instance;
     public static NarrativeGraphHub Instance => _instance;
 
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { _instance = null; }
+#endif
+
     [Serializable]
     public class GraphSlot
     {
@@ -258,13 +263,13 @@ public sealed class NarrativeGraphHub : MonoBehaviour
     {
         if (snapshots == null || snapshots.Count == 0)
         {
-    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[NarrativeGraphHub] No hay blackboards guardados para restaurar");
 #endif
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NarrativeGraphHub] RestoreBlackboards llamado con {snapshots.Count} snapshot(s)");
 #endif
         
@@ -277,7 +282,7 @@ public sealed class NarrativeGraphHub : MonoBehaviour
                 continue;
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeGraphHub] Intentando restaurar '{snapshot.graphLabel}' con {(snapshot.blackboardData != null ? snapshot.blackboardData.Count : 0)} entradas");
 #endif
             
@@ -307,12 +312,12 @@ public sealed class NarrativeGraphHub : MonoBehaviour
                     currentNodeName = $"{node.GetType().Name}";
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeGraphHub] ✅ Blackboard restaurado para grafo '{snapshot.graphLabel}' | Nodo guardado: {currentNodeName} ({ShortGuid(currentNodeGuid)}...)");
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NarrativeGraphHub] Restaurados {restored}/{snapshots.Count} blackboards");
 #endif
     }

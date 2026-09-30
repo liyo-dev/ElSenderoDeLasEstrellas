@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -94,7 +94,7 @@ public class VfxBeat : SequenceBeat
     {
         if (vfxPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[VfxBeat] Sin prefab asignado ({note}) — no hay nada que reproducir.");
 #endif
             yield break;
@@ -102,7 +102,7 @@ public class VfxBeat : SequenceBeat
 
         if (VfxPoolService.Instance == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[VfxBeat] VfxPoolService.Instance es null — el pool de VFX no está " +
                 "listo en esta escena. ¿Arrancaste desde Start.unity?");
 #endif
@@ -112,9 +112,9 @@ public class VfxBeat : SequenceBeat
         if (!TryResolvePoint(ctx, atActorId, markName, out Vector3 point, out Quaternion rotation))
             yield break;
 
-        // A quién acompaña, si es que acompaña a alguien. El pool ya acepta un padre: al devolver
-        // la instancia no la desemparenta, pero el siguiente Play la reasigna, así que es un uso
-        // contemplado (ver el FIX A3 de VfxPoolService, que ya cubre el caso de morir con padre).
+        // A quién acompaña, si es que acompaña a alguien. El pool acepta un padre: al devolver la
+        // instancia la vuelve a colgar del servicio, así que el padre puede morir cuando quiera
+        // (ver VfxPoolService.ReturnInternal y su FIX A3 para el caso de morir estando activa).
         Transform aQuienSigue = null;
         if (seguirAlActor && !string.IsNullOrEmpty(atActorId))
             aQuienSigue = ctx.GetActor(atActorId)?.Transform;
@@ -191,7 +191,7 @@ public class SfxBeat : SequenceBeat
             if (positioned) AudioService.Instance.PlaySFXAt(clip, point, volume);
             else AudioService.Instance.PlaySFX(clip, volume);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[SfxBeat] Sin eventKey ni clip ({note}) — no hay nada que sonar.");
@@ -274,7 +274,7 @@ public class SignalBeat : SequenceBeat
 /// un Parallel junto a Gesture y Emotion de OTRO actor es, exactamente, "el que escucha reacciona
 /// mientras el otro habla" — que es lo que faltaba en todas las secuencias hasta ahora.
 [Serializable]
-public class ParallelBeat : SequenceBeat
+public class ParallelBeat : SequenceBeat, INarrativeStateEffect
 {
     [Tooltip("Los beats que se lanzan a la vez.")]
     [SerializeReference]
@@ -283,6 +283,13 @@ public class ParallelBeat : SequenceBeat
     [Tooltip("Marcado = el beat termina cuando han terminado TODOS. Desmarcado = termina en cuanto " +
              "acaba el primero (los demás siguen corriendo por su cuenta y la secuencia avanza).")]
     public bool waitForAll = true;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (beats == null) return;
+        foreach (var beat in beats)
+            if (beat is INarrativeStateEffect effect) effect.Project(state);
+    }
 
     public override string Describe()
         => $"A la vez ({(beats != null ? beats.Count : 0)} beats"
@@ -327,11 +334,18 @@ public class ParallelBeat : SequenceBeat
 /// ParallelBeat: «mientras corren, espera un segundo y corta a la plaza» es un Wait y un Shot en
 /// serie que tienen que ir a la vez que la carrera, y un Parallel solo sabe lanzar cosas a la vez.
 [Serializable]
-public class SerieBeat : SequenceBeat
+public class SerieBeat : SequenceBeat, INarrativeStateEffect
 {
     [Tooltip("Los beats, en orden.")]
     [SerializeReference]
     public List<SequenceBeat> beats = new();
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (beats == null) return;
+        foreach (var beat in beats)
+            if (beat is INarrativeStateEffect effect) effect.Project(state);
+    }
 
     public override string Describe() => $"En serie ({(beats != null ? beats.Count : 0)} beats)";
 
@@ -419,7 +433,7 @@ public class SetPropActiveBeat : SequenceBeat
         var actor = ctx.GetActor(propId);
         if (actor?.Transform == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SetPropActiveBeat] No hay ningún objeto '{propId}' en la lista de " +
                 "objetos encuadrables del SequenceStage. La secuencia sigue.");
 #endif
@@ -494,7 +508,7 @@ public class PropMoveBeat : SequenceBeat
         var actor = ctx.GetActor(propId);
         if (actor?.Transform == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PropMoveBeat] No hay ningún objeto '{propId}' en la lista de " +
                 "objetos encuadrables del SequenceStage. La secuencia sigue.");
 #endif
@@ -511,7 +525,7 @@ public class PropMoveBeat : SequenceBeat
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (desdeDondeEstaba)
                 Debug.LogWarning($"[PropMoveBeat] '{propId}' quiere contar desde su pose inicial, " +
                     "pero no se guardó (¿no está en la lista de objetos encuadrables del " +
@@ -575,7 +589,7 @@ public class PropMoveBeat : SequenceBeat
 
         if (float.IsNegativeInfinity(suelo))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PropMoveBeat] No encuentro suelo debajo de '{t.name}' para apoyarlo. " +
                 "Se queda a la altura que dicen los deltas.");
 #endif

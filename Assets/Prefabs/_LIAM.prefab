@@ -7532,6 +7532,8 @@ GameObject:
   - component: {fileID: 4389471102299698973}
   - component: {fileID: 2931094273191265983}
   - component: {fileID: 4005596319935594983}
+  - component: {fileID: 4613854375824481313}
+  - component: {fileID: 2143559118739238903}
   m_Layer: 8
   m_Name: _LIAM
   m_TagString: Liam
@@ -7793,10 +7795,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -7898,6 +7896,33 @@ MonoBehaviour:
   avoidWeight: 1.1
   steerLerp: 8
   maxContinuousAvoidSeconds: 1.5
+--- !u!114 &4613854375824481313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335879819108417999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af826a5d9c0a194da4966500093c23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Personaje
+  ficha: {fileID: 11400000, guid: 573454893dba82049a917b58b2787a39, type: 2}
+--- !u!114 &2143559118739238903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3335879819108417999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68ad396c2e154746b2e37734a4dbf7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SenueloDeCombate
+  vfxProvocando: {fileID: 0}
+  offsetVfx: {x: 0, y: 1, z: 0}
 --- !u!1 &3341901564085152908
 GameObject:
   m_ObjectHideFlags: 0

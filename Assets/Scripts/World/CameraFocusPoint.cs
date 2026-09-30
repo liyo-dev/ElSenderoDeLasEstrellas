@@ -16,7 +16,7 @@ public class CameraFocusPoint : MonoBehaviour
     /// </summary>
     public Vector3 WorldPosition => transform.position;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Test en Play Mode")]
     [Tooltip("Segundos que la cámara permanece cortada a este punto al usar 'Probar este plano' (menú contextual del componente).")]
     public float testHoldSeconds = 3f;

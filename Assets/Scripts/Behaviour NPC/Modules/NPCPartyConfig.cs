@@ -78,16 +78,6 @@ namespace Game.NPC.Modules
         [Range(5f, 50f)]
         public float rangoAsistenciaCombate = 30f;
         
-        [Header("=== STATS DEL PERSONAJE ===")]
-
-        [Tooltip("HP máximo de este compañero en combate.")]
-        [Min(1f)]
-        public float maxHP = 100f;
-
-        [Tooltip("MP máximo de este compañero. 0 = no usa magia.")]
-        [Min(0f)]
-        public float maxMP = 0f;
-
         [Header("=== ESCUDO ===")]
 
         [Tooltip("¿Este compañero puede usar el escudo durante el combate?")]
@@ -103,17 +93,6 @@ namespace Game.NPC.Modules
         [Tooltip("Duración máxima del escudo (segundos)")]
         [Min(0f)]
         public float shieldMaxDuration = 4f;
-
-        [Header("=== HECHIZOS DE COMBATE ===")]
-        
-        [Tooltip("Hechizo principal (mano izquierda)")]
-        public MagicSpellSO spellLeft;
-        
-        [Tooltip("Hechizo secundario (mano derecha)")]
-        public MagicSpellSO spellRight;
-        
-        [Tooltip("Hechizo especial (más potente)")]
-        public MagicSpellSO spellSpecial;
 
         [Header("=== DISTANCIAS DE ATAQUE ===")]
         
@@ -201,20 +180,6 @@ namespace Game.NPC.Modules
         public float combatAssistRange => rangoAsistenciaCombate;
         public float minAttackDistance => distanciaMinimaAtaque;
         public float maxAttackDistance => distanciaMaximaAtaque;
-
-        /// <summary>
-        /// Obtiene el hechizo por índice (0=Left, 1=Right, 2=Special)
-        /// </summary>
-        public MagicSpellSO GetSpell(int index)
-        {
-            return index switch
-            {
-                0 => spellLeft,
-                1 => spellRight,
-                2 => spellSpecial,
-                _ => null
-            };
-        }
 
         /// <summary>
         /// Valida que la configuración sea correcta

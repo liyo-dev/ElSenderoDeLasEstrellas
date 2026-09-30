@@ -83,9 +83,8 @@ namespace Sendero.Narrative.Editor
         {
             if (_entries != null) return;
             _entries = new List<Entry>();
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => { try { return a.GetTypes(); } catch { return Array.Empty<Type>(); } })
-                .Where(t => typeof(NarrativeNode).IsAssignableFrom(t) && !t.IsAbstract && t.IsClass);
+            var types = UnityEditor.TypeCache.GetTypesDerivedFrom<NarrativeNode>()
+                .Where(t => !t.IsAbstract && t.IsClass);
             foreach (var t in types)
             {
                 var e = Build(t);

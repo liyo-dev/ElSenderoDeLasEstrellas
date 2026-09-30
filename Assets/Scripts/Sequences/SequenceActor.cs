@@ -73,7 +73,7 @@ public class SequenceActor
             var playerTransform = PlayerLocator.ResolvePlayer();
             if (playerTransform == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[SequenceActor] No se ha podido resolver al jugador ('Player'). " +
                     "¿Está la escena arrancada desde Start.unity?");
 #endif
@@ -119,7 +119,7 @@ public class SequenceActor
 
         if (manager == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SequenceActor] No hay ningún NPC registrado con el ID '{actorId}'. " +
                 "Revisa el Persistence ID del NPC en su prefab/escena, o si el NPC está presente en " +
                 "esta escena. IDs registrados ahora mismo: " +
@@ -204,7 +204,7 @@ public class SequenceActor
         if (NpcAnimator != null) { NpcAnimator.PlaySocialGesture(stateName); return; }
         if (PlayerAnimator != null) { PlayerAnimator.PlayGesture(stateName); return; }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[SequenceActor:{Id}] No tiene NPCSimpleAnimator ni PlayerDialogueAnimator " +
             $"— no se puede reproducir el gesto '{stateName}'.");
 #endif
@@ -216,7 +216,7 @@ public class SequenceActor
         if (emotion == NPCEmotion.None) return;
 
         if (Emotion != null) Emotion.SetEmotion(emotion);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning($"[SequenceActor:{Id}] No tiene NPCEmotionController — no se puede " +
                 $"cambiar la cara a '{emotion}'. (El prefab de Will puede llevar más de uno, uno por " +

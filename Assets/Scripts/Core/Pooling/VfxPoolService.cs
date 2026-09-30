@@ -175,6 +175,18 @@ public class VfxPoolService : MonoBehaviour
         if (_instancePool.TryGetValue(instance, out ObjectPool<Transform> pool))
         {
             _instancePool.Remove(instance);
+
+            // FIX INC-544 (MissingReferenceException en la pelea del demonio): una instancia
+            // lanzada con Play(..., parent:) se devolvía al pool SIN desemparentarla. Se quedaba
+            // desactivada colgando de ese padre ajeno (un actor de secuencia, un jefe, Will...) y,
+            // si ese padre se destruía después, Unity destruía también la instancia mientras
+            // esperaba en la pila de disponibles. El siguiente Play de ese prefab la sacaba ya
+            // muerta y reventaba en ObjectPool.Get. Ahora toda instancia vuelve a colgar del
+            // servicio (DontDestroyOnLoad) al devolverse: mientras está en el pool no depende de
+            // la vida de nadie.
+            if (instance.parent != transform)
+                instance.SetParent(transform, worldPositionStays: false);
+
             pool.Return(instance);
         }
         else

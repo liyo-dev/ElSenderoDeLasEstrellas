@@ -35,7 +35,7 @@ public class MinigameExitTrigger : MonoBehaviour
             if (c.MinigameId == minigameId)
                 return c;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[MinigameExitTrigger] No se encontró TagMinigameController con id='{minigameId}'");
 #endif
         return null;

@@ -50,6 +50,15 @@ public class BossHealthBar : MonoBehaviour
     private bool  _suspendedByMenu    = false;
     private Tween _fadeTween;
 
+    // Marcas de fase: dónde empieza cada fase del jefe (si tiene, ver IJefeConFases).
+    [Header("Fases")]
+    [Tooltip("Color de la marca de una fase que aún no ha empezado.")]
+    [SerializeField] private Color colorMarcaFase = new Color(1f, 0.85f, 0.3f, 0.95f);
+    [Tooltip("Color de la marca una vez superada.")]
+    [SerializeField] private Color colorMarcaSuperada = new Color(1f, 1f, 1f, 0.25f);
+    private IJefeConFases _fases;
+    private Image[] _marcasDeFase;
+
     void Start()
     {
         // FIX (ronda 16): antes esta búsqueda de Damageable vivía en Awake(), pero Damageable se añade
@@ -60,13 +69,20 @@ public class BossHealthBar : MonoBehaviour
         _bossDamageable = GetComponent<Damageable>();
         if (!_bossDamageable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[BossHealthBar] No se encontró Damageable en el GameObject.", this);
 #endif
             enabled = false;
             return;
         }
         CreateBossHealthBarUI();
+
+        _fases = GetComponent<IJefeConFases>();
+        if (_fases != null)
+        {
+            CrearMarcasDeFase();
+            _fases.AlCambiarDeFase += OnCambioDeFase;
+        }
 
         _bossDamageable.OnDamaged += OnBossDamaged;
         _bossDamageable.OnHealed  += OnBossHealed;
@@ -96,6 +112,7 @@ public class BossHealthBar : MonoBehaviour
             _bossDamageable.OnHealed  -= OnBossHealed;
             _bossDamageable.OnDied   -= OnBossDied;
         }
+        if (_fases != null) _fases.AlCambiarDeFase -= OnCambioDeFase;
         if (_canvas != null && _canvas.gameObject != null)
             Destroy(_canvas.gameObject);
     }
@@ -195,6 +212,46 @@ public class BossHealthBar : MonoBehaviour
         _fadeTween = _canvasGroup.DOFade(target, duration)
             .SetEase(target > 0f ? Ease.OutCubic : Ease.InCubic)
             .SetUpdate(true);
+    }
+
+    /// Una raya vertical en la barra por cada fase siguiente, justo en el porcentaje de vida en
+    /// que empieza: el jugador ve venir el cambio.
+    private void CrearMarcasDeFase()
+    {
+        var umbrales = _fases.UmbralesDeFase;
+        if (umbrales == null || _healthBarBackground == null) return;
+
+        _marcasDeFase = new Image[umbrales.Count];
+        for (int i = 0; i < umbrales.Count; i++)
+        {
+            var go = new GameObject($"MarcaFase_{i + 2}");
+            go.transform.SetParent(_healthBarBackground.transform, false);
+            var rt = go.AddComponent<RectTransform>();
+            float x = Mathf.Clamp01(umbrales[i]);
+            rt.anchorMin = new Vector2(x, 0f);
+            rt.anchorMax = new Vector2(x, 1f);
+            rt.pivot     = new Vector2(0.5f, 0.5f);
+            rt.sizeDelta = new Vector2(4f, 10f); // sobresale un poco por arriba y por abajo
+
+            var img = go.AddComponent<Image>();
+            img.sprite = CreateSolidSprite();
+            img.color  = _fases.Fase > i ? colorMarcaSuperada : colorMarcaFase;
+            _marcasDeFase[i] = img;
+        }
+    }
+
+    /// Al cambiar de fase la barra da un golpe y la marca superada se apaga.
+    private void OnCambioDeFase(int fase)
+    {
+        int i = fase - 1;
+        if (_marcasDeFase != null && i >= 0 && i < _marcasDeFase.Length && _marcasDeFase[i])
+            _marcasDeFase[i].color = colorMarcaSuperada;
+
+        if (_barContainer)
+        {
+            _barContainer.transform.DOKill(true);
+            _barContainer.transform.DOPunchScale(Vector3.one * 0.15f, 0.6f, 6).SetUpdate(true);
+        }
     }
 
     private void FlashDamage()

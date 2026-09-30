@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 using DG.Tweening;
 
 namespace Sendero.UI
@@ -11,8 +10,8 @@ namespace Sendero.UI
     /// Usa arte personalizado en lugar de crear UI dinámicamente.
     /// Version: 2025-12-24
     /// 
-    /// NOTA: Este HUD trabaja con el sistema MagicCaster existente.
-    /// Los slots son: Left, Right, Special (no Up).
+    /// Vida, maná y visibilidad del HUD. Los círculos de combate (X, Y, B) los lleva
+    /// CombatButtonsHUD (INC-485).
     /// </summary>
     public class PlayerHUDV2 : MonoBehaviour
     {
@@ -41,43 +40,6 @@ namespace Sendero.UI
         [Tooltip("Texto opcional para mostrar MP numérico (ej: 50/50)")]
         [SerializeField] private TextMeshProUGUI manaText;
         
-        [Header("Slots de Magia")]
-        [Tooltip("Imagen del slot de magia IZQUIERDO (Q / Left)")]
-        [SerializeField] private Image leftMagicSlotImage;
-        
-        [Tooltip("Imagen del slot de magia DERECHO (E / Right)")]
-        [SerializeField] private Image rightMagicSlotImage;
-        
-        [Tooltip("Imagen del slot de magia ESPECIAL (R / Special)")]
-        [SerializeField] private Image specialMagicSlotImage;
-        
-        [Tooltip("Overlay de cooldown para slot izquierdo (opcional)")]
-        [SerializeField] private Image leftCooldownOverlay;
-        
-        [Tooltip("Overlay de cooldown para slot derecho (opcional)")]
-        [SerializeField] private Image rightCooldownOverlay;
-        
-        [Tooltip("Overlay de cooldown para slot especial (opcional)")]
-        [SerializeField] private Image specialCooldownOverlay;
-        
-        [Tooltip("Texto de cooldown para slot izquierdo (opcional)")]
-        [SerializeField] private TextMeshProUGUI leftCooldownText;
-        
-        [Tooltip("Texto de cooldown para slot derecho (opcional)")]
-        [SerializeField] private TextMeshProUGUI rightCooldownText;
-        
-        [Tooltip("Texto de cooldown para slot especial (opcional)")]
-        [SerializeField] private TextMeshProUGUI specialCooldownText;
-        
-        [Header("Configuración Visual")]
-        [SerializeField] private Color availableColor = Color.white;
-        [SerializeField] private Color cooldownColor = new Color(0.5f, 0.5f, 0.5f, 0.7f);
-        [SerializeField] private Color noManaColor = new Color(1f, 0.3f, 0.3f, 0.8f);
-        
-        [Header("Sprites por Defecto")]
-        [Tooltip("Sprite cuando el slot está vacío")]
-        [SerializeField] private Sprite emptySlotSprite;
-        
         [Header("Configuración de Fade")]
         [Tooltip("Duración del fade in/out en segundos")]
         [SerializeField] private float fadeDuration = 0.5f;
@@ -85,34 +47,23 @@ namespace Sendero.UI
         // Referencias a sistemas del juego
         private PlayerHealthSystem _healthSystem;
         private ManaPool _manaPool;
-        private MagicCaster _magicCaster;
         
         // Control de visibilidad
         private CanvasGroup _canvasGroup;
         private Tween _currentFadeTween;
         private bool _isVisible = true;
-        // Contador de referencias: cuántos sistemas han pedido ocultar el HUD y aún no lo han
-        // liberado. Ver comentario en HideHUD()/ShowHUD().
-        private int _hideRequestCount = 0;
-        
-        // Estado actual de los slots
-        private Dictionary<MagicSlot, SlotState> _slotStates = new Dictionary<MagicSlot, SlotState>();
-        
-        private class SlotState
-        {
-            public Image slotImage;
-            public Image cooldownOverlay;
-            public TextMeshProUGUI cooldownText;
-            public Sprite equippedSprite;
-            public bool hasSpell;
-        }
+        // Quién tiene pedido el HUD oculto (ver HideHUD/ShowHUD).
+        private readonly System.Collections.Generic.HashSet<object> _ocultadoPor = new();
+        private readonly System.Collections.Generic.List<object> _ocultadoresDestruidos = new();
+        private float _siguienteRevision;
+        private const float IntervaloRevision = 1f;
         
         private void Awake()
         {
             // Configurar Singleton
             if (Instance != null && Instance != this)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerHUDV2] Ya existe una instancia. Destruyendo duplicado.");
 #endif
                 Destroy(gameObject);
@@ -133,7 +84,7 @@ namespace Sendero.UI
             // Asegurar que empieza visible
             _canvasGroup.alpha = 1f;
             _isVisible = true;
-            _hideRequestCount = 0;
+            _ocultadoPor.Clear();
 
             // FIX: este Canvas también lleva un SceneBoundUI (para ocultarse/mostrarse según la
             // escena activa), y SceneBoundUI.BeginBossIntro/EndBossIntro operan sobre el MISMO
@@ -147,33 +98,8 @@ namespace Sendero.UI
             // fuente de verdad sobre su visibilidad.
             GetComponent<SceneBoundUI>()?.ExcludeFromBossIntro();
             
-            // Inicializar diccionario de slots
-            _slotStates[MagicSlot.Left] = new SlotState
-            {
-                slotImage = leftMagicSlotImage,
-                cooldownOverlay = leftCooldownOverlay,
-                cooldownText = leftCooldownText
-            };
-            
-            _slotStates[MagicSlot.Right] = new SlotState
-            {
-                slotImage = rightMagicSlotImage,
-                cooldownOverlay = rightCooldownOverlay,
-                cooldownText = rightCooldownText
-            };
-            
-            _slotStates[MagicSlot.Special] = new SlotState
-            {
-                slotImage = specialMagicSlotImage,
-                cooldownOverlay = specialCooldownOverlay,
-                cooldownText = specialCooldownText
-            };
-            
             // Validar referencias críticas
             ValidateReferences();
-            
-            // Inicializar overlays ocultos
-            HideAllCooldownOverlays();
         }
         
         private void Start()
@@ -182,7 +108,7 @@ namespace Sendero.UI
             var player = PlayerService.Player;
             if (player == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[PlayerHUDV2] ❌ No se pudo obtener el jugador desde PlayerService");
 #endif
                 return;
@@ -191,35 +117,25 @@ namespace Sendero.UI
             // Obtener componentes del jugador (buscar en hijos para soportar jerarquías anidadas)
             _healthSystem = player.GetComponentInChildren<PlayerHealthSystem>(true);
             _manaPool = player.GetComponentInChildren<ManaPool>(true);
-            _magicCaster = player.GetComponentInChildren<MagicCaster>(true);
 
             // Validar componentes críticos
             if (_healthSystem == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró PlayerHealthSystem en el jugador");
                 #endif
             }
             if (_manaPool == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró ManaPool en el jugador");
                 #endif
             }
-            if (_magicCaster == null)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning("[PlayerHUDV2] ⚠️ No se encontró MagicCaster en el jugador");
-                #endif
-            }
-
             // Suscribirse a eventos
             SubscribeToEvents();
 
             // Suscribirse al evento OnPresetApplied para refrescar cuando se carga partida
             PlayerPresetService.OnPresetApplied += OnPresetApplied;
-            // Refrescar iconos de hechizo al cambiar personaje activo
-            PartyControlManager.OnActiveCharacterChanged += OnCharacterSwitched;
             
             // Marcar como inicializado
             _hasStarted = true;
@@ -227,7 +143,6 @@ namespace Sendero.UI
             // Actualización inicial
             RefreshHealthBar();
             RefreshManaBar();
-            RefreshAllMagicSlots();
             
             // Debug.Log($"[PlayerHUDV2] ✅ Start completado - Mana: {_manaPool?.Current ?? 0}/{_manaPool?.Max ?? 0}, HP: {_healthSystem?.CurrentHealth ?? 0}");
         }
@@ -245,7 +160,6 @@ namespace Sendero.UI
             
             // ✅ Desuscribirse del evento de preset
             PlayerPresetService.OnPresetApplied -= OnPresetApplied;
-            PartyControlManager.OnActiveCharacterChanged -= OnCharacterSwitched;
             
             // Limpiar todos los tweens (incluido el punch de escala del daño, que corre sobre el Transform, no sobre la Image)
             if (healthFillImage != null)
@@ -265,7 +179,7 @@ namespace Sendero.UI
             
             if (healthFillImage == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[PlayerHUDV2] ❌ healthFillImage no está asignado en el Inspector!");
 #endif
                 hasErrors = true;
@@ -273,54 +187,18 @@ namespace Sendero.UI
             
             if (manaFillImage == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[PlayerHUDV2] ❌ manaFillImage no está asignado en el Inspector!");
-#endif
-                hasErrors = true;
-            }
-            
-            if (leftMagicSlotImage == null || rightMagicSlotImage == null || specialMagicSlotImage == null)
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogError("[PlayerHUDV2] ❌ Faltan referencias de slots de magia en el Inspector!");
 #endif
                 hasErrors = true;
             }
             
             if (hasErrors)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[PlayerHUDV2] ⚠️ El HUD no funcionará correctamente sin las referencias necesarias.");
 #endif
             }
-        }
-        
-        private void HideAllCooldownOverlays()
-        {
-            if (leftCooldownOverlay != null)
-            {
-                leftCooldownOverlay.enabled = false;
-                leftCooldownOverlay.gameObject.SetActive(false);
-                leftCooldownOverlay.fillAmount = 0f;
-            }
-            
-            if (rightCooldownOverlay != null)
-            {
-                rightCooldownOverlay.enabled = false;
-                rightCooldownOverlay.gameObject.SetActive(false);
-                rightCooldownOverlay.fillAmount = 0f;
-            }
-            
-            if (specialCooldownOverlay != null)
-            {
-                specialCooldownOverlay.enabled = false;
-                specialCooldownOverlay.gameObject.SetActive(false);
-                specialCooldownOverlay.fillAmount = 0f;
-            }
-            
-            if (leftCooldownText != null) leftCooldownText.gameObject.SetActive(false);
-            if (rightCooldownText != null) rightCooldownText.gameObject.SetActive(false);
-            if (specialCooldownText != null) specialCooldownText.gameObject.SetActive(false);
         }
         
         #endregion
@@ -342,12 +220,10 @@ namespace Sendero.UI
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ No hay ManaPool para suscribirse a OnManaChanged");
 #endif
             }
-            
-            // MagicCaster no tiene eventos, se actualiza cada frame en Update()
         }
         
         private void UnsubscribeFromEvents()
@@ -376,13 +252,13 @@ namespace Sendero.UI
             // Si Start() aún no se ha ejecutado, las referencias se configurarán ahí
             if (!_hasStarted)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[PlayerHUDV2] ⏭️ OnPresetApplied llamado antes de Start() - Se refrescará en Start()");
 #endif
                 return;
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerHUDV2] 🔄 OnPresetApplied - Refrescando HUD completo tras cargar partida");
 #endif
             
@@ -396,16 +272,15 @@ namespace Sendero.UI
                 // Obtener nuevas referencias (buscar en hijos para soportar jerarquías anidadas)
                 _healthSystem = player.GetComponentInChildren<PlayerHealthSystem>(true);
                 _manaPool = player.GetComponentInChildren<ManaPool>(true);
-                _magicCaster = player.GetComponentInChildren<MagicCaster>(true);
                 
                 // Re-suscribirse a eventos
                 SubscribeToEvents();
             }
             
             // Validar que tenemos las referencias
-            if (_healthSystem == null || _manaPool == null || _magicCaster == null)
+            if (_healthSystem == null || _manaPool == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerHUDV2] ⚠️ OnPresetApplied - Faltan referencias de componentes del player");
 #endif
                 return;
@@ -414,15 +289,8 @@ namespace Sendero.UI
             // Refrescar todo el HUD porque el preset puede haber cambiado
             RefreshHealthBar();
             RefreshManaBar();
-            RefreshAllMagicSlots();
 
             // Debug.Log($"[PlayerHUDV2] ✅ HUD refrescado completamente tras aplicar preset (Mana: {_manaPool.Current}/{_manaPool.Max})");
-        }
-
-        private void OnCharacterSwitched(int _)
-        {
-            if (!_hasStarted || _magicCaster == null) return;
-            RefreshAllMagicSlots();
         }
 
         #endregion
@@ -607,181 +475,19 @@ namespace Sendero.UI
 
         #endregion
         
-        #region Actualización de Slots de Magia
-        
         private void Update()
         {
-            // Actualizar cooldowns cada frame
-            UpdateMagicSlotCooldowns();
-
             // Sigue interpolando la barra de maná hacia su objetivo aunque ManaPool ya no esté
             // notificando cambios (ver comentario en RefreshManaBar() / TickManaRegen()).
             TickManaRegen();
-        }
-        
-        private void RefreshAllMagicSlots()
-        {
-            RefreshMagicSlot(MagicSlot.Left);
-            RefreshMagicSlot(MagicSlot.Right);
-            RefreshMagicSlot(MagicSlot.Special);
-        }
-        
-        private void RefreshMagicSlot(MagicSlot slotType)
-        {
-            if (!_slotStates.ContainsKey(slotType)) return;
-            if (_magicCaster == null) return;
-            
-            var slotState = _slotStates[slotType];
-            if (slotState.slotImage == null) return;
-            
-            // Limpiar el estado del slot PRIMERO
-            slotState.hasSpell = false;
-            slotState.equippedSprite = null;
-            
-            // Obtener el spell equipado en este slot
-            MagicSpellSO equippedSpell = _magicCaster.GetSpellForSlot(slotType);
-            
-            if (equippedSpell != null && equippedSpell.attackIcon != null)
+
+            // Si quien ocultó el HUD se destruye sin soltarlo, se suelta solo.
+            if (!_isVisible && Time.unscaledTime >= _siguienteRevision)
             {
-                // Hay un hechizo equipado - asignar su sprite
-                slotState.hasSpell = true;
-                slotState.equippedSprite = equippedSpell.attackIcon;
-                slotState.slotImage.sprite = equippedSpell.attackIcon;
-                slotState.slotImage.color = availableColor;
-                slotState.slotImage.enabled = true;
-                
-                // Overlay siempre visible para slots con hechizo
-                if (slotState.cooldownOverlay != null)
-                {
-                    slotState.cooldownOverlay.enabled = true;
-                    slotState.cooldownOverlay.gameObject.SetActive(true);
-                    slotState.cooldownOverlay.fillAmount = 1f; // Empezar lleno (disponible)
-                }
-            }
-            else
-            {
-                // Slot vacío
-                if (emptySlotSprite != null)
-                {
-                    slotState.slotImage.sprite = emptySlotSprite;
-                    slotState.slotImage.color = new Color(1f, 1f, 1f, 0.3f); // Semi-transparente
-                    slotState.slotImage.enabled = true;
-                }
-                else
-                {
-                    // Si no hay sprite vacío, ocultar la imagen
-                    slotState.slotImage.enabled = false;
-                }
-                
-                // Ocultar overlay de cooldown para slots vacíos
-                if (slotState.cooldownOverlay != null)
-                {
-                    slotState.cooldownOverlay.enabled = false;
-                    slotState.cooldownOverlay.gameObject.SetActive(false);
-                    slotState.cooldownOverlay.fillAmount = 0f;
-                }
+                _siguienteRevision = Time.unscaledTime + IntervaloRevision;
+                if (SoltarOcultadoresDestruidos()) MostrarSiNadieLoOculta(-1f);
             }
         }
-        
-        private void UpdateMagicSlotCooldowns()
-        {
-            UpdateSlotCooldown(MagicSlot.Left);
-            UpdateSlotCooldown(MagicSlot.Right);
-            UpdateSlotCooldown(MagicSlot.Special);
-        }
-        
-        private void UpdateSlotCooldown(MagicSlot slotType)
-        {
-            if (!_slotStates.ContainsKey(slotType)) return;
-            if (_magicCaster == null) return;
-            
-            var slotState = _slotStates[slotType];
-            
-            // No procesar slots vacíos
-            if (!slotState.hasSpell)
-            {
-                // Asegurar que el overlay esté oculto
-                if (slotState.cooldownOverlay != null)
-                {
-                    if (slotState.cooldownOverlay.gameObject.activeSelf || slotState.cooldownOverlay.enabled)
-                    {
-                        slotState.cooldownOverlay.enabled = false;
-                        slotState.cooldownOverlay.gameObject.SetActive(false);
-                        slotState.cooldownOverlay.fillAmount = 0f;
-                    }
-                }
-                return;
-            }
-            
-            // Verificar que el spell sigue existiendo
-            MagicSpellSO spell = _magicCaster.GetSpellForSlot(slotType);
-            if (spell == null)
-            {
-                slotState.hasSpell = false;
-                if (slotState.cooldownOverlay != null)
-                {
-                    slotState.cooldownOverlay.enabled = false;
-                    slotState.cooldownOverlay.gameObject.SetActive(false);
-                    slotState.cooldownOverlay.fillAmount = 0f;
-                }
-                return;
-            }
-            
-            // El slot tiene un hechizo real
-            float cooldownRemaining = _magicCaster.GetCooldownTime(slotType);
-            bool canCast = _magicCaster.CanCastSpell(slotType, spell, out string reason);
-            
-            // El overlay debe estar visible para slots con hechizo
-            if (slotState.cooldownOverlay != null && !slotState.cooldownOverlay.gameObject.activeSelf)
-            {
-                slotState.cooldownOverlay.enabled = true;
-                slotState.cooldownOverlay.gameObject.SetActive(true);
-            }
-            
-            // Actualizar visual del slot
-            if (cooldownRemaining > 0f)
-            {
-                // EN COOLDOWN: El overlay se va RELLENANDO de 0 a 1
-                if (slotState.cooldownOverlay != null)
-                {
-                    float progress = 1f - Mathf.Clamp01(cooldownRemaining / spell.cooldown);
-                    slotState.cooldownOverlay.fillAmount = progress;
-                }
-                
-                if (slotState.slotImage != null)
-                {
-                    slotState.slotImage.color = cooldownColor;
-                }
-            }
-            else if (!canCast && reason.Contains("mana"))
-            {
-                // Sin maná
-                if (slotState.cooldownOverlay != null)
-                {
-                    slotState.cooldownOverlay.fillAmount = 1f;
-                }
-                
-                if (slotState.slotImage != null)
-                {
-                    slotState.slotImage.color = noManaColor;
-                }
-            }
-            else
-            {
-                // Disponible
-                if (slotState.cooldownOverlay != null)
-                {
-                    slotState.cooldownOverlay.fillAmount = 1f;
-                }
-                
-                if (slotState.slotImage != null)
-                {
-                    slotState.slotImage.color = availableColor;
-                }
-            }
-        }
-        
-        #endregion
         
         #region API Pública
         
@@ -792,18 +498,6 @@ namespace Sendero.UI
         {
             RefreshHealthBar();
             RefreshManaBar();
-            RefreshAllMagicSlots();
-        }
-        
-        /// <summary>
-        /// Actualiza solo un slot de magia específico
-        /// </summary>
-        public void RefreshMagicSlot(string slotName)
-        {
-            if (System.Enum.TryParse<MagicSlot>(slotName, true, out var slotType))
-            {
-                RefreshMagicSlot(slotType);
-            }
         }
         
         /// <summary>
@@ -815,37 +509,33 @@ namespace Sendero.UI
         }
         
         /// <summary>
-        /// Oculta el HUD con un fade suave usando DOTween.
-        /// FIX: 7 sistemas independientes (DialogueManager, CinematicSequencerBase,
-        /// SimpleCinematicDirector, BossIntroPresentation, DramaticTextOverlayUI,
-        /// PlayerEquipmentMenuController, DialogueCinematicController) llaman a HideHUD/ShowHUD
-        /// sobre este mismo singleton sin coordinarse entre sí. Con el booleano _isVisible antiguo,
-        /// si el sistema A ocultaba el HUD y luego el sistema B (anidado, ej. un bocadillo dentro de
-        /// una cinemática) hacía su propio Show antes de que A terminara, el HUD reaparecía a mitad
-        /// de secuencia y nada volvía a ocultarlo hasta el EndCinematic() de A — el bug de "el HUD
-        /// se queda/reaparece en las secuencias". _hideRequestCount convierte esto en un contador de
-        /// referencias: el HUD solo se muestra cuando TODOS los que pidieron ocultarlo han pedido
-        /// mostrarlo de vuelta. La firma pública no cambia, así que ningún call site necesita tocarse.
+        /// Pide ocultar el HUD (con fundido). Cada sistema lo pide y lo suelta con su propia clave,
+        /// normalmente 'this': el HUD solo vuelve cuando todos los que lo pidieron lo han soltado.
+        /// Pedirlo dos veces con la misma clave cuenta una sola vez, soltarlo sin haberlo pedido no
+        /// hace nada, y si quien lo pidió (un objeto de Unity) se destruye sin soltarlo, se suelta
+        /// solo. Ver INC-538.
         /// </summary>
-        public void HideHUD(float duration = -1f)
+        public void HideHUD(object quien, float duration = -1f)
         {
-            _hideRequestCount++;
-            if (!_isVisible) return; // Ya está oculto (por este u otro sistema)
+            if (quien == null) return;
+            SoltarOcultadoresDestruidos();
+            bool nuevo = _ocultadoPor.Add(quien);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            // Diagnóstico de INC-538 (HUD que no vuelve). Se quita al cerrar la incidencia.
+            if (nuevo) Debug.Log($"[PlayerHUDV2:DIAG] Oculta: {Nombre(quien)}. Lo tienen oculto: {QuienLoOculta}");
+#endif
+            if (!_isVisible) return;
 
             _isVisible = false;
             float useDuration = duration > 0 ? duration : fadeDuration;
-
-            // Matar tween anterior si existe
             _currentFadeTween?.Kill();
 
-            // Si _canvasGroup es null, intentar obtenerlo
             if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
-            if (_canvasGroup == null) return; // Si sigue siendo null, salir
+            if (_canvasGroup == null) return;
 
-            // Fade out suave
             _currentFadeTween = _canvasGroup.DOFade(0f, useDuration)
                 .SetEase(Ease.OutQuad)
-                .SetUpdate(true) // Ignora timeScale
+                .SetUpdate(true)
                 .OnComplete(() =>
                 {
                     if (_canvasGroup != null)
@@ -856,34 +546,67 @@ namespace Sendero.UI
                 });
         }
 
-        /// <summary>
-        /// Muestra el HUD con un fade suave usando DOTween. Ver comentario de HideHUD(): solo
-        /// revela el HUD de verdad cuando ningún otro sistema sigue reclamándolo oculto.
-        /// </summary>
-        public void ShowHUD(float duration = -1f)
+        /// <summary>Suelta lo pedido con <see cref="HideHUD"/>; el HUD vuelve si ya nadie lo oculta.</summary>
+        public void ShowHUD(object quien, float duration = -1f)
         {
-            if (_hideRequestCount > 0) _hideRequestCount--;
-            if (_hideRequestCount > 0) return; // Otro sistema todavía lo quiere oculto
-            if (_isVisible) return; // Ya está visible
+            if (quien == null || !_ocultadoPor.Remove(quien)) return;
+            SoltarOcultadoresDestruidos();
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[PlayerHUDV2:DIAG] Suelta: {Nombre(quien)}. Lo tienen oculto: {QuienLoOculta}");
+#endif
+            MostrarSiNadieLoOculta(duration);
+        }
+
+        /// Quién tiene pedido el HUD oculto ahora mismo (para depurar).
+        public string QuienLoOculta
+        {
+            get
+            {
+                if (_ocultadoPor.Count == 0) return "nadie";
+                var nombres = new System.Collections.Generic.List<string>(_ocultadoPor.Count);
+                foreach (var q in _ocultadoPor) nombres.Add(Nombre(q));
+                return string.Join(", ", nombres);
+            }
+        }
+
+        private static string Nombre(object quien) => quien switch
+        {
+            UnityEngine.Object o when o == null => "(destruido)",
+            UnityEngine.Object o => $"{o.GetType().Name} '{o.name}'",
+            System.Type t => t.Name,
+            _ => quien.GetType().Name,
+        };
+
+        private void MostrarSiNadieLoOculta(float duration)
+        {
+            if (_ocultadoPor.Count > 0 || _isVisible) return;
 
             _isVisible = true;
             float useDuration = duration > 0 ? duration : fadeDuration;
-
-            // Matar tween anterior si existe
             _currentFadeTween?.Kill();
 
-            // Si _canvasGroup es null, intentar obtenerlo
             if (_canvasGroup == null) _canvasGroup = GetComponent<CanvasGroup>();
-            if (_canvasGroup == null) return; // Si sigue siendo null, salir
+            if (_canvasGroup == null) return;
 
-            // Restaurar interactividad antes del fade in
             _canvasGroup.interactable = true;
             _canvasGroup.blocksRaycasts = true;
-
-            // Fade in suave
             _currentFadeTween = _canvasGroup.DOFade(1f, useDuration)
                 .SetEase(Ease.InQuad)
-                .SetUpdate(true); // Ignora timeScale
+                .SetUpdate(true);
+        }
+
+        /// Quita de la lista a los objetos de Unity ya destruidos. Devuelve true si quitó alguno.
+        private bool SoltarOcultadoresDestruidos()
+        {
+            _ocultadoresDestruidos.Clear();
+            foreach (var q in _ocultadoPor)
+                if (q is UnityEngine.Object o && o == null) _ocultadoresDestruidos.Add(q);
+            foreach (var q in _ocultadoresDestruidos) _ocultadoPor.Remove(q);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (_ocultadoresDestruidos.Count > 0)
+                Debug.LogWarning($"[PlayerHUDV2:DIAG] {_ocultadoresDestruidos.Count} sistema(s) se destruyeron con el HUD oculto sin soltarlo. Lo tienen oculto: {QuienLoOculta}");
+#endif
+            return _ocultadoresDestruidos.Count > 0;
         }
         
         /// <summary>
@@ -892,24 +615,10 @@ namespace Sendero.UI
         public bool IsVisible => _isVisible;
 
         /// <summary>
-        /// Reinicia por completo el estado de "ocultado" del HUD (contador de referencias, tween
-        /// de fade y visibilidad), forzándolo a visible.
-        ///
-        /// FIX: HideHUD()/ShowHUD() usan un contador de referencias (_hideRequestCount) para
-        /// coordinar los ~8 sistemas independientes que ocultan el HUD (diálogos, cinemáticas,
-        /// menú de inventario...). Como este componente vive en Start.unity (DontDestroyOnLoad),
-        /// su Awake() —que es lo único que reinicia el contador a 0— solo se ejecuta UNA VEZ por
-        /// sesión de la aplicación, nunca al "cargar partida" ni al "salir al menú principal". Si
-        /// cualquiera de esos sistemas queda interrumpido antes de poder emparejar su HideHUD()
-        /// con el ShowHUD() correspondiente (p.ej. la escena cambia a mitad de un diálogo o justo
-        /// al confirmar "Salir al menú principal" desde el inventario), el contador se queda
-        /// colgado para siempre y el HUD no vuelve a aparecer en lo que dure la sesión, aunque se
-        /// cargue una partida nueva (repro: cargar partida → abrir inventario → salir al menú
-        /// principal → cargar partida de nuevo → el HUD ya no aparece).
-        ///
-        /// Se llama desde GameBootService.ResetTransientSessionState(), el mismo punto de entrada
-        /// seguro de sesión que ya limpia GameState/CameraDirectorService/SimpleCinematicDirector/
-        /// TeleportService por el mismo motivo — ver el comentario de ese método.
+        /// Olvida quién tenía pedido el HUD oculto y lo deja visible. Este componente vive en
+        /// Start (DontDestroyOnLoad), así que al cargar partida o volver al menú principal puede
+        /// quedar pedido por sistemas que ya no van a soltarlo. Lo llama
+        /// GameBootService.ResetTransientSessionState().
         /// </summary>
         public static void ForceResetHideState()
         {
@@ -917,7 +626,7 @@ namespace Sendero.UI
             if (hud == null) return;
 
             hud._currentFadeTween?.Kill();
-            hud._hideRequestCount = 0;
+            hud._ocultadoPor.Clear();
             hud._isVisible = true;
 
             if (hud._canvasGroup == null) hud._canvasGroup = hud.GetComponent<CanvasGroup>();

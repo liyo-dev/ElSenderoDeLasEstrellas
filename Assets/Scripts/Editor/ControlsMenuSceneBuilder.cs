@@ -470,7 +470,7 @@ public static class ControlsMenuSceneBuilder
         }
         else if (label != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ControlsMenuBuilder] El botón CONTROLES no tiene LocalizedText — se escribe " +
                               "'Controles' como texto suelto (revisa la localización a mano).");
 #endif

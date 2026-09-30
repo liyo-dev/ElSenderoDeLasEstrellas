@@ -50,13 +50,13 @@ public class AnchorSetter : MonoBehaviour
         if (string.IsNullOrEmpty(anchorId)) return;
 
         SpawnManager.SetCurrentAnchor(anchorId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AnchorSetter] Anchor establecido a: {anchorId}");
 #endif
 
         if (saveAfter)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[AnchorSetter] Auto-guardado deshabilitado. Visita un punto de guardado para persistir el nuevo anchor.");
 #endif
         }

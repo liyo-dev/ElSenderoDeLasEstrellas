@@ -51,6 +51,7 @@ public class MainMenuFlyingCompanion : MonoBehaviour
 
     Vector3 _velocity; // usado por SmoothDamp, no reasignar a mano
     float _time;
+    bool _colocado;    // el primer frame se coloca en su sitio sin SmoothDamp
 
     void Awake()
     {
@@ -59,52 +60,15 @@ public class MainMenuFlyingCompanion : MonoBehaviour
         if (!menuCamera && Camera.main)
             menuCamera = Camera.main.transform;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (!menuCamera)
             Debug.LogWarning($"[MainMenuFlyingCompanion] {name}: no se ha asignado menuCamera y no hay Camera.main disponible en la escena.");
 #endif
 
-        // FIX 4 sep 2026, ver DisableConflictingGameplaySystems() más abajo. Debe ir ANTES de
-        // TryEnterFlyPose(): si se desactivan estos componentes después, NPCSimpleAnimator.Start()
-        // ya habría alcanzado a deshacer la pose de vuelo forzada aquí.
-        DisableConflictingGameplaySystems();
+        // Antes de la pose de vuelo: NPCSimpleAnimator.Start() la desharía si siguiera activo.
+        DecoradoDeMenu.ApagarSistemasDeJuego(gameObject);
 
         if (driveFlyAnimator) TryEnterFlyPose();
-    }
-
-    /// <summary>
-    /// FIX 4 sep 2026 (petición de Raúl: "will y liam en el MainMenu de pronto se ponen a temblar
-    /// como si hubiera animaciones en conflicto"): este script se añade sobre el prefab COMPLETO
-    /// del personaje jugable (el mismo que se usa en partida), que trae su propio cerebro de IA
-    /// activo — NPCBehaviourManagerV2 + NPCSimpleAnimator + NavMeshAgent + Rigidbody — y nadie lo
-    /// desactivaba para este uso puramente decorativo del menú. Concretamente:
-    /// NPCSimpleAnimator.Start() llama a TransitionToIdle() nada más arrancar (deshaciendo la pose
-    /// de vuelo forzada por TryEnterFlyPose()) y su propio LateUpdate() aplica ApplySmoothRotation()
-    /// cada frame, escribiendo transform.rotation en competencia directa con el LateUpdate() de
-    /// este script (que fija la rotación hacia la cámara) — dos sistemas peleando por la misma
-    /// rotación cada frame es exactamente lo que se ve como "temblor"/animaciones en conflicto.
-    /// Se desactivan (no se destruyen: reversible, sin tocar el prefab) todos los componentes de
-    /// IA/física en vivo que este personaje no necesita como decorado de fondo — de paso evita que
-    /// intente patrullar/perseguir o suelte diálogo aleatorio (LiamIdleCommentary) mientras "vuela"
-    /// en el menú.
-    /// </summary>
-    private void DisableConflictingGameplaySystems()
-    {
-        var brain = GetComponent<Game.NPC.NPCBehaviourManagerV2>();
-        if (brain != null) brain.enabled = false;
-
-        var simpleAnimator = GetComponent<NPCSimpleAnimator>();
-        if (simpleAnimator != null) simpleAnimator.enabled = false;
-
-        var agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (agent != null) agent.enabled = false;
-
-        var rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-        }
     }
 
     /// <summary>
@@ -159,6 +123,8 @@ public class MainMenuFlyingCompanion : MonoBehaviour
         }
     }
 
+    void OnEnable() => _colocado = false;
+
     void LateUpdate()
     {
         if (!menuCamera) return;
@@ -166,7 +132,18 @@ public class MainMenuFlyingCompanion : MonoBehaviour
         _time += Time.deltaTime;
 
         Vector3 targetPos = menuCamera.TransformPoint(cameraLocalOffset);
-        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref _velocity, followSmoothTime);
+        if (!_colocado)
+        {
+            // La cámara puede haberse movido al encuadre de la portada después de su Awake:
+            // sin esto se le vería cruzar la pantalla hasta su sitio.
+            transform.position = targetPos;
+            _velocity = Vector3.zero;
+            _colocado = true;
+        }
+        else
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref _velocity, followSmoothTime);
+        }
 
         float roll = Mathf.Sin(_time * rollSpeed * Mathf.PI * 2f) * rollAmplitudeDegrees;
         float pitch = Mathf.Sin(_time * pitchSpeed * Mathf.PI * 2f + 1.3f) * pitchAmplitudeDegrees;

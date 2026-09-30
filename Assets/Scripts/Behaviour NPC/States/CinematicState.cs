@@ -1113,7 +1113,7 @@ namespace Game.NPC.States
             // Validación de requisitos críticos
             if (agent == null || _player == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Requisito nulo: agent={agent != null}, player={_player != null}. Abortando.");
                 #endif
                 IsCompleted = true; return;
@@ -1123,7 +1123,7 @@ namespace Game.NPC.States
             // reactivarlo y esperar un frame para que vuelva al NavMesh.
             if (!agent.enabled)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ NavMeshAgent desactivado, reactivando...");
                 #endif
                 agent.enabled = true;
@@ -1132,7 +1132,7 @@ namespace Game.NPC.States
 
             if (!agent.isOnNavMesh)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ Agente fuera del NavMesh (enabled={agent.enabled}). Abortando.");
                 #endif
                 IsCompleted = true; return;
@@ -1176,7 +1176,7 @@ namespace Game.NPC.States
                     agent.isStopped = false;
                     if (!agent.SetDestination(_anchorPos))
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⚠️ SetDestination falló para {_anchorPos}. El anchor puede estar fuera del NavMesh o en una superficie no conectada.");
                         #endif
                     }
@@ -1191,7 +1191,7 @@ namespace Game.NPC.States
             {
                 if (!agent.hasPath)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     UnityEngine.Debug.LogError($"[LeadPlayerToAnchorSequence] ❌ No hay ruta válida al anchor {_anchorPos}. Comprueba que el anchor esté en el NavMesh y conectado con la posición actual del guardia.");
                     #endif
                 }
@@ -1202,7 +1202,7 @@ namespace Game.NPC.States
             _timer += Time.deltaTime;
             if (_timer >= _maxDuration)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.LogWarning($"[LeadPlayerToAnchorSequence] ⏱️ Tiempo agotado ({_maxDuration}s).");
                 #endif
                 IsCompleted = true; return;
@@ -1258,7 +1258,7 @@ namespace Game.NPC.States
             else if (distToPlayer > _escortMaxDist && !jugadorPorDelante)
             {
                 // Se ha quedado atrás: parar, esperarle y llamarle. Ver INC-465.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.Log($"[LeadPlayerToAnchorSequence] '{context.Transform.name}' se para a esperar al jugador: " +
                     $"está a {distToPlayer:F1} m (máximo {_escortMaxDist:F1}) y a {Vector3.Distance(_player.position, _anchorPos):F1} m " +
                     $"de la marca, el NPC a {distToAnchor:F1} m. Sigue cuando el jugador esté a {_escortResumeDist:F1} m o por delante.");
@@ -1277,7 +1277,7 @@ namespace Game.NPC.States
                 _siguienteRuta = Time.time + 1f;
                 agent.isStopped = false;
                 agent.SetDestination(_anchorPos);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 UnityEngine.Debug.Log($"[LeadPlayerToAnchorSequence] '{context.Transform.name}' se había quedado sin ruta a mitad de camino; se le vuelve a pedir. Ver INC-465.");
 #endif
             }

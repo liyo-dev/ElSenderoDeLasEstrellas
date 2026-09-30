@@ -17,8 +17,6 @@ public class WardrobeInventory : MonoBehaviour
 
     void Awake()
     {
-        if (builder == null)
-            builder = GetComponentInChildren<ModularAutoBuilder>(true) ?? GetComponent<ModularAutoBuilder>();
         InitializeCategories();
     }
 
@@ -89,7 +87,7 @@ public class WardrobeInventory : MonoBehaviour
                 var item = WardrobeItemSO.Find(id);
                 if (item == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[WardrobeInventory] Wardrobe item '{id}' no encontrado al aplicar preset.");
 #endif
                     continue;
@@ -104,12 +102,12 @@ public class WardrobeInventory : MonoBehaviour
         NotifyChanged();
     }
 
+    // La ropa que se tiene es del grupo (GrupoDelJugador); la que se lleva puesta, del cuerpo del
+    // jugador: el builder se busca a través de PlayerService. Ver INC-484.
     void EnsureBuilderReference()
     {
         if (builder != null) return;
-        builder = GetComponentInChildren<ModularAutoBuilder>(true) ?? GetComponent<ModularAutoBuilder>();
-        if (builder == null)
-            PlayerService.TryGetComponent(out builder, includeInactive: true, allowSceneLookup: true);
+        PlayerService.TryGetComponent(out builder, includeInactive: true, allowSceneLookup: true);
     }
 
     void AutoUnlockAll()
@@ -173,7 +171,7 @@ public class WardrobeInventory : MonoBehaviour
     {
         if (string.IsNullOrEmpty(entry.partName))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[WardrobeInventory.AddEntry] partName está vacío");
 #endif
             return false;
@@ -225,7 +223,7 @@ public class WardrobeInventory : MonoBehaviour
     {
         if (!item)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[WardrobeInventory] WardrobeItemSO no asignado.");
 #endif
             return false;

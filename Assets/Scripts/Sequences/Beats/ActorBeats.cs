@@ -224,7 +224,7 @@ public class FaceBeat : SequenceBeat
 /// Mueve a un actor. Siempre por el camino canónico (ver SequenceMovement): el NavMeshAgent
 /// conduce y el animator lee su velocidad real. Nunca a mano.
 [Serializable]
-public class MoveToBeat : SequenceBeat
+public class MoveToBeat : SequenceBeat, INarrativeStateEffect
 {
     [Tooltip("Quién se mueve.")]
     public string actorId;
@@ -260,6 +260,13 @@ public class MoveToBeat : SequenceBeat
              "asiente: sin ella, el siguiente gesto puede pedirse en el mismo frame y se ve como si " +
              "el actor siguiera caminando mientras ya está hablando.")]
     public float settleOnArrival = 0.3f;
+
+    /// Solo el destino a una marca es deducible sin jugar; ir hacia otro actor depende de dónde esté.
+    public void Project(INarrativeStateWriter state)
+    {
+        if (string.IsNullOrEmpty(towardsActorId) && !string.IsNullOrWhiteSpace(markName))
+            state.PlaceActor(actorId, NarrativeLocation.Local(markName));
+    }
 
     public override string Describe()
         => $"Mover: {actorId} → {(string.IsNullOrEmpty(towardsActorId) ? markName : towardsActorId)}";
@@ -389,7 +396,7 @@ public class TakeCoverBeat : SequenceBeat
 
         Vector3 destination = FindCoverSpot(actor, threatPos, out string what);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TakeCoverBeat] {actorId} se pone a cubierto {what}.");
 #endif
 
@@ -484,7 +491,7 @@ public class TakeCoverBeat : SequenceBeat
 ///
 /// Se usa SIEMPRE detrás de un corte de plano, nunca a la vista.
 [Serializable]
-public class PlaceAtMarkBeat : SequenceBeat
+public class PlaceAtMarkBeat : SequenceBeat, INarrativeStateEffect
 {
     [Tooltip("Quién se coloca.")]
     public string actorId;
@@ -499,6 +506,11 @@ public class PlaceAtMarkBeat : SequenceBeat
     [Tooltip("O mirando hacia este actor. Tiene preferencia sobre 'faceTowardsMark'.")]
     public string faceTowardsActor;
 
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(markName)) state.PlaceActor(actorId, NarrativeLocation.Local(markName));
+    }
+
     public override string Describe() => $"Colocar: {actorId} en '{markName}'";
 
     public override IEnumerator Run(SequenceContext ctx)
@@ -509,33 +521,9 @@ public class PlaceAtMarkBeat : SequenceBeat
         var mark = ctx.Stage != null ? ctx.Stage.GetMark(markName) : null;
         if (mark == null) yield break; // el aviso ya lo ha dado el stage
 
-        actor.StopMovement();
-
-        // Con NavMeshAgent hay que usar Warp: mover el transform a pelo deja al agente creyendo
-        // que sigue donde estaba, y el siguiente movimiento lo teletransporta de vuelta.
-        var agent = actor.Agent;
-        // Warp falla (devuelve false) cuando en la marca no hay NavMesh, y entonces el actor se
-        // queda donde estaba sin que nadie lo diga. Eso pasa en cuanto una marca sale del suelo
-        // caminable — lo alto de una colina, un tejado, un saliente —, que es justo donde se pone a
-        // alguien para que se le vea desde abajo. Si el Warp no puede, se apaga el agente y se
-        // coloca el transform a pelo: un actor de cinemática no necesita navegar, necesita estar
-        // donde dice la marca.
-        bool colocado = false;
-        if (agent != null && agent.enabled && agent.isOnNavMesh) colocado = agent.Warp(mark.position);
-
-        if (!colocado)
-        {
-            if (agent != null && agent.enabled) agent.enabled = false;
-            actor.Transform.position = mark.position;
-        }
-
-        // OJO: las marcas se crean con `new GameObject(nombre)` y solo se les pone la posición,
-        // así que su rotación es la identidad — el +Z del mundo. Colocar sin `faceTowards` deja al
-        // actor mirando al norte del mundo, diga lo que diga la escena (INC-293). Se conserva
-        // porque una marca CON rotación puesta a mano sí es una orientación deliberada, pero lo
-        // normal es dar también un `faceTowardsActor` o `faceTowardsMark`.
-        actor.Transform.rotation = mark.rotation;
-        actor.SyncRotation();
+        // Las marcas creadas con `new GameObject(nombre)` tienen la rotación identidad (+Z del
+        // mundo): lo normal es dar también `faceTowardsActor` o `faceTowardsMark` (INC-293).
+        SequenceMovement.PlaceAt(actor, mark.position, mark.rotation);
 
         Transform objetivo = null;
         if (!string.IsNullOrWhiteSpace(faceTowardsActor))

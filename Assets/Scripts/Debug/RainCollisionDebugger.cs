@@ -118,7 +118,7 @@ public class RainCollisionDebugger : MonoBehaviour
         }
         
         diagnosticResult = results.ToString();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log(diagnosticResult);
 #endif
     }
@@ -130,7 +130,7 @@ public class RainCollisionDebugger : MonoBehaviour
         if (existing != null)
         {
             DestroyImmediate(existing);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("🗑️ Plano de prueba eliminado.");
 #endif
             return;
@@ -145,7 +145,7 @@ public class RainCollisionDebugger : MonoBehaviour
         var renderer = plane.GetComponent<MeshRenderer>();
         renderer.enabled = false;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("✅ Plano de colisión de prueba creado. Si la lluvia ahora colisiona, el problema es que falta collider en el suelo exterior.");
         Debug.Log("💡 Ejecuta de nuevo para eliminar el plano de prueba.");
 #endif

@@ -78,7 +78,7 @@ namespace Game.World
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MeshSwapper:{name}] Ya fue cambiado anteriormente, ignorando");
                     #endif
                 }
@@ -87,7 +87,7 @@ namespace Game.World
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MeshSwapper:{name}] 💥 Ejecutando swap...");
                 #endif
             }
@@ -118,7 +118,7 @@ namespace Game.World
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MeshSwapper:{name}] ✅ Swap completado");
                 #endif
             }
@@ -131,7 +131,7 @@ namespace Game.World
         {
             if (targetMeshFilter == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[MeshSwapper:{name}] ❌ No hay MeshFilter asignado");
 #endif
                 return;
@@ -139,7 +139,7 @@ namespace Game.World
 
             if (newMesh == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[MeshSwapper:{name}] ❌ No hay nuevo mesh asignado");
 #endif
                 return;
@@ -157,7 +157,7 @@ namespace Game.World
                     meshCollider.sharedMesh = newMesh;
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[MeshSwapper:{name}] MeshCollider actualizado");
                         #endif
                     }
@@ -166,7 +166,7 @@ namespace Game.World
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MeshSwapper:{name}] Mesh cambiado a '{newMesh.name}'");
                 #endif
             }
@@ -182,7 +182,7 @@ namespace Game.World
                 objectToDeactivate.SetActive(false);
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MeshSwapper:{name}] '{objectToDeactivate.name}' desactivado");
                     #endif
                 }
@@ -193,7 +193,7 @@ namespace Game.World
                 objectToActivate.SetActive(true);
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MeshSwapper:{name}] '{objectToActivate.name}' activado");
                     #endif
                 }
@@ -246,7 +246,7 @@ namespace Game.World
                 
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MeshSwapper:{name}] 💨 Instanciando {effectsOnSwap.Length} efectos en posición {targetPosition}");
                     #endif
                 }
@@ -257,7 +257,7 @@ namespace Game.World
                     Instantiate(effect.gameObject, targetPosition, effect.transform.rotation);
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[MeshSwapper:{name}] ✅ Efecto '{effect.name}' instanciado en {targetPosition}");
                         #endif
                     }
@@ -278,7 +278,7 @@ namespace Game.World
             PlayerPrefs.Save();
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MeshSwapper:{name}] Estado guardado: {_hasSwapped}");
                 #endif
             }
@@ -292,7 +292,7 @@ namespace Game.World
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MeshSwapper:{name}] Restaurando estado: ya estaba swapped");
                     #endif
                 }
@@ -328,7 +328,7 @@ namespace Game.World
             {
                 PlayerPrefs.DeleteKey($"MeshSwapper_{persistenceId}");
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MeshSwapper:{name}] Estado reseteado");
 #endif
         }
@@ -365,7 +365,7 @@ namespace Game.World
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MeshSwapper:{name}] 📡 Signal recibido de Timeline: {notification}");
                 #endif
             }

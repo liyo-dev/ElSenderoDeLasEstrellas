@@ -123,7 +123,7 @@ QuestManager.OnQuestCompleted += HandleQuestComplete;
 
 - VFX de un solo uso → `VfxPoolService.Instance.Play(...)`, nunca `Instantiate` + `Destroy` directo.
 - Comentarios, documentación y mensajes de commit **en español**.
-- `Debug.Log` de diagnóstico siempre bajo `#if UNITY_EDITOR || DEVELOPMENT_BUILD`.
+- `Debug.Log` de diagnóstico siempre bajo `#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION`.
 
 ## 🔧 Herramientas de desarrollo
 

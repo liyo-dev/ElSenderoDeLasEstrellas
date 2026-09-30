@@ -55,11 +55,11 @@ public sealed class TutorialPromptNode : NarrativeNode
              "con la X. Pensado para avisos puramente informativos (tutorial de movimiento, de " +
              "minimapa...) que antes se cerraban con Confirmar/Interactuar, el mismo botón que avanza " +
              "diálogo — el jugador los cerraba sin querer, por inercia, nada más salir de una " +
-             "conversación (petición de Raúl, 15 sept 2026). Dejar en 'false' (por defecto, " +
+             "conversación. Dejar en 'false' (por defecto, " +
              "comportamiento de siempre) para avisos que piden pulsar el botón de una mecánica real " +
              "(p.ej. 'Pulsa {BOTON} para despertar'): ahí cerrar tiene que seguir exigiendo ESE " +
              "botón, o el texto dejaría de coincidir con lo que hace falta pulsar.\n\n" +
-             "IMPORTANTE (INC-201d, 15 sept 2026): al activar esto, el grafo YA NO espera a que el " +
+             "IMPORTANTE (INC-201d): al activar esto, el grafo YA NO espera a que el " +
              "jugador cierre el aviso — avanza de inmediato al mostrarlo (ver _detachedInformational " +
              "en el código). Antes de este cambio, el propio cierre del aviso era lo único que hacía " +
              "avanzar el grafo, y como este aviso no bloquea el movimiento ni la interacción, un " +
@@ -104,7 +104,7 @@ public sealed class TutorialPromptNode : NarrativeNode
     [System.NonSerialized]
     private Action _teleportHandler;
 
-    // INC-201d (15 sept 2026): true mientras este nodo ha avanzado el grafo de inmediato
+    // INC-201d: true mientras este nodo ha avanzado el grafo de inmediato
     // (dismissWithCancel=true) pero el aviso sigue en pantalla, aún sin cerrar a mano. GoTo()
     // llama a Exit() de este nodo de forma SÍNCRONA, anidada dentro de la propia llamada a
     // onReadyToAdvance() (antes de que Enter() siquiera termine de ejecutarse) — así que si Exit()
@@ -122,7 +122,7 @@ public sealed class TutorialPromptNode : NarrativeNode
 
         if (ui == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TutorialPromptNode] ❌ TutorialPromptUI.Instance es NULL. " +
                            "Añade el prefab al Canvas persistente en Start.unity.");
 #endif
@@ -258,10 +258,7 @@ public sealed class TutorialPromptNode : NarrativeNode
     private static bool SenalYaEmitida(string key)
     {
         var s = DefaultNarrativeSignals.Instance;
-        if (s == null) return false;
-        foreach (var k in s.CurrentPending) if (k == key) return true;
-        foreach (var k in s.CurrentRaised) if (k == key) return true;
-        return false;
+        return s != null && s.IsPendingDelivery(key);
     }
 
     private void QuitarCierresAutomaticos()

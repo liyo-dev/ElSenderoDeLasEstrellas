@@ -48,6 +48,9 @@ public sealed class DialogueChoiceNode : NarrativeNode
         return fallback;
     }
 
+    public override string DescribeDecision()
+        => $"Pregunta con respuestas \"{displayTitle}\" (guid {guid}): \"{(string.IsNullOrEmpty(promptText) ? promptTextId : promptText)}\" → '{optionAText}' / '{optionBText}'.";
+
     public override void Enter(NarrativeContext ctx, Action ready)
     {
         var dm = DialogueManager.Instance;

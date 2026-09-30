@@ -98,7 +98,7 @@ public class NarrativeActor : MonoBehaviour
     {
         _manager = GetComponent<NPCBehaviourManagerV2>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (_manager != null && string.IsNullOrEmpty(_manager.PersistenceId))
         {
             Debug.LogWarning($"[NarrativeActor:{name}] Este NPC no tiene persistenceId — el grafo no podrá referenciarlo por actorId.");

@@ -1,0 +1,744 @@
+﻿using UnityEngine;
+
+namespace Invector.vCharacterController
+{
+    public class vThirdPersonMotor : MonoBehaviour
+    {
+        #region Inspector Variables
+
+        [Header("- Movement")]
+
+        [Tooltip("Turn off if you have 'in place' animations and use this values above to move the character, or use with root motion as extra speed")]
+        public bool useRootMotion = false;
+        [Tooltip("Use this to rotate the character using the World axis, or false to use the camera axis - CHECK for Isometric Camera")]
+        public bool rotateByWorld = false;
+        [Tooltip("Check This to use sprint on press button to your Character run until the stamina finish or movement stops\nIf uncheck your Character will sprint as long as the SprintInput is pressed or the stamina finishes")]
+        public bool useContinuousSprint = true;
+        [Tooltip("Check this to sprint always in free movement")]
+        public bool sprintOnlyFree = true;
+        public enum LocomotionType
+        {
+            FreeWithStrafe,
+            OnlyStrafe,
+            OnlyFree,
+        }
+        public LocomotionType locomotionType = LocomotionType.FreeWithStrafe;
+
+        public vMovementSpeed freeSpeed, strafeSpeed;
+
+        [Header("- Airborne")]
+
+        [Tooltip("OBSOLETO: ya no se usa (ver AirControl/AirVelocity — el control aéreo ahora siempre es instantáneo, con o sin este flag). Se deja para no romper referencias/serialización existentes.")]
+        public bool jumpWithRigidbodyForce = false;
+        [Tooltip("Rotate or not while airborne")]
+        public bool jumpAndRotate = true;
+        [Tooltip("How much time the character will be jumping")]
+        public float jumpTimer = 0.14f;
+        [Tooltip("Add Extra jump height, if you want to jump only with Root Motion leave the value with 0.")]
+        public float jumpHeight = 4f;
+        [Tooltip("Multiplicador del impulso inicial al despegar.")]
+        [Range(0.5f, 6f)] public float jumpTakeoffBoost = 3.2f;
+        [Tooltip("Velocidad vertical mínima al inicio del salto para asegurar despegue visible.")]
+        [Range(0f, 20f)] public float minJumpTakeoffSpeed = 7.6f;
+        [Tooltip("Multiplicador para el empuje de salto mantenido. 1 = comportamiento clásico, menor valor = salto menos 'lunar'.")]
+        [Range(0f, 1f)] public float jumpSustainMultiplier = 0.06f;
+        [Tooltip("Activa un perfil de salto action-RPG con gravedad diferenciada por fase.")]
+        public bool useActionRPGJump = true;
+        [Tooltip("Gravedad mientras asciende (1 = normal, <1 más flotante).")]
+        [Range(0.1f, 4f)] public float ascentGravityMultiplier = 1.9f;
+        [Tooltip("Gravedad cerca del ápice (hang time).")]
+        [Range(0.05f, 4f)] public float apexGravityMultiplier = 2.8f;
+        [Tooltip("Gravedad al caer (1 = normal, >1 caída más firme).")]
+        [Range(0.5f, 6f)] public float fallGravityMultiplier = 3.8f;
+        [Tooltip("Umbral de velocidad vertical para considerar que está en ápice.")]
+        [Range(0.01f, 2f)] public float apexVelocityThreshold = 0.06f;
+
+        [Tooltip("Speed that the character will move while airborne")]
+        public float airSpeed = 5f;
+        [Tooltip("Smoothness of the direction while airborne")]
+        public float airSmooth = 6f;
+        [Tooltip("OBSOLETO: el giro en el aire ahora es instantáneo (ver RotateToDirectionInstant). Este valor ya no se usa, se deja para no romper referencias/serialización existentes.")]
+        public float airRotationSpeed = 30f;
+        [Tooltip("Apply extra gravity when the character is not grounded")]
+        public float extraGravity = -10f;
+        [HideInInspector]
+        public float limitFallVelocity = -15f;
+
+        [Header("- Sostenerse en el aire (lanzar en el aire)")]
+        [Tooltip("Segundos que el personaje sigue sostenido en el aire después de que acabe cada acción (p. ej. cuando sale el hechizo). Si no encadena otra, al acabar este tiempo cae con normalidad.")]
+        [Min(0f)] public float airHoldWindow = 0.45f;
+        [Tooltip("Velocidad máxima de caída (m/s) mientras se sostiene: al encadenar lanzamientos baja despacio a esta velocidad.")]
+        [Min(0f)] public float airHoldFallSpeed = 1.2f;
+        [Tooltip("Fracción de la velocidad en el aire (airSpeed) con la que puede desplazarse mientras se sostiene.")]
+        [Range(0f, 1f)] public float airHoldMoveFactor = 0.3f;
+
+        [Header("- Compromiso al atacar")]
+        [Tooltip("Velocidad de giro (grados por segundo) hacia el objetivo al lanzar o defender. 1800 = media vuelta en 0,1 s.")]
+        [Min(90f)] public float commitTurnSpeed = 1800f;
+
+        [Header("- Ground")]
+        [Tooltip("Layers that the character can walk on")]
+        public LayerMask groundLayer = 1 << 0;
+        [Tooltip("Distance to became not grounded")]
+        public float groundMinDistance = 0.25f;
+        public float groundMaxDistance = 0.5f;
+        [Tooltip("Max angle to walk")]
+        [Range(30, 80)] public float slopeLimit = 75f;
+        #endregion
+
+        #region Components
+
+        internal Animator animator;
+        internal Rigidbody _rigidbody;                                                      // access the Rigidbody component
+        internal PhysicsMaterial frictionPhysics, maxFrictionPhysics, slippyPhysics;         // create PhysicMaterial for the Rigidbody
+        internal CapsuleCollider _capsuleCollider;                                          // access CapsuleCollider information
+
+        #endregion
+
+        #region Internal Variables
+
+        // movement bools
+        internal bool isJumping;
+        internal bool isStrafing
+        {
+            get
+            {
+                return _isStrafing;
+            }
+            set
+            {
+                _isStrafing = value;
+            }
+        }
+        internal bool isGrounded { get; set; }
+        internal bool isSprinting { get; set; }
+        public bool stopMove { get; protected set; }
+
+        internal float inputMagnitude;                      // sets the inputMagnitude to update the animations in the animator controller
+        internal float verticalSpeed;                       // set the verticalSpeed based on the verticalInput
+        internal float horizontalSpeed;                     // set the horizontalSpeed based on the horizontalInput       
+        internal float moveSpeed;                           // set the current moveSpeed for the MoveCharacter method
+        internal float verticalVelocity;                    // set the vertical velocity of the rigidbody
+        internal float colliderRadius, colliderHeight;      // storage capsule collider extra information        
+        internal float heightReached;                       // max height that character reached in air;
+        internal float jumpCounter;                         // used to count the routine to reset the jump
+        internal float groundDistance;                      // used to know the distance from the ground
+        internal RaycastHit groundHit;                      // raycast to hit the ground 
+        public bool lockMovement = false;                   // lock the movement of the controller (not the animation)
+        internal bool lockRotation = false;                 // lock the rotation of the controller (not the animation)
+        /// <summary>
+        /// Bloquea ControlJumpBehaviour y AirControl. Activar durante vuelo u otros modos
+        /// que controlen el rigidbody directamente para evitar interferencias del motor.
+        /// </summary>
+        public bool suppressAirMovement = false;
+        private float _airHoldUntil;                        // fin de la ventana de HoldAirborne()
+        protected int airJumpsUsed;                         // saltos en el aire gastados desde el último apoyo
+        private float _actionCommitUntil;                   // fin de la ventana de CommitToAction()
+        private Vector3 _commitFacing;                      // dirección hacia la que gira durante CommitToAction()
+        private bool _hasCommitFacing;
+        internal bool _isStrafing;                          // internally used to set the strafe movement                
+        internal Transform rotateTarget;                    // used as a generic reference for the camera.transform
+        internal Vector3 input;                             // generate raw input for the controller
+        internal Vector3 colliderCenter;                    // storage the center of the capsule collider info                
+        internal Vector3 inputSmooth;                       // generate smooth input based on the inputSmooth value       
+        internal Vector3 moveDirection;                     // used to know the direction you're moving 
+
+        #endregion
+
+        // --- Helper to validate vectors to avoid NaN/Infinity assignments to Rigidbody ---
+        private bool IsFiniteVector(Vector3 v)
+        {
+            return !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) ||
+                     float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));
+        }
+
+        public void Init()
+        {
+            animator = GetComponent<Animator>();
+            // FIX (15 ago): "Fixed" ataba la pose visual del Animator a la cadencia física (~50Hz)
+            // incluso después de que el FIX del 14 ago (ver vThirdPersonInput.Update) moviera
+            // UpdateMotor/ControlLocomotionType/ControlRotationType/AirVelocity a Update() para
+            // igualar la cadencia de vThirdPersonCamera (LateUpdate, cada frame renderizado). A
+            // framerates > 50fps la cámara se recalculaba cada frame pero el cuerpo animado del
+            // personaje solo se reevaluaba 50 veces por segundo — mismo síntoma de "lentitud/mareo"
+            // reportado en la demo, esta vez en la capa de animación en vez de en la de movimiento
+            // lógico. "Normal" reevalúa el Animator cada frame renderizado, igual que la cámara.
+            animator.updateMode = AnimatorUpdateMode.Normal;
+
+            // slides the character through walls and edges
+            frictionPhysics = new PhysicsMaterial();
+            frictionPhysics.name = "frictionPhysics";
+            frictionPhysics.staticFriction = .25f;
+            frictionPhysics.dynamicFriction = .25f;
+            frictionPhysics.frictionCombine = PhysicsMaterialCombine.Multiply;
+
+            // prevents the collider from slipping on ramps
+            maxFrictionPhysics = new PhysicsMaterial();
+            maxFrictionPhysics.name = "maxFrictionPhysics";
+            maxFrictionPhysics.staticFriction = 1f;
+            maxFrictionPhysics.dynamicFriction = 1f;
+            maxFrictionPhysics.frictionCombine = PhysicsMaterialCombine.Maximum;
+
+            // air physics 
+            slippyPhysics = new PhysicsMaterial();
+            slippyPhysics.name = "slippyPhysics";
+            slippyPhysics.staticFriction = 0f;
+            slippyPhysics.dynamicFriction = 0f;
+            slippyPhysics.frictionCombine = PhysicsMaterialCombine.Minimum;
+
+            // rigidbody info
+            _rigidbody = GetComponent<Rigidbody>();
+
+            // capsule collider info
+            _capsuleCollider = GetComponent<CapsuleCollider>();
+
+            // save your collider preferences 
+            colliderCenter = GetComponent<CapsuleCollider>().center;
+            colliderRadius = GetComponent<CapsuleCollider>().radius;
+            colliderHeight = GetComponent<CapsuleCollider>().height;
+
+            isGrounded = true;
+        }
+
+        public virtual void UpdateMotor()
+        {
+            CheckGround();
+            CheckSlopeLimit();
+            ControlJumpBehaviour();
+            AirControl();
+        }
+
+        /// <summary>
+        /// FIX: inputSmooth/moveDirection son 'internal' y lockMovement=true NO los resetea
+        /// ("lock the movement of the controller, not the animation" — comentario original de
+        /// Invector arriba). Si se bloquea el movimiento mientras el jugador está sprintando,
+        /// estos valores quedan congelados con magnitud de sprint y ControlAnimatorRootMotion()
+        /// (OnAnimatorMove, que NO comprueba lockMovement) sigue dejando que animator.rootPosition
+        /// se desincronice de transform.position mientras dure el bloqueo. Al desbloquear, ese
+        /// desfase se vuelca de golpe en un único frame (el player "salta" y la cámara tiene que
+        /// perseguirlo). Llamar a este método justo al activar el lock evita que el desfase se
+        /// acumule. Público porque otros ensamblados (Scripts, NarrativeGraph) no pueden acceder
+        /// a los campos 'internal' de este assembly (Plugins compila en Assembly-CSharp-firstpass).
+        /// </summary>
+        public void ResetInputSmoothing()
+        {
+            inputSmooth = Vector3.zero;
+            moveDirection = Vector3.zero;
+        }
+
+        /// <summary>True en el aire: sin tocar suelo o en pleno despegue de un salto.</summary>
+        public bool IsAirborne => !isGrounded || isJumping;
+
+        /// <summary>True mientras el personaje está en el aire sostenido por HoldAirborne().</summary>
+        public bool IsHoldingAirborne => !isGrounded && Time.time < _airHoldUntil;
+
+        /// <summary>True mientras dura CommitToAction(): el input de movimiento se ignora.</summary>
+        public bool IsActionCommitted => Time.time < _actionCommitUntil;
+
+        /// <summary>
+        /// Compromete al personaje con una acción (lanzar, defender...): durante 'seconds' se
+        /// ignora el input de movimiento, así que se frena y no gira con el stick. Si
+        /// 'faceDirection' no es cero, gira hacia ella a commitTurnSpeed (un giro de 180° dura
+        /// ~0,1 s). Saltar lo cancela (CancelActionCommit). Con el controlador deshabilitado o en
+        /// vuelo no hace nada. Ver INC-484.
+        /// </summary>
+        public void CommitToAction(float seconds, Vector3 faceDirection)
+        {
+            if (!enabled || suppressAirMovement) return;
+            faceDirection.y = 0f;
+            _hasCommitFacing = faceDirection.sqrMagnitude > 0.0001f;
+            if (_hasCommitFacing)
+            {
+                _commitFacing = faceDirection.normalized;
+                float angle = Vector3.Angle(Vector3.ProjectOnPlane(transform.forward, Vector3.up), _commitFacing);
+                if (angle > 1f) OnCommitTurnStarted?.Invoke(_commitFacing, angle);
+            }
+            _actionCommitUntil = Mathf.Max(_actionCommitUntil, Time.time + Mathf.Max(0f, seconds));
+        }
+
+        /// <summary>
+        /// Empieza un giro de CommitToAction: dirección final y grados que va a girar. Lo usa el
+        /// feedback visual de giro rápido.
+        /// </summary>
+        public event System.Action<Vector3, float> OnCommitTurnStarted;
+
+        /// <summary>Termina en el acto el sostén de HoldAirborne() (p. ej. al saltar en el aire).</summary>
+        public void CancelAirHold() => _airHoldUntil = 0f;
+
+        /// <summary>Termina en el acto la ventana de CommitToAction().</summary>
+        public void CancelActionCommit()
+        {
+            _actionCommitUntil = 0f;
+            _hasCommitFacing = false;
+        }
+
+        /// <summary>
+        /// Durante CommitToAction con dirección, gira hacia ella y devuelve true (la rotación por
+        /// stick no debe aplicarse ese fotograma). Respeta lockRotation.
+        /// </summary>
+        protected bool ApplyCommitFacing()
+        {
+            if (!_hasCommitFacing || !IsActionCommitted || lockRotation) return false;
+            var target = Quaternion.LookRotation(_commitFacing, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, commitTurnSpeed * Time.deltaTime);
+            return true;
+        }
+
+        /// <summary>True si el personaje ya mira hacia la dirección de CommitToAction (o no hay).</summary>
+        public bool IsFacingCommitDirection =>
+            !_hasCommitFacing || Vector3.Angle(transform.forward, _commitFacing) < 10f;
+
+        /// <summary>
+        /// Sostiene al personaje en el aire mientras dura la acción ('actionSeconds') y
+        /// airHoldWindow segundos más. Si no estaba ya sostenido, se para en seco (velocidad
+        /// vertical y horizontal a cero); si ya lo estaba, solo se alarga la ventana, así que al
+        /// encadenar llamadas sigue bajando despacio a airHoldFallSpeed. Al acabar la ventana
+        /// vuelve la gravedad normal. Sin haber despegado del todo (isGrounded), con el
+        /// controlador deshabilitado o con suppressAirMovement (vuelo) no hace nada.
+        /// Ver INC-483.
+        /// </summary>
+        public void HoldAirborne(float actionSeconds)
+        {
+            if (!enabled || suppressAirMovement || _rigidbody == null || _rigidbody.isKinematic) return;
+            if (isGrounded) return;
+
+            if (!IsHoldingAirborne)
+                _rigidbody.linearVelocity = Vector3.zero;
+
+            isJumping = false;
+            jumpCounter = 0f;
+            _airHoldUntil = Time.time + Mathf.Max(0f, actionSeconds) + airHoldWindow;
+        }
+
+        #region Locomotion
+
+        public virtual void SetControllerMoveSpeed(vMovementSpeed speed)
+        {
+            if (speed.walkByDefault)
+                moveSpeed = Mathf.Lerp(moveSpeed, isSprinting ? speed.runningSpeed : speed.walkSpeed, speed.movementSmooth * Time.deltaTime);
+            else
+                moveSpeed = Mathf.Lerp(moveSpeed, isSprinting ? speed.sprintSpeed : speed.runningSpeed, speed.movementSmooth * Time.deltaTime);
+        }
+
+        public virtual void MoveCharacter(Vector3 _direction)
+        {
+            // validate incoming direction to avoid NaN propagation
+            if (!IsFiniteVector(_direction))
+            {
+                Debug.LogWarning("[vThirdPersonMotor] MoveCharacter received invalid direction (NaN/Infinity). Ignoring movement.");
+                return;
+            }
+
+            // calculate input smooth
+            inputSmooth = Vector3.Lerp(inputSmooth, input, (isStrafing ? strafeSpeed.movementSmooth : freeSpeed.movementSmooth) * Time.deltaTime);
+
+            if (!isGrounded || isJumping) return;
+
+            _direction.y = 0;
+            _direction.x = Mathf.Clamp(_direction.x, -1f, 1f);
+            _direction.z = Mathf.Clamp(_direction.z, -1f, 1f);
+            // limit the input
+            if (_direction.magnitude > 1f)
+                _direction.Normalize();
+
+            Vector3 basePosition = useRootMotion ? animator.rootPosition : _rigidbody.position;
+            if (!IsFiniteVector(basePosition) || !IsFiniteVector(transform.position))
+            {
+                Debug.LogWarning("[vThirdPersonMotor] Invalid positions detected. Skipping velocity assignment.");
+                return;
+            }
+
+            Vector3 targetPosition = basePosition + _direction * (stopMove ? 0 : moveSpeed) * Time.deltaTime;
+
+            if (!IsFiniteVector(targetPosition))
+            {
+                Debug.LogWarning("[vThirdPersonMotor] Computed invalid targetPosition. Skipping velocity assignment.");
+                return;
+            }
+
+            // Protección: evitar división por cero en Time.deltaTime
+            if (Time.deltaTime <= Mathf.Epsilon)
+            {
+                // Juego en pausa (timeScale 0): es normal, no se avisa.
+                return;
+            }
+
+            Vector3 targetVelocity = (targetPosition - transform.position) / Time.deltaTime;
+
+            bool useVerticalVelocity = true;
+            if (useVerticalVelocity)
+            {
+                // keep existing vertical velocity if it's finite, otherwise zero
+                var currentY = _rigidbody.linearVelocity.y;
+                targetVelocity.y = float.IsNaN(currentY) || float.IsInfinity(currentY) ? 0f : currentY;
+            }
+
+            if (!IsFiniteVector(targetVelocity))
+            {
+                Debug.LogWarning("[vThirdPersonMotor] Computed invalid targetVelocity (NaN/Infinity). Skipping assignment.");
+                return;
+            }
+
+            if (!_rigidbody.isKinematic)
+                _rigidbody.linearVelocity = targetVelocity;
+        }
+
+        public virtual void CheckSlopeLimit()
+        {
+            if (input.sqrMagnitude < 0.1) return;
+
+            RaycastHit hitinfo;
+            var hitAngle = 0f;
+
+            if (Physics.Linecast(transform.position + Vector3.up * (_capsuleCollider.height * 0.5f), transform.position + moveDirection.normalized * (_capsuleCollider.radius + 0.2f), out hitinfo, groundLayer))
+            {
+                hitAngle = Vector3.Angle(Vector3.up, hitinfo.normal);
+
+                var targetPoint = hitinfo.point + moveDirection.normalized * _capsuleCollider.radius;
+                if ((hitAngle > slopeLimit) && Physics.Linecast(transform.position + Vector3.up * (_capsuleCollider.height * 0.5f), targetPoint, out hitinfo, groundLayer))
+                {
+                    hitAngle = Vector3.Angle(Vector3.up, hitinfo.normal);
+
+                    if (hitAngle > slopeLimit && hitAngle < 85f)
+                    {
+                        stopMove = true;
+                        return;
+                    }
+                }
+            }
+            stopMove = false;
+        }
+
+        public virtual void RotateToPosition(Vector3 position)
+        {
+            Vector3 desiredDirection = position - transform.position;
+            RotateToDirection(desiredDirection.normalized);
+        }
+
+        public virtual void RotateToDirection(Vector3 direction)
+        {
+            if (!isGrounded)
+            {
+                // En el aire: giro instantáneo. Si el jugador cambia de dirección mientras salta,
+                // el personaje debe encarar la nueva dirección en el mismo frame (sin interpolar),
+                // así la velocidad aérea (AirVelocity, que sigue a transform.forward) también
+                // cambia al instante en vez de "derrapar" hacia el nuevo rumbo.
+                RotateToDirectionInstant(direction);
+                return;
+            }
+
+            float speed = isStrafing ? strafeSpeed.rotationSpeed : freeSpeed.rotationSpeed;
+            RotateToDirection(direction, speed);
+        }
+
+        public virtual void RotateToDirection(Vector3 direction, float rotationSpeed)
+        {
+            if (!jumpAndRotate && !isGrounded) return;
+            direction.y = 0f;
+            Vector3 desiredForward = Vector3.RotateTowards(transform.forward, direction.normalized, rotationSpeed * Time.deltaTime, .1f);
+            Quaternion _newRotation = Quaternion.LookRotation(desiredForward);
+            transform.rotation = _newRotation;
+        }
+
+        /// <summary>
+        /// Gira el personaje para encarar 'direction' en el acto (sin interpolación de velocidad
+        /// angular), usado exclusivamente para el cambio de dirección en el aire.
+        /// </summary>
+        protected virtual void RotateToDirectionInstant(Vector3 direction)
+        {
+            if (!jumpAndRotate) return;
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f) return;
+            transform.rotation = Quaternion.LookRotation(direction.normalized);
+        }
+
+        #endregion
+
+        #region Jump Methods
+
+        protected virtual void ControlJumpBehaviour()
+        {
+            if (suppressAirMovement || !isJumping) return;
+
+            jumpCounter -= Time.deltaTime;
+            if (jumpCounter <= 0)
+            {
+                jumpCounter = 0;
+                isJumping = false;
+            }
+            // Evitar sensación "lunar": no mantener velocidad Y fija durante todo el salto.
+            // Aplicamos un empuje decreciente según el tiempo restante de salto.
+            if (jumpHeight > 0f)
+            {
+                float timer = useActionRPGJump ? Mathf.Max(0.0001f, Mathf.Min(jumpTimer, 0.14f)) : Mathf.Max(0.0001f, jumpTimer);
+                float normalizedJumpTime = Mathf.Clamp01(jumpCounter / timer);
+                float sustainMultiplier = useActionRPGJump ? Mathf.Min(jumpSustainMultiplier, 0.08f) : jumpSustainMultiplier;
+                float sustainFactor = useActionRPGJump
+                    ? (normalizedJumpTime * normalizedJumpTime * normalizedJumpTime * normalizedJumpTime) * sustainMultiplier
+                    : normalizedJumpTime * sustainMultiplier;
+                float targetUpSpeed = jumpHeight * sustainFactor;
+
+                var vel = _rigidbody.linearVelocity;
+                if (vel.y < targetUpSpeed)
+                {
+                    vel.y = targetUpSpeed;
+                    if (IsFiniteVector(vel))
+                    {
+                        _rigidbody.linearVelocity = vel;
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[vThirdPersonMotor] Skipping assignment of jump velocity because it's invalid (NaN/Infinity).");
+                    }
+                }
+            }
+        }
+
+        public virtual void AirControl()
+        {
+            if (suppressAirMovement || (isGrounded && !isJumping)) return;
+            if (transform.position.y > heightReached) heightReached = transform.position.y;
+            inputSmooth = Vector3.Lerp(inputSmooth, input, airSmooth * Time.deltaTime);
+
+            // NOTA: antes, con jumpWithRigidbodyForce=true, aquí se aplicaba un AddForce pequeño
+            // por frame (moveDirection * airSpeed * Time.deltaTime) en vez de calcular moveDirection.
+            // Eso hacía que cambiar de dirección en el aire tardara en notarse (la velocidad tardaba
+            // ~1s en "acumularse" hasta llegar a airSpeed), dando la sensación de que el giro solo
+            // respondía cerca del punto más alto del salto. Ahora AirControl() SIEMPRE solo calcula
+            // moveDirection (para que ControlRotationType rote el cuerpo) y es AirVelocity() —
+            // incondicional, ver más abajo — quien fija la velocidad de golpe cada frame. Así el
+            // comportamiento en el aire es el mismo (instantáneo) tenga o no marcado ese flag.
+
+            // Solo calcula moveDirection para que ControlRotationType rote el cuerpo.
+            // La velocidad la aplica AirVelocity() DESPUÉS de la rotación, así siempre
+            // coinciden dirección del cuerpo y dirección del movimiento.
+            if (input.magnitude > 0.01f)
+            {
+                if (rotateTarget != null && !rotateByWorld)
+                {
+                    var right = rotateTarget.right; right.y = 0f;
+                    var fwd   = Quaternion.AngleAxis(-90f, Vector3.up) * right;
+                    moveDirection = (input.x * right) + (input.z * fwd);
+                }
+                else
+                {
+                    moveDirection = new Vector3(input.x, 0f, input.z);
+                }
+                if (moveDirection.sqrMagnitude > 1f) moveDirection.Normalize();
+                moveDirection.x = Mathf.Clamp(moveDirection.x, -1f, 1f);
+                moveDirection.z = Mathf.Clamp(moveDirection.z, -1f, 1f);
+            }
+            else
+            {
+                moveDirection = Vector3.Lerp(moveDirection, Vector3.zero, airSmooth * Time.deltaTime);
+            }
+        }
+
+        /// <summary>
+        /// Aplica la velocidad horizontal en el aire siguiendo el transform.forward actual del personaje,
+        /// que ya fue rotado por ControlRotationType en este mismo frame. Así velocidad y cuerpo
+        /// siempre apuntan en la misma dirección: es imposible que el personaje mire hacia atrás
+        /// mientras se mueve hacia delante o viceversa.
+        /// Debe llamarse desde FixedUpdate DESPUÉS de ControlRotationType.
+        /// </summary>
+        public virtual void AirVelocity()
+        {
+            if (suppressAirMovement || (isGrounded && !isJumping)) return;
+
+            Vector3 currentVel   = _rigidbody.linearVelocity;
+            Vector3 currentHoriz = new Vector3(currentVel.x, 0f, currentVel.z);
+            var     currentY     = currentVel.y;
+            float   safeY        = float.IsNaN(currentY) || float.IsInfinity(currentY) ? 0f : currentY;
+
+            if (input.magnitude > 0.01f)
+            {
+                // Velocidad = dirección donde mira el personaje AHORA (tras la rotación de este frame).
+                // Conserva la velocidad horizontal actual si supera airSpeed para mantener inercia del salto.
+                Vector3 facingDir = transform.forward; facingDir.y = 0f;
+                if (facingDir.sqrMagnitude < 0.001f) return;
+                facingDir.Normalize();
+
+                // Sostenido en el aire (HoldAirborne) solo se desplaza a una fracción de airSpeed.
+                float   horizSpeed  = IsHoldingAirborne
+                    ? airSpeed * airHoldMoveFactor
+                    : Mathf.Max(currentHoriz.magnitude, airSpeed);
+                Vector3 targetHoriz = facingDir * horizSpeed;
+                if (!IsFiniteVector(targetHoriz)) return;
+
+                _rigidbody.linearVelocity = new Vector3(targetHoriz.x, safeY, targetHoriz.z);
+            }
+            else
+            {
+                // Sin input: frenar suavemente pero sin forzar a cero bruscamente.
+                Vector3 newHoriz = Vector3.Lerp(currentHoriz, Vector3.zero, airSmooth * Time.deltaTime);
+                if (!IsFiniteVector(newHoriz)) return;
+                _rigidbody.linearVelocity = new Vector3(newHoriz.x, safeY, newHoriz.z);
+            }
+        }
+
+        protected virtual bool jumpFwdCondition
+        {
+            get
+            {
+                Vector3 p1 = transform.position + _capsuleCollider.center + Vector3.up * -_capsuleCollider.height * 0.5F;
+                Vector3 p2 = p1 + Vector3.up * _capsuleCollider.height;
+                return Physics.CapsuleCastAll(p1, p2, _capsuleCollider.radius * 0.5f, transform.forward, 0.6f, groundLayer).Length == 0;
+            }
+        }
+
+        #endregion
+
+        #region Ground Check                
+
+        protected virtual void CheckGround()
+        {
+            CheckGroundDistance();
+            ControlMaterialPhysics();
+
+            if (groundDistance <= groundMinDistance)
+            {
+                isGrounded = true;
+                _airHoldUntil = 0f;
+                airJumpsUsed = 0;
+                if (!isJumping && groundDistance > 0.05f)
+                    _rigidbody.AddForce(transform.up * (extraGravity * 2 * Time.deltaTime), ForceMode.VelocityChange);
+
+                heightReached = transform.position.y;
+            }
+            else
+            {
+                if (IsHoldingAirborne)
+                {
+                    // Sostenido: sin gravedad extra; la velocidad vertical no sube de 0 y va
+                    // hacia -airHoldFallSpeed en ~0,25 s, así que baja despacio y siempre llega
+                    // al suelo aunque se siga lanzando.
+                    var vel = _rigidbody.linearVelocity;
+                    if (IsFiniteVector(vel))
+                    {
+                        float y = Mathf.Clamp(vel.y, -airHoldFallSpeed, 0f);
+                        vel.y = Mathf.MoveTowards(y, -airHoldFallSpeed, airHoldFallSpeed * 4f * Time.deltaTime);
+                        _rigidbody.linearVelocity = vel;
+                    }
+                }
+                else if (groundDistance >= groundMaxDistance)
+                {
+                    // set IsGrounded to false 
+                    isGrounded = false;
+                    // check vertical velocity
+                    verticalVelocity = _rigidbody.linearVelocity.y;
+
+                    float gravityMultiplier = 1f;
+                    if (useActionRPGJump)
+                    {
+                        gravityMultiplier = GetJumpGravityMultiplier(verticalVelocity);
+                    }
+                    else if (isJumping)
+                    {
+                        gravityMultiplier = 0f;
+                    }
+
+                    if (gravityMultiplier > 0f)
+                        _rigidbody.AddForce(transform.up * (extraGravity * gravityMultiplier * Time.deltaTime), ForceMode.VelocityChange);
+                }
+                else if (!isJumping || useActionRPGJump)
+                {
+                    float nearGroundMultiplier = useActionRPGJump ? 2.2f : 2f;
+                    _rigidbody.AddForce(transform.up * (extraGravity * nearGroundMultiplier * Time.deltaTime), ForceMode.VelocityChange);
+                }
+            }
+        }
+
+        protected virtual float GetJumpGravityMultiplier(float currentVerticalVelocity)
+        {
+            float apexThreshold = Mathf.Min(apexVelocityThreshold, 0.08f);
+            float ascent = Mathf.Max(ascentGravityMultiplier, 1.8f);
+            float apex = Mathf.Max(apexGravityMultiplier, 2.6f);
+            float fall = Mathf.Max(fallGravityMultiplier, 3.4f);
+
+            if (currentVerticalVelocity > apexThreshold)
+                return ascent;
+
+            if (Mathf.Abs(currentVerticalVelocity) <= apexThreshold)
+                return apex;
+
+            return fall;
+        }
+
+        protected virtual void ControlMaterialPhysics()
+        {
+            // change the physics material to very slip when not grounded
+            _capsuleCollider.material = (isGrounded && GroundAngle() <= slopeLimit + 1) ? frictionPhysics : slippyPhysics;
+
+            if (isGrounded && input == Vector3.zero)
+                _capsuleCollider.material = maxFrictionPhysics;
+            else if (isGrounded && input != Vector3.zero)
+                _capsuleCollider.material = frictionPhysics;
+            else
+                _capsuleCollider.material = slippyPhysics;
+        }
+
+        protected virtual void CheckGroundDistance()
+        {
+            if (_capsuleCollider != null)
+            {
+                // radius of the SphereCast
+                float radius = _capsuleCollider.radius * 0.9f;
+                var dist = 10f;
+                // ray for RayCast
+                Ray ray2 = new Ray(transform.position + new Vector3(0, colliderHeight / 2, 0), Vector3.down);
+                // raycast for check the ground distance
+                if (Physics.Raycast(ray2, out groundHit, (colliderHeight / 2) + dist, groundLayer) && !groundHit.collider.isTrigger)
+                    dist = transform.position.y - groundHit.point.y;
+                // sphere cast around the base of the capsule to check the ground distance
+                if (dist >= groundMinDistance)
+                {
+                    Vector3 pos = transform.position + Vector3.up * (_capsuleCollider.radius);
+                    Ray ray = new Ray(pos, -Vector3.up);
+                    if (Physics.SphereCast(ray, radius, out groundHit, _capsuleCollider.radius + groundMaxDistance, groundLayer) && !groundHit.collider.isTrigger)
+                    {
+                        Physics.Linecast(groundHit.point + (Vector3.up * 0.1f), groundHit.point + Vector3.down * 0.15f, out groundHit, groundLayer);
+                        float newDist = transform.position.y - groundHit.point.y;
+                        if (dist > newDist) dist = newDist;
+                    }
+                }
+                groundDistance = (float)System.Math.Round(dist, 2);
+            }
+        }
+
+        public virtual float GroundAngle()
+        {
+            var groundAngle = Vector3.Angle(groundHit.normal, Vector3.up);
+            return groundAngle;
+        }
+
+        public virtual float GroundAngleFromDirection()
+        {
+            var dir = isStrafing && input.magnitude > 0 ? (transform.right * input.x + transform.forward * input.z).normalized : transform.forward;
+            var movementAngle = Vector3.Angle(dir, groundHit.normal) - 90;
+            return movementAngle;
+        }
+
+        #endregion
+
+        [System.Serializable]
+        public class vMovementSpeed
+        {
+            [Range(1f, 20f)]
+            public float movementSmooth = 6f;
+            [Range(0f, 1f)]
+            public float animationSmooth = 0.2f;
+            [Tooltip("Rotation speed of the character")]
+            public float rotationSpeed = 16f;
+            [Tooltip("Character will limit the movement to walk instead of running")]
+            public bool walkByDefault = false;
+            [Tooltip("Rotate with the Camera forward when standing idle")]
+            public bool rotateWithCamera = false;
+            [Tooltip("Speed to Walk using rigidbody or extra speed if you're using RootMotion")]
+            public float walkSpeed = 2f;
+            [Tooltip("Speed to Run using rigidbody or extra speed if you're using RootMotion")]
+            public float runningSpeed = 4f;
+            [Tooltip("Speed to Sprint using rigidbody or extra speed if you're using RootMotion")]
+            public float sprintSpeed = 6f;
+        }
+    }
+}

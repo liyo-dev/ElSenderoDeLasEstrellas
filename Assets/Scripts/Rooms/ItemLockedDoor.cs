@@ -91,7 +91,7 @@ public class ItemLockedDoor : MonoBehaviour
         {
             if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[ItemLockedDoor] Inventario no encontrado.");
 #endif
                 return;
@@ -99,7 +99,7 @@ public class ItemLockedDoor : MonoBehaviour
 
             if (!inventory.HasItem(requiredItem, requiredItemAmount))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ItemLockedDoor] Ítem '{requiredItem.itemId}' (x{requiredItemAmount}) no disponible.");
 #endif
                 return;
@@ -109,7 +109,7 @@ public class ItemLockedDoor : MonoBehaviour
             {
                 if (!inventory.TryConsume(requiredItem, requiredItemAmount))
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[ItemLockedDoor] No se pudo consumir '{requiredItem.itemId}'.");
                     #endif
                 }
@@ -156,7 +156,7 @@ public class ItemLockedDoor : MonoBehaviour
         if (!preset.flags.Contains(flag))
             preset.flags.Add(flag);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ItemLockedDoor] Flag '{flag}' añadida al preset.");
 #endif
     }
@@ -171,8 +171,6 @@ public class ItemLockedDoor : MonoBehaviour
     string ResolveId()
     {
         if (!string.IsNullOrEmpty(persistenceId)) return persistenceId;
-        var sceneName = gameObject.scene.IsValid() ? gameObject.scene.name : "Unknown";
-        var pos = transform.position;
-        return $"{sceneName}_{gameObject.name}_{pos.x:F1}_{pos.y:F1}_{pos.z:F1}";
+        return IdDePersistencia.DeObjeto(gameObject);
     }
 }

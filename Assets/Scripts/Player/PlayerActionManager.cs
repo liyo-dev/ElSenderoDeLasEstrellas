@@ -56,7 +56,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     {
         if (abilities == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerActionManager] ApplyAbilities called with null abilities!");
 #endif
             return;
@@ -104,7 +104,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _anim = GetComponent<Animator>();
         if (_anim == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerActionManager] No Animator on '{name}' — animation features disabled. (Is this component on a disabled GO that never ran Awake?)", gameObject);
 #endif
         }
@@ -521,7 +521,7 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     public bool IsInMode(ActionMode mode) => _stack.Contains(mode);
     public int StackDepth => _stack.Count;
 
-    // Implementación de IActionValidator para compatibilidad con otros namespaces
+    // IActionValidator: permisos que consulta el controlador de personaje de Plugins.
     public bool CanJump()
     {
         // Si hay menús abiertos (Shop, Equipment, etc.), NO permitir saltar
@@ -577,10 +577,6 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
 
         return CanUse(PlayerAbility.Magic);
     }
-
-    // FIX INC-012: expone si el jugador está en modo Vuelo para que vThirdPersonController
-    // pueda saltarse su chequeo interno de "isGrounded" al lanzar magia mientras vuela.
-    public bool IsFlying() => IsInMode(ActionMode.Flying);
 
     public bool CanInteract()
     {

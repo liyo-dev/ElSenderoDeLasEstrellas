@@ -17,6 +17,18 @@
             "value": "¡Victoria!"
         },
         {
+            "key": "BATTLE_REPORT_STATS",
+            "value": "Estadísticas"
+        },
+        {
+            "key": "BATTLE_REPORT_LOOT",
+            "value": "Botín"
+        },
+        {
+            "key": "BATTLE_REPORT_CONTINUE",
+            "value": "Continuar"
+        },
+        {
             "key": "STAT_VIDA",
             "value": "Vida"
         },
@@ -198,7 +210,7 @@
         },
         {
             "key": "CONTROLS_JUMP",
-            "value": "Saltar"
+            "value": "Saltar (en el aire: doble salto; otra vez: volar)"
         },
         {
             "key": "CONTROLS_MOVE",
@@ -209,16 +221,16 @@
             "value": "Pausa / Menú"
         },
         {
-            "key": "CONTROLS_SPELL_LEFT",
-            "value": "Hechizo — slot izquierdo"
+            "key": "CONTROLS_SERIES",
+            "value": "Hechizo básico: serie de tres (mantener: disparo preciso)"
         },
         {
-            "key": "CONTROLS_SPELL_RIGHT",
-            "value": "Hechizo — slot derecho"
+            "key": "CONTROLS_DEFENSE",
+            "value": "Defensa: en el momento justo, contraataque; mantener, escudo"
         },
         {
-            "key": "CONTROLS_SPELL_SPECIAL",
-            "value": "Hechizo especial"
+            "key": "CONTROLS_COMBO",
+            "value": "Combo mágico: abre el círculo y teclea la secuencia"
         },
         {
             "key": "CONTROLS_SPRINT",
@@ -226,11 +238,43 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Cambiar objetivo de combate (siguiente)"
+            "value": "Siguiente objetivo de combate"
         },
         {
-            "key": "CONTROLS_TARGET_PREV",
-            "value": "Cambiar objetivo de combate (anterior)"
+            "key": "CONTROLS_TEAM_ATTACK",
+            "value": "Ataque de equipo: los dos gatillos a la vez, con quien esté cerca"
+        },
+        {
+            "key": "COMBO_DENIED_NONE",
+            "value": "Aún no conoces ningún combo."
+        },
+        {
+            "key": "COMBO_DENIED_COOLDOWN",
+            "value": "El círculo aún no está listo."
+        },
+        {
+            "key": "COMBO_DENIED_BUSY",
+            "value": "Ahora no se puede."
+        },
+        {
+            "key": "COMBO_DENIED_FLYING",
+            "value": "No puedes concentrarte volando."
+        },
+        {
+            "key": "TEAM_DENIED_NOBODY",
+            "value": "No hay ningún compañero cerca."
+        },
+        {
+            "key": "TEAM_DENIED_CHARGE",
+            "value": "Falta carga de equipo."
+        },
+        {
+            "key": "TEAM_DENIED_BUSY",
+            "value": "Ahora no se puede."
+        },
+        {
+            "key": "CONTROLS_NEXT_SPELL",
+            "value": "Siguiente hechizo básico"
         },
         {
             "key": "CONTROLS_TARGET_TOGGLE",
@@ -1049,10 +1093,6 @@
             "value": "¿Qué te apetece comprar hoy?"
         },
         {
-            "key": "SPELL_ASSIGN_HINT",
-            "value": "Pulsa A sobre un hechizo y luego escoge el slot al que asignarlo."
-        },
-        {
             "key": "SPELL_AURA_ESTELAR_NAME",
             "value": "Aura Estelar"
         },
@@ -1063,10 +1103,6 @@
         {
             "key": "SPELL_BOLA_PRISMA_NAME",
             "value": "Bola Prisma"
-        },
-        {
-            "key": "SPELL_COOLDOWN_LABEL",
-            "value": "Cooldown: {0}s"
         },
         {
             "key": "SPELL_CORAZON_ESTELAR_NAME",
@@ -1089,24 +1125,8 @@
             "value": "Coste de maná: {0}"
         },
         {
-            "key": "SPELL_NO_INFO",
-            "value": "Hechizo sin información."
-        },
-        {
-            "key": "SPELL_SELECT_SLOT_HINT",
-            "value": "Selecciona un slot con A o cancela con B."
-        },
-        {
-            "key": "SPELL_SELECT_SPELL_HINT",
-            "value": "Selecciona un hechizo con A o cancela con B."
-        },
-        {
             "key": "SPELL_TORNADO_NAME",
             "value": "Tornado"
-        },
-        {
-            "key": "SPELL_UNASSIGNED",
-            "value": "Sin asignar."
         },
         {
             "key": "SPELL_UNASSIGNED_SHORT",
@@ -1675,6 +1695,258 @@
         {
             "key": "ABILITY_SHIELD_DESC",
             "value": "Levanta un escudo para bloquear ataques enemigos."
+        },
+        {
+            "key": "SPELL_FX_BOUNCE",
+            "value": "Rebota {0} veces"
+        },
+        {
+            "key": "SPELL_FX_PIERCE_ALL",
+            "value": "Atraviesa a todos"
+        },
+        {
+            "key": "SPELL_FX_PIERCE",
+            "value": "Atraviesa {0}"
+        },
+        {
+            "key": "SPELL_FX_SPREAD",
+            "value": "Abanico de {0}"
+        },
+        {
+            "key": "SPELL_FX_IMPACT_ZONE",
+            "value": "Deja fuego al impactar"
+        },
+        {
+            "key": "SPELL_FX_SLOW",
+            "value": "Ralentiza"
+        },
+        {
+            "key": "SPELL_FX_ROOT",
+            "value": "Inmoviliza"
+        },
+        {
+            "key": "SPELL_FX_PULL",
+            "value": "Atrae al centro"
+        },
+        {
+            "key": "SPELL_FX_PUSH",
+            "value": "Aparta a los enemigos"
+        },
+        {
+            "key": "SPELL_FX_HEAL",
+            "value": "Cura al grupo"
+        },
+        {
+            "key": "SPELL_FX_SHIELD",
+            "value": "Escudo al grupo"
+        },
+        {
+            "key": "SPELL_FX_BLINK",
+            "value": "Teletransporte de {0} m"
+        },
+        {
+            "key": "SPELL_LEARNED_COMBO",
+            "value": "Combo de {0}: abre el círculo con {1} y teclea {2}."
+        },
+        {
+            "key": "SPELL_LEARNED_BASIC",
+            "value": "Hechizo básico de {0}. Equípalo en Equipo › Hechizos."
+        },
+        {
+            "key": "MENU_CONTROLS_HINT",
+            "value": "Controles"
+        },
+        {
+            "key": "GRIMOIRE_BUTTON",
+            "value": "Grimorio"
+        },
+        {
+            "key": "GRIMOIRE_OWNER",
+            "value": "Hechizo de {0}"
+        },
+        {
+            "key": "GRIMOIRE_CAST_TITLE",
+            "value": "Cómo se lanza"
+        },
+        {
+            "key": "GRIMOIRE_STEP_OPEN",
+            "value": "Abre el círculo"
+        },
+        {
+            "key": "GRIMOIRE_STEP_TYPE",
+            "value": "Teclea"
+        },
+        {
+            "key": "GRIMOIRE_STEP_CAST",
+            "value": "Lanzar"
+        },
+        {
+            "key": "GRIMOIRE_STEP_ROTATE",
+            "value": "Cambiar de básico"
+        },
+        {
+            "key": "GRIMOIRE_STEP_HOLD",
+            "value": "Mantén: levanta"
+        },
+        {
+            "key": "GRIMOIRE_STEP_RELEASE",
+            "value": "Suelta: lanza"
+        },
+        {
+            "key": "GRIMOIRE_KIND_BASIC",
+            "value": "Básico"
+        },
+        {
+            "key": "GRIMOIRE_KIND_COMBO",
+            "value": "Combo"
+        },
+        {
+            "key": "GRIMOIRE_KIND_LEVITATION",
+            "value": "Levitación"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE",
+            "value": "Daño"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE_TICK",
+            "value": "Daño por golpe"
+        },
+        {
+            "key": "GRIMOIRE_STAT_HEAL_TICK",
+            "value": "Cura por golpe"
+        },
+        {
+            "key": "GRIMOIRE_STAT_SHIELD",
+            "value": "Escudo"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DURATION",
+            "value": "Duración"
+        },
+        {
+            "key": "GRIMOIRE_STAT_MANA",
+            "value": "Maná"
+        },
+        {
+            "key": "GRIMOIRE_COMBO_ALWAYS",
+            "value": "No ocupa ranura · siempre a mano"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TITLE",
+            "value": "Página sin descubrir"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TEXT",
+            "value": "Esta página aún está sellada. Quizá la guarde un maestro, una misión o algún rincón al que solo se llega volando, levitando o buceando."
+        },
+        {
+            "key": "GRIMOIRE_PAGE_COUNTER",
+            "value": "{0} · página {1} de {2} · {3} descubiertas"
+        },
+        {
+            "key": "GRIMOIRE_EQUIPPED",
+            "value": "Equipado · ranura {0}"
+        },
+        {
+            "key": "GRIMOIRE_NOT_EQUIPPED",
+            "value": "Sin equipar"
+        },
+        {
+            "key": "GRIMOIRE_HINT_KB",
+            "value": "A / D  Pasar página      Tab  Otro personaje      Esc  Cerrar"
+        },
+        {
+            "key": "GRIMOIRE_HINT",
+            "value": "{0} {1}  Pasar página      {2}  Otro personaje      {3}  Cerrar"
+        },
+        {
+            "key": "ELEMENT_FIRE",
+            "value": "Fuego"
+        },
+        {
+            "key": "ELEMENT_ICE",
+            "value": "Hielo"
+        },
+        {
+            "key": "ELEMENT_STORM",
+            "value": "Viento"
+        },
+        {
+            "key": "ELEMENT_LIGHT",
+            "value": "Luz"
+        },
+        {
+            "key": "ELEMENT_MIND",
+            "value": "Mente"
+        },
+        {
+            "key": "SPELL_FX_KNOCKBACK",
+            "value": "Empuja"
+        },
+        {
+            "key": "SPELL_FX_ON_CASTER",
+            "value": "Alrededor de quien lo lanza"
+        },
+        {
+            "key": "SPELL_KEEP_ONE",
+            "value": "Tiene que llevar al menos un básico."
+        },
+        {
+            "key": "SPELL_NOTHING_TO_REORDER",
+            "value": "Solo lleva uno: no hay orden que cambiar."
+        },
+        {
+            "key": "SPELL_SLOT_EMPTY",
+            "value": "vacío"
+        },
+        {
+            "key": "SPELL_SLOT_FREE",
+            "value": "Hueco {0} libre.\nElige un básico de la lista para llenarlo."
+        },
+        {
+            "key": "SPELL_BASICS_INTRO",
+            "value": "Lleva hasta 4 básicos. En combate se lanzan con {0}\ny {1} pasa de uno a otro, en este orden."
+        },
+        {
+            "key": "SPELL_TYPE_BASIC",
+            "value": "Básico"
+        },
+        {
+            "key": "SPELL_HINT_REPLACE",
+            "value": "Lleva 4. ¿Cuál cambias por {0}?   {1} Este   ·   {2} Cancelar"
+        },
+        {
+            "key": "SPELL_HINT_MOVE",
+            "value": "¿A qué hueco lo llevas?   {0} Aquí   ·   {1} Cancelar"
+        },
+        {
+            "key": "SPELL_HINT_SLOT",
+            "value": "{0} Cambiar de sitio   ·   {1} Volver a la lista"
+        },
+        {
+            "key": "SPELL_HINT_SLOT_EMPTY",
+            "value": "{0} Elegir un básico de la lista"
+        },
+        {
+            "key": "SPELL_HINT_LIST",
+            "value": "{0} Equipar o quitar"
+        },
+        {
+            "key": "SPELL_HINT_UNEQUIP",
+            "value": "{0} Quitar"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP",
+            "value": "{0} Equipar en el hueco {1}"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP_FULL",
+            "value": "{0} Equipar (lleva 4: elegirás cuál cambiar)"
+        },
+        {
+            "key": "GAME_OVER_MENSAJE",
+            "value": "Has caído. ¿Continuar desde el último punto de guardado?"
         }
     ]
 }

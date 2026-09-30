@@ -70,7 +70,7 @@ namespace Quests
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[QuestPartyMemberChecker:{gameObject.name}] {message}");
                 #endif
             }
@@ -80,7 +80,7 @@ namespace Quests
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[QuestPartyMemberChecker:{gameObject.name}] ⚠️ {message}");
                 #endif
             }

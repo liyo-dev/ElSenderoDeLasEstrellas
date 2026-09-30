@@ -182,7 +182,7 @@ public class TeleportUI : MonoBehaviour
         
         if (!TeleportRegistry.IsSystemAvailable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportUI] No hay suficientes puntos desbloqueados.");
 #endif
             return;
@@ -234,7 +234,7 @@ public class TeleportUI : MonoBehaviour
             SelectItem(0);
         
         GamepadInputReader.PlayUISound("UI_Open");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TeleportUI] UI abierta.");
 #endif
     }
@@ -295,7 +295,7 @@ public class TeleportUI : MonoBehaviour
         if (Core.PlayerInputManager.Instance != null)
             Core.PlayerInputManager.Instance.PopUIMode();
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TeleportUI] UI cerrada.");
 #endif
     }
@@ -320,7 +320,7 @@ public class TeleportUI : MonoBehaviour
         
         if (itemPrefab == null || listContainer == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TeleportUI] itemPrefab o listContainer no asignados.");
 #endif
             return;
@@ -328,18 +328,18 @@ public class TeleportUI : MonoBehaviour
         
         // Obtener destinos disponibles (excluyendo posición actual)
         string currentAnchor = _currentAnchorId ?? SpawnManager.CurrentAnchorId;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportUI] Anchor actual a excluir: '{currentAnchor}'. Puntos totales: {TeleportRegistry.UnlockedCount}");
 #endif
         
         var destinations = TeleportRegistry.GetAvailableDestinations(currentAnchor);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportUI] Destinos disponibles (excluyendo actual): {destinations.Count}");
 #endif
         
         foreach (var point in destinations)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TeleportUI] Añadiendo destino: {point.displayName} ({point.anchorId})");
 #endif
             var itemGo = Instantiate(itemPrefab, listContainer);
@@ -357,7 +357,7 @@ public class TeleportUI : MonoBehaviour
         // Si no hay destinos, cerrar
         if (_items.Count == 0 && _isOpen)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TeleportUI] No hay destinos disponibles.");
 #endif
             Close();
@@ -408,7 +408,7 @@ public class TeleportUI : MonoBehaviour
         else
         {
             // Fallback: usar SpawnManager directamente
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportUI] TeleportSystem no encontrado, usando teletransporte directo.");
 #endif
             SpawnManager.TeleportTo(selectedPoint.anchorId, true);

@@ -143,7 +143,7 @@ public class ShotBeat : SequenceBeat
             viaja = porEncima.HasValue;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (smooth && !viaja)
             Debug.Log($"[ShotBeat] El movimiento hasta '{framing.Describe()}' atravesaría el " +
                 "escenario, así que se hace corte seco. Si el movimiento importaba, hay que " +

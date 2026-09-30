@@ -48,7 +48,7 @@ public static class CinematicTimeOfDay
         var ciclo = DayNightCycle.Instance;
         if (ciclo == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CinematicTimeOfDay] No hay ningún DayNightCycle cargado, así que la " +
                 "hora del día de esta cinemática no se puede cambiar. La escena se verá con la luz " +
                 "que haya. (Normal en una escena de prueba abierta suelta; en partida no debería pasar.)");
@@ -180,7 +180,7 @@ public static class CinematicTimeOfDay
         Diagnostico("exterior forzado", camara);
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     /// Cuenta CON QUÉ se está rodando, no qué se ha pedido.
     ///
     /// Incluye el tinte y la intensidad reales del material de cielo, que es donde estaba el
@@ -253,7 +253,7 @@ public static class CinematicTimeOfDay
         ciclo.SetTimeOfDay(vuelta, immediate: true);
         ciclo.AutoAdvance = _avanceAutomaticoPrevio;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CinematicTimeOfDay] Fin de cinemática: el mundo se queda en {vuelta} " +
                   $"(antes era {_horaPrevia}).");
 #endif

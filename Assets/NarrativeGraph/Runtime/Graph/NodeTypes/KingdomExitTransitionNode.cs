@@ -82,7 +82,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
         }
 
         // --- Ocultar toda la UI de gameplay para la revelación del título ---
-        PlayerHUDV2.Instance?.HideHUD();
+        PlayerHUDV2.Instance?.HideHUD(this);
         TimeOfDayIndicator.Instance?.Hide();
         MinimapController.Instance?.SetHiddenByCinematic(true);
 
@@ -98,7 +98,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
                 cam.transform.SetPositionAndRotation(focusPoint.transform.position, focusPoint.transform.rotation);
                 cameraCut = true;
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
                 Debug.LogWarning($"[KingdomExitTransitionNode] No se encontró CameraFocusPoint con focusId='{landscapeFocusId}'.");
 #endif
@@ -113,7 +113,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
         // que "la música original nunca se cortó".
         var audio = AudioService.Instance;
         float previousSfxVolume = audio != null ? audio.GetVolume(AudioBus.Sfx) : 1f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[KingdomExitTransitionNode] AudioService.Instance={(audio != null)}, " +
                   $"CurrentMusicClip antes de StopMusic='{(audio != null ? audio.CurrentMusicClip?.name : "N/A")}'");
 #endif
@@ -128,13 +128,13 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
             yield return new WaitForSecondsRealtime(silenceDuration);
 
         // --- Entrada del tema principal (crossfade de volumen; el crescendo lo aporta el propio clip) ---
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[KingdomExitTransitionNode] CurrentMusicClip justo antes de PlayMusic(mainThemeClip)=" +
                   $"'{(audio != null ? audio.CurrentMusicClip?.name : "N/A")}' (debería ser null/ninguno si StopMusic funcionó)");
 #endif
         if (mainThemeClip != null)
             audio?.PlayMusic(mainThemeClip, musicFadeInSeconds);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning("[KingdomExitTransitionNode] No hay mainThemeClip asignado.");
 #endif
@@ -169,7 +169,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
         pam?.PopMode(ActionMode.Cinematic);
 
         // --- Restaurar la UI de gameplay (oculta tras el negro, junto con la cámara) ---
-        PlayerHUDV2.Instance?.ShowHUD();
+        PlayerHUDV2.Instance?.ShowHUD(this);
         TimeOfDayIndicator.Instance?.Show();
         MinimapController.Instance?.SetHiddenByCinematic(false);
 
@@ -179,7 +179,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
 
         yield return FeedbackService.ScreenFadeAsync(Color.black, cameraReturnFadeSeconds, fadeIn: false);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[KingdomExitTransitionNode] Transición completada, control devuelto al jugador.");
 #endif
 
@@ -214,7 +214,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
 
         yield return FeedbackService.ScreenFadeAsync(Color.black, cameraReturnFadeSeconds, fadeIn: true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[KingdomExitTransitionNode] Fin de la demo → cargando '{closeDemoTargetScene}'.");
 #endif
 

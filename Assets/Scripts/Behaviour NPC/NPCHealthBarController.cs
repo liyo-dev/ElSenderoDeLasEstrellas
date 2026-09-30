@@ -55,7 +55,7 @@ namespace Game.NPC
             
             if (_damageable == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCHealthBarController] No se encontró Damageable en {name}");
 #endif
                 enabled = false;
@@ -100,7 +100,7 @@ namespace Game.NPC
         {
             if (healthBarPrefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCHealthBarController] No hay prefab asignado en {name}");
 #endif
                 return;
@@ -135,7 +135,7 @@ namespace Game.NPC
                 _canvas.enabled = false;
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCHealthBarController] Barra de vida instanciada para {name}");
 #endif
         }

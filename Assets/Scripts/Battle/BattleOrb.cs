@@ -13,8 +13,6 @@ public class BattleOrb : MonoBehaviour
 {
     [Header("Tipo")]
     [SerializeField] private OrbType      type      = OrbType.Health;
-    [Tooltip("Solo si type == SpecialCharge: que medidor llenar")]
-    [SerializeField] private DuoCompanion chargeFor = DuoCompanion.Estela;
 
     [Header("Cantidades")]
     [SerializeField] private float healthAmount = 15f;
@@ -458,8 +456,9 @@ public class BattleOrb : MonoBehaviour
                 break;
 
             case OrbType.SpecialCharge:
-                var duo = playerGO.GetComponentInParent<DuoSpecialAttackSystem>();
-                if (duo) duo.AddCharge(chargeFor, chargeAmount);
+                // La carga de equipo es del grupo (GrupoDelJugador, INC-484), no del cuerpo que recoge el orbe.
+                if (PlayerService.TryGetComponent(out DuoSpecialAttackSystem duo, allowSceneLookup: false))
+                    duo.AddTeamCharge(chargeAmount);
                 break;
         }
 

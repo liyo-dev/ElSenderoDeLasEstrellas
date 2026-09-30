@@ -58,7 +58,7 @@ public class ExpandingShockwave : MonoBehaviour
         {
             _useParticleSystem = true;
             _shapeModule = _particleSystem.shape;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ExpandingShockwave] 🌀 Usando Particle System para visual");
 #endif
         }
@@ -102,7 +102,7 @@ public class ExpandingShockwave : MonoBehaviour
                 _particleSystem.Play();
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ExpandingShockwave] 🌀 Particle System configurado (radio inicial: {_shapeModule.radius})");
 #endif
         }
@@ -222,7 +222,7 @@ public class ExpandingShockwave : MonoBehaviour
                 if (damageable != null && damageable.IsAlive)
                 {
                     damageable.TakeDamage(damage);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ExpandingShockwave] 💥 Daño a {target.name}: {damage}");
 #endif
                     
@@ -236,7 +236,7 @@ public class ExpandingShockwave : MonoBehaviour
                     if (damageable != null && damageable.IsAlive)
                     {
                         damageable.TakeDamage(damage);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[ExpandingShockwave] 💥 Daño a padre de {target.name}: {damage}");
 #endif
                         ApplyKnockback(col);

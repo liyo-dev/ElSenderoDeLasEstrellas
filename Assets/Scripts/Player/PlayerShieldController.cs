@@ -2,7 +2,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Core;
+using Sendero.Core.Feedback;
 
+/// <summary>
+/// Defensa del jugador en la B (INC-491/INC-493).
+/// <list type="bullet">
+/// <item>Pulsar B abre una ventana corta (<see cref="parryWindow"/>): un proyectil enemigo que
+/// llegue en ella se devuelve como hechizo propio y más fuerte (contraataque, con parón de
+/// impacto); un golpe cuerpo a cuerpo se anula y empuja al enemigo.</item>
+/// <item>Mantener B = escudo (gasta maná): bloquea proyectiles y reduce el daño cuerpo a cuerpo.
+/// Pulsar tarde es, en la práctica, bloquear.</item>
+/// <item>Fallar la ventana deja un pequeño margen (<see cref="parryWhiffCooldown"/>) antes de poder
+/// abrir otra, para que machacar B no valga.</item>
+/// </list>
+/// </summary>
 [RequireComponent(typeof(Animator))]
 public class PlayerShieldController : MonoBehaviour
 {
@@ -10,7 +23,6 @@ public class PlayerShieldController : MonoBehaviour
     [SerializeField] private GameObject shieldPrefab;
     [SerializeField] private Transform shieldAnchor;
     [SerializeField] private Vector3 shieldOffset = Vector3.zero;
-    [SerializeField, Range(0f, 1f)] private float triggerThreshold = 0.5f;
 
     [Header("Animaciones")]
     [SerializeField] private string defendAnimation = "Defend_NoWeapon";
@@ -27,6 +39,31 @@ public class PlayerShieldController : MonoBehaviour
     [Tooltip("Maná por segundo que consume mantener el escudo activo. 0 = gratuito.")]
     [SerializeField] private float manaPerSecond = 10f;
 
+    [Header("Contraataque (B en el momento justo)")]
+    [Tooltip("Segundos tras pulsar B en los que un golpe enemigo se devuelve.")]
+    [SerializeField, Range(0.05f, 0.5f)] private float parryWindow = 0.2f;
+    [Tooltip("Distancia a la que se detectan los proyectiles enemigos durante la ventana.")]
+    [SerializeField] private float parryRadius = 2.6f;
+    [Tooltip("Espera tras una ventana fallida antes de poder abrir otra.")]
+    [SerializeField] private float parryWhiffCooldown = 0.45f;
+    [Tooltip("Daño del contraataque respecto al del proyectil devuelto.")]
+    [SerializeField] private float counterDamageMultiplier = 2f;
+    [SerializeField] private float minCounterDamage = 20f;
+    [Tooltip("Segundos que el jugador queda comprometido con el gesto del contraataque.")]
+    [SerializeField] private float counterLockSeconds = 0.45f;
+    [SerializeField] private GameObject counterVfx;
+    [SerializeField] private string counterSfxKey = "EstelaAppears_ShieldBlock";
+    [SerializeField, Range(0.01f, 1f)] private float counterHitStopScale = 0.05f;
+    [SerializeField] private float counterHitStopSeconds = 0.08f;
+    [SerializeField] private float counterCameraShake = 0.25f;
+
+    [Header("Cuerpo a cuerpo")]
+    [Tooltip("Parte del daño cuerpo a cuerpo que pasa con el escudo levantado.")]
+    [SerializeField, Range(0f, 1f)] private float meleeBlockFactor = 0.3f;
+    [Tooltip("Empuje al enemigo que golpea cuerpo a cuerpo dentro de la ventana.")]
+    [SerializeField] private float meleeDeflectPush = 8f;
+    [SerializeField] private float meleeDeflectRadius = 3f;
+
     private PlayerControls _controls;
     private bool _ownsControls;
     private Animator _animator;
@@ -39,7 +76,31 @@ public class PlayerShieldController : MonoBehaviour
     private ManaPool _manaPool;
     private PlayerActionManager _playerActionManager;
 
+    private bool _bWasDown;
+    private float _parryUntil = -1f;
+    private bool _parryOpen;
+    private bool _parried;
+    private float _parryCooldownUntil = -1f;
+    private int _parryMask;
+    private readonly Collider[] _parryBuffer = new Collider[16];
+    private readonly HashSet<GameObject> _countered = new();
+
     public bool IsDefending => _isDefending;
+
+    /// <summary>La ventana de contraataque está abierta.</summary>
+    public bool IsParryWindowOpen => Time.time < _parryUntil;
+
+    /// <summary>Contraataque o desvío logrado (para el HUD y la guía de combate).</summary>
+    public event System.Action OnCounter;
+
+    /// Se ha devuelto un hechizo enemigo: quién lo había lanzado (null si no se sabe). Para que un
+    /// jefe reaccione cuando le devuelven su propio ataque (el Mago Oscuro se aturde). Ver INC-509.
+    public static event System.Action<GameObject> AlDevolverAtaque;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStaticsDevolver() => AlDevolverAtaque = null;
+#endif
 
     void Awake()
     {
@@ -51,7 +112,20 @@ public class PlayerShieldController : MonoBehaviour
         _magicCaster = GetComponentInParent<MagicCaster>();
         _manaPool = GetComponentInParent<ManaPool>();
         _playerActionManager = GetComponentInParent<PlayerActionManager>();
+        _parryMask = LayerMask.GetMask("ProjectileEnemy", "EnemyProjectile", "Projectile", "Enemy");
         CreateShieldInstance();
+    }
+
+    void Start()
+    {
+        // El filtro de daño va en el objeto de la vida del jugador, esté donde esté en la jerarquía.
+        PlayerHealthSystem health = GetComponentInParent<PlayerHealthSystem>() ?? GetComponentInChildren<PlayerHealthSystem>();
+        if (health == null) PlayerService.TryGetComponent(out health, allowSceneLookup: false);
+        if (health != null)
+        {
+            var filtro = health.GetComponent<FiltroDeDefensa>() ?? health.gameObject.AddComponent<FiltroDeDefensa>();
+            filtro.Owner = this;
+        }
     }
 
     void OnEnable()
@@ -61,11 +135,6 @@ public class PlayerShieldController : MonoBehaviour
         if (_ownsControls)
             _controls.Enable();
 
-        _controls.GamePlay.LT.performed += OnTriggerChanged;
-        _controls.GamePlay.LT.canceled += OnTriggerChanged;
-        _controls.GamePlay.RT.performed += OnTriggerChanged;
-        _controls.GamePlay.RT.canceled += OnTriggerChanged;
-
         UnlockService.OnSpellUnlocked += OnSpellUnlocked;
     }
 
@@ -74,11 +143,6 @@ public class PlayerShieldController : MonoBehaviour
         UnlockService.OnSpellUnlocked -= OnSpellUnlocked;
 
         if (_controls == null) return;
-
-        _controls.GamePlay.LT.performed -= OnTriggerChanged;
-        _controls.GamePlay.LT.canceled -= OnTriggerChanged;
-        _controls.GamePlay.RT.performed -= OnTriggerChanged;
-        _controls.GamePlay.RT.canceled -= OnTriggerChanged;
 
         if (_ownsControls)
             _controls.Disable();
@@ -100,11 +164,28 @@ public class PlayerShieldController : MonoBehaviour
         if (_controls == null)
             return;
 
+        bool bDown = GamepadInputReader.AttackMagicRightHeld;
+        bool bPressed = bDown && !_bWasDown;
+        _bWasDown = bDown;
+
         if (!GameState.CanProcessGameplayInput)
         {
+            CloseParryWindow();
             StopDefending();
             return;
         }
+
+        // Tecleando un combo (Y), la B es un botón de la secuencia (INC-494).
+        if (ComboCastController.IsComposing)
+        {
+            CloseParryWindow();
+            StopDefending();
+            return;
+        }
+
+        if (bPressed) OpenParryWindow();
+        if (IsParryWindowOpen) ScanForParry();
+        else if (_parryOpen) CloseParryWindow();
 
         if (_magicCaster != null && _magicCaster.IsCasting)
         {
@@ -125,11 +206,119 @@ public class PlayerShieldController : MonoBehaviour
         EvaluateDefenseState();
     }
 
+    // ── Contraataque ────────────────────────────────────────────────────────
+
+    private void OpenParryWindow()
+    {
+        if (Time.time < _parryCooldownUntil) return;
+        if (_playerActionManager != null && !_playerActionManager.AllowShield) return;
+        _parryUntil = Time.time + parryWindow;
+        _parryOpen = true;
+        _parried = false;
+        _countered.Clear();
+        ScanForParry();
+    }
+
+    private void CloseParryWindow()
+    {
+        if (!_parryOpen) return;
+        _parryOpen = false;
+        _parryUntil = -1f;
+        if (!_parried) _parryCooldownUntil = Time.time + parryWhiffCooldown;
+    }
+
+    private void ScanForParry()
+    {
+        Vector3 center = transform.position + Vector3.up;
+        int count = Physics.OverlapSphereNonAlloc(center, parryRadius, _parryBuffer, _parryMask, QueryTriggerInteraction.Collide);
+        for (int i = 0; i < count; i++)
+        {
+            var col = _parryBuffer[i];
+            if (col == null) continue;
+
+            var enemyProjectile = col.GetComponentInParent<EnemyProjectile>();
+            if (enemyProjectile != null)
+            {
+                if (!_countered.Add(enemyProjectile.gameObject)) continue;
+                Vector3 back = -enemyProjectile.Direction;
+                Counter(enemyProjectile.transform.position, enemyProjectile.Damage, back);
+                enemyProjectile.DestroyProjectile();
+                continue;
+            }
+
+            var magic = col.GetComponentInParent<MagicProjectile>();
+            if (magic != null && !EsDelGrupo(magic.Instigator))
+            {
+                if (!_countered.Add(magic.gameObject)) continue;
+                Vector3 back = magic.Instigator != null
+                    ? magic.Instigator.transform.position - transform.position
+                    : -magic.transform.forward;
+                Counter(magic.transform.position, magic.Damage, back);
+                AlDevolverAtaque?.Invoke(magic.Instigator);
+                magic.End(true);
+            }
+        }
+    }
+
+    private void Counter(Vector3 where, float incomingDamage, Vector3 backDirection)
+    {
+        float damage = Mathf.Max(minCounterDamage, incomingDamage * counterDamageMultiplier);
+        backDirection.y = 0f;
+        if (_magicCaster != null) _magicCaster.CastCounter(damage, backDirection, counterLockSeconds);
+        CounterFeedback(where);
+    }
+
+    /// <summary>Un golpe cuerpo a cuerpo ha llegado dentro de la ventana: se anula y empuja.</summary>
+    internal void OnMeleeDeflect()
+    {
+        Vector3 center = transform.position + Vector3.up;
+        int count = Physics.OverlapSphereNonAlloc(center, meleeDeflectRadius, _parryBuffer, LayerMask.GetMask("Enemy", "Boss"), QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            var rb = _parryBuffer[i].attachedRigidbody;
+            if (rb == null || rb.isKinematic) continue;
+            Vector3 dir = rb.position - transform.position; dir.y = 0f;
+            rb.AddForce(dir.normalized * meleeDeflectPush, ForceMode.VelocityChange);
+        }
+        CounterFeedback(center + transform.forward * 0.8f);
+    }
+
+    private void CounterFeedback(Vector3 where)
+    {
+        _parried = true;
+        if (counterVfx != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(counterVfx, where, Quaternion.identity, 1.5f);
+        if (!string.IsNullOrEmpty(counterSfxKey) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(counterSfxKey);
+        if (counterHitStopSeconds > 0f) FeedbackService.HitStop(counterHitStopScale, counterHitStopSeconds);
+        if (counterCameraShake > 0f) FeedbackService.CameraShake(counterCameraShake, 0.15f);
+        OnShieldHit();
+        OnCounter?.Invoke();
+    }
+
+    /// <summary>Parte del daño que llega al jugador según la defensa (lo usa FiltroDeDefensa).</summary>
+    internal float FilterIncomingDamage(float amount)
+    {
+        if (IsParryWindowOpen)
+        {
+            OnMeleeDeflect();
+            return 0f;
+        }
+        return _isDefending ? amount * meleeBlockFactor : amount;
+    }
+
+    private static bool EsDelGrupo(GameObject go)
+    {
+        if (go == null) return false;
+        var cuerpo = PlayerService.Player;
+        if (cuerpo != null && (go == cuerpo || go.transform.IsChildOf(cuerpo.transform))) return true;
+        return go.GetComponentInParent<Game.NPC.NPCPartyMember>() != null;
+    }
+
     private void EvaluateDefenseState()
     {
-        float lt = _controls.GamePlay.LT.ReadValue<float>();
-        float rt = _controls.GamePlay.RT.ReadValue<float>();
-        bool wantsDefense = lt >= triggerThreshold && rt >= triggerThreshold;
+        // Mantener B (clic derecho en teclado y ratón). Antes era LT+RT, que ahora es el trío (INC-491).
+        bool wantsDefense = GamepadInputReader.AttackMagicRightHeld;
 
         bool hasMana = _manaPool == null || manaPerSecond <= 0f || _manaPool.Current > 0f;
         bool isAllowed = _playerActionManager == null || _playerActionManager.AllowShield;
@@ -137,11 +326,6 @@ public class PlayerShieldController : MonoBehaviour
             StartDefending();
         else
             StopDefending();
-    }
-
-    private void OnTriggerChanged(InputAction.CallbackContext _)
-    {
-        EvaluateDefenseState();
     }
 
     private void StartDefending()
@@ -180,7 +364,7 @@ public class PlayerShieldController : MonoBehaviour
     {
         if (shieldPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerShieldController] shieldPrefab no asignado, no se puede instanciar el escudo.");
 #endif
             return;
@@ -258,7 +442,7 @@ public class PlayerShieldController : MonoBehaviour
                 _blockedLayers.Add(layer);
             else
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerShieldController] No se encontró la capa '{name}'.");
                 #endif
             }
@@ -379,3 +563,4 @@ public class PlayerShieldController : MonoBehaviour
     // Componente público y ligero para identificar el escudo en colisiones externas
     public class ShieldMarker : MonoBehaviour {}
 }
+

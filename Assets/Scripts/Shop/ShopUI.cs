@@ -292,7 +292,7 @@ public class ShopUI : MonoBehaviour
         // Ask central MenuManager for permission
         if (!MenuManager.TryOpen(MenuKind.Shop))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[ShopUI] Apertura denegada por MenuManager");
 #endif
             return;
@@ -314,7 +314,7 @@ public class ShopUI : MonoBehaviour
         
         if (shopController == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[ShopUI] No se encontró ShopController en este GameObject ni en sus hijos.");
 #endif
         }
@@ -346,7 +346,7 @@ public class ShopUI : MonoBehaviour
         // Pero permitir navegación UI (D-Pad, joystick, submit, cancel)
         GamepadInputReader.PushGameplaySuppression(this);
         GamepadInputReader.PushUiNavigationScope();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ShopUI] Gameplay suprimido - Solo inputs UI permitidos");
 #endif
     }
@@ -386,7 +386,7 @@ public class ShopUI : MonoBehaviour
         // Restaurar los inputs de gameplay después del retraso
         GamepadInputReader.PopUiNavigationScope();
         GamepadInputReader.PopGameplaySuppression(this);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ShopUI] Gameplay restaurado - Inputs de gameplay desbloqueados (con retraso)");
 #endif
     }
@@ -444,7 +444,7 @@ public class ShopUI : MonoBehaviour
     {
         if (shopController == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[ShopUI] RebuildItemList: shopController es NULL");
 #endif
             return;
@@ -452,7 +452,7 @@ public class ShopUI : MonoBehaviour
 
         if (itemCardPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[ShopUI] RebuildItemList: itemCardPrefab es NULL");
 #endif
             return;
@@ -460,13 +460,13 @@ public class ShopUI : MonoBehaviour
 
         if (itemListContainer == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[ShopUI] RebuildItemList: itemListContainer es NULL");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // PERF (revisión rendimiento 24/08): RebuildItemList() se llama tras cada compra/venta, no
         // solo al abrir la tienda — este log no aporta nada en build final.
         Debug.Log($"[ShopUI] RebuildItemList: Stock tiene {shopController.Stock.Count} items");
@@ -480,7 +480,7 @@ public class ShopUI : MonoBehaviour
             var entry = shopController.Stock[i];
             if (entry == null || entry.item == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ShopUI] Item en índice {i} es null o no tiene ItemData");
 #endif
                 continue;
@@ -507,7 +507,7 @@ public class ShopUI : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[ShopUI] itemCardPrefab no tiene componente ShopItemCard");
 #endif
             }
@@ -527,7 +527,7 @@ public class ShopUI : MonoBehaviour
         for (int i = usedChildren; i < itemListContainer.childCount; i++)
             itemListContainer.GetChild(i).gameObject.SetActive(false);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ShopUI] {_itemCards.Count} cards activas (pool total: {itemListContainer.childCount})");
 #endif
     }

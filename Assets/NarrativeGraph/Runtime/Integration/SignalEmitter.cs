@@ -82,7 +82,7 @@ public class SignalEmitter : MonoBehaviour
         else if (trigger == TriggerType.OnEnemyDied)
             _damageable = GetComponent<Damageable>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (trigger == TriggerType.OnInteract && _interactable == null)
             Debug.LogWarning($"[SignalEmitter:{name}] trigger=OnInteract pero no hay Interactable en este GameObject.");
         if (trigger == TriggerType.OnEnemyDied && _damageable == null)
@@ -156,7 +156,7 @@ public class SignalEmitter : MonoBehaviour
                 if (d <= dReferencia - 2f || d >= radioDeProximidad * 2.5f)
                 {
                     armado = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[SignalEmitter:{name}] Armado a {d:F1} m (empezó a {dReferencia:F1} m): " +
                               $"a partir de ahora, acercarse a {radioDeProximidad:F1} m emite '{eventKey}'.");
 #endif
@@ -203,7 +203,7 @@ public class SignalEmitter : MonoBehaviour
 
         if (_signals == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SignalEmitter:{name}] No hay DefaultNarrativeSignals tras esperar.");
 #endif
             yield break;
@@ -223,7 +223,7 @@ public class SignalEmitter : MonoBehaviour
     {
         if (string.IsNullOrEmpty(eventKey))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SignalEmitter:{name}] eventKey vacío — no se emite nada.");
 #endif
             return;
@@ -233,7 +233,7 @@ public class SignalEmitter : MonoBehaviour
         if (_signals == null) ResolveSignals();
         if (_signals == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SignalEmitter:{name}] No hay DefaultNarrativeSignals.");
 #endif
             return;
@@ -242,7 +242,7 @@ public class SignalEmitter : MonoBehaviour
         if (!string.IsNullOrWhiteSpace(soloConLaMision)
             && _signals.GetQuestState(soloConLaMision) != NarrativeQuestState.Active)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (debugLogs)
                 Debug.Log($"[SignalEmitter:{name}] Ignorado: '{soloConLaMision}' no está activa.");
 #endif
@@ -251,7 +251,7 @@ public class SignalEmitter : MonoBehaviour
 
         if (onlyIfListening && !_signals.HasCustomListener(eventKey))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (debugLogs)
                 Debug.Log($"[SignalEmitter:{name}] Ignorado: nadie espera '{eventKey}' todavía.");
 #endif
@@ -260,7 +260,7 @@ public class SignalEmitter : MonoBehaviour
 
         _used = true;
         _signals.RaiseCustom(eventKey, name);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLogs)
             Debug.Log($"[SignalEmitter:{name}] Emite '{eventKey}' (trigger={trigger}).");
 #endif

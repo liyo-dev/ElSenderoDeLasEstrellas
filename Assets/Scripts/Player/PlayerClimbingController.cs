@@ -152,7 +152,7 @@ public class PlayerClimbingController : MonoBehaviour
             {
                 if (debugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[PlayerClimbingController] Climb bloqueado por ActionManager");
                     #endif
                 }
@@ -162,7 +162,7 @@ public class PlayerClimbingController : MonoBehaviour
             {
                 if (debugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[PlayerClimbingController] Climb bloqueado por modo Swimming/Flying");
                     #endif
                 }
@@ -279,7 +279,7 @@ public class PlayerClimbingController : MonoBehaviour
 
         if (debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerClimbingController] Enter Climb");
             #endif
         }
@@ -350,7 +350,7 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (debugLogs && _lastMissingStateWarn != "_layer")
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerClimbingController] Layer de escalada inválido (" + climbAnimatorLayer + ")");
 #endif
                 _lastMissingStateWarn = "_layer";
@@ -370,7 +370,7 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (debugLogs && _lastMissingStateWarn != targetState)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerClimbingController] Estado de animación no encontrado: " + targetState + " en capa " + climbAnimatorLayer);
 #endif
                 _lastMissingStateWarn = targetState;
@@ -422,7 +422,7 @@ public class PlayerClimbingController : MonoBehaviour
 
         if (debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerClimbingController] Exit Climb");
             #endif
         }
@@ -446,15 +446,6 @@ public class PlayerClimbingController : MonoBehaviour
         {
             if (_actionManager != null)
                 _actionManager.SetInteractCooldown();
-        }
-        catch { }
-
-        // Además pedir al controlador de vuelo que cancele cualquier arming/pending
-        // para evitar que un doble-press previo active vuelo por estar armado.
-        try
-        {
-            var fly = GetComponent<PlayerFlyingController>();
-            if (fly != null) fly.CancelFlightArming();
         }
         catch { }
 

@@ -165,7 +165,7 @@ public class LiamGolemSummonSequencer : CinematicSequencerBase
 
         if ((_liamTransform.position - _liamDesignPosition).sqrMagnitude > 0.0001f)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LiamGolemSummonSequencer] Liam se había desplazado de su posición diseñada " +
                 $"({_liamTransform.position} → objetivo {_liamDesignPosition}), probablemente por corrección " +
                 $"automática del NavMeshAgent al activarse. Restaurando.");

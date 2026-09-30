@@ -202,7 +202,7 @@ public static class NavMeshAutoSetup
     {
         int ajustados = 0, sinCollider = 0;
         var escenas = new HashSet<UnityEngine.SceneManagement.Scene>();
-        foreach (var o in Object.FindObjectsByType<NavMeshObstacle>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        foreach (var o in Object.FindObjectsByType<NavMeshObstacle>(FindObjectsInactive.Include))
         {
             // Las cajas por apoyo de una pasada anterior las rehace (o las borra) su padre dentro
             // de este mismo bucle: pueden estar ya destruidas cuando llega su turno.

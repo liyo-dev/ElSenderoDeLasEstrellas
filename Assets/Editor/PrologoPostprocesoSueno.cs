@@ -132,8 +132,7 @@ public static class PrologoPostprocesoSueno
 
     private static VolumeComponent AnadirPorNombre(VolumeProfile p, string tipo)
     {
-        Type t = AppDomain.CurrentDomain.GetAssemblies()
-            .Select(a => a.GetType(tipo, false)).FirstOrDefault(x => x != null);
+        Type t = TypeCache.GetTypesDerivedFrom<VolumeComponent>().FirstOrDefault(x => x.FullName == tipo);
         if (t == null)
         {
             Debug.LogWarning($"[Sueño] No encuentro el efecto de Quibli '{tipo}': ¿está Quibli importado? Sigo sin él.");

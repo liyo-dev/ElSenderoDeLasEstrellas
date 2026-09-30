@@ -14339,6 +14339,8 @@ GameObject:
   - component: {fileID: 4060681882113047802}
   - component: {fileID: 1114897567811555624}
   - component: {fileID: 3016803284781558853}
+  - component: {fileID: 4618817870680840545}
+  - component: {fileID: 4580961354317073218}
   m_Layer: 8
   m_Name: _ESTELA
   m_TagString: Estela
@@ -14599,10 +14601,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -14712,6 +14710,7 @@ MonoBehaviour:
   showAfterStep: -1
   icon: {fileID: 21300000, guid: 5fff0fe396af4674595e4938a11bd7a3, type: 3}
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  iconoSobreLaCabeza: {fileID: 0}
 --- !u!114 &1114897567811555624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14768,6 +14767,34 @@ MonoBehaviour:
   checkInterval: 0.15
   avoidWeight: 1.1
   steerLerp: 8
+  maxContinuousAvoidSeconds: 1.5
+--- !u!114 &4618817870680840545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741617104233437454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af826a5d9c0a194da4966500093c23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Personaje
+  ficha: {fileID: 11400000, guid: 52ed0bc224c5ce44fac4357797afa287, type: 2}
+--- !u!114 &4580961354317073218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6741617104233437454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68ad396c2e154746b2e37734a4dbf7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SenueloDeCombate
+  vfxProvocando: {fileID: 0}
+  offsetVfx: {x: 0, y: 1, z: 0}
 --- !u!1 &6762110793360784662
 GameObject:
   m_ObjectHideFlags: 0

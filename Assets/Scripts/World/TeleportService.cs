@@ -24,7 +24,7 @@ public class TeleportService : MonoBehaviour
             }
             
             // Si no está registrado, advertir
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportService] No se encontró instancia registrada en ServiceLocator.");
 #endif
             return null;
@@ -57,7 +57,7 @@ public class TeleportService : MonoBehaviour
             try { ((System.Action)d).Invoke(); }
             catch (System.Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[TeleportService] Excepción en suscriptor de {eventName}: {ex.Message}\n{ex.StackTrace}");
 #endif
             }
@@ -156,7 +156,7 @@ public class TeleportService : MonoBehaviour
         }
         if (!sa)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TeleportService] Anchor '{anchorId}' no encontrado.");
 #endif
             InvokeEvent(OnTeleportEnded, nameof(OnTeleportEnded));
@@ -173,7 +173,7 @@ public class TeleportService : MonoBehaviour
         {
             // FIX C3: mismo motivo que arriba — no dejar colgado a quien espera OnTeleportEnded.
             InvokeEvent(OnTeleportEnded, nameof(OnTeleportEnded));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportService] Parámetros nulos en TeleportToAnchor.");
 #endif
             return;
@@ -222,25 +222,25 @@ public class TeleportService : MonoBehaviour
         {
             if (_sTransitionInProgress)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TeleportService] Una transición ya está en curso (local). Se hace teletransporte inmediato para evitar el error del plugin.");
                 #endif
             }
             else if (pluginBusy)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TeleportService] TransitionManager está ocupado con otra transición. Teletransporte inmediato.");
                 #endif
             }
             else if (teleportTransition == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TeleportService] No hay TransitionSettings asignado. Se hace teletransporte inmediato.");
                 #endif
             }
             else if (tm == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TeleportService] No se encontró TransitionManager. Se hace teletransporte inmediato.");
                 #endif
             }
@@ -264,14 +264,14 @@ public class TeleportService : MonoBehaviour
 
         if (_sTransitionInProgress)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportService] Se intentó iniciar una transición mientras otra sigue activa. Ejecutando teletransporte inmediato.");
 #endif
             MoveNow(player, worldPos, worldRot, anchorForEnv);
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportService] Transition OK → Settings='{teleportTransition.name}', Delay={transitionDelay:0.00}, Manager='{tm.name}'");
 #endif
 
@@ -352,7 +352,7 @@ public class TeleportService : MonoBehaviour
 
         if (!_sTransitionInProgress) yield break; // terminó con normalidad, nada que hacer
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[TeleportService] Watchdog: la transición no terminó tras {timeout:0.0}s " +
                           "(probable interrupción por carga/descarga aditiva de escena a mitad de la " +
                           "transición). Forzando reset y liberando al jugador.");

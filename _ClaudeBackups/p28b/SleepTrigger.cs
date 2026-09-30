@@ -1,0 +1,595 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using Core;
+using System.Collections;
+using Invector.vCharacterController;
+using Sendero.Core.Feedback;
+
+// Después de las cámaras (INC-426): mientras Will duerme, el plano lo pone este LateUpdate.
+[DefaultExecutionOrder(500)]
+public class SleepTrigger : MonoBehaviour
+{
+    [Header("Referencia al jugador")]
+    public GameObject player;
+    [Header("Nombre del estado de animación de dormir")]
+    public string sleepAnimationState = "Sleeping_NoWeapon";
+    [Header("Anchor de posición en la cama")]
+    public Transform bedPosition;
+
+    [Header("Cámara cenital")]
+    [Tooltip("Posición y rotación que adoptará la cámara mientras duerme. Déjalo vacío para no mover la cámara.")]
+    public Transform sleepCameraAnchor;
+    [Tooltip("Velocidad de transición de la cámara al dormir/despertar.")]
+    public float cameraTransitionSpeed = 2f;
+
+    [Header("Expresión facial")]
+    [Tooltip("Expresión de la cara mientras duerme. None mantiene la expresión actual.")]
+    public NPCEmotion sleepEmotion = NPCEmotion.Tired;
+
+    [Header("Despertar")]
+    [Tooltip("Posición en el suelo donde Will se coloca al despertar (pie de la cama). Sin esto, permanece en bedPosition.")]
+    public Transform wakeUpPosition;
+    [Tooltip("Rotación de referencia para la cámara al despertar (solo se usa euler.y → horizontal, euler.x → vertical). Evita que la cámara aparezca detrás de una pared.")]
+    public Transform wakeUpCameraAnchor;
+
+    [Header("Narrativa")]
+    [Tooltip("Si true, Will empieza dormido en esta cama al arrancar la escena sin necesidad de entrar al trigger.")]
+    public bool sleepOnStart = false;
+    [Tooltip("Evento que se dispara al despertar. Compatible con WaitCustomEventNode.")]
+    [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
+    public string wakeNarrativeEvent = "";
+
+    [Header("Uso único")]
+    [Tooltip("Si true, este trigger solo puede activarse una vez. El flag se guarda en el preset.")]
+    public bool playOnlyOnce = false;
+    [Tooltip("ID único para recordar si este trigger ya se ejecutó (requerido con playOnlyOnce).")]
+    public string persistenceId = "";
+
+    private bool isSleeping = false;
+    private float _sleepStartTime = -999f;
+    private int _sleepStateHash = -1;
+
+    private Animator playerAnimator;
+    private PlayerActionManager playerActionManager;
+    private NPCEmotionController _playerEmotion;
+
+    private vThirdPersonInput _playerInput;
+
+    private vThirdPersonCamera _tpsCamera;
+    private Camera _mainCamera;
+    private bool _wasCameraLocked;
+    private Coroutine _cameraCoroutine;
+
+    void OnEnable()
+    {
+        GamepadInputReader.EnsureInputEventsSubscribed();
+        GamepadInputReader.OnInput += HandleGamepadInput;
+    }
+
+    void OnDisable()
+    {
+        GamepadInputReader.OnInput -= HandleGamepadInput;
+    }
+
+    void Start()
+    {
+        if (!sleepOnStart) return;
+        if (playOnlyOnce && AlreadyPlayed()) return;
+        StartCoroutine(ForceSleepNextFrame());
+    }
+
+    void LateUpdate()
+    {
+        if (!isSleeping) return;
+
+        if (bedPosition != null && player != null)
+        {
+            player.transform.position = bedPosition.position;
+            player.transform.rotation = bedPosition.rotation;
+        }
+
+        // FIX (18 sep 2026): mientras Will duerme (sleepOnStart, p. ej. el anchor 'Bedroom'), este
+        // LateUpdate clavaba la cámara en sleepCameraAnchor CADA FRAME sin saber si algún sistema
+        // cinemático (CinematicCameraDriver vía CameraDirectorService, p. ej. SEQ_Prologo_UltimaNoche)
+        // tenía la cámara reclamada para sus propios planos — el mismo tipo de choque entre dos
+        // sistemas de cámara que no se conocen que motivó crear CameraDirectorService. Resultado real:
+        // la cinemática del prólogo calculaba y aplicaba bien sus planos (el panadero, el horno...),
+        // pero este trigger los pisaba el mismo frame o el siguiente, así que en pantalla nunca se
+        // veía nada más que a Will dormido. isSleeping sigue en true durante toda la cinemática a
+        // propósito (WakeUp() se ignora mientras CinematicSequencerBase.AnySequenceActive, ver
+        // HandleGamepadInput/INC-084) — así que sin este guard no había forma de que la cinemática
+        // ganara la cámara ni un solo frame. Cede el control mientras alguien la tenga reclamada;
+        // en cuanto se libera (fin de la cinemática, con su margen de gracia), este trigger retoma
+        // el plano cenital como antes.
+        // Si mientras dormía ha pasado una secuencia (el sueño del prólogo), al acabar es cuando
+        // se despierta de verdad: ahí empieza la tormenta que todavía se oye.
+        bool hayCinematica = CameraDirectorService.HasOwner || CinematicSequencerBase.AnySequenceActive;
+        if (hayCinematica) _vioUnaSecuencia = true;
+        else if (_vioUnaSecuencia && sleepOnStart) EmpezarTormentaSiToca();
+
+        if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null
+            && !CameraDirectorService.HasOwner)
+        {
+            // Al acabar el prólogo algo vuelve a encender la cámara de juego, y su LateUpdate y
+            // este se pisarían el plano fotograma a fotograma.
+            if (_tpsCamera != null && _tpsCamera.enabled) _tpsCamera.enabled = false;
+            _mainCamera.transform.position = sleepCameraAnchor.position;
+            _mainCamera.transform.rotation = sleepCameraAnchor.rotation;
+        }
+
+        // Igual que PlayerAmbientActivityHandler.LateUpdate(): el motor corre con lockMovement=true,
+        // pero con el CC desactivado podría registrar isGrounded=false → animación de caída.
+        if (playerAnimator != null)
+        {
+            try { playerAnimator.SetBool(vAnimatorParameters.IsGrounded, true); } catch { }
+            try { playerAnimator.SetFloat(vAnimatorParameters.GroundDistance, 0f); } catch { }
+
+            // FIX (12 sep 2026): "Will sigue de pie en la cama" — reportado con sleepOnStart (Will
+            // ya duerme al cargar la escena, antes de que arranque el sueño del prólogo) y, a
+            // diferencia del bug del 15 ago (Animator sin el estado — eso ya deja su propio
+            // Debug.LogError si vuelve a pasar), esta vez SetupSleep() sí consigue reproducir
+            // 'sleepAnimationState' sin error. Hipótesis de Raúl: "es por temas de tiempos" — y
+            // encaja con el propio comentario de más abajo en SetupSleep() sobre WorldBootstrap
+            // pudiendo aplicar la apariencia del personaje activo DESPUÉS del Play() de aquí (mismo
+            // orden de ejecución que ya causó el bug de "cae encima de la cama" con IsGrounded, ver
+            // el FIX del 15 ago un poco más arriba en este archivo): un Rebind/reasignación de
+            // Animator Controller en ese punto devuelve al Animator a su estado de entrada por
+            // defecto (de pie), pisando el Play() que ya se había hecho. playerAnimator.Play() es
+            // un one-shot, no algo que se reafirme solo — así que, igual que ya hacemos con
+            // IsGrounded arriba, se vigila aquí CADA FRAME mientras isSleeping siga activo y se
+            // fuerza de vuelta si algo externo lo saca del estado de dormir.
+            if (_sleepStateHash != -1)
+            {
+                var stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+                if (stateInfo.shortNameHash != _sleepStateHash && !playerAnimator.IsInTransition(0))
+                {
+                    playerAnimator.Play(_sleepStateHash, 0, 0f);
+                }
+            }
+        }
+    }
+
+    IEnumerator ForceSleepNextFrame()
+    {
+        // FIX (11 sep 2026): "Will sigue sin salir acostado" — antes esto esperaba UN solo frame e
+        // intentaba resolver al jugador UNA sola vez ('player' o PlayerService.Player); si en ese
+        // frame el jugador todavía no estaba listo (p. ej. WorldBootstrap sigue cargando la escena
+        // aditiva de esta habitación y/o esperando a que el jugador exista antes de teletransportarlo
+        // — puede tardar varios frames), fallaba en silencio y Will nunca se dormía. Ahora reintenta
+        // con un timeout, sondeando solo PlayerService.Player (referencia ya cacheada, sin
+        // FindObjectOfType ni GameObject.Find — ver AGENTS.md § 2).
+        const float maxWait = 5f;
+        float elapsed = 0f;
+        GameObject playerGO = null;
+
+        while (elapsed < maxWait)
+        {
+            playerGO = player != null ? player : PlayerService.Player;
+            if (playerGO != null) break;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        if (playerGO != null)
+        {
+            ForceSleep(playerGO);
+        }
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        else
+        {
+            Debug.LogError($"[SleepTrigger] '{name}': sleepOnStart=true pero no se pudo resolver el " +
+                $"jugador tras {maxWait:F0}s (ni 'player' ni PlayerService.Player). Will no se ha " +
+                $"dormido al arrancar la escena.", this);
+        }
+#endif
+    }
+
+    /// <summary>Pone a Will a dormir desde código (ej: llamado por el grafo narrativo o sleepOnStart).</summary>
+    public void ForceSleep(GameObject playerGO)
+    {
+        player = playerGO;
+        SetupSleep(playerGO);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (!gameObject.activeInHierarchy) return;
+        if (isSleeping) return;
+        if (!other.CompareTag("Player")) return;
+        if (playOnlyOnce && AlreadyPlayed()) return;
+
+        // FIX (15 ago 2026, prioridad demo): "Will cayendo/de pie en vez de dormido" — causa real
+        // confirmada con el diagnóstico de esta misma sesión (log: "CC[sin CharacterController]").
+        // El fallback a other.gameObject cuando GetComponentInParent<CharacterController>() no
+        // encontraba nada operaba sobre el GameObject del propio collider del trigger — casi nunca
+        // la raíz real del jugador — así que todo lo que hacía SetupSleep()/WakeUp() (teleport,
+        // Play() de la animación, PushMode) se aplicaba a un objeto que nadie ve, mientras el Will
+        // real seguía bajo el control normal de Invector (por eso "cae": su gravedad de siempre
+        // seguía activa). PlayerService.Player es la misma referencia central que ya usa
+        // ForceSleepNextFrame() más abajo en este archivo — se prioriza aquí también en vez de
+        // fiarse de un fallback silencioso.
+        var playerGO = PlayerService.Player != null
+            ? PlayerService.Player
+            : other.GetComponentInParent<CharacterController>()?.gameObject;
+
+        if (playerGO == null)
+        {
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogError($"[SleepTrigger] '{name}': no se pudo resolver el GameObject real del " +
+                $"jugador (ni PlayerService.Player ni CharacterController en los padres de " +
+                $"'{other.name}'). Abortando para no operar sobre el objeto equivocado.", this);
+            #endif
+            return;
+        }
+
+        player = playerGO;
+        SetupSleep(playerGO);
+    }
+
+    void SetupSleep(GameObject playerGO)
+    {
+        // FIX: en el rig del jugador (Invector) el Animator vive en un hijo ("model"), no en la
+        // raíz — igual que _playerEmotion ya resolvía con GetComponentInChildren. Con
+        // GetComponent() (solo raíz) esto devolvía null en el rig real, así que
+        // `playerAnimator.Play(sleepAnimationState)` de abajo nunca llegaba a ejecutarse (el guard
+        // `if (playerAnimator != null)` lo saltaba en silencio) y Will se quedaba en la pose en la
+        // que estuviera (de pie) en vez de tumbarse. Antes esto quedaba tapado por el bug de AABB de
+        // culling ya corregido (el personaje se veía "flotando/roto" de cualquier forma); al arreglar
+        // ese bug quedó a la vista que la animación de dormir tampoco se estaba aplicando nunca.
+        playerAnimator      = playerGO.GetComponentInChildren<Animator>(true);
+        playerActionManager = playerGO.GetComponent<PlayerActionManager>();
+        _playerEmotion      = playerGO.GetComponentInChildren<NPCEmotionController>();
+        _playerInput         = playerGO.GetComponent<vThirdPersonInput>();
+
+        // PushMode PRIMERO: PlayerLockService capturará CC=true y lockMovement=false como estado previo,
+        // y los bloqueará. Si hacemos push después de bloquearlos manualmente, capturaría el estado
+        // ya bloqueado y al despertar los "restauraría" en estado bloqueado.
+        playerActionManager?.PushMode(ActionMode.Cinematic);
+
+        // FIX (15 ago 2026): "se acuesta y enseguida se pone con la animación de caer" — causa real,
+        // no la del intento anterior (el LateUpdate de más abajo forzando IsGrounded=true, que se
+        // quedó corto). vThirdPersonInput.Update() llama cada frame a cc.UpdateMotor()/UpdateAnimator(),
+        // que reescribe el parámetro IsGrounded del Animator con el resultado del ground-check propio
+        // de Invector — falso, porque PlayerLockService ya desactivó el CharacterController al hacer
+        // PushMode de arriba. Unity evalúa las transiciones del Animator justo después de Update() y
+        // ANTES de LateUpdate(): por eso corregir IsGrounded=true en LateUpdate() (más abajo en este
+        // mismo archivo) siempre llega un paso tarde — la transición hacia el estado de caída ya se
+        // disparó ESE MISMO FRAME con el valor falso que Invector acaba de escribir en Update(). Único
+        // arreglo real: que Invector deje de escribir el parámetro mientras se duerme. Desactivar el
+        // componente entero detiene su Update() (y con él ese push erróneo); se reactiva en WakeUp().
+        if (_playerInput != null) _playerInput.enabled = false;
+
+        // Snap a la posición de cama (CC ya desactivado por PlayerLockService vía PushMode)
+        if (bedPosition != null)
+        {
+            playerGO.transform.position = bedPosition.position;
+            playerGO.transform.rotation = bedPosition.rotation;
+        }
+
+        // FIX (15 ago 2026, prioridad demo): "Will sale de pie en vez de dormido" — Play() con un
+        // string NO avisa si ese estado no existe en el controller actualmente activo, se queda
+        // callado y sin hacer nada (por eso no salía ninguna excepción en los logs). Encontrado por
+        // datos, no adivinado: el clip "Sleeping_NoWeapon" solo existe en
+        // NoWeaponStanceExtraAnim.controller — NoWeaponStance.controller (el otro candidato "sin
+        // arma") no lo tiene. Si el Animator activo de Will está usando el controller que no tiene
+        // el estado, esto es la causa exacta. HasState() lo confirma en el acto la próxima vez que
+        // se pruebe, con el nombre real del controller puesto — no hace falta adivinar más.
+        if (playerAnimator != null)
+        {
+            _sleepStateHash = Animator.StringToHash(sleepAnimationState);
+            if (!playerAnimator.HasState(0, _sleepStateHash))
+            {
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogError($"[SleepTrigger] El Animator Controller activo en '{playerGO.name}' " +
+                    $"('{playerAnimator.runtimeAnimatorController?.name ?? "ninguno"}') NO tiene un " +
+                    $"estado llamado '{sleepAnimationState}' en el layer 0 — por eso Will se queda de " +
+                    $"pie en vez de tumbarse. El clip existe en NoWeaponStanceExtraAnim.controller; " +
+                    $"revisa si es ese el controller que debería estar asignado aquí.", playerGO);
+                #endif
+                // Sin estado en el controller no hay nada que reafirmar en LateUpdate() — desactiva
+                // el guard de más abajo para no gastar GetCurrentAnimatorStateInfo() cada frame en vano.
+                _sleepStateHash = -1;
+            }
+            playerAnimator.Play(_sleepStateHash != -1 ? _sleepStateHash : Animator.StringToHash(sleepAnimationState));
+        }
+
+        if (sleepEmotion != NPCEmotion.None)
+            _playerEmotion?.SetEmotion(sleepEmotion);
+
+        // FIX "personaje flotando/desencajado en la cama" (bug reportado en el prólogo — Estela/
+        // Will apareciendo flotando sobre la cama en vez de Will dormido normalmente): mismo AABB
+        // de culling atascado que documenta ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange.
+        // Aquí el teleport a bedPosition + el Play() forzado de la animación de dormir cambian de
+        // golpe la posición Y la pose del rig, justo después de que WorldBootstrap haya podido
+        // aplicar la apariencia del personaje activo — sin este refresco, el bounds de culling de
+        // cada SkinnedMeshRenderer puede quedarse calculado con la pose/posición ANTERIOR hasta que
+        // algo más lo fuerce, dando la sensación de que el personaje "vuela" sobre la cama.
+        RefreshPlayerRendererBounds(playerGO);
+
+        MoveCameraToSleepAnchor();
+
+        _sleepStartTime = Time.time;
+        isSleeping = true;
+
+    }
+
+    /// <summary>
+    /// Fuerza el recálculo del AABB de culling de cada SkinnedMeshRenderer del rig del jugador —
+    /// mismo patrón que ModularAutoBuilder.RefreshRendererBoundsAfterAppearanceChange() y los otros
+    /// call sites documentados en ActiveCharacterSwapper. Se llama tras cualquier teleport+cambio
+    /// de pose brusco de este trigger (SetupSleep/WakeUp) para evitar que el personaje se vea
+    /// "flotando" un instante hasta que algo más refresque sus bounds.
+    /// </summary>
+    private static void RefreshPlayerRendererBounds(GameObject playerGO)
+    {
+        if (playerGO == null) return;
+        var animator = playerGO.GetComponentInChildren<Animator>(true);
+        if (animator != null) animator.Update(0f);
+
+        foreach (var smr in playerGO.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+        {
+            if (!smr.updateWhenOffscreen) smr.updateWhenOffscreen = true;
+            if (smr.gameObject.activeInHierarchy) _ = smr.bounds;
+        }
+    }
+
+    void WakeUp()
+    {
+        if (!isSleeping) return;
+        isSleeping = false;
+        TerminarTormenta();
+
+        // Forzar ángulo de cámara antes de re-habilitarla (evita que aparezca detrás de la pared)
+        if (wakeUpCameraAnchor != null && _tpsCamera != null)
+        {
+            var a = wakeUpCameraAnchor.eulerAngles;
+            _tpsCamera.SetAngles(a.y, a.x);
+        }
+        RestoreCamera();
+
+        // Teleportar al suelo (CC todavía desactivado — PlayerLockService lo gestiona)
+        if (wakeUpPosition != null)
+        {
+            player.transform.position = wakeUpPosition.position;
+            player.transform.rotation = wakeUpPosition.rotation;
+        }
+
+        // Mismo fix que en SetupSleep(): otro teleport brusco del rig, misma necesidad de refrescar
+        // el bounds de culling después.
+        RefreshPlayerRendererBounds(player);
+
+        _playerEmotion?.ForceReset();
+
+        // PopMode → PlayerLockService.Release → ReleaseHardLock:
+        // restaura CC=true, lockMovement=false, SuppressMoveInput=false, PopUIMode, IgnoreJumpButton
+        playerActionManager?.PopMode(ActionMode.Cinematic);
+
+        // Reactivar vThirdPersonInput (desactivado en SetupSleep) DESPUÉS de que PopMode ya haya
+        // restaurado el CharacterController — así su primer Update() con ground-check real encuentra
+        // el CC ya activo, en vez de un frame intermedio con el CC todavía desactivado.
+        if (_playerInput != null) _playerInput.enabled = true;
+
+        // El motor corre con lockMovement=false → CrossFade funciona correctamente
+        if (playerAnimator != null)
+            playerAnimator.CrossFadeInFixedTime("Free Locomotion", 0.2f, 0);
+
+        TutorialPromptUI.Instance?.Hide();
+
+        if (!string.IsNullOrEmpty(wakeNarrativeEvent))
+            DefaultNarrativeSignals.Instance?.RaiseCustom(wakeNarrativeEvent, name);
+
+        if (playOnlyOnce)
+            MarkAsPlayed();
+    }
+
+    void HandleGamepadInput(GamepadInputReader.InputEvent input)
+    {
+        if (!isSleeping) return;
+        if (input.Phase != InputActionPhase.Performed) return;
+        // Aceptar Interact (GamePlay map) y Submit (fallback hardware que siempre emite aunque
+        // GamePlay esté deshabilitado, p.ej. en modo Cinematic).
+        bool isWakeInput = input.Type == GamepadInputReader.InputEventType.Interact
+                        || input.Type == GamepadInputReader.InputEventType.Submit;
+        if (!isWakeInput) return;
+
+        // FIX (24 ago 2026, INC-084): "Will se levanta de la cama al saltar una secuencia del
+        // Prólogo" — Submit se diseñó a propósito para llegar siempre aquí, incluso en modo
+        // Cinematic (ver comentario de arriba), precisamente para poder despertar a Will con un
+        // botón. Pero HoldToSkipUI (el botón global de "mantener para saltar") usa ese MISMO
+        // InputAction (Controls.UI.Submit) como hold — y GamepadInputReader emite el evento Submit
+        // ya en el primer frame de pulsación (performed), no al completar el hold. Resultado: en
+        // cuanto el jugador empieza a mantener pulsado para saltar cualquier secuencia que ocurra
+        // mientras Will sigue dormido (p. ej. el sueño del Prólogo, PrologueDreamSequencer, que se
+        // reproduce con Will ya en la cama), este listener recibía ese mismo Submit como "orden de
+        // despertar" y sacaba a Will de la cama al instante — sin esperar a que la propia secuencia
+        // terminase ni a que empezara de verdad la escena de despertar. Ignorar el input de
+        // despertar mientras haya cualquier cinemática/secuencia narrativa activa o saltable evita
+        // el falso positivo sin afectar al resto de usos de SleepTrigger: fuera de una secuencia
+        // activa (p. ej. una cama normal explorando el mundo) despertar por input sigue funcionando
+        // exactamente igual que antes.
+        if (CinematicSequencerBase.AnySequenceActive || NarrativeSkipHub.AnySkippable) return;
+
+        // Grace period: ignorar input del primer segundo para evitar despertar inmediato al cargar escena
+        if (Time.time - _sleepStartTime < 1f) return;
+
+        if (_levantandose) return;
+        _levantandose = true;
+        StartCoroutine(Co_Levantarse());
+    }
+
+    /// Un parpadeo en negro tapa el salto de tumbado (plano cenital) a de pie (cámara de juego).
+    private IEnumerator Co_Levantarse()
+    {
+        yield return FeedbackService.ScreenFadeAsync(Color.black, 0.15f, true);
+        WakeUp();
+        // La cámara de juego necesita unos fotogramas para colocarse detrás de él.
+        yield return null;
+        yield return null;
+        yield return new WaitForSecondsRealtime(0.25f);
+        yield return FeedbackService.ScreenFadeAsync(Color.black, 0.6f, false);
+        _levantandose = false;
+    }
+
+    // --- Uso único ---
+
+    private string FlagKey() => $"SLEEP_DONE:{persistenceId}";
+
+    private bool AlreadyPlayed()
+    {
+        if (string.IsNullOrEmpty(persistenceId))
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[SleepTrigger] '{name}' tiene playOnlyOnce=true pero persistenceId está vacío. El trigger no se desactivará.", this);
+#endif
+            return false;
+        }
+        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        return preset?.flags != null && preset.flags.Contains(FlagKey());
+    }
+
+    private void MarkAsPlayed()
+    {
+        if (string.IsNullOrEmpty(persistenceId)) return;
+        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        if (preset == null) return;
+        preset.flags ??= new System.Collections.Generic.List<string>();
+        if (!preset.flags.Contains(FlagKey()))
+            preset.flags.Add(FlagKey());
+    }
+
+    // --- Cámara ---
+
+    void InitCameraIfNeeded()
+    {
+        if (_tpsCamera != null) return;
+        _tpsCamera = ServiceLocator.Get<vThirdPersonCamera>(false);
+        if (_tpsCamera != null)
+            _mainCamera = _tpsCamera.GetComponent<Camera>();
+    }
+
+    void MoveCameraToSleepAnchor()
+    {
+        if (sleepCameraAnchor == null) return;
+        InitCameraIfNeeded();
+        if (_tpsCamera == null || _mainCamera == null) return;
+
+        _wasCameraLocked = _tpsCamera.lockCamera;
+        // Deshabilitar el componente completo detiene su LateUpdate, que de lo contrario
+        // sobreescribiría la posición de cámara que establece el coroutine cada frame.
+        _tpsCamera.enabled = false;
+
+        if (_cameraCoroutine != null) StopCoroutine(_cameraCoroutine);
+
+        // FIX INC-397 (24 sep 2026): el mismo choque que el del LateUpdate (18 sep), pero por la
+        // otra puerta. Con el prólogo, WillHouse se carga DESPUÉS de que la cinemática haya
+        // empezado y puesto su primer plano: este viaje de medio segundo cogía la cámara desde
+        // el cielo del valle y la dejaba clavada en el plano cenital de la cama. Mientras la
+        // secuencia usaba un travelling largo (que reescribe la cámara cada frame) no se notaba;
+        // con un corte seco se quedaba ahí hasta el plano siguiente — «lo de las nubes sale en la
+        // habitación de Will». Si alguien tiene la cámara reclamada, no se toca: el LateUpdate ya
+        // pone el plano de la cama en cuanto la suelte.
+        if (CameraDirectorService.HasOwner) return;
+
+        _cameraCoroutine = StartCoroutine(TransitionCamera(
+            _mainCamera.transform.position, _mainCamera.transform.rotation,
+            sleepCameraAnchor.position,     sleepCameraAnchor.rotation));
+    }
+
+    void RestoreCamera()
+    {
+        if (_tpsCamera == null) return;
+        _tpsCamera.lockCamera = _wasCameraLocked;
+        _tpsCamera.enabled = true;
+        if (_cameraCoroutine != null) { StopCoroutine(_cameraCoroutine); _cameraCoroutine = null; }
+    }
+
+    IEnumerator TransitionCamera(Vector3 fromPos, Quaternion fromRot, Vector3 toPos, Quaternion toRot)
+    {
+        float elapsed = 0f;
+        float duration = 1f / Mathf.Max(0.01f, cameraTransitionSpeed);
+
+        while (elapsed < duration)
+        {
+            // Si una cinemática reclama la cámara a mitad del viaje, se le deja (INC-397).
+            if (CameraDirectorService.HasOwner) { _cameraCoroutine = null; yield break; }
+
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+            _mainCamera.transform.position = Vector3.Lerp(fromPos, toPos, t);
+            _mainCamera.transform.rotation = Quaternion.Slerp(fromRot, toRot, t);
+            yield return null;
+        }
+
+        _mainCamera.transform.position = toPos;
+        _mainCamera.transform.rotation = toRot;
+        _cameraCoroutine = null;
+    }
+
+    // ── La tormenta del sueño al despertar ───────────────────────────────────────────────────
+    //
+    // Al acabar el prólogo la tormenta del sueño todavía se oye: lluvia contra la ventana, un
+    // relámpago con su trueno y otro más lejos. Al levantarse, la lluvia se apaga: era el sueño.
+    // El HUD no aparece hasta que Will está de pie.
+
+    private bool _vioUnaSecuencia;
+    private bool _tormentaEmpezada;
+    private bool _levantandose;
+    private bool _hudOcultado;
+    private Coroutine _tormenta;
+    private const string LoopLluviaDespertar = "Despertar_Lluvia";
+
+    private void EmpezarTormentaSiToca()
+    {
+        if (_tormentaEmpezada) return;
+        _tormentaEmpezada = true;
+        OcultarHud();
+        _tormenta = StartCoroutine(Co_TormentaAlDespertar());
+    }
+
+    private IEnumerator Co_TormentaAlDespertar()
+    {
+        var audio = AudioService.Instance;
+        audio?.PlayLoopingSFX(LoopLluviaDespertar, "rain", 0.22f);
+
+        // Los relámpagos, cuando ya se ve el cuarto: después de «Will, ¡despierta!» y su iris.
+        yield return null;
+        while (DramaticTextOverlayUI.Instance != null && DramaticTextOverlayUI.Instance.IsPlaying) yield return null;
+        OcultarHud();   // el overlay vuelve a enseñar el HUD al terminar
+
+        yield return new WaitForSecondsRealtime(1.2f);
+        Relampago(0.5f);
+        yield return new WaitForSecondsRealtime(0.08f);
+        Relampago(0.3f);
+        yield return new WaitForSecondsRealtime(0.9f);
+        audio?.PlaySFX("Prologo_Trueno", 0.8f);
+
+        yield return new WaitForSecondsRealtime(6.5f);
+        Relampago(0.25f);
+        yield return new WaitForSecondsRealtime(1.8f);
+        audio?.PlaySFX("Weather_Thunder", 0.6f);
+        _tormenta = null;
+    }
+
+    private static void Relampago(float fuerza)
+        => FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, fuerza), 0.14f);
+
+    private void OcultarHud()
+    {
+        if (!isSleeping || Sendero.UI.PlayerHUDV2.Instance == null) return;
+        Sendero.UI.PlayerHUDV2.Instance.HideHUD(0.05f);
+        _hudOcultado = true;
+    }
+
+    private void TerminarTormenta()
+    {
+        if (_tormenta != null) { StopCoroutine(_tormenta); _tormenta = null; }
+        if (_tormentaEmpezada) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 5f);
+        if (_hudOcultado && Sendero.UI.PlayerHUDV2.Instance != null) Sendero.UI.PlayerHUDV2.Instance.ShowHUD();
+        _hudOcultado = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (_tormentaEmpezada && isSleeping) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 1f);
+    }
+}

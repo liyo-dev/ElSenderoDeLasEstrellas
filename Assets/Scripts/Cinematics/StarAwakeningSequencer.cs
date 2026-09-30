@@ -23,10 +23,9 @@ public class StarAwakeningSequencer : CinematicSequencerBase
     [Header("Disparo de Will — sistema real del jugador")]
     [Tooltip("MagicProjectileSpawner del jugador; se llama en el último botón correcto del panic input")]
     [SerializeField] private MagicProjectileSpawner playerSpawner;
-    [Tooltip("Slot que se dispara (Right = botón principal de magia)")]
-    [SerializeField] private MagicSlot castSlot = MagicSlot.Right;
-    [Tooltip("Hechizo de reserva cinemático: se usa si el jugador no tiene nada equipado en ese slot " +
-             "o no ha desbloqueado la magia todavía. Nunca falla, ignora maná y cooldowns.")]
+    [Tooltip("Mano desde la que sale el hechizo de la cinemática.")]
+    [SerializeField] private CastHand castSlot = CastHand.Right;
+    [Tooltip("Hechizo que lanza Will en la cinemática. Ignora maná, enfriamientos y lo que tenga equipado.")]
     [SerializeField] private MagicSpellSO cinematicSpellFallback;
     [SerializeField] private string castAnimState      = "MagicRight";
     [SerializeField] private int    willUpperBodyLayer = 1;
@@ -163,7 +162,7 @@ public class StarAwakeningSequencer : CinematicSequencerBase
             var playerGO = GameObject.FindWithTag("Player");
             if (playerGO != null)
                 willTransform = playerGO.transform;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
                 Debug.LogWarning("[StarAwakeningSequencer] No se encontró ningún GO con tag 'Player'.");
 #endif
@@ -458,7 +457,7 @@ public class StarAwakeningSequencer : CinematicSequencerBase
         }
 
         GameObject fireball = playerSpawner?.SpawnForCinematic(
-            castSlot, cinematicSpellFallback, willCastOrigin, castDir);
+            cinematicSpellFallback, castSlot, willCastOrigin, castDir);
         _pendingFireball = fireball; // ver guard de Cleanup() por si el skip corta antes del Destroy() de más abajo
 
         if (fireball != null && fireball.TryGetComponent<Rigidbody>(out var fireballRb) && !fireballRb.isKinematic)

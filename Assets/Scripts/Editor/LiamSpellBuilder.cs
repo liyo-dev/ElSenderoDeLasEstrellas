@@ -142,7 +142,6 @@ public static class LiamSpellBuilder
         spell.forwardOffset     = 0.35f;
         spell.flattenDirection  = true;
         spell.manaCost          = 15f;
-        spell.cooldown          = 1.2f;
 
         spell.spawnVFX    = LoadByGuid<GameObject>(SpawnVfxGuid);
         spell.impactVFX   = LoadByGuid<GameObject>(ImpactVfxGuid);

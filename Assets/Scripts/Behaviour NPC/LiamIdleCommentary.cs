@@ -82,7 +82,7 @@ namespace Game.NPC
         private bool _timerArmed;
         private float _nextNudgeAllowedTime;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private float _nextDiagnosticLogTime;
 #endif
 
@@ -97,7 +97,7 @@ namespace Game.NPC
             _partyMember = GetComponent<NPCPartyMember>();
             _npcManager = GetComponent<NPCBehaviourManagerV2>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LiamIdleCommentary:{name}] Componente activo. partyMember={(_partyMember != null)}, npcManager={(_npcManager != null)}.");
 #endif
         }
@@ -154,7 +154,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam no está libre para reaccionar ahora mismo.");
                     #endif
                 }
@@ -164,7 +164,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[LiamIdleCommentary] Estela se sentó, pero Liam ya reaccionó hace poco (cooldown).");
                     #endif
                 }
@@ -174,7 +174,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[LiamIdleCommentary] Estela se sentó, pero esta vez Liam pasa de largo (tirada de dado).");
                     #endif
                 }
@@ -190,7 +190,7 @@ namespace Game.NPC
             string estelaLine = PickLine(estelaReplyLines);
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LiamIdleCommentary] Reacciona a Estela sentada: Liam \"{liamLine}\" → Estela \"{estelaLine}\"");
                 #endif
             }
@@ -245,7 +245,7 @@ namespace Game.NPC
             return true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private void LogIneligible(string reason)
         {
             if (Time.time < _nextDiagnosticLogTime) return;
@@ -263,7 +263,7 @@ namespace Game.NPC
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LiamIdleCommentary] Comentario suelto: \"{line}\"");
                 #endif
             }

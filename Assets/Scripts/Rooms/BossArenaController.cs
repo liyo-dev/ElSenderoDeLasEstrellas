@@ -154,11 +154,24 @@ public class BossArenaController : MonoBehaviour
     /// entre dos avisos consecutivos (ver Co_EnforceRadius).
     private const float CannotFleeToastDuration = 3f;
 
+    /// Distancia que queda entre el borde de la arena y una ZonaSinArenas de la que se ha apartado.
+    private const float MargenZonaSinArenas = 0.5f;
+
+    /// Si al apartar la arena el jugador queda más cerca que esto del borde (o fuera), se le mete
+    /// dentro hasta esta distancia durante la presentación del jefe.
+    private const float MargenJugadorAlBorde = 3f;
+
+    /// Segundos como mucho esperando a que la cámara del jefe tome la pantalla para colocar al jugador.
+    private const float EsperaMaximaColocacion = 5f;
+
     // Estado del modo radio — no serializado: se fija en tiempo de ejecución al empezar la batalla.
     private BattleEncounterSO _activeEncounter;
     private int _activeSpawnProfileIndex;
     private Vector3 _arenaCenter;
-    private Quaternion _arenaPlayerRotation = Quaternion.identity;
+    private Quaternion _spawnReferenceRotation = Quaternion.identity; // referencia de los perfiles de spawn (BattleEncounterSO)
+    private Vector3 _playerArenaPosition;   // dónde empieza el jugador la batalla (tras colocarlo, si hace falta)
+    private bool _playerPendingPlacement;   // la arena se ha apartado de una ZonaSinArenas: falta encarar (y quizá mover) al jugador
+    private bool _playerNeedsMove;          // además de encararlo, hay que meterlo hacia dentro
     private float _effectiveRadius;
     private bool _radiusLocked;
     private Coroutine _radiusEnforceRoutine;
@@ -172,6 +185,7 @@ public class BossArenaController : MonoBehaviour
     bool _profileReady = false; // ✅ Flag para rastrear si el perfil está listo
     EnemyMarker _activeBossMarker;
     Damageable _activeBossDamageable;
+    GuiaDeCombate _guia;
     BossHealthBar _activeBossHealthBar;
 
     public void SetStartBarrierOnPlayerEnter(bool value)
@@ -210,13 +224,13 @@ public class BossArenaController : MonoBehaviour
         {
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing != this)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[BossArenaController] BattleId '{battleId}' ya registrado por otro BossArenaController. Sobrescribiendo registro.");
 #endif
             }
             s_arenaRegistry[battleId] = this;
             // Diagnostic log: confirmar registro en runtime (útil para debugging)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] Registrada arena con BattleId='{battleId}' en scene='{gameObject.scene.name}' (active={gameObject.activeInHierarchy}, enabled={this.enabled}).");
 #endif
         }
@@ -237,7 +251,7 @@ public class BossArenaController : MonoBehaviour
             {
                 if (s_arenaRegistry.TryGetValue(key, out var existing) && existing != this)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[BossArenaController] OnEnable: BattleId '{key}' ya registrado por otro BossArenaController. Sobrescribiendo registro.");
 #endif
                 }
@@ -259,7 +273,7 @@ public class BossArenaController : MonoBehaviour
             _pendingStartBattle = false;
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[BossArenaController] OnEnable: procesando StartBattle pendiente.");
                 #endif
             }
@@ -279,7 +293,7 @@ public class BossArenaController : MonoBehaviour
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing == this)
             {
                 s_arenaRegistry.Remove(battleId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[BossArenaController] Desregistrada arena con BattleId='{battleId}' en OnDisable.");
 #endif
             }
@@ -288,7 +302,7 @@ public class BossArenaController : MonoBehaviour
 
     void Start()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 🎬 Start() - Arena BattleId='{battleId}', BossId='{bossId}', ProfileReady={_profileReady}");
 #endif
         
@@ -300,7 +314,7 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⏳ Esperando a que el perfil esté listo para verificar el estado del boss");
 #endif
         }
@@ -313,14 +327,14 @@ public class BossArenaController : MonoBehaviour
     {
         if (_profileReady)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⚠️ HandleProfileReady llamado múltiples veces para '{bossId}' - ignorando");
 #endif
             return;
         }
         
         _profileReady = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] ✅ Perfil listo para '{bossId}' - verificando estado del boss");
 #endif
         
@@ -337,20 +351,20 @@ public class BossArenaController : MonoBehaviour
     void CheckBossStateAndApply()
     {
         bool isDefeated = IsBossAlreadyDefeated();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 🔍 IsBossAlreadyDefeated() = {isDefeated} para BossId='{bossId}'");
 #endif
         
         if (isDefeated)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ✅ Boss '{bossId}' ya fue derrotado - desbloqueando área sin spawnearlo");
 #endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⚔️ Boss '{bossId}' NO ha sido derrotado - esperando trigger del player");
 #endif
         }
@@ -358,7 +372,7 @@ public class BossArenaController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 🚪 OnTriggerEnter - Tag: {other.tag}, Started: {started}, BossDefeated: {_bossDefeatHandled}, StartOnEnter: {startBarrierOnPlayerEnter}");
 #endif
         
@@ -366,27 +380,27 @@ public class BossArenaController : MonoBehaviour
         if (!other.CompareTag(playerTag)) return;
         if (!startBarrierOnPlayerEnter) 
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⏸️ StartBarrierOnPlayerEnter está desactivado - no se inicia batalla automáticamente");
 #endif
             return;
         }
 
         bool isDefeated = IsBossAlreadyDefeated();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 🔍 Player entró al trigger - IsBossAlreadyDefeated={isDefeated}");
 #endif
         
         if (isDefeated)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ✅ Boss ya derrotado - aplicando estado cleared");
 #endif
             ApplyBossClearedState(invokeUnityEvents: false, markDefeatedInTracker: false, raiseSignals: false);
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] ⚔️ Iniciando batalla con boss '{bossId}'");
 #endif
         // Usamos el método centralizado para iniciar la batalla
@@ -433,7 +447,7 @@ public class BossArenaController : MonoBehaviour
             _pendingStartBattle = true;
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[BossArenaController] StartBattleInternal deferred: component inactive; will start on OnEnable.");
                 #endif
             }
@@ -489,7 +503,7 @@ public class BossArenaController : MonoBehaviour
             // Posición calculada a partir del radio de la arena y la posición del jugador al
             // empezar la batalla (INC-207) — ya no depende de un Transform bossSpawn colocado a
             // mano en la escena.
-            spawnPosition = _activeEncounter.ComputeSpawnPosition(_arenaCenter, _arenaPlayerRotation, _activeSpawnProfileIndex);
+            spawnPosition = _activeEncounter.ComputeSpawnPosition(_arenaCenter, _playerArenaPosition, _spawnReferenceRotation, _activeSpawnProfileIndex);
 
             // El punto se calcula a ciegas (a X metros por delante del jugador), así que puede
             // caer dentro de un edificio, en el agua o simplemente fuera del NavMesh. Se proyecta
@@ -515,7 +529,6 @@ public class BossArenaController : MonoBehaviour
         _activeFloorLayer = (useEncounterData && _activeEncounter.floorLayer.value != 0) ? _activeEncounter.floorLayer : floorLayer;
 
         // Instanciar portal de aparición si está configurado
-        GameObject portalVFX = null;
         if (usedPortalPrefab != null)
         {
             Vector3 portalPosition = spawnPosition;
@@ -528,37 +541,16 @@ public class BossArenaController : MonoBehaviour
 
             // Calcular posición del portal en el suelo usando raycast
             if (Physics.Raycast(portalPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hit, 100f, _activeFloorLayer))
-            {
                 portalPosition = hit.point;
-                if (showDebugLogs)
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log($"[BossArenaController] Portal de aparición colocado en el suelo: {portalPosition}");
-                    #endif
-                }
-            }
-            portalVFX = Instantiate(usedPortalPrefab, portalPosition, portalRotation, transform.parent);
-            
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[BossArenaController] Portal de aparición instanciado en {portalPosition}");
-                #endif
-            }
+
+            VfxPoolService.Instance.Play(usedPortalPrefab, portalPosition, portalRotation, usedSpawnVfxDuration, transform.parent);
         }
 
         // Instanciar VFX de aparición adicional si está configurado
         if (usedSpawnVfxPrefab != null)
         {
             Vector3 vfxPosition = spawnPosition + Vector3.up * usedSpawnVfxHeightOffset;
-            GameObject vfx = Instantiate(usedSpawnVfxPrefab, vfxPosition, spawnRotation);
-            Destroy(vfx, usedSpawnVfxDuration);
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[BossArenaController] VFX de aparición instanciado en {vfxPosition}, se destruirá en {usedSpawnVfxDuration}s");
-                #endif
-            }
+            VfxPoolService.Instance.Play(usedSpawnVfxPrefab, vfxPosition, spawnRotation, usedSpawnVfxDuration);
         }
 
         GameObject boss = null;
@@ -571,34 +563,22 @@ public class BossArenaController : MonoBehaviour
 
         if (!boss)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[BossArenaController] No hay boss para esta sala.");
 #endif
             started = false;
-            
-            // Destruir el portal si no hay boss
-            if (portalVFX != null)
-                Destroy(portalVFX);
-            
+            ColocarJugadorEnArena();
             return;
-        }
-
-        // Destruir el portal después de la duración del VFX
-        if (portalVFX != null)
-        {
-            Destroy(portalVFX, usedSpawnVfxDuration);
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[BossArenaController] Portal se destruirá en {usedSpawnVfxDuration}s");
-                #endif
-            }
         }
 
         // Preparar referencias para escuchar la derrota real del boss
         _activeBossMarker = boss.GetComponent<EnemyMarker>() ?? boss.AddComponent<EnemyMarker>();
         _activeBossMarker.onEnemyGone -= OnBossDead;
         _activeBossMarker.onEnemyGone += OnBossDead;
+
+        // Quien guía el combate (el guion del encuentro): arranca ya para ir mirando al jefe, y
+        // habla cuando termina la presentación (INC-489).
+        _guia = GuiaDeCombate.Empezar(gameObject, _activeEncounter != null ? _activeEncounter.guion : null, boss);
 
         _activeBossDamageable = boss.GetComponent<Damageable>();
         if (_activeBossDamageable != null)
@@ -613,16 +593,17 @@ public class BossArenaController : MonoBehaviour
         // servicio global BossIntroPresentationService — INC-207) o colocar directamente en el suelo
         if (bossIntroPresentation != null || BossIntroPresentationService.Instance != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ✅ Presentación de boss disponible para '{boss.name}'. Iniciando presentación...");
 #endif
             StartCoroutine(PlayPresentationAndPlaceBoss(boss));
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⚠️ No hay presentación de boss disponible para '{boss.name}'. Colocando boss directamente.");
 #endif
+            ColocarJugadorEnArena();
             PlaceBossOnFloor(boss);
             EnableBossCombat(boss);
             _activeBossHealthBar?.Show();
@@ -636,18 +617,22 @@ public class BossArenaController : MonoBehaviour
         
         if (bossCamera == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] ❌ No se encontró cámara en el boss '{boss.name}' (ni activa ni inactiva). Saltando presentación.");
 #endif
+            ColocarJugadorEnArena();
             PlaceBossOnFloor(boss);
             EnableBossCombat(boss);
             yield break;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 📷 Cámara encontrada: '{bossCamera.name}' en boss '{boss.name}'");
 #endif
         
+        if (_playerPendingPlacement)
+            StartCoroutine(Co_ColocarJugadorBajoPresentacion());
+
         // Configurar y reproducir presentación: componente propio de la arena si lo tiene
         // asignado (comportamiento sin cambios), o si no el servicio global (INC-207).
         if (bossIntroPresentation != null)
@@ -694,34 +679,24 @@ public class BossArenaController : MonoBehaviour
         DefaultNarrativeSignals.Instance?.RaiseCustom("BOSS_INTRO_DONE", name);
         if (!string.IsNullOrEmpty(BattleId))
             DefaultNarrativeSignals.Instance?.RaiseCustom($"BOSS_INTRO_DONE:{BattleId}", name);
+        if (_guia != null) _guia.LanzarIntervencion();
     }
 
     private void EnableBossCombat(GameObject boss)
     {
-        // Activar el combate en el componente de IA del boss (si existe)
-        var impDemonAI = boss.GetComponent<ImpDemonAI>();
-        if (impDemonAI != null)
+        // La IA del jefe da la salida al combate por su cuenta (ImpDemonAI, GolemBossAI...).
+        var inicio = boss.GetComponent<IInicioDeCombate>();
+        if (inicio != null)
         {
-            impDemonAI.canStartCombat = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log("[BossArenaController] Combate del boss (ImpDemon) activado.");
-#endif
-            return;
-        }
-        
-        var golemBossAI = boss.GetComponent<GolemBossAI>();
-        if (golemBossAI != null)
-        {
-            golemBossAI.canStartCombat = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log("[BossArenaController] Combate del boss (Golem) activado.");
+            inicio.EmpezarCombate();
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[BossArenaController] Combate del boss '{boss.name}' activado.");
 #endif
             return;
         }
 
         // Bosses basados en el FSM genérico NPCBehaviourManagerV2 (p.ej. Mago Oscuro, batalla final).
-        // A diferencia de ImpDemonAI/GolemBossAI (flag canStartCombat leído por su propio Update),
-        // NPCBehaviourManagerV2 expone EnterCombat() como entrada directa: registra el NPC en
+        // A diferencia de las IA con IInicioDeCombate, NPCBehaviourManagerV2 expone EnterCombat() como entrada directa: registra el NPC en
         // ActiveCombatRegistry y fuerza el cambio a CombatState de inmediato.
         var npcManager = boss.GetComponent<NPCBehaviourManagerV2>();
         if (npcManager != null)
@@ -736,25 +711,25 @@ public class BossArenaController : MonoBehaviour
             if (enemyLayer != -1)
             {
                 boss.layer = enemyLayer;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[BossArenaController] Layer del boss cambiado a 'Enemy' para permitir recibir daño.");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[BossArenaController] No se encontró el layer 'Enemy' en el proyecto; el boss podría no recibir daño.");
 #endif
             }
 
             npcManager.EnterCombat();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[BossArenaController] Combate del boss (NPCBehaviourManagerV2) activado.");
 #endif
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[BossArenaController] No se encontró componente de IA compatible en el boss.");
 #endif
     }
@@ -792,7 +767,7 @@ public class BossArenaController : MonoBehaviour
                 Vector3 candidate = _arenaCenter + (Quaternion.Euler(0f, angle, 0f) * dir) * dist;
                 if (NavMesh.SamplePosition(candidate, out hit, SampleRadius, NavMesh.AllAreas))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[BossArenaController] Spawn calculado fuera del NavMesh: reubicado a {hit.position} (giro {angle}º, {distanceFactors[d]:P0} de la distancia original).");
 #endif
                     return hit.position;
@@ -800,7 +775,7 @@ public class BossArenaController : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[BossArenaController] No se encontró NavMesh cerca de la posición de spawn calculada ({desired}). El enemigo aparecerá ahí igualmente, pero puede que no pueda moverse. Revisa el bakeado de NavMesh en esa zona.");
 #endif
         return desired;
@@ -849,7 +824,7 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] No se encontró Floor debajo del boss en {boss.transform.position} (máscara={layerToUse.value}). Se queda a la altura calculada.");
 #endif
         }
@@ -888,7 +863,7 @@ public class BossArenaController : MonoBehaviour
                 player.position += direction * 2f;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[BossArenaController] Jugador empujado de vuelta al área del boss.");
 #endif
         }
@@ -958,6 +933,8 @@ public class BossArenaController : MonoBehaviour
 
     void CleanupBossSubscriptions()
     {
+        if (_guia != null) _guia.Parar();
+
         if (_activeBossMarker != null)
         {
             _activeBossMarker.onEnemyGone -= OnBossDead;
@@ -984,7 +961,7 @@ public class BossArenaController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(bossId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] ⚠️ IsBossAlreadyDefeated: bossId está vacío para battleId='{battleId}'");
 #endif
             return false;
@@ -994,13 +971,13 @@ public class BossArenaController : MonoBehaviour
         {
             bool defeated = tracker.IsDefeated(bossId);
             var allDefeated = tracker.DefeatedBossIds;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossArenaController] 🔍 Tracker encontrado - BossId='{bossId}', IsDefeated={defeated}, DefeatedBossIds=[{string.Join(", ", allDefeated)}]");
 #endif
             return defeated;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] ⚠️ BossProgressTracker no encontrado - asumiendo boss NO derrotado");
 #endif
         return false;
@@ -1049,22 +1026,13 @@ public class BossArenaController : MonoBehaviour
         // SOLO si raiseSignals=true (evita sonar música al cargar partida)
         if (raiseSignals)
         {
+            if (_guia != null) _guia.Parar();
             OnAnyBattleEnded?.Invoke();
 
-            try
-            {
-                if (!string.IsNullOrEmpty(BattleId) && AudioService.Instance != null)
-                    AudioService.Instance.EndBattleById(BattleId);
-            }
-            catch (Exception ex)
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[BossArenaController] Error cerrando la música de batalla: {ex.Message}");
-#endif
-            }
-
             // Victoria de verdad: antes de avisar al grafo, el cierre de batalla (premios,
-            // celebración de Will, informe). Ver CierreDeBatalla, INC-470.
+            // celebración de Will, informe). Ver CierreDeBatalla, INC-470. La música del combate
+            // sigue hasta que la releva el jingle de la celebración; el combate se da por cerrado
+            // en AvisarBatallaGanada (INC-500).
             if (invokeUnityEvents && isActiveAndEnabled)
                 StartCoroutine(Co_CerrarYAvisarVictoria());
             else
@@ -1085,12 +1053,24 @@ public class BossArenaController : MonoBehaviour
     {
         try
         {
+            if (!string.IsNullOrEmpty(BattleId) && AudioService.Instance != null)
+                AudioService.Instance.EndBattleById(BattleId);
+        }
+        catch (Exception ex)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[BossArenaController] Error cerrando la música de batalla: {ex.Message}");
+#endif
+        }
+
+        try
+        {
             // Usar BattleId (fallback a bossId ya fue aplicado en Awake)
             DefaultNarrativeSignals.Instance?.RaiseBattleWon(BattleId);
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error notificando BattleWon: {ex.Message}");
 #endif
         }
@@ -1124,7 +1104,7 @@ public class BossArenaController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BossArenaController] Solo se soportan BoxCollider para las barreras visuales. Creando barrera genérica.");
 #endif
             CreateGenericBarrier(bounds, height);
@@ -1233,7 +1213,7 @@ public class BossArenaController : MonoBehaviour
                 barrier.Show();
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[BossArenaController] Área del boss bloqueada.");
 #endif
     }
@@ -1250,7 +1230,7 @@ public class BossArenaController : MonoBehaviour
                 barrier.Hide();
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[BossArenaController] Área del boss desbloqueada.");
 #endif
     }
@@ -1260,9 +1240,45 @@ public class BossArenaController : MonoBehaviour
     private void LockRadiusArea()
     {
         Transform playerT = ResolvePlayerTransform();
-        _arenaCenter = playerT != null ? playerT.position : transform.position;
-        _arenaPlayerRotation = playerT != null ? playerT.rotation : transform.rotation;
+        Vector3 playerPos = playerT != null ? playerT.position : transform.position;
+        Quaternion playerRot = playerT != null ? playerT.rotation : transform.rotation;
         _effectiveRadius = (_activeEncounter != null && _activeEncounter.arenaRadius > 0f) ? _activeEncounter.arenaRadius : radiusMeters;
+
+        _arenaCenter = playerPos;
+        _playerArenaPosition = playerPos;
+        _spawnReferenceRotation = playerRot;
+        _playerPendingPlacement = false;
+        _playerNeedsMove = false;
+
+        // La arena se centra en el jugador, salvo que invada una ZonaSinArenas: entonces se aparta
+        // lo justo. El jugador queda descentrado; si queda pegado al borde (o fuera), se le mete
+        // dentro, y en cualquier caso se le encara hacia el centro, que es donde aparece el jefe.
+        if (ZonaSinArenas.ApartarDeTodas(playerPos, _effectiveRadius, MargenZonaSinArenas, out Vector3 centroApartado))
+        {
+            _arenaCenter = centroApartado;
+
+            Vector3 desdeCentro = playerPos - _arenaCenter;
+            desdeCentro.y = 0f;
+            float distancia = desdeCentro.magnitude;
+            float maxDistancia = _effectiveRadius - Mathf.Min(MargenJugadorAlBorde, _effectiveRadius * 0.5f);
+            if (distancia > maxDistancia)
+            {
+                Vector3 dir = distancia > 0.001f ? desdeCentro / distancia : Vector3.forward;
+                Vector3 destino = _arenaCenter + dir * maxDistancia;
+                destino.y = playerPos.y;
+                if (NavMesh.SamplePosition(destino, out NavMeshHit hit, 3f, NavMesh.AllAreas))
+                    destino = hit.position;
+                _playerArenaPosition = destino;
+                _playerNeedsMove = true;
+            }
+
+            Vector3 haciaCentro = _arenaCenter - _playerArenaPosition;
+            haciaCentro.y = 0f;
+            if (haciaCentro.sqrMagnitude > 0.01f)
+                _spawnReferenceRotation = Quaternion.LookRotation(haciaCentro.normalized);
+            _playerPendingPlacement = true;
+        }
+
         _radiusLocked = true;
 
         if (_limite == null) _limite = LimiteDeArena.Crear(transform, _arenaCenter, _effectiveRadius);
@@ -1270,14 +1286,63 @@ public class BossArenaController : MonoBehaviour
         if (_radiusEnforceRoutine == null)
             _radiusEnforceRoutine = StartCoroutine(Co_EnforceRadius());
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        Debug.Log($"[BossArenaController] Arena en modo radio: centro={_arenaCenter}, radio={_effectiveRadius}m.");
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[BossArenaController] Arena en modo radio: centro={_arenaCenter}, radio={_effectiveRadius}m" +
+                  (_playerPendingPlacement ? $", apartada de una ZonaSinArenas (jugador {(_playerNeedsMove ? "se mete a " + _playerArenaPosition : "no se mueve")})." : "."));
 #endif
+    }
+
+    /// Espera a que la cámara de juego se apague (la presentación del jefe tiene la pantalla) y
+    /// entonces coloca al jugador, para que no se vea el salto. Si no llega a apagarse en
+    /// EsperaMaximaColocacion segundos, lo coloca igualmente.
+    private IEnumerator Co_ColocarJugadorBajoPresentacion()
+    {
+        Camera camaraDeJuego = Camera.main;
+        float limite = Time.unscaledTime + EsperaMaximaColocacion;
+        while (_playerPendingPlacement && camaraDeJuego != null && camaraDeJuego.gameObject.activeInHierarchy
+               && Time.unscaledTime < limite)
+            yield return null;
+
+        ColocarJugadorEnArena();
+    }
+
+    /// Encara al jugador hacia el centro de una arena apartada (y lo mete dentro si hacía falta),
+    /// con la cámara de juego detrás de él. No hace nada si la arena no se apartó.
+    private void ColocarJugadorEnArena()
+    {
+        if (!_playerPendingPlacement) return;
+        _playerPendingPlacement = false;
+
+        Transform playerT = ResolvePlayerTransform();
+        if (playerT == null) return;
+
+        Vector3 posicion = _playerNeedsMove ? _playerArenaPosition : playerT.position;
+        Vector3 haciaCentro = _arenaCenter - posicion;
+        haciaCentro.y = 0f;
+        Quaternion rotacion = haciaCentro.sqrMagnitude > 0.01f ? Quaternion.LookRotation(haciaCentro.normalized) : playerT.rotation;
+        MoverJugador(playerT, posicion, rotacion);
+
+        var camara = FindAnyObjectByType<vThirdPersonCamera>(FindObjectsInactive.Include);
+        if (camara != null)
+        {
+            float pitch = camara.transform.eulerAngles.x;
+            if (pitch > 180f) pitch -= 360f;
+            camara.SetAngles(rotacion.eulerAngles.y, pitch);
+        }
+    }
+
+    private static void MoverJugador(Transform playerT, Vector3 posicion, Quaternion rotacion)
+    {
+        var cc = playerT.GetComponentInChildren<CharacterController>();
+        if (cc != null) cc.enabled = false;
+        playerT.SetPositionAndRotation(posicion, rotacion);
+        if (cc != null) cc.enabled = true;
     }
 
     private void UnlockRadiusArea()
     {
         _radiusLocked = false;
+        _playerPendingPlacement = false;
         if (_limite != null) { _limite.Retirar(); _limite = null; }
         if (_radiusEnforceRoutine != null)
         {
@@ -1309,7 +1374,9 @@ public class BossArenaController : MonoBehaviour
         while (_radiusLocked)
         {
             Transform playerT = ResolvePlayerTransform();
-            if (playerT != null)
+            // Mientras falta colocar al jugador (arena apartada), no se le empuja: se le coloca
+            // en cuanto la presentación tapa la pantalla.
+            if (playerT != null && !_playerPendingPlacement)
             {
                 Vector3 toPlayer = playerT.position - _arenaCenter;
                 toPlayer.y = 0f;
@@ -1319,25 +1386,14 @@ public class BossArenaController : MonoBehaviour
                 {
                     Vector3 clampedXZ = _arenaCenter + toPlayer.normalized * _effectiveRadius;
                     Vector3 clamped = new Vector3(clampedXZ.x, playerT.position.y, clampedXZ.z);
-
-                    CharacterController cc = playerT.GetComponent<CharacterController>();
-                    if (cc)
-                    {
-                        cc.enabled = false;
-                        playerT.position = clamped;
-                        cc.enabled = true;
-                    }
-                    else
-                    {
-                        playerT.position = clamped;
-                    }
+                    MoverJugador(playerT, clamped, playerT.rotation);
 
                     if (Time.time >= nextToastTime)
                     {
                         HudToastService.Instance?.Show(cannotFleeLocKey, CannotFleeToastDuration);
                         nextToastTime = Time.time + CannotFleeToastDuration;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log("[BossArenaController] Jugador intentó cruzar el radio de la arena — empujado de vuelta.");
 #endif
                     }
@@ -1399,7 +1455,7 @@ public class BossArenaController : MonoBehaviour
             if (s_arenaRegistry.TryGetValue(battleId, out var existing) && existing == this)
             {
                 s_arenaRegistry.Remove(battleId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[BossArenaController] Desregistrada arena con BattleId='{battleId}' en OnDestroy.");
 #endif
             }
@@ -1431,7 +1487,7 @@ public class BossArenaController : MonoBehaviour
                 {
                     if (kvp.Value != null)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[BossArenaController] TryTriggerBattleById: Lookup directo falló para '{id}', usando fallback con key registrada '{kvp.Key}'.");
 #endif
                         kvp.Value.TriggerStartBattle();
@@ -1442,7 +1498,7 @@ public class BossArenaController : MonoBehaviour
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error durante fallback de búsqueda de BattleId '{id}': {ex.Message}");
 #endif
         }
@@ -1452,21 +1508,21 @@ public class BossArenaController : MonoBehaviour
         {
             if (s_arenaRegistry.Count == 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[BossArenaController] Intento de activar BattleId '{id}' pero el registry está vacío.");
 #endif
             }
             else
             {
                 var keys = string.Join(", ", s_arenaRegistry.Keys);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[BossArenaController] Intento de activar BattleId '{id}' pero no se encontró. Keys registradas: {keys}");
 #endif
             }
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error al listar ids registrados: {ex.Message}");
 #endif
         }
@@ -1509,7 +1565,7 @@ public class BossArenaController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(battleId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BossArenaController] CreateRuntimeArena: battleId vacío. No se crea arena.");
 #endif
             return null;
@@ -1517,7 +1573,7 @@ public class BossArenaController : MonoBehaviour
 
         if (encounter == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] CreateRuntimeArena('{battleId}'): no hay BattleEncounterSO. Sin SO no hay datos de enemigo, así que no se crea arena.");
 #endif
             return null;
@@ -1525,7 +1581,7 @@ public class BossArenaController : MonoBehaviour
 
         if (encounter.enemyPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] CreateRuntimeArena('{battleId}'): la SO '{encounter.name}' no tiene enemyPrefab asignado. La batalla no tendría enemigo.");
 #endif
             return null;
@@ -1564,7 +1620,7 @@ public class BossArenaController : MonoBehaviour
 
         go.SetActive(true); // Awake + OnEnable → queda registrada en s_arenaRegistry
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossArenaController] 🏟️ Arena creada en runtime para battleId='{battleId}' (encounter='{encounter.name}', radio={arena.radiusMeters}m, centro={center}). No hacía falta ningún objeto de arena en la escena.");
 #endif
         return arena;

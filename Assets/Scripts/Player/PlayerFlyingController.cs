@@ -6,8 +6,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Controla el modo de vuelo del jugador (tipo Dragon Ball): doble salto para entrar,
-/// joystick izquierdo para direccionarse y mantener pulsado salto para descender/salir.
+/// Controla el modo de vuelo del jugador (tipo Dragon Ball): se entra pulsando saltar en el aire
+/// después del doble salto (tercer toque, vThirdPersonController.OnJumpPressedWithoutAirJumps),
+/// el joystick izquierdo dirige y saltar de nuevo sale del vuelo.
 /// </summary>
 [DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(Animator))]
@@ -38,6 +39,11 @@ public class PlayerFlyingController : MonoBehaviour
     [SerializeField] private float landingCrossfade = 0.08f;
     [SerializeField] private float hardLandingSpeed = -6f;
     [SerializeField] private string locomotionStateName = "Free Locomotion";
+    [Tooltip("Pose mientras se lanza un hechizo en vuelo (el movimiento no cambia, solo la animación). INC-492.")]
+    [SerializeField] private string castPoseState = "Falling";
+    [SerializeField] private float castPoseCrossfade = 0.1f;
+    [Tooltip("Tras disparar, la pose de caída se mantiene hasta que se avanza y han pasado estos segundos sin disparar; quieto en el aire se queda en caída (Raúl, INC-492).")]
+    [SerializeField] private float castPoseRelease = 1f;
 
     [Header("Movimiento")]
     [SerializeField] private float horizontalSpeed = 12f;
@@ -47,13 +53,17 @@ public class PlayerFlyingController : MonoBehaviour
     [SerializeField] private float turnSpeed = 9f;
     [SerializeField] private float tiltAngleMultiplier = 15f;
     [SerializeField] private float tiltSpeed = 5f;
-    [SerializeField] private float doubleTapWindow = 0.35f;
     [SerializeField] private float boostMultiplier = 1.5f;
 
     [Header("Debug")]
     [SerializeField] private bool debugLogs = false;
 
     private Animator _animator;
+    private MagicCaster _magicCaster;
+    private bool _inCastPose;
+    private bool _castPosePrevGrounded;
+    private float _lastCastTime = -999f;
+    private float _castPoseBlendUntil;
     private Rigidbody _rigidbody;
     private vThirdPersonController _controller;
     private Invector.vCharacterController.vThirdPersonInput _inputController;
@@ -79,21 +89,16 @@ public class PlayerFlyingController : MonoBehaviour
     private float _cachedExtraGravity;
     private bool _gravityStored;
     private bool _storedUseGravity;
-    private float _flightArmUntil = -1f;
     private float _currentPlanarSpeed;
     private bool _isBoosting;
     private bool _controllerWasEnabled = true;
     private bool _animRootMotionPrev;
     private float _prevFlightLayerWeight = -1f;
     private int _isFlyingHash = -1;
-    private bool _pendingEnterFlight = false;
-    private bool _flightArmed = false;
-    private float _flightArmedExpires = -1f;
     private bool _justEnteredFlight;
     private float _currentPitch = 0f;
     private float _groundedWhileFlyingTimer;
     private bool _isPhysicsBobbingIdle;
-    [SerializeField] private float flightArmedDuration = 2f;
 
     [Header("FX Vuelo")]
     [SerializeField] private Transform vfxAttach;
@@ -136,11 +141,11 @@ public class PlayerFlyingController : MonoBehaviour
         _controller = GetComponent<vThirdPersonController>();
         _inputController = GetComponent<Invector.vCharacterController.vThirdPersonInput>();
         _actionManager = GetComponent<PlayerActionManager>();
+        _magicCaster = GetComponentInChildren<MagicCaster>(true) ?? GetComponentInParent<MagicCaster>();
         _inputManager = ServiceLocator.Get<Core.PlayerInputManager>(logIfMissing: false);
         _capsule = GetComponent<CapsuleCollider>() ?? GetComponentInChildren<CapsuleCollider>();
         CacheControllerLockFields();
         CacheCameraTransform();
-        _flightArmUntil = -1f;
 
         if (_inputManager != null && _inputManager.Controls != null)
         {
@@ -186,7 +191,7 @@ public class PlayerFlyingController : MonoBehaviour
                         locomotionLayerIndex = layer;
                         if (debugLogs)
                         {
-                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"[PlayerFlyingController] Detected flight state '{s}' on animator layer {layer}. Using that layer for flight animations.");
                             #endif
                         }
@@ -207,6 +212,8 @@ public class PlayerFlyingController : MonoBehaviour
             _jumpAction.performed += OnJumpPerformed;
             _jumpAction.canceled += OnJumpCanceled;
         }
+        if (_controller != null)
+            _controller.OnJumpPressedWithoutAirJumps += OnJumpAfterDoubleJump;
         if (_moveAction != null)
         {
             _moveAction.performed += OnMovePerformed;
@@ -224,13 +231,14 @@ public class PlayerFlyingController : MonoBehaviour
         if (_isFlying)
             ExitFlight(force: true);
         StopFlightVfx();
-        _flightArmUntil = -1f;
 
         if (_jumpAction != null)
         {
             _jumpAction.performed -= OnJumpPerformed;
             _jumpAction.canceled -= OnJumpCanceled;
         }
+        if (_controller != null)
+            _controller.OnJumpPressedWithoutAirJumps -= OnJumpAfterDoubleJump;
         if (_moveAction != null)
         {
             _moveAction.performed -= OnMovePerformed;
@@ -265,29 +273,6 @@ public class PlayerFlyingController : MonoBehaviour
             }
             CacheCameraTransform();
             UpdateFlightAnimation();
-        }
-
-        // If user pressed jump twice but second press happened while still considered grounded,
-        // wait until the player is airborne then auto-enter flight.
-        if (!_isFlying && _pendingEnterFlight)
-        {
-            if (debugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PlayerFlyingController] Pending check now={Time.time:F2} flightArmUntil={_flightArmUntil:F2} IsGrounded={IsGrounded()} CanEnter={CanEnterFlight()}");
-                #endif
-            }
-            // clear pending if window expired
-            if (_flightArmUntil > 0f && Time.time > _flightArmUntil)
-            {
-                _pendingEnterFlight = false;
-            }
-            else if (CanEnterFlight() && !IsGrounded())
-            {
-                EnterFlight();
-                _pendingEnterFlight = false;
-                _flightArmUntil = -1f;
-            }
         }
     }
 
@@ -334,110 +319,26 @@ public class PlayerFlyingController : MonoBehaviour
     private void OnCameraPerformed(InputAction.CallbackContext ctx) => _cameraInput = PlayerSettings.ApplyLookInversion(ctx.ReadValue<Vector2>(), true);
     private void OnCameraCanceled(InputAction.CallbackContext ctx) => _cameraInput = Vector2.zero;
 
+    // Saltar volando sale del vuelo. Entrar lo decide OnJumpAfterDoubleJump.
     private void OnJumpPerformed(InputAction.CallbackContext ctx)
     {
         if (_inputManager != null && !_inputManager.CanProcess(PlayerAbility.Jump))
-        {
-            if (debugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log("[PlayerFlyingController] Salto ignorado: acción bloqueada por PlayerActionManager.");
-                #endif
-            }
             return;
-        }
 
         _jumpHeld = true;
 
         if (_isFlying)
-        {
             ExitFlight();
-            return;
-        }
+    }
 
-        // If player presses Jump while already airborne, enter flight immediately.
-        // This covers the common case: jump from ground, then press jump again in air.
-        if (!IsGrounded())
-        {
-            if (CanEnterFlight())
-            {
-                if (debugLogs)
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log("[PlayerFlyingController] Jump performed while airborne -> EnterFlight immediate.");
-                    #endif
-                }
-                EnterFlight();
-                return;
-            }
-        }
-
-        // Arm or attempt to enter flight. We allow the first press (from ground) to arm
-        // and the second press while airborne to actually enter flight.
-        float now = Time.time;
-        if (debugLogs)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerFlyingController] OnJumpPerformed now={now:F2} flightArmUntil={_flightArmUntil:F2} isGrounded={IsGrounded()} pending={_pendingEnterFlight} armed={_flightArmed}");
-            #endif
-        }
-
-        bool inDoubleTapWindow = now <= _flightArmUntil;
-        bool armedAndAirborne = _flightArmed && !IsGrounded() && now <= _flightArmedExpires;
-
-        if (inDoubleTapWindow || armedAndAirborne)
-        {
-            // Second press within window or armed-and-now-airborne -> try to enter flight now.
-            if (CanEnterFlight())
-            {
-                EnterFlight();
-                _flightArmUntil = -1f;
-                _pendingEnterFlight = false;
-                _flightArmed = false;
-            }
-            else
-            {
-                // Not ready yet (likely still considered grounded). Mark pending so that
-                // when the player becomes airborne we enter flight automatically.
-                _pendingEnterFlight = true;
-                _flightArmUntil = now + doubleTapWindow; // extend window while pending
-                if (debugLogs)
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log($"[PlayerFlyingController] Second jump but can't enter yet. Marked pending. new flightArmUntil={_flightArmUntil:F2}");
-                    #endif
-                }
-            }
-        }
-        else
-        {
-            // First press (or outside window): arm the flight trigger.
-            _flightArmUntil = now + doubleTapWindow;
-            _pendingEnterFlight = false;
-            _flightArmed = true;
-            _flightArmedExpires = now + flightArmedDuration;
-            if (debugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PlayerFlyingController] First jump pressed - armed flight (expires {_flightArmedExpires:F2}) and window until {_flightArmUntil:F2}");
-                #endif
-            }
-        }
+    // Tercer toque de salto: en el aire y sin saltos extra (ya se hizo el doble salto).
+    private void OnJumpAfterDoubleJump()
+    {
+        if (!_isFlying && CanEnterFlight())
+            EnterFlight();
     }
 
     private void OnJumpCanceled(InputAction.CallbackContext ctx) => _jumpHeld = false;
-
-    /// <summary>
-    /// Cancela cualquier estado de "doble salto armado" sin salir del vuelo activo.
-    /// Llamar al iniciar interacciones que bloquean el vuelo (sentarse, diálogos, etc.)
-    /// </summary>
-    public void CancelFlightArming()
-    {
-        _pendingEnterFlight = false;
-        _flightArmed = false;
-        _flightArmUntil = -1f;
-        _jumpHeld = false;
-    }
 
     private bool CanEnterFlight()
     {
@@ -457,8 +358,9 @@ public class PlayerFlyingController : MonoBehaviour
 
          _isFlying = true;
          _groundedWhileFlyingTimer = 0f;
+         _inCastPose = false;
+         _castPoseBlendUntil = 0f;
          _visualRootHasBase = false; // Resetear bobbing visual para que capture la posición base
-         _flightArmUntil = -1f;
         _isBoosting = false;
         _justEnteredFlight = true;
         _jumpHeld = false; // evitar que el primer frame se considere dive por mantener salto
@@ -531,7 +433,7 @@ public class PlayerFlyingController : MonoBehaviour
 
         if (debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerFlyingController] Enter Flight");
             #endif
         }
@@ -544,12 +446,11 @@ public class PlayerFlyingController : MonoBehaviour
 
         bool wasFlying = _isFlying;
         _isFlying = false;
+        _inCastPose = false;
+        _castPoseBlendUntil = 0f;
         _currentPlanarSpeed = 0f;
         _currentPitch = 0f;
         _isBoosting = false;
-        _flightArmed = false;
-        _pendingEnterFlight = false;
-        _flightArmUntil = -1f;
         if (_inputController != null)
             _inputController.CancelPendingJump();
         GamepadInputReader.IgnoreJumpButton(0.2f);
@@ -609,7 +510,7 @@ public class PlayerFlyingController : MonoBehaviour
 
         if (wasFlying && debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerFlyingController] Exit Flight");
             #endif
         }
@@ -706,12 +607,6 @@ public class PlayerFlyingController : MonoBehaviour
         if (_animator == null)
             return;
 
-        float verticalVel = _rigidbody != null ? _rigidbody.linearVelocity.y : 0f;
-        // Excluir el bobbing físico del chequeo de dive para no disparar la anim de picado sin input
-        bool diving = (!_isPhysicsBobbingIdle && verticalVel < -0.5f) || _jumpHeld;
-        // Consider joystick (left stick) movement as input to switch to dive state.
-        bool stickMoved = _moveInput.sqrMagnitude > 0.01f; // small deadzone
-
         if (_justEnteredFlight)
         {
             _justEnteredFlight = false;
@@ -719,30 +614,58 @@ public class PlayerFlyingController : MonoBehaviour
             return;
         }
 
-        if (stickMoved)
+        // Lanzando un hechizo en vuelo: pose de caída mientras dura el gesto (INC-492). Al acabar,
+        // vuelve con un fundido a la animación de vuelo que toque.
+        bool castingNow = _magicCaster != null && _magicCaster.IsCasting;
+        if (castingNow) _lastCastTime = Time.time;
+        bool advancing = _moveInput.sqrMagnitude > 0.01f || _currentPlanarSpeed > 0.5f;
+        // Se mantiene la pose de caída mientras dispara y después, hasta que avanza y lleva un rato
+        // sin disparar. Quieto en el aire tras disparar sigue en caída.
+        bool keepPose = castingNow || (_inCastPose && !(advancing && Time.time - _lastCastTime >= castPoseRelease));
+        bool casting = keepPose && HasAnimatorState(castPoseState);
+        if (casting)
         {
-            PlayFlightState(flyDiveState);
+            // Falling pasa a LandLow si IsGrounded está a true (el modo vuelo lo fuerza a true para que
+            // no salten animaciones de caída): mientras dura la pose se mantiene a false.
+            int groundedHash = Invector.vCharacterController.vAnimatorParameters.IsGrounded;
+            if (!_inCastPose)
+            {
+                _inCastPose = true;
+                _castPosePrevGrounded = _animator.GetBool(groundedHash);
+                _animator.CrossFadeInFixedTime(castPoseState, castPoseCrossfade, locomotionLayerIndex);
+            }
+            _animator.SetBool(groundedHash, false);
             return;
         }
+        if (_inCastPose)
+        {
+            _inCastPose = false;
+            _animator.SetBool(Invector.vCharacterController.vAnimatorParameters.IsGrounded, _castPosePrevGrounded);
+            string next = ResolveFlightState();
+            _animator.CrossFadeInFixedTime(next, castPoseCrossfade, locomotionLayerIndex);
+            if (_inputController != null)
+                _inputController.DisableVerticalCameraRotation = !string.Equals(next, flyIdleState, StringComparison.Ordinal);
+            _castPoseBlendUntil = Time.time + castPoseCrossfade;
+            return;
+        }
+        if (Time.time < _castPoseBlendUntil) return;
+
+        PlayFlightState(ResolveFlightState());
+    }
+
+    /// <summary>Estado de vuelo según el movimiento: picado, avance o quieto.</summary>
+    private string ResolveFlightState()
+    {
+        float verticalVel = _rigidbody != null ? _rigidbody.linearVelocity.y : 0f;
+        bool diving = (!_isPhysicsBobbingIdle && verticalVel < -0.5f) || _jumpHeld;
+        bool stickMoved = _moveInput.sqrMagnitude > 0.01f;
+        if (stickMoved || diving) return flyDiveState;
 
         bool moving = _currentPlanarSpeed > 0.5f;
-
-        if (diving)
-        {
-            PlayFlightState(flyDiveState);
-        }
-        else
-        {
-            // Use move state only when it is explicitly different from idle/dive
-            bool useMove = moving && !string.IsNullOrEmpty(flyMoveState)
-                           && !string.Equals(flyMoveState, flyIdleState, StringComparison.Ordinal)
-                           && !string.Equals(flyMoveState, flyDiveState, StringComparison.Ordinal);
-
-            if (useMove)
-                PlayFlightState(flyMoveState);
-            else
-                PlayFlightState(flyIdleState);
-        }
+        bool useMove = moving && !string.IsNullOrEmpty(flyMoveState)
+                       && !string.Equals(flyMoveState, flyIdleState, StringComparison.Ordinal)
+                       && !string.Equals(flyMoveState, flyDiveState, StringComparison.Ordinal);
+        return useMove ? flyMoveState : flyIdleState;
     }
 
     private void PlayFlightState(string stateName)

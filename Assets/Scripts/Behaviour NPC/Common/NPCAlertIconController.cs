@@ -132,14 +132,9 @@ namespace Game.NPC.Common
             DialogueManager.OnDialogueStarted -= OnDialogueStarted;
             DialogueManager.OnDialogueClosed -= OnDialogueClosed;
 
-            // FIX INC-184 (9 sept 2026): el icono se instancia sin padre (Instantiate(iconPrefab)
-            // en ShowIconRoutine/ShowPersistentIconRoutine) y solo se sigue posicionando/destruyendo
-            // desde la propia corrutina de este componente. Si el NPC que lo muestra se desactiva
-            // SIN ser destruido (p. ej. durante la secuencia de Game Over, que no pasa por
-            // AlertState.OnExit), la corrutina se detiene a mitad y el icono queda huérfano: visible
-            // y congelado en su última posición para siempre, porque nada vuelve a tocarlo. Mismo
-            // patrón exacto ya diagnosticado y corregido en InteractionDetector.OnDisable() (ver
-            // incidencia de los iconos "A" acumulados, 5 sept 2026) — mismo fix aquí.
+            // La corrutina de icono vive en este componente, no en el propio icono (sin padre).
+            // Si el NPC se desactiva sin pasar por AlertState.OnExit, la corrutina se detiene y el
+            // icono quedaría huérfano y congelado — OnDisable lo limpia explícitamente. Ver INC-184.
             HideAlertIconImmediate();
         }
         
@@ -160,7 +155,7 @@ namespace Game.NPC.Common
                 {
                     if (showDebugLogs)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada via Animator: {_headBone.name}");
                         #endif
                     }
@@ -176,7 +171,7 @@ namespace Game.NPC.Common
                 {
                     if (showDebugLogs)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCAlertIcon:{name}] ✅ Cabeza encontrada por nombre: {_headBone.name}");
                         #endif
                     }
@@ -186,7 +181,7 @@ namespace Game.NPC.Common
             
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ No se encontró hueso de cabeza, usando fallback height={fallbackHeight}");
                 #endif
             }
@@ -249,14 +244,9 @@ namespace Game.NPC.Common
         {
             if (!OcultarDuranteDialogos) return;
 
-            // FIX (16 sept 2026): antes esto salía de vacío si _hiddenDuringDialogue ya era true.
-            // Con dos diálogos seguidos (p. ej. el turn-in de una misión y la oferta de la
-            // siguiente, ambos del grafo, separados por un frame), el flag todavía valía true del
-            // diálogo anterior — porque solo se baja al TERMINAR la animación de restauración, que
-            // tiene 0.5s de retardo — así que el diálogo nuevo no ocultaba nada Y ADEMÁS la
-            // restauración pendiente saltaba 0.5s después, ya con el diálogo nuevo en pantalla:
-            // el icono aparecía en medio de la conversación. Ahora se cancela la restauración
-            // pendiente y se oculta siempre que haya un icono visible.
+            // Con dos diálogos seguidos sin cancelar la restauración pendiente, el icono reaparece
+            // en mitad del segundo diálogo: la animación de restauración (0.5s) del primero completa
+            // justo cuando el segundo ya está activo. Cancelar y re-ocultar siempre previene esto.
             if (_restoreAfterDialogueCoroutine != null)
             {
                 StopCoroutine(_restoreAfterDialogueCoroutine);
@@ -278,7 +268,7 @@ namespace Game.NPC.Common
                     
                 if (showDebugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCAlertIcon:{name}] 🔇 Ocultando icono durante diálogo");
                     #endif
                 }
@@ -339,7 +329,7 @@ namespace Game.NPC.Common
 
                 if (showDebugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCAlertIcon:{name}] 🔊 Restaurando icono tras diálogo (después de {restoreAfterDialogueDelay}s de delay)");
                     #endif
                 }
@@ -402,7 +392,7 @@ namespace Game.NPC.Common
         {
             if (iconPrefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIconController:{name}] IconPrefab es null");
 #endif
                 return;
@@ -416,14 +406,14 @@ namespace Game.NPC.Common
             
             float useDuration = duration > 0f ? duration : iconDuration;
             
-            // ✅ FIX: Respetar la escala original del prefab multiplicándola por iconScale
+            // Multiplica la escala del prefab por iconScale para respetar la proporción original.
             _targetScale = Vector3.Scale(iconPrefab.transform.localScale, Vector3.one * iconScale);
             
             _iconRoutine = StartCoroutine(ShowIconRoutine(iconPrefab, useDuration));
             
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] 🔔 Mostrando icono por {useDuration}s");
                 #endif
             }
@@ -440,7 +430,7 @@ namespace Game.NPC.Common
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ alertPrefab no proporcionado");
 #endif
             }
@@ -457,7 +447,7 @@ namespace Game.NPC.Common
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ questionPrefab no proporcionado");
 #endif
             }
@@ -483,7 +473,7 @@ namespace Game.NPC.Common
             
             if (showDebugLogs) 
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] SetIconOffset: altura deseada={offset.y}, fallbackHeight={fallbackHeight}");
 #endif
                 }
@@ -509,7 +499,7 @@ namespace Game.NPC.Common
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] SetIconHeight: {height}");
 #endif
                 }
@@ -526,7 +516,7 @@ namespace Game.NPC.Common
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIcon:{name}] ⚠️ exclamationPrefab no proporcionado");
 #endif
             }
@@ -540,7 +530,7 @@ namespace Game.NPC.Common
         {
             if (iconPrefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAlertIconController:{name}] ⚠️ persistentIconPrefab es null");
 #endif
                 return;
@@ -559,14 +549,14 @@ namespace Game.NPC.Common
             UpdateCameraReference();
             HideAlertIconImmediate();
             
-            // ✅ FIX: Respetar la escala original del prefab multiplicándola por iconScale
+            // Multiplica la escala del prefab por iconScale para respetar la proporción original.
             _targetScale = Vector3.Scale(iconPrefab.transform.localScale, Vector3.one * iconScale);
 
             _iconRoutine = StartCoroutine(ShowPersistentIconRoutine(iconPrefab));
             
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] 📌 Mostrando icono persistente");
                 #endif
             }
@@ -636,7 +626,7 @@ namespace Game.NPC.Common
             
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] 🔕 Ocultando icono con animación");
                 #endif
             }
@@ -668,7 +658,7 @@ namespace Game.NPC.Common
             
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAlertIcon:{name}] ⚡ Icono eliminado inmediatamente");
                 #endif
             }
@@ -754,9 +744,7 @@ namespace Game.NPC.Common
             var cam = GetCurrentCamera();
             if (cam != null && iconTransform != null)
             {
-                // ✅ FIX: Revert to standard "LookAt" direction (Towards camera)
-                // This ensures we see the "front" face of the sprite.
-                // If the sprite is mirrored, we handle it by flipping X scale in TagMinigameController.
+                // Apuntar hacia la cámara muestra la cara frontal del sprite.
                 Vector3 lookDir = cam.transform.position - iconTransform.position;
                 lookDir.y = 0; // Solo rotar en Y para mantener vertical
                 
@@ -793,10 +781,8 @@ namespace Game.NPC.Common
             
             DOTween.Kill(this);
 
-            // FIX (16 sept 2026): si el icono se crea CON UN DIÁLOGO YA ABIERTO (el evento
-            // OnDialogueStarted ya pasó, así que nadie va a ocultarlo), nace oculto y se queda
-            // esperando a OnDialogueClosed para restaurarse, en vez de animarse hacia arriba en
-            // mitad de la conversación.
+            // Si el icono nace con un diálogo ya abierto, nace oculto y espera a OnDialogueClosed
+            // en vez de animarse en mitad de la conversación.
             bool bornDuringDialogue = OcultarDuranteDialogos && IsDialogueOpenNow();
             bool bornDuringSequence = OcultarDuranteSecuencias && HaySecuenciaEnCurso();
             if (bornDuringSequence && !bornDuringDialogue)

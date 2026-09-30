@@ -97,8 +97,8 @@ namespace Core.InputGlyphs
                          : family == InputGlyphDeviceFamily.Switch ? "R"
                          : "RB";
 
-                // LT y RT comparten binding de teclado (<Keyboard>/leftCtrl) en PlayerControls.inputactions
-                // a fecha de este comentario — no es un error de esta tabla, así está mapeado el asset.
+                // LT y RT comparten tecla en teclado (<Keyboard>/leftCtrl): el ataque de equipo es LT+RT
+                // a la vez, así que en teclado basta con una (INC-491).
                 case InputGlyphNames.TriggerLeft:
                     if (kb) return "Ctrl";
                     return family == InputGlyphDeviceFamily.PlayStation ? "L2"

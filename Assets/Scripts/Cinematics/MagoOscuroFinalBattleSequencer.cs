@@ -447,7 +447,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
 
         if (_willVisionPrefab == null || _goodWizardVisionPrefab == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MagoOscuroFinalBattleSequencer] _willVisionPrefab/_goodWizardVisionPrefab " +
                 "sin asignar — vuelve a ejecutar 'El Sendero/Escena/Rellenar Referencias de la Batalla " +
                 "Final' para que se autowireen (Assets/Prefabs/_WILL.prefab y _WILL_ORIGINAL.prefab). " +
@@ -510,7 +510,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         // PlayerDialogueAnimator.cs para ese caso.
         if (willVisionAnimator == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MagoOscuroFinalBattleSequencer] willVisionAnimator es null -- " +
                 "_willVisionPrefab no tiene PlayerDialogueAnimator en ningun hijo. Los gestos de Will " +
                 "en la visión no pueden dispararse.");
@@ -553,7 +553,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         }
         else
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MagoOscuroFinalBattleSequencer] Camera.main es null — no se puede forzar " +
                 "el fondo blanco de la visión (CinematicCameraDriver dice mover Camera.main directamente).");
             #endif
@@ -660,7 +660,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         // Ver nota del HUD en la cabecera del método: DramaticTextOverlayUI acaba de restaurarlo
         // por su cuenta al terminar su propia secuencia — se vuelve a ocultar porque seguimos
         // dentro de esta cinemática (mismas tres llamadas que CinematicSequencerBase.LockCinematic()).
-        PlayerHUDV2.Instance?.HideHUD();
+        PlayerHUDV2.Instance?.HideHUD(this);
         MinimapController.Instance?.SetHiddenByCinematic(true);
         TimeOfDayIndicator.Instance?.Hide();
 
@@ -704,7 +704,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
     {
         if (DramaticTextOverlayUI.Instance == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MagoOscuroFinalBattleSequencer] DramaticTextOverlayUI.Instance es null " +
                 "(¿el HUD persistente de Start.unity no llegó a cargar en esta escena?) — se salta " +
                 "el diálogo de la visión.");
@@ -843,7 +843,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
             // solo al arrancar la escena en cuanto combatConfig está wireado. Si esto se dispara,
             // significa que ese menú no se ha ejecutado todavía sobre el prefab: se mantiene esta
             // red de seguridad por tiempo fijo para no bloquear el grafo narrativo mientras tanto.
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MagoOscuroFinalBattleSequencer] No se encontró Damageable en el Mago Oscuro — " +
                 "¿se ejecutó el menú 'El Sendero/Magia/Crear Hechizos del Mago Oscuro (Batalla Final)'? " +
                 "De momento se usa un tiempo fijo de espera como red de seguridad.");

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// IA del Boss Golem - VERSIÓN SIMPLIFICADA
@@ -14,7 +15,7 @@ using System.Collections;
 /// </summary>
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Damageable))]
-public class GolemBossAI : MonoBehaviour
+public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInicioDeCombate
 {
     [Header("Referencias")]
     [SerializeField] private Transform player;
@@ -156,6 +157,26 @@ public class GolemBossAI : MonoBehaviour
     [Tooltip("Radio de detección de colisión (debe coincidir con el collider del Golem)")]
     [SerializeField] private float contactRadius = 2f;
 
+    [Header("Dos objetivos: jugador y señuelo (INC-489)")]
+    [Tooltip("Ataques contra el jugador antes de ir a por un aliado que le provoque (SenueloDeCombate). " +
+             "Mientras va a por el aliado le enseña la espalda al jugador: es el momento de darle " +
+             "(ArmaduraFrontal).")]
+    [SerializeField, Min(1)] private int ataquesAntesDeCambiar = 2;
+    [Tooltip("Segundos que persigue al señuelo antes de volver a por el jugador.")]
+    [SerializeField] private float segundosConSenuelo = 7f;
+    [Tooltip("Distancia máxima a la que busca un señuelo.")]
+    [SerializeField] private float distanciaMaxSenuelo = 18f;
+    [Tooltip("Segundos que se queda girándose (sin atacar) al cambiar de objetivo: se ve venir.")]
+    [SerializeField] private float pausaAlCambiarObjetivo = 1f;
+
+    [Header("Fusión con el bosque (fase 3, INC-489)")]
+    [Tooltip("Rocas que arranca del claro y se pega al entrar en la fase final (usa rockPrefab, sin daño).")]
+    [SerializeField, Min(0)] private int piezasFusion = 10;
+    [SerializeField] private float radioFusion = 9f;
+    [SerializeField] private float duracionFusion = 1.2f;
+    [Tooltip("Cuánto crece al fundirse.")]
+    [SerializeField] private float escalaFusion = 1.25f;
+
     [Header("Combat Control")]
     public bool canStartCombat
     {
@@ -169,7 +190,7 @@ public class GolemBossAI : MonoBehaviour
                 {
                     ActiveCombatRegistry.RegisterNPC(gameObject);
                     _registeredInCombat = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 🔴🔴🔴 GOLEM REGISTRADO EN COMBATE INMEDIATAMENTE - ActiveCombatRegistry.Count = {ActiveCombatRegistry.Count}");
 #endif
                 }
@@ -177,6 +198,8 @@ public class GolemBossAI : MonoBehaviour
         }
     }
     private bool _canStartCombat = false;
+
+    public void EmpezarCombate() => canStartCombat = true;
     
     [SerializeField] private bool autoStartOnDetection = true;
 
@@ -198,6 +221,15 @@ public class GolemBossAI : MonoBehaviour
     private bool _isDead;
     private bool _registeredInCombat;
     private Coroutine _aiRoutine;
+
+    // Dos objetivos y fases (INC-489)
+    private SenueloDeCombate _senuelo;
+    private int _ataquesSobreJugador;
+    private float _senueloHasta;
+    private float _pausaHasta;
+    private float[] _umbrales;
+    private TransicionDeFaseDeJefe _transicion;
+    private Collider _cuerpo;
     private float _targetRefreshTimer;
     
     // Sistema de fases
@@ -233,7 +265,11 @@ public class GolemBossAI : MonoBehaviour
         if (!animator) animator = GetComponent<Animator>();
         if (!damageable) damageable = GetComponent<Damageable>();
         if (!agent) agent = GetComponent<NavMeshAgent>();
-        
+        _cuerpo = GetComponent<Collider>();
+        _umbrales = new[] { phase2HealthThreshold, phase3HealthThreshold };
+        _transicion = GetComponent<TransicionDeFaseDeJefe>();
+        if (_transicion == null) _transicion = gameObject.AddComponent<TransicionDeFaseDeJefe>();
+
         if (!player && PlayerService.Player != null)
         {
             SetTarget(PlayerService.Player.transform);
@@ -284,6 +320,7 @@ public class GolemBossAI : MonoBehaviour
 
     void OnDestroy()
     {
+        SoltarSenuelo();
         if (damageable)
         {
             damageable.OnDamaged -= OnDamageTaken;
@@ -327,6 +364,7 @@ public class GolemBossAI : MonoBehaviour
 
     void OnDisable()
     {
+        SoltarSenuelo();
         // La corrutina ya ha sido detenida por Unity al desactivarse; limpiamos la referencia
         // para que OnEnable sepa que debe relanzarla en vez de asumir que sigue viva.
         _aiRoutine = null;
@@ -349,7 +387,7 @@ public class GolemBossAI : MonoBehaviour
         if (_targetRefreshTimer >= 0.5f)
         {
             _targetRefreshTimer = 0f;
-            var nearest = CombatTargetProvider.GetNearestTarget(transform.position);
+            var nearest = _senuelo != null ? _senuelo.transform : CombatTargetProvider.GetNearestTarget(transform.position);
             if (nearest != null) SetTarget(nearest);
         }
 
@@ -432,8 +470,16 @@ public class GolemBossAI : MonoBehaviour
             return;
         }
 
-        // Verificar cambio de fase
-        CheckPhaseTransition();
+        // Cambio de fase: la transición se lleva este turno.
+        if (CheckPhaseTransition()) return;
+
+        // Dos objetivos: ¿toca ir a por el señuelo o volver a por el jugador?
+        if (RevisarObjetivo()) return;
+        if (Time.time < _pausaHasta)
+        {
+            SetIdle(); // quieto, girándose hacia su nuevo objetivo (la rotación va en Update)
+            return;
+        }
 
         // Fuera de rango de detección
         if (distance > detectionRange)
@@ -448,7 +494,7 @@ public class GolemBossAI : MonoBehaviour
             _kitingSinceTime = -1f;
             if (TryAttack())
             {
-                // Ataque iniciado
+                if (_senuelo == null) _ataquesSobreJugador++;
             }
             else
             {
@@ -461,7 +507,7 @@ public class GolemBossAI : MonoBehaviour
             _kitingSinceTime = -1f;
             if (TryAttack())
             {
-                // Ataque iniciado
+                if (_senuelo == null) _ataquesSobreJugador++;
             }
             else
             {
@@ -493,9 +539,9 @@ public class GolemBossAI : MonoBehaviour
     /// <summary>
     /// Verifica si el Golem debe cambiar de fase basado en su vida actual
     /// </summary>
-    private void CheckPhaseTransition()
+    private bool CheckPhaseTransition()
     {
-        if (!damageable) return;
+        if (!damageable) return false;
         
         float healthPercent = damageable.Current / damageable.Max;
         int previousPhase = _currentPhase;
@@ -505,7 +551,7 @@ public class GolemBossAI : MonoBehaviour
         {
             _currentPhase = 3;
             Log($"🔥🔥🔥 FASE 3 ACTIVADA - Vida: {healthPercent:P0}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🔥🔥🔥 FASE 3 ACTIVADA - El Golem ahora usará SALTO CON ONDA EXPANSIVA!");
 #endif
         }
@@ -514,25 +560,23 @@ public class GolemBossAI : MonoBehaviour
         {
             _currentPhase = 2;
             Log($"⚡⚡⚡ FASE 2 ACTIVADA - Vida: {healthPercent:P0}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] ⚡⚡⚡ FASE 2 ACTIVADA - El Golem ahora usará lluvia de rocas!");
 #endif
         }
         
-        // Si cambió de fase, posible embestida de transición
-        if (_currentPhase != previousPhase && !_isAttacking && !_isCharging)
-        {
-            if (Random.value <= chargeOnPhaseChangeChance)
-            {
-                _pendingChargeAttack = true;
-                Log($"🏃 ¡EMBESTIDA DE TRANSICIÓN ACTIVADA!");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[GolemBossAI] 🏃 ¡EMBESTIDA DE TRANSICIÓN! El Golem cargará hacia el jugador!");
-#endif
-            }
-        }
+        if (_currentPhase == previousPhase) return false;
+
+        // Transición compartida (rugido, onda, color) y aviso a quien lo cuente (barra, guía).
+        AlCambiarDeFase?.Invoke(Fase);
+        StartCoroutine(TransicionDeFase(_currentPhase == 3));
+
+        // Y después, posible embestida de transición.
+        if (Random.value <= chargeOnPhaseChangeChance)
+            _pendingChargeAttack = true;
+        return true;
     }
-    
+
     /// <summary>
     /// Intenta ejecutar un ataque según la fase actual
     /// </summary>
@@ -670,7 +714,7 @@ public class GolemBossAI : MonoBehaviour
         {
             _isReturningHome = true;
             Log("🚧 Fuera del área de batalla — el Golem regresa a su posición de origen.");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🚧 Leash superado ({distanceFromHome:F1}m > {maxLeashDistance}m) — volviendo a {_homePosition}");
 #endif
         }
@@ -820,7 +864,7 @@ public class GolemBossAI : MonoBehaviour
         StopAgent();
         
         Log("🪨 Iniciando lanzar roca");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🪨 Iniciando lanzar roca");
 #endif
 
@@ -931,13 +975,13 @@ public class GolemBossAI : MonoBehaviour
                 // El daño se configura en el prefab (baseDamage del EnemyProjectile)
                 // Pasamos -1 para usar el daño configurado en el prefab
                 proj.Initialize(direction, -1f);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[GolemBossAI] 🎯 Roca lanzada - EnemyProjectile usará su baseDamage del prefab, velocidad {rockSpeed}");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[GolemBossAI] ❌ EnemyProjectile NO encontrado en la roca!");
 #endif
             }
@@ -946,7 +990,7 @@ public class GolemBossAI : MonoBehaviour
             Destroy(rock, 5f);
             
             Log($"🪨 Roca lanzada hacia jugador");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🪨 Roca lanzada: dir={direction}, speed={rockSpeed}");
 #endif
         }
@@ -974,7 +1018,7 @@ public class GolemBossAI : MonoBehaviour
         string animName = _useLeftHand ? ANIM_ATTACK02 : ANIM_ATTACK01;
         
         Log($"🪨 [Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🪨 [Fase 2] Lanzando roca con mano {(_useLeftHand ? "izquierda" : "derecha")}");
 #endif
 
@@ -1055,7 +1099,7 @@ public class GolemBossAI : MonoBehaviour
         StopAgent();
 
         Log("🌧️ [Fase 2] ¡LLUVIA DE ROCAS!");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🌧️ [Fase 2] ¡LLUVIA DE ROCAS! - {rockRainCount} rocas");
 #endif
 
@@ -1226,7 +1270,7 @@ public class GolemBossAI : MonoBehaviour
         _lastAttackTime = Time.time;
         
         Log("🏃💨 ¡EMBESTIDA INICIADA!");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🏃💨 ¡EMBESTIDA! El Golem corre hacia el jugador!");
 #endif
         
@@ -1255,7 +1299,7 @@ public class GolemBossAI : MonoBehaviour
         if (animator)
         {
             animator.speed = chargeAnimationSpeedMultiplier;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🏃💨 Velocidad de animación aumentada a {chargeAnimationSpeedMultiplier}x para embestida!");
 #endif
         }
@@ -1335,7 +1379,7 @@ public class GolemBossAI : MonoBehaviour
         if (animator)
         {
             animator.speed = 1f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🏃 Velocidad de animación restaurada a normal (1.0x)");
 #endif
         }
@@ -1355,7 +1399,7 @@ public class GolemBossAI : MonoBehaviour
     private IEnumerator ExecutePunch()
     {
         Log("👊 ¡PUÑETAZO!");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 👊 ¡PUÑETAZO!");
 #endif
         
@@ -1386,27 +1430,27 @@ public class GolemBossAI : MonoBehaviour
     {
         Vector3 punchCenter = transform.position + transform.forward * 1.5f + Vector3.up;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 👊 Verificando daño de puñetazo en posición {punchCenter}, radio {punchRadius}");
 #endif
         
         int hitCount = Physics.OverlapSphereNonAlloc(punchCenter, punchRadius, _punchHitBuffer); // ✅ OPTIMIZACIÓN: NonAlloc
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 👊 Detectados {hitCount} colliders en el área");
 #endif
         
         for (int i = 0; i < hitCount; i++)
         {
             var hit = _punchHitBuffer[i];
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 👊 Evaluando collider: {hit.name} (Tag: {hit.tag})");
 #endif
             
             // No dañarse a sí mismo
             if (hit.transform == transform || hit.transform.IsChildOf(transform))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[GolemBossAI] 👊 Ignorando a sí mismo: {hit.name}");
 #endif
                 continue;
@@ -1417,7 +1461,7 @@ public class GolemBossAI : MonoBehaviour
             var partyMember = hit.GetComponent<Game.NPC.NPCPartyMember>();
             bool isAlly = partyMember != null;
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 👊 {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
 #endif
             
@@ -1427,7 +1471,7 @@ public class GolemBossAI : MonoBehaviour
                 var shieldController = hit.GetComponent<PlayerShieldController>();
                 if (shieldController != null && shieldController.IsDefending)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 🛡️ {hit.name} está DEFENDIENDO - ¡Puñetazo BLOQUEADO!");
 #endif
                     continue; // No aplicar daño
@@ -1448,7 +1492,7 @@ public class GolemBossAI : MonoBehaviour
                     playerHealth.TakeDamage(punchDamage);
                     damageApplied = true;
                     Log($"👊 Puñetazo golpeó a {hit.name} por {punchDamage}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 👊 ✅ DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {punchDamage}!");
 #endif
                 }
@@ -1461,7 +1505,7 @@ public class GolemBossAI : MonoBehaviour
                         hitDamageable.TakeDamage(punchDamage);
                         damageApplied = true;
                         Log($"👊 Puñetazo golpeó a {hit.name} por {punchDamage}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[GolemBossAI] 👊 ✅ DAÑO APLICADO a {hit.name} via Damageable por {punchDamage}!");
 #endif
                     }
@@ -1469,7 +1513,7 @@ public class GolemBossAI : MonoBehaviour
                 
                 if (!damageApplied)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[GolemBossAI] 👊 ⚠️ {hit.name} no tiene PlayerHealthSystem ni Damageable!");
 #endif
                 }
@@ -1479,7 +1523,7 @@ public class GolemBossAI : MonoBehaviour
                 if (rb != null && !rb.isKinematic)
                 {
                     rb.AddForce(knockbackDir * punchKnockback, ForceMode.Impulse);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 👊 Knockback aplicado a {hit.name}");
 #endif
                 }
@@ -1507,7 +1551,7 @@ public class GolemBossAI : MonoBehaviour
         StopAgent();
         
         Log("🦘 [Fase 3] ¡SALTO HACIA EL JUGADOR!");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🦘 [Fase 3] ¡SALTO HACIA EL JUGADOR!");
 #endif
         
@@ -1588,7 +1632,7 @@ public class GolemBossAI : MonoBehaviour
         // Aterrizaje - asegurar posición final exacta
         transform.position = _jumpTargetPos;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 🦘 ¡ATERRIZAJE! Posición: {transform.position}");
 #endif
         
@@ -1625,7 +1669,7 @@ public class GolemBossAI : MonoBehaviour
         Vector3 impactPos = transform.position;
         
         Log($"💥 [Fase 3] ¡ONDA EXPANSIVA! Radio: {shockwaveRadius}, Daño: {shockwaveDamage}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 💥 [Fase 3] ¡ONDA EXPANSIVA! en {impactPos}, Radio: {shockwaveRadius}m, Daño: {shockwaveDamage}");
 #endif
         
@@ -1634,13 +1678,13 @@ public class GolemBossAI : MonoBehaviour
         {
             Transform vfx = VfxPoolService.Instance.Play(shockwaveVFX, impactPos, Quaternion.identity, 3f);
             if (vfx != null) vfx.localScale = Vector3.one * (shockwaveRadius / 5f); // Escalar según radio
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 VFX de onda expansiva creado");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ No hay VFX de onda expansiva configurado!");
 #endif
         }
@@ -1650,7 +1694,7 @@ public class GolemBossAI : MonoBehaviour
         {
             Transform dust = VfxPoolService.Instance.Play(landingDustVFX, impactPos, Quaternion.identity, 3f);
             if (dust != null) dust.localScale = Vector3.one * 2f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 VFX de polvo creado");
 #endif
         }
@@ -1667,28 +1711,28 @@ public class GolemBossAI : MonoBehaviour
     /// </summary>
     private void ApplyShockwaveDamage(Vector3 center)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 💥 Verificando daño de onda expansiva en {center}, radio {shockwaveRadius}");
 #endif
         
         // Buscar todos los colliders en el radio
         int hitCount = Physics.OverlapSphereNonAlloc(center, shockwaveRadius, _shockwaveHitBuffer); // ✅ OPTIMIZACIÓN: NonAlloc
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[GolemBossAI] 💥 Detectados {hitCount} colliders en el área de onda");
 #endif
         
         for (int i = 0; i < hitCount; i++)
         {
             var hit = _shockwaveHitBuffer[i];
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 Evaluando collider: {hit.name} (Tag: {hit.tag})");
 #endif
             
             // No dañarse a sí mismo
             if (hit.transform == transform || hit.transform.IsChildOf(transform))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[GolemBossAI] 💥 Ignorando a sí mismo: {hit.name}");
 #endif
                 continue;
@@ -1699,7 +1743,7 @@ public class GolemBossAI : MonoBehaviour
             var partyMember = hit.GetComponent<Game.NPC.NPCPartyMember>();
             bool isAlly = partyMember != null;
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 {hit.name}: isPlayer={isPlayer}, isAlly={isAlly}");
 #endif
             
@@ -1709,7 +1753,7 @@ public class GolemBossAI : MonoBehaviour
                 var shieldController = hit.GetComponent<PlayerShieldController>();
                 if (shieldController != null && shieldController.IsDefending)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 🛡️ {hit.name} está DEFENDIENDO - ¡Onda expansiva BLOQUEADA!");
 #endif
                     // Reproducir efecto de bloqueo si existe
@@ -1731,7 +1775,7 @@ public class GolemBossAI : MonoBehaviour
                     playerHealth.TakeDamage(shockwaveDamage);
                     damageApplied = true;
                     Log($"💥 Onda dañó a {hit.name} por {shockwaveDamage}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO APLICADO a {hit.name} via PlayerHealthSystem por {shockwaveDamage}!");
 #endif
                 }
@@ -1744,7 +1788,7 @@ public class GolemBossAI : MonoBehaviour
                         hitDamageable.TakeDamage(shockwaveDamage);
                         damageApplied = true;
                         Log($"💥 Onda dañó a {hit.name} por {shockwaveDamage}");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO APLICADO a {hit.name} via Damageable por {shockwaveDamage}!");
 #endif
                     }
@@ -1752,7 +1796,7 @@ public class GolemBossAI : MonoBehaviour
                 
                 if (!damageApplied)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ {hit.name} no tiene PlayerHealthSystem ni Damageable!");
 #endif
                 }
@@ -1762,7 +1806,7 @@ public class GolemBossAI : MonoBehaviour
                 if (rb != null && !rb.isKinematic)
                 {
                     rb.AddForce(knockbackDir * shockwaveKnockback, ForceMode.Impulse);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 💥 Knockback aplicado a {hit.name}");
 #endif
                 }
@@ -1773,7 +1817,7 @@ public class GolemBossAI : MonoBehaviour
                 {
                     // El knockback se aplicará en el siguiente frame via el sistema de movimiento
                     // Por ahora solo hacemos daño, el knockback es opcional
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[GolemBossAI] 💥 {hit.name} tiene CharacterController (knockback manual necesario)");
 #endif
                 }
@@ -1830,7 +1874,7 @@ public class GolemBossAI : MonoBehaviour
         var shieldController = player.GetComponent<PlayerShieldController>();
         if (shieldController != null && shieldController.IsDefending)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 🛡️ Jugador está DEFENDIENDO - ¡Daño por contacto BLOQUEADO!");
 #endif
             return; // No aplicar daño
@@ -1841,7 +1885,7 @@ public class GolemBossAI : MonoBehaviour
         if (_isCharging)
         {
             damage *= chargeDamageMultiplier;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 ¡COLISIÓN DURANTE EMBESTIDA! Daño aumentado a {damage}");
 #endif
         }
@@ -1854,7 +1898,7 @@ public class GolemBossAI : MonoBehaviour
             _lastContactDamageTime = Time.time;
             
             Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO POR CONTACTO aplicado al jugador via PlayerHealthSystem: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
 #endif
             return;
@@ -1868,13 +1912,13 @@ public class GolemBossAI : MonoBehaviour
             _lastContactDamageTime = Time.time;
             
             Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] 💥 ✅ DAÑO POR CONTACTO aplicado al jugador via Damageable: {damage} (distancia: {Vector3.Distance(transform.position, player.position):F2}m)");
 #endif
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[GolemBossAI] 💥 ⚠️ El jugador no tiene PlayerHealthSystem ni Damageable!");
 #endif
     }
@@ -1913,6 +1957,7 @@ public class GolemBossAI : MonoBehaviour
         
         _isDead = true;
         _currentState = BossState.Dead;
+        SoltarSenuelo();
         
         Log("💀 Golem derrotado");
         
@@ -1930,6 +1975,151 @@ public class GolemBossAI : MonoBehaviour
 
     #endregion
 
+    #region Fases y objetivos (INC-489)
+
+    // ── IJefeConFases / IJefeConObjetivo ──────────────────────────────────
+    public int Fase => _currentPhase - 1;
+    public IReadOnlyList<float> UmbralesDeFase => _umbrales;
+    public event System.Action<int> AlCambiarDeFase;
+    public Transform Objetivo => player;
+    public event System.Action<Transform> AlCambiarDeObjetivo;
+
+    /// Cambio de fase: golpe contra el suelo con los efectos compartidos (TransicionDeFaseDeJefe).
+    /// En la fase final, además, se funde con el bosque: arranca rocas del claro, se las pega y crece.
+    private IEnumerator TransicionDeFase(bool fusion)
+    {
+        _isAttacking = true;
+        StopAgent();
+        PlayAnim(ANIM_ATTACK02);
+        _transicion.Cargar();
+
+        if (fusion) yield return Fusionarse();
+        else yield return new WaitForSeconds(0.8f);
+
+        _transicion.Estallar(Fase, fusion);
+        yield return new WaitForSeconds(1f);
+
+        PlayAnim(ANIM_IDLE);
+        _currentState = BossState.Idle;
+        EndAttack();
+    }
+
+    /// Las rocas salen de alrededor, vuelan hasta el pecho y el Gólem crece. Las rocas son el
+    /// mismo prefab que lanza, pero sin nada que haga daño (solo se ven).
+    private IEnumerator Fusionarse()
+    {
+        int n = rockPrefab != null ? piezasFusion : 0;
+        var piezas = new Transform[n];
+        var origen = new Vector3[n];
+        Vector3 centro = transform.position;
+
+        for (int i = 0; i < n; i++)
+        {
+            float angulo = (360f / n) * i + Random.Range(-15f, 15f);
+            Vector3 pos = centro + Quaternion.Euler(0f, angulo, 0f) * Vector3.forward * radioFusion + Vector3.up * 0.3f;
+            var roca = Instantiate(rockPrefab, pos, Random.rotation);
+            SoloDecorado(roca);
+            piezas[i] = roca.transform;
+            origen[i] = pos;
+            if (rockPickupVFX && VfxPoolService.Instance != null)
+                VfxPoolService.Instance.Play(rockPickupVFX, pos, Quaternion.identity, 2f);
+        }
+
+        Vector3 escalaInicial = transform.localScale;
+        Vector3 escalaFinal = escalaInicial * Mathf.Max(0.1f, escalaFusion);
+        float t = 0f;
+        while (t < duracionFusion)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duracionFusion);
+            Vector3 pecho = _cuerpo != null ? _cuerpo.bounds.center : transform.position + Vector3.up * 3f;
+            for (int i = 0; i < n; i++)
+            {
+                if (!piezas[i]) continue;
+                piezas[i].position = Vector3.Lerp(origen[i], pecho, k * k) + Vector3.up * (Mathf.Sin(k * Mathf.PI) * 3f);
+            }
+            transform.localScale = Vector3.Lerp(escalaInicial, escalaFinal, Mathf.SmoothStep(0f, 1f, k));
+            yield return null;
+        }
+
+        for (int i = 0; i < n; i++)
+            if (piezas[i]) Destroy(piezas[i].gameObject);
+        if (landingDustVFX && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(landingDustVFX, transform.position, Quaternion.identity, 3f);
+    }
+
+    /// Deja una roca solo para verse: sin scripts (nada de daño ni de vuelo propio) ni física.
+    private static void SoloDecorado(GameObject roca)
+    {
+        foreach (var comp in roca.GetComponentsInChildren<MonoBehaviour>(true)) comp.enabled = false;
+        foreach (var col in roca.GetComponentsInChildren<Collider>(true)) col.enabled = false;
+        foreach (var rb in roca.GetComponentsInChildren<Rigidbody>(true)) rb.isKinematic = true;
+    }
+
+    /// Dos objetivos: tras unos ataques contra el jugador va a por un aliado que le provoca
+    /// (SenueloDeCombate); pasado un rato, o si el aliado desaparece, vuelve. Devuelve true si ha
+    /// cambiado de objetivo (ese turno se lo lleva el giro).
+    private bool RevisarObjetivo()
+    {
+        if (_senuelo != null)
+        {
+            bool volver = Time.time >= _senueloHasta || !_senuelo.isActiveAndEnabled ||
+                          Vector3.Distance(transform.position, _senuelo.transform.position) > distanciaMaxSenuelo * 1.5f;
+            if (!volver) return false;
+            CambiarObjetivo(null);
+            return true;
+        }
+
+        if (_ataquesSobreJugador < ataquesAntesDeCambiar) return false;
+
+        var senuelo = BuscarSenuelo();
+        if (senuelo == null) return false;
+        CambiarObjetivo(senuelo);
+        return true;
+    }
+
+    private SenueloDeCombate BuscarSenuelo()
+    {
+        SenueloDeCombate mejor = null;
+        float mejorDist = distanciaMaxSenuelo;
+        var activos = SenueloDeCombate.Activos;
+        for (int i = 0; i < activos.Count; i++)
+        {
+            var s = activos[i];
+            if (s == null || !s.isActiveAndEnabled) continue;
+            float d = Vector3.Distance(transform.position, s.transform.position);
+            if (d <= mejorDist) { mejorDist = d; mejor = s; }
+        }
+        return mejor;
+    }
+
+    /// null = volver a por el jugador.
+    private void CambiarObjetivo(SenueloDeCombate senuelo)
+    {
+        if (_senuelo != null) _senuelo.TerminarProvocacion();
+        _senuelo = senuelo;
+        _ataquesSobreJugador = 0;
+        if (_senuelo != null)
+        {
+            _senuelo.EmpezarProvocacion();
+            _senueloHasta = Time.time + segundosConSenuelo;
+        }
+
+        Transform nuevo = _senuelo != null ? _senuelo.transform : CombatTargetProvider.GetNearestTarget(transform.position);
+        if (nuevo != null) SetTarget(nuevo);
+        _pausaHasta = Time.time + pausaAlCambiarObjetivo;
+        AlCambiarDeObjetivo?.Invoke(nuevo);
+    }
+
+    /// Suelta al señuelo si lo tenía (al morir, desactivarse o destruirse).
+    private void SoltarSenuelo()
+    {
+        if (_senuelo != null) _senuelo.TerminarProvocacion();
+        _senuelo = null;
+    }
+
+    #endregion
+
     #region Animaciones
 
     private void PlayAnim(string animName)
@@ -1942,7 +2132,7 @@ public class GolemBossAI : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GolemBossAI] Error al reproducir animación '{animName}': {ex.Message}");
 #endif
         }
@@ -1956,7 +2146,7 @@ public class GolemBossAI : MonoBehaviour
     {
         if (debugMode)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[GolemBossAI] {msg}");
 #endif
         }

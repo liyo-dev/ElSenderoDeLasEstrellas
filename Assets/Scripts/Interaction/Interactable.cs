@@ -18,6 +18,8 @@ public class Interactable : MonoBehaviour
     [SerializeField] private GameObject hint;
     [SerializeField] private bool hideHintAtStart = true;
     [SerializeField] private float hintAnimDuration = 0.25f;
+    [Tooltip("Tamaño del icono respecto a la escala que tiene el hint en el prefab (1 = tal cual, 0.5 = la mitad).")]
+    [SerializeField, Range(0.1f, 2f)] private float hintScale = 0.5f;
     [Tooltip("Set de sprites (uno por familia de mando/teclado) para el icono de interactuar. " +
              "Referencia DIRECTA (sin Resources.Load) — arrastrar el asset compartido " +
              "InteractionHintIconSet. Si se deja vacío, el icono se queda con el sprite que ya " +
@@ -101,12 +103,16 @@ public class Interactable : MonoBehaviour
         enabledForUse = initiallyEnabled;
         if (hint)
         {
-            _hintOriginalScale = hint.transform.localScale;
+            _hintOriginalScale = hint.transform.localScale * hintScale;
             _hintIcon = hint.GetComponentInChildren<Image>(true);
             if (hideHintAtStart)
             {
                 hint.transform.localScale = Vector3.zero;
                 hint.SetActive(false);
+            }
+            else
+            {
+                hint.transform.localScale = _hintOriginalScale;
             }
         }
         _npcManager = GetComponent<NPCBehaviourManagerV2>();
@@ -354,27 +360,27 @@ public class Interactable : MonoBehaviour
             var config = narrativeExecutor.GetConfiguration();
             if (config != null && config.HasAvailableNarrative())
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] 🎭 Delegando a NPCInteractiveNarrativeExecutor (tiene narrativas condicionales disponibles)");
 #endif
                 bool success = narrativeExecutor.TryExecuteNarrative();
                 if (success)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[Interactable:{name}] ✅ Narrativa condicional ejecutada exitosamente");
 #endif
                     return; // ✅ Salir - no ejecutar el diálogo por defecto
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[Interactable:{name}] ⚠️ TryExecuteNarrative() falló, usando diálogo por defecto");
 #endif
                 }
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] ℹ️ NPCInteractiveNarrativeExecutor existe pero no hay narrativas disponibles, usando diálogo por defecto");
 #endif
             }
@@ -408,7 +414,7 @@ public class Interactable : MonoBehaviour
     {
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[Interactable] Could not locate Player for interaction via PlayerService.");
 #endif
             return false;
@@ -459,7 +465,7 @@ public class Interactable : MonoBehaviour
 
     void StartDialogue()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Interactable:{name}] 📖 StartDialogue - dialogue={dialogue?.name}");
 #endif
         
@@ -471,7 +477,7 @@ public class Interactable : MonoBehaviour
             if (_npcManager.Context == null || !_npcManager.Context.IsInCombat)
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción");
 #endif
             }
@@ -480,7 +486,7 @@ public class Interactable : MonoBehaviour
         var dm = DialogueManager.Instance;
         if (dialogue && dm != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Interactable:{name}] ✅ Iniciando diálogo: {dialogue.name}");
 #endif
             OnStarted?.Invoke();
@@ -495,7 +501,7 @@ public class Interactable : MonoBehaviour
             // ✅ NPCSimpleAnimator maneja la rotación del NPC (suscrito a eventos de DialogueManager)
             dm.StartDialogue(dialogue, transform, () =>
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] 🔚 Diálogo terminado");
 #endif
                 SetNpcInteracting(false);
@@ -506,7 +512,7 @@ public class Interactable : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[Interactable] No DialogueAsset o DialogueManager en {name}.");
 #endif
             AfterUse();
@@ -535,7 +541,7 @@ public class Interactable : MonoBehaviour
             if (_npcManager.Context == null || !_npcManager.Context.IsInCombat)
             {
                 StartCoroutine(PlayInteractionAnimation(npcAnimator));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] 🎭 Reproduciendo animación de interacción (con opciones)");
 #endif
             }
@@ -544,7 +550,7 @@ public class Interactable : MonoBehaviour
         var dm = DialogueManager.Instance;
         if (dm == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[Interactable] DialogueManager no disponible.");
 #endif
             return;
@@ -580,7 +586,7 @@ public class Interactable : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[Interactable] ShowWithChoices failed: {ex.Message}\n{ex.StackTrace}");
 #endif
             if (GameState.Is(GamePhase.SavePrompt)) GameState.Pop(GamePhase.SavePrompt);
@@ -607,7 +613,7 @@ public class Interactable : MonoBehaviour
         var popup = ConfirmationPopupUI.Instance;
         if (popup == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[Interactable:{name}] ConfirmationPopupUI.Instance es null (¿Start.unity no está cargada?). Usando diálogo con opciones como fallback.");
 #endif
             StartDialogueWithOptions();
@@ -703,7 +709,7 @@ public class Interactable : MonoBehaviour
     {
         if (_worldPoint == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[Interactable:{name}] UseWorldPoint configurado pero no hay NPCWorldPoint en este objeto.");
 #endif
             return;
@@ -716,7 +722,7 @@ public class Interactable : MonoBehaviour
 
         if (handler == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[Interactable:{name}] No se encontró PlayerAmbientActivityHandler en el interactor.");
 #endif
             return;
@@ -734,7 +740,7 @@ public class Interactable : MonoBehaviour
 
         if (!_worldPoint.TryOccupy(interactor.transform))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Interactable:{name}] NPCWorldPoint ya ocupado — no se puede iniciar actividad.");
 #endif
             return;
@@ -787,8 +793,7 @@ public class Interactable : MonoBehaviour
             : string.Empty;
 
         // Incluir posición para garantizar unicidad entre objetos con el mismo nombre
-        var pos = transform.position;
-        var posKey = $"{pos.x:F1}_{pos.y:F1}_{pos.z:F1}";
+        var posKey = IdDePersistencia.ClaveDePosicion(transform.position);
 
         if (string.IsNullOrEmpty(sceneName))
             return $"{gameObject.name}_{posKey}";

@@ -188,7 +188,7 @@ namespace Core
                 // se invoca desde un callback de Submit (que pertenece al mapa UI).
                 _controls?.GamePlay.Enable();
                 ScheduleEnableControls(); // aplicará también UI.Disable() de forma diferida
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (logDiagnostico) Debug.Log("[PIM-Debug] PopUIMode → refCount=0");
 #endif
 
@@ -214,7 +214,7 @@ namespace Core
         {
             if (_uiModeRefCount > 0)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerInputManager] ForceRestoreGameplayMode: resetando refCount {_uiModeRefCount} → 0. " +
                                   "Algún PushUIMode no tuvo su PopUIMode correspondiente.");
                 #endif
@@ -242,7 +242,7 @@ namespace Core
                 _pendingControlsUpdate = false;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             bool uiWasEnabled   = _controls?.UI.enabled   ?? false;
             bool gpWasEnabled   = _controls?.GamePlay.enabled ?? false;
             if (logDiagnostico) Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode ANTES — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
@@ -258,7 +258,7 @@ namespace Core
                 _controls.UI.Enable();
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (logDiagnostico) Debug.Log($"[PIM-Debug] ForceSyncEnterUIMode DESPUÉS — refCount={_uiModeRefCount}, isInUIMode={_isInUIMode}, " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}");
 #endif
@@ -341,7 +341,7 @@ namespace Core
 
             _connectedEventSystem = es;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (logDiagnostico) Debug.Log($"[PIM-Debug] ConnectToEventSystemModule OK — ES='{es.name}', " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}");
 #endif
@@ -356,7 +356,7 @@ namespace Core
         {
             if (_controls == null) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (logDiagnostico) Debug.Log($"[PIM-Debug] EnableControls — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
 #endif
             // Restaurar el modo correcto según el estado
@@ -385,7 +385,7 @@ namespace Core
         {
             InputSystem.onAfterUpdate -= ApplyPendingControlsUpdate;
             _pendingControlsUpdate = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (logDiagnostico) Debug.Log($"[PIM-Debug] ApplyPendingControlsUpdate disparado — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}");
 #endif
             EnableControls();
@@ -421,7 +421,7 @@ namespace Core
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (logDiagnostico) Debug.Log($"[PIM-Debug] OnSceneLoaded '{scene.name}' — isInUIMode={_isInUIMode}, refCount={_uiModeRefCount}, " +
                       $"UI.enabled={_controls?.UI.enabled}, GamePlay.enabled={_controls?.GamePlay.enabled}, " +
                       $"EventSystem.current={EventSystem.current?.name ?? "NULL"}, " +
@@ -442,7 +442,7 @@ namespace Core
             // en el UIInputModule, lo que reconstruye el InputActionState y causa IndexOutOfRangeException.
             if (EventSystem.current != null && EventSystem.current != _connectedEventSystem)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (logDiagnostico) Debug.Log($"[PIM-Debug] OnSceneLoaded → ReconnectEventSystemNextFrame (ES cambió a '{EventSystem.current.name}')");
 #endif
                 StartCoroutine(ReconnectEventSystemNextFrame());
@@ -510,7 +510,7 @@ namespace Core
             var go = new GameObject("[PlayerInputManager]");
             var created = go.AddComponent<PlayerInputManager>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerInputManager] Instancia creada dinámicamente vía EnsureExists() " +
                               "— la escena se cargó sin pasar por Start.unity.");
 #endif

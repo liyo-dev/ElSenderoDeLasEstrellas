@@ -51,7 +51,7 @@ public class ControlsMenuController : MonoBehaviour
         // Mismo mapeo que SettingsMenuController: Start o Cancel (B) cierran el panel.
         if (GamepadInputReader.StartPressed || GamepadInputReader.CancelPressed)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ControlsMenu-Debug] Update() detectó cierre — Start={GamepadInputReader.StartPressed}, Cancel={GamepadInputReader.CancelPressed}");
 #endif
             Close();
@@ -89,7 +89,7 @@ public class ControlsMenuController : MonoBehaviour
     {
         bool wasVisible = root && root.activeSelf;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ControlsMenu-Debug] Close(silent={silent}) — wasVisible={wasVisible}, " +
                   $"root={(root ? root.name : "NULL")}, hasOnClosedCallback={_onClosed != null}");
 #endif
@@ -114,7 +114,7 @@ public class ControlsMenuController : MonoBehaviour
 
         if (!scheme || !rowPrefab || !rowsContainer)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ControlsMenu] Faltan referencias (scheme/rowPrefab/rowsContainer) — no se puede poblar la lista de controles.");
 #endif
             return;

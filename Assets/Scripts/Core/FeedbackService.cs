@@ -103,6 +103,33 @@
             yield return Co_ScreenFade(color, duration, fadeIn);
         }
 
+        /// Si la pantalla está tapada, cambia el color del fundido a 'color' (opaco) en 'duration',
+        /// sin destaparla en ningún momento: p. ej. del blanco de un destello al negro de una
+        /// transición. Si no está tapada, no hace nada.
+        public static System.Collections.IEnumerator ScreenRecolorAsync(Color color, float duration)
+        {
+            if (!IsScreenFaded) yield break;
+            var img = _fadeRoot.Image;
+            var inst = EnsureInstance();
+            if (_activeFadeRoutine != null && inst != null)
+            {
+                inst.StopCoroutine(_activeFadeRoutine);
+                _activeFadeRoutine = null;
+            }
+
+            Color desde = img.color;
+            Color hasta = color;
+            hasta.a = 1f;
+            float t = 0f;
+            while (t < duration && img != null)
+            {
+                img.color = Color.Lerp(desde, hasta, t / duration);
+                t += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            if (img != null) img.color = hasta;
+        }
+
         /// <summary>
         /// Establece el overlay de fade de pantalla a un color exacto de forma instantánea, sin animación.
         /// Útil para poner la pantalla en negro antes de activar una nueva escena y evitar parpadeos.
@@ -112,7 +139,7 @@
             // Con el telón cerrado nadie destapa (ver Telon). Tapar sí se puede siempre.
             if (color.a < 0.99f && Telon.Cerrado)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[FeedbackService] Destape inmediato ignorado: el telón está cerrado ({Telon.Describir()}).");
 #endif
                 return;
@@ -144,7 +171,7 @@
             // telón destapará él solo cuando ya nadie lo retenga (ver Telon).
             if (!fadeIn && Telon.Cerrado)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[FeedbackService] Fundido de salida ignorado: el telón está cerrado ({Telon.Describir()}).");
 #endif
                 yield break;

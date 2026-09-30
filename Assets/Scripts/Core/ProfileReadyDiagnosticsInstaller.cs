@@ -47,7 +47,7 @@ public static class ProfileReadyDiagnosticsInstaller
             var diagnosticsGO = new GameObject("[ProfileReadyDiagnostics]");
             diagnosticsGO.AddComponent<ProfileReadyDiagnostics>();
             Object.DontDestroyOnLoad(diagnosticsGO);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[ProfileReadyDiagnosticsInstaller] ✅ ProfileReadyDiagnostics instalado automáticamente");
 #endif
         }
@@ -58,7 +58,7 @@ public static class ProfileReadyDiagnosticsInstaller
             var analyzerGO = new GameObject("[ProfileReadySubscriptionAnalyzer]");
             analyzerGO.AddComponent<ProfileReadySubscriptionAnalyzer>();
             Object.DontDestroyOnLoad(analyzerGO);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[ProfileReadyDiagnosticsInstaller] ✅ ProfileReadySubscriptionAnalyzer instalado automáticamente");
 #endif
         }

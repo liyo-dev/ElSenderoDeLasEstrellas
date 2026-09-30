@@ -78,6 +78,12 @@ namespace Sendero.Narrative.Editor
                     break;
             }
 
+            if (node is INarrativeStandingLine frase && !string.IsNullOrEmpty(frase.StandingActorId))
+            {
+                BuildActor(root, frase.StandingActorId, "Mientras tanto, si le hablas:");
+                Line(root, frase.StandingDialogue != null ? "💬 " + frase.StandingDialogue.name : "(sin diálogo: no dice nada)", "summary__muted");
+            }
+
             return root.childCount > 0 ? root : null;
         }
 
@@ -324,6 +330,8 @@ namespace Sendero.Narrative.Editor
                 case PlayCinematicNode pc when string.IsNullOrEmpty(pc.signalIn) || string.IsNullOrEmpty(pc.signalDone): issues.Add("Faltan señales de entrada/fin"); break;
                 case CheckpointNode cp when string.IsNullOrEmpty(cp.checkpointId): issues.Add("checkpointId vacío"); break;
             }
+
+            node.CollectWarnings(issues);
 
             // Puertos con nombre sin conectar (aviso, no error: puede ser fin de flujo a propósito)
             var ports = node.GetOutputPorts();

@@ -15933,6 +15933,7 @@ GameObject:
   - component: {fileID: 1613471923374371259}
   - component: {fileID: 4210016675758445095}
   - component: {fileID: 7684833946529579901}
+  - component: {fileID: 4209954612334999035}
   m_Layer: 8
   m_Name: _WILL_NPC
   m_TagString: Untagged
@@ -16215,10 +16216,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -16326,6 +16323,20 @@ MonoBehaviour:
   checkInterval: 0.15
   avoidWeight: 1.1
   steerLerp: 8
+  maxContinuousAvoidSeconds: 1.5
+--- !u!114 &4209954612334999035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699691312287338962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6af826a5d9c0a194da4966500093c23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Personaje
+  ficha: {fileID: 11400000, guid: abebf915f0ef0a44e9892af25aa6eb4b, type: 2}
 --- !u!1 &6707483821792758320
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,6 +21,9 @@ public sealed class BranchFlagNode : NarrativeNode
     static readonly string[] Ports = { "Sí", "No" };
     public override string[] GetOutputPorts() => Ports;
 
+    public override string DescribeDecision()
+        => $"Según flag \"{displayTitle}\" (guid {guid}): comprueba '{flagKey}'{(invert ? " (invertido)" : "")}. Salidas: Sí / No.";
+
     public override void Enter(NarrativeContext ctx, Action ready)
     {
         bool value = false;
@@ -36,7 +39,7 @@ public sealed class BranchFlagNode : NarrativeNode
         }
         if (invert) value = !value;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BranchFlagNode:{guid}] {flagKey} → {(value ? "Sí" : "No")}");
 #endif
         AdvanceThrough(ctx, ready, value ? 0 : 1);

@@ -125,14 +125,14 @@ public class ModularAutoBuilder : MonoBehaviour
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ModularAutoBuilder] Total detectadas: {activePartsDetected.Count} partes activas");
 #endif
         
         // Si no se detectó nada activo, no hagas nada (deja todo como está)
         if (activePartsDetected.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ModularAutoBuilder] No se detectaron partes activas. Dejando todo como está.");
 #endif
             return;
@@ -159,7 +159,7 @@ public class ModularAutoBuilder : MonoBehaviour
                     EnsureAncestorsActive(go.transform);
                     go.SetActive(true);
                     idx[cat] = index;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ModularAutoBuilder] Reactivado {cat}: {go.name} (índice {index})");
 #endif
                 }
@@ -521,7 +521,7 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print Current State")]
     void DebugCurrentState()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("=== CURRENT STATE ===");
         Debug.Log($"Cached categories: {parts.Count}");
         Debug.Log($"Active selections: {idx.Count}");
@@ -531,14 +531,14 @@ public class ModularAutoBuilder : MonoBehaviour
         {
             if (parts.TryGetValue(cat, out var list) && list.Count > 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"\n{cat} - {list.Count} total parts:");
 #endif
                 foreach (var go in list)
                 {
                     bool isActive = go.activeSelf;
                     bool isSelected = idx.TryGetValue(cat, out var selIdx) && list[selIdx] == go;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"  {go.name}: active={isActive}, selected={isSelected}");
 #endif
                 }
@@ -555,7 +555,7 @@ public class ModularAutoBuilder : MonoBehaviour
             if (t != transform && t.name.StartsWith("Head", StringComparison.OrdinalIgnoreCase))
             {
                 var r = t.GetComponent<Renderer>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"Head {t.name} | activeSelf={t.gameObject.activeSelf} | rend={(r!=null)} | layer={t.gameObject.layer}");
 #endif
             }
@@ -565,7 +565,7 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print active Weapons")]
     void DebugWeapons()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("=== WEAPON DEBUG START ===");
 #endif
         
@@ -574,20 +574,20 @@ public class ModularAutoBuilder : MonoBehaviour
         {
             if (parts.TryGetValue(cat, out var list))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"Category {cat}: {list.Count} items cached");
 #endif
                 foreach (var go in list)
                 {
                     var hand = handOf.TryGetValue(go, out var h) ? h : Hand.None;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"  - {go.name} | hand={hand}");
 #endif
                 }
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("\n=== ACTIVE WEAPONS IN HIERARCHY ===");
 #endif
         var trs = GetComponentsInChildren<Transform>(true);
@@ -603,26 +603,26 @@ public class ModularAutoBuilder : MonoBehaviour
                 var r = t.GetComponent<Renderer>();
                 var rends = t.GetComponentsInChildren<Renderer>(true);
                 var path = GetPath(t);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"Weapon {t.name} | activeSelf={t.gameObject.activeSelf} | activeInHierarchy={t.gameObject.activeInHierarchy} | hasRenderer={r!=null} | childRenderers={rends.Length} | layer={LayerMask.LayerToName(t.gameObject.layer)} | path={path}");
 #endif
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("\n=== CURRENT SELECTION ===");
 #endif
         foreach (var cat in WeaponCats.Concat(new[] { PartCategory.Arrows }))
         {
             if (idx.TryGetValue(cat, out var i) && parts.TryGetValue(cat, out var list) && i < list.Count)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"{cat}: {list[i].name} (index {i})");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"{cat}: NONE");
 #endif
             }
@@ -632,20 +632,20 @@ public class ModularAutoBuilder : MonoBehaviour
     [ContextMenu("Debug/Print all cached parts")]
     void DebugAllParts()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("=== ALL CACHED PARTS ===");
 #endif
         foreach (var cat in Enum.GetValues(typeof(PartCategory)).Cast<PartCategory>())
         {
             if (parts.TryGetValue(cat, out var list) && list.Count > 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"\n{cat} ({list.Count} items):");
 #endif
                 foreach (var go in list)
                 {
                     var path = GetPath(go.transform);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"  - {go.name} | path={path}");
 #endif
                 }

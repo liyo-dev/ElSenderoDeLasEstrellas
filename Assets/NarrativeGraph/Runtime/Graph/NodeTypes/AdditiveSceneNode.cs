@@ -81,7 +81,7 @@ public sealed class AdditiveSceneNode : NarrativeNode
     {
         if (SceneManager.GetSceneByName(sceneName).isLoaded)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[AdditiveSceneNode:{guid}] '{sceneName}' ya estaba cargada → se avanza sin tocar nada.");
 #endif
             onReadyToAdvance?.Invoke();
@@ -121,7 +121,7 @@ public sealed class AdditiveSceneNode : NarrativeNode
 
         yield return op;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AdditiveSceneNode:{guid}] ✅ '{sceneName}' cargada en aditivo.");
 #endif
 
@@ -148,7 +148,7 @@ public sealed class AdditiveSceneNode : NarrativeNode
         var scene = SceneManager.GetSceneByName(sceneName);
         if (!scene.isLoaded)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[AdditiveSceneNode:{guid}] '{sceneName}' no estaba cargada → nada que descargar.");
 #endif
             onReadyToAdvance?.Invoke();
@@ -178,7 +178,7 @@ public sealed class AdditiveSceneNode : NarrativeNode
 
         yield return op;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AdditiveSceneNode:{guid}] ✅ '{sceneName}' descargada.");
 #endif
 

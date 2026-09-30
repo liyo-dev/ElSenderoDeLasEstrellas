@@ -243,14 +243,14 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
     //      (el punto en el que el proyecto considera "el perfil ya está listo del todo" — se
     //      dispara también tras ReloadTestPreset/NewGameReset). Si en ese momento la secuencia
     //      consta como vista, se vuelve a ocultar; si ya estaba oculta, es un no-op.
-    //   2. Se deja un log SIEMPRE activo (sin '#if UNITY_EDITOR || DEVELOPMENT_BUILD') con el
+    //   2. Se deja un log SIEMPRE activo (sin '#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION') con el
     //      resultado de HasSequencePlayed(), para que la próxima vez que esto falle quede
     //      constancia en el Player.log de una build de Release y no haga falta reproducirlo con
     //      una build de desarrollo para diagnosticarlo.
     private void ApplyAlreadyPlayedState(string checkpoint)
     {
         bool seen = HasSequencePlayed();
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[EstelaAppearsSequencer] Comprobación 'secuencia ya vista' en {checkpoint}: {seen}. " +
             $"Arañas/guerreros deberían quedar {(seen ? "OCULTOS" : "visibles (sin cambios)")}.");
         #endif
@@ -344,7 +344,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[EstelaAppearsSequencer] {label} se había desplazado de su posición diseñada " +
             $"({t.position} → objetivo {designPosition}), probablemente por corrección automática del " +
             $"NavMeshAgent al activarse. Restaurando (esto es lo que desencuadraba los planos de cámara).");
@@ -634,7 +634,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
         if (_warrior1SimpleAnim != null) { _warrior1SimpleAnim.SetBattleMode(false); _warrior1SimpleAnim.TransitionToLocomotion(); _warrior1SimpleAnim.SetMovementSpeed(1f, 0f); }
         if (_warrior2SimpleAnim != null) { _warrior2SimpleAnim.SetBattleMode(false); _warrior2SimpleAnim.TransitionToLocomotion(); _warrior2SimpleAnim.SetMovementSpeed(1f, 0f); }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // ⚠️ DIAGNÓSTICO: en la escena actual _warrior1FleeTarget y _warrior2FleeTarget apuntan
         // ambos al mismo Transform ("RunPoint"). Esto no debería impedir la animación por sí solo,
         // pero hace que los dos guerreros converjan al mismo punto exacto (se superponen al llegar
@@ -681,14 +681,14 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
             agent.isStopped = false;
             agent.speed = _fleeSpeed;
             bool pathOk = agent.SetDestination(fleeTarget.position);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[EstelaFlee:{debugTag}] SetDestination → {fleeTarget.position} | " +
                 $"aceptado={pathOk} isOnNavMesh={agent.isOnNavMesh} isStopped={agent.isStopped} " +
                 $"speed={agent.speed} avoidance={agent.obstacleAvoidanceType} " +
                 $"syncedAgentCoincide={(simpleAnim != null && simpleAnim.DebugSyncedAgent == agent)}");
 #endif
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[EstelaFlee:{debugTag}] Sin NavMeshAgent válido (agent null={agent == null}, " +
@@ -697,7 +697,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
 #endif
 
         float elapsed = 0f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         float debugLogTimer = 0f;
 #endif
         while (elapsed < _fleeTimeout && warrior != null &&
@@ -720,7 +720,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
                 }
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             debugLogTimer += Time.deltaTime;
             if (debugLogTimer >= 0.3f)
             {
@@ -745,7 +745,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
             yield return null;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[EstelaFlee:{debugTag}] Fin del bucle en t={elapsed:F1}s, pos={warrior?.position}, " +
             $"distanciaAlDestino={(warrior != null ? Vector3.Distance(warrior.position, fleeTarget.position).ToString("F2") : "N/A")}");
 #endif
@@ -768,7 +768,7 @@ public class EstelaAppearsSequencer : CinematicSequencerBase
             ? _willTransform
             : (PlayerService.Player != null ? PlayerService.Player.transform : null);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (willTransform == null)
             Debug.LogWarning("[EstelaAppearsSequencer] Co_WillAndBow: willTransform no encontrado. Asígnalo en el Inspector o verifica PlayerService.");
 #endif

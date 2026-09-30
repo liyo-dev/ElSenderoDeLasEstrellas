@@ -57,11 +57,15 @@ public class vThirdPersonCamera : MonoBehaviour
     private float _zoneLockedMouseX;
     private float _zoneLockedMouseY;
 
-    // Suavizado de posición al re-activar tras cinemáticas/sueño
+    // Vuelta suave al gameplay al re-activar el componente (menú de equipo, sueño) o al soltar
+    // lockCameraForCinematic (diálogos, tienda, cinemáticas): mezcla posición Y rotación desde
+    // donde estaba la cámara hasta su sitio de gameplay en un tiempo FIJO y luego queda anclada.
     private bool _doSmoothSnap;
-    private Vector3 _snapVelocity;
+    private float _snapElapsed;
+    private Vector3 _snapFromPos;
+    private Quaternion _snapFromRot;
     private bool _wasCinematicLocked;
-    private const float SnapSmoothTime = 0.15f;
+    private const float SnapBlendDuration = 0.35f;
 
     #endregion
 
@@ -72,10 +76,15 @@ public class vThirdPersonCamera : MonoBehaviour
         // Si ya estaba inicializado (re-activación tras dormir u otra desactivación),
         // activar suavizado para no dar el golpe seco de posición.
         if (targetLookAt != null)
-        {
-            _doSmoothSnap = true;
-            _snapVelocity = Vector3.zero;
-        }
+            BeginSmoothSnap();
+    }
+
+    private void BeginSmoothSnap()
+    {
+        _doSmoothSnap = true;
+        _snapElapsed = 0f;
+        _snapFromPos = transform.position;
+        _snapFromRot = transform.rotation;
     }
 
     public void Init()
@@ -120,10 +129,7 @@ public class vThirdPersonCamera : MonoBehaviour
         {
             _wasCinematicLocked = false;
             if (targetLookAt != null)
-            {
-                _doSmoothSnap = true;
-                _snapVelocity = Vector3.zero;
-            }
+                BeginSmoothSnap();
         }
 
         CameraMovement();
@@ -254,32 +260,29 @@ public class vThirdPersonCamera : MonoBehaviour
         
         Vector3 camPos = current_cPos + (finalCamDir * distance);
 
+        var lookPoint = current_cPos + targetLookAt.forward * 2f;
+        lookPoint += (targetLookAt.right * Vector3.Dot(finalCamDir * (distance), targetLookAt.right));
+        Quaternion camRot = Quaternion.LookRotation(lookPoint - camPos);
+
         if (_doSmoothSnap)
         {
-            var p = Vector3.SmoothDamp(transform.position, camPos, ref _snapVelocity, SnapSmoothTime, float.MaxValue, Time.deltaTime);
-            if ((p - camPos).sqrMagnitude < 0.0001f) { _doSmoothSnap = false; p = camPos; }
-            transform.position = p;
+            // Mezcla con duración fija (tiempo real, para que acabe aunque el juego esté en
+            // pausa). Antes era un SmoothDamp solo de posición que se daba por terminado al
+            // quedar a <1 cm del destino: con el jugador en marcha el destino se mueve cada frame
+            // y el SmoothDamp va siempre ~v·0,15 m por detrás, así que nunca terminaba — la cámara
+            // perseguía a Will a trompicones (su posición avanza a pasos de física) hasta que el
+            // jugador se paraba. Y la rotación saltaba de golpe a la final mientras la posición
+            // seguía a medio camino. Ahora ambas llegan juntas y la cámara vuelve a quedar anclada.
+            _snapElapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(_snapElapsed / SnapBlendDuration);
+            float w = t * t * (3f - 2f * t);
+            transform.SetPositionAndRotation(Vector3.Lerp(_snapFromPos, camPos, w), Quaternion.Slerp(_snapFromRot, camRot, w));
+            if (t >= 1f) _doSmoothSnap = false;
         }
         else
         {
-            transform.position = camPos;
+            transform.SetPositionAndRotation(camPos, camRot);
         }
-        
-        // Mirar siempre al pivote. FIX (tirones/saltos de cámara al cerrar menús e inventario,
-        // 4 sep 2026): antes se calculaba la rotación mirando desde transform.position, que
-        // durante el SmoothDamp de _doSmoothSnap (ver OnEnable/LateUpdate, se dispara cada vez
-        // que este componente se reactiva tras el menú de equipamiento/inventario, o cada vez
-        // que se sale de un lockCameraForCinematic como el de la cámara de diálogo que abre la
-        // tienda) va cambiando de frame en frame mientras la posición aún converge hacia camPos.
-        // Como la rotación no se suavizaba (era instantánea cada frame), mirar desde una posición
-        // en movimiento producía un bamboleo/tirón visible durante esos ~0.15s, aunque la
-        // posición en sí se veía suave. Usar siempre camPos (destino final de este frame) en vez
-        // de transform.position mantiene la rotación estable y mirando al pivote durante todo el
-        // SmoothDamp; en los frames normales (sin _doSmoothSnap) camPos y transform.position ya
-        // son el mismo valor, así que no cambia el comportamiento existente.
-        var lookPoint = current_cPos + targetLookAt.forward * 2f;
-        lookPoint += (targetLookAt.right * Vector3.Dot(finalCamDir * (distance), targetLookAt.right));
-        transform.rotation = Quaternion.LookRotation((lookPoint) - camPos);
 
         // Oclusión (desactivada en interiores: las paredes no deben desaparecer)
         if (_occlusionFader != null)

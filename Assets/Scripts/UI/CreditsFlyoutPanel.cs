@@ -179,7 +179,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // estado final real en vez de un intento del primer frame.
         if (!TryWireCreditsButton())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CreditsFlyoutPanel] No se encontró el botón CRÉDITOS automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Credits Button Override' a mano en el Inspector.");
             #endif
@@ -403,7 +403,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
     {
         if (string.IsNullOrEmpty(fullCreditsSceneName))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CreditsFlyoutPanel] fullCreditsSceneName vacío — no se puede abrir el crawl completo.");
 #endif
             return;

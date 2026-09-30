@@ -104,7 +104,7 @@ public class CastleDoorController : MonoBehaviour
         var flag = FlagKey;
         if (!preset.flags.Contains(flag))
             preset.flags.Add(flag);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CastleDoorController] Flag '{flag}' añadida al preset.");
 #endif
     }
@@ -124,8 +124,6 @@ public class CastleDoorController : MonoBehaviour
     string ResolveId()
     {
         if (!string.IsNullOrEmpty(persistenceId)) return persistenceId;
-        var sceneName = gameObject.scene.IsValid() ? gameObject.scene.name : "Unknown";
-        var pos = transform.position;
-        return $"{sceneName}_{gameObject.name}_{pos.x:F1}_{pos.y:F1}_{pos.z:F1}";
+        return IdDePersistencia.DeObjeto(gameObject);
     }
 }

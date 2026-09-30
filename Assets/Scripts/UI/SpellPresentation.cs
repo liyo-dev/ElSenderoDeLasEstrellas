@@ -38,6 +38,17 @@ public static class SpellPresentationLookup
         if (Defaults.TryGetValue(spellId, out var preset))
             return preset;
 
+        // Hechizos del grimorio (INC-503): nombre, icono, de quién es y cómo se lanza, del propio hechizo.
+        var spell = GrimorioDelPersonaje.Hechizo(spellId);
+        if (spell != null)
+            return new SpellPresentation
+            {
+                spellId = spellId,
+                title = spell.GetLocalizedName(),
+                description = DescribeForPopup(spell),
+                icon = spell.attackIcon
+            };
+
         return new SpellPresentation
         {
             spellId = spellId,
@@ -45,5 +56,19 @@ public static class SpellPresentationLookup
             description = string.Empty,
             icon = null
         };
+    }
+
+    /// "Combo de Estela: Y · B · X" / "Básico de Liam. Equípalo en Equipo › Hechizos."
+    static string DescribeForPopup(MagicSpellSO spell)
+    {
+        string quien = GrimorioDelPersonaje.Nombre(spell.caster);
+        string Loc(string key, string fallback) =>
+            LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
+        if (spell.HasCombo)
+        {
+            return string.Format(Loc("SPELL_LEARNED_COMBO", "Combo de {0}: abre el círculo con {1} y teclea {2}."), quien,
+                Core.InputGlyphs.ComboButtonGlyphs.Label(ComboButton.Y), Core.InputGlyphs.ComboButtonGlyphs.SequenceLabel(spell.comboSequence));
+        }
+        return string.Format(Loc("SPELL_LEARNED_BASIC", "Hechizo básico de {0}. Equípalo en Equipo › Hechizos."), quien);
     }
 }

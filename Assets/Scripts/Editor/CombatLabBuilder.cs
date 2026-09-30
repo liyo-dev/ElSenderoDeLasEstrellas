@@ -7,10 +7,11 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Genera una escena de ensayo desechable que usa el jugador y enemigos reales del proyecto.
-/// No modifica MainWorld, el perfil de arranque ni los prefabs de combate.
+/// Genera una escena de ensayo desechable que usa el jugador y enemigos reales del proyecto:
+/// la arena de combate en el centro y, alrededor, zonas de plataformeo, puzles, agua y vuelo
+/// (CombatLabBuilder.Zonas.cs). No modifica MainWorld, el perfil de arranque ni los prefabs de combate.
 /// </summary>
-public static class CombatLabBuilder
+public static partial class CombatLabBuilder
 {
     private const string ScenePath = "Assets/Scenes/Test/CombatLab.unity";
     private const string MaterialsPath = "Assets/Scenes/Test/CombatLabMaterials";
@@ -47,14 +48,11 @@ public static class CombatLabBuilder
 
         CrearCubo("Suelo de pruebas", geometry.transform, new Vector3(0f, -0.25f, 1f),
             new Vector3(28f, 0.5f, 36f), floorMaterial, "Floor");
-        CrearCubo("Muro norte", geometry.transform, new Vector3(0f, 1.5f, 19f),
-            new Vector3(28f, 3f, 0.5f), coverMaterial);
-        CrearCubo("Muro sur", geometry.transform, new Vector3(0f, 1.5f, -17f),
-            new Vector3(28f, 3f, 0.5f), coverMaterial);
-        CrearCubo("Muro este", geometry.transform, new Vector3(14f, 1.5f, 1f),
-            new Vector3(0.5f, 3f, 36f), coverMaterial);
-        CrearCubo("Muro oeste", geometry.transform, new Vector3(-14f, 1.5f, 1f),
-            new Vector3(0.5f, 3f, 36f), coverMaterial);
+        // Cada muro deja un hueco en el centro para pasar a la zona de ese lado.
+        CrearMuroConHueco("Muro norte", geometry.transform, new Vector3(0f, 1.5f, 19f), 28f, true, coverMaterial);
+        CrearMuroConHueco("Muro sur", geometry.transform, new Vector3(0f, 1.5f, -17f), 28f, true, coverMaterial);
+        CrearMuroConHueco("Muro este", geometry.transform, new Vector3(14f, 1.5f, 1f), 36f, false, coverMaterial);
+        CrearMuroConHueco("Muro oeste", geometry.transform, new Vector3(-14f, 1.5f, 1f), 36f, false, coverMaterial);
 
         CrearCubo("Cobertura baja izquierda", geometry.transform, new Vector3(-5f, 0.65f, 3f),
             new Vector3(2f, 1.3f, 1.4f), coverMaterial);
@@ -68,6 +66,8 @@ public static class CombatLabBuilder
         CrearMarcador("Puesto 3 — grupo", geometry.transform, new Vector3(3f, 0.02f, -12f), markerMaterial);
         CrearMarcador("Puesto 4 — jefe", geometry.transform, new Vector3(9f, 0.02f, -12f), markerMaterial);
 
+        CrearZonas(geometry.transform, floorMaterial, coverMaterial);
+
         var navMesh = geometry.AddComponent<NavMeshSurface>();
         navMesh.collectObjects = CollectObjects.Children;
         navMesh.useGeometry = NavMeshCollectGeometry.PhysicsColliders;
@@ -76,6 +76,16 @@ public static class CombatLabBuilder
         var player = (GameObject)PrefabUtility.InstantiatePrefab(playerPrefab, scene);
         player.name = "LAB_JUGADOR_WILL";
         player.transform.SetPositionAndRotation(new Vector3(0f, 0.1f, -8f), Quaternion.identity);
+
+        var camaraPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/CamaraDelJugador.prefab");
+        if (camaraPrefab != null)
+        {
+            var camara = (GameObject)PrefabUtility.InstantiatePrefab(camaraPrefab, scene);
+            camara.transform.SetPositionAndRotation(new Vector3(0f, 2.5f, -12f), Quaternion.identity);
+        }
+
+        var grupoPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/GrupoDelJugador.prefab");
+        if (grupoPrefab != null) PrefabUtility.InstantiatePrefab(grupoPrefab, scene);
 
         var bootstrapObject = new GameObject("LAB_INICIALIZACION");
         var bootstrap = bootstrapObject.AddComponent<CombatLabBootstrap>();
@@ -147,7 +157,10 @@ public static class CombatLabBuilder
         instance.transform.position = position;
     }
 
-    private static void CrearCubo(string name, Transform parent, Vector3 position, Vector3 scale, Material material, string layerName = null)
+    /// 'estatico' a false para lo que se mueve (puertas, ascensores, placas): un objeto estático
+    /// se agrupa con el resto de la geometría y su malla ya no sigue a su transform.
+    private static GameObject CrearCubo(string name, Transform parent, Vector3 position, Vector3 scale, Material material,
+                                        string layerName = null, bool estatico = true)
     {
         var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.name = name;
@@ -159,8 +172,21 @@ public static class CombatLabBuilder
         cube.transform.SetParent(parent);
         cube.transform.SetPositionAndRotation(position, Quaternion.identity);
         cube.transform.localScale = scale;
-        cube.isStatic = true;
+        cube.isStatic = estatico;
         cube.GetComponent<Renderer>().sharedMaterial = material;
+        return cube;
+    }
+
+    /// Muro a lo largo de X ('aLoLargoDeX') o de Z con un hueco de 4 m en el centro.
+    private static void CrearMuroConHueco(string name, Transform parent, Vector3 centro, float largo, bool aLoLargoDeX, Material material)
+    {
+        const float hueco = 4f;
+        float tramo = (largo - hueco) * 0.5f;
+        Vector3 eje = aLoLargoDeX ? Vector3.right : Vector3.forward;
+        Vector3 tamano = aLoLargoDeX ? new Vector3(tramo, 3f, 0.5f) : new Vector3(0.5f, 3f, tramo);
+        float desplazamiento = (hueco + tramo) * 0.5f;
+        CrearCubo(name + " (1)", parent, centro - eje * desplazamiento, tamano, material);
+        CrearCubo(name + " (2)", parent, centro + eje * desplazamiento, tamano, material);
     }
 
     private static void CrearMarcador(string name, Transform parent, Vector3 position, Material material)
@@ -175,11 +201,12 @@ public static class CombatLabBuilder
         marker.GetComponent<Renderer>().sharedMaterial = material;
     }
 
-    private static void CrearTexto(string text, Transform parent, Vector3 position)
+    /// 'yaw': hacia dónde mira quien lo lee (0 = hacia +Z, 90 = hacia +X).
+    private static void CrearTexto(string text, Transform parent, Vector3 position, float yaw = 0f)
     {
         var textObject = new GameObject("Rótulo — " + text);
         textObject.transform.SetParent(parent);
-        textObject.transform.SetPositionAndRotation(position, Quaternion.identity);
+        textObject.transform.SetPositionAndRotation(position, Quaternion.Euler(0f, yaw, 0f));
         textObject.transform.localScale = Vector3.one * 0.18f;
         var label = textObject.AddComponent<TextMesh>();
         label.text = text;

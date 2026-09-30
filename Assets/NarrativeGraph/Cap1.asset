@@ -58,10 +58,12 @@ MonoBehaviour:
   - rid: 6000000000000000048
   - rid: 6000000000000000049
   - rid: 7428272542014767947
+  - rid: 7428272610038513845
   - rid: 7428272564026736784
   - rid: 7428272564026736785
   - rid: 7428272564026736786
   - rid: 7428272564026736787
+  - rid: 7428272610038513846
   applicableSceneNames: []
   references:
     version: 2
@@ -197,10 +199,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
-        position: {x: 12540, y: 0}
+        position: {x: 13300, y: 0}
         outputs:
         - 0cc20edd-5f8a-48c6-a9c5-38685774b09a
         questId: ELDRAN_MISSION2
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 39ef7fd3a6e9f8641acf2cced0f26532, type: 2}
+        noGiver: 0
     - rid: 6000000000000000014
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -212,7 +217,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0cc20edd-5f8a-48c6-a9c5-38685774b09a
-        position: {x: 13300, y: 0}
+        position: {x: 13680, y: 0}
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
@@ -227,7 +232,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
-        position: {x: 14440, y: 0}
+        position: {x: 14820, y: 0}
         outputs:
         - e10bdcbf-059f-40f6-bfcf-7799abe09913
         npcId: NPC_Eldran
@@ -244,7 +249,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e10bdcbf-059f-40f6-bfcf-7799abe09913
-        position: {x: 14820, y: 0}
+        position: {x: 15200, y: 0}
         outputs:
         - bfb7330e-0489-4388-bcab-d6305b68a97a
         dialogue: {fileID: 11400000, guid: ccf34efc36cfcf24caa59ea5fe1817a5, type: 2}
@@ -261,7 +266,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: bfb7330e-0489-4388-bcab-d6305b68a97a
-        position: {x: 15200, y: 0}
+        position: {x: 15580, y: 0}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
         questId: ELDRAN_MISSION2
@@ -298,7 +303,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        position: {x: 15960, y: 0}
+        position: {x: 16340, y: 0}
         outputs:
         - d1785c09-9503-4d7b-a24e-682424ca83a7
         abilityKeysToUnlock: 03000000i
@@ -320,10 +325,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: d1785c09-9503-4d7b-a24e-682424ca83a7
-        position: {x: 16340, y: 0}
+        position: {x: 16720, y: 0}
         outputs:
         - 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
         questId: ELDRAN_MISSION3
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: d1c8c8eadd79b824dbe89bc62809106b, type: 2}
+        noGiver: 0
     - rid: 6000000000000000024
       type: {class: StartBattleNode, ns: , asm: Assembly-CSharp}
       data:
@@ -335,7 +343,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 09fd7f9e-17a4-4ece-9b76-bbd3c4def441
-        position: {x: 16720, y: 0}
+        position: {x: 17100, y: 0}
         outputs:
         - a1032a1a-451d-410d-bccc-2c33329d00f3
         battleId: Demon_1
@@ -358,7 +366,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a1032a1a-451d-410d-bccc-2c33329d00f3
-        position: {x: 17100, y: 0}
+        position: {x: 17480, y: 0}
         outputs:
         - fcfe6d87-7d52-4b68-930c-ec6807fa381c
         eventKey: LIAM_CRYSTAL_START
@@ -373,7 +381,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: fcfe6d87-7d52-4b68-930c-ec6807fa381c
-        position: {x: 17480, y: 0}
+        position: {x: 17860, y: 0}
         outputs:
         - dedc7fec-da78-4587-82a4-341ca93c8eaa
         eventKey: LIAM_CRYSTAL_DONE
@@ -388,7 +396,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: dedc7fec-da78-4587-82a4-341ca93c8eaa
-        position: {x: 17860, y: 0}
+        position: {x: 18240, y: 0}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
         questId: ELDRAN_MISSION3
@@ -407,7 +415,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 036db357-3031-43d4-a75e-9ebd27b9fb77
-        position: {x: 18240, y: 0}
+        position: {x: 18620, y: 0}
         outputs: []
         eventKey: CH_Cap1_BACK_1
     - rid: 6000000000000000029
@@ -451,7 +459,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 71cf01b8-b417-47c7-8688-648106590000
-        position: {x: 13680, y: 0}
+        position: {x: 14060, y: 0}
         outputs:
         - da4a9b32-670c-4724-ab44-6743e2c728d1
         npcId: NPC_Eldran
@@ -473,7 +481,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: da4a9b32-670c-4724-ab44-6743e2c728d1
-        position: {x: 14060, y: 0}
+        position: {x: 14440, y: 0}
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         action: 0
@@ -530,6 +538,9 @@ MonoBehaviour:
         outputs:
         - 05d8c990-c631-4ddd-8aff-4092490214c8
         questId: WILL_MISSION0
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
     - rid: 6000000000000000037
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -627,6 +638,9 @@ MonoBehaviour:
         outputs:
         - 95a7a650-50b9-4797-9dcd-e9bc33ad04dd
         questId: WILL_MISSION1
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 974964efe9eb2c04e8b78a8b0d12e7c1, type: 2}
+        noGiver: 0
     - rid: 6000000000000000043
       type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -657,6 +671,9 @@ MonoBehaviour:
         outputs:
         - 486dfd45-dc63-438c-ae05-f2f8a045b36a
         questId: ELDRAN_MISSION1
+        giverId: 
+        inProgressDialogue: {fileID: 0}
+        noGiver: 1
     - rid: 6000000000000000045
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -795,7 +812,7 @@ MonoBehaviour:
         guid: 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
         position: {x: 10640, y: 0}
         outputs:
-        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
+        - 004d01ec-565b-4943-8661-88335a7b0057
         cinematicName: Eldran viene a pedir la caja
         signalIn: ELDRAN_CAJA_START
         signalDone: ELDRAN_CAJA_DONE
@@ -816,14 +833,13 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 0a923444-f2e4-42d4-be51-49d30c40e362
-        position: {x: 15580, y: 0}
+        position: {x: 15960, y: 0}
         outputs:
         - e7e8e2f2-6e54-4490-97b1-fd48323945a4
-        - 0a923444-f2e4-42d4-be51-49d30c40e362
         cinematicName: El Despertar de la Estrella
         signalIn: AWAKEN_START
         signalDone: AWAKEN_DONE
-        signalFailed: AWAKEN_FAILED
+        signalFailed: 
         secuencia: {fileID: 11400000, guid: 6ac34a156a67474d888221efb090025e, type: 2}
         plantillaDeAjustes: SEQ_PerasEldran
         acercarActor: 
@@ -858,7 +874,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
-        position: {x: 11020, y: 0}
+        position: {x: 11400, y: 0}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
         npcId: NPC_Eldran
@@ -871,6 +887,7 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 2.6
         duracionMaxima: 240
+        charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -882,7 +899,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e03
-        position: {x: 11400, y: 0}
+        position: {x: 11780, y: 0}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
         dialogue: {fileID: 11400000, guid: 0666c4491bbda38479c192cdef5bb094, type: 2}
@@ -899,7 +916,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e04
-        position: {x: 11780, y: 0}
+        position: {x: 12160, y: 0}
         outputs:
         - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
         npcId: NPC_Eldran
@@ -912,6 +929,7 @@ MonoBehaviour:
         radioLlegada: 4
         velocidad: 2.6
         duracionMaxima: 240
+        charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787
       type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
       data:
@@ -923,9 +941,46 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02
-        position: {x: 12160, y: 0}
+        position: {x: 12540, y: 0}
         outputs:
-        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        - 474b5be0-7a90-4148-8790-6f8fad1783a8
         dialogue: {fileID: 11400000, guid: aa47a70e31624274ab9b052905b3fc79, type: 2}
         npcId: NPC_Eldran
         oneShotFlag: 
+    - rid: 7428272610038513845
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "20c2.- SIGUE A ELDRAN A VER QU\xC9 QUIERE (ELDRAN_SIGUEME)"
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 004d01ec-565b-4943-8661-88335a7b0057
+        position: {x: 11020, y: 0}
+        outputs:
+        - c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e01
+        questId: ELDRAN_SIGUEME
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 3b930c6537af08943b9c5df1d2d242f0, type: 2}
+        noGiver: 0
+    - rid: 7428272610038513846
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "20e2.- Completa ELDRAN_SIGUEME (ya sabe qu\xE9 quiere)"
+        chapter: Cap. 1
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 474b5be0-7a90-4148-8790-6f8fad1783a8
+        position: {x: 12920, y: 0}
+        outputs:
+        - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        questId: ELDRAN_SIGUEME
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 1

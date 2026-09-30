@@ -129,7 +129,7 @@ public class RoomExitBlocker : MonoBehaviour
         if (!_isBlocked)
             ReleaseStopLock();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] → {(_isBlocked ? "BLOQUEADO" : "DESBLOQUEADO")}");
 #endif
     }
@@ -152,7 +152,7 @@ public class RoomExitBlocker : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnTriggerEnter de Player. _isBlocked={_isBlocked}");
 #endif
         if (!_isBlocked) return;
@@ -164,7 +164,7 @@ public class RoomExitBlocker : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnTriggerExit de Player.");
 #endif
         ReleaseStopLock();
@@ -173,7 +173,7 @@ public class RoomExitBlocker : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnCollisionEnter de Player. _isBlocked={_isBlocked}");
 #endif
         if (!_isBlocked) return;
@@ -185,7 +185,7 @@ public class RoomExitBlocker : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnCollisionExit de Player.");
 #endif
         ReleaseStopLock();
@@ -212,7 +212,7 @@ public class RoomExitBlocker : MonoBehaviour
         var lockService = PlayerLockService.Instance;
         if (lockService == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[RoomExitBlocker:{gameObject.name}] PlayerLockService.Instance es null — no se pudo congelar al jugador.");
 #endif
             return;
@@ -221,7 +221,7 @@ public class RoomExitBlocker : MonoBehaviour
         lockService.Acquire(this);
         _stopLockHeld = true;
         _safetyReleaseCoroutine = StartCoroutine(Co_SafetyReleaseStopLock());
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] ⛔ Jugador congelado (zona bloqueada).");
 #endif
     }
@@ -230,7 +230,7 @@ public class RoomExitBlocker : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(Mathf.Max(0.1f, stopLockSafetyTimeout));
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[RoomExitBlocker:{gameObject.name}] ⏱️ Timeout de seguridad ({stopLockSafetyTimeout}s) — " +
                           "el freeze seguía activo sin OnTriggerExit/OnCollisionExit. Liberando para evitar bloqueo permanente.");
 #endif
@@ -251,7 +251,7 @@ public class RoomExitBlocker : MonoBehaviour
         if (PlayerLockService.HasInstance)
             PlayerLockService.Instance.Release(this);
         _stopLockHeld = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] ✅ Jugador liberado.");
 #endif
     }
@@ -322,7 +322,7 @@ public class RoomExitBlocker : MonoBehaviour
                     configuredCount++;
                     var state = qm.GetState(id);
                     if (state == QuestState.Active || state == QuestState.Completed) satisfiedCount++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     if (debugLogs) Debug.Log($"[RoomExitBlocker:{gameObject.name}] ID '{id}' → {state}");
 #endif
                 }
@@ -334,7 +334,7 @@ public class RoomExitBlocker : MonoBehaviour
                     configuredCount++;
                     var state = qm.GetState(r.questId);
                     if (state == QuestState.Active || state == QuestState.Completed) satisfiedCount++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     if (debugLogs) Debug.Log($"[RoomExitBlocker:{gameObject.name}] Ref '{r.questId}' → {state}");
 #endif
                 }

@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ae78e9c7f822d4cb2aa946c1c82558, type: 3}
   m_Name: SpecialAttack_Liam
   m_EditorClassIdentifier: Assembly-CSharp::SpecialAttackSO
-  displayName: Ataque Especial
-  companion: 1
+  displayName: "D\xFAo Will y Liam"
   icon: {fileID: 0}
+  isTrio: 0
+  first: 1
+  second: 0
+  companion: 1
   companionMaxDistance: 10
-  playerAnimationTrigger: MagicSpecial
   companionAnimationTrigger: MagicSpecial
+  playerAnimationTrigger: MagicSpecial
+  gestureSeconds: 0.6
   vfxPrefab: {fileID: 4262623056482241364, guid: b7001a552767ee943852979358986930, type: 3}
   castSFXKey: SpecialAttack_Liam
   vfxLifetime: 3

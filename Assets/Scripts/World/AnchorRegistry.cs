@@ -14,7 +14,7 @@ public static class AnchorRegistry
         if (!anchor || string.IsNullOrEmpty(anchor.anchorId)) return;
         if (_byId.TryGetValue(anchor.anchorId, out var existing) && existing && existing != anchor)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[AnchorRegistry] Duplicado de anchorId '{anchor.anchorId}'. Reemplazando referencia.");
 #endif
         }

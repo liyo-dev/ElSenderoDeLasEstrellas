@@ -34,7 +34,7 @@ public static class NarrativeGraphValidator
             // Para evitar spam en la consola durante el desarrollo normal
             if (Warnings.Count > 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeGraphValidator] ℹ️ Grafo '{graphName}' tiene {Warnings.Count} advertencia(s):");
                 foreach (var warning in Warnings)
                 {
@@ -92,10 +92,25 @@ public static class NarrativeGraphValidator
         ValidateStartQuestNodes(graph, result);
         ValidateCompleteQuestStepsNodes(graph, result);
         ValidateSavePoints(graph, result);
+        CollectNodeWarnings(graph, result);
         
         return result;
     }
     
+    /// <summary>Avisos que declara cada nodo sobre su propio contenido (NarrativeNode.CollectWarnings).</summary>
+    static void CollectNodeWarnings(NarrativeGraph graph, ValidationResult result)
+    {
+        var avisos = new List<string>();
+        foreach (var node in graph.nodes)
+        {
+            if (node == null) continue;
+            avisos.Clear();
+            node.CollectWarnings(avisos);
+            foreach (var aviso in avisos)
+                result.Warnings.Add($"«{node.displayTitle}»: {aviso}");
+        }
+    }
+
     static List<NarrativeNode> FindOrphanNodes(NarrativeGraph graph)
     {
         var orphans = new List<NarrativeNode>();

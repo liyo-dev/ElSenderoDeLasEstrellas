@@ -8,14 +8,12 @@ using System.Linq;
 /// Genera automáticamente un preset temporal con el blackboard configurado para que el NarrativeRunner
 /// continúe desde el nodo seleccionado, y lanza Play Mode.
 ///
-/// FAST-FORWARD (2026-09-15): el tool SIMULA el camino desde el inicio del grafo hasta el nodo
-/// objetivo (sin ejecutar Enter() de ningún nodo real, solo leyendo sus campos serializados) y aplica
-/// al preset temporal los efectos de los nodos que cambian estado: StartQuestNode, CompleteQuestStepsNode,
-/// GiveInventoryItemNode, UnlockAbilitiesNode y SetFlagNode. Los nodos puramente presentacionales
-/// (Wait*, diálogos, cinemáticas, textos, etc.) se ignoran. Si el camino pasa por una bifurcación real
-/// (BranchFlagNode, BranchQuestStateNode, DialogueChoiceNode, RequireInventoryItemNode, o cualquier nodo
-/// con varias salidas sin nombrar que no sea un ForkNode explícito) la simulación se PARA ahí y lo avisa
-/// en vez de adivinar qué rama seguir — hay que resolverlo a mano (flag, quest, etc.) antes de lanzar.
+/// FAST-FORWARD: calcula el estado del mundo al llegar al nodo objetivo con NarrativeStateProjector
+/// (cada nodo declara su propio efecto con INarrativeStateEffect; esta ventana no conoce tipos de
+/// nodo) y lo escribe en el preset temporal con PresetNarrativeStateWriter: quests, objetos,
+/// habilidades/hechizos, flags y dónde queda cada actor (resuelto contra las escenas abiertas).
+/// El nodo objetivo no se proyecta, porque se va a ejecutar. Si el camino pasa por una decisión
+/// real (flag, estado de quest, pregunta, objeto requerido) no se adivina la rama: se avisa.
 /// Se puede desactivar con el checkbox correspondiente para volver al comportamiento anterior (progreso
 /// vacío/neutro). Además, independientemente del Fast-Forward, el tool siempre:
 ///   1. Coloca el grafo en el nodo elegido (vía blackboard "__currentNodeGuid").
@@ -71,9 +69,8 @@ public class NarrativeQuickTestWindow : EditorWindow
     private bool _abilityFly;
     private bool _abilitySprint;
     private bool _abilityShield;
-    private SpellId _leftSpellId = SpellId.None;
-    private SpellId _rightSpellId = SpellId.None;
-    private SpellId _specialSpellId = SpellId.None;
+    private readonly SpellId[] _basicSpellIds = new SpellId[MagicCaster.BasicSlotCount];
+    private SpellId _comboSpellId = SpellId.None;
 
     // Fast-Forward (progreso previo simulado desde el inicio del grafo)
     private bool _fastForward = true;
@@ -81,7 +78,8 @@ public class NarrativeQuickTestWindow : EditorWindow
     [SerializeField] private bool _fastForwardPreviewRan;
     [SerializeField] private bool _fastForwardReachedTarget;
     [SerializeField] private List<string> _fastForwardWarnings = new List<string>();
-    private Dictionary<string, QuestData> _questCatalogCache;
+    [SerializeField] private List<string> _fastForwardActors = new List<string>();
+    [SerializeField] private List<string> _fastForwardNotes = new List<string>();
 
     // State
     private int _selectedNodeIndex;
@@ -285,9 +283,9 @@ public class NarrativeQuickTestWindow : EditorWindow
 
         EditorGUILayout.Space(6);
         EditorGUILayout.LabelField("Hechizos equipados", EditorStyles.boldLabel);
-        _leftSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Izquierdo", _leftSpellId);
-        _rightSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Derecho", _rightSpellId);
-        _specialSpellId = (SpellId)EditorGUILayout.EnumPopup("Slot Especial", _specialSpellId);
+        for (int i = 0; i < _basicSpellIds.Length; i++)
+            _basicSpellIds[i] = (SpellId)EditorGUILayout.EnumPopup($"Básico {i + 1} (X, LB rota)", _basicSpellIds[i]);
+        _comboSpellId = (SpellId)EditorGUILayout.EnumPopup("Combo desbloqueado (Y)", _comboSpellId);
 
         EditorGUILayout.Space(8);
 
@@ -295,7 +293,8 @@ public class NarrativeQuickTestWindow : EditorWindow
         EditorGUILayout.LabelField("Fast-Forward (progreso previo)", EditorStyles.boldLabel);
         EditorGUILayout.LabelField(
             "Simula el camino desde el inicio del grafo hasta el nodo objetivo y aplica automáticamente " +
-            "quests iniciadas/completadas, objetos entregados, habilidades/hechizos desbloqueados y flags. " +
+            "quests iniciadas/completadas, objetos entregados, habilidades/hechizos desbloqueados, flags " +
+            "y dónde queda cada actor (necesita abiertas las escenas donde están los actores y sus marcas). " +
             "Si el camino pasa por una bifurcación (flag, estado de quest, diálogo con opciones, objeto " +
             "requerido...) la simulación se para ahí y te lo avisa en vez de adivinar qué rama seguir.",
             EditorStyles.wordWrappedMiniLabel);
@@ -325,6 +324,11 @@ public class NarrativeQuickTestWindow : EditorWindow
                 : "El nodo objetivo no parece alcanzable desde el inicio del grafo (revisa las conexiones).",
                 _fastForwardReachedTarget ? MessageType.Info : MessageType.Warning);
         }
+
+        if (_fastForwardActors.Count > 0)
+            EditorGUILayout.HelpBox("Actores colocados:\n" + string.Join("\n", _fastForwardActors), MessageType.Info);
+        if (_fastForwardNotes.Count > 0)
+            EditorGUILayout.HelpBox("Revisar:\n\n" + string.Join("\n\n", _fastForwardNotes), MessageType.Warning);
 
         EditorGUILayout.Space(4);
         _autoRestore = EditorGUILayout.Toggle("Restaurar bootPreset al salir", _autoRestore);
@@ -416,6 +420,8 @@ public class NarrativeQuickTestWindow : EditorWindow
                 Debug.LogWarning($"[QuickTest] Fast-Forward encontró {_fastForwardWarnings.Count} bifurcación(es):\n" +
                     string.Join("\n", _fastForwardWarnings));
             }
+            if (_fastForwardNotes.Count > 0)
+                Debug.LogWarning("[QuickTest] Fast-Forward, a revisar:\n" + string.Join("\n", _fastForwardNotes));
             if (!_fastForwardReachedTarget)
             {
                 Debug.LogWarning("[QuickTest] Fast-Forward no llegó al nodo objetivo automáticamente " +
@@ -456,7 +462,7 @@ public class NarrativeQuickTestWindow : EditorWindow
         _status = $"Lanzando Play desde {nodeDesc} en {_graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
         Debug.Log($"[QuickTest] Configurado: grafo='{_graphLabel}', nodo='{nodeDesc}', anchor='{tempPreset.spawnAnchorId}', " +
             $"habilidades=(swim:{_abilitySwim}, jump:{_abilityJump}, climb:{_abilityClimb}, magic:{_abilityMagic}, fly:{_abilityFly}, sprint:{_abilitySprint}, shield:{_abilityShield}), " +
-            $"hechizos=(L:{_leftSpellId}, R:{_rightSpellId}, Esp:{_specialSpellId})");
+            $"básicos=({string.Join(", ", _basicSpellIds)}), combo={_comboSpellId}");
 
         // 7. Enter Play Mode
         EditorApplication.isPlaying = true;
@@ -492,10 +498,8 @@ public class NarrativeQuickTestWindow : EditorWindow
         };
         dst.unlockedAbilities = new List<AbilityId>();
 
-        dst.leftSpellId = _leftSpellId;
-        dst.rightSpellId = _rightSpellId;
-        dst.specialSpellId = _specialSpellId;
-        dst.unlockedSpells = new[] { _leftSpellId, _rightSpellId, _specialSpellId }
+        dst.basicSpellIds = _basicSpellIds.Where(id => id != SpellId.None).Distinct().ToList();
+        dst.unlockedSpells = _basicSpellIds.Append(_comboSpellId)
             .Where(id => id != SpellId.None)
             .Distinct()
             .ToList();
@@ -510,6 +514,7 @@ public class NarrativeQuickTestWindow : EditorWindow
         dst.inventoryItems = new List<InventoryItemSave>();
         dst.defeatedBossIds = new List<string>();
         dst.consumedInteractableIds = new List<string>();
+        dst.objetosDelMundo = new List<ObjetoPersistente.Estado>();
         dst.completedInteractiveNarratives = new List<string>();
         dst.seenLorePopupIds = new List<string>();
         dst.partyMemberIds = new List<string>();
@@ -562,10 +567,8 @@ public class NarrativeQuickTestWindow : EditorWindow
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Fast-Forward: simula el camino Start → nodo objetivo y aplica el progreso
-    // previo (quests/items/habilidades/flags) a un PlayerPresetSO. NUNCA invoca
-    // Enter() de un nodo real (dispararía diálogos/señales de verdad fuera de
-    // Play Mode) — solo lee los campos serializados de cada nodo.
+    // Fast-Forward: proyecta el estado del mundo en el nodo objetivo. NUNCA invoca
+    // Enter() de un nodo real (dispararía diálogos/señales de verdad fuera de Play Mode).
     // ─────────────────────────────────────────────────────────────────────────
 
     /// <summary>
@@ -581,10 +584,6 @@ public class NarrativeQuickTestWindow : EditorWindow
         }
 
         var scratch = ScriptableObject.CreateInstance<PlayerPresetSO>();
-        scratch.flags = new List<string>();
-        scratch.inventoryItems = new List<InventoryItemSave>();
-        scratch.unlockedSpells = new List<SpellId>();
-        scratch.abilities = new PlayerAbilities();
         try
         {
             RunFastForward(scratch);
@@ -597,287 +596,22 @@ public class NarrativeQuickTestWindow : EditorWindow
         Repaint();
     }
 
-    /// <summary>
-    /// Recorre el grafo en anchura desde <see cref="NarrativeGraph.startNodeGuid"/> aplicando a
-    /// <paramref name="dst"/> el efecto de los nodos que cambian estado (StartQuestNode,
-    /// CompleteQuestStepsNode, GiveInventoryItemNode, UnlockAbilitiesNode, SetFlagNode). El resto de
-    /// nodos son presentacionales y se ignoran a propósito.
-    ///
-    /// Qué cuenta como bifurcación y qué como fork — MISMA REGLA QUE EL RUNTIME (corregido 16 sept 2026,
-    /// INC-219). El criterio lo manda NarrativeRunner.RunSubGraph(), que trata cualquier nodo con varias
-    /// salidas SIN NOMBRE como un fork implícito y lanza todas sus ramas en paralelo:
-    ///   - ForkNode y cualquier nodo con varias salidas sin nombre → fork: se expanden TODAS las salidas.
-    ///   - PlayCinematicNode → se sigue por «Hecho», que es el camino normal; «Fallo» es la rama de error.
-    ///   - Resto de nodos con puertos con nombre (BranchFlagNode, BranchQuestStateNode,
-    ///     DialogueChoiceNode...) → bifurcación real: no se sigue explorando por ahí, se registra un aviso.
-    ///   - RequireInventoryItemNode → bifurcación real pese a no tener puertos con nombre: es el único
-    ///     nodo del proyecto que redirige el flujo por índice (ForceJumpToOutput) desde Enter().
-    /// Nunca se adivina una rama de una bifurcación real.
-    ///
-    /// Antes de este arreglo, CUALQUIER nodo con varias salidas sin nombre se trataba como bifurcación
-    /// irresoluble. Como un StartQuestNode en mitad del camino principal de Cap1 tiene una segunda salida
-    /// hacia una rama paralela (el saludo de Oliver), el Fast-Forward abandonaba el recorrido ahí y el
-    /// preset salía con una sola flag (QUEST_ACTIVE de la primera misión): el grafo arrancaba en el nodo
-    /// correcto pero la UI de misiones mostraba una misión atrasada, y los CompleteQuestStepsNode
-    /// posteriores no hacían nada porque esas quests nunca se habían iniciado en el QuestManager.
-    /// </summary>
+    /// <summary>Proyecta el grafo hasta el nodo objetivo y escribe el resultado en <paramref name="dst"/>.</summary>
     private void RunFastForward(PlayerPresetSO dst)
     {
         _fastForwardWarnings.Clear();
+        _fastForwardActors.Clear();
+        _fastForwardNotes.Clear();
         _fastForwardReachedTarget = false;
-        _questCatalogCache = null;
+        if (_targetGraph == null || string.IsNullOrEmpty(_targetNodeGuid)) return;
 
-        if (_targetGraph == null || string.IsNullOrEmpty(_targetGraph.startNodeGuid) || string.IsNullOrEmpty(_targetNodeGuid))
-            return;
+        var writer = new PresetNarrativeStateWriter(dst);
+        var result = NarrativeStateProjector.Project(_targetGraph, _targetNodeGuid, writer);
+        _fastForwardActors.AddRange(writer.ApplyActorPlacements(new OpenScenesNarrativeWorld()));
 
-        var byGuid = _targetGraph.nodes
-            .Where(n => n != null && !string.IsNullOrEmpty(n.guid))
-            .GroupBy(n => n.guid)
-            .ToDictionary(g => g.Key, g => g.First());
-
-        var visited = new HashSet<string>();
-        var queue = new Queue<string>();
-        queue.Enqueue(_targetGraph.startNodeGuid);
-
-        while (queue.Count > 0)
-        {
-            var guid = queue.Dequeue();
-            if (!visited.Add(guid)) continue;
-            if (!byGuid.TryGetValue(guid, out var node) || node == null) continue;
-
-            ApplyNodeEffect(node, dst);
-
-            if (guid == _targetNodeGuid)
-            {
-                _fastForwardReachedTarget = true;
-                break;
-            }
-
-            // Nodo terminal: no hay nada que seguir ni que decidir. Sin este guard, un nodo con puertos
-            // con nombre y ninguna salida conectada (p.ej. el PlayCinematicNode final de una rama
-            // paralela) se contaba como "bifurcación sin resolver" y ensuciaba el aviso al usuario.
-            bool hasAnyOutput = node.outputs != null && node.outputs.Any(o => !string.IsNullOrEmpty(o));
-            if (!hasAnyOutput) continue;
-
-            // Bifurcación real = puertos con nombre, o RequireInventoryItemNode (única excepción sin
-            // nombrar que redirige por índice). Todo lo demás con varias salidas es un fork implícito,
-            // igual que en NarrativeRunner.RunSubGraph() — ver comentario de RunFastForward.
-            if (node is PlayCinematicNode)
-            {
-                var hecho = node.GetOutputGuid(0);
-                if (hecho != null && !visited.Contains(hecho)) queue.Enqueue(hecho);
-                continue;
-            }
-
-            bool isDecision = node.HasNamedOutputs || node is RequireInventoryItemNode;
-
-            if (isDecision)
-            {
-                _fastForwardWarnings.Add(DescribeBifurcation(node));
-                continue; // no se sigue explorando por este nodo; el resto de la cola continúa
-            }
-
-            foreach (var outGuid in node.outputs)
-            {
-                if (!string.IsNullOrEmpty(outGuid) && !visited.Contains(outGuid))
-                    queue.Enqueue(outGuid);
-            }
-        }
-    }
-
-    private static string DescribeBifurcation(NarrativeNode node)
-    {
-        switch (node)
-        {
-            case BranchFlagNode bf:
-                return $"Bifurcación \"Según flag\" (\"{bf.displayTitle}\", guid {bf.guid}): comprueba el flag " +
-                    $"'{bf.flagKey}'{(bf.invert ? " (invertido)" : "")}. Salidas: Sí / No.";
-            case BranchQuestStateNode bq:
-                return $"Bifurcación \"Según estado de quest\" (\"{bq.displayTitle}\", guid {bq.guid}): " +
-                    $"quest '{bq.questId}'. Salidas: No iniciada / Activa / Pasos listos / Completada.";
-            case DialogueChoiceNode dc:
-                return $"Pregunta con respuestas (\"{dc.displayTitle}\", guid {dc.guid}): " +
-                    $"\"{(string.IsNullOrEmpty(dc.promptText) ? dc.promptTextId : dc.promptText)}\" → " +
-                    $"opciones '{dc.optionAText}' / '{dc.optionBText}'.";
-            case RequireInventoryItemNode ri:
-                return $"Requiere objeto (\"{ri.displayTitle}\", guid {ri.guid}): necesita " +
-                    $"'{(ri.item != null ? ri.item.itemId : "<sin item>")}' x{ri.requiredAmount}.";
-            default:
-                return $"{node.GetType().Name} (\"{node.displayTitle}\", guid {node.guid}) tiene " +
-                    $"{node.outputs?.Count ?? 0} salidas sin nombrar — no se puede decidir automáticamente qué rama seguir.";
-        }
-    }
-
-    private void ApplyNodeEffect(NarrativeNode node, PlayerPresetSO dst)
-    {
-        switch (node)
-        {
-            case StartQuestNode sq:
-                if (!string.IsNullOrEmpty(sq.questId) && !HasFlag(dst, $"QUEST_COMPLETED:{sq.questId}"))
-                    AddFlagIfMissing(dst, $"QUEST_ACTIVE:{sq.questId}");
-                break;
-
-            case CompleteQuestStepsNode cs:
-                ApplyCompleteQuestSteps(cs, dst);
-                break;
-
-            case GiveInventoryItemNode gi:
-                ApplyGiveItem(gi, dst);
-                break;
-
-            case UnlockAbilitiesNode ua:
-                ApplyUnlockAbilities(ua, dst);
-                break;
-
-            case SetFlagNode sf:
-                if (!string.IsNullOrWhiteSpace(sf.flagKey))
-                {
-                    if (sf.value) AddFlagIfMissing(dst, sf.flagKey);
-                    else RemoveFlagIfPresent(dst, sf.flagKey);
-                }
-                break;
-
-            // Resto de tipos (Wait*, diálogos, cinemáticas, cámara, audio, etc.): puramente
-            // presentacionales para el propósito del Fast-Forward — se ignoran a propósito.
-        }
-    }
-
-    private void ApplyCompleteQuestSteps(CompleteQuestStepsNode node, PlayerPresetSO dst)
-    {
-        if (string.IsNullOrWhiteSpace(node.questId)) return;
-
-        bool alreadyCompleted = HasFlag(dst, $"QUEST_COMPLETED:{node.questId}");
-        if (!alreadyCompleted)
-            AddFlagIfMissing(dst, $"QUEST_ACTIVE:{node.questId}");
-
-        if (node.stepConditionIds != null && node.stepConditionIds.Count > 0)
-        {
-            var qd = FindQuestData(node.questId);
-            if (qd == null || qd.steps == null)
-            {
-                _fastForwardWarnings.Add($"CompleteQuestStepsNode (\"{node.displayTitle}\", guid {node.guid}): " +
-                    $"no se encontró el QuestData de '{node.questId}' en el proyecto; no se pudieron aplicar " +
-                    "los pasos por Condition ID.");
-            }
-            else
-            {
-                foreach (var conditionId in node.stepConditionIds)
-                {
-                    if (string.IsNullOrWhiteSpace(conditionId)) continue;
-                    int idx = System.Array.FindIndex(qd.steps, s => s.conditionId == conditionId);
-                    if (idx < 0)
-                    {
-                        _fastForwardWarnings.Add($"CompleteQuestStepsNode (\"{node.displayTitle}\", guid {node.guid}): " +
-                            $"el Condition ID '{conditionId}' no existe en los steps de '{node.questId}'.");
-                        continue;
-                    }
-                    AddFlagIfMissing(dst, $"QUEST_STEP_DONE:{node.questId}:{idx}");
-                }
-            }
-        }
-        else if (node.steps != null && node.steps.Count > 0)
-        {
-            foreach (var idx in node.steps)
-                if (idx >= 0) AddFlagIfMissing(dst, $"QUEST_STEP_DONE:{node.questId}:{idx}");
-        }
-
-        if (node.completeQuest)
-            AddFlagIfMissing(dst, $"QUEST_COMPLETED:{node.questId}");
-    }
-
-    private static void ApplyGiveItem(GiveInventoryItemNode node, PlayerPresetSO dst)
-    {
-        if (node.item == null || node.amount <= 0) return;
-
-        dst.inventoryItems ??= new List<InventoryItemSave>();
-        int idx = dst.inventoryItems.FindIndex(e => e.itemId == node.item.itemId);
-        if (idx >= 0)
-        {
-            var entry = dst.inventoryItems[idx];
-            entry.count += node.amount;
-            dst.inventoryItems[idx] = entry;
-        }
-        else
-        {
-            dst.inventoryItems.Add(new InventoryItemSave { itemId = node.item.itemId, count = node.amount });
-        }
-    }
-
-    private static void ApplyUnlockAbilities(UnlockAbilitiesNode node, PlayerPresetSO dst)
-    {
-        dst.abilities ??= new PlayerAbilities();
-
-        if (node.abilityKeysToUnlock != null)
-        {
-            foreach (var key in node.abilityKeysToUnlock)
-            {
-                switch (key)
-                {
-                    case AbilityKey.Swim: dst.abilities.swim = true; break;
-                    case AbilityKey.Jump: dst.abilities.jump = true; break;
-                    case AbilityKey.Climb: dst.abilities.climb = true; break;
-                    case AbilityKey.Magic: dst.abilities.magic = true; break;
-                    case AbilityKey.Fly: dst.abilities.fly = true; break;
-                    case AbilityKey.Sprint: dst.abilities.sprint = true; break;
-                    case AbilityKey.Shield: dst.abilities.shield = true; break;
-                }
-            }
-        }
-
-        if (node.spellsToUnlock != null)
-        {
-            dst.unlockedSpells ??= new List<SpellId>();
-            foreach (var spell in node.spellsToUnlock)
-            {
-                if (spell == SpellId.None) continue;
-                if (!dst.unlockedSpells.Contains(spell)) dst.unlockedSpells.Add(spell);
-
-                if (node.assignSpellsToEmptySlot)
-                {
-                    bool alreadyEquipped = dst.leftSpellId == spell || dst.rightSpellId == spell || dst.specialSpellId == spell;
-                    if (!alreadyEquipped)
-                    {
-                        if (dst.leftSpellId == SpellId.None) dst.leftSpellId = spell;
-                        else if (dst.rightSpellId == SpellId.None) dst.rightSpellId = spell;
-                        else if (dst.specialSpellId == SpellId.None) dst.specialSpellId = spell;
-                    }
-                }
-            }
-        }
-
-        if (!string.IsNullOrEmpty(node.oneShotFlag))
-            AddFlagIfMissing(dst, node.oneShotFlag);
-    }
-
-    private static void AddFlagIfMissing(PlayerPresetSO dst, string flag)
-    {
-        dst.flags ??= new List<string>();
-        if (!dst.flags.Contains(flag)) dst.flags.Add(flag);
-    }
-
-    private static void RemoveFlagIfPresent(PlayerPresetSO dst, string flag)
-    {
-        dst.flags?.Remove(flag);
-    }
-
-    private static bool HasFlag(PlayerPresetSO dst, string flag) => dst.flags != null && dst.flags.Contains(flag);
-
-    /// <summary>Busca el QuestData de un questId en todo el proyecto (cacheado por ejecución de Fast-Forward).</summary>
-    private QuestData FindQuestData(string questId)
-    {
-        if (_questCatalogCache == null)
-        {
-            _questCatalogCache = new Dictionary<string, QuestData>();
-            var guids = AssetDatabase.FindAssets("t:QuestData");
-            foreach (var g in guids)
-            {
-                var qd = AssetDatabase.LoadAssetAtPath<QuestData>(AssetDatabase.GUIDToAssetPath(g));
-                if (qd != null && !string.IsNullOrEmpty(qd.questId) && !_questCatalogCache.ContainsKey(qd.questId))
-                    _questCatalogCache[qd.questId] = qd;
-            }
-        }
-        _questCatalogCache.TryGetValue(questId, out var result);
-        return result;
+        _fastForwardReachedTarget = result.ReachedTarget;
+        _fastForwardWarnings.AddRange(result.Decisions);
+        _fastForwardNotes.AddRange(writer.Notes);
     }
 
     private void TryAutoDetectLabel(NarrativeGraph graph)

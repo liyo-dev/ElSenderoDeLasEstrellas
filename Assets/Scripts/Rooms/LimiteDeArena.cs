@@ -40,7 +40,7 @@ public sealed class LimiteDeArena : MonoBehaviour
         var material = Resources.Load<Material>(RutaMaterial);
         if (material == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LimiteDeArena] Falta el material Resources/{RutaMaterial}: la arena no marca su borde.");
 #endif
             return null;

@@ -178,6 +178,53 @@ public enum SequenceEndScreen
     QuedarseEnNegro = 2,
 }
 
+/// El jugador cae y la partida termina en Game Over.
+///
+/// Para las ramas en las que fallar es morir (no reaccionar a tiempo, perder un duelo de
+/// guion). Mata al personaje que controla el jugador con su propio sistema de vida, y a partir de
+/// ahí manda el Game Over (GameOverManager): animación de caída, pantalla con las opciones, y
+/// cambio de escena. Por eso la secuencia no cierra ni levanta su señal de salida: el grafo no
+/// sigue por ninguna rama, se recarga la partida. El cierre de la secuencia (cámara, candado,
+/// actores) lo hace su OnDisable al descargarse la escena.
+///
+/// Si el jugador no puede morir (modo dios), el beat no hace nada y la secuencia sigue con lo
+/// que venga detrás.
+[Serializable]
+public class DerrotaBeat : SequenceBeat
+{
+    public override string Describe() => "Derrota: el jugador cae (Game Over)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var jugador = ctx?.GetActor(SequenceActor.PlayerId)?.Transform;
+        var salud = jugador != null
+            ? jugador.GetComponentInParent<PlayerHealthSystem>() ?? jugador.GetComponentInChildren<PlayerHealthSystem>()
+            : null;
+
+        if (salud == null || !salud.IsAlive)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[DerrotaBeat] No hay jugador vivo al que derrotar; la secuencia sigue.");
+#endif
+            yield break;
+        }
+
+        salud.Kill();
+        if (salud.IsAlive)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[DerrotaBeat] El jugador no ha muerto (¿modo dios?); la secuencia sigue.");
+#endif
+            yield break;
+        }
+
+        // Este beat no termina: el Game Over siempre acaba cambiando de escena (o la de carga, o el
+        // menú), y con ella se apaga la secuencia. Si terminara antes, la secuencia cerraría y
+        // levantaría su señal de salida con el grafo a punto de recargarse.
+        while (true) yield return null;
+    }
+}
+
 /// Cambia la música a mitad de secuencia, o la para.
 ///
 /// La música de la secuencia entera ya la pone el asset (campo 'musicId') y se restaura sola al
@@ -244,7 +291,7 @@ public class ModuleBeat : SequenceBeat
         var module = ctx?.Stage != null ? ctx.Stage.GetModuleFor(routine) : null;
         if (module == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ModuleBeat] Ningún módulo de esta escena sabe ejecutar la rutina " +
                 $"'{routine}'. Comprueba que el SequenceModule está en la lista del SequenceStage y " +
                 "que el nombre coincide con los que anuncia.");

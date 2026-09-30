@@ -39,7 +39,7 @@ public class SolDeEscenaAditiva : MonoBehaviour
     private void Apagar(Light mia, string motivo)
     {
         mia.enabled = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SolDeEscenaAditiva] '{name}' se apaga: ya manda {motivo}. Esta luz existe solo " +
                   "para poder editar la escena abierta suelta.");
 #endif

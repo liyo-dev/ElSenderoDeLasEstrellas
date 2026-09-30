@@ -160,7 +160,7 @@ public static class SettingsBackButtonBuilder
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SettingsBackButtonBuilder] '{ButtonName}' no tiene LocalizedText (el botón de idioma clonado tampoco lo tenía) — se escribe 'Volver' como texto suelto.");
 #endif
         }

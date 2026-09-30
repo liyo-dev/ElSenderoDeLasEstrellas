@@ -520,9 +520,7 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         // Hechizos y abilities
         destination.unlockedAbilities = new List<AbilityId>(source.unlockedAbilities);
         destination.unlockedSpells = new List<SpellId>(source.unlockedSpells);
-        destination.leftSpellId = source.leftSpellId;
-        destination.rightSpellId = source.rightSpellId;
-        destination.specialSpellId = source.specialSpellId;
+        destination.basicSpellIds = new List<SpellId>(source.basicSpellIds);
         
         // Flags
         destination.flags = new List<string>(source.flags);
@@ -607,6 +605,7 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         
         // Interactuables
         destination.consumedInteractableIds = new List<string>(source.consumedInteractableIds ?? new List<string>());
+        destination.objetosDelMundo = new List<ObjetoPersistente.Estado>(source.objetosDelMundo ?? new List<ObjetoPersistente.Estado>());
 
         // Narrativas interactivas
         destination.completedInteractiveNarratives = new List<string>(source.completedInteractiveNarratives ?? new List<string>());

@@ -6,8 +6,8 @@ using UnityEngine.Events;
 /// claude/analisis-refactor-tramo1-hasta-demonio-2026-09-17.md §6): "las runas se iluminaban cada
 /// vez que el monstruo atacaba". Un hijo con collider propio (trigger) del prefab del jefe que:
 ///
-///  - se ilumina SOLO mientras ImpDemonAI.IsAttacking es true (la ventana de ataque real, no un
-///    temporizador aparte -- si la IA cambia de ritmo, el aro la sigue sin tocar este script),
+///  - se ilumina SOLO mientras ImpDemonAI.Expuesto es true (aviso, ataque y agotamiento de
+///    después; nunca en el rugido de fase): el ritmo lo marca la IA, el aro solo lo enseña,
 ///  - solo puede recibir daño de disparos en modo preciso (MagicProjectile.IsPrecise, ver Paso 5 /
 ///    MagicSpellSO.BuildPreciseVariant) llegados DURANTE esa ventana -- cualquier otro impacto
 ///    (normal, o preciso pero fuera de la ventana) lo ignora sin consumir el proyectil,
@@ -24,14 +24,14 @@ using UnityEngine.Events;
 public class RuneCollar : MonoBehaviour, IExpuestoAlDano
 {
     /// El aro brilla: es el momento de hacerle daño al jefe (ver SoloDanoCuandoExpuesto, INC-469).
-    public bool Expuesto => !_broken && demonAI != null && !demonAI.IsDead && demonAI.IsAttacking;
+    public bool Expuesto => !_broken && demonAI != null && !demonAI.IsDead && demonAI.Expuesto;
 
     [Header("Referencias")]
     [Tooltip("Si se deja vacío, se busca en los padres (el aro es normalmente un hijo del jefe).")]
     [SerializeField] private ImpDemonAI demonAI;
 
     [Header("Config")]
-    [Tooltip("Impactos precisos, durante la ventana de ataque, necesarios para romper el aro.")]
+    [Tooltip("Impactos precisos con el aro encendido necesarios para romperlo.")]
     [SerializeField, Min(1)] private int hitsToBreak = 3;
 
     [Header("Visual (sin arte nuevo -- Paso 6)")]
@@ -74,7 +74,7 @@ public class RuneCollar : MonoBehaviour, IExpuestoAlDano
         // nada que hacer (no hace falta un evento propio para enterarse -- isDead ya lo dice todo).
         if (_broken || demonAI == null || demonAI.IsDead) return;
 
-        bool glowing = demonAI.IsAttacking;
+        bool glowing = demonAI.Expuesto;
         if (glowing != _wasGlowing)
         {
             _wasGlowing = glowing;
@@ -105,7 +105,7 @@ public class RuneCollar : MonoBehaviour, IExpuestoAlDano
         // -- ni cuenta ni consume el proyectil, que sigue su camino normal (por ejemplo, seguirá
         // haciendo el daño de cuerpo habitual vía MagicProjectile.ResolveHit contra el Damageable
         // principal del jefe, exactamente igual que si el aro no existiera).
-        if (!projectile.IsPrecise || !demonAI.IsAttacking) return;
+        if (!projectile.IsPrecise || !demonAI.Expuesto) return;
 
         _consumedProjectiles.Add(projectile);
         _hits++;

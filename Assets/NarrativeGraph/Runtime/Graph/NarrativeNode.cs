@@ -36,6 +36,12 @@ public abstract class NarrativeNode
     public abstract void Enter(NarrativeContext ctx, Action onReadyToAdvance);
     public virtual void Exit(NarrativeContext ctx) {}
 
+    /// <summary>
+    /// Avisos de contenido que declara el propio nodo (algo a medias, algo que falta). Los muestran
+    /// la tarjeta del editor y el validador del grafo sin conocer el tipo de nodo.
+    /// </summary>
+    public virtual void CollectWarnings(List<string> warnings) {}
+
     // ─────────────────────────────────────────────────────────────────────────
     // Puertos de salida con nombre (Septiembre 2026 — sistema narrativo único)
     //
@@ -63,6 +69,32 @@ public abstract class NarrativeNode
         if (outputs == null || portIndex < 0 || portIndex >= outputs.Count) return null;
         var g = outputs[portIndex];
         return string.IsNullOrEmpty(g) ? null : g;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Proyección de estado (NarrativeStateProjector): por dónde se sigue el
+    // recorrido al pasar por este nodo sin ejecutarlo.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Seguir por todas las salidas (paso normal o fork).</summary>
+    public const int ProjectAllOutputs = -1;
+
+    /// <summary>Decisión real: la proyección no adivina la rama y se detiene aquí.</summary>
+    public const int ProjectionStops = -2;
+
+    /// <summary>
+    /// Salida por la que sigue la proyección: ProjectAllOutputs, ProjectionStops o un índice de
+    /// puerto. Por defecto, un nodo con puertos con nombre es una decisión y uno sin ellos sigue
+    /// por todas (la misma regla que aplica el runner a los forks implícitos).
+    /// </summary>
+    public virtual int ProjectionPort => HasNamedOutputs ? ProjectionStops : ProjectAllOutputs;
+
+    /// <summary>Explicación, para una persona, de qué decide este nodo y qué hay que fijar para resolverlo.</summary>
+    public virtual string DescribeDecision()
+    {
+        var ports = GetOutputPorts();
+        string salidas = ports != null ? string.Join(" / ", ports) : $"{outputs?.Count ?? 0} salidas";
+        return $"{GetType().Name} \"{displayTitle}\" (guid {guid}): decisión con salidas {salidas}.";
     }
 
     /// <summary>

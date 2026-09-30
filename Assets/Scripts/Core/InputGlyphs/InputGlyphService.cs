@@ -100,7 +100,7 @@ namespace Core.InputGlyphs
 
             if (_dialogueIcons == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[InputGlyphService] No se pudo resolver DialogueIcons.asset a través de " +
                                  "Resources/DialogueIconsLink. Los iconos de botones en los diálogos no se " +
                                  "generarán dinámicamente hasta revisar esa referencia.");
@@ -153,6 +153,18 @@ namespace Core.InputGlyphs
                 var link = Resources.Load<DialogueIconsResourceLink>("DialogueIconsLink");
                 return link != null ? link.dialogueIcons : null;
             }
+        }
+
+        /// <summary>Etiqueta &lt;sprite&gt; del botón <paramref name="glyphName"/> (<see cref="InputGlyphNames"/>)
+        /// para textos TMP: se ve el icono del mando o teclado activo. El texto necesita
+        /// <see cref="IconosDeTexto"/> como spriteAsset (ver <see cref="UsarIconos"/>).</summary>
+        public static string SpriteTag(string glyphName) => $"<sprite name=\"{glyphName}\">";
+
+        /// <summary>Prepara un texto TMP para pintar las etiquetas de <see cref="SpriteTag"/>.</summary>
+        public static void UsarIconos(TMP_Text text)
+        {
+            var iconos = IconosDeTexto;
+            if (text != null && iconos != null && text.spriteAsset != iconos) text.spriteAsset = iconos;
         }
 
         /// <summary>Sprite suelto (para <see cref="UnityEngine.UI.Image"/>) del botón <paramref name="name"/>
@@ -213,7 +225,7 @@ namespace Core.InputGlyphs
 
             _familyLibraryLink = Resources.Load<InputGlyphFamilySpriteLibraryLink>("InputGlyphFamilySpriteLibraryLink");
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (_familyLibraryLink == null)
                 Debug.LogWarning("[InputGlyphService] No se pudo resolver InputGlyphFamilySpriteLibraryLink desde " +
                                   "Resources. Los iconos de botón no se resolverán hasta revisar esa referencia " +
@@ -257,7 +269,7 @@ namespace Core.InputGlyphs
                 if (sprite == null && family != InputGlyphDeviceFamily.Xbox && xboxSet != null)
                 {
                     sprite = xboxSet.GetSprite(buttonName);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     if (sprite != null)
                         Debug.LogWarning($"[InputGlyphService] Falta el sprite '{buttonName}' en " +
                                           $"InputGlyphFamilySpriteSet_{family}.asset. Usando el de Xbox como respaldo.");
@@ -266,7 +278,7 @@ namespace Core.InputGlyphs
 
                 if (sprite == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[InputGlyphService] No se encontró ningún sprite para '{buttonName}' " +
                                       $"(ni en {family} ni en Xbox). Rellena Assets/_UI/InputGlyphFamilySpriteSet_" +
                                       $"{family}.asset antes de jugar.");

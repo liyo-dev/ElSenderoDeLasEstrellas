@@ -14,18 +14,38 @@ public class PlayerPresetSO : ScriptableObject
     public float maxHP = 100, currentHP = 100;
     public float maxMP = 50,  currentMP = 50;
 
-    [Tooltip("Ataque y defensa de Will, sin el equipo (la vida y la magia son maxHP y maxMP). Suben " +
-             "al ganar combates. 0 = aún sin inicializar: se pone el valor inicial (ver EstadisticasDeWill, INC-470).")]
+    [Tooltip("Ataque y defensa del personaje, sin el equipo (la vida y la magia son maxHP y maxMP). Suben " +
+             "al ganar combates. 0 = aún sin inicializar: se pone el valor inicial (ver EstadisticasDelPersonaje, INC-470).")]
     public float ataque, defensa;
 
     [Header("Desbloqueos")]
     [HideInInspector] public List<AbilityId> unlockedAbilities = new();
     public List<SpellId>   unlockedSpells    = new();
 
-    [Header("Slots de hechizo (por ID)")]
-    public SpellId leftSpellId;
-    public SpellId rightSpellId;
-    public SpellId specialSpellId;
+    [Header("Hechizos básicos equipados (X; se rotan con LB)")]
+    [Tooltip("Hasta cuatro hechizos básicos, de cualquier elemento, en el orden en que se rotan con LB.")]
+    public List<SpellId> basicSpellIds = new();
+
+    /// Básicos equipados de Estela o Liam (INC-503). Sin entrada = los de su ficha.
+    [Serializable]
+    public class BasicosDeCompanero
+    {
+        public PartyControlManager.CharacterSlot personaje;
+        public List<SpellId> hechizos = new();
+
+        public BasicosDeCompanero Copia() =>
+            new BasicosDeCompanero { personaje = personaje, hechizos = new List<SpellId>(hechizos ?? new List<SpellId>()) };
+
+        public static List<BasicosDeCompanero> CopiarLista(List<BasicosDeCompanero> src)
+        {
+            var dst = new List<BasicosDeCompanero>();
+            if (src != null) foreach (var e in src) if (e != null) dst.Add(e.Copia());
+            return dst;
+        }
+    }
+
+    [Tooltip("Básicos equipados de Estela y Liam (hasta cuatro cada uno). Vacío = los de su ficha.")]
+    public List<BasicosDeCompanero> companionBasics = new();
 
     [Header("Flags (misiones/estados simples)")]
     public List<string> flags = new();
@@ -74,6 +94,11 @@ public class PlayerPresetSO : ScriptableObject
              "NPCSocialEncounterState). Se reutiliza directamente NPCRelationshipRegistry.SaveEntry en vez " +
              "de duplicar el struct — ver NPCRelationshipRegistry.cs.")]
     public List<NPCRelationshipRegistry.SaveEntry> npcRelationships = new();
+
+    [Header("Objetos del mundo movidos o retirados")]
+    [Tooltip("Objetos de escena que se han movido de su sitio o se han retirado (entregados, consumidos). " +
+             "Lo escribe y lo aplica ObjetoPersistente.")]
+    public List<ObjetoPersistente.Estado> objetosDelMundo = new();
 
     [Header("Interactuables consumidos (single-use)")]
     [Tooltip("IDs de Interactable marcados como singleUse que ya han sido consumidos.")]

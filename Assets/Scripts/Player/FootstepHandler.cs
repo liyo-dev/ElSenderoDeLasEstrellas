@@ -60,7 +60,7 @@ namespace Game.Player
                 _rightFoot = _animator.GetBoneTransform(HumanBodyBones.RightFoot);
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (_leftFoot == null || _rightFoot == null)
                 Debug.LogWarning($"[FootstepHandler] No se encontraron huesos de pies en {name}. ¿Es un rig Humanoid?");
 #endif

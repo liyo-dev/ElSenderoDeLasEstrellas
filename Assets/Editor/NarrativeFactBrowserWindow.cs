@@ -18,7 +18,6 @@ using System.Reflection;
 /// - Valores en vivo durante Play Mode
 /// - Edición de valores en Play Mode
 /// - Snapshots: guardar/comparar estado para detectar cambios
-/// - Exportar definiciones al NarrativeFactCatalog
 ///
 /// Menú: Tools → Narrativa → Fact Browser
 /// </summary>
@@ -58,8 +57,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
         public bool changed;
         public bool isEditable;
 
-        public string catalogDescription;
-        public List<string> catalogTags;
     }
 
     // ─── Tab ───
@@ -77,7 +74,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
     private bool _onlyChanged;
     private bool _hasScanned;
     private string _scanStatus = "";
-    private NarrativeFactCatalog _catalog;
     private double _lastRuntimeRefresh;
     private const double RuntimeRefreshInterval = 0.5;
 
@@ -112,7 +108,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
     private void OnEnable()
     {
         EditorApplication.update += OnEditorUpdate;
-        TryFindCatalog();
     }
 
     private void OnDisable()
@@ -129,17 +124,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
         Repaint();
     }
 
-    private void TryFindCatalog()
-    {
-        if (_catalog != null) return;
-        var guids = AssetDatabase.FindAssets("t:NarrativeFactCatalog");
-        if (guids.Length > 0)
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guids[0]);
-            _catalog = AssetDatabase.LoadAssetAtPath<NarrativeFactCatalog>(path);
-        }
-    }
-
     // ─── Scan ───
 
     private void ScanAllFacts()
@@ -152,7 +136,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
         else
             ScanAssets();
 
-        MergeCatalogMetadata();
         ApplyFilters();
         _hasScanned = true;
         _scanStatus = $"{_facts.Count} hechos descubiertos";
@@ -415,7 +398,7 @@ public class NarrativeFactBrowserWindow : EditorWindow
     {
         if (DefaultNarrativeSignals.Instance == null) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         var signals = DefaultNarrativeSignals.Instance;
 
         // Raised events
@@ -631,7 +614,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
 
         _facts.Clear();
         ScanRuntime();
-        MergeCatalogMetadata();
 
         // Detect changes
         foreach (var f in _facts)
@@ -644,22 +626,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
         }
 
         ApplyFilters();
-    }
-
-    // ─── Catalog integration ───
-
-    private void MergeCatalogMetadata()
-    {
-        if (_catalog == null) return;
-
-        foreach (var fact in _facts)
-        {
-            var def = _catalog.FindDefinition(fact.id);
-            if (def == null) continue;
-            if (!string.IsNullOrEmpty(def.displayName)) fact.displayName = def.displayName;
-            if (!string.IsNullOrEmpty(def.description)) fact.catalogDescription = def.description;
-            if (def.tags != null && def.tags.Count > 0) fact.catalogTags = def.tags;
-        }
     }
 
     // ─── Helpers ───
@@ -999,8 +965,7 @@ public class NarrativeFactBrowserWindow : EditorWindow
         DrawValueCell(fact);
 
         // Detail / description
-        var detailText = !string.IsNullOrEmpty(fact.catalogDescription) ? fact.catalogDescription : fact.detail;
-        GUILayout.Label(detailText, EditorStyles.miniLabel);
+        GUILayout.Label(fact.detail, EditorStyles.miniLabel);
 
         EditorGUILayout.EndHorizontal();
     }
@@ -1079,108 +1044,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
         }
 
         EditorGUILayout.EndScrollView();
-
-        EditorGUILayout.Space(8);
-
-        // Export catalog button
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Exportar hechos descubiertos al catálogo", GUILayout.Width(280)))
-        {
-            ExportToCatalog();
-        }
-        GUILayout.FlexibleSpace();
-        EditorGUILayout.EndHorizontal();
-    }
-
-    // ─── Export to Catalog ───
-
-    private void ExportToCatalog()
-    {
-        if (_facts.Count == 0) return;
-
-        if (_catalog == null)
-        {
-            // Create new catalog
-            var path = EditorUtility.SaveFilePanelInProject(
-                "Guardar catálogo de hechos",
-                "NarrativeFactCatalog",
-                "asset",
-                "Elige dónde guardar el catálogo de hechos");
-
-            if (string.IsNullOrEmpty(path)) return;
-
-            _catalog = ScriptableObject.CreateInstance<NarrativeFactCatalog>();
-            AssetDatabase.CreateAsset(_catalog, path);
-        }
-
-        Undo.RecordObject(_catalog, "Export facts to catalog");
-
-        int added = 0;
-        foreach (var fact in _facts)
-        {
-            if (_catalog.FindDefinition(fact.id) != null) continue;
-
-            var def = new NarrativeFactCatalog.FactDefinition
-            {
-                factId = fact.id,
-                displayName = fact.displayName,
-                category = MapCategory(fact.category),
-                factType = MapValueType(fact.valueType),
-                source = MapSource(fact.source),
-                description = fact.detail ?? ""
-            };
-            _catalog.definitions.Add(def);
-            added++;
-        }
-
-        EditorUtility.SetDirty(_catalog);
-        AssetDatabase.SaveAssets();
-        Debug.Log($"[FactBrowser] Exportados {added} hechos nuevos al catálogo ({_catalog.name}). Total: {_catalog.definitions.Count}");
-    }
-
-    private static NarrativeFactCatalog.FactCategory MapCategory(string category)
-    {
-        switch (category)
-        {
-            case "Narrativo": return NarrativeFactCatalog.FactCategory.Narrative;
-            case "Quest": return NarrativeFactCatalog.FactCategory.Quest;
-            case "Evento": return NarrativeFactCatalog.FactCategory.Event;
-            case "Habilidad": return NarrativeFactCatalog.FactCategory.Ability;
-            case "Hechizo": return NarrativeFactCatalog.FactCategory.Ability;
-            case "Inventario": return NarrativeFactCatalog.FactCategory.Inventory;
-            case "Flag": return NarrativeFactCatalog.FactCategory.Flag;
-            case "Mundo": return NarrativeFactCatalog.FactCategory.World;
-            case "Party": return NarrativeFactCatalog.FactCategory.NPC;
-            case "Jugador": return NarrativeFactCatalog.FactCategory.Custom;
-            default: return NarrativeFactCatalog.FactCategory.Custom;
-        }
-    }
-
-    private static NarrativeFactCatalog.FactType MapValueType(FactValueType vt)
-    {
-        switch (vt)
-        {
-            case FactValueType.Bool: return NarrativeFactCatalog.FactType.Bool;
-            case FactValueType.Int: return NarrativeFactCatalog.FactType.Int;
-            case FactValueType.Float: return NarrativeFactCatalog.FactType.Float;
-            default: return NarrativeFactCatalog.FactType.String;
-        }
-    }
-
-    private static NarrativeFactCatalog.FactSource MapSource(FactSource source)
-    {
-        switch (source)
-        {
-            case FactSource.Blackboard: return NarrativeFactCatalog.FactSource.Blackboard;
-            case FactSource.Quest: return NarrativeFactCatalog.FactSource.QuestManager;
-            case FactSource.Signal: return NarrativeFactCatalog.FactSource.Signals;
-            case FactSource.PlayerState: return NarrativeFactCatalog.FactSource.PlayerState;
-            case FactSource.Inventory: return NarrativeFactCatalog.FactSource.PlayerState;
-            case FactSource.Party: return NarrativeFactCatalog.FactSource.PlayerState;
-            case FactSource.World: return NarrativeFactCatalog.FactSource.PlayerState;
-            default: return NarrativeFactCatalog.FactSource.Custom;
-        }
     }
 
     // ─── Colors ───

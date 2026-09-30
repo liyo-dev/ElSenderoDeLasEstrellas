@@ -64,7 +64,7 @@ public class UnlockTrigger : MonoBehaviour
             else
             {
                 _pendingApply = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo (OnEnable) diferido");
 #endif
             }
@@ -89,7 +89,7 @@ public class UnlockTrigger : MonoBehaviour
         else
         {
             _pendingApply = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo diferido hasta OnProfileReady");
 #endif
         }
@@ -102,7 +102,7 @@ public class UnlockTrigger : MonoBehaviour
         else
         {
             _pendingApply = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[UnlockTrigger] Perfil no listo. Desbloqueo (ApplyUnlocksNow) diferido");
 #endif
         }
@@ -118,7 +118,7 @@ public class UnlockTrigger : MonoBehaviour
         var preset = UnlockService.GetActivePreset();
         if (!preset)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[UnlockTrigger] No hay preset activo");
 #endif
             return;
@@ -174,10 +174,11 @@ public class UnlockTrigger : MonoBehaviour
 
             if (caster != null)
             {
-                float cL = caster.GetSpellForSlot(MagicSlot.Left)    ? caster.GetSpellForSlot(MagicSlot.Left).manaCost    : float.PositiveInfinity;
-                float cR = caster.GetSpellForSlot(MagicSlot.Right)   ? caster.GetSpellForSlot(MagicSlot.Right).manaCost   : float.PositiveInfinity;
-                float cS = caster.GetSpellForSlot(MagicSlot.Special) ? caster.GetSpellForSlot(MagicSlot.Special).manaCost : float.PositiveInfinity;
-                needed = Mathf.Min(cL, cR, cS);
+                // Lo que cuesta el básico más barato equipado.
+                needed = float.PositiveInfinity;
+                var basics = caster.BasicSpells;
+                for (int i = 0; i < basics.Count; i++)
+                    if (basics[i]) needed = Mathf.Min(needed, basics[i].manaCost);
                 if (!float.IsFinite(needed)) needed = 0f;
             }
             else
@@ -226,7 +227,7 @@ public class UnlockTrigger : MonoBehaviour
         // === Guardado ===
         if (saveAfterUnlock && needsHudRefresh)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[UnlockTrigger] Auto-guardado deshabilitado. Usa un punto de guardado para conservar los cambios.");
 #endif
         }

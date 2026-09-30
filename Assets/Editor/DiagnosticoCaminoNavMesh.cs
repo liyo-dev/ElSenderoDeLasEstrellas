@@ -80,7 +80,7 @@ public static class DiagnosticoCaminoNavMesh
 
         // Obstáculos cuyo hueco tallado (con el radio del agente) cubre algún punto sin NavMesh.
         // Si no hay puntos sin NavMesh en la recta, los que tallan cerca del corte.
-        var todos = Object.FindObjectsByType<NavMeshObstacle>(FindObjectsSortMode.None)
+        var todos = Object.FindObjectsByType<NavMeshObstacle>()
             .Where(o => o.isActiveAndEnabled && o.carving).ToList();
         var talladores = huecos.Count > 0
             ? todos.Where(o => huecos.Any(h => Cubre(o, h, 0.6f))).ToList()
@@ -176,7 +176,7 @@ public static class DiagnosticoCaminoNavMesh
     }
 
     private static SpawnAnchor BuscarAnchor(string id) =>
-        Object.FindObjectsByType<SpawnAnchor>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+        Object.FindObjectsByType<SpawnAnchor>(FindObjectsInactive.Include)
             .FirstOrDefault(s => s.anchorId == id);
 
     private static float DistanciaPlana(Vector3 a, Vector3 b)

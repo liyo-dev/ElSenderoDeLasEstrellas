@@ -65,7 +65,7 @@ namespace Sendero.Core.Feedback
             {
                 if (showDebugLogs)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[DeathCameraEffect] Efecto ya activo, ignorando nueva llamada");
 #endif
                     }
@@ -76,7 +76,7 @@ namespace Sendero.Core.Feedback
             {
                 if (showDebugLogs)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError("[DeathCameraEffect] Target es null");
 #endif
                     }
@@ -100,7 +100,7 @@ namespace Sendero.Core.Feedback
             {
                 if (showDebugLogs)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError("[DeathCameraEffect] Main camera no encontrada");
 #endif
                     }
@@ -121,7 +121,7 @@ namespace Sendero.Core.Feedback
 
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] 🎬 Iniciando efecto de muerte - Target: {target.name}");
 #endif
                 }
@@ -134,7 +134,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] ⏱️ Slowmotion activado - TimeScale: {slowMotionScale}");
 #endif
                 }
@@ -146,7 +146,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] 🔍 Zoom: {startFOV:F1}° → {targetFOV:F1}°");
 #endif
                 }
@@ -165,7 +165,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] ✅ Zoom completado");
 #endif
                 }
@@ -180,7 +180,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] ⏸️ Hold completado ({holdDuration:F2}s)");
 #endif
                 }
@@ -191,7 +191,7 @@ namespace Sendero.Core.Feedback
 
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] ⏱️ TimeScale restaurado: {Time.timeScale}");
 #endif
                 }
@@ -205,7 +205,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] 🔄 Volviendo zoom a normal: {startFOV:F1}° → {_originalFieldOfView:F1}°");
 #endif
                 }
@@ -223,7 +223,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] ✅ Efecto completado - FOV restaurado: {_originalFieldOfView:F1}°");
 #endif
                 }
@@ -238,7 +238,7 @@ namespace Sendero.Core.Feedback
             
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DeathCameraEffect] 🎉 Sistema completamente restaurado");
 #endif
                 }
@@ -266,7 +266,7 @@ namespace Sendero.Core.Feedback
 
             if (showDebugLogs)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[DeathCameraEffect] ⛔ Efecto cancelado - Todo restaurado");
 #endif
                 }

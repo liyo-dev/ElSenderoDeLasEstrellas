@@ -11,6 +11,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     static void ResetStatics()
     {
         Instance = null;
+        OnAfterReset = null;
     }
     #endif
 
@@ -66,7 +67,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     public static event Action OnAfterReset;
 
     // ── Observabilidad (Editor + Development builds) ─────────────
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     public enum SignalStatus { Fired, Queued, Consumed, Reset }
 
     public readonly struct SignalRecord
@@ -157,7 +158,9 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     {
         if (Instance != null && Instance != this)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DefaultNarrativeSignals] Instancia duplicada detectada. Se usará la primera creada.");
+#endif
             return;
         }
         Instance = this;
@@ -224,6 +227,13 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     public bool HasEverRaised(string key)
         => !string.IsNullOrWhiteSpace(key) && _everRaised.Contains(key);
 
+    /// <summary>
+    /// True si esta key se ha disparado y está esperando a su primer oyente (en _pending o
+    /// _raised). Solo consulta: no la consume, a diferencia de OnCustom.
+    /// </summary>
+    public bool IsPendingDelivery(string key)
+        => !string.IsNullOrWhiteSpace(key) && (_pending.Contains(key) || _raised.Contains(key));
+
     public void ResetState()
     {
         ResetState(preservePending: false);
@@ -239,7 +249,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         _battlePending.Clear();
         _raised.Clear();
         _everRaised.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Record("__RESET__", SignalStatus.Reset, "Nueva partida: señales olvidadas, suscriptores intactos");
 #endif
         try { OnAfterReset?.Invoke(); }
@@ -259,14 +269,16 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
             _battlePending.Clear();
             _raised.Clear();
             _everRaised.Clear();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Record("__RESET__", SignalStatus.Reset, "ResetState completo — _pending, _raised y _custom limpiados");
 #endif
         }
         else if (_pending.Count > 0 || _battlePending.Count > 0 || _raised.Count > 0)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] ResetState preservando {_pending.Count} pendientes, {_raised.Count} persistentes, {_battlePending.Count} batallas");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#endif
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Record("__RESET__", SignalStatus.Reset, $"ResetState suave — preservando {_pending.Count} pending, {_raised.Count} raised");
 #endif
         }
@@ -301,7 +313,9 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     // ===================== QUEST =====================
     public void OfferQuest(string questId, object npcContext)
     {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Signals] OfferQuest {questId} (svc={(QS!=null?QS.GetType().Name:"NULL")})");
+#endif
         QS?.Offer(questId, npcContext);
     }
 
@@ -311,7 +325,9 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 
     public void StartQuest(string questId, object npcContext)
     {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Signals] StartQuest {questId} (svc={(QS!=null?QS.GetType().Name:"NULL")})");
+#endif
         QS?.StartQuest(questId);
     }
 
@@ -351,8 +367,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         if (_custom.TryGetValue(key, out var a) && a != null)
         {
             int listenerCount = a.GetInvocationList().Length;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] Custom: {key}" + (string.IsNullOrEmpty(context) ? "" : $" ({context})"));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
             RecordWithContext(key, SignalStatus.Fired, $"{listenerCount} oyente(s)", context);
 #endif
             try { a.Invoke(); } catch (Exception e) { Debug.LogException(e); }
@@ -361,8 +377,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         {
             _pending.Add(key);
             _raised.Add(key);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] Custom: {key} (sin oyentes → pendiente)" + (string.IsNullOrEmpty(context) ? "" : $" ({context})"));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
             RecordWithContext(key, SignalStatus.Queued, "sin oyentes, guardado en _pending y _raised", context);
 #endif
         }
@@ -380,8 +396,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         if (wasPending || wasRaised)
         {
             string src = wasRaised && !wasPending ? "_raised" : "_pending";
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] Custom: {key} (consumido desde {(wasRaised && !wasPending ? "registro persistente" : "pendientes")})");
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Record(key, SignalStatus.Consumed, $"consumido desde {src} al suscribirse");
 #endif
             try { cb(); } catch (Exception e) { Debug.LogException(e); }
@@ -393,19 +409,12 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     }
 
     /// <summary>
-    /// FIX A5 (auditoría 2026-08-07): "devuelve" una señal custom a _pending/_raised sin
-    /// invocar a ningún suscriptor — a diferencia de RaiseCustom, que si hay oyentes activos en
-    /// _custom los invoca de inmediato. Pensado para el caso en que un suscriptor consumió una
-    /// señal desde OnCustom() (porque ya estaba pendiente/persistida al suscribirse) pero decide
-    /// que no era para él (p.ej. NPCInteractiveNarrativeExecutor.OnCustomEventReceived
-    /// descartándola por singleUse ya ejecutado): el consumo en OnCustom es "primero en
-    /// suscribirse, se la lleva", así que si el ejecutor legacy Interactive se suscribe antes de
-    /// que el WaitCustomEventNode del grafo lo haga (orden normal durante la carga: el executor
-    /// se re-suscribe en OnSignalsReset antes de que los runners restauren blackboards), la señal
-    /// se perdía para siempre aunque el grafo la necesitara. Requeue-sin-invocar es seguro de
-    /// llamar incluso desde dentro del propio callback que la consumió: no puede re-disparar al
-    /// mismo suscriptor en el mismo stack porque no invoca nada, solo la deja disponible para la
-    /// próxima llamada a OnCustom() de cualquier futuro suscriptor real.
+    /// Devuelve una señal a _pending/_raised sin invocar suscriptores activos. Diferente de
+    /// RaiseCustom, que despacha de inmediato si hay oyentes. Útil cuando un suscriptor consumió
+    /// la señal desde OnCustom() pero decide que no era para él: sin requeue se perdería para
+    /// cualquier suscriptor posterior (p.ej. el WaitCustomEventNode del grafo, que se suscribe
+    /// después del executor legacy en la carga). Es seguro llamarlo desde dentro del propio
+    /// callback que consumió la señal porque no invoca nada.
     /// </summary>
     public void RequeueCustom(string key)
     {
@@ -413,7 +422,7 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 
         _pending.Add(key);
         _raised.Add(key);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Record(key, SignalStatus.Queued, "reencolada sin invocar (consumidor la descartó, ver RequeueCustom)");
 #endif
     }
@@ -463,23 +472,29 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     {
         var key = arena ?? "__NULL__";
         
-        // ✅ NUEVO: Disparar PRIMERO a suscriptores globales (clave especial)
+        // Los suscriptores globales reciben la victoria antes que los específicos de arena.
         if (_battleSubscribers.TryGetValue("__GLOBAL__", out var globalAction) && globalAction != null)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] BattleWon GLOBAL disparado para arena: {key}");
+#endif
             try { globalAction.Invoke(); } catch (Exception e) { Debug.LogException(e); }
         }
-        
+
         // Luego disparar a suscriptores específicos de esta arena
         if (_battleSubscribers.TryGetValue(key, out var a) && a != null)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] BattleWon: {key}");
+#endif
             try { a.Invoke(); } catch (Exception e) { Debug.LogException(e); }
         }
         else
         {
             _battlePending.Add(key);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Signals] BattleWon: {key} (sin oyentes específicos → pendiente)");
+#endif
         }
     }
 }

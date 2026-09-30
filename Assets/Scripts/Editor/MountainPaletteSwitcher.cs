@@ -92,7 +92,6 @@ public static class MountainPaletteSwitcher
 
             // Capturamos del original lo que no viene de la prefab base y hay que trasladar a mano.
             string nombreOriginal = original.name;
-            int navMeshArea = GameObjectUtility.GetNavMeshArea(original);
             StaticEditorFlags staticFlags = GameObjectUtility.GetStaticEditorFlags(original);
             NavMeshObstacle obstaculoOriginal = original.GetComponent<NavMeshObstacle>();
 
@@ -104,7 +103,6 @@ public static class MountainPaletteSwitcher
             nueva.transform.SetSiblingIndex(i);
             nueva.name = nombreOriginal;
 
-            GameObjectUtility.SetNavMeshArea(nueva, navMeshArea);
             GameObjectUtility.SetStaticEditorFlags(nueva, staticFlags);
 
             if (obstaculoOriginal != null)

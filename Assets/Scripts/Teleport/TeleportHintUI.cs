@@ -68,7 +68,7 @@ public class TeleportHintUI : MonoBehaviour
         {
             // Si es hijo de otro objeto (ej. HUD), no podemos usar DontDestroyOnLoad directamente
             // pero podemos confiar en que el padre (HUD) persista o se gestione adecuadamente
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TeleportHintUI] Inicializado como hijo de otro objeto, no se aplica DontDestroyOnLoad.");
 #endif
         }
@@ -197,7 +197,7 @@ public class TeleportHintUI : MonoBehaviour
         // Solo mostrar si el sistema de teletransporte está disponible
         if (!TeleportRegistry.IsSystemAvailable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TeleportHintUI] Sistema no disponible, no se muestra el hint.");
 #endif
             return;
@@ -230,7 +230,7 @@ public class TeleportHintUI : MonoBehaviour
                 .SetEase(Ease.OutQuad);
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TeleportHintUI] Hint mostrado.");
 #endif
     }
@@ -260,7 +260,7 @@ public class TeleportHintUI : MonoBehaviour
             hintRoot.SetActive(false);
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TeleportHintUI] Hint ocultado.");
 #endif
     }

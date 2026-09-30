@@ -127,7 +127,7 @@ public static class Telon
 
         if (s_vigilante == null) s_vigilante = Correr().StartCoroutine(Co_Vigilar());
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (nuevo) Debug.Log($"[Telón] Cierra '{quien}'. Lo retienen: {Describir()}.");
 #endif
     }
@@ -147,7 +147,7 @@ public static class Telon
         if (string.IsNullOrEmpty(quien) || !s_quien.Remove(quien)) return;
         s_avisados.Remove(quien);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Telón] Suelta '{quien}'." +
             (s_quien.Count > 0 ? $" Siguen reteniéndolo: {Describir()}." : " Nadie más: se abre."));
 #endif
@@ -202,7 +202,7 @@ public static class Telon
             {
                 float lleva = ahora - kv.Value;
                 if (lleva >= Tope) s_buffer.Add(kv.Key);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 else if (lleva >= AvisarTras && s_avisados.Add(kv.Key))
                     Debug.LogWarning($"[Telón] '{kv.Key}' lleva {lleva:F0} s con la pantalla en negro. " +
                         $"Lo retienen: {Describir()}. Si no la suelta, se abrirá sola a los {Tope:F0} s.");

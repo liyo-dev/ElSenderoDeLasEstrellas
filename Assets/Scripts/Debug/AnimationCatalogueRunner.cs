@@ -34,7 +34,7 @@ public class AnimationCatalogueRunner : MonoBehaviour
 
     [Header("Referencias")]
     [SerializeField] private Animator animator;
-    [SerializeField] private new Camera camera;
+    [SerializeField] private Camera camera;
 
     [Header("Catálogo (lo rellena la herramienta del Editor)")]
     [SerializeField] private List<Entrada> entradas = new List<Entrada>();

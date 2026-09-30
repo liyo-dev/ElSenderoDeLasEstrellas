@@ -42,7 +42,7 @@ public class ProjectileCollisionService : MonoBehaviour
         // Patrón Singleton con protección contra duplicados
         if (Instance != null && Instance != this)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ProjectileCollisionService] Instancia duplicada detectada en '{name}'. Se destruye el duplicado.");
 #endif
             Destroy(gameObject);
@@ -97,14 +97,14 @@ public class ProjectileCollisionService : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[ProjectileCollisionService] ⚠️ No hay VFX de colisión asignado");
 #endif
             }
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ProjectileCollisionService] ⚠️ No hay settings asignado - usando configuración por defecto");
 #endif
             // El handler usará configuración por defecto automáticamente
@@ -120,7 +120,7 @@ public class ProjectileCollisionService : MonoBehaviour
 
         settings = newSettings;
         InitializeCollisionSystem();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ProjectileCollisionService] Configuración actualizada en runtime");
 #endif
     }

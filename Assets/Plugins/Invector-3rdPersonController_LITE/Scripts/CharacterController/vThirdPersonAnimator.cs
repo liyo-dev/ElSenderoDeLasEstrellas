@@ -64,6 +64,14 @@ namespace Invector.vCharacterController
                 inputMagnitude = Mathf.Clamp(newInput.magnitude, 0, isSprinting ? runningSpeed : walkSpeed);
             else
                 inputMagnitude = Mathf.Clamp(isSprinting ? newInput.magnitude + 0.5f : newInput.magnitude, 0, isSprinting ? sprintSpeed : runningSpeed);
+
+            // Con tope de velocidad, la animación no pasa de la que corresponde a esa velocidad.
+            // El valor lo calcula TopeDeVelocidadDelJugador con el criterio común de NPCs y
+            // jugador (INC-545). Antes se calculaba aquí con las velocidades propias de Will
+            // (andar = 4 m/s): siguiendo a Eldran a 2,3 m/s daba 0,29, entre quieto y andar, y
+            // Will se deslizaba con las piernas casi quietas mientras Eldran trotaba a su lado.
+            if (!float.IsPositiveInfinity(topeDeAnimacion))
+                inputMagnitude = Mathf.Min(inputMagnitude, topeDeAnimacion);
         }
     }
 

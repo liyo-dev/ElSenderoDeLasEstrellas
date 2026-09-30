@@ -5,7 +5,7 @@ using Sendero.Core.Feedback;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Damageable))]
-public class ImpDemonAI : MonoBehaviour
+public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 {
     [Header("Referencias")]
     [SerializeField] private Transform player;
@@ -59,13 +59,7 @@ public class ImpDemonAI : MonoBehaviour
     [Tooltip("La fase berserk se activa antes (50% en lugar del 33%).")]
     [SerializeField] private float phase3HealthPercentSecond = 0.50f;
 
-    [Header("  · Dash (2ª aparición)")]
-    [SerializeField] private float dashDamage = 25f;
-    [SerializeField] private float dashSpeed = 22f;
-    [SerializeField] private float dashDuration = 0.35f;
-    [SerializeField] private float dashCooldown = 7f;
-
-    [Header("  · Lluvia de ataques (2ª aparición)")]
+    [Header("Lluvia de sombras (fase 3; en la revancha desde la fase 2)")]
     [Tooltip("Prefab con un quad/decal semitransparente que hace de sombra de aviso.")]
     [SerializeField] private GameObject rainShadowPrefab;
     [Tooltip("Efecto de explosión/impacto que aparece tras el aviso.")]
@@ -86,20 +80,37 @@ public class ImpDemonAI : MonoBehaviour
     [SerializeField] private float attackRecoveryBeat = 0.45f;
     private float _lastAttackEndTime = -999f;
 
-    [Header("🏃 Anti-Kiting (Fase 1)")]
-    [Tooltip("FIX (petición Raúl, 4 sep 2026 — combate aburrido / \"te alejas un poco y lo matas "
-             + "sin esfuerzo\"): en Fase 1 el Demonio NO tiene ningún ataque a distancia a propósito "
-             + "(DecideRangedAttack está bloqueado hasta Fase 2) — si el jugador se queda fuera de "
-             + "attackRange (melee) disparando, antes el Demonio se limitaba a perseguir a velocidad "
-             + "normal, indefenso. Tras kitingLungeDelay segundos de persecución sin alcanzar rango, "
-             + "hace un lunge breve (ráfaga de velocidad) para cerrar distancia — no es el Dash "
-             + "completo de la 2ª aparición, solo una respuesta mínima para que kitear en Fase 1 no "
-             + "sea gratis.")]
-    [SerializeField] private float kitingLungeDelay = 2.5f;
-    [SerializeField] private float kitingLungeSpeedMultiplier = 1.6f;
-    [SerializeField] private float kitingLungeDuration = 0.7f;
-    private float _kitingSinceTime = -1f;
-    private bool _isLungingAtPlayer = false;
+    [Header("Ventana del aro: aviso + agotado")]
+    [Tooltip("Segundos que se queda quieto y expuesto (el aro sigue brillando) al terminar cada " +
+             "ataque, por fase (1, 2, 3). Es el momento de castigarle: primero se esquiva el golpe " +
+             "y después se dispara. Baja en cada fase para que el combate apriete.")]
+    [SerializeField] private float[] agotamientoPorFase = { 1.6f, 1.25f, 0.9f };
+    [Tooltip("Golpes encajados en una misma ventana a partir de los cuales, al terminarla, se " +
+             "aparta de Will antes de volver a atacar.")]
+    [SerializeField, Min(1)] private int golpesParaRecular = 2;
+    [SerializeField] private float distanciaRecular = 4f;
+    [SerializeField] private float duracionRecular = 0.6f;
+
+    [Header("Embestida")]
+    [Tooltip("Si Will se queda lejos, marca en el suelo dónde va a caer y embiste en línea recta " +
+             "hacia allí. Durante el aviso y después el aro brilla: también hay ventana para quien " +
+             "pelea de lejos.")]
+    [SerializeField] private float dashDamage = 25f;
+    [SerializeField] private float dashSpeed = 22f;
+    [SerializeField] private float dashCooldown = 7f;
+    [Tooltip("Segundos de aviso (marca en el suelo) antes de embestir.")]
+    [SerializeField] private float preparacionEmbestida = 0.7f;
+    [Tooltip("Segundos persiguiendo a Will sin alcanzarle antes de embestir.")]
+    [SerializeField] private float persecucionAntesDeEmbestir = 1.5f;
+    [Tooltip("Por debajo de esta distancia no embiste: ya está a tiro de garra.")]
+    [SerializeField] private float distanciaMinimaEmbestida = 5f;
+    [Tooltip("Metros que sigue de largo pasada la marca.")]
+    [SerializeField] private float pasadaEmbestida = 1.5f;
+
+    [Header("Cambio de fase (efectos en TransicionDeFaseDeJefe)")]
+    [Tooltip("Multiplicador de la velocidad de movimiento en cada fase (1, 2, 3).")]
+    [SerializeField] private float[] velocidadPorFase = { 1f, 1.2f, 1.5f };
+    private float _persiguiendoDesde = -1f;
 
     [Header("DEBUG")]
     [SerializeField] private bool debugLogAnimator = false;
@@ -107,6 +118,8 @@ public class ImpDemonAI : MonoBehaviour
     [Header("Combat Control")]
     [Tooltip("Permite iniciar el combate. Se activa externamente después de la presentación.")]
     public bool canStartCombat = false;
+
+    public void EmpezarCombate() => canStartCombat = true;
 
     [Header("Aro de runas / final alternativo (Paso 6 del refactor Tramo 1)")]
     [Tooltip("Al romper RuneCollar el demonio queda 'caído' en vez de morir (ver " +
@@ -134,12 +147,25 @@ public class ImpDemonAI : MonoBehaviour
     private bool isDead = false;
     private bool _registeredInCombat = false;
 
+    // Ventana del aro y movimiento
+    private bool _expuesto;
+    private bool _agotado;
+    private int _golpesEnVentana;
+    private float _volverAIdleEn = -1f;
+    private int _ladoRodeo = 1;
+    private float _siguienteCambioRodeo;
+    private float _velocidadBase;
+    private float[] _umbrales;
+    private Coroutine _accionActual;
+    private TransicionDeFaseDeJefe _transicion;
+
     // Cooldowns efectivos calculados en Awake
     private float _effSlashCooldown;
     private float _effStabCooldown;
     private float _effProjectileCooldown;
     private float _effSpellCooldown;
     private float _effUndergroundCooldown;
+    private float _effDashCooldown;
 
     private static readonly Collider[] _overlapBuffer = new Collider[16];
     private float _targetRefreshTimer;
@@ -193,6 +219,12 @@ public class ImpDemonAI : MonoBehaviour
         _effProjectileCooldown  = projectileCooldown  * m;
         _effSpellCooldown       = spellCooldown       * m;
         _effUndergroundCooldown = undergroundCooldown * m;
+        _effDashCooldown        = dashCooldown        * m;
+
+        _velocidadBase = agent ? agent.speed : 3.5f;
+        _transicion = GetComponent<TransicionDeFaseDeJefe>();
+        if (_transicion == null) _transicion = gameObject.AddComponent<TransicionDeFaseDeJefe>();
+        _umbrales = new[] { phase2HealthPercent, isSecondEncounter ? phase3HealthPercentSecond : phase3HealthPercent };
 
         BuildAnimatorLookup();
 
@@ -255,7 +287,7 @@ public class ImpDemonAI : MonoBehaviour
     {
         if (animator == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ImpDemonAI] No hay Animator asignado para inspeccionar.");
 #endif
             return;
@@ -263,7 +295,7 @@ public class ImpDemonAI : MonoBehaviour
 
         var controller = animator.runtimeAnimatorController;
         string ctrlName = controller != null ? controller.name : "<null>";
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ImpDemonAI] Animator Controller: {ctrlName}");
         Debug.Log($"[ImpDemonAI] Layer count: {animator.layerCount}");
 #endif
@@ -271,7 +303,7 @@ public class ImpDemonAI : MonoBehaviour
         if (controller != null)
         {
             var clips = controller.animationClips;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ImpDemonAI] Animation Clips ({(clips != null ? clips.Length : 0)}):");
 #endif
             if (clips != null)
@@ -279,14 +311,14 @@ public class ImpDemonAI : MonoBehaviour
                 foreach (var c in clips)
                 {
                     if (c == null) continue;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($" - {c.name}");
 #endif
                 }
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ImpDemonAI] Mapeo de animaciones usadas:");
 #endif
         foreach (var kv in AnimNameMap)
@@ -296,13 +328,13 @@ public class ImpDemonAI : MonoBehaviour
             int layer = AnimatorLayerContainingState(hash);
             if (layer >= 0)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($" - '{animLabel}' -> encontrada en capa {layer}");
                 #endif
             }
             else
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($" - '{animLabel}' -> NO encontrada");
                 #endif
             }
@@ -317,7 +349,7 @@ public class ImpDemonAI : MonoBehaviour
                         if (c == null) continue;
                         if (c.name.IndexOf(animLabel, System.StringComparison.OrdinalIgnoreCase) >= 0)
                         {
-                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"    Clip coincidente: {c.name}");
                             #endif
                         }
@@ -435,7 +467,10 @@ public class ImpDemonAI : MonoBehaviour
         else
             newPhase = BossPhase.Phase1;
 
-        if (newPhase != currentPhase)
+        // Las fases solo avanzan. Si se cura (golpes sin el aro) por encima del umbral, sigue en
+        // la fase a la que llegó: volver atrás repetiría el rugido y desharía lo aprendido.
+        // Ver INC-487.
+        if (newPhase > currentPhase)
         {
             currentPhase = newPhase;
             OnPhaseChanged();
@@ -444,28 +479,20 @@ public class ImpDemonAI : MonoBehaviour
 
     private void OnPhaseChanged()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ImpDemonAI] Cambiando a {currentPhase}");
 #endif
-        switch (currentPhase)
-        {
-            case BossPhase.Phase2:
-                if (agent) agent.speed *= 1.2f;
-                StartCoroutine(PhaseTransitionEffect());
-                break;
+        if (agent) agent.speed = _velocidadBase * ValorDeFase(velocidadPorFase, 1f);
 
-            case BossPhase.Phase3:
-                if (agent) agent.speed *= 1.3f;
-                SpawnEnrageAura();
-                // Propuesta mejora fases (27 ago 2026): en la revancha, la entrada a la fase final
-                // es un combo de cierre scripted (teletransporte + golpe + lluvia) en vez del mismo
-                // cast generico que el resto de transiciones — ver SecondEncounterEnrageSequence().
-                if (isSecondEncounter)
-                    StartCoroutine(SecondEncounterEnrageSequence());
-                else
-                    StartCoroutine(PhaseTransitionEffect());
-                break;
-        }
+        // El rugido manda: corta lo que estuviera haciendo (el cambio llega casi siempre a mitad
+        // de una ventana, porque solo ahí recibe daño).
+        if (_accionActual != null) StopCoroutine(_accionActual);
+        _expuesto = false;
+        _agotado = false;
+
+        if (currentPhase == BossPhase.Phase3) SpawnEnrageAura();
+        _accionActual = StartCoroutine(TransicionDeFase());
+        AlCambiarDeFase?.Invoke(Fase);
     }
 
     // Propuesta identidad de fase (30 ago 2026): la Fase 3 ('enrage') se notaba solo en el shake
@@ -478,100 +505,42 @@ public class ImpDemonAI : MonoBehaviour
         _enrageAuraInstance = Instantiate(enrageAuraVFXPrefab, transform.position, transform.rotation, transform);
     }
 
-    private IEnumerator PhaseTransitionEffect()
+    /// Cambio de fase: ruge con el aro apagado; los efectos (invulnerable, cámara lenta, onda,
+    /// color) los pone TransicionDeFaseDeJefe. Tiene que leerse como «ahora pelea distinto».
+    private IEnumerator TransicionDeFase()
     {
         currentState = BossState.CastingSpell;
         isAttacking = true;
+        _expuesto = false;
         if (agent && agent.isOnNavMesh) agent.isStopped = true;
 
-        // Propuesta mejora fases (27 ago 2026): antes esto solo subia la velocidad y reproducia
-        // el cast generico — el jugador no "sentia" el cambio de fase salvo mirando la barra de
-        // vida. Ahora es un momento real: invulnerabilidad breve (no se puede interrumpir el
-        // rugido a media transicion) + camera shake + flash de pantalla, mas fuerte si es la
-        // entrada a Fase 3 (lectura de "enrage").
-        bool isEnrage = currentPhase == BossPhase.Phase3;
-        float shakeIntensity = isEnrage ? 0.9f : 0.5f;
-        float shakeDuration = isEnrage ? 0.5f : 0.35f;
-        Color flashColor = isEnrage ? new Color(0.6f, 0f, 0f, 0.35f) : new Color(1f, 1f, 1f, 0.2f);
+        bool furia = currentPhase == BossPhase.Phase3;
 
-        if (damageable) damageable.GrantInvulnerability(1.6f);
-        FeedbackService.CameraShake(shakeIntensity, shakeDuration);
-        FeedbackService.ScreenFlash(flashColor, 0.25f);
-
+        // Carga: ruge mientras tiembla el suelo.
         PlayAnimation(AnimCastSpell);
+        _transicion.Cargar();
+        yield return WaitFacingPlayer(0.7f);
 
-        if (spellEffectPrefab && projectileSpawnPoint)
-            Instantiate(spellEffectPrefab, projectileSpawnPoint.position, Quaternion.identity);
+        // Estallido.
+        _transicion.Estallar(Fase, furia);
+        if (spellEffectPrefab && projectileSpawnPoint && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(spellEffectPrefab, projectileSpawnPoint.position, Quaternion.identity, 3f);
 
-        yield return StartCoroutine(WaitFacingPlayer(1.5f));
-
-        EndAttack();
-        if (agent && agent.isOnNavMesh) agent.isStopped = false;
-    }
-
-    // Propuesta mejora fases (27 ago 2026): combo de cierre de la revancha (2a aparicion, entrada
-    // a Fase 3). En vez de solo escalar numeros (velocidad, cooldowns) y dejar el resto a tiradas
-    // independientes de TrySecondEncounterAttacks/TrySpecialAttacks, esta es una secuencia
-    // scripted una sola vez: teletransporte a espaldas del jugador + golpe inmediato
-    // (UndergroundAttack, ya con esa variante en 2a aparicion) -> respiro corto -> lluvia de
-    // ataques (RainAttack). Reutiliza corrutinas ya existentes, solo fija el orden la primera vez
-    // que se entra en la fase final de la revancha.
-    private IEnumerator SecondEncounterEnrageSequence()
-    {
-        isAttacking = true;
-        currentState = BossState.CastingSpell;
-        if (agent && agent.isOnNavMesh) agent.isStopped = true;
-
-        FeedbackService.CameraShake(0.9f, 0.5f);
-        FeedbackService.ScreenFlash(new Color(0.6f, 0f, 0f, 0.35f), 0.25f);
-        if (damageable) damageable.GrantInvulnerability(2.5f);
-
-        PlayAnimation(AnimCastSpell);
-        if (spellEffectPrefab && projectileSpawnPoint)
-            Instantiate(spellEffectPrefab, projectileSpawnPoint.position, Quaternion.identity);
-
-        yield return StartCoroutine(WaitFacingPlayer(1f));
-
+        yield return WaitFacingPlayer(1f);
         EndAttack();
 
-        yield return StartCoroutine(UndergroundAttack());
-
-        // UndergroundAttack() ya hizo su propio EndAttack() al terminar — isAttacking=false aqui
-        // dejaria un hueco de 0.4s en el que UpdateBehavior() podria colarse y decidir un ataque
-        // normal (melee, con el player ya pegado tras el teletransporte) a mitad del combo
-        // scripted. Se vuelve a marcar isAttacking=true para el respiro; RainAttack() ya lo hace
-        // igualmente al empezar, esto solo cierra el hueco intermedio.
-        isAttacking = true;
-        yield return new WaitForSeconds(0.4f);
-
-        yield return StartCoroutine(RainAttack());
-    }
-
-    // FIX (petición Raúl, 4 sep 2026): respuesta mínima anti-kiting para la Fase 1 (ver
-    // kitingLungeDelay). No es un ataque — no hace daño ni tiene animación propia — solo una
-    // ráfaga de velocidad del NavMeshAgent para cerrar distancia cuando el jugador se mantiene
-    // fuera de attackRange disparando. Restaura la velocidad original del agente al terminar,
-    // guardando el valor de partida por si ya venía escalado por un cambio de fase anterior.
-    private IEnumerator Phase1KiteLunge()
-    {
-        if (!agent || !agent.isOnNavMesh) yield break;
-
-        _isLungingAtPlayer = true;
-        float originalSpeed = agent.speed;
-        agent.speed = originalSpeed * kitingLungeSpeedMultiplier;
-
-        float elapsed = 0f;
-        while (elapsed < kitingLungeDuration && player && agent && agent.isOnNavMesh)
+        // La revancha abre su fase final con un combo: teletransporte a la espalda + golpe + lluvia.
+        if (isSecondEncounter && furia)
         {
-            agent.SetDestination(player.position);
-            elapsed += Time.deltaTime;
-            yield return null;
+            yield return UndergroundAttack();
+            // Agotarse() ya bajó isAttacking: se vuelve a subir para que UpdateBehavior no
+            // meta un ataque suelto en el respiro del combo.
+            isAttacking = true;
+            yield return new WaitForSeconds(0.4f);
+            yield return RainAttack();
         }
 
-        if (agent && agent.isOnNavMesh)
-            agent.speed = originalSpeed;
-
-        _isLungingAtPlayer = false;
+        if (agent && agent.isOnNavMesh) agent.isStopped = false;
     }
 
     private void UpdateBehavior()
@@ -583,65 +552,155 @@ public class ImpDemonAI : MonoBehaviour
         if (distanceToPlayer > detectionRange)
         {
             currentState = BossState.Idle;
+            _persiguiendoDesde = -1f;
             PlayAnimation(AnimIdle);
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
             return;
         }
 
         LookAtPlayer();
+        bool puedeAtacar = CanStartNewAttack();
 
-        if (distanceToPlayer <= attackRange)
+        if (puedeAtacar && TryAtaqueEspecial(distanceToPlayer)) return;
+
+        bool melee = puedeAtacar && MeleeDisponible();
+
+        // Cuerpo a cuerpo: si puede, ataca; si no, rodea a Will en vez de quedarse plantado.
+        if (distanceToPlayer <= attackRange && melee)
         {
-            _kitingSinceTime = -1f;
+            _persiguiendoDesde = -1f;
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
-            if (CanStartNewAttack())
-                DecideMeleeAttack();
-            else
-                PlayAnimation(AnimIdle);
+            DecideMeleeAttack();
+            return;
         }
-        else if (distanceToPlayer <= projectileRange && currentPhase != BossPhase.Phase1)
+        if (distanceToPlayer <= attackRange * 1.5f && !melee)
         {
-            _kitingSinceTime = -1f;
+            _persiguiendoDesde = -1f;
+            Rodear();
+            return;
+        }
+
+        // Media distancia (fase 2+): fuego.
+        if (distanceToPlayer <= projectileRange && currentPhase != BossPhase.Phase1
+            && puedeAtacar && DistanciaDisponible())
+        {
+            _persiguiendoDesde = -1f;
             if (agent && agent.isOnNavMesh) agent.isStopped = true;
-            if (CanStartNewAttack())
-                DecideRangedAttack();
-            else
-                PlayAnimation(AnimIdle);
+            DecideRangedAttack();
+            return;
         }
-        else
+
+        // Lejos: persigue y, si Will no se deja alcanzar, embiste.
+        Perseguir();
+        if (_persiguiendoDesde < 0f) _persiguiendoDesde = Time.time;
+
+        if (puedeAtacar
+            && distanceToPlayer >= distanciaMinimaEmbestida
+            && Time.time >= lastDashTime + _effDashCooldown
+            && Time.time - _persiguiendoDesde >= persecucionAntesDeEmbestir)
         {
-            currentState = BossState.Chasing;
-            if (agent && agent.isOnNavMesh)
-            {
-                agent.isStopped = false;
-                agent.SetDestination(player.position);
+            _persiguiendoDesde = -1f;
+            Lanzar(Embestida());
+        }
+    }
 
-                if (agent.velocity.sqrMagnitude > 0.1f)
-                    LookAtDirection(agent.velocity.normalized);
-                else
-                    LookAtPlayer();
-            }
-            PlayAnimation(AnimFlyForward);
+    private void Lanzar(IEnumerator accion) => _accionActual = StartCoroutine(accion);
 
-            // FIX (petición Raúl, 4 sep 2026): ver comentario de kitingLungeDelay más arriba —
-            // solo aplica en Fase 1 (Fase 2+ ya tienen ataque a distancia propio para esto).
-            if (currentPhase == BossPhase.Phase1 && !_isLungingAtPlayer)
-            {
-                if (_kitingSinceTime < 0f) _kitingSinceTime = Time.time;
+    private bool MeleeDisponible()
+        => Time.time >= lastSlashTime + _effSlashCooldown || Time.time >= lastStabTime + _effStabCooldown;
 
-                if (Time.time - _kitingSinceTime >= kitingLungeDelay)
-                {
-                    _kitingSinceTime = -1f;
-                    StartCoroutine(Phase1KiteLunge());
-                }
-            }
+    private bool DistanciaDisponible()
+        => Time.time >= lastProjectileTime + _effProjectileCooldown
+        || (currentPhase == BossPhase.Phase3 && Time.time >= lastSpellTime + _effSpellCooldown);
+
+    private void Perseguir()
+    {
+        currentState = BossState.Chasing;
+        if (agent && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.SetDestination(player.position);
+
+            if (agent.velocity.sqrMagnitude > 0.1f)
+                LookAtDirection(agent.velocity.normalized);
+            else
+                LookAtPlayer();
+        }
+        PlayAnimation(AnimFlyForward);
+    }
+
+    /// Mientras no puede atacar, da vueltas alrededor de Will cambiando de lado de vez en cuando.
+    private void Rodear()
+    {
+        currentState = BossState.Chasing;
+        if (!agent || !agent.isOnNavMesh) { PlayAnimation(AnimIdle); return; }
+
+        if (Time.time >= _siguienteCambioRodeo)
+        {
+            _ladoRodeo = Random.value < 0.5f ? -1 : 1;
+            _siguienteCambioRodeo = Time.time + Random.Range(1.2f, 2.2f);
         }
 
-        if (currentPhase == BossPhase.Phase3 && CanStartNewAttack())
-            TrySpecialAttacks();
+        Vector3 desdeWill = transform.position - player.position;
+        desdeWill.y = 0f;
+        if (desdeWill.sqrMagnitude < 0.01f) desdeWill = -player.forward;
+        Vector3 dir = Quaternion.Euler(0f, 40f * _ladoRodeo, 0f) * desdeWill.normalized;
 
-        if (isSecondEncounter && CanStartNewAttack())
-            TrySecondEncounterAttacks();
+        agent.isStopped = false;
+        agent.SetDestination(player.position + dir * attackRange * 1.2f);
+        PlayAnimation(AnimFlyForward);
+    }
+
+    /// Tras encajar varios golpes en una ventana, se aparta de Will antes de volver a la carga.
+    private IEnumerator Recular()
+    {
+        if (!player || !agent || !agent.isOnNavMesh) yield break;
+
+        Vector3 lejos = transform.position - player.position;
+        lejos.y = 0f;
+        if (lejos.sqrMagnitude < 0.01f) lejos = -transform.forward;
+        Vector3 destino = transform.position + lejos.normalized * distanciaRecular;
+        if (NavMesh.SamplePosition(destino, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            destino = hit.position;
+
+        float velocidad = agent.speed;
+        agent.speed = velocidad * 1.6f;
+        agent.isStopped = false;
+        agent.SetDestination(destino);
+        PlayAnimation(AnimFlyForward);
+
+        float t = 0f;
+        while (t < duracionRecular)
+        {
+            LookAtPlayer();
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        if (agent) agent.speed = velocidad;
+    }
+
+    /// Ataques propios de las fases avanzadas: la lluvia de sombras (fase 3; en la revancha desde
+    /// la fase 2) y el paso bajo tierra (fase 3, para cerrar distancia). Sin prefab de sombra no
+    /// hay lluvia: el daño caería sin aviso.
+    private bool TryAtaqueEspecial(float distancia)
+    {
+        bool lluviaPermitida = rainShadowPrefab != null &&
+            (currentPhase == BossPhase.Phase3 || (isSecondEncounter && currentPhase != BossPhase.Phase1));
+        if (lluviaPermitida && Time.time >= lastRainTime + rainCooldown)
+        {
+            Lanzar(RainAttack());
+            return true;
+        }
+
+        if (currentPhase == BossPhase.Phase3 && distancia > attackRange
+            && Time.time >= lastUndergroundTime + _effUndergroundCooldown)
+        {
+            Lanzar(UndergroundAttack());
+            return true;
+        }
+
+        return false;
     }
 
     private void DecideMeleeAttack()
@@ -649,32 +708,20 @@ public class ImpDemonAI : MonoBehaviour
         bool canSlash = Time.time >= lastSlashTime + _effSlashCooldown;
         bool canStab  = Time.time >= lastStabTime  + _effStabCooldown;
 
-        // En segunda aparición, combo melee cuando ambos están disponibles (60% de probabilidad)
-        if (isSecondEncounter && canSlash && canStab && Random.value > 0.4f)
+        // Combo (zarpazo + estocada) en la fase final y en toda la revancha.
+        bool comboPermitido = isSecondEncounter || currentPhase == BossPhase.Phase3;
+        if (comboPermitido && canSlash && canStab && Random.value > 0.4f)
         {
-            StartCoroutine(MeleeCombo());
+            Lanzar(MeleeCombo());
             return;
         }
 
         if (canSlash && canStab)
-        {
-            if (Random.value > 0.5f)
-                StartCoroutine(SlashAttack());
-            else
-                StartCoroutine(StabAttack());
-        }
+            Lanzar(Random.value > 0.5f ? SlashAttack() : StabAttack());
         else if (canSlash)
-        {
-            StartCoroutine(SlashAttack());
-        }
+            Lanzar(SlashAttack());
         else if (canStab)
-        {
-            StartCoroutine(StabAttack());
-        }
-        else
-        {
-            PlayAnimation(AnimIdle);
-        }
+            Lanzar(StabAttack());
     }
 
     private void DecideRangedAttack()
@@ -682,48 +729,57 @@ public class ImpDemonAI : MonoBehaviour
         bool canProjectile = Time.time >= lastProjectileTime + _effProjectileCooldown;
         bool canSpell      = Time.time >= lastSpellTime      + _effSpellCooldown && currentPhase == BossPhase.Phase3;
 
-        if (canSpell && Random.value > 0.7f)
-            StartCoroutine(CastSpellAttack());
+        if (canSpell && (!canProjectile || Random.value > 0.7f))
+            Lanzar(CastSpellAttack());
         else if (canProjectile)
-            StartCoroutine(ProjectileAttack());
-        else
-            PlayAnimation(AnimIdle);
+            Lanzar(ProjectileAttack());
     }
 
-    private void TrySpecialAttacks()
+    /// Principio de cualquier ataque. 'expuesto' = el aro se enciende ya en el aviso.
+    private void EmpezarAtaque(bool expuesto)
     {
-        if (isAttacking) return;
-
-        bool canUnderground = Time.time >= lastUndergroundTime + _effUndergroundCooldown;
-
-        if (canUnderground && Random.value > 0.9f)
-            StartCoroutine(UndergroundAttack());
+        isAttacking = true;
+        _expuesto = expuesto;
+        _golpesEnVentana = 0;
     }
 
-    // Segunda aparición: dash y lluvia de ataques
-    private void TrySecondEncounterAttacks()
+    /// Final de cualquier ataque: se queda quieto, jadeando, con el aro encendido. Es la ventana
+    /// para castigarle. Si en ella ha encajado varios golpes, se aparta antes de volver.
+    private IEnumerator Agotarse()
     {
-        if (isAttacking) return;
+        _expuesto = true;
+        _agotado = true;
+        currentState = BossState.Attacking;
+        if (agent && agent.isOnNavMesh) agent.isStopped = true;
+        PlayAnimation(AnimIdle);
 
-        bool canRain = Time.time >= lastRainTime + rainCooldown && currentPhase != BossPhase.Phase1;
-        bool canDash = Time.time >= lastDashTime + dashCooldown;
-
-        // La lluvia tiene prioridad si está disponible (28% de probabilidad por frame cuando el cooldown lo permite)
-        if (canRain && Random.value > 0.72f)
+        float fin = Time.time + ValorDeFase(agotamientoPorFase, 1f);
+        while (Time.time < fin)
         {
-            StartCoroutine(RainAttack());
-            return;
+            if (_volverAIdleEn > 0f && Time.time >= _volverAIdleEn)
+            {
+                _volverAIdleEn = -1f;
+                PlayAnimation(AnimIdle);
+            }
+            yield return null;
         }
 
-        if (canDash && Random.value > 0.75f)
-            StartCoroutine(DashAttack());
+        _agotado = false;
+        _expuesto = false;
+        if (_golpesEnVentana >= golpesParaRecular) yield return Recular();
+
+        EndAttack();
+        if (agent && agent.isOnNavMesh) agent.isStopped = false;
     }
+
+    private float ValorDeFase(float[] valores, float porDefecto)
+        => valores != null && valores.Length > 0 ? valores[Mathf.Min((int)currentPhase, valores.Length - 1)] : porDefecto;
 
     // ========== ATAQUES ==========
 
     private IEnumerator SlashAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.Attacking;
         lastSlashTime = Time.time;
 
@@ -734,12 +790,12 @@ public class ImpDemonAI : MonoBehaviour
             DamagePlayer(slashDamage);
 
         yield return new WaitForSeconds(0.5f);
-        EndAttack();
+        yield return Agotarse();
     }
 
     private IEnumerator StabAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.Attacking;
         lastStabTime = Time.time;
 
@@ -750,13 +806,13 @@ public class ImpDemonAI : MonoBehaviour
             DamagePlayer(stabDamage);
 
         yield return new WaitForSeconds(0.4f);
-        EndAttack();
+        yield return Agotarse();
     }
 
-    // Slash + Stab encadenados sin pausa completa entre ellos (solo 2ª aparición)
+    // Zarpazo + estocada encadenados sin pausa completa (fase 3 y toda la revancha)
     private IEnumerator MeleeCombo()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.Attacking;
         lastSlashTime = Time.time;
         lastStabTime  = Time.time;
@@ -774,13 +830,13 @@ public class ImpDemonAI : MonoBehaviour
             DamagePlayer(stabDamage);
 
         yield return new WaitForSeconds(0.35f);
-        EndAttack();
+        yield return Agotarse();
     }
 
     // En 2ª aparición (Fase 2+): triple proyectil en abanico con 2-3 rondas seguidas
     private IEnumerator ProjectileAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.Attacking;
         lastProjectileTime = Time.time;
 
@@ -792,9 +848,9 @@ public class ImpDemonAI : MonoBehaviour
         // RainAttack (sombra que crece antes del impacto), aplicado a un unico punto de aviso.
         GameObject telegraphPrefab = rangedTelegraphPrefab ? rangedTelegraphPrefab : rainShadowPrefab;
         if (telegraphPrefab && player)
-            yield return StartCoroutine(SpawnRangedTelegraph(player.position, rangedTelegraphDuration));
+            yield return SpawnRangedTelegraph(player.position, rangedTelegraphDuration);
         else
-            yield return StartCoroutine(WaitFacingPlayer(0.5f));
+            yield return WaitFacingPlayer(0.5f);
 
         if (projectilePrefab && projectileSpawnPoint && player)
         {
@@ -805,7 +861,7 @@ public class ImpDemonAI : MonoBehaviour
 
             for (int v = 0; v < volleys; v++)
             {
-                if (v > 0) yield return StartCoroutine(WaitFacingPlayer(0.65f));
+                if (v > 0) yield return WaitFacingPlayer(0.65f);
 
                 Vector3 aimPos = player.position + Vector3.up * 1f;
                 for (int i = 0; i < count; i++)
@@ -817,7 +873,7 @@ public class ImpDemonAI : MonoBehaviour
                     GameObject projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.LookRotation(direction));
                     var proj = projectile.GetComponent<EnemyProjectile>()
                                ?? projectile.GetComponentInChildren<EnemyProjectile>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     if (!proj) Debug.LogError($"[ImpDemonAI] El prefab '{projectilePrefab.name}' no tiene componente EnemyProjectile en la raíz ni en hijos.");
 #endif
                     if (proj) proj.Initialize(direction, projectileDamage);
@@ -826,17 +882,17 @@ public class ImpDemonAI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        EndAttack();
+        yield return Agotarse();
     }
 
     private IEnumerator CastSpellAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.CastingSpell;
         lastSpellTime = Time.time;
 
         PlayAnimation(AnimCastSpell);
-        yield return StartCoroutine(WaitFacingPlayer(1f));
+        yield return WaitFacingPlayer(1f);
 
         if (spellEffectPrefab && player)
         {
@@ -852,13 +908,13 @@ public class ImpDemonAI : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
-        EndAttack();
+        yield return Agotarse();
     }
 
     // En 2ª aparición: teleporta detrás del jugador en lugar de posición aleatoria
     private IEnumerator UndergroundAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(false);
         currentState = BossState.Underground;
         lastUndergroundTime = Time.time;
 
@@ -882,69 +938,66 @@ public class ImpDemonAI : MonoBehaviour
         }
 
         PlayAnimation(AnimSpawn);
+        _expuesto = true; // al salir del suelo vuelve a brillar
         yield return new WaitForSeconds(0.5f);
 
         if (player && Vector3.Distance(transform.position, player.position) <= attackRange * 1.5f)
             DamagePlayer(stabDamage * 1.5f);
 
         yield return new WaitForSeconds(0.5f);
-        if (agent && agent.isOnNavMesh) agent.isStopped = false;
-        EndAttack();
+        yield return Agotarse();
     }
 
-    // Dash: embestida rápida hacia el jugador con breve telegrafía (solo 2ª aparición)
-    private IEnumerator DashAttack()
+    /// Marca en el suelo el sitio donde está Will, espera el aviso y embiste en línea recta hasta
+    /// ahí (y un poco más). No corrige el rumbo: se esquiva apartándose de la marca. El aro brilla
+    /// desde el aviso hasta el final del agotamiento.
+    private IEnumerator Embestida()
     {
-        isAttacking = true;
+        EmpezarAtaque(true);
         currentState = BossState.Attacking;
         lastDashTime = Time.time;
-
         if (agent && agent.isOnNavMesh) agent.isStopped = true;
 
-        // Telegrafía breve
-        PlayAnimation(AnimSlashAttack);
-        yield return new WaitForSeconds(0.25f);
+        if (!player) { yield return Agotarse(); yield break; }
 
-        if (!player) { EndAttack(); yield break; }
+        Vector3 objetivo = player.position;
+        PlayAnimation(AnimIdle);
+        yield return SpawnRangedTelegraph(objetivo, preparacionEmbestida);
 
-        float originalSpeed = agent ? agent.speed : dashSpeed;
-        if (agent)
+        Vector3 dir = objetivo - transform.position;
+        dir.y = 0f;
+        float recorrido = dir.magnitude + pasadaEmbestida;
+        dir = dir.sqrMagnitude > 0.01f ? dir.normalized : transform.forward;
+
+        PlayAnimation(AnimStabAttack);
+        bool golpeado = false;
+        float hecho = 0f, tiempo = 0f;
+        while (hecho < recorrido && tiempo < 1.5f)
         {
-            agent.speed = dashSpeed;
-            agent.isStopped = false;
-            agent.SetDestination(player.position);
-        }
+            float paso = dashSpeed * Time.deltaTime;
+            if (agent && agent.isOnNavMesh) agent.Move(dir * paso);
+            else transform.position += dir * paso;
+            LookAtDirection(dir);
+            hecho += paso;
+            tiempo += Time.deltaTime;
 
-        float elapsed = 0f;
-        bool hasDealtDamage = false;
-
-        while (elapsed < dashDuration)
-        {
-            elapsed += Time.deltaTime;
-
-            if (!hasDealtDamage && player && Vector3.Distance(transform.position, player.position) <= attackRange)
+            if (!golpeado && player && Vector3.Distance(transform.position, player.position) <= attackRange * 0.8f)
             {
                 DamagePlayer(dashDamage);
-                hasDealtDamage = true;
+                FeedbackService.CameraShake(0.4f, 0.25f);
+                golpeado = true;
             }
-
             yield return null;
         }
 
-        if (agent)
-        {
-            agent.speed = originalSpeed;
-            if (agent.isOnNavMesh) agent.isStopped = false;
-        }
-
-        yield return new WaitForSeconds(0.3f);
-        EndAttack();
+        yield return Agotarse();
     }
 
-    // Lluvia de ataques: dos olas de sombras escalonadas (solo 2ª aparición)
+    // Lluvia de sombras: dos olas escalonadas. El aro solo brilla en el agotamiento del final:
+    // mientras cae la lluvia toca esquivar.
     private IEnumerator RainAttack()
     {
-        isAttacking = true;
+        EmpezarAtaque(false);
         currentState = BossState.CastingSpell;
         lastRainTime = Time.time;
 
@@ -955,18 +1008,17 @@ public class ImpDemonAI : MonoBehaviour
 
         // Ola 1: amplia, sigue al jugador mientras avisa
         Vector3 center = player ? player.position : transform.position;
-        yield return StartCoroutine(SpawnRainWave(center, rainCount, rainRadius, rainWarningDuration, trackPlayer: true));
+        yield return SpawnRainWave(center, rainCount, rainRadius, rainWarningDuration, trackPlayer: true);
 
         yield return new WaitForSeconds(0.35f);
 
         // Ola 2: más concentrada en donde el jugador se refugió, sin seguimiento
         center = player ? player.position : transform.position;
         int wave2Count = rainCount / 2 + 2;
-        yield return StartCoroutine(SpawnRainWave(center, wave2Count, rainRadius * 0.55f, rainWarningDuration * 0.6f, trackPlayer: false));
+        yield return SpawnRainWave(center, wave2Count, rainRadius * 0.55f, rainWarningDuration * 0.6f, trackPlayer: false);
 
         yield return new WaitForSeconds(0.5f);
-        if (agent && agent.isOnNavMesh) agent.isStopped = false;
-        EndAttack();
+        yield return Agotarse();
     }
 
     // Propuesta identidad de fase (30 ago 2026): aviso de un unico proyectil normal (Fase 2+),
@@ -976,12 +1028,17 @@ public class ImpDemonAI : MonoBehaviour
     private IEnumerator SpawnRangedTelegraph(Vector3 targetPosition, float duration)
     {
         GameObject telegraphPrefab = rangedTelegraphPrefab ? rangedTelegraphPrefab : rainShadowPrefab;
+        if (!telegraphPrefab || VfxPoolService.Instance == null)
+        {
+            yield return WaitFacingPlayer(duration);
+            yield break;
+        }
         Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
         Transform telegraph = VfxPoolService.Instance.Play(telegraphPrefab, targetPosition, rot, duration);
 
         if (!telegraph)
         {
-            yield return StartCoroutine(WaitFacingPlayer(duration));
+            yield return WaitFacingPlayer(duration);
             yield break;
         }
 
@@ -1173,7 +1230,7 @@ public class ImpDemonAI : MonoBehaviour
             }
             catch (System.Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación mapeada hash={animHash}: {ex.Message}");
 #endif
             }
@@ -1191,7 +1248,7 @@ public class ImpDemonAI : MonoBehaviour
             }
             catch (System.Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación hash={animHash} en capa={layerIndex}: {ex.Message}");
 #endif
             }
@@ -1199,7 +1256,7 @@ public class ImpDemonAI : MonoBehaviour
         }
 
         string animName = AnimNameMap.TryGetValue(animHash, out var n) ? n : animHash.ToString();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[ImpDemonAI] Estado '{animName}' no encontrado. Reproduciendo Idle como fallback.");
 #endif
         int idleLayer = AnimatorLayerContainingState(AnimIdle);
@@ -1245,7 +1302,18 @@ public class ImpDemonAI : MonoBehaviour
 
     private void OnDamageTaken(float amount)
     {
-        if (isAttacking || isDead) return;
+        if (isDead) return;
+        if (_expuesto) _golpesEnVentana++;
+
+        // Agotado: acusa el golpe sin salir de la ventana.
+        if (_agotado)
+        {
+            PlayAnimation(AnimTakeDamage);
+            _volverAIdleEn = Time.time + 0.35f;
+            return;
+        }
+
+        if (isAttacking) return;
         StartCoroutine(TakeDamageSequence());
     }
 
@@ -1269,7 +1337,7 @@ public class ImpDemonAI : MonoBehaviour
         currentState = BossState.Dead;
         StopCombatAndPlayDeathPose();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ImpDemonAI] Boss derrotado!");
 #endif
     }
@@ -1299,7 +1367,7 @@ public class ImpDemonAI : MonoBehaviour
         }
 
         StopCombatAndPlayDeathPose();
-        ApplyFallenDarkenVisual();
+        _transicion.Tintar(new Color(fallenDarkenFactor, fallenDarkenFactor, fallenDarkenFactor, 1f), apagarEmision: true);
 
         var healthBar = GetComponent<BossHealthBar>();
         if (healthBar) healthBar.Hide();
@@ -1309,13 +1377,13 @@ public class ImpDemonAI : MonoBehaviour
         // la batalla como ganada exactamente igual que con una muerte normal.
         var arena = FindAnyObjectByType<BossArenaController>();
         if (arena != null) arena.NotifyBossDefeatedByAlternateEnding();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else Debug.LogWarning("[ImpDemonAI] Aro roto pero no se encontró ningún BossArenaController en la escena -- la arena no se desbloqueará.");
 #endif
 
         OnFellByCollarBreak?.Invoke();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ImpDemonAI] Aro de runas roto -- demonio caído (final alternativo, sin orbes).");
 #endif
     }
@@ -1324,11 +1392,15 @@ public class ImpDemonAI : MonoBehaviour
     /// secuencia de Eldran narrando lo que había debajo) necesita reaccionar sin sondear isDead.
     public event System.Action OnFellByCollarBreak;
 
-    /// Ventana de ataque actual (Paso 6, RuneCollar): true mientras el demonio está ejecutando
-    /// cualquiera de sus corrutinas de ataque (SlashAttack, StabAttack, ProjectileAttack, etc.).
-    /// El aro solo se ilumina y solo puede romperse mientras esto es true -- fuera de la ventana
-    /// de ataque, ignora cualquier impacto preciso.
-    public bool IsAttacking => isAttacking;
+    /// El aro brilla: está preparando un ataque, atacando o agotado después. Es el único momento
+    /// en que se le puede hacer daño (RuneCollar → SoloDanoCuandoExpuesto). Nunca durante el
+    /// rugido de cambio de fase ni bajo tierra.
+    public bool Expuesto => _expuesto && !isDead;
+
+    // ── IJefeConFases ─────────────────────────────────────────────────────
+    public int Fase => (int)currentPhase;
+    public System.Collections.Generic.IReadOnlyList<float> UmbralesDeFase => _umbrales;
+    public event System.Action<int> AlCambiarDeFase;
 
     /// true en cuanto el combate termina, por CUALQUIER camino (HP a 0 vía OnDeath, o el aro roto
     /// vía ForceFallenByCollarBreak). RuneCollar lo consulta para dejar de trabajar en cuanto el
@@ -1360,32 +1432,6 @@ public class ImpDemonAI : MonoBehaviour
         {
             Destroy(_enrageAuraInstance);
             _enrageAuraInstance = null;
-        }
-    }
-
-    /// Atenúa el color de todos los materiales del demonio y apaga cualquier emisión, vía
-    /// MaterialPropertyBlock (nunca toca los materiales compartidos del prefab). Cubre tanto
-    /// shaders Standard (_Color/_EmissionColor) como URP/Lit (_BaseColor) -- HasProperty() hace
-    /// que sea un no-op seguro si el shader del demonio no usa alguno de estos nombres.
-    private void ApplyFallenDarkenVisual()
-    {
-        var renderers = GetComponentsInChildren<Renderer>(true);
-        var mpb = new MaterialPropertyBlock();
-
-        foreach (var r in renderers)
-        {
-            if (!r || !r.sharedMaterial) continue;
-
-            r.GetPropertyBlock(mpb);
-
-            if (r.sharedMaterial.HasProperty("_Color"))
-                mpb.SetColor("_Color", r.sharedMaterial.GetColor("_Color") * fallenDarkenFactor);
-            if (r.sharedMaterial.HasProperty("_BaseColor"))
-                mpb.SetColor("_BaseColor", r.sharedMaterial.GetColor("_BaseColor") * fallenDarkenFactor);
-            if (r.sharedMaterial.HasProperty("_EmissionColor"))
-                mpb.SetColor("_EmissionColor", Color.black);
-
-            r.SetPropertyBlock(mpb);
         }
     }
 

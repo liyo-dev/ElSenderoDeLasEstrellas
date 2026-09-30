@@ -479,6 +479,22 @@
         {
             "key": "QUEST_WILL_MISSION1_NAME",
             "value": "Something useless"
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_NAME",
+            "value": "Follow Eldran"
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_DESC",
+            "value": "Follow Eldran and see what he wants."
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_DETAIL",
+            "value": "Eldran knows where the missing crate is. Go with him."
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_STEP01_DESC",
+            "value": "Follow Eldran."
         }
     ]
 }

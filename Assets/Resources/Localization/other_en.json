@@ -47,6 +47,10 @@
         {
             "key": "TUTORIAL_MINIMAP_ELDRAN",
             "value": "Follow the marker to Eldran.\nPress {BOTON} to open the map."
+        },
+        {
+            "key": "BIGMAP_HINT",
+            "value": "<sprite name=\"interactable_Joystick\"> Move    <sprite name=\"interactable_lb\"><sprite name=\"interactable_rb\"> Zoom    <sprite name=\"interactable_confirm\"> Center    <sprite name=\"interactable_select\"> Close"
         }
     ]
 }

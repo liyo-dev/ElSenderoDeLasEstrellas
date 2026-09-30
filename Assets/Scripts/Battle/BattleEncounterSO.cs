@@ -24,7 +24,7 @@ public class BattleEncounterSO : ScriptableObject
     public string displayName = "ENEMIGO";
 
     [Header("Arena (radio alrededor del jugador — INC-207)")]
-    [Tooltip("Radio en metros de la arena, medido desde la posición del jugador en el instante en que empieza la batalla (no se recalcula después).")]
+    [Tooltip("Radio en metros de la arena. Se centra en el jugador en el instante en que empieza la batalla (o se aparta lo justo de una ZonaSinArenas) y no se recalcula después.")]
     [Min(1f)]
     public float arenaRadius = 15f;
 
@@ -35,6 +35,10 @@ public class BattleEncounterSO : ScriptableObject
     [Tooltip("Lo que suben las estadísticas de Will al ganar este combate. Se suma una sola vez por " +
              "batalla ganada y sale en el informe final.")]
     public Estadisticas premioEstadisticas;
+
+    [Header("Guía (INC-489)")]
+    [Tooltip("Quién guía al jugador durante este combate y qué le dice. Vacío = nadie habla.")]
+    public GuionDeCombate guion;
 
     [Header("Perfiles de spawn")]
     [Tooltip("Dónde aparece el enemigo dentro del radio de la arena. Pensado para poder variar por dificultad más adelante (varios perfiles, seleccionables por índice desde el nodo) sin tocar código.")]
@@ -57,34 +61,47 @@ public class BattleEncounterSO : ScriptableObject
     {
         public string label;
 
-        [Tooltip("Fracción del radio de la arena a la que aparece el enemigo (0 = centro/jugador, 1 = borde del radio).")]
+        [Tooltip("Distancia al jugador a la que aparece el enemigo, como fracción del radio de la arena (0 = junto al jugador, 1 = un radio entero).")]
         [Range(0f, 1f)]
         public float distanceFactor;
 
         [Tooltip("Ángulo en grados respecto a la dirección de referencia (ver 'relativeToPlayerFacing').")]
         public float angleDegrees;
 
-        [Tooltip("Si es true, el ángulo se mide respecto a hacia dónde mira el jugador al empezar la batalla. Si es false, respecto al eje Z del mundo.")]
+        [Tooltip("Si es true, el ángulo se mide respecto a hacia dónde mira el jugador al empezar la batalla (o hacia el centro de la arena, si se ha apartado de una ZonaSinArenas). Si es false, respecto al eje Z del mundo.")]
         public bool relativeToPlayerFacing;
     }
 
     /// <summary>
-    /// Calcula la posición mundial de spawn del enemigo a partir del centro de la arena (posición
-    /// del jugador al empezar la batalla) y el perfil elegido. El resultado no tiene en cuenta la
-    /// altura del terreno — quien llame a este método debe asentarlo con un raycast contra el
-    /// suelo (igual que ya hace BossArenaController.PlaceBossOnFloor con el spawn antiguo).
+    /// Calcula la posición mundial de spawn del enemigo según el perfil elegido. La distancia se
+    /// mide desde el jugador, en la dirección de referencia (hacia dónde mira, o hacia el centro
+    /// si la arena se ha apartado de una ZonaSinArenas), y el punto se mantiene dentro del radio.
+    /// Con el jugador en el centro de la arena, es la misma posición de siempre. El resultado no
+    /// tiene en cuenta la altura del terreno: quien llame debe asentarlo contra el suelo.
     /// </summary>
-    public Vector3 ComputeSpawnPosition(Vector3 arenaCenter, Quaternion playerRotationAtStart, int profileIndex = 0)
+    public Vector3 ComputeSpawnPosition(Vector3 arenaCenter, Vector3 playerPosition, Quaternion referenceRotation, int profileIndex = 0)
     {
         SpawnProfile profile = (spawnProfiles != null && spawnProfiles.Length > 0)
             ? spawnProfiles[Mathf.Clamp(profileIndex, 0, spawnProfiles.Length - 1)]
             : new SpawnProfile { distanceFactor = 0.85f, angleDegrees = 0f, relativeToPlayerFacing = true };
 
-        Quaternion baseRotation = profile.relativeToPlayerFacing ? playerRotationAtStart : Quaternion.identity;
+        Quaternion baseRotation = profile.relativeToPlayerFacing ? referenceRotation : Quaternion.identity;
         Quaternion offsetRotation = baseRotation * Quaternion.Euler(0f, profile.angleDegrees, 0f);
         Vector3 direction = offsetRotation * Vector3.forward;
         float distance = arenaRadius * Mathf.Clamp01(profile.distanceFactor);
 
-        return arenaCenter + direction * distance;
+        Vector3 spawn = playerPosition + direction * distance;
+
+        // Dentro del radio, con holgura para que no aparezca pegado al borde.
+        Vector3 desdeCentro = spawn - arenaCenter;
+        desdeCentro.y = 0f;
+        float maximo = arenaRadius * 0.95f;
+        if (desdeCentro.magnitude > maximo)
+        {
+            Vector3 dentro = arenaCenter + desdeCentro.normalized * maximo;
+            spawn = new Vector3(dentro.x, spawn.y, dentro.z);
+        }
+
+        return spawn;
     }
 }

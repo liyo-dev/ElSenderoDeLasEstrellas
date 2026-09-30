@@ -17,7 +17,7 @@ public static class NpcSpawnRegistry
         if (!point || string.IsNullOrEmpty(point.spawnId)) return;
         if (_byId.TryGetValue(point.spawnId, out var existing) && existing && existing != point)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NpcSpawnRegistry] Duplicado de spawnId '{point.spawnId}'. Reemplazando referencia.");
 #endif
         }

@@ -33,7 +33,7 @@ public class AmbientZone : MonoBehaviour
     [Header("Prioridad")]
     [SerializeField] private int priority = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
 #endif
@@ -103,7 +103,7 @@ public class AmbientZone : MonoBehaviour
         if (_collider != null && !_collider.isTrigger)
         {
             _collider.isTrigger = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[AmbientZone] Collider en '{gameObject.name}' configurado como trigger automáticamente");
 #endif
         }
@@ -140,14 +140,14 @@ public class AmbientZone : MonoBehaviour
 
         if (_currentActiveZone != null && _currentActiveZone.priority > priority)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (showDebugLogs)
                 Debug.Log($"[AmbientZone] '{gameObject.name}' ignorada en chequeo inicial — '{_currentActiveZone.gameObject.name}' tiene mayor prioridad");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (showDebugLogs)
             Debug.Log($"[AmbientZone] Jugador ya estaba dentro de '{gameObject.name}' al cargar la escena — activando sin esperar OnTriggerEnter");
 #endif
@@ -174,14 +174,14 @@ public class AmbientZone : MonoBehaviour
 
         if (_currentActiveZone != null && _currentActiveZone.priority > priority)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (showDebugLogs)
                 Debug.Log($"[AmbientZone] '{gameObject.name}' ignorada — '{_currentActiveZone.gameObject.name}' tiene mayor prioridad");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (showDebugLogs)
             Debug.Log($"[AmbientZone] Jugador entró en '{gameObject.name}'");
 #endif
@@ -203,7 +203,7 @@ public class AmbientZone : MonoBehaviour
         if (_currentActiveZone != this) return;
         _playerTransform = null;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (showDebugLogs)
             Debug.Log($"[AmbientZone] Jugador salió de '{gameObject.name}'");
 #endif
@@ -227,7 +227,7 @@ public class AmbientZone : MonoBehaviour
     {
         if (ambientPreset == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[AmbientZone] '{gameObject.name}' no tiene AmbientPreset asignado.");
 #endif
             PlayFootFog();
@@ -581,7 +581,7 @@ public class AmbientZone : MonoBehaviour
         // de zona entra igual, solo que cuando toca.
         if (CinematicSequencerBase.AnySequenceActive)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (showDebugLogs)
                 Debug.Log($"[AmbientZone] '{gameObject.name}': música de zona omitida, hay una cinemática activa (manda la suya).");
 #endif
@@ -606,7 +606,7 @@ public class AmbientZone : MonoBehaviour
         {
             audioService.PlayMusic(rule.music, rule.fade);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else if (showDebugLogs)
         {
             Debug.LogWarning($"[AmbientZone] No se encontró música para musicZoneId '{ambientPreset.musicZoneId}'");
@@ -623,7 +623,7 @@ public class AmbientZone : MonoBehaviour
 
         // Mismo guard que TransitionToZoneMusic(): con combate activo, la música de combate
         // manda. AudioService.EndBattleMusic ya se encarga de restaurar la música de zona
-        // correcta cuando el combate termine de verdad (ver Co_RestoreAfterBattleDeferred).
+        // correcta cuando el combate termine de verdad (ver AudioService.PedirMusicaDelLugar).
         if (audioService.IsBattleActive || ActiveCombatRegistry.Count > 0)
         {
             _previousMusic   = null;

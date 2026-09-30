@@ -129,13 +129,13 @@ public class SavePointTeleportTrigger : MonoBehaviour
             {
                 if (!RequirementSatisfied())
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[SavePointTeleportTrigger] Botón Y presionado pero '{requiredDefeatedBossId}' no está derrotado todavía — menú bloqueado.");
 #endif
                     ShowBlockedMessage();
                     return;
                 }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[SavePointTeleportTrigger] Botón Y presionado! Abriendo menú de teletransporte...");
 #endif
                 OpenTeleportUI();
@@ -208,7 +208,7 @@ public class SavePointTeleportTrigger : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[SavePointTeleportTrigger] TeleportSystem no encontrado.");
 #endif
             }

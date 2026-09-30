@@ -67,7 +67,7 @@ public class QuestKillContributor : MonoBehaviour
         {
             if (debugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[QuestKillContributor:{name}] ❌ questId vacío en el prefab — esta muerte no cuenta para ninguna quest.");
                 #endif
             }
@@ -79,7 +79,7 @@ public class QuestKillContributor : MonoBehaviour
         {
             if (debugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[QuestKillContributor:{name}] ❌ QuestManager.Instance es null.");
                 #endif
             }
@@ -90,7 +90,7 @@ public class QuestKillContributor : MonoBehaviour
         {
             if (debugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[QuestKillContributor:{name}] ℹ️ Quest '{questId}' no está Activa (estado actual: {qm.GetState(questId)}) — esta muerte no cuenta.");
                 #endif
             }
@@ -101,7 +101,7 @@ public class QuestKillContributor : MonoBehaviour
         {
             if (debugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[QuestKillContributor:{name}] ℹ️ Quest '{questId}' ya no tiene steps pendientes — esta muerte no cuenta.");
                 #endif
             }
@@ -122,7 +122,7 @@ public class QuestKillContributor : MonoBehaviour
                 qm.MarkStepDone(questId, i);
                 if (debugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[QuestKillContributor:{name}] ✅ Step {i} de '{questId}' completado por esta muerte.");
                     #endif
                 }
@@ -134,7 +134,7 @@ public class QuestKillContributor : MonoBehaviour
 
         if (debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[QuestKillContributor:{name}] ⚠️ Quest '{questId}' no se encontró en qm.GetAll() (¿questId con typo o quest nunca añadida vía AddQuest/StartQuest?).");
             #endif
         }

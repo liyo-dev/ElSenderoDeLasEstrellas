@@ -78,7 +78,7 @@ public class CameraOcclusionShadowsOnly : MonoBehaviour
         if (!_loggedShaderLoadAttempt)
         {
             _loggedShaderLoadAttempt = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[CameraOcclusionShadowsOnly] Cargando shader de oclusión...");
 #endif
         }
@@ -148,7 +148,7 @@ public class CameraOcclusionShadowsOnly : MonoBehaviour
             // disolverse (visto en zonas con mucho attrezzo: columnas, rocas, vegetación con
             // collider). Repetimos con SphereCastAll — sí aloca, pero solo en este caso
             // excepcional — para no perder oclusiones reales.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CameraOcclusionShadowsOnly] SphereCastNonAlloc llenó el buffer " +
                               $"({_hitsBuffer.Length} impactos) — puede haber objetos entre cámara y " +
                               "jugador sin disolver. Usando SphereCastAll de respaldo este frame.");

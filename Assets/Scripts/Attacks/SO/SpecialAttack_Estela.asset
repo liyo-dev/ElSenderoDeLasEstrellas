@@ -12,12 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7ae78e9c7f822d4cb2aa946c1c82558, type: 3}
   m_Name: SpecialAttack_Estela
   m_EditorClassIdentifier: Assembly-CSharp::SpecialAttackSO
-  displayName: Ataque Especial
-  companion: 0
+  displayName: "D\xFAo Will y Estela"
   icon: {fileID: 0}
+  isTrio: 0
+  first: 1
+  second: 2
+  companion: 0
   companionMaxDistance: 10
-  playerAnimationTrigger: MagicSpecial
   companionAnimationTrigger: MagicSpecial
+  playerAnimationTrigger: MagicSpecial
+  gestureSeconds: 0.6
   vfxPrefab: {fileID: 8240083682830294036, guid: 3eebe64e41953e842b2d3509bf070d1b, type: 3}
   castSFXKey: SpecialAttack_Estela
   vfxLifetime: 3

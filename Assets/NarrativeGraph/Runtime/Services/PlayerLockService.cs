@@ -67,11 +67,15 @@ public class PlayerLockService : MonoBehaviour
     {
         if (_owners.Count == 0)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerLockService] ⚠️ ForceUnlock() llamado pero no hay locks activos");
+#endif
             return;
         }
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[PlayerLockService] 🚨 FORCE UNLOCK - Limpiando {_owners.Count} locks forzadamente");
+#endif
         _owners.Clear();
         _lockedMotor = null; // evitar restaurar lockMovement al estado bloqueado
         ReleaseHardLock();
@@ -82,16 +86,21 @@ public class PlayerLockService : MonoBehaviour
         if (owner == null) owner = this;
         if (_owners.Contains(owner))
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerLockService] ⚠️ Owner ya tenía un lock: {owner?.GetType().Name ?? "null"}");
+#endif
             return;
         }
-        
-        _owners.Add(owner);
-        Debug.Log($"[PlayerLockService] 🔒 Acquire de {owner?.GetType().Name ?? "null"}. Total locks: {_owners.Count}");
 
+        _owners.Add(owner);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[PlayerLockService] 🔒 Acquire de {owner?.GetType().Name ?? "null"}. Total locks: {_owners.Count}");
+#endif
         if (_owners.Count == 1)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerLockService] 🚫 Primer lock - Deshabilitando movimiento del jugador");
+#endif
             ApplyHardLock();
         }
     }
@@ -102,16 +111,21 @@ public class PlayerLockService : MonoBehaviour
         
         if (!_owners.Contains(owner))
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerLockService] ⚠️ Intento de Release de owner no registrado: {owner?.GetType().Name ?? "null"}");
+#endif
             return;
         }
-        
-        _owners.Remove(owner);
-        Debug.Log($"[PlayerLockService] 🔓 Release de {owner?.GetType().Name ?? "null"}. Locks restantes: {_owners.Count}");
 
+        _owners.Remove(owner);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[PlayerLockService] 🔓 Release de {owner?.GetType().Name ?? "null"}. Locks restantes: {_owners.Count}");
+#endif
         if (_owners.Count == 0)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerLockService] ✅ Todos los locks liberados - Reactivando movimiento del jugador");
+#endif
             ReleaseHardLock();
         }
     }
@@ -124,25 +138,13 @@ public class PlayerLockService : MonoBehaviour
     /// siempre por un evento sin nodo de bloqueo después, o un WaitCustomEventNode que tarda
     /// varios frames en encadenar hasta el nodo que realmente hace PushMode).
     ///
-    /// FIX (Agosto 2026): antes cada trigger (KingdomBoundaryTrigger, TriggerPlayerStop.
-    /// IniciarParadaMomentanea) liberaba su propio lock "un frame después" con una corrutina
-    /// alojada en SU PROPIO GameObject. Dos problemas:
-    /// 1) El grafo narrativo (NarrativeRunner.RunSubGraph) avanza nodo a nodo mediante
-    ///    `yield return new WaitUntil(...)`, que SIEMPRE cede como mínimo 1 frame por nodo aunque
-    ///    ese nodo resuelva su `ready` de forma síncrona. Si entre el WaitCustomEventNode que
-    ///    consume el evento del trigger y el nodo que hace PushMode(ActionMode.Cinematic)
-    ///    (LockPlayerNode, o el LockCinematic() interno de un CinematicSequencerBase) hay más de
-    ///    un salto, el freeze de "1 frame fijo" se soltaba ANTES de que el grafo tomara el
-    ///    control real — el jugador recuperaba el movimiento libre durante uno o más frames y
-    ///    quedaba mal ubicado para la secuencia.
-    /// 2) Triggers con DestroyElement=1 en OnTriggerEnter_Event (EXIT_FROM_WOODS_ESTELA,
-    ///    FUEGO_FATUO) destruían su propio GameObject el mismo frame en que emitían el evento;
-    ///    al destruirse, la corrutina "liberar el siguiente frame" (alojada en ese mismo objeto)
-    ///    se abortaba y el lock se soltaba en el acto vía OnDestroy(), sin ni siquiera llegar a
-    ///    esperar ese frame.
-    /// Alojar la corrutina aquí (PlayerLockService es DontDestroyOnLoad) resuelve ambos: sobrevive
-    /// a que el trigger que la pidió se destruya, y espera de verdad a que Cinematic esté activo
-    /// en vez de asumir que 1 frame siempre alcanza.
+    /// La corrutina vive aquí (DontDestroyOnLoad) por dos razones:
+    /// 1) NarrativeRunner avanza nodo a nodo con yield, siempre al menos 1 frame por nodo aunque
+    ///    sea síncrono. Si entre el WaitCustomEventNode y el LockPlayerNode hay varios nodos, un
+    ///    freeze de "1 frame fijo" se soltaría antes de que el grafo tome el control real.
+    /// 2) Triggers con DestroyElement=1 (p.ej. EXIT_FROM_WOODS_ESTELA) destruyen su propio
+    ///    GameObject el mismo frame en que emiten el evento; una corrutina alojada en ese
+    ///    GameObject se abortaría por OnDestroy y el lock se soltaría en el acto.
     /// </summary>
     public void AcquireBridgeUntilCinematic(object owner, int maxFramesSafety = 60)
     {
@@ -160,7 +162,7 @@ public class PlayerLockService : MonoBehaviour
             frames++;
             yield return null;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (pam != null && !pam.IsInMode(ActionMode.Cinematic))
         {
             Debug.LogWarning($"[PlayerLockService] Puente de {owner?.GetType().Name ?? "null"} liberado por timeout " +
@@ -214,23 +216,14 @@ public class PlayerLockService : MonoBehaviour
             _motorWasLocked = _lockedMotor.lockMovement;
             _lockedMotor.lockMovement = true;
 
-            // FIX: inputSmooth/moveDirection son 'internal' en vThirdPersonMotor y NO se
-            // resetean al activar lockMovement (el comentario del propio Invector lo dice:
-            // "lock the movement of the controller, not the animation"). Si el jugador estaba
-            // sprintando justo cuando se adquiere el lock (abrir menú de equipo/pausa, entrar
-            // en diálogo/tienda), estos valores quedan congelados en su magnitud de sprint.
-            // ControlAnimatorRootMotion() (OnAnimatorMove) NO comprueba lockMovement, así que
-            // mientras el lock esté activo el root motion de la animación de sprint se sigue
-            // acumulando en animator.rootPosition sin reflejarse en transform.position — el
-            // snap-sync ("transform.position = animator.rootPosition") solo ocurre cuando
-            // inputSmooth == Vector3.zero exactamente. Al soltar el lock, inputSmooth tarda
-            // varios frames en decaer a cero, y ese frame vuelca de golpe todo el desfase
-            // acumulado: el player "salta" hacia delante y la cámara (recién reactivada, con
-            // su propio suavizado de reconexión) tiene que perseguirlo, dando el efecto de
-            // quedarse atrás al reanudar el sprint tras pausa/tienda. Resetear aquí evita que
-            // el desfase se acumule mientras el lock está activo.
+            // lockMovement no resetea inputSmooth/moveDirection (Invector: "lock the movement,
+            // not the animation"). ControlAnimatorRootMotion (OnAnimatorMove) ignora lockMovement,
+            // así que el root motion acumula desfase mientras el lock está activo; al soltarlo el
+            // player "salta" hacia delante. ResetInputSmoothing() previene ese acumulado.
             _lockedMotor.ResetInputSmoothing();
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerLockService] lockMovement=true en vThirdPersonMotor (inputSmooth/moveDirection reseteados)");
+#endif
         }
         else
         {
@@ -246,11 +239,15 @@ public class PlayerLockService : MonoBehaviour
             {
                 _movementScriptWasEnabled = _movementScript.enabled;
                 _movementScript.enabled = false;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerLockService] Fallback: script '{_movementScript.GetType().Name}' DESHABILITADO");
+#endif
             }
             else
             {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerLockService] No se encontró vThirdPersonMotor ni script de movimiento");
+#endif
             }
         }
 
@@ -291,13 +288,17 @@ public class PlayerLockService : MonoBehaviour
         if (_lockedMotor != null)
         {
             _lockedMotor.lockMovement = _motorWasLocked;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerLockService] lockMovement restaurado en vThirdPersonMotor");
+#endif
             _lockedMotor = null;
         }
         else if (_movementScript != null)
         {
             _movementScript.enabled = _movementScriptWasEnabled;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerLockService] Script de movimiento '{_movementScript.GetType().Name}' RESTAURADO");
+#endif
         }
         _movementScript = null;
 
@@ -333,24 +334,11 @@ public class PlayerLockService : MonoBehaviour
         if (_instance == this)
         {
             _instance = null;
-            // FIX (Agosto 2026): antes esto ponía _isShuttingDown = true también aquí. Pero
-            // _isShuttingDown solo se resetea a false en Awake() — y si _isShuttingDown es true,
-            // Instance devuelve _instance (ya null) SIN crear uno nuevo. Resultado: si este
-            // singleton (DontDestroyOnLoad) se destruía por CUALQUIER motivo que no fuera un
-            // cierre real de la aplicación (un bug en otro sitio, un caso límite de recarga de
-            // escena en modo testeo, etc.), _isShuttingDown quedaba atascado en true para el
-            // resto de la sesión — nadie volvía a poder resetearlo porque Awake() nunca se
-            // volvía a ejecutar (nada crea una instancia nueva mientras el flag esté activo).
-            // A partir de ahí, PlayerLockService.Instance devolvía null en silencio (sin logs, sin
-            // errores — cada `lockService?.Acquire(...)` de cada trigger del juego se convertía en
-            // un no-op) y NINGÚN freeze de jugador volvía a funcionar en lo que quedaba de partida.
-            // Esto es lo que estaba pasando: KingdomBoundaryTrigger llamaba a
-            // AcquireBridgeUntilCinematic() correctamente, pero Instance ya devolvía null, así que
-            // el freeze nunca llegaba a intentarse. Ahora _isShuttingDown solo se marca en
-            // OnApplicationQuit() (cierre real), que es el único caso que el comentario de más
-            // arriba (evitar el warning "Some objects were not cleaned up") necesitaba cubrir.
-            // Así, si el singleton se destruye por cualquier otro motivo, Instance puede
-            // recrearlo la próxima vez que se necesite en vez de quedar inutilizado para siempre.
+            // _isShuttingDown NO se pone a true aquí: solo lo hace OnApplicationQuit.
+            // Si se pusiera en OnDestroy, cualquier destrucción accidental del singleton
+            // (recarga de escena en testeo, bug externo) lo dejaría atascado en true para
+            // siempre — Instance devolvería null en silencio y ningún freeze funcionaría
+            // el resto de la sesión. Ver INC-448.
         }
     }
 
@@ -368,50 +356,52 @@ public class PlayerLockService : MonoBehaviour
         // Solo limpiar en carga normal (no aditiva)
         if (mode == UnityEngine.SceneManagement.LoadSceneMode.Single)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerLockService] 🔍 Escena cargada '{scene.name}' - Verificando locks...");
-            
-            // Verificar si hay owners destruidos/huérfanos
+#endif
             var deadOwners = new List<object>();
             foreach (var owner in _owners)
             {
-                // Si el owner es un MonoBehaviour/GameObject destruido, marcarlo
                 if (owner is UnityEngine.Object unityObj && unityObj == null)
-                {
                     deadOwners.Add(owner);
-                }
             }
-            
+
             if (deadOwners.Count > 0)
             {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerLockService] 🧹 Limpiando {deadOwners.Count} locks huérfanos al cargar escena '{scene.name}'");
+#endif
                 foreach (var dead in deadOwners)
-                {
                     _owners.Remove(dead);
-                }
             }
-            
-            // NUEVO: En modo testeo o cuando no hay cinemáticas aditivas, limpiar todos los locks
-            // Esto previene que el player quede bloqueado cuando se skipean cinemáticas en grafos narrativos
-            bool isTestingMode = GameBootService.IsAvailable && 
-                                 GameBootService.Profile != null && 
+
+            // En modo testeo se limpian todos los locks para evitar que el player quede
+            // bloqueado cuando se saltan cinemáticas en grafos narrativos.
+            bool isTestingMode = GameBootService.IsAvailable &&
+                                 GameBootService.Profile != null &&
                                  GameBootService.Profile.ShouldBootFromPreset();
-            
+
             if (isTestingMode && _owners.Count > 0)
             {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerLockService] 🧪 Modo testeo detectado - Limpiando {_owners.Count} locks al cargar escena '{scene.name}'");
+#endif
                 _owners.Clear();
             }
-            
-            // Si ya no quedan locks, liberar el player
+
             if (_owners.Count == 0)
             {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[PlayerLockService] ✅ Todos los locks limpiados - Reactivando movimiento del jugador");
+#endif
                 ReleaseHardLock();
             }
-            else if (_owners.Count > 0)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            else
             {
                 Debug.Log($"[PlayerLockService] ⚠️ {_owners.Count} locks aún activos tras limpieza");
             }
+#endif
         }
     }
 }

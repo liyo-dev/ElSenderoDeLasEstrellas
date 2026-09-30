@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dcdd0a4a7862184ebc622d2a69dbdd9, type: 3}
   m_Name: Encuentro_Demonio1
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 2543156170968106335, guid: 75ce093c15c934c4d894f67be515e8fd,
-    type: 3}
+  enemyPrefab: {fileID: 2543156170968106335, guid: 75ce093c15c934c4d894f67be515e8fd, type: 3}
   displayNameId: BOSS_DEMONIO_NAME
   displayName: DEMONIO
   arenaRadius: 25
@@ -25,6 +24,7 @@ MonoBehaviour:
     magia: 10
     ataque: 2
     defensa: 2
+  guion: {fileID: 11400000, guid: c6a177c262ffe924eb6ce20105ced90c, type: 2}
   spawnProfiles:
   - label: Por defecto
     distanceFactor: 0.5

@@ -102,7 +102,7 @@ public class SayBeat : SequenceBeat
 
         if (SpeechBubbleUI.Instance == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SayBeat] SpeechBubbleUI.Instance es null — no hay bocadillo que mostrar. " +
                 "¿Arrancaste la escena desde Start.unity?");
 #endif
@@ -190,7 +190,7 @@ public class SayBeat : SequenceBeat
                 }
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!done)
                 Debug.LogWarning($"[SayBeat] El bocadillo de '{(string.IsNullOrEmpty(actorId) ? markName : actorId)}' " +
                     $"({textKey}) no avisó de que había terminado y se ha seguido adelante por el tope de " +
@@ -264,7 +264,7 @@ public class DialogueBeat : SequenceBeat
     {
         if (dialogue == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[DialogueBeat] Sin DialogueAsset asignado ({note}) — se salta este beat.");
 #endif
             yield break;
@@ -272,7 +272,7 @@ public class DialogueBeat : SequenceBeat
 
         if (DialogueManager.Instance == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[DialogueBeat] DialogueManager.Instance es null — se salta este beat.");
 #endif
             yield break;

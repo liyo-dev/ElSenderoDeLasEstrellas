@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0abddc14c08b6ee4cba7c1181c8551fb, type: 3}
+  m_Name: CupulaEstelar
+  m_EditorClassIdentifier: Assembly-CSharp::MagicSpellSO
+  spellId: 26
+  displayNameId: 
+  displayName: "C\xFApula Estelar"
+  kind: 3
+  element: 3
+  lore: Un trozo de cielo nocturno para que nadie se quede fuera.
+  loreId: 
+  prefab: {fileID: 8360215751799587626, guid: 30d8c6d910538b747b295427dc427c7d, type: 3}
+  castDelaySeconds: 0.5
+  chargeTime: 0
+  chargeStartScale: 0.1
+  followOriginDuringCharge: 1
+  initialSpeed: 18
+  useGravity: 0
+  maxRange: 40
+  lifeTime: 8
+  damage: 0
+  aoeRadius: 0
+  knockbackForce: 0
+  destroyOnHit: 1
+  forwardOffset: 0.35
+  positionOffset: {x: 0, y: 0, z: 0}
+  visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
+  flattenDirection: 1
+  useScaleOverride: 0
+  scaleOverride: {x: 1, y: 1, z: 1}
+  manaCost: 30
+  supportsPreciseMode: 0
+  preciseHoldThreshold: 0.18
+  preciseDamageMultiplier: 0.5
+  preciseSpeedMultiplier: 1.3
+  preciseScaleMultiplier: 0.4
+  zoneRadius: 7
+  zoneDuration: 1.2
+  zoneTickInterval: 1.5
+  zoneRange: 9
+  zoneSnapToTarget: 1
+  zoneGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  zoneGroundOffset: 0.15
+  levitationRange: 10
+  levitationAngle: 45
+  levitationPullForce: 5
+  levitationPushForce: 15
+  levitationHoldDistance: 3
+  levitationHeight: 2
+  levitationLiftSpeed: 3
+  levitationTargetLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  levitationDrainDelay: 1
+  levitationManaDrainPerSecond: 5
+  levitationHoldVFX: {fileID: 0}
+  levitationReleaseVFX: {fileID: 0}
+  levitationRangeIndicatorVFX: {fileID: 0}
+  rangeIndicatorCount: 3
+  levitationCaptureShakeIntensity: 0.3
+  levitationCaptureShakeDuration: 0.2
+  levitationReleaseShakeIntensity: 0.5
+  levitationReleaseShakeDuration: 0.3
+  levitationImpactDamage: 25
+  levitationImpactMinSpeed: 4
+  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  impactVFX: {fileID: 0}
+  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  vfxLifetime: 3
+  castSFXKey: SelloDelPacto
+  impactSFXKey: 
+  slotType: 1
+  attackIcon: {fileID: 21300000, guid: bf6b8162c21df1740b6fcd1abde165af, type: 3}
+  bounceCount: 0
+  bounceRange: 8
+  pierceCount: 0
+  spreadCount: 1
+  spreadAngle: 24
+  impactZone: {fileID: 0}
+  castStyle: 4
+  statusEffect: 0
+  statusDuration: 2
+  statusStrength: 0.5
+  statusVFX: {fileID: 0}
+  zoneOnCaster: 1
+  healPerTick: 0
+  groupShieldSeconds: 6
+  groupShieldDamageFactor: 0.3
+  groupShieldVFX: {fileID: 6424583148328831481, guid: d2ffbc8b168cdf74a9dbb7c6c1cfdf2f, type: 3}
+  teamGaugeGain: 0.34
+  teleportDistance: 6
+  caster: 1
+  comboSequence: 020000000100000000000000i

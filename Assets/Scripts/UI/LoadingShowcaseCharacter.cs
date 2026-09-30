@@ -53,7 +53,7 @@ public class LoadingShowcaseCharacter : MonoBehaviour
         _animator = GetComponentInChildren<Animator>(true);
         if (!_animator)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LoadingShowcaseCharacter] {name}: no se encontró Animator en la jerarquía.");
 #endif
             return;
@@ -69,7 +69,7 @@ public class LoadingShowcaseCharacter : MonoBehaviour
         int layer = LayerMask.NameToLayer(renderLayerName);
         if (layer < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LoadingShowcaseCharacter] {name}: la layer '{renderLayerName}' no existe en el proyecto.");
 #endif
             return;

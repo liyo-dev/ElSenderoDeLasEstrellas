@@ -23,12 +23,11 @@ namespace Core.InputGlyphs
     ///
     /// Uso: Assets → Create → El Sendero → Controles → Esquema de Controles. Al crearlo, Reset()
     /// pre-rellena la lista con las acciones reales del juego (ver GamepadInputReader.cs) para no
-    /// partir de cero. LB/RB (rueda abajo/arriba en teclado) disparan
-    /// InputEventType.LeftShoulder/RightShoulder en GamepadInputReader; el único suscriptor de esos
-    /// eventos es CombatCameraTargeting.HandleGamepadInput, que llama a
-    /// SwitchToPreviousTarget()/SwitchToNextTarget() — solo tienen efecto mientras hay un objetivo de
-    /// combate bloqueado (isLockActive), para ciclar entre los enemigos cercanos. Todas las filas
-    /// están verificadas contra GamepadInputReader/InputGlyphLabels/CombatCameraTargeting.
+    /// partir de cero. Combate (INC-485): X serie (PlayerCombatInput), B defensa
+    /// (PlayerShieldController), Y combo (ComboCastController), LB siguiente básico
+    /// (PlayerCombatInput), RB siguiente objetivo (CombatCameraTargeting), LT+RT ataque de equipo
+    /// (DuoSpecialAttackSystem). Para rehacer el asset con esta lista: menú
+    /// El Sendero/Archivo/UI/Rehacer la pantalla de Controles (INC-485).
     /// </summary>
     [CreateAssetMenu(menuName = "El Sendero/Controles/Esquema de Controles", fileName = "ControlsSchemeConfig")]
     public class ControlsSchemeConfig : ScriptableObject
@@ -58,18 +57,21 @@ namespace Core.InputGlyphs
                 // Saltar necesita override de teclado: el icono South se etiqueta "E" por defecto
                 // (reservado para Interactuar), pero la tecla real de salto es Espacio. Reutiliza la
                 // clave GLYPH_KEY_SPACE que ya usa InputGlyphLabels para Confirm.
-                Entry(InputGlyphNames.South, "CONTROLS_JUMP", "Saltar",
+                Entry(InputGlyphNames.South, "CONTROLS_JUMP", "Saltar (en el aire: doble salto; otra vez: volar)",
                       keyboardLabelKey: "GLYPH_KEY_SPACE", keyboardOverride: "Espacio"),
                 Entry(InputGlyphNames.South, "CONTROLS_INTERACT", "Interactuar (NPCs, puertas, objetos)"),
-                Entry(InputGlyphNames.West, "CONTROLS_SPELL_LEFT", "Hechizo — slot izquierdo"),
-                Entry(InputGlyphNames.East, "CONTROLS_SPELL_RIGHT", "Hechizo — slot derecho"),
-                Entry(InputGlyphNames.North, "CONTROLS_SPELL_SPECIAL", "Hechizo especial"),
+                // Reparto de combate de INC-486/491/493/494 (X serie, B defensa, Y combo, LB rota,
+                // LT+RT equipo). INC-485.
+                Entry(InputGlyphNames.West, "CONTROLS_SERIES", "Hechizo básico: serie de tres (mantener: disparo preciso)"),
+                Entry(InputGlyphNames.East, "CONTROLS_DEFENSE", "Defensa: en el momento justo, contraataque; mantener, escudo"),
+                Entry(InputGlyphNames.North, "CONTROLS_COMBO", "Combo mágico: abre el círculo y teclea la secuencia"),
+                Entry(InputGlyphNames.ShoulderLeft, "CONTROLS_NEXT_SPELL", "Siguiente hechizo básico"),
+                Entry(InputGlyphNames.TriggerLeft, "CONTROLS_TEAM_ATTACK", "Ataque de equipo: los dos gatillos a la vez, con quien esté cerca"),
                 Entry(InputGlyphNames.Sprint, "CONTROLS_SPRINT", "Correr"),
                 // Flechas Unicode (←/→) sustituidas por texto: ni LiberationSans SDF ni Nunito-Bold
                 // SDF (las fuentes que usa el menú) tienen esos glifos, así que TMP los pintaba como
                 // "□" y llenaba la consola de avisos de fuente en cada refresco del ScrollRect.
-                Entry(InputGlyphNames.ShoulderLeft, "CONTROLS_TARGET_PREV", "Cambiar objetivo de combate (anterior)"),
-                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_TARGET_NEXT", "Cambiar objetivo de combate (siguiente)"),
+                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_TARGET_NEXT", "Siguiente objetivo de combate"),
                 // Nuevo (1 sep 2026, petición Raúl): activar/desactivar el lock-on automático de
                 // cámara/objetivo en combate. Sin glyph propio (botón sin icono de familia) — fila
                 // manual como la de Cámara, mismo patrón. Ver GamepadInputReader.InputEventType.

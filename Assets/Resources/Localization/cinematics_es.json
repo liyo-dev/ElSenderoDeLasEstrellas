@@ -94,15 +94,127 @@
         },
         {
             "id": "EVT_ELDRAN_HINT_ARO",
-            "text": "¡Mira el aro de runas! Solo le haces daño cuando brilla: ¡atácale entonces!"
+            "text": "¡Fíjate en el aro de runas de su cuello! Solo le haces daño cuando brilla."
         },
         {
             "id": "EVT_ELDRAN_HINT_SIN_ARO",
-            "text": "¡Así no! Si le das sin que brille el aro, se cura. ¡Espera a que se encienda!"
+            "text": "¡Así no! Sin el aro encendido no le haces nada. ¡Espera a que brille!"
         },
         {
             "id": "EVT_ELDRAN_HINT_ORBES",
             "text": "¡Suelta orbes cuando le aciertas! Los naranjas te curan y los azules te dan magia. ¡Recógelos!"
+        },
+        {
+            "id": "EVT_ELDRAN_GUIA_RITMO",
+            "text": "Esquiva su ataque y dispara justo después: se queda agotado y el aro sigue brillando."
+        },
+        {
+            "id": "EVT_ELDRAN_AHORA_01",
+            "text": "¡Ahora, Will! ¡El aro brilla!"
+        },
+        {
+            "id": "EVT_ELDRAN_AHORA_02",
+            "text": "¡Brilla! ¡Dispara ya!"
+        },
+        {
+            "id": "EVT_ELDRAN_ACIERTO_01",
+            "text": "¡Eso es! ¡Así se le hace daño!"
+        },
+        {
+            "id": "EVT_ELDRAN_SIN_ARO_02",
+            "text": "¡No le ha hecho nada! Guarda tu magia hasta que brille el aro."
+        },
+        {
+            "id": "EVT_ELDRAN_WILL_HERIDO",
+            "text": "¡Cuidado! Si levanta las garras o marca el suelo, apártate y luego contraataca."
+        },
+        {
+            "id": "EVT_ELDRAN_POCA_VIDA",
+            "text": "¡Estás herido! Recoge los orbes naranjas que suelta al golpearle."
+        },
+        {
+            "id": "EVT_ELDRAN_FASE_2",
+            "text": "¡Se ha enfurecido! Ahora también lanza fuego de lejos: ¡no te quedes quieto!"
+        },
+        {
+            "id": "EVT_ELDRAN_FASE_3",
+            "text": "¡Está desesperado! Mira las sombras del suelo: ¡de ahí caerá su magia!"
+        },
+        {
+            "id": "EVT_ELDRAN_CASI",
+            "text": "¡Ya casi es tuyo! ¡Un último esfuerzo, Will!"
+        },
+        {
+            "id": "EVT_ELDRAN_RECUERDA_ARO",
+            "text": "No malgastes tu magia: espera a que brille el aro."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_01",
+            "text": "¡Un gólem de piedra! Por delante es pura roca: ni le harás cosquillas."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_02",
+            "text": "Yo le distraigo. Cuando venga a por mí, ¡rodéale y dale en la espalda!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_PROVOCA_01",
+            "text": "¡Eh, montón de piedras, aquí! ¡Will, a su espalda!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_PROVOCA_02",
+            "text": "¡Me tiene a mí! ¡Dale por detrás, rápido!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_VUELVE",
+            "text": "¡Vuelve a por ti, Will! Aguanta, que enseguida le provoco."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REBOTA_01",
+            "text": "¡Así rebota! Por delante no le haces nada."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REBOTA_02",
+            "text": "¡Por la espalda, Will! ¡Por la espalda!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ACIERTO",
+            "text": "¡Eso es! ¡Ahí le duele!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ANIMO",
+            "text": "¡Bien hecho! ¡Sigue así!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_HERIDO",
+            "text": "¡Cuidado con sus rocas! Si ves una sombra en el suelo, apártate."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_POCA_VIDA",
+            "text": "¡Will, estás herido! Coge los orbes naranjas."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ORBES",
+            "text": "¡Orbes! Los naranjas curan y los azules dan magia."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_FASE_2",
+            "text": "¡Se ha enfadado! Va a llover piedra: ¡no te quedes quieto!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_FASE_3",
+            "text": "¡Se está fundiendo con el bosque! ¡Cuidado cuando salte!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REMATE",
+            "text": "¡No cae! Ese sello... alguien lo ha invocado. ¡Juntos, Will! Acércate y pulsa <kbonly><sprite name=\"interactable_lt\"></kbonly><gpadonly><sprite name=\"interactable_lt\"> y <sprite name=\"interactable_rt\"> a la vez</gpadonly>."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_CASI",
+            "text": "¡Ya casi! ¡No le dejes respirar!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_RECUERDA",
+            "text": "Por delante no sirve. Espera a que venga a por mí."
         },
         {
             "id": "EVT_ELDRAN_GUIA_LLAMADA",
@@ -622,23 +734,23 @@
         },
         {
             "id": "PERAS_01",
-            "text": "Te dije que las peras tenían que ir arriba."
+            "text": "¿Y las peras? ¿Están bien?"
         },
         {
             "id": "PERAS_02",
-            "text": "Y yo te dije que no había otra caja. Mira, están bien."
+            "text": "Mira: manzanas abajo, peras arriba. Ni un golpe."
         },
         {
             "id": "PERAS_03",
-            "text": "Bueno, siguen enteras. Parece que tenías razón."
+            "text": "…Vale. Siguen enteras."
         },
         {
             "id": "PERAS_04",
-            "text": "¿Ves? No había de qué preocuparse. Anda, saluda a Will, que lleva un rato esperando."
+            "text": "Tú sabrás dónde dejaste la otra caja. Anda, saluda a Will."
         },
         {
             "id": "PERAS_05",
-            "text": "¡Will! Perdona por el follón. Ya sabes cómo nos ponemos con las cajas."
+            "text": "¡Will! Perdona el follón. Ya sabes cómo nos ponemos con la fruta."
         },
         {
             "id": "PERAS_06",
@@ -650,27 +762,139 @@
         },
         {
             "id": "HOOK_DISCUSION_01",
-            "text": "¡Victoria, cuidado! Si pones las manzanas encima, vas a aplastar las peras."
+            "text": "¡Victoria, no pongas las manzanas encima de las peras!"
         },
         {
             "id": "HOOK_DISCUSION_02",
-            "text": "No hay otra caja, Eldran. Así cabe toda la fruta."
+            "text": "¿Y dónde las pongo? Solo hay una caja, Eldran."
         },
         {
             "id": "HOOK_DISCUSION_03",
-            "text": "Pues pon las peras arriba, como siempre."
+            "text": "¡Si esta mañana había dos!"
         },
         {
             "id": "HOOK_DISCUSION_04",
-            "text": "Otra vez discutiendo por las cajas… Voy a ver qué pasa."
+            "text": "Ya están otra vez… Voy a ver qué pasa."
         },
         {
             "id": "PERAS_OLIVER_VOY",
-            "text": "¿Os echo una mano con las cajas?"
+            "text": "¿Os echo una mano?"
         },
         {
             "id": "PERAS_VICTORIA_QUEDATE",
-            "text": "Sí, por favor. Ayúdame a colocarlas antes de que os vayáis."
+            "text": "Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis."
+        },
+        {
+            "id": "FINAL_MAGO_INTRO_01",
+            "text": "Habéis llegado hasta mi altar. Qué conmovedor."
+        },
+        {
+            "id": "FINAL_MAGO_INTRO_02",
+            "text": "Un deseo como el mío no se deshace con buenas intenciones."
+        },
+        {
+            "id": "FINAL_ESTELA_INICIO_01",
+            "text": "Juntos, como acordamos. Sus rayos se pueden devolver: ¡para con <sprite name=\"interactable_b\"> justo a tiempo!"
+        },
+        {
+            "id": "FINAL_ESTELA_INICIO_02",
+            "text": "Tras cada ráfaga se queda sin aliento. ¡Ese es el momento!"
+        },
+        {
+            "id": "FINAL_ESTELA_AHORA",
+            "text": "¡Ahora, está expuesto!"
+        },
+        {
+            "id": "FINAL_ESTELA_ESCUDO",
+            "text": "Su escudo lo para todo. Espera a que se agote... o devuélvele un rayo."
+        },
+        {
+            "id": "FINAL_ESTELA_ACIERTO",
+            "text": "¡Eso es, Will!"
+        },
+        {
+            "id": "FINAL_ESTELA_HERIDO",
+            "text": "¡Cuidado! Las sombras del suelo avisan antes de golpear."
+        },
+        {
+            "id": "FINAL_ESTELA_POCA_VIDA",
+            "text": "¡Will, aguanta! Recoge orbes."
+        },
+        {
+            "id": "FINAL_ESTELA_FASE_2",
+            "text": "¡Está volando! Las anclas de los pilares le sostienen: rómpelas. Liam, tu pacto las quiebra."
+        },
+        {
+            "id": "FINAL_ESTELA_FASE_3",
+            "text": "Tres nodos le alimentan y hay que cortarlos a la vez. Déjanos uno a cada uno: pulsa <sprite name=\"interactable_dpad_down\"> y nos quedamos."
+        },
+        {
+            "id": "FINAL_ESTELA_RECUERDA",
+            "text": "No gastes magia contra su escudo."
+        },
+        {
+            "id": "FINAL_MAGO_MAREA",
+            "text": "Nadie cruza la marea."
+        },
+        {
+            "id": "FINAL_TIEMPO_WILL",
+            "text": "No hay ningún hueco... El Hechizo del Tiempo. Solo una vez."
+        },
+        {
+            "id": "FINAL_TIEMPO_PULSA",
+            "text": "Pulsa <sprite name=\"interactable_confirm\"> para lanzar el Hechizo del Tiempo."
+        },
+        {
+            "id": "FINAL_TIEMPO_RESQUICIO",
+            "text": "Ahí... ¡un resquicio! Sigue la luz."
+        },
+        {
+            "id": "FINAL_MAGO_VENCIDO",
+            "text": "Basta... basta. Habéis ganado."
+        },
+        {
+            "id": "FINAL_ESTELA_ACABADO",
+            "text": "¡Se acabó! ¡Lo tenemos!"
+        },
+        {
+            "id": "FINAL_MAGO_TRAICION",
+            "text": "Ingenuos."
+        },
+        {
+            "id": "FINAL_ESTELA_LIAM",
+            "text": "¡LIAM!"
+        },
+        {
+            "id": "FINAL_WILL_INTENTA_TIEMPO",
+            "text": "¡El tiempo, otra vez! Pulsa <sprite name=\"interactable_confirm\">."
+        },
+        {
+            "id": "FINAL_WILL_POZO_SECO",
+            "text": "Nada... El pozo está seco."
+        },
+        {
+            "id": "FINAL_ESTELA_CONDUCTO",
+            "text": "Will. El conducto."
+        },
+        {
+            "id": "FINAL_WILL_CUANTO",
+            "text": "¿Cuánto puedes darme?"
+        },
+        {
+            "id": "FINAL_ESTELA_TODO",
+            "text": "Todo lo que me queda. Te lo doy yo."
+        },
+        {
+            "id": "FINAL_PULSA_GATILLOS",
+            "text": "Mantén <sprite name=\"interactable_lt\"> y <sprite name=\"interactable_rt\"> para recibir la energía de Estela."
+        },
+        {
+            "id": "FINAL_PULSA_AGUJA",
+            "text": "Pulsa <sprite name=\"interactable_confirm\"> para lanzar la aguja de luz al conducto."
+        },
+        {
+            "id": "FINAL_MAGO_DESHACE",
+            "text": "No... mi deseo... el altar..."
         }
     ]
 }

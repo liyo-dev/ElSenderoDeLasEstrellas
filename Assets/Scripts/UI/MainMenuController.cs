@@ -48,6 +48,10 @@ public class MainMenuController : MonoBehaviour
     [Tooltip("Panel de selección de idioma. Se muestra una única vez, antes del menú, mientras PlayerSettings.LanguageSelected siga en false. Opcional: si se deja vacío, el menú arranca como hasta ahora sin selector de idioma.")]
     [SerializeField] private LanguageSelectPanel languageSelectPanel;
 
+    [Header("Portada")]
+    [Tooltip("Portada del fondo (una por etapa de la historia). Al pulsar Nueva Partida o Continuar, se espera a su animación de salida antes de cargar. Vacío = se busca en la escena.")]
+    [SerializeField] private PortadaDelMenu portada;
+
     [Header("Scene when continuing")]
     [SerializeField] private string nextSceneContinue = "MainWorld";
 
@@ -119,6 +123,9 @@ public class MainMenuController : MonoBehaviour
         if (!languageSelectPanel)
             languageSelectPanel = GetComponentInChildren<LanguageSelectPanel>(true);
 
+        if (!portada)
+            portada = FindAnyObjectByType<PortadaDelMenu>();
+
         if (settingsMenu)
             settingsMenu.Close(silent: true);
 
@@ -173,11 +180,11 @@ public class MainMenuController : MonoBehaviour
         // sobre MainMenu.unity) sin haber pasado antes por Start.unity, que es donde normalmente
         // vive el PlayerInputManager persistente.
         var pim = Core.PlayerInputManager.EnsureExists();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MainMenu-Debug] OnEnable — pim={pim != null}, GameState.MainMenu={GameState.Is(GamePhase.MainMenu)}");
 #endif
         pim.ForceSyncEnterUIMode();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Log estado del EventSystem
         var es = UnityEngine.EventSystems.EventSystem.current;
         var uiMod = es != null ? es.GetComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>() : null;
@@ -395,7 +402,7 @@ public class MainMenuController : MonoBehaviour
         {
             if (!_inputArmed)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu] Ignorando Continue mientras el menú arma la entrada.");
                 #endif
             }
@@ -409,48 +416,10 @@ public class MainMenuController : MonoBehaviour
         if (!saveSystem)
             saveSystem = ServiceLocator.Get<SaveSystem>(logIfMissing: false);
 
-        bool hasSave = saveSystem != null && saveSystem.HasSave();
-        bool forcePreset = GameBootService.IsPresetOverrideActive;
-
-        if (forcePreset)
+        // El mismo «Continuar» que usa la pantalla de Game Over: ver GameBootService.PrepararContinuar.
+        if (!GameBootService.PrepararContinuar(saveSystem))
         {
-            // MODO TESTING: Descartar avances de la sesión y recargar el bootPreset desde cero.
-            // Esto detiene corrutinas huérfanas, resetea el runtimePreset y re-aplica todos los sistemas.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log("[MainMenu] CONTINUE en modo preset/test → Recargando bootPreset desde cero");
-#endif
-            GameBootService.ReloadTestPreset();
-        }
-        else if (hasSave)
-        {
-            // Recargar siempre desde disco antes de continuar.
-            // Durante la sesión anterior, QuestPersistenceBridge puede haber actualizado
-            // runtimePreset.flags en memoria (p.ej. misiones completadas/archivadas).
-            // Si el jugador no guardó, save.json tiene el estado antiguo correcto,
-            // pero runtimePreset ya tiene el estado evolucionado → hay que recargar desde disco
-            // para que QuestManager quede con el estado correcto antes de que cargue la escena.
-            var bootProfile = GameBootService.Profile;
-            if (bootProfile != null)
-            {
-                bootProfile.LoadProfile(saveSystem);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log("[MainMenu] CONTINUE → Perfil recargado desde disco");
-#endif
-
-                // FIX: sin esto, PartyControlManager.HandleProfileReady() (que resetea
-                // _activeIndex a Will y llama a ActiveCharacterSwapper.ResetState()) nunca se
-                // ejecutaba en un "Continuar" normal. Si el jugador moría controlando a
-                // Liam/Estela, el slot activo se quedaba pillado en ese personaje: el
-                // controller conservaba su apariencia de antes de morir (PlayerPresetService
-                // no reasigna Will si el slot activo no es Will) mientras MainWorld
-                // reinstanciaba un NPC de party nuevo y visible para ese mismo personaje —
-                // dos modelos superpuestos en pantalla al cargar tras un Game Over.
-                GameBootService.NotifyProfileReady();
-            }
-        }
-        else
-        {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MainMenu] CONTINUE pulsado sin save disponible → usando preset por defecto");
 #endif
         }
@@ -460,7 +429,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnClickNewGame()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[MainMenu] ========== NUEVA PARTIDA SOLICITADA ==========");
 #endif
 
@@ -468,7 +437,7 @@ public class MainMenuController : MonoBehaviour
         {
             if (!_inputArmed)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu] Ignorando New Game mientras el menú arma la entrada.");
                 #endif
             }
@@ -496,7 +465,7 @@ public class MainMenuController : MonoBehaviour
                 return;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MainMenu] Había que mostrar el popup de confirmación pero ConfirmationPopupUI.Instance es NULL (¿Start.unity no está cargada?). Se procede sin confirmar.");
 #endif
         }
@@ -516,29 +485,29 @@ public class MainMenuController : MonoBehaviour
         if (forcePreset)
         {
             // MODO TESTING: El preset de testeo controla TODO - no hace falta resetear ni borrar saves
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[MainMenu] NEW GAME en modo preset/test → Save NO se borra, bootPreset tiene control absoluto");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[MainMenu] NEW GAME → Reseteando perfil y borrando save");
 #endif
 
             if (GameBootService.IsAvailable)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu] Llamando a GameBootService.NewGameReset()...");
 #endif
                 GameBootService.NewGameReset();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu] GameBootService.NewGameReset() completado");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[MainMenu] GameBootService no esta listo; se borra el save directamente.");
 #endif
                 if (saveSystem != null)
@@ -546,7 +515,7 @@ public class MainMenuController : MonoBehaviour
                     bool ok = saveSystem.Delete();
                     if (!ok)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning("[MainMenu] SaveSystem.Delete() devolvio false (algun fichero no se pudo borrar).");
                         #endif
                     }
@@ -564,7 +533,7 @@ public class MainMenuController : MonoBehaviour
             AudioService.MuteNextBaseSceneMusic = true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[MainMenu] Cargando escena de Nueva Partida...");
 #endif
         LoadNewGameScene();
@@ -611,7 +580,7 @@ public class MainMenuController : MonoBehaviour
         if (!settingsMenu)
         {
             settingsMenu = ServiceLocator.Get<SettingsMenuController>(false);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MainMenu] OnClickSettings fallback ServiceLocator -> {(settingsMenu != null ? settingsMenu.name : "<null>")}");
 #endif
         }
@@ -648,7 +617,7 @@ public class MainMenuController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MainMenu] No se encontró SettingsMenuController en la jerarquía ni en la escena.");
 #endif
         }
@@ -666,7 +635,7 @@ public class MainMenuController : MonoBehaviour
         if (!controlsMenu)
         {
             controlsMenu = ServiceLocator.Get<ControlsMenuController>(false);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MainMenu] OnClickControls fallback ServiceLocator -> {(controlsMenu != null ? controlsMenu.name : "<null>")}");
 #endif
         }
@@ -680,7 +649,7 @@ public class MainMenuController : MonoBehaviour
             LogMenuState("OnClickControls-BeforeShow");
             controlsMenu.Show(() =>
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu-Debug] Controls onClosed callback INVOCADO");
 #endif
                 RestoreMainMenuInteraction();
@@ -689,7 +658,7 @@ public class MainMenuController : MonoBehaviour
                     buttonPanel.SetActive(true);
                 else
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[MainMenu-Debug] buttonPanel es NULL en el callback de cierre de Controles");
                     #endif
                 }
@@ -705,7 +674,7 @@ public class MainMenuController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[MainMenu] No se encontró ControlsMenuController en la jerarquía ni en la escena.");
 #endif
         }
@@ -731,7 +700,7 @@ public class MainMenuController : MonoBehaviour
         {
             if (!_inputArmed)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MainMenu] Ignorando Exit mientras el menú arma la entrada.");
                 #endif
             }
@@ -752,7 +721,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nextSceneContinue))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[MainMenu] nextSceneContinue no está configurado.");
 #endif
             _isLoading = false;
@@ -766,7 +735,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (string.IsNullOrEmpty(nextSceneNewGame))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[MainMenu] nextSceneNewGame no está configurado.");
 #endif
             _isLoading = false;
@@ -777,6 +746,24 @@ public class MainMenuController : MonoBehaviour
     }
 
     void LoadTargetScene(string sceneName)
+    {
+        // La portada puede tener animación de salida (Will se levanta del banco): se carga al acabar.
+        float espera = portada ? portada.ReproducirSalida() : 0f;
+        if (espera > 0f)
+        {
+            StartCoroutine(LoadTargetSceneAfter(sceneName, espera));
+            return;
+        }
+        LoadTargetSceneNow(sceneName);
+    }
+
+    System.Collections.IEnumerator LoadTargetSceneAfter(string sceneName, float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        LoadTargetSceneNow(sceneName);
+    }
+
+    void LoadTargetSceneNow(string sceneName)
     {
         // Asegurar que timeScale esté a 1 al salir del menú principal
         Time.timeScale = 1f;
@@ -821,7 +808,7 @@ public class MainMenuController : MonoBehaviour
     // ===== Debug (temporal — investigando "el menú desaparece tras Controles") =====
     void LogMenuState(string tag)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         var es = UnityEngine.EventSystems.EventSystem.current;
         Debug.Log($"[MainMenu-Debug] {tag} — buttonPanel.activeSelf={(buttonPanel ? buttonPanel.activeSelf.ToString() : "NULL")}, " +
                   $"buttonPanel.activeInHierarchy={(buttonPanel ? buttonPanel.activeInHierarchy.ToString() : "NULL")}, " +
@@ -839,7 +826,7 @@ public class MainMenuController : MonoBehaviour
     {
         if (!btn)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[MainMenu] Botón {label} no asignado/encontrado.");
 #endif
             return;
@@ -850,14 +837,14 @@ public class MainMenuController : MonoBehaviour
 
         if (!btn.interactable)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[MainMenu] Botón {label} no está interactable.");
             #endif
         }
 
         if (!btn.gameObject.activeInHierarchy)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[MainMenu] Botón {label} está inactivo en jerarquía.");
             #endif
         }

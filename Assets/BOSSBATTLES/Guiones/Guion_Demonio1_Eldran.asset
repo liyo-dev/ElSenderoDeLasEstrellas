@@ -1,0 +1,187 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef12fab86cd60144ebc5a9cc59e32e21, type: 3}
+  m_Name: Guion_Demonio1_Eldran
+  m_EditorClassIdentifier: Assembly-CSharp::GuionDeCombate
+  hablanteId: NPC_Eldran
+  nombreHablante: Eldran
+  mirarAlJugador: 1
+  introDelay: 0.6
+  introFallbackSeconds: 12
+  duracionBocadillo: 2.8
+  pausaEntreFrases: 0.6
+  umbralPocaVida: 0.35
+  umbralJefeCasiVencido: 0.2
+  segundosSinAcertar: 15
+  comentarios:
+  - momento: 0
+    fase: 0
+    key: EVT_10
+    anim: FoundSomething_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 0
+    fase: 0
+    key: EVT_08
+    anim: Challenging_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 0
+    fase: 0
+    key: EVT_ELDRAN_HINT_ARO
+    anim: FoundSomething_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 0
+    fase: 0
+    key: EVT_ELDRAN_GUIA_RITMO
+    anim: Cheer02
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 1
+    fase: 0
+    key: EVT_ELDRAN_AHORA_01
+    anim: Challenging_NoWeapon
+    vecesMax: 2
+    enfriamiento: 0
+    caducidad: 0.8
+    interrumpe: 1
+    duracion: 1.6
+  - momento: 1
+    fase: 0
+    key: EVT_ELDRAN_AHORA_02
+    anim: Challenging_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0.8
+    interrumpe: 1
+    duracion: 1.6
+  - momento: 2
+    fase: 0
+    key: EVT_ELDRAN_ACIERTO_01
+    anim: Cheer01
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 2
+    fase: 0
+    key: EVT_ELDRAN_CHEER_01
+    anim: Cheer01
+    vecesMax: 0
+    enfriamiento: 12
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 2
+    fase: 0
+    key: EVT_ELDRAN_CHEER_02
+    anim: Cheer01
+    vecesMax: 0
+    enfriamiento: 12
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 3
+    fase: 0
+    key: EVT_ELDRAN_HINT_SIN_ARO
+    anim: HeadShake01
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 0
+  - momento: 3
+    fase: 0
+    key: EVT_ELDRAN_SIN_ARO_02
+    anim: HeadShake01
+    vecesMax: 1
+    enfriamiento: 20
+    caducidad: 3
+    interrumpe: 0
+    duracion: 0
+  - momento: 4
+    fase: 0
+    key: EVT_ELDRAN_WILL_HERIDO
+    anim: Challenging_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 5
+    fase: 0
+    key: EVT_ELDRAN_POCA_VIDA
+    anim: FoundSomething_NoWeapon
+    vecesMax: 2
+    enfriamiento: 30
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 6
+    fase: 0
+    key: EVT_ELDRAN_HINT_ORBES
+    anim: FoundSomething_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 6
+    interrumpe: 0
+    duracion: 0
+  - momento: 7
+    fase: 1
+    key: EVT_ELDRAN_FASE_2
+    anim: FoundSomething_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 3.5
+  - momento: 7
+    fase: 2
+    key: EVT_ELDRAN_FASE_3
+    anim: FoundSomething_NoWeapon
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 3.5
+  - momento: 8
+    fase: 0
+    key: EVT_ELDRAN_CASI
+    anim: Cheer02
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 9
+    fase: 0
+    key: EVT_ELDRAN_RECUERDA_ARO
+    anim: HeadShake01
+    vecesMax: 2
+    enfriamiento: 25
+    caducidad: 3
+    interrumpe: 0
+    duracion: 0

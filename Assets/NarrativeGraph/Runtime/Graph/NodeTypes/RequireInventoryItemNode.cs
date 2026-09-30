@@ -32,6 +32,12 @@ public sealed class RequireInventoryItemNode : NarrativeNode
     [Tooltip("Índice de la salida a usar cuando falta el item (por defecto 1).")]
     public int alternateOutputIndex = 1;
 
+    /// Decide por índice desde Enter() (ForceJumpToOutput) aunque no tenga puertos con nombre.
+    public override int ProjectionPort => ProjectionStops;
+
+    public override string DescribeDecision()
+        => $"Requiere objeto \"{displayTitle}\" (guid {guid}): necesita '{(item != null ? item.itemId : "<sin objeto>")}' x{requiredAmount}.";
+
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
         if (item == null || requiredAmount <= 0)

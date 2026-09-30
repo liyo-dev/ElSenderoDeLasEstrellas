@@ -41,7 +41,7 @@ public class ShopItemCard : MonoBehaviour
         
         if (entry == null || entry.item == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ShopItemCard] Setup: entry o item es null");
 #endif
             return;
@@ -50,7 +50,7 @@ public class ShopItemCard : MonoBehaviour
         var item = entry.item;
         int price = entry.GetBuyPrice();
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ShopItemCard] Setup: {item.displayName}, precio={price}");
 #endif
         
@@ -58,7 +58,7 @@ public class ShopItemCard : MonoBehaviour
             iconImage.sprite = item.icon;
         else
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ShopItemCard] iconImage es null");
             #endif
         }
@@ -67,7 +67,7 @@ public class ShopItemCard : MonoBehaviour
             nameText.text = item.GetLocalizedName();
         else
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ShopItemCard] nameText es null");
             #endif
         }
@@ -77,13 +77,13 @@ public class ShopItemCard : MonoBehaviour
             // Ya no se usa el emoji 💰 literal: el icono de moneda es ahora el sprite
             // real "coin.png" (CoinIcon) mostrado junto a este texto en el prefab.
             priceText.text = $"{price}";
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ShopItemCard] PriceText actualizado a: {priceText.text}");
 #endif
         }
         else
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ShopItemCard] priceText es NULL - no está asignado en el inspector");
             #endif
         }

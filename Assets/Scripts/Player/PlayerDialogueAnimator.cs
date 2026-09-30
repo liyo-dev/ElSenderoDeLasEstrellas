@@ -25,17 +25,6 @@ public class PlayerDialogueAnimator : MonoBehaviour
     // Angry01-02, etc.) viven aquí desde la migración fuera del Base Layer (30 ago 2026).
     private const int CapaUpperBody = 1;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-    [Header("Debug")]
-    // FIX (30/08/2026, Raul: "en el pensamiento de will solo hace animaciones el mago, will
-    // ni una"): activado temporalmente para diagnosticar por que PlayGesture() no produce
-    // ningun cambio visible en la vision -- si el problema es que "Question02"/"Talk01" no se
-    // encuentran en el Animator Controller de Will, este flag hara que salga un aviso claro en
-    // consola (antes silencioso salvo que debugMode ya estuviera a true a mano). Volver a false
-    // cuando se confirme la causa real.
-    [SerializeField] private bool debugMode = true;
-#endif
-
     // Estado
     private Coroutine _gestureCoroutine;
     private int _lastTalkIndex = -1;
@@ -110,8 +99,8 @@ public class PlayerDialogueAnimator : MonoBehaviour
         int capa = AnimatorLayerUtil.ResolveLayer(animator, stateHash, CapaUpperBody);
         if (capa < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            // Diagnóstico SIEMPRE visible, no detrás de debugMode (20 sep 2026, INC-273).
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            // Diagnóstico siempre visible (ver INC-273).
             // Un estado que no existe es un no-op silencioso: quien lo pide da el gesto por
             // reproducido y el personaje no hace nada. Así se perdió INC-214, donde una secuencia
             // le pedía a Will `Attack2` — que es un estado del controller de los NPCs, no del suyo —
@@ -208,8 +197,8 @@ public class PlayerDialogueAnimator : MonoBehaviour
         int capa = AnimatorLayerUtil.ResolveLayer(animator, stateHash, CapaUpperBody);
         if (capa < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            // Diagnóstico SIEMPRE visible, no detrás de debugMode (20 sep 2026, INC-273).
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            // Diagnóstico siempre visible (ver INC-273).
             // Un estado que no existe es un no-op silencioso: quien lo pide da el gesto por
             // reproducido y el personaje no hace nada. Así se perdió INC-214, donde una secuencia
             // le pedía a Will `Attack2` — que es un estado del controller de los NPCs, no del suyo —

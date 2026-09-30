@@ -128,7 +128,7 @@ public class DialogueCameraController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DialogueCameraController] Enfocando NPC en movimiento: {npcTransform.name}");
             #endif
         }
@@ -150,7 +150,7 @@ public class DialogueCameraController : MonoBehaviour
         {
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DialogueCameraController] No se encontró el player.");
                 #endif
             }
@@ -171,7 +171,7 @@ public class DialogueCameraController : MonoBehaviour
         {
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DialogueCameraController] No se encontró vThirdPersonCamera.");
                 #endif
             }
@@ -207,7 +207,7 @@ public class DialogueCameraController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DialogueCameraController] Iniciando cámara de diálogo con {npcTransform.name}");
             #endif
         }
@@ -230,7 +230,7 @@ public class DialogueCameraController : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DialogueCameraController] Finalizando cámara de diálogo");
             #endif
         }

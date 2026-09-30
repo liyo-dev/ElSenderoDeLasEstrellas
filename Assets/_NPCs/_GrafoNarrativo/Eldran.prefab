@@ -11242,7 +11242,6 @@ GameObject:
   - component: {fileID: 7707363998424899796}
   - component: {fileID: 1687942726773230502}
   - component: {fileID: 5014074110871755233}
-  - component: {fileID: 892032856192410032}
   - component: {fileID: 6938378013747625067}
   - component: {fileID: 3622547188665190604}
   - component: {fileID: 1273344385334190010}
@@ -11557,48 +11556,6 @@ MonoBehaviour:
   eyePrefix: Eye
   mouthPrefix: Mouth
   debugMode: 0
---- !u!114 &892032856192410032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8894687061216898430}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36c3b9bc87b4a9245a23859f102cd20c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EldranCombatCheerController
-  eldranTransform: {fileID: 3275434959031855424}
-  willTransform: {fileID: 0}
-  startSignal: AWAKEN_DONE
-  stopSignal: AWAKEN_COMBAT_END
-  bossIntroDoneSignal: BOSS_INTRO_DONE
-  introKeys:
-  - EVT_10
-  - EVT_08
-  introAnims:
-  - FoundSomething_NoWeapon
-  - Challenging_NoWeapon
-  introDelay: 0.6
-  introFallbackSeconds: 12
-  cheerKeys:
-  - EVT_ELDRAN_CHEER_01
-  - EVT_ELDRAN_CHEER_02
-  - EVT_ELDRAN_CHEER_03
-  cheerAnims:
-  - Cheer01
-  - Cheer01
-  - Cheer01
-  bubbleDuration: 2.8
-  collarHintKey: EVT_ELDRAN_HINT_ARO
-  collarHintAnim: Cheer02
-  willDamageable: {fileID: 0}
-  collarHintFallbackSeconds: 8
-  firstDelay: 2.5
-  minInterval: 6
-  maxInterval: 14
-  lookAtSpeed: 360
 --- !u!114 &6938378013747625067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11698,6 +11655,7 @@ MonoBehaviour:
   showAfterStep: -1
   icon: {fileID: 0}
   color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  iconoSobreLaCabeza: {fileID: 0}
 --- !u!114 &9173539135787210561
 MonoBehaviour:
   m_ObjectHideFlags: 0

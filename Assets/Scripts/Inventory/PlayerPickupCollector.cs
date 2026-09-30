@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [DisallowMultipleComponent]
-[RequireComponent(typeof(Inventory))]
 public class PlayerPickupCollector : MonoBehaviour
 {
     [Header("References")]
@@ -30,7 +29,6 @@ public class PlayerPickupCollector : MonoBehaviour
 
     void Awake()
     {
-        if (!inventory) inventory = GetComponent<Inventory>();
         if (!healthSystem) healthSystem = GetComponentInChildren<PlayerHealthSystem>(true);
         if (!manaPool) manaPool = GetComponentInChildren<ManaPool>(true);
         if (!specialChargeMeter) specialChargeMeter = GetComponentInChildren<SpecialChargeMeter>(true);
@@ -67,9 +65,17 @@ public class PlayerPickupCollector : MonoBehaviour
         return changed;
     }
 
+    // El inventario es del grupo (GrupoDelJugador), no del cuerpo: se busca a través de
+    // PlayerService la primera vez que hace falta. Ver INC-484.
+    private bool ResolverInventario()
+    {
+        if (!inventory) PlayerService.TryGetComponent(out inventory, allowSceneLookup: false);
+        return inventory;
+    }
+
     private bool ApplyCurrency(PickupEffect effect)
     {
-        if (!inventory)
+        if (!ResolverInventario())
         {
             LogMissingComponent(nameof(Inventory));
             return false;
@@ -79,7 +85,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             if (logWarnings)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPickupCollector] Currency pickup has no ItemData assigned.");
                 #endif
             }
@@ -137,6 +143,8 @@ public class PlayerPickupCollector : MonoBehaviour
 
     private bool ApplySpecialCharge(PickupEffect effect)
     {
+        // La carga de equipo vive en GrupoDelJugador (INC-484/INC-491); se busca al usarla.
+        if (!specialChargeMeter) PlayerService.TryGetComponent(out specialChargeMeter, allowSceneLookup: false);
         if (!specialChargeMeter)
         {
             LogMissingComponent(nameof(SpecialChargeMeter));
@@ -151,7 +159,7 @@ public class PlayerPickupCollector : MonoBehaviour
 
     private bool ApplyAddToInventory(PickupEffect effect)
     {
-        if (!inventory)
+        if (!ResolverInventario())
         {
             LogMissingComponent(nameof(Inventory));
             return false;
@@ -161,7 +169,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             if (logWarnings)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPickupCollector] AddToInventory pickup has no ItemData assigned.");
                 #endif
             }
@@ -175,7 +183,7 @@ public class PlayerPickupCollector : MonoBehaviour
         // wardrobeUnlock al armario en vez de la bolsa normal (punto único de control),
         // así que este pickup funciona igual sin importar el tipo de item configurado.
         inventory.Add(effect.item, quantity);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerPickupCollector] ✅ Pickup procesado: {effect.item.displayName} x{quantity}");
 #endif
 
@@ -189,7 +197,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             if (logWarnings)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPickupCollector] UnlockWardrobeItem pickup has no ItemData or WardrobeItemSO assigned.");
                 #endif
             }
@@ -208,13 +216,13 @@ public class PlayerPickupCollector : MonoBehaviour
 
         if (unlocked)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerPickupCollector] ✅ Item de equipo '{effect.item.displayName}' desbloqueado y añadido al wardrobe.");
             #endif
         }
         else if (logWarnings)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerPickupCollector] Item de equipo '{effect.item.displayName}' ya estaba desbloqueado o no pudo añadirse.");
             #endif
         }
@@ -225,7 +233,7 @@ public class PlayerPickupCollector : MonoBehaviour
     private void LogMissingComponent(string componentName)
     {
         if (!logWarnings) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[PlayerPickupCollector] Missing required component '{componentName}' on '{name}'.");
 #endif
     }
@@ -236,7 +244,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             if (logWarnings)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPickupCollector] No se puede reproducir animación de poción: Animator no encontrado.");
                 #endif
             }
@@ -247,7 +255,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             if (logWarnings)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPickupCollector] No se puede reproducir animación de poción: nombre de animación vacío.");
                 #endif
             }
@@ -259,7 +267,7 @@ public class PlayerPickupCollector : MonoBehaviour
         {
             StopCoroutine(_drinkPotionCoroutine);
             _drinkPotionCoroutine = null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerPickupCollector] Animación anterior de poción cancelada para iniciar nueva");
 #endif
         }
@@ -267,7 +275,7 @@ public class PlayerPickupCollector : MonoBehaviour
         // Si ya está reproduciéndose, no iniciar otra
         if (_isPlayingDrinkAnimation)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerPickupCollector] Animación de poción ya en curso - ignorando nueva solicitud");
 #endif
             return;
@@ -297,7 +305,7 @@ public class PlayerPickupCollector : MonoBehaviour
         // Esperar 1 frame para que el Animator Controller procese el cambio antes de leer el clip
         yield return null;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerPickupCollector] Animación reproducida: {drinkPotionAnimationName} (layer {playLayer})");
 #endif
 
@@ -323,7 +331,7 @@ public class PlayerPickupCollector : MonoBehaviour
         _isPlayingDrinkAnimation = false;
         _drinkPotionCoroutine = null;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerPickupCollector] Animación de poción completada - flag limpiado");
 #endif
     }

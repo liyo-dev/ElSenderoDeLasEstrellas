@@ -48,7 +48,8 @@ public class ActiveCharacterSwapper : MonoBehaviour
     public NPCPartyMember WillNpcInstance => _willNpcInstance;
 
     // Hechizos de Will, actualizados cada vez que se abandona su slot
-    private MagicSpellSO _willLeft, _willRight, _willSpecial;
+    // Básicos de Will (orden de rotación) mientras el jugador lleva a otro personaje.
+    private readonly MagicSpellSO[] _willBasics = new MagicSpellSO[MagicCaster.BasicSlotCount];
 
     // NPC actualmente oculto porque el controller lo está representando
     private NPCPartyMember _hiddenNpc;
@@ -171,7 +172,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
     {
         if (_willNpcInstance == null) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         bool hadDisabled = false;
 #endif
         foreach (var r in _willNpcInstance.GetComponentsInChildren<Renderer>(true))
@@ -179,7 +180,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             if (r != null && !r.enabled)
             {
                 r.enabled = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 hadDisabled = true;
 #endif
             }
@@ -199,7 +200,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (hadDisabled)
             Debug.LogWarning("[ActiveCharacterSwapper] Will NPC tenía renderers desactivados fuera de la ventana de ReassertWillVisibilityNextFrames — reactivados por la red de seguridad periódica (0.5s).");
 #endif
@@ -218,7 +219,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
     {
         if (_hiddenNpc == null) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         bool hadEnabled = false;
 #endif
         foreach (var r in _hiddenNpc.GetComponentsInChildren<Renderer>(true))
@@ -226,13 +227,13 @@ public class ActiveCharacterSwapper : MonoBehaviour
             if (r != null && r.enabled)
             {
                 r.enabled = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 hadEnabled = true;
 #endif
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (hadEnabled)
             Debug.LogWarning($"[ActiveCharacterSwapper] NPC oculto '{_hiddenNpc.name}' tenía renderers reactivados fuera de la ventana de ReassertHiddenNextFrames — vuelto a ocultar por la red de seguridad periódica (0.5s). Bug 'dos Estelas y un Will' evitado.");
 #endif
@@ -294,7 +295,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             if (r.isVisible) { algunoVisible = true; visibles++; }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // 🫀 Latido de diagnóstico (cada ~2.5s mientras exista el clon): foto del estado real
         // de Will aunque no salte ninguna anomalía. Cuando el jugador reporte "Will invisible",
         // estas líneas dicen DÓNDE está Will de verdad (¿bajo el suelo? ¿desplazado del botón?),
@@ -343,7 +344,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
         if (_willInvisibleStrikes < 2) return;
         _willInvisibleStrikes = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         var agent = _willNpcInstance.GetComponent<NavMeshAgent>();
         Debug.LogWarning($"[ActiveCharacterSwapper] 🩺 Will NPC en encuadre pero SIN renderizar durante ~1s — " +
             $"clase={(algunoActivoYEncendido ? "renderers activos atascados en culling" : "partes del modelo desactivadas")}, " +
@@ -361,7 +362,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             {
                 npcBuilder.DeactivateAllCategories();
                 npcBuilder.ApplySelection(app);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ActiveCharacterSwapper] 🩺 Apariencia de Will reaplicada al NPC ({app.Count} partes).");
 #endif
             }
@@ -405,7 +406,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
         if (!_ready || from == to) return;
 
         var registry = CharacterAppearanceRegistry.Instance;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCharacterSwapper] SwitchCharacter {from}→{to} | registry={(object)registry ?? "NULL"} | _ready={_ready}");
 #endif
 
@@ -419,7 +420,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
         if (from == PartyControlManager.CharacterSlot.Will)
         {
             CaptureWillSpells();
-            _willNpcInstance?.SetRuntimeSpells(_willLeft, _willRight, _willSpecial);
+            _willNpcInstance?.SetRuntimeBasics(_willBasics);
         }
 
         // 2. Teleportar el controller a la posición del NPC objetivo (solo al ir a Liam/Estela)
@@ -494,7 +495,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
 
             if (willPinnedOrInCinematic)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[ActiveCharacterSwapper] Will NPC anclado (modo Libre) o en cinemática — no se reposiciona al cambiar de personaje.");
 #endif
             }
@@ -524,7 +525,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
     /// </summary>
     public void ResetState()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ActiveCharacterSwapper] 🔄 Reseteando estado.");
 #endif
         DestroyWillNpc();
@@ -639,7 +640,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
 
         var go = Instantiate(willNpcPrefab, pos, spawnRot);
         _willNpcInstance = go.GetComponent<NPCPartyMember>();
-        _willNpcInstance?.SetRuntimeSpells(_willLeft, _willRight, _willSpecial);
+        _willNpcInstance?.SetRuntimeBasics(_willBasics);
         _willFollowCheckTimer = 0f;
 
         // FIX Will invisible al separar el equipo: a diferencia de Liam/Estela (NPCs que ya
@@ -683,7 +684,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             var npcBuilder = go.GetComponentInChildren<ModularAutoBuilder>(true);
             if (npcBuilder == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ActiveCharacterSwapper] willNpcPrefab '{go.name}' sin ModularAutoBuilder — activando partes por nombre como fallback.");
 #endif
                 ActivateWillPartsByName(go, willAppearance);
@@ -692,7 +693,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             {
                 npcBuilder.DeactivateAllCategories();
                 npcBuilder.ApplySelection(willAppearance);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ActiveCharacterSwapper] SpawnWillNpc — apariencia aplicada al NPC ({willAppearance.Count} partes).");
 #endif
             }
@@ -826,19 +827,34 @@ public class ActiveCharacterSwapper : MonoBehaviour
         if (cc != null) cc.enabled = true;
     }
 
+    /// <summary>
+    /// Si Will no está al mando (lo lleva la IA), guarda sus básicos para cuando vuelva y se los da
+    /// al Will de la IA. Devuelve false si Will está al mando: entonces van directos al MagicCaster.
+    /// Lo usa PlayerPresetService al cambiar los hechizos desde el menú con otro personaje. INC-498.
+    /// </summary>
+    public bool TrySetWillBasicsWhileAway(System.Collections.Generic.IReadOnlyList<MagicSpellSO> basics)
+    {
+        var pcm = PartyControlManager.Instance;
+        if (pcm == null || pcm.ActiveSlot == PartyControlManager.CharacterSlot.Will) return false;
+        for (int i = 0; i < _willBasics.Length; i++)
+            _willBasics[i] = basics != null && i < basics.Count ? basics[i] : null;
+        _willNpcInstance?.SetRuntimeBasics(_willBasics);
+        return true;
+    }
+
     private void CaptureWillSpells()
     {
         if (magicCaster == null) return;
-        _willLeft    = magicCaster.GetSpellForSlot(MagicSlot.Left);
-        _willRight   = magicCaster.GetSpellForSlot(MagicSlot.Right);
-        _willSpecial = magicCaster.GetSpellForSlot(MagicSlot.Special);
+        var basics = magicCaster.BasicSpells;
+        for (int i = 0; i < _willBasics.Length; i++)
+            _willBasics[i] = i < basics.Count ? basics[i] : null;
     }
 
     private void ApplySpells(PartyControlManager.CharacterSlot slot)
     {
         if (magicCaster == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ActiveCharacterSwapper] ApplySpells({slot}): magicCaster es NULL");
 #endif
             return;
@@ -846,26 +862,27 @@ public class ActiveCharacterSwapper : MonoBehaviour
 
         if (slot == PartyControlManager.CharacterSlot.Will)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[ActiveCharacterSwapper] ApplySpells(Will): L={_willLeft?.displayName} R={_willRight?.displayName} S={_willSpecial?.displayName}");
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[ActiveCharacterSwapper] ApplySpells(Will): {_willBasics[0]?.displayName}, {_willBasics[1]?.displayName}, {_willBasics[2]?.displayName}, {_willBasics[3]?.displayName}");
 #endif
-            magicCaster.SetSpells(_willLeft, _willRight, _willSpecial);
+            magicCaster.SetBasicSpells(_willBasics);
             return;
         }
 
         var npc = GetNpc(slot);
-        var config = npc?.PartyConfig;
-        if (config != null)
+        var personaje = npc != null ? npc.GetComponent<Personaje>() : null;
+        var ficha = personaje != null ? personaje.Ficha : null;
+        if (ficha != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[ActiveCharacterSwapper] ApplySpells({slot}): L={config.GetSpell(0)?.displayName} R={config.GetSpell(1)?.displayName} S={config.GetSpell(2)?.displayName} — en magicCaster={magicCaster.name} (instanceID={magicCaster.GetEntityId()})");
-#endif
-            magicCaster.SetSpells(config.GetSpell(0), config.GetSpell(1), config.GetSpell(2));
+            // Controlado por el jugador, el compañero lleva los básicos de su ficha (hasta 4, rotan con
+            // LB igual que los de Will, INC-498); su hechizo especial es de la IA.
+            // Los que tenga equipados (menú de pausa) o, si nunca se han tocado, los de su ficha (INC-503).
+            magicCaster.SetBasicSpells(GrimorioDelPersonaje.BasicosEquipados(slot));
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning($"[ActiveCharacterSwapper] ApplySpells({slot}): NPC={npc?.name ?? "null"}, config={config?.name ?? "null"} — hechizos no actualizados");
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[ActiveCharacterSwapper] ApplySpells({slot}): NPC={npc?.name ?? "null"} sin ficha de personaje — hechizos no actualizados");
 #endif
         }
     }
@@ -1040,7 +1057,7 @@ public class ActiveCharacterSwapper : MonoBehaviour
             if (shouldBeActive) activated++;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCharacterSwapper] ActivateWillPartsByName — {activated}/{partNames.Count} partes activadas en '{npcRoot.name}'.");
 #endif
     }

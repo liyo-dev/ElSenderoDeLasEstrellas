@@ -110,13 +110,13 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     {
         if (_actualSubscribers.Add(systemName))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ProfileReadyDiagnostics] ✅ Sistema suscrito: {systemName} (Total: {_actualSubscribers.Count}/{_expectedSubscribers.Count}) - Time: {Time.time:F3}s");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ProfileReadyDiagnostics] ℹ️ Sistema ya estaba suscrito: {systemName} - Time: {Time.time:F3}s");
 #endif
         }
@@ -125,7 +125,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         if (_profileReadyFired)
         {
             float delay = Time.time - _profileReadyTime;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ TARDE: {systemName} se suscribió {delay:F3}s DESPUÉS de OnProfileReady - Puede perder el evento!");
 #endif
         }
@@ -144,7 +144,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             // Si el sistema accede al Profile ANTES de OnProfileReady y NO está suscrito, es un problema
             if (!_profileReadyFired && !_actualSubscribers.Contains(systemName) && !_exemptSystems.Contains(systemName))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {systemName} está accediendo al Profile ANTES de OnProfileReady sin estar suscrito!");
 #endif
             }
@@ -153,7 +153,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             if (_profileReadyFired && !_actualSubscribers.Contains(systemName) && !_exemptSystems.Contains(systemName))
             {
                 float delay = Time.time - _profileReadyTime;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {systemName} accede al Profile {delay:F3}s después de OnProfileReady sin suscribirse - Puede tener datos obsoletos!");
 #endif
             }
@@ -165,7 +165,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         _profileReadyFired = true;
         _profileReadyTime = Time.time;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] 🔔 OnProfileReady disparado en t={Time.time:F3}s - Analizando suscripciones...");
 #endif
 
@@ -211,13 +211,13 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         // Log con nivel apropiado
         if (missing.Count > 0 || unsafeAccessors.Count > 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError(report.ToString());
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log(report.ToString());
 #endif
         }
@@ -240,7 +240,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
             UnityEngine.FindObjectsInactive.Include
         );
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] Escaneando {allMonoBehaviours.Length} MonoBehaviours...");
 #endif
         
@@ -260,20 +260,20 @@ public class ProfileReadyDiagnostics : MonoBehaviour
                 if (isActive)
                 {
                     presentSystems.Add(typeName);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ProfileReadyDiagnostics] ✅ Presente y activo: {typeName}");
 #endif
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ProfileReadyDiagnostics] 💤 Encontrado pero INACTIVO: {typeName} - No se esperará su registro");
 #endif
                 }
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] Total sistemas esperados ACTIVOS: {presentSystems.Count}");
 #endif
         
@@ -290,7 +290,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
 
         if (countAfter > countBefore)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ {countAfter - countBefore} sistema(s) se suscribieron DESPUÉS de OnProfileReady");
 #endif
         }
@@ -302,7 +302,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     [ContextMenu("Analizar Suscripciones")]
     public void AnalyzeSubscriptions()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] 📊 Análisis Manual:");
         Debug.Log($"  - OnProfileReady disparado: {_profileReadyFired}");
         Debug.Log($"  - Sistemas esperados: {_expectedSubscribers.Count}");
@@ -313,7 +313,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         var missing = _expectedSubscribers.Except(_actualSubscribers).ToList();
         if (missing.Count > 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"  - ❌ Faltantes: {string.Join(", ", missing)}");
 #endif
         }
@@ -326,7 +326,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     [ContextMenu("Escanear Escena Completa")]
     public void ScanScene()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] 🔍 Escaneando escena en busca de sistemas problemáticos...");
 #endif
 
@@ -356,18 +356,18 @@ public class ProfileReadyDiagnostics : MonoBehaviour
 
         if (potentialIssues.Count > 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ProfileReadyDiagnostics] ⚠️ Sistemas esperados pero NO suscritos en escena:\n  - {string.Join("\n  - ", potentialIssues)}");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ProfileReadyDiagnostics] ✅ No se detectaron sistemas problemáticos en la escena");
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProfileReadyDiagnostics] 📋 Total MonoBehaviours escaneados: {allMonoBehaviours.Length}");
 #endif
     }
@@ -467,7 +467,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         
         report.AppendLine("========================================");
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log(report.ToString());
 #endif
     }
@@ -481,7 +481,7 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         _profileAccessors.Clear();
         _profileReadyFired = false;
         _profileReadyTime = -1f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ProfileReadyDiagnostics] 🔄 Estado reseteado");
 #endif
     }

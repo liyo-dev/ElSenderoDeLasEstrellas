@@ -49,7 +49,7 @@ public class QuestObjectDisabler : MonoBehaviour
 
         if (!questRequirement.IsSatisfied()) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLogs)
             Debug.Log($"[QuestObjectDisabler:{name}] Condición cumplida ({questRequirement.DebugDescription()}) → {(destroyObject ? "destruyendo" : "desactivando")}.");
 #endif

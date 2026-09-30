@@ -138,7 +138,7 @@ namespace Game.NPC.Modules
 
             if (_npcManager == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ Falta NPCBehaviourManagerV2");
 #endif
                 return;
@@ -262,7 +262,7 @@ namespace Game.NPC.Modules
                 {
                     if (verboseLogging)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque step {stepIndex} de quest '{questId}' fue completado");
                         #endif
                     }
@@ -295,7 +295,7 @@ namespace Game.NPC.Modules
                 {
                     if (verboseLogging)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' porque quest '{questId}' cumplió condición {expectedConditionType}");
                         #endif
                     }
@@ -362,7 +362,7 @@ namespace Game.NPC.Modules
 
                 if (verboseLogging || narrative.condition.debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] 📡 Suscrito a evento custom '{eventKey}'");
 #endif
                     }
@@ -380,7 +380,7 @@ namespace Game.NPC.Modules
             SubscribeToCustomEvents();
             if (verboseLogging)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 🔄 Re-suscrito a eventos custom tras reset de señales");
 #endif
                 }
@@ -419,7 +419,7 @@ namespace Game.NPC.Modules
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya fue ejecutada (singleUse)");
                     #endif
                 }
@@ -445,7 +445,7 @@ namespace Game.NPC.Modules
                     {
                         if (verboseLogging)
                         {
-                            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"[NarrativeExecutor:{name}] ⏭️ Ignorando evento '{eventKey}' - narrativa '{narrative.description}' ya completada en preset");
                             #endif
                         }
@@ -461,7 +461,7 @@ namespace Game.NPC.Modules
             
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 📨 Evento custom '{eventKey}' recibido para narrativa '{narrative.description}'");
                 #endif
             }
@@ -473,7 +473,7 @@ namespace Game.NPC.Modules
                 {
                     if (verboseLogging)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] 🎯 Auto-ejecutando narrativa '{narrative.description}' por evento custom '{eventKey}'");
                         #endif
                     }
@@ -733,7 +733,7 @@ namespace Game.NPC.Modules
             _isExecuting = false;
             _isAmbientLoopExecution = false;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] ⏹️ Bucle ambiental interrumpido por interacción real del jugador");
 #endif
         }
@@ -779,7 +779,7 @@ namespace Game.NPC.Modules
                 
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] -> Executing Action #{i}: {entry.actionType}");
                     #endif
                 }
@@ -823,7 +823,7 @@ namespace Game.NPC.Modules
                 global::Core.PlayerInputManager.Instance.PushUIMode();
                 _playerLockedByPostChain = true;
                 _postChainUnlockTimeout = StartCoroutine(PostChainUnlockTimeout(narrativeData.lockPlayerMaxDuration));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 🔒 Player bloqueado post-cadena (máx {narrativeData.lockPlayerMaxDuration}s)");
 #endif
             }
@@ -844,7 +844,7 @@ namespace Game.NPC.Modules
                 _lastExecutionEndTime = Time.time;
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ⏱️ Narrativa finalizada - Cooldown activo hasta {_lastExecutionEndTime + POST_EXECUTION_COOLDOWN:F2}s");
                     #endif
                 }
@@ -977,12 +977,12 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteMoveNearPlayer(NarrativeChainEntry entry)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] 🚶 MoveNearPlayer iniciado.");
 #endif
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ MoveNearPlayer: no se encontró al jugador (PlayerService).");
 #endif
                 yield break;
@@ -1008,7 +1008,7 @@ namespace Game.NPC.Modules
             else
             {
                 // Fallback: posición del jugador directamente (sin NavMesh válido)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ MoveNearPlayer: NavMesh.SamplePosition falló en {desiredPos} - usando posición directa del jugador.");
 #endif
                 targetPos = player.transform.position;
@@ -1049,12 +1049,12 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteTeleportNearPlayer(NarrativeChainEntry entry)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] ⚡ TeleportNearPlayer iniciado.");
 #endif
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportNearPlayer: no se encontró al jugador (PlayerService).");
 #endif
                 yield break;
@@ -1076,7 +1076,7 @@ namespace Game.NPC.Modules
             else
             {
                 // Fallback: posición del jugador directamente (sin NavMesh válido en el área)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportNearPlayer: NavMesh.SamplePosition falló en {desiredPos} - usando posición directa del jugador.");
 #endif
                 targetPos = player.transform.position;
@@ -1110,7 +1110,7 @@ namespace Game.NPC.Modules
 
             if (verboseLogging)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] ⚡ TeleportNearPlayer: apareció junto al jugador en {targetPos}");
 #endif
                 }
@@ -1124,7 +1124,7 @@ namespace Game.NPC.Modules
         /// </summary>
         private IEnumerator ExecuteTeleportPlayer(NarrativeChainEntry entry)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] 🚀 TeleportPlayer iniciado.");
 #endif
 
@@ -1150,7 +1150,7 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: anchor '{entry.targetAnchorName}' no encontrado.");
 #endif
                     yield break;
@@ -1158,7 +1158,7 @@ namespace Game.NPC.Modules
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: no se configuró 'targetTransform' ni 'targetAnchorName'.");
 #endif
                 yield break;
@@ -1168,7 +1168,7 @@ namespace Game.NPC.Modules
 
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ TeleportPlayer: no se encontró al jugador (PlayerService).");
 #endif
                 yield break;
@@ -1198,7 +1198,7 @@ namespace Game.NPC.Modules
             // ── La transición hace el fade-out automáticamente ──
             if (verboseLogging)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 🚀 TeleportPlayer: jugador teletransportado a {targetPos}");
 #endif
                 }
@@ -1217,7 +1217,7 @@ namespace Game.NPC.Modules
                 var foundAnchor = SpawnAnchor.FindById(entry.targetAnchorName);
                 if (foundAnchor == null)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No se encontró anchor con ID '{entry.targetAnchorName}'. " +
                                    $"Anchors registrados: [{string.Join(", ", AnchorRegistry.All.Keys)}]");
                     #endif
@@ -1226,7 +1226,7 @@ namespace Game.NPC.Modules
             }
             else if (entry.targetTransform == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No hay targetAnchorName ni targetTransform asignado.");
 #endif
                 yield break;
@@ -1236,7 +1236,7 @@ namespace Game.NPC.Modules
 
             if (!PlayerService.TryGetPlayer(out var player, true))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No se encontró al jugador.");
 #endif
                 yield break;
@@ -1245,7 +1245,7 @@ namespace Game.NPC.Modules
             var agent = _npcManager.Agent;
             if (agent == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: No hay NavMeshAgent.");
 #endif
                 yield break;
@@ -1254,7 +1254,7 @@ namespace Game.NPC.Modules
             // Reactivar el agente si fue desactivado (p.ej. por NavMeshAgentForceStop en IdleState)
             if (!agent.enabled)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ LeadPlayerToAnchor: Agente desactivado, reactivando...");
 #endif
                 agent.enabled = true;
@@ -1263,13 +1263,13 @@ namespace Game.NPC.Modules
 
             if (!agent.isOnNavMesh)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NarrativeExecutor:{name}] ❌ LeadPlayerToAnchor: Agente fuera del NavMesh (enabled={agent.enabled}). ¿Está en un NavMesh Surface?");
 #endif
                 yield break;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] 🚶 LeadPlayerToAnchor iniciado → anchor '{entry.targetAnchorName}' pos={anchorPos}");
 #endif
 
@@ -1338,7 +1338,7 @@ namespace Game.NPC.Modules
             {
                 if (escortSeq.WaitingForRetrievedDialogue)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] 🔔 WaitingForRetrievedDialogue=true | outOfRangeDialogue={entry.outOfRangeDialogue?.name ?? "NULL"} | lines={entry.outOfRangeDialogue?.lines?.Length ?? -1} | DM={DialogueManager.Instance != null}");
 #endif
                     if (entry.outOfRangeDialogue != null && DialogueManager.Instance != null &&
@@ -1348,12 +1348,12 @@ namespace Game.NPC.Modules
                             _npcManager.SimpleAnimator.PlayOneShot("Talk01");
 
                         bool dialogueDone = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] 💬 Iniciando outOfRangeDialogue: {entry.outOfRangeDialogue.name}");
 #endif
                         DialogueManager.Instance.StartDialogue(entry.outOfRangeDialogue, transform, () => dialogueDone = true);
                         while (!dialogueDone) yield return null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] ✅ outOfRangeDialogue completado");
 #endif
                     }
@@ -1388,7 +1388,7 @@ namespace Game.NPC.Modules
 
             if (verboseLogging)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] LeadPlayer: llegado al anchor o tiempo agotado");
 #endif
                 }
@@ -1529,7 +1529,7 @@ namespace Game.NPC.Modules
             
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor] ✅ NPC preparado para combate - esperando detección natural del jugador");
                 #endif
             }
@@ -1543,7 +1543,7 @@ namespace Game.NPC.Modules
         {
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 🤝 Intentando unir al party...");
                 #endif
             }
@@ -1558,14 +1558,14 @@ namespace Game.NPC.Modules
                     partyMember.SetConfig(_npcManager.Configuration.partyConfig);
                     if (verboseLogging)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeExecutor:{name}] 🤝 NPCPartyMember creado dinámicamente");
                         #endif
                     }
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No hay NPCPartyMember ni partyConfig configurado. No puede unirse al equipo.");
 #endif
                     yield break;
@@ -1577,7 +1577,7 @@ namespace Game.NPC.Modules
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} YA está en el party, acción JoinParty ignorada");
                     #endif
                 }
@@ -1587,7 +1587,7 @@ namespace Game.NPC.Modules
                 _joinPartyFailedUntil = Time.time + JOIN_PARTY_FAILED_COOLDOWN;
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ⏰ Cooldown de {JOIN_PARTY_FAILED_COOLDOWN}s activado (ya en party)");
                     #endif
                 }
@@ -1600,7 +1600,7 @@ namespace Game.NPC.Modules
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ✨ {name} se unió al equipo del jugador");
                     #endif
                 }
@@ -1613,7 +1613,7 @@ namespace Game.NPC.Modules
                 if (Game.NPC.PlayerParty.HasInstance)
                 {
                     var party = Game.NPC.PlayerParty.Instance;
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No se pudo unir al equipo. " +
                         $"Miembros actuales: {party.MemberCount}/{party.MaxSize}. " +
                         $"¿Está lleno? {party.IsFull}. " +
@@ -1625,7 +1625,7 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No se pudo unir al equipo - PlayerParty no existe");
 #endif
                     _joinPartyFailedUntil = Time.time + JOIN_PARTY_FAILED_COOLDOWN;
@@ -1642,7 +1642,7 @@ namespace Game.NPC.Modules
         {
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 👋 Intentando abandonar el party...");
                 #endif
             }
@@ -1650,7 +1650,7 @@ namespace Game.NPC.Modules
             var partyMember = GetComponent<Game.NPC.NPCPartyMember>();
             if (partyMember == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ No hay NPCPartyMember. No puede abandonar el equipo.");
 #endif
                 yield break;
@@ -1660,7 +1660,7 @@ namespace Game.NPC.Modules
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] ℹ️ {name} no está en el equipo");
                     #endif
                 }
@@ -1672,7 +1672,7 @@ namespace Game.NPC.Modules
             {
                 if (verboseLogging)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NarrativeExecutor:{name}] 👋 {name} abandonó el equipo del jugador");
                     #endif
                 }
@@ -1689,7 +1689,7 @@ namespace Game.NPC.Modules
         {
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] 🔍 Verificando party members para quests activas...");
                 #endif
             }
@@ -1697,7 +1697,7 @@ namespace Game.NPC.Modules
             var questManager = QuestManager.Instance;
             if (questManager == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ QuestManager no está disponible");
 #endif
                 yield break;
@@ -1724,7 +1724,7 @@ namespace Game.NPC.Modules
                     }
                     if (tm.IsRunning)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[NarrativeExecutor:{name}] TransitionManager seguía ocupado tras 3s — forzando reset.");
 #endif
                         tm.ForceResetTransition();
@@ -1756,7 +1756,7 @@ namespace Game.NPC.Modules
             
             if (verboseLogging)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeExecutor:{name}] ✅ Executing PostNarrativeState: {narrativeData.postNarrativeState} for narrative '{narrativeData.description}'");
                 #endif
             }
@@ -2000,7 +2000,7 @@ namespace Game.NPC.Modules
                 }
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ GetRandomPointAround: no se encontró punto válido en NavMesh tras {maxAttempts} intentos (origin={origin}, radios=[{lo},{hi}]). El NPC se queda donde está.");
 #endif
             return origin;
@@ -2147,7 +2147,7 @@ namespace Game.NPC.Modules
                                 narrative.MarkAsExecuted();
                                 if (verboseLogging)
                                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                                     Debug.Log($"[NarrativeExecutor:{name}] 🔄 Catch-up: narrativa '{narrative.description}' marcada como ejecutada (quest {questState})");
 #endif
                                     }
@@ -2174,7 +2174,7 @@ namespace Game.NPC.Modules
             if (global::Core.PlayerInputManager.Instance != null)
                 global::Core.PlayerInputManager.Instance.PopUIMode();
             _playerLockedByPostChain = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeExecutor:{name}] 🔓 Player desbloqueado (lock post-cadena liberado)");
 #endif
         }
@@ -2184,7 +2184,7 @@ namespace Game.NPC.Modules
             yield return new WaitForSeconds(duration);
             if (_playerLockedByPostChain)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NarrativeExecutor:{name}] ⚠️ Timeout post-cadena ({duration}s) alcanzado — desbloqueando player por failsafe");
 #endif
                 ReleasePostChainLock();

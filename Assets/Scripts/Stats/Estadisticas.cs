@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// Las cuatro estadísticas de un personaje: vida, magia, ataque y defensa. Sirve igual para lo
-/// que tiene Will de base, para lo que da un premio de combate y para lo que suma una pieza de
+/// que tiene un personaje de base, para lo que da un premio de combate y para lo que suma una pieza de
 /// equipo: todo se suma con el operador +. Ver INC-470.
 [Serializable]
 public struct Estadisticas
@@ -29,8 +29,8 @@ public struct Estadisticas
     public override string ToString() => $"vida {vida:0.#}, magia {magia:0.#}, ataque {ataque:0.#}, defensa {defensa:0.#}";
 }
 
-/// Algo que suma estadísticas a Will mientras está activo: una pieza de equipo, un efecto
-/// temporal... Se registra en EstadisticasDeWill y sale en el total sin tocar lo que Will tiene
+/// Algo que suma estadísticas al personaje mientras está activo: una pieza de equipo, un efecto
+/// temporal... Se registra en EstadisticasDelPersonaje y sale en el total sin tocar lo que tiene
 /// de base (que es lo que suben los combates y lo que se guarda). Ver INC-470.
 public interface IFuenteDeBonos
 {

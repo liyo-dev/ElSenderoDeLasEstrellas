@@ -18,11 +18,14 @@ MonoBehaviour:
   currentHP: 100
   maxMP: 0
   currentMP: 0
+  ataque: 0
+  defensa: 0
   unlockedAbilities: 
   unlockedSpells: 
-  leftSpellId: 0
-  rightSpellId: 0
-  specialSpellId: 0
+  basicSpellIds: 
+  legacyLeftSpellId: 0
+  legacyRightSpellId: 0
+  legacySpecialSpellId: 0
   flags:
   - SLEEP_DONE:PrologueBed
   - QUEST_ACTIVE:ELDRAN_MISSION1
@@ -94,18 +97,22 @@ MonoBehaviour:
   - npcId: Sofia
     position: {x: 403.56, y: 0.14147949, z: 160.89}
     rotation: {x: -0, y: 1, z: -0, w: 0}
+    hasRotation: 0
     hasActiveState: 0
     isActive: 1
   - npcId: Oliver
     position: {x: -32.1, y: 1.224823, z: 26.31}
     rotation: {x: -0, y: -0.57688415, z: -0, w: 0.81682605}
+    hasRotation: 0
     hasActiveState: 0
     isActive: 1
   - npcId: _ELDRAN
     position: {x: -5.0975237, y: 0.13344732, z: 102.391884}
     rotation: {x: -0, y: 0.7933535, z: -0, w: 0.60876125}
+    hasRotation: 0
     hasActiveState: 0
     isActive: 1
+  npcRelationships: []
   consumedInteractableIds:
   - MainWorld:Carta_1231,6_1000,8_3,4
   completedInteractiveNarratives:

@@ -142,7 +142,7 @@ public class SolForzado : MonoBehaviour
             d = Quaternion.AngleAxis(4f, eje) * plano;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (cam != _ultimaCamara || Time.time >= _siguienteLog)
         {
             _ultimaCamara = cam;

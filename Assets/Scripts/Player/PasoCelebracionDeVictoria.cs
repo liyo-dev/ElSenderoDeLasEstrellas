@@ -31,14 +31,14 @@ namespace Game.Player
                 yield break;
             }
             yield return _jugador.CelebrarVictoria(resultado.BattleId);
+            resultado.AnotarEnLaFoto(_jugador.PersonajesEnLaFoto);
         }
 
         // Al final de todo el cierre (después del informe): cámara, input y control de vuelta.
+        // La música no se toca: el jingle de victoria devuelve la del lugar al acabar (INC-500).
         public void Terminar(ResultadoDeBatalla resultado)
         {
             if (_jugador != null) _jugador.TerminarVictoria();
-            // El jingle de victoria suena una vez y se para: se vuelve a la música de la zona.
-            AudioService.Instance?.RestoreAfterBattle();
         }
     }
 }

@@ -174,7 +174,7 @@ public class SleepTrigger : MonoBehaviour
         {
             ForceSleep(playerGO);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogError($"[SleepTrigger] '{name}': sleepOnStart=true pero no se pudo resolver el " +
@@ -214,7 +214,7 @@ public class SleepTrigger : MonoBehaviour
 
         if (playerGO == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SleepTrigger] '{name}': no se pudo resolver el GameObject real del " +
                 $"jugador (ni PlayerService.Player ni CharacterController en los padres de " +
                 $"'{other.name}'). Abortando para no operar sobre el objeto equivocado.", this);
@@ -279,7 +279,7 @@ public class SleepTrigger : MonoBehaviour
             _sleepStateHash = Animator.StringToHash(sleepAnimationState);
             if (!playerAnimator.HasState(0, _sleepStateHash))
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[SleepTrigger] El Animator Controller activo en '{playerGO.name}' " +
                     $"('{playerAnimator.runtimeAnimatorController?.name ?? "ninguno"}') NO tiene un " +
                     $"estado llamado '{sleepAnimationState}' en el layer 0 — por eso Will se queda de " +
@@ -438,7 +438,7 @@ public class SleepTrigger : MonoBehaviour
     {
         if (string.IsNullOrEmpty(persistenceId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SleepTrigger] '{name}' tiene playOnlyOnce=true pero persistenceId está vacío. El trigger no se desactivará.", this);
 #endif
             return false;
@@ -551,10 +551,10 @@ public class SleepTrigger : MonoBehaviour
         var audio = AudioService.Instance;
         audio?.PlayLoopingSFX(LoopLluviaDespertar, "rain", 0.22f);
 
-        // Los relámpagos, cuando ya se ve el cuarto: después de «Will, ¡despierta!» y su iris.
+        // Los relámpagos, cuando ya se ve el cuarto: el prólogo acaba con la pantalla tapada y el
+        // grafo la destapa con la transición de Easy Transitions.
         yield return null;
-        while (DramaticTextOverlayUI.Instance != null && DramaticTextOverlayUI.Instance.IsPlaying) yield return null;
-        OcultarHud();   // el overlay vuelve a enseñar el HUD al terminar
+        while (PantallaTapada()) yield return null;
 
         yield return new WaitForSecondsRealtime(1.2f);
         Relampago(0.5f);
@@ -570,13 +570,19 @@ public class SleepTrigger : MonoBehaviour
         _tormenta = null;
     }
 
+    private static bool PantallaTapada()
+    {
+        if (FeedbackService.IsScreenFaded || Telon.Cerrado) return true;
+        return ServiceLocator.TryGet(out EasyTransition.TransitionManager tm) && tm != null && tm.IsRunning;
+    }
+
     private static void Relampago(float fuerza)
         => FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, fuerza), 0.14f);
 
     private void OcultarHud()
     {
         if (!isSleeping || Sendero.UI.PlayerHUDV2.Instance == null) return;
-        Sendero.UI.PlayerHUDV2.Instance.HideHUD(0.05f);
+        Sendero.UI.PlayerHUDV2.Instance.HideHUD(this, 0.05f);
         _hudOcultado = true;
     }
 
@@ -584,7 +590,7 @@ public class SleepTrigger : MonoBehaviour
     {
         if (_tormenta != null) { StopCoroutine(_tormenta); _tormenta = null; }
         if (_tormentaEmpezada) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 5f);
-        if (_hudOcultado && Sendero.UI.PlayerHUDV2.Instance != null) Sendero.UI.PlayerHUDV2.Instance.ShowHUD();
+        if (_hudOcultado && Sendero.UI.PlayerHUDV2.Instance != null) Sendero.UI.PlayerHUDV2.Instance.ShowHUD(this);
         _hudOcultado = false;
     }
 

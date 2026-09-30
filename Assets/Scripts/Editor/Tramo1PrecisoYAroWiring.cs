@@ -13,11 +13,7 @@ using UnityEngine;
 ///
 /// QUÉ HACE (todo idempotente -- se puede volver a ejecutar sin duplicar nada):
 ///
-///   Paso 5 -- _WILL.prefab:
-///     Añade `PlayerPreciseAimController` al mismo GameObject donde ya vive `MagicCaster`, si no
-///     estaba ya, y enlaza su campo `magicCaster` a mano (el propio `Awake()`/`OnValidate()` del
-///     componente ya hace `GetComponentInParent<MagicCaster>()` solo en runtime, pero dejarlo
-///     enlazado en el propio prefab es más explícito y no depende de que ese fallback acierte).
+///   Paso 5 (modo preciso en Will) ya no se monta aquí: lo lee PlayerCombatInput (INC-486).
 ///
 ///   Paso 6 -- Demon.prefab:
 ///     1) Busca un RuneCollar ya existente en el prefab (por si esto se re-ejecuta); si no hay
@@ -56,8 +52,6 @@ public static class Tramo1PrecisoYAroWiring
         var log = new StringBuilder();
         var warnings = new List<string>();
 
-        WireWill(log, warnings);
-        log.AppendLine();
         WireDemon(log, warnings);
 
         var final = new StringBuilder();
@@ -76,47 +70,6 @@ public static class Tramo1PrecisoYAroWiring
             final.AppendLine($"--- {warnings.Count} aviso(s), revisar: ---");
             foreach (var w in warnings) final.AppendLine("  • " + w);
             Debug.LogWarning(final.ToString());
-        }
-    }
-
-    // ── Paso 5: Will ────────────────────────────────────────────────────────────
-
-    private static void WireWill(StringBuilder log, List<string> warnings)
-    {
-        if (AssetDatabase.LoadAssetAtPath<GameObject>(WillPrefabPath) == null)
-        {
-            warnings.Add($"No encuentro '{WillPrefabPath}' -- Paso 5 sin montar.");
-            return;
-        }
-
-        var root = PrefabUtility.LoadPrefabContents(WillPrefabPath);
-        try
-        {
-            var caster = root.GetComponentInChildren<MagicCaster>(true);
-            if (caster == null)
-            {
-                warnings.Add($"'{WillPrefabPath}' no tiene ningún MagicCaster -- no sé dónde añadir PlayerPreciseAimController.");
-                return;
-            }
-
-            var component = caster.GetComponent<PlayerPreciseAimController>();
-            bool isNew = component == null;
-            if (isNew) component = caster.gameObject.AddComponent<PlayerPreciseAimController>();
-
-            var so = new SerializedObject(component);
-            var mcProp = so.FindProperty("magicCaster");
-            if (mcProp != null && mcProp.objectReferenceValue == null)
-                mcProp.objectReferenceValue = caster;
-            so.ApplyModifiedProperties();
-
-            PrefabUtility.SaveAsPrefabAsset(root, WillPrefabPath);
-            log.AppendLine(isNew
-                ? $"Will: PlayerPreciseAimController añadido a '{caster.gameObject.name}' y enlazado a su MagicCaster."
-                : $"Will: PlayerPreciseAimController ya existía en '{caster.gameObject.name}' -- campo magicCaster revisado, no se duplica.");
-        }
-        finally
-        {
-            PrefabUtility.UnloadPrefabContents(root);
         }
     }
 

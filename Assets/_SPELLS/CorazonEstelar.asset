@@ -17,6 +17,8 @@ MonoBehaviour:
   displayName: "Coraz\xF3n Estelar"
   kind: 1
   element: 3
+  lore: "Late como una estrella que a\xFAn no ha decidido apagarse."
+  loreId: 
   prefab: {fileID: 4286403840095254974, guid: 5edca020d53f45944bdc3324c46214d0, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
@@ -37,7 +39,20 @@ MonoBehaviour:
   useScaleOverride: 0
   scaleOverride: {x: 1, y: 1, z: 1}
   manaCost: 25
-  cooldown: 3
+  supportsPreciseMode: 0
+  preciseHoldThreshold: 0.18
+  preciseDamageMultiplier: 0.5
+  preciseSpeedMultiplier: 1.3
+  preciseScaleMultiplier: 0.4
+  zoneRadius: 4
+  zoneDuration: 5
+  zoneTickInterval: 0.5
+  zoneRange: 8
+  zoneSnapToTarget: 1
+  zoneGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  zoneGroundOffset: 0.15
   levitationRange: 10
   levitationAngle: 45
   levitationPullForce: 5
@@ -68,3 +83,23 @@ MonoBehaviour:
   impactSFXKey: Impact1
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 7bb9669c2b0c9ef4c86aced248b8b3d7, type: 3}
+  bounceCount: 0
+  bounceRange: 8
+  pierceCount: 0
+  spreadCount: 1
+  spreadAngle: 24
+  impactZone: {fileID: 0}
+  castStyle: 2
+  statusEffect: 0
+  statusDuration: 2
+  statusStrength: 0.5
+  statusVFX: {fileID: 0}
+  zoneOnCaster: 0
+  healPerTick: 0
+  groupShieldSeconds: 0
+  groupShieldDamageFactor: 0.3
+  groupShieldVFX: {fileID: 0}
+  teamGaugeGain: 0
+  teleportDistance: 6
+  caster: 1
+  comboSequence: 020000000300000001000000i

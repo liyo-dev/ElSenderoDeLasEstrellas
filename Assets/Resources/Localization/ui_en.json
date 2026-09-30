@@ -17,6 +17,18 @@
             "value": "Victory!"
         },
         {
+            "key": "BATTLE_REPORT_STATS",
+            "value": "Stats"
+        },
+        {
+            "key": "BATTLE_REPORT_LOOT",
+            "value": "Loot"
+        },
+        {
+            "key": "BATTLE_REPORT_CONTINUE",
+            "value": "Continue"
+        },
+        {
             "key": "STAT_VIDA",
             "value": "Health"
         },
@@ -198,7 +210,7 @@
         },
         {
             "key": "CONTROLS_JUMP",
-            "value": "Jump"
+            "value": "Jump (in the air: double jump; again: fly)"
         },
         {
             "key": "CONTROLS_MOVE",
@@ -209,16 +221,16 @@
             "value": "Pause / Menu"
         },
         {
-            "key": "CONTROLS_SPELL_LEFT",
-            "value": "Spell — left slot"
+            "key": "CONTROLS_SERIES",
+            "value": "Basic spell: three-hit series (hold: precise shot)"
         },
         {
-            "key": "CONTROLS_SPELL_RIGHT",
-            "value": "Spell — right slot"
+            "key": "CONTROLS_DEFENSE",
+            "value": "Defense: at the right moment, counter; hold, shield"
         },
         {
-            "key": "CONTROLS_SPELL_SPECIAL",
-            "value": "Special spell"
+            "key": "CONTROLS_COMBO",
+            "value": "Magic combo: open the circle and type the sequence"
         },
         {
             "key": "CONTROLS_SPRINT",
@@ -226,11 +238,43 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Switch combat target (next)"
+            "value": "Next combat target"
         },
         {
-            "key": "CONTROLS_TARGET_PREV",
-            "value": "Switch combat target (previous)"
+            "key": "CONTROLS_TEAM_ATTACK",
+            "value": "Team attack: both triggers together, with whoever is nearby"
+        },
+        {
+            "key": "COMBO_DENIED_NONE",
+            "value": "You don't know any combo yet."
+        },
+        {
+            "key": "COMBO_DENIED_COOLDOWN",
+            "value": "The circle is not ready yet."
+        },
+        {
+            "key": "COMBO_DENIED_BUSY",
+            "value": "You can't right now."
+        },
+        {
+            "key": "COMBO_DENIED_FLYING",
+            "value": "You can't focus while flying."
+        },
+        {
+            "key": "TEAM_DENIED_NOBODY",
+            "value": "No companion nearby."
+        },
+        {
+            "key": "TEAM_DENIED_CHARGE",
+            "value": "Not enough team charge."
+        },
+        {
+            "key": "TEAM_DENIED_BUSY",
+            "value": "You can't right now."
+        },
+        {
+            "key": "CONTROLS_NEXT_SPELL",
+            "value": "Next basic spell"
         },
         {
             "key": "CONTROLS_TARGET_TOGGLE",
@@ -1049,10 +1093,6 @@
             "value": "What would you like to buy today?"
         },
         {
-            "key": "SPELL_ASSIGN_HINT",
-            "value": "Press A on a spell, then choose the slot to assign it to."
-        },
-        {
             "key": "SPELL_AURA_ESTELAR_NAME",
             "value": "Stellar Aura"
         },
@@ -1063,10 +1103,6 @@
         {
             "key": "SPELL_BOLA_PRISMA_NAME",
             "value": "Prism Ball"
-        },
-        {
-            "key": "SPELL_COOLDOWN_LABEL",
-            "value": "Cooldown: {0}s"
         },
         {
             "key": "SPELL_CORAZON_ESTELAR_NAME",
@@ -1089,24 +1125,8 @@
             "value": "Mana cost: {0}"
         },
         {
-            "key": "SPELL_NO_INFO",
-            "value": "Spell with no information."
-        },
-        {
-            "key": "SPELL_SELECT_SLOT_HINT",
-            "value": "Select a slot with A or cancel with B."
-        },
-        {
-            "key": "SPELL_SELECT_SPELL_HINT",
-            "value": "Select a spell with A or cancel with B."
-        },
-        {
             "key": "SPELL_TORNADO_NAME",
             "value": "Cycloneburst"
-        },
-        {
-            "key": "SPELL_UNASSIGNED",
-            "value": "Unassigned."
         },
         {
             "key": "SPELL_UNASSIGNED_SHORT",
@@ -1675,6 +1695,258 @@
         {
             "key": "ABILITY_SHIELD_DESC",
             "value": "Raises a shield to block enemy attacks."
+        },
+        {
+            "key": "SPELL_FX_BOUNCE",
+            "value": "Bounces {0} times"
+        },
+        {
+            "key": "SPELL_FX_PIERCE_ALL",
+            "value": "Pierces everyone"
+        },
+        {
+            "key": "SPELL_FX_PIERCE",
+            "value": "Pierces {0}"
+        },
+        {
+            "key": "SPELL_FX_SPREAD",
+            "value": "Fan of {0}"
+        },
+        {
+            "key": "SPELL_FX_IMPACT_ZONE",
+            "value": "Leaves fire on impact"
+        },
+        {
+            "key": "SPELL_FX_SLOW",
+            "value": "Slows"
+        },
+        {
+            "key": "SPELL_FX_ROOT",
+            "value": "Roots"
+        },
+        {
+            "key": "SPELL_FX_PULL",
+            "value": "Pulls to the center"
+        },
+        {
+            "key": "SPELL_FX_PUSH",
+            "value": "Pushes enemies away"
+        },
+        {
+            "key": "SPELL_FX_HEAL",
+            "value": "Heals the party"
+        },
+        {
+            "key": "SPELL_FX_SHIELD",
+            "value": "Shields the party"
+        },
+        {
+            "key": "SPELL_FX_BLINK",
+            "value": "{0} m teleport"
+        },
+        {
+            "key": "SPELL_LEARNED_COMBO",
+            "value": "{0}'s combo: open the circle with {1} and type {2}."
+        },
+        {
+            "key": "SPELL_LEARNED_BASIC",
+            "value": "{0}'s basic spell. Equip it in Equipment › Spells."
+        },
+        {
+            "key": "MENU_CONTROLS_HINT",
+            "value": "Controls"
+        },
+        {
+            "key": "GRIMOIRE_BUTTON",
+            "value": "Grimoire"
+        },
+        {
+            "key": "GRIMOIRE_OWNER",
+            "value": "{0}'s spell"
+        },
+        {
+            "key": "GRIMOIRE_CAST_TITLE",
+            "value": "How to cast"
+        },
+        {
+            "key": "GRIMOIRE_STEP_OPEN",
+            "value": "Open the circle"
+        },
+        {
+            "key": "GRIMOIRE_STEP_TYPE",
+            "value": "Type"
+        },
+        {
+            "key": "GRIMOIRE_STEP_CAST",
+            "value": "Cast"
+        },
+        {
+            "key": "GRIMOIRE_STEP_ROTATE",
+            "value": "Switch basic"
+        },
+        {
+            "key": "GRIMOIRE_STEP_HOLD",
+            "value": "Hold: lift"
+        },
+        {
+            "key": "GRIMOIRE_STEP_RELEASE",
+            "value": "Release: throw"
+        },
+        {
+            "key": "GRIMOIRE_KIND_BASIC",
+            "value": "Basic"
+        },
+        {
+            "key": "GRIMOIRE_KIND_COMBO",
+            "value": "Combo"
+        },
+        {
+            "key": "GRIMOIRE_KIND_LEVITATION",
+            "value": "Levitation"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE",
+            "value": "Damage"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DAMAGE_TICK",
+            "value": "Damage per hit"
+        },
+        {
+            "key": "GRIMOIRE_STAT_HEAL_TICK",
+            "value": "Heal per hit"
+        },
+        {
+            "key": "GRIMOIRE_STAT_SHIELD",
+            "value": "Shield"
+        },
+        {
+            "key": "GRIMOIRE_STAT_DURATION",
+            "value": "Duration"
+        },
+        {
+            "key": "GRIMOIRE_STAT_MANA",
+            "value": "Mana"
+        },
+        {
+            "key": "GRIMOIRE_COMBO_ALWAYS",
+            "value": "Takes no slot · always at hand"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TITLE",
+            "value": "Undiscovered page"
+        },
+        {
+            "key": "GRIMOIRE_LOCKED_TEXT",
+            "value": "This page is still sealed. A master, a quest or a corner you can only reach by flying, levitating or diving may hold it."
+        },
+        {
+            "key": "GRIMOIRE_PAGE_COUNTER",
+            "value": "{0} · page {1} of {2} · {3} discovered"
+        },
+        {
+            "key": "GRIMOIRE_EQUIPPED",
+            "value": "Equipped · slot {0}"
+        },
+        {
+            "key": "GRIMOIRE_NOT_EQUIPPED",
+            "value": "Not equipped"
+        },
+        {
+            "key": "GRIMOIRE_HINT_KB",
+            "value": "A / D  Turn page      Tab  Other character      Esc  Close"
+        },
+        {
+            "key": "GRIMOIRE_HINT",
+            "value": "{0} {1}  Turn page      {2}  Other character      {3}  Close"
+        },
+        {
+            "key": "ELEMENT_FIRE",
+            "value": "Fire"
+        },
+        {
+            "key": "ELEMENT_ICE",
+            "value": "Ice"
+        },
+        {
+            "key": "ELEMENT_STORM",
+            "value": "Wind"
+        },
+        {
+            "key": "ELEMENT_LIGHT",
+            "value": "Light"
+        },
+        {
+            "key": "ELEMENT_MIND",
+            "value": "Mind"
+        },
+        {
+            "key": "SPELL_FX_KNOCKBACK",
+            "value": "Knockback"
+        },
+        {
+            "key": "SPELL_FX_ON_CASTER",
+            "value": "Around the caster"
+        },
+        {
+            "key": "SPELL_KEEP_ONE",
+            "value": "At least one basic spell must stay equipped."
+        },
+        {
+            "key": "SPELL_NOTHING_TO_REORDER",
+            "value": "Only one equipped: there's no order to change."
+        },
+        {
+            "key": "SPELL_SLOT_EMPTY",
+            "value": "empty"
+        },
+        {
+            "key": "SPELL_SLOT_FREE",
+            "value": "Slot {0} is free.\nPick a basic spell from the list to fill it."
+        },
+        {
+            "key": "SPELL_BASICS_INTRO",
+            "value": "Equip up to 4 basic spells. In combat, cast them with {0}\nand {1} switches to the next one, in this order."
+        },
+        {
+            "key": "SPELL_TYPE_BASIC",
+            "value": "Basic"
+        },
+        {
+            "key": "SPELL_HINT_REPLACE",
+            "value": "4 equipped. Replace which one with {0}?   {1} This one   ·   {2} Cancel"
+        },
+        {
+            "key": "SPELL_HINT_MOVE",
+            "value": "Move it to which slot?   {0} Here   ·   {1} Cancel"
+        },
+        {
+            "key": "SPELL_HINT_SLOT",
+            "value": "{0} Change position   ·   {1} Back to the list"
+        },
+        {
+            "key": "SPELL_HINT_SLOT_EMPTY",
+            "value": "{0} Pick a basic spell from the list"
+        },
+        {
+            "key": "SPELL_HINT_LIST",
+            "value": "{0} Equip or remove"
+        },
+        {
+            "key": "SPELL_HINT_UNEQUIP",
+            "value": "{0} Remove"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP",
+            "value": "{0} Equip in slot {1}"
+        },
+        {
+            "key": "SPELL_HINT_EQUIP_FULL",
+            "value": "{0} Equip (4 equipped: you'll pick one to replace)"
+        },
+        {
+            "key": "GAME_OVER_MENSAJE",
+            "value": "You have fallen. Continue from the last save point?"
         }
     ]
 }

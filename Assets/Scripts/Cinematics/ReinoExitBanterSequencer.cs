@@ -168,7 +168,7 @@ public class ReinoExitBanterSequencer : CinematicSequencerBase
     private static readonly int HashInputMagnitude = Animator.StringToHash("InputMagnitude");
     private static readonly int HashLocomotion     = Animator.StringToHash("Free Locomotion");
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [ContextMenu("Test — iniciar sin señal")]
     private void TestStartDirect() => StartCoroutine(Co_Sequence());
 #endif
@@ -337,7 +337,7 @@ public class ReinoExitBanterSequencer : CinematicSequencerBase
             ? controllerTransform
             : _liamManager?.transform;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (_willTransform == null) Debug.LogWarning("[ReinoExitBanterSequencer] No se pudo resolver a Will (ni el controller activo ni ActiveCharacterSwapper.WillNpcInstance).");
         if (_estelaTransform == null) Debug.LogWarning($"[ReinoExitBanterSequencer] No se pudo resolver a Estela (id='{_estelaCharacterId}').");
         if (_liamTransform == null) Debug.LogWarning($"[ReinoExitBanterSequencer] No se pudo resolver a Liam (id='{_liamCharacterId}').");

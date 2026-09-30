@@ -35,7 +35,7 @@ public class PromoStudioUISuppressor : MonoBehaviour
         _skipController = FindAnyObjectByType<GlobalCinematicSkipController>();
         if (_skipController == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PromoStudioUISuppressor] No se encontró GlobalCinematicSkipController en la " +
                 "escena — ¿se ha dado Play sin que 'Start.unity' se cargue de forma aditiva? El botón de skip " +
                 "no debería aparecer de todos modos en ese caso, así que no hay nada que suprimir.");

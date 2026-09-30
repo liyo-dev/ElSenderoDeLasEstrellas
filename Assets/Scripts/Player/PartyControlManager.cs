@@ -147,20 +147,20 @@ public class PartyControlManager : MonoBehaviour
     {
         if (_switchingLocked)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}");
             #endif
             return;
         }
         if (!IsSwapAllowedByCurrentMode())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
             #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchLeft — _activeIndex={_activeIndex}");
 #endif
         for (int i = _activeIndex - 1; i >= 0; i--)
@@ -171,7 +171,7 @@ public class PartyControlManager : MonoBehaviour
                 return;
             }
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchLeft — no hay slot disponible a la izquierda de {_activeIndex}");
 #endif
     }
@@ -180,20 +180,20 @@ public class PartyControlManager : MonoBehaviour
     {
         if (_switchingLocked)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — switching BLOQUEADO. _activeIndex={_activeIndex}");
             #endif
             return;
         }
         if (!IsSwapAllowedByCurrentMode())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
             #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchRight — _activeIndex={_activeIndex}");
 #endif
         for (int i = _activeIndex + 1; i <= 2; i++)
@@ -204,7 +204,7 @@ public class PartyControlManager : MonoBehaviour
                 return;
             }
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchRight — no hay slot disponible a la derecha de {_activeIndex}");
 #endif
     }
@@ -231,14 +231,14 @@ public class PartyControlManager : MonoBehaviour
         var swapper = ActiveCharacterSwapper.Instance;
         if (swapper == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.Instance es null. _activeIndex NO modificado.");
 #endif
             return;
         }
         if (!swapper.IsReady)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PartyControlManager] SwitchToCharacter({from}→{to}) ABORTADO — ActiveCharacterSwapper.IsReady=false. _activeIndex NO modificado.");
 #endif
             return;
@@ -346,7 +346,7 @@ public class PartyControlManager : MonoBehaviour
 
     private void HandleProfileReady()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] 🔄 GameBootService.OnProfileReady recibido. _activeIndex={_activeIndex} ({(CharacterSlot)_activeIndex}). Reinicializando estado del party.");
 #endif
 
@@ -381,7 +381,7 @@ public class PartyControlManager : MonoBehaviour
         if (ActiveCharacterSwapper.Instance == null || !ActiveCharacterSwapper.Instance.IsReady) return;
 
         PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] Party listo. Restaurando personaje guardado: {(CharacterSlot)_pendingSlotToRestore}");
 #endif
         int slotToRestore = _pendingSlotToRestore;

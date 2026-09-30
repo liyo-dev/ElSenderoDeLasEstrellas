@@ -87,14 +87,14 @@ public class FallingPathBuilder : MonoBehaviour
 
         if (doorW == null || doorE == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[FallingPathBuilder] No encuentro Door_W/Door_E. Asigna referencias o nómbralas así.");
 #endif
             return;
         }
         if (tilePrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[FallingPathBuilder] Falta tilePrefab.");
 #endif
             return;
@@ -124,7 +124,7 @@ public class FallingPathBuilder : MonoBehaviour
         float dist = dir.magnitude;
         if (dist < 0.1f)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[FallingPathBuilder] Puertas demasiado juntas.");
             #endif
             return;

@@ -18,8 +18,12 @@ using UnityEngine.Rendering;
 ///      PanicInputDetector y ShockEffectsController (+ su Volume), con las mismas referencias que
 ///      tenía el sequencer antiguo en MainWorld_old.
 ///   2. Lo asigna a SEQ_StarAwakening.modulos.
-///   3. Cambia el nodo 29 de Cap1 por un PlayCinematicNode (Hecho → nodo 30, Fallo → se repite) y
-///      retira las dos esperas sueltas AWAKEN_DONE / AWAKEN_FAILED.
+///   3. Cambia el nodo 29 de Cap1 por un PlayCinematicNode (Hecho → nodo 30) y retira las dos
+///      esperas sueltas AWAKEN_DONE / AWAKEN_FAILED.
+///   4. El nodo 29 no tiene rama de fallo: si Will no reacciona, la bola le alcanza y es Game Over,
+///      y se recarga la partida (INC-517).
+///   5. La fase de fallo de SEQ_StarAwakening: la bola llega hasta Will, le explota encima y cae
+///      (DerrotaBeat).
 /// </summary>
 public static class Cap1MontarDespertar
 {
@@ -80,21 +84,70 @@ public static class Cap1MontarDespertar
                 guid = viejo.guid, position = viejo.position, chapter = viejo.chapter,
                 displayTitle = "29.- DESPERTAR MAGICO (SEQ_StarAwakening)",
                 cinematicName = "El Despertar de la Estrella",
-                signalIn = seq.signalIn, signalDone = seq.signalOut, signalFailed = "AWAKEN_FAILED",
+                signalIn = seq.signalIn, signalDone = seq.signalOut, signalFailed = "",
                 secuencia = seq, plantillaDeAjustes = "SEQ_PerasEldran",
             };
-            // Salidas por puerto: 0 = Hecho, 1 = Fallo (se repite la secuencia, como antes).
-            nuevo.outputs = new System.Collections.Generic.List<string> { Nodo30, Nodo29 };
+            nuevo.outputs = new System.Collections.Generic.List<string> { Nodo30 };
             grafo.nodes[grafo.nodes.IndexOf(viejo)] = nuevo;
 
             int quitados = grafo.nodes.RemoveAll(n => n != null && (n.guid == EsperaHecho || n.guid == EsperaFallo));
-            log.AppendLine($"✓ Nodo 29 → PlayCinematicNode (Hecho → 30, Fallo → repetir). Esperas sueltas retiradas: {quitados}.");
+            log.AppendLine($"✓ Nodo 29 → PlayCinematicNode (Hecho → 30). Esperas sueltas retiradas: {quitados}.");
             EditorUtility.SetDirty(grafo);
         }
+
+        // 4. Sin rama de fallo en el grafo
+        if (grafo.FindNode(Nodo29) is PlayCinematicNode n29)
+        {
+            bool conFallo = !string.IsNullOrEmpty(n29.signalFailed) || (n29.outputs != null && n29.outputs.Count > 1);
+            if (!conFallo) log.AppendLine("= El nodo 29 ya no tiene rama de fallo.");
+            else
+            {
+                Undo.RecordObject(grafo, "Cap1: nodo 29 sin rama de fallo");
+                n29.signalFailed = "";
+                n29.outputs.RemoveRange(1, n29.outputs.Count - 1);
+                EditorUtility.SetDirty(grafo);
+                log.AppendLine("✓ Nodo 29 sin rama de fallo (fallar el Despertar es Game Over).");
+            }
+        }
+
+        // 5. La fase de fallo de la secuencia
+        MontarDerrota(seq, log);
 
         AssetDatabase.SaveAssets();
         log.AppendLine("Si la ventana del grafo está abierta, ciérrala y vuelve a abrirla.");
         Debug.Log(log.ToString());
+    }
+
+    private const string ResumenFalloViejo = "si falla, el grafo vuelve al dialogo con Eldran";
+    private const string ResumenFalloNuevo = "si falla, la bola le alcanza y es Game Over";
+
+    /// La fase que corre cuando Will no reacciona (la que se salta con 'panicSuperado'): se ve venir
+    /// la bola, le explota encima y cae. Idempotente: si ya tiene su DerrotaBeat, no la toca.
+    private static void MontarDerrota(SequenceDefinition seq, StringBuilder log)
+    {
+        var fase = seq.phases.FirstOrDefault(f => f != null && f.skipIfFlag == StarAwakeningModule.FlagPanicSuperado);
+        if (fase == null) { log.AppendLine("✗ No encuentro la fase de fallo de SEQ_StarAwakening."); return; }
+        if (fase.beats.Any(b => b is DerrotaBeat)) { log.AppendLine("= La fase de fallo ya acaba en derrota."); return; }
+
+        Undo.RecordObject(seq, "SEQ_StarAwakening: la bola alcanza a Will");
+        fase.beats.Clear();
+        fase.beats.Add(new ShotBeat
+        {
+            note = "Se ve venir la bola hasta Will. Sigue a los dos hasta el impacto.",
+            framing = new ShotFraming { type = ShotType.Wide, subjectId = SequenceActor.PlayerId, secondaryId = StarAwakeningModule.ProjectileActorId },
+            live = true,
+        });
+        fase.beats.Add(new TimeScaleBeat { note = "Fuera la camara lenta: la bola llega ya.", timeScale = 1f, rampDuration = 0.4f });
+        fase.beats.Add(new ModuleBeat { note = "La bola alcanza a Will y le explota encima.", routine = "ImpactoEnWill", waitForEnd = true });
+        fase.beats.Add(new ShakeBeat { note = "El golpe.", intensity = 0.5f, duration = 0.5f });
+        fase.beats.Add(new ScreenFlashBeat { note = "" });
+        fase.beats.Add(new DerrotaBeat { note = "Will cae: Game Over y se recarga la partida." });
+
+        if (!string.IsNullOrEmpty(seq.summary) && seq.summary.Contains(ResumenFalloViejo))
+            seq.summary = seq.summary.Replace(ResumenFalloViejo, ResumenFalloNuevo);
+
+        EditorUtility.SetDirty(seq);
+        log.AppendLine($"✓ Fase '{fase.name}': la bola alcanza a Will y es Game Over.");
     }
 
     private static GameObject CrearPrefab(StringBuilder log)

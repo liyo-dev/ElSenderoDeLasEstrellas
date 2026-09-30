@@ -60,6 +60,17 @@ public class SpeechBubbleUI : MonoBehaviour
     [Header("Posición")]
     [SerializeField] Vector3 _worldOffset = new Vector3(0f, 2.2f, 0f);
 
+    [Header("Fijo en pantalla (quien habla no está a la vista)")]
+    [Tooltip("Dónde se queda el bocadillo cuando se muestra fijo en pantalla, en proporción del " +
+             "canvas (0,0 abajo a la izquierda; 1,1 arriba a la derecha). En este modo el bocadillo " +
+             "no tiene pico: una fila de circulitos sube de él hasta el nombre de quien habla.")]
+    [SerializeField] Vector2 _posicionFija = new Vector2(0f, 0.42f);
+    [Tooltip("Separación del borde de la pantalla, en píxeles de canvas.")]
+    [SerializeField] float _margenFijo = 40f;
+    [SerializeField] Color _colorNombre = new Color(1f, 0.85f, 0.35f);
+    [Tooltip("Color del contorno del bocadillo sin pico y de sus circulitos.")]
+    [SerializeField] Color _colorContornoADistancia = new Color(0.08f, 0.08f, 0.1f, 1f);
+
     Image _bubbleImage;
     Camera _cam;
     Transform _target;
@@ -79,6 +90,24 @@ public class SpeechBubbleUI : MonoBehaviour
     // Oculto temporalmente porque hay un menú (pausa, equipo, tienda...) abierto encima.
     bool _hiddenByMenu;
 
+    // Fijo en pantalla en vez de seguir al personaje, con su nombre encima (ver Show()).
+    bool _fijoEnPantalla;
+    TextMeshProUGUI _nombre;
+
+    // Estilo «a distancia» del modo fijo: cuerpo sin pico y circulitos hasta el nombre.
+    static readonly (Vector2 centro, float diametro)[] Circulitos =
+    {
+        (new Vector2(46f, 20f), 24f),
+        (new Vector2(30f, 46f), 16f),
+        (new Vector2(21f, 66f), 10f),
+    };
+    const float AlturaNombre = 78f;
+    Sprite _spriteSinPico;
+    Sprite _spriteCirculito;
+    readonly List<Image> _circulitos = new();
+    VerticalLayoutGroup _layout;
+    RectOffset _paddingConPico;
+
     // Caché de componentes de animación: evita GetComponentInChildren repetido
     readonly Dictionary<Transform, Animator> _animatorCache = new();
     readonly Dictionary<Transform, NPCSimpleAnimator> _npcAnimCache = new();
@@ -94,6 +123,10 @@ public class SpeechBubbleUI : MonoBehaviour
 
         _cam = Camera.main;
         _bubbleImage = _bubbleRect.GetComponent<Image>();
+        _layout = _bubbleRect.GetComponent<VerticalLayoutGroup>();
+        if (_layout != null)
+            _paddingConPico = new RectOffset(_layout.padding.left, _layout.padding.right,
+                                             _layout.padding.top, _layout.padding.bottom);
 
         if (_parentCanvasRect == null)
             _parentCanvasRect = GetComponentInParent<Canvas>()?.GetComponent<RectTransform>();
@@ -110,6 +143,7 @@ public class SpeechBubbleUI : MonoBehaviour
         // hay un menú abierto (pausa incluida) y restaurarse al cerrar el último.
         MenuManager.MenuOpened += OnMenuOpened;
         MenuManager.MenuClosed += OnMenuClosed;
+        Canvas.willRenderCanvases += ColocarBocadillo;
     }
 
     void OnDisable()
@@ -117,6 +151,7 @@ public class SpeechBubbleUI : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
         MenuManager.MenuOpened -= OnMenuOpened;
         MenuManager.MenuClosed -= OnMenuClosed;
+        Canvas.willRenderCanvases -= ColocarBocadillo;
     }
 
     void OnSceneLoaded(Scene s, LoadSceneMode m) => _cam = Camera.main;
@@ -128,11 +163,36 @@ public class SpeechBubbleUI : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
         _rootGroup?.DOKill();
         _bubbleRect?.DOKill();
+        DestruirSprite(_spriteSinPico);
+        DestruirSprite(_spriteCirculito);
     }
 
-    void LateUpdate()
+    static void DestruirSprite(Sprite s)
     {
-        if (!_isShowing || _target == null || _cam == null || _parentCanvasRect == null) return;
+        if (s == null) return;
+        if (s.texture != null) Destroy(s.texture);
+        Destroy(s);
+    }
+
+    /// Coloca el bocadillo justo antes de dibujar el canvas, cuando todas las cámaras ya se han
+    /// movido en su LateUpdate. No va en un LateUpdate propio: el orden entre LateUpdates no está
+    /// garantizado y, si se colocase antes que la cámara, iría un fotograma por detrás y temblaría
+    /// al andar. Ver INC-541.
+    void ColocarBocadillo()
+    {
+        if (!_isShowing || _parentCanvasRect == null) return;
+
+        if (_fijoEnPantalla)
+        {
+            Rect canvas = _parentCanvasRect.rect;
+            var fija = new Vector2(
+                canvas.xMin + canvas.width * _posicionFija.x + _bubbleRect.rect.width * 0.5f + _margenFijo,
+                canvas.yMin + canvas.height * _posicionFija.y);
+            _bubbleRect.anchoredPosition = ClampToCanvas(fija);
+            return;
+        }
+
+        if (_target == null || _cam == null) return;
 
         Vector3 offset = _offsetOverride ?? _worldOffset;
         Vector3 screenPos = _cam.WorldToScreenPoint(_target.position + offset);
@@ -207,15 +267,26 @@ public class SpeechBubbleUI : MonoBehaviour
     /// enterrarse 2,2 m bajo el suelo solo para compensar el offset pensado para cabezas de
     /// personaje.
     /// </param>
+    /// <param name="fijoEnPantalla">
+    /// En vez de seguir al personaje, el bocadillo se queda quieto en un lado de la pantalla
+    /// (_posicionFija), sin pico y con una fila de circulitos que sube hasta el nombre de quien
+    /// habla (speakerName): se lee como una voz que llega de alguien que no está a la vista. Para
+    /// comentarios durante el juego (Eldran guiando un combate, INC-480 e INC-534). En cinemáticas
+    /// se deja en false: ahí el pico señala al que habla.
+    /// </param>
     public void Show(Transform target, string text, float duration = 0f,
                      Action onComplete = null, string animTrigger = null, bool emphasis = false,
-                     string speakerName = null, Vector3? worldOffset = null)
+                     string speakerName = null, Vector3? worldOffset = null,
+                     bool fijoEnPantalla = false)
     {
         if (_autoHideRoutine != null) { StopCoroutine(_autoHideRoutine); _autoHideRoutine = null; }
 
         _target = target;
         _offsetOverride = worldOffset;
         _isShowing = true;
+        _fijoEnPantalla = fijoEnPantalla;
+        PonerNombre(fijoEnPantalla ? speakerName : null);
+        PonerEstiloADistancia(fijoEnPantalla);
 
         // Frases de más de _maxLineas líneas: páginas (INC-435).
         List<string> paginas = Paginar(text);
@@ -223,8 +294,7 @@ public class SpeechBubbleUI : MonoBehaviour
         string primera = paginas[0];
         // Los mismos iconos que los diálogos: «presiona <sprite name="interactable_x">» sin esto
         // salía como «?» en el bocadillo (INC-468).
-        var iconos = Core.InputGlyphs.InputGlyphService.IconosDeTexto;
-        if (iconos != null && _label.spriteAsset != iconos) _label.spriteAsset = iconos;
+        Core.InputGlyphs.InputGlyphService.UsarIconos(_label);
         _label.text = primera;
 
         GameplayEventLog.Log("Dialogo", !string.IsNullOrEmpty(speakerName) ? speakerName : target != null ? target.name : null);
@@ -265,7 +335,8 @@ public class SpeechBubbleUI : MonoBehaviour
 
         if (_bubbleImage != null)
         {
-            Sprite sprite = emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
+            Sprite sprite = fijoEnPantalla ? SpriteSinPico()
+                          : emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
             if (sprite != null) _bubbleImage.sprite = sprite;
         }
 
@@ -395,6 +466,130 @@ public class SpeechBubbleUI : MonoBehaviour
         string resto = sb.ToString().Trim();
         if (resto.Length > 0) frases.Add(resto);
         return frases;
+    }
+
+    /// Nombre de quien habla encima del bocadillo. Solo en el modo fijo en pantalla: siguiendo al
+    /// personaje, el pico ya dice quién es. No cuenta como línea del bocadillo (va fuera del layout).
+    void PonerNombre(string nombre)
+    {
+        if (string.IsNullOrEmpty(nombre))
+        {
+            if (_nombre != null) _nombre.gameObject.SetActive(false);
+            return;
+        }
+
+        if (_nombre == null)
+        {
+            var go = new GameObject("Nombre", typeof(RectTransform));
+            go.transform.SetParent(_bubbleRect, false);
+            go.AddComponent<LayoutElement>().ignoreLayout = true;
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 0f);
+            rt.anchoredPosition = new Vector2(4f, AlturaNombre);
+            rt.sizeDelta = new Vector2(400f, 40f);
+
+            _nombre = go.AddComponent<TextMeshProUGUI>();
+            _nombre.font = _label.font;
+            _nombre.fontSize = _label.fontSize * 0.8f;
+            _nombre.fontStyle = FontStyles.Bold;
+            _nombre.alignment = TextAlignmentOptions.BottomLeft;
+            _nombre.textWrappingMode = TextWrappingModes.NoWrap;
+            _nombre.raycastTarget = false;
+            var sombra = go.AddComponent<Shadow>();
+            sombra.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            sombra.effectDistance = new Vector2(2f, -2f);
+        }
+
+        _nombre.color = _colorNombre;
+        _nombre.text = nombre;
+        _nombre.gameObject.SetActive(true);
+    }
+
+    /// Cuerpo sin pico (el relleno de abajo reservado al pico se iguala al de arriba) y los
+    /// circulitos que llevan al nombre. Con fijo = false deja el bocadillo con pico de siempre.
+    void PonerEstiloADistancia(bool fijo)
+    {
+        if (_layout != null && _paddingConPico != null)
+        {
+            int arriba = _paddingConPico.top;
+            _layout.padding = fijo
+                ? new RectOffset(_paddingConPico.left, _paddingConPico.right, arriba + 6, arriba + 6)
+                : new RectOffset(_paddingConPico.left, _paddingConPico.right, arriba, _paddingConPico.bottom);
+        }
+
+        if (fijo && _circulitos.Count == 0)
+        {
+            foreach (var (centro, diametro) in Circulitos)
+            {
+                var go = new GameObject("Circulito", typeof(RectTransform));
+                go.transform.SetParent(_bubbleRect, false);
+                go.AddComponent<LayoutElement>().ignoreLayout = true;
+                var rt = (RectTransform)go.transform;
+                rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+                rt.pivot = new Vector2(0.5f, 0.5f);
+                rt.anchoredPosition = centro;
+                rt.sizeDelta = new Vector2(diametro, diametro);
+                var img = go.AddComponent<Image>();
+                img.sprite = SpriteCirculito();
+                img.raycastTarget = false;
+                _circulitos.Add(img);
+            }
+        }
+        foreach (var c in _circulitos)
+            if (c != null && c.gameObject.activeSelf != fijo) c.gameObject.SetActive(fijo);
+    }
+
+    /// Rectángulo redondeado blanco con contorno, en 9-slice: el bocadillo sin pico.
+    Sprite SpriteSinPico()
+    {
+        if (_spriteSinPico != null) return _spriteSinPico;
+        const int lado = 128, radio = 44, borde = 48;
+        var tex = PintarRedondeado(lado, lado, radio, 3.5f);
+        _spriteSinPico = Sprite.Create(tex, new Rect(0, 0, lado, lado), new Vector2(0.5f, 0.5f), 100f,
+                                       0, SpriteMeshType.FullRect, new Vector4(borde, borde, borde, borde));
+        _spriteSinPico.name = "BocadilloSinPico";
+        return _spriteSinPico;
+    }
+
+    Sprite SpriteCirculito()
+    {
+        if (_spriteCirculito != null) return _spriteCirculito;
+        const int lado = 64;
+        var tex = PintarRedondeado(lado, lado, lado * 0.5f, 5f);
+        _spriteCirculito = Sprite.Create(tex, new Rect(0, 0, lado, lado), new Vector2(0.5f, 0.5f), 100f);
+        _spriteCirculito.name = "Circulito";
+        return _spriteCirculito;
+    }
+
+    /// Relleno blanco con contorno de _colorContornoADistancia, con los bordes suavizados.
+    Texture2D PintarRedondeado(int ancho, int alto, float radio, float grosor)
+    {
+        var tex = new Texture2D(ancho, alto, TextureFormat.RGBA32, false)
+        {
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Bilinear,
+            name = "BocadilloADistancia",
+        };
+        var px = new Color32[ancho * alto];
+        Color contorno = _colorContornoADistancia;
+        for (int y = 0; y < alto; y++)
+        for (int x = 0; x < ancho; x++)
+        {
+            // Distancia con signo al borde del rectángulo redondeado (negativa dentro).
+            float qx = Mathf.Abs(x + 0.5f - ancho * 0.5f) - (ancho * 0.5f - radio);
+            float qy = Mathf.Abs(y + 0.5f - alto * 0.5f) - (alto * 0.5f - radio);
+            float d = new Vector2(Mathf.Max(qx, 0f), Mathf.Max(qy, 0f)).magnitude
+                      + Mathf.Min(Mathf.Max(qx, qy), 0f) - radio;
+            float fuera = Mathf.Clamp01(d + 0.5f);                // 1 = fuera del todo
+            float relleno = Mathf.Clamp01(-(d + grosor) + 0.5f);   // 1 = dentro del contorno
+            Color c = Color.Lerp(contorno, Color.white, relleno);
+            c.a = Mathf.Max((1f - fuera) * contorno.a, relleno);
+            px[y * ancho + x] = c;
+        }
+        tex.SetPixels32(px);
+        tex.Apply(false, true);
+        return tex;
     }
 
     void PrepararLabel()

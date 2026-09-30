@@ -43,7 +43,7 @@ public static class NarrativeFlags
         var flags = Flags;
         if (flags == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             UnityEngine.Debug.LogWarning($"[NarrativeFlags] No hay perfil activo (GameBootService.Profile == null); el flag '{flag}' no se guarda. ¿Play sin la escena Start?");
 #endif
             return;

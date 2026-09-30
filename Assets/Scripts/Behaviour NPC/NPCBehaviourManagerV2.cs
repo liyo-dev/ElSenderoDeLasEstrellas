@@ -136,7 +136,7 @@ namespace Game.NPC
 
             if (_identityRegistered)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCBehaviourV2:{name}] OverrideIdentityBeforeAwake('{newPersistenceId}') llamado DESPUÉS de Awake(). " +
                                $"El NPC ya está registrado como '{persistenceId}' y este cambio no tendrá efecto en NPCRegistry.");
 #endif
@@ -164,7 +164,7 @@ namespace Game.NPC
             // 1. Validación de Configuración
             if (!configuration.Validate(out string errors))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCBehaviourV2:{name}] ❌ ERROR DE CONFIG:\n{errors}");
 #endif
             }
@@ -288,12 +288,12 @@ namespace Game.NPC
                 _brain.ChangeState(new States.IdleState());
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             WarnIfFixedSitterMisplaced();
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // FIX (30 ago 2026, incidencia reportada por Raúl: NPC sentado pero hundido en el suelo —
         // confirmado que NO estaba en un NPCShelterPoint, así que SeekShelterState queda descartado
         // como causa): los NPCs con actividad ambiental FIJA (ambientConfig.enableWander = false +
@@ -559,7 +559,7 @@ namespace Game.NPC
                 {
                     if (debugMode)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[NPCManager:{name}] ⚠️ LateUpdate Safety: Agent no detenido en IdleState (isStopped={_agent.isStopped}, vel={_agent.velocity.magnitude:F1})");
 #endif
                         }
@@ -593,7 +593,7 @@ namespace Game.NPC
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCManager] 🔧 Verificando módulos...");
                 #endif
             }
@@ -616,7 +616,7 @@ namespace Game.NPC
                     gameObject.AddComponent<NPCQuestIconManager>();
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCManager] 🎯 NPCQuestIconManager añadido para {name}");
                         #endif
                     }
@@ -650,7 +650,7 @@ namespace Game.NPC
                     
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCManager] 🛡️ Damageable añadido (Pre-Combate) - destroyOnDeath=false");
                         #endif
                     }
@@ -673,7 +673,7 @@ namespace Game.NPC
                     gameObject.AddComponent<Targetable>();
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCManager] 🎯 Targetable añadido (Pre-Combate)");
                         #endif
                     }
@@ -698,7 +698,7 @@ namespace Game.NPC
                     partyMember.SetConfig(configuration.partyConfig);
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCManager] 🤝 NPCPartyMember añadido para {name}");
                         #endif
                     }
@@ -741,7 +741,7 @@ namespace Game.NPC
                 {
                     if (debugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCManager] 🤝 {name} entrando en AllyCombatState (es aliado)");
                         #endif
                     }
@@ -818,7 +818,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCManager] ⚔️ {name} forzado a entrar en combate contra {target.name}");
                     #endif
                 }
@@ -877,7 +877,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCManager] {name} no tiene NPCPartyMember. Asegúrate de configurar Companion behaviour.");
                     #endif
                 }
@@ -894,7 +894,7 @@ namespace Game.NPC
                 
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCManager:{name}] ✅ Se unió al party - Eventos disparados");
                     #endif
                 }
@@ -920,7 +920,7 @@ namespace Game.NPC
                 
                 if (debugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCManager:{name}] 👋 Abandonó el party - Eventos disparados");
                     #endif
                 }
@@ -944,13 +944,13 @@ namespace Game.NPC
             bool success = JoinPlayerParty();
             if (success)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCManager:{name}] ✅ AddToParty exitoso");
 #endif
             }
             else if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCManager:{name}] ⚠️ AddToParty falló - ¿Tiene Companion behaviour configurado?");
 #endif
             }
@@ -965,7 +965,7 @@ namespace Game.NPC
             bool success = LeavePlayerParty();
             if (!success && debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCManager:{name}] ⚠️ RemoveFromParty falló");
 #endif
             }
@@ -1009,7 +1009,7 @@ namespace Game.NPC
         public void StartCinematicSequence(States.CinematicSequence sequence)
         {
             if (sequence == null) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // FIX 15 sep 2026 (Raúl: "ahora se pone a andar en mitad de la conversación del
             // tutorial de menús", OliverSaludoSequencer) -- ForceState() de más abajo NO
             // comprueba si ya hay una CinematicState activa: si dos sistemas distintos llaman a
@@ -1091,7 +1091,7 @@ namespace Game.NPC
 
             if(debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCManager] 📍 Posición restaurada: {lastPosition}");
                 #endif
             }
@@ -1149,7 +1149,7 @@ namespace Game.NPC
             if (!string.IsNullOrEmpty(registryId))
             {
                 NPCRegistry.Instance.RegisterNPC(registryId, null, this);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (debugMode) Debug.Log($"[NPCBehaviourManagerV2] NPC '{registryId}' registrado en NPCRegistry");
 #endif
             }

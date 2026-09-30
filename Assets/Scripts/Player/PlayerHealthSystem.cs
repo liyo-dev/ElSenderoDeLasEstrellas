@@ -21,6 +21,11 @@ public class PlayerHealthSystem : MonoBehaviour
     [SerializeField] private string[] damageAnimationNames = new string[] { "TakeDamage", "TakeDamage_2" };
     [SerializeField] private string deathAnimationName = "Die02_NoWeapon";
     [SerializeField] private int upperBodyLayer = 1; // Layer para animaciones del torso superior
+    [Tooltip("Velocidad de las animaciones de daño y de caída al morir. Se reproducen en tiempo real, " +
+             "sin la cámara lenta del Game Over, para que la caída se vea entera. Menos de 1 = más lenta.")]
+    [SerializeField, Range(0.2f, 1.5f)] private float ritmoDeLaCaida = 0.7f;
+    [Tooltip("Tope, en segundos reales, de la animación de daño que precede a la de caída al morir.")]
+    [SerializeField, Min(0.1f)] private float topeAnimacionDeDano = 1.5f;
     
     [Header("Efectos Visuales")]
     [SerializeField] private float damageFlashDuration = 0.2f;
@@ -84,6 +89,21 @@ public class PlayerHealthSystem : MonoBehaviour
     // Corrutinas
     private Coroutine _invulnerabilityFlashCoroutine;
     private Coroutine _damageFlashCoroutine;
+    private Coroutine _caidaCoroutine;
+
+    // Renderers que ha apagado el parpadeo de invulnerabilidad. Al volver a mostrar solo se
+    // encienden estos: los que tenga apagados otro sistema (el plano corto de un diálogo, el
+    // cambio de personaje) se quedan como están. Ver INC-527.
+    private readonly List<Renderer> _ocultosPorParpadeo = new List<Renderer>();
+
+    // Muerte: animación de daño que se acaba de lanzar (para no repetirla) y si ya ha arrancado la
+    // de caída. El Animator pasa a tiempo real durante la caída y se restaura al revivir.
+    private string _animDeDanoLanzada;
+    private int _frameAnimDeDano = -1;
+    private bool _caidaIniciada;
+    private bool _animatorEnModoCaida;
+    private AnimatorUpdateMode _modoAnimatorPrevio;
+    private float _velocidadAnimatorPrevia = 1f;
 
     // Estado de regeneración
 #pragma warning disable CS0414 // Usado para tracking de daño interno
@@ -151,6 +171,7 @@ public class PlayerHealthSystem : MonoBehaviour
         // reactivarse, porque nada volvía a llamar a ResetDamageVisuals(). Se llama siempre al
         // desactivar (ya es seguro/no-op si no había nada que restaurar).
         ResetDamageVisuals();
+        RestaurarAnimatorTrasCaida();
     }
 
     private void HandleProfileReady()
@@ -172,7 +193,7 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerHealthSystem] No se encontró preset válido, usando valores por defecto");
 #endif
             _maxHp = 100f;
@@ -272,7 +293,7 @@ public class PlayerHealthSystem : MonoBehaviour
         if (_actionManager != null && _actionManager.Top == ActionMode.Cinematic) return false;
         if (IsInvulnerable && !ignoreInvulnerability) return false;
 
-        // Reglas del jugador sobre el golpe (su defensa, ver CombateDeWill; INC-470). Como en
+        // Reglas del jugador sobre el golpe (su defensa, ver CombateDelPersonaje; INC-470). Como en
         // Damageable, pero aquí un golpe nunca cura: si queda en 0 o menos, no hace nada.
         GetComponentsInParent(true, _filtrosDeDano);
         for (int i = 0; i < _filtrosDeDano.Count; i++)
@@ -293,10 +314,12 @@ public class PlayerHealthSystem : MonoBehaviour
         string selectedDamageAnim = GetRandomDamageAnimation();
         if (!string.IsNullOrEmpty(selectedDamageAnim))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerHealthSystem] 💥 Reproduciendo animación de daño: '{selectedDamageAnim}' ({damageAnimationNames?.Length ?? 0} variantes disponibles)");
 #endif
             TriggerAnimation(selectedDamageAnim);
+            _animDeDanoLanzada = selectedDamageAnim;
+            _frameAnimDeDano = Time.frameCount;
         }
         
         // Efectos visuales y sonoros
@@ -326,7 +349,8 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         // Pequeño delay para que la animación empiece primero
         yield return new WaitForSeconds(0.1f);
-        yield return StartCoroutine(ApplyKnockback());
+        // Empujar en la dirección opuesta a donde mira el jugador.
+        yield return ApplyKnockback(-transform.forward, knockbackForce);
     }
     
     /// <summary>
@@ -362,7 +386,7 @@ public class PlayerHealthSystem : MonoBehaviour
         OnHealed?.Invoke(actualHeal, _currentHp);
         UpdateUI();
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerHealth] Jugador curado {actualHeal}. Vida: {_currentHp}/{_maxHp} - Estado: {(_currentHp > 0 ? "VIVO" : "MUERTO")}");
 #endif
         
@@ -487,24 +511,32 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception e)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar eventos de muerte: {e}");
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerHealth] ¡El jugador ha muerto!");
 #endif
 
         // Intentar ejecutar efectos (animación/sonido) de forma segura; si fallan, no impedimos la notificación de GameOver
         try
         {
-            TriggerAnimation(deathAnimationName);
             PlaySound(deathSoundKey);
+            _caidaIniciada = false;
+            if (_caidaCoroutine != null) StopCoroutine(_caidaCoroutine);
+            if (isActiveAndEnabled)
+                _caidaCoroutine = StartCoroutine(Co_Caida());
+            else
+            {
+                TriggerAnimation(deathAnimationName);
+                _caidaIniciada = true;
+            }
         }
         catch (Exception e)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error al reproducir animación/sonido de muerte: {e}");
 #endif
         }
@@ -518,7 +550,7 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception e)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error notificando GameOver: {e}");
 #endif
         }
@@ -534,6 +566,9 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (_animator == null || string.IsNullOrEmpty(deathAnimationName)) return true;
 
+        // Todavía en la animación de daño que precede a la caída (ver Co_Caida).
+        if (!_caidaIniciada) return false;
+
         // Si nunca llegamos a resolver el estado (p. ej. TriggerAnimation falló al arrancar la
         // animación), no tenemos forma de saberlo: no bloqueamos la transición indefinidamente.
         if (!_stateHash.TryGetValue(deathAnimationName, out int hash) ||
@@ -544,9 +579,91 @@ public class PlayerHealthSystem : MonoBehaviour
 
         // Si el Animator ya no está en el estado de muerte (transicionó a otro, p. ej. un Idle de
         // "muerto en el suelo"), damos la caída por completada.
-        if (stateInfo.shortNameHash != hash) return !_animator.IsInTransition(layer);
+        if (stateInfo.shortNameHash != hash && stateInfo.fullPathHash != hash) return !_animator.IsInTransition(layer);
 
         return stateInfo.normalizedTime >= 1f && !_animator.IsInTransition(layer);
+    }
+
+    /// <summary>
+    /// Al morir: la animación de daño y, cuando termina, la de caída. Las dos en tiempo real y a
+    /// <see cref="ritmoDeLaCaida"/>, para que la cámara lenta del Game Over no las deje a medias.
+    /// Si la muerte viene de un golpe, su animación de daño ya la lanzó TakeDamage en este frame.
+    /// </summary>
+    private IEnumerator Co_Caida()
+    {
+        PonerAnimatorEnModoCaida();
+
+        string dano = _frameAnimDeDano == Time.frameCount ? _animDeDanoLanzada : null;
+        if (string.IsNullOrEmpty(dano))
+        {
+            dano = GetRandomDamageAnimation();
+            if (!string.IsNullOrEmpty(dano)) TriggerAnimation(dano);
+        }
+
+        if (_animator != null && !string.IsNullOrEmpty(dano) && EnsureResolved(dano))
+        {
+            int hash = _stateHash[dano];
+            int layer = _stateLayer[dano];
+            float limite = Time.unscaledTime + topeAnimacionDeDano;
+            bool entro = false;
+
+            while (Time.unscaledTime < limite && _animator != null)
+            {
+                yield return null;
+
+                var actual = _animator.GetCurrentAnimatorStateInfo(layer);
+                bool enDano = EsEstado(actual, hash);
+                if (enDano)
+                {
+                    entro = true;
+                    if (actual.normalizedTime >= 0.9f) break;
+                    continue;
+                }
+
+                if (_animator.IsInTransition(layer) && EsEstado(_animator.GetNextAnimatorStateInfo(layer), hash))
+                {
+                    entro = true;
+                    continue;
+                }
+
+                // Ya ha salido del estado de daño (o su transición de salida ha empezado).
+                if (entro) break;
+            }
+        }
+
+        TriggerAnimation(deathAnimationName);
+        _caidaIniciada = true;
+        _caidaCoroutine = null;
+    }
+
+    private static bool EsEstado(AnimatorStateInfo info, int hash)
+        => info.shortNameHash == hash || info.fullPathHash == hash;
+
+    private void PonerAnimatorEnModoCaida()
+    {
+        if (_animator == null) return;
+        if (!_animatorEnModoCaida)
+        {
+            _modoAnimatorPrevio = _animator.updateMode;
+            _velocidadAnimatorPrevia = _animator.speed;
+            _animatorEnModoCaida = true;
+        }
+        _animator.updateMode = AnimatorUpdateMode.UnscaledTime;
+        _animator.speed = ritmoDeLaCaida;
+    }
+
+    private void RestaurarAnimatorTrasCaida()
+    {
+        if (_caidaCoroutine != null)
+        {
+            StopCoroutine(_caidaCoroutine);
+            _caidaCoroutine = null;
+        }
+        if (!_animatorEnModoCaida) return;
+        _animatorEnModoCaida = false;
+        if (_animator == null) return;
+        _animator.updateMode = _modoAnimatorPrevio;
+        _animator.speed = _velocidadAnimatorPrevia;
     }
 
     private void ReviveInternal()
@@ -554,6 +671,8 @@ public class PlayerHealthSystem : MonoBehaviour
         if (!_isDead) return;
 
         _isDead = false;
+        _caidaIniciada = false;
+        RestaurarAnimatorTrasCaida();
 
         // FIX A10 (auditoría 2026-08-07): red de seguridad — vaciar la pila de nuevo por si algún
         // sistema empujó un modo entre la muerte y el revive (p. ej. una cinemática de Game Over).
@@ -571,20 +690,20 @@ public class PlayerHealthSystem : MonoBehaviour
             if (!string.IsNullOrEmpty(SpawnManager.CurrentAnchorId))
             {
                 SpawnManager.TeleportToCurrent(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[PlayerHealth] Revivido y teletransportado al último punto de partida guardado");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[PlayerHealth] Revivido pero no hay anchor guardado (CurrentAnchorId vacío)");
 #endif
             }
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error al teletransportar en ReviveInternal: {ex.Message}");
 #endif
         }
@@ -600,12 +719,12 @@ public class PlayerHealthSystem : MonoBehaviour
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar OnPlayerRevived: {ex.Message}");
 #endif
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerHealth] ¡El jugador ha revivido!");
 #endif
     }
@@ -675,7 +794,8 @@ public class PlayerHealthSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Forzamos la restauración de materiales y visibilidad para evitar quedarse tintado tras cinemáticas.
+    /// Deshace lo que el destello y el parpadeo de daño hayan dejado a medias: vuelve a los
+    /// materiales originales y enciende los renderers que apagó el parpadeo (solo esos).
     /// </summary>
     public void ResetDamageVisuals()
     {
@@ -748,15 +868,31 @@ public class PlayerHealthSystem : MonoBehaviour
         return Color.white;
     }
     
+    /// <summary>
+    /// Parpadeo de invulnerabilidad. Apagar solo toca los renderers que estaban encendidos y los
+    /// apunta; encender solo vuelve a encender esos. Así el parpadeo nunca enseña algo que otro
+    /// sistema tenía oculto (INC-527: la cabeza de Will en el plano corto de un diálogo).
+    /// </summary>
     private void SetRenderersVisibility(bool visible)
     {
-        if (_renderers == null) return;
-        
-        foreach (var rend in _renderers)
+        if (!visible)
         {
-            if (rend != null)
-                rend.enabled = visible;
+            if (_renderers == null) return;
+            foreach (var rend in _renderers)
+            {
+                if (rend == null || !rend.enabled) continue;
+                rend.enabled = false;
+                _ocultosPorParpadeo.Add(rend);
+            }
+            return;
         }
+
+        for (int i = 0; i < _ocultosPorParpadeo.Count; i++)
+        {
+            if (_ocultosPorParpadeo[i] != null)
+                _ocultosPorParpadeo[i].enabled = true;
+        }
+        _ocultosPorParpadeo.Clear();
     }
     
     private void RestoreOriginalMaterials()
@@ -773,7 +909,7 @@ public class PlayerHealthSystem : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerHealthSystem] Materiales restaurados al color original");
 #endif
     }
@@ -802,7 +938,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (damageAnimationNames == null || damageAnimationNames.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerHealthSystem] ⚠️ No hay animaciones de daño configuradas en el array damageAnimationNames");
 #endif
             return null;
@@ -817,7 +953,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (_animator == null || string.IsNullOrEmpty(animationName))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealthSystem] No se puede reproducir animación - Animator: {(_animator != null ? "OK" : "NULL")}, AnimationName: '{animationName}'");
 #endif
             return;
@@ -843,13 +979,13 @@ public class PlayerHealthSystem : MonoBehaviour
             int hash = _stateHash[animationName];
             int layer = _stateLayer[animationName];
             _animator.Play(hash, layer, 0f);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerHealthSystem] Reproduciendo animación (Play por hash): {animationName} en layer {layer}");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[PlayerHealthSystem] No se encontró el estado '{animationName}' en Animator. Asegúrate del nombre EXACTO o usa la ruta completa (p. ej. 'Base Layer.NombreEstado').");
 #endif
     }
@@ -911,13 +1047,13 @@ public class PlayerHealthSystem : MonoBehaviour
         // Depuración: listar candidatos probados (solo si no se encontró)
         try
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: no se encontró '{nameOrPath}'. Candidatos probados: {string.Join(", ", candidates)}");
 #endif
         }
         catch (Exception ex)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: excepción al listar candidatos: {ex.Message}");
 #endif
         }
@@ -930,7 +1066,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         if (_animator == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerHealthSystem] DumpAnimatorStates: Animator es null");
 #endif
             return;
@@ -939,13 +1075,13 @@ public class PlayerHealthSystem : MonoBehaviour
         var rc = _animator.runtimeAnimatorController;
         if (rc == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerHealthSystem] DumpAnimatorStates: runtimeAnimatorController es null");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerHealthSystem] Runtime clips ({rc.animationClips.Length}): {string.Join(", ", Array.ConvertAll(rc.animationClips, c => c.name))}");
 #endif
 
@@ -976,7 +1112,7 @@ public class PlayerHealthSystem : MonoBehaviour
             {
                 int h = Animator.StringToHash(cand);
                 bool has = _animator.HasState(layer, h);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerHealthSystem] Layer {layer} ('{layerName}') - HasState('{cand}') = {has}");
 #endif
             }
@@ -990,9 +1126,15 @@ public class PlayerHealthSystem : MonoBehaviour
         OnHealthPercentageChanged?.Invoke(healthPercentage);
     }
 
-    private IEnumerator ApplyKnockback()
+    /// Aparta al jugador en una dirección, sin hacerle daño (p. ej. la onda del rugido de un jefe).
+    public void Empujar(Vector3 direccion, float fuerza)
     {
-        Vector3 knockbackDirection = -transform.forward; // Empujar en la dirección opuesta a donde mira el jugador
+        if (_isDead || fuerza <= 0f || direccion.sqrMagnitude < 0.0001f) return;
+        StartCoroutine(ApplyKnockback(direccion.normalized, fuerza));
+    }
+
+    private IEnumerator ApplyKnockback(Vector3 knockbackDirection, float fuerza)
+    {
 
         // Si el objeto tiene Rigidbody, aplicar una fuerza/impulso en vez de mover transform directamente.
         // Mover el transform de un objeto controlado por física puede producir valores NaN en la velocidad.
@@ -1002,7 +1144,7 @@ public class PlayerHealthSystem : MonoBehaviour
             // Normalizar y comprobar NaN por seguridad
             if (!float.IsNaN(knockbackDirection.x) && !float.IsNaN(knockbackDirection.y) && !float.IsNaN(knockbackDirection.z))
             {
-                Vector3 impulse = knockbackDirection.normalized * knockbackForce;
+                Vector3 impulse = knockbackDirection.normalized * fuerza;
                 rb.AddForce(impulse, ForceMode.Impulse);
             }
             yield break;
@@ -1016,7 +1158,7 @@ public class PlayerHealthSystem : MonoBehaviour
             float curveValue = knockbackCurve.Evaluate(t);
 
             // Aplicar fuerza de empuje (fallback para objetos sin Rigidbody)
-            Vector3 delta = knockbackDirection * (knockbackForce * curveValue * Time.deltaTime);
+            Vector3 delta = knockbackDirection * (fuerza * curveValue * Time.deltaTime);
             if (!float.IsNaN(delta.x) && !float.IsNaN(delta.y) && !float.IsNaN(delta.z))
             {
                 transform.position += delta;
@@ -1031,7 +1173,7 @@ public class PlayerHealthSystem : MonoBehaviour
     public void SetGodMode(bool isEnabled)
     {
         godMode = isEnabled;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerHealth] God Mode: {(isEnabled ? "ACTIVADO" : "DESACTIVADO")}");
 #endif
     }

@@ -13,7 +13,7 @@ public static class UnlockService
     {
         if (!GameBootService.IsAvailable || GameBootService.Profile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[UnlockService] GameBootService no está disponible todavía");
 #endif
             return null;
@@ -64,7 +64,7 @@ public static class UnlockService
                     preset.maxMP = desiredMax;
                     preset.currentMP = desiredCurrent;
                     changed = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[UnlockService] MagicAttack desbloqueado: Maná seteado a {desiredCurrent}/{desiredMax} (100%)");
 #endif
                 }
@@ -135,7 +135,7 @@ public static class UnlockService
                         preset.maxMP = newMax;
                         preset.currentMP = newCurrent;
                         changed = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[UnlockService] Magic desbloqueada: Maná seteado a {newCurrent}/{newMax} (100%)");
 #endif
                     }
@@ -193,35 +193,38 @@ public static class UnlockService
             changed = true;
             isNewUnlock = true;
             if (spell != SpellId.None)
+            {
+                GrimorioDelPersonaje.UltimoAprendido = spell;
                 OnSpellUnlocked?.Invoke(spell);
+            }
         }
 
-        // Solo asignar a un slot vacío si es la PRIMERA VEZ que se desbloquea
-        // Si ya estaba desbloqueado (carga de partida), respetar la configuración del usuario
+        // La primera vez que se desbloquea un hechizo básico se equipa si queda hueco entre los
+        // básicos. Al cargar partida (ya estaba desbloqueado) se respeta lo que eligió el jugador.
+        // Los de solo especial no se equipan: son combos.
         if (assignToEmptySlot && isNewUnlock && spell != SpellId.None)
         {
-            // Usar el slotType del SO para decidir el slot destino
-            bool preferSpecial = false;
+            bool isSpecialOnly = false;
+            MagicSpellSO spellSO = null;
             if (PlayerService.TryGetComponent<PlayerPresetService>(out var pps, includeInactive: false, allowSceneLookup: true))
             {
                 var library = pps?.SpellLibrary;
-                if (library != null && library.TryGet(spell, out var spellSO))
-                    preferSpecial = spellSO.slotType == SpellSlotType.SpecialOnly;
+                if (library != null && library.TryGet(spell, out spellSO))
+                    isSpecialOnly = spellSO.slotType == SpellSlotType.SpecialOnly;
             }
 
-            if (preferSpecial)
+            // Un básico de Estela o Liam va a sus ranuras, no a las de Will (INC-503).
+            if (spellSO != null && spellSO.caster != PartyControlManager.CharacterSlot.Will)
             {
-                if (preset.specialSpellId == SpellId.None)
-                { preset.specialSpellId = spell; changed = true; }
+                if (!isSpecialOnly) GrimorioDelPersonaje.EquiparSiHayHueco(spellSO);
+                return changed;
             }
-            else
+
+            preset.basicSpellIds ??= new List<SpellId>();
+            if (!isSpecialOnly && !preset.basicSpellIds.Contains(spell) && preset.basicSpellIds.Count < MagicCaster.BasicSlotCount)
             {
-                if (preset.leftSpellId == SpellId.None)
-                { preset.leftSpellId = spell; changed = true; }
-                else if (preset.rightSpellId == SpellId.None)
-                { preset.rightSpellId = spell; changed = true; }
-                else if (preset.specialSpellId == SpellId.None)
-                { preset.specialSpellId = spell; changed = true; }
+                preset.basicSpellIds.Add(spell);
+                changed = true;
             }
         }
 
@@ -237,7 +240,7 @@ public static class UnlockService
         float oldCur = preset.currentMP;
         preset.maxMP = Mathf.Max(preset.maxMP, minMax);
         preset.currentMP = Mathf.Clamp(Mathf.Max(preset.currentMP, minCurrent), 0f, preset.maxMP);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[UnlockService] EnsureMana(minMax={minMax}, minCurrent={minCurrent}) - Antes: {oldMax}/{oldCur} -> Después: {preset.maxMP}/{preset.currentMP}");
 #endif
         return !Mathf.Approximately(oldMax, preset.maxMP) || !Mathf.Approximately(oldCur, preset.currentMP);

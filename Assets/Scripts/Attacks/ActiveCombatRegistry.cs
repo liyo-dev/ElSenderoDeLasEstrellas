@@ -54,7 +54,7 @@ public static class ActiveCombatRegistry
 
         if (_npcsInCombat.Add(npc))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ActiveCombatRegistry] ⚔️ NPC '{npc.name}' registrado en combate{(allowsCameraLock ? "" : " (sin auto-lock de cámara)")}");
 #endif
             OnNPCEnteredCombat?.Invoke(npc);
@@ -72,7 +72,7 @@ public static class ActiveCombatRegistry
 
         if (_npcsInCombat.Remove(npc))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ActiveCombatRegistry] 🏳️ NPC '{npc.name}' removido del combate");
 #endif
             OnNPCExitedCombat?.Invoke(npc);
@@ -123,7 +123,7 @@ public static class ActiveCombatRegistry
     {
         // ✅ FIX #16 (auditoría combate, 15 ago 2026): antes había ~5 Debug.Log por NPC evaluado,
         // sin gatear, en un método pensado para poder llamarse con cierta frecuencia.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCombatRegistry] GetClosestCombatNPC: Buscando entre {_npcsInCombat.Count} NPCs (pos={position}, maxDist={maxDistance}m)");
 #endif
 
@@ -147,7 +147,7 @@ public static class ActiveCombatRegistry
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (nullCount > 0)
             Debug.LogWarning($"[ActiveCombatRegistry] ⚠️ {nullCount} NPCs null en el registro (destruidos)");
         Debug.Log($"[ActiveCombatRegistry] Resultado: {(closest != null ? $"'{closest.name}' a {closestDist:F1}m" : "NINGUNO")}");
@@ -222,7 +222,7 @@ public static class ActiveCombatRegistry
     /// </summary>
     public static void ClearAll()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActiveCombatRegistry] 🧹 Limpiando {_npcsInCombat.Count} NPCs del registro");
 #endif
         _npcsInCombat.Clear();

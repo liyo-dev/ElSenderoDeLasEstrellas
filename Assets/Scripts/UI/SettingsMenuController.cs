@@ -453,7 +453,7 @@ public class SettingsMenuController : MonoBehaviour
 
     void OnInvertLookClicked(bool invert)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SettingsMenu] OnInvertLookClicked: {invert}");
 #endif
         PlayerSettings.SetInvertLook(invert);
@@ -462,7 +462,7 @@ public class SettingsMenuController : MonoBehaviour
 
     void OnInvertFlightClicked(bool invert)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SettingsMenu] OnInvertFlightClicked: {invert}");
 #endif
         PlayerSettings.SetInvertFlightLook(invert);

@@ -120,7 +120,7 @@ namespace Game.NPC.Modules
                     result = _customEventReceived || CustomEventReceivedGlobally;
                     if (debugMode)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NarrativeCondition] Custom('{customEventKey}') = {result} (local={_customEventReceived}, global={CustomEventReceivedGlobally})");
 #endif
                         }
@@ -134,7 +134,7 @@ namespace Game.NPC.Modules
             if (debugMode)
             {
                 string questName = targetQuest != null ? targetQuest.questId : "N/A";
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] Evaluate: Type={conditionType}, Quest={questName}, Result={result}");
 #endif
             }
@@ -148,7 +148,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestNotStarted: targetQuest es null");
 #endif
                     }
@@ -160,7 +160,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -172,7 +172,7 @@ namespace Game.NPC.Modules
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestNotStarted('{targetQuest.questId}') = {result} (state={state})");
 #endif
                 }
@@ -186,7 +186,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestStarted: targetQuest es null");
 #endif
                     }
@@ -198,7 +198,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -210,7 +210,7 @@ namespace Game.NPC.Modules
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestStarted('{targetQuest.questId}') = {result} (state={state})");
 #endif
                 }
@@ -224,7 +224,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestCompleted: targetQuest es null");
 #endif
                     }
@@ -236,7 +236,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -248,7 +248,7 @@ namespace Game.NPC.Modules
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestCompleted('{targetQuest.questId}') = {result} (state={state})");
 #endif
                 }
@@ -262,7 +262,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestActive: targetQuest es null");
 #endif
                     }
@@ -274,7 +274,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -286,7 +286,7 @@ namespace Game.NPC.Modules
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestActive('{targetQuest.questId}') = {result} (state={state})");
 #endif
                 }
@@ -300,7 +300,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestNotCompleted: targetQuest es null");
 #endif
                     }
@@ -312,7 +312,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -324,7 +324,7 @@ namespace Game.NPC.Modules
 
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestNotCompleted('{targetQuest.questId}') = {result} (state={state})");
 #endif
                 }
@@ -338,7 +338,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestStepCompleted: targetQuest es null");
 #endif
                     }
@@ -349,7 +349,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestStepCompleted: targetStepConditionId está vacío");
 #endif
                     }
@@ -361,7 +361,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[NarrativeCondition] QuestManager no disponible");
 #endif
                     }
@@ -373,7 +373,7 @@ namespace Game.NPC.Modules
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NarrativeCondition] QuestStepCompleted: step '{targetStepConditionId}' no encontrado en '{targetQuest.questId}'");
 #endif
                     }
@@ -384,7 +384,7 @@ namespace Game.NPC.Modules
 
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] QuestStepCompleted('{targetQuest.questId}', step='{targetStepConditionId}', idx={idx}) = {result}");
 #endif
                 }
@@ -450,7 +450,7 @@ namespace Game.NPC.Modules
             _customEventReceived = true;
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NarrativeCondition] ✅ Evento custom '{customEventKey}' recibido");
 #endif
                 }

@@ -193,7 +193,7 @@ public class NarrativeGraphStarter : MonoBehaviour
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NarrativeGraphStarter] 🔄 Restaurando blackboards desde preset '{preset.name}' ({preset.narrativeBlackboards.Count} grafos)");
 #endif
 

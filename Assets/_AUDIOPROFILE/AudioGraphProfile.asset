@@ -32,7 +32,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
     fade: 0
   - battleId: MagoOscuro
-    music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
+    music: {fileID: 8300000, guid: fa065d26f021f8e44a39d8b422d0ef2a, type: 3}
     fade: 0
   minigames:
   - minigameId: TAG_MINIGAME_01
@@ -296,6 +296,12 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
   - eventKey: Prologo_ProteccionAbsoluta
     sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
+  - eventKey: Agua_Zambullida
+    sfx: {fileID: 8300000, guid: c4a619d419f485e3c8274090402a9e52, type: 3}
+  - eventKey: Agua_Entrada
+    sfx: {fileID: 8300000, guid: 5613f2e09fe5d491789612c3870d24a3, type: 3}
+  - eventKey: Agua_SalirAFlote
+    sfx: {fileID: 8300000, guid: 1c0370f9553392603b24a0fa17629e5a, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}

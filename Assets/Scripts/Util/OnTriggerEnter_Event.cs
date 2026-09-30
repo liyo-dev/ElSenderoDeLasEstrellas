@@ -35,7 +35,7 @@ namespace Director
             if (requiredQuest == null) return true;
             if (QuestManager.Instance == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[OnTriggerEnter_Event] '{name}': QuestManager.Instance es null — trigger bloqueado.");
 #endif
                 return false;
@@ -47,7 +47,7 @@ namespace Director
             if (requiredStepIndex < 0)
             {
                 bool metLegacy = state != QuestState.Inactive;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (!metLegacy)
                     Debug.LogWarning($"[OnTriggerEnter_Event] '{name}': misión '{requiredQuest.questId}' está Inactive — trigger bloqueado (requiere iniciada o completada).");
 #endif
@@ -57,14 +57,14 @@ namespace Director
             // Con requisito de paso: la misión debe estar activa y encontrarse EXACTAMENTE en ese paso.
             if (state != QuestState.Active)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[OnTriggerEnter_Event] '{name}': misión '{requiredQuest.questId}' está en estado '{state}' (se requiere Active) — trigger bloqueado.");
 #endif
                 return false;
             }
             if (QuestManager.Instance.IsStepCompleted(requiredQuest.questId, requiredStepIndex))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[OnTriggerEnter_Event] '{name}': misión '{requiredQuest.questId}' ya tiene el paso {requiredStepIndex} completado — trigger bloqueado.");
 #endif
                 return false;
@@ -72,7 +72,7 @@ namespace Director
             if (requiredStepIndex > 0 &&
                 !QuestManager.Instance.IsStepCompleted(requiredQuest.questId, requiredStepIndex - 1))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[OnTriggerEnter_Event] '{name}': misión '{requiredQuest.questId}' NO tiene completado el paso {requiredStepIndex - 1} (previo a {requiredStepIndex}) — trigger bloqueado.");
 #endif
                 return false;
@@ -83,7 +83,7 @@ namespace Director
 
         private void OnTriggerEnter(Collider collision)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!collision.CompareTag(ElementToCompare))
                 return; // ruido esperado (otros colliders no-Player), no logueamos
             if (!isEnabled)

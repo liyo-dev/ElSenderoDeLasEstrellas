@@ -3,8 +3,8 @@ using UnityEngine;
 using Core.InputGlyphs;
 using Game.NPC.Common;
 
-/// La mecánica de juego del Despertar de la Estrella: el proyectil entrante, el panic input y el
-/// contraataque real de Will.
+/// La mecánica de juego del Despertar de la Estrella: el proyectil entrante, el panic input, el
+/// contraataque real de Will y, si no reacciona a tiempo, el impacto de la bola sobre él.
 ///
 /// ── Qué hay aquí y qué no ─────────────────────────────────────────────────────────────────────
 /// Aquí está SOLO lo que es mecánica y no se repite en ninguna otra secuencia del juego. Todo el
@@ -62,6 +62,9 @@ public class StarAwakeningModule : SequenceModule
              "tope del prefab, que está calibrado para combate y aquí se queda corto.")]
     [SerializeField] private float cinematicProjectileLifetime = 120f;
     [SerializeField] private GameObject explosionVFX;
+    [Tooltip("Segundos reales máximos esperando a que la bola alcance a Will cuando no reacciona. " +
+             "Si se cumplen, explota donde esté: la escena no puede quedarse esperando.")]
+    [SerializeField] private float impactWaitUnscaled = 6f;
 
     [Header("Contraataque de Will")]
     [Tooltip("MagicProjectileSpawner del jugador. Se dispara de verdad, con su sistema real. " +
@@ -69,9 +72,9 @@ public class StarAwakeningModule : SequenceModule
              "que no existe en la escena a la hora de arrastrarlo. Se resuelve solo desde el actor " +
              "Player al arrancar la secuencia.")]
     [SerializeField] private MagicProjectileSpawner playerSpawner;
-    [SerializeField] private MagicSlot castSlot = MagicSlot.Right;
-    [Tooltip("Hechizo de reserva: se usa si el jugador no tiene nada equipado en ese slot o no ha " +
-             "desbloqueado la magia todavía. Nunca falla, ignora maná y recargas.")]
+    [Tooltip("Mano desde la que sale el hechizo de la cinemática.")]
+    [SerializeField] private CastHand castSlot = CastHand.Right;
+    [Tooltip("Hechizo que lanza Will en la cinemática. Ignora maná, enfriamientos y lo que tenga equipado.")]
     [SerializeField] private MagicSpellSO cinematicSpellFallback;
     [Tooltip("Punto del que sale el hechizo (normalmente la mano de Will). Vacío = su pivot.")]
     [SerializeField] private Transform willCastOrigin;
@@ -121,6 +124,7 @@ public class StarAwakeningModule : SequenceModule
     // ── Estado ────────────────────────────────────────────────────────────────
 
     private SlowMotionFireProjectile _projectile;
+    private float _flightHeight;
     private GameObject _pendingFireball;
     private Transform _collisionPoint;
     private bool _collisionTriggered;
@@ -136,7 +140,7 @@ public class StarAwakeningModule : SequenceModule
         "WillContraataca",
         "Aturdimiento",
         "Tinnitus",
-        "RetirarProyectil",
+        "ImpactoEnWill",
         "PausarProyectil",
         "ReanudarProyectil",
     };
@@ -154,7 +158,7 @@ public class StarAwakeningModule : SequenceModule
             "reanudarproyectil" => Co_ReanudarProyectil(),
             "aturdimiento" => Co_Aturdimiento(),
             "tinnitus" => Co_Tinnitus(),
-            "retirarproyectil" => Co_RetirarProyectil(ctx),
+            "impactoenwill" => Co_ImpactoEnWill(ctx),
             _ => null,
         };
     }
@@ -172,7 +176,7 @@ public class StarAwakeningModule : SequenceModule
         var will = ctx.GetActor(SequenceActor.PlayerId);
         if (will?.Transform == null || incomingProjectilePrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[StarAwakeningModule] No se puede lanzar el proyectil: falta Will o el prefab.");
 #endif
             yield break;
@@ -185,6 +189,7 @@ public class StarAwakeningModule : SequenceModule
         // La altura depende del tamaño de la bola: el centro va lo bastante alto para que la
         // parte de abajo no toque el suelo, ni al salir ni al llegar a Will. Ver INC-458.
         float flightHeight = Mathf.Max(spawnHeight, will.EyeHeight * 0.85f, _projectile.MinCenterHeight);
+        _flightHeight = flightHeight;
         _projectile.SetAimHeight(flightHeight);
 
         Vector3 target = will.Transform.position + Vector3.up * flightHeight;
@@ -240,7 +245,7 @@ public class StarAwakeningModule : SequenceModule
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[StarAwakeningModule] No hay ningún ángulo con el camino despejado hasta " +
             "Will; la bola sale por 'spawnAngle' y puede atravesar decorado.");
 #endif
@@ -276,7 +281,7 @@ public class StarAwakeningModule : SequenceModule
     {
         if (panicInputDetector == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[StarAwakeningModule] Sin PanicInputDetector asignado: no hay forma de " +
                 "superar la prueba, así que se da por buena para no dejar la escena colgada.");
 #endif
@@ -284,7 +289,7 @@ public class StarAwakeningModule : SequenceModule
             yield break;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico (17 sep 2026). La prueba se quedaba colgada aquí sin decir una palabra: la
         // secuencia entraba en la fase del botón y no volvía a pasar nada. En vez de adivinar, esto
         // dice en una línea qué referencias hay y, sobre todo, si el detector está ACTIVO — porque
@@ -341,7 +346,7 @@ public class StarAwakeningModule : SequenceModule
         panicInputUI?.Activate(panicInputDetector);
         panicInputDetector.StartListening();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[StarAwakeningModule] Panic input escuchando. Quedan " +
             $"{panicInputDetector.TimeRemaining:F1} s reales para pulsar el botón.");
 
@@ -389,7 +394,7 @@ public class StarAwakeningModule : SequenceModule
 
         if (!_panicResolved)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[StarAwakeningModule] El panic input no ha resuelto en {limite:F0} s. " +
                 "Lo normal es que el PanicInputDetector no esté activo (su cuenta atrás corre en " +
                 "Update) o que su 'panicAction' esté sin asignar. Se da la prueba por FALLADA para " +
@@ -426,7 +431,7 @@ public class StarAwakeningModule : SequenceModule
 
         playerSpawner = will.Transform.GetComponentInChildren<MagicProjectileSpawner>(true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (playerSpawner == null)
             Debug.LogError("[StarAwakeningModule] No encuentro el MagicProjectileSpawner de Will ni " +
                 "en el Inspector ni colgando del actor Player. Sin él Will no contraataca: la " +
@@ -485,7 +490,7 @@ public class StarAwakeningModule : SequenceModule
 
         var spawner = ResolverSpawner(ctx);
         GameObject fireball = spawner != null
-            ? spawner.SpawnForCinematic(castSlot, cinematicSpellFallback, castOrigin, castDir)
+            ? spawner.SpawnForCinematic(cinematicSpellFallback, castSlot, castOrigin, castDir)
             : null;
         _pendingFireball = fireball;
 
@@ -558,13 +563,31 @@ public class StarAwakeningModule : SequenceModule
         yield break;
     }
 
-    /// Retira el proyectil sin explosión. Es lo que pasa en la rama de fallo: la escena corta a
-    /// negro y el proyectil simplemente deja de existir.
-    private IEnumerator Co_RetirarProyectil(SequenceContext ctx)
+    /// Rama de fallo: Will no ha reaccionado y la bola sigue hasta él y le explota encima. Lo que
+    /// pasa después (la derrota) lo decide el asset. Ver INC-517.
+    private IEnumerator Co_ImpactoEnWill(SequenceContext ctx)
     {
-        DespawnProjectile(ctx);
-        if (playerSpawner != null) playerSpawner.enabled = true;
-        yield break;
+        var will = ctx.GetActor(SequenceActor.PlayerId);
+        if (_projectile == null || will?.Transform == null) yield break;
+
+        _projectile.Resume();
+
+        // La bola apunta al pecho de Will; se da por alcanzado cuando su centro llega a media bola
+        // de ese punto, que es cuando ya lo está tapando.
+        float alcance = Mathf.Max(0.6f, _projectile.Radius * 0.5f);
+        float esperado = 0f;
+        while (_projectile != null && esperado < impactWaitUnscaled)
+        {
+            Vector3 pecho = will.Transform.position + Vector3.up * _flightHeight;
+            if ((_projectile.transform.position - pecho).sqrMagnitude <= alcance * alcance) break;
+            esperado += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        EnsureCollisionPoint().position = _projectile != null
+            ? _projectile.transform.position
+            : will.Transform.position + Vector3.up * _flightHeight;
+        TriggerExplosion();
     }
 
     // ── Interno ───────────────────────────────────────────────────────────────

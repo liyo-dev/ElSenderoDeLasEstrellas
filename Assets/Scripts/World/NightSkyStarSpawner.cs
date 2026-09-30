@@ -322,7 +322,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     {
         if (dayNightCycle != null)
             dayNightCycle.TimeOfDayChanged += HandleTimeOfDayChanged;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning("[NightSkyStarSpawner] No se encontró ningún DayNightCycle en la escena; el domo de estrellas nunca se activará.");
 #endif
@@ -372,7 +372,7 @@ public class NightSkyStarSpawner : MonoBehaviour
             frames++;
             yield return null;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (Camera.main == null)
             Debug.LogWarning("[NightSkyStarSpawner] Camera.main sigue sin existir tras esperar " + MaxCameraWaitFrames + " frames; el domo se construirá con el radio de último recurso (domeRadius), que puede quedar más cerca que alguna montaña de fondo.");
 #endif

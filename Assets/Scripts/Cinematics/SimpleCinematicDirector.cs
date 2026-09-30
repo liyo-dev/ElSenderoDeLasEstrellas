@@ -308,7 +308,7 @@ namespace Game.Cinematics
                     if (!preset.flags.Contains(flag))
                     {
                         preset.flags.Add(flag);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[Cinematic] Marcada como vista: {id}");
 #endif
                     }
@@ -321,7 +321,7 @@ namespace Game.Cinematics
             // Verificar si ya se vio y es de un solo uso
             if (singleUse && HasBeenSeen())
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Cinematic] Omitiendo cinemática '{GetPersistenceId()}' porque ya fue vista.");
 #endif
                 return;
@@ -332,7 +332,7 @@ namespace Game.Cinematics
 
         private IEnumerator PlayRoutine()
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Cinematic] Iniciando secuencia con {steps.Count} pasos.");
 #endif
             IsAnyCinematicPlaying = true;
@@ -357,12 +357,12 @@ namespace Game.Cinematics
                 var hud = ServiceLocator.Get<Sendero.UI.PlayerHUDV2>(false);
                 if (hud != null)
                 {
-                    hud.HideHUD();
+                    hud.HideHUD(this);
                 }
                 else if (Sendero.UI.PlayerHUDV2.Instance)
                 {
                     // Fallback a Singleton si ServiceLocator falla
-                    Sendero.UI.PlayerHUDV2.Instance.HideHUD();
+                    Sendero.UI.PlayerHUDV2.Instance.HideHUD(this);
                 }
 
                 // Ocultar también el minimapa durante la secuencia
@@ -390,7 +390,7 @@ namespace Game.Cinematics
                     // Si no tiene Brain y tenemos una customBrainCamera, usar esa
                     if (_brain == null && customBrainCamera != null)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log("[Cinematic] Usando Custom Brain Camera.");
 #endif
                         _brain = customBrainCamera.GetComponent<CinemachineBrain>();
@@ -403,7 +403,7 @@ namespace Game.Cinematics
                     
                     if (_brain == null)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning("[Cinematic] ⚠️ NO SE ENCONTRÓ CINEMACHINE BRAIN. Se forzará control directo de la cámara.");
 #endif
                         forceDirectCameraControl = true;
@@ -418,7 +418,7 @@ namespace Game.Cinematics
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[Cinematic] ❌ NO HAY MAIN CAMERA en la escena.");
 #endif
             }
@@ -430,7 +430,7 @@ namespace Game.Cinematics
                 if (_mainGameplayCamera != null)
                 {
                     _originalGameplayCameraPriority = _mainGameplayCamera.Priority.Value;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[Cinematic] Desactivando cámara de gameplay Cinemachine (Priority: {_originalGameplayCameraPriority} -> 0)");
 #endif
                     _mainGameplayCamera.Priority.Value = 0;
@@ -441,7 +441,7 @@ namespace Game.Cinematics
             for (int i = 0; i < steps.Count; i++)
             {
                 var step = steps[i];
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Cinematic] Ejecutando paso: {step.name}");
 #endif
 
@@ -498,7 +498,7 @@ namespace Game.Cinematics
                     {
                         // Usar el método específico para cinemáticas que aplica skybox/exterior
                         EnvironmentController.Instance.ApplyExteriorForCinematic(activeRenderCam);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log("[Cinematic] Aplicando entorno EXTERIOR para este paso");
 #endif
                     }
@@ -506,7 +506,7 @@ namespace Game.Cinematics
                     {
                         // Usar el método específico para cinemáticas que aplica config de interior
                         EnvironmentController.Instance.ApplyInteriorForCinematic(activeRenderCam);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log("[Cinematic] Aplicando entorno INTERIOR para este paso");
 #endif
                     }
@@ -640,7 +640,7 @@ namespace Game.Cinematics
                             if (spawner.rotationLoops != 0)
                                 t.SetLoops(spawner.rotationLoops, spawner.rotationLoopType);
                             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"[Cinematic] Animating rotation for {instance.name}: {spawner.targetRotation} over {spawner.rotationDuration}s");
 #endif
                         }
@@ -810,12 +810,12 @@ namespace Game.Cinematics
                 var hud = ServiceLocator.Get<Sendero.UI.PlayerHUDV2>(false);
                 if (hud != null)
                 {
-                    hud.ShowHUD();
+                    hud.ShowHUD(this);
                 }
                 else if (Sendero.UI.PlayerHUDV2.Instance)
                 {
                     // Fallback a Singleton
-                    Sendero.UI.PlayerHUDV2.Instance.ShowHUD();
+                    Sendero.UI.PlayerHUDV2.Instance.ShowHUD(this);
                 }
 
                 // Restaurar visibilidad del minimapa
@@ -863,7 +863,7 @@ namespace Game.Cinematics
             // Reactivar la cámara de gameplay de Cinemachine (si existe)
             if (_mainGameplayCamera != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Cinematic] Restaurando cámara de gameplay Cinemachine (Priority: {_originalGameplayCameraPriority})");
 #endif
                 _mainGameplayCamera.Priority.Value = _originalGameplayCameraPriority;
@@ -880,7 +880,7 @@ namespace Game.Cinematics
             if (singleUse) MarkAsSeen();
             
             onCinematicEnd?.Invoke();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[Cinematic] Secuencia finalizada.");
 #endif
         }
@@ -913,7 +913,7 @@ namespace Game.Cinematics
             var extraCam = cam.GetComponent<Camera>();
             if (extraCam != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[Cinematic] ⚠️ La cámara virtual '{cam.name}' tiene un componente Camera. Esto puede causar problemas de renderizado. Se desactivará el componente Camera.");
 #endif
                 extraCam.enabled = false;
@@ -925,7 +925,7 @@ namespace Game.Cinematics
             {
                 lens.FarClipPlane = 5000f;
                 cam.Lens = lens;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Cinematic] 🔧 Ajustado FarClipPlane de '{cam.name}' a 5000 para asegurar visibilidad del Skybox.");
 #endif
             }
@@ -939,7 +939,7 @@ namespace Game.Cinematics
             SetCameraPriority(cam, 9999);
             
             _lastActiveCamera = cam;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Cinematic] Activando cámara manual: {cam.name} (Priority 9999)");
 #endif
         }

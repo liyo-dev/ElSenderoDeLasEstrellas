@@ -31,7 +31,20 @@ public class MagicZoneEffect : MonoBehaviour
         public string tickSFXKey;         // opcional: SFX en cada tick que golpea a alguien
         public GameObject despawnVFX;     // VFX al terminar la duración
         public float vfxLifetime;         // tiempo antes de destruir despawnVFX (0 = 3s por defecto)
+        public EstadoDeCombate status;    // estado que pone a los de dentro en cada tick (INC-499)
+        public float statusDuration;
+        public float statusStrength;
+        public GameObject statusVFX;
+        public float healPerTick;         // curación al grupo en cada tick (INC-500)
+        public float groupShieldSeconds;  // escudo al grupo al aparecer (INC-500)
+        public float groupShieldFactor;
+        public GameObject groupShieldVFX;
+        public float teamGaugeGain;       // tramos de carga de equipo al curar/proteger (una vez)
     }
+
+    readonly List<GrupoCercano.Miembro> _grupo = new List<GrupoCercano.Miembro>(3);
+    bool _shieldDone;
+    bool _gaugeDone;
 
     ZoneConfig _cfg;
     GameObject _instigator;
@@ -78,6 +91,8 @@ public class MagicZoneEffect : MonoBehaviour
 
     void DoTick()
     {
+        TickSupport();
+
         int count = Physics.OverlapSphereNonAlloc(transform.position, _cfg.radius, _hitBuffer, ~0, QueryTriggerInteraction.Collide);
         bool hitSomething = false;
         HashSet<Damageable> alreadyHit = null;
@@ -99,8 +114,14 @@ public class MagicZoneEffect : MonoBehaviour
             alreadyHit ??= new HashSet<Damageable>();
             if (!alreadyHit.Add(d)) continue; // evita doble tick si el enemigo tiene varios colliders
 
-            d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damagePerTick), _instigator);
+            if (_cfg.damagePerTick > 0f)
+                d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damagePerTick), _instigator);
             hitSomething = true;
+
+            // Estado (INC-499): se renueva en cada tick; atraer tira hacia el centro de la zona.
+            if (_cfg.status != EstadoDeCombate.Ninguno)
+                EstadosDeCombate.Aplicar(d, _cfg.status, Mathf.Max(_cfg.statusDuration, _cfg.tickInterval + 0.1f),
+                                         _cfg.statusStrength, transform.position, _cfg.statusVFX);
 
             if (_cfg.knockbackForce > 0f)
             {
@@ -118,6 +139,35 @@ public class MagicZoneEffect : MonoBehaviour
         if (hitSomething && !string.IsNullOrEmpty(_cfg.tickSFXKey) && AudioService.Instance != null)
         {
             AudioService.Instance.PlaySFX(_cfg.tickSFXKey, worldPosition: transform.position);
+        }
+    }
+
+    /// Apoyo al grupo (INC-500): curar en cada tick y escudo una vez, a los del grupo dentro.
+    void TickSupport()
+    {
+        bool heal = _cfg.healPerTick > 0f;
+        bool shield = _cfg.groupShieldSeconds > 0f && !_shieldDone;
+        if (!heal && !shield) return;
+
+        GrupoCercano.Buscar(transform.position, _cfg.radius, _grupo);
+        bool helped = false;
+        foreach (var m in _grupo)
+        {
+            if (heal) { m.Curar(_cfg.healPerTick); helped = true; }
+            if (shield)
+            {
+                EscudoTemporal.Poner(m.ObjetoDeVida, m.cuerpo, _cfg.groupShieldSeconds, _cfg.groupShieldFactor, _cfg.groupShieldVFX);
+                helped = true;
+            }
+        }
+        if (shield) _shieldDone = true;
+
+        if (helped && !_gaugeDone && _cfg.teamGaugeGain > 0f)
+        {
+            _gaugeDone = true;
+            if (PlayerService.TryGetComponent<DuoSpecialAttackSystem>(out var duo, includeInactive: true, allowSceneLookup: true)
+                && duo != null && duo.TeamGauge != null)
+                duo.TeamGauge.AddCharge(_cfg.teamGaugeGain);
         }
     }
 

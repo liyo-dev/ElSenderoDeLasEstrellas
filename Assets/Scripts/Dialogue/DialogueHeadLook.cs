@@ -18,7 +18,7 @@ using UnityEngine;
 ///   no tiene objetivo y el peso llega a 0.
 ///
 /// Cumple las reglas del proyecto: huesos y buffers cacheados en Awake, sin allocs por frame,
-/// sin reflection, logs bajo UNITY_EDITOR || DEVELOPMENT_BUILD.
+/// sin reflection, logs bajo UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION.
 /// </summary>
 public class DialogueHeadLook : MonoBehaviour
 {
@@ -102,7 +102,7 @@ public class DialogueHeadLook : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (_head == null)
             Debug.LogWarning($"[DialogueHeadLook:{name}] No se encontró hueso 'head' — head-look desactivado para este personaje");
 #endif

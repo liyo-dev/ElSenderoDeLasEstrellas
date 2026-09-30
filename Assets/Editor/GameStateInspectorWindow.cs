@@ -465,10 +465,8 @@ public class GameStateInspectorWindow : EditorWindow
         }
 
         EditorGUILayout.Space(4);
-        EditorGUILayout.LabelField("Spell Slots", EditorStyles.boldLabel);
-        EditorGUILayout.LabelField($"  Left:    {preset.leftSpellId}", EditorStyles.miniLabel);
-        EditorGUILayout.LabelField($"  Right:   {preset.rightSpellId}", EditorStyles.miniLabel);
-        EditorGUILayout.LabelField($"  Special: {preset.specialSpellId}", EditorStyles.miniLabel);
+        EditorGUILayout.LabelField("Hechizos básicos (X, LB rota)", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField($"  {string.Join(", ", preset.basicSpellIds)}", EditorStyles.miniLabel);
     }
 
     private void DrawAbilityToggle(string label, bool current, System.Action<bool> setter)

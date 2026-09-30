@@ -104,7 +104,7 @@ public class PortalTrigger : MonoBehaviour
     {
         if (string.IsNullOrEmpty(targetAnchorId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PortalTrigger] targetAnchorId vacío");
 #endif
             return;
@@ -113,7 +113,7 @@ public class PortalTrigger : MonoBehaviour
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PortalTrigger] GameBootProfile no disponible en GameBootService");
 #endif
             return;
@@ -122,7 +122,7 @@ public class PortalTrigger : MonoBehaviour
         var preset = bootProfile.GetActivePresetResolved();
         if (preset == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PortalTrigger] No hay preset activo");
 #endif
             return;
@@ -133,7 +133,7 @@ public class PortalTrigger : MonoBehaviour
         {
             if (preset.flags == null || !preset.flags.Contains(requiredFlag))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PortalTrigger] Flag requerida '{requiredFlag}' no encontrada. Portal bloqueado.");
 #endif
                 return;
@@ -154,7 +154,7 @@ public class PortalTrigger : MonoBehaviour
             {
                 if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[PortalTrigger] Inventario no encontrado en el jugador. Portal bloqueado.");
 #endif
                     return;
@@ -162,7 +162,7 @@ public class PortalTrigger : MonoBehaviour
 
                 if (!inventory.HasItem(requiredItem, requiredItemAmount))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[PortalTrigger] Ítem requerido '{requiredItem.itemId}' (x{requiredItemAmount}) no encontrado. Portal bloqueado.");
 #endif
                     return;
@@ -172,7 +172,7 @@ public class PortalTrigger : MonoBehaviour
                 {
                     if (!inventory.TryConsume(requiredItem, requiredItemAmount))
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[PortalTrigger] No se pudo consumir '{requiredItem.itemId}' pese a que el conteo era suficiente.");
                         #endif
                     }
@@ -189,7 +189,7 @@ public class PortalTrigger : MonoBehaviour
             if (!preset.flags.Contains(setFlagOnEnter))
             {
                 preset.flags.Add(setFlagOnEnter);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PortalTrigger] Flag '{setFlagOnEnter}' establecida");
 #endif
                 _restoredUnlocked = true;
@@ -214,7 +214,7 @@ public class PortalTrigger : MonoBehaviour
         {
             if (_waitingForSceneLoad)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PortalTrigger] Ya esperando carga de escena. Ignorando trigger adicional.");
 #endif
                 return;
@@ -414,7 +414,7 @@ public class PortalTrigger : MonoBehaviour
             animator.SetBool("IsSprinting", false);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PortalTrigger] RestorePlayerMovement ejecutado. Posición: {player.transform.position}, Velocidad Rigidbody: {(rb ? rb.linearVelocity : Vector3.zero)}");
 #endif
     }

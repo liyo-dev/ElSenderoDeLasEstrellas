@@ -1,17 +1,18 @@
-using System;
 using UnityEngine;
 
 namespace Game.NPC.Common
 {
+    /// Dónde está el jugador. PlayerService ya registra siempre el cuerpo que se mueve (ver
+    /// PlayerService.ResolverCuerpo, INC-482), así que aquí basta con leerlo.
     public static class PlayerLocator
     {
         public static Transform ResolvePlayer(bool allowSceneLookup = true)
         {
             if (PlayerService.TryGetComponent(out Transform player, includeInactive: true))
-                return ResolveMotionRoot(player);
+                return player;
 
             if (PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup) && playerGo)
-                return ResolveMotionRoot(playerGo.transform);
+                return playerGo.transform;
 
             if (!allowSceneLookup)
                 return null;
@@ -20,7 +21,7 @@ namespace Game.NPC.Common
             if (fallback != null)
             {
                 PlayerService.RegisterPlayer(fallback, false);
-                return ResolveMotionRoot(fallback.transform);
+                return PlayerService.PlayerTransform;
             }
 
             return null;
@@ -32,39 +33,6 @@ namespace Game.NPC.Common
                 return Camera.main.transform;
 
             return null;
-        }
-
-        static Transform ResolveMotionRoot(Transform candidate)
-        {
-            if (!candidate)
-                return null;
-
-            var invector = FindInvectorController(candidate);
-            if (invector != null && invector != candidate)
-                return invector;
-
-            var characterController = candidate.GetComponentInChildren<CharacterController>(true);
-            if (characterController && characterController.transform != candidate)
-                return characterController.transform;
-
-            var rigidbody = candidate.GetComponentInChildren<Rigidbody>(true);
-            if (rigidbody && rigidbody.transform != candidate)
-                return rigidbody.transform;
-
-            return candidate;
-        }
-
-        static Transform FindInvectorController(Transform root)
-        {
-            var type = Type.GetType("Invector.vCharacterController.vThirdPersonController, Invector-3rdPersonController_LITE", false)
-                       ?? Type.GetType("Invector.vCharacterController.vThirdPersonController, Invector-3rdPersonController", false)
-                       ?? Type.GetType("Invector.vCharacterController.vThirdPersonController", false);
-
-            if (type == null)
-                return null;
-
-            var component = root.GetComponentInChildren(type, true) as Component;
-            return component ? component.transform : null;
         }
     }
 }

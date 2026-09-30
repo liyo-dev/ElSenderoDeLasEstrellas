@@ -60,26 +60,68 @@ namespace Game.NPC
         #endregion
 
         #region Runtime spell overrides
-        private MagicSpellSO[] _runtimeSpells; // null = usar PartyConfig
+        private System.Collections.Generic.List<MagicSpellSO> _runtimeBasics; // null = los de la ficha
+        private MagicSpellSO _runtimeSpecial;
+        private readonly System.Collections.Generic.List<MagicSpellSO> _effective = new System.Collections.Generic.List<MagicSpellSO>(5);
 
         /// <summary>
-        /// Sobreescribe los hechizos en runtime sin modificar el ScriptableObject.
-        /// Usado por ActiveCharacterSwapper para sincronizar los hechizos actuales de Will.
+        /// Sobreescribe los hechizos en runtime sin modificar la ficha.
+        /// Usado por ActiveCharacterSwapper para que el Will de la IA lleve los básicos del jugador.
         /// </summary>
         public void SetRuntimeSpells(MagicSpellSO left, MagicSpellSO right, MagicSpellSO special)
         {
-            _runtimeSpells = new[] { left, right, special };
+            SetRuntimeBasics(new[] { left, right }, special);
+        }
+
+        /// <summary>Los básicos (hasta 4) y el especial que usa en runtime. INC-498.</summary>
+        public void SetRuntimeBasics(System.Collections.Generic.IReadOnlyList<MagicSpellSO> basics, MagicSpellSO special = null)
+        {
+            _runtimeBasics = new System.Collections.Generic.List<MagicSpellSO>(4);
+            if (basics != null)
+                foreach (var s in basics)
+                    if (s != null && !_runtimeBasics.Contains(s)) _runtimeBasics.Add(s);
+            _runtimeSpecial = special;
         }
 
         /// <summary>
-        /// Devuelve el hechizo efectivo: override runtime si existe, si no el del PartyConfig.
+        /// Los hechizos que usa la IA, en el orden en que los rota: sus básicos (los de runtime o los
+        /// de la ficha, ver INC-483) y después el especial. Sin huecos ni levitación. INC-498.
         /// </summary>
+        public System.Collections.Generic.IReadOnlyList<MagicSpellSO> EffectiveSpells
+        {
+            get
+            {
+                _effective.Clear();
+                if (_personaje == null) _personaje = GetComponent<Personaje>();
+                var ficha = _personaje != null ? _personaje.Ficha : null;
+
+                // Estela y Liam: los que tengan equipados en el grimorio (INC-503); si no, los de su ficha.
+                System.Collections.Generic.IReadOnlyList<MagicSpellSO> basics = _runtimeBasics;
+                if (basics == null && ficha != null)
+                    basics = ficha.Personaje != PartyControlManager.CharacterSlot.Will
+                        ? GrimorioDelPersonaje.BasicosEquipados(ficha.Personaje)
+                        : ficha.Basicos;
+                if (basics != null)
+                    foreach (var s in basics) Add(s);
+                Add(_runtimeSpecial != null ? _runtimeSpecial : (_runtimeBasics == null && ficha != null ? ficha.Hechizo(2) : null));
+                return _effective;
+
+                void Add(MagicSpellSO s)
+                {
+                    if (s == null || s.kind == MagicKind.Levitation || _effective.Contains(s)) return;
+                    _effective.Add(s);
+                }
+            }
+        }
+
+        /// <summary>El hechizo número <paramref name="index"/> de <see cref="EffectiveSpells"/> (null si no hay).</summary>
         public MagicSpellSO GetEffectiveSpell(int index)
         {
-            if (_runtimeSpells != null && index >= 0 && index < _runtimeSpells.Length)
-                return _runtimeSpells[index];
-            return partyConfig?.GetSpell(index);
+            var list = EffectiveSpells;
+            return index >= 0 && index < list.Count ? list[index] : null;
         }
+
+        private Personaje _personaje;
         #endregion
 
         #region Properties
@@ -156,7 +198,7 @@ namespace Game.NPC
             
             if (_npcManager == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCPartyMember] {name} requiere NPCBehaviourManagerV2");
 #endif
             }
@@ -183,7 +225,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCPartyMember:{name}] No listo para auto-join: {reason}. Reintentando en Update.");
 #endif
                     }
@@ -584,13 +626,13 @@ namespace Game.NPC
         /// </summary>
         internal void OnPlayerEnteredCombat(Transform enemy)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCPartyMember:{name}] 🔔 OnPlayerEnteredCombat - Enemigo: {enemy?.name}");
 #endif
 
             if (_npcManager?.Brain == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCPartyMember:{name}] ⚠️ _npcManager.Brain es NULL!");
 #endif
                 return;
@@ -599,7 +641,7 @@ namespace Game.NPC
             // No interrumpir si el jugador está controlando directamente este NPC
             if (ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.HiddenNpc == this)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCPartyMember:{name}] ℹ️ Ignorando combate: personaje bajo control del jugador");
 #endif
                 return;
@@ -615,7 +657,7 @@ namespace Game.NPC
             {
                 // Pasar el enemigo al constructor para que lo ataque directamente
                 _npcManager.Brain.ChangeState(new States.AllyCombatState(enemy));
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCPartyMember:{name}] ⚔️ CAMBIADO A AllyCombatState con target: {enemy?.name}");
 #endif
             }
@@ -733,7 +775,7 @@ namespace Game.NPC
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCPartyMember:{name}] {message}");
                 #endif
             }
@@ -741,7 +783,7 @@ namespace Game.NPC
 
         private void LogWarning(string message)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCPartyMember:{name}] ⚠️ {message}");
 #endif
         }

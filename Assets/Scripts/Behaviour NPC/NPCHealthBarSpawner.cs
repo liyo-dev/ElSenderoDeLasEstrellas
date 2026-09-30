@@ -124,7 +124,7 @@ namespace Game.NPC
         {
             if (healthBarPrefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCHealthBarSpawner] No hay prefab asignado en {name}");
 #endif
                 return;
@@ -143,7 +143,7 @@ namespace Game.NPC
             var existingBars = GetComponentsInChildren<Game.UI.NPCHealthBarUI>(true);
             if (existingBars != null && existingBars.Length > 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCHealthBarSpawner] ⚠️ INC-125: {existingBars.Length} barra(s) de vida huérfana(s) encontradas en {name} antes de instanciar — destruyéndolas para evitar duplicado.");
 #endif
                 foreach (var stray in existingBars)
@@ -154,7 +154,7 @@ namespace Game.NPC
             
             // Instanciar como hijo del NPC
             _healthBarInstance = Instantiate(healthBarPrefab, transform);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCHealthBarSpawner] Barra de vida instanciada para {name}");
 #endif
         }

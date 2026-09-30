@@ -301,7 +301,7 @@ public class TagMinigameController : MonoBehaviour
             if (navAgent == null)
             {
                 navAgent = chaserNPC.gameObject.AddComponent<UnityEngine.AI.NavMeshAgent>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] ✅ NavMeshAgent añadido a {chaserNPC.name}");
 #endif
             }
@@ -311,7 +311,7 @@ public class TagMinigameController : MonoBehaviour
             {
                 // Intentar añadir ChaserAI dinámicamente si no existe
                 chaser = chaserNPC.gameObject.AddComponent<ChaserAI>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] ✅ ChaserAI añadido a {chaserNPC.name}");
 #endif
             }
@@ -320,7 +320,7 @@ public class TagMinigameController : MonoBehaviour
             if (!chaserNPC.gameObject.activeInHierarchy)
             {
                 chaserNPC.gameObject.SetActive(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] ✅ Perseguidor {chaserNPC.name} activado");
 #endif
             }
@@ -331,7 +331,7 @@ public class TagMinigameController : MonoBehaviour
             _chaserRenderers = chaserNPC.GetComponentsInChildren<Renderer>();
             CacheOriginalColors();
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🎬 Animator: {(_chaserAnimator != null ? "✅" : "❌")}, NPCSimpleAnimator: {(_chaserNpcAnimator != null ? "✅" : "❌")}");
             Debug.Log($"[TagMinigame] 🤖 NavMeshAgent: {(navAgent != null ? "✅" : "❌")}, isOnNavMesh: {(navAgent != null && navAgent.isOnNavMesh ? "✅" : "❌")}");
 #endif
@@ -355,7 +355,7 @@ public class TagMinigameController : MonoBehaviour
                 
                 if (chaserNPC != null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] ✅ NPC encontrado por ID: {chaserNarrativeId} -> {chaserNPC.name}");
 #endif
                     
@@ -364,7 +364,7 @@ public class TagMinigameController : MonoBehaviour
                     if (navAgent == null)
                     {
                         navAgent = chaserNPC.gameObject.AddComponent<UnityEngine.AI.NavMeshAgent>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[TagMinigame] ✅ NavMeshAgent añadido a {chaserNPC.name}");
 #endif
                     }
@@ -374,7 +374,7 @@ public class TagMinigameController : MonoBehaviour
                     if (chaser == null)
                     {
                         chaser = chaserNPC.gameObject.AddComponent<ChaserAI>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[TagMinigame] ✅ ChaserAI añadido a {chaserNPC.name}");
 #endif
                     }
@@ -383,7 +383,7 @@ public class TagMinigameController : MonoBehaviour
                     if (!chaserNPC.gameObject.activeInHierarchy)
                     {
                         chaserNPC.gameObject.SetActive(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[TagMinigame] ✅ Perseguidor {chaserNPC.name} activado");
 #endif
                     }
@@ -394,7 +394,7 @@ public class TagMinigameController : MonoBehaviour
                     _chaserRenderers = chaserNPC.GetComponentsInChildren<Renderer>();
                     CacheOriginalColors();
                     
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] 🎬 Animator: {(_chaserAnimator != null ? "✅" : "❌")}, NPCSimpleAnimator: {(_chaserNpcAnimator != null ? "✅" : "❌")}");
                     Debug.Log($"[TagMinigame] 🤖 NavMeshAgent: {(navAgent != null ? "✅" : "❌")}, isOnNavMesh: {(navAgent != null && navAgent.isOnNavMesh ? "✅" : "❌")}");
 #endif
@@ -405,14 +405,14 @@ public class TagMinigameController : MonoBehaviour
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError($"[TagMinigame] ❌ No se encontró NPC con ID: {chaserNarrativeId}");
 #endif
                 }
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TagMinigame] ⚠️ NPCRegistry no disponible");
 #endif
             }
@@ -420,7 +420,7 @@ public class TagMinigameController : MonoBehaviour
         
         if (chaser == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TagMinigame] ❌ No se pudo resolver el perseguidor. Asigna chaserNarrativeId o chaserNPC.");
 #endif
         }
@@ -441,7 +441,7 @@ public class TagMinigameController : MonoBehaviour
         DontDestroyOnLoad(chaser.gameObject);
         
         _chaserWasMadePersistent = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔒 Perseguidor '{chaser.name}' marcado como persistente entre escenas");
 #endif
     }
@@ -458,7 +458,7 @@ public class TagMinigameController : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         
         _controllerWasMadePersistent = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔒 Controller '{name}' marcado como persistente entre escenas");
 #endif
     }
@@ -477,7 +477,7 @@ public class TagMinigameController : MonoBehaviour
             if (chaser.gameObject.scene != targetScene)
             {
                 UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(chaser.gameObject, targetScene);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] 🚀 Perseguidor movido a escena '{targetScene.name}' al restaurar");
 #endif
             }
@@ -490,7 +490,7 @@ public class TagMinigameController : MonoBehaviour
         }
         
         _chaserWasMadePersistent = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔓 Perseguidor '{chaser.name}' restaurado");
 #endif
     }
@@ -510,7 +510,7 @@ public class TagMinigameController : MonoBehaviour
         }
         
         _controllerWasMadePersistent = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔓 Controller '{name}' restaurado");
 #endif
     }
@@ -591,7 +591,7 @@ public class TagMinigameController : MonoBehaviour
         }
 
         protectTargets = generatedTargets;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🛡️ Objetivo auto-configurado con {finalCount} NPCs (protectTargets estaba vacío).");
 #endif
     }
@@ -627,7 +627,7 @@ public class TagMinigameController : MonoBehaviour
         objectiveText.fontSize = 30f;
         objectiveText.color = Color.white;
         objectiveText.text = string.Empty;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] 🛠️ objectiveText no asignado: creado TextMeshProUGUI runtime para el contador de protección.");
 #endif
     }
@@ -871,14 +871,14 @@ public class TagMinigameController : MonoBehaviour
         // y llamaría a StartChasing() en la nueva escena (p.ej. menú principal) sin jugador.
         if (isCountingDown && !isRunning)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TagMinigame] 🌍 Escena '{scene.name}' cargada durante cuenta atrás. Abortando minijuego.");
 #endif
             StopMinigame();
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🌍 Nueva escena cargada: '{scene.name}' (mode={mode})");
 #endif
 
@@ -904,14 +904,14 @@ public class TagMinigameController : MonoBehaviour
             CachePlayerRuntimeReferences();
             if (_playerMinigameModeApplied)
                 EnableMinigameActionRestrictions();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🌍 Player encontrado en nueva escena: {player.name} @ {player.position}");
 #endif
             
             // Verificar/re-resolver perseguidor
             if (chaser == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TagMinigame] 🌍 Perseguidor perdido tras cambio de escena, re-resolviendo...");
 #endif
                 ResolveNPCReferences();
@@ -925,7 +925,7 @@ public class TagMinigameController : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[TagMinigame] 🌍 ❌ No se pudo encontrar/recuperar al perseguidor tras cambio de escena");
 #endif
             }
@@ -934,7 +934,7 @@ public class TagMinigameController : MonoBehaviour
         {
             // Si no hay jugador en la nueva escena (p.ej. el jugador salió al menú principal),
             // abortar el minijuego para limpiar la UI y el estado.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] 🌍 ⚠️ No se encontró jugador en la nueva escena. Abortando minijuego.");
 #endif
             StopMinigame();
@@ -949,13 +949,13 @@ public class TagMinigameController : MonoBehaviour
     {
         if (!isRunning) 
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] 🚀 OnPlayerTeleported llamado pero minijuego no está corriendo");
 #endif
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🚀 ===== JUGADOR TELETRANSPORTADO =====");
         Debug.Log($"[TagMinigame] 🚀 isRunning={isRunning}, chaser={(chaser != null ? chaser.name : "NULL")}");
 #endif
@@ -967,7 +967,7 @@ public class TagMinigameController : MonoBehaviour
     /// </summary>
     private IEnumerator TeleportChaserAfterPlayerTeleport()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] 🚀 TeleportChaserAfterPlayerTeleport - Iniciando...");
 #endif
         
@@ -977,7 +977,7 @@ public class TagMinigameController : MonoBehaviour
         
         if (!isRunning) 
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] ❌ Minijuego detenido durante la espera");
 #endif
             yield break;
@@ -990,13 +990,13 @@ public class TagMinigameController : MonoBehaviour
             CachePlayerRuntimeReferences();
             if (_playerMinigameModeApplied)
                 EnableMinigameActionRestrictions();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] ✅ Player actualizado: {player.name} en posición {player.position}");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TagMinigame] ❌ No se pudo encontrar al jugador después del teletransporte");
 #endif
             yield break;
@@ -1005,7 +1005,7 @@ public class TagMinigameController : MonoBehaviour
         // Verificar que el perseguidor siga existiendo
         if (chaser == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] ⚠️ Perseguidor perdido, intentando re-resolver...");
 #endif
             ResolveNPCReferences();
@@ -1013,13 +1013,13 @@ public class TagMinigameController : MonoBehaviour
         
         if (chaser == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TagMinigame] ❌ No se pudo recuperar al perseguidor");
 #endif
             yield break;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ✅ Chaser disponible: {chaser.name}");
 #endif
         
@@ -1038,7 +1038,7 @@ public class TagMinigameController : MonoBehaviour
     {
         if (chaser == null || player == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TagMinigame] ⚠️ MoveCharserToPlayerScene: chaser={chaser}, player={player}");
 #endif
             return;
@@ -1047,7 +1047,7 @@ public class TagMinigameController : MonoBehaviour
         var playerScene = player.gameObject.scene;
         var chaserScene = chaser.gameObject.scene;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 📍 Escena jugador: '{playerScene.name}' (isLoaded={playerScene.isLoaded}), Escena perseguidor: '{chaserScene.name}'");
 #endif
         
@@ -1055,7 +1055,7 @@ public class TagMinigameController : MonoBehaviour
         // pero eso está bien - DontDestroyOnLoad funciona en todas las escenas
         if (chaserScene.name == "DontDestroyOnLoad")
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] ✅ Perseguidor está en DontDestroyOnLoad - funcionará en cualquier escena");
 #endif
             
@@ -1071,7 +1071,7 @@ public class TagMinigameController : MonoBehaviour
                 if (UnityEngine.AI.NavMesh.SamplePosition(nearPlayerPos, out var hit, 10f, UnityEngine.AI.NavMesh.AllAreas))
                 {
                     agent.Warp(hit.position);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] 🚀 Perseguidor warpeado a NavMesh cerca del jugador: {hit.position}");
 #endif
                 }
@@ -1083,13 +1083,13 @@ public class TagMinigameController : MonoBehaviour
         {
             // Mover el perseguidor a la escena del jugador
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(chaser.gameObject, playerScene);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🚀 Perseguidor movido a escena '{playerScene.name}'");
 #endif
         }
         else if (playerScene == chaserScene)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] ✅ Perseguidor ya está en la escena correcta '{playerScene.name}'");
 #endif
         }
@@ -1613,7 +1613,7 @@ public class TagMinigameController : MonoBehaviour
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🎨 Colores originales cacheados: {_originalColors.Length} renderers");
 #endif
     }
@@ -1687,7 +1687,7 @@ public class TagMinigameController : MonoBehaviour
         // Si el jugador está muy lejos, teletransportar al perseguidor
         if (distance > maxDistanceBeforeTeleport)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🚀 Jugador detectado a {distance:F1}m - Teletransportando perseguidor...");
 #endif
             StartCoroutine(TeleportChaserToPlayer());
@@ -1745,7 +1745,7 @@ public class TagMinigameController : MonoBehaviour
         // Teletransportar al perseguidor
         chaser.TeleportTo(targetPos);
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ⚡ Perseguidor teletransportado a {targetPos}");
 #endif
         
@@ -1762,7 +1762,7 @@ public class TagMinigameController : MonoBehaviour
     {
         if (isRunning || isCountingDown || _waitingForStart)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] Ya está en ejecución.");
 #endif
             return;
@@ -1771,7 +1771,7 @@ public class TagMinigameController : MonoBehaviour
         // No arrancar si el minijuego ya fue superado y está guardado
         if (IsAlreadyCompleted())
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] Minijuego '{minigameId}' ya completado, se omite.");
 #endif
             return;
@@ -1796,7 +1796,7 @@ public class TagMinigameController : MonoBehaviour
         TryAutoPopulateProtectionTargets();
 
         // ✅ Log de diagnóstico
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ========== DIAGNÓSTICO ==========");
         Debug.Log($"[TagMinigame] chaserNPC: {(chaserNPC != null ? chaserNPC.name : "NULL")}");
         Debug.Log($"[TagMinigame] chaser (ChaserAI): {(chaser != null ? chaser.name : "NULL")}");
@@ -1808,7 +1808,7 @@ public class TagMinigameController : MonoBehaviour
 #endif
 
         _minigameSceneName = gameObject.scene.name;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] Iniciando minijuego '{minigameId}'...");
 #endif
         catchCount = 0;
@@ -1816,13 +1816,13 @@ public class TagMinigameController : MonoBehaviour
 
         int availableProtectTargets = CountValidProtectTargets();
         int requiredForRound = RequiredProtectCount;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🛡️ Objetivo protección: disponibles={availableProtectTargets}, requeridos={requiredForRound}, configurado={requiredProtectedCount}");
 #endif
 
         if (availableProtectTargets == 0 && !_loggedMissingProtectionConfig)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] ⚠️ No hay NPCs válidos en protectTargets. No se activará la mecánica de proteger NPCs hasta configurar/auto-detectar objetivos.");
 #endif
             _loggedMissingProtectionConfig = true;
@@ -1830,7 +1830,7 @@ public class TagMinigameController : MonoBehaviour
 
         if (requiredProtectedCount > availableProtectTargets && availableProtectTargets > 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TagMinigame] Solo hay {availableProtectTargets} NPCs configurados para proteger. El objetivo real será {RequiredProtectCount}.");
 #endif
         }
@@ -1892,7 +1892,7 @@ public class TagMinigameController : MonoBehaviour
         instructionPanel.SetActive(true);
         if (instructionText)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] instructionText — spriteAsset: {(instructionText.spriteAsset != null ? instructionText.spriteAsset.name : "null (hereda de font/TMP_Settings)")} | fontSize: {instructionText.fontSize} | autoSize: {instructionText.enableAutoSizing} (min:{instructionText.fontSizeMin} max:{instructionText.fontSizeMax})");
 #endif
             instructionText.text = Loc(instructionMessage);
@@ -1959,7 +1959,7 @@ public class TagMinigameController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] ConfirmationPopupUI.Instance es null — ConfirmationPopupUI no está en la escena Start.unity. Abortando sin confirmación.");
 #endif
             _isWaitingForAbortConfirmation = false;
@@ -2039,7 +2039,7 @@ public class TagMinigameController : MonoBehaviour
             // Verificar que el chaser sigue existiendo después de sacarlo del party
             if (chaser == null && chaserNPC != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TagMinigame] ⚠️ chaser perdido después de RemoveChaserFromParty, re-obteniendo...");
 #endif
                 chaser = chaserNPC.GetComponent<ChaserAI>();
@@ -2053,7 +2053,7 @@ public class TagMinigameController : MonoBehaviour
             if (chaser != null && !chaser.gameObject.activeInHierarchy)
             {
                 chaser.gameObject.SetActive(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[TagMinigame] ✅ Perseguidor reactivado");
 #endif
             }
@@ -2066,7 +2066,7 @@ public class TagMinigameController : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] 🔄 Reiniciando cuenta atrás (reinicio tras captura)");
 #endif
         }
@@ -2132,7 +2132,7 @@ public class TagMinigameController : MonoBehaviour
 
         if (chaser)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🏃 ========== INICIANDO PERSECUCIÓN ==========");
             Debug.Log($"[TagMinigame] 🏃 Perseguidor: '{chaser.name}'");
             Debug.Log($"[TagMinigame] 🏃 Posición perseguidor: {chaser.transform.position}");
@@ -2149,17 +2149,17 @@ public class TagMinigameController : MonoBehaviour
                 ApplyChaserDifficulty();
             FeedbackService.CameraShake(chaseStartShakeIntensity, chaseStartShakeDuration);
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🏃 Llamando a StartChasing()...");
 #endif
             chaser.StartChasing();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] ✅ StartChasing() completado");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TagMinigame] ❌ ========== ERROR ==========");
             Debug.LogError($"[TagMinigame] ❌ chaser es NULL - no se puede iniciar persecución!");
             Debug.LogError($"[TagMinigame] ❌ chaserNPC: {(chaserNPC != null ? chaserNPC.name : "NULL")}");
@@ -2167,7 +2167,7 @@ public class TagMinigameController : MonoBehaviour
         }
 
         OnMinigameStarted?.Invoke();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ¡Minijuego iniciado! Duración: {duration}s, Chaser: {(chaser != null ? chaser.name : "NULL")}");
 #endif
     }
@@ -2182,7 +2182,7 @@ public class TagMinigameController : MonoBehaviour
         {
             string eventKey = $"MINIGAME_START:{minigameId}";
             signals.RaiseCustom(eventKey, name);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🎮 Señal de inicio emitida: '{eventKey}'");
 #endif
         }
@@ -2204,7 +2204,7 @@ public class TagMinigameController : MonoBehaviour
         chaser.CatchDistance = catchDistance;
         chaser.Acceleration = chaserAcceleration;
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ⚡ Dificultad aplicada: Velocidad {_originalChaserSpeed} → {chaserSpeed}, " +
                   $"Captura {_originalCatchDistance} → {catchDistance}, Aceleración: {chaserAcceleration}");
         #endif
@@ -2220,7 +2220,7 @@ public class TagMinigameController : MonoBehaviour
         chaser.ChaseSpeed = _originalChaserSpeed;
         chaser.CatchDistance = _originalCatchDistance;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔄 Dificultad restaurada: Velocidad {_originalChaserSpeed}, Captura {_originalCatchDistance}");
 #endif
     }
@@ -2248,14 +2248,14 @@ public class TagMinigameController : MonoBehaviour
         
         if (targetGO != null && (_chaserAnimator == null || _chaserRenderers == null || _chaserNpcAnimator == null))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🔧 Resolviendo componentes visuales desde '{targetGO.name}'...");
 #endif
             _chaserAnimator = targetGO.GetComponent<Animator>();
             _chaserNpcAnimator = targetGO.GetComponent<NPCSimpleAnimator>();
             _chaserRenderers = targetGO.GetComponentsInChildren<Renderer>();
             CacheOriginalColors();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🔧 Renderers encontrados: {(_chaserRenderers != null ? _chaserRenderers.Length : 0)}");
 #endif
         }
@@ -2266,7 +2266,7 @@ public class TagMinigameController : MonoBehaviour
             _chaserEmotionController = targetGO.GetComponent<NPCEmotionController>();
             if (_chaserEmotionController != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] 🎭 EmotionController encontrado en '{targetGO.name}'");
 #endif
             }
@@ -2280,13 +2280,13 @@ public class TagMinigameController : MonoBehaviour
             
             // Aplicar emoción de enfado
             _chaserEmotionController.SetEmotion(minigameEmotion);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 😠 Emoción cambiada a '{minigameEmotion}' (original: {_originalEmotion})");
 #endif
         }
         
         // Diagnóstico adicional
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔴 === INICIO EFECTOS DE ENFADO ===");
         Debug.Log($"[TagMinigame] 🔴 chaserNPC: {(chaserNPC != null ? chaserNPC.name : "NULL")}");
         Debug.Log($"[TagMinigame] 🔴 chaser (ChaserAI): {(chaser != null ? chaser.name : "NULL")}");
@@ -2316,7 +2316,7 @@ public class TagMinigameController : MonoBehaviour
                     _chaserAnimator.Play(angryAnimationName, UPPER_BODY_LAYER);
                     
                     animationPlayed = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] 😠 Animación '{angryAnimationName}' en UpperBody (Layer {UPPER_BODY_LAYER}) con peso 1.0 (original: {_originalUpperBodyWeight})");
                     Debug.Log($"[TagMinigame] 🏃 La capa Base seguirá reproduciendo animaciones de movimiento");
 #endif
@@ -2326,14 +2326,14 @@ public class TagMinigameController : MonoBehaviour
                     // Fallback: reproducir en capa base si no hay UpperBody
                     _chaserAnimator.Play(angryAnimationName);
                     animationPlayed = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] 😠 Animación '{angryAnimationName}' en Layer base (no hay UpperBody)");
 #endif
                 }
             }
             catch (System.Exception e)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[TagMinigame] ⚠️ Error al reproducir animación: {e.Message}");
 #endif
             }
@@ -2341,7 +2341,7 @@ public class TagMinigameController : MonoBehaviour
         
         if (!animationPlayed)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TagMinigame] ⚠️ No se pudo reproducir animación de enfado '{angryAnimationName}'");
 #endif
         }
@@ -2367,7 +2367,7 @@ public class TagMinigameController : MonoBehaviour
                 ps.Play();
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 💨 VFX de enfado instanciado como hijo de '{targetGO.name}'");
 #endif
         }
@@ -2375,13 +2375,13 @@ public class TagMinigameController : MonoBehaviour
         {
             if (angerVFXPrefab == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[TagMinigame] ⚠️ No hay prefab de VFX (angerVFXPrefab) asignado");
                 #endif
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] 🔴 Efectos de enfado iniciados");
 #endif
     }
@@ -2454,7 +2454,7 @@ public class TagMinigameController : MonoBehaviour
         {
             Destroy(_vfxInstance);
             _vfxInstance = null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] 💨 VFX de enfado destruido");
 #endif
         }
@@ -2463,7 +2463,7 @@ public class TagMinigameController : MonoBehaviour
         if (_chaserAnimator != null && _chaserAnimator.layerCount > UPPER_BODY_LAYER)
         {
             _chaserAnimator.SetLayerWeight(UPPER_BODY_LAYER, _originalUpperBodyWeight);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🎬 Peso de UpperBody restaurado a {_originalUpperBodyWeight}");
 #endif
         }
@@ -2472,12 +2472,12 @@ public class TagMinigameController : MonoBehaviour
         if (_chaserEmotionController != null)
         {
             _chaserEmotionController.SetEmotion(_originalEmotion);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🎭 Emoción restaurada a '{_originalEmotion}'");
 #endif
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] ✅ Efectos de enfado desactivados, colores restaurados");
 #endif
     }
@@ -2491,7 +2491,7 @@ public class TagMinigameController : MonoBehaviour
     {
         if (chaserNPC == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] No hay chaserNPC configurado");
 #endif
             return;
@@ -2504,13 +2504,13 @@ public class TagMinigameController : MonoBehaviour
         {
             // Usar el método del NPCBehaviourManagerV2 que dispara eventos
             chaserNPC.LeavePlayerParty();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 👋 {chaserNPC.name} sacado del party para el minijuego");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] {chaserNPC.name} no estaba en el party");
 #endif
         }
@@ -2531,7 +2531,7 @@ public class TagMinigameController : MonoBehaviour
         
         if (!rejoinPartyOnWin)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[TagMinigame] rejoinPartyOnWin=false, el perseguidor no vuelve al party");
 #endif
             return;
@@ -2539,7 +2539,7 @@ public class TagMinigameController : MonoBehaviour
         
         // Usar el método del NPCBehaviourManagerV2 que dispara eventos
         chaserNPC.JoinPlayerParty();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ✨ {chaserNPC.name} ha vuelto al party");
 #endif
     }
@@ -2569,7 +2569,7 @@ public class TagMinigameController : MonoBehaviour
             // del estado saliente y deja el agente en un estado limpio y conocido.
             chaserNPC.ForceIdle();
             chaserNPC.enabled = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🔧 NPCBehaviourManagerV2 de '{chaserNPC.name}' deshabilitado para el minijuego (tras ForceIdle)");
 #endif
         }
@@ -2578,7 +2578,7 @@ public class TagMinigameController : MonoBehaviour
         if (_chaserNpcAnimator != null)
         {
             // No deshabilitamos el animator, pero el ChaserAI usará SetMovementSpeed()
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🎬 NPCSimpleAnimator presente - ChaserAI controlará las animaciones");
 #endif
         }
@@ -2590,7 +2590,7 @@ public class TagMinigameController : MonoBehaviour
             // Resetear el path y estado del NavMeshAgent
             navAgent.ResetPath();
             navAgent.isStopped = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🤖 NavMeshAgent reseteado - listo para ChaserAI");
 #endif
         }
@@ -2607,7 +2607,7 @@ public class TagMinigameController : MonoBehaviour
         if (_npcBehaviourWasEnabled && !chaserNPC.enabled)
         {
             chaserNPC.enabled = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] 🔧 NPCBehaviourManagerV2 de '{chaserNPC.name}' rehabilitado");
 #endif
             
@@ -2661,7 +2661,7 @@ public class TagMinigameController : MonoBehaviour
         DisableMinigameActionRestrictions();
         UpdateObjectiveUI();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] Minijuego detenido.");
 #endif
     }
@@ -2671,7 +2671,7 @@ public class TagMinigameController : MonoBehaviour
         if (!isRunning) return;
 
         catchCount++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ¡Jugador atrapado! (Vez #{catchCount})");
 #endif
 
@@ -2711,7 +2711,7 @@ public class TagMinigameController : MonoBehaviour
 
         yield return FeedbackService.ScreenFadeAsync(Color.black, 0.5f, fadeIn: true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] 🔄 Reiniciando intento en el sitio (atrapado #{catchCount})");
 #endif
 
@@ -2745,7 +2745,7 @@ public class TagMinigameController : MonoBehaviour
 
         yield return FeedbackService.ScreenFadeAsync(Color.black, 0.5f, fadeIn: true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[TagMinigame] 🔄 Reiniciando intento en el sitio (tiempo agotado)");
 #endif
 
@@ -2816,7 +2816,7 @@ public class TagMinigameController : MonoBehaviour
         var preset = GameBootService.IsAvailable ? GameBootService.Profile?.GetActivePresetResolved() : null;
         if (preset == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] No se pudo registrar la victoria: preset no disponible.");
 #endif
             return;
@@ -2825,7 +2825,7 @@ public class TagMinigameController : MonoBehaviour
         if (!preset.completedInteractiveNarratives.Contains(minigameId))
         {
             preset.completedInteractiveNarratives.Add(minigameId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] ✅ Victoria registrada en save: '{minigameId}'");
 #endif
         }
@@ -2837,7 +2837,7 @@ public class TagMinigameController : MonoBehaviour
         isTeleporting = false;
         if (requiresWill)
             WillOnlyMomentManager.Instance?.ExitMoment(minigameId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TagMinigame] ¡Victoria! Objetivo completado.");
 #endif
 
@@ -2959,20 +2959,20 @@ public class TagMinigameController : MonoBehaviour
                 bool joined = npc.JoinPlayerParty();
                 if (joined)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[TagMinigame] ✨ {npc.name} se unió al party al ganar el minijuego");
 #endif
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[TagMinigame] ⚠️ No se pudo unir {npc.name} al party");
 #endif
                 }
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] {npc.name} ya estaba en el party");
 #endif
             }
@@ -2988,7 +2988,7 @@ public class TagMinigameController : MonoBehaviour
     {
         if (npc == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] AddNpcToParty: NPC es null");
 #endif
             return;
@@ -2999,20 +2999,20 @@ public class TagMinigameController : MonoBehaviour
             bool joined = npc.JoinPlayerParty();
             if (joined)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[TagMinigame] ✨ {npc.name} se unió al party (llamado manualmente)");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[TagMinigame] ⚠️ No se pudo unir {npc.name} al party");
 #endif
             }
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] {npc.name} ya estaba en el party");
 #endif
         }
@@ -3025,13 +3025,13 @@ public class TagMinigameController : MonoBehaviour
         {
             string eventKey = $"MINIGAME_{minigameId}_WON";
             signals.RaiseCustom(eventKey, name);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[TagMinigame] Señal emitida: '{eventKey}'");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TagMinigame] No se encontró DefaultNarrativeSignals para emitir la señal de victoria.");
 #endif
         }

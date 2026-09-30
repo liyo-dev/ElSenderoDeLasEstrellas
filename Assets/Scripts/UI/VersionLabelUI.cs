@@ -20,7 +20,7 @@ public class VersionLabelUI : MonoBehaviour
     [Tooltip("Prefijo delante del número de versión.")]
     [SerializeField] private string prefix = "v";
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Tooltip("Sufijo añadido solo en el Editor o en builds de desarrollo, para no confundir una " +
              "build de prueba con la build final que llega a jugadores.")]
     [SerializeField] private string devSuffix = " (dev)";
@@ -44,7 +44,7 @@ public class VersionLabelUI : MonoBehaviour
     {
         if (!label)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[VersionLabelUI] No se encontró un TMP_Text para mostrar la versión.");
 #endif
             return;
@@ -52,7 +52,7 @@ public class VersionLabelUI : MonoBehaviour
 
         string text = prefix + Application.version;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         text += devSuffix;
 #endif
 

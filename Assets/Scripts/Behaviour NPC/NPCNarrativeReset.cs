@@ -24,7 +24,7 @@ public class NPCNarrativeReset : MonoBehaviour
         
         if (showDebugInfo)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log(NPCNarrativeStateManager.GetDebugInfo());
 #endif
         }
@@ -37,7 +37,7 @@ public class NPCNarrativeReset : MonoBehaviour
     public void ResetAllNarratives()
     {
         NPCNarrativeStateManager.ResetAllNPCs();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[NPCNarrativeReset] ✅ Todas las narrativas reseteadas");
 #endif
     }
@@ -49,7 +49,7 @@ public class NPCNarrativeReset : MonoBehaviour
     public void ClearAllSavedStates()
     {
         NPCNarrativeStateManager.ClearAllSavedStates();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[NPCNarrativeReset] ✅ Todos los estados guardados limpiados");
 #endif
     }
@@ -62,7 +62,7 @@ public class NPCNarrativeReset : MonoBehaviour
     {
         ClearAllSavedStates();
         ResetAllNarratives();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[NPCNarrativeReset] ✅ RESET COMPLETO - Como nueva partida");
 #endif
     }
@@ -73,7 +73,7 @@ public class NPCNarrativeReset : MonoBehaviour
     [ContextMenu("Show Debug Info")]
     public void ShowDebugInfo()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log(NPCNarrativeStateManager.GetDebugInfo());
 #endif
     }

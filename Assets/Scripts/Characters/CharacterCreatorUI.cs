@@ -20,7 +20,7 @@ public class CharacterCreatorUI : MonoBehaviour
             case "Shield": return PartCategory.ShieldR;
             default:
                 if (System.Enum.TryParse(category, out PartCategory cat)) return cat;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[UI] Categoría desconocida: {category}");
 #endif
                 return PartCategory.Body;

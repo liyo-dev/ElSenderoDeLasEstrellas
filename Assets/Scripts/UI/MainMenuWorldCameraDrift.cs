@@ -53,6 +53,16 @@ public class MainMenuWorldCameraDrift : MonoBehaviour
         _baseRotation = transform.rotation;
     }
 
+    /// <summary>
+    /// Toma como nuevo encuadre base la posición y orientación actuales de la cámara (la usa
+    /// PortadaDelMenu al colocar la cámara de cada portada).
+    /// </summary>
+    public void Reanclar()
+    {
+        _basePosition = transform.position;
+        _baseRotation = transform.rotation;
+    }
+
     void Update()
     {
         _time += Time.deltaTime;

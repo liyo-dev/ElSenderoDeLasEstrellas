@@ -76,7 +76,7 @@ public class GameBootProfileDebugger : MonoBehaviour
         _toggleKeyValid ??= System.Enum.IsDefined(typeof(Key), toggleKey);
         if (_toggleKeyValid != true)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GameBootProfileDebugger] toggleKey ({(int)toggleKey}) no es un valor valido del enum Key " +
                 "(probablemente arrastrado de una version antigua del campo, era KeyCode) - selecciona la tecla de nuevo en el Inspector.");
 #endif
@@ -205,9 +205,7 @@ public class GameBootProfileDebugger : MonoBehaviour
                 DrawKeyValue("Unlocked Wardrobe", (p.unlockedWardrobeIds?.Count ?? 0).ToString());
 
                 GUILayout.Space(5);
-                DrawKeyValue("Left Spell", p.leftSpellId.ToString());
-                DrawKeyValue("Right Spell", p.rightSpellId.ToString());
-                DrawKeyValue("Special Spell", p.specialSpellId.ToString());
+                DrawKeyValue("Basic Spells", p.basicSpellIds != null ? string.Join(", ", p.basicSpellIds) : "-");
                 
                 GUILayout.Space(5);
                 if (p.abilities != null)

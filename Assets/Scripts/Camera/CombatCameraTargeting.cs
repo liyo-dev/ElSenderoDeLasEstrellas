@@ -17,9 +17,6 @@ public class CombatCameraTargeting : MonoBehaviour
     [SerializeField] private float visualResyncInterval = 0.1f;
     [SerializeField] private float shoulderSwitchDebounce = 0.12f;
     
-    [Header("Ángulo frontal para marcador")]
-    [SerializeField] private float facingAngleForMarker = 140f;
-
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
     
@@ -41,7 +38,8 @@ public class CombatCameraTargeting : MonoBehaviour
         if (thirdPersonCamera == null)
             thirdPersonCamera = GetComponent<vThirdPersonCamera>();
         
-        if (playerTransform == null && PlayerService.TryGetPlayer(out var player))
+        // Solo lee quién está registrado: la cámara no decide quién es el jugador (INC-482).
+        if (playerTransform == null && PlayerService.TryGetPlayer(out var player, allowSceneLookup: false))
             playerTransform = player.transform;
         
         if (playerTargeting == null && playerTransform != null)
@@ -57,6 +55,7 @@ public class CombatCameraTargeting : MonoBehaviour
         DialogueManager.OnDialogueClosed += OnDialogueClosed;
         LevitationTarget.OnAnyLevitationStarted += OnLevitationStarted;
         LevitationTarget.OnAnyLevitationEnded += OnLevitationEnded;
+        PlayerService.OnPlayerRegistered += AlRegistrarJugador;
     }
 
     private void OnDisable()
@@ -68,7 +67,16 @@ public class CombatCameraTargeting : MonoBehaviour
         DialogueManager.OnDialogueClosed -= OnDialogueClosed;
         LevitationTarget.OnAnyLevitationStarted -= OnLevitationStarted;
         LevitationTarget.OnAnyLevitationEnded -= OnLevitationEnded;
+        PlayerService.OnPlayerRegistered -= AlRegistrarJugador;
         ReleaseLock();
+    }
+
+    // La cámara no es parte del personaje (CamaraDelJugador.prefab): sigue a quien se registre
+    // como jugador. Ver INC-482.
+    private void AlRegistrarJugador(GameObject jugador)
+    {
+        playerTransform = jugador != null ? jugador.transform : null;
+        playerTargeting = playerTransform != null ? playerTransform.GetComponentInChildren<PlayerTargeting>() : null;
     }
 
     private void OnDialogueStarted(Transform _) => _isInDialogue = true;
@@ -92,7 +100,7 @@ public class CombatCameraTargeting : MonoBehaviour
     {
         if (playerTransform == null)
         {
-            if (PlayerService.TryGetPlayer(out var player))
+            if (PlayerService.TryGetPlayer(out var player, allowSceneLookup: false))
             {
                 playerTransform = player.transform;
                 if (playerTargeting == null)
@@ -150,13 +158,10 @@ public class CombatCameraTargeting : MonoBehaviour
         
         switch (inputEvent.Type)
         {
+            // RB pasa al siguiente enemigo; LB es de la rotación de hechizos básicos.
             case GamepadInputReader.InputEventType.RightShoulder:
                 _lastShoulderSwitchAt = Time.unscaledTime;
                 SwitchToNextTarget();
-                break;
-            case GamepadInputReader.InputEventType.LeftShoulder:
-                _lastShoulderSwitchAt = Time.unscaledTime;
-                SwitchToPreviousTarget();
                 break;
         }
     }
@@ -262,17 +267,15 @@ public class CombatCameraTargeting : MonoBehaviour
             thirdPersonCamera.SetLockTarget(newTarget.transform);
         }
 
-        // Mientras el lock-on de cámara está activo, el marker/target de PlayerTargeting debe
-        // depender EXCLUSIVAMENTE de IsFacingTarget() (aquí y en EnsureVisualLockSync). Si no se
-        // suprime el auto-scan de PlayerTargeting, este reengancha el target usando el FOV de la
-        // cámara (que durante el lock-on SIEMPRE apunta al enemigo), pisando el gate y provocando
-        // que el marker se muestre aunque el jugador ya no esté mirando hacia el enemigo.
+        // Con el objetivo fijado, el objetivo de los hechizos es el enemigo fijado aunque el
+        // jugador esté de espaldas: al lanzar, Will se gira hacia él (INC-484/488). El auto-scan
+        // se suprime para que no lo sustituya por otro enemigo.
         if (syncWithProjectileTargeting && playerTargeting != null)
         {
             playerTargeting.SetAutoScanSuppressed(true);
         }
 
-        if (syncWithProjectileTargeting && playerTargeting != null && !_isInDialogue && IsFacingTarget())
+        if (syncWithProjectileTargeting && playerTargeting != null && !_isInDialogue)
         {
             playerTargeting.SetManualTarget(newTarget.transform);
             playerTargeting.ForceVisualRefresh();
@@ -334,19 +337,6 @@ public class CombatCameraTargeting : MonoBehaviour
         SetTarget(enemies[nextIndex]);
     }
     
-    private void SwitchToPreviousTarget()
-    {
-        var enemies = GetOrderedEnemies();
-        if (enemies.Count == 0) { ReleaseLock(); return; }
-        if (enemies.Count == 1) { SetTarget(enemies[0]); return; }
-        
-        int currentIndex = enemies.IndexOf(currentTarget);
-        int previousIndex = (currentIndex - 1 + enemies.Count) % enemies.Count;
-
-        Log($"🔄 LB: Cambiando target → {enemies[previousIndex].name}");
-        SetTarget(enemies[previousIndex]);
-    }
-    
     private void ReleaseLock()
     {
         if (!isLockActive) return;
@@ -390,25 +380,14 @@ public class CombatCameraTargeting : MonoBehaviour
 
         if (syncWithProjectileTargeting && playerTargeting != null)
         {
-            if (IsFacingTarget())
+            if (!playerTargeting.IsManualTargetActive || playerTargeting.CurrentTarget != currentTarget.transform)
             {
-                if (!playerTargeting.IsManualTargetActive || playerTargeting.CurrentTarget != currentTarget.transform)
-                {
-                    playerTargeting.SetManualTarget(currentTarget.transform);
-                    Log($"🔁 Resync marcador -> {currentTarget.name}");
-                }
-                else if (Time.frameCount % 30 == 0)
-                {
-                    playerTargeting.ForceVisualRefresh();
-                }
+                playerTargeting.SetManualTarget(currentTarget.transform);
+                Log($"🔁 Resync marcador -> {currentTarget.name}");
             }
-            else
+            else if (Time.frameCount % 30 == 0)
             {
-                if (playerTargeting.IsManualTargetActive)
-                {
-                    playerTargeting.ClearManualTarget();
-                    Log($"↩️ Enemigo fuera de ángulo frontal, ocultando marcador");
-                }
+                playerTargeting.ForceVisualRefresh();
             }
         }
     }
@@ -431,22 +410,11 @@ public class CombatCameraTargeting : MonoBehaviour
         Log("🪄 Levitación terminada → restaurando lock de cámara");
     }
 
-    private bool IsFacingTarget()
-    {
-        if (playerTransform == null || currentTarget == null) return false;
-        Vector3 toTarget = currentTarget.transform.position - playerTransform.position;
-        toTarget.y = 0f;
-        if (toTarget.sqrMagnitude < 0.001f) return true;
-        Vector3 fwd = playerTransform.forward;
-        fwd.y = 0f;
-        return Vector3.Angle(fwd, toTarget.normalized) <= facingAngleForMarker * 0.5f;
-    }
-
     private void Log(string message)
     {
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[CombatCameraTargeting] {message}");
             #endif
         }

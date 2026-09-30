@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7ae78e9c7f822d4cb2aa946c1c82558, type: 3}
+  m_Name: SpecialAttack_Trio
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialAttackSO
+  displayName: "Tr\xEDo"
+  icon: {fileID: 0}
+  isTrio: 1
+  first: 1
+  second: 2
+  companion: 0
+  companionMaxDistance: 12
+  companionAnimationTrigger: MagicSpecial
+  playerAnimationTrigger: MagicSpecial
+  gestureSeconds: 0.8
+  vfxPrefab: {fileID: 8240083682830294036, guid: 3eebe64e41953e842b2d3509bf070d1b, type: 3}
+  castSFXKey: SpecialAttack_Estela
+  vfxLifetime: 3
+  damageDelay: 0.4
+  damage: 200
+  aoeRadius: 6
+  knockbackForce: 25
+  shakeCameraOnCast: 1

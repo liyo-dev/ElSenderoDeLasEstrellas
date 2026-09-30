@@ -84,7 +84,7 @@ public class TeleportSystem : MonoBehaviour
     {
         if (IsTeleporting)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportSystem] Ya hay un teletransporte en progreso.");
 #endif
             return;
@@ -92,7 +92,7 @@ public class TeleportSystem : MonoBehaviour
         
         if (!TeleportRegistry.IsSystemAvailable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportSystem] Sistema de teletransporte no disponible (menos de 2 puntos desbloqueados).");
 #endif
             return;
@@ -103,7 +103,7 @@ public class TeleportSystem : MonoBehaviour
             teleportUI = FindAnyObjectByType<TeleportUI>();
             if (teleportUI == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[TeleportSystem] No se encontró TeleportUI en la escena.");
 #endif
                 return;
@@ -131,7 +131,7 @@ public class TeleportSystem : MonoBehaviour
     {
         if (IsTeleporting)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TeleportSystem] Ya hay un teletransporte en progreso.");
 #endif
             return;
@@ -139,7 +139,7 @@ public class TeleportSystem : MonoBehaviour
         
         if (string.IsNullOrEmpty(destinationAnchorId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TeleportSystem] destinationAnchorId es nulo o vacío.");
 #endif
             return;
@@ -148,7 +148,7 @@ public class TeleportSystem : MonoBehaviour
         // Verificar que el destino está desbloqueado
         if (!TeleportRegistry.IsUnlocked(destinationAnchorId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TeleportSystem] El punto {destinationAnchorId} no está desbloqueado.");
 #endif
             return;
@@ -174,7 +174,7 @@ public class TeleportSystem : MonoBehaviour
         
         if (player == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[TeleportSystem] No se encontró el jugador para el VFX de teletransporte.");
 #endif
             IsTeleporting = false;
@@ -233,7 +233,7 @@ public class TeleportSystem : MonoBehaviour
         TeleportService.OnTeleportEnded -= onTransitionEnd;
         if (!transitionEnded)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[TeleportSystem] Timeout esperando OnTeleportEnded para '{destinationAnchorId}' — se fuerza el cierre del teletransporte para no dejar al jugador bloqueado.");
             #endif
         }
@@ -262,7 +262,7 @@ public class TeleportSystem : MonoBehaviour
         OnTeleportCompleted?.Invoke();
         _teleportCoroutine = null;
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[TeleportSystem] Teletransporte completado a: {destinationAnchorId}");
 #endif
     }

@@ -85,7 +85,7 @@ public class BossIntroPresentation : MonoBehaviour
         // propio HideHUD()/ShowHUD() con fade. Lo ocultamos aquí explícitamente y en el mismo
         // "par" que el resto de la UI, para que no se quede a medio fade si esta presentación
         // arranca pegada a una cinemática que todavía estuviera mostrando el HUD.
-        PlayerHUDV2.Instance?.HideHUD(0.25f);
+        PlayerHUDV2.Instance?.HideHUD(this, 0.25f);
 
         // IMPORTANTE: todo lo que sigue va envuelto en try/finally. Si cualquier boss concreto
         // lanza una excepción a mitad de la presentación (p.ej. referencia nula específica de
@@ -187,7 +187,7 @@ public class BossIntroPresentation : MonoBehaviour
 
             // Restaurar toda la UI persistente con fade, pase lo que pase durante la presentación.
             SceneBoundUI.EndBossIntro(0.35f);
-            PlayerHUDV2.Instance?.ShowHUD(0.35f);
+            PlayerHUDV2.Instance?.ShowHUD(this, 0.35f);
 
             if (PlayerLockService.HasInstance) PlayerLockService.Instance.Release(this);
 

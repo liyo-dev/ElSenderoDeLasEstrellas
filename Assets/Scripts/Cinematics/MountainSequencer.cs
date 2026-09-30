@@ -167,7 +167,7 @@ public class MountainSequencer : CinematicSequencerBase
 
     // ── Secuencia principal ───────────────────────────────────────────────────
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [ContextMenu("Test — iniciar sin señal")]
     private void TestStartDirect() => StartCoroutine(Co_Sequence());
 #endif

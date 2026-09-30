@@ -246,7 +246,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         return stateInfo.IsName(dizzyState);
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     /// <summary>
     /// Solo para diagnóstico en Editor/Development Build: valor actual del InputMagnitude
     /// que este NPCSimpleAnimator está aplicando al Animator.
@@ -331,7 +331,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCAnimator] NavMeshAgent.angularSpeed muy bajo ({navAgent.angularSpeed}), aumentando a 360°/s");
 #endif
                     }
@@ -422,7 +422,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         if (animator == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[NPCAnimator] SetMovementSpeed llamado pero animator es null");
 #endif
             return;
@@ -509,7 +509,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] SetBattleMode({enable}) ignorado - NPC está muerto");
 #endif
                 }
@@ -563,7 +563,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator] Battle mode: {enable}");
 #endif
             }
@@ -698,7 +698,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (layer < 0) layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
         if (layer < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] HoldPose('{stateName}'): ese estado no " +
                 "existe en ningún layer de este Animator Controller. La pose no se va a ver.");
 #endif
@@ -783,7 +783,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator] Playing one-shot: {stateName}, length: {waitTime:F2}s");
 #endif
             }
@@ -810,7 +810,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] OneShot completado pero NPC está muerto - NO transicionar a Idle");
 #endif
                 }
@@ -887,7 +887,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[NPCAnimator] Begin interaction");
 #endif
             }
@@ -916,7 +916,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[NPCAnimator] End interaction");
 #endif
             }
@@ -966,7 +966,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAnimator] Parámetro 'IsTalking' no encontrado en Animator Controller");
 #endif
                 }
@@ -1053,7 +1053,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(searchingState))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] 🔍 PlaySearching() - Buscando al jugador");
 #endif
             // SenseSomethingSearching_NoWeapon vive en UpperBody layer (no debe congelar las piernas)
@@ -1080,7 +1080,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         if (getHitStates == null || getHitStates.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ No hay animaciones de daño configuradas");
 #endif
             return;
@@ -1091,7 +1091,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (!string.IsNullOrEmpty(selectedHitAnim))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] 💥 PlayGetHit() - Animación seleccionada: '{selectedHitAnim}' ({getHitStates.Length} variantes disponibles)");
 #endif
             PlayOneShot(selectedHitAnim);
@@ -1114,7 +1114,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void PlayDeath()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NPCAnimator:{gameObject.name}] 💀 PlayDeath() llamado - dieState: '{dieState}'");
 #endif
         
@@ -1123,7 +1123,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             _currentState = AnimationState.Dead;
             StopIdleVariations();
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] 🎬 Reproduciendo animación de muerte: {dieState}");
 #endif
             
@@ -1134,7 +1134,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 // Resetear el parámetro InputMagnitude a 0 para evitar movimiento residual
                 animator.SetFloat(InputMagnitudeHash, 0f);
                 animator.Play(dieState, 0); // Layer 0, reproducción inmediata
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ animator.Play('{dieState}', 0) ejecutado");
 #endif
             }
@@ -1146,7 +1146,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                 navAgent.velocity = Vector3.zero;
                 navAgent.updateRotation = false;
                 navAgent.updatePosition = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator:{gameObject.name}] NavMeshAgent detenido");
 #endif
             }
@@ -1154,13 +1154,13 @@ public class NPCSimpleAnimator : MonoBehaviour
             // NO desactivar el componente inmediatamente - dejar que la animación se reproduzca
             // enabled = false;  // ❌ COMENTADO - Esto evitaba que la animación se reprodujera
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ Animación de muerte iniciada");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ dieState está vacío - no se puede reproducir animación de muerte");
 #endif
         }
@@ -1183,7 +1183,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void PlayDizzy()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NPCAnimator:{gameObject.name}] 😵 PlayDizzy() llamado - dizzyState: '{dizzyState}'");
 #endif
         
@@ -1192,7 +1192,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             // Cambiar a estado normal (no muerto)
             _currentState = AnimationState.Idle;
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] 🎬 Reproduciendo animación de mareo: {dizzyState}");
 #endif
             
@@ -1201,18 +1201,18 @@ public class NPCSimpleAnimator : MonoBehaviour
                 // Reproducir la animación de mareo
                 animator.Play(dizzyState, 0);
                 animator.speed = 1f; // Asegurar velocidad normal
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ animator.Play('{dizzyState}', 0) ejecutado");
 #endif
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{gameObject.name}] ✅ Animación de mareo iniciada");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] ⚠️ dizzyState está vacío - no se puede reproducir animación de mareo");
 #endif
         }
@@ -1250,7 +1250,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] PlaySpellCastLeft: {spellCastLeftState} en layer {upperBodyLayer}");
 #endif
                 }
@@ -1271,7 +1271,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] PlaySpellCastRight: {spellCastRightState} en layer {upperBodyLayer}");
 #endif
                 }
@@ -1292,7 +1292,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] PlaySpellCastSpecial: {spellCastSpecialState} en layer {upperBodyLayer}");
 #endif
                 }
@@ -1322,7 +1322,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] Spell cast completado en UpperBody layer");
 #endif
                 }
@@ -1413,7 +1413,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{name}] 📢 OnDialogueStarted recibido");
 #endif
             }
@@ -1451,7 +1451,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{name}] 📢 OnDialogueClosed recibido");
 #endif
             }
@@ -1491,7 +1491,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAnimator:{name}] KeepLookingAtPlayerDuringDialogue - No se encontró el jugador");
                 #endif
             }
@@ -1500,7 +1500,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{name}] 👁️ Seguimiento de rotación iniciado durante diálogo");
 #endif
             }
@@ -1532,7 +1532,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{name}] 🔚 Seguimiento de rotación durante diálogo finalizado");
 #endif
             }
@@ -1550,7 +1550,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator:{name}] ✅ Rotación automática reactivada");
 #endif
             }
@@ -1578,7 +1578,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAnimator:{name}] FacePlayerInstantly: No se encontró jugador");
                 #endif
             }
@@ -1600,7 +1600,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             
             if (debugMode) 
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator:{name}] 👁️ Rotado INSTANTÁNEAMENTE hacia el jugador (ángulo: {targetRotation.eulerAngles.y:F1}°)");
 #endif
                 }
@@ -1728,7 +1728,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         int layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
         if (layer < 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCSimpleAnimator:{name}] La emoción {emotion} está mapeada a " +
                 $"'{stateName}', que no existe en ninguna capa del Animator. Revisa el " +
                 "EmotionProfile: ese nombre no hace nada.", this);
@@ -1795,7 +1795,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // (misma utilidad compartida que usan PromoVideo01Sequencer y PlayerDialogueAnimator).
         int resolvedLayer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico siempre visible (no depende de debugMode): si el estado no existe en NINGÚN
         // layer del Animator Controller de este NPC en concreto, PlayOneShot fallará en silencio
         // (CrossFadeToState solo loguea con debugMode activo). Esto confirma o descarta rápidamente
@@ -1826,6 +1826,15 @@ public class NPCSimpleAnimator : MonoBehaviour
             StopCoroutine(_victoryCelebrationCoroutine);
 
         _victoryCelebrationCoroutine = StartCoroutine(VictoryCelebrationRoutine(delay));
+    }
+
+    /// Anula la celebración de victoria que esté esperando su retardo. La usa quien monta su propia
+    /// celebración con este personaje (la foto de grupo al ganar, ver CelebracionEnGrupo).
+    public void CancelarCelebracionDeVictoria()
+    {
+        if (_victoryCelebrationCoroutine == null) return;
+        StopCoroutine(_victoryCelebrationCoroutine);
+        _victoryCelebrationCoroutine = null;
     }
 
     private IEnumerator VictoryCelebrationRoutine(float delay)
@@ -1874,7 +1883,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // de mostrar el hueco.
         if (!HasWorkingAnimation(activity))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] PlayAmbientActivity({activity}) omitida: " +
                 "clips de Begin/Loop aún sin importar en el Animator Controller (INC-130). " +
                 "El NPC no realizará la actividad hasta que se wireen los clips reales.");
@@ -2008,7 +2017,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         string loopState  = GetActivityLoopState(activity);
         int layer = GetActivityLayer(activity);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico (15 ago 2026): a diferencia de PlaySocialGesture (que sí avisa si el estado
         // no existe), este método no dejaba ningún rastro en consola cuando el Animator Controller
         // no tenía el estado begin/loop (p.ej. los clips de SitGround están "pendientes de
@@ -2295,7 +2304,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             {
                 Vector3 forward = transform.forward;
                 float angleDiff = Vector3.Angle(forward, direction);
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCAnimator] ROTACIÓN DEBUG:\n" +
                          $"  Transform.forward: {forward}\n" +
                          $"  NavAgent.velocity: {navAgent.velocity}\n" +
@@ -2325,7 +2334,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // ✅ DEBUG: Log aplicación de rotación
         if (debugMode && Time.frameCount % 60 == 0) // Cada 60 frames
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator] APLICANDO ROTACIÓN:\n" +
                      $"  Current: {transform.rotation.eulerAngles}\n" +
                      $"  Target: {_targetRotation.eulerAngles}\n" +
@@ -2415,7 +2424,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCAnimator] locomotionState está vacío");
 #endif
                 }
@@ -2436,7 +2445,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             // Solo loguear si no es un string vacío intencional
             if (!string.IsNullOrEmpty(stateName) && debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAnimator] CrossFadeToState falló - stateName: {stateName}, animator: {animator != null}");
 #endif
                 }
@@ -2455,7 +2464,7 @@ public class NPCSimpleAnimator : MonoBehaviour
             // ✅ Cambiado a Warning para no ensuciar la consola si un NPC específico no tiene una animación opcional
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAnimator] ⚠️ Estado '{stateName}' no encontrado en layer {layer} para {gameObject.name}.");
 #endif
                 }
@@ -2509,7 +2518,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         
         if (debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCAnimator] Cached {_clipLengthCache.Count} animation clips");
 #endif
             }

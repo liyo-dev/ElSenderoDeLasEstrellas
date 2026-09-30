@@ -21,7 +21,7 @@ public sealed class CombatLabPartyPanel : MonoBehaviour
     private bool _initialized;
     private string _status = "Solo";
 
-    public void Initialize(GameObject player)
+    public void Initialize(GameObject player, int composicionInicial = 0)
     {
         var config = Resources.Load<CombatLabConfig>("CombatLab/CombatLabConfig");
         if (config == null || config.liamPrefab == null || config.estelaPrefab == null)
@@ -52,7 +52,7 @@ public sealed class CombatLabPartyPanel : MonoBehaviour
         }
 
         _initialized = true;
-        ApplyComposition(0);
+        ApplyComposition(composicionInicial);
     }
 
     private static void SilenciarEscuchasDeCompanero(GameObject companion)

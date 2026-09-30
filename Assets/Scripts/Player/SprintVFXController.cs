@@ -18,7 +18,7 @@ public class SprintVFXController : MonoBehaviour
     [Tooltip("Retardo antes de activar el VFX para evitar parpadeos en sprints muy cortos")]
     [SerializeField] private float activationDelay = 0.15f;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Debug")]
     [SerializeField] private bool debugLog = false;
 #endif
@@ -46,7 +46,7 @@ public class SprintVFXController : MonoBehaviour
     {
         if (_animator == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SprintVFXController] No se encontró Animator. Desactivando.");
 #endif
             enabled = false;
@@ -83,7 +83,7 @@ public class SprintVFXController : MonoBehaviour
         bool isFlyingBoost = _flyingController != null && _flyingController.IsFlying && _flyingController.IsBoosting;
         bool shouldShow = isSprintRunning || isFlyingBoost;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (debugLog)
             Debug.Log($"[SprintVFX] IsGrounded={isGrounded} InputMag={inputMag:F2} FlyBoost={isFlyingBoost} shouldShow={shouldShow}");
 #endif

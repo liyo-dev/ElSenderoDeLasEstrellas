@@ -412,8 +412,6 @@ public static class WillTrialMazeBuilder
         var renderer = wall.GetComponent<MeshRenderer>();
         renderer.sharedMaterial = material;
 
-        GameObjectUtility.SetStaticEditorFlags(wall, StaticEditorFlags.NavigationStatic);
-
         if (isRealMirror)
         {
             wall.AddComponent<MirrorReflection>();
@@ -433,7 +431,6 @@ public static class WillTrialMazeBuilder
                 floor.transform.position = cellCenter + Vector3.down * (FloorThickness * 0.5f);
                 floor.transform.localScale = new Vector3(CellSize, FloorThickness, CellSize);
                 floor.GetComponent<MeshRenderer>().sharedMaterial = floorMat;
-                GameObjectUtility.SetStaticEditorFlags(floor, StaticEditorFlags.NavigationStatic);
             }
         }
     }

@@ -66,7 +66,7 @@ public sealed class QuestRequirement
     /// <summary>Indica si hay algún requisito configurado (mode != None y hay ID).</summary>
     public bool IsConfigured => mode != Mode.None && !string.IsNullOrEmpty(ResolvedId);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     public string DebugDescription()
     {
         if (!IsConfigured) return "Sin requisito";

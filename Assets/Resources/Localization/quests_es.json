@@ -479,6 +479,22 @@
         {
             "key": "QUEST_WILL_MISSION1_NAME",
             "value": "Algo inútil"
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_NAME",
+            "value": "Sigue a Eldran"
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_DESC",
+            "value": "Sigue a Eldran a ver qué quiere."
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_DETAIL",
+            "value": "Eldran sabe dónde está la caja que faltaba. Ve con él."
+        },
+        {
+            "key": "QUEST_ELDRAN_SIGUEME_STEP01_DESC",
+            "value": "Sigue a Eldran."
         }
     ]
 }

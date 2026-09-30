@@ -341,7 +341,7 @@ public class TabernaSequencer : CinematicSequencerBase
 
     // ── Secuencia principal ───────────────────────────────────────────────────
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [ContextMenu("Test — iniciar sin señal")]
     private void TestStartDirect() => StartCoroutine(Co_Sequence());
 #endif
@@ -806,12 +806,12 @@ public class TabernaSequencer : CinematicSequencerBase
             SeatNPC(npc, seat, simAnim, agent, behaviour);
         }
         catch (System.Exception
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             e
 #endif
         )
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             string npcName = npc != null ? npc.name : "NULL";
             Debug.LogError($"[TabernaSequencer] ❌ SeatNPC('{npcName}') lanzó una excepción y se abortó a " +
                 $"mitad — el NPC puede haber quedado a medio sentar (posición sin animación, o FSM " +
@@ -834,7 +834,7 @@ public class TabernaSequencer : CinematicSequencerBase
         // IsGrounded/isFlying) sin resolverse, y no tengo forma de inspeccionar el wiring del
         // Inspector de Cinematic_Taberna.unity desde aquí. Estos logs identifican en qué punto
         // exacto falla SeatNPC() para cada NPC — quitar una vez encontrada la causa real.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         string npcName = npc != null ? npc.name : "NULL";
         if (seat == null)
         {

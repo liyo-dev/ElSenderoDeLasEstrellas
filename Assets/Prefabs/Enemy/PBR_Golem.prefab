@@ -114,6 +114,9 @@ GameObject:
   - component: {fileID: 4726417671420510494}
   - component: {fileID: 1443765776427105792}
   - component: {fileID: 7148564349786104097}
+  - component: {fileID: 4621281258234471913}
+  - component: {fileID: 4791041056768204728}
+  - component: {fileID: 2450120384487338745}
   m_Layer: 7
   m_Name: PBR_Golem
   m_TagString: Boss
@@ -213,6 +216,7 @@ MonoBehaviour:
   rockRainAoeRadius: 3
   rockRainAoeDamage: 25
   rockWarningVFX: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}
+  rockLandingVfxScale: 0.6
   phase3HealthThreshold: 0.5
   jumpHeight: 8
   jumpDuration: 1.2
@@ -226,6 +230,7 @@ MonoBehaviour:
   attackCooldown: 3
   rockRainCooldown: 8
   jumpAttackCooldown: 12
+  attackRecoveryBeat: 0.35
   chargeSpeed: 18
   chargeAnimationSpeedMultiplier: 1.8
   chargeMinDistance: 5
@@ -235,14 +240,25 @@ MonoBehaviour:
   punchImpactVFX: {fileID: 1758473627833946668, guid: 9b21333b068a5084ba09535839bee3c8, type: 3}
   chargeCooldown: 10
   chargeOnPhaseChangeChance: 0.7
+  kitingChargeDelay: 2.5
   walkSpeed: 2.5
   rotationSpeed: 3
   modelRotationOffset: 0
+  maxLeashDistance: 20
+  leashReturnThreshold: 2
   enableContactDamage: 1
   contactDamage: 15
   contactDamageCooldown: 1.5
   chargeDamageMultiplier: 1.5
   contactRadius: 2
+  ataquesAntesDeCambiar: 2
+  segundosConSenuelo: 7
+  distanciaMaxSenuelo: 18
+  pausaAlCambiarObjetivo: 1
+  piezasFusion: 10
+  radioFusion: 9
+  duracionFusion: 1.2
+  escalaFusion: 1.25
   autoStartOnDetection: 1
   debugMode: 0
 --- !u!65 &4044291363522193637
@@ -278,8 +294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb4fad89a3ff4600bf9b5379a88fe8c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
-  bossName: Boss Golem
   bossNameId: BOSS_GOLEM_HEALTHBAR_NAME
+  bossName: Boss Golem
   barSize: {x: 400, y: 40}
   barPosition: {x: 0, y: -30}
   healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
@@ -289,6 +305,10 @@ MonoBehaviour:
   criticalThreshold: 0.25
   animateHealthChanges: 1
   animationSpeed: 5
+  fadeInDuration: 0.4
+  fadeOutDuration: 0.5
+  colorMarcaFase: {r: 1, g: 0.85, b: 0.3, a: 0.95}
+  colorMarcaSuperada: {r: 1, g: 1, b: 1, a: 0.25}
 --- !u!114 &6115329083915449752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,6 +417,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
   _profileId: 
   _spawnOrigin: {fileID: 0}
+--- !u!114 &4621281258234471913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939999298480460806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f36a009bf85dd84689f4714c41a49a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TransicionDeFaseDeJefe
+  vfxOnda: {fileID: 6526302276393259002, guid: f9d9793366789ae48a7e1b0692763acc, type: 3}
+  radioOnda: 7
+  empuje: 9
+  invulnerabilidad: 2.2
+  tintePorFase:
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0.8, b: 0.68, a: 1}
+  - {r: 1, g: 0.55, b: 0.5, a: 1}
+--- !u!114 &4791041056768204728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939999298480460806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77cdaaa78e189b64c933e5354cc06a79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ArmaduraFrontal
+  factorDeFrente: 0.2
+  anguloEspalda: 110
+  desfaseFrente: 0
+  vfxRebote: {fileID: 4809171458859421548, guid: 4e91ed1a8efe7044785b9bd97a47d87f, type: 3}
+  alturaVfx: 2
+--- !u!114 &2450120384487338745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939999298480460806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba0a080f785bcfe49a88892bc38bca7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RemateObligatorio
+  umbral: 0.1
+  vfxSello: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
+  puntoSello: {fileID: 0}
 --- !u!1 &1151455076570608189
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8841478096083396395
 Transform:
   m_ObjectHideFlags: 0

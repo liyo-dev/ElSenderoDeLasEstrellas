@@ -39,13 +39,13 @@ public class LorePopupPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[LorePopupPoint:{name}] OnTriggerEnter: '{other.name}' tag='{other.tag}' | usedThisSession={_usedThisSession} | persistenceId='{persistenceId}'");
 #endif
 
         if (_usedThisSession)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: ya usado esta sesión.");
 #endif
             return;
@@ -53,7 +53,7 @@ public class LorePopupPoint : MonoBehaviour
 
         if (!other.CompareTag("Player"))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: tag '{other.tag}' no es 'Player'.");
 #endif
             return;
@@ -61,7 +61,7 @@ public class LorePopupPoint : MonoBehaviour
 
         if (AlreadySeen())
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: persistenceId '{persistenceId}' ya está en seenLorePopupIds.");
 #endif
             return;
@@ -75,7 +75,7 @@ public class LorePopupPoint : MonoBehaviour
         {
             if (LorePopupUI.Instance == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[LorePopupPoint:{name}] ❌ loreConfig asignado pero LorePopupUI.Instance es NULL. Añade un LorePopupUI al Canvas de la escena.");
                 #endif
             }
@@ -89,13 +89,13 @@ public class LorePopupPoint : MonoBehaviour
             var signals = DefaultNarrativeSignals.Instance;
             if (signals == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[LorePopupPoint:{name}] ❌ narrativeEventKey='{narrativeEventKey}' pero DefaultNarrativeSignals.Instance es NULL.");
                 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LorePopupPoint:{name}] ✅ RaiseCustom('{narrativeEventKey}')");
 #endif
                 signals.RaiseCustom(narrativeEventKey, name);
@@ -104,7 +104,7 @@ public class LorePopupPoint : MonoBehaviour
 
         if (loreConfig == null && string.IsNullOrEmpty(narrativeEventKey))
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LorePopupPoint:{name}] ⚠️ Ni loreConfig ni narrativeEventKey están asignados. El trigger no hace nada.");
             #endif
         }

@@ -453,6 +453,18 @@
             "value": "Follow the path; it can’t be far."
         },
         {
+            "key": "DLG_ELDRAN_WILL_MISSION1_INPROGRESS_01",
+            "value": "Haven’t spent it yet? Something silly, Will—whatever you like."
+        },
+        {
+            "key": "DLG_ELDRAN_WILL_MISSION1_INPROGRESS_02",
+            "value": "Take a stroll around the market stalls; something’s bound to catch your eye."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION3_INPROGRESS_01",
+            "value": "Not now, Will! Watch the ring around his neck!"
+        },
+        {
             "key": "DLG_ELDRAN_MISSION2_OFFER_01",
             "value": "Thanks for coming."
         },
@@ -478,7 +490,7 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_02",
-            "value": "I knew I could count on you."
+            "value": "And not a word to Victoria, all right?"
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_03",
@@ -790,11 +802,11 @@
         },
         {
             "key": "DLG_GUERRERACHINA_05",
-            "value": "You can use PROTECTION if <kbonly>you hold down <sprite name=\"interactable_lt\"></kbonly><gpadonly>you press <sprite name=\"interactable_lt\"> and <sprite name=\"interactable_rt\"> at the same time</gpadonly>."
+            "value": "You can use PROTECTION if you hold down <sprite name=\"interactable_b\">."
         },
         {
             "key": "DLG_GUERRERACHINA_06",
-            "value": "I'm going to give you a new spell: PRISM BALL. Use <sprite name=\"interactable_b\"> and attack me with it."
+            "value": "I'm going to give you a new spell: PRISM BALL. Pick it with <sprite name=\"interactable_lb\"> and attack me with <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_GUERRERACHINA_07",
@@ -1362,11 +1374,11 @@
         },
         {
             "key": "DLG_ELDRAN_CAJA_01",
-            "value": "Good thing I caught up with you. All that talk about the pears nearly made me forget something."
+            "value": "Good thing I caught up with you. I know where the other crate is."
         },
         {
             "key": "DLG_ELDRAN_CAJA_02",
-            "value": "I left a crate of apples in there, in the forest. Could you fetch it for me?"
+            "value": "The crate’s in there, full of apples. Could you fetch it for me?"
         },
         {
             "key": "DLG_ELDRAN_CAJA_03",
@@ -1379,6 +1391,34 @@
         {
             "key": "DLG_ELDRAN_CAJA_05",
             "value": "Come, follow me."
+        },
+        {
+            "key": "DLG_ELDRAN_SIGUEME_INPROGRESS_01",
+            "value": "Don't fall behind, Will. We're almost there."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_01",
+            "value": "So where’s the other crate?"
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_02",
+            "value": "In the forest. I left it there this morning."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_03",
+            "value": "Victoria’s never going to let you forget it."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_01",
+            "value": "So, what did you spend the coin on?"
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_02",
+            "value": "A wooden star. A bit crooked."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_03",
+            "value": "Then it's perfect."
         }
     ]
 }

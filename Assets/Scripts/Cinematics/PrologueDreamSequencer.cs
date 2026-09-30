@@ -372,7 +372,7 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PrologueDreamSequencer] Falta asignar magoOscuroPrefab.", this);
 #endif
         }
@@ -388,7 +388,7 @@ public class PrologueDreamSequencer : CinematicSequencerBase
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PrologueDreamSequencer] Falta asignar willOriginalPrefab.", this);
 #endif
         }
@@ -1567,7 +1567,7 @@ public class PrologueDreamSequencer : CinematicSequencerBase
             Destroy(_stageRoot.gameObject);
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     void OnValidate()
     {
         if (warFlashVisuals != null && warFlashVisuals.Length == 0)

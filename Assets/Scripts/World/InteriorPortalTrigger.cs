@@ -56,7 +56,7 @@ public class InteriorPortalTrigger : MonoBehaviour
 
         if (string.IsNullOrEmpty(targetAnchorId))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[InteriorPortalTrigger] {name}: targetAnchorId vacío.");
 #endif
             return;
@@ -101,7 +101,7 @@ public class InteriorPortalTrigger : MonoBehaviour
                     {
                         while (!op.isDone) yield return null;
                     }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     else
                     {
                         Debug.LogError($"[InteriorPortalTrigger] {name}: no se pudo iniciar la carga aditiva de '{sceneToLoad}'.");
@@ -163,7 +163,7 @@ public class InteriorPortalTrigger : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[InteriorPortalTrigger] {name}: teleport a '{targetAnchorId}' completado" +
                   (string.IsNullOrEmpty(sceneToLoad) ? "" : $" (cargada '{sceneToLoad}')") +
                   (string.IsNullOrEmpty(pendingSceneToUnload) ? "" : $" (descargando '{pendingSceneToUnload}')") + ".");

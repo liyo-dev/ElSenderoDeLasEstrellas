@@ -164,18 +164,18 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         {
             if (_sequenceRunning)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: señal de entrada '{ResolvedSignalIn}' recibida mientras la secuencia ya está en curso — ignorada para evitar solapamiento y un Push/Pop de ActionMode.Cinematic desbalanceado.");
 #endif
                 return;
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Secuencia:{name}] Recibida '{_resolvedSignalIn}': empieza.");
 #endif
             _activeSequenceCoroutine = StartCoroutine(Co_SequenceGuarded());
         };
         _resolvedSignalIn = ResolvedSignalIn;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // INC-430: una secuencia sin señal de entrada no se entera de nada y antes no lo decía.
         if (string.IsNullOrEmpty(_resolvedSignalIn))
             Debug.LogWarning($"[Secuencia:{name}] No tiene señal de entrada: no va a arrancar " +
@@ -207,7 +207,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         señales.OnCustom(_resolvedSignalIn, _signalInHandler);
         _señalesSuscritas = señales;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Secuencia:{name}] A la espera de '{_resolvedSignalIn}' " +
                   $"(y avisará con '{ResolvedSignalOut}') en '{señales.name}'.");
 #endif
@@ -245,7 +245,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             Telon.Soltar(ClaveTelon);   // red de seguridad: idempotente
             if (_cinematicLocked)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name} terminó de forma anómala con la cinemática aún bloqueada (HUD oculto). Restaurando estado.");
 #endif
                 EndCinematic();
@@ -333,11 +333,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         s_activeSequenceCount++;
         if (wasInactive) OnAnySequenceActiveChanged?.Invoke(true);
         ResolveActionManager()?.PushMode(ActionMode.Cinematic);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (PlayerHUDV2.Instance == null)
             Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: PlayerHUDV2.Instance es null al bloquear la cinemática — el HUD no se ocultará (fallo silencioso con ?.).");
 #endif
-        PlayerHUDV2.Instance?.HideHUD();
+        PlayerHUDV2.Instance?.HideHUD(this);
         MinimapController.Instance?.SetHiddenByCinematic(true);
         // FIX INC-058: el icono del período del día (HUD) también debe ocultarse durante secuencias.
         TimeOfDayIndicator.Instance?.Hide();
@@ -368,7 +368,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
-        PlayerHUDV2.Instance?.ShowHUD();
+        PlayerHUDV2.Instance?.ShowHUD(this);
         MinimapController.Instance?.SetHiddenByCinematic(false);
         // FIX INC-058: restaurar el icono del período del día al terminar la secuencia.
         TimeOfDayIndicator.Instance?.Show();
@@ -648,7 +648,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         var profile = ResolveAudioProfile();
         if (profile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: no hay AudioGraphProfile " +
                 $"(ni en el Inspector de este componente ni en AudioService) — la música '{sequenceId}' " +
                 "no puede sonar.");
@@ -659,7 +659,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         var rule = profile.GetSequenceRule(sequenceId);
         if (rule?.music == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: el AudioGraphProfile " +
                 $"'{profile.name}' no tiene ninguna regla de secuencia con id '{sequenceId}' (o la " +
                 "tiene sin clip asignado). Revisa la lista de Sequence Rules del perfil.");
@@ -669,7 +669,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
         if (AudioService.Instance == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: AudioService.Instance es " +
                 $"null — la música '{sequenceId}' no puede sonar. ¿Arrancaste desde Start.unity?");
 #endif
@@ -677,7 +677,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         }
 
         AudioService.Instance.PlayMusic(rule.music, rule.fadeIn);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CinematicSequencerBase] {GetType().Name}: música de secuencia '{sequenceId}' → " +
             $"'{rule.music.name}' (fadeIn {rule.fadeIn}s).");
 #endif
@@ -686,29 +686,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected void RestoreMusic()
     {
         if (AudioService.Instance == null) return;
-        // Nunca en seco (INC-421): al acabar una cinemática la música de la escena entra fundida,
+        // Nunca en seco (INC-421): al acabar una cinemática la música del lugar entra fundida,
         // por lo menos dos segundos, aunque la regla pida menos.
         float fadeDur = Mathf.Max(MusicRule?.fadeOut ?? 0.8f, 2f);
 
-        // FIX INC-185 (9 sept 2026): antes esto restauraba siempre la música de ESCENA por
-        // defecto, sin comprobar si el jugador está dentro de una AmbientZone con música propia
-        // (p. ej. el Bosque Prohibido) — al terminar una cinemática ahí (EstelaAppearsSequencer)
-        // se perdía la música de zona y volvía la de mundo. Mismo criterio de prioridad que ya
-        // usan AudioService.RestoreAfterBattle/OnBattleWonRestoreMusic/RestoreAfterMinigame:
-        // si hay una AmbientZone activa con música propia, restaurar esa antes que la de escena.
-        var activeAmbientZone = AmbientZone.CurrentActiveZone;
-        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
-        {
-            var zoneRule = AudioService.Instance.profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
-            if (zoneRule?.music != null)
-            {
-                AudioService.Instance.PlayMusic(zoneRule.music, fadeDur);
-                return;
-            }
-        }
-
-        if (!AudioService.Instance.RestoreSceneMusic(fadeDur))
-            AudioService.Instance.StopMusic(fadeDur);
+        // Se pide, no se pone: si lo siguiente es un jefe u otra cinemática, su música entra
+        // directamente sobre la de esta escena (ver AudioService.PedirMusicaDelLugar).
+        AudioService.Instance.PedirMusicaDelLugar(fadeDur);
     }
 
     // ── Señales ───────────────────────────────────────────────────────────────
@@ -751,7 +735,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         // diferencia para no repetir la misma investigación cada vez.
         if (GameBootService.Profile == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CinematicSequencerBase] HasCinematicBeenSeen('{id}'): GameBootService.Profile " +
                 "es null, así que no se puede saber si esta cinemática ya se vio (se asume que no). Si esperabas " +
                 "que sus actores ya estuvieran ocultos, probablemente entraste en Play Mode directamente sobre " +
@@ -932,7 +916,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             from.rotation = Quaternion.LookRotation(dir);
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [Header("Debug")]
     [Tooltip("Tecla que dispara 'Simular secuencia' en Play Mode — mismo efecto que el menú contextual " +
         "del componente (click derecho en la cabecera → 'Simular secuencia'), sin tener que entrar en el " +

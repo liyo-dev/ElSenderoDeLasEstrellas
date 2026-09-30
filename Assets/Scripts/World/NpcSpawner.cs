@@ -69,7 +69,7 @@ public static class NpcSpawner
 
                 if (!entry.Validate(out string error))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError($"[NpcSpawner] Roster '{roster.rosterId}': entrada inválida — {error}. Se omite.");
 #endif
                     continue;
@@ -80,7 +80,7 @@ public static class NpcSpawner
 
                 if (!entry.ConditionMet())
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NpcSpawner] '{entry.spawnId}' no cumple su condición (flag '{entry.requiredFlag}') — no se instancia.");
 #endif
                     continue;
@@ -89,7 +89,7 @@ public static class NpcSpawner
                 var point = NpcSpawnRegistry.Get(entry.spawnId);
                 if (point == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NpcSpawner] No hay ningún NpcSpawnPoint con spawnId '{entry.spawnId}' en la escena actual — '{entry.gameObjectName}' no aparece. " +
                                      "(Normal si el marcador vive en otra escena.)");
 #endif
@@ -103,7 +103,7 @@ public static class NpcSpawner
                 if (!string.IsNullOrEmpty(entry.persistenceId) && NPCRegistry.HasInstance
                     && NPCRegistry.Instance.TryGetNPCByID(entry.persistenceId, out var ya))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NpcSpawner] '{entry.spawnId}': ya hay un '{entry.persistenceId}' en el mundo " +
                                      $"('{ya.name}', escena '{ya.gameObject.scene.name}'). No se crea otro: quítalo de la escena " +
                                      "si debe venir del roster.", ya);
@@ -120,7 +120,7 @@ public static class NpcSpawner
             Object.Destroy(holder);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (created > 0)
             Debug.Log($"[NpcSpawner] Roster '{roster.rosterId}': {created} NPC(s) instanciados.");
 #endif
@@ -160,7 +160,7 @@ public static class NpcSpawner
             var brain = go.GetComponent<NPCBehaviourManagerV2>();
             if (brain != null)
                 brain.OverrideIdentityBeforeAwake(entry.persistenceId);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
                 Debug.LogWarning($"[NpcSpawner] '{entry.gameObjectName}' no tiene NPCBehaviourManagerV2 — no se puede aplicar persistenceId '{entry.persistenceId}'.");
 #endif
@@ -197,7 +197,7 @@ public static class NpcSpawner
 
         if (NavMesh.SamplePosition(raw, out var hit, NavMeshSampleRadius, NavMesh.AllAreas))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (Vector3.Distance(raw, hit.position) > 0.75f)
             {
                 Debug.LogWarning($"[NpcSpawner] El marcador '{spawnId}' está a {Vector3.Distance(raw, hit.position):0.00} m del NavMesh más cercano. " +
@@ -207,7 +207,7 @@ public static class NpcSpawner
             return hit.position;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogError($"[NpcSpawner] El marcador '{spawnId}' NO tiene NavMesh en {NavMeshSampleRadius} m. " +
                        "El NPC aparecerá ahí igualmente, pero su NavMeshAgent no funcionará (no podrá caminar).");
 #endif

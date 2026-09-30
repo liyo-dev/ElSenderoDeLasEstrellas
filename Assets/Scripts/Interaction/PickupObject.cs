@@ -13,13 +13,17 @@ public class PickupObject : MonoBehaviour
     void Awake()
     {
         _interactable = GetComponent<Interactable>();
+
+        // Lo que se lleva en brazos se mueve o se entrega: su estado va en la partida (INC-540).
+        if (!TryGetComponent<ObjetoPersistente>(out _))
+            gameObject.AddComponent<ObjetoPersistente>();
     }
 
     void Start()
     {
         if (_interactable == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PickupObject] Falta Interactable en {name}");
 #endif
             return;
@@ -43,7 +47,7 @@ public class PickupObject : MonoBehaviour
 
         if (carry == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PickupObject] No se encuentra PlayerCarrySystem en {name}");
 #endif
             return;

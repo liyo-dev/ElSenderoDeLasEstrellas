@@ -137,7 +137,7 @@ public class SequenceStage : MonoBehaviour
             if (module != null && module.Handles(routine))
                 return module;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         var disponibles = new List<string>();
         foreach (var module in _modules)
             if (module != null && module.Routines != null)
@@ -177,7 +177,7 @@ public class SequenceStage : MonoBehaviour
                 return entry.target;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[SequenceStage:{name}] No hay ningún {what} llamado '{wanted}'. " +
             $"Disponibles: {string.Join(", ", NamesOf(list))}. " +
             "Revisa el nombre en el asset de la secuencia, o añade el punto en este componente.");

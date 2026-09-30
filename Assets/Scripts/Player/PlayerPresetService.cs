@@ -52,7 +52,6 @@ public class PlayerPresetService : MonoBehaviour
             ServiceLocator.Register(_manaPool);
         }
         _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>(); // ← NUEVO: obtener PlayerActionManager
-        _inventory = GetComponent<Inventory>() ?? GetComponentInParent<Inventory>(); // ← NUEVO: obtener Inventory
     }
 
     // Suscribirnos al evento y cubrir el caso de que ya esté disponible
@@ -87,14 +86,14 @@ public class PlayerPresetService : MonoBehaviour
         if (!profile)
         {
             enabled = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerPresetService] Falta GameBootProfile.");
 #endif
             return;
         }
         if (!spellLibrary)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] SpellLibrary no asignada en el inspector — algunas funcionalidades (resolución de SpellId) no estarán disponibles.");
 #endif
         }
@@ -106,7 +105,7 @@ public class PlayerPresetService : MonoBehaviour
         var preset = profile.GetActivePresetResolved();
         if (!preset) 
         { 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] Sin preset activo."); 
 #endif
             return; 
@@ -151,7 +150,7 @@ public class PlayerPresetService : MonoBehaviour
         {
             if (preset.abilities == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPresetService] preset.abilities es NULL — creando con valores por defecto");
 #endif
                 preset.abilities = new PlayerAbilities { swim = false, jump = false, climb = false, magic = false, fly = false };
@@ -163,7 +162,7 @@ public class PlayerPresetService : MonoBehaviour
         }
         else if (_actionManager == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No se encontró PlayerActionManager para aplicar abilities del preset");
 #endif
         }
@@ -188,7 +187,7 @@ public class PlayerPresetService : MonoBehaviour
 
         if (_appearanceBuilder == null && !_warnedMissingAppearanceBuilder)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No se encontro ModularAutoBuilder para sincronizar la apariencia del jugador.");
 #endif
             _warnedMissingAppearanceBuilder = true;
@@ -202,7 +201,7 @@ public class PlayerPresetService : MonoBehaviour
         EnsureAppearanceBuilderReference();
         if (_appearanceBuilder == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerPresetService] ❌ APARIENCIA NO APLICADA: _appearanceBuilder es NULL. El jugador mantendrá la apariencia del prefab.");
 #endif
             return;
@@ -216,7 +215,7 @@ public class PlayerPresetService : MonoBehaviour
         if (entries == null || entries.Count == 0)
         {
             var currentSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerPresetService] ⚠️ Preset '{preset.name}' sin apariencia definida (activeSlot={currentSlot}). " +
                 "Se omite la aplicación al builder para evitar invisibilidad. " +
                 "Define la apariencia en el Inspector del preset para control preciso.");
@@ -236,7 +235,7 @@ public class PlayerPresetService : MonoBehaviour
 
         var activeSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Guardado tras el mismo patrón que otros logs del proyecto (p.ej. CloudCoverSpawner):
         // el ConvertAll+string.Join alocaba en cada cambio de personaje/apariencia incluso en build
         // final, donde nadie lee la consola. Ahora solo se construye el string en Editor/dev builds.
@@ -250,13 +249,13 @@ public class PlayerPresetService : MonoBehaviour
             var snap = registry?.GetAppearance(PartyControlManager.CharacterSlot.Will);
             if (registry != null && registry.HasWillSnapshot && snap?.Count > 0 && IsSelectionCorrupted(selection, registry))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPresetService] ↩️ preset.appearance corrompido — registry de Will NO se sobreescribe.");
 #endif
                 return;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerPresetService] ↩️ Slot activo es {activeSlot} (no Will): guardando apariencia de Will en registry sin tocar el builder.");
 #endif
             CharacterAppearanceRegistry.Instance?.SetAppearanceFromList(
@@ -277,7 +276,7 @@ public class PlayerPresetService : MonoBehaviour
             bool corrupted = reg.HasWillSnapshot && willSnap.Count > 0 && IsSelectionCorrupted(selection, reg);
             if (corrupted)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerPresetService] ⚠️ Corrupción detectada en preset.appearance. Aplicando snapshot existente del registry sin sobreescribir.");
 #endif
                 reg.ApplyAppearance(PartyControlManager.CharacterSlot.Will);
@@ -290,14 +289,14 @@ public class PlayerPresetService : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] CharacterAppearanceRegistry no disponible — aplicando directamente al builder.");
 #endif
             _appearanceBuilder.DeactivateAllCategories();
             _appearanceBuilder.ApplySelection(selection);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerPresetService] ✅ Apariencia de Will aplicada al builder. Partes activas: [{string.Join(", ", _appearanceBuilder.GetSelection().Select(kv => $"{kv.Key}:{kv.Value}"))}]");
 #endif
     }
@@ -335,7 +334,7 @@ public class PlayerPresetService : MonoBehaviour
         // activo es Will, ver comentario ahí — por diseño debería llegar limpio).
         if (LooksLikeOtherCharacter(willSnap, estelaApp, liamApp))
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] ⚠️ El pre-snapshot de Will coincide con la " +
                 "apariencia de Estela/Liam — no es una referencia fiable para detectar corrupción " +
                 "(bug 'dos Estelas y un Will'). Se omite la comprobación y se confía en preset.appearance.");
@@ -361,7 +360,7 @@ public class PlayerPresetService : MonoBehaviour
 
         if (corruptCount >= 2)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerPresetService] 🔍 {corruptCount} partes de otro personaje detectadas en preset.appearance.");
 #endif
             return true;
@@ -407,7 +406,7 @@ public class PlayerPresetService : MonoBehaviour
 
         if (!GameBootService.IsAvailable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] GameBootService no esta listo; no se guarda la apariencia.");
 #endif
             return;
@@ -416,7 +415,7 @@ public class PlayerPresetService : MonoBehaviour
         var profile = GameBootService.Profile;
         if (profile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] GameBootService.Profile es null; no se guarda la apariencia.");
 #endif
             return;
@@ -425,7 +424,7 @@ public class PlayerPresetService : MonoBehaviour
         var preset = profile.GetActivePresetResolved();
         if (preset == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No hay preset activo; no se guarda la apariencia.");
 #endif
             return;
@@ -454,7 +453,7 @@ public class PlayerPresetService : MonoBehaviour
             });
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerPresetService] Apariencia guardada en el preset activo.");
 #endif
         
@@ -503,7 +502,7 @@ public class PlayerPresetService : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No se encontró componente Inventory para cargar el inventario del preset");
 #endif
         }
@@ -545,9 +544,8 @@ public class PlayerPresetService : MonoBehaviour
             if (maxMP <= 0f)
             {
                 float highestCost = 0f;
-                // Revisar slots asignados
-                SpellId[] slotIds = new[] { preset.leftSpellId, preset.rightSpellId, preset.specialSpellId };
-                foreach (var id in slotIds)
+                // Revisar básicos equipados
+                foreach (var id in preset.basicSpellIds ?? new List<SpellId>())
                 {
                     if (id == SpellId.None) continue;
                     var s = spellLibrary != null ? spellLibrary.Get(id) : null;
@@ -599,120 +597,62 @@ public class PlayerPresetService : MonoBehaviour
          }
          else
          {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
              Debug.LogWarning("[PlayerPresetService] No se encontró ManaPool en escena para sincronizar MP");
 #endif
          }
     }
 
+    /// Equipa en MagicCaster los hechizos básicos del preset (hasta cuatro, en orden de rotación).
+    /// Se descartan los que no están en SpellLibrary, los de solo especial y los repetidos. Si el
+    /// preset no trae ninguno, o autoFillEmptySlotsFromUnlocked está activo, se completan con los
+    /// desbloqueados.
     private void ConfigureSpells(PlayerPresetSO preset)
     {
-        // Resolver IDs respetando None
-        var leftId = preset.leftSpellId;
-        var rightId = preset.rightSpellId;
-        var specialId = preset.specialSpellId;
+        var basics = new List<MagicSpellSO>(MagicCaster.BasicSlotCount);
 
-        // Fallback: si no hay ningún slot asignado pero sí hay desbloqueados, autocompletamos aunque la opción esté desactivada
-        bool allNone = leftId == SpellId.None && rightId == SpellId.None && specialId == SpellId.None;
-
-        var left = leftId == SpellId.None ? null : spellLibrary.Get(leftId);
-        var right = rightId == SpellId.None ? null : spellLibrary.Get(rightId);
-        var special = specialId == SpellId.None ? null : spellLibrary.Get(specialId);
-
-        if (leftId != SpellId.None && left == null)
+        void TryAdd(SpellId id)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning($"[PlayerPresetService] Left ID {leftId} no está en SpellLibrary");
-            #endif
-        }
-        if (rightId != SpellId.None && right == null)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning($"[PlayerPresetService] Right ID {rightId} no está en SpellLibrary");
-            #endif
-        }
-        if (specialId != SpellId.None && special == null)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning($"[PlayerPresetService] Special ID {specialId} no está en SpellLibrary");
-            #endif
-        }
-
-        // Validar tipos de slot
-        if (left && left.slotType == SpellSlotType.SpecialOnly)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning("[PlayerPresetService] Left es SpecialOnly, se descarta");
-            #endif
-            left = null;
-        }
-        if (right && right.slotType == SpellSlotType.SpecialOnly)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning("[PlayerPresetService] Right es SpecialOnly, se descarta");
-            #endif
-            right = null;
-        }
-        if (special && special.slotType != SpellSlotType.SpecialOnly)
-        {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.LogWarning("[PlayerPresetService] Special no es SpecialOnly, se descarta");
-            #endif
-            special = null;
-        }
-
-        // Evitar duplicados en slots izq/der (limpieza automática, normal en transiciones)
-        if (left && right && leftId == rightId) 
-        { 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[PlayerPresetService] Duplicado detectado en Left/Right ({leftId}), se limpia automáticamente"); 
-#endif
-            right = null; 
-        }
-
-        // Auto-completar slots vacíos (opcional o por fallback si todos estaban None)
-        if ((autoFillEmptySlotsFromUnlocked || allNone) && preset.unlockedSpells != null)
-        {
-            MagicSpellSO FindFirstAvailable(bool requireSpecial, SpellId avoid)
+            if (id == SpellId.None || basics.Count >= MagicCaster.BasicSlotCount) return;
+            var spell = spellLibrary.Get(id);
+            if (spell == null)
             {
-                foreach (var id in preset.unlockedSpells)
-                {
-                    if (id == SpellId.None || id == avoid) continue;
-                    var s = spellLibrary.Get(id);
-                    if (!s) continue;
-                    if (requireSpecial && s.slotType != SpellSlotType.SpecialOnly) continue;
-                    if (!requireSpecial && s.slotType == SpellSlotType.SpecialOnly) continue;
-                    return s;
-                }
-                return null;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[PlayerPresetService] El hechizo {id} no está en SpellLibrary");
+#endif
+                return;
             }
-
-            if (!left) left = FindFirstAvailable(false, rightId);
-            if (!right) right = FindFirstAvailable(false, leftId);
-            if (!special) special = FindFirstAvailable(true, SpellId.None);
+            if (spell.slotType == SpellSlotType.SpecialOnly || basics.Contains(spell)) return;
+            // Los básicos de Estela y Liam van en sus propias ranuras (INC-503).
+            if (spell.caster != PartyControlManager.CharacterSlot.Will) return;
+            basics.Add(spell);
         }
 
-        // Aplicar configuración al spawner
+        if (preset.basicSpellIds != null)
+            foreach (var id in preset.basicSpellIds) TryAdd(id);
+
+        if ((autoFillEmptySlotsFromUnlocked || basics.Count == 0) && preset.unlockedSpells != null)
+            foreach (var id in preset.unlockedSpells) TryAdd(id);
+
         if (_spawner != null)
-        {
-            _spawner.SetSpells(left, right, special);
             _spawner.SetInstigator(instigatorOverride ? instigatorOverride : gameObject);
-        }
 
-        // ← NUEVO: Aplicar configuración al MagicCaster también
-        if (_magicCaster)
+        // Con Estela o Liam al mando, el MagicCaster lleva los suyos: los de Will se guardan para
+        // cuando vuelva (INC-498).
+        var swapper = ActiveCharacterSwapper.Instance;
+        if (swapper != null && swapper.TrySetWillBasicsWhileAway(basics))
         {
-            _magicCaster.SetSpells(left, right, special);
-            //Debug.Log($"[PlayerPresetService] MagicCaster configurado con hechizos del preset");
+        }
+        else if (_magicCaster)
+        {
+            _magicCaster.SetBasicSpells(basics);
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No se encontró MagicCaster en el GameObject");
 #endif
         }
-
-        //Debug.Log($"[PlayerPresetService] Hechizos configurados - L:{left?.name} R:{right?.name} S:{special?.name}");
     }
 
     // === NUEVO: API pública para re-aplicar el preset activo en runtime (incluye mana) ===
@@ -720,7 +660,7 @@ public class PlayerPresetService : MonoBehaviour
     {
         if (!GameBootService.IsAvailable)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] GameBootService aún no está disponible");
 #endif
             return;
@@ -728,7 +668,7 @@ public class PlayerPresetService : MonoBehaviour
         var preset = GameBootService.Profile.GetActivePresetResolved();
         if (!preset)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerPresetService] No hay preset activo para aplicar");
 #endif
             return;
@@ -760,16 +700,16 @@ public class PlayerPresetService : MonoBehaviour
             {
                 if (preset.abilities == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[PlayerPresetService] preset.abilities es NULL en ApplyCurrentPreset — creando con valores por defecto");
 #endif
                     preset.abilities = new PlayerAbilities { swim = true, jump = true, climb = true, magic = false, fly = true };
                 }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerPresetService] Re-aplicando abilities: Swim={preset.abilities.swim} Jump={preset.abilities.jump} Climb={preset.abilities.climb} Fly={preset.abilities.fly} Magic={preset.abilities.magic}");
 #endif
                 _actionManager.ApplyAbilities(preset.abilities);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[PlayerPresetService] Re-aplicado preset: abilities actualizadas");
 #endif
             }

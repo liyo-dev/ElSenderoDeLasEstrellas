@@ -1,357 +1,401 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Invector.vCharacterController;
 
-/// Sistema completo de gestión de magia: cooldowns, maná, validaciones
+/// <summary>
+/// Magia del jugador: los hechizos básicos que lleva (hasta <see cref="BasicSlotCount"/>, que se
+/// rotan en combate), la serie de la X y el único punto por el que sale cualquier hechizo,
+/// <see cref="Cast"/>: permisos, maná, giro hacia el objetivo, compromiso de
+/// movimiento, sostén en el aire, gesto de la capa superior y materialización en el spawner.
+/// Ver INC-483, INC-484 y INC-486.
+/// </summary>
 [DisallowMultipleComponent]
-public class MagicCaster : MonoBehaviour, IMagicCaster
+public class MagicCaster : MonoBehaviour
 {
+    public const int BasicSlotCount = 4;
+
     [Header("Referencias")]
     [SerializeField] private ManaPool manaPool;
     [SerializeField] private PlayerActionManager actionManager;
     [SerializeField] private MagicProjectileSpawner spawner;
-    [SerializeField] private SpecialChargeMeter specialChargeMeter;
     [SerializeField] private PlayerShieldController shieldController;
+    [Tooltip("Controlador del personaje: giro, bloqueo de movimiento, sostén en el aire y gestos. Se busca solo si está vacío.")]
+    [FormerlySerializedAs("motor")]
+    [SerializeField] private vThirdPersonController controller;
+
+    [Header("Serie básica (X)")]
+    [Tooltip("Segundos tras un lanzamiento en los que el siguiente continúa la serie (derecha, izquierda, centro). Pasado este tiempo vuelve a empezar.")]
+    [SerializeField, Min(0.1f)] private float seriesWindow = 1.1f;
+    [Tooltip("Multiplicador de daño del tercer golpe de la serie (centro, a dos manos).")]
+    [SerializeField, Min(1f)] private float finisherDamageMultiplier = 1.5f;
+
+    [Header("Gestos (rutas completas en la capa superior)")]
+    [SerializeField] private string leftHandState = "UpperBody.Magic.MagicLeft";
+    [SerializeField] private string rightHandState = "UpperBody.Magic.MagicRight";
+    [SerializeField] private string centerState = "UpperBody.Magic.MagicSpecial";
+
+    [Header("Gestos por estilo (MagicSpellSO.castStyle, fuera de la serie)")]
+    [SerializeField] private string twoHandedState = "UpperBody.Magic.HumanM@MagicAttackDirect2H01 - Cast";
+    [SerializeField] private string omniState = "UpperBody.Magic.HumanM@MagicAttackOmni01 - Cast";
+    [Tooltip("Pose de carga previa al gesto omni (brazos juntos arriba). Es la misma del combo mágico.")]
+    [SerializeField] private string omniLoadState = "UpperBody.Magic.ComboIdle";
+    [Tooltip("Segundos desde que empieza el gesto omni hasta que abre los brazos. El gesto se retrasa para que ese momento coincida con la salida del hechizo (castDelaySeconds + chargeTime).")]
+    [SerializeField, Min(0f)] private float omniBurstTime = 0.08f;
+    [SerializeField] private string callState = "UpperBody.Magic.HumanM@MagicAttackCall1H01_L";
+    [Tooltip("Gesto de los hechizos de área: brazo arriba en lo alto del saltito.")]
+    [SerializeField] private string areaState = "UpperBody.Cheer01";
+    [Tooltip("Impulso del saltito de los hechizos de área, respecto al salto normal.")]
+    [SerializeField, Range(0.2f, 1f)] private float areaHopFactor = 0.55f;
+    [Tooltip("Segundos mínimos del gesto de área (subir, brazos arriba y bajar).")]
+    [SerializeField] private float areaMinSeconds = 0.8f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
 
-    // Cooldowns por slot
-    private readonly Dictionary<MagicSlot, float> _slotCooldowns = new();
-    private static readonly MagicSlot[] AllSlots = { MagicSlot.Left, MagicSlot.Right, MagicSlot.Special };
-    
-    // Hechizos actuales por slot
-    private MagicSpellSO _leftSpell, _rightSpell, _specialSpell;
+    private readonly MagicSpellSO[] _basics = new MagicSpellSO[BasicSlotCount];
+    private int _activeBasic;
+    private int _nextSeriesStep;
+    private float _lastSeriesCastTime = -999f;
     private float _castingUntil;
+    private ITargetProvider _targets;
+    private Coroutine _omniRelease;
 
+    /// <summary>Cambió la lista de básicos o el activo.</summary>
+    public event Action OnLoadoutChanged;
+
+    /// <summary>Salió un hechizo: el hechizo y la mano.</summary>
+    public event Action<MagicSpellSO, CastHand> OnSpellCast;
+
+    /// <summary>True mientras dura el gesto del último lanzamiento (retraso + carga).</summary>
     public bool IsCasting => Time.time < _castingUntil;
+
+    public IReadOnlyList<MagicSpellSO> BasicSpells => _basics;
+    public int ActiveBasicIndex => _activeBasic;
+    public MagicSpellSO ActiveBasic => _basics[_activeBasic];
+
+    /// <summary>Paso de la serie que saldrá con la próxima X: 0 derecha, 1 izquierda, 2 centro.</summary>
+    public int NextSeriesStep => Time.time - _lastSeriesCastTime <= seriesWindow ? _nextSeriesStep : 0;
 
     void Awake()
     {
-        // Auto-buscar componentes si no están asignados
+        ResolveReferences();
+    }
+
+    void OnDisable()
+    {
+        // La pose de carga del gesto omni no baja sola: si se corta la espera, se suelta aquí.
+        if (_omniRelease == null) return;
+        StopCoroutine(_omniRelease);
+        _omniRelease = null;
+        if (controller) controller.ReleaseUpperBodyPose();
+    }
+
+    private void ResolveReferences()
+    {
         if (!manaPool) manaPool = GetComponentInParent<ManaPool>();
         if (!actionManager) actionManager = GetComponentInParent<PlayerActionManager>();
         if (!spawner) spawner = GetComponentInParent<MagicProjectileSpawner>();
-        if (!specialChargeMeter) specialChargeMeter = GetComponentInParent<SpecialChargeMeter>();
         if (!shieldController) shieldController = GetComponentInParent<PlayerShieldController>();
-
-        // Inicializar cooldowns
-        InitializeCooldowns();
+        if (!controller) controller = GetComponentInParent<vThirdPersonController>();
+        if (!controller) controller = GetComponentInChildren<vThirdPersonController>();
+        _targets ??= GetComponentInParent<ITargetProvider>() ?? GetComponentInChildren<ITargetProvider>();
     }
 
-    void InitializeCooldowns()
+    // === Hechizos básicos ======================================================
+
+    /// <summary>
+    /// Equipa los básicos en orden de rotación (los que sobren de <see cref="BasicSlotCount"/> se
+    /// ignoran; los huecos se permiten). Conserva el activo si sigue ocupado.
+    /// </summary>
+    public void SetBasicSpells(IReadOnlyList<MagicSpellSO> spells)
     {
-        if (!_slotCooldowns.ContainsKey(MagicSlot.Left))
-            _slotCooldowns[MagicSlot.Left] = 0f;
-        if (!_slotCooldowns.ContainsKey(MagicSlot.Right))
-            _slotCooldowns[MagicSlot.Right] = 0f;
-        if (!_slotCooldowns.ContainsKey(MagicSlot.Special))
-            _slotCooldowns[MagicSlot.Special] = 0f;
+        for (int i = 0; i < BasicSlotCount; i++)
+            _basics[i] = spells != null && i < spells.Count ? spells[i] : null;
+
+        if (_basics[_activeBasic] == null)
+            _activeBasic = FirstOccupiedFrom(0);
+        _nextSeriesStep = 0;
+        OnLoadoutChanged?.Invoke();
     }
 
-    void Update()
+    /// <summary>Pasa al siguiente básico ocupado. False si no hay otro al que pasar.</summary>
+    public bool RotateBasic()
     {
-        float dt = Time.deltaTime;
-        for (int i = 0; i < AllSlots.Length; i++)
-        {
-            var s = AllSlots[i];
-            if (_slotCooldowns.TryGetValue(s, out float cd) && cd > 0f)
-                _slotCooldowns[s] = Mathf.Max(0f, cd - dt);
-        }
-    }
-
-    /// Intenta lanzar magia del slot especificado
-    public bool TryCastSpell(MagicSlot slot)
-    {
-        var spell = GetSpellForSlot(slot);
-        if (!CanCastSpell(slot, spell, out string reason))
-        {
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[MagicCaster] No se puede lanzar {slot}: {reason}");
-                #endif
-            }
-            return false;
-        }
-
-        // Los hechizos de Levitación se manejan por PlayerLevitationController, no aquí
-        if (spell.kind == MagicKind.Levitation)
-        {
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[MagicCaster] Hechizo {spell.displayName} es de tipo Levitación, ignorando (manejado por PlayerLevitationController)");
-                #endif
-            }
-            return false;
-        }
-
-        // Modo preciso (Paso 5 del refactor Tramo 1, INC-237): estos hechizos se lanzan al
-        // SOLTAR el botón, no al pulsar -- los gestiona PlayerPreciseAimController, que llama a
-        // CastResolvedSpell directamente con la decisión ya tomada (toque corto = normal,
-        // mantenido = preciso). Mismo patrón que el early-out de Levitación de arriba: este
-        // método no hace nada al pulsar, y quien SÍ decide es otro componente.
-        if (spell.supportsPreciseMode)
-        {
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[MagicCaster] Hechizo {spell.displayName} tiene modo preciso, ignorando (manejado por PlayerPreciseAimController)");
-                #endif
-            }
-            return false;
-        }
-
-        if (!ConsumeCastResources(slot, spell)) return false;
-
-        // Lanzar el hechizo usando el spawner existente
-        spawner.Spawn(slot);
-
-        if (showDebugLogs) 
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[MagicCaster] Lanzado {spell.displayName} - Maná restante: {manaPool.Current:F1}");
-#endif
-            }
-
+        int next = FirstOccupiedFrom(_activeBasic + 1);
+        if (next == _activeBasic) return false;
+        _activeBasic = next;
+        _nextSeriesStep = 0;
+        OnLoadoutChanged?.Invoke();
         return true;
     }
 
-    /// Lanza un hechizo ya resuelto como normal o preciso -- lo usa PlayerPreciseAimController
-    /// para los slots con MagicSpellSO.supportsPreciseMode, en el momento de soltar el botón.
-    /// Aplica EXACTAMENTE las mismas reglas de maná/cooldown que TryCastSpell (mismo helper,
-    /// ConsumeCastResources) -- el modo preciso no cambia lo que cuesta ni el cooldown, solo el
-    /// proyectil que sale (más fino y débil, MagicSpellSO.BuildPreciseVariant).
-    public bool CastResolvedSpell(MagicSlot slot, bool precise)
+    private int FirstOccupiedFrom(int start)
     {
-        var spell = GetSpellForSlot(slot);
-        if (!CanCastSpell(slot, spell, out string reason))
+        for (int k = 0; k < BasicSlotCount; k++)
         {
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[MagicCaster] No se puede lanzar {slot} (preciso={precise}): {reason}");
-                #endif
-            }
-            return false;
+            int i = (start + k) % BasicSlotCount;
+            if (_basics[i] != null) return i;
         }
+        return 0;
+    }
 
-        if (!ConsumeCastResources(slot, spell)) return false;
+    /// <summary>
+    /// Lanza el básico activo como siguiente golpe de la serie: derecha, izquierda y centro, el
+    /// último con más daño. 'precise' pide la variante precisa si el hechizo la admite. La
+    /// levitación no sale por aquí (PlayerLevitationController).
+    /// </summary>
+    public bool CastBasic(bool precise)
+    {
+        var spell = ActiveBasic;
+        if (spell == null || spell.kind == MagicKind.Levitation) return false;
 
-        if (precise)
-        {
-            var preciseSpell = spell.BuildPreciseVariant();
-            var origin = spawner.GetOrigin(slot);
-            spawner.SpawnNow(preciseSpell, origin);
-        }
-        else
-        {
-            spawner.Spawn(slot);
-        }
+        int step = NextSeriesStep;
+        CastHand hand = step switch { 0 => CastHand.Right, 1 => CastHand.Left, _ => CastHand.Center };
+        float multiplier = step == 2 ? finisherDamageMultiplier : 1f;
 
-        if (showDebugLogs)
-        {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Debug.Log($"[MagicCaster] Lanzado {spell.displayName} (preciso={precise}) - Maná restante: {manaPool.Current:F1}");
-#endif
-        }
+        if (!Cast(spell, hand, multiplier, precise)) return false;
 
+        _nextSeriesStep = (step + 1) % 3;
+        _lastSeriesCastTime = Time.time;
         return true;
     }
 
-    /// Consume maná/carga especial y activa el cooldown. Compartido por TryCastSpell (toque
-    /// normal) y CastResolvedSpell (modo preciso) para que ambos caminos apliquen exactamente las
-    /// mismas reglas de coste -- solo cambia el momento del lanzamiento y qué proyectil se
-    /// spawnea, nunca lo que cuesta.
-    private bool ConsumeCastResources(MagicSlot slot, MagicSpellSO spell)
+    // === Lanzamiento ==========================================================
+
+    /// <summary>
+    /// Único punto de salida de un hechizo del jugador. Comprueba permisos, cobra maná, gira hacia
+    /// el objetivo, bloquea el movimiento mientras dura el gesto, sostiene en el aire, reproduce el
+    /// gesto de la mano y lo materializa. Sin enfriamientos: el ritmo lo marcan el gesto y el maná.
+    /// </summary>
+    public bool Cast(MagicSpellSO spell, CastHand hand, float damageMultiplier = 1f, bool precise = false)
     {
-        // Consumir maná
-        if (!manaPool.TrySpend(spell.manaCost))
+        if (!CanCast(spell, out string reason))
         {
-            if (showDebugLogs)
-            {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[MagicCaster] Sin maná suficiente para {spell.displayName} (costo: {spell.manaCost})");
-                #endif
-            }
+            Log($"No se puede lanzar {(spell ? spell.displayName : "(nada)")}: {reason}");
             return false;
         }
 
-        if (slot == MagicSlot.Special && specialChargeMeter)
+        if (manaPool && !manaPool.TrySpend(spell.manaCost))
         {
-            if (!specialChargeMeter.TryConsume())
-            {
-                if (showDebugLogs)
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.LogWarning("[MagicCaster] Fallo el consumo de carga especial.");
-                    #endif
-                }
-                if (manaPool) manaPool.Refill(spell.manaCost);
-                return false;
-            }
+            Log($"Sin maná para {spell.displayName} (coste {spell.manaCost})");
+            return false;
         }
 
-        // Activar cooldown
-        InitializeCooldowns();
-        _slotCooldowns[slot] = spell.cooldown;
+        float castLock = GetCastingLockDuration(spell);
+        // Fuera de la serie (combos y centro), cada hechizo puede tener su gesto (INC-495).
+        MagicCastStyle style = hand == CastHand.Center && spell.castStyle != MagicCastStyle.Hand
+            ? spell.castStyle : MagicCastStyle.Hand;
+        if (style == MagicCastStyle.Area) castLock = Mathf.Max(castLock, areaMinSeconds);
+        _castingUntil = Time.time + castLock;
 
-        _castingUntil = Time.time + GetCastingLockDuration(spell);
+        if (controller) PlayCastGesture(style, hand, castLock, GetDirectionToTarget());
+
+        var toSpawn = precise && spell.supportsPreciseMode ? spell.BuildPreciseVariant() : spell;
+        if (spawner) spawner.Cast(toSpawn, hand, damageMultiplier);
+
+        OnSpellCast?.Invoke(spell, hand);
+        Log($"Lanzado {spell.displayName} ({hand}, x{damageMultiplier:0.##}, preciso={precise && spell.supportsPreciseMode})");
         return true;
     }
 
-    /// Intenta lanzar magia por índice de slot (0=Left, 1=Right, 2=Special)
-    public bool TryCastSpell(int slotIndex)
+    /// <summary>
+    /// Gesto del jugador en un ataque de equipo (dúo o trío, <see cref="DuoSpecialAttackSystem"/>):
+    /// mismas reglas de permiso, giro hacia el objetivo, bloqueo y sostén en el aire que un hechizo,
+    /// con el gesto del centro. No cobra maná (los ataques de equipo gastan la carga de equipo).
+    /// Devuelve la dirección horizontal hacia la que queda mirando.
+    /// </summary>
+    public bool BeginTeamGesture(float lockSeconds, out Vector3 facing) =>
+        BeginTeamGesture(lockSeconds, MagicCastStyle.TwoHanded, out facing);
+
+    /// <summary>Como el anterior, con el gesto que se pida (el trío usa el de área).</summary>
+    public bool BeginTeamGesture(float lockSeconds, MagicCastStyle style, out Vector3 facing)
     {
-        var slot = slotIndex switch
-        {
-            0 => MagicSlot.Left,
-            1 => MagicSlot.Right,
-            2 => MagicSlot.Special,
-            _ => MagicSlot.Left
-        };
-        return TryCastSpell(slot);
+        facing = controller ? controller.transform.forward : transform.forward;
+
+        if (IsCasting) return false;
+        if (actionManager && !actionManager.CanCastMagic()) return false;
+        if (shieldController != null && shieldController.IsDefending) return false;
+
+        Vector3 toTarget = GetDirectionToTarget();
+        if (toTarget.sqrMagnitude > 0.0001f) facing = toTarget.normalized;
+        facing.y = 0f;
+
+        lockSeconds = Mathf.Max(0.1f, lockSeconds);
+        if (style == MagicCastStyle.Area) lockSeconds = Mathf.Max(lockSeconds, areaMinSeconds);
+        _castingUntil = Time.time + lockSeconds;
+
+        if (controller) PlayCastGesture(style, CastHand.Center, lockSeconds, facing);
+        return true;
     }
 
-    /// Verifica si se puede lanzar un hechizo
-    public bool CanCastSpell(MagicSlot slot, MagicSpellSO spell, out string reason)
+    /// <summary>
+    /// Contraataque (B en el momento justo, INC-493): devuelve el golpe como un hechizo propio, al
+    /// instante y sin maná. Usa el básico activo o, si no es un proyectil, el siguiente que lo sea.
+    /// Apunta al objetivo si lo hay; si no, a 'fallbackDirection' (por donde vino el proyectil).
+    /// </summary>
+    public bool CastCounter(float damage, Vector3 fallbackDirection, float lockSeconds)
     {
-        // Asegurar que el diccionario esté inicializado
-        InitializeCooldowns();
-        
+        MagicSpellSO spell = FindCounterSpell();
+        if (!spell || !spawner) return false;
+
+        Vector3 toTarget = GetDirectionToTarget();
+        bool hasTarget = toTarget.sqrMagnitude > 0.0001f;
+        Vector3 facing = hasTarget ? toTarget : fallbackDirection;
+        facing.y = 0f;
+
+        lockSeconds = Mathf.Max(0.1f, lockSeconds);
+        _castingUntil = Time.time + lockSeconds;
+        if (controller)
+        {
+            controller.CommitToAction(lockSeconds, facing);
+            controller.HoldAirborne(lockSeconds);
+            controller.PlayUpperBodyAction(centerState);
+        }
+
+        Vector3? direction = hasTarget || fallbackDirection.sqrMagnitude < 0.0001f ? (Vector3?)null : fallbackDirection.normalized;
+        float multiplier = Mathf.Max(0.1f, damage / Mathf.Max(1f, spell.damage));
+        spawner.SpawnNow(spell, spawner.GetOrigin(CastHand.Center), true, direction, multiplier);
+
+        OnSpellCast?.Invoke(spell, CastHand.Center);
+        Log($"Contraataque con {spell.displayName} ({damage:0.#} de daño)");
+        return true;
+    }
+
+    private MagicSpellSO FindCounterSpell()
+    {
+        for (int k = 0; k < BasicSlotCount; k++)
+        {
+            var s = _basics[(_activeBasic + k) % BasicSlotCount];
+            if (s && s.prefab && s.kind == MagicKind.Projectile) return s;
+        }
+        return null;
+    }
+
+    /// <summary>Cuerpo del jugador (el del controlador), para situar efectos de equipo.</summary>
+    public Transform Body => controller ? controller.transform : transform;
+
+    /// <summary>Objetivo actual (fijado o automático), si lo hay.</summary>
+    public bool TryGetTarget(out Transform target)
+    {
+        target = null;
+        return _targets != null && _targets.TryGetTarget(out target) && target;
+    }
+
+    /// <summary>Gesto, giro, bloqueo y sostén en el aire de un lanzamiento según su estilo.</summary>
+    private void PlayCastGesture(MagicCastStyle style, CastHand hand, float lockSeconds, Vector3 facing)
+    {
+        if (_omniRelease != null) { StopCoroutine(_omniRelease); _omniRelease = null; }
+
+        if (style == MagicCastStyle.Omni && lockSeconds > omniBurstTime)
+        {
+            // Carga con los brazos juntos y abre justo cuando sale el hechizo, no al empezar.
+            controller.CommitToAction(lockSeconds, facing);
+            controller.HoldAirborne(lockSeconds);
+            controller.HoldUpperBodyPose(omniLoadState);
+            _omniRelease = StartCoroutine(Co_OmniRelease(lockSeconds - omniBurstTime));
+            return;
+        }
+
+        if (style == MagicCastStyle.Area)
+        {
+            // Saltito desde el suelo y brazos arriba; el sostén en el aire llega en lo alto del salto
+            // (sostener antes anularía el impulso). En el aire, sin saltito: se sostiene ya.
+            bool hopped = controller.Hop(areaHopFactor);
+            controller.CommitToAction(lockSeconds, facing);
+            controller.PlayUpperBodyActionFor(areaState, lockSeconds);
+            if (hopped) StartCoroutine(Co_HoldAtApex(lockSeconds));
+            else controller.HoldAirborne(lockSeconds);
+            return;
+        }
+
+        controller.CommitToAction(lockSeconds, facing);
+        controller.HoldAirborne(lockSeconds);
+        controller.PlayUpperBodyAction(style switch
+        {
+            MagicCastStyle.TwoHanded => twoHandedState,
+            MagicCastStyle.Omni => omniState,
+            MagicCastStyle.Call => callState,
+            _ => GetGestureState(hand),
+        });
+    }
+
+    private System.Collections.IEnumerator Co_OmniRelease(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        _omniRelease = null;
+        if (controller) controller.PlayUpperBodyAction(omniState);
+    }
+
+    private System.Collections.IEnumerator Co_HoldAtApex(float lockSeconds)
+    {
+        float start = Time.time;
+        yield return new WaitForSeconds(0.28f);
+        float left = lockSeconds - (Time.time - start);
+        if (controller && left > 0.05f) controller.HoldAirborne(left);
+    }
+
+    /// <summary>¿Se puede lanzar este hechizo ahora? 'reason' explica el porqué si no.</summary>
+    public bool CanCast(MagicSpellSO spell, out string reason)
+    {
         reason = "";
 
-        // Verificar ActionManager (carrying, stunned, etc.)
-        if (actionManager && !actionManager.CanUse(PlayerAbility.Magic))
-        {
-            reason = "Acción bloqueada";
-            return false;
-        }
+        if (!spell) { reason = "Sin hechizo"; return false; }
 
-        if (shieldController != null && shieldController.IsDefending)
-        {
-            reason = "Defendiendo";
-            return false;
-        }
+        if (actionManager && !actionManager.CanCastMagic()) { reason = "Acción bloqueada"; return false; }
 
-        // Verificar que hay hechizo
-        if (!spell)
-        {
-            reason = "Sin hechizo asignado";
-            return false;
-        }
+        if (shieldController != null && shieldController.IsDefending) { reason = "Defendiendo"; return false; }
 
-        // Verificar cooldown
-        if (_slotCooldowns.TryGetValue(slot, out float cooldown) && cooldown > 0f)
-        {
-            reason = $"Cooldown activo ({cooldown:F1}s)";
-            return false;
-        }
+        // En tierra, de cara a una pendiente imposible o una pared (stopMove), no se lanza; en el
+        // aire sí (INC-483).
+        if (controller && !controller.IsAirborne && controller.stopMove) { reason = "Bloqueado contra una pared"; return false; }
 
-        // Verificar maná
         if (manaPool && manaPool.Current < spell.manaCost)
         {
             reason = $"Maná insuficiente ({spell.manaCost:F1} requerido, {manaPool.Current:F1} disponible)";
             return false;
         }
 
-        if (slot == MagicSlot.Special && specialChargeMeter && !specialChargeMeter.IsReady)
-        {
-            reason = "Sin carga especial disponible";
-            return false;
-        }
-
         return true;
     }
 
-    /// Versión sin reason para uso simple
-    public bool CanCastSpell(MagicSlot slot)
+    public bool CanCast(MagicSpellSO spell) => CanCast(spell, out _);
+
+    private float GetCastingLockDuration(MagicSpellSO spell)
     {
-        var spell = GetSpellForSlot(slot);
-        return CanCastSpell(slot, spell, out _);
+        if (!spell) return 0.1f;
+        return Mathf.Max(0.1f, spell.castDelaySeconds + spell.chargeTime);
     }
 
-    /// Obtiene el tiempo de cooldown restante para un slot
-    public float GetCooldownTime(MagicSlot slot)
+    private string GetGestureState(CastHand hand) => hand switch
     {
-        return _slotCooldowns.TryGetValue(slot, out float time) ? time : 0f;
+        CastHand.Left  => leftHandState,
+        CastHand.Right => rightHandState,
+        _              => centerState
+    };
+
+    /// Dirección horizontal hacia el objetivo actual (fijado o automático); cero si no hay.
+    private Vector3 GetDirectionToTarget()
+    {
+        if (_targets == null || !controller || !_targets.TryGetTarget(out Transform t) || !t)
+            return Vector3.zero;
+        Vector3 to = t.position - controller.transform.position;
+        to.y = 0f;
+        return to;
     }
 
-    /// Verifica si un slot está en cooldown
-    public bool IsOnCooldown(MagicSlot slot)
+    private void Log(string message)
     {
-        return GetCooldownTime(slot) > 0f;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (showDebugLogs) Debug.Log($"[MagicCaster] {message}", this);
+#endif
     }
-
-    /// Establece los hechizos para cada slot
-    public void SetSpells(MagicSpellSO left, MagicSpellSO right, MagicSpellSO special)
-    {
-        _leftSpell = left;
-        _rightSpell = right;
-        _specialSpell = special;
-
-        // También actualizarlo en el spawner
-        if (spawner) spawner.SetSpells(left, right, special);
-    }
-
-    float GetCastingLockDuration(MagicSpellSO spell)
-    {
-        if (!spell)
-            return 0.1f;
-
-        float duration = Mathf.Max(0.1f, spell.castDelaySeconds + spell.chargeTime);
-        return duration;
-    }
-
-    /// Obtiene el hechizo para un slot específico
-    public MagicSpellSO GetSpellForSlot(MagicSlot slot)
-    {
-        return slot switch
-        {
-            MagicSlot.Left => _leftSpell,
-            MagicSlot.Right => _rightSpell,
-            MagicSlot.Special => _specialSpell,
-            _ => null
-        };
-    }
-
-    /// Verifica si el slot tiene un hechizo de tipo Levitación (implementación de IMagicCaster)
-    public bool IsLevitationSpell(int slotIndex)
-    {
-        var slot = slotIndex switch
-        {
-            0 => MagicSlot.Left,
-            1 => MagicSlot.Right,
-            2 => MagicSlot.Special,
-            _ => MagicSlot.Left
-        };
-        var spell = GetSpellForSlot(slot);
-        return spell != null && spell.kind == MagicKind.Levitation;
-    }
-
-    /// Resetea todos los cooldowns (útil para debug o power-ups)
-    public void ResetAllCooldowns()
-    {
-        _slotCooldowns[MagicSlot.Left] = 0f;
-        _slotCooldowns[MagicSlot.Right] = 0f;
-        _slotCooldowns[MagicSlot.Special] = 0f;
-    }
-
-    /// Propiedades públicas para debugging/UI
-    public float LeftCooldown => GetCooldownTime(MagicSlot.Left);
-    public float RightCooldown => GetCooldownTime(MagicSlot.Right);
-    public float SpecialCooldown => GetCooldownTime(MagicSlot.Special);
-    public SpecialChargeMeter SpecialChargeMeter => specialChargeMeter;
 
 #if UNITY_EDITOR
     void OnValidate()
     {
-        if (!manaPool) manaPool = GetComponentInParent<ManaPool>();
-        if (!actionManager) actionManager = GetComponentInParent<PlayerActionManager>();
-        if (!spawner) spawner = GetComponentInParent<MagicProjectileSpawner>();
-        if (!specialChargeMeter) specialChargeMeter = GetComponentInParent<SpecialChargeMeter>();
-        if (!shieldController) shieldController = GetComponentInParent<PlayerShieldController>();
+        ResolveReferences();
     }
 #endif
 }

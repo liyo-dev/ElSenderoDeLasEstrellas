@@ -54,7 +54,7 @@ namespace Game.NPC.States
             string[] gestures = GetGestureSet(_relation);
             string openingGesture = gestures[Random.Range(0, gestures.Length)];
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // Diagnóstico siempre visible: confirma si el encuentro realmente se dispara y con
             // qué gesto, para distinguir "el encuentro no se activó" de "se activó pero la
             // animación no se ve" (ver también el warning en NPCSimpleAnimator.PlaySocialGesture).

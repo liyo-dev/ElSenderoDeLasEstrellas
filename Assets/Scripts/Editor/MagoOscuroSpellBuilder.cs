@@ -44,7 +44,7 @@ using Game.NPC.Common;
 ///   4) Asignar ambos prefabs (no los MagicSpellSO) en NPC_Combat_Config_MagoOscuro.asset →
 ///      spell1Prefab / spell2Prefab (ya están precargados por guid en el asset .asset creado
 ///      junto con esta herramienta, pero conviene confirmar en el Inspector tras generarlos).
-///   5) Probarlo en juego: radio/daño/cooldown de "Grieta del Sendero" son valores de partida
+///   5) Probarlo en juego: radio y daño de "Grieta del Sendero" son valores de partida
 ///      razonados para un jefe final, no ajuste fino.
 /// </summary>
 public static class MagoOscuroSpellBuilder
@@ -172,7 +172,6 @@ public static class MagoOscuroSpellBuilder
         spell.flattenDirection  = true;
 
         spell.manaCost = 20f;
-        spell.cooldown = 2.2f;
 
         spell.spawnVFX    = LoadByGuid<GameObject>(SpawnVfxGuid);
         spell.impactVFX   = LoadByGuid<GameObject>(ImpactVfxGuid);
@@ -303,7 +302,6 @@ public static class MagoOscuroSpellBuilder
         spell.flattenDirection = true;
 
         spell.manaCost = 30f;
-        spell.cooldown = 8f;
 
         spell.spawnVFX    = LoadByGuid<GameObject>(SpawnVfxGuid);
         spell.despawnVFX  = LoadByGuid<GameObject>(DespawnVfxGuid);

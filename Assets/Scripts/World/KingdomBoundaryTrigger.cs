@@ -60,7 +60,7 @@ public sealed class KingdomBoundaryTrigger : MonoBehaviour
         // consumir para que el cruce cuente solo cuando de verdad haya alguien escuchando.
         if (!signals.HasCustomListener(eventKey))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[KingdomBoundaryTrigger] Cruce ignorado: nadie espera '{eventKey}' todavía (el grafo no ha llegado a ese punto).");
 #endif
             return;
@@ -87,7 +87,7 @@ public sealed class KingdomBoundaryTrigger : MonoBehaviour
 
         signals.RaiseCustom(eventKey, $"[KingdomBoundaryTrigger] {name}");
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[KingdomBoundaryTrigger] Límite del Reino cruzado. Evento '{eventKey}' emitido.");
 #endif
     }

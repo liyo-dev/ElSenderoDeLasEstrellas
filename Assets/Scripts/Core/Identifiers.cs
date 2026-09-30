@@ -64,15 +64,51 @@ public enum SpellId
     // Assets/_SPELLS/MagoOscuroGolpe.asset y MagoOscuroGrieta.asset, creados por el menu
     // "El Sendero/Magia/Crear Hechizos del Mago Oscuro (Batalla Final)".
     MagoOscuroGolpe,
-    MagoOscuroGrieta
+    MagoOscuroGrieta,
+    // Grimorio, paso 1 (INC-496): ver el documento «Grimorio: ampliación del catálogo mágico».
+    Meteoro,
+    Rafaga,
+    MuroDeFuego,
+    TormentaDeFuego,
+    JuicioDelPacto,
+    // Grimorio, paso 2 (INC-497): proyectil mejorado.
+    EstrellaFugaz,
+    LluviaDeChispas,
+    ChispaIgnea,
+    Eco,
+    ChispaIgneaFuego,  // la zona que deja Chispa Ígnea al impactar (no va en la SpellLibrary)
+    // Grimorio, paso 3 (INC-499): estados.
+    DardoMental,
+    CadenasDelPacto,
+    Remolino,
+    // Grimorio, pasos 4 a 6 (INC-500 a INC-502).
+    BrisaSanadora,
+    CupulaEstelar,
+    NovaDeLuz,
+    PasoSombrio,
+    // Bola de Fuego de Estela: antes compartía el id Fireball con Llama Astral (INC-503).
+    BolaDeFuegoEstela
 }
 
-/// <summary>Ranuras de magia (mano izquierda, derecha, o especial).</summary>
-public enum MagicSlot
+/// <summary>
+/// Desde dónde sale un hechizo y con qué gesto: mano izquierda, mano derecha o las dos (centro).
+/// La serie básica de la X va derecha, izquierda y centro.
+/// </summary>
+public enum CastHand
 {
     Left,
     Right,
-    Special
+    Center
+}
+
+/// <summary>Estado que un hechizo pone a los enemigos que alcanza (INC-499). Ver EstadosDeCombate.</summary>
+public enum EstadoDeCombate
+{
+    Ninguno,
+    Ralentizar,
+    Inmovilizar,
+    Atraer,
+    Empujar      // aparta del centro (Nova de Luz, INC-501)
 }
 
 /// <summary>Tipos de comportamiento de un hechizo.</summary>
@@ -86,7 +122,9 @@ public enum MagicKind
     // instanciar algo que viaja, se materializa al instante como una zona fija que aplica daño
     // periódico a quien esté dentro mientras dura. Ver MagicZoneEffect.cs y
     // MagicProjectileSpawner.SpawnZoneNow().
-    Zone
+    Zone,
+    // Paso corto (INC-502): el lanzador se teletransporta hacia delante. Ver MagicProjectileSpawner.Teleport.
+    Teleport
 }
 
 /// <summary>Elementos mágicos disponibles.</summary>
@@ -109,6 +147,30 @@ public enum SpellSlotType
 {
     Any,
     SpecialOnly
+}
+
+/// <summary>
+/// Gesto con el que el jugador lanza un hechizo que no es de la serie de la X (combos, remates).
+/// Hand = el de la mano/centro de siempre; el resto usan animaciones de Kevin Iglesias que ya están
+/// en la capa UpperBody. Omni = carga con los brazos juntos y los abre al salir el hechizo.
+/// Area = saltito y brazo arriba (Cheer01).
+/// </summary>
+public enum MagicCastStyle
+{
+    Hand,
+    TwoHanded,
+    Omni,
+    Call,
+    Area
+}
+
+/// <summary>Botón de una secuencia de combo mágico (INC-494). En teclado: A = Espacio, B = clic derecho, X = clic izquierdo, Y = Q.</summary>
+public enum ComboButton
+{
+    A,
+    B,
+    X,
+    Y
 }
 
 // Player / Actions

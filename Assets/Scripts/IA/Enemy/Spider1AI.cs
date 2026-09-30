@@ -428,7 +428,7 @@ public class Spider1AI : MonoBehaviour
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(dmg);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Spider1AI] Infligió {dmg} de daño al jugador");
 #endif
             return;
@@ -439,7 +439,7 @@ public class Spider1AI : MonoBehaviour
         if (damageable != null && damageable.IsAlive)
         {
             damageable.TakeDamage(dmg);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Spider1AI] Infligió {dmg} de daño al jugador");
 #endif
         }

@@ -12,7 +12,7 @@ using Game.NPC;
 /// queda quieto en su sitio en vez de acompañarlos. Se dispara con el evento EVT_ARRESTADOS, que
 /// `NPC_InteractiveNarrative_Config_Guard.asset` lanza justo al terminar el diálogo del guardia
 /// y ANTES del paso de escolta que mueve al grupo hacia el castillo.
-/// Añadir al GameObject de Eldran (mismo patrón que EldranCombatCheerController).
+/// Añadir al GameObject de Eldran.
 ///
 /// INC-114 (27 ago 2026): Eldran también se reposiciona aquí mismo al anchor `OutSideKingdom` —
 /// el mismo punto donde la novela lo sitúa esperando cuando el trío sale del castillo, Cap. XIII:
@@ -78,7 +78,7 @@ public class EldranStaysBehindController : MonoBehaviour
         var anchor = SpawnAnchor.FindById(waitingAnchorId);
         if (anchor == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[EldranStaysBehindController] No se encontró el anchor '{waitingAnchorId}' — Eldran se queda donde estaba.");
 #endif
             return;
@@ -103,7 +103,7 @@ public class EldranStaysBehindController : MonoBehaviour
         GetComponent<NPCSimpleAnimator>()?.SyncTargetRotation();
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [ContextMenu("Simular: Eldran se queda fuera")]
     void EditorSimulate() => HandleArrested();
 #endif

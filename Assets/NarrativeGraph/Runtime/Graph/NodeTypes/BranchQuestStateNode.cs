@@ -20,6 +20,9 @@ public sealed class BranchQuestStateNode : NarrativeNode
     static readonly string[] Ports = { "No iniciada", "Activa", "Pasos listos", "Completada" };
     public override string[] GetOutputPorts() => Ports;
 
+    public override string DescribeDecision()
+        => $"Según estado de quest \"{displayTitle}\" (guid {guid}): quest '{questId}'. Salidas: No iniciada / Activa / Pasos listos / Completada.";
+
     public override void Enter(NarrativeContext ctx, Action ready)
     {
         var state = NarrativeQuestState.NotStarted;
@@ -28,7 +31,7 @@ public sealed class BranchQuestStateNode : NarrativeNode
         else if (ctx?.Signals != null)
             state = ctx.Signals.GetQuestState(questId);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BranchQuestStateNode:{guid}] {questId} → {state}");
 #endif
         AdvanceThrough(ctx, ready, (int)state);

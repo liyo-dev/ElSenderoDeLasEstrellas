@@ -21,6 +21,7 @@ public class PlayerSaveData
     public List<AppearanceEntry> appearance = new();
     public List<string> unlockedWardrobeIds = new();
     public List<string> consumedInteractables = new();
+    public List<ObjetoPersistente.Estado> objetosDelMundo = new(); // INC-540
     public List<string> seenLorePopupIds = new();
     
     // === NUEVO: narrativas interactivas completadas ===
@@ -63,7 +64,12 @@ public class PlayerSaveData
     // vía PlayerPresetSO.npcRelationships). Se reutiliza NPCRelationshipRegistry.SaveEntry directamente.
     public List<NPCRelationshipRegistry.SaveEntry> npcRelationships = new();
 
-    // Slots guardados (opcional: si faltan en saves antiguos, quedarán en None por defecto)
+    // Hechizos básicos equipados, en orden de rotación (hasta cuatro).
+    public List<SpellId> basicSpellIds = new();
+    public List<PlayerPresetSO.BasicosDeCompanero> companionBasics = new(); // INC-503
+
+    // Ranuras del sistema anterior: solo se leen para convertir partidas guardadas antes de
+    // INC-486 (GameBootProfile). No se escriben.
     public SpellId leftSpellId  = SpellId.None;
     public SpellId rightSpellId = SpellId.None;
     public SpellId specialSpellId = SpellId.None;
@@ -90,7 +96,7 @@ public class PlayerSaveData
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerSaveData] GameBootService.Profile es null (¿se llamó antes de OnProfileReady?)");
 #endif
             return new PlayerSaveData();
@@ -99,7 +105,7 @@ public class PlayerSaveData
         var preset = bootProfile.GetActivePresetResolved();
         if (preset == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerSaveData] No hay preset activo en GameBootProfile");
 #endif
             return new PlayerSaveData();
@@ -126,18 +132,19 @@ public class PlayerSaveData
         d.appearance = preset.appearance != null ? new List<AppearanceEntry>(preset.appearance) : new List<AppearanceEntry>();
         d.unlockedWardrobeIds = preset.unlockedWardrobeIds != null ? new List<string>(preset.unlockedWardrobeIds) : new List<string>();
         d.consumedInteractables = preset.consumedInteractableIds != null ? new List<string>(preset.consumedInteractableIds) : new List<string>();
+        d.objetosDelMundo = new List<ObjetoPersistente.Estado>(preset.objetosDelMundo ?? new List<ObjetoPersistente.Estado>());
         d.seenLorePopupIds = preset.seenLorePopupIds != null ? new List<string>(preset.seenLorePopupIds) : new List<string>();
         d.completedInteractiveNarratives = preset.completedInteractiveNarratives != null ? new List<string>(preset.completedInteractiveNarratives) : new List<string>();
         
         // DEBUG: Ver qué narrativas se están guardando
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerSaveData] 💾 FromGameBootProfile - completedInteractiveNarratives: {d.completedInteractiveNarratives.Count} entradas");
 #endif
         if (d.completedInteractiveNarratives.Count > 0)
         {
             foreach (var id in d.completedInteractiveNarratives)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerSaveData]   → {id}");
 #endif
             }
@@ -149,7 +156,7 @@ public class PlayerSaveData
         if (Game.NPC.PlayerParty.HasInstance)
         {
             d.partyMemberIds = Game.NPC.PlayerParty.Instance.GetMemberIdsForSave();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerSaveData] 💾 Party guardado: {d.partyMemberIds.Count} miembros");
 #endif
         }
@@ -178,10 +185,8 @@ public class PlayerSaveData
             }
         }
 
-        // Slots
-        d.leftSpellId = preset.leftSpellId;
-        d.rightSpellId = preset.rightSpellId;
-        d.specialSpellId = preset.specialSpellId;
+        d.basicSpellIds = new List<SpellId>(preset.basicSpellIds ?? new List<SpellId>());
+        d.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(preset.companionBasics);
 
         // === NUEVO: persistir permisos de abilities desde el preset ===
         if (preset.abilities != null)
@@ -199,7 +204,7 @@ public class PlayerSaveData
         d.unlockedTeleportPoints = preset.unlockedTeleportPoints != null && preset.unlockedTeleportPoints.Count > 0
             ? new List<string>(preset.unlockedTeleportPoints)
             : TeleportRegistry.ToSaveData();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerSaveData] 💾 Teleport points guardados: {d.unlockedTeleportPoints.Count}");
 #endif
 
@@ -239,7 +244,7 @@ public class PlayerSaveData
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerSaveData] GameBootService.Profile es null (¿se llamó antes de OnProfileReady?)");
 #endif
             return;
@@ -248,7 +253,7 @@ public class PlayerSaveData
         // Usar el método existente del GameBootProfile para aplicar los datos
         bootProfile.SetRuntimePresetFromSave(this);
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerSaveData] Datos aplicados al GameBootProfile - Level: {level}, HP: {currentHp}/{maxHp}");
 #endif
     }

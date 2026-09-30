@@ -92,7 +92,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
         
         if (_manaPool == null && showDebugInfo)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerAbilitiesUI] No se encontró ManaPool en la escena");
 #endif
         }
@@ -212,7 +212,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
 
         if (showDebugInfo)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerAbilitiesUI] Abilities refreshed: {preset.unlockedAbilities?.Count ?? 0} abilities");
 #endif
         }
@@ -246,7 +246,7 @@ public class PlayerAbilitiesUI : MonoBehaviour
 
         if (showDebugInfo)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerAbilitiesUI] Spells refreshed: {preset.unlockedSpells?.Count ?? 0} spells");
 #endif
         }

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dcdd0a4a7862184ebc622d2a69dbdd9, type: 3}
+  m_Name: Encuentro_Golem1
+  m_EditorClassIdentifier: Assembly-CSharp::BattleEncounterSO
+  enemyPrefab: {fileID: 939999298480460806, guid: 7bf3d2a53ef1fb149ac7e4e6cec6d98c, type: 3}
+  displayNameId: 
+  displayName: "G\xD3LEM"
+  arenaRadius: 25
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 1025
+  premioEstadisticas:
+    vida: 15
+    magia: 10
+    ataque: 3
+    defensa: 3
+  guion: {fileID: 11400000, guid: 41672923bedefa4449cc9e6495b0fa79, type: 2}
+  spawnProfiles:
+  - label: Por defecto
+    distanceFactor: 0.5
+    angleDegrees: 0
+    relativeToPlayerFacing: 1
+  spawnVfxPrefab: {fileID: 0}
+  spawnVfxDuration: 2
+  spawnVfxHeightOffset: 0
+  portalPrefab: {fileID: 0}

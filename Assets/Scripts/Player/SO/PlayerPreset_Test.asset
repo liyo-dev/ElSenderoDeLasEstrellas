@@ -18,11 +18,14 @@ MonoBehaviour:
   currentHP: 1000
   maxMP: 500
   currentMP: 500
-  unlockedAbilities: 01000000
-  unlockedSpells: 03000000010000000200000004000000
-  leftSpellId: 1
-  rightSpellId: 2
-  specialSpellId: 3
+  ataque: 0
+  defensa: 0
+  unlockedAbilities: 01000000i
+  unlockedSpells: 03000000010000000200000004000000i
+  basicSpellIds: 0100000002000000i
+  legacyLeftSpellId: 0
+  legacyRightSpellId: 0
+  legacySpecialSpellId: 0
   flags:
   - SLEEP_DONE:PrologueBed
   abilities:
@@ -50,7 +53,10 @@ MonoBehaviour:
   defeatedBossIds: []
   narrativeBlackboards: []
   npcPositions: []
+  npcRelationships: []
   consumedInteractableIds: []
   completedInteractiveNarratives: []
+  seenLorePopupIds: []
   partyMemberIds: []
+  activeCharacterSlot: 1
   unlockedTeleportPoints: []

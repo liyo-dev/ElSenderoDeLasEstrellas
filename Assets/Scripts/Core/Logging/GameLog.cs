@@ -61,21 +61,21 @@ public static class GameLog
 
     public static void Log(string tag, string message, UnityEngine.Object ctx = null)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[{tag}] {message}", ctx);
 #endif
     }
 
     public static void Warn(string tag, string message, UnityEngine.Object ctx = null)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[{tag}] {message}", ctx);
 #endif
     }
 
     public static void Error(string tag, string message, UnityEngine.Object ctx = null)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogError($"[{tag}] {message}", ctx);
 #endif
     }

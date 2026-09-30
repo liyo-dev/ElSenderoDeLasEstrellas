@@ -154,7 +154,7 @@ public class InputPromptBeat : SequenceBeat
 
         if (!done)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             string msg = $"[InputPromptBeat] '{note}' no resolvió a tiempo (detector parado o sin responder).";
             if (tolerant) Debug.LogWarning(msg + " Se continúa como fallo, por ser 'tolerant'.");
             else Debug.LogError(msg + " 'tolerant' está desactivado: conviene revisar por qué.");

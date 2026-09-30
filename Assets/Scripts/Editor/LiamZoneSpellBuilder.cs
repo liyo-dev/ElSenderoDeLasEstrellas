@@ -244,7 +244,6 @@ public static class LiamZoneSpellBuilder
         spell.flattenDirection = true;
 
         spell.manaCost = 25f;
-        spell.cooldown = 7f; // hechizo de control de área, no para spamear
 
         spell.spawnVFX    = LoadByGuid<GameObject>(SpawnVfxGuid);
         spell.despawnVFX  = LoadByGuid<GameObject>(DespawnVfxGuid);

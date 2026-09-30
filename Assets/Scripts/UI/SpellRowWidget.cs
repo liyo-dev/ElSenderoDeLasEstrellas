@@ -8,6 +8,8 @@ public class SpellRowWidget : MonoBehaviour, ISelectHandler, IPointerEnterHandle
     [SerializeField] private Button button;
     [SerializeField] private Text label;
     [SerializeField] private Image icon;
+    [Tooltip("Separación entre el icono y el texto, en píxeles.")]
+    [SerializeField] private float labelGap = 16f;
 
     Action _onClick;
     Action _onSelected;
@@ -33,12 +35,35 @@ public class SpellRowWidget : MonoBehaviour, ISelectHandler, IPointerEnterHandle
             _defaultColors = button.colors;
             _colorsInitialized = true;
         }
+        AlignLabel();
+    }
+
+    /// El texto empieza justo detrás del icono y va alineado a la izquierda, así todas las filas
+    /// quedan en columna, tengan o no icono. Si un nombre no cabe, la letra encoge en vez de cortarse.
+    void AlignLabel()
+    {
+        if (label == null) return;
+        label.alignment = TextAnchor.MiddleLeft;
+        label.horizontalOverflow = HorizontalWrapMode.Wrap;
+        label.resizeTextForBestFit = true;
+        label.resizeTextMaxSize = label.fontSize;
+        label.resizeTextMinSize = Mathf.Max(10, Mathf.RoundToInt(label.fontSize * 0.6f));
+
+        var iconImage = ResolveIconTarget();
+        if (iconImage == null) return;
+        var iconRt = iconImage.rectTransform;
+        var labelRt = label.rectTransform;
+        // Solo con el icono anclado al borde izquierdo de la fila, que es como viene en el prefab.
+        if (iconRt.parent != labelRt.parent || iconRt.anchorMin.x != 0f || iconRt.anchorMax.x != 0f) return;
+        float iconRight = iconRt.anchoredPosition.x + iconRt.rect.width * (1f - iconRt.pivot.x);
+        labelRt.offsetMin = new Vector2(iconRight + labelGap, labelRt.offsetMin.y);
     }
 
     public void SetLabel(string value)
     {
-        if (label != null)
-            label.text = value;
+        if (label == null) return;
+        label.supportRichText = true;
+        label.text = value;
     }
 
     public void RegisterClickHandler(Action onClick)

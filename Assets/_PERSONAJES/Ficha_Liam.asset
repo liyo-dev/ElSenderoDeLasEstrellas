@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3220caa328193e4cae03df8257d9cbf, type: 3}
+  m_Name: Ficha_Liam
+  m_EditorClassIdentifier: Assembly-CSharp::FichaDePersonaje
+  personaje: 0
+  retrato: {fileID: 21300000, guid: 72dc8a10b4d7a53478018b46ea8ffeb7, type: 3}
+  estadisticasIniciales:
+    vida: 100
+    magia: 100
+    ataque: 10
+    defensa: 5
+  hechizoIzquierdo: {fileID: 11400000, guid: 5e2557db11732694182c948ffac0eab8, type: 2}
+  hechizoDerecho: {fileID: 11400000, guid: 0686630f8f80a5c4291f775845a499d7, type: 2}
+  hechizoEspecial: {fileID: 11400000, guid: fb52c3e17e7394045aee1b7785a90735, type: 2}
+  basicos:
+  - {fileID: 11400000, guid: 5e2557db11732694182c948ffac0eab8, type: 2}
+  - {fileID: 11400000, guid: 0686630f8f80a5c4291f775845a499d7, type: 2}
+  - {fileID: 11400000, guid: debf1cda4ac0d3442933043d7e98ec84, type: 2}
+  - {fileID: 11400000, guid: b98eab48539a2d242941f1ab18a54d1a, type: 2}
+  combos:
+  - {fileID: 11400000, guid: fb52c3e17e7394045aee1b7785a90735, type: 2}
+  - {fileID: 11400000, guid: 5d70393c82dd7724eaba245d27f0b394, type: 2}
+  - {fileID: 11400000, guid: 8cf2fd32d0415cb49944882b468f10c5, type: 2}
+  - {fileID: 11400000, guid: 5ba4cee36828d10489ac08ce369056bc, type: 2}

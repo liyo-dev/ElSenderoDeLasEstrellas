@@ -89,14 +89,14 @@ public class PressureRoomBuilder : MonoBehaviour
 
         if (!doorW || !doorE)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PressureRoomBuilder] Falta Door_W/Door_E");
             #endif
             return;
         }
         if (!platePrefab)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PressureRoomBuilder] Falta platePrefab");
             #endif
             return;
@@ -111,7 +111,7 @@ public class PressureRoomBuilder : MonoBehaviour
         float dist = dir.magnitude;
         if (dist < 0.1f)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PressureRoomBuilder] Puertas demasiado juntas.");
             #endif
             return;

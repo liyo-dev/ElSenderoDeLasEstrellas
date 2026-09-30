@@ -165,7 +165,7 @@ public class PerformanceCapture : MonoBehaviour
 
         GameplayEventLog.BeginSession(_recordingStartRealtime);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PerformanceCapture] ▶ Grabación de rendimiento iniciada.");
 #endif
     }
@@ -263,7 +263,7 @@ public class PerformanceCapture : MonoBehaviour
         {
             _lastSavedPath = SaveToDisk(json);
             _lastSaveFailed = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PerformanceCapture] ⏹ Grabación detenida ({motivo}). Guardada en: {_lastSavedPath}");
 #endif
         }
@@ -271,7 +271,7 @@ public class PerformanceCapture : MonoBehaviour
         {
             _lastSaveFailed = true;
             _lastSavedPath = ex.Message;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PerformanceCapture] ❌ No se pudo guardar la captura: {ex}");
 #endif
         }

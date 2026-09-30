@@ -223,7 +223,7 @@ public class SolYLunaEnElCielo : MonoBehaviour
 
         Mostrar(true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (!_contado && Application.isPlaying)
         {
             _contado = true;

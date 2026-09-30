@@ -184,7 +184,7 @@ public class QuestMainMenuUI : MonoBehaviour
 
         if (visibleContentRoot == null || itemPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("QuestMainMenuUI: visibleContentRoot o itemPrefab es null");
 #endif
             return;
@@ -527,7 +527,7 @@ public class QuestMainMenuUI : MonoBehaviour
     {
         if (scrollRect == null || content == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"QuestMainMenuUI.RefreshScrollView: ScrollRect o Content es null (scrollRect={scrollRect != null}, content={content != null})");
 #endif
             return;
@@ -536,7 +536,7 @@ public class QuestMainMenuUI : MonoBehaviour
         // Verificar que content esté bajo el viewport correcto
         if (scrollRect.viewport != null && !content.IsChildOf(scrollRect.viewport))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"QuestMainMenuUI.RefreshScrollView: Content '{content.name}' no es hijo del Viewport '{scrollRect.viewport.name}'");
 #endif
             return;
@@ -647,7 +647,7 @@ public class QuestMainMenuUI : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[QuestMainMenuUI] ⚠️ ScrollRect o Content visible es null: scrollRect={visibleScrollRect != null}, content={visibleContentRoot != null}");
 #endif
         }
@@ -664,7 +664,7 @@ public class QuestMainMenuUI : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[QuestMainMenuUI] ⚠️ ScrollRect o Content oculto es null: scrollRect={hiddenScrollRect != null}, content={hiddenContentRoot != null}");
 #endif
         }

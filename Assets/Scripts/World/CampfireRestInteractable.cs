@@ -73,7 +73,7 @@ public class CampfireRestInteractable : MonoBehaviour
         _pendingTarget = isNight ? dayTarget : nightTarget;
         _interactable.SetDialogue(isNight ? waitForDayDialogue : waitForNightDialogue);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         string timeLabel = isNight ? "noche" : "día";
         Debug.Log($"[CampfireRest:{name}] Es {timeLabel} → preguntando por {_pendingTarget}.");
 #endif
@@ -93,7 +93,7 @@ public class CampfireRestInteractable : MonoBehaviour
         if (_dayNightCycle != null)
             _dayNightCycle.SetTimeOfDay(_pendingTarget, immediate: true);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CampfireRest:{name}] Hora cambiada a {_pendingTarget} bajo el negro.");
 #endif
 

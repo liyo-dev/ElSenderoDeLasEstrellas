@@ -152,11 +152,8 @@ public class PanicInputUI : MonoBehaviour
 
         var cg = root.AddComponent<CanvasGroup>();
 
-        // Fondo semitransparente
-        var bgGO = new GameObject("BG", typeof(RectTransform));
-        bgGO.transform.SetParent(root.transform, false);
-        FillRT(bgGO.GetComponent<RectTransform>());
-        bgGO.AddComponent<Image>().color = new Color(0f, 0f, 0f, 0.55f);
+        // Sin fondo propio: el icono del botón ya trae su círculo, y un panel detrás lo encerraba
+        // en un cuadrado (INC-528).
 
         // Icono del botón
         var iconGO = new GameObject("ButtonIcon", typeof(RectTransform));
@@ -174,14 +171,16 @@ public class PanicInputUI : MonoBehaviour
         var sliderGO = new GameObject("ProgressBar", typeof(RectTransform));
         sliderGO.transform.SetParent(root.transform, false);
         var sliderRT = sliderGO.GetComponent<RectTransform>();
-        sliderRT.anchorMin = new Vector2(0.05f, 0.05f);
-        sliderRT.anchorMax = new Vector2(0.95f, 0.2f);
+        sliderRT.anchorMin = new Vector2(0.15f, 0.06f);
+        sliderRT.anchorMax = new Vector2(0.85f, 0.13f);
         sliderRT.offsetMin = sliderRT.offsetMax = Vector2.zero;
 
         var sliderBgGO = new GameObject("BG", typeof(RectTransform));
         sliderBgGO.transform.SetParent(sliderGO.transform, false);
         FillRT(sliderBgGO.GetComponent<RectTransform>());
-        sliderBgGO.AddComponent<Image>().color = new Color(0.15f, 0.15f, 0.15f, 0.9f);
+        var pista = sliderBgGO.AddComponent<Image>();
+        pista.color = PaletaUI.PistaBarra;
+        pista.raycastTarget = false;
 
         var fillAreaGO = new GameObject("FillArea", typeof(RectTransform));
         fillAreaGO.transform.SetParent(sliderGO.transform, false);
@@ -193,7 +192,9 @@ public class PanicInputUI : MonoBehaviour
         fillRT.anchorMin = Vector2.zero;
         fillRT.anchorMax = new Vector2(0f, 1f);
         fillRT.offsetMin = fillRT.offsetMax = Vector2.zero;
-        fillGO.AddComponent<Image>().color = new Color(1f, 0.45f, 0.08f, 1f);
+        var relleno = fillGO.AddComponent<Image>();
+        relleno.color = PaletaUI.Lavanda;
+        relleno.raycastTarget = false;
 
         var slider = sliderGO.AddComponent<Slider>();
         slider.fillRect   = fillRT;

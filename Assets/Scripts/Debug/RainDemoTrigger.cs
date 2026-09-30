@@ -40,7 +40,7 @@ public class RainDemoTrigger : MonoBehaviour
         _cycle = FindAnyObjectByType<DayNightCycle>();
         if (_cycle == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[RainDemoTrigger] No se encontró ningún DayNightCycle en esta escena — la tecla de lluvia de demo no hará nada aquí.");
             #endif
         }
@@ -55,7 +55,7 @@ public class RainDemoTrigger : MonoBehaviour
         _toggleKeyValid ??= System.Enum.IsDefined(typeof(Key), toggleKey);
         if (_toggleKeyValid != true)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[RainDemoTrigger] toggleKey ({(int)toggleKey}) no es un valor valido del enum Key " +
                 "(probablemente arrastrado de una version antigua del campo, era KeyCode) - selecciona la tecla de nuevo en el Inspector.");
 #endif
@@ -65,7 +65,7 @@ public class RainDemoTrigger : MonoBehaviour
         if (Keyboard.current != null && Keyboard.current[toggleKey].wasPressedThisFrame)
         {
             _cycle.ToggleRain();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[RainDemoTrigger] Lluvia {(_cycle.IsRaining ? "activada" : "detenida")} manualmente ({toggleKey}).");
 #endif
         }

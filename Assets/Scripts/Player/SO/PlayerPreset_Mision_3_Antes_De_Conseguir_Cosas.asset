@@ -18,11 +18,14 @@ MonoBehaviour:
   currentHP: 100
   maxMP: 50
   currentMP: 50
-  unlockedAbilities: 01000000
-  unlockedSpells: 01000000
-  leftSpellId: 1
-  rightSpellId: 0
-  specialSpellId: 0
+  ataque: 0
+  defensa: 0
+  unlockedAbilities: 01000000i
+  unlockedSpells: 01000000i
+  basicSpellIds: 01000000i
+  legacyLeftSpellId: 0
+  legacyRightSpellId: 0
+  legacySpecialSpellId: 0
   flags:
   - SLEEP_DONE:PrologueBed
   - CINEMATIC_SEEN:Cinematic_DemonAppears
@@ -118,12 +121,17 @@ MonoBehaviour:
   npcPositions:
   - npcId: _ELDRAN
     position: {x: -39.945, y: 1.224823, z: 26.09}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+    hasRotation: 0
     hasActiveState: 0
     isActive: 1
   - npcId: Oliver
     position: {x: -31.48, y: 1.224823, z: 26.09}
+    rotation: {x: 0, y: 0, z: 0, w: 0}
+    hasRotation: 0
     hasActiveState: 0
     isActive: 1
+  npcRelationships: []
   consumedInteractableIds:
   - MainWorld:Carta_1231,6_1000,8_3,4
   completedInteractiveNarratives:
@@ -133,5 +141,6 @@ MonoBehaviour:
   - oliver-narrative-b8a7c6d5-unique_CN0
   seenLorePopupIds: []
   partyMemberIds: []
+  activeCharacterSlot: 1
   unlockedTeleportPoints:
   - Woods_Entrance_SavePoint

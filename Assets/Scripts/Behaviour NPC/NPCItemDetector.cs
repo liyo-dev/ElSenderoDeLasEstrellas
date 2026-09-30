@@ -54,7 +54,7 @@ namespace Game.NPC
                 
                 if (npcManager == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError($"[NPCItemDetector:{name}] No se encontró NPCBehaviourManagerV2");
 #endif
                 }
@@ -108,7 +108,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCItemDetector:{name}] Item detection desactivado en config");
 #endif
                     }
@@ -124,7 +124,7 @@ namespace Game.NPC
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Sistema de detección activado. Radio: {detectionRadius}");
 #endif
                 }
@@ -146,7 +146,7 @@ namespace Game.NPC
                 
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCItemDetector:{name}] Player entró en rango");
 #endif
                     }
@@ -169,7 +169,7 @@ namespace Game.NPC
                 
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCItemDetector:{name}] Player salió del rango");
 #endif
                     }
@@ -263,7 +263,7 @@ namespace Game.NPC
                 // ¡Encontrado! Completar el paso
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCItemDetector:{name}] Ítem detectado para quest {questId}, completando paso {entry.itemDeliveryStepIndex}");
 #endif
                     }
@@ -309,7 +309,7 @@ namespace Game.NPC
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCItemDetector:{name}] No se pudo obtener Animator del player");
 #endif
                     }
@@ -328,7 +328,7 @@ namespace Game.NPC
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Jugador forzado a idle");
 #endif
                 }
@@ -380,7 +380,7 @@ namespace Game.NPC
         {
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Iniciando ProcessItemDelivery para quest {questId}");
 #endif
                 }
@@ -392,7 +392,7 @@ namespace Game.NPC
                 {
                     if (debugMode)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCItemDetector:{name}] Reproduciendo animación de drop");
 #endif
                         }
@@ -416,21 +416,21 @@ namespace Game.NPC
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Animación completada, destruyendo objeto");
 #endif
                 }
             
             // 2. DESPUÉS: Destruir el objeto
             if (itemObject != null)
-                Destroy(itemObject);
+                ObjetoPersistente.Retirar(itemObject);
             
             // 3. Esperar varios frames para asegurar que la destrucción se procesó
             yield return new WaitForSeconds(pauseBeforeComplete);
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Completando quest step");
 #endif
                 }
@@ -448,7 +448,7 @@ namespace Game.NPC
             
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] ProcessItemDelivery completado");
 #endif
                 }
@@ -464,7 +464,7 @@ namespace Game.NPC
 
             if (debugMode)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCItemDetector:{name}] Estado de carrying limpiado");
 #endif
                 }

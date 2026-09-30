@@ -96,7 +96,7 @@ namespace Game.NPC
         {
             if (!SequenceActor.TryResolve(miId, out _yo) || !SequenceActor.TryResolve(conQuienId, out _otro))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[DiscusionEnBucle] No encuentro a '{miId}' o a '{conQuienId}': no discuten.");
 #endif
                 _siguienteComprobacion = Time.unscaledTime + 3f;
@@ -118,7 +118,7 @@ namespace Game.NPC
 
             _paso = 0;
             _siguienteTurno = 0f;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DiscusionEnBucle] {miId} y {conQuienId} empiezan a discutir (hasta {terminaCon}).");
 #endif
         }
@@ -147,7 +147,7 @@ namespace Game.NPC
             _yo?.Release();
             _otro?.Release();
             _yo = _otro = null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[DiscusionEnBucle] Se acabó la discusión ({terminaCon}).");
 #endif
         }

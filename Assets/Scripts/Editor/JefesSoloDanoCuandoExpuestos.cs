@@ -5,7 +5,7 @@ using UnityEngine;
 /// Pone SoloDanoCuandoExpuesto en todos los prefabs de enemigo que tienen algo que dice cuándo
 /// están expuestos (IExpuestoAlDano, p. ej. el aro de runas del Demonio), junto a su Damageable.
 /// Así cualquier jefe nuevo con su propia ventana de ataque queda con la regla «solo recibe daño
-/// cuando está expuesto; si no, se cura» pasando este menú, sin tocar código. Idempotente.
+/// cuando está expuesto» (y, si se ajusta 'curacionPorGolpe', se cura con los golpes a destiempo) pasando este menú, sin tocar código. Idempotente.
 /// Ver INC-469.
 public static class JefesSoloDanoCuandoExpuestos
 {

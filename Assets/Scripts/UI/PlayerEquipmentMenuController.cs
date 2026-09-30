@@ -105,6 +105,19 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     [SerializeField, Tooltip("Tiempo que se mantiene visible el mensaje de feedback tras usar un objeto.")]
     private float feedbackDuration = 1.5f;
 
+    [Header("Controles (INC-504)")]
+    [SerializeField, Tooltip("Panel de controles (copia del del menú principal). Se abre con X (C en teclado) desde el menú.")]
+    private ControlsMenuController controlsMenu;
+    [SerializeField, Tooltip("Texto de ayuda «X Controles» (opcional).")]
+    private TextMeshProUGUI controlsHintText;
+    int _controlsClosedFrame = -1;
+
+    [Header("Grimorio (INC-506)")]
+    [SerializeField, Tooltip("Libro del grimorio. Se abre desde la pestaña Hechizos con el botón «Grimorio» o Select/View (M en teclado).")]
+    private GrimorioLibroUI grimorioLibro;
+    [SerializeField, Tooltip("Tarjeta «Grimorio» de la barra de pistas de abajo, con el icono del botón que lo abre. Solo se ve en la pestaña Hechizos.")]
+    private GameObject grimorioHintCard;
+
     [Header("Pestañas")]
     [SerializeField] private Button inventoryTabButton;
     [SerializeField] private Button spellsTabButton;
@@ -189,8 +202,6 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     // Cámara principal desplazada temporalmente mientras el menú está abierto
     Camera _mainCamera;
-    Vector3 _mainCameraOriginalPosition;
-    Quaternion _mainCameraOriginalRotation;
     bool _mainCameraOffsetActive;
     Tween _mainCameraTween;
 
@@ -260,7 +271,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (_instance != null && _instance != this)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerEquipmentMenuController] Instancia duplicada detectada en '{gameObject.name}', destruyendo...");
 #endif
             Destroy(gameObject);
@@ -280,7 +291,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (canvas == null)
         {
             canvas = GetComponentInChildren<Canvas>(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerEquipmentMenuController] Canvas encontrado: {(canvas != null ? canvas.gameObject.name : "NULL")}");
 #endif
         }
@@ -288,7 +299,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (canvasGroup == null)
         {
             canvasGroup = GetComponentInChildren<CanvasGroup>(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerEquipmentMenuController] CanvasGroup encontrado: {(canvasGroup != null ? "Sí" : "No")}");
 #endif
         }
@@ -296,7 +307,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (windowRoot == null && canvas != null)
         {
             windowRoot = canvas.gameObject;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerEquipmentMenuController] WindowRoot asignado automáticamente a Canvas: '{windowRoot.name}'");
 #endif
         }
@@ -304,7 +315,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Verificar si tenemos lo mínimo necesario
         if (canvas == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[PlayerEquipmentMenuController] âš ï¸ No se encontró Canvas en '{gameObject.name}'");
             Debug.LogError("   El menú de equipamiento NO funcionará correctamente.");
             Debug.LogError("   Asegúrate de que el PlayerEquipmentMenuController esté en un GameObject con Canvas configurado.");
@@ -328,7 +339,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // EnsureViews retorna false si no hay vistas configuradas
         if (!EnsureViews())
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerEquipmentMenuController] âš ï¸ No se pudo inicializar ninguna vista del menú");
             Debug.LogError("   El menú no podrá abrirse hasta que se configuren las vistas en el Inspector.");
 #endif
@@ -389,21 +400,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _isOpen = false;
         }
         ExitUiInputScope();
-        // Si la cámara principal quedó desplazada (p.ej. el objeto se destruye con el menú
-        // abierto por un cambio de escena), restaurarla de forma inmediata para no dejar al
-        // jugador con la cámara desplazada y el vThirdPersonCamera deshabilitado para siempre.
-        if (_mainCameraOffsetActive)
-        {
-            _mainCameraTween?.Kill();
-            if (_mainCamera != null)
-            {
-                _mainCamera.transform.position = _mainCameraOriginalPosition;
-                _mainCamera.transform.rotation = _mainCameraOriginalRotation;
-            }
-            if (mainThirdPersonCamera != null)
-                mainThirdPersonCamera.enabled = true;
-            _mainCameraOffsetActive = false;
-        }
+        // Si el objeto se destruye con el menú abierto (p.ej. cambio de escena), devolver la
+        // cámara al gameplay para no dejar el vThirdPersonCamera deshabilitado para siempre.
+        RestoreEquipmentMenuCamera();
         _inventoryView?.Dispose();
         _equipmentView?.Dispose();
         if (_instance == this)
@@ -442,6 +441,39 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         }
         else
         {
+            // Controles abiertos encima (INC-504): el menú no hace nada hasta que se cierren; el mismo
+            // B o Start que los cierra tampoco cierra el menú.
+            // Grimorio abierto encima (INC-506): igual que los controles.
+            if (grimorioLibro != null && (grimorioLibro.IsOpen || Time.frameCount == grimorioLibro.ClosedFrame))
+            {
+                _toggleRequested = false;
+                _cancelRequested = false;
+                return;
+            }
+            if (grimorioLibro != null && _activeTab == 1 && GrimorioLibroUI.OpenPressed())
+            {
+                AbrirGrimorio();
+                return;
+            }
+
+            if (controlsMenu != null && (controlsMenu.IsVisible || Time.frameCount == _controlsClosedFrame))
+            {
+                _toggleRequested = false;
+                _cancelRequested = false;
+                return;
+            }
+            if (controlsMenu != null && GamepadInputReader.XButtonPressedUI)
+            {
+                GamepadInputReader.PlayUISound("UI_Navigate");
+                controlsMenu.Show(() =>
+                {
+                    _controlsClosedFrame = Time.frameCount;
+                    ShowTab(_activeTab);
+                });
+                return;
+            }
+            UpdateControlsHint();
+
             // Detectar botones del gamepad usando GamepadInputReader
             
             // Botón B (Cancel) o Start para cerrar el menú
@@ -498,11 +530,11 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 // Manejar Submit (A button)
                 if (GamepadInputReader.SubmitPressed)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[PlayerEquipmentMenu] â­ Submit detectado en inventario!");
 #endif
                     bool handled = _inventoryView?.TryHandleSubmit() ?? false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[PlayerEquipmentMenu] Submit handled: {handled}");
 #endif
                 }
@@ -532,6 +564,31 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     bool IsRightShoulderPressed()
     {
         return GamepadInputReader.RightShoulderPressedUI;
+    }
+
+    /// Abre el libro del grimorio por el hechizo resaltado (o el último aprendido). Lo llama el
+    /// botón «Grimorio» de la pestaña Hechizos. INC-506.
+    public void AbrirGrimorio()
+    {
+        if (grimorioLibro == null || grimorioLibro.IsOpen) return;
+        var start = GrimorioDelPersonaje.UltimoAprendido != SpellId.None
+            ? GrimorioDelPersonaje.UltimoAprendido
+            : (_spellView != null ? _spellView.HighlightedSpell : SpellId.None);
+        GrimorioDelPersonaje.UltimoAprendido = SpellId.None;
+        grimorioLibro.Open(start);
+    }
+
+    void UpdateControlsHint()
+    {
+        if (controlsHintText == null) return;
+        var family = Core.InputGlyphs.InputGlyphService.CurrentFamily;
+        string key = family == Core.InputGlyphs.InputGlyphDeviceFamily.KeyboardMouse
+            ? "C"
+            : Core.InputGlyphs.InputGlyphLabels.GetLabel(Core.InputGlyphs.InputGlyphNames.West, family);
+        string label = LocalizationManager.Instance != null
+            ? LocalizationManager.Instance.Get("MENU_CONTROLS_HINT", "Controles")
+            : "Controles";
+        controlsHintText.text = $"{key}  {label}";
     }
 
     bool IsYButtonPressed()
@@ -654,7 +711,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     {
         if (TagMinigameController.IsAnyMinigameActive)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerEquipmentMenu] OpenMenu() bloqueado — minijuego activo");
             #endif
             return;
@@ -663,14 +720,14 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Reproducir sonido de apertura de menú
         GamepadInputReader.PlayUISound("UI_Submit");
 
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] OpenMenu() llamado");
         #endif
         
         // Verificación temprana: Â¿tenemos Canvas?
         if (canvas == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerEquipmentMenu] âŒ No se puede abrir - Canvas es NULL");
             Debug.LogError("   El PlayerEquipmentMenuController no está correctamente configurado.");
             Debug.LogError("   Debe estar en un GameObject con un Canvas configurado.");
@@ -681,7 +738,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Verificación temprana: Â¿hay al menos una vista configurada?
         if (_inventoryView == null && _spellView == null && _equipmentView == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerEquipmentMenu] âŒ No se puede abrir - NINGUNA VISTA CONFIGURADA");
             Debug.LogError("   Configura al menos una vista (Inventory, Spell o Equipment) en el Inspector.");
             Debug.LogError("   Revisa los logs anteriores de EnsureViews() para más detalles.");
@@ -691,7 +748,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (!GameState.CanOpenInventory)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenu] No se puede abrir - GameState.CanOpenInventory = false");
             #endif
             return;
@@ -699,7 +756,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenu] No se puede abrir - Diálogo activo");
             #endif
             return;
@@ -708,26 +765,26 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Ask central manager for permission to open
         if (!MenuManager.TryOpen(MenuKind.Equipment))
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenuController] Apertura denegada por MenuManager");
             #endif
             return;
         }
 
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] MenuManager permitió la apertura, verificando vistas...");
         #endif
         
         if (!EnsureViews())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerEquipmentMenu] EnsureViews() retornó false - cerrando menú");
             #endif
             MenuManager.Close(MenuKind.Equipment);
             return;
         }
 
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] Vistas verificadas, inicializando ActionManager...");
         #endif
         
@@ -738,7 +795,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _actionModeActive = true;
         }
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] Llamando a EnterUiInputScope()");
         #endif
         EnterUiInputScope();
@@ -759,12 +816,12 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         {
             _storedAnimatorUpdateMode = _playerAnimator.updateMode;
             _playerAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenu] Animator cambiado a UnscaledTime para mantener animaciones en el menú");
             #endif
         }
 
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] Configurando canvas y pestañas...");
         #endif
         SetCanvasState(true);
@@ -773,7 +830,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         // Ocultar el HUD y el icono de estado del tiempo mientras el menú está abierto
         // (ahora se ve el mundo real detrás de Will, así que estorbarían en pantalla).
-        Sendero.UI.PlayerHUDV2.Instance?.HideHUD();
+        Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
         Sendero.UI.TimeOfDayIndicator.Instance?.Hide();
 
         // Cachear colores originales de HP/MP si no se han cacheado aún
@@ -798,7 +855,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         GameState.Push(GamePhase.Equipment);
         SelectInitial();
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] Activando cámara de equipamiento...");
         #endif
         // Activar la cámara de equipamiento siempre que el menú esté abierto
@@ -808,7 +865,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         _openedAt = Time.unscaledTime;
         _cancelRequested = false; // Limpiar cualquier cancel previo para evitar cierres inmediatos.
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] Menú abierto completamente");
         #endif
     }
@@ -838,7 +895,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         SetCanvasState(false);
 
         // Restaurar el HUD y el icono de estado del tiempo al cerrar el menú
-        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD();
+        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
         Sendero.UI.TimeOfDayIndicator.Instance?.Show();
         _spellView?.CancelSlotSelection(true);
         TimeScaleArbiterService.Release(this);
@@ -847,7 +904,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (_playerAnimator != null)
         {
             _playerAnimator.updateMode = _storedAnimatorUpdateMode;
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenu] Animator restaurado a su UpdateMode original");
             #endif
         }
@@ -873,7 +930,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void OnQuitToMainMenu()
     {
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenuController] Iniciando transición al Main Menu");
         #endif
 
@@ -895,7 +952,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         var tm = ResolveTransitionManager();
         if (tm != null && mainMenuTransitionSettings != null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenuController] Usando transición con settings configurados");
             #endif
             tm.Transition("MainMenu", mainMenuTransitionSettings, mainMenuTransitionDelay);
@@ -904,13 +961,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         {
             if (tm == null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] TransitionManager no disponible, cargando escena directamente");
                 #endif
             }
             else
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] MainMenuTransitionSettings no configurado, cargando escena directamente");
                 #endif
             }
@@ -942,7 +999,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         }
         catch (Exception ex)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerEquipmentMenuController] TransitionManager.Instance() falló: {ex.Message}");
             #endif
         }
@@ -989,6 +1046,8 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _spellView.SetVisible(_activeTab == 1);
             if (_activeTab == 1) _spellView.Refresh();
         }
+        if (grimorioHintCard != null && grimorioHintCard.activeSelf != (_activeTab == 1))
+            grimorioHintCard.SetActive(_activeTab == 1);
 
         if (_equipmentView != null)
         {
@@ -1010,7 +1069,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void EnterUiInputScope()
     {
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] EnterUiInputScope() - Cambiando a modo UI");
         #endif
         _inputScope?.Dispose();
@@ -1019,7 +1078,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Asegurar que los eventos de input están suscritos (para sonidos automáticos de LB/RB)
         GamepadInputReader.EnsureInputEventsSubscribed();
         
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[PlayerEquipmentMenu] InputScope creado");
         #endif
     }
@@ -1099,13 +1158,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _playerAnimator = _playerPreviewTarget.GetComponentInChildren<Animator>();
             if (_playerAnimator != null)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerEquipmentMenuController] Animator del player encontrado: {_playerAnimator.name}");
                 #endif
             }
             else
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] No se encontró Animator en el player. Las animaciones no funcionarán en el menú.");
                 #endif
             }
@@ -1119,7 +1178,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             TrySetAnimatorFloat(AnimHash_Speed, 0f);
             TrySetAnimatorFloat(AnimHash_VerticalVelocity, 0f);
 
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerEquipmentMenuController] Animator forzado a idle");
             #endif
         }
@@ -1173,7 +1232,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         EnsureMainCameraRefs();
         if (mainThirdPersonCamera == null || _mainCamera == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerEquipmentMenuController] No se encontró la cámara principal (vThirdPersonCamera). No se puede desplazar para el menú de equipamiento.");
             #endif
             return;
@@ -1181,8 +1240,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (_mainCameraOffsetActive) return;
 
         Transform camT = _mainCamera.transform;
-        _mainCameraOriginalPosition = camT.position;
-        _mainCameraOriginalRotation = camT.rotation;
+        Vector3 originalPosition = camT.position;
 
         Vector3 targetWorldPos = _playerPreviewTarget != null ? _playerPreviewTarget.position : camT.position + camT.forward * 3f;
         Vector3 lookPoint = targetWorldPos + Vector3.up * equipmentMenuCameraLookHeight;
@@ -1204,7 +1262,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (flatForward.sqrMagnitude < 0.001f && _playerPreviewTarget != null)
             flatForward = Vector3.ProjectOnPlane(_playerPreviewTarget.forward, Vector3.up);
         if (flatForward.sqrMagnitude < 0.001f)
-            flatForward = Vector3.ProjectOnPlane(targetWorldPos - _mainCameraOriginalPosition, Vector3.up);
+            flatForward = Vector3.ProjectOnPlane(targetWorldPos - originalPosition, Vector3.up);
         if (flatForward.sqrMagnitude < 0.001f)
             flatForward = Vector3.forward;
         flatForward.Normalize();
@@ -1214,7 +1272,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         // Posición nivelada: mismo desplazamiento horizontal (X/Z) que la cámara original respecto
         // a Will, pero a la altura del punto de mira, ya sin inclinación.
-        Vector3 levelPosition = new Vector3(_mainCameraOriginalPosition.x, lookPoint.y, _mainCameraOriginalPosition.z);
+        Vector3 levelPosition = new Vector3(originalPosition.x, lookPoint.y, originalPosition.z);
 
         Vector3 toTarget = lookPoint - levelPosition;
         float depth = Vector3.Dot(toTarget, flatForward);
@@ -1251,39 +1309,22 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     }
 
     /// <summary>
-    /// Devuelve la cámara principal a su posición/rotación previas al abrir el menú de equipamiento
-    /// y reactiva su seguimiento normal al terminar la transición.
+    /// Devuelve la cámara principal al gameplay al cerrar el menú de equipamiento. Se reactiva
+    /// vThirdPersonCamera al instante y es ella la que vuelve suave a su sitio (misma vuelta que
+    /// tras un diálogo o una cinemática). Antes el menú la devolvía con su propio tween de 0,4 s
+    /// hacia la pose de ANTES de abrir, con la cámara apagada mientras el juego ya corría: si Will
+    /// se movía en ese margen, al terminar el tween la cámara estaba en un sitio viejo y pegaba el
+    /// salto para alcanzarlo.
     /// </summary>
     void RestoreEquipmentMenuCamera()
     {
         if (!_mainCameraOffsetActive) return;
 
         _mainCameraTween?.Kill();
-
-        if (_mainCamera == null)
-        {
-            _mainCameraOffsetActive = false;
-            if (mainThirdPersonCamera != null)
-                mainThirdPersonCamera.enabled = true;
-            return;
-        }
-
-        Transform camT = _mainCamera.transform;
-        Vector3 savedPos = _mainCameraOriginalPosition;
-        Quaternion savedRot = _mainCameraOriginalRotation;
-
-        var seq = DOTween.Sequence().SetUpdate(true);
-        seq.Join(camT.DOMove(savedPos, equipmentMenuCameraTransitionDuration).SetEase(Ease.OutCubic));
-        seq.Join(camT.DORotateQuaternion(savedRot, equipmentMenuCameraTransitionDuration).SetEase(Ease.OutCubic));
-        seq.OnComplete(() =>
-        {
-            camT.position = savedPos;
-            camT.rotation = savedRot;
-            if (mainThirdPersonCamera != null)
-                mainThirdPersonCamera.enabled = true;
-            _mainCameraOffsetActive = false;
-        });
-        _mainCameraTween = seq;
+        _mainCameraTween = null;
+        _mainCameraOffsetActive = false;
+        if (mainThirdPersonCamera != null)
+            mainThirdPersonCamera.enabled = true;
     }
 
     // NO forzar idle si se está reproduciendo una animación de uso de item (beber poción, etc.)
@@ -1373,7 +1414,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         InputActionMapScope()
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[InputActionMapScope] Constructor - Iniciando");
             #endif
             
@@ -1383,17 +1424,17 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Cambiar a modo UI centralizado
             if (ServiceLocator.TryGet(out Core.PlayerInputManager pim))
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[InputActionMapScope] PlayerInputManager encontrado, llamando a PushUIMode()");
                 #endif
                 pim.PushUIMode();
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[InputActionMapScope] PushUIMode ejecutado. IsInUIMode: {pim.IsInUIMode}");
                 #endif
             }
             else
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[InputActionMapScope] PlayerInputManager NO encontrado en ServiceLocator!");
                 #endif
             }
@@ -1459,7 +1500,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     void SelectInitial()
     {
         var finalTarget = ResolveInitialTarget();
-        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerEquipmentMenu] SelectInitial tab={_activeTab} default={finalTarget?.name ?? "null"} rows={_inventoryView?.RowCount.ToString() ?? "-"} override={initialSelectionOverride?.name ?? "null"} -> target={finalTarget?.name ?? "null"}");
         #endif
 
@@ -1695,7 +1736,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedInventory)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] Inventario no configurado:");
                 Debug.LogWarning($"  - root: {(inventoryUI.root != null ? "OK" : "FALTA")}");
                 Debug.LogWarning($"  - rowsParent: {(inventoryUI.rowsParent != null ? "OK" : "FALTA")}");
@@ -1725,7 +1766,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedSpells)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] Vista de hechizos no configurada: asigna root, botones de slots, contenedor y prefab de filas.");
                 #endif
                 _warnedSpells = true;
@@ -1752,7 +1793,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             else if (!_warnedEquipment)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[PlayerEquipmentMenuController] Vista de equipamiento no configurada: añade filas con categoría y botones.");
                 #endif
                 _warnedEquipment = true;
@@ -1768,7 +1809,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         
         if (!anyViewConfigured)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[PlayerEquipmentMenuController] âŒ NINGUNA VISTA ESTÃ CONFIGURADA");
             Debug.LogError("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—");
             Debug.LogError("â•‘ SOLUCIÃ“N: El PlayerEquipmentMenuController necesita un Canvas UI  â•‘");
@@ -1885,13 +1926,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 _scrollRect = _ui.rowsParent.GetComponentInParent<ScrollRect>();
                 if (_scrollRect != null)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[InventoryView] ✅ ScrollRect encontrado automáticamente: {_scrollRect.name}");
                     #endif
                 }
                 else
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[InventoryView] ⚠️ ScrollRect NO encontrado. Asigna manualmente el ScrollRect en el Inspector (Inventory UI → Scroll Rect) o verifica que '{_ui.rowsParent.name}' esté bajo un GameObject con ScrollRect.");
                     #endif
                 }
@@ -2057,7 +2098,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 }
                 else if (_scrollRect == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[InventoryView] ⚠️ No se puede añadir ScrollOnSelectRelay: ScrollRect es null");
 #endif
                 }
@@ -2145,7 +2186,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (widget == null) return;
             if (_scrollRect == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[InventoryView] ScrollRect no encontrado en el padre de rowsParent. Verifica que el contenedor esté bajo un ScrollRect.");
 #endif
                 return;
@@ -2234,7 +2275,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         {
             if (!IsInventoryInputContextValid())
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[InventoryView] Ignorando UseSelectedItem fuera del tab de inventario.");
 #endif
                 return;
@@ -2433,7 +2474,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 yield return null;
                 HandleRowActivated(first, first.Item, true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerEquipmentMenu] Inventario - Seleccionado: {first.Item?.displayName}");
 #endif
             }
@@ -2476,7 +2517,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (_ui.useButton == null) return;
             if (_selectedItem == null || !_selectedItem.usableFromInventory) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[InventoryView] FocusUseButton - Cambiando estado a UseButtonFocused");
 #endif
             _interactionState = InventoryInteractionState.UseButtonFocused;
@@ -2484,7 +2525,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Habilitar el botón si no lo está
             if (!_ui.useButton.interactable)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[InventoryView] Habilitando botón useButton");
 #endif
                 _ui.useButton.interactable = true;
@@ -2496,7 +2537,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Reproducir sonido de selección/confirmación
             GamepadInputReader.PlayUISound("UI_Select");
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InventoryView] FocusUseButton completado - Estado final: {_interactionState}");
 #endif
         }
@@ -2530,7 +2571,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             {
                 // ⭐ SOLUCIÓN SIMPLE: Cambiar el color del Image directamente
                 buttonImage.color = yellowColor;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[InventoryView] Color amarillo aplicado directamente al Image");
 #endif
             }
@@ -2586,14 +2627,14 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (!IsInventoryInputContextValid())
                 return false;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InventoryView] TryHandleSubmit - Estado: {_interactionState}, SelectedRow: {(_lastSelectedRow != null ? "OK" : "NULL")}, SelectedItem: {(_selectedItem != null ? _selectedItem.displayName : "NULL")}");
 #endif
             
             if (_interactionState == InventoryInteractionState.UseButtonFocused)
             {
                 // Segunda pulsación: Usar el item
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[InventoryView] Segunda pulsación - Usando item");
 #endif
                 UseSelectedItem();
@@ -2603,17 +2644,17 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             if (_lastSelectedRow != null && _selectedItem != null)
             {
                 // Primera pulsación: Enfocar botón de usar
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[InventoryView] Primera pulsación - Enfocando botón de usar");
 #endif
                 HandleRowSubmit();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[InventoryView] Después de HandleRowSubmit - Estado: {_interactionState}");
 #endif
                 return true;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[InventoryView] TryHandleSubmit - No hay nada que hacer");
 #endif
             return false;
@@ -2625,22 +2666,34 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     {
         public GameObject root;
         
-        [Header("Slots - Botón izquierdo (X)")]
+        // Los nombres de campo son los de antes (izquierdo/derecho/especial) para no perder las
+        // referencias de la escena; desde INC-485 son los básicos 1, 2 y 3, y 'fourthSlot' el 4.
+        [Header("Básico 1")]
         public Button leftSlotButton;
         public Text leftSlotLabel;
 
-        [Header("Slots - Botón derecho (B)")]
+        [Header("Básico 2")]
         public Button rightSlotButton;
         public Text rightSlotLabel;
 
-        [Header("Slots - Botón especial (Y)")]
+        [Header("Básico 3")]
         public Button specialSlotButton;
         public Text specialSlotLabel;
+
+        [Header("Básico 4 (opcional)")]
+        public Button fourthSlotButton;
+        public Text fourthSlotLabel;
+
+        [Header("Iconos de las ranuras")]
+        [Tooltip("Imagen de ranura vacía. Si se deja vacía, la ranura conserva su imagen.")]
+        public Sprite emptySlotSprite;
         
         [Header("Lista de hechizos")]
         public Transform rowsParent;
         public SpellRowWidget rowPrefab;
         public Text detailsText;
+        [Tooltip("Línea de abajo con lo que hace A en cada momento (equipar, quitar, mover...). Lleva iconos de botón.")]
+        public TMP_Text hintLabel;
         
         [Header("Scroll (opcional - se busca automáticamente si no se asigna)")]
         [Tooltip("ScrollRect de hechizos. Si no se asigna, se busca automáticamente desde rowsParent.")]
@@ -2664,831 +2717,650 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     class SpellView
     {
-        static string Loc(string key, string fallback) =>
-            LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
+        // Pestaña Hechizos (INC-515). Cada personaje lleva hasta 4 básicos, seguidos y en el orden en
+        // que rotan con LB:
+        // - A sobre un básico de la lista lo pone en el primer hueco libre, o lo quita si ya lo lleva.
+        //   Con los 4 ocupados, pregunta cuál cambiar.
+        // - A sobre un hueco lleno lo coge para cambiarlo de sitio (el orden de LB).
+        // - La lista solo trae lo que se equipa en la X. Los combos (Y) y la levitación se ven en el grimorio.
+        // Will guarda sus básicos en PlayerPresetSO.basicSpellIds; Estela y Liam, en su entrada de
+        // companionBasics (GrimorioDelPersonaje).
 
-        enum FocusArea
-        {
-            Slots,
-            SpellList
-        }
-
-        enum AssignmentMode
-        {
-            None,
-            WaitingForSpellSelection,
-            WaitingForSlotSelection
-        }
-
-        readonly SpellBindings _ui;
-        readonly List<RowEntry> _rows = new();
-        readonly Dictionary<Button, ColorBlock> _slotDefaultColors = new();
-        readonly Dictionary<Button, MagicSlot> _buttonToSlot = new();
-        readonly Dictionary<MagicSlot, Button> _slotToButton = new();
-        readonly Dictionary<Button, Vector3> _slotBaseScales = new();
-        readonly Dictionary<Button, Tween> _slotFeedbackTweens = new();
-        readonly ScrollRect _scrollRect;
-
-        PlayerPresetSO _preset;
-        SpellLibrarySO _library;
-        PlayerPresetService _presetService;
-        SpellId _highlightedSpell = SpellId.None;
-        RowEntry _highlightedRow;
-        SpellId _pendingSpell = SpellId.None;
-        MagicSlot _pendingSlot = MagicSlot.Left;
-        MagicSlot _focusedSlot = MagicSlot.Left;
-        FocusArea _focusArea = FocusArea.SpellList;
-        AssignmentMode _assignmentMode = AssignmentMode.None;
+        enum Mode { Browse, ReplaceSlot, MoveSlot }
 
         class RowEntry
         {
-            public SpellId spellId;
+            public MagicSpellSO spell;
             public SpellRowWidget widget;
         }
+
+        const string Gold = "#FFD54A";
+        const string Muted = "#9A94C8";
+        const string RowNumber = "#C98B00";          // número de ranura sobre la fila clara
+        const string RowNumberSelected = "#5A3A00";  // y sobre la fila resaltada (fondo dorado)
+
+        readonly SpellBindings _ui;
+        readonly Button[] _slotButtons;
+        readonly Text[] _slotLabels;
+        readonly ScrollRect _scrollRect;
+        readonly List<RowEntry> _rows = new();
+        readonly List<SpellId> _equipped = new(MagicCaster.BasicSlotCount);
+        readonly Dictionary<Button, ColorBlock> _slotDefaultColors = new();
+        readonly Dictionary<Button, Vector3> _slotBaseScales = new();
+        readonly Dictionary<Button, Tween> _slotTweens = new();
+
+        PartyControlManager.CharacterSlot _slot = PartyControlManager.CharacterSlot.Will;
+        PlayerPresetSO _preset;
+        PlayerPresetService _presetService;
+
+        Mode _mode = Mode.Browse;
+        SpellId _pendingSpell = SpellId.None; // ReplaceSlot: el que entra
+        int _pendingSlot = -1;                // MoveSlot: el hueco que se mueve
+        int _focusedSlot = -1;                // hueco con el foco; -1 = el foco está en la lista
+        RowEntry _highlightedRow;
+        string _notice;                       // aviso de una línea hasta el siguiente movimiento
+        Core.InputGlyphs.InputGlyphDeviceFamily _hintFamily;
+
+        bool EsWill => _slot == PartyControlManager.CharacterSlot.Will;
+        int SlotCount => Mathf.Min(_slotButtons.Length, MagicCaster.BasicSlotCount);
+
+        static string Loc(string key, string fallback) =>
+            LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
 
         public SpellView(SpellBindings bindings)
         {
             _ui = bindings;
             _ui.root?.SetActive(false);
 
-            ConfigureSlotButton(_ui.leftSlotButton, MagicSlot.Left);
-            ConfigureSlotButton(_ui.rightSlotButton, MagicSlot.Right);
-            ConfigureSlotButton(_ui.specialSlotButton, MagicSlot.Special);
-            
-            // Intentar usar el ScrollRect asignado manualmente, o buscarlo automáticamente
-            if (_ui.scrollRect != null)
+            var buttons = new List<Button> { _ui.leftSlotButton, _ui.rightSlotButton, _ui.specialSlotButton };
+            var labels = new List<Text> { _ui.leftSlotLabel, _ui.rightSlotLabel, _ui.specialSlotLabel };
+            if (_ui.fourthSlotButton != null && _ui.fourthSlotLabel != null)
             {
-                _scrollRect = _ui.scrollRect;
-                // Debug.Log($"[SpellView] ✅ ScrollRect asignado manualmente: {_scrollRect.name}");
+                buttons.Add(_ui.fourthSlotButton);
+                labels.Add(_ui.fourthSlotLabel);
             }
-            else if (_ui.rowsParent != null)
-            {
-                _scrollRect = _ui.rowsParent.GetComponentInParent<ScrollRect>();
-                if (_scrollRect != null)
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.Log($"[SpellView] ✅ ScrollRect encontrado automáticamente: {_scrollRect.name}");
-                    #endif
-                }
-                else
-                {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                    Debug.LogWarning($"[SpellView] ⚠️ ScrollRect NO encontrado. Asigna manualmente el ScrollRect en el Inspector (Spell UI → Scroll Rect) o verifica que '{_ui.rowsParent.name}' esté bajo un GameObject con ScrollRect.");
-                    #endif
-                }
-            }
+            _slotButtons = buttons.ToArray();
+            _slotLabels = labels.ToArray();
+            for (int i = 0; i < _slotButtons.Length; i++)
+                ConfigureSlotButton(_slotButtons[i], i);
+
+            _scrollRect = _ui.scrollRect != null
+                ? _ui.scrollRect
+                : (_ui.rowsParent != null ? _ui.rowsParent.GetComponentInParent<ScrollRect>() : null);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (_scrollRect == null)
+                Debug.LogWarning("[SpellView] Sin ScrollRect: asígnalo en Spell UI → Scroll Rect.");
+#endif
         }
+
+        // ── API para el menú ──────────────────────────────────────────────
 
         public GameObject DefaultSelection
         {
             get
             {
-                if (_rows.Count > 0)
-                {
-                    var first = _rows[0]?.widget;
-                    if (first != null)
-                        return first.ButtonGameObject;
-                }
-                if (_ui.leftSlotButton != null)
-                    return _ui.leftSlotButton.gameObject;
-                if (_ui.rightSlotButton != null)
-                    return _ui.rightSlotButton.gameObject;
-                if (_ui.specialSlotButton != null)
-                    return _ui.specialSlotButton.gameObject;
+                if (_rows.Count > 0 && _rows[0]?.widget != null) return _rows[0].widget.ButtonGameObject;
+                foreach (var b in _slotButtons)
+                    if (b != null) return b.gameObject;
                 return _ui.root;
             }
         }
 
+        /// El hechizo resaltado en la lista (el grimorio se abre por él, INC-506).
+        public SpellId HighlightedSpell => _highlightedRow?.spell != null ? _highlightedRow.spell.spellId : SpellId.None;
+
         public void SetVisible(bool value)
         {
-            if (_ui.root != null)
-                _ui.root.SetActive(value);
+            if (_ui.root != null) _ui.root.SetActive(value);
             if (!value)
             {
-                CancelSlotSelection(true);
+                ResetMode();
                 KillAllSlotFeedback();
             }
         }
 
         public void Refresh()
         {
-            if (!(GameBootService.IsAvailable && GameBootService.Profile != null))
-            {
-                _preset = null;
-                _library = null;
-                _presetService = null;
-                CancelSlotSelection(true);
-                ClearList();
-                UpdateSlotLabels();
-                ShowSpellDetails(SpellId.None);
-                return;
-            }
+            _preset = GameBootService.IsAvailable && GameBootService.Profile != null
+                ? GameBootService.Profile.GetActivePresetResolved()
+                : null;
+            if (_preset != null)
+                PlayerService.TryGetComponent(out _presetService, includeInactive: true, allowSceneLookup: true);
+            _slot = PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveSlot : PartyControlManager.CharacterSlot.Will;
 
-            _preset = GameBootService.Profile.GetActivePresetResolved();
-            PlayerService.TryGetComponent(out _presetService, includeInactive: true, allowSceneLookup: true);
-            _library = _presetService != null ? _presetService.SpellLibrary : null;
+            ResetMode();
+            LoadEquipped();
+            BuildList();
+            UpdateSlots();
+            UpdateNavigation();
+            ShowDetails(null, -1);
 
-            EnforcePresetSlotRules();
-            UpdateSlotLabels();
-            BuildSpellList();
-            UpdateSlotButtonVisuals();
-            CancelSlotSelection(true);
-            // No seleccionar ningún hechizo al abrir, limpiar detalles
-            _highlightedSpell = SpellId.None;
-            _highlightedRow = null;
-            ShowSpellDetails(SpellId.None);
+            // Recién aprendido uno: la lista se abre por él (INC-503).
+            var nuevo = GrimorioDelPersonaje.UltimoAprendido;
+            if (nuevo != SpellId.None && FocusRow(nuevo))
+                GrimorioDelPersonaje.UltimoAprendido = SpellId.None;
+            UpdateHint();
         }
 
         public void HandleInput()
         {
-            if (_ui.root == null || !_ui.root.activeInHierarchy)
+            if (_ui.root == null || !_ui.root.activeInHierarchy) return;
+            if (Core.InputGlyphs.InputGlyphService.CurrentFamily != _hintFamily) UpdateHint();
+        }
+
+        public void CancelSlotSelection(bool silent)
+        {
+            ResetMode();
+            if (!silent) UpdateHint();
+        }
+
+        /// B: sale del modo en curso, o vuelve de los huecos a la lista. False si no había nada que cancelar.
+        public bool TryHandleCancel()
+        {
+            if (_mode != Mode.Browse)
+            {
+                int back = _mode == Mode.MoveSlot ? _pendingSlot : -1;
+                var spell = _pendingSpell;
+                ResetMode();
+                if (back >= 0) FocusSlot(back);
+                else if (!FocusRow(spell)) FocusList();
+                UpdateHint();
+                return true;
+            }
+            if (_focusedSlot >= 0)
+            {
+                FocusList();
+                return true;
+            }
+            return false;
+        }
+
+        // ── Lo que lleva equipado ─────────────────────────────────────────
+
+        bool Equipable(MagicSpellSO s) => s != null && s.caster == _slot && GrimorioDelPersonaje.EsBasico(s);
+
+        /// Lee los básicos del personaje, sin huecos ni repetidos ni hechizos que no puede llevar. Si
+        /// había algo que limpiar, lo guarda ya.
+        void LoadEquipped()
+        {
+            _equipped.Clear();
+            if (_preset == null) return;
+
+            var src = EsWill ? _preset.basicSpellIds : GrimorioDelPersonaje.IdsEquipados(_preset, _slot, crear: false);
+            if (src == null)
+            {
+                foreach (var s in GrimorioDelPersonaje.BasicosEquipados(_slot))
+                    if (s != null) _equipped.Add(s.spellId);
                 return;
-
-            if (_assignmentMode == AssignmentMode.WaitingForSlotSelection)
-            {
-                if (_focusArea != FocusArea.Slots)
-                    FocusSlots(_focusedSlot);
-                return;
             }
 
-            if (_focusArea != FocusArea.SpellList)
-                FocusSpellList();
+            foreach (var id in src)
+                if (_equipped.Count < SlotCount && !_equipped.Contains(id) && Equipable(GrimorioDelPersonaje.Hechizo(id)))
+                    _equipped.Add(id);
+
+            bool igual = src.Count == _equipped.Count;
+            for (int i = 0; igual && i < src.Count; i++) igual = src[i] == _equipped[i];
+            if (!igual) Save();
         }
 
-        void FocusSlots(MagicSlot? slotOverride = null)
+        void Save()
         {
-            if (_slotToButton.Count == 0)
-                return;
+            if (_preset == null) return;
+            List<SpellId> dst;
+            if (EsWill) dst = _preset.basicSpellIds ??= new List<SpellId>();
+            else dst = GrimorioDelPersonaje.IdsEquipados(_preset, _slot, crear: true);
+            if (dst == null) return;
+            dst.Clear();
+            dst.AddRange(_equipped);
 
-            var targetSlot = slotOverride ?? _focusedSlot;
-            if (_assignmentMode == AssignmentMode.WaitingForSlotSelection && !CanAssign(targetSlot, _pendingSpell))
-            {
-                foreach (var candidate in _slotToButton.Keys)
-                {
-                    if (!CanAssign(candidate, _pendingSpell)) continue;
-                    targetSlot = candidate;
-                    break;
-                }
-            }
-
-            if (!_slotToButton.TryGetValue(targetSlot, out var button) || button == null)
-            {
-                foreach (var kvp in _slotToButton)
-                {
-                    if (kvp.Value != null)
-                    {
-                        targetSlot = kvp.Key;
-                        button = kvp.Value;
-                        break;
-                    }
-                }
-            }
-
-            _focusedSlot = targetSlot;
-            _focusArea = FocusArea.Slots;
-
-            if (button != null)
-            {
-                var es = EventSystem.current;
-                if (es != null)
-                    es.SetSelectedGameObject(button.gameObject);
-            }
+            if (EsWill) _presetService?.ApplyCurrentPreset(includeInventory: false, includeAbilities: false);
+            else GrimorioDelPersonaje.Aplicar(_slot);
         }
 
-        void FocusSpellList()
+        // ── Lista ─────────────────────────────────────────────────────────
+
+        void BuildList()
         {
-            if (_rows.Count == 0)
-                return;
+            foreach (var entry in _rows)
+                if (entry?.widget != null) entry.widget.gameObject.SetActive(false);
+            _rows.Clear();
+            _highlightedRow = null;
+            if (_preset == null || _ui.rowsParent == null) return;
 
-            if (_highlightedRow == null)
-                SelectFirstRow();
+            // Solo lo que se equipa en la X; los combos (Y) tienen su página en el grimorio.
+            foreach (var s in GrimorioDelPersonaje.BasicosDisponibles(_slot))
+                if (Equipable(s)) AddRow(s);
 
-            _focusArea = FocusArea.SpellList;
-            _highlightedRow?.widget?.Focus();
-        }
-
-        MagicSlot GetPreferredSlotForSpell(SpellId spellId)
-        {
-            if (spellId != SpellId.None && _library != null)
-            {
-                var spell = _library.Get(spellId);
-                if (spell != null && spell.slotType == SpellSlotType.SpecialOnly)
-                    return MagicSlot.Special;
-            }
-
-            if (CanAssign(MagicSlot.Left, spellId)) return MagicSlot.Left;
-            if (CanAssign(MagicSlot.Right, spellId)) return MagicSlot.Right;
-            if (CanAssign(MagicSlot.Special, spellId)) return MagicSlot.Special;
-            return MagicSlot.Left;
-        }
-
-        void UpdateSlotLabels()
-        {
-            UpdateSlotLabel(_ui.leftSlotLabel, _preset != null ? _preset.leftSpellId : SpellId.None);
-            UpdateSlotLabel(_ui.rightSlotLabel, _preset != null ? _preset.rightSpellId : SpellId.None);
-            UpdateSlotLabel(_ui.specialSlotLabel, _preset != null ? _preset.specialSpellId : SpellId.None);
-        }
-
-        void UpdateSlotLabel(Text label, SpellId spellId)
-        {
-            if (label == null) return;
-            label.gameObject.SetActive(true);
-            label.text = ResolveName(spellId);
-        }
-
-        void BuildSpellList()
-        {
-            ClearList();
-
-            if (_preset == null)
-                return;
-
-            var added = new HashSet<SpellId>();
-
-            if (_preset.unlockedSpells != null)
-            {
-                foreach (var id in _preset.unlockedSpells)
-                {
-                    if (!added.Add(id)) continue;
-                    AddSpellRow(id);
-                }
-            }
-
-            // Ocultar (no destruir) las filas del pool sobrantes de una construcción anterior con
-            // más hechizos desbloqueados — ver AddSpellRow().
+            // Las filas del pool que sobran se esconden (no se destruyen, ver AddRow).
             for (int i = _rows.Count; i < _ui.rowsParent.childCount; i++)
                 _ui.rowsParent.GetChild(i).gameObject.SetActive(false);
 
-            // No seleccionar ninguna fila al abrir
-            _highlightedRow = null;
-            _highlightedSpell = SpellId.None;
             UpdateRowVisuals();
-            ConfigureRowNavigation();
-            UpdateSlotNavigationTargets();
         }
 
-        void AddSpellRow(SpellId spellId)
+        void AddRow(MagicSpellSO spell)
         {
-            // PERF (revisión rendimiento 24/08): mismo pool que InventoryView.BuildList() — se
-            // reutilizan los GameObjects ya hijos de rowsParent en vez de Destroy+Instantiate en
-            // cada apertura de la pestaña de hechizos (Refresh() la llama siempre, sin condición).
-            SpellRowWidget widget;
+            // Pool: se reutilizan los hijos de rowsParent en vez de destruir y crear en cada apertura.
+            SpellRowWidget widget = null;
             int poolIndex = _rows.Count;
             if (poolIndex < _ui.rowsParent.childCount)
             {
                 var child = _ui.rowsParent.GetChild(poolIndex);
                 widget = child.GetComponent<SpellRowWidget>();
-                if (widget == null)
-                    widget = UnityEngine.Object.Instantiate(_ui.rowPrefab, _ui.rowsParent);
-                else
-                    child.gameObject.SetActive(true);
+                if (widget != null) child.gameObject.SetActive(true);
             }
-            else
-            {
-                widget = UnityEngine.Object.Instantiate(_ui.rowPrefab, _ui.rowsParent);
-            }
+            if (widget == null) widget = UnityEngine.Object.Instantiate(_ui.rowPrefab, _ui.rowsParent);
 
-            widget.SetLabel(ResolveName(spellId));
-            widget.SetIcon(GetSpellAsset(spellId)?.attackIcon);
-            var rowEntry = new RowEntry { spellId = spellId, widget = widget };
-            // RegisterClickHandler/RegisterSelectedHandler reasignan el delegate (RemoveListener +
-            // AddListener sobre el mismo método estático) en vez de acumular con +=, así que
-            // reutilizar una fila del pool con handlers nuevos es seguro.
-            widget.RegisterClickHandler(() => HandleRowClicked(rowEntry));
-            widget.RegisterSelectedHandler(() => HandleRowSelected(rowEntry, true));
+            var entry = new RowEntry { spell = spell, widget = widget };
+            widget.SetIcon(spell.attackIcon);
+            widget.RegisterClickHandler(() => OnRowPressed(entry));
+            widget.RegisterSelectedHandler(() => OnRowFocused(entry));
 
-            // Configurar auto-scroll al seleccionar este hechizo
-            var rect = widget.GetComponent<RectTransform>();
-            if (rect != null && _scrollRect != null)
+            if (_scrollRect != null)
             {
                 var relay = widget.GetComponent<ScrollOnSelectRelay>();
-                if (relay == null)
-                    relay = widget.gameObject.AddComponent<ScrollOnSelectRelay>();
+                if (relay == null) relay = widget.gameObject.AddComponent<ScrollOnSelectRelay>();
                 relay.scrollRect = _scrollRect;
-                relay.target = rect;
-            }
-            else if (_scrollRect == null)
-            {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning("[SpellView] ⚠️ No se puede añadir ScrollOnSelectRelay: ScrollRect es null");
-#endif
+                relay.target = widget.GetComponent<RectTransform>();
             }
 
-            _rows.Add(rowEntry);
+            _rows.Add(entry);
         }
 
-        void HandleRowSelected(RowEntry entry, bool fromUser)
-        {
-            if (entry == null) return;
-
-            _highlightedSpell = entry.spellId;
-            _highlightedRow = entry;
-
-            // Only force selection when the EventSystem is not already pointing at this row.
-            if (!fromUser)
-            {
-                entry.widget?.Focus();
-            }
-            else
-            {
-                entry.widget?.Focus();
-            }
-
-            if (fromUser)
-                _focusArea = FocusArea.SpellList;
-            UpdateRowVisuals();
-            ShowSpellDetails(entry.spellId);
-            ScrollToEntry(entry);
-        }
-
+        /// Resalte y texto de cada fila. El número de ranura ocupa siempre su sitio (transparente si no
+        /// va equipado), así los nombres empiezan todos a la misma altura.
         void UpdateRowVisuals()
         {
             foreach (var row in _rows)
             {
                 if (row?.widget == null) continue;
-                bool isSelected = row == _highlightedRow;
-                row.widget.SetHighlighted(isSelected, _ui.slotSelectionColor);
+                bool highlighted = row == _highlightedRow;
+                row.widget.SetHighlighted(highlighted, _ui.slotSelectionColor);
+
+                int idx = _equipped.IndexOf(row.spell.spellId);
+                string number = idx >= 0
+                    ? $"<b><color={(highlighted ? RowNumberSelected : RowNumber)}>{idx + 1}</color></b>"
+                    : "<b><color=#00000000>0</color></b>";
+                row.widget.SetLabel($"{number}   {row.spell.GetLocalizedName()}");
             }
         }
 
-        void HandleRowClicked(RowEntry entry)
+        void OnRowFocused(RowEntry entry)
         {
             if (entry == null) return;
+            // Mientras se elige hueco, pasar el ratón por la lista no cambia nada.
+            if (_mode != Mode.Browse) return;
+            _focusedSlot = -1;
+            _highlightedRow = entry;
+            _notice = null;
+            UpdateRowVisuals();
+            UpdateNavigation();
+            ShowDetails(entry.spell, -1);
+            ScrollTo(entry);
+            UpdateHint();
+        }
 
-            if (_assignmentMode == AssignmentMode.WaitingForSpellSelection)
+        void OnRowPressed(RowEntry entry)
+        {
+            if (entry == null) return;
+            // Con el ratón se puede pinchar otra fila mientras se elige hueco: cuenta como cambiar de idea.
+            if (_mode != Mode.Browse) ResetMode();
+            var id = entry.spell.spellId;
+
+            int idx = _equipped.IndexOf(id);
+            if (idx >= 0)
             {
-                AssignSpellToSlot(_pendingSlot, entry.spellId);
-                CompleteAssignment();
-                return;
-            }
-
-            _pendingSpell = entry.spellId;
-            _assignmentMode = AssignmentMode.WaitingForSlotSelection;
-            _focusedSlot = GetPreferredSlotForSpell(entry.spellId);
-            _pendingSlot = _focusedSlot;
-            FocusSlots(_focusedSlot);
-            UpdateSlotButtonVisuals();
-            ShowSpellDetails(entry.spellId);
-        }
-
-        void HandleSlotButtonPressed(MagicSlot slot)
-        {
-            if (_assignmentMode == AssignmentMode.WaitingForSlotSelection)
-            {
-                _focusedSlot = slot;
-                if (!CanAssign(slot, _pendingSpell)) return;
-                AssignSpellToSlot(slot, _pendingSpell);
-                CompleteAssignment();
-                return;
-            }
-
-            if (_assignmentMode == AssignmentMode.WaitingForSpellSelection)
-            {
-                if (!CanAssign(slot, _pendingSpell)) return;
-                AssignSpellToSlot(slot, _pendingSpell);
-                CompleteAssignment();
-                return;
-            }
-
-            _pendingSlot = slot;
-            _assignmentMode = AssignmentMode.WaitingForSpellSelection;
-            _focusArea = FocusArea.SpellList;
-            FocusSpellList();
-            UpdateSlotButtonVisuals();
-            ShowSpellDetails(_highlightedSpell);
-        }
-
-        void BeginSpellSelectionFromSlot(MagicSlot slot)
-        {
-            _pendingSlot = slot;
-            _pendingSpell = SpellId.None;
-            _assignmentMode = AssignmentMode.WaitingForSpellSelection;
-            FocusSpellList();
-            UpdateSlotButtonVisuals();
-            ShowSpellDetails(_highlightedSpell);
-        }
-
-        void AssignSpellToSlot(MagicSlot slot, SpellId id)
-        {
-            if (_preset == null) return;
-
-            // Primero limpiamos duplicados de otros slots antes de asignar
-            // para evitar que ConfigureSpells vea duplicados temporales
-            EnsureUniqueAssignment(id, slot);
-
-            switch (slot)
-            {
-                case MagicSlot.Left: _preset.leftSpellId = id; break;
-                case MagicSlot.Right: _preset.rightSpellId = id; break;
-                case MagicSlot.Special: _preset.specialSpellId = id; break;
-            }
-
-            // No restaurar inventario al cambiar hechizos (solo actualizar spells)
-            _presetService?.ApplyCurrentPreset(includeInventory: false, includeAbilities: false);
-            UpdateSlotLabels();
-            PlaySlotConfirmFeedback(slot);
-        }
-
-        void EnsureUniqueAssignment(SpellId id, MagicSlot targetSlot)
-        {
-            if (id == SpellId.None) return;
-
-            if (targetSlot != MagicSlot.Left && _preset.leftSpellId == id)
-                _preset.leftSpellId = SpellId.None;
-            if (targetSlot != MagicSlot.Right && _preset.rightSpellId == id)
-                _preset.rightSpellId = SpellId.None;
-            if (targetSlot != MagicSlot.Special && _preset.specialSpellId == id)
-                _preset.specialSpellId = SpellId.None;
-        }
-
-        void CompleteAssignment()
-        {
-            _assignmentMode = AssignmentMode.None;
-            _pendingSpell = SpellId.None;
-            UpdateSlotButtonVisuals();
-            FocusSpellList();
-            ShowSpellDetails(_highlightedSpell);
-        }
-
-        public void CancelSlotSelection(bool silent)
-        {
-            ResetState(silent);
-        }
-
-        void ResetState(bool silent)
-        {
-            _assignmentMode = AssignmentMode.None;
-            _pendingSpell = SpellId.None;
-            _pendingSlot = MagicSlot.Left;
-            _focusArea = FocusArea.SpellList;
-            _focusedSlot = MagicSlot.Left;
-            UpdateSlotButtonVisuals();
-            if (!silent)
-            {
-                FocusSpellList();
-                ShowSpellDetails(_highlightedSpell);
-            }
-        }
-
-        public bool TryHandleCancel()
-        {
-            if (_assignmentMode == AssignmentMode.None)
-                return false;
-
-            CancelSlotSelection(false);
-            return true;
-        }
-
-        void ShowSpellDetails(SpellId id)
-        {
-            if (_ui.detailsText == null) return;
-
-            string description;
-
-            if (id == SpellId.None)
-            {
-                description = Loc("SPELL_UNASSIGNED", "Sin asignar.");
-            }
-            else
-            {
-                var spell = GetSpellAsset(id);
-                if (spell == null)
+                if (_equipped.Count == 1)
                 {
-                    description = Loc("SPELL_NO_INFO", "Hechizo sin información.");
+                    _notice = Loc("SPELL_KEEP_ONE", "Tiene que llevar al menos un básico.");
+                    UpdateHint();
+                    return;
                 }
-                else
+                _equipped.RemoveAt(idx);
+                AfterChange(-1);
+                return;
+            }
+
+            if (_equipped.Count < SlotCount)
+            {
+                _equipped.Add(id);
+                AfterChange(_equipped.Count - 1);
+                return;
+            }
+
+            // Los 4 ocupados: ¿cuál cambia?
+            _mode = Mode.ReplaceSlot;
+            _pendingSpell = id;
+            UpdateNavigation();
+            FocusSlot(0);
+            UpdateHint();
+        }
+
+        // ── Huecos ────────────────────────────────────────────────────────
+
+        void ConfigureSlotButton(Button button, int slot)
+        {
+            if (button == null) return;
+            button.onClick.AddListener(() => OnSlotPressed(slot));
+            var listener = button.gameObject.GetComponent<SlotSelectListener>();
+            if (listener == null) listener = button.gameObject.AddComponent<SlotSelectListener>();
+            listener.onSelect = () => OnSlotFocused(slot);
+            if (!_slotDefaultColors.ContainsKey(button)) _slotDefaultColors[button] = button.colors;
+            if (!_slotBaseScales.ContainsKey(button)) _slotBaseScales[button] = button.transform.localScale;
+        }
+
+        void OnSlotFocused(int slot)
+        {
+            _focusedSlot = slot;
+            _notice = null;
+            ShowDetails(slot < _equipped.Count ? GrimorioDelPersonaje.Hechizo(_equipped[slot]) : null, slot);
+            UpdateSlotVisuals();
+            UpdateHint();
+        }
+
+        void OnSlotPressed(int slot)
+        {
+            switch (_mode)
+            {
+                case Mode.ReplaceSlot:
+                    if (slot < _equipped.Count)
+                    {
+                        var entra = _pendingSpell;
+                        _equipped[slot] = entra;
+                        ResetMode();
+                        AfterChange(slot);
+                        FocusRow(entra);
+                    }
+                    return;
+
+                case Mode.MoveSlot:
+                    if (slot < _equipped.Count && slot != _pendingSlot)
+                    {
+                        (_equipped[slot], _equipped[_pendingSlot]) = (_equipped[_pendingSlot], _equipped[slot]);
+                        ResetMode();
+                        AfterChange(slot);
+                    }
+                    else ResetMode();
+                    FocusSlot(slot);
+                    UpdateHint();
+                    return;
+            }
+
+            if (slot >= _equipped.Count)
+            {
+                FocusList();
+                return;
+            }
+            if (_equipped.Count < 2)
+            {
+                _notice = Loc("SPELL_NOTHING_TO_REORDER", "Solo lleva uno: no hay orden que cambiar.");
+                UpdateHint();
+                return;
+            }
+            _mode = Mode.MoveSlot;
+            _pendingSlot = slot;
+            UpdateNavigation();
+            UpdateSlotVisuals();
+            UpdateHint();
+        }
+
+        void UpdateSlots()
+        {
+            for (int i = 0; i < _slotButtons.Length; i++)
+            {
+                var id = i < _equipped.Count ? _equipped[i] : SpellId.None;
+                var spell = id != SpellId.None ? GrimorioDelPersonaje.Hechizo(id) : null;
+                bool usable = i < SlotCount;
+                if (_slotButtons[i] != null) _slotButtons[i].gameObject.SetActive(usable);
+                if (_slotLabels[i] != null)
                 {
-                    string damageLabel = string.Format(Loc("SPELL_DAMAGE_LABEL", "Daño: {0}"), spell.damage);
-                    string manaLabel = string.Format(Loc("SPELL_MANA_COST_LABEL", "Coste de maná: {0}"), spell.manaCost);
-                    string cooldownLabel = string.Format(Loc("SPELL_COOLDOWN_LABEL", "Cooldown: {0}s"), spell.cooldown.ToString("F2"));
-                    description = $"{spell.GetLocalizedName()}\n{damageLabel}\n{manaLabel}\n{cooldownLabel}";
+                    _slotLabels[i].gameObject.SetActive(usable);
+                    _slotLabels[i].supportRichText = true;
+                    _slotLabels[i].text = spell != null
+                        ? $"<b><color={Gold}>{i + 1}</color></b>   {spell.GetLocalizedName()}"
+                        : $"<b><color={Muted}>{i + 1}</color></b>   <color={Muted}>{Loc("SPELL_SLOT_EMPTY", "vacío")}</color>";
+                }
+                var image = _slotButtons[i] != null ? _slotButtons[i].image : null;
+                if (image != null)
+                {
+                    var icon = spell != null ? spell.attackIcon : null;
+                    if (icon != null) image.sprite = icon;
+                    else if (_ui.emptySlotSprite != null) image.sprite = _ui.emptySlotSprite;
+                    image.preserveAspect = true;
                 }
             }
-
-            switch (_assignmentMode)
-            {
-                case AssignmentMode.WaitingForSpellSelection:
-                    description += "\n" + Loc("SPELL_SELECT_SPELL_HINT", "Selecciona un hechizo con A o cancela con B.");
-                    break;
-                case AssignmentMode.WaitingForSlotSelection:
-                    description += "\n" + Loc("SPELL_SELECT_SLOT_HINT", "Selecciona un slot con A o cancela con B.");
-                    break;
-                default:
-                    description += "\n" + Loc("SPELL_ASSIGN_HINT", "Pulsa A sobre un hechizo y luego escoge el slot al que asignarlo.");
-                    break;
-            }
-
-            _ui.detailsText.text = description;
+            UpdateSlotVisuals();
         }
 
-        void ClearList()
+        void UpdateSlotVisuals()
         {
-            // PERF (revisión rendimiento 24/08): se desactivan en vez de destruirse, para
-            // reutilizarlas como pool en el próximo BuildSpellList() (ver AddSpellRow()).
-            foreach (var entry in _rows)
+            for (int i = 0; i < _slotButtons.Length; i++)
             {
-                if (entry?.widget != null)
-                    entry.widget.gameObject.SetActive(false);
+                var button = _slotButtons[i];
+                if (button == null) continue;
+                bool pulse = (_mode == Mode.ReplaceSlot && i == _focusedSlot && i < _equipped.Count)
+                          || (_mode == Mode.MoveSlot && i == _focusedSlot && i != _pendingSlot);
+                if (pulse) PlayPulse(button);
+                else KillTween(button);
+
+                if (!_slotDefaultColors.TryGetValue(button, out var colors)) continue;
+                if (_mode == Mode.MoveSlot && i == _pendingSlot)
+                {
+                    colors.normalColor = colors.highlightedColor = colors.selectedColor = _ui.slotSelectionColor;
+                }
+                button.colors = colors;
             }
-            _rows.Clear();
-            _highlightedRow = null;
         }
 
-        bool SelectRow(SpellId id)
+        /// Tras poner, quitar o mover: guarda, repinta y da un golpe de escala al hueco que cambió.
+        void AfterChange(int punchSlot)
         {
-            if (_rows.Count == 0) return false;
+            Save();
+            UpdateSlots();
+            UpdateRowVisuals();
+            if (punchSlot >= 0 && punchSlot < _slotButtons.Length) PlayPunch(_slotButtons[punchSlot]);
+            if (_focusedSlot >= 0) OnSlotFocused(_focusedSlot);
+            else if (_highlightedRow != null) ShowDetails(_highlightedRow.spell, -1);
+            UpdateHint();
+        }
 
+        void ResetMode()
+        {
+            _mode = Mode.Browse;
+            _pendingSpell = SpellId.None;
+            _pendingSlot = -1;
+            _notice = null;
+            UpdateNavigation();
+            UpdateSlotVisuals();
+        }
+
+        // ── Foco y navegación ─────────────────────────────────────────────
+
+        void FocusSlot(int slot)
+        {
+            slot = Mathf.Clamp(slot, 0, SlotCount - 1);
+            var button = slot < _slotButtons.Length ? _slotButtons[slot] : null;
+            if (button == null) return;
+            _focusedSlot = slot;
+            var es = EventSystem.current;
+            if (es != null && es.currentSelectedGameObject != button.gameObject) es.SetSelectedGameObject(button.gameObject);
+            else OnSlotFocused(slot);
+        }
+
+        void FocusList()
+        {
+            if (_rows.Count == 0) return;
+            (_highlightedRow ?? _rows[0]).widget?.Focus();
+        }
+
+        bool FocusRow(SpellId id)
+        {
             foreach (var entry in _rows)
             {
-                if (entry == null || entry.spellId != id) continue;
-                HandleRowSelected(entry, false);
+                if (entry?.spell == null || entry.spell.spellId != id) continue;
+                entry.widget?.Focus();
+                OnRowFocused(entry);
                 return true;
             }
-
             return false;
         }
 
-        void SelectFirstRow()
+        void ScrollTo(RowEntry entry)
         {
-            if (_rows.Count == 0) return;
-            var first = _rows[0];
-            HandleRowSelected(first, false);
+            if (_scrollRect == null || entry?.widget == null) return;
+            ScrollRectAutoScroller.ScrollTo(_scrollRect, entry.widget.GetComponent<RectTransform>(), 10f);
         }
 
-        void ScrollToEntry(RowEntry entry)
+        /// La lista está a la izquierda y los huecos a la derecha. Mientras se elige hueco, el foco se
+        /// queda en los huecos.
+        void UpdateNavigation()
         {
-            if (_scrollRect == null || entry?.widget == null)
-                return;
-            var rect = entry.widget.GetComponent<RectTransform>();
-            ScrollRectAutoScroller.ScrollTo(_scrollRect, rect, 10f);
-        }
+            Selectable rowTarget = (_highlightedRow ?? (_rows.Count > 0 ? _rows[0] : null))?.widget?.Selectable;
+            int n = SlotCount;
+            Selectable slotTarget = n > 0 ? _slotButtons[Mathf.Clamp(_focusedSlot, 0, n - 1)] : null;
 
-        void ConfigureSlotButton(Button button, MagicSlot slot)
-        {
-            if (button == null) return;
-
-            button.onClick.AddListener(() => HandleSlotButtonPressed(slot));
-            var listener = button.gameObject.GetComponent<SlotSelectListener>();
-            if (listener == null)
-                listener = button.gameObject.AddComponent<SlotSelectListener>();
-            var capturedSlot = slot;
-            listener.onSelect = () => HandleSlotFocused(button, capturedSlot);
-
-            if (!_slotDefaultColors.ContainsKey(button))
-                _slotDefaultColors[button] = button.colors;
-
-            if (!_buttonToSlot.ContainsKey(button))
-                _buttonToSlot[button] = slot;
-            if (!_slotToButton.ContainsKey(slot))
-                _slotToButton[slot] = button;
-        }
-
-        void ConfigureSlotNavigation(Button button, Button up, Button down, Selectable right)
-        {
-            if (button == null) return;
-            var nav = button.navigation;
-            nav.mode = Navigation.Mode.Explicit;
-            nav.selectOnUp = up != null ? up : button;
-            nav.selectOnDown = down != null ? down : button;
-            nav.selectOnLeft = button;
-            nav.selectOnRight = right;
-            button.navigation = nav;
-        }
-
-        void UpdateSlotNavigationTargets()
-        {
-            var firstRowSelectable = GetFirstRowSelectable();
-            ConfigureSlotNavigation(_ui.leftSlotButton, _ui.specialSlotButton, _ui.rightSlotButton, firstRowSelectable);
-            ConfigureSlotNavigation(_ui.rightSlotButton, _ui.leftSlotButton, _ui.specialSlotButton, firstRowSelectable);
-            ConfigureSlotNavigation(_ui.specialSlotButton, _ui.rightSlotButton, _ui.leftSlotButton, firstRowSelectable);
-        }
-
-        Selectable GetFirstRowSelectable()
-        {
-            return _rows.Count > 0 ? _rows[0]?.widget?.Selectable : null;
-        }
-
-        Button GetPrimarySlotSelectable()
-        {
-            if (_ui.leftSlotButton != null && _ui.leftSlotButton.IsInteractable())
-                return _ui.leftSlotButton;
-            if (_ui.rightSlotButton != null && _ui.rightSlotButton.IsInteractable())
-                return _ui.rightSlotButton;
-            if (_ui.specialSlotButton != null && _ui.specialSlotButton.IsInteractable())
-                return _ui.specialSlotButton;
-            return null;
-        }
-
-        void UpdateSlotButtonVisuals()
-        {
-            UpdateSlotButtonState(_ui.leftSlotButton, MagicSlot.Left);
-            UpdateSlotButtonState(_ui.rightSlotButton, MagicSlot.Right);
-            UpdateSlotButtonState(_ui.specialSlotButton, MagicSlot.Special);
-        }
-
-        void UpdateSlotButtonState(Button button, MagicSlot slot)
-        {
-            if (button == null) return;
-
-            bool canAssignPending = _assignmentMode == AssignmentMode.WaitingForSlotSelection && CanAssign(slot, _pendingSpell);
-            bool isWaitingForSlot = _assignmentMode == AssignmentMode.WaitingForSlotSelection;
-            bool isFocused = slot == _focusedSlot;
-
-            if (isWaitingForSlot && canAssignPending && isFocused)
+            for (int i = 0; i < _rows.Count; i++)
             {
-                PlaySlotPulseFeedback(slot);
+                var sel = _rows[i]?.widget?.Selectable;
+                if (sel == null) continue;
+                var nav = sel.navigation;
+                nav.mode = Navigation.Mode.Explicit;
+                nav.selectOnUp = i > 0 ? _rows[i - 1].widget.Selectable : sel;
+                nav.selectOnDown = i < _rows.Count - 1 ? _rows[i + 1].widget.Selectable : sel;
+                nav.selectOnLeft = sel;
+                nav.selectOnRight = slotTarget != null ? slotTarget : sel;
+                sel.navigation = nav;
             }
+
+            for (int i = 0; i < n; i++)
+            {
+                var b = _slotButtons[i];
+                if (b == null) continue;
+                var nav = b.navigation;
+                nav.mode = Navigation.Mode.Explicit;
+                nav.selectOnUp = _slotButtons[(i + n - 1) % n];
+                nav.selectOnDown = _slotButtons[(i + 1) % n];
+                nav.selectOnLeft = _mode == Mode.Browse && rowTarget != null ? rowTarget : b;
+                nav.selectOnRight = b;
+                b.navigation = nav;
+            }
+        }
+
+        // ── Textos ────────────────────────────────────────────────────────
+
+        static string Key(ComboButton b) => Bold(Core.InputGlyphs.ComboButtonGlyphs.Label(b));
+        static string Key(string glyphName) =>
+            Bold(Core.InputGlyphs.InputGlyphLabels.GetLabel(glyphName, Core.InputGlyphs.InputGlyphService.CurrentFamily));
+        static string Bold(string s) => $"<b><color={Gold}>{s}</color></b>";
+
+        /// Icono del botón, para la línea de ayuda (TMP).
+        static string Icon(string glyphName) => Core.InputGlyphs.InputGlyphService.SpriteTag(glyphName);
+
+        /// Botón de aceptar y de volver en la línea de ayuda: A/B en mando; en teclado, la tecla de
+        /// Selección (la misma que muestra la barra de abajo) y Esc.
+        static string AcceptKey() => Icon(Core.InputGlyphs.InputGlyphNames.South);
+        static string BackKey() =>
+            Core.InputGlyphs.InputGlyphService.CurrentFamily == Core.InputGlyphs.InputGlyphDeviceFamily.KeyboardMouse
+                ? Bold("Esc")
+                : Icon(Core.InputGlyphs.InputGlyphNames.East);
+
+        /// Tres líneas: nombre y tipo, daño y maná, lo que hace de especial.
+        void ShowDetails(MagicSpellSO spell, int slot)
+        {
+            if (_ui.detailsText == null) return;
+            _ui.detailsText.supportRichText = true;
+
+            if (spell == null)
+            {
+                _ui.detailsText.text = slot >= 0
+                    ? string.Format(Loc("SPELL_SLOT_FREE", "Hueco {0} libre.\nElige un básico de la lista para llenarlo."), slot + 1)
+                    : string.Format(Loc("SPELL_BASICS_INTRO", "Lleva hasta 4 básicos. En combate se lanzan con {0}\ny {1} pasa de uno a otro, en este orden."),
+                        Key(ComboButton.X), Key(Core.InputGlyphs.InputGlyphNames.ShoulderLeft));
+                return;
+            }
+
+            string tipo = Loc("SPELL_TYPE_BASIC", "Básico");
+            string linea3 = GrimorioDelPersonaje.Efectos(spell);
+
+            _ui.detailsText.text =
+                $"{spell.GetLocalizedName()}  <size=80%><color={Muted}>{tipo}</color></size>\n" +
+                string.Format(Loc("SPELL_DAMAGE_LABEL", "Daño: {0}"), spell.damage) + "   ·   " +
+                string.Format(Loc("SPELL_MANA_COST_LABEL", "Coste de maná: {0}"), spell.manaCost) +
+                (string.IsNullOrEmpty(linea3) ? "" : "\n" + linea3);
+        }
+
+        /// La línea de abajo: qué hace A ahora mismo, según dónde está el foco.
+        void UpdateHint()
+        {
+            _hintFamily = Core.InputGlyphs.InputGlyphService.CurrentFamily;
+            if (_ui.hintLabel == null) return;
+            _ui.hintLabel.richText = true;
+            Core.InputGlyphs.InputGlyphService.UsarIconos(_ui.hintLabel);
+
+            string a = AcceptKey(), b = BackKey();
+            string text;
+            if (!string.IsNullOrEmpty(_notice)) text = _notice;
+            else if (_mode == Mode.ReplaceSlot)
+            {
+                var entra = GrimorioDelPersonaje.Hechizo(_pendingSpell);
+                text = string.Format(Loc("SPELL_HINT_REPLACE", "Lleva 4. ¿Cuál cambias por {0}?   {1} Este   ·   {2} Cancelar"),
+                    entra != null ? entra.GetLocalizedName() : "", a, b);
+            }
+            else if (_mode == Mode.MoveSlot)
+                text = string.Format(Loc("SPELL_HINT_MOVE", "¿A qué hueco lo llevas?   {0} Aquí   ·   {1} Cancelar"), a, b);
+            else if (_focusedSlot >= 0)
+                text = _focusedSlot < _equipped.Count
+                    ? string.Format(Loc("SPELL_HINT_SLOT", "{0} Cambiar de sitio   ·   {1} Volver a la lista"), a, b)
+                    : string.Format(Loc("SPELL_HINT_SLOT_EMPTY", "{0} Elegir un básico de la lista"), a);
+            else if (_highlightedRow == null)
+                text = string.Format(Loc("SPELL_HINT_LIST", "{0} Equipar o quitar"), a);
+            else if (_equipped.Contains(_highlightedRow.spell.spellId))
+                text = string.Format(Loc("SPELL_HINT_UNEQUIP", "{0} Quitar"), a);
+            else if (_equipped.Count < SlotCount)
+                text = string.Format(Loc("SPELL_HINT_EQUIP", "{0} Equipar en el hueco {1}"), a, _equipped.Count + 1);
             else
-            {
-                KillSlotFeedback(slot);
-                if (_slotDefaultColors.TryGetValue(button, out var defaultColors))
-                    button.colors = defaultColors;
-            }
+                text = string.Format(Loc("SPELL_HINT_EQUIP_FULL", "{0} Equipar (lleva 4: elegirás cuál cambiar)"), a);
+
+            _ui.hintLabel.text = text;
         }
 
-        void HandleSlotFocused(Button button, MagicSlot slot)
+        // ── Animación de los huecos ───────────────────────────────────────
+
+        void PlayPulse(Button button)
         {
-            _focusedSlot = slot;
-            if (_assignmentMode == AssignmentMode.WaitingForSlotSelection)
-                UpdateSlotButtonVisuals();
-        }
-
-        bool CanAssign(MagicSlot slot, SpellId spellId)
-        {
-            if (spellId == SpellId.None) return true;
-            if (_library == null) return false;
-
-            var spell = _library.Get(spellId);
-            if (spell == null) return false;
-
-            if (spell.slotType == SpellSlotType.SpecialOnly)
-                return slot == MagicSlot.Special;
-            
-            // SpellSlotType.Any puede ir en cualquier slot
-            return true;
-        }
-
-        void EnforcePresetSlotRules()
-        {
-            if (_preset == null || _library == null) return;
-
-            if (!CanAssign(MagicSlot.Left, _preset.leftSpellId))
-                _preset.leftSpellId = SpellId.None;
-            if (!CanAssign(MagicSlot.Right, _preset.rightSpellId))
-                _preset.rightSpellId = SpellId.None;
-            if (!CanAssign(MagicSlot.Special, _preset.specialSpellId))
-                _preset.specialSpellId = SpellId.None;
-        }
-
-        string ResolveName(SpellId id)
-        {
-            if (id == SpellId.None) return Loc("SPELL_UNASSIGNED_SHORT", "Sin asignar");
-            var spell = GetSpellAsset(id);
-            return spell != null ? spell.GetLocalizedName() : id.ToString();
-        }
-
-        MagicSpellSO GetSpellAsset(SpellId id)
-        {
-            return _library != null ? _library.Get(id) : null;
-        }
-
-        void PlaySlotPulseFeedback(MagicSlot slot)
-        {
-            if (!_slotToButton.TryGetValue(slot, out var button) || button == null)
-                return;
-
-            // No añadir tween si ya está corriendo para este slot
-            if (_slotFeedbackTweens.ContainsKey(button)) return;
-
-            if (!_slotBaseScales.ContainsKey(button))
-                _slotBaseScales[button] = button.transform.localScale;
-
-            var baseScale = _slotBaseScales[button];
-            var tween = button.transform
+            if (_slotTweens.ContainsKey(button)) return;
+            var baseScale = _slotBaseScales.TryGetValue(button, out var s) ? s : button.transform.localScale;
+            _slotTweens[button] = button.transform
                 .DOScale(baseScale * 1.12f, 0.35f)
                 .SetLoops(-1, LoopType.Yoyo)
                 .SetEase(Ease.InOutSine)
                 .SetUpdate(true);
-            _slotFeedbackTweens[button] = tween;
         }
 
-        void PlaySlotConfirmFeedback(MagicSlot slot)
+        void PlayPunch(Button button)
         {
-            if (!_slotToButton.TryGetValue(slot, out var button) || button == null)
-                return;
-
-            KillSlotFeedback(slot);
-
-            if (!_slotBaseScales.ContainsKey(button))
-                _slotBaseScales[button] = button.transform.localScale;
-
-            var confirmColor = new Color(0.3f, 1f, 0.3f, 1f);
-            var colors = button.colors;
-            colors.normalColor = confirmColor;
-            colors.highlightedColor = confirmColor * 1.1f;
-            colors.selectedColor = confirmColor * 1.1f;
-            button.colors = colors;
-
-            var baseScale = _slotBaseScales[button];
-            var tween = button.transform
+            if (button == null) return;
+            KillTween(button);
+            _slotTweens[button] = button.transform
                 .DOPunchScale(Vector3.one * 0.15f, 0.3f, vibrato: 8, elasticity: 0.6f)
                 .SetUpdate(true)
-                .OnComplete(() =>
-                {
-                    if (button != null && _slotDefaultColors.TryGetValue(button, out var defaultColors))
-                    {
-                        button.colors = defaultColors;
-                        if (_slotBaseScales.TryGetValue(button, out var bs))
-                            button.transform.localScale = bs;
-                    }
-                });
-            _slotFeedbackTweens[button] = tween;
+                .OnComplete(() => KillTween(button));
         }
 
-        void KillSlotFeedback(MagicSlot slot)
+        void KillTween(Button button)
         {
-            if (!_slotToButton.TryGetValue(slot, out var button) || button == null)
-                return;
-
-            if (_slotFeedbackTweens.TryGetValue(button, out var tween))
+            if (button == null) return;
+            if (_slotTweens.TryGetValue(button, out var tween))
             {
+                _slotTweens.Remove(button);
                 tween?.Kill();
-                _slotFeedbackTweens.Remove(button);
             }
-
-            if (_slotBaseScales.TryGetValue(button, out var baseScale))
-                button.transform.localScale = baseScale;
+            if (_slotBaseScales.TryGetValue(button, out var baseScale)) button.transform.localScale = baseScale;
         }
 
         void KillAllSlotFeedback()
         {
-            foreach (var kvp in _slotFeedbackTweens)
-                kvp.Value?.Kill();
-            _slotFeedbackTweens.Clear();
-
-            foreach (var kvp in _slotToButton)
-            {
-                var button = kvp.Value;
-                if (button != null && _slotBaseScales.TryGetValue(button, out var baseScale))
-                    button.transform.localScale = baseScale;
-            }
-        }
-
-        void ConfigureRowNavigation()
-        {
-            var leftTarget = GetPrimarySlotSelectable();
-            for (int rowIndex = 0; rowIndex < _rows.Count; rowIndex++)
-            {
-                var entry = _rows[rowIndex];
-                if (entry?.widget?.Selectable != null)
-                {
-                    ConfigureButtonNavigation(entry.widget.Selectable, rowIndex, leftTarget);
-                }
-            }
-        }
-
-        void ConfigureButtonNavigation(Selectable button, int rowIndex, Selectable leftTarget)
-        {
-            if (button == null) return;
-
-            var nav = button.navigation;
-            nav.mode = Navigation.Mode.Explicit;
-            nav.selectOnLeft = leftTarget;
-            nav.selectOnRight = button;
-            nav.selectOnUp = ResolveVertical(rowIndex, -1);
-            nav.selectOnDown = ResolveVertical(rowIndex, +1);
-            button.navigation = nav;
-        }
-
-        Selectable ResolveVertical(int rowIndex, int step)
-        {
-            int idx = rowIndex;
-            while (true)
-            {
-                idx += step;
-                if (idx < 0 || idx >= _rows.Count)
-                    break;
-                var row = _rows[idx];
-                if (row?.widget?.Selectable != null && IsSelectable(row.widget.Selectable))
-                    return row.widget.Selectable;
-            }
-
-            var currentRow = GetRow(rowIndex);
-            if (currentRow?.widget?.Selectable != null && IsSelectable(currentRow.widget.Selectable))
-                return currentRow.widget.Selectable;
-            
-            return null;
-        }
-
-        RowEntry GetRow(int index)
-        {
-            if (index < 0 || index >= _rows.Count) return null;
-            return _rows[index];
-        }
-
-        static bool IsSelectable(Selectable selectable)
-        {
-            return selectable != null && selectable.IsInteractable();
+            foreach (var b in _slotButtons) KillTween(b);
         }
 
         class SlotSelectListener : MonoBehaviour, ISelectHandler
@@ -3838,7 +3710,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             // Forzar selección al botón previous/next de la misma fila
             if (fallbackButton != null && fallbackButton.IsInteractable())
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EquipmentView.Clear] Moviendo selección a {fallbackButton.name}");
 #endif
                 EventSystem.current?.SetSelectedGameObject(null);
@@ -4082,20 +3954,20 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         void HandleWardrobeChanged()
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[EquipmentView] 📢 HandleWardrobeChanged - Evento recibido, refrescando opciones disponibles");
 #endif
             
             // Log del wardrobe actual
             if (_wardrobe != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EquipmentView] Wardrobe encontrado: {_wardrobe.GetType().Name}");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[EquipmentView] ⚠️ Wardrobe es NULL en HandleWardrobeChanged!");
 #endif
             }
@@ -4107,7 +3979,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         void UpdateAllRowsUI()
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[EquipmentView] UpdateAllRowsUI - Actualizando todas las filas visualmente");
 #endif
             UpdateLabels();
@@ -4123,13 +3995,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 {
                     var options = _wardrobe.GetUnlockedOptions(category);
                     hasOptions = options != null && options.Count > 0;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[EquipmentView.UpdateAllRowsUI] Categoría {category}: {options?.Count ?? 0} opciones, hasOptions={hasOptions}");
 #endif
                 }
 
                 bool allowClear = _wardrobe == null ? _builder != null : hasOptions;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EquipmentView.UpdateAllRowsUI] Categoría {category}: Builder={(_builder != null)}, hasOptions={hasOptions}, allowClear={allowClear}");
 #endif
                 SetInteractable(row, _builder != null || hasOptions, allowClear);

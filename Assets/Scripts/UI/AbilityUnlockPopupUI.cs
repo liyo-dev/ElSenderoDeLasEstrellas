@@ -60,29 +60,6 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
     /// <summary>ISceneBoundUIHideGuard: mientras el popup esté en pantalla, no se apaga por cambio de escena.</summary>
     public bool BlocksSceneHide() => _isShowing;
 
-    /// El popup activo, para enseñar en él otros avisos (el informe de fin de batalla, INC-470).
-    public static AbilityUnlockPopupUI Instancia { get; private set; }
-#if UNITY_EDITOR
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetInstancia() => Instancia = null;
-#endif
-
-    public bool EstaEnPantalla => _isShowing;
-
-    /// <summary>
-    /// Enseña en este mismo popup un aviso cualquiera (título, texto, icono opcional) durante
-    /// 'segundos'. Lo usan otros sistemas para no crear un popup nuevo con el mismo aspecto
-    /// (INC-470: el informe de fin de batalla). No guarda flag de «ya visto».
-    /// </summary>
-    public void MostrarAviso(string titulo, string texto, Sprite icono, float segundos)
-    {
-        _pendingAbility = null;
-        _pendingAbilityKey = null;
-        _pendingSpell = null;
-        SetTexts(titulo, texto, icono);
-        AnimateIn(segundos);
-    }
-
     void Awake()
     {
         _sceneBoundUI = GetComponent<SceneBoundUI>();
@@ -92,7 +69,6 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     void OnEnable()
     {
-        Instancia = this;
         ProfileReadyDiagnostics.RegisterSubscriber(nameof(AbilityUnlockPopupUI));
         GameBootService.OnProfileReady += HandleProfileReady;
         UnlockService.OnAbilityUnlocked += HandleAbilityUnlocked;
@@ -108,7 +84,6 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     void OnDisable()
     {
-        if (Instancia == this) Instancia = null;
         GameBootService.OnProfileReady -= HandleProfileReady;
         UnlockService.OnAbilityUnlocked -= HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey -= HandleAbilityUnlockedKey;
@@ -274,11 +249,54 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (abilityTitleText != null) abilityTitleText.text = title;
         if (abilityDescriptionText != null) abilityDescriptionText.text = description;
         if (abilityIcon != null) { abilityIcon.sprite = icon; abilityIcon.enabled = icon != null; }
+        AjustarAlTexto();
     }
 
-    private void AnimateIn() => AnimateIn(displayDuration);
+    // ── Alto del panel según el texto ─────────────────────────────────────────
+    //
+    // La descripción ocupa todo el hueco que queda debajo del título, y si el texto no cabe (una
+    // descripción de varias líneas) el panel crece hacia arriba. Con el tamaño fijo del diseño, un
+    // texto de varias líneas centrado en el panel se montaba encima del título. Ver INC-542.
 
-    private void AnimateIn(float segundos)
+    private const float MargenDelTexto = 10f;
+
+    private RectTransform _panelDelTexto;
+    private RectTransform _rectDescripcion;
+    private RectTransform _rectTitulo;
+    private Vector2 _tamanoPanelDeDiseno;
+    private bool _medidasGuardadas;
+
+    private void GuardarMedidasDeDiseno()
+    {
+        if (_medidasGuardadas || abilityDescriptionText == null) return;
+        _rectDescripcion = abilityDescriptionText.rectTransform;
+        _panelDelTexto = _rectDescripcion.parent as RectTransform;
+        _rectTitulo = abilityTitleText != null ? abilityTitleText.rectTransform : null;
+        if (_panelDelTexto == null) return;
+        _tamanoPanelDeDiseno = _panelDelTexto.sizeDelta;
+        _medidasGuardadas = true;
+    }
+
+    private void AjustarAlTexto()
+    {
+        GuardarMedidasDeDiseno();
+        if (!_medidasGuardadas) return;
+
+        float altoTitulo = _rectTitulo != null && _rectTitulo.parent == _panelDelTexto ? _rectTitulo.rect.height : 0f;
+        float ancho = _rectDescripcion.rect.width;
+        float altoTexto = abilityDescriptionText.GetPreferredValues(abilityDescriptionText.text, ancho, 0f).y;
+
+        float alto = Mathf.Max(_tamanoPanelDeDiseno.y, altoTitulo + altoTexto + 2f * MargenDelTexto);
+        _panelDelTexto.sizeDelta = new Vector2(_tamanoPanelDeDiseno.x, alto);
+
+        // Descripción: el hueco entre el borde de abajo y el título, con el texto centrado en él.
+        _rectDescripcion.anchorMin = _rectDescripcion.anchorMax = new Vector2(0.5f, 0.5f);
+        _rectDescripcion.pivot = new Vector2(0.5f, 0.5f);
+        _rectDescripcion.sizeDelta = new Vector2(_rectDescripcion.sizeDelta.x, alto - altoTitulo - 2f * MargenDelTexto);
+        _rectDescripcion.anchoredPosition = new Vector2(_rectDescripcion.anchoredPosition.x, -altoTitulo * 0.5f);
+    }
+
+    private void AnimateIn()
     {
         if (popupRoot == null)
         {
@@ -303,12 +321,12 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (popupCanvasGroup != null)
             popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
 
-        _autoDismissCoroutine = StartCoroutine(AutoDismiss(segundos));
+        _autoDismissCoroutine = StartCoroutine(AutoDismiss());
     }
 
-    private IEnumerator AutoDismiss(float segundos)
+    private IEnumerator AutoDismiss()
     {
-        yield return new WaitForSecondsRealtime(segundos);
+        yield return new WaitForSecondsRealtime(displayDuration);
         HidePopup();
     }
 

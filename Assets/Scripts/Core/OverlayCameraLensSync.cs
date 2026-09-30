@@ -5,7 +5,7 @@ using UnityEngine.Rendering.Universal;
 
 /// Las cámaras overlay de una pila URP usan la MISMA lente que su cámara base (INC-415).
 ///
-/// Caso real: `_WILL.prefab` lleva «Hint Camera», overlay hija de vThirdPersonCamera que pinta solo
+/// Caso real: `CamaraDelJugador.prefab` lleva «Hint Camera», overlay hija de vThirdPersonCamera que pinta solo
 /// la capa InteractHint (icono de interactuar, bocadillos de pelea…) por encima de todo. Su FOV
 /// estaba fijo en 60°, y la cámara base —que TAMBIÉN pinta esa capa— cambia de FOV en cada plano de
 /// cinemática (y hasta INC-415 se quedaba con el del último plano). En cuanto los dos FOV no

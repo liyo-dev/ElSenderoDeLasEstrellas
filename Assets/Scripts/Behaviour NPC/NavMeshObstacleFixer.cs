@@ -46,21 +46,21 @@ public class NavMeshObstacleFixer : MonoBehaviour
         if (searchRoot != null)
         {
             obstacles = searchRoot.GetComponentsInChildren<NavMeshObstacle>(true);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ObstacleFixer] 🔍 Buscando en '{searchRoot.name}' y sus hijos...");
 #endif
         }
         else
         {
             obstacles = FindObjectsByType<NavMeshObstacle>();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ObstacleFixer] 🔍 Buscando en toda la escena...");
 #endif
         }
         
         if (obstacles.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[ObstacleFixer] ⚠️ No se encontraron NavMeshObstacle.");
 #endif
             return;
@@ -76,7 +76,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ObstacleFixer] ✅ {fixedCount}/{obstacles.Length} NavMeshObstacle configurados correctamente.");
 #endif
     }
@@ -125,7 +125,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
         
         if (needsFix)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ObstacleFixer] 🔧 {obstacle.gameObject.name}:{changes}");
 #endif
             
@@ -171,7 +171,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
                     AutoSizeObstacle(obstacle);
                     
                     addedCount++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ObstacleFixer] ➕ NavMeshObstacle añadido a: {t.name}");
 #endif
                     
@@ -182,7 +182,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
             }
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ObstacleFixer] ✅ {addedCount} NavMeshObstacle añadidos a árboles.");
 #endif
     }
@@ -215,7 +215,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
                 Mathf.Approximately(lossyScale.y, 0f) ? bounds.size.y : bounds.size.y / Mathf.Abs(lossyScale.y),
                 Mathf.Approximately(lossyScale.z, 0f) ? bounds.size.z : bounds.size.z / Mathf.Abs(lossyScale.z));
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ObstacleFixer]   └─ Auto-sized (local space): center={obstacle.center} size={obstacle.size}");
 #endif
         }
@@ -225,7 +225,7 @@ public class NavMeshObstacleFixer : MonoBehaviour
             obstacle.center = Vector3.up * 2f;
             obstacle.size = new Vector3(1f, 4f, 1f);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ObstacleFixer]   └─ Default size: (1, 4, 1)");
 #endif
         }

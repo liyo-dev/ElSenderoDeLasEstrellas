@@ -11,6 +11,10 @@ public class MagicSpellSO : ScriptableObject
     public string     displayName = "Fireball";
     public MagicKind  kind        = MagicKind.Projectile;
     public MagicElement element   = MagicElement.Fire;
+    [Tooltip("Frase de la página del grimorio (INC-506). Vacío = solo lo que hace.")]
+    [TextArea(2, 4)] public string lore = "";
+    [Tooltip("Clave de localización de la frase del grimorio (opcional).")]
+    public string loreId = "";
 
     /// <summary>Obtiene el nombre localizado del hechizo (usa displayNameId si está definido).</summary>
     public string GetLocalizedName()
@@ -51,22 +55,18 @@ public class MagicSpellSO : ScriptableObject
     [Tooltip("Offset de posición adicional en espacio local (X=derecha, Y=arriba, Z=adelante). Útil para ajustar la altura de spawn y evitar que se vea metido en el suelo.")]
     public Vector3 positionOffset = Vector3.zero;
     public Vector3 visualRotationOffsetEuler = Vector3.zero;
+    [Tooltip("Sale en horizontal. Los proyectiles con objetivo lo ignoran y van a su centro; se aplica sin objetivo, con dirección forzada (cinemáticas) y a los hechizos de zona.")]
     public bool    flattenDirection = true;
     [Tooltip("Si se marca, se forzará esta escala al instanciar el proyectil y el VFX de spawn. Si está desmarcado, se usará la escala del prefab.")]
     public bool     useScaleOverride = false;
     public Vector3  scaleOverride = Vector3.one;
 
-    [Header("Costes / CD")]
+    [Header("Coste")]
+    [Tooltip("Maná por lanzamiento. El ritmo lo marcan el maná y el gesto (castDelaySeconds + chargeTime): los hechizos no tienen enfriamiento propio.")]
     public float manaCost = 5f;
-    public float cooldown = 0.25f;
 
     [Header("Modo preciso (Paso 5 del refactor Tramo 1, mantener el botón)")]
-    [Tooltip("Si está activo, mantener pulsado el botón de este hechizo (en vez de tocarlo) " +
-             "lanza la variante 'precisa': más fina, más rápida y más débil. Por defecto " +
-             "desactivado -- todos los hechizos existentes se comportan exactamente igual que " +
-             "hasta ahora salvo que se active explícitamente aquí. Solo funciona en los slots " +
-             "Left/Right (PlayerPreciseAimController); Special ya tiene su propio mecanismo de " +
-             "carga (chargeTime) y no está cableado a esto.")]
+    [Tooltip("Si está activo, mantener pulsada la X (en vez de tocarla) lanza la variante precisa: más fina, más rápida y más débil. La decide PlayerCombatInput al soltar.")]
     public bool supportsPreciseMode = false;
     [Tooltip("Segundos que hay que mantener pulsado antes de comprometerse al modo preciso. Por " +
              "debajo de esto, soltar lanza el hechizo normal -- un toque sigue siendo un toque.")]
@@ -191,4 +191,61 @@ public class MagicSpellSO : ScriptableObject
     [Header("UI")]
     [Tooltip("Icono que se mostrará en el HUD cuando este hechizo esté equipado.")]
     public Sprite attackIcon;
+
+    [Header("Proyectil mejorado (INC-497)")]
+    [Tooltip("Veces que salta a otro enemigo cercano tras impactar (0 = no rebota).")]
+    [Min(0)] public int bounceCount = 0;
+    [Tooltip("Distancia máxima a la que busca el siguiente enemigo al rebotar.")]
+    [Min(0.5f)] public float bounceRange = 8f;
+    [Tooltip("Enemigos que atraviesa antes de desaparecer (0 = ninguno, -1 = todos los de su camino).")]
+    [Min(-1)] public int pierceCount = 0;
+    [Tooltip("Proyectiles que salen a la vez, en abanico (1 = uno solo).")]
+    [Min(1)] public int spreadCount = 1;
+    [Tooltip("Ángulo total del abanico, en grados.")]
+    [Range(0f, 90f)] public float spreadAngle = 24f;
+    [Tooltip("Hechizo de zona (MagicKind.Zone) que deja en el suelo al impactar. Vacío = nada.")]
+    public MagicSpellSO impactZone;
+
+    [Header("Gesto al lanzarlo (combos y centro)")]
+    [Tooltip("Hand: el gesto de siempre. TwoHanded: a dos manos. Omni: en todas direcciones. Call: invocación. Area: saltito y brazos arriba (hechizos de zona). La serie de la X usa siempre derecha/izquierda/centro.")]
+    public MagicCastStyle castStyle = MagicCastStyle.Hand;
+
+    [Header("Estado que pone (INC-499)")]
+    [Tooltip("Ralentizar, inmovilizar o atraer a los enemigos que alcanza (proyectil: al que impacta; zona: a los de dentro en cada tick).")]
+    public EstadoDeCombate statusEffect = EstadoDeCombate.Ninguno;
+    [Tooltip("Segundos que dura. En una zona se renueva en cada tick mientras sigan dentro. A los jefes les dura la mitad.")]
+    [Min(0f)] public float statusDuration = 2f;
+    [Tooltip("Ralentizar: fracción de velocidad que les queda (0,4 = al 40 %). Atraer: metros por segundo hacia el centro. Inmovilizar: no se usa.")]
+    [Min(0f)] public float statusStrength = 0.5f;
+    [Tooltip("Efecto que lleva encima el enemigo mientras dura el estado (opcional).")]
+    public GameObject statusVFX;
+
+    [Header("Apoyo y zona en el lanzador (INC-500, INC-501)")]
+    [Tooltip("La zona aparece en quien lo lanza, no delante ni sobre el objetivo (Nova de Luz, Brisa Sanadora).")]
+    public bool zoneOnCaster = false;
+    [Tooltip("Vida que recupera en cada tick cada miembro del grupo que esté dentro de la zona.")]
+    [Min(0f)] public float healPerTick = 0f;
+    [Tooltip("Segundos de escudo que da al grupo que esté dentro de la zona al aparecer (0 = ninguno).")]
+    [Min(0f)] public float groupShieldSeconds = 0f;
+    [Tooltip("Parte del golpe que pasa con el escudo puesto (0,3 = el 30 %).")]
+    [Range(0f, 1f)] public float groupShieldDamageFactor = 0.3f;
+    [Tooltip("Efecto que lleva cada uno mientras dura el escudo.")]
+    public GameObject groupShieldVFX;
+    [Tooltip("Tramos de carga de equipo que da al curar o proteger a alguien (una vez por lanzamiento).")]
+    [Min(0f)] public float teamGaugeGain = 0f;
+
+    [Header("Paso corto (INC-502)")]
+    [Tooltip("Metros que avanza el teletransporte (MagicKind.Teleport). Se queda antes si hay pared o no hay suelo.")]
+    [Min(1f)] public float teleportDistance = 6f;
+
+    [Header("Quién lo lanza")]
+    [Tooltip("Personaje al que pertenece el hechizo. Los combos solo salen con ese personaje al mando (Will: los desbloqueados en su preset; Estela y Liam: los de su ficha).")]
+    public PartyControlManager.CharacterSlot caster = PartyControlManager.CharacterSlot.Will;
+
+    [Header("Combo mágico (Y)")]
+    [Tooltip("Secuencia de botones que lo lanza con la Y (vacía = no es combo). Ninguna secuencia puede ser el principio de otra: lo comprueba 'El Sendero/Combate/Comprobar secuencias de combo'.")]
+    public ComboButton[] comboSequence = new ComboButton[0];
+
+    /// <summary>Tiene secuencia de combo.</summary>
+    public bool HasCombo => comboSequence != null && comboSequence.Length > 0;
 }

@@ -88,13 +88,13 @@ namespace Game.UI
                         // Suscribirse a eventos
                         _npcDamageable.OnDamaged += OnNPCDamaged;
                         _npcDamageable.OnDied += OnNPCDied;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCHealthBarUI] ✅ Conectado a Damageable de {_npcTransform.name}");
 #endif
                     }
                     else
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[NPCHealthBarUI] No se encontró Damageable en {_npcTransform.name}. Asegúrate de que el NPC está en combate.");
 #endif
                     }
@@ -107,13 +107,13 @@ namespace Game.UI
                     {
                         _npcDamageable.OnDamaged += OnNPCDamaged;
                         _npcDamageable.OnDied += OnNPCDied;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCHealthBarUI] ✅ Conectado a Damageable (fallback) de {_npcTransform.name}");
 #endif
                     }
                     else
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[NPCHealthBarUI] No se encontró NPCBehaviourManagerV2 ni Damageable en {_npcTransform.name}");
 #endif
                     }

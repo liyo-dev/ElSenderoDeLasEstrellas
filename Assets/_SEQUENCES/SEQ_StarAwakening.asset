@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SEQ_StarAwakening
   m_EditorClassIdentifier: 
   displayName: El Despertar de la Estrella
-  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo a esconderse gritandole que se aparte, y Will se queda solo: primer plano de su cara, la camara retrocede hasta verle entero y se planta en pose de combate. El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta, devuelve el golpe; si falla, el grafo vuelve al dialogo con Eldran. Ningun plano esta colocado a mano.'
+  summary: 'Eldran avisa. Will se gira y ve venir el proyectil. Eldran sale corriendo a esconderse gritandole que se aparte, y Will se queda solo: primer plano de su cara, la camara retrocede hasta verle entero y se planta en pose de combate. El plano se abre a general y ahi el jugador tiene que reaccionar. Si acierta, devuelve el golpe; si falla, la bola le alcanza y es Game Over. Ningun plano esta colocado a mano.'
   signalIn: AWAKEN_START
   signalOut: AWAKEN_DONE
   musicId: AWAKEN
@@ -104,16 +104,65 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: panicSuperado
     beats:
-    - rid: 8000000000000000080
-    - rid: 8000000000000000081
-    - rid: 8000000000000000082
-    - rid: 8000000000000000083
-    - rid: 8000000000000000084
-    - rid: 8000000000000000085
-    - rid: 8000000000000000086
+    - rid: 7428272587110613230
+    - rid: 7428272587110613231
+    - rid: 7428272587110613232
+    - rid: 7428272587110613233
+    - rid: 7428272587110613234
+    - rid: 7428272587110613235
   references:
     version: 2
     RefIds:
+    - rid: 7428272587110613230
+      type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Se ve venir la bola hasta Will. Sigue a los dos hasta el impacto.
+        shotName: 
+        framing:
+          type: 0
+          subjectId: Player
+          secondaryId: Proyectil
+          heightBias: 0
+          distanceScale: 1
+          fovOverride: 0
+          crossTheLine: 0
+          headroom: 1
+          encara: 1
+        smooth: 0
+        duration: 1.4
+        waitForArrival: 1
+        arrancaLanzado: 0
+        entrarDesdeArriba: 0
+        live: 1
+    - rid: 7428272587110613231
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Fuera la camara lenta: la bola llega ya.'
+        timeScale: 1
+        rampDuration: 0.4
+    - rid: 7428272587110613232
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: La bola alcanza a Will y le explota encima.
+        routine: ImpactoEnWill
+        waitForEnd: 1
+    - rid: 7428272587110613233
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: El golpe.
+        intensity: 0.5
+        duration: 0.5
+        waitForEnd: 0
+    - rid: 7428272587110613234
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 0.6, b: 0.2, a: 1}
+        duration: 0.25
+    - rid: 7428272587110613235
+      type: {class: DerrotaBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 'Will cae: Game Over y se recarga la partida.'
     - rid: 8000000000000000001
       type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -571,53 +620,6 @@ MonoBehaviour:
         note: Negro con el pitido antes de levantar AWAKEN_DONE.
         seconds: 1.2
         unscaled: 1
-    - rid: 8000000000000000080
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Stinger de denegado como sonido de fallo.
-        eventKey: ui_denied
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 1
-    - rid: 8000000000000000081
-      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Tapar antes de retirar el proyectil.
-        fadeIn: 1
-        color: {r: 0, g: 0, b: 0, a: 1}
-        duration: 0.2
-        waitForEnd: 1
-    - rid: 8000000000000000082
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: El proyectil desaparece sin explotar.
-        routine: RetirarProyectil
-        waitForEnd: 1
-    - rid: 8000000000000000083
-      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Fuera la camara lenta.
-        timeScale: 1
-        rampDuration: 0
-    - rid: 8000000000000000084
-      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        musicId: 
-        fadeOut: 0.5
-    - rid: 8000000000000000085
-      type: {class: WaitBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        seconds: 0.4
-        unscaled: 1
-    - rid: 8000000000000000086
-      type: {class: EndSequenceBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: Rama de fallo. Aqui SI se descubre la pantalla.
-        signalOutOverride: AWAKEN_FAILED
-        screen: 1
     - rid: 8000000000000000090
       type: {class: ShotBeat, ns: , asm: Assembly-CSharp}
       data:

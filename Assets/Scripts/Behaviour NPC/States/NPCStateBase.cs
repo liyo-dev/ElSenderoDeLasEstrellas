@@ -215,7 +215,7 @@ namespace Game.NPC.States
                 hit.collider != ignoreCollider &&
                 hit.transform.GetComponentInParent<NPCSimpleAnimator>() == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 context.LogWarning($"[ManualApproach] Paso bloqueado por '{hit.transform.name}' (posible tronco/prop) a {hit.distance:F2}m — no se atraviesa, se da el tramo por completado aquí.");
 #endif
                 context.Animator?.SetMovementSpeed(0f);

@@ -22,13 +22,10 @@ public class MenuNavigator : MonoBehaviour
     public bool debugLogs;
 
     private Button _lastSelected;
+    private GameObject _lastSelectedGo;
     private RectTransform _lastNudgedText;
 
-    // FIX M10 (auditoría 2026-08-07): si no hay nada seleccionado, Update() llamaba a
-    // SelectFirstButton() cada frame — y esa función hace GetComponentsInChildren<Button> +
-    // Array.Sort completos cada vez. En un menú sin ningún botón interactable (o mientras el
-    // EventSystem tarda en asentar la selección), esto se convertía en un bucle caro por frame.
-    // Throttle a 4 reintentos/seg: de sobra para recuperar una selección perdida.
+    // Throttle al reintentar selección: SelectFirstButton hace GetComponentsInChildren + Sort.
     private float _nextSelectFirstRetryAt;
 
     void OnEnable()
@@ -52,6 +49,7 @@ public class MenuNavigator : MonoBehaviour
         }
         _lastNudgedText = null;
         _lastSelected = null;
+        _lastSelectedGo = null;
     }
     
     void HandleNavigationInput(GamepadInputReader.InputEvent input)
@@ -77,7 +75,7 @@ public class MenuNavigator : MonoBehaviour
             // El sonido ya se reproduce en GamepadInputReader, pero podemos añadir feedback extra aquí si queremos
             if (debugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[MenuNavigator] Navegación vertical detectada");
                 #endif
             }
@@ -101,6 +99,9 @@ public class MenuNavigator : MonoBehaviour
             }
             return;
         }
+
+        if (selected == _lastSelectedGo) return;
+        _lastSelectedGo = selected;
 
         var btn = selected.GetComponent<Button>();
         if (btn && btn != _lastSelected)
@@ -130,7 +131,7 @@ public class MenuNavigator : MonoBehaviour
                 
                 if (debugLogs)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[MenuNavigator] Primer botón seleccionado: {btn.name}");
                     #endif
                 }
@@ -164,7 +165,7 @@ public class MenuNavigator : MonoBehaviour
         
         if (debugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[MenuNavigator] Nudge aplicado a: {button.name}");
             #endif
         }

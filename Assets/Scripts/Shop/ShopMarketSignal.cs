@@ -30,7 +30,7 @@ public class ShopMarketSignal : MonoBehaviour
     {
         if (shopUI == null) shopUI = FindAnyObjectByType<ShopUI>();
         if (shopUI != null) shopUI.OnClosed += HandleShopClosed;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else Debug.LogWarning($"[ShopMarketSignal:{name}] No se encontró ninguna ShopUI a la que engancharse.");
 #endif
     }
@@ -48,7 +48,7 @@ public class ShopMarketSignal : MonoBehaviour
         var signals = DefaultNarrativeSignals.Instance;
         if (signals == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[ShopMarketSignal:{name}] narrativeEventKey='{narrativeEventKey}' pero DefaultNarrativeSignals.Instance es NULL.");
 #endif
             return;

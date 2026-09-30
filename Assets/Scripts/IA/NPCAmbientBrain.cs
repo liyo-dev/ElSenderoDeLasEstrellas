@@ -362,7 +362,7 @@ public class NPCAmbientBrain : MonoBehaviour
 
             if (!CrossFade(state, 0.08f, actionLayer))
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCAmbientBrain] No se encontró el estado '{state}'.", this);
                 #endif
             }
@@ -877,7 +877,7 @@ public class NPCAmbientBrain : MonoBehaviour
     void DebugLog(string message)
     {
         if (!logDebug) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NPCAmbientBrain:{name}] {message}", this);
 #endif
     }

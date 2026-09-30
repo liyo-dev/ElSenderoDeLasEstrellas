@@ -92,6 +92,7 @@ namespace Game.NPC.States
 
         // --- Seguimiento especial (vuelo, nado, escalada, plataformas sin NavMesh) ---
         private PlayerActionManager _playerActionManager;
+        private PlayerSwimmingController _playerSwimming;
         private Animator _playerAnimator;
         private bool _inSpecialFollow;
 
@@ -176,7 +177,7 @@ namespace Game.NPC.States
 
             base.OnEnter(context);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[FollowPlayerState] {context.Transform.name} entró en FollowPlayerState");
 #endif
 
@@ -210,6 +211,7 @@ namespace Game.NPC.States
             {
                 _lastPlayerPosition = context.Player.position;
                 _playerActionManager = context.Player.GetComponent<PlayerActionManager>();
+                _playerSwimming = context.Player.GetComponent<PlayerSwimmingController>();
                 _playerAnimator = context.Player.GetComponent<Animator>();
             }
 
@@ -819,9 +821,14 @@ namespace Game.NPC.States
                 : (partyIdx % 2 == 1 ? 1f : -1f) * spread * Mathf.Ceil(partyIdx * 0.5f);
             Vector3 side = context.Player.right * lateral;
 
+            // En el agua, a la altura de flote del jugador: si Will se zambulle, los demás no bucean con él.
+            float y = _playerSwimming != null && _playerSwimming.EstaEnElAgua
+                ? _playerSwimming.AlturaDeFlote
+                : context.Player.position.y;
+
             return new Vector3(
                 context.Player.position.x + behind.x + side.x,
-                context.Player.position.y,
+                y,
                 context.Player.position.z + behind.z + side.z
             );
         }

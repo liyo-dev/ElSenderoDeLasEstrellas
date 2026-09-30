@@ -23,7 +23,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
         
         if (_agent == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[ForceStop:{name}] ❌ No tiene NavMeshAgent!");
 #endif
             enabled = false;
@@ -32,14 +32,14 @@ public class NavMeshAgentForceStop : MonoBehaviour
         
         if (_manager == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[ForceStop:{name}] ❌ No tiene NPCBehaviourManagerV2!");
 #endif
             enabled = false;
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ForceStop:{name}] ✅ Iniciado - Modo: {(disableAgentInIdle ? "DESACTIVAR" : "FORZAR STOP")}");
 #endif
     }
@@ -56,7 +56,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
             // Detectar transición a Idle
             if (!_lastWasIdle && debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ForceStop:{name}] 🔄 Entró en IdleState");
 #endif
             }
@@ -68,7 +68,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
                 {
                     if (debugMode)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[ForceStop:{name}] ⚠️ DESACTIVANDO NavMeshAgent en IdleState");
 #endif
                         }
@@ -90,7 +90,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     {
                         if (debugMode)
                             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ isStopped era FALSE, corrigiendo");
 #endif
                             }
@@ -102,7 +102,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     {
                         if (debugMode)
                             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ Velocidad residual: {_agent.velocity.magnitude:F1}, limpiando");
 #endif
                             }
@@ -114,7 +114,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     {
                         if (debugMode)
                             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.LogWarning($"[ForceStop:{name}] ⚠️ Tiene path activo, reseteando");
 #endif
                             }
@@ -124,7 +124,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
                     
                     if (needsFix && debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogError($"[ForceStop:{name}] 🔥 ALGUIEN ESTÁ REACTIVANDO EL AGENTE! Verificar otros scripts.");
 #endif
                     }
@@ -136,7 +136,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
             // Detectar transición fuera de Idle
             if (_lastWasIdle && debugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ForceStop:{name}] 🔄 Salió de IdleState → {_manager.Brain.CurrentState.StateName}");
 #endif
             }
@@ -146,7 +146,7 @@ public class NavMeshAgentForceStop : MonoBehaviour
             {
                 if (debugMode)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[ForceStop:{name}] ✅ Reactivando NavMeshAgent para {_manager.Brain.CurrentState.StateName}");
 #endif
                     }

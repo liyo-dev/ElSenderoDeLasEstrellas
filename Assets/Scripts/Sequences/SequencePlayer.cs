@@ -301,7 +301,7 @@ public class SequencePlayer : CinematicSequencerBase
             {
                 // El sujeto ha dejado de existir (un proyectil que ya explotó, un NPC despawneado).
                 // Insistir solo sirve para repetir el mismo aviso sesenta veces por segundo.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SequencePlayer:{name}] Se deja de seguir el plano " +
                     $"'{framing.Describe()}': su sujeto ya no existe. La cámara se queda donde está.");
 #endif
@@ -331,7 +331,7 @@ public class SequencePlayer : CinematicSequencerBase
             try { _pendingCleanups[i]?.Invoke(); }
             catch (System.Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SequencePlayer:{name}] Una limpieza pendiente ha fallado: {ex.Message}");
 #endif
             }
@@ -395,12 +395,9 @@ public class SequencePlayer : CinematicSequencerBase
         if (_cinematicCamera == null && _stage != null && _stage.CameraDriver != null)
             _cinematicCamera = _stage.CameraDriver;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        // INC-430 (24 sep 2026): sin definición no hay señal de entrada (sale del asset), así que
-        // la secuencia no escucha NADA y el grafo se queda esperando su señal de salida para
-        // siempre, sin un solo error. Fue la causa real de «las peras no arrancan» (INC-387 lo
-        // atribuyó a la suscripción): el SequencePlayer de SEQ_PerasEldran en MainWorld tenía el
-        // campo Definition vacío. Ahora lo dice en rojo al arrancar.
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        // Sin definición el SequencePlayer no escucha ninguna señal de entrada, así que el grafo
+        // narrativo se quedaría esperando su señal de salida para siempre, sin ningún error. Ver INC-430.
         if (_definition == null)
             Debug.LogError($"[SequencePlayer:{name}] No tiene asignado ningún SequenceDefinition " +
                 "(campo 'Definition', abajo del todo en el Inspector). Sin él esta secuencia no " +
@@ -411,11 +408,8 @@ public class SequencePlayer : CinematicSequencerBase
             Debug.LogWarning($"[SequencePlayer:{name}] Sin CinematicCameraDriver (ni en el Inspector " +
                 "ni en el SequenceStage) — ningún corte de cámara de esta secuencia hará nada.");
 
-        // FIX (17 sep 2026): el driver mueve la cámara con corrutinas suyas (MoveTo, StartFollowing),
-        // y StartCoroutine falla si su GameObject está apagado en la jerarquía. El síntoma es
-        // traicionero: los cortes secos funcionan, así que la secuencia parece ir bien y sólo
-        // desaparecen los planos con movimiento, sin un solo error por consola. Pasó de verdad, con
-        // el driver que se quedó en el GameObject del sequencer viejo al migrar el Despertar.
+        // El driver usa StartCoroutine internamente (MoveTo, StartFollowing): falla en silencio si
+        // su GO está desactivado — los cortes secos funcionan, pero los planos con movimiento no.
         else if (!_cinematicCamera.gameObject.activeInHierarchy)
             Debug.LogError($"[SequencePlayer:{name}] El CinematicCameraDriver vive en " +
                 $"'{_cinematicCamera.gameObject.name}', que está APAGADO en la jerarquía. Los cortes " +
@@ -466,7 +460,7 @@ public class SequencePlayer : CinematicSequencerBase
     {
         if (_definition == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SequencePlayer:{name}] Sin SequenceDefinition asignada — no hay nada " +
                 "que reproducir. La señal de salida se levanta igualmente para no dejar el grafo " +
                 "narrativo esperando para siempre.");
@@ -497,15 +491,9 @@ public class SequencePlayer : CinematicSequencerBase
         // La caché de colliders de ShotComposer es estática: se vacía al empezar cada secuencia.
         ShotComposer.ClearColliderCache();
 
-        // FIX (auditoría 17 sep 2026) — ESTO BLOQUEABA EL CAPÍTULO 1.
-        //
-        // Estos campos los pone EndSequenceBeat para cerrar por una rama concreta, y no se
-        // reseteaban nunca. El Despertar de la Estrella se relanza a sí mismo cuando el jugador
-        // falla el panic input (en el grafo, AWAKEN_FAILED vuelve a AWAKEN_START), así que en el
-        // segundo intento _endRequested seguía en true: la secuencia hacía la transición de
-        // entrada, NO ejecutaba un solo beat, y volvía a levantar AWAKEN_FAILED. El grafo la
-        // relanzaba otra vez. Bucle infinito de fundidos con el input bloqueado, sin más salida
-        // que cerrar el juego — y fallar esa prueba la primera vez que se juega es lo normal.
+        // EndSequenceBeat escribe estos campos para cerrar por una rama concreta. Si la secuencia
+        // se relanza (p.ej. retry tras fallo de panic input), deben partir de cero o la segunda
+        // ejecución salta todos los beats y levanta la señal de rama errónea de inmediato.
         _endRequested = false;
         _endSignalOverride = null;
         _endScreenOverride = SequenceEndScreen.ComoElAsset;
@@ -529,7 +517,7 @@ public class SequencePlayer : CinematicSequencerBase
             // capítulo colgado sin que nadie sepa por qué.
             if (!_signalRaised)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[SequencePlayer:{name}] La secuencia terminó de forma anómala " +
                     "(lo normal es que un beat haya lanzado una excepción; mírala más arriba en la " +
                     "consola). Se levanta la señal de salida igualmente para no dejar el grafo " +
@@ -542,28 +530,11 @@ public class SequencePlayer : CinematicSequencerBase
 
     private IEnumerator Co_Play()
     {
-// La música de la secuencia se lanza en el CUT POINT de la transición de entrada: con la
-        // pantalla ya cubierta, y -- esto es lo importante -- después de que LockCinematic() haya
-        // puesto AnySequenceActive a true.
-        //
-        // Historia de este punto, que se ha movido dos veces:
-        //   1. Al principio iba DESPUÉS de la transición. Síntoma (Raúl): "cuando salimos de la
-        //      habitación hay un segundo que suena la música del mundo y luego la de la secuencia".
-        //      Causa: al cruzar la puerta, EnvironmentController levanta OnInteriorExited y
-        //      AudioService.HandleInteriorExited() pone la música de mundo/zona; nuestra música no
-        //      entraba hasta bastante después.
-        //   2. Se movió a ANTES de la transición, para adelantarla. Eso lo empeoró: pasó a no
-        //      sonar nada. Motivo: AnySequenceActive solo se pone a true dentro de LockCinematic(),
-        //      que es lo primero que hace Co_BeginCinematicWithTransition -- así que poner la
-        //      música ANTES la dejaba en la ventana en la que la cinemática todavía no consta como
-        //      activa, y el HandleInteriorExited del portal la pisaba con la música de mundo. O
-        //      sea: antes se oía un segundo de mundo y luego la nuestra; después, solo la de mundo.
-        //   3. Aquí. El candado se echa al entrar en Co_BeginCinematicWithTransition (primer frame
-        //      de la secuencia, guard de AudioService ya activo) y la música arranca en el cut
-        //      point, con la pantalla cubierta. Ni hueco audible ni nadie que la pise.
-        // El plano de apertura puede venir colocado a mano (por nombre) o descrito para que lo
-        // calcule el solver. En los dos casos se aplica en el CUT POINT, con la pantalla ya
-        // cubierta, para que la escena aparezca encuadrada en vez de verse el corte.
+        // La música arranca en el CUT POINT (pantalla cubierta, AnySequenceActive ya en true).
+        // Antes del cut point, LockCinematic() no ha ejecutado todavía y HandleInteriorExited del
+        // portal picaría la música de zona encima de la de la secuencia.
+        // El plano de apertura se aplica también en el cut point para que la escena aparezca ya
+        // encuadrada.
         Transform opening = _stage != null && !string.IsNullOrWhiteSpace(_definition.openingShotName)
             ? _stage.GetShot(_definition.openingShotName)
             : null;
@@ -576,7 +547,7 @@ public class SequencePlayer : CinematicSequencerBase
                 PlaySequenceMusic(_definition.musicId);
         });
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Comprobación tardía: si la música arrancó pero alguien la pisó justo después (el portal,
         // una AmbientZone, una batalla...), esto lo dice en vez de dejarnos adivinando. Es
         // fire-and-forget a propósito: no debe retrasar la secuencia.
@@ -612,14 +583,14 @@ public class SequencePlayer : CinematicSequencerBase
             // lista ordenada que se lee de arriba abajo, en vez de un grafo dentro de otro grafo.
             if (!phase.ShouldRun(_context))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[SequencePlayer:{name}] Fase {p + 1}/{_definition.phases.Count}: " +
                     $"'{phase.name}' SE SALTA porque {phase.DescribeSkipReason(_context)}.");
 #endif
                 continue;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SequencePlayer:{name}] Fase {p + 1}/{_definition.phases.Count}: '{phase.name}' " +
                 $"({phase.beats.Count} beats).");
 #endif
@@ -655,7 +626,7 @@ public class SequencePlayer : CinematicSequencerBase
 
             if (_endRequested)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[SequencePlayer:{name}] La secuencia termina en la fase '{phase.name}': " +
                     "un beat ha pedido cerrar antes de tiempo.");
 #endif
@@ -737,7 +708,7 @@ public class SequencePlayer : CinematicSequencerBase
         _backgroundRoutines.Clear();
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     /// Mira, un par de segundos después de arrancar, qué música está sonando de verdad. Si no es la
     /// de la secuencia, alguien la ha pisado — y el aviso dice cuál suena, que es justo el dato que
     /// hace falta para saber quién.

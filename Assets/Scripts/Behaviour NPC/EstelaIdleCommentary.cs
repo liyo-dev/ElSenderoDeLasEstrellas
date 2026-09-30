@@ -122,7 +122,7 @@ namespace Game.NPC
         /// </summary>
         public void RequestStandUp() => _activeSitAction?.ForceComplete();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private float _nextDiagnosticLogTime;
 #endif
 
@@ -137,7 +137,7 @@ namespace Game.NPC
             _partyMember = GetComponent<NPCPartyMember>();
             _npcManager = GetComponent<NPCBehaviourManagerV2>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // Diagnóstico (15 ago 2026): si esta línea no aparece en consola al arrancar la
             // escena, el componente no está añadido al GameObject (o el GameObject está
             // desactivado) — la causa más probable de "no ha pasado nada" al probarlo. Si aparece
@@ -224,7 +224,7 @@ namespace Game.NPC
             return true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico (15 ago 2026): tras el aviso de Raúl de que "nada de esto ha funcionado" al
         // probarlo, sin más pista que esa. Antes IsEligibleNow fallaba en silencio — indistinguible
         // entre "el componente no está añadido", "está en combate", "el equipo está en modo Libre",
@@ -260,7 +260,7 @@ namespace Game.NPC
 
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EstelaIdleCommentary] Comentario suelto: \"{line}\"");
                 #endif
             }
@@ -272,7 +272,7 @@ namespace Game.NPC
             string line = PickLine(hungryLines);
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EstelaIdleCommentary] Se sienta a quejarse de hambre: \"{line}\"");
                 #endif
             }
@@ -304,7 +304,7 @@ namespace Game.NPC
             string line = PickLine(boredLines);
             if (debugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[EstelaIdleCommentary] Se planta delante a molestar: \"{line}\"");
                 #endif
             }

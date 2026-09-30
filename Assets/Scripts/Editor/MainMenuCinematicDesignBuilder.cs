@@ -561,14 +561,14 @@ public static class MainMenuCinematicDesignBuilder
 
     static void LogInfo(string message)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log(message);
 #endif
     }
 
     static void LogError(string message)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogError(message);
 #endif
     }

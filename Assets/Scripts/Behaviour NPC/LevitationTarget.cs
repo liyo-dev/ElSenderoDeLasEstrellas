@@ -170,7 +170,7 @@ public class LevitationTarget : MonoBehaviour
 
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LevitationTarget] {name} comenzando levitación");
             #endif
         }
@@ -387,7 +387,7 @@ public class LevitationTarget : MonoBehaviour
         OnAnyLevitationEnded?.Invoke();
         if (showDebugLogs)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LevitationTarget] {name} estado normal restaurado");
             #endif
         }
@@ -434,7 +434,7 @@ public class LevitationTarget : MonoBehaviour
         }
         else if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LevitationTarget] {name}: no se encontró NavMesh cercano tras aterrizar (radio {fallbackSampleRadius}m); el agente permanece desactivado para no congelar al NPC en el aire.");
 #endif
         }
@@ -472,7 +472,7 @@ public class LevitationTarget : MonoBehaviour
 
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LevitationTarget] {name} rebote en pared → {speed:F1}m/s");
                 #endif
             }
@@ -490,7 +490,7 @@ public class LevitationTarget : MonoBehaviour
         {
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LevitationTarget] {name} impacto bloqueado por escudo");
                 #endif
             }
@@ -504,7 +504,7 @@ public class LevitationTarget : MonoBehaviour
             dmg.TakeDamage(damage);
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[LevitationTarget] {name} impacto pared → {impactSpeed:F1}m/s, daño={damage:F0}");
                 #endif
             }

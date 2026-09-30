@@ -42,7 +42,9 @@ public class InteractableToNarrativeEvent : MonoBehaviour
 
         if (_signals == null)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[InteractableToNarrativeEvent] No hay DefaultNarrativeSignals tras esperar.");
+#endif
             yield break;
         }
 
@@ -60,7 +62,9 @@ public class InteractableToNarrativeEvent : MonoBehaviour
         if (_signals == null) ResolveSignals();
         if (_signals == null)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[InteractableToNarrativeEvent] No hay DefaultNarrativeSignals.");
+#endif
             return;
         }
 
@@ -73,7 +77,7 @@ public class InteractableToNarrativeEvent : MonoBehaviour
         // realidad ocurrió antes de tiempo. Mismo patrón que KingdomBoundaryTrigger.
         if (!_signals.HasCustomListener(eventKey))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InteractableToNarrativeEvent] Ignorado: nadie espera '{eventKey}' todavía (el grafo no ha llegado a ese punto).");
 #endif
             return;
@@ -85,6 +89,8 @@ public class InteractableToNarrativeEvent : MonoBehaviour
         playerStop?.IniciarParadaMomentanea();
 
         _signals.RaiseCustom(eventKey, name);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[InteractableToNarrativeEvent] Emite '{eventKey}' → signals #{_signals.GetEntityId()}");
+#endif
     }
 }

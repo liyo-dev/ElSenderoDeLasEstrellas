@@ -89,13 +89,13 @@ public static class MenuManager
     {
         if (IsOpen(kind))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[MenuManager] Menú ya está abierto: " + kind);
 #endif
             return true;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[MenuManager] Intentando abrir menú: " + kind);
 #endif
 
@@ -137,14 +137,14 @@ public static class MenuManager
                     break;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[MenuManager] Estado de menú " + k + ": " + stillOpen);
 #endif
 
             if (!stillOpen)
             {
                 s_open[k] = false;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MenuManager] Cleared stale registration for {k}");
 #endif
             }
@@ -155,7 +155,7 @@ public static class MenuManager
         {
             if (kv.Value)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[MenuManager] Deny open {kind} because {kv.Key} is open");
 #endif
                 return false;
@@ -163,7 +163,7 @@ public static class MenuManager
         }
 
         s_open[kind] = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[MenuManager] Opened {kind}");
 #endif
         MenuOpened?.Invoke(kind);
@@ -205,7 +205,7 @@ public static class MenuManager
     /// </summary>
     public static void ForceFullRecovery()
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[MenuManager] ForceFullRecovery: limpiando estado completo de menus y input.");
 #endif
 
@@ -229,7 +229,7 @@ public static class MenuManager
         // 5. Restaurar timeScale por si algún menú pausó el tiempo
         Time.timeScale = 1f;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[MenuManager] ForceFullRecovery completado.");
 #endif
     }

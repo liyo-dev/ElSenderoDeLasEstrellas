@@ -34,7 +34,7 @@ public static class CierreDeBatalla
         var pasos = new List<IPasoDeCierre>(_pasos);
         pasos.Sort((a, b) => a.Orden.CompareTo(b.Orden));
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CierreDeBatalla] '{resultado.BattleId}': {pasos.Count} paso(s).");
 #endif
         var hechos = new List<IPasoDeCierre>(pasos.Count);
@@ -78,15 +78,23 @@ public interface IPasoDeCierre
     void Terminar(ResultadoDeBatalla resultado);
 }
 
-/// Lo que sale de una batalla ganada: qué batalla era y qué se ha ganado. Los pasos de premios
-/// añaden líneas al informe; el paso del informe las enseña.
+/// Lo que sale de una batalla ganada: qué batalla era, qué se ha ganado y quién sale en la foto.
+/// Los pasos de premios anotan lo ganado; la celebración, quién está; el informe lo enseña todo.
 public sealed class ResultadoDeBatalla
 {
     public string BattleId { get; }
     public BattleEncounterSO Encuentro { get; }
-    public IReadOnlyList<LineaDeInforme> Lineas => _lineas;
+    public IReadOnlyList<SubidaDeEstadistica> Subidas => _subidas;
+    public IReadOnlyList<PremioDelBotin> Botin => _botin;
+    /// Quién sale en la foto de victoria: primero el personaje al mando, después los compañeros.
+    public IReadOnlyList<PartyControlManager.CharacterSlot> EnLaFoto => _enLaFoto;
 
-    private readonly List<LineaDeInforme> _lineas = new();
+    /// Hay algo que contar en el informe.
+    public bool HayPremios => _subidas.Count > 0 || _botin.Count > 0;
+
+    private readonly List<SubidaDeEstadistica> _subidas = new();
+    private readonly List<PremioDelBotin> _botin = new();
+    private readonly List<PartyControlManager.CharacterSlot> _enLaFoto = new();
 
     public ResultadoDeBatalla(string battleId, BattleEncounterSO encuentro)
     {
@@ -94,21 +102,65 @@ public sealed class ResultadoDeBatalla
         Encuentro = encuentro;
     }
 
-    public void Anotar(LineaDeInforme linea)
+    public void AnotarSubida(SubidaDeEstadistica subida)
     {
-        if (!string.IsNullOrEmpty(linea.texto)) _lineas.Add(linea);
+        if (!Mathf.Approximately(subida.antes, subida.despues)) _subidas.Add(subida);
+    }
+
+    public void AnotarBotin(PremioDelBotin premio)
+    {
+        if (premio.cantidad > 0) _botin.Add(premio);
+    }
+
+    public void AnotarEnLaFoto(IReadOnlyList<PartyControlManager.CharacterSlot> personajes)
+    {
+        _enLaFoto.Clear();
+        if (personajes == null) return;
+        for (int i = 0; i < personajes.Count; i++)
+            if (!_enLaFoto.Contains(personajes[i])) _enLaFoto.Add(personajes[i]);
+    }
+
+    /// El nombre del encuentro, traducido si tiene clave. Vacío si no hay encuentro.
+    public string NombreDelEncuentro
+    {
+        get
+        {
+            if (Encuentro == null) return "";
+            if (!string.IsNullOrEmpty(Encuentro.displayNameId) && LocalizationManager.Instance != null)
+                return LocalizationManager.Instance.Get(Encuentro.displayNameId, Encuentro.displayName);
+            return Encuentro.displayName;
+        }
     }
 }
 
-[Serializable]
-public struct LineaDeInforme
-{
-    public string texto;
-    public Sprite icono;
+public enum TipoDeEstadistica { Vida, Magia, Ataque, Defensa }
 
-    public LineaDeInforme(string texto, Sprite icono = null)
+/// Una estadística que ha cambiado con la batalla: cuánto valía antes y cuánto después.
+public readonly struct SubidaDeEstadistica
+{
+    public readonly TipoDeEstadistica tipo;
+    public readonly float antes;
+    public readonly float despues;
+
+    public SubidaDeEstadistica(TipoDeEstadistica tipo, float antes, float despues)
     {
-        this.texto = texto;
+        this.tipo = tipo;
+        this.antes = antes;
+        this.despues = despues;
+    }
+}
+
+/// Algo del botín: un objeto o monedas, con su icono y cuántos.
+public readonly struct PremioDelBotin
+{
+    public readonly string nombre;
+    public readonly Sprite icono;
+    public readonly int cantidad;
+
+    public PremioDelBotin(string nombre, Sprite icono, int cantidad)
+    {
+        this.nombre = nombre;
         this.icono = icono;
+        this.cantidad = cantidad;
     }
 }

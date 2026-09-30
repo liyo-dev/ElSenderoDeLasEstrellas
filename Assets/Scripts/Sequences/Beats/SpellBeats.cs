@@ -107,7 +107,7 @@ public class SpellBeat : SequenceBeat
         var lanza = ctx?.GetActor(lanzaId);
         if (lanza?.Transform == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SpellBeat] No hay ningún actor '{lanzaId}' que lance esto ({note}).");
 #endif
             yield break;
@@ -115,7 +115,7 @@ public class SpellBeat : SequenceBeat
 
         if (VfxPoolService.Instance == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SpellBeat] VfxPoolService.Instance es null — ¿arrancaste desde Start.unity?");
 #endif
             yield break;
@@ -128,7 +128,7 @@ public class SpellBeat : SequenceBeat
 
         if (objetivo?.Transform == null && marca == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[SpellBeat] El hechizo de '{lanzaId}' no tiene a dónde ir ({note}).");
 #endif
             yield break;

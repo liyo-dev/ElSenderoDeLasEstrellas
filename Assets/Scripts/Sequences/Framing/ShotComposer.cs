@@ -325,7 +325,7 @@ public static class ShotComposer
         var subject = ctx.GetActor(framing.subjectId);
         if (subject?.Transform == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ShotComposer] No se puede montar el plano '{framing.Describe()}': " +
                 $"no hay ningún actor '{framing.subjectId}' en esta escena. La cámara se queda donde está.");
 #endif
@@ -356,7 +356,7 @@ public static class ShotComposer
             if (Clearance(mirrored) > bestClearance * 1.5f)
             {
                 best = mirrored;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' se ha cruzado al otro lado " +
                     "del eje: por el lado que tocaba la cámara quedaba contra algo. Si esto pasa en " +
                     "varios planos de la misma escena, lo que hay que mover es a los personajes, no la cámara.");
@@ -524,7 +524,7 @@ public static class ShotComposer
         float separation = Vector3.Distance(Flatten(eyeA), Flatten(eyeB));
         if (separation > MaxTwoShotSpan)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ShotComposer] Two-shot de '{a.Id}' y '{b.Id}' descartado: están a " +
                 $"{separation:F0} m, demasiado lejos para caber en un encuadre sin que uno de los dos " +
                 "quede diminuto. Se usa un plano medio del primero. Si querías ver a los dos, la " +
@@ -924,7 +924,7 @@ public static class ShotComposer
                 s_hayOrbitaRecordada = true;
                 s_fotogramasTapado = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (l > 0 || a > 0)
                     Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' estaba tapado desde " +
                         $"donde tocaba; se ha rodado {s_anglesOrbita[a]:F0}° a un lado" +
@@ -971,7 +971,7 @@ public static class ShotComposer
                 s_hayOrbitaRecordada = true;
                 s_fotogramasTapado = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' no tenía ningún ángulo " +
                     $"libre a su distancia, así que se ha abierto a {mas:F1}× y {(mas - 1f) * 3f:F1} m " +
                     "más alto. Sale más abierto de lo que pide el asset, pero se ve.");
@@ -992,7 +992,7 @@ public static class ShotComposer
             s_hayOrbitaRecordada = true;
             s_fotogramasTapado = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' no tenía ningún ángulo " +
                 $"impecable dentro de sus {arco:F0}°, así que se ha cogido el menos malo " +
                 $"({mejorAngulo:F0}°, {mejorPuntos} puntos de estorbo). Se ve al personaje de " +
@@ -1024,7 +1024,7 @@ public static class ShotComposer
                     s_hayOrbitaRecordada = true;
                     s_fotogramasTapado = 0;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[ShotComposer] El plano '{framing.Describe()}' no tenía " +
                         $"NINGÚN ángulo libre dentro de sus {arco:F0}°, así que se ha rodado " +
                         $"{s_anglesOrbita[a]:F0}°: va a salir de lado o de espaldas. Lo que hay que " +
@@ -1037,7 +1037,7 @@ public static class ShotComposer
 
         // El sujeto está metido en un sitio del que no se le puede ver desde ningún sitio. Aquí sí
         // toca acercarse, aun a costa del encuadre: un plano cerrado de más se ve y una pared no.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[ShotComposer] El plano '{framing.Describe()}' no tiene NINGÚN ángulo " +
             "despejado alrededor del sujeto, ni siquiera abriendo el plano: está demasiado pegado a " +
             "la geometría. Se acerca la cámara para poder verlo, así que el encuadre no será el que " +
@@ -1571,7 +1571,7 @@ public static class ShotComposer
     /// consola al montar, que es cuando se puede arreglar barato.
     private static void WarnIfSameAsPrevious(SequenceContext ctx, ShotFraming f, ShotSolution s)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (!ctx.TryGetPreviousShot(out ShotSolution prev)) return;
 
         Vector3 dirNow = (s.lookAt - s.position).normalized;

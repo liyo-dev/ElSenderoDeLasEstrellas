@@ -29,7 +29,7 @@ RPG de acción/aventura en Unity 6 (6000.6.2f1) + URP 17.6. Proyecto indie en so
 
 **Reflection:** no usar `System.Reflection` en código de runtime frecuente (lento y frágil en IL2CPP).
 
-**Logging:** todo `Debug.Log` de diagnóstico bajo `#if UNITY_EDITOR || DEVELOPMENT_BUILD`.
+**Logging:** todo `Debug.Log` de diagnóstico bajo `#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION` (`DEVELOPMENT_BUILD` está obsoleto desde Unity 6.6 —aviso UAC0009— y desaparece en 6.8; en builds lo decide *Player ▸ Managed Code Variant*).
 
 **Idioma:** comentarios, documentación y mensajes de commit **en español**.
 
@@ -84,6 +84,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 6. **Compilar antes de entregar:** tras cada tanda, leer `Logs/Editor.log` (errores `error CS`) antes de pedir a Raúl que pruebe.
 7. **`PushMode`/`PopMode`, suscripciones y bloqueos** se liberan también en `OnDisable`/`Exit()`: un `finally` de corrutina no se ejecuta si se para o se destruye el objeto.
 8. **Menús de un solo uso:** evitarlos; si hacen falta, pasan a `El Sendero/Archivo/` en cuanto se han ejecutado.
+9. **Grafo narrativo = producto reutilizable (regla prioritaria).** Todo lo que toque el grafo narrativo (núcleo, nodos, editor, herramientas) se diseña SOLID, escalable y con nomenclatura genérica: nada de nombres de este juego (personajes, capítulos, escenas) en el núcleo, nada de `switch` por tipo de nodo fuera del propio nodo (cada nodo declara su comportamiento), dependencias del juego solo a través de interfaces. Objetivo: reutilizarlo en el siguiente juego y venderlo en la Asset Store con soporte para IA.
 
 **Sistema oficial por responsabilidad** (lo demás está congelado: se mantiene, no se amplía):
 
@@ -93,9 +94,20 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Cinemáticas | `SequencePlayer` + `SequenceDefinition`, lanzadas con `PlayCinematicNode` (campo `secuencia` para montarlas en vivo) | `*Sequencer.cs` escritos a mano, `SimpleCinematicDirector` |
 | Cámara | `CameraDirectorService` (Claim/Release) | apagar `Camera.main` o `vThirdPersonCamera` a mano |
 | Mover / girar NPCs en escenas | `SequenceActor` + `SequenceMovement` | helpers propios en cada sistema |
+| Lo que dice un NPC si se le habla y el grafo no espera esa charla (p. ej. misión en curso) | `INarrativeStandingLine` (en `StartQuestNode`: «Mientras está en curso») | `QuestChainEntry.dlgInProgress` de `NPCQuestConfig` |
+| Ocultar el HUD | `PlayerHUDV2.HideHUD(quien)`/`ShowHUD(quien)` (cada sistema con su clave) | contar ocultados a mano |
+| Seguir a un NPC (escolta jugable) | `GuiarJugadorNode` (tope de velocidad con `TopeDeVelocidadDelJugador`, charla por el camino con `CharlaEnBocadillos`) | escoltas de `NPCInteractiveNarrativeExecutor` |
 | Iconos sobre la cabeza | `NPCAlertIconController` (quests vía `NarrativeActor`) | `NPCQuestIconManager`, `NPCPersistentIconController` |
 | Texto | `SpeechBubbleUI` (cinemática, auto) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
 | Tiempo (`timeScale`) | `TimeScaleArbiterService` | escribir `Time.timeScale` directamente |
+| Botones de combate del jugador (X, LB…) | `PlayerCombatInput` | leer botones de magia en cada sistema; reflexión en `vThirdPersonInput` |
+| Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`) | leer B en otro sitio; bloquear daño con `if` en cada IA |
+| Combo mágico (Y) | `ComboCastController` (`IsComposing` para callar a los demás lectores) | abrir paneles de secuencia propios; leer A/B/X/Y mientras se teclea |
+| Carga de equipo, dúos y trío (LT+RT) | `DuoSpecialAttackSystem` (en `GrupoDelJugador`) | medidores por compañero; ataques de equipo fuera de `SpecialAttackSO` |
+| Lanzar un hechizo del jugador | `MagicCaster.Cast` (coste, giro, bloqueo, aire, gesto) → `MagicProjectileSpawner` | lanzar desde otro componente o instanciar el proyectil a mano |
+| Música al terminar algo (cinemática, combate) | `AudioService.PedirMusicaDelLugar` (relevo con gracia, como la cámara) | `PlayMusic`/`RestoreSceneMusic` directos al acabar |
+| Qué deja cambiado un nodo / cómo está el mundo en un nodo | `INarrativeStateEffect` + `NarrativeStateProjector` (TDD § 10) | `switch` por tipo de nodo en herramientas |
+| Guardar que un objeto de escena se ha movido o retirado (entregado, consumido) | `ObjetoPersistente` (`Retirar()` para quitarlo; ID con `IdDePersistencia`) | `Destroy` directo de objetos de misión; IDs de posición escritos a mano en cada sistema |
 
 ---
 

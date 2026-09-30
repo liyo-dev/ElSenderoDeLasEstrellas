@@ -73,8 +73,12 @@ namespace Game.Player
         [SerializeField] private float victoryCamBlendSeconds = 0.4f;
 
         [Header("Celebración de victoria (INC-470)")]
-        [Tooltip("Salto antes de la pose de victoria. Vacío = sin salto. Si el Animator no tiene el estado, se salta.")]
+        [Tooltip("Voltereta antes de la pose de victoria. Vacío = sin salto. Si el Animator no tiene el estado, se salta.")]
         [SerializeField] private string victoryJumpStateName = "JumpFullSpin_InPlace_NoWeapon";
+        [Tooltip("Altura del salto, en alturas de la cabeza del personaje (1 = lo que mide de los pies a la cabeza). La animación da la voltereta en el sitio; la altura la pone este salto.")]
+        [SerializeField] private float victoryJumpHeight = 1.4f;
+        [Tooltip("Tramo de la animación del salto (0-1) en el que el personaje está en el aire.")]
+        [SerializeField] private Vector2 victoryJumpAirborne = new Vector2(0.1f, 0.81f);
         [Tooltip("Tope de segundos del salto (por si el estado no termina nunca).")]
         [SerializeField] private float victoryJumpMaxSeconds = 1.8f;
         [Tooltip("La cámara de victoria arranca más lejos y más alta, de lado, y se acerca girando hasta el plano final en estos segundos.")]
@@ -85,6 +89,17 @@ namespace Game.Player
         [SerializeField] private float victoryCamStartYawOffsetDeg = -110f;
         [Tooltip("En las batallas con cierre (jefes), segundos que se deja ver la derrota del enemigo antes de celebrarlo.")]
         [SerializeField] private float victoryDelayAfterDefeat = 1.5f;
+
+        [Header("Foto de victoria en grupo (INC-542)")]
+        [SerializeField] private AjustesCelebracionEnGrupo celebracionEnGrupo = new AjustesCelebracionEnGrupo();
+        [Tooltip("Metros que se aleja la cámara por cada compañero en la foto.")]
+        [SerializeField] private float victoryCamExtraDistancePerMember = 1.1f;
+        [Tooltip("Ángulo final de la cámara respecto al frente cuando hay compañeros: más de frente que con uno solo, para que la fila no se vea en diagonal.")]
+        [SerializeField] private float victoryCamGroupYawOffsetDeg = -15f;
+        [Tooltip("Con compañeros, metros que se desplaza el punto de mira hacia la derecha de la pantalla: el grupo queda a la izquierda y el informe de la derecha no lo tapa.")]
+        [SerializeField] private float victoryCamGroupScreenShift = 0.8f;
+        [Tooltip("Segundos que se mantiene el gesto final de todos antes de pasar al informe.")]
+        [SerializeField] private float victoryFinalHoldSeconds = 0.4f;
 
 #if UNITY_EDITOR
         [Header("Debug")]
@@ -161,13 +176,15 @@ namespace Game.Player
             // Suscribirse al evento de fin de animación de magia para restaurar battle idle
             if (controller != null)
             {
-                controller.OnMagicCastAnimationEnded += OnMagicAnimationEnded;
+                controller.OnUpperBodyActionEnded += OnMagicAnimationEnded;
             }
         }
         
         void OnDisable()
         {
             if (_pasoDeCierre != null) CierreDeBatalla.Quitar(_pasoDeCierre);
+            // Una corrutina parada no llega a su final: se devuelve aquí lo que tomó la celebración.
+            TerminarVictoria();
 
             // Desactivar la capa al deshabilitarse
             if (animator != null && animator.layerCount > upperBodyLayerIndex)
@@ -186,7 +203,7 @@ namespace Game.Player
             // Desuscribirse del evento
             if (controller != null)
             {
-                controller.OnMagicCastAnimationEnded -= OnMagicAnimationEnded;
+                controller.OnUpperBodyActionEnded -= OnMagicAnimationEnded;
             }
         }
         
@@ -240,22 +257,23 @@ namespace Game.Player
         /// <param name="battleId">ID del combate para restaurar la música después de la victoria</param>
         public void PlayVictory(string battleId = null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlayerBattleMode] 🎯 PlayVictory() LLAMADO - _isPlayingVictory: {_isPlayingVictory}, battleId: {battleId ?? "null"}");
 #endif
             
             if (_isPlayingVictory)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ Victoria ya en reproducción - ignorando llamada duplicada (battleId: {battleId ?? "null"})");
 #endif
                 return;
             }
             
             _currentBattleId = battleId;
+            if (!isActiveAndEnabled) return;
             StartCoroutine(PlayVictorySequence());
         }
-        
+
         /// <summary>
         /// Suprime temporalmente el Battle Mode (tras diálogos de combate, etc.)
         /// </summary>
@@ -430,9 +448,8 @@ namespace Game.Player
         }
 
         /// <summary>
-        /// Activa la cámara de victoria enfocando al jugador. Encuadre en 3/4 lateral con espacio
-        /// libre en pantalla (ver victoryCamYawOffsetDeg) pensado para los pop-ups de recompensa
-        /// que se añadirán en el próximo scope.
+        /// Activa la cámara de victoria encuadrando el centro de la foto (el jugador solo, o el
+        /// grupo en fila), en 3/4 de frente (ver victoryCamYawOffsetDeg / victoryCamGroupYawOffsetDeg).
         /// </summary>
         private void ActivateVictoryCamera()
         {
@@ -441,39 +458,17 @@ namespace Game.Player
             EnsureVictoryCamera();
             if (_victoryVcam == null) return;
 
-            // Girar al jugador para que quede de cara a la cámara de gameplay activa en el
-            // momento de la victoria, en vez de dejarlo con la orientación que tuviera al
-            // terminar el combate (que puede ser cualquiera: de lado, de espaldas, a medio
-            // esquivar...). Sin esto, colocar la cámara relativa a un "forward" arbitrario no
-            // garantiza una pose de cara -- solo evita quedar exactamente detrás (bug anterior).
-            // Con el jugador ya orientado hacia la cámara, el offset de victoryCamYawOffsetDeg
-            // sí produce el 3/4 de cara buscado de forma consistente.
-            Camera refCam = Camera.main;
-            if (refCam != null)
-            {
-                Vector3 camForward = refCam.transform.forward;
-                camForward.y = 0f;
-                if (camForward.sqrMagnitude > 0.0001f)
-                {
-                    camForward.Normalize();
-                    transform.rotation = Quaternion.LookRotation(-camForward, Vector3.up);
-                }
-            }
-
             Vector3 flatForward = transform.forward;
             flatForward.y = 0f;
             if (flatForward.sqrMagnitude < 0.0001f) flatForward = Vector3.forward;
             flatForward.Normalize();
 
-            // La cámara se coloca EN LA DIRECCIÓN a la que mira el jugador (ya girado hacia
-            // cámara arriba), para que el plano quede de frente/3-4 y se vea la cara durante la
-            // pose de victoria. Con "-flatForward" (bug histórico, INC pendiente) la cámara
-            // quedaba detrás del personaje mirando en la misma dirección que él, dejándolo de
-            // espaldas a cámara.
-            Quaternion yaw = Quaternion.AngleAxis(victoryCamYawOffsetDeg, Vector3.up);
+            // La cámara va EN LA DIRECCIÓN a la que mira el jugador (ya girado hacia la cámara con
+            // OrientarHaciaLaCamara), para que el plano quede de frente/3-4 y se vea la cara.
+            Quaternion yaw = Quaternion.AngleAxis(YawFinalDeCamara, Vector3.up);
             Vector3 offsetDir = yaw * flatForward;
-            Vector3 camPos = transform.position + offsetDir * victoryCamDistance + Vector3.up * victoryCamHeight;
-            Vector3 lookAt = transform.position + Vector3.up * victoryCamLookHeight;
+            Vector3 camPos = _focoVictoria + offsetDir * DistanciaFinalDeCamara + Vector3.up * victoryCamHeight;
+            Vector3 lookAt = PuntoDeMira(camPos);
 
             _victoryVcam.transform.position = camPos;
             _victoryVcam.transform.rotation = Quaternion.LookRotation((lookAt - camPos).normalized, Vector3.up);
@@ -497,6 +492,36 @@ namespace Game.Player
             if (debugMode)
                 Debug.Log($"[PlayerBattleMode] 🎥 Cámara de victoria activada (pos: {camPos})");
 #endif
+        }
+
+        /// Gira al jugador de cara a la cámara de gameplay activa, en vez de dejarlo con la
+        /// orientación que tuviera al terminar el combate (de lado, de espaldas, a medio esquivar...).
+        /// Con el jugador de cara, el ángulo de la cámara de victoria da el 3/4 de frente buscado, y
+        /// la fila del grupo se forma a lo ancho de la pantalla.
+        private void OrientarHaciaLaCamara()
+        {
+            Camera refCam = Camera.main;
+            if (refCam == null) return;
+            Vector3 camForward = refCam.transform.forward;
+            camForward.y = 0f;
+            if (camForward.sqrMagnitude < 0.0001f) return;
+            transform.rotation = Quaternion.LookRotation(-camForward.normalized, Vector3.up);
+        }
+
+        private int CompanerosEnLaFoto => _grupo != null ? _grupo.Companeros : 0;
+        private float DistanciaFinalDeCamara => victoryCamDistance + victoryCamExtraDistancePerMember * CompanerosEnLaFoto;
+        private float YawFinalDeCamara => CompanerosEnLaFoto > 0 ? victoryCamGroupYawOffsetDeg : victoryCamYawOffsetDeg;
+
+        /// El punto al que mira la cámara de victoria: el centro de la foto a la altura del pecho y,
+        /// con compañeros, algo a la derecha, para dejar sitio al informe.
+        private Vector3 PuntoDeMira(Vector3 posCamara)
+        {
+            Vector3 mira = _focoVictoria + Vector3.up * victoryCamLookHeight;
+            if (CompanerosEnLaFoto == 0 || Mathf.Approximately(victoryCamGroupScreenShift, 0f)) return mira;
+            Vector3 alFoco = mira - posCamara;
+            alFoco.y = 0f;
+            if (alFoco.sqrMagnitude < 0.0001f) return mira;
+            return mira + Vector3.Cross(Vector3.up, alFoco.normalized) * victoryCamGroupScreenShift;
         }
 
         /// <summary>
@@ -528,11 +553,13 @@ namespace Game.Player
         }
 
         /// <summary>
-        /// La celebración de victoria sin devolver nada: bloquea el control, cámara que se acerca
-        /// girando hasta Will, salto, pose de victoria y música. Termina cuando acaba la pose,
-        /// con la cámara aún enfocando a Will. Lo devuelve todo TerminarVictoria(). Así el cierre
-        /// de batalla (CierreDeBatalla) puede enseñar el informe con este mismo plano antes de
-        /// devolver el control. INC-470.
+        /// La celebración de victoria sin devolver nada: bloquea el control, pone al jugador de
+        /// cara a la cámara y a los compañeros cercanos en fila a su lado (CelebracionEnGrupo), la
+        /// cámara se acerca girando hasta el centro de la foto, el jugador salta con voltereta en el
+        /// aire y hace su pose, cada compañero hace la suya al llegar, y al final todos el mismo
+        /// gesto a la vez. Termina con la cámara aún encuadrándolos; lo devuelve todo
+        /// TerminarVictoria(), para que el cierre de batalla (CierreDeBatalla) enseñe el informe con
+        /// este mismo plano. INC-470, INC-542.
         /// </summary>
         public IEnumerator CelebrarVictoria(string battleId)
         {
@@ -547,74 +574,77 @@ namespace Game.Player
             if (actionManager != null)
                 actionManager.PushMode(ActionMode.Cinematic);
 
-            // Cámara: arranca lejos y de lado y se acerca girando hasta el plano de 3/4 de Will.
+            // La pose de combate de la capa de brazos taparía la voltereta y los gestos.
+            ApagarCapaDeBrazos();
+
+            // De cara a la cámara y el grupo en fila a su lado; la cámara encuadra el centro.
+            if (enableVictoryCamera) OrientarHaciaLaCamara();
+            var slot = PartyControlManager.Instance != null
+                ? PartyControlManager.Instance.ActiveSlot
+                : PartyControlManager.CharacterSlot.Will;
+            _grupo ??= new CelebracionEnGrupo(celebracionEnGrupo);
+            _focoVictoria = _grupo.Preparar(transform, slot);
+            if (_grupo.Companeros == 0) _focoVictoria = transform.position;
+            _grupo.PersonajesEnLaFoto(_enLaFoto);
+
+            // Cámara: arranca lejos y de lado y se acerca girando hasta el plano final.
             ActivateVictoryCamera();
             if (_victoryCameraActive) _victoryCamMove = StartCoroutine(Co_MoverCamaraDeVictoria());
 
             // Reproducir música de victoria usando el sistema de audio centralizado
             if (!string.IsNullOrEmpty(victorySfxKey) && AudioService.Instance != null)
             {
-                // Usar PlayVictoryForBattle para reproducir la música de victoria correctamente
-                // IMPORTANTE: holdSeconds = 0 significa que NO se restaura automáticamente
-                // El NPCCombatLifecycleHandler se encargará de restaurar la música después del diálogo post-derrota
-                AudioService.Instance.PlayVictoryForBattle(_currentBattleId ?? "", victorySfxKey, holdSeconds: 0f);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.Log($"[PlayerBattleMode] 🎵 ✅ Reproduciendo música de victoria: {victorySfxKey} (battleId: {_currentBattleId ?? "null"}) - Restauración manual por lifecycle handler");
-#endif
+                // El jingle suena una vez y, al acabar, devuelve él mismo la música del lugar.
+                AudioService.Instance.PlayVictoryForBattle(_currentBattleId ?? "", victorySfxKey);
             }
             else if (string.IsNullOrEmpty(victorySfxKey))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ victorySfxKey está vacío - no se reproduce audio");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[PlayerBattleMode] ⚠️ AudioService.Instance es NULL - no se puede reproducir música");
 #endif
             }
-            
-            // Salto y, al caer, la pose de victoria.
-            if (animator != null && !string.IsNullOrEmpty(victoryJumpStateName) && TryPlayState(victoryJumpStateName, 0.15f, out int capaSalto))
-            {
-                int hashSalto = Animator.StringToHash(victoryJumpStateName);
-                float tope = Time.time + Mathf.Max(0.3f, victoryJumpMaxSeconds);
-                float empezar = Time.time + 0.3f;
-                while (Time.time < tope)
-                {
-                    var info = animator.GetCurrentAnimatorStateInfo(capaSalto);
-                    bool enSalto = info.shortNameHash == hashSalto;
-                    if (enSalto && info.normalizedTime >= 0.92f) break;
-                    if (!enSalto && Time.time > empezar) break;   // ya ha salido del salto
-                    yield return null;
-                }
-            }
 
+            // Los compañeros van a su sitio mientras el jugador salta.
+            _grupo.Empezar(this);
+
+            yield return Co_SaltoConVoltereta();
+
+            // Aviso de «ya enfoca al jugador»: la cámara lleva ya el salto entero en su plano.
+            if (_victoryCameraActive) OnVictoryCameraFocused?.Invoke();
+
+            // Su pose de victoria.
             float empiezaPose = Time.time;
-            if (animator == null || !TryPlayState(victoryStateName, 0.2f, out _))
+            string pose = _grupo.PoseDe(slot);
+            if (string.IsNullOrEmpty(pose)) pose = victoryStateName;
+            yield return Co_Gesto(pose, victoryAnimationDuration);
+
+            // Los compañeros que aún van de camino o con su pose.
+            float topeGrupo = Time.time + celebracionEnGrupo.topeParaLlegar + celebracionEnGrupo.topeDePose;
+            while (!_grupo.TodosListos && Time.time < topeGrupo) yield return null;
+
+            // Todos a la vez: el puño arriba.
+            if (_grupo.Companeros > 0 && !string.IsNullOrEmpty(_grupo.GestoFinal))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-                Debug.LogWarning($"[PlayerBattleMode] ⚠️ Estado '{victoryStateName}' NO encontrado en el Animator");
-#endif
+                _grupo.HacerGestoFinal();
+                yield return Co_Gesto(_grupo.GestoFinal, celebracionEnGrupo.topeDePose);
+                if (victoryFinalHoldSeconds > 0f) yield return new WaitForSeconds(victoryFinalHoldSeconds);
             }
 
-            // Aviso de «ya enfoca al jugador» (tras el blend de entrada de la cámara)
-            if (_victoryCameraActive)
-            {
-                yield return new WaitForSeconds(victoryCamBlendSeconds);
-                OnVictoryCameraFocused?.Invoke();
-            }
-
-            // Lo que dura la pose, y que la cámara haya llegado a su sitio.
+            // Lo que dura la pose como mínimo, y que la cámara haya llegado a su sitio.
             float fin = Mathf.Max(empiezaPose + victoryAnimationDuration, Time.time);
             float topeCamara = Time.time + victoryCamMoveSeconds + 2f;
             while (Time.time < fin || (_victoryCamMove != null && Time.time < topeCamara)) yield return null;
         }
 
         /// <summary>
-        /// Devuelve lo que tomó CelebrarVictoria: cámara de gameplay, input y controlador.
-        /// Idempotente.
+        /// Devuelve lo que tomó CelebrarVictoria: cámara de gameplay, input, controlador y
+        /// compañeros. Idempotente.
         /// </summary>
         public void TerminarVictoria()
         {
@@ -623,22 +653,158 @@ namespace Game.Player
             _isPlayingVictory = false;
 
             if (_victoryCamMove != null) { StopCoroutine(_victoryCamMove); _victoryCamMove = null; }
+            AterrizarSalto();
+            _grupo?.Soltar();
             DeactivateVictoryCamera();
             if (actionManager != null)
                 actionManager.PopMode(ActionMode.Cinematic);
 
+            // La capa de brazos se quedó con el último gesto: vuelve a su pose con la transición
+            // suave de UpdateLayerWeight (a la de combate si seguimos en combate).
+            if (animator != null && animator.layerCount > upperBodyLayerIndex)
+            {
+                _currentLayerWeight = animator.GetLayerWeight(upperBodyLayerIndex);
+                if (_isInBattleMode) RestoreBattleIdle();
+                else _targetLayerWeight = 0f;
+            }
+
             // La pose de victoria tiene exit time a locomoción en el Animator: no hace falta forzarla.
             if (controller != null) controller.enabled = true;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[PlayerBattleMode] ✅ Victoria terminada: control devuelto.");
 #endif
+        }
+
+        private CelebracionEnGrupo _grupo;
+        private Vector3 _focoVictoria;
+        private readonly System.Collections.Generic.List<PartyControlManager.CharacterSlot> _enLaFoto = new();
+
+        /// Quién ha salido en la última foto de victoria (el personaje al mando primero). Lo lee
+        /// el informe de fin de batalla para poner los retratos.
+        public System.Collections.Generic.IReadOnlyList<PartyControlManager.CharacterSlot> PersonajesEnLaFoto => _enLaFoto;
+
+        private void ApagarCapaDeBrazos()
+        {
+            if (animator == null || animator.layerCount <= upperBodyLayerIndex) return;
+            animator.SetLayerWeight(upperBodyLayerIndex, 0f);
+            _currentLayerWeight = 0f;
+            _targetLayerWeight = 0f;
+        }
+
+        // ── Salto con voltereta ─────────────────────────────────────────────────────────────
+        //
+        // La voltereta del Animator es «en el sitio» (sin desplazamiento): sola, se ve dar la vuelta
+        // pegado al suelo. La altura se la da esta curva, sincronizada con el tramo en el aire del
+        // clip: el cuerpo sube y baja en parábola mientras gira. Durante el salto el Rigidbody va
+        // cinemático para que la gravedad no tire en contra.
+
+        private bool _saltoEnCurso;
+        private Vector3 _sueloDelSalto;
+        private bool _cinematicoAntesDelSalto;
+
+        private IEnumerator Co_SaltoConVoltereta()
+        {
+            if (animator == null || string.IsNullOrEmpty(victoryJumpStateName)) yield break;
+            if (!TryPlayState(victoryJumpStateName, 0.1f, out int capa)) yield break;
+
+            int hash = Animator.StringToHash(victoryJumpStateName);
+            float alto = AlturaDeLaCabeza() * Mathf.Max(0f, victoryJumpHeight);
+
+            _sueloDelSalto = transform.position;
+            _saltoEnCurso = true;
+            if (playerRigidbody != null)
+            {
+                _cinematicoAntesDelSalto = playerRigidbody.isKinematic;
+                playerRigidbody.isKinematic = true;
+            }
+
+            float tope = Time.time + Mathf.Max(0.3f, victoryJumpMaxSeconds);
+            float empezar = Time.time + 0.3f;
+            bool visto = false;
+            while (Time.time < tope)
+            {
+                float t = TiempoNormalizado(capa, hash);
+                if (t >= 0f) visto = true;
+                else if (visto || Time.time > empezar) break;   // ya ha salido del salto
+                if (t >= 0.92f) break;
+
+                float subida = 0f;
+                if (t > victoryJumpAirborne.x && t < victoryJumpAirborne.y)
+                {
+                    float u = Mathf.InverseLerp(victoryJumpAirborne.x, victoryJumpAirborne.y, t);
+                    subida = alto * 4f * u * (1f - u);
+                }
+                transform.position = _sueloDelSalto + Vector3.up * subida;
+                yield return null;
+            }
+
+            AterrizarSalto();
+        }
+
+        /// Deja al jugador en el suelo de donde saltó y devuelve el Rigidbody. Idempotente.
+        private void AterrizarSalto()
+        {
+            if (!_saltoEnCurso) return;
+            _saltoEnCurso = false;
+            transform.position = _sueloDelSalto;
+            if (playerRigidbody != null)
+            {
+                playerRigidbody.isKinematic = _cinematicoAntesDelSalto;
+                if (!playerRigidbody.isKinematic) playerRigidbody.linearVelocity = Vector3.zero;
+            }
+        }
+
+        /// De los pies a la cabeza, en metros (1 si el Animator no es humanoide).
+        private float AlturaDeLaCabeza()
+        {
+            if (animator != null && animator.isHuman)
+            {
+                var cabeza = animator.GetBoneTransform(HumanBodyBones.Head);
+                if (cabeza != null)
+                {
+                    float h = cabeza.position.y - transform.position.y;
+                    if (h > 0.2f) return h;
+                }
+            }
+            return 1f;
+        }
+
+        /// Tiempo normalizado del estado en la capa (también mientras se entra en él), o -1.
+        private float TiempoNormalizado(int capa, int hash)
+        {
+            if (animator.IsInTransition(capa))
+            {
+                var siguiente = animator.GetNextAnimatorStateInfo(capa);
+                if (siguiente.shortNameHash == hash) return siguiente.normalizedTime;
+            }
+            var actual = animator.GetCurrentAnimatorStateInfo(capa);
+            return actual.shortNameHash == hash ? actual.normalizedTime : -1f;
+        }
+
+        /// Reproduce un gesto (en la capa que lo tenga; si es la de brazos, con peso 1 para que se
+        /// vea) y espera a que acabe, con tope.
+        private IEnumerator Co_Gesto(string estado, float tope)
+        {
+            if (animator == null || !TryPlayState(estado, 0.2f, out int capa)) yield break;
+            if (capa == upperBodyLayerIndex) animator.SetLayerWeight(capa, 1f);
+
+            int hash = Animator.StringToHash(estado);
+            float limite = Time.time + Mathf.Max(0.5f, tope);
+            float empezar = Time.time + 0.3f;
+            while (Time.time < limite)
+            {
+                float t = TiempoNormalizado(capa, hash);
+                if (t >= 0.95f) break;
+                if (t < 0f && Time.time > empezar) break;   // ya ha salido del gesto
+                yield return null;
+            }
         }
 
         private Coroutine _victoryCamMove;
 
         /// Plano de victoria con movimiento: de lejos, alto y de lado, a 3/4 de frente y cerca,
-        /// girando alrededor de Will y sin perderlo de vista.
+        /// girando alrededor del centro de la foto y sin perderlo de vista.
         private IEnumerator Co_MoverCamaraDeVictoria()
         {
             if (_victoryVcam == null) { _victoryCamMove = null; yield break; }
@@ -654,13 +820,15 @@ namespace Game.Player
                 t = Mathf.Min(1f, t + Time.deltaTime / dur);
                 float k = Mathf.SmoothStep(0f, 1f, t);
 
-                float yaw = Mathf.Lerp(victoryCamStartYawOffsetDeg, victoryCamYawOffsetDeg, k);
-                float dist = Mathf.Lerp(victoryCamStartDistance, victoryCamDistance, k);
+                float extra = victoryCamExtraDistancePerMember * CompanerosEnLaFoto;
+                float yaw = Mathf.Lerp(victoryCamStartYawOffsetDeg, YawFinalDeCamara, k);
+                float dist = Mathf.Lerp(victoryCamStartDistance + extra, DistanciaFinalDeCamara, k);
                 float alto = Mathf.Lerp(victoryCamStartHeight, victoryCamHeight, k);
 
+                // Alrededor del centro de la foto, que no sube ni baja con el salto.
                 Vector3 dir = Quaternion.AngleAxis(yaw, Vector3.up) * frente;
-                Vector3 pos = transform.position + dir * dist + Vector3.up * alto;
-                Vector3 mira = transform.position + Vector3.up * victoryCamLookHeight;
+                Vector3 pos = _focoVictoria + dir * dist + Vector3.up * alto;
+                Vector3 mira = PuntoDeMira(pos);
 
                 _victoryVcam.transform.SetPositionAndRotation(pos, Quaternion.LookRotation((mira - pos).normalized, Vector3.up));
                 yield return null;

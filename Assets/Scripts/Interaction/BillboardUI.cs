@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class BillboardUI : MonoBehaviour
 {
     private Camera cam;
+    float _nextCamRetry;
 
     // Compartido entre todas las instancias: evita crear un Material por cada
     // icono de interaccion y solo se resuelve una vez por sesion.
@@ -18,8 +19,13 @@ public class BillboardUI : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!cam) cam = Camera.main;
-        if (!cam) return;
+        if (!cam)
+        {
+            if (Time.unscaledTime < _nextCamRetry) return;
+            cam = Camera.main;
+            _nextCamRetry = Time.unscaledTime + 1f;
+            if (!cam) return;
+        }
 
         // Quaternion.LookRotation(forward) usa Vector3.up implícito como
         // referencia; con ángulos de cámara casi cenitales (ver
@@ -61,7 +67,7 @@ public class BillboardUI : MonoBehaviour
         var shader = Shader.Find("UI/HintAlwaysOnTop");
         if (shader == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BillboardUI] Shader 'UI/HintAlwaysOnTop' no encontrado; los iconos de interacción " +
                               "seguirán pudiendo recortarse contra geometría cercana a la cámara.");
             #endif

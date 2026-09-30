@@ -165,7 +165,7 @@ public class ChestInteractable : MonoBehaviour
     {
         if (coinsContainer == null) return;
         int i = 0;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[ChestInteractable] AnimateCoinsDisappear called");
 #endif
         foreach (Transform c in coinsContainer)
@@ -213,7 +213,7 @@ public class ChestInteractable : MonoBehaviour
             // Show coins (if any) when lid finished opening
             if (coinsContainer != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[ChestInteractable] Showing coinsContainer and animating children");
 #endif
                 coinsContainer.gameObject.SetActive(true);

@@ -4,106 +4,54 @@ using UnityEngine;
 namespace Invector.vCharacterController
 {
     /// <summary>
-    /// Controller de tercera persona con sistema de combate físico y mágico.
-    /// 
-    /// IMPORTANTE: Este controller está en el assembly de Plugins y NO debe referenciar
-    /// enums o tipos específicos del assembly principal (como MagicSlot, PlayerState, etc.).
-    /// 
-    /// Para comunicación entre assemblies, usa:
-    /// - Interfaces en el namespace global (IActionValidator, ITargetProvider, IAttackHitbox)
-    /// - Tipos primitivos (int, float, bool, string)
-    /// - El evento OnMagicSlotCast usa int: 0=Left, 1=Right, 2=Special
+    /// Controlador de tercera persona: locomoción, salto y la capa de acciones de medio cuerpo
+    /// (gestos de lanzar, defender...). No sabe nada de magia: el juego le pide que reproduzca un
+    /// estado de la capa superior con <see cref="PlayUpperBodyAction"/>.
+    ///
+    /// Vive en el ensamblado de Plugins, que compila antes que el juego: no referencia tipos del
+    /// juego. Se comunica con él mediante interfaces globales (IActionValidator) y
+    /// CharacterControllerBridge.
     /// </summary>
     public class vThirdPersonController : vThirdPersonAnimator
     {
-        [Header("Physical Attacks (Base Layer)")]
-        [SerializeField] private string[] physicalAttackStates = { "Attack1", "Attack2", "Attack3", "Attack4" };
-        [SerializeField] private float attackFade = 0.10f;
-        [SerializeField] private float physicalCooldown = 0.20f;
-
-        [Header("UpperBody Magic (use FULL PATHS)")]
-        [SerializeField] private int    upperLayerIndex        = 1;
-        [SerializeField] private string magicLeftStatePath     = "UpperBody.Magic.MagicLeft";
-        [SerializeField] private string magicRightStatePath    = "UpperBody.Magic.MagicRight";
-        [SerializeField] private string magicSpecialStatePath  = "UpperBody.Magic.MagicSpecial";
-        [SerializeField] private string upperIdlePath          = "UpperBody.UpperIdle";
-        [SerializeField] private float  magicFade              = 0.10f;
+        [Header("Capa de acciones de medio cuerpo")]
+        [SerializeField] private int upperLayerIndex = 1;
         [SerializeField, Min(0f)] private float upperLayerFadeOut = 0.22f;
 
-
-        [Header("Attack Impulse")]
-        [SerializeField] private float impulseIdle   = 2.4f;
-        [SerializeField] private float impulseMoving = 1.2f;
-        [SerializeField] private float impulseDamp   = 10f;
+        [Header("Doble salto")]
+        [Tooltip("Saltos extra que se pueden dar en el aire antes de volver a tocar suelo.")]
+        [SerializeField, Min(0)] private int airJumps = 1;
+        [Tooltip("Fuerza del salto en el aire respecto al salto desde el suelo.")]
+        [SerializeField, Range(0.3f, 1.5f)] private float airJumpImpulseFactor = 0.9f;
 
         [Header("SFX")]
         [SerializeField] private AudioClip jumpSfx;
-        [SerializeField] private AudioClip landSfx;
-        [SerializeField] private AudioClip attackSfx;
         [SerializeField] private float sfxVolume = 1f;
 
-        [Header("Debug")]
-        [SerializeField] private bool debugLogs = false;
-
-        // ---- Eventos ----
         /// <summary>
-        /// Evento disparado al lanzar magia. Usa int en lugar de enum para evitar dependencias:
-        /// 0 = Left, 1 = Right, 2 = Special
+        /// Se pulsa saltar en el aire sin saltos extra disponibles (tras el doble salto).
+        /// PlayerFlyingController lo usa para echar a volar.
         /// </summary>
-        public System.Action<int> OnMagicSlotCast;
-        
-        /// <summary>
-        /// Evento disparado cuando termina la animación de magia en la capa superior.
-        /// Útil para que otros sistemas (como PlayerBattleModeController) restauren estados.
-        /// </summary>
-        public System.Action OnMagicCastAnimationEnded;
+        public event System.Action OnJumpPressedWithoutAirJumps;
 
-        // ---- Runtime ----
-        private int nextPhysicalIndex = 0;
-        private float nextPhysicalTime = 0f;
-        private Vector3 extraImpulse = Vector3.zero;
-        private Coroutine upperWeightCo;
-        private bool wasGrounded = true;
-
-        [SerializeField] private bool autoAimMelee = true;
-        private ITargetProvider _targeting;
-        
         /// <summary>
-        /// Referencia a IActionValidator (interfaz del namespace global).
-        /// Permite validar acciones sin depender de enums del assembly principal.
-        /// Es opcional, el sistema funciona sin él.
+        /// Se lanza cuando la capa superior termina la acción pedida con PlayUpperBodyAction y su
+        /// peso vuelve a cero. PlayerBattleModeController lo usa para volver a la pose de combate.
         /// </summary>
+        public System.Action OnUpperBodyActionEnded;
+
+        private Coroutine upperBodyCo;
         private IActionValidator _actionValidator;
-
-        // Referencia a IMagicCaster (más robusta que la reflexión)
-        private IMagicCaster _magicCasterInterface;
-        // TEMPORAL: Sistema directo mientras Unity recompila las interfaces
-        private MonoBehaviour _magicCasterMB; // Referencia temporal como MonoBehaviour (fallback)
 
         // ========================= Motor base =========================
         public virtual void ControlAnimatorRootMotion()
         {
             if (!this.enabled) return;
 
-            // FIX (16 ago 2026): "se sienta/tumba y enseguida se pone a flotar" en las camas/
-            // asientos interactivos (NPCWorldPoint + PlayerAmbientActivityHandler) — causa real,
-            // encontrada leyendo este método, no adivinada. Este resync NO comprobaba
-            // lockMovement (el propio comentario de ResetInputSmoothing() en vThirdPersonMotor.cs
-            // y el de PlayerLockService.ApplyHardLock() ya avisaban de este hueco: "el snap-sync
-            // ... solo ocurre cuando inputSmooth == Vector3.zero exactamente"). En cuanto
-            // PlayerAmbientActivityHandler.SnapToSeat() suprime el input (SuppressMoveInput +
-            // MoveInput()), inputSmooth llega a cero en un puñado de frames — y la línea de abajo
-            // pisa transform.position con el animator.rootPosition de ESTE Animator (el de la raíz
-            // del jugador, que este motor usa solo para tracking de root motion; el Animator
-            // VISIBLE que reproduce Sleeping_NoWeapon/Sit*_Loop vive en el hijo "model" y es un
-            // componente distinto — ver el comentario de SleepTrigger.SetupSleep() sobre
-            // GetComponentInChildren<Animator>). Como nada mueve el rootPosition de ESTE Animator
-            // a la posición del asiento/cama, este snap-back devuelve al jugador a donde estaba
-            // ANTES de sentarse/tumbarse — visualmente, "flotando" sobre la cama. Bloquearlo
-            // mientras lockMovement esté activo evita que este resync automático pelee con el
-            // snap manual que hace PlayerAmbientActivityHandler.SnapToSeat()/SleepTrigger.SetupSleep()
-            // justo después. Arreglado aquí (fuente común) en vez de en cada llamador, para que
-            // cubra automáticamente a cualquiera que use lockMovement en el futuro.
+            // Con lockMovement no se resincroniza con el root del Animator: quien bloquea (asientos,
+            // camas, cinemáticas) coloca al jugador a mano, y este resync lo devolvería a donde
+            // estaba antes. El Animator visible vive en el hijo "model"; el de la raíz solo sigue el
+            // root motion.
             if (lockMovement) return;
 
             if (inputSmooth == Vector3.zero)
@@ -112,7 +60,7 @@ namespace Invector.vCharacterController
                 transform.rotation = animator.rootRotation;
             }
 
-            if (useRootMotion) ApplyMove(moveDirection);
+            if (useRootMotion) MoveCharacter(moveDirection);
         }
 
         public virtual void ControlLocomotionType()
@@ -131,12 +79,13 @@ namespace Invector.vCharacterController
                 SetAnimatorMoveSpeed(strafeSpeed);
             }
 
-            if (!useRootMotion) ApplyMove(moveDirection);
+            if (!useRootMotion) MoveCharacter(moveDirection);
         }
 
         public virtual void ControlRotationType()
         {
             if (lockRotation) return;
+            if (ApplyCommitFacing()) return;
 
             bool validInput = input != Vector3.zero || (isStrafing ? strafeSpeed.rotateWithCamera : freeSpeed.rotateWithCamera);
 
@@ -170,7 +119,6 @@ namespace Invector.vCharacterController
 
         public virtual void Sprint(bool value)
         {
-            // Verificar permiso del ActionValidator
             if (_actionValidator != null && !_actionValidator.CanSprint()) return;
 
             var sprintConditions = (input.sqrMagnitude > 0.1f && isGrounded &&
@@ -190,23 +138,50 @@ namespace Invector.vCharacterController
 
         public virtual void Strafe() => isStrafing = !isStrafing;
 
-        public virtual void Jump()
+        /// <summary>Salto desde el suelo.</summary>
+        public virtual void Jump() => DoJump(1f);
+
+        /// <summary>
+        /// Pulsación de salto en el aire: doble salto si quedan saltos extra; si no, avisa con
+        /// OnJumpPressedWithoutAirJumps (vuelo). Sin efecto con el controlador deshabilitado o en
+        /// vuelo (suppressAirMovement).
+        /// </summary>
+        public void JumpInAir()
         {
-            // Verificar permiso del ActionValidator
+            if (!enabled || suppressAirMovement) return;
             if (_actionValidator != null && !_actionValidator.CanJump()) return;
+
+            if (airJumpsUsed < airJumps)
+            {
+                airJumpsUsed++;
+                DoJump(airJumpImpulseFactor);
+            }
+            else
+            {
+                OnJumpPressedWithoutAirJumps?.Invoke();
+            }
+        }
+
+        private void DoJump(float impulseFactor, bool ignoreValidator = false)
+        {
+            if (!ignoreValidator && _actionValidator != null && !_actionValidator.CanJump()) return;
+
+            // Saltar cancela el compromiso de un ataque o lanzamiento y el sostén en el aire.
+            CancelActionCommit();
+            CancelAirHold();
 
             jumpCounter = jumpTimer;
             isJumping = true;
-            
-            // Impulso inicial real al despegar para evitar sensación de "pegado al suelo".
-            // El sustain del motor seguirá modulando la curva del salto en frames siguientes.
+
+            // Impulso real al despegar para que no se sienta pegado al suelo; el sustain del motor
+            // modula la curva del salto en los fotogramas siguientes.
             if (_rigidbody != null)
             {
                 var vel = _rigidbody.linearVelocity;
                 float actionRPGMinImpulse = useActionRPGJump ? 7.6f : 0f;
-                float baseJumpImpulse = Mathf.Max(jumpHeight * jumpTakeoffBoost, minJumpTakeoffSpeed, actionRPGMinImpulse);
+                float baseJumpImpulse = Mathf.Max(jumpHeight * jumpTakeoffBoost, minJumpTakeoffSpeed, actionRPGMinImpulse) * impulseFactor;
 
-                // Si llega con velocidad negativa por pendiente/step, limpiamos antes del despegue.
+                // Si llega con velocidad negativa por pendiente o escalón, se limpia antes del despegue.
                 if (vel.y < 0f)
                     vel.y = 0f;
 
@@ -221,162 +196,110 @@ namespace Invector.vCharacterController
                 }
             }
 
-            // Play jump SFX
             if (jumpSfx != null)
-                PlaySFX(jumpSfx);
+                CharacterControllerBridge.PlaySfx?.Invoke(jumpSfx, sfxVolume, transform.position);
 
             if (input.sqrMagnitude < 0.1f) animator.CrossFadeInFixedTime("Jump", 0.05f, 0);
             else                            animator.CrossFadeInFixedTime("JumpMove", 0.07f, 0);
         }
 
-        private void ApplyMove(Vector3 dir)
+        // ========================= Capa de medio cuerpo =========================
+
+        /// <summary>
+        /// Reproduce un estado de la capa superior (ruta completa, p. ej. "UpperBody.Magic.MagicLeft")
+        /// con peso 1 y, cuando el Animator sale de él por su Exit Time, baja el peso suavemente y
+        /// lanza <see cref="OnUpperBodyActionEnded"/>. Una acción nueva sustituye a la anterior.
+        /// </summary>
+        public void PlayUpperBodyAction(string fullPath)
         {
-            if (extraImpulse.sqrMagnitude > 0.0001f)
-            {
-                dir += extraImpulse;
-                extraImpulse = Vector3.Lerp(extraImpulse, Vector3.zero, Time.deltaTime * impulseDamp);
-            }
-            MoveCharacter(dir);
-        }
+            if (animator == null || string.IsNullOrEmpty(fullPath)) return;
 
-        // ========================= Ataque físico =========================
-        public virtual void AttackPhysical()
-        {
-            // Verificar permiso del ActionValidator
-            if (_actionValidator != null && !_actionValidator.CanAttack()) return;
-            if (!CanAttack() || Time.time < nextPhysicalTime) return;
-
-            string state = (physicalAttackStates != null && physicalAttackStates.Length > 0)
-                ? physicalAttackStates[Mathf.Clamp(nextPhysicalIndex, 0, physicalAttackStates.Length - 1)]
-                : "Attack1";
-
-            if (autoAimMelee && _targeting != null && _targeting.TryGetTarget(out var t))
-            {
-                Vector3 to = t.position - transform.position;
-                to.y = 0f;
-                if (to.sqrMagnitude > 0.0001f)
-                    transform.rotation = Quaternion.LookRotation(to.normalized, Vector3.up);
-            }
-
-            animator.CrossFadeInFixedTime(state, attackFade, 0);
-
-            // Play attack SFX
-            if (attackSfx != null)
-                PlaySFX(attackSfx);
-
-            var hitbox = GetComponentInChildren<IAttackHitbox>(true);
-            if (hitbox != null) hitbox.ArmForSeconds(0.25f);
-
-            nextPhysicalIndex = (nextPhysicalIndex + 1) % physicalAttackStates.Length;
-            nextPhysicalTime  = Time.time + physicalCooldown;
-
-            Vector3 fwd = Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-            float strength = (input.sqrMagnitude > 0.1f) ? impulseMoving : impulseIdle;
-            extraImpulse += fwd * strength;
-        }
-
-        // ======== MAGIA (Left / Right / Special) ========
-
-        private Coroutine magicCo;
-
-        // Input → X/B/Y
-        public void CastMagicLeft()    => TryCastMagic(magicLeftStatePath, 0);
-        public void CastMagicRight()   => TryCastMagic(magicRightStatePath, 1);
-        // Special slot id is 2 (0=Left, 1=Right, 2=Special)
-        public void CastMagicSpecial() => TryCastMagic(magicSpecialStatePath, 2);
-
-        private void TryCastMagic(string fullPath, int slotId)
-        {
-            // Verificar permiso del ActionValidator
-            if (_actionValidator != null && !_actionValidator.CanCastMagic()) return;
-
-            // FIX INC-012: CanAttack() exige isGrounded (ver más abajo), lo cual es correcto en
-            // tierra pero impedía SIEMPRE lanzar magia mientras se vuela (isGrounded es false, y
-            // además queda "congelado" porque este controlador se deshabilita durante el vuelo,
-            // así que ni siquiera se refresca). El vuelo ya tiene su propia validación de permisos
-            // vía _actionValidator.CanCastMagic(), así que solo pedimos CanAttack() cuando NO
-            // se está volando.
-            bool isFlying = _actionValidator != null && _actionValidator.IsFlying();
-            if (!isFlying && !CanAttack()) return;
-
-            // Si es un hechizo de levitación, no procesarlo aquí (lo maneja PlayerLevitationController)
-            if (_magicCasterInterface != null && _magicCasterInterface.IsLevitationSpell(slotId))
-            {
-                if (debugLogs) Debug.Log($"[vThirdPersonController] Slot {slotId} es Levitación, ignorando (manejado por PlayerLevitationController)");
-                return;
-            }
-
-            // TEMPORAL: Buscar MagicCaster por nombre de componente
-            bool canCast = false;
-            if (_magicCasterInterface != null)
-            {
-                canCast = _magicCasterInterface.TryCastSpell(slotId);
-            }
-            else if (_magicCasterMB != null)
-            {
-                // Usar reflexión para llamar TryCastSpell como fallback
-                var method = _magicCasterMB.GetType().GetMethod("TryCastSpell", new[] { typeof(int) });
-                if (method != null)
-                {
-                    canCast = (bool)method.Invoke(_magicCasterMB, new object[] { slotId });
-                }
-            }
-            else
-            {
-                // Fallback: usar el sistema anterior si no hay MagicCaster
-                OnMagicSlotCast?.Invoke(slotId);
-                canCast = true; // Asumimos que el casting es válido
-            }
-
-            // Solo reproducir animación si el casting fue exitoso
-            if (canCast)
-                PlayUpperAnimationAndExit(fullPath);
-        }
-
-        private void PlayUpperAnimationAndExit(string fullPath)
-        {
-            // Proteger contra Animator destruido
-            if (animator == null)
-            {
-                if (debugLogs) Debug.LogWarning("PlayUpperAnimationAndExit called but animator is null/destroyed");
-                return;
-            }
-
-            // Subimos el peso del layer y ENTRAMOS directo al estado (sin CrossFade)
-            if (magicCo != null) { StopCoroutine(magicCo); magicCo = null; }
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
             animator.SetLayerWeight(upperLayerIndex, 1f);
             animator.Play(fullPath, upperLayerIndex, 0f);
 
-            // Esperamos a que el Animator SALGA del estado y bajamos el layer suave
-            magicCo = StartCoroutine(Co_WaitAnimatorExitThenLowerLayer(Animator.StringToHash(fullPath)));
+            upperBodyCo = StartCoroutine(Co_WaitStateExitThenLowerLayer(Animator.StringToHash(fullPath)));
         }
 
-        private System.Collections.IEnumerator Co_WaitAnimatorExitThenLowerLayer(int targetHash)
+        /// <summary>
+        /// Mantiene una pose en la capa superior (ruta completa) con peso 1 y sin bajarla sola: para
+        /// poses sostenidas como la del combo mágico. Se sale con <see cref="PlayUpperBodyAction"/>
+        /// (un gesto que sí baja la capa al acabar) o con <see cref="ReleaseUpperBodyPose"/>.
+        /// </summary>
+        public void HoldUpperBodyPose(string fullPath, float crossfade = 0.15f)
+        {
+            if (animator == null || string.IsNullOrEmpty(fullPath)) return;
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
+            animator.SetLayerWeight(upperLayerIndex, 1f);
+            animator.CrossFadeInFixedTime(fullPath, crossfade, upperLayerIndex);
+        }
+
+        /// <summary>
+        /// Pone un estado de la capa superior durante 'seconds' y luego baja la capa, aunque el estado
+        /// no tenga salida (poses como FoundSomething, brazos arriba). Para gestos de hechizo de área.
+        /// </summary>
+        public void PlayUpperBodyActionFor(string fullPath, float seconds, float crossfade = 0.1f)
+        {
+            if (animator == null || string.IsNullOrEmpty(fullPath)) return;
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
+            animator.SetLayerWeight(upperLayerIndex, 1f);
+            animator.CrossFadeInFixedTime(fullPath, crossfade, upperLayerIndex);
+            upperBodyCo = StartCoroutine(Co_HoldThenLower(seconds));
+        }
+
+        private IEnumerator Co_HoldThenLower(float seconds)
+        {
+            yield return new WaitForSeconds(Mathf.Max(0f, seconds));
+            upperBodyCo = null;
+            ReleaseUpperBodyPose();
+        }
+
+        /// <summary>Saltito desde el suelo (impulso relativo al salto normal). Para lanzar hechizos de área.</summary>
+        public bool Hop(float impulseFactor)
+        {
+            if (!isGrounded || isJumping) return false;
+            // Es parte del gesto del hechizo, no un salto del jugador: no depende de tener el salto.
+            DoJump(impulseFactor, ignoreValidator: true);
+            return true;
+        }
+
+        /// <summary>Suelta una pose sostenida bajando la capa superior suavemente.</summary>
+        public void ReleaseUpperBodyPose()
+        {
+            if (animator == null) return;
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
+            upperBodyCo = StartCoroutine(Co_LowerLayer());
+        }
+
+        private IEnumerator Co_LowerLayer()
+        {
+            int layer = upperLayerIndex;
+            float t = 0f, start = animator.GetLayerWeight(layer);
+            while (t < upperLayerFadeOut && animator != null)
+            {
+                t += Time.deltaTime;
+                animator.SetLayerWeight(layer, Mathf.Lerp(start, 0f, t / upperLayerFadeOut));
+                yield return null;
+            }
+            if (animator != null) animator.SetLayerWeight(layer, 0f);
+            upperBodyCo = null;
+            OnUpperBodyActionEnded?.Invoke();
+        }
+
+        private IEnumerator Co_WaitStateExitThenLowerLayer(int targetHash)
         {
             int layer = upperLayerIndex;
 
-            // Esperar a ENTRAR realmente en el estado
+            // Esperar a entrar de verdad en el estado.
             while (animator != null && animator.GetCurrentAnimatorStateInfo(layer).fullPathHash != targetHash)
                 yield return null;
+            if (animator == null) { upperBodyCo = null; yield break; }
 
-            if (animator == null)
-            {
-                // Animator fue destruido, limpiar y salir
-                magicCo = null;
-                yield break;
-            }
-
-            // Esperar a SALIR del estado por Exit Time (no cortamos el clip)
+            // Esperar a que salga por su Exit Time (el clip no se corta).
             while (animator != null && animator.GetCurrentAnimatorStateInfo(layer).fullPathHash == targetHash)
                 yield return null;
+            if (animator == null) { upperBodyCo = null; yield break; }
 
-            if (animator == null)
-            {
-                magicCo = null;
-                yield break;
-            }
-
-            // Desvanecer peso del layer superior
             float t = 0f, start = animator.GetLayerWeight(layer);
             while (t < upperLayerFadeOut)
             {
@@ -387,99 +310,28 @@ namespace Invector.vCharacterController
             }
 
             if (animator != null) animator.SetLayerWeight(layer, 0f);
-            magicCo = null;
-            
-            // Notificar que la animación de magia terminó
-            OnMagicCastAnimationEnded?.Invoke();
+            upperBodyCo = null;
+
+            OnUpperBodyActionEnded?.Invoke();
         }
 
-        // ========================= Lifecycle =========================
+        // ========================= Ciclo de vida =========================
         private void Start()
         {
-            _targeting = GetComponent<ITargetProvider>();
-            // Buscar el ActionValidator (opcional, el sistema funciona sin él)
             _actionValidator = GetComponent<IActionValidator>();
-
-            // TEMPORAL: Buscar MagicCaster por nombre de componente
-            // Intentar obtener una referencia por la interfaz IMagicCaster (más robusto)
-            _magicCasterInterface = GetComponent<IMagicCaster>();
-            if (_magicCasterInterface == null)
-                _magicCasterInterface = GetComponentInParent<IMagicCaster>();
-
-            // Si no hay interfaz, mantener el fallback de buscar MonoBehaviour por nombre
-            if (_magicCasterInterface == null)
-            {
-                var allComponents = GetComponents<MonoBehaviour>();
-                foreach (var comp in allComponents)
-                {
-                    if (comp.GetType().Name == "MagicCaster")
-                    {
-                        _magicCasterMB = comp;
-                        break;
-                    }
-                }
-
-                if (_magicCasterMB == null)
-                {
-                    var parentComponents = GetComponentsInParent<MonoBehaviour>();
-                    foreach (var comp in parentComponents)
-                    {
-                        if (comp.GetType().Name == "MagicCaster")
-                        {
-                            _magicCasterMB = comp;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // Log diagnóstico para ayudar a verificar en consola si el controller encontró el caster
-            //Debug.Log($"[vThirdPersonController] MagicCaster detected -> interface={( _magicCasterInterface != null ? "yes" : "no" )}, mb={( _magicCasterMB != null ? _magicCasterMB.GetType().Name : "no" )}");
         }
 
-        public virtual bool CanAttack() => isGrounded && !isJumping && !stopMove;
-
-        // ========================= SFX Helper =========================
-        private void PlaySFX(AudioClip clip)
-        {
-            if (clip == null) return;
-            
-            // Try to use AudioService via reflection (avoid hard dependency on main assembly)
-            var audioServiceType = System.Type.GetType("AudioService");
-            if (audioServiceType != null)
-            {
-                var instanceProperty = audioServiceType.GetProperty("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                if (instanceProperty != null)
-                {
-                    var instance = instanceProperty.GetValue(null);
-                    if (instance != null)
-                    {
-                        var playSfxMethod = audioServiceType.GetMethod("PlaySFX", new System.Type[] { typeof(AudioClip), typeof(float), typeof(Vector3) });
-                        if (playSfxMethod != null)
-                        {
-                            playSfxMethod.Invoke(instance, new object[] { clip, sfxVolume, transform.position });
-                            return;
-                        }
-                    }
-                }
-            }
-            
-            // Fallback: play at point
-            AudioSource.PlayClipAtPoint(clip, transform.position, sfxVolume);
-        }
-
-        // ========================= Lifecycle =========================
-        // Limpiar coroutine y asegurar que el peso del layer no quede atascado si el objeto se desactiva o destruye
+        // Si el objeto se desactiva o destruye a mitad de una acción, la corrutina no termina:
+        // se para aquí y el peso de la capa no se queda atascado.
         private void OnDisable()
         {
-            if (magicCo != null) { StopCoroutine(magicCo); magicCo = null; }
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
             if (animator != null) animator.SetLayerWeight(upperLayerIndex, 0f);
         }
 
         private void OnDestroy()
         {
-            if (magicCo != null) { StopCoroutine(magicCo); magicCo = null; }
-            // No podemos tocar animator si ya fue destruido, la comprobación es redundante pero segura
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
             if (animator != null) animator.SetLayerWeight(upperLayerIndex, 0f);
         }
     }

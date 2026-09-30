@@ -30,7 +30,7 @@ namespace Game.NPC.States
         // ambiente no tiene NPCTeamMember, así que el GetComponent fallaba constantemente y
         // aparecía como GC.Alloc en el profiler (NPCBehaviourManagerV2.Update -> CheckPlayerDetection).
         private NPCTeamMember _teamMember;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         private bool _loggedCombatBlockThisIdle; // evita spam: solo un log por bloqueo, no por frame
 #endif
 
@@ -179,7 +179,7 @@ namespace Game.NPC.States
             if (!teammateAlreadyFighting
                 && ActiveCombatRegistry.HasActiveCombatExcluding(context.Transform.gameObject))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 // 🔍 DIAGNÓSTICO (incidencia recurrente "no me detectan" - Lety/Vicky y otros):
                 // este early-return era totalmente silencioso, así que cada vez que el bloqueo
                 // global de combate (un solo combate activo a la vez, ver ActiveCombatRegistry)
@@ -197,7 +197,7 @@ namespace Game.NPC.States
 #endif
                 return;
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             _loggedCombatBlockThisIdle = false;
 #endif
 

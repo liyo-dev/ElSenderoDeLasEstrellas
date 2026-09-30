@@ -22,7 +22,7 @@ public class DebugInventoryAdder : MonoBehaviour
         {
             if (item == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DebugInventoryAdder] No ItemData assigned.");
 #endif
                 return;
@@ -31,13 +31,13 @@ public class DebugInventoryAdder : MonoBehaviour
             if (PlayerService.TryGetComponent<Inventory>(out var inv, includeInactive: true, allowSceneLookup: true))
             {
                 inv.Add(item, amount);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[DebugInventoryAdder] Added {amount} {item.displayName} to Inventory '{inv.gameObject.name}'");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[DebugInventoryAdder] Inventory not found via PlayerService.");
 #endif
             }
@@ -51,14 +51,14 @@ public class DebugInventoryAdder : MonoBehaviour
 #endif
                 if (queue != null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[DebugInventoryAdder] Forcing TestSpawn on CollectiblePopupQueue");
 #endif
                     queue.TestSpawn(item, amount);
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning("[DebugInventoryAdder] No CollectiblePopupQueue found in scene.");
 #endif
                 }

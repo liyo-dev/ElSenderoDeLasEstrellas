@@ -18,11 +18,14 @@ MonoBehaviour:
   currentHP: 100
   maxMP: 0
   currentMP: 0
+  ataque: 0
+  defensa: 0
   unlockedAbilities: 
   unlockedSpells: 
-  leftSpellId: 0
-  rightSpellId: 0
-  specialSpellId: 0
+  basicSpellIds: 
+  legacyLeftSpellId: 0
+  legacyRightSpellId: 0
+  legacySpecialSpellId: 0
   flags: []
   abilities:
     swim: 0
@@ -49,4 +52,10 @@ MonoBehaviour:
   defeatedBossIds: []
   narrativeBlackboards: []
   npcPositions: []
+  npcRelationships: []
   consumedInteractableIds: []
+  completedInteractiveNarratives: []
+  seenLorePopupIds: []
+  partyMemberIds: []
+  activeCharacterSlot: 1
+  unlockedTeleportPoints: []

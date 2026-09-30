@@ -16,7 +16,6 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
 
     private Animator _animator;
     private PlayerActionManager _actionManager;
-    private PlayerFlyingController _flyingController;
     private CharacterController _cc;
     private Rigidbody _rb;
     private Invector.vCharacterController.vThirdPersonMotor _motor;
@@ -51,7 +50,6 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     {
         _animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
         _actionManager = GetComponent<PlayerActionManager>();
-        _flyingController = GetComponent<PlayerFlyingController>();
         _cc = GetComponent<CharacterController>() ?? GetComponentInChildren<CharacterController>();
         _rb = GetComponent<Rigidbody>() ?? GetComponentInChildren<Rigidbody>();
         _motor = GetComponent<Invector.vCharacterController.vThirdPersonMotor>();
@@ -147,16 +145,13 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
     {
         if (_currentWorldPoint != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[PlayerAmbientActivityHandler] Ya hay una actividad activa, ignorando nueva petición.");
 #endif
             return;
         }
 
         _currentWorldPoint = worldPoint;
-
-        // Cancelar cualquier "doble salto armado" para que no dispare vuelo al levantarse
-        _flyingController?.CancelFlightArming();
 
         // Bloquear movimiento, salto, ataques, etc.
         _actionManager?.PushMode(ActionMode.UsingWorldPoint);
@@ -337,7 +332,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
         string loopState  = GetActivityLoopState(activity);
         int layer = GetActivityLayer(activity);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PlayerAmbientActivityHandler] Actividad: {activity} | Begin='{beginState}' (existe={HasState(beginState, layer)}) | Loop='{loopState}' (existe={HasState(loopState, layer)}) | Layer={layer} | Animator={_animator?.name}");
         if (_animator != null)
         {
@@ -436,7 +431,7 @@ public class PlayerAmbientActivityHandler : MonoBehaviour
                 return;
             }
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[PlayerAmbientActivityHandler] ReturnAnimatorToLocomotion: ningún estado de locomoción encontrado, el Animator puede quedarse pillado en la pose de sentado.");
 #endif
     }

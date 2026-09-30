@@ -42,7 +42,7 @@ namespace EasyTransition
             //Checking if the materials were correctly set
             if (multiplyColorMaterial == null || additiveColorMaterial == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("There are no color tint materials set for the transition. Changing the color tint will not affect the transition anymore!");
 #endif
                 }

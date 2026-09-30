@@ -82,7 +82,7 @@ public class ActivationCounter : MonoBehaviour
             currentCount = requiredCount;
             onRequirementMet.Invoke();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ActivationCounter] {name}: restaurado desde preset.");
 #endif
         }
@@ -97,7 +97,7 @@ public class ActivationCounter : MonoBehaviour
 
         currentCount++;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActivationCounter] {name}: {currentCount}/{requiredCount}");
 #endif
 
@@ -124,7 +124,7 @@ public class ActivationCounter : MonoBehaviour
         if (currentCount < requiredCount)
             _isComplete = false;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActivationCounter] {name}: decremento → {currentCount}/{requiredCount}");
 #endif
     }
@@ -153,7 +153,7 @@ public class ActivationCounter : MonoBehaviour
         if (!preset.flags.Contains(flag))
             preset.flags.Add(flag);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ActivationCounter] Flag '{flag}' guardada en preset.");
 #endif
     }
@@ -161,9 +161,7 @@ public class ActivationCounter : MonoBehaviour
     string ResolveId()
     {
         if (!string.IsNullOrEmpty(persistenceIdOverride)) return persistenceIdOverride;
-        var scene = gameObject.scene.IsValid() ? gameObject.scene.name : "Unknown";
-        var pos = transform.position;
-        return $"{scene}_{gameObject.name}_{pos.x:F1}_{pos.y:F1}_{pos.z:F1}";
+        return IdDePersistencia.DeObjeto(gameObject);
     }
 
 #if UNITY_EDITOR

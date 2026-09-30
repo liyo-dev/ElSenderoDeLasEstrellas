@@ -84,13 +84,13 @@ public class Burnable : MonoBehaviour
         
         if (!canBurn)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Burnable] {gameObject.name} no puede ser quemado con {element}");
 #endif
             return;
         }
         
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[Burnable] 🔥 {gameObject.name} está siendo quemado con {element}!");
 #endif
         
@@ -170,7 +170,7 @@ public class Burnable : MonoBehaviour
                     Destroy(meshRenderer.gameObject, destroyDelay);
                 }
                 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Burnable] 🔥 Destruyendo hijo con mesh: {meshRenderer.gameObject.name}");
 #endif
             }
@@ -193,7 +193,7 @@ public class Burnable : MonoBehaviour
                         Destroy(meshFilter.gameObject, destroyDelay);
                     }
                     
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[Burnable] 🔥 Destruyendo hijo con mesh filter: {meshFilter.gameObject.name}");
 #endif
                 }

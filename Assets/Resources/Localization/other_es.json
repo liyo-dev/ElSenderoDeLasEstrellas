@@ -47,6 +47,10 @@
         {
             "key": "TUTORIAL_MINIMAP_ELDRAN",
             "value": "Sigue el marcador hasta Eldran.\nPulsa {BOTON} para abrir el mapa."
+        },
+        {
+            "key": "BIGMAP_HINT",
+            "value": "<sprite name=\"interactable_Joystick\"> Mover    <sprite name=\"interactable_lb\"><sprite name=\"interactable_rb\"> Zoom    <sprite name=\"interactable_confirm\"> Centrar    <sprite name=\"interactable_select\"> Cerrar"
         }
     ]
 }

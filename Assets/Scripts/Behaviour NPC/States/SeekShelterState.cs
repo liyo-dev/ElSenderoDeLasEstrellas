@@ -84,7 +84,7 @@ namespace Game.NPC.States
             {
                 // No hay refugio libre en rango: quedarse en Idle bajo la lluvia en vez de forzar
                 // un comportamiento sin sentido (vagar buscando algo que no existe).
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 LogNoShelterFound(context);
 #endif
                 context.Brain?.ChangeState(new IdleState());
@@ -138,7 +138,7 @@ namespace Game.NPC.States
                         // El NavMeshAgent ha llegado al borde del área caminable, pero el punto
                         // real sigue más adentro (típico bajo copas de árbol, ver
                         // NPCStateBase.BeginManualApproach): completar el resto a mano.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         float verticalDiff = truePos.y - context.Transform.position.y;
                         if (Mathf.Abs(verticalDiff) > 0.3f)
                         {
@@ -229,7 +229,7 @@ namespace Game.NPC.States
             _arrived = true;
             context.CurrentShelter = _shelterPoint;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             // Diagnóstico (14 ago 2026): Arrive() no dejaba ningún rastro en consola al llegar,
             // así que "entra en SeekShelter y sale enseguida sin refugiarse" (p.ej. porque dejó de
             // llover a mitad de camino, ShouldSeekShelter pasa a false y CheckTransitions manda
@@ -282,7 +282,7 @@ namespace Game.NPC.States
             _nextGestureTimer = Random.Range(MinGestureInterval, MaxGestureInterval);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico añadido tras el aviso de Raúl (14 ago 2026) de que ningún NPC del pueblo
         // llegaba a los NPCShelterPoint recién recolocados bajo GO con techo: antes de este log,
         // "no hay refugio libre en rango" era un fallo silencioso (se volvía a IdleState sin

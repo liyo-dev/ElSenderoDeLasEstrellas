@@ -48,7 +48,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
 
         if (ui == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[ShowSpeechBubbleNode] ❌ SpeechBubbleUI.Instance es NULL. " +
                            "Añade el prefab al Canvas persistente en Start.unity.");
 #endif
@@ -62,7 +62,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
 
         if (target == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[ShowSpeechBubbleNode] ❌ No se encontró objeto con tag '{targetTag}'.");
 #endif
             onReadyToAdvance?.Invoke();

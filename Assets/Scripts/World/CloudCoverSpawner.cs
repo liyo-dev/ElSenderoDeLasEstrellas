@@ -270,7 +270,7 @@ public class CloudCoverSpawner : MonoBehaviour
             dayNightCycle.CloudsBuildingUp += HandleCloudsBuildingUp;
             dayNightCycle.RainStopped += HandleRainStopped;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning("[CloudCoverSpawner] No se encontró ningún DayNightCycle en la escena; el techo de nubes nunca se activará.");
@@ -729,7 +729,7 @@ public class CloudCoverSpawner : MonoBehaviour
         _safetyHeightBonus = deficit;
         _root.position += Vector3.up * deficit;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[CloudCoverSpawner] El techo de nubes no dejaba suficiente margen sobre el jugador (faltaban {deficit:F1} unidades); se ha subido automáticamente. Considera aumentar cloudHeight o reducir scaleRange para no depender de esta corrección.");
 #endif
     }

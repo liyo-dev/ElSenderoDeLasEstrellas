@@ -253,7 +253,7 @@ namespace Game.NPC.Modules
         /// </summary>
         public bool ProcessInteraction(GameObject interactor, Common.NPCStateContext context)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.ProcessInteraction] Iniciando interacción con NPC. Interactor: {interactor?.name}, Context válido: {context != null}");
             
             // ✅ Activar animación de hablar/interactuar
@@ -265,7 +265,7 @@ namespace Game.NPC.Modules
             var qm = QuestManager.Instance;
             if (qm == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[NPCQuestConfig] QuestManager.Instance es null");
 #endif
                 return false;
@@ -273,14 +273,14 @@ namespace Game.NPC.Modules
 
             if (questChain == null || questChain.Length == 0)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[NPCQuestConfig] questChain vacío");
 #endif
                 return false;
             }
 
             // Buscar quest activa en la cadena (de atrás hacia adelante)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.ProcessInteraction] Escaneando cadena ({questChain.Length} entradas) de atrás hacia adelante:");
 #endif
             for (int i = questChain.Length - 1; i >= 0; i--)
@@ -288,7 +288,7 @@ namespace Game.NPC.Modules
                 var entry = questChain[i];
                 if (entry?.questData == null)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"  [{i}] questData NULL - skip");
                     #endif
                     continue;
@@ -298,7 +298,7 @@ namespace Game.NPC.Modules
                 var state = qm.GetState(questId);
                 if (state == QuestState.Active || state == QuestState.Completed)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCQuestConfig.ProcessInteraction] → Seleccionada entrada [{i}] quest={questId} estado={state}");
 #endif
                     HandleQuestState(qm, entry, questId, state, context);
@@ -318,7 +318,7 @@ namespace Game.NPC.Modules
                     // Sin unlockRequirement configurado, esto es un no-op y no cambia nada.
                     if (!IsUnlockRequirementSatisfied(first))
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCQuestConfig] Quest '{first.questData.questId}' bloqueada por unlockRequirement — mostrando dlgLocked");
 #endif
                         PlayDialogue(first.dlgLocked, context);
@@ -349,7 +349,7 @@ namespace Game.NPC.Modules
                     else
                     {
                         // Sin diálogo, NO iniciar automáticamente (se iniciará desde otro lado)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCQuestConfig] Quest '{first.questData.questId}' sin dlgBefore - no se inicia automáticamente");
 #endif
                     }
@@ -401,7 +401,7 @@ namespace Game.NPC.Modules
                                 else
                                 {
                                     // No tiene los items -> mostrar diálogo in progress
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                                     Debug.Log($"[NPCQuestConfig] Quest '{questId}' - AutoCompleteOnTalk bloqueado: faltan items requeridos");
 #endif
                                     PlayDialogue(entry.dlgInProgress, context);
@@ -465,7 +465,7 @@ namespace Game.NPC.Modules
             // Obtener el inventario del jugador
             if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCQuestConfig] No se encontró Inventory del jugador para verificar items");
 #endif
                 return false;
@@ -477,14 +477,14 @@ namespace Game.NPC.Modules
                 
                 if (!inventory.HasItem(req.item, req.amount))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCQuestConfig] ❌ Falta item '{req.item.displayName}' (tiene {inventory.Count(req.item.itemId)}/{req.amount})");
 #endif
                     return false;
                 }
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig] ✅ Todos los items requeridos están en el inventario");
 #endif
             return true;
@@ -501,7 +501,7 @@ namespace Game.NPC.Modules
             // Obtener el inventario del jugador
             if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCQuestConfig] No se encontró Inventory del jugador para verificar items requeridos");
 #endif
                 return;
@@ -514,7 +514,7 @@ namespace Game.NPC.Modules
                 // Verificar si tiene suficiente cantidad del item
                 bool hasItem = inventory.HasItem(req.item, req.amount);
                 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig] Verificando item '{req.item.displayName}' (x{req.amount}): {(hasItem ? "✅ TIENE" : "❌ NO TIENE")}");
 #endif
                 
@@ -544,7 +544,7 @@ namespace Game.NPC.Modules
                         var quest = qm.GetAll().FirstOrDefault(q => q.Id == questId);
                         if (quest?.Steps != null && stepToMark < quest.Steps.Length && !quest.Steps[stepToMark].completed)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"[NPCQuestConfig] ✅ Marcando step {stepToMark} de quest '{questId}' como completado (item '{req.item.displayName}' entregado)");
 #endif
                             qm.MarkStepDone(questId, stepToMark);
@@ -552,7 +552,7 @@ namespace Game.NPC.Modules
                     }
                     else
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogWarning($"[NPCQuestConfig] No se pudo determinar el step a marcar para item '{req.item.displayName}'");
 #endif
                     }
@@ -572,14 +572,14 @@ namespace Game.NPC.Modules
             // Verificar si PlayerParty está disponible
             if (!Game.NPC.PlayerParty.HasInstance)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCQuestConfig] PlayerParty no está disponible para verificar party members");
 #endif
                 return;
             }
             
             var party = Game.NPC.PlayerParty.Instance;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig] 🔍 Verificando {entry.requiredPartyMembers.Length} party members requeridos (party tiene {party.MemberCount} miembros)");
 #endif
             
@@ -587,7 +587,7 @@ namespace Game.NPC.Modules
             {
                 if (string.IsNullOrEmpty(memberReq.memberId))
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCQuestConfig] PartyMemberRequirement con memberId vacío en quest '{questId}'");
 #endif
                     continue;
@@ -596,7 +596,7 @@ namespace Game.NPC.Modules
                 // Verificar si el miembro está en el equipo (comparación robusta con distintos formatos de ID)
                 bool isInParty = party.Members.Any(m => QuestMatchingUtils.IsPartyMemberMatch(m, memberReq.memberId));
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig] Verificando member '{memberReq.memberId}': {(isInParty ? "✅ EN PARTY" : "❌ NO EN PARTY")}");
 #endif
                 
@@ -626,21 +626,21 @@ namespace Game.NPC.Modules
                     var quest = qm.GetAll().FirstOrDefault(q => q.Id == questId);
                     if (quest?.Steps != null && stepToMark < quest.Steps.Length && !quest.Steps[stepToMark].completed)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCQuestConfig] ✅ Marcando step {stepToMark} de quest '{questId}' como completado (member '{memberReq.memberId}' está en party)");
 #endif
                         qm.MarkStepDone(questId, stepToMark);
                     }
                     else if (quest?.Steps != null && stepToMark < quest.Steps.Length && quest.Steps[stepToMark].completed)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[NPCQuestConfig] ℹ️ Step {stepToMark} ya estaba completado para member '{memberReq.memberId}'");
 #endif
                     }
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[NPCQuestConfig] No se pudo determinar el step a marcar para party member '{memberReq.memberId}'");
 #endif
                 }
@@ -673,14 +673,14 @@ namespace Game.NPC.Modules
             // ✅ IMPORTANTE: Reproducir el diálogo turn in PRIMERO
             // La quest se completa DESPUÉS del diálogo para que el grafo narrativo
             // se ejecute en el momento correcto (después del feedback al jugador)
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.FinishQuest] Iniciando diálogo de turn-in para quest '{questId}'");
 #endif
             
             PlayDialogueWithCallback(entry.dlgTurnIn, context, () =>
             {
                 // Callback ejecutado cuando termina el diálogo turn in
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.FinishQuest] Diálogo de turn-in completado. Completando quest '{questId}'");
 #endif
                 
@@ -688,7 +688,7 @@ namespace Game.NPC.Modules
                 qm.CompleteQuest(questId);
                 entry.onQuestCompleted?.Invoke();
                 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.FinishQuest] Quest completada. Intentando iniciar siguiente en la cadena");
 #endif
                 
@@ -699,7 +699,7 @@ namespace Game.NPC.Modules
 
         private void TryStartNextQuestInChain(string completedQuestId, Common.NPCStateContext context)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Buscando siguiente quest después de '{completedQuestId}'");
 #endif
             
@@ -715,7 +715,7 @@ namespace Game.NPC.Modules
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogError("[NPCQuestConfig.TryStartNextQuestInChain] No se encontró NPCBehaviourManagerV2 en el NPC");
 #endif
                     // Ejecutar directamente como fallback
@@ -724,7 +724,7 @@ namespace Game.NPC.Modules
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[NPCQuestConfig.TryStartNextQuestInChain] Context.Transform es null, no se puede diferir la ejecución");
 #endif
                 // Ejecutar directamente como fallback
@@ -742,7 +742,7 @@ namespace Game.NPC.Modules
             yield return null;
             yield return null;
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChainDelayed] Ejecutando búsqueda de siguiente quest después de 5 frames");
 #endif
             
@@ -764,7 +764,7 @@ namespace Game.NPC.Modules
 
             if (completedIndex < 0 || completedIndex >= questChain.Length - 1)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] No hay siguiente quest (completedIndex={completedIndex}, total={questChain.Length})");
 #endif
                 return; // No hay siguiente quest
@@ -773,7 +773,7 @@ namespace Game.NPC.Modules
             var nextEntry = questChain[completedIndex + 1];
             if (nextEntry?.questData == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Siguiente entrada no tiene questData");
 #endif
                 return;
@@ -785,27 +785,27 @@ namespace Game.NPC.Modules
             var nextState = qm.GetState(nextEntry.questData.questId);
             if (nextState != QuestState.Inactive)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Quest '{nextEntry.questData.questId}' ya está iniciada (estado={nextState})");
 #endif
                 return; // Ya está iniciada
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Iniciando siguiente quest '{nextEntry.questData.questId}'");
 #endif
 
             // Si tiene dlgBefore, reproducir diálogo y luego iniciar quest
             if (nextEntry.dlgBefore != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Reproduciendo diálogo de oferta");
 #endif
                 nextEntry.onOfferDialogueStarted?.Invoke();
                 PlayDialogueWithCallback(nextEntry.dlgBefore, context, () =>
                 {
                     // Callback ejecutado cuando termina el diálogo
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCQuestConfig.TryStartNextQuestInChain] Diálogo de oferta completado. Añadiendo y arrancando quest");
 #endif
                     qm.AddQuest(nextEntry.questData);
@@ -845,7 +845,7 @@ namespace Game.NPC.Modules
         {
             if (dialogue == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[NPCQuestConfig.PlayDialogue] dialogue es null - no se reproduce diálogo");
 #endif
                 return;
@@ -854,20 +854,20 @@ namespace Game.NPC.Modules
             var dm = DialogueManager.Instance;
             if (dm == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[NPCQuestConfig] DialogueManager.Instance es null");
 #endif
                 return;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestConfig.PlayDialogue] Iniciando diálogo '{dialogue.name}' con NPC en {context.Transform?.position}. Líneas: {dialogue.lines?.Length ?? 0}");
 #endif
             
             // Callback para detener animación de hablar cuando termine el diálogo
             dm.StartDialogue(dialogue, context.Transform, () => 
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestConfig.PlayDialogue] Diálogo '{dialogue.name}' terminado - deteniendo animación");
 #endif
                 StopTalkingAnimation(context);
@@ -885,7 +885,7 @@ namespace Game.NPC.Modules
             var dm = DialogueManager.Instance;
             if (dm == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[NPCQuestConfig] DialogueManager.Instance es null");
 #endif
                 onFinished?.Invoke();

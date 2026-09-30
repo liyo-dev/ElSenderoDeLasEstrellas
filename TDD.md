@@ -295,6 +295,8 @@ El tope del stack determina el modo activo. Esto permite que un diálogo en medi
 
 `ActiveCharacterSwapper.cs` permite controlar a Liam o Estela en lugar de Will.
 
+Cada personaje del grupo tiene una **ficha** (`FichaDePersonaje`, en `Assets/_PERSONAJES/`): estadísticas y hechizos con los que empieza. Su cuerpo la lleva en el componente `Personaje`. Los hechizos de Estela y Liam salen de ahí (ya no de `NPCPartyConfig`, que solo describe cómo siguen al jugador). Ver INC-483.
+
 Al cambiar:
 1. Teleporta el controller al NPC objetivo.
 2. Aplica apariencia visual vía `CharacterAppearanceRegistry`.
@@ -318,6 +320,58 @@ Los cooldowns se gestionan en `MagicCaster` con un diccionario indexado por `Mag
 - Usa `ActiveCombatRegistry` para saber si hay enemigos en combate (O(1)).
 - `Physics.OverlapSphereNonAlloc` con buffer pre-alocado para la detección de área.
 - Secuencia de victoria coordinada con `AudioService` y `NPCCombatLifecycleHandler`.
+
+### Lanzar magia en el aire (INC-483)
+
+Se puede lanzar magia durante un salto o una caída. En tierra `MagicCaster.CanCast` no lanza de cara a una pared (`stopMove`); en el aire sí.
+
+- **Punto único:** `MagicCaster.Cast` (INC-486) llama a `vThirdPersonMotor.HoldAirborne(castLock)` tras cada lanzamiento con éxito (`castLock` = `castDelaySeconds` + `chargeTime`, mínimo 0,1 s).
+- **`HoldAirborne(actionSeconds)`** (motor, API genérica: cualquier acción que deba sostener al personaje en el aire la puede usar): sostiene durante la acción más `airHoldWindow`. Si no estaba sostenido, pone la velocidad a cero (se para); si ya lo estaba, solo alarga la ventana. No hace nada con `isGrounded`, controlador deshabilitado o `suppressAirMovement` (vuelo).
+- **Mientras dura la ventana** (`IsHoldingAirborne`): `CheckGround` no aplica gravedad extra y lleva la velocidad vertical hacia `-airHoldFallSpeed` (nunca sube), así que al encadenar lanzamientos baja despacio y siempre acaba en el suelo. `AirVelocity` limita el desplazamiento a `airSpeed × airHoldMoveFactor`.
+- **Al aterrizar** la ventana se anula, para que el siguiente salto no empiece sostenido.
+- **Ajustes** (Inspector del jugador, «Sostenerse en el aire»): `airHoldWindow` (0,45 s tras salir el hechizo), `airHoldFallSpeed` (1,2 m/s), `airHoldMoveFactor` (0,3).
+- **Animación:** sin cambios en el Animator. La capa base sigue en el estado de caída y la capa `UpperBody` reproduce el gesto de manos del hechizo.
+
+### Entrada y lanzamiento de combate (INC-486)
+
+Un solo lector de botones y un solo punto de lanzamiento. Cualquier mecánica nueva de combate (defensa, combo, dúos) se engancha aquí; no lee botones por su cuenta ni instancia proyectiles a mano.
+
+- **`PlayerCombatInput`** (en el GameObject de `MagicCaster` de `_WILL.prefab`): X = `MagicCaster.CastBasic` (serie de tres), con buffer de 0,35 s mientras sale el hechizo anterior; si el hechizo tiene `supportsPreciseMode`, sale al soltar (toque = normal, mantener = preciso). LB = `MagicCaster.RotateBasic`. La levitación, si es el básico activo, la lee `PlayerLevitationController` (mantener X).
+- **`MagicCaster`**: hasta `BasicSlotCount` (4) básicos en orden de rotación (`SetBasicSpells`, `ActiveBasic`, `OnLoadoutChanged`). `Cast(spell, hand, damageMultiplier, precise)` es el único camino: `CanCast` (permisos de `PlayerActionManager`, escudo, pared en tierra, maná), cobra, `CommitToAction` + `HoldAirborne` + `PlayUpperBodyAction` en el controlador, y `MagicProjectileSpawner.Cast`. Serie: paso 0 derecha, 1 izquierda, 2 centro (`finisherDamageMultiplier`, 1,5); la serie se reinicia tras `seriesWindow` (1,1 s) o al rotar.
+- **`CastHand`** (Left, Right, Center) sustituye a `MagicSlot`: indica la mano y el gesto, no una ranura.
+- **`MagicProjectileSpawner`**: solo materializa (`Cast`, `SpawnNow`, `SpawnForCinematic(spell, hand, …)`), sin hechizos equipados.
+- **Datos**: `PlayerPresetSO.basicSpellIds` y `PlayerSaveData.basicSpellIds`. Los presets del proyecto ya están convertidos; los campos antiguos izquierda/derecha/especial solo quedan en `PlayerSaveData` para convertir partidas guardadas antes de este cambio (`GameBootProfile`). Los hechizos `SpecialOnly` no se equipan como básicos: serán combos.
+- **Plugins sin reflexión**: `vThirdPersonInput` lee `CharacterControllerBridge.Input` (`ICharacterInputSource`), que registra `Core.CharacterControllerBridgeSetup` al arrancar (incluye inversión de cámara y la supresión con UI abierta); los SFX del controlador van por `CharacterControllerBridge.PlaySfx`.
+- **Giro con rayitas**: `CommitToAction` gira a `commitTurnSpeed` (1800°/s) en `ControlRotationType` y lanza `OnCommitTurnStarted`; `TurnStreakFeedback` saca `GiroRapido.prefab` por `VfxPoolService` en giros de más de 90°.
+- **Mando**: LB rota hechizos; correr solo con L3 (Mayúsculas en teclado); RB pasa al siguiente objetivo fijado.
+- **Sin enfriamientos por hechizo**: el ritmo lo marcan el gesto (`castDelaySeconds` + `chargeTime`, que bloquea el siguiente lanzamiento vía `IsCasting`) y el maná. `MagicSpellSO` ya no tiene `cooldown`.
+- **Doble salto y vuelo** (INC-489): A en el aire = `vThirdPersonController.JumpInAir` (doble salto, `airJumps`); sin saltos extra lanza `OnJumpPressedWithoutAirJumps`, que usa `PlayerFlyingController` para entrar en vuelo.
+- **Objetivo fijado** (INC-488): con lock-on, `CombatCameraTargeting` mantiene siempre el enemigo fijado como objetivo manual de `PlayerTargeting`, aunque el jugador esté de espaldas.
+- **Salto con buffer corto** (INC-487): `vThirdPersonInput` solo guarda una pulsación de salto `jumpBufferSeconds` (0,15 s); una pulsación hecha en el aire no salta sola al aterrizar.
+- **Montaje** (ya ejecutado, archivado en `El Sendero/Archivo/Combate/`): quita scripts perdidos, añade y enlaza `PlayerCombatInput` y `TurnStreakFeedback` y crea el efecto de giro.
+- **HUD de combate** (INC-485): `Sendero.UI.CombatButtonsHUD` en `PlayerHUD_Canvas/CombatButtons` (Start.unity), abajo a la derecha, un círculo por botón en su posición del mando. X: `ActiveBasic` en grande, los demás básicos en pequeño en orden de rotación (`(ActiveBasicIndex + k) % n`), glifo de LB, tres puntos con `NextSeriesStep` y tinte si `ManaPool.Current < manaCost`; se repinta con `OnLoadoutChanged` y se reengancha con `PlayerPresetService.OnPresetApplied` y `PartyControlManager.OnActiveCharacterChanged`. Y: sello del combo y anillo de enfriamiento (`SetComboCooldown(0..1)`). B: escudo. Glifos por `InputGlyphIcon`. La visibilidad la lleva el `CanvasGroup` de `PlayerHUDV2`, que ya solo pinta vida y maná. Lo monta `CombatHudBuilder` (`El Sendero/Archivo/UI/Montar HUD de combate (INC-485)`), idempotente.
+- **Ataques de equipo** (INC-491): `DuoSpecialAttackSystem` (en `GrupoDelJugador`) lleva una sola carga de equipo (`SpecialChargeMeter`, 3 tramos) que se llena con el daño del grupo a quien no es del grupo (`Damageable.AlRecibirDanoCualquiera`), orbes y objetos. LT+RT (pulsados con menos de `chordWindow` de diferencia; en teclado los dos son Ctrl) = `TryTeamAttack`: con los compañeros que estén a `companionMaxDistance`, uno = dúo (1 tramo), los dos y carga llena = trío, los dos sin carga llena = dúo con el más cercano. Para elegir se acerca uno o se usa el sígueme. El gesto va por `MagicCaster.BeginTeamGesture`; el golpe es de remate (`GolpeDeRemate`) y cae sobre el objetivo si está a 9 m o menos. Los ataques son `SpecialAttackSO` con `first`/`second` o `isTrio`. La barra la pinta `TeamGaugeHUD` (panel de estado). El escudo es mantener B.
+- **Pose al lanzar en vuelo** (INC-492): `PlayerFlyingController` pone `Falling` al lanzar y lo mantiene hasta que el jugador avanza y lleva `castPoseRelease` sin disparar; entonces vuelve con fundido al estado de vuelo. No cambia el movimiento.
+- **Defensa en la B** (INC-493): `PlayerShieldController` lee B (`GamepadInputReader.AttackMagicRightHeld`). Pulsar abre `parryWindow`; en ella, `ScanForParry` busca proyectiles enemigos a `parryRadius` y llama a `MagicCaster.CastCounter` (hechizo propio al instante, sin maná, daño ×`counterDamageMultiplier`). `FiltroDeDefensa` (IFiltroDeDano junto a `PlayerHealthSystem`) anula el daño dentro de la ventana y deja pasar `meleeBlockFactor` con el escudo. Ventana fallida = `parryWhiffCooldown`. Evento `OnCounter` para el HUD.
+- **Menú de hechizos** (INC-485): `PlayerEquipmentMenuController.SpellView` con `SlotCount` ranuras (3 fijas + `fourthSlot*` opcional) que editan `basicSpellIds[i]`; icono del hechizo en cada ranura; los combos muestran su secuencia (`SPELL_COMBO_LABEL`). Controles: `ControlsSchemeConfig.BuildDefaultEntries` con el reparto nuevo.
+- **Combo mágico en la Y** (INC-494): `ComboCastController` abre el círculo con Y, lee A/B/X/Y (`TryReadButton`), compara con `MagicSpellSO.comboSequence` por prefijo y lanza con `MagicCaster.Cast(spell, CastHand.Center)`. `ComboCastController.IsComposing` (también el fotograma de cierre) lo consultan `PlayerCombatInput`, `PlayerLevitationController`, `PlayerShieldController`, `DuoSpecialAttackSystem` y el salto del puente (`GamepadCharacterInput.JumpPressed`). Eventos `OnOpened`/`OnInput`/`OnClosed` para `ComboPanelUI`; `CooldownNormalized` para el anillo de la Y (`CombatButtonsHUD`). Pose sostenida con `HoldUpperBodyPose` y salida con `PlayUpperBodyAction(ComboExit/ComboBreak)`.
+- **Proyectil mejorado** (INC-497): cuatro opciones en `MagicSpellSO` que por defecto no cambian nada. `bounceCount`/`bounceRange`: tras impactar, `MagicProjectile.TryContinueAfterHit` relanza (`Launch`) hacia el enemigo vivo más cercano de Enemy/Boss que no haya tocado. `pierceCount` (-1 = todos): sigue volando. Un `HashSet` de raíces (la del `Damageable`) evita dañar dos veces al mismo. `spreadCount`/`spreadAngle`: `MagicProjectileSpawner.LaunchProjectile` lanza N copias giradas alrededor del eje vertical (`LaunchOne`). `impactZone`: `End(true)` llama a `MagicProjectileSpawner.SpawnZoneAt` (estático, sin gesto ni maná), que apoya la zona en el suelo y la configura como `SpawnZoneNow`. Solo el proyectil del jugador (`MagicProjectile`); los de enemigos no lo usan.
+- **Cuatro básicos por personaje** (INC-498): Will los saca del preset; Estela y Liam, de `FichaDePersonaje.basicos` (vacío = los de mano). Al mando, `ActiveCharacterSwapper.ApplySpells` los pone en el `MagicCaster`. Con IA, `NPCPartyMember.EffectiveSpells` = básicos + especial (sin levitación), y `AllyCombatState` rota por todos; el Will de la IA recibe los suyos con `SetRuntimeBasics`. Con otro personaje al mando, `PlayerPresetService.ConfigureSpells` guarda los de Will con `ActiveCharacterSwapper.TrySetWillBasicsWhileAway`.
+- **Estados** (INC-499): `EstadosDeCombate` (ralentizar, inmovilizar, atraer) se añade en tiempo de ejecución al enemigo, en el objeto de su `NavMeshAgent`. Update (orden -900) apunta la posición; LateUpdate recorta el avance horizontal del fotograma y suma el tirón, escribiendo `NavMeshAgent.nextPosition`. Así vale para cualquier IA sin tocarla. Jefes (capa Boss): duración ×0,5. Sin intervenir con el agente apagado ni en saltos de más de 3 m. Los pone `MagicProjectile` al impactar y `MagicZoneEffect` en cada tick, según `MagicSpellSO.statusEffect`/`statusDuration`/`statusStrength`/`statusVFX`.
+- **Apoyo** (INC-500): `MagicZoneEffect.TickSupport` cura (`healPerTick`) y pone `EscudoTemporal` (IFiltroDeDano, `groupShieldSeconds`/`groupShieldDamageFactor`) a los de `GrupoCercano.Buscar` dentro del radio; suma `teamGaugeGain` a la carga de equipo una vez. `Damageable.RefrescarFiltros()` para reglas añadidas en juego.
+- **Zona en el lanzador y Empujar** (INC-501): `MagicSpellSO.zoneOnCaster`; `EstadoDeCombate.Empujar` aparta del centro en `EstadosDeCombate`.
+- **Paso corto** (INC-502): `MagicKind.Teleport`; `MagicProjectileSpawner.Teleport` busca de lejos a cerca un punto con NavMesh, sin pared (SphereCast) y con poco desnivel, y mueve transform y Rigidbody del lanzador.
+- **Grimorio de cada personaje** (INC-503): `GrimorioDelPersonaje` (disponibles = ficha + desbloqueados con `caster` del personaje; equipados de Estela/Liam en `PlayerPresetSO.companionBasics`, guardado en `PlayerSaveData`). `ActiveCharacterSwapper.ApplySpells` y `NPCPartyMember.EffectiveSpells` los leen; `PlayerPresetService.ConfigureSpells` solo equipa a Will lo suyo; `UnlockService.UnlockSpell` equipa el básico de un compañero si le queda hueco. `PaginaDelGrimorio` (flag `GRIMORIO_PAGINA:<id>`). La pestaña Hechizos edita el grimorio del personaje al mando.
+- **Grimorio en libro** (INC-506): `GrimorioLibroUI` construye las páginas por personaje (conocidos = `BasicosDisponibles` + `CombosDisponibles`; resto de la SpellLibrary con ese `caster`, como páginas selladas; fuera los del Mago Oscuro, Huracán y la zona de Chispa Ígnea). Lee la entrada del dispositivo directamente (tiempo sin escala) y `PlayerEquipmentMenuController` se para mientras está abierto (`IsOpen`/`ClosedFrame`, como los controles). Texto de cada página: `MagicSpellSO.lore`/`loreId`.
+
+### Compromiso al atacar y puntería (INC-484)
+
+Modelo acción-RPG: al lanzar, el personaje encara al objetivo y se queda quieto hasta que sale el hechizo; el resto de la animación es libre.
+
+- **`vThirdPersonMotor.CommitToAction(seconds, faceDirection)`**: gira hacia `faceDirection` a `commitTurnSpeed` (INC-486; respeta `lockRotation`) y durante `seconds` `IsActionCommitted` es true. `vThirdPersonInput.MoveInput` pone el input de movimiento a cero mientras dure (mismo camino que `SuppressMoveInput`), así que frena y no gira con el stick. `Jump()` lo cancela (`CancelActionCommit`). Sin efecto con el controlador deshabilitado o en vuelo.
+- **Quién lo llama:** `MagicCaster.Cast`, con `castLock` como duración y la dirección horizontal al objetivo de `ITargetProvider` (fijado con R3 o automático). Sin objetivo no gira, solo frena.
+- **Puntería:** `PlayerTargeting.GetAimDirectionFrom` apunta al centro del collider del objetivo (no al marcador, que va `markerOffset` por encima). `MagicProjectileSpawner.ResolveProjectileDirection` no aplana la dirección de un proyectil que tiene objetivo, así que desde el aire o hacia un saliente va al enemigo. `flattenDirection` se aplica sin objetivo, con dirección forzada (cinemáticas) y a los hechizos de zona.
+- **Duración:** la marca `castDelaySeconds` de cada hechizo (0,5 s en todos los actuales). Para un hechizo más ágil o más pesado se ajusta ese campo en su asset.
 
 ### Targeting
 
@@ -379,6 +433,8 @@ static void ResetStatics()
 
 Referencia global al GameObject del jugador. Usado para acceder a componentes sin referencias directas. Prefiere `TryGetPlayer(out GameObject go)` sobre `Instance.gameObject` para evitar errores si el jugador no está en escena.
 
+El jugador registrado es siempre **el cuerpo** (el objeto con `vThirdPersonController`, tag `Player`), nunca la raíz de `_WILL.prefab`: si se registra la raíz, `ResolverCuerpo` baja al cuerpo. La raíz es un contenedor que no se mueve en Play. La cámara de juego no va dentro del personaje: es `Assets/Prefabs/CamaraDelJugador.prefab`, una por escena, y sigue a quien se registre como jugador. Ver INC-482. Lo que es del grupo y no de un personaje (inventario, vestuario, cargas del ataque doble) vive en `Assets/Prefabs/GrupoDelJugador.prefab`, también uno por escena; `PlayerService.TryGetComponent` lo busca ahí si no está en el cuerpo. Si el cuerpo registrado se destruye, `PlayerService.Player` busca el nuevo. Ver INC-484.
+
 ---
 
 ## 6. Audio
@@ -403,6 +459,16 @@ AudioService.Instance.PlaySFX2D(clipId, volume);           // 2D
 AudioService.Instance.BeginBattleMusic(battleId);
 AudioService.Instance.OnBattleWonRestoreMusic(battleId);
 ```
+
+### Relevos de música: la del lugar se pide, no se pone (INC-486)
+
+Mismo criterio que `CameraDirectorService` con la cámara. Quien termina algo (una cinemática en `CinematicSequencerBase.RestoreMusic()`, un combate en `OnBattleWonRestoreMusic`/`RestoreAfterBattle`) no pone la música del lugar al instante: llama a `AudioService.PedirMusicaDelLugar(fade, incluirEscena)`, que la pone a los 0,3 s (prioridad zona → interior → escena → silencio). Cualquier `PlayMusic`/`StopMusic` en ese margen cancela la petición, así que en una cadena secuencia → jefe, secuencia → secuencia o combate → secuencia la música pasa directamente de una a otra, sin colar la de gameplay en medio. Si al cumplirse hay una cinemática activa no hace nada (su propio `RestoreMusic` la pedirá); con el telón cerrado espera a que se abra.
+
+Crossfades: si un `PlayMusic` llega a mitad de otro fundido, se reutiliza la fuente que menos suena (la que más suena se apaga, nunca se corta). La canción que sale tarda como mínimo `FundidoMinimoDeSalida` (1 s) en apagarse; la que entra respeta su fundido (con 0 entra de golpe, como las `BattleRule`).
+
+**Regla:** ningún sistema nuevo debe restaurar música de lugar llamando a `PlayMusic`/`RestoreSceneMusic` directamente al terminar algo; debe pasar por `PedirMusicaDelLugar`.
+
+**Fin de combate con victoria (INC-500).** La música del combate sigue hasta que la releva el jingle de victoria (`PlayVictoryForBattle`, desde la celebración). El jingle suena una vez y, al acabar, él mismo cierra el combate (pila de música) y pide la música del lugar con `FundidoDeLugar`. Mientras suena, `EndBattleById`, `RestoreAfterBattle` y la señal BattleWon no hacen nada, y `OnBattleWonRestoreMusic` solo cierra el combate que está activo (es idempotente: llega por la señal y por `EndBattleById`). Así ni se cuela la música del lugar debajo del jingle ni hay silencio mientras se lee el informe. `BossArenaController` da el combate por cerrado en `AvisarBatallaGanada`, después del cierre de batalla, no al morir el jefe.
 
 ### Bug crítico — StopAllCoroutines mata el pool SFX
 
@@ -551,6 +617,8 @@ Los objetos que persisten estado entre cambios de escena (pickups, puertas, puzz
 {escena}_{nombreObjeto}_{posX:F1}_{posY:F1}_{posZ:F1}
 ```
 
+El ID lo calcula siempre `IdDePersistencia.DeObjeto(...)` (`Assets/Scripts/Core/IdDePersistencia.cs`); ningún sistema lo vuelve a escribir a mano. Cada uno le pone delante su prefijo. El formato no se puede cambiar: las partidas guardadas ya llevan esos IDs.
+
 Todos estos scripts exponen un campo override **opcional**. Si está vacío, el ID automático se usa siempre.
 
 | Script | Prefijo del flag | Campo override |
@@ -560,6 +628,18 @@ Todos estos scripts exponen un campo override **opcional**. Si está vacío, el 
 | `ActivationCounter` | `ACTIVATION_COMPLETE_` | `persistenceIdOverride` |
 
 **Regla:** nunca asignar ID manual salvo que el objeto pueda moverse o renombrarse. La posición en mundo (1 decimal) es suficientemente estable para todos los casos normales.
+
+### Objetos que se mueven o se retiran (INC-540)
+
+`ObjetoPersistente` (`Assets/Scripts/World/ObjetoPersistente.cs`) guarda en la partida si un objeto de escena se ha **movido** o se ha **retirado** (entregado, consumido…), y lo deja igual al cargar. Lo guarda en `PlayerPresetSO.objetosDelMundo` / `PlayerSaveData.objetosDelMundo`: una entrada por objeto que ya no está como lo dejó la escena.
+
+- **ID:** `IdDePersistencia` con la posición **de partida** (la que tiene en `Awake`), así que no cambia aunque el objeto se mueva.
+- **Movido:** `GameBootProfile.UpdateRuntimePresetFromCurrentState()` llama a `ObjetoPersistente.CapturarEstado(preset)` al guardar. Anota posición y giro de los que se han movido y borra la entrada de los que han vuelto a su sitio. Los objetos de escenas no cargadas conservan su entrada.
+- **Retirado:** quien quita un objeto del mundo llama a `ObjetoPersistente.Retirar(objeto)`, **nunca a `Destroy` directo**. Lo anota en el acto y lo destruye. Lo usan `WaitItemDeliveryNode` y `NPCItemDetector`.
+- **Al cargar:** cada objeto se aplica su entrada en `Awake` (o en `OnProfileReady` si el perfil aún no estaba). Si está retirado, se destruye; si está movido, se coloca.
+- **Quién lo lleva:** `PickupObject` lo añade solo, así que todo lo que se lleva en brazos queda cubierto sin tocar prefabs. En cualquier otro objeto (bloques empujables, piezas de puzle…) se pone a mano.
+- `PlayerCarrySystem` devuelve el objeto soltado a su padre y a su escena de antes de cogerlo. Si no, se quedaría en la escena persistente del jugador y aparecería repetido al cargar.
+- **Pendiente:** el Quick Test no proyecta los objetos retirados. Si se arranca desde un nodo posterior a una entrega, el objeto sigue en la escena.
 
 ### Presets de testing
 
@@ -621,6 +701,28 @@ El `Advance()` ya maneja fork detection. El `WaitCustomEventNode` ya tiene su me
 `RaiseCustom` añade a `_pending` y `_raised`. `ResetState(preservePending:true)` preserva los dos. No eliminar `_raised`.
 
 **Sobre presets de testing:** si un preset fue capturado después de que un trigger se activó, contiene el flag `__event_XXX_received = 1` en el blackboard. El runner saltará ese nodo. Para resetear, eliminar el flag manualmente del asset del preset.
+
+### Estado proyectado del grafo (saber cómo está el mundo en cualquier nodo)
+
+Código en `Assets/NarrativeGraph/Runtime/State/` (núcleo genérico, sin nada de este juego). Ver INC-481.
+
+- **`INarrativeStateEffect`**: lo implementa todo nodo (o beat de secuencia) que deja el mundo cambiado de forma duradera. `Project(INarrativeStateWriter)` describe el cambio sin ejecutar nada (no emite señales, no toca la escena).
+- **`INarrativeStateWriter`**: contrato genérico del estado (flags, misiones, objetos, dónde está cada actor, activo/inactivo, avisos). Lo propio de un juego se pide con `TryGetExtension<T>()` a una interfaz del juego (aquí `IPlayerLoadoutState`: habilidades y hechizos).
+- **`NarrativeLocation`**: lugar por nombre. `World(marca)` = SpawnAnchor; `Local(marca)` = marca del contexto actual, que `ScopedNarrativeStateWriter` liga a un contexto con nombre (la secuencia, con la plantilla como reserva si se monta en vivo). Lo convierte en posición un `INarrativeLocationResolver` del juego.
+- **`NarrativeStateProjector.Project(grafo, nodoObjetivo, escritor)`**: recorre en anchura desde el StartNode y proyecta cada nodo hasta el objetivo, **sin proyectar el objetivo** (se va a ejecutar). Cada nodo decide por dónde se sigue con `NarrativeNode.ProjectionPort` (`ProjectAllOutputs`, un índice, o `ProjectionStops` si es una decisión real). Las decisiones no se adivinan: se listan con `DescribeDecision()`.
+- **Uso actual:** Quick Test (`PresetNarrativeStateWriter` + `OpenScenesNarrativeWorld`) escribe el resultado en el preset temporal, incluidas las posiciones de los actores en `npcPositions` (el mismo camino que la partida guardada). Las marcas se buscan en las escenas abiertas; los actores, en ellas o, si los instancia `NpcSpawner` al arrancar (no existen en el Editor), en los `NpcRosterSO` (`gameObjectName` es la clave del guardado). Si la última marca de un actor no se resuelve, usa la anterior y lo avisa.
+- **Regla:** un nodo o beat nuevo que cambie estado implementa `INarrativeStateEffect`. Ninguna herramienta debe volver a tener un `switch` por tipo de nodo para saber qué hace. Para fijar a mano dónde está alguien (salto de tiempo, fundido, cambio de capítulo), nodo **«Colocar actor»** (`PlaceActorNode`).
+
+### Frase de «mientras tanto» (hablar con un NPC cuando el grafo no espera esa charla)
+
+Ver INC-514. Quien encarga una misión tiene que decir algo si se le habla mientras sigue en curso (en el sistema antiguo era `QuestChainEntry.dlgInProgress`).
+
+- **`INarrativeStandingLine`** (`Runtime/Graph/`, núcleo genérico): lo implementa un nodo que deja a un actor con algo que decir mientras dura una situación. Da el actor (`StandingActorId`), el diálogo (`StandingDialogue`) y si vale ahora (`IsStandingLineActive(INarrativeSignals)`). Es **estado derivado**: el nodo no registra nada al ejecutarse, así que funciona igual al cargar partida o al arrancar desde un nodo intermedio.
+- **`StartQuestNode`** la implementa con la cabecera «Mientras está en curso»: `giverId` (quién la encarga) + `inProgressDialogue`. Vale mientras la quest esté `Active` o `StepsReady`.
+- **`NarrativeStandingLines.TryPlay(actorId, transform)`** (`Runtime/Integration/`): recorre los nodos de los grafos del `NarrativeGraphHub` que implementan la interfaz y dice la primera frase que valga (si no hay otro diálogo abierto). Solo se consulta al pulsar hablar.
+- **Quién la llama:** `NPCBrain.HandleInteraction`, prioridad 4 (después de combate, Interactive congelado y `NPCQuestConfig` congelado), y **solo si nadie del grafo escuchaba `NPC_INTERACT_{id}`** (`DefaultNarrativeSignals.HasCustomListener`, mirado antes de emitir la señal). Así un `WaitNpcInteractionNode` (entrega, siguiente paso) siempre manda sobre la frase.
+- **Obligatorio en todas las quests:** un «Iniciar quest» sin quién la encarga ni su diálogo sale con aviso, salvo que se marque `noGiver` (quest propia del jugador). El aviso lo declara el propio nodo en `NarrativeNode.CollectWarnings`, que leen la tarjeta del editor (`NodeSummary`) y `NarrativeGraphValidator` (se pasa al dar Play) sin conocer el tipo de nodo.
+- **Regla:** un tipo de nodo nuevo que deje una frase así implementa `INarrativeStandingLine`; si tiene avisos propios de contenido, sobrescribe `CollectWarnings`.
 
 ### Política formal: convivencia Interactive ↔ Grafo narrativo
 
@@ -700,6 +802,28 @@ Cada botón lleva su propio texto rotulado a mano en su idioma ("Español"/"Engl
 
 La vista conserva el `MainMenuController`, los ocho botones existentes, sus listeners, los paneles de ajustes/controles y sus referencias serializadas. El builder solo cambia la geometría/estilo de `LogoTitulo`, `ButtonPanel`, sus etiquetas y `VersionLabel`, y añade bajo el `Canvas` existente un fondo transparente de estrellas, arco del portal y camino de luz. Comprueba que `MainMenuController.buttonPanel` sigue apuntando al `ButtonPanel` de la escena antes de aplicar. Las capas decorativas no reciben raycasts; la deriva de cámara y el compañero volador ya presentes en la escena siguen funcionando.
 
+### Portadas del menú principal por etapa (INC-539)
+
+El fondo del menú principal cambia según hasta dónde ha llegado la partida que cargaría «Continuar»:
+
+| # | Portada | Se ve cuando | Música |
+|---|---|---|---|
+| 1 | Península: Will sentado en un banco en su pueblo (copiado de MainWorld: pueblo inicial + terreno), con el árbol rosa y nubes | sin partida o partida sin los flags de abajo | `menu-principal-el-sendero-v2-alegre` |
+| 2 | Viaje: los tres en el barco, con el agua del mar de MainWorld; Will señala o saluda en proa, Estela (sentada) y Liam charlan | flag narrativo `SALIDA_DEL_REINO` | `Brisa del Puerto` |
+| 3 | Sendero: los tres volando entre las nubes del menú original, cielo de noche con estrellas y un sendero de luz | flag narrativo `ENTRADA_AL_SENDERO` | `El Sendero de las Estrellas (Tema Principal)` |
+
+**Piezas (Assets/Scripts/UI):**
+- `PortadaDelMenu` (GameObject `PortadaDelMenu` de MainMenu.unity): en `Start` lee los flags del save en disco (`SaveSystem.Load`, sin aplicarlo al perfil) o del `bootPreset` en modo pruebas, y enciende la última etapa cuyo flag está (`NarrativeFlags.Key`). Coloca la cámara en el `Encuadre` de la etapa (y llama a `MainMenuWorldCameraDrift.Reanclar`); la cámara solo se mece en la etapa con personajes volando (`MainMenuFlyingCompanion`), en tierra queda quieta. Aplica cielo/ambiente/niebla y pide la música. `forzarEtapaEnEditor` (solo Editor) fuerza una etapa para probar.
+- `PortadaEtapa` (una por etapa): flag que la desbloquea, encuadre, FOV, música, skybox, sol propio, ambiente, niebla y salida (actores + espera). Todo el decorado de la etapa cuelga de ella.
+- `ActorDePortada`: personaje decorado en pose en bucle (`SitMedium_Loop`) con animación de salida (`SitMedium_Exit`), en todos los Animators del rig que tengan el estado; vuelve a poner la pose si otro sistema reinicia el Animator. `gestos` + `cadaCuanto`: estados del controlador (FoundSomething, Laugh01, Talk01…) que hace de vez en cuando; al acabar vuelve al estado anterior de esa capa.
+- `DecoradoDeMenu`: utilidades compartidas con `MainMenuFlyingCompanion` (apagar IA/física del prefab jugable, parámetros de suelo del Animator).
+- `AudioService.FijarMusicaDeEscena(clip)`: la escena fija su música en vez de tomarla de `profile.sceneMusic`; respeta el telón y queda como música de escena para `RestoreSceneMusic`.
+- `MainMenuController.portada`: al pulsar Nueva Partida/Continuar espera la salida de la portada (Will se levanta, 1,4 s) antes de cargar.
+
+**Para activar las etapas 2 y 3:** poner un nodo «Poner flag» (`SetFlagNode`) con `SALIDA_DEL_REINO` al salir del Reino y con `ENTRADA_AL_SENDERO` al cruzar al Sendero, antes del guardado. No hace falta tocar el menú.
+
+**Montaje:** `El Sendero ▸ MainMenu ▸ Portadas: montar las tres etapas` (Ctrl+Mayús+Alt+0, `PortadasDelMenuBuilder`) monta **solo las portadas que no existen**: lo que ya está, y lo retocado a mano (p. ej. el árbol rosa de la Península), no se toca; para rehacer una, borrar su GameObject `Etapa N · …` y volver a montar. La Península y el agua del Viaje se copian abriendo MainWorld en aditivo (se cierra sin guardar). Además, sin rehacer nada, pone nubes en los cielos de día si faltan centra `LogoTitulo` (y `PhaseLabel`, que cuelga de él) sobre los botones y, si las filas activas (Continuar incluido) se salen por abajo, sube logo y botones lo que falte para dejar 50 px de margen. Materiales propios en `Assets/Art/MainMenu` (cielo de día, cielo de noche, estrellas). `Portadas: previsualizar 1/2/3` (Ctrl+Mayús+Alt+1/2/3) enciende una en el Editor y la deja forzada para el próximo Play; `según la partida` (Ctrl+Mayús+Alt+4) quita el forzado. MainMenu.unity pasa de ~0,45 MB a ~5,7 MB por la copia del pueblo.
+
 ---
 
 ## 12. Reglas de Rendimiento
@@ -771,10 +895,12 @@ Cada `Debug.Log` con `$"..."` (string interpolation) genera allocaciones GC aunq
 
 Regla: todos los logs de diagnóstico deben estar bajo:
 ```csharp
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
 Debug.Log($"[Sistema] ...");
 #endif
 ```
+
+`UNITY_INCLUDE_INSTRUMENTATION` está siempre definido en el Editor. En un build no lo decide la casilla *Development Build* sino *Player ▸ Other Settings ▸ Managed Code Variant*: `Debug`, `Checked` e `Instrumented` lo definen, `Release` no. Builds de prueba con logs → `Instrumented` (o superior); build final → `Release`. Sustituye a `DEVELOPMENT_BUILD`, obsoleto desde Unity 6.6 (aviso UAC0009) y eliminado en 6.8.
 
 O mediante un flag de instancia: `[SerializeField] private bool debugMode;`
 
@@ -965,7 +1091,9 @@ Documentar en el nombre del asset el estado de juego que representa (ej: `Preset
 
 ### Game Over y cinemáticas que se repiten al recargar
 
-**Síntoma:** al morir, volver al menú y cargar partida, aparece una cinemática que ya se había visto.
+**Flujo del Game Over (INC-518):** al caer el jugador, `GameOverManager` pregunta con `ConfirmationPopupUI`: «Continuar» carga el último guardado sin pasar por el menú (`SceneTransitionLoader.LoadWithOverlay(destino, overlay, conElMundoVacio)` descarga el mundo tras la pantalla de carga y llama a `GameBootService.PrepararContinuar`, el mismo «Continuar» del menú principal); «Salir al menú» va al menú. Sin partida guardada ni preset de pruebas, va directo al menú. Una secuencia puede acabar en derrota con `DerrotaBeat`: mata al jugador y no cierra ni levanta señal; la apaga el cambio de escena.
+
+**Síntoma:** al morir y cargar partida, aparece una cinemática que ya se había visto.
 
 **Causa esperada:** la última vez que se guardó con el SavePoint, el blackboard capturó el grafo en un estado anterior al de esa cinemática. Cargar la partida restaura ese estado exacto — el grafo vuelve al nodo donde estaba en el momento del guardado.
 

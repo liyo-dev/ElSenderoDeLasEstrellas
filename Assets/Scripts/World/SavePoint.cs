@@ -63,7 +63,7 @@ public class SavePoint : MonoBehaviour
     {
         if (TeleportSystem.IsTeleporting)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[SavePoint] Teletransporte en progreso, guardado bloqueado.");
 #endif
             return;
@@ -73,7 +73,7 @@ public class SavePoint : MonoBehaviour
         var narrativeRunner = FindAnyObjectByType<NarrativeRunner>();
         if (narrativeRunner != null && narrativeRunner.IsCurrentNodeBlockingSave)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[SavePoint] No se puede guardar: el nodo narrativo actual bloquea el guardado.");
 #endif
             ShowBlockedSaveFeedback();
@@ -88,7 +88,7 @@ public class SavePoint : MonoBehaviour
 
         if (!player)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SavePoint] Save() llamado pero no se pudo resolver el jugador (PlayerService/_playerInRange null).");
 #endif
             return;
@@ -106,7 +106,7 @@ public class SavePoint : MonoBehaviour
         {
             _pendingSave = true;
             _pendingPlayer = player;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[SavePoint] Perfil no listo. Guardado diferido hasta OnProfileReady (desde Prompt)");
 #endif
         }
@@ -117,7 +117,7 @@ public class SavePoint : MonoBehaviour
         var bootProfile = GameBootService.Profile;
         if (bootProfile == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[SavePoint] GameBootProfile no disponible en GameBootService");
 #endif
             return;
@@ -158,7 +158,7 @@ public class SavePoint : MonoBehaviour
                 var preset = GameBootService.Profile?.GetActivePresetResolved();
                 if (preset != null && preset.abilities != null && !preset.abilities.magic)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[SavePoint] Preset sin magia detectado; no se rellenará el ManaPool");
 #endif
                 }
@@ -183,14 +183,14 @@ public class SavePoint : MonoBehaviour
             {
                 if (wasTestingMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[SavePoint] 🧪 Partida guardada en MODO TESTEO - El estado runtime actual se ha guardado en el JSON. " +
                               "Ahora puedes desactivar 'usePresetInsteadOfSave' para continuar desde aquí.");
                     #endif
                 }
                 else
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log("[SavePoint] Partida guardada correctamente");
 #endif
                 }
@@ -202,14 +202,14 @@ public class SavePoint : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError("[SavePoint] Error al guardar la partida");
 #endif
             }
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[SavePoint] No se encontró SaveSystem");
 #endif
         }
@@ -263,7 +263,7 @@ public class SavePoint : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log(message);
 #endif
         }

@@ -8,12 +8,14 @@ using Game.NPC.States;
 /// Un NPC lleva al jugador andando hasta un SpawnAnchor mientras el jugador tiene el control.
 ///
 /// El NPC camina delante. Si el jugador se queda atrás, se para, le espera y le dice la frase de
-/// 'llamadaKey' en un bocadillo cada pocos segundos; sigue cuando llega. El nodo avanza cuando el NPC ha llegado a la marca y el
-/// jugador está a 'radioLlegada' de él. El paseo lo hace CinematicState.LeadPlayerToAnchorSequence,
-/// la misma escolta que usa el guardia del castillo.
+/// 'llamadaKey' en un bocadillo cada pocos segundos; sigue cuando llega. Mientras el jugador va
+/// cerca, no puede ir más rápido que el NPC (así no le adelanta, INC-536), y si hay 'charla', la
+/// van diciendo en bocadillos por el camino (INC-537). El nodo avanza cuando el NPC ha llegado a
+/// la marca, el jugador está a 'radioLlegada' de él y la charla ha terminado. El paseo lo hace
+/// CinematicState.LeadPlayerToAnchorSequence, la misma escolta que usa el guardia del castillo.
 [Serializable]
-[NarrativeNodeInfo("NPCs", "Guiar al jugador", "Un NPC camina hasta una marca (SpawnAnchor) y el jugador le sigue con el control. Si el jugador se queda atrás, el NPC le espera y le llama. Avanza cuando los dos están en la marca.")]
-public sealed class GuiarJugadorNode : NarrativeNode
+[NarrativeNodeInfo("NPCs", "Guiar al jugador", "Un NPC camina hasta una marca (SpawnAnchor) y el jugador le sigue con el control, sin poder adelantarle. Si el jugador se queda atrás, el NPC le espera y le llama. Por el camino pueden ir charlando (bocadillos). Avanza cuando los dos están en la marca y la charla ha terminado.")]
+public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("persistenceId del NPC que guía (p. ej. NPC_Eldran).")]
@@ -55,10 +57,29 @@ public sealed class GuiarJugadorNode : NarrativeNode
     [Tooltip("Tope de segundos del paseo. Si se agota, el NPC se queda donde esté y se sigue esperando a que llegue el jugador.")]
     public float duracionMaxima = 240f;
 
+    [Tooltip("Lo que se cuentan por el camino: un diálogo normal (hablante y texto por línea) que sale en bocadillos sobre quien habla mientras el jugador va cerca. Si llegan antes de acabarlo, lo terminan allí. Vacío = van en silencio.")]
+    public DialogueAsset charla;
+
+    // Mientras sigue al NPC, el jugador va como mucho a esta fracción de la velocidad del NPC.
+    private const float FraccionVelocidadJugador = 0.9f;
+    // La charla solo habla con el jugador a menos de esta fracción de 'distanciaMaxima': se calla
+    // antes de que el NPC se pare a llamarle.
+    private const float FraccionDistanciaCharla = 0.75f;
+
     [NonSerialized] private Coroutine _rutina;
     [NonSerialized] private NarrativeRunner _runner;
     [NonSerialized] private UnityEngine.AI.NavMeshAgent _agenteTocado;
     [NonSerialized] private float _velocidadOriginal;
+    [NonSerialized] private Coroutine _rutinaCharla;
+    [NonSerialized] private CharlaEnBocadillos _charla;
+    [NonSerialized] private bool _topePuesto;
+
+    /// El actor acaba en la marca de destino.
+    public void Project(INarrativeStateWriter state)
+    {
+        if (!string.IsNullOrWhiteSpace(npcId) && !string.IsNullOrWhiteSpace(anchorId))
+            state.PlaceActor(npcId, NarrativeLocation.World(anchorId));
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
@@ -68,7 +89,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
 
         if (npc == null || anchor == null || player == null || ctx?.Runner == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GuiarJugadorNode:{guid}] No se puede guiar: NPC '{npcId}'={(npc != null ? "ok" : "NO")}, " +
                 $"marca '{anchorId}'={(anchor != null ? "ok" : "NO")}, jugador={(player != null ? "ok" : "NO")}. Se avanza para no bloquear.");
 #endif
@@ -83,9 +104,14 @@ public sealed class GuiarJugadorNode : NarrativeNode
     public override void Exit(NarrativeContext ctx)
     {
         if (_rutina != null && _runner != null) _runner.StopCoroutine(_rutina);
+        if (_rutinaCharla != null && _runner != null) _runner.StopCoroutine(_rutinaCharla);
         _rutina = null;
+        _rutinaCharla = null;
         _runner = null;
+        _charla?.Callar();
+        _charla = null;
         DevolverVelocidad();
+        QuitarTope();
     }
 
     private IEnumerator Co_Guiar(NPCBehaviourManagerV2 npc, Vector3 destino, Transform player, Action onReadyToAdvance)
@@ -108,7 +134,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
         // navegable más cercano para que el NPC pueda terminar el camino.
         if (UnityEngine.AI.NavMesh.SamplePosition(destino, out var navHit, 10f, UnityEngine.AI.NavMesh.AllAreas))
             destino = navHit.position;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning($"[GuiarJugadorNode:{guid}] La marca '{anchorId}' no tiene NavMesh a menos de 10 m: " +
                 $"'{npcId}' no podrá llegar. Hay que ampliar el NavMesh hasta ahí o mover la marca.");
@@ -131,7 +157,17 @@ public sealed class GuiarJugadorNode : NarrativeNode
         var paseo = new LeadPlayerToAnchorSequence(Ruta(destino), player, duracionMaxima, distanciaMaxima, distanciaReanudar);
         npc.StartCinematicSequence(paseo);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        float radioCharla = distanciaMaxima * FraccionDistanciaCharla;
+        if (charla != null)
+        {
+            _charla = new CharlaEnBocadillos(charla, npc);
+            _rutinaCharla = _runner.StartCoroutine(_charla.Co_Hablar(
+                () => player != null && !paseo.WaitingForRetrievedDialogue && !MenuManager.AnyOpen() &&
+                      (player.position - npc.transform.position).sqrMagnitude <= radioCharla * radioCharla,
+                pausaInicial: 1f));
+        }
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnóstico de INC-461 (Eldran no echa a andar). Se quita al cerrar la incidencia.
         float siguienteDiag = 0f;
         _diagRutaAnterior = null;
@@ -139,7 +175,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
 #endif
         while (!paseo.IsCompleted)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (Time.unscaledTime >= siguienteDiag)
             {
                 siguienteDiag = Time.unscaledTime + 3f;
@@ -147,6 +183,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
             }
             DiagnosticoRuta(npc, destino);
 #endif
+            LimitarJugador(npc, player, agent);
             if (paseo.WaitingForRetrievedDialogue)
             {
                 yield return Co_Llamar(npc, destino);
@@ -154,19 +191,29 @@ public sealed class GuiarJugadorNode : NarrativeNode
             }
             yield return null;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Diagnostico(npc, destino, "paseo terminado");
 #endif
 
         if (anim != null) anim.AllowManualRotation = true;
+        float velocidadGuia = agent != null ? agent.speed : velocidad;
         DevolverVelocidad();
 
         // Ya en la marca, espera a que el jugador llegue hasta él.
         float radio2 = radioLlegada * radioLlegada;
         while (player != null && (player.position - npc.transform.position).sqrMagnitude > radio2)
+        {
+            LimitarJugador(npc, player, velocidadGuia);
             yield return null;
+        }
+        QuitarTope();
 
         if (player != null && anim != null) anim.FaceTarget(player.position);
+
+        // Si llegan antes de acabar la charla, la terminan allí.
+        while (_charla != null && !_charla.Terminada) yield return null;
+        _rutinaCharla = null;
+        _charla = null;
 
         _rutina = null;
         onReadyToAdvance?.Invoke();
@@ -184,7 +231,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
                 var marca = SpawnAnchor.FindById(id);
                 if (marca == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[GuiarJugadorNode:{guid}] El punto de paso '{id}' no está en la escena: se lo salta.");
 #endif
                     continue;
@@ -192,7 +239,7 @@ public sealed class GuiarJugadorNode : NarrativeNode
                 Vector3 p = marca.transform.position;
                 if (UnityEngine.AI.NavMesh.SamplePosition(p, out var hit, 4f, UnityEngine.AI.NavMesh.AllAreas))
                     p = hit.position;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 else
                     Debug.LogWarning($"[GuiarJugadorNode:{guid}] El punto de paso '{id}' no tiene NavMesh a menos de 4 m: muévelo al camino.");
 #endif
@@ -203,13 +250,35 @@ public sealed class GuiarJugadorNode : NarrativeNode
         return ruta;
     }
 
+    private void LimitarJugador(NPCBehaviourManagerV2 npc, Transform player, UnityEngine.AI.NavMeshAgent agent)
+        => LimitarJugador(npc, player, agent != null ? agent.speed : velocidad);
+
+    /// Cerca del NPC, el jugador no va más rápido que él (no le adelanta). Lejos, va a su paso
+    /// normal para poder alcanzarle.
+    private void LimitarJugador(NPCBehaviourManagerV2 npc, Transform player, float velocidadNpc)
+    {
+        bool cerca = player != null &&
+                     (player.position - npc.transform.position).sqrMagnitude <= distanciaMaxima * distanciaMaxima;
+        if (cerca == _topePuesto) return;
+        if (cerca) TopeDeVelocidadDelJugador.Poner(this, velocidadNpc * FraccionVelocidadJugador);
+        else TopeDeVelocidadDelJugador.Quitar(this);
+        _topePuesto = cerca;
+    }
+
+    private void QuitarTope()
+    {
+        if (!_topePuesto) return;
+        TopeDeVelocidadDelJugador.Quitar(this);
+        _topePuesto = false;
+    }
+
     private void DevolverVelocidad()
     {
         if (_agenteTocado != null) _agenteTocado.speed = _velocidadOriginal;
         _agenteTocado = null;
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private void Diagnostico(NPCBehaviourManagerV2 npc, Vector3 destino, string momento)
     {
         var a = npc.Agent;

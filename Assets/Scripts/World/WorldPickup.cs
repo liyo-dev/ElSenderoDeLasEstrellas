@@ -254,7 +254,7 @@ public class WorldPickup : MonoBehaviour
 
         if (removed > 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[WorldPickup] 🧹 Limpiados {removed} flags GUID antiguos del preset");
 #endif
         }
@@ -295,12 +295,7 @@ public class WorldPickup : MonoBehaviour
         if (!string.IsNullOrEmpty(pickupIdOverride))
             return $"PICKUP_{pickupIdOverride}";
         
-        // SIEMPRE generar ID único basado en escena + nombre + posición
-        // Esto garantiza que cada pickup tenga un ID único automáticamente
-        // y que no se use ningún GUID antiguo del prefab
-        var sceneName = gameObject.scene.IsValid() ? gameObject.scene.name : "Unknown";
-        var pos = transform.position;
-        var posKey = $"{pos.x:F1}_{pos.y:F1}_{pos.z:F1}";
-        return $"PICKUP_{sceneName}_{gameObject.name}_{posKey}";
+        // Id automático: escena + nombre + posición (nunca el GUID antiguo del prefab).
+        return $"PICKUP_{IdDePersistencia.DeObjeto(gameObject)}";
     }
 }

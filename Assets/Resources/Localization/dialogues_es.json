@@ -453,6 +453,18 @@
             "value": "Sigue el camino; no debe andar lejos."
         },
         {
+            "key": "DLG_ELDRAN_WILL_MISSION1_INPROGRESS_01",
+            "value": "¿Todavía no te la has gastado? Una tontería, Will, lo que tú quieras."
+        },
+        {
+            "key": "DLG_ELDRAN_WILL_MISSION1_INPROGRESS_02",
+            "value": "Date una vuelta por los puestos del mercado; seguro que algo te llama."
+        },
+        {
+            "key": "DLG_ELDRAN_MISSION3_INPROGRESS_01",
+            "value": "¡Ahora no, Will! ¡Atento al aro de su cuello!"
+        },
+        {
             "key": "DLG_ELDRAN_MISSION2_OFFER_01",
             "value": "Gracias por venir."
         },
@@ -478,7 +490,7 @@
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_02",
-            "value": "Sabía que podía contar contigo."
+            "value": "Y a Victoria, ni una palabra, ¿eh?"
         },
         {
             "key": "DLG_ELDRAN_MISSION2_TURNIN_03",
@@ -790,11 +802,11 @@
         },
         {
             "key": "DLG_GUERRERACHINA_05",
-            "value": "Podrás usar PROTECCIÓN si <kbonly>mantienes pulsado <sprite name=\"interactable_lt\"></kbonly><gpadonly>presionas <sprite name=\"interactable_lt\"> y <sprite name=\"interactable_rt\"> a la vez</gpadonly>."
+            "value": "Podrás usar PROTECCIÓN si mantienes pulsado <sprite name=\"interactable_b\">."
         },
         {
             "key": "DLG_GUERRERACHINA_06",
-            "value": "Voy a darte un hechizo nuevo: BOLA PRISMA. Usa <sprite name=\"interactable_b\"> y atacame con él."
+            "value": "Voy a darte un hechizo nuevo: BOLA PRISMA. Elígelo con <sprite name=\"interactable_lb\"> y atácame con <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_GUERRERACHINA_07",
@@ -1362,11 +1374,11 @@
         },
         {
             "key": "DLG_ELDRAN_CAJA_01",
-            "value": "Menos mal que te he alcanzado. Con el lío de las peras, casi se me olvida otra cosa."
+            "value": "Menos mal que te he alcanzado. Ya sé dónde está la otra caja."
         },
         {
             "key": "DLG_ELDRAN_CAJA_02",
-            "value": "He dejado una caja de manzanas ahí dentro, en el bosque. ¿Puedes ir a por ella?"
+            "value": "Ahí dentro está la caja, con las manzanas. ¿Puedes ir a por ella?"
         },
         {
             "key": "DLG_ELDRAN_CAJA_03",
@@ -1379,6 +1391,34 @@
         {
             "key": "DLG_ELDRAN_CAJA_05",
             "value": "Ven, sígueme."
+        },
+        {
+            "key": "DLG_ELDRAN_SIGUEME_INPROGRESS_01",
+            "value": "No te quedes atrás, Will. Ya casi estamos."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_01",
+            "value": "¿Y la otra caja?"
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_02",
+            "value": "En el bosque. La dejé allí esta mañana."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_VICTORIA_03",
+            "value": "Victoria no te va a dejar olvidarlo."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_01",
+            "value": "¿Y en qué te has gastado la moneda?"
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_02",
+            "value": "En una estrella de madera. Algo torcida."
+        },
+        {
+            "key": "DLG_ELDRAN_CHARLA_ESTRELLA_03",
+            "value": "Entonces es perfecta."
         }
     ]
 }

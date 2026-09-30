@@ -9,7 +9,7 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Quests", "Completar pasos de quest", "Marca pasos como hechos y, opcionalmente, cierra la quest.")]
-public sealed class CompleteQuestStepsNode : NarrativeNode
+public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffect
 {
     [Header("Quest")]
     [Tooltip("ID de la quest que se actualizará.")]
@@ -31,6 +31,14 @@ public sealed class CompleteQuestStepsNode : NarrativeNode
 
     [Tooltip("Muestra advertencias cuando los datos son inválidos.")]
     public bool logWarnings = true;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (string.IsNullOrWhiteSpace(questId)) return;
+        bool porCondicion = stepConditionIds != null && stepConditionIds.Count > 0;
+        state.CompleteQuestSteps(questId, porCondicion ? stepConditionIds : null, porCondicion ? null : steps);
+        if (completeQuest) state.CompleteQuest(questId);
+    }
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {

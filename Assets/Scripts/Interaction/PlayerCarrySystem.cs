@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using Invector.vCharacterController;
 
 [RequireComponent(typeof(Animator))]
@@ -31,6 +32,8 @@ public class PlayerCarrySystem : MonoBehaviour
     private Rigidbody _carriedRigidbody;
     private PickupObject _carriedPickupObject;
     private Collider[] _carriedColliders;
+    private Transform _padreOriginal;
+    private Scene _escenaOriginal;
     private bool _isCarrying;
     private bool _isPickingUp;
     private float _lastDropTime = -999f;
@@ -79,6 +82,8 @@ public class PlayerCarrySystem : MonoBehaviour
         if (pickup != null) obj = pickup.gameObject;
 
         _carriedObject = obj;
+        _padreOriginal = obj.transform.parent;
+        _escenaOriginal = obj.scene;
         _carriedRigidbody = obj.GetComponent<Rigidbody>();
         _carriedPickupObject = obj.GetComponent<PickupObject>();
 
@@ -148,7 +153,7 @@ public class PlayerCarrySystem : MonoBehaviour
 
         _carriedPickupObject?.OnDropped();
 
-        _carriedObject.transform.SetParent(null);
+        DevolverASuSitio(_carriedObject);
         
         // Reactivar colliders
         if (_carriedColliders != null)
@@ -264,7 +269,7 @@ public class PlayerCarrySystem : MonoBehaviour
                 _carriedRigidbody.useGravity  = true;
             }
             if (_carriedObject != null)
-                _carriedObject.transform.SetParent(null);
+                DevolverASuSitio(_carriedObject);
 
             if (_isCarrying && _actionManager != null)
                 _actionManager.PopMode(ActionMode.Carrying);
@@ -275,6 +280,28 @@ public class PlayerCarrySystem : MonoBehaviour
             _carriedRigidbody = null;
             _carriedPickupObject = null;
         }
+    }
+
+    /// <summary>
+    /// Devuelve el objeto soltado a su padre y a su escena de antes de cogerlo. Mientras se lleva
+    /// cuelga del jugador, que vive en una escena persistente: sin esto, el objeto soltado se quedaría
+    /// en esa escena, no se descargaría con el mundo y aparecería repetido al cargar partida (INC-540).
+    /// </summary>
+    private void DevolverASuSitio(GameObject obj)
+    {
+        if (_padreOriginal != null)
+        {
+            obj.transform.SetParent(_padreOriginal, worldPositionStays: true);
+        }
+        else
+        {
+            obj.transform.SetParent(null, worldPositionStays: true);
+            if (_escenaOriginal.IsValid() && _escenaOriginal.isLoaded && obj.scene != _escenaOriginal)
+                SceneManager.MoveGameObjectToScene(obj, _escenaOriginal);
+        }
+
+        _padreOriginal = null;
+        _escenaOriginal = default;
     }
 
     void OnDrawGizmos()

@@ -97,13 +97,13 @@ namespace Game.NPC.States
 
             if (context.DebugMode)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] ⚔️ ENTRANDO EN COMBATE - ForcedTarget: {_forcedTarget?.name ?? "NULL"}, Registry.Count: {ActiveCombatRegistry.Count}");
 #endif
                 ActiveCombatRegistry.GetAllInCombatNonAlloc(_combatNpcBuffer);
                 foreach (var npc in _combatNpcBuffer)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}]   Registry NPC: {npc?.name ?? "NULL"} (active: {npc?.activeInHierarchy})");
 #endif
                     }
@@ -155,7 +155,7 @@ namespace Game.NPC.States
                 _currentTarget = _forcedTarget;
                 if (context.DebugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target forzado: {_forcedTarget.name}");
                     #endif
                 }
@@ -189,7 +189,7 @@ namespace Game.NPC.States
 
             if (context.DebugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] OnEnter completado - Target: {_currentTarget?.name ?? "NINGUNO"}");
                 #endif
             }
@@ -221,7 +221,7 @@ namespace Game.NPC.States
                 {
                     if (context.DebugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target forzado {_forcedTarget.name} está muerto, liberando target...");
                         #endif
                     }
@@ -264,7 +264,7 @@ namespace Game.NPC.States
                 {
                     if (context.DebugMode)
                     {
-                        #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                        #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[AllyCombatState:{context.Transform.name}] ☠️ Target {_currentTarget.name} murió, buscando otro...");
                         #endif
                     }
@@ -301,7 +301,7 @@ namespace Game.NPC.States
                             _forcedTargetName = npc.name;
                             if (context.DebugMode)
                             {
-                                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                                 Debug.Log($"[AllyCombatState:{context.Transform.name}] 🎯 Target encontrado en Registry: {npc.name}");
                                 #endif
                             }
@@ -323,7 +323,7 @@ namespace Game.NPC.States
 
                     if (context.DebugMode && (int)_noEnemyTimer != (int)(_noEnemyTimer - Time.deltaTime) && _noEnemyTimer > 1f)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏳ Sin enemigos por {_noEnemyTimer:F1}s (timeout: {NO_ENEMY_TIMEOUT}s)");
 #endif
                         }
@@ -528,7 +528,7 @@ namespace Game.NPC.States
             StopMovement(context);
             if (context.DebugMode)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] 🏳️ Saliendo de combate");
                 #endif
             }
@@ -545,7 +545,7 @@ namespace Game.NPC.States
             {
                 if (context.DebugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}] ⏰ Timeout sin enemigos, volviendo a seguir al jugador.");
                     #endif
                 }
@@ -598,7 +598,7 @@ namespace Game.NPC.States
             {
                 if (context.DebugMode)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Registry: {_currentTarget.name}");
                     #endif
                 }
@@ -625,13 +625,13 @@ namespace Game.NPC.States
             {
                 if (_currentTarget != null)
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}] ✅ Enemigo via Layer: {_currentTarget.name}");
                     #endif
                 }
                 else
                 {
-                    #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[AllyCombatState:{context.Transform.name}] ❌ Sin enemigos (Registry:{_combatNpcBuffer.Count}, Layers:{hitCount})");
                     #endif
                 }
@@ -739,44 +739,37 @@ namespace Game.NPC.States
             
             if (_partyMember == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay NPCPartyMember!");
 #endif
                 return;
             }
 
-            // Rotar entre los 3 hechizos disponibles (runtime overrides o PartyConfig)
+            // Rotar entre sus hechizos: los básicos (hasta 4) y el especial (INC-498).
+            var spells = _partyMember.EffectiveSpells;
+            int spellCount = spells.Count;
             MagicSpellSO spell = null;
-            int attempts = 0;
-            int selectedIndex = _currentSpellIndex;
-            while (spell == null && attempts < 3)
+            int selectedIndex = 0;
+            if (spellCount > 0)
             {
-                spell = _partyMember.GetEffectiveSpell(_currentSpellIndex);
-                if (spell == null)
-                {
-                    _currentSpellIndex = (_currentSpellIndex + 1) % 3;
-                    attempts++;
-                }
-                else
-                {
-                    selectedIndex = _currentSpellIndex;
-                }
+                selectedIndex = _currentSpellIndex % spellCount;
+                spell = spells[selectedIndex];
             }
             
             if (spell == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ No hay ningún hechizo configurado en PartyConfig!");
 #endif
                 return;
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[AllyCombatState:{context.Transform.name}] 📝 Hechizo seleccionado: [{selectedIndex}] {spell.name}");
 #endif
             
             // Rotar al siguiente hechizo para el próximo ataque
-            _currentSpellIndex = (_currentSpellIndex + 1) % 3;
+            _currentSpellIndex = (selectedIndex + 1) % spellCount;
             
             // Iniciar casting con delay
             StartCasting(context, spell);
@@ -802,8 +795,9 @@ namespace Game.NPC.States
             // Usar el castDelay del hechizo (como hace el player)
             _castTimer = spell.castDelaySeconds > 0 ? spell.castDelaySeconds : 0.15f;
             
-            // Actualizar cooldown basado en el hechizo
-            _attackCooldown = spell.cooldown > 0 ? spell.cooldown + 0.5f : DEFAULT_ATTACK_COOLDOWN;
+            // Pausa del aliado entre ataques: la marca su IA, no el hechizo (los hechizos no tienen
+            // enfriamiento; ver MagicSpellSO.manaCost). Así no ametralla y deja espacio al jugador.
+            _attackCooldown = _castTimer + DEFAULT_ATTACK_COOLDOWN;
             
             // Reproducir animación de casting ANTES de lanzar
             context.Animator?.PlaySpellCast();
@@ -814,7 +808,7 @@ namespace Game.NPC.States
                 AudioService.Instance?.PlaySFX(spell.castSFXKey, worldPosition: context.Transform.position);
             }
             
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[AllyCombatState:{context.Transform.name}] 🔮 Iniciando cast de {spell.name} " +
                       $"(delay:{_castTimer:F2}s, cd:{_attackCooldown:F1}s, speed:{spell.initialSpeed}, dmg:{spell.damage})");
 #endif
@@ -827,7 +821,7 @@ namespace Game.NPC.States
         {
             if (spell == null || spell.prefab == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Spell o prefab es null!");
 #endif
                 return;
@@ -836,7 +830,7 @@ namespace Game.NPC.States
             // Verificar que aún tenemos target
             if (_currentTarget == null || !_currentTarget.gameObject.activeInHierarchy)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] ⚠️ Target perdido durante casting, cancelando...");
 #endif
                 return;
@@ -919,14 +913,14 @@ namespace Game.NPC.States
                 magicProj.Configure(config, context.Transform.gameObject);
                 magicProj.Launch(direction, spell.initialSpeed, spell.useGravity);
                 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[AllyCombatState:{context.Transform.name}] 🔥 Lanzando {spell.name} hacia {_currentTarget.name} " +
                           $"(dmg:{spell.damage}, speed:{spell.initialSpeed}, lifeTime:{spell.lifeTime}, maxRange:{spell.maxRange})");
 #endif
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[AllyCombatState:{context.Transform.name}] ⚠️ Proyectil no tiene MagicProjectile component!");
 #endif
             }

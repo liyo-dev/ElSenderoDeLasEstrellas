@@ -93,7 +93,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     private void OnPlayerRegistered(UnityEngine.GameObject player)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[CollectiblePopupQueue] OnPlayerRegistered called");
 #endif
         TryBindToPlayer();
@@ -121,7 +121,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         {
             _inventory.OnItemAdded -= OnItemAdded;
             // Previously also unsubscribed OnInventoryChanged; removed since we don't subscribe to it.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[CollectiblePopupQueue] Unbound from Inventory");
 #endif
             _inventory = null;
@@ -130,7 +130,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     private void OnInventoryChanged(ItemData item, int newAmount)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CollectiblePopupQueue] OnInventoryChanged called for {item?.displayName} newAmount={newAmount}");
 #endif
         // fallback: show the new total (used only if OnItemAdded isn't provided by publisher)
@@ -142,7 +142,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         if (!_popupsEnabled) return;
         if (item == null || addedAmount <= 0) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CollectiblePopupQueue] OnItemAdded called for {item?.displayName} added={addedAmount} total={newTotal}");
 #endif
 
@@ -211,7 +211,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     public void TestSpawn(ItemData item, int amount)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[CollectiblePopupQueue] TestSpawn called");
 #endif
         SpawnPopup(item, amount);
@@ -260,7 +260,7 @@ public class CollectiblePopupQueue : MonoBehaviour
             // If there's a pending grouped flush for this item, skip spawning now; the flush will spawn the aggregated popup.
             if (_pending.ContainsKey(key))
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[CollectiblePopupQueue] Spawn suppressed because a grouped flush is pending for {key}");
 #endif
                 return;
@@ -276,7 +276,7 @@ public class CollectiblePopupQueue : MonoBehaviour
                     {
                         if (p != null && p.ItemId == key)
                         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                             Debug.Log($"[CollectiblePopupQueue] Aggregating into already-creating popup for {key} (adding {amountToShow})");
 #endif
                             p.AddAmount(amountToShow);
@@ -284,7 +284,7 @@ public class CollectiblePopupQueue : MonoBehaviour
                         }
                     }
                 }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[CollectiblePopupQueue] Deferring spawn because {key} is being created");
 #endif
                 return;
@@ -295,7 +295,7 @@ public class CollectiblePopupQueue : MonoBehaviour
             {
                 if (Time.realtimeSinceStartup - last < dedupeWindow)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[CollectiblePopupQueue] Suppressed duplicate popup for {key} (within dedupe window {dedupeWindow}s)");
 #endif
                     // remove creation reservation since we won't create
@@ -313,7 +313,7 @@ public class CollectiblePopupQueue : MonoBehaviour
                 {
                     if (p != null && p.ItemId == key)
                     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log($"[CollectiblePopupQueue] Aggregating into existing popup for {key} (adding {amountToShow})");
 #endif
                         p.AddAmount(amountToShow);
@@ -326,7 +326,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
         if (popupPrefab == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CollectiblePopupQueue] popupPrefab is null — cannot spawn popup.");
 #endif
             // ensure we release reservation if present
@@ -342,7 +342,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         var go = Instantiate(popupPrefab, parent);
         if (go == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CollectiblePopupQueue] Instantiate returned null");
 #endif
             if (item != null)
@@ -375,7 +375,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CollectiblePopupQueue] Spawned popup root has no RectTransform (not a UI element). It may not be visible inside a Canvas.");
 #endif
         }
@@ -386,7 +386,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         var panel = go.GetComponent<CollectiblePopupPanel>();
         if (panel != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[CollectiblePopupQueue] Spawned popup for {item?.displayName} amount={amountToShow}");
 #endif
             panel.Init(item, amountToShow, displayDuration);
@@ -401,13 +401,13 @@ public class CollectiblePopupQueue : MonoBehaviour
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CollectiblePopupQueue] popupPrefab has no CollectiblePopupPanel component. Inspecting children...");
 #endif
             var panelChild = go.GetComponentInChildren<CollectiblePopupPanel>();
             if (panelChild != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[CollectiblePopupQueue] Found CollectiblePopupPanel in children — initializing");
 #endif
                 panelChild.Init(item, amountToShow, displayDuration);
@@ -421,7 +421,7 @@ public class CollectiblePopupQueue : MonoBehaviour
             }
             else
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[CollectiblePopupQueue] No CollectiblePopupPanel found on popup prefab. Destroying instance.");
 #endif
                 if (item != null)

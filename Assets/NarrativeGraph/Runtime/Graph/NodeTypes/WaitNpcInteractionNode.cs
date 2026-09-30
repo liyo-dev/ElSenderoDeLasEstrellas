@@ -67,13 +67,13 @@ public sealed class WaitNpcInteractionNode : NarrativeNode
         _handler = () =>
         {
             Unsubscribe();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[WaitNpcInteractionNode:{guid}] ✅ El jugador habló con '{npcId}' → avanzando");
 #endif
             ready?.Invoke();
         };
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[WaitNpcInteractionNode:{guid}] Esperando '{_key}'...");
 #endif
         _signals.OnCustom(_key, _handler);
@@ -113,7 +113,7 @@ public sealed class WaitNpcInteractionNode : NarrativeNode
     {
         var npc = NPCRegistry.HasInstance ? NPCRegistry.Instance.GetNPCByID(npcId) : null;
         var actor = npc != null ? npc.GetComponent<NarrativeActor>() : null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (actor == null)
             Debug.LogWarning($"[WaitNpcInteractionNode:{guid}] '{npcId}' no tiene NarrativeActor — no se puede mostrar/ocultar el icono de quest.");
 #endif

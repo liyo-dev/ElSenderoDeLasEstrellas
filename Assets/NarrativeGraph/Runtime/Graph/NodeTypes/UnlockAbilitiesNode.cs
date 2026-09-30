@@ -5,7 +5,7 @@ using UnityEngine;
 
 [Serializable]
 [NarrativeNodeInfo("Jugador", "Desbloquear habilidades", "Desbloquea habilidades y hechizos.")]
-public sealed class UnlockAbilitiesNode : NarrativeNode
+public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
 {
     [Header("Internal Unlock - Abilities & Spells")]
     [Tooltip("Habilidades principales (swim/jump/climb/magic/fly) a desbloquear desde el grafo")]
@@ -37,6 +37,19 @@ public sealed class UnlockAbilitiesNode : NarrativeNode
     [Header("Save/Apply")]
     public bool applyPresetAfterUnlock = true;
     public bool saveAfterUnlock = true;
+
+    public void Project(INarrativeStateWriter state)
+    {
+        if (state.TryGetExtension<IPlayerLoadoutState>(out var loadout))
+        {
+            if (abilityKeysToUnlock != null)
+                foreach (var key in abilityKeysToUnlock) loadout.UnlockAbility(key);
+            if (spellsToUnlock != null)
+                foreach (var spell in spellsToUnlock)
+                    if (spell != SpellId.None) loadout.UnlockSpell(spell, assignSpellsToEmptySlot);
+        }
+        if (!string.IsNullOrEmpty(oneShotFlag)) state.SetFlag(oneShotFlag, true);
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

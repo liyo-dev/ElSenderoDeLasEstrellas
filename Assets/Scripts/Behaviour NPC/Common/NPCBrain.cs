@@ -129,12 +129,17 @@ namespace Game.NPC.Common
             // grafo narrativo (WaitCustomEventNode escuchando "NPC_INTERACT_{persistenceId}")
             // sin depender de NPCInteractiveNarrativeExecutor. No cambia ningún comportamiento
             // existente: es un evento adicional, no gatea ni sustituye nada de lo de abajo.
+            // Si alguien del grafo ya escucha esa señal (p. ej. un WaitNpcInteractionNode), la
+            // conversación es suya y este NPC no dice su frase de «mientras tanto» (prioridad 4).
             var manager = _context.Transform.GetComponent<NPCBehaviourManagerV2>();
-            if (manager != null && !string.IsNullOrEmpty(manager.PersistenceId))
+            string actorId = manager != null ? manager.PersistenceId : null;
+            bool grafoEsperaEstaCharla = false;
+            if (!string.IsNullOrEmpty(actorId))
             {
-                DefaultNarrativeSignals.Instance?.RaiseCustom(
-                    $"NPC_INTERACT_{manager.PersistenceId}",
-                    $"[NPCBrain] Interacción con {_context.Transform.name}");
+                string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
+                var senales = DefaultNarrativeSignals.Instance;
+                grafoEsperaEstaCharla = senales != null && senales.HasCustomListener(clave);
+                senales?.RaiseCustom(clave, $"[NPCBrain] Interacción con {_context.Transform.name}");
             }
 
             // PRIORIDAD 1: COMBATE (Post-Derrota)
@@ -177,12 +182,15 @@ namespace Game.NPC.Common
                 _context.IsInteracting = true;
                 bool questHandled = config.questConfig.ProcessInteraction(interactor, _context);
                 
-                if (!questHandled)
-                {
-                    _context.IsInteracting = false; // Revertir si falló
-                }
-                return questHandled;
+                if (questHandled) return true;
+                _context.IsInteracting = false; // Revertir si falló
             }
+
+            // PRIORIDAD 4: FRASE DE «MIENTRAS TANTO» DEL GRAFO
+            // Nadie del grafo esperaba esta charla: si el NPC tiene algo que decir en este punto de
+            // la historia (p. ej. encargó una misión que sigue en curso), lo dice. Ver INC-514.
+            if (!grafoEsperaEstaCharla && NarrativeStandingLines.TryPlay(actorId, _context.Transform))
+                return true;
 
             return false;
         }

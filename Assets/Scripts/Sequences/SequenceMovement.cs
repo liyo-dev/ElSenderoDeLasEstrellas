@@ -23,6 +23,31 @@ public static class SequenceMovement
     /// CinematicState.HasReachedDestination().
     public const float ArrivalTolerance = 0.25f;
 
+    /// Coloca a un actor en una posición del mundo al instante (detrás de un corte o fuera de
+    /// cámara). Con NavMeshAgent usa Warp: mover el transform a pelo deja al agente creyendo que
+    /// sigue donde estaba, y el siguiente movimiento lo devuelve allí. Si en ese punto no hay
+    /// NavMesh (lo alto de una colina, un tejado) el Warp falla; entonces se apaga el agente y se
+    /// coloca el transform, porque ahí el actor necesita estar, no navegar.
+    public static void PlaceAt(SequenceActor actor, Vector3 position, Quaternion rotation)
+    {
+        if (actor?.Transform == null) return;
+
+        actor.StopMovement();
+
+        var agent = actor.Agent;
+        bool colocado = false;
+        if (agent != null && agent.enabled && agent.isOnNavMesh) colocado = agent.Warp(position);
+
+        if (!colocado)
+        {
+            if (agent != null && agent.enabled) agent.enabled = false;
+            actor.Transform.position = position;
+        }
+
+        actor.Transform.rotation = rotation;
+        actor.SyncRotation();
+    }
+
     /// Lleva a un actor hasta una posición del mundo.
     ///
     /// speedOverride: 0 (lo normal) = usar la velocidad ya configurada en su NavMeshAgent, que es
@@ -41,7 +66,7 @@ public static class SequenceMovement
         // en vez de caer en un Lerp a mano que reintroduciría el patinaje de INC-209.
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SequenceMovement] '{actor.Id}' no tiene un NavMeshAgent utilizable " +
                 "(sin componente, desactivado, o fuera del NavMesh), así que va andando en línea " +
                 "recta en vez de navegando. Si esto sale en varios actores de la misma escena, lo " +
@@ -66,7 +91,7 @@ public static class SequenceMovement
         {
             target = hit.position;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[SequenceMovement] El destino de '{actor.Id}' ({destination}) no cae " +
@@ -109,12 +134,12 @@ public static class SequenceMovement
                 // Rotación continua hacia la dirección real de avance, para que nunca se le vea
                 // caminar de lado o de espaldas cuando la ruta gira.
                 if (agent.velocity.sqrMagnitude > 0.01f)
-                    anim?.FaceDirection(agent.velocity.normalized);
+                    GirarHaciaAvance(actor, anim, agent.velocity);
 
                 yield return null;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (elapsed >= timeout)
                 Debug.LogWarning($"[SequenceMovement] '{actor.Id}' no llegó a su destino en {timeout}s. " +
                     "La secuencia sigue desde donde esté. Suele significar que no hay ruta de NavMesh " +
@@ -129,6 +154,27 @@ public static class SequenceMovement
             actor.EndAgentOverride();
             actor.StopMovement();
         }
+    }
+
+    /// Grados por segundo a los que un personaje se gira hacia donde anda. A 300 un giro de 90°
+    /// tarda tres décimas: se lee como cambiar de rumbo, no como un salto de rotación.
+    public const float GiroAlAndar = 300f;
+
+    /// Gira al actor hacia donde avanza ESCRIBIENDO la rotación, y sincroniza el objetivo del
+    /// animador para que no lo arrastre de vuelta. No vale `NPCSimpleAnimator.FaceDirection`: solo
+    /// propone la rotación, y no llega a aplicarse si el animador tiene la rotación automática
+    /// apagada (un diálogo o una cinemática anterior la dejan así): el actor anda de espaldas.
+    /// Ver INC-313 e INC-479. Lo usan los dos caminos de movimiento (NavMesh y WalkPathBeat).
+    public static void GirarHaciaAvance(SequenceActor actor, NPCSimpleAnimator anim, Vector3 direccion)
+    {
+        direccion.y = 0f;
+        if (actor?.Transform == null || direccion.sqrMagnitude < 0.0001f) return;
+
+        actor.Transform.rotation = Quaternion.RotateTowards(
+            actor.Transform.rotation,
+            Quaternion.LookRotation(direccion.normalized, Vector3.up),
+            GiroAlAndar * Time.deltaTime);
+        anim?.SyncTargetRotation();
     }
 
     /// Punto de parada alrededor de otro actor: a 'distance' metros de él, en el ángulo indicado

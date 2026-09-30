@@ -1,43 +1,9 @@
-﻿﻿/// <summary>
-/// Interfaz para validar acciones del jugador sin depender de enums específicos.
-/// Usada para comunicación entre diferentes assemblies/namespaces.
+﻿/// <summary>
+/// Permisos de acción que el controlador de personaje (ensamblado de Plugins) consulta al juego
+/// sin depender de sus tipos. Lo implementa PlayerActionManager.
 /// </summary>
 public interface IActionValidator
 {
     bool CanJump();
     bool CanSprint();
-    bool CanAttack();
-    bool CanCastMagic();
-    bool CanInteract();
-
-    /// <summary>
-    /// FIX INC-012: indica si el jugador está actualmente en modo Vuelo.
-    /// Usado por vThirdPersonController para no exigir "isGrounded" al lanzar magia
-    /// mientras se vuela (de lo contrario CanAttack() del controlador base siempre
-    /// devuelve false en el aire y el hechizo nunca sale).
-    /// </summary>
-    bool IsFlying();
-}
-
-/// <summary>
-/// Interfaz para el sistema de casting de magia.
-/// Permite al vThirdPersonController (en Plugins) comunicarse con MagicCaster
-/// sin crear dependencias entre assemblies.
-/// </summary>
-public interface IMagicCaster
-{
-    /// <summary>
-    /// Intenta lanzar un hechizo por índice de slot
-    /// </summary>
-    /// <param name="slotIndex">0=Left, 1=Right, 2=Special</param>
-    /// <returns>true si el casting fue exitoso</returns>
-    bool TryCastSpell(int slotIndex);
-    
-    /// <summary>
-    /// Verifica si el slot especificado tiene un hechizo de tipo Levitación.
-    /// Los hechizos de levitación se manejan de forma especial (mantener/soltar botón).
-    /// </summary>
-    /// <param name="slotIndex">0=Left, 1=Right, 2=Special</param>
-    /// <returns>true si el hechizo es de tipo Levitación</returns>
-    bool IsLevitationSpell(int slotIndex);
 }

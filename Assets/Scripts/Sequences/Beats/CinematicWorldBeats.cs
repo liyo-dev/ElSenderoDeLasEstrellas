@@ -80,7 +80,7 @@ public class NubesDeAperturaBeat : SequenceBeat
 
         if (nube == null || lente == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NubesDeApertura] Sin prefab de nube o sin cámara cinemática ({note}).");
 #endif
             yield break;
@@ -171,7 +171,7 @@ public class NubesDeAperturaBeat : SequenceBeat
         der.transform.localScale = escalaNube;
         Vector3 desfase = Vector3.Scale(centroUnidad, escalaNube);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // Diagnostico (INC-383): si las nubes no se ven, esta linea dice si es que no se han
         // creado, si se han creado detras de la camara o si se han creado sin nada que pintar.
         Debug.Log($"[NubesDeApertura] '{nube.name}' x2 en '{camara.name}' a {dist:F1} m. " +
@@ -291,7 +291,7 @@ public static class CinematicWeather
         var ciclo = DayNightCycle.Instance;
         if (ciclo == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CinematicWeather] No hay ningún DayNightCycle cargado, así que el " +
                 "tiempo de esta cinemática no se puede cambiar. (Normal en una escena de prueba " +
                 "abierta suelta; en partida no debería pasar.)");
@@ -389,7 +389,7 @@ public static class CinematicWeather
 /// Se pega al suelo con un raycast por frame, así que sirve para cualquier relieve sin preparar
 /// nada — y por eso hay que poner las marcas en planta: la altura la calcula él.
 [Serializable]
-public class WalkPathBeat : SequenceBeat
+public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
 {
     [Tooltip("Quién anda.")]
     public string actorId;
@@ -446,6 +446,18 @@ public class WalkPathBeat : SequenceBeat
 
     // Buffer pre-alocado: el pegado al suelo corre una vez por frame (CLAUDE.md § 2).
     private static readonly RaycastHit[] s_hits = new RaycastHit[8];
+
+    /// Acaba en la última marca del camino.
+    public void Project(INarrativeStateWriter state)
+    {
+        if (markNames == null) return;
+        for (int i = markNames.Count - 1; i >= 0; i--)
+            if (!string.IsNullOrWhiteSpace(markNames[i]))
+            {
+                state.PlaceActor(actorId, NarrativeLocation.Local(markNames[i]));
+                return;
+            }
+    }
 
     public override string Describe()
         => $"Andar: {actorId} por {(markNames == null ? 0 : markNames.Count)} marca(s) a {speed} m/s";
@@ -736,7 +748,7 @@ public class WalkPathBeat : SequenceBeat
             if (agent.Warp(hit.position)) return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[WalkPathBeat] '{actor?.Id}' ha terminado el paseo fuera del NavMesh y no " +
             "hay suelo caminable a menos de 9 m. Se queda sin agente utilizable, asi que sus " +
             "movimientos siguientes tambien iran en linea recta. Lo que hay que mirar es el bakeado " +
@@ -745,13 +757,6 @@ public class WalkPathBeat : SequenceBeat
     }
 
     /// Un tramo del paseo: de donde esté el actor hasta 'destino'.
-    /// Grados por segundo a los que un personaje se gira hacia donde anda.
-    ///
-    /// Empezó en 720 (media vuelta en un cuarto de segundo) y se quedaba seco: Raúl, tras la
-    /// novena, «cuando cambian de dirección se ve muy brusco». A 300 un giro de 90° tarda tres
-    /// décimas, que es lo que tarda una persona en cambiar de rumbo andando.
-    private const float GiroAlAndar = 300f;
-
     private static IEnumerator Tramo(SequenceActor actor, NPCSimpleAnimator anim, Vector3 destino,
         float v, float paso, bool pegarAlSuelo, float alturaExtra, bool mirarAlAvance, float tope,
         string aDonde, bool animarAndando = true)
@@ -796,41 +801,13 @@ public class WalkPathBeat : SequenceBeat
             // pasitos, que es literalmente lo que salió en la novena grabación.
             if (animarAndando) anim?.SetMovementSpeed(paso);
 
-            // ── Girar hacia donde se anda ─────────────────────────────────────────────────────
-            //
-            // Esto ESCRIBE la rotación. Antes llamaba a `anim.FaceDirection(dir)`, que no gira a
-            // nadie: solo apunta `_targetRotation`, y quien gira es `ApplySmoothRotation()` en el
-            // Update del animador — que empieza con
-            //
-            //     if (_disableAutoRotation || AllowManualRotation) return;
-            //
-            // y `AllowManualRotation` lo pone a true este mismo beat, al empezar a andar. O sea
-            // que **durante toda la caminata no giraba nadie**: el personaje conservaba la
-            // rotación que tuviera al arrancar y se deslizaba por el camino.
-            //
-            // Es «los NPCs caminan de espaldas, el Archimago también, el Mago Oscuro también»
-            // (INC-313), y es el tercer sitio donde aparece el mismo fallo de fondo: una API que
-            // PROPONE una rotación en vez de aplicarla, combinada con la bandera que desactiva a
-            // quien la aplicaría. Los otros dos fueron `SequenceActor.Face` y el arrastre de
-            // vuelta al terminar de andar (INC-299).
-            //
-            // Se gira deprisa pero no de golpe: 720°/s da media vuelta en un cuarto de segundo,
-            // que se lee como girarse y echar a andar, no como un salto de rotación.
-            if (mirarAlAvance)
-            {
-                actor.Transform.rotation = Quaternion.RotateTowards(
-                    actor.Transform.rotation,
-                    Quaternion.LookRotation(dir, Vector3.up),
-                    GiroAlAndar * Time.deltaTime);
-
-                // Y que el animador no lo arrastre de vuelta en cuanto se suelte la bandera.
-                anim?.SyncTargetRotation();
-            }
+            // Girar hacia donde se anda: escribe la rotación (ver SequenceMovement.GirarHaciaAvance).
+            if (mirarAlAvance) SequenceMovement.GirarHaciaAvance(actor, anim, dir);
 
             yield return null;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (transcurrido >= tope)
             Debug.LogWarning($"[WalkPathBeat] '{actor.Id}' no llegó a '{aDonde}' en {tope}s. La " +
                 "secuencia sigue desde donde esté. Suele significar que está demasiado lejos para " +
@@ -1019,14 +996,14 @@ public class SaltoBeat : SequenceBeat
                 continue;
             if (UnityEngine.AI.NavMesh.Raycast(enSuelo.position, hit.position, out _, UnityEngine.AI.NavMesh.AllAreas))
                 continue;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (v != lado)
                 Debug.Log($"[SaltoBeat] '{quien}' iba a caer dentro de algo; salta {v.magnitude:F1} m " +
                           $"{(Vector3.Dot(v, lado) < 0f ? "hacia el otro lado" : "más corto")}.");
 #endif
             return v;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SaltoBeat] '{quien}' no tiene sitio libre a ningún lado: salta en el sitio.");
 #endif
         return Vector3.zero;
@@ -1239,7 +1216,7 @@ public class SolDeFondoBeat : SequenceBeat
         var luz = DayNightCycle.Sun;
         if (luz == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SolDeFondo] No hay sol del ciclo día/noche (¿MainWorld cargada?).");
 #endif
             yield break;
@@ -1258,7 +1235,7 @@ public class SolDeFondoBeat : SequenceBeat
         if (enCuadro)
         {
             forzado.ColocarEnCuadro(posicionX, alturaDeSalida, alturaDePuesta, puesta, segundos);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SolDeFondo] Sol en cuadro (x={posicionX:F2}), poniéndose en {puesta:F0} s.");
 #endif
             yield break;
@@ -1269,7 +1246,7 @@ public class SolDeFondoBeat : SequenceBeat
         float yawSol = ladoDeLaCamara + 180f;
         Vector3 haciaElSol = Quaternion.Euler(-elevacion, yawSol, 0f) * Vector3.forward;
         forzado.Colocar(Quaternion.LookRotation(-haciaElSol, Vector3.up), segundos);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[SolDeFondo] Sol a {elevacion:F0}° sobre el horizonte, hacia {Mathf.Repeat(yawSol, 360f):F0}°.");
 #endif
     }

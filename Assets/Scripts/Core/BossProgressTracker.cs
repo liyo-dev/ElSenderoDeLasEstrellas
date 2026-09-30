@@ -103,7 +103,7 @@ public class BossProgressTracker : MonoBehaviour
     {
         _defeated.Clear();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[BossProgressTracker] 📥 LoadFromSnapshot llamado");
 #endif
 
@@ -115,17 +115,17 @@ public class BossProgressTracker : MonoBehaviour
                 if (string.IsNullOrEmpty(id)) continue;
                 _defeated.Add(id);
                 count++;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[BossProgressTracker]   ✅ Boss derrotado cargado: '{id}'");
 #endif
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossProgressTracker] 📊 Total bosses derrotados cargados: {count}");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[BossProgressTracker] ⚠️ defeatedBossIds es NULL - no hay bosses derrotados");
 #endif
         }

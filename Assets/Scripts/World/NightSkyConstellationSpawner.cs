@@ -206,7 +206,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
     {
         if (dayNightCycle != null)
             dayNightCycle.TimeOfDayChanged += HandleTimeOfDayChanged;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning("[NightSkyConstellationSpawner] No se encontró ningún DayNightCycle en la escena; las constelaciones nunca se activarán.");
 #endif
@@ -244,7 +244,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
             frames++;
             yield return null;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (Camera.main == null)
             Debug.LogWarning("[NightSkyConstellationSpawner] Camera.main sigue sin existir tras esperar " + MaxCameraWaitFrames + " frames; las constelaciones se construirán con el radio de último recurso (fallbackRadius), que puede quedar más cerca que alguna montaña de fondo.");
 #endif

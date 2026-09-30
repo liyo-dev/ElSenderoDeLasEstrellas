@@ -116,7 +116,7 @@ namespace Game.NPC
         
         if (_leaderManager == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[NPCCombatTeam] {name}: No se encontró NPCBehaviourManagerV2 en este GameObject!");
 #endif
             enabled = false;
@@ -189,7 +189,7 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCCombatTeam] {name}: Combate global activo, se cancela nueva detección del equipo.");
 #endif
             }
@@ -202,7 +202,7 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: ¡Jugador detectado! Iniciando secuencia de equipo...");
 #endif
         }
@@ -243,7 +243,7 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCCombatTeam] {name}: NotifyPostDefeatDialogueFinished llamado múltiples veces - ignorando");
 #endif
             }
@@ -253,7 +253,7 @@ namespace Game.NPC
         IsPostDefeatDialogueFinished = true;
         if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: Diálogo post-derrota finalizado. Notificando al equipo.");
 #endif
         }
@@ -269,7 +269,7 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
-                #if UNITY_EDITOR || DEVELOPMENT_BUILD
+                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCCombatTeam] {name}: ⚠️ FORZANDO finalización de diálogo post-derrota");
                 #endif
             }
@@ -324,7 +324,7 @@ namespace Game.NPC
         
         if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: Miembro {member.name} derrotado ({_defeatedCount}/{_allMembers.Count})");
 #endif
         }
@@ -334,7 +334,7 @@ namespace Game.NPC
         {
             if (showDebugLogs)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCCombatTeam] {name}: ¡Todo el equipo ha sido derrotado!");
 #endif
             }
@@ -394,7 +394,7 @@ namespace Game.NPC
     {
         if (member.Configuration?.combatConfig == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[NPCCombatTeam] {name}: {member.name} no tiene combatConfig asignado — se excluye del combate de equipo (no podrá recibir daño). Revisa su NPCBehaviourManagerV2.");
 #endif
             OnMemberDefeated(member);
@@ -494,7 +494,7 @@ namespace Game.NPC
 
         if (showDebugLogs)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: ¡Jugador detectado! Deteniendo y encarando al equipo...");
 #endif
             }
@@ -581,14 +581,14 @@ namespace Game.NPC
 
             if (showDebugLogs && isFirstLine) // nadie llegó a hablar (ningún dialogueOnAlert configurado)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCCombatTeam] {name}: Ningún miembro tiene dialogueOnAlert configurado — se pasa directo a combate.");
 #endif
                 }
         }
         else if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: DialogueManager no disponible — se pasa directo a combate.");
 #endif
         }
@@ -615,7 +615,7 @@ namespace Game.NPC
 
         if (showDebugLogs)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: Equipo en combate.");
 #endif
             }
@@ -763,7 +763,7 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: Resucitando equipo...");
 #endif
         }
@@ -786,7 +786,7 @@ namespace Game.NPC
 
         if (showDebugLogs)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCCombatTeam] {name}: ¡Equipo resucitado!");
 #endif
         }

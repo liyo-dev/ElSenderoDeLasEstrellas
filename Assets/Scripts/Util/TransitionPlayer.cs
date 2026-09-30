@@ -39,7 +39,7 @@ public class TransitionPlayer : MonoBehaviour
         var tm = TransitionManager.Instance();
         if (tm == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TransitionPlayer] TransitionManager no encontrado. ¿Está Start cargada?");
 #endif
             return;
@@ -53,7 +53,7 @@ public class TransitionPlayer : MonoBehaviour
         var tm = TransitionManager.Instance();
         if (tm == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[TransitionPlayer] TransitionManager no encontrado. Cargo escena directa.");
 #endif
             SceneManager.LoadScene(sceneName);

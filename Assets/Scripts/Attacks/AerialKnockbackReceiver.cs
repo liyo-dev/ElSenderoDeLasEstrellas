@@ -285,7 +285,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
         else
             transform.position = finalPos;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AerialKnockbackReceiver] Fin del arco. groundY detectado={finalGroundY:F2}, posición final={finalPos}, rb.isKinematic (antes de restaurar)={_rigidbody?.isKinematic}");
 #endif
 
@@ -307,7 +307,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
                 _rigidbody.angularVelocity = Vector3.zero;
             }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[AerialKnockbackReceiver] Rigidbody restaurado: isKinematic={_rigidbody.isKinematic}, useGravity={_rigidbody.useGravity}, posición={_rigidbody.position}");
 #endif
         }
@@ -350,7 +350,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
                 if (sinkAmount > SinkTolerance)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.LogWarning($"[AerialKnockbackReceiver] Corrección post-aterrizaje: jugador {sinkAmount:F2}m por debajo del suelo detectado (rb.isKinematic={_rigidbody.isKinematic}, useGravity={_rigidbody.useGravity}). Reposicionando.");
 #endif
                     Vector3 corrected = _rigidbody.position;
@@ -437,7 +437,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
         float clamped = Mathf.Max(0f, closestDistance - GroundSkin);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AerialKnockbackReceiver] Obstrucción detectada en el arco ('{hitName}'), distancia recortada de {requestedDistance:F2}m a {clamped:F2}m.");
 #endif
         return clamped;

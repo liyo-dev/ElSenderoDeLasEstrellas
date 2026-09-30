@@ -1,0 +1,178 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef12fab86cd60144ebc5a9cc59e32e21, type: 3}
+  m_Name: Guion_Golem1_Estela
+  m_EditorClassIdentifier: Assembly-CSharp::GuionDeCombate
+  hablanteId: NPC_Estela
+  nombreHablante: Estela
+  mirarAlJugador: 0
+  introDelay: 0.6
+  introFallbackSeconds: 12
+  duracionBocadillo: 2.8
+  pausaEntreFrases: 0.6
+  umbralPocaVida: 0.35
+  umbralJefeCasiVencido: 0.2
+  segundosSinAcertar: 15
+  comentarios:
+  - momento: 0
+    fase: 0
+    key: EVT_ESTELA_GOLEM_01
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 0
+    fase: 0
+    key: EVT_ESTELA_GOLEM_02
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 10
+    fase: 0
+    key: EVT_ESTELA_GOLEM_PROVOCA_01
+    anim: 
+    vecesMax: 0
+    enfriamiento: 8
+    caducidad: 1.5
+    interrumpe: 1
+    duracion: 2.2
+  - momento: 10
+    fase: 0
+    key: EVT_ESTELA_GOLEM_PROVOCA_02
+    anim: 
+    vecesMax: 0
+    enfriamiento: 8
+    caducidad: 1.5
+    interrumpe: 1
+    duracion: 2.2
+  - momento: 11
+    fase: 0
+    key: EVT_ESTELA_GOLEM_VUELVE
+    anim: 
+    vecesMax: 2
+    enfriamiento: 12
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 3
+    fase: 0
+    key: EVT_ESTELA_GOLEM_REBOTA_01
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 0
+  - momento: 3
+    fase: 0
+    key: EVT_ESTELA_GOLEM_REBOTA_02
+    anim: 
+    vecesMax: 2
+    enfriamiento: 15
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 2
+    fase: 0
+    key: EVT_ESTELA_GOLEM_ACIERTO
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
+  - momento: 2
+    fase: 0
+    key: EVT_ESTELA_GOLEM_ANIMO
+    anim: 
+    vecesMax: 0
+    enfriamiento: 14
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 4
+    fase: 0
+    key: EVT_ESTELA_GOLEM_HERIDO
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 5
+    fase: 0
+    key: EVT_ESTELA_GOLEM_POCA_VIDA
+    anim: 
+    vecesMax: 2
+    enfriamiento: 30
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 6
+    fase: 0
+    key: EVT_ESTELA_GOLEM_ORBES
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 6
+    interrumpe: 0
+    duracion: 0
+  - momento: 7
+    fase: 1
+    key: EVT_ESTELA_GOLEM_FASE_2
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 3.5
+  - momento: 7
+    fase: 2
+    key: EVT_ESTELA_GOLEM_FASE_3
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 3.5
+  - momento: 12
+    fase: 0
+    key: EVT_ESTELA_GOLEM_REMATE
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 5
+  - momento: 8
+    fase: 0
+    key: EVT_ESTELA_GOLEM_CASI
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 4
+    interrumpe: 0
+    duracion: 0
+  - momento: 9
+    fase: 0
+    key: EVT_ESTELA_GOLEM_RECUERDA
+    anim: 
+    vecesMax: 2
+    enfriamiento: 25
+    caducidad: 3
+    interrumpe: 0
+    duracion: 0

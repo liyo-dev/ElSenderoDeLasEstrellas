@@ -94,15 +94,127 @@
         },
         {
             "id": "EVT_ELDRAN_HINT_ARO",
-            "text": "Look at the rune ring! You can only hurt him while it glows: attack then!"
+            "text": "Look at the rune ring around his neck! You can only hurt him while it glows."
         },
         {
             "id": "EVT_ELDRAN_HINT_SIN_ARO",
-            "text": "Not like that! Hit him while the ring isn't glowing and he heals. Wait for it to light up!"
+            "text": "Not like that! If the ring isn't glowing, you can't hurt him. Wait for it to light up!"
         },
         {
             "id": "EVT_ELDRAN_HINT_ORBES",
             "text": "He drops orbs when you hit him! Orange ones heal you, blue ones restore your magic. Grab them!"
+        },
+        {
+            "id": "EVT_ELDRAN_GUIA_RITMO",
+            "text": "Dodge his attack and shoot right after: he's worn out and the ring keeps glowing."
+        },
+        {
+            "id": "EVT_ELDRAN_AHORA_01",
+            "text": "Now, Will! The ring is glowing!"
+        },
+        {
+            "id": "EVT_ELDRAN_AHORA_02",
+            "text": "It's glowing! Shoot now!"
+        },
+        {
+            "id": "EVT_ELDRAN_ACIERTO_01",
+            "text": "That's it! That's how you hurt him!"
+        },
+        {
+            "id": "EVT_ELDRAN_SIN_ARO_02",
+            "text": "That did nothing! Save your magic until the ring glows."
+        },
+        {
+            "id": "EVT_ELDRAN_WILL_HERIDO",
+            "text": "Careful! When he raises his claws or marks the ground, get away, then strike back."
+        },
+        {
+            "id": "EVT_ELDRAN_POCA_VIDA",
+            "text": "You're hurt! Grab the orange orbs he drops when you hit him."
+        },
+        {
+            "id": "EVT_ELDRAN_FASE_2",
+            "text": "He's furious! Now he throws fire from afar too: keep moving!"
+        },
+        {
+            "id": "EVT_ELDRAN_FASE_3",
+            "text": "He's desperate! Watch the shadows on the ground: his magic will fall there!"
+        },
+        {
+            "id": "EVT_ELDRAN_CASI",
+            "text": "He's almost done! One last push, Will!"
+        },
+        {
+            "id": "EVT_ELDRAN_RECUERDA_ARO",
+            "text": "Don't waste your magic: wait for the ring to glow."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_01",
+            "text": "A stone golem! His front is solid rock: you won't even scratch him."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_02",
+            "text": "I'll distract him. When he comes for me, circle round and hit his back!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_PROVOCA_01",
+            "text": "Hey, pile of rocks, over here! Will, get behind him!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_PROVOCA_02",
+            "text": "He's after me! Hit him from behind, quick!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_VUELVE",
+            "text": "He's coming back for you, Will! Hold on, I'll draw him off."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REBOTA_01",
+            "text": "It just bounces off! You can't hurt him from the front."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REBOTA_02",
+            "text": "His back, Will! Aim for his back!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ACIERTO",
+            "text": "That's it! That one hurt!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ANIMO",
+            "text": "Well done! Keep it up!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_HERIDO",
+            "text": "Watch his rocks! If you see a shadow on the ground, move."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_POCA_VIDA",
+            "text": "Will, you're hurt! Grab the orange orbs."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_ORBES",
+            "text": "Orbs! Orange ones heal, blue ones restore magic."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_FASE_2",
+            "text": "He's angry! It's going to rain rocks: keep moving!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_FASE_3",
+            "text": "He's merging with the forest! Watch out when he jumps!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_REMATE",
+            "text": "He won't fall! That seal... someone summoned him. Together, Will! Get close and press <kbonly><sprite name=\"interactable_lt\"></kbonly><gpadonly><sprite name=\"interactable_lt\"> and <sprite name=\"interactable_rt\"> together</gpadonly>."
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_CASI",
+            "text": "Almost there! Don't let him breathe!"
+        },
+        {
+            "id": "EVT_ESTELA_GOLEM_RECUERDA",
+            "text": "The front is no use. Wait until he comes for me."
         },
         {
             "id": "EVT_ELDRAN_GUIA_LLAMADA",
@@ -622,23 +734,23 @@
         },
         {
             "id": "PERAS_01",
-            "text": "I told you the pears should go on top."
+            "text": "And the pears? Are they all right?"
         },
         {
             "id": "PERAS_02",
-            "text": "And I told you there wasn’t another crate. Look, they’re fine."
+            "text": "Look: apples at the bottom, pears on top. Not a single bruise."
         },
         {
             "id": "PERAS_03",
-            "text": "Well, they’re still intact. Maybe you were right."
+            "text": "...Fine. They’re still in one piece."
         },
         {
             "id": "PERAS_04",
-            "text": "See? Nothing to worry about. Go say hello to Will; he’s been waiting a while."
+            "text": "You’re the one who lost the other crate. Go on, say hello to Will."
         },
         {
             "id": "PERAS_05",
-            "text": "Will! Sorry about the fuss. You know what we’re like when it comes to packing fruit."
+            "text": "Will! Sorry about the fuss. You know what we’re like with the fruit."
         },
         {
             "id": "PERAS_06",
@@ -650,27 +762,139 @@
         },
         {
             "id": "HOOK_DISCUSION_01",
-            "text": "Victoria, careful! Put the apples on top and you’ll bruise the pears."
+            "text": "Victoria, don’t put the apples on top of the pears!"
         },
         {
             "id": "HOOK_DISCUSION_02",
-            "text": "There isn’t another crate, Eldran. This way, it all fits."
+            "text": "Where else would I put them? There’s only one crate, Eldran."
         },
         {
             "id": "HOOK_DISCUSION_03",
-            "text": "Then put the pears on top, like we always do."
+            "text": "There were two this morning!"
         },
         {
             "id": "HOOK_DISCUSION_04",
-            "text": "Arguing over crates again... I’d better see what’s going on."
+            "text": "Here they go again... I’d better see what’s going on."
         },
         {
             "id": "PERAS_OLIVER_VOY",
-            "text": "Need a hand with the crates?"
+            "text": "Need a hand?"
         },
         {
             "id": "PERAS_VICTORIA_QUEDATE",
-            "text": "Yes, please. Help me stack them before you two go."
+            "text": "Yes, please. Help me stack the fruit before you two go."
+        },
+        {
+            "id": "FINAL_MAGO_INTRO_01",
+            "text": "You made it all the way to my altar. How touching."
+        },
+        {
+            "id": "FINAL_MAGO_INTRO_02",
+            "text": "A wish like mine is not undone by good intentions."
+        },
+        {
+            "id": "FINAL_ESTELA_INICIO_01",
+            "text": "Together, as we agreed. His bolts can be sent back: block with <sprite name=\"interactable_b\"> right on time!"
+        },
+        {
+            "id": "FINAL_ESTELA_INICIO_02",
+            "text": "After each volley he's out of breath. That's our moment!"
+        },
+        {
+            "id": "FINAL_ESTELA_AHORA",
+            "text": "Now, he's open!"
+        },
+        {
+            "id": "FINAL_ESTELA_ESCUDO",
+            "text": "His shield stops everything. Wait until he tires... or send a bolt back."
+        },
+        {
+            "id": "FINAL_ESTELA_ACIERTO",
+            "text": "That's it, Will!"
+        },
+        {
+            "id": "FINAL_ESTELA_HERIDO",
+            "text": "Careful! The shadows on the ground warn you before they strike."
+        },
+        {
+            "id": "FINAL_ESTELA_POCA_VIDA",
+            "text": "Hold on, Will! Grab some orbs."
+        },
+        {
+            "id": "FINAL_ESTELA_FASE_2",
+            "text": "He's flying! The anchors on the pillars hold him up: break them. Liam, your pact shatters them."
+        },
+        {
+            "id": "FINAL_ESTELA_FASE_3",
+            "text": "Three nodes feed him and we must cut them together. Leave each of us at one: press <sprite name=\"interactable_dpad_down\"> and we'll hold."
+        },
+        {
+            "id": "FINAL_ESTELA_RECUERDA",
+            "text": "Don't waste magic on his shield."
+        },
+        {
+            "id": "FINAL_MAGO_MAREA",
+            "text": "No one crosses the tide."
+        },
+        {
+            "id": "FINAL_TIEMPO_WILL",
+            "text": "There's no gap at all... The Time spell. Just once."
+        },
+        {
+            "id": "FINAL_TIEMPO_PULSA",
+            "text": "Press <sprite name=\"interactable_confirm\"> to cast the Time spell."
+        },
+        {
+            "id": "FINAL_TIEMPO_RESQUICIO",
+            "text": "There... an opening! Follow the light."
+        },
+        {
+            "id": "FINAL_MAGO_VENCIDO",
+            "text": "Enough... enough. You win."
+        },
+        {
+            "id": "FINAL_ESTELA_ACABADO",
+            "text": "It's over! We've got him!"
+        },
+        {
+            "id": "FINAL_MAGO_TRAICION",
+            "text": "Fools."
+        },
+        {
+            "id": "FINAL_ESTELA_LIAM",
+            "text": "LIAM!"
+        },
+        {
+            "id": "FINAL_WILL_INTENTA_TIEMPO",
+            "text": "Time, again! Press <sprite name=\"interactable_confirm\">."
+        },
+        {
+            "id": "FINAL_WILL_POZO_SECO",
+            "text": "Nothing... The well is dry."
+        },
+        {
+            "id": "FINAL_ESTELA_CONDUCTO",
+            "text": "Will. The conduit."
+        },
+        {
+            "id": "FINAL_WILL_CUANTO",
+            "text": "How much can you give me?"
+        },
+        {
+            "id": "FINAL_ESTELA_TODO",
+            "text": "Everything I have left. I'm giving it to you."
+        },
+        {
+            "id": "FINAL_PULSA_GATILLOS",
+            "text": "Hold <sprite name=\"interactable_lt\"> and <sprite name=\"interactable_rt\"> to receive Estela's energy."
+        },
+        {
+            "id": "FINAL_PULSA_AGUJA",
+            "text": "Press <sprite name=\"interactable_confirm\"> to fire the needle of light at the conduit."
+        },
+        {
+            "id": "FINAL_MAGO_DESHACE",
+            "text": "No... my wish... the altar..."
         }
     ]
 }

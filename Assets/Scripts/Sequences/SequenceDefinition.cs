@@ -12,7 +12,7 @@ using UnityEngine;
 /// cabe aquí son las posiciones del mundo — los planos de cámara y las marcas de suelo — que viven
 /// en el SequenceStage de la escena y se referencian desde los beats por su nombre.
 [CreateAssetMenu(menuName = "El Sendero/Secuencias/Definición de secuencia", fileName = "SEQ_NuevaSecuencia")]
-public class SequenceDefinition : ScriptableObject
+public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
 {
     [Header("Identidad")]
     [Tooltip("Nombre legible de la secuencia, para logs y para el Inspector.")]
@@ -79,6 +79,30 @@ public class SequenceDefinition : ScriptableObject
                 foreach (var p in phases)
                     if (p?.beats != null) n += p.beats.Count;
             return n;
+        }
+    }
+
+    /// Lo que deja cambiado la secuencia al terminar (hoy: dónde quedan los actores), sin
+    /// reproducirla. Las marcas se emiten como locales: quien proyecta las liga a esta secuencia.
+    /// Una fase con condición depende de lo que pase al jugarla, así que no se proyecta: si movía
+    /// actores, se avisa para que se revise a mano.
+    public void Project(INarrativeStateWriter state)
+    {
+        if (phases == null) return;
+        foreach (var phase in phases)
+        {
+            if (phase?.beats == null) continue;
+            bool condicional = !string.IsNullOrWhiteSpace(phase.onlyIfFlag) || !string.IsNullOrWhiteSpace(phase.skipIfFlag);
+            foreach (var beat in phase.beats)
+            {
+                if (beat is not INarrativeStateEffect effect) continue;
+                if (condicional)
+                {
+                    state.Note($"'{name}', fase '{phase.name}': es condicional y cambia el estado; no se proyecta.");
+                    break;
+                }
+                effect.Project(state);
+            }
         }
     }
 

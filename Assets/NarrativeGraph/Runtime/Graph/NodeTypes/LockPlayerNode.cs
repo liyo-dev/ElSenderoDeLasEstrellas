@@ -7,14 +7,8 @@ using Sendero.UI;
 /// Bloquea: Move, Sprint, Jump, Interact.
 /// Colocar un nodo con bloquear=true antes del momento crítico y otro con bloquear=false después.
 ///
-/// FIX: PlayerActionManager.OnTopModeChanged no tiene ningún suscriptor que oculte el HUD —
-/// PlayerHUDV2 se oculta/muestra solo cuando cada sistema (DialogueManager,
-/// CinematicSequencerBase, etc.) lo llama explícitamente. Este nodo es el bloqueo genérico
-/// recomendado por CLAUDE.md §7 para secuencias construidas en NarrativeGraph (ej. combinado con
-/// ShowSpeechBubbleNode), así que sin este HideHUD/ShowHUD el HUD se quedaba visible durante esas
-/// secuencias. HideHUD()/ShowHUD() son idempotentes (guard interno _isVisible), igual que en
-/// CinematicSequencerBase.LockCinematic/EndCinematic, así que es seguro emparejarlos aquí con el
-/// Push/Pop sin coordinarse con los demás sistemas que también ocultan el HUD.
+/// También oculta el HUD mientras el jugador está bloqueado. El bloqueo y el desbloqueo son nodos
+/// distintos, así que piden y sueltan el HUD con la misma clave (el tipo del nodo). Ver INC-538.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Jugador", "Bloquear / soltar jugador", "Bloquea o libera el control del jugador.")]
@@ -37,11 +31,11 @@ public sealed class LockPlayerNode : NarrativeNode
         }
 
         if (bloquear)
-            PlayerHUDV2.Instance?.HideHUD();
+            PlayerHUDV2.Instance?.HideHUD(typeof(LockPlayerNode));
         else
-            PlayerHUDV2.Instance?.ShowHUD();
+            PlayerHUDV2.Instance?.ShowHUD(typeof(LockPlayerNode));
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[LockPlayerNode] jugador {(bloquear ? "bloqueado" : "desbloqueado")} (ActionMode.Cinematic), HUD {(bloquear ? "oculto" : "restaurado")}");
 #endif
         onReadyToAdvance?.Invoke();

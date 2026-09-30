@@ -121,7 +121,7 @@ public static class CameraDirectorService
     public static void Claim(object owner)
     {
         if (owner == null) return;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (s_currentOwner != null && !Equals(s_currentOwner, owner))
             Debug.Log($"[CameraDirectorService] '{Describe(owner)}' reclama la cámara mientras seguía " +
                 $"marcada como de '{Describe(s_currentOwner)}' (con o sin liberación pendiente) — relevo " +
@@ -154,7 +154,7 @@ public static class CameraDirectorService
         // consola, apunta directamente a quién es el dueño real que está bloqueando la cámara.
         if (!Equals(s_currentOwner, owner))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CameraDirectorService] Release() IGNORADO: '{Describe(owner)}' pide soltar la " +
                 $"cámara, pero el dueño actual es '{Describe(s_currentOwner)}'. Si la cámara se queda bloqueada " +
                 "en modo cinemático a partir de aquí, el dueño real es este, no quien intentó soltarla.");
@@ -187,11 +187,11 @@ public static class CameraDirectorService
             s_currentOwner = null;
             vThirdPersonCamera.lockCameraForCinematic = false;
             DevolverFov();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[CameraDirectorService] Cámara devuelta al gameplay (dueño soltado: '{Describe(owner)}').");
 #endif
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.Log($"[CameraDirectorService] Liberación de '{Describe(owner)}' superada por un Claim() " +
@@ -202,7 +202,7 @@ public static class CameraDirectorService
         s_pendingRelease = null;
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private static string Describe(object owner)
     {
         if (owner == null) return "(nadie)";
@@ -249,7 +249,7 @@ public static class CameraDirectorService
         var cam = s_camaraDeJuego;
         float desde = cam.fieldOfView;
         float hasta = s_fovDeJuego;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CameraDirectorService] FOV de juego devuelto: {desde:0.#}° → {hasta:0.#}° " +
                   "(lo había cambiado la cinemática).");
 #endif

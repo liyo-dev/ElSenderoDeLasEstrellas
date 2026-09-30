@@ -128,7 +128,7 @@ public class LorePopupUI : MonoBehaviour
     {
         if (_hudAndMinimapHidden) return;
         _hudAndMinimapHidden = true;
-        Sendero.UI.PlayerHUDV2.Instance?.HideHUD();
+        Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
         MinimapController.Instance?.SetHiddenByCinematic(true);
     }
 
@@ -137,7 +137,7 @@ public class LorePopupUI : MonoBehaviour
     {
         if (!_hudAndMinimapHidden) return;
         _hudAndMinimapHidden = false;
-        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD();
+        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
         MinimapController.Instance?.SetHiddenByCinematic(false);
     }
 
@@ -264,14 +264,14 @@ public class LorePopupUI : MonoBehaviour
     {
         if (popupRoot == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[LorePopupUI] ❌ 'popupRoot' no está asignado en el Inspector. El popup no será visible.");
 #endif
             yield break;
         }
         if (canvasGroup == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[LorePopupUI] ❌ 'canvasGroup' no está asignado en el Inspector. El popup no será visible.");
 #endif
             yield break;

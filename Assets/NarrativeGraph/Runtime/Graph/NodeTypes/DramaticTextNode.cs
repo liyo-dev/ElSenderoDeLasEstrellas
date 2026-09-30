@@ -31,7 +31,7 @@ public sealed class DramaticTextNode : NarrativeNode
 
         if (ui == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[DramaticTextNode] ❌ DramaticTextOverlayUI.Instance es NULL. " +
                            "Añade el prefab al Canvas persistente en Start.unity.");
 #endif
@@ -41,7 +41,7 @@ public sealed class DramaticTextNode : NarrativeNode
 
         if (config == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[DramaticTextNode] ❌ 'config' no está asignado en el nodo del grafo.");
 #endif
             onReadyToAdvance?.Invoke();
@@ -50,7 +50,7 @@ public sealed class DramaticTextNode : NarrativeNode
 
         if (config.phrases == null || config.phrases.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[DramaticTextNode] ❌ El DramaticPhraseConfig '{config.name}' no tiene frases.");
 #endif
             onReadyToAdvance?.Invoke();

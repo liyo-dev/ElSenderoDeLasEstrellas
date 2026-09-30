@@ -749,38 +749,9 @@ public class NarrativeTimelineWindow : EditorWindow
 
     private void OpenInGraphEditor(NarrativeGraph graph, NarrativeNode node)
     {
-        var windowType = Type.GetType("Sendero.Narrative.Editor.NarrativeGraphWindow, Assembly-CSharp-Editor");
-        if (windowType == null)
-        {
-            // Fallback: try all assemblies
-            foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
-            {
-                windowType = asm.GetType("Sendero.Narrative.Editor.NarrativeGraphWindow");
-                if (windowType != null) break;
-            }
-        }
-
-        if (windowType != null)
-        {
-            var window = EditorWindow.GetWindow(windowType);
-            if (window != null)
-            {
-                // Try invoking LoadGraph via reflection
-                var loadMethod = windowType.GetMethod("LoadGraph",
-                    System.Reflection.BindingFlags.NonPublic |
-                    System.Reflection.BindingFlags.Public |
-                    System.Reflection.BindingFlags.Instance);
-                if (loadMethod != null)
-                    loadMethod.Invoke(window, new object[] { graph });
-
-                window.Focus();
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[NarrativeTimeline] No se encontró NarrativeGraphWindow. Abre el editor manualmente.");
-            Selection.activeObject = graph;
-        }
+        var window = GetWindow<Sendero.Narrative.Editor.NarrativeGraphWindow>();
+        window.LoadGraph(graph);
+        window.Focus();
     }
 
     private void LaunchQuickTest(NarrativeGraph graph, NarrativeNode node, string graphLabel)

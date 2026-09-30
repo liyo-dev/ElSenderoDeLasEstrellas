@@ -64,6 +64,18 @@ namespace Invector.vCharacterController
         [HideInInspector]
         public float limitFallVelocity = -15f;
 
+        [Header("- Sostenerse en el aire (lanzar en el aire)")]
+        [Tooltip("Segundos que el personaje sigue sostenido en el aire después de que acabe cada acción (p. ej. cuando sale el hechizo). Si no encadena otra, al acabar este tiempo cae con normalidad.")]
+        [Min(0f)] public float airHoldWindow = 0.45f;
+        [Tooltip("Velocidad máxima de caída (m/s) mientras se sostiene: al encadenar lanzamientos baja despacio a esta velocidad.")]
+        [Min(0f)] public float airHoldFallSpeed = 1.2f;
+        [Tooltip("Fracción de la velocidad en el aire (airSpeed) con la que puede desplazarse mientras se sostiene.")]
+        [Range(0f, 1f)] public float airHoldMoveFactor = 0.3f;
+
+        [Header("- Compromiso al atacar")]
+        [Tooltip("Velocidad de giro (grados por segundo) hacia el objetivo al lanzar o defender. 1800 = media vuelta en 0,1 s.")]
+        [Min(90f)] public float commitTurnSpeed = 1800f;
+
         [Header("- Ground")]
         [Tooltip("Layers that the character can walk on")]
         public LayerMask groundLayer = 1 << 0;
@@ -119,6 +131,24 @@ namespace Invector.vCharacterController
         /// que controlen el rigidbody directamente para evitar interferencias del motor.
         /// </summary>
         public bool suppressAirMovement = false;
+        /// <summary>
+        /// Velocidad máxima de desplazamiento, en m/s. Infinito = sin tope. La pone
+        /// TopeDeVelocidadDelJugador (p. ej. mientras se sigue a un NPC, para no adelantarle).
+        /// </summary>
+        [System.NonSerialized] public float topeDeVelocidad = float.PositiveInfinity;
+        /// <summary>
+        /// Valor máximo de InputMagnitude (la animación de locomoción) mientras hay tope de
+        /// velocidad. Infinito = sin tope. Lo pone TopeDeVelocidadDelJugador con el MISMO criterio
+        /// que usan los NPCs (NavMeshAgentUtility.FactorDeLocomocion), para que al seguir a un NPC
+        /// el jugador se mueva igual que él: con su trote si el NPC trota, solo que un poco más
+        /// despacio. Ver INC-545.
+        /// </summary>
+        [System.NonSerialized] public float topeDeAnimacion = float.PositiveInfinity;
+        private float _airHoldUntil;                        // fin de la ventana de HoldAirborne()
+        protected int airJumpsUsed;                         // saltos en el aire gastados desde el último apoyo
+        private float _actionCommitUntil;                   // fin de la ventana de CommitToAction()
+        private Vector3 _commitFacing;                      // dirección hacia la que gira durante CommitToAction()
+        private bool _hasCommitFacing;
         internal bool _isStrafing;                          // internally used to set the strafe movement                
         internal Transform rotateTarget;                    // used as a generic reference for the camera.transform
         internal Vector3 input;                             // generate raw input for the controller
@@ -209,14 +239,98 @@ namespace Invector.vCharacterController
             moveDirection = Vector3.zero;
         }
 
+        /// <summary>True en el aire: sin tocar suelo o en pleno despegue de un salto.</summary>
+        public bool IsAirborne => !isGrounded || isJumping;
+
+        /// <summary>True mientras el personaje está en el aire sostenido por HoldAirborne().</summary>
+        public bool IsHoldingAirborne => !isGrounded && Time.time < _airHoldUntil;
+
+        /// <summary>True mientras dura CommitToAction(): el input de movimiento se ignora.</summary>
+        public bool IsActionCommitted => Time.time < _actionCommitUntil;
+
+        /// <summary>
+        /// Compromete al personaje con una acción (lanzar, defender...): durante 'seconds' se
+        /// ignora el input de movimiento, así que se frena y no gira con el stick. Si
+        /// 'faceDirection' no es cero, gira hacia ella a commitTurnSpeed (un giro de 180° dura
+        /// ~0,1 s). Saltar lo cancela (CancelActionCommit). Con el controlador deshabilitado o en
+        /// vuelo no hace nada. Ver INC-484.
+        /// </summary>
+        public void CommitToAction(float seconds, Vector3 faceDirection)
+        {
+            if (!enabled || suppressAirMovement) return;
+            faceDirection.y = 0f;
+            _hasCommitFacing = faceDirection.sqrMagnitude > 0.0001f;
+            if (_hasCommitFacing)
+            {
+                _commitFacing = faceDirection.normalized;
+                float angle = Vector3.Angle(Vector3.ProjectOnPlane(transform.forward, Vector3.up), _commitFacing);
+                if (angle > 1f) OnCommitTurnStarted?.Invoke(_commitFacing, angle);
+            }
+            _actionCommitUntil = Mathf.Max(_actionCommitUntil, Time.time + Mathf.Max(0f, seconds));
+        }
+
+        /// <summary>
+        /// Empieza un giro de CommitToAction: dirección final y grados que va a girar. Lo usa el
+        /// feedback visual de giro rápido.
+        /// </summary>
+        public event System.Action<Vector3, float> OnCommitTurnStarted;
+
+        /// <summary>Termina en el acto el sostén de HoldAirborne() (p. ej. al saltar en el aire).</summary>
+        public void CancelAirHold() => _airHoldUntil = 0f;
+
+        /// <summary>Termina en el acto la ventana de CommitToAction().</summary>
+        public void CancelActionCommit()
+        {
+            _actionCommitUntil = 0f;
+            _hasCommitFacing = false;
+        }
+
+        /// <summary>
+        /// Durante CommitToAction con dirección, gira hacia ella y devuelve true (la rotación por
+        /// stick no debe aplicarse ese fotograma). Respeta lockRotation.
+        /// </summary>
+        protected bool ApplyCommitFacing()
+        {
+            if (!_hasCommitFacing || !IsActionCommitted || lockRotation) return false;
+            var target = Quaternion.LookRotation(_commitFacing, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, target, commitTurnSpeed * Time.deltaTime);
+            return true;
+        }
+
+        /// <summary>True si el personaje ya mira hacia la dirección de CommitToAction (o no hay).</summary>
+        public bool IsFacingCommitDirection =>
+            !_hasCommitFacing || Vector3.Angle(transform.forward, _commitFacing) < 10f;
+
+        /// <summary>
+        /// Sostiene al personaje en el aire mientras dura la acción ('actionSeconds') y
+        /// airHoldWindow segundos más. Si no estaba ya sostenido, se para en seco (velocidad
+        /// vertical y horizontal a cero); si ya lo estaba, solo se alarga la ventana, así que al
+        /// encadenar llamadas sigue bajando despacio a airHoldFallSpeed. Al acabar la ventana
+        /// vuelve la gravedad normal. Sin haber despegado del todo (isGrounded), con el
+        /// controlador deshabilitado o con suppressAirMovement (vuelo) no hace nada.
+        /// Ver INC-483.
+        /// </summary>
+        public void HoldAirborne(float actionSeconds)
+        {
+            if (!enabled || suppressAirMovement || _rigidbody == null || _rigidbody.isKinematic) return;
+            if (isGrounded) return;
+
+            if (!IsHoldingAirborne)
+                _rigidbody.linearVelocity = Vector3.zero;
+
+            isJumping = false;
+            jumpCounter = 0f;
+            _airHoldUntil = Time.time + Mathf.Max(0f, actionSeconds) + airHoldWindow;
+        }
+
         #region Locomotion
 
         public virtual void SetControllerMoveSpeed(vMovementSpeed speed)
         {
-            if (speed.walkByDefault)
-                moveSpeed = Mathf.Lerp(moveSpeed, isSprinting ? speed.runningSpeed : speed.walkSpeed, speed.movementSmooth * Time.deltaTime);
-            else
-                moveSpeed = Mathf.Lerp(moveSpeed, isSprinting ? speed.sprintSpeed : speed.runningSpeed, speed.movementSmooth * Time.deltaTime);
+            float objetivo = speed.walkByDefault
+                ? (isSprinting ? speed.runningSpeed : speed.walkSpeed)
+                : (isSprinting ? speed.sprintSpeed : speed.runningSpeed);
+            moveSpeed = Mathf.Lerp(moveSpeed, Mathf.Min(objetivo, topeDeVelocidad), speed.movementSmooth * Time.deltaTime);
         }
 
         public virtual void MoveCharacter(Vector3 _direction)
@@ -457,7 +571,10 @@ namespace Invector.vCharacterController
                 if (facingDir.sqrMagnitude < 0.001f) return;
                 facingDir.Normalize();
 
-                float   horizSpeed  = Mathf.Max(currentHoriz.magnitude, airSpeed);
+                // Sostenido en el aire (HoldAirborne) solo se desplaza a una fracción de airSpeed.
+                float   horizSpeed  = IsHoldingAirborne
+                    ? airSpeed * airHoldMoveFactor
+                    : Mathf.Max(currentHoriz.magnitude, airSpeed);
                 Vector3 targetHoriz = facingDir * horizSpeed;
                 if (!IsFiniteVector(targetHoriz)) return;
 
@@ -494,6 +611,8 @@ namespace Invector.vCharacterController
             if (groundDistance <= groundMinDistance)
             {
                 isGrounded = true;
+                _airHoldUntil = 0f;
+                airJumpsUsed = 0;
                 if (!isJumping && groundDistance > 0.05f)
                     _rigidbody.AddForce(transform.up * (extraGravity * 2 * Time.deltaTime), ForceMode.VelocityChange);
 
@@ -501,7 +620,20 @@ namespace Invector.vCharacterController
             }
             else
             {
-                if (groundDistance >= groundMaxDistance)
+                if (IsHoldingAirborne)
+                {
+                    // Sostenido: sin gravedad extra; la velocidad vertical no sube de 0 y va
+                    // hacia -airHoldFallSpeed en ~0,25 s, así que baja despacio y siempre llega
+                    // al suelo aunque se siga lanzando.
+                    var vel = _rigidbody.linearVelocity;
+                    if (IsFiniteVector(vel))
+                    {
+                        float y = Mathf.Clamp(vel.y, -airHoldFallSpeed, 0f);
+                        vel.y = Mathf.MoveTowards(y, -airHoldFallSpeed, airHoldFallSpeed * 4f * Time.deltaTime);
+                        _rigidbody.linearVelocity = vel;
+                    }
+                }
+                else if (groundDistance >= groundMaxDistance)
                 {
                     // set IsGrounded to false 
                     isGrounded = false;

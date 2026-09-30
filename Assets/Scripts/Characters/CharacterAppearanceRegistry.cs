@@ -55,7 +55,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
             if (_builder != null && _builder.gameObject != null) return _builder;
             if (_builder != null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ _builder cacheado fue destruido — re-buscando.");
 #endif
                 }
@@ -63,7 +63,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
             PlayerService.TryGetComponent(out _builder);
             if (_builder == null)
                 {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ Builder es null — PlayerService no encontró ModularAutoBuilder en el player.");
 #endif
                 }
@@ -88,13 +88,13 @@ public class CharacterAppearanceRegistry : MonoBehaviour
     /// </summary>
     public void ApplyAppearance(PartyControlManager.CharacterSlot slot)
     {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance ENTER — slot={slot}, _builder={(object)_builder ?? "null"}, Instance={(object)Instance ?? "null"}");
 #endif
         var b = Builder;
         if (b == null)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) abortado — Builder null.");
             #endif
             return;
@@ -107,13 +107,13 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         // Si la apariencia de Will está vacía, el switch aborta SIN deactivar nada.
         if ((app == null || app.Count == 0) && slot == PartyControlManager.CharacterSlot.Will)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError("[CharacterAppearanceRegistry] ❌ _appearances[Will] vacío — ApplyAppearance abortado para evitar invisibilidad.");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) — partes: [{(app != null ? string.Join(", ", System.Linq.Enumerable.Select(app, kv => $"{kv.Key}:{kv.Value}")) : "NULL")}]");
 #endif
         b.DeactivateAllCategories();
@@ -121,7 +121,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         _currentBuilderSlot = slot;
 
         var postSelection = b.GetSelection();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] ApplyAppearance({slot}) COMPLETO — {postSelection.Count} partes activas: [{string.Join(", ", System.Linq.Enumerable.Select(postSelection, kv => $"{kv.Key}:{kv.Value}"))}]");
 #endif
 
@@ -129,7 +129,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         // parte activa (nombres que no existen en el builder), restaurar apariencia inicial.
         if (slot == PartyControlManager.CharacterSlot.Will && postSelection.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ ApplySelection de Will resultó vacío — restaurando apariencia inicial del prefab.");
 #endif
             b.RestoreInitialSelection();
@@ -156,7 +156,7 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         // sobreescribiría _appearances[slot] con la apariencia equivocada.
         if (_currentBuilderSlot.HasValue && _currentBuilderSlot.Value != slot)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[CharacterAppearanceRegistry] ⚠️ CaptureCurrentAppearance({slot}) rechazada — builder muestra {_currentBuilderSlot.Value}. Posible switch duplicado.");
 #endif
             return;
@@ -168,13 +168,13 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         // No sobreescribir la apariencia de Will con un estado vacío.
         if (slot == PartyControlManager.CharacterSlot.Will && selection.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ Ignorando captura vacía para Will — el builder no tiene partes activas.");
 #endif
             return;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] CaptureCurrentAppearance({slot}) — capturando: [{string.Join(", ", System.Linq.Enumerable.Select(selection, kv => $"{kv.Key}:{kv.Value}"))}]");
 #endif
         _appearances[(int)slot] = selection;
@@ -256,14 +256,14 @@ public class CharacterAppearanceRegistry : MonoBehaviour
         // La siguiente llamada (desde EnsureWillSnapshot o ApplyAppearance) podrá reintentar.
         if (sel.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[CharacterAppearanceRegistry] ⚠️ SnapshotWillFromBuilderIfNeeded: builder devolvió selección vacía — snapshot diferido.");
 #endif
             return;
         }
         _appearances[(int)PartyControlManager.CharacterSlot.Will] = sel;
         _willSnapshotTaken = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CharacterAppearanceRegistry] 📸 Pre-snapshot Will tomado: [{string.Join(", ", System.Linq.Enumerable.Select(_appearances[(int)PartyControlManager.CharacterSlot.Will], kv => $"{kv.Key}:{kv.Value}"))}]");
 #endif
     }

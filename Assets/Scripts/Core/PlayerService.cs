@@ -29,6 +29,9 @@ public sealed class PlayerService : MonoBehaviour
 
     readonly Dictionary<Type, Component> _componentCache = new();
 
+    // Lo que es del grupo y no del cuerpo (inventario, vestuario…). Ver GrupoDelJugador, INC-484.
+    GameObject _grupo;
+
     public static event Action<GameObject> OnPlayerRegistered;
     public static event Action OnPlayerUnregistered;
 
@@ -55,14 +58,14 @@ public sealed class PlayerService : MonoBehaviour
         }
     }
     public static bool HasInstance => _instance != null;
-    public static GameObject Player => Instance != null ? Instance.playerRoot : null;
+    public static GameObject Player => Instance != null ? Instance.JugadorVigente() : null;
     public static Transform PlayerTransform => TryGetComponent(out Transform result) ? result : null;
 
     void Awake()
     {
         if (_instance != null && _instance != this)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerService] Instancia duplicada detectada en '{name}'. Se destruye el duplicado.");
 #endif
             Destroy(gameObject);
@@ -128,6 +131,24 @@ public sealed class PlayerService : MonoBehaviour
     }
 
     /// <summary>
+    /// Registra el objeto del grupo (GrupoDelJugador). TryGetComponent busca en él lo que no
+    /// encuentra en el cuerpo del jugador.
+    /// </summary>
+    public static void RegistrarGrupo(GameObject grupo)
+    {
+        if (grupo == null || _isShuttingDown) return;
+        var inst = Instance;
+        if (inst == null) return;
+        inst._grupo = grupo;
+    }
+
+    public static void QuitarGrupo(GameObject grupo)
+    {
+        if (_isShuttingDown || !HasInstance) return;
+        if (_instance._grupo == grupo) _instance._grupo = null;
+    }
+
+    /// <summary>
     /// Limpia la referencia al jugador si coincide con la instancia registrada.
     /// </summary>
     public static void UnregisterPlayer(GameObject player)
@@ -182,6 +203,7 @@ public sealed class PlayerService : MonoBehaviour
 
     void InternalRegister(GameObject player, bool overwriteExisting)
     {
+        player = ResolverCuerpo(player);
         if (!overwriteExisting && playerRoot != null && playerRoot != player)
             return;
 
@@ -204,11 +226,26 @@ public sealed class PlayerService : MonoBehaviour
 
     void InternalUnregister(GameObject player)
     {
+        player = ResolverCuerpo(player);
         if (playerRoot != player) return;
 
         playerRoot = null;
         _componentCache.Clear();
         OnPlayerUnregistered?.Invoke();
+    }
+
+    // Si el cuerpo registrado se ha destruido (la escena se recargó después de registrarlo), se
+    // olvida y se busca el nuevo una vez. Sin esto, quien registrara al jugador pronto dejaba a
+    // `Player` devolviendo un objeto muerto para siempre. Ver INC-484.
+    GameObject JugadorVigente()
+    {
+        if (playerRoot == null && !ReferenceEquals(playerRoot, null))
+        {
+            playerRoot = null;
+            _componentCache.Clear();
+            TryGetPlayerInternal(out _, true);
+        }
+        return playerRoot;
     }
 
     bool TryGetPlayerInternal(out GameObject player, bool allowSceneLookup)
@@ -251,8 +288,28 @@ public sealed class PlayerService : MonoBehaviour
             }
         }
 
+        if (_grupo != null)
+        {
+            component = _grupo.GetComponentInChildren<T>(includeInactive);
+            if (component != null)
+            {
+                _componentCache[typeof(T)] = component;
+                return true;
+            }
+        }
+
         component = null;
         return false;
+    }
+
+    /// El jugador es el cuerpo que se mueve, el que lleva el controller: la raíz del prefab del
+    /// personaje es un contenedor que no se mueve en Play. Si se registra la raíz, se baja al cuerpo.
+    /// Ver INC-482.
+    static GameObject ResolverCuerpo(GameObject candidato)
+    {
+        if (candidato == null) return null;
+        var controller = candidato.GetComponentInChildren<Invector.vCharacterController.vThirdPersonController>(true);
+        return controller != null ? controller.gameObject : candidato;
     }
 
     void CacheDefaultComponents(GameObject player)
@@ -263,12 +320,9 @@ public sealed class PlayerService : MonoBehaviour
         CacheIfPresent<PlayerHealthSystem>(player);
         CacheIfPresent<ManaPool>(player);
         CacheIfPresent<MagicCaster>(player);
-        CacheIfPresent<SpecialChargeMeter>(player);
         CacheIfPresent<PlayerActionManager>(player);
-        CacheIfPresent<Inventory>(player);
         CacheIfPresent<ModularAutoBuilder>(player);
         CacheIfPresent<PlayerPickupCollector>(player);
-        CacheIfPresent<WardrobeInventory>(player);
     }
 
     void CacheIfPresent<T>(GameObject root) where T : Component

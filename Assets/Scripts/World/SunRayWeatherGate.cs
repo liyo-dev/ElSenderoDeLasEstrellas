@@ -43,7 +43,7 @@ public class SunRayWeatherGate : MonoBehaviour
         _cicloDiaNoche = Object.FindAnyObjectByType<DayNightCycle>();
         if (_cicloDiaNoche == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[SunRayWeatherGate] No se encontró DayNightCycle en la escena; los rayos de sol se quedan siempre visibles.");
 #endif
             return;

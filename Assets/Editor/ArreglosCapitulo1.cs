@@ -8,9 +8,10 @@ using UnityEngine;
 ///
 /// Todo se hace con PrefabUtility, SerializedObject y AssetDatabase — nada de YAML a mano (INC-249).
 ///
-///   1. Fuera «Will, ¡DESPIERTA!» y su iris. El nodo de texto dramático del grafo pasa a ser un
-///      fundido normal que destapa la habitación y pone su música. Se borran el shader y el
-///      material del iris y la frase, para no dejar basura.
+///   1. Fuera «Will, ¡despierta!» y su iris. El nodo 4 del grafo pasa a ser un ScreenFadeNode que
+///      destapa la habitación con la transición normal de Easy Transitions (Fade): el blanco del
+///      final del prólogo pasa a negro, la transición destapa y suena la música del cuarto. Se
+///      borran el shader y el material del iris y la frase (copia en Versiones antiguas). Ver INC-546.
 ///   2. Oliver se une al grupo. El Oliver que aparece en el mundo es el del ROSTER
 ///      (_NPCs/_GrafoNarrativo/Oliver.prefab), no _NPCs/Oliver.prefab, que es el que se había
 ///      preparado: el de verdad no era compañero ni tenía PartyConfig, y los PartyMembershipSignal
@@ -29,8 +30,10 @@ public static class ArreglosCapitulo1
     {
         "Assets/Shaders/UI/Mat_CircleIrisCutout.mat",
         "Assets/Shaders/UI/CircleIrisCutout.shader",
-        "Assets/_DIALOGUES/Prologo/DramaticText_Prolog.asset",
+        "Assets/_DIALOGUES/Prologo/DramaticText_DespiertaWill.asset",
     };
+
+    private const string RutaTransicion = "Assets/Scripts/Core/EasyTransitions/Transitions/Fade/Fade.asset";
 
     private const string RutaOliver = "Assets/_NPCs/_GrafoNarrativo/Oliver.prefab";
     private const string RutaPartyOliver = "Assets/_NPCs/Party/Oliver_PartyConfig.asset";
@@ -68,16 +71,20 @@ public static class ArreglosCapitulo1
         string r;
         var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(RutaGrafo);
         if (grafo == null) return $"(1) No encuentro {RutaGrafo}.";
+        var transicion = AssetDatabase.LoadAssetAtPath<EasyTransition.TransitionSettings>(RutaTransicion);
+        if (transicion == null) return $"(1) No encuentro {RutaTransicion}.";
 
         int i = grafo.nodes.FindIndex(n => n != null && n.guid == GuidNodoDespierta);
-        if (i < 0) r = "(1) El nodo de «Will, ¡DESPIERTA!» ya no está.";
-        else if (grafo.nodes[i] is ScreenFadeNode) r = "(1) El despertar ya era un fundido normal.";
+        if (i < 0) r = "(1) No encuentro el nodo 4 (despertar) en Cap1.";
+        else if (grafo.nodes[i] is ScreenFadeNode fundido && fundido.transicion == transicion && !fundido.fadeIn)
+            r = "(1) El nodo 4 ya destapa la habitación con Easy Transitions.";
         else
         {
             var viejo = grafo.nodes[i];
+            Undo.RecordObject(grafo, "Cap1: despertar con Easy Transitions");
             var nuevo = new ScreenFadeNode
             {
-                displayTitle = "4.- Se destapa la habitacion de Will",
+                displayTitle = "4.- Se destapa la habitacion de Will (Easy Transitions)",
                 chapter = viejo.chapter,
                 blockSaving = viejo.blockSaving,
                 inputAnchor = viejo.inputAnchor,
@@ -88,14 +95,15 @@ public static class ArreglosCapitulo1
                 position = viejo.position,
                 outputs = new List<string>(viejo.outputs),
                 color = Color.black,
-                duration = 0.8f,
+                duration = 0.6f,
                 fadeIn = false,
+                transicion = transicion,
                 restaurarMusicaDeEscena = true,
-                fundidoDeMusica = 2f,
+                fundidoDeMusica = 3f,
             };
             grafo.nodes[i] = nuevo;
             EditorUtility.SetDirty(grafo);
-            r = "(1) «Will, ¡DESPIERTA!» fuera: ahora la habitación se destapa con un fundido normal y suena su música.";
+            r = "(1) Fuera «Will, ¡despierta!» y el iris: la habitación se destapa con la transición de Easy Transitions (Fade) y suena su música.";
         }
 
         int borrados = 0;

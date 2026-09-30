@@ -79,7 +79,7 @@ public class LocalizedText : MonoBehaviour
 
         if (_tmp == null && _legacyText == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[LocalizedText] '{name}' no tiene TextMeshProUGUI ni Text (Legacy). Clave '{key}' no se aplicará.");
 #endif
             return;

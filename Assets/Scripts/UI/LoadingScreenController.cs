@@ -54,7 +54,7 @@ public class LoadingScreenController : MonoBehaviour, ILoadingUI
         if (!characterStage)
             characterStage = FindAnyObjectByType<LoadingCharacterStage>();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // DIAGNÓSTICO TEMPORAL (20 ago 2026): ver comentario en LoadingCharacterStage.Awake().
         Debug.Log(characterStage
             ? $"[LoadingScreen] characterStage resuelto: '{characterStage.name}' (entityId {characterStage.GetEntityId()}) en escena '{characterStage.gameObject.scene.name}'"
@@ -72,7 +72,7 @@ public class LoadingScreenController : MonoBehaviour, ILoadingUI
     {
         if (!panel)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[LoadingScreen] Panel not assigned.");
             #endif
             return;

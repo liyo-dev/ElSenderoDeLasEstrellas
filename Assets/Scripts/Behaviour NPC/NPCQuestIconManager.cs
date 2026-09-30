@@ -46,7 +46,7 @@ namespace Game.NPC
             
             if (_npcManager == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[NPCQuestIconManager:{name}] Falta NPCBehaviourManagerV2");
 #endif
                 enabled = false;
@@ -57,7 +57,7 @@ namespace Game.NPC
         {
             if (_npcManager.Configuration == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCQuestIconManager:{name}] Configuration es null — desactivando");
 #endif
                 enabled = false;
@@ -67,7 +67,7 @@ namespace Game.NPC
             _questConfig = _npcManager.Configuration.questConfig;
             if (_questConfig == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[NPCQuestIconManager:{name}] questConfig es null — desactivando");
 #endif
                 enabled = false;
@@ -92,7 +92,7 @@ namespace Game.NPC
             }
 
             bool qmAvailable = QuestManager.Instance != null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestIconManager:{name}] Start — questConfig={_questConfig.name}, QM={qmAvailable}");
 #endif
 
@@ -141,7 +141,7 @@ namespace Game.NPC
                 QuestManager.Instance.OnQuestCompleted += OnQuestChanged;
                 QuestManager.Instance.OnQuestsChanged += OnAnyQuestChanged;
             }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestIconManager:{name}] OnProfileReady — re-evaluando icono (QM={QuestManager.Instance != null})");
 #endif
             UpdateIconState();
@@ -178,7 +178,7 @@ namespace Game.NPC
                 if (!_iconForcedHidden)
                 {
                     _iconForcedHidden = true;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[NPCQuestIconManager:{name}] Forzando ocultar cabeza — executing={isExecuting}, diálogo={_isInDialogue}, combate={isInCombat}, lejano={isTooFar}, cinemática={isCinematicSequence}");
 #endif
                     if (_iconController != null && _iconController.HasPersistentIcon)
@@ -298,7 +298,7 @@ namespace Game.NPC
             _lastIconState = newState;
             _currentIconPrefab = newPrefab;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestIconManager:{name}] UpdateIconState — estado={newState}, prefab={newPrefab?.name ?? "NULL"}, stateChanged={stateChanged}, iconMissing={iconMissing}");
 #endif
 
@@ -315,7 +315,7 @@ namespace Game.NPC
         {
             if (_iconController == null || prefab == null) return;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NPCQuestIconManager:{name}] ShowIcon — prefab={prefab.name}");
 #endif
 
@@ -332,7 +332,7 @@ namespace Game.NPC
             if (_iconController.HasPersistentIcon)
             {
                 _iconController.HideAlertIcon();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCQuestIconManager:{name}] Ocultando icono de quest");
 #endif
             }

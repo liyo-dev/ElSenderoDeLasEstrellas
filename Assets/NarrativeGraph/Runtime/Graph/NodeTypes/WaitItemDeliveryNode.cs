@@ -83,7 +83,7 @@ public sealed class WaitItemDeliveryNode : NarrativeNode
         // idempotente si ya está mostrando el mismo prefab), así que no hay parpadeo al entregar.
         npc.GetComponent<NarrativeActor>()?.ShowQuestIcon(questIcon);
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[WaitItemDeliveryNode:{guid}] Esperando entrega de '{expectedItemType}' a '{npcId}' (radio {detectionRadius}m)...");
 #endif
     }
@@ -121,7 +121,7 @@ public sealed class WaitItemDeliveryNode : NarrativeNode
             if (!string.IsNullOrEmpty(deliveryGesture))
                 actor.PlayGesture(deliveryGesture);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[WaitItemDeliveryNode:{guid}] '{npcId}' no tiene NarrativeActor — no se puede girar ni hacer el gesto de recibir el objeto.");
@@ -139,7 +139,7 @@ public sealed class WaitItemDeliveryNode : NarrativeNode
             if (!string.IsNullOrEmpty(deliverySfxKey) && AudioService.Instance != null)
                 AudioService.Instance.PlaySFX(deliverySfxKey, 1f, vfxPos);
 
-            UnityEngine.Object.Destroy(itemObject);
+            ObjetoPersistente.Retirar(itemObject);
         }
 
         // 4. Icono "habla conmigo" — mismo sistema que ya usa WaitNpcInteractionNode, así el

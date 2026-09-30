@@ -106,7 +106,7 @@ public class InteractionDetector : MonoBehaviour
         {
             if (current != null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[InteractionDetector] 🚫 {blockedReason}, desenfocando interactable");
 #endif
             }
@@ -169,7 +169,7 @@ public class InteractionDetector : MonoBehaviour
         // sobrecargado y detectan correctamente el objeto destruido.
         bool isCarrying = _carrySystem != null && _carrySystem.IsCarrying;
         string currentName = current != null ? current.name : "null";
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[InteractionDetector] 🔘 OnInteract llamado - IsCarrying={isCarrying}, current={currentName}");
 #endif
         
@@ -177,7 +177,7 @@ public class InteractionDetector : MonoBehaviour
         if (_carrySystem != null && _carrySystem.IsCarrying)
         {
             _carrySystem.DropObject();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InteractionDetector] 📦 Objeto soltado - bloqueando interacciones por cooldown");
 #endif
             return;
@@ -185,14 +185,14 @@ public class InteractionDetector : MonoBehaviour
 
         if (IsInteractionBlocked(out string blockedReason, out bool _ignored))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InteractionDetector] 🚫 Interacción ignorada: {blockedReason}");
 #endif
             return;
         }
         if (Time.unscaledTime < _resumeAfterBlockAt)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[InteractionDetector] ⏳ Esperando retardo de reactivación del hint/interacción");
 #endif
             return;
@@ -201,7 +201,7 @@ public class InteractionDetector : MonoBehaviour
         // CRÍTICO: Verificar si acabamos de soltar un objeto (cooldown activo)
         if (_carrySystem != null && _carrySystem.JustDroppedObject)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InteractionDetector] ⏳ Cooldown activo después de soltar objeto - ignorando interacción");
 #endif
             return;
@@ -210,20 +210,20 @@ public class InteractionDetector : MonoBehaviour
         // Si no está cargando y no hay cooldown, intentar interactuar con objeto enfocado
         if (current != null && current.CanInteract(gameObject))
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[InteractionDetector] ✅ Interactuando con: {current.name}");
 #endif
             current.Interact(gameObject);
         }
         else if (current != null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[InteractionDetector] ⚠️ {current.name} NO puede interactuar (CanInteract=false)");
 #endif
         }
         else
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[InteractionDetector] ⚠️ No hay objeto enfocado (current=null)");
 #endif
         }
@@ -370,7 +370,7 @@ public class InteractionDetector : MonoBehaviour
         int hitCount = Physics.OverlapSphereNonAlloc(origin, range, _interactableBuffer, interactableMask, QueryTriggerInteraction.Collide); // ✅ OPTIMIZACIÓN FASE 2: NonAlloc
         if (hitCount == 0) return null;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // FIX (2026-08-13): si el buffer se satura, la query puede estar descartando
         // candidatos sin avisar (ver comentario junto a _interactableBuffer). Avisar en vez
         // de fallar en silencio para poder diagnosticarlo si vuelve a pasar.
@@ -380,7 +380,7 @@ public class InteractionDetector : MonoBehaviour
 
         float best = float.MaxValue;
         Interactable winner = null;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Interactable nearestObstructed = null;
         float nearestObstructedDist = float.MaxValue;
 #endif
@@ -426,7 +426,7 @@ public class InteractionDetector : MonoBehaviour
                     best = d;
                     winner = it;
                 }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 else if (d < nearestObstructedDist)
                 {
                     nearestObstructedDist = d;
@@ -438,7 +438,7 @@ public class InteractionDetector : MonoBehaviour
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         // FIX (2026-08-13): diagnóstico para el bug "el hint no aparece hasta buscar la
         // posición/entrar-salir del rango varias veces". Si hay un candidato en rango pero
         // el resultado es null, esto dice exactamente por qué (línea de visión bloqueada y
@@ -449,7 +449,7 @@ public class InteractionDetector : MonoBehaviour
         return winner;
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private string _lastObstructionHitName;
 #endif
 

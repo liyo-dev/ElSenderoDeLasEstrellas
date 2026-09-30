@@ -12,12 +12,9 @@ public class QuestMenuManager : MonoBehaviour
     [SerializeField] private QuestLogListUI quickMenu; // El menú rápido (QuickQuestMenu)
     [SerializeField] private QuestMainMenuUI mainMenu; // El menú principal (QuestMainMenu)
 
-    [Header("Auto apertura")]
-    [SerializeField] private bool autoShowQuickOnQuestInit = true;
-    [SerializeField] private float autoShowDelay = 0.35f;
+    [Header("Menú principal")]
     [SerializeField] private float holdTimeForMainMenu = 0.6f;
 
-    private QuestManager _lastQuestManager;
     private float _dpadHoldTime;
     private bool _dpadUpHeld;
     private bool _dpadUpPressed;
@@ -36,7 +33,6 @@ public class QuestMenuManager : MonoBehaviour
     {
         GamepadInputReader.EnsureInputEventsSubscribed();
         GamepadInputReader.OnInput += HandleGamepadInput;
-        TrySubscribeQuestManager();
     }
 
     private void OnDisable()
@@ -46,15 +42,12 @@ public class QuestMenuManager : MonoBehaviour
         _dpadUpPressed = false;
         _bPressed = false;
         _startPressed = false;
-        UnsubscribeQuestManager();
         TearDownMenuRegistration();
         ExitUiScope();
     }
 
     private void Update()
     {
-        TrySubscribeQuestManager();
-
         if (_startPressed)
         {
             CloseAllMenus();
@@ -150,38 +143,6 @@ public class QuestMenuManager : MonoBehaviour
         }
     }
 
-    private void TrySubscribeQuestManager()
-    {
-        if (QuestManager.Instance == _lastQuestManager) return;
-
-        UnsubscribeQuestManager();
-        _lastQuestManager = QuestManager.Instance;
-
-        if (_lastQuestManager != null)
-            _lastQuestManager.OnQuestStarted += HandleQuestStarted;
-    }
-
-    private void UnsubscribeQuestManager()
-    {
-        if (_lastQuestManager == null) return;
-
-        _lastQuestManager.OnQuestStarted -= HandleQuestStarted;
-        _lastQuestManager = null;
-    }
-
-    private void HandleQuestStarted(string questId)
-    {
-        // FIX (21 sept 2026, Raul: "debe salir SOLO el pop up nuevo, no el menu de misiones" --
-        // INC-346). Este metodo abria el QuickQuestMenu solo (con un retardo de autoShowDelay)
-        // CADA VEZ que arrancaba una mision, duplicando el aviso propio que QuestLogListUI.
-        // OnQuestStarted() ya hacía sin ningun retardo -- dos aperturas automaticas de la misma
-        // ventana por el mismo evento, una de ellas encima con delay (de ahi que el jugador viera
-        // "tarda mucho en salir"). Ahora el unico aviso automatico de "nueva mision" es el banner
-        // centrado (QuestStartedBannerUI); este menu solo se abre a mano (D-pad arriba). Se deja
-        // el metodo (vacio) y la suscripcion tal cual para no tocar el wiring de la escena; los
-        // campos autoShowQuickOnQuestInit/autoShowDelay quedan sin uso a proposito.
-    }
-
     private void HandleDpadUpPressed()
     {
         bool quickIsOpen = quickMenu != null && quickMenu.IsVisible;
@@ -196,7 +157,7 @@ public class QuestMenuManager : MonoBehaviour
 
             if (quickMenu == null)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[QuestMenuManager] quickMenu reference is null - cannot open quick menu.");
 #endif
                 return;
@@ -230,7 +191,7 @@ public class QuestMenuManager : MonoBehaviour
             }
             catch (System.Exception ex)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[QuestMenuManager] Exception while showing quickMenu: {ex}");
 #endif
             }

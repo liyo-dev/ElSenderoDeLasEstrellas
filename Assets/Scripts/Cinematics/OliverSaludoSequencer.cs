@@ -220,7 +220,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
         // secuencia en esta sesión de Play, para que el próximo log de consola confirme o
         // descarte de una vez si _oliverActor/_willActor están intercambiados o si
         // _cinematicCamera llega null.
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[OliverSaludoSequencer:{name}] Arranca secuencia — " +
             $"_willActor={(_willActor != null ? _willActor.name : "NULL")}, " +
             $"_oliverActor={(_oliverActor != null ? _oliverActor.name : "NULL")}, " +
@@ -310,7 +310,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
             VfxPoolService.Instance.Play(_spellFailSmokeVfx.gameObject, _oliverActor.position,
                 _oliverActor.rotation, vfxLifetime);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             // FIX 15 sep 2026 (Raúl, tras recompilar: "sigue sin salir el vfx" pese al fix del
@@ -328,7 +328,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
         {
             AudioService.Instance.PlaySFXAt(_spellFailSfx, _oliverActor.position);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else if (_spellFailSfx == null)
         {
             Debug.LogWarning($"[OliverSaludoSequencer:{name}] _spellFailSfx sin asignar — no hay SFX del gag que reproducir.");
@@ -357,7 +357,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
             DialogueManager.Instance.StartDialogue(_menusDialogue, _oliverActor, () => menusDialogueFinished = true, isSequenceDialogue: true);
             yield return new WaitUntil(() => menusDialogueFinished);
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[OliverSaludoSequencer:{name}] _menusDialogue sin asignar — se salta la explicación de menús. Asigna Assets/_DIALOGUES/DIALOGUE NPCS/Oliver Menus/DG_Oliver_Menus.asset en el Inspector.");
@@ -508,7 +508,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
         // en vez de caer otra vez en un Lerp a mano que reintroduciría el patinaje.
         if (agent == null || !agent.enabled || !agent.isOnNavMesh)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[OliverSaludoSequencer:{name}] Co_ApproachWill: el NavMeshAgent de " +
                 "Oliver no está utilizable (sin asignar, desactivado, o fuera del NavMesh) — no se " +
                 "puede hacer la aproximación animada. Oliver se coloca directamente en el punto de " +
@@ -541,7 +541,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
         {
             destination = navHit.position;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning($"[OliverSaludoSequencer:{name}] Co_ApproachWill: el punto de encuentro " +
@@ -601,7 +601,7 @@ public class OliverSaludoSequencer : CinematicSequencerBase
             yield return null;
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (elapsed >= _approachTimeout)
             Debug.LogWarning($"[OliverSaludoSequencer:{name}] Co_ApproachWill: timeout de " +
                 $"{_approachTimeout}s sin llegar al punto de encuentro. Oliver sigue desde donde " +

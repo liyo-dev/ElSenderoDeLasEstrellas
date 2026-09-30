@@ -56,7 +56,7 @@ public class BugReportButton : MonoBehaviour
 
         if (!TryWireButton())
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BugReportButton] No se encontró el botón REPORTAR UN FALLO automáticamente " +
                               $"tras reintentar durante {2f:0.#}s. Asigna 'Bug Report Button Override' a mano en el Inspector.");
             #endif
@@ -81,7 +81,7 @@ public class BugReportButton : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(bugReportFormUrl))
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[BugReportButton] 'Bug Report Form Url' está vacío — pega aquí la URL real " +
                               "del Google Form en el Inspector de este componente.");
             #endif

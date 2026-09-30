@@ -183,7 +183,7 @@ namespace Core
             // Simplemente esperar a que esté disponible
             if (UnityEngine.Application.isPlaying)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning("[GamepadInputReader] PlayerInputManager aún no está disponible. Se inicializará cuando esté listo.");
 #endif
             }
@@ -283,7 +283,7 @@ namespace Core
     {
         if (_gameplaySuppressionOwners.Count > 0)
         {
-            #if UNITY_EDITOR || DEVELOPMENT_BUILD
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GamepadInputReader] ForceRestoreGameplaySuppression: eliminando {_gameplaySuppressionOwners.Count} " +
                               "owners de supresión que no hicieron Pop. Los controles de gameplay se restauran.");
             #endif
@@ -720,6 +720,39 @@ namespace Core
         }
     }
 
+    /// <summary>
+    /// Botón X (West/Square) en menús: abre los Controles desde el menú de Start (INC-504).
+    /// Teclado: C. Solo en modo UI.
+    /// </summary>
+    public static bool XButtonPressedUI
+    {
+        get
+        {
+            if (ServiceLocator.TryGet(out PlayerInputManager pim) && !pim.IsInUIMode)
+                return false;
+
+#if ENABLE_INPUT_SYSTEM
+            var gp = GetGamepad();
+            if (gp != null && gp.buttonWest.wasPressedThisFrame)
+                return true;
+
+            var js = GetJoystick();
+            if (js != null)
+            {
+                var x = GetJoystickButton(js, "buttonWest", "square", "button0");
+                if (x != null && x.wasPressedThisFrame)
+                    return true;
+            }
+
+            var kb = Keyboard.current;
+            if (kb != null && kb.cKey.wasPressedThisFrame)
+                return true;
+#endif
+
+            return false;
+        }
+    }
+
     public static bool DpadUpPressed
     {
         get
@@ -778,14 +811,19 @@ namespace Core
         }
     }
 
+    /// <summary>
+    /// LB pulsado este fotograma (rueda abajo en teclado, acción GamePlay/ShoulderLeft). En combate
+    /// pasa al siguiente hechizo básico. Respeta supresión de gameplay.
+    /// </summary>
     public static bool LeftShoulderPressed
     {
         get
         {
-            // Si los inputs de gameplay están suprimidos (menú abierto), NO leer el botón
-            // para que no afecte al player en gameplay
             if (IsGameplaySuppressed())
                 return false;
+
+            if (Controls != null && Controls.GamePlay.ShoulderLeft.triggered)
+                return true;
 
 #if ENABLE_INPUT_SYSTEM
             var gp = GetGamepad();
@@ -1099,9 +1137,34 @@ namespace Core
     public static Vector2 CameraLook => Controls != null ? Controls.GamePlay.CameraLook.ReadValue<Vector2>() : Vector2.zero;
     
     /// <summary>
-    /// Lee si el botón de sprint está mantenido presionado.
-    /// Respeta supresión de gameplay.
+    /// Sprint mantenido: L3 en mando, Mayúsculas en teclado (acción GamePlay/Sprint). LB queda
+    /// para rotar el hechizo básico. Respeta supresión de gameplay.
     /// </summary>
+    /// <summary>
+    /// Gatillo izquierdo (LT/L2/ZL) pulsado ahora mismo, leído del dispositivo. En teclado, Ctrl
+    /// izquierdo cuenta como LT y RT a la vez (ataque de equipo, INC-491). Respeta supresión de gameplay.
+    /// </summary>
+    public static bool LeftTriggerHeld => TriggerHeld(left: true);
+
+    /// <summary>Gatillo derecho (RT/R2/ZR) pulsado ahora mismo. Ver <see cref="LeftTriggerHeld"/>.</summary>
+    public static bool RightTriggerHeld => TriggerHeld(left: false);
+
+    private static bool TriggerHeld(bool left)
+    {
+        if (IsGameplaySuppressed())
+            return false;
+#if ENABLE_INPUT_SYSTEM
+        var gp = GetGamepad();
+        if (gp != null && (left ? gp.leftTrigger : gp.rightTrigger).ReadValue() >= 0.5f)
+            return true;
+
+        var kb = Keyboard.current;
+        if (kb != null && kb.leftCtrlKey.isPressed)
+            return true;
+#endif
+        return false;
+    }
+
     public static bool SprintHeld
     {
         get
@@ -1109,16 +1172,7 @@ namespace Core
             if (IsGameplaySuppressed())
                 return false;
 
-            if (Controls != null && Controls.GamePlay.Sprint.IsPressed())
-                return true;
-
-#if ENABLE_INPUT_SYSTEM
-            var gp = GetGamepad();
-            if (gp != null && gp.leftShoulder.isPressed)
-                return true;
-#endif
-
-            return false;
+            return Controls != null && Controls.GamePlay.Sprint.IsPressed();
         }
     }
 
@@ -1181,33 +1235,6 @@ namespace Core
         }
     }
 
-    /// <summary>
-    /// Lee si el gatillo izquierdo (LB/L1/L) fue presionado este frame.
-    /// Hoy sin uso funcional en el movimiento del personaje (ver StrafeInput() en vThirdPersonInput,
-    /// la llamada a cc.Strafe() está comentada); el ciclo de objetivo/pestaña real pasa por
-    /// HandleLeftShoulder vía el evento OnInput, no por esta propiedad.
-    /// Respeta supresión de gameplay.
-    /// </summary>
-    public static bool ShoulderLeftPressed
-    {
-        get
-        {
-            if (IsGameplaySuppressed())
-                return false;
-
-            if (Controls != null && Controls.GamePlay.ShoulderLeft.triggered)
-                return true;
-
-#if ENABLE_INPUT_SYSTEM
-            var gp = GetGamepad();
-            if (gp != null && gp.leftShoulder.wasPressedThisFrame)
-                return true;
-#endif
-
-            return false;
-        }
-    }
-    
     /// <summary>
     /// Lee CameraLook directamente del hardware sin restricciones de supresión.
     /// Útil para sistemas que necesitan leer el input independientemente del estado del juego.

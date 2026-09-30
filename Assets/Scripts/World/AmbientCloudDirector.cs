@@ -156,7 +156,7 @@ public class AmbientCloudDirector : MonoBehaviour
             dayNightCycle.CloudsBuildingUp += HandleStormStarting;
             dayNightCycle.RainStopped += HandleRainStopped;
         }
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
         {
             Debug.LogWarning("[AmbientCloudDirector] No se encontró ningún DayNightCycle en la escena; la nubosidad ambiental no sabrá cuándo hay tormenta real.");
@@ -241,7 +241,7 @@ public class AmbientCloudDirector : MonoBehaviour
     {
         if (ambientCloudPrefabs == null || ambientCloudPrefabs.Length == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning("[AmbientCloudDirector] ambientCloudPrefabs está vacío; no habrá nubes sueltas ambientales (la lluvia/tormenta de CloudCoverSpawner no se ve afectada).");
 #endif
             return;
@@ -296,7 +296,7 @@ public class AmbientCloudDirector : MonoBehaviour
 
             if (_stormActive || _hiddenByInterior)
             {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 if (_zoneCloudBoostActive)
                     Debug.Log($"[AmbientCloudDirector] CloudSpawnLoop salta spawn -- _stormActive={_stormActive} _hiddenByInterior={_hiddenByInterior}");
 #endif
@@ -323,7 +323,7 @@ public class AmbientCloudDirector : MonoBehaviour
         Transform followT = PlayerService.Player != null ? PlayerService.Player.transform : null;
         if (followT == null)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (_zoneCloudBoostActive)
                 Debug.Log("[AmbientCloudDirector] SpawnPassingCloud: PlayerService.Player es null, se salta este ciclo.");
 #endif
@@ -332,7 +332,7 @@ public class AmbientCloudDirector : MonoBehaviour
 
         if (_free.Count == 0)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (_zoneCloudBoostActive)
                 Debug.Log("[AmbientCloudDirector] SpawnPassingCloud: pool de nubes lleno, se salta este ciclo.");
 #endif
@@ -366,7 +366,7 @@ public class AmbientCloudDirector : MonoBehaviour
 
         drifter.gameObject.SetActive(true);
         drifter.Play(start, end, speed, fadeInDuration, fadeOutDuration, OnCloudFinished);
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (_zoneCloudBoostActive)
             Debug.Log("[AmbientCloudDirector] Nube ambiental generada (boost de zona activo).");
 #endif
@@ -408,7 +408,7 @@ public class AmbientCloudDirector : MonoBehaviour
     public void SetZoneCloudBoost(bool active)
     {
         _zoneCloudBoostActive = active;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AmbientCloudDirector] SetZoneCloudBoost({active})");
 #endif
     }
