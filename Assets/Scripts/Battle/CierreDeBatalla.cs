@@ -14,9 +14,19 @@ public static class CierreDeBatalla
 {
     private static readonly List<IPasoDeCierre> _pasos = new();
 
+    // Pasos que ya han llamado a Ejecutar en la pasada actual, para poder terminarlos si
+    // la corrutina muere antes de llegar al bucle de Terminar.
+    private static List<IPasoDeCierre> _activosActual;
+    private static ResultadoDeBatalla _resultadoActual;
+
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => _pasos.Clear();
+    static void ResetStatics()
+    {
+        _pasos.Clear();
+        _activosActual = null;
+        _resultadoActual = null;
+    }
 #endif
 
     public static void Registrar(IPasoDeCierre paso)
@@ -25,6 +35,25 @@ public static class CierreDeBatalla
     }
 
     public static void Quitar(IPasoDeCierre paso) => _pasos.Remove(paso);
+
+    /// Llama Terminar en orden inverso sobre los pasos que ya ejecutaron, y limpia el
+    /// tracking. Es idempotente: si no hay pasada en curso, no hace nada.
+    /// Lo llama el bucle normal al acabar y BossArenaController.OnDisable si la corrutina
+    /// muere antes de terminar.
+    public static void TerminarForzado()
+    {
+        if (_activosActual == null || _resultadoActual == null) return;
+        var hechos = _activosActual;
+        var resultado = _resultadoActual;
+        _activosActual = null;
+        _resultadoActual = null;
+
+        for (int i = hechos.Count - 1; i >= 0; i--)
+        {
+            try { hechos[i].Terminar(resultado); }
+            catch (Exception e) { Debug.LogException(e); }
+        }
+    }
 
     /// Ejecuta los pasos por orden (Orden de menor a mayor) y, al final, les deja recoger en
     /// orden inverso (devolver la cámara, el control...). Un paso que falla no deja la batalla
@@ -37,13 +66,15 @@ public static class CierreDeBatalla
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CierreDeBatalla] '{resultado.BattleId}': {pasos.Count} paso(s).");
 #endif
-        var hechos = new List<IPasoDeCierre>(pasos.Count);
+        _activosActual = new List<IPasoDeCierre>(pasos.Count);
+        _resultadoActual = resultado;
+
         foreach (var paso in pasos)
         {
             IEnumerator rutina = null;
             try { rutina = paso.Ejecutar(resultado); }
             catch (Exception e) { Debug.LogException(e); }
-            hechos.Add(paso);
+            _activosActual.Add(paso);
             if (rutina == null) continue;
 
             while (true)
@@ -59,11 +90,7 @@ public static class CierreDeBatalla
             }
         }
 
-        for (int i = hechos.Count - 1; i >= 0; i--)
-        {
-            try { hechos[i].Terminar(resultado); }
-            catch (Exception e) { Debug.LogException(e); }
-        }
+        TerminarForzado();
     }
 }
 

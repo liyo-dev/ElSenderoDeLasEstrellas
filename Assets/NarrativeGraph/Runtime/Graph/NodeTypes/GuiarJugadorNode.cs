@@ -73,6 +73,9 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [NonSerialized] private Coroutine _rutinaCharla;
     [NonSerialized] private CharlaEnBocadillos _charla;
     [NonSerialized] private bool _topePuesto;
+    [NonSerialized] private NPCBehaviourManagerV2 _npcEscortado;
+    [NonSerialized] private NPCSimpleAnimator _animTocado;
+    [NonSerialized] private bool _updatePositionOriginal;
 
     /// El actor acaba en la marca de destino.
     public void Project(INarrativeStateWriter state)
@@ -110,6 +113,17 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         _runner = null;
         _charla?.Callar();
         _charla = null;
+
+        if (_npcEscortado != null)
+        {
+            if (_npcEscortado.Brain?.CurrentState is CinematicState cs)
+                cs.CancelSequence();
+            if (_animTocado != null) _animTocado.AllowManualRotation = true;
+            if (_agenteTocado != null) _agenteTocado.updatePosition = _updatePositionOriginal;
+            _npcEscortado = null;
+            _animTocado = null;
+        }
+
         DevolverVelocidad();
         QuitarTope();
     }
@@ -123,9 +137,12 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
             yield return null;
         }
 
+        _npcEscortado = npc;
+
         var anim = npc.SimpleAnimator;
         if (anim != null)
         {
+            _animTocado = anim;
             anim.AllowManualRotation = false;
             anim.EnableAutoRotation();
         }
@@ -144,6 +161,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         // (updatePosition = false), el agente andaría solo por dentro y el NPC se quedaría quieto.
         if (agent != null && agent.enabled)
         {
+            _updatePositionOriginal = agent.updatePosition;
             if (agent.isOnNavMesh) agent.nextPosition = npc.transform.position;
             agent.updatePosition = true;
         }
@@ -215,6 +233,8 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         _rutinaCharla = null;
         _charla = null;
 
+        _npcEscortado = null;
+        _animTocado = null;
         _rutina = null;
         onReadyToAdvance?.Invoke();
     }

@@ -283,6 +283,8 @@ public class BossArenaController : MonoBehaviour
 
     void OnDisable()
     {
+        CierreDeBatalla.TerminarForzado();
+
         BossProgressTracker.OnProgressRestored -= HandleBossProgressRestored;
         GameBootService.OnProfileReady -= HandleProfileReady; // ✅ Desuscribirse de OnProfileReady
         CleanupBossSubscriptions();
