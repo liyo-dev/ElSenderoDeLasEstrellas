@@ -43,7 +43,7 @@ public class SavePoint : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (!GameState.CanInteractGlobally) return;
         _playerInRange = other.gameObject;
         ShowPrompt(true);
@@ -51,7 +51,7 @@ public class SavePoint : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (_playerInRange == other.gameObject) _playerInRange = null;
         ShowPrompt(false);
     }

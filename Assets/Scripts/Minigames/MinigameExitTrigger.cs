@@ -20,7 +20,7 @@ public class MinigameExitTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 
         var controller = FindMinigameController();
         if (controller != null)

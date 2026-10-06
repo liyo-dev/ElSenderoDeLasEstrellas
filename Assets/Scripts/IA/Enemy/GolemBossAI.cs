@@ -1457,7 +1457,7 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
             }
             
             // Verificar si es el jugador o un aliado
-            bool isPlayer = hit.CompareTag("Player");
+            bool isPlayer = hit.CompareTag(GameTags.Player);
             var partyMember = hit.GetComponent<Game.NPC.NPCPartyMember>();
             bool isAlly = partyMember != null;
             
@@ -1739,7 +1739,7 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
             }
             
             // Verificar si es el jugador o un aliado
-            bool isPlayer = hit.CompareTag("Player");
+            bool isPlayer = hit.CompareTag(GameTags.Player);
             var partyMember = hit.GetComponent<Game.NPC.NPCPartyMember>();
             bool isAlly = partyMember != null;
             

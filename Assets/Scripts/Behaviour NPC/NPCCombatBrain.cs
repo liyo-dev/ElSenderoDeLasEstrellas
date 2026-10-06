@@ -165,6 +165,15 @@ namespace Game.NPC
         #endregion
 
         #region 🔌 Dependencies & State
+        private static readonly WaitForSeconds s_wait02 = s_wait02;
+        private static readonly WaitForSeconds s_wait03 = s_wait03;
+        private static readonly WaitForSeconds s_wait04 = s_wait04;
+        private static readonly WaitForSeconds s_wait05 = s_wait05;
+        private static readonly WaitForSeconds s_wait08 = s_wait08;
+        private static readonly WaitForSeconds s_wait1  = s_wait1;
+        private static readonly WaitForSeconds s_wait15 = s_wait15;
+        private static readonly WaitForSeconds s_wait2  = s_wait2;
+
         public Settings settings; // Visible en inspector
 
         NPCBehaviourManagerV2 _manager;
@@ -692,7 +701,7 @@ namespace Game.NPC
                     yield break;
                 }
                 // Aún no toca cambiar (anti-nerviosismo) — esperamos un momento y reevaluamos
-                yield return new WaitForSeconds(0.2f);
+                yield return s_wait02;
                 yield break;
             }
 
@@ -766,13 +775,13 @@ namespace Game.NPC
                     Debug.Log($"[CombatBrain:{gameObject.name}] 🚶 Acercándose al player ({dist:F1}m > {settings.maxDistance}m){(kitingTooLong ? " - ¡ACELERANDO, demasiado tiempo kiteado!" : "")}");
                     #endif
                     MoveTo(_player.position, kitingTooLong ? settings.runSpeed : settings.walkSpeed);
-                    yield return new WaitForSeconds(0.5f);
+                    yield return s_wait05;
                 }
                 else if (_globalCd > 0)
                 {
                     // En cooldown global → Esperar un momento
                     _approachKitingSinceTime = -1f;
-                    yield return new WaitForSeconds(0.3f);
+                    yield return s_wait03;
                 }
             }
             else
@@ -1043,7 +1052,7 @@ namespace Game.NPC
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[CombatBrain:{gameObject.name}] ⚠️ No se encontró mejor posición de tiro - esperando");
                     #endif
-                    yield return new WaitForSeconds(0.5f);
+                    yield return s_wait05;
                 }
             }
             
@@ -1212,7 +1221,7 @@ namespace Game.NPC
                 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[CombatBrain:{gameObject.name}] ❌ Ataque cancelado - NPC está siendo levitado");
                 #endif
-                yield return new WaitForSeconds(0.5f);
+                yield return s_wait05;
                 yield break;
             }
             
@@ -1247,7 +1256,7 @@ namespace Game.NPC
                 #endif
                 Vector3 waitFlankPos = GetFlankPosition();
                 MoveTo(waitFlankPos, settings.walkSpeed);
-                yield return new WaitForSeconds(0.4f);
+                yield return s_wait04;
                 _currentState = CombatState.EVALUATE;
                 yield break;
             }
@@ -1355,7 +1364,7 @@ namespace Game.NPC
 
                 // Pausa post-ataque (Global Cooldown)
                 _globalCd = settings.globalCooldown;
-                yield return new WaitForSeconds(0.5f);
+                yield return s_wait05;
                 
                 // ✅ Verificar visión DESPUÉS del ataque
                 if (!_hasLineOfSight)
@@ -1376,7 +1385,7 @@ namespace Game.NPC
                     {
                         Vector3 flankPos = GetFlankPosition();
                         MoveTo(flankPos, settings.runSpeed);
-                        yield return new WaitForSeconds(1f);
+                        yield return s_wait1;
                     }
                     else
                     {
@@ -1521,7 +1530,7 @@ namespace Game.NPC
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[CombatBrain:{gameObject.name}] ⏳ Esperando tras cobertura, recargando cooldowns...");
                     #endif
-                    yield return new WaitForSeconds(2.0f);
+                    yield return s_wait2;
                 }
                 else
                 {
@@ -1539,7 +1548,7 @@ namespace Game.NPC
                 if (UnityEngine.Random.value > 0.5f)
                     yield return DoDodge();
                 else 
-                    yield return new WaitForSeconds(1.0f);
+                    yield return s_wait1;
             }
 
             _currentState = CombatState.EVALUATE;
@@ -1674,7 +1683,7 @@ namespace Game.NPC
                 // En su lugar, mantenerse alerta
                 
                 // Pequeña pausa de "mirar alrededor"
-                yield return new WaitForSeconds(0.5f);
+                yield return s_wait05;
             }
             
             // E. Esperar mientras se recargan los hechizos (o finge recargar si es emboscada)
@@ -1738,7 +1747,7 @@ namespace Game.NPC
                                     _animator.PlaySenseSomething();
                                 }
                                 
-                                yield return new WaitForSeconds(0.5f);
+                                yield return s_wait05;
                                 
                                 _currentState = CombatState.EVALUATE;
                                 yield break;
@@ -1776,7 +1785,7 @@ namespace Game.NPC
                         }
                         
                         // Pequeña pausa dramática
-                        yield return new WaitForSeconds(0.5f);
+                        yield return s_wait05;
                         
                         // Resetear estrategia de engaño
                         _isUsingDeceptionStrategy = false;
@@ -1840,7 +1849,7 @@ namespace Game.NPC
                     }
                 }
                 
-                yield return new WaitForSeconds(0.3f);
+                yield return s_wait03;
             }
             
             // F. Hechizos recargados o emboscada fallida - Momento de salir de cobertura
@@ -1881,7 +1890,7 @@ namespace Game.NPC
                         _animator.PlaySenseSomething();
                     }
 
-                    yield return new WaitForSeconds(0.8f);
+                    yield return s_wait08;
 
                     _currentState = CombatState.EVALUATE;
                 }
@@ -1898,7 +1907,7 @@ namespace Game.NPC
                         _animator.PlaySenseSomething();
                     }
                     
-                    yield return new WaitForSeconds(0.8f);
+                    yield return s_wait08;
                     
                     _currentState = CombatState.EVALUATE;
                 }
@@ -1917,7 +1926,7 @@ namespace Game.NPC
                     _animator.PlaySearching();
                 }
                 
-                yield return new WaitForSeconds(1.0f);
+                yield return s_wait1;
                 
                 // Entrar en modo búsqueda activa
                 _currentState = CombatState.SEARCHING;
@@ -2109,7 +2118,7 @@ namespace Game.NPC
             Vector3 dest = transform.position + side * settings.dodgeDistance;
             
             MoveTo(dest, settings.runSpeed * 1.5f);
-            yield return new WaitForSeconds(0.5f);
+            yield return s_wait05;
             StopMove();
         }
 
@@ -2282,7 +2291,7 @@ namespace Game.NPC
                     if (hit.collider == null) continue;
                     if (ShouldIgnoreVisionHit(hit.collider)) continue;
 
-                    if (hit.collider.CompareTag("Player"))
+                    if (hit.collider.CompareTag(GameTags.Player))
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.DrawRay(origin, direction, Color.green);
@@ -2329,7 +2338,7 @@ namespace Game.NPC
                     var hit = _raycastBuffer[i];
                     if (hit.collider == null) continue;
                     if (ShouldIgnoreVisionHit(hit.collider)) continue;
-                    if (hit.collider.CompareTag("Player")) break;
+                    if (hit.collider.CompareTag(GameTags.Player)) break;
 
                     float distToObstacle = hit.distance;
                     if (distToObstacle < 2f)
@@ -2366,7 +2375,7 @@ namespace Game.NPC
                 }
 
                 // Verificar si no es el jugador
-                if (!sphereHit.collider.CompareTag("Player"))
+                if (!sphereHit.collider.CompareTag(GameTags.Player))
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     Debug.Log($"[CombatBrain:{gameObject.name}] ⚠️ Proyectil podría rozar con {sphereHit.collider.gameObject.name}");
@@ -2472,7 +2481,7 @@ namespace Game.NPC
                 }
                 
                 // ⏳ ESPERAR A QUE LA ANIMACIÓN DE BÚSQUEDA SE VEA (duración aprox de la animación)
-                yield return new WaitForSeconds(1.5f);
+                yield return s_wait15;
             }
             else
             {
@@ -2511,7 +2520,7 @@ namespace Game.NPC
                     }
                     
                     // Esperar breve para que se vea el feedback
-                    yield return new WaitForSeconds(0.5f);
+                    yield return s_wait05;
                     
                     StopMove();
                     
@@ -2590,7 +2599,7 @@ namespace Game.NPC
                                     #endif
                                 }
                                 
-                                yield return new WaitForSeconds(0.5f);
+                                yield return s_wait05;
                                 
                                 StopMove();
                                 
@@ -2633,12 +2642,12 @@ namespace Game.NPC
                             }
                             
                             // Pausa para la animación y el icono (tiempo realista de "mirar alrededor")
-                            yield return new WaitForSeconds(2.0f);
+                            yield return s_wait2;
                         }
                         else
                         {
                             // En combate reciente: búsqueda más rápida sin animaciones largas
-                            yield return new WaitForSeconds(0.5f);
+                            yield return s_wait05;
                         }
                         
                         // Verificar de nuevo si lo encontró mientras miraba alrededor
@@ -2657,7 +2666,7 @@ namespace Game.NPC
                                 #endif
                             }
                             
-                            yield return new WaitForSeconds(0.5f);
+                            yield return s_wait05;
                             
                             StopMove();
                             
@@ -2683,7 +2692,7 @@ namespace Game.NPC
                 else
                 {
                     // BÚSQUEDA PASIVA: Solo espera y observa
-                    yield return new WaitForSeconds(1.0f);
+                    yield return s_wait1;
                 }
             }
             
@@ -2729,7 +2738,7 @@ namespace Game.NPC
                             #endif
                         }
                         
-                        yield return new WaitForSeconds(0.5f);
+                        yield return s_wait05;
                         
                         StopMove();
                         

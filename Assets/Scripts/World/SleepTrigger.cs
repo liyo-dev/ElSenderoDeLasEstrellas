@@ -196,7 +196,7 @@ public class SleepTrigger : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy) return;
         if (isSleeping) return;
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (playOnlyOnce && AlreadyPlayed()) return;
 
         // FIX (15 ago 2026, prioridad demo): "Will cayendo/de pie en vez de dormido" — causa real

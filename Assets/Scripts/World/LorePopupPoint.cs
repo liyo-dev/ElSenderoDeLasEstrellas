@@ -51,7 +51,7 @@ public class LorePopupPoint : MonoBehaviour
             return;
         }
 
-        if (!other.CompareTag("Player"))
+        if (!other.CompareTag(GameTags.Player))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[LorePopupPoint:{name}] Bloqueado: tag '{other.tag}' no es 'Player'.");

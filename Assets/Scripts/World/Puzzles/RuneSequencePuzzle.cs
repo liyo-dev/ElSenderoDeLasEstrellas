@@ -97,7 +97,7 @@ public class RuneSequencePuzzle : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (_solved || _demoPlayed) return;
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 
         _demoPlayed = true;
         _demoRoutine = StartCoroutine(PlayDemo());

@@ -32,7 +32,7 @@ public class AnchorSetter : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 
         if (GameBootService.IsAvailable)
         {

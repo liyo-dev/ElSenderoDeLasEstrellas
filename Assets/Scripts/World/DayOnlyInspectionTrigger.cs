@@ -98,7 +98,7 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (_used) return;
         if (!questRequirement.IsSatisfied()) return;
 

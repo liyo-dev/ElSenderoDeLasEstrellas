@@ -46,7 +46,7 @@ namespace Game.NPC
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_delivered || !other.CompareTag("Player")) return;
+            if (_delivered || !other.CompareTag(GameTags.Player)) return;
 
             _playerInRange = true;
 
@@ -60,7 +60,7 @@ namespace Game.NPC
 
         private void OnTriggerExit(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!other.CompareTag(GameTags.Player)) return;
 
             _playerInRange = false;
             Unsubscribe();

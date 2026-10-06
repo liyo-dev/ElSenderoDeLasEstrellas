@@ -30,7 +30,7 @@ public class CastleDoorCloseTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (questGate.IsConfigured && questGate.IsSatisfied()) return;
 
         if (delay > 0f)

@@ -375,7 +375,7 @@ public class EnemyProjectile : MonoBehaviour
         Transform checkTransform = hit.transform;
         for (int j = 0; j < 5 && checkTransform != null; j++)
         {
-            if (checkTransform.CompareTag("Player"))
+            if (checkTransform.CompareTag(GameTags.Player))
             {
                 var shield = checkTransform.GetComponentInChildren<PlayerShieldController>();
                 if (shield != null && shield.IsDefending)
@@ -447,7 +447,7 @@ public class EnemyProjectile : MonoBehaviour
         Transform checkTransform = other.transform;
         for (int i = 0; i < 5; i++)
         {
-            if (checkTransform.CompareTag("Player"))
+            if (checkTransform.CompareTag(GameTags.Player))
             {
                 hasHit = true;
                 ApplyDamage(checkTransform.gameObject);

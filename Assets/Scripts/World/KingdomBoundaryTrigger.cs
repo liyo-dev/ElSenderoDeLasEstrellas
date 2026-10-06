@@ -46,7 +46,7 @@ public sealed class KingdomBoundaryTrigger : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (_fired && singleUse) return;
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 
         var signals = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
 

@@ -89,7 +89,7 @@ public class SavePointTeleportTrigger : MonoBehaviour
         
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!other.CompareTag(GameTags.Player)) return;
             
             _playerInRange = true;
             
@@ -104,7 +104,7 @@ public class SavePointTeleportTrigger : MonoBehaviour
         
         private void OnTriggerExit(Collider other)
         {
-            if (!other.CompareTag("Player")) return;
+            if (!other.CompareTag(GameTags.Player)) return;
             
             _playerInRange = false;
             

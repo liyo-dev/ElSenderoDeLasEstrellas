@@ -16,7 +16,7 @@ public class QuestProgressOnTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (used || !other.CompareTag("Player")) return;
+        if (used || !other.CompareTag(GameTags.Player)) return;
         QuestManager.Instance?.MarkStepDone(questId, stepIndex);
         if (once) used = true;
     }

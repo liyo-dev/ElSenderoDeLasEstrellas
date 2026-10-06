@@ -52,7 +52,7 @@ public class InteriorPortalTrigger : MonoBehaviour
         if (_busy) return;
         if (_used && singleUse) return;
         if (Time.unscaledTime - _lastCompletedAt < reArmDelay) return;
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 
         if (string.IsNullOrEmpty(targetAnchorId))
         {

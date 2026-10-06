@@ -151,7 +151,7 @@ public class RoomExitBlocker : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnTriggerEnter de Player. _isBlocked={_isBlocked}");
 #endif
@@ -163,7 +163,7 @@ public class RoomExitBlocker : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnTriggerExit de Player.");
 #endif
@@ -172,7 +172,7 @@ public class RoomExitBlocker : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Player")) return;
+        if (!collision.gameObject.CompareTag(GameTags.Player)) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnCollisionEnter de Player. _isBlocked={_isBlocked}");
 #endif
@@ -184,7 +184,7 @@ public class RoomExitBlocker : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Player")) return;
+        if (!collision.gameObject.CompareTag(GameTags.Player)) return;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[RoomExitBlocker:{gameObject.name}] OnCollisionExit de Player.");
 #endif

@@ -272,7 +272,7 @@ public class DialogueManager : MonoBehaviour
             var t = transform.Find("Canvas/Panel/boton A");
             if (t != null) submitHint = t.gameObject;
         }
-        if (submitHint != null) submitHint.SetActive(false);
+        SetSubmitHintActive(false);
     }
 
     void OnEnable()
@@ -536,8 +536,7 @@ public class DialogueManager : MonoBehaviour
         _dreamSparkles?.StartSparkles();
 
         // NO mostrar el submitHint al inicio - se mostrará cuando termine de escribir la primera línea
-        if (submitHint != null)
-            submitHint.SetActive(false);
+        SetSubmitHintActive(false);
             
         if (pauseGameWhileOpen) Time.timeScale = 0f;
 
@@ -815,7 +814,7 @@ public class DialogueManager : MonoBehaviour
                 group.interactable = false;
             }
             ActivateDialogueMode(false);
-            if (submitHint != null) submitHint.SetActive(false);
+            SetSubmitHintActive(false);
             if (_hudHiddenForNonCinematicDialogue)
             {
                 _hudHiddenForNonCinematicDialogue = false;
@@ -895,9 +894,8 @@ public class DialogueManager : MonoBehaviour
         // NUEVO: Desactivar modo DialogueActive en PlayerActionManager
         ActivateDialogueMode(false);
 
-        if (submitHint != null)
-            submitHint.SetActive(false);
-        
+        SetSubmitHintActive(false);
+
         // ✅ IMPORTANTE: Ignorar el botón de salto (A/Submit) después de cerrar el diálogo
         // para evitar que el mismo botón que cerró el diálogo se procese como salto
         GamepadInputReader.IgnoreJumpButton(0.3f);
@@ -929,8 +927,7 @@ public class DialogueManager : MonoBehaviour
         _dreamBackground?.StopDream();
         _dreamSparkles?.StopSparkles();
 
-        if (submitHint != null)
-            submitHint.SetActive(false);
+        SetSubmitHintActive(false);
 
         // Seguridad extra: garantizar que SavePrompt no quede enganchado
         if (GameState.Is(GamePhase.SavePrompt)) GameState.Pop(GamePhase.SavePrompt);
@@ -954,8 +951,7 @@ public class DialogueManager : MonoBehaviour
         if (yesButton != null) yesButton.onClick.RemoveListener(OnYesClicked);
         if (noButton  != null) noButton.onClick.RemoveListener(OnNoClicked);
         _onYes = null; _onNo = null;
-        if (submitHint != null)
-            submitHint.SetActive(false);
+        SetSubmitHintActive(false);
         
         // NUEVO: Desactivar modo DialogueActive si no hay diálogo activo
         if (restoreGameplay && !IsOpen)
@@ -1000,9 +996,8 @@ public class DialogueManager : MonoBehaviour
         ActivateDialogueMode(true);
         
         if (pauseGameWhileOpen) Time.timeScale = 0f;
-        if (submitHint != null)
-            submitHint.SetActive(false);
-        
+        SetSubmitHintActive(false);
+
         if (messageLabel != null && !string.IsNullOrEmpty(message))
             messageLabel.text = message;
         else if (bodyText != null && !string.IsNullOrEmpty(message))
@@ -1485,19 +1480,22 @@ public class DialogueManager : MonoBehaviour
         }
     }
     
+    private void SetSubmitHintActive(bool value)
+    {
+        if (submitHint != null && submitHint.activeSelf != value)
+            submitHint.SetActive(value);
+    }
+
     private void HideSubmitHint()
     {
-        if (submitHint != null)
-        {
-            submitHint.SetActive(false);
-        }
+        SetSubmitHintActive(false);
     }
     
     private void ShowSubmitHintWithAnimation()
     {
         if (submitHint == null) return;
-        
-        submitHint.SetActive(true);
+
+        SetSubmitHintActive(true);
         
         // Reiniciar escala y aplicar animación de pulso
         submitHint.transform.localScale = Vector3.one;

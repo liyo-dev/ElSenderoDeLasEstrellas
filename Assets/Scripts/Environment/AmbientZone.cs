@@ -169,7 +169,7 @@ public class AmbientZone : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         _playerTransform = other.transform;
 
         if (_currentActiveZone != null && _currentActiveZone.priority > priority)
@@ -199,7 +199,7 @@ public class AmbientZone : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
+        if (!other.CompareTag(GameTags.Player)) return;
         if (_currentActiveZone != this) return;
         _playerTransform = null;
 
