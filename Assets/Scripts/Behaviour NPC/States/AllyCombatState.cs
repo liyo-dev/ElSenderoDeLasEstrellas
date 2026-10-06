@@ -860,9 +860,8 @@ namespace Game.NPC.States
             // Spawn VFX si existe
             if (spell.spawnVFX != null)
             {
-                var vfx = Object.Instantiate(spell.spawnVFX, spawnPos, Quaternion.LookRotation(direction));
-                if (spell.vfxLifetime > 0)
-                    Object.Destroy(vfx, spell.vfxLifetime);
+                VfxPoolService.Instance.Play(spell.spawnVFX, spawnPos, Quaternion.LookRotation(direction),
+                    spell.vfxLifetime > 0 ? spell.vfxLifetime : 3f);
             }
             
             // Instanciar proyectil

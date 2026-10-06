@@ -82,6 +82,7 @@ public class PlayerShieldController : MonoBehaviour
     private bool _parried;
     private float _parryCooldownUntil = -1f;
     private int _parryMask;
+    private int _deflectMask;
     private readonly Collider[] _parryBuffer = new Collider[16];
     private readonly HashSet<GameObject> _countered = new();
 
@@ -113,6 +114,7 @@ public class PlayerShieldController : MonoBehaviour
         _manaPool = GetComponentInParent<ManaPool>();
         _playerActionManager = GetComponentInParent<PlayerActionManager>();
         _parryMask = LayerMask.GetMask("ProjectileEnemy", "EnemyProjectile", "Projectile", "Enemy");
+        _deflectMask = LayerMask.GetMask("Enemy", "Boss");
         CreateShieldInstance();
     }
 
@@ -272,7 +274,7 @@ public class PlayerShieldController : MonoBehaviour
     internal void OnMeleeDeflect()
     {
         Vector3 center = transform.position + Vector3.up;
-        int count = Physics.OverlapSphereNonAlloc(center, meleeDeflectRadius, _parryBuffer, LayerMask.GetMask("Enemy", "Boss"), QueryTriggerInteraction.Ignore);
+        int count = Physics.OverlapSphereNonAlloc(center, meleeDeflectRadius, _parryBuffer, _deflectMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)
         {
             var rb = _parryBuffer[i].attachedRigidbody;

@@ -333,6 +333,38 @@ Transform:
   - {fileID: 5258810084923681311}
   m_Father: {fileID: 4047413826655954352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &609592077836308391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5500108391214907001}
+  m_Layer: 0
+  m_Name: CloakBone01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5500108391214907001
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609592077836308391}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.19011132, y: 0.9817626, z: 2.95347e-17, w: -1.6956532e-16}
+  m_LocalPosition: {x: -0.07525502, y: 0.1138894, z: -1.3765184e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7843208436608034512}
+  m_Father: {fileID: 8365680159492987051}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &698930266874288938
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,9 +2519,9 @@ SkinnedMeshRenderer:
   - {fileID: 1102029589666593886}
   - {fileID: 1838156781025789880}
   - {fileID: 4386112231983631353}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 5500108391214907001}
+  - {fileID: 7843208436608034512}
+  - {fileID: 1945730868324602556}
   - {fileID: 7565767078744118566}
   - {fileID: 5809604750814455548}
   - {fileID: 7537245288262194955}
@@ -2883,6 +2915,38 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1850410092870628748}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4716427173309275256
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7843208436608034512}
+  m_Layer: 0
+  m_Name: CloakBone02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7843208436608034512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4716427173309275256}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.092717506, w: 0.9956925}
+  m_LocalPosition: {x: -0.2614295, y: 2.6645352e-17, z: -5.804901e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1945730868324602556}
+  m_Father: {fileID: 5500108391214907001}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4818654756932010604
 GameObject:
@@ -3396,6 +3460,7 @@ MonoBehaviour:
   hint: {fileID: 2096473345646287279}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 1
   initiallyEnabled: 1
@@ -3422,6 +3487,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!195 &6353187348953647502
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3532,6 +3598,9 @@ MonoBehaviour:
   disableWander: 0
   startInIdleState: 1
   forceKinematicRigidbody: 1
+  aiUpdateDistance: 45
+  aiWakeUpMargin: 8
+  aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: 
   dialogueCharacterId: CHAR_GUARD
@@ -3539,10 +3608,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -5365,6 +5430,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8838243971677665696
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1945730868324602556}
+  m_Layer: 0
+  m_Name: CloakBone03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1945730868324602556
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8838243971677665696}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.05674181, w: 0.9983889}
+  m_LocalPosition: {x: -0.30492613, y: -1.0658141e-16, z: -7.123106e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7843208436608034512}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9012632888572765372
 GameObject:
   m_ObjectHideFlags: 0
@@ -5612,6 +5708,7 @@ Transform:
   - {fileID: 7354563728803408494}
   - {fileID: 5809604750814455548}
   - {fileID: 800709605453123446}
+  - {fileID: 5500108391214907001}
   m_Father: {fileID: 4973902054794107064}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9152433982546447538

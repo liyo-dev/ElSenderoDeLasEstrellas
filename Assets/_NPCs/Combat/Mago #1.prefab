@@ -2959,6 +2959,37 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.49789864, y: -0.00000013783574, z: 0}
     m_Extent: {x: 0.59546524, y: 0.041324396, z: 0.021053929}
   m_DirtyAABB: 0
+--- !u!1 &3037712855631565213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2912408187851757159}
+  m_Layer: 0
+  m_Name: CloakBone03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2912408187851757159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037712855631565213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.05674181, w: 0.9983889}
+  m_LocalPosition: {x: -0.30492613, y: -1.0658141e-16, z: -7.123106e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4787461329787523322}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3045547874787162335
 GameObject:
   m_ObjectHideFlags: 0
@@ -3084,6 +3115,38 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.5095029, y: 0, z: 0}
     m_Extent: {x: 0.5793121, y: 0.09606228, z: 0.046215784}
   m_DirtyAABB: 0
+--- !u!1 &3512639957771564697
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4787461329787523322}
+  m_Layer: 0
+  m_Name: CloakBone02
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4787461329787523322
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3512639957771564697}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.092717506, w: 0.9956925}
+  m_LocalPosition: {x: -0.2614295, y: 2.6645352e-17, z: -5.804901e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2912408187851757159}
+  m_Father: {fileID: 4974687690965804612}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3654441839772820790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3894,9 +3957,9 @@ SkinnedMeshRenderer:
   - {fileID: 7414138696073921560}
   - {fileID: 5467697165134459642}
   - {fileID: 7001470177931455254}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4974687690965804612}
+  - {fileID: 4787461329787523322}
+  - {fileID: 2912408187851757159}
   - {fileID: 8401662690849385807}
   - {fileID: 2156506837988010734}
   - {fileID: 8878944670312746078}
@@ -4531,6 +4594,38 @@ Transform:
   m_Children:
   - {fileID: 7747546946601778237}
   m_Father: {fileID: 8839587617938466589}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4921478507223927603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4974687690965804612}
+  m_Layer: 0
+  m_Name: CloakBone01
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4974687690965804612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4921478507223927603}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.19011132, y: 0.9817626, z: 2.95347e-17, w: -1.6956532e-16}
+  m_LocalPosition: {x: -0.07525502, y: 0.1138894, z: -1.3765184e-16}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4787461329787523322}
+  m_Father: {fileID: 6778048776505914492}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5000550975478037384
 GameObject:
@@ -5206,6 +5301,7 @@ MonoBehaviour:
   hint: {fileID: 4053614378330038311}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -5301,10 +5397,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -7803,6 +7895,7 @@ Transform:
   - {fileID: 5931636511200497978}
   - {fileID: 2156506837988010734}
   - {fileID: 2958535991931891040}
+  - {fileID: 4974687690965804612}
   m_Father: {fileID: 8215774786525450421}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8659367832976583641

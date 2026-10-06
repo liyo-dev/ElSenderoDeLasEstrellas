@@ -151,7 +151,17 @@
       "Bash(jq --version)",
       "Bash(node *)",
       "Bash(xargs -I {} cat \"{}\")",
-      "Bash(Remove-Item *)"
+      "Bash(Remove-Item *)",
+      "Bash(sort -t- -k2 -n)",
+      "Skill(superpowers:writing-plans)",
+      "Skill(superpowers:subagent-driven-development)",
+      "Bash(Get-Item \"C:/Users/luarb/dev/unity/ElSenderoDeLasEstrellas/Logs/Editor.log\")",
+      "Bash(Select-Object LastWriteTime)",
+      "PowerShell(Get-Item *)",
+      "Bash(ls *)",
+      "Bash(Select-Object Length)",
+      "PowerShell(Get-Content *)",
+      "Skill(superpowers:dispatching-parallel-agents)"
     ]
   }
 }

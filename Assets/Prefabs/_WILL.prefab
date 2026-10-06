@@ -589,7 +589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1704929965809554623
 Transform:
   m_ObjectHideFlags: 0
@@ -7197,7 +7197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8725001589453840830
 Transform:
   m_ObjectHideFlags: 0
@@ -12170,6 +12170,8 @@ MonoBehaviour:
   - TakeDamage_2
   deathAnimationName: Die02_NoWeapon
   upperBodyLayer: 1
+  ritmoDeLaCaida: 0.7
+  topeAnimacionDeDano: 1.5
   damageFlashDuration: 0.2
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   damageVFX: {fileID: 0}
@@ -12208,6 +12210,10 @@ MonoBehaviour:
   damageSoundKey: Player_Damage
   healSoundKey: Player_Heal
   deathSoundKey: Player_Death
+  reactionCharacter: Will
+  damageReactionKind: hurt
+  deathReactionKind: death
+  damageReactionCooldown: 0.6
   OnHealthChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12535,12 +12541,33 @@ MonoBehaviour:
   victoryCamFOV: 38
   victoryCamBlendSeconds: 0.4
   victoryJumpStateName: JumpFullSpin_InPlace_NoWeapon
+  victoryJumpHeight: 1.4
+  victoryJumpAirborne: {x: 0.1, y: 0.81}
   victoryJumpMaxSeconds: 1.8
   victoryCamMoveSeconds: 3
   victoryCamStartDistance: 6.5
   victoryCamStartHeight: 3
   victoryCamStartYawOffsetDeg: -110
   victoryDelayAfterDefeat: 1.5
+  celebracionEnGrupo:
+    orden: 010000000200000000000000i
+    poses:
+    - personaje: 1
+      estado: Victory_NoWeapon
+    - personaje: 2
+      estado: HandClap01
+    - personaje: 0
+      estado: Cheer02
+    gestoFinal: Cheer01
+    separacion: 1.2
+    radioDeBusqueda: 25
+    distanciaParaColocarDeGolpe: 15
+    topeParaLlegar: 3.5
+    topeDePose: 3
+  victoryCamExtraDistancePerMember: 1.1
+  victoryCamGroupYawOffsetDeg: -15
+  victoryCamGroupScreenShift: 0.8
+  victoryFinalHoldSeconds: 0.4
   debugMode: 1
 --- !u!114 &4479948751999106379
 MonoBehaviour:
@@ -12576,11 +12603,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 5254754835644330641}
-  originalMouthMesh: {fileID: 206955243820471005}
+  ojosDeReposo: {fileID: 5254754835644330641}
+  bocaDeReposo: {fileID: 3032424197757487374}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
 --- !u!114 &8164817358401321661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12649,11 +12675,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 0}
-  originalEyeMesh: {fileID: 0}
-  originalMouthMesh: {fileID: 0}
+  ojosDeReposo: {fileID: 0}
+  bocaDeReposo: {fileID: 0}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
 --- !u!114 &1307908492277444293
 MonoBehaviour:
   m_ObjectHideFlags: 0

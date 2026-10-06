@@ -79,8 +79,8 @@ MonoBehaviour:
   impactVFX: {fileID: 7647375919561907788, guid: 035ce8c9cfc34104991ce416daf8aebe, type: 3}
   despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
   vfxLifetime: 3
-  castSFXKey: Tornado
-  impactSFXKey: Impact1
+  castSFXKey: Hechizo_Rafaga
+  impactSFXKey: Impacto_Viento_Pequeno
   slotType: 0
   attackIcon: {fileID: 21300000, guid: d0aac83b8523838498dd54892f9cc498, type: 3}
   bounceCount: 0

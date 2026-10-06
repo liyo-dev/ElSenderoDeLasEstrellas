@@ -136,6 +136,9 @@ namespace Invector.vCharacterController
 
         public virtual void MoveInput()
         {
+            // Se puede llamar desde fuera (PlayerLockService) antes de Start(): p. ej. en el menú
+            // principal, con el jugador aún sin inicializar. Ver INC-551.
+            if (cc == null) return;
             // Durante un ataque o lanzamiento (cc.IsActionCommitted) el stick no mueve. Ver INC-484.
             if (SuppressMoveInput || cc.IsActionCommitted) { cc.input.x = 0; cc.input.z = 0; return; }
             cc.input.x = moveInput.x;

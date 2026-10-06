@@ -19,6 +19,7 @@ using UnityEngine;
 /// La lista es corta a propósito: la gramática de una escena de diálogo es finita, y con estos
 /// siete se cubre prácticamente todo lo que hacen las doce secuencias del juego. Añadir un tipo
 /// nuevo solo tiene sentido cuando haya una escena que de verdad lo pida.
+
 public enum ShotType
 {
     /// Plano general: todos los sujetos en cuadro, con aire. Sirve para situar la escena.
@@ -287,7 +288,7 @@ public static class ShotComposer
 
     // Buffer pre-alocado: el pase de seguridad se ejecuta cada frame en los planos 'live', y
     // CLAUDE.md § 2 prohíbe reservar memoria en bucles por frame.
-    private static readonly RaycastHit[] s_hits = new RaycastHit[16];
+    private static readonly RaycastHit[] s_hits = new RaycastHit[64];
 
     /// El contexto de la secuencia que se esta rodando ahora mismo. Se guarda al entrar en
     /// TrySolve porque la comprobacion de "la camara se ha quedado dentro de alguien" necesita la
@@ -313,6 +314,8 @@ public static class ShotComposer
 
         s_ctx = ctx;
         s_esCorte = isCut;
+        s_tipoDelPlano = framing.type;
+        s_encuadreDelPlano = framing;
 
         // Cuánto se alejan todos los planos de esta secuencia. Es un ajuste de gusto y vive en la
         // escena, donde se puede mover en pleno Play. Ver SequenceStage.DistanceMultiplier.
@@ -342,7 +345,7 @@ public static class ShotComposer
         // Se intenta el lado que toca; si la cámara acaba pegada a una pared o metida dentro de
         // algo, se prueba el espejo y se elige el que respire mejor. Cruzar el eje es peor que un
         // plano un poco más cerrado, así que el espejo solo gana si la diferencia es grande.
-        ShotSolution best = Compute(subject, secondary, framing, side, aspect, globalScale);
+        ShotSolution best = Compute(subject, secondary, framing, side, aspect, globalScale, ctx.UsaSubtitulos);
         float bestClearance = Clearance(best);
 
         // En un plano VIVO no se cruza el eje a mitad de plano (INC-378). Cruzarlo es cambiar la
@@ -352,7 +355,7 @@ public static class ShotComposer
         // plano se queda ahí hasta el corte siguiente.
         if (isCut && bestClearance < MinSubjectDistance * 1.6f)
         {
-            ShotSolution mirrored = Compute(subject, secondary, framing, -side, aspect, globalScale);
+            ShotSolution mirrored = Compute(subject, secondary, framing, -side, aspect, globalScale, ctx.UsaSubtitulos);
             if (Clearance(mirrored) > bestClearance * 1.5f)
             {
                 best = mirrored;
@@ -364,8 +367,45 @@ public static class ShotComposer
             }
         }
 
+        // ── Cara visible (INC-582) ────────────────────────────────────────────────────────────
+        // Un plano de un personaje que no le ve la cara no vale, por limpio que esté: se prueba el
+        // otro lado del eje y, si tampoco, un tres cuartos sobre el frente real de su cara.
+        if (isCut && EsPlanoDeUno(framing.type))
+        {
+            float angulo = AnguloDeCara(subject, best.position);
+            if (angulo > MaxAnguloDeCara)
+            {
+                ShotSolution espejo = Compute(subject, secondary, framing, -side, aspect, globalScale, ctx.UsaSubtitulos);
+                float anguloEspejo = AnguloDeCara(subject, espejo.position);
+                if (anguloEspejo < angulo && Penalizacion(espejo.lookAt, espejo.position, subject, secondary) < 1000)
+                {
+                    best = espejo;
+                    angulo = anguloEspejo;
+                }
+            }
+            if (angulo > MaxAnguloDeCara)
+            {
+                s_frontalForzado = true;
+                ShotSolution frontal = Compute(subject, secondary, framing, side, aspect, globalScale, ctx.UsaSubtitulos);
+                s_frontalForzado = false;
+                float anguloFrontal = AnguloDeCara(subject, frontal.position);
+                if (anguloFrontal < angulo) best = frontal;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.Log($"[ShotComposer] '{framing.Describe()}': la cámara quedaba a {angulo:F0}° de la cara; " +
+                    $"se usa un tres cuartos sobre su frente ({anguloFrontal:F0}°).");
+#endif
+            }
+        }
+
         if (isCut)
         {
+            s_fovDelPlano = best.fieldOfView;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            int penaFinal = Penalizacion(best.lookAt, best.position, subject, secondary);
+            if (penaFinal > 250)
+                Debug.LogWarning($"[ShotComposer] '{framing.Describe()}': penalización {penaFinal}; "
+                    + MotivoDeObstruccion(best.lookAt, best.position, subject, secondary));
+#endif
             WarnIfSameAsPrevious(ctx, framing, best);
             ctx.RememberShot(best);
         }
@@ -374,10 +414,38 @@ public static class ShotComposer
         return true;
     }
 
+    // ── Cara visible ──────────────────────────────────────────────────────────────────────────
+
+    /// Ángulo máximo entre el frente de la cara y la cámara en un plano de un personaje.
+    private const float MaxAnguloDeCara = 62f;
+    private static bool s_frontalForzado;
+
+    private static bool EsPlanoDeUno(ShotType tipo)
+        => tipo == ShotType.Medium || tipo == ShotType.CloseUp || tipo == ShotType.Reaction
+           || tipo == ShotType.OverTheShoulder;
+
+    /// Frente de la cara contrastado con el del cuerpo: si la medida de la cara apunta hacia la
+    /// espalda (pasa con mallas de ojos mal pivotadas), manda el cuerpo.
+    public static Vector3 FrenteFiable(SequenceActor actor)
+    {
+        if (actor?.Transform == null) return Vector3.forward;
+        Vector3 cuerpo = Flatten(actor.Transform.forward);
+        cuerpo = cuerpo.sqrMagnitude > 0.0001f ? cuerpo.normalized : Vector3.forward;
+        Vector3 cara = actor.FrenteDeLaCara;
+        return Vector3.Dot(cara, cuerpo) > 0.2f ? cara : cuerpo;
+    }
+
+    private static float AnguloDeCara(SequenceActor actor, Vector3 camara)
+    {
+        Vector3 hacia = Flatten(camara - actor.EyePosition);
+        if (hacia.sqrMagnitude < 0.0001f) return 0f;
+        return Vector3.Angle(FrenteFiable(actor), hacia);
+    }
+
     // ── Geometría ─────────────────────────────────────────────────────────────────────────────
 
     private static ShotSolution Compute(SequenceActor subject, SequenceActor secondary,
-        ShotFraming f, Vector3 side, float aspect, float globalScale)
+        ShotFraming f, Vector3 side, float aspect, float globalScale, bool subtitulos)
     {
         float fov = f.fovOverride > 0f ? f.fovOverride : DefaultFov(f.type);
         float frameHeight = DefaultFrameHeight(f.type);
@@ -414,6 +482,14 @@ public static class ShotComposer
                 break;
         }
 
+        bool personaje = subtitulos && !subject.IsDynamic && f.type != ShotType.Wide;
+        s_ojosEnTercioSuperior = personaje;
+        if (personaje)
+        {
+            Vector3 correccion = Vector3.up * (subject.AlturaDeOjos - subject.EyeHeight);
+            position += correccion;
+            lookAt += correccion;
+        }
         position += Vector3.up * f.heightBias;
 
         // ── Sitio para el bocadillo ───────────────────────────────────────────────────────────
@@ -428,7 +504,7 @@ public static class ShotComposer
         //
         // No se aplica a los planos generales: ahi el personaje ya es pequeno y el bocadillo tiene
         // sitio de sobra.
-        if (f.headroom && f.type != ShotType.Wide)
+        if (!subtitulos && f.headroom && f.type != ShotType.Wide)
         {
             float sitioParaElBocadillo = frameHeight * SitioParaElBocadillo;
             position += Vector3.up * sitioParaElBocadillo;
@@ -448,14 +524,18 @@ public static class ShotComposer
         // El buscador necesita saber qué entra en el cuadro; ver RayosDelCuadroTapados.
         s_fovDelPlano = Mathf.Clamp(fov, 18f, 75f);
         s_aspecto = aspect > 0.1f ? aspect : 16f / 9f;
-        s_secundarioNoSale = f.type == ShotType.CloseUp || f.type == ShotType.Reaction
-            || f.type == ShotType.Medium;
 
         position = FindClearPosition(lookAt, position, minDistance, f, subject, secondary);
 
         Quaternion rotation = Quaternion.LookRotation((lookAt - position).normalized, Vector3.up);
         rotation = ApplyComposition(rotation, position, lookAt, secondary, f, fov, aspect);
 
+        if (personaje)
+        {
+            // Y proyectada = 2/3: ojos en el tercio superior, conservando el contrapicado.
+            float pitch = Mathf.Atan(Mathf.Tan(Mathf.Clamp(fov, 18f, 75f) * 0.5f * Mathf.Deg2Rad) / 3f) * Mathf.Rad2Deg;
+            rotation *= Quaternion.Euler(pitch, 0f, 0f);
+        }
         return new ShotSolution
         {
             position = position,
@@ -478,8 +558,10 @@ public static class ShotComposer
         Vector3 eye = subject.EyePosition;
         lookAt = eye;
 
-        // Dirección desde el sujeto hacia donde estaría la cámara si fuera un frontal puro.
-        Vector3 frontal = secondary?.Transform != null
+        // Dirección desde el sujeto hacia donde estaría la cámara si fuera un frontal puro. Con el
+        // frontal forzado (ver «Cara visible») manda el frente real de la cara.
+        Vector3 frontal = s_frontalForzado ? FrenteFiable(subject)
+            : secondary?.Transform != null
             ? Flatten(secondary.EyePosition - eye)
             : Flatten(subject.Transform.forward);
 
@@ -703,7 +785,7 @@ public static class ShotComposer
 
     /// Alturas extra, en metros, que se prueban cuando ningún ángulo queda libre a la altura
     /// pedida. Asomarse por encima de una carreta, de un murete o de una viga suele bastar.
-    private static readonly float[] s_alturasOrbita = { 0f, 0.8f, 1.7f };
+    private static readonly float[] s_alturasOrbita = { 0f, 0.4f, 0.8f };
 
     /// Hasta cuántos grados puede rodar la cámara alrededor del sujeto BUSCANDO SITIO, según el
     /// tipo de plano.
@@ -735,6 +817,8 @@ public static class ShotComposer
     /// antes de acercar la cámara contra la pared: un plano general de más cuenta la escena, un
     /// plano de una pared no cuenta nada.
     private static readonly float[] s_radiosDeRescate = { 1.4f, 1.9f, 2.6f };
+    private static readonly float[] s_radiosDeCorte = { 1f, 1.2f, 1.45f };
+    private const float MaximaAlturaExtraDeDialogo = 1.2f;
 
     // ── Memoria de órbita ─────────────────────────────────────────────────────────────────────
     //
@@ -783,26 +867,8 @@ public static class ShotComposer
         s_fotogramasTapado = 0;
     }
 
-    /// Busca una posición desde la que se VEA al sujeto, conservando la distancia del plano.
-    ///
-    /// ── Por qué no vale con acercar la cámara ─────────────────────────────────────────────────
-    /// Lo que había antes (PullOutOfWalls) es un deoccluder clásico: si hay una pared en medio,
-    /// trae la cámara a este lado de la pared por la misma recta. Eso resuelve el caso fácil y
-    /// falla en los dos que de verdad se ven, los dos en la grabación del prólogo del 19 sep:
-    ///
-    ///   · Si el obstáculo está MÁS CERCA que la distancia mínima, la cámara se queda clavada en
-    ///     la distancia mínima — es decir, dentro de la pared. Son los cinco segundos de pantalla
-    ///     gris del plano de la carta (0:37).
-    ///   · Si el obstáculo está a medio camino, un plano general o medio se convierte en un primer
-    ///     plano de la cara que nadie pidió: el encuadre que dice el asset deja de existir.
-    ///
-    /// Lo que hace un operador de cámara real no es acercarse: es moverse de sitio. Eso es esto —
-    /// se gira alrededor del sujeto manteniendo la distancia hasta encontrar un ángulo despejado,
-    /// y solo si no hay ninguno se recurre a acercarse.
-    ///
-    /// El eje de acción se respeta por construcción: los ángulos se prueban de menor a mayor, así
-    /// que un desvío de 14 grados siempre gana a uno de 90, y solo se cruza al otro lado cuando no
-    /// queda literalmente nada más.
+    /// Compara visibilidad, ángulo, altura añadida y distancia dentro del arco del plano.
+    /// Los cortes toleran estorbos menores; los planos vivos conservan su órbita y su ángulo.
     private static Vector3 FindClearPosition(Vector3 target, Vector3 desired, float minDistance,
         ShotFraming framing, SequenceActor sujeto, SequenceActor secundario)
     {
@@ -819,8 +885,9 @@ public static class ShotComposer
         // Primero, el ángulo que ya se estaba usando: si sigue despejado, no se cambia. Ver la
         // memoria de órbita de arriba.
         float arco = ArcoDeBusqueda(framing.type);
+        bool planoAbierto = framing.type == ShotType.Wide || framing.type == ShotType.Tracking;
 
-        if (s_hayOrbitaRecordada && Mathf.Abs(s_anguloRecordado) <= arco)
+        if (!s_esCorte && s_hayOrbitaRecordada && Mathf.Abs(s_anguloRecordado) <= arco)
         {
             Vector3 dirRecordada = Quaternion.AngleAxis(s_anguloRecordado, Vector3.up) * plana;
             Vector3 recordada = LiftOffGround(
@@ -828,11 +895,11 @@ public static class ShotComposer
 
             int penalizacionRecordada = Penalizacion(target, recordada, sujeto, secundario);
 
-            // En un corte se exige un plano impecable. En un plano VIVO basta con que se siga
-            // VIENDO al sujeto (menos de 1000, que es lo que vale «tapado del todo»): mover la
+            // En un plano VIVO basta con que se siga
+            // VIENDO al sujeto sin invasiones graves (menos de 500): mover la
             // cámara porque una esquina roza el cuadro se ve como un tirón, y el tirón es peor
             // que la esquina.
-            if (penalizacionRecordada == 0 || (!s_esCorte && penalizacionRecordada < 1000))
+            if (penalizacionRecordada == 0 || (!s_esCorte && penalizacionRecordada < 500))
             {
                 s_fotogramasTapado = 0;
                 return recordada;
@@ -863,15 +930,17 @@ public static class ShotComposer
                 {
                     foreach (float masAlto in EscapesDeAltura)
                     {
+                        float extra = s_alturaRecordada + masAlto;
+                        if (!planoAbierto) extra = Mathf.Min(extra, MaximaAlturaExtraDeDialogo);
                         Vector3 c = LiftOffGround(target + dirRecordada * (radio * masRadio)
-                                                  + Vector3.up * (altura + s_alturaRecordada + masAlto));
+                                                  + Vector3.up * (altura + extra));
                         int pena = Penalizacion(target, c, sujeto, secundario);
                         if (pena < mejorPena)
                         {
                             mejorPena = pena;
                             mejorIgualAngulo = c;
                             radioElegido = masRadio;
-                            alturaElegida = s_alturaRecordada + masAlto;
+                            alturaElegida = extra;
                         }
                         if (mejorPena == 0) break;
                     }
@@ -885,166 +954,95 @@ public static class ShotComposer
             }
         }
 
-        // La menos mala encontrada dentro del arco, por si no hay ninguna impecable. Vale más un
-        // plano con una esquina tapada y la cara del personaje que un plano limpio de su nuca.
-        Vector3 mejor = Vector3.zero;
-        int mejorPuntos = int.MaxValue;
+        // Un único coste compara estorbos y desviación del encuadre sin exigir esquinas perfectas.
+        Vector3 mejor = desired;
+        float mejorCoste = float.PositiveInfinity;
+        int mejorPenalizacion = int.MaxValue;
         float mejorAngulo = 0f, mejorAltura = 0f, mejorRadio = 1f;
+        Vector3 ojos = sujeto != null ? sujeto.EyePosition : target;
+        float picadoPedido = Picado(desired, ojos);
 
-        for (int l = 0; l < s_alturasOrbita.Length; l++)
+        // El rescate solo se abre si la mejor posición normal tiene una obstrucción grave.
+        for (int pase = 0; pase < 2; pase++)
         {
-            for (int a = 0; a < s_anglesOrbita.Length; a++)
+            if (pase == 1 && mejorPenalizacion <= 250) break;
+            float[] radios = pase == 0 ? s_radiosDeCorte : s_radiosDeRescate;
+            foreach (float masRadio in radios)
             {
-                if (Mathf.Abs(s_anglesOrbita[a]) > arco) continue;
-
-                Vector3 dir = Quaternion.AngleAxis(s_anglesOrbita[a], Vector3.up) * plana;
-                Vector3 candidata = LiftOffGround(
-                    target + dir * radio + Vector3.up * (altura + s_alturasOrbita[l]));
-
-                int puntos = Penalizacion(target, candidata, sujeto, secundario);
-                if (puntos > 0)
+                int alturas = pase == 1 && planoAbierto ? 1 : s_alturasOrbita.Length + (pase == 1 ? 1 : 0);
+                for (int h = 0; h < alturas; h++)
                 {
-                    // Se penaliza además apartarse del ángulo que pedía el encuadre, para que
-                    // entre dos igual de tapadas gane la que respeta el plano.
-                    int coste = puntos + Mathf.RoundToInt(Mathf.Abs(s_anglesOrbita[a]) * 0.1f);
-                    if (coste < mejorPuntos)
+                    float extra = pase == 1 && planoAbierto ? (masRadio - 1f) * 3f
+                        : h < s_alturasOrbita.Length ? s_alturasOrbita[h] : MaximaAlturaExtraDeDialogo;
+                    foreach (float angulo in s_anglesOrbita)
                     {
-                        mejorPuntos = coste;
+                        if (Mathf.Abs(angulo) > arco) continue;
+                        Vector3 dir = Quaternion.AngleAxis(angulo, Vector3.up) * plana;
+                        Vector3 candidata = LiftOffGround(
+                            target + dir * (radio * masRadio) + Vector3.up * (altura + extra));
+                        int pena = Penalizacion(target, candidata, sujeto, secundario);
+                        float coste = pena + Mathf.Abs(angulo) * 0.6f + extra * 60f
+                            + (masRadio - 1f) * 80f;
+                        // Respeta un picado explícito del asset; castiga el que introduce el solver.
+                        if (!planoAbierto && Picado(candidata, ojos) > Mathf.Max(18f, picadoPedido) + 0.01f)
+                            coste += 400f;
+                        if (coste >= mejorCoste) continue;
+                        mejorCoste = coste;
+                        mejorPenalizacion = pena;
                         mejor = candidata;
-                        mejorAngulo = s_anglesOrbita[a];
-                        mejorAltura = s_alturasOrbita[l];
-                        mejorRadio = 1f;
+                        mejorAngulo = angulo;
+                        mejorAltura = extra;
+                        mejorRadio = masRadio;
                     }
-                    continue;
                 }
-
-                s_anguloRecordado = s_anglesOrbita[a];
-                s_alturaRecordada = s_alturasOrbita[l];
-                s_radioRecordado = 1f;
-                s_hayOrbitaRecordada = true;
-                s_fotogramasTapado = 0;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                if (l > 0 || a > 0)
-                    Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' estaba tapado desde " +
-                        $"donde tocaba; se ha rodado {s_anglesOrbita[a]:F0}° a un lado" +
-                        (s_alturasOrbita[l] > 0f ? $" y {s_alturasOrbita[l]:F1} m más alto" : "") +
-                        ". Si pasa en varios planos de la misma escena, lo que hay que mover es a " +
-                        "los personajes o el decorado, no la cámara.");
-#endif
-                return candidata;
             }
         }
 
-        // Ningún ángulo libre a esta distancia. ANTES de resignarse a acercarse, se prueba a
-        // ALEJARSE y subir: casi siempre el problema es que la cámara está metida entre el mobiliario
-        // de la plaza, y desde tres metros más atrás y dos más arriba se ve todo. Un plano más
-        // abierto de lo pedido sigue contando la escena; uno pegado a una pared, no.
-        foreach (float mas in s_radiosDeRescate)
+        // El último recurso abre un frontal del sujeto y compara su visibilidad real.
+        bool acercada = mejorPenalizacion >= 1000;
+        if (acercada && sujeto != null)
         {
-            for (int a = 0; a < s_anglesOrbita.Length; a++)
+            Vector3 frente = sujeto.FrenteDeLaCara;
+            foreach (float apertura in s_radiosDeRescate)
             {
-                if (Mathf.Abs(s_anglesOrbita[a]) > arco) continue;
-
-                Vector3 dir = Quaternion.AngleAxis(s_anglesOrbita[a], Vector3.up) * plana;
-                Vector3 candidata = LiftOffGround(
-                    target + dir * (radio * mas) + Vector3.up * (altura + (mas - 1f) * 3f));
-
-                int puntos = Penalizacion(target, candidata, sujeto, secundario);
-                if (puntos > 0)
-                {
-                    int coste = puntos + Mathf.RoundToInt(Mathf.Abs(s_anglesOrbita[a]) * 0.1f);
-                    if (coste < mejorPuntos)
-                    {
-                        mejorPuntos = coste;
-                        mejor = candidata;
-                        mejorAngulo = s_anglesOrbita[a];
-                        mejorAltura = (mas - 1f) * 3f;
-                        mejorRadio = mas;
-                    }
-                    continue;
-                }
-
-                s_anguloRecordado = s_anglesOrbita[a];
-                s_alturaRecordada = (mas - 1f) * 3f;
-                s_radioRecordado = mas;
-                s_hayOrbitaRecordada = true;
-                s_fotogramasTapado = 0;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' no tenía ningún ángulo " +
-                    $"libre a su distancia, así que se ha abierto a {mas:F1}× y {(mas - 1f) * 3f:F1} m " +
-                    "más alto. Sale más abierto de lo que pide el asset, pero se ve.");
-#endif
-                return candidata;
+                Vector3 candidata = LiftOffGround(target + frente * Mathf.Max(minDistance, radio * apertura)
+                    + Vector3.up * altura);
+                int pena = Penalizacion(target, candidata, sujeto, secundario);
+                if (pena >= mejorPenalizacion) continue;
+                mejor = candidata; mejorPenalizacion = pena;
+                mejorAngulo = Vector3.SignedAngle(plana, frente, Vector3.up);
+                mejorAltura = 0f; mejorRadio = apertura;
             }
         }
+        s_anguloRecordado = mejorAngulo;
+        s_alturaRecordada = mejorAltura;
+        s_radioRecordado = mejorRadio;
+        s_hayOrbitaRecordada = true;
+        s_fotogramasTapado = 0;
 
-        // Ninguna impecable dentro del arco. Antes de dar la vuelta al personaje —que es lo que
-        // producía los planos de nuca— se coge la MENOS MALA de las de dentro del arco, siempre
-        // que el sujeto se vea desde ella (por debajo de 1000 puntos, ver Penalizacion). Un alero
-        // en una esquina se aguanta; una nuca no.
-        if (mejorPuntos < 1000)
-        {
-            s_anguloRecordado = mejorAngulo;
-            s_alturaRecordada = mejorAltura;
-            s_radioRecordado = mejorRadio;
-            s_hayOrbitaRecordada = true;
-            s_fotogramasTapado = 0;
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ShotComposer] El plano '{framing.Describe()}' no tenía ningún ángulo " +
-                $"impecable dentro de sus {arco:F0}°, así que se ha cogido el menos malo " +
-                $"({mejorAngulo:F0}°, {mejorPuntos} puntos de estorbo). Se ve al personaje de " +
-                "frente, con algo de decorado en el cuadro. Si molesta, hay que separar al " +
-                "personaje del decorado en la escena.");
-#endif
-            return mejor;
-        }
-
-        // Ni eso. Ahora sí, la vuelta entera: un plano de espaldas se ve, y una pared no. Pero
-        // esto es lo último y se avisa, porque lo que hay que mover es el decorado o al personaje.
-        if (arco < 180f)
-        {
-            for (int l = 0; l < s_alturasOrbita.Length; l++)
-            {
-                for (int a = 0; a < s_anglesOrbita.Length; a++)
-                {
-                    if (Mathf.Abs(s_anglesOrbita[a]) <= arco) continue;   // ya probados arriba
-
-                    Vector3 dir = Quaternion.AngleAxis(s_anglesOrbita[a], Vector3.up) * plana;
-                    Vector3 candidata = LiftOffGround(
-                        target + dir * (radio * 1.6f) + Vector3.up * (altura + 1.8f));
-
-                    if (Penalizacion(target, candidata, sujeto, secundario) >= 1000) continue;
-
-                    s_anguloRecordado = s_anglesOrbita[a];
-                    s_alturaRecordada = 1.8f;
-                    s_radioRecordado = 1.6f;
-                    s_hayOrbitaRecordada = true;
-                    s_fotogramasTapado = 0;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[ShotComposer] El plano '{framing.Describe()}' no tenía " +
-                        $"NINGÚN ángulo libre dentro de sus {arco:F0}°, así que se ha rodado " +
-                        $"{s_anglesOrbita[a]:F0}°: va a salir de lado o de espaldas. Lo que hay que " +
-                        "mover es el personaje o el decorado, no la cámara.");
-#endif
-                    return candidata;
-                }
-            }
-        }
-
-        // El sujeto está metido en un sitio del que no se le puede ver desde ningún sitio. Aquí sí
-        // toca acercarse, aun a costa del encuadre: un plano cerrado de más se ve y una pared no.
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[ShotComposer] El plano '{framing.Describe()}' no tiene NINGÚN ángulo " +
-            "despejado alrededor del sujeto, ni siquiera abriendo el plano: está demasiado pegado a " +
-            "la geometría. Se acerca la cámara para poder verlo, así que el encuadre no será el que " +
-            "dice el asset. Esto se arregla separando al personaje de la pared en la escena, no aquí.");
-#endif
-        return LiftOffGround(PullOutOfWalls(target, desired, minDistance));
+        return mejor;
     }
+
+    private static float Picado(Vector3 camara, Vector3 ojos)
+        => Mathf.Atan2(camara.y - ojos.y, Mathf.Max(0.01f, Flatten(camara - ojos).magnitude)) * Mathf.Rad2Deg;
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+    // Solo se construye el diagnóstico una vez por corte, fuera del barrido de candidatos.
+    private static string MotivoDeObstruccion(Vector3 target, Vector3 camara,
+        SequenceActor sujeto, SequenceActor secundario)
+    {
+        string motivo = "";
+        if (!IsPathClear(target, camara, sujeto, secundario)) motivo += "visión bloqueada (1000); ";
+        if (CamaraMetidaEnAlguien(camara, sujeto, secundario)) motivo += "lente dentro de alguien (500); ";
+        int personajes = PenalizacionDePersonajes(camara, target, sujeto, secundario);
+        if (personajes > 0) motivo += $"personajes/cara {personajes} puntos; ";
+        if (LenteContraElDecorado(camara, target, sujeto, secundario)) motivo += "decorado pegado a la lente (100); ";
+        int esquinas = RayosDelCuadroTapados(camara, target, sujeto, secundario);
+        if (esquinas > 0) motivo += $"decorado en {esquinas} bordes/esquinas ({esquinas * 10}); ";
+        return motivo.Length == 0 ? "sin obstrucción" : motivo;
+    }
+#endif
 
     /// ¿Vale esta posición de cámara?
     ///
@@ -1074,9 +1072,10 @@ public static class ShotComposer
         // los ocho rayos del cuadro son lo más caro de todo esto y se resuelven planos en vivo
         // cada fotograma. Si no se ve al sujeto, da igual lo que haya en las esquinas.
         if (!IsPathClear(target, camara, sujeto, secundario)) return 1000;
+        int personajes = PenalizacionDePersonajes(camara, target, sujeto, secundario);
+        if (personajes >= 1000) return personajes;
         if (CamaraMetidaEnAlguien(camara, sujeto, secundario)) puntos += 500;
-        if (ElSecundarioSeComeElCuadro(camara, target, secundario)) puntos += 400;
-        else if (AlguienSeComeElCuadro(camara, target, sujeto, secundario)) puntos += 250;
+        puntos += personajes;
         if (LenteContraElDecorado(camara, target, sujeto, secundario)) puntos += 100;
         if (puntos >= 500) return puntos;
 
@@ -1091,6 +1090,81 @@ public static class ShotComposer
     /// patrón que `s_ctx`: se dejan puestos antes de buscar.
     private static float s_fovDelPlano = 45f;
     private static float s_aspecto = 16f / 9f;
+    private static ShotType s_tipoDelPlano;
+    private static ShotFraming s_encuadreDelPlano;
+    private static bool s_ojosEnTercioSuperior;
+
+    /// Proyecta el volumen completo hasta la punta del pelo; una lente dentro ocupa todo el cuadro.
+    private static bool ProyectarVolumen(Vector3 camara, Quaternion giro, Vector3 centro,
+        Vector3 extremos, out Rect rect, out float profundidad)
+    {
+        Quaternion inversa = Quaternion.Inverse(giro);
+        Vector3 local = inversa * (centro - camara);
+        profundidad = local.z;
+        rect = default;
+        float extensionZ = Mathf.Abs((inversa * Vector3.right).z) * extremos.x
+            + Mathf.Abs((inversa * Vector3.up).z) * extremos.y
+            + Mathf.Abs((inversa * Vector3.forward).z) * extremos.z;
+        if (local.z + extensionZ <= 0.01f) return false;
+        if (local.z - extensionZ <= 0.01f) { rect = new Rect(0f, 0f, 1f, 1f); return true; }
+        float tanV = Mathf.Tan(s_fovDelPlano * 0.5f * Mathf.Deg2Rad);
+        Vector2 min = new(float.PositiveInfinity, float.PositiveInfinity);
+        Vector2 max = new(float.NegativeInfinity, float.NegativeInfinity);
+        for (int i = 0; i < 8; i++)
+        {
+            Vector3 esquina = centro + Vector3.Scale(extremos,
+                new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f));
+            Vector3 p = inversa * (esquina - camara);
+            Vector2 uv = new(0.5f + p.x / (2f * p.z * tanV * s_aspecto), 0.5f + p.y / (2f * p.z * tanV));
+            min = Vector2.Min(min, uv); max = Vector2.Max(max, uv);
+        }
+        rect = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+        return true;
+    }
+
+    private static int PenalizacionDePersonajes(Vector3 camara, Vector3 lookAt,
+        SequenceActor sujeto, SequenceActor secundario)
+    {
+        if (s_ctx == null || sujeto?.Transform == null || sujeto.IsDynamic) return 0;
+        Vector3 direccion = lookAt - camara;
+        if (direccion.sqrMagnitude < 0.001f) return 1000;
+        Quaternion giro = Quaternion.LookRotation(direccion, Vector3.up);
+        if (s_encuadreDelPlano != null)
+            giro = ApplyComposition(giro, camara, lookAt, secundario, s_encuadreDelPlano, s_fovDelPlano, s_aspecto);
+        if (s_ojosEnTercioSuperior)
+            giro *= Quaternion.Euler(Mathf.Atan(Mathf.Tan(s_fovDelPlano * 0.5f * Mathf.Deg2Rad) / 3f)
+                * Mathf.Rad2Deg, 0f, 0f);
+        Vector3 ojos = sujeto.Transform.position + Vector3.up * sujeto.AlturaDeOjos;
+        float radioCara = Mathf.Max(0.16f, sujeto.SafeRadius * 0.55f);
+        if (!ProyectarVolumen(camara, giro, ojos, new Vector3(radioCara, radioCara, radioCara),
+            out Rect cara, out float profundidadCara)) return 1000;
+        int puntos = 0;
+        foreach (var actor in s_ctx.PersonajesVisibles)
+        {
+            if (actor?.Transform == null || actor.Transform == sujeto.Transform || actor.IsDynamic
+                || !actor.Transform.gameObject.activeInHierarchy) continue;
+            float alto = actor.HeadTopHeight;
+            float radio = actor.SafeRadius;
+            Vector3 centro = actor.Transform.position + Vector3.up * (alto * 0.5f);
+            if (!ProyectarVolumen(camara, giro, centro, new Vector3(radio, alto * 0.5f, radio),
+                out Rect volumen, out float fondo)) continue;
+            if (fondo - radio >= profundidadCara) continue;
+            if (volumen.Overlaps(cara)) return 1000;
+            float ancho = Mathf.Max(0f, Mathf.Min(1f, volumen.xMax) - Mathf.Max(0f, volumen.xMin));
+            float altura = Mathf.Max(0f, Mathf.Min(1f, volumen.yMax) - Mathf.Max(0f, volumen.yMin));
+            bool planoDeUno = s_tipoDelPlano == ShotType.Medium || s_tipoDelPlano == ShotType.CloseUp
+                || s_tipoDelPlano == ShotType.Reaction;
+            // Plano limpio de un personaje (INC-582): el interlocutor, como mucho, asoma por un borde.
+            // Una nuca suya en el centro del cuadro es justo lo que Raúl veía en todos los diálogos.
+            if (actor == secundario && planoDeUno
+                && (volumen.xMax > 0.22f && volumen.xMin < 0.78f || ancho > 0.15f))
+                puntos += 600 + Mathf.CeilToInt(ancho * 400f);
+            else if (actor == secundario && s_tipoDelPlano != ShotType.Wide && s_tipoDelPlano != ShotType.TwoShot
+                && ancho > 0.25f) puntos += 500 + Mathf.CeilToInt((ancho - 0.25f) * 500f);
+            else puntos += Mathf.CeilToInt(ancho * altura * 1000f);
+        }
+        return puntos;
+    }
 
     /// Ocho direcciones hacia el borde del cuadro: las cuatro esquinas y los cuatro lados, al 90 %
     /// del borde para no rozar justo el filo.
@@ -1158,86 +1232,6 @@ public static class ShotComposer
         return tapados;
     }
 
-    /// A partir de qué distancia de la lente la cabeza del secundario deja de «tapar» y pasa a
-    /// ser un personaje en segundo término, que da profundidad y está bien.
-    ///
-    /// (21 sep) Primero fue 1,7 m desde sus pies, en planta. No bastaba: en la grabación 11 la
-    /// cabeza del Archimago sigue ocupando un tercio del cuadro en «Mañana rompes dos», y la
-    /// espalda de Oliver tapa a Will entero en su saludo. Estos personajes son casi todo cabeza,
-    /// y una cabeza de ochenta centímetros a dos metros y pico de un objetivo de 40° llena media
-    /// pantalla. Lo que importa no es a cuánto está, sino si SALE EN EL CUADRO y a qué distancia.
-    private const float DistanciaQueTapa = 3.6f;
-
-    private static bool s_secundarioNoSale;
-
-    /// ¿Sale la cabeza del secundario en el cuadro, y tan cerca que se come el plano?
-    ///
-    /// En un primer plano, una reacción o un plano medio el secundario no sale en cuadro: está
-    /// para dar el ángulo de tres cuartos y el lado del eje, nada más. `CamaraMetidaEnAlguien` no
-    /// lo coge, porque la cámara no está DENTRO de él, y `RayosDelCuadroTapados` tampoco, porque
-    /// se salta a los personajes a propósito.
-    ///
-    /// Se proyecta su cabeza con el campo de visión y el aspecto del plano de verdad: si cae
-    /// dentro del encuadre (aunque sea un borde) y a menos de `DistanciaQueTapa`, la posición se
-    /// penaliza. No se descarta: el buscador se va a otro ángulo si puede, y si no puede da el
-    /// menos malo en vez de dar la vuelta al personaje.
-    private static bool ElSecundarioSeComeElCuadro(Vector3 camara, Vector3 lookAt, SequenceActor secundario)
-    {
-        if (!s_secundarioNoSale || secundario?.Transform == null) return false;
-        return LaCabezaSeComeElCuadro(camara, lookAt, secundario);
-    }
-
-    /// Un TERCERO plantado delante de la cámara (23 sep): «cuando habla con el NPC que le pide lo
-    /// del carro se ve una cabeza en medio». El plano solo declara sujeto y secundario, así que
-    /// cualquier otro vecino del corro es, para el buscador, parte del decorado — y a metro y
-    /// medio de la lente un vecino no es decorado, es una cabeza tapando la conversación. Se
-    /// penaliza igual que al secundario, un poco menos, para que el buscador prefiera rodearle.
-    private static bool AlguienSeComeElCuadro(Vector3 camara, Vector3 lookAt,
-        SequenceActor sujeto, SequenceActor secundario)
-    {
-        if (s_ctx == null) return false;
-
-        foreach (var actor in s_ctx.Actores)
-        {
-            if (actor?.Transform == null) continue;
-            if (actor == sujeto || actor == secundario) continue;
-            if (LaCabezaSeComeElCuadro(camara, lookAt, actor)) return true;
-        }
-        return false;
-    }
-
-    private static bool LaCabezaSeComeElCuadro(Vector3 camara, Vector3 lookAt, SequenceActor quien)
-    {
-        var secundario = quien;
-
-        Vector3 adelante = lookAt - camara;
-        if (adelante.sqrMagnitude < 0.0001f) return false;
-        adelante.Normalize();
-
-        Vector3 derecha = Vector3.Cross(Vector3.up, adelante);
-        if (derecha.sqrMagnitude < 0.0001f) return false;
-        derecha.Normalize();
-        Vector3 arriba = Vector3.Cross(adelante, derecha);
-
-        float alto = secundario.HeadTopHeight;
-        Vector3 cabeza = secundario.Transform.position + Vector3.up * (alto * 0.72f);
-        float radioCabeza = Mathf.Max(0.4f, alto * 0.3f);
-
-        Vector3 v = cabeza - camara;
-        float fondo = Vector3.Dot(v, adelante);
-        if (fondo < 0.05f) return false;                 // detrás de la cámara
-        if (fondo - radioCabeza > DistanciaQueTapa) return false;   // lejos: es segundo término
-
-        float tanV = Mathf.Tan(s_fovDelPlano * 0.5f * Mathf.Deg2Rad);
-        float tanH = tanV * s_aspecto;
-        float r = radioCabeza / fondo;
-
-        float x = Mathf.Abs(Vector3.Dot(v, derecha)) / fondo;
-        float y = Mathf.Abs(Vector3.Dot(v, arriba)) / fondo;
-
-        return x - r < tanH && y - r < tanV;
-    }
-
     /// ¿Ha quedado la cámara dentro del volumen de algún personaje que no sea el del plano?
     ///
     /// Se compara contra lo que SequenceActor mide de los Renderer (SafeRadius de ancho,
@@ -1246,9 +1240,9 @@ public static class ShotComposer
     {
         if (s_ctx == null) return false;
 
-        foreach (var actor in s_ctx.Actores)
+        foreach (var actor in s_ctx.PersonajesVisibles)
         {
-            if (actor?.Transform == null) continue;
+            if (actor?.Transform == null || !actor.Transform.gameObject.activeInHierarchy) continue;
 
             Vector3 pies = actor.Transform.position;
 
@@ -1256,14 +1250,12 @@ public static class ShotComposer
             // la cámara acabara DENTRO del pelo de Liora en la octava grabación — pantalla rosa
             // entera en 2:48 mientras el Archimago habla. Estar cerca del secundario es legítimo
             // (un escorzo se pone justo detrás de su hombro); estar dentro de él no lo es nunca.
-            // Así que a ellos se les mide solo el núcleo del cuerpo, sin el margen del pelo.
+            // El radio completo incluye pelo también en los dos protagonistas del plano.
             bool esDelPlano = actor == sujeto || actor == secundario;
 
             float dx = camara.x - pies.x;
             float dz = camara.z - pies.z;
-            float radio = esDelPlano
-                ? actor.SafeRadius * 0.55f
-                : actor.SafeRadius + MargenAlrededorDeUnPersonaje;
+            float radio = actor.SafeRadius + (esDelPlano ? 0.05f : MargenAlrededorDeUnPersonaje);
             if (dx * dx + dz * dz > radio * radio) continue;
 
             // Por arriba se deja pasar: una cámara por encima de la cabeza de alguien es un
@@ -1492,21 +1484,23 @@ public static class ShotComposer
     /// Sube la cámara si ha quedado por debajo del suelo o pegada a él. Es el fallo que ya se dio
     /// una vez en esta misma cinemática ("se ve por debajo del mundo", 14 sept 2026), allí porque
     /// los planos estaban clavados a coordenadas fijas del mapa.
-    private static Vector3 LiftOffGround(Vector3 position)
+    public static Vector3 LiftOffGround(Vector3 position)
     {
-        // Solo cuenta lo que está POR DEBAJO de la cámara. Con un único Raycast, lo primero que
-        // encuentra bajando desde cuatro metros por encima puede ser un tejado o una viga, y
-        // entonces esto no sube la cámara sobre el suelo: la sube sobre el tejado (INC-315).
-        int n = Physics.RaycastNonAlloc(position + Vector3.up * 4f, Vector3.down, s_hits, 12f, ~0,
+        // El soporte más cercano evita elegir un tejado lejano y permite salir de bajo el terreno.
+        int n = Physics.RaycastNonAlloc(position + Vector3.up * 32f, Vector3.down, s_hits, 96f, ~0,
             QueryTriggerInteraction.Ignore);
 
         float suelo = float.NegativeInfinity;
+        float distanciaSuelo = float.PositiveInfinity;
         for (int i = 0; i < n; i++)
         {
             var hit = s_hits[i];
             if (hit.collider == null) continue;
-            if (hit.point.y > position.y) continue;
-            if (hit.point.y > suelo) suelo = hit.point.y;
+            if (IsCharacter(hit.collider) || hit.normal.y < 0.65f) continue;
+            float distancia = Mathf.Abs(hit.point.y - position.y);
+            if (distancia >= distanciaSuelo) continue;
+            distanciaSuelo = distancia;
+            suelo = hit.point.y;
         }
 
         if (!float.IsNegativeInfinity(suelo))
@@ -1552,6 +1546,8 @@ public static class ShotComposer
     public static void ClearColliderCache()
     {
         s_esPersonaje.Clear();
+        SequenceMovement.LimpiarCache();
+        s_encuadreDelPlano = null;
         OlvidarOrbita();
 
         // Y el contexto: es de la secuencia que acaba de terminar, y guardarlo de una escena a

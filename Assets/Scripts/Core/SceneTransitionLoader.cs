@@ -18,6 +18,7 @@ using Sendero.Core.Feedback;
 /// </summary>
 public static class SceneTransitionLoader
 {
+    private const float DuracionDestapePantallaDeCarga = 0.6f;
     // Defaults configurable en runtime (p.ej., desde menús) para aplicar overlay/fade
     public static string DefaultOverlayScene = null; // si no es null/empty, Load() usará overlay
     public static TransitionSettings DefaultFade = null; // usado cuando NO hay overlay
@@ -164,6 +165,9 @@ public static class SceneTransitionLoader
                 MarcarPantallaDeCarga(true);
                 // Fade-in de la UI desde el runner persistente
                 yield return EnsureRunner().StartCoroutine(ui.Fade(0f, 1f));
+                if (FeedbackService.IsScreenFaded && !Telon.Cerrado)
+                    yield return FeedbackService.ScreenFadeAsync(FeedbackService.ColorDelFundido,
+                        DuracionDestapePantallaDeCarga, fadeIn: false);
             }
         }
 

@@ -17,6 +17,8 @@ MonoBehaviour:
   displayName: "Chispa \xCDgnea (fuego en el suelo)"
   kind: 3
   element: 0
+  lore: 
+  loreId: 
   prefab: {fileID: 5000399587882656411, guid: c77f14af211da944494b2377f0fc6a51, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
@@ -77,7 +79,7 @@ MonoBehaviour:
   impactVFX: {fileID: 0}
   despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
   vfxLifetime: 3
-  castSFXKey: SelloDelPacto
+  castSFXKey: Hechizo_ChispaIgneaFuego
   impactSFXKey: 
   slotType: 1
   attackIcon: {fileID: 21300000, guid: c0f7caa3829897842a4783156480f259, type: 3}
@@ -88,5 +90,16 @@ MonoBehaviour:
   spreadAngle: 24
   impactZone: {fileID: 0}
   castStyle: 0
+  statusEffect: 0
+  statusDuration: 2
+  statusStrength: 0.5
+  statusVFX: {fileID: 0}
+  zoneOnCaster: 0
+  healPerTick: 0
+  groupShieldSeconds: 0
+  groupShieldDamageFactor: 0.3
+  groupShieldVFX: {fileID: 0}
+  teamGaugeGain: 0
+  teleportDistance: 6
   caster: 2
   comboSequence: 

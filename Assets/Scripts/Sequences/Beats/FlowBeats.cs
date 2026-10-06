@@ -1,9 +1,34 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Sendero.Core.Feedback;
 
 // Beats de control de la escena: tiempo, pantalla, ramas y enganche con la mecánica de juego.
+/// Cambia el ambiente visual con tiempo real y espera opcional.
+[Serializable]
+public sealed class PostprocesoBeat : SequenceBeat
+{
+    public VolumeProfile perfil;
+    [Min(0)] public float transicion;
+    public bool esperar;
+
+    public override string Describe() => $"Post-procesado: {(perfil != null ? perfil.name : "sin perfil")} ({transicion}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var control = PostprocesoDeEscena.Activo;
+        if (control == null)
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning("[PostprocesoBeat] No hay post-procesado de escena activo.");
+#endif
+            yield break;
+        }
+        control.CambiarPerfil(perfil, transicion);
+        while (esperar && control != null && control.isActiveAndEnabled && control.EnTransicion) yield return null;
+    }
+}
 //
 // Todos son genéricos a propósito. La regla para añadir algo a este archivo es que sirva a
 // cualquier secuencia futura; lo que solo vale para UNA escena concreta (un panic input, un
@@ -109,6 +134,85 @@ public class ScreenFlashBeat : SequenceBeat
     {
         FeedbackService.ScreenFlash(color, duration);
         yield break;
+    }
+}
+
+/// Muestra o retira las bandas de cine; el cierre del reproductor siempre las retira.
+[Serializable]
+public class BandasDeCineBeat : SequenceBeat
+{
+    public bool mostrar = true;
+    [Range(0f, 0.45f)] public float altura = 0.12f;
+    [Min(0f)] public float duracion = 0.5f;
+    public bool esperar = true;
+
+    public override string Describe() => $"Bandas de cine: {(mostrar ? "mostrar" : "retirar")} ({duracion}s)";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var bandas = BandasDeCineUI.Obtener(ctx.Player.transform);
+        if (mostrar)
+            ctx.Player.RegisterCleanup(() => { if (bandas != null) bandas.Mostrar(false, duracion: 0f); });
+        bandas.Mostrar(mostrar, altura, duracion);
+        if (esperar) while (bandas != null && bandas.Animando) yield return null;
+    }
+}
+
+/// Acentúa un momento con rayas radiales y limpia el efecto al cerrar.
+[Serializable]
+public class LineasDeConcentracionBeat : SequenceBeat
+{
+    public bool mostrar = true;
+    public Color color = new Color(1f, 1f, 1f, .85f);
+    [Range(0f, 1f)] public float huecoCentral = .35f;
+    [Min(0f)] public float fundido = .1f;
+    [Min(0f)] public float duracion;
+    public bool esperar;
+    public override string Describe() => $"Líneas de concentración: {(mostrar ? "mostrar" : "retirar")}";
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var ui = LineasDeConcentracionUI.Obtener(ctx.Player.transform);
+        if (mostrar) ctx.Player.RegisterCleanup(() => { if (ui != null) ui.OcultarInmediato(); });
+        ui.Mostrar(mostrar, color, huecoCentral, fundido, duracion);
+        // Con duración abierta espera solo la entrada para permitir la retirada posterior.
+        if (esperar)
+            while (ui != null && (mostrar && duracion <= 0f ? ui.Animando : ui.Ocupado)) yield return null;
+    }
+}
+
+/// Inserta un primer plano en vivo sin cambiar la cámara de la secuencia.
+[Serializable]
+public class CutInBeat : SequenceBeat
+{
+    public string actorId;
+    public EncuadreCutIn encuadre = EncuadreCutIn.Cara;
+    public LadoCutIn lado = LadoCutIn.Izquierda;
+    [Range(0f, 1f)] public float alturaEnPantalla = .62f;
+    [Min(0f)] public float duracion;
+    [Tooltip("Franja que se usa (0 o 1). Dos ranuras permiten enfrentar a dos personajes a la vez.")]
+    [Range(0, CutInUI.Ranuras - 1)] public int ranura;
+    [Tooltip("Clave de SFX que suena al entrar la franja (vacío = sin sonido).")]
+    public string sonido;
+    public bool mostrar = true;
+    public bool esperar;
+    public override string Describe() => $"Cut-in {ranura}: {(mostrar ? actorId : "retirar")} ({encuadre})";
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx?.Player == null) yield break;
+        var actor = mostrar ? ctx.GetActor(actorId) : null;
+        if (mostrar && actor?.Transform == null) yield break;
+        var ui = CutInUI.Obtener(ctx.Player.transform);
+        if (mostrar)
+        {
+            ctx.Player.RegisterCleanup(() => { if (ui != null) ui.OcultarInmediato(); });
+            ui.Mostrar(actor, encuadre, lado, alturaEnPantalla, duracion, ranura);
+            if (!string.IsNullOrWhiteSpace(sonido)) AudioService.Instance?.PlaySFX(sonido);
+        }
+        else ui.Retirar(ranura);
+        if (esperar)
+            while (ui != null && (mostrar && duracion <= 0f ? ui.AnimandoRanura(ranura) : ui.OcupadaRanura(ranura))) yield return null;
     }
 }
 
@@ -233,6 +337,8 @@ public class DerrotaBeat : SequenceBeat
 [Serializable]
 public class MusicBeat : SequenceBeat
 {
+    [Tooltip("Retoma la posición de esta pista en la escena; desmarcado comienza desde cero.")]
+    public bool continuarDondeIba = true;
     [Tooltip("ID de regla de secuencia del AudioGraphProfile. Vacío = PARAR la música.")]
     public string musicId;
 
@@ -248,7 +354,7 @@ public class MusicBeat : SequenceBeat
         if (player == null) yield break;
 
         if (string.IsNullOrWhiteSpace(musicId)) player.StopMusicNow(fadeOut);
-        else player.PlayMusic(musicId);
+        else player.PlayMusic(musicId, continuarDondeIba);
 
         yield break;
     }

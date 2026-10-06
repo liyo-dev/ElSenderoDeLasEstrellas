@@ -21,6 +21,9 @@ using UnityEngine;
 ///      montaje que los ponía colgaba de la escena y nunca llegó a ejecutarse.
 ///   4. En la ventana, la cara de Will cambia: sorpresa al primer grito, y media sonrisa cuando
 ///      comenta que ya les conoce.
+///   5. Eldran y Victoria discuten en bucle hasta PERAS_START.
+///   6. «Otra vez esa pesadilla» sale cuando Will ya está de pie: entre «Pulsa A para despertar»
+///      y el bocadillo, el grafo espera la señal de la cama (will_wake_up). Ver INC-549.
 public static class ArreglosCapitulo1
 {
     private const string RutaGrafo = "Assets/NarrativeGraph/Cap1.asset";
@@ -58,6 +61,7 @@ public static class ArreglosCapitulo1
             EldranLlegadaYMarcador(),
             CaraEnLaVentana(),
             DiscusionDeEldranYVictoria(),
+            EsperarAQueSeLevante(),
         };
         AssetDatabase.SaveAssets();
         string r = string.Join("\n", informe);
@@ -269,6 +273,48 @@ public static class ArreglosCapitulo1
         finally { PrefabUtility.UnloadPrefabContents(raiz); }
     }
 
+    // ── 6 ─────────────────────────────────────────────────────────────────────────────────────
+    private const string GuidNodoPulsaDespertar = "d206615e-7e83-4d62-bd5a-d6e04d6b237b";
+    private const string GuidNodoPensamiento = "95228e84-0a1a-4e3b-9ef9-e36ad502e222";
+    private const string GuidNodoDePie = "3f6b2c1e-8a47-4d59-b0c3-5e7a9d1f2b64";
+    private const string SenalDePie = "will_wake_up";
+
+    /// Entre «Pulsa A para despertar» (5) y el bocadillo (6): el botón completa el aviso en el
+    /// mismo instante en que Will empieza a levantarse, así que el bocadillo salía con él aún
+    /// tumbado y justo antes del parpadeo en negro.
+    private static string EsperarAQueSeLevante()
+    {
+        var grafo = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(RutaGrafo);
+        if (grafo == null) return $"(6) No encuentro {RutaGrafo}.";
+        if (grafo.FindNode(GuidNodoDePie) != null) return "(6) El bocadillo ya espera a que Will esté de pie.";
+
+        var pulsa = grafo.FindNode(GuidNodoPulsaDespertar);
+        if (pulsa == null || grafo.FindNode(GuidNodoPensamiento) == null)
+            return "(6) No encuentro los nodos 5 y 6 del despertar en Cap1.";
+
+        Undo.RecordObject(grafo, "Cap1: el bocadillo espera a que Will esté de pie");
+        var espera = new WaitCustomEventNode
+        {
+            displayTitle = $"5b.- Will ya esta de pie ({SenalDePie})",
+            chapter = pulsa.chapter,
+            blockSaving = pulsa.blockSaving,
+            inputAnchor = pulsa.inputAnchor,
+            outputAnchor = pulsa.outputAnchor,
+            overrideNodeColor = pulsa.overrideNodeColor,
+            nodeColor = pulsa.nodeColor,
+            guid = GuidNodoDePie,
+            position = pulsa.position + new Vector2(190f, 160f),
+            outputs = new List<string> { GuidNodoPensamiento },
+            eventKey = SenalDePie,
+        };
+
+        pulsa.outputs.Remove(GuidNodoPensamiento);
+        pulsa.outputs.Add(GuidNodoDePie);
+        grafo.nodes.Add(espera);
+        EditorUtility.SetDirty(grafo);
+        return "(6) «Otra vez esa pesadilla» espera a que Will esté de pie (señal will_wake_up de la cama).";
+    }
+
     // ── 4 ─────────────────────────────────────────────────────────────────────────────────────
     private const string NotaCara = "CARA (INC-361)";
 
@@ -288,7 +334,7 @@ public static class ArreglosCapitulo1
             note = NotaCara + ": sorpresa al primer grito.",
             actorId = SequenceActor.PlayerId,
             emotion = NPCEmotion.Surprised,
-            revertAfter = 0f,
+            duracion = 0f,
         });
 
         // Media sonrisa cuando él comenta la escena: ya les conoce.
@@ -299,7 +345,7 @@ public static class ArreglosCapitulo1
                 note = NotaCara + ": media sonrisa, ya les conoce.",
                 actorId = SequenceActor.PlayerId,
                 emotion = NPCEmotion.Smirk,
-                revertAfter = 0f,
+                duracion = 0f,
             });
 
         // Y la pensativa del medio pasa a confusa, que se distingue más.

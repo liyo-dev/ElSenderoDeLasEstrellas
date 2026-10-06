@@ -255,6 +255,7 @@ public class LorePopupUI : MonoBehaviour
             if (!string.IsNullOrEmpty(e.textId))
                 text = LocalizationManager.Instance?.Get(e.textId, e.text) ?? e.text;
             bodyText.text = text;
+            VoiceLines.TryPlay(e.textId);
         }
     }
 

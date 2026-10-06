@@ -360,8 +360,14 @@ public class DramaticTextOverlayUI : MonoBehaviour
 
         SetBackground(phrase.background);
 
+        float voiceDuration = 0f;
         if (phrase.voiceClip != null)
+        {
             AudioService.Instance?.PlayVoice(phrase.voiceClip);
+            voiceDuration = phrase.voiceClip.length;
+        }
+        else
+            voiceDuration = VoiceLines.TryPlay(phrase.textId);
 
         if (skipEntry)
         {
@@ -390,8 +396,8 @@ public class DramaticTextOverlayUI : MonoBehaviour
             yield return EntryAnimation(phrase.entryAnim, text, preset, basePos, releaseScreenFadeOnOpaque);
         }
 
-        float holdDuration = phrase.waitForAudio && phrase.voiceClip != null
-            ? Mathf.Max(phrase.voiceClip.length - preset.entryDuration, 0f)
+        float holdDuration = phrase.waitForAudio && voiceDuration > 0f
+            ? Mathf.Max(voiceDuration - preset.entryDuration, 0f)
             : Mathf.Max(phrase.duration, 0.1f);
 
         // Movimiento durante el hold: de positionOffset a moveTo (o drift del preset como fallback)
@@ -535,6 +541,9 @@ public class DramaticTextOverlayUI : MonoBehaviour
     {
         switch (anim)
         {
+            // Un valor que ya no existe en el enum (una salida retirada que sigue guardada en un
+            // asset) se trata como FadeOut: sin esto la frase se quedaba en pantalla. Ver INC-550.
+            default:
             case DramaticExitAnimation.FadeOut:
                 yield return _rootGroup.DOFade(0f, preset.exitDuration)
                     .SetUpdate(true).WaitForCompletion();

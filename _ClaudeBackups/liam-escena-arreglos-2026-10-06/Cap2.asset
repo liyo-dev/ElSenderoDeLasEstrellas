@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Cap2
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: 7fd8150e-4981-4e1d-82a9-37878792354c
+  nodes:
+  - rid: 5630202263296278868
+  - rid: 5630202263296278869
+  - rid: 5630202263296278870
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202263296278868
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 0.- Inicio
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 7fd8150e-4981-4e1d-82a9-37878792354c
+        position: {x: 0, y: 0}
+        outputs:
+        - a85bfc4c-0b07-4746-8610-48591900d3e1
+    - rid: 5630202263296278869
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 1.- Esperar fin del Cap. 1
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: a85bfc4c-0b07-4746-8610-48591900d3e1
+        position: {x: 320, y: 0}
+        outputs:
+        - 562a84cd-8ae4-43e1-92b9-36f411700e01
+        eventKey: CH_Cap1_BACK_1
+    - rid: 5630202263296278870
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.- Cap. 2 \xB7 Inicio (tras el Demonio)"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 562a84cd-8ae4-43e1-92b9-36f411700e01
+        position: {x: 640, y: 0}
+        outputs: []
+        checkpointId: CAP2_INICIO_TRAS_DEMONIO
+        spawnAnchorId: Eldran_PuntoGuardado
+        sceneName: MainWorld

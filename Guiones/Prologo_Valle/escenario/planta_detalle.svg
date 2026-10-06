@@ -1,0 +1,807 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='1429' viewBox='0 0 2048 1429' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='planta_detalle.png' xlink:href='planta_detalle.png' x='0' y='0' width='2048' height='1429' opacity='0.85'/>
+<polygon points='-704.884,1495.682 389.419,1235.629 392.93,1247.491' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='-704.884,1352.782 388.14,1231.303 389.419,1235.629' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='384.628,1219.395 386.535,1225.861 194.698,1237.257' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='384.628,1219.395 194.698,1237.257 207.907,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='386.535,1225.861 387.465,1228.977 48.558,1259.097' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='386.535,1225.861 48.558,1259.097 194.698,1237.257' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='387.465,1228.977 388.14,1231.303 -704.884,1352.782' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1774.465,1333.733 1793.209,1378.971 1472.837,1252.957' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1793.209,1288.496 1774.465,1333.733 1472.837,1252.957' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1152.488,1219.395 1195.256,1291.984 1081.791,1301.032' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1152.488,1219.395 1081.791,1301.032 1115.605,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1481.512,1219.395 1803.767,1219.395 1803.372,1220.348' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1481.512,1219.395 1803.372,1220.348 1472.837,1252.957' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1472.837,1252.957 1786,1262.283 1796.326,1287.193' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1472.837,1252.957 1796.326,1287.193 1793.209,1288.496' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1803.372,1220.348 1786,1262.283 1472.837,1252.957' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='770.442,1219.395 804.256,1301.032 669.581,1293.31' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='770.442,1219.395 669.581,1293.31 709.721,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2238.512,1249.352 1928.884,1285.519 1938.512,1262.283' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2241.419,1264.958 1916.163,1316.196 1928.884,1285.519' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1920.744,1219.395 2236.721,1239.583 1938.512,1262.283' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='141.954,884.403 -4.186,906.243 -65.023,423.979' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='141.954,884.403 -65.023,423.979 80.256,450.912' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='260.744,972.297 141.954,884.403 80.256,450.912' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='136.651,412.163 123.744,462.053 80.256,450.912' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='238.791,258.75 220.093,269.775 228.954,221.909' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='356.093,1123.058 366.512,1158.271 282.581,1118.453' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='356.093,1123.058 282.581,1118.453 260.744,972.297' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='373.465,1091.031 356.093,1123.058 260.744,972.297' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='366.512,1158.271 384.628,1219.395 207.907,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='366.512,1158.271 207.907,1219.395 282.581,1118.453' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='80.256,450.912 399.814,1042.514 373.465,1091.031' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='80.256,450.912 373.465,1091.031 260.744,972.297' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='421.023,1003.463 406.674,1029.885 207.558,604.348' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='421.023,1003.463 207.558,604.348 291.093,625.955' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='406.674,1029.885 399.814,1042.514 80.256,450.912' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='406.674,1029.885 80.256,450.912 123.744,462.053' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='406.674,1029.885 123.744,462.053 207.558,604.348' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='426.605,993.183 421.023,1003.463 291.093,625.955' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='434.326,990.904 426.605,993.183 291.093,625.955' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='434.326,990.904 291.093,625.955 340.256,638.677' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='495.349,570.321 495.349,972.832 443.768,988.113' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='495.349,570.321 443.768,988.113 367.419,645.702' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='443.768,988.113 434.326,990.904 340.256,638.677' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='443.768,988.113 340.256,638.677 367.419,645.702' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.628,602.418 1198.14,601.603 1198.14,601.324' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1314.674,609.697 1314,608.046 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1308.465,624.699 1314.674,609.697 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1209.605,609.697 1214.86,622.397 1198.14,621.978' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1209.605,609.697 1198.14,621.978 1198.14,601.603' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.628,602.418 1209.605,609.697 1198.14,601.603' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1307.767,626.35 1308.465,624.699 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1214.86,622.397 1215.674,624.35 1107.07,622.001' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1214.86,622.397 1107.07,622.001 1198.14,621.978' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1215.674,624.35 1216.372,626.002 862.209,619.233' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1215.674,624.35 862.209,619.233 1107.07,622.001' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1307.209,627.746 1307.767,626.35 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='682.302,645.469 715.372,659.168 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1303.884,583.671 1299.279,572.554 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='676.372,643.004 682.302,645.469 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='666.907,620.164 676.372,643.004 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='666.907,620.164 683.395,885.566 627.605,619.513' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='979.442,322.409 1128.302,223.7 1123.512,238.027' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='979.442,322.409 1123.512,238.027 1020.93,320.618' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1087.698,345.109 1083.14,358.692 1076.395,354.668' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1083.14,358.692 1081.93,359.739 1076.395,354.668' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1847.977,724.013 1876.558,724.013 1876.558,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1847.977,724.013 1876.558,762.11 1847.977,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='756.674,1138.292 756.302,1139.246 734.884,1145.805' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='605.907,627.397 627.605,619.513 661.605,865.61' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1082.349,369.6 1110.512,426.095 1084.488,418.699' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1083.14,358.692 1082.023,362.041 1081.93,359.739' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='734.884,1145.805 756.302,1139.246 750.837,1152.434' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='734.884,1145.805 750.837,1152.434 737.837,1155.829' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1110.512,426.095 1138.674,482.59 1044.628,462.239' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1110.512,426.095 1044.628,462.239 1084.488,418.699' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1020.93,320.618 1123.512,238.027 1117.674,255.471' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1020.93,320.618 1117.674,255.471 1038.395,319.85' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1038.395,319.85 1117.674,255.471 1087.698,345.109' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1038.395,319.85 1087.698,345.109 1076.395,354.668' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='985.651,464.797 1147.651,500.615 1152.209,502.15' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='985.651,464.797 1152.209,502.15 1107.07,502.15' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1141.023,487.288 1147.651,500.615 985.651,464.797' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1141.023,487.288 985.651,464.797 1044.628,462.239' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1328.628,529.084 1336.093,525.339 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1138.674,482.59 1141.023,487.288 1044.628,462.239' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1290.116,548.295 1328.628,529.084 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1290.116,548.295 1857.512,638.259 1299.279,572.554' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1227.395,527.293 1290.116,548.295 1299.279,572.554' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1227.395,527.293 1299.279,572.554 1262.14,557.157' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,573.228 1198.14,517.501 1204.86,519.757' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,573.228 1204.86,519.757 1223.674,575.74' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1204.86,519.757 1225,572.554 1223.674,575.74' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1225,572.554 1204.86,519.757 1227.395,527.293' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1225,572.554 1227.395,527.293 1262.14,557.157' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1245.884,961.551 1212.674,981.112 1082.814,1025.884' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='698.14,1021.744 804.256,1023.465 769.302,1107.847' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='698.14,1021.744 769.302,1107.847 728.558,1124.43' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1082.814,1025.884 1156.233,1014.371 1155.651,1016.558' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1082.814,1025.884 1155.651,1016.558 1087.605,1037.467' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.674,981.112 1156.233,1014.371 1082.814,1025.884' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='943.023,965.971 804.256,1023.465 698.14,1021.744' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1087.605,1037.467 1155.651,1016.558 1147.395,1048.492' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1087.605,1037.467 1147.395,1048.492 1097.581,1061.54' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='627.605,619.513 683.395,885.566 661.605,865.61' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='644.628,850.027 576.837,632.584 587.814,602.418' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='676.628,952.737 680.907,948.062 698.14,1021.744' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1147.395,1048.492 1126.163,1130.594 1097.581,1061.54' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='962.163,959.109 963.047,961.226 943.023,965.971' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='558.977,480.38 560.581,496.266 542.558,534.945' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1130.837,1182.646 1152.488,1219.395 1115.605,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='557.395,878.821 545.698,891.59 500.768,604.883' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='557.395,878.821 500.768,604.883 517.07,610.814' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1029.628,1001.835 1236.372,920.756 1254.791,943.107' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1029.628,1001.835 1254.791,943.107 1081.791,1023.465' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1236.674,917.523 1236.372,920.756 1029.628,1001.835' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1393.488,778.949 1354.349,775.181 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1000.186,871.541 1290,792.672 1256.163,820.582' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1000.186,871.541 1256.163,820.582 1037.326,886.938' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1406.814,780.228 1393.488,778.949 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1411.419,785.81 1406.814,780.228 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1037.326,886.938 1245.14,829.676 1244.023,841.166' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1037.326,886.938 1244.023,841.166 1045.558,906.824' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1256.163,820.582 1245.14,829.676 1037.326,886.938' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1354.349,775.181 1336.907,773.507 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='685.884,942.619 1302.395,782.461 1290,792.672' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='685.884,942.619 1290,792.672 1000.186,871.541' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1437.372,817.279 1419.256,795.3 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1437.372,817.279 1857.512,638.259 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1242.349,858.703 1239.488,888.497 1037.326,961.226' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1242.349,858.703 1037.326,961.226 1051.465,927.106' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1239.488,888.497 1236.674,917.523 1029.628,1001.835' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1239.488,888.497 1029.628,1001.835 1000.186,976.623' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1239.488,888.497 1000.186,976.623 1037.326,961.226' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1448.814,831.164 1437.372,817.279 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1418.349,794.23 1411.419,785.81 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1045.558,906.824 1244.023,841.166 1242.535,856.656' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1045.558,906.824 1242.535,856.656 1052.721,924.082' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1419.256,795.3 1418.349,794.23 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1242.535,856.656 1242.349,858.703 1051.465,927.106' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1242.535,856.656 1051.465,927.106 1052.721,924.082' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1336.907,773.507 1315.744,771.46 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='683.395,885.566 1315.744,771.46 1302.395,782.461' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='683.395,885.566 1302.395,782.461 685.884,942.619' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1315.744,771.46 683.395,885.566 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='774.954,657.377 809.674,671.774 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='774.954,657.377 683.395,885.566 743,670.611' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1259.535,948.852 1262.116,951.992 1245.884,961.551' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1259.535,948.852 1245.884,961.551 1082.814,1025.884' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1259.535,948.852 1082.814,1025.884 1081.791,1023.465' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='746.768,1162.249 747.326,1163.621 740.093,1163.435' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='737.837,1155.829 750.837,1152.434 746.768,1162.249' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='737.837,1155.829 746.768,1162.249 740.093,1163.435' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1254.791,943.107 1259.535,948.852 1081.791,1023.465' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='516.279,562.25 511.674,574.926 509.698,561.878' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='728.558,1124.43 769.302,1107.847 756.674,1138.292' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='728.558,1124.43 756.674,1138.292 734.884,1145.805' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2219.488,724.013 1876.558,724.013 1886.093,704.964' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1430.14,974.39 1489.907,958.714 1527.977,990.648' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1430.14,974.39 1527.977,990.648 1433.814,975.344' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='598.744,607.511 605.907,627.397 661.605,865.61' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='598.744,607.511 661.605,865.61 644.628,850.027' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='598.744,607.511 644.628,850.027 587.814,602.418' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1527.977,990.648 1552.837,1011.534 1510.814,1106.079' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1527.977,990.648 1510.814,1106.079 1433.814,975.344' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='747.326,1163.621 770.442,1219.395 709.721,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='747.326,1163.621 709.721,1219.395 740.093,1163.435' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='947.651,924.082 953.163,937.386 698.14,1021.744' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='947.651,924.082 698.14,1021.744 680.907,948.062' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='963.047,886.938 947.651,924.082 680.907,948.062' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='963.047,886.938 680.907,948.062 685.884,942.619' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1000.186,871.541 963.047,886.938 685.884,942.619' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1458,923.687 1529.093,901.847 1503.419,932.432' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1458,923.687 1503.419,932.432 1456.256,941.921' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1420.047,971.785 1484.907,954.504 1489.907,958.714' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1420.047,971.785 1489.907,958.714 1430.14,974.39' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1503.419,932.432 1484.907,954.504 1420.047,971.785' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1503.419,932.432 1420.047,971.785 1456.256,941.921' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1629.372,920.314 1616.698,909.662 1876.558,857.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1627.372,922.687 1629.372,920.314 1876.558,857.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1460.977,213.373 1432.209,258.564 1405.186,204.349' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='509.698,561.878 541.605,438.445 543.628,443.306' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='509.698,561.878 543.628,443.306 516.279,562.25' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='528.14,529.688 543.628,443.306 558.977,480.38' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='528.14,529.688 558.977,480.38 542.558,534.945' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1605.302,546.807 1682.465,529.688 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='963.047,961.226 1000.186,976.623 1029.628,1001.835' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='963.047,961.226 1029.628,1001.835 943.023,965.971' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1566.116,555.482 1605.302,546.807 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1417.488,484.776 1498.209,536.201 1381.047,502.941' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1538.186,561.692 1566.116,555.482 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1498.209,536.201 1538.186,561.692 1336.093,525.339' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1498.209,536.201 1336.093,525.339 1381.047,502.941' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1538.186,561.692 1857.512,638.259 1336.093,525.339' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1594.907,785.089 1589.698,773.925 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1448.814,831.164 1526.767,803.278 1531.93,814.349' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1448.814,831.164 1531.93,814.349 1461.791,846.934' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1589.698,773.925 1526.767,803.278 1448.814,831.164' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1589.698,773.925 1448.814,831.164 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1610.163,817.837 1596.419,788.346 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1610.163,817.837 1828.93,676.379 1847.977,724.013' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1533.837,818.465 1545.442,843.352 1462.605,876.053' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1533.837,818.465 1462.605,876.053 1464.953,851.655' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1596.233,787.927 1594.907,785.089 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1461.791,846.934 1531.93,814.349 1533.605,817.954' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1461.791,846.934 1533.605,817.954 1465.023,850.841' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1596.419,788.346 1596.233,787.927 1828.93,676.379' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1533.605,817.954 1533.837,818.465 1464.953,851.655' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1533.605,817.954 1464.953,851.655 1465.023,850.841' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1620.721,840.445 1610.163,817.837 1847.977,724.013' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1620.721,840.445 1847.977,724.013 1847.977,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1545.442,843.352 1554.698,863.215 1460.721,895.614' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1545.442,843.352 1460.721,895.614 1462.605,876.053' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1634.279,869.541 1621.488,842.096 1847.977,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1634.279,869.541 1847.977,762.11 1828.93,809.743' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1555.628,865.168 1557.14,868.425 1529.093,901.847' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1555.628,865.168 1529.093,901.847 1458,923.687' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1555.628,865.168 1458,923.687 1460.721,895.614' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1621.488,842.096 1620.721,840.445 1847.977,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1554.698,863.215 1555.628,865.168 1460.721,895.614' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.558,857.377 1636.023,873.286 1634.279,869.541' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.558,857.377 1634.279,869.541 1828.93,809.743' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1595.744,892.078 1636.023,873.286 1876.558,857.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1595.744,892.078 1876.558,857.377 1616.698,909.662' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1597.349,1116.825 1657.186,1133.408 1493.372,1173.529' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1595.07,1112.778 1597.349,1116.825 1493.372,1173.529' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1595.07,1112.778 1493.372,1173.529 1510.814,1106.079' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='698.14,1021.744 953.163,937.386 962.163,959.109' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='698.14,1021.744 962.163,959.109 943.023,965.971' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='631.256,985.415 647.326,984.717 698.14,1021.744' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='558.977,480.38 566.744,499.15 560.581,496.266' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1627.372,922.687 1637.419,972.32 1587.791,1000.393' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1627.372,922.687 1587.791,1000.393 1565.256,996.718' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1566.767,1062.749 1595.07,1112.778 1510.814,1106.079' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1583.349,1002.905 1566.767,1062.749 1510.814,1106.079' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1583.349,1002.905 1510.814,1106.079 1552.837,1011.534' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1565.256,996.718 1587.791,1000.393 1583.349,1002.905' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1565.256,996.718 1583.349,1002.905 1552.837,1011.534' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,596.231 1107.07,596.556 873.93,583.601' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,596.231 873.93,583.601 873.93,583.183' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='543.628,443.306 528.14,529.688 516.279,562.25' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='906.93,363.321 939.558,365.949 940.395,385.439' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='906.93,363.321 940.395,385.439 922.163,400.115' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='979.442,322.409 939.558,365.949 906.93,363.321' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='644.628,850.027 641.302,847.004 576.837,632.584' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='647.326,984.717 676.628,952.737 698.14,1021.744' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1737.674,243.842 1727.744,259.425 1614.395,187.207' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='966.814,447.539 985.651,464.797 873.93,541.271' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='966.814,447.539 873.93,541.271 873.93,526.246' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1757.093,1181.925 1759.907,1189.438 1491.047,1182.577' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1757.093,1181.925 1491.047,1182.577 1493.372,1173.529' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='940.395,385.439 942.116,424.932 869.93,526.246' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='940.395,385.439 869.93,526.246 922.163,400.115' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='548.186,948.643 555.233,955.086 495.349,972.832' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='715.372,659.168 743,670.611 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1759.907,1189.438 1762.465,1196.299 1481.512,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1759.907,1189.438 1481.512,1219.395 1491.047,1182.577' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='869.93,526.246 942.116,424.932 966.814,447.539' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='869.93,526.246 966.814,447.539 873.93,526.246' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1216.372,626.002 1216.953,627.42 861.302,621.42' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1216.372,626.002 861.302,621.42 862.209,619.233' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1748.651,1125.012 1742.209,1139.13 1657.186,1133.408' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1748.651,1125.012 1657.186,1133.408 1681.488,1119.662' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1741.605,1140.479 1757.093,1181.925 1493.372,1173.529' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1742.209,1139.13 1741.605,1140.479 1493.372,1173.529' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1742.209,1139.13 1493.372,1173.529 1657.186,1133.408' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,596.556 1107.07,622.001 873.93,616.954' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,596.556 873.93,616.954 873.93,583.601' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='861.256,616.954 873.93,616.954 1107.07,622.001' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='861.256,616.954 1107.07,622.001 862.209,619.233' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1727.837,1042.979 1766.302,1086.263 1756.791,1107.173' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1727.837,1042.979 1756.791,1107.173 1711.233,1102.823' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1822.116,1065.4 1766.302,1086.263 1727.837,1042.979' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.558,724.013 2219.488,762.11 1876.558,762.11' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='584.256,849.492 557.395,878.821 517.07,610.814' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1756.791,1107.173 1748.651,1125.012 1681.488,1119.662' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1756.791,1107.173 1681.488,1119.662 1711.233,1102.823' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1855.023,577.671 1868.442,574.205 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1849.674,447.446 1847.767,401.115 1887.233,339.155' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1836.93,582.369 1855.023,577.671 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1833.163,437.701 1787.977,449.4 1776.047,417.001' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1833.163,437.701 1776.047,417.001 1847.767,401.115' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1849.674,447.446 1833.163,437.701 1847.767,401.115' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1834.814,582.904 1836.93,582.369 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1787.977,449.4 1780.791,451.238 1763.465,408.977' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1787.977,449.4 1763.465,408.977 1776.047,417.001' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1811.907,588.835 1834.814,582.904 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1761.605,559.18 1811.907,588.835 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1761.605,559.18 1857.512,638.259 1682.465,529.688' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1746.977,502.639 1761.605,559.18 1682.465,529.688' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1776.628,452.331 1746.977,502.639 1682.465,529.688' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1776.628,452.331 1682.465,529.688 1760.535,407.116' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1780.791,451.238 1776.628,452.331 1760.535,407.116' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1780.791,451.238 1760.535,407.116 1763.465,408.977' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1312.814,605.209 1303.884,583.671 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,573.228 1223.674,575.74 1213.953,599.231' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,573.228 1213.953,599.231 1198.14,598.254' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1313.744,607.441 1313.163,606.046 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,502.15 1107.07,564.25 873.93,541.271' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,502.15 873.93,541.271 985.651,464.797' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1637.419,972.32 1792.116,1001.207 1809.372,1009.813' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1637.419,972.32 1809.372,1009.813 1697.256,988.927' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1774.163,947.503 1792.116,1001.207 1637.419,972.32' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1774.163,947.503 1637.419,972.32 1627.372,922.687' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1799.419,896.823 1774.163,947.503 1627.372,922.687' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1853.116,878.868 1799.419,896.823 1627.372,922.687' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1853.116,878.868 1627.372,922.687 1876.558,857.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='545.698,891.59 548.186,948.643 495.349,972.832' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='545.698,891.59 495.349,972.832 500.768,604.883' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1809.372,1009.813 1842.791,1026.466 1715.512,1021.163' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1809.372,1009.813 1715.512,1021.163 1697.256,988.927' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='641.302,847.004 584.256,849.492 517.07,610.814' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='641.302,847.004 517.07,610.814 576.837,632.584' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='661.512,607.162 666.907,620.164 627.605,619.513' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1301.791,640.771 1306.698,628.955 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1216.953,627.42 1222.628,641.143 852.442,642.817' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1216.953,627.42 852.442,642.817 861.302,621.42' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1262.14,662.238 1295.698,648.33 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1231.372,649.493 1262.14,662.238 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1231.372,649.493 683.395,885.566 809.674,671.774' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1805.256,1215.79 1803.767,1219.395 1481.512,1219.395' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1805.256,1215.79 1481.512,1219.395 1762.465,1196.299' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='500.768,604.883 495.349,972.832 495.349,570.321' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2039.14,348.133 2238.535,638.259 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2030.302,340.039 2039.14,348.133 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,595.742 1107.07,596.231 873.93,583.183' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,595.742 873.93,583.183 873.93,582.508' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1986.767,235.794 1989.442,297.173 1883.465,467.356' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1986.767,235.794 1883.465,467.356 1849.674,447.446' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1986.767,235.794 1849.674,447.446 1887.233,339.155' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='873.93,541.271 1107.07,564.25 1107.07,592.742' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='873.93,541.271 1107.07,592.742 873.93,578.601' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.558,762.11 2200.419,790.695 1895.605,790.695' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,593.858 1107.07,595.742 873.93,582.508' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,593.858 873.93,582.508 873.93,580.066' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='511.674,574.926 500.768,604.883 495.349,570.321' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='511.674,574.926 495.349,570.321 509.698,561.878' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1989.698,302.825 2015.419,326.409 1898.093,523.897' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1989.698,302.825 1898.093,523.897 1883.465,467.356' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1989.442,297.173 1989.698,302.825 1883.465,467.356' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,592.742 1107.07,593.858 873.93,580.066' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1107.07,592.742 873.93,580.066 873.93,578.601' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2015.419,326.409 2030.302,340.039 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2015.419,326.409 1857.512,638.259 1868.442,574.205' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2015.419,326.409 1868.442,574.205 1898.093,523.897' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1809.395,227.956 1985.163,35.306 1985.791,107.268' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1809.395,227.956 1985.791,107.268 1871.349,267.426' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1985.907,119.828 2015.186,148.622 1887.233,339.155' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1985.907,119.828 1887.233,339.155 1871.349,267.426' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1985.791,107.268 1985.907,119.828 1871.349,267.426' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1887.233,339.155 2015.186,148.622 2040.395,173.392' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1887.233,339.155 2040.395,173.392 1986.767,235.794' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2040.395,173.392 2032.07,186.347 1986.767,235.794' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2032.07,186.347 2046.186,179.09 2063.07,178.951' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2040.395,173.392 2046.186,179.09 2032.07,186.347' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.744,602.138 1212.628,602.418 1198.14,601.324' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,599.254 1213.558,600.161 1212.907,601.72' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1198.14,599.254 1212.907,601.72 1198.14,600.882' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1715.512,1021.163 2233.372,1116.918 1727.837,1042.979' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1893.698,1136.571 2210.465,1168.11 1897.186,1145.921' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2210.465,1168.11 1895.558,1149.457 1897.186,1145.921' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1262.14,662.238 1857.512,638.259 683.395,885.566' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1231.372,649.493 809.674,671.774 846.814,656.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2210.395,1170.668 1879,1185.809 1895.558,1149.457' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1822.116,1065.4 2217.651,1131.827 1876.326,1090.101' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.326,1090.101 2210.93,1150.457 1887.349,1119.616' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1727.837,1042.979 2228.372,1121.663 1822.116,1065.4' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1887.349,1119.616 2210.628,1161.807 1893.698,1136.571' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1313.163,606.046 1312.814,605.209 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1213.953,599.231 1213.558,600.161 1198.14,598.254' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1213.558,600.161 1198.14,599.254 1198.14,598.254' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1313.884,607.813 1313.744,607.441 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.907,601.72 1212.744,602.138 1198.14,600.882' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1212.744,602.138 1198.14,601.324 1198.14,600.882' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2252.372,1098.893 1715.512,1021.163 1842.791,1026.466' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1314,608.046 1313.884,607.813 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1299.279,646.841 1301.791,640.771 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1876.256,1191.833 2214.256,1201.044 1877.767,1192.461' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1295.698,648.33 1299.279,646.841 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2209.721,1196.346 1876.256,1191.833 1879,1185.809' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1225,646.841 1231.372,649.493 846.814,656.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1877.767,1192.461 2219.372,1206.44 1897.395,1200.579' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1222.628,641.143 1225,646.841 846.814,656.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1222.628,641.143 846.814,656.377 852.442,642.817' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1897.395,1200.579 2224.395,1211.696 1916.163,1208.37' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1306.698,628.955 1307.209,627.746 1857.512,638.259' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2224.395,1211.696 1920.744,1219.395 1916.163,1208.37' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2266.047,990.741 1903.791,904.126 1853.116,878.868' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2266.047,990.741 1853.116,878.868 1876.558,857.377' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='1903.791,904.126 2239.86,1040.026 1921.744,957.83' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2239.86,1040.026 1896.488,1008.51 1921.744,957.83' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2246.581,1084.984 1862.814,1019.767 1896.488,1008.51' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<polygon points='2250.581,1097.148 1842.791,1026.466 1862.814,1019.767' fill='#3cff6e' fill-opacity='0.16' stroke='none'/>
+<rect x='210.209' y='250.052' width='254.605' height='365.67' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='605.395' y='261.541' width='237.116' height='277.148' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1167.837' y='207.419' width='217.163' height='290.126' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1415.86' y='219.746' width='311.721' height='303.57' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-119.744' y='106.245' width='320.465' height='311.477' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='398.721' y='999.416' width='298' height='287.568' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='843.861' y='1023.768' width='198.326' height='276.962' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1177.837' y='979.949' width='273.395' height='307.43' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-67.535' y='912.616' width='325.581' height='318.269' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='958.047' y='339.597' width='107.954' height='105.454' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='789.698' y='599.254' width='39.953' height='39.958' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1242.163' y='589.718' width='39.953' height='39.958' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='980.209' y='904.103' width='39.953' height='39.958' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1564.721' y='811.953' width='33.302' height='52.704' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='569.302' y='879.635' width='93.023' height='74.892' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='562.791' y='534.27' width='36.558' height='36.562' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='537.419' y='566.344' width='30.14' height='29.585' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1525.442' y='903.777' width='54.419' height='59.728' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1135.651' y='530.735' width='33.907' height='62.658' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='684.512' y='554.784' width='116.977' height='43.168' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='719.186' y='533.503' width='47.628' height='47.633' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='613.744' y='533.41' width='96.558' height='57.309' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='811.837' y='554.831' width='33.535' height='33.539' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1270.047' y='791.044' width='161.07' height='189.37' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1809.116' y='667.518' width='477.768' height='152.064' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1807.93' y='1314.522' width='61.023' height='38.423' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1770.488' y='1093.45' width='97.814' height='99.5' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1805.07' y='910.988' width='86.791' height='90.615' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1774.488' y='468.123' width='95.07' height='90.15' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1712.512' y='242.656' width='162.605' height='167.135' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2273.302' y='1198.067' width='62.837' height='84.614' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2261.721' y='994.834' width='124.093' height='110.013' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2207.814' y='403.674' width='122.372' height='138.481' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2004.302' y='199.604' width='129.209' height='133.55' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1994.488' y='-15.537' width='195.674' height='183.742' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1820.395' y='1220.418' width='83.721' height='83.73' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='1602.209' y='1014.116' width='85.721' height='85.731' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2239.047' y='1127.059' width='83.721' height='83.73' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2695.279' y='455.378' width='85.721' height='85.731' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='971.372' y='-1309.289' width='152.884' height='141.644' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='622.814' y='-1943.896' width='183.209' height='172.392' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-3182.651' y='1590.367' width='415.07' height='415.117' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-3039.674' y='-981.461' width='131.767' height='138.853' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-1475.07' y='-2169.177' width='181.256' height='181.276' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-1808.744' y='-2847.417' width='353.395' height='353.436' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-2549.977' y='-2840.091' width='191.675' height='191.696' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-2336.837' y='-2353.082' width='133.023' height='151.413' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-1684.791' y='-1608.834' width='77.302' height='73.357' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-2589.535' y='-1960.177' width='160.93' height='149.133' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-1036.535' y='-2222.811' width='170.093' height='170.112' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-643.768' y='-2880.817' width='152.233' height='157.832' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2374.326' y='-2743.801' width='63.07' height='59.356' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='2540.93' y='-2100.495' width='59.861' height='59.402' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='-2307.977' y='-736.34' width='234.186' height='234.213' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<line x1='0' y1='1429' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5980</text>
+<line x1='95.256' y1='1429' x2='95.256' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='190.512' y1='1429' x2='190.512' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='192.512' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5984</text>
+<line x1='285.768' y1='1429' x2='285.768' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='381.023' y1='1429' x2='381.023' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='383.023' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5988</text>
+<line x1='476.279' y1='1429' x2='476.279' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='571.535' y1='1429' x2='571.535' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='573.535' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5992</text>
+<line x1='666.791' y1='1429' x2='666.791' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='762.047' y1='1429' x2='762.047' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='764.047' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5996</text>
+<line x1='857.302' y1='1429' x2='857.302' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='952.558' y1='1429' x2='952.558' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='954.558' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6000</text>
+<line x1='1047.814' y1='1429' x2='1047.814' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1143.07' y1='1429' x2='1143.07' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1145.07' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6004</text>
+<line x1='1238.326' y1='1429' x2='1238.326' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1333.581' y1='1429' x2='1333.581' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1335.581' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6008</text>
+<line x1='1428.837' y1='1429' x2='1428.837' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1524.093' y1='1429' x2='1524.093' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1526.093' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6012</text>
+<line x1='1619.349' y1='1429' x2='1619.349' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1714.605' y1='1429' x2='1714.605' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1716.605' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6016</text>
+<line x1='1809.86' y1='1429' x2='1809.86' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1905.116' y1='1429' x2='1905.116' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1907.116' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6020</text>
+<line x1='2000.372' y1='1429' x2='2000.372' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='1429' x2='2048' y2='1429' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='1333.733' x2='2048' y2='1333.733' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='1331.733' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5988</text>
+<line x1='0' y1='1238.467' x2='2048' y2='1238.467' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='1143.2' x2='2048' y2='1143.2' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='1141.2' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5992</text>
+<line x1='0' y1='1047.933' x2='2048' y2='1047.933' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='952.667' x2='2048' y2='952.667' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='950.667' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>5996</text>
+<line x1='0' y1='857.4' x2='2048' y2='857.4' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='762.133' x2='2048' y2='762.133' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='760.133' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6000</text>
+<line x1='0' y1='666.867' x2='2048' y2='666.867' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='571.6' x2='2048' y2='571.6' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='569.6' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6004</text>
+<line x1='0' y1='476.333' x2='2048' y2='476.333' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='381.067' x2='2048' y2='381.067' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='379.067' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6008</text>
+<line x1='0' y1='285.8' x2='2048' y2='285.8' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='190.533' x2='2048' y2='190.533' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='188.533' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6012</text>
+<line x1='0' y1='95.267' x2='2048' y2='95.267' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='0' y1='0' x2='2048' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='-2' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6016</text>
+<circle cx='1405.023' cy='976.483' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1405.023' y1='976.483' x2='1405.023' y2='968.483' stroke='#ffffff' stroke-width='2'/>
+<text x='1410.023' y='972.483' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aire_Mago_1</text>
+<circle cx='619.163' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='619.163' y1='881.217' x2='619.163' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='624.163' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aire_Oscuro</text>
+<circle cx='762.047' cy='643.05' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='762.047' y1='643.05' x2='762.047' y2='635.05' stroke='#ffffff' stroke-width='2'/>
+<text x='767.047' y='639.05' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aire_Oscuro_2</text>
+<circle cx='738.233' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='738.233' y1='881.217' x2='738.233' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='743.233' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aire_Oscuro_3</text>
+<circle cx='873.93' cy='549.016' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='873.93' y1='549.016' x2='873.93' y2='541.016' stroke='#ffffff' stroke-width='2'/>
+<text x='878.93' y='545.016' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_01</text>
+<circle cx='904.93' cy='905.033' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='904.93' y1='905.033' x2='904.93' y2='897.033' stroke='#ffffff' stroke-width='2'/>
+<text x='909.93' y='901.033' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_02</text>
+<circle cx='1119.256' cy='485.869' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1119.256' y1='485.869' x2='1119.256' y2='477.869' stroke='#ffffff' stroke-width='2'/>
+<text x='1124.256' y='481.869' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_03</text>
+<circle cx='1190.698' cy='928.85' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1190.698' y1='928.85' x2='1190.698' y2='920.85' stroke='#ffffff' stroke-width='2'/>
+<text x='1195.698' y='924.85' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_04</text>
+<circle cx='619.163' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='619.163' y1='738.317' x2='619.163' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='624.163' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_05</text>
+<circle cx='1357.395' cy='619.233' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1357.395' y1='619.233' x2='1357.395' y2='611.233' stroke='#ffffff' stroke-width='2'/>
+<text x='1362.395' y='615.233' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_06</text>
+<circle cx='661.512' cy='607.162' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='661.512' y1='607.162' x2='661.512' y2='599.162' stroke='#ffffff' stroke-width='2'/>
+<text x='666.512' y='603.162' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_07</text>
+<circle cx='976.372' cy='500.15' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='976.372' y1='500.15' x2='976.372' y2='492.15' stroke='#ffffff' stroke-width='2'/>
+<text x='981.372' y='496.15' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_08</text>
+<circle cx='1444' cy='825.35' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1444' y1='825.35' x2='1444' y2='817.35' stroke='#ffffff' stroke-width='2'/>
+<text x='1449' y='821.35' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_09</text>
+<circle cx='516.721' cy='561.017' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='516.721' y1='561.017' x2='516.721' y2='553.017' stroke='#ffffff' stroke-width='2'/>
+<text x='521.721' y='557.017' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Aldeano_10</text>
+<circle cx='1247.86' cy='695.451' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1247.86' y1='695.451' x2='1253.517' y2='701.108' stroke='#ffffff' stroke-width='2'/>
+<text x='1252.86' y='691.451' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Apertura</text>
+<circle cx='1071.628' cy='562.064' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1071.628' y1='562.064' x2='1071.628' y2='554.064' stroke='#ffffff' stroke-width='2'/>
+<text x='1076.628' y='558.064' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile</text>
+<circle cx='1334.698' cy='729.06' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1334.698' y1='729.06' x2='1334.698' y2='721.06' stroke='#ffffff' stroke-width='2'/>
+<text x='1339.698' y='725.06' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_01</text>
+<circle cx='1297.791' cy='776.879' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1297.791' y1='776.879' x2='1297.791' y2='768.879' stroke='#ffffff' stroke-width='2'/>
+<text x='1302.791' y='772.879' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_02</text>
+<circle cx='1241.233' cy='814.604' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1241.233' y1='814.604' x2='1241.233' y2='806.604' stroke='#ffffff' stroke-width='2'/>
+<text x='1246.233' y='810.604' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_03</text>
+<circle cx='1169.744' cy='839.119' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1169.744' y1='839.119' x2='1169.744' y2='831.119' stroke='#ffffff' stroke-width='2'/>
+<text x='1174.744' y='835.119' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_04</text>
+<circle cx='1089.349' cy='848.306' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1089.349' y1='848.306' x2='1089.349' y2='840.306' stroke='#ffffff' stroke-width='2'/>
+<text x='1094.349' y='844.306' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_05</text>
+<circle cx='1006.791' cy='841.421' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1006.791' y1='841.421' x2='1006.791' y2='833.421' stroke='#ffffff' stroke-width='2'/>
+<text x='1011.791' y='837.421' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_06</text>
+<circle cx='929.047' cy='819.07' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='929.047' y1='819.07' x2='929.047' y2='811.07' stroke='#ffffff' stroke-width='2'/>
+<text x='934.047' y='815.07' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_07</text>
+<circle cx='862.581' cy='783.066' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='862.581' y1='783.066' x2='862.581' y2='775.066' stroke='#ffffff' stroke-width='2'/>
+<text x='867.581' y='779.066' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_08</text>
+<circle cx='813.047' cy='736.503' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='813.047' y1='736.503' x2='813.047' y2='728.503' stroke='#ffffff' stroke-width='2'/>
+<text x='818.047' y='732.503' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_09</text>
+<circle cx='784.558' cy='683.241' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='784.558' y1='683.241' x2='784.558' y2='675.241' stroke='#ffffff' stroke-width='2'/>
+<text x='789.558' y='679.241' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Baile_Corro_10</text>
+<circle cx='1047.814' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1047.814' y1='881.217' x2='1047.814' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='1052.814' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Carrera_Mago</text>
+<circle cx='1352.628' cy='733.549' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1352.628' y1='733.549' x2='1358.285' y2='739.206' stroke='#ffffff' stroke-width='2'/>
+<text x='1357.628' y='729.549' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Carreta</text>
+<circle cx='1438.07' cy='740.666' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1438.07' y1='740.666' x2='1438.07' y2='732.666' stroke='#ffffff' stroke-width='2'/>
+<text x='1443.07' y='736.666' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Carreta_Dueno</text>
+<circle cx='1267.186' cy='726.432' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1267.186' y1='726.432' x2='1267.186' y2='718.432' stroke='#ffffff' stroke-width='2'/>
+<text x='1272.186' y='722.432' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Carreta_Maestro</text>
+<circle cx='1244.512' cy='552.807' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1244.512' y1='552.807' x2='1244.512' y2='544.807' stroke='#ffffff' stroke-width='2'/>
+<text x='1249.512' y='548.807' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Casa_Archimago</text>
+<circle cx='1809.86' cy='766.901' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1809.86' y1='766.901' x2='1806.479' y2='759.651' stroke='#ffffff' stroke-width='2'/>
+<text x='1814.86' y='762.901' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Despedida_Liora</text>
+<circle cx='1781.279' cy='695.451' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1781.279' y1='695.451' x2='1784.66' y2='702.702' stroke='#ffffff' stroke-width='2'/>
+<text x='1786.279' y='691.451' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Despedida_Mago</text>
+<circle cx='833.488' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='833.488' y1='738.317' x2='833.488' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='838.488' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo_Caida</text>
+<circle cx='571.535' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='571.535' y1='738.317' x2='571.535' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='576.535' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo_Choque</text>
+<circle cx='976.372' cy='809.767' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='976.372' y1='809.767' x2='976.372' y2='801.767' stroke='#ffffff' stroke-width='2'/>
+<text x='981.372' y='805.767' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo_Mago</text>
+<circle cx='976.372' cy='523.967' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='976.372' y1='523.967' x2='976.372' y2='531.967' stroke='#ffffff' stroke-width='2'/>
+<text x='981.372' y='519.967' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo_Oscuro</text>
+<circle cx='714.419' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='714.419' y1='738.317' x2='714.419' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='719.419' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo2_Mago</text>
+<circle cx='428.651' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='428.651' y1='738.317' x2='428.651' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='433.651' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo2_Oscuro</text>
+<circle cx='1366.116' cy='776.321' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1366.116' y1='776.321' x2='1366.116' y2='768.321' stroke='#ffffff' stroke-width='2'/>
+<text x='1371.116' y='772.321' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo3_Caida</text>
+<circle cx='1095.442' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1095.442' y1='881.217' x2='1095.442' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='1100.442' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo3_Choque</text>
+<circle cx='1238.326' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1238.326' y1='881.217' x2='1238.326' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='1243.326' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo3_Mago</text>
+<circle cx='952.558' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='952.558' y1='881.217' x2='952.558' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='957.558' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Duelo3_Oscuro</text>
+<circle cx='381.023' cy='738.317' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='381.023' y1='738.317' x2='381.023' y2='730.317' stroke='#ffffff' stroke-width='2'/>
+<text x='386.023' y='734.317' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Entrada_Villa</text>
+<circle cx='1061.372' cy='567.018' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1061.372' y1='567.018' x2='1061.372' y2='559.018' stroke='#ffffff' stroke-width='2'/>
+<text x='1066.372' y='563.018' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Esquina_Archimago</text>
+<circle cx='1490.302' cy='1020.023' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1490.302' y1='1020.023' x2='1490.302' y2='1012.023' stroke='#ffffff' stroke-width='2'/>
+<text x='1495.302' y='1016.023' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_03</text>
+<circle cx='1436.093' cy='1073.006' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1436.093' y1='1073.006' x2='1436.093' y2='1065.006' stroke='#ffffff' stroke-width='2'/>
+<text x='1441.093' y='1069.006' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_04</text>
+<circle cx='1356.791' cy='1109.103' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1356.791' y1='1109.103' x2='1356.791' y2='1101.103' stroke='#ffffff' stroke-width='2'/>
+<text x='1361.791' y='1105.103' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_05</text>
+<circle cx='1261.977' cy='1123.896' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1261.977' y1='1123.896' x2='1261.977' y2='1115.896' stroke='#ffffff' stroke-width='2'/>
+<text x='1266.977' y='1119.896' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_06</text>
+<circle cx='1163.093' cy='1115.662' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1163.093' y1='1115.662' x2='1163.093' y2='1107.662' stroke='#ffffff' stroke-width='2'/>
+<text x='1168.093' y='1111.662' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_07</text>
+<circle cx='1072' cy='1085.38' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1072' y1='1085.38' x2='1072' y2='1077.38' stroke='#ffffff' stroke-width='2'/>
+<text x='1077' y='1081.38' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_08</text>
+<circle cx='999.768' cy='1036.676' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='999.768' y1='1036.676' x2='999.768' y2='1028.676' stroke='#ffffff' stroke-width='2'/>
+<text x='1004.767' y='1032.676' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_09</text>
+<circle cx='956.651' cy='971.622' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='956.651' y1='971.622' x2='956.651' y2='963.622' stroke='#ffffff' stroke-width='2'/>
+<text x='961.651' y='967.622' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Fondo_Manana_10</text>
+<circle cx='514.372' cy='685.939' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='514.372' y1='685.939' x2='507.444' y2='681.939' stroke='#ffffff' stroke-width='2'/>
+<text x='519.372' y='681.939' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Globo</text>
+<circle cx='743' cy='657.331' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='743' y1='657.331' x2='743' y2='649.331' stroke='#ffffff' stroke-width='2'/>
+<text x='748' y='653.331' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Horno</text>
+<circle cx='1524.093' cy='809.767' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1524.093' y1='809.767' x2='1524.093' y2='801.767' stroke='#ffffff' stroke-width='2'/>
+<text x='1529.093' y='805.767' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_01</text>
+<circle cx='1643.163' cy='928.85' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1643.163' y1='928.85' x2='1643.163' y2='920.85' stroke='#ffffff' stroke-width='2'/>
+<text x='1648.163' y='924.85' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_02</text>
+<circle cx='1476.465' cy='690.683' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1476.465' y1='690.683' x2='1476.465' y2='682.683' stroke='#ffffff' stroke-width='2'/>
+<text x='1481.465' y='686.683' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_03</text>
+<circle cx='1714.605' cy='785.95' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1714.605' y1='785.95' x2='1714.605' y2='777.95' stroke='#ffffff' stroke-width='2'/>
+<text x='1719.605' y='781.95' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_04</text>
+<circle cx='1571.721' cy='1000.3' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1571.721' y1='1000.3' x2='1571.721' y2='992.3' stroke='#ffffff' stroke-width='2'/>
+<text x='1576.721' y='996.3' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_05</text>
+<circle cx='1690.791' cy='643.05' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1690.791' y1='643.05' x2='1690.791' y2='635.05' stroke='#ffffff' stroke-width='2'/>
+<text x='1695.791' y='639.05' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_06</text>
+<circle cx='1459.558' cy='907.592' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1459.558' y1='907.592' x2='1459.558' y2='899.592' stroke='#ffffff' stroke-width='2'/>
+<text x='1464.558' y='903.592' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_07</text>
+<circle cx='1762.233' cy='905.033' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1762.233' y1='905.033' x2='1762.233' y2='897.033' stroke='#ffffff' stroke-width='2'/>
+<text x='1767.233' y='901.033' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_08</text>
+<circle cx='1547.907' cy='595.417' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1547.907' y1='595.417' x2='1547.907' y2='587.417' stroke='#ffffff' stroke-width='2'/>
+<text x='1552.907' y='591.417' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_09</text>
+<circle cx='1619.349' cy='714.5' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1619.349' y1='714.5' x2='1619.349' y2='706.5' stroke='#ffffff' stroke-width='2'/>
+<text x='1624.349' y='710.5' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Huida_10</text>
+<circle cx='1428.837' cy='690.707' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1428.837' y1='690.707' x2='1433.979' y2='684.578' stroke='#ffffff' stroke-width='2'/>
+<text x='1433.837' y='686.707' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Mesa</text>
+<circle cx='1547.907' cy='585.881' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1547.907' y1='585.881' x2='1542.765' y2='592.009' stroke='#ffffff' stroke-width='2'/>
+<text x='1552.907' y='581.881' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Mesa_Liora</text>
+<circle cx='1166.884' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1166.884' y1='881.217' x2='1166.884' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='1171.884' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Picado_Oscuro</text>
+<circle cx='1166.884' cy='621.978' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1166.884' y1='621.978' x2='1166.884' y2='613.978' stroke='#ffffff' stroke-width='2'/>
+<text x='1171.884' y='617.978' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Plaza_Liora</text>
+<circle cx='1765.116' cy='744.387' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1765.116' y1='744.387' x2='1765.116' y2='736.387' stroke='#ffffff' stroke-width='2'/>
+<text x='1770.116' y='740.387' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Puente_Ent</text>
+<circle cx='1643.163' cy='690.683' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1643.163' y1='690.683' x2='1643.163' y2='682.683' stroke='#ffffff' stroke-width='2'/>
+<text x='1648.163' y='686.683' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rio_Camino</text>
+<circle cx='1743.186' cy='905.033' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1743.186' y1='905.033' x2='1743.186' y2='897.033' stroke='#ffffff' stroke-width='2'/>
+<text x='1748.186' y='901.033' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rio_Fin_Liora</text>
+<circle cx='1800.326' cy='885.985' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1800.326' y1='885.985' x2='1800.326' y2='877.985' stroke='#ffffff' stroke-width='2'/>
+<text x='1805.326' y='881.985' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rio_Fin_Mago</text>
+<circle cx='1733.651' cy='600.185' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1733.651' y1='600.185' x2='1733.651' y2='592.185' stroke='#ffffff' stroke-width='2'/>
+<text x='1738.651' y='596.185' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rio_Liora</text>
+<circle cx='1790.814' cy='581.136' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1790.814' y1='581.136' x2='1790.814' y2='573.136' stroke='#ffffff' stroke-width='2'/>
+<text x='1795.814' y='577.136' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rio_Mago</text>
+<circle cx='1071.628' cy='562.064' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1071.628' y1='562.064' x2='1071.628' y2='554.064' stroke='#ffffff' stroke-width='2'/>
+<text x='1076.628' y='558.064' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Rodeo_Abrevadero</text>
+<circle cx='881.116' cy='881.217' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='881.116' y1='881.217' x2='881.116' y2='873.217' stroke='#ffffff' stroke-width='2'/>
+<text x='886.116' y='877.217' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Salto_Mago_Aire</text>
+<circle cx='1152.93' cy='687.544' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1152.93' y1='687.544' x2='1152.93' y2='679.544' stroke='#ffffff' stroke-width='2'/>
+<text x='1157.93' y='683.544' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Saludo_01</text>
+<circle cx='1342.791' cy='703.359' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1342.791' y1='703.359' x2='1342.791' y2='695.359' stroke='#ffffff' stroke-width='2'/>
+<text x='1347.791' y='699.359' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Saludo_02</text>
+<circle cx='1099.791' cy='105.338' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1099.791' y1='105.338' x2='1099.791' y2='97.338' stroke='#ffffff' stroke-width='2'/>
+<text x='1104.791' y='101.338' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_TrasCasa_Archimago</text>
+<circle cx='1171.651' cy='766.901' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1171.651' y1='766.901' x2='1176.24' y2='760.348' stroke='#ffffff' stroke-width='2'/>
+<text x='1176.651' y='762.901' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>M_Viga</text>
+<circle cx='743' cy='576.368' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='749' y='588.368' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Horno</text>
+<circle cx='1347.395' cy='891.706' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1353.395' y='903.706' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Carreta</text>
+<circle cx='352.442' cy='518.734' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='358.442' y='530.734' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Globo</text>
+<circle cx='332.442' cy='396.789' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='338.442' y='408.789' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Campanario</text>
+<circle cx='1428.837' cy='833.583' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1434.837' y='845.583' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Escudo</text>
+<circle cx='952.558' cy='881.217' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='958.558' y='893.217' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_PuertaSendero</text>
+<circle cx='1190.698' cy='1167.04' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1196.698' y='1179.04' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Nube_Oeste</text>
+<circle cx='1476.465' cy='1167.04' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1482.465' y='1179.04' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Nube_Este</text>
+<circle cx='873.93' cy='549.016' r='9' fill='#ffd27a' stroke='#000000' stroke-width='1'/>
+<line x1='873.93' y1='549.016' x2='889.868' y2='564.182' stroke='#ffd27a' stroke-width='2'/>
+<text x='881.93' y='563.016' font-size='15' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_01</text>
+<circle cx='904.93' cy='905.033' r='9' fill='#7ad7ff' stroke='#000000' stroke-width='1'/>
+<line x1='904.93' y1='905.033' x2='918.13' y2='887.433' stroke='#7ad7ff' stroke-width='2'/>
+<text x='912.93' y='919.033' font-size='15' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_02</text>
+<circle cx='1119.256' cy='485.869' r='9' fill='#ff8fb1' stroke='#000000' stroke-width='1'/>
+<line x1='1119.256' y1='485.869' x2='1112.694' y2='506.868' stroke='#ff8fb1' stroke-width='2'/>
+<text x='1127.256' y='499.869' font-size='15' fill='#ff8fb1' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_03</text>
+<circle cx='1190.698' cy='928.85' r='9' fill='#9dff7a' stroke='#000000' stroke-width='1'/>
+<line x1='1190.698' y1='928.85' x2='1178.494' y2='910.545' stroke='#9dff7a' stroke-width='2'/>
+<text x='1198.698' y='942.85' font-size='15' fill='#9dff7a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_04</text>
+<circle cx='619.163' cy='738.317' r='9' fill='#c79bff' stroke='#000000' stroke-width='1'/>
+<line x1='619.163' y1='738.317' x2='641.129' y2='737.096' stroke='#c79bff' stroke-width='2'/>
+<text x='627.163' y='752.317' font-size='15' fill='#c79bff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_05</text>
+<circle cx='1357.395' cy='619.233' r='9' fill='#ffb36b' stroke='#000000' stroke-width='1'/>
+<line x1='1357.395' y1='619.233' x2='1336.368' y2='625.703' stroke='#ffb36b' stroke-width='2'/>
+<text x='1365.395' y='633.233' font-size='15' fill='#ffb36b' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_06</text>
+<circle cx='661.512' cy='607.162' r='9' fill='#6bffd8' stroke='#000000' stroke-width='1'/>
+<line x1='661.512' y1='607.162' x2='682.709' y2='613.051' stroke='#6bffd8' stroke-width='2'/>
+<text x='669.512' y='621.162' font-size='15' fill='#6bffd8' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_07</text>
+<circle cx='976.372' cy='500.15' r='9' fill='#ff6b6b' stroke='#000000' stroke-width='1'/>
+<line x1='976.372' y1='500.15' x2='983.329' y2='521.021' stroke='#ff6b6b' stroke-width='2'/>
+<text x='984.372' y='514.15' font-size='15' fill='#ff6b6b' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_08</text>
+<circle cx='1444' cy='825.35' r='9' fill='#e6e6e6' stroke='#000000' stroke-width='1'/>
+<line x1='1444' y1='825.35' x2='1422.813' y2='819.423' stroke='#e6e6e6' stroke-width='2'/>
+<text x='1452' y='839.35' font-size='15' fill='#e6e6e6' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_09</text>
+<circle cx='516.721' cy='561.017' r='9' fill='#b0ff3a' stroke='#000000' stroke-width='1'/>
+<line x1='516.721' y1='561.017' x2='537.856' y2='567.125' stroke='#b0ff3a' stroke-width='2'/>
+<text x='524.721' y='575.017' font-size='15' fill='#b0ff3a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Aldeano_10</text>
+<circle cx='1247.86' cy='695.451' r='9' fill='#ffa0ff' stroke='#000000' stroke-width='1'/>
+<line x1='1247.86' y1='695.451' x2='1263.417' y2='711.008' stroke='#ffa0ff' stroke-width='2'/>
+<text x='1255.86' y='709.451' font-size='15' fill='#ffa0ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Archimago</text>
+<circle cx='1547.907' cy='585.881' r='9' fill='#80a0ff' stroke='#000000' stroke-width='1'/>
+<line x1='1547.907' y1='585.881' x2='1533.766' y2='602.734' stroke='#80a0ff' stroke-width='2'/>
+<text x='1555.907' y='599.881' font-size='15' fill='#80a0ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_Liora</text>
+<circle cx='976.372' cy='523.967' r='9' fill='#ffe14d' stroke='#000000' stroke-width='1'/>
+<line x1='976.372' y1='523.967' x2='976.372' y2='545.967' stroke='#ffe14d' stroke-width='2'/>
+<text x='984.372' y='537.967' font-size='15' fill='#ffe14d' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>NPC_MagoOscuro</text>
+<text x='10' y='1417' font-size='14' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>Rejilla cada 2 m · X hacia la derecha, Z hacia arriba</text>
+</svg>

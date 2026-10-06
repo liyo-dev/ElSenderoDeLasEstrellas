@@ -17,6 +17,8 @@ MonoBehaviour:
   displayName: Grieta del Sendero
   kind: 3
   element: 5
+  lore: 
+  loreId: 
   prefab: {fileID: 1800714943050542859, guid: d8087ea6f3f1a934e8f05e0bcded1494, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
@@ -77,9 +79,27 @@ MonoBehaviour:
   impactVFX: {fileID: 0}
   despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
   vfxLifetime: 3
-  castSFXKey: MagoOscuroGrieta
+  castSFXKey: Hechizo_MagoOscuroGrieta
   impactSFXKey: 
   slotType: 0
   attackIcon: {fileID: 0}
+  bounceCount: 0
+  bounceRange: 8
+  pierceCount: 0
+  spreadCount: 1
+  spreadAngle: 24
+  impactZone: {fileID: 0}
   castStyle: 4
+  statusEffect: 0
+  statusDuration: 2
+  statusStrength: 0.5
+  statusVFX: {fileID: 0}
+  zoneOnCaster: 0
+  healPerTick: 0
+  groupShieldSeconds: 0
+  groupShieldDamageFactor: 0.3
+  groupShieldVFX: {fileID: 0}
+  teamGaugeGain: 0
+  teleportDistance: 6
+  caster: 1
   comboSequence: 

@@ -1,0 +1,968 @@
+{
+ "escena":"TorreDeLiam",
+ "nota":"Coordenadas del mundo en metros. En las plantas, X crece a la derecha y Z hacia arriba.",
+ "area_general":{
+  "xmin":-6008,
+  "zmin":5991,
+  "xmax":-5992,
+  "zmax":6008
+ },
+ "area_detalle":{
+  "xmin":-6010,
+  "zmin":5989,
+  "xmax":-5990,
+  "zmax":6010
+ },
+ "marcas":[],
+ "props":[
+  {
+   "id":"PROP_Bola",
+   "pos":[-5999.55,100.82,6000.7],
+   "rumbo":0
+  },
+  {
+   "id":"PROP_Llave",
+   "pos":[-6000.522,100.857,6000.4],
+   "rumbo":0
+  },
+  {
+   "id":"PROP_BrilloLlave",
+   "pos":[-6000.55,100.96,6000.4],
+   "rumbo":0
+  },
+  {
+   "id":"PROP_Mapa",
+   "pos":[-5998.3,101.85,6003.43],
+   "rumbo":0
+  },
+  {
+   "id":"PROP_Espejo",
+   "pos":[-5996.08,101.55,6001.1],
+   "rumbo":0
+  },
+  {
+   "id":"PROP_Mesa",
+   "pos":[-6000,100,6000.7],
+   "rumbo":0
+  }],
+ "personajes":[
+  {
+   "id":"LIAM_TORRE",
+   "spawn":"SPAWN_LIAM_TORRE",
+   "objeto":"Liam_Torre",
+   "prefab":"_LIAM",
+   "pos":[-6000,100,5999.55],
+   "rumbo":0,
+   "altura":1.508,
+   "ojos":0.937
+  }],
+ "obstaculos":[
+  {
+   "nombre":"TorreDeLiam_Decorado/Suelo",
+   "min":[-6004,99.7,5996.5],
+   "max":[-5996,100,6003.5]
+  }],
+ "navmesh":{
+  "vertices":[],
+  "triangulos":[]
+ },
+ "animaciones":{
+  "LIAM_TORRE":[{
+    "estado":"TakeDamage",
+    "capa":"Base Layer",
+    "clip":"GetHit01_NoWeapon",
+    "largo":0.467,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Sleeping_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Sleeping_NoWeapon",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Swimming_Floating_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Swimming_Floating_NoWeapon",
+    "largo":0.833,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Push_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Push_InPlace_NoWeapon",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Dance_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Dance_NoWeapon",
+    "largo":2.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Defend_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Defend_NoWeapon",
+    "largo":0.667,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Dizzy_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Dizzy_NoWeapon",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"LevelUp_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"LevelUp_NoWeapon",
+    "largo":2.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Die02_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Die02_NoWeapon",
+    "largo":1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"fly_dive",
+    "capa":"Base Layer",
+    "clip":"fly_dive",
+    "largo":0.033,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"fly_idle",
+    "capa":"Base Layer",
+    "clip":"fly_idle",
+    "largo":1,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"ClimbDown_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"ClimbDown_RM_NoWeapon",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"ClimbUp_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"ClimbUp_RM_NoWeapon",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"DefendHit_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"DefendHit_NoWeapon",
+    "largo":0.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"TakeDamage_2",
+    "capa":"Base Layer",
+    "clip":"GetHit02_NoWeapon",
+    "largo":0.467,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Victory_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Victory_NoWeapon",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"InteractWithGateObject_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"InteractWithGateObject_NoWeapon",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"InteractWithPeople_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"InteractWithPeople_NoWeapon",
+    "largo":7,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Idle02",
+    "capa":"Base Layer",
+    "clip":"HumanM@Idle02",
+    "largo":2.7,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Idle01",
+    "capa":"Base Layer",
+    "clip":"HumanM@Idle01",
+    "largo":2.7,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Pain01",
+    "capa":"Base Layer",
+    "clip":"HumanM@Pain01",
+    "largo":1,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SitGround_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitGround01 - Begin",
+    "largo":1.1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitGround_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitGround01 - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SitGround_Exit",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitGround01 - Stop",
+    "largo":1.533,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitHigh_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitHigh01 - Begin",
+    "largo":0.7,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitHigh_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitHigh01 - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SitHigh_Exit",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitHigh01 - Stop",
+    "largo":0.933,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitLow_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitLow01 - Begin",
+    "largo":0.967,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitLow_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitLow01 - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SitLow_Exit",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitLow01 - Stop",
+    "largo":1.133,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitMedium_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitMedium01 - Begin",
+    "largo":0.7,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SitMedium_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitMedium01 - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SitMedium_Exit",
+    "capa":"Base Layer",
+    "clip":"HumanM@SitMedium01 - Stop",
+    "largo":0.933,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Dizzy_NoWeapon 0",
+    "capa":"Base Layer",
+    "clip":"Dizzy_NoWeapon",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Idle03",
+    "capa":"Base Layer",
+    "clip":"HumanM@Idle03",
+    "largo":2.667,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"JumpStart_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpStart_InPlace_NoWeapon",
+    "largo":0.267,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"JumpAir_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpAir_InPlace_NoWeapon",
+    "largo":0.5,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"JumpEnd_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpEnd_InPlace_NoWeapon",
+    "largo":0.4,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"JumpFull_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpFull_InPlace_NoWeapon",
+    "largo":0.8,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"JumpAirSpin_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpAirSpin_InPlace_NoWeapon",
+    "largo":0.5,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"JumpFullSpin_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpFullSpin_InPlace_NoWeapon",
+    "largo":0.8,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"JumpAirDoubleJump_InPlace_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"JumpAirDoubleJump_InPlace_NoWeapon",
+    "largo":0.5,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Landing",
+    "capa":"Base Layer",
+    "clip":"JumpEnd_InPlace_NoWeapon",
+    "largo":0.4,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Die01Stay_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Die01Stay_NoWeapon",
+    "largo":0.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"GetUp_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"GetUp_NoWeapon",
+    "largo":0.833,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Die01_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"Die01_NoWeapon",
+    "largo":0.5,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Loot01_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@Loot01 - Begin",
+    "largo":0.8,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Loot01_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@Loot01 - Loop",
+    "largo":1.4,
+    "bucle":true,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Loot01_Stop",
+    "capa":"Base Layer",
+    "clip":"HumanM@Loot01 - Stop",
+    "largo":0.9,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Stun01",
+    "capa":"Base Layer",
+    "clip":"HumanM@Stun01",
+    "largo":2.667,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Knockdown01_Ground",
+    "capa":"Base Layer",
+    "clip":"HumanM@Knockdown01 - Ground",
+    "largo":1.733,
+    "bucle":true,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Knockdown01_StandUp",
+    "capa":"Base Layer",
+    "clip":"HumanM@Knockdown01 - StandUp",
+    "largo":1.167,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Opening01_Begin",
+    "capa":"Base Layer",
+    "clip":"HumanM@Opening01 - Begin",
+    "largo":0.633,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Opening01_Loop",
+    "capa":"Base Layer",
+    "clip":"HumanM@Opening01 - Loop",
+    "largo":1.433,
+    "bucle":true,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"Opening01_Stop",
+    "capa":"Base Layer",
+    "clip":"HumanM@Opening01 - Stop",
+    "largo":0.767,
+    "bucle":false,
+    "etiqueta":"ActuacionCuerpoEntero"
+   },{
+    "estado":"LandLow",
+    "capa":"Base Layer",
+    "clip":"HumanM@Jump01 - Land",
+    "largo":0.48,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"JumpMove",
+    "capa":"Base Layer",
+    "clip":"HumanM@Jump01 - Begin",
+    "largo":0.667,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Jump",
+    "capa":"Base Layer",
+    "clip":"HumanM@Jump01 - Begin",
+    "largo":0.667,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Falling",
+    "capa":"Base Layer",
+    "clip":"HumanM@Fall01",
+    "largo":1,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Free Locomotion",
+    "capa":"Base Layer",
+    "clip":"(mezcla) Free Locomotion",
+    "largo":0,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Strafing Movement",
+    "capa":"Base Layer",
+    "clip":"(mezcla) Strafing Locomotion",
+    "largo":0,
+    "bucle":true,
+    "etiqueta":"HeadTrack"
+   },{
+    "estado":"Attack1",
+    "capa":"Base Layer",
+    "clip":"Attack01_SwordAndShiled",
+    "largo":0.533,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Attack2",
+    "capa":"Base Layer",
+    "clip":"Attack02_SwordAndShiled",
+    "largo":0.533,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Attack3",
+    "capa":"Base Layer",
+    "clip":"Attack03_SwordAndShiled",
+    "largo":0.533,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Attack4",
+    "capa":"Base Layer",
+    "clip":"Attack04_SwordAndShiled",
+    "largo":0.533,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"RollRGT_Battle_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"(mezcla) Blend Tree",
+    "largo":0,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"RollLFT_Battle_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"RollLFT_Battle_RM_NoWeapon",
+    "largo":0.833,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"RollFWD_Battle_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"RollFWD_Battle_RM_NoWeapon",
+    "largo":0.833,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"RollBWD_Battle_RM_NoWeapon",
+    "capa":"Base Layer",
+    "clip":"RollBWD_Battle_RM_NoWeapon",
+    "largo":0.833,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Greeting01_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"Greeting01_NoWeapon",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"HandWave01",
+    "capa":"UpperBody",
+    "clip":"HumanM@HandWave01",
+    "largo":2.533,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HandWave02",
+    "capa":"UpperBody",
+    "clip":"HumanM@HandWave02",
+    "largo":3.2,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HeadShake01",
+    "capa":"UpperBody",
+    "clip":"HumanM@HeadShake01",
+    "largo":1.467,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HeadShake02",
+    "capa":"UpperBody",
+    "clip":"HumanM@HeadShake02",
+    "largo":1.8,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HeadNod01",
+    "capa":"UpperBody",
+    "clip":"HumanM@HeadNod01",
+    "largo":1.133,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Question01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Question01",
+    "largo":2.1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Question02",
+    "capa":"UpperBody",
+    "clip":"HumanM@Question02",
+    "largo":2.633,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Reverence01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Reverence01",
+    "largo":2.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Talk01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Talk01",
+    "largo":2.267,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Talk02",
+    "capa":"UpperBody",
+    "clip":"HumanM@Talk02",
+    "largo":2.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Talk03",
+    "capa":"UpperBody",
+    "clip":"HumanM@Talk03",
+    "largo":2.967,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Angry01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Angry01",
+    "largo":2.867,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Angry02",
+    "capa":"UpperBody",
+    "clip":"HumanM@Angry02",
+    "largo":1.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Beg01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Beg01",
+    "largo":4.433,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Cheer01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Cheer01",
+    "largo":1.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Cheer02",
+    "capa":"UpperBody",
+    "clip":"HumanM@Cheer02",
+    "largo":0.933,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Cry01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Cry01",
+    "largo":2.733,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Laugh01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Laugh01",
+    "largo":2.633,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Fear01",
+    "capa":"UpperBody",
+    "clip":"HumanM@Fear01",
+    "largo":1.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"HandClap01",
+    "capa":"UpperBody",
+    "clip":"HumanM@HandClap01",
+    "largo":2.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"IdleWounded01",
+    "capa":"UpperBody",
+    "clip":"HumanM@IdleWounded01",
+    "largo":2.7,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"FoundSomething_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"FoundSomething_NoWeapon",
+    "largo":2.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"SenseSomethingStart_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"SenseSomethingStart_NoWeapon",
+    "largo":0.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"DrinkPotion_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"DrinkPotion_NoWeapon",
+    "largo":2.333,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Eat_Begin",
+    "capa":"UpperBody",
+    "clip":"HumanM@Eat01_L",
+    "largo":2.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Eat_Loop",
+    "capa":"UpperBody",
+    "clip":"HumanM@Eat01_R - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"UpperIdle",
+    "capa":"UpperBody",
+    "clip":null,
+    "largo":0,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"DefendHit_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"DefendHit_NoWeapon",
+    "largo":0.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Defend_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"Defend_NoWeapon",
+    "largo":0.667,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Idle_Battle_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"Idle_Battle_NoWeapon",
+    "largo":0.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Challenging_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"Challenging_NoWeapon",
+    "largo":3,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"SenseSomethingSearching_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"SenseSomethingSearching_NoWeapon",
+    "largo":4,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Beg01_Loop",
+    "capa":"UpperBody",
+    "clip":"HumanM@Beg01 - Loop",
+    "largo":2.533,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"CastingEnter01",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingEnter01",
+    "largo":0.7,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"CastingIdle01",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingIdle01",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"CastingExit01",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingExit01",
+    "largo":1.2,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"CastingDamage01",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingDamage01",
+    "largo":1.1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"MagicAttackOmni01_Load",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackOmni01 - Load",
+    "largo":1.633,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"Reverence01_Loop",
+    "capa":"UpperBody",
+    "clip":"HumanM@Reverence01 - Loop",
+    "largo":1.167,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Laugh01_Loop",
+    "capa":"UpperBody",
+    "clip":"HumanM@Laugh01 - Loop",
+    "largo":1.4,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"Cry01_Loop",
+    "capa":"UpperBody",
+    "clip":"HumanM@Cry01 - Loop",
+    "largo":2,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"ApretonDeManos_A",
+    "capa":"UpperBody",
+    "clip":"mixamo.com",
+    "largo":4.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"MagicLeft",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackDirect1H01_L",
+    "largo":1.2,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"MagicRight",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackDirect1H01_R",
+    "largo":1.2,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"MagicSpecial",
+    "capa":"UpperBody",
+    "clip":"Combo05_RM_NoWeapon",
+    "largo":1.333,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HumanM@MagicAttackDirect2H01 - Cast",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackDirect2H01 - Cast",
+    "largo":0.967,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HumanM@MagicAttackOmni01 - Cast",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackOmni01 - Cast",
+    "largo":1.3,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"HumanM@MagicAttackDirect2H01 - Load",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackDirect2H01 - Load",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"HumanM@MagicAttackCall1H01_L - Load",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackCall1H01_L - Load",
+    "largo":1.667,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"HumanM@MagicAttackCall1H01_L",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackCall1H01_L",
+    "largo":1.367,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"ComboEnter",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingEnter01",
+    "largo":0.7,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"ComboIdle",
+    "capa":"UpperBody",
+    "clip":"HumanM@MagicAttackOmni01 - Load",
+    "largo":1.633,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"ComboExit",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingExit01",
+    "largo":1.2,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"ComboBreak",
+    "capa":"UpperBody",
+    "clip":"HumanM@CastingDamage01",
+    "largo":1.1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"New State",
+    "capa":"UpperBody",
+    "clip":null,
+    "largo":0,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"CarryThrow_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"CarryThrow_NoWeapon",
+    "largo":1,
+    "bucle":false,
+    "etiqueta":""
+   },{
+    "estado":"CarryMoveIdle_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"CarryMoveIdle_NoWeapon",
+    "largo":0.933,
+    "bucle":true,
+    "etiqueta":""
+   },{
+    "estado":"CarryStart_NoWeapon",
+    "capa":"UpperBody",
+    "clip":"CarryStart_NoWeapon",
+    "largo":1,
+    "bucle":false,
+    "etiqueta":""
+   }]
+ }
+}

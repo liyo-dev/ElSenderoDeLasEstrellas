@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.AI;
 
 // Beats que actúan sobre un actor: gesto, cara, hacia dónde mira, movimiento y el candado que lo
@@ -15,6 +16,7 @@ using UnityEngine.AI;
 [Serializable]
 public class GestureBeat : SequenceBeat
 {
+    public VozDelGesto voz = VozDelGesto.Automatica;
     [Tooltip("ID del actor: 'Player' para Will, o el Persistence ID del NPC (p. ej. 'NPC_Oliver').")]
     public string actorId;
 
@@ -49,7 +51,9 @@ public class GestureBeat : SequenceBeat
         int times = Mathf.Max(1, repeats);
         for (int i = 0; i < times; i++)
         {
+            ctx.ReservarGesto(actor, gesture, holdSeconds);
             actor.PlayGesture(gesture);
+            if (voz == VozDelGesto.Automatica) ReaccionesDeEscena.Sonar(actor, ReaccionesDeEscena.VozParaGesto(gesture));
             if (holdSeconds > 0f) yield return new WaitForSeconds(holdSeconds);
         }
 
@@ -84,6 +88,9 @@ public class PoseBeat : SequenceBeat
              "fotograma entre los dos.")]
     public bool volverAIdle = true;
 
+    [Tooltip("En clips sin bucle, mantiene el último fotograma hasta soltar la pose.")]
+    public bool congelarAlFinal = false;
+
     public override string Describe()
         => soltar ? $"Soltar pose: {actorId}" : $"Pose: {actorId} → {pose}";
 
@@ -93,7 +100,11 @@ public class PoseBeat : SequenceBeat
         if (actor == null) yield break;
 
         if (soltar) actor.ReleasePose(volverAIdle);
-        else actor.HoldPose(pose);
+        else
+        {
+            actor.HoldPose(pose, congelarAlFinal);
+            ctx.Player?.RegisterCleanup(() => actor.ReleasePose());
+        }
 
         yield break;
     }
@@ -107,28 +118,34 @@ public class EmotionBeat : SequenceBeat
 
     [Tooltip("Emoción a poner. 'None' no cambia nada (no tiene sentido aquí, pero no rompe).")]
     public NPCEmotion emotion = NPCEmotion.Neutral;
+    [Tooltip("Malla opcional de ojos; vac?o usa el perfil. Conserva boca y pose.")]
+    public string ojos;
 
-    [Tooltip("Si es > 0, la cara vuelve a Neutral pasados esos segundos. 0 = se queda puesta hasta " +
-             "que otro beat la cambie.")]
-    public float revertAfter = 0f;
+    [Tooltip("Segundos que dura la cara antes de volver a la de reposo. 0 = la duración por defecto del perfil.")]
+    [FormerlySerializedAs("revertAfter")]
+    public float duracion = 0f;
+    [Tooltip("Marcado: la cara se queda hasta que otro beat la cambie.")]
+    public bool mantener = false;
 
-    public override string Describe() => $"Cara: {actorId} → {emotion}";
+    public override string Describe() => $"Cara: {actorId} → {emotion}" +
+        (mantener ? " (se mantiene)" : duracion > 0f ? $" ({duracion:0.##} s)" : " (duración del perfil)");
 
     public override IEnumerator Run(SequenceContext ctx)
     {
+        Aplicar(ctx);
+        yield break;
+    }
+
+    /// Aplica la cara inmediatamente; permite marcas de habla sin crear corrutinas por frame.
+    public void Aplicar(SequenceContext ctx)
+    {
         var actor = ctx.GetActor(actorId);
-        if (actor == null) yield break;
-
-        actor.SetEmotion(emotion);
-
-        if (revertAfter > 0f)
-        {
-            yield return new WaitForSeconds(revertAfter);
-            actor.SetEmotion(NPCEmotion.Neutral);
-        }
+        if (actor == null) return;
+        if (mantener) actor.SetEmotion(emotion);
+        else actor.Reaccionar(emotion, duracion);
+        actor.Emotion?.AplicarOjos(ojos);
     }
 }
-
 /// Orienta a un actor: hacia otro actor, hacia una marca de posición, o justo al contrario.
 [Serializable]
 public class FaceBeat : SequenceBeat
@@ -190,35 +207,13 @@ public class FaceBeat : SequenceBeat
             yield break;
         }
 
-        yield return Co_TurnSmoothly(actor.Transform, point, turnDuration);
+        yield return actor.GirarSuavemente(point, turnDuration);
 
         // Sin esto, ApplySmoothRotation arrastra al NPC de vuelta a la rotación que tuviera
         // apuntada el animador en cuanto termina el giro. Ver SequenceActor.Face (INC-299).
         actor.SyncRotation();
     }
 
-    /// Gira poco a poco en lugar de encarar de golpe. Solo toca el eje vertical: inclinar a un
-    /// personaje para mirar algo que está más alto o más bajo lo deja torcido.
-    private static IEnumerator Co_TurnSmoothly(Transform who, Vector3 lookAtPoint, float duration)
-    {
-        Vector3 dir = lookAtPoint - who.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude < 0.0001f) yield break;
-
-        Quaternion from = who.rotation;
-        Quaternion to = Quaternion.LookRotation(dir.normalized, Vector3.up);
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            if (who == null) yield break;
-            elapsed += Time.unscaledDeltaTime;
-            who.rotation = Quaternion.Slerp(from, to, Mathf.Clamp01(elapsed / duration));
-            yield return null;
-        }
-
-        if (who != null) who.rotation = to;
-    }
 }
 
 /// Mueve a un actor. Siempre por el camino canónico (ver SequenceMovement): el NavMeshAgent
@@ -226,6 +221,10 @@ public class FaceBeat : SequenceBeat
 [Serializable]
 public class MoveToBeat : SequenceBeat, INarrativeStateEffect
 {
+    [Tooltip("Acortar la espera colocando al actor fuera del encuadre activo.")]
+    public bool elipsis = true;
+    [Tooltip("Espera máxima en segundos. 0 calcula distancia/velocidad × 1,2 + 1.")]
+    public float esperaMaxima = 0f;
     [Tooltip("Quién se mueve.")]
     public string actorId;
 
@@ -249,6 +248,9 @@ public class MoveToBeat : SequenceBeat, INarrativeStateEffect
              "que se mueve en el resto del juego y con la que está calibrada la animación. Subirla " +
              "solo si se ha verificado que el clip aguanta esa velocidad sin patinar.")]
     public float speedOverride = 0f;
+
+    [Tooltip("Rodear geometría al andar sin un NavMeshAgent utilizable.")]
+    public bool esquivar = true;
 
     [Tooltip("Segundos máximos de trayecto antes de rendirse y seguir con la secuencia.")]
     public float timeout = 8f;
@@ -290,7 +292,8 @@ public class MoveToBeat : SequenceBeat, INarrativeStateEffect
             destination = mark.position;
         }
 
-        yield return SequenceMovement.MoveTo(actor, destination, speedOverride, timeout);
+        yield return SequenceMovement.MoveTo(actor, destination, speedOverride, timeout, esquivar, ctx,
+            elipsis, esperaMaxima);
 
         if (faceEachOtherOnArrival && target?.Transform != null && actor.Transform != null)
         {
@@ -299,36 +302,6 @@ public class MoveToBeat : SequenceBeat, INarrativeStateEffect
         }
 
         if (settleOnArrival > 0f) yield return new WaitForSeconds(settleOnArrival);
-    }
-}
-
-/// Retiene o suelta el comportamiento ambiental de un NPC (Wander/Idle).
-///
-/// Normalmente NO hace falta usarlo: el SequencePlayer retiene automáticamente a todos los actores
-/// que aparecen en la secuencia al empezar, y los suelta al terminar. Este beat existe para los
-/// casos concretos en que hace falta soltar a alguien antes de tiempo, o retener a un actor que la
-/// secuencia no menciona en ningún otro beat.
-[Serializable]
-public class HoldActorBeat : SequenceBeat
-{
-    [Tooltip("A quién se retiene o se suelta.")]
-    public string actorId;
-
-    [Tooltip("Marcado = retener (sale de Wander/Idle y queda bajo control de la secuencia). " +
-             "Desmarcado = soltar (recupera su comportamiento normal).")]
-    public bool hold = true;
-
-    public override string Describe() => (hold ? "Retener: " : "Soltar: ") + actorId;
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        var actor = ctx.GetActor(actorId);
-        if (actor == null) yield break;
-
-        if (hold) actor.Hold();
-        else actor.Release();
-
-        yield break;
     }
 }
 
@@ -523,7 +496,7 @@ public class PlaceAtMarkBeat : SequenceBeat, INarrativeStateEffect
 
         // Las marcas creadas con `new GameObject(nombre)` tienen la rotación identidad (+Z del
         // mundo): lo normal es dar también `faceTowardsActor` o `faceTowardsMark` (INC-293).
-        SequenceMovement.PlaceAt(actor, mark.position, mark.rotation);
+        SequenceMovement.PlaceAt(actor, mark.position, mark.rotation, ctx);
 
         Transform objetivo = null;
         if (!string.IsNullOrWhiteSpace(faceTowardsActor))

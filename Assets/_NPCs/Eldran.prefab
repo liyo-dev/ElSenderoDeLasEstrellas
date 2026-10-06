@@ -2917,6 +2917,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2221590132249757865
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5622249800736206675}
+  m_Layer: 0
+  m_Name: CloakBone03
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5622249800736206675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2221590132249757865}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.05674181, w: 0.9983889}
+  m_LocalPosition: {x: -0.30492613, y: -1.0658141e-16, z: -7.123106e-17}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6469472914116897036}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2272571950991997479
 GameObject:
   m_ObjectHideFlags: 0
@@ -8624,7 +8655,7 @@ SkinnedMeshRenderer:
   - {fileID: 8977777166961182368}
   - {fileID: 4718319820153239785}
   - {fileID: 9216595598841775424}
-  - {fileID: 0}
+  - {fileID: 4865301679453101861}
   - {fileID: 8601095121971554140}
   - {fileID: 7607412041518876430}
   - {fileID: 1734541129679621260}
@@ -8639,7 +8670,7 @@ SkinnedMeshRenderer:
   - {fileID: 1257056353364737058}
   - {fileID: 1626813773667758060}
   - {fileID: 6469472914116897036}
-  - {fileID: 0}
+  - {fileID: 5622249800736206675}
   - {fileID: 1820348648220156610}
   - {fileID: 7960120347513376585}
   - {fileID: 6499695474905875463}
@@ -10209,7 +10240,8 @@ Transform:
   m_LocalPosition: {x: -0.2614295, y: 2.6645352e-17, z: -5.804901e-17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 5622249800736206675}
   m_Father: {fileID: 1626813773667758060}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8541611781517747621
@@ -11337,6 +11369,7 @@ MonoBehaviour:
   hint: {fileID: 442860958227013085}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1

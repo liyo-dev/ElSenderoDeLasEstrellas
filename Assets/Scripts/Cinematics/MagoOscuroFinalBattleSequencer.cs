@@ -365,7 +365,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         // que Will diga sus frases actuales. Ver Co_MemoryVision más abajo.
         yield return Co_MemoryVision();
 
-        yield return ShowBubblePaged(_willActor, Loc(_willFlashbackTextKey), 3f,
+        yield return ShowBubbleLocalized(_willActor, _willFlashbackTextKey, 3f,
             animTrigger: "Question02", loopAnim: true, speakerName: "Will");
 
         if (_willAwakenedAuraVfx != null && _willActor != null)
@@ -900,6 +900,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         if (SpeechBubbleUI.Instance != null)
         {
             bool done = false;
+            VoiceLines.TryPlay(_timeTutorialTextKey);
             SpeechBubbleUI.Instance.Show(_willActor, Loc(_timeTutorialTextKey), _tutorialDisplayDuration, () => done = true);
             yield return new WaitUntil(() => done); // el propio SpeechBubbleUI debe usar tiempo real para esto — confirmar en Editor
         }
@@ -964,7 +965,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
 
         // El foco de cámara y narrativo está en Liam, no en el golpe en sí — ver guion técnico.
         FaceTarget(_liamActor, _willActor);
-        yield return ShowBubblePaged(_liamActor, Loc(_liamLastWordsTextKey), _sacrificeHoldDuration,
+        yield return ShowBubbleLocalized(_liamActor, _liamLastWordsTextKey, _sacrificeHoldDuration,
             animTrigger: "Beg01", speakerName: "Liam");
 
         yield return new WaitForSeconds(1f);

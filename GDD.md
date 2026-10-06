@@ -1,8 +1,8 @@
 # GDD — El Sendero de las Estrellas
 
-**Versión:** 2.7 (revisión de diálogos del prólogo y el tramo inicial)
+**Versión:** 2.8 (Capítulo 2 aprobado)
 **Autor original:** Raúl Báez Amate — Liyodev
-**Última revisión:** 25 de septiembre de 2026 — ver [Registro de cambios](#registro-de-cambios).
+**Última revisión:** 6 de octubre de 2026 — ver [Registro de cambios](#registro-de-cambios).
 
 ---
 
@@ -56,6 +56,8 @@ El Mago Oscuro lanzó un hechizo prohibido para borrar el valle. Al perder el co
 
 Siglos después, un joven llamado Will enfermó de gravedad. Cuando su corazón dejó de latir, el alma del antiguo mago encontró en él un recipiente compatible y lo devolvió a la vida. El muchacho creció sin recordar su vida anterior. La pesadilla recurrente del prólogo es el primer eco de aquel enfrentamiento.
 
+**Quién tendió el Sendero.** El Sendero no lo construyó nadie con nombre: lo tendió la Luz primera, la misma fuerza que encendió las estrellas. No juzga ni elige; responde a quien pide con todo su ser y concede tal cual se pide, igual que el altar. La gente del valle la invocaba en sus oraciones sin saber nada del Sendero, y el Archimago tampoco lo sabía: en su última noche le suplicó a la Luz primera un hechizo que no existía, sin sospechar que el poder del Mago Oscuro venía del camino que esa misma Luz había tendido. Por eso el choque selló al Mago dentro del Sendero, y por eso al final Will puede vencerlo con un hechizo nuevo: el Mago pidió que ningún poder existente pudiera destruirlo. En el juego no se nombran los hechizos en voz alta (ni la Protección Absoluta ni la Aniquilación: son nombres internos).
+
 ## Guión Técnico
 
 > **Alcance y fuentes de estado (25 sep 2026):** el grafo activo de esta revisión es Assets/NarrativeGraph/Cap1.asset, junto con Secundary.asset. Los archivos MainNarrative_Cap2.asset a Cap6.asset están en Assets/NarrativeGraph/Versiones antiguas y no se tratan como flujo vigente. Para confirmar implementación se contrastan el grafo activo, los assets de secuencia y las quests; para fijar canon se usa la novela completa.
@@ -100,6 +102,8 @@ El enfrentamiento contra el primer Demonio es un combate normal de gameplay, no 
 
 Al concluir, el grafo completa la misión ELDRAN_MISSION3. El nodo se titula «ELDRAN SE VA A CASA DE WILL»; la ubicación del punto de guardado depende del montaje de escena y no se infiere solo por el título.
 
+**ADAPTACIÓN DEL JUEGO frente a la novela V:** Liam provoca el ataque para encontrar a alguien de buen corazón, con el tono de la novela. En la escena del cristal no se ríe; se levanta cuando Will cae y la llave del aro se apaga al romperse el aro. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
+
 ### Estado de la adaptación a partir del Demonio — revisión del 25 de septiembre de 2026
 
 El orden de abajo sigue la novela como canon y traduce cada bloque a una experiencia de juego. Las mecánicas son objetivos de diseño, no funciones aprobadas por el mero hecho de aparecer aquí.
@@ -110,17 +114,48 @@ El orden de abajo sigue la novela como canon y traduce cada bloque a una experie
 
 **Criterio para textos en bocadillo:** un bocadillo no debe pasar de tres frases. Si una intervención necesita más, se convierte en dos turnos con una pausa, reacción o cambio de plano que justifique el relevo. No se parte una frase para dejar una palabra suelta en el bocadillo siguiente ni se fuerza una página manual: se ajusta la redacción al espacio real del cuadro. Si aun así no cabe, se recorta o se divide en una unidad de sentido completa. Las líneas largas existentes en localización se consideran pendientes de adaptación a esta pauta.
 
-### 6. La preparación y el camino a Estela — novelas IV–VII
+### 6. Capítulo 2: El camino elegido — novelas III–VIII
 
-Tras el primer Demonio, Eldran explica que el grupo necesita ayuda experta. Will se prepara para salir del Reino y buscar a Estela en el Bosque Prohibido. La capa de Victoria, la poción y el entrenamiento con Erika pueden funcionar como tareas opcionales o como objetivos de preparación; la progresión debe enseñar equipo, consumibles y combate sin detener la aventura con tres recados equivalentes.
+El capítulo empieza al ganar al Demonio y abarca del final de la novela III a la VIII. Will se prepara en el pueblo, investiga los aros, encuentra a Estela y vence al Gólem con ella. Termina cuando Liam entra en el grupo y pierde la bota en el vado: fin de la Primera Parte y de la demo. La ruta principal dura unos 60 minutos, con unos 15 de contenido opcional.
 
-**Diseño jugable:** presentar las tareas en paralelo y permitir que el jugador elija el orden. El entrenamiento con Erika introduce la Bola Prisma si esa progresión se conserva. El bosque conduce a la presentación de Estela y a un combate cooperativo contra el Gólem. El incidente deja claro que el grupo ya no viaja solo con Will y Eldran.
+**Ritmo aprobado:**
 
-**Diseño del combate contra el Gólem (27 sep 2026, INC-489):** por delante es pura roca (apenas recibe daño); por la espalda, el daño completo. Estela le provoca: tras unos ataques contra Will, el Gólem va a por ella (Estela levanta su escudo y no recibe daño) y le enseña la espalda a Will. Estela guía el combate. Fase 2: lluvia de rocas; fase 3: se funde con el bosque (arranca rocas del claro, crece) y salta con onda. Al final no cae con magia normal: aparece el sello de invocación y solo el dúo Will + Estela lo remata. Estela reconoce que alguien lo ha invocado, sin señalar a Liam (el canon no establece que ella le acuse).
+| Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
+|---|---|---|---|
+| 2.1 | Liam observa a Will en el cristal | Cinemática | El jugador sabe más que Will |
+| 2.2 | La mañana después: vela, origen de Will y trozo del aro | Cinemática con interacción | Control de la magia y objetivo: encontrar a Estela |
+| 2.3 | Cuatro encargos en orden libre: capa de Victoria, poción regalada por la boticaria, pañuelo con Erika y cubos y piedras con Eldran | Gameplay | Equipo, consumibles, defensa con Oliver y Pía, tiro preciso y Bola Prisma con Eldran; «¿Debes hacerlo?» |
+| 2.4 | Lista de motivos, brújula y despedida; Oliver sale del grupo y Eldran parte a la capital | Cinemática | Elegir el viaje y conservar el camino a casa |
+| 2.5 | Liam habla con Tobías por el espejo | Cinemática de interludio | Para quién busca la cura |
+| 2.6 | Will reúne pistas en la aldea del mar para la hoja de avistamientos | Investigación | Escuchar, inspeccionar y unir pistas |
+| 2.7 | Sigue el carro de los contrabandistas y decide cómo actuar | Sigilo ligero y decisión | Aplicar la lección de Eldran; versión pendiente |
+| 2.8 | Explora el Bosque Prohibido; Estela lee el aro y la hoja y entra en el grupo | Exploración y cinemática cómica | Runas de sometimiento y magia cuya fuerza no es propia |
+| 2.9 | Descanso en la casa entre raíces y primera receta: Cúpula Estelar | Respiro cómico y tutorial | Combo mágico |
+| 2.10 | Prueba de la campana en cuatro rondas; Will aprende Levitación | Puzle de combate por rondas | Maná, cambio de personaje, avisar y cooperar; fuego amigo pendiente |
+| 2.11 | Liam invoca al Gólem; Will y Estela lo vencen y encuentran la esquirla | Jefe | Aplicar lo aprendido y rematar en dúo |
+| 2.12 | Comparten la manzana harinosa y continúan apoyándose | Respiro | Aceptar ayuda sin imponerla |
+| 2.13 | Bifurcación, entrada de Liam al grupo y recuperación de su bota en el vado | Cinemática y gameplay | Viajar juntos; fin de la demo |
+
+**ADAPTACIONES DEL JUEGO** (no cambian el canon de la novela):
+
+1. **El aro roto del Demonio sustituye al trozo de hierro.** No hay lobo ni cuneta. Eldran guarda el aro en el cofre de sal y Will lleva el objeto «Trozo del aro»: lo muestra en la posada y lo leen Estela y Liam.
+2. **Liam provoca el ataque para encontrar a alguien de buen corazón**, como establece la GDD, con el tono de la novela. La escena del cristal y sus líneas al invocar al Gólem se reescriben sin tono de villano. En la novela V envía al lobo por error, creyendo que Will es un ladrón.
+3. **Oliver participa en la preparación**, junto a Pía en la prueba de Erika. Sale del grupo en la despedida y no sale del pueblo; el grupo final es Will, Estela y Liam.
+4. **«¿Debes hacerlo?» guía el aprendizaje.** La pregunta de Eldran se juega mediante contención y cooperación: parar, avisar, descansar y apoyarse en otro, con más peso que el daño.
 
 **Canon que debe conservarse:** la novela muestra el miedo de Will a no estar a la altura, los planes de Liam y la desconfianza de Estela hacia su conducta controladora. La invocación del Gólem es una acción de Liam; el título antiguo del nodo «LIAM AMENAZADO POR ESTELA» no basta para establecer que Estela amenazara a Liam.
 
-**Estado:** el guion y los assets antiguos describen misiones, secuencias y desbloqueos para este tramo. La conexión vigente debe comprobarse en las escenas y quests actuales antes de marcarlo como jugable. La secuencia de aparición de Estela y el combate contra el Gólem no se dan por confirmados a partir del grafo archivado.
+**Diseño del combate contra el Gólem (27 sep 2026, INC-489):** por delante es pura roca (apenas recibe daño); por la espalda, el daño completo. Estela le provoca: tras unos ataques contra Will, el Gólem va a por ella (Estela levanta su escudo y no recibe daño) y le enseña la espalda a Will. Estela guía el combate. Fase 2: lluvia de rocas; fase 3: se funde con el bosque (arranca rocas del claro, crece) y salta con onda. Al final no cae con magia normal: aparece el sello de invocación y solo el dúo Will + Estela lo remata. Estela reconoce que alguien lo ha invocado, sin señalar a Liam (el canon no establece que ella le acuse).
+
+**Ajustes del Gólem — propuesto, pendiente de construir:**
+
+- El fuego frontal lo hace crecer. Una explosión de Estela muestra por qué hay que atacar por la espalda.
+- Un manotazo tira a Will delante de Estela; ella corta su hechizo para no alcanzarlo y Will levanta Cúpula Estelar sobre ambos. Bajo la barrera acuerdan llevar al Gólem al barro.
+- Una zona de barro junto al arroyo lo hunde unos segundos. Abre la ventana de la fase 2 para atacar las grietas y mostrar las runas de la espalda.
+
+**Pendientes:** elegir la versión de los contrabandistas (combate opcional con consecuencias o elección de diálogo), confirmar el fuego amigo en este capítulo y decidir si entran el puente sin magia y el plato que persigue a Will. Todo bocadillo tiene un máximo de tres líneas.
+
+**Estado:** propuesta aprobada 6 oct 2026; tanda 0 en curso; nada jugable todavía. Diseño completo en [la propuesta aprobada](<Claude outputs/propuesta-capitulo2-el-camino-elegido-2026-10-06.md>). El combate de INC-489 se aprovecha como base; el recorrido del capítulo aún no está montado.
 
 ### 7. La taberna, el arresto y la deuda del Rey — novelas IX–XII
 
@@ -279,7 +314,7 @@ Liam despierta junto a la Piedra apagada y pregunta por Will. Estela le explica 
 
 | Tramo de juego | Canon de la novela | Función de juego | Estado actual |
 |---|---|---|---|
-| Preparación, bosque y Gólem | IV–VIII | Aprendizaje, presentación de Estela y cooperación | Contenido descrito; integración actual por verificar |
+| Capítulo 2 (III–VIII) | III–VIII | Aprendizaje, presentación de Estela y cooperación | Propuesta aprobada 6 oct 2026; en construcción |
 | Taberna, arresto y Reino | IX–XII | Humor, puzzle de prisión y defensa del Reino | Contenido descrito; grafo citado anteriormente está archivado |
 | Biblioteca, viaje y Silas | XIII–XVI | Pistas sobre Liam y aprendizaje del tiempo | Hay claves/quests; recorrido completo por verificar |
 | Risco, Vega y Piedra | XVII–XVIII | Decisión social, puzzle de reflejo y jefe cooperativo | Canon novelado; adaptar e implementar |
@@ -576,13 +611,17 @@ El estado distingue entre **cadena localizada** y **secuencia conectada/revisada
 
 ## Registro de Cambios
 
+**6 de octubre de 2026 — Nivelación con el Capítulo 2 aprobado (INC-611).**
+
+Se actualizan las secciones 5–6 y la correspondencia de hitos con «El camino elegido», desde la victoria contra el Demonio hasta la bota de Liam y el fin de la demo. Se resumen los 13 bloques y las cuatro adaptaciones del juego: aro roto, motivo y tono de Liam, despedida de Oliver y aprendizaje de contención y cooperación. Se conserva el diseño del Gólem de INC-489 y se añaden tres ajustes pendientes de construir. La tanda 0 está en curso, sin recorrido jugable; contrabandistas, fuego amigo y opcionales siguen pendientes.
+
 **25 de septiembre de 2026 — Codex, revisión de diálogos iniciales solicitada por Raúl.**
 
-Se revisan las voces en español e inglés desde la última noche del Archimago hasta el encargo de la caja de manzanas, con frases naturales y turnos breves. Se retira el texto del relato histórico antiguo; `PRLG_WILL_WAKE_UP` se conserva. La plegaria mantiene su referencia de desesperación, y «No quiero perder a Liora» expresa el temor del Archimago a perderla sin sugerir que ya se había marchado. En el despertar, Will oye jaleo desde la ventana y sale a comprobar qué pasa; se quitan las referencias a la carta de Eldran. La novela no cambia: es una adaptación del tutorial del juego. Las señales heredadas de `SplashScreen` aún apuntan a las claves antiguas, por lo que estas conservan traducción vacía hasta poder retirar esas llamadas desde Unity Editor. Seguimiento: `INC-455`.
+Se revisan las voces en español e inglés desde la última noche del Archimago hasta el encargo de la caja de manzanas, con frases naturales y turnos breves. Se retira el texto del relato histórico antiguo; `PRLG_WILL_WAKE_UP` se conserva. La plegaria expresa su desesperación en seis frases dirigidas a la Luz primera (PROLOGO_PLEGARIA_01–06), desde «No... No voy a dejar que los toques» hasta «Perdóname, Liora... no voy a volver pronto.». En el despertar, Will oye jaleo desde la ventana y sale a comprobar qué pasa; se quitan las referencias a la carta de Eldran. La novela no cambia: es una adaptación del tutorial del juego. Las señales heredadas de `SplashScreen` aún apuntan a las claves antiguas, por lo que estas conservan traducción vacía hasta poder retirar esas llamadas desde Unity Editor. Seguimiento: `INC-455`.
 
 **26 de septiembre de 2026 — Codex, revisión de la discusión y el regalo de Eldran solicitada por Raúl.**
 
-La discusión de Eldran y Victoria ahora tiene una causa clara —solo queda una caja y Eldran teme que se magullen las peras— y se cierra con una concesión ligera. Eldran saluda a Will sin hablar de sí mismo en tercera persona. Oliver ofrece ayudar con las cajas, en lugar de anunciar que va con Will cuando ya está a su lado. Tras darle la moneda por adelantado, Eldran responde a la pregunta de Will explicándole que quiere que tenga algo para él, aunque sea una tontería; Will acepta y se dispone a buscar algo. En la despedida del prólogo, el Archimago admite que no sabe quién es el Mago y le pide a Liora que evacue a todos mientras él se queda a enfrentarlo. Se restaura la plegaria «Quiero volver con Liora» y el hechizo culmina con «¡Protégelos...! ¡A todos!». Seguimiento: `INC-455`.
+La discusión de Eldran y Victoria ahora tiene una causa clara —solo queda una caja y Eldran teme que se magullen las peras— y se cierra con una concesión ligera. Eldran saluda a Will sin hablar de sí mismo en tercera persona. Oliver ofrece ayudar con las cajas, en lugar de anunciar que va con Will cuando ya está a su lado. Tras darle la moneda por adelantado, Eldran responde a la pregunta de Will explicándole que quiere que tenga algo para él, aunque sea una tontería; Will acepta y se dispone a buscar algo. En la despedida del prólogo, el Archimago admite que no sabe quién es el Mago y le pide a Liora que evacue a todos mientras él se queda a enfrentarlo. El Mago Oscuro dice «Que este valle no haya existido nunca.» (PROLOGO_MAGO_VALLE). El Archimago suplica a la Luz primera en seis frases (PROLOGO_PLEGARIA_01–06): pide un hechizo que no existe, ofrece sus años, su voz, su nombre y su alma para que los demás vean amanecer, y se despide de Liora. El hechizo culmina con «¡Protégelos a todos!» (PROLOGO_HECHIZO), sin nombrarlo en voz alta. Seguimiento: `INC-455` y `INC-567`.
 
 **25 de septiembre de 2026 — Codex, banco de experimentos de combate solicitado por Raúl.**
 

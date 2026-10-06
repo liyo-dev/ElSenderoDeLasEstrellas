@@ -1,0 +1,82 @@
+# Liam observa el combate desde el puesto abandonado. El interior queda al margen del clima.
+GUION Cap2_01_LosPlanesDeLiam
+ESCENA TorreDeLiam
+SECUENCIA Assets/_SEQUENCES/SEQ_LosPlanesDeLiam.asset
+TEXTO subtitulo
+RITMO entre_frases=0.45 mismo_hablante=0.3
+
+REPARTO
+liam LIAM_TORRE nombre=Liam color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+
+PUNTOS
+silla -6000 6000.9 100
+manos -6000 6000.5 100.45
+cam_general -6001.4 5997.4 100
+cam_cara -6001.2 5998.9 100
+cam_llave -6000.65 5998.6 100
+cam_mapa -6000.6 6001.2 100
+cam_sienta -6001.3 5998.7 100
+foco_general -6000 6001 101.75
+detalle_llave -6000.15 5999.75 100.62
+
+HILO
+@inicio
+liam en silla mirando PROP_Bola
+& liam bucle SitMedium_Loop
+& liam cara pensativo
+& bandas
+plano general liam mira=foco_general altura_foco=0 desde=cam_general altura=1.5 lente=65
+espera 6.5
+
+@mira
+plano primer liam desde=cam_cara altura=0.95 lente=40
+liam dice EVT_LIAM_CRYSTAL_01 cara=pensativo sin_pose
+espera 3
+liam dice EVT_LIAM_CRYSTAL_02 cara=sorpresa sin_pose
+espera 1.7
+
+@cae
+plano medio liam PROP_Bola desde=cam_general altura=1.15 lente=42
+vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=PROP_Bola lifetime=1.2
+& liam gesto SenseSomethingStart_NoWeapon
++0.2 liam gesto SitMedium_Exit
++0.2 liam cara sorpresa
++1.1 liam reposo
+espera 1.3
+liam dice EVT_LIAM_CRYSTAL_03 cara=preocupado sin_pose
+espera 1
+
+@llave
+plano detalle detalle_llave altura_foco=0 desde=cam_llave altura=1.0 lente=48
+espera 1
+prop PROP_BrilloLlave oculto
+& liam mira PROP_Llave
+espera 1
+liam dice EVT_LIAM_CRYSTAL_04 cara=pensativo sin_pose
+espera 0.9
+
+@decide
+liam mira PROP_Bola
+plano medio liam desde=cam_sienta altura=0.95 lente=40
+liam gesto SitMedium_Begin
+espera 0.4
+liam bucle SitMedium_Loop
+espera 0.9
+plano detalle PROP_Mapa desde=cam_mapa altura=1.9 lente=65
+liam mira PROP_Mapa
+liam dice EVT_LIAM_CRYSTAL_05 cara=decidido sin_pose
+espera 3
+liam mira PROP_Bola
+plano primer liam desde=cam_cara altura=0.95 lente=40
+liam dice EVT_LIAM_CRYSTAL_06 cara=decidido sin_pose
+espera 1.5
+
+@final
+liam mira manos
+liam cara triste
+espera 1.5
+liam dice EVT_LIAM_CRYSTAL_07 cara=triste sin_pose
+espera 2
+fundido cubre 1.5
+espera 1.5
+bandas quita

@@ -1,460 +1,433 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-/// <summary>
-/// Componente que controla las expresiones faciales de un NPC mediante meshes intercambiables.
-/// Los personajes tienen múltiples GameObjects para ojos (Eye01, Eye02...) y bocas (Mouth01, Mouth02...)
-/// y este componente activa/desactiva el correspondiente según la emoción.
-/// </summary>
+/// Controla la cara de reposo, las reacciones y las bocas del habla del personaje.
 public class NPCEmotionController : MonoBehaviour
 {
-    #region Serialized Fields
-    
     [Header("Configuración")]
-    [Tooltip("Perfil de emociones que define el mapeo emoción -> meshes")]
     [SerializeField] private EmotionProfile emotionProfile;
-
-    [Header("Estado Original (Antes de Hablar)")]
-    [Tooltip("Mesh de ojos que tiene el NPC por defecto (antes de cualquier diálogo)")]
-    [SerializeField] private GameObject originalEyeMesh;
-    
-    [Tooltip("Mesh de boca que tiene el NPC por defecto (antes de cualquier diálogo)")]
-    [SerializeField] private GameObject originalMouthMesh;
-    
-    [Header("Búsqueda Automática")]
-    [Tooltip("Si no se asignan meshes originales, buscar meshes que contengan estos prefijos")]
+    [Header("Cara de reposo")]
+    [Tooltip("Ojos neutros de este personaje.")]
+    [FormerlySerializedAs("originalEyeMesh")]
+    [SerializeField] private GameObject ojosDeReposo;
+    [Tooltip("Boca neutra de este personaje.")]
+    [FormerlySerializedAs("originalMouthMesh")]
+    [SerializeField] private GameObject bocaDeReposo;
+    [Header("Búsqueda automática")]
     [SerializeField] private string eyePrefix = "Eye";
     [SerializeField] private string mouthPrefix = "Mouth";
-    
-    [Header("Debug")]
-    [SerializeField] private bool debugMode = false;
-    
-    #endregion
-    
-    #region Private Fields
-    
-    private NPCSimpleAnimator _npcAnimator;
+
+    [Header("Parpadeo automático")]
+    [SerializeField] private bool parpadeoAutomatico = true;
+    [SerializeField, Min(0.1f)] private float intervaloMinimoParpadeo = 2f;
+    [SerializeField, Min(0.1f)] private float intervaloMaximoParpadeo = 6f;
+    [SerializeField, Min(0.01f)] private float duracionParpadeo = 0.12f;
+    [SerializeField, Range(0f, 1f)] private float probabilidadDobleParpadeo = 0.15f;
+    [Tooltip("Malla de ojos cerrados del sistema modular. Vacío desactiva el parpadeo.")]
+    [SerializeField] private string ojosDelParpadeo = "Eye09";
+    [Tooltip("Expresiones que ya representan ojos cerrados y no se interrumpen con parpadeos.")]
+    [SerializeField] private string[] ojosYaCerrados = { "Eye07", "Eye09" };
+
+    // Una sola corrutina actualiza todas las caras; su propietario se releva al desactivarse.
+    private static readonly List<NPCEmotionController> CarasActivas = new List<NPCEmotionController>();
+    private static NPCEmotionController _duenoDelTick;
+    private static Coroutine _tick;
+    private readonly Dictionary<string, Renderer[]> _renderersDeOjos = new Dictionary<string, Renderer[]>();
+    private Renderer[] _ojosVisibles;
+    private string _ojosDeLaCara;
+    private float _proximoParpadeo;
+    private int _faseParpadeo;
+    private bool _dobleParpadeo;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ResetStatics()
+    {
+        if (_duenoDelTick != null && _tick != null) _duenoDelTick.StopCoroutine(_tick);
+        _tick = null;
+        _duenoDelTick = null;
+        CarasActivas.Clear();
+    }
+#endif
+
     private Game.NPC.NPCBehaviourManagerV2 _npcManager;
-
-    // Cache de GameObjects de ojos indexados por nombre
-    private Dictionary<string, GameObject> _eyeMeshes = new Dictionary<string, GameObject>();
-
-    // Cache de GameObjects de boca indexados por nombre
-    private Dictionary<string, GameObject> _mouthMeshes = new Dictionary<string, GameObject>();
-    
-    // Nombres de los meshes activos antes de empezar el diálogo
-    private string _originalEyeMeshName;
-    private string _originalMouthMeshName;
-    
-    // Emoción actual
+    private readonly Dictionary<string, GameObject> _eyeMeshes = new Dictionary<string, GameObject>();
+    private readonly Dictionary<string, GameObject> _mouthMeshes = new Dictionary<string, GameObject>();
+    private string _ojosDeReposo, _bocaDeReposo, _bocaDeLaCara, _bocaDuranteHabla;
     private NPCEmotion _currentEmotion = NPCEmotion.Neutral;
-    
-    // Flag para saber si estamos en diálogo
-    private bool _isInDialogue = false;
-    
-    #endregion
-    
-    #region Unity Lifecycle
-    
+    private bool _isInDialogue, _hablando, _controladorDeHablaResuelto, _esControladorDeHabla, _haTenidoVoz, _avisadoSinPerfil, _avisadoSinBocasDelHabla;
+    private bool _tieneOjos, _tieneBoca;
+    private float _finDelHabla, _proximoCambioDeBoca;
+    private float _finDeReaccion = float.PositiveInfinity;
+
     void Awake()
     {
-        _npcAnimator = GetComponent<NPCSimpleAnimator>();
         _npcManager = GetComponent<Game.NPC.NPCBehaviourManagerV2>();
-        CacheFacialMeshes();
+        CacheMeshesRecursive(transform);
+        foreach (var ojos in _eyeMeshes)
+            _renderersDeOjos.Add(ojos.Key, ojos.Value.GetComponentsInChildren<Renderer>(true));
+        // Una parte sin malla de reposo asignada ni malla activa está tapada: no se toca. Ver INC-562.
+        _tieneOjos = TieneParte(ojosDeReposo, _eyeMeshes);
+        _tieneBoca = TieneParte(bocaDeReposo, _mouthMeshes);
+        ResolverReposo();
     }
-    
+    void Start() => VolverAReposo();
     void OnEnable()
     {
-        // Suscribirse a eventos del DialogueManager
+        ProgramarParpadeo();
+        if (!CarasActivas.Contains(this)) CarasActivas.Add(this);
+        AsegurarTick();
+        SenalesDeHabla.OnEmpiezaAHablar += EmpezarHabla;
+        SenalesDeHabla.OnDejaDeHablar += AlPararHabla;
         DialogueManager.OnDialogueStarted += OnDialogueStarted;
         DialogueManager.OnDialogueClosed += OnDialogueClosed;
         DialogueManager.OnDialogueLineChanged += OnDialogueLineChanged;
     }
-    
     void OnDisable()
     {
-        // Desuscribirse de eventos
+        CarasActivas.Remove(this);
+        if (_duenoDelTick == this)
+        {
+            if (_tick != null) StopCoroutine(_tick);
+            _tick = null;
+            _duenoDelTick = null;
+            AsegurarTick();
+        }
+        SenalesDeHabla.OnEmpiezaAHablar -= EmpezarHabla;
+        SenalesDeHabla.OnDejaDeHablar -= AlPararHabla;
         DialogueManager.OnDialogueStarted -= OnDialogueStarted;
         DialogueManager.OnDialogueClosed -= OnDialogueClosed;
         DialogueManager.OnDialogueLineChanged -= OnDialogueLineChanged;
+        PararHabla();
+        VolverAReposo();
+        _isInDialogue = false;
     }
-    
-    #endregion
-    
-    #region Initialization
-    
-    /// <summary>
-    /// Busca y cachea todos los meshes de ojos y boca en el personaje.
-    /// </summary>
-    private void CacheFacialMeshes()
-    {
-        _eyeMeshes.Clear();
-        _mouthMeshes.Clear();
-        
-        // Buscar todos los meshes en la jerarquía
-        CacheMeshesRecursive(transform);
-        
-        // Si hay meshes originales asignados, guardar sus nombres
-        if (originalEyeMesh != null)
-        {
-            _originalEyeMeshName = originalEyeMesh.name;
-        }
-        
-        if (originalMouthMesh != null)
-        {
-            _originalMouthMeshName = originalMouthMesh.name;
-        }
-        
-        if (debugMode)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] ✅ Encontrados {_eyeMeshes.Count} meshes de ojos, {_mouthMeshes.Count} meshes de boca");
-            Debug.Log($"[NPCEmotionController:{name}] 💾 Estado original configurado - Ojos: {_originalEyeMeshName ?? "auto"}, Boca: {_originalMouthMeshName ?? "auto"}");
-#endif
-            
-            foreach (var kvp in _eyeMeshes)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"  👁️ {kvp.Key} -> {kvp.Value.name}");
-#endif
-                }
-            
-            foreach (var kvp in _mouthMeshes)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"  👄 {kvp.Key} -> {kvp.Value.name}");
-#endif
-                }
-        }
-    }
-    
     private void CacheMeshesRecursive(Transform parent)
     {
         foreach (Transform child in parent)
         {
-            // Buscar ojos
-            if (child.name.StartsWith(eyePrefix) && !_eyeMeshes.ContainsKey(child.name))
-            {
-                _eyeMeshes[child.name] = child.gameObject;
-            }
-            
-            // Buscar bocas
-            if (child.name.StartsWith(mouthPrefix) && !_mouthMeshes.ContainsKey(child.name))
-            {
-                _mouthMeshes[child.name] = child.gameObject;
-            }
-            
-            // Buscar recursivamente
+            if (child.name.StartsWith(eyePrefix) && !_eyeMeshes.ContainsKey(child.name)) _eyeMeshes[child.name] = child.gameObject;
+            if (child.name.StartsWith(mouthPrefix) && !_mouthMeshes.ContainsKey(child.name)) _mouthMeshes[child.name] = child.gameObject;
             CacheMeshesRecursive(child);
         }
     }
-    
-    #endregion
-    
-    #region Dialogue Events
-    
-    /// <summary>
-    /// Callback cuando se inicia un diálogo.
-    /// </summary>
+    private static bool TieneParte(GameObject asignada, Dictionary<string, GameObject> mallas)
+    {
+        if (asignada != null) return true;
+        foreach (var malla in mallas)
+            if (malla.Value != null && malla.Value.activeSelf) return true;
+        return false;
+    }
+    private void ResolverReposo()
+    {
+        _ojosDeReposo = ResolverMalla(ojosDeReposo, _eyeMeshes, true);
+        _bocaDeReposo = ResolverMalla(bocaDeReposo, _mouthMeshes, false);
+    }
+    private string ResolverMalla(GameObject asignada, Dictionary<string, GameObject> mallas, bool ojos)
+    {
+        if (!(ojos ? _tieneOjos : _tieneBoca)) return null;
+        if (asignada != null) return asignada.name;
+        if (emotionProfile == null) return null;
+        foreach (var malla in mallas)
+            if (malla.Value != null && malla.Value.activeSelf &&
+                (ojos ? emotionProfile.EsOjoNeutro(malla.Key) : emotionProfile.EsBocaNeutra(malla.Key))) return malla.Key;
+        string defecto = ojos ? emotionProfile.ojosDeReposoPorDefecto : emotionProfile.bocaDeReposoPorDefecto;
+        return !string.IsNullOrEmpty(defecto) && mallas.ContainsKey(defecto) ? defecto : null;
+    }
     private void OnDialogueStarted(Transform npcInvolved)
     {
-        // Solo procesar si este NPC es el involucrado
-        if (npcInvolved != transform)
-            return;
-        
-        // Si ya estamos en diálogo, ignorar (evitar doble guardado)
-        if (_isInDialogue)
-            return;
-        
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueStarted - Guardando estado original");
-#endif
-            }
-        
-        _isInDialogue = true;
-        
-        // Guardar los meshes activos actualmente (ANTES de cualquier cambio de emoción)
-        SaveOriginalMeshes();
+        if (npcInvolved == transform) _isInDialogue = true;
     }
-    
-    /// <summary>
-    /// Callback cuando se cierra un diálogo.
-    /// </summary>
     private void OnDialogueClosed(Transform npcInvolved)
     {
-        // Restaurar si participamos en este diálogo (como NPC principal o como hablante secundario)
-        if (!_isInDialogue)
-            return;
-
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueClosed - Restaurando estado original");
-#endif
-            }
-
+        if (!_isInDialogue) return;
         _isInDialogue = false;
-
-        // Restaurar meshes originales
-        RestoreOriginalMeshes();
+        VolverAReposo();
     }
-    
-    /// <summary>
-    /// Callback cuando cambia la línea de diálogo.
-    /// </summary>
     private void OnDialogueLineChanged(DialogueLine line, Transform npcInvolved)
     {
-        bool isMainNpc = npcInvolved == transform;
-        string effectiveId = _npcManager?.DialogueCharacterId;
-        bool matchesById = !string.IsNullOrEmpty(effectiveId) && line.speakerNameId == effectiveId;
-        if (!isMainNpc && !matchesById)
-            return;
-        
-        // ✅ Si es la primera línea y aún no hemos guardado el estado original, hacerlo ahora
-        if (!_isInDialogue)
-        {
-            if (debugMode)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[NPCEmotionController:{name}] 📢 Primera línea detectada - Guardando estado original ANTES de aplicar emoción");
-#endif
-                }
-            
-            _isInDialogue = true;
-            SaveOriginalMeshes();
-        }
-        
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] 📢 OnDialogueLineChanged - Emoción: {line.emotion}");
-#endif
-            }
-
-        // La cara cambia si hay emoción explícita; None mantiene la expresión actual
-        // La animación corporal (Talk01/02/03, Angry, Cheer, etc.) la gestiona DialogueManager directamente
-        if (line.emotion != NPCEmotion.None)
-            SetEmotion(line.emotion);
+        string id = _npcManager?.DialogueCharacterId;
+        if (npcInvolved != transform && (string.IsNullOrEmpty(id) || line.speakerNameId != id)) return;
+        _isInDialogue = true;
+        if (line.emotion != NPCEmotion.None) Reaccionar(line.emotion);
     }
-    
-    #endregion
-    
-    #region Emotion Control
-    
-    /// <summary>
-    /// Establece la emoción del NPC, activando los meshes correspondientes.
-    /// </summary>
-    private bool _avisadoSinPerfil;
-
     public void SetEmotion(NPCEmotion emotion)
     {
+        if (emotion == NPCEmotion.None) return;
+        _finDeReaccion = float.PositiveInfinity;
+        if (emotion == NPCEmotion.Neutral) { VolverAReposo(); return; }
         if (emotionProfile == null)
         {
-            // Este aviso NO va detrás de debugMode (INC-316). Sin EmotionProfile este método no
-            // hace absolutamente nada, y como el fallo es silencioso el síntoma que se ve es
-            // "los personajes no cambian nunca de expresión, solo de animación" — que es
-            // exactamente lo que Raúl reportó tras la novena grabación, con 57 beats de cara
-            // puestos en la secuencia del prólogo y ni uno surtiendo efecto.
-            //
-            // Un método que no puede hacer su trabajo tiene que decirlo. Se avisa una vez por
-            // personaje, no una por llamada, para no inundar la consola.
+            // Avisa una vez si falta el perfil necesario para cambiar la expresión.
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             if (!_avisadoSinPerfil)
             {
                 _avisadoSinPerfil = true;
-                Debug.LogWarning($"[NPCEmotionController:{name}] No tiene EmotionProfile asignado, " +
-                    "así que NINGÚN cambio de expresión de este personaje va a verse. Se le asigna " +
-                    "en el Inspector, en el componente NPCEmotionController del prefab.", this);
+                Debug.LogWarning($"[NPCEmotionController:{name}] No tiene EmotionProfile asignado; no puede cambiar de expresión.", this);
             }
 #endif
             return;
         }
-        
-        // Antes: `if (_currentEmotion == emotion) return;`. Pero la cara puede haber cambiado por
-        // otro camino (RestoreOriginalMeshes al cerrar un diálogo, el prefab arrancando con su
-        // malla por defecto mientras _currentEmotion ya dice Neutral...) y entonces pedir otra vez
-        // la misma emoción NO la volvía a poner: la cara se quedaba en la de antes (INC-404).
-        // Encender una malla que ya está encendida no cuesta nada (ActivateMesh mira activeSelf).
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] 🎭 Cambiando emoción: {_currentEmotion} -> {emotion}");
-#endif
-            }
-        
         _currentEmotion = emotion;
-        
-        // Obtener datos de la emoción
-        var emotionData = emotionProfile.GetEmotionData(emotion);
-        
-        // Activar mesh de ojos correspondiente
-        ActivateMesh(_eyeMeshes, emotionData.eyeMeshName, "ojos");
-        
-        // Activar mesh de boca correspondiente
-        ActivateMesh(_mouthMeshes, emotionData.mouthMeshName, "boca");
+        var datos = emotionProfile.GetEmotionData(emotion);
+        AplicarCara(string.IsNullOrEmpty(datos.eyeMeshName) ? _ojosDeReposo : datos.eyeMeshName,
+            string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
     }
-    
-    /// <summary>
-    /// Activa un mesh específico y desactiva los demás del mismo tipo.
-    /// </summary>
-    private void ActivateMesh(Dictionary<string, GameObject> meshCache, string meshName, string meshType)
+    /// Sustituye los ojos sin cambiar boca, emoci?n ni pose.
+    public void AplicarOjos(string malla)
     {
-        if (string.IsNullOrEmpty(meshName))
+        if (!string.IsNullOrEmpty(malla)) ActivateMesh(_eyeMeshes, malla, "ojos", false);
+    }
+    public void Reaccionar(NPCEmotion emotion, float segundos = -1f)
+    {
+        if (emotion == NPCEmotion.None) return;
+        SetEmotion(emotion);
+        if (emotion != NPCEmotion.Neutral && emotionProfile != null)
+            _finDeReaccion = Time.unscaledTime + (segundos > 0f ? segundos : emotionProfile.segundosDeReaccion);
+    }
+    private object _propietarioDeFondo;
+    private NPCEmotion _caraDeFondo = NPCEmotion.None;
+    private bool _fondoSuave;
+    public void SetCaraDeFondo(object propietario, NPCEmotion emocion, bool suave = false, bool aplicarAhora = true)
+    {
+        _propietarioDeFondo = propietario;
+        _caraDeFondo = emocion;
+        _fondoSuave = suave;
+        if (aplicarAhora) VolverAReposo();
+    }
+    public void ClearCaraDeFondo(object propietario)
+    {
+        if (!ReferenceEquals(_propietarioDeFondo, propietario)) return;
+        _propietarioDeFondo = null;
+        _caraDeFondo = NPCEmotion.None;
+        VolverAReposo();
+    }
+    public void VolverAReposo()
+    {
+        _finDeReaccion = float.PositiveInfinity;
+        _currentEmotion = _caraDeFondo == NPCEmotion.None ? NPCEmotion.Neutral : _caraDeFondo;
+        if (_caraDeFondo != NPCEmotion.None && _caraDeFondo != NPCEmotion.Neutral && emotionProfile != null)
+        {
+            var datos = emotionProfile.GetEmotionData(_caraDeFondo);
+            AplicarCara(_fondoSuave || string.IsNullOrEmpty(datos.eyeMeshName) ? _ojosDeReposo : datos.eyeMeshName,
+                string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
+        }
+        else AplicarCara(_ojosDeReposo, _bocaDeReposo);
+    }
+    private void AplicarCara(string ojos, string boca)
+    {
+        _faseParpadeo = 0;
+        ProgramarParpadeo();
+        // Conserva la expresión real incluso cuando se sustituye temporalmente por ojos cerrados.
+        if (!string.IsNullOrEmpty(ojos) && _eyeMeshes.ContainsKey(ojos)) _ojosDeLaCara = ojos;
+        ActivateMesh(_eyeMeshes, ojos, "ojos", false);
+        _bocaDeLaCara = boca;
+        if (!_hablando) ActivateMesh(_mouthMeshes, boca, "boca", false);
+    }
+    private bool EsEsteHablante(Transform quien)
+        => quien != null && (quien == transform || transform.IsChildOf(quien) || quien.IsChildOf(transform));
+    private bool ExisteBoca(string nombre)
+        => !string.IsNullOrEmpty(nombre) && _mouthMeshes.TryGetValue(nombre, out var boca) && boca != null;
+    private bool TieneBocasDelHabla()
+        => emotionProfile != null && ExisteBoca(emotionProfile.bocaHablandoEntreabierta)
+            && ExisteBoca(emotionProfile.bocaHablandoAbierta);
+    private void EmpezarHabla(Transform quien, float segundos)
+    {
+        if (!EsEsteHablante(quien)) return;
+        if (!_controladorDeHablaResuelto)
+        {
+            // Compara las mallas cacheadas tras Awake para resolver el controlador del hablante.
+            _esControladorDeHabla = Game.NPC.Common.EmotionControllerResolver.Resolve(gameObject) == this;
+            _controladorDeHablaResuelto = true;
+        }
+        if (!_esControladorDeHabla) return;
+        if (!TieneBocasDelHabla())
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (!_avisadoSinBocasDelHabla && emotionProfile != null)
+            {
+                _avisadoSinBocasDelHabla = true;
+                string faltantes = "";
+                if (!ExisteBoca(emotionProfile.bocaHablandoEntreabierta))
+                    faltantes = string.IsNullOrEmpty(emotionProfile.bocaHablandoEntreabierta) ? "(entreabierta sin configurar)" : emotionProfile.bocaHablandoEntreabierta;
+                if (!ExisteBoca(emotionProfile.bocaHablandoAbierta))
+                    faltantes += (faltantes.Length > 0 ? ", " : "") + (string.IsNullOrEmpty(emotionProfile.bocaHablandoAbierta) ? "(abierta sin configurar)" : emotionProfile.bocaHablandoAbierta);
+                Debug.LogWarning($"[NPCEmotionController:{name}] Faltan mallas de hablar: {faltantes}. Usa El Sendero/Diálogos/Completar caras de todos los personajes.", this);
+            }
+#endif
             return;
-        
-        if (!meshCache.TryGetValue(meshName, out GameObject targetMesh))
+        }
+        if (!_tieneBoca) return;
+        if (!_hablando)
         {
-            if (debugMode)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[NPCEmotionController:{name}] ⚠️ Mesh de {meshType} '{meshName}' no encontrado");
-#endif
-                }
+            _bocaDuranteHabla = _bocaDeLaCara;
+            _haTenidoVoz = false;
+            AplicarBocaDelHabla(emotionProfile.bocaHablandoAbierta);
+        }
+        _hablando = true;
+        _finDelHabla = segundos > 0f ? Time.unscaledTime + segundos : float.PositiveInfinity;
+        var audio = AudioService.Instance;
+        float intervalo = audio != null && audio.HayVozSonando
+            ? emotionProfile.tiempoMinimoPorBocaConVoz : emotionProfile.segundosPorBoca;
+        _proximoCambioDeBoca = Time.unscaledTime + Mathf.Max(0.01f, intervalo);
+    }
+    private void AlPararHabla(Transform quien)
+    {
+        if (EsEsteHablante(quien)) PararHabla();
+    }
+    private void PararHabla()
+    {
+        if (!_hablando) return;
+        _hablando = false;
+        _haTenidoVoz = false;
+        AplicarBocaDelHabla(_bocaDeLaCara);
+    }
+    private void AplicarBocaDelHabla(string boca)
+    {
+        if (boca == _bocaDuranteHabla) return;
+        ActivateMesh(_mouthMeshes, boca, "boca", false);
+        _bocaDuranteHabla = boca;
+    }
+    private void ActivateMesh(Dictionary<string, GameObject> mallas, string nombre, string tipo, bool diagnostico = true)
+    {
+        if ((mallas == _eyeMeshes && !_tieneOjos) || (mallas == _mouthMeshes && !_tieneBoca)) return;
+        if (string.IsNullOrEmpty(nombre) || !mallas.TryGetValue(nombre, out var destino) || destino == null) return;
+        if (mallas == _eyeMeshes) _renderersDeOjos.TryGetValue(nombre, out _ojosVisibles);
+        foreach (var malla in mallas)
+        {
+            if (malla.Value == null) continue;
+            bool activa = malla.Key == nombre;
+            if (malla.Value.activeSelf != activa) malla.Value.SetActive(activa);
+        }
+    }
+    private static void AsegurarTick()
+    {
+        if (_duenoDelTick != null && _duenoDelTick.isActiveAndEnabled &&
+            _duenoDelTick.gameObject.activeInHierarchy && _tick != null) return;
+        if (_duenoDelTick != null && _tick != null) _duenoDelTick.StopCoroutine(_tick);
+        _duenoDelTick = null;
+        _tick = null;
+        foreach (var candidata in CarasActivas)
+        {
+            // Al desactivar una jerarquía, otros OnDisable pueden seguir pendientes.
+            if (candidata == null || !candidata.isActiveAndEnabled ||
+                !candidata.gameObject.activeInHierarchy) continue;
+            _duenoDelTick = candidata;
+            _tick = candidata.StartCoroutine(ActualizarCaras());
+            break;
+        }
+    }
+    private static IEnumerator ActualizarCaras()
+    {
+        while (true)
+        {
+            yield return null;
+            for (int i = CarasActivas.Count - 1; i >= 0; i--)
+            {
+                if (i >= CarasActivas.Count) continue;
+                var cara = CarasActivas[i];
+                if (cara == null || !cara.isActiveAndEnabled) continue;
+                cara.ActualizarParpadeo();
+                cara.ActualizarCara();
+            }
+        }
+    }
+    private void ProgramarParpadeo()
+    {
+        float minimo = Mathf.Max(0.1f, intervaloMinimoParpadeo);
+        _proximoParpadeo = Time.time + Random.Range(minimo, Mathf.Max(minimo, intervaloMaximoParpadeo));
+    }
+    private bool SeVenLosOjos()
+    {
+        if (_ojosVisibles == null) return false;
+        for (int i = 0; i < _ojosVisibles.Length; i++)
+        {
+            var renderer = _ojosVisibles[i];
+            if (renderer != null && renderer.enabled && renderer.gameObject.activeInHierarchy && renderer.isVisible) return true;
+        }
+        return false;
+    }
+    private bool CaraConOjosCerrados()
+    {
+        if (_ojosDeLaCara == ojosDelParpadeo) return true;
+        if (ojosYaCerrados == null) return false;
+        for (int i = 0; i < ojosYaCerrados.Length; i++)
+            if (_ojosDeLaCara == ojosYaCerrados[i]) return true;
+        return false;
+    }
+    private void ActualizarParpadeo()
+    {
+        if (Time.deltaTime <= 0f) return;
+        if (!parpadeoAutomatico || !_tieneOjos || CaraConOjosCerrados())
+        {
+            if (_faseParpadeo != 0) ActivateMesh(_eyeMeshes, _ojosDeLaCara, "ojos", false);
+            _faseParpadeo = 0;
             return;
         }
-        
-        // Desactivar todos los meshes de este tipo
-        foreach (var kvp in meshCache)
+        if (Time.time < _proximoParpadeo) return;
+        if (_faseParpadeo == 1 || _faseParpadeo == 3)
         {
-            if (kvp.Value == null) continue;
-            bool shouldBeActive = kvp.Key == meshName;
-            if (kvp.Value.activeSelf != shouldBeActive)
+            ActivateMesh(_eyeMeshes, _ojosDeLaCara, "ojos", false);
+            if (_faseParpadeo == 1 && _dobleParpadeo)
             {
-                kvp.Value.SetActive(shouldBeActive);
-
-                if (debugMode && shouldBeActive)
-                    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[NPCEmotionController:{name}] ✅ Activado {meshType}: {kvp.Key}");
-#endif
-                    }
+                _faseParpadeo = 2;
+                _proximoParpadeo = Time.time + 0.1f;
             }
+            else { _faseParpadeo = 0; ProgramarParpadeo(); }
+            return;
         }
+        if (!SeVenLosOjos() || string.IsNullOrEmpty(ojosDelParpadeo) ||
+            !_eyeMeshes.TryGetValue(ojosDelParpadeo, out var cerrados) || cerrados == null)
+        {
+            _faseParpadeo = 0;
+            ProgramarParpadeo();
+            return;
+        }
+        if (_faseParpadeo == 0) _dobleParpadeo = Random.value < probabilidadDobleParpadeo;
+        _faseParpadeo = _faseParpadeo == 2 ? 3 : 1;
+        ActivateMesh(_eyeMeshes, ojosDelParpadeo, "ojos", false);
+        _proximoParpadeo = Time.time + Mathf.Max(0.01f, duracionParpadeo);
     }
-    
-    /// <summary>
-    /// Guarda los meshes activos actualmente como estado original.
-    /// Si hay meshes originales configurados en el inspector, usa esos.
-    /// </summary>
-    private void SaveOriginalMeshes()
+    private void ActualizarCara()
     {
-        // Si hay mesh original de ojos configurado en inspector, usarlo
-        if (originalEyeMesh != null)
+        float ahora = Time.unscaledTime;
+        if (ahora >= _finDeReaccion) VolverAReposo();
+        if (!_hablando) return;
+        if (emotionProfile == null || !EsEsteHablante(SenalesDeHabla.HablanteActual)) { PararHabla(); return; }
+        var audio = AudioService.Instance;
+        bool hayVoz = audio != null && audio.HayVozSonando;
+        if (hayVoz)
         {
-            _originalEyeMeshName = originalEyeMesh.name;
-        }
-        else
-        {
-            // Si no, detectar cuál está activo actualmente
-            _originalEyeMeshName = null;
-            foreach (var kvp in _eyeMeshes)
+            _haTenidoVoz = true;
+            if (ahora < _proximoCambioDeBoca) return;
+            float nivel = audio.NivelDeVoz();
+            string boca = nivel < emotionProfile.umbralVozAbierta ? emotionProfile.bocaHablandoEntreabierta : emotionProfile.bocaHablandoAbierta;
+            if (boca != _bocaDuranteHabla)
             {
-                if (kvp.Value.activeSelf)
-                {
-                    _originalEyeMeshName = kvp.Key;
-                    break;
-                }
+                AplicarBocaDelHabla(boca);
+                _proximoCambioDeBoca = ahora + Mathf.Max(0.01f, emotionProfile.tiempoMinimoPorBocaConVoz);
             }
+            return;
         }
-        
-        // Si hay mesh original de boca configurado en inspector, usarlo
-        if (originalMouthMesh != null)
-        {
-            _originalMouthMeshName = originalMouthMesh.name;
-        }
-        else
-        {
-            // Si no, detectar cuál está activo actualmente
-            _originalMouthMeshName = null;
-            foreach (var kvp in _mouthMeshes)
-            {
-                if (kvp.Value.activeSelf)
-                {
-                    _originalMouthMeshName = kvp.Key;
-                    break;
-                }
-            }
-        }
-        
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] 💾 Estado original guardado - Ojos: {_originalEyeMeshName ?? "ninguno"}, Boca: {_originalMouthMeshName ?? "ninguno"}");
-#endif
-            }
+        if (_haTenidoVoz || ahora >= _finDelHabla) { PararHabla(); return; }
+        if (ahora < _proximoCambioDeBoca) return;
+        AplicarBocaDelHabla(_bocaDuranteHabla == emotionProfile.bocaHablandoAbierta
+            ? emotionProfile.bocaHablandoEntreabierta : emotionProfile.bocaHablandoAbierta);
+        _proximoCambioDeBoca = ahora + Mathf.Max(0.01f, emotionProfile.segundosPorBoca);
     }
-    
-    /// <summary>
-    /// Restaura los meshes originales.
-    /// </summary>
-    private void RestoreOriginalMeshes()
-    {
-        if (!string.IsNullOrEmpty(_originalEyeMeshName))
-        {
-            ActivateMesh(_eyeMeshes, _originalEyeMeshName, "ojos");
-        }
-        
-        if (!string.IsNullOrEmpty(_originalMouthMeshName))
-        {
-            ActivateMesh(_mouthMeshes, _originalMouthMeshName, "boca");
-        }
-        
-        _currentEmotion = NPCEmotion.Neutral;
-        
-        if (debugMode)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NPCEmotionController:{name}] ↩️ Estado original restaurado");
-#endif
-            }
-    }
-    
-    #endregion
-    
-    #region Public API
-    
-    /// <summary>
-    /// Expone el perfil de emociones para que otros componentes (NPCSimpleAnimator) puedan leerlo.
-    /// </summary>
     public EmotionProfile EmotionProfile => emotionProfile;
-
-    /// <summary>
-    /// Obtiene la emoción actual del NPC.
-    /// </summary>
     public NPCEmotion CurrentEmotion => _currentEmotion;
-    
-    /// <summary>
-    /// Indica si el NPC está actualmente en un diálogo.
-    /// </summary>
     public bool IsInDialogue => _isInDialogue;
-    
-    /// <summary>
-    /// Fuerza el reset de la expresión facial a la original.
-    /// </summary>
-    public void ForceReset()
-    {
-        RestoreOriginalMeshes();
-    }
-    
-    /// <summary>
-    /// Establece el perfil de emociones en runtime.
-    /// </summary>
+    public int EyeMeshCount => _eyeMeshes.Count;
+    public int MouthMeshCount => _mouthMeshes.Count;
+    public void ForceReset() => VolverAReposo();
     public void SetEmotionProfile(EmotionProfile profile)
     {
         emotionProfile = profile;
+        ResolverReposo();
+        VolverAReposo();
+        if (_hablando && !TieneBocasDelHabla()) PararHabla();
     }
-    
-    /// <summary>
-    /// Obtiene la cantidad de meshes de ojos encontrados.
-    /// </summary>
-    public int EyeMeshCount => _eyeMeshes.Count;
-    
-    /// <summary>
-    /// Obtiene la cantidad de meshes de boca encontrados.
-    /// </summary>
-    public int MouthMeshCount => _mouthMeshes.Count;
-    
-    #endregion
 }

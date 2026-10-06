@@ -1,0 +1,6 @@
+Reacciones vocales (risas, quejidos, suspiros...) del capitulo 1.
+- Carpetas por personaje: {tipo}_{nn}.mp3 (ya normalizadas, ~-17 LUFS, recorte de silencios; las de Will con tono -2 semitonos).
+- Las copias que usa Unity estan en Assets/Resources/Voices/reactions/{Personaje}/ (mismos nombres).
+- Originales sin procesar: _sin_normalizar/{Personaje}/.
+- Textos y voces usadas: ../../registro_reacciones.csv
+- Tipos: hurt, death (usados ya por PlayerHealthSystem), effort, laugh, gasp, sigh, hmm, cheer.

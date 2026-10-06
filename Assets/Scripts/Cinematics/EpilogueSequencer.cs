@@ -99,7 +99,7 @@ public class EpilogueSequencer : CinematicSequencerBase
     private IEnumerator Co_PhaseB_EstelaExplains()
     {
         _cinematicCamera?.Cut(_shotEstelaExplains);
-        yield return ShowBubblePaged(_estelaActor, Loc(_estelaExplainsTextKey), _explainsHoldDuration,
+        yield return ShowBubbleLocalized(_estelaActor, _estelaExplainsTextKey, _explainsHoldDuration,
             animTrigger: "Talk03", loopAnim: true, speakerName: "Estela");
     }
 
@@ -114,7 +114,7 @@ public class EpilogueSequencer : CinematicSequencerBase
 
     private IEnumerator Co_PhaseD_Farewell()
     {
-        yield return ShowBubblePaged(_willActor, Loc(_willFarewellTextKey), _farewellHoldDuration,
+        yield return ShowBubbleLocalized(_willActor, _willFarewellTextKey, _farewellHoldDuration,
             animTrigger: "HandWave02", speakerName: "Will");
     }
 

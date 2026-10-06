@@ -98,6 +98,10 @@ public class StarAwakeningModule : SequenceModule
              "la explosión. Es una red de seguridad: sin ella, un proyectil que falla el blanco " +
              "deja la secuencia colgada y con ella el input del jugador.")]
     [SerializeField] private float collisionWaitUnscaled = 3f;
+    [Tooltip("Marca del escenario (o PUNTO del guion) donde chocan la bola de fuego y el proyectil.")]
+    [SerializeField] private string clashMarkName = "choque";
+    [Tooltip("Lo que tardan las dos bolas en encontrarse, en segundos reales.")]
+    [SerializeField] private float clashTravelUnscaled = 0.7f;
 
     [Header("Panic input")]
     [SerializeField] private PanicInputDetector panicInputDetector;
@@ -193,7 +197,12 @@ public class StarAwakeningModule : SequenceModule
         _projectile.SetAimHeight(flightHeight);
 
         Vector3 target = will.Transform.position + Vector3.up * flightHeight;
-        Vector3 origin = projectileSpawnPoint != null
+        // Con guion horneado (INC-598) la salida es un punto del guion, «bola_salida»: así las
+        // cámaras, que se calculan en el Editor, saben por dónde viene la bola.
+        Transform marcaSalida = ctx.Stage != null ? ctx.Stage.GetMark("bola_salida") : null;
+        Vector3 origin = marcaSalida != null
+            ? new Vector3(marcaSalida.position.x, will.Transform.position.y + flightHeight, marcaSalida.position.z)
+            : projectileSpawnPoint != null
             ? projectileSpawnPoint.position
             : BuscarSalidaDespejada(will.Transform, target, flightHeight, _projectile.Radius);
 
@@ -473,7 +482,9 @@ public class StarAwakeningModule : SequenceModule
 
         AudioService.Instance?.PlaySFX("Star_SpellCast", 1f, willT.position);
 
-        if (castAnimDelay > 0f) yield return new WaitForSeconds(castAnimDelay);
+        // En tiempo real: el guion pone la cámara lenta justo aquí y con WaitForSeconds el gesto
+        // tardaba cinco veces más de lo previsto (INC-602).
+        if (castAnimDelay > 0f) yield return new WaitForSecondsRealtime(castAnimDelay);
         else yield return null;
 
         // El spawner recibe un Transform, no una posicion, asi que para poder subir el punto de
@@ -501,27 +512,60 @@ public class StarAwakeningModule : SequenceModule
             rb.linearVelocity = castDir * speed;
         }
 
-        // Espera a que choquen, con tope de tiempo: un proyectil que falla el blanco no puede
-        // dejar la secuencia — y con ella el input del jugador — colgada para siempre.
-        float elapsed = 0f;
-        while (elapsed < collisionWaitUnscaled && !_collisionTriggered)
+        // El choque, siempre (INC-602). Si el guion ha puesto la marca «choque», las dos bolas se
+        // encuentran ahí; si no, a medio camino. Se llevan a mano y en tiempo real: con la cámara
+        // lenta del guion la bola de fuego tardaba tanto que saltaba el tope de espera, explotaba
+        // junto a Will y el proyectil seguía de largo.
+        if (fireball != null && _projectile != null)
         {
-            if (fireball != null && _projectile != null)
-            {
-                float dist = Vector3.Distance(fireball.transform.position, _projectile.transform.position);
-                if (dist < 1.5f)
-                {
-                    EnsureCollisionPoint().position =
-                        (fireball.transform.position + _projectile.transform.position) * 0.5f;
-                    TriggerExplosion();
-                    break;
-                }
-            }
-            elapsed += Time.unscaledDeltaTime;
-            yield return null;
-        }
+            Vector3 desde = fireball.transform.position;
+            Vector3 proyectilDesde = _projectile.transform.position;
+            float alto = willT.position.y + _flightHeight;
+            Vector3 encuentro = (desde + proyectilDesde) * 0.5f;
+            Transform marca = ctx.Stage != null ? ctx.Stage.BuscarMarca(clashMarkName) : null;
+            if (marca != null) encuentro = new Vector3(marca.position.x, alto, marca.position.z);
+            // Si el proyectil ya está más cerca de Will que la marca, el choque es donde está él.
+            if (Plano(proyectilDesde - willT.position).sqrMagnitude < Plano(encuentro - willT.position).sqrMagnitude)
+                encuentro = proyectilDesde;
 
-        if (!_collisionTriggered) TriggerExplosion();
+            _projectile.Pause();
+            if (fireball.TryGetComponent(out MagicProjectile mp)) mp.enabled = false;
+            foreach (var col in fireball.GetComponentsInChildren<Collider>()) col.enabled = false;
+            if (fireball.TryGetComponent(out Rigidbody rbf))
+            {
+                rbf.linearVelocity = Vector3.zero;
+                rbf.isKinematic = true;
+                rbf.interpolation = RigidbodyInterpolation.None;
+            }
+
+            float dura = Mathf.Max(0.1f, clashTravelUnscaled);
+            for (float tt = 0f; tt < dura; tt += Time.unscaledDeltaTime)
+            {
+                if (fireball == null || _projectile == null) break;
+                float k = tt / dura;
+                fireball.transform.position = Vector3.Lerp(desde, encuentro, 1f - (1f - k) * (1f - k));
+                _projectile.transform.position = Vector3.Lerp(proyectilDesde, encuentro, k);
+                yield return null;
+            }
+            EnsureCollisionPoint().position = encuentro;
+            TriggerExplosion();
+        }
+        else
+        {
+            // Sin bola de fuego (no hay spawner) o sin proyectil: espera corta y explosión igual,
+            // para que la secuencia nunca se quede colgada.
+            float elapsed = 0f;
+            while (elapsed < collisionWaitUnscaled && !_collisionTriggered)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                yield return null;
+            }
+            if (!_collisionTriggered)
+            {
+                if (_projectile != null) EnsureCollisionPoint().position = _projectile.transform.position;
+                TriggerExplosion();
+            }
+        }
 
         if (fireball != null) Destroy(fireball);
         _pendingFireball = null;
@@ -659,6 +703,8 @@ public class StarAwakeningModule : SequenceModule
         }
         return _castOrigin;
     }
+
+    private static Vector3 Plano(Vector3 v) { v.y = 0f; return v; }
 
     private Transform EnsureCollisionPoint()
     {

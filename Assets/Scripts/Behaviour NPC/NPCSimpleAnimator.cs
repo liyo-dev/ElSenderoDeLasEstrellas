@@ -73,6 +73,10 @@ public class NPCSimpleAnimator : MonoBehaviour
     [SerializeField, Range(3f, 60f)] private float minIdleVariationInterval = 8f;
     [Tooltip("Tiempo máximo en segundos entre variaciones")]
     [SerializeField, Range(5f, 120f)] private float maxIdleVariationInterval = 20f;
+    [Tooltip("Variación individual de velocidad solo en los estados idle preparados por el menú de animación.")]
+    [SerializeField, Range(0f, 0.05f)] private float variacionVelocidadIdle = 0.05f;
+    private static readonly int VariacionIdleHash = Animator.StringToHash("VariacionIdle");
+    private int _ultimaVariacionIdle = -1;
     
     [Header("Combat Animations")]
     [SerializeField] private string challengingState = "Challenging_NoWeapon";
@@ -318,6 +322,8 @@ public class NPCSimpleAnimator : MonoBehaviour
             var animParams = animator.parameters;
             for (int i = 0; i < animParams.Length; i++)
                 _animatorParamHashes.Add(animParams[i].nameHash);
+            if (_animatorParamHashes.Contains(VariacionIdleHash))
+                animator.SetFloat(VariacionIdleHash, UnityEngine.Random.Range(1f - variacionVelocidadIdle, 1f + variacionVelocidadIdle));
         }
         
         // ✅ FIX CRÍTICO: Configurar NavMeshAgent para control de rotación correcto
@@ -361,6 +367,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         DialogueManager.OnDialogueClosed += OnDialogueClosed;
     }
     
+    void OnDisable()
+    {
+        PararLaPose();
+    }
+
     void OnDestroy()
     {
         // ✅ Desuscribirse de eventos del DialogueManager
@@ -643,7 +654,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// <summary>
     /// Reproduce una animación one-shot (ataque, habilidad, etc.)
     /// </summary>
-    public void PlayOneShot(string stateName, int layer = 0, Action onComplete = null)
+    public void PlayOneShot(string stateName, int layer = 0, Action onComplete = null, float fundido = 0.08f)
     {
         if (string.IsNullOrEmpty(stateName))
             return;
@@ -657,7 +668,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Y cualquier pose sostenida: un gesto nuevo manda sobre la pose que hubiera.
         PararLaPose();
         
-        _oneShotCoroutine = StartCoroutine(PlayOneShotCoroutine(stateName, layer, onComplete));
+        _oneShotCoroutine = StartCoroutine(PlayOneShotCoroutine(stateName, layer, onComplete, fundido));
     }
 
     // ── Poses sostenidas ──────────────────────────────────────────────────────────────────────
@@ -681,6 +692,7 @@ public class NPCSimpleAnimator : MonoBehaviour
     // justo lo que se quiere.
     private Coroutine _poseCoroutine;
     private string _poseSostenida;
+    private bool _congelarPoseAlFinal;
 
     /// ¿Hay ahora mismo una pose sostenida? Lo pregunta quien podría pisarla sin querer — el
     /// relanzador de gestos de hablar de SayBeat, sin ir más lejos.
@@ -688,12 +700,17 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     /// Mantiene una pose hasta que alguien diga lo contrario. Idempotente: pedir la pose que ya
     /// está puesta no la reinicia.
-    public void HoldPose(string stateName, int layer = -1)
+    public void HoldPose(string stateName, int layer = -1, bool congelarAlFinal = false)
     {
-        if (string.IsNullOrEmpty(stateName) || animator == null || _currentState == AnimationState.Dead)
+        if (string.IsNullOrEmpty(stateName) || animator == null || _currentState == AnimationState.Dead ||
+            !isActiveAndEnabled || !gameObject.activeInHierarchy)
             return;
 
-        if (_poseSostenida == stateName && _poseCoroutine != null) return;
+        if (_poseSostenida == stateName && _poseCoroutine != null)
+        {
+            _congelarPoseAlFinal = congelarAlFinal;
+            return;
+        }
 
         if (layer < 0) layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
         if (layer < 0)
@@ -709,6 +726,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         PararLaPose();
 
         _poseSostenida = stateName;
+        _congelarPoseAlFinal = congelarAlFinal;
         _poseCoroutine = StartCoroutine(SostenerPose(stateName, layer));
     }
 
@@ -751,14 +769,29 @@ public class NPCSimpleAnimator : MonoBehaviour
 
             // Solo se recruza si se ha salido de verdad. Mientras esté en la pose —o entrando en
             // ella— no se toca, que es lo que evita el reinicio del clip.
+            var actual = animator.GetCurrentAnimatorStateInfo(layer);
+            var siguiente = animator.IsInTransition(layer) ? animator.GetNextAnimatorStateInfo(layer) : actual;
+            // Cancela la salida del estado sin detener las otras capas del animador.
+            if (actual.IsName(stateName) && animator.IsInTransition(layer) && !siguiente.IsName(stateName))
+            {
+                if (actual.loop || _congelarPoseAlFinal)
+                    animator.Play(Animator.StringToHash(stateName), layer,
+                        actual.loop ? Mathf.Repeat(actual.normalizedTime, 1f) : Mathf.Min(actual.normalizedTime, 1f));
+                continue;
+            }
+            if (actual.IsName(stateName))
+            {
+                if (_congelarPoseAlFinal && !actual.loop && actual.normalizedTime >= 1f)
+                    animator.Play(Animator.StringToHash(stateName), layer, 1f);
+                continue;
+            }
             if (animator.IsInTransition(layer)) continue;
-            if (animator.GetCurrentAnimatorStateInfo(layer).IsName(stateName)) continue;
 
             CrossFadeToState(stateName, 0.12f, layer);
         }
     }
     
-    private IEnumerator PlayOneShotCoroutine(string stateName, int layer, Action onComplete)
+    private IEnumerator PlayOneShotCoroutine(string stateName, int layer, Action onComplete, float fundido)
     {
         _currentState = AnimationState.OneShot;
         
@@ -773,7 +806,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
         
         // Play animation
-        CrossFadeToState(stateName, 0.08f, layer);
+        CrossFadeToState(stateName, fundido, layer);
         
         yield return null; // Wait one frame for transition to start
         
@@ -1697,7 +1730,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     public void SetFaceEmotion(NPCEmotion emotion)
     {
         if (emotion == NPCEmotion.None) return;
-        ResolvedEmotionController?.SetEmotion(emotion);
+        var controlador = ResolvedEmotionController;
+        if (controlador != null) controlador.Reaccionar(emotion);
     }
 
     public void PlayBodyEmotion(NPCEmotion emotion)
@@ -1705,9 +1739,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (_currentState == AnimationState.Dead)
             return;
 
-        // La cara se cambia SIEMPRE, incluso si el personaje no está en modo interacción o si esta
-        // emoción no tiene animación corporal asignada: son dos cosas independientes y hasta hoy la
-        // segunda se comía a la primera.
+        // La cara reacciona con independencia de la animación corporal.
         SetFaceEmotion(emotion);
 
         if (!_isInteracting)
@@ -1720,11 +1752,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Los gestos corporales de diálogo (Talk01-03, Angry01-02, Cry01, Laugh01, Beg01, etc.)
         // viven en UpperBody layer para no congelar las piernas del NPC mientras gesticula.
         //
-        // FIX (17 sep 2026): antes se forzaba upperBodyLayer a pelo. Un estado que NO está en esa
-        // capa —y hay unos cuantos en NPC_NoWeapon: Idle02, Pain01, Victory_NoWeapon, Fidget…—
-        // no se reproducía y no avisaba de nada: el NPC se quedaba con la cara puesta y el cuerpo
-        // quieto, y desde fuera parecía que el mapeo de la emoción no servía. Ahora se resuelve la
-        // capa de verdad (preferimos UpperBody; si el estado solo existe en Base Layer, se usa esa).
+        // Prefiere UpperBody y usa Base Layer si el estado solo existe allí.
         int layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
         if (layer < 0)
         {
@@ -1736,11 +1764,8 @@ public class NPCSimpleAnimator : MonoBehaviour
             return;
         }
 
-        PlayOneShot(stateName, layer, () =>
-        {
-            if (_isInteracting && _currentState != AnimationState.Dead)
-                CrossFadeToState(interactState, 0.15f);
-        });
+        // La corrutina devuelve a conversación al terminar; evita iniciar dos fundidos al mismo estado.
+        PlayOneShot(stateName, layer, fundido: 0.18f);
     }
 
     /// <summary>
@@ -1810,7 +1835,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
 #endif
 
-        PlayOneShot(stateName, resolvedLayer >= 0 ? resolvedLayer : 0, onComplete);
+        PlayOneShot(stateName, resolvedLayer >= 0 ? resolvedLayer : 0, onComplete, 0.18f);
     }
 
     /// <summary>
@@ -2166,6 +2191,20 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// Verifica si está reproduciendo una animación
     /// </summary>
     public bool IsPlayingAnimation() => _oneShotCoroutine != null;
+
+    /// Corta el gesto o la pose que esté en marcha para que el NPC pueda echar a andar (INC-602).
+    ///
+    /// Durante un gesto el estado es OneShot y SetMovementSpeed no pasa a locomoción: el
+    /// personaje se desliza por el suelo con el gesto puesto. En el despertar, Eldran huía
+    /// encogido en Fear01 (con la cámara lenta del guion el gesto dura cinco veces más), y eso
+    /// parecía «la animación de miedo con el cuello roto».
+    public void CortarGestoParaAndar()
+    {
+        if (_currentState == AnimationState.Dead) return;
+        if (_oneShotCoroutine != null) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
+        _currentState = AnimationState.Idle;
+        TransitionToIdle();
+    }
     
     #endregion
     
@@ -2217,16 +2256,16 @@ public class NPCSimpleAnimator : MonoBehaviour
             if (idleVariationStates.Length == 0)
                 continue;
 
-            string variation = idleVariationStates[UnityEngine.Random.Range(0, idleVariationStates.Length)];
+            int cantidad = idleVariationStates.Length;
+            int indice = UnityEngine.Random.Range(0, cantidad > 1 && _ultimaVariacionIdle >= 0 ? cantidad - 1 : cantidad);
+            if (cantidad > 1 && _ultimaVariacionIdle >= 0 && indice >= _ultimaVariacionIdle) indice++;
+            _ultimaVariacionIdle = indice;
+            string variation = idleVariationStates[indice];
 
             if (string.IsNullOrEmpty(variation) || animator == null || !animator.HasState(0, Animator.StringToHash(variation)))
                 continue;
 
-            PlayOneShot(variation, 0, () =>
-            {
-                if (_currentState != AnimationState.Dead && !_isInBattle && !_isInteracting)
-                    CrossFadeToState(idleNormalState, 0.2f);
-            });
+            PlayOneShot(variation, 0, fundido: 0.2f);
         }
     }
 

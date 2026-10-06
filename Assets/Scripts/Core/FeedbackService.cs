@@ -149,6 +149,10 @@
             if (root?.Image != null) root.Image.color = color;
         }
 
+        /// Color actual del lienzo de fundido, sin crear un lienzo si no existe.
+        public static Color ColorDelFundido => _fadeRoot?.Image != null
+            ? _fadeRoot.Image.color : Color.clear;
+
         /// Devuelve true si el overlay de fade está actualmente a opacidad completa (pantalla cubierta).
         public static bool IsScreenFaded
         {

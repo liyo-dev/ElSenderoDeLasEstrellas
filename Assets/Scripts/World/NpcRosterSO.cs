@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,6 +40,9 @@ public class NpcRosterSO : ScriptableObject
         [Tooltip("Id narrativo con el que se registra en NPCRegistry (lo que buscan el grafo y " +
                  "las secuencias). Si se deja vacío, se respeta el que traiga el prefab.")]
         public string persistenceId;
+
+        [Tooltip("Carpeta de voz para vecinos genéricos: Vecino o Vecina según el modelo.")]
+        public string vozDeReacciones = "Vecino";
 
         [Tooltip("Estado activo con el que aparece. Se captura del objeto que había en la escena: " +
                  "un NPC que estaba desactivado (porque aparece más adelante en la historia) debe " +

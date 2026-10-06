@@ -64,6 +64,7 @@ public class MagicProjectile : MonoBehaviour
     float        _zoneDamageMultiplier = 1f;
     readonly System.Collections.Generic.HashSet<Transform> _alreadyHit = new System.Collections.Generic.HashSet<Transform>();
     static readonly Collider[] s_bounceBuffer = new Collider[24];
+    static readonly int s_bounceMask = LayerMask.GetMask("Enemy", "Boss");
 
     Vector3 _spawnPos;
     float   _spawnTime;
@@ -258,7 +259,7 @@ public class MagicProjectile : MonoBehaviour
 
     Transform FindNextBounceTarget(Vector3 from)
     {
-        int mask = LayerMask.GetMask("Enemy", "Boss");
+        int mask = s_bounceMask;
         int n = Physics.OverlapSphereNonAlloc(from, _bounceRange, s_bounceBuffer, mask, QueryTriggerInteraction.Collide);
         Transform best = null;
         float bestSqr = float.MaxValue;

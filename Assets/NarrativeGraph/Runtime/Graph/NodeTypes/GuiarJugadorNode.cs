@@ -19,7 +19,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
 {
     [NarrativeKey(NarrativeKeyKind.Actor)]
     [Tooltip("persistenceId del NPC que guía (p. ej. NPC_Eldran).")]
-    public string npcId = "NPC_Eldran";
+    public string npcId = "";
 
     [NarrativeKey(NarrativeKeyKind.Anchor)]
     [Tooltip("anchorId del SpawnAnchor al que lleva al jugador.")]
@@ -31,7 +31,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
 
     [NarrativeKey(NarrativeKeyKind.LocKey)]
     [Tooltip("Lo que dice el NPC, en bocadillo, cuando vuelve a por el jugador. Vacío = no dice nada.")]
-    public string llamadaKey = "EVT_ELDRAN_GUIA_LLAMADA";
+    public string llamadaKey = "";
 
     [Min(0.5f)]
     [Tooltip("Segundos que dura el bocadillo de la llamada.")]
@@ -405,7 +405,8 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
             : llamadaKey;
 
         bool terminado = false;
-        ui.Show(npc.transform, texto, duracionLlamada, () => terminado = true);
+        float voz = VoiceLines.TryPlay(llamadaKey);
+        ui.Show(npc.transform, texto, Mathf.Max(duracionLlamada, voz > 0f ? voz + 0.3f : 0f), () => terminado = true);
         while (!terminado) yield return null;
     }
 }

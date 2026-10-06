@@ -35,6 +35,8 @@ public sealed class GuiaDeCombate : MonoBehaviour
     private Coroutine _introCoroutine;
     private float     _hablandoHasta;
     private bool      _rotacionTomada;
+    private int       _turnoBocadillo;
+    private AudioClip _vozActual;
 
     private int[] _dichas;
     private readonly Dictionary<MomentoDeCombate, float> _ultimoMomento = new();
@@ -110,7 +112,21 @@ public sealed class GuiaDeCombate : MonoBehaviour
         DesvincularJefe();
         if (_saludJugador != null) { _saludJugador.OnDamageReceived -= AlHerirAlJugador; _saludJugador = null; }
         SoltarRotacion();
+        Callar();
         _activo = false;
+    }
+
+    // Al pararse (victoria, derrota, salir de la arena) quita su bocadillo y su voz al momento:
+    // la indicación ya no vale y no puede quedarse encima del informe de victoria. Solo el suyo:
+    // si otro sistema ha puesto un bocadillo después, no se toca. Ver INC-614.
+    private void Callar()
+    {
+        if (_turnoBocadillo != 0) SpeechBubbleUI.Instance?.Hide(_turnoBocadillo);
+        _turnoBocadillo = 0;
+        var audio = AudioService.Instance;
+        if (_vozActual != null && audio != null && audio.IsVoicePlaying(_vozActual)) audio.StopVoice();
+        _vozActual = null;
+        _hablandoHasta = 0f;
     }
 
     /// Lo llama quien presenta al jefe al terminar la presentación. Si llega dos veces, no repite.
@@ -373,13 +389,20 @@ public sealed class GuiaDeCombate : MonoBehaviour
 
         var bocadillo = SpeechBubbleUI.Instance;
         if (bocadillo != null) duracion = Mathf.Max(duracion, bocadillo.TiempoDeLectura(text));
+        float voz = bocadillo != null ? VoiceLines.TryPlay(c.key) : 0f;
+        _vozActual = null;
+        if (voz > 0f)
+        {
+            duracion = Mathf.Max(duracion, voz + 0.3f);
+            VoiceLines.TryGet(c.key, out _vozActual);
+        }
         _hablandoHasta = Time.time + duracion + _guion.pausaEntreFrases;
 
         if (bocadillo == null) return;
         // Fijo a un lado de la pantalla: quien guía cambia de sitio en pantalla cada vez que el
         // jugador se mueve, y un bocadillo que le persigue no se puede leer mientras se juega (INC-480).
-        bocadillo.Show(_hablante != null ? _hablante : transform, text, duration: duracion,
-                       speakerName: _guion.nombreHablante, fijoEnPantalla: true);
+        _turnoBocadillo = bocadillo.Show(_hablante != null ? _hablante : transform, text, duration: duracion,
+                                         speakerName: _guion.nombreHablante, fijoEnPantalla: true);
     }
 
     // LateUpdate con DefaultExecutionOrder(100) corre después de NPCSimpleAnimator y gana la rotación.

@@ -84,6 +84,10 @@ public class ShotBeat : SequenceBeat
         // Camino A: plano colocado a mano. Se comporta igual que siempre.
         if (!string.IsNullOrWhiteSpace(shotName))
         {
+            player.NotifyCurrentShot(null, shotName);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            InformeDeRodaje.PlanoNuevo($"'{shotName}' (colocado a mano)", null, null);
+#endif
             var shot = ctx.Stage != null ? ctx.Stage.GetShot(shotName) : null;
             if (shot == null) yield break; // el aviso ya lo ha dado el stage
 
@@ -151,6 +155,12 @@ public class ShotBeat : SequenceBeat
         else if (porEncima.HasValue)
             Debug.Log($"[ShotBeat] La recta hasta '{framing.Describe()}' chocaba: se entra desde " +
                       $"arriba, pasando por {porEncima.Value.ToString("F1")}.");
+#endif
+
+        // Los figurantes que estorban se retiran solo en un corte: durante un movimiento se les
+        // vería desaparecer (INC-582).
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.PlanoNuevo(framing.Describe() + (live ? " [vivo]" : ""), framing, null);
 #endif
 
         if (viaja)
@@ -281,23 +291,6 @@ public class ShotBeat : SequenceBeat
     }
 }
 
-/// Deja de seguir a un sujeto en movimiento, congelando la cámara donde esté.
-///
-/// Normalmente no hace falta: el siguiente beat de cámara ya corta el seguimiento, y el final de
-/// la secuencia también. Existe para cuando se quiere que la cámara se quede quieta un rato y lo
-/// siguiente que pase no sea un plano.
-[Serializable]
-public class StopTrackingBeat : SequenceBeat
-{
-    public override string Describe() => "Cámara: dejar de seguir";
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        ctx?.Player?.StopShotTracking();
-        yield break;
-    }
-}
-
 /// Olvida el lado del eje de acción elegido, para que el próximo plano vuelva a decidirlo.
 ///
 /// La regla de los 180 grados dice que todos los planos de una escena se ruedan del mismo lado de
@@ -331,18 +324,6 @@ public class SetActionAxisBeat : SequenceBeat
     {
         float rad = sideDegrees * Mathf.Deg2Rad;
         ctx?.SetActionSide(new Vector3(Mathf.Sin(rad), 0f, Mathf.Cos(rad)));
-        yield break;
-    }
-}
-
-[Serializable]
-public class ResetActionAxisBeat : SequenceBeat
-{
-    public override string Describe() => "Cámara: reiniciar el eje de acción";
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        ctx?.ResetActionAxis();
         yield break;
     }
 }

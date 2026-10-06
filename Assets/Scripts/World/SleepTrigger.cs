@@ -35,7 +35,7 @@ public class SleepTrigger : MonoBehaviour
     [Header("Narrativa")]
     [Tooltip("Si true, Will empieza dormido en esta cama al arrancar la escena sin necesidad de entrar al trigger.")]
     public bool sleepOnStart = false;
-    [Tooltip("Evento que se dispara al despertar. Compatible con WaitCustomEventNode.")]
+    [Tooltip("Señal que se emite cuando el jugador ya está de pie y la pantalla destapada. Compatible con WaitCustomEventNode.")]
     [NarrativeKey(NarrativeKeyKind.Signal, Rol = SignalRole.Emite)]
     public string wakeNarrativeEvent = "";
 
@@ -69,6 +69,8 @@ public class SleepTrigger : MonoBehaviour
     void OnDisable()
     {
         GamepadInputReader.OnInput -= HandleGamepadInput;
+        AvisarDeQueEstaDePie();
+        MostrarHudAlLevantarse();
     }
 
     void Start()
@@ -101,11 +103,10 @@ public class SleepTrigger : MonoBehaviour
         // ganara la cámara ni un solo frame. Cede el control mientras alguien la tenga reclamada;
         // en cuanto se libera (fin de la cinemática, con su margen de gracia), este trigger retoma
         // el plano cenital como antes.
-        // Si mientras dormía ha pasado una secuencia (el sueño del prólogo), al acabar es cuando
-        // se despierta de verdad: ahí empieza la tormenta que todavía se oye.
+        // Tras la secuencia, el HUD permanece oculto mientras el jugador sigue en la cama.
         bool hayCinematica = CameraDirectorService.HasOwner || CinematicSequencerBase.AnySequenceActive;
         if (hayCinematica) _vioUnaSecuencia = true;
-        else if (_vioUnaSecuencia && sleepOnStart) EmpezarTormentaSiToca();
+        else if (_vioUnaSecuencia && sleepOnStart) OcultarHudAlDespertarSiToca();
 
         if (sleepCameraAnchor != null && _mainCamera != null && _cameraCoroutine == null
             && !CameraDirectorService.HasOwner)
@@ -337,7 +338,6 @@ public class SleepTrigger : MonoBehaviour
     {
         if (!isSleeping) return;
         isSleeping = false;
-        TerminarTormenta();
 
         // Forzar ángulo de cámara antes de re-habilitarla (evita que aparezca detrás de la pared)
         if (wakeUpCameraAnchor != null && _tpsCamera != null)
@@ -375,9 +375,6 @@ public class SleepTrigger : MonoBehaviour
 
         TutorialPromptUI.Instance?.Hide();
 
-        if (!string.IsNullOrEmpty(wakeNarrativeEvent))
-            DefaultNarrativeSignals.Instance?.RaiseCustom(wakeNarrativeEvent, name);
-
         if (playOnlyOnce)
             MarkAsPlayed();
     }
@@ -408,6 +405,8 @@ public class SleepTrigger : MonoBehaviour
         // activa (p. ej. una cama normal explorando el mundo) despertar por input sigue funcionando
         // exactamente igual que antes.
         if (CinematicSequencerBase.AnySequenceActive || NarrativeSkipHub.AnySkippable) return;
+        // No se despierta mientras la pantalla está tapada o destapándose: el aviso aún no ha salido. Ver INC-604.
+        if (PantallaTapada()) return;
 
         // Grace period: ignorar input del primer segundo para evitar despertar inmediato al cargar escena
         if (Time.time - _sleepStartTime < 1f) return;
@@ -427,7 +426,20 @@ public class SleepTrigger : MonoBehaviour
         yield return null;
         yield return new WaitForSecondsRealtime(0.25f);
         yield return FeedbackService.ScreenFadeAsync(Color.black, 0.6f, false);
+        AvisarDeQueEstaDePie();
+    }
+
+    /// La señal de despertar sale cuando ya se le ve de pie: lo que venga después (un bocadillo,
+    /// un aviso) no puede salir mientras sigue tumbado o con la pantalla en negro. Si el trigger
+    /// se apaga a medio levantarse, se avisa igual para que el grafo no se quede esperando.
+    /// Ver INC-549.
+    private void AvisarDeQueEstaDePie()
+    {
+        if (!_levantandose) return;
         _levantandose = false;
+        MostrarHudAlLevantarse();
+        if (!string.IsNullOrEmpty(wakeNarrativeEvent))
+            DefaultNarrativeSignals.Instance?.RaiseCustom(wakeNarrativeEvent, name);
     }
 
     // --- Uso único ---
@@ -525,49 +537,17 @@ public class SleepTrigger : MonoBehaviour
         _cameraCoroutine = null;
     }
 
-    // ── La tormenta del sueño al despertar ───────────────────────────────────────────────────
-    //
-    // Al acabar el prólogo la tormenta del sueño todavía se oye: lluvia contra la ventana, un
-    // relámpago con su trueno y otro más lejos. Al levantarse, la lluvia se apaga: era el sueño.
-    // El HUD no aparece hasta que Will está de pie.
+    // El HUD permanece oculto tras la secuencia hasta que el jugador está de pie y la pantalla destapada.
+    // Ver INC-606.
 
     private bool _vioUnaSecuencia;
-    private bool _tormentaEmpezada;
     private bool _levantandose;
     private bool _hudOcultado;
-    private Coroutine _tormenta;
-    private const string LoopLluviaDespertar = "Despertar_Lluvia";
 
-    private void EmpezarTormentaSiToca()
+    private void OcultarHudAlDespertarSiToca()
     {
-        if (_tormentaEmpezada) return;
-        _tormentaEmpezada = true;
+        if (_hudOcultado) return;
         OcultarHud();
-        _tormenta = StartCoroutine(Co_TormentaAlDespertar());
-    }
-
-    private IEnumerator Co_TormentaAlDespertar()
-    {
-        var audio = AudioService.Instance;
-        audio?.PlayLoopingSFX(LoopLluviaDespertar, "rain", 0.22f);
-
-        // Los relámpagos, cuando ya se ve el cuarto: el prólogo acaba con la pantalla tapada y el
-        // grafo la destapa con la transición de Easy Transitions.
-        yield return null;
-        while (PantallaTapada()) yield return null;
-
-        yield return new WaitForSecondsRealtime(1.2f);
-        Relampago(0.5f);
-        yield return new WaitForSecondsRealtime(0.08f);
-        Relampago(0.3f);
-        yield return new WaitForSecondsRealtime(0.9f);
-        audio?.PlaySFX("Prologo_Trueno", 0.8f);
-
-        yield return new WaitForSecondsRealtime(6.5f);
-        Relampago(0.25f);
-        yield return new WaitForSecondsRealtime(1.8f);
-        audio?.PlaySFX("Weather_Thunder", 0.6f);
-        _tormenta = null;
     }
 
     private static bool PantallaTapada()
@@ -576,9 +556,6 @@ public class SleepTrigger : MonoBehaviour
         return ServiceLocator.TryGet(out EasyTransition.TransitionManager tm) && tm != null && tm.IsRunning;
     }
 
-    private static void Relampago(float fuerza)
-        => FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, fuerza), 0.14f);
-
     private void OcultarHud()
     {
         if (!isSleeping || Sendero.UI.PlayerHUDV2.Instance == null) return;
@@ -586,16 +563,9 @@ public class SleepTrigger : MonoBehaviour
         _hudOcultado = true;
     }
 
-    private void TerminarTormenta()
+    private void MostrarHudAlLevantarse()
     {
-        if (_tormenta != null) { StopCoroutine(_tormenta); _tormenta = null; }
-        if (_tormentaEmpezada) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 5f);
         if (_hudOcultado && Sendero.UI.PlayerHUDV2.Instance != null) Sendero.UI.PlayerHUDV2.Instance.ShowHUD(this);
         _hudOcultado = false;
-    }
-
-    private void OnDestroy()
-    {
-        if (_tormentaEmpezada && isSleeping) AudioService.Instance?.StopLoopingSFX(LoopLluviaDespertar, 1f);
     }
 }

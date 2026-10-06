@@ -901,15 +901,48 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
-                    "id": "82bc8e7e-e6d5-4995-9675-11335a07b3b6",
-                    "path": "<Gamepad>/dpad",
+                    "name": "up",
+                    "id": "6355b87a-e7c8-4e14-9be4-6c57ef77b542",
+                    "path": "<Gamepad>/dpad/up",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Navigate",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "ae63da92-bff5-4fea-b28b-8eb8fdba5dca",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "f2365bb6-c55b-4f54-908b-54c4430800e9",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "c8904fd1-2e89-4673-b4f8-e211c41fe8a3",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "Joystick",

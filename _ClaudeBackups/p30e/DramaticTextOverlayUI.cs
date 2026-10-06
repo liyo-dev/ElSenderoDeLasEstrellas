@@ -1,0 +1,1052 @@
+using System;
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using DG.Tweening;
+using Sendero.UI;
+using Sendero.Core.Feedback;
+
+[Serializable]
+public struct DramaticStylePreset
+{
+    public DramaticTextStyle style;
+    public Color textColor;
+    [Range(12, 180)] public float fontSize;
+    public FontStyles fontStyle;
+    [Tooltip("Escala inicial para la animación ScaleUp.")]
+    [Range(0.01f, 0.99f)] public float scaleUpFrom;
+    [Tooltip("Duración de la animación de entrada (segundos).")]
+    [Range(0.05f, 2f)] public float entryDuration;
+    [Tooltip("Duración de la animación de salida (segundos).")]
+    [Range(0.05f, 2f)] public float exitDuration;
+    [Tooltip("Posición de inicio de la entrada: el texto parte de aquí y llega al centro. Ej: (0,-30) sube desde abajo.")]
+    public Vector2 entryFromOffset;
+    [Tooltip("Desplazamiento que recorre el texto durante el hold (flota lentamente). Ej: (0,25) sube suavemente.")]
+    public Vector2 drift;
+}
+
+/// <summary>
+/// Overlay de pantalla completa para frases dramáticas: recuerdos, momentos épicos y llamadas urgentes.
+/// Debe vivir en el Canvas del HUD persistente (Start.unity). Singleton.
+/// </summary>
+public class DramaticTextOverlayUI : MonoBehaviour
+{
+    public static DramaticTextOverlayUI Instance { get; private set; }
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { Instance = null; }
+#endif
+
+    [Header("Referencias UI")]
+    [SerializeField] CanvasGroup _rootGroup;
+    [SerializeField] Image _background;
+    [SerializeField] TextMeshProUGUI _label;
+    [SerializeField] RectTransform _textContainer;
+
+    [Header("Fondos")]
+    [SerializeField] Color _semiBlackColor = new Color(0f, 0f, 0f, 0.65f);
+
+    [Header("Estilos por tipo")]
+    [SerializeField] DramaticStylePreset[] _stylePresets;
+
+    [Header("TypeWriter")]
+    [Tooltip("Caracteres por segundo en la animación TypeWriter.")]
+    [SerializeField] float _typewriterSpeed = 28f;
+
+    [Header("Slide")]
+    [Tooltip("Distancia en píxeles UI fuera de pantalla para las animaciones SlideFrom/SlideTo.")]
+    [SerializeField] float _slideOffscreenX = 1500f;
+
+    [Header("Modo Sueño")]
+    [Tooltip("Overlay de chispas flotantes para secuencias con dreamMode = true.")]
+    [SerializeField] DreamSparkleOverlay _dreamSparkles;
+    [Tooltip("Fondo nebulosa (blobs de color) para secuencias con dreamMode = true.")]
+    [SerializeField] DreamBackgroundController _dreamBackground;
+    [Header("Sueño — degradado y shimmer")]
+    [Tooltip("Color izquierdo del degradado en modo sueño.")]
+    [SerializeField] Color _dreamGradientLeft  = new Color(0.68f, 0.88f, 1.00f, 1f);
+    [Tooltip("Color derecho del degradado en modo sueño.")]
+    [SerializeField] Color _dreamGradientRight = new Color(1.00f, 0.94f, 0.62f, 1f);
+    [Tooltip("Intensidad máxima del destello shimmer (0=sin shimmer, 1=blanco puro).")]
+    [Range(0f, 1f)] [SerializeField] float _dreamShimmerIntensity = 0.65f;
+
+    [Header("Sueño — variante DreamWhite (visión de la Voz, 30/08/2026)")]
+    [Tooltip("Fondo blanco cálido (no blanco puro, para que no 'queme'). Pulsa suavemente hacia _dreamBgWhiteBright igual que Dream pulsa entre sus dos azules.")]
+    [SerializeField] Color _dreamBgWhite       = new Color(0.98f, 0.97f, 0.94f, 1f);
+    [SerializeField] Color _dreamBgWhiteBright = new Color(1f,    0.99f, 0.93f, 1f);
+    [Tooltip("Degradado izquierdo/derecho del texto SOLO para DreamWhite — los tonos claros de _dreamGradientLeft/Right (pensados para el fondo azul oscuro de Dream) serían casi invisibles sobre blanco. Tonos oscuros por defecto, mismo par dorado/azul del resto del proyecto pero oscurecido para contraste.")]
+    [SerializeField] Color _dreamGradientLeftOnWhite  = new Color(0.04f, 0.14f, 0.42f, 1f);
+    [SerializeField] Color _dreamGradientRightOnWhite = new Color(0.55f, 0.28f, 0.02f, 1f);
+
+    [Header("Kingdom Hearts Style")]
+    [Tooltip("Caracteres por segundo en la animación KingdomHearts (independiente de TypeWriter).")]
+    [SerializeField] float _khRevealSpeed = 10f;
+    [Tooltip("Píxeles de desplazamiento vertical inicial por carácter (caen hacia su posición final).")]
+    [SerializeField] float _khOffsetY = 22f;
+    [Tooltip("Escala inicial de cada carácter individual (se reduce hasta 1.0 al aparecer).")]
+    [Range(1f, 2.5f)] [SerializeField] float _khCharScaleFrom = 1.35f;
+    [Tooltip("Escala inicial del contenedor completo (zoom suave hacia 1.0 mientras aparecen las letras).")]
+    [Range(1f, 1.5f)] [SerializeField] float _khContainerZoom = 1.06f;
+
+    [Header("Letter Fly-In (12/09/2026 — sustituye a Shake en 'Will, ¡DESPIERTA!')")]
+    [Tooltip("Punto de origen COMPARTIDO (offset en unidades de canvas respecto al centro de cada letra) desde el que 'vuela' cada carácter hasta su posición final. Ej: (0,-220) hace que las letras avancen hacia el espectador y suban hasta su sitio, en vez de caer una a una como en KingdomHearts.")]
+    [SerializeField] Vector2 _letterFlyInOrigin = new Vector2(0f, -220f);
+    [Tooltip("Escala inicial de cada letra en su punto de origen. >1 = empieza más grande (sensación de venir hacia cámara).")]
+    [Range(0.3f, 4f)] [SerializeField] float _letterFlyInScaleFrom = 2.2f;
+    [Tooltip("Caracteres por segundo — cada letra empieza su vuelo este intervalo después que la anterior.")]
+    [SerializeField] float _letterFlyInSpeed = 14f;
+    [Tooltip("Duración del vuelo de UNA letra sola, independiente del intervalo entre letras.")]
+    [SerializeField] float _letterFlyInCharDuration = 0.35f;
+
+
+    static readonly Color _dreamBgDark  = new Color(0.03f, 0.05f, 0.16f, 1f);
+    static readonly Color _dreamBgLight = new Color(0.06f, 0.09f, 0.24f, 1f);
+
+    bool      _isPlaying;
+    bool      _dreamModeActive;
+    Coroutine _playRoutine;
+    Tween     _bgPulseTween;
+
+    // DreamWhite (30/08/2026): al entrar se guarda el degradado normal de texto (pensado para
+    // Dream) y se sustituye por el par legible sobre blanco; al salir se restaura. No usa el
+    // mismo mecanismo save/restore que Co_BossName (que también toca _dreamGradientLeft/Right)
+    // porque Co_BossName nunca pasa por DreamWhite — no hay solape entre ambos.
+    bool  _dreamWhiteActive;
+    Color _dreamGradientLeftPreWhite;
+    Color _dreamGradientRightPreWhite;
+
+    // FIX: el overlay solo tapaba visualmente el HUD/minimapa/icono de tiempo con el fondo negro;
+    // no los ocultaba de verdad. Dependía de que el Canvas de este overlay se dibujara por encima
+    // del Canvas del HUD, algo no garantizado cuando ambos comparten Sorting Order (ver Start.unity) —
+    // funcionaba por casualidad en el editor y fallaba en build. Ahora se ocultan explícitamente.
+    bool      _gameplayUiHidden;
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────
+
+    void Awake()
+    {
+        if (Instance != null) { Destroy(gameObject); return; }
+        Instance = this;
+        DontDestroyOnLoad(transform.root.gameObject);
+
+        // El canvas que nos contiene tiene SceneBoundUI; excluirlo para que BeginBossIntro
+        // no lo tape cuando mostramos el nombre del boss con animación KingdomHearts.
+        GetComponentInParent<SceneBoundUI>(true)?.ExcludeFromBossIntro();
+
+        if (_rootGroup == null)
+        {
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogError("[DramaticTextOverlayUI] ❌ _rootGroup no asignado en el Inspector.", this);
+            #endif
+        }
+        if (_label == null)
+        {
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogError("[DramaticTextOverlayUI] ❌ _label (TextMeshProUGUI) no asignado en el Inspector.", this);
+            #endif
+        }
+        if (_textContainer == null)
+        {
+            #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogError("[DramaticTextOverlayUI] ❌ _textContainer (RectTransform) no asignado en el Inspector.", this);
+            #endif
+        }
+
+        if (_rootGroup != null)
+        {
+            _rootGroup.alpha = 0f;
+            _rootGroup.blocksRaycasts = false;
+        }
+        gameObject.SetActive(false);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+            _bgPulseTween?.Kill();
+            _rootGroup?.DOKill();
+            _textContainer?.DOKill();
+        }
+    }
+
+    // ── API pública ───────────────────────────────────────────────────────
+
+    public bool IsPlaying => _isPlaying;
+
+    /// <summary>Reproduce la secuencia de frases. Llama onComplete cuando termina la última.</summary>
+    public void Play(DramaticPhraseConfig config, Action onComplete)
+    {
+        if (config == null || config.phrases == null || config.phrases.Length == 0)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+
+        gameObject.SetActive(true); // debe estar activo antes de StartCoroutine
+        if (_playRoutine != null)
+        {
+            StopCoroutine(_playRoutine);
+            // StopCoroutine no ejecuta el finally de RunSequence: restaurar por si la secuencia
+            // anterior se cortó a mitad y dejó el HUD/minimapa/icono ocultos.
+            ShowGameplayUI();
+        }
+        if (config.dreamMode) _dreamSparkles?.StartSparkles();
+        _playRoutine = StartCoroutine(RunSequence(config, onComplete));
+    }
+
+    /// <summary>
+    /// Activa solo los efectos visuales de "modo sueño" (nebulosa + chispas), sin reproducir
+    /// ninguna frase. Pensado para cinemáticas ajenas a este overlay que necesitan el mismo fondo
+    /// onírico pero llevan su propio timing/texto (o ninguno) — ej. PrologueDreamSequencer.
+    /// </summary>
+    public void StartDreamVisuals()
+    {
+        gameObject.SetActive(true);
+        _dreamBackground?.StartDream();
+        _dreamSparkles?.StartSparkles();
+    }
+
+    /// <summary>
+    /// Detiene los efectos activados por StartDreamVisuals(). No desactiva el overlay si hay una
+    /// secuencia de frases en curso (Play/RunSequence gestiona su propio ciclo de vida).
+    /// </summary>
+    public void StopDreamVisuals()
+    {
+        _dreamBackground?.StopDream();
+        _dreamSparkles?.StopSparkles();
+        if (!_isPlaying) gameObject.SetActive(false);
+    }
+
+    /// <summary>Detiene la secuencia y oculta el overlay inmediatamente.</summary>
+    public void ForceStop()
+    {
+        if (_playRoutine != null)
+        {
+            StopCoroutine(_playRoutine);
+            _playRoutine = null;
+        }
+        _dreamModeActive = false;
+        _dreamSparkles?.StopSparkles();
+        _dreamBackground?.StopDream();
+        _bgPulseTween?.Kill();
+        _bgPulseTween = null;
+        DOTween.Kill(_rootGroup);
+        DOTween.Kill(_textContainer);
+        _rootGroup.alpha = 0f;
+        _rootGroup.blocksRaycasts = false;
+        _isPlaying = false;
+        gameObject.SetActive(false);
+        ShowGameplayUI();
+    }
+
+    /// <summary>Oculta el HUD, el minimapa y el icono del período del día mientras dura la secuencia.</summary>
+    void HideGameplayUI()
+    {
+        if (_gameplayUiHidden) return;
+        _gameplayUiHidden = true;
+        PlayerHUDV2.Instance?.HideHUD(this);
+        MinimapController.Instance?.SetHiddenByCinematic(true);
+        TimeOfDayIndicator.Instance?.Hide();
+    }
+
+    /// <summary>Restaura el HUD, el minimapa y el icono del período del día al terminar la secuencia.</summary>
+    void ShowGameplayUI()
+    {
+        if (!_gameplayUiHidden) return;
+        _gameplayUiHidden = false;
+        PlayerHUDV2.Instance?.ShowHUD(this);
+        MinimapController.Instance?.SetHiddenByCinematic(false);
+        TimeOfDayIndicator.Instance?.Show();
+    }
+
+    // ── Secuencia ─────────────────────────────────────────────────────────
+
+    IEnumerator RunSequence(DramaticPhraseConfig config, Action onComplete)
+    {
+        _isPlaying = true;
+        _dreamModeActive = config.dreamMode;
+        if (config.dreamMode) _dreamBackground?.StartDream();
+        HideGameplayUI();
+
+        try
+        {
+            for (int i = 0; i < config.phrases.Length; i++)
+            {
+                var current = config.phrases[i];
+                bool prevFullBlack = i > 0 && config.phrases[i - 1].background == DramaticTextBackground.FullBlack;
+                bool nextFullBlack = i < config.phrases.Length - 1 && config.phrases[i + 1].background == DramaticTextBackground.FullBlack;
+                bool currentFullBlack = current.background == DramaticTextBackground.FullBlack;
+
+                // FIX: si nos llaman con la pantalla ya cubierta por el overlay de FeedbackService
+                // (ej: una cinemática que terminó con Co_EndCinematicStayBlack y nos pasa el
+                // testigo, como PrologueDreamSequencer → DramaticTextNode), la frase 0 haciendo su
+                // fade-in normal desde alpha=0 exponía durante entryDuration lo que hubiera detrás
+                // (la escena/cámara de gameplay ya reactivada) antes de que este overlay llegara a
+                // opacidad completa. Tratarla como "ya estamos en negro" evita ese hueco — solo
+                // aplica si además el fondo de esta frase es FullBlack (si no, no cubriría la
+                // pantalla igual y sí queremos ver el fade real).
+                bool screenAlreadyCovered = i == 0 && currentFullBlack && FeedbackService.IsScreenFaded;
+
+                // Si venimos de FullBlack y la actual también lo es, no hacer fade de entrada.
+                // KingdomHearts y LetterFlyIn tienen su propia gestión de visibilidad (vértices en
+                // alpha=0 hasta que cada letra "entra"), por eso nunca saltan aunque la pantalla ya
+                // esté en negro — el letreo/vuelo carácter a carácter ES el contenido del plano.
+                //
+                // FIX (12 sep 2026): "Will, ¡DESPIERTA!" sale de golpe, sin letreo — reportado por
+                // Raúl con captura + log confirmando 'Anim: LetterFlyIn' disparándose igualmente.
+                // Causa: esta condición solo eximía a KingdomHearts. La frase del prólogo llega con
+                // la pantalla ya en negro (Co_Awaken de PrologueDreamSequencer termina en fundido a
+                // negro, screenAlreadyCovered=true) y su propio fondo es FullBlack, así que
+                // skipEntry daba true y ShowPhrase() saltaba directo a la rama skipEntry de abajo
+                // (snap instantáneo del texto, sin pasar por EntryAnimation()/LetterFlyInRoutine en
+                // absoluto) — de ahí "sale como el sistema viejo": ni siquiera llegaba a ejecutarse
+                // el código nuevo, pese a que el log ya mostraba 'Anim: LetterFlyIn' (ese log se
+                // imprime antes de esta rama, no confirma que se haya reproducido).
+                bool skipEntry = (prevFullBlack || screenAlreadyCovered) && currentFullBlack
+                                 && current.entryAnim != DramaticEntryAnimation.KingdomHearts
+                                 && current.entryAnim != DramaticEntryAnimation.LetterFlyIn;
+                bool skipExit  = currentFullBlack && nextFullBlack;
+
+                yield return ShowPhrase(current, skipEntry, skipExit, screenAlreadyCovered);
+
+                if (i < config.phrases.Length - 1 && config.pauseBetween > 0f)
+                    yield return new WaitForSecondsRealtime(config.pauseBetween);
+            }
+        }
+        finally
+        {
+            _dreamModeActive = false;
+            _dreamSparkles?.StopSparkles();
+            _dreamBackground?.StopDream();
+            _bgPulseTween?.Kill();
+            _bgPulseTween = null;
+            gameObject.SetActive(false);
+            _isPlaying = false;
+            _playRoutine = null;
+            ShowGameplayUI();
+        }
+
+        onComplete?.Invoke();
+    }
+
+    IEnumerator ShowPhrase(DramaticPhrase phrase, bool skipEntry = false, bool skipExit = false,
+                           bool releaseScreenFadeOnOpaque = false)
+    {
+        if (_label == null || _textContainer == null || _rootGroup == null)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogError("[DramaticTextOverlayUI] ❌ Referencias UI nulas — asigna _label, _textContainer y _rootGroup en el Inspector.");
+#endif
+            yield break;
+        }
+
+        DramaticStylePreset preset = GetPreset(phrase.style);
+        string text = GetLocalizedText(phrase);
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[DramaticTextOverlay] Frase: '{text}' | Style: {phrase.style} | Anim: {phrase.entryAnim} | Duration: {phrase.duration}s | fontSize: {preset.fontSize} | color alpha: {preset.textColor.a}");
+#endif
+
+        _label.color = preset.textColor;
+        _label.fontSize = preset.fontSize;
+        _label.fontStyle = preset.fontStyle;
+
+        Vector2 basePos = phrase.positionOffset;
+        _textContainer.anchoredPosition = basePos;
+
+        SetBackground(phrase.background);
+
+        if (phrase.voiceClip != null)
+            AudioService.Instance?.PlayVoice(phrase.voiceClip);
+
+        if (skipEntry)
+        {
+            // Ya estamos en pantalla totalmente negra: solo actualizar texto sin fade
+            _label.text = text;
+            _textContainer.localScale = Vector3.one;
+            _textContainer.anchoredPosition = basePos;
+            _rootGroup.alpha = 1f;
+            _rootGroup.blocksRaycasts = true;
+
+            // Justo aquí nuestro propio fondo opaco ya cubre la pantalla (SetBackground se llamó
+            // arriba, y con el CanvasGroup a alpha=1 por fin se ve) — soltamos el overlay de
+            // FeedbackService en el mismo instante, sin que se note (algo ya lo está tapando). Así,
+            // si esta secuencia termina más tarde con su propio fade out, revela limpio en vez de
+            // dejar el negro de FeedbackService pegado para siempre por detrás (ver comentario en
+            // RunSequence sobre screenAlreadyCovered).
+            if (releaseScreenFadeOnOpaque)
+                FeedbackService.SetScreenFadeImmediate(Color.clear);
+        }
+        else
+        {
+            // KingdomHearts nunca "salta" el entry (el letreo carácter a carácter es el contenido),
+            // pero si screenAlreadyCovered viene true, su fondo opaco igualmente cubre la pantalla
+            // en cuanto arranca (ver KingdomHeartsRoutine) — propagamos el flag para soltar el
+            // overlay de FeedbackService en ese instante, igual que en la rama skipEntry de arriba.
+            yield return EntryAnimation(phrase.entryAnim, text, preset, basePos, releaseScreenFadeOnOpaque);
+        }
+
+        float holdDuration = phrase.waitForAudio && phrase.voiceClip != null
+            ? Mathf.Max(phrase.voiceClip.length - preset.entryDuration, 0f)
+            : Mathf.Max(phrase.duration, 0.1f);
+
+        // Movimiento durante el hold: de positionOffset a moveTo (o drift del preset como fallback)
+        Vector2 holdTarget;
+        bool hasMovement;
+        if (phrase.useMovement)
+        {
+            holdTarget = phrase.moveTo;
+            hasMovement = true;
+        }
+        else if (preset.drift != Vector2.zero)
+        {
+            holdTarget = basePos + preset.drift;
+            hasMovement = true;
+        }
+        else
+        {
+            holdTarget = basePos;
+            hasMovement = false;
+        }
+
+        if (hasMovement)
+            _textContainer.DOAnchorPos(holdTarget, holdDuration)
+                .SetEase(Ease.InOutSine).SetUpdate(true);
+
+        // Degradado + shimmer en modo sueño (corre concurrente con el hold).
+        // disableDreamTextEffect permite que una frase concreta mantenga su color sólido
+        // (ej: la amenaza inicial en rojo) aunque el resto de la secuencia sea modo sueño.
+        Coroutine dreamFx = null;
+        if (_dreamModeActive && !phrase.disableDreamTextEffect)
+            dreamFx = StartCoroutine(Co_DreamTextEffect(holdDuration, preset.textColor.a));
+
+        yield return new WaitForSecondsRealtime(holdDuration);
+
+        if (dreamFx != null) { StopCoroutine(dreamFx); dreamFx = null; }
+
+        if (!skipExit)
+            yield return ExitAnimation(phrase.exitAnim, preset, basePos);
+    }
+
+    // ── Animaciones de entrada ────────────────────────────────────────────
+
+    IEnumerator EntryAnimation(DramaticEntryAnimation anim, string text, DramaticStylePreset preset, Vector2 basePos,
+                               bool releaseScreenFadeOnOpaque = false)
+    {
+        _rootGroup.blocksRaycasts = true;
+
+        switch (anim)
+        {
+            case DramaticEntryAnimation.ScaleUp:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one * preset.scaleUpFrom;
+                _textContainer.anchoredPosition = basePos + preset.entryFromOffset;
+                _rootGroup.alpha = 0f;
+                _textContainer.DOScale(Vector3.one, preset.entryDuration)
+                    .SetEase(Ease.OutQuart).SetUpdate(true);
+                if (preset.entryFromOffset != Vector2.zero)
+                    _textContainer.DOAnchorPos(basePos, preset.entryDuration)
+                        .SetEase(Ease.OutQuart).SetUpdate(true);
+                yield return _rootGroup.DOFade(1f, preset.entryDuration * 0.7f)
+                    .SetUpdate(true).WaitForCompletion();
+                break;
+
+            case DramaticEntryAnimation.FadeIn:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = basePos + preset.entryFromOffset;
+                _rootGroup.alpha = 0f;
+                if (preset.entryFromOffset != Vector2.zero)
+                    _textContainer.DOAnchorPos(basePos, preset.entryDuration)
+                        .SetEase(Ease.InOutSine).SetUpdate(true);
+                yield return _rootGroup.DOFade(1f, preset.entryDuration)
+                    .SetEase(Ease.InOutSine).SetUpdate(true).WaitForCompletion();
+                break;
+
+            case DramaticEntryAnimation.TypeWriter:
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = basePos + preset.entryFromOffset;
+                _rootGroup.alpha = 1f;
+                if (preset.entryFromOffset != Vector2.zero)
+                    _textContainer.DOAnchorPos(basePos, preset.entryDuration)
+                        .SetEase(Ease.InOutSine).SetUpdate(true);
+                yield return TypewriterRoutine(text);
+                break;
+
+            case DramaticEntryAnimation.Instant:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = basePos;
+                _rootGroup.alpha = 1f;
+                break;
+
+            case DramaticEntryAnimation.SlideFromLeft:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = new Vector2(-_slideOffscreenX, basePos.y);
+                _rootGroup.alpha = 0f;
+                _rootGroup.DOFade(1f, preset.entryDuration * 0.35f).SetUpdate(true);
+                yield return _textContainer.DOAnchorPos(basePos, preset.entryDuration)
+                    .SetEase(Ease.OutQuart).SetUpdate(true).WaitForCompletion();
+                break;
+
+            case DramaticEntryAnimation.SlideFromRight:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = new Vector2(_slideOffscreenX, basePos.y);
+                _rootGroup.alpha = 0f;
+                _rootGroup.DOFade(1f, preset.entryDuration * 0.35f).SetUpdate(true);
+                yield return _textContainer.DOAnchorPos(basePos, preset.entryDuration)
+                    .SetEase(Ease.OutQuart).SetUpdate(true).WaitForCompletion();
+                break;
+
+            case DramaticEntryAnimation.KingdomHearts:
+                yield return KingdomHeartsRoutine(text, preset, basePos, releaseScreenFadeOnOpaque);
+                break;
+
+            // Aparece casi de golpe (fade muy corto, nada de letreo/zoom "de título") y sacude el
+            // contenedor con un temblor que decae — pensado para "Will, ¡DESPIERTA!": la sensación
+            // de que alguien te zarandea, no la de una presentación épica.
+            case DramaticEntryAnimation.Shake:
+                _label.text = text;
+                _textContainer.localScale = Vector3.one;
+                _textContainer.anchoredPosition = basePos;
+                _rootGroup.alpha = 0f;
+                _rootGroup.DOFade(1f, Mathf.Min(preset.entryDuration * 0.25f, 0.08f)).SetUpdate(true);
+                yield return _textContainer
+                    .DOShakeAnchorPos(preset.entryDuration, strength: new Vector2(22f, 14f), vibrato: 20, randomness: 90, fadeOut: true)
+                    .SetUpdate(true).WaitForCompletion();
+                _textContainer.anchoredPosition = basePos;
+                break;
+
+            case DramaticEntryAnimation.LetterFlyIn:
+                yield return LetterFlyInRoutine(text, preset, basePos, releaseScreenFadeOnOpaque);
+                break;
+        }
+    }
+
+    // ── Animaciones de salida ─────────────────────────────────────────────
+
+    IEnumerator ExitAnimation(DramaticExitAnimation anim, DramaticStylePreset preset, Vector2 basePos)
+    {
+        switch (anim)
+        {
+            case DramaticExitAnimation.FadeOut:
+                yield return _rootGroup.DOFade(0f, preset.exitDuration)
+                    .SetUpdate(true).WaitForCompletion();
+                break;
+
+            case DramaticExitAnimation.ScaleUp:
+                _textContainer.DOScale(Vector3.one * 1.5f, preset.exitDuration)
+                    .SetEase(Ease.InQuart).SetUpdate(true);
+                yield return _rootGroup.DOFade(0f, preset.exitDuration)
+                    .SetUpdate(true).WaitForCompletion();
+                _textContainer.localScale = Vector3.one;
+                break;
+
+            case DramaticExitAnimation.Instant:
+                _rootGroup.alpha = 0f;
+                break;
+
+            case DramaticExitAnimation.SlideToLeft:
+            {
+                float currentY = _textContainer.anchoredPosition.y;
+                _rootGroup.DOFade(0f, preset.exitDuration * 0.4f)
+                    .SetDelay(preset.exitDuration * 0.6f).SetUpdate(true);
+                yield return _textContainer.DOAnchorPos(new Vector2(-_slideOffscreenX, currentY), preset.exitDuration)
+                    .SetEase(Ease.InQuart).SetUpdate(true).WaitForCompletion();
+                _rootGroup.alpha = 0f;
+                break;
+            }
+
+            case DramaticExitAnimation.SlideToRight:
+            {
+                float currentY = _textContainer.anchoredPosition.y;
+                _rootGroup.DOFade(0f, preset.exitDuration * 0.4f)
+                    .SetDelay(preset.exitDuration * 0.6f).SetUpdate(true);
+                yield return _textContainer.DOAnchorPos(new Vector2(_slideOffscreenX, currentY), preset.exitDuration)
+                    .SetEase(Ease.InQuart).SetUpdate(true).WaitForCompletion();
+                _rootGroup.alpha = 0f;
+                break;
+            }
+        }
+
+        _rootGroup.blocksRaycasts = false;
+    }
+
+    /// Fundido manual del alpha del label (sin depender de que exista un DOFade para TMP).
+    IEnumerator FadeLabelAlpha(float duration)
+    {
+        if (_label == null) yield break;
+        Color c = _label.color;
+        float startA = c.a;
+        float t = 0f;
+        duration = Mathf.Max(duration, 0.01f);
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            c.a = Mathf.Lerp(startA, 0f, t / duration);
+            _label.color = c;
+            yield return null;
+        }
+        c.a = 0f;
+        _label.color = c;
+    }
+
+    // ── Kingdom Hearts ────────────────────────────────────────────────────
+
+    IEnumerator KingdomHeartsRoutine(string text, DramaticStylePreset preset, Vector2 basePos,
+                                      bool releaseScreenFadeOnOpaque = false)
+    {
+        // El color real se bake en los vértices; el label queda en blanco para no teñir.
+        _label.color = Color.white;
+        _label.text = text;
+        _label.ForceMeshUpdate();
+
+        _textContainer.anchoredPosition = basePos;
+        _textContainer.localScale = Vector3.one * _khContainerZoom;
+        _rootGroup.alpha = 1f;
+        _rootGroup.blocksRaycasts = true;
+
+        // El fondo (SetBackground, llamado antes en ShowPhrase) ya es opaco en cuanto el
+        // CanvasGroup pasa a alpha=1 arriba, aunque el letreo carácter a carácter tarde más —
+        // mismo momento que la rama skipEntry de ShowPhrase, ver comentario en RunSequence.
+        if (releaseScreenFadeOnOpaque)
+            FeedbackService.SetScreenFadeImmediate(Color.clear);
+
+        var textInfo = _label.textInfo;
+        int charCount = textInfo.characterCount;
+        if (charCount == 0) yield break;
+
+        // Caché de posiciones originales de vértices por material
+        int matCount = textInfo.materialCount;
+        var originalVerts = new Vector3[matCount][];
+        for (int m = 0; m < matCount; m++)
+            originalVerts[m] = (Vector3[])textInfo.meshInfo[m].vertices.Clone();
+
+        Color32 targetCol = preset.textColor;
+        float delayPerChar = 1f / Mathf.Max(_khRevealSpeed, 1f);
+        float letterAnim   = Mathf.Max(preset.entryDuration, 0.05f);
+        float totalDuration = charCount * delayPerChar + letterAnim;
+
+        // Zoom suave del contenedor mientras aparecen las letras
+        _textContainer.DOScale(Vector3.one, totalDuration)
+            .SetEase(Ease.OutCubic).SetUpdate(true);
+
+        float elapsed = 0f;
+        bool done = false;
+
+        while (!done)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            done = elapsed >= totalDuration;
+            float t_global = Mathf.Min(elapsed, totalDuration);
+
+            for (int i = 0; i < charCount; i++)
+            {
+                var charInfo = textInfo.characterInfo[i];
+                if (!charInfo.isVisible) continue;
+
+                int matIdx = charInfo.materialReferenceIndex;
+                int vIdx   = charInfo.vertexIndex;
+
+                float t    = Mathf.Clamp01((t_global - i * delayPerChar) / letterAnim);
+                float ease = KhEaseOutQuart(t);
+                byte  alpha = (byte)(ease * targetCol.a);
+
+                // Color con alpha animado
+                Color32 col = new Color32(targetCol.r, targetCol.g, targetCol.b, alpha);
+                var colors = textInfo.meshInfo[matIdx].colors32;
+                colors[vIdx + 0] = col;
+                colors[vIdx + 1] = col;
+                colors[vIdx + 2] = col;
+                colors[vIdx + 3] = col;
+
+                // Escala y offset Y por carácter, alrededor de su centro
+                var  verts = textInfo.meshInfo[matIdx].vertices;
+                var  origV = originalVerts[matIdx];
+                Vector3 center = (origV[vIdx] + origV[vIdx+1] + origV[vIdx+2] + origV[vIdx+3]) * 0.25f;
+                float   scale  = Mathf.Lerp(_khCharScaleFrom, 1f, ease);
+                float   ofsY   = Mathf.Lerp(_khOffsetY, 0f, ease);
+                Vector3 yOfs   = new Vector3(0f, ofsY, 0f);
+
+                for (int k = 0; k < 4; k++)
+                    verts[vIdx + k] = center + (origV[vIdx + k] - center) * scale + yOfs;
+            }
+
+            _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32 | TMP_VertexDataUpdateFlags.Vertices);
+            yield return null;
+        }
+    }
+
+    static float KhEaseOutQuart(float t) => 1f - Mathf.Pow(1f - t, 4f);
+
+    // ── Letter Fly-In (12/09/2026) ────────────────────────────────────────
+
+    /// <summary>
+    /// Letra a letra, como KingdomHeartsRoutine (mismo patrón de vértices/timing por carácter),
+    /// pero en vez de caer cada letra desde un pequeño offset propio, TODAS parten de un mismo
+    /// punto de origen compartido (_letterFlyInOrigin) y más grandes (_letterFlyInScaleFrom) —
+    /// "letra a letra, avanzando desde la pantalla hasta su posición" (pedido de Raúl, sustituye a
+    /// Shake). Sin el zoom del contenedor completo de KingdomHearts a propósito: eso es justo lo
+    /// que hacía que se leyera como el título de una novela/videojuego.
+    /// </summary>
+    IEnumerator LetterFlyInRoutine(string text, DramaticStylePreset preset, Vector2 basePos,
+                                    bool releaseScreenFadeOnOpaque = false)
+    {
+        _label.color = preset.textColor;
+        _label.text = text;
+        _label.ForceMeshUpdate();
+
+        _textContainer.anchoredPosition = basePos;
+        _textContainer.localScale = Vector3.one;
+        _rootGroup.alpha = 1f;
+        _rootGroup.blocksRaycasts = true;
+
+        // Mismo momento que la rama skipEntry de ShowPhrase / KingdomHeartsRoutine: el fondo ya es
+        // opaco en cuanto el CanvasGroup pasa a alpha=1 arriba, aunque el letreo tarde más.
+        if (releaseScreenFadeOnOpaque)
+            FeedbackService.SetScreenFadeImmediate(Color.clear);
+
+        var textInfo = _label.textInfo;
+        int charCount = textInfo.characterCount;
+        if (charCount == 0) yield break;
+
+        int matCount = textInfo.materialCount;
+        var originalVerts = new Vector3[matCount][];
+        for (int m = 0; m < matCount; m++)
+            originalVerts[m] = (Vector3[])textInfo.meshInfo[m].vertices.Clone();
+
+        Color32 targetCol = preset.textColor;
+        float delayPerChar = 1f / Mathf.Max(_letterFlyInSpeed, 1f);
+        float charDuration = Mathf.Max(_letterFlyInCharDuration, 0.05f);
+        float totalDuration = charCount * delayPerChar + charDuration;
+
+        Vector3 originOffset = new Vector3(_letterFlyInOrigin.x, _letterFlyInOrigin.y, 0f);
+
+        float elapsed = 0f;
+        bool done = false;
+
+        while (!done)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            done = elapsed >= totalDuration;
+            float tGlobal = Mathf.Min(elapsed, totalDuration);
+
+            for (int i = 0; i < charCount; i++)
+            {
+                var charInfo = textInfo.characterInfo[i];
+                if (!charInfo.isVisible) continue;
+
+                int matIdx = charInfo.materialReferenceIndex;
+                int vIdx   = charInfo.vertexIndex;
+
+                float t    = Mathf.Clamp01((tGlobal - i * delayPerChar) / charDuration);
+                float ease = KhEaseOutQuart(t);
+                byte  alpha = (byte)(ease * targetCol.a);
+
+                Color32 col = new Color32(targetCol.r, targetCol.g, targetCol.b, alpha);
+                var colors = textInfo.meshInfo[matIdx].colors32;
+                colors[vIdx + 0] = col;
+                colors[vIdx + 1] = col;
+                colors[vIdx + 2] = col;
+                colors[vIdx + 3] = col;
+
+                var  verts = textInfo.meshInfo[matIdx].vertices;
+                var  origV = originalVerts[matIdx];
+                Vector3 center = (origV[vIdx] + origV[vIdx+1] + origV[vIdx+2] + origV[vIdx+3]) * 0.25f;
+                float   scale  = Mathf.Lerp(_letterFlyInScaleFrom, 1f, ease);
+                // Todas las letras "vuelan" desde el MISMO originOffset hasta su propia posición
+                // final (offset cero) — a diferencia de KingdomHearts, que solo desplaza cada letra
+                // un poco en Y desde SU PROPIA posición.
+                Vector3 flyOffset = Vector3.Lerp(originOffset, Vector3.zero, ease);
+
+                for (int k = 0; k < 4; k++)
+                    verts[vIdx + k] = center + flyOffset + (origV[vIdx + k] - center) * scale;
+            }
+
+            _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32 | TMP_VertexDataUpdateFlags.Vertices);
+            yield return null;
+        }
+    }
+
+    // ── Boss Name ──────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Muestra el nombre de un boss con animación KingdomHearts y degradado personalizado.
+    /// No activa chispas ni fondo nebulosa — pensado para usarse sobre la cámara del boss.
+    /// </summary>
+    public void PlayBossName(string bossName, Color gradLeft, Color gradRight,
+                              float duration, Action onComplete)
+    {
+        if (string.IsNullOrEmpty(bossName)) { onComplete?.Invoke(); return; }
+        gameObject.SetActive(true);
+        if (_playRoutine != null) StopCoroutine(_playRoutine);
+        _playRoutine = StartCoroutine(Co_BossName(bossName, gradLeft, gradRight, duration, onComplete));
+    }
+
+    IEnumerator Co_BossName(string name, Color gradLeft, Color gradRight,
+                             float duration, Action onComplete)
+    {
+        _isPlaying = true;
+        _dreamModeActive = false;
+
+        Color origLeft  = _dreamGradientLeft;
+        Color origRight = _dreamGradientRight;
+        _dreamGradientLeft  = gradLeft;
+        _dreamGradientRight = gradRight;
+        _dreamModeActive = true; // habilita Co_DreamTextEffect pero sin arrancar sparkles/nebula
+
+        DramaticStylePreset preset = GetPreset(DramaticTextStyle.Epic);
+        SetBackground(DramaticTextBackground.None);
+
+        _label.color     = preset.textColor;
+        _label.fontSize  = preset.fontSize;
+        _label.fontStyle = preset.fontStyle;
+        _textContainer.anchoredPosition = Vector2.zero;
+
+        yield return EntryAnimation(DramaticEntryAnimation.KingdomHearts, name, preset, Vector2.zero);
+
+        float hold = Mathf.Max(duration, 0.1f);
+        Coroutine gradFx = StartCoroutine(Co_DreamTextEffect(hold, preset.textColor.a));
+        yield return new WaitForSecondsRealtime(hold);
+        if (gradFx != null) { StopCoroutine(gradFx); gradFx = null; }
+
+        yield return ExitAnimation(DramaticExitAnimation.FadeOut, preset, Vector2.zero);
+
+        _dreamGradientLeft  = origLeft;
+        _dreamGradientRight = origRight;
+        _dreamModeActive    = false;
+        gameObject.SetActive(false);
+        _isPlaying   = false;
+        _playRoutine = null;
+        onComplete?.Invoke();
+    }
+
+    // ── TypeWriter ────────────────────────────────────────────────────────
+
+    IEnumerator TypewriterRoutine(string text)
+    {
+        _label.text = "";
+        _rootGroup.alpha = 1f;
+
+        if (_typewriterSpeed <= 0f)
+        {
+            _label.text = text;
+            yield break;
+        }
+
+        float delayPerChar = 1f / _typewriterSpeed;
+        for (int i = 1; i <= text.Length; i++)
+        {
+            _label.text = text.Substring(0, i);
+            yield return new WaitForSecondsRealtime(delayPerChar);
+        }
+    }
+
+    // ── Helpers ───────────────────────────────────────────────────────────
+
+    void SetBackground(DramaticTextBackground bg)
+    {
+        // Siempre matar el pulso anterior antes de cambiar de fondo
+        _bgPulseTween?.Kill();
+        _bgPulseTween = null;
+
+        // DreamWhite entra/sale: guarda y restaura _dreamGradientLeft/Right (ver campos arriba).
+        if (bg == DramaticTextBackground.DreamWhite)
+        {
+            if (!_dreamWhiteActive)
+            {
+                _dreamGradientLeftPreWhite  = _dreamGradientLeft;
+                _dreamGradientRightPreWhite = _dreamGradientRight;
+                _dreamWhiteActive = true;
+            }
+            _dreamGradientLeft  = _dreamGradientLeftOnWhite;
+            _dreamGradientRight = _dreamGradientRightOnWhite;
+        }
+        else if (_dreamWhiteActive)
+        {
+            _dreamGradientLeft  = _dreamGradientLeftPreWhite;
+            _dreamGradientRight = _dreamGradientRightPreWhite;
+            _dreamWhiteActive = false;
+        }
+
+        if (_background == null) return;
+        switch (bg)
+        {
+            case DramaticTextBackground.None:
+                _background.color = Color.clear;
+                break;
+            case DramaticTextBackground.SemiBlack:
+                _background.color = _semiBlackColor;
+                break;
+            case DramaticTextBackground.FullBlack:
+                _background.color = Color.black;
+                break;
+            case DramaticTextBackground.Dream:
+                _background.color = _dreamBgDark;
+                // Pulso suave: el azul "respira" entre oscuro y ligeramente más brillante
+                _bgPulseTween = _background
+                    .DOColor(_dreamBgLight, 3.2f)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetUpdate(true);
+                break;
+            case DramaticTextBackground.DreamWhite:
+                _background.color = _dreamBgWhite;
+                // Mismo pulso suave que Dream, pero entre los dos blancos cálidos.
+                _bgPulseTween = _background
+                    .DOColor(_dreamBgWhiteBright, 3.2f)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetUpdate(true);
+                break;
+        }
+    }
+
+    DramaticStylePreset GetPreset(DramaticTextStyle style)
+    {
+        if (_stylePresets != null)
+        {
+            foreach (var p in _stylePresets)
+            {
+                if (p.style != style) continue;
+
+                // Si el preset tiene valores vacíos (struct sin configurar), usamos el fallback
+                if (p.fontSize < 1f || p.textColor.a < 0.01f)
+                {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                    Debug.LogWarning($"[DramaticTextOverlayUI] Preset '{style}' tiene fontSize={p.fontSize} o textColor.a={p.textColor.a}. Usando fallback. Configura el preset en el Inspector.");
+#endif
+                    break;
+                }
+                return p;
+            }
+        }
+
+        // Fallback con valores visibles garantizados
+        return new DramaticStylePreset
+        {
+            textColor = Color.white,
+            fontSize = 48f,
+            fontStyle = FontStyles.Normal,
+            scaleUpFrom = 0.3f,
+            entryDuration = 0.4f,
+            exitDuration = 0.3f
+        };
+    }
+
+    string GetLocalizedText(DramaticPhrase phrase)
+    {
+        if (!string.IsNullOrEmpty(phrase.textId))
+            return LocalizationManager.Instance?.Get(phrase.textId, phrase.text) ?? phrase.text;
+        return phrase.text;
+    }
+
+    // ── Modo Sueño — degradado + shimmer ─────────────────────────────────────
+
+    /// Aplica un degradado horizontal al texto y, tras una breve pausa, lanza un
+    /// destello (shimmer) que viaja de izquierda a derecha. Corre concurrente con el hold.
+    IEnumerator Co_DreamTextEffect(float holdDuration, float baseAlpha)
+    {
+        if (_label == null || holdDuration < 0.35f) yield break;
+
+        _label.ForceMeshUpdate();
+        var info  = _label.textInfo;
+        int count = info.characterCount;
+        if (count == 0) yield break;
+
+        // Calcular rango X de los caracteres visibles
+        float minX = float.MaxValue, maxX = float.MinValue;
+        for (int i = 0; i < count; i++)
+        {
+            var ci = info.characterInfo[i];
+            if (!ci.isVisible) continue;
+            int vi   = ci.vertexIndex;
+            var verts = info.meshInfo[ci.materialReferenceIndex].vertices;
+            float cx = (verts[vi].x + verts[vi + 2].x) * 0.5f;
+            if (cx < minX) minX = cx;
+            if (cx > maxX) maxX = cx;
+        }
+        float xRange = Mathf.Max(maxX - minX, 0.001f);
+
+        // Hacer que TMP no sobreescriba los vértices coloreados manualmente
+        Color leftCol  = _dreamGradientLeft;  leftCol.a  = baseAlpha;
+        Color rightCol = _dreamGradientRight; rightCol.a = baseAlpha;
+        _label.color = Color.white;
+
+        // Paso 1: degradado base inmediato
+        ApplyDreamGradient(info, count, minX, xRange, leftCol, rightCol);
+        _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+
+        // Paso 2: shimmer sweep
+        float shimmerDelay    = Mathf.Min(0.35f, holdDuration * 0.12f);
+        float shimmerDuration = Mathf.Clamp(holdDuration * 0.38f, 0.55f, 1.5f);
+        float bandHalf        = xRange * 0.22f;
+        float travelStart     = minX - bandHalf;
+        float travelEnd       = maxX + bandHalf;
+
+        yield return new WaitForSecondsRealtime(shimmerDelay);
+
+        float elapsed = 0f;
+        while (elapsed < shimmerDuration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t      = elapsed / shimmerDuration;
+            float shimX  = Mathf.Lerp(travelStart, travelEnd, t);
+
+            for (int i = 0; i < count; i++)
+            {
+                var ci  = info.characterInfo[i];
+                if (!ci.isVisible) continue;
+                int vi  = ci.vertexIndex;
+                int mat = ci.materialReferenceIndex;
+                var verts  = info.meshInfo[mat].vertices;
+                var colors = info.meshInfo[mat].colors32;
+
+                float cx    = (verts[vi].x + verts[vi + 2].x) * 0.5f;
+                float gradT = (cx - minX) / xRange;
+                Color baseC = Color.Lerp(leftCol, rightCol, gradT);
+
+                float dist  = Mathf.Abs(cx - shimX);
+                float shine = Mathf.Clamp01(1f - dist / bandHalf);
+                shine = shine * shine * (3f - 2f * shine); // smoothstep
+
+                Color32 finalC = Color.Lerp(baseC, Color.white, shine * _dreamShimmerIntensity);
+                finalC.a = (byte)(baseAlpha * 255);
+                colors[vi]   = finalC; colors[vi + 1] = finalC;
+                colors[vi + 2] = finalC; colors[vi + 3] = finalC;
+            }
+            _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+            yield return null;
+        }
+
+        // Restaurar degradado limpio
+        ApplyDreamGradient(info, count, minX, xRange, leftCol, rightCol);
+        _label.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
+    }
+
+    void ApplyDreamGradient(TMP_TextInfo info, int count, float minX, float xRange,
+                             Color leftCol, Color rightCol)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            var ci  = info.characterInfo[i];
+            if (!ci.isVisible) continue;
+            int vi  = ci.vertexIndex;
+            int mat = ci.materialReferenceIndex;
+            var verts  = info.meshInfo[mat].vertices;
+            var colors = info.meshInfo[mat].colors32;
+
+            float cx    = (verts[vi].x + verts[vi + 2].x) * 0.5f;
+            float t     = (cx - minX) / xRange;
+            Color32 col = Color.Lerp(leftCol, rightCol, t);
+            colors[vi]   = col; colors[vi + 1] = col;
+            colors[vi + 2] = col; colors[vi + 3] = col;
+        }
+    }
+}

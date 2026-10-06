@@ -156,6 +156,7 @@ public sealed class TutorialPromptNode : NarrativeNode
         // (allowManualClose) solo se muestra si dismissWithCancel está activo — ver comentario en
         // ese campo.
         ui.Show(resolved, buttonName, icon, allowManualClose: dismissWithCancel);
+        VoiceLines.TryPlay(textId);
 
         void CloseInformationalPrompt()
         {

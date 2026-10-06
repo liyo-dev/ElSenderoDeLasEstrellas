@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,15 +7,115 @@ using UnityEngine;
 /// (planos de cámara y marcas de posición), y al reproductor (cámara, bocadillos, señales).
 public sealed class SequenceContext
 {
+    public AnimoDeAccion AnimoVigente { get; private set; } = AnimoDeAccion.Neutral;
+    public string EtiquetaDeAccion { get; private set; }
+    public string OrigenDeAccion { get; private set; }
+    public string MarcaDeAccion { get; private set; }
+    public int VersionDeAccion { get; private set; }
+    private readonly HashSet<SequenceActor> _hablantes = new();
+    private readonly Dictionary<SequenceActor, (string estado, float fin)> _gestosExplicitos = new();
+    private readonly HashSet<NPCEmotionController> _carasDeFondo = new();
+    private bool _limpiezaDeAnimoRegistrada;
+
+    public void MarcarHabla(SequenceActor actor, bool hablando)
+    {
+        if (actor == null) return;
+        if (hablando) _hablantes.Add(actor); else _hablantes.Remove(actor);
+    }
+    public void ReservarGesto(SequenceActor actor, string estado, float segundos)
+    {
+        if (actor != null) _gestosExplicitos[actor] = (estado, Time.unscaledTime + Mathf.Max(0.4f, segundos));
+    }
+    private bool TieneGestoExplicito(SequenceActor actor)
+    {
+        if (!_gestosExplicitos.TryGetValue(actor, out var reserva)) return false;
+        if (Time.unscaledTime < reserva.fin) return true;
+        var animador = actor.AnimadorDeActuacion;
+        int capa = animador != null ? AnimatorLayerUtil.ResolveLayer(animador, reserva.estado, animador.GetLayerIndex("UpperBody")) : -1;
+        if (capa < 0) return false;
+        var estado = animador.GetCurrentAnimatorStateInfo(capa);
+        return (estado.IsName(reserva.estado) && (estado.loop || estado.normalizedTime < 1f)) ||
+            (animador.IsInTransition(capa) && animador.GetNextAnimatorStateInfo(capa).IsName(reserva.estado));
+    }
+    public bool EstaHablando(SequenceActor actor) => actor != null && _hablantes.Contains(actor);
+    public bool PuedeReaccionar(SequenceActor actor)
+        => actor != null && actor.PuedeEscuchar && !_hablantes.Contains(actor) &&
+           !(actor.Emotion != null && actor.Emotion.IsInDialogue) && !TieneGestoExplicito(actor);
+    private readonly List<Action> _limpiezasDeAccion = new();
+    public void RegistrarLimpiezaDeAccion(Action limpieza)
+    {
+        if (limpieza != null) _limpiezasDeAccion.Add(limpieza);
+    }
+    private void LimpiarReaccionesDeAccion()
+    {
+        foreach (var limpieza in _limpiezasDeAccion) limpieza();
+        _limpiezasDeAccion.Clear();
+    }
+    public void CambiarAccion(string etiqueta, AnimoDeAccion animo, string origen, string marca)
+    {
+        LimpiarReaccionesDeAccion();
+        LimpiarCarasDeFondo();
+        VersionDeAccion++;
+        EtiquetaDeAccion = etiqueta;
+        AnimoVigente = animo;
+        OrigenDeAccion = origen;
+        MarcaDeAccion = marca;
+        if (!_limpiezaDeAnimoRegistrada && Player != null)
+        {
+            _limpiezaDeAnimoRegistrada = true;
+            Player.RegisterCleanup(() =>
+            {
+                LimpiarReaccionesDeAccion();
+                VersionDeAccion++;
+                LimpiarCarasDeFondo();
+                _hablantes.Clear();
+                _gestosExplicitos.Clear();
+                AnimoVigente = AnimoDeAccion.Neutral;
+                EtiquetaDeAccion = OrigenDeAccion = MarcaDeAccion = null;
+            });
+        }
+    }
+    public void SostenerCara(SequenceActor actor)
+    {
+        if (actor?.Emotion == null) return;
+        _carasDeFondo.Add(actor.Emotion);
+        actor.Emotion.SetCaraDeFondo(this, ReaccionesDeEscena.Cara(AnimoVigente), AnimoVigente == AnimoDeAccion.Ternura, PuedeReaccionar(actor));
+    }
+    private void LimpiarCarasDeFondo()
+    {
+        foreach (var cara in _carasDeFondo) if (cara != null) cara.ClearCaraDeFondo(this);
+        _carasDeFondo.Clear();
+    }
     public SequencePlayer Player { get; }
     public SequenceStage Stage { get; }
+    public PresentacionDeTexto? PresentacionDeLineaActiva { get; private set; }
+    public bool UsaSubtitulos => (PresentacionDeLineaActiva ?? Player?.Definition?.presentacionDeTexto
+        ?? PresentacionDeTexto.Bocadillo) != PresentacionDeTexto.Bocadillo;
+
+    /// Reencuadra solo cuando cambia la necesidad de reservar hueco de bocadillo.
+    public void CambiarPresentacionDeLinea(PresentacionDeTexto? estilo)
+    {
+        bool anterior = UsaSubtitulos;
+        PresentacionDeLineaActiva = estilo;
+        if (anterior != UsaSubtitulos) Player?.RefreshCurrentShot();
+    }
 
     private readonly Dictionary<string, SequenceActor> _actors = new();
+    private readonly Dictionary<string, SequenceActor> _personajesVisibles = new();
+    public Dictionary<string, SequenceActor>.ValueCollection PersonajesVisibles => _personajesVisibles.Values;
+    private readonly Dictionary<string, (VfxPoolService pool, ulong uso)> _vfxRegistrados = new();
 
     public SequenceContext(SequencePlayer player, SequenceStage stage)
     {
         Player = player;
         Stage = stage;
+        // El gentío también ocupa espacio y cuadro, sin quedar retenido por observarlo.
+        if (Game.NPC.NPCRegistry.HasInstance)
+            foreach (string id in Game.NPC.NPCRegistry.Instance.GetAllRegisteredIDs())
+                if (SequenceActor.TryResolve(id, out var vecino)) _personajesVisibles[id] = vecino;
+        if (Game.NPC.Common.PlayerLocator.ResolvePlayer(false) != null
+            && SequenceActor.TryResolve(SequenceActor.PlayerId, out var jugador))
+            _personajesVisibles[SequenceActor.PlayerId] = jugador;
     }
 
     /// Devuelve el actor con ese ID, resolviéndolo la primera vez y cacheándolo después.
@@ -25,7 +125,11 @@ public sealed class SequenceContext
         if (string.IsNullOrEmpty(actorId)) return null;
         if (_actors.TryGetValue(actorId, out var cached)) return cached;
 
-        SequenceActor.TryResolve(actorId, out var actor);
+        if (!_personajesVisibles.TryGetValue(actorId, out var actor))
+        {
+            SequenceActor.TryResolve(actorId, out actor);
+            if (actor != null && !actor.IsDynamic) _personajesVisibles[actorId] = actor;
+        }
         _actors[actorId] = actor; // se cachea incluso si es null: no reintentar cada beat
 
         // Todo actor que la secuencia toque queda retenido automáticamente en cuanto se resuelve:
@@ -67,6 +171,38 @@ public sealed class SequenceContext
         _poseInicial[id] = (pos, rot);
     }
 
+    /// Registra un VFX como actor y conserva la identidad de su uso en el pool.
+    public void RegisterVfx(string id, Transform instancia, VfxPoolService pool)
+    {
+        if (string.IsNullOrWhiteSpace(id) || instancia == null || pool == null) return;
+        ulong uso = pool.ObtenerUso(instancia);
+        if (uso == 0) return;
+        RecogerVfx(id);
+        RegisterActor(id, instancia, 0f);
+        _vfxRegistrados[id] = (pool, uso);
+        Player?.RegisterCleanup(() => RecogerVfx(id));
+    }
+
+    /// Recoge el uso registrado, sin resolver actores de escena ni afectar a una instancia reutilizada.
+    public void RecogerVfx(string id)
+    {
+        if (string.IsNullOrWhiteSpace(id) || !_vfxRegistrados.TryGetValue(id, out var registro)) return;
+        if (_actors.TryGetValue(id, out var actor) && actor?.Transform != null && registro.pool != null)
+            registro.pool.Recoger(actor.Transform, registro.uso);
+        UnregisterActor(id);
+    }
+
+    /// Accede únicamente a un uso vigente del pool, sin resolver un actor de escena por error.
+    public bool TryGetVfx(string id, out Transform instancia, out VfxPoolService pool, out ulong uso)
+    {
+        instancia = null; pool = null; uso = 0;
+        if (string.IsNullOrWhiteSpace(id) || !_vfxRegistrados.TryGetValue(id, out var registro)
+            || !_actors.TryGetValue(id, out var actor) || actor?.Transform == null
+            || registro.pool == null || registro.pool.ObtenerUso(actor.Transform) != registro.uso) return false;
+        instancia = actor.Transform; pool = registro.pool; uso = registro.uso;
+        return true;
+    }
+
     // ── Cómo estaba el decorado antes de empezar ─────────────────────────────
     //
     // Un objeto del decorado que la secuencia mueve (la carreta que se vuelca y se endereza, una
@@ -103,6 +239,8 @@ public sealed class SequenceContext
     {
         if (string.IsNullOrWhiteSpace(id)) return;
         _actors.Remove(id);
+        _poseInicial.Remove(id);
+        _vfxRegistrados.Remove(id);
     }
 
     /// ¿Hay ahora mismo un actor dado de alta con este ID? A diferencia de GetActor, no intenta

@@ -11,11 +11,15 @@ using UnityEngine;
 public sealed class CharlaEnBocadillos
 {
     private const float PausaEntreLineas = 0.5f;
+    private const float MargenDeCierre = 0.25f;
+    private const float EsperaMaximaAlBocadilloAjeno = 4f;
 
     private readonly DialogueAsset _dialogo;
     private readonly NPCBehaviourManagerV2 _principal;
     private int _linea;
     private bool _mostrando;
+    private int _turno;
+    private AudioClip _voz;
 
     /// <param name="principal">NPC con quien es la charla: dice las líneas sin hablante y las suyas.</param>
     public CharlaEnBocadillos(DialogueAsset dialogo, NPCBehaviourManagerV2 principal)
@@ -51,19 +55,58 @@ public sealed class CharlaEnBocadillos
 
             float duracion = 0f;
             foreach (var pagina in ui.Paginar(texto)) duracion += ui.TiempoDeLectura(pagina);
-            ui.Show(quien, texto, duracion);
+            float voz = VoiceLines.TryPlay(linea.textId);
+            if (voz > 0f)
+            {
+                VoiceLines.TryGet(linea.textId, out _voz);
+                duracion = Mathf.Max(duracion, voz + 0.3f);
+            }
+            _turno = ui.Show(quien, texto, duracion);
             _mostrando = true;
 
+            // Si otro sistema pone su bocadillo encima (o quita el nuestro), la línea no se ha
+            // leído: se repite cuando el bocadillo vuelva a estar libre. Ver INC-613.
             float fin = Time.unscaledTime + duracion;
             bool cortada = false;
+            bool quitada = false;
             while (Time.unscaledTime < fin)
             {
                 if (puedeHablar != null && !puedeHablar()) { cortada = true; break; }
+                // El cierre propio por tiempo puede llegar un fotograma antes que 'fin' (otro reloj):
+                // solo cuenta como quitado si faltaba un buen trozo.
+                if (ui.Turno != _turno || (!ui.Mostrando && fin - Time.unscaledTime > MargenDeCierre))
+                { quitada = true; break; }
                 yield return null;
             }
             _mostrando = false;
 
-            if (cortada) { ui.Hide(); continue; }
+            if (cortada)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                // Diagnóstico de INC-613: se quita al cerrar la incidencia.
+                Debug.Log($"[CharlaEnBocadillos] {_dialogo.name}, línea {_linea + 1}: se corta (jugador lejos, " +
+                          $"menú abierto o el NPC le está llamando) a los {duracion - (fin - Time.unscaledTime):F1} s de {duracion:F1} s.");
+#endif
+                PararVoz();
+                ui.Hide(_turno);
+                continue;
+            }
+            if (quitada)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                // Diagnóstico de INC-613: se quita al cerrar la incidencia.
+                Debug.LogWarning($"[CharlaEnBocadillos] {_dialogo.name}, línea {_linea + 1}: otro sistema " +
+                                 $"{(ui.Turno != _turno ? "ha puesto su bocadillo" : "ha quitado el bocadillo")} " +
+                                 $"a los {duracion - (fin - Time.unscaledTime):F1} s de {duracion:F1} s. Se repite.");
+#endif
+                PararVoz();
+                // Se espera a que el otro bocadillo acabe, con tope: uno sin duración no puede
+                // dejar la charla (y al nodo que la espera) parada para siempre.
+                float limite = Time.unscaledTime + EsperaMaximaAlBocadilloAjeno;
+                while (ui.Mostrando && Time.unscaledTime < limite) yield return null;
+                yield return new WaitForSecondsRealtime(PausaEntreLineas);
+                continue;
+            }
             _linea++;
             if (!Terminada) yield return new WaitForSecondsRealtime(PausaEntreLineas);
         }
@@ -74,7 +117,15 @@ public sealed class CharlaEnBocadillos
     {
         if (!_mostrando) return;
         _mostrando = false;
-        SpeechBubbleUI.Instance?.Hide();
+        PararVoz();
+        SpeechBubbleUI.Instance?.Hide(_turno);
+    }
+
+    private void PararVoz()
+    {
+        var audio = AudioService.Instance;
+        if (audio != null && audio.IsVoicePlaying(_voz)) audio.StopVoice();
+        _voz = null;
     }
 
     private static string Texto(DialogueLine linea)

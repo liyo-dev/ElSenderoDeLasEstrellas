@@ -391,6 +391,10 @@ public static class CinematicWeather
 [Serializable]
 public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
 {
+    [Tooltip("Acortar la espera colocando al actor fuera del encuadre activo.")]
+    public bool elipsis = true;
+    [Tooltip("Espera máxima por marca en segundos. 0 calcula distancia/velocidad × 1,2 + 1.")]
+    public float esperaMaxima = 0f;
     [Tooltip("Quién anda.")]
     public string actorId;
 
@@ -406,6 +410,9 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
     [Tooltip("Pegar al suelo con un raycast en cada frame. Desmarcado, la altura se interpola " +
              "entre marcas — solo para volar o flotar.")]
     public bool stickToGround = true;
+
+    [Tooltip("Usar NavMesh o barrido de cápsula y rodeos para evitar props al andar.")]
+    public bool esquivar = true;
 
     [Tooltip("Cuánto se levanta del suelo, en metros. Para un personaje normal, 0.")]
     public float groundOffset = 0f;
@@ -443,6 +450,7 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
     /// tablero de un puente. Lo que esté más alto que esto no es suelo, es algo que tiene encima.
     /// Aquí el puente sube 1,2 m y la viga de la plaza está a 2,6: metro y medio separa los dos.
     internal const float AlturaQueSePuedeSubir = 1.5f;
+    private const float MaxDesnivelAlAndar = 0.3f;
 
     // Buffer pre-alocado: el pegado al suelo corre una vez por frame (CLAUDE.md § 2).
     private static readonly RaycastHit[] s_hits = new RaycastHit[8];
@@ -488,7 +496,27 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
         const float velocidadMaxima = VelocidadMaximaPorDefecto;
 
         // El agente estorba: intentaría corregir la posición contra un NavMesh que aquí no existe.
-        if (agent != null && agent.enabled) agent.enabled = false;
+        bool agenteEstabaEncendido = agent != null && agent.enabled;
+        if (agenteEstabaEncendido) agent.enabled = false;
+
+        bool movimientoManualPrevio = anim != null && anim.AllowManualMovement;
+        bool rotacionManualPrevia = anim != null && anim.AllowManualRotation;
+        bool limpio = false;
+        Action limpiar = () =>
+        {
+            if (limpio) return;
+            limpio = true;
+            actor.DestinoReservado = null;
+            anim?.ResetMovement();
+            if (anim != null)
+            {
+                anim.AllowManualMovement = movimientoManualPrevio;
+                anim.AllowManualRotation = rotacionManualPrevia;
+                anim.SyncTargetRotation();
+            }
+            DevolverElAgente(actor, agent, agenteEstabaEncendido);
+        };
+        ctx.Player?.RegisterCleanup(limpiar);
 
         if (anim != null)
         {
@@ -508,162 +536,36 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             float v = Mathf.Max(0.2f, speed);
             float paso = Mathf.Clamp01(v / velocidadMaxima);
 
-            CargarObstaculos(ctx);
-
             for (int i = 0; i < markNames.Count; i++)
             {
                 var marca = ctx.Stage != null ? ctx.Stage.GetMark(markNames[i]) : null;
                 if (marca == null) continue;   // el aviso ya lo ha dado el stage
 
-                // Si en línea recta se atraviesa algo que está en medio (la carreta), primero se
-                // va al punto que lo rodea. Ver Rodeo().
-                if (stickToGround && Rodeo(actor.Transform.position, marca.position, out Vector3 rodeo))
-                {
-                    yield return Tramo(actor, anim, rodeo, v, paso, stickToGround,
-                        groundOffset, faceTravelDirection, TopePorTramo, markNames[i] + " (rodeo)",
-                        animarAndando);
-                }
-
-                yield return Tramo(actor, anim, marca.position, v, paso, stickToGround,
-                    groundOffset, faceTravelDirection, TopePorTramo, markNames[i], animarAndando);
+                Vector3 destino = marca.position;
+                if (stickToGround && !SequenceMovement.ReservarLlegada(ctx, actor, destino, out destino)) continue;
+                yield return Tramo(actor, anim, destino, v, paso, stickToGround,
+                    groundOffset, faceTravelDirection, TopePorTramo, markNames[i], animarAndando, esquivar,
+                    ctx, elipsis, esperaMaxima);
+                Vector3 pendiente = destino - actor.Transform.position;
+                pendiente.y = 0f;
+                if (stickToGround && pendiente.sqrMagnitude < 0.01f
+                    && (destino - marca.position).sqrMagnitude > 0.01f) actor.Face(marca.position);
+                actor.DestinoReservado = null;
             }
         }
         finally
         {
-            // ── LA REGLA DE INC-210 ──────────────────────────────────────────────────────────
-            //
-            // Aquí ponía `SetMovementSpeed(0f)`, y eso es EXACTAMENTE lo que INC-210 prohibió el
-            // 16 de septiembre. Esa sobrecarga escribe el parámetro del Animator CON AMORTIGUACIÓN
-            // (`animator.SetFloat(hash, valor, dampTime, deltaTime)`): no asigna el valor, lo
-            // acerca. Una sola llamada mueve `InputMagnitude` un 15 % hacia 0 y ahí se queda,
-            // porque durante la secuencia nadie vuelve a escribirlo cada frame.
-            //
-            // Resultado: el parámetro se congela en ~0,85, el estado de idle cae solo en el blend
-            // tree de locomoción (su única transición de salida no tiene condiciones) y el actor
-            // reproduce la animación de andar CON EL CUERPO PARADO. Y como el blend tree también
-            // lee dirección, a veces sale andando de lado o de espaldas.
-            //
-            // Es la mitad de la lista de la novena grabación: el Archimago hablando quieto y
-            // andando, Liora en «¿y tú?», los vecinos del fondo, el Mago Oscuro diciendo lo de
-            // arrodillaos. Un solo sitio, ocho síntomas.
-            //
-            // `ResetMovement()` escribe el 0 SIN amortiguar, que es para lo que existe.
-            anim?.ResetMovement();
-
-            // Y volver a una pose de verdad — pero solo si esto era andar. En un vuelo la pose la
-            // pone el gesto que corre en paralelo, y mandarle a idle aquí se la comería.
-            //
-            // Y si el montaje dice con qué se encadena, se pone ESO y no idle: ver 'encadenarCon'.
             if (!string.IsNullOrEmpty(encadenarCon)) anim?.HoldPose(encadenarCon);
             else if (animarAndando) anim?.TransitionToIdle();
-
-            if (anim != null)
-            {
-                anim.AllowManualMovement = false;
-                anim.AllowManualRotation = false;
-
-                // Y que se quede mirando donde ha acabado. Al soltar AllowManualRotation vuelve a
-                // correr ApplySmoothRotation, que tira hacia `_targetRotation` — la rotación que
-                // el animador tenía apuntada ANTES de la caminata. Sin esta línea el personaje
-                // llega a su sitio y acto seguido se gira solo hacia donde miraba antes de andar,
-                // que es una buena parte de los "de lado" y "de espaldas" de la quinta grabación
-                // (INC-299).
-                anim.SyncTargetRotation();
-            }
+            limpiar();
         }
     }
-
-    // ── Rodear lo que está en medio ─────────────────────────────────────────────────────────
-    //
-    // «La gente se tropieza con la carreta en lugar de esquivarla.» Este beat anda en línea recta
-    // entre marcas, sin NavMesh, así que cualquier cosa que quede entre dos marcas se atraviesa:
-    // en la grabación 11 los vecinos salen de la plaza hacia el puente pasando POR DENTRO de la
-    // carreta, que Raúl ha colocado en el camino.
-    //
-    // Las marcas no se pueden mover para cada caso —el que sale de la plaza está donde esté—, así
-    // que el rodeo se calcula aquí: cada prop del SequenceStage marcado `esObstaculo` es un
-    // círculo en planta, y si el tramo lo corta se añade un punto tangente por el lado más corto.
-    // Una vez por beat, no por frame, y con listas estáticas (CLAUDE.md § 2).
-
-    /// Margen alrededor del obstáculo: lo que ocupa un personaje y un poco de aire.
-    private const float MargenAlRodear = 0.7f;
-
-    private static readonly List<Vector3> s_obstaculoCentro = new();
-    private static readonly List<float> s_obstaculoRadio = new();
-
-    private static void CargarObstaculos(SequenceContext ctx)
-    {
-        s_obstaculoCentro.Clear();
-        s_obstaculoRadio.Clear();
-        if (ctx?.Stage == null) return;
-
-        foreach (var prop in ctx.Stage.Props)
-        {
-            if (!prop.esObstaculo || prop.target == null || !prop.target.gameObject.activeInHierarchy)
-                continue;
-
-            var renders = prop.target.GetComponentsInChildren<Renderer>();
-            bool hay = false;
-            Bounds caja = default;
-            foreach (var r in renders)
-            {
-                if (r == null || !r.enabled || r is ParticleSystemRenderer) continue;
-                if (!hay) { caja = r.bounds; hay = true; }
-                else caja.Encapsulate(r.bounds);
-            }
-            if (!hay) continue;
-
-            Vector3 c = caja.center; c.y = 0f;
-            s_obstaculoCentro.Add(c);
-            s_obstaculoRadio.Add(Mathf.Max(caja.extents.x, caja.extents.z) + MargenAlRodear);
-        }
-    }
-
-    /// ¿El tramo de A a B corta algún obstáculo? Si sí, devuelve el punto por el que rodearlo.
-    private static bool Rodeo(Vector3 a, Vector3 b, out Vector3 punto)
-    {
-        punto = default;
-        Vector2 A = new(a.x, a.z), B = new(b.x, b.z);
-        Vector2 ab = B - A;
-        float largo = ab.magnitude;
-        if (largo < 0.01f) return false;
-        Vector2 dir = ab / largo;
-
-        float mejorT = float.MaxValue;
-        for (int i = 0; i < s_obstaculoCentro.Count; i++)
-        {
-            Vector2 C = new(s_obstaculoCentro[i].x, s_obstaculoCentro[i].z);
-            float r = s_obstaculoRadio[i];
-
-            // Si la salida o la llegada están DENTRO del obstáculo no hay rodeo que valga: la marca
-            // está mal puesta, y rodear solo daría una vuelta rara.
-            if ((A - C).sqrMagnitude < r * r || (B - C).sqrMagnitude < r * r) continue;
-
-            float t = Vector2.Dot(C - A, dir);
-            if (t <= 0f || t >= largo) continue;          // queda antes o después del tramo
-            Vector2 cercano = A + dir * t;
-            Vector2 aparte = cercano - C;
-            if (aparte.sqrMagnitude >= r * r) continue;   // pasa sin tocarlo
-            if (t >= mejorT) continue;                    // hay otro antes en el camino
-
-            // Por el lado por el que el tramo ya pasaba más cerca del borde: es el rodeo corto.
-            Vector2 lado = aparte.sqrMagnitude > 0.0001f
-                ? aparte.normalized
-                : new Vector2(-dir.y, dir.x);
-            Vector2 p = C + lado * (r + 0.05f);
-
-            mejorT = t;
-            punto = new Vector3(p.x, Mathf.Lerp(a.y, b.y, t / largo), p.y);
-        }
-
-        return mejorT < float.MaxValue;
-    }
-
     /// Lleva a un actor andando hasta un punto, sin NavMesh. Es el mismo paseo que usa este beat,
     /// expuesto para que SequenceMovement pueda caer aquí cuando el agente no sirve — antes, en ese
     /// caso, el actor se teletransportaba al destino.
     public static IEnumerator AndarHasta(SequenceActor actor, Vector3 destino, float velocidad,
-        float tope)
+        float tope, bool esquivar = true, SequenceContext ctx = null, bool elipsis = false,
+        float esperaMaxima = 0f)
     {
         if (actor?.Transform == null) yield break;
 
@@ -679,6 +581,25 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
         // TODOS sus MoveToBeat volvian a caer aqui, a la linea recta, en vez de navegar.
         bool agenteEstabaEncendido = agent != null && agent.enabled;
         if (agenteEstabaEncendido) agent.enabled = false;
+
+        bool movimientoManualPrevio = anim != null && anim.AllowManualMovement;
+        bool rotacionManualPrevia = anim != null && anim.AllowManualRotation;
+        bool limpio = false;
+        Action limpiar = () =>
+        {
+            if (limpio) return;
+            limpio = true;
+            actor.DestinoReservado = null;
+            anim?.ResetMovement();
+            if (anim != null)
+            {
+                anim.AllowManualMovement = movimientoManualPrevio;
+                anim.AllowManualRotation = rotacionManualPrevia;
+                anim.SyncTargetRotation();
+            }
+            DevolverElAgente(actor, agent, agenteEstabaEncendido);
+        };
+        ctx?.Player?.RegisterCleanup(limpiar);
 
         if (anim != null)
         {
@@ -696,94 +617,88 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             float v = Mathf.Max(0.2f, velocidad);
 
             yield return Tramo(actor, anim, destino, v, Mathf.Clamp01(v / velocidadMaxima),
-                true, 0f, true, Mathf.Max(1f, tope), "su destino");
+                true, 0f, true, Mathf.Max(1f, tope), "su destino", true, esquivar, ctx, elipsis, esperaMaxima);
         }
         finally
         {
-            // Mismo caso que arriba: la regla de INC-210. Aquí importa todavía más, porque este es
-            // el camino por el que pasan los MoveToBeat cuyo actor se ha quedado sin agente.
-            anim?.ResetMovement();
             anim?.TransitionToIdle();
-
-            if (anim != null)
-            {
-                anim.AllowManualMovement = false;
-                anim.AllowManualRotation = false;
-
-                // Y que se quede mirando donde ha acabado. Al soltar AllowManualRotation vuelve a
-                // correr ApplySmoothRotation, que tira hacia `_targetRotation` — la rotación que
-                // el animador tenía apuntada ANTES de la caminata. Sin esta línea el personaje
-                // llega a su sitio y acto seguido se gira solo hacia donde miraba antes de andar,
-                // que es una buena parte de los "de lado" y "de espaldas" de la quinta grabación
-                // (INC-299).
-                anim.SyncTargetRotation();
-            }
-
-            DevolverElAgente(actor, agent, agenteEstabaEncendido);
+            limpiar();
         }
     }
-
-    /// Vuelve a dejar al actor a cargo de su NavMeshAgent despues de un paseo a mano.
-    ///
-    /// No basta con encenderlo: si el paseo ha terminado fuera del NavMesh (la ladera de la montana
-    /// del prologo no esta bakeada, por ejemplo), el agente arranca en un sitio que no es del mapa
-    /// de navegacion, `isOnNavMesh` sigue siendo false, y el siguiente MoveToBeat vuelve a caer al
-    /// paseo a mano sin que nadie sepa por que. Asi que se le busca el suelo caminable mas cercano
-    /// y se le teletransporta ahi -- son centimetros, no se ve -- antes de devolverselo.
+    /// Devuelve el agente cerca de la llegada sin saltar a otra zona del mapa.
     private static void DevolverElAgente(SequenceActor actor, NavMeshAgent agent, bool estabaEncendido)
     {
-        if (agent == null || !estabaEncendido) return;
-
-        Vector3 donde = actor != null && actor.Transform != null ? actor.Transform.position : agent.transform.position;
-
+        if (agent == null || !estabaEncendido || actor?.Transform == null) return;
+        Vector3 donde = actor.Transform.position;
+        if (!NavMesh.SamplePosition(donde, out var hit, 0.3f, agent.areaMask)) return;
         agent.enabled = true;
-
-        if (agent.isOnNavMesh) return;
-
-        // Radios crecientes, igual que hace el wiring de las marcas. 9 m es generoso a proposito:
-        // mas vale un salto de medio metro que un personaje que ya no sabe navegar en toda la escena.
-        foreach (float radio in new[] { 1f, 2.5f, 5f, 9f })
-        {
-            if (!NavMesh.SamplePosition(donde, out var hit, radio, NavMesh.AllAreas)) continue;
-            if (agent.Warp(hit.position)) return;
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.LogWarning($"[WalkPathBeat] '{actor?.Id}' ha terminado el paseo fuera del NavMesh y no " +
-            "hay suelo caminable a menos de 9 m. Se queda sin agente utilizable, asi que sus " +
-            "movimientos siguientes tambien iran en linea recta. Lo que hay que mirar es el bakeado " +
-            "del NavMesh en esa zona, no el beat.");
-#endif
+        if (agent.isOnNavMesh) agent.Warp(donde);
+        else agent.enabled = false;
     }
-
     /// Un tramo del paseo: de donde esté el actor hasta 'destino'.
     private static IEnumerator Tramo(SequenceActor actor, NPCSimpleAnimator anim, Vector3 destino,
         float v, float paso, bool pegarAlSuelo, float alturaExtra, bool mirarAlAvance, float tope,
-        string aDonde, bool animarAndando = true)
+        string aDonde, bool animarAndando = true, bool esquivar = true, SequenceContext ctx = null,
+        bool elipsis = false, float esperaMaxima = 0f)
+    {
+        float inicio = Time.time;
+        float limite = SequenceMovement.LimiteDeEspera(actor, destino, v, esperaMaxima);
+        var vigilante = new SequenceMovement.Vigilante(actor.Transform.position, destino);
+        for (int intento = 0; intento <= 2; intento++)
+        {
+            var ruta = SequenceMovement.CalcularRuta(actor, destino, intento == 0 && esquivar && pegarAlSuelo);
+            foreach (var punto in ruta)
+            {
+                yield return TramoDirecto(actor, anim, punto, v, paso, pegarAlSuelo, alturaExtra,
+                    mirarAlAvance, elipsis ? float.PositiveInfinity : Mathf.Max(0f, tope - (Time.time - inicio)),
+                    aDonde, animarAndando, esquivar, intento < 2, ctx, elipsis, inicio, limite, destino, vigilante);
+                Vector3 pendiente = punto - actor.Transform.position;
+                if (pegarAlSuelo) pendiente.y = 0f;
+                if (pendiente.sqrMagnitude > 0.01f) break;
+            }
+            Vector3 falta = destino - actor.Transform.position;
+            if (pegarAlSuelo) falta.y = 0f;
+            if (falta.sqrMagnitude < 0.01f) yield break;
+            if (!elipsis && Time.time - inicio >= tope) break;
+        }
+        SequenceMovement.ResolverAtasco(actor, destino, ctx);
+    }
+
+    private static IEnumerator TramoDirecto(SequenceActor actor, NPCSimpleAnimator anim, Vector3 destino,
+        float v, float paso, bool pegarAlSuelo, float alturaExtra, bool mirarAlAvance, float tope,
+        string aDonde, bool animarAndando, bool esquivar, bool evitarGente, SequenceContext ctx,
+        bool elipsis, float inicio, float limite, Vector3 llegada, SequenceMovement.Vigilante vigilante)
     {
         float transcurrido = 0f;
 
         while (transcurrido < tope)
         {
             transcurrido += Time.deltaTime;
+            if (elipsis && Time.time - inicio >= limite && !SequenceMovement.EnEncuadre(actor, ctx))
+            {
+                SequenceMovement.PlaceAt(actor, llegada, actor.Transform.rotation, ctx);
+                yield break;
+            }
+            if (vigilante.Atascado(actor, llegada, "rodeos, separación lateral o suelo sin avance")) yield break;
 
             Vector3 pos = actor.Transform.position;
             Vector3 plano = destino - pos;
-            plano.y = 0f;
+            if (pegarAlSuelo) plano.y = 0f;
 
-            if (plano.magnitude <= 0.2f) break;
+            if (plano.magnitude <= 0.03f) break;
 
             Vector3 dir = plano.normalized;
-            Vector3 siguiente = pos + dir * (v * Time.deltaTime);
+            Vector3 siguiente = Vector3.MoveTowards(pos, new Vector3(destino.x, pos.y, destino.z), v * Time.deltaTime);
 
             // Espacio personal (INC-406): apartarse de lado de quien tenga delante, en vez de
             // atravesarle. Solo andando por el suelo.
-            Vector3 aparte = (pegarAlSuelo && animarAndando)
+            Vector3 aparte = (pegarAlSuelo && animarAndando && evitarGente)
                 ? Apartarse(actor.Transform, pos, dir) * (v * Time.deltaTime)
                 : Vector3.zero;
 
             if (pegarAlSuelo)
             {
+                siguiente.y -= alturaExtra;
                 Vector3 conApartarse = PegarAlSuelo(actor.Transform, siguiente + aparte);
                 // Apartarse nunca vale si es para caerse de algo (el borde del puente).
                 siguiente = aparte != Vector3.zero && conApartarse.y > pos.y - 0.4f
@@ -793,13 +708,19 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             else siguiente.y = Mathf.MoveTowards(pos.y, destino.y, v * Time.deltaTime);
 
             siguiente.y += alturaExtra;
+            if (pegarAlSuelo && esquivar && SequenceMovement.Obstaculo(actor, pos, siguiente, out _))
+            {
+                anim?.ResetMovement();
+                yield break;
+            }
             actor.Transform.position = siguiente;
 
             // Volando NO se toca la animación. Si se sigue escribiendo la velocidad de
             // locomoción, SetMovementSpeed vuelve a llamar a TransitionToLocomotion en cuanto el
             // gesto de vuelo termina su ciclo — y lo que se ve es un mago cruzando el cielo a
             // pasitos, que es literalmente lo que salió en la novena grabación.
-            if (animarAndando) anim?.SetMovementSpeed(paso);
+            if (animarAndando) anim?.SetMovementSpeed(Mathf.Clamp01(
+                Vector3.Distance(pos, siguiente) / Mathf.Max(Time.deltaTime, 0.0001f) / VelocidadMaximaPorDefecto));
 
             // Girar hacia donde se anda: escribe la rotación (ver SequenceMovement.GirarHaciaAvance).
             if (mirarAlAvance) SequenceMovement.GirarHaciaAvance(actor, anim, dir);
@@ -846,10 +767,11 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             if (c == null || c.transform.IsChildOf(yo)) continue;
             // Personajes y geometría viven en la misma capa: lo que distingue a un personaje es
             // el NPCSimpleAnimator (CLAUDE.md § 2).
-            var otro = c.GetComponentInParent<NPCSimpleAnimator>();
-            if (otro == null || otro.transform == yo) continue;
+            if (!SequenceMovement.EsPersonaje(c)) continue;
+            var otro = c.transform.root;
+            if (otro == yo) continue;
 
-            Vector3 rel = otro.transform.position - pos;
+            Vector3 rel = otro.position - pos;
             rel.y = 0f;
             float d = rel.magnitude;
             if (d > RadioPersonal || d < 0.001f) continue;
@@ -871,23 +793,18 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
 
         float mejor = float.NegativeInfinity;
 
-        // Techo de búsqueda: el suelo está ABAJO. Sin esto, cualquier cosa que haya por encima
-        // —una viga, un alero, un toldo— cuenta como suelo, porque de todos los impactos se coge
-        // el más alto, y un vecino que pasa por debajo se sube encima (INC-315).
-        //
-        // El margen empezó en 0,5 m y era DEMASIADO CORTO: el tablero del puente está 1,2 m por
-        // encima de la plaza, así que quedaba excluido y los vecinos cruzaban el río por debajo
-        // del puente, andando sobre el agua (INC-319 — regresión mía del mismo día). Metro y
-        // medio deja subir a un puente, a una rampa o a un escalón alto, y sigue dejando fuera la
-        // viga de la plaza, que está a 2,6 m.
-        float techo = punto.y + AlturaQueSePuedeSubir;
-
+        // Solo desniveles de un escalón; los personajes nunca aportan suelo.
         for (int i = 0; i < n; i++)
         {
             var hit = s_hits[i];
             if (hit.collider == null) continue;
-            if (hit.collider.transform.root == actor) continue;   // no pisarse a sí mismo
-            if (hit.point.y > techo) continue;
+            if (SequenceMovement.EsPersonaje(hit.collider)) continue;
+            if (hit.normal.y < 0.65f) continue;
+            float desnivel = hit.point.y - punto.y;
+            // Las rampas transitables permiten recuperar altura; un tablero horizontal conserva
+            // el límite de escalón para que un tejado o una mesa no se conviertan en suelo.
+            float subida = hit.normal.y < 0.98f ? AlturaQueSePuedeSubir : MaxDesnivelAlAndar;
+            if (desnivel > subida || desnivel < -AlturaQueSePuedeSubir) continue;
 
             if (hit.point.y > mejor) mejor = hit.point.y;
         }

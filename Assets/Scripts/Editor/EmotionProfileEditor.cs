@@ -26,6 +26,10 @@ public class EmotionProfileEditor : Editor
         // Configuración General
         EditorGUILayout.LabelField("Configuración General", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(serializedObject.FindProperty("transitionDuration"));
+        foreach (string campo in new[] { "ojosNeutros", "bocasNeutras", "ojosDeReposoPorDefecto",
+            "bocaDeReposoPorDefecto", "segundosDeReaccion", "bocaHablandoEntreabierta",
+            "bocaHablandoAbierta", "segundosPorBoca", "umbralVozAbierta", "tiempoMinimoPorBocaConVoz" })
+            EditorGUILayout.PropertyField(serializedObject.FindProperty(campo), true);
         
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Configuración de Emociones", EditorStyles.boldLabel);
@@ -38,7 +42,7 @@ public class EmotionProfileEditor : Editor
             
             profile.emotions = new EmotionMeshData[]
             {
-                new EmotionMeshData { emotion = NPCEmotion.Neutral,    eyeMeshName = "Eye01", mouthMeshName = "Mouth01", bodyAnimStateName = "" },
+                new EmotionMeshData { emotion = NPCEmotion.Neutral,    eyeMeshName = "", mouthMeshName = "", bodyAnimStateName = "" },
                 new EmotionMeshData { emotion = NPCEmotion.Happy,      eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "HeadNod01" },
                 new EmotionMeshData { emotion = NPCEmotion.Sad,        eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
                 new EmotionMeshData { emotion = NPCEmotion.Angry,      eyeMeshName = "Eye04", mouthMeshName = "Mouth04", bodyAnimStateName = "Angry02" },
@@ -46,7 +50,7 @@ public class EmotionProfileEditor : Editor
                 new EmotionMeshData { emotion = NPCEmotion.Scared,     eyeMeshName = "Eye06", mouthMeshName = "Mouth06", bodyAnimStateName = "Beg01" },
                 new EmotionMeshData { emotion = NPCEmotion.Thinking,   eyeMeshName = "Eye07", mouthMeshName = "Mouth07", bodyAnimStateName = "Question01" },
                 new EmotionMeshData { emotion = NPCEmotion.Tired,      eyeMeshName = "Eye08", mouthMeshName = "Mouth08", bodyAnimStateName = "IdleWounded01" },
-                new EmotionMeshData { emotion = NPCEmotion.Smirk,      eyeMeshName = "Eye09", mouthMeshName = "Mouth09", bodyAnimStateName = "Laugh01" },
+                new EmotionMeshData { emotion = NPCEmotion.Smirk,      eyeMeshName = "", mouthMeshName = "Mouth11", bodyAnimStateName = "Laugh01" },
                 new EmotionMeshData { emotion = NPCEmotion.Worried,    eyeMeshName = "Eye02", mouthMeshName = "Mouth08", bodyAnimStateName = "HeadShake02" },
                 new EmotionMeshData { emotion = NPCEmotion.Determined, eyeMeshName = "Eye04", mouthMeshName = "Mouth01", bodyAnimStateName = "Challenging_NoWeapon" },
                 new EmotionMeshData { emotion = NPCEmotion.Relieved,   eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },

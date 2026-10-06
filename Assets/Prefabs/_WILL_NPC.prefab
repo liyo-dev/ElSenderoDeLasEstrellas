@@ -4985,7 +4985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5756656552624685546
 Transform:
   m_ObjectHideFlags: 0
@@ -8853,7 +8853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8162534175265637819
 Transform:
   m_ObjectHideFlags: 0
@@ -16121,6 +16121,7 @@ MonoBehaviour:
   hint: {fileID: 8764421452871750880}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -16235,11 +16236,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 0}
-  originalMouthMesh: {fileID: 0}
+  ojosDeReposo: {fileID: 7051384065032571125}
+  bocaDeReposo: {fileID: 1761894409013522335}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
 --- !u!114 &1093861493971799819
 MonoBehaviour:
   m_ObjectHideFlags: 0

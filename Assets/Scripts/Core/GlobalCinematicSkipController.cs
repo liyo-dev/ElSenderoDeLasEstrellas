@@ -114,6 +114,9 @@ public class GlobalCinematicSkipController : MonoBehaviour
     {
         NarrativeSkipHub.OnAnySkippableChanged += HandleAnySkippableChanged;
         CinematicSequencerBase.OnAnySequenceActiveChanged += HandleAnySequenceActiveChanged;
+        DialogueManager.OnDialogueStarted += HandleCuadroDeDialogo;
+        DialogueManager.OnDialogueLineChanged += HandleLineaDeDialogo;
+        DialogueManager.OnDialogueClosed += HandleCuadroDeDialogo;
         // Por si este controlador se activa/recarga mientras ya hay algo saltable en curso
         // (recarga de dominio en el Editor, por ejemplo) — sincroniza el estado inicial.
         Refresh();
@@ -123,17 +126,29 @@ public class GlobalCinematicSkipController : MonoBehaviour
     {
         NarrativeSkipHub.OnAnySkippableChanged -= HandleAnySkippableChanged;
         CinematicSequencerBase.OnAnySequenceActiveChanged -= HandleAnySequenceActiveChanged;
+        DialogueManager.OnDialogueStarted -= HandleCuadroDeDialogo;
+        DialogueManager.OnDialogueLineChanged -= HandleLineaDeDialogo;
+        DialogueManager.OnDialogueClosed -= HandleCuadroDeDialogo;
     }
 
     private void HandleAnySkippableChanged(bool active) => Refresh();
 
     private void HandleAnySequenceActiveChanged(bool active) => Refresh();
 
+    // La primera línea avisa también de los cuadros que se abren sin NPC (StartDialogue sin
+    // Transform no emite OnDialogueStarted).
+    private void HandleCuadroDeDialogo(Transform _) => Refresh();
+    private void HandleLineaDeDialogo(DialogueLine _, Transform __) => Refresh();
+
+    /// El botón se ve mientras haya algo saltable (NarrativeSkipHub o una secuencia de
+    /// CinematicSequencerBase), salvo con un cuadro de diálogo abierto: los cuadros los avanza el
+    /// jugador línea a línea y no se saltan. Ver INC-612.
     private void Refresh()
     {
-        if (_suppressed) return;
-        if (skipButtonRoot != null)
-            skipButtonRoot.SetActive(NarrativeSkipHub.AnySkippable || CinematicSequencerBase.AnySequenceActive);
+        if (_suppressed || skipButtonRoot == null) return;
+        bool hayCuadro = DialogueManager.Instance != null && DialogueManager.Instance.IsOpen;
+        bool visible = (NarrativeSkipHub.AnySkippable || CinematicSequencerBase.AnySequenceActive) && !hayCuadro;
+        if (skipButtonRoot.activeSelf != visible) skipButtonRoot.SetActive(visible);
     }
 
     /// Oculta el botón y deja de reaccionar a NarrativeSkipHub/CinematicSequencerBase mientras dure

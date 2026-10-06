@@ -109,8 +109,9 @@ public class SenalDeCompra : MonoBehaviour
                     ? LocalizationManager.Instance.Get(r.textKey, r.textKey)
                     : r.textKey;
 
+                float voz = VoiceLines.TryPlay(r.textKey);
                 bool fin = false;
-                bocadillo.Show(quien, texto, Mathf.Max(0.1f, segundosPorFrase), () => fin = true,
+                bocadillo.Show(quien, texto, Mathf.Max(0.1f, segundosPorFrase, voz > 0f ? voz + 0.3f : 0f), () => fin = true,
                                string.IsNullOrEmpty(r.gesto) ? null : r.gesto);
 
                 // Tope por si otro bocadillo pisa este y su aviso no llega nunca (mismo motivo que

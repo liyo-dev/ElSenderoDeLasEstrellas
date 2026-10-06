@@ -43,11 +43,11 @@ public sealed class StartBattleNode : NarrativeNode
     [Tooltip("Identificador que se usará al suscribirse a OnBattleWon. Si está vacío, se usará battleId o el de la arena.")]
     public string arenaContext = "";
 
-    // --- Estado interno ---
-    Action _onBattleWonCb;
-    INarrativeSignals _subscribedSignals;
-    object _usedContextKey; // clave usada al suscribirse (para desuscribirse)
-    bool _subscriptionOk;
+    // --- Estado interno (no serializado: solo vive mientras el nodo está activo) ---
+    [NonSerialized] Action _onBattleWonCb;
+    [NonSerialized] INarrativeSignals _subscribedSignals;
+    [NonSerialized] object _usedContextKey;
+    [NonSerialized] bool _subscriptionOk;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

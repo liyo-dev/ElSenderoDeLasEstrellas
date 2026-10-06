@@ -52,10 +52,12 @@ public class VfxPoolService : MonoBehaviour
     {
         public Transform instance;
         public float returnAt;
+        public ulong uso;
     }
 
     // Cola de expiración procesada en un único Update (evita una coroutine por VFX activo).
     private readonly List<ActiveVfx> _active = new(64);
+    private ulong _ultimoUso;
 
     private void Awake()
     {
@@ -78,18 +80,30 @@ public class VfxPoolService : MonoBehaviour
     ///
     /// Es idempotente: recoger algo que ya no está activo no hace nada.
     /// </summary>
-    public void Recoger(Transform instancia)
+    public void Recoger(Transform instancia) => Recoger(instancia, 0);
+
+    /// Recoge solo el uso indicado; 0 permite recoger cualquier uso activo de la instancia.
+    public void Recoger(Transform instancia, ulong uso)
     {
         if (instancia == null) return;
 
         for (int i = _active.Count - 1; i >= 0; i--)
         {
-            if (_active[i].instance != instancia) continue;
+            if (_active[i].instance != instancia || (uso != 0 && _active[i].uso != uso)) continue;
 
             ReturnInternal(instancia);
             _active.RemoveAt(i);
             return;
         }
+    }
+
+    /// Identifica el uso activo para distinguirlo de futuras reutilizaciones del mismo Transform.
+    public ulong ObtenerUso(Transform instancia)
+    {
+        if (instancia == null) return 0;
+        for (int i = _active.Count - 1; i >= 0; i--)
+            if (_active[i].instance == instancia) return _active[i].uso;
+        return 0;
     }
 
     private void Update()
@@ -152,7 +166,7 @@ public class VfxPoolService : MonoBehaviour
         RestartParticles(instance);
 
         _instancePool[instance] = pool;
-        _active.Add(new ActiveVfx { instance = instance, returnAt = Time.time + (lifetime > 0f ? lifetime : DefaultLifetime) });
+        _active.Add(new ActiveVfx { instance = instance, returnAt = Time.time + (lifetime > 0f ? lifetime : DefaultLifetime), uso = ++_ultimoUso });
 
         return instance;
     }

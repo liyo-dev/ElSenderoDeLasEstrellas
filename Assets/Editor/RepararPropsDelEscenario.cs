@@ -21,6 +21,10 @@ using UnityEngine.SceneManagement;
 /// si hay varios, el que comparte más nombres de padres) y se apunta a él. Los props apagados a
 /// propósito (el incendio, el escudo, la puerta del Sendero, que se encienden con un beat) están
 /// apagados ELLOS MISMOS, así que no se tocan.
+///
+/// Si la entrada no apunta a nada (se borró o se sustituyó el decorado), se busca en la escena el
+/// único objeto que se llame como el id del prop (PROP_Incendio, PROP_Escudo…), encendido o no,
+/// siempre que su padre se vea. Si no hay ninguno o hay varios, se avisa y se deja. Ver INC-552.
 public static class RepararPropsDelEscenario
 {
     [MenuItem("El Sendero/Archivo/Prólogo: apuntar los objetos del escenario al decorado que se ve", priority = 33)]
@@ -59,9 +63,20 @@ public static class RepararPropsDelEscenario
                     if (t == null)
                     {
                         // Pasa si se borra o se sustituye el decorado al que apuntaba (p. ej. al pegar
-                        // el definitivo encima de ISLA_POSTGAME_MODULO): ya no hay nombre que buscar.
-                        Debug.LogWarning($"[Escenario] '{id}' no apunta a nada (¿se borró o se sustituyó el " +
-                                         "decorado?). Hay que apuntarlo a mano en el SequenceStage.", stage);
+                        // el definitivo encima de ISLA_POSTGAME_MODULO).
+                        var porNombre = BuscarPorId(escena, id, out int candidatos);
+                        if (porNombre == null)
+                        {
+                            Debug.LogWarning($"[Escenario] '{id}' no apunta a nada y " +
+                                             (candidatos == 0 ? "no hay ningún objeto que se llame así"
+                                                              : $"hay {candidatos} objetos que se llaman así") +
+                                             ". Hay que apuntarlo a mano en el SequenceStage.", stage);
+                            continue;
+                        }
+
+                        target.objectReferenceValue = porNombre;
+                        arreglados++;
+                        Debug.Log($"[Escenario] '{id}': no apuntaba a nada → '{Ruta(porNombre)}'.", porNombre);
                         continue;
                     }
                     if (!t.gameObject.activeSelf || t.gameObject.activeInHierarchy) continue;
@@ -88,6 +103,28 @@ public static class RepararPropsDelEscenario
             }
         }
         return arreglados;
+    }
+
+    /// El único objeto de la escena que se llama como el id del prop y cuyo padre se ve. Él mismo
+    /// puede estar apagado: los props que enciende la secuencia lo están hasta su beat.
+    private static Transform BuscarPorId(Scene escena, string id, out int candidatos)
+    {
+        candidatos = 0;
+        Transform encontrado = null;
+        if (string.IsNullOrWhiteSpace(id)) return null;
+        string nombre = id.Trim();
+
+        foreach (var raiz in escena.GetRootGameObjects())
+        {
+            foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
+            {
+                if (t.name != nombre) continue;
+                if (t.parent != null && !t.parent.gameObject.activeInHierarchy) continue;
+                candidatos++;
+                encontrado = t;
+            }
+        }
+        return candidatos == 1 ? encontrado : null;
     }
 
     private static Transform BuscarGemeloEncendido(Scene escena, Transform viejo)

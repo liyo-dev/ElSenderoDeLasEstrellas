@@ -50,6 +50,9 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     [Tooltip("Asignar si la cinemática ocurre en un interior. Activa/desactiva el skybox sólido automáticamente.")]
     [SerializeField] private AnchorEnvironment _interiorAnchor;
 
+    /// True si la cinemática ocurre en un interior (tiene AnchorEnvironment asignado).
+    protected bool OcurreEnInterior => _interiorAnchor != null;
+
     protected AudioGraphProfile.SequenceRule MusicRule { get; private set; }
 
     private Action _signalInHandler;
@@ -331,7 +334,12 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         _cinematicLocked = true;
         bool wasInactive = s_activeSequenceCount == 0;
         s_activeSequenceCount++;
-        if (wasInactive) OnAnySequenceActiveChanged?.Invoke(true);
+        if (wasInactive)
+        {
+            // INC-601: el occlusion culling horneado se equivoca con las cámaras de las secuencias.
+            SinOcclusionEnSecuencias.Activar();
+            OnAnySequenceActiveChanged?.Invoke(true);
+        }
         ResolveActionManager()?.PushMode(ActionMode.Cinematic);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         if (PlayerHUDV2.Instance == null)
@@ -364,7 +372,11 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         if (!_cinematicLocked) return; // Ya restaurado (evita Pop/ShowHUD duplicados si se llama dos veces)
         _cinematicLocked = false;
         s_activeSequenceCount = Mathf.Max(0, s_activeSequenceCount - 1);
-        if (s_activeSequenceCount == 0) OnAnySequenceActiveChanged?.Invoke(false);
+        if (s_activeSequenceCount == 0)
+        {
+            SinOcclusionEnSecuencias.Desactivar();
+            OnAnySequenceActiveChanged?.Invoke(false);
+        }
 
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
@@ -779,6 +791,17 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// llamada. Solo aplica a NPCs con NPCSimpleAnimator — Will (jugador) usa PlayerDialogueAnimator,
     /// que no tiene este problema (sus gestos viven en la UpperBody layer y se quedan en su último
     /// frame en vez de forzar Idle, ver PlayerDialogueAnimator.PlayGestureCoroutine()).
+    protected IEnumerator ShowBubbleLocalized(Transform target, string textKey, float durationPerPage,
+        string animTrigger = null, bool loopAnim = false, string speakerName = null)
+    {
+        if (SpeechBubbleUI.Instance == null) yield break;
+        string text = Loc(textKey);
+        float voz = VoiceLines.TryPlay(textKey);
+        int paginas = Mathf.Max(1, text.Split('\n').Length);
+        if (voz > 0f) durationPerPage = Mathf.Max(durationPerPage, (voz + 0.3f) / paginas);
+        yield return ShowBubblePaged(target, text, durationPerPage, animTrigger, loopAnim, speakerName);
+    }
+
     protected IEnumerator ShowBubblePaged(Transform target, string text, float durationPerPage,
         string animTrigger = null, bool loopAnim = false, string speakerName = null)
     {

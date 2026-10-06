@@ -110,7 +110,7 @@ public class WillSacrificeSequencer : CinematicSequencerBase
     private IEnumerator Co_PhaseB_TheWish()
     {
         _cinematicCamera?.Cut(_shotWillEstelaClose);
-        yield return ShowBubblePaged(_willActor, Loc(_willWishTextKey), _wishHoldDuration,
+        yield return ShowBubbleLocalized(_willActor, _willWishTextKey, _wishHoldDuration,
             animTrigger: "Beg01", speakerName: "Will");
     }
 
@@ -126,9 +126,9 @@ public class WillSacrificeSequencer : CinematicSequencerBase
 
     private IEnumerator Co_PhaseD_PushEstelaOut()
     {
-        yield return ShowBubblePaged(_estelaActor, Loc(_estelaProtestTextKey), 2f,
+        yield return ShowBubbleLocalized(_estelaActor, _estelaProtestTextKey, 2f,
             animTrigger: "HeadShake01", speakerName: "Estela");
-        yield return ShowBubblePaged(_willActor, Loc(_willCalmReplyTextKey), 2.5f,
+        yield return ShowBubbleLocalized(_willActor, _willCalmReplyTextKey, 2.5f,
             animTrigger: "Talk01", speakerName: "Will");
 
         if (_portalVfx != null && _portalTransform != null)

@@ -79,7 +79,7 @@ MonoBehaviour:
   impactVFX: {fileID: 0}
   despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
   vfxLifetime: 3
-  castSFXKey: SelloDelPacto
+  castSFXKey: Hechizo_JuicioDelPacto
   impactSFXKey: 
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 8bc2a032c5cd69d4a936d42cd33dc39e, type: 3}

@@ -1,0 +1,388 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Despertar_2_Contraataque_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Despertar_2_Contraataque
+  duracion: 7.339473
+  presentacion: 1
+  huella: "2026-10-06 08:09 \xB7 614a736534b133af2c722a654bc30e9e"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 0, z: 0}
+    - t: 0.001
+      p: {x: 25.3, y: 26.537277, z: -79.4}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 30.5, y: 30.5, z: -61}
+      actor: 
+    animacion:
+    - t: 0
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 0.08
+      tipo: 2
+      estado: Angry02
+      congelar: 0
+    - t: 1.6173469
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 3.4
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 3.48
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - t: 4.6
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - t: 5.8010206
+      tipo: 4
+      estado: 
+      congelar: 0
+    caras:
+    - t: 0
+      emocion: 3
+      dura: 0
+    - t: 0
+      emocion: 3
+      dura: 1.9673469
+    - t: 3.4
+      emocion: 12
+      dura: 2.7510204
+    - t: 4.6
+      emocion: 12
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Eldran
+    alias: eldran
+    colorDelNombre: {r: 0.6039216, g: 0.8156863, b: 1, a: 1}
+    claveDelNombre: Eldran
+    posiciones:
+    - t: 0
+      p: {x: -1.91, y: 26.281815, z: -142.75}
+    - t: 0.001
+      p: {x: 21.3, y: 26.281815, z: -85.7}
+    - t: 3
+      p: {x: 21.3, y: 26.281815, z: -85.7}
+    - t: 3.202018
+      p: {x: 21.355, y: 26.281815, z: -85.564995}
+    - t: 3.5190618
+      p: {x: 21.465, y: 26.281815, z: -85.295}
+    - t: 3.7859411
+      p: {x: 21.574999, y: 26.281815, z: -85.024994}
+    - t: 4.0394583
+      p: {x: 21.685, y: 26.281815, z: -84.755}
+    - t: 4.2929754
+      p: {x: 21.795, y: 26.281815, z: -84.485}
+    - t: 4.546498
+      p: {x: 21.904999, y: 26.281815, z: -84.215}
+    - t: 4.800015
+      p: {x: 22.015, y: 26.281815, z: -83.945}
+    - t: 5.053532
+      p: {x: 22.125, y: 26.281815, z: -83.675}
+    - t: 5.320411
+      p: {x: 22.234999, y: 26.281815, z: -83.405}
+    - t: 5.637455
+      p: {x: 22.345, y: 26.281815, z: -83.135}
+    - t: 5.839473
+      p: {x: 22.4, y: 26.281815, z: -83}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 4.6
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion: []
+    caras:
+    - t: 4.6
+      emocion: 4
+      dura: 0
+    visible: []
+    deslizando: []
+  lineas:
+  - t0: 0
+    t1: 1.5673469
+    actor: Player
+    clave: EVT_AWAKEN_03
+    gesto: Angry02
+    sinPose: 0
+    presentacion: -1
+  - t0: 3.4
+    t1: 5.7510204
+    actor: Player
+    clave: EVT_AWAKEN_05
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - t0: 0
+    t1: 0.9
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 0
+      p: {x: 27.4, y: 28.63828, z: -76.4}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 0.9
+    t1: 3
+    tipo: 1
+    descripcion: conjunto de will
+    posiciones:
+    - t: 0.9
+      p: {x: 36.0236, y: 30.839151, z: -68.936104}
+    lente: 28
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras:
+    - {x: 26.6, y: 28.6, z: -73.5}
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0880126
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 3
+    t1: 4.6
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 3
+      p: {x: 27.247118, y: 28.797731, z: -76.932816}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 4.6
+    t1: 7.339473
+    tipo: 5
+    descripcion: 'dos: will y eldran'
+    posiciones:
+    - t: 4.6
+      p: {x: 29.191101, y: 28.602137, z: -77.261475}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Eldran
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8461868
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - t: 0
+    beat:
+      rid: 5630202263296278776
+    linea: 33
+  - t: 0
+    beat:
+      rid: 5630202263296278777
+    linea: 39
+  - t: 0
+    beat:
+      rid: 5630202263296278778
+    linea: 40
+  - t: 0.9
+    beat:
+      rid: 5630202263296278779
+    linea: 43
+  - t: 2
+    beat:
+      rid: 5630202263296278780
+    linea: 48
+  - t: 2
+    beat:
+      rid: 5630202263296278781
+    linea: 49
+  - t: 2
+    beat:
+      rid: 5630202263296278782
+    linea: 50
+  - t: 2
+    beat:
+      rid: 5630202263296278783
+    linea: 51
+  - t: 6.6
+    beat:
+      rid: 5630202263296278784
+    linea: 64
+  - t: 6.6
+    beat:
+      rid: 5630202263296278785
+    linea: 65
+  - t: 6.6
+    beat:
+      rid: 5630202263296278786
+    linea: 66
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: grito
+    t: 0
+  - nombre: choque
+    t: 2
+  - nombre: despues
+    t: 3
+  puntos:
+  - nombre: p_eldran
+    posicion: {x: 25.8, y: 26.33728, z: -82.4}
+  - nombre: p_will
+    posicion: {x: 25.3, y: 26.537277, z: -79.4}
+  - nombre: bola_salida
+    posicion: {x: 30.5, y: 30.5, z: -61}
+  - nombre: escondite
+    posicion: {x: 21.3, y: 26.281815, z: -85.7}
+  - nombre: mira_bola
+    posicion: {x: 27.6, y: 28.6, z: -70}
+  - nombre: choque
+    posicion: {x: 26.6, y: 28.6, z: -73.5}
+  - nombre: asoma
+    posicion: {x: 22.4, y: 26.281815, z: -83}
+  - nombre: cam_will
+    posicion: {x: 27.4, y: 27.53828, z: -76.4}
+  - nombre: cam_dos
+    posicion: {x: 29, y: 26.953224, z: -80.2}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202263296278776
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.12
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202263296278777
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        encuadre: 1
+        lado: 0
+        alturaEnPantalla: 0.55
+        duracion: 1.2
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202263296278778
+      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        color: {r: 1, g: 1, b: 1, a: 0.85}
+        huecoCentral: 0.35
+        fundido: 0.1
+        duracion: 1.4
+        esperar: 0
+    - rid: 5630202263296278779
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: WillContraataca
+        waitForEnd: 1
+    - rid: 5630202263296278780
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: Aturdimiento
+        waitForEnd: 1
+    - rid: 5630202263296278781
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.35
+        duration: 0.5
+        waitForEnd: 0
+    - rid: 5630202263296278782
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 0.6, b: 0.2, a: 1}
+        duration: 0.25
+    - rid: 5630202263296278783
+      type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        timeScale: 1
+        rampDuration: 0
+    - rid: 5630202263296278784
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.25
+        waitForEnd: 0
+    - rid: 5630202263296278785
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: Tinnitus
+        waitForEnd: 1
+    - rid: 5630202263296278786
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 1
+        musicId: 
+        fadeOut: 1.5

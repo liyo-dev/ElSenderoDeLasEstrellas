@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.AI;
 using Game.NPC;
 using Game.NPC.Common;
@@ -31,6 +31,9 @@ public class SequenceActor
     public PlayerDialogueAnimator PlayerAnimator { get; private set; }
     public NPCEmotionController Emotion { get; private set; }
     public NavMeshAgent Agent { get; private set; }
+
+    /// Reserva de llegada compartida por los movimientos paralelos de la secuencia.
+    public Vector3? DestinoReservado { get; set; }
 
     /// Candado que mantiene al NPC en CinematicState (y por tanto con su comportamiento ambiental
     /// Wander/Idle desactivado) mientras la secuencia lo controla a mano. Null = no retenido.
@@ -176,13 +179,103 @@ public class SequenceActor
     /// también funciona en Will.
     /// Mantiene una pose hasta que alguien la suelte. Ver NPCSimpleAnimator.HoldPose: un gesto es
     /// un disparo que acaba en idle, y hay poses —volar, sostener un hechizo— que tienen que durar.
-    public void HoldPose(string stateName)
+    private Animator _animadorDeActuacion;
+    private bool _animadorDeActuacionResuelto;
+    public Animator AnimadorDeActuacion
+    {
+        get
+        {
+            if (!_animadorDeActuacionResuelto)
+            {
+                _animadorDeActuacionResuelto = true;
+                _animadorDeActuacion = Transform != null ? Transform.GetComponentInChildren<Animator>(true) : null;
+            }
+            return _animadorDeActuacion;
+        }
+    }
+
+    public bool TieneEstado(string nombre)
+        => !string.IsNullOrEmpty(nombre) && AnimatorLayerUtil.ResolveLayer(
+            AnimadorDeActuacion, nombre, AnimadorDeActuacion != null ? AnimadorDeActuacion.GetLayerIndex("UpperBody") : -1) >= 0;
+
+    /// Evita que la conversación interrumpa desplazamientos o acciones completas.
+    public bool PuedeEscuchar
+    {
+        get
+        {
+            if (Transform == null || !Transform.gameObject.activeInHierarchy || _agentOverridden ||
+                (NpcAnimator != null && NpcAnimator.AllowManualMovement) || SosteniendoPose) return false;
+            if (Agent != null && Agent.enabled && Agent.isOnNavMesh &&
+                (Agent.pathPending || (!Agent.isStopped && Agent.hasPath) || Agent.velocity.sqrMagnitude > 0.01f)) return false;
+            var animador = AnimadorDeActuacion;
+            if (animador == null || animador.layerCount == 0) return true;
+            return !EsAccionCompleta(animador.GetCurrentAnimatorStateInfo(0)) &&
+                (!animador.IsInTransition(0) || !EsAccionCompleta(animador.GetNextAnimatorStateInfo(0)));
+        }
+    }
+
+    private static bool EsAccionCompleta(AnimatorStateInfo estado)
+        => estado.IsTag("ActuacionCuerpoEntero") || estado.IsName("Dance_NoWeapon") ||
+           estado.IsName("Dizzy_NoWeapon") || estado.IsName("Sleeping_NoWeapon") ||
+           estado.IsName("Loot01_Begin") || estado.IsName("Loot01_Loop") || estado.IsName("Loot01_Stop") ||
+           estado.IsName("Baile_A") || estado.IsName("Baile_B");
+
+    public System.Collections.IEnumerator GirarSuavemente(Vector3 punto, float segundos)
+    {
+        if (Transform == null) yield break;
+        Vector3 direccion = punto - Transform.position;
+        direccion.y = 0f;
+        if (direccion.sqrMagnitude < 0.0001f) yield break;
+        Quaternion origen = Transform.rotation;
+        Quaternion destino = Quaternion.LookRotation(direccion.normalized, Vector3.up);
+        float transcurrido = 0f;
+        while (transcurrido < segundos)
+        {
+            if (Transform == null) yield break;
+            transcurrido += Time.unscaledDeltaTime;
+            Transform.rotation = Quaternion.Slerp(origen, destino, Mathf.Clamp01(transcurrido / segundos));
+            SyncRotation();
+            yield return null;
+        }
+        if (Transform != null) { Transform.rotation = destino; SyncRotation(); }
+    }
+
+    private Coroutine _poseDelJugador;
+    public void HoldPose(string stateName, bool congelarAlFinal = false)
     {
         if (string.IsNullOrEmpty(stateName)) return;
-        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName); return; }
+        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal); return; }
 
-        // El jugador no tiene este mecanismo; su animador de diálogo solo sabe de gestos sueltos.
-        PlayerAnimator?.PlayGesture(stateName);
+        // La pose del jugador cancela el gesto puntual para que su cierre no la interrumpa.
+        if (PlayerAnimator == null || !PlayerAnimator.isActiveAndEnabled || !TieneEstado(stateName)) return;
+        ReleasePose(false);
+        PlayerAnimator.CancelarGesto();
+        var animador = AnimadorDeActuacion;
+        int capa = AnimatorLayerUtil.ResolveLayer(animador, stateName, animador.GetLayerIndex("UpperBody"));
+        if (capa > 0) animador.SetLayerWeight(capa, 1f);
+        animador.CrossFadeInFixedTime(Animator.StringToHash(stateName), 0.12f, capa, 0f);
+        _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal));
+    }
+
+    private System.Collections.IEnumerator SostenerPoseDelJugador(string nombre, bool congelar)
+    {
+        var animador = AnimadorDeActuacion;
+        int capa = AnimatorLayerUtil.ResolveLayer(animador, nombre, animador.GetLayerIndex("UpperBody"));
+        int hash = Animator.StringToHash(nombre);
+        while (animador != null && PlayerAnimator != null && PlayerAnimator.isActiveAndEnabled)
+        {
+            yield return null;
+            if (animador == null) yield break;
+            var estado = animador.GetCurrentAnimatorStateInfo(capa);
+            if (estado.IsName(nombre))
+            {
+                bool sale = animador.IsInTransition(capa) && !animador.GetNextAnimatorStateInfo(capa).IsName(nombre);
+                if ((sale && (estado.loop || congelar)) || (congelar && !estado.loop && estado.normalizedTime >= 1f))
+                    animador.Play(hash, capa, estado.loop ? Mathf.Repeat(estado.normalizedTime, 1f) : Mathf.Min(1f, estado.normalizedTime));
+            }
+            else if (!animador.IsInTransition(capa)) animador.CrossFadeInFixedTime(hash, 0.12f, capa);
+        }
+        _poseDelJugador = null;
     }
 
     /// Suelta la pose sostenida. `aIdle` a false la deja puesta y no devuelve a nadie a su pose
@@ -191,15 +284,28 @@ public class SequenceActor
     public void ReleasePose(bool aIdle = true)
     {
         NpcAnimator?.ReleasePose(aIdle);
+        if (_poseDelJugador != null && PlayerAnimator != null) PlayerAnimator.StopCoroutine(_poseDelJugador);
+        bool teniaPose = _poseDelJugador != null;
+        _poseDelJugador = null;
+        if (teniaPose && aIdle)
+        {
+            var animador = AnimadorDeActuacion;
+            int capa = animador != null ? animador.GetLayerIndex("UpperBody") : -1;
+            int idle = Animator.StringToHash("UpperIdle");
+            if (capa >= 0 && animador.HasState(capa, idle)) animador.CrossFadeInFixedTime(idle, 0.2f, capa);
+            PlayerAnimator?.ReturnToLocomotion();
+        }
     }
 
     /// ¿Está sosteniendo una pose? Quien vaya a lanzarle un gesto por su cuenta debería mirarlo
     /// antes: una pose sostenida es una decisión del montaje y no se pisa sola.
-    public bool SosteniendoPose => NpcAnimator != null && NpcAnimator.SosteniendoPose;
+    public bool SosteniendoPose => (NpcAnimator != null && NpcAnimator.SosteniendoPose) || _poseDelJugador != null;
 
     public void PlayGesture(string stateName)
     {
         if (string.IsNullOrEmpty(stateName)) return;
+
+        if (_poseDelJugador != null) ReleasePose(false);
 
         if (NpcAnimator != null) { NpcAnimator.PlaySocialGesture(stateName); return; }
         if (PlayerAnimator != null) { PlayerAnimator.PlayGesture(stateName); return; }
@@ -216,6 +322,20 @@ public class SequenceActor
         if (emotion == NPCEmotion.None) return;
 
         if (Emotion != null) Emotion.SetEmotion(emotion);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        else
+            Debug.LogWarning($"[SequenceActor:{Id}] No tiene NPCEmotionController — no se puede " +
+                $"cambiar la cara a '{emotion}'. (El prefab de Will puede llevar más de uno, uno por " +
+                "variante de malla: si la cara no cambia, comprueba cuál está activo.)");
+#endif
+    }
+
+    /// Aplica una reacción temporal. None deja la cara sin cambios.
+    public void Reaccionar(NPCEmotion emotion, float segundos = -1f)
+    {
+        if (emotion == NPCEmotion.None) return;
+
+        if (Emotion != null) Emotion.Reaccionar(emotion, segundos);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning($"[SequenceActor:{Id}] No tiene NPCEmotionController — no se puede " +
@@ -264,6 +384,72 @@ public class SequenceActor
             if (_eyeHeight < 0f) _eyeHeight = MeasureEyeHeight();
             return _eyeHeight;
         }
+    }
+
+    private bool _caraMedida;
+    private float _alturaDeOjos;
+    private Vector3 _frenteLocal;
+
+    /// Altura real de ojos sobre los pies; excluye pelo y accesorios y se mide una sola vez.
+    public float AlturaDeOjos { get { MedirCara(); return _alturaDeOjos; } }
+    /// Direcci?n horizontal hacia la cara, independiente de la ra?z del prefab.
+    public Vector3 FrenteDeLaCara
+    {
+        get
+        {
+            MedirCara();
+            Vector3 frente = Transform != null ? Transform.TransformDirection(_frenteLocal) : Vector3.forward;
+            frente.y = 0f;
+            return frente.sqrMagnitude > 0.0001f ? frente.normalized : Vector3.forward;
+        }
+    }
+    private void MedirCara()
+    {
+        if (_caraMedida) return;
+        _caraMedida = true;
+        _alturaDeOjos = EyeHeight;
+        _frenteLocal = Vector3.forward;
+        if (Transform == null || IsDynamic) return;
+        var animator = Transform.GetComponentInChildren<Animator>(true);
+        var head = animator != null && animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.Head) : null;
+        var left = animator != null && animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.LeftEye) : null;
+        var right = animator != null && animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.RightEye) : null;
+        Vector3 centro = Vector3.zero;
+        bool medido = false;
+        if (left != null && right != null) { centro = (left.position + right.position) * 0.5f; medido = true; }
+        if (!medido)
+        {
+            // Los bounds de piel pueden abarcar el cuerpo: BakeMesh mide la geometr?a de ojos.
+            foreach (var renderer in Transform.GetComponentsInChildren<Renderer>(true))
+            {
+                if (!renderer.name.StartsWith("Eye", System.StringComparison.OrdinalIgnoreCase)) continue;
+                Mesh mesh = null;
+                bool temporal = false;
+                if (renderer is SkinnedMeshRenderer skin && skin.sharedMesh != null)
+                {
+                    mesh = new Mesh(); skin.BakeMesh(mesh); mesh.RecalculateBounds(); temporal = true;
+                }
+                else if (renderer.TryGetComponent<MeshFilter>(out var filtro)) mesh = filtro.sharedMesh;
+                if (mesh != null) { centro = renderer.transform.TransformPoint(mesh.bounds.center); medido = true; }
+                if (temporal)
+                {
+                    if (Application.isPlaying) Object.Destroy(mesh);
+                    else Object.DestroyImmediate(mesh);
+                }
+                if (medido) break;
+            }
+        }
+        if (!medido && head != null)
+        {
+            float baseCabeza = head.position.y - Transform.position.y;
+            centro = head.position + Vector3.up * Mathf.Max(0f, MeasureHeadTop() - baseCabeza) * 0.45f;
+            medido = true;
+        }
+        if (medido) _alturaDeOjos = Mathf.Max(0f, centro.y - Transform.position.y);
+        Vector3 frente = head != null && medido ? centro - head.position : Vector3.zero;
+        frente.y = 0f;
+        if (frente.sqrMagnitude < 0.0001f) frente = head != null ? head.forward : Transform.forward;
+        _frenteLocal = Transform.InverseTransformDirection(frente.normalized);
     }
 
     /// Punto del mundo a la altura de la cara. Es a donde apuntan los planos.
@@ -445,6 +631,7 @@ public class SequenceActor
     /// esto (Dizzy_NoWeapon en la capa base de Will, sin transición de salida).
     public void ReturnToNormalPose()
     {
+        ReleasePose(false);
         if (NpcAnimator != null)
         {
             NpcAnimator.EndInteraction();
@@ -463,6 +650,7 @@ public class SequenceActor
     // la limpieza del SequencePlayer los restaure también en ese camino, sin depender del finally.
 
     private float _savedAgentSpeed = -1f;
+    private float _savedStoppingDistance;
     private UnityEngine.AI.ObstacleAvoidanceType _savedAvoidance;
     private bool _agentOverridden;
 
@@ -473,6 +661,8 @@ public class SequenceActor
         if (Agent == null || _agentOverridden) return;
 
         _savedAgentSpeed = Agent.speed;
+        _savedStoppingDistance = Agent.stoppingDistance;
+        Agent.stoppingDistance = 0.02f;
         _savedAvoidance = Agent.obstacleAvoidanceType;
         _agentOverridden = true;
 
@@ -496,6 +686,7 @@ public class SequenceActor
 
         if (Agent != null)
         {
+            Agent.stoppingDistance = _savedStoppingDistance;
             if (_savedAgentSpeed > 0f) Agent.speed = _savedAgentSpeed;
 
             // El avoidance solo se devuelve si el actor ya no está retenido por la secuencia. Si

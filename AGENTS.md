@@ -90,6 +90,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 
 | Responsabilidad | Oficial | Congelado / a retirar |
 |---|---|---|
+| Post-procesado de escena y cinemáticas | `PostprocesoDeEscena` (+ `PostprocesoBeat`) | Volumes globales que se pisan sin control; valores de look en código |
 | Historia, misiones, señales | `NarrativeGraph` (StartQuestNode, CompleteQuestStepsNode, Wait*/Raise*) | `NPCInteractiveNarrativeExecutor`, `NPCQuestConfig`, `NPCQuestActionExecutor`, micro-componentes `Quest*` |
 | Cinemáticas | `SequencePlayer` + `SequenceDefinition`, lanzadas con `PlayCinematicNode` (campo `secuencia` para montarlas en vivo) | `*Sequencer.cs` escritos a mano, `SimpleCinematicDirector` |
 | Cámara | `CameraDirectorService` (Claim/Release) | apagar `Camera.main` o `vThirdPersonCamera` a mano |
@@ -98,7 +99,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Ocultar el HUD | `PlayerHUDV2.HideHUD(quien)`/`ShowHUD(quien)` (cada sistema con su clave) | contar ocultados a mano |
 | Seguir a un NPC (escolta jugable) | `GuiarJugadorNode` (tope de velocidad con `TopeDeVelocidadDelJugador`, charla por el camino con `CharlaEnBocadillos`) | escoltas de `NPCInteractiveNarrativeExecutor` |
 | Iconos sobre la cabeza | `NPCAlertIconController` (quests vía `NarrativeActor`) | `NPCQuestIconManager`, `NPCPersistentIconController` |
-| Texto | `SpeechBubbleUI` (cinemática, auto) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
+| Texto | `SpeechBubbleUI` (cinemática, auto; bocadillo o subtítulo mediante `SayBeat.presentacion` / `SequenceDefinition.presentacionDeTexto`; bandas con `BandasDeCineBeat`) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
 | Tiempo (`timeScale`) | `TimeScaleArbiterService` | escribir `Time.timeScale` directamente |
 | Botones de combate del jugador (X, LB…) | `PlayerCombatInput` | leer botones de magia en cada sistema; reflexión en `vThirdPersonInput` |
 | Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`) | leer B en otro sitio; bloquear daño con `if` en cada IA |

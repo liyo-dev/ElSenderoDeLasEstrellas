@@ -1,0 +1,1046 @@
+{
+  "mcpServers": {
+    "codex": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "codex",
+        "mcp-server"
+      ]
+    }
+  },
+  "coworkUserFilesPath": "C:\\Users\\luarb\\Claude",
+  "preferences": {
+    "coworkBrowserToolsEnabled": true,
+    "coworkPreferredBrowser": "chrome",
+    "launchPreviewPersistedWorkspaces": [
+      "cowork-shared"
+    ],
+    "launchPreviewSessionScopedSessions": [],
+    "launchPreviewAllowedOrigins": [
+      "https://popmakerai.com",
+      "https://poppop.ai",
+      "https://aws.amazon.com",
+      "https://eu-west-1.console.aws.amazon.com",
+      "https://studio.youtube.com",
+      "https://youtube.com",
+      "https://elevenlabs.io",
+      "https://chatgpt.com",
+      "https://suno.com"
+    ],
+    "localAgentModeTrustedFolders": [
+      "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+      "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+      "C:\\Users\\luarb\\dev",
+      "C:\\Users\\luarb\\OneDrive\\Desktop"
+    ],
+    "remoteFolderConsentMemory": [
+      "C:\\Users\\luarb\\Videos",
+      "C:\\Users\\luarb\\dev",
+      "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas",
+      "C:\\Users\\luarb\\.codex\\generated_images\\01a08beb-33d8-72e0-8e00-c730bd61ba5b",
+      "C:\\Users\\luarb\\Downloads"
+    ],
+    "remoteSessionFolderGrants": {
+      "session_011MDubidTGGuRm1J8JRAdRc": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BMSqfi3RKP6RDUAbM5V7tT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas\\PerformanceCaptures"
+      ],
+      "session_011dbjaBsGVWnzcBVNLqQHQd": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01JJ7mAYUsxKN9HwkhTo8DHL": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QauuPxLhweJC1CpPpKWv98": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01GeRJQRm4p3sUub6CGgWqLx": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\Videos",
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01XMELNYPV4i5jLYgHKKzkso": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HDHFhumz4bQxMapQf62492": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01PfDN2P7NXZbqPmUyrc3Svb": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas\\PerformanceCaptures"
+      ],
+      "session_01GkfN2yjKQUy6FK7cYXkLbu": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017fbixMrzKYDsJbTGcjFtMg": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SRd8kquiXRuUGqL8cKpU6Q": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CEbrhcfSUqYvbPQCjYL9FB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_018cgv4Ra231Y85HEKtsejmL": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Web",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Novela"
+      ],
+      "session_01RCuMbkg99tvQNbQbMrDXRV": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01EGwWYEdb5HXL5We6aUjzPG": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01A6r2dT6uQkhycVLpFvRoRQ": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\dev\\senderoWeb"
+      ],
+      "session_01MDjYqBYgCkDw1qBrwJyibC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01AL5XVgLrNxsUxD45ZpQQfp": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TdWbE3XYFHhEEMg53UstMM": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LfD3SaYi2F3CvuWoRz6sQe": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VZ896hqSg2xQvWSDpf9RCM": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BXmNrU5BqBfCHsRbbuPMna": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SA77tNQBeaKEWA2osrsLiC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VmdY17VsYLM7QxQ7K2dxSa": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Web",
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01PBzs7UGstzqYCVgdYJ6wDq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01FVG1kYV4juUm4vT4WeDipA": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LnC8JHYWbwBo7P3Ep3u6VD": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0175miQCRAa6tcSouJnDXNPq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas\\.claude",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01KjqysEFJ3RBdPZ2dFgW3NB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01L37rLESvPxPFQNJwFvSNmS": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TrCF69DsjMD18FPSHV5o5a": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CzYZpdtXE29VLocssMY2pJ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012QD1k5pwvm2NzNb3aw7R9y": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LDiNYTJLhKXGqVLXUYvUzU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016w9hkC91n6kLA4zgiLGuRo": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01JZ8k6qKov4X2ggorQiH3EP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019SM2b2LPxNmHti9tZbHxZQ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TRUBTysk152n2eXJWRT9XT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas"
+      ],
+      "session_01QEmMEc8h97oSvJ3VMD1cEG": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SS9PiYPq8nQJkpXXWq41hN": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019ChPTtXFabY1YfpaWujXwq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01J1oTP9h1LhaHocP6mpNJqt": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01RcZPQoRL9dqRQcVGQE4oMt": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BuiAtWDVmHxXobMH5MdSTn": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NpT668J3exsKf4gyGqVxk6": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CqTZPWBwNP3RmEaR1x86AT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LMNutUmy3VETC51sTUBt4Z": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Novela"
+      ],
+      "session_01McLXeAk3FJbYao1XzZ7j1h": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NvHKPUwsD564rjq3YBNdM1": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0168R7dD9azBRzmpHGXfRS9s": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LC2cdgzLvnFGwJnn4Lmzup": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01FDWqQwPwY6F6iX4P4vBw3k": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Novela"
+      ],
+      "session_01CZ6sUge8pAKtYCcB9qGLhK": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Lg4ubJxijFkcGPZKJMLY4M": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QEVY71EHDmz9NKkmpLkEbC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas\\PerformanceCaptures",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas"
+      ],
+      "session_013hQ9qZHcprFRKCT6hzuZgq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012Xc19MFmBgKGH2mCDW6zeh": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TjHWeeZdyNc6DSDg46u2Vz": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VMeNZxiP5XFgz9SPw3fTsy": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01AFQynJg18LJfz2qeyZw4FW": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017X4atPTHvvTpricrkyrvBY": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CEhmgSNZdLFJrhwpneQXQK": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01UHCck3a6ZTnNtrSfnjche9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LoFwhPYtdKCY1ZCJQJmXWx": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01EXJJYyUKRT7AeqzmKMHLqa": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01EmK7baQPbmb5TdDEytqn1e": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01N2nXBt8XPHF15QJYiLJNPX": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01WSPWYG5Wcgk3DyxcBXd1vw": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01CziY4t5AuDN9go5rRRSEXP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SJFwCRXG2EvYf2Ykzo3fLn": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01X64K23j9wqdqnhcL4aoTxq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0164yXGWLYukxLoy25cQB16k": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012nHVMf2YD8oSq2onbHUt6S": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01UMPBugCD9WH5PbxJx4vCjw": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_019ojsXniDgaVQRoiPvAZGMU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01KEN8mkJsimRjtGyTtNB35V": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_014Ku8EaA6Bsj7FaHL7aDoVx": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas\\PerformanceCaptures"
+      ],
+      "session_014jRKSsAvccrFnuaHCEDy9y": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01FCcqf6Y3tfN3xxJghsmuXd": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01YTj7EeQ9tzWVUr2Ch5Exww": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Aj1wQoiCtfeQuw9D4vgdtC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01N9upkogXP5FHSTCzTLteY2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Bq96mY9oRk7MLug2erQAF6": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QC9LAtUCRcxTMJdzEJNXQW": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XTpod5qkmPjAoXQJ82Q8Gs": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01AweBy7ubbmuzT3zrL23A8p": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01452mtYuQ35TANJELuZYcLf": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Fw6rGuSswbBVTrmWSRge9h": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XMDco3cvsscC2vsXaBPhdw": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\Downloads"
+      ],
+      "session_01AzvseyyeZxRvPnRtLjwQ2v": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012EaB8B128hWYNxebNtUwdF": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XPFrxK3v2awKfquSWpmdgQ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Ai7S2H6HwjGTUzy5Bz8fsy": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01KKqnVXPK3PBLRAvyvfvoP9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01L4nXM7aHc5psTE3a4LzBKQ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Vvie3UpEA9evc96aEtHMar": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_018ENS9VCVKS9UnuJrHGMqoB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_013SVPBFBevQoFfozH6ndkEj": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Xo5247kQescsHRyLyqXseG": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LZWY1KTBqDNcqqa1gv5egk": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Xa7UxWhAzXLgztTRfNKnnh": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01WHbTugmCScyzZPny85mg5u": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01KTJC45ZcwAsjAeiihaoY4C": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QdKMFJWRJ6YGe5BeeWPt8G": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01E9gXWVzbfMbCHyyK4zJMWC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Jq716ArA3QUSJwHQdisdAF": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01PhKBk1mcVqrCMGe78G5wWw": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0153xCv6AoiVnD6ZkXyL92w7": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Fe9RwgoTDa3JSqTUc9eK8E": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0196fyEAYuUMHinfP7pM4JEf": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01GoQTMPWdgew6AD1Rxu3DkS": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0139SAWHDRgRZC2uCkKYh6kF": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Y772ieNu42QHxKnoFYiF7W": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_015MGFxP76NmDMzWwckreSzb": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_018u9gwj1G69g7Bx4nXcqdQk": [
+        "C:\\Users\\luarb\\dev\\unity",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas"
+      ],
+      "session_013VDsqqwMydLvDAVS8Z1cr2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017PNAxY8KQ9widENAv3DvZ2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XDEdbGxhbVg5LRVUJU772h": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_018vc8rmUzWEj9apbGyz4jfm": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_016ZjESw3MeN6tsXdtJGiu98": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01AqkZhh37RrYfukjxoevgeN": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01TziJAXAStfsv9x8nWBobsb": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012ySkg2AQM9uhTPsFoMDYR1": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_011gm8bKuWsXCmUK3TszXRYB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01T6JkBuRQB17Eg7TpKEMXcS": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_014ZXG4fR4T1k4ppwHxfvcZN": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01MDt3MfSmA7Kg7K2hUvFmuT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Cxz2jAKikQvggs8ae3zZwq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Lpz6ivKn75LLRYnhwSwaYP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01D165jcFX5Tigyj5q9jXmEo": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01AeDWxnzZoskKQDu3XMUXrA": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019WyfMwe8mMAEbm1s1HqngF": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01Mow6gTukNY4jY6xBc1AR2s": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas"
+      ],
+      "session_01Y5Rn6J72g6Bqpeh88m6bpn": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LxTe3JbSYifwCtjvL4UHnS": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Novela"
+      ],
+      "session_01PzNjQx477dvz3Asiz1Rzvr": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NGJbAjuq6uGB5fG7qoL3Sh": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01WXva1xvHv17N7Xf59vZz88": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019axxqYxtQEa1eaNDVy9rze": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01DsiH6wHYxUYrBGZN4EdN1V": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01FWZbrKk85wy3JKMqGF9uNi": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BAqCLsjh3si1r631mDtus2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019qYuGc9KMGPJ6L4QunBjDE": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0112BXFwKxZVFAu72WSkZwoX": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01RhcNh7T9d3ZuejKq1fWocM": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CLW5UiU9nQRoxbpEo5qFsM": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01WrUtbNfpNYobCZutoo7394": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SB2gqqnJc6Axta1PaKeEJt": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01N6Pc8jrA5S55fQdTe1MAKZ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0134xwppRFEpTem5AoCVx4B9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Eis7c3crhcJL4TkGSZMWK9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012PNuMgVYLLZWhEgqCQ25NR": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01DkJm1c8bZstUCS1pjRYXEw": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01DJrWjngPaLNy8AyN8DxjPH": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\.codex\\generated_images\\01a08beb-33d8-72e0-8e00-c730bd61ba5b"
+      ],
+      "session_01W3J376nhAjjPjfpQ1e1Ao1": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_014YPXxXp8PN8eMsMq9bRbko": [
+        "C:\\Users\\luarb\\dev",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas\\Novela"
+      ],
+      "session_01V1Wn8VMfXwenJhbaJpVioj": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01B8gMtLcdY9w4rJCJZpaaCZ": [
+        "C:\\Users\\luarb\\dev\\Videos Pipo",
+        "C:\\Users\\luarb\\Downloads"
+      ],
+      "session_013mCKUhMTERgJCNGVZvtVoL": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01F8D1V8B2h1yL5ndoMhE9WR": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01LueNtPnAPASE7RHFBE9Wci": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01YCCRp6aW7cSANhDdJptoQH": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CBvHei6ConZ5usY3EF5bMT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Dhxg18EdyxJFbrABBcYS4u": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VHChWrkXLoidswSMrn5PJm": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_011HAnykSwcpcicyS79nQZpk": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_018v3uihQWk4UHKxpBWAAEwp": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_015bQ9kLMRGqqqFYudSHfGm3": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_016wMkEmE8vu4PYTrjoGtqAG": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HjoBxB6gjGePZ7K1AH85VT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_011DTWxjCkZgsWr6v7tHcgvt": [
+        "C:\\Users\\luarb\\Downloads",
+        "C:\\Users\\luarb\\dev\\Videos Pipo"
+      ],
+      "session_01CmgbWH6KZVtfK34RMySEzT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01GMLJC6hZyXjb2g41vsmKPk": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0172CYJye8ekAsjQxQVepB8z": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016RQ3f3Y7mNHTS1o5ZhjEg7": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\Local\\Unity\\Editor"
+      ],
+      "session_012PQBg3RetRLuskg1SBG2Qg": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Y982Xub5AUpcz2e69Xg448": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VgCo5K1biQ3jpbUojsHPiH": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TfFczwbA5gWMSiQMUJryPw": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QjJN9XZZ5X9XpSvc9pVsL6": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01DMQRS4Mwy6ADcyVaSTAyAd": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01UFQJV8X6RfXKmqAWKNusCj": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Qs3L5ZDf9sPhu27hT59cSn": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SB6pG4DXwM2qRCkf3tN8RD": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Bw36YGVWdqtR6H8ScHsTxi": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012X153vkPuF1wXu7TPZmPQT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0188HjWLNTRx5VN88XvNPoGj": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CsA7PCncdM1vQofNq6UCKR": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01UKLCgfcC3skjYMha5o33ds": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016Ps8xExf6s1cLxzwgjTAyP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CB48wv1x6Jrn9Pzx4wtXzQ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SFSTFR94enbQQMNWS3CiME": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TUhmCU7pnBYs88sxUDQRr4": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01RQdSvrQgX7EtX6QfhYP74w": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01PfrtU3PwusBsNgTD11XJZX": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NtxpzYqmSF7gEgkGfqDwqu": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019Fz8BG7bdoKQf65FCx6tr5": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01PnJNZqDsESTi1wzZACtiQt": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01KMvsyTtYVsuSun6sEcuzd6": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HLATyCnqEHWKjo7SpGjc1y": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01MxNrNNEAQjxFhYsKkHABKz": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_015oiJbdgXYohQ3Mpfbtoaub": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CQPnrpaxwpkLGuRPYUNWzS": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019B5H9HySdpESgT4VAPNHEU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0192hzztwQzdqiERu5pa8FvY": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01PKBegvtsdCkvFLJvZSm9V7": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HKKr7XL3BF6AE3Sx5LToiP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012otiDdU3QzRowGvEdzocEu": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01YLUGA5SYmMw3tERnatvTY9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TNdMCcmVrpHxGpTsgDiTEM": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_011KTx3dzF7U4HJZxPXRP8u8": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017D61DQceZ67fc8EetKbLp2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BorBaWyfSMsfFyNoHy4j8b": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HbunvgQGaMcy8oSa5WQ45H": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BUq8zvgM89Pmgg2nce5t1t": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01VoWdynrYMSAAoz9iUwAQvk": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01F93inTLH2i92pnqwdLzjqp": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NmBMVPe51mMWR6mKW2tQTu": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01EueKxLmJq77J4wezfb1ftC": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016rXFMcarhWwEq6KVUvdYAn": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01X9NzKmxcdddMnUrqHQnepE": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01MLizAyZcUBDjBo1GUh2taq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01S7vTfttfMbLcow2fm1pTcK": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017FAaWVmN65Bd66HKmZty81": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_015p79gWmz8Pa2k8NgsYdJku": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01VvW7p6NdedgSiX3WR3NmwV": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\Videos\\Grabaciones de pantalla"
+      ],
+      "session_01NXs6hxsKcAaZirCTh5aHFq": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01CbhNhsGq5xMNw4b6Z2mPZT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01JvcXK7odDza6GHVDsmB5MZ": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01WECEerebwseTwfBdugFnzA": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01RM6ZR8qGjaP68SCT5f58YN": [
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Li8UoYTRCdHhmUr7U7BMCb": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01MBxMaky8bQw3SbSUAQaZTK": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01TaZNovnw2i2RcWu3xQJjPR": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01EvFVGA7mAaYuugxtRsfW1b": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01LnozPkiMuYE2tmAT28N4N9": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_013LceHuyhtU5GibAGaXwzMG": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01YXMdaSWjN1fTgtsMhACG6b": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017MX9rGxHyfXVj66wP9zyA2": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01NPkh345p2e5yY4pcNuaMD3": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01FvdXrtAmjFP78rEsm2DHbW": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_013Yx1Y5jrXP4AdEY27tpwAk": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\OneDrive\\Desktop"
+      ],
+      "session_0144kKXJKyuNkDWXk6VyTbFh": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016MnsdE6xUdNWaS66kr8XfU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\OneDrive\\Desktop"
+      ],
+      "session_011dyViUuZbYtwWnnvJWSQWg": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_015JiS3VbNh5Ss5c5qKMQM17": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01DAvHwUJCTRZvTp1ZpRoYA5": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0112rfgFBELqWU8x6tVgx3VY": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017YFiAiogN8LzwT9aWVUfnY": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01BGgNmnmNQxNnwx1yxp4YYB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017BaLGSaQUtjsmkCwMhnbjj": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01CizNdV6toLFrKFGQXE52nD": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01EvgFVRDvdQshwxwyjMNuDQ": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SsB2Pgm5mwfgjuzC2b8ep3": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\Local\\Unity\\Editor",
+        "C:\\Users\\luarb\\Desktop",
+        "C:\\Users\\luarb\\Videos",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas"
+      ],
+      "session_013jivHBn79Y6m61AWFmA3Py": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01Gr1BDtqaFrM4bdF9jzhASa": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_01VF4GazqX2ViYkzA1jMZuMJ": [
+        "C:\\Users\\luarb\\dev"
+      ],
+      "session_015W2FEGFV6qZZkt7g9XBQEi": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019GYMJSccaeuxcYeR8ebkmA": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QTjxmP7DwtR2yFKCA78xty": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_0141nzT8x6bbr3X1MsU3wXvu": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01GDbgHSXAp4YA1hskuxEzyj": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01U6gjTagdeBpC7pLaGtPGX7": [
+        "C:\\Users\\luarb\\Desktop",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas",
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\OneDrive\\Desktop"
+      ],
+      "session_01WnGDzyvHLX3PkihXKrz4rp": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\dev\\El Sendero de las Estrellas"
+      ],
+      "session_01MJkKdQYAQ1FRcMbQTnPC7C": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XGPa1aNYpiuv2ftX9t1gKL": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01V6T1xAwEvjnjQdqZNWAQwq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SAorJr28Nm5YU2NTGgueHw": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01QWwZdoaStHVvgvKaSgUjSi": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_016yZKACL7XSMzFTgLJa36Fx": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01MPioAV118d4XnXAfg3N5iH": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Wj1bGMwjG6ingMebPWvBVc": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_011GKaXohwVMhBVvtem2BTxF": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_017cDGaq5FE1pgFkrCLwAeJU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_013wxmF352r2gigZ8hs6oWMk": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_012NfofvGRz3PLo3GG2C3k6a": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\OneDrive\\Desktop"
+      ],
+      "session_015QPPQkM9vzVsX8SSn7FgFt": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01SfomvxLcr7paq7qJiJ24kv": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01Q2FU4V7sggvijpCZoveCKT": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019AvTPoKep2Pf9xmUdd9hms": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_018Vnkfkc2dBsoWsdTGyMfdp": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XD6zwHv8zwtE6iitrnCyrw": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Qya1BtNZF1LL51FKkzzoHU": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_019vBrFCtrPe93nKNWa69crP": [
+        "C:\\Users\\luarb\\dev\\unity"
+      ],
+      "session_01QkJ6qTDNdrVxk7TrhFwoEq": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01HGv9c1sXoJUGP9qKib4DSx": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Dw3YgjMJqGPGFKHES46Xg3": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01Pnd6TbqrE2YDoETd8fB8yY": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_011krRgbogPuhSkAE7gAoLqi": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01MYoLxsfvYi3GC5L2P5hjhF": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01DRQy6pZRMaXjLcrr8QV2ga": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01JAGs6yQXPi7d5g2akXCYW7": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01C4z1NTV993DHc5CMFnXGNH": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01UTAd3UWeKASMwQNn5WU4JM": [
+        "C:\\Users\\luarb\\dev\\Videos Pipo",
+        "C:\\Users\\luarb\\Downloads",
+        "C:\\Users\\luarb\\dev\\Videos Tentino"
+      ],
+      "session_01Par6MUyVuGMvwD34yp5cGP": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01JbM1kAZhufLPE68Gcpnx5G": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_013XdMXbLPzCfgabdQgnbxMv": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\Desktop"
+      ],
+      "session_011S5uJGkCuprcL9cRVvsUGB": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ],
+      "session_01XQtXjAMMr4ELErk89LJUUf": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas",
+        "C:\\Users\\luarb\\AppData\\LocalLow\\Liyodev\\El Sendero de las Estrellas"
+      ],
+      "session_0191NSfCsrmzZYUiG1vAT132": [
+        "C:\\Users\\luarb\\dev\\unity\\ElSenderoDeLasEstrellas"
+      ]
+    },
+    "coworkLegacyRootGrantsPruned": true,
+    "coworkHasBoundRoutine": {
+      "c6c82b13-cb70-4e15-9605-e95436a35bdf": true
+    },
+    "coworkScheduledTasksEnabled": true,
+    "coworkHipaaRestricted": false,
+    "orgWorkAcrossAppsDisabled": false,
+    "ccdScheduledTasksEnabled": true,
+    "earlyWindowShowLatched": true,
+    "storeReadCacheLatched": true,
+    "windowsAppJobLatched": true,
+    "sidebarMode": "chat",
+    "bypassPermissionsGateByAccount": {
+      "2da95d0b-b6d4-43c8-a3d6-58969461f1e3": false
+    },
+    "coworkWebSearchEnabled": true,
+    "coworkModelAutoFallbackByAccount": {
+      "2da95d0b-b6d4-43c8-a3d6-58969461f1e3": true
+    },
+    "chicagoEnabled": true,
+    "remoteToolsDeviceName": "raul",
+    "epitaxyPrefs": {
+      "ccd-sessions-filter": {
+        "state": {
+          "selectedProjects": []
+        },
+        "version": 0
+      },
+      "desktop-frame.paneStore.v1": {
+        "state": {
+          "extraPanesByMode": {},
+          "colWeightsByMode": {},
+          "rowSplit": 0.5,
+          "draftNonce": 0,
+          "lastPrimaryCodeSession": null
+        },
+        "version": 4
+      },
+      "starred-local-code-sessions": [],
+      "starred-cowork-spaces": [
+        "a0cd1d98-8608-4963-ae68-edb8102fffe6"
+      ],
+      "starred-session-groups": [],
+      "dframe-group-scopes": {},
+      "dframe-local-slice": {
+        "pinnedOrder": [],
+        "homeProjectsPinnedOrder": []
+      },
+      "epitaxy-transcript-links-in-preview": true,
+      "epitaxy-transcript-links-chooser-seen": true,
+      "starred-local-routines": [],
+      "epitaxy-auto-default-notice-seen.2da95d0b-b6d4-43c8-a3d6-58969461f1e3": true
+    }
+  }
+}

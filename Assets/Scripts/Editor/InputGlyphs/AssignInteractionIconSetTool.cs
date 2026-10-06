@@ -59,14 +59,6 @@ namespace Core.InputGlyphs.EditorTools
                 ScriptGuid = "28a0f694c80a490196628203b693cf88",
                 Label = "TeleportHintUI.teleportIconSet",
             },
-            new Target
-            {
-                ComponentType = typeof(StarAwakeningSequencer),
-                FieldName = "interactIconSet",
-                AssetPath = "Assets/_UI/InteractionHintIconSet.asset",
-                ScriptGuid = "9972e554871cac546b34f166e14d7d04",
-                Label = "StarAwakeningSequencer.interactIconSet",
-            },
         };
 
         [MenuItem("Tools/Input Glyphs/Asignar Icon Sets a todos los consumidores")]

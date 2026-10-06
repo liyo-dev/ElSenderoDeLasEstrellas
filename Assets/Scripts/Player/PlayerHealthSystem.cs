@@ -51,6 +51,16 @@ public class PlayerHealthSystem : MonoBehaviour
     [SerializeField] private string damageSoundKey = "Player_Damage";
     [SerializeField] private string healSoundKey = "Player_Heal";
     [SerializeField] private string deathSoundKey = "Player_Death";
+
+    [Header("Reacciones vocales")]
+    [Tooltip("Personaje de las reacciones. Vacío desactiva las reacciones vocales.")]
+    [SerializeField] private string reactionCharacter = "Will";
+    [Tooltip("Reacción al recibir daño. Vacío la desactiva.")]
+    [SerializeField] private string damageReactionKind = "hurt";
+    [Tooltip("Reacción al morir. Vacío la desactiva.")]
+    [SerializeField] private string deathReactionKind = "death";
+    [SerializeField, Min(0f)] private float damageReactionCooldown = 0.6f;
+    private float _nextDamageReactionTime = float.NegativeInfinity;
     
     [Header("Eventos")]
     public UnityEvent<float> OnHealthChanged; // healthPercentage (0-1)
@@ -524,6 +534,7 @@ public class PlayerHealthSystem : MonoBehaviour
         try
         {
             PlaySound(deathSoundKey);
+            PlayVocalReaction(deathReactionKind);
             _caidaIniciada = false;
             if (_caidaCoroutine != null) StopCoroutine(_caidaCoroutine);
             if (isActiveAndEnabled)
@@ -744,6 +755,11 @@ public class PlayerHealthSystem : MonoBehaviour
         StartDamageFlash();
         SpawnVFX(damageVFX);
         PlaySound(damageSoundKey);
+        if (Time.unscaledTime >= _nextDamageReactionTime)
+        {
+            PlayVocalReaction(damageReactionKind);
+            _nextDamageReactionTime = Time.unscaledTime + damageReactionCooldown;
+        }
         
         if (enableCameraShake)
         {
@@ -751,6 +767,13 @@ public class PlayerHealthSystem : MonoBehaviour
         }
     }
     
+    private void PlayVocalReaction(string kind)
+    {
+        if (AudioService.Instance == null || string.IsNullOrWhiteSpace(reactionCharacter)
+            || string.IsNullOrWhiteSpace(kind)) return;
+        AudioService.Instance.PlayReaction(reactionCharacter, kind);
+    }
+
     private void PlayHealEffects()
     {
         SpawnVFX(healVFX);

@@ -21101,10 +21101,11 @@ MonoBehaviour:
   greetingDialogueState: HandWave01
   enableIdleVariations: 1
   idleVariationStates:
-  - Idle02_NoWeapon
-  - Idle03_NoWeapon
+  - Idle02
+  - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -21138,6 +21139,7 @@ MonoBehaviour:
   hint: {fileID: 8085522046611362526}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -21233,10 +21235,6 @@ MonoBehaviour:
   rotationDuration: 0.3
   initialLayer: 0
   switchToEnemyLayerOnCombat: 1
-  narrativeDetectionRange: 10
-  walkTowardsPlayerOnAlert: 1
-  stopDistanceFromPlayer: 2
-  narrativeAlertIconPrefab: {fileID: 0}
   onJoinedParty:
     m_PersistentCalls:
       m_Calls: []
@@ -21268,11 +21266,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 0}
-  originalMouthMesh: {fileID: 0}
+  ojosDeReposo: {fileID: 0}
+  bocaDeReposo: {fileID: 0}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &8344871266714992783
 GameObject:
   m_ObjectHideFlags: 0

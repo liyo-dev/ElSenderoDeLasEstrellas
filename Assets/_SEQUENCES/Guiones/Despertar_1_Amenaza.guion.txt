@@ -1,0 +1,81 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  EL DESPERTAR DE LA ESTRELLA · 1. LA AMENAZA  (INC-598, 5 oct 2026)
+#  Parte de cine del despertar, del aviso de Eldran a la pose de combate de Will. Después
+#  viene la jugabilidad de siempre (el botón a tiempo) y, si sale bien, «2. El contraataque».
+#  Pasa en el bosque, junto a Anchor_Eldran_Bosque: la bola llega desde la pradera del norte.
+#  Se hornea con la orden «hornear Assets/_SEQUENCES/Guiones/Despertar_1_Amenaza.guion.txt storyboard».
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Despertar_1_Amenaza
+ESCENA MainWorld
+ZONA Despertar 25.8 -82.6 40
+SECUENCIA Assets/_SEQUENCES/SEQ_StarAwakening.asset
+TEXTO subtitulo
+RITMO entre_frases=0.25 mismo_hablante=0.15
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=Eldran color=9AD0FF prefab=Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
+
+# ── Puntos (x z [y]; ver Guiones/MainWorld_Despertar/escenario/planta_general.svg) ─────────
+PUNTOS
+p_eldran     25.8 -82.4
+p_will       25.3 -79.4
+bola_salida  30.5 -61.0 30.5
+escondite    21.3 -85.7
+mira_bola    27.6 -70.0 28.6
+cam_norte    28.8 -74.8
+cam_espalda  24.1 -81.8
+
+HILO
+@inicio
+will en p_will mirando eldran
+& eldran en p_eldran mirando will
+& bandas
+plano dos eldran will desde=cam_norte altura=1.5 lente=30
+espera 1.2
+
+# Algo viene: temblor sordo y Eldran lo ve por encima del hombro de Will.
+@aviso
+sacudida 0.06 1.8
+& sonido SFX_Prologo_Trueno_Lejano volume=0.45
+& eldran mira bola_salida
+& eldran cara miedo
++0.5 plano medio eldran altura=1.0 lente=34 solo
+eldran dice EVT_AWAKEN_01 gesto=SenseSomethingStart_NoWeapon cara=miedo
+
+# Cámara lenta de golpe. En negro sale la bola (la mecánica la lanza desde «bola_salida»).
+@lento
+lento 0.2
+& fundido cubre 0.15
+desde @lento+0.2 efecto ModuleBeat routine=LanzarProyectil
+desde @lento+0.35 fundido entra 0.35
+desde @lento+0.35 sacudida 0.08 0.25
+desde @lento+0.35 plano primer will altura=1.1 lente=34
+desde @lento+0.35 will mira bola_salida
+desde @lento+0.35 will cara sorpresa
+desde @lento+0.5 will dice EVT_AWAKEN_02
+desde @lento+1.9 plano medio will mira_bola desde=cam_espalda altura=1.4 lente=30 solo
+espera 3.3
+
+@huida
+efecto ModuleBeat routine=PausarProyectil
+& lento 1
+& plano sigue eldran altura=1.4 lente=34
+eldran huye a escondite llega_mirando=bola_salida
+desde @huida+0.25 eldran dice EVT_AWAKEN_06 cara=miedo
+espera 0.3
+
+# El despertar: la cara de Will, la franja y la cámara que se aleja mientras se planta.
+@despertar
+lento 0.2
+& plano primer will altura=1.1 lente=34
+& will mira bola_salida
+& will cara decidido
+espera 0.7
+cutin will encuadre=Cara lado=Izquierda alturaEnPantalla=0.55 duracion=1.6 sonido=SFX_Prologo_CutIn dura=1.7
+& efecto LineasDeConcentracionBeat mostrar=true duracion=1.8
+& sonido Prologo_Carga volume=0.7
++0.9 plano medio will altura=1.4 lente=40 zoom=26 solo
+& will bucle Idle_Battle_NoWeapon
+espera 1.4

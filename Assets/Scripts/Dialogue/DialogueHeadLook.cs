@@ -52,6 +52,7 @@ public class DialogueHeadLook : MonoBehaviour
     [SerializeField] private float targetHeightFallback = 1.2f;
 
     private Transform _target;
+    public Transform Target => _target;
     private Transform _targetHead;   // hueso head del objetivo (si existe), para mirar a la cara
     private Transform _head;
     private Transform _neck;

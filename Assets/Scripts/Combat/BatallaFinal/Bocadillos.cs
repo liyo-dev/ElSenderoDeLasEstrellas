@@ -12,6 +12,8 @@ public static class Bocadillos
 
         string texto = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, key) : key;
         duracion = Mathf.Max(duracion, bocadillo.TiempoDeLectura(texto));
+        float voz = VoiceLines.TryPlay(key);
+        if (voz > 0f) duracion = Mathf.Max(duracion, voz + 0.3f);
         bocadillo.Show(quien, texto, duration: duracion, speakerName: nombre, fijoEnPantalla: fijo || quien == null);
         return duracion + 0.3f;
     }

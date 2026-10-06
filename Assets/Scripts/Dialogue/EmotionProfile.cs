@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// ScriptableObject que define cómo se mapean las emociones a meshes de ojos y boca.
@@ -14,11 +14,36 @@ public class EmotionProfile : ScriptableObject
     [Range(0f, 1f)]
     public float transitionDuration = 0.1f;
     
+    [Header("Cara de reposo")]
+    [Tooltip("Nombres de las mallas de ojos que se consideran neutras para la cara de reposo.")]
+    public string[] ojosNeutros = { "Eye01", "Eye02", "Eye04", "Eye08" };
+    [Tooltip("Nombres de las mallas de boca que se consideran neutras para la cara de reposo.")]
+    public string[] bocasNeutras = { "Mouth01", "Mouth02" };
+    [Tooltip("Ojos de reposo que se usan si no hay ojos asignados ni una malla neutra activa, siempre que exista en el personaje.")]
+    public string ojosDeReposoPorDefecto = "Eye01";
+    [Tooltip("Boca de reposo que se usa si no hay boca asignada ni una malla neutra activa, siempre que exista en el personaje.")]
+    public string bocaDeReposoPorDefecto = "Mouth02";
+    [Header("Reacciones")]
+    [Tooltip("Segundos que dura la reacción antes de volver a reposo.")]
+    [Min(0.1f)] public float segundosDeReaccion = 1.5f;
+    [Header("Boca al hablar")]
+    [Tooltip("Boca entreabierta al hablar, común a todas las emociones.")]
+    [FormerlySerializedAs("bocaHablandoMedia")]
+    public string bocaHablandoEntreabierta = "Mouth08";
+    [Tooltip("Boca abierta al hablar, común a todas las emociones.")]
+    public string bocaHablandoAbierta = "Mouth10";
+    [Tooltip("Intervalo entre bocas sin voz, en segundos no escalados.")]
+    [Min(0.01f)] public float segundosPorBoca = 0.08f;
+    [Tooltip("Nivel RMS mínimo para la boca abierta.")]
+    [Min(0f)] public float umbralVozAbierta = 0.08f;
+    [Tooltip("Tiempo mínimo por boca al seguir la voz.")]
+    [Min(0.01f)] public float tiempoMinimoPorBocaConVoz = 0.06f;
+
     [Header("Mapeo de Emociones")]
-    [Tooltip("Configuración de meshes faciales y animación corporal para cada emoción")]
+    [Tooltip("Configuración facial y corporal. Neutral usa la cara de reposo de cada personaje.")]
     public EmotionMeshData[] emotions = new EmotionMeshData[]
     {
-        new EmotionMeshData { emotion = NPCEmotion.Neutral,    eyeMeshName = "Eye01", mouthMeshName = "Mouth01", bodyAnimStateName = "" },
+        new EmotionMeshData { emotion = NPCEmotion.Neutral,    eyeMeshName = "", mouthMeshName = "", bodyAnimStateName = "" },
         new EmotionMeshData { emotion = NPCEmotion.Happy,      eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "HeadNod01" },
         new EmotionMeshData { emotion = NPCEmotion.Sad,        eyeMeshName = "Eye02", mouthMeshName = "Mouth02", bodyAnimStateName = "Cry01" },
         new EmotionMeshData { emotion = NPCEmotion.Angry,      eyeMeshName = "Eye04", mouthMeshName = "Mouth04", bodyAnimStateName = "Angry02" },
@@ -26,7 +51,7 @@ public class EmotionProfile : ScriptableObject
         new EmotionMeshData { emotion = NPCEmotion.Scared,     eyeMeshName = "Eye06", mouthMeshName = "Mouth06", bodyAnimStateName = "Beg01" },
         new EmotionMeshData { emotion = NPCEmotion.Thinking,   eyeMeshName = "Eye07", mouthMeshName = "Mouth07", bodyAnimStateName = "Question01" },
         new EmotionMeshData { emotion = NPCEmotion.Tired,      eyeMeshName = "Eye08", mouthMeshName = "Mouth08", bodyAnimStateName = "IdleWounded01" },
-        new EmotionMeshData { emotion = NPCEmotion.Smirk,      eyeMeshName = "Eye09", mouthMeshName = "Mouth09", bodyAnimStateName = "Laugh01" },
+        new EmotionMeshData { emotion = NPCEmotion.Smirk,      eyeMeshName = "", mouthMeshName = "Mouth11", bodyAnimStateName = "Laugh01" },
         new EmotionMeshData { emotion = NPCEmotion.Worried,    eyeMeshName = "Eye02", mouthMeshName = "Mouth08", bodyAnimStateName = "HeadShake02" },
         new EmotionMeshData { emotion = NPCEmotion.Determined, eyeMeshName = "Eye04", mouthMeshName = "Mouth01", bodyAnimStateName = "Challenging_NoWeapon" },
         new EmotionMeshData { emotion = NPCEmotion.Relieved,   eyeMeshName = "Eye03", mouthMeshName = "Mouth03", bodyAnimStateName = "Talk02" },
@@ -40,9 +65,17 @@ public class EmotionProfile : ScriptableObject
     [Tooltip("Estados del Animator que se rotan cuando la emoción es None o Neutral")]
     public string[] neutralBodyAnims = { "Talk01", "Talk02", "Talk03" };
     
-    /// <summary>
-    /// Obtiene la configuración de meshes para una emoción específica.
-    /// </summary>
+    public bool EsOjoNeutro(string nombre) => Contiene(ojosNeutros, nombre);
+    public bool EsBocaNeutra(string nombre) => Contiene(bocasNeutras, nombre);
+    private static bool Contiene(string[] nombres, string nombre)
+    {
+        if (nombres == null || string.IsNullOrEmpty(nombre)) return false;
+        for (int i = 0; i < nombres.Length; i++)
+            if (nombres[i] == nombre) return true;
+        return false;
+    }
+
+    /// Busca la emoción; si falta devuelve Neutral y, si tampoco existe, default.
     public EmotionMeshData GetEmotionData(NPCEmotion emotion)
     {
         if (emotions == null) return default;
@@ -53,11 +86,7 @@ public class EmotionProfile : ScriptableObject
                 return data;
         }
 
-        // FIX (17 sep 2026): antes se caía a emotions[0], que es "el primero de la lista", no
-        // "neutral". En el perfil del juego el primero es Happy, así que una emoción sin mapear
-        // ponía al NPC a SONREÍR — justo lo contrario de lo que suele pedir la línea que se le
-        // ha quedado sin mapa. Ahora se busca Neutral de verdad y, si tampoco está, se devuelve
-        // vacío, que el resto del sistema ya interpreta como "no cambies nada".
+        // Busca Neutral si falta la emoción; si tampoco existe, devuelve default.
         foreach (var data in emotions)
         {
             if (data.emotion == NPCEmotion.Neutral)
@@ -79,10 +108,10 @@ public struct EmotionMeshData
     public NPCEmotion emotion;
 
     [Header("Cara")]
-    [Tooltip("Nombre del GameObject de ojos a activar (ej: 'Eye01', 'Eye03'). Vacío = no cambia, se mantienen los ojos que ya tenía el NPC.")]
+    [Tooltip("Nombre del GameObject de ojos a activar (ej: 'Eye01', 'Eye03'). Vacío = se usa la de la cara de reposo del personaje")]
     public string eyeMeshName;
 
-    [Tooltip("Nombre del GameObject de boca a activar (ej: 'Mouth01', 'Mouth03'). Vacío = no cambia, se mantiene la boca que ya tenía el NPC.")]
+    [Tooltip("Nombre del GameObject de boca a activar (ej: 'Mouth01', 'Mouth03'). Vacío = se usa la de la cara de reposo del personaje")]
     public string mouthMeshName;
 
     [Header("Animación Corporal (jugador)")]
@@ -110,4 +139,3 @@ public struct EmotionMeshData
         return index == 0 ? bodyAnimStateName : bodyAnimVariants[index - 1];
     }
 }
-

@@ -3,24 +3,10 @@ using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
-/// Las caras que no podían cambiar (INC-404).
-///
-/// ── Qué pasó ──────────────────────────────────────────────────────────────────────────────────
-/// «Liora está contenta todo el rato y no cambia la cara.» Las expresiones las pone
-/// `NPCEmotionController` ENCENDIENDO una malla de ojos y otra de boca por su nombre (Eye10 +
-/// Mouth08 es «preocupada», Eye09 + Mouth08 «asustada»...). El prefab de Liora (`Tendera`) solo
-/// trae UNA de cada: Eye07 y Mouth09, que es la cara feliz. Pedirle cualquier otra emoción no
-/// hacía nada — sin aviso, porque el controlador solo avisa en modo debug. Los aldeanos
-/// (`TownNpc#N`) están igual: una cara fija cada uno.
-///
-/// ── Arreglo ───────────────────────────────────────────────────────────────────────────────────
-/// Las mallas de ojos y bocas son del mismo pack modular para todos (el mismo asset de Mesh, la
-/// misma pose bajo el hueso de la cabeza). Se copian las que falten desde un donante que las tiene
-/// todas (`_WILL_ORIGINAL`, el Archimago), APAGADAS, junto a las que ya tiene el personaje, en la
-/// misma pose y con su mismo material. El personaje se ve igual que antes hasta que una emoción
-/// pida otra cara.
-///
-/// Idempotente: si ya están, no toca nada.
+/// Completa las mallas Eye/Mouth de los personajes desde el donante modular.
+/// Las añade apagadas bajo el mismo padre y con la pose y materiales del ancla,
+/// para permitir expresiones y habla sin cambiar la cara visible del prefab.
+/// El contenido cargado incluye las mallas heredadas de variantes y evita duplicarlas.
 public static class CompletarCarasDeNpc
 {
     private const string RutaDonante = "Assets/Prefabs/_WILL_ORIGINAL.prefab";
@@ -62,15 +48,65 @@ public static class CompletarCarasDeNpc
         return total;
     }
 
+    private const string MenuCompletar = "El Sendero/Diálogos/Completar caras de todos los personajes";
+    private static int _prefabsCompletados;
+
+    [MenuItem(MenuCompletar)]
+    public static void MenuTodos()
+    {
+        int total = CompletarTodos();
+        EditorUtility.DisplayDialog("Caras de todos los personajes",
+            $"Añadidas {total} mallas de ojos/boca en {_prefabsCompletados} prefabs.", "Vale");
+    }
+
+    /// Completa los prefabs de personajes editables bajo Assets y devuelve las mallas añadidas.
+    public static int CompletarTodos()
+    {
+        int total = 0;
+        _prefabsCompletados = 0;
+        foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { "Assets" }))
+        {
+            string ruta = AssetDatabase.GUIDToAssetPath(guid);
+            if (ruta == RutaDonante || ruta.IndexOf("Versiones antiguas", System.StringComparison.OrdinalIgnoreCase) >= 0) continue;
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+            if (prefab == null || prefab.GetComponentInChildren<NPCEmotionController>(true) == null) continue;
+            try
+            {
+                int añadidas = Completar(ruta);
+                total += añadidas;
+                if (añadidas > 0) _prefabsCompletados++;
+            }
+            catch (System.Exception error)
+            {
+                Debug.LogWarning($"[Caras] No se puede completar '{ruta}': {error.Message}");
+            }
+        }
+        return total;
+    }
+
+    private static bool EsEditable(string ruta)
+    {
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+        return ruta.StartsWith("Assets/", System.StringComparison.Ordinal)
+            && prefab != null && PrefabUtility.GetPrefabAssetType(prefab) != PrefabAssetType.Model
+            && !PrefabUtility.IsPartOfImmutablePrefab(prefab) && AssetDatabase.IsOpenForEdit(ruta);
+    }
+
     public static int Completar(string rutaPrefab)
     {
         if (string.IsNullOrEmpty(rutaPrefab) || rutaPrefab == RutaDonante) return 0;
 
-        var donante = PrefabUtility.LoadPrefabContents(RutaDonante);
-        var raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
+        if (!EsEditable(rutaPrefab))
+        {
+            Debug.LogWarning($"[Caras] '{rutaPrefab}' no es un prefab editable; se omite.");
+            return 0;
+        }
+        GameObject donante = null, raiz = null;
         int añadidas = 0;
         try
         {
+            donante = PrefabUtility.LoadPrefabContents(RutaDonante);
+            raiz = PrefabUtility.LoadPrefabContents(rutaPrefab);
             if (raiz.GetComponentInChildren<NPCEmotionController>(true) == null) return 0;
 
             añadidas += CompletarGrupo(raiz, donante, Ojo, rutaPrefab);
@@ -78,14 +114,18 @@ public static class CompletarCarasDeNpc
 
             if (añadidas > 0)
             {
-                PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab);
+                if (!EsEditable(rutaPrefab)) throw new System.InvalidOperationException("El prefab deja de ser editable; no se guarda.");
+                EditorUtility.SetDirty(raiz);
+                PrefabUtility.SaveAsPrefabAsset(raiz, rutaPrefab, out bool guardado);
+                if (!guardado) throw new System.InvalidOperationException("No se han podido guardar las caras.");
+                AssetDatabase.SaveAssets();
                 Debug.Log($"[Caras] '{rutaPrefab}': {añadidas} malla(s) de cara añadidas (apagadas).");
             }
         }
         finally
         {
-            PrefabUtility.UnloadPrefabContents(raiz);
-            PrefabUtility.UnloadPrefabContents(donante);
+            if (raiz != null) PrefabUtility.UnloadPrefabContents(raiz);
+            if (donante != null) PrefabUtility.UnloadPrefabContents(donante);
         }
         return añadidas;
     }
@@ -97,8 +137,9 @@ public static class CompletarCarasDeNpc
         var existentes = new HashSet<string>();
         foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
         {
-            if (!patron.IsMatch(t.name) || t.GetComponent<MeshFilter>() == null) continue;
+            if (!patron.IsMatch(t.name)) continue;
             existentes.Add(t.name);
+            if (t.GetComponent<MeshFilter>() == null && t.GetComponent<SkinnedMeshRenderer>() == null) continue;
             if (ancla == null || t.gameObject.activeSelf) ancla = t;
         }
         if (ancla == null)
@@ -106,15 +147,23 @@ public static class CompletarCarasDeNpc
             Debug.LogWarning($"[Caras] '{ruta}' no tiene ninguna malla '{patron}' de la que colgar las demás.");
             return 0;
         }
-        var rendAncla = ancla.GetComponent<MeshRenderer>();
+        var rendAncla = ancla.GetComponent<Renderer>();
+        var pielAncla = ancla.GetComponent<SkinnedMeshRenderer>();
 
         int n = 0;
         foreach (var d in donante.GetComponentsInChildren<Transform>(true))
         {
             if (!patron.IsMatch(d.name) || existentes.Contains(d.name)) continue;
             var filtro = d.GetComponent<MeshFilter>();
-            var rend = d.GetComponent<MeshRenderer>();
-            if (filtro == null || filtro.sharedMesh == null) continue;
+            var rend = d.GetComponent<Renderer>();
+            var pielDonante = d.GetComponent<SkinnedMeshRenderer>();
+            var malla = filtro != null ? filtro.sharedMesh : pielDonante != null ? pielDonante.sharedMesh : null;
+            if (malla == null) continue;
+            if (pielAncla != null && malla.bindposes.Length != pielAncla.bones.Length)
+            {
+                Debug.LogWarning($"[Caras] '{ruta}': no se copia '{d.name}': los huesos del ancla SkinnedMeshRenderer no coinciden con las bindposes del donante. Requiere revisar el rig.");
+                continue;
+            }
 
             var nueva = new GameObject(d.name);
             nueva.layer = ancla.gameObject.layer;
@@ -122,8 +171,23 @@ public static class CompletarCarasDeNpc
             nueva.transform.localPosition = ancla.localPosition;
             nueva.transform.localRotation = ancla.localRotation;
             nueva.transform.localScale = ancla.localScale;
-            nueva.AddComponent<MeshFilter>().sharedMesh = filtro.sharedMesh;
-            var r = nueva.AddComponent<MeshRenderer>();
+            Renderer r;
+            if (pielAncla != null)
+            {
+                var piel = nueva.AddComponent<SkinnedMeshRenderer>();
+                piel.sharedMesh = malla;
+                piel.bones = pielAncla.bones;
+                piel.rootBone = pielAncla.rootBone;
+                piel.localBounds = pielAncla.localBounds;
+                piel.updateWhenOffscreen = pielAncla.updateWhenOffscreen;
+                piel.quality = pielAncla.quality;
+                r = piel;
+            }
+            else
+            {
+                nueva.AddComponent<MeshFilter>().sharedMesh = malla;
+                r = nueva.AddComponent<MeshRenderer>();
+            }
             r.sharedMaterials = rendAncla != null ? rendAncla.sharedMaterials
                               : rend != null ? rend.sharedMaterials : new Material[0];
             if (rendAncla != null)

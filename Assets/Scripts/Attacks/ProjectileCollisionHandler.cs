@@ -170,11 +170,8 @@ public static class ProjectileCollisionHandler
             return;
         }
         
-        GameObject vfx = Object.Instantiate(config.collisionVFX, position, Quaternion.identity);
-        
-        // 🔥 CORRECCIÓN: Siempre destruir el VFX después de un tiempo
-        float destroyTime = config.vfxLifetime > 0f ? config.vfxLifetime : 3f; // 3s por defecto
-        Object.Destroy(vfx, destroyTime);
+        float destroyTime = config.vfxLifetime > 0f ? config.vfxLifetime : 3f;
+        VfxPoolService.Instance.Play(config.collisionVFX, position, Quaternion.identity, destroyTime);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[ProjectileCollision] ✨ VFX spawneado en {position}");

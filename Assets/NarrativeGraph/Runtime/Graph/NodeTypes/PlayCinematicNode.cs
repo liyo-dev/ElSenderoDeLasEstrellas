@@ -37,7 +37,7 @@ public sealed class PlayCinematicNode : NarrativeNode, INarrativeStateEffect
     public SequenceDefinition secuencia;
 
     [Tooltip("Nombre del GameObject del SequencePlayer ya montado del que copiar los ajustes.")]
-    public string plantillaDeAjustes = "SEQ_PerasEldran";
+    public string plantillaDeAjustes = "";
 
     [Tooltip("Actor que se coloca más cerca del jugador ANTES de empezar, fuera de plano, si está a " +
              "más de 'distanciaMaxima' (para que un «viene hacia ti» no dure medio minuto). Vacío = nada.")]

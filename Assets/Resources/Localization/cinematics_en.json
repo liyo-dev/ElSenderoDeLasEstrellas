@@ -254,15 +254,31 @@
         },
         {
             "id": "EVT_LIAM_CRYSTAL_01",
-            "text": "So… that's the pure-hearted boy who will open the Path."
+            "text": "He didn't run."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_02",
-            "text": "I'm glad that demon managed to awaken his magic."
+            "text": "He stood his ground against the demon. This morning he didn't even know he had magic."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_03",
-            "text": "Ha… ha ha…"
+            "text": "Get up..."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_04",
+            "text": "He beat it."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_05",
+            "text": "It's him. He can open the path."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_06",
+            "text": "If only there were another way..."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_07",
+            "text": "Hold on, Tobi. I'm almost there."
         },
         {
             "id": "EVT_LIAM_GOLEM_01",
@@ -618,11 +634,11 @@
         },
         {
             "id": "PROLOGO_BAILE",
-            "text": "That’s it. Let them hear you from the bridge."
+            "text": "I love your dancing!"
         },
         {
             "id": "PROLOGO_BAILE_RESPUESTA",
-            "text": "You got it!"
+            "text": "Thanks, master! We'll keep dancing!"
         },
         {
             "id": "PROLOGO_CARRETA_GRACIAS",
@@ -690,23 +706,43 @@
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "All of them!"
+            "text": "Protect them all!"
         },
         {
-            "id": "PROLOGO_HECHIZO_PLEGARIA",
-            "text": "If anyone can hear me, give me the strength to protect the valley. I want to get back to Liora."
+            "id": "PROLOGO_PLEGARIA_01",
+            "text": "No... I won't let you touch them.\nLiora! Nina! All of you!"
         },
         {
-            "id": "PROLOGO_HECHIZO_1",
-            "text": "Protect them...!"
+            "id": "PROLOGO_PLEGARIA_02",
+            "text": "First light... you who burned before there was a sky...\nyou who lit the stars and laid paths between them when there was no one yet to walk them..."
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_03",
+            "text": "I know no spell that can stop him...\nSo I'm not asking for one that exists. Nothing burns without you... I beg you... lend me your fire!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_04",
+            "text": "I know there's no coming back from this. I know I'll never answer that letter...\nI don't care what's left of me!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_05",
+            "text": "Take my years! Take my voice, my name!\nTake my soul if you want it! Just let them see the dawn!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_06",
+            "text": "Forgive me, Liora... I won't be back soon."
+        },
+        {
+            "id": "PROLOGO_MAGO_VALLE",
+            "text": "Let this valley never have existed."
+        },
+        {
+            "id": "PROLOGO_MAGO_VACIO",
+            "text": "Let the void devour you!"
         },
         {
             "id": "PROLOGO_HORA_ARCHIMAGO",
             "text": "To the bridge! All of you, now!"
-        },
-        {
-            "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Kneel. You have one hour to leave the valley. Resist, and I’ll raze it all."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
@@ -714,7 +750,7 @@
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "Whoops! I went too far. Sorry, everyone."
+            "text": "Oops! Sorry, it got away from me."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
@@ -895,6 +931,22 @@
         {
             "id": "FINAL_MAGO_DESHACE",
             "text": "No... my wish... the altar..."
+        },
+        {
+            "id": "PROLOGO_MANANA_SALUDO_1",
+            "text": "Good morning, master!"
+        },
+        {
+            "id": "PROLOGO_MANANA_SALUDO_2",
+            "text": "Morning, master!"
+        },
+        {
+            "id": "PROLOGO_BAILE_INVITA",
+            "text": "Hey, master, look! Come dance with us!"
+        },
+        {
+            "id": "PROLOGO_BAILE_NOCHE",
+            "text": "Tonight we dance it in front of the whole village!"
         }
     ]
 }

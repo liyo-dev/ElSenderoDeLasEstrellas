@@ -44,6 +44,28 @@ public class AudioGraphProfile : ScriptableObject
         public bool loop = true;
     }
 
+    [Serializable]
+    public class VoiceDuckSettings
+    {
+        public bool enabled = true;
+        [Range(-80f, 0f)] public float musicDb = -12f;
+        [Range(-80f, 0f)] public float ambienceDb = -8f;
+        [Range(-80f, 0f)] public float sfxDb = -5f;
+        [Min(0f)] public float attackSeconds = 0.15f;
+        [Min(0f)] public float releaseSeconds = 0.6f;
+        [Min(0f)] public float holdAfterVoiceSeconds = 0.25f;
+    }
+
+    [Header("Atenuación durante las voces")]
+    public VoiceDuckSettings voiceDuck = new();
+
+    [Header("Atenuación de voces en cinemáticas")]
+    public VoiceDuckSettings cinematicVoiceDuck = new()
+    {
+        musicDb = -8f, ambienceDb = -5f, sfxDb = -3f,
+        attackSeconds = 0.15f, releaseSeconds = 0.6f, holdAfterVoiceSeconds = 0.25f
+    };
+
     public List<BattleRule> battles = new();
     public List<MinigameRule> minigames = new();
     public List<AmbientZoneRule> ambientZones = new();

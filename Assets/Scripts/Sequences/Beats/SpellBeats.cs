@@ -88,6 +88,15 @@ public class SpellBeat : SequenceBeat
     [Tooltip("Sacudida de cámara al impacto. 0 = ninguna.")]
     public float sacudidaAlImpacto = 0.4f;
 
+    [Tooltip("Segunda capa de sonido al impactar (p. ej. un golpe de cine). Vacío = ninguna.")]
+    public string sfxImpactoExtra;
+
+    [Tooltip("Congelado breve al impactar, en segundos reales (0 = sin congelado). Da peso al golpe.")]
+    [Min(0f)] public float pausaAlImpacto;
+
+    [Tooltip("Destello de pantalla al impactar (alfa 0 = sin destello).")]
+    public Color destelloAlImpacto = new Color(1f, 1f, 1f, 0f);
+
     [Tooltip("Esperar a que llegue antes de seguir con el beat siguiente. Desmarcado, la escena " +
              "avanza mientras el hechizo vuela — para cortar a la cara del que lo ve venir.")]
     public bool esperarAlImpacto = true;
@@ -197,8 +206,17 @@ public class SpellBeat : SequenceBeat
         if (!string.IsNullOrWhiteSpace(sfxImpacto) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxImpacto, 1f, posicion);
 
+        if (!string.IsNullOrWhiteSpace(sfxImpactoExtra) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(sfxImpactoExtra, 1f, posicion);
+
         if (sacudidaAlImpacto > 0f)
             FeedbackService.CameraShake(sacudidaAlImpacto, 0.45f);
+
+        if (destelloAlImpacto.a > 0f)
+            FeedbackService.ScreenFlash(destelloAlImpacto, 0.18f);
+
+        if (pausaAlImpacto > 0f)
+            FeedbackService.HitStop(0.05f, pausaAlImpacto);
 
         if (!esperarAlImpacto) yield break;
 

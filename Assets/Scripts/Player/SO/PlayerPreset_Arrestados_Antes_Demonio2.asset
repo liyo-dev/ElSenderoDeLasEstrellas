@@ -23,9 +23,7 @@ MonoBehaviour:
   unlockedAbilities: 01000000i
   unlockedSpells: 0100000002000000i
   basicSpellIds: 0100000002000000i
-  legacyLeftSpellId: 0
-  legacyRightSpellId: 0
-  legacySpecialSpellId: 0
+  companionBasics: []
   flags:
   - SLEEP_DONE:PrologueBed
   - CINEMATIC_SEEN:Cinematic_DemonAppears
@@ -64,6 +62,7 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION10
   - QUEST_ARCHIVED:ELDRAN_MISSION10
   - QUEST_ACTIVE:ELDRAN_MISSION11
+  - LIAM_EN_GRUPO
   abilities:
     swim: 0
     jump: 0
@@ -217,6 +216,7 @@ MonoBehaviour:
     hasActiveState: 0
     isActive: 1
   npcRelationships: []
+  objetosDelMundo: []
   consumedInteractableIds:
   - MainWorld:Carta_1231,6_1000,8_3,4
   completedInteractiveNarratives:

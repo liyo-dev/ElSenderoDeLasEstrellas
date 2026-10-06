@@ -809,17 +809,22 @@ public class DayNightCycle : MonoBehaviour
 
         if (_rainDarkenAmount <= 0f && _mistAmount <= 0f) return;
 
-        if (_rainDarkenAmount > 0f && directionalLight != null)
+        // Dentro de un interior el clima no se ve. Ver INC-606.
+        bool climaVisible = !(AnclaDeClima == null && IsSkyboxLockedByEnvironment());
+        float lluviaVisible = climaVisible ? _rainDarkenAmount : 0f;
+        float nieblaVisible = climaVisible ? _mistAmount : 0f;
+
+        if (lluviaVisible > 0f && directionalLight != null)
         {
             float baseIntensity = directionalLight.intensity;
             float darkened = baseIntensity * rainLightIntensityMultiplier;
             // Suelo absoluto: en periodos ya oscuros (Night...) el multiplicador por sí solo puede
             // dejar la luz casi a cero. Nunca baja de rainMinLightIntensity.
             float floored = Mathf.Max(darkened, rainMinLightIntensity);
-            directionalLight.intensity = Mathf.Lerp(baseIntensity, floored, _rainDarkenAmount);
+            directionalLight.intensity = Mathf.Lerp(baseIntensity, floored, lluviaVisible);
         }
 
-        if (_rainDarkenAmount > 0f && _runtimeSkybox != null)
+        if (lluviaVisible > 0f && _runtimeSkybox != null)
         {
             // Mismo patrón que la niebla (_baseFogDensity/_baseFogColor): se parte SIEMPRE de
             // _baseSkyboxTint/_baseSkyboxIntensity (la base cacheada del periodo actual), nunca de
@@ -830,14 +835,14 @@ public class DayNightCycle : MonoBehaviour
             // nunca conocía el estado de lluvia al pintar el skybox.
             Color rainedTint = Color.Lerp(_baseSkyboxTint, rainSkyboxTint, rainSkyboxTintBlend);
             float rainedIntensity = _baseSkyboxIntensity * rainSkyboxIntensityMultiplier;
-            _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(_baseSkyboxTint, rainedTint, _rainDarkenAmount));
-            _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(_baseSkyboxIntensity, rainedIntensity, _rainDarkenAmount));
+            _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(_baseSkyboxTint, rainedTint, lluviaVisible));
+            _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(_baseSkyboxIntensity, rainedIntensity, lluviaVisible));
 
             // Encapotado: el tinte de arriba solo oscurece el azul; esto lo lleva a gris.
             float periodBrightness = (0.2126f * _baseSkyboxTint.r + 0.7152f * _baseSkyboxTint.g + 0.0722f * _baseSkyboxTint.b) * rainedIntensity;
             Color overcastColor = rainSkyOvercastColor * periodBrightness;
             overcastColor.a = 1f;
-            _lastSkyOvercast = rainSkyOvercast * _rainDarkenAmount;
+            _lastSkyOvercast = rainSkyOvercast * lluviaVisible;
             _runtimeSkybox.SetColor(SkyboxOvercastColorId, overcastColor);
             _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
         }
@@ -849,14 +854,14 @@ public class DayNightCycle : MonoBehaviour
             float density = _baseFogDensity;
             Color color   = _baseFogColor;
 
-            if (_rainDarkenAmount > 0f)
+            if (lluviaVisible > 0f)
             {
-                density *= Mathf.Lerp(1f, rainFogDensityMultiplier, _rainDarkenAmount);
-                color    = Color.Lerp(color, rainFogColorTint, _rainDarkenAmount * rainFogColorBlend);
+                density *= Mathf.Lerp(1f, rainFogDensityMultiplier, lluviaVisible);
+                color    = Color.Lerp(color, rainFogColorTint, lluviaVisible * rainFogColorBlend);
             }
 
-            if (_mistAmount > 0f)
-                density *= Mathf.Lerp(1f, mistFogDensityMultiplier, _mistAmount);
+            if (nieblaVisible > 0f)
+                density *= Mathf.Lerp(1f, mistFogDensityMultiplier, nieblaVisible);
 
             RenderSettings.fogDensity = density;
             RenderSettings.fogColor   = color;
@@ -2066,6 +2071,8 @@ public class DayNightCycle : MonoBehaviour
                 yield return new WaitForSeconds(wait);
             }
             first = false;
+            // Dentro de un interior no se ve ni se oye el rayo, igual que la lluvia. Ver INC-606.
+            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment()) continue;
             yield return FlashLightningRoutine();
         }
     }
@@ -2090,13 +2097,13 @@ public class DayNightCycle : MonoBehaviour
     /// (thunderstormBoltJitter) para dar la forma quebrada característica de un rayo, en vez de una
     /// línea recta. Se autodestruye a los pocos instantes, igual que el destello de luz.
     /// </summary>
-    void SpawnLightningBolt()
+    void SpawnLightningBolt(Vector3? punto = null, bool destello = true)
     {
         if (_lightningBoltMaterial == null)
             return;
 
         // En una cinemática, el rayo se coloca EN EL PLANO (INC-432), como el sol en cuadro.
-        if (AnclaDeClima != null && RayoEnCuadro())
+        if (AnclaDeClima != null && RayoEnCuadro(destello, punto))
             return;
 
         // En una cinemática (INC-420 → INC-427): con el ancla en la cámara, el zigzag caía a 18-55 m
@@ -2121,7 +2128,7 @@ public class DayNightCycle : MonoBehaviour
                                       : UnityEngine.Random.Range(thunderstormBoltDistanceRange.x, thunderstormBoltDistanceRange.y);
         Vector3 horizontalOffset = (Quaternion.Euler(0f, boltYaw, 0f) * Vector3.forward) * distance;
 
-        Vector3 groundPoint = reference.position + horizontalOffset;
+        Vector3 groundPoint = punto ?? (reference.position + horizontalOffset);
         Vector3 topPoint = groundPoint + Vector3.up * thunderstormBoltHeight;
 
         int segments = enCinematica ? 11 : Mathf.Max(2, thunderstormBoltSegments);
@@ -2173,22 +2180,24 @@ public class DayNightCycle : MonoBehaviour
     /// del cuadro (el centro es de los personajes), lejos, con un halo azulado alrededor del trazo
     /// y una rama. Si la cámara mira muy hacia abajo (no hay cielo en el plano), no se cuelga y
     /// cae como siempre.
-    bool RayoEnCuadro()
+    bool RayoEnCuadro(bool destello = true, Vector3? punto = null)
     {
         Camera cam = SolYLunaEnElCielo.CamaraActual();
         if (cam == null) cam = Camera.main;
         if (cam == null || !cam.isActiveAndEnabled) return false;
         if (cam.transform.forward.y < -0.45f) return false;
 
-        float lejos = Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
+        float lejos = punto.HasValue ? cam.transform.InverseTransformPoint(punto.Value).z
+            : Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
         if (lejos < 30f) return false;
 
         float x = UnityEngine.Random.value < 0.5f ? UnityEngine.Random.Range(0.10f, 0.36f)
                                                   : UnityEngine.Random.Range(0.64f, 0.90f);
+        if (punto.HasValue) x = cam.WorldToViewportPoint(punto.Value).x;
         Vector3 arriba = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.05f, 0.05f), 1.10f, lejos));
-        Vector3 abajo = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.12f, 0.12f),
+        Vector3 abajo = punto ?? cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.12f, 0.12f),
                                                              UnityEngine.Random.Range(0.30f, 0.48f), lejos));
-        if (arriba.y < abajo.y + 15f) return false;   // el plano no tiene cielo de verdad
+        if (arriba.y < abajo.y + (punto.HasValue ? 1f : 15f)) return false;
 
         Vector3 lado = cam.transform.right;
         float largo = Vector3.Distance(arriba, abajo);
@@ -2221,7 +2230,7 @@ public class DayNightCycle : MonoBehaviour
         TrazoDelRayo(raiz, rama, grosor * 0.55f, new Color(1f, 1f, 1f, 0.9f), 0);
 
         StartCoroutine(Co_ParpadeoDelRayoEnCuadro(raiz));
-        Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, 0.16f), 0.12f);
+        if (destello) Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, 0.16f), 0.12f);
         return true;
     }
 
@@ -2254,7 +2263,7 @@ public class DayNightCycle : MonoBehaviour
         {
             if (raiz == null) yield break;
             raiz.SetActive(on);
-            yield return new WaitForSeconds(p);
+            yield return new WaitForSecondsRealtime(p);
             on = !on;
         }
         if (raiz != null) Destroy(raiz);
@@ -2269,37 +2278,49 @@ public class DayNightCycle : MonoBehaviour
         {
             if (line == null) yield break;
             line.enabled = on;
-            yield return new WaitForSeconds(p);
+            yield return new WaitForSecondsRealtime(p);
             on = !on;
         }
         if (bolt != null) Destroy(bolt);
     }
 
+    public string ClaveDeTrueno => string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey;
+
+    /// Lanza un rayo del sistema de clima en un punto concreto; no requiere tormenta activa.
+    public void LanzarRayo(Vector3 punto, bool conTrueno = true, string trueno = null, float volumen = 1f, bool destello = true)
+    {
+        if (!isActiveAndEnabled) return;
+        SpawnLightningBolt(punto, destello);
+        if (conTrueno) ProgramarTrueno(trueno, volumen);
+        if (destello) StartCoroutine(DestelloDelRayo());
+    }
+    private void ProgramarTrueno(string clave = null, float volumen = 1f)
+    {
+        float minimo = Mathf.Clamp(thunderstormThunderDelayRange.x, 0.2f, 0.9f);
+        float maximo = Mathf.Clamp(thunderstormThunderDelayRange.y, minimo, 0.9f);
+        AudioService.Instance?.ProgramarTrueno(string.IsNullOrWhiteSpace(clave) ? ClaveDeTrueno : clave,
+            UnityEngine.Random.Range(minimo, maximo), volumen);
+    }
     IEnumerator FlashLightningRoutine()
     {
         SpawnLightningBolt();
-
+        ProgramarTrueno();
+        yield return DestelloDelRayo();
+    }
+    private IEnumerator DestelloDelRayo()
+    {
         var flashObj = new GameObject("[ThunderstormLightningFlash]");
         var flash = flashObj.AddComponent<Light>();
         flash.type = LightType.Directional;
         flash.color = Color.white;
         flash.intensity = thunderstormFlashIntensity;
         flash.shadows = LightShadows.None;
-        if (directionalLight != null)
-            flashObj.transform.rotation = directionalLight.transform.rotation;
-
-        yield return new WaitForSeconds(Mathf.Max(0.01f, thunderstormFlashDuration));
-
-        if (flashObj != null)
-            Destroy(flashObj);
-
-        float thunderDelay = UnityEngine.Random.Range(thunderstormThunderDelayRange.x, thunderstormThunderDelayRange.y);
-        yield return new WaitForSeconds(thunderDelay);
-        // Sin clave puesta en el Inspector, el trueno de siempre (INC-417): la tormenta del prólogo
-        // destellaba sin que se oyera nada — «vamos a añadir de vez en cuando un trueno».
-        PlayWeatherSfx(string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey);
+        if (directionalLight != null) flashObj.transform.rotation = directionalLight.transform.rotation;
+        // Destroy con retardo garantiza la retirada incluso si se apaga el componente del clima.
+        Destroy(flashObj, Mathf.Max(0.01f, thunderstormFlashDuration));
+        yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, thunderstormFlashDuration));
+        if (flashObj != null) Destroy(flashObj);
     }
-
     const string TruenoPorDefecto = "Weather_Thunder";
 
     // 30 ago 2026 — Raúl pidió botones de prueba en el Inspector ("testeos") para poder forzar cada

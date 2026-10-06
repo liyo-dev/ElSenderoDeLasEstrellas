@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc82f4ca07df3ef42ac99a6a3f3dd3af, type: 3}
   m_Name: QuickTest_Temp
   m_EditorClassIdentifier: Assembly-CSharp::PlayerPresetSO
-  spawnAnchorId: Bedroom
+  spawnAnchorId: Eldran_Bosque
   level: 1
   maxHP: 100
   currentHP: 100
@@ -31,6 +31,9 @@ MonoBehaviour:
   - QUEST_COMPLETED:ELDRAN_MISSION1
   - QUEST_ACTIVE:WILL_MISSION1
   - QUEST_COMPLETED:WILL_MISSION1
+  - QUEST_ACTIVE:ELDRAN_SIGUEME
+  - QUEST_COMPLETED:ELDRAN_SIGUEME
+  - QUEST_ACTIVE:ELDRAN_MISSION2
   abilities:
     swim: 0
     jump: 0
@@ -63,8 +66,14 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: 004d01ec-565b-4943-8661-88335a7b0057
-  npcPositions: []
+      value: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 25.8, y: 27.01, z: -82.61}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

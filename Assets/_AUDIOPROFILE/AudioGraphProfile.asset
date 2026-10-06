@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3770fbd868330b148805ba2ad4c4af7f, type: 3}
   m_Name: AudioGraphProfile
   m_EditorClassIdentifier: Assembly-CSharp::AudioGraphProfile
+  voiceDuck:
+    enabled: 1
+    musicDb: -12
+    ambienceDb: -8
+    sfxDb: -5
+    attackSeconds: 0.15
+    releaseSeconds: 0.6
+    holdAfterVoiceSeconds: 0.25
+  cinematicVoiceDuck:
+    enabled: 1
+    musicDb: -8
+    ambienceDb: -5
+    sfxDb: -3
+    attackSeconds: 0.15
+    releaseSeconds: 0.6
+    holdAfterVoiceSeconds: 0.25
   battles:
   - battleId: Demon_1
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
@@ -79,7 +95,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: d3c300de31b869f49b6a1b40d52a47ff, type: 3}
   eventSfx:
   - eventKey: UI_Navigate
-    sfx: {fileID: 8300000, guid: c83e31fc92bdc722b8d62fa8ebea0722, type: 3}
+    sfx: {fileID: 8300000, guid: 541614e7686fea34187bb7cda4196c8d, type: 3}
   - eventKey: UI_Submit
     sfx: {fileID: 8300000, guid: 43ccdaf4e06a1324fa8c6defac11f3fe, type: 3}
   - eventKey: UI_Cancel
@@ -139,7 +155,7 @@ MonoBehaviour:
   - eventKey: Prologue_SpellRelease
     sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
   - eventKey: Prologue_Explosion
-    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+    sfx: {fileID: 8300000, guid: a189b54c866af7c4cad4338ed7a1f5a0, type: 3}
   - eventKey: Prologue_WarClashStinger_A
     sfx: {fileID: 8300000, guid: 0c3a043231d545f43824cdc8e35d93c6, type: 3}
   - eventKey: Prologue_WarClashStinger_B
@@ -271,37 +287,179 @@ MonoBehaviour:
   - eventKey: Weather_Thunder
     sfx: {fileID: 8300000, guid: 72d91bb92d4c44488a6ea681cfdef106, type: 3}
   - eventKey: Prologo_Golpe
-    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+    sfx: {fileID: 8300000, guid: 15ff3f25002ee9c4690c81a45a985e09, type: 3}
   - eventKey: Prologo_PresenciaOscura
     sfx: {fileID: 8300000, guid: dacadfd86bc4d50a488d378400c7254b, type: 3}
   - eventKey: Prologo_BolaDeFuego
-    sfx: {fileID: 8300000, guid: f18a0dcd1bbc4ee69cbc9056c3e13f00, type: 3}
+    sfx: {fileID: 8300000, guid: 0ad4b04db76f3ef469c092a5e5523125, type: 3}
   - eventKey: Prologo_EscudoBloquea
-    sfx: {fileID: 8300000, guid: 4d1251d3584f3534a9287fc24218f233, type: 3}
+    sfx: {fileID: 8300000, guid: cfdaae207dcbfe041970a3d05efb6004, type: 3}
   - eventKey: Prologo_HechizoArchimago
-    sfx: {fileID: 8300000, guid: a2ae90e42daaf4723a539c25867d37fd, type: 3}
+    sfx: {fileID: 8300000, guid: 6cfb39117dc4d6c41873d08cb72e0cb4, type: 3}
   - eventKey: Prologo_ImpactoHechizo
-    sfx: {fileID: 8300000, guid: 63ab46d1f43f673338691ce52bb3f9ee, type: 3}
+    sfx: {fileID: 8300000, guid: 9e286eb9bb172814dade0f827d1a6212, type: 3}
   - eventKey: Prologo_Carga
-    sfx: {fileID: 8300000, guid: 4253ea676060e49dd9488f73d692ea2a, type: 3}
+    sfx: {fileID: 8300000, guid: b49c989b8e5e38f4c9c0139a07910698, type: 3}
   - eventKey: Prologo_Choque
-    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+    sfx: {fileID: 8300000, guid: 4e9e3b7e7d9e2194baec8fc4ab2449dd, type: 3}
   - eventKey: Prologo_SueloSeAbre
-    sfx: {fileID: 8300000, guid: ad5214a44455017afb1d4b9c21d768b6, type: 3}
+    sfx: {fileID: 8300000, guid: b713a7ef75ab11f47aef1c5ea5a39065, type: 3}
   - eventKey: Prologo_Despegue
-    sfx: {fileID: 8300000, guid: cadebfea8b8a85ff6a9db0f5d84195ad, type: 3}
+    sfx: {fileID: 8300000, guid: fb54678df71984e49a0c8ec6f2164f0a, type: 3}
   - eventKey: Prologo_GolpeEnElAire
     sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
   - eventKey: Prologo_HechizoGrande
-    sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
+    sfx: {fileID: 8300000, guid: be1b952bf37515545ac2c304a7ae7946, type: 3}
   - eventKey: Prologo_ProteccionAbsoluta
-    sfx: {fileID: 8300000, guid: 7743889c22ea9472a895ecd63b2bb221, type: 3}
+    sfx: {fileID: 8300000, guid: 6534bc5d1d216754589a828c10b5781c, type: 3}
   - eventKey: Agua_Zambullida
     sfx: {fileID: 8300000, guid: c4a619d419f485e3c8274090402a9e52, type: 3}
   - eventKey: Agua_Entrada
     sfx: {fileID: 8300000, guid: 5613f2e09fe5d491789612c3870d24a3, type: 3}
   - eventKey: Agua_SalirAFlote
     sfx: {fileID: 8300000, guid: 1c0370f9553392603b24a0fa17629e5a, type: 3}
+  - eventKey: UI_ComenzarPartida
+    sfx: {fileID: 8300000, guid: 4e6d1d74866b3404689d4af0896850d1, type: 3}
+  - eventKey: Ambience_Prologo_Pueblo
+    sfx: {fileID: 8300000, guid: 4871881a72e47e9408672db41756958a, type: 3}
+  - eventKey: Ambience_Prologo_Rio
+    sfx: {fileID: 8300000, guid: c59c7ee8d0a83af42b2fe092d1221ab6, type: 3}
+  - eventKey: Ambience_Prologo_Tormenta
+    sfx: {fileID: 8300000, guid: 3cc8ec29f6b4ef5429c750574d037fe8, type: 3}
+  - eventKey: Ambience_Prologo_Panico
+    sfx: {fileID: 8300000, guid: f0620845e26f00e4ca3567ebaf55e868, type: 3}
+  - eventKey: SFX_Prologo_AgujeroNegro_Carga
+    sfx: {fileID: 8300000, guid: 58cd03b8939d6894a86fe687d3c4491e, type: 3}
+  - eventKey: SFX_Prologo_AgujeroNegro_Bucle
+    sfx: {fileID: 8300000, guid: f6aad008630b3944282e880373f7e759, type: 3}
+  - eventKey: SFX_Prologo_Choque
+    sfx: {fileID: 8300000, guid: 95aff130e38e19941b8752785c112170, type: 3}
+  - eventKey: SFX_Prologo_GritoMago
+    sfx: {fileID: 8300000, guid: 5c1545f83b6b48a429dbfa0a9444b350, type: 3}
+  - eventKey: SFX_Prologo_CutIn
+    sfx: {fileID: 8300000, guid: b99f5f9d19da49380b531e1d6649a8de, type: 3}
+  - eventKey: SFX_Prologo_GolpeCine
+    sfx: {fileID: 8300000, guid: 0c3a043231d545f43824cdc8e35d93c6, type: 3}
+  - eventKey: SFX_Prologo_Explosion
+    sfx: {fileID: 8300000, guid: 5a7837b53ae69456b9164dec1604dead, type: 3}
+  - eventKey: SFX_Prologo_Globo
+    sfx: {fileID: 8300000, guid: 91937034e8690bab4a51993657db6c12, type: 3}
+  - eventKey: SFX_Prologo_Viento
+    sfx: {fileID: 8300000, guid: a812a3d9ad10a968dbf300f765adfd5b, type: 3}
+  - eventKey: SFX_Prologo_Grito
+    sfx: {fileID: 8300000, guid: 24cd36a75c748aa318ee167a32b6c118, type: 3}
+  - eventKey: SFX_Prologo_Impacto
+    sfx: {fileID: 8300000, guid: d4aeaa82960253d099537626a6ab15a3, type: 3}
+  - eventKey: SFX_Prologo_Latigazo
+    sfx: {fileID: 8300000, guid: d6195cb91af5b1db781bf8564703f1cd, type: 3}
+  - eventKey: SFX_Prologo_Madera_Golpe1
+    sfx: {fileID: 8300000, guid: 0956a0dd5dcf3066e84b5431f8f48958, type: 3}
+  - eventKey: SFX_Prologo_Madera_Golpe2
+    sfx: {fileID: 8300000, guid: 94c903b0eac2ca271b3077c4709d4db0, type: 3}
+  - eventKey: SFX_Prologo_Madera_Rascar
+    sfx: {fileID: 8300000, guid: 0eed984838b5357939ca9c36c4d587ec, type: 3}
+  - eventKey: SFX_Prologo_Subida
+    sfx: {fileID: 8300000, guid: 6308d1134e303e84494c440ca94aba77, type: 3}
+  - eventKey: SFX_Prologo_ForcejeoBucle
+    sfx: {fileID: 8300000, guid: 5f83490259d029748b7d1c7ceeaf7e24, type: 3}
+  - eventKey: SFX_Prologo_CoroBucle
+    sfx: {fileID: 8300000, guid: b0f4489ed694f6c4ebe46293727aa750, type: 3}
+  - eventKey: SFX_Prologo_EscudoNace
+    sfx: {fileID: 8300000, guid: bdc3b115440df554d817e64dacb4beac, type: 3}
+  - eventKey: SFX_Prologo_Trueno_1
+    sfx: {fileID: 8300000, guid: b942eba8c4506b84ab5c47eb0bb8a522, type: 3}
+  - eventKey: SFX_Prologo_Trueno_2
+    sfx: {fileID: 8300000, guid: abc73e24ccb42af49a43e6d2d37a857d, type: 3}
+  - eventKey: SFX_Prologo_Trueno_3
+    sfx: {fileID: 8300000, guid: 5a1edf8748c78dd44a4ad6b01eb0dd53, type: 3}
+  - eventKey: SFX_Prologo_Trueno_Lejano
+    sfx: {fileID: 8300000, guid: 83def554885275545a1d534824725972, type: 3}
+  - eventKey: SFX_Prologo_LuchaFinal
+    sfx: {fileID: 8300000, guid: 33b22981c46156a4686a63fe0b0a1b49, type: 3}
+  - eventKey: SFX_Prologo_ExplosionFinal
+    sfx: {fileID: 8300000, guid: be1087e06770df142ac84f0b2d58c536, type: 3}
+  - eventKey: SFX_Prologo_SilencioBlanco
+    sfx: {fileID: 8300000, guid: 473e08dd01ecd964ca3f0a93923640ca, type: 3}
+  - eventKey: Hechizo_BolaFuego
+    sfx: {fileID: 8300000, guid: e69e943289a45bb4ea76bcc49af4f16f, type: 3}
+  - eventKey: Hechizo_ChispaIgnea
+    sfx: {fileID: 8300000, guid: dab6a1d4a966b124f91372e9e6d83547, type: 3}
+  - eventKey: Hechizo_LlamaAstral
+    sfx: {fileID: 8300000, guid: 2eebd261fdb3595499bc4deef3419376, type: 3}
+  - eventKey: Hechizo_Rafaga
+    sfx: {fileID: 8300000, guid: ed2125ce7f05d2b4abb99873cf621710, type: 3}
+  - eventKey: Hechizo_Tornado
+    sfx: {fileID: 8300000, guid: f4f74632000c00f41b6ceb0045dda9f6, type: 3}
+  - eventKey: Hechizo_Huracan
+    sfx: {fileID: 8300000, guid: e2e18c74496ddc34dad21d8d380b50a6, type: 3}
+  - eventKey: Hechizo_AuraEstelar
+    sfx: {fileID: 8300000, guid: ca2a3f855331f4f4ca69a032c851e1c6, type: 3}
+  - eventKey: Hechizo_BolaPrisma
+    sfx: {fileID: 8300000, guid: 8ceac768d54b10c4281496b60b52be31, type: 3}
+  - eventKey: Hechizo_EstrellaFugaz
+    sfx: {fileID: 8300000, guid: 9e43fe6cc76ee384283e2f305c3e420f, type: 3}
+  - eventKey: Hechizo_LluviaDeChispas
+    sfx: {fileID: 8300000, guid: 914e62118541c5a4ca7e76d216221558, type: 3}
+  - eventKey: Hechizo_CorazonEstelar
+    sfx: {fileID: 8300000, guid: e29b03119f2182a4eabf90d9565a1d9e, type: 3}
+  - eventKey: Hechizo_GarraDelPacto
+    sfx: {fileID: 8300000, guid: a87447a355a682944bca5054737be04a, type: 3}
+  - eventKey: Hechizo_DardoMental
+    sfx: {fileID: 8300000, guid: 64c2aa89978197a43b997993f5cd31b2, type: 3}
+  - eventKey: Hechizo_Eco
+    sfx: {fileID: 8300000, guid: ff030717c2b339549bf8e9b6680708f8, type: 3}
+  - eventKey: Hechizo_MagoOscuroGolpe
+    sfx: {fileID: 8300000, guid: 5abf482a4847be9408d17033ea411fa6, type: 3}
+  - eventKey: Hechizo_PasoSombrio
+    sfx: {fileID: 8300000, guid: c0a14250e6746ce45b03118fe6747dd3, type: 3}
+  - eventKey: Hechizo_Levitation
+    sfx: {fileID: 8300000, guid: 63f61c96d5bae544c9972a7b71b93dda, type: 3}
+  - eventKey: Hechizo_BrisaSanadora
+    sfx: {fileID: 8300000, guid: 96e563c466baacd419039460bfc151b4, type: 3}
+  - eventKey: Hechizo_Remolino
+    sfx: {fileID: 8300000, guid: 562dd6767b937974185949bdd976a7ea, type: 3}
+  - eventKey: Hechizo_MuroDeFuego
+    sfx: {fileID: 8300000, guid: 2ec989377f4f9de4fb55fdf26313130f, type: 3}
+  - eventKey: Hechizo_TormentaDeFuego
+    sfx: {fileID: 8300000, guid: d82404c2151043d4f9c1d8c63e57562d, type: 3}
+  - eventKey: Hechizo_ChispaIgneaFuego
+    sfx: {fileID: 8300000, guid: 28111a4a09caf8146941c48a8ad415ea, type: 3}
+  - eventKey: Hechizo_Meteoro
+    sfx: {fileID: 8300000, guid: c1b768f0c038cec488f1b3606c2bd37b, type: 3}
+  - eventKey: Hechizo_NovaDeLuz
+    sfx: {fileID: 8300000, guid: a9abbcd98f94a1a4382f39fe3d189bd8, type: 3}
+  - eventKey: Hechizo_CupulaEstelar
+    sfx: {fileID: 8300000, guid: a3344bece87201b42b636d2251b5d6b8, type: 3}
+  - eventKey: Hechizo_SelloDelPacto
+    sfx: {fileID: 8300000, guid: 34576772b3eb74a4c85956dfcf73b2e3, type: 3}
+  - eventKey: Hechizo_CadenasDelPacto
+    sfx: {fileID: 8300000, guid: a004c37c065b3254d88b50e1c7d1ce8e, type: 3}
+  - eventKey: Hechizo_JuicioDelPacto
+    sfx: {fileID: 8300000, guid: 7868ac93f488ced439b7970a1d016845, type: 3}
+  - eventKey: Hechizo_MagoOscuroGrieta
+    sfx: {fileID: 8300000, guid: 10f9110051d11f64da9c435dccdb0078, type: 3}
+  - eventKey: Impacto_Fuego_Pequeno
+    sfx: {fileID: 8300000, guid: be44d6c10e030e2448a24673fe000048, type: 3}
+  - eventKey: Impacto_Fuego_Grande
+    sfx: {fileID: 8300000, guid: 2e84331c35a27a74990f720a45cf2184, type: 3}
+  - eventKey: Impacto_Viento_Pequeno
+    sfx: {fileID: 8300000, guid: 4536c25b70c794c4dae460e7d7edb248, type: 3}
+  - eventKey: Impacto_Viento_Grande
+    sfx: {fileID: 8300000, guid: 68ac612595145e940a1f9e7af26877c5, type: 3}
+  - eventKey: Impacto_Luz_Pequeno
+    sfx: {fileID: 8300000, guid: 1afa518148af67045abe542d0136c410, type: 3}
+  - eventKey: Impacto_Luz_Grande
+    sfx: {fileID: 8300000, guid: a306839eaea12f04c8899ba7601b781c, type: 3}
+  - eventKey: Impacto_Mente_Pequeno
+    sfx: {fileID: 8300000, guid: b2f26227308e95446b8a4fd3a2eedd3b, type: 3}
+  - eventKey: Impacto_Mente_Grande
+    sfx: {fileID: 8300000, guid: c8c213b0a29a1e1438499b3a02a3ae61, type: 3}
+  - eventKey: Impacto_Oscuro_Pequeno
+    sfx: {fileID: 8300000, guid: 3e73257b410dc874b8acd83650aba936, type: 3}
+  - eventKey: Impacto_Oscuro_Grande
+    sfx: {fileID: 8300000, guid: 583556f6e1b03c64bbdd356fee7f4447, type: 3}
+  - eventKey: Impacto_Levitacion
+    sfx: {fileID: 8300000, guid: a9d2eae040eff14429c17c40d05fa67e, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}
@@ -320,7 +478,7 @@ MonoBehaviour:
     fadeIn: 1
     fadeOut: 2
   - sequenceId: LIAM_CRYSTAL
-    music: {fileID: 8300000, guid: fe45a7da307add14a9f93158f047bc7c, type: 3}
+    music: {fileID: 8300000, guid: 2b6499ae1b7898d41ad775bffb9b370b, type: 3}
     fadeIn: 1
     fadeOut: 2
   - sequenceId: ESTELA_APPEARS
@@ -355,3 +513,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: c11b574e92002c44a92772ec8eb12331, type: 3}
     fadeIn: 1.5
     fadeOut: 2.5
+  - sequenceId: PROLOGUE_DANCE
+    music: {fileID: 8300000, guid: 741f5c2ab994d7e43b3fe2a6b792a897, type: 3}
+    fadeIn: 1
+    fadeOut: 1

@@ -170,6 +170,7 @@ public class SavePointTeleportTrigger : MonoBehaviour
             string text = LocalizationManager.Instance != null
                 ? LocalizationManager.Instance.Get("TELEPORT_BLOCKED_BOSS", "No puedo teletransportarme fuera de aquí todavía.")
                 : "No puedo teletransportarme fuera de aquí todavía.";
+            VoiceLines.TryPlay("TELEPORT_BLOCKED_BOSS");
             SpeechBubbleUI.Instance.Show(player.transform, text, duration: 2.5f, speakerName: "Pensamiento");
         }
         

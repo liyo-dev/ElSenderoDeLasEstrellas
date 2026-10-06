@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
@@ -52,6 +52,9 @@ public class MainMenuController : MonoBehaviour
     [Tooltip("Portada del fondo (una por etapa de la historia). Al pulsar Nueva Partida o Continuar, se espera a su animación de salida antes de cargar. Vacío = se busca en la escena.")]
     [SerializeField] private PortadaDelMenu portada;
 
+    [Tooltip("Efecto de salida al comenzar o continuar una partida.")]
+    [SerializeField] private EfectoDeComenzarPartida efectoAlComenzar;
+
     [Header("Scene when continuing")]
     [SerializeField] private string nextSceneContinue = "MainWorld";
 
@@ -81,6 +84,8 @@ public class MainMenuController : MonoBehaviour
 
     private Sequence _introSeq;
     private bool _isLoading;
+    private Coroutine _loadRoutine;
+    private bool _interactionSuspendedForLoad;
     private bool _inputArmed = true;
     private Coroutine _armRoutine;
     private bool _armSnapshotValid;
@@ -92,6 +97,8 @@ public class MainMenuController : MonoBehaviour
 
     void Awake()
     {
+        if (!efectoAlComenzar)
+            efectoAlComenzar = GetComponent<EfectoDeComenzarPartida>();
         if (!saveSystem)
             saveSystem = ServiceLocator.Get<SaveSystem>();
 
@@ -219,7 +226,7 @@ public class MainMenuController : MonoBehaviour
             AutoSelectFirstIfNeeded();
         }
 
-        // Rehabilitar sonidos después de un frame
+        // Rehabilita los sonidos después de la selección inicial.
         StartCoroutine(EnableUISoundsNextFrame());
         
         // SelfTestButtons eliminado - solo útil en debug profundo
@@ -269,6 +276,16 @@ public class MainMenuController : MonoBehaviour
             _armRoutine = null;
         }
         RestoreArmSnapshot();
+        if (_loadRoutine != null)
+        {
+            StopCoroutine(_loadRoutine);
+            _loadRoutine = null;
+        }
+        if (_interactionSuspendedForLoad)
+        {
+            RestoreMainMenuInteraction();
+            _interactionSuspendedForLoad = false;
+        }
         _inputArmed = true;
     }
 
@@ -313,9 +330,10 @@ public class MainMenuController : MonoBehaviour
     
     private System.Collections.IEnumerator EnableUISoundsNextFrame()
     {
-        yield return null; // Esperar un frame
+        // Mantiene el silencio hasta después del Invoke inicial de MenuNavigator.
+        yield return new WaitForSeconds(0.1f);
+        yield return null;
         UIButtonAudio.MuteAll = false;
-        // Log eliminado - operación normal
     }
     
     /// <summary>
@@ -329,34 +347,41 @@ public class MainMenuController : MonoBehaviour
         // Optimización: solo ejecutar una vez
         if (_audioComponentsEnsured) return;
         
-        var menuButtons = GetComponentsInChildren<Button>(true);
-        
-        int addedCount = 0;
+        var buttonsRoot = buttonPanel ? buttonPanel : rootGroup ? rootGroup.gameObject : gameObject;
+        var menuButtons = new System.Collections.Generic.HashSet<Button>(buttonsRoot.GetComponentsInChildren<Button>(true));
+        var languageButtons = languageSelectPanel
+            ? languageSelectPanel.GetComponentsInChildren<Button>(true)
+            : System.Array.Empty<Button>();
+        menuButtons.UnionWith(languageButtons);
         foreach (var b in menuButtons)
         {
             if (b == null) continue;
             
-            // Audio feedback (navegación)
+            // Añade el audio de navegación al botón.
             var audioComp = b.GetComponent<UIButtonAudio>();
             if (audioComp == null)
             {
                 audioComp = b.gameObject.AddComponent<UIButtonAudio>();
-                addedCount++;
             }
             
-            // Forzar que el sonido de navegación esté habilitado
+            // Habilita la navegación y reserva el click para los handlers que no reproducen sonido.
             audioComp.SetPlayHoverSound(true);
+            bool handlerPlaysSound = b == continueButton || b == newGameButton
+                || b == settingsButton || b == controlsButton || b == exitButton
+                || System.Array.IndexOf(languageButtons, b) >= 0;
+            for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
+            {
+                if (b.onClick.GetPersistentTarget(i) != this) continue;
+                string method = b.onClick.GetPersistentMethodName(i);
+                handlerPlaysSound |= method == nameof(OnClickContinue) || method == nameof(OnClickNewGame)
+                    || method == nameof(OnClickSettings) || method == nameof(OnClickControls)
+                    || method == nameof(OnClickExit);
+            }
+            audioComp.SetPlayClickSound(!handlerPlaysSound);
         }
         
         _audioComponentsEnsured = true;
         
-        // Solo log si se añadieron componentes (útil para debug)
-        #if UNITY_EDITOR
-        if (addedCount > 0)
-        {
-            Debug.Log($"[MainMenu] ✅ UIButtonAudio añadido a {addedCount} botones");
-        }
-        #endif
     }
 
     // ===== Intro (CanvasGroup en cada item) =================================
@@ -411,7 +436,8 @@ public class MainMenuController : MonoBehaviour
         _isLoading = true;
         
         // SFX de confirmación
-        AudioService.Instance?.PlaySFX("UI_Submit");
+        if (!efectoAlComenzar)
+            AudioService.Instance?.PlaySFX("UI_Submit");
 
         if (!saveSystem)
             saveSystem = ServiceLocator.Get<SaveSystem>(logIfMissing: false);
@@ -475,10 +501,12 @@ public class MainMenuController : MonoBehaviour
 
     void ProceedWithNewGame()
     {
+        if (_isLoading) return;
         _isLoading = true;
 
         // SFX de confirmación
-        AudioService.Instance?.PlaySFX("UI_Submit");
+        if (!efectoAlComenzar)
+            AudioService.Instance?.PlaySFX("UI_Submit");
 
         bool forcePreset = GameBootService.IsPresetOverrideActive;
 
@@ -570,6 +598,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnClickSettings()
     {
+        if (_isLoading || !_inputArmed) return;
         // SFX de confirmación
         AudioService.Instance?.PlaySFX("UI_Submit");
         
@@ -625,6 +654,7 @@ public class MainMenuController : MonoBehaviour
 
     public void OnClickControls()
     {
+        if (_isLoading || !_inputArmed) return;
         // SFX de confirmación
         AudioService.Instance?.PlaySFX("UI_Submit");
 
@@ -728,7 +758,7 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        LoadTargetScene(nextSceneContinue);
+        LoadTargetScene(nextSceneContinue, continueButton);
     }
 
     void LoadNewGameScene()
@@ -742,19 +772,41 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        LoadTargetScene(nextSceneNewGame);
+        LoadTargetScene(nextSceneNewGame, newGameButton);
     }
 
-    void LoadTargetScene(string sceneName)
+    void LoadTargetScene(string sceneName, Button boton)
     {
         // La portada puede tener animación de salida (Will se levanta del banco): se carga al acabar.
         float espera = portada ? portada.ReproducirSalida() : 0f;
+        if (efectoAlComenzar)
+        {
+            if (_armRoutine != null)
+            {
+                StopCoroutine(_armRoutine);
+                _armRoutine = null;
+                RestoreArmSnapshot();
+            }
+            _introSeq?.Kill(true);
+            SuspendMainMenuInteraction();
+            _interactionSuspendedForLoad = true;
+            _loadRoutine = StartCoroutine(LoadTargetSceneWithEffect(sceneName, boton, espera));
+            return;
+        }
         if (espera > 0f)
         {
-            StartCoroutine(LoadTargetSceneAfter(sceneName, espera));
+            _loadRoutine = StartCoroutine(LoadTargetSceneAfter(sceneName, espera));
             return;
         }
         LoadTargetSceneNow(sceneName);
+    }
+
+    System.Collections.IEnumerator LoadTargetSceneWithEffect(string sceneName, Button boton, float espera)
+    {
+        yield return efectoAlComenzar.Reproducir(boton, espera);
+        _loadRoutine = null;
+        if (efectoAlComenzar && efectoAlComenzar.isActiveAndEnabled)
+            LoadTargetSceneNow(sceneName);
     }
 
     System.Collections.IEnumerator LoadTargetSceneAfter(string sceneName, float seconds)
@@ -788,7 +840,10 @@ public class MainMenuController : MonoBehaviour
 
     System.Collections.IEnumerator RestoreSelectionNextFrame(GameObject previous)
     {
-        yield return null; // esperar un frame
+        UIButtonAudio.MuteAll = true;
+        // Espera la selección de MenuNavigator al reactivar el panel antes de restaurar el foco.
+        yield return new WaitForSeconds(0.1f);
+        yield return null;
 
         // Si no tenemos selección previa, usar el primer botón activo visible
         if (previous == null)
@@ -803,6 +858,7 @@ public class MainMenuController : MonoBehaviour
             var sel = previous.GetComponent<Selectable>();
             if (sel != null) sel.Select();
         }
+        UIButtonAudio.MuteAll = false;
     }
 
     // ===== Debug (temporal — investigando "el menú desaparece tras Controles") =====

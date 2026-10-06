@@ -13,10 +13,28 @@ MonoBehaviour:
   m_Name: NpcEmotionProfile
   m_EditorClassIdentifier: Assembly-CSharp::EmotionProfile
   transitionDuration: 0.1
+  ojosNeutros:
+  - Eye01
+  - Eye02
+  - Eye04
+  - Eye08
+  bocasNeutras:
+  - Mouth01
+  - Mouth02
+  ojosDeReposoPorDefecto: Eye01
+  bocaDeReposoPorDefecto: Mouth02
+  segundosDeReaccion: 1.5
+  bocaHablandoCerrada: Mouth02
+  bocaHablandoMedia: Mouth08
+  bocaHablandoAbierta: Mouth10
+  segundosPorBoca: 0.08
+  umbralVozMedia: 0.02
+  umbralVozAbierta: 0.08
+  tiempoMinimoPorBocaConVoz: 0.06
   emotions:
   - emotion: 0
-    eyeMeshName: Eye07
-    mouthMeshName: Mouth02
+    eyeMeshName: 
+    mouthMeshName: 
     bodyAnimStateName: 
     bodyAnimVariants: []
   - emotion: 1
@@ -67,8 +85,8 @@ MonoBehaviour:
     bodyAnimVariants:
     - Talk02
   - emotion: 8
-    eyeMeshName: Eye09
-    mouthMeshName: Mouth06
+    eyeMeshName: 
+    mouthMeshName: Mouth11
     bodyAnimStateName: Talk03
     bodyAnimVariants:
     - Laugh01

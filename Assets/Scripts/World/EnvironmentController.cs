@@ -190,8 +190,7 @@ public class EnvironmentController : MonoBehaviour
         // Re-aplicar configuración de cámara si quedó pendiente porque había cinemática activa
         if (_cinematicReapplyPending)
         {
-            bool stillCinematic = (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode)
-                               || Game.Cinematics.SimpleCinematicDirector.IsAnyCinematicPlaying;
+            bool stillCinematic = DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode;
             if (!stillCinematic) { _needReapply = true; _cinematicReapplyPending = false; }
         }
 
@@ -749,12 +748,6 @@ public class EnvironmentController : MonoBehaviour
             isCinematicActive = true;
         }
         
-        // Verificar SimpleCinematicDirector
-        if (Game.Cinematics.SimpleCinematicDirector.IsAnyCinematicPlaying)
-        {
-            isCinematicActive = true;
-        }
-        
         if (isCinematicActive)
         {
             // Si hay cinemática, solo aplicamos lógica de luces y objetos, pero NO tocamos la cámara.
@@ -819,12 +812,6 @@ public class EnvironmentController : MonoBehaviour
         // --- PROTECCIÓN CINEMÁTICA ---
         bool isCinematicActive = false;
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode)
-        {
-            isCinematicActive = true;
-        }
-        
-        // Verificar SimpleCinematicDirector
-        if (Game.Cinematics.SimpleCinematicDirector.IsAnyCinematicPlaying)
         {
             isCinematicActive = true;
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Game.NPC.Modules;
 
 namespace Game.NPC
@@ -45,7 +46,10 @@ namespace Game.NPC
         private SphereCollider _triggerCollider;
         private PlayerCarrySystem _playerCarrySystem;
         private bool _subscribedToDropEvent;
-        
+
+        private static readonly Dictionary<Animator, Dictionary<string, AnimatorControllerParameterType>> s_paramCache
+            = new Dictionary<Animator, Dictionary<string, AnimatorControllerParameterType>>();
+
         void Awake()
         {
             if (npcManager == null)
@@ -334,43 +338,36 @@ namespace Game.NPC
                 }
         }
         
-        private void TrySetAnimatorBool(Animator anim, string paramName, bool value)
+        private static bool HasParam(Animator anim, string name, AnimatorControllerParameterType type)
         {
-            if (anim == null) return;
-            foreach (var param in anim.parameters)
+            if (!s_paramCache.TryGetValue(anim, out var map))
             {
-                if (param.name == paramName && param.type == AnimatorControllerParameterType.Bool)
-                {
-                    anim.SetBool(paramName, value);
-                    return;
-                }
+                map = new Dictionary<string, AnimatorControllerParameterType>(anim.parameterCount);
+                foreach (var p in anim.parameters) map[p.name] = p.type;
+                s_paramCache[anim] = map;
             }
+            return map.TryGetValue(name, out var t) && t == type;
         }
-        
-        private void TrySetAnimatorFloat(Animator anim, string paramName, float value)
+
+        private static void TrySetAnimatorBool(Animator anim, string paramName, bool value)
         {
             if (anim == null) return;
-            foreach (var param in anim.parameters)
-            {
-                if (param.name == paramName && param.type == AnimatorControllerParameterType.Float)
-                {
-                    anim.SetFloat(paramName, value);
-                    return;
-                }
-            }
+            if (HasParam(anim, paramName, AnimatorControllerParameterType.Bool))
+                anim.SetBool(paramName, value);
         }
-        
-        private void TrySetAnimatorTrigger(Animator anim, string paramName)
+
+        private static void TrySetAnimatorFloat(Animator anim, string paramName, float value)
         {
             if (anim == null) return;
-            foreach (var param in anim.parameters)
-            {
-                if (param.name == paramName && param.type == AnimatorControllerParameterType.Trigger)
-                {
-                    anim.SetTrigger(paramName);
-                    return;
-                }
-            }
+            if (HasParam(anim, paramName, AnimatorControllerParameterType.Float))
+                anim.SetFloat(paramName, value);
+        }
+
+        private static void TrySetAnimatorTrigger(Animator anim, string paramName)
+        {
+            if (anim == null) return;
+            if (HasParam(anim, paramName, AnimatorControllerParameterType.Trigger))
+                anim.SetTrigger(paramName);
         }
         
         /// <summary>

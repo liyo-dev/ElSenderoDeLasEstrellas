@@ -254,15 +254,31 @@
         },
         {
             "id": "EVT_LIAM_CRYSTAL_01",
-            "text": "Y ese es el chico de corazón puro que abrirá el Sendero."
+            "text": "No ha huido."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_02",
-            "text": "Me alegra que ese demonio haya despertado su magia."
+            "text": "Se ha quedado delante del demonio. Esta mañana ni sabía que tenía magia."
         },
         {
             "id": "EVT_LIAM_CRYSTAL_03",
-            "text": "Ja… ja, ja…"
+            "text": "Levántate…"
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_04",
+            "text": "Lo ha vencido."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_05",
+            "text": "Es él. Él puede abrir el camino."
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_06",
+            "text": "Ojalá hubiera otra manera…"
+        },
+        {
+            "id": "EVT_LIAM_CRYSTAL_07",
+            "text": "Resiste, Tobi. Ya casi lo tengo."
         },
         {
             "id": "EVT_LIAM_GOLEM_01",
@@ -618,11 +634,11 @@
         },
         {
             "id": "PROLOGO_BAILE",
-            "text": "Así está bien. Que se os oiga desde el puente."
+            "text": "¡Me encanta vuestro baile!"
         },
         {
             "id": "PROLOGO_BAILE_RESPUESTA",
-            "text": "¡Eso está hecho, maestro!"
+            "text": "¡Gracias, maestro! ¡Seguiremos bailando!"
         },
         {
             "id": "PROLOGO_CARRETA_GRACIAS",
@@ -690,23 +706,43 @@
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "¡A todos!"
+            "text": "¡Protégelos a todos!"
         },
         {
-            "id": "PROLOGO_HECHIZO_PLEGARIA",
-            "text": "Si alguien me escucha, dame fuerzas para proteger el valle. Quiero volver con Liora."
+            "id": "PROLOGO_PLEGARIA_01",
+            "text": "No... No voy a dejar que los toques.\n¡Liora! ¡Nina! ¡Todos vosotros!"
         },
         {
-            "id": "PROLOGO_HECHIZO_1",
-            "text": "¡Protégelos...!"
+            "id": "PROLOGO_PLEGARIA_02",
+            "text": "Luz primera... tú que ardías antes de que hubiera cielo...\ntú que encendiste las estrellas y tendiste caminos entre ellas cuando aún no había nadie para recorrerlos..."
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_03",
+            "text": "No conozco ningún hechizo capaz de pararlo...\nAsí que no te pido uno que exista. Nada arde sin ti... Te lo ruego... ¡préstame tu fuego!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_04",
+            "text": "Sé que de esto no se vuelve. Sé que nunca contestaré esa carta...\n¡Me da igual lo que quede de mí!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_05",
+            "text": "¡Toma mis años! ¡Toma mi voz, mi nombre!\n¡Llévate mi alma si la quieres! ¡Pero que ellos vean amanecer!"
+        },
+        {
+            "id": "PROLOGO_PLEGARIA_06",
+            "text": "Perdóname, Liora... no voy a volver pronto."
+        },
+        {
+            "id": "PROLOGO_MAGO_VALLE",
+            "text": "Que este valle no haya existido nunca."
+        },
+        {
+            "id": "PROLOGO_MAGO_VACIO",
+            "text": "¡Que el vacío os devore!"
         },
         {
             "id": "PROLOGO_HORA_ARCHIMAGO",
             "text": "¡Al puente! ¡Todos, ahora!"
-        },
-        {
-            "id": "PROLOGO_IRRUPCION_MAGO",
-            "text": "Arrodillaos. Tenéis una hora para abandonar el valle. Si os resistís, lo arrasaré todo."
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_OK",
@@ -714,7 +750,7 @@
         },
         {
             "id": "PROLOGO_MANANA_GLOBO_ROTO",
-            "text": "¡Uy! Se me ha ido la mano. Lo siento, chicos."
+            "text": "¡Ups! Lo siento, se me ha escapado."
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
@@ -895,6 +931,22 @@
         {
             "id": "FINAL_MAGO_DESHACE",
             "text": "No... mi deseo... el altar..."
+        },
+        {
+            "id": "PROLOGO_MANANA_SALUDO_1",
+            "text": "¡Buenos días, maestro!"
+        },
+        {
+            "id": "PROLOGO_MANANA_SALUDO_2",
+            "text": "¡Muy buenas, maestro!"
+        },
+        {
+            "id": "PROLOGO_BAILE_INVITA",
+            "text": "¡Eh, maestro, mira! ¡Únete a bailar con nosotros!"
+        },
+        {
+            "id": "PROLOGO_BAILE_NOCHE",
+            "text": "¡Esta noche lo bailamos delante de todo el pueblo!"
         }
     ]
 }

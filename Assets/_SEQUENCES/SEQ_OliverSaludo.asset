@@ -17,6 +17,7 @@ MonoBehaviour:
   signalIn: OLIVER_GREETING_START
   signalOut: OLIVER_GREETING_DONE
   musicId: OLIVER_1
+  presentacionDeTexto: 0
   openingShotName: 
   openingShot:
     type: 0
@@ -29,6 +30,7 @@ MonoBehaviour:
     headroom: 1
     encara: 0
   endStayBlack: 0
+  modulos: {fileID: 0}
   phases:
   - name: 1 - Saludo a distancia
     onlyIfFlag: 
@@ -140,6 +142,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Cheer02 dos veces - el primer ciclo se pierde con la transicion de entrada
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_SPOT_WILL
@@ -160,6 +167,7 @@ MonoBehaviour:
         stopDistance: 1.8
         approachAngle: 0
         speedOverride: 0
+        esquivar: 1
         timeout: 8
         faceEachOtherOnArrival: 1
         settleOnArrival: 0.3
@@ -167,6 +175,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: He aprendido un hechizo nuevo
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_NEW_SPELL_INTRO
@@ -181,6 +194,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Ay que me ahogo
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_OUT_OF_BREATH
@@ -195,6 +213,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'REACCION: Will escucha con curiosidad'
+        voz: 0
         actorId: Player
         gesture: Question01
         repeats: 1
@@ -206,7 +225,9 @@ MonoBehaviour:
         note: 'REACCION: cara de Will contenta mientras Oliver habla'
         actorId: Player
         emotion: 1
-        revertAfter: 0
+        ojos: 
+        duracion: 0
+        mantener: 0
     - rid: 8000000000000000010
       type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -220,6 +241,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'Lanza el hechizo. FIX 16 sep: Attack2 NO existe en NPC_NoWeapon.controller (es un estado solo del controller del jugador), asi que PlaySocialGesture no hacia nada y Oliver no llegaba a lanzar nada. MagicSpecial si existe y es de los NPCs.'
+        voz: 0
         actorId: NPC_Oliver
         gesture: MagicSpecial
         repeats: 1
@@ -242,6 +264,7 @@ MonoBehaviour:
         lifetime: 0
         earlyDespawn: 1
         seguirAlActor: 0
+        registrarComo: 
     - rid: 8000000000000000015
       type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -251,6 +274,7 @@ MonoBehaviour:
         atActorId: NPC_Oliver
         markName: 
         volume: 1
+        tono: 1
     - rid: 8000000000000000016
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -262,6 +286,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Oliver sale despedido
+        voz: 0
         actorId: NPC_Oliver
         gesture: TakeDamage_2
         repeats: 1
@@ -271,6 +296,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'REACCION: Will tambien'
+        voz: 0
         actorId: Player
         gesture: TakeDamage_2
         repeats: 1
@@ -282,14 +308,18 @@ MonoBehaviour:
         note: Cara de sorpresa
         actorId: NPC_Oliver
         emotion: 4
-        revertAfter: 0
+        ojos: 
+        duracion: 0
+        mantener: 0
     - rid: 8000000000000000020
       type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'REACCION: cara de sorpresa'
         actorId: Player
         emotion: 4
-        revertAfter: 0
+        ojos: 
+        duracion: 0
+        mantener: 0
     - rid: 8000000000000000021
       type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -313,6 +343,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
+        voz: 0
         actorId: NPC_Oliver
         gesture: Dizzy_NoWeapon
         repeats: 1
@@ -322,6 +353,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
+        voz: 0
         actorId: Player
         gesture: Dizzy_NoWeapon
         repeats: 1
@@ -345,6 +377,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
+        voz: 0
         actorId: NPC_Oliver
         gesture: Laugh01
         repeats: 1
@@ -354,6 +387,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
+        voz: 0
         actorId: Player
         gesture: Laugh01
         repeats: 1
@@ -365,14 +399,18 @@ MonoBehaviour:
         note: 
         actorId: NPC_Oliver
         emotion: 1
-        revertAfter: 0
+        ojos: 
+        duracion: 0
+        mantener: 0
     - rid: 8000000000000000030
       type: {class: EmotionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         actorId: Player
         emotion: 1
-        revertAfter: 0
+        ojos: 
+        duracion: 0
+        mantener: 0
     - rid: 8000000000000000031
       type: {class: ParallelBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -387,6 +425,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Will pregunta por Eldran y Victoria - gancho hacia SEQ_PerasEldran (cambia el motivo de antes, ya no es Eldran quien le necesita)
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: Player
         markName: 
         textKey: WILL_GREETING_OLIVER_CUT_OFF
@@ -401,6 +444,7 @@ MonoBehaviour:
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'REACCION: Oliver niega con la cabeza, resignado, MIENTRAS habla Will'
+        voz: 0
         actorId: NPC_Oliver
         gesture: HeadShake01
         repeats: 1
@@ -418,6 +462,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Oliver confirma lo de Eldran/Victoria, promete ir luego, y engancha con la explicacion de menus (doblaje ya grabado, sin tocar)
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_BEFORE_MENUS_HANDOFF
@@ -454,6 +503,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'NUEVO (adapta el gancho): Oliver se anima a ir con Will, en vez del viejo "por si se te ha olvidado que te conozco" desconectado de la discusion. Engancha directo con PERAS_START (OLIVER_GREETING_DONE se levanta al terminar la secuencia).'
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: NPC_Oliver
         markName: 
         textKey: OLIVER_GREETING_PERAS_HANDOFF
@@ -468,6 +522,11 @@ MonoBehaviour:
       type: {class: SayBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 'NUEVO: Will remata y los dos salen juntos hacia el mercado'
+        presentacion: 0
+        colorDelNombre: {r: 0, g: 0, b: 0, a: 0}
+        expresiones: []
+        oyentes: []
+        reaccionDeOyentes: 1
         actorId: Player
         markName: 
         textKey: WILL_GREETING_PERAS_HANDOFF

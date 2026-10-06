@@ -136,6 +136,7 @@ public class Interactable : MonoBehaviour
 
     void OnDisable()
     {
+        StopPromptVoice();
         GameBootService.OnProfileReady -= RestoreSingleUseStateFromPreset;
         PlayerPresetService.OnPresetApplied -= HandlePresetApplied;
         InputGlyphService.FamilyChanged -= HandleInputFamilyChanged;
@@ -583,6 +584,7 @@ public class Interactable : MonoBehaviour
                     HandleChoiceResult(cancelFollowUp, invokeConfirm: false);
                 }
             );
+            PlayPromptVoice();
         }
         catch (System.Exception ex)
         {
@@ -632,6 +634,24 @@ public class Interactable : MonoBehaviour
         popup.Show(prompt,
             onConfirm: () => HandleChoiceResult(confirmFollowUp, invokeConfirm: true),
             onCancel:  () => HandleChoiceResult(cancelFollowUp, invokeConfirm: false));
+        PlayPromptVoice();
+    }
+
+    private AudioClip _promptVoice;
+
+    private void StopPromptVoice()
+    {
+        var audio = AudioService.Instance;
+        if (audio != null && audio.IsVoicePlaying(_promptVoice)) audio.StopVoice();
+        _promptVoice = null;
+    }
+
+    private void PlayPromptVoice()
+    {
+        if (dialogue == null || dialogue.lines == null || dialogue.lines.Length == 0) return;
+        var line = dialogue.lines[0];
+        string key = !string.IsNullOrEmpty(line.textId) ? line.textId : (LooksLikeKey(line.text) ? line.text : null);
+        if (VoiceLines.TryPlay(key) > 0f) VoiceLines.TryGet(key, out _promptVoice);
     }
 
     string ResolveDialogueText(DialogueAsset asset, string fallback)
@@ -664,6 +684,7 @@ public class Interactable : MonoBehaviour
 
     void HandleChoiceResult(DialogueAsset followUp, bool invokeConfirm)
     {
+        StopPromptVoice();
         if (invokeConfirm)
             OnConfirm?.Invoke();
 

@@ -6,33 +6,8 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Monta el sistema de caras (NPCEmotionController) en los NPCs que no lo tienen.
-///
-/// CONTEXTO (16 sep 2026). Raúl, al ver que Oliver no cambiaba de expresión durante un diálogo:
-/// "realmente esto que estamos haciendo con Oliver habría que hacerlo para todos los NPCs".
-/// La auditoría le dio la razón — de 22 prefabs en Assets/_NPCs solo cuatro personajes en todo el
-/// proyecto tenían NPCEmotionController (Eldran, Ladron1, Ladron2 y, fuera de esa carpeta, Will,
-/// Estela y Liam). Sin ese componente, `DialogueLine.emotion` mueve el cuerpo pero la cara nunca
-/// cambia, en silencio y sin ningún error (ver INC-213 e INC-215).
-///
-/// Esta herramienta sustituye a la versión que solo trataba a Oliver.
-///
-/// QUÉ HACE, prefab a prefab:
-///   - Si ya tiene NPCEmotionController, repasa que sus campos estén puestos y no toca nada más.
-///   - Si no lo tiene pero SÍ tiene piezas de cara (GameObjects Eye0X / Mouth0X), se lo añade y lo
-///     configura igual que el de Eldran: mismo EmotionProfile, prefijos "Eye"/"Mouth", y la primera
-///     pareja que encuentre como meshes originales.
-///   - Si no tiene piezas de cara, lo deja en paz y lo dice en el informe (no hay nada que montar).
-/// Es idempotente: se puede volver a ejecutar sin duplicar nada.
-///
-/// EL INFORME SEPARA DOS GRUPOS, y esto importa:
-///   • Los que ya tienen las 24 piezas (Eye01-12 + Mouth01-12) quedan LISTOS. Riesgo cero.
-///   • Los que solo tienen una pareja quedan con el componente puesto pero solo saben poner la cara
-///     que ya tenían. Para esos hay que ejecutar después la herramienta que ya existía:
-///       El Sendero > NPCs > Setup > Completar partes de cara (Eye/Mouth) desde Eldran
-///     que les clona las variantes que faltan. OJO: las clona con la transform local de Eldran, así
-///     que en cabezas de otra proporción pueden quedar descolocadas — hay que mirarlas a ojo, una
-///     por una, antes de dar ese grupo por bueno.
+/// Añade el sistema de caras a personajes con piezas faciales y asigna mallas neutras.
+/// Informa de las variantes disponibles y de los personajes que necesitan completar su cara.
 /// </summary>
 public static class NpcFaceSetup
 {
@@ -108,10 +83,10 @@ public static class NpcFaceSetup
                     so.FindProperty("emotionProfile").objectReferenceValue = profile;
                     so.FindProperty("eyePrefix").stringValue = "Eye";
                     so.FindProperty("mouthPrefix").stringValue = "Mouth";
-                    so.FindProperty("originalEyeMesh").objectReferenceValue =
-                        eyes.Count > 0 ? eyes[0].gameObject : null;
-                    so.FindProperty("originalMouthMesh").objectReferenceValue =
-                        mouths.Count > 0 ? mouths[0].gameObject : null;
+                    so.FindProperty("ojosDeReposo").objectReferenceValue =
+                        PrimeraNeutra(eyes, profile, true);
+                    so.FindProperty("bocaDeReposo").objectReferenceValue =
+                        PrimeraNeutra(mouths, profile, false);
                     so.ApplyModifiedProperties();
 
                     PrefabUtility.SaveAsPrefabAsset(root, path);
@@ -136,6 +111,14 @@ public static class NpcFaceSetup
 
         AssetDatabase.SaveAssets();
         Debug.LogWarning(BuildReport(listos, completos, parciales, sinCara));
+    }
+
+    private static GameObject PrimeraNeutra(List<Transform> mallas, EmotionProfile perfil, bool ojos)
+    {
+        foreach (var malla in mallas)
+            if (ojos ? perfil.EsOjoNeutro(malla.name) : perfil.EsBocaNeutra(malla.name))
+                return malla.gameObject;
+        return null;
     }
 
     private static string BuildReport(List<string> listos, List<string> completos,
@@ -180,12 +163,7 @@ public static class NpcFaceSetup
 
     /// Piezas de cara con el prefijo dado ("Eye" / "Mouth").
     ///
-    /// FIX 16 sep 2026: la primera versión buscaba por el prefijo "Eye0"/"Mouth0" y por tanto
-    /// **no contaba Eye10, Eye11 ni Eye12** — siempre se dejaba tres fuera. El informe salía con un
-    /// "9 ojos / 9 bocas" sospechosamente redondo y repetido en TODOS los personajes completos
-    /// (Eldran, Will, Estela, Liam), y clasificaba como "a medias" a trece prefabs que en realidad
-    /// ya estaban listos. Ahora se exige prefijo + un dígito detrás, que además descarta el
-    /// GameObject padre llamado solo "Eye" que tienen algunos personajes.
+    /// Exige un dígito tras el prefijo para descartar los contenedores de piezas.
     private static List<Transform> FaceParts(Transform root, string prefix)
     {
         return root.GetComponentsInChildren<Transform>(true)

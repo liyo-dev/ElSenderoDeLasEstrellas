@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -294,6 +294,15 @@ public class SequencePlayer : CinematicSequencerBase
                     SuavizadoDelPlanoVivo, Mathf.Infinity, dt);
                 Quaternion rot = Quaternion.Slerp(driver.CurrentRotation, objetivoRot,
                     1f - Mathf.Exp(-GiroDelPlanoVivo * dt));
+                Vector3 sobreSuelo = ShotComposer.LiftOffGround(pos);
+                if (sobreSuelo != pos)
+                {
+                    pos = sobreSuelo;
+                    velocidad.y = 0f;
+                    Vector3 haciaSujeto = s.lookAt - pos;
+                    if (haciaSujeto.sqrMagnitude > 0.001f)
+                        rot = Quaternion.LookRotation(haciaSujeto, Vector3.up);
+                }
                 driver.SetPose(pos, rot, objetivoFov);
                 fallosSeguidos = 0;
             }
@@ -356,7 +365,13 @@ public class SequencePlayer : CinematicSequencerBase
     }
 
     /// Cambia la música a mitad de secuencia. Usado por MusicBeat.
-    public void PlayMusic(string musicId) => PlaySequenceMusic(musicId);
+    public void PlayMusic(string musicId, bool continuarDondeIba = true)
+    {
+        var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
+        if (regla?.music != null && AudioService.Instance != null)
+            AudioService.Instance.PlayMusic(regla.music, regla.fadeIn, continuarDondeIba);
+        else PlaySequenceMusic(musicId);
+    }
 
     /// Para la música. Usado por MusicBeat: hace falta para los silencios dramáticos y para dejar
     /// paso limpio a lo que venga detrás (la intro de un jefe, por ejemplo).
@@ -425,7 +440,7 @@ public class SequencePlayer : CinematicSequencerBase
     protected override bool SueltaElTelonEnSuPrimerPlano => true;
 
     private static bool EsDeCamara(SequenceBeat beat)
-        => beat is ShotBeat || beat is CutBeat || beat is MoveCameraBeat;
+        => beat is ShotBeat;
 
     /// Beats que solo colocan: son instantáneos y no se ve nada de lo que hacen hasta que haya un
     /// plano. Con el telón cerrado se ejecutan a oscuras. Cualquier otro beat destapa antes de
@@ -436,14 +451,11 @@ public class SequencePlayer : CinematicSequencerBase
         {
             case PlaceAtMarkBeat _:
             case SetActionAxisBeat _:
-            case ResetActionAxisBeat _:
             case SetPropActiveBeat _:
             case EmotionBeat _:
             case SetFlagBeat _:
             case MusicBeat _:
             case PoseBeat _:
-            case HoldActorBeat _:
-            case StopTrackingBeat _:
                 return true;
             case PropMoveBeat m:
                 return m.segundos <= 0.001f || !m.esperar;
@@ -486,7 +498,9 @@ public class SequencePlayer : CinematicSequencerBase
         // Que se vea el cielo. Va AQUI y no en Awake: entre que el SequencePlayer despierta y que
         // la secuencia arranca, el jugador puede haber entrado en una casa -- que es justo lo que
         // pasa en el prologo, donde Will se va a dormir despues. Ver CinematicTimeOfDay.MostrarExterior.
-        CinematicTimeOfDay.MostrarExterior(CachedCamera);
+        // Una secuencia de interior no fuerza el cielo: el interior se aplica en el corte (ver
+        // Co_BeginCinematicWithTransition) y así no se le cuelgan lluvia ni niebla.
+        if (!OcurreEnInterior) CinematicTimeOfDay.MostrarExterior(CachedCamera);
 
         // La caché de colliders de ShotComposer es estática: se vacía al empezar cada secuencia.
         ShotComposer.ClearColliderCache();
@@ -555,6 +569,10 @@ public class SequencePlayer : CinematicSequencerBase
             StartCoroutine(Co_CheckMusicStuck(_definition.musicId));
 #endif
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.Iniciar(this);
+#endif
+
         int startPhase = 0;
 #if UNITY_EDITOR
         if (!string.IsNullOrWhiteSpace(_startAtPhase))
@@ -593,6 +611,7 @@ public class SequencePlayer : CinematicSequencerBase
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SequencePlayer:{name}] Fase {p + 1}/{_definition.phases.Count}: '{phase.name}' " +
                 $"({phase.beats.Count} beats).");
+            InformeDeRodaje.Fase(phase.name);
 #endif
 
             for (int b = 0; b < phase.beats.Count; b++)
@@ -638,6 +657,9 @@ public class SequencePlayer : CinematicSequencerBase
         // aquí manda otra vez el juego.
         StopShotTracking();
         StopBackgroundRoutines();
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.Terminar(this);
+#endif
 
         // Los módulos se cierran AQUÍ, no en ReleaseAllActors. Aquel corre después del margen de
         // gracia de los NPCs (3,5 s por defecto), y ese margen existe para que un NPC no eche a
@@ -691,10 +713,20 @@ public class SequencePlayer : CinematicSequencerBase
     /// la transición de entrada, así que el corte no se ve.
     private void ApplyOpeningShotIfDescribed()
     {
+        var driver = ActiveCamera;
+
+        // Secuencia hecha con guion: el plano de apertura es el primer plano del guion.
+        if (_definition != null && _definition.phases != null && _definition.phases.Count > 0
+            && _definition.phases[0].beats != null && _definition.phases[0].beats.Count > 0
+            && _definition.phases[0].beats[0] is GuionBeat gb && gb.guion != null)
+        {
+            if (driver != null && gb.guion.PoseDeCamara(gb.Inicio, out var pos, out var rot, out var fov))
+                driver.Cut(pos, rot, fov);
+            return;
+        }
+
         var framing = _definition != null ? _definition.openingShot : null;
         if (framing == null || string.IsNullOrWhiteSpace(framing.subjectId)) return;
-
-        var driver = ActiveCamera;
         if (driver == null) return;
 
         if (ShotComposer.TrySolve(_context, framing, CameraAspect, out ShotSolution s))
@@ -752,6 +784,7 @@ public class SequencePlayer : CinematicSequencerBase
         if (_context == null) return;
         foreach (var actor in _context.ResolvedActors)
         {
+            if (actor.Emotion != null) actor.Emotion.VolverAReposo();
             actor.EndAgentOverride();
 
             // Si otro sistema ya se lo ha llevado (el grafo lo manda a guiar al jugador en cuanto

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,6 +47,19 @@ public sealed class AudioService : MonoBehaviour
     // --- motor interno ---
     AudioSource _musicA, _musicB;
     AudioSource _voiceSource;
+    AudioReverbFilter _reverbDeVoz;
+    AudioEchoFilter _ecoDeVoz;
+    bool _gananciaDeVozAplicada;
+    float _dialogoDbOriginal;
+    float _gananciaDeVozDb;
+    readonly AudioGraphProfile.VoiceDuckSettings _duckCinematico = new()
+    {
+        musicDb = -8f, ambienceDb = -5f, sfxDb = -3f,
+        attackSeconds = 0.15f, releaseSeconds = 0.6f, holdAfterVoiceSeconds = 0.25f
+    };
+    AudioGraphProfile.VoiceDuckSettings _ajustesDeVozActiva;
+    readonly Dictionary<string, Vector3> _mezclas = new();
+    readonly float[] _muestrasDeVoz = new float[256];
     bool _musicATurn; // false => current=_musicA, true => current=_musicB
     readonly Queue<AudioSource> _pool2D = new();
     readonly Queue<AudioSource> _pool3D = new();
@@ -69,9 +82,19 @@ public sealed class AudioService : MonoBehaviour
     Coroutine _victoryRestoreCoroutine;
     // El jingle que sigue sonando; se olvida si otro sistema pone o para la música mientras suena.
     AudioClip _jingleSonando;
-    float _duckTarget = 1f;
-    int _duckCount = 0;
-    Coroutine _duckRoutine;
+    Vector3 _duckTarget = Vector3.one;
+    Vector3 _duckMultiplier = Vector3.one;
+    Vector3 _duckStart = Vector3.one;
+    float _duckElapsed, _duckDuration;
+    readonly Dictionary<string, float> _duckRequests = new();
+    readonly Dictionary<AudioSource, float> _sourceVolumes = new();
+    readonly HashSet<AudioSource> _ambienceSources = new();
+    readonly AudioGraphProfile.VoiceDuckSettings _defaultVoiceDuck = new();
+    Coroutine _voiceDuckRoutine;
+    uint _voiceToken;
+    bool _voiceDuckActive, _applicationPaused;
+    AudioGraphProfile.VoiceDuckSettings VoiceDuck => _ajustesDeVozActiva ??
+        (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck);
     bool _battleActive;
     // FIX (5 sep 2026): id de la batalla cuya música está activa ahora mismo. Ver guard
     // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
@@ -299,6 +322,7 @@ public sealed class AudioService : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         EnsureSignalsAndWireNow();
+        if (mode == LoadSceneMode.Single) _posicionesDeMusica.Clear();
         if (profile == null) return;
 
         // Las escenas aditivas no disparan música propia (feature de cinemáticas aditivas eliminada).
@@ -641,7 +665,7 @@ public sealed class AudioService : MonoBehaviour
         StopMusicCoroutines();
         active.Stop();
         active.timeSamples = 0;
-        active.volume = GetDuckedVolume(1f);
+        SetSourceVolume(active, 1f);
         active.Play();
 
         // Evitar duplicados en la otra fuente.
@@ -881,7 +905,13 @@ public sealed class AudioService : MonoBehaviour
 
     // ===========================================================
     // Música
-    public void PlayMusic(AudioClip clip, float fadeSeconds = -1f)
+    private readonly Dictionary<AudioClip, int> _posicionesDeMusica = new();
+    private void RecordarMusica(AudioSource fuente)
+    {
+        if (fuente != null && fuente.clip != null && fuente.isPlaying)
+            _posicionesDeMusica[fuente.clip] = fuente.timeSamples;
+    }
+    public void PlayMusic(AudioClip clip, float fadeSeconds = -1f, bool continuarDondeIba = true)
     {
         if (!clip) return;
         CancelarMusicaDelLugarPendiente();
@@ -891,12 +921,20 @@ public sealed class AudioService : MonoBehaviour
         // Fuente "actual": la que está sonando ahora mismo
         var current = _musicATurn ? _musicB : _musicA;
         var other   = _musicATurn ? _musicA : _musicB;
+        RecordarMusica(current);
+        RecordarMusica(other);
+        if (!continuarDondeIba)
+        {
+            _posicionesDeMusica.Remove(clip);
+            if (current.clip == clip) current.timeSamples = 0;
+            if (other.clip == clip) other.timeSamples = 0;
+        }
 
         // 1) Si YA está sonando este mismo clip, no reiniciamos.
         //    Solo aseguramos volumen (con ducking aplicado) y salimos.
         if (current.clip == clip)
         {
-            float target = GetDuckedVolume(1f);
+            float target = 1f;
 
             // si por lo que sea está parado (pausa/crossfade previo), reanudar sin resetear tiempo
             if (!current.isPlaying)
@@ -904,7 +942,6 @@ public sealed class AudioService : MonoBehaviour
 
             // llevar al volumen objetivo suavemente (sin cambiar de fuente)
             StopMusicCoroutines();
-            _duckRoutine = null;
 
             // BUGFIX: StopMusicCoroutines() solo mata la corrutina de crossfade/fade-out en
             // curso, no la fuente en sí. Si 'other' venía de un crossfade interrumpido a medias
@@ -913,8 +950,9 @@ public sealed class AudioService : MonoBehaviour
             // no comparte el clip que queremos, hay que silenciarla explícitamente aquí.
             if (other.isPlaying && other.clip != clip)
             {
+                RecordarMusica(other);
                 other.Stop();
-                other.volume = 0f;
+                SetSourceVolume(other, 0f);
             }
 
             _setVolumeRoutine = StartCoroutine(SetMusicVolumeTo(target, fadeSeconds));
@@ -925,9 +963,8 @@ public sealed class AudioService : MonoBehaviour
         //    también evitamos reiniciar y nos quedamos con esa.
         if (other.clip == clip && other.isPlaying)
         {
-            float target = GetDuckedVolume(1f);
+            float target = 1f;
             StopMusicCoroutines();
-            _duckRoutine = null;
 
             // BUGFIX: 'other' es la fuente que de verdad queremos activa a partir de ahora.
             // Antes no se actualizaba _musicATurn, así que SetMusicVolumeTo seguía tratando a
@@ -936,8 +973,9 @@ public sealed class AudioService : MonoBehaviour
             // el turno con la realidad y silenciamos 'current' si quedó con un clip distinto.
             if (current.isPlaying && current.clip != clip)
             {
+                RecordarMusica(current);
                 current.Stop();
-                current.volume = 0f;
+                SetSourceVolume(current, 0f);
             }
             _musicATurn = !_musicATurn;
 
@@ -950,26 +988,29 @@ public sealed class AudioService : MonoBehaviour
         //    verdad está sonando no se corte en seco al cambiarle el clip.
         var from = current;
         var to   = other;
-        if (current.isPlaying && other.isPlaying && other.volume > current.volume)
+        if (current.isPlaying && other.isPlaying && BaseVolume(other) > BaseVolume(current))
         {
             from = other;
             to   = current;
         }
 
+        StopMusicCoroutines();
+        RecordarMusica(to);
+        to.Stop();
         to.clip = clip;
-        to.volume = GetDuckedVolume(0f);
-        to.timeSamples = 0;             // nuevo clip, empieza de inicio
+        SetSourceVolume(to, 0f);
+        to.timeSamples = continuarDondeIba && _posicionesDeMusica.TryGetValue(clip, out int muestra)
+            ? Mathf.Clamp(muestra, 0, Mathf.Max(0, clip.samples - 1)) : 0;
         if (!to.isPlaying) to.Play();
 
         if (from.isPlaying)
         {
             StopMusicCoroutines();
-            _duckRoutine = null;
             _crossfadeRoutine = StartCoroutine(Crossfade(from, to, fadeSeconds));
         }
         else
         {
-            to.volume = GetDuckedVolume(1f);
+            _crossfadeRoutine = StartCoroutine(Crossfade(from, to, fadeSeconds));
         }
 
         // La fuente activa pasa a ser la que entra.
@@ -991,7 +1032,6 @@ public sealed class AudioService : MonoBehaviour
         if (!_musicA.isPlaying && !_musicB.isPlaying) return;
 
         StopMusicCoroutines();
-        _duckRoutine = null;
 
         if (_musicA.isPlaying) _fadeOutRoutine  = StartCoroutine(FadeOutAndStop(_musicA, fadeOut, isSecondary: false));
         if (_musicB.isPlaying) _fadeOutRoutineB = StartCoroutine(FadeOutAndStop(_musicB, fadeOut, isSecondary: true));
@@ -1006,8 +1046,8 @@ public sealed class AudioService : MonoBehaviour
     {
         float entrada = Mathf.Max(0f, seconds);
         float salida  = Mathf.Max(entrada, FundidoMinimoDeSalida);
-        float startFrom = from.volume;
-        float targetTo  = GetDuckedVolume(1f);
+        float startFrom = BaseVolume(from);
+        float targetTo  = 1f;
         float t = 0f;
         while (t < salida)
         {
@@ -1016,12 +1056,13 @@ public sealed class AudioService : MonoBehaviour
             float kOut = Mathf.Clamp01(t / salida);
             // Fundido de potencia constante (INC-421): con dos rectas, a mitad de camino las dos
             // pistas suenan a la mitad y se oye un hueco entre canción y canción.
-            from.volume = startFrom * Mathf.Cos(kOut * Mathf.PI * 0.5f);
-            to.volume   = targetTo  * Mathf.Sin(kIn  * Mathf.PI * 0.5f);
+            SetSourceVolume(from, startFrom * Mathf.Cos(kOut * Mathf.PI * 0.5f));
+            SetSourceVolume(to, targetTo  * Mathf.Sin(kIn  * Mathf.PI * 0.5f));
             yield return null;
         }
+        RecordarMusica(from);
         from.Stop();
-        to.volume = targetTo;
+        SetSourceVolume(to, targetTo);
         _crossfadeRoutine = null;
     }
 
@@ -1029,48 +1070,166 @@ public sealed class AudioService : MonoBehaviour
     {
         if (seconds <= 0f)
         {
+            RecordarMusica(src);
             src.Stop();
             if (isSecondary) _fadeOutRoutineB = null; else _fadeOutRoutine = null;
             yield break;
         }
-        float start = src.volume, t = 0f;
+        float start = BaseVolume(src), t = 0f;
         while (t < seconds)
         {
             t += Time.unscaledDeltaTime;
-            src.volume = Mathf.Lerp(start, 0f, t / seconds);
+            SetSourceVolume(src, Mathf.Lerp(start, 0f, t / seconds));
             yield return null;
         }
+        RecordarMusica(src);
         src.Stop();
-        src.volume = GetDuckedVolume(1f);
+        SetSourceVolume(src, 1f);
         if (isSecondary) _fadeOutRoutineB = null; else _fadeOutRoutine = null;
     }
 
-    // Ducking simple (para cinemáticas aditivas duckInsteadOfReplace)
-    void StartDuck(float duckTo, float fade)
+    /// Atenúa la música mientras el propietario mantiene su petición; repetir actualiza los dB.
+    public void BeginDuck(string source, float db)
     {
-        _duckCount++;
-        _duckTarget = Mathf.Clamp01(duckTo);
-        if (_duckRoutine != null) StopCoroutine(_duckRoutine);
-        _duckRoutine = StartCoroutine(SetMusicVolumeTo(_duckTarget, fade));
+        if (string.IsNullOrWhiteSpace(source)) return;
+        _duckRequests[source] = DbMultiplier(db);
+        RefreshDuck(VoiceDuck.attackSeconds);
     }
 
-    void StopDuck(float fade)
+    /// Libera únicamente la petición del propietario indicado.
+    public void EndDuck(string source)
     {
-        _duckCount = Mathf.Max(0, _duckCount - 1);
-        float target = (_duckCount == 0) ? 1f : _duckTarget;
-        if (_duckRoutine != null) StopCoroutine(_duckRoutine);
-        _duckRoutine = StartCoroutine(SetMusicVolumeTo(target, fade));
+        if (string.IsNullOrWhiteSpace(source) || !_duckRequests.Remove(source)) return;
+        RefreshDuck(VoiceDuck.releaseSeconds);
     }
 
-    float GetDuckedVolume(float baseVol) => baseVol * (_duckCount > 0 ? _duckTarget : 1f);
+    /// Atenúa música, SFX y ambiente por propietario, con fundido en tiempo real.
+    public void BeginDuck(string source, float musicaDb, float sfxDb, float ambienteDb, float fundido)
+    {
+        if (string.IsNullOrWhiteSpace(source)) return;
+        _mezclas[source] = new Vector3(DbMultiplier(musicaDb), DbMultiplier(ambienteDb), DbMultiplier(sfxDb));
+        RefreshDuck(fundido);
+    }
 
+    public void EndDuck(string source, float fundido)
+    {
+        if (string.IsNullOrWhiteSpace(source) || !_mezclas.Remove(source)) return;
+        RefreshDuck(fundido);
+    }
+
+    static float DbMultiplier(float db) => Mathf.Pow(10f, Mathf.Clamp(db, -80f, 0f) / 20f);
+
+    void RefreshDuck(float duration)
+    {
+        var settings = VoiceDuck;
+        Vector3 target = Vector3.one;
+        foreach (var request in _duckRequests.Values) target.x = Mathf.Min(target.x, request);
+        foreach (var request in _mezclas.Values) target = Vector3.Min(target, request);
+        if (_voiceDuckActive && settings.enabled)
+        {
+            target.x = Mathf.Min(target.x, DbMultiplier(settings.musicDb));
+            target.y = Mathf.Min(target.y, DbMultiplier(settings.ambienceDb));
+            target.z = Mathf.Min(target.z, DbMultiplier(settings.sfxDb));
+        }
+        _duckStart = _duckMultiplier;
+        _duckTarget = target;
+        _duckElapsed = 0f;
+        _duckDuration = Mathf.Max(0f, duration);
+        if (_duckDuration == 0f)
+        {
+            _duckMultiplier = _duckTarget;
+            foreach (var entry in _sourceVolumes)
+                if (entry.Key != null) entry.Key.volume = entry.Value * SourceMultiplier(entry.Key);
+        }
+    }
+
+    float GetDuckedVolume(float baseVol) => baseVol * _duckMultiplier.x;
+
+    private readonly HashSet<AudioSource> _truenos = new();
+    float SourceMultiplier(AudioSource src)
+    {
+        if (_truenos.Contains(src)) return 1f;
+        var group = src.outputAudioMixerGroup;
+        if (src == _voiceSource || (uiGroup != null && group == uiGroup)
+            || (dialogueGroup != null && group == dialogueGroup)) return 1f;
+        if (src == _musicA || src == _musicB) return GetDuckedVolume(1f);
+        return _ambienceSources.Contains(src) || (ambienceGroup != null && group == ambienceGroup)
+            ? _duckMultiplier.y : _duckMultiplier.z;
+    }
+
+    float BaseVolume(AudioSource src) => _sourceVolumes.TryGetValue(src, out float volume) ? volume : src.volume;
+
+    // Los fundidos escriben el volumen base; la atenuación se compone sin alterar el mixer.
+    void SetSourceVolume(AudioSource src, float volume)
+    {
+        _sourceVolumes[src] = Mathf.Clamp01(volume);
+        src.volume = Mathf.Clamp01(volume) * SourceMultiplier(src);
+    }
+
+    void LateUpdate()
+    {
+        if (!_applicationPaused && !AudioListener.pause)
+        {
+            _duckElapsed += Time.unscaledDeltaTime;
+            float progress = _duckDuration > 0f ? Mathf.Clamp01(_duckElapsed / _duckDuration) : 1f;
+            _duckMultiplier = Vector3.Lerp(_duckStart, _duckTarget, Mathf.SmoothStep(0f, 1f, progress));
+        }
+        foreach (var entry in _sourceVolumes)
+            if (entry.Key != null) entry.Key.volume = entry.Value * SourceMultiplier(entry.Key);
+    }
+
+    void OnApplicationPause(bool paused) => _applicationPaused = paused;
+
+    void CancelVoiceMonitor()
+    {
+        ++_voiceToken;
+        if (_voiceDuckRoutine != null) StopCoroutine(_voiceDuckRoutine);
+        _voiceDuckRoutine = null;
+    }
+
+    IEnumerator MonitorVoice(uint token, bool waitForVoice = true)
+    {
+        // Un frame permite que una voz recién lanzada empiece a reproducirse.
+        yield return null;
+        while (token == _voiceToken && _voiceSource != null
+            && (_applicationPaused || AudioListener.pause || (waitForVoice
+                && (_voiceSource.isPlaying || (_voiceSource.clip != null
+                    && _voiceSource.clip.loadState == AudioDataLoadState.Loading)))))
+            yield return null;
+        float elapsed = 0f;
+        while (token == _voiceToken && elapsed < Mathf.Max(0f, VoiceDuck.holdAfterVoiceSeconds))
+        {
+            if (!_applicationPaused && !AudioListener.pause) elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        if (token != _voiceToken) yield break;
+        _voiceDuckActive = false;
+        RefreshDuck(VoiceDuck.releaseSeconds);
+        _ajustesDeVozActiva = null;
+        _voiceDuckRoutine = null;
+    }
+
+    void OnDisable()
+    {
+        QuitarEfectoDeVoz();
+        _mezclas.Clear();
+        _ajustesDeVozActiva = null;
+        CancelVoiceMonitor();
+        if (_voiceSource != null) _voiceSource.Stop();
+        _voiceDuckActive = false;
+        _duckRequests.Clear();
+        _duckMultiplier = _duckStart = _duckTarget = Vector3.one;
+        foreach (var entry in _sourceVolumes)
+            if (entry.Key != null) entry.Key.volume = entry.Value;
+    }
     IEnumerator SetMusicVolumeTo(float target, float fade)
     {
         var current = _musicATurn ? _musicB : _musicA;
         var other   = _musicATurn ? _musicA : _musicB;
+
         float t = 0f;
-        float a0 = current.volume;
-        float b0 = other.volume;
+        float a0 = BaseVolume(current);
+        float b0 = BaseVolume(other);
         if (fade <= 0f) fade = 0.0001f;
 
         // BUGFIX: antes 'other' se interpolaba desde a0 (volumen de 'current') hacia el mismo
@@ -1086,14 +1245,13 @@ public sealed class AudioService : MonoBehaviour
         {
             t += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(t / fade);
-            current.volume = Mathf.Lerp(a0, target, k);
-            other.volume   = Mathf.Lerp(b0, otherTarget, k);
+            SetSourceVolume(current, Mathf.Lerp(a0, target, k));
+            SetSourceVolume(other, Mathf.Lerp(b0, otherTarget, k));
             yield return null;
         }
-        current.volume = target;
-        other.volume   = otherTarget;
+        SetSourceVolume(current, target);
+        SetSourceVolume(other, otherTarget);
         if (!sameClip && other.isPlaying) other.Stop();
-        _duckRoutine = null;
         _setVolumeRoutine = null;
     }
 
@@ -1104,17 +1262,16 @@ public sealed class AudioService : MonoBehaviour
     /// Reproduce un SFX por clave de evento configurada en el AudioGraphProfile.
     /// Ejemplo: PlaySFX("Ambience_Cave"), PlaySFX("Spell01"), PlaySFX("FootStep00")
     /// </summary>
-    public void PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null)
+    public void PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null, float tono = 1f)
     {
         if (string.IsNullOrWhiteSpace(eventKey)) return;
         
         AudioClip clip = FindSfxClipByKey(eventKey);
         if (clip != null)
         {
-            if (worldPosition.HasValue)
-                PlaySFXAt(clip, worldPosition.Value, volume);
-            else
-                PlaySFX(clip, volume);
+            PlayEffect(clip, volume, worldPosition,
+                eventKey.StartsWith("Ambience", StringComparison.OrdinalIgnoreCase),
+                eventKey.StartsWith("UI_", StringComparison.OrdinalIgnoreCase), pitch: Mathf.Clamp(tono, 0.01f, 3f));
         }
         else
         {
@@ -1155,7 +1312,8 @@ public sealed class AudioService : MonoBehaviour
     /// </summary>
     public void PlayAmbience(string ambienceKey, float volume = 1f, Vector3? worldPosition = null)
     {
-        PlaySFX(ambienceKey, volume, worldPosition);
+        var clip = FindSfxClipByKey(ambienceKey);
+        if (clip != null) PlayEffect(clip, volume, worldPosition, true);
     }
     
     /// <summary>
@@ -1227,9 +1385,13 @@ public sealed class AudioService : MonoBehaviour
             _loopFadeRoutines.Remove(loopId);
         }
 
+        if (eventKey.StartsWith("Ambience", StringComparison.OrdinalIgnoreCase)) _ambienceSources.Add(src);
+        else _ambienceSources.Remove(src);
+        src.outputAudioMixerGroup = eventKey.StartsWith("UI_", StringComparison.OrdinalIgnoreCase)
+            ? uiGroup : _ambienceSources.Contains(src) ? ambienceGroup : sfxGroup;
         src.loop = true;
         src.clip = clip;
-        src.volume = Mathf.Clamp01(volume);
+        SetSourceVolume(src, volume);
         src.Play();
     }
 
@@ -1273,46 +1435,199 @@ public sealed class AudioService : MonoBehaviour
 
     IEnumerator FadeOutAndStopLoop(string loopId, AudioSource src, float duration)
     {
-        float startVolume = src.volume;
+        float startVolume = BaseVolume(src);
         float elapsed = 0f;
         while (elapsed < duration && src != null)
         {
-            elapsed += Time.deltaTime;
-            src.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+            elapsed += Time.unscaledDeltaTime;
+            SetSourceVolume(src, Mathf.Lerp(startVolume, 0f, elapsed / duration));
             yield return null;
         }
         if (src != null)
         {
             src.Stop();
-            src.volume = startVolume;
+            SetSourceVolume(src, startVolume);
         }
         _loopFadeRoutines.Remove(loopId);
     }
 
     // ===========================================================
     // SFX (métodos internos y legacy)
-    public void PlaySFX(AudioClip clip, float volume = 1f)
+    /// Configura filtros reutilizables y suma ganancia al volumen de diálogo del usuario.
+    public void AplicarEfectoDeVoz(PresetDeVoz preset, float gananciaDb = 0f)
     {
-        if (!clip) return;
-        var src = Rent2D();
-        src.transform.localPosition = Vector3.zero;
-        src.volume = Mathf.Clamp01(volume);
-        src.clip = clip;
-        src.Play();
-        StartCoroutine(ReturnWhenDone(src, _pool2D));
+        if (_voiceSource == null) return;
+        QuitarEfectoDeVoz();
+        if (preset != PresetDeVoz.Ninguno)
+        {
+            if (_reverbDeVoz == null)
+            {
+                _reverbDeVoz = _voiceSource.gameObject.AddComponent<AudioReverbFilter>();
+                _ecoDeVoz = _voiceSource.gameObject.AddComponent<AudioEchoFilter>();
+            }
+            // Valores en milibelios salvo tiempos en segundos; la señal seca permanece íntegra.
+            float cola = 0.45f, sala = -2200f, nivel = -2600f, reflexiones = -3000f;
+            switch (preset)
+            {
+                case PresetDeVoz.ExteriorNoche:
+                    cola = 0.9f; sala = -1800f; nivel = -2000f; reflexiones = -2600f;
+                    break;
+                case PresetDeVoz.Plegaria:
+                    cola = 3.2f; sala = -1000f; nivel = -1100f; reflexiones = -1800f;
+                    break;
+                case PresetDeVoz.Epico:
+                    cola = 6.5f; sala = -500f; nivel = -500f; reflexiones = -1200f;
+                    break;
+            }
+            _reverbDeVoz.reverbPreset = AudioReverbPreset.User;
+            _reverbDeVoz.dryLevel = 0f;
+            _reverbDeVoz.room = sala;
+            _reverbDeVoz.roomHF = -600f;
+            _reverbDeVoz.roomLF = 0f;
+            _reverbDeVoz.decayTime = cola;
+            _reverbDeVoz.decayHFRatio = 0.65f;
+            _reverbDeVoz.reflectionsLevel = reflexiones;
+            _reverbDeVoz.reflectionsDelay = 0.025f;
+            _reverbDeVoz.reverbLevel = nivel;
+            _reverbDeVoz.reverbDelay = 0.04f;
+            _reverbDeVoz.hfReference = 5000f;
+            _reverbDeVoz.lfReference = 250f;
+            _reverbDeVoz.diffusion = 90f;
+            _reverbDeVoz.density = 100f;
+            _reverbDeVoz.enabled = true;
+            _ecoDeVoz.delay = 320f;
+            _ecoDeVoz.decayRatio = 0.35f;
+            _ecoDeVoz.wetMix = 0.22f;
+            _ecoDeVoz.dryMix = 1f;
+            _ecoDeVoz.enabled = preset == PresetDeVoz.Epico;
+        }
+        float ganancia = Mathf.Clamp(gananciaDb, 0f, 20f);
+        if (ganancia <= 0f) return;
+        if (mixer != null && dialogueGroup != null && dialogueGroup.audioMixer == mixer
+            && mixer.GetFloat(dialogueVolumeParam, out _dialogoDbOriginal))
+        {
+            _gananciaDeVozAplicada = mixer.SetFloat(dialogueVolumeParam,
+                Mathf.Clamp(_dialogoDbOriginal + ganancia, -80f, 20f));
+            _gananciaDeVozDb = ganancia;
+        }
+        // Sin bus expuesto, la misma relación señal/fondo se obtiene atenuando el resto.
+        if (!_gananciaDeVozAplicada)
+            BeginDuck("efectoDeVoz", -ganancia, -ganancia, -ganancia, 0.15f);
     }
 
-    public void PlaySFXAt(AudioClip clip, Vector3 worldPos, float volume = 1f)
+    /// Retira filtros y ganancia incluso al deshabilitar el servicio o saltar una secuencia.
+    public void QuitarEfectoDeVoz()
     {
-        if (!clip) return;
-        var src = Rent3D();
-        src.transform.position = worldPos;
-        src.volume = Mathf.Clamp01(volume);
-        src.clip = clip;
-        src.Play();
-        StartCoroutine(ReturnWhenDone(src, _pool3D));
+        if (_reverbDeVoz != null) _reverbDeVoz.enabled = false;
+        if (_ecoDeVoz != null) _ecoDeVoz.enabled = false;
+        if (_gananciaDeVozAplicada && mixer != null)
+            mixer.SetFloat(dialogueVolumeParam, _dialogoDbOriginal);
+        _gananciaDeVozAplicada = false;
+        _gananciaDeVozDb = 0f;
+        EndDuck("efectoDeVoz", 0f);
     }
 
+    public void PlaySFX(AudioClip clip, float volume = 1f, float tono = 1f)
+        => PlayEffect(clip, volume, null, false, pitch: Mathf.Clamp(tono, 0.01f, 3f));
+
+    public void PlaySFXAt(AudioClip clip, Vector3 worldPos, float volume = 1f, float tono = 1f)
+        => PlayEffect(clip, volume, worldPos, false, pitch: Mathf.Clamp(tono, 0.01f, 3f));
+
+    /// Reproduce una reacción sobre el diálogo mediante una fuente independiente del pool.
+    /// El sonido del rayo sobrevive a detener la tormenta y usa el volumen SFX del usuario.
+    public void ProgramarTrueno(string clave, float retraso, float volumen = 1f)
+    {
+        if (!isActiveAndEnabled) return;
+        var clip = FindSfxClipByKey(clave);
+        if (clip == null)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[AudioService] El trueno '{clave}' no tiene clip asignado.");
+#endif
+            return;
+        }
+        clip.LoadAudioData();
+        StartCoroutine(SonarTrueno(clip, Mathf.Clamp(retraso, 0.2f, 0.9f), volumen));
+    }
+    private IEnumerator SonarTrueno(AudioClip clip, float retraso, float volumen)
+    {
+        yield return new WaitForSecondsRealtime(retraso);
+        while (clip != null && clip.loadState == AudioDataLoadState.Loading) yield return null;
+        if (clip == null || clip.loadState == AudioDataLoadState.Failed) yield break;
+        var fuente = Rent2D();
+        _truenos.Add(fuente);
+        fuente.outputAudioMixerGroup = sfxGroup;
+        fuente.pitch = 1f;
+        fuente.priority = 32;
+        SetSourceVolume(fuente, volumen);
+        fuente.clip = clip;
+        fuente.Play();
+        StartCoroutine(ReturnWhenDone(fuente, _pool2D));
+    }
+    private readonly Dictionary<SequencePlayer, VocalReactions.EstadoDeSecuencia> _reaccionesPorSecuencia = new();
+    private readonly VocalReactions.EstadoDeSecuencia _reaccionesFueraDeSecuencia = new();
+    private readonly List<float> _finDeReacciones = new();
+    public void PlayReaction(string character, string kind, float volume = 1f, Vector3? worldPosition = null,
+        string emisor = null, SequencePlayer secuencia = null, bool risaSiAnimoGastado = false)
+    {
+        if (string.IsNullOrWhiteSpace(character) || string.IsNullOrWhiteSpace(kind)) return;
+        character = character.Trim();
+        kind = kind.Trim().ToLowerInvariant();
+        // Los beats existentes comparten la memoria sin modificar sus llamadas.
+        if (secuencia == null)
+        {
+            var activas = CinematicSequencerBase.RunningSequences;
+            for (int i = activas.Count - 1; i >= 0; i--)
+                if (activas[i] is SequencePlayer player) { secuencia = player; break; }
+        }
+        var estado = _reaccionesFueraDeSecuencia;
+        if (secuencia != null && !_reaccionesPorSecuencia.TryGetValue(secuencia, out estado))
+        {
+            estado = new VocalReactions.EstadoDeSecuencia();
+            _reaccionesPorSecuencia.Add(secuencia, estado);
+            var propietaria = secuencia;
+            secuencia.RegisterCleanup(() => _reaccionesPorSecuencia.Remove(propietaria));
+        }
+        if (risaSiAnimoGastado && kind == "cheer" && estado.AnimoGastado(character)) kind = "laugh";
+        float ahora = Time.unscaledTime;
+        if (!estado.PuedeSonar(character, kind, ahora, secuencia != null)) return;
+        _finDeReacciones.RemoveAll(fin => fin <= ahora);
+        if (_finDeReacciones.Count >= 3) return;
+        if (!VocalReactions.TryGet(character, kind, out var clip))
+        {
+            if (kind != "cheer") return;
+            kind = "laugh";
+            if (!VocalReactions.TryGet(character, kind, out clip)) return;
+        }
+        float pitch = UnityEngine.Random.Range(0.96f, 1.04f);
+        estado.Registrar(character, kind, ahora);
+        _finDeReacciones.Add(ahora + clip.length / pitch);
+        PlayEffect(clip, volume, worldPosition, false, dialogue: true, pitch: pitch);
+    }
+
+    void PlayEffect(AudioClip clip, float volume, Vector3? worldPosition, bool ambience, bool ui = false,
+        bool dialogue = false, float pitch = 1f)
+    {
+        if (!clip) return;
+        var src = worldPosition.HasValue ? Rent3D() : Rent2D();
+        src.outputAudioMixerGroup = dialogue ? dialogueGroup : ui ? uiGroup : ambience ? ambienceGroup : sfxGroup;
+        src.pitch = pitch;
+        if (worldPosition.HasValue) src.transform.position = worldPosition.Value;
+        else src.transform.localPosition = Vector3.zero;
+        if (ambience)
+        {
+            _ambienceSources.Add(src);
+            SetSourceVolume(src, volume);
+        }
+        else
+        {
+            _ambienceSources.Remove(src);
+            SetSourceVolume(src, volume);
+        }
+        src.clip = clip;
+        src.Play();
+        StartCoroutine(ReturnWhenDone(src, worldPosition.HasValue ? _pool3D : _pool2D));
+    }
     void PlaySfxForKey(string key)
     {
         if (profile == null || string.IsNullOrEmpty(key)) return;
@@ -1336,12 +1651,19 @@ public sealed class AudioService : MonoBehaviour
     {
         if (!mixer || string.IsNullOrEmpty(exposedParam)) return;
         float dB = Mathf.Lerp(-80f, 0f, Mathf.Clamp01(linear01));
+        if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam)
+        {
+            _dialogoDbOriginal = dB;
+            dB = Mathf.Clamp(dB + _gananciaDeVozDb, -80f, 20f);
+        }
         mixer.SetFloat(exposedParam, dB);
     }
 
     public float GetExposedVolume01(string exposedParam, float def01 = 1f)
     {
         if (!mixer || string.IsNullOrEmpty(exposedParam)) return def01;
+        if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam)
+            return Mathf.InverseLerp(-80f, 0f, _dialogoDbOriginal);
         return mixer.GetFloat(exposedParam, out float dB) ? Mathf.InverseLerp(-80f, 0f, dB) : def01;
     }
 
@@ -1369,7 +1691,8 @@ public sealed class AudioService : MonoBehaviour
         // pausa. WaitForSecondsRealtime no depende de timeScale.
         float wait = src.clip ? Mathf.Max(0.02f, src.clip.length / Mathf.Max(0.01f, src.pitch)) : 1f;
         yield return new WaitForSecondsRealtime(wait);
-        src.Stop(); src.clip = null; pool.Enqueue(src);
+        _truenos.Remove(src); src.priority = 128;
+        src.Stop(); src.clip = null; src.pitch = 1f; _sourceVolumes.Remove(src); _ambienceSources.Remove(src); pool.Enqueue(src);
     }
 
     AudioClip GetCurrentMusicClip()
@@ -1531,10 +1854,43 @@ public sealed class AudioService : MonoBehaviour
     public void PlayVoice(AudioClip clip, float volume = 1f)
     {
         if (_voiceSource == null || clip == null) return;
+        CancelVoiceMonitor();
         _voiceSource.Stop();
         _voiceSource.clip = clip;
         _voiceSource.volume = Mathf.Clamp01(volume);
         _voiceSource.Play();
+        _ajustesDeVozActiva = CinematicSequencerBase.AnySequenceActive
+            ? (profile != null && profile.cinematicVoiceDuck != null ? profile.cinematicVoiceDuck : _duckCinematico)
+            : (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck);
+        _voiceDuckActive = VoiceDuck.enabled;
+        RefreshDuck(VoiceDuck.attackSeconds);
+        _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken));
+    }
+
+    /// Indica si la fuente de voz está sonando.
+    public bool HayVozSonando => _voiceSource != null && _voiceSource.isPlaying;
+
+    /// <summary>Mide el volumen RMS con un buffer reutilizable.</summary>
+    public float NivelDeVoz()
+    {
+        if (!HayVozSonando) return 0f;
+        _voiceSource.GetOutputData(_muestrasDeVoz, 0);
+        float suma = 0f;
+        for (int i = 0; i < _muestrasDeVoz.Length; i++)
+            suma += _muestrasDeVoz[i] * _muestrasDeVoz[i];
+        return Mathf.Sqrt(suma / _muestrasDeVoz.Length);
+    }
+
+    public bool IsVoicePlaying(AudioClip clip)
+        => clip != null && _voiceSource != null && _voiceSource.clip == clip && _voiceSource.isPlaying;
+
+    /// Detiene la voz actual.
+    public void StopVoice()
+    {
+        if (_voiceSource != null) _voiceSource.Stop();
+        if (!_voiceDuckActive || _voiceSource == null) return;
+        CancelVoiceMonitor();
+        _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken, false));
     }
 
     public void PlaySfx(AudioClip clip, float volume = 1f)

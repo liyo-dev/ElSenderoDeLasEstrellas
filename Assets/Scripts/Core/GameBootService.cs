@@ -235,7 +235,6 @@ public class GameBootService : MonoBehaviour
     {
         GameState.ResetAll();
         CameraDirectorService.ForceResetState();
-        Game.Cinematics.SimpleCinematicDirector.ForceResetStaticState();
         TeleportService.ForceResetTransitionLock();
         // El HUD vive en Start (DontDestroyOnLoad): al cambiar de sesión se olvida quién lo tenía
         // oculto, por si alguien se quedó a medias. Ver PlayerHUDV2.ForceResetHideState().

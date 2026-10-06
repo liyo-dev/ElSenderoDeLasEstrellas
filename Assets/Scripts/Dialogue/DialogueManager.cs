@@ -146,6 +146,7 @@ public class DialogueManager : MonoBehaviour
     // NPC para cámara de diálogo
     private Transform _currentNpc;
     private NPCSimpleAnimator _activeDialogueSpeakerAnimator;
+    private Transform _hablanteDeLaLinea;
     private bool _activeDialogueSpeakerIsPlayer;
     // Caché del NPCSimpleAnimator del jugador activo (se reutiliza por línea sin GetComponent extra)
     private NPCSimpleAnimator _playerDialogueAnimator;
@@ -280,8 +281,23 @@ public class DialogueManager : MonoBehaviour
         GamepadInputReader.OnInput += HandleGamepadInput;
     }
 
+    [Tooltip("Si suena el doblaje en los cuadros de diálogo que se pasan con A. Raúl (6 oct 2026, " +
+             "INC-603): no; la voz queda para las cinemáticas, los bocadillos y los comentarios de combate.")]
+    [SerializeField] private bool vocesEnCuadrosDeDialogo = false;
+    private AudioClip _lineVoice;
+
+    private void StopLineVoice()
+    {
+        // No corta una toma que otro sistema haya sustituido.
+        var audio = AudioService.Instance;
+        if (audio != null && audio.IsVoicePlaying(_lineVoice)) audio.StopVoice();
+        _lineVoice = null;
+    }
+
     void OnDisable()
     {
+        StopLineVoice();
+        StopTypewriter();
         GamepadInputReader.OnInput -= HandleGamepadInput;
         // Defensivo: si el objeto se desactiva/destruye a mitad de un diálogo (cierre de sesión,
         // teardown de escena) evita dejar el handler colgado suscrito a un componente inerte.
@@ -773,6 +789,7 @@ public class DialogueManager : MonoBehaviour
         // Si estamos escribiendo y se permite saltar, completa la línea actual
         if (useTypewriter && _isTyping && allowSkipCurrentLine)
         {
+            StopLineVoice();
             CompleteCurrentLineInstant();
             return;
         }
@@ -782,6 +799,7 @@ public class DialogueManager : MonoBehaviour
 
     public void Close()
     {
+        StopLineVoice();
         StopTypewriter();
         HideChoices();
 
@@ -1087,6 +1105,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Next()
     {
+        StopLineVoice();
         _index++;
         if (_current == null || _current.lines == null || _index >= _current.lines.Length)
         {
@@ -1148,6 +1167,8 @@ public class DialogueManager : MonoBehaviour
         {
             StopTypewriter();
             bodyText.text = _currentText;
+            if (vocesEnCuadrosDeDialogo && VoiceLines.TryPlay(line.textId) > 0f)
+                VoiceLines.TryGet(line.textId, out _lineVoice);
             if (useTypewriter)
             {
                 if (verboseLogging)
@@ -1166,6 +1187,7 @@ public class DialogueManager : MonoBehaviour
                     // ForceMeshUpdate falló (ver TryForceMeshUpdate) - renunciamos al typewriter
                     // para esta línea y mostramos el texto completo en vez de dejar el diálogo roto.
                     bodyText.maxVisibleCharacters = int.MaxValue;
+                    if (_currentText.Length > 0) SenalesDeHabla.Empieza(_hablanteDeLaLinea, _currentText.Length / Mathf.Max(1f, charsPerSecond));
                 }
             }
             else
@@ -1177,6 +1199,7 @@ public class DialogueManager : MonoBehaviour
                     #endif
                 }
                 bodyText.maxVisibleCharacters = int.MaxValue;
+                if (_currentText.Length > 0) SenalesDeHabla.Empieza(_hablanteDeLaLinea, _currentText.Length / Mathf.Max(1f, charsPerSecond));
                 // Forzamos el rebuild aquí (dentro del try/catch de TryForceMeshUpdate) en vez de
                 // dejarlo para el próximo pase automático de Canvas.SendWillRenderCanvases, que no
                 // pasa por nuestro código y por tanto no captura el NRE de SaveSpriteVertexInfo si
@@ -1190,6 +1213,7 @@ public class DialogueManager : MonoBehaviour
     private System.Collections.IEnumerator TypeRoutine()
     {
         _isTyping = true;
+        SenalesDeHabla.Empieza(_hablanteDeLaLinea, 0f);
         
         // Ocultar el icono de Submit mientras se escribe
         HideSubmitHint();
@@ -1208,6 +1232,7 @@ public class DialogueManager : MonoBehaviour
             _isTyping = false;
             _typeRoutine = null;
             ShowSubmitHintWithAnimation();
+            SenalesDeHabla.Para(_hablanteDeLaLinea);
             yield break;
         }
         int shown = 0;
@@ -1256,6 +1281,7 @@ public class DialogueManager : MonoBehaviour
                 _isTyping = false;
                 _typeRoutine = null;
                 ShowSubmitHintWithAnimation();
+                SenalesDeHabla.Para(_hablanteDeLaLinea);
                 yield break;
             }
 
@@ -1268,6 +1294,7 @@ public class DialogueManager : MonoBehaviour
 
         bodyText.maxVisibleCharacters = total;
         TryForceMeshUpdate();
+        SenalesDeHabla.Para(_hablanteDeLaLinea);
         _isTyping = false;
         _typeRoutine = null;
 
@@ -1296,6 +1323,7 @@ public class DialogueManager : MonoBehaviour
 
     private void StopTypewriter()
     {
+        SenalesDeHabla.Para(_hablanteDeLaLinea);
         if (_typeRoutine != null)
         {
             StopCoroutine(_typeRoutine);
@@ -1616,6 +1644,7 @@ public class DialogueManager : MonoBehaviour
             {
                 if (!_activeDialogueSpeakerIsPlayer && _activeDialogueSpeakerAnimator == willAnimator)
                 {
+                    _hablanteDeLaLinea = willAnimator.transform;
                     willAnimator.SetTalking(true);
                     willAnimator.PlayBodyEmotion(line.emotion);
                     return;
@@ -1626,6 +1655,7 @@ public class DialogueManager : MonoBehaviour
                 willAnimator.SetTalking(true);
                 willAnimator.PlayBodyEmotion(line.emotion);
                 _activeDialogueSpeakerAnimator = willAnimator;
+                _hablanteDeLaLinea = willAnimator.transform;
                 if (verboseLogging)
                 {
                     #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1721,6 +1751,7 @@ public class DialogueManager : MonoBehaviour
         // Si sigue hablando el mismo speaker, no re-disparar BeginInteraction pero sí actualizar la emoción
         if (!_activeDialogueSpeakerIsPlayer && _activeDialogueSpeakerAnimator == speakerAnimator)
         {
+            _hablanteDeLaLinea = speakerAnimator.transform;
             speakerAnimator.SetTalking(true);
             speakerAnimator.PlayBodyEmotion(line.emotion);
             return;
@@ -1731,6 +1762,7 @@ public class DialogueManager : MonoBehaviour
         speakerAnimator.SetTalking(true);
         speakerAnimator.PlayBodyEmotion(line.emotion);
         _activeDialogueSpeakerAnimator = speakerAnimator;
+        _hablanteDeLaLinea = speakerAnimator.transform;
         if (verboseLogging)
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1741,6 +1773,8 @@ public class DialogueManager : MonoBehaviour
 
     private void ClearActiveSpeakerAnimations()
     {
+        SenalesDeHabla.Para(_hablanteDeLaLinea);
+        _hablanteDeLaLinea = null;
         if (_activeDialogueSpeakerIsPlayer)
         {
             SetPlayerTalkingAnimation(false);
@@ -1761,6 +1795,7 @@ public class DialogueManager : MonoBehaviour
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
             return false;
 
+        if (isTalking) _hablanteDeLaLinea = playerGo.transform;
         var npcAnimator = playerGo.GetComponent<NPCSimpleAnimator>();
         if (npcAnimator != null)
         {

@@ -6,50 +6,6 @@ using Sendero.Core.Feedback;
 
 // Beats de puesta en escena: cámara, efectos, tiempo y control de flujo.
 
-/// Corte seco a un plano de cámara del SequenceStage.
-[Serializable]
-public class CutBeat : SequenceBeat
-{
-    [Tooltip("Nombre del plano tal como está en el SequenceStage (o el 'label' de su CinematicShot).")]
-    public string shotName;
-
-    public override string Describe() => $"Cámara: corte a '{shotName}'";
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        ctx.Player?.CutTo(shotName);
-        yield break;
-    }
-}
-
-/// Movimiento suave de la cámara hacia otro plano.
-[Serializable]
-public class MoveCameraBeat : SequenceBeat
-{
-    [Tooltip("Plano de destino, por su nombre en el SequenceStage.")]
-    public string shotName;
-
-    [Tooltip("Duración del movimiento en segundos.")]
-    public float duration = 2f;
-
-    [Tooltip("Si está marcado, el beat espera a que la cámara llegue. Si no, la cámara sigue " +
-             "moviéndose mientras la secuencia avanza (útil para un travelling de fondo mientras " +
-             "alguien habla).")]
-    public bool waitForArrival = true;
-
-    public override string Describe() => $"Cámara: mover a '{shotName}' ({duration}s)";
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        var shot = ctx.Stage != null ? ctx.Stage.GetShot(shotName) : null;
-        var driver = ctx.Player?.ActiveCamera;
-        if (shot == null || driver == null) yield break;
-
-        driver.MoveTo(shot, duration);
-        if (waitForArrival && duration > 0f) yield return new WaitForSeconds(duration);
-    }
-}
-
 /// Un VFX de un solo uso, siempre por VfxPoolService (regla no negociable de CLAUDE.md § 2:
 /// nunca Instantiate + Destroy directo).
 [Serializable]
@@ -86,6 +42,9 @@ public class VfxBeat : SequenceBeat
              "el polvo que levanta al despegar tiene que quedarse en el suelo, no subir con él.\n\n" +
              "Solo aplica si hay 'atActorId'.")]
     public bool seguirAlActor = false;
+
+    [Tooltip("ID opcional que registra el efecto como actor para encuadrarlo o recogerlo con RecogerVfxBeat.")]
+    public string registrarComo;
 
     public override string Describe()
         => $"VFX: {(vfxPrefab != null ? vfxPrefab.name : "SIN ASIGNAR")} en {(string.IsNullOrEmpty(atActorId) ? markName : atActorId)}";
@@ -127,11 +86,14 @@ public class VfxBeat : SequenceBeat
             life = Mathf.Max(0.1f, full - Mathf.Max(0f, earlyDespawn));
         }
 
-        VfxPoolService.Instance.Play(vfxPrefab, point + offset, rotation, life, aQuienSigue);
+        var pool = VfxPoolService.Instance;
+        Transform instancia = pool.Play(vfxPrefab, point + offset, rotation, life, aQuienSigue);
+        if (instancia != null && !string.IsNullOrWhiteSpace(registrarComo))
+            ctx.RegisterVfx(registrarComo, instancia, pool);
         yield break;
     }
 
-    /// Resuelve un punto del mundo a partir de un actor o de una marca. Compartido con SfxBeat.
+    /// Resuelve un punto del mundo a partir de un actor o de una marca para los beats de efectos.
     internal static bool TryResolvePoint(SequenceContext ctx, string actorId, string markName,
         out Vector3 point, out Quaternion rotation)
     {
@@ -155,6 +117,113 @@ public class VfxBeat : SequenceBeat
     }
 }
 
+/// Recoge efectos registrados sin esperar a que caduque su lifetime.
+[Serializable]
+public class RecogerVfxBeat : SequenceBeat
+{
+    [Tooltip("IDs registrados por VfxBeat que se devuelven al pool y se desregistran; los ausentes se ignoran.")]
+    public List<string> ids = new();
+
+    public override string Describe() => "VFX: recoger efectos registrados";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        if (ctx == null || ids == null) yield break;
+        foreach (string id in ids) ctx.RecogerVfx(id);
+        yield break;
+    }
+}
+
+/// Hace crecer o encoger un actor registrado (p. ej. un VFX con 'registrarComo') hasta un factor
+/// de su escala original, con una curva suave. Sirve para que un hechizo sostenido se lea como que
+/// se está haciendo más grande.
+[Serializable]
+public class EscalarActorBeat : SequenceBeat
+{
+    [Tooltip("ID del actor o del VFX registrado que se escala.")]
+    public string actorId;
+
+    [Tooltip("Factor final respecto a la escala que tenía la primera vez que se escaló (1 = original).")]
+    [Min(0f)] public float escala = 1f;
+
+    [Tooltip("Segundos que tarda en llegar a la escala final (0 = de golpe).")]
+    [Min(0f)] public float duracion = 1f;
+
+    [Tooltip("Espera a que termine antes de pasar al siguiente beat.")]
+    public bool esperar;
+
+    static readonly Dictionary<Transform, Vector3> s_escalaBase = new();
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => s_escalaBase.Clear();
+#endif
+
+    public override string Describe() => $"Escalar: {actorId} ×{escala:0.##} en {duracion:0.##} s";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var objetivo = ctx?.GetActor(actorId)?.Transform;
+        if (objetivo == null) yield break;
+        if (!s_escalaBase.TryGetValue(objetivo, out Vector3 baseEscala))
+        {
+            baseEscala = objetivo.localScale;
+            s_escalaBase[objetivo] = baseEscala;
+        }
+        Vector3 destino = baseEscala * escala;
+        if (duracion <= 0f) { objetivo.localScale = destino; yield break; }
+        if (esperar) yield return Tween(objetivo, destino);
+        else ctx.Player?.StartCoroutine(Tween(objetivo, destino));
+    }
+
+    IEnumerator Tween(Transform objetivo, Vector3 destino)
+    {
+        Vector3 origen = objetivo.localScale;
+        float t = 0f;
+        while (t < duracion)
+        {
+            if (objetivo == null) yield break;
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / duracion);
+            objetivo.localScale = Vector3.LerpUnclamped(origen, destino, k * k * (3f - 2f * k));
+            yield return null;
+        }
+        if (objetivo != null) objetivo.localScale = destino;
+    }
+}
+
+/// Arranca o detiene un sonido en bucle (ambiente, zumbido de un hechizo sostenido) con su propio
+/// identificador. Lo que siga sonando al terminar o saltar la secuencia se apaga solo.
+[Serializable]
+public class AmbienteBeat : SequenceBeat
+{
+    [Tooltip("Identificador del bucle. El mismo id lo detiene o lo sustituye.")]
+    public string loopId;
+
+    [Tooltip("Clave del AudioGraphProfile que suena en bucle. Las que empiezan por 'Ambience' van al bus de ambiente.")]
+    public string eventKey;
+
+    [Range(0f, 1f)] public float volumen = 0.6f;
+
+    [Tooltip("Desmarcado: detiene el bucle 'loopId' con el fundido indicado.")]
+    public bool sonar = true;
+
+    [Tooltip("Segundos de fundido al detener.")]
+    [Min(0f)] public float fundido = 1.5f;
+
+    public override string Describe() => sonar ? $"Ambiente: {loopId} ← {eventKey}" : $"Ambiente: parar {loopId}";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var audio = AudioService.Instance;
+        if (audio == null || string.IsNullOrWhiteSpace(loopId)) yield break;
+        if (!sonar) { audio.StopLoopingSFX(loopId, fundido); yield break; }
+        audio.PlayLoopingSFX(loopId, eventKey, volumen);
+        string id = loopId;
+        ctx?.Player?.RegisterCleanup(() => AudioService.Instance?.StopLoopingSFX(id, 0.5f));
+    }
+}
+
 /// Un efecto de sonido, por clave del AudioGraphProfile o por clip suelto.
 [Serializable]
 public class SfxBeat : SequenceBeat
@@ -173,6 +242,8 @@ public class SfxBeat : SequenceBeat
 
     [Range(0f, 1f)] public float volume = 1f;
 
+    [Range(0.01f, 3f)] public float tono = 1f;
+
     public override string Describe() => $"SFX: {(string.IsNullOrEmpty(eventKey) ? (clip != null ? clip.name : "SIN ASIGNAR") : eventKey)}";
 
     public override IEnumerator Run(SequenceContext ctx)
@@ -183,13 +254,13 @@ public class SfxBeat : SequenceBeat
 
         if (!string.IsNullOrEmpty(eventKey))
         {
-            if (positioned) AudioService.Instance.PlaySFX(eventKey, volume, point);
-            else AudioService.Instance.PlaySFX(eventKey, volume);
+            if (positioned) AudioService.Instance.PlaySFX(eventKey, volume, point, tono);
+            else AudioService.Instance.PlaySFX(eventKey, volume, tono: tono);
         }
         else if (clip != null)
         {
-            if (positioned) AudioService.Instance.PlaySFXAt(clip, point, volume);
-            else AudioService.Instance.PlaySFX(clip, volume);
+            if (positioned) AudioService.Instance.PlaySFXAt(clip, point, volume, tono);
+            else AudioService.Instance.PlaySFX(clip, volume, tono);
         }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
@@ -246,25 +317,6 @@ public class WaitBeat : SequenceBeat
 
         if (unscaled) yield return new WaitForSecondsRealtime(seconds);
         else yield return new WaitForSeconds(seconds);
-    }
-}
-
-/// Levanta una señal narrativa a mitad de secuencia, sin esperar al final.
-///
-/// Útil para encadenar: que el grafo empiece a preparar lo siguiente mientras la escena todavía
-/// está rodando, o para avisar a otro sistema de que ya puede actuar.
-[Serializable]
-public class SignalBeat : SequenceBeat
-{
-    [Tooltip("Nombre de la señal (el mismo que espera un WaitCustomEventNode del grafo).")]
-    public string signal;
-
-    public override string Describe() => $"Señal: {signal}";
-
-    public override IEnumerator Run(SequenceContext ctx)
-    {
-        if (!string.IsNullOrEmpty(signal)) ctx.Player?.Raise(signal);
-        yield break;
     }
 }
 

@@ -163,7 +163,41 @@ public class SequenceStage : MonoBehaviour
     public Transform GetShot(string shotName) => Resolve(_shots, shotName, "plano de cámara");
 
     /// Marca de posición por nombre, o null (con aviso) si no está en la lista.
-    public Transform GetMark(string markName) => Resolve(_marks, markName, "marca de posición");
+    public Transform GetMark(string markName)
+    {
+        if (!string.IsNullOrWhiteSpace(markName) && _marcasTemporales.TryGetValue(markName.Trim(), out var temporal) && temporal != null)
+            return temporal;
+        return Resolve(_marks, markName, "marca de posición");
+    }
+
+    /// Como GetMark, pero sin avisar si no existe (para marcas opcionales).
+    public Transform BuscarMarca(string markName)
+    {
+        if (string.IsNullOrWhiteSpace(markName)) return null;
+        if (_marcasTemporales.TryGetValue(markName.Trim(), out var temporal) && temporal != null) return temporal;
+        if (_marks == null) return null;
+        foreach (var m in _marks)
+            if (m.target != null && string.Equals(NameOf(m), markName.Trim(), StringComparison.OrdinalIgnoreCase))
+                return m.target;
+        return null;
+    }
+
+    // Marcas que pone un guion mientras se reproduce (sus PUNTOS), para que los efectos de siempre
+    // (VfxBeat, SfxBeat...) puedan usarlas como cualquier marca de la escena. Ver ReproductorDeGuion.
+    private readonly Dictionary<string, Transform> _marcasTemporales = new(StringComparer.OrdinalIgnoreCase);
+
+    public void PonerMarcaTemporal(string nombre, Transform t)
+    {
+        if (!string.IsNullOrWhiteSpace(nombre) && t != null) _marcasTemporales[nombre.Trim()] = t;
+    }
+
+    public void QuitarMarcasTemporales() => _marcasTemporales.Clear();
+
+    /// Todas las marcas, para las herramientas de Editor (captura del escenario, horneado de guiones).
+    public IReadOnlyList<NamedTransform> Marks => _marks;
+
+    /// Todos los planos con nombre, para las herramientas de Editor.
+    public IReadOnlyList<NamedTransform> Shots => _shots;
 
     private Transform Resolve(List<NamedTransform> list, string wanted, string what)
     {

@@ -58,7 +58,9 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
         {
             if (UnlockService.HasFlag(oneShotFlag))
             {
-                Debug.Log($"[UnlockAbilitiesNode] Ya se ejecutó previamente (flag: {oneShotFlag}), saltando.");
+    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[UnlockAbilitiesNode] Ya se ejecutó previamente (flag: {oneShotFlag}), saltando.");
+#endif
                 onReadyToAdvance?.Invoke();
                 return;
             }
@@ -68,7 +70,9 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
         var runner = ctx.Runner;
         if (runner != null)
         {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[UnlockAbilitiesNode] Difiriendo ejecución para permitir que callbacks de diálogo terminen");
+#endif
             runner.StartCoroutine(ExecuteAfterDelay(ctx, onReadyToAdvance));
         }
         else
@@ -86,10 +90,12 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
         // Esperar un frame adicional para que el sistema de input se estabilice
         yield return null;
         
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[UnlockAbilitiesNode] Frames esperados, verificando estado del DialogueManager");
-        
+#endif
+
         // Verificar que realmente no hay diálogo activo
-        var dialogueManager = UnityEngine.Object.FindAnyObjectByType<DialogueManager>();
+        var dialogueManager = DialogueManager.Instance;
         if (dialogueManager != null && dialogueManager.IsOpen)
         {
             Debug.LogWarning($"[UnlockAbilitiesNode] DialogueManager aún abierto después de esperar, esperando más...");
@@ -102,7 +108,9 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
             yield return null;
         }
         
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[UnlockAbilitiesNode] Ejecutando unlock ahora");
+#endif
         ExecuteUnlocks(ctx, onReadyToAdvance);
     }
 
@@ -183,7 +191,9 @@ public sealed class UnlockAbilitiesNode : NarrativeNode, INarrativeStateEffect
                     // Nota: mantenemos el guardado deshabilitado aquí (como antes).
                     if (saveAfterUnlock)
                     {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.Log("[UnlockAbilitiesNode] Auto-guardado deshabilitado. Usa un punto de guardado para conservar el progreso.");
+#endif
                     }
                 }
             }

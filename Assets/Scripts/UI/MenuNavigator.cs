@@ -18,6 +18,81 @@ public class MenuNavigator : MonoBehaviour
     [Tooltip("Duración de la animación")]
     public float nudgeTime = 0.08f;
 
+    [Tooltip("Cursor opcional que acompaña al botón seleccionado.")]
+    [SerializeField] RectTransform cursorSeleccion;
+    [SerializeField, Min(0f)] float duracionCursor = 0.12f;
+    [Tooltip("Estrella opcional que respira mientras el cursor está visible.")]
+    [SerializeField] RectTransform destelloDelCursor;
+
+    CanvasGroup _cursorGroup;
+    RectTransform _cursorParent;
+    Vector2 _cursorOrigin;
+    Vector3 _starScale;
+    bool _cursorVisible;
+    Tween _cursorMove, _cursorFade, _starTween;
+    readonly System.Collections.Generic.Dictionary<GameObject, Button> _buttonCache = new();
+    readonly System.Collections.Generic.Dictionary<Button, RectTransform> _textCache = new();
+
+    void Awake() { CacheReferences(); }
+
+    void CacheReferences()
+    {
+        var buttons = GetComponentsInChildren<Button>(true);
+        _buttonCache.Clear();
+        _textCache.Clear();
+        foreach (var button in buttons)
+        {
+            _buttonCache[button.gameObject] = button;
+            var text = button.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
+            _textCache[button] = text ? text.rectTransform : null;
+        }
+        if (!cursorSeleccion) return;
+        _cursorParent = cursorSeleccion.parent as RectTransform;
+        _cursorGroup = cursorSeleccion.GetComponent<CanvasGroup>();
+        if (!_cursorGroup) _cursorGroup = cursorSeleccion.gameObject.AddComponent<CanvasGroup>();
+        _cursorGroup.interactable = false;
+        _cursorGroup.blocksRaycasts = false;
+        _cursorOrigin = cursorSeleccion.anchoredPosition;
+        if (destelloDelCursor) _starScale = destelloDelCursor.localScale;
+        _cursorGroup.alpha = 0f;
+    }
+
+    void UpdateCursor(Button button)
+    {
+        if (!cursorSeleccion || !_cursorParent) return;
+        if (!button || !button.transform.IsChildOf(transform))
+        {
+            if (!_cursorVisible) return;
+            _cursorVisible = false;
+            _cursorMove?.Kill();
+            _cursorFade?.Kill();
+            _starTween?.Kill();
+            if (destelloDelCursor) destelloDelCursor.localScale = _starScale;
+            _cursorFade = _cursorGroup.DOFade(0f, duracionCursor).SetUpdate(true);
+            return;
+        }
+        var rect = (RectTransform)button.transform;
+        var local = _cursorParent.InverseTransformPoint(rect.TransformPoint(rect.rect.center));
+        float anchorY = Mathf.Lerp(_cursorParent.rect.yMin, _cursorParent.rect.yMax,
+            Mathf.Lerp(cursorSeleccion.anchorMin.y, cursorSeleccion.anchorMax.y, cursorSeleccion.pivot.y));
+        float y = local.y - anchorY;
+        _cursorMove?.Kill();
+        if (!_cursorVisible)
+        {
+            var position = cursorSeleccion.anchoredPosition;
+            position.y = y;
+            cursorSeleccion.anchoredPosition = position;
+            _cursorFade?.Kill();
+            _cursorGroup.alpha = 1f;
+            _cursorVisible = true;
+            if (destelloDelCursor)
+                _starTween = destelloDelCursor.DOScale(_starScale * 1.12f, 0.6f)
+                    .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine).SetUpdate(true);
+        }
+        else
+            _cursorMove = cursorSeleccion.DOAnchorPosY(y, duracionCursor).SetEase(Ease.OutCubic).SetUpdate(true);
+    }
+
     [Header("Debug")]
     public bool debugLogs;
 
@@ -30,6 +105,7 @@ public class MenuNavigator : MonoBehaviour
 
     void OnEnable()
     {
+        CacheReferences();
         // Seleccionar el primer botón activo e interactable
         Invoke(nameof(SelectFirstButton), 0.1f);
         
@@ -41,6 +117,15 @@ public class MenuNavigator : MonoBehaviour
     void OnDisable()
     {
         GamepadInputReader.OnInput -= HandleNavigationInput;
+        CancelInvoke(nameof(SelectFirstButton));
+        _cursorMove?.Kill();
+        _cursorFade?.Kill();
+        _starTween?.Kill();
+        _cursorMove = _cursorFade = _starTween = null;
+        _cursorVisible = false;
+        if (cursorSeleccion) cursorSeleccion.anchoredPosition = _cursorOrigin;
+        if (_cursorGroup) _cursorGroup.alpha = 0f;
+        if (destelloDelCursor) destelloDelCursor.localScale = _starScale;
         
         if (_lastNudgedText != null)
         {
@@ -85,13 +170,16 @@ public class MenuNavigator : MonoBehaviour
     void Update()
     {
         var es = EventSystem.current;
-        if (!es) return;
+        if (!es) { UpdateCursor(null); _lastSelectedGo = null; return; }
 
         var selected = es.currentSelectedGameObject;
         
         // Si no hay nada seleccionado, seleccionar el primer botón automáticamente
         if (selected == null)
         {
+            UpdateCursor(null);
+            _lastSelectedGo = null;
+            _lastSelected = null;
             if (Time.unscaledTime >= _nextSelectFirstRetryAt)
             {
                 _nextSelectFirstRetryAt = Time.unscaledTime + 0.25f;
@@ -103,7 +191,12 @@ public class MenuNavigator : MonoBehaviour
         if (selected == _lastSelectedGo) return;
         _lastSelectedGo = selected;
 
-        var btn = selected.GetComponent<Button>();
+        if (!_buttonCache.TryGetValue(selected, out var btn))
+        {
+            btn = selected.GetComponent<Button>();
+            _buttonCache[selected] = btn;
+        }
+        UpdateCursor(btn);
         if (btn && btn != _lastSelected)
         {
             _lastSelected = btn;
@@ -151,7 +244,12 @@ public class MenuNavigator : MonoBehaviour
         }
 
         // Buscar el texto hijo
-        var textTransform = button.GetComponentInChildren<TMPro.TextMeshProUGUI>()?.rectTransform;
+        if (!_textCache.TryGetValue(button, out var textTransform))
+        {
+            var text = button.GetComponentInChildren<TMPro.TextMeshProUGUI>(true);
+            textTransform = text ? text.rectTransform : null;
+            _textCache[button] = textTransform;
+        }
         if (textTransform == null) return;
 
         _lastNudgedText = textTransform;

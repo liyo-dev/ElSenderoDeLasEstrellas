@@ -1,0 +1,67 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+#  EL DESPERTAR DE LA ESTRELLA · 2. EL CONTRAATAQUE  (INC-598, 5 oct 2026)
+#  Solo si el jugador pulsa a tiempo (fase con la marca «panicSuperado»). Will grita, dispara
+#  su primera bola de fuego, las dos chocan, y se queda aturdido sin saber qué ha hecho.
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION Despertar_2_Contraataque
+ESCENA MainWorld
+ZONA Despertar 25.8 -82.6 40
+SECUENCIA Assets/_SEQUENCES/SEQ_StarAwakening.asset
+TEXTO subtitulo
+RITMO entre_frases=0.25 mismo_hablante=0.15
+
+REPARTO
+will    Player      nombre=Will color=FFD27A prefab=Assets/Prefabs/_WILL.prefab
+eldran  NPC_Eldran  nombre=Eldran color=9AD0FF prefab=Assets/_NPCs/_GrafoNarrativo/Eldran.prefab
+
+PUNTOS
+p_eldran     25.8 -82.4
+p_will       25.3 -79.4
+bola_salida  30.5 -61.0 30.5
+escondite    21.3 -85.7
+mira_bola    27.6 -70.0 28.6
+choque       26.6 -73.5 28.6
+asoma        22.4 -83.0
+cam_will     27.4 -76.4
+cam_dos      29.0 -80.2
+
+HILO
+@inicio
+will en p_will mirando bola_salida
+& eldran en escondite mirando will
+& bandas
+& will cara enfado
+& plano primer will desde=cam_will altura=1.1 lente=34
+
+# El grito y el disparo, a la vez. Franja de Will con líneas de concentración.
+@grito
+cutin will encuadre=Cara lado=Izquierda alturaEnPantalla=0.55 duracion=1.2 sonido=SFX_Prologo_CutIn dura=1.0
+& efecto LineasDeConcentracionBeat mostrar=true duracion=1.4
+& will dice EVT_AWAKEN_03 gesto=Angry02 cara=enfado
++0.9 plano conjunto will choque lado=der altura=1.6 lente=28
+& efecto ModuleBeat routine=WillContraataca
+espera 1.0
+
+# El choque: aturdimiento, temblor y fogonazo. El tiempo vuelve a correr.
+@choque
+efecto ModuleBeat routine=Aturdimiento
+& sacudida 0.35 0.5
+& destello FF9933FF 0.25
+& lento 1
+espera 1.0
+
+# Después: Will no entiende qué ha pasado. Eldran asoma detrás del árbol.
+@despues
+eldran anda a asoma llega_mirando=will
+& plano medio will altura=1.4 lente=34
+desde @despues+1.6 plano dos will eldran lado=izq lente=36
+& will gesto Question01
+& will cara confuso
+& eldran mira will
+& eldran cara sorpresa
+desde @despues+0.4 will dice EVT_AWAKEN_05 gesto=Question01 cara=confuso
+desde @despues+3.6 fundido cubre 0.25
+& efecto ModuleBeat routine=Tinnitus
+& silencio 1.5
+espera 1.0

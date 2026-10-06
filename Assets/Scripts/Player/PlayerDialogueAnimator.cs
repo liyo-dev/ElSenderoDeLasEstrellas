@@ -100,13 +100,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
         if (capa < 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Diagnóstico siempre visible (ver INC-273).
-            // Un estado que no existe es un no-op silencioso: quien lo pide da el gesto por
-            // reproducido y el personaje no hace nada. Así se perdió INC-214, donde una secuencia
-            // le pedía a Will `Attack2` — que es un estado del controller de los NPCs, no del suyo —
-            // y el gag empezaba sin que nadie lanzara ningún hechizo. El gemelo de esto en los NPCs
-            // (NPCSimpleAnimator.PlaySocialGesture) ya avisaba sin condiciones; aquí no, y por eso el
-            // mismo fallo se veía en un sitio y en el otro no.
+            // Avisa si el perfil pide un estado corporal que el Animator no contiene.
             Debug.LogWarning($"[PlayerDialogueAnimator] ⚠️ PlayGesture('{stateName}'): ese estado no " +
                 $"existe en ningún layer del Animator Controller " +
                 $"'{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +
@@ -119,6 +113,13 @@ public class PlayerDialogueAnimator : MonoBehaviour
             StopCoroutine(_gestureCoroutine);
 
         _gestureCoroutine = StartCoroutine(PlayGestureCoroutine(stateHash, stateName, capa));
+    }
+
+    /// Cancela el gesto pendiente sin insertar una locomoción entre dos poses.
+    public void CancelarGesto()
+    {
+        if (_gestureCoroutine != null) StopCoroutine(_gestureCoroutine);
+        _gestureCoroutine = null;
     }
 
     // ── La cara del jugador (FIX 16 sep 2026) ────────────────────────────────
@@ -178,7 +179,8 @@ public class PlayerDialogueAnimator : MonoBehaviour
     public void SetFaceEmotion(NPCEmotion emotion)
     {
         if (emotion == NPCEmotion.None) return;
-        ResolvedEmotionController?.SetEmotion(emotion);
+        var controlador = ResolvedEmotionController;
+        if (controlador != null) controlador.Reaccionar(emotion);
     }
 
     private void PlayBodyEmotion(NPCEmotion emotion)
@@ -198,13 +200,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
         if (capa < 0)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // Diagnóstico siempre visible (ver INC-273).
-            // Un estado que no existe es un no-op silencioso: quien lo pide da el gesto por
-            // reproducido y el personaje no hace nada. Así se perdió INC-214, donde una secuencia
-            // le pedía a Will `Attack2` — que es un estado del controller de los NPCs, no del suyo —
-            // y el gag empezaba sin que nadie lanzara ningún hechizo. El gemelo de esto en los NPCs
-            // (NPCSimpleAnimator.PlaySocialGesture) ya avisaba sin condiciones; aquí no, y por eso el
-            // mismo fallo se veía en un sitio y en el otro no.
+            // Avisa si el perfil pide un estado corporal que el Animator no contiene.
             Debug.LogWarning($"[PlayerDialogueAnimator] ⚠️ PlayBodyEmotion('{stateName}'): ese estado no " +
                 $"existe en ningún layer del Animator Controller " +
                 $"'{(animator.runtimeAnimatorController != null ? animator.runtimeAnimatorController.name : "null")}'. " +

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,8 +17,27 @@ using UnityEngine;
 /// 'gestureRepeats' a 2 sirve, por ejemplo, para un saludo al principio de una escena, cuando el
 /// primer ciclo se pierde con la transición de entrada y apenas se ve.
 [Serializable]
+public class ExpresionDuranteLinea
+{
+    [Range(0f, 1f), Tooltip("Progreso aproximado de voz o lectura, ponderado por caracteres de las p?ginas.")]
+    public float progreso;
+    public EmotionBeat expresion = new();
+}
+
+[Serializable]
 public class SayBeat : SequenceBeat
 {
+    [Tooltip("Presentación de esta línea; heredar usa el estilo de la secuencia.")]
+    public PresentacionDeLinea presentacion = PresentacionDeLinea.HeredarDeLaSecuencia;
+    [Tooltip("Color del nombre del hablante. Alpha cero usa el color por defecto.")]
+    public Color colorDelNombre;
+    [Tooltip("Cambios faciales durante la l?nea, sin gestos ni interrupciones de poses.")]
+    public List<ExpresionDuranteLinea> expresiones = new();
+
+    [Tooltip("IDs de los actores que escuchan; vacío mantiene el montaje existente.")]
+    public List<string> oyentes = new();
+    public ReaccionDeOyente reaccionDeOyentes = ReaccionDeOyente.Automatica;
+
     [Tooltip("Quién habla: 'Player' para Will, o el Persistence ID del NPC. Vacío = usar " +
              "'markName' en su lugar (una voz sin personaje visible, ver más abajo).")]
     public string actorId;
@@ -34,11 +53,11 @@ public class SayBeat : SequenceBeat
     [Tooltip("Clave de localización del texto. Los saltos de línea dentro del texto separan páginas.")]
     public string textKey;
 
-    [Tooltip("Segundos que dura cada página en pantalla.")]
+    [Tooltip("Segundos que dura cada página en pantalla. Se ignora si la línea tiene voz.")]
     public float pageDuration = 2.6f;
 
     [Tooltip("Gesto específico de esta frase (p. ej. 'Cheer02', 'Angry01'). Vacío = solo " +
-             "variaciones genéricas de hablar. Se ignora si se habla desde una marca ('markName'): " +
+             "actuación automática según el texto. Se ignora si se habla desde una marca ('markName'): " +
              "una marca no tiene animator que mover.")]
     public string gesture;
 
@@ -113,6 +132,28 @@ public class SayBeat : SequenceBeat
         string speakerName = string.IsNullOrEmpty(speakerNameKey) ? null : Localize(speakerNameKey);
 
         bool animar = playGestures && actor != null;
+        ActuacionAutomatica.Memoria(actor, out string anteriorActor, out string anteriorHablante);
+        string[] gestosAutomaticos = animar && string.IsNullOrEmpty(gesture) ? ActuacionAutomatica.Preparar(text) : null;
+        var escuchas = new List<EscuchaDuranteLinea>();
+        EscuchaDuranteLinea miradaDelHablante = null;
+        if (actor != null && oyentes != null)
+        {
+            string reaccion = ActuacionAutomatica.Reaccion(text, reaccionDeOyentes, ctx.AnimoVigente);
+            foreach (string id in oyentes)
+            {
+                if (string.IsNullOrEmpty(id) || id == actorId) continue;
+                var oyente = ctx.GetActor(id);
+                if (oyente == null || escuchas.Exists(e => e.Actor == oyente)) continue;
+                var escucha = new EscuchaDuranteLinea(oyente, actor, reaccion, ctx, girar: true);
+                escuchas.Add(escucha);
+                ctx.Player?.RegisterCleanup(escucha.Cerrar);
+                if (miradaDelHablante == null && oyente.PuedeEscuchar && actor.PuedeEscuchar)
+                {
+                    miradaDelHablante = new EscuchaDuranteLinea(actor, oyente, null, ctx, girar: false);
+                    ctx.Player?.RegisterCleanup(miradaDelHablante.Cerrar);
+                }
+            }
+        }
 
         // Mantener al actor en su pose de interacción durante toda la frase: si no, entre gesto y
         // gesto cae a Idle de pie y se le ve "parado sin hablar" a mitad de la línea.
@@ -124,6 +165,22 @@ public class SayBeat : SequenceBeat
             actor.BeginInteraction();
             actor.SetTalking(true);
         }
+        ctx.MarcarHabla(actor, true);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.Linea(actorId, textKey);
+#endif
+        bool hablaCerrada = false;
+        Action cerrarHabla = () =>
+        {
+            if (hablaCerrada) return;
+            hablaCerrada = true;
+            ctx.MarcarHabla(actor, false);
+            actor?.Emotion?.VolverAReposo();
+            foreach (var escucha in escuchas) escucha.Cerrar();
+            miradaDelHablante?.Cerrar();
+            if (animar) { actor.SetTalking(false); actor.EndInteraction(); }
+        };
+        ctx.Player?.RegisterCleanup(cerrarHabla);
 
         int specificFired = 0;
         int talkIndex = 0;
@@ -141,23 +198,66 @@ public class SayBeat : SequenceBeat
         // bocadillo (INC-435): SpeechBubbleUI las mide con la fuente y el ancho de verdad. Cada
         // página dura lo que pide el beat, pero nunca menos de lo que se tarda en leerla.
         var bubble = SpeechBubbleUI.Instance;
+        int turnoDelBocadillo = 0;
+        ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
+        var estilo = presentacion == PresentacionDeLinea.HeredarDeLaSecuencia
+            ? (ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo)
+            : (PresentacionDeTexto)((int)presentacion - 1);
+        ctx.CambiarPresentacionDeLinea(estilo);
         var pages = new System.Collections.Generic.List<string>();
         foreach (string raw in text.Split('\n'))
         {
             string trozo = raw.Trim();
-            if (!string.IsNullOrEmpty(trozo)) pages.AddRange(bubble.Paginar(trozo));
+            if (!string.IsNullOrEmpty(trozo)) pages.AddRange(bubble.Paginar(trozo, estilo));
         }
 
+        bool hasVoice = VoiceLines.TryGet(textKey, out AudioClip voiceClip);
+        int totalCharacters = 0;
+        foreach (string page in pages) totalCharacters += page.Length;
+        bool[] expresionesAplicadas = expresiones != null ? new bool[expresiones.Count] : null;
+        int caracteresLeidos = 0;
+
+        bool voiceStarted = false;
+        bool voiceClosed = false;
+        AudioService voiceService = null;
+        Action stopVoice = () =>
+        {
+            if (voiceClosed) return;
+            voiceClosed = true;
+            if (voiceService != null && voiceService.IsVoicePlaying(voiceClip))
+                voiceService.StopVoice();
+        };
+
+        int pageIndex = 0;
         foreach (string page in pages)
         {
             if (string.IsNullOrEmpty(page)) continue;
 
             bool done = false;
-            string trigger = animar ? NextGesture(ref specificFired, ref talkIndex) : null;
+            string trigger = animar && !actor.SosteniendoPose
+                ? NextGesture(actor, gestosAutomaticos, anteriorActor, anteriorHablante, ref specificFired, ref talkIndex) : null;
             float duracion = Mathf.Max(pageDuration, bubble.TiempoDeLectura(page));
+            if (hasVoice)
+            {
+                float proportionalDuration = totalCharacters > 0
+                    ? voiceClip.length * ((float)page.Length / totalCharacters) : 0f;
+                duracion = Mathf.Max(bubble.TiempoDeLectura(page), proportionalDuration);
+                if (pageIndex == pages.Count - 1) duracion += 0.3f;
+            }
 
-            bubble.Show(anchor, page, duracion, () => done = true,
-                trigger, speakerName: speakerName, worldOffset: offsetOverride);
+            AplicarExpresiones(ctx, totalCharacters > 0 ? (float)caracteresLeidos / totalCharacters : 0f, expresionesAplicadas);
+            turnoDelBocadillo = bubble.Show(anchor, page, duracion, () => done = true,
+                trigger, speakerName: speakerName, worldOffset: offsetOverride,
+                presentacion: estilo, colorDelNombre: colorDelNombre);
+
+            if (hasVoice && !voiceStarted)
+            {
+                voiceStarted = true;
+                voiceService = AudioService.Instance;
+                ctx.Player?.RegisterCleanup(stopVoice);
+                voiceService?.PlayVoice(voiceClip);
+            }
+            pageIndex++;
 
             // Tope de seguridad (auditoría 17 sep 2026). SpeechBubbleUI.Show() y Hide() matan el
             // temporizador del bocadillo anterior SIN llamar a su callback, así que dos bocadillos
@@ -176,6 +276,11 @@ public class SayBeat : SequenceBeat
                 yield return null;
                 esperado += Time.unscaledDeltaTime;
                 sinceRetrigger += Time.deltaTime;
+                float progreso = totalCharacters > 0
+                    ? (caracteresLeidos + page.Length * Mathf.Clamp01(esperado / duracion)) / totalCharacters : 1f;
+                AplicarExpresiones(ctx, progreso, expresionesAplicadas);
+                foreach (var escucha in escuchas) escucha.Actualizar(progreso);
+                miradaDelHablante?.Actualizar(progreso);
                 // Un gesto nuevo cada 1,6 s mientras dura el bocadillo, para que no se quede
                 // parado a mitad de la frase. PERO nunca por encima de una pose sostenida: esa es
                 // una decisión del montaje y pisarla es un fallo, no una animación.
@@ -186,7 +291,7 @@ public class SayBeat : SequenceBeat
                 if (animar && !actor.SosteniendoPose && sinceRetrigger >= TalkRetriggerInterval)
                 {
                     sinceRetrigger = 0f;
-                    actor.PlayGesture(NextGesture(ref specificFired, ref talkIndex));
+                    actor.PlayGesture(NextGesture(actor, gestosAutomaticos, anteriorActor, anteriorHablante, ref specificFired, ref talkIndex));
                 }
             }
 
@@ -197,33 +302,115 @@ public class SayBeat : SequenceBeat
                     "seguridad. Lo normal es que otro bocadillo lo haya pisado: mira si hay dos beats de " +
                     "hablar a la vez.");
 #endif
+            caracteresLeidos += page.Length;
         }
 
-        if (animar)
+        ctx.CambiarPresentacionDeLinea(null);
+        if (voiceStarted) stopVoice();
+
+        foreach (var escucha in escuchas) escucha.Actualizar(1f);
+        cerrarHabla();
+    }
+
+    private void AplicarExpresiones(SequenceContext ctx, float progreso, bool[] aplicadas)
+    {
+        if (aplicadas == null) return;
+        for (int i = 0; i < expresiones.Count; i++)
         {
-            actor.SetTalking(false);
-            actor.EndInteraction();
+            var marca = expresiones[i];
+            if (aplicadas[i] || marca == null || marca.expresion == null || progreso < marca.progreso) continue;
+            aplicadas[i] = true;
+            marca.expresion.Aplicar(ctx);
         }
     }
 
     /// Devuelve el gesto que toca: el específico mientras queden repeticiones, y a partir de ahí
     /// las variaciones genéricas de hablar, rotando.
-    private string NextGesture(ref int specificFired, ref int talkIndex)
+    private string NextGesture(SequenceActor actor, string[] automaticos, string anteriorActor, string anteriorHablante,
+        ref int specificFired, ref int talkIndex)
     {
+        if (string.IsNullOrEmpty(gesture))
+            return ActuacionAutomatica.Elegir(actor, automaticos, talkIndex++, anteriorActor, anteriorHablante);
         if (!string.IsNullOrEmpty(gesture) && specificFired < Mathf.Max(1, gestureRepeats))
         {
             specificFired++;
+            ActuacionAutomatica.RecordarExplicito(actor, gesture);
             return gesture;
         }
 
         string chosen = TalkVariations[talkIndex % TalkVariations.Length];
         talkIndex++;
+        ActuacionAutomatica.RecordarExplicito(actor, chosen);
         return chosen;
+    }
+
+    /// Control temporal de giro, mirada y reacción, con cierre idempotente para el salto.
+    private sealed class EscuchaDuranteLinea
+    {
+        public SequenceActor Actor { get; }
+        private readonly SequenceActor _objetivo;
+        private string _reaccion;
+        private readonly SequenceContext _contexto;
+        private readonly bool _girar;
+        private IEnumerator _giro;
+        private DialogueHeadLook _mirada;
+        private Transform _objetivoAnterior;
+        private bool _iniciada, _cerrada, _reaccionHecha;
+
+        public EscuchaDuranteLinea(SequenceActor actor, SequenceActor objetivo, string reaccion, SequenceContext contexto, bool girar)
+        { Actor = actor; _objetivo = objetivo; _reaccion = reaccion; _contexto = contexto; _girar = girar; }
+
+        public void Actualizar(float progreso)
+        {
+            if (_cerrada) return;
+            if (!Actor.PuedeEscuchar || _objetivo.Transform == null) { Cerrar(); return; }
+            if (!_iniciada)
+            {
+                _iniciada = true;
+                if (_girar) _giro = Actor.GirarSuavemente(_objetivo.Transform.position, 0.45f);
+                _mirada = Actor.Transform.GetComponent<DialogueHeadLook>();
+                if (_mirada == null) _mirada = Actor.Transform.gameObject.AddComponent<DialogueHeadLook>();
+                _objetivoAnterior = _mirada.Target;
+                _mirada.SetTarget(_objetivo.Transform);
+            }
+            if (_giro != null && !_giro.MoveNext()) _giro = null;
+            if (!_reaccionHecha && progreso >= 0.5f)
+            {
+                _reaccionHecha = true;
+                if (!_contexto.PuedeReaccionar(Actor)) return;
+                var animo = _contexto.AnimoVigente;
+                if (animo == AnimoDeAccion.Amenaza || animo == AnimoDeAccion.Miedo ||
+                    animo == AnimoDeAccion.Triste || animo == AnimoDeAccion.Enfado || animo == AnimoDeAccion.Sorpresa)
+                    _reaccion = ReaccionesDeEscena.ElegirGesto(Actor, animo);
+                if (Actor.TieneEstado(_reaccion)) Actor.PlayGesture(_reaccion);
+            }
+        }
+
+        public void Cerrar()
+        {
+            if (_cerrada) return;
+            _cerrada = true;
+            (_giro as IDisposable)?.Dispose();
+            _giro = null;
+            if (_iniciada) Actor.SyncRotation();
+            if (_mirada != null && _mirada.Target == _objetivo.Transform) _mirada.SetTarget(_objetivoAnterior);
+            // Solo libera nuestra reacción; una acción posterior conserva su control.
+            var animador = Actor.AnimadorDeActuacion;
+            if (_reaccionHecha && !string.IsNullOrEmpty(_reaccion) && Actor.PuedeEscuchar && animador != null)
+            {
+                int capa = AnimatorLayerUtil.ResolveLayer(animador, _reaccion, animador.GetLayerIndex("UpperBody"));
+                if (capa >= 0 && (animador.GetCurrentAnimatorStateInfo(capa).IsName(_reaccion) ||
+                    (animador.IsInTransition(capa) && animador.GetNextAnimatorStateInfo(capa).IsName(_reaccion))))
+                    Actor.ReturnToNormalPose();
+            }
+        }
     }
 
     private static string Localize(string key)
         => LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, key) : key;
 }
+
+public enum PresentacionDeLinea { HeredarDeLaSecuencia, Bocadillo, Subtitulo, SubtituloGrande }
 
 /// Un diálogo normal, con el componente de siempre (DialogueManager): avance manual, doblaje,
 /// retratos.
@@ -395,6 +582,6 @@ public class DialogueReaction
             listener.PlayGesture(gestures[lineIndex % gestures.Length]);
 
         if (emotions != null && emotions.Length > 0)
-            listener.SetEmotion(emotions[lineIndex % emotions.Length]);
+            listener.Reaccionar(emotions[lineIndex % emotions.Length]);
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -33,6 +33,11 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
         playHoverSound = value;
     }
     
+    public void SetPlayClickSound(bool value)
+    {
+        playClickSound = value;
+    }
+
     void Awake()
     {
         _button = GetComponent<Button>();
@@ -66,9 +71,6 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
     // Detecta selección por gamepad/teclado
     public void OnSelect(BaseEventData eventData)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[UIButtonAudio] OnSelect en {gameObject.name}, playHoverSound={playHoverSound}, MuteAll={MuteAll}");
-#endif
         if (!playHoverSound) return;
         PlaySound(hoverSoundKey, hoverVolume);
     }
@@ -77,16 +79,10 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
     {
         if (MuteAll)
         {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[UIButtonAudio] PlaySound BLOQUEADO por MuteAll - {soundKey}");
-#endif
             return;
         }
         if (string.IsNullOrEmpty(soundKey))
         {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[UIButtonAudio] PlaySound - soundKey vacío");
-#endif
             return;
         }
         if (AudioService.Instance == null)
@@ -97,9 +93,6 @@ public class UIButtonAudio : MonoBehaviour, IPointerEnterHandler, ISelectHandler
             return;
         }
         
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[UIButtonAudio] ✅ PlaySound: {soundKey}");
-#endif
         AudioService.Instance.PlaySFX(soundKey, volume);
     }
 }

@@ -1,0 +1,415 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap2_01_LosPlanesDeLiam_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap2_01_LosPlanesDeLiam
+  duracion: 42.474
+  presentacion: 1
+  huella: "2026-10-06 12:42 \xB7 4af89070a101f6d84819da3e1e23c6c6"
+  actores:
+  - id: LIAM_TORRE
+    alias: liam
+    colorDelNombre: {r: 0.73333335, g: 0.627451, b: 1, a: 1}
+    claveDelNombre: Liam
+    posiciones:
+    - t: 0
+      p: {x: -6000, y: 100, z: 6000.9}
+    - t: 0.001
+      p: {x: -6000, y: 100, z: 6000.9}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: -5999.6, y: 100.40358, z: 5999.85}
+      actor: 
+    - t: 21.58
+      tipo: 1
+      rumbo: 0
+      punto: {x: -6000.4688, y: 100.4291, z: 5999.65}
+      actor: 
+    - t: 24.68
+      tipo: 1
+      rumbo: 0
+      punto: {x: -5999.6, y: 100.40358, z: 5999.85}
+      actor: 
+    - t: 26.624
+      tipo: 1
+      rumbo: 0
+      punto: {x: -6000.6, y: 102, z: 6002.86}
+      actor: 
+    - t: 31.704
+      tipo: 1
+      rumbo: 0
+      punto: {x: -5999.6, y: 100.40358, z: 5999.85}
+      actor: 
+    - t: 34.894
+      tipo: 1
+      rumbo: 0
+      punto: {x: -6000, y: 100.45, z: 6000.5}
+      actor: 
+    animacion:
+    - t: 0
+      tipo: 1
+      estado: SitMedium_Loop
+      congelar: 0
+    - t: 17.08
+      tipo: 2
+      estado: SenseSomethingStart_NoWeapon
+      congelar: 0
+    - t: 17.28
+      tipo: 2
+      estado: SitMedium_Exit
+      congelar: 0
+    - t: 18.138668
+      tipo: 1
+      estado: SitMedium_Loop
+      congelar: 0
+    - t: 18.18
+      tipo: 0
+      estado: 
+      congelar: 0
+    - t: 24.68
+      tipo: 2
+      estado: SitMedium_Begin
+      congelar: 0
+    - t: 25.724
+      tipo: 1
+      estado: SitMedium_Loop
+      congelar: 0
+    caras:
+    - t: 0
+      emocion: 6
+      dura: 0
+    - t: 6.5
+      emocion: 6
+      dura: 1.6
+    - t: 10.7
+      emocion: 4
+      dura: 5.08
+    - t: 17.28
+      emocion: 4
+      dura: 0
+    - t: 18.38
+      emocion: 9
+      dura: 1.6
+    - t: 22.58
+      emocion: 6
+      dura: 1.6
+    - t: 26.624
+      emocion: 10
+      dura: 2.48
+    - t: 31.704
+      emocion: 10
+      dura: 2.09
+    - t: 34.894
+      emocion: 2
+      dura: 0
+    - t: 36.394
+      emocion: 2
+      dura: 2.48
+    visible: []
+    deslizando: []
+  lineas:
+  - t0: 6.5
+    t1: 7.7
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_01
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 10.7
+    t1: 15.379999
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 18.38
+    t1: 19.58
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 22.58
+    t1: 23.78
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_04
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 26.624
+    t1: 28.704
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_05
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 31.704
+    t1: 33.394
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_06
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - t0: 36.394
+    t1: 38.474
+    actor: LIAM_TORRE
+    clave: EVT_LIAM_CRYSTAL_07
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  planos:
+  - t0: 0
+    t1: 6.5
+    tipo: 0
+    descripcion: general de liam
+    posiciones:
+    - t: 0
+      p: {x: -6001.4, y: 101.5, z: 5997.4}
+    lente: 65
+    lenteFinal: 0
+    sujetos:
+    - LIAM_TORRE
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: -6000, y: 101.75, z: 6001}
+    alturaDelFoco: 0.8293355
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - t0: 6.5
+    t1: 17.08
+    tipo: 3
+    descripcion: primer plano de liam
+    posiciones:
+    - t: 6.5
+      p: {x: -6001.2, y: 100.95, z: 5998.9}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - LIAM_TORRE
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 17.08
+    t1: 20.58
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 17.08
+      p: {x: -6001.4, y: 101.15, z: 5997.4}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - LIAM_TORRE
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: -5999.6, y: 100.40358, z: 5999.85}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 20.58
+    t1: 24.68
+    tipo: 4
+    descripcion: detalle de el punto
+    posiciones:
+    - t: 20.58
+      p: {x: -6000.65, y: 101, z: 5998.6}
+    lente: 48
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: -6000.15, y: 100.62, z: 5999.75}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 24.68
+    t1: 26.624
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 24.68
+      p: {x: -6001.3, y: 100.95, z: 5998.7}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - LIAM_TORRE
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 26.624
+    t1: 31.704
+    tipo: 4
+    descripcion: detalle de el punto
+    posiciones:
+    - t: 26.624
+      p: {x: -6000.6, y: 101.9, z: 6001.2}
+    lente: 65
+    lenteFinal: 0
+    sujetos:
+    - PROP_Mapa
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: -6000.6, y: 102, z: 6002.86}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 31.704
+    t1: 42.474
+    tipo: 3
+    descripcion: primer plano de liam
+    posiciones:
+    - t: 31.704
+      p: {x: -6001.2, y: 100.95, z: 5998.9}
+    lente: 40
+    lenteFinal: 0
+    sujetos:
+    - LIAM_TORRE
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - t: 0
+    beat:
+      rid: 5630202263296278936
+    linea: 27
+  - t: 17.08
+    beat:
+      rid: 5630202263296278937
+    linea: 40
+  - t: 21.58
+    beat:
+      rid: 5630202263296278938
+    linea: 52
+  - t: 40.474
+    beat:
+      rid: 5630202263296278939
+    linea: 80
+  - t: 41.974
+    beat:
+      rid: 5630202263296278940
+    linea: 82
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  - nombre: mira
+    t: 6.5
+  - nombre: cae
+    t: 17.08
+  - nombre: llave
+    t: 20.58
+  - nombre: decide
+    t: 24.68
+  - nombre: final
+    t: 34.894
+  puntos:
+  - nombre: silla
+    posicion: {x: -6000, y: 100, z: 6000.9}
+  - nombre: manos
+    posicion: {x: -6000, y: 100.45, z: 6000.5}
+  - nombre: cam_general
+    posicion: {x: -6001.4, y: 100, z: 5997.4}
+  - nombre: cam_cara
+    posicion: {x: -6001.2, y: 100, z: 5998.9}
+  - nombre: cam_llave
+    posicion: {x: -6000.65, y: 100, z: 5998.6}
+  - nombre: cam_mapa
+    posicion: {x: -6000.6, y: 100, z: 6001.2}
+  - nombre: cam_sienta
+    posicion: {x: -6001.3, y: 100, z: 5998.7}
+  - nombre: foco_general
+    posicion: {x: -6000, y: 101.75, z: 6001}
+  - nombre: detalle_llave
+    posicion: {x: -6000.15, y: 100.62, z: 5999.75}
+  - nombre: PROP_Bola
+    posicion: {x: -5999.6, y: 100.40358, z: 5999.85}
+  - nombre: PROP_Llave
+    posicion: {x: -6000.4688, y: 100.4291, z: 5999.65}
+  - nombre: PROP_Mapa
+    posicion: {x: -6000.6, y: 102, z: 6002.86}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202263296278936
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.12
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202263296278937
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+        atActorId: 
+        markName: PROP_Bola
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 1.2
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+    - rid: 5630202263296278938
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_BrilloLlave
+        active: 0
+    - rid: 5630202263296278939
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1.5
+        waitForEnd: 0
+    - rid: 5630202263296278940
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.12
+        duracion: 0.5
+        esperar: 0

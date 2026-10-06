@@ -51,7 +51,7 @@ public class NarrativeQuickTestWindow : EditorWindow
     // de desde el nodo elegido, y se quedaba esperando el primer WaitCustomEventNode del camino real
     // (p.ej. "Recoge la caja") sin que Quick Test avisara del problema.
     private static readonly string[] KnownGraphLabels = {
-        "Cap1", "Misiones Secundarias"
+        "Cap1", "Cap2", "Misiones Secundarias"
     };
 
     // Punto de aparición física (independiente del nodo del grafo)

@@ -41,6 +41,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
     // Unity de todas formas, pero se documenta como tal para que quede claro que no debe tratarse
     // como campo de configuración del nodo.
     [NonSerialized] private Action _activeSkipHandler;
+    [NonSerialized] private AudioClip _voiceClip;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
@@ -73,7 +74,14 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
             ? text
             : LocalizationManager.Instance?.Get(textId, text) ?? text;
 
-        bool willWait = waitForCompletion && duration > 0f;
+        float voiceDuration = VoiceLines.TryPlay(textId);
+        _voiceClip = null;
+        if (voiceDuration > 0f) VoiceLines.TryGet(textId, out _voiceClip);
+        float showDuration = duration;
+        // Mantiene la toma completa visible sin alterar los bocadillos permanentes.
+        if (waitForCompletion && duration > 0f && voiceDuration > 0f)
+            showDuration = Mathf.Max(duration, voiceDuration + 0.3f);
+        bool willWait = waitForCompletion && showDuration > 0f;
         Action callback = null;
 
         if (willWait)
@@ -90,7 +98,11 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
             // etc.) ANTES de que el bocadillo termine solo o se salte — si no, el registro se
             // quedaría huérfano para siempre y NarrativeSkipHub.AnySkippable se quedaría en true
             // permanentemente (botón de skip visible sin nada real que saltar).
-            _activeSkipHandler = () => SpeechBubbleUI.Instance?.SkipCurrent();
+            _activeSkipHandler = () =>
+            {
+                StopOwnVoice();
+                SpeechBubbleUI.Instance?.SkipCurrent();
+            };
 
             // El callback que le pasamos a Show() se desregistra a sí mismo la primera vez que se
             // dispare, sea por la vía normal (el bocadillo termina solo) o por skip (SkipCurrent()
@@ -107,10 +119,17 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
             callback = wrappedCallback;
         }
 
-        ui.Show(target.transform, resolved, duration, callback, animTrigger, emphasis, speakerName);
+        ui.Show(target.transform, resolved, showDuration, callback, animTrigger, emphasis, speakerName);
 
         if (!willWait)
             onReadyToAdvance?.Invoke();
+    }
+
+    private void StopOwnVoice()
+    {
+        var audio = AudioService.Instance;
+        if (audio != null && audio.IsVoicePlaying(_voiceClip)) audio.StopVoice();
+        _voiceClip = null;
     }
 
     /// Red de seguridad: si el runner interrumpe/abandona este nodo (StopExecution(), GoTo() a
@@ -121,6 +140,7 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
     public override void Exit(NarrativeContext ctx)
     {
         if (_activeSkipHandler == null) return;
+        StopOwnVoice();
         NarrativeSkipHub.UnregisterSkipHandler(_activeSkipHandler);
         _activeSkipHandler = null;
     }

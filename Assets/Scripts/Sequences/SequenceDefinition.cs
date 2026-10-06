@@ -39,6 +39,12 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
     public string musicId;
 
     [Header("Puesta en escena")]
+    [Tooltip("Presentación de las líneas que heredan el estilo de la secuencia.")]
+    public PresentacionDeTexto presentacionDeTexto = PresentacionDeTexto.Bocadillo;
+
+    [Tooltip("Actores que nunca se ocultan al despejar un plano. Vacío protege a todos los que tienen líneas.")]
+    public List<string> protagonistas = new();
+
     [Tooltip("Plano de cámara al que se corta DURANTE el fundido de entrada, con la pantalla ya " +
              "cubierta, para que la escena aparezca ya encuadrada en vez de verse el corte. " +
              "Nombre tal como está en el SequenceStage. Vacío = la cámara se queda donde estaba.")]

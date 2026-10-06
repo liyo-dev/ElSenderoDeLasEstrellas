@@ -14,6 +14,8 @@ public class HoldToSkipUI : MonoBehaviour
     [FormerlySerializedAs("progressCircle")]
     [SerializeField] private Image fillOverlayIcon; // copia exacta de buttonIcon encima, Type=Filled — se "rellena" de opaco sobre el propio icono en vez de usar una barra aparte (ver FIX 15/09/2026, 3ª pasada)
     [SerializeField] private CanvasGroup group;     // opcional
+    [SerializeField, Tooltip("Orden del lienzo, por encima de las bandas de cine y los bocadillos y por debajo del fundido a negro.")]
+    private int ordenDeDibujo = 9997;
 
     [Header("Comportamiento")]
     [SerializeField, Min(0.2f)] private float holdSeconds = 1.25f;
@@ -64,6 +66,15 @@ public class HoldToSkipUI : MonoBehaviour
 
     void Awake()
     {
+        // Mantiene el icono visible sobre las capas de cinemática 9993–9996.
+        // Ver INC-599
+        var canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            if (!canvas.isRootCanvas) canvas.overrideSorting = true;
+            canvas.sortingOrder = ordenDeDibujo;
+        }
+
         if (!group) group = GetComponent<CanvasGroup>() ?? gameObject.AddComponent<CanvasGroup>();
 
         if (buttonIcon) _fallbackButtonIcon = buttonIcon.sprite;
@@ -320,8 +331,9 @@ public class HoldToSkipUI : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log("[HoldToSkipUI] ✅ COMPLETADO - Ejecutando skip action");
 #endif
-                ExecuteSkipAction();
+                // Desactiva primero para conservar la reactivación del siguiente contenido saltable. Ver INC-607
                 if (disableSelfOnSkip) gameObject.SetActive(false);
+                ExecuteSkipAction();
             }
         }
     }

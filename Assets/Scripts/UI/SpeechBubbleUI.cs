@@ -7,12 +7,16 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 
-/// <summary>
-/// Bocadillo de cómic flotante que sigue a un personaje en espacio de pantalla.
-/// Vive en el Canvas persistente (Start.unity). Singleton.
-/// </summary>
+public enum PresentacionDeTexto { Bocadillo, Subtitulo, SubtituloGrande }
+
+/// Texto cinematográfico paginado, como bocadillo o subtítulo. Vive en la UI de Start.
 public class SpeechBubbleUI : MonoBehaviour
 {
+    PresentacionDeTexto _presentacion;
+    CanvasGroup _grupoBocadillo, _grupoSubtitulo;
+    RectTransform _rectBocadillo, _rectSubtitulo, _canvasSubtitulo;
+    TextMeshProUGUI _textoBocadillo, _textoSubtitulo, _nombreSubtitulo;
+    Image _franjaSubtitulo;
     public static SpeechBubbleUI Instance { get; private set; }
 
 #if UNITY_EDITOR
@@ -57,6 +61,9 @@ public class SpeechBubbleUI : MonoBehaviour
     [Tooltip("Ninguna página dura menos que esto.")]
     [SerializeField, Min(0.5f)] float _lecturaMinima = 1.6f;
 
+    [Tooltip("Caracteres hablados por segundo para estimar el habla sin voz.")]
+    [SerializeField, Min(1f)] float _caracteresHabladosPorSegundo = 14f;
+
     [Header("Posición")]
     [SerializeField] Vector3 _worldOffset = new Vector3(0f, 2.2f, 0f);
 
@@ -75,6 +82,14 @@ public class SpeechBubbleUI : MonoBehaviour
     Camera _cam;
     Transform _target;
     bool _isShowing;
+    // Cada Show() abre un turno nuevo: quien lo abrió puede cerrar SOLO el suyo (Hide(turno)) y
+    // saber si otro le ha quitado el bocadillo. Ver INC-613.
+    int _turno;
+
+    /// Turno del bocadillo en pantalla (o del último que se mostró).
+    public int Turno => _turno;
+    /// Hay un bocadillo en pantalla (aunque sea saliendo).
+    public bool Mostrando => _isShowing;
     Coroutine _autoHideRoutine;
     // Callback pendiente del Show() en curso — solo relevante mientras _autoHideRoutine != null.
     // Guardado aparte (además del parámetro local que ya recibe la propia corrutina AutoHide) para
@@ -134,6 +149,9 @@ public class SpeechBubbleUI : MonoBehaviour
         _rootGroup.alpha = 0f;
         _rootGroup.blocksRaycasts = false;
         _bubbleRect.localScale = Vector3.zero;
+        _grupoBocadillo = _rootGroup;
+        _rectBocadillo = _bubbleRect;
+        _textoBocadillo = _label;
     }
 
     void OnEnable()
@@ -148,6 +166,12 @@ public class SpeechBubbleUI : MonoBehaviour
 
     void OnDisable()
     {
+        Hide();
+        _rootGroup.DOKill();
+        _bubbleRect.DOKill();
+        _rootGroup.alpha = 0f;
+        _pendingOnComplete = null;
+        SenalesDeHabla.Para(_target);
         SceneManager.sceneLoaded -= OnSceneLoaded;
         MenuManager.MenuOpened -= OnMenuOpened;
         MenuManager.MenuClosed -= OnMenuClosed;
@@ -163,6 +187,11 @@ public class SpeechBubbleUI : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
         _rootGroup?.DOKill();
         _bubbleRect?.DOKill();
+        _grupoBocadillo?.DOKill();
+        _rectBocadillo?.DOKill();
+        _grupoSubtitulo?.DOKill();
+        _rectSubtitulo?.DOKill();
+        if (_canvasSubtitulo != null) Destroy(_canvasSubtitulo.gameObject);
         DestruirSprite(_spriteSinPico);
         DestruirSprite(_spriteCirculito);
     }
@@ -180,6 +209,11 @@ public class SpeechBubbleUI : MonoBehaviour
     /// al andar. Ver INC-541.
     void ColocarBocadillo()
     {
+        if (_presentacion != PresentacionDeTexto.Bocadillo)
+        {
+            if (_isShowing) ColocarSubtitulo();
+            return;
+        }
         if (!_isShowing || _parentCanvasRect == null) return;
 
         if (_fijoEnPantalla)
@@ -247,18 +281,13 @@ public class SpeechBubbleUI : MonoBehaviour
     void TestHide() => Hide();
 
     /// <summary>
-    /// Muestra el bocadillo sobre <paramref name="target"/>.
+    /// Muestra una línea con la presentación elegida y mantiene el habla de <paramref name="target"/>.
     /// </summary>
     /// <param name="animTrigger">Trigger del Animator del personaje a disparar mientras habla.</param>
     /// <param name="emphasis">Si true, usa el sprite de énfasis (ej: burbuja explosiva).</param>
     /// <param name="speakerName">
-    /// Nombre del personaje que habla (ej: "Will", "Estela"). AÑADIDO (Agosto 2026) para
-    /// desambiguar quién habla con varios NPCs juntos (taberna), probado como texto dentro del
-    /// propio bocadillo. REVERTIDO (Agosto 2026, mismo mes): un bocadillo de cómic no lleva
-    /// nombres escritos — la desambiguación correcta es que el PICO señale a quien habla (ver
-    /// fix del pico más abajo). Se mantiene el parámetro sin usarlo en el texto (todas las
-    /// llamadas ya lo pasan) por si en el futuro sirve para otra cosa, pero ya no se antepone al
-    /// texto — no tocar esto de nuevo sin que el usuario lo pida explícitamente.
+    /// Nombre que aparece encima del subtítulo o del bocadillo fijo. El bocadillo anclado
+    /// identifica al personaje con su pico; el subtítulo grande no muestra nombre.
     /// </param>
     /// <param name="worldOffset">
     /// Sustituye, solo para esta llamada, el offset vertical de siempre (_worldOffset, 2,2 m).
@@ -274,22 +303,31 @@ public class SpeechBubbleUI : MonoBehaviour
     /// comentarios durante el juego (Eldran guiando un combate, INC-480 e INC-534). En cinemáticas
     /// se deja en false: ahí el pico señala al que habla.
     /// </param>
-    public void Show(Transform target, string text, float duration = 0f,
+    /// Devuelve el turno de este bocadillo (ver Hide(int)).
+    public int Show(Transform target, string text, float duration = 0f,
                      Action onComplete = null, string animTrigger = null, bool emphasis = false,
                      string speakerName = null, Vector3? worldOffset = null,
-                     bool fijoEnPantalla = false)
+                     bool fijoEnPantalla = false,
+                     PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo,
+                     Color colorDelNombre = default)
     {
+        CambiarPresentacion(presentacion, speakerName, colorDelNombre);
         if (_autoHideRoutine != null) { StopCoroutine(_autoHideRoutine); _autoHideRoutine = null; }
+        _turno++;
 
+        SenalesDeHabla.Para(_target);
         _target = target;
         _offsetOverride = worldOffset;
         _isShowing = true;
         _fijoEnPantalla = fijoEnPantalla;
-        PonerNombre(fijoEnPantalla ? speakerName : null);
-        PonerEstiloADistancia(fijoEnPantalla);
+        if (presentacion == PresentacionDeTexto.Bocadillo)
+        {
+            PonerNombre(fijoEnPantalla ? speakerName : null);
+            PonerEstiloADistancia(fijoEnPantalla);
+        }
 
         // Frases de más de _maxLineas líneas: páginas (INC-435).
-        List<string> paginas = Paginar(text);
+        List<string> paginas = Paginar(text, presentacion);
         if (paginas.Count == 0) paginas.Add(text ?? string.Empty);
         string primera = paginas[0];
         // Los mismos iconos que los diálogos: «presiona <sprite name="interactable_x">» sin esto
@@ -305,8 +343,9 @@ public class SpeechBubbleUI : MonoBehaviour
         _label.alignment = TextAlignmentOptions.Center;
 
         // Margen horizontal para que el texto no roque los bordes del bocadillo
-        _label.margin = new Vector4(_labelHorizontalMargin, _label.margin.y,
-                                    _labelHorizontalMargin, _label.margin.w);
+        _label.margin = presentacion == PresentacionDeTexto.Bocadillo
+            ? new Vector4(_labelHorizontalMargin, _label.margin.y, _labelHorizontalMargin, _label.margin.w)
+            : Vector4.zero;
 
         // BUGFIX (Agosto 2026): el bocadillo solo tenía un ancho MÍNIMO fijo (_bubbleMinWidth) y
         // nunca se adaptaba al texto real, así que cualquier línea más larga que ese mínimo se
@@ -333,7 +372,7 @@ public class SpeechBubbleUI : MonoBehaviour
             AjustarAncho(primera);
         }
 
-        if (_bubbleImage != null)
+        if (_bubbleImage != null && presentacion == PresentacionDeTexto.Bocadillo)
         {
             Sprite sprite = fijoEnPantalla ? SpriteSinPico()
                           : emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
@@ -366,30 +405,34 @@ public class SpeechBubbleUI : MonoBehaviour
         _bubbleRect.DOKill();
 
         _rootGroup.alpha = 0f;
-        _bubbleRect.localScale = Vector3.zero;
+        _bubbleRect.localScale = presentacion == PresentacionDeTexto.Bocadillo ? Vector3.zero
+            : Vector3.one * (presentacion == PresentacionDeTexto.SubtituloGrande ? 1.15f : 1f);
 
-        _rootGroup.DOFade(1f, _fadeInDuration).SetUpdate(true);
-        _bubbleRect.DOScale(Vector3.one, _popInDuration)
-                   .SetEase(Ease.OutBack)
+        _rootGroup.DOFade(1f, presentacion == PresentacionDeTexto.Bocadillo ? _fadeInDuration : 0.12f).SetUpdate(true);
+        _bubbleRect.DOScale(Vector3.one, presentacion == PresentacionDeTexto.Bocadillo ? _popInDuration : 0.15f)
+                   .SetEase(presentacion == PresentacionDeTexto.Bocadillo ? Ease.OutBack : Ease.OutQuad)
                    .SetUpdate(true);
 
         _pendingOnComplete = onComplete;
         if (paginas.Count > 1)
             _autoHideRoutine = StartCoroutine(Co_Paginas(paginas, duration, onComplete));
-        else if (duration > 0f)
-            _autoHideRoutine = StartCoroutine(AutoHide(Mathf.Max(duration, TiempoDeLectura(primera)), onComplete));
+        else
+        {
+            float tiempo = duration > 0f ? Mathf.Max(duration, TiempoDeLectura(primera)) : 0f;
+            EmpezarHablaDePagina(primera, tiempo);
+            if (duration > 0f) _autoHideRoutine = StartCoroutine(AutoHide(tiempo, onComplete));
+        }
+        return _turno;
     }
 
     /// Cuánto tiene que estar en pantalla una página para poder leerla (INC-435).
     public float TiempoDeLectura(string pagina)
         => Mathf.Max(_lecturaMinima, 0.6f + (pagina?.Length ?? 0) / Mathf.Max(1f, _caracteresPorSegundo));
 
-    /// Parte un texto en páginas de como mucho `_maxLineas` líneas, medidas con el bocadillo de
-    /// verdad (fuente, tamaño, márgenes y ancho máximo). Corta por el final de una frase (. ! ? …)
-    /// siempre que pueda; si una frase sola ya no cabe, por palabras. Un texto que cabe entero
-    /// devuelve una sola página, igual que antes. Lo usa Show() y también SayBeat, que da a cada
-    /// página su propio tiempo (INC-435).
-    public List<string> Paginar(string text)
+    /// Parte el texto con la fuente y ancho reales de su presentación: como máximo _maxLineas
+    /// en bocadillo o dos en subtítulo. Corta por frases y, si no caben, por palabras.
+    /// Show y SayBeat comparten esta medición para temporizar cada página.
+    public List<string> Paginar(string text, PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo)
     {
         var paginas = new List<string>();
         if (string.IsNullOrWhiteSpace(text) || _label == null || _bubbleRect == null)
@@ -399,13 +442,33 @@ public class SpeechBubbleUI : MonoBehaviour
         }
         text = text.Trim();
 
-        PrepararLabel();
-        float anchoGuardado = _bubbleRect.sizeDelta.x;
-        AjustarAncho(text);
-        float ancho = _label.rectTransform.rect.width - _label.margin.x - _label.margin.z;
+        TextMeshProUGUI medida = _textoBocadillo;
+        int lineas = _maxLineas;
+        float ancho;
+        float anchoGuardado = _rectBocadillo.sizeDelta.x;
+        if (presentacion != PresentacionDeTexto.Bocadillo)
+        {
+            CrearSubtitulo();
+            medida = _textoSubtitulo;
+            medida.fontSize = TamanoDeSubtitulo(presentacion);
+            ancho = _canvasSubtitulo.rect.width * 0.7f;
+            lineas = 2;
+        }
+        else
+        {
+            medida.alignment = TextAlignmentOptions.Center;
+            medida.textWrappingMode = TextWrappingModes.Normal;
+            medida.margin = new Vector4(_labelHorizontalMargin, medida.margin.y, _labelHorizontalMargin, medida.margin.w);
+            float preferido = medida.GetPreferredValues(text, 0f, 0f).x + _labelHorizontalMargin * 2f;
+            Vector2 tamano = _rectBocadillo.sizeDelta;
+            tamano.x = Mathf.Clamp(preferido, _bubbleMinWidth, _bubbleMaxWidth);
+            _rectBocadillo.sizeDelta = tamano;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_rectBocadillo);
+            ancho = medida.rectTransform.rect.width - medida.margin.x - medida.margin.z;
+        }
         if (ancho < 50f) ancho = _bubbleMaxWidth - _labelHorizontalMargin * 2f;
-        float altoMaximo = _label.GetPreferredValues(RenglonesDePrueba(_maxLineas), ancho, 0f).y + 0.5f;
-        bool Cabe(string s) => _label.GetPreferredValues(s, ancho, 0f).y <= altoMaximo;
+        float altoMaximo = medida.GetPreferredValues(RenglonesDePrueba(lineas), ancho, 0f).y + 0.5f;
+        bool Cabe(string s) => medida.GetPreferredValues(s, ancho, 0f).y <= altoMaximo;
 
         if (Cabe(text))
         {
@@ -433,8 +496,12 @@ public class SpeechBubbleUI : MonoBehaviour
             if (actual.Length > 0) paginas.Add(actual);
         }
 
-        // El ancho de verdad lo pone Show() con la página que toque; aquí solo se ha medido.
-        Vector2 sd = _bubbleRect.sizeDelta; sd.x = anchoGuardado; _bubbleRect.sizeDelta = sd;
+        if (presentacion == PresentacionDeTexto.Bocadillo)
+        {
+            Vector2 tamano = _rectBocadillo.sizeDelta;
+            tamano.x = anchoGuardado;
+            _rectBocadillo.sizeDelta = tamano;
+        }
         return paginas;
     }
 
@@ -592,18 +659,117 @@ public class SpeechBubbleUI : MonoBehaviour
         return tex;
     }
 
-    void PrepararLabel()
+    // La presentación cambia las referencias visuales; el ciclo de habla y cierre es compartido.
+    void CambiarPresentacion(PresentacionDeTexto presentacion, string nombre, Color color)
     {
-        _label.alignment = TextAlignmentOptions.Center;
-        _label.margin = new Vector4(_labelHorizontalMargin, _label.margin.y,
-                                    _labelHorizontalMargin, _label.margin.w);
-        _label.textWrappingMode = TextWrappingModes.Normal;
+        _rootGroup.DOKill();
+        _bubbleRect.DOKill();
+        _rootGroup.alpha = 0f;
+        _presentacion = presentacion;
+        if (presentacion == PresentacionDeTexto.Bocadillo)
+        {
+            _rootGroup = _grupoBocadillo;
+            _bubbleRect = _rectBocadillo;
+            _label = _textoBocadillo;
+            return;
+        }
+        CrearSubtitulo();
+        _rootGroup = _grupoSubtitulo;
+        _bubbleRect = _rectSubtitulo;
+        _label = _textoSubtitulo;
+        _label.fontSize = TamanoDeSubtitulo(presentacion);
+        _nombreSubtitulo.fontSize = TamanoDeSubtitulo(PresentacionDeTexto.Subtitulo) * 0.75f;
+        _nombreSubtitulo.text = presentacion == PresentacionDeTexto.SubtituloGrande ? string.Empty : nombre;
+        _nombreSubtitulo.color = color.a > 0f ? color : new Color(0.91f, 0.91f, 0.91f);
+        ColocarSubtitulo();
+    }
+
+    void CrearSubtitulo()
+    {
+        if (_grupoSubtitulo != null) return;
+        var go = new GameObject("Subtitulos", typeof(RectTransform), typeof(Canvas));
+        go.transform.SetParent(_parentCanvasRect, false);
+        var canvas = go.GetComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = 9996;
+        _canvasSubtitulo = (RectTransform)go.transform;
+        _canvasSubtitulo.anchorMin = Vector2.zero;
+        _canvasSubtitulo.anchorMax = Vector2.one;
+        _canvasSubtitulo.offsetMin = _canvasSubtitulo.offsetMax = Vector2.zero;
+        var panel = new GameObject("Linea", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
+        panel.transform.SetParent(go.transform, false);
+        _rectSubtitulo = (RectTransform)panel.transform;
+        _grupoSubtitulo = panel.GetComponent<CanvasGroup>();
+        _grupoSubtitulo.alpha = 0f;
+        _grupoSubtitulo.blocksRaycasts = false;
+        _grupoSubtitulo.interactable = false;
+        // Los grupos del HUD no ocultan el texto de la cinemática.
+        _grupoSubtitulo.ignoreParentGroups = true;
+        _franjaSubtitulo = panel.GetComponent<Image>();
+        _franjaSubtitulo.raycastTarget = false;
+        _textoSubtitulo = CrearTextoDeSubtitulo("Texto", _rectSubtitulo);
+        _nombreSubtitulo = CrearTextoDeSubtitulo("Hablante", _rectSubtitulo);
+        _nombreSubtitulo.fontSize = _textoBocadillo.fontSize * 0.75f;
+        _nombreSubtitulo.fontStyle = FontStyles.Bold;
+        _nombreSubtitulo.textWrappingMode = TextWrappingModes.NoWrap;
+    }
+
+    TextMeshProUGUI CrearTextoDeSubtitulo(string nombre, RectTransform padre)
+    {
+        var go = new GameObject(nombre, typeof(RectTransform), typeof(TextMeshProUGUI));
+        go.transform.SetParent(padre, false);
+        var texto = go.GetComponent<TextMeshProUGUI>();
+        texto.font = _textoBocadillo.font;
+        texto.fontSize = _textoBocadillo.fontSize;
+        texto.color = Color.white;
+        texto.alignment = TextAlignmentOptions.Center;
+        texto.textWrappingMode = TextWrappingModes.Normal;
+        texto.raycastTarget = false;
+        texto.outlineColor = new Color32(0, 0, 0, 220);
+        texto.outlineWidth = 0.15f;
+        return texto;
+    }
+
+    float TamanoDeSubtitulo(PresentacionDeTexto presentacion)
+    {
+        float altura = BandasDeCineUI.Instance != null && BandasDeCineUI.Instance.AlturaObjetivo > 0f
+            ? BandasDeCineUI.Instance.AlturaObjetivo : 0.12f;
+        float normal = Mathf.Min(_textoBocadillo.fontSize, Mathf.Max(1f, (_canvasSubtitulo.rect.height * altura - 12f) / 3.5f));
+        return normal * (presentacion == PresentacionDeTexto.SubtituloGrande ? 2.2f : 1f);
+    }
+
+    void ColocarSubtitulo()
+    {
+        bool grande = _presentacion == PresentacionDeTexto.SubtituloGrande;
+        var bandas = BandasDeCineUI.Instance;
+        float banda = bandas != null ? bandas.AlturaVisible : 0f;
+        float altoCanvas = _canvasSubtitulo.rect.height;
+        float ancho = _canvasSubtitulo.rect.width * 0.7f;
+        float altoTexto = _textoSubtitulo.fontSize * 2.5f;
+        float altoNombre = string.IsNullOrEmpty(_nombreSubtitulo.text) ? 0f : _nombreSubtitulo.fontSize * 1.3f;
+        float alto = altoTexto + altoNombre + 12f;
+        bool dentroDeBanda = banda * altoCanvas >= alto;
+        _rectSubtitulo.anchorMin = _rectSubtitulo.anchorMax = new Vector2(0.5f, grande ? 0.5f : 0f);
+        _rectSubtitulo.pivot = new Vector2(0.5f, grande ? 0.5f : 0f);
+        _rectSubtitulo.sizeDelta = new Vector2(ancho, alto);
+        _rectSubtitulo.anchoredPosition = grande ? Vector2.zero : new Vector2(0f, dentroDeBanda ? (altoCanvas * banda - alto) * 0.5f : altoCanvas * 0.025f);
+        _textoSubtitulo.rectTransform.anchorMin = _textoSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+        _textoSubtitulo.rectTransform.pivot = new Vector2(0.5f, 0f);
+        _textoSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, 6f);
+        _textoSubtitulo.rectTransform.sizeDelta = new Vector2(ancho, altoTexto);
+        _nombreSubtitulo.rectTransform.anchorMin = _nombreSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+        _nombreSubtitulo.rectTransform.pivot = new Vector2(0.5f, 0f);
+        _nombreSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, altoTexto + 6f);
+        _nombreSubtitulo.rectTransform.sizeDelta = new Vector2(ancho, altoNombre);
+        _franjaSubtitulo.color = new Color(0f, 0f, 0f, grande || dentroDeBanda ? 0f : 0.45f);
     }
 
     /// El ancho del bocadillo para un texto: el que ocuparía en una línea, entre el mínimo y el
     /// máximo (ver el comentario largo de Show()). El alto lo recalcula el layout del prefab.
     void AjustarAncho(string texto)
     {
+        if (_presentacion != PresentacionDeTexto.Bocadillo) { ColocarSubtitulo(); return; }
         Vector2 singleLineSize = _label.GetPreferredValues(texto, 0f, 0f);
         float desiredWidth = singleLineSize.x + _labelHorizontalMargin * 2f;
         float bubbleWidth = Mathf.Clamp(desiredWidth, _bubbleMinWidth, _bubbleMaxWidth);
@@ -633,14 +799,17 @@ public class SpeechBubbleUI : MonoBehaviour
                 AjustarAncho(paginas[i]);
                 _bubbleRect.DOKill();
                 _bubbleRect.localScale = Vector3.one;
-                _bubbleRect.DOPunchScale(Vector3.one * 0.06f, 0.2f, 6, 0.6f).SetUpdate(true);
+                if (_presentacion == PresentacionDeTexto.Bocadillo)
+                    _bubbleRect.DOPunchScale(Vector3.one * 0.06f, 0.2f, 6, 0.6f).SetUpdate(true);
             }
 
             bool ultima = i == paginas.Count - 1;
+            float reparto = duration > 0f ? duration * Mathf.Max(1, paginas[i].Length) / total : 0f;
+            float tiempo = Mathf.Max(reparto, TiempoDeLectura(paginas[i]));
+            EmpezarHablaDePagina(paginas[i], ultima && duration <= 0f ? 0f : tiempo);
             if (ultima && duration <= 0f) { _autoHideRoutine = null; yield break; }
 
-            float reparto = duration > 0f ? duration * Mathf.Max(1, paginas[i].Length) / total : 0f;
-            yield return new WaitForSecondsRealtime(Mathf.Max(reparto, TiempoDeLectura(paginas[i])));
+            yield return new WaitForSecondsRealtime(tiempo);
         }
 
         _autoHideRoutine = null;
@@ -657,6 +826,7 @@ public class SpeechBubbleUI : MonoBehaviour
     /// global de "saltar" — ver ShowSpeechBubbleNode.RegisterSkipHandler.
     public void SkipCurrent()
     {
+        SenalesDeHabla.Para(_target);
         if (_autoHideRoutine == null) return;
         StopCoroutine(_autoHideRoutine);
         _autoHideRoutine = null;
@@ -666,8 +836,23 @@ public class SpeechBubbleUI : MonoBehaviour
         callback?.Invoke();
     }
 
+    void EmpezarHablaDePagina(string pagina, float duracion)
+    {
+        float segundos = (pagina?.Length ?? 0) / Mathf.Max(1f, _caracteresHabladosPorSegundo);
+        if (segundos > 0f) SenalesDeHabla.Empieza(_target, duracion > 0f ? Mathf.Min(duracion, segundos) : segundos);
+        else SenalesDeHabla.Para(_target);
+    }
+
+    /// Cierra el bocadillo solo si sigue siendo el de ese turno: quien limpia lo suyo no se lleva
+    /// por delante el bocadillo que otro sistema haya puesto después.
+    public void Hide(int turno)
+    {
+        if (turno == _turno) Hide();
+    }
+
     public void Hide()
     {
+        SenalesDeHabla.Para(_target);
         if (_autoHideRoutine != null) { StopCoroutine(_autoHideRoutine); _autoHideRoutine = null; }
         _isShowing = false;
 
@@ -675,7 +860,7 @@ public class SpeechBubbleUI : MonoBehaviour
         _bubbleRect.DOKill();
 
         _rootGroup.DOFade(0f, _fadeOutDuration).SetUpdate(true);
-        _bubbleRect.DOScale(Vector3.zero, _popOutDuration)
+        _bubbleRect.DOScale(_presentacion == PresentacionDeTexto.Bocadillo ? Vector3.zero : Vector3.one, _popOutDuration)
                    .SetEase(Ease.InBack)
                    .SetUpdate(true);
     }

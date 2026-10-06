@@ -1,0 +1,25 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='1928' height='2048' viewBox='0 0 1928 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='planta_general.png' xlink:href='planta_general.png' x='0' y='0' width='1928' height='2048' opacity='0.85'/>
+<rect x='482' y='542.118' width='964' height='843.294' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<line x1='964' y1='2048' x2='964' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='966' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-6000</text>
+<line x1='0' y1='963.765' x2='1928' y2='963.765' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='961.765' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6000</text>
+<circle cx='1018.249' cy='879.412' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1024.249' y='891.412' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Bola</text>
+<circle cx='901.044' cy='915.588' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='907.044' y='927.588' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Llave</text>
+<circle cx='897.749' cy='915.588' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='903.749' y='927.588' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_BrilloLlave</text>
+<circle cx='1168.874' cy='550.529' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1174.874' y='562.529' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Mapa</text>
+<circle cx='1436.351' cy='831.235' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='1442.351' y='843.235' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Espejo</text>
+<circle cx='964' cy='879.412' r='5' fill='#ff9a3c' stroke='#000000' stroke-width='1'/>
+<text x='970' y='891.412' font-size='13' fill='#ff9a3c' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>PROP_Mesa</text>
+<circle cx='964' cy='1018' r='9' fill='#ffd27a' stroke='#000000' stroke-width='1'/>
+<line x1='964' y1='1018' x2='964' y2='996' stroke='#ffd27a' stroke-width='2'/>
+<text x='972' y='1032' font-size='15' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>LIAM_TORRE</text>
+<text x='10' y='2036' font-size='14' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>Rejilla cada 10 m · X hacia la derecha, Z hacia arriba</text>
+</svg>
