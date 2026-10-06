@@ -37,11 +37,11 @@ MonoBehaviour:
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 5630202263296278941
+    - rid: 5630202263296278953
   references:
     version: 2
     RefIds:
-    - rid: 5630202263296278941
+    - rid: 5630202263296278953
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

@@ -37,7 +37,11 @@ public sealed class ReproductorDeGuion
         _inicio = inicio;
     }
 
-    const float PasoMaximo = 0.1f;
+    // Un fotograma que tarda más que esto es un tirón (el editor, una pausa, una carga) y no un
+    // juego lento: cuenta como PasoTrasTiron para no saltarse planos ni frases. Los fotogramas
+    // normales, aunque haya pocos por segundo, avanzan su tiempo real. Ver INC-628.
+    const float TironMaximo = 0.5f;
+    const float PasoTrasTiron = 0.1f;
 
     public float Tiempo => _t;
 
@@ -51,9 +55,8 @@ public sealed class ReproductorDeGuion
         {
             Avanzar(_t);
             yield return null;
-            // Un tirón del editor o una pausa no deben saltarse planos ni frases: el guion
-            // avanza como mucho un paso corto por fotograma y se retrasa en vez de saltar.
-            _t += Mathf.Min(Time.unscaledDeltaTime, PasoMaximo);
+            float paso = Time.unscaledDeltaTime;
+            _t += paso > TironMaximo ? PasoTrasTiron : paso;
         }
         Avanzar(_g.duracion);
     }

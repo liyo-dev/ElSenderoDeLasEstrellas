@@ -64,7 +64,22 @@ public class MagicProjectile : MonoBehaviour
     float        _zoneDamageMultiplier = 1f;
     readonly System.Collections.Generic.HashSet<Transform> _alreadyHit = new System.Collections.Generic.HashSet<Transform>();
     static readonly Collider[] s_bounceBuffer = new Collider[24];
-    static readonly int s_bounceMask = LayerMask.GetMask("Enemy", "Boss");
+    // La máscara se calcula la primera vez que se usa: Unity no permite LayerMask.GetMask en
+    // inicializadores de campo ni constructores estáticos de un MonoBehaviour. Ver INC-626.
+    static int  s_bounceMask;
+    static bool s_bounceMaskReady;
+    static int BounceMask
+    {
+        get
+        {
+            if (!s_bounceMaskReady)
+            {
+                s_bounceMask = LayerMask.GetMask("Enemy", "Boss");
+                s_bounceMaskReady = true;
+            }
+            return s_bounceMask;
+        }
+    }
 
     Vector3 _spawnPos;
     float   _spawnTime;
@@ -259,7 +274,7 @@ public class MagicProjectile : MonoBehaviour
 
     Transform FindNextBounceTarget(Vector3 from)
     {
-        int mask = s_bounceMask;
+        int mask = BounceMask;
         int n = Physics.OverlapSphereNonAlloc(from, _bounceRange, s_bounceBuffer, mask, QueryTriggerInteraction.Collide);
         Transform best = null;
         float bestSqr = float.MaxValue;

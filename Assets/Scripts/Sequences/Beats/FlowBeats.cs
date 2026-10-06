@@ -137,7 +137,7 @@ public class ScreenFlashBeat : SequenceBeat
     }
 }
 
-/// Muestra o retira las bandas de cine; el cierre del reproductor siempre las retira.
+/// Muestra o retira las bandas de cine; el reproductor las retira en cuanto devuelve el juego.
 [Serializable]
 public class BandasDeCineBeat : SequenceBeat
 {
@@ -153,7 +153,7 @@ public class BandasDeCineBeat : SequenceBeat
         if (ctx?.Player == null) yield break;
         var bandas = BandasDeCineUI.Obtener(ctx.Player.transform);
         if (mostrar)
-            ctx.Player.RegisterCleanup(() => { if (bandas != null) bandas.Mostrar(false, duracion: 0f); });
+            ctx.Player.RegisterScreenCleanup(() => { if (bandas != null) bandas.Mostrar(false, duracion: 0.25f); });
         bandas.Mostrar(mostrar, altura, duracion);
         if (esperar) while (bandas != null && bandas.Animando) yield return null;
     }

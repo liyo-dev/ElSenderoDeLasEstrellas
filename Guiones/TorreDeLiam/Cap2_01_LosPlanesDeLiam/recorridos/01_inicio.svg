@@ -33,7 +33,7 @@
 <line x1='0' y1='195.048' x2='1950' y2='195.048' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
 <text x='2' y='193.048' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>6008</text>
 <line x1='0' y1='0' x2='1950' y2='0' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
-<polyline points='975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<polyline points='975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 975,887.476 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <text x='979' y='899.476' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
@@ -42,7 +42,6 @@
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <text x='979' y='899.476' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
-<circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='887.476' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='975' cy='887.476' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
@@ -55,5 +54,5 @@
 <polygon points='857.981,1082.524 861.822,855.139 1056.822,972.158' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='857.981' cy='1082.524' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='864.981' y='1086.524' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>2</text>
-<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@inicio  0:00,0 – 0:17,1</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@inicio  0:00,0 – 0:15,7</text>
 </svg>

@@ -333,6 +333,32 @@ public class SequencePlayer : CinematicSequencerBase
         if (cleanup != null) _pendingCleanups.Add(cleanup);
     }
 
+    // Lo que la secuencia pone encima de la imagen (bandas de cine...) se quita en cuanto la escena
+    // devuelve el juego, no tras el margen de gracia de los NPCs: lo que el grafo lance justo
+    // después (la presentación de un jefe, un aviso) no puede salir con las bandas puestas.
+    // Ver INC-627.
+    private readonly List<System.Action> _pendingScreenCleanups = new();
+
+    public void RegisterScreenCleanup(System.Action cleanup)
+    {
+        if (cleanup != null) _pendingScreenCleanups.Add(cleanup);
+    }
+
+    private void RunScreenCleanups()
+    {
+        for (int i = 0; i < _pendingScreenCleanups.Count; i++)
+        {
+            try { _pendingScreenCleanups[i]?.Invoke(); }
+            catch (System.Exception ex)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[SequencePlayer:{name}] Una limpieza de pantalla ha fallado: {ex.Message}");
+#endif
+            }
+        }
+        _pendingScreenCleanups.Clear();
+    }
+
     private void RunPendingCleanups()
     {
         for (int i = 0; i < _pendingCleanups.Count; i++)
@@ -668,6 +694,7 @@ public class SequencePlayer : CinematicSequencerBase
         // tres segundos y medio de juego real.
         if (_stage != null) _stage.CleanupModules();
         CinematicTimeOfDay.Restore();
+        RunScreenCleanups();
 
         // Red de seguridad del tiempo: si la escena iba en cámara lenta y su beat de vuelta no se
         // llegó a ejecutar (una rama que salió antes, un beat mal puesto), la partida se quedaría
@@ -776,6 +803,7 @@ public class SequencePlayer : CinematicSequencerBase
         // los otros hayan pasado.
         StopShotTracking();
         StopBackgroundRoutines();
+        RunScreenCleanups();
         RunPendingCleanups();
         Time.timeScale = 1f;
         if (_stage != null) _stage.CleanupModules();

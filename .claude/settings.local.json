@@ -161,7 +161,8 @@
       "Bash(ls *)",
       "Bash(Select-Object Length)",
       "PowerShell(Get-Content *)",
-      "Skill(superpowers:dispatching-parallel-agents)"
+      "Skill(superpowers:dispatching-parallel-agents)",
+      "Skill(superpowers:brainstorming)"
     ]
   }
 }

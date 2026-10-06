@@ -136,7 +136,7 @@ namespace Game.NPC
         
         void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag(GameTags.Player))
             {
                 _playerInRange = true;
                 
@@ -159,7 +159,7 @@ namespace Game.NPC
         
         void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag(GameTags.Player))
             {
                 _playerInRange = false;
                 

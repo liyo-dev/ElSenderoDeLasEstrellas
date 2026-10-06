@@ -478,7 +478,7 @@ MonoBehaviour:
     fadeIn: 1
     fadeOut: 2
   - sequenceId: LIAM_CRYSTAL
-    music: {fileID: 8300000, guid: 2b6499ae1b7898d41ad775bffb9b370b, type: 3}
+    music: {fileID: 8300000, guid: 8e63bf0204db797478d778ef7b3c6821, type: 3}
     fadeIn: 1
     fadeOut: 2
   - sequenceId: ESTELA_APPEARS

@@ -52,7 +52,9 @@ public static class ConstruirTorreDeLiam
             Prop("Cama", Pack+"Props/Furniture/Bed/Bed01_a01.prefab", new(-2.5f,0,1.3f), new(1.3f,0.8f,2.1f));
             // Muebles a escala de los personajes (chibi): con la mesa a 0,75 m Liam sentado no asomaba por encima.
             var mesa = Prop("Mesa", Pack+"Props/Furniture/Table/Table01_a01.prefab", new(0,0,-0.1f), new(2.2f,AlturaMesa,1.1f));
-            Prop("Silla", Pack+"Props/Furniture/Chair/Chair01_a01.prefab", new(0,0,0.95f), new(0.5f,0.6f,0.5f),new(0,180,0));
+            // Silla con respaldo (el asiento queda al 39 % de su alto: 0,29 m). El punto «silla» del
+            // guion pone a Liam a esa altura; si cambia el tamaño, cambiarlo también allí.
+            Prop("Silla", Pack+"Props/Furniture/Chair/Chair12_a01.prefab", new(0,0,0.95f), new(0.45f,0.75f,0.45f),new(0,180,0));
             // El módulo de habitación no tiene pared del fondo: se cierra detrás del mapa y del espejo.
             Caja("Pared del fondo", new(0,1.7f,3.08f), new(7.4f,3.4f,0.1f), madera);
             var bola = Prop("PROP_Bola", Pack+"Props/Goods/Crystalball02_b01.prefab", new(0.4f,AlturaMesa+0.01f,-0.15f), new(0.42f,0.4f,0.42f));

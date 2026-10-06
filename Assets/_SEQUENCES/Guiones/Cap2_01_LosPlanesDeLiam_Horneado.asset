@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap2_01_LosPlanesDeLiam_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap2_01_LosPlanesDeLiam
-  duracion: 42.474
+  duracion: 43.50449
   presentacion: 1
-  huella: "2026-10-06 12:42 \xB7 4af89070a101f6d84819da3e1e23c6c6"
+  huella: "2026-10-06 14:00 \xB7 3c23662d8aa710f28a032e1440cb2cfe"
   actores:
   - id: LIAM_TORRE
     alias: liam
@@ -25,34 +25,34 @@ MonoBehaviour:
     - t: 0
       p: {x: -6000, y: 100, z: 6000.9}
     - t: 0.001
-      p: {x: -6000, y: 100, z: 6000.9}
+      p: {x: -6000, y: 100.29, z: 6000.9}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
       punto: {x: -5999.6, y: 100.40358, z: 5999.85}
       actor: 
-    - t: 21.58
+    - t: 20.404081
       tipo: 1
       rumbo: 0
       punto: {x: -6000.4688, y: 100.4291, z: 5999.65}
       actor: 
-    - t: 24.68
+    - t: 23.871428
       tipo: 1
       rumbo: 0
       punto: {x: -5999.6, y: 100.40358, z: 5999.85}
       actor: 
-    - t: 26.624
+    - t: 25.171427
       tipo: 1
       rumbo: 0
       punto: {x: -6000.6, y: 102, z: 6002.86}
       actor: 
-    - t: 31.704
+    - t: 30.75755
       tipo: 1
       rumbo: 0
       punto: {x: -5999.6, y: 100.40358, z: 5999.85}
       actor: 
-    - t: 34.894
+    - t: 34.60857
       tipo: 1
       rumbo: 0
       punto: {x: -6000, y: 100.45, z: 6000.5}
@@ -62,108 +62,84 @@ MonoBehaviour:
       tipo: 1
       estado: SitMedium_Loop
       congelar: 0
-    - t: 17.08
-      tipo: 2
-      estado: SenseSomethingStart_NoWeapon
-      congelar: 0
-    - t: 17.28
-      tipo: 2
-      estado: SitMedium_Exit
-      congelar: 0
-    - t: 18.138668
-      tipo: 1
-      estado: SitMedium_Loop
-      congelar: 0
-    - t: 18.18
-      tipo: 0
-      estado: 
-      congelar: 0
-    - t: 24.68
-      tipo: 2
-      estado: SitMedium_Begin
-      congelar: 0
-    - t: 25.724
-      tipo: 1
-      estado: SitMedium_Loop
-      congelar: 0
     caras:
     - t: 0
       emocion: 6
       dura: 0
-    - t: 6.5
+    - t: 3
       emocion: 6
-      dura: 1.6
-    - t: 10.7
+      dura: 2.1240816
+    - t: 7.7240815
       emocion: 4
-      dura: 5.08
-    - t: 17.28
+      dura: 6.669388
+    - t: 15.693469
       emocion: 4
       dura: 0
-    - t: 18.38
+    - t: 16.99347
       emocion: 9
-      dura: 1.6
-    - t: 22.58
+      dura: 1.8106122
+    - t: 21.404081
       emocion: 6
-      dura: 1.6
-    - t: 26.624
+      dura: 1.9673469
+    - t: 25.171427
       emocion: 10
-      dura: 2.48
-    - t: 31.704
+      dura: 2.9861226
+    - t: 30.75755
       emocion: 10
-      dura: 2.09
-    - t: 34.894
+      dura: 2.7510204
+    - t: 34.60857
       emocion: 2
       dura: 0
-    - t: 36.394
+    - t: 36.10857
       emocion: 2
-      dura: 2.48
+      dura: 3.7959185
     visible: []
     deslizando: []
   lineas:
-  - t0: 6.5
-    t1: 7.7
+  - t0: 3
+    t1: 4.7240815
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_01
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 10.7
-    t1: 15.379999
+  - t0: 7.7240815
+    t1: 13.993469
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_02
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 18.38
-    t1: 19.58
+  - t0: 16.99347
+    t1: 18.404081
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_03
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 22.58
-    t1: 23.78
+  - t0: 21.404081
+    t1: 22.971428
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_04
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 26.624
-    t1: 28.704
+  - t0: 25.171427
+    t1: 27.75755
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_05
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 31.704
-    t1: 33.394
+  - t0: 30.75755
+    t1: 33.10857
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_06
     gesto: 
     sinPose: 1
     presentacion: -1
-  - t0: 36.394
-    t1: 38.474
+  - t0: 36.10857
+    t1: 39.50449
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_07
     gesto: 
@@ -171,7 +147,7 @@ MonoBehaviour:
     presentacion: -1
   planos:
   - t0: 0
-    t1: 6.5
+    t1: 3
     tipo: 0
     descripcion: general de liam
     posiciones:
@@ -190,13 +166,13 @@ MonoBehaviour:
     suavidad: 1
     mezcla: 0
     mano: 0.12
-  - t0: 6.5
-    t1: 17.08
+  - t0: 3
+    t1: 15.693469
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
-    - t: 6.5
-      p: {x: -6001.2, y: 100.95, z: 5998.9}
+    - t: 3
+      p: {x: -6001.2, y: 101.25, z: 5998.9}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -210,13 +186,13 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 17.08
-    t1: 20.58
+  - t0: 15.693469
+    t1: 19.404081
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 17.08
-      p: {x: -6001.4, y: 101.15, z: 5997.4}
+    - t: 15.693469
+      p: {x: -6001.4, y: 101.4, z: 5997.4}
     lente: 42
     lenteFinal: 0
     sujetos:
@@ -230,12 +206,12 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 20.58
-    t1: 24.68
+  - t0: 19.404081
+    t1: 23.871428
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
-    - t: 20.58
+    - t: 19.404081
       p: {x: -6000.65, y: 101, z: 5998.6}
     lente: 48
     lenteFinal: 0
@@ -248,13 +224,13 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 24.68
-    t1: 26.624
+  - t0: 23.871428
+    t1: 25.171427
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 24.68
-      p: {x: -6001.3, y: 100.95, z: 5998.7}
+    - t: 23.871428
+      p: {x: -6001.3, y: 101.25, z: 5998.7}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -268,12 +244,12 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 26.624
-    t1: 31.704
+  - t0: 25.171427
+    t1: 30.75755
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
-    - t: 26.624
+    - t: 25.171427
       p: {x: -6000.6, y: 101.9, z: 6001.2}
     lente: 65
     lenteFinal: 0
@@ -288,13 +264,13 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 31.704
-    t1: 42.474
+  - t0: 30.75755
+    t1: 43.50449
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
-    - t: 31.704
-      p: {x: -6001.2, y: 100.95, z: 5998.9}
+    - t: 30.75755
+      p: {x: -6001.2, y: 101.25, z: 5998.9}
     lente: 40
     lenteFinal: 0
     sujetos:
@@ -311,40 +287,40 @@ MonoBehaviour:
   efectos:
   - t: 0
     beat:
-      rid: 5630202263296278936
-    linea: 27
-  - t: 17.08
+      rid: 5630202263296278948
+    linea: 28
+  - t: 15.693469
     beat:
-      rid: 5630202263296278937
-    linea: 40
-  - t: 21.58
+      rid: 5630202263296278949
+    linea: 42
+  - t: 20.404081
     beat:
-      rid: 5630202263296278938
-    linea: 52
-  - t: 40.474
+      rid: 5630202263296278950
+    linea: 51
+  - t: 41.50449
     beat:
-      rid: 5630202263296278939
-    linea: 80
-  - t: 41.974
+      rid: 5630202263296278951
+    linea: 76
+  - t: 43.00449
     beat:
-      rid: 5630202263296278940
-    linea: 82
+      rid: 5630202263296278952
+    linea: 78
   etiquetas:
   - nombre: inicio
     t: 0
   - nombre: mira
-    t: 6.5
+    t: 3
   - nombre: cae
-    t: 17.08
+    t: 15.693469
   - nombre: llave
-    t: 20.58
+    t: 19.404081
   - nombre: decide
-    t: 24.68
+    t: 23.871428
   - nombre: final
-    t: 34.894
+    t: 34.60857
   puntos:
   - nombre: silla
-    posicion: {x: -6000, y: 100, z: 6000.9}
+    posicion: {x: -6000, y: 100.29, z: 6000.9}
   - nombre: manos
     posicion: {x: -6000, y: 100.45, z: 6000.5}
   - nombre: cam_general
@@ -371,7 +347,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202263296278936
+    - rid: 5630202263296278948
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -379,7 +355,7 @@ MonoBehaviour:
         altura: 0.12
         duracion: 0.5
         esperar: 0
-    - rid: 5630202263296278937
+    - rid: 5630202263296278949
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -391,13 +367,13 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
-    - rid: 5630202263296278938
+    - rid: 5630202263296278950
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloLlave
         active: 0
-    - rid: 5630202263296278939
+    - rid: 5630202263296278951
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -405,7 +381,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.5
         waitForEnd: 0
-    - rid: 5630202263296278940
+    - rid: 5630202263296278952
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
