@@ -82,29 +82,68 @@ public static partial class VestidoDelMundo
     /// sendas de las puertas vecinas). La puerta mira a su calle.
     private static CasaNueva[] CasasNuevasDelReino() => new[]
     {
-        new CasaNueva("BuildingAT47", 62.2f, 305.1f, 189.3f, 3.54f),
-        new CasaNueva("BuildingAT02", 70.3f, 303.5f, 192.1f, 3.0f),
-        new CasaNueva("BuildingAT53", 78.6f, 301.8f, 192.1f, 3.54f),
-        new CasaNueva("BuildingAT06", 87.9f, 299.0f, 212.4f, 5.1f),
-        new CasaNueva("BuildingAT02", -80.0f, 251.2f, 0f, 3.0f),
-        new CasaNueva("BuildingAT47", -62.0f, 251.0f, 0f, 3.54f),
-        new CasaNueva("BuildingAT02", -84.0f, 307.8f, 180f, 3.0f),
-        new CasaNueva("BuildingAT47", -62.0f, 326.0f, 90f, 3.54f),
-        new CasaNueva("BuildingAT53", -46.0f, 326.0f, 270f, 3.54f),
-        new CasaNueva("BuildingAT47", 28.5f, 308.0f, 180f, 3.54f),
-        new CasaNueva("BuildingAT02", 42.0f, 307.8f, 180f, 3.0f),
-        new CasaNueva("BuildingAT47", 46.0f, 324.0f, 90f, 3.54f),
-        new CasaNueva("BuildingAT53", 62.0f, 324.0f, 270f, 3.54f),
+        new CasaNueva("BuildingAT47", 62.2f, 305.1f, 189.3f),
+        new CasaNueva("BuildingAT02", 70.3f, 303.5f, 192.1f),
+        new CasaNueva("BuildingAT53", 78.6f, 301.8f, 192.1f),
+        new CasaNueva("BuildingAT06", 87.9f, 299.0f, 212.4f),
+        new CasaNueva("BuildingAT02", -80.0f, 251.2f, 0f),
+        new CasaNueva("BuildingAT47", -62.0f, 251.0f, 0f),
+        new CasaNueva("BuildingAT02", -84.0f, 307.8f, 180f),
+        new CasaNueva("BuildingAT47", -62.0f, 326.0f, 90f),
+        new CasaNueva("BuildingAT53", -46.0f, 326.0f, 270f),
+        new CasaNueva("BuildingAT47", 28.5f, 308.0f, 180f),
+        new CasaNueva("BuildingAT02", 42.0f, 307.8f, 180f),
+        new CasaNueva("BuildingAT47", 46.0f, 324.0f, 90f),
+        new CasaNueva("BuildingAT53", 62.0f, 324.0f, 270f),
     };
 
     private struct Puerta
     {
-        public Vector2 Pos, Frente, Centro;
-        public float Fondo;
+        public Vector2 Pos, Frente;
         public string Prefab;
     }
 
-    private static List<Puerta> ListarPuertas(Scene escena, Pueblo pueblo, HashSet<string> giradas, IList<CasaNueva> nuevas)
+    private const string GrupoCasasNuevas = "Casas nuevas";
+
+    private static string NombreCasaNueva(int i, CasaNueva n) => $"Casa nueva {i} ({n.Prefab})";
+
+    private static Vector2 FrenteDe(float grados)
+    {
+        float a = grados * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Sin(a), Mathf.Cos(a));
+    }
+
+    private static Vector3 Esquina(int i) => new Vector3((i & 1) == 0 ? -1f : 1f, (i & 2) == 0 ? -1f : 1f, (i & 4) == 0 ? -1f : 1f);
+
+    /// Distancia desde «centro» hasta la cara de la casa en la dirección «dir», medida con la caja de cada
+    /// malla en su propio espacio (el AABB de mundo exagera el fondo de una casa girada en diagonal).
+    private static float Alcance(GameObject go, Vector2 centro, Vector2 dir)
+    {
+        float max = 0f;
+        foreach (Renderer r in go.GetComponentsInChildren<Renderer>())
+        {
+            if (!r.enabled || !r.gameObject.activeInHierarchy || !(r is MeshRenderer)) continue;
+            if (!r.TryGetComponent(out MeshFilter mf) || mf.sharedMesh == null) continue;
+            Bounds local = mf.sharedMesh.bounds;
+            Matrix4x4 m = r.localToWorldMatrix;
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 q = m.MultiplyPoint3x4(local.center + Vector3.Scale(local.extents, Esquina(i)));
+                max = Mathf.Max(max, Vector2.Dot(new Vector2(q.x, q.z) - centro, dir));
+            }
+        }
+        return max;
+    }
+
+    private static Transform BuscarCasasNuevas(Scene escena, Pueblo pueblo)
+    {
+        Transform raiz = BuscarRaiz(escena);
+        return raiz == null ? null : raiz.Find(pueblo.Nombre + "/" + GrupoCasasNuevas);
+    }
+
+    /// Puertas de las casas que hay ahora en la escena: las del generador (con su giro, si lo tienen) y
+    /// las casas nuevas que el vestido llegó a colocar. Lo usan la pintura del suelo y los adornos.
+    private static List<Puerta> PuertasDelPueblo(Scene escena, Pueblo pueblo, HashSet<string> giradas)
     {
         var r = new List<Puerta>();
         foreach (string nombreGrupo in pueblo.Grupos)
@@ -115,21 +154,26 @@ public static partial class VestidoDelMundo
             {
                 GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
                 if (fuente == null || !fuente.name.StartsWith("BuildingAT")) continue;
-                Bounds b = LimitesVisibles(casa.gameObject);
                 Vector3 f3 = FrenteDeCasa(casa, fuente.name, giradas);
-                Vector2 frente = new Vector2(f3.x, f3.z).normalized;
-                float fondo = Mathf.Abs(frente.x) * b.extents.x + Mathf.Abs(frente.y) * b.extents.z;
-                var centro = new Vector2(b.center.x, b.center.z);
-                r.Add(new Puerta { Pos = centro + frente * (fondo + 1.2f), Frente = frente, Centro = centro, Fondo = fondo, Prefab = fuente.name });
+                r.Add(PuertaDe(casa.gameObject, new Vector2(f3.x, f3.z).normalized, fuente.name));
             }
         }
-        foreach (CasaNueva n in nuevas)
-        {
-            float a = n.Frente * Mathf.Deg2Rad;
-            var frente = new Vector2(Mathf.Sin(a), Mathf.Cos(a));
-            r.Add(new Puerta { Pos = n.Pos + frente * (n.Fondo + 1.2f), Frente = frente, Centro = n.Pos, Fondo = n.Fondo, Prefab = n.Prefab });
-        }
+        Transform nuevas = BuscarCasasNuevas(escena, pueblo);
+        if (nuevas != null)
+            for (int i = 0; i < pueblo.Nuevas.Length; i++)
+            {
+                CasaNueva n = pueblo.Nuevas[i];
+                Transform casa = nuevas.Find(NombreCasaNueva(i + 1, n));
+                if (casa != null) r.Add(PuertaDe(casa.gameObject, FrenteDe(n.Frente), n.Prefab));
+            }
         return r;
+    }
+
+    private static Puerta PuertaDe(GameObject casa, Vector2 frente, string prefab)
+    {
+        Bounds b = LimitesVisibles(casa);
+        var centro = new Vector2(b.center.x, b.center.z);
+        return new Puerta { Pos = centro + frente * (Alcance(casa, centro, frente) + 1.2f), Frente = frente, Prefab = prefab };
     }
 
     private static float Rumbo(Vector2 dir) => Mathf.Atan2(dir.x, dir.y) * Mathf.Rad2Deg;
@@ -184,9 +228,7 @@ public static partial class VestidoDelMundo
         foreach (Pueblo pueblo in Pueblos())
         {
             Transform grupo = Grupo(o.Raiz, pueblo.Nombre);
-            var nuevas = new List<CasaNueva>();
-            if (pueblo.Nuevas.Length > 0) nuevas = PonerCasasNuevas(o, Grupo(grupo, "Casas nuevas"), pueblo);
-            List<Puerta> puertas = ListarPuertas(escena, pueblo, giradas, nuevas);
+            List<Puerta> puertas = PuertasDelPueblo(escena, pueblo, giradas);
             RegistrarCorredores(o, pueblo, puertas);
             int antes = o.Puestas;
             AdornarPuertas(o, Grupo(grupo, "Puertas"), puertas, pueblo.Semilla);
@@ -196,33 +238,39 @@ public static partial class VestidoDelMundo
             else if (pueblo.Nombre == "Pueblo vecino") EscenasDelVecino(o, grupo);
             else if (pueblo.Nombre == "Granjas de la cascada") EscenasDeLasGranjas(o, grupo);
             Jardines(o, Grupo(grupo, "Jardines"), pueblo);
-            o.Informe.Add($"{pueblo.Nombre}: {o.Puestas - antes} piezas de detalle" + (nuevas.Count > 0 ? $" y {nuevas.Count} casas nuevas." : "."));
+            o.Informe.Add($"{pueblo.Nombre}: {o.Puestas - antes} piezas de detalle.");
         }
         PoblarParajes(o);
     }
 
-    private static List<CasaNueva> PonerCasasNuevas(Obra o, Transform grupo, Pueblo pueblo)
+    /// Coloca las casas nuevas de todos los pueblos. Va antes de pintar el suelo: así solo se pintan la
+    /// puerta, la senda y el patio de las que de verdad caben.
+    private static void PonerCasasNuevas(Obra o)
     {
-        var puestas = new List<CasaNueva>();
-        int i = 0;
-        foreach (CasaNueva n in pueblo.Nuevas)
+        foreach (Pueblo pueblo in Pueblos())
         {
-            i++;
-            LadoDeLaPuertaNuevas.TryGetValue(n.Prefab, out float lado);
-            var p = new Pieza
+            if (pueblo.Nuevas.Length == 0) continue;
+            Transform grupo = Grupo(Grupo(o.Raiz, pueblo.Nombre), GrupoCasasNuevas);
+            int puestas = 0;
+            for (int i = 0; i < pueblo.Nuevas.Length; i++)
             {
-                Prefab = PrefabsEdificios + n.Prefab + ".prefab",
-                Nombre = $"Casa nueva {i} ({n.Prefab})",
-                Pos = n.Pos,
-                Rumbo = n.Frente - lado,
-                DesnivelMax = 1.4f,
-                Hundir = 0.15f,
-                PermitirCamino = true,
-                Holgura = 0.2f,
-            };
-            if (Poner(o, grupo, p) != null) puestas.Add(n);
+                CasaNueva n = pueblo.Nuevas[i];
+                LadoDeLaPuertaNuevas.TryGetValue(n.Prefab, out float lado);
+                var p = new Pieza
+                {
+                    Prefab = PrefabsEdificios + n.Prefab + ".prefab",
+                    Nombre = NombreCasaNueva(i + 1, n),
+                    Pos = n.Pos,
+                    Rumbo = n.Frente - lado,
+                    DesnivelMax = 1.4f,
+                    Hundir = 0.15f,
+                    PermitirCamino = true,
+                    Holgura = 0.2f,
+                };
+                if (Poner(o, grupo, p) != null) puestas++;
+            }
+            o.Informe.Add($"{pueblo.Nombre}: {puestas} de {pueblo.Nuevas.Length} casas nuevas.");
         }
-        return puestas;
     }
 
     /// Macetas a los lados de cada puerta y, según la casa, banco o barriles y cajas.
@@ -235,8 +283,10 @@ public static partial class VestidoDelMundo
             Vector2 fachada = p.Pos - p.Frente * 1.2f;
             float rumbo = Rumbo(p.Frente);
             string maceta = dado.Siguiente() < 0.5f ? Maceta : Jardinera;
-            Pon(o, grupo, maceta, "Maceta de la puerta", fachada + lado * 1.8f + p.Frente * 0.5f, rumbo + 90f, holgura: 0.02f, corredor: false, camino: true);
-            Pon(o, grupo, maceta, "Maceta de la puerta", fachada - lado * 1.8f + p.Frente * 0.5f, rumbo + 90f, holgura: 0.02f, corredor: false, camino: true);
+            // La jardinera, con el lado largo a lo largo del muro.
+            float giroMaceta = maceta == Jardinera ? rumbo : rumbo + 90f;
+            Pon(o, grupo, maceta, "Maceta de la puerta", fachada + lado * 1.8f + p.Frente * 0.5f, giroMaceta, holgura: 0.02f, corredor: false, camino: true);
+            Pon(o, grupo, maceta, "Maceta de la puerta", fachada - lado * 1.8f + p.Frente * 0.5f, giroMaceta, holgura: 0.02f, corredor: false, camino: true);
             float tirada = dado.Siguiente();
             float s = dado.Siguiente() < 0.5f ? 1f : -1f;
             if (tirada < 0.35f)
@@ -344,8 +394,8 @@ public static partial class VestidoDelMundo
         int n = Physics.OverlapSphereNonAlloc(new Vector3(p.x, y + 1.2f, p.y), radio, BufferCerca, ~0, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < n; i++)
             if (!Ignorable(BufferCerca[i])) return true;
-        foreach (Rect r in o.Ocupado)
-            if (new Rect(r.x - radio, r.y - radio, r.width + 2 * radio, r.height + 2 * radio).Contains(p)) return true;
+        foreach (Huella h in o.Ocupado)
+            if (h.Contiene(p, radio)) return true;
         return false;
     }
 

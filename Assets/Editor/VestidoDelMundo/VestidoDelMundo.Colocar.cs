@@ -31,6 +31,33 @@ public static partial class VestidoDelMundo
         public float Holgura = 0.3f;
     }
 
+    /// Nivel del mar de MainWorld (WORLD/Mar). Lo que apoyaría por debajo de NivelDelMar + MargenDeOrilla
+    /// quedaría en el agua o en la orilla mojada y no se coloca.
+    private const float NivelDelMar = 0f;
+    private const float MargenDeOrilla = 0.3f;
+
+    /// Huella orientada en planta: centro, ejes unitarios y semitamaño a lo largo de cada eje.
+    private struct Huella
+    {
+        public Vector2 Centro, EjeX, EjeZ;
+        public float MedioX, MedioZ;
+
+        private float Radio(Vector2 eje) => Mathf.Abs(Vector2.Dot(EjeX, eje)) * MedioX + Mathf.Abs(Vector2.Dot(EjeZ, eje)) * MedioZ;
+
+        private static bool Separa(Vector2 eje, Huella a, Huella b) =>
+            Mathf.Abs(Vector2.Dot(b.Centro - a.Centro, eje)) > a.Radio(eje) + b.Radio(eje);
+
+        /// Prueba de ejes separadores entre dos rectángulos orientados.
+        public bool Solapa(Huella b) =>
+            !Separa(EjeX, this, b) && !Separa(EjeZ, this, b) && !Separa(b.EjeX, this, b) && !Separa(b.EjeZ, this, b);
+
+        public bool Contiene(Vector2 p, float margen)
+        {
+            Vector2 d = p - Centro;
+            return Mathf.Abs(Vector2.Dot(d, EjeX)) <= MedioX + margen && Mathf.Abs(Vector2.Dot(d, EjeZ)) <= MedioZ + margen;
+        }
+    }
+
     /// Estado de una ejecución: terreno, raíz generada, informe y huellas ya ocupadas.
     private sealed class Obra
     {
@@ -38,7 +65,7 @@ public static partial class VestidoDelMundo
         public Lienzo Suelo;
         public Transform Raiz;
         public readonly List<string> Informe = new();
-        public readonly List<Rect> Ocupado = new();
+        public readonly List<Huella> Ocupado = new();
         public readonly List<Zona> Libres = new();
         public readonly Dictionary<string, GameObject> Prefabs = new();
         public readonly Collider[] Buffer = new Collider[64];
@@ -60,13 +87,22 @@ public static partial class VestidoDelMundo
         }
     }
 
-    /// Zona que debe quedar libre (anclas, arenas, plazas de eventos, recorridos de escolta…).
+    /// Zona que debe quedar libre (anclas, arenas, plazas de eventos, recorridos de escolta…): un círculo,
+    /// o un rectángulo alineado con los ejes si Medio no es cero.
     private struct Zona
     {
         public string Nombre;
         public Vector2 Centro;
         public float Radio;
-        public Zona(string nombre, float x, float z, float radio) { Nombre = nombre; Centro = new Vector2(x, z); Radio = radio; }
+        public Vector2 Medio;
+        public Zona(string nombre, float x, float z, float radio) { Nombre = nombre; Centro = new Vector2(x, z); Radio = radio; Medio = Vector2.zero; }
+
+        public static Zona Rectangulo(string nombre, float xMin, float zMin, float xMax, float zMax) => new Zona
+        {
+            Nombre = nombre,
+            Centro = new Vector2((xMin + xMax) * 0.5f, (zMin + zMax) * 0.5f),
+            Medio = new Vector2((xMax - xMin) * 0.5f, (zMax - zMin) * 0.5f),
+        };
     }
 
     private static GameObject CargarPrefab(Obra o, string ruta)
@@ -164,16 +200,55 @@ public static partial class VestidoDelMundo
         var centro = new Vector2(b.center.x, b.center.z);
         float radio = Mathf.Max(b.extents.x, b.extents.z);
         foreach (Zona z in o.Libres)
-            if (Vector2.Distance(centro, z.Centro) < z.Radio + radio) { zona = z.Nombre; return true; }
+        {
+            bool dentro = z.Medio == Vector2.zero
+                ? Vector2.Distance(centro, z.Centro) < z.Radio + radio
+                : Mathf.Abs(centro.x - z.Centro.x) < z.Medio.x + b.extents.x && Mathf.Abs(centro.y - z.Centro.y) < z.Medio.y + b.extents.z;
+            if (dentro) { zona = z.Nombre; return true; }
+        }
         zona = null;
         return false;
     }
 
-    private static bool SolapaPropio(Obra o, Rect r)
+    private static bool SolapaPropio(Obra o, Huella h)
     {
-        foreach (Rect q in o.Ocupado)
-            if (q.Overlaps(r)) return true;
+        foreach (Huella q in o.Ocupado)
+            if (q.Solapa(h)) return true;
         return false;
+    }
+
+    /// Huella de las mallas visibles en los ejes del rumbo (más ajustada que el AABB de mundo en piezas giradas).
+    private static Huella HuellaOrientada(GameObject go, float rumbo)
+    {
+        Quaternion giro = Quaternion.Euler(0f, rumbo, 0f);
+        Vector3 x3 = giro * Vector3.right, z3 = giro * Vector3.forward;
+        var h = new Huella { EjeX = new Vector2(x3.x, x3.z), EjeZ = new Vector2(z3.x, z3.z) };
+        float minX = float.MaxValue, maxX = float.MinValue, minZ = float.MaxValue, maxZ = float.MinValue;
+
+        void Sumar(Vector3 p)
+        {
+            var q = new Vector2(p.x, p.z);
+            float a = Vector2.Dot(q, h.EjeX), c = Vector2.Dot(q, h.EjeZ);
+            minX = Mathf.Min(minX, a); maxX = Mathf.Max(maxX, a);
+            minZ = Mathf.Min(minZ, c); maxZ = Mathf.Max(maxZ, c);
+        }
+
+        foreach (Renderer r in go.GetComponentsInChildren<Renderer>())
+        {
+            if (!r.enabled || !r.gameObject.activeInHierarchy) continue;
+            Bounds local;
+            Matrix4x4 m;
+            if (r is MeshRenderer && r.TryGetComponent(out MeshFilter mf) && mf.sharedMesh != null) { local = mf.sharedMesh.bounds; m = r.localToWorldMatrix; }
+            else if (r is MeshRenderer || r is SkinnedMeshRenderer) { local = r.bounds; m = Matrix4x4.identity; }
+            else continue;
+            for (int i = 0; i < 8; i++)
+                Sumar(m.MultiplyPoint3x4(local.center + Vector3.Scale(local.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1))));
+        }
+        if (minX > maxX) { h.Centro = new Vector2(go.transform.position.x, go.transform.position.z); return h; }
+        h.MedioX = (maxX - minX) * 0.5f;
+        h.MedioZ = (maxZ - minZ) * 0.5f;
+        h.Centro = h.EjeX * ((minX + maxX) * 0.5f) + h.EjeZ * ((minZ + maxZ) * 0.5f);
+        return h;
     }
 
     /// Instancia, escala, gira y apoya una pieza. Devuelve null si no pasa las comprobaciones.
@@ -186,7 +261,9 @@ public static partial class VestidoDelMundo
         go.name = p.Nombre;
         Transform t = go.transform;
         Vector3 escalaBase = prefab.transform.localScale;
-        t.rotation = Quaternion.Euler(0f, p.Rumbo, 0f);
+        // Se compone con el giro propio de la raíz del prefab (alguno lo trae para que su frente mire a +Z).
+        Quaternion giroBase = prefab.transform.localRotation;
+        t.rotation = Quaternion.Euler(0f, p.Rumbo, 0f) * giroBase;
         t.localScale = escalaBase;
         t.position = new Vector3(p.Pos.x, 0f, p.Pos.y);
 
@@ -202,7 +279,7 @@ public static partial class VestidoDelMundo
         else t.localScale = escalaBase * p.Tamano;
 
         if (Mathf.Abs(p.Inclinar) > 0.01f)
-            t.rotation = Quaternion.AngleAxis(p.Inclinar, Quaternion.Euler(0f, p.Rumbo, 0f) * Vector3.right) * Quaternion.Euler(0f, p.Rumbo, 0f);
+            t.rotation = Quaternion.AngleAxis(p.Inclinar, Quaternion.Euler(0f, p.Rumbo, 0f) * Vector3.right) * Quaternion.Euler(0f, p.Rumbo, 0f) * giroBase;
 
         // Centrar la huella visible en Pos.
         b = LimitesVisibles(go);
@@ -216,10 +293,16 @@ public static partial class VestidoDelMundo
             o.Descartar($"terreno demasiado desigual ({max - min:0.0} m)", p);
             return null;
         }
+        if (min < NivelDelMar + MargenDeOrilla)
+        {
+            Object.DestroyImmediate(go);
+            o.Descartar("en el agua o en la orilla", p);
+            return null;
+        }
         t.position += Vector3.up * (min - p.Hundir - b.min.y);
         b = LimitesVisibles(go);
 
-        var huella = new Rect(b.min.x, b.min.z, b.size.x, b.size.z);
+        Huella huella = HuellaOrientada(go, p.Rumbo);
         if (!p.PermitirSolapePropio && SolapaPropio(o, huella))
         {
             Object.DestroyImmediate(go);

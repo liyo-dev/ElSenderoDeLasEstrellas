@@ -26,8 +26,17 @@ public static partial class VestidoDelMundo
         public Action<Obra, Transform, Paraje> Receta;
         public int Semilla;
 
-        /// Rumbo del frente del paraje: mira hacia donde llega su senda.
-        public float Frente => Senda != null && Senda.Length > 1 ? Rumbo(Senda[0] - Centro) : 0f;
+        /// Rumbo del frente del paraje: mira por donde llega su senda (su último tramo antes del centro).
+        public float Frente
+        {
+            get
+            {
+                if (Senda == null) return 0f;
+                for (int i = Senda.Length - 1; i >= 0; i--)
+                    if (Vector2.Distance(Senda[i], Centro) > 1f) return Rumbo(Senda[i] - Centro);
+                return 0f;
+            }
+        }
 
         /// Punto de mundo a partir de coordenadas locales (x a la derecha, z hacia el frente).
         public Vector2 Local(float x, float z)
@@ -400,7 +409,7 @@ public static partial class VestidoDelMundo
         new Zona("Escolta de Eldran: punto de guardado → bosque", 10.3f, -81.9f, 9.0f),
         new Zona("Arena dinámica del Demonio 1 (estimada)", 41.1f, -54.3f, 26.0f),
         new Zona("Caja de Eldran bajo un árbol", -16.05f, 21.44f, 6.0f),
-        new Zona("Plaza real — arena del Demonio 2", 0f, 299f, 24.4f),
+        Zona.Rectangulo("Plaza real — arena del Demonio 2", -20f, 285f, 20f, 313f),
         new Zona("Castillo — acceso despejado", 0f, 320f, 12.0f),
         new Zona("Sala del trono y calabozo (pendiente)", 0f, 355f, 8.0f),
         new Zona("Puerta del Reino (hueco de la muralla)", 80.0f, 240.0f, 14.0f),

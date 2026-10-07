@@ -3504,12 +3504,12 @@ Pinta el `TerrainData` de `Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.
 - Quita la hierba de detalle de lo que queda como suelo duro (calles, plazas, sendas).
 - **No se toca:** el pueblo de Will (referencia de estilo), el bosque prohibido y la montaña.
 
-**Copia del suelo.** La primera ejecución guarda en `_ClaudeBackups/VestidoDelMundo/` los pesos originales (`pesos_originales.bin.gz`) y la hierba de detalle (`detalle_original.bin.gz`), con la ruta del asset, la resolución y los nombres de capa para comprobarlos al reponer. `estado.txt` guarda la huella de los pesos que dejó el vestido:
+**Copia del suelo.** La primera ejecución guarda en `_ClaudeBackups/VestidoDelMundo/` los pesos originales (`pesos_originales.bin.gz`) y la hierba de detalle (`detalle_original.bin.gz`), con la ruta del asset, la resolución y los nombres de capa para comprobarlos al reponer. Esa copia no se vuelve a escribir: es el suelo de antes del vestido y *quitar* vuelve a ella. `estado.txt` guarda la huella (pesos y hierba de detalle) del suelo que dejó la herramienta:
 
 - Si al volver a ejecutar la huella coincide, se parte de la copia (el resultado no se acumula).
-- Si no coincide (alguien ha pintado a mano), pregunta: partir de lo actual, volver a la copia o cancelar.
+- Si no coincide (alguien ha pintado a mano), pregunta: partir de lo actual (pinta encima y conserva lo pintado a mano), volver a la copia (se pierde) o cancelar.
 
-La copia se versiona con el resto de `_ClaudeBackups/`.
+Conviene hacer commit de `_ClaudeBackups/VestidoDelMundo/` tras el primer vestido: es la única copia del suelo original.
 
 **Comparte terreno con el menú principal.** `MainMenu.unity` usa el mismo `Terreno.asset` para las portadas: los suelos nuevos se ven también ahí.
 
@@ -3517,7 +3517,9 @@ La copia se versiona con el resto de `_ClaudeBackups/`.
 
 Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y paraje.
 
-- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, o su nombre se repite en su grupo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly, un hijo por casa), así se guarda o se descarta junto con las casas.
+**Orden:** primero se giran las casas y se colocan las nuevas, después se pinta el suelo y al final se ponen los detalles. Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución, y no se pinta el patio de una casa nueva que no cupo.
+
+- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro.
 - **Reino:**
   - 13 casas nuevas en solares vacíos;
   - armaduras y estandartes a la entrada del castillo;
@@ -3533,10 +3535,11 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 
 **Comprobaciones de cada pieza** (`VestidoDelMundo.Colocar.cs`). Si una falla, la pieza no se pone y queda anotada en el informe:
 
-- tamaño medido en el propio prefab;
+- tamaño medido en el propio prefab (el giro se compone con el que traiga la raíz del prefab);
 - apoyo en 9 puntos de la huella y desnivel máximo;
-- sin pisarse con otras piezas del vestido;
-- fuera de las zonas que deben quedar libres (48: anclas, arenas, recorridos de escolta, plazas de eventos… en `ZonasLibres`);
+- nada por debajo de 0,3 m sobre el mar (y = 0): ni en el agua ni en la orilla mojada;
+- sin pisarse con otras piezas del vestido (huellas orientadas, no la caja de mundo, que exagera las piezas giradas);
+- fuera de las zonas que deben quedar libres (48: anclas, arenas, recorridos de escolta, plazas de eventos… en `ZonasLibres`; círculos, y la plaza real como rectángulo x ±20, z 285–313);
 - fuera de calles y caminos pintados, y de los corredores de puerta;
 - sin chocar (`OverlapBoxNonAlloc`) con los colisionadores que ya había en la escena. No cuentan el terreno, los triggers ni los volúmenes de más de 60 m.
 

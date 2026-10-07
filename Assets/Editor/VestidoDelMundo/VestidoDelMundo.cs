@@ -58,7 +58,7 @@ public static partial class VestidoDelMundo
                 else
                 {
                     AssetDatabase.SaveAssets();
-                    BorrarEstado();
+                    EscribirEstado(HuellaSuelo(terreno.terrainData));
                     informe.Add("Suelo: repuesta la copia original.");
                 }
             }
@@ -93,25 +93,15 @@ public static partial class VestidoDelMundo
                 return;
             }
 
-            if (suelo)
-            {
-                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Pintando calles y plazas…", 0.2f);
-                PintarZonas(lienzo, escena, informe);
-                lienzo.Normalizar();
-                terreno.terrainData.SetAlphamaps(0, 0, lienzo.Pesos);
-                int quitadas = QuitarHierbaDeSueloDuro(lienzo);
-                EditorUtility.SetDirty(terreno.terrainData);
-                AssetDatabase.SaveAssets();
-                EscribirEstado(HuellaPesos(terreno.terrainData));
-                informe.Add($"Suelo: pintado y guardado ({quitadas} celdas de hierba de detalle retiradas de calles y sendas).");
-            }
-
+            // Las casas se giran y las nuevas se colocan antes de pintar: el suelo se pinta según lo que de
+            // verdad queda en la escena (puertas, sendas y patios).
+            Obra obra = null;
             if (detalles)
             {
-                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Colocando detalles…", 0.5f);
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Girando casas y poniendo las nuevas…", 0.15f);
                 BorrarRaiz(escena, informe);
                 ReponerCasas(escena, informe);
-                var obra = new Obra
+                obra = new Obra
                 {
                     Terreno = terreno,
                     Suelo = lienzo,
@@ -120,6 +110,25 @@ public static partial class VestidoDelMundo
                 obra.Libres.AddRange(ZonasLibres);
                 IndexarEjemplares(escena, obra);
                 GirarCasasHaciaSuCalle(escena, obra);
+                PonerCasasNuevas(obra);
+            }
+
+            if (suelo)
+            {
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Pintando calles y plazas…", 0.3f);
+                PintarZonas(lienzo, escena, informe);
+                lienzo.Normalizar();
+                terreno.terrainData.SetAlphamaps(0, 0, lienzo.Pesos);
+                int quitadas = QuitarHierbaDeSueloDuro(lienzo);
+                EditorUtility.SetDirty(terreno.terrainData);
+                AssetDatabase.SaveAssets();
+                EscribirEstado(HuellaSuelo(terreno.terrainData));
+                informe.Add($"Suelo: pintado y guardado ({quitadas} celdas de hierba de detalle retiradas de calles y sendas).");
+            }
+
+            if (obra != null)
+            {
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Colocando detalles…", 0.5f);
                 PoblarZonas(obra);
                 int obstaculos = NavMeshAutoSetup.ClasificarBajo(obra.Raiz);
                 informe.AddRange(obra.Informe);
@@ -191,7 +200,7 @@ public static partial class VestidoDelMundo
             return true;
         }
         string estado = LeerEstado();
-        string actual = HuellaPesos(datos);
+        string actual = HuellaSuelo(datos);
         if (estado == actual)
         {
             string error = ReponerCopia(datos);
@@ -206,14 +215,13 @@ public static partial class VestidoDelMundo
         EditorUtility.ClearProgressBar();
         int r = EditorUtility.DisplayDialogComplex("Vestido de MainWorld",
             "El suelo del terreno ha cambiado desde la última vez que se vistió (¿pintado a mano?).\n\n" +
-            "· «Partir de lo actual» guarda lo que hay ahora como nueva copia y pinta encima.\n" +
-            "· «Volver a la copia» repone la copia antigua (se pierde lo pintado a mano) y pinta encima.",
+            "· «Partir de lo actual» pinta encima de lo que hay ahora. La copia del suelo original no cambia: «Quitar» volverá a ella.\n" +
+            "· «Volver a la copia» repone el suelo original (se pierde lo pintado a mano) y pinta encima.",
             "Partir de lo actual", "Cancelar", "Volver a la copia");
         if (r == 1) { informe.Add("Suelo: cancelado."); return false; }
         if (r == 0)
         {
-            GuardarCopia(datos);
-            informe.Add("Suelo: lo actual pasa a ser la copia original.");
+            informe.Add("Suelo: se pinta encima de lo actual; la copia original se conserva.");
             return true;
         }
         string err = ReponerCopia(datos);
@@ -237,12 +245,6 @@ public static partial class VestidoDelMundo
             }
     }
 
-    private static void BorrarEstado()
-    {
-        string r = Path.Combine(RutaCopias, ArchivoEstado);
-        if (File.Exists(r)) File.Delete(r);
-    }
-
     private static Transform CrearRaiz(Scene escena)
     {
         Transform padre = escena.GetRootGameObjects().FirstOrDefault(g => g.name == NombrePadre)?.transform;
@@ -252,18 +254,24 @@ public static partial class VestidoDelMundo
         return raiz.transform;
     }
 
+    /// Raíz de lo generado: bajo WORLD o, si no hay WORLD, en la raíz de la escena.
+    private static Transform BuscarRaiz(Scene escena)
+    {
+        foreach (GameObject g in escena.GetRootGameObjects())
+        {
+            if (g.name == NombreRaiz) return g.transform;
+            Transform t = g.transform.Find(NombreRaiz);
+            if (t != null) return t;
+        }
+        return null;
+    }
+
     private static void BorrarRaiz(Scene escena, List<string> informe)
     {
-        int n = 0;
-        foreach (GameObject g in escena.GetRootGameObjects())
-            foreach (Transform t in g.GetComponentsInChildren<Transform>(true))
-            {
-                if (t == null || t.name != NombreRaiz) continue;
-                UnityEngine.Object.DestroyImmediate(t.gameObject);
-                n++;
-                break;
-            }
-        if (n > 0) informe.Add("Borrado el vestido anterior.");
+        Transform raiz = BuscarRaiz(escena);
+        if (raiz == null) return;
+        UnityEngine.Object.DestroyImmediate(raiz.gameObject);
+        informe.Add("Borrado el vestido anterior.");
     }
 
     private static void Terminar(string titulo, List<string> informe)

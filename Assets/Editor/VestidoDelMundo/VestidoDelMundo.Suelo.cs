@@ -391,7 +391,8 @@ public static partial class VestidoDelMundo
     }
 
     /// Huella de los pesos actuales, para saber si alguien ha pintado a mano después del vestido.
-    private static string HuellaPesos(TerrainData datos)
+    /// Huella del suelo: pesos de las capas y hierba de detalle. Si cambia, alguien ha pintado a mano.
+    private static string HuellaSuelo(TerrainData datos)
     {
         int res = datos.alphamapResolution, capas = datos.alphamapLayers;
         float[,,] p = datos.GetAlphamaps(0, 0, res, res);
@@ -405,6 +406,17 @@ public static partial class VestidoDelMundo
                         h ^= (byte)Mathf.Clamp(Mathf.RoundToInt(p[k, i, c] * 255f), 0, 255);
                         h *= 16777619u;
                     }
+            int dres = datos.detailResolution;
+            for (int c = 0; c < datos.detailPrototypes.Length; c++)
+            {
+                int[,] capa = datos.GetDetailLayer(0, 0, dres, dres, c);
+                for (int k = 0; k < dres; k++)
+                    for (int i = 0; i < dres; i++)
+                    {
+                        h ^= (uint)capa[k, i];
+                        h *= 16777619u;
+                    }
+            }
         }
         return h.ToString("x8");
     }

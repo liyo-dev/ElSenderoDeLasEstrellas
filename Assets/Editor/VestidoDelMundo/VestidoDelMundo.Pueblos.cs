@@ -29,10 +29,8 @@ public static partial class VestidoDelMundo
         public Vector2 Pos;
         /// Dirección hacia la calle (grados); la puerta acaba mirando ahí.
         public float Frente;
-        /// Media profundidad de la huella en la dirección del frente.
-        public float Fondo;
-        public CasaNueva(string prefab, float x, float z, float frente, float fondo)
-        { Prefab = prefab; Pos = new Vector2(x, z); Frente = frente; Fondo = fondo; }
+        public CasaNueva(string prefab, float x, float z, float frente)
+        { Prefab = prefab; Pos = new Vector2(x, z); Frente = frente; }
     }
 
     private sealed class Pueblo
@@ -210,47 +208,25 @@ public static partial class VestidoDelMundo
             PintarAlfombraDePlaya(l, new Vector2(d.x, d.y), d.z, pueblo, Fuera);
         }
 
-        // 2. Puertas: casas que ya están y casas nuevas del vestido.
-        var puertas = new List<(Vector2 puerta, Vector2 centro, float radio)>();
-        foreach (string nombreGrupo in pueblo.Grupos)
-        {
-            Transform grupo = BuscarGrupo(escena, nombreGrupo);
-            if (grupo == null) continue;
-            foreach (Transform casa in grupo)
-            {
-                GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
-                if (fuente == null || !fuente.name.StartsWith("BuildingAT")) continue;
-                Bounds b = LimitesVisibles(casa.gameObject);
-                Vector3 frente3 = FrenteDeCasa(casa, fuente.name, giradas);
-                var frente = new Vector2(frente3.x, frente3.z).normalized;
-                float fondo = Mathf.Abs(frente.x) * b.extents.x + Mathf.Abs(frente.y) * b.extents.z;
-                var centro = new Vector2(b.center.x, b.center.z);
-                puertas.Add((centro + frente * (fondo + 1.2f), centro, Mathf.Max(b.extents.x, b.extents.z)));
-            }
-        }
-        foreach (CasaNueva n in pueblo.Nuevas)
-        {
-            float r = n.Frente * Mathf.Deg2Rad;
-            var frente = new Vector2(Mathf.Sin(r), Mathf.Cos(r));
-            puertas.Add((n.Pos + frente * (n.Fondo + 1.2f), n.Pos, n.Fondo + 1f));
-        }
+        // 2. Puertas: casas que ya están y casas nuevas que el vestido ha colocado.
+        List<Puerta> puertas = PuertasDelPueblo(escena, pueblo, giradas);
 
         // 3. Núcleo pisado: alrededor de las plazas y delante de las puertas.
         var discos = new List<Vector3>();
         if (pueblo.NucleoEnPlazas)
             foreach (Plaza pl in pueblo.Plazas) discos.Add(new Vector3(pl.Centro.x, pl.Centro.y, Mathf.Max(pl.Tamano.x, pl.Tamano.y) * 0.5f + 5f));
-        foreach (var p in puertas) discos.Add(new Vector3(p.puerta.x, p.puerta.y, pueblo.RadioNucleo));
+        foreach (Puerta p in puertas) discos.Add(new Vector3(p.Pos.x, p.Pos.y, pueblo.RadioNucleo));
         PintarNucleo(l, discos, pueblo.Semilla + 1, Fuera, pueblo.IntensidadNucleo);
 
         // 4. Sendas de cada puerta a lo más cercano (calle, plaza o acceso) y su patio. Van antes que
         //    calles y plazas para que estas queden enteras encima del empalme.
         int n2 = 0;
-        foreach (var p in puertas)
+        foreach (Puerta p in puertas)
         {
-            Vector2 destino = DestinoMasCercano(pueblo, p.puerta);
-            if (Vector2.Distance(destino, p.puerta) < 60f)
-                PintarSenda(l, Curva(p.puerta, destino, 0.18f, pueblo.Semilla + n2), 3.4f, pueblo.Semilla + 100 + n2, Fuera, pueblo.CapaSendaA, pueblo.CapaSendaB);
-            PintarMancha(l, p.puerta, pueblo.RadioPatio, pueblo.CapaSendaB, 0.8f, pueblo.Semilla + 200 + n2, Fuera);
+            Vector2 destino = DestinoMasCercano(pueblo, p.Pos);
+            if (Vector2.Distance(destino, p.Pos) < 60f)
+                PintarSenda(l, Curva(p.Pos, destino, 0.18f, pueblo.Semilla + n2), 3.4f, pueblo.Semilla + 100 + n2, Fuera, pueblo.CapaSendaA, pueblo.CapaSendaB);
+            PintarMancha(l, p.Pos, pueblo.RadioPatio, pueblo.CapaSendaB, 0.8f, pueblo.Semilla + 200 + n2, Fuera);
             n2++;
         }
 
@@ -331,7 +307,7 @@ public static partial class VestidoDelMundo
     /// se deshace el giro en el cálculo.
     private static Vector3 FrenteDeCasa(Transform casa, string prefab, HashSet<string> giradas)
     {
-        if (giradas.Contains(RutaJerarquia(casa)) && LadoDeLaPuerta.TryGetValue(prefab, out float lado))
+        if (giradas.Contains(IdDe(casa.gameObject)) && LadoDeLaPuerta.TryGetValue(prefab, out float lado))
             return casa.rotation * Quaternion.Euler(0f, lado, 0f) * Vector3.forward;
         return casa.forward;
     }

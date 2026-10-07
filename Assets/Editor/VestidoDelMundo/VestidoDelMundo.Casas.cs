@@ -65,8 +65,9 @@ public static partial class VestidoDelMundo
         return null;
     }
 
-    /// Objeto de la escena que guarda el giro original de cada casa girada (hijo = ruta de la casa, con su
-    /// posición y giro originales). Con «crear», lo crea si no existe.
+    /// Objeto de la escena que guarda el giro original de cada casa girada: un hijo por casa, llamado
+    /// «ruta|GlobalObjectId», con la posición y el giro originales, y dentro un hijo «girada» con la pose
+    /// que le dejó el vestido. Con «crear», lo crea si no existe.
     private static Transform RegistroCasas(Scene escena, bool crear)
     {
         Transform padre = null;
@@ -85,13 +86,33 @@ public static partial class VestidoDelMundo
         return g.transform;
     }
 
-    /// Rutas de las casas que están giradas ahora mismo en la escena.
+    private const string NombrePoseGirada = "girada";
+
+    /// Identificador estable de una casa en su escena: sobrevive a renombrarla o cambiarla de grupo.
+    private static string IdDe(GameObject go) => GlobalObjectId.GetGlobalObjectIdSlow(go).ToString();
+
+    /// Casa a la que apunta una marca del registro: por su identificador y, si no, por su ruta.
+    private static Transform CasaDeLaMarca(Scene escena, Transform marca, out string id)
+    {
+        int corte = marca.name.LastIndexOf('|');
+        id = corte >= 0 ? marca.name.Substring(corte + 1) : "";
+        if (GlobalObjectId.TryParse(id, out GlobalObjectId gid) &&
+            GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) is GameObject go && go.scene == escena)
+            return go.transform;
+        return corte > 0 ? BuscarPorRuta(escena, marca.name.Substring(0, corte)) : null;
+    }
+
+    /// Identificadores de las casas que están giradas ahora mismo en la escena.
     private static HashSet<string> CasasGiradas(Scene escena)
     {
         var r = new HashSet<string>();
         Transform registro = RegistroCasas(escena, crear: false);
-        if (registro != null)
-            foreach (Transform t in registro) r.Add(t.name);
+        if (registro == null) return r;
+        foreach (Transform marca in registro)
+        {
+            Transform casa = CasaDeLaMarca(escena, marca, out string id);
+            r.Add(casa != null ? IdDe(casa.gameObject) : id);
+        }
         return r;
     }
 
@@ -104,17 +125,13 @@ public static partial class VestidoDelMundo
         {
             Transform grupo = BuscarGrupo(escena, nombreGrupo);
             if (grupo == null) { o.Informe.Add($"  · no encuentro el grupo «{nombreGrupo}»: sus casas no se giran."); continue; }
-            var nombres = new Dictionary<string, int>();
-            foreach (Transform hijo in grupo) nombres[hijo.name] = nombres.TryGetValue(hijo.name, out int k) ? k + 1 : 1;
             foreach (Transform casa in grupo)
             {
                 GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
                 if (fuente == null || !LadoDeLaPuerta.TryGetValue(fuente.name, out float lado)) continue;
                 if (Mathf.Abs(Mathf.DeltaAngle(lado, 0f)) < 1f) continue;
-                // La reposición busca la casa por su ruta: con el nombre repetido podría devolver otra.
-                if (nombres[casa.name] > 1) { o.Informe.Add($"  · «{casa.name}» no se gira: hay otra con el mismo nombre en su grupo."); continue; }
-                string ruta = RutaJerarquia(casa);
-                if (yaGiradas.Contains(ruta)) continue;
+                string id = IdDe(casa.gameObject);
+                if (yaGiradas.Contains(id)) continue;
 
                 Vector3 pos = casa.position;
                 Quaternion rot = casa.rotation;
@@ -130,9 +147,12 @@ public static partial class VestidoDelMundo
                     continue;
                 }
                 if (registro == null) registro = RegistroCasas(escena, crear: true);
-                var marca = new GameObject(ruta) { tag = "EditorOnly" };
+                var marca = new GameObject(RutaJerarquia(casa) + "|" + id) { tag = "EditorOnly" };
                 marca.transform.SetParent(registro, false);
                 marca.transform.SetPositionAndRotation(pos, rot);
+                var girada = new GameObject(NombrePoseGirada);
+                girada.transform.SetParent(marca.transform, false);
+                girada.transform.SetPositionAndRotation(casa.position, casa.rotation);
                 giradas++;
             }
         }
@@ -154,20 +174,39 @@ public static partial class VestidoDelMundo
         return false;
     }
 
-    /// Devuelve a su sitio las casas que giró la última ejecución y borra el registro.
+    /// Devuelve a su sitio las casas que giró el vestido. Si alguien ha movido una después, solo se le
+    /// deshace el giro (se respeta dónde la dejó). Las marcas de casas que no aparecen se conservan.
     private static void ReponerCasas(Scene escena, List<string> informe)
     {
         Transform registro = RegistroCasas(escena, crear: false);
         if (registro == null) return;
-        int n = 0, perdidas = 0;
+        int n = 0, movidas = 0, perdidas = 0;
+        var hechas = new List<GameObject>();
         foreach (Transform marca in registro)
         {
-            Transform casa = BuscarPorRuta(escena, marca.name);
+            Transform casa = CasaDeLaMarca(escena, marca, out _);
             if (casa == null) { perdidas++; continue; }
-            casa.SetPositionAndRotation(marca.position, marca.rotation);
+            Transform girada = marca.Find(NombrePoseGirada);
+            bool intacta = girada == null ||
+                           (Vector3.Distance(casa.position, girada.position) < 0.01f && Quaternion.Angle(casa.rotation, girada.rotation) < 0.5f);
+            if (intacta) casa.SetPositionAndRotation(marca.position, marca.rotation);
+            else
+            {
+                GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
+                if (fuente != null && LadoDeLaPuerta.TryGetValue(fuente.name, out float lado))
+                {
+                    Bounds b = LimitesVisibles(casa.gameObject);
+                    casa.RotateAround(new Vector3(b.center.x, casa.position.y, b.center.z), Vector3.up, lado);
+                }
+                movidas++;
+                informe.Add($"  · «{casa.name}» se movió a mano después del vestido: se le deshace solo el giro.");
+            }
+            hechas.Add(marca.gameObject);
             n++;
         }
-        Object.DestroyImmediate(registro.gameObject);
-        informe.Add($"Casas: {n} devueltas a su giro original" + (perdidas > 0 ? $" ({perdidas} no encontradas)." : "."));
+        foreach (GameObject g in hechas) Object.DestroyImmediate(g);
+        if (registro.childCount == 0) Object.DestroyImmediate(registro.gameObject);
+        informe.Add($"Casas: {n} devueltas a su giro original" + (movidas > 0 ? $" ({movidas} movidas a mano)" : "") +
+                    (perdidas > 0 ? $"; {perdidas} no aparecen en la escena y su marca se conserva en «{NombreRegistroCasas}»." : "."));
     }
 }
