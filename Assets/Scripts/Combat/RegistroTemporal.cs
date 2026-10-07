@@ -40,6 +40,13 @@ public sealed class RegistroTemporal : MonoBehaviour
 
     public void Dejar(Transform t) => _pistas.RemoveAll(p => p.t == t);
 
+    /// Olvida lo grabado: lo más atrás que se podrá rebobinar será este momento.
+    public void EmpezarDeNuevo()
+    {
+        for (int i = 0; i < _pistas.Count; i++) _pistas[i].escritas = 0;
+        _siguiente = 0f;
+    }
+
     void Update()
     {
         if (Rebobinando || Time.time < _siguiente) return;

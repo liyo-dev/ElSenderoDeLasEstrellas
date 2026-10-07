@@ -65,6 +65,8 @@ public class GrimorioLibroUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI equippedTagText;
 
     [Header("Libro")]
+    [SerializeField, Tooltip("Paneles que se esconden mientras el libro está abierto, como la barra de pistas del menú de Start.")]
+    private CanvasGroup[] ocultarMientrasEstaAbierto = {};
     [SerializeField] private TextMeshProUGUI pageCounterText;
     [SerializeField] private TextMeshProUGUI hintText;
     [SerializeField] private Image[] ribbons = new Image[3];   // pestañas de Will, Estela y Liam
@@ -125,7 +127,11 @@ public class GrimorioLibroUI : MonoBehaviour
     }
 
     void OnEnable() => Core.InputGlyphs.InputGlyphService.FamilyChanged += OnFamilyChanged;
-    void OnDisable() => Core.InputGlyphs.InputGlyphService.FamilyChanged -= OnFamilyChanged;
+    void OnDisable()
+    {
+        Core.InputGlyphs.InputGlyphService.FamilyChanged -= OnFamilyChanged;
+        MostrarPanelesDelMenu(true, false);
+    }
 
     // Los iconos de botón cambian con el mando: se rehace la página y la barra de pistas.
     private void OnFamilyChanged(Core.InputGlyphs.InputGlyphDeviceFamily _)
@@ -148,6 +154,7 @@ public class GrimorioLibroUI : MonoBehaviour
         _openedAt = Time.unscaledTime;
         gameObject.SetActive(true);
         transform.SetAsLastSibling();
+        MostrarPanelesDelMenu(false, true);
 
         group.DOKill();
         group.alpha = 0f;
@@ -171,10 +178,25 @@ public class GrimorioLibroUI : MonoBehaviour
         if (!_open) return;
         _open = false;
         ClosedFrame = Time.frameCount;
+        MostrarPanelesDelMenu(true, true);
         group.DOKill();
         group.blocksRaycasts = false;
         group.DOFade(0f, 0.15f).SetUpdate(true).OnComplete(() => gameObject.SetActive(false));
         Play(pageClip);
+    }
+
+    private void MostrarPanelesDelMenu(bool mostrar, bool animar)
+    {
+        if (ocultarMientrasEstaAbierto == null) return;
+        foreach (var panel in ocultarMientrasEstaAbierto)
+        {
+            if (panel == null) continue;
+            panel.DOKill();
+            panel.blocksRaycasts = mostrar;
+            panel.interactable = mostrar;
+            if (animar) panel.DOFade(mostrar ? 1f : 0f, 0.15f).SetUpdate(true);
+            else panel.alpha = mostrar ? 1f : 0f;
+        }
     }
 
     /// <summary>Select/View del mando o M (InputGlyphNames.Select): abre el grimorio desde la pestaña de hechizos.</summary>

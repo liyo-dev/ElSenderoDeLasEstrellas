@@ -10,6 +10,7 @@ using UnityEngine;
 /// quita lo aplicado en el anterior, así que nunca se acumula y al soltar vuelve a su sitio exacto.</para>
 /// </summary>
 [DisallowMultipleComponent]
+[DefaultExecutionOrder(50)]
 public class ElevacionVisual : MonoBehaviour
 {
     [Tooltip("Animator humanoide del personaje. Vacío: el de este objeto o el de su padre.")]

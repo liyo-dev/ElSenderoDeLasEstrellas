@@ -20,6 +20,7 @@
         private static IVfxProvider _vfxProvider;
         private static ISfxProvider _sfxProvider;
         private static DeathCameraEffect _deathCameraEffect;
+        private static float _finDeLaVibracion;
 
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -32,6 +33,7 @@
             _vfxProvider = null;
             _sfxProvider = null;
             _deathCameraEffect = null;
+            _finDeLaVibracion = 0f;
             _fadeRoot = null;
             _activeFadeRoutine = null;
         }
@@ -60,6 +62,30 @@
         public static void CancelAllShakes() => _cameraShakeProvider?.CancelAll();
 
         public static void SetCameraShakeProvider(ICameraShakeProvider provider) => _cameraShakeProvider = provider;
+
+        /// <summary>
+        /// Vibración del mando: motores grave ('baja') y agudo ('alta') de 0 a 1 durante 'segundos'
+        /// (tiempo real, no le afecta la cámara lenta). Respeta el ajuste de vibración. Un pulso
+        /// nuevo sustituye al anterior.
+        /// </summary>
+        public static void Vibrar(float baja, float alta, float segundos)
+        {
+            if (segundos <= 0f || !PlayerSettings.Vibration) return;
+            var mando = UnityEngine.InputSystem.Gamepad.current;
+            if (mando == null) return;
+            mando.SetMotorSpeeds(Mathf.Clamp01(baja), Mathf.Clamp01(alta));
+            _finDeLaVibracion = Time.unscaledTime + segundos;
+            EnsureInstance().StartCoroutine(Co_PararVibracion(_finDeLaVibracion));
+        }
+
+        private static System.Collections.IEnumerator Co_PararVibracion(float fin)
+        {
+            while (Time.unscaledTime < fin) yield return null;
+            if (!Mathf.Approximately(fin, _finDeLaVibracion)) yield break;   // la sustituyó otra
+            UnityEngine.InputSystem.Gamepad.current?.SetMotorSpeeds(0f, 0f);
+        }
+
+        private void OnDisable() => UnityEngine.InputSystem.Gamepad.current?.SetMotorSpeeds(0f, 0f);
 
         // Screen Flash
         public static void ScreenFlash(Color color, float duration)

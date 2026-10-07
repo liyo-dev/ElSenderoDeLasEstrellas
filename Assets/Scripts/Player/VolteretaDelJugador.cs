@@ -13,10 +13,9 @@ using Invector.vCharacterController;
 /// <item><see cref="EnElAire"/>: solo la animación; el salto y la caída los sigue llevando el
 /// motor (o quien mueva al personaje, como el lanzamiento por un golpe).</item>
 /// </list>
-/// Además, al caer desde mucha altura da sola una voltereta antes de aterrizar.
 /// Mientras dura, la transición «cualquier estado → Falling» del Animator queda bloqueada con el
 /// mismo parámetro que la bloquea en vuelo, y la capa de brazos baja a 0 para no tapar el giro del
-/// torso. Ver INC-651 e INC-656.
+/// torso. Ver INC-651.
 /// </summary>
 [DisallowMultipleComponent]
 public class VolteretaDelJugador : MonoBehaviour
@@ -54,14 +53,6 @@ public class VolteretaDelJugador : MonoBehaviour
     [Tooltip("Tope de segundos de una voltereta, por si el estado no termina nunca.")]
     [SerializeField, Min(0.3f)] private float duracionMaxima = 1.8f;
 
-    [Header("Caída larga (INC-656)")]
-    [Tooltip("Da una voltereta sola al caer desde mucha altura.")]
-    [SerializeField] private bool volteretaEnCaidaLarga = true;
-    [Tooltip("Metros sin suelo por debajo, cayendo, a partir de los que da la voltereta.")]
-    [SerializeField, Min(1f)] private float alturaMinimaDeCaida = 5f;
-    [Tooltip("Velocidad de caída (m/s) a partir de la que se mira la altura.")]
-    [SerializeField, Min(0f)] private float velocidadMinimaDeCaida = 3f;
-
     private PlayerActionManager _acciones;
     private Coroutine _co;
     private bool _modoPuesto;
@@ -72,7 +63,6 @@ public class VolteretaDelJugador : MonoBehaviour
     private bool _aireSuprimidoAntes;
     private bool _devolverCuerpo;
     private Vector3 _aterrizaje;
-    private bool _caidaArmada = true;
     private bool _animacionAjena;   // otro sistema ha puesto su estado: al acabar no se toca el Animator
     private int _hashSuelo, _hashAire, _hashCaida, _hashLocomocion, _hashBloqueo;
     private bool _tieneBloqueo;
@@ -129,7 +119,6 @@ public class VolteretaDelJugador : MonoBehaviour
     public bool EnElAire(string estado = null)
     {
         if (!PuedeEmpezar(permitirLanzado: true)) return false;
-        _caidaArmada = false;
         _co = StartCoroutine(Co_EnElAire(estado));
         return true;
     }
@@ -297,22 +286,6 @@ public class VolteretaDelJugador : MonoBehaviour
         OnTerminada?.Invoke();
     }
 
-    // ── Caída larga ───────────────────────────────────────────────────────────
-
-    void Update()
-    {
-        if (!volteretaEnCaidaLarga || _co != null || !controller || !controller.enabled) return;
-        if (!controller.IsAirborne) { _caidaArmada = true; return; }
-        if (!_caidaArmada || controller.suppressAirMovement || controller.IsHoldingAirborne) return;
-        if (!body || body.isKinematic || body.linearVelocity.y > -velocidadMinimaDeCaida) return;
-        if ((Time.frameCount & 3) != 0) return;   // basta con mirar cada pocos fotogramas
-
-        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, alturaMinimaDeCaida,
-                controller.groundLayer, QueryTriggerInteraction.Ignore)) return;   // el suelo está cerca
-
-        EnElAire();
-    }
-
     // ── Animator ──────────────────────────────────────────────────────────────
 
     private bool Reproducir(int hash)
@@ -334,6 +307,8 @@ public class VolteretaDelJugador : MonoBehaviour
         if (!_tieneBloqueo || !animator) return;
         if (activo == _bloqueoPuesto) return;
         _bloqueoPuesto = activo;
+        // Si ha echado a volar, el parámetro es del vuelo: no se le quita.
+        if (!activo && controller && controller.suppressAirMovement) return;
         animator.SetBool(_hashBloqueo, activo);
     }
 

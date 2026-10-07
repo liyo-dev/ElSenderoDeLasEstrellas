@@ -35,6 +35,9 @@ namespace Sendero.UI
         [SerializeField] private UnityEngine.UI.Image defenseIcon;
         [SerializeField] private Color defendingColor = new Color(0.75f, 0.95f, 1f, 1f);
         [SerializeField] private Color idleDefenseColor = new Color(1f, 1f, 1f, 0.85f);
+        [Tooltip("Color de la B mientras late en el momento justo del aviso de combate (INC-666).")]
+        [SerializeField] private Color momentoJustoColor = new Color(1f, 0.82f, 0.25f, 1f);
+        [SerializeField, Min(1f)] private float latidoEscala = 1.25f;
 
         [Header("Colores")]
         [SerializeField] private Color availableColor = Color.white;
@@ -49,6 +52,8 @@ namespace Sendero.UI
         private MagicCaster _caster;
         private PlayerShieldController _shield;
         private ComboCastController _combo;
+        private AvisoDeAmenazas _avisos;
+        private bool _latiendo;
         private float _shownCooldown = -1f;
         private int _shownDefending = -1;
         private ManaPool _mana;
@@ -91,6 +96,8 @@ namespace Sendero.UI
             _shield = player.GetComponentInChildren<PlayerShieldController>(true);
             if (_shield != null) _shield.OnCounter += OnCounter;
             _combo = player.GetComponentInChildren<ComboCastController>(true);
+            _avisos = player.GetComponentInChildren<AvisoDeAmenazas>(true);
+            if (_avisos != null) _avisos.OnAviso += OnAviso;
             _shownDefending = -1;
             _shownActive = null;
             RefreshLoadout(false);
@@ -100,6 +107,9 @@ namespace Sendero.UI
         {
             if (_caster != null) _caster.OnLoadoutChanged -= OnLoadoutChanged;
             if (_shield != null) _shield.OnCounter -= OnCounter;
+            if (_avisos != null) _avisos.OnAviso -= OnAviso;
+            _avisos = null;
+            DejarDeLatir();
             _caster = null;
             _combo = null;
             _shield = null;
@@ -147,6 +157,30 @@ namespace Sendero.UI
                 t.DOKill(true);
                 t.DOPunchScale(Vector3.one * rotatePunch, rotatePunchDuration, 6, 0.6f).SetUpdate(true);
             }
+        }
+
+        /// La B late mientras pulsarla ya devuelve el golpe (aviso de combate, INC-666).
+        private void OnAviso(TipoDeAviso tipo, EstadoDeAviso estado)
+        {
+            bool latir = tipo == TipoDeAviso.Defensa && estado == EstadoDeAviso.Ahora;
+            if (latir == _latiendo || defenseIcon == null) return;
+            if (!latir) { DejarDeLatir(); return; }
+
+            _latiendo = true;
+            var t = defenseIcon.transform;
+            t.DOKill(true);
+            defenseIcon.color = momentoJustoColor;
+            t.DOScale(latidoEscala, 0.12f).SetLoops(-1, LoopType.Yoyo).SetUpdate(true);
+        }
+
+        private void DejarDeLatir()
+        {
+            if (!_latiendo) return;
+            _latiendo = false;
+            if (defenseIcon == null) return;
+            defenseIcon.transform.DOKill();
+            defenseIcon.transform.localScale = Vector3.one;
+            _shownDefending = -1;   // Update repinta el color de siempre
         }
 
         private void OnCounter()

@@ -68,7 +68,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dbc86fb877919e45a0fc811dabed0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanzadorDeSalto
-  velocidadVertical: 18
+  velocidadVertical: 22
+  empujeHaciaDelante: 4
   devolverDobleSalto: 1
   retrasoDeLaVoltereta: 0.12
   enfriamiento: 0.8

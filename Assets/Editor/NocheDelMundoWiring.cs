@@ -207,7 +207,7 @@ public static class NocheDelMundoWiring
                 var go = t.gameObject;
                 if (!PrefabUtility.IsAnyPrefabInstanceRoot(go)) continue;
 
-                Tipo tipo = Clasificar(PrefabUtility.GetPrefabAssetPathOfNearestPrefabInstanceRoot(go));
+                Tipo tipo = Clasificar(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(go));
                 if (tipo == Tipo.Ninguno) continue;
                 if (!Limites(go, out var b)) continue;
                 if (tipo == Tipo.Casa) posicionesDeCasas.Add(b.center);
@@ -302,7 +302,7 @@ public static class NocheDelMundoWiring
             foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
             {
                 if (!PrefabUtility.IsAnyPrefabInstanceRoot(t.gameObject)) continue;
-                string ruta = PrefabUtility.GetPrefabAssetPathOfNearestPrefabInstanceRoot(t.gameObject);
+                string ruta = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(t.gameObject);
                 if (ruta == null || !ruta.Contains("/Vegetation/Tree")) continue;
                 var p = t.position;
                 var celda = new Vector2Int(Mathf.FloorToInt(p.x / CeldaDeBosque), Mathf.FloorToInt(p.z / CeldaDeBosque));

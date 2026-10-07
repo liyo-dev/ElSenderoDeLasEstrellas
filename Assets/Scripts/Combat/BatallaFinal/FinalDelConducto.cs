@@ -49,7 +49,7 @@ public sealed class FinalDelConducto : MonoBehaviour
         Transform will = PlayerService.Player != null ? PlayerService.Player.transform : null;
         Transform liam = Miembro(nombreLiam);
         Transform estela = Miembro(nombreEstela);
-        Transform union = mago.Escenario != null ? mago.Escenario.unionDelConducto : null;
+        Transform union = null;   // el disparo final va al propio Mago
         Apagar(rayoTraicion); Apagar(rayoEnergia); Apagar(rayoAguja);
 
         // 1. Parece vencido.

@@ -11852,6 +11852,9 @@ GameObject:
   - component: {fileID: 7986244161915090015}
   - component: {fileID: 5033974601795874271}
   - component: {fileID: 5948103706511078393}
+  - component: {fileID: 6175552821911066800}
+  - component: {fileID: 1553048706587922655}
+  - component: {fileID: 9134696940597055789}
   m_Layer: 3
   m_Name: vBasicController_MaleCharacterPBR
   m_TagString: Player
@@ -12214,6 +12217,7 @@ MonoBehaviour:
   healSoundKey: Player_Heal
   deathSoundKey: Player_Death
   reactionCharacter: Will
+  playDamageReaction: 0
   damageReactionKind: hurt
   deathReactionKind: death
   damageReactionCooldown: 0.6
@@ -12467,6 +12471,12 @@ MonoBehaviour:
   tiltSpeed: 5
   boostMultiplier: 1.5
   debugLogs: 0
+  volteretaAlEntrar: 1
+  impulsoDeEntrada: 6
+  esperaMaximaDeEntrada: 0.7
+  vfxDeEntrada: {fileID: 0}
+  duracionVfxDeEntrada: 2
+  sfxDeEntrada: 
   vfxAttach: {fileID: 4420504159218681614}
   trailPrefab: {fileID: 0}
   trailSpeedThreshold: 1
@@ -12510,9 +12520,6 @@ MonoBehaviour:
   counterLockSeconds: 0.45
   counterVfx: {fileID: 4535006216103734310, guid: 98c4704d0fd7211449bcf5c451095a60, type: 3}
   counterSfxKey: EstelaAppears_ShieldBlock
-  counterHitStopScale: 0.05
-  counterHitStopSeconds: 0.08
-  counterCameraShake: 0.25
   meleeBlockFactor: 0.3
   meleeDeflectPush: 8
   meleeDeflectRadius: 3
@@ -12839,13 +12846,19 @@ MonoBehaviour:
   bajadaAlFallar: 0.25
   bajadaAlRomperse: 0.08
   bajadaAlCancelar: 0.2
-  posesPorBoton:
-  - UpperBody.Magic.ComboPose1
-  - UpperBody.Magic.ComboPose2
-  - UpperBody.Magic.ComboPose3
-  - UpperBody.Magic.ComboPose4
-  - UpperBody.Magic.ComboPose5
-  fundidoEntrePoses: 0.08
+  materialOrbe: {fileID: 2100000, guid: 32cc483f9636edd4bbb82e26419fd290, type: 2}
+  diametroOrbe: 0.16
+  crecimientoPorBoton: 0.05
+  colorNucleo: {r: 1, g: 0.95, b: 0.85, a: 1}
+  holguraManos: 0.04
+  manosAdelante: 0.12
+  manosArriba: 0.05
+  temblorManos: 0.012
+  frecuenciaTemblor: 1.3
+  empujePorBoton: 0.06
+  distanciaLanzamiento: 1.5
+  alturaOrbeSinManos: 0.7
+  chispasDelOrbe: 12
   escalaFrenazo: 0.1
   duracionFrenazo: 0.12
   escalaGeneral: 1
@@ -12890,7 +12903,6 @@ MonoBehaviour:
   intensidadPulso: 4
   duracionPulso: 0.25
   alcanceLuz: 4
-  alturaLuz: 0.3
   sfxApertura: Prologue_SpellInstantiate
   sfxRafaga: Impacto_Viento_Pequeno
   sfxViento: SFX_Prologo_Viento
@@ -12923,9 +12935,62 @@ MonoBehaviour:
   capaDeBrazos: 1
   fundido: 0.08
   duracionMaxima: 1.8
-  volteretaEnCaidaLarga: 1
-  alturaMinimaDeCaida: 5
-  velocidadMinimaDeCaida: 3
+--- !u!114 &6175552821911066800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fece29b27dda4714fbe3ebbd5af87fba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AvisoDeAmenazas
+  anticipacion: 0.6
+  margenDeAcierto: 1.2
+  alturaDelPecho: 1
+  rutaDelIcono: UI/AvisoDeAmenaza
+--- !u!114 &1553048706587922655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92869b4b6c8e4e04c8b3fefbcbd5748b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ManosIK
+  animator: {fileID: 0}
+  aperturaDeCodos: 0.25
+--- !u!114 &9134696940597055789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68ad891c0d986824485e82b91c8984bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PresentacionDelContraataque
+  congelado: 0.07
+  camaraLenta: 0.25
+  duracionLenta: 0.18
+  vuelta: 0.25
+  colorDelDestello: {r: 1, g: 0.92, b: 0.65, a: 0.35}
+  duracionDelDestello: 0.15
+  sacudida: 0.4
+  duracionDeLaSacudida: 0.2
+  vibracionGrave: 0.5
+  vibracionAguda: 0.9
+  duracionDeLaVibracion: 0.18
+  sfxDelAcierto: Star_Collision
+  ondaEnLosPies: {fileID: 9080140021571130472, guid: 82066d902ed0dd6488ddfd32eb994801, type: 3}
+  duracionDeLaOnda: 2
 --- !u!1 &4956991213707944661
 GameObject:
   m_ObjectHideFlags: 0

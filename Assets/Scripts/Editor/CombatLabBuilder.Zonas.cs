@@ -27,6 +27,7 @@ public static partial class CombatLabBuilder
         CrearZonaPuzles(geometria, mecanismos, suelo, muro, plataforma, puzle, madera);
         CrearZonaAgua(geometria, mecanismos, suelo, muro, agua);
         CrearZonaVuelo(geometria, suelo, plataforma);
+        CrearGeometriaDeSaltos(geometria, suelo, muro, plataforma);
     }
 
     // ── Oeste: plataformeo ────────────────────────────────────────────────

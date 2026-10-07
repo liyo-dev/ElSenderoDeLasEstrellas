@@ -821,28 +821,16 @@
             "text": "Yes, please. Help me stack the fruit before you two go."
         },
         {
-            "id": "FINAL_MAGO_INTRO_01",
-            "text": "You made it all the way to my altar. How touching."
-        },
-        {
-            "id": "FINAL_MAGO_INTRO_02",
-            "text": "A wish like mine is not undone by good intentions."
-        },
-        {
             "id": "FINAL_ESTELA_INICIO_01",
-            "text": "Together, as we agreed. His bolts can be sent back: block with <sprite name=\"interactable_b\"> right on time!"
-        },
-        {
-            "id": "FINAL_ESTELA_INICIO_02",
-            "text": "After each volley he's out of breath. That's our moment!"
+            "text": "Together, like we agreed. No matter what."
         },
         {
             "id": "FINAL_ESTELA_AHORA",
-            "text": "Now, he's open!"
+            "text": "Now, don't let him get up!"
         },
         {
             "id": "FINAL_ESTELA_ESCUDO",
-            "text": "His shield stops everything. Wait until he tires... or send a bolt back."
+            "text": "His crystals protect him! If they fall, he falls."
         },
         {
             "id": "FINAL_ESTELA_ACIERTO",
@@ -850,39 +838,43 @@
         },
         {
             "id": "FINAL_ESTELA_HERIDO",
-            "text": "Careful! The shadows on the ground warn you before they strike."
+            "text": "Will! Are you okay?"
         },
         {
             "id": "FINAL_ESTELA_POCA_VIDA",
-            "text": "Hold on, Will! Grab some orbs."
+            "text": "Hang in there, Will! I'm not leaving you alone."
         },
         {
             "id": "FINAL_ESTELA_FASE_2",
-            "text": "He's flying! The anchors on the pillars hold him up: break them. Liam, your pact shatters them."
-        },
-        {
-            "id": "FINAL_ESTELA_FASE_3",
-            "text": "Three nodes feed him and we must cut them together. Leave each of us at one: press <sprite name=\"interactable_dpad_down\"> and we'll hold."
+            "text": "He's lifting the whole ground!"
         },
         {
             "id": "FINAL_ESTELA_RECUERDA",
-            "text": "Don't waste magic on his shield."
+            "text": "His crystals first, Will."
         },
         {
             "id": "FINAL_MAGO_MAREA",
             "text": "No one crosses the tide."
         },
         {
+            "id": "FINAL_WILL_NADA",
+            "text": "We haven't done anything to him..."
+        },
+        {
+            "id": "FINAL_WILL_CONMIGO",
+            "text": "With me! Now!"
+        },
+        {
+            "id": "FINAL_PULSA_ESCUDO",
+            "text": "Hold <sprite name=\"interactable_b\">"
+        },
+        {
             "id": "FINAL_TIEMPO_WILL",
-            "text": "There's no gap at all... The Time spell. Just once."
+            "text": "There's no gap at all... Ten seconds. Only once."
         },
         {
             "id": "FINAL_TIEMPO_PULSA",
-            "text": "Press <sprite name=\"interactable_confirm\"> to cast the Time spell."
-        },
-        {
-            "id": "FINAL_TIEMPO_RESQUICIO",
-            "text": "There... an opening! Follow the light."
+            "text": "<sprite name=\"interactable_confirm\">"
         },
         {
             "id": "FINAL_MAGO_VENCIDO",

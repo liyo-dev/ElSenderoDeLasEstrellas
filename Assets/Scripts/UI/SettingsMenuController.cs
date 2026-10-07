@@ -34,6 +34,9 @@ public class SettingsMenuController : MonoBehaviour
     [SerializeField] private Button vibrationNoButton;
     [SerializeField] private Button fullscreenYesButton;
     [SerializeField] private Button fullscreenNoButton;
+    [Tooltip("Sí/No de los avisos de combate en el momento justo (INC-666).")]
+    [SerializeField] private Button combatHintsYesButton;
+    [SerializeField] private Button combatHintsNoButton;
 
     private Action _onClosed;
     private EventSystem _eventSystem;
@@ -96,6 +99,8 @@ public class SettingsMenuController : MonoBehaviour
         WireBinaryButton(vibrationNoButton, () => OnVibrationClicked(false));
         WireBinaryButton(fullscreenYesButton, () => OnFullscreenClicked(true));
         WireBinaryButton(fullscreenNoButton, () => OnFullscreenClicked(false));
+        WireBinaryButton(combatHintsYesButton, () => OnCombatHintsClicked(true));
+        WireBinaryButton(combatHintsNoButton, () => OnCombatHintsClicked(false));
 
         RefreshUI();
 
@@ -264,6 +269,8 @@ public class SettingsMenuController : MonoBehaviour
         RemoveBinaryListener(vibrationNoButton);
         RemoveBinaryListener(fullscreenYesButton);
         RemoveBinaryListener(fullscreenNoButton);
+        RemoveBinaryListener(combatHintsYesButton);
+        RemoveBinaryListener(combatHintsNoButton);
     }
 
     public void Show(GameObject initialSelection = null, Action onClosed = null)
@@ -366,6 +373,7 @@ public class SettingsMenuController : MonoBehaviour
             lookSensitivitySlider.SetValueWithoutNotify(PlayerSettings.LookSensitivity);
         UpdateBinaryGroup(vibrationYesButton, vibrationNoButton, PlayerSettings.Vibration);
         UpdateBinaryGroup(fullscreenYesButton, fullscreenNoButton, PlayerSettings.Fullscreen);
+        UpdateBinaryGroup(combatHintsYesButton, combatHintsNoButton, PlayerSettings.AvisosDeCombate);
     }
 
     private void UpdateLanguageButtons()
@@ -473,6 +481,12 @@ public class SettingsMenuController : MonoBehaviour
     {
         PlayerSettings.SetVibration(enabled);
         UpdateBinaryGroup(vibrationYesButton, vibrationNoButton, enabled);
+    }
+
+    void OnCombatHintsClicked(bool enabled)
+    {
+        PlayerSettings.SetAvisosDeCombate(enabled);
+        UpdateBinaryGroup(combatHintsYesButton, combatHintsNoButton, enabled);
     }
 
     void OnFullscreenClicked(bool enabled)

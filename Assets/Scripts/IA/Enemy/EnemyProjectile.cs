@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /// </summary>
 [RequireComponent(typeof(SphereCollider))]
 [RequireComponent(typeof(Rigidbody))]
-public class EnemyProjectile : MonoBehaviour
+public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
 {
     [Header("Configuración")]
     [SerializeField] private float speed = 15f;
@@ -42,6 +42,16 @@ public class EnemyProjectile : MonoBehaviour
     public float Damage => damage;
     /// <summary>Dirección de vuelo. Lo usa el contraataque para devolverlo por donde vino (INC-493).</summary>
     public Vector3 Direction => rb != null && rb.linearVelocity.sqrMagnitude > 0.01f ? rb.linearVelocity.normalized : direction;
+
+    // Amenaza para el aviso de combate (INC-666): mientras vuela está en AmenazasAlJugador.
+    public Vector3 PosicionDeAmenaza => transform.position;
+    public Vector3 VelocidadDeAmenaza => rb != null && !rb.isKinematic && rb.linearVelocity.sqrMagnitude > 0.01f
+        ? rb.linearVelocity
+        : direction * EffectiveSpeed;
+    public TipoDeAmenaza TipoDeAmenaza => TipoDeAmenaza.Devolvible;
+
+    void OnEnable() => AmenazasAlJugador.Registrar(this);
+    void OnDisable() => AmenazasAlJugador.Quitar(this);
     private bool hasHit = false;
     private float _spawnTime;
     private Rigidbody rb;
@@ -588,6 +598,7 @@ public class EnemyProjectile : MonoBehaviour
 
     void OnDestroy()
     {
+        AmenazasAlJugador.Quitar(this);
         // Salvaguarda: si se destruye por lifetime o desde fuera, limpiar VFX registrados
         if (_attachedVfx != null)
         {

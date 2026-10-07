@@ -55,6 +55,8 @@ public class PlayerHealthSystem : MonoBehaviour
     [Header("Reacciones vocales")]
     [Tooltip("Personaje de las reacciones. Vacío desactiva las reacciones vocales.")]
     [SerializeField] private string reactionCharacter = "Will";
+    [Tooltip("Desactivado de momento (petición de Raúl, 7 oct 2026): Will no se queja al recibir daño. Marcar para volver a oír la reacción 'hurt'.")]
+    [SerializeField] private bool playDamageReaction = false;
     [Tooltip("Reacción al recibir daño. Vacío la desactiva.")]
     [SerializeField] private string damageReactionKind = "hurt";
     [Tooltip("Reacción al morir. Vacío la desactiva.")]
@@ -755,7 +757,7 @@ public class PlayerHealthSystem : MonoBehaviour
         StartDamageFlash();
         SpawnVFX(damageVFX);
         PlaySound(damageSoundKey);
-        if (Time.unscaledTime >= _nextDamageReactionTime)
+        if (playDamageReaction && Time.unscaledTime >= _nextDamageReactionTime)
         {
             PlayVocalReaction(damageReactionKind);
             _nextDamageReactionTime = Time.unscaledTime + damageReactionCooldown;

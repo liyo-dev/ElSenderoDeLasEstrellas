@@ -821,28 +821,16 @@
             "text": "Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis."
         },
         {
-            "id": "FINAL_MAGO_INTRO_01",
-            "text": "Habéis llegado hasta mi altar. Qué conmovedor."
-        },
-        {
-            "id": "FINAL_MAGO_INTRO_02",
-            "text": "Un deseo como el mío no se deshace con buenas intenciones."
-        },
-        {
             "id": "FINAL_ESTELA_INICIO_01",
-            "text": "Juntos, como acordamos. Sus rayos se pueden devolver: ¡para con <sprite name=\"interactable_b\"> justo a tiempo!"
-        },
-        {
-            "id": "FINAL_ESTELA_INICIO_02",
-            "text": "Tras cada ráfaga se queda sin aliento. ¡Ese es el momento!"
+            "text": "Juntos, como acordamos. Pase lo que pase."
         },
         {
             "id": "FINAL_ESTELA_AHORA",
-            "text": "¡Ahora, está expuesto!"
+            "text": "¡Ahora, que no se levante!"
         },
         {
             "id": "FINAL_ESTELA_ESCUDO",
-            "text": "Su escudo lo para todo. Espera a que se agote... o devuélvele un rayo."
+            "text": "¡Sus cristales le protegen! Si caen, cae él."
         },
         {
             "id": "FINAL_ESTELA_ACIERTO",
@@ -850,39 +838,43 @@
         },
         {
             "id": "FINAL_ESTELA_HERIDO",
-            "text": "¡Cuidado! Las sombras del suelo avisan antes de golpear."
+            "text": "¡Will! ¿Estás bien?"
         },
         {
             "id": "FINAL_ESTELA_POCA_VIDA",
-            "text": "¡Will, aguanta! Recoge orbes."
+            "text": "¡Aguanta, Will! No pienso dejarte solo."
         },
         {
             "id": "FINAL_ESTELA_FASE_2",
-            "text": "¡Está volando! Las anclas de los pilares le sostienen: rómpelas. Liam, tu pacto las quiebra."
-        },
-        {
-            "id": "FINAL_ESTELA_FASE_3",
-            "text": "Tres nodos le alimentan y hay que cortarlos a la vez. Déjanos uno a cada uno: pulsa <sprite name=\"interactable_dpad_down\"> y nos quedamos."
+            "text": "¡Está levantando el suelo entero!"
         },
         {
             "id": "FINAL_ESTELA_RECUERDA",
-            "text": "No gastes magia contra su escudo."
+            "text": "Primero sus cristales, Will."
         },
         {
             "id": "FINAL_MAGO_MAREA",
             "text": "Nadie cruza la marea."
         },
         {
+            "id": "FINAL_WILL_NADA",
+            "text": "No le hemos hecho nada..."
+        },
+        {
+            "id": "FINAL_WILL_CONMIGO",
+            "text": "¡Conmigo! ¡Ya!"
+        },
+        {
+            "id": "FINAL_PULSA_ESCUDO",
+            "text": "Mantén <sprite name=\"interactable_b\">"
+        },
+        {
             "id": "FINAL_TIEMPO_WILL",
-            "text": "No hay ningún hueco... El Hechizo del Tiempo. Solo una vez."
+            "text": "No hay ningún hueco... Diez segundos. Solo una vez."
         },
         {
             "id": "FINAL_TIEMPO_PULSA",
-            "text": "Pulsa <sprite name=\"interactable_confirm\"> para lanzar el Hechizo del Tiempo."
-        },
-        {
-            "id": "FINAL_TIEMPO_RESQUICIO",
-            "text": "Ahí... ¡un resquicio! Sigue la luz."
+            "text": "<sprite name=\"interactable_confirm\">"
         },
         {
             "id": "FINAL_MAGO_VENCIDO",
