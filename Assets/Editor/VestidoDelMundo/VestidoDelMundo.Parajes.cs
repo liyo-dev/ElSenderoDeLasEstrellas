@@ -76,9 +76,9 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Atalaya rota del acantilado sur", Centro = new Vector2(-72f, -369f), RadioSuelo = 7f, Semilla = 5102,
+            Nombre = "Atalaya rota del acantilado sur", Centro = new Vector2(-64f, -369f), RadioSuelo = 7f, Semilla = 5102,
             Senda = P(-140f, -240f, -144f, -252f, -144f, -264f, -144f, -276f, -140f, -288f, -136f, -300f, -136f, -312f, -136f, -324f,
-                -132f, -336f, -124f, -348f, -112f, -360f, -100f, -368f, -88f, -372f, -78f, -371f),
+                -132f, -336f, -124f, -348f, -112f, -360f, -100f, -368f, -90f, -378f, -78f, -381f, -68f, -375f),
             Receta = RecetaAtalaya,
         },
         new Paraje
@@ -119,9 +119,9 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Almenara del acantilado este", Centro = new Vector2(372f, -300f), RadioSuelo = 7f, Semilla = 5111,
+            Nombre = "Almenara del acantilado este", Centro = new Vector2(358f, -314f), RadioSuelo = 7f, Semilla = 5111,
             Senda = P(240f, -396f, 232f, -384f, 228f, -372f, 220f, -360f, 220f, -348f, 232f, -340f, 244f, -328f, 256f, -316f, 268f, -308f,
-                280f, -308f, 292f, -308f, 304f, -312f, 316f, -312f, 328f, -312f, 340f, -300f, 352f, -300f, 364f, -300f),
+                280f, -308f, 292f, -308f, 304f, -312f, 316f, -312f, 328f, -312f, 340f, -312f, 350f, -314f),
             Receta = RecetaAlmenara,
         },
         new Paraje
@@ -131,8 +131,8 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Descanso del cruce", Centro = new Vector2(-100f, -119f), RadioSuelo = 6f, CapaSuelo = CapaTierra, Semilla = 5112,
-            Senda = P(-92f, -100f, -96f, -112f), Receta = RecetaDescanso,
+            Nombre = "Descanso del cruce", Centro = new Vector2(-90f, -125f), RadioSuelo = 6f, CapaSuelo = CapaTierra, Semilla = 5112,
+            Senda = P(-92f, -100f, -90f, -112f), Receta = RecetaDescanso,
         },
     };
 

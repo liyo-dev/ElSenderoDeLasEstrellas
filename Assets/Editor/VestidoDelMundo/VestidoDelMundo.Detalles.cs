@@ -433,12 +433,12 @@ public static partial class VestidoDelMundo
 
     private static void EscenasDelReino(Obra o, Transform grupo)
     {
-        // Entrada al castillo: armaduras y estandartes pegados a la fachada, fuera del eje plaza→puerta
-        // (x ±6) y del acceso despejado (12 m alrededor de (0,320)).
+        // Entrada al castillo: armaduras y estandartes delante de las torres (su cara sur está en z ≈ 318,9),
+        // fuera del eje plaza→puerta (x ±6), del acceso despejado (12 m alrededor de (0,320)) y de la plaza real.
         Transform entrada = Grupo(grupo, "Entrada del castillo");
         foreach (float s in new[] { -1f, 1f })
         {
-            Pon(o, entrada, Armadura, "Armadura de la guardia", new Vector2(s * 13f, 318.5f), 180f, 2.3f, Medida.Alto, corredor: false, camino: true);
+            Pon(o, entrada, Armadura, "Armadura de la guardia", new Vector2(s * 13f, 317.8f), 180f, 2.3f, Medida.Alto, corredor: false, camino: true);
             Pon(o, entrada, EstandarteColor, "Estandarte del castillo", new Vector2(s * 16.5f, 317f), 180f, 5f, Medida.Alto, corredor: false, camino: true);
         }
 
@@ -483,13 +483,14 @@ public static partial class VestidoDelMundo
             Pon(o, mercado, i % 2 == 0 ? Caja : Sacos, "Género del puesto", new Vector2(x, z) + l * 3.2f, frente + 20f, camino: true, holgura: 0.02f);
             if (i % 3 == 0) Pon(o, mercado, Barril, "Barril del puesto", new Vector2(x, z) - l * 3.2f, 0f, camino: true, holgura: 0.02f);
         }
-        Pon(o, mercado, CarroToldo, "Carro-puesto del mercado", new Vector2(-40f, 252f), 90f, camino: true);
+        Pon(o, mercado, CarroToldo, "Carro-puesto del mercado", new Vector2(-41f, 253f), 90f, camino: true);
         Pon(o, mercado, Carreta, "Carreta de descarga", new Vector2(82f, 266f), 200f, camino: true);
 
-        // Puerta de la muralla (sureste): estandartes a ambos lados del camino.
+        // Puerta de la muralla (sureste): un estandarte a cada lado de la calle que entra por el hueco, fuera
+        // de la calzada (los descarta si la tocan).
         Transform puerta = Grupo(grupo, "Puerta de la muralla");
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(63f, 244.5f), 210f, 5f, Medida.Alto, camino: true, corredor: false);
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(93.5f, 252f), 210f, 5f, Medida.Alto, camino: true, corredor: false);
+        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(88.8f, 253.9f), 210f, 5f, Medida.Alto, camino: true);
+        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(98.9f, 253.1f), 210f, 5f, Medida.Alto, camino: true);
     }
 
     private static void EscenasDelPuerto(Obra o, Transform grupo)
@@ -500,8 +501,8 @@ public static partial class VestidoDelMundo
         Pon(o, muelle, Barril, "Barril junto a la rampa", new Vector2(263f, -449f), 0f, camino: true, corredor: false);
         Pon(o, muelle, Nasa, "Nasa", new Vector2(261.5f, -447.5f), 30f, camino: true, corredor: false);
         Pon(o, muelle, Nasa2, "Nasa", new Vector2(279.5f, -446f), -20f, camino: true, corredor: false);
-        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(244f, -466f), 115f, desnivel: 1.6f, hundir: 0.25f, inclinar: 6f);
-        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(296f, -467f), 250f, desnivel: 1.6f, hundir: 0.25f, inclinar: -5f);
+        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(235f, -458f), 115f, desnivel: 1.6f, hundir: 0.25f, inclinar: 6f);
+        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(305f, -458f), 250f, desnivel: 1.6f, hundir: 0.25f, inclinar: -5f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(249f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(251.5f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(291f, -458f), 90f);
@@ -538,8 +539,8 @@ public static partial class VestidoDelMundo
         Pon(o, era, Heno, "Paca de heno", new Vector2(278f, 125.5f), 70f);
         Pon(o, era, Abrevadero, "Abrevadero", new Vector2(252f, 140f), 0f, camino: true);
         Pon(o, era, Carretilla, "Carretilla", new Vector2(242f, 139.5f), 120f, camino: true);
-        Pon(o, era, Gallinero, "Gallinero", new Vector2(203f, 166f), 90f);
-        Pon(o, era, Gallinero, "Gallinero", new Vector2(203f, 170f), 90f);
+        Pon(o, era, Gallinero, "Gallinero", new Vector2(204f, 165f), 90f);
+        Pon(o, era, Gallinero, "Gallinero", new Vector2(206f, 171f), 90f);
         Pon(o, era, Espantapajaros, "Espantapájaros", new Vector2(254f, 179.5f), 180f, camino: true, corredor: false);
         for (int i = 0; i < 3; i++) Pon(o, era, Colmena, "Colmena", new Vector2(283.5f, 150f + i * 2.4f), 270f);
     }
