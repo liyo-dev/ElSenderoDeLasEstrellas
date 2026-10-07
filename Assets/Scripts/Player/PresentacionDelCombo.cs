@@ -8,15 +8,18 @@ using UnityEngine;
 /// <item>Al abrir: frenazo breve del tiempo, el personaje se eleva (<see cref="ElevacionVisual"/>),
 /// ráfaga de polvo por el suelo, chispas que suben en espiral, luz cálida desde abajo, viento en
 /// bucle y un círculo propio a los pies que aparece con un rebote.</item>
-/// <item>Con cada botón: el personaje cambia de pose (una por botón, en orden), se enciende un anillo
-/// del círculo con el color del botón (de dentro afuera), el círculo gira más rápido, la luz da un
-/// pulso de ese color y suena una nota más aguda.</item>
-/// <item>Al cerrar: lanzado (destello, el círculo se encoge y sube), fallo (parpadea en rojo y se
-/// apaga), golpe (se apaga de golpe) o cancelado (fundido suave).</item>
+/// <item>Mientras teclea: sostiene entre las manos un orbe de energía (<see cref="ManosIK"/>), con un
+/// temblor suave; la luz sale del orbe.</item>
+/// <item>Con cada botón: el orbe crece y toma el color del botón, las manos se separan y dan un
+/// empujón, salen chispas, se enciende un anillo del círculo (de dentro afuera), el círculo gira más
+/// rápido y suena una nota más aguda.</item>
+/// <item>Al cerrar: lanzado (el orbe sale disparado al frente, destello, el círculo se encoge y sube),
+/// fallo (parpadea en rojo y se apaga), golpe (revienta) o cancelado (se apaga suave).</item>
 /// </list>
 /// Las animaciones usan tiempo real para que el círculo «salte» durante el frenazo. Ver INC-643.
 /// </summary>
 [DisallowMultipleComponent]
+[DefaultExecutionOrder(100)] // después de ElevacionVisual y ManosIK, para colocar el orbe entre las manos ya elevadas
 [RequireComponent(typeof(ComboCastController))]
 public class PresentacionDelCombo : MonoBehaviour
 {
@@ -36,12 +39,31 @@ public class PresentacionDelCombo : MonoBehaviour
     [Tooltip("Segundos que tarda en bajar si se cierra sin teclear.")]
     [SerializeField, Min(0f)] private float bajadaAlCancelar = 0.2f;
 
-    [Header("Poses")]
-    [Tooltip("Pose (ruta completa en la capa superior) a la que pasa con cada botón acertado, en orden; " +
-             "si hay más botones que poses, vuelve a empezar. Vacío: se queda en la pose del combo.")]
-    [SerializeField] private string[] posesPorBoton = new string[0];
-    [Tooltip("Segundos de fundido entre poses.")]
-    [SerializeField, Min(0f)] private float fundidoEntrePoses = 0.08f;
+    [Header("Orbe entre las manos")]
+    [Tooltip("Material del orbe (Hovl GlowFree1).")]
+    [SerializeField] private Material materialOrbe;
+    [Tooltip("Diámetro del orbe al abrir, en metros.")]
+    [SerializeField, Min(0f)] private float diametroOrbe = 0.16f;
+    [Tooltip("Lo que crece el orbe con cada botón.")]
+    [SerializeField, Min(0f)] private float crecimientoPorBoton = 0.05f;
+    [SerializeField] private Color colorNucleo = new Color(1f, 0.95f, 0.85f, 1f);
+    [Tooltip("Hueco entre las manos y el orbe.")]
+    [SerializeField, Min(0f)] private float holguraManos = 0.04f;
+    [Tooltip("Cuánto adelanta las manos respecto a la animación.")]
+    [SerializeField] private float manosAdelante = 0.12f;
+    [Tooltip("Cuánto sube las manos respecto a la animación.")]
+    [SerializeField] private float manosArriba = 0.05f;
+    [Tooltip("Amplitud del temblor de las manos, en metros.")]
+    [SerializeField, Min(0f)] private float temblorManos = 0.012f;
+    [SerializeField, Min(0f)] private float frecuenciaTemblor = 1.3f;
+    [Tooltip("Empujón de las manos al frente con cada botón, en metros.")]
+    [SerializeField, Min(0f)] private float empujePorBoton = 0.06f;
+    [Tooltip("Metros que recorre el orbe al lanzar.")]
+    [SerializeField, Min(0f)] private float distanciaLanzamiento = 1.5f;
+    [Tooltip("Sin ManosIK: altura del orbe sobre los pies.")]
+    [SerializeField] private float alturaOrbeSinManos = 0.7f;
+    [Tooltip("Chispas que salen del orbe con cada botón.")]
+    [SerializeField, Min(0)] private int chispasDelOrbe = 12;
 
     [Header("Frenazo al abrir")]
     [Tooltip("Escala de tiempo durante el frenazo (1 = sin frenazo).")]
@@ -125,8 +147,6 @@ public class PresentacionDelCombo : MonoBehaviour
     [SerializeField, Min(0f)] private float intensidadPulso = 4f;
     [SerializeField, Min(0.01f)] private float duracionPulso = 0.25f;
     [SerializeField, Min(0f)] private float alcanceLuz = 4f;
-    [Tooltip("Altura de la luz sobre el suelo (por debajo del personaje elevado, para iluminarlo desde abajo).")]
-    [SerializeField] private float alturaLuz = 0.3f;
 
     [Header("Sonido (claves del AudioGraphProfile)")]
     [SerializeField] private string sfxApertura = "Prologue_SpellInstantiate";
@@ -153,6 +173,15 @@ public class PresentacionDelCombo : MonoBehaviour
     private Color[] _colorAnillo;
     private float[] _brilloAnillo;
     private Light _luz;
+    private ManosIK _manos;
+    private Transform _orbe;
+    private MeshRenderer _nucleo, _halo;
+    private ParticleSystem _chispasOrbe;
+    private Mesh _quadVertical;
+    private Camera _camara;
+    private float _diamOrbe, _velDiamOrbe, _sepManos, _velSepManos, _empuje, _faseTemblor;
+    private Color _colorOrbe;
+    private Vector3 _orbeAlCerrar, _frenteAlCerrar;
     private ParticleSystem _chispas, _rafaga;
     private MaterialPropertyBlock _mpb;
     private Mesh _quad;
@@ -197,6 +226,7 @@ public class PresentacionDelCombo : MonoBehaviour
         {
             DetenerViento(0f);
             if (_elevacion != null) _elevacion.Soltar(this, 0f);
+            if (_manos != null) _manos.Soltar(this, 0f);
             if (_chispas != null) _chispas.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             Apagar();
         }
@@ -205,6 +235,7 @@ public class PresentacionDelCombo : MonoBehaviour
     void OnDestroy()
     {
         if (_quad != null) Destroy(_quad);
+        if (_quadVertical != null) Destroy(_quadVertical);
     }
 
     // ── Eventos del combo ──────────────────────────────────────────────────
@@ -224,7 +255,17 @@ public class PresentacionDelCombo : MonoBehaviour
         _colorPulso = colorCirculo;
 
         if (!_raiz.gameObject.activeSelf) _raiz.gameObject.SetActive(true);
+        if (!_orbe.gameObject.activeSelf) _orbe.gameObject.SetActive(true);
         if (!_luz.enabled) _luz.enabled = true;
+        if (_camara == null) _camara = Camera.main;
+
+        _diamOrbe = 0f;
+        _velDiamOrbe = 0f;
+        _sepManos = holguraManos;
+        _velSepManos = 0f;
+        _empuje = 0f;
+        _colorOrbe = colorCirculo;
+        if (_manos != null) _manos.Sostener(this, 0.15f);
 
         var main = _chispas.main;
         main.startColor = colorCirculo;
@@ -271,9 +312,16 @@ public class PresentacionDelCombo : MonoBehaviour
 
         Sonar(sfxBoton, 1f + subidaDeTono * i);
 
-        var personaje = _combo.Personaje;
-        if (personaje != null && posesPorBoton != null && posesPorBoton.Length > 0)
-            personaje.HoldUpperBodyPose(posesPorBoton[i % posesPorBoton.Length], fundidoEntrePoses);
+        _colorOrbe = c;
+        _empuje = 1f;
+        if (chispasDelOrbe > 0)
+        {
+            var mainOrbe = _chispasOrbe.main;
+            mainOrbe.startColor = c;
+            _chispasOrbe.transform.position = _orbe.position;
+            _chispasOrbe.Play();
+            _chispasOrbe.Emit(chispasDelOrbe);
+        }
     }
 
     private void AlCerrar(ComboCastController.Result resultado, MagicSpellSO _)
@@ -281,6 +329,8 @@ public class PresentacionDelCombo : MonoBehaviour
         if (_estado != Estado.Abierto) return;
 
         _alfaAlCerrar = Mathf.Clamp01(_tAbierto / duracionAparicion);
+        _orbeAlCerrar = _orbe.position;
+        _frenteAlCerrar = _personaje.forward;
         _estado = Estado.Cerrando;
         _cierre = resultado;
         _tCierre = 0f;
@@ -297,6 +347,7 @@ public class PresentacionDelCombo : MonoBehaviour
                 _pulso = 1f;
                 _colorPulso = colorLanzado;
                 Soltar(bajadaAlLanzar);
+                SoltarManos(0.1f);
                 DetenerViento(0.15f);
                 break;
             case ComboCastController.Result.Fizzled:
@@ -304,18 +355,21 @@ public class PresentacionDelCombo : MonoBehaviour
                 _pulso = 1f;
                 _colorPulso = colorFallo;
                 Soltar(bajadaAlFallar);
+                SoltarManos(0.25f);
                 DetenerViento(0.2f);
                 Sonar(sfxFallo);
                 break;
             case ComboCastController.Result.Interrupted:
                 _duracionCierre = cierreAlRomperse;
                 Soltar(bajadaAlRomperse);
+                SoltarManos(0.08f);
                 DetenerViento(0.05f);
                 Sonar(sfxFallo);
                 break;
             default:
                 _duracionCierre = cierreAlCancelar;
                 Soltar(bajadaAlCancelar);
+                SoltarManos(0.2f);
                 DetenerViento(0.25f);
                 break;
         }
@@ -408,10 +462,79 @@ public class PresentacionDelCombo : MonoBehaviour
         float tamDestello = diametroBase * s * (0.5f + 0.6f * _brilloDestello);
         Pintar(_destello, tamDestello, 0f, Tinte(_colorDestello, 1f + _brilloDestello, alfa * _brilloDestello));
 
-        // Luz desde abajo.
+        // Luz desde el orbe.
         float luzBase = _estado == Estado.Abierto ? Mathf.Clamp01(_tAbierto / 0.12f) : alfa;
         _luz.intensity = intensidadLuz * luzBase + intensidadPulso * _pulso;
         _luz.color = Color.Lerp(colorLuz, _colorPulso, _pulso);
+
+        AnimarOrbeYManos(dt, alfa, fallo);
+    }
+
+    private void AnimarOrbeYManos(float dt, float alfa, bool fallo)
+    {
+        // Tamaño: crece con cada botón, con muelle, y da un salto con el pulso.
+        float objetivo = _estado == Estado.Abierto ? diametroOrbe + crecimientoPorBoton * _encendidos : _diamOrbe;
+        _diamOrbe = Mathf.SmoothDamp(_diamOrbe, objetivo, ref _velDiamOrbe, 0.08f, Mathf.Infinity, dt);
+        _empuje = Mathf.Max(0f, _empuje - dt * 6f);
+
+        float tam = _diamOrbe * escalaGeneral * (1f + 0.35f * _pulso);
+        if (_estado == Estado.Cerrando)
+        {
+            float k = _tCierre / _duracionCierre;
+            switch (_cierre)
+            {
+                case ComboCastController.Result.Cast: tam *= 1f + 0.6f * k; break;
+                case ComboCastController.Result.Interrupted: tam *= 1f + 2f * k; break;
+                default: tam *= 1f - 0.7f * k; break;
+            }
+        }
+
+        Color c = fallo ? colorFallo : _colorOrbe;
+        PintarOrbe(_halo, tam * 2.2f, Tinte(c, 1f, alfa * 0.8f));
+        PintarOrbe(_nucleo, tam, Tinte(Color.Lerp(colorNucleo, c, 0.25f), 1.4f + _pulso, alfa));
+
+        // Manos: separadas lo justo para el orbe, con temblor y el empujón de cada botón.
+        if (_manos == null) return;
+        _sepManos = Mathf.SmoothDamp(_sepManos, tam * 0.9f + holguraManos, ref _velSepManos, 0.06f, Mathf.Infinity, dt);
+        _faseTemblor += dt * frecuenciaTemblor;
+        float tx = (Mathf.PerlinNoise(_faseTemblor, 0.1f) - 0.5f) * 2f * temblorManos;
+        float ty = (Mathf.PerlinNoise(0.7f, _faseTemblor) - 0.5f) * 2f * temblorManos;
+        _manos.Separacion = _sepManos;
+        _manos.Desplazamiento = new Vector3(tx, manosArriba + ty, manosAdelante + empujePorBoton * Mathf.Sin(_empuje * Mathf.PI) * escalaGeneral);
+    }
+
+    void LateUpdate()
+    {
+        if (_estado == Estado.Apagado) return;
+
+        Vector3 pos;
+        if (_estado == Estado.Cerrando && _cierre == ComboCastController.Result.Cast)
+        {
+            float k = _tCierre / _duracionCierre;
+            pos = _orbeAlCerrar + _frenteAlCerrar * (distanciaLanzamiento * escalaGeneral * k);
+        }
+        else if (_manos != null && _manos.Activo)
+            pos = _manos.PuntoMedio + _personaje.forward * (0.03f * escalaGeneral);
+        else if (_estado == Estado.Cerrando)
+            pos = _orbeAlCerrar;
+        else
+            pos = _personaje.position + Vector3.up * alturaOrbeSinManos + _personaje.forward * 0.3f;
+
+        _orbe.position = pos;
+        if (_camara != null) _orbe.rotation = Quaternion.LookRotation(_camara.transform.forward, _camara.transform.up);
+    }
+
+    private void PintarOrbe(MeshRenderer r, float diametro, Color color)
+    {
+        r.transform.localScale = new Vector3(diametro, diametro, diametro);
+        _mpb.SetColor(IdColor, color);
+        _mpb.SetColor(IdBaseColor, color);
+        r.SetPropertyBlock(_mpb);
+    }
+
+    private void SoltarManos(float segundos)
+    {
+        if (_manos != null) _manos.Soltar(this, segundos);
     }
 
     private void Pintar(MeshRenderer r, float diametro, float grados, Color color)
@@ -447,6 +570,7 @@ public class PresentacionDelCombo : MonoBehaviour
     {
         _estado = Estado.Apagado;
         if (_raiz != null && _raiz.gameObject.activeSelf) _raiz.gameObject.SetActive(false);
+        if (_orbe != null && _orbe.gameObject.activeSelf) _orbe.gameObject.SetActive(false);
         if (_luz != null && _luz.enabled) _luz.enabled = false;
     }
 
@@ -483,6 +607,8 @@ public class PresentacionDelCombo : MonoBehaviour
         _personaje = controller != null ? controller.transform : transform;
         _elevacion = _personaje.GetComponent<ElevacionVisual>();
         if (_elevacion == null) _elevacion = GetComponentInParent<ElevacionVisual>();
+        _manos = _personaje.GetComponent<ManosIK>();
+        _camara = Camera.main;
 
         _mpb = new MaterialPropertyBlock();
         _quad = CrearQuad();
@@ -501,9 +627,15 @@ public class PresentacionDelCombo : MonoBehaviour
         for (int i = 0; i < n; i++) _anillos[i] = CrearCapa("Anillo" + (i + 1), materialAnillo, orden++);
         _destello = CrearCapa("Destello", materialDestello, orden++);
 
+        _quadVertical = CrearQuadVertical();
+        _orbe = new GameObject("OrbeDelCombo").transform;
+        _orbe.SetParent(_personaje, false);
+        _halo = CrearCapaDelOrbe("Halo", 20);
+        _nucleo = CrearCapaDelOrbe("Nucleo", 21);
+        _chispasOrbe = CrearChispasDelOrbe();
+
         var luzGo = new GameObject("Luz");
-        luzGo.transform.SetParent(_raiz, false);
-        luzGo.transform.localPosition = new Vector3(0f, alturaLuz - alturaSobreElSuelo, 0f);
+        luzGo.transform.SetParent(_orbe, false);
         _luz = luzGo.AddComponent<Light>();
         _luz.type = LightType.Point;
         _luz.range = alcanceLuz * escalaGeneral;
@@ -516,6 +648,79 @@ public class PresentacionDelCombo : MonoBehaviour
         _rafaga = CrearRafaga();
 
         _raiz.gameObject.SetActive(false);
+        _orbe.gameObject.SetActive(false);
+    }
+
+    private MeshRenderer CrearCapaDelOrbe(string nombre, int orden)
+    {
+        var go = new GameObject(nombre);
+        go.transform.SetParent(_orbe, false);
+        go.AddComponent<MeshFilter>().sharedMesh = _quadVertical;
+        var r = go.AddComponent<MeshRenderer>();
+        r.sharedMaterial = materialOrbe;
+        r.sortingOrder = orden;
+        r.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        r.receiveShadows = false;
+        r.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
+        r.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
+        r.enabled = materialOrbe != null;
+        return r;
+    }
+
+    private static Mesh CrearQuadVertical()
+    {
+        var m = new Mesh { name = "QuadDelOrbe" };
+        m.vertices = new[]
+        {
+            new Vector3(-0.5f, -0.5f, 0f), new Vector3(-0.5f, 0.5f, 0f),
+            new Vector3(0.5f, 0.5f, 0f), new Vector3(0.5f, -0.5f, 0f),
+        };
+        m.uv = new[] { new Vector2(0f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(1f, 0f) };
+        m.normals = new[] { Vector3.back, Vector3.back, Vector3.back, Vector3.back };
+        m.colors = new[] { Color.white, Color.white, Color.white, Color.white };
+        m.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+        m.RecalculateBounds();
+        return m;
+    }
+
+    private ParticleSystem CrearChispasDelOrbe()
+    {
+        var go = new GameObject("ChispasDelOrbe");
+        go.transform.SetParent(_personaje, false);
+        var ps = go.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
+        var main = ps.main;
+        main.duration = 1f;
+        main.loop = false;
+        main.playOnAwake = false;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.2f, 0.4f);
+        main.startSpeed = new ParticleSystem.MinMaxCurve(1.2f * escalaGeneral, 2.2f * escalaGeneral);
+        main.startSize = new ParticleSystem.MinMaxCurve(0.03f * escalaGeneral, 0.06f * escalaGeneral);
+        main.startColor = colorCirculo;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.useUnscaledTime = true;
+        main.maxParticles = 64;
+
+        var emision = ps.emission;
+        emision.enabled = false;
+
+        var forma = ps.shape;
+        forma.enabled = true;
+        forma.shapeType = ParticleSystemShapeType.Sphere;
+        forma.radius = 0.05f * escalaGeneral;
+
+        var freno = ps.limitVelocityOverLifetime;
+        freno.enabled = true;
+        freno.limit = new ParticleSystem.MinMaxCurve(0.3f * escalaGeneral);
+        freno.dampen = 0.3f;
+
+        var tam = ps.sizeOverLifetime;
+        tam.enabled = true;
+        tam.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0f));
+
+        ConfigurarRender(go, materialChispas);
+        return ps;
     }
 
     private MeshRenderer CrearCapa(string nombre, Material material, int orden)

@@ -16274,6 +16274,7 @@ MonoBehaviour:
   effectText: {fileID: 442637452}
   equippedTag: {fileID: 812727429}
   equippedTagText: {fileID: 274131253}
+  ocultarMientrasEstaAbierto: []
   pageCounterText: {fileID: 8734620}
   hintText: {fileID: 293283510}
   ribbons:
@@ -26890,6 +26891,8 @@ MonoBehaviour:
   defenseIcon: {fileID: 0}
   defendingColor: {r: 0.75, g: 0.95, b: 1, a: 1}
   idleDefenseColor: {r: 1, g: 1, b: 1, a: 0.85}
+  momentoJustoColor: {r: 1, g: 0.82, b: 0.25, a: 1}
+  latidoEscala: 1.25
   availableColor: {r: 1, g: 1, b: 1, a: 1}
   noManaColor: {r: 1, g: 0.35, b: 0.35, a: 0.85}
   dotOnColor: {r: 1, g: 0.85, b: 0.95, a: 1}

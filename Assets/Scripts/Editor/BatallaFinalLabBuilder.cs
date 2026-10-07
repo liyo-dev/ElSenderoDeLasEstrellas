@@ -13,7 +13,7 @@ using M = MomentoDeCombate;
 /// pilares con anclas, plataformas y lanzadores) está oculto hasta que el Mago lo conjura. Trae el
 /// grupo completo (Will, Estela y Liam) y rellena el guion de comentarios de Estela. Usa el
 /// jugador, los compañeros y el Mago reales; no toca el Sendero ni los prefabs. Regenerarla borra
-/// los cambios hechos a mano dentro de la escena. Ver INC-509, INC-661.
+/// los cambios hechos a mano dentro de la escena. Ver INC-509, INC-663.
 public static class BatallaFinalLabBuilder
 {
     const string ScenePath = "Assets/Scenes/Test/BatallaFinal.unity";

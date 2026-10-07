@@ -1037,6 +1037,10 @@
             "value": "Vibration"
         },
         {
+            "key": "SETTINGS_COMBAT_HINTS",
+            "value": "Combat hints"
+        },
+        {
             "key": "SHOP_BUY_BUTTON",
             "value": "BUY"
         },

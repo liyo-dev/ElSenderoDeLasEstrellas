@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Core;
-using Sendero.Core.Feedback;
 
 /// <summary>
 /// Defensa del jugador en la B (INC-491/INC-493).
@@ -54,9 +53,6 @@ public class PlayerShieldController : MonoBehaviour
     [SerializeField] private float counterLockSeconds = 0.45f;
     [SerializeField] private GameObject counterVfx;
     [SerializeField] private string counterSfxKey = "EstelaAppears_ShieldBlock";
-    [SerializeField, Range(0.01f, 1f)] private float counterHitStopScale = 0.05f;
-    [SerializeField] private float counterHitStopSeconds = 0.08f;
-    [SerializeField] private float counterCameraShake = 0.25f;
 
     [Header("Cuerpo a cuerpo")]
     [Tooltip("Parte del daño cuerpo a cuerpo que pasa con el escudo levantado.")]
@@ -110,6 +106,12 @@ public class PlayerShieldController : MonoBehaviour
 
     /// <summary>Contraataque o desvío logrado (para el HUD y la guía de combate).</summary>
     public event System.Action OnCounter;
+
+    /// <summary>
+    /// Contraataque o desvío logrado, con el punto del choque. Lo presenta
+    /// PresentacionDelContraataque (congelado, cámara lenta, destello, vibración). Ver INC-670.
+    /// </summary>
+    public event System.Action<Vector3> AlContraatacar;
 
     /// Se ha devuelto un hechizo enemigo: quién lo había lanzado (null si no se sabe). Para que un
     /// jefe reaccione cuando le devuelven su propio ataque (el Mago Oscuro se aturde). Ver INC-509.
@@ -335,10 +337,9 @@ public class PlayerShieldController : MonoBehaviour
             VfxPoolService.Instance.Play(counterVfx, where, Quaternion.identity, 1.5f);
         if (!string.IsNullOrEmpty(counterSfxKey) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(counterSfxKey);
-        if (counterHitStopSeconds > 0f) FeedbackService.HitStop(counterHitStopScale, counterHitStopSeconds);
-        if (counterCameraShake > 0f) FeedbackService.CameraShake(counterCameraShake, 0.15f);
         OnShieldHit();
         OnCounter?.Invoke();
+        AlContraatacar?.Invoke(where);
     }
 
     /// <summary>Parte del daño que llega al jugador según la defensa (lo usa FiltroDeDefensa).</summary>

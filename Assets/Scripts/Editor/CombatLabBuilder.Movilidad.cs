@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 /// <item>Doble salto: pilares de 1,5, 2,6 y 4,2 m.</item>
 /// <item>Remate aéreo y desvío con la B: corral de arañas con un lanzador al lado.</item>
 /// <item>Derribo y recuperación: placa que lanza al jugador como un golpe de jefe.</item>
+/// <item>Devolver con la B y aviso de combate: lanzadera que dispara las bolas del Demonio.</item>
 /// </list>
 /// La geometría va con la del LAB (entra en el NavMesh); lo demás, en su raíz. Se llega por el
 /// viaje rápido del panel. Ver INC-651 a INC-656.
@@ -99,6 +100,26 @@ public static partial class CombatLabBuilder
         placa.AddComponent<PlacaDeDerriboDelLab>();
         CrearTexto("Placa de derribo", r, new Vector3(42f, 2.6f, 43.5f), 0f);
         CrearTexto("A en el aire: caes de pie", r, new Vector3(42f, 1.9f, 43.5f), 0f);
+
+        // ── Devolver con la B (y aviso de combate) ──
+        var demonio = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/Demon.prefab");
+        var ia = demonio != null ? demonio.GetComponentInChildren<ImpDemonAI>(true) : null;
+        var bola = ia != null ? new SerializedObject(ia).FindProperty("projectilePrefab")?.objectReferenceValue as GameObject : null;
+        if (bola != null)
+        {
+            CrearCubo("Pedestal de la lanzadera", r, new Vector3(47f, 0.75f, 53f), new Vector3(1f, 1.5f, 1f), rojo);
+            var lanzadera = new GameObject("Lanzadera (bolas del Demonio)");
+            lanzadera.transform.SetParent(r);
+            lanzadera.transform.SetPositionAndRotation(new Vector3(47f, 1.5f, 53f), Quaternion.Euler(0f, 225f, 0f));
+            var componente = lanzadera.AddComponent<LanzaderaDelLab>();
+            componente.Configurar(bola);
+            var so = new SerializedObject(componente);
+            so.FindProperty("alcance").floatValue = 7f;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            CrearMarcador("Puesto de la lanzadera", r, new Vector3(43f, 0.02f, 50f), GetMaterial("Lab_Marcadores", new Color(0.20f, 0.48f, 0.70f)));
+            CrearTexto("Devuelve sus bolas con B", r, new Vector3(43f, 3f, 48f), 0f);
+        }
+        else avisos.Add("No encuentro el proyectil del Demonio (Demon.prefab → ImpDemonAI.projectilePrefab): no hay lanzadera.");
 
         CrearTexto("Dúo con voltereta: Will + Estela, LT+RT", r, new Vector3(32f, 2.5f, 21f), 0f);
         return avisos;

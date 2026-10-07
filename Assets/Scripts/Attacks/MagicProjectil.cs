@@ -89,7 +89,7 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
     /// <summary>Quién lanzó el proyectil (puede ser null). Lo usa el contraataque (INC-493).</summary>
     public GameObject Instigator => _instigator;
 
-    // Amenaza para el aviso de combate (INC-658): solo si lo lanza alguien ajeno al grupo.
+    // Amenaza para el aviso de combate (INC-666): solo si lo lanza alguien ajeno al grupo.
     public Vector3 PosicionDeAmenaza => transform.position;
     public Vector3 VelocidadDeAmenaza => _hasRb ? _rb.linearVelocity : transform.forward * _cfg.initialSpeed;
     public TipoDeAmenaza TipoDeAmenaza => TipoDeAmenaza.Devolvible;
@@ -655,7 +655,7 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
             MagicProjectileSpawner.SpawnZoneAt(_impactZone, transform.position, _instigator, _zoneLayers, _zoneDamageMultiplier);
 
         // Si muere sin impactar (TTL o rango), dispara VFX de despawn (pooled)
-        if (!byImpact && _cfg.despawnVFX)
+        if (!byImpact && _cfg.despawnVFX && VfxPoolService.Instance != null)
         {
             float lifetime = _cfg.vfxLifetime > 0f ? _cfg.vfxLifetime : 3f; // 3s por defecto
             VfxPoolService.Instance.Play(_cfg.despawnVFX, transform.position, Quaternion.identity, lifetime);

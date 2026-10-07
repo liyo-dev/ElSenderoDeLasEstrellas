@@ -34,7 +34,7 @@ public enum EstadoDeAviso
 /// </list>
 /// Lo pinta <see cref="Sendero.UI.AvisoDeAmenazaUI"/> (lo crea este componente desde Resources) y
 /// lo escucha el HUD de botones. Se apaga en Ajustes (<see cref="PlayerSettings.AvisosDeCombate"/>),
-/// en cinemáticas y con el HUD oculto. Ver INC-658.
+/// en cinemáticas y con el HUD oculto. Ver INC-666.
 /// </summary>
 [DisallowMultipleComponent]
 public class AvisoDeAmenazas : MonoBehaviour
@@ -83,6 +83,9 @@ public class AvisoDeAmenazas : MonoBehaviour
         if (prefab == null) return;
         var ui = Instantiate(prefab);
         ui.name = prefab.name;
+        // Vive en la misma escena que el jugador (se destruye sola si el jugador desaparece).
+        if (gameObject.scene.name == "DontDestroyOnLoad") DontDestroyOnLoad(ui.gameObject);
+        else if (gameObject.scene.IsValid()) UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(ui.gameObject, gameObject.scene);
         ui.Seguir(this);
     }
 

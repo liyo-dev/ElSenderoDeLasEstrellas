@@ -7,7 +7,7 @@ using UnityEngine;
 /// no con una senda de luz. Quien esté fuera del resquicio cuando le alcanza el frente recibe un
 /// golpe fuerte; volar por encima no sirve (es muy alta). El dueño puede decir que el jugador está
 /// a salvo en ese momento (Config.aSalvo, p. ej. tras un escudo) y se puede pausar desde fuera.
-/// Ver INC-509, INC-661.
+/// Ver INC-509, INC-663.
 public sealed class MareaDeSombra : MonoBehaviour
 {
     public struct Config

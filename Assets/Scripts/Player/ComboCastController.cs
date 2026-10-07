@@ -61,7 +61,7 @@ public class ComboCastController : MonoBehaviour
     [SerializeField, Range(2, 8)] private int maxLength = 5;
 
     [Header("Poses (rutas completas en la capa superior)")]
-    [Tooltip("Pose al abrir el círculo (brazos delante, congelada). Las de cada botón las pone PresentacionDelCombo.")]
+    [Tooltip("Pose mientras se teclea (en bucle). Los brazos los coloca ManosIK sosteniendo el orbe de PresentacionDelCombo.")]
     [SerializeField] private string enterState = "UpperBody.Magic.ComboIdle";
     [SerializeField] private string exitState = "UpperBody.Magic.ComboExit";
     [SerializeField] private string breakState = "UpperBody.Magic.ComboBreak";

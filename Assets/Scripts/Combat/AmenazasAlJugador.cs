@@ -26,7 +26,7 @@ public interface IAmenazaEntrante
 /// <item>Los golpes con preparación (cuerpo a cuerpo) los anuncia su atacante al empezar, con los
 /// segundos que faltan para el impacto (<see cref="Anunciar"/>); caducan solos.</item>
 /// </list>
-/// Ver INC-658.
+/// Ver INC-666.
 /// </summary>
 public static class AmenazasAlJugador
 {

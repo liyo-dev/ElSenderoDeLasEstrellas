@@ -25,7 +25,7 @@ using UnityEngine.AI;
 ///     escudo aguanta la segunda. Nada de esto se puede fallar.
 ///
 /// Expuesto (aturdido o derribado) recibe más daño. Cada fase tiene un suelo de vida: no se salta
-/// a golpes. Ver INC-509, INC-661.
+/// a golpes. Ver INC-509, INC-663.
 [RequireComponent(typeof(Damageable))]
 public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAlDano, IInicioDeCombate, IFiltroDeDano
 {
@@ -394,12 +394,12 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
             VfxPoolService.Instance.Play(vfxCarga, PuntoDeLanzamiento(), Quaternion.identity, avisoSalva + 0.2f, transform);
         yield return Esperar(avisoSalva, girarAlJugador: true);
 
-        for (int i = 0; i < balas && !_aturdir; i++)
+        for (int i = 0; i < balas && !_aturdir && !_sinCristales; i++)
         {
             Disparar();
             yield return Esperar(intervaloSalva, girarAlJugador: true);
         }
-        if (!_aturdir) yield return Esperar(pausaTrasAtaque);
+        if (!_aturdir && !_sinCristales) yield return Esperar(pausaTrasAtaque);
     }
 
     private IEnumerator Co_Grieta()

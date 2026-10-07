@@ -4,7 +4,7 @@ using UnityEngine;
 /// Las piezas de la arena de la batalla final que usa el Mago Oscuro: el altar, dónde puede
 /// aparecer y lo que conjura en cada fase. Al empezar solo está el altar; lo demás aparece y se
 /// deshace con su magia (ObjetoConjurado). Solo guarda referencias; la escena de prueba la rellena
-/// BatallaFinalLabBuilder y la escena del Sendero tendrá la suya. Ver INC-661.
+/// BatallaFinalLabBuilder y la escena del Sendero tendrá la suya. Ver INC-663.
 public sealed class EscenarioBatallaFinal : MonoBehaviour
 {
     [Header("Arena")]

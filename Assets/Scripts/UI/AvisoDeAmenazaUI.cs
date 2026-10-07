@@ -9,7 +9,7 @@ namespace Sendero.UI
     /// Icono del aviso de combate sobre la cabeza del jugador (<see cref="AvisoDeAmenazas"/>):
     /// anillo con el glifo del botón del mando que se use (B para la defensa, A para recuperarse) o
     /// un «!» rojo para lo que no se para. Tenue cuando viene; opaco, dorado y con golpe de escala
-    /// en el momento justo. Prefab en Resources/UI/AvisoDeAmenaza (lo crea el menú de INC-658).
+    /// en el momento justo. Prefab en Resources/UI/AvisoDeAmenaza (lo crea el menú de INC-666).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class AvisoDeAmenazaUI : MonoBehaviour

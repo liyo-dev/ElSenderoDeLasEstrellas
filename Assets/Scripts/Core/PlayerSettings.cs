@@ -143,7 +143,7 @@ public static class PlayerSettings
         get { EnsureLoaded(); return _data.fullscreen; }
     }
 
-    /// <summary>Iconos de «ahora» en combate: devolver con la B, recuperarse con la A (INC-658).</summary>
+    /// <summary>Iconos de «ahora» en combate: devolver con la B, recuperarse con la A (INC-666).</summary>
     public static bool AvisosDeCombate
     {
         get { EnsureLoaded(); return _data.avisosDeCombate; }

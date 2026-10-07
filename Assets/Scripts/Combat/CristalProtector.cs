@@ -5,7 +5,7 @@ using UnityEngine;
 /// Se ve unido a él por un rayo, se registra como objetivo de combate (los aliados lo atacan) y
 /// avisa al romperse. Quién decide qué protege y cómo es el dueño: el cristal solo dice si sigue
 /// activo. Va junto a su Damageable; con DebilidadDePersonaje, un personaje lo rompe antes.
-/// Ver INC-661.
+/// Ver INC-663.
 [RequireComponent(typeof(Damageable))]
 public sealed class CristalProtector : MonoBehaviour
 {

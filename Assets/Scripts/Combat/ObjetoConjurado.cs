@@ -5,7 +5,7 @@ using UnityEngine;
 /// runas... Al aparecer crece desde su pivote (ponerlo en la base para que salga del suelo) y al
 /// deshacerse se encoge y se apaga. Mientras está, sus colliders cuentan y, si lleva un
 /// NavMeshObstacle con «carve», recorta la malla de navegación. Si su GameObject empieza
-/// desactivado en la escena, empieza oculto. Ver INC-661.
+/// desactivado en la escena, empieza oculto. Ver INC-663.
 [DisallowMultipleComponent]
 public sealed class ObjetoConjurado : MonoBehaviour
 {

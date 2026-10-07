@@ -73,6 +73,7 @@ Material:
   m_ValidKeywords:
   - DR_RIM_ON
   - _DETAILMAPBLENDINGMODE_MULTIPLY
+  - _EMISSION
   - _RECEIVE_SHADOWS_OFF
   - _TEXTUREBLENDINGMODE_MULTIPLY
   m_InvalidKeywords:
@@ -118,7 +119,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 1394f1e9d200d87419cf8d2b4c2d5e02, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _GradientRamp:

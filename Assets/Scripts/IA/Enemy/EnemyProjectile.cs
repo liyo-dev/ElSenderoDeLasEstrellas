@@ -43,7 +43,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
     /// <summary>Dirección de vuelo. Lo usa el contraataque para devolverlo por donde vino (INC-493).</summary>
     public Vector3 Direction => rb != null && rb.linearVelocity.sqrMagnitude > 0.01f ? rb.linearVelocity.normalized : direction;
 
-    // Amenaza para el aviso de combate (INC-658): mientras vuela está en AmenazasAlJugador.
+    // Amenaza para el aviso de combate (INC-666): mientras vuela está en AmenazasAlJugador.
     public Vector3 PosicionDeAmenaza => transform.position;
     public Vector3 VelocidadDeAmenaza => rb != null && !rb.isKinematic && rb.linearVelocity.sqrMagnitude > 0.01f
         ? rb.linearVelocity
