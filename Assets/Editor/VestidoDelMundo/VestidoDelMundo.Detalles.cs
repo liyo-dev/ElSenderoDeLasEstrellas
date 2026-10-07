@@ -180,7 +180,7 @@ public static partial class VestidoDelMundo
     private static void PoblarZonas(Obra o)
     {
         Scene escena = o.Raiz.gameObject.scene;
-        HashSet<string> giradas = CasasGiradas();
+        HashSet<string> giradas = CasasGiradas(escena);
         foreach (Pueblo pueblo in Pueblos())
         {
             Transform grupo = Grupo(o.Raiz, pueblo.Nombre);

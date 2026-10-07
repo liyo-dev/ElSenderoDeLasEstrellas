@@ -287,9 +287,7 @@ public static partial class VestidoDelMundo
         Directory.CreateDirectory(RutaCopias);
         int res = datos.alphamapResolution, capas = datos.alphamapLayers;
         float[,,] pesos = datos.GetAlphamaps(0, 0, res, res);
-        using (var fs = File.Create(Path.Combine(RutaCopias, ArchivoPesos)))
-        using (var gz = new GZipStream(fs, System.IO.Compression.CompressionLevel.Optimal))
-        using (var w = new BinaryWriter(gz))
+        EscribirComprimido(Path.Combine(RutaCopias, ArchivoPesos), w =>
         {
             w.Write("VDMP1");
             w.Write(AssetDatabase.GetAssetPath(datos));
@@ -303,12 +301,10 @@ public static partial class VestidoDelMundo
                     for (int c = 0; c < capas; c++)
                         bytes[n++] = (byte)Mathf.Clamp(Mathf.RoundToInt(pesos[k, i, c] * 255f), 0, 255);
             w.Write(bytes);
-        }
+        });
 
         int dres = datos.detailResolution, dcapas = datos.detailPrototypes.Length;
-        using (var fs = File.Create(Path.Combine(RutaCopias, ArchivoDetalle)))
-        using (var gz = new GZipStream(fs, System.IO.Compression.CompressionLevel.Optimal))
-        using (var w = new BinaryWriter(gz))
+        EscribirComprimido(Path.Combine(RutaCopias, ArchivoDetalle), w =>
         {
             w.Write("VDMD1");
             w.Write(dres);
@@ -320,7 +316,20 @@ public static partial class VestidoDelMundo
                     for (int i = 0; i < dres; i++)
                         w.Write(capa[k, i]);
             }
-        }
+        });
+    }
+
+    /// Escribe primero a un temporal y lo pone en su sitio al terminar: si algo falla a mitad, la copia
+    /// anterior sigue entera.
+    private static void EscribirComprimido(string ruta, Action<BinaryWriter> escribir)
+    {
+        string temporal = ruta + ".tmp";
+        using (var fs = File.Create(temporal))
+        using (var gz = new GZipStream(fs, System.IO.Compression.CompressionLevel.Optimal))
+        using (var w = new BinaryWriter(gz))
+            escribir(w);
+        if (File.Exists(ruta)) File.Delete(ruta);
+        File.Move(temporal, ruta);
     }
 
     /// Repone la copia. Devuelve un texto de error o null si todo ha ido bien.

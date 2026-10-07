@@ -1,7 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -9,11 +6,13 @@ using UnityEngine.SceneManagement;
 
 /// Las casas que puso el generador del mapa dan la espalda a su calle: el generador suponía que la fachada
 /// de los BuildingAT es su +Z local y en casi todos la puerta está en otro lado. Aquí se giran sobre el
-/// centro de su huella para que la puerta mire a donde el generador quería que mirase la fachada. Se guarda
-/// el giro y la posición originales; «Quitar el vestido» (y cada nueva ejecución, antes de girar) los repone.
+/// centro de su huella para que la puerta mire a donde el generador quería que mirase la fachada. El giro y
+/// la posición originales se guardan en la propia escena (un objeto EditorOnly bajo WORLD con un hijo por
+/// casa), así se guardan o se descartan junto con las casas; «Quitar el vestido» (y cada nueva ejecución,
+/// antes de girar) los repone.
 public static partial class VestidoDelMundo
 {
-    private const string ArchivoCasas = "casas_originales.txt";
+    private const string NombreRegistroCasas = "Vestido del mundo — giro original de las casas (no tocar)";
 
     /// Lado de la puerta a ras de suelo de cada prefab, en grados respecto al +Z local (medido en sus hijos Door*).
     private static readonly Dictionary<string, float> LadoDeLaPuerta = new()
@@ -66,9 +65,40 @@ public static partial class VestidoDelMundo
         return null;
     }
 
+    /// Objeto de la escena que guarda el giro original de cada casa girada (hijo = ruta de la casa, con su
+    /// posición y giro originales). Con «crear», lo crea si no existe.
+    private static Transform RegistroCasas(Scene escena, bool crear)
+    {
+        Transform padre = null;
+        foreach (GameObject raiz in escena.GetRootGameObjects())
+        {
+            if (raiz.name == NombreRegistroCasas) return raiz.transform;
+            if (raiz.name != NombrePadre) continue;
+            padre = raiz.transform;
+            Transform t = padre.Find(NombreRegistroCasas);
+            if (t != null) return t;
+        }
+        if (!crear) return null;
+        var g = new GameObject(NombreRegistroCasas) { tag = "EditorOnly" };
+        SceneManager.MoveGameObjectToScene(g, escena);
+        if (padre != null) g.transform.SetParent(padre, false);
+        return g.transform;
+    }
+
+    /// Rutas de las casas que están giradas ahora mismo en la escena.
+    private static HashSet<string> CasasGiradas(Scene escena)
+    {
+        var r = new HashSet<string>();
+        Transform registro = RegistroCasas(escena, crear: false);
+        if (registro != null)
+            foreach (Transform t in registro) r.Add(t.name);
+        return r;
+    }
+
     private static void GirarCasasHaciaSuCalle(Scene escena, Obra o)
     {
-        var lineas = new List<string>();
+        HashSet<string> yaGiradas = CasasGiradas(escena);
+        Transform registro = null;
         int giradas = 0, revertidas = 0;
         foreach (string nombreGrupo in GruposConCasasAGirar)
         {
@@ -83,6 +113,8 @@ public static partial class VestidoDelMundo
                 if (Mathf.Abs(Mathf.DeltaAngle(lado, 0f)) < 1f) continue;
                 // La reposición busca la casa por su ruta: con el nombre repetido podría devolver otra.
                 if (nombres[casa.name] > 1) { o.Informe.Add($"  · «{casa.name}» no se gira: hay otra con el mismo nombre en su grupo."); continue; }
+                string ruta = RutaJerarquia(casa);
+                if (yaGiradas.Contains(ruta)) continue;
 
                 Vector3 pos = casa.position;
                 Quaternion rot = casa.rotation;
@@ -97,16 +129,12 @@ public static partial class VestidoDelMundo
                     o.Informe.Add($"  · «{casa.name}» no se gira: chocaría con algo vecino.");
                     continue;
                 }
-                lineas.Add(string.Join("|", RutaJerarquia(casa),
-                    pos.x.ToString("R", CultureInfo.InvariantCulture), pos.y.ToString("R", CultureInfo.InvariantCulture), pos.z.ToString("R", CultureInfo.InvariantCulture),
-                    rot.x.ToString("R", CultureInfo.InvariantCulture), rot.y.ToString("R", CultureInfo.InvariantCulture), rot.z.ToString("R", CultureInfo.InvariantCulture), rot.w.ToString("R", CultureInfo.InvariantCulture)));
+                if (registro == null) registro = RegistroCasas(escena, crear: true);
+                var marca = new GameObject(ruta) { tag = "EditorOnly" };
+                marca.transform.SetParent(registro, false);
+                marca.transform.SetPositionAndRotation(pos, rot);
                 giradas++;
             }
-        }
-        if (lineas.Count > 0)
-        {
-            Directory.CreateDirectory(RutaCopias);
-            File.WriteAllLines(Path.Combine(RutaCopias, ArchivoCasas), lineas, Encoding.UTF8);
         }
         o.Informe.Add($"Casas: {giradas} giradas para que la puerta dé a su calle, {revertidas} sin girar por espacio.");
     }
@@ -126,30 +154,20 @@ public static partial class VestidoDelMundo
         return false;
     }
 
-    private static float F(string s) => float.Parse(s, NumberStyles.Float, CultureInfo.InvariantCulture);
-
-    /// Devuelve a su sitio las casas que giró la última ejecución.
+    /// Devuelve a su sitio las casas que giró la última ejecución y borra el registro.
     private static void ReponerCasas(Scene escena, List<string> informe)
     {
-        string ruta = Path.Combine(RutaCopias, ArchivoCasas);
-        if (!File.Exists(ruta)) return;
+        Transform registro = RegistroCasas(escena, crear: false);
+        if (registro == null) return;
         int n = 0, perdidas = 0;
-        foreach (string linea in File.ReadAllLines(ruta, Encoding.UTF8))
+        foreach (Transform marca in registro)
         {
-            string[] p = linea.Split('|');
-            if (p.Length != 8) continue;
-            Transform casa = BuscarPorRuta(escena, p[0]);
+            Transform casa = BuscarPorRuta(escena, marca.name);
             if (casa == null) { perdidas++; continue; }
-            try
-            {
-                var pos = new Vector3(F(p[1]), F(p[2]), F(p[3]));
-                var rot = new Quaternion(F(p[4]), F(p[5]), F(p[6]), F(p[7]));
-                casa.SetPositionAndRotation(pos, rot);
-                n++;
-            }
-            catch (FormatException) { perdidas++; }
+            casa.SetPositionAndRotation(marca.position, marca.rotation);
+            n++;
         }
-        File.Delete(ruta);
+        Object.DestroyImmediate(registro.gameObject);
         informe.Add($"Casas: {n} devueltas a su giro original" + (perdidas > 0 ? $" ({perdidas} no encontradas)." : "."));
     }
 }

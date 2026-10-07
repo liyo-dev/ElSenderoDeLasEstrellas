@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -168,7 +166,7 @@ public static partial class VestidoDelMundo
 
     private static void PintarZonas(Lienzo l, Scene escena, List<string> informe)
     {
-        var giradas = CasasGiradas();
+        var giradas = CasasGiradas(escena);
         foreach (Pueblo pueblo in Pueblos())
         {
             int casas = PintarPueblo(l, escena, pueblo, giradas);
@@ -336,18 +334,5 @@ public static partial class VestidoDelMundo
         if (giradas.Contains(RutaJerarquia(casa)) && LadoDeLaPuerta.TryGetValue(prefab, out float lado))
             return casa.rotation * Quaternion.Euler(0f, lado, 0f) * Vector3.forward;
         return casa.forward;
-    }
-
-    private static HashSet<string> CasasGiradas()
-    {
-        var r = new HashSet<string>();
-        string ruta = Path.Combine(RutaCopias, ArchivoCasas);
-        if (!File.Exists(ruta)) return r;
-        foreach (string linea in File.ReadAllLines(ruta, Encoding.UTF8))
-        {
-            int i = linea.IndexOf('|');
-            if (i > 0) r.Add(linea.Substring(0, i));
-        }
-        return r;
     }
 }

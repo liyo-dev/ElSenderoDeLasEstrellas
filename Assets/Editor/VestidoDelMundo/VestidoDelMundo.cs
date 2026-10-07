@@ -45,22 +45,30 @@ public static partial class VestidoDelMundo
             return;
 
         var informe = new List<string>();
-        BorrarRaiz(escena, informe);
-        ReponerCasas(escena, informe);
-        if (HayCopia())
+        try
         {
-            string error = ReponerCopia(terreno.terrainData);
-            if (error != null) informe.Add("Suelo: " + error);
-            else
+            BorrarRaiz(escena, informe);
+            ReponerCasas(escena, informe);
+            EditorSceneManager.MarkSceneDirty(escena);
+            EditorSceneManager.SaveScene(escena);
+            if (HayCopia())
             {
-                AssetDatabase.SaveAssets();
-                BorrarEstado();
-                informe.Add("Suelo: repuesta la copia original.");
+                string error = ReponerCopia(terreno.terrainData);
+                if (error != null) informe.Add("Suelo: " + error);
+                else
+                {
+                    AssetDatabase.SaveAssets();
+                    BorrarEstado();
+                    informe.Add("Suelo: repuesta la copia original.");
+                }
             }
+            else informe.Add("Suelo: no había copia, no se toca.");
         }
-        else informe.Add("Suelo: no había copia, no se toca.");
-        EditorSceneManager.MarkSceneDirty(escena);
-        EditorSceneManager.SaveScene(escena);
+        catch (Exception e)
+        {
+            informe.Add("ERROR: " + e.Message);
+            Debug.LogException(e);
+        }
         Terminar("Quitar el vestido", informe);
     }
 
@@ -195,6 +203,7 @@ public static partial class VestidoDelMundo
             informe.Add("Suelo: se parte de la copia original para repintar.");
             return true;
         }
+        EditorUtility.ClearProgressBar();
         int r = EditorUtility.DisplayDialogComplex("Vestido de MainWorld",
             "El suelo del terreno ha cambiado desde la última vez que se vistió (¿pintado a mano?).\n\n" +
             "· «Partir de lo actual» guarda lo que hay ahora como nueva copia y pinta encima.\n" +
@@ -259,6 +268,7 @@ public static partial class VestidoDelMundo
 
     private static void Terminar(string titulo, List<string> informe)
     {
+        EditorUtility.ClearProgressBar();
         string texto = string.Join("\n", informe);
         Debug.Log($"{Etiqueta} {titulo}\n{texto}");
         try

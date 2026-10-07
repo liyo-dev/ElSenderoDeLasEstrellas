@@ -3517,7 +3517,7 @@ La copia se versiona con el resto de `_ClaudeBackups/`.
 
 Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y paraje.
 
-- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta dé a la calle más cercana. El giro original queda en `_ClaudeBackups/VestidoDelMundo/casas_originales.txt`. Si al girar una casa chocara con otra, se deja como estaba.
+- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, o su nombre se repite en su grupo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly, un hijo por casa), así se guarda o se descarta junto con las casas.
 - **Reino:**
   - 13 casas nuevas en solares vacíos;
   - armaduras y estandartes a la entrada del castillo;
