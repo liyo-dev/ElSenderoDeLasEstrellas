@@ -32,7 +32,7 @@
 20. [Convenciones de Documentación del Proyecto](#20-convenciones-de-documentación-del-proyecto)
 21. [Diseño: Vestir MainWorld con el "look" de las demos de Quibli (árboles, hierba, rayos de sol, outline)](#21-diseño-vestir-mainworld-con-el-look-de-las-demos-de-quibli-árboles-hierba-rayos-de-sol-outline)
 22. [Secuencias con guion horneado](#22-secuencias-con-guion-horneado-inc-588-a-inc-590)
-23. [Vestido de MainWorld: suelos de pueblo, castillo y parajes](#23-vestido-de-mainworld-suelos-de-pueblo-castillo-y-parajes-inc-663)
+23. [Vestido de MainWorld: suelos de pueblo, castillo y parajes](#23-vestido-de-mainworld-suelos-de-pueblo-castillo-y-parajes-inc-671)
 
 ---
 
@@ -3473,7 +3473,7 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 
 ---
 
-## 23. Vestido de MainWorld: suelos de pueblo, castillo y parajes (INC-663)
+## 23. Vestido de MainWorld: suelos de pueblo, castillo y parajes (INC-671)
 
 Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real, sin tocar lo que ya había (salvo el giro de algunas casas, reversible) y con un menú que lo deshace entero.
 
@@ -3519,7 +3519,7 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 
 **Orden:** primero se giran las casas y se colocan las nuevas, después se pinta el suelo y al final se ponen los detalles. Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución, y no se pinta el patio de una casa nueva que no cupo.
 
-- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva.
+- **Casas que daban la espalda a su calle** (INC-673): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva.
 - **Reino:**
   - 13 casas nuevas en solares vacíos;
   - armaduras y estandartes a la entrada del castillo;

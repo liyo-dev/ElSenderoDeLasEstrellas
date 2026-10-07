@@ -40,7 +40,7 @@
 *.signal    text eol=lf
 *.renderTexture binary
 # .asset que Unity guarda siempre en binario (TerrainData, NavMesh horneado). Con «text eol=lf» git
-# borra sus bytes CR al hacer commit y la copia del repositorio queda corrupta. Ver INC-664.
+# borra sus bytes CR al hacer commit y la copia del repositorio queda corrupta. Ver INC-672.
 Assets/Scenes/Worlds/**/Terreno.asset binary
 Assets/Scenes/Worlds/**/NavMesh*.asset binary
 Assets/Scenes/Test/**/NavMesh*.asset binary
