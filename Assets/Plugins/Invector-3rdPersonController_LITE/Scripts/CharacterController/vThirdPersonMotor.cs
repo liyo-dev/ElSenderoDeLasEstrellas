@@ -144,7 +144,18 @@ namespace Invector.vCharacterController
         /// despacio. Ver INC-545.
         /// </summary>
         [System.NonSerialized] public float topeDeAnimacion = float.PositiveInfinity;
-        private float _airHoldUntil;                        // fin de la ventana de HoldAirborne()
+        /// <summary>
+        /// Desplazamiento horizontal que se suma al del jugador mientras pisa el suelo, en m/s
+        /// (p. ej. el viento que lo arrastra si se queda quieto). Lo pone VientoSobreElJugador.
+        /// </summary>
+        [System.NonSerialized] public Vector3 empujeExterno;
+        /// <summary>Dirección de movimiento pedida por el mando, en mundo (sin normalizar).</summary>
+        public Vector3 DireccionDeMovimiento => moveDirection;
+        /// <summary>Cuánto empuja el jugador el stick (0-1).</summary>
+        public float MagnitudDeEntrada => input.magnitude;
+        /// <summary>True si el personaje está apoyado en el suelo y no saltando.</summary>
+        public bool PisandoSuelo => isGrounded && !isJumping;
+        private float _airHoldUntil;                       // fin de la ventana de HoldAirborne()
         protected int airJumpsUsed;                         // saltos en el aire gastados desde el último apoyo
         private float _actionCommitUntil;                   // fin de la ventana de CommitToAction()
         private Vector3 _commitFacing;                      // dirección hacia la que gira durante CommitToAction()
@@ -361,7 +372,7 @@ namespace Invector.vCharacterController
                 return;
             }
 
-            Vector3 targetPosition = basePosition + _direction * (stopMove ? 0 : moveSpeed) * Time.deltaTime;
+            Vector3 targetPosition = basePosition + (_direction * (stopMove ? 0 : moveSpeed) + empujeExterno) * Time.deltaTime;
 
             if (!IsFiniteVector(targetPosition))
             {

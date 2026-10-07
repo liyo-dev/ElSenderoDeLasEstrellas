@@ -150,10 +150,14 @@ public class CloudCoverSpawner : MonoBehaviour
     private Coroutine _recenterCoroutine;
 
     [Header("Aspecto de tormenta")]
-    [Tooltip("Color de sombreado de tormenta. Solo se usa en modo QuibliCloud2D (_ShadowColor) y LegacyBaseColor (_BaseColor). En QuibliCloud3D no hace falta: el tono tormentoso lo pone la propia luz de la escena al oscurecerse con la lluvia.")]
+    [Tooltip("Color de sombreado de tormenta. Solo se usa en modo QuibliCloud2D (_ShadowColor) y LegacyBaseColor (_BaseColor). En QuibliCloud3D el tono lo pone stormShadingGradient.")]
     [SerializeField] private Color stormCloudColor = new Color(0.42f, 0.43f, 0.47f);
     [Tooltip("Cuánto sombreado de tormenta (_ShadowAmount de Quibli/Cloud2D) tienen las nubes una vez formadas del todo. 0 = nubes blancas de buen tiempo, 1 = panza de tormenta muy marcada. Se anima junto a la formación: mientras la nube llega también se va oscureciendo.")]
     [SerializeField, Range(0f, 1f)] private float stormShadowAmount = 0.55f;
+    [Tooltip("Solo con QuibliCloud3D: degradado de sombreado de las nubes de tormenta (de la cara en sombra a la iluminada), en lugar del del material, que es el de nubes blancas de buen tiempo. Nubes blancas sobre el cielo gris de lluvia se leen como nubes sueltas; grises, como un techo continuo. De noche se oscurece según DayNightCycle.PesoDeNoche.")]
+    [SerializeField] private Gradient stormShadingGradient = DegradadoDeTormenta();
+    [Tooltip("Brillo del degradado de tormenta en plena noche (1 = igual que de día).")]
+    [SerializeField, Range(0f, 1f)] private float stormNightBrightness = 0.3f;
     [Tooltip("Shader de los prefabs de nube. QuibliCloud3D (por defecto y recomendado): mallas del Foliage Generator con Quibli/Cloud3D; el fundido 'erosiona' el recorte de alfa (_AlphaThreshold), con efecto de materializarse/disiparse. QuibliCloud2D: quads con Quibli/Cloud2D (_Opacity + _ShadowColor/_ShadowAmount). LegacyBaseColor: comportamiento antiguo (_BaseColor con alfa) para mallas tipo Low Poly.")]
     [SerializeField] private CloudShaderMode cloudShaderMode = CloudShaderMode.QuibliCloud3D;
     [Tooltip("Solo con QuibliCloud3D: valor de _AlphaThreshold cuando la nube está formada del todo (0.5 en el material del demo de Quibli, SampleScene_Cloud3D.mat). El fundido anima desde 1 (invisible) hasta este valor.")]
@@ -203,6 +207,11 @@ public class CloudCoverSpawner : MonoBehaviour
     private static readonly int BillboardId = Shader.PropertyToID("_Billboard");
     // Propiedad del shader Quibli/Cloud3D (recorte de alfa que anima la formación/disipación).
     private static readonly int AlphaThresholdId = Shader.PropertyToID("_AlphaThreshold");
+    private static readonly int ShadingGradientId = Shader.PropertyToID("_ShadingGradientTexture");
+    private const int AnchoDelDegradado = 64;
+    private Texture2D _degradadoTormenta;
+    private readonly Color32[] _pixelesDelDegradado = new Color32[AnchoDelDegradado];
+    private float _brilloDelDegradado = -1f;
 
     private Transform _root;
     private Transform _followTransform;
@@ -242,6 +251,54 @@ public class CloudCoverSpawner : MonoBehaviour
             dayNightCycle = FindAnyObjectByType<DayNightCycle>();
 
         _mpb = new MaterialPropertyBlock();
+
+        if (cloudShaderMode == CloudShaderMode.QuibliCloud3D)
+        {
+            _degradadoTormenta = new Texture2D(AnchoDelDegradado, 1, TextureFormat.RGBA32, false)
+            {
+                name = "[CloudCover] Degradado de tormenta",
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Bilinear,
+            };
+            ActualizarDegradado(1f);
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (_degradadoTormenta != null) Destroy(_degradadoTormenta);
+        _degradadoTormenta = null;
+    }
+
+    static Gradient DegradadoDeTormenta()
+    {
+        var g = new Gradient();
+        g.SetKeys(
+            new[]
+            {
+                new GradientColorKey(new Color(0.30f, 0.32f, 0.36f), 0f),
+                new GradientColorKey(new Color(0.42f, 0.44f, 0.49f), 0.45f),
+                new GradientColorKey(new Color(0.57f, 0.59f, 0.64f), 0.65f),
+                new GradientColorKey(new Color(0.66f, 0.68f, 0.72f), 1f),
+            },
+            new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 1f) });
+        return g;
+    }
+
+    /// Reescribe la textura del degradado con el brillo dado. La comparten todas las nubes por su
+    /// MaterialPropertyBlock, así que basta con cambiar los píxeles.
+    void ActualizarDegradado(float brillo)
+    {
+        if (_degradadoTormenta == null || stormShadingGradient == null) return;
+        for (int i = 0; i < AnchoDelDegradado; i++)
+        {
+            Color c = stormShadingGradient.Evaluate(i / (AnchoDelDegradado - 1f)) * brillo;
+            c.a = 1f;
+            _pixelesDelDegradado[i] = c;
+        }
+        _degradadoTormenta.SetPixels32(_pixelesDelDegradado);
+        _degradadoTormenta.Apply(false);
+        _brilloDelDegradado = brillo;
     }
 
 #if UNITY_EDITOR
@@ -448,6 +505,12 @@ public class CloudCoverSpawner : MonoBehaviour
         // o en marcha (formándose o disipándose).
         if (!_built || _root == null) return;
         if (_targetFormation <= 0f && _formationCoroutine == null) return;
+
+        if (_degradadoTormenta != null && dayNightCycle != null)
+        {
+            float brillo = Mathf.Lerp(1f, stormNightBrightness, dayNightCycle.PesoDeNoche);
+            if (Mathf.Abs(brillo - _brilloDelDegradado) > 0.03f) ActualizarDegradado(brillo);
+        }
 
         _recenterTimer += Time.deltaTime;
         if (_recenterTimer < recenterCheckInterval) return;
@@ -920,6 +983,7 @@ public class CloudCoverSpawner : MonoBehaviour
             {
                 case CloudShaderMode.QuibliCloud3D:
                     _mpb.SetFloat(AlphaThresholdId, alphaThreshold);
+                    if (_degradadoTormenta != null) _mpb.SetTexture(ShadingGradientId, _degradadoTormenta);
                     break;
                 case CloudShaderMode.QuibliCloud2D:
                     _mpb.SetFloat(OpacityId, eased);

@@ -112,6 +112,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Voltereta del jugador (desde el suelo o en el aire) | `VolteretaDelJugador` (`DesdeElSuelo`, `EnElAire`) | parábolas o volteretas propias en cada sistema |
 | Ambiente de noche (ventanas, faroles, estrellas fugaces) | `VentanasIluminadas` (emisión de materiales compartidos), `LuzNocturna` (Light), `EstrellasFugaces`, todos con `DayNightCycle.NocheActual` | encender luces o emisiones por hora en cada sistema |
 | Partículas de ambiente fijas en el mundo (luciérnagas, niebla de bosque, humo) | heredar de `ParticulasDeAmbiente` (`LuciernagasNocturnas`, `NieblaNocturna`, `HumoDeChimenea`) | `ParticleSystem` sueltos con su propia activación por distancia |
+| Clima (lluvia, tormenta, nieve, viento, niebla) y su efecto en el jugador | `DayNightCycle` (+ `VfxDeClima` si no hay prefab, `VientoSobreElJugador` para frenar/arrastrar) | partículas de clima o empujes del viento por su cuenta en cada sistema |
 
 ---
 
