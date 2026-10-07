@@ -317,7 +317,7 @@ public static class NavMeshAutoSetup
                !Mathf.Approximately(o.radius, radioAntes) || !Mathf.Approximately(o.height, altoAntes);
     }
 
-    private const string PrefijoCajaHija = "NavObstáculo pie ";
+    internal const string PrefijoCajaHija = "NavObstáculo pie ";
     // Separación mínima, en metros, entre dos apoyos para tratarlos como cajas distintas.
     private const float HuecoEntreApoyos = 0.8f;
 

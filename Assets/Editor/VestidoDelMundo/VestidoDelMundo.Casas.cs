@@ -240,8 +240,13 @@ public static partial class VestidoDelMundo
                     informe.Add($"  · «{casa.name}» se movió a mano después del vestido: se deja donde está.");
                     continue;
                 }
-                Bounds b = LimitesVisibles(casa.gameObject);
-                casa.RotateAround(new Vector3(b.center.x, casa.position.y, b.center.z), Vector3.up, lado);
+                // Solo se deshace el giro si la casa aún lo lleva: un Ctrl+Z de un cambio anterior al vestido
+                // (que no usa Undo) puede haberla devuelto ya a su giro de antes.
+                if (Quaternion.Angle(casa.rotation, girada.rotation) < Quaternion.Angle(casa.rotation, marca.rotation))
+                {
+                    Bounds b = LimitesVisibles(casa.gameObject);
+                    casa.RotateAround(new Vector3(b.center.x, casa.position.y, b.center.z), Vector3.up, lado);
+                }
                 movidas++;
                 informe.Add($"  · «{casa.name}» se movió a mano después del vestido: se le deshace solo el giro.");
             }

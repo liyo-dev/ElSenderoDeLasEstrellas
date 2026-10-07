@@ -94,6 +94,9 @@ public static partial class VestidoDelMundo
             }
 
             var lienzo = new Lienzo(terreno);
+            if (suelo && HayCopia(Copia.Base))
+                LeerRetoques(lienzo.Res * lienzo.Res, terreno.terrainData.detailResolution * terreno.terrainData.detailResolution,
+                    out lienzo.Bloqueadas, out lienzo.DetalleBloqueado);
             if (!lienzo.TieneCapas(new[] { CapaHierba, CapaFlores, CapaTierraPiedras, CapaTierra, CapaAdoquin, CapaBaldosa }, out string falta))
             {
                 informe.Add($"El terreno no tiene la capa «{falta}». No se ha cambiado nada.");
@@ -281,7 +284,8 @@ public static partial class VestidoDelMundo
         "Si quieres conservar algo, sácalo antes de esa raíz.";
 
     /// Huella de lo generado: nombre, pose y componentes de todo lo que cuelga de la raíz. No cuenta lo que
-    /// añade el menú de Noche (hijos «LuzNocturna…» y «Humo»), que se rehace solo.
+    /// rehacen solos otros menús: Noche (hijos «LuzNocturna…» y «Humo») y Navegación (NavMeshObstacle y sus
+    /// hijos «NavObstáculo pie N»).
     private static string HuellaRaiz(Transform raiz)
     {
         uint h = 2166136261u;
@@ -292,20 +296,20 @@ public static partial class VestidoDelMundo
 
         foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
         {
-            if (t == raiz || t.name.StartsWith(PrefijoHuellaRaiz) || EsDeLaNoche(t, raiz)) continue;
+            if (t == raiz || t.name.StartsWith(PrefijoHuellaRaiz) || EsRegenerable(t, raiz)) continue;
             Vector3 p = t.position, e = t.eulerAngles, s = t.lossyScale;
             Mezclar(t.name);
             Mezclar(FormattableString.Invariant($"{p.x:F1},{p.y:F1},{p.z:F1},{e.x:F0},{e.y:F0},{e.z:F0},{s.x:F1},{s.y:F1},{s.z:F1},{t.gameObject.activeSelf}"));
             foreach (Component c in t.GetComponents<Component>())
-                if (c != null) Mezclar(c.GetType().Name);
+                if (c != null && !(c is UnityEngine.AI.NavMeshObstacle)) Mezclar(c.GetType().Name);
         }
         return h.ToString("x8");
     }
 
-    private static bool EsDeLaNoche(Transform t, Transform raiz)
+    private static bool EsRegenerable(Transform t, Transform raiz)
     {
         for (; t != null && t != raiz; t = t.parent)
-            if (t.name.StartsWith("LuzNocturna") || t.name == "Humo") return true;
+            if (t.name.StartsWith("LuzNocturna") || t.name == "Humo" || t.name.StartsWith(NavMeshAutoSetup.PrefijoCajaHija)) return true;
         return false;
     }
 

@@ -16,6 +16,7 @@ public static partial class VestidoDelMundo
     private const string ArchivoPesos = "pesos_originales.bin.gz";
     private const string ArchivoDetalle = "detalle_original.bin.gz";
     private const string ArchivoEstado = "estado.txt";
+    private const string ArchivoRetoques = "retoques_base.bin.gz";
 
     // Capas por nombre de TerrainLayer: el índice se busca en el TerrainData al empezar.
     private const string CapaHierba = "SueloPueblo_0";      // FK Terrain01, hierba con textura
@@ -37,6 +38,10 @@ public static partial class VestidoDelMundo
         public readonly float[,,] Pesos;
         /// Celdas donde ha quedado suelo duro (calle, plaza, senda): ahí se quita la hierba de detalle.
         public readonly bool[,] Duro;
+        /// Celdas de pesos [k * Res + i] retocadas a mano: el vestido no las repinta. Null si no hay.
+        public bool[] Bloqueadas;
+        /// Celdas de hierba de detalle [k * DRes + i] retocadas a mano: no se les quita la hierba. Null si no hay.
+        public bool[] DetalleBloqueado;
         private readonly Vector3 origen;
         private readonly Vector3 tamano;
         private readonly Dictionary<string, int> indices = new();
@@ -78,7 +83,7 @@ public static partial class VestidoDelMundo
         /// Mezcla convexa: lleva la celda hacia la capa indicada con fuerza s (0..1).
         public void Mezclar(int i, int k, int capa, float s, bool duro = false)
         {
-            if (capa < 0 || s <= 0f) return;
+            if (capa < 0 || s <= 0f || (Bloqueadas != null && Bloqueadas[k * Res + i])) return;
             s = Mathf.Min(s, 1f);
             for (int c = 0; c < NumCapas; c++) Pesos[k, i, c] *= 1f - s;
             Pesos[k, i, capa] += s;
@@ -88,7 +93,7 @@ public static partial class VestidoDelMundo
         /// Mezcla convexa hacia una combinación de dos capas: (1 - t) de «a» y t de «b».
         public void MezclarPar(int i, int k, int a, int b, float s, float t)
         {
-            if (a < 0 || b < 0 || s <= 0f) return;
+            if (a < 0 || b < 0 || s <= 0f || (Bloqueadas != null && Bloqueadas[k * Res + i])) return;
             s = Mathf.Min(s, 1f);
             for (int c = 0; c < NumCapas; c++) Pesos[k, i, c] *= 1f - s;
             Pesos[k, i, a] += s * (1f - t);
@@ -294,8 +299,9 @@ public static partial class VestidoDelMundo
 
     private static void BorrarCopia(Copia c)
     {
-        foreach (string a in new[] { ArchivoPesosDe(c), ArchivoDetalleDe(c) })
+        foreach (string a in new[] { ArchivoPesosDe(c), ArchivoDetalleDe(c), c == Copia.Base ? ArchivoRetoques : null })
         {
+            if (a == null) continue;
             string r = Path.Combine(RutaCopias, a);
             if (File.Exists(r)) File.Delete(r);
         }
@@ -483,12 +489,16 @@ public static partial class VestidoDelMundo
             return null;
         }
 
+        // Las celdas retocadas antes siguen en la máscara: el vestido no las repintó y hoy coinciden con él.
+        LeerRetoques(actual.Res * actual.Res, actual.DRes * actual.DRes, out bool[] bloqueadas, out bool[] detalleBloqueado);
+        bloqueadas ??= new bool[actual.Res * actual.Res];
+        detalleBloqueado ??= new bool[actual.DRes * actual.DRes];
         int capas = actual.Capas;
         for (int o = 0; o < actual.Pesos.Length; o += capas)
         {
             bool tocada = false;
             for (int c = 0; c < capas && !tocada; c++) tocada = actual.Pesos[o + c] != vestido.Pesos[o + c];
-            if (tocada) retocadas++;
+            if (tocada) { retocadas++; bloqueadas[o / capas] = true; }
             else Array.Copy(debajo.Pesos, o, actual.Pesos, o, capas);
         }
         if (vestido.Detalle != null && debajo.Detalle != null && actual.Detalle != null &&
@@ -497,8 +507,35 @@ public static partial class VestidoDelMundo
             for (int c = 0; c < actual.Detalle.Length; c++)
                 for (int t = 0; t < actual.Detalle[c].Length; t++)
                     if (actual.Detalle[c][t] == vestido.Detalle[c][t]) actual.Detalle[c][t] = debajo.Detalle[c][t];
+                    else detalleBloqueado[t] = true;
         Escribir(actual, Copia.Base);
+        EscribirComprimido(Path.Combine(RutaCopias, ArchivoRetoques), w =>
+        {
+            w.Write("VDMR1");
+            w.Write(bloqueadas.Length);
+            foreach (bool b in bloqueadas) w.Write(b);
+            w.Write(detalleBloqueado.Length);
+            foreach (bool b in detalleBloqueado) w.Write(b);
+        });
         return null;
+    }
+
+    /// Máscaras de celdas retocadas a mano guardadas con la base; null en la que falte o no encaje.
+    private static void LeerRetoques(int celdas, int celdasDetalle, out bool[] bloqueadas, out bool[] detalleBloqueado)
+    {
+        bloqueadas = detalleBloqueado = null;
+        string ruta = Path.Combine(RutaCopias, ArchivoRetoques);
+        if (!File.Exists(ruta)) return;
+        using var fs = File.OpenRead(ruta);
+        using var gz = new GZipStream(fs, CompressionMode.Decompress);
+        using var r = new BinaryReader(gz);
+        if (r.ReadString() != "VDMR1") return;
+        var a = new bool[r.ReadInt32()];
+        for (int t = 0; t < a.Length; t++) a[t] = r.ReadBoolean();
+        var d = new bool[r.ReadInt32()];
+        for (int t = 0; t < d.Length; t++) d[t] = r.ReadBoolean();
+        if (a.Length == celdas) bloqueadas = a;
+        if (d.Length == celdasDetalle) detalleBloqueado = d;
     }
 
     /// Huella del suelo: pesos de las capas y hierba de detalle. Si cambia, alguien ha pintado a mano.
@@ -559,7 +596,7 @@ public static partial class VestidoDelMundo
                 int ak = Mathf.Clamp(Mathf.RoundToInt(k / (float)(dres - 1) * (l.Res - 1)), 0, l.Res - 1);
                 for (int i = 0; i < dres; i++)
                 {
-                    if (capa[k, i] == 0) continue;
+                    if (capa[k, i] == 0 || (l.DetalleBloqueado != null && l.DetalleBloqueado[k * dres + i])) continue;
                     int ai = Mathf.Clamp(Mathf.RoundToInt(i / (float)(dres - 1) * (l.Res - 1)), 0, l.Res - 1);
                     if (!l.Duro[ak, ai]) continue;
                     capa[k, i] = 0;
