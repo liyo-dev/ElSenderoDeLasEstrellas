@@ -184,6 +184,27 @@ public static class NavMeshAutoSetup
         }
     }
 
+    /// Clasifica solo lo que cuelga de una raíz (lo que coloca una herramienta), sin recorrer el resto
+    /// de la escena. Lo que cabe en menos de «ladoMinimo» metros en planta (macetas, cajas, farolas) no
+    /// recibe obstáculo, para no llenar el NavMesh de agujeros diminutos. Devuelve cuántos añade.
+    public static int ClasificarBajo(Transform raiz, float ladoMinimo = 1f)
+    {
+        int floorLayer = LayerMask.NameToLayer(WalkableLayerName);
+        if (floorLayer < 0 || raiz == null) return 0;
+        int added = 0;
+        foreach (var col in raiz.GetComponentsInChildren<Collider>(includeInactive: false))
+        {
+            if (ShouldExclude(col, floorLayer, ignoreExistingObstacle: false)) continue;
+            var b = col.bounds;
+            if (b.size.x < ladoMinimo && b.size.z < ladoMinimo) continue;
+            var obstacle = col.gameObject.AddComponent<NavMeshObstacle>();
+            obstacle.carving = true;
+            AjustarAlPie(obstacle, col, conUndo: false);
+            added++;
+        }
+        return added;
+    }
+
     // Altura, en metros sobre la base del objeto, de lo que cuenta como obstáculo para andar: la
     // de un personaje (la altura de agente del NavMesh). Lo que queda por encima (una copa alta,
     // el dintel de un arco) no corta el paso; lo que queda por debajo (las ramas bajas de un
@@ -229,8 +250,9 @@ public static class NavMeshAutoSetup
     /// ramas bajas).
     /// Antes se usaba una cápsula del tamaño del objeto entero: la copa de un árbol o el largo de
     /// una valla tallaban un círculo enorme, y en la puerta del reino cerraban el paso. Ver INC-463.
-    /// Devuelve true si ha cambiado algo.
-    private static bool AjustarAlPie(NavMeshObstacle o, Collider col)
+    /// Devuelve true si ha cambiado algo. Sin «conUndo», las cajas de apoyo no pasan por Undo (para
+    /// herramientas que tampoco lo usan y se deshacen con su propio menú).
+    private static bool AjustarAlPie(NavMeshObstacle o, Collider col, bool conUndo = true)
     {
         var shapeAntes = o.shape; var centroAntes = o.center; var tamAntes = o.size;
         var radioAntes = o.radius; var altoAntes = o.height;
@@ -248,7 +270,7 @@ public static class NavMeshAutoSetup
                 o.shape = NavMeshObstacleShape.Box;
                 o.center = cajasVisibles[0].center;
                 o.size = cajasVisibles[0].size;
-                if (PonerCajasHijas(o, cajasVisibles)) return true;
+                if (PonerCajasHijas(o, cajasVisibles, conUndo)) return true;
                 return o.shape != shapeAntes || o.center != centroAntes || o.size != tamAntes;
             }
         }
@@ -283,7 +305,7 @@ public static class NavMeshAutoSetup
                 o.size = cajas[0].size;
                 // Un arco o una valla con hueco apoyan en el suelo por varios sitios: cada apoyo
                 // lleva su propia caja (hijos «NavObstáculo pie N»), para que el hueco quede libre.
-                bool cambioHijos = PonerCajasHijas(o, cajas);
+                bool cambioHijos = PonerCajasHijas(o, cajas, conUndo);
                 if (cambioHijos) return true;
                 break;
 
@@ -295,7 +317,7 @@ public static class NavMeshAutoSetup
                !Mathf.Approximately(o.radius, radioAntes) || !Mathf.Approximately(o.height, altoAntes);
     }
 
-    private const string PrefijoCajaHija = "NavObstáculo pie ";
+    internal const string PrefijoCajaHija = "NavObstáculo pie ";
     // Separación mínima, en metros, entre dos apoyos para tratarlos como cajas distintas.
     private const float HuecoEntreApoyos = 0.8f;
 
@@ -424,7 +446,7 @@ public static class NavMeshAutoSetup
 
     /// Deja un hijo con su NavMeshObstacle por cada caja a partir de la segunda, y quita los que
     /// sobren de pasadas anteriores. Devuelve true si ha cambiado algo.
-    private static bool PonerCajasHijas(NavMeshObstacle o, List<Bounds> cajas)
+    private static bool PonerCajasHijas(NavMeshObstacle o, List<Bounds> cajas, bool conUndo)
     {
         var existentes = new List<Transform>();
         foreach (Transform hijo in o.transform)
@@ -438,7 +460,7 @@ public static class NavMeshAutoSetup
             if (hijo == null)
             {
                 var go = new GameObject(nombre);
-                Undo.RegisterCreatedObjectUndo(go, "Cajas de apoyo del obstáculo");
+                if (conUndo) Undo.RegisterCreatedObjectUndo(go, "Cajas de apoyo del obstáculo");
                 go.transform.SetParent(o.transform, false);
                 go.layer = o.gameObject.layer;
                 hijo = go.transform;
@@ -446,8 +468,12 @@ public static class NavMeshAutoSetup
             }
             existentes.Remove(hijo);
             var obs = hijo.GetComponent<NavMeshObstacle>();
-            if (obs == null) { obs = Undo.AddComponent<NavMeshObstacle>(hijo.gameObject); cambio = true; }
-            else Undo.RecordObject(obs, "Cajas de apoyo del obstáculo");
+            if (obs == null)
+            {
+                obs = conUndo ? Undo.AddComponent<NavMeshObstacle>(hijo.gameObject) : hijo.gameObject.AddComponent<NavMeshObstacle>();
+                cambio = true;
+            }
+            else if (conUndo) Undo.RecordObject(obs, "Cajas de apoyo del obstáculo");
             obs.carving = true;
             obs.shape = NavMeshObstacleShape.Box;
             if (obs.center != cajas[i].center || obs.size != cajas[i].size) cambio = true;
@@ -456,7 +482,8 @@ public static class NavMeshAutoSetup
         }
         foreach (var sobra in existentes)
         {
-            Undo.DestroyObjectImmediate(sobra.gameObject);
+            if (conUndo) Undo.DestroyObjectImmediate(sobra.gameObject);
+            else Object.DestroyImmediate(sobra.gameObject);
             cambio = true;
         }
         return cambio;

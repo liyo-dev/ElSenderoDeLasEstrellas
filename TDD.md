@@ -31,6 +31,8 @@
 19. [Auditorías](#19-auditorías)
 20. [Convenciones de Documentación del Proyecto](#20-convenciones-de-documentación-del-proyecto)
 21. [Diseño: Vestir MainWorld con el "look" de las demos de Quibli (árboles, hierba, rayos de sol, outline)](#21-diseño-vestir-mainworld-con-el-look-de-las-demos-de-quibli-árboles-hierba-rayos-de-sol-outline)
+22. [Secuencias con guion horneado](#22-secuencias-con-guion-horneado-inc-588-a-inc-590)
+23. [Vestido de MainWorld: suelos de pueblo, castillo y parajes](#23-vestido-de-mainworld-suelos-de-pueblo-castillo-y-parajes-inc-671)
 
 ---
 
@@ -3484,3 +3486,100 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
   - los beats sin uso (`CutBeat`, `MoveCameraBeat`, `ReactionBeat`, `SignalBeat`, `StopTrackingBeat`, `ResetActionAxisBeat`, `HoldActorBeat`, `InputPromptBeat`);
   - los cableadores de un solo uso.
 - La versión de beats del prólogo está en `Versiones antiguas/Secuencias de beats (antes del guion)/`.
+
+---
+
+## 23. Vestido de MainWorld: suelos de pueblo, castillo y parajes (INC-671)
+
+Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real, sin tocar lo que ya había (salvo el giro de algunas casas, reversible) y con un menú que lo deshace entero.
+
+### 23.1 Menús
+
+`Assets/Editor/VestidoDelMundo/` (clase parcial `VestidoDelMundo`, 8 archivos). En *El Sendero ▸ Escenario*:
+
+| Menú | Qué hace |
+|---|---|
+| MainWorld: vestir (suelos, castillo y parajes) | Pinta los suelos y coloca los detalles. Es el normal. |
+| MainWorld: vestir solo los suelos | Solo la pintura del terreno. |
+| MainWorld: vestir solo los detalles | Solo los objetos (y el giro de casas). Usa los suelos que haya pintados. |
+| MainWorld: quitar el vestido (repone suelo y casas) | Borra lo generado, devuelve las casas a su giro y repone la copia del suelo. |
+
+- Abre MainWorld si no está abierta (pregunta antes si hay escenas sin guardar) y no funciona en Play.
+- Al terminar guarda la escena y el `TerrainData`, y escribe el informe en `_ClaudeBackups/VestidoDelMundo/Informe.txt`: piezas colocadas, descartadas y por qué (máx. 6 ejemplos por motivo).
+- Repetir el menú da el mismo resultado: todo sale de semillas fijas y la raíz generada se borra y se rehace.
+
+### 23.2 Suelos (`VestidoDelMundo.Suelo.cs`, `VestidoDelMundo.Pueblos.cs`)
+
+Pinta el `TerrainData` de `Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.asset` con las capas que ya usa el pueblo de Will (`SueloPueblo_0..3`, `SueloUrbano0/3`), con bordes de ruido y no en rectángulos.
+
+- **Reino (ciudad del castillo):** alfombra de hierba dentro de la muralla, calles de adoquín con tierra en los bordes, plaza real y plaza de la taberna en baldosa con marco de adoquín, explanada ante el castillo, senda desde cada puerta y huerto.
+- **Pueblo pesquero:** alfombra que funde la hierba con la arena a lo largo de la línea de playa (sin escalones), plaza del puerto, sendas de puerta y accesos.
+- **Pueblo vecino** y **granjas de la cascada:** alfombra, calles de tierra con piedras, plaza / era de trilla, huertos.
+- **Parajes:** senda de tierra de 2,6 m desde el camino más cercano y suelo propio alrededor de cada paraje.
+- Quedan fuera las pendientes de más de 32°, lo que está bajo 0,6 m y los huertos.
+- Quita la hierba de detalle de lo que queda como suelo duro (calles, plazas, sendas).
+- **No se toca:** el pueblo de Will (referencia de estilo), el bosque prohibido y la montaña.
+
+**Copia del suelo.** La primera ejecución guarda en `_ClaudeBackups/VestidoDelMundo/` los pesos originales (`pesos_originales.bin.gz`) y la hierba de detalle (`detalle_original.bin.gz`), con la ruta del asset, la resolución y los nombres de capa para comprobarlos al reponer. Esa copia no se vuelve a escribir: es el suelo de antes del vestido y *quitar* vuelve a ella. `estado.txt` guarda la huella (pesos y hierba de detalle) del suelo que dejó la herramienta:
+
+- Si al volver a ejecutar la huella coincide, se parte de la copia (el resultado no se acumula).
+- Si no coincide (alguien ha pintado a mano), pregunta: partir de lo actual, volver a la copia o cancelar. Cada pintura guarda también cómo dejó el suelo (`pesos_vestido`/`detalle_vestido`). «Partir de lo actual» compara con eso: las celdas que ya no son las del vestido (retocadas a mano) se conservan y el resto vuelve al suelo de debajo. Eso queda como base (`pesos_base`/`detalle_base`), con una máscara de las celdas retocadas (`retoques_base`) que el vestido no repinta ni les quita la hierba; las siguientes ejecuciones repintan desde esa base. Así lo retocado a mano se queda y el vestido no se aplica dos veces. «Volver a la copia» descarta la base.
+
+Conviene hacer commit de `_ClaudeBackups/VestidoDelMundo/` tras el primer vestido: es la única copia del suelo original.
+
+**Comparte terreno con el menú principal.** `MainMenu.unity` usa el mismo `Terreno.asset` para las portadas: los suelos nuevos se ven también ahí.
+
+### 23.3 Detalles (`VestidoDelMundo.Detalles.cs`, `VestidoDelMundo.Parajes.cs`, `VestidoDelMundo.Casas.cs`)
+
+Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y paraje.
+
+**Orden:** primero se giran las casas y se colocan las nuevas, después se pinta el suelo y al final se ponen los detalles. Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución, y no se pinta el patio de una casa nueva que no cupo.
+
+- **Casas que daban la espalda a su calle** (INC-673): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva.
+- **Reino:**
+  - 13 casas nuevas en solares vacíos;
+  - armaduras y estandartes a la entrada del castillo;
+  - estandartes, jardineras y bancos en el borde de la plaza real (su interior queda libre para eventos);
+  - mercado de 9 puestos junto a la taberna;
+  - plazoleta con pozo, patio de armas con dianas y armero;
+  - árboles de jardín.
+- **En todos los pueblos:** macetas, jardineras, barriles, cajas, leña o un banco junto a las puertas y farolas cada 18 m alternando acera.
+- **Pueblo pesquero:** puestos de pescado, cajas, nasas, redes y barcas varadas fuera del embarcadero, y bancos.
+- **Pueblo vecino:** puesto y bancos en la plaza, heno, carreta y leña.
+- **Granjas:** almiar y pacas, abrevadero, carretilla, gallineros, colmena y espantapájaros fuera de los huertos.
+- **12 parajes entre zonas:** ruinas de una casa fuerte, atalaya rota del acantilado sur, caserío abandonado, claustro viejo, redil del pastor, varadero de la playa oeste, cantera vieja, posta del cruce, era de trilla, almenara del acantilado este, mirador de la subida al Reino y descanso del cruce. Cada uno es una «receta» de piezas en coordenadas locales (muros derruidos, columnas, sillares sueltos, maderos, flores silvestres) orientada hacia donde llega su senda.
+
+**Comprobaciones de cada pieza** (`VestidoDelMundo.Colocar.cs`). Si una falla, la pieza no se pone y queda anotada en el informe:
+
+- tamaño medido en el propio prefab (el giro se compone con el que traiga la raíz del prefab);
+- apoyo en 9 puntos de la huella y desnivel máximo;
+- nada por debajo de 0,3 m sobre el mar (y = 0): ni en el agua ni en la orilla mojada;
+- sin pisarse con otras piezas del vestido (huellas orientadas, no la caja de mundo, que exagera las piezas giradas);
+- fuera de las zonas que deben quedar libres (51: anclas, arenas, recorridos de escolta, plazas de eventos, el Bosque Prohibido, el solar de Silas… en `ZonasLibres`; círculos, y la plaza real como rectángulo x ±20, z 285–313);
+- fuera de calles y caminos pintados, y de los corredores de puerta;
+- sin chocar (`OverlapBoxNonAlloc`) con los colisionadores que ya había en la escena. No cuentan el terreno, los triggers ni los volúmenes de más de 60 m.
+
+**Retoques a mano dentro de lo generado:** al terminar se guarda una huella (nombre, pose y componentes de todo lo que cuelga de la raíz, sin contar lo que rehacen solos los menús de Noche y de Navegación) en un hijo EditorOnly «Huella del vestido: …». Si al rehacer o quitar la huella no coincide, avisa antes de borrar la raíz: lo que se haya movido, añadido o enganchado ahí se perdería. También avisa, aunque la huella coincida, si algún script o director de la escena apunta a una pieza de la raíz (un `NarrativeActor`, un horario, una secuencia), y lista cuáles. Lo que se quiera conservar se saca antes de esa raíz.
+
+**Navegación:** `NavMeshAutoSetup.ClasificarBajo(raíz)` añade `NavMeshObstacle` con Carve a lo nuevo que mida 1 m o más en planta. El NavMesh horneado no cambia. Después conviene pasar *El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?* para el paseo de Eldran.
+
+**Noche:** las farolas y las casas nuevas reciben su luz (y las chimeneas, su humo) al ejecutar *El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas* (§ 16 parte D) después del vestido. Por eso los parajes no llevan fuegos (`Fire0*`, que la Noche enciende): la almenara tiene leña sin encender.
+
+### 23.4 Canon (GDD) que respeta
+
+- Nada en el Bosque Prohibido: ni ruinas ni oficios. Su caja (la de `Ambient_ForbidenWoods`, x −445…−135, z −152…234) es zona libre y tampoco se pinta. Sin leñadores: la propuesta del cap. 2 corta ese motivo.
+- Nada que imite las Ruinas del Libro: sin monolitos, altares, pedestales, portales ni puertas selladas, inscripciones ni estrellas. El único vano (casa fuerte) es la puerta de un muro, entre dos tramos; el claustro es de columnas; ningún anillo de piedras alrededor de algo central.
+- Nada que se lea como la torre de Liam.
+- Sin molinos ni establos fuera del puerto.
+- En ningún sitio: montones de 3 piedras (por eso no se usa `Stone01_a02`, que son tres sillares apilados), jaulas (las nasas solo en el puerto), luces bajas entre árboles, carros volcados, campamentos con ceniza ni nidos de araña. Los parajes no usan edificios del pack de casas (`Building Combination`) salvo la posta, que está habitada: la Noche les encendería luz y ventanas.
+- Nada en las playas salvo el varadero; la montaña, intacta.
+- Sin carteles con texto ni objetos recogibles (el poste indicador del pack lleva letras talladas: no se usa).
+- La plaza real deja libres la arena de 25 m y el eje x ±6, z 300→338.
+- En el pueblo vecino queda reservado un solar para la casa y el taller de Silas (GDD § 9): x 281…299, z −118…−102, al oeste de la plaza, llano. Es zona libre: no se adorna ni se planta nada. La plaza del vecino (x 315…345, z −127…−103) tampoco se adorna.
+
+### 23.5 Estado y límites
+
+- Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity).
+- La disposición se validó fuera de Unity con las alturas, los pesos y la jerarquía reales de MainWorld: simulación de la pintura, renders con las texturas de las capas y una simulación de `Poner` (desnivel, agua, zonas, corredores, solapes y choques contra los colisionadores reales de la escena y sus prefabs, incluidos los `MeshCollider` de las mallas `*_col`). Con las coordenadas finales coloca 231 de las 235 piezas de posición fija. Quedaban dos del mercado, que se arreglan separándolas del puesto según su ancho medido (cambio no simulado), una roca de la atalaya y una pared del caserío; el informe de cada ejecución dice cuáles se descartan y por qué.
+- Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas de `Pueblos.cs`, `Detalles.cs` y `Parajes.cs`, y se vuelve a ejecutar el menú.
+- Queda para Raúl lo que necesita su criterio: escaleras entre terrazas del Reino para la persecución y qué se levanta en el solar libre de Silas.
