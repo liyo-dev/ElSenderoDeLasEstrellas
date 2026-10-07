@@ -3539,7 +3539,7 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 - apoyo en 9 puntos de la huella y desnivel máximo;
 - nada por debajo de 0,3 m sobre el mar (y = 0): ni en el agua ni en la orilla mojada;
 - sin pisarse con otras piezas del vestido (huellas orientadas, no la caja de mundo, que exagera las piezas giradas);
-- fuera de las zonas que deben quedar libres (48: anclas, arenas, recorridos de escolta, plazas de eventos… en `ZonasLibres`; círculos, y la plaza real como rectángulo x ±20, z 285–313);
+- fuera de las zonas que deben quedar libres (51: anclas, arenas, recorridos de escolta, plazas de eventos, el Bosque Prohibido, el solar de Silas… en `ZonasLibres`; círculos, y la plaza real como rectángulo x ±20, z 285–313);
 - fuera de calles y caminos pintados, y de los corredores de puerta;
 - sin chocar (`OverlapBoxNonAlloc`) con los colisionadores que ya había en la escena. No cuentan el terreno, los triggers ni los volúmenes de más de 60 m.
 
