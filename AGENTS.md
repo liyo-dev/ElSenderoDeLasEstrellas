@@ -110,6 +110,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Qué deja cambiado un nodo / cómo está el mundo en un nodo | `INarrativeStateEffect` + `NarrativeStateProjector` (TDD § 10) | `switch` por tipo de nodo en herramientas |
 | Guardar que un objeto de escena se ha movido o retirado (entregado, consumido) | `ObjetoPersistente` (`Retirar()` para quitarlo; ID con `IdDePersistencia`) | `Destroy` directo de objetos de misión; IDs de posición escritos a mano en cada sistema |
 | Voltereta del jugador (desde el suelo o en el aire) | `VolteretaDelJugador` (`DesdeElSuelo`, `EnElAire`) | parábolas o volteretas propias en cada sistema |
+| Luces que se encienden de noche (ventanas, faroles, luciérnagas) | `VentanasIluminadas` (emisión de materiales compartidos), `LuzNocturna` (Light), `LuciernagasNocturnas` (zonas), todos con `DayNightCycle.NocheActual` | encender luces o emisiones por hora en cada sistema |
 
 ---
 
