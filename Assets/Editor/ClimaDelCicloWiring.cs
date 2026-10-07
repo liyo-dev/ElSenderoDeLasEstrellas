@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// Completa el clima de las escenas abiertas: prefab de lluvia del ciclo día/noche (INC-377) y
-/// valores del techo de nubes de tormenta (CloudCoverSpawner) que dejan huecos. Ver INC-657.
+/// valores del techo de nubes de tormenta (CloudCoverSpawner) que dejan huecos. Ver INC-660.
 ///
 /// «Cuando salió el Mago Oscuro no empezó a llover.» El beat de clima está puesto y llega a
 /// ejecutarse — `CinematicWeather` llama a `DayNightCycle.StartRain()` —, pero ese método arranca

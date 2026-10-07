@@ -538,6 +538,10 @@ public class DayNightCycle : MonoBehaviour
     /// SolYLunaEnElCielo pintaba ahí un SOL en plena noche (INC-410).
     public float PesoDeNoche { get; private set; }
 
+    /// PesoDeNoche del ciclo cargado, o 0 si no hay ninguno. Lo leen las luces, ventanas y
+    /// luciérnagas que se encienden de noche (VentanasIluminadas, LuzNocturna, LuciernagasNocturnas).
+    public static float NocheActual => Instance != null ? Instance.PesoDeNoche : 0f;
+
     // True mientras el cielo se está nublando (nubes 3D de CloudCoverSpawner + oscurecimiento) pero
     // la lluvia todavía no ha empezado a caer (IsRaining sigue en false hasta que termina la transición).
     private bool _isCloudBuildingUp;
