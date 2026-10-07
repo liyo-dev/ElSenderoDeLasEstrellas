@@ -41,10 +41,13 @@ using UnityEngine.Rendering;
 /// bloquearse por ellos:
 /// - **Viento** (<see cref="IsWindy"/>, <see cref="StartWind"/>/<see cref="StopWind"/>,
 ///   <see cref="windChancePerCheck"/>/<see cref="windDurationRange"/>): mismo patrón que la niebla
-///   ocasional. <see cref="windPrefab"/> es OPCIONAL (null-safe, igual que <c>mistPrefab</c>) — sin
-///   asignar, el viento sigue funcionando como evento lógico completo (flag, eventos, SFX en loop)
-///   pero sin ningún VFX de hojas/polvo, porque este proyecto no tiene ese prefab todavía. Asignarlo
-///   en cuanto exista arte para ello no necesita ningún cambio de código.
+///   ocasional, con dirección (<see cref="DireccionDelViento"/>) y fuerza gradual
+///   (<see cref="FuerzaDelViento"/>). Sin <see cref="windPrefab"/>, las rachas y hojas las genera
+///   <see cref="VfxDeClima"/>; el efecto sobre el jugador (frenar contra el viento, taparse la cara,
+///   arrastrarlo si está quieto) lo aplica <see cref="VientoSobreElJugador"/>.
+/// - **Nieve** (<see cref="IsSnowing"/>, <see cref="StartSnow"/>/<see cref="StopSnow"/>): como la
+///   niebla ocasional; copos de <see cref="snowPrefab"/> o de <see cref="VfxDeClima"/>, niebla
+///   blanquecina y cielo gris claro.
 /// - **Tormenta** (<see cref="IsThunderstorm"/>, <see cref="StartThunderstorm"/>/
 ///   <see cref="StopThunderstorm"/>): NO es un sistema de lluvia paralelo — una tormenta ES lluvia
 ///   normal (reutiliza <see cref="StartRain"/> tal cual) más una capa de rayos periódicos
@@ -57,11 +60,6 @@ using UnityEngine.Rendering;
 ///   lluvia), así que escribir el destello ahí se pelearía con ese cálculo frame a frame. El trueno
 ///   (<see cref="thunderstormThunderSfxKey"/>) suena con un retraso aleatorio tras el destello
 ///   (<see cref="thunderstormThunderDelayRange"/>), como en la realidad.
-///
-/// Alcance que sigue sin cubrir esta pasada: los VFX de partículas en sí (hojas/polvo para el
-/// viento) — el sistema lógico completo ya funciona y se oye/comporta correctamente, pero visualmente
-/// el viento no mueve nada todavía porque no hay ningún prefab de partículas en el proyecto para él;
-/// asignar <see cref="windPrefab"/> cuando exista ese arte es todo lo que hace falta.
 ///
 /// Además, revisando este script para hacer este cambio se encontró y corrigió una regresión
 /// independiente y bastante más vieja: el comentario del propio código (ver más abajo, "13 ago
@@ -124,7 +122,7 @@ public class DayNightCycle : MonoBehaviour
     /// empezó antes de la cinemática se queda en el sitio de antes toda la escena.
     private void ReanclarClima()
     {
-        foreach (var efecto in new[] { _activeRainInstance, _activeMistInstance, _activeWindInstance })
+        foreach (var efecto in new[] { _activeRainInstance, _activeMistInstance, _activeWindInstance, _activeSnowInstance })
         {
             if (efecto == null) continue;
             if (s_anclaDeClima != null)
@@ -345,12 +343,45 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private float mistTransitionDuration = 8f;
 
     [Header("Clima - Viento (30 ago 2026)")]
-    [Tooltip("Prefab OPCIONAL de partículas de viento (hojas/polvo en el aire). Si es null, el viento sigue funcionando igual como evento lógico (IsWindy, eventos, SFX en loop) pero sin ningún VFX — mismo patrón de degradado que ya usa mistPrefab. Este proyecto no tiene todavía ningún prefab de este tipo; asignar aquí en cuanto exista arte para ello, no hace falta tocar código.")]
+    [Tooltip("Prefab OPCIONAL de partículas de viento. Vacío = rachas y hojas generadas en código (VfxDeClima.CrearViento), orientadas según DireccionDelViento.")]
     [SerializeField] private GameObject windPrefab;
     [Tooltip("Duración aleatoria (min, max) en segundos de un evento de viento.")]
     [SerializeField] private Vector2 windDurationRange = new Vector2(30f, 90f);
     [Tooltip("Segundos que tardan en desaparecer las partículas (si hay windPrefab asignado) al detener el viento.")]
     [SerializeField] private float windFadeOutTime = 3f;
+    [Tooltip("Segundos que tarda el viento en coger toda su fuerza al empezar y en amainar al terminar (FuerzaDelViento de 0 a 1).")]
+    [SerializeField] private float windRampDuration = 4f;
+    [Tooltip("Velocidad (m/s) a la que anda el jugador de cara contra el viento con el viento a toda fuerza. Ver VientoSobreElJugador.")]
+    [SerializeField] private float windVelocidadContra = 1.8f;
+    [Tooltip("Velocidad (m/s) a la que el viento arrastra al jugador si se queda quieto, con el viento a toda fuerza. 0 = no lo arrastra.")]
+    [SerializeField] private float windArrastreQuieto = 0.9f;
+    [Tooltip("Volumen del loop de viento (0-1).")]
+    [SerializeField, Range(0f, 1f)] private float windLoopVolume = 0.5f;
+
+    [Header("Clima - Nieve")]
+    [Tooltip("Prefab OPCIONAL de partículas de nieve. Vacío = copos generados en código (VfxDeClima.CrearNieve).")]
+    [SerializeField] private GameObject snowPrefab;
+    [Tooltip("Duración aleatoria (min, max) en segundos de una nevada sorteada por el temporizador de clima.")]
+    [SerializeField] private Vector2 snowDurationRange = new Vector2(60f, 140f);
+    [Tooltip("Segundos que tardan en desaparecer los copos al terminar la nevada.")]
+    [SerializeField] private float snowFadeOutTime = 6f;
+    [Tooltip("Segundos que tarda el cielo en blanquearse al empezar a nevar y en despejarse al terminar.")]
+    [SerializeField] private float snowTransitionDuration = 8f;
+    [Tooltip("Multiplicador de la intensidad de la luz direccional con la nevada a tope (1 = sin cambio).")]
+    [SerializeField, Range(0f, 1f)] private float snowLightIntensityMultiplier = 0.8f;
+    [Tooltip("Multiplicador de la densidad de niebla con la nevada a tope (la nieve quita visibilidad a lo lejos).")]
+    [SerializeField, Range(1f, 6f)] private float snowFogDensityMultiplier = 2.2f;
+    [Tooltip("Color hacia el que se tiñe la niebla mientras nieva (mezclado según snowFogColorBlend).")]
+    [SerializeField] private Color snowFogColor = new Color(0.82f, 0.85f, 0.9f);
+    [SerializeField, Range(0f, 1f)] private float snowFogColorBlend = 0.55f;
+    [Tooltip("Cuánto se encapota el cielo con la nevada a tope (_Overcast del skybox, como la lluvia pero más claro).")]
+    [SerializeField, Range(0f, 1f)] private float snowSkyOvercast = 0.6f;
+    [Tooltip("Color del cielo encapotado por la nieve, escalado con el brillo del periodo.")]
+    [SerializeField] private Color snowSkyOvercastColor = new Color(0.86f, 0.88f, 0.92f);
+    [Tooltip("Event Key del AudioGraphProfile del ambiente de nevada (loop). Vacío = el viento suave de Weather_WindStarted.")]
+    [SerializeField] private string snowSfxKey;
+    [Tooltip("Volumen del loop de la nevada (0-1). Bajo: la nieve apenas suena.")]
+    [SerializeField, Range(0f, 1f)] private float snowLoopVolume = 0.18f;
 
     [Header("Clima - Tormenta / Rayos (30 ago 2026)")]
     [Tooltip("Una tormenta es lluvia normal (mismas partículas/oscurecimiento/niebla de siempre, ver StartThunderstorm) más rayos periódicos. Rango (min, max) en segundos entre un rayo y el siguiente mientras dura la tormenta.")]
@@ -359,6 +390,10 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private float thunderstormFlashIntensity = 3.5f;
     [Tooltip("Segundos que dura visible cada destello de rayo.")]
     [SerializeField] private float thunderstormFlashDuration = 0.12f;
+    [Tooltip("Event Keys de los truenos de los rayos de una tormenta en juego (se elige uno al azar en cada rayo). Truenos con chasquido: los rayos caen a pocas decenas de metros, y un retumbo lejano solo de graves se pierde bajo el loop de lluvia. Si se deja vacío, suena thunderstormThunderSfxKey.")]
+    [SerializeField] private string[] truenosDeTormenta = { "SFX_Prologo_Trueno_1", "SFX_Prologo_Trueno_2", "SFX_Prologo_Trueno_3" };
+    [Tooltip("Volumen de los truenos de una tormenta en juego (0-1).")]
+    [SerializeField, Range(0f, 1f)] private float volumenDelTrueno = 1f;
     [Tooltip("Retraso (min, max) en segundos entre el destello del rayo y el trueno — la luz llega antes que el sonido, igual que en la realidad. Solo afecta a CUÁNDO suena thunderstormThunderSfxKey, no al destello en sí.")]
     [SerializeField] private Vector2 thunderstormThunderDelayRange = new Vector2(0.3f, 1.8f);
     [Tooltip("Altura (unidades de mundo) desde la que 'cae' el rayo visible, por encima de la posición del jugador. No depende de ningún terreno/collider real (no se hace Raycast): el extremo inferior del rayo se dibuja a la altura actual del jugador, como aproximación razonable del suelo cercano.")]
@@ -383,7 +418,9 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float thunderstormChancePerCheck = 0.05f;
     [Tooltip("Probabilidad (0-1) de que arranque a llover (lluvia normal, sin rayos) en cada sorteo — solo se comprueba si el sorteo de tormenta de ese mismo intento no salió.")]
     [SerializeField, Range(0f, 1f)] private float rainChancePerCheck = 0.18f;
-    [Tooltip("Probabilidad (0-1) de que arranque viento en cada sorteo — solo se comprueba si ni tormenta ni lluvia salieron en ese mismo intento.")]
+    [Tooltip("Probabilidad (0-1) de que empiece a nevar en cada sorteo — solo se comprueba si ni tormenta ni lluvia salieron en ese mismo intento.")]
+    [SerializeField, Range(0f, 1f)] private float snowChancePerCheck = 0.08f;
+    [Tooltip("Probabilidad (0-1) de que arranque viento en cada sorteo — solo se comprueba si ni tormenta, ni lluvia, ni nieve salieron en ese mismo intento.")]
     [SerializeField, Range(0f, 1f)] private float windChancePerCheck = 0.15f;
     [Tooltip("Probabilidad (0-1) de que arranque niebla ocasional en cada sorteo — la última en probarse (solo si tormenta/lluvia/viento no salieron). No se solapan lluvia y niebla ocasional a propósito (la lluvia ya espesa la niebla por su cuenta).")]
     [SerializeField, Range(0f, 1f)] private float mistChancePerCheck = 0.12f;
@@ -403,7 +440,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private string mistStartedSfxKey;
     [Tooltip("Event Key del AudioGraphProfile que se reproduce al disiparse la niebla ocasional.")]
     [SerializeField] private string mistStoppedSfxKey;
-    [Tooltip("Event Key del AudioGraphProfile del SFX/ambiente de viento. Igual que rainStartedSfxKey, se reproduce en LOOP (AudioService.PlayLoopingSFX) mientras IsWindy es true, no como one-shot.")]
+    [Tooltip("Event Key del AudioGraphProfile del SFX/ambiente de viento. Igual que rainStartedSfxKey, se reproduce en LOOP (AudioService.PlayLoopingSFX) mientras IsWindy es true, no como one-shot. Vacío = Weather_WindStarted.")]
     [SerializeField] private string windStartedSfxKey;
     [Tooltip("Event Key opcional del AudioGraphProfile para un one-shot al terminar el viento. El loop de windStartedSfxKey se detiene siempre, tenga o no clave este campo.")]
     [SerializeField] private string windStoppedSfxKey;
@@ -440,6 +477,8 @@ public class DayNightCycle : MonoBehaviour
     /// <summary>Se dispara al arrancar/terminar la capa de tormenta (rayos) por encima de la lluvia — ver StartThunderstorm. No confundir con RainStarted/RainStopped, que también se disparan (una tormenta ES lluvia, más rayos).</summary>
     public event Action ThunderstormStarted;
     public event Action ThunderstormStopped;
+    public event Action SnowStarted;
+    public event Action SnowStopped;
 
     public TimeOfDay CurrentTimeOfDay { get; private set; }
     public bool IsRaining { get; private set; }
@@ -447,6 +486,13 @@ public class DayNightCycle : MonoBehaviour
     public bool IsWindy { get; private set; }
     /// <summary>True mientras la capa de rayos está activa (ver StartThunderstorm). Independiente de IsRaining a nivel de flag, aunque en la práctica una tormenta siempre implica IsRaining == true a la vez (StartThunderstorm arranca la lluvia por debajo).</summary>
     public bool IsThunderstorm { get; private set; }
+    public bool IsSnowing { get; private set; }
+    /// Hacia dónde sopla el viento (horizontal, normalizado). Se sortea al empezar cada viento.
+    public Vector3 DireccionDelViento { get; private set; } = Vector3.forward;
+    /// Fuerza del viento (0-1), con subida y bajada graduales (windRampDuration).
+    public float FuerzaDelViento { get; private set; }
+    /// La fuerza que se nota donde está el jugador: 0 dentro de un interior.
+    public float FuerzaDelVientoAqui => AnclaDeClima == null && IsSkyboxLockedByEnvironment() ? 0f : FuerzaDelViento;
     public float TimeProgress => _currentDuration > 0 ? Mathf.Clamp01(_timeElapsed / _currentDuration) : 1f;
 
     /// <summary>Segundos que tarda el cielo en nublarse/despejarse. Expuesto para que sistemas
@@ -480,6 +526,8 @@ public class DayNightCycle : MonoBehaviour
     private Coroutine _rainFadeCoroutine;
     private Coroutine _rainDarkenCoroutine;
     private float _rainDarkenAmount;
+    // Intensidad de la luz direccional que marca el periodo (sin lluvia ni nieve). -1 = aún sin leer.
+    private float _baseLightIntensity = -1f;
 
     /// Cuánto tapan las nubes de lluvia/tormenta el cielo ahora mismo (0-1). Lo lee
     /// SolYLunaEnElCielo para esconder el sol y la luna detrás de la tormenta (INC-410).
@@ -489,6 +537,10 @@ public class DayNightCycle : MonoBehaviour
     /// LUNA: en el periodo Night apunta desde 30° sobre el horizonte, y sin esto
     /// SolYLunaEnElCielo pintaba ahí un SOL en plena noche (INC-410).
     public float PesoDeNoche { get; private set; }
+
+    /// PesoDeNoche del ciclo cargado, o 0 si no hay ninguno. Lo leen las luces, ventanas y
+    /// luciérnagas que se encienden de noche (VentanasIluminadas, LuzNocturna, LuciernagasNocturnas).
+    public static float NocheActual => Instance != null ? Instance.PesoDeNoche : 0f;
 
     // True mientras el cielo se está nublando (nubes 3D de CloudCoverSpawner + oscurecimiento) pero
     // la lluvia todavía no ha empezado a caer (IsRaining sigue en false hasta que termina la transición).
@@ -518,6 +570,14 @@ public class DayNightCycle : MonoBehaviour
     private Coroutine _windCoroutine;
     private Coroutine _windFadeCoroutine;
     const string WindWeatherSfxLoopId = "Weather_Wind";
+    const string VientoPorDefecto = "Weather_WindStarted";
+
+    private GameObject _activeSnowInstance;
+    private Coroutine _snowCoroutine;
+    private Coroutine _snowFadeCoroutine;
+    private Coroutine _snowAmountCoroutine;
+    private float _snowAmount;
+    const string SnowWeatherSfxLoopId = "Weather_Snow";
 
     // La tormenta reutiliza StartRain/StopRain por debajo (mismas partículas/oscurecimiento/niebla
     // de siempre) — _thunderstormCoroutine solo controla CUÁNTO dura la capa extra de rayos,
@@ -711,7 +771,7 @@ public class DayNightCycle : MonoBehaviour
     /// </summary>
     void TryRollWeather()
     {
-        if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm) return;
+        if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm || IsSnowing) return;
         if (TagMinigameController.IsAnyMinigameActive) return;
         if (SorteoDeClimaEnPausa) return;
 
@@ -731,6 +791,10 @@ public class DayNightCycle : MonoBehaviour
         else if (UnityEngine.Random.value < rainChancePerCheck)
         {
             StartRain(UnityEngine.Random.Range(rainDurationRange.x, rainDurationRange.y));
+        }
+        else if (UnityEngine.Random.value < snowChancePerCheck)
+        {
+            StartSnow(UnityEngine.Random.Range(snowDurationRange.x, snowDurationRange.y));
         }
         else if (UnityEngine.Random.value < windChancePerCheck)
         {
@@ -789,9 +853,24 @@ public class DayNightCycle : MonoBehaviour
             _activeWindInstance = null;
         }
 
+        FuerzaDelViento = 0f;
+        VientoSobreElJugador.Soltar();
+
         IsThunderstorm = false;
         _thunderstormCoroutine = null;
         _lightningCoroutine = null;
+
+        IsSnowing = false;
+        _snowAmount = 0f;
+        _snowCoroutine = null;
+        _snowFadeCoroutine = null;
+        _snowAmountCoroutine = null;
+        AudioService.Instance?.StopLoopingSFX(SnowWeatherSfxLoopId);
+        if (_activeSnowInstance != null)
+        {
+            Destroy(_activeSnowInstance);
+            _activeSnowInstance = null;
+        }
     }
 
     /// <summary>
@@ -801,28 +880,42 @@ public class DayNightCycle : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        if (_rainDarkenAmount <= 0f && _lastSkyOvercast > 0f && _runtimeSkybox != null)
+        if (_rainDarkenAmount <= 0f && _snowAmount <= 0f && _lastSkyOvercast > 0f && _runtimeSkybox != null)
         {
             _runtimeSkybox.SetFloat(SkyboxOvercastId, 0f);
             _lastSkyOvercast = 0f;
         }
 
-        if (_rainDarkenAmount <= 0f && _mistAmount <= 0f) return;
+        // Las partículas de nieve y viento no reciben luz: se tiñen con la de la franja.
+        if (_activeSnowInstance != null || _activeWindInstance != null)
+            VfxDeClima.Iluminar(Color.Lerp(RenderSettings.fogColor, Color.white, 0.55f));
+
+        if (_rainDarkenAmount <= 0f && _mistAmount <= 0f && _snowAmount <= 0f) return;
 
         // Dentro de un interior el clima no se ve. Ver INC-606.
         bool climaVisible = !(AnclaDeClima == null && IsSkyboxLockedByEnvironment());
         float lluviaVisible = climaVisible ? _rainDarkenAmount : 0f;
         float nieblaVisible = climaVisible ? _mistAmount : 0f;
+        float nieveVisible = climaVisible ? _snowAmount : 0f;
+
+        // Se parte siempre de la intensidad del periodo (_baseLightIntensity), no de la ya
+        // oscurecida del frame anterior: así no se compone frame a frame y la luz vuelve sola a la
+        // del periodo cuando amaina.
+        if (directionalLight != null && _baseLightIntensity < 0f) _baseLightIntensity = directionalLight.intensity;
 
         if (lluviaVisible > 0f && directionalLight != null)
         {
-            float baseIntensity = directionalLight.intensity;
+            float baseIntensity = _baseLightIntensity;
             float darkened = baseIntensity * rainLightIntensityMultiplier;
             // Suelo absoluto: en periodos ya oscuros (Night...) el multiplicador por sí solo puede
             // dejar la luz casi a cero. Nunca baja de rainMinLightIntensity.
-            float floored = Mathf.Max(darkened, rainMinLightIntensity);
+            float floored = Mathf.Min(baseIntensity, Mathf.Max(darkened, rainMinLightIntensity));
             directionalLight.intensity = Mathf.Lerp(baseIntensity, floored, lluviaVisible);
         }
+
+        if (nieveVisible > 0f && directionalLight != null)
+            directionalLight.intensity = Mathf.Min(directionalLight.intensity,
+                _baseLightIntensity * Mathf.Lerp(1f, snowLightIntensityMultiplier, nieveVisible));
 
         if (lluviaVisible > 0f && _runtimeSkybox != null)
         {
@@ -846,6 +939,16 @@ public class DayNightCycle : MonoBehaviour
             _runtimeSkybox.SetColor(SkyboxOvercastColorId, overcastColor);
             _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
         }
+        else if (nieveVisible > 0f && _runtimeSkybox != null)
+        {
+            // Nevada: cielo blanquecino, más claro que el de lluvia y sin oscurecer el periodo.
+            float brillo = (0.2126f * _baseSkyboxTint.r + 0.7152f * _baseSkyboxTint.g + 0.0722f * _baseSkyboxTint.b) * _baseSkyboxIntensity;
+            Color colorNevado = snowSkyOvercastColor * brillo;
+            colorNevado.a = 1f;
+            _lastSkyOvercast = snowSkyOvercast * nieveVisible;
+            _runtimeSkybox.SetColor(SkyboxOvercastColorId, colorNevado);
+            _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
+        }
 
         if (controlFog)
         {
@@ -863,6 +966,12 @@ public class DayNightCycle : MonoBehaviour
             if (nieblaVisible > 0f)
                 density *= Mathf.Lerp(1f, mistFogDensityMultiplier, nieblaVisible);
 
+            if (nieveVisible > 0f)
+            {
+                density *= Mathf.Lerp(1f, snowFogDensityMultiplier, nieveVisible);
+                color = Color.Lerp(color, snowFogColor, nieveVisible * snowFogColorBlend);
+            }
+
             RenderSettings.fogDensity = density;
             RenderSettings.fogColor   = color;
         }
@@ -874,6 +983,7 @@ public class DayNightCycle : MonoBehaviour
         SetRainVisualActive(false);
         SetMistVisualActive(false);
         SetWindVisualActive(false);
+        SetSnowVisualActive(false);
         SetWeatherAudioSuppressed(true);
     }
 
@@ -883,6 +993,7 @@ public class DayNightCycle : MonoBehaviour
         SetRainVisualActive(true);
         SetMistVisualActive(true);
         SetWindVisualActive(true);
+        SetSnowVisualActive(true);
         SetWeatherAudioSuppressed(false);
 
         // Si la tormenta arrancó mientras estábamos dentro, o cambió el periodo del día,
@@ -910,6 +1021,12 @@ public class DayNightCycle : MonoBehaviour
             _activeWindInstance.SetActive(active);
     }
 
+    void SetSnowVisualActive(bool active)
+    {
+        if (_activeSnowInstance != null)
+            _activeSnowInstance.SetActive(active);
+    }
+
     // FIX (30 ago 2026, incidencia reportada por Raúl: "se escuchaba como caía la lluvia" estando
     // dentro del castillo): HandleInteriorEntered/Exited y el sondeo cinemático de más abajo ya
     // suprimían la lluvia/niebla/viento VISUALMENTE al entrar en un interior, pero nunca tocaban
@@ -923,6 +1040,7 @@ public class DayNightCycle : MonoBehaviour
     {
         AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, suppressed);
         AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, suppressed);
+        AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, suppressed);
     }
 
     /// <summary>
@@ -974,6 +1092,7 @@ public class DayNightCycle : MonoBehaviour
             SetRainVisualActive(!effectivelyInteriorNow);
             SetMistVisualActive(!effectivelyInteriorNow);
             SetWindVisualActive(!effectivelyInteriorNow);
+            SetSnowVisualActive(!effectivelyInteriorNow);
             SetWeatherAudioSuppressed(effectivelyInteriorNow);
             if (!effectivelyInteriorNow) ReapplyPendingSkybox();
         }
@@ -992,6 +1111,8 @@ public class DayNightCycle : MonoBehaviour
             else if (IsRaining || _isCloudBuildingUp) StopRain();
         }
         _wasMinigameActive = minigameActiveNow;
+
+        ActualizarViento();
 
         if (!autoAdvance || _isTransitioning) return;
 
@@ -1118,6 +1239,9 @@ public class DayNightCycle : MonoBehaviour
 #endif
             return;
         }
+
+        // Lluvia y nieve no se solapan: la lluvia (narrativa, tormenta) manda.
+        if (IsSnowing) StopSnow();
 
         if (_rainCoroutine != null)
             StopCoroutine(_rainCoroutine);
@@ -1338,6 +1462,7 @@ public class DayNightCycle : MonoBehaviour
         {
             directionalLight.color = settings.lightColor;
             directionalLight.intensity = settings.lightIntensity;
+            _baseLightIntensity = settings.lightIntensity;
             directionalLight.transform.eulerAngles = new Vector3(settings.sunRotationX, settings.sunRotationY, 0f);
         }
         PesoDeNoche = settings.timeOfDay == TimeOfDay.Night ? 1f : 0f;
@@ -1398,6 +1523,7 @@ public class DayNightCycle : MonoBehaviour
             {
                 light.color = Color.Lerp(startLightColor, target.lightColor, t);
                 light.intensity = Mathf.Lerp(startIntensity, target.lightIntensity, t);
+                _baseLightIntensity = light.intensity;
                 light.transform.eulerAngles = new Vector3(
                     Mathf.LerpAngle(startRotX, target.sunRotationX, t),
                     Mathf.LerpAngle(startRotY, target.sunRotationY, t),
@@ -1815,11 +1941,31 @@ public class DayNightCycle : MonoBehaviour
         _mistFadeCoroutine = null;
     }
 
-    // ==================== Viento (30 ago 2026) ====================
+    // ==================== Viento ====================
     // Mismo patrón que la niebla ocasional (StartMist/StopMist/MistRoutine/ActivateMist/
-    // BeginMistFadeOut/MistFadeOutRoutine) pero más simple: el viento no oscurece luz ni engorda
-    // niebla en esta pasada, así que no hace falta ningún "amount" gradual — solo instancia
-    // opcional (windPrefab, null-safe) + evento/SFX en loop + fundido de las partículas al parar.
+    // BeginMistFadeOut/MistFadeOutRoutine). Cada viento sortea su dirección (DireccionDelViento);
+    // FuerzaDelViento sube y baja en windRampDuration y es lo que lee VientoSobreElJugador para
+    // frenar al jugador contra el viento y arrastrarlo si está quieto. Sin windPrefab, las
+    // partículas las genera VfxDeClima.CrearViento.
+
+    /// Sube o baja la fuerza del viento hacia su objetivo y aplica su efecto sobre el jugador.
+    void ActualizarViento()
+    {
+        float objetivo = IsWindy ? 1f : 0f;
+        if (FuerzaDelViento != objetivo)
+            FuerzaDelViento = Mathf.MoveTowards(FuerzaDelViento, objetivo,
+                Time.deltaTime / Mathf.Max(0.01f, windRampDuration));
+
+        // Con una cinemática al mando (AnclaDeClima) el jugador no está en juego.
+        float fuerza = AnclaDeClima != null ? 0f : FuerzaDelVientoAqui;
+        if (fuerza > 0f || _vientoSobreElJugador)
+        {
+            VientoSobreElJugador.Actualizar(fuerza, DireccionDelViento, windVelocidadContra,
+                windArrastreQuieto, Time.deltaTime);
+            _vientoSobreElJugador = fuerza > 0f;
+        }
+    }
+    private bool _vientoSobreElJugador;
 
     public void ToggleWind()
     {
@@ -1836,6 +1982,9 @@ public class DayNightCycle : MonoBehaviour
             StopCoroutine(_windCoroutine);
 
         float windDuration = duration ?? UnityEngine.Random.Range(windDurationRange.x, windDurationRange.y);
+        // Solo se cambia de dirección si el viento anterior ya amainó del todo.
+        if (FuerzaDelViento <= 0f)
+            DireccionDelViento = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f) * Vector3.forward;
         _windCoroutine = StartCoroutine(WindRoutine(windDuration));
     }
 
@@ -1875,30 +2024,32 @@ public class DayNightCycle : MonoBehaviour
             }
         }
 
-        if (windPrefab != null)
+        Transform parent = AnclaDeClima != null ? AnclaDeClima :
+                           PlayerService.Player != null ? PlayerService.Player.transform :
+                           Camera.main != null ? Camera.main.transform : null;
+
+        if (windPrefab == null)
         {
-            Transform parent = AnclaDeClima != null ? AnclaDeClima :
-                               PlayerService.Player != null ? PlayerService.Player.transform :
-                               Camera.main != null ? Camera.main.transform : null;
-
-            if (parent != null)
-            {
-                _activeWindInstance = Instantiate(windPrefab, parent);
-                _activeWindInstance.transform.localPosition = Vector3.zero;
-            }
-            else
-            {
-                _activeWindInstance = Instantiate(windPrefab, transform.position, Quaternion.identity);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[DayNightCycle] No se encontró jugador ni cámara, viento instanciado sin padre.");
-#endif
-            }
-
-            // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
-            // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
-            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
-                _activeWindInstance.SetActive(false);
+            _activeWindInstance = VfxDeClima.CrearViento(parent, DireccionDelViento);
+            if (parent == null) _activeWindInstance.transform.position = transform.position;
         }
+        else if (parent != null)
+        {
+            _activeWindInstance = Instantiate(windPrefab, parent);
+            _activeWindInstance.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            _activeWindInstance = Instantiate(windPrefab, transform.position, Quaternion.identity);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[DayNightCycle] No se encontró jugador ni cámara, viento instanciado sin padre.");
+#endif
+        }
+
+        // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
+        // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
+        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+            _activeWindInstance.SetActive(false);
 
         IsWindy = true;
         onWindStarted?.Invoke();
@@ -1906,7 +2057,8 @@ public class DayNightCycle : MonoBehaviour
         GameplayEventLog.Log("VientoInicio");
         // Igual que la lluvia (ver ActivateRain): loop dedicado, no un one-shot que se autodevuelve
         // al pool cuando termina el CLIP en vez de cuando termina el viento de verdad.
-        AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId, windStartedSfxKey);
+        AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId,
+            string.IsNullOrWhiteSpace(windStartedSfxKey) ? VientoPorDefecto : windStartedSfxKey, windLoopVolume);
         // FIX (30 ago 2026): mismo hueco que ActivateRain (ver comentario ahí) — silenciar también
         // si ya estamos en un interior/cinemática cuando arranca el viento.
         if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
@@ -1949,6 +2101,152 @@ public class DayNightCycle : MonoBehaviour
             _activeWindInstance = null;
 
         _windFadeCoroutine = null;
+    }
+
+    // ==================== Nieve ====================
+    // Mismo patrón que la niebla ocasional: partículas colgadas del ancla del clima (snowPrefab o,
+    // si no hay, VfxDeClima.CrearNieve), loop de ambiente suave y _snowAmount gradual, que LateUpdate
+    // usa para blanquear la niebla y encapotar el cielo de gris claro.
+
+    /// Empieza a nevar. No hace nada si ya nieva o si llueve (no se solapan).
+    public void StartSnow(float? duration = null)
+    {
+        if (IsSnowing || IsRaining || _isCloudBuildingUp) return;
+
+        if (_snowCoroutine != null)
+            StopCoroutine(_snowCoroutine);
+
+        float snowDuration = duration ?? UnityEngine.Random.Range(snowDurationRange.x, snowDurationRange.y);
+        _snowCoroutine = StartCoroutine(SnowRoutine(snowDuration));
+    }
+
+    public void StopSnow()
+    {
+        if (!IsSnowing) return;
+
+        if (_snowCoroutine != null)
+        {
+            StopCoroutine(_snowCoroutine);
+            _snowCoroutine = null;
+        }
+
+        BeginSnowFadeOut();
+    }
+
+    IEnumerator SnowRoutine(float duration)
+    {
+        ActivateSnow();
+        yield return new WaitForSeconds(duration);
+        BeginSnowFadeOut();
+        _snowCoroutine = null;
+    }
+
+    void ActivateSnow()
+    {
+        if (IsSnowing) return;
+
+        if (_snowFadeCoroutine != null)
+        {
+            StopCoroutine(_snowFadeCoroutine);
+            _snowFadeCoroutine = null;
+            if (_activeSnowInstance != null)
+            {
+                Destroy(_activeSnowInstance);
+                _activeSnowInstance = null;
+            }
+        }
+
+        Transform parent = AnclaDeClima != null ? AnclaDeClima :
+                           PlayerService.Player != null ? PlayerService.Player.transform :
+                           Camera.main != null ? Camera.main.transform : null;
+
+        if (snowPrefab == null)
+        {
+            _activeSnowInstance = VfxDeClima.CrearNieve(parent);
+            if (parent == null) _activeSnowInstance.transform.position = transform.position;
+        }
+        else if (parent != null)
+        {
+            _activeSnowInstance = Instantiate(snowPrefab, parent);
+            _activeSnowInstance.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            _activeSnowInstance = Instantiate(snowPrefab, transform.position, Quaternion.identity);
+        }
+
+        // Dentro de un interior no se ve ni se oye (ver AnclaDeClima para la excepción de las cinemáticas).
+        bool dentro = AnclaDeClima == null && IsSkyboxLockedByEnvironment();
+        if (dentro) _activeSnowInstance.SetActive(false);
+
+        IsSnowing = true;
+        SnowStarted?.Invoke();
+        GameplayEventLog.Log("NieveInicio");
+        AudioService.Instance?.PlayLoopingSFX(SnowWeatherSfxLoopId,
+            string.IsNullOrWhiteSpace(snowSfxKey) ? VientoPorDefecto : snowSfxKey, snowLoopVolume);
+        if (dentro) AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, true);
+        StartSnowAmount(1f);
+    }
+
+    void BeginSnowFadeOut()
+    {
+        if (!IsSnowing) return;
+
+        IsSnowing = false;
+        SnowStopped?.Invoke();
+        GameplayEventLog.Log("NieveFin");
+        AudioService.Instance?.StopLoopingSFX(SnowWeatherSfxLoopId, snowFadeOutTime);
+        StartSnowAmount(0f);
+
+        if (_snowFadeCoroutine != null)
+            StopCoroutine(_snowFadeCoroutine);
+
+        if (_activeSnowInstance != null)
+            _snowFadeCoroutine = StartCoroutine(SnowFadeOutRoutine(_activeSnowInstance));
+    }
+
+    void StartSnowAmount(float target)
+    {
+        if (_snowAmountCoroutine != null)
+            StopCoroutine(_snowAmountCoroutine);
+        _snowAmountCoroutine = StartCoroutine(SnowAmountRoutine(target));
+    }
+
+    IEnumerator SnowAmountRoutine(float target)
+    {
+        float start = _snowAmount;
+        float elapsed = 0f;
+        float duration = Mathf.Max(0.01f, snowTransitionDuration);
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            _snowAmount = Mathf.Lerp(start, target, elapsed / duration);
+            yield return null;
+        }
+
+        _snowAmount = target;
+        _snowAmountCoroutine = null;
+    }
+
+    IEnumerator SnowFadeOutRoutine(GameObject snowInstance)
+    {
+        var particles = snowInstance.GetComponentsInChildren<ParticleSystem>();
+        foreach (var ps in particles)
+        {
+            var emission = ps.emission;
+            emission.enabled = false;
+        }
+
+        yield return new WaitForSeconds(snowFadeOutTime);
+
+        if (snowInstance != null)
+            Destroy(snowInstance);
+
+        if (_activeSnowInstance == snowInstance)
+            _activeSnowInstance = null;
+
+        _snowFadeCoroutine = null;
     }
 
     // ==================== Tormenta / Rayos (30 ago 2026) ====================
@@ -2304,7 +2602,11 @@ public class DayNightCycle : MonoBehaviour
     IEnumerator FlashLightningRoutine()
     {
         SpawnLightningBolt();
-        ProgramarTrueno();
+        // En una cinemática suena el trueno de siempre (ClaveDeTrueno); en juego, uno con chasquido.
+        if (AnclaDeClima == null && truenosDeTormenta != null && truenosDeTormenta.Length > 0)
+            ProgramarTrueno(truenosDeTormenta[UnityEngine.Random.Range(0, truenosDeTormenta.Length)], volumenDelTrueno);
+        else
+            ProgramarTrueno();
         yield return DestelloDelRayo();
     }
     private IEnumerator DestelloDelRayo()
@@ -2368,6 +2670,12 @@ public class DayNightCycle : MonoBehaviour
 
     [ContextMenu("Testeo: Viento (detener)")]
     public void DebugStopWind() => StopWind();
+
+    [ContextMenu("Testeo: Nieve (iniciar)")]
+    public void DebugStartSnow() => StartSnow();
+
+    [ContextMenu("Testeo: Nieve (detener)")]
+    public void DebugStopSnow() => StopSnow();
 
     [ContextMenu("Testeo: Tormenta (iniciar)")]
     public void DebugStartThunderstorm() => StartThunderstorm(immediate: true);

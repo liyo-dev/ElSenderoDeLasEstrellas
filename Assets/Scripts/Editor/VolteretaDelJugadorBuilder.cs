@@ -85,7 +85,7 @@ public static class VolteretaDelJugadorBuilder
             }
             else hecho.Add("_WILL ya tenía VolteretaDelJugador.");
 
-            // Efecto de la entrada al vuelo (INC-660), si no tiene ninguno puesto.
+            // Efecto de la entrada al vuelo (INC-665), si no tiene ninguno puesto.
             var vuelo = controller.GetComponent<PlayerFlyingController>();
             var vfx = AssetDatabase.LoadAssetAtPath<GameObject>(VfxDeEntradaAlVuelo);
             if (vuelo != null && vfx != null)

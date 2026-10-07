@@ -10,7 +10,7 @@ using UnityEngine.InputSystem;
 /// Controla el modo de vuelo del jugador (tipo Dragon Ball): se entra pulsando saltar en el aire
 /// después del doble salto (tercer toque, vThirdPersonController.OnJumpPressedWithoutAirJumps),
 /// el joystick izquierdo dirige y saltar de nuevo sale del vuelo. Al entrar, un pequeño impulso
-/// hacia arriba con voltereta y efecto antes de echar a volar (INC-660).
+/// hacia arriba con voltereta y efecto antes de echar a volar (INC-665).
 /// </summary>
 [DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(Animator))]
@@ -104,7 +104,7 @@ public class PlayerFlyingController : MonoBehaviour
     private float _groundedWhileFlyingTimer;
     private bool _isPhysicsBobbingIdle;
 
-    [Header("Entrada al vuelo (INC-660)")]
+    [Header("Entrada al vuelo (INC-665)")]
     [Tooltip("Al entrar en vuelo, pequeño impulso hacia arriba con voltereta (VolteretaDelJugador) y efecto antes de volar.")]
     [SerializeField] private bool volteretaAlEntrar = true;
     [Tooltip("Velocidad (m/s) del impulso hacia arriba al entrar.")]
