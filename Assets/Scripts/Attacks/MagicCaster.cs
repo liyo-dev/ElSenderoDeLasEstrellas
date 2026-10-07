@@ -1,15 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Invector.vCharacterController;
+using Sendero.Core.Feedback;
 
 /// <summary>
 /// Magia del jugador: los hechizos básicos que lleva (hasta <see cref="BasicSlotCount"/>, que se
 /// rotan en combate), la serie de la X y el único punto por el que sale cualquier hechizo,
 /// <see cref="Cast"/>: permisos, maná, giro hacia el objetivo, compromiso de
 /// movimiento, sostén en el aire, gesto de la capa superior y materialización en el spawner.
-/// Ver INC-483, INC-484 y INC-486.
+/// En el aire, el tercer golpe de la serie es el remate aéreo si el básico lo tiene
+/// (<see cref="MagicSpellSO.remateAereo"/>).
+/// Ver INC-483, INC-484, INC-486 e INC-652.
 /// </summary>
 [DisallowMultipleComponent]
 public class MagicCaster : MonoBehaviour
@@ -51,6 +55,24 @@ public class MagicCaster : MonoBehaviour
     [Tooltip("Segundos mínimos del gesto de área (subir, brazos arriba y bajar).")]
     [SerializeField] private float areaMinSeconds = 0.8f;
 
+    [Header("Remate aéreo (tercer golpe de la X en el aire, INC-652)")]
+    [Tooltip("Voltereta del jugador. Se busca sola si está vacía; sin ella el remate sale sin voltereta.")]
+    [SerializeField] private VolteretaDelJugador voltereta;
+    [Tooltip("Segundos desde que empieza la voltereta hasta que sale el disparo en picado.")]
+    [SerializeField, Min(0f)] private float remateRetraso = 0.22f;
+    [Tooltip("Velocidad (m/s) a la que cae el personaje tras el disparo.")]
+    [SerializeField, Min(1f)] private float remateVelocidadDeCaida = 14f;
+    [Tooltip("Segundos sin poder moverse ni lanzar al aterrizar tras el remate.")]
+    [SerializeField, Min(0f)] private float remateRecuperacion = 0.5f;
+    [Tooltip("Sin objetivo (o fuera de alcance), metros por delante donde cae el remate.")]
+    [SerializeField, Min(0f)] private float remateDistanciaSinObjetivo = 3f;
+    [Tooltip("Distancia horizontal máxima al objetivo para que el remate caiga sobre él.")]
+    [SerializeField, Min(0f)] private float remateAlcance = 9f;
+    [Tooltip("Metros máximos hasta el suelo para que haya remate; más alto, sale el tercer golpe normal.")]
+    [SerializeField, Min(1f)] private float remateAlturaMaxima = 25f;
+    [Tooltip("Sacudida de cámara cuando el remate llega al suelo.")]
+    [SerializeField, Min(0f)] private float remateSacudida = 0.3f;
+
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
 
@@ -61,6 +83,10 @@ public class MagicCaster : MonoBehaviour
     private float _castingUntil;
     private ITargetProvider _targets;
     private Coroutine _omniRelease;
+    private Coroutine _remate;
+    private bool _esperandoAterrizaje;
+    private float _esperaDeAterrizajeHasta;
+    private readonly Dictionary<MagicSpellSO, MagicSpellSO> _variantesEnPicado = new Dictionary<MagicSpellSO, MagicSpellSO>();
 
     /// <summary>Cambió la lista de básicos o el activo.</summary>
     public event Action OnLoadoutChanged;
@@ -85,6 +111,9 @@ public class MagicCaster : MonoBehaviour
 
     void OnDisable()
     {
+        if (_remate != null) { StopCoroutine(_remate); _remate = null; }
+        _esperandoAterrizaje = false;
+
         // La pose de carga del gesto omni no baja sola: si se corta la espera, se suelta aquí.
         if (_omniRelease == null) return;
         StopCoroutine(_omniRelease);
@@ -101,6 +130,27 @@ public class MagicCaster : MonoBehaviour
         if (!controller) controller = GetComponentInParent<vThirdPersonController>();
         if (!controller) controller = GetComponentInChildren<vThirdPersonController>();
         _targets ??= GetComponentInParent<ITargetProvider>() ?? GetComponentInChildren<ITargetProvider>();
+        if (!voltereta && controller) voltereta = controller.GetComponent<VolteretaDelJugador>();
+    }
+
+    void OnDestroy()
+    {
+        foreach (var variante in _variantesEnPicado.Values)
+            if (variante) Destroy(variante);
+        _variantesEnPicado.Clear();
+    }
+
+    void Update()
+    {
+        // Tras el remate aéreo: al tocar suelo queda un momento vendido.
+        if (!_esperandoAterrizaje) return;
+        if (!controller || Time.time > _esperaDeAterrizajeHasta) { _esperandoAterrizaje = false; return; }
+        if (controller.IsAirborne) return;
+
+        _esperandoAterrizaje = false;
+        if (remateRecuperacion <= 0f) return;
+        controller.CommitToAction(remateRecuperacion, Vector3.zero);
+        _castingUntil = Mathf.Max(_castingUntil, Time.time + remateRecuperacion);
     }
 
     // === Hechizos básicos ======================================================
@@ -155,11 +205,123 @@ public class MagicCaster : MonoBehaviour
         CastHand hand = step switch { 0 => CastHand.Right, 1 => CastHand.Left, _ => CastHand.Center };
         float multiplier = step == 2 ? finisherDamageMultiplier : 1f;
 
-        if (!Cast(spell, hand, multiplier, precise)) return false;
+        bool lanzado = step == 2 && PuedeRematarEnElAire(spell)
+            ? CastRemateAereo(spell, multiplier)
+            : Cast(spell, hand, multiplier, precise);
+        if (!lanzado) return false;
 
         _nextSeriesStep = (step + 1) % 3;
         _lastSeriesCastTime = Time.time;
         return true;
+    }
+
+    // === Remate aéreo (INC-652) ================================================
+
+    private bool PuedeRematarEnElAire(MagicSpellSO spell) =>
+        spell.kind == MagicKind.Projectile && spell.prefab && spawner && controller &&
+        spell.remateAereo != null && spell.remateAereo.kind == MagicKind.Zone &&
+        controller.IsAirborne && !controller.suppressAirMovement;
+
+    /// <summary>
+    /// Tercer golpe de la serie en el aire: voltereta, el básico sale en picado hacia el suelo
+    /// (sobre el objetivo si está a mano; si no, por delante), deja su zona de remate donde cae y
+    /// el personaje baja rápido detrás. Al aterrizar queda un momento sin poder moverse. Si el
+    /// suelo está demasiado lejos, sale el tercer golpe normal.
+    /// </summary>
+    private bool CastRemateAereo(MagicSpellSO spell, float multiplier)
+    {
+        if (!TryGetPuntoDeRemate(out Vector3 punto)) return Cast(spell, CastHand.Center, multiplier);
+
+        if (!CanCast(spell, out string reason))
+        {
+            Log($"No se puede rematar con {spell.displayName}: {reason}");
+            return false;
+        }
+        if (manaPool && !manaPool.TrySpend(spell.manaCost))
+        {
+            Log($"Sin maná para rematar con {spell.displayName} (coste {spell.manaCost})");
+            return false;
+        }
+
+        Vector3 facing = punto - controller.transform.position;
+        facing.y = 0f;
+        float lockSeconds = remateRetraso + 0.15f;
+        _castingUntil = Time.time + lockSeconds;
+
+        if (_omniRelease != null) { StopCoroutine(_omniRelease); _omniRelease = null; }
+        controller.CommitToAction(lockSeconds, facing);
+        controller.HoldAirborne(remateRetraso);
+        if (voltereta) voltereta.EnElAire();
+
+        if (_remate != null) StopCoroutine(_remate);
+        _remate = StartCoroutine(Co_RemateAereo(spell, multiplier));
+
+        OnSpellCast?.Invoke(spell, CastHand.Center);
+        Log($"Remate aéreo con {spell.displayName} (x{multiplier:0.##})");
+        return true;
+    }
+
+    private IEnumerator Co_RemateAereo(MagicSpellSO spell, float multiplier)
+    {
+        if (remateRetraso > 0f) yield return new WaitForSeconds(remateRetraso);
+        _remate = null;
+        if (!controller || !spawner || !TryGetPuntoDeRemate(out Vector3 punto)) yield break;
+
+        Transform origen = spawner.GetOrigin(CastHand.Center);
+        Vector3 desde = origen ? origen.position : controller.transform.position + Vector3.up;
+        Vector3 dir = punto - desde;
+        float distancia = dir.magnitude;
+        if (distancia > 0.01f)
+            spawner.SpawnNow(VarianteEnPicado(spell), origen, true, dir / distancia, multiplier);
+
+        controller.CaerEnPicado(remateVelocidadDeCaida);
+        _esperandoAterrizaje = true;
+        _esperaDeAterrizajeHasta = Time.time + 4f;
+
+        float vuelo = distancia / Mathf.Max(1f, spell.initialSpeed);
+        if (vuelo > 0f) yield return new WaitForSeconds(vuelo);
+
+        var zona = spell.remateAereo;
+        spawner.PonerZonaEn(zona, punto);
+        if (!string.IsNullOrEmpty(zona.castSFXKey) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(zona.castSFXKey, 1f, punto);
+        if (remateSacudida > 0f) FeedbackService.CameraShake(remateSacudida, 0.15f);
+    }
+
+    /// Punto de suelo donde cae el remate: bajo el objetivo si está al alcance, o por delante.
+    private bool TryGetPuntoDeRemate(out Vector3 punto)
+    {
+        punto = default;
+        if (!controller) return false;
+        Transform cuerpo = controller.transform;
+        Vector3 pos = cuerpo.position;
+        Vector3 frente = cuerpo.forward; frente.y = 0f;
+        Vector3 destino = pos + (frente.sqrMagnitude > 0.0001f ? frente.normalized : Vector3.forward) * remateDistanciaSinObjetivo;
+
+        if (TryGetTarget(out Transform objetivo))
+        {
+            Vector3 plano = objetivo.position - pos; plano.y = 0f;
+            if (plano.sqrMagnitude <= remateAlcance * remateAlcance) destino = objetivo.position;
+        }
+
+        destino.y = pos.y + 1f;
+        if (!Physics.Raycast(destino, Vector3.down, out RaycastHit hit, remateAlturaMaxima + 1f,
+                controller.groundLayer, QueryTriggerInteraction.Ignore)) return false;
+        punto = hit.point;
+        return true;
+    }
+
+    /// Copia del básico que sale hacia abajo (sin aplanar) y sin su zona de impacto: la zona del
+    /// remate la pone MagicCaster donde cae. Una por hechizo, reutilizada.
+    private MagicSpellSO VarianteEnPicado(MagicSpellSO spell)
+    {
+        if (_variantesEnPicado.TryGetValue(spell, out var variante) && variante) return variante;
+        variante = Instantiate(spell);
+        variante.name = spell.name + " (en picado)";
+        variante.flattenDirection = false;
+        variante.impactZone = null;
+        _variantesEnPicado[spell] = variante;
+        return variante;
     }
 
     // === Lanzamiento ==========================================================

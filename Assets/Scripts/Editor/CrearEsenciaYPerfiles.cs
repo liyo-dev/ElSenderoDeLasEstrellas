@@ -1,12 +1,8 @@
 using System;
 using System.IO;
-using Sendero.UI;
-using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 /// <summary>Prepara los datos de economía sin modificar el arte original de los orbes.</summary>
 public static class CrearEsenciaYPerfiles
@@ -48,7 +44,6 @@ public static class CrearEsenciaYPerfiles
         foreach (string path in new[] { "Assets/_NPCs/Combat/Mago #1.prefab", "Assets/_NPCs/Combat/Mago #2.prefab",
                      "Assets/_NPCs/Combat/Mago #3.prefab" })
             PerfilEnPrefab(path, "elite");
-        MontarHUD(item);
         AssetDatabase.SaveAssets();
         // El comando sigue siendo idempotente y queda disponible entre las herramientas archivadas.
         string fuente = File.ReadAllText(Script);
@@ -56,7 +51,7 @@ public static class CrearEsenciaYPerfiles
             "[MenuItem(\"El Sendero/Archivo/Crear Esencia y perfiles de drop\")]");
         File.WriteAllText(Script, fuente, new System.Text.UTF8Encoding(false));
         AssetDatabase.ImportAsset(Script);
-        EditorUtility.DisplayDialog("Economía preparada", "Esencia, orbes, perfiles y contador guardados. Revisa su aspecto y prueba los drops en Play.", "Aceptar");
+        EditorUtility.DisplayDialog("Economía preparada", "Esencia, orbes y perfiles guardados. Revisa su aspecto y prueba los drops en Play.", "Aceptar");
     }
 
     private static void CarpetaSiFalta(string ruta)
@@ -259,73 +254,5 @@ public static class CrearEsenciaYPerfiles
             PrefabUtility.SaveAsPrefabAsset(root, path);
         }
         finally { PrefabUtility.UnloadPrefabContents(root); }
-    }
-
-    private static void MontarHUD(ItemData item)
-    {
-        var scene = SceneManager.GetSceneByPath(Inicio);
-        bool abrir = !scene.isLoaded;
-        if (abrir) scene = EditorSceneManager.OpenScene(Inicio, OpenSceneMode.Additive);
-        try
-        {
-            PlayerHUDV2 hud = null;
-            foreach (var root in scene.GetRootGameObjects())
-            {
-                hud = root.GetComponentInChildren<PlayerHUDV2>(true);
-                if (hud != null) break;
-            }
-            if (hud == null) throw new InvalidOperationException("No se encuentra PlayerHUDV2 en Start.");
-            var existente = hud.transform.Find("Contador_Esencia");
-            if (existente != null) return;
-            var go = new GameObject("Contador_Esencia", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
-            go.transform.SetParent(hud.transform, false);
-            var rect = (RectTransform)go.transform;
-            rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(1f, 0f);
-            rect.anchoredPosition = new Vector2(-48f, 80f);
-            rect.sizeDelta = new Vector2(250f, 64f);
-            go.GetComponent<Image>().color = PaletaUI.FondoPanel;
-            go.GetComponent<Image>().raycastTarget = false;
-            var group = go.GetComponent<CanvasGroup>();
-            group.alpha = 0f;
-            group.interactable = group.blocksRaycasts = false;
-            var iconGO = new GameObject("Icono", typeof(RectTransform), typeof(Image));
-            iconGO.transform.SetParent(go.transform, false);
-            var iconRect = (RectTransform)iconGO.transform;
-            iconRect.anchorMin = iconRect.anchorMax = new Vector2(0f, 0.5f);
-            iconRect.anchoredPosition = new Vector2(32f, 0f);
-            iconRect.sizeDelta = new Vector2(40f, 40f);
-            var icon = iconGO.GetComponent<Image>();
-            icon.raycastTarget = false;
-            icon.preserveAspect = true;
-            icon.color = PaletaUI.Lavanda;
-            var total = Texto(go.transform, "Total", new Vector2(145f, 0f));
-            var gain = Texto(go.transform, "Ganancia", new Vector2(145f, 48f));
-            var counter = go.AddComponent<ContadorDeMonedaHUD>();
-            counter.Configurar(item, null, total, icon);
-            var so = new SerializedObject(counter);
-            so.FindProperty("grupo").objectReferenceValue = group;
-            so.FindProperty("ganancia").objectReferenceValue = gain;
-            so.FindProperty("textoFlotante").objectReferenceValue = gain.rectTransform;
-            so.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(counter);
-            EditorSceneManager.MarkSceneDirty(scene);
-            EditorSceneManager.SaveScene(scene);
-        }
-        finally { if (abrir) EditorSceneManager.CloseScene(scene, true); }
-    }
-
-    private static TextMeshProUGUI Texto(Transform padre, string nombre, Vector2 posicion)
-    {
-        var go = new GameObject(nombre, typeof(RectTransform), typeof(TextMeshProUGUI));
-        go.transform.SetParent(padre, false);
-        var text = go.GetComponent<TextMeshProUGUI>();
-        text.rectTransform.anchorMin = text.rectTransform.anchorMax = new Vector2(0f, 0.5f);
-        text.rectTransform.anchoredPosition = posicion;
-        text.rectTransform.sizeDelta = new Vector2(160f, 50f);
-        text.fontSize = 28f;
-        text.color = PaletaUI.Lavanda;
-        text.alignment = TextAlignmentOptions.Center;
-        text.raycastTarget = false;
-        return text;
     }
 }

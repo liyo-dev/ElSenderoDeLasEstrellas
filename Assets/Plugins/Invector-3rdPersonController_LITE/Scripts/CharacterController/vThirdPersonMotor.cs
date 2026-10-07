@@ -159,7 +159,7 @@ namespace Invector.vCharacterController
         #endregion
 
         // --- Helper to validate vectors to avoid NaN/Infinity assignments to Rigidbody ---
-        private bool IsFiniteVector(Vector3 v)
+        protected bool IsFiniteVector(Vector3 v)
         {
             return !(float.IsNaN(v.x) || float.IsNaN(v.y) || float.IsNaN(v.z) ||
                      float.IsInfinity(v.x) || float.IsInfinity(v.y) || float.IsInfinity(v.z));

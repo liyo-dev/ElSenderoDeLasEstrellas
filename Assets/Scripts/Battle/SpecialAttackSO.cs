@@ -47,6 +47,14 @@ public class SpecialAttackSO : ScriptableObject
     [Tooltip("Segundos de delay entre animación y aplicación de daño")]
     public float damageDelay = 0.4f;
 
+    [Header("Voltereta del personaje activo (INC-654)")]
+    [Tooltip("El personaje activo salta con una voltereta hacia el golpe; el efecto y el daño llegan al aterrizar (en vez de tras 'damageDelay'). Solo si tiene VolteretaDelJugador y está en el suelo.")]
+    public bool volteretaDelActivo;
+    [Tooltip("Altura de la voltereta, en alturas de la cabeza del personaje.")]
+    [Min(0f)] public float alturaDeLaVoltereta = 1.2f;
+    [Tooltip("Metros máximos que avanza hacia el punto del golpe (se queda a 1,5 m de él).")]
+    [Min(0f)] public float avanceDeLaVoltereta = 3f;
+
     [Header("Daño")]
     public float damage = 80f;
     public float aoeRadius = 4f;

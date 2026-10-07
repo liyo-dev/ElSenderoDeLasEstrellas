@@ -14,13 +14,11 @@ public class ProfileReadyDiagnostics : MonoBehaviour
     {
         // ✅ Sistemas de persistencia
         "BossProgressPersistenceBridge",
-        "QuestPersistenceBridge",
         
         // ✅ Sistemas del jugador
         "PlayerPresetService",
         "PlayerHealthSystem",
         "WardrobeInventory",
-        "PlayerAbilitiesUI",
         "PlayerEquipmentMenuController",
         
         // ✅ Managers de mundo
@@ -28,7 +26,6 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         "WorldPickup",
         "SavePoint",
         "PortalTrigger",
-        "AnchorSetter",
         "SpawnManager",
         "WorldBootstrap",
         

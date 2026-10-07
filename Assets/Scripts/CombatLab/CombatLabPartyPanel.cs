@@ -7,9 +7,8 @@ using Game.NPC;
 /// Permite comparar combate en solitario y con los compañeros reales del juego,
 /// manteniendo la composición de prueba fuera del progreso guardado.
 /// </summary>
-public sealed class CombatLabPartyPanel : MonoBehaviour
+public sealed class CombatLabPartyPanel : MonoBehaviour, ISeccionDelLab
 {
-    private const float PanelWidth = 436f;
     private readonly List<string> _savedPartyIds = new();
 
     private GameObject _liamObject;
@@ -66,40 +65,30 @@ public sealed class CombatLabPartyPanel : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        if (!_initialized) return;
+    public string Titulo => "Grupo";
+    public int Orden => 30;
 
-        float x = 18f;
-        const float y = 140f;
-        if (_liamObject == null || _estelaObject == null)
+    public void Dibujar()
+    {
+        GUILayout.Label("Con quién pelea Will. Los compañeros usan la IA y los ataques de equipo del juego (LT+RT).", EstiloDelLab.Etiqueta);
+        GUILayout.Space(6f);
+        if (!_initialized || _liamObject == null || _estelaObject == null)
         {
-            GUI.Box(new Rect(x, y, PanelWidth, 66f), "COMBAT LAB · GRUPO DE COMBATE");
-            GUI.Label(new Rect(x + 16f, y + 28f, PanelWidth - 32f, 30f), _status);
+            GUILayout.Label(_status, EstiloDelLab.Nota);
             return;
         }
-
-        GUI.Box(new Rect(x, y, PanelWidth, 116f), "COMBAT LAB · GRUPO DE COMBATE");
-        GUI.Label(new Rect(x + 16f, y + 27f, PanelWidth - 32f, 18f),
-            "Compara cómo cambia el encuentro con aliados que atacan y siguen la IA del juego.");
-
-        DrawCompositionButton(x + 16f, y + 50f, 96f, "Solo", 0);
-        DrawCompositionButton(x + 116f, y + 50f, 96f, "+ Estela", 1);
-        DrawCompositionButton(x + 216f, y + 50f, 96f, "+ Liam", 2);
-        DrawCompositionButton(x + 316f, y + 50f, 104f, "Ambos", 3);
-
-        if (!string.IsNullOrEmpty(_status))
-            GUI.Label(new Rect(x + 16f, y + 82f, PanelWidth - 32f, 30f), _status);
+        GUILayout.BeginHorizontal();
+        Opcion("Solo", 0);
+        Opcion("+ Estela", 1);
+        Opcion("+ Liam", 2);
+        Opcion("Los tres", 3);
+        GUILayout.EndHorizontal();
+        GUILayout.Label(_status, EstiloDelLab.Nota);
     }
 
-    private void DrawCompositionButton(float x, float y, float width, string label, int composition)
+    private void Opcion(string texto, int composicion)
     {
-        Color previous = GUI.backgroundColor;
-        if (_composition == composition)
-            GUI.backgroundColor = new Color(0.45f, 0.72f, 1f, 1f);
-        if (GUI.Button(new Rect(x, y, width, 27f), label))
-            ApplyComposition(composition);
-        GUI.backgroundColor = previous;
+        if (EstiloDelLab.Opcion(texto, _composition == composicion)) ApplyComposition(composicion);
     }
 
     private void ApplyComposition(int composition)

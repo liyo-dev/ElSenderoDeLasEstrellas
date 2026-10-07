@@ -89,6 +89,7 @@ MonoBehaviour:
   spreadCount: 1
   spreadAngle: 24
   impactZone: {fileID: 11400000, guid: 742dd717d47d8e148b8d0bc620fcd1a2, type: 2}
+  remateAereo: {fileID: 11400000, guid: 0e662708f1714174c9ace71b36fa7a85, type: 2}
   castStyle: 0
   statusEffect: 0
   statusDuration: 2

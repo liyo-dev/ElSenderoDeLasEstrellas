@@ -35,6 +35,12 @@ public class MainMenuController : MonoBehaviour
     [Tooltip("Button de la fila SALIR.")]
     [SerializeField] private Button exitButton;
 
+    [Tooltip("Button de la fila LABORATORIO (el LAB de pruebas para testers). Opcional.")]
+    [SerializeField] private Button labButton;
+
+    [Tooltip("Escena del LAB que carga el botón LABORATORIO.")]
+    [SerializeField] private string escenaDelLab = "Lab";
+
     [Tooltip("Panel que contiene los botones principales del menú.")]
     [SerializeField] private GameObject buttonPanel;
 
@@ -147,6 +153,7 @@ public class MainMenuController : MonoBehaviour
         WireButton(settingsButton, OnClickSettings, "SETTINGS");
         WireButton(controlsButton, OnClickControls, "CONTROLS");
         WireButton(exitButton, OnClickExit, "EXIT");
+        if (labButton) WireButton(labButton, OnClickLab, "LAB");
 
         // Ensure UISelectVisual exists on main menu buttons
         var menuButtons = GetComponentsInChildren<Button>(true);
@@ -367,7 +374,7 @@ public class MainMenuController : MonoBehaviour
             // Habilita la navegación y reserva el click para los handlers que no reproducen sonido.
             audioComp.SetPlayHoverSound(true);
             bool handlerPlaysSound = b == continueButton || b == newGameButton
-                || b == settingsButton || b == controlsButton || b == exitButton
+                || b == settingsButton || b == controlsButton || b == exitButton || (labButton && b == labButton)
                 || System.Array.IndexOf(languageButtons, b) >= 0;
             for (int i = 0; i < b.onClick.GetPersistentEventCount(); i++)
             {
@@ -375,7 +382,7 @@ public class MainMenuController : MonoBehaviour
                 string method = b.onClick.GetPersistentMethodName(i);
                 handlerPlaysSound |= method == nameof(OnClickContinue) || method == nameof(OnClickNewGame)
                     || method == nameof(OnClickSettings) || method == nameof(OnClickControls)
-                    || method == nameof(OnClickExit);
+                    || method == nameof(OnClickExit) || method == nameof(OnClickLab);
             }
             audioComp.SetPlayClickSound(!handlerPlaysSound);
         }
@@ -722,6 +729,20 @@ public class MainMenuController : MonoBehaviour
 
         float delay = Mathf.Max(0.01f, inputArmDelay);
         _armRoutine = StartCoroutine(ArmMenuAfterDelay(delay));
+    }
+
+    /// <summary>
+    /// LABORATORIO: carga el LAB de pruebas. No toca la partida guardada (el LAB no guarda), así
+    /// que no pide confirmación como NUEVA PARTIDA.
+    /// </summary>
+    public void OnClickLab()
+    {
+        if (_isLoading || !_inputArmed) return;
+        if (string.IsNullOrEmpty(escenaDelLab)) return;
+        _isLoading = true;
+        if (!efectoAlComenzar)
+            AudioService.Instance?.PlaySFX("UI_Submit");
+        LoadTargetScene(escenaDelLab, labButton);
     }
 
     public void OnClickExit()

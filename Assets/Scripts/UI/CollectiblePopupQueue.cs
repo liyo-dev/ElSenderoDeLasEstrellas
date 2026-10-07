@@ -49,15 +49,40 @@ public class CollectiblePopupQueue : MonoBehaviour
     // small buffer (seconds) added to removal scheduling to ensure panel has time to fade out
     private const float RemovalBuffer = 0.12f;
 
+    // Quien pide silencio (una batalla, por ejemplo). Mientras haya alguno, lo que entra al
+    // inventario no saca pop-up y se descarta: no se enseña después.
+    private static readonly HashSet<object> _silenciadores = new();
+
+    /// <summary>True mientras algún sistema tenga silenciados los pop-ups de objetos.</summary>
+    public static bool Silenciada => _silenciadores.Count > 0;
+
+    /// <summary>Silencia los pop-ups de objetos hasta que <paramref name="quien"/> llame a <see cref="Reanudar"/>.</summary>
+    public static void Silenciar(object quien)
+    {
+        if (quien != null) _silenciadores.Add(quien);
+    }
+
+    /// <summary>Retira el silencio que pidió <paramref name="quien"/>. Llamarlo de más no hace nada.</summary>
+    public static void Reanudar(object quien)
+    {
+        if (quien != null) _silenciadores.Remove(quien);
+    }
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { _silenciadores.Clear(); }
+#endif
+
     void Awake()
     {
         // Log eliminado - binding normal no necesita log
         PlayerPresetService.OnPresetApplying += HandlePresetApplying;
         PlayerPresetService.OnPresetApplied += HandlePresetApplied;
+        // Habilitada por defecto (también en escenas que no aplican preset, como el CombatLab);
+        // solo se apaga mientras se aplica un preset o se carga partida. Ver INC-642.
         _popupsEnabled = false;
-        if (PlayerPresetService.HasAppliedPreset)
-            StartEnableRoutine();
         _pendingEnable = false;
+        StartEnableRoutine();
         // Try bind to registered player inventory
         TryBindToPlayer();
         PlayerService.OnPlayerRegistered += OnPlayerRegistered;
@@ -139,7 +164,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     private void OnItemAdded(ItemData item, int addedAmount, int newTotal)
     {
-        if (!_popupsEnabled) return;
+        if (!_popupsEnabled || Silenciada) return;
         if (item == null || addedAmount <= 0) return;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -159,6 +184,9 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     void HandlePresetApplying()
     {
+        // Cargar partida empieza de cero: un silencio que nadie retiró (una batalla que no se
+        // cerró) no debe sobrevivir a la carga.
+        _silenciadores.Clear();
         _popupsEnabled = false;
         if (_enableRoutine != null)
         {
@@ -205,7 +233,7 @@ public class CollectiblePopupQueue : MonoBehaviour
             _pending.Remove(itemId);
         }
 
-        if (amount > 0)
+        if (amount > 0 && !Silenciada)
             SpawnPopup(item, amount);
     }
 

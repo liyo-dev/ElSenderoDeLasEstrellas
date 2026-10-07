@@ -116,6 +116,16 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
     [SerializeField] private float punchRadius = 3f;
     [Tooltip("Knockback del puñetazo")]
     [SerializeField] private float punchKnockback = 12f;
+
+    [Header("Derribo del jugador (INC-654)")]
+    [Tooltip("El puñetazo, la onda y la embestida lanzan y derriban al jugador (se recupera saltando en el aire). Los compañeros siguen recibiendo el empuje de siempre.")]
+    [SerializeField] private bool derribaAlJugador = true;
+    [Tooltip("Metros que sale despedido el jugador.")]
+    [SerializeField, Min(0f)] private float derriboDistancia = 4f;
+    [Tooltip("Altura del vuelo, en metros.")]
+    [SerializeField, Min(0f)] private float derriboAltura = 2f;
+    [Tooltip("Segundos que dura el vuelo.")]
+    [SerializeField, Min(0.1f)] private float derriboDuracion = 0.7f;
     [Tooltip("VFX del impacto del puñetazo")]
     [SerializeField] private GameObject punchImpactVFX;
     [Tooltip("Cooldown de la embestida")]
@@ -1518,9 +1528,9 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
 #endif
                 }
                 
-                // Aplicar knockback
+                // Aplicar knockback (al jugador, derribo; ver INC-654)
                 var rb = hit.GetComponent<Rigidbody>();
-                if (rb != null && !rb.isKinematic)
+                if (!DerribarAlJugador(hit.gameObject, transform.position) && rb != null && !rb.isKinematic)
                 {
                     rb.AddForce(knockbackDir * punchKnockback, ForceMode.Impulse);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1801,9 +1811,9 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
 #endif
                 }
                 
-                // Aplicar knockback via Rigidbody si existe
+                // Aplicar knockback via Rigidbody si existe (al jugador, derribo; ver INC-654)
                 var rb = hit.GetComponent<Rigidbody>();
-                if (rb != null && !rb.isKinematic)
+                if (!DerribarAlJugador(hit.gameObject, center) && rb != null && !rb.isKinematic)
                 {
                     rb.AddForce(knockbackDir * shockwaveKnockback, ForceMode.Impulse);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1896,6 +1906,7 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
         {
             playerHealth.TakeDamage(damage);
             _lastContactDamageTime = Time.time;
+            if (_isCharging) DerribarAlJugador(player.gameObject, transform.position);
             
             Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1924,6 +1935,10 @@ public class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetivo, IInic
     }
     
     #endregion
+
+    /// Derribo del jugador por un golpe fuerte (INC-654). True si lo ha lanzado.
+    private bool DerribarAlJugador(GameObject objetivo, Vector3 origen) =>
+        derribaAlJugador && AerialKnockbackReceiver.Derribar(objetivo, origen, derriboDistancia, derriboAltura, derriboDuracion);
 
     #region Daño y Muerte
 

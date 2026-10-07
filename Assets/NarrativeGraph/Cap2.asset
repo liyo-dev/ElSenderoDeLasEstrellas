@@ -456,7 +456,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-0
-        position: {x: 7220, y: 186}
+        position: {x: 7220, y: 184}
         outputs:
         - cap2-prepara-viaje-boticaria-1
         npcId: NPC_Boticaria
@@ -473,7 +473,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-1
-        position: {x: 7600, y: 256}
+        position: {x: 7600, y: 251.20001}
         outputs:
         - cap2-prepara-viaje-boticaria-2
         dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
@@ -490,7 +490,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-2
-        position: {x: 7980, y: 186}
+        position: {x: 7980, y: 184}
         outputs:
         - cap2-prepara-viaje-boticaria-3
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -508,7 +508,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 8360, y: 190}
+        position: {x: 8360, y: 188.79999}
         outputs:
         - cap2-prepara-viaje-boticaria-4
         action: 0
@@ -531,7 +531,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-4
-        position: {x: 8740, y: 288}
+        position: {x: 8740, y: 282.4}
         outputs: []
         standingActorId: NPC_Boticaria
         standingDialogue: {fileID: 11400000, guid: 79e721f963b681b4b83cbe507f578e4c, type: 2}

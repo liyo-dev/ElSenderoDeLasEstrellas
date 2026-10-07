@@ -18,6 +18,8 @@ using Invector.vCharacterController;
 /// </list>
 /// Mientras está abierto (<see cref="IsComposing"/>), los demás lectores de botones de combate
 /// (X, LB, B, LT+RT, salto) no hacen nada, y el jugador no se mueve.
+/// Lo que se ve y se oye (círculo, elevación, viento, luz, sonidos) lo pone
+/// <see cref="PresentacionDelCombo"/> escuchando los eventos de este componente.
 /// </summary>
 [DisallowMultipleComponent]
 public class ComboCastController : MonoBehaviour
@@ -59,21 +61,10 @@ public class ComboCastController : MonoBehaviour
     [SerializeField, Range(2, 8)] private int maxLength = 5;
 
     [Header("Poses (rutas completas en la capa superior)")]
-    [Tooltip("Pose mientras se teclea (en bucle): brazos abiertos cargando, Omni01 - Load de Kevin Iglesias.")]
+    [Tooltip("Pose al abrir el círculo (brazos delante, congelada). Las de cada botón las pone PresentacionDelCombo.")]
     [SerializeField] private string enterState = "UpperBody.Magic.ComboIdle";
     [SerializeField] private string exitState = "UpperBody.Magic.ComboExit";
     [SerializeField] private string breakState = "UpperBody.Magic.ComboBreak";
-
-    [Header("Círculo mágico")]
-    [Tooltip("Efecto a los pies mientras el círculo está abierto (se instancia una vez y se enciende y apaga).")]
-    [SerializeField] private GameObject circleVfx;
-    [SerializeField] private Vector3 circleOffset = new Vector3(0f, 0.05f, 0f);
-    [SerializeField] private float circleScale = 1f;
-
-    [Header("Sonido")]
-    [SerializeField] private string openSfxKey = "Prologue_SpellInstantiate";
-    [SerializeField] private string inputSfxKey = "UI_Navigate";
-    [SerializeField] private string failSfxKey = "SpellFail";
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs;
@@ -90,7 +81,6 @@ public class ComboCastController : MonoBehaviour
     private PlayerActionManager _actions;
     private PlayerShieldController _shield;
     private PlayerHealthSystem _health;
-    private GameObject _circle;
 
     /// <summary>Se abrió el círculo con este repertorio.</summary>
     public event Action<IReadOnlyList<MagicSpellSO>> OnOpened;
@@ -102,6 +92,10 @@ public class ComboCastController : MonoBehaviour
     public event Action<string> OnDenied;
 
     public bool IsOpen => _open;
+    /// <summary>Personaje que conjura el combo.</summary>
+    public vThirdPersonController Personaje => controller;
+    /// <summary>Botones máximos de una secuencia.</summary>
+    public int LongitudMaxima => maxLength;
     public IReadOnlyList<ComboButton> Typed => _typed;
 
     /// <summary>Enfriamiento restante del combo, de 1 (recién lanzado) a 0 (disponible).</summary>
@@ -203,8 +197,6 @@ public class ComboCastController : MonoBehaviour
         _lastInputTime = Time.time;
 
         if (controller) controller.HoldUpperBodyPose(enterState);
-        ShowCircle(true);
-        PlaySfx(openSfxKey);
         OnOpened?.Invoke(_repertoire);
         Log($"Círculo abierto ({_repertoire.Count} combos)");
     }
@@ -249,7 +241,6 @@ public class ComboCastController : MonoBehaviour
     {
         _typed.Add(button);
         _lastInputTime = Time.time;
-        PlaySfx(inputSfxKey);
 
         MagicSpellSO match = null;
         int stillPossible = 0;
@@ -268,20 +259,6 @@ public class ComboCastController : MonoBehaviour
         if (stillPossible == 0 || _typed.Count >= maxLength) Fizzle("la secuencia no es de ningún combo");
     }
 
-    private void ShowCircle(bool on)
-    {
-        if (circleVfx == null || controller == null) return;
-        if (_circle == null)
-        {
-            if (!on) return;
-            _circle = Instantiate(circleVfx, controller.transform);
-            _circle.transform.localPosition = circleOffset;
-            _circle.transform.localRotation = Quaternion.identity;
-            _circle.transform.localScale = Vector3.one * circleScale;
-        }
-        _circle.SetActive(on);
-    }
-
     private static bool IsPrefix(List<ComboButton> typed, ComboButton[] sequence)
     {
         if (sequence == null || typed.Count > sequence.Length) return false;
@@ -295,7 +272,6 @@ public class ComboCastController : MonoBehaviour
         // Se cierra antes de lanzar: Cast comprueba permisos y el gesto sustituye a la pose.
         _open = false;
         SetComposing(false);
-        ShowCircle(false);
         bool cast = magicCaster.Cast(spell, CastHand.Center, 1f);
         if (cast)
         {
@@ -306,7 +282,6 @@ public class ComboCastController : MonoBehaviour
         }
         else
         {
-            PlaySfx(failSfxKey);
             if (controller) controller.PlayUpperBodyAction(exitState);
             OnClosed?.Invoke(Result.Fizzled, spell);
             Log($"Combo {spell.displayName} correcto, pero no se pudo lanzar (maná o permisos)");
@@ -316,7 +291,6 @@ public class ComboCastController : MonoBehaviour
     private void Fizzle(string why)
     {
         if (_mana != null && fizzleManaCost > 0f) _mana.TrySpend(Mathf.Min(fizzleManaCost, _mana.Current));
-        PlaySfx(failSfxKey);
         Close(Result.Fizzled, null, playExit: true);
         Log("Se disipa: " + why);
     }
@@ -326,9 +300,7 @@ public class ComboCastController : MonoBehaviour
         if (!_open) return;
         _open = false;
         SetComposing(false);
-        ShowCircle(false);
         if (controller) controller.PlayUpperBodyAction(breakState);
-        PlaySfx(failSfxKey);
         OnClosed?.Invoke(Result.Interrupted, null);
         Log("Círculo roto por un golpe");
     }
@@ -337,7 +309,6 @@ public class ComboCastController : MonoBehaviour
     {
         _open = false;
         SetComposing(false);
-        ShowCircle(false);
         if (playExit && controller) controller.PlayUpperBodyAction(exitState);
         OnClosed?.Invoke(result, spell);
     }
@@ -346,17 +317,11 @@ public class ComboCastController : MonoBehaviour
 
     private void Deny(string why, string messageKey, string fallback)
     {
-        PlaySfx(failSfxKey);
 #if UNITY_EDITOR
         Debug.Log("[Combo] No se abre: " + why, this);
 #endif
         string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(messageKey, fallback) : fallback;
         OnDenied?.Invoke(msg);
-    }
-
-    private static void PlaySfx(string key)
-    {
-        if (!string.IsNullOrEmpty(key) && AudioService.Instance != null) AudioService.Instance.PlaySFX(key);
     }
 
     private void Log(string message)

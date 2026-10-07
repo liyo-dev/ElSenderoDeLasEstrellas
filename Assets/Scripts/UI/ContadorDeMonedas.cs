@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>Muestra una moneda y su cantidad; se refresca cuando cambia el inventario.</summary>
 [DisallowMultipleComponent]
-public class ContadorDeMonedas : MonoBehaviour
+public sealed class ContadorDeMonedas : MonoBehaviour
 {
     [SerializeField] private ItemData moneda;
     [SerializeField] private Inventory inventario;
@@ -14,8 +14,6 @@ public class ContadorDeMonedas : MonoBehaviour
     private bool ocultarSinCantidad;
     private CanvasGroup visibilidad;
     private Inventory suscrito;
-    protected ItemData Moneda => moneda;
-    protected Inventory Inventario => inventario;
 
     public void ConectarInventario(Inventory inventory)
     {
@@ -39,7 +37,7 @@ public class ContadorDeMonedas : MonoBehaviour
         Refrescar();
     }
 
-    protected virtual void OnEnable()
+    private void OnEnable()
     {
         PrepararVisibilidad();
         if (inventario == null)
@@ -48,7 +46,7 @@ public class ContadorDeMonedas : MonoBehaviour
         Refrescar();
     }
 
-    protected virtual void OnDisable() => Desuscribir();
+    private void OnDisable() => Desuscribir();
 
     private void Suscribir()
     {
@@ -64,7 +62,7 @@ public class ContadorDeMonedas : MonoBehaviour
         suscrito = null;
     }
 
-    protected virtual void AlCambiarInventario(ItemData item, int total) => Refrescar();
+    private void AlCambiarInventario(ItemData item, int total) => Refrescar();
 
     private void PrepararVisibilidad()
     {
@@ -75,7 +73,7 @@ public class ContadorDeMonedas : MonoBehaviour
         visibilidad.blocksRaycasts = false;
     }
 
-    protected void Refrescar()
+    private void Refrescar()
     {
         int total = inventario != null && moneda != null ? inventario.Count(moneda.itemId) : 0;
         if (cantidad != null)

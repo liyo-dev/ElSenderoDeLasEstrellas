@@ -24,7 +24,7 @@ public static partial class CombatLabBuilder
         }
         if (!File.Exists(ScenePath))
         {
-            EditorUtility.DisplayDialog("CombatLab", "No existe CombatLab. Créala antes con «Crear o regenerar CombatLab».", "Aceptar");
+            EditorUtility.DisplayDialog("CombatLab", "No existe el LAB. Créalo antes con «Crear o regenerar el LAB».", "Aceptar");
             return;
         }
 

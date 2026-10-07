@@ -11,8 +11,10 @@ using UnityEngine.AI;
 /// Tres fases, cada una con una regla nueva que se enseña, se demuestra y se practica:
 ///
 ///  1. Patrones: se teletransporta y lanza salvas de tres rayos (se pueden devolver con la B:
-///     devolverle su propio rayo le aturde y le deja expuesto), grietas en el suelo y una nova si
-///     te acercas. Tras cada salva queda agotado un momento: es la ventana.
+///     devolverle su propio rayo le aturde y le deja expuesto), grietas en el suelo, una nova si
+///     te acercas y el Pozo del Sendero si estás lejos (el agujero negro del prólogo en pequeño:
+///     atrae mientras crece, hay que correr en contra). Tras cada salva o pozo queda agotado un
+///     momento: es la ventana.
 ///  2. El Sendero se deforma: vuela sostenido por cuatro anclas en lo alto de los pilares, el
 ///     suelo se corrompe por zonas y llueve sombra. Rotas las anclas (Liam las rompe antes), se
 ///     desploma y queda expuesto. Hay que moverse, subir a las plataformas o volar.
@@ -74,6 +76,20 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     [SerializeField] private float aturdidoPorContraataque = 3.5f;
     [SerializeField] private float pausaFase1 = 1.1f;
 
+    [Header("Pozo del Sendero (fases 1 y 3)")]
+    [Tooltip("El agujero negro del prólogo; aquí se usa en pequeño.")]
+    [SerializeField] private GameObject vfxPozo;
+    [SerializeField] private GameObject vfxImplosionPozo;
+    [SerializeField] private float cargaPozo = 3f;
+    [SerializeField] private float radioAtraccionPozo = 13f;
+    [Tooltip("Metros por segundo cerca del centro. Menos que correr: se escapa corriendo en contra.")]
+    [SerializeField] private float velocidadAtraccionPozo = 3.2f;
+    [SerializeField] private float radioImplosionPozo = 3.5f;
+    [SerializeField] private float danoPozo = 30f;
+    [SerializeField] private float empujePozo = 10f;
+    [Tooltip("Segundos mínimos entre dos pozos.")]
+    [SerializeField] private float cadaPozo = 14f;
+
     [Header("Fase 2: el Sendero se deforma")]
     [SerializeField] private float alturaVuelo = 7f;
     [SerializeField] private float tiempoEntrePuntos = 1.6f;
@@ -115,7 +131,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     private bool _cortados;
     private int _ataquesDesdeSalto;
     private int _puntoVuelo;
-    private float _novaLista, _grietaLista, _siguienteCorrupcion, _siguienteOleada;
+    private float _novaLista, _grietaLista, _pozoListo, _siguienteCorrupcion, _siguienteOleada;
     private readonly List<GameObject> _sombras = new();
     private GuiaDeCombate _guia;
     private PlayerActionManager _accion;
@@ -172,6 +188,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     {
         if (_empezado) return;
         _empezado = true;
+        _pozoListo = Time.time + cadaPozo * 0.5f;
         ActiveCombatRegistry.RegisterNPC(gameObject);
         var bossBar = GetComponent<BossHealthBar>();
         if (bossBar) bossBar.Show();
@@ -249,6 +266,8 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         float d = DistanciaAlJugador();
         if (d < radioNova + 1f && Time.time >= _novaLista)
             yield return Co_Nova();
+        else if (d > radioNova + 2f && Time.time >= _pozoListo && UnityEngine.Random.value < 0.35f)
+            yield return Co_Pozo(exponerDespues: true);
         else if (Time.time >= _grietaLista && UnityEngine.Random.value < 0.4f)
             yield return Co_Grieta();
         else
@@ -312,6 +331,43 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         _expuestoHasta = Time.time + 1f;
         yield return Esperar(1f);
         yield return Co_Teletransporte(PuntoLejosDelJugador(escenario != null ? escenario.puntosDeSalto : null));
+    }
+
+    /// Pozo del Sendero: brazos arriba, nace delante de él el agujero negro y atrae al jugador
+    /// mientras crece; al implosionar hace daño cerca. Quien corre en contra escapa.
+    private IEnumerator Co_Pozo(bool exponerDespues)
+    {
+        _pozoListo = Time.time + cadaPozo;
+        MirarAlJugador(1f);
+        _anim?.HoldPose("MagicAttackOmni01_Load");
+
+        Vector3 centro = transform.position + transform.forward * 2f;
+        centro.y = SueloEn(centro);
+        PozoGravitatorio.Crear(centro, new PozoGravitatorio.Config
+        {
+            carga = cargaPozo,
+            radioAtraccion = radioAtraccionPozo,
+            velocidadAtraccion = velocidadAtraccionPozo,
+            radioImplosion = radioImplosionPozo,
+            dano = danoPozo,
+            empuje = empujePozo,
+            vfxPozo = vfxPozo,
+            escalaInicial = 0.2f,
+            escalaFinal = 1f,
+            alturaVfx = 1.8f,
+            vfxImplosion = vfxImplosionPozo,
+            sfxCarga = "SFX_Prologo_AgujeroNegro_Carga",
+            sfxImplosion = "SFX_Prologo_Explosion",
+        });
+
+        yield return Esperar(cargaPozo + 0.3f);
+        _anim?.ReleasePose(true);
+
+        if (exponerDespues && !_aturdir)
+        {
+            _expuestoHasta = Time.time + agotamiento;
+            yield return Esperar(agotamiento);
+        }
     }
 
     private IEnumerator Co_Aturdido(float segundos, bool exponer)
@@ -541,7 +597,10 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
             _siguienteOleada = Time.time + cadaOleada;
         }
 
-        yield return Co_Salva(exponerDespues: false);
+        if (Time.time >= _pozoListo && UnityEngine.Random.value < 0.3f)
+            yield return Co_Pozo(exponerDespues: false);
+        else
+            yield return Co_Salva(exponerDespues: false);
         _anim?.HoldPose("MagicSpecial");
         yield return Esperar(pausaFase3 * UnityEngine.Random.Range(0.8f, 1.3f));
     }

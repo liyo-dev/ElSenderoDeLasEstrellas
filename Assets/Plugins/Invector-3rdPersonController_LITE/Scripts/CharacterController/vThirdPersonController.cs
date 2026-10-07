@@ -162,6 +162,60 @@ namespace Invector.vCharacterController
             }
         }
 
+        /// <summary>
+        /// Impulso desde fuera, como un salto pero con la velocidad que se pida (lanzadores de salto):
+        /// 'velocidadVertical' hacia arriba y 'empujeHorizontal' (m/s, en mundo) hacia donde se
+        /// quiera llevar al personaje. Cancela el compromiso de acción y el sostén en el aire. Con
+        /// 'devolverSaltosEnElAire' el doble salto vuelve a estar disponible. Sin efecto con el
+        /// controlador deshabilitado, en vuelo o con el Rigidbody cinemático.
+        /// </summary>
+        public void Impulsar(float velocidadVertical, Vector3 empujeHorizontal, bool devolverSaltosEnElAire)
+        {
+            if (!enabled || suppressAirMovement || _rigidbody == null || _rigidbody.isKinematic) return;
+            if (float.IsNaN(velocidadVertical) || float.IsInfinity(velocidadVertical) || !IsFiniteVector(empujeHorizontal)) return;
+
+            CancelActionCommit();
+            CancelAirHold();
+            jumpCounter = jumpTimer;
+            isJumping = true;
+            if (devolverSaltosEnElAire) airJumpsUsed = 0;
+
+            var vel = _rigidbody.linearVelocity;
+            vel.y = Mathf.Max(0f, velocidadVertical);
+            if (empujeHorizontal.sqrMagnitude > 0.0001f)
+            {
+                vel.x = empujeHorizontal.x;
+                vel.z = empujeHorizontal.z;
+                // Mirando hacia el empuje: el control en el aire conserva la velocidad hacia donde mira.
+                var plano = new Vector3(empujeHorizontal.x, 0f, empujeHorizontal.z);
+                transform.rotation = Quaternion.LookRotation(plano.normalized, Vector3.up);
+            }
+            _rigidbody.linearVelocity = vel;
+
+            if (animator != null) animator.CrossFadeInFixedTime("Jump", 0.05f, 0);
+        }
+
+        /// <summary>
+        /// Cae en picado: termina el sostén en el aire y pone la velocidad vertical a -'velocidad'
+        /// (frenando el desplazamiento horizontal). Solo en el aire. Sin efecto con el controlador
+        /// deshabilitado, en vuelo o con el Rigidbody cinemático.
+        /// </summary>
+        public void CaerEnPicado(float velocidad)
+        {
+            if (!enabled || suppressAirMovement || _rigidbody == null || _rigidbody.isKinematic) return;
+            if (!IsAirborne || float.IsNaN(velocidad) || float.IsInfinity(velocidad)) return;
+
+            CancelAirHold();
+            isJumping = false;
+            jumpCounter = 0f;
+
+            var vel = _rigidbody.linearVelocity;
+            vel.x *= 0.3f;
+            vel.z *= 0.3f;
+            vel.y = -Mathf.Abs(velocidad);
+            _rigidbody.linearVelocity = vel;
+        }
+
         private void DoJump(float impulseFactor, bool ignoreValidator = false)
         {
             if (!ignoreValidator && _actionValidator != null && !_actionValidator.CanJump()) return;

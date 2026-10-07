@@ -56,7 +56,6 @@ public static class MenuDeStartBuilder
                 // La tarjeta ofrece acceso con ratón sin entrar en la navegación de las listas.
                 boton.navigation = new Navigation { mode = Navigation.Mode.None };
             }
-            TarjetasDeAyudaBuilder.AjustarBarra(barra, avisos);
         }
         var coin = AssetDatabase.LoadAssetAtPath<ItemData>("Assets/_ITEMS/IT_Coin.asset");
         var esencia = AssetDatabase.LoadAssetAtPath<ItemData>("Assets/_ITEMS/IT_Esencia.asset");
@@ -88,7 +87,7 @@ public static class MenuDeStartBuilder
         listaContadores.arraySize = contadores.Count;
         for (int i = 0; i < contadores.Count; i++)
             listaContadores.GetArrayElementAtIndex(i).objectReferenceValue = contadores[i];
-        if (barra != null && contadores.Count > 1) AjustarEspacioParaContadores(barra, contadores.Count);
+        if (barra != null) TarjetasDeAyudaBuilder.AjustarBarra(barra, avisos);
         var jam = AssetDatabase.LoadAssetAtPath<ItemData>("Assets/_ITEMS/IT_Mermelada.asset");
         var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(AssetDatabase.GUIDToAssetPath("ec996c98e7ca4d0aabfbd34531c5624a"));
         if (jam == null || sprite == null) avisos.Add("Falta IT_Mermelada o su sprite correcto.");
@@ -101,6 +100,7 @@ public static class MenuDeStartBuilder
         }
         foreach (var child in menu.GetComponentsInChildren<Transform>(true))
             if (child != null && child.name == "PistaControles") Object.DestroyImmediate(child.gameObject);
+        bool contadorDelHudRetirado = RetirarContadorDelHud(scene);
         so.ApplyModifiedPropertiesWithoutUndo();
         EditorUtility.SetDirty(menu);
         EditorSceneManager.MarkSceneDirty(scene);
@@ -109,6 +109,8 @@ public static class MenuDeStartBuilder
         int registrados = ItemRegistrySincronizador.Sincronizar();
         log.AppendLine("Panel de controles reparado: sin canvas anidado, estirado y encima del menú.");
         log.AppendLine("Tarjeta Controles en todas las pestañas; pista antigua retirada; contadores de monedas montados.");
+        if (contadorDelHudRetirado)
+            log.AppendLine("Contador de Esencia del HUD retirado: lo ganado sale en el pop-up de objetos. Ver INC-642.");
         log.AppendLine($"Moneda clasificada como Currency; icono de mermelada corregido; registro con {registrados} ItemData. Start guardada.");
     }
 
@@ -209,27 +211,14 @@ public static class MenuDeStartBuilder
         return counter;
     }
 
-    private static void AjustarEspacioParaContadores(Transform barra, int numero)
+    /// <summary>Quita el contador de Esencia que había en el HUD de juego (lo sustituye el pop-up de objetos).</summary>
+    private static bool RetirarContadorDelHud(Scene scene)
     {
-        var layout = barra.GetComponent<HorizontalLayoutGroup>();
-        if (layout == null) return;
-        layout.padding.left = 12 + numero * 204 + 8;
-        var tarjetas = new List<LayoutElement>();
-        foreach (Transform child in barra)
-        {
-            var element = child.GetComponent<LayoutElement>();
-            if (element != null && !element.ignoreLayout) tarjetas.Add(element);
-        }
-        // Mantiene las seis tarjetas dentro de la fila de referencia de 1920 px.
-        float disponible = 1920f - layout.padding.left - layout.padding.right - layout.spacing * Mathf.Max(0, tarjetas.Count - 1);
-        float ancho = tarjetas.Count > 0 ? Mathf.Floor(disponible / tarjetas.Count) : 0f;
-        foreach (var tarjeta in tarjetas)
-        {
-            tarjeta.minWidth = tarjeta.preferredWidth = ancho;
-            EditorUtility.SetDirty(tarjeta);
-        }
-        LayoutRebuilder.ForceRebuildLayoutImmediate((RectTransform)barra);
-        EditorUtility.SetDirty(layout);
+        var hud = BuscarEnEscena<Sendero.UI.PlayerHUDV2>(scene);
+        var contador = hud != null ? hud.transform.Find("Contador_Esencia") : null;
+        if (contador == null) return false;
+        Object.DestroyImmediate(contador.gameObject);
+        return true;
     }
 
     private static GameObject Hijo(Transform parent, string nombre)

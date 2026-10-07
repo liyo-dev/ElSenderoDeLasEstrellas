@@ -1,20 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Core;
 
 /// <summary>
-/// Selector de hechizos exclusivo de CombatLab. Cambia el loadout en runtime y no escribe
+/// Pestaña «Magia» del panel del LAB: selector de hechizos exclusivo del laboratorio. Cambia el loadout en runtime y no escribe
 /// en PlayerPresetSO ni en la partida guardada. Al entrar aprende el grimorio entero (todos los
 /// hechizos de todos los personajes) en el preset de la sesión (copia en memoria), para poder
 /// equipar cualquiera desde el menú de Start.
 /// </summary>
-public sealed class CombatLabMagicPanel : MonoBehaviour
+public sealed class CombatLabMagicPanel : MonoBehaviour, ISeccionDelLab
 {
-    private const float PanelWidth = 390f;
-    private const float PanelHeight = 520f;
-    private const float RowHeight = 40f;
-
     // Candidatos por ranura básica; el primero (null) deja la ranura vacía.
     private readonly List<MagicSpellSO> _basicCandidates = new() { null };
     private readonly MagicSpellSO[] _equipped = new MagicSpellSO[MagicCaster.BasicSlotCount];
@@ -25,9 +20,6 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
     private PlayerPresetService _presetService;
     private ManaPool _manaPool;
     private SpecialChargeMeter _specialCharge;
-    private Core.PlayerInputManager _inputManager;
-    private bool _isOpen;
-    private bool _ownsUiMode;
     private bool _initialized;
     private string _status = "";
 
@@ -40,7 +32,6 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         _presetService = player.GetComponentInChildren<PlayerPresetService>(true);
         _manaPool = player.GetComponentInChildren<ManaPool>(true);
         PlayerService.TryGetComponent(out _specialCharge, allowSceneLookup: false);   // del grupo, INC-484
-        _inputManager = Core.PlayerInputManager.Instance;
 
         if (_caster == null || _presetService == null || _presetService.SpellLibrary == null)
         {
@@ -74,19 +65,11 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         RefillTestResources();
         AprenderGrimorioEntero();   // en el laboratorio todo viene aprendido (INC-494)
         _initialized = true;
-        SetOpen(true);
     }
 
     private void Update()
     {
-        if (!_initialized) return;
-
-        var keyboard = Keyboard.current;
-        if (keyboard != null && keyboard.mKey.wasPressedThisFrame)
-            SetOpen(!_isOpen);
-
-        if (_isOpen) return;
-
+        if (!_initialized || PanelDelLab.Abierto) return;
         if (GamepadInputReader.AttackMagicLeftPressed)
             ReportMagicInput("X / clic izquierdo");
     }
@@ -117,69 +100,38 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
 #endif
     }
 
-    private void OnGUI()
+    public string Titulo => "Magia";
+    public int Orden => 40;
+
+    public void Dibujar()
     {
         if (!_initialized)
         {
-            if (!string.IsNullOrEmpty(_status))
-                GUI.Box(new Rect(Screen.width - PanelWidth - 18f, 18f, PanelWidth, 46f), "COMBAT LAB · " + _status);
+            GUILayout.Label(string.IsNullOrEmpty(_status) ? "Preparando la magia…" : _status, EstiloDelLab.Nota);
             return;
         }
+        GUILayout.Label("Hechizos básicos de Will (los cambias también en Start ▸ Hechizos). Nada de esto toca tu partida.", EstiloDelLab.Etiqueta);
+        for (int i = 0; i < _equipped.Length; i++) DrawSlotRow(i);
 
-        float x = Screen.width - PanelWidth - 18f;
-        if (!_isOpen)
+        GUILayout.Space(6f);
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("Recargar maná y carga de equipo", EstiloDelLab.Boton)) RefillTestResources();
+        if (GUILayout.Button("Aprender el grimorio entero", EstiloDelLab.Boton)) AprenderGrimorioEntero();
+        GUILayout.EndHorizontal();
+
+        GUILayout.Label($"Habilidades · Maná {GetManaReadout()}", EstiloDelLab.Titulo);
+        if (_actionManager != null)
         {
-            var compactBounds = new Rect(x, 18f, PanelWidth, 82f);
-            var currentEvent = Event.current;
-            if (currentEvent.type == EventType.MouseDown && currentEvent.button == 2 && compactBounds.Contains(currentEvent.mousePosition))
-            {
-                currentEvent.Use();
-                SetOpen(true);
-            }
-
-            GUI.Box(compactBounds, "MAGIA LAB");
-            var active = _caster.ActiveBasic;
-            GUI.Label(new Rect(x + 14f, 38f, PanelWidth - 28f, 18f),
-                $"Activo (X): {(active != null ? active.GetLocalizedName() : "—")}  ·  LB: siguiente");
-            GUI.Label(new Rect(x + 14f, 55f, PanelWidth - 28f, 18f),
-                $"Serie: golpe {_caster.NextSeriesStep + 1} de 3  ·  M o clic central: editar");
-            GUI.Label(new Rect(x + 14f, 72f, PanelWidth - 28f, 20f), _status);
-            return;
+            GUILayout.BeginHorizontal();
+            DrawAbilityToggle("Magia", 0);
+            DrawAbilityToggle("Salto", 1);
+            DrawAbilityToggle("Vuelo", 2);
+            GUILayout.EndHorizontal();
         }
-
-        GUI.Box(new Rect(x, 18f, PanelWidth, PanelHeight), "COMBAT LAB · HECHIZOS Y HABILIDADES");
-        GUI.Label(new Rect(x + 16f, 48f, PanelWidth - 32f, 34f),
-            "Magia y escudo habilitados solo aquí. Hechizos y desbloqueos no modifican tu perfil ni la partida.");
-
-        float y = 89f;
-        for (int i = 0; i < _equipped.Length; i++, y += RowHeight)
-            DrawSlotRow(x, y, i, $"BÁSICO {i + 1}");
-
-        if (GUI.Button(new Rect(x + 16f, y + 4f, 175f, 28f), "Recargar maná y carga"))
-            RefillTestResources();
-        if (GUI.Button(new Rect(x + 199f, y + 4f, 175f, 28f), "Aprender grimorio entero"))
-            AprenderGrimorioEntero();
-        y += 36f;
-
-        GUI.Label(new Rect(x + 16f, y, PanelWidth - 32f, 22f),
-            $"HABILIDADES DE PRUEBA · Maná: {GetManaReadout()}");
-        bool canEditAbilities = _actionManager != null;
-        GUI.enabled = canEditAbilities;
-        DrawAbilityToggle(new Rect(x + 16f, y + 24f, 108f, 30f), "Magia", 0);
-        DrawAbilityToggle(new Rect(x + 132f, y + 24f, 108f, 30f), "Salto", 1);
-        DrawAbilityToggle(new Rect(x + 248f, y + 24f, 126f, 30f), "Vuelo", 2);
-        GUI.enabled = true;
-        y += 68f;
-
-        if (GUI.Button(new Rect(x + 16f, y, 358f, 26f), "Cerrar panel y probar habilidades"))
-            SetOpen(false);
-        GUI.Label(new Rect(x + 16f, y + 30f, PanelWidth - 32f, 96f),
-            "En juego: X / clic izq. = serie de tres; mantener = preciso. LB / rueda abajo = siguiente básico. " +
-            "Y / Q = combo (teclea la secuencia con A B X Y). B / clic der.: en el momento justo = contraataque; mantener = escudo. LT+RT / Ctrl = ataque de equipo con quien esté cerca (uno: dúo, 1 tramo; los dos y carga llena: trío). " +
-            "ESPACIO salta. M abre/cierra.");
+        if (!string.IsNullOrEmpty(_status)) GUILayout.Label(_status, EstiloDelLab.Nota);
     }
 
-    private void DrawAbilityToggle(Rect bounds, string label, int abilityIndex)
+    private void DrawAbilityToggle(string label, int abilityIndex)
     {
         bool enabled = abilityIndex switch
         {
@@ -188,7 +140,7 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
             _ => _actionManager.AllowFly
         };
 
-        if (GUI.Button(bounds, $"{label}: {(enabled ? "SI" : "NO")}"))
+        if (EstiloDelLab.Opcion($"{label}: {(enabled ? "Sí" : "No")}", enabled))
         {
             bool magic = _actionManager.AllowMagic;
             bool jump = _actionManager.AllowJump;
@@ -222,19 +174,16 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
         _status = $"Habilidades de prueba: Magia {(magic ? "SI" : "NO")}, Salto {(jump ? "SI" : "NO")}, Vuelo {(fly ? "SI" : "NO")}.";
     }
 
-    private void DrawSlotRow(float x, float y, int slotIndex, string label)
+    private void DrawSlotRow(int slotIndex)
     {
         bool isActive = _caster.ActiveBasicIndex == slotIndex && _equipped[slotIndex] != null;
-        GUI.Label(new Rect(x + 16f, y + 5f, 80f, 24f), isActive ? label + " ▶" : label);
-
-        if (GUI.Button(new Rect(x + 96f, y, 30f, 28f), "‹"))
-            SelectRelative(slotIndex, -1);
-
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(isActive ? $"Básico {slotIndex + 1} ▶" : $"Básico {slotIndex + 1}", EstiloDelLab.Etiqueta, GUILayout.Width(100f));
+        if (GUILayout.Button("‹", EstiloDelLab.Boton, GUILayout.Width(40f))) SelectRelative(slotIndex, -1);
         string spellName = _equipped[slotIndex] != null ? _equipped[slotIndex].GetLocalizedName() : "Vacío";
-        GUI.Label(new Rect(x + 130f, y + 4f, 200f, 22f), spellName);
-
-        if (GUI.Button(new Rect(x + 334f, y, 40f, 28f), "›"))
-            SelectRelative(slotIndex, 1);
+        GUILayout.Label(spellName, EstiloDelLab.Etiqueta, GUILayout.Width(220f));
+        if (GUILayout.Button("›", EstiloDelLab.Boton, GUILayout.Width(40f))) SelectRelative(slotIndex, 1);
+        GUILayout.EndHorizontal();
     }
 
     private void SelectRelative(int slotIndex, int direction)
@@ -317,33 +266,6 @@ public sealed class CombatLabMagicPanel : MonoBehaviour
     {
         if (_manaPool == null) return "sin ManaPool";
         return $"{Mathf.CeilToInt(_manaPool.Current)}/{Mathf.CeilToInt(_manaPool.Max)}";
-    }
-
-    private void SetOpen(bool open)
-    {
-        if (_isOpen == open) return;
-        _isOpen = open;
-
-        if (_inputManager == null) _inputManager = Core.PlayerInputManager.Instance;
-        if (_isOpen && _inputManager != null)
-        {
-            _inputManager.PushUIMode();
-            _ownsUiMode = true;
-        }
-        else if (!_isOpen && _ownsUiMode && _inputManager != null)
-        {
-            _inputManager.PopUIMode();
-            _ownsUiMode = false;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (_ownsUiMode && _inputManager != null)
-        {
-            _inputManager.PopUIMode();
-            _ownsUiMode = false;
-        }
     }
 
     private static int FindIndex(List<MagicSpellSO> list, MagicSpellSO spell)

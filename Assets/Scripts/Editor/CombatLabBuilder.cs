@@ -7,28 +7,30 @@ using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Genera una escena de ensayo desechable que usa el jugador y enemigos reales del proyecto:
-/// la arena de combate en el centro y, alrededor, zonas de plataformeo, puzles, agua y vuelo
-/// (CombatLabBuilder.Zonas.cs). No modifica MainWorld, el perfil de arranque ni los prefabs de combate.
+/// Genera el LAB (escena Lab): el jugador y enemigos reales del proyecto, con la arena de combate
+/// en el centro y, alrededor, plataformeo, puzles, agua, vuelo (CombatLabBuilder.Zonas.cs),
+/// tiendas (CombatLabBuilder.Economia.cs) y la zona de jefes (CombatLabBuilder.Jefes.cs). No
+/// modifica MainWorld, el perfil de arranque ni los prefabs de combate.
 /// </summary>
 public static partial class CombatLabBuilder
 {
-    private const string ScenePath = "Assets/Scenes/Test/CombatLab.unity";
+    private const string ScenePath = "Assets/Scenes/Test/Lab.unity";
+    private const string EscenaAntigua = "Assets/Scenes/Test/CombatLab.unity";
     private const string MaterialsPath = "Assets/Scenes/Test/CombatLabMaterials";
 
-    [MenuItem("El Sendero/Combate/Crear o regenerar CombatLab")]
+    [MenuItem("El Sendero/Combate/Crear o regenerar el LAB")]
     public static void CrearEscena()
     {
         if (File.Exists(ScenePath) && !EditorUtility.DisplayDialog(
-                "Regenerar CombatLab",
-                "Se reemplazará CombatLab.unity y se perderán los cambios manuales hechos dentro de esa escena. Los prefabs y niveles del juego no se modifican.",
+                "Regenerar el LAB",
+                "Se reemplazará Lab.unity y se perderán los cambios manuales hechos dentro de esa escena. Los prefabs y niveles del juego no se modifican.",
                 "Regenerar", "Cancelar"))
             return;
 
         var playerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/_WILL.prefab");
         if (playerPrefab == null)
         {
-            EditorUtility.DisplayDialog("CombatLab", "No se encontró Assets/Prefabs/_WILL.prefab. No se creó ni modificó ninguna escena.", "Aceptar");
+            EditorUtility.DisplayDialog("LAB", "No se encontró Assets/Prefabs/_WILL.prefab. No se creó ni modificó ninguna escena.", "Aceptar");
             return;
         }
 
@@ -67,6 +69,7 @@ public static partial class CombatLabBuilder
         CrearMarcador("Puesto 4 — jefe", geometry.transform, new Vector3(9f, 0.02f, -12f), markerMaterial);
 
         CrearZonas(geometry.transform, floorMaterial, coverMaterial);
+        var entradaJefes = CrearZonaDeJefes(geometry.transform, floorMaterial, coverMaterial);
 
         var navMesh = geometry.AddComponent<NavMeshSurface>();
         navMesh.collectObjects = CollectObjects.Children;
@@ -128,14 +131,65 @@ public static partial class CombatLabBuilder
         foreach (var aviso in CrearZonaEconomia(scene))
             Debug.LogWarning("[CombatLab] " + aviso);
 
+        foreach (var aviso in CrearZonaMovilidad(scene))
+            Debug.LogWarning("[CombatLab] " + aviso);
+
+        CrearDestinos(entradaJefes);
+
         if (!AssetDatabase.IsValidFolder("Assets/Scenes/Test"))
             AssetDatabase.CreateFolder("Assets/Scenes", "Test");
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene, ScenePath);
+        RetirarEscenaAntigua();
         AddToBuildSettings(ScenePath);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("CombatLab creada. F1–F4 cambian el escenario; el panel Party compara a Will solo o acompañado.");
+        Debug.Log("LAB creado (Assets/Scenes/Test/Lab.unity). Tab / Select abre el panel del LAB.");
+    }
+
+    /// Destinos del viaje rápido (pestaña Zonas del panel).
+    private static void CrearDestinos(Transform entradaJefes)
+    {
+        var raiz = new GameObject("LAB_DESTINOS");
+        var viaje = raiz.AddComponent<ViajeDelLab>();
+        var lista = new (string nombre, string queHay, Vector3 pos, float giro)[]
+        {
+            ("Combate (centro)", "Escenarios F1–F4: blanco, duelo, grupo y Gólem.", new Vector3(0f, 0.1f, -8f), 0f),
+            ("Plataformeo (oeste)", "Saltos, doble salto, viga, rampa y escalada.", new Vector3(-18f, 0.1f, 1f), -90f),
+            ("Puzles (este)", "Placas, puerta, plataforma que eleva, fuego y runas.", new Vector3(18f, 0.1f, 1f), 90f),
+            ("Agua (norte)", "Nadar en lo hondo y en lo poco hondo.", new Vector3(0f, 0.1f, 21f), 0f),
+            ("Tiendas y Esencia (sur)", "Renard, Tomasa y placas de +100.", new Vector3(0f, 0.1f, -20f), 180f),
+            ("Vuelo (sur)", "Torres y plataformas flotantes a 10, 18 y 26 m.", new Vector3(0f, 0.1f, -35f), 180f),
+            ("Arañas y contratos (sur)", "Corral de arañas que reaparecen.", new Vector3(25f, 0.1f, -68f), 180f),
+        };
+        var so = new SerializedObject(viaje);
+        var destinos = so.FindProperty("destinos");
+        destinos.arraySize = lista.Length + (entradaJefes != null ? 1 : 0);
+        for (int i = 0; i < lista.Length; i++)
+        {
+            var punto = new GameObject("Destino — " + lista[i].nombre).transform;
+            punto.SetParent(raiz.transform);
+            punto.SetPositionAndRotation(lista[i].pos, Quaternion.Euler(0f, lista[i].giro, 0f));
+            Destino(destinos.GetArrayElementAtIndex(i), lista[i].nombre, lista[i].queHay, punto);
+        }
+        if (entradaJefes != null)
+            Destino(destinos.GetArrayElementAtIndex(lista.Length), "Zona de jefes (oeste)", "Demonio 1, Demonio 2, Gólem y Mago Oscuro.", entradaJefes);
+        so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    private static void Destino(SerializedProperty d, string nombre, string queHay, Transform punto)
+    {
+        d.FindPropertyRelative("nombre").stringValue = nombre;
+        d.FindPropertyRelative("queHay").stringValue = queHay;
+        d.FindPropertyRelative("punto").objectReferenceValue = punto;
+    }
+
+    /// La escena se llamaba CombatLab: se quita del build y del proyecto al crear Lab.
+    private static void RetirarEscenaAntigua()
+    {
+        var escenas = new System.Collections.Generic.List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        if (escenas.RemoveAll(e => e.path == EscenaAntigua) > 0) EditorBuildSettings.scenes = escenas.ToArray();
+        if (File.Exists(EscenaAntigua)) AssetDatabase.DeleteAsset(EscenaAntigua);
     }
 
     private static GameObject CrearEstacion(string name, Transform parent)

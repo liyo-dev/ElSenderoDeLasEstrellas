@@ -26,6 +26,9 @@ MonoBehaviour:
   castSFXKey: SpecialAttack_Estela
   vfxLifetime: 3
   damageDelay: 0.4
+  volteretaDelActivo: 1
+  alturaDeLaVoltereta: 1.2
+  avanceDeLaVoltereta: 3
   damage: 80
   aoeRadius: 4
   knockbackForce: 18

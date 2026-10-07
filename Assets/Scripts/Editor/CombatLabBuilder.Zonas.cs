@@ -35,7 +35,7 @@ public static partial class CombatLabBuilder
     {
         var zona = Grupo("Zona oeste — plataformeo", g);
         CrearCubo("Suelo", zona, new Vector3(-32f, -0.25f, 1f), new Vector3(36f, 0.5f, 36f), suelo, CapaSuelo);
-        CrearCubo("Muro oeste", zona, new Vector3(-50f, 1.5f, 1f), new Vector3(0.5f, 3f, 36f), muro);
+        MuroConPuertaAlPasillo("Muro oeste", zona, -50f, -17f, 19f, muro);   // el pasillo a la zona de jefes
         CrearCubo("Muro norte", zona, new Vector3(-32f, 1.5f, 19f), new Vector3(36f, 3f, 0.5f), muro);
         CrearCubo("Muro sur", zona, new Vector3(-32f, 1.5f, -17f), new Vector3(36f, 3f, 0.5f), muro);
         CrearTexto("Plataformeo", zona, new Vector3(-17f, 3.5f, 1f), -90f);

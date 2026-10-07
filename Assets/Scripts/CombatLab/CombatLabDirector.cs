@@ -3,10 +3,10 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Navegación rápida entre escenarios aislados del laboratorio. Las teclas F1–F4 eligen
-/// configuración; R recarga la escena para recuperar vida, maná, IA y objetivos.
+/// Escenarios de combate del área central del LAB (pestaña «Combate» del panel). Las teclas
+/// F1–F4 eligen escenario; R recarga el LAB para recuperar vida, maná, IA y objetivos.
 /// </summary>
-public sealed class CombatLabDirector : MonoBehaviour
+public sealed class CombatLabDirector : MonoBehaviour, ISeccionDelLab
 {
     [SerializeField] private GameObject[] stations = new GameObject[4];
     [SerializeField] private string[] stationNames =
@@ -78,17 +78,21 @@ public sealed class CombatLabDirector : MonoBehaviour
         if (guia != null) guia.LanzarIntervencion();
     }
 
-    private void OnGUI()
+    public string Titulo => "Combate";
+    public int Orden => 10;
+
+    public void Dibujar()
     {
-        string station = _activeStation < stationNames.Length ? stationNames[_activeStation] : "Escenario";
-        GUI.Box(new Rect(18f, 18f, 436f, 112f), "COMBAT LAB");
-        GUI.Label(new Rect(34f, 46f, 385f, 22f), $"Prueba activa: {station}");
-        if (GUI.Button(new Rect(34f, 72f, 76f, 26f), "F1 Base")) SelectStation(0);
-        if (GUI.Button(new Rect(113f, 72f, 76f, 26f), "F2 Duelo")) SelectStation(1);
-        if (GUI.Button(new Rect(192f, 72f, 76f, 26f), "F3 Grupo")) SelectStation(2);
-        if (GUI.Button(new Rect(271f, 72f, 76f, 26f), "F4 Jefe")) SelectStation(3);
-        if (GUI.Button(new Rect(350f, 72f, 92f, 26f), "Reiniciar")) ReloadScene();
-        GUI.Label(new Rect(34f, 98f, 385f, 18f), "Atajos: F1–F4 seleccionan; R reinicia.");
+        GUILayout.Label("Escenarios del área central. Al elegir uno aparecen sus enemigos y empiezan a pelear.", EstiloDelLab.Etiqueta);
+        GUILayout.Space(6f);
+        for (int i = 0; i < stations.Length; i++)
+        {
+            string nombre = i < stationNames.Length ? stationNames[i] : $"Escenario {i + 1}";
+            if (EstiloDelLab.Opcion($"F{i + 1} · {nombre}", i == _activeStation)) SelectStation(i);
+        }
+        GUILayout.Space(10f);
+        if (GUILayout.Button("Reiniciar el LAB (R): vida, maná y enemigos como al entrar", EstiloDelLab.Boton)) ReloadScene();
+        GUILayout.Label("Los jefes de verdad (Demonios, Gólem y Mago Oscuro) están en la pestaña Zonas ▸ Zona de jefes.", EstiloDelLab.Nota);
     }
 
     private static void ReloadScene()

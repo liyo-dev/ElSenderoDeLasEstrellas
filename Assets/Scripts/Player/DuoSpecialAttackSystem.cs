@@ -281,6 +281,7 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     {
         _isExecuting = true;
         Transform body = magicCaster.Body;
+        if (body == null) { _isExecuting = false; yield break; }
 
         for (int i = 0; i < _partners.Count; i++)
         {
@@ -301,14 +302,25 @@ public class DuoSpecialAttackSystem : MonoBehaviour
             if (flat.sqrMagnitude <= targetReach * targetReach) center = target.position;
         }
 
-        if (attack.vfxPrefab != null && VfxPoolService.Instance != null)
+        // Con voltereta, el efecto y el daño llegan al aterrizar (INC-654).
+        bool enElAire = body.TryGetComponent(out Invector.vCharacterController.vThirdPersonController motor) && motor.IsAirborne;
+        if (attack.volteretaDelActivo && !enElAire && body.TryGetComponent(out VolteretaDelJugador voltereta))
         {
-            VfxPoolService.Instance.Play(
-                attack.vfxPrefab,
-                center,
-                Quaternion.LookRotation(facing.sqrMagnitude > 0.01f ? facing : body.forward),
-                Mathf.Max(0.5f, attack.vfxLifetime));
+            Vector3 haciaElGolpe = center - body.position; haciaElGolpe.y = 0f;
+            float avance = Mathf.Clamp(haciaElGolpe.magnitude - 1.5f, 0f, attack.avanceDeLaVoltereta);
+            Vector3 desplazamiento = haciaElGolpe.sqrMagnitude > 0.0001f ? haciaElGolpe.normalized * avance : Vector3.zero;
+            if (voltereta.DesdeElSuelo(attack.alturaDeLaVoltereta, desplazamiento))
+            {
+                float tope = Time.time + 2.5f;
+                while (voltereta.EnCurso && Time.time < tope) yield return null;
+                PlayTeamVfx(attack, center, facing, body);
+                ApplyAoeDamage(attack, center);
+                _isExecuting = false;
+                yield break;
+            }
         }
+
+        PlayTeamVfx(attack, center, facing, body);
 
         if (attack.damageDelay > 0f)
             yield return new WaitForSeconds(attack.damageDelay);
@@ -340,6 +352,16 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────
+
+    private static void PlayTeamVfx(SpecialAttackSO attack, Vector3 center, Vector3 facing, Transform body)
+    {
+        if (attack.vfxPrefab == null || VfxPoolService.Instance == null) return;
+        VfxPoolService.Instance.Play(
+            attack.vfxPrefab,
+            center,
+            Quaternion.LookRotation(facing.sqrMagnitude > 0.01f ? facing : body.forward),
+            Mathf.Max(0.5f, attack.vfxLifetime));
+    }
 
     private static void TriggerAnimation(GameObject go, string trigger)
     {

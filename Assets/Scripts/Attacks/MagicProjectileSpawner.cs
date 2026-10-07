@@ -141,6 +141,13 @@ public class MagicProjectileSpawner : MonoBehaviour
 
     public void SetInstigator(GameObject instigator) => instigatorOverride = instigator;
 
+    /// <summary>
+    /// Pone una zona (MagicKind.Zone) en un punto, a nombre de este lanzador y contra sus capas de
+    /// daño, sin gesto ni coste (la del remate aéreo, INC-652).
+    /// </summary>
+    public GameObject PonerZonaEn(MagicSpellSO zona, Vector3 punto, float damageMultiplier = 1f) =>
+        SpawnZoneAt(zona, punto, Instigator, GetDamageLayers(), damageMultiplier);
+
     // === Lanzamiento ==========================================================
 
     private IEnumerator Co_SpawnAfterDelay(MagicSpellSO spell, Transform origin, float damageMultiplier)

@@ -39,6 +39,8 @@ public static class BatallaFinalLabBuilder
     const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
     const string VfxCorte = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_02.prefab";
     const string VfxRoturaAncla = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
+    const string VfxPozo = "Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab";
+    const string VfxImplosionPozo = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect4.prefab";
     const string VfxRoturaNodo = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy explosion.prefab";
 
     [MenuItem("El Sendero/Combate/Crear o regenerar la Batalla Final (prueba)")]
@@ -297,6 +299,8 @@ public static class BatallaFinalLabBuilder
         soIA.FindProperty("vfxInvocacion").objectReferenceValue = Cargar<GameObject>(VfxInvocacion, avisos);
         soIA.FindProperty("vfxRebobinado").objectReferenceValue = Cargar<GameObject>(VfxRebobinado, avisos);
         soIA.FindProperty("prefabSombra").objectReferenceValue = Cargar<GameObject>(PrefabSombra, avisos);
+        soIA.FindProperty("vfxPozo").objectReferenceValue = Cargar<GameObject>(VfxPozo, avisos);
+        soIA.FindProperty("vfxImplosionPozo").objectReferenceValue = Cargar<GameObject>(VfxImplosionPozo, avisos);
         soIA.FindProperty("esperaInicial").floatValue = 4f;
         soIA.ApplyModifiedPropertiesWithoutUndo();
 

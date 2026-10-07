@@ -1,11 +1,9 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
-using DG.Tweening;
 
 /// <summary>
-/// Barra de vida para bosses. Se autoconfigura en Awake; BossArenaController llama a Show()
-/// cuando el combate comienza. Se oculta automáticamente mientras haya un menú/diálogo abierto.
+/// Barra de vida de un jefe: sigue su Damageable y sus fases (IJefeConFases) y se oculta mientras
+/// haya un menú o diálogo abierto. BossArenaController llama a Show() cuando empieza el combate.
+/// Lo que se ve es BarraDeJefeUI (prefab Resources/UI/BarraDeJefe, con el arte del HUD).
 /// </summary>
 public class BossHealthBar : MonoBehaviour
 {
@@ -14,16 +12,7 @@ public class BossHealthBar : MonoBehaviour
     [SerializeField] private string bossNameId;
     [Tooltip("Nombre del boss mostrado en la barra de vida. Fallback si bossNameId no resuelve.")]
     [SerializeField] private string bossName = "Boss Demonio";
-    [SerializeField] private Vector2 barSize     = new Vector2(400f, 40f);
-    // INC-107: centro-superior de pantalla (convención habitual del género), antes
-    // esquina inferior derecha. Ver anchorMin/anchorMax/pivot en CreateBossHealthBarUI().
-    [SerializeField] private Vector2 barPosition = new Vector2(0f, -30f);
-
-    [Header("Colores")]
-    [SerializeField] private Color healthyColor          = new Color(0.8f, 0.2f, 0.2f);
-    [SerializeField] private Color warningColor          = Color.yellow;
-    [SerializeField] private Color criticalColor         = Color.red;
-    [SerializeField] private float warningThreshold  = 0.5f;
+    [Tooltip("Fracción de vida por debajo de la cual la barra pasa a su tinte crítico.")]
     [SerializeField] private float criticalThreshold = 0.25f;
 
     [Header("Animación")]
@@ -32,40 +21,21 @@ public class BossHealthBar : MonoBehaviour
     [SerializeField] private float fadeInDuration       = 0.4f;
     [SerializeField] private float fadeOutDuration      = 0.5f;
 
-    // Referencias generadas automáticamente
-    private Damageable         _bossDamageable;
-    private Canvas             _canvas;
-    private GameObject         _barContainer;
-    private Image              _healthBarFill;
-    private Image              _healthBarBackground;
-    private TextMeshProUGUI    _healthText;
-    private TextMeshProUGUI    _bossNameText;
-    private CanvasGroup        _canvasGroup;
+    private Damageable    _bossDamageable;
+    private BarraDeJefeUI _barra;
+    private IJefeConFases _fases;
 
     private float _targetFillAmount  = 1f;
     private float _currentFillAmount = 1f;
 
     // Estado de visibilidad: activo en batalla y si está suspendido por un menú
-    private bool  _battleActive       = false;
-    private bool  _suspendedByMenu    = false;
-    private Tween _fadeTween;
-
-    // Marcas de fase: dónde empieza cada fase del jefe (si tiene, ver IJefeConFases).
-    [Header("Fases")]
-    [Tooltip("Color de la marca de una fase que aún no ha empezado.")]
-    [SerializeField] private Color colorMarcaFase = new Color(1f, 0.85f, 0.3f, 0.95f);
-    [Tooltip("Color de la marca una vez superada.")]
-    [SerializeField] private Color colorMarcaSuperada = new Color(1f, 1f, 1f, 0.25f);
-    private IJefeConFases _fases;
-    private Image[] _marcasDeFase;
+    private bool _battleActive    = false;
+    private bool _suspendedByMenu = false;
 
     void Start()
     {
-        // FIX (ronda 16): antes esta búsqueda de Damageable vivía en Awake(), pero Damageable se añade
-        // dinámicamente en tiempo de ejecución por NPCBehaviourManagerV2 (componente hermano), y Unity NO
-        // garantiza el orden de Awake() entre componentes del mismo GameObject — solo garantiza que todos
-        // los Awake() terminan antes de que se ejecute cualquier Start(). Moviendo la dependencia aquí se
-        // elimina el riesgo de carrera sin importar qué script añada Damageable primero.
+        // Damageable lo añade en tiempo de ejecución NPCBehaviourManagerV2 (componente hermano) y
+        // el orden de Awake entre componentes no está garantizado: se busca aquí, en Start.
         _bossDamageable = GetComponent<Damageable>();
         if (!_bossDamageable)
         {
@@ -75,20 +45,31 @@ public class BossHealthBar : MonoBehaviour
             enabled = false;
             return;
         }
-        CreateBossHealthBarUI();
+
+        _barra = BarraDeJefeUI.Crear();
+        if (_barra == null)
+        {
+            enabled = false;
+            return;
+        }
+        _barra.PonerNombre(GetLocalizedBossName());
 
         _fases = GetComponent<IJefeConFases>();
         if (_fases != null)
         {
-            CrearMarcasDeFase();
+            _barra.CrearMarcas(_fases.UmbralesDeFase, _fases.Fase);
             _fases.AlCambiarDeFase += OnCambioDeFase;
         }
 
         _bossDamageable.OnDamaged += OnBossDamaged;
         _bossDamageable.OnHealed  += OnBossHealed;
-        _bossDamageable.OnDied   += OnBossDied;
+        _bossDamageable.OnDied    += OnBossDied;
         UpdateHealthBar();
-        // No auto-mostrar — BossArenaController llama a Show() cuando corresponde
+        _currentFillAmount = _targetFillAmount;
+        _barra.PonerRelleno(_currentFillAmount);
+        // No auto-mostrar: BossArenaController llama a Show() cuando corresponde. Si ya lo ha
+        // hecho antes de este Start, la barra aparece ahora.
+        if (_battleActive && !_suspendedByMenu) Fundir(1f, fadeInDuration);
     }
 
     void OnEnable()
@@ -105,28 +86,26 @@ public class BossHealthBar : MonoBehaviour
 
     void OnDestroy()
     {
-        _fadeTween?.Kill();
         if (_bossDamageable)
         {
             _bossDamageable.OnDamaged -= OnBossDamaged;
             _bossDamageable.OnHealed  -= OnBossHealed;
-            _bossDamageable.OnDied   -= OnBossDied;
+            _bossDamageable.OnDied    -= OnBossDied;
         }
         if (_fases != null) _fases.AlCambiarDeFase -= OnCambioDeFase;
-        if (_canvas != null && _canvas.gameObject != null)
-            Destroy(_canvas.gameObject);
+        if (_barra) Destroy(_barra.gameObject);
     }
 
     void Update()
     {
-        if (!_battleActive || _suspendedByMenu) return;
-        if (!animateHealthChanges) return;
+        if (!_battleActive || _suspendedByMenu || !_barra) return;
         if (Mathf.Abs(_currentFillAmount - _targetFillAmount) <= 0.001f) return;
 
         _currentFillAmount = Mathf.Lerp(_currentFillAmount, _targetFillAmount,
-                                         Time.deltaTime * animationSpeed);
-        if (_healthBarFill)
-            _healthBarFill.fillAmount = _currentFillAmount;
+                                        Time.deltaTime * animationSpeed);
+        if (Mathf.Abs(_currentFillAmount - _targetFillAmount) <= 0.001f)
+            _currentFillAmount = _targetFillAmount;
+        _barra.PonerRelleno(_currentFillAmount);
     }
 
     // ── API pública ────────────────────────────────────────────────────────
@@ -143,13 +122,13 @@ public class BossHealthBar : MonoBehaviour
             return;
         }
 
-        AnimateFade(1f, fadeInDuration);
+        Fundir(1f, fadeInDuration);
     }
 
     public void Hide()
     {
         _battleActive = false;
-        AnimateFade(0f, fadeOutDuration);
+        Fundir(0f, fadeOutDuration);
     }
 
     // ── MenuManager ────────────────────────────────────────────────────────
@@ -158,7 +137,7 @@ public class BossHealthBar : MonoBehaviour
     {
         if (!_battleActive) return;
         _suspendedByMenu = true;
-        AnimateFade(0f, fadeOutDuration * 0.7f);
+        Fundir(0f, fadeOutDuration * 0.7f);
     }
 
     private void OnMenuClosed(MenuKind kind)
@@ -166,7 +145,7 @@ public class BossHealthBar : MonoBehaviour
         if (!_battleActive || !_suspendedByMenu) return;
         if (MenuManager.AnyOpen()) return; // todavía hay otro menú abierto
         _suspendedByMenu = false;
-        AnimateFade(1f, fadeInDuration);
+        Fundir(1f, fadeInDuration);
     }
 
     // ── Eventos del boss ───────────────────────────────────────────────────
@@ -175,99 +154,43 @@ public class BossHealthBar : MonoBehaviour
     {
         UpdateHealthBar();
         if (!_battleActive) Show(); // mostrar si por algún motivo no se había mostrado
-        FlashDamage();
+        _barra.DestelloDano();
     }
 
     // Se ha curado (p. ej. un golpe a destiempo, ver SoloDanoCuandoExpuesto): la barra sube y
-    // parpadea en verde, para que se lea que ese golpe le ha venido bien al jefe.
-    private Color? _colorFondoOriginal;
-
+    // destella en verde, para que se lea que ese golpe le ha venido bien al jefe.
     private void OnBossHealed(float _)
     {
         UpdateHealthBar();
-        if (_healthBarBackground == null) return;
-        _colorFondoOriginal ??= _healthBarBackground.color;
-        Color orig = _colorFondoOriginal.Value;
-        _healthBarBackground.DOKill();
-        _healthBarBackground.DOColor(new Color(0.35f, 1f, 0.45f, 0.9f), 0.08f)
-            .SetUpdate(true)
-            .OnComplete(() => _healthBarBackground.DOColor(orig, 0.2f).SetUpdate(true));
+        _barra.DestelloCuracion();
     }
 
     private void OnBossDied()
     {
         UpdateHealthBar();
         _battleActive = false;
-        _fadeTween?.Kill();
-        _fadeTween = _canvasGroup.DOFade(0f, fadeOutDuration)
-            .SetDelay(2f).SetEase(Ease.InQuad).SetUpdate(true);
-    }
-
-    // ── Helpers ────────────────────────────────────────────────────────────
-
-    private void AnimateFade(float target, float duration)
-    {
-        if (_canvasGroup == null) return;
-        _fadeTween?.Kill();
-        _fadeTween = _canvasGroup.DOFade(target, duration)
-            .SetEase(target > 0f ? Ease.OutCubic : Ease.InCubic)
-            .SetUpdate(true);
-    }
-
-    /// Una raya vertical en la barra por cada fase siguiente, justo en el porcentaje de vida en
-    /// que empieza: el jugador ve venir el cambio.
-    private void CrearMarcasDeFase()
-    {
-        var umbrales = _fases.UmbralesDeFase;
-        if (umbrales == null || _healthBarBackground == null) return;
-
-        _marcasDeFase = new Image[umbrales.Count];
-        for (int i = 0; i < umbrales.Count; i++)
-        {
-            var go = new GameObject($"MarcaFase_{i + 2}");
-            go.transform.SetParent(_healthBarBackground.transform, false);
-            var rt = go.AddComponent<RectTransform>();
-            float x = Mathf.Clamp01(umbrales[i]);
-            rt.anchorMin = new Vector2(x, 0f);
-            rt.anchorMax = new Vector2(x, 1f);
-            rt.pivot     = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(4f, 10f); // sobresale un poco por arriba y por abajo
-
-            var img = go.AddComponent<Image>();
-            img.sprite = CreateSolidSprite();
-            img.color  = _fases.Fase > i ? colorMarcaSuperada : colorMarcaFase;
-            _marcasDeFase[i] = img;
-        }
+        _currentFillAmount = _targetFillAmount;
+        _barra.PonerRelleno(_currentFillAmount);
+        _barra.Fundido(0f, fadeOutDuration, 2f);
     }
 
     /// Al cambiar de fase la barra da un golpe y la marca superada se apaga.
     private void OnCambioDeFase(int fase)
     {
-        int i = fase - 1;
-        if (_marcasDeFase != null && i >= 0 && i < _marcasDeFase.Length && _marcasDeFase[i])
-            _marcasDeFase[i].color = colorMarcaSuperada;
-
-        if (_barContainer)
-        {
-            _barContainer.transform.DOKill(true);
-            _barContainer.transform.DOPunchScale(Vector3.one * 0.15f, 0.6f, 6).SetUpdate(true);
-        }
+        _barra.MarcarSuperada(fase - 1);
+        _barra.GolpeDeFase();
     }
 
-    private void FlashDamage()
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    private void Fundir(float alfa, float duracion)
     {
-        if (_healthBarBackground == null) return;
-        _colorFondoOriginal ??= _healthBarBackground.color;
-        Color orig = _colorFondoOriginal.Value;
-        _healthBarBackground.DOKill();
-        _healthBarBackground.DOColor(new Color(1f, 0.3f, 0.3f, 0.9f), 0.08f)
-            .SetUpdate(true)
-            .OnComplete(() => _healthBarBackground.DOColor(orig, 0.15f).SetUpdate(true));
+        if (_barra) _barra.Fundido(alfa, duracion);
     }
 
     private void UpdateHealthBar()
     {
-        if (!_bossDamageable) return;
+        if (!_bossDamageable || !_barra) return;
 
         float pct = _bossDamageable.Current / _bossDamageable.Max;
         _targetFillAmount = Mathf.Clamp01(pct);
@@ -275,21 +198,11 @@ public class BossHealthBar : MonoBehaviour
         if (!animateHealthChanges)
         {
             _currentFillAmount = _targetFillAmount;
-            if (_healthBarFill) _healthBarFill.fillAmount = _currentFillAmount;
+            _barra.PonerRelleno(_currentFillAmount);
         }
 
-        if (_healthBarFill)
-        {
-            _healthBarFill.color = pct <= criticalThreshold ? criticalColor
-                                 : pct <= warningThreshold  ? warningColor
-                                 : healthyColor;
-        }
-
-        if (_healthText)
-            _healthText.text = $"{Mathf.Ceil(_bossDamageable.Current)} / {_bossDamageable.Max}";
+        _barra.PonerVida(_bossDamageable.Current, _bossDamageable.Max, pct <= criticalThreshold);
     }
-
-    // ── Creación de UI ─────────────────────────────────────────────────────
 
     /// <summary>Obtiene el nombre localizado del boss (usa bossNameId si está definido).</summary>
     private string GetLocalizedBossName()
@@ -297,118 +210,5 @@ public class BossHealthBar : MonoBehaviour
         if (!string.IsNullOrEmpty(bossNameId) && LocalizationManager.Instance != null)
             return LocalizationManager.Instance.Get(bossNameId, bossName);
         return bossName;
-    }
-
-    private void CreateBossHealthBarUI()
-    {
-        GameObject canvasObj = new GameObject("BossHealthBar_Canvas");
-        _canvas = canvasObj.AddComponent<Canvas>();
-        _canvas.renderMode    = RenderMode.ScreenSpaceOverlay;
-        _canvas.sortingOrder  = 100;
-
-        var scaler = canvasObj.AddComponent<CanvasScaler>();
-        scaler.uiScaleMode        = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920, 1080);
-        scaler.matchWidthOrHeight  = 0.5f;
-        canvasObj.AddComponent<GraphicRaycaster>();
-
-        _barContainer = new GameObject("BarContainer");
-        _barContainer.transform.SetParent(_canvas.transform, false);
-
-        var containerRect = _barContainer.AddComponent<RectTransform>();
-        // INC-107: centro-superior en vez de esquina inferior derecha.
-        containerRect.anchorMin        = new Vector2(0.5f, 1f);
-        containerRect.anchorMax        = new Vector2(0.5f, 1f);
-        containerRect.pivot            = new Vector2(0.5f, 1f);
-        containerRect.anchoredPosition = barPosition;
-        containerRect.sizeDelta        = new Vector2(barSize.x + 20f, barSize.y + 60f);
-
-        _canvasGroup       = _barContainer.AddComponent<CanvasGroup>();
-        _canvasGroup.alpha = 0f;
-
-        // Nombre del boss
-        var nameObj  = new GameObject("BossName");
-        nameObj.transform.SetParent(_barContainer.transform, false);
-        var nameRect = nameObj.AddComponent<RectTransform>();
-        nameRect.anchorMin        = new Vector2(0f, 1f);
-        nameRect.anchorMax        = new Vector2(1f, 1f);
-        nameRect.pivot            = new Vector2(0.5f, 1f);
-        nameRect.anchoredPosition = new Vector2(0f, -5f);
-        nameRect.sizeDelta        = new Vector2(0f, 30f);
-
-        _bossNameText           = nameObj.AddComponent<TextMeshProUGUI>();
-        _bossNameText.text      = GetLocalizedBossName();
-        _bossNameText.fontSize  = 24;
-        _bossNameText.fontStyle = FontStyles.Bold;
-        _bossNameText.alignment = TextAlignmentOptions.Center;
-        _bossNameText.color     = Color.white;
-        var shadow = nameObj.AddComponent<Shadow>();
-        shadow.effectColor    = new Color(0, 0, 0, 0.8f);
-        shadow.effectDistance = new Vector2(2, -2);
-
-        // Fondo de la barra
-        var bgObj  = new GameObject("HealthBar_Background");
-        bgObj.transform.SetParent(_barContainer.transform, false);
-        var bgRect = bgObj.AddComponent<RectTransform>();
-        bgRect.anchorMin        = new Vector2(0f, 0f);
-        bgRect.anchorMax        = new Vector2(1f, 0f);
-        bgRect.pivot            = new Vector2(0.5f, 0f);
-        bgRect.anchoredPosition = new Vector2(0f, 5f);
-        bgRect.sizeDelta        = new Vector2(-20f, barSize.y);
-
-        _healthBarBackground       = bgObj.AddComponent<Image>();
-        _healthBarBackground.sprite = CreateSolidSprite();
-        _healthBarBackground.color  = new Color(0.1f, 0.1f, 0.1f, 0.9f);
-        _healthBarBackground.type   = Image.Type.Sliced;
-        var outline = bgObj.AddComponent<Outline>();
-        outline.effectColor    = new Color(0.8f, 0.8f, 0.8f, 0.5f);
-        outline.effectDistance = new Vector2(2, -2);
-
-        // Fill
-        var fillObj  = new GameObject("HealthBar_Fill");
-        fillObj.transform.SetParent(bgObj.transform, false);
-        var fillRect = fillObj.AddComponent<RectTransform>();
-        fillRect.anchorMin        = Vector2.zero;
-        fillRect.anchorMax        = Vector2.one;
-        fillRect.pivot            = new Vector2(0f, 0.5f);
-        fillRect.anchoredPosition = Vector2.zero;
-        fillRect.sizeDelta        = new Vector2(-4f, -4f);
-
-        _healthBarFill            = fillObj.AddComponent<Image>();
-        _healthBarFill.sprite     = CreateSolidSprite();
-        _healthBarFill.color      = healthyColor;
-        _healthBarFill.type       = Image.Type.Filled;
-        _healthBarFill.fillMethod = Image.FillMethod.Horizontal;
-        _healthBarFill.fillOrigin = (int)Image.OriginHorizontal.Left;
-        _healthBarFill.fillAmount = 1f;
-
-        // Texto de HP
-        var textObj  = new GameObject("HealthText");
-        textObj.transform.SetParent(bgObj.transform, false);
-        var textRect = textObj.AddComponent<RectTransform>();
-        textRect.anchorMin        = Vector2.zero;
-        textRect.anchorMax        = Vector2.one;
-        textRect.pivot            = new Vector2(0.5f, 0.5f);
-        textRect.anchoredPosition = Vector2.zero;
-        textRect.sizeDelta        = Vector2.zero;
-
-        _healthText           = textObj.AddComponent<TextMeshProUGUI>();
-        _healthText.fontSize  = 18;
-        _healthText.fontStyle = FontStyles.Bold;
-        _healthText.alignment = TextAlignmentOptions.Center;
-        _healthText.color     = Color.white;
-        var textShadow = textObj.AddComponent<Shadow>();
-        textShadow.effectColor    = new Color(0, 0, 0, 0.9f);
-        textShadow.effectDistance = new Vector2(1, -1);
-    }
-
-    private static Sprite CreateSolidSprite()
-    {
-        var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-        tex.SetPixel(0, 0, Color.white);
-        tex.Apply();
-        tex.filterMode = FilterMode.Point;
-        return Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 100f,
-                             0, SpriteMeshType.FullRect);
     }
 }

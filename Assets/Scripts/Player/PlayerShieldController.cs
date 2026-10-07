@@ -9,7 +9,8 @@ using Sendero.Core.Feedback;
 /// <list type="bullet">
 /// <item>Pulsar B abre una ventana corta (<see cref="parryWindow"/>): un proyectil enemigo que
 /// llegue en ella se devuelve como hechizo propio y más fuerte (contraataque, con parón de
-/// impacto); un golpe cuerpo a cuerpo se anula y empuja al enemigo.</item>
+/// impacto); un golpe cuerpo a cuerpo se anula, empuja al enemigo y el jugador se aparta con una
+/// voltereta hacia atrás (INC-653).</item>
 /// <item>Mantener B = escudo (gasta maná): bloquea proyectiles y reduce el daño cuerpo a cuerpo.
 /// Pulsar tarde es, en la práctica, bloquear.</item>
 /// <item>Fallar la ventana deja un pequeño margen (<see cref="parryWhiffCooldown"/>) antes de poder
@@ -64,6 +65,14 @@ public class PlayerShieldController : MonoBehaviour
     [SerializeField] private float meleeDeflectPush = 8f;
     [SerializeField] private float meleeDeflectRadius = 3f;
 
+    [Header("Voltereta al desviar cuerpo a cuerpo (INC-653)")]
+    [Tooltip("Al anular un golpe cuerpo a cuerpo, el jugador se aparta con una voltereta hacia atrás.")]
+    [SerializeField] private bool volteretaAlDesviar = true;
+    [Tooltip("Altura de la voltereta, en alturas de la cabeza del personaje.")]
+    [SerializeField, Min(0f)] private float alturaDeLaVoltereta = 0.8f;
+    [Tooltip("Metros que se aparta del enemigo (menos si hay una pared detrás).")]
+    [SerializeField, Min(0f)] private float distanciaDeLaVoltereta = 2.5f;
+
     private PlayerControls _controls;
     private bool _ownsControls;
     private Animator _animator;
@@ -73,6 +82,8 @@ public class PlayerShieldController : MonoBehaviour
     private int _playerLayer;
     private float _originalUpperBodyWeight;
     private MagicCaster _magicCaster;
+    private VolteretaDelJugador _voltereta;
+    private Invector.vCharacterController.vThirdPersonController _controller;
     private ManaPool _manaPool;
     private PlayerActionManager _playerActionManager;
 
@@ -111,6 +122,8 @@ public class PlayerShieldController : MonoBehaviour
         CacheUpperBodyWeight();
         CacheBlockedLayers();
         _magicCaster = GetComponentInParent<MagicCaster>();
+        _voltereta = GetComponentInParent<VolteretaDelJugador>();
+        _controller = GetComponentInParent<Invector.vCharacterController.vThirdPersonController>();
         _manaPool = GetComponentInParent<ManaPool>();
         _playerActionManager = GetComponentInParent<PlayerActionManager>();
         _parryMask = LayerMask.GetMask("ProjectileEnemy", "EnemyProjectile", "Projectile", "Enemy");
@@ -270,19 +283,43 @@ public class PlayerShieldController : MonoBehaviour
         CounterFeedback(where);
     }
 
-    /// <summary>Un golpe cuerpo a cuerpo ha llegado dentro de la ventana: se anula y empuja.</summary>
+    /// <summary>
+    /// Un golpe cuerpo a cuerpo ha llegado dentro de la ventana: se anula, empuja al enemigo y el
+    /// jugador se aparta de él con una voltereta (en el aire, solo la voltereta).
+    /// </summary>
     internal void OnMeleeDeflect()
     {
         Vector3 center = transform.position + Vector3.up;
+        Vector3 alejarse = -transform.forward;
+        float masCerca = float.MaxValue;
         int count = Physics.OverlapSphereNonAlloc(center, meleeDeflectRadius, _parryBuffer, _deflectMask, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < count; i++)
         {
+            Vector3 desdeEnemigo = transform.position - _parryBuffer[i].transform.position; desdeEnemigo.y = 0f;
+            if (desdeEnemigo.sqrMagnitude > 0.0001f && desdeEnemigo.sqrMagnitude < masCerca)
+            {
+                masCerca = desdeEnemigo.sqrMagnitude;
+                alejarse = desdeEnemigo;
+            }
+
             var rb = _parryBuffer[i].attachedRigidbody;
             if (rb == null || rb.isKinematic) continue;
             Vector3 dir = rb.position - transform.position; dir.y = 0f;
             rb.AddForce(dir.normalized * meleeDeflectPush, ForceMode.VelocityChange);
         }
         CounterFeedback(center + transform.forward * 0.8f);
+        VolteretaDeDesvio(alejarse);
+    }
+
+    private void VolteretaDeDesvio(Vector3 alejarse)
+    {
+        if (!volteretaAlDesviar || _voltereta == null || _voltereta.EnCurso) return;
+        alejarse.y = 0f;
+        if (alejarse.sqrMagnitude < 0.0001f) alejarse = -transform.forward;
+        alejarse.Normalize();
+
+        if (_controller != null && _controller.IsAirborne) _voltereta.EnElAire();
+        else _voltereta.DesdeElSuelo(alturaDeLaVoltereta, alejarse * distanciaDeLaVoltereta);
     }
 
     private void CounterFeedback(Vector3 where)

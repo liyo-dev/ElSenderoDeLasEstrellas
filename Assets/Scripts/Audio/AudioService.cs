@@ -1777,6 +1777,14 @@ public sealed class AudioService : MonoBehaviour
     /// Devuelve -1 si no hay música sonando o si esa fuente tiene loop activo (no tiene un
     /// "final" con sentido). Pensado para sincronizar UI con el final de un tema no-loop.
     /// </summary>
+    /// Segundos reproducidos de la música que suena (fuente activa), o -1 si no suena nada.
+    public float GetMusicTime()
+    {
+        var active = _musicATurn ? _musicB : _musicA;
+        if (active == null || active.clip == null || !active.isPlaying) return -1f;
+        return active.time;
+    }
+
     public float GetMusicRemainingSeconds()
     {
         var active = _musicATurn ? _musicB : _musicA;

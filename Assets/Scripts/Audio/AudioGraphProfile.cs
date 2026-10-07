@@ -84,6 +84,33 @@ public class AudioGraphProfile : ScriptableObject
     public List<EventSfx>   eventSfx   = new();
     public List<SequenceRule> sequences = new();
     
+    /// Una canción del juego y dónde suena (grupo: Escenas, Batallas, Minijuegos, Zonas o Secuencias).
+    public readonly struct CancionDelJuego
+    {
+        public readonly AudioClip clip;
+        public readonly string grupo;
+        public readonly string donde;
+        public CancionDelJuego(AudioClip clip, string grupo, string donde) { this.clip = clip; this.grupo = grupo; this.donde = donde; }
+    }
+
+    /// Toda la música del juego, sin repetir: si una canción suena en varios sitios, cuenta el primero.
+    public void ReunirMusica(List<CancionDelJuego> destino)
+    {
+        if (destino == null) return;
+        foreach (var r in sceneMusic) Anadir(destino, r?.music, "Escenas", r?.sceneName);
+        foreach (var r in battles) Anadir(destino, r?.music, "Batallas", r?.battleId);
+        foreach (var r in minigames) Anadir(destino, r?.music, "Minijuegos", r?.minigameId);
+        foreach (var r in ambientZones) Anadir(destino, r?.music, "Zonas", r?.zoneId);
+        foreach (var r in sequences) Anadir(destino, r?.music, "Secuencias", r?.sequenceId);
+    }
+
+    private static void Anadir(List<CancionDelJuego> destino, AudioClip clip, string grupo, string donde)
+    {
+        if (clip == null) return;
+        foreach (var c in destino) if (c.clip == clip) return;
+        destino.Add(new CancionDelJuego(clip, grupo, donde));
+    }
+
     public SequenceRule GetSequenceRule(string sequenceId)
     {
         if (string.IsNullOrEmpty(sequenceId)) return null;

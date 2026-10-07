@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0abddc14c08b6ee4cba7c1181c8551fb, type: 3}
+  m_Name: RemateAereo_Fuego
+  m_EditorClassIdentifier: Assembly-CSharp::MagicSpellSO
+  spellId: 0
+  displayNameId: 
+  displayName: "Remate a\xE9reo (Fuego)"
+  kind: 3
+  element: 0
+  lore: 
+  loreId: 
+  prefab: {fileID: 636835854787205537, guid: 5abbab5e3d28c0842acf2913647d66eb, type: 3}
+  castDelaySeconds: 0.5
+  chargeTime: 0
+  chargeStartScale: 0.1
+  followOriginDuringCharge: 1
+  initialSpeed: 18
+  useGravity: 0
+  maxRange: 40
+  lifeTime: 8
+  damage: 5
+  aoeRadius: 0
+  knockbackForce: 0
+  destroyOnHit: 1
+  forwardOffset: 0.35
+  positionOffset: {x: 0, y: 0, z: 0}
+  visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
+  flattenDirection: 1
+  useScaleOverride: 1
+  scaleOverride: {x: 0.8333333, y: 0.8333333, z: 0.8333333}
+  manaCost: 0
+  supportsPreciseMode: 0
+  preciseHoldThreshold: 0.18
+  preciseDamageMultiplier: 0.5
+  preciseSpeedMultiplier: 1.3
+  preciseScaleMultiplier: 0.4
+  zoneRadius: 2.5
+  zoneDuration: 2.5
+  zoneTickInterval: 0.5
+  zoneRange: 4
+  zoneSnapToTarget: 1
+  zoneGroundLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  zoneGroundOffset: 0.15
+  levitationRange: 10
+  levitationAngle: 45
+  levitationPullForce: 5
+  levitationPushForce: 15
+  levitationHoldDistance: 3
+  levitationHeight: 2
+  levitationLiftSpeed: 3
+  levitationTargetLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  levitationDrainDelay: 1
+  levitationManaDrainPerSecond: 5
+  levitationHoldVFX: {fileID: 0}
+  levitationReleaseVFX: {fileID: 0}
+  levitationRangeIndicatorVFX: {fileID: 0}
+  rangeIndicatorCount: 3
+  levitationCaptureShakeIntensity: 0.3
+  levitationCaptureShakeDuration: 0.2
+  levitationReleaseShakeIntensity: 0.5
+  levitationReleaseShakeDuration: 0.3
+  levitationImpactDamage: 25
+  levitationImpactMinSpeed: 4
+  spawnVFX: {fileID: 5302146505831436120, guid: b3573f03d84ca004b8e00a5343295ec2, type: 3}
+  impactVFX: {fileID: 0}
+  despawnVFX: {fileID: 3685239417598464635, guid: acdaa162cece6444b90ef53280ca8aa4, type: 3}
+  vfxLifetime: 3
+  castSFXKey: Impacto_Fuego_Grande
+  impactSFXKey: 
+  slotType: 1
+  attackIcon: {fileID: 21300000, guid: 264dd2b399fac2544a8de4e720c52674, type: 3}
+  bounceCount: 0
+  bounceRange: 8
+  pierceCount: 0
+  spreadCount: 1
+  spreadAngle: 24
+  impactZone: {fileID: 0}
+  remateAereo: {fileID: 0}
+  castStyle: 1
+  statusEffect: 0
+  statusDuration: 0
+  statusStrength: 0
+  statusVFX: {fileID: 0}
+  zoneOnCaster: 0
+  healPerTick: 0
+  groupShieldSeconds: 0
+  groupShieldDamageFactor: 0.3
+  groupShieldVFX: {fileID: 0}
+  teamGaugeGain: 0
+  teleportDistance: 6
+  caster: 2
+  comboSequence: 030000000200000002000000i

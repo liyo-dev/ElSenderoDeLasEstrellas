@@ -17,7 +17,8 @@ namespace Game.Player
         [Header("Referencias")]
         [SerializeField] private Animator animator;
         [SerializeField] private vThirdPersonController controller;
-        [SerializeField] private Rigidbody playerRigidbody;
+        [Tooltip("Voltereta del jugador (la del salto de victoria). Se busca sola si está vacía.")]
+        [SerializeField] private VolteretaDelJugador voltereta;
         [SerializeField] private PlayerActionManager actionManager;
         
         [Header("Configuración de Capas del Animator")]
@@ -75,12 +76,8 @@ namespace Game.Player
         [Header("Celebración de victoria (INC-470)")]
         [Tooltip("Voltereta antes de la pose de victoria. Vacío = sin salto. Si el Animator no tiene el estado, se salta.")]
         [SerializeField] private string victoryJumpStateName = "JumpFullSpin_InPlace_NoWeapon";
-        [Tooltip("Altura del salto, en alturas de la cabeza del personaje (1 = lo que mide de los pies a la cabeza). La animación da la voltereta en el sitio; la altura la pone este salto.")]
+        [Tooltip("Altura del salto, en alturas de la cabeza del personaje (1 = lo que mide de los pies a la cabeza). La da VolteretaDelJugador.")]
         [SerializeField] private float victoryJumpHeight = 1.4f;
-        [Tooltip("Tramo de la animación del salto (0-1) en el que el personaje está en el aire.")]
-        [SerializeField] private Vector2 victoryJumpAirborne = new Vector2(0.1f, 0.81f);
-        [Tooltip("Tope de segundos del salto (por si el estado no termina nunca).")]
-        [SerializeField] private float victoryJumpMaxSeconds = 1.8f;
         [Tooltip("La cámara de victoria arranca más lejos y más alta, de lado, y se acerca girando hasta el plano final en estos segundos.")]
         [SerializeField] private float victoryCamMoveSeconds = 3f;
         [SerializeField] private float victoryCamStartDistance = 6.5f;
@@ -145,8 +142,8 @@ namespace Game.Player
             if (controller == null)
                 controller = GetComponent<vThirdPersonController>() ?? GetComponentInParent<vThirdPersonController>();
             
-            if (playerRigidbody == null)
-                playerRigidbody = GetComponent<Rigidbody>() ?? GetComponentInChildren<Rigidbody>();
+            if (voltereta == null)
+                voltereta = GetComponentInParent<VolteretaDelJugador>();
 
             if (actionManager == null)
                 actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
@@ -653,7 +650,7 @@ namespace Game.Player
             _isPlayingVictory = false;
 
             if (_victoryCamMove != null) { StopCoroutine(_victoryCamMove); _victoryCamMove = null; }
-            AterrizarSalto();
+            if (voltereta != null && voltereta.EnCursoDesdeElSuelo) voltereta.Cancelar();
             _grupo?.Soltar();
             DeactivateVictoryCamera();
             if (actionManager != null)
@@ -693,81 +690,14 @@ namespace Game.Player
         }
 
         // ── Salto con voltereta ─────────────────────────────────────────────────────────────
-        //
-        // La voltereta del Animator es «en el sitio» (sin desplazamiento): sola, se ve dar la vuelta
-        // pegado al suelo. La altura se la da esta curva, sincronizada con el tramo en el aire del
-        // clip: el cuerpo sube y baja en parábola mientras gira. Durante el salto el Rigidbody va
-        // cinemático para que la gravedad no tire en contra.
 
-        private bool _saltoEnCurso;
-        private Vector3 _sueloDelSalto;
-        private bool _cinematicoAntesDelSalto;
-
+        /// Salto con voltereta de la victoria (VolteretaDelJugador, en el sitio) y espera a que
+        /// aterrice.
         private IEnumerator Co_SaltoConVoltereta()
         {
-            if (animator == null || string.IsNullOrEmpty(victoryJumpStateName)) yield break;
-            if (!TryPlayState(victoryJumpStateName, 0.1f, out int capa)) yield break;
-
-            int hash = Animator.StringToHash(victoryJumpStateName);
-            float alto = AlturaDeLaCabeza() * Mathf.Max(0f, victoryJumpHeight);
-
-            _sueloDelSalto = transform.position;
-            _saltoEnCurso = true;
-            if (playerRigidbody != null)
-            {
-                _cinematicoAntesDelSalto = playerRigidbody.isKinematic;
-                playerRigidbody.isKinematic = true;
-            }
-
-            float tope = Time.time + Mathf.Max(0.3f, victoryJumpMaxSeconds);
-            float empezar = Time.time + 0.3f;
-            bool visto = false;
-            while (Time.time < tope)
-            {
-                float t = TiempoNormalizado(capa, hash);
-                if (t >= 0f) visto = true;
-                else if (visto || Time.time > empezar) break;   // ya ha salido del salto
-                if (t >= 0.92f) break;
-
-                float subida = 0f;
-                if (t > victoryJumpAirborne.x && t < victoryJumpAirborne.y)
-                {
-                    float u = Mathf.InverseLerp(victoryJumpAirborne.x, victoryJumpAirborne.y, t);
-                    subida = alto * 4f * u * (1f - u);
-                }
-                transform.position = _sueloDelSalto + Vector3.up * subida;
-                yield return null;
-            }
-
-            AterrizarSalto();
-        }
-
-        /// Deja al jugador en el suelo de donde saltó y devuelve el Rigidbody. Idempotente.
-        private void AterrizarSalto()
-        {
-            if (!_saltoEnCurso) return;
-            _saltoEnCurso = false;
-            transform.position = _sueloDelSalto;
-            if (playerRigidbody != null)
-            {
-                playerRigidbody.isKinematic = _cinematicoAntesDelSalto;
-                if (!playerRigidbody.isKinematic) playerRigidbody.linearVelocity = Vector3.zero;
-            }
-        }
-
-        /// De los pies a la cabeza, en metros (1 si el Animator no es humanoide).
-        private float AlturaDeLaCabeza()
-        {
-            if (animator != null && animator.isHuman)
-            {
-                var cabeza = animator.GetBoneTransform(HumanBodyBones.Head);
-                if (cabeza != null)
-                {
-                    float h = cabeza.position.y - transform.position.y;
-                    if (h > 0.2f) return h;
-                }
-            }
-            return 1f;
+            if (voltereta == null || string.IsNullOrEmpty(victoryJumpStateName)) yield break;
+            if (!voltereta.DesdeElSuelo(victoryJumpHeight, Vector3.zero, victoryJumpStateName)) yield break;
+            while (voltereta.EnCurso) yield return null;
         }
 
         /// Tiempo normalizado del estado en la capa (también mientras se entra en él), o -1.

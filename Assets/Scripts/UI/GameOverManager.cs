@@ -22,8 +22,19 @@ public class GameOverManager : MonoBehaviour
     static void ResetStatics()
     {
         Instance = null;
+        s_respuestaALaDerrota = null;
     }
     #endif
+
+    private static IRespuestaALaDerrota s_respuestaALaDerrota;
+
+    /// La escena actual responde ella misma a la derrota (ver IRespuestaALaDerrota).
+    public static void RegistrarRespuestaALaDerrota(IRespuestaALaDerrota respuesta) => s_respuestaALaDerrota = respuesta;
+
+    public static void QuitarRespuestaALaDerrota(IRespuestaALaDerrota respuesta)
+    {
+        if (s_respuestaALaDerrota == respuesta) s_respuestaALaDerrota = null;
+    }
 
     [Header("Escenas")]
     [SerializeField] private string mainMenuScene = "MainMenu";
@@ -303,6 +314,8 @@ public class GameOverManager : MonoBehaviour
     /// partida guardada ni preset de pruebas), o sin popup, va al menú como siempre.
     private void OfrecerContinuar()
     {
+        if (s_respuestaALaDerrota != null && s_respuestaALaDerrota.Responder()) return;
+
         var popup = ConfirmationPopupUI.Instance;
         if (popup == null || !GameBootService.PuedeContinuar())
         {

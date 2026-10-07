@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 9032325607275798955}
+  - {fileID: 5616987133747058879}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &4741472124930517088
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicProjectile
   lifeTimeSeconds: 0
---- !u!1001 &4763779586217879033
+--- !u!1001 &8265952539304680685
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -120,13 +120,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 623937475749896447, guid: bc142210df3ec4545a4e3e1f21e00da7, type: 3}
+    - {fileID: 3595581602607807123, guid: bc142210df3ec4545a4e3e1f21e00da7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc142210df3ec4545a4e3e1f21e00da7, type: 3}
---- !u!4 &9032325607275798955 stripped
+--- !u!4 &5616987133747058879 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4559080999636468818, guid: bc142210df3ec4545a4e3e1f21e00da7, type: 3}
-  m_PrefabInstance: {fileID: 4763779586217879033}
+  m_PrefabInstance: {fileID: 8265952539304680685}
   m_PrefabAsset: {fileID: 0}

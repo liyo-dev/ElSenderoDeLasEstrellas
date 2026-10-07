@@ -352,7 +352,7 @@ public static class VfxDeHechizos
         {
             PaginaDelGrimorioBuilder.Montar(root, warnings);
             PrefabUtility.SaveAsPrefabAsset(root, PaginaDelGrimorioBuilder.PrefabPath);
-            log.AppendLine("   Página del grimorio: brillo y destello propios (ver PaginaDelGrimorioBuilder).");
+            log.AppendLine("   Página del grimorio: polvo dorado y destello (ver PaginaDelGrimorioBuilder).");
         }
         finally
         {

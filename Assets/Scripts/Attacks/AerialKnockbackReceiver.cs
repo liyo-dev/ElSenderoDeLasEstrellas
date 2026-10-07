@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Invector.vCharacterController;
+using Core;
 
 /// <summary>
 /// Lanza al objetivo hacia atrás describiendo un arco por el aire (estilo "knockback aéreo" de
@@ -22,10 +23,34 @@ using Invector.vCharacterController;
 /// Al terminar la corrutina y devolver el control a Invector, esa velocidad acumulada se
 /// descarga de golpe y el jugador se hunde/atraviesa el suelo. Por eso aquí también hay que
 /// poner el Rigidbody en kinemático (sin gravedad, sin velocidad) mientras dura el lanzamiento.
+///
+/// Recuperación (INC-654): pulsar saltar durante el vuelo hace una voltereta
+/// (<see cref="VolteretaDelJugador"/>) y el jugador cae de pie. Un lanzamiento que derriba
+/// (golpes fuertes de los jefes) deja al jugador en el suelo hasta que se levanta si no se recupera.
 /// </summary>
 [DisallowMultipleComponent]
 public class AerialKnockbackReceiver : MonoBehaviour
 {
+    [Header("Recuperación y derribo (INC-654)")]
+    [Tooltip("Tramo del vuelo (0-1) en el que pulsar saltar hace la voltereta de recuperación.")]
+    [SerializeField] private Vector2 ventanaDeRecuperacion = new Vector2(0.15f, 0.9f);
+    [Tooltip("Estado del Animator tumbado en el suelo tras un derribo.")]
+    [SerializeField] private string estadoEnElSuelo = "Knockdown01_Ground";
+    [Tooltip("Estado del Animator al levantarse tras un derribo.")]
+    [SerializeField] private string estadoLevantarse = "Knockdown01_StandUp";
+    [Tooltip("Segundos tumbado antes de levantarse.")]
+    [SerializeField, Min(0f)] private float segundosEnElSuelo = 0.7f;
+    [Tooltip("Tope de segundos para levantarse.")]
+    [SerializeField, Min(0.2f)] private float topeParaLevantarse = 2f;
+    [Tooltip("Clave de SFX al recuperarse en el aire. Vacío = sin sonido.")]
+    [SerializeField] private string sfxDeRecuperacion = "";
+
+    private VolteretaDelJugador _voltereta;
+    private bool _recuperado;
+
+    /// <summary>El jugador se ha recuperado en el aire durante el último lanzamiento.</summary>
+    public bool SeRecupero => _recuperado;
+
     private CharacterController _controller;
     private Rigidbody _rigidbody;
     private Animator _animator;
@@ -108,6 +133,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
+        _voltereta = GetComponentInParent<VolteretaDelJugador>();
         _thirdPersonController = GetComponent<vThirdPersonController>() ?? GetComponentInParent<vThirdPersonController>();
         _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
 
@@ -175,18 +201,53 @@ public class AerialKnockbackReceiver : MonoBehaviour
     /// -transform.forward del propio objetivo para garantizar que SIEMPRE va hacia atrás,
     /// sin depender de vectores geométricos como la posición del proyectil o del impacto).
     /// </summary>
-    public void Launch(Vector3 backwardDirection, float distance, float height, float duration)
+    public void Launch(Vector3 backwardDirection, float distance, float height, float duration) =>
+        Launch(backwardDirection, distance, height, duration, derriba: false);
+
+    /// <summary>
+    /// Lanza y derriba al jugador por un golpe fuerte, alejándolo de 'origen'. Solo actúa sobre el
+    /// cuerpo del jugador (no sobre compañeros), vivo y sin defenderse (escudo o ventana de la B).
+    /// True si lo ha lanzado: quien llama no debe empujarlo además con fuerzas.
+    /// </summary>
+    public static bool Derribar(GameObject objetivo, Vector3 origen, float distancia, float altura, float duracion)
+    {
+        if (objetivo == null) return false;
+        var jugador = PlayerService.Player;
+        if (jugador == null || (objetivo != jugador && !objetivo.transform.IsChildOf(jugador.transform))) return false;
+
+        var cuerpo = objetivo.GetComponentInParent<vThirdPersonController>();
+        if (cuerpo == null) return false;
+        var salud = cuerpo.GetComponent<PlayerHealthSystem>();
+        if (salud != null && !salud.IsAlive) return false;
+        var escudo = cuerpo.GetComponent<PlayerShieldController>();
+        if (escudo != null && (escudo.IsParryWindowOpen || escudo.IsDefending)) return false;
+
+        if (!cuerpo.TryGetComponent(out AerialKnockbackReceiver receptor))
+            receptor = cuerpo.gameObject.AddComponent<AerialKnockbackReceiver>();
+        Vector3 dir = cuerpo.transform.position - origen;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) dir = -cuerpo.transform.forward;
+        receptor.Launch(dir.normalized, distancia, altura, duracion, derriba: true);
+        return true;
+    }
+
+    /// <summary>
+    /// Como el anterior; con 'derriba', si el jugador no se recupera en el aire (saltar durante el
+    /// vuelo) se queda tumbado y se levanta antes de recuperar el control.
+    /// </summary>
+    public void Launch(Vector3 backwardDirection, float distance, float height, float duration, bool derriba)
     {
         if (_isLaunching) return; // no solapar lanzamientos
         if (duration <= 0f) return;
 
         StopAllCoroutines();
-        StartCoroutine(LaunchRoutine(backwardDirection, distance, height, duration));
+        StartCoroutine(LaunchRoutine(backwardDirection, distance, height, duration, derriba));
     }
 
-    private IEnumerator LaunchRoutine(Vector3 backwardDirection, float distance, float height, float duration)
+    private IEnumerator LaunchRoutine(Vector3 backwardDirection, float distance, float height, float duration, bool derriba)
     {
         _isLaunching = true;
+        _recuperado = false;
 
         // Desactivar Root Motion mientras dura el lanzamiento: la trayectoria la controla
         // este script en exclusiva, no el clip de animación (evita el "tironeo" por doble
@@ -246,6 +307,8 @@ public class AerialKnockbackReceiver : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
+            if (!_recuperado && t >= ventanaDeRecuperacion.x && t <= ventanaDeRecuperacion.y && GamepadInputReader.JumpPressed)
+                Recuperarse();
 
             // Arco parabólico: avance horizontal con ease-out (rápido al inicio, se frena al final)
             // y altura con una curva de seno (sube, alcanza el pico, y vuelve a bajar).
@@ -289,6 +352,10 @@ public class AerialKnockbackReceiver : MonoBehaviour
         Debug.Log($"[AerialKnockbackReceiver] Fin del arco. groundY detectado={finalGroundY:F2}, posición final={finalPos}, rb.isKinematic (antes de restaurar)={_rigidbody?.isKinematic}");
 #endif
 
+        // Derribo sin recuperarse: tumbado y levantarse, con todo aún tomado.
+        if (derriba && !_recuperado)
+            yield return Co_DerriboEnElSuelo();
+
         // Restaurar todo en orden inverso
         // El Rigidbody se restaura primero y con velocidad a cero: así Invector retoma el
         // control desde reposo, sin gravedad acumulada que descargar de golpe.
@@ -327,6 +394,38 @@ public class AerialKnockbackReceiver : MonoBehaviour
         _isLaunching = false;
 
         StartCoroutine(PostLandingSafetyNet());
+    }
+
+    /// Voltereta de recuperación: el jugador cae de pie (no se queda tumbado).
+    private void Recuperarse()
+    {
+        _recuperado = true;
+        if (_voltereta != null) _voltereta.EnElAire();
+        if (!string.IsNullOrEmpty(sfxDeRecuperacion) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(sfxDeRecuperacion);
+    }
+
+    /// Tumbado unos segundos y levantarse. Si el Animator no tiene los estados, solo espera.
+    private IEnumerator Co_DerriboEnElSuelo()
+    {
+        int suelo = Animator.StringToHash(estadoEnElSuelo);
+        int levantarse = Animator.StringToHash(estadoLevantarse);
+        bool animado = _animator != null && _animator.HasState(0, suelo) && _animator.HasState(0, levantarse);
+
+        if (animado) _animator.CrossFadeInFixedTime(suelo, 0.1f, 0);
+        if (segundosEnElSuelo > 0f) yield return new WaitForSeconds(segundosEnElSuelo);
+        if (!animado) yield break;
+
+        _animator.CrossFadeInFixedTime(levantarse, 0.12f, 0);
+        float tope = Time.time + topeParaLevantarse;
+        float empezo = Time.time;
+        while (Time.time < tope)
+        {
+            var info = _animator.IsInTransition(0) ? _animator.GetNextAnimatorStateInfo(0) : _animator.GetCurrentAnimatorStateInfo(0);
+            if (info.shortNameHash == levantarse && info.normalizedTime >= 0.9f) break;
+            if (info.shortNameHash != levantarse && Time.time > empezo + 0.4f) break;   // ya ha salido
+            yield return null;
+        }
     }
 
     /// <summary>

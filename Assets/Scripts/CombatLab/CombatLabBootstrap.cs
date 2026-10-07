@@ -66,6 +66,19 @@ public sealed class CombatLabBootstrap : MonoBehaviour
         if (partyPanel == null)
             partyPanel = gameObject.AddComponent<CombatLabPartyPanel>();
         partyPanel.Initialize(player, grupoInicial);
+
+        // Panel del LAB y sus pestañas que no dependen de la escena (ver PanelDelLab).
+        Asegurar<VueltaAlLab>();
+        Asegurar<JukeboxDelLab>();
+        Asegurar<TrucosDelLab>();
+        Asegurar<AyudaDelLab>();
+        if (FindAnyObjectByType<ViajeDelLab>() == null) gameObject.AddComponent<ViajeDelLab>();
+        Asegurar<PanelDelLab>();
+    }
+
+    private void Asegurar<T>() where T : Component
+    {
+        if (GetComponent<T>() == null) gameObject.AddComponent<T>();
     }
 
     /// Maná mínimo del laboratorio: cubre dos lanzamientos del hechizo más caro de la biblioteca.

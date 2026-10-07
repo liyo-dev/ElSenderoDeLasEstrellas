@@ -11849,6 +11849,9 @@ GameObject:
   - component: {fileID: 2929466757202866933}
   - component: {fileID: 724768449762793005}
   - component: {fileID: 2781199477461800611}
+  - component: {fileID: 7986244161915090015}
+  - component: {fileID: 5033974601795874271}
+  - component: {fileID: 5948103706511078393}
   m_Layer: 3
   m_Name: vBasicController_MaleCharacterPBR
   m_TagString: Player
@@ -12323,6 +12326,14 @@ MonoBehaviour:
   areaState: UpperBody.Cheer01
   areaHopFactor: 0.55
   areaMinSeconds: 0.8
+  voltereta: {fileID: 5948103706511078393}
+  remateRetraso: 0.22
+  remateVelocidadDeCaida: 14
+  remateRecuperacion: 0.5
+  remateDistanciaSinObjetivo: 3
+  remateAlcance: 9
+  remateAlturaMaxima: 25
+  remateSacudida: 0.3
   showDebugLogs: 0
 --- !u!114 &3543219876543210987
 MonoBehaviour:
@@ -12505,6 +12516,9 @@ MonoBehaviour:
   meleeBlockFactor: 0.3
   meleeDeflectPush: 8
   meleeDeflectRadius: 3
+  volteretaAlDesviar: 1
+  alturaDeLaVoltereta: 0.8
+  distanciaDeLaVoltereta: 2.5
 --- !u!114 &1750471286796519853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12519,7 +12533,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Player.PlayerBattleModeController
   animator: {fileID: 6005525575959977289}
   controller: {fileID: 8092544119751004760}
-  playerRigidbody: {fileID: 6059246465518525408}
+  voltereta: {fileID: 0}
   actionManager: {fileID: 0}
   upperBodyLayerIndex: 1
   battleIdleStateName: Idle_Battle_NoWeapon
@@ -12542,8 +12556,6 @@ MonoBehaviour:
   victoryCamBlendSeconds: 0.4
   victoryJumpStateName: JumpFullSpin_InPlace_NoWeapon
   victoryJumpHeight: 1.4
-  victoryJumpAirborne: {x: 0.1, y: 0.81}
-  victoryJumpMaxSeconds: 1.8
   victoryCamMoveSeconds: 3
   victoryCamStartDistance: 6.5
   victoryCamStartHeight: 3
@@ -12607,6 +12619,15 @@ MonoBehaviour:
   bocaDeReposo: {fileID: 3032424197757487374}
   eyePrefix: Eye
   mouthPrefix: Mouth
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &8164817358401321661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12679,6 +12700,15 @@ MonoBehaviour:
   bocaDeReposo: {fileID: 0}
   eyePrefix: Eye
   mouthPrefix: Mouth
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &1307908492277444293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12774,13 +12804,128 @@ MonoBehaviour:
   enterState: UpperBody.Magic.ComboIdle
   exitState: UpperBody.Magic.ComboExit
   breakState: UpperBody.Magic.ComboBreak
-  circleVfx: {fileID: 3377181292992421420, guid: 48c5715f9603c3842a353516a8baefbb, type: 3}
-  circleOffset: {x: 0, y: 0.05, z: 0}
-  circleScale: 1
-  openSfxKey: Prologue_SpellInstantiate
-  inputSfxKey: UI_Navigate
-  failSfxKey: SpellFail
   showDebugLogs: 0
+--- !u!114 &7986244161915090015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad9a8fa542860154cb042757ad6ebf18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevacionVisual
+  animator: {fileID: 0}
+  amplitudBalanceo: 0.04
+  frecuenciaBalanceo: 0.8
+  rebote: 1.7
+--- !u!114 &5033974601795874271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6aaa1157eca39fb4bba86a3c3dfece9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PresentacionDelCombo
+  altura: 0.35
+  segundosSubida: 0.25
+  bajadaAlLanzar: 0.12
+  bajadaAlFallar: 0.25
+  bajadaAlRomperse: 0.08
+  bajadaAlCancelar: 0.2
+  posesPorBoton:
+  - UpperBody.Magic.ComboPose1
+  - UpperBody.Magic.ComboPose2
+  - UpperBody.Magic.ComboPose3
+  - UpperBody.Magic.ComboPose4
+  - UpperBody.Magic.ComboPose5
+  fundidoEntrePoses: 0.08
+  escalaFrenazo: 0.1
+  duracionFrenazo: 0.12
+  escalaGeneral: 1
+  alturaSobreElSuelo: 0.04
+  materialBase: {fileID: 2100000, guid: ddac23d301cbfca45bcbe217c05f0141, type: 2}
+  materialExterior: {fileID: 2100000, guid: 48c12feeb614f8d439f1f0c476f145c8, type: 2}
+  materialAnillo: {fileID: 2100000, guid: 8fce5540653d6d8439e52364661e10c9, type: 2}
+  materialDestello: {fileID: 2100000, guid: 32cc483f9636edd4bbb82e26419fd290, type: 2}
+  diametroBase: 2.2
+  diametroExterior: 2.7
+  diametroAnilloInterior: 0.7
+  diametroAnilloExterior: 1.9
+  duracionAparicion: 0.2
+  giroBase: 30
+  giroPorBoton: 45
+  intensidad: 2.4
+  colorCirculo: {r: 1, g: 0.78, b: 0.35, a: 1}
+  colorApagado: {r: 1, g: 0.85, b: 0.6, a: 0.12}
+  colorLanzado: {r: 1, g: 0.95, b: 0.8, a: 1}
+  colorFallo: {r: 1, g: 0.2, b: 0.15, a: 1}
+  destelloDeAnillo: 0.25
+  colorA: {r: 0.35, g: 0.9, b: 0.3, a: 1}
+  colorB: {r: 0.95, g: 0.25, b: 0.25, a: 1}
+  colorX: {r: 0.25, g: 0.55, b: 1, a: 1}
+  colorY: {r: 1, g: 0.85, b: 0.2, a: 1}
+  cierreAlLanzar: 0.3
+  cierreAlFallar: 0.3
+  cierreAlRomperse: 0.1
+  cierreAlCancelar: 0.2
+  subidaAlLanzar: 0.5
+  materialChispas: {fileID: 2100000, guid: e546d2d7171981b468cf29388d902e99, type: 2}
+  materialPolvo: {fileID: 2100000, guid: ea6dde5ed1a02aa43828aad40f3f7974, type: 2}
+  chispasPorSegundo: 45
+  chispasPorBoton: 10
+  velocidadSubida: 2.2
+  giroEspiral: 3
+  polvoEnRafaga: 20
+  velocidadRafaga: 4.5
+  colorPolvo: {r: 0.95, g: 0.9, b: 0.8, a: 0.55}
+  colorLuz: {r: 1, g: 0.75, b: 0.4, a: 1}
+  intensidadLuz: 3
+  intensidadPulso: 4
+  duracionPulso: 0.25
+  alcanceLuz: 4
+  alturaLuz: 0.3
+  sfxApertura: Prologue_SpellInstantiate
+  sfxRafaga: Impacto_Viento_Pequeno
+  sfxViento: SFX_Prologo_Viento
+  volumenViento: 0.6
+  sfxBoton: RuneActivate
+  subidaDeTono: 0.12
+  sfxFallo: SpellFail
+--- !u!114 &5948103706511078393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d46656cf8aa96e4592cb1076df59c71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VolteretaDelJugador
+  controller: {fileID: 0}
+  animator: {fileID: 0}
+  body: {fileID: 0}
+  estadoDesdeElSuelo: JumpFullSpin_InPlace_NoWeapon
+  tramoEnElAire: {x: 0.1, y: 0.81}
+  duracionSinAnimacion: 0.8
+  estadoEnElAire: JumpAirSpin_InPlace_NoWeapon
+  estadoDeCaida: Falling
+  estadoDeLocomocion: Free Locomotion
+  parametroDeBloqueoAereo: isFlying
+  capaDeBrazos: 1
+  fundido: 0.08
+  duracionMaxima: 1.8
+  volteretaEnCaidaLarga: 1
+  alturaMinimaDeCaida: 5
+  velocidadMinimaDeCaida: 3
 --- !u!1 &4956991213707944661
 GameObject:
   m_ObjectHideFlags: 0

@@ -109,6 +109,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Música al terminar algo (cinemática, combate) | `AudioService.PedirMusicaDelLugar` (relevo con gracia, como la cámara) | `PlayMusic`/`RestoreSceneMusic` directos al acabar |
 | Qué deja cambiado un nodo / cómo está el mundo en un nodo | `INarrativeStateEffect` + `NarrativeStateProjector` (TDD § 10) | `switch` por tipo de nodo en herramientas |
 | Guardar que un objeto de escena se ha movido o retirado (entregado, consumido) | `ObjetoPersistente` (`Retirar()` para quitarlo; ID con `IdDePersistencia`) | `Destroy` directo de objetos de misión; IDs de posición escritos a mano en cada sistema |
+| Voltereta del jugador (desde el suelo o en el aire) | `VolteretaDelJugador` (`DesdeElSuelo`, `EnElAire`) | parábolas o volteretas propias en cada sistema |
 
 ---
 

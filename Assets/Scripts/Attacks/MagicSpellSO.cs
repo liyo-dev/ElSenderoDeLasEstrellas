@@ -206,6 +206,10 @@ public class MagicSpellSO : ScriptableObject
     [Tooltip("Hechizo de zona (MagicKind.Zone) que deja en el suelo al impactar. Vacío = nada.")]
     public MagicSpellSO impactZone;
 
+    [Header("Remate aéreo (INC-652)")]
+    [Tooltip("Zona (MagicKind.Zone) que deja el tercer golpe de la serie de la X lanzado en el aire: el personaje da una voltereta, el hechizo sale en picado y la zona aparece donde cae. Vacío = el tercer golpe normal.")]
+    public MagicSpellSO remateAereo;
+
     [Header("Gesto al lanzarlo (combos y centro)")]
     [Tooltip("Hand: el gesto de siempre. TwoHanded: a dos manos. Omni: en todas direcciones. Call: invocación. Area: saltito y brazos arriba (hechizos de zona). La serie de la X usa siempre derecha/izquierda/centro.")]
     public MagicCastStyle castStyle = MagicCastStyle.Hand;

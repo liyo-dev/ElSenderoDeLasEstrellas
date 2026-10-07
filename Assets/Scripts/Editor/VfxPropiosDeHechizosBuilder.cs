@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using static VfxProcedural;
 
 /// <summary>
 /// Efectos propios de los hechizos (INC-640). Genera en Assets/_VFX/Hechizos/:
@@ -15,7 +15,8 @@ using Object = UnityEngine.Object;
 /// - Destellos de lanzamiento y de fin por elemento.
 /// Paleta: Will dorado/blanco, Estela naranja (fuego) y blanco (viento), Liam violeta, Mago Oscuro
 /// negro con rojo. Lo llama VfxDeHechizos antes de asignar; es idempotente (regenera en el sitio y
-/// conserva los GUID).
+/// conserva los GUID). Las piezas genéricas (partículas, texturas y materiales) están en
+/// VfxProcedural.
 /// </summary>
 public static class VfxPropiosDeHechizosBuilder
 {
@@ -75,8 +76,7 @@ public static class VfxPropiosDeHechizosBuilder
     /// Genera (o regenera) todos los efectos.
     public static void Construir(System.Text.StringBuilder log, List<string> warnings)
     {
-        Carpetas();
-        var t = new Texturas();
+        var t = NuevasTexturas();
 
         Guardar(CadenasZona, root => ConstruirCadenasZona(root, t), log);
         Guardar(CadenasEstado, root => ConstruirCadenasEstado(root, t), log);
@@ -293,172 +293,12 @@ public static class VfxPropiosDeHechizosBuilder
         Desvanecer(chispas, 0.05f, 0.6f);
     }
 
-    // ── Piezas comunes ────────────────────────────────────────────────────
-
-    /// Núcleo brillante que viaja con el proyectil.
-    private static void Nucleo(Transform padre, Texturas t, string nombre, Color color, float tam)
-    {
-        var ps = Sistema(padre, nombre, t.Mat("Brillo", true), ParticleSystemRenderMode.Billboard, 1f);
-        var main = ps.main;
-        main.startLifetime = 0.15f;
-        main.startSize = tam;
-        main.startColor = color;
-        Emitir(ps, 30f);
-        Desvanecer(ps, 0.2f, 0.6f);
-    }
-
-    /// Estela de chispas que se queda atrás (espacio de mundo).
-    private static void Estela(Transform padre, Texturas t, string nombre, Color color, float tam, float ritmo)
-    {
-        var ps = Sistema(padre, nombre, t.Mat("Brillo", true), ParticleSystemRenderMode.Billboard, 1f);
-        var main = ps.main;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.25f, 0.45f);
-        main.startSize = new ParticleSystem.MinMaxCurve(tam * 0.4f, tam);
-        main.startColor = color;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        Emitir(ps, ritmo);
-        Forma(ps, ParticleSystemShapeType.Sphere, 0.12f, 1f);
-        var tam2 = ps.sizeOverLifetime;
-        tam2.enabled = true;
-        tam2.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0f));
-        Desvanecer(ps, 0.05f, 0.4f);
-    }
-
-    /// Motas que suben desde un círculo.
-    private static void Motas(Transform padre, Texturas t, string nombre, Color color, float radio, float ritmo, float subida)
-    {
-        var ps = Sistema(padre, nombre, t.Mat("Brillo", true), ParticleSystemRenderMode.Billboard, 1f);
-        var main = ps.main;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.8f, 1.6f);
-        main.startSize = new ParticleSystem.MinMaxCurve(0.06f, 0.16f);
-        main.startColor = color * 1.5f;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        Emitir(ps, ritmo);
-        Forma(ps, ParticleSystemShapeType.Circle, radio, 1f);
-        Velocidad(ps, new Vector3(0f, subida, 0f));
-        Desvanecer(ps, 0.2f, 0.6f);
-    }
-
-    private static ParticleSystem Sistema(Transform padre, string nombre, Material mat, ParticleSystemRenderMode modo, float duracion, bool bucle = true)
-    {
-        var go = new GameObject(nombre);
-        go.transform.SetParent(padre, false);
-        var ps = go.AddComponent<ParticleSystem>();
-        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-
-        var main = ps.main;
-        main.loop = bucle;
-        main.duration = duracion;
-        main.playOnAwake = true;
-        main.startSpeed = 0f;
-        main.scalingMode = ParticleSystemScalingMode.Hierarchy;
-        main.simulationSpace = ParticleSystemSimulationSpace.Local;
-        main.maxParticles = 500;
-
-        var emision = ps.emission;
-        emision.rateOverTime = 0f;
-        var forma = ps.shape;
-        forma.enabled = false;
-
-        var render = go.GetComponent<ParticleSystemRenderer>();
-        render.renderMode = modo;
-        render.sharedMaterial = mat;
-        render.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        render.receiveShadows = false;
-        return ps;
-    }
-
-    /// Una sola partícula que dura toda la zona (la zona se destruye antes de que acabe).
-    private static void Unico(ParticleSystem ps, float vida, float tam, Color color)
-    {
-        var main = ps.main;
-        main.startLifetime = vida;
-        main.startSize = tam;
-        main.startColor = color;
-        main.maxParticles = 1;
-        Rafaga(ps, 1);
-        var col = ps.colorOverLifetime;
-        col.enabled = true;
-        var g = new Gradient();
-        g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                  new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.012f), new GradientAlphaKey(1f, 1f) });
-        col.color = new ParticleSystem.MinMaxGradient(g);
-    }
-
-    private static void Rafaga(ParticleSystem ps, int cuantas)
-    {
-        var emision = ps.emission;
-        emision.rateOverTime = 0f;
-        emision.SetBursts(new[] { new ParticleSystem.Burst(0f, (short)cuantas) });
-    }
-
-    private static void Emitir(ParticleSystem ps, float ritmo)
-    {
-        var emision = ps.emission;
-        emision.rateOverTime = ritmo;
-    }
-
-    private static void Forma(ParticleSystem ps, ParticleSystemShapeType tipo, float radio, float grosor)
-    {
-        var forma = ps.shape;
-        forma.enabled = true;
-        forma.shapeType = tipo;
-        forma.radius = radio;
-        forma.radiusThickness = grosor;
-        if (tipo == ParticleSystemShapeType.Circle) forma.rotation = new Vector3(-90f, 0f, 0f);
-    }
-
-    private static void Velocidad(ParticleSystem ps, Vector3 v)
-    {
-        var vel = ps.velocityOverLifetime;
-        vel.enabled = true;
-        vel.space = ParticleSystemSimulationSpace.World;
-        // Los tres ejes tienen que ir en el mismo modo (dos constantes).
-        vel.x = new ParticleSystem.MinMaxCurve(v.x, v.x);
-        vel.y = new ParticleSystem.MinMaxCurve(v.y * 0.7f, v.y * 1.3f);
-        vel.z = new ParticleSystem.MinMaxCurve(v.z, v.z);
-    }
-
-    private static void Girar(ParticleSystem ps, float gradosPorSegundo)
-    {
-        var rot = ps.rotationOverLifetime;
-        rot.enabled = true;
-        rot.z = new ParticleSystem.MinMaxCurve(gradosPorSegundo * Mathf.Deg2Rad);
-    }
-
-    /// Crece de casi nada a su tamaño en la fracción de vida indicada.
-    private static void Crecer(ParticleSystem ps, float hasta)
-    {
-        var tam = ps.sizeOverLifetime;
-        tam.enabled = true;
-        var curva = new AnimationCurve(new Keyframe(0f, 0.1f), new Keyframe(hasta, 0.8f), new Keyframe(1f, 1f));
-        tam.size = new ParticleSystem.MinMaxCurve(1f, curva);
-    }
-
-    /// Alfa: entra hasta 'entra' y empieza a salir en 'sale' (fracciones de la vida).
-    private static void Desvanecer(ParticleSystem ps, float entra, float sale)
-    {
-        var col = ps.colorOverLifetime;
-        col.enabled = true;
-        var g = new Gradient();
-        g.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
-                  new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, entra), new GradientAlphaKey(1f, sale), new GradientAlphaKey(0f, 1f) });
-        col.color = new ParticleSystem.MinMaxGradient(g);
-    }
+    // ── Guardado ──────────────────────────────────────────────────────────
 
     private static void Guardar(string nombre, Action<GameObject> construir, System.Text.StringBuilder log)
     {
-        var root = new GameObject("VFX_Hechizo_" + nombre);
-        try
-        {
-            construir(root);
-            PrefabUtility.SaveAsPrefabAsset(root, Ruta(nombre));
-            log.AppendLine($"   VFX nuevo: {nombre}.");
-        }
-        finally
-        {
-            Object.DestroyImmediate(root);
-        }
+        GuardarPrefab("VFX_Hechizo_" + nombre, Ruta(nombre), construir);
+        log.AppendLine($"   VFX nuevo: {nombre}.");
     }
 
     // ── Variantes retintadas ──────────────────────────────────────────────
@@ -556,99 +396,25 @@ public static class VfxPropiosDeHechizosBuilder
         return r;
     }
 
-    // ── Carpetas, texturas y materiales ───────────────────────────────────
+    // ── Texturas ──────────────────────────────────────────────────────────
 
-    private static void Carpetas()
+    /// Las genéricas de VfxProcedural más las propias de los efectos a medida de los hechizos.
+    private static Texturas NuevasTexturas()
     {
-        Crear("Assets", "_VFX");
-        Crear("Assets/_VFX", "Hechizos");
-        Crear(Carpeta, "Texturas");
-        Crear(Carpeta, "Materiales");
+        var t = new Texturas(CarpetaTexturas, CarpetaMateriales, "Hechizo");
+        t.Registrar("CirculoRunico", 512, 512, Patrones.CirculoRunico);
+        t.Registrar("Cadena", 64, 256, Patrones.Cadena);
+        t.Registrar("AnilloDeCadena", 256, 256, Patrones.AnilloDeCadena);
+        t.Registrar("Zarpazo", 256, 256, Patrones.Zarpazos);
+        t.Registrar("Grieta", tx => Patrones.Grieta(tx, "Grieta", 512));
+        return t;
     }
 
-    private static void Crear(string padre, string nombre)
+    /// Fórmulas de las texturas propias de los hechizos (coordenadas de -1 a 1 con el centro en 0).
+    private static class Patrones
     {
-        if (!AssetDatabase.IsValidFolder(padre + "/" + nombre)) AssetDatabase.CreateFolder(padre, nombre);
-    }
-
-    /// Texturas procedurales (blanco con alfa; el color lo ponen las partículas) y sus materiales.
-    private sealed class Texturas
-    {
-        private readonly Dictionary<string, Texture2D> _tex = new Dictionary<string, Texture2D>();
-
-        public Material Mat(string textura, bool aditivo)
-        {
-            string ruta = $"{CarpetaMateriales}/M_Hechizo_{textura}_{(aditivo ? "Aditivo" : "Alfa")}.mat";
-            var shader = Shader.Find("Universal Render Pipeline/Particles/Unlit");
-            var mat = AssetDatabase.LoadAssetAtPath<Material>(ruta);
-            if (mat == null)
-            {
-                mat = new Material(shader);
-                AssetDatabase.CreateAsset(mat, ruta);
-            }
-            else if (shader != null && mat.shader != shader) mat.shader = shader;
-
-            mat.SetTexture("_BaseMap", Tex(textura));
-            mat.SetColor("_BaseColor", Color.white);
-            mat.SetFloat("_Surface", 1f);
-            mat.SetFloat("_Blend", aditivo ? 2f : 0f);
-            mat.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            mat.SetFloat("_DstBlend", (float)(aditivo ? UnityEngine.Rendering.BlendMode.One : UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha));
-            if (mat.HasProperty("_SrcBlendAlpha")) mat.SetFloat("_SrcBlendAlpha", (float)UnityEngine.Rendering.BlendMode.One);
-            if (mat.HasProperty("_DstBlendAlpha")) mat.SetFloat("_DstBlendAlpha", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            mat.SetFloat("_ZWrite", 0f);
-            mat.SetFloat("_Cull", 0f);
-            mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-            mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            mat.DisableKeyword("_ALPHAMODULATE_ON");
-            mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-            EditorUtility.SetDirty(mat);
-            return mat;
-        }
-
-        private Texture2D Tex(string nombre)
-        {
-            if (_tex.TryGetValue(nombre, out var t)) return t;
-            switch (nombre)
-            {
-                case "Brillo": t = Pintar(nombre, 128, 128, (x, y) => Mathf.Pow(Mathf.Clamp01(1f - R(x, y)), 2f)); break;
-                case "Anillo": t = Pintar(nombre, 256, 256, (x, y) => Gauss(R(x, y) - 0.86f, 0.045f) + 0.25f * Gauss(R(x, y) - 0.8f, 0.12f)); break;
-                case "Estrella": t = Pintar(nombre, 256, 256, Estrella); break;
-                case "Humo": t = Pintar(nombre, 128, 128, (x, y) => Mathf.Pow(Mathf.Clamp01(1f - R(x, y)), 1.5f) * (0.55f + 0.45f * Mathf.PerlinNoise(x * 5f + 3.1f, y * 5f + 7.7f))); break;
-                case "CirculoRunico": t = Pintar(nombre, 512, 512, CirculoRunico); break;
-                case "Cadena": t = Pintar(nombre, 64, 256, Cadena); break;
-                case "AnilloDeCadena": t = Pintar(nombre, 256, 256, AnilloDeCadena); break;
-                case "Zarpazo": t = Pintar(nombre, 256, 256, Zarpazos); break;
-                case "Grieta": t = PintarGrieta(nombre, 512); break;
-            }
-            _tex[nombre] = t;
-            return t;
-        }
-
-        // Coordenadas de -1 a 1 con el centro en 0.
-        private static float R(float x, float y) => Mathf.Sqrt(x * x + y * y);
-        private static float Gauss(float d, float ancho) => Mathf.Exp(-(d * d) / (ancho * ancho));
-        private static float Linea(float d, float grosor) => Mathf.Clamp01((grosor - Mathf.Abs(d)) / (grosor * 0.5f) + 0.5f);
-
-        private static float DistSegmento(Vector2 p, Vector2 a, Vector2 b)
-        {
-            Vector2 ab = b - a;
-            float t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
-            return Vector2.Distance(p, a + ab * t);
-        }
-
-        private static float Estrella(float x, float y)
-        {
-            float r = R(x, y);
-            float nucleo = Mathf.Pow(Mathf.Clamp01(1f - r * 1.6f), 3f);
-            float rayos = Mathf.Max(Gauss(y, 0.035f) * Mathf.Clamp01(1f - Mathf.Abs(x)), Gauss(x, 0.035f) * Mathf.Clamp01(1f - Mathf.Abs(y)));
-            float dx = (x + y) * 0.7071f, dy = (x - y) * 0.7071f;
-            float diag = Mathf.Max(Gauss(dy, 0.03f) * Mathf.Clamp01(1f - Mathf.Abs(dx) * 1.6f), Gauss(dx, 0.03f) * Mathf.Clamp01(1f - Mathf.Abs(dy) * 1.6f)) * 0.6f;
-            return Mathf.Clamp01(nucleo + rayos + diag);
-        }
-
         /// Círculo de pacto: dos anillos, marcas, estrella de cinco puntas y runas en sus vértices.
-        private static float CirculoRunico(float x, float y)
+        public static float CirculoRunico(float x, float y)
         {
             var p = new Vector2(x, y);
             float r = p.magnitude;
@@ -678,7 +444,7 @@ public static class VfxPropiosDeHechizosBuilder
         }
 
         /// Tira vertical de eslabones: uno de frente (aro) y otro de canto (barra), alternos.
-        private static float Cadena(float x, float y)
+        public static float Cadena(float x, float y)
         {
             // x en [-1,1] cubre 64 px y y en [-1,1] cubre 256 px: se pasa a unidades iguales.
             var p = new Vector2(x, y * 4f);
@@ -696,7 +462,7 @@ public static class VfxPropiosDeHechizosBuilder
         }
 
         /// Aro de catorce eslabones alrededor del centro.
-        private static float AnilloDeCadena(float x, float y)
+        public static float AnilloDeCadena(float x, float y)
         {
             var p = new Vector2(x, y);
             float a = 0f;
@@ -715,7 +481,7 @@ public static class VfxPropiosDeHechizosBuilder
         }
 
         /// Tres zarpazos curvos en paralelo, más gruesos en el centro que en las puntas.
-        private static float Zarpazos(float x, float y)
+        public static float Zarpazos(float x, float y)
         {
             var p = new Vector2(x, y);
             float a = 0f;
@@ -739,17 +505,8 @@ public static class VfxPropiosDeHechizosBuilder
             return a;
         }
 
-        private static Texture2D Pintar(string nombre, int w, int h, Func<float, float, float> f)
-        {
-            var a = new float[w * h];
-            for (int j = 0; j < h; j++)
-                for (int i = 0; i < w; i++)
-                    a[j * w + i] = f((i + 0.5f) / w * 2f - 1f, (j + 0.5f) / h * 2f - 1f);
-            return Guardar(nombre, w, h, a);
-        }
-
         /// Grietas que salen del centro y se ramifican (semilla fija: siempre la misma).
-        private static Texture2D PintarGrieta(string nombre, int n)
+        public static Texture2D Grieta(Texturas t, string nombre, int n)
         {
             var a = new float[n * n];
             var rnd = new System.Random(640);
@@ -771,7 +528,7 @@ public static class VfxPropiosDeHechizosBuilder
                     p = q;
                 }
             }
-            return Guardar(nombre, n, n, a);
+            return t.GuardarAlfa(nombre, n, n, a);
         }
 
         private static void Trazo(float[] a, int n, Vector2 p, Vector2 q, float grosor)
@@ -790,35 +547,6 @@ public static class VfxPropiosDeHechizosBuilder
                     int k = j * n + i;
                     if (v > a[k]) a[k] = v;
                 }
-        }
-
-        private static Texture2D Guardar(string nombre, int w, int h, float[] a)
-        {
-            string ruta = $"{CarpetaTexturas}/T_Hechizo_{nombre}.png";
-            var px = new Color32[w * h];
-            for (int i = 0; i < px.Length; i++)
-            {
-                byte b = (byte)Mathf.RoundToInt(Mathf.Clamp01(a[i]) * 255f);
-                px[i] = new Color32(b, b, b, b);
-            }
-            var tex = new Texture2D(w, h, TextureFormat.RGBA32, false);
-            tex.SetPixels32(px);
-            tex.Apply();
-            File.WriteAllBytes(ruta, tex.EncodeToPNG());
-            Object.DestroyImmediate(tex);
-
-            AssetDatabase.ImportAsset(ruta, ImportAssetOptions.ForceSynchronousImport);
-            if (AssetImporter.GetAtPath(ruta) is TextureImporter imp)
-            {
-                imp.textureType = TextureImporterType.Default;
-                imp.alphaSource = TextureImporterAlphaSource.FromInput;
-                imp.alphaIsTransparency = true;
-                imp.wrapMode = TextureWrapMode.Clamp;
-                imp.mipmapEnabled = true;
-                imp.sRGBTexture = true;
-                imp.SaveAndReimport();
-            }
-            return AssetDatabase.LoadAssetAtPath<Texture2D>(ruta);
         }
     }
 }
