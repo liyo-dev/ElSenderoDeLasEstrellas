@@ -28,7 +28,6 @@ public static partial class VestidoDelMundo
     private const string Maceta = FK + "Vegetation/Flowerpot/Flowerpot01_b03.prefab";
     private const string Jardinera = FK + "Vegetation/Flowerpot/Flowerpot02_a01.prefab";
     private const string Pozo = FK + "Main Structures/Decoration/Well02.prefab";
-    private const string Brasero = FK + "Props/Goods/Fire01_a01.prefab";
     private const string Armadura = ModularCastle + "mannequin_armor.prefab";
     private const string Maniqui = ModularCastle + "mannequin.prefab";
     private const string Armero = FK + "Props/Weapon/Shelf01_a02.prefab";

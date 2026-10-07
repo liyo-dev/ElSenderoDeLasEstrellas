@@ -3507,7 +3507,7 @@ Pinta el `TerrainData` de `Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.
 **Copia del suelo.** La primera ejecución guarda en `_ClaudeBackups/VestidoDelMundo/` los pesos originales (`pesos_originales.bin.gz`) y la hierba de detalle (`detalle_original.bin.gz`), con la ruta del asset, la resolución y los nombres de capa para comprobarlos al reponer. Esa copia no se vuelve a escribir: es el suelo de antes del vestido y *quitar* vuelve a ella. `estado.txt` guarda la huella (pesos y hierba de detalle) del suelo que dejó la herramienta:
 
 - Si al volver a ejecutar la huella coincide, se parte de la copia (el resultado no se acumula).
-- Si no coincide (alguien ha pintado a mano), pregunta: partir de lo actual (pinta encima y conserva lo pintado a mano), volver a la copia (se pierde) o cancelar.
+- Si no coincide (alguien ha pintado a mano), pregunta: partir de lo actual, volver a la copia o cancelar. «Partir de lo actual» guarda lo que hay como base (`pesos_base`/`detalle_base`) y las siguientes ejecuciones repintan desde esa base, sin perder lo pintado a mano; «volver a la copia» la descarta.
 
 Conviene hacer commit de `_ClaudeBackups/VestidoDelMundo/` tras el primer vestido: es la única copia del suelo original.
 
@@ -3519,7 +3519,7 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 
 **Orden:** primero se giran las casas y se colocan las nuevas, después se pinta el suelo y al final se ponen los detalles. Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución, y no se pinta el patio de una casa nueva que no cupo.
 
-- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro.
+- **Casas que daban la espalda a su calle** (INC-665): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva.
 - **Reino:**
   - 13 casas nuevas en solares vacíos;
   - armaduras y estandartes a la entrada del castillo;
@@ -3543,9 +3543,11 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 - fuera de calles y caminos pintados, y de los corredores de puerta;
 - sin chocar (`OverlapBoxNonAlloc`) con los colisionadores que ya había en la escena. No cuentan el terreno, los triggers ni los volúmenes de más de 60 m.
 
+**Retoques a mano dentro de lo generado:** al terminar se guarda una huella (nombre, pose y componentes de todo lo que cuelga de la raíz, sin contar lo que añade la Noche) en un hijo EditorOnly «Huella del vestido: …». Si al rehacer o quitar la huella no coincide, avisa antes de borrar la raíz: lo que se haya movido, añadido o enganchado ahí se perdería. Lo que se quiera conservar se saca antes de esa raíz.
+
 **Navegación:** `NavMeshAutoSetup.ClasificarBajo(raíz)` añade `NavMeshObstacle` con Carve a lo nuevo que mida 1 m o más en planta. El NavMesh horneado no cambia. Después conviene pasar *El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?* para el paseo de Eldran.
 
-**Noche:** las farolas, braseros y casas nuevas reciben su luz (y las chimeneas, su humo) al ejecutar *El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas* (§ 16 parte D) después del vestido.
+**Noche:** las farolas y las casas nuevas reciben su luz (y las chimeneas, su humo) al ejecutar *El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas* (§ 16 parte D) después del vestido. Por eso los parajes no llevan fuegos (`Fire0*`, que la Noche enciende): la almenara tiene leña sin encender.
 
 ### 23.4 Canon (GDD) que respeta
 

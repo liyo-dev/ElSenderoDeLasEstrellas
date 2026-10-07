@@ -279,15 +279,31 @@ public static partial class VestidoDelMundo
 
     private static string RutaCopias => Path.Combine(Path.GetDirectoryName(Application.dataPath) ?? ".", CarpetaCopias);
 
-    private static bool HayCopia() => File.Exists(Path.Combine(RutaCopias, ArchivoPesos));
+    /// Original: el suelo de antes del primer vestido (no se reescribe; «Quitar» vuelve a él).
+    /// Base: el suelo sobre el que se repinta cuando alguien eligió conservar lo pintado a mano.
+    private enum Copia { Original, Base }
+
+    private static string ArchivoPesosDe(Copia c) => c == Copia.Original ? ArchivoPesos : "pesos_base.bin.gz";
+    private static string ArchivoDetalleDe(Copia c) => c == Copia.Original ? ArchivoDetalle : "detalle_base.bin.gz";
+
+    private static bool HayCopia(Copia c = Copia.Original) => File.Exists(Path.Combine(RutaCopias, ArchivoPesosDe(c)));
+
+    private static void BorrarBase()
+    {
+        foreach (string a in new[] { ArchivoPesosDe(Copia.Base), ArchivoDetalleDe(Copia.Base) })
+        {
+            string r = Path.Combine(RutaCopias, a);
+            if (File.Exists(r)) File.Delete(r);
+        }
+    }
 
     /// Guarda los pesos (cuantizados a bytes: el Terrain ya los guarda así, la copia es exacta) y la hierba de detalle.
-    private static void GuardarCopia(TerrainData datos)
+    private static void GuardarCopia(TerrainData datos, Copia copia = Copia.Original)
     {
         Directory.CreateDirectory(RutaCopias);
         int res = datos.alphamapResolution, capas = datos.alphamapLayers;
         float[,,] pesos = datos.GetAlphamaps(0, 0, res, res);
-        EscribirComprimido(Path.Combine(RutaCopias, ArchivoPesos), w =>
+        EscribirComprimido(Path.Combine(RutaCopias, ArchivoPesosDe(copia)), w =>
         {
             w.Write("VDMP1");
             w.Write(AssetDatabase.GetAssetPath(datos));
@@ -304,7 +320,7 @@ public static partial class VestidoDelMundo
         });
 
         int dres = datos.detailResolution, dcapas = datos.detailPrototypes.Length;
-        EscribirComprimido(Path.Combine(RutaCopias, ArchivoDetalle), w =>
+        EscribirComprimido(Path.Combine(RutaCopias, ArchivoDetalleDe(copia)), w =>
         {
             w.Write("VDMD1");
             w.Write(dres);
@@ -333,9 +349,9 @@ public static partial class VestidoDelMundo
     }
 
     /// Repone la copia. Devuelve un texto de error o null si todo ha ido bien.
-    private static string ReponerCopia(TerrainData datos)
+    private static string ReponerCopia(TerrainData datos, Copia copia = Copia.Original)
     {
-        string rutaPesos = Path.Combine(RutaCopias, ArchivoPesos);
+        string rutaPesos = Path.Combine(RutaCopias, ArchivoPesosDe(copia));
         if (!File.Exists(rutaPesos)) return "No hay copia del suelo en " + RutaCopias + ".";
         using (var fs = File.OpenRead(rutaPesos))
         using (var gz = new GZipStream(fs, CompressionMode.Decompress))
@@ -363,7 +379,7 @@ public static partial class VestidoDelMundo
             datos.SetAlphamaps(0, 0, pesos);
         }
 
-        string rutaDetalle = Path.Combine(RutaCopias, ArchivoDetalle);
+        string rutaDetalle = Path.Combine(RutaCopias, ArchivoDetalleDe(copia));
         if (File.Exists(rutaDetalle))
         {
             using var fs = File.OpenRead(rutaDetalle);
@@ -390,7 +406,6 @@ public static partial class VestidoDelMundo
         return null;
     }
 
-    /// Huella de los pesos actuales, para saber si alguien ha pintado a mano después del vestido.
     /// Huella del suelo: pesos de las capas y hierba de detalle. Si cambia, alguien ha pintado a mano.
     private static string HuellaSuelo(TerrainData datos)
     {

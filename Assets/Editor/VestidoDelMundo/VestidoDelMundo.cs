@@ -41,7 +41,8 @@ public static partial class VestidoDelMundo
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
         if (!EditorUtility.DisplayDialog("Quitar el vestido de MainWorld",
                 "Se borra «" + NombreRaiz + "», las casas vuelven a su giro original y el suelo vuelve a la copia guardada.\n\n" +
-                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde.", "Quitar", "Cancelar"))
+                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." +
+                (RaizRetocada(escena) ? "\n\n" + AvisoDeRetoques : ""), "Quitar", "Cancelar"))
             return;
 
         var informe = new List<string>();
@@ -58,6 +59,7 @@ public static partial class VestidoDelMundo
                 else
                 {
                     AssetDatabase.SaveAssets();
+                    BorrarBase();
                     EscribirEstado(HuellaSuelo(terreno.terrainData));
                     informe.Add("Suelo: repuesta la copia original.");
                 }
@@ -75,6 +77,9 @@ public static partial class VestidoDelMundo
     private static void Ejecutar(bool suelo, bool detalles)
     {
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
+        if (detalles && RaizRetocada(escena) &&
+            !EditorUtility.DisplayDialog("Vestido de MainWorld", AvisoDeRetoques, "Rehacer igualmente", "Cancelar"))
+            return;
         var informe = new List<string> { $"Vestido de MainWorld — {DateTime.Now:yyyy-MM-dd HH:mm}" };
 
         try
@@ -131,6 +136,7 @@ public static partial class VestidoDelMundo
                 EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Colocando detalles…", 0.5f);
                 PoblarZonas(obra);
                 int obstaculos = NavMeshAutoSetup.ClasificarBajo(obra.Raiz);
+                GuardarHuellaRaiz(obra.Raiz);
                 informe.AddRange(obra.Informe);
                 informe.Add($"Navegación: {obstaculos} obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta no talla el NavMesh.");
                 informe.Add($"Detalles: {obra.Puestas} piezas colocadas, {obra.Descartadas} descartadas por comprobaciones.");
@@ -139,7 +145,7 @@ public static partial class VestidoDelMundo
                 EditorSceneManager.MarkSceneDirty(escena);
                 EditorSceneManager.SaveScene(escena);
                 informe.Add("Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?");
-                informe.Add("Las farolas, braseros y casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).");
+                informe.Add("Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).");
             }
         }
         catch (Exception e)
@@ -203,29 +209,34 @@ public static partial class VestidoDelMundo
         string actual = HuellaSuelo(datos);
         if (estado == actual)
         {
-            string error = ReponerCopia(datos);
+            Copia copia = HayCopia(Copia.Base) ? Copia.Base : Copia.Original;
+            string error = ReponerCopia(datos, copia);
             if (error != null)
             {
                 informe.Add("Suelo: no se pudo reponer la copia (" + error + "). No se ha cambiado nada.");
                 return false;
             }
-            informe.Add("Suelo: se parte de la copia original para repintar.");
+            informe.Add(copia == Copia.Base
+                ? "Suelo: se parte de la base guardada (con lo pintado a mano) para repintar."
+                : "Suelo: se parte de la copia original para repintar.");
             return true;
         }
         EditorUtility.ClearProgressBar();
         int r = EditorUtility.DisplayDialogComplex("Vestido de MainWorld",
             "El suelo del terreno ha cambiado desde la última vez que se vistió (¿pintado a mano?).\n\n" +
-            "· «Partir de lo actual» pinta encima de lo que hay ahora. La copia del suelo original no cambia: «Quitar» volverá a ella.\n" +
+            "· «Partir de lo actual» guarda lo que hay ahora como base (con lo pintado a mano) y pinta encima; las próximas veces se repinta desde esa base. La copia del suelo original no cambia: «Quitar» volverá a ella.\n" +
             "· «Volver a la copia» repone el suelo original (se pierde lo pintado a mano) y pinta encima.",
             "Partir de lo actual", "Cancelar", "Volver a la copia");
         if (r == 1) { informe.Add("Suelo: cancelado."); return false; }
         if (r == 0)
         {
-            informe.Add("Suelo: se pinta encima de lo actual; la copia original se conserva.");
+            GuardarCopia(datos, Copia.Base);
+            informe.Add("Suelo: lo actual (con lo pintado a mano) queda como base para repintar; la copia original se conserva.");
             return true;
         }
         string err = ReponerCopia(datos);
         if (err != null) { informe.Add("Suelo: " + err); return false; }
+        BorrarBase();
         informe.Add("Suelo: repuesta la copia antigua.");
         return true;
     }
@@ -252,6 +263,59 @@ public static partial class VestidoDelMundo
         SceneManager.MoveGameObjectToScene(raiz, escena);
         if (padre != null) raiz.transform.SetParent(padre, false);
         return raiz.transform;
+    }
+
+    private const string PrefijoHuellaRaiz = "Huella del vestido: ";
+
+    private const string AvisoDeRetoques =
+        "Hay cambios hechos a mano dentro de «" + NombreRaiz + "» (piezas movidas, borradas o añadidas, o componentes nuevos). " +
+        "Rehacer o quitar el vestido borra esa raíz entera y lo que se haya enganchado a ella queda sin referencia. " +
+        "Si quieres conservar algo, sácalo antes de esa raíz.";
+
+    /// Huella de lo generado: nombre, pose y componentes de todo lo que cuelga de la raíz. No cuenta lo que
+    /// añade el menú de Noche (hijos «LuzNocturna…» y «Humo»), que se rehace solo.
+    private static string HuellaRaiz(Transform raiz)
+    {
+        uint h = 2166136261u;
+        void Mezclar(string texto)
+        {
+            unchecked { foreach (char c in texto) { h ^= c; h *= 16777619u; } }
+        }
+
+        foreach (Transform t in raiz.GetComponentsInChildren<Transform>(true))
+        {
+            if (t == raiz || t.name.StartsWith(PrefijoHuellaRaiz) || EsDeLaNoche(t, raiz)) continue;
+            Vector3 p = t.position, e = t.eulerAngles, s = t.lossyScale;
+            Mezclar(t.name);
+            Mezclar(FormattableString.Invariant($"{p.x:F1},{p.y:F1},{p.z:F1},{e.x:F0},{e.y:F0},{e.z:F0},{s.x:F1},{s.y:F1},{s.z:F1},{t.gameObject.activeSelf}"));
+            foreach (Component c in t.GetComponents<Component>())
+                if (c != null) Mezclar(c.GetType().Name);
+        }
+        return h.ToString("x8");
+    }
+
+    private static bool EsDeLaNoche(Transform t, Transform raiz)
+    {
+        for (; t != null && t != raiz; t = t.parent)
+            if (t.name.StartsWith("LuzNocturna") || t.name == "Humo") return true;
+        return false;
+    }
+
+    private static void GuardarHuellaRaiz(Transform raiz)
+    {
+        var marca = new GameObject(PrefijoHuellaRaiz + HuellaRaiz(raiz)) { tag = "EditorOnly" };
+        marca.transform.SetParent(raiz, false);
+    }
+
+    /// Si lo generado ha cambiado desde que se generó (retoques a mano dentro de la raíz).
+    private static bool RaizRetocada(Scene escena)
+    {
+        Transform raiz = BuscarRaiz(escena);
+        if (raiz == null) return false;
+        foreach (Transform t in raiz)
+            if (t.name.StartsWith(PrefijoHuellaRaiz))
+                return t.name.Substring(PrefijoHuellaRaiz.Length) != HuellaRaiz(raiz);
+        return false;
     }
 
     /// Raíz de lo generado: bajo WORLD o, si no hay WORLD, en la raíz de la escena.

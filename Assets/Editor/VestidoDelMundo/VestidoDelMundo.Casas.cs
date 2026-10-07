@@ -116,11 +116,34 @@ public static partial class VestidoDelMundo
         return r;
     }
 
+    /// Adornos que el generador pegó a la fachada que creía delantera: se giran con su casa para que no
+    /// queden delante de la puerta.
+    private static readonly string[] AdornosDeCasa = { "Maceta junto a vivienda" };
+    private const string GrupoVidaDeLosPueblos = "Vida de los pueblos — huertas, enseres y claros";
+    private const float AlcanceDeAdornos = 2.5f;
+
+    private static void Registrar(Transform registro, Transform t, Vector3 pos, Quaternion rot)
+    {
+        var marca = new GameObject(RutaJerarquia(t) + "|" + IdDe(t.gameObject)) { tag = "EditorOnly" };
+        marca.transform.SetParent(registro, false);
+        marca.transform.SetPositionAndRotation(pos, rot);
+        var girada = new GameObject(NombrePoseGirada);
+        girada.transform.SetParent(marca.transform, false);
+        girada.transform.SetPositionAndRotation(t.position, t.rotation);
+    }
+
     private static void GirarCasasHaciaSuCalle(Scene escena, Obra o)
     {
         HashSet<string> yaGiradas = CasasGiradas(escena);
         Transform registro = null;
-        int giradas = 0, revertidas = 0;
+        int giradas = 0, revertidas = 0, adornos = 0;
+
+        var sueltos = new List<Transform>();
+        Transform vida = BuscarGrupo(escena, GrupoVidaDeLosPueblos);
+        if (vida != null)
+            foreach (Transform t in vida)
+                if (System.Array.IndexOf(AdornosDeCasa, t.name) >= 0 && !yaGiradas.Contains(IdDe(t.gameObject))) sueltos.Add(t);
+
         foreach (string nombreGrupo in GruposConCasasAGirar)
         {
             Transform grupo = BuscarGrupo(escena, nombreGrupo);
@@ -139,7 +162,7 @@ public static partial class VestidoDelMundo
                 casa.RotateAround(new Vector3(antes.center.x, pos.y, antes.center.z), Vector3.up, -lado);
 
                 Bounds despues = LimitesVisibles(casa.gameObject);
-                if (ChocaConOtraCasa(casa, despues))
+                if (Choca(casa, despues, 0.4f, null))
                 {
                     casa.SetPositionAndRotation(pos, rot);
                     revertidas++;
@@ -147,28 +170,44 @@ public static partial class VestidoDelMundo
                     continue;
                 }
                 if (registro == null) registro = RegistroCasas(escena, crear: true);
-                var marca = new GameObject(RutaJerarquia(casa) + "|" + id) { tag = "EditorOnly" };
-                marca.transform.SetParent(registro, false);
-                marca.transform.SetPositionAndRotation(pos, rot);
-                var girada = new GameObject(NombrePoseGirada);
-                girada.transform.SetParent(marca.transform, false);
-                girada.transform.SetPositionAndRotation(casa.position, casa.rotation);
+                Registrar(registro, casa, pos, rot);
                 giradas++;
+
+                var zona = new Rect(antes.min.x - AlcanceDeAdornos, antes.min.z - AlcanceDeAdornos,
+                    antes.size.x + 2f * AlcanceDeAdornos, antes.size.z + 2f * AlcanceDeAdornos);
+                for (int i = sueltos.Count - 1; i >= 0; i--)
+                {
+                    Transform a = sueltos[i];
+                    if (!zona.Contains(new Vector2(a.position.x, a.position.z))) continue;
+                    sueltos.RemoveAt(i);
+                    Vector3 pa = a.position;
+                    Quaternion ra = a.rotation;
+                    a.RotateAround(new Vector3(antes.center.x, pa.y, antes.center.z), Vector3.up, -lado);
+                    if (Choca(a, LimitesVisibles(a.gameObject), 0f, casa))
+                    {
+                        a.SetPositionAndRotation(pa, ra);
+                        o.Informe.Add($"  · «{a.name}» junto a «{casa.name}» no se gira con ella: chocaría con algo.");
+                        continue;
+                    }
+                    Registrar(registro, a, pa, ra);
+                    adornos++;
+                }
             }
         }
-        o.Informe.Add($"Casas: {giradas} giradas para que la puerta dé a su calle, {revertidas} sin girar por espacio.");
+        o.Informe.Add($"Casas: {giradas} giradas para que la puerta dé a su calle ({adornos} macetas del generador giradas con ellas), {revertidas} sin girar por espacio.");
     }
 
-    private static bool ChocaConOtraCasa(Transform casa, Bounds b)
+    /// Si algo de la escena (salvo el propio objeto y «ignorar») ocupa su caja, reducida «reducir» metros por lado.
+    private static bool Choca(Transform t, Bounds b, float reducir, Transform ignorar)
     {
         Physics.SyncTransforms();
         var buffer = new Collider[64];
-        Vector3 medio = new Vector3(b.extents.x - 0.4f, Mathf.Max(0.3f, b.extents.y * 0.6f), b.extents.z - 0.4f);
+        Vector3 medio = new Vector3(Mathf.Max(0.05f, b.extents.x - reducir), Mathf.Max(0.3f, b.extents.y * 0.6f), Mathf.Max(0.05f, b.extents.z - reducir));
         int n = Physics.OverlapBoxNonAlloc(b.center + Vector3.up * 0.6f, medio, buffer, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < n; i++)
         {
             Collider c = buffer[i];
-            if (Ignorable(c) || c.transform.IsChildOf(casa)) continue;
+            if (Ignorable(c) || c.transform.IsChildOf(t) || (ignorar != null && c.transform.IsChildOf(ignorar))) continue;
             return true;
         }
         return false;

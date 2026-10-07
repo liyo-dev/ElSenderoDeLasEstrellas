@@ -359,11 +359,12 @@ public static partial class VestidoDelMundo
         PP(o, g, p, Carretilla, "Carretilla", 6f, -3f, 120f, hundir: 0.05f);
     }
 
-    /// Almenara: plataforma redonda con un brasero de piedra frío para avisar a la costa en tiempos de paz.
+    /// Almenara: plataforma redonda con la leña preparada y sin encender para avisar a la costa.
     private static void RecetaAlmenara(Obra o, Transform g, Paraje p)
     {
         PP(o, g, p, Losas, "Plataforma de la almenara", 0f, 0f, 0f, 0.6f, hundir: 0.12f, desnivel: 2f);
-        PP(o, g, p, Brasero, "Brasero apagado", 0f, 0f, 0f, 1.6f, hundir: 0.02f);
+        // Leña sin encender: un fuego (Fire0*) recibiría llama de noche y la almenara se leería como una señal.
+        PP(o, g, p, HogueraApagada, "Leña de la almenara, sin encender", 0f, 0f, 0f, hundir: 0.02f);
         var dado = new Ruido.Dado(p.Semilla);
         for (int i = 0; i < 6; i++)
         {
