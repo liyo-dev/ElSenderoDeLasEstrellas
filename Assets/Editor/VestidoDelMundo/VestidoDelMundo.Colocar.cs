@@ -55,8 +55,6 @@ public static partial class VestidoDelMundo
         public float CotaAgua;
         /// No pasa por las zonas libres (piezas que van dentro de ellas a propósito: muralla, escalinata).
         public bool IgnorarZonas;
-        /// No se descarta por quedar bajo el nivel del mar o en la orilla (Fondo y Flotar ya no lo miran).
-        public bool IgnorarNivelDelMar;
         /// No recibe NavMeshObstacle al clasificar lo generado (escalinata, puerta, pavimento, juncos…).
         public bool SinObstaculo;
         /// Si no es null, sustituye al Tree.mat del pack FK en todas las mallas de la pieza (follaje matizado
@@ -432,8 +430,7 @@ public static partial class VestidoDelMundo
             if (max - min > p.DesnivelMax) return $"terreno demasiado desigual ({max - min:0.0} m)";
             baseY = min - p.Hundir;
         }
-        bool mirarMar = p.Apoyo != Apoyo.Fondo && !p.IgnorarNivelDelMar;
-        if (mirarMar && min < NivelDelMar + MargenDeOrilla) return "en el agua o en la orilla";
+        if (p.Apoyo != Apoyo.Fondo && min < NivelDelMar + MargenDeOrilla) return "en el agua o en la orilla";
         t.position += Vector3.up * (baseY - b.min.y);
         return null;
     }

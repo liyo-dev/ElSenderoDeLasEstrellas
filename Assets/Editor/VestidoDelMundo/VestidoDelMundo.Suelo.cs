@@ -6,10 +6,11 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-/// Pintura de suelos del Terrain de MainWorld al estilo del pueblo de Will: alfombra de hierba con
-/// textura (capas SueloPueblo), núcleo de tierra pisada orgánico, sendas que serpentean y plazas
-/// de adoquín con el borde gastado. Antes de tocar nada guarda una copia exacta de los pesos y de
-/// la hierba de detalle en _ClaudeBackups/VestidoDelMundo, y el menú de quitar la repone.
+/// Lienzo de pintura del Terrain de MainWorld (pesos en memoria), los pinceles comunes (sendas que
+/// serpentean y manchas sueltas, con el borde moteado por ruido de 6 m, nunca celda a celda) y la copia del
+/// suelo: antes de tocar nada guarda una copia exacta de los pesos y de la hierba de detalle en
+/// _ClaudeBackups/VestidoDelMundo, y el menú de quitar la repone. Los pinceles de pueblo están en
+/// VestidoDelMundo.Pueblos.
 public static partial class VestidoDelMundo
 {
     private const string CarpetaCopias = "_ClaudeBackups/VestidoDelMundo";
@@ -132,48 +133,6 @@ public static partial class VestidoDelMundo
     /// Máscara de celdas que un pincel no debe tocar (huertos, agua…).
     private delegate bool Mascara(float x, float z);
 
-    /// Alfombra de hierba con textura que se funde con el prado de alrededor por un borde irregular.
-    private static void PintarAlfombra(Lienzo l, Vector2 centro, float radio, int semilla, Mascara mascara, float borde = 16f, float floresUmbral = 0.64f)
-    {
-        int hierba = l.Capa(CapaHierba), flores = l.Capa(CapaFlores);
-        float ext = radio * 1.25f + borde;
-        l.Recorrer(centro.x - ext, centro.y - ext, centro.x + ext, centro.y + ext, (i, k, x, z) =>
-        {
-            if (mascara != null && mascara(x, z)) return;
-            float d = Vector2.Distance(new Vector2(x, z), centro);
-            float r = radio + (Ruido.Fbm(x, z, 45f, semilla) - 0.5f) * radio * 0.45f;
-            float s = 1f - Ruido.Suave(r - borde, r, d);
-            if (s <= 0f) return;
-            l.Mezclar(i, k, Ruido.Fbm(x, z, 16f, semilla + 5) > floresUmbral ? flores : hierba, s);
-        });
-    }
-
-    /// Núcleo de tierra pisada: unión de discos con borde roto, islas de hierba y moteado.
-    private static void PintarNucleo(Lienzo l, IList<Vector3> discos, int semilla, Mascara mascara, float intensidad = 1f)
-    {
-        if (discos.Count == 0) return;
-        int tierra = l.Capa(CapaTierra), piedras = l.Capa(CapaTierraPiedras);
-        float x0 = float.MaxValue, z0 = float.MaxValue, x1 = float.MinValue, z1 = float.MinValue;
-        foreach (Vector3 d in discos)
-        {
-            x0 = Mathf.Min(x0, d.x - d.z); x1 = Mathf.Max(x1, d.x + d.z);
-            z0 = Mathf.Min(z0, d.y - d.z); z1 = Mathf.Max(z1, d.y + d.z);
-        }
-        l.Recorrer(x0 - 8f, z0 - 8f, x1 + 8f, z1 + 8f, (i, k, x, z) =>
-        {
-            if (mascara != null && mascara(x, z)) return;
-            float campo = -1f;
-            foreach (Vector3 d in discos)
-                campo = Mathf.Max(campo, 1f - Vector2.Distance(new Vector2(x, z), new Vector2(d.x, d.y)) / d.z);
-            campo += (Ruido.Fbm(x, z, 11f, semilla) - 0.5f) * 0.55f;
-            if (campo <= 0f) return;
-            float s = Ruido.Suave(0f, 0.28f, campo) * intensidad;
-            if (campo < 0.22f && Ruido.Hash(i, k, semilla + 77) < 0.45f) s *= 0.35f;
-            if (Ruido.Fbm(x, z, 7f, semilla + 3) < 0.3f && campo < 0.6f) s *= 0.4f;
-            l.Mezclar(i, k, Ruido.Fbm(x, z, 6f, semilla + 9) > 0.5f ? piedras : tierra, s, duro: true);
-        });
-    }
-
     /// Senda que serpentea: anchura variable, borde moteado y mezcla de tierra con y sin piedras.
     private static void PintarSenda(Lienzo l, Vector2[] puntos, float ancho, int semilla, Mascara mascara, string capaA = CapaTierraPiedras, string capaB = CapaTierra, float serpenteo = 1.6f)
     {
@@ -206,65 +165,8 @@ public static partial class VestidoDelMundo
             float r = ancho * 0.5f * (0.75f + 0.6f * Ruido.Fbm(x, z, 8f, semilla + 1));
             if (d > r + 2.5f) return;
             float s = 1f - Ruido.Suave(r * 0.55f, r + 2.5f, d);
-            if (d > r && Ruido.Hash(i, k, semilla + 5) < 0.5f) s *= 0.4f;
+            if (d > r) s *= Mathf.Lerp(0.4f, 1f, Ruido.Suave(0.42f, 0.58f, Ruido.Fbm(x, z, 6f, semilla + 5)));
             l.Mezclar(i, k, Ruido.Fbm(x, z, 5f, semilla + 2) > 0.45f ? a : b, s, duro: true);
-        });
-    }
-
-    /// Plaza rectangular (girada «grados» alrededor de su centro) con marco gastado de adoquín y tierra.
-    private static void PintarPlaza(Lienzo l, Vector2 centro, Vector2 tamano, float grados, int semilla, string capaInterior, float marco = 3f, Mascara mascara = null, string capaMarco = CapaAdoquin)
-    {
-        int interior = l.Capa(capaInterior), adoquin = l.Capa(capaMarco), piedras = l.Capa(CapaTierraPiedras);
-        float rad = grados * Mathf.Deg2Rad;
-        float cs = Mathf.Cos(rad), sn = Mathf.Sin(rad);
-        Vector2 media = tamano * 0.5f;
-        float ext = media.magnitude + marco + 4f;
-        l.Recorrer(centro.x - ext, centro.y - ext, centro.x + ext, centro.y + ext, (i, k, x, z) =>
-        {
-            if (mascara != null && mascara(x, z)) return;
-            float dx = x - centro.x, dz = z - centro.y;
-            float lx = dx * cs - dz * sn, lz = dx * sn + dz * cs;
-            float fx = Mathf.Max(Mathf.Abs(lx) - media.x, 0f), fz = Mathf.Max(Mathf.Abs(lz) - media.y, 0f);
-            float fuera = Mathf.Sqrt(fx * fx + fz * fz);
-            float dentro = Mathf.Min(media.x - Mathf.Abs(lx), media.y - Mathf.Abs(lz));
-            float n = (Ruido.Fbm(x, z, 5f, semilla) - 0.5f) * 3.5f;
-            if (fuera <= 0f && dentro > 1.2f + n) l.Mezclar(i, k, interior, 1f, duro: true);
-            else if (fuera < marco + n)
-            {
-                float s = Mathf.Max(0.35f, 1f - Ruido.Suave(0f, marco + n, fuera));
-                l.Mezclar(i, k, Ruido.Hash(i, k, semilla) < 0.45f ? adoquin : piedras, s, duro: true);
-            }
-        });
-    }
-
-    /// Calle empedrada: adoquín en el centro, tierra con piedras en los bordes y alguna calva de tierra.
-    private static void PintarCalle(Lienzo l, Vector2[] puntos, float ancho, int semilla, Mascara mascara)
-    {
-        int adoquin = l.Capa(CapaAdoquin), piedras = l.Capa(CapaTierraPiedras), tierra = l.Capa(CapaTierra);
-        float minX = float.MaxValue, minZ = float.MaxValue, maxX = float.MinValue, maxZ = float.MinValue;
-        foreach (Vector2 q in puntos)
-        {
-            minX = Mathf.Min(minX, q.x); maxX = Mathf.Max(maxX, q.x);
-            minZ = Mathf.Min(minZ, q.y); maxZ = Mathf.Max(maxZ, q.y);
-        }
-        float m = ancho + 4f;
-        l.Recorrer(minX - m, minZ - m, maxX + m, maxZ + m, (i, k, x, z) =>
-        {
-            if (mascara != null && mascara(x, z)) return;
-            float d = DistanciaAPolilinea(new Vector2(x, z), puntos);
-            float r = ancho * 0.5f * (0.85f + 0.3f * Ruido.Fbm(x, z, 9f, semilla));
-            if (d > r + 2.2f) return;
-            if (d <= r * 0.85f)
-            {
-                bool calva = Ruido.Fbm(x, z, 6f, semilla + 4) < 0.22f;
-                l.Mezclar(i, k, calva ? tierra : adoquin, calva ? 0.7f : 1f, duro: true);
-            }
-            else
-            {
-                float s = 1f - Ruido.Suave(r * 0.85f, r + 2.2f, d);
-                if (Ruido.Hash(i, k, semilla + 2) < 0.4f) s *= 0.5f;
-                l.Mezclar(i, k, Ruido.Hash(i, k, semilla + 8) < 0.5f ? adoquin : piedras, s, duro: true);
-            }
         });
     }
 
@@ -279,7 +181,7 @@ public static partial class VestidoDelMundo
             float r = radio * (0.7f + 0.6f * Ruido.Fbm(x, z, radio * 0.8f + 2f, semilla));
             if (d > r) return;
             float s = fuerza * (1f - Ruido.Suave(r * 0.45f, r, d));
-            if (Ruido.Hash(i, k, semilla + 3) < 0.25f) s *= 0.5f;
+            s *= Mathf.Lerp(0.5f, 1f, Ruido.Suave(0.35f, 0.5f, Ruido.Fbm(x, z, 6f, semilla + 3)));
             l.Mezclar(i, k, c, s, duro);
         });
     }

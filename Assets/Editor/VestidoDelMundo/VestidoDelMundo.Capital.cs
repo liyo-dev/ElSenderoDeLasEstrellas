@@ -355,7 +355,8 @@ public static partial class VestidoDelMundo
 
     // ── Escalinata Real (talud central, opción A: sin tocar el terreno) ───────────────────────
 
-    private const float EscalinataPie = 268.8f, EscalinataCresta = 283f, EscalinataAncho = 12f;
+    /// La cresta coincide con el borde sur de la Plaza Real (Reino()): el último peldaño llega al pavimento.
+    private const float EscalinataPie = 268.8f, EscalinataCresta = 283.5f, EscalinataAncho = 12f;
     private const int TramosDeEscalinata = 3;
 
     /// Tres tramos de Stairs01 de la Plaza del Mercado (y 104) a la Plaza Real (y 112): 12 m de ancho y 29° de

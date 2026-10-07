@@ -1540,7 +1540,6 @@ public static partial class VestidoDelMundo
         private sealed class Materiales
         {
             public Material Campo, Bosque, Cerezo;
-            public string Aviso;
         }
 
         private static Materiales CargarMateriales(List<string> informe)

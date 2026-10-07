@@ -301,7 +301,7 @@ public static partial class VestidoDelMundo
     /// pavimentadas, en la acera (cada 12 m en las avenidas de 8 m o más y cada 16 m en las demás).
     private static void FarolasEnCalles(Obra o, Transform grupo, Pueblo pueblo)
     {
-        void Recorrer(Vector2[] linea, float desplazamiento, float paso, int semilla)
+        void Recorrer(Vector2[] linea, float desplazamiento, float paso)
         {
             float acumulado = paso * 0.5f;
             int n = 0;
@@ -325,10 +325,10 @@ public static partial class VestidoDelMundo
         for (int i = 0; i < pueblo.Calles.Length; i++)
         {
             float ancho = pueblo.AnchoDeCalle(i);
-            if (pueblo.Pavimentado) Recorrer(pueblo.Calles[i], ancho * 0.5f - DentroDeLaAcera, ancho >= 8f ? 12f : 16f, pueblo.Semilla + i);
-            else Recorrer(pueblo.Calles[i], ancho * 0.5f + 1.1f, 18f, pueblo.Semilla + i);
+            if (pueblo.Pavimentado) Recorrer(pueblo.Calles[i], ancho * 0.5f - DentroDeLaAcera, ancho >= 8f ? 12f : 16f);
+            else Recorrer(pueblo.Calles[i], ancho * 0.5f + 1.1f, 18f);
         }
-        for (int i = 0; i < pueblo.Accesos.Length; i++) Recorrer(pueblo.Accesos[i], 3.6f, 20f, pueblo.Semilla + 40 + i);
+        for (int i = 0; i < pueblo.Accesos.Length; i++) Recorrer(pueblo.Accesos[i], 3.6f, 20f);
     }
 
     /// Como EnCorredor pero sin contar la propia calle junto a la que se pone la pieza.

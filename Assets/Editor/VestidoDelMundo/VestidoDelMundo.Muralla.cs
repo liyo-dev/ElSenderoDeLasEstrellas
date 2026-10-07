@@ -85,7 +85,7 @@ public static partial class VestidoDelMundo
                     piezas++;
                     if (g == null) continue;
                     puestas++;
-                    AnotarLoQueToca(o, g.name, TocaEnCaja(o, m, m.Desde + m.Largo * k / m.Piezas, m.Largo / m.Piezas), tocados);
+                    AnotarLoQueToca(g.name, TocaEnCaja(o, m, m.Desde + m.Largo * k / m.Piezas, m.Largo / m.Piezas), tocados);
                 }
             }
 
@@ -95,7 +95,7 @@ public static partial class VestidoDelMundo
             {
                 // Sin obstáculo de navegación: el que le pondría la clasificación taparía el vano.
                 o.SinObstaculo.Add(puerta.transform);
-                AnotarLoQueToca(o, puerta.name, TocaEnCaja(o, p, p.Desde, p.Largo), tocados);
+                AnotarLoQueToca(puerta.name, TocaEnCaja(o, p, p.Desde, p.Largo), tocados);
             }
 
             int conTejado = 0, almenadas = 0;
@@ -118,7 +118,7 @@ public static partial class VestidoDelMundo
                 float arriba = plan.Referencia(t);
                 var centro = new Vector3(torre.Centro.x, (abajo + arriba) * 0.5f, torre.Centro.y);
                 var medio = new Vector3(0.7f * ApotemaDeTorre * s, Mathf.Max(0.2f, (arriba - abajo) * 0.5f), 0.7f * ApotemaDeTorre * s);
-                AnotarLoQueToca(o, g.name, Toca(o, centro, medio, Quaternion.identity), tocados);
+                AnotarLoQueToca(g.name, Toca(o, centro, medio, Quaternion.identity), tocados);
             }
 
             Transform escarpa = Grupo(muralla, "Escarpa");
@@ -714,7 +714,7 @@ public static partial class VestidoDelMundo
             return fuente != null && fuente.name.StartsWith("Castle01");
         }
 
-        private static void AnotarLoQueToca(Obra o, string pieza, List<string> tocados, SortedDictionary<string, SortedSet<string>> anotados)
+        private static void AnotarLoQueToca(string pieza, List<string> tocados, SortedDictionary<string, SortedSet<string>> anotados)
         {
             foreach (string t in tocados)
             {
