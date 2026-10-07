@@ -99,6 +99,12 @@ public class PlayerShieldController : MonoBehaviour
 
     public bool IsDefending => _isDefending;
 
+    /// <summary>Distancia a la que la ventana de contraataque atrapa un proyectil (para el aviso de combate).</summary>
+    public float RadioDeContraataque => parryRadius;
+
+    /// <summary>Segundos que dura la ventana de contraataque tras pulsar B.</summary>
+    public float VentanaDeContraataque => parryWindow;
+
     /// <summary>La ventana de contraataque está abierta.</summary>
     public bool IsParryWindowOpen => Time.time < _parryUntil;
 
@@ -262,7 +268,7 @@ public class PlayerShieldController : MonoBehaviour
             }
 
             var magic = col.GetComponentInParent<MagicProjectile>();
-            if (magic != null && !EsDelGrupo(magic.Instigator))
+            if (magic != null && !AmenazasAlJugador.EsDelGrupoDelJugador(magic.Instigator))
             {
                 if (!_countered.Add(magic.gameObject)) continue;
                 Vector3 back = magic.Instigator != null
@@ -344,14 +350,6 @@ public class PlayerShieldController : MonoBehaviour
             return 0f;
         }
         return _isDefending ? amount * meleeBlockFactor : amount;
-    }
-
-    private static bool EsDelGrupo(GameObject go)
-    {
-        if (go == null) return false;
-        var cuerpo = PlayerService.Player;
-        if (cuerpo != null && (go == cuerpo || go.transform.IsChildOf(cuerpo.transform))) return true;
-        return go.GetComponentInParent<Game.NPC.NPCPartyMember>() != null;
     }
 
     private void EvaluateDefenseState()

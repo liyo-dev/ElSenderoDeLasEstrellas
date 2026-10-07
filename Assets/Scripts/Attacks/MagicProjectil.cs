@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Collider))]
-public class MagicProjectile : MonoBehaviour
+public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
 {
     // ==== Config que inyecta el Spawner (no hay referencia a SO) =============
 
@@ -88,6 +88,13 @@ public class MagicProjectile : MonoBehaviour
     public float Damage => _cfg.damage;
     /// <summary>Quién lanzó el proyectil (puede ser null). Lo usa el contraataque (INC-493).</summary>
     public GameObject Instigator => _instigator;
+
+    // Amenaza para el aviso de combate (INC-658): solo si lo lanza alguien ajeno al grupo.
+    public Vector3 PosicionDeAmenaza => transform.position;
+    public Vector3 VelocidadDeAmenaza => _hasRb ? _rb.linearVelocity : transform.forward * _cfg.initialSpeed;
+    public TipoDeAmenaza TipoDeAmenaza => TipoDeAmenaza.Devolvible;
+
+    void OnDisable() => AmenazasAlJugador.Quitar(this);
 
     /// <summary>true si este proyectil es la variante precisa de un hechizo con modo preciso (ver
     /// ProjectileConfig.isPrecise / MagicSpellSO.BuildPreciseVariant). Usado por RuneCollar.</summary>
@@ -171,6 +178,8 @@ public class MagicProjectile : MonoBehaviour
     {
         _cfg        = cfg;
         _instigator = instigator;
+        if (_instigator != null && !AmenazasAlJugador.EsDelGrupoDelJugador(_instigator)) AmenazasAlJugador.Registrar(this);
+        else AmenazasAlJugador.Quitar(this);
 
         // ✅ IMPORTANTE: Aplicar el lifeTime de la configuración del SO
         // Esto sobrescribe el lifeTimeSeconds del prefab si el SO define un valor
@@ -639,6 +648,7 @@ public class MagicProjectile : MonoBehaviour
     {
         if (_ended) return;
         _ended = true;
+        AmenazasAlJugador.Quitar(this);
 
         // Zona al impactar (INC-497): fuego en el suelo, etc.
         if (byImpact && _impactZone != null)

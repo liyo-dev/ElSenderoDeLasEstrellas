@@ -14,6 +14,7 @@ public static class VolteretaDelJugadorBuilder
     private const string RutaJugador = "Assets/Prefabs/_WILL.prefab";
     private const string CarpetaExploracion = "Assets/Prefabs/Exploracion";
     public const string RutaLanzador = CarpetaExploracion + "/LanzadorDeSalto.prefab";
+    private const string VfxDeEntradaAlVuelo = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Shockwave_01.prefab";
 
     private const string CarpetaRemates = "Assets/_SPELLS/Remates aéreos";
 
@@ -75,14 +76,33 @@ public static class VolteretaDelJugadorBuilder
         {
             var controller = raiz.GetComponentInChildren<vThirdPersonController>(true);
             if (controller == null) { avisos.Add("_WILL no tiene vThirdPersonController."); return; }
-            if (controller.GetComponent<VolteretaDelJugador>() != null)
+            bool cambiado = false;
+            if (controller.GetComponent<VolteretaDelJugador>() == null)
             {
-                hecho.Add("_WILL ya tenía VolteretaDelJugador.");
-                return;
+                controller.gameObject.AddComponent<VolteretaDelJugador>();
+                hecho.Add("Añadida VolteretaDelJugador a _WILL.");
+                cambiado = true;
             }
-            controller.gameObject.AddComponent<VolteretaDelJugador>();
-            PrefabUtility.SaveAsPrefabAsset(raiz, RutaJugador);
-            hecho.Add("Añadida VolteretaDelJugador a _WILL.");
+            else hecho.Add("_WILL ya tenía VolteretaDelJugador.");
+
+            // Efecto de la entrada al vuelo (INC-660), si no tiene ninguno puesto.
+            var vuelo = controller.GetComponent<PlayerFlyingController>();
+            var vfx = AssetDatabase.LoadAssetAtPath<GameObject>(VfxDeEntradaAlVuelo);
+            if (vuelo != null && vfx != null)
+            {
+                var so = new SerializedObject(vuelo);
+                var campo = so.FindProperty("vfxDeEntrada");
+                if (campo != null && campo.objectReferenceValue == null)
+                {
+                    campo.objectReferenceValue = vfx;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    hecho.Add("Efecto de entrada al vuelo puesto en _WILL.");
+                    cambiado = true;
+                }
+            }
+            else if (vfx == null) avisos.Add($"No encuentro {VfxDeEntradaAlVuelo}: la entrada al vuelo queda sin efecto.");
+
+            if (cambiado) PrefabUtility.SaveAsPrefabAsset(raiz, RutaJugador);
         }
         finally
         {

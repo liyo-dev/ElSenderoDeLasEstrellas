@@ -4,15 +4,16 @@ using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 using M = MomentoDeCombate;
 
-/// Genera una escena de prueba de la batalla final contra el Mago Oscuro (el Corazón del Sendero):
-/// una plaza circular flotando en el vacío con el altar al norte, cuatro pilares con anclas, cuatro
-/// plataformas elevadas, tres nodos de conducto y el grupo completo (Will, Estela y Liam).
-/// Usa el jugador, los compañeros y el Mago reales. No toca el Sendero ni los prefabs. Crea también
-/// el guion de Estela para este combate si no existe. Regenerarla borra los cambios hechos a mano
-/// dentro de la escena. Ver INC-509.
+/// Genera una escena de prueba de la batalla final contra el Mago Oscuro: el final del camino de
+/// luz, con el suelo de luz, bordes invisibles y solo el altar de piedra blanca. Lo demás (espinas,
+/// pilares con anclas, plataformas y lanzadores) está oculto hasta que el Mago lo conjura. Trae el
+/// grupo completo (Will, Estela y Liam) y rellena el guion de comentarios de Estela. Usa el
+/// jugador, los compañeros y el Mago reales; no toca el Sendero ni los prefabs. Regenerarla borra
+/// los cambios hechos a mano dentro de la escena. Ver INC-509, INC-661.
 public static class BatallaFinalLabBuilder
 {
     const string ScenePath = "Assets/Scenes/Test/BatallaFinal.unity";
@@ -23,7 +24,7 @@ public static class BatallaFinalLabBuilder
     const string PrefabMago = "Assets/Prefabs/_MAGO_OSCURO.prefab";
     const string PrefabCamara = "Assets/Prefabs/CamaraDelJugador.prefab";
     const string PrefabGrupo = "Assets/Prefabs/GrupoDelJugador.prefab";
-    const string PrefabSombra = "Assets/Prefabs/Enemy/Spider1.prefab";
+    const string PrefabLanzador = "Assets/Prefabs/Exploracion/LanzadorDeSalto.prefab";
     const string HechizoGolpe = "Assets/_SPELLS/MagoOscuroGolpe.asset";
 
     // Efectos (los que falten se avisan y se dejan vacíos)
@@ -33,15 +34,13 @@ public static class BatallaFinalLabBuilder
     const string VfxSacrificio = "Assets/_VFX/BatallaFinal/VFX_SacrificioLiam.prefab";
     const string VfxZona = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect2.prefab";
     const string VfxMarea = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect3.prefab";
+    const string VfxRegeneracion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab";
     const string VfxCarga = "Assets/VFX/Free Game VFX/Prefab/FX_Purple_Hit_02.prefab";
-    const string VfxResquicio = "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab";
-    const string VfxInvocacion = "Assets/VFX/100BestEffectPack/Effects/PortalEffect/PortalEffect2.prefab";
     const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
     const string VfxCorte = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_02.prefab";
-    const string VfxRoturaAncla = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
+    const string VfxRoturaCristal = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
     const string VfxPozo = "Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab";
     const string VfxImplosionPozo = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect4.prefab";
-    const string VfxRoturaNodo = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/AoE effects/Red energy explosion.prefab";
 
     [MenuItem("El Sendero/Combate/Crear o regenerar la Batalla Final (prueba)")]
     public static void Crear()
@@ -63,34 +62,31 @@ public static class BatallaFinalLabBuilder
         if (!AssetDatabase.IsValidFolder(Materiales)) AssetDatabase.CreateFolder("Assets/Scenes/Test", "BatallaFinalMaterials");
         var escena = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-        // ── Ambiente: el vacío entre mundos ───────────────────────────────
+        // ── Ambiente: el final del camino, entre estrellas ────────────────
         var luz = new GameObject("Luz").AddComponent<Light>();
         luz.type = LightType.Directional;
         luz.intensity = 0.9f;
-        luz.color = new Color(0.8f, 0.75f, 1f);
+        luz.color = new Color(0.85f, 0.85f, 1f);
         luz.transform.rotation = Quaternion.Euler(55f, -30f, 0f);
         RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.22f, 0.18f, 0.3f);
+        RenderSettings.ambientLight = new Color(0.25f, 0.24f, 0.36f);
         RenderSettings.fog = true;
-        RenderSettings.fogColor = new Color(0.08f, 0.05f, 0.12f);
+        RenderSettings.fogColor = new Color(0.06f, 0.05f, 0.14f);
         RenderSettings.fogMode = FogMode.ExponentialSquared;
         RenderSettings.fogDensity = 0.012f;
 
-        var matSuelo = Mat("BF_Suelo", new Color(0.24f, 0.22f, 0.3f));
-        var matPiedra = Mat("BF_Piedra", new Color(0.35f, 0.32f, 0.42f));
-        var matAltar = Mat("BF_Altar", new Color(0.18f, 0.1f, 0.25f));
-        var matAncla = Mat("BF_Ancla", new Color(0.55f, 0.2f, 0.9f), emision: new Color(0.6f, 0.15f, 1f));
-        var matNodo = Mat("BF_Nodo", new Color(0.15f, 0.05f, 0.25f), emision: new Color(0.35f, 0f, 0.6f));
-        var matUnion = Mat("BF_Union", new Color(0.9f, 0.3f, 1f), emision: new Color(1f, 0.3f, 1f));
+        var matSuelo = Mat("BF_SueloDeLuz", new Color(0.72f, 0.78f, 0.95f), emision: new Color(0.2f, 0.25f, 0.4f));
+        var matAltar = Mat("BF_AltarBlanco", new Color(0.93f, 0.91f, 0.86f));
+        var matConjuro = Mat("BF_PiedraConjurada", new Color(0.16f, 0.12f, 0.2f));
+        var matCristal = Mat("BF_Ancla", new Color(0.55f, 0.2f, 0.9f), emision: new Color(0.6f, 0.15f, 1f));
         var rayoSombra = MatRayo("BF_RayoSombra", new Color(0.45f, 0.05f, 0.7f));
-        var rayoAliado = MatRayo("BF_RayoAliado", new Color(0.4f, 0.9f, 1f));
         var rayoEnergia = MatRayo("BF_RayoEnergia", new Color(1f, 0.55f, 0.75f));
         var rayoAguja = MatRayo("BF_RayoAguja", new Color(1f, 0.97f, 0.8f));
 
-        // ── Geometría con NavMesh ─────────────────────────────────────────
+        // ── Geometría fija: suelo de luz, bordes invisibles y el altar ────
         var arena = new GameObject("BF_ARENA");
         var plaza = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        plaza.name = "Plaza del Corazón";
+        plaza.name = "Suelo de luz";
         plaza.transform.SetParent(arena.transform);
         plaza.transform.position = new Vector3(0f, -0.25f, 0f);
         plaza.transform.localScale = new Vector3(42f, 0.25f, 42f);
@@ -103,33 +99,17 @@ public static class BatallaFinalLabBuilder
         for (int i = 0; i < 24; i++)
         {
             float a = i * 15f;
-            var borde = Cubo($"Borde {i}", arena.transform, Polar(21f, a) + Vector3.up * 0.5f, new Vector3(5.2f, 1f, 0.8f), matPiedra);
-            borde.transform.rotation = Quaternion.Euler(0f, a + 90f, 0f);
+            var borde = new GameObject($"Borde invisible {i}");
+            borde.transform.SetParent(arena.transform);
+            borde.transform.SetPositionAndRotation(Polar(21f, a) + Vector3.up * 2f, Quaternion.Euler(0f, a + 90f, 0f));
+            borde.transform.localScale = new Vector3(5.6f, 4f, 0.8f);
+            borde.AddComponent<BoxCollider>();
+            borde.isStatic = true;
         }
 
-        // Altar al norte
-        var altar = Cubo("Altar", arena.transform, new Vector3(0f, 0.6f, 16f), new Vector3(4f, 1.2f, 3f), matAltar);
-        Cubo("Altar · columna", arena.transform, new Vector3(0f, 2.6f, 17f), new Vector3(1.2f, 4f, 1.2f), matAltar);
-        var union = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        union.name = "Unión del conducto";
-        union.transform.SetParent(arena.transform);
-        union.transform.position = new Vector3(0f, 5f, 17f);
-        union.transform.localScale = Vector3.one * 0.9f;
-        Object.DestroyImmediate(union.GetComponent<Collider>());
-        union.GetComponent<Renderer>().sharedMaterial = matUnion;
+        var altar = Cubo("Altar de piedra blanca", arena.transform, new Vector3(0f, 0.6f, 16f), new Vector3(4f, 1.2f, 3f), matAltar);
+        Cubo("Altar · losa", arena.transform, new Vector3(0f, 1.4f, 16f), new Vector3(2.4f, 0.4f, 1.8f), matAltar);
         var puntoAltar = Punto("Sitio del Mago en el altar", arena.transform, new Vector3(0f, 0f, 12.5f));
-
-        // Pilares y plataformas
-        var pilares = new List<Transform>();
-        foreach (float a in new[] { 45f, 135f, 225f, 315f })
-            pilares.Add(Cubo($"Pilar {a}", arena.transform, Polar(13f, a) + Vector3.up * 3.5f, new Vector3(2f, 7f, 2f), matPiedra).transform);
-        int k = 0;
-        foreach (float a in new[] { 0f, 90f, 180f, 270f })
-        {
-            float alto = k++ % 2 == 0 ? 3f : 5f;
-            if (a == 0f) continue; // al norte está el altar
-            Cubo($"Plataforma {a}", arena.transform, Polar(10f, a) + Vector3.up * alto, new Vector3(5f, 0.5f, 5f), matPiedra);
-        }
 
         var nav = arena.AddComponent<NavMeshSurface>();
         nav.collectObjects = CollectObjects.Children;
@@ -143,84 +123,39 @@ public static class BatallaFinalLabBuilder
         escenario.radio = 20f;
         escenario.altar = altar.transform;
         escenario.puntoDelAltar = puntoAltar;
-        escenario.unionDelConducto = union.transform;
-        escenario.conductoPrincipal = Rayo("Conducto principal", altar.transform, rayoSombra, 0.25f, true);
         escenario.puntosDeSalto = Anillo("Salto", raiz.transform, 9.5f, 8, 0f);
         escenario.cuadrantes = Anillo("Cuadrante", raiz.transform, 10f, 4, 45f);
-        escenario.puntosDeInvocacion = Anillo("Invocación", raiz.transform, 8f, 6, 30f);
-        var vuelo = new List<Transform>();
-        foreach (var p in pilares) vuelo.Add(Punto("Vuelo", raiz.transform, new Vector3(p.position.x * 0.85f, 8.5f, p.position.z * 0.85f)));
-        escenario.puntosDeVuelo = vuelo.ToArray();
         escenario.registro = raiz.AddComponent<RegistroTemporal>();
 
-        // Anclas en lo alto de los pilares
-        var anclas = new List<AnclaDelSendero>();
-        foreach (var p in pilares)
+        // ── Lo que conjura (oculto hasta entonces) ────────────────────────
+        var conjuros = new GameObject("BF_CONJUROS").transform;
+        conjuros.SetParent(raiz.transform);
+        var ctx = new Contexto
         {
-            var ancla = new GameObject($"Ancla · {p.name}");
-            ancla.transform.SetParent(raiz.transform);
-            ancla.transform.position = p.position + Vector3.up * 4.3f;
-            Capa(ancla, "Enemy");
-            var col = ancla.AddComponent<SphereCollider>();
-            col.radius = 0.9f;
-            var vida = ancla.AddComponent<Damageable>();
-            ancla.AddComponent<DebilidadDePersonaje>();
-            var visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            visual.name = "Cristal";
-            Object.DestroyImmediate(visual.GetComponent<Collider>());
-            visual.transform.SetParent(ancla.transform, false);
-            visual.transform.localScale = Vector3.one * 1.3f;
-            visual.GetComponent<Renderer>().sharedMaterial = matAncla;
-            var a = ancla.AddComponent<AnclaDelSendero>();
-            var so = new SerializedObject(a);
-            so.FindProperty("visual").objectReferenceValue = visual;
-            so.FindProperty("rayo").objectReferenceValue = Rayo("Rayo", ancla.transform, rayoSombra, 0.08f, false);
-            so.FindProperty("vfxRotura").objectReferenceValue = Cargar<GameObject>(VfxRoturaAncla, avisos);
-            so.ApplyModifiedPropertiesWithoutUndo();
-            anclas.Add(a);
-        }
-        escenario.anclas = anclas.ToArray();
+            padre = conjuros,
+            matPiedra = matConjuro,
+            matCristal = matCristal,
+            rayo = rayoSombra,
+            vfxConjuro = Cargar<GameObject>(VfxAparicion, avisos),
+            vfxRotura = Cargar<GameObject>(VfxRoturaCristal, avisos),
+            lanzador = Cargar<GameObject>(PrefabLanzador, avisos),
+        };
 
-        // Nodos de conducto: este, oeste y sur
-        var redGo = new GameObject("Red de conductos");
-        redGo.transform.SetParent(raiz.transform);
-        var nodos = new List<NodoDeConducto>();
-        foreach (float a in new[] { 90f, 270f, 180f })
+        // Fase 1: tres espinas bajas.
+        escenario.espinas = Juego(ctx, "Espinas",
+            pilares: new[] { 60f, 180f, 300f }, radioPilares: 9f, altoPilar: 2.6f, anchoPilar: 1.1f, vidaCristal: 40f,
+            plataformas: new (float, float)[0], lanzadores: new float[0]);
+
+        // Fase 2: dos juegos de pilares con anclas, plataformas y lanzadores, en sitios alternos.
+        escenario.fase2 = new[]
         {
-            var nodo = new GameObject($"Nodo {a}");
-            nodo.transform.SetParent(redGo.transform);
-            nodo.transform.position = Polar(15f, a);
-            Capa(nodo, "Enemy");
-            var col = nodo.AddComponent<CapsuleCollider>();
-            col.center = Vector3.up * 1.2f;
-            col.height = 2.4f;
-            col.radius = 0.8f;
-            nodo.AddComponent<Damageable>();
-            var visual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            visual.name = "Cristal oscuro";
-            Object.DestroyImmediate(visual.GetComponent<Collider>());
-            visual.transform.SetParent(nodo.transform, false);
-            visual.transform.localPosition = Vector3.up * 1.2f;
-            visual.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
-            visual.GetComponent<Renderer>().sharedMaterial = matNodo;
-            var n = nodo.AddComponent<NodoDeConducto>();
-            var plantilla = Rayo("Rayo de aliado (plantilla)", nodo.transform, rayoAliado, 0.12f, false);
-            var so = new SerializedObject(n);
-            so.FindProperty("visual").objectReferenceValue = visual;
-            so.FindProperty("conducto").objectReferenceValue = Rayo("Conducto al altar", nodo.transform, rayoSombra, 0.15f, false);
-            so.FindProperty("plantillaRayoAliado").objectReferenceValue = plantilla;
-            so.FindProperty("vfxRotura").objectReferenceValue = Cargar<GameObject>(VfxRoturaNodo, avisos);
-            so.ApplyModifiedPropertiesWithoutUndo();
-            nodos.Add(n);
-            CrearTexto($"Nodo", nodo.transform, Vector3.up * 3.4f);
-        }
-        var red = redGo.AddComponent<RedDeConductos>();
-        var soRed = new SerializedObject(red);
-        var arr = soRed.FindProperty("nodos");
-        arr.arraySize = nodos.Count;
-        for (int i = 0; i < nodos.Count; i++) arr.GetArrayElementAtIndex(i).objectReferenceValue = nodos[i];
-        soRed.ApplyModifiedPropertiesWithoutUndo();
-        escenario.red = red;
+            Juego(ctx, "Fase 2 · A",
+                pilares: new[] { 45f, 135f, 225f, 315f }, radioPilares: 13f, altoPilar: 7f, anchoPilar: 2f, vidaCristal: 60f,
+                plataformas: new[] { (90f, 3f), (180f, 4f), (270f, 5f) }, lanzadores: new[] { 70f, 250f }),
+            Juego(ctx, "Fase 2 · B",
+                pilares: new[] { 22.5f, 112.5f, 202.5f, 292.5f }, radioPilares: 13f, altoPilar: 7f, anchoPilar: 2f, vidaCristal: 60f,
+                plataformas: new[] { (67.5f, 4f), (157.5f, 3f), (247.5f, 5f) }, lanzadores: new[] { 135f, 315f }),
+        };
 
         // El final (traición, Liam, Estela, aguja)
         var finalGo = new GameObject("Final del conducto");
@@ -265,10 +200,6 @@ public static class BatallaFinalLabBuilder
         soVida.FindProperty("maxHealth").floatValue = 800f;
         soVida.FindProperty("destroyOnDeath").boolValue = false;
         soVida.ApplyModifiedPropertiesWithoutUndo();
-        var escudo = mago.AddComponent<SoloDanoCuandoExpuesto>();
-        var soEscudo = new SerializedObject(escudo);
-        soEscudo.FindProperty("curacionPorGolpe").floatValue = 0f;   // fuera de ventana, los golpes no hacen nada
-        soEscudo.ApplyModifiedPropertiesWithoutUndo();
         var transicion = mago.AddComponent<TransicionDeFaseDeJefe>();
         var golem = Cargar<GameObject>("Assets/Prefabs/Enemy/PBR_Golem.prefab", avisos);
         var golemIA = golem != null ? golem.GetComponentInChildren<GolemBossAI>(true) : null;
@@ -289,16 +220,14 @@ public static class BatallaFinalLabBuilder
         soIA.FindProperty("escenario").objectReferenceValue = escenario;
         soIA.FindProperty("final").objectReferenceValue = final;
         soIA.FindProperty("golpe").objectReferenceValue = Cargar<MagicSpellSO>(HechizoGolpe, avisos);
-        soIA.FindProperty("guion").objectReferenceValue = CrearGuion(avisos);
+        soIA.FindProperty("guion").objectReferenceValue = RellenarGuion(avisos);
         soIA.FindProperty("vfxAviso").objectReferenceValue = SombraDeAviso(avisos);
         soIA.FindProperty("vfxZona").objectReferenceValue = Cargar<GameObject>(VfxZona, avisos);
         soIA.FindProperty("vfxTeletransporte").objectReferenceValue = Cargar<GameObject>(VfxAparicion, avisos);
         soIA.FindProperty("vfxCarga").objectReferenceValue = Cargar<GameObject>(VfxCarga, avisos);
         soIA.FindProperty("vfxMarea").objectReferenceValue = Cargar<GameObject>(VfxMarea, avisos);
-        soIA.FindProperty("vfxResquicio").objectReferenceValue = Cargar<GameObject>(VfxResquicio, avisos);
-        soIA.FindProperty("vfxInvocacion").objectReferenceValue = Cargar<GameObject>(VfxInvocacion, avisos);
         soIA.FindProperty("vfxRebobinado").objectReferenceValue = Cargar<GameObject>(VfxRebobinado, avisos);
-        soIA.FindProperty("prefabSombra").objectReferenceValue = Cargar<GameObject>(PrefabSombra, avisos);
+        soIA.FindProperty("vfxRegeneracion").objectReferenceValue = Cargar<GameObject>(VfxRegeneracion, avisos);
         soIA.FindProperty("vfxPozo").objectReferenceValue = Cargar<GameObject>(VfxPozo, avisos);
         soIA.FindProperty("vfxImplosionPozo").objectReferenceValue = Cargar<GameObject>(VfxImplosionPozo, avisos);
         soIA.FindProperty("esperaInicial").floatValue = 4f;
@@ -330,14 +259,131 @@ public static class BatallaFinalLabBuilder
         Debug.Log("[BatallaFinalLabBuilder] " + resumen);
     }
 
+    // ── Conjuros ──────────────────────────────────────────────────────────
+
+    sealed class Contexto
+    {
+        public Transform padre;
+        public Material matPiedra, matCristal, rayo;
+        public GameObject vfxConjuro, vfxRotura, lanzador;
+    }
+
+    /// Un juego de conjuros: pilares con un cristal arriba, plataformas flotantes (ángulo, altura) y
+    /// lanzadores de salto en el suelo mirando hacia fuera. Todo queda oculto.
+    static JuegoDeConjuros Juego(Contexto ctx, string nombre, float[] pilares, float radioPilares, float altoPilar,
+                                 float anchoPilar, float vidaCristal, (float angulo, float alto)[] plataformas, float[] lanzadores)
+    {
+        var raiz = new GameObject(nombre).transform;
+        raiz.SetParent(ctx.padre);
+        var objetos = new List<ObjetoConjurado>();
+        var cristales = new List<CristalProtector>();
+        var vuelo = new List<Transform>();
+
+        foreach (float a in pilares)
+        {
+            var pilar = Conjuro(ctx, $"Pilar {a}", raiz, Polar(radioPilares, a));
+            Pieza("Cuerpo", pilar.transform, Vector3.up * altoPilar * 0.5f, new Vector3(anchoPilar, altoPilar, anchoPilar), ctx.matPiedra);
+            var obstaculo = pilar.gameObject.AddComponent<NavMeshObstacle>();
+            obstaculo.shape = NavMeshObstacleShape.Box;
+            obstaculo.center = Vector3.up * altoPilar * 0.5f;
+            obstaculo.size = new Vector3(anchoPilar, altoPilar, anchoPilar);
+            obstaculo.carving = true;
+            float tamCristal = Mathf.Lerp(0.8f, 1.3f, Mathf.InverseLerp(2f, 7f, altoPilar));
+            cristales.Add(Cristal(ctx, pilar.transform, Vector3.up * (altoPilar + tamCristal * 0.5f), tamCristal, vidaCristal));
+            objetos.Add(pilar);
+            var p = Polar(radioPilares * 0.85f, a);
+            vuelo.Add(Punto("Vuelo", raiz, new Vector3(p.x, altoPilar + 1.5f, p.z)));
+        }
+
+        foreach (var (a, alto) in plataformas)
+        {
+            var plataforma = Conjuro(ctx, $"Plataforma {a}", raiz, Polar(10f, a) + Vector3.up * alto);
+            Pieza("Losa", plataforma.transform, Vector3.zero, new Vector3(5f, 0.5f, 5f), ctx.matPiedra);
+            objetos.Add(plataforma);
+        }
+
+        foreach (float a in lanzadores)
+        {
+            var runa = Conjuro(ctx, $"Lanzador {a}", raiz, Polar(6f, a));
+            runa.transform.rotation = Quaternion.LookRotation(Polar(1f, a));
+            if (ctx.lanzador != null)
+            {
+                var l = (GameObject)PrefabUtility.InstantiatePrefab(ctx.lanzador, runa.transform);
+                l.transform.localPosition = Vector3.zero;
+                l.transform.localRotation = Quaternion.identity;
+            }
+            objetos.Add(runa);
+        }
+
+        foreach (var o in objetos) o.gameObject.SetActive(false);
+        return new JuegoDeConjuros { objetos = objetos.ToArray(), cristales = cristales.ToArray(), puntosDeVuelo = vuelo.ToArray() };
+    }
+
+    static ObjetoConjurado Conjuro(Contexto ctx, string nombre, Transform padre, Vector3 pos)
+    {
+        var go = new GameObject(nombre);
+        go.transform.SetParent(padre);
+        go.transform.position = pos;
+        var oc = go.AddComponent<ObjetoConjurado>();
+        var so = new SerializedObject(oc);
+        so.FindProperty("vfxAparecer").objectReferenceValue = ctx.vfxConjuro;
+        so.FindProperty("vfxDeshacer").objectReferenceValue = ctx.vfxConjuro;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        return oc;
+    }
+
+    /// Geometría de un conjuro: no estática, porque crece y se encoge.
+    static GameObject Pieza(string nombre, Transform padre, Vector3 local, Vector3 escala, Material mat)
+    {
+        var c = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        c.name = nombre;
+        c.transform.SetParent(padre, false);
+        c.transform.localPosition = local;
+        c.transform.localScale = escala;
+        c.GetComponent<Renderer>().sharedMaterial = mat;
+        return c;
+    }
+
+    static CristalProtector Cristal(Contexto ctx, Transform padre, Vector3 local, float tam, float vida)
+    {
+        var go = new GameObject("Cristal");
+        go.transform.SetParent(padre, false);
+        go.transform.localPosition = local;
+        Capa(go, "Enemy");
+        var col = go.AddComponent<SphereCollider>();
+        col.radius = tam * 0.7f;
+        go.AddComponent<Damageable>();
+        go.AddComponent<DebilidadDePersonaje>();
+        var visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        visual.name = "Visual";
+        Object.DestroyImmediate(visual.GetComponent<Collider>());
+        visual.transform.SetParent(go.transform, false);
+        visual.transform.localScale = Vector3.one * tam;
+        visual.GetComponent<Renderer>().sharedMaterial = ctx.matCristal;
+        var cristal = go.AddComponent<CristalProtector>();
+        var so = new SerializedObject(cristal);
+        so.FindProperty("vida").floatValue = vida;
+        so.FindProperty("visual").objectReferenceValue = visual;
+        so.FindProperty("rayo").objectReferenceValue = Rayo("Rayo", go.transform, ctx.rayo, 0.08f, false);
+        so.FindProperty("vfxRotura").objectReferenceValue = ctx.vfxRotura;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        return cristal;
+    }
+
     // ── Guion de Estela ───────────────────────────────────────────────────
 
-    static GuionDeCombate CrearGuion(List<string> avisos)
+    /// Rellena (o crea) el guion: Estela reacciona a lo que pasa y no enseña controles; como mucho
+    /// señala lo propio de este jefe con sus palabras.
+    static GuionDeCombate RellenarGuion(List<string> avisos)
     {
         var g = AssetDatabase.LoadAssetAtPath<GuionDeCombate>(GuionPath);
-        if (g != null) return g;
-        if (!AssetDatabase.IsValidFolder("Assets/BOSSBATTLES/Guiones")) AssetDatabase.CreateFolder("Assets/BOSSBATTLES", "Guiones");
-        g = ScriptableObject.CreateInstance<GuionDeCombate>();
+        if (g == null)
+        {
+            if (!AssetDatabase.IsValidFolder("Assets/BOSSBATTLES/Guiones")) AssetDatabase.CreateFolder("Assets/BOSSBATTLES", "Guiones");
+            g = ScriptableObject.CreateInstance<GuionDeCombate>();
+            AssetDatabase.CreateAsset(g, GuionPath);
+            avisos.Add("Creado " + GuionPath + ".");
+        }
         g.hablanteId = "NPC_Estela";
         g.nombreHablante = "Estela";
         g.mirarAlJugador = false;
@@ -345,18 +391,15 @@ public static class BatallaFinalLabBuilder
         g.comentarios = new List<ComentarioDeCombate>
         {
             new(M.Inicio, "FINAL_ESTELA_INICIO_01", null),
-            new(M.Inicio, "FINAL_ESTELA_INICIO_02", null),
-            new(M.JefeExpuesto, "FINAL_ESTELA_AHORA", null, vecesMax: 3, enfriamiento: 6f, caducidad: 0.8f, interrumpe: true, duracion: 1.6f),
-            new(M.GolpeMalDado, "FINAL_ESTELA_ESCUDO", null, vecesMax: 2, enfriamiento: 20f, caducidad: 2f),
-            new(M.GolpeValido, "FINAL_ESTELA_ACIERTO", null, vecesMax: 0, enfriamiento: 16f, caducidad: 2f),
+            new(M.JefeExpuesto, "FINAL_ESTELA_AHORA", null, vecesMax: 3, enfriamiento: 8f, caducidad: 0.8f, interrumpe: true, duracion: 1.6f),
+            new(M.GolpeMalDado, "FINAL_ESTELA_ESCUDO", null, vecesMax: 2, enfriamiento: 25f, caducidad: 2f),
+            new(M.GolpeValido, "FINAL_ESTELA_ACIERTO", null, vecesMax: 0, enfriamiento: 18f, caducidad: 2f),
             new(M.JugadorHerido, "FINAL_ESTELA_HERIDO", null, caducidad: 4f),
             new(M.JugadorPocaVida, "FINAL_ESTELA_POCA_VIDA", null, vecesMax: 2, enfriamiento: 30f, caducidad: 4f),
-            new(M.CambioDeFase, "FINAL_ESTELA_FASE_2", null, interrumpe: true, duracion: 4f, fase: 1),
-            new(M.CambioDeFase, "FINAL_ESTELA_FASE_3", null, interrumpe: true, duracion: 5f, fase: 2),
+            new(M.CambioDeFase, "FINAL_ESTELA_FASE_2", null, interrumpe: true, duracion: 3f, fase: 1),
             new(M.SinAcertar, "FINAL_ESTELA_RECUERDA", null, vecesMax: 2, enfriamiento: 30f, caducidad: 3f),
         };
-        AssetDatabase.CreateAsset(g, GuionPath);
-        avisos.Add("Creado " + GuionPath + ".");
+        EditorUtility.SetDirty(g);
         return g;
     }
 
@@ -464,18 +507,6 @@ public static class BatallaFinalLabBuilder
         m.color = color;
         AssetDatabase.CreateAsset(m, ruta);
         return m;
-    }
-
-    static void CrearTexto(string texto, Transform padre, Vector3 local)
-    {
-        var go = new GameObject("Etiqueta");
-        go.transform.SetParent(padre, false);
-        go.transform.localPosition = local;
-        var tm = go.AddComponent<TextMesh>();
-        tm.text = texto;
-        tm.characterSize = 0.25f;
-        tm.anchor = TextAnchor.MiddleCenter;
-        tm.color = new Color(0.8f, 0.7f, 1f);
     }
 
     static void AnadirABuild(string ruta)

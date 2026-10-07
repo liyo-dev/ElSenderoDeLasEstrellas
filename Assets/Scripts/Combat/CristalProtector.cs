@@ -1,26 +1,27 @@
 using System;
 using UnityEngine;
 
-/// Un ancla del Mago Oscuro (fase 2): un cristal en lo alto de un pilar que le sostiene en el aire
-/// y le protege. Mientras quede alguna, el Mago no está expuesto; cuando caen todas, se desploma.
-/// Se ven unidas a él por un rayo. Los aliados la atacan (se registra como objetivo de combate)
-/// y la magia del pacto de Liam la rompe antes (DebilidadDePersonaje). Ver INC-509.
+/// Un cristal que protege a su dueño mientras está entero: espinas o anclas que conjura un jefe.
+/// Se ve unido a él por un rayo, se registra como objetivo de combate (los aliados lo atacan) y
+/// avisa al romperse. Quién decide qué protege y cómo es el dueño: el cristal solo dice si sigue
+/// activo. Va junto a su Damageable; con DebilidadDePersonaje, un personaje lo rompe antes.
+/// Ver INC-661.
 [RequireComponent(typeof(Damageable))]
-public sealed class AnclaDelSendero : MonoBehaviour
+public sealed class CristalProtector : MonoBehaviour
 {
     [SerializeField] private float vida = 60f;
-    [Tooltip("Lo que se ve mientras está activa (el cristal).")]
+    [Tooltip("Lo que se ve mientras está activo (el cristal).")]
     [SerializeField] private GameObject visual;
-    [Tooltip("Rayo del ancla al Mago.")]
+    [Tooltip("Rayo del cristal a su dueño.")]
     [SerializeField] private LineRenderer rayo;
     [SerializeField] private GameObject vfxRotura;
 
     private Damageable _vida;
     private Collider _col;
-    private Transform _destino;
+    private Transform _dueno;
 
-    public bool Activa { get; private set; }
-    public event Action<AnclaDelSendero> AlRomperse;
+    public bool Activo { get; private set; }
+    public event Action<CristalProtector> AlRomperse;
 
     void Awake()
     {
@@ -33,12 +34,12 @@ public sealed class AnclaDelSendero : MonoBehaviour
 
     void OnDestroy() { if (_vida != null) _vida.OnDied -= AlMorir; }
 
-    public void Activar(Transform destino)
+    public void Activar(Transform dueno)
     {
-        _destino = destino;
+        _dueno = dueno;
         _vida.Revive(vida);
         _vida.SetMaxAndCurrent(vida, vida);
-        Activa = true;
+        Activo = true;
         if (visual) visual.SetActive(true);
         if (_col) _col.enabled = true;
         if (rayo) rayo.enabled = true;
@@ -47,16 +48,22 @@ public sealed class AnclaDelSendero : MonoBehaviour
 
     public void Apagar()
     {
-        Activa = false;
+        Activo = false;
         if (visual) visual.SetActive(false);
         if (_col) _col.enabled = false;
         if (rayo) rayo.enabled = false;
         ActiveCombatRegistry.UnregisterNPC(gameObject);
     }
 
+    /// Lo rompe de golpe, como si le hubieran quitado toda la vida.
+    public void Romper()
+    {
+        if (Activo) _vida.Kill();
+    }
+
     private void AlMorir()
     {
-        if (!Activa) return;
+        if (!Activo) return;
         if (vfxRotura && VfxPoolService.Instance != null)
             VfxPoolService.Instance.Play(vfxRotura, transform.position, Quaternion.identity, 2f);
         Apagar();
@@ -65,8 +72,8 @@ public sealed class AnclaDelSendero : MonoBehaviour
 
     void LateUpdate()
     {
-        if (!Activa || rayo == null || _destino == null) return;
+        if (!Activo || rayo == null || _dueno == null) return;
         rayo.SetPosition(0, transform.position);
-        rayo.SetPosition(1, _destino.position + Vector3.up * 1.2f);
+        rayo.SetPosition(1, _dueno.position + Vector3.up * 1.2f);
     }
 }

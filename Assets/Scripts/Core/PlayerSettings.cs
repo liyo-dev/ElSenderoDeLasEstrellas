@@ -10,6 +10,7 @@ public static class PlayerSettings
     public static event Action<AudioBus, float> VolumeChanged;
     public static event Action<bool> InvertLookChanged;
     public static event Action<bool> InvertFlightLookChanged;
+    public static event Action<bool> AvisosDeCombateChanged;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -19,6 +20,7 @@ public static class PlayerSettings
         VolumeChanged = null;
         InvertLookChanged = null;
         InvertFlightLookChanged = null;
+        AvisosDeCombateChanged = null;
         _loaded = false;
         _data = null;
     }
@@ -43,6 +45,7 @@ public static class PlayerSettings
         public bool vibration = true;
         public bool subtitles = true;
         public bool fullscreen = true;
+        public bool avisosDeCombate = true;
     }
 
     private static bool _loaded;
@@ -138,6 +141,12 @@ public static class PlayerSettings
     public static bool Fullscreen
     {
         get { EnsureLoaded(); return _data.fullscreen; }
+    }
+
+    /// <summary>Iconos de «ahora» en combate: devolver con la B, recuperarse con la A (INC-658).</summary>
+    public static bool AvisosDeCombate
+    {
+        get { EnsureLoaded(); return _data.avisosDeCombate; }
     }
 
     public static void EnsureLoaded()
@@ -270,6 +279,15 @@ public static class PlayerSettings
         if (_data.subtitles == enabled) return;
         _data.subtitles = enabled;
         SaveToDisk();
+    }
+
+    public static void SetAvisosDeCombate(bool enabled)
+    {
+        EnsureLoaded();
+        if (_data.avisosDeCombate == enabled) return;
+        _data.avisosDeCombate = enabled;
+        SaveToDisk();
+        AvisosDeCombateChanged?.Invoke(enabled);
     }
 
     public static void SetFullscreen(bool enabled)

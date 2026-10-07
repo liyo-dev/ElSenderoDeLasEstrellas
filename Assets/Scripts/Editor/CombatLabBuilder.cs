@@ -161,6 +161,7 @@ public static partial class CombatLabBuilder
             ("Tiendas y Esencia (sur)", "Renard, Tomasa y placas de +100.", new Vector3(0f, 0.1f, -20f), 180f),
             ("Vuelo (sur)", "Torres y plataformas flotantes a 10, 18 y 26 m.", new Vector3(0f, 0.1f, -35f), 180f),
             ("Arañas y contratos (sur)", "Corral de arañas que reaparecen.", new Vector3(25f, 0.1f, -68f), 180f),
+            ("Saltos y volteretas (noreste)", "Lanzadores, caída larga, doble salto, remate aéreo, B y derribo.", EntradaSaltos, 45f),
         };
         var so = new SerializedObject(viaje);
         var destinos = so.FindProperty("destinos");

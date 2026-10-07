@@ -123,15 +123,8 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     private void AlHacerDanoAlguien(Damageable victima, float cantidad, GameObject autor)
     {
         if (_isExecuting || teamGauge == null || autor == null || victima == null) return;
-        if (!EsDelGrupo(autor) || EsDelGrupo(victima.gameObject)) return;
+        if (!AmenazasAlJugador.EsDelGrupoDelJugador(autor) || AmenazasAlJugador.EsDelGrupoDelJugador(victima.gameObject)) return;
         teamGauge.AddCharge(cantidad / damagePerSegment);
-    }
-
-    private static bool EsDelGrupo(GameObject go)
-    {
-        var cuerpo = PlayerService.Player;
-        if (cuerpo != null && (go == cuerpo || go.transform.IsChildOf(cuerpo.transform))) return true;
-        return go.GetComponentInParent<NPCPartyMember>() != null;
     }
 
     // ── Entrada ────────────────────────────────────────────────────────────

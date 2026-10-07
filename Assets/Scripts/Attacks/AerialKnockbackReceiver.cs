@@ -51,6 +51,9 @@ public class AerialKnockbackReceiver : MonoBehaviour
     /// <summary>El jugador se ha recuperado en el aire durante el último lanzamiento.</summary>
     public bool SeRecupero => _recuperado;
 
+    /// <summary>Ahora mismo, saltar haría la voltereta de recuperación (para el aviso de combate).</summary>
+    public bool VentanaDeRecuperacionAbierta { get; private set; }
+
     private CharacterController _controller;
     private Rigidbody _rigidbody;
     private Animator _animator;
@@ -167,6 +170,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        VentanaDeRecuperacionAbierta = false;
         if (!_isLaunching) return;
 
         StopAllCoroutines();
@@ -307,7 +311,8 @@ public class AerialKnockbackReceiver : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            if (!_recuperado && t >= ventanaDeRecuperacion.x && t <= ventanaDeRecuperacion.y && GamepadInputReader.JumpPressed)
+            VentanaDeRecuperacionAbierta = !_recuperado && t >= ventanaDeRecuperacion.x && t <= ventanaDeRecuperacion.y;
+            if (VentanaDeRecuperacionAbierta && GamepadInputReader.JumpPressed)
                 Recuperarse();
 
             // Arco parabólico: avance horizontal con ease-out (rápido al inicio, se frena al final)
@@ -351,6 +356,8 @@ public class AerialKnockbackReceiver : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[AerialKnockbackReceiver] Fin del arco. groundY detectado={finalGroundY:F2}, posición final={finalPos}, rb.isKinematic (antes de restaurar)={_rigidbody?.isKinematic}");
 #endif
+
+        VentanaDeRecuperacionAbierta = false;
 
         // Derribo sin recuperarse: tumbado y levantarse, con todo aún tomado.
         if (derriba && !_recuperado)

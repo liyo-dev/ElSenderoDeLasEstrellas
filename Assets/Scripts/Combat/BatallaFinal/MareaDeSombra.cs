@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// Una ola de sombra que sale de un punto y cruza toda la arena como un anillo que se ensancha.
-/// Solo tiene un resquicio: un sector estrecho por donde no pasa. Quien esté fuera del resquicio
-/// cuando le alcanza el frente recibe un golpe fuerte; volar por encima no sirve (es muy alta).
-/// El resquicio puede no verse (la primera vez es inevitable: novela, «Tiempo 2») o marcarse con
-/// una senda de luz (tras rebobinar con el Hechizo del Tiempo). Se puede pausar desde fuera.
-/// Ver INC-509.
+/// Puede tener un resquicio, un sector estrecho por donde no pasa (ancho 0 = ninguno), marcado o
+/// no con una senda de luz. Quien esté fuera del resquicio cuando le alcanza el frente recibe un
+/// golpe fuerte; volar por encima no sirve (es muy alta). El dueño puede decir que el jugador está
+/// a salvo en ese momento (Config.aSalvo, p. ej. tras un escudo) y se puede pausar desde fuera.
+/// Ver INC-509, INC-661.
 public sealed class MareaDeSombra : MonoBehaviour
 {
     public struct Config
@@ -24,6 +24,7 @@ public sealed class MareaDeSombra : MonoBehaviour
         public float escalaPieza;
         public bool mostrarHueco;
         public GameObject vfxHueco;  // marcas de luz a lo largo del resquicio
+        public System.Func<bool> aSalvo; // si devuelve true cuando llega el frente, el jugador no recibe el golpe (p. ej. un escudo)
     }
 
     private Config _c;
@@ -133,7 +134,7 @@ public sealed class MareaDeSombra : MonoBehaviour
         if (d < antes - 0.5f || d > ahora + 0.5f) return;
 
         bool porEncima = _jugador.position.y - transform.position.y > _c.altura;
-        if (porEncima || EnElHueco(_jugador.position))
+        if (porEncima || EnElHueco(_jugador.position) || (_c.aSalvo != null && _c.aSalvo()))
         {
             JugadorSalvado = true;
             return;
