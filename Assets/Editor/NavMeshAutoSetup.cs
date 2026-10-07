@@ -184,6 +184,27 @@ public static class NavMeshAutoSetup
         }
     }
 
+    /// Clasifica solo lo que cuelga de una raíz (lo que coloca una herramienta), sin recorrer el resto
+    /// de la escena. Lo que cabe en menos de «ladoMinimo» metros en planta (macetas, cajas, farolas) no
+    /// recibe obstáculo, para no llenar el NavMesh de agujeros diminutos. Devuelve cuántos añade.
+    public static int ClasificarBajo(Transform raiz, float ladoMinimo = 1f)
+    {
+        int floorLayer = LayerMask.NameToLayer(WalkableLayerName);
+        if (floorLayer < 0 || raiz == null) return 0;
+        int added = 0;
+        foreach (var col in raiz.GetComponentsInChildren<Collider>(includeInactive: false))
+        {
+            if (ShouldExclude(col, floorLayer, ignoreExistingObstacle: false)) continue;
+            var b = col.bounds;
+            if (b.size.x < ladoMinimo && b.size.z < ladoMinimo) continue;
+            var obstacle = col.gameObject.AddComponent<NavMeshObstacle>();
+            obstacle.carving = true;
+            AjustarAlPie(obstacle, col);
+            added++;
+        }
+        return added;
+    }
+
     // Altura, en metros sobre la base del objeto, de lo que cuenta como obstáculo para andar: la
     // de un personaje (la altura de agente del NavMesh). Lo que queda por encima (una copa alta,
     // el dintel de un arco) no corta el paso; lo que queda por debajo (las ramas bajas de un

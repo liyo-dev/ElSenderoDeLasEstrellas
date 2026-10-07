@@ -39,6 +39,13 @@
 *.playable  text eol=lf merge=unityyamlmerge
 *.signal    text eol=lf
 *.renderTexture binary
+# .asset que Unity guarda siempre en binario (TerrainData, NavMesh horneado). Con «text eol=lf» git
+# borra sus bytes CR al hacer commit y la copia del repositorio queda corrupta. Ver INC-664.
+Assets/Scenes/Worlds/**/Terreno.asset binary
+Assets/Scenes/Worlds/**/NavMesh*.asset binary
+Assets/Scenes/Test/**/NavMesh*.asset binary
+Assets/Terrain/**/*TerrainData*.asset binary
+Assets/Art/World/ithappy/**/NavMesh.asset binary
 *.flare     text eol=lf
 *.fontsettings text eol=lf
 *.guiskin   text eol=lf

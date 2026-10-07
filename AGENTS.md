@@ -113,6 +113,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Ambiente de noche (ventanas, faroles, estrellas fugaces) | `VentanasIluminadas` (emisión de materiales compartidos), `LuzNocturna` (Light), `EstrellasFugaces`, todos con `DayNightCycle.NocheActual` | encender luces o emisiones por hora en cada sistema |
 | Partículas de ambiente fijas en el mundo (luciérnagas, niebla de bosque, humo) | heredar de `ParticulasDeAmbiente` (`LuciernagasNocturnas`, `NieblaNocturna`, `HumoDeChimenea`) | `ParticleSystem` sueltos con su propia activación por distancia |
 | Clima (lluvia, tormenta, nieve, viento, niebla) y su efecto en el jugador | `DayNightCycle` (+ `VfxDeClima` si no hay prefab, `VientoSobreElJugador` para frenar/arrastrar) | partículas de clima o empujes del viento por su cuenta en cada sistema |
+| Vestir los pueblos y parajes de MainWorld (suelos de calle, detalles, ruinas entre zonas) | `VestidoDelMundo` (*El Sendero ▸ Escenario ▸ MainWorld: vestir…*, TDD § 23): lo generado se rehace en cada ejecución, se retoca en sus tablas | colocar a mano bajo «Vestido del mundo (generado)»; generadores de pueblos aparte |
 
 ---
 
