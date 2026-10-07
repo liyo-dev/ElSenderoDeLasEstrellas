@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body10
   displayNameId: WARDROBE_BODY10_NAME
   displayName: Traje de comerciante
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: b5a7bf760a46405e9902aaac05557dd5, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY10_DESC
   useDescription: "Elegante pero pr\xE1ctico, pensado para cerrar buenos tratos."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: c436e387dffe41f9990bc22d3f6243b5, type: 2}

@@ -722,7 +722,7 @@ namespace Core
 
     /// <summary>
     /// Botón X (West/Square) en menús: abre los Controles desde el menú de Start (INC-504).
-    /// Teclado: C. Solo en modo UI.
+    /// Solo en modo UI: X del mando o C del teclado. El clic se gestiona desde la tarjeta de controles.
     /// </summary>
     public static bool XButtonPressedUI
     {
@@ -747,6 +747,8 @@ namespace Core
             var kb = Keyboard.current;
             if (kb != null && kb.cKey.wasPressedThisFrame)
                 return true;
+
+            // El acceso con ratón lo recibe la tarjeta de controles para no interceptar otros clics de UI.
 #endif
 
             return false;

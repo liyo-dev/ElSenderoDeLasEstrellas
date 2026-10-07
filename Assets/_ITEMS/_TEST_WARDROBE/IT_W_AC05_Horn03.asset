@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac05_horn03
   displayNameId: ITEM_AC05_HORN03_NAME
   displayName: Cuerno Doble
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: c263fff5cc1a4e1f9e116f3feff9bc32, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC05_HORN03_DESC
   useDescription: "Dos peque\xF1os cuernos gemelos."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 120
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 890a624baf57494f8ac08c091a30fc1f, type: 2}

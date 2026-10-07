@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body17
   displayNameId: WARDROBE_BODY17_NAME
   displayName: Ropa de anciano
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 50965543889f4f73a4c8b775929c8acd, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY17_DESC
   useDescription: "Abrigada y c\xF3moda, perfecta para los a\xF1os de sabidur\xEDa."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 29b8ce64a7a5484d8f7e99598187518b, type: 2}

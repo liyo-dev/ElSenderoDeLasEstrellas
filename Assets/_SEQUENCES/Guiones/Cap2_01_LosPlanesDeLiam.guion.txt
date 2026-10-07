@@ -7,10 +7,11 @@ RITMO entre_frases=0.45 mismo_hablante=0.3
 
 REPARTO
 liam LIAM_TORRE nombre=Liam color=BBA0FF prefab=Assets/Prefabs/_LIAM.prefab
+tobi TOBI_TORRE nombre=CHAR_TOBI color=C8D8FF prefab=Assets/_NPCs/_GrafoNarrativo/Tobi.prefab
 
 PUNTOS
-# Sentado: la raíz del personaje va a la altura del asiento de la silla (0,29 m).
-silla -6000 6000.9 100.29
+# La silla trae su punto de sentarse (NPCWorldPoint, el mismo que usan Will y los NPCs): «sienta» toma de ahí sitio, orientación y animación.
+silla Silla_Liam
 manos -6000 6000.5 100.45
 cam_general -6001.4 5997.4 100
 cam_cara -6001.2 5998.9 100
@@ -19,12 +20,17 @@ cam_mapa -6000.6 6001.2 100
 cam_sienta -6001.3 5998.7 100
 foco_general -6000 6001 101.75
 detalle_llave -6000.15 5999.75 100.62
+# Tobi, en su cama: un cuarto aparte, a 12 m, que solo ve la franja.
+cama_tobi -5988 6000.42 100.519
+pies_tobi -5988 5998.5
 
 HILO
 @inicio
-liam en silla mirando PROP_Bola
-& liam bucle SitMedium_Loop
+liam sienta silla ya
 & liam cara pensativo
+& tobi en cama_tobi mirando pies_tobi
+& tobi bucle SitGround_Loop
+& tobi cara cansado
 & bandas
 plano general liam mira=foco_general altura_foco=0 desde=cam_general altura=1.5 lente=65
 espera 3
@@ -70,7 +76,13 @@ espera 1.5
 @final
 liam mira manos
 liam cara triste
-espera 1.5
+espera 1
+# Liam piensa en su hermano: la franja con Tobi en la cama, y la frase cuando se va.
+cutin tobi encuadre=Busto lado=Izquierda alturaEnPantalla=0.7 duracion=2.6 dura=0.8
+tobi cara triste
+espera 0.9
+tobi cara cansado
+espera 1.1
 liam dice EVT_LIAM_CRYSTAL_07 cara=triste sin_pose
 espera 2
 fundido cubre 1.5

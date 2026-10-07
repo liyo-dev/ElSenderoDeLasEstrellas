@@ -13,6 +13,12 @@ using System.Collections.Generic;
 /// </summary>
 public static class NarrativeFlags
 {
+    public static event Action<string> Changed;
+
+#if UNITY_EDITOR
+    [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => Changed = null;
+#endif
     public const string Prefix = "NARRATIVE_FLAG:";
 
     static List<string> Flags
@@ -49,6 +55,7 @@ public static class NarrativeFlags
             return;
         }
         var key = Key(flag);
+        bool anterior = flags.Contains(key);
         if (value)
         {
             if (!flags.Contains(key)) flags.Add(key);
@@ -57,6 +64,7 @@ public static class NarrativeFlags
         {
             flags.Remove(key);
         }
+        if (anterior != value) Changed?.Invoke(flag);
     }
 
     /// <summary>Todos los flags narrativos activos, sin prefijo (para debug/editor).</summary>

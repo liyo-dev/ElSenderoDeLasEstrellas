@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac11_mustache04
   displayNameId: ITEM_AC11_MUSTACHE04_NAME
   displayName: Bigote y Barba Trenzada
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 08ba1dac07ea462981b3c6c5123066af, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC11_MUSTACHE04_DESC
   useDescription: Un bigote combinado con una barba trenzada.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: ba2fa565df8c4592a47a78157f159f4a, type: 2}

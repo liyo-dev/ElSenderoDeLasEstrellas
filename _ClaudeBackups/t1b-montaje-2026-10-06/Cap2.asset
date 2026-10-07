@@ -1,0 +1,308 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: Cap2
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: 7fd8150e-4981-4e1d-82a9-37878792354c
+  nodes:
+  - rid: 5630202263296278868
+  - rid: 5630202263296278869
+  - rid: 5630202263296278870
+  - rid: 5630202263296278916
+  - rid: 5630202263296278917
+  - rid: 5630202263296278918
+  - rid: 5630202263296278919
+  - rid: 5630202263296278993
+  - rid: 5630202263296278994
+  - rid: 5630202263296278995
+  - rid: 5630202263296278996
+  - rid: 5630202263296278997
+  - rid: 5630202263296278998
+  - rid: 5630202263296278999
+  - rid: 5630202263296279000
+  - rid: 5630202263296279001
+  applicableSceneNames: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202263296278868
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 0.- Inicio
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 7fd8150e-4981-4e1d-82a9-37878792354c
+        position: {x: 0, y: 0}
+        outputs:
+        - a85bfc4c-0b07-4746-8610-48591900d3e1
+    - rid: 5630202263296278869
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 1.- Esperar fin del Cap. 1
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: a85bfc4c-0b07-4746-8610-48591900d3e1
+        position: {x: 320, y: 0}
+        outputs:
+        - 562a84cd-8ae4-43e1-92b9-36f411700e01
+        eventKey: CH_Cap1_BACK_1
+    - rid: 5630202263296278870
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.- Cap. 2 \xB7 Inicio (tras el Demonio)"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 562a84cd-8ae4-43e1-92b9-36f411700e01
+        position: {x: 640, y: 0}
+        outputs:
+        - 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
+        checkpointId: CAP2_INICIO_TRAS_DEMONIO
+        spawnAnchorId: Eldran_PuntoGuardado
+        sceneName: MainWorld
+    - rid: 5630202263296278916
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 3.- Carga la torre de Liam (TorreDeLiam)
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
+        position: {x: 1020, y: 0}
+        outputs:
+        - ccda44d1-808e-43b9-bdd1-2833e19985e5
+        operacion: 0
+        sceneName: TorreDeLiam
+        waitForCompletion: 1
+    - rid: 5630202263296278917
+      type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 4.- Los planes de Liam (LIAM_CRYSTAL_START)
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: ccda44d1-808e-43b9-bdd1-2833e19985e5
+        position: {x: 1400, y: 0}
+        outputs:
+        - f9727755-a7d3-4139-b632-6be36c051717
+        eventKey: LIAM_CRYSTAL_START
+    - rid: 5630202263296278918
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 5.- Espera fin de la escena de Liam (LIAM_CRYSTAL_DONE)
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: f9727755-a7d3-4139-b632-6be36c051717
+        position: {x: 1780, y: 0}
+        outputs:
+        - 5d1d3c34-cd28-464d-8039-73856cd7338e
+        eventKey: LIAM_CRYSTAL_DONE
+    - rid: 5630202263296278919
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 6.- Descarga la torre de Liam
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 5d1d3c34-cd28-464d-8039-73856cd7338e
+        position: {x: 2160, y: 0}
+        outputs:
+        - c07008ca-ae29-4d50-848f-8c80e0dfa16a
+        operacion: 1
+        sceneName: TorreDeLiam
+        waitForCompletion: 1
+    - rid: 5630202263296278993
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 7.- Amanece tras la noche
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
+        position: {x: 2540, y: 0}
+        outputs:
+        - cap2-manana-despues-8
+        targetTime: 6
+        immediate: 1
+    - rid: 5630202263296278994
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "8.- Carga la habitaci\xF3n de Will"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-8
+        position: {x: 2920, y: 0}
+        outputs:
+        - cap2-manana-despues-9
+        operacion: 0
+        sceneName: WillHouse
+        waitForCompletion: 1
+    - rid: 5630202263296278995
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-9
+        position: {x: 3300, y: 0}
+        outputs:
+        - cap2-manana-despues-10
+        actorId: Player
+        markId: Bedroom
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 5630202263296278996
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10.- Eldran entra en la habitaci\xF3n"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-10
+        position: {x: 3680, y: 0}
+        outputs:
+        - cap2-manana-despues-11
+        actorId: NPC_Eldran
+        markId: M_Manana_EldranPuerta
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 5630202263296278997
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-11
+        position: {x: 4060, y: 0}
+        outputs:
+        - cap2-manana-despues-12
+        cinematicName: "La ma\xF1ana despu\xE9s"
+        signalIn: MANANA_DESPUES_START
+        signalDone: MANANA_DESPUES_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 5630202263296278998
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 12.- Eldran queda junto a la mesa
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-12
+        position: {x: 4440, y: 0}
+        outputs:
+        - cap2-manana-despues-13
+        actorId: NPC_Eldran
+        markId: M_Manana_EldranMesa
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 5630202263296278999
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 13.- Trozo del aro
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-13
+        position: {x: 4820, y: 0}
+        outputs:
+        - cap2-manana-despues-14
+        item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 5630202263296279000
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "14.- Prep\xE1rate para el viaje"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-14
+        position: {x: 5200, y: 0}
+        outputs:
+        - cap2-manana-despues-15
+        questId: PREPARA_VIAJE
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
+        noGiver: 0
+    - rid: 5630202263296279001
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-15
+        position: {x: 5580, y: 0}
+        outputs: []
+        checkpointId: CAP2_MANANA_DESPUES
+        spawnAnchorId: Bedroom
+        sceneName: WillHouse

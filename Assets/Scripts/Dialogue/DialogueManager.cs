@@ -142,6 +142,7 @@ public class DialogueManager : MonoBehaviour
     Coroutine _typeRoutine;
     bool _isTyping;
     string _currentText = string.Empty;
+    string _textoPendienteDePagina = string.Empty;
 
     // NPC para cámara de diálogo
     private Transform _currentNpc;
@@ -498,6 +499,7 @@ public class DialogueManager : MonoBehaviour
         _current = asset;
         _onEnd = onFinished;
         _index = -1;
+        _textoPendienteDePagina = string.Empty;
 
         // Cachear el NPCSimpleAnimator del jugador para animaciones corporales durante el diálogo
         if (PlayerService.TryGetPlayer(out var pGo, allowSceneLookup: true) && pGo != null)
@@ -1101,6 +1103,12 @@ public class DialogueManager : MonoBehaviour
     private void Next()
     {
         StopLineVoice();
+        if (_current != null && !string.IsNullOrEmpty(_textoPendienteDePagina))
+        {
+            _currentText = _textoPendienteDePagina;
+            PintarPagina(_current.lines[_index], false);
+            return;
+        }
         _index++;
         if (_current == null || _current.lines == null || _index >= _current.lines.Length)
         {
@@ -1157,12 +1165,42 @@ public class DialogueManager : MonoBehaviour
             portraitImage.enabled = true;
         }
 
+        PintarPagina(line, true);
+    }
+
+    void PintarPagina(DialogueLine line, bool reproducirVoz)
+    {
+        // La medición de TMP respeta el ancho, la fuente y la localización actuales.
+        _textoPendienteDePagina = string.Empty;
         // --- PINTADO + TYPEWRITER ---
         if (bodyText)
         {
             StopTypewriter();
             bodyText.text = _currentText;
-            if (vocesEnCuadrosDeDialogo && VoiceLines.TryPlay(line.textId) > 0f)
+            int limite = _current != null ? _current.maxLinesPerPage : 0;
+            if (limite > 0)
+            {
+                Canvas.ForceUpdateCanvases();
+                var desbordamiento = bodyText.overflowMode;
+                bodyText.overflowMode = TextOverflowModes.Overflow;
+                bodyText.maxVisibleCharacters = int.MaxValue;
+                try
+                {
+                    if (TryForceMeshUpdate() && bodyText.textInfo.lineCount > limite)
+                    {
+                        int caracter = bodyText.textInfo.lineInfo[limite].firstCharacterIndex;
+                        int corte = bodyText.textInfo.characterInfo[caracter].index;
+                        if (corte > 0 && corte < _currentText.Length)
+                        {
+                            _textoPendienteDePagina = _currentText.Substring(corte);
+                            _currentText = _currentText.Substring(0, corte).TrimEnd('\r', '\n');
+                            bodyText.text = _currentText;
+                        }
+                    }
+                }
+                finally { bodyText.overflowMode = desbordamiento; }
+            }
+            if (reproducirVoz && vocesEnCuadrosDeDialogo && VoiceLines.TryPlay(line.textId) > 0f)
                 VoiceLines.TryGet(line.textId, out _lineVoice);
             if (useTypewriter)
             {

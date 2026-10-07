@@ -2,18 +2,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TMPro;
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// <summary>
-/// Monta de una vez todo lo que quedaba del grimorio (Raúl: «métemelos todos en una única opción
-/// del menú para luego darle y probar todo»). En orden:
+/// Monta los hechizos y sus interfaces desde una única opción del Editor. En orden:
 ///
 ///   1. Grimorio de cada personaje (INC-503): Bola de Fuego de Estela deja de compartir id con
 ///      Llama Astral; Bola de Fuego, Cycloneburst y Aura Estelar entran en la SpellLibrary.
@@ -24,7 +20,7 @@ using Slot = PartyControlManager.CharacterSlot;
 ///   5. Iconos propios de los 16 hechizos nuevos (Assets/Art/UI/Attacks/Grimorio).
 ///   6. Página del grimorio (INC-503): prefab y dos páginas en el laboratorio de combate
 ///      (Estrella Fugaz para Will y Brisa Sanadora para Estela).
-///   7. Controles en el menú de Start (INC-504): copia el panel del menú principal.
+///   7. Menú de Start: delega los controles, las monedas y el registro de objetos en su builder.
 ///   8. El grimorio en libro (INC-506): el libro y el botón «Grimorio» de la pestaña Hechizos.
 ///   9. Comprueba que ninguna secuencia de combo sea el principio de otra.
 ///
@@ -40,8 +36,6 @@ public static class GrimorioMontarTodo
     private const string IconFolder = "Assets/Art/UI/Attacks/Grimorio/";
     private const string PagePrefabPath = PaginaDelGrimorioBuilder.PrefabPath;
     private const string CombatLabPath = "Assets/Scenes/Test/CombatLab.unity";
-    private const string StartScenePath = "Assets/Scenes/Systems/Start.unity";
-    private const string MainMenuScenePath = "Assets/Scenes/Systems/MainMenu.unity";
 
     private const string Hovl = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/";
     private const string Best = "Assets/VFX/100BestEffectPack/Effects/";
@@ -62,7 +56,7 @@ public static class GrimorioMontarTodo
         Step("5. Iconos", log, () => Iconos(log, warnings));
         AssetDatabase.SaveAssets();
         Step("6. Páginas del grimorio", log, () => Paginas(log, warnings));
-        Step("7. Controles en el menú de Start", log, () => ControlesEnPausa(log, warnings));
+        Step("7. Controles en el menú de Start", log, () => MenuDeStartBuilder.Montar(log, warnings));
         Step("8. Grimorio en libro", log, () => GrimorioLibroBuilder.Montar(log, warnings));
         AssetDatabase.SaveAssets();
         Step("9. VFX propios (ninguno repetido)", log, () => VfxDeHechizos.Aplicar(log, warnings));
@@ -279,110 +273,6 @@ public static class GrimorioMontarTodo
         EditorUtility.SetDirty(page);
         log.AppendLine($"   Página de {spell} en el laboratorio ({pos.x:0}, {pos.z:0}).");
         return true;
-    }
-
-    // ── 7. Controles en el menú de Start ──────────────────────────────────
-
-    private static void ControlesEnPausa(StringBuilder log, List<string> warnings)
-    {
-        var start = SceneManager.GetSceneByPath(StartScenePath);
-        bool openedStart = false;
-        if (!start.isLoaded)
-        {
-            start = EditorSceneManager.OpenScene(StartScenePath, OpenSceneMode.Additive);
-            openedStart = true;
-        }
-
-        var menu = FindInScene<PlayerEquipmentMenuController>(start);
-        if (menu == null) { warnings.Add("Start.unity no tiene PlayerEquipmentMenuController."); Close(start, openedStart); return; }
-
-        var so = new SerializedObject(menu);
-        var controlsProp = so.FindProperty("controlsMenu");
-        var hintProp = so.FindProperty("controlsHintText");
-        if (controlsProp == null) { warnings.Add("PlayerEquipmentMenuController no tiene 'controlsMenu' (¿sin compilar?)."); Close(start, openedStart); return; }
-
-        if (controlsProp.objectReferenceValue == null)
-        {
-            var mm = SceneManager.GetSceneByPath(MainMenuScenePath);
-            bool openedMm = false;
-            if (!mm.isLoaded)
-            {
-                mm = EditorSceneManager.OpenScene(MainMenuScenePath, OpenSceneMode.Additive);
-                openedMm = true;
-            }
-            var src = FindInScene<ControlsMenuController>(mm);
-            if (src == null) warnings.Add("MainMenu.unity no tiene ControlsMenuController.");
-            else
-            {
-                var canvas = so.FindProperty("canvas")?.objectReferenceValue as Canvas;
-                Transform parent = canvas != null ? canvas.transform : menu.transform;
-                var copy = Object.Instantiate(src.gameObject, parent, false);
-                copy.name = "Controles (menú de Start)";
-                copy.transform.SetAsLastSibling();
-                copy.SetActive(false);
-
-                // Quitar los botones que llamaban a cosas del menú principal (no existen aquí).
-                foreach (var b in copy.GetComponentsInChildren<Button>(true))
-                {
-                    for (int i = b.onClick.GetPersistentEventCount() - 1; i >= 0; i--)
-                    {
-                        var target = b.onClick.GetPersistentTarget(i);
-                        bool inside = target is Component c && c != null && c.transform.IsChildOf(copy.transform)
-                                   || target is GameObject g && g != null && g.transform.IsChildOf(copy.transform);
-                        if (!inside) UnityEventTools.RemovePersistentListener(b.onClick, i);
-                    }
-                }
-
-                controlsProp.objectReferenceValue = copy.GetComponent<ControlsMenuController>();
-                log.AppendLine("   Copiado el panel de controles del menú principal al menú de Start.");
-            }
-            if (openedMm) EditorSceneManager.CloseScene(mm, true);
-        }
-
-        if (hintProp != null && hintProp.objectReferenceValue == null)
-        {
-            var windowRoot = so.FindProperty("windowRoot")?.objectReferenceValue as GameObject;
-            var reference = so.FindProperty("levelText")?.objectReferenceValue as TextMeshProUGUI;
-            if (windowRoot != null)
-            {
-                var go = new GameObject("PistaControles", typeof(RectTransform));
-                go.transform.SetParent(windowRoot.transform, false);
-                var rt = (RectTransform)go.transform;
-                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(0f, 0f);
-                rt.anchoredPosition = new Vector2(40f, 28f);
-                rt.sizeDelta = new Vector2(420f, 48f);
-                var tmp = go.AddComponent<TextMeshProUGUI>();
-                if (reference != null) { tmp.font = reference.font; tmp.fontSharedMaterial = reference.fontSharedMaterial; }
-                tmp.fontSize = 26f;
-                tmp.color = new Color(1f, 1f, 1f, 0.85f);
-                tmp.alignment = TextAlignmentOptions.BottomLeft;
-                tmp.raycastTarget = false;
-                tmp.text = "X  Controles";
-                hintProp.objectReferenceValue = tmp;
-                log.AppendLine("   Pista «X Controles» abajo a la izquierda del menú.");
-            }
-            else warnings.Add("El menú de Start no tiene windowRoot; sin pista de controles.");
-        }
-
-        so.ApplyModifiedPropertiesWithoutUndo();
-        EditorSceneManager.MarkSceneDirty(start);
-        EditorSceneManager.SaveScene(start);
-        Close(start, openedStart);
-    }
-
-    private static void Close(Scene scene, bool opened)
-    {
-        if (opened) EditorSceneManager.CloseScene(scene, true);
-    }
-
-    private static T FindInScene<T>(Scene scene) where T : Component
-    {
-        foreach (var go in scene.GetRootGameObjects())
-        {
-            var c = go.GetComponentInChildren<T>(true);
-            if (c != null) return c;
-        }
-        return null;
     }
 
     // ── Utilidades ────────────────────────────────────────────────────────

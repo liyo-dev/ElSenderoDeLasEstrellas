@@ -1,0 +1,1697 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: Cap2_02_MananaDespues_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: Cap2_02_MananaDespues
+  duracion: 195.06859
+  presentacion: 1
+  huella: "2026-10-07 09:40 \xB7 cb83b9a0d898784a07d8464b1138258f"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: CHAR_WILL
+    posiciones:
+    - t: 0
+      p: {x: 115.75, y: 0, z: 3.55}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 114.9, y: 0.92, z: 3.55}
+      actor: 
+    - t: 1
+      tipo: 1
+      rumbo: 0
+      punto: {x: 114.9, y: 0.92, z: 3.55}
+      actor: 
+    - t: 4.9500003
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 13.4509735
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 18.300974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 21.450974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 28.300974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 32.450974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 35.300972
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 41.950974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 45.800972
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 50.950974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 58.130974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 78.490974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 83.490974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 91.990974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 95.84097
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 99.990974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 103.84097
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 107.990974
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 116.170975
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 120.02097
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 123.170975
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 135.26526
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 142.11526
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 150.26526
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 158.44525
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 163.44525
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 169.29526
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 172.44525
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 179.29526
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 182.44525
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    - t: 187.62524
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Eldran
+    animacion:
+    - t: 1
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 4.55
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 18.300974
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 21.350973
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 28.300974
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 32.35097
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 35.300972
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 35.800972
+      tipo: 2
+      estado: CastingDamage01
+      congelar: 0
+    - t: 37.60097
+      tipo: 2
+      estado: Cheer01
+      congelar: 0
+    - t: 39.10097
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+    - t: 40.300972
+      tipo: 2
+      estado: Cheer02
+      congelar: 0
+    - t: 41.85097
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 45.800972
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 50.85097
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 95.84097
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 99.890976
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 103.84097
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 107.890976
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 120.02097
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 123.07098
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 142.11526
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 150.16527
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 169.29526
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 172.34526
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 179.29526
+      tipo: 3
+      estado: 
+      congelar: 0
+    - t: 182.34526
+      tipo: 4
+      estado: 
+      congelar: 0
+    - t: 194.56859
+      tipo: 0
+      estado: 
+      congelar: 0
+    caras:
+    - t: 1
+      emocion: 6
+      dura: 3.9
+    - t: 18.300974
+      emocion: 4
+      dura: 3.4
+    - t: 28.300974
+      emocion: 13
+      dura: 4.4
+    - t: 35.300972
+      emocion: 4
+      dura: 6.9
+    - t: 45.800972
+      emocion: 6
+      dura: 5.4
+    - t: 95.84097
+      emocion: 6
+      dura: 4.4
+    - t: 103.84097
+      emocion: 10
+      dura: 4.4
+    - t: 120.02097
+      emocion: 6
+      dura: 3.4
+    - t: 142.11526
+      emocion: 9
+      dura: 8.4
+    - t: 169.29526
+      emocion: 6
+      dura: 3.4
+    - t: 179.29526
+      emocion: 10
+      dura: 3.4
+    visible: []
+    deslizando: []
+  - id: NPC_Eldran
+    alias: eldran
+    colorDelNombre: {r: 0.61960787, g: 0.8392157, b: 1, a: 1}
+    claveDelNombre: CHAR_ELDRAN
+    posiciones:
+    - t: 0
+      p: {x: 116.4, y: 0, z: 5}
+    - t: 4.5
+      p: {x: 116.4, y: 0, z: 5}
+    - t: 4.7632637
+      p: {x: 116.525475, y: 0.000032173586, z: 4.7400947}
+    - t: 4.9683485
+      p: {x: 116.65094, y: 0.000032184947, z: 4.4801893}
+    - t: 5.2407837
+      p: {x: 116.83915, y: 0.000032201988, z: 4.0903316}
+    - t: 5.477538
+      p: {x: 116.954254, y: 0.000032217715, z: 3.7305188}
+    - t: 5.702667
+      p: {x: 116.95175, y: 0.00003223341, z: 3.3715224}
+    - t: 5.93942
+      p: {x: 116.83167, y: 0.000032249063, z: 3.0133433}
+    - t: 6.207643
+      p: {x: 116.63975, y: 0.00003226584, z: 2.629495}
+    - t: 6.475866
+      p: {x: 116.44782, y: 0.00003228262, z: 2.2456465}
+    - t: 6.746153
+      p: {x: 116.2559, y: 0.0000322994, z: 1.8617979}
+    - t: 6.9498916
+      p: {x: 116.12795, y: 0.000032310585, z: 1.605899}
+    - t: 7.211256
+      p: {x: 116, y: 0.000032321772, z: 1.35}
+    - t: 10.8
+      p: {x: 116, y: 0.000032321772, z: 1.35}
+    - t: 11.163648
+      p: {x: 115.76936, y: 0.00003231364, z: 1.5360314}
+    - t: 11.442827
+      p: {x: 115.53873, y: 0.000032305506, z: 1.7220627}
+    - t: 11.70049
+      p: {x: 115.30809, y: 0.000032297376, z: 1.9080939}
+    - t: 11.958147
+      p: {x: 115.07746, y: 0.000032289245, z: 2.0941253}
+    - t: 12.237327
+      p: {x: 114.846825, y: 0.000032281114, z: 2.2801566}
+    - t: 12.600974
+      p: {x: 114.61619, y: 0.000032272983, z: 2.466188}
+    - t: 12.675974
+      p: {x: 114.56647, y: 0.039089732, z: 2.4164696}
+    - t: 12.750974
+      p: {x: 114.45709, y: 0.12501614, z: 2.3070889}
+    - t: 12.825974
+      p: {x: 114.34771, y: 0.21094254, z: 2.1977084}
+    - t: 12.900974
+      p: {x: 114.29799, y: 0.25, z: 2.14799}
+    - t: 126.02097
+      p: {x: 114.29799, y: 0.25, z: 2.14799}
+    - t: 126.37264
+      p: {x: 114.54683, y: 0.00003229199, z: 2.0313203}
+    - t: 126.6476
+      p: {x: 114.79567, y: 0.00003229709, z: 1.9146508}
+    - t: 126.89068
+      p: {x: 115.04452, y: 0.00003230219, z: 1.7979813}
+    - t: 127.12966
+      p: {x: 115.29336, y: 0.00003230729, z: 1.6813116}
+    - t: 127.368645
+      p: {x: 115.5422, y: 0.00003231239, z: 1.5646421}
+    - t: 127.613464
+      p: {x: 115.766525, y: 0.000032319676, z: 1.3978964}
+    - t: 127.92227
+      p: {x: 115.79979, y: 0.000032334487, z: 1.0590873}
+    - t: 128.15335
+      p: {x: 115.67, y: 0.00003234461, z: 0.8275}
+    - t: 128.37318
+      p: {x: 115.535, y: 0.000032353953, z: 0.61375}
+    - t: 128.59358
+      p: {x: 115.67, y: 0.00003234461, z: 0.8275}
+    - t: 128.8297
+      p: {x: 115.802, y: 0.000032335476, z: 1.0365}
+    - t: 129.10812
+      p: {x: 115.934, y: 0.000032326338, z: 1.2455}
+    - t: 129.28333
+      p: {x: 116, y: 0.000032321772, z: 1.35}
+    - t: 132.6143
+      p: {x: 116, y: 0.000032321772, z: 1.35}
+    - t: 132.97795
+      p: {x: 115.76936, y: 0.00003231364, z: 1.5360314}
+    - t: 133.25713
+      p: {x: 115.53873, y: 0.000032305506, z: 1.7220627}
+    - t: 133.51479
+      p: {x: 115.30809, y: 0.000032297376, z: 1.9080939}
+    - t: 133.77245
+      p: {x: 115.07746, y: 0.000032289245, z: 2.0941253}
+    - t: 134.05162
+      p: {x: 114.846825, y: 0.000032281114, z: 2.2801566}
+    - t: 134.41527
+      p: {x: 114.61619, y: 0.000032272983, z: 2.466188}
+    - t: 134.49026
+      p: {x: 114.56647, y: 0.039089732, z: 2.4164696}
+    - t: 134.56526
+      p: {x: 114.45709, y: 0.12501614, z: 2.3070889}
+    - t: 134.64027
+      p: {x: 114.34771, y: 0.21094254, z: 2.1977084}
+    - t: 134.71527
+      p: {x: 114.29799, y: 0.25, z: 2.14799}
+    - t: 194.26859
+      p: {x: 114.29799, y: 0.25, z: 2.14799}
+    - t: 194.34358
+      p: {x: 114.34771, y: 0.21094254, z: 2.1977084}
+    - t: 194.41858
+      p: {x: 114.45709, y: 0.12501614, z: 2.3070889}
+    - t: 194.49359
+      p: {x: 114.56647, y: 0.039089732, z: 2.4164696}
+    - t: 194.56859
+      p: {x: 114.61619, y: 0.000032272983, z: 2.466188}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 4.8
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.600974
+      tipo: 0
+      rumbo: 45.000004
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    - t: 134.41527
+      tipo: 0
+      rumbo: 45.000004
+      punto: {x: 0, y: 0, z: 0}
+      actor: 
+    animacion:
+    - t: 12.600974
+      tipo: 2
+      estado: SitHigh_Begin
+      congelar: 0
+    - t: 13.265974
+      tipo: 1
+      estado: SitHigh_Loop
+      congelar: 0
+    - t: 126.02097
+      tipo: 2
+      estado: SitHigh_Exit
+      congelar: 0
+    - t: 126.95431
+      tipo: 0
+      estado: 
+      congelar: 0
+    - t: 134.41527
+      tipo: 2
+      estado: SitHigh_Begin
+      congelar: 0
+    - t: 135.08026
+      tipo: 1
+      estado: SitHigh_Loop
+      congelar: 0
+    - t: 193.47525
+      tipo: 2
+      estado: SitHigh_Exit
+      congelar: 0
+    - t: 194.40858
+      tipo: 0
+      estado: 
+      congelar: 0
+    caras:
+    - t: 13.300974
+      emocion: 2
+      dura: 5.4
+    - t: 21.300974
+      emocion: 8
+      dura: 7.4
+    - t: 32.300972
+      emocion: 1
+      dura: 3.4
+    - t: 41.800972
+      emocion: 8
+      dura: 4.4
+    - t: 50.800972
+      emocion: 6
+      dura: 7.4
+    - t: 57.980972
+      emocion: 6
+      dura: 5.4
+    - t: 63.160973
+      emocion: 2
+      dura: 7.4
+    - t: 70.16097
+      emocion: 2
+      dura: 8.4
+    - t: 78.34097
+      emocion: 2
+      dura: 5.4
+    - t: 83.34097
+      emocion: 2
+      dura: 7.4
+    - t: 91.84097
+      emocion: 2
+      dura: 3.4
+    - t: 99.84097
+      emocion: 8
+      dura: 4.4
+    - t: 107.84097
+      emocion: 6
+      dura: 8.4
+    - t: 116.02097
+      emocion: 2
+      dura: 4.4
+    - t: 123.02097
+      emocion: 6
+      dura: 3.4
+    - t: 135.11526
+      emocion: 0
+      dura: 7.4
+    - t: 150.11526
+      emocion: 0
+      dura: 8.4
+    - t: 158.29526
+      emocion: 6
+      dura: 5.4
+    - t: 163.29526
+      emocion: 8
+      dura: 6.4
+    - t: 172.29526
+      emocion: 8
+      dura: 7.4
+    - t: 182.29526
+      emocion: 0
+      dura: 5.4
+    - t: 187.47525
+      emocion: 1
+      dura: 6.4
+    visible: []
+    deslizando:
+    - desde: 12.600974
+      hasta: 12.950974
+    - desde: 126.81431
+      hasta: 127.16431
+    - desde: 134.41527
+      hasta: 134.76527
+    - desde: 194.26859
+      hasta: 194.61859
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1
+    t1: 4.5
+    actor: Player
+    clave: EVT_MANANA_00
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: velaControlada
+    skipIfFlag: 
+    t0: 4.8
+    t1: 10.8
+    actor: NPC_Eldran
+    clave: EVT_MANANA_01a
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t0: 4.8
+    t1: 10.8
+    actor: NPC_Eldran
+    clave: EVT_MANANA_01b
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 13.300974
+    t1: 18.300974
+    actor: NPC_Eldran
+    clave: EVT_MANANA_03
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 18.300974
+    t1: 21.300974
+    actor: Player
+    clave: EVT_MANANA_02b
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 21.300974
+    t1: 28.300974
+    actor: NPC_Eldran
+    clave: EVT_MANANA_02
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 28.300974
+    t1: 32.300972
+    actor: Player
+    clave: EVT_MANANA_04a
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 32.300972
+    t1: 35.300972
+    actor: NPC_Eldran
+    clave: EVT_MANANA_04b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 35.300972
+    t1: 41.800972
+    actor: Player
+    clave: EVT_MANANA_04
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 41.800972
+    t1: 45.800972
+    actor: NPC_Eldran
+    clave: EVT_MANANA_05
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 45.800972
+    t1: 50.800972
+    actor: Player
+    clave: EVT_MANANA_06
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 50.800972
+    t1: 57.800972
+    actor: NPC_Eldran
+    clave: EVT_MANANA_07
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 57.980972
+    t1: 62.980972
+    actor: NPC_Eldran
+    clave: EVT_MANANA_07b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 63.160973
+    t1: 70.16097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_08
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 70.16097
+    t1: 78.16097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_09
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 78.34097
+    t1: 83.34097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_09b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 83.34097
+    t1: 90.34097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_10
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 91.84097
+    t1: 94.84097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_10b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 95.84097
+    t1: 99.84097
+    actor: Player
+    clave: EVT_MANANA_11
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 99.84097
+    t1: 103.84097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_11b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 103.84097
+    t1: 107.84097
+    actor: Player
+    clave: EVT_MANANA_11c
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 107.84097
+    t1: 115.84097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_12
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 116.02097
+    t1: 120.02097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_13
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 120.02097
+    t1: 123.02097
+    actor: Player
+    clave: EVT_MANANA_14
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 123.02097
+    t1: 126.02097
+    actor: NPC_Eldran
+    clave: EVT_MANANA_15
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 135.11526
+    t1: 142.11526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_15b
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 142.11526
+    t1: 150.11526
+    actor: Player
+    clave: EVT_MANANA_16
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 150.11526
+    t1: 158.11526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_17
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 158.29526
+    t1: 163.29526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_18
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 163.29526
+    t1: 169.29526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_19
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 169.29526
+    t1: 172.29526
+    actor: Player
+    clave: EVT_MANANA_20
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 172.29526
+    t1: 179.29526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_21
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 179.29526
+    t1: 182.29526
+    actor: Player
+    clave: EVT_MANANA_22
+    gesto: 
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 182.29526
+    t1: 187.29526
+    actor: NPC_Eldran
+    clave: EVT_MANANA_23
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 187.47525
+    t1: 193.47525
+    actor: NPC_Eldran
+    clave: EVT_MANANA_24
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  planos:
+  - t0: 0
+    t1: 13.300974
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 0
+      p: {x: 114.3, y: 1.13, z: 4.6}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 13.300974
+    t1: 18.300974
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 13.300974
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 18.300974
+    t1: 21.300974
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 18.300974
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 21.300974
+    t1: 28.300974
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 21.300974
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 28.300974
+    t1: 32.300972
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 28.300974
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 32.300972
+    t1: 35.300972
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 32.300972
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 35.300972
+    t1: 41.800972
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 35.300972
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 41.800972
+    t1: 45.800972
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 41.800972
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 45.800972
+    t1: 50.800972
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 45.800972
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 50.800972
+    t1: 70.16097
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 50.800972
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 70.16097
+    t1: 83.34097
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 70.16097
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 83.34097
+    t1: 95.84097
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 83.34097
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 95.84097
+    t1: 99.84097
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 95.84097
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 99.84097
+    t1: 103.84097
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 99.84097
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 103.84097
+    t1: 107.84097
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 103.84097
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 107.84097
+    t1: 120.02097
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 107.84097
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 120.02097
+    t1: 123.02097
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 120.02097
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 123.02097
+    t1: 126.02097
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 123.02097
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 126.02097
+    t1: 135.11526
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 126.02097
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 135.11526
+    t1: 142.11526
+    tipo: 4
+    descripcion: detalle de el punto
+    posiciones:
+    - t: 135.11526
+      p: {x: 115.5, y: 1.25, z: 2.5}
+    lente: 40
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 114.65, y: 0.75, z: 3.1}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 142.11526
+    t1: 150.11526
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 142.11526
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 150.11526
+    t1: 163.29526
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 150.11526
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 163.29526
+    t1: 169.29526
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 163.29526
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 169.29526
+    t1: 172.29526
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 169.29526
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 172.29526
+    t1: 179.29526
+    tipo: 3
+    descripcion: primer plano de eldran
+    posiciones:
+    - t: 172.29526
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 179.29526
+    t1: 182.29526
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 179.29526
+      p: {x: 116.9, y: 1.13, z: 1.9}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - t0: 182.29526
+    t1: 195.06859
+    tipo: 2
+    descripcion: medio de eldran
+    posiciones:
+    - t: 182.29526
+      p: {x: 116, y: 1.15, z: 2.7}
+    lente: 48
+    lenteFinal: 0
+    sujetos:
+    - NPC_Eldran
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 114.29799, y: 1.1, z: 2.14799}
+    alturaDelFoco: 0.85
+    encuadre: {x: -0.13, y: -0.076}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202287041282359
+    linea: 39
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 4.5
+    beat:
+      rid: 5630202287041282360
+    linea: 44
+  - onlyIfFlag: velaControlada
+    skipIfFlag: 
+    t: 4.8
+    beat:
+      rid: 5630202287041282361
+    linea: 46
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.8
+    beat:
+      rid: 5630202287041282362
+    linea: 47
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.8
+    beat:
+      rid: 5630202287041282363
+    linea: 48
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 4.8
+    beat:
+      rid: 5630202287041282364
+    linea: 49
+  - onlyIfFlag: 
+    skipIfFlag: velaControlada
+    t: 8
+    beat:
+      rid: 5630202287041282365
+    linea: 50
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 10.8
+    beat:
+      rid: 5630202287041282366
+    linea: 57
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 10.8
+    beat:
+      rid: 5630202287041282367
+    linea: 59
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 10.8
+    beat:
+      rid: 5630202287041282368
+    linea: 60
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 126.52097
+    beat:
+      rid: 5630202287041282369
+    linea: 121
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 132.6143
+    beat:
+      rid: 5630202287041282370
+    linea: 123
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 194.56859
+    beat:
+      rid: 5630202287041282371
+    linea: 145
+  etiquetas:
+  - nombre: vela
+    t: 0
+  - nombre: bollo
+    t: 10.8
+  - nombre: origen
+    t: 45.800972
+  - nombre: eldran
+    t: 94.84097
+  - nombre: aro
+    t: 126.02097
+  puntos:
+  - nombre: will_mesa
+    posicion: {x: 115.75, y: 0, z: 3.55}
+  - nombre: puerta
+    posicion: {x: 116.4, y: 0, z: 5}
+  - nombre: eldran_mesa
+    posicion: {x: 116, y: 0, z: 2.25}
+  - nombre: silla
+    posicion: {x: 114.29799, y: 0.25, z: 2.14799}
+  - nombre: cofre
+    posicion: {x: 115.4, y: 0, z: 0.4}
+  - nombre: vela
+    posicion: {x: 114.9, y: 0.92, z: 3.55}
+  - nombre: bollo
+    posicion: {x: 114.65, y: 0.72, z: 3.9}
+  - nombre: aro
+    posicion: {x: 114.65, y: 0.75, z: 3.1}
+  - nombre: paso_silla
+    posicion: {x: 116, y: 0, z: 1.35}
+  - nombre: entrada
+    posicion: {x: 117.1, y: 0, z: 3.55}
+  - nombre: cam_vela
+    posicion: {x: 114.3, y: 0, z: 4.6}
+  - nombre: cam_will
+    posicion: {x: 116.9, y: 0, z: 1.9}
+  - nombre: cam_eldran
+    posicion: {x: 117.45, y: 0, z: 4.35}
+  - nombre: cam_sentado
+    posicion: {x: 116, y: 0, z: 2.7}
+  - nombre: cam_aro
+    posicion: {x: 115.5, y: 0, z: 2.5}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202287041282359
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.12
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202287041282360
+      type: {class: InputPromptBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mode: 2
+        actionRef: {fileID: 11400000, guid: ac62a6cee2ce5724399c56e91af58e29, type: 2}
+        directionActionRef: {fileID: 0}
+        pressesRequired: 8
+        windowSeconds: 12
+        holdSeconds: 0.8
+        maxHoldSeconds: 2.2
+        expectedDirection: {x: 0, y: 1}
+        directionAngleTolerance: 45
+        directionHoldSeconds: 0.15
+        iconGlyphName: interactable_confirm
+        promptTextId: TUTORIAL_VELA
+        successFlag: velaControlada
+        tolerant: 1
+        detenerEscena: 1
+    - rid: 5630202287041282361
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 3812152352920875704, guid: aa2460827beb3ad43b14f12f928b9647, type: 3}
+        atActorId: 
+        markName: vela
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 400
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+    - rid: 5630202287041282362
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 7719688146008883090, guid: 140d62751eecbec45b063c2d381cfdbd, type: 3}
+        atActorId: 
+        markName: vela
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 3
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+    - rid: 5630202287041282363
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 2696885978289718539, guid: 6e003eb84e91db9469d72088fc7ab4db, type: 3}
+        atActorId: Player
+        markName: 
+        offset: {x: -0.25, y: 0.9, z: 0.1}
+        lifetime: 1.5
+        earlyDespawn: 0
+        seguirAlActor: 1
+        registrarComo: 
+    - rid: 5630202287041282364
+      type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        voz: 1
+        actorId: Player
+        gesture: CastingDamage01
+        repeats: 2
+        holdSeconds: 0.6
+        returnToNormalAfter: 0
+    - rid: 5630202287041282365
+      type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        vfxPrefab: {fileID: 3812152352920875704, guid: aa2460827beb3ad43b14f12f928b9647, type: 3}
+        atActorId: 
+        markName: vela
+        offset: {x: 0, y: 0, z: 0}
+        lifetime: 400
+        earlyDespawn: 0
+        seguirAlActor: 0
+        registrarComo: 
+    - rid: 5630202287041282366
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 0
+        musicId: MANANA_DESPUES
+        fadeOut: 0.5
+    - rid: 5630202287041282367
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Bollo
+        deltaPosicion: {x: -1.25, y: -0.18, z: 1.65}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        segundos: 0.01
+        suavizar: 1
+        esperar: 1
+        desdeDondeEstaba: 0
+        apoyarEnElSuelo: 0
+    - rid: 5630202287041282368
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Bollo
+        active: 1
+    - rid: 5630202287041282369
+      type: {class: PropMoveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Aro
+        deltaPosicion: {x: -1.35, y: 0.03, z: 3.6}
+        deltaRotacion: {x: 0, y: 0, z: 0}
+        segundos: 0.01
+        suavizar: 1
+        esperar: 1
+        desdeDondeEstaba: 0
+        apoyarEnElSuelo: 0
+    - rid: 5630202287041282370
+      type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        propId: PROP_Aro
+        active: 1
+    - rid: 5630202287041282371
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 0
+        altura: 0.12
+        duracion: 0.5
+        esperar: 0

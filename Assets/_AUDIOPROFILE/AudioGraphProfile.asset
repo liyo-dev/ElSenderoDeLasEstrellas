@@ -517,3 +517,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 741f5c2ab994d7e43b3fe2a6b792a897, type: 3}
     fadeIn: 1
     fadeOut: 1
+  - sequenceId: MANANA_DESPUES
+    music: {fileID: 8300000, guid: 62884d4643e97fb4fb5014f5b0fb93ec, type: 3}
+    fadeIn: 2
+    fadeOut: 1.5

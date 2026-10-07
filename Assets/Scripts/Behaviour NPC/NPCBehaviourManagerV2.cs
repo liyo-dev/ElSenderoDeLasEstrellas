@@ -1098,19 +1098,32 @@ namespace Game.NPC
         }
         
         public void HandleInteraction(GameObject interactor)
+            => TryHandleInteraction(interactor);
+
+        /// <summary>True si el grafo estaba esperando esta charla y se queda con ella.</summary>
+        public bool TryHandleNarrativeInteraction()
+            => _context != null && !_context.IsInCombat && _brain != null && _brain.TryHandleNarrativeInteraction();
+
+        /// <summary>Frase que el grafo asigna ahora a este NPC (p. ej. «mientras tanto» de una misión).</summary>
+        public bool TryGetStandingLine(out DialogueAsset dialogue)
+        {
+            dialogue = null;
+            return !string.IsNullOrEmpty(PersistenceId) && NarrativeStandingLines.TryFind(PersistenceId, out dialogue);
+        }
+
+        public bool TryHandleInteraction(GameObject interactor)
         {
             // No interactuar si estamos muertos o en combate
-            if (_context.IsInCombat) return;
+            if (_context == null || _context.IsInCombat) return false;
             if (_cachedLifecycle != null && _cachedLifecycle.IsDefeatedAndInactive)
             {
                 // TODO: Implementar HandlePostDefeatInteraction en NPCCombatLifecycleHandler
                 // Por ahora, delegar al Brain para que maneje la interacción normalmente
                 // lifecycle.HandlePostDefeatInteraction(interactor);
-                _brain?.HandleInteraction(interactor);
-                return;
+                return _brain != null && _brain.HandleInteraction(interactor);
             }
 
-            _brain?.HandleInteraction(interactor);
+            return _brain != null && _brain.HandleInteraction(interactor);
         }
 
         /// <summary>

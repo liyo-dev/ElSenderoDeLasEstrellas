@@ -96,6 +96,8 @@ internal sealed class ActorH
     public readonly List<(float t0, float t1)> habla = new();
     public bool ocultoAlEmpezar;
     public string bucle;          // bucle en curso (en el instante del último comando procesado)
+    public NPCAmbientActivity sentadoCon; // actividad del asiento en el que está sentado (sienta/levanta)
+    public Vector3 dePie;         // donde estaba de pie antes de sentarse: ahí vuelve al levantarse
     public bool bucleDeCuerpo;    // ese bucle es de cuerpo entero
 
     // Pista propia
@@ -136,6 +138,14 @@ internal sealed class ActorH
 
     public void Teletransporte(float t, Vector3 p)
     {
+        // Una colocación inicial define el origen; no crea un viaje desde una posición sin resolver.
+        if (t <= 0.001f)
+        {
+            pos.Clear();
+            pos.Add(new ClaveDePosicion(0f, p));
+            spawnPos = p;
+            return;
+        }
         Cortar(t);
         pos.Add(new ClaveDePosicion(t + 0.001f, p));
     }
@@ -152,7 +162,9 @@ internal sealed class ActorH
         for (int i = pos.Count - 1; i > 0; i--)
         {
             if (pos[i].t > t) continue;
-            if ((pos[i].p - pos[i - 1].p).sqrMagnitude > 1e-4f && pos[i].t - pos[i - 1].t > 0.02f)
+            // Un deslizamiento no cuenta como paso: no gira el cuerpo (igual que en el juego, donde
+            // deslizarse no es andar y manda la mirada).
+            if ((pos[i].p - pos[i - 1].p).sqrMagnitude > 1e-4f && pos[i].t - pos[i - 1].t > 0.02f && !DeslizandoEn(pos[i].t - 1e-3f))
             {
                 ultimoPaso = pos[i].t;
                 if (m == null || m.Value.t < ultimoPaso)
@@ -213,6 +225,8 @@ internal sealed partial class Horno
     private SequenceStage _stage;
     private readonly Dictionary<string, ActorH> _actores = new();   // por alias
     private readonly Dictionary<string, Vector3> _puntos = new();
+    /// Puntos que son un asiento (objeto con NPCWorldPoint): ver HornoAsientos.
+    private readonly Dictionary<string, Asiento> _asientos = new();
     private readonly Dictionary<string, float> _etiquetas = new();
     private readonly List<LineaHorneada> _lineas = new();
     private readonly List<EfectoHorneado> _efectos = new();
@@ -248,6 +262,7 @@ internal sealed partial class Horno
         if (Errores.Count > 0) return null;
         EditorUtility.DisplayProgressBar("Hornear guion", "Escenario…", 0.05f);
         _escena = CapturaDeEscenario.AbrirEscena(_g.escena);
+        EscenaDelGuion = _escena;
         if (!_escena.IsValid() || !_escena.isLoaded) { Error($"No puedo abrir la escena '{_g.escena}'."); return null; }
         _stage = CapturaDeEscenario.BuscarStage(_escena);
         Physics.SyncTransforms();
@@ -347,6 +362,7 @@ internal sealed partial class Horno
             {
                 if (!BuscarMarca(p.marca, out var pos)) { Error($"línea {p.linea}: no encuentro la marca u objeto '{p.marca}' en la escena"); continue; }
                 _puntos[p.nombre] = pos;
+                if (_asientos.TryGetValue(p.marca, out var asiento)) _asientos[p.nombre] = asiento;
             }
             else
             {
@@ -363,7 +379,21 @@ internal sealed partial class Horno
         if (m.target != null) { pos = m.target.position; return true; }
         foreach (var raiz in _escena.GetRootGameObjects())
             foreach (var t in raiz.GetComponentsInChildren<Transform>(true))
-                if (t.name == nombre) { pos = t.position; return true; }
+                if (t.name == nombre)
+                {
+                    pos = t.position;
+                    // Una silla, un banco…: si el objeto tiene su punto de sentarse (NPCWorldPoint, el
+                    // mismo que usan el jugador y los NPCs, ajustado a mano al filo del asiento), el
+                    // punto es ese y no el centro del mueble. Sentarse siempre ha dado guerra: así
+                    // se ajusta una vez en el prefab y vale para todo.
+                    var punto = t.GetComponentInChildren<NPCWorldPoint>(true);
+                    if (punto != null)
+                    {
+                        pos = punto.InteractionPosition;
+                        _asientos[nombre] = Asiento.De(punto);
+                    }
+                    return true;
+                }
         return false;
     }
 
@@ -603,6 +633,8 @@ internal sealed partial class Horno
             }
             case "mira":
             {
+                // Sentado el cuerpo no gira (en el juego tampoco: el asiento fija la orientación).
+                if (Sentado(a)) { Aviso($"{o}: {a.alias} está sentado; no se gira en la silla"); return 0f; }
                 if (Objetivo(o.args.FirstOrDefault(), o.linea, out var m)) a.Mirar(t, m);
                 return 0f;
             }
@@ -661,10 +693,19 @@ internal sealed partial class Horno
             }
             case "dice":
                 return Decir(a, o, t);
+            case "sienta":
+                return Sentar(a, o, t);
+            case "levanta":
+                return Levantar(a, o, t);
         }
         Error($"{o}: acción desconocida");
         return 0f;
     }
+
+    /// Sentado (un bucle «Sit…»): el cuerpo se queda como lo dejó el asiento. Ni las miradas de
+    /// las frases (la suya y la de quien le habla) ni un «mira» lo giran.
+    private static bool Sentado(ActorH a)
+        => a.bucle != null && a.bucle.StartsWith("Sit", System.StringComparison.OrdinalIgnoreCase);
 
     /// Antes de echar a andar se suelta un bucle de cuerpo entero (bailando no se anda).
     private void SoltarBucleSiAnda(ActorH a, float t, bool haraCuerpo)
@@ -728,7 +769,8 @@ internal sealed partial class Horno
         string clave = o.args.FirstOrDefault();
         if (string.IsNullOrEmpty(clave)) { Error($"{o}: ¿qué frase?"); return 0f; }
         float dura = DuracionDeVoz(clave, o);
-        var linea = new LineaHorneada { t0 = t, t1 = t + dura, actor = a.id, clave = clave, sinPose = o.Tiene("sin_pose") };
+        var linea = new LineaHorneada { t0 = t, t1 = t + dura, actor = a.id, clave = clave, sinPose = o.Tiene("sin_pose"),
+            onlyIfFlag = o.Op("onlyIfFlag"), skipIfFlag = o.Op("skipIfFlag") };
         if (o.opciones.TryGetValue("texto", out var pres))
             linea.presentacion = pres == "bocadillo" ? 0 : pres == "subtitulo_grande" ? 2 : 1;
         _lineas.Add(linea);
@@ -740,7 +782,8 @@ internal sealed partial class Horno
             linea.gesto = g;
             a.Animar(t + 0.08f, TipoDeAnimacion.Gesto, g);
         }
-        if (o.opciones.TryGetValue("mira", out var x) && Objetivo(x, o.linea, out var m)) a.Mirar(t, m);
+        // Sentado no se gira el cuerpo para hablar: se quedaría de lado en la silla.
+        if (o.opciones.TryGetValue("mira", out var x) && Objetivo(x, o.linea, out var m) && !Sentado(a)) a.Mirar(t, m);
         if (o.opciones.TryGetValue("cara", out var c))
         {
             var e = Emocion(c, o);
@@ -761,7 +804,7 @@ internal sealed partial class Horno
         int k = 0;
         foreach (var b in oyentes)
         {
-            if (b == a || b.AndandoEn(t)) continue;
+            if (b == a || b.AndandoEn(t) || Sentado(b)) continue;
             b.Mirar(t + 0.15f + (k++ % 4) * 0.12f, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
         }
         return dura;
@@ -771,7 +814,14 @@ internal sealed partial class Horno
     {
         var clip = AssetDatabase.LoadAssetAtPath<AudioClip>($"Assets/Resources/Voices/es/{clave}.mp3")
                    ?? Resources.Load<AudioClip>($"Voices/es/{clave}");
-        if (clip != null) return clip.length;
+        // El hueco explícito permite montar texto y alternativas, pero nunca corta una voz más larga.
+        float explicita = o.OpF("dura", 0f);
+        if (clip != null) return Mathf.Max(clip.length, explicita);
+        if (explicita > 0f)
+        {
+            Aviso($"{o}: la frase {clave} no tiene voz en Voices/es; usa los {explicita:0.0} s del guion");
+            return explicita;
+        }
         string texto = TextoDe(clave);
         float estimada = Mathf.Max(1.2f, (texto?.Length ?? 30) * 0.065f);
         Aviso($"{o}: la frase {clave} no tiene voz en Voices/es; le doy {estimada:0.0} s por su texto");
@@ -862,7 +912,8 @@ internal sealed partial class Horno
         string clase = o.args.FirstOrDefault();
         var beat = CrearBeat(clase, o.opciones, o);
         if (beat == null) return 0f;
-        _efectos.Add(new EfectoHorneado { t = t, beat = beat, linea = o.linea });
+        _efectos.Add(new EfectoHorneado { t = t, beat = beat, linea = o.linea,
+            onlyIfFlag = o.Op("onlyIfFlag"), skipIfFlag = o.Op("skipIfFlag") });
         return o.OpF("dura", 0f);
     }
 
@@ -887,7 +938,7 @@ internal sealed partial class Horno
         var beat = (SequenceBeat)Activator.CreateInstance(tipo);
         foreach (var kv in campos)
         {
-            if (kv.Key == "dura") continue;
+            if (kv.Key == "dura" || kv.Key == "onlyIfFlag" || kv.Key == "skipIfFlag") continue;
             var campo = tipo.GetField(kv.Key, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
             if (campo == null) { Error($"{o}: {tipo.Name} no tiene el campo '{kv.Key}'"); continue; }
             if (!Convertir(kv.Value, campo.FieldType, out object valor, o)) continue;
@@ -983,7 +1034,8 @@ internal sealed partial class Horno
         }
         var beat = CrearBeat(clase, campos, o);
         if (beat == null) return 0f;
-        _efectos.Add(new EfectoHorneado { t = t, beat = beat, linea = o.linea });
+        _efectos.Add(new EfectoHorneado { t = t, beat = beat, linea = o.linea,
+            onlyIfFlag = o.Op("onlyIfFlag"), skipIfFlag = o.Op("skipIfFlag") });
         return o.OpF("dura", 0f);
     }
 
@@ -997,8 +1049,21 @@ internal sealed partial class Horno
 
     // ── Suelo ───────────────────────────────────────────────────────────────────────────────
 
+    /// Escena del guion que se está horneando: su suelo manda sobre el de otras escenas abiertas.
+    internal static UnityEngine.SceneManagement.Scene EscenaDelGuion;
+
     internal static Vector3 Suelo(Vector3 p)
     {
+        // Un 0 puede ser «sin altura» o el suelo de verdad. Los interiores están a ras de 0 con el
+        // pueblo encima (a ~26 m): si justo ahí hay suelo de la escena del guion, es ese, y no el
+        // terreno ni el NavMesh del exterior.
+        if (p.y == 0f && EscenaDelGuion.IsValid())
+        {
+            float mejor = float.NegativeInfinity;
+            foreach (var h in Physics.RaycastAll(new Vector3(p.x, 2.5f, p.z), Vector3.down, 6f, ~0, QueryTriggerInteraction.Ignore))
+                if (h.collider.gameObject.scene == EscenaDelGuion && h.point.y > mejor) mejor = h.point.y;
+            if (!float.IsNegativeInfinity(mejor)) return new Vector3(p.x, mejor, p.z);
+        }
         float y = p.y;
         bool hayNav = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas);
         if (hayNav && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f) y = hit.position.y;

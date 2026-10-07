@@ -1,6 +1,34 @@
 {
     "texts": [
         {
+            "key": "CHAR_RENARD",
+            "value": "Renard"
+        },
+        {
+            "key": "DLG_RENARD_INTRO_01",
+            "value": "Hold it, boy. Don\u0027t step on that root. Something with more legs than you is sleeping underneath."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_02",
+            "value": "Name\u0027s Renard. Hunted these woods longer than you\u0027ve been alive."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_03",
+            "value": "Seen that glow the beasts leave when they fall? That\u0027s Essence. What\u0027s left of the magic that moved them."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_04",
+            "value": "Treat it with respect. That magic was alive."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_05",
+            "value": "Bring it here. I\u0027ll give you things no market sells. Or coins, if you\u0027re the practical sort."
+        },
+        {
+            "key": "DLG_RENARD_SALUDO",
+            "value": "Here to trade? Show me what you\u0027ve hunted."
+        },
+        {
             "key": "CHAR_AMIGAPEZ",
             "value": "Fish Kid's Friend"
         },
@@ -1419,6 +1447,35 @@
         {
             "key": "DLG_ELDRAN_CHARLA_ESTRELLA_03",
             "value": "Then it's perfect."
-        }
+        },
+        {
+            "key":  "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
+            "value":  "Victoria, the apothecary, Erika... and then come and find me at the practice field."
+        },
+        {"key":"DLG_VICTORIA_CAPA_01","value":"And that sleeve? Don\u0027t tell me. Magic."},
+        {"key":"DLG_VICTORIA_CAPA_02","value":"I only came for some thread."},
+        {"key":"DLG_VICTORIA_CAPA_03","value":"And you\u0027re leaving with a cloak. One that won\u0027t catch fire every time you get angry."},
+        {"key":"DLG_VICTORIA_CAPA_04","value":"Hold still, let me measure you."},
+        {"key":"DLG_VICTORIA_CAPA_05","value":"Again. Just in case."},
+        {"key":"DLG_VICTORIA_CAPA_06","value":"I\u0027ve watched you grow up, Will. Every winter, with shorter sleeves."},
+        {"key":"DLG_VICTORIA_CAPA_07","value":"I already had one half made. I knew this day would come."},
+        {"key":"DLG_VICTORIA_CAPA_08","value":"And don\u0027t you dare pay me."},
+        {"key":"DLG_VICTORIA_CAPA_DESPUES_01","value":"That cloak suits you perfectly."},
+        {"key":"DLG_BOTICARIA_POCION_01","value":"So you\u0027re the one with the demon. Here."},
+        {"key":"DLG_BOTICARIA_POCION_02","value":"It\u0027s the only life potion I have. It\u0027ll take me months to make another."},
+        {"key":"DLG_BOTICARIA_POCION_03","value":"It stabilises a serious wound. But it won\u0027t bring anyone back."},
+        {"key":"DLG_BOTICARIA_POCION_04","value":"And it won\u0027t cure magic fatigue. Only rest does that."},
+        {"key":"DLG_BOTICARIA_POCION_05","value":"Got it. Doesn\u0027t revive, doesn\u0027t cure fatigue..."},
+        {"key":"DLG_BOTICARIA_POCION_06","value":"...and isn\u0027t wasted on a scratch. Say it."},
+        {"key":"DLG_BOTICARIA_POCION_07","value":"And isn\u0027t wasted on a scratch."},
+        {"key":"DLG_BOTICARIA_POCION_DESPUES_01","value":"Take care. And take care of that potion."},
+        {"key":"DLG_RENARD_CONTRATO1_OFERTA_01","value":"One more thing. The spiders have grown bold: last night they came right up to my trap by the path."},
+        {"key":"DLG_RENARD_CONTRATO1_OFERTA_02","value":"Take care of eight and I'll pay you twenty Essence, on top of whatever you pick up."},
+        {"key":"DLG_RENARD_CONTRATO1_MIENTRAS_01","value":"Eight, kid. I count them by the legs, so don't try to fool me."},
+        {"key":"DLG_RENARD_CONTRATO1_HECHO_01","value":"Eight. Not bad for someone your size. Here, as promised."},
+        {"key":"DLG_RENARD_CONTRATO2_OFERTA_01","value":"There are more deeper in, where the light barely reaches. Fifteen, and I'll give you something I've kept for years."},
+        {"key":"DLG_RENARD_CONTRATO2_MIENTRAS_01","value":"Fifteen. And don't stray from the path more than you need to."},
+        {"key":"DLG_RENARD_CONTRATO2_HECHO_01","value":"Fifteen... I'll stop calling you kid."},
+        {"key":"DLG_RENARD_CONTRATO2_HECHO_02","value":"Take this eyepatch. I wore it the winter a bear tried to take my eye. It didn't manage."}
     ]
 }

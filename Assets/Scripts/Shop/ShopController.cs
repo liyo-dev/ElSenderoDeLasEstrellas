@@ -93,10 +93,24 @@ public class ShopController : MonoBehaviour
             return false;
         }
 
+        PlayerPickupCollector collector = null;
+        if (entry.item.usageKind == ItemData.ItemUsageKind.Currency && entry.item.useEffects != null &&
+            entry.item.useEffects.Count > 0 &&
+            !PlayerService.TryGetComponent(out collector, allowSceneLookup: false))
+        {
+            message = Loc("SHOP_MSG_EFFECT_UNAVAILABLE", "No se puede aplicar el efecto de este producto.");
+            return false;
+        }
+
         if (price > 0)
             SpendCurrency(price);
 
-        GrantItem(entry.item);
+        if (!GrantItem(entry.item, collector))
+        {
+            if (price > 0) playerInventory.Add(currencyItem, price);
+            message = Loc("SHOP_MSG_EFFECT_UNAVAILABLE", "No se puede aplicar el efecto de este producto.");
+            return false;
+        }
 
         entry.ConsumeOne();
         OnStockChanged?.Invoke();
@@ -182,13 +196,25 @@ public class ShopController : MonoBehaviour
         playerInventory.TryConsume(currencyItem, amount, true);
     }
 
-    void GrantItem(ItemData item)
+    bool GrantItem(ItemData item, PlayerPickupCollector collector)
     {
-        if (item == null || playerInventory == null) return;
+        if (item == null || playerInventory == null) return false;
+        if (item.usageKind == ItemData.ItemUsageKind.Currency && item.useEffects != null && item.useEffects.Count > 0)
+        {
+            if (collector == null) return false;
+            bool aplicado = false;
+            foreach (var effect in item.useEffects)
+            {
+                bool cambio = collector.TryCollect(effect, out bool consumir);
+                aplicado |= cambio || consumir;
+            }
+            return aplicado;
+        }
 
         // Inventory.Add ya redirige automáticamente los items de equipamiento con
         // wardrobeUnlock al armario en vez de la bolsa normal (punto único de control).
         playerInventory.Add(item, 1);
+        return true;
     }
 
     [Serializable]

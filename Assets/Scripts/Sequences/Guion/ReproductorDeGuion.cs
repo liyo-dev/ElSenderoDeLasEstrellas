@@ -55,6 +55,7 @@ public sealed class ReproductorDeGuion
         {
             Avanzar(_t);
             yield return null;
+            if (_ctx.RelojRetenido) continue;
             float paso = Time.unscaledDeltaTime;
             _t += paso > TironMaximo ? PasoTrasTiron : paso;
         }
@@ -137,7 +138,7 @@ public sealed class ReproductorDeGuion
             var plano = _g.planos[_iPlano++];
             _camaras.Activar(plano);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            InformeDeRodaje.PlanoNuevo(plano.descripcion, null, null);
+            InformeDeRodaje.PlanoNuevo(plano.descripcion, null, null, plano.sujetos.Count > 0 ? plano.sujetos[0] : null);
             _nPlano = _iPlano;
             _tFoto = Mathf.Lerp(plano.t0, plano.t1, 0.35f);
             _desviados.Clear();
@@ -192,9 +193,13 @@ public sealed class ReproductorDeGuion
            || beat is WeatherBeat || beat is SetPropActiveBeat || beat is SetFlagBeat || beat is MezclaBeat
            || beat is BandasDeCineBeat || beat is SolDeFondoBeat;
 
+    private bool CumpleCondicion(string onlyIfFlag, string skipIfFlag)
+        => (string.IsNullOrWhiteSpace(onlyIfFlag) || _ctx.GetFlag(onlyIfFlag))
+           && (string.IsNullOrWhiteSpace(skipIfFlag) || !_ctx.GetFlag(skipIfFlag));
+
     private void Lanzar(EfectoHorneado e)
     {
-        if (e.beat == null || _ctx.Player == null) return;
+        if (e.beat == null || _ctx.Player == null || !CumpleCondicion(e.onlyIfFlag, e.skipIfFlag)) return;
         try
         {
             var rutina = _ctx.Player.StartCoroutine(Proteger(e));
@@ -236,6 +241,7 @@ public sealed class ReproductorDeGuion
 
     private void AbrirLinea(LineaHorneada linea)
     {
+        if (!CumpleCondicion(linea.onlyIfFlag, linea.skipIfFlag)) return;
         CerrarLinea();
         _lineaEnCurso = linea;
         _porId.TryGetValue(linea.actor, out var quien);
@@ -284,7 +290,6 @@ public sealed class ReproductorDeGuion
         private float _rumbo;
         private bool _moviendo;
         private bool _visible = true;
-        private Renderer[] _renderers;
         private bool _hablando;
 
         private const float GiroAndando = 360f;   // grados por segundo
@@ -317,9 +322,12 @@ public sealed class ReproductorDeGuion
                 npc.ResetMovement();
             }
             Actor.ReleasePose(true);
-            _renderers = t.GetComponentsInChildren<Renderer>(true);
 
-            if (Datos.posiciones.Count > 0) t.position = Datos.posiciones[0].p;
+            if (Datos.posiciones.Count > 0)
+            {
+                Actor.AvisarDeQueLoTomaUnaEscena();
+                t.position = Datos.posiciones[0].p;
+            }
             _rumbo = RumboInicial();
             t.rotation = Quaternion.Euler(0f, _rumbo, 0f);
             Actor.SyncRotation();
@@ -487,10 +495,7 @@ public sealed class ReproductorDeGuion
         private void AplicarVisible(bool visible)
         {
             _visible = visible;
-            if (_renderers == null) return;
-            // forceRenderingOff y no enabled: las caras encienden y apagan sus mallas con enabled,
-            // y esconder así no les pisa nada.
-            foreach (var r in _renderers) if (r != null) r.forceRenderingOff = !visible;
+            Actor.SetRenderingVisible(visible);
         }
     }
 }

@@ -30,6 +30,19 @@ public class QuestStepItemUI : MonoBehaviour
         UpdateIcon(step);
     }
 
+    /// <summary>Varios pasos iguales seguidos en una sola fila: texto del primero y «(hechos/total)».</summary>
+    public void BindRepetido(QuestData questData, int primerPaso, int hechos, int total)
+    {
+        string description = questData != null ? questData.GetLocalizedStepDescription(primerPaso) : "";
+        if (label) label.text = $"{description} ({hechos}/{total})";
+        bool done = hechos >= total;
+        if (icon)
+        {
+            icon.sprite = done ? spriteDone : spritePending;
+            icon.color  = done ? colorDone   : colorPending;
+        }
+    }
+
     private void UpdateIcon(QuestStep step)
     {
         if (icon)

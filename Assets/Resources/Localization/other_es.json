@@ -1,6 +1,28 @@
 {
     "texts": [
         {
+            "key": "ITEM_BOLSA_MONEDAS_GRANDE_DESC",
+            "value": "Contiene 75 monedas."
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_GRANDE_NAME",
+            "value": "Bolsa grande de monedas"
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_PEQUENA_DESC",
+            "value": "Contiene 20 monedas."
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_PEQUENA_NAME",
+            "value": "Bolsa pequeña de monedas"
+        },
+        { "key": "ITEM_ESENCIA_NAME", "value": "Esencia" },
+        { "key": "ITEM_ESENCIA_DESC", "value": "Energía mágica que dejan los monstruos al caer. Un cazador del Bosque Prohibido la acepta como pago." },
+        {
+            "key": "MENU_CONTROLS_HINT",
+            "value": "Controles"
+        },
+        {
             "key": "MINIGAME_ESCAPE",
             "value": "¡Sal del Reino!"
         },
@@ -51,6 +73,24 @@
         {
             "key": "BIGMAP_HINT",
             "value": "<sprite name=\"interactable_Joystick\"> Mover    <sprite name=\"interactable_lb\"><sprite name=\"interactable_rb\"> Zoom    <sprite name=\"interactable_confirm\"> Centrar    <sprite name=\"interactable_select\"> Cerrar"
-        }
+        },
+        {
+            "key":  "ITEM_TROZO_DEL_ARO_NAME",
+            "value":  "Trozo del aro"
+        },
+        {
+            "key":  "ITEM_TROZO_DEL_ARO_DESC",
+            "value":  "Un pedazo del aro de runas del demonio. Eldran guardó el resto en el cofre de sal."
+        },
+        {
+            "key":  "TUTORIAL_MANTENER_SOLTAR",
+            "value":  "Mantén {BOTON} y suelta al llenar la barra."
+        },
+        {"key":"TUTORIAL_VELA","value":"Enciende la vela: mantén {BOTON} para concentrar la magia y suelta cuando se llene la barra."},
+        {"key":"CHAR_BOTICARIA","value":"Boticaria"},
+        {"key":"CHAR_TOBI","value":"Tobi"},
+        {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Equípate la capa desde el menú: Equipo ▸ Capas."},
+        {"key":"TUTORIAL_PREPARA_VIAJE_POCION","value":"En Inventario, selecciona la poción y confirma {BOTON}; confirma otra vez en Usar."},
+        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"A la mañana siguiente…"}
     ]
 }

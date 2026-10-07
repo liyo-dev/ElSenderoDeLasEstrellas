@@ -5,158 +5,341 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// VFX de los hechizos (INC-516). Regla: cada hechizo tiene un efecto propio; ninguno repite el de
-/// otro. El destello de lanzamiento (spawnVFX / despawnVFX y los de la levitación) es común a todos
-/// a propósito y no cuenta.
-/// - «Comprobar VFX repetidos»: lista los efectos que comparten dos o más hechizos. Mira el prefab
-///   (o los efectos que lleva dentro, si es un envoltorio como los de las zonas), el impacto, el
-///   estado, el escudo de grupo y el indicador de la levitación.
-/// - «VFX propios de los hechizos nuevos»: pone a cada hechizo del grimorio que repetía un efecto
-///   uno que no usa nadie más (tabla de abajo) y cambia el brillo de la página del grimorio, que
-///   también copiaba el de un hechizo. Idempotente.
+/// VFX de los hechizos. Regla: cada hechizo tiene efectos propios; ninguno repite el de otro. Los
+/// destellos de lanzamiento y de fin (spawnVFX / despawnVFX) van por elemento y no cuentan.
+/// - «VFX de los hechizos · aplicar»: genera los efectos propios (VfxPropiosDeHechizosBuilder) y
+///   pone a cada hechizo los de la tabla Fichas. Los proyectiles viajan siempre dentro de un
+///   envoltorio con MagicProjectile (sin él el efecto se queda quieto en la mano); en zonas y
+///   envoltorios se cambia el visual de dentro. Idempotente. Ver INC-640.
+/// - «Comprobar VFX de los hechizos»: efectos repetidos, proyectiles sin MagicProjectile y
+///   envoltorios con componentes de juego dentro (p. ej. un punto de guardado).
 /// </summary>
 public static class VfxDeHechizos
 {
     private const string SpellFolder = "Assets/_SPELLS/";
-    private const string ZoneFolder = "Assets/_SPELLS/Prefabs/";
+    private const string EnvoltorioFolder = "Assets/_SPELLS/Prefabs/";
+    private const string GuardianConfig = "Assets/_NPCs/Combat/NPC_Combat_Config_GuardianPiedra.asset";
+    private const string GuardianZona = "Assets/_ENEMY_SPELLS/Prefabs/GuardianPiedra_Zona.prefab";
 
     private const string Hovl = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/";
-    private const string HovlFire = "Assets/VFX/Hovl Studio/Procedural fire/Prefabs/";
     private const string Best = "Assets/VFX/100BestEffectPack/Effects/";
     private const string Lana = "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/";
     private const string Gabriel = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/";
-    private const string Universal = "Assets/VFX/Univeral FX Shader/Prefab/";
-    private const string Guz = "Assets/VFX/Matthew Guz/Spell Area of Effect FREE/Prefab/";
+    private const string Free = "Assets/VFX/Free Game VFX/Prefab/";
+    private const string Fuego = "Assets/VFX/fireAttackEffects/";
 
-    /// Efecto propio de cada hechizo nuevo que repetía el de otro. prefab = lo que viaja (proyectil) o
-    /// lo que se ve dentro de la zona; null = no se toca.
-    private static readonly (string asset, string prefab, string impact, bool quitarImpacto)[] Propios =
+    private static string Propio(string nombre) => VfxPropiosDeHechizosBuilder.Ruta(nombre);
+
+    /// Efectos de un hechizo. null = no se toca.
+    private sealed class Ficha
     {
-        ("EstrellaFugaz",   Lana + "Shine/Shine_ellow.prefab",                 null, false),
-        ("LluviaDeChispas", Hovl + "Sparks/Sparks yellow.prefab",              null, false),
-        ("ChispaIgnea",     HovlFire + "Magic fire pro orange.prefab",         Gabriel + "vfx_Explosion_01.prefab", false),
-        ("Rafaga",          Hovl + "Smoke effects/Dust puff_flying.prefab",    null, false),
-        ("Eco",             Universal + "Projectile.prefab",                   null, false),
-        ("DardoMental",     Best + "Kunai/Kunai3.prefab",                      null, false),
-        ("CadenasDelPacto", Guz + "AoE Magic.prefab",                          null, false),
-        ("Remolino",        Universal + "Vortex.prefab",                       null, false),
-        // El teletransporte no impacta: el impacto que traía de la plantilla sobraba.
-        ("PasoSombrio",     null,                                              null, true),
+        public string Asset;
+        public string Visual;        // lo que viaja, lo que se ve en la zona o el efecto de llegada
+        public string Impacto;
+        public bool SinImpacto;
+        public string Estado;
+        public string LevitacionMantener;
+        public string LevitacionSoltar;
+        public MagicElement? Elemento;
+        public string Nombre;
+    }
+
+    /// Fuente de verdad de los efectos de cada hechizo (Huracan no está: no lo usa nadie).
+    private static readonly Ficha[] Fichas =
+    {
+        // Will
+        new Ficha { Asset = "LlamaAstral",     Impacto = Fuego + "effects/fireBall/hitVFX.prefab" },
+        new Ficha { Asset = "BolaPrisma",      Visual = Propio(VfxPropiosDeHechizosBuilder.BolaPrisma), Impacto = Lana + "Flash/Flash_star_ellow_purple.prefab", Elemento = MagicElement.Light },
+        new Ficha { Asset = "CorazonEstelar",  Impacto = Propio(VfxPropiosDeHechizosBuilder.CorazonImpacto) },
+        new Ficha { Asset = "EstrellaFugaz" },
+        new Ficha { Asset = "LluviaDeChispas" },
+        new Ficha { Asset = "Meteoro",         Visual = Propio(VfxPropiosDeHechizosBuilder.MeteoroZona) },
+        new Ficha { Asset = "NovaDeLuz",       Visual = Best + "HolyEffect/HolyEffect2.prefab" },
+        new Ficha { Asset = "CupulaEstelar" },
+        new Ficha { Asset = "Levitation",      LevitacionMantener = Hovl + "Character auras/Buff.prefab", LevitacionSoltar = Lana + "Flash/Flash_ellow.prefab", Nombre = "Levitación" },
+        // Estela
+        new Ficha { Asset = "BolaFuego" },
+        new Ficha { Asset = "ChispaIgnea" },
+        new Ficha { Asset = "ChispaIgneaFuego" },
+        new Ficha { Asset = "Rafaga" },
+        new Ficha { Asset = "Tornado",         Impacto = Gabriel + "vfx_Smoke_01.prefab", Nombre = "Ciclón" },
+        new Ficha { Asset = "Remolino" },
+        new Ficha { Asset = "BrisaSanadora" },
+        new Ficha { Asset = "MuroDeFuego",     Visual = Fuego + "prefabs/fireZoneVFX.prefab" },
+        new Ficha { Asset = "TormentaDeFuego", Visual = Fuego + "prefabs/meteorFireRainVFX.prefab" },
+        // Liam
+        new Ficha { Asset = "AuraEstelar",     Visual = Best + "Kunai/Kunai5.prefab", Impacto = Hovl + "Sparks/Sparks explode white.prefab" },
+        new Ficha { Asset = "DardoMental",     Visual = Propio(VfxPropiosDeHechizosBuilder.Dardo) },
+        new Ficha { Asset = "Eco",             Impacto = Free + "FX_Purple_Hit_02.prefab" },
+        new Ficha { Asset = "GarraDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.Garra), Impacto = Hovl + "Sparks/Sparks explode pink.prefab" },
+        new Ficha { Asset = "CadenasDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.CadenasZona), Estado = Propio(VfxPropiosDeHechizosBuilder.CadenasEstado) },
+        new Ficha { Asset = "SelloDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.SelloZona) },
+        new Ficha { Asset = "JuicioDelPacto",  Visual = Propio(VfxPropiosDeHechizosBuilder.JuicioZona) },
+        new Ficha { Asset = "PasoSombrio",     Visual = Lana + "Flash/Flash_blue_purple.prefab", SinImpacto = true },
+        // Mago Oscuro
+        new Ficha { Asset = "MagoOscuroGolpe", Impacto = Best + "DarkEffect/DarkEffect5.prefab" },
+        new Ficha { Asset = "MagoOscuroGrieta", Visual = Propio(VfxPropiosDeHechizosBuilder.GrietaZona) },
     };
 
-    [MenuItem("El Sendero/Archivo/Magia/VFX propios de los hechizos nuevos (INC-516)")]
+    [MenuItem("El Sendero/Magia/VFX de los hechizos · aplicar (INC-640)")]
     public static void AplicarMenu()
     {
-        var log = new StringBuilder("=== VFX propios de los hechizos nuevos (INC-516) ===\n");
+        var log = new StringBuilder("=== VFX de los hechizos (INC-640) ===\n");
         var warnings = new List<string>();
         Aplicar(log, warnings);
         AssetDatabase.SaveAssets();
         Informe(log, warnings);
-        ComprobarRepetidos();
+        Comprobar();
     }
 
-    [MenuItem("El Sendero/Magia/Comprobar VFX repetidos entre hechizos")]
-    public static void ComprobarRepetidos()
+    [MenuItem("El Sendero/Magia/Comprobar VFX de los hechizos")]
+    public static void Comprobar()
     {
         var porEfecto = new Dictionary<GameObject, List<string>>();
-        foreach (var guid in AssetDatabase.FindAssets("t:MagicSpellSO"))
+        var avisos = new List<string>();
+        foreach (var spell in Hechizos())
         {
-            var spell = AssetDatabase.LoadAssetAtPath<MagicSpellSO>(AssetDatabase.GUIDToAssetPath(guid));
-            if (spell == null) continue;
             foreach (var fx in Firma(spell))
             {
                 if (!porEfecto.TryGetValue(fx, out var lista)) porEfecto[fx] = lista = new List<string>();
                 if (!lista.Contains(spell.name)) lista.Add(spell.name);
             }
+            if (EsProyectil(spell) && spell.prefab != null && spell.prefab.GetComponent<MagicProjectile>() == null)
+                avisos.Add($"{spell.name}: el proyectil no lleva MagicProjectile; se queda quieto en la mano.");
+            if (spell.prefab != null)
+                foreach (var script in ScriptsDeJuegoDentro(spell.prefab))
+                    avisos.Add($"{spell.name}: su efecto lleva dentro {script} (componente de juego).");
         }
 
         var repetidos = porEfecto.Where(kv => kv.Value.Count > 1).OrderByDescending(kv => kv.Value.Count).ToList();
-        if (repetidos.Count == 0)
-        {
-            Debug.Log("[VFX] Ningún hechizo repite el efecto de otro.");
-            return;
-        }
-        var sb = new StringBuilder($"[VFX] {repetidos.Count} efecto(s) repetidos entre hechizos:\n");
         foreach (var kv in repetidos)
-            sb.AppendLine($"  • {kv.Key.name}  ←  {string.Join(", ", kv.Value)}");
-        Debug.LogWarning(sb.ToString());
+            avisos.Add($"Repetido: {kv.Key.name}  ←  {string.Join(", ", kv.Value)}");
+
+        if (avisos.Count == 0) { Debug.Log("[VFX] Hechizos en orden: sin efectos repetidos y todos los proyectiles vuelan."); return; }
+        Debug.LogWarning($"[VFX] {avisos.Count} aviso(s):\n  • " + string.Join("\n  • ", avisos));
     }
 
-    /// Lo aplica también «Grimorio · montar todo», para que un montaje desde cero no repita efectos.
+    /// Lo aplica también «Grimorio · montar todo».
     public static void Aplicar(StringBuilder log, List<string> warnings)
     {
-        foreach (var p in Propios)
+        VfxPropiosDeHechizosBuilder.Construir(log, warnings);
+        AssetDatabase.SaveAssets();
+        SepararZonaDelGuardian(log, warnings);
+        MoverEnvoltorio("Assets/Prefabs/GarraDelPacto.prefab", log, warnings);
+
+        foreach (var f in Fichas)
         {
-            var spell = AssetDatabase.LoadAssetAtPath<MagicSpellSO>(SpellFolder + p.asset + ".asset");
-            if (spell == null) { warnings.Add($"No encuentro el hechizo {p.asset}."); continue; }
-
-            if (p.prefab != null)
-            {
-                var fx = Load(p.prefab, warnings);
-                if (fx != null)
-                {
-                    if (spell.kind == MagicKind.Zone) CambiarVisualDeZona(spell, fx, log, warnings);
-                    else if (spell.prefab != fx)
-                    {
-                        spell.prefab = fx;
-                        EditorUtility.SetDirty(spell);
-                        log.AppendLine($"   {spell.displayName}: viaja con {fx.name}.");
-                    }
-                }
-            }
-
-            if (p.impact != null)
-            {
-                var fx = Load(p.impact, warnings);
-                if (fx != null && spell.impactVFX != fx)
-                {
-                    spell.impactVFX = fx;
-                    EditorUtility.SetDirty(spell);
-                    log.AppendLine($"   {spell.displayName}: impacto {fx.name}.");
-                }
-            }
-            else if (p.quitarImpacto && spell.impactVFX != null)
-            {
-                spell.impactVFX = null;
-                EditorUtility.SetDirty(spell);
-                log.AppendLine($"   {spell.displayName}: sin impacto (no le hace falta).");
-            }
+            var spell = AssetDatabase.LoadAssetAtPath<MagicSpellSO>(SpellFolder + f.Asset + ".asset");
+            if (spell == null) { warnings.Add($"No encuentro el hechizo {f.Asset}."); continue; }
+            AplicarFicha(spell, f, log, warnings);
+            EditorUtility.SetDirty(spell);
         }
         Pagina(log, warnings);
     }
 
-    // ── Zonas: el efecto va dentro del prefab envoltorio (MagicZoneEffect) ──
-
-    private static void CambiarVisualDeZona(MagicSpellSO spell, GameObject fx, StringBuilder log, List<string> warnings)
+    private static void AplicarFicha(MagicSpellSO spell, Ficha f, StringBuilder log, List<string> warnings)
     {
-        if (spell.prefab == null) { warnings.Add($"{spell.displayName} no tiene prefab de zona."); return; }
-        string path = AssetDatabase.GetAssetPath(spell.prefab);
-        if (!path.StartsWith(ZoneFolder)) { warnings.Add($"{spell.displayName}: su zona no es un envoltorio de {ZoneFolder}; no la toco."); return; }
+        if (f.Elemento.HasValue && spell.element != f.Elemento.Value)
+        {
+            spell.element = f.Elemento.Value;
+            log.AppendLine($"   {spell.name}: elemento {spell.element}.");
+        }
+        if (f.Nombre != null && spell.displayName != f.Nombre)
+        {
+            spell.displayName = f.Nombre;
+            log.AppendLine($"   {spell.name}: nombre «{f.Nombre}».");
+        }
+
+        var visual = f.Visual != null ? Load(f.Visual, warnings) : null;
+        if (spell.kind == MagicKind.Zone)
+        {
+            if (visual != null) CambiarVisual(spell.prefab, visual, true, spell.name, log, warnings);
+        }
+        else if (spell.kind == MagicKind.Teleport)
+        {
+            if (visual != null && spell.prefab != visual) { spell.prefab = visual; log.AppendLine($"   {spell.name}: llegada {visual.name}."); }
+        }
+        else if (EsProyectil(spell))
+        {
+            AsegurarProyectil(spell, visual, log, warnings);
+        }
+
+        if (f.Impacto != null) Asignar(ref spell.impactVFX, Load(f.Impacto, warnings), spell.name, "impacto", log);
+        else if (f.SinImpacto && spell.impactVFX != null) { spell.impactVFX = null; log.AppendLine($"   {spell.name}: sin impacto."); }
+        if (f.Estado != null) Asignar(ref spell.statusVFX, Load(f.Estado, warnings), spell.name, "estado", log);
+        if (f.LevitacionMantener != null) Asignar(ref spell.levitationHoldVFX, Load(f.LevitacionMantener, warnings), spell.name, "al levantar", log);
+        if (f.LevitacionSoltar != null) Asignar(ref spell.levitationReleaseVFX, Load(f.LevitacionSoltar, warnings), spell.name, "al soltar", log);
+
+        string destello = VfxPropiosDeHechizosBuilder.RutaDestello(spell.element, false);
+        string fin = VfxPropiosDeHechizosBuilder.RutaDestello(spell.element, true);
+        if (destello != null) Asignar(ref spell.spawnVFX, Load(destello, warnings), spell.name, "destello", log);
+        if (fin != null) Asignar(ref spell.despawnVFX, Load(fin, warnings), spell.name, "destello de fin", log);
+    }
+
+    private static void Asignar(ref GameObject campo, GameObject fx, string hechizo, string que, StringBuilder log)
+    {
+        if (fx == null || campo == fx) return;
+        campo = fx;
+        log.AppendLine($"   {hechizo}: {que} {fx.name}.");
+    }
+
+    private static bool EsProyectil(MagicSpellSO s) => s.kind == MagicKind.Projectile || s.kind == MagicKind.Special;
+
+    // ── Proyectiles: siempre con MagicProjectile en la raíz ──────────────
+
+    /// Si el hechizo ya vuela con un prefab propio con MagicProjectile, solo cambia el visual de
+    /// dentro (si se pide). Si su prefab es un efecto suelto, lo mete en un envoltorio nuevo.
+    private static void AsegurarProyectil(MagicSpellSO spell, GameObject visual, StringBuilder log, List<string> warnings)
+    {
+        var actual = spell.prefab;
+        bool vuela = actual != null && actual.GetComponent<MagicProjectile>() != null;
+        bool esEnvoltorio = vuela && AssetDatabase.GetAssetPath(actual).StartsWith(EnvoltorioFolder);
+
+        if (visual == null)
+        {
+            // Envoltorio con restos de juego en el visual: se vuelve a montar el mismo visual, limpio.
+            if (esEnvoltorio && ScriptsDeJuegoDentro(actual).Any()) visual = Visuales(actual).FirstOrDefault(v => v != actual);
+            else if (vuela || actual == null) return;
+            else visual = actual;
+            if (visual == null) return;
+        }
+        if (esEnvoltorio)
+        {
+            CambiarVisual(actual, visual, false, spell.name, log, warnings);
+            return;
+        }
+        if (visual.GetComponent<MagicProjectile>() != null)
+        {
+            if (spell.prefab != visual) { spell.prefab = visual; log.AppendLine($"   {spell.name}: viaja con {visual.name}."); }
+            return;
+        }
+        spell.prefab = CrearEnvoltorio(spell.name, visual);
+        log.AppendLine($"   {spell.name}: envoltorio nuevo con {visual.name}.");
+    }
+
+    private static GameObject CrearEnvoltorio(string nombre, GameObject visual)
+    {
+        string path = EnvoltorioFolder + nombre + ".prefab";
+        var root = new GameObject(nombre);
+        try
+        {
+            var col = root.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.35f;
+            root.AddComponent<MagicProjectile>();
+            var v = (GameObject)PrefabUtility.InstantiatePrefab(visual, root.transform);
+            v.transform.localPosition = Vector3.zero;
+            v.transform.localRotation = Quaternion.identity;
+            LimpiarVisual(v);
+            return PrefabUtility.SaveAsPrefabAsset(root, path);
+        }
+        finally
+        {
+            Object.DestroyImmediate(root);
+        }
+    }
+
+    // ── Envoltorios (zonas y proyectiles): el efecto va dentro ───────────
+
+    private static void CambiarVisual(GameObject envoltorio, GameObject fx, bool enBucle, string hechizo, StringBuilder log, List<string> warnings)
+    {
+        if (envoltorio == null) { warnings.Add($"{hechizo} no tiene prefab."); return; }
+        string path = AssetDatabase.GetAssetPath(envoltorio);
+        if (!path.StartsWith(EnvoltorioFolder)) { warnings.Add($"{hechizo}: su prefab no es un envoltorio de {EnvoltorioFolder}; no lo toco."); return; }
 
         var root = PrefabUtility.LoadPrefabContents(path);
         try
         {
-            if (Visuales(root).Contains(fx)) return;
+            if (Visuales(root).Contains(fx) && !ScriptsDeJuegoDentro(root).Any()) return;
 
-            // Fuera los efectos que llevaba; el nuevo, en bucle, porque la zona dura varios segundos.
+            // Si se vuelve a montar el mismo efecto, conserva su colocación y tamaño.
+            Vector3 pos = Vector3.zero, escala = Vector3.one;
+            Quaternion rot = Quaternion.identity;
             foreach (Transform child in root.transform.Cast<Transform>().ToList())
-                if (PrefabUtility.IsAnyPrefabInstanceRoot(child.gameObject)) Object.DestroyImmediate(child.gameObject);
+            {
+                if (!PrefabUtility.IsAnyPrefabInstanceRoot(child.gameObject)) continue;
+                if (PrefabUtility.GetCorrespondingObjectFromSource(child.gameObject) == fx)
+                {
+                    pos = child.localPosition; rot = child.localRotation; escala = child.localScale;
+                }
+                Object.DestroyImmediate(child.gameObject);
+            }
 
             var v = (GameObject)PrefabUtility.InstantiatePrefab(fx, root.transform);
-            v.transform.localPosition = Vector3.zero;
-            v.transform.localRotation = Quaternion.identity;
-            foreach (var ps in v.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                var main = ps.main;
-                main.loop = true;
-            }
+            v.transform.localPosition = pos;
+            v.transform.localRotation = rot;
+            v.transform.localScale = escala;
+            LimpiarVisual(v);
+            if (enBucle)
+                foreach (var ps in v.GetComponentsInChildren<ParticleSystem>(true))
+                {
+                    var main = ps.main;
+                    main.loop = true;
+                }
             PrefabUtility.SaveAsPrefabAsset(root, path);
-            log.AppendLine($"   {spell.displayName}: la zona muestra {fx.name}.");
+            log.AppendLine($"   {hechizo}: muestra {fx.name}.");
         }
         finally
         {
             PrefabUtility.UnloadPrefabContents(root);
         }
+    }
+
+    /// Un visual solo se ve: fuera físicas y componentes de juego (los scripts de los packs se quedan).
+    private static void LimpiarVisual(GameObject v)
+    {
+        // Primero los scripts: alguno exige un Collider y no deja quitarlo antes.
+        foreach (var mb in v.GetComponentsInChildren<MonoBehaviour>(true))
+            if (EsScriptDeJuego(mb)) Object.DestroyImmediate(mb);
+        foreach (var rb in v.GetComponentsInChildren<Rigidbody>(true)) Object.DestroyImmediate(rb);
+        foreach (var c in v.GetComponentsInChildren<Collider>(true)) Object.DestroyImmediate(c);
+    }
+
+    private static bool EsScriptDeJuego(MonoBehaviour mb)
+    {
+        if (mb == null) return false;
+        var script = MonoScript.FromMonoBehaviour(mb);
+        return script != null && AssetDatabase.GetAssetPath(script).StartsWith("Assets/Scripts/");
+    }
+
+    /// Componentes de juego que cuelgan de los visuales de un prefab (no de su raíz).
+    private static IEnumerable<string> ScriptsDeJuegoDentro(GameObject prefab)
+    {
+        foreach (Transform child in prefab.transform)
+            foreach (var mb in child.GetComponentsInChildren<MonoBehaviour>(true))
+                if (EsScriptDeJuego(mb)) yield return mb.GetType().Name;
+    }
+
+    /// El Guardián de la Piedra lanzaba la zona del Sello del Pacto: se queda con una copia propia
+    /// para que el Sello pueda cambiar sin tocarle a él.
+    private static void SepararZonaDelGuardian(StringBuilder log, List<string> warnings)
+    {
+        var config = AssetDatabase.LoadAssetAtPath<ScriptableObject>(GuardianConfig);
+        if (config == null) return;
+        var so = new SerializedObject(config);
+        var campo = so.FindProperty("spell3Prefab");
+        if (campo == null) { warnings.Add("El Guardián de la Piedra no tiene spell3Prefab."); return; }
+        var sello = AssetDatabase.LoadAssetAtPath<GameObject>(EnvoltorioFolder + "SelloDelPacto.prefab");
+        if (sello == null || campo.objectReferenceValue != sello) return;
+
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(GuardianZona) == null &&
+            !AssetDatabase.CopyAsset(EnvoltorioFolder + "SelloDelPacto.prefab", GuardianZona))
+        {
+            warnings.Add($"No he podido copiar la zona del Sello a {GuardianZona}.");
+            return;
+        }
+        campo.objectReferenceValue = AssetDatabase.LoadAssetAtPath<GameObject>(GuardianZona);
+        so.ApplyModifiedPropertiesWithoutUndo();
+        log.AppendLine("   Guardián de la Piedra: zona propia (copia de la que tenía), el Sello queda libre.");
+    }
+
+    private static void MoverEnvoltorio(string desde, StringBuilder log, List<string> warnings)
+    {
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(desde) == null) return;
+        string hasta = EnvoltorioFolder + System.IO.Path.GetFileName(desde);
+        string error = AssetDatabase.MoveAsset(desde, hasta);
+        if (string.IsNullOrEmpty(error)) log.AppendLine($"   {desde} → {hasta}.");
+        else warnings.Add($"No he podido mover {desde}: {error}");
     }
 
     // ── Página del grimorio ───────────────────────────────────────────────
@@ -179,6 +362,15 @@ public static class VfxDeHechizos
 
     // ── Firma visual de un hechizo ────────────────────────────────────────
 
+    private static IEnumerable<MagicSpellSO> Hechizos()
+    {
+        foreach (var guid in AssetDatabase.FindAssets("t:MagicSpellSO"))
+        {
+            var spell = AssetDatabase.LoadAssetAtPath<MagicSpellSO>(AssetDatabase.GUIDToAssetPath(guid));
+            if (spell != null) yield return spell;
+        }
+    }
+
     private static IEnumerable<GameObject> Firma(MagicSpellSO s)
     {
         var set = new HashSet<GameObject>();
@@ -186,6 +378,8 @@ public static class VfxDeHechizos
         if (s.impactVFX != null) set.Add(s.impactVFX);
         if (s.statusVFX != null) set.Add(s.statusVFX);
         if (s.groupShieldVFX != null) set.Add(s.groupShieldVFX);
+        if (s.levitationHoldVFX != null) set.Add(s.levitationHoldVFX);
+        if (s.levitationReleaseVFX != null) set.Add(s.levitationReleaseVFX);
         if (s.levitationRangeIndicatorVFX != null) set.Add(s.levitationRangeIndicatorVFX);
         return set;
     }
@@ -198,7 +392,7 @@ public static class VfxDeHechizos
         foreach (Transform child in prefab.transform)
         {
             if (!PrefabUtility.IsAnyPrefabInstanceRoot(child.gameObject)) continue;
-            var src = PrefabUtility.GetCorrespondingObjectFromOriginalSource(child.gameObject);
+            var src = PrefabUtility.GetCorrespondingObjectFromSource(child.gameObject);
             if (src != null && !result.Contains(src)) result.Add(src);
         }
         bool propio = prefab.GetComponent<ParticleSystem>() != null || prefab.GetComponent<Renderer>() != null;

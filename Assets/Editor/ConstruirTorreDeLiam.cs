@@ -52,9 +52,10 @@ public static class ConstruirTorreDeLiam
             Prop("Cama", Pack+"Props/Furniture/Bed/Bed01_a01.prefab", new(-2.5f,0,1.3f), new(1.3f,0.8f,2.1f));
             // Muebles a escala de los personajes (chibi): con la mesa a 0,75 m Liam sentado no asomaba por encima.
             var mesa = Prop("Mesa", Pack+"Props/Furniture/Table/Table01_a01.prefab", new(0,0,-0.1f), new(2.2f,AlturaMesa,1.1f));
-            // Silla con respaldo (el asiento queda al 39 % de su alto: 0,29 m). El punto «silla» del
-            // guion pone a Liam a esa altura; si cambia el tamaño, cambiarlo también allí.
-            Prop("Silla", Pack+"Props/Furniture/Chair/Chair12_a01.prefab", new(0,0,0.95f), new(0.45f,0.75f,0.45f),new(0,180,0));
+            // Silla con su punto de sentarse: Chair12_a08 trae un NPCWorldPoint (el mismo que usan Will
+            // y los NPCs) y el guion sienta a Liam ahí con «sienta». Sin escalar: el punto está
+            // ajustado a mano para su tamaño real.
+            PropTalCual(SillaDeLiam, Pack+"Props/Furniture/Chair/Chair12_a08.prefab", new(0,0,0.95f), new(0,180,0));
             // El módulo de habitación no tiene pared del fondo: se cierra detrás del mapa y del espejo.
             Caja("Pared del fondo", new(0,1.7f,3.08f), new(7.4f,3.4f,0.1f), madera);
             var bola = Prop("PROP_Bola", Pack+"Props/Goods/Crystalball02_b01.prefab", new(0.4f,AlturaMesa+0.01f,-0.15f), new(0.42f,0.4f,0.42f));
@@ -104,11 +105,32 @@ public static class ConstruirTorreDeLiam
             foreach(var r in llave.GetComponentsInChildren<Renderer>())r.sharedMaterial=metal;
             var espejo = Caja("PROP_Espejo",new(2,1.75f,2.95f),new(0.8f,1.3f,0.04f),metal);
             Caja("Marco del espejo",new(2,1.75f,3),new(0.98f,1.48f,0.06f),madera);
+            // El cuarto de Tobi, lejos de la torre: solo lo ve la franja en la que Liam piensa en él.
+            var cuarto = new Vector3(12, 0, 0);
+            Caja("Tobi · suelo", cuarto + new Vector3(0, -0.05f, 0), new(3.2f, 0.1f, 3.2f), madera);
+            var camaTobi = Prop("Tobi · cama", Pack+"Props/Furniture/Bed/Bed01_a01.prefab", cuarto, new(1.3f,0.8f,2.1f));
+            float asiento = AlturaDe(camaTobi, cuarto);
+            int cabecera = AlturaDe(camaTobi, cuarto + new Vector3(0,0,0.9f)) > AlturaDe(camaTobi, cuarto + new Vector3(0,0,-0.9f)) ? 1 : -1;
+            Caja("Tobi · pared", cuarto + new Vector3(0, 1.3f, cabecera*1.2f), new(3.2f, 2.6f, 0.1f), madera);
+            Caja("Tobi · pared lateral", cuarto + new Vector3(-1.6f, 1.3f, 0), new(0.1f, 2.6f, 3.2f), madera);
+            Prop("Tobi · almohada", Pack+"Props/Goods/Pillow01_a01.prefab", cuarto + new Vector3(0, asiento, cabecera*0.72f), new(0.55f, 0.16f, 0.32f));
+            Caja("Tobi · mesilla", cuarto + new Vector3(0.95f, 0.2f, cabecera*0.6f), new(0.4f, 0.4f, 0.4f), madera);
+            Prop("Tobi · vela", "Assets/Art/World/Modular Castle/Assets/prefabs/candle1.prefab", cuarto + new Vector3(0.95f, 0.41f, cabecera*0.6f), new(0.1f,0.22f,0.1f));
+            var velaTobi = Luz("Tobi · luz de vela", cuarto + new Vector3(0.9f, 0.85f, cabecera*0.45f), new(1f,0.78f,0.55f), 0.35f, 2.6f);
+            var nocheTobi = Luz("Tobi · relleno de noche", cuarto + new Vector3(-0.9f, 1.6f, -cabecera*0.6f), new(0.55f,0.65f,0.9f), 0.15f, 3.2f);
+            var tobiSentado = cuarto + new Vector3(0, asiento, cabecera*0.42f);
+            var spawnTobi = Nuevo("SpawnPoint_Tobi"); spawnTobi.transform.localPosition = tobiSentado;
+            spawnTobi.transform.localRotation = Quaternion.Euler(0, cabecera > 0 ? 180 : 0, 0);
+            spawnTobi.AddComponent<NpcSpawnPoint>().spawnId = "SPAWN_TOBI_TORRE";
+            var pies = cuarto + new Vector3(0, 0, -cabecera*1.5f);
+            Debug.Log($"[Torre] Tobi: cama_tobi {Origen.x+tobiSentado.x:0.##} {Origen.z+tobiSentado.z:0.##} {Origen.y+tobiSentado.y:0.###} · pies_tobi {Origen.x+pies.x:0.##} {Origen.z+pies.z:0.##} · cabecera {cabecera}");
+
             var spawn = Nuevo("SpawnPoint_Liam_Torre"); spawn.transform.localPosition=new(0,0,0.9f);spawn.transform.localRotation=Quaternion.Euler(0,180,0);
             spawn.AddComponent<NpcSpawnPoint>().spawnId="SPAWN_LIAM_TORRE";
             var roster = Asset<NpcRosterSO>("Assets/Resources/NpcRosters/NpcRoster_TorreDeLiam.asset");
             roster.rosterId="TorreDeLiam";
-            roster.entries=new(){new NpcRosterSO.Entry{spawnId="SPAWN_LIAM_TORRE",prefab=AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath("de7b566c44b3b6949964c333227535b2")),gameObjectName="Liam_Torre",persistenceId="LIAM_TORRE",startActive=true,requireNavMesh=false}};
+            roster.entries=new(){new NpcRosterSO.Entry{spawnId="SPAWN_LIAM_TORRE",prefab=AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath("de7b566c44b3b6949964c333227535b2")),gameObjectName="Liam_Torre",persistenceId="LIAM_TORRE",startActive=true,requireNavMesh=false},
+                new NpcRosterSO.Entry{spawnId="SPAWN_TOBI_TORRE",prefab=AssetDatabase.LoadAssetAtPath<GameObject>(CrearTobi.Prefab)??throw new InvalidOperationException("Falta el prefab de Tobi (El Sendero/Archivo/Liam/Crear prefab de Tobi)."),gameObjectName="Tobi_Torre",persistenceId="TOBI_TORRE",startActive=true,requireNavMesh=false}};
             EditorUtility.SetDirty(roster);
             var def = Asset<SequenceDefinition>(Secuencia);
             def.displayName="Los planes de Liam"; def.summary="Liam observa el combate, ve romperse el aro y decide conducir a Will hasta el Sendero.";
@@ -126,8 +148,8 @@ public static class ConstruirTorreDeLiam
             for(int i=0;i<ids.Length;i++){var p=props.GetArrayElementAtIndex(i);p.FindPropertyRelative("id").stringValue=ids[i];p.FindPropertyRelative("target").objectReferenceValue=objetivos[i];p.FindPropertyRelative("eyeHeight").floatValue=i==0?0.3f:0;}
             so.ApplyModifiedPropertiesWithoutUndo();
             var env=escenario.AddComponent<AnchorEnvironment>(); env.zoneRoot=raiz.gameObject; env.hideExteriorWorld=true;
-            foreach(var l in new[]{fria,calida,brillo,luna})l.transform.SetParent(escenario.transform,true);
-            env.lightsEnableOnEnter=new[]{fria,calida,brillo,luna}; env.adjustCameraClipping=true; env.interiorFarClipPlane=25;
+            foreach(var l in new[]{fria,calida,brillo,luna,velaTobi,nocheTobi})l.transform.SetParent(escenario.transform,true);
+            env.lightsEnableOnEnter=new[]{fria,calida,brillo,luna,velaTobi,nocheTobi}; env.adjustCameraClipping=true; env.interiorFarClipPlane=25;
             var volumen=escenario.AddComponent<Volume>();volumen.isGlobal=true;volumen.priority=100;
             var postproceso=escenario.AddComponent<PostprocesoDeEscena>();postproceso.entrada=0;postproceso.exclusivo=true;
             var player=escenario.AddComponent<SequencePlayer>(); var sp=new SerializedObject(player);
@@ -229,6 +251,21 @@ public static class ConstruirTorreDeLiam
     static GameObject Nuevo(string nombre){var go=new GameObject(nombre);go.transform.SetParent(raiz,false);return go;}
     static GameObject Caja(string nombre,Vector3 pos,Vector3 escala,Material mat,bool col=false)
     {var go=GameObject.CreatePrimitive(PrimitiveType.Cube);go.name=nombre;go.transform.SetParent(raiz,false);go.transform.localPosition=pos;go.transform.localScale=escala;go.GetComponent<Renderer>().sharedMaterial=mat;if(!col)UnityEngine.Object.DestroyImmediate(go.GetComponent<Collider>());return go;}
+    internal const string SillaDeLiam = "Silla_Liam";
+
+    /// Un prop a su tamaño original (para muebles con punto de sentarse: el punto no se escala).
+    internal static GameObject PropTalCual(string nombre,string path,Vector3 pos,Vector3 giro,Transform padre=null)
+    {
+        var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(path)??throw new InvalidOperationException("Falta prop: "+path);
+        var go=new GameObject(nombre);go.transform.SetParent(padre!=null?padre:raiz,false);
+        var modelo=(GameObject)PrefabUtility.InstantiatePrefab(prefab,go.transform);modelo.transform.localPosition=Vector3.zero;modelo.transform.localRotation=Quaternion.Euler(giro);
+        var rr=go.GetComponentsInChildren<Renderer>().Where(r=>!(r is CanvasRenderer)&&r.GetComponentInParent<Canvas>()==null).ToArray();
+        var b=rr[0].bounds;foreach(var r in rr)b.Encapsulate(r.bounds);
+        go.transform.position+=Origen+pos-new Vector3(b.center.x,b.min.y,b.center.z);
+        foreach(var c in go.GetComponentsInChildren<Collider>())UnityEngine.Object.DestroyImmediate(c);
+        return go;
+    }
+
     static GameObject Prop(string nombre,string path,Vector3 pos,Vector3 tamano,Vector3 giro=default)
     {
         var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(path)??throw new InvalidOperationException("Falta prop: "+path);
@@ -240,6 +277,22 @@ public static class ConstruirTorreDeLiam
         go.transform.position+=Origen+pos-new Vector3(b.center.x,b.min.y,b.center.z);
         foreach(var c in go.GetComponentsInChildren<Collider>())UnityEngine.Object.DestroyImmediate(c);
         return go;
+    }
+    /// Altura (local a la torre) de la superficie de un prop en un punto, medida con colliders temporales.
+    static float AlturaDe(GameObject prop, Vector3 local)
+    {
+        var temporales = new List<MeshCollider>();
+        foreach (var mf in prop.GetComponentsInChildren<MeshFilter>())
+        {
+            if (mf.sharedMesh == null) continue;
+            var c = mf.gameObject.AddComponent<MeshCollider>(); c.sharedMesh = mf.sharedMesh; temporales.Add(c);
+        }
+        Physics.SyncTransforms();
+        float altura = 0f;
+        foreach (var hit in Physics.RaycastAll(Origen + local + Vector3.up * 5f, Vector3.down, 10f))
+            if (temporales.Contains(hit.collider as MeshCollider)) altura = Mathf.Max(altura, hit.point.y - Origen.y);
+        foreach (var c in temporales) UnityEngine.Object.DestroyImmediate(c);
+        return altura;
     }
     static Light Luz(string nombre,Vector3 pos,Color color,float intensidad,float alcance)
     {var go=Nuevo(nombre);go.transform.localPosition=pos;var l=go.AddComponent<Light>();l.type=LightType.Point;l.color=color;l.intensity=intensidad;l.range=alcance;return l;}

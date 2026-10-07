@@ -125,6 +125,9 @@ public static partial class CombatLabBuilder
             stationArray.GetArrayElementAtIndex(i).objectReferenceValue = stations[i];
         directorSerialized.ApplyModifiedPropertiesWithoutUndo();
 
+        foreach (var aviso in CrearZonaEconomia(scene))
+            Debug.LogWarning("[CombatLab] " + aviso);
+
         if (!AssetDatabase.IsValidFolder("Assets/Scenes/Test"))
             AssetDatabase.CreateFolder("Assets/Scenes", "Test");
         EditorSceneManager.MarkSceneDirty(scene);

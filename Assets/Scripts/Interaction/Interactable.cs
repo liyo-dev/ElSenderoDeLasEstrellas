@@ -346,11 +346,24 @@ public class Interactable : MonoBehaviour
         if (_partyMember != null && _partyMember.IsInParty)
             return;
 
-        // Modo HandOffToTarget: delegar al NPCBehaviourManagerV2 si existe
-        if (mode == InteractableMode.HandOffToTarget && _npcManager != null)
+        // El Brain reserva las charlas esperadas por el grafo antes del diálogo o servicio local.
+        if (_npcManager != null)
         {
-            _npcManager.HandleInteraction(interactor);
-            return;
+            if (mode == InteractableMode.HandOffToTarget)
+            {
+                _npcManager.HandleInteraction(interactor);
+                return;
+            }
+            if (_npcManager.TryHandleNarrativeInteraction()) return;
+
+            // La frase que el grafo asigna ahora al NPC sustituye a su diálogo por defecto; lo que
+            // va después del diálogo (p. ej. abrir su tienda con OnFinished) sigue igual.
+            if (_npcManager.TryGetStandingLine(out var frase))
+            {
+                if (mode == InteractableMode.OpenDialogue) StartDialogue(frase);
+                else NarrativeStandingLines.TryPlay(_npcManager.PersistenceId, transform);
+                return;
+            }
         }
         
         // ✅ PRIORIDAD: Si hay un NPCInteractiveNarrativeExecutor con narrativas condicionales,
@@ -392,7 +405,7 @@ public class Interactable : MonoBehaviour
         switch (mode)
         {
             case InteractableMode.OpenDialogue:
-                StartDialogue();
+                StartDialogue(dialogue);
                 break;
             case InteractableMode.OpenDialogueWithOptions:
                 StartDialogueWithOptions();
@@ -464,10 +477,10 @@ public class Interactable : MonoBehaviour
         return false;
     }
 
-    void StartDialogue()
+    void StartDialogue(DialogueAsset asset)
     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[Interactable:{name}] 📖 StartDialogue - dialogue={dialogue?.name}");
+        Debug.Log($"[Interactable:{name}] 📖 StartDialogue - dialogue={asset?.name}");
 #endif
         
         // ✅ REPRODUCIR ANIMACIÓN DE INTERACCIÓN (si no es batalla)
@@ -485,10 +498,10 @@ public class Interactable : MonoBehaviour
         }
         
         var dm = DialogueManager.Instance;
-        if (dialogue && dm != null)
+        if (asset && dm != null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[Interactable:{name}] ✅ Iniciando diálogo: {dialogue.name}");
+            Debug.Log($"[Interactable:{name}] ✅ Iniciando diálogo: {asset.name}");
 #endif
             OnStarted?.Invoke();
             GameState.Push(GamePhase.Dialogue);
@@ -500,7 +513,7 @@ public class Interactable : MonoBehaviour
             SetNpcInteracting(true);
 
             // ✅ NPCSimpleAnimator maneja la rotación del NPC (suscrito a eventos de DialogueManager)
-            dm.StartDialogue(dialogue, transform, () =>
+            dm.StartDialogue(asset, transform, () =>
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Interactable:{name}] 🔚 Diálogo terminado");

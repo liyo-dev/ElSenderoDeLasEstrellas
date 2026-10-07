@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac04_anthenaears
   displayNameId: ITEM_AC04_ANTHENAEARS_NAME
   displayName: Orejas de Antena
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: f255c854c33d470ba01ad2e60b7de486, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC04_ANTHENAEARS_DESC
   useDescription: Orejas con antenas, como de otro mundo.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 388a1eb9d02f4b2b9a133f8425aa303e, type: 2}

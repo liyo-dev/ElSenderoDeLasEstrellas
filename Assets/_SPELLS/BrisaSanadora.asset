@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 5503135327009739637, guid: a1ec355707f8e6042a4b1cd49075459c, type: 3}
   impactVFX: {fileID: 0}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 2762701776606989417, guid: a7f5797aa55665942b30a94f26b1cccd, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_BrisaSanadora
   impactSFXKey: 

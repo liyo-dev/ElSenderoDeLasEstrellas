@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 4
   lore: Un pensamiento afilado que vuelve lentos los pies del enemigo.
   loreId: 
-  prefab: {fileID: 100006, guid: 3c00fc772aa93bf43a4027055c3dd76c, type: 3}
+  prefab: {fileID: 4548091428559645111, guid: ed6633fad84ff57459ad6e3b14da561f, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
   impactVFX: {fileID: 8974203713140315807, guid: 709b0bd6b0b625249a98409dd7a87343, type: 3}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_DardoMental
   impactSFXKey: Impacto_Mente_Pequeno

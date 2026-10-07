@@ -412,6 +412,7 @@ GameObject:
   - component: {fileID: 3934879012085031816}
   - component: {fileID: 4589410262978653035}
   - component: {fileID: 7021102751427995675}
+  - component: {fileID: 9031472481659939320}
   m_Layer: 7
   m_Name: Spider1
   m_TagString: Untagged
@@ -676,6 +677,27 @@ MonoBehaviour:
   checkInterval: 0.15
   avoidWeight: 1.1
   steerLerp: 8
+  maxContinuousAvoidSeconds: 1.5
+--- !u!114 &9031472481659939320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5572779666037620316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bba43a50e5997d44ead9129312d1e871, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SignalEmitter
+  eventKey: ENEMIGO_DERROTADO_ARANA
+  trigger: 4
+  requiredTag: Player
+  once: 1
+  onlyIfListening: 1
+  soloConLaMision: 
+  radioDeProximidad: 0
+  debugLogs: 0
 --- !u!1 &5572779666037620318
 GameObject:
   m_ObjectHideFlags: 0

@@ -168,11 +168,22 @@ public class QuestLogItemUI : MonoBehaviour
             for (int i = stepsRoot.childCount - 1; i >= 0; i--)
                 GameObject.Destroy(stepsRoot.GetChild(i).gameObject);
 
-            for (int i = 0; i < steps.Length; i++)
+            // Los pasos seguidos con el mismo texto (p. ej. «derrota arañas» ×8) se muestran en una
+            // sola fila con su cuenta.
+            for (int i = 0; i < steps.Length; )
             {
+                int fin = i + 1;
+                string clave = ClaveDePaso(data.Data, i);
+                while (clave != null && fin < steps.Length && ClaveDePaso(data.Data, fin) == clave) fin++;
                 var item = GameObject.Instantiate(stepPrefab, stepsRoot);
-                // Usar el método Bind con localización
-                item.Bind(steps[i], data.Data, i);
+                if (fin - i == 1) item.Bind(steps[i], data.Data, i);
+                else
+                {
+                    int hechos = 0;
+                    for (int k = i; k < fin; k++) if (steps[k] != null && steps[k].completed) hechos++;
+                    item.BindRepetido(data.Data, i, hechos, fin - i);
+                }
+                i = fin;
             }
         }
 
@@ -183,6 +194,13 @@ public class QuestLogItemUI : MonoBehaviour
     public void OnPointerClick(PointerEventData eventData)
     {
         ToggleExpanded();
+    }
+
+    static string ClaveDePaso(QuestData quest, int indice)
+    {
+        if (quest == null || quest.steps == null || indice < 0 || indice >= quest.steps.Length) return null;
+        string clave = quest.steps[indice].descriptionId;
+        return string.IsNullOrEmpty(clave) ? null : clave;
     }
 
     public void ToggleExpanded()

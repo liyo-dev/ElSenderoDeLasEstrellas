@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac08_ninjamask06
   displayNameId: ITEM_AC08_NINJAMASK06_NAME
   displayName: "M\xE1scara Ninja VI"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: f159251abefc4e57aaa8d34e7bba2659, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC08_NINJAMASK06_DESC
   useDescription: "Una m\xE1scara oscura que oculta el rostro, perfecta para el sigilo."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 1022beddb2cf4d34995022b8fd82b70a, type: 2}

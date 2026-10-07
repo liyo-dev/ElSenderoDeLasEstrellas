@@ -1384,6 +1384,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -1545,7 +1546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd846acda22bfd41bb1c016673b9e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
-  _profileId: 
+  _profileId: elite
   _spawnOrigin: {fileID: 0}
 --- !u!114 &815559477837206886
 MonoBehaviour:

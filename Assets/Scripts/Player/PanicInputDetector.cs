@@ -146,7 +146,7 @@ public class PanicInputDetector : MonoBehaviour
             return;
         }
 
-        if (mode == PanicInputMode.Hold) UpdateHold();
+        if (mode == PanicInputMode.Hold || mode == PanicInputMode.HoldRelease) UpdateHold();
         else if (mode == PanicInputMode.Direction) UpdateDirection();
     }
 
@@ -155,10 +155,16 @@ public class PanicInputDetector : MonoBehaviour
         if (!_isHeld) return;
         float held = Time.unscaledTime - _heldSinceUnscaled;
         OnProgressChanged?.Invoke(Mathf.Clamp01(held / Mathf.Max(0.01f, holdSeconds)));
-        if (held >= holdSeconds)
+        if (mode == PanicInputMode.Hold && held >= holdSeconds)
         {
             StopListening();
             OnSuccess?.Invoke();
+        }
+        // HoldRelease: aguantar más de la cuenta ya es el fallo; no se hace esperar al jugador.
+        else if (mode == PanicInputMode.HoldRelease && held > maxHoldSeconds)
+        {
+            StopListening();
+            OnFailure?.Invoke();
         }
     }
 
@@ -239,10 +245,8 @@ public class PanicInputDetector : MonoBehaviour
             return;
         }
 
-        // HoldRelease soltado demasiado pronto o demasiado tarde: no cuenta como éxito, se deja
-        // que la ventana expire y falle por tiempo — mismo camino de salida que el resto de modos,
-        // en vez de un fallo inmediato que no le daría tiempo a leer el aviso al jugador.
-        // Hold soltado antes de tiempo: mismo trato, y se reinicia la barra visualmente.
+        // Soltado antes de llenar la barra: no cuenta; la barra vuelve a cero y se puede repetir
+        // mientras dure la ventana. (Pasarse de tiempo ya falla en UpdateHold.)
         OnProgressChanged?.Invoke(0f);
     }
 

@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac08_ninjamask03
   displayNameId: ITEM_AC08_NINJAMASK03_NAME
   displayName: "M\xE1scara Ninja III"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: a0cf6b5a91734fd9b35e578586fbd175, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC08_NINJAMASK03_DESC
   useDescription: "Una m\xE1scara oscura que oculta el rostro, perfecta para el sigilo."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 133804a0a2254c1bbf994fb97c21ce1a, type: 2}

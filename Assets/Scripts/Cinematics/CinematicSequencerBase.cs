@@ -409,7 +409,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected IEnumerator Co_BeginCinematicWithTransition(Action additionalOnCut = null)
     {
         LockCinematic();
-        yield return Co_Transition(_entryTransition, () =>
+        yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
         {
             BeginCinematic();
             // El interior se aplica en el cut point, con la pantalla cubierta:
@@ -424,7 +424,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected IEnumerator Co_BeginCinematicWithTransition(Transform initialShot, Action additionalOnCut = null)
     {
         LockCinematic();
-        yield return Co_Transition(_entryTransition, () =>
+        yield return Co_Transition(_entryTransition, recogerPantallaTapada: true, () =>
         {
             BeginCinematic();
             if (initialShot != null) _cinematicCamera.Cut(initialShot);
@@ -446,7 +446,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// Cubre la pantalla, llama a EndCinematic() en el cut point y revela el gameplay.
     /// additionalOnCut: acciones extra que deben ocurrir junto con EndCinematic (mismo frame, pantalla cubierta).
     protected IEnumerator Co_EndCinematicWithTransition(Action additionalOnCut = null)
-        => Co_Transition(_exitTransition, () => { additionalOnCut?.Invoke(); EndCinematic(); });
+        => Co_Transition(_exitTransition, recogerPantallaTapada: false, () => { additionalOnCut?.Invoke(); EndCinematic(); });
 
     /// Cubre la pantalla con negro y llama a EndCinematic(), pero NO revela después.
     /// Usar cuando el sistema siguiente (ej: BossIntroPresentation) maneja su propia revelación,
@@ -463,7 +463,10 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
     /// Ejecuta una transición via TransitionManager. onCutPoint se llama cuando la pantalla está cubierta.
     /// Si settings es null, llama onCutPoint de inmediato sin animación.
-    private IEnumerator Co_Transition(TransitionSettings settings, Action onCutPoint)
+    /// recogerPantallaTapada: al EMPEZAR, si alguien dejó la pantalla tapada (una escena anterior
+    /// que acaba en negro, un rótulo), la cinemática la recoge como si fuera el telón y la destapa
+    /// en su primer plano. Al acabar no: la pantalla tapada es de quien venga después.
+    private IEnumerator Co_Transition(TransitionSettings settings, bool recogerPantallaTapada, Action onCutPoint)
     {
         // (21 sep) EL TELÓN. Si la pantalla ya está en negro y retenida (arranque de partida, una
         // carga de escena, otra escena cargándose en aditivo), esta cinemática NO hace su propia
@@ -471,7 +474,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         // destapar al acabar la transición es enseñar la escena antes de que los primeros beats
         // la hayan montado. Recoge el telón, hace el cut point a oscuras, y lo suelta cuando ya
         // hay algo que ver (ver SueltaElTelonEnSuPrimerPlano).
-        if (Telon.Cerrado)
+        if (Telon.Cerrado || (recogerPantallaTapada && FeedbackService.IsScreenFaded))
         {
             Telon.Cerrar(ClaveTelon);
             onCutPoint?.Invoke();

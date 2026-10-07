@@ -81,10 +81,29 @@ public class OrbDropper : MonoBehaviour
             else if (roll < p.deathHealthWeight + p.deathManaWeight)
                 SpawnOrb(p.manaOrbPrefab, OrbType.Mana);
         }
+        DropCurrency(p);
     }
 
-    /// Un enemigo ha soltado orbes al recibir un golpe (quién, de qué tipo). Para que otros
-    /// sistemas reaccionen: Eldran explica qué son la primera vez (INC-469).
+    private void DropCurrency(OrbDropProfile p)
+    {
+        if (p.currencyItem == null || p.currencyItem.usageKind != ItemData.ItemUsageKind.Currency ||
+            p.currencyOrbPrefab == null) return;
+        int minimum = Mathf.Max(0, p.currencyDeathMin);
+        int maximum = Mathf.Max(minimum, p.currencyDeathMax);
+        int total = Random.Range(minimum, maximum + 1);
+        if (total <= 0) return;
+        int count = Mathf.Min(6, total);
+        int share = total / count;
+        int remainder = total % count;
+        for (int i = 0; i < count; i++)
+            SpawnOrb(p.currencyOrbPrefab, OrbType.Currency, share + (i < remainder ? 1 : 0), p.currencyPickupSFXKey);
+        if (p.specialCurrencyOrbPrefab != null && Random.value < p.specialCurrencyChance)
+            SpawnOrb(p.specialCurrencyOrbPrefab, OrbType.Currency,
+                total * Mathf.Max(1, p.specialCurrencyMultiplier), p.specialCurrencyPickupSFXKey);
+        AlSoltarOrbes?.Invoke(this, OrbType.Currency);
+    }
+
+    /// Notifica quién suelta orbes y su tipo para que otros sistemas reaccionen.
     public static event System.Action<OrbDropper, OrbType> AlSoltarOrbes;
 
 #if UNITY_EDITOR
@@ -98,7 +117,7 @@ public class OrbDropper : MonoBehaviour
         if (count > 0 && prefab != null) AlSoltarOrbes?.Invoke(this, type);
     }
 
-    private void SpawnOrb(GameObject prefab, OrbType orbType)
+    private void SpawnOrb(GameObject prefab, OrbType orbType, int currencyAmount = 0, string pickupSound = null)
     {
         if (prefab == null) return;
         var p = Profile;
@@ -127,8 +146,8 @@ public class OrbDropper : MonoBehaviour
             orb.Configure(orbType, amount);
         }
 
+        if (orbType == OrbType.Currency) orb.ConfigureCurrency(p.currencyItem, currencyAmount, pickupSound);
         orb.SetAudioKeys(p.orbSpawnSFXKey, p.orbAttractSFXKey);
     }
 
-    // private DuoCompanion? GetCompanionFromInstigator(GameObject instigator) { ... }
 }

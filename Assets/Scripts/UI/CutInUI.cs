@@ -87,14 +87,36 @@ public sealed class CutInUI : MonoBehaviour
         f.imagen.rectTransform.localRotation = Quaternion.Euler(0f, 0f, indice == 0 ? 6f : -6f);
         CrearBorde(f.imagen.transform, true);
         CrearBorde(f.imagen.transform, false);
-        f.textura = new RenderTexture(1600, 450, 24) { name = "CutIn" + indice, antiAliasing = 1 };
-        f.textura.Create();
-        f.imagen.texture = f.textura;
+        AjustarTextura(f, indice);
         var auxiliar = new GameObject("CamaraCutIn" + indice, typeof(Camera), typeof(UniversalAdditionalCameraData));
         auxiliar.transform.SetParent(transform, false);
         f.camara = auxiliar.GetComponent<Camera>();
         f.camara.enabled = false;
         return f;
+    }
+
+    // Tamaño de la franja en pantalla, en fracción del ancho y del alto.
+    const float AnchoFranja = 1.12f, AltoFranja = .28f;
+
+    /// La imagen de la franja se pinta a la medida exacta de la franja en pantalla: con una
+    /// textura fija (1600×450) en una franja que en 16:9 es el doble de apaisada, los personajes
+    /// salían estirados a lo ancho, y en otras resoluciones de otra manera. Así no se estira nada
+    /// y la imagen tiene la resolución que se ve. Se rehace si cambia la resolución.
+    static void AjustarTextura(Franja f, int indice)
+    {
+        int ancho = Mathf.Clamp(Mathf.RoundToInt(Screen.width * AnchoFranja), 64, 8192);
+        int alto = Mathf.Clamp(Mathf.RoundToInt(Screen.height * AltoFranja), 32, 4096);
+        if (f.textura != null && f.textura.width == ancho && f.textura.height == alto) return;
+        var vieja = f.textura;
+        f.textura = new RenderTexture(ancho, alto, 24) { name = "CutIn" + indice, antiAliasing = 1 };
+        f.textura.Create();
+        if (f.imagen != null) f.imagen.texture = f.textura;
+        if (f.camara != null)
+        {
+            if (f.camara.targetTexture == vieja) f.camara.targetTexture = f.textura;
+            f.camara.aspect = ancho / (float)alto;
+        }
+        if (vieja != null) { vieja.Release(); Destroy(vieja); }
     }
 
     static void CrearBorde(Transform padre, bool superior)
@@ -137,10 +159,11 @@ public sealed class CutInUI : MonoBehaviour
                 datos.requiresDepthOption = fuente.requiresDepthOption;
             }
         }
+        AjustarTextura(f, ranura);
         f.camara.targetTexture = f.textura;
         f.camara.rect = new Rect(0f, 0f, 1f, 1f);
         f.camara.orthographic = false;
-        f.camara.aspect = 1600f / 450f;
+        f.camara.aspect = f.textura.width / (float)f.textura.height;
         f.camara.fieldOfView = f.fov;
         f.camara.nearClipPlane = .02f;
         f.camara.enabled = true;
@@ -188,9 +211,10 @@ public sealed class CutInUI : MonoBehaviour
                     if (!f.visible) { Ocultar(f); continue; }
                 }
             }
+            AjustarTextura(f, System.Array.IndexOf(_franjas, f));
             var rect = f.imagen.rectTransform;
             rect.anchorMin = rect.anchorMax = new Vector2(.5f, f.altura);
-            rect.sizeDelta = new Vector2(Screen.width * 1.12f, Screen.height * .28f);
+            rect.sizeDelta = new Vector2(Screen.width * AnchoFranja, Screen.height * AltoFranja);
             rect.anchoredPosition = new Vector2(f.lado * (1f - f.avance) * Screen.width * 1.3f, 0f);
             if (f.visible && f.restante >= 0f)
             {

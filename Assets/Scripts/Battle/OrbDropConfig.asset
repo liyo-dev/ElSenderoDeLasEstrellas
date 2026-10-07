@@ -26,11 +26,80 @@ MonoBehaviour:
     deathBurstMax: 8
     deathHealthWeight: 0.5
     deathManaWeight: 0.3
+    currencyOrbPrefab: {fileID: 1826052065983394627, guid: 46f10849ce930f84a9032aea589fa63a, type: 3}
+    currencyItem: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+    currencyDeathMin: 2
+    currencyDeathMax: 4
+    currencyPickupSFXKey: Coin
+    specialCurrencyChance: 0.05
+    specialCurrencyMultiplier: 3
+    specialCurrencyOrbPrefab: {fileID: 6244781603022362723, guid: 66f58801d3961a34798754c797669d42, type: 3}
+    specialCurrencyPickupSFXKey: puzzle_done
     orbSpawnSFXKey: orbSpawn
     orbAttractSFXKey: orbAttract
     spawnCenterOffset: {x: 0, y: 1.5, z: 0}
     spawnRadius: 0.5
     spawnHeightMin: 0.3
     spawnHeightMax: 0.8
-  _profiles: []
-  _tagMappings: []
+  _profiles:
+  - id: elite
+    healthOrbPrefab: {fileID: 7011574980652007753, guid: d5e45887b593fd449bb7e2b65a451fb4, type: 3}
+    manaOrbPrefab: {fileID: 720135145037961379, guid: 5714829a3d11d394c8f7dba269972167, type: 3}
+    healthOrbAmount: 15
+    manaOrbAmount: 20
+    healthChance: 0.186
+    manaChance: 0.25
+    minOrbsPerHit: 1
+    maxOrbsPerHit: 3
+    deathBurstMin: 4
+    deathBurstMax: 8
+    deathHealthWeight: 0.5
+    deathManaWeight: 0.3
+    currencyOrbPrefab: {fileID: 1826052065983394627, guid: 46f10849ce930f84a9032aea589fa63a, type: 3}
+    currencyItem: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+    currencyDeathMin: 6
+    currencyDeathMax: 10
+    currencyPickupSFXKey: Coin
+    specialCurrencyChance: 0.05
+    specialCurrencyMultiplier: 3
+    specialCurrencyOrbPrefab: {fileID: 6244781603022362723, guid: 66f58801d3961a34798754c797669d42, type: 3}
+    specialCurrencyPickupSFXKey: puzzle_done
+    orbSpawnSFXKey: orbSpawn
+    orbAttractSFXKey: orbAttract
+    spawnCenterOffset: {x: 0, y: 1.5, z: 0}
+    spawnRadius: 0.5
+    spawnHeightMin: 0.3
+    spawnHeightMax: 0.8
+  - id: boss
+    healthOrbPrefab: {fileID: 7011574980652007753, guid: d5e45887b593fd449bb7e2b65a451fb4, type: 3}
+    manaOrbPrefab: {fileID: 720135145037961379, guid: 5714829a3d11d394c8f7dba269972167, type: 3}
+    healthOrbAmount: 15
+    manaOrbAmount: 20
+    healthChance: 0.186
+    manaChance: 0.25
+    minOrbsPerHit: 1
+    maxOrbsPerHit: 3
+    deathBurstMin: 4
+    deathBurstMax: 8
+    deathHealthWeight: 0.5
+    deathManaWeight: 0.3
+    currencyOrbPrefab: {fileID: 1826052065983394627, guid: 46f10849ce930f84a9032aea589fa63a, type: 3}
+    currencyItem: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+    currencyDeathMin: 40
+    currencyDeathMax: 60
+    currencyPickupSFXKey: Coin
+    specialCurrencyChance: 0.05
+    specialCurrencyMultiplier: 3
+    specialCurrencyOrbPrefab: {fileID: 6244781603022362723, guid: 66f58801d3961a34798754c797669d42, type: 3}
+    specialCurrencyPickupSFXKey: puzzle_done
+    orbSpawnSFXKey: orbSpawn
+    orbAttractSFXKey: orbAttract
+    spawnCenterOffset: {x: 0, y: 1.5, z: 0}
+    spawnRadius: 0.5
+    spawnHeightMin: 0.3
+    spawnHeightMax: 0.8
+  _tagMappings:
+  - tag: Boss
+    profileId: boss
+  _currenciesForBattleReport:
+  - {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}

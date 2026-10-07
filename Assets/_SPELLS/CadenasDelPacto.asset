@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
   impactVFX: {fileID: 0}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_CadenasDelPacto
   impactSFXKey: 
@@ -93,7 +93,7 @@ MonoBehaviour:
   statusEffect: 2
   statusDuration: 0.6
   statusStrength: 0
-  statusVFX: {fileID: 6126188424833946103, guid: a58aa9a78f2b45b45bb0f3e2e1e3ad3c, type: 3}
+  statusVFX: {fileID: 7446724993709181866, guid: 9ffd0f5d261b6b847a3e55d8f8c17bbe, type: 3}
   zoneOnCaster: 0
   healPerTick: 0
   groupShieldSeconds: 0

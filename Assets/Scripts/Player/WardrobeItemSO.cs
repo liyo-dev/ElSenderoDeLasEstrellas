@@ -15,6 +15,8 @@ public class WardrobeItemSO : ScriptableObject
     [TextArea]
     [SerializeField] private string description;
     [SerializeField] private Sprite icon;
+    [Tooltip("Estadísticas que aporta esta prenda mientras está equipada.")]
+    [SerializeField] private Estadisticas bonos;
 
     static readonly Dictionary<string, WardrobeItemSO> Registry = new Dictionary<string, WardrobeItemSO>();
 
@@ -24,6 +26,15 @@ public class WardrobeItemSO : ScriptableObject
     public string DisplayName => string.IsNullOrEmpty(displayName) ? partName : displayName;
     public string Description => description;
     public Sprite Icon => icon;
+    public Estadisticas Bonos => bonos;
+
+    public static WardrobeItemSO FindPart(PartCategory category, string part)
+    {
+        foreach (var item in Registry.Values)
+            if (item != null && item.Category == category &&
+                string.Equals(item.PartName, part, System.StringComparison.OrdinalIgnoreCase)) return item;
+        return null;
+    }
 
     /// <summary>Obtiene el nombre localizado del item de armario (usa displayNameId si está definido).</summary>
     public string GetLocalizedDisplayName()

@@ -6,6 +6,12 @@ public class NarrativeRunner : MonoBehaviour
 {
     public NarrativeGraph graph;
 
+    /// <summary>Clave del blackboard con el nodo del flujo principal en curso.</summary>
+    public const string CurrentNodeKey = "__currentNodeGuid";
+    /// <summary>Clave del blackboard que marca que el flujo principal llegó a su final.
+    /// Distingue «grafo terminado» de «grafo sin empezar» al cargar una partida.</summary>
+    public const string FlowEndedKey = "__flowEnded";
+
     // SimpleBlackboard no es [Serializable] (usa Dictionary<string, object> internamente); Unity ya
     // lo saltaba al serializar. [NonSerialized] documenta esto y silencia el warning del analizador.
     // El guardado/restaurado real de su contenido pasa por ExportToSerializable/ImportFromSerializable.
@@ -168,9 +174,24 @@ public class NarrativeRunner : MonoBehaviour
         Debug.Log($"[NarrativeRunner] StartFromStartNode() - savedNodeGuid='{savedNodeGuid ?? "NULL"}'");
 #endif
 
+        if (string.IsNullOrEmpty(savedNodeGuid) && Blackboard.Get<bool>(FlowEndedKey, false))
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log($"[NarrativeRunner] Grafo '{graph.name}' ya terminado: no se vuelve a empezar.");
+#endif
+            return;
+        }
+
         if (!string.IsNullOrEmpty(savedNodeGuid))
         {
             var savedNode = graph.FindNode(savedNodeGuid);
+            if (savedNode != null && IsLaunchedFork(savedNode))
+            {
+                // El fork ya hizo su trabajo: solo se reanudan sus ramas, sin volver a ejecutarlo.
+                _current = null;
+                RelaunchForkBranches(savedNode.guid, savedNode.outputs);
+                return;
+            }
             if (savedNode != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -240,14 +261,15 @@ public class NarrativeRunner : MonoBehaviour
         if (_current == null)
         {
             Debug.LogWarning("[Narrative] GoTo(null). Fin del flujo.");
-            Blackboard.Set("__currentNodeGuid", string.Empty);
+            EndMainFlow();
             return;
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[NarrativeRunner] ▶ GoTo → {_current.GetType().Name} '{_current.displayTitle}' ({_current.guid})");
 #endif
-        Blackboard.Set("__currentNodeGuid", _current.guid);
+        Blackboard.Set(CurrentNodeKey, _current.guid);
+        if (Blackboard.Get<bool>(FlowEndedKey, false)) Blackboard.Set(FlowEndedKey, false);
         _current.Enter(_ctx, () =>
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -273,7 +295,7 @@ public class NarrativeRunner : MonoBehaviour
             var chosen = ResolveNamedOutput(_current, out _);
             if (chosen == null)
             {
-                Blackboard.Set("__currentNodeGuid", string.Empty);
+                EndMainFlow();
                 return;
             }
             GoTo(chosen);
@@ -285,8 +307,7 @@ public class NarrativeRunner : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[Narrative] '{_current.GetType().Name}' no tiene salidas. Flujo detenido.");
 #endif
-            // Marcar que no hay nodo actual para evitar re-ejecutar acciones tras cargar partida
-            Blackboard.Set("__currentNodeGuid", string.Empty);
+            EndMainFlow();
             return;
         }
 
@@ -299,6 +320,7 @@ public class NarrativeRunner : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[Narrative] Salida vacía desde '{_current.GetType().Name}'. Flujo detenido.");
 #endif
+                EndMainFlow();
                 return;
             }
 
@@ -318,9 +340,8 @@ public class NarrativeRunner : MonoBehaviour
         var forkGuid = forkNode.guid;
         var forkKey = $"__forked_{forkGuid}";
 
-        // Al entrar en fork, __currentNodeGuid apunta al nodo fork (puesto por GoTo).
-        // En el path de primera vez lo limpiamos; en reload lo dejamos apuntando al fork
-        // para que las recargas subsecuentes retomen directamente desde aquí.
+        // __currentNodeGuid sigue apuntando al fork (puesto por GoTo): al cargar partida,
+        // StartFromStartNode reanuda sus ramas sin volver a ejecutar el fork ni lo anterior.
 
         _current = null;
 
@@ -334,8 +355,7 @@ public class NarrativeRunner : MonoBehaviour
             return;
         }
 
-        // Primera vez: limpiar currentNodeGuid y marcar fork activo
-        Blackboard.Set("__currentNodeGuid", string.Empty);
+        // Primera vez: marcar fork activo
         Blackboard.Set(forkKey, true);
         int gen = BumpForkGeneration(forkGuid);
 
@@ -352,6 +372,17 @@ public class NarrativeRunner : MonoBehaviour
             StartCoroutine(RunSubGraph(node, forkGuid, i, gen));
         }
     }
+
+    /// <summary>Fin del flujo principal: no hay nodo en curso y el grafo no debe volver a empezar.</summary>
+    void EndMainFlow()
+    {
+        Blackboard.Set(CurrentNodeKey, string.Empty);
+        Blackboard.Set(FlowEndedKey, true);
+    }
+
+    bool IsLaunchedFork(NarrativeNode node)
+        => !node.HasNamedOutputs && node.outputs != null && node.outputs.Count > 1
+           && Blackboard.Get<bool>($"__forked_{node.guid}", false);
 
     /// <summary>
     /// Reanuda las ramas de un fork que ya fue ejecutado, usando el estado guardado en el blackboard.

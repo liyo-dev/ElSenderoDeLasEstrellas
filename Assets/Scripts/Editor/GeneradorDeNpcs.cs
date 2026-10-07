@@ -182,44 +182,9 @@ public class GeneradorDeNpcs : EditorWindow
         if (!AssetDatabase.IsValidFolder(_carpeta)) CrearCarpeta(_carpeta);
         string nombreArchivo = string.Join("_", _nombre.Trim().Split(Path.GetInvalidFileNameChars()));
         string ruta = AssetDatabase.GenerateUniqueAssetPath($"{_carpeta}/{nombreArchivo}.prefab");
-        if (!AssetDatabase.CopyAsset(rutaBase, ruta))
-        {
-            EditorUtility.DisplayDialog("Generador de NPCs", $"No se pudo copiar {rutaBase}.", "Vale");
-            return;
-        }
-
-        var raiz = PrefabUtility.LoadPrefabContents(ruta);
-        GameObject plantillaRaiz = null;
-        try
-        {
-            var piezas = Piezas(raiz);
-            if (!piezas.Any(p => RxPelo.IsMatch(p.name)) || piezas.Count(p => RxCuerpo.IsMatch(p.name)) < 2)
-            {
-                EditorUtility.DisplayDialog("Generador de NPCs",
-                    $"'{_base.name}' no trae el juego completo de piezas. Usa de base un NPC completo (Sofia, Nora, Tabernera, MC01…).", "Vale");
-                PrefabUtility.UnloadPrefabContents(raiz); raiz = null;
-                AssetDatabase.DeleteAsset(ruta);
-                return;
-            }
-
-            raiz.name = _nombre.Trim();
-            Aleatorizar(piezas, Parte.Todo, registrarUndo: false);
-
-            if (_plantilla != null)
-            {
-                plantillaRaiz = PrefabUtility.LoadPrefabContents(AssetDatabase.GetAssetPath(_plantilla));
-                CopiarComportamiento(plantillaRaiz, raiz, _quitarLoQueLaPlantillaNoTiene);
-            }
-
-            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
-        }
-        finally
-        {
-            if (raiz != null) PrefabUtility.UnloadPrefabContents(raiz);
-            if (plantillaRaiz != null) PrefabUtility.UnloadPrefabContents(plantillaRaiz);
-        }
-
-        var nuevo = AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+        var nuevo = CrearDesdePlantilla(rutaBase, ruta, _nombre.Trim(),
+            _plantilla != null ? AssetDatabase.GetAssetPath(_plantilla) : null,
+            raiz => Aleatorizar(Piezas(raiz), Parte.Todo, registrarUndo: false), _quitarLoQueLaPlantillaNoTiene);
         int sustituidos = 0;
         if (_plantilla != null && _sustituirEnRoster) sustituidos = SustituirEnRosters(_plantilla, nuevo);
 
@@ -231,6 +196,58 @@ public class GeneradorDeNpcs : EditorWindow
         _nombre = NombreAlAzar();
     }
 
+    /// <summary>Comparte la creación del generador con montajes de contenido deterministas.</summary>
+    public static GameObject CrearDesdePlantilla(string rutaBase, string ruta, string nombre,
+        string plantilla, Action<GameObject> configurar, bool quitarSobrantes = true)
+    {
+        CrearCarpeta(Path.GetDirectoryName(ruta).Replace('\\', '/'));
+        bool nuevo = AssetDatabase.LoadAssetAtPath<GameObject>(ruta) == null;
+        if (nuevo && !AssetDatabase.CopyAsset(rutaBase, ruta))
+            throw new InvalidOperationException($"No se puede copiar {rutaBase}.");
+        var raiz = PrefabUtility.LoadPrefabContents(ruta);
+        GameObject modelo = null;
+        bool fallo = false;
+        try
+        {
+            var piezas = Piezas(raiz);
+            if (!piezas.Any(p => RxPelo.IsMatch(p.name)) || piezas.Count(p => RxCuerpo.IsMatch(p.name)) < 2)
+                throw new InvalidOperationException("La base debe contener el juego completo de piezas modulares.");
+            raiz.name = nombre;
+            if (nuevo && !string.IsNullOrEmpty(plantilla))
+            {
+                modelo = PrefabUtility.LoadPrefabContents(plantilla);
+                CopiarComportamiento(modelo, raiz, quitarSobrantes);
+            }
+            configurar?.Invoke(raiz);
+            PrefabUtility.SaveAsPrefabAsset(raiz, ruta);
+        }
+        catch
+        {
+            fallo = true;
+            throw;
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(raiz);
+            if (modelo != null) PrefabUtility.UnloadPrefabContents(modelo);
+            if (nuevo && fallo) AssetDatabase.DeleteAsset(ruta);
+        }
+        return AssetDatabase.LoadAssetAtPath<GameObject>(ruta);
+    }
+
+    /// <summary>Activa una selección explícita conservando las piezas para editar el NPC.</summary>
+    public static void SeleccionarPiezas(GameObject raiz, params string[] nombres)
+    {
+        var seleccion = new HashSet<string>(nombres, StringComparer.Ordinal);
+        var piezas = Piezas(raiz);
+        foreach (string nombre in seleccion)
+            if (!piezas.Any(p => p.name == nombre)) throw new InvalidOperationException($"Falta la pieza {nombre}.");
+        foreach (var pieza in piezas)
+        {
+            bool activo = seleccion.Contains(pieza.name);
+            if (pieza.activeSelf != activo) pieza.SetActive(activo);
+        }
+    }
     static void CrearCarpeta(string ruta)
     {
         var partes = ruta.Split('/');

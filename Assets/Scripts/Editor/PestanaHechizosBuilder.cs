@@ -10,14 +10,13 @@ using UnityEngine.UI;
 /// <summary>
 /// Pestaña Hechizos del menú de Start (INC-515): conecta la línea de ayuda de abajo del panel
 /// (<c>spellUI.hintLabel</c>), añade la tarjeta «Grimorio» a la barra de pistas de abajo (con el icono
-/// del botón que lo abre, InputGlyphNames.Select) y deja sitio a la izquierda de esa barra para la
-/// pista «Controles». Idempotente: lo que ya está hecho no se toca.
+/// del botón que lo abre, InputGlyphNames.Select) y reserva el hueco del contador de monedas.
+/// Reutiliza el helper de tarjetas para mantener el arte y las dimensiones de la barra.
 /// </summary>
 public static class PestanaHechizosBuilder
 {
     private const string StartScenePath = "Assets/Scenes/Systems/Start.unity";
     private const string CardName = "PanelInfoGrimorio";
-    private const int ControlsHintRoom = 220;
 
     [MenuItem("El Sendero/Archivo/UI/Pestaña Hechizos: equipar con A y tarjeta del grimorio (INC-515)")]
     public static void Build()
@@ -126,68 +125,13 @@ public static class PestanaHechizosBuilder
     private static void TarjetaGrimorio(SerializedObject so, PlayerEquipmentMenuController menu, StringBuilder log, List<string> warnings)
     {
         var prop = so.FindProperty("grimorioHintCard");
-        if (prop == null) { warnings.Add("El menú no tiene 'grimorioHintCard' (¿sin compilar?)."); return; }
-
-        Transform bar = FindDeep(menu.transform, "PanelInfo");
-        if (bar == null) { warnings.Add("No encuentro la barra de pistas 'PanelInfo'."); return; }
-
-        // Sitio a la izquierda para la pista «Controles», que antes se montaba encima de la primera tarjeta.
-        var layout = bar.GetComponent<HorizontalLayoutGroup>();
-        if (layout != null && layout.padding.left < ControlsHintRoom)
-        {
-            Undo.RecordObject(layout, "Hueco para Controles");
-            layout.padding = new RectOffset(ControlsHintRoom, layout.padding.right, layout.padding.top, layout.padding.bottom);
-            EditorUtility.SetDirty(layout);
-            log.AppendLine($"   Barra de pistas: {ControlsHintRoom} px a la izquierda para «Controles».");
-        }
-
-        if (prop.objectReferenceValue != null) { log.AppendLine("   Tarjeta «Grimorio»: ya estaba."); return; }
-
-        // Plantilla: una tarjeta con un solo icono de botón.
-        Transform plantilla = null;
-        foreach (Transform card in bar)
-            if (card.name != CardName && card.GetComponentsInChildren<Core.InputGlyphs.InputGlyphIcon>(true).Length == 1)
-            {
-                plantilla = card;
-                break;
-            }
-        if (plantilla == null) { warnings.Add("No hay en 'PanelInfo' una tarjeta con un solo icono que copiar."); return; }
-
-        var nueva = Object.Instantiate(plantilla.gameObject, bar);
-        nueva.name = CardName;
-        nueva.transform.SetAsLastSibling();
-
-        var icon = nueva.GetComponentInChildren<Core.InputGlyphs.InputGlyphIcon>(true);
-        var iconSo = new SerializedObject(icon);
-        iconSo.FindProperty("glyphName").stringValue = Core.InputGlyphs.InputGlyphNames.Select;
-        iconSo.ApplyModifiedPropertiesWithoutUndo();
-        var iconImage = icon.GetComponent<Image>();
-        var sprite = Core.InputGlyphs.InputGlyphService.GetSprite(Core.InputGlyphs.InputGlyphNames.Select);
-        if (iconImage != null && sprite != null) iconImage.sprite = sprite;
-
-        var tmp = nueva.GetComponentInChildren<TextMeshProUGUI>(true);
-        if (tmp != null) tmp.text = "Grimorio";
-        var loc = nueva.GetComponentInChildren<LocalizedText>(true);
-        if (loc != null)
-        {
-            var locSo = new SerializedObject(loc);
-            locSo.FindProperty("_key").stringValue = "GRIMOIRE_BUTTON";
-            locSo.ApplyModifiedPropertiesWithoutUndo();
-        }
-
-        nueva.SetActive(false); // el menú la enciende en la pestaña Hechizos
-        prop.objectReferenceValue = nueva;
-        log.AppendLine("   Tarjeta «Grimorio» en la barra de pistas (solo se ve en Hechizos).");
-    }
-
-    private static Transform FindDeep(Transform root, string name)
-    {
-        if (root.name == name) return root;
-        foreach (Transform child in root)
-        {
-            var found = FindDeep(child, name);
-            if (found != null) return found;
-        }
-        return null;
+        if (prop == null) { warnings.Add("El menú no tiene grimorioHintCard."); return; }
+        var bar = TarjetasDeAyudaBuilder.Buscar(menu.transform, "PanelInfo");
+        if (bar == null) { warnings.Add("No se encuentra PanelInfo."); return; }
+        var card = TarjetasDeAyudaBuilder.Montar(bar, CardName, Core.InputGlyphs.InputGlyphNames.Select,
+            "GRIMOIRE_BUTTON", "Grimorio", false, warnings);
+        if (card != null) prop.objectReferenceValue = card;
+        TarjetasDeAyudaBuilder.AjustarBarra(bar, warnings);
+        log.AppendLine("   Tarjeta Grimorio reparada con el helper de tarjetas de ayuda.");
     }
 }

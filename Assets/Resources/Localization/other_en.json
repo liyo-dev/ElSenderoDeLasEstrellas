@@ -1,6 +1,28 @@
 {
     "texts": [
         {
+            "key": "ITEM_BOLSA_MONEDAS_GRANDE_DESC",
+            "value": "Contains 75 coins."
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_GRANDE_NAME",
+            "value": "Large bag of coins"
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_PEQUENA_DESC",
+            "value": "Contains 20 coins."
+        },
+        {
+            "key": "ITEM_BOLSA_MONEDAS_PEQUENA_NAME",
+            "value": "Small bag of coins"
+        },
+        { "key": "ITEM_ESENCIA_NAME", "value": "Essence" },
+        { "key": "ITEM_ESENCIA_DESC", "value": "Magical energy left behind by fallen monsters. A hunter in the Forbidden Forest accepts it as payment." },
+        {
+            "key": "MENU_CONTROLS_HINT",
+            "value": "Controls"
+        },
+        {
             "key": "MINIGAME_ESCAPE",
             "value": "Escape the Kingdom!"
         },
@@ -51,6 +73,24 @@
         {
             "key": "BIGMAP_HINT",
             "value": "<sprite name=\"interactable_Joystick\"> Move    <sprite name=\"interactable_lb\"><sprite name=\"interactable_rb\"> Zoom    <sprite name=\"interactable_confirm\"> Center    <sprite name=\"interactable_select\"> Close"
-        }
+        },
+        {
+            "key":  "ITEM_TROZO_DEL_ARO_NAME",
+            "value":  "Shard of the Collar"
+        },
+        {
+            "key":  "ITEM_TROZO_DEL_ARO_DESC",
+            "value":  "A piece of the demon\u0027s rune collar. Eldran kept the rest in the salt chest."
+        },
+        {
+            "key":  "TUTORIAL_MANTENER_SOLTAR",
+            "value":  "Hold {BOTON} and release when the bar fills."
+        },
+        {"key":"TUTORIAL_VELA","value":"Light the candle: hold {BOTON} to focus your magic and release when the bar fills."},
+        {"key":"CHAR_BOTICARIA","value":"Apothecary"},
+        {"key":"CHAR_TOBI","value":"Tobi"},
+        {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Equip the cloak from the menu: Equipment ▸ Cloaks."},
+        {"key":"TUTORIAL_PREPARA_VIAJE_POCION","value":"In Inventory, select the potion and confirm {BOTON}; confirm again on Use."},
+        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"The next morning…"}
     ]
 }

@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac08_ninjamask04
   displayNameId: ITEM_AC08_NINJAMASK04_NAME
   displayName: "M\xE1scara Ninja IV"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 299ac787b5cf4ef0b207c750a9c09f76, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC08_NINJAMASK04_DESC
   useDescription: "Una m\xE1scara oscura que oculta el rostro, perfecta para el sigilo."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 7e1f81331737441498602c826f50e70e, type: 2}

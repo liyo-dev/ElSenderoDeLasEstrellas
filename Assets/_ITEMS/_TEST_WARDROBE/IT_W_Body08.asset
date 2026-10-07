@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body08
   displayNameId: WARDROBE_BODY08_NAME
   displayName: Delantal de herrero
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 2a461e294d664c5f9414d45af052a464, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY08_DESC
   useDescription: Cuero grueso resistente a chispas y al calor de la fragua.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 762218ade3be4cea834d29e7fc2ee2e1, type: 2}

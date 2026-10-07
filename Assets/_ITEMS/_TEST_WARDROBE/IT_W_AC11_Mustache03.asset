@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac11_mustache03
   displayNameId: ITEM_AC11_MUSTACHE03_NAME
   displayName: Bigote y Barba Larga
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 965699adf8ca49f89da24742700f06aa, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC11_MUSTACHE03_DESC
   useDescription: Un bigote combinado con una barba larga y poblada.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: dce075350999495a9971358294ab7403, type: 2}

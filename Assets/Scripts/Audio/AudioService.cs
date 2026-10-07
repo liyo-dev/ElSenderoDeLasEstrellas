@@ -396,6 +396,28 @@ public sealed class AudioService : MonoBehaviour
     // vez que se destapa la imagen. Si para entonces hay una cinemática, manda la suya.
     bool _musicaEsperandoAlTelon;
 
+    // (6 oct 2026) La pantalla también puede quedar tapada sin telón: una cinemática que acaba
+    // en negro (FeedbackService) y lo que viene detrás (un rótulo «A la mañana siguiente…», la
+    // siguiente cinemática). Al final de «Los planes de Liam» se teletransporta a la casa de Will
+    // con la pantalla así, sonaba la música de la habitación durante el rótulo y, a los pocos
+    // segundos, la de la secuencia siguiente la pisaba. Con la pantalla tapada la música del
+    // lugar espera igual que con el telón, y lo que sonaba se apaga.
+    static bool PantallaTapada => Telon.Cerrado || Sendero.Core.Feedback.FeedbackService.IsScreenFaded;
+    Coroutine _esperaPantallaDestapada;
+
+    void EsperarPantallaDestapada()
+    {
+        _musicaEsperandoAlTelon = true;
+        if (_esperaPantallaDestapada == null) _esperaPantallaDestapada = StartCoroutine(Co_EsperarPantallaDestapada());
+    }
+
+    IEnumerator Co_EsperarPantallaDestapada()
+    {
+        while (PantallaTapada) yield return null;
+        _esperaPantallaDestapada = null;
+        HandleTelonAbierto();
+    }
+
     /// Para quien quiere poner música de escena/zona con el telón cerrado (AmbientZone): se apunta
     /// y se resuelve al abrirse, con la misma prioridad de siempre (interior, zona, escena).
     public void PedirMusicaAlAbrirseElTelon() => _musicaEsperandoAlTelon = true;
@@ -403,6 +425,8 @@ public sealed class AudioService : MonoBehaviour
     void HandleTelonAbierto()
     {
         if (!_musicaEsperandoAlTelon) return;
+        // El telón se ha abierto pero el fundido de pantalla sigue tapando: se sigue esperando.
+        if (PantallaTapada) { EsperarPantallaDestapada(); return; }
         _musicaEsperandoAlTelon = false;
         if (CinematicSequencerBase.AnySequenceActive) return;
 
@@ -433,8 +457,9 @@ public sealed class AudioService : MonoBehaviour
         if (DialogueCinematicController.Instance != null && DialogueCinematicController.Instance.IsInCinematicMode) return;
 
         // (21 sep) Con la pantalla en negro no suena la música del interior: es lo que hacía sonar
-        // la habitación de Will al empezar partida nueva, antes del prólogo. Espera al telón.
-        if (Telon.Cerrado) { _musicaEsperandoAlTelon = true; return; }
+        // la habitación de Will al empezar partida nueva, antes del prólogo. Espera al telón
+        // (o a que se retire el fundido de pantalla, ver PantallaTapada).
+        if (PantallaTapada) { EsperarPantallaDestapada(); return; }
 
         var env = EnvironmentController.Instance ? EnvironmentController.Instance.CurrentInterior : null;
         if (!env) return;
@@ -478,7 +503,7 @@ public sealed class AudioService : MonoBehaviour
             return;
         }
 
-        if (Telon.Cerrado) { _musicaEsperandoAlTelon = true; return; }
+        if (PantallaTapada) { EsperarPantallaDestapada(); return; }
 
         var activeAmbientZone = AmbientZone.CurrentActiveZone;
         if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
@@ -540,8 +565,15 @@ public sealed class AudioService : MonoBehaviour
         // que puede llegar después de la gracia; al acabar, ella misma pedirá la del lugar.
         if (CinematicSequencerBase.AnySequenceActive) yield break;
 
-        // Con la pantalla retenida en negro, espera al telón (HandleTelonAbierto).
-        if (Telon.Cerrado) { _musicaEsperandoAlTelon = true; yield break; }
+        // Con la pantalla en negro, espera al telón o al fundido (HandleTelonAbierto). Lo que
+        // sonaba (la música de la cinemática que acaba de terminar) se apaga mientras tanto: así
+        // no se pisa con lo que venga detrás (rótulo, otra cinemática con su propio tema).
+        if (PantallaTapada)
+        {
+            StopMusic(fade);
+            EsperarPantallaDestapada();
+            yield break;
+        }
 
         var zona = AmbientZone.CurrentActiveZone;
         if (zona != null && !string.IsNullOrEmpty(zona.MusicZoneId))

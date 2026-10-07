@@ -1,0 +1,25 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='2048' viewBox='0 0 2048 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='planta_general.png' xlink:href='planta_general.png' x='0' y='0' width='2048' height='2048' opacity='0.85'/>
+<rect x='754.619' y='1127.057' width='265.707' height='367.334' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='387.985' y='864.828' width='194.682' height='216.644' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='379.961' y='1391.563' width='218.602' height='101.202' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='352.705' y='713.822' width='682.667' height='790.311' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='427.691' y='1095.203' width='77.594' height='79.303' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='353.045' y='1129.006' width='67.604' height='67.605' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='295.811' y='656.932' width='796.451' height='904.096' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='631.895' y='1399.167' width='104.399' height='104.82' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<line x1='0' y1='2048' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<line x1='1137.778' y1='2048' x2='1137.778' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='1139.778' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>120</text>
+<line x1='0' y1='1365.333' x2='2048' y2='1365.333' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='1363.333' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<line x1='0' y1='227.556' x2='2048' y2='227.556' stroke='#ffffff' stroke-opacity='0.18' stroke-width='1'/>
+<circle cx='1002.376' cy='1053.041' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1002.376' y1='1053.041' x2='1002.376' y2='1045.041' stroke='#ffffff' stroke-width='2'/>
+<text x='1007.376' y='1049.041' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>VentanaDcha</text>
+<circle cx='1068.374' cy='933.519' r='3' fill='#ffffff' stroke='#000000' stroke-width='1'/>
+<line x1='1068.374' y1='933.519' x2='1068.374' y2='925.519' stroke='#ffffff' stroke-width='2'/>
+<text x='1073.374' y='929.519' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>VentanaIzq</text>
+<text x='10' y='2036' font-size='14' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>Rejilla cada 10 m · X hacia la derecha, Z hacia arriba</text>
+</svg>

@@ -166,6 +166,7 @@ public class BossArenaController : MonoBehaviour
 
     // Estado del modo radio — no serializado: se fija en tiempo de ejecución al empezar la batalla.
     private BattleEncounterSO _activeEncounter;
+    private ResultadoDeBatalla _resultadoDeBatalla;
     private int _activeSpawnProfileIndex;
     private Vector3 _arenaCenter;
     private Quaternion _spawnReferenceRotation = Quaternion.identity; // referencia de los perfiles de spawn (BattleEncounterSO)
@@ -284,6 +285,8 @@ public class BossArenaController : MonoBehaviour
     void OnDisable()
     {
         CierreDeBatalla.TerminarForzado();
+        CierreDeBatalla.Cancelar(_resultadoDeBatalla);
+        _resultadoDeBatalla = null;
 
         BossProgressTracker.OnProgressRestored -= HandleBossProgressRestored;
         GameBootService.OnProfileReady -= HandleProfileReady; // ✅ Desuscribirse de OnProfileReady
@@ -459,6 +462,8 @@ public class BossArenaController : MonoBehaviour
         started = true;
         _bossDeathConfirmed = false;
 
+        _resultadoDeBatalla = new ResultadoDeBatalla(BattleId, _activeEncounter);
+        CierreDeBatalla.Iniciar(_resultadoDeBatalla);
         OnAnyBattleStarted?.Invoke();
 
         // Puertas, área delimitada, o radio alrededor del jugador (INC-207)
@@ -1038,7 +1043,11 @@ public class BossArenaController : MonoBehaviour
             if (invokeUnityEvents && isActiveAndEnabled)
                 StartCoroutine(Co_CerrarYAvisarVictoria());
             else
+            {
+                CierreDeBatalla.Cancelar(_resultadoDeBatalla);
+                _resultadoDeBatalla = null;
                 AvisarBatallaGanada();
+            }
         }
 
         RestoreBattleDisables();
@@ -1047,7 +1056,9 @@ public class BossArenaController : MonoBehaviour
 
     private IEnumerator Co_CerrarYAvisarVictoria()
     {
-        yield return CierreDeBatalla.Ejecutar(new ResultadoDeBatalla(BattleId, _activeEncounter));
+        var resultado = _resultadoDeBatalla ?? new ResultadoDeBatalla(BattleId, _activeEncounter);
+        yield return CierreDeBatalla.Ejecutar(resultado);
+        _resultadoDeBatalla = null;
         AvisarBatallaGanada();
     }
 

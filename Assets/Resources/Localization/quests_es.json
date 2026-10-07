@@ -495,6 +495,42 @@
         {
             "key": "QUEST_ELDRAN_SIGUEME_STEP01_DESC",
             "value": "Sigue a Eldran."
-        }
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_NAME",
+            "value":  "Prepárate para el viaje"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_DESC",
+            "value":  "Antes de ir al Bosque Prohibido, prepárate en el pueblo."
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_DETAIL",
+            "value":  "Eldran quiere que no salgas con las manos vacías: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika, y practica la puntería con él."
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP1",
+            "value":  "Pide una capa a Victoria"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP2",
+            "value":  "Visita a la boticaria"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP3",
+            "value":  "Entrena con Erika"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP4",
+            "value":  "Practica la puntería con Eldran"
+        },
+        {"key":"QUEST_RENARD_CONTRATO_1_NAME","value":"Patas de sobra"},
+        {"key":"QUEST_RENARD_CONTRATO_1_DESC","value":"Renard quiere que acabes con ocho arañas del Bosque Prohibido."},
+        {"key":"QUEST_RENARD_CONTRATO_1_DETAIL","value":"Derrota ocho arañas del Bosque Prohibido y vuelve a hablar con Renard, a la entrada del bosque. Te pagará veinte de Esencia."},
+        {"key":"QUEST_RENARD_CONTRATO_1_STEP","value":"Derrota arañas del Bosque Prohibido"},
+        {"key":"QUEST_RENARD_CONTRATO_2_NAME","value":"Donde no llega la luz"},
+        {"key":"QUEST_RENARD_CONTRATO_2_DESC","value":"Renard te paga por acabar con quince arañas más del Bosque Prohibido."},
+        {"key":"QUEST_RENARD_CONTRATO_2_DETAIL","value":"Derrota quince arañas del Bosque Prohibido y vuelve a hablar con Renard. Promete algo que guarda desde hace años."},
+        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Derrota arañas del Bosque Prohibido"}
     ]
 }

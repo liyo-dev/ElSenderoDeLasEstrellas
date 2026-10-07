@@ -947,6 +947,146 @@
         {
             "id": "PROLOGO_BAILE_NOCHE",
             "text": "¡Esta noche lo bailamos delante de todo el pueblo!"
+        },
+        {
+            "id":  "EVT_MANANA_00",
+            "text":  "Una llama pequeña. Solo la mecha…"
+        },
+        {
+            "id":  "EVT_MANANA_01a",
+            "text":  "Vaya. Ni una chispa de más."
+        },
+        {
+            "id":  "EVT_MANANA_01b",
+            "text":  "Prometedor… si lo que quieres es declararle la guerra a tu ropa."
+        },
+        {
+            "id":  "EVT_MANANA_02",
+            "text":  "Me lo ha dado la panadera. Para el mago del pueblo. Pero la idea de traértelo ha sido mía."
+        },
+        {
+            "id":  "EVT_MANANA_02b",
+            "text":  "¿Me lo has comprado tú?"
+        },
+        {
+            "id":  "EVT_MANANA_03",
+            "text":  "Y perdona por lo del bosque. No debí mandarte solo."
+        },
+        {
+            "id":  "EVT_MANANA_04",
+            "text":  "Ya, pero cuando le lancé el fuego… Era así de grande. No, más. Así."
+        },
+        {
+            "id":  "EVT_MANANA_04a",
+            "text":  "Oye, ayer lo viste todo, ¿no?"
+        },
+        {
+            "id":  "EVT_MANANA_04b",
+            "text":  "Claro. Si te estaba ayudando."
+        },
+        {
+            "id":  "EVT_MANANA_05",
+            "text":  "Anoche, cuando me lo contaste, era la mitad."
+        },
+        {
+            "id":  "EVT_MANANA_06",
+            "text":  "¿Siempre he podido hacer esto?"
+        },
+        {
+            "id":  "EVT_MANANA_07",
+            "text":  "No lo sé. Hay algo de la noche en que te encontré que nunca te he contado."
+        },
+        {
+            "id":  "EVT_MANANA_07b",
+            "text":  "Ya sabes que te encontré en un carro volcado, junto al camino."
+        },
+        {
+            "id":  "EVT_MANANA_08",
+            "text":  "Estaba todo tan oscuro que no se veía nada. Si os encontré fue porque había una luz."
+        },
+        {
+            "id":  "EVT_MANANA_09",
+            "text":  "La mujer que iba contigo tenía una llamita encendida entre los dedos, para que alguien os viera."
+        },
+        {
+            "id":  "EVT_MANANA_09b",
+            "text":  "Todavía respiraba. Nunca supe quién era."
+        },
+        {
+            "id":  "EVT_MANANA_10",
+            "text":  "Solo le dio tiempo a pedirme que no te dejara solo. Luego la llama se apagó."
+        },
+        {
+            "id":  "EVT_MANANA_10b",
+            "text":  "Se lo prometí."
+        },
+        {
+            "id":  "EVT_MANANA_11",
+            "text":  "¿Y tú? ¿Qué sabes tú de magia?"
+        },
+        {
+            "id":  "EVT_MANANA_11b",
+            "text":  "¿Otra vez? Ya hemos hablado de eso mil veces."
+        },
+        {
+            "id":  "EVT_MANANA_11c",
+            "text":  "No. Mil veces me has cambiado de tema."
+        },
+        {
+            "id":  "EVT_MANANA_12",
+            "text":  "Hace cuarenta años me fui con unos amigos a buscar algo que no debíamos buscar."
+        },
+        {
+            "id":  "EVT_MANANA_13",
+            "text":  "Volvimos todos menos una."
+        },
+        {
+            "id":  "EVT_MANANA_14",
+            "text":  "¿Qué buscabais?"
+        },
+        {
+            "id":  "EVT_MANANA_15",
+            "text":  "Otro día."
+        },
+        {
+            "id":  "EVT_MANANA_15b",
+            "text":  "Esto es lo que llevaba el demonio al cuello. Lo traje del bosque y lo guardé en sal."
+        },
+        {
+            "id":  "EVT_MANANA_16",
+            "text":  "¿Y si aparece otro? La próxima vez puede que no sea yo quien esté en el bosque. Puede que sea un crío del pueblo."
+        },
+        {
+            "id":  "EVT_MANANA_17",
+            "text":  "Por eso necesitas a alguien que sepa de verdad. Yo no puedo enseñarte, y aquí nadie sabe leer estas runas."
+        },
+        {
+            "id":  "EVT_MANANA_18",
+            "text":  "Hay una hechicera en el Bosque Prohibido. Se llama Estela."
+        },
+        {
+            "id":  "EVT_MANANA_19",
+            "text":  "Dicen que es muy poderosa y, según la mitad de las historias, imposible de soportar."
+        },
+        {
+            "id":  "EVT_MANANA_20",
+            "text":  "¿Y según la otra mitad?"
+        },
+        {
+            "id":  "EVT_MANANA_21",
+            "text":  "También. Pero si alguien puede enseñarte a no incendiarte cada vez que estornudas, es ella."
+        },
+        {
+            "id":  "EVT_MANANA_22",
+            "text":  "Iré."
+        },
+        {
+            "id":  "EVT_MANANA_23",
+            "text":  "Ya lo sé. Pero no así: primero, prepárate."
+        },
+        {
+            "id":  "EVT_MANANA_24",
+            "text":  "Llévate un trozo del aro. Que ella lo vea."
         }
     ]
 }

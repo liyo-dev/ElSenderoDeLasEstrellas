@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac02_leaf
   displayNameId: ITEM_AC02_LEAF_NAME
   displayName: Hoja
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: a3b5817c244a47e7803f8f17882ad993, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC02_LEAF_DESC
   useDescription: "Una hoja oto\xF1al prendida como adorno."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: b2ace74ec6064155928298c9592dec56, type: 2}

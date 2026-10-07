@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 5302146505831436120, guid: b3573f03d84ca004b8e00a5343295ec2, type: 3}
   impactVFX: {fileID: 0}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 3685239417598464635, guid: acdaa162cece6444b90ef53280ca8aa4, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_MuroDeFuego
   impactSFXKey: 

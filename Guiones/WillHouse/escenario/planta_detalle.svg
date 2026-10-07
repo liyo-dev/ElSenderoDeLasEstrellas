@@ -1,0 +1,17 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='2048' viewBox='0 0 2048 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='planta_detalle.png' xlink:href='planta_detalle.png' x='0' y='0' width='2048' height='2048' opacity='0.85'/>
+<rect x='238863.1' y='-2240.978' width='4782.719' height='6612.004' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='232263.7' y='-6961.093' width='3504.281' height='3899.582' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='232119.3' y='2520.13' width='3934.844' height='1821.631' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='231628.7' y='-9679.204' width='12288' height='14225.6' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='232978.4' y='-2814.342' width='1396.688' height='1427.463' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='231634.8' y='-2205.891' width='1216.875' height='1216.883' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='230604.6' y='-10703.22' width='14336.13' height='16273.72' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<rect x='236654.1' y='2657.009' width='1879.188' height='1886.761' fill='#ff9a3c' fill-opacity='0.175' stroke='#ff9a3c' stroke-opacity='0.5' stroke-width='1'/>
+<line x1='0' y1='2048' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<line x1='0' y1='2048' x2='2048' y2='2048' stroke='#ffffff' stroke-opacity='0.324' stroke-width='1'/>
+<text x='2' y='2046' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<text x='10' y='2036' font-size='14' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>Rejilla cada 2 m · X hacia la derecha, Z hacia arriba</text>
+</svg>

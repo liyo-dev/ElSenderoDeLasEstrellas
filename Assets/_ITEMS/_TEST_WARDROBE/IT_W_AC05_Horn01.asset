@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac05_horn01
   displayNameId: ITEM_AC05_HORN01_NAME
   displayName: Cuerno Curvo
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 57fcd1aa979f40f9915d6fc844c608c0, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC05_HORN01_DESC
   useDescription: "Un cuerno curvo, de aspecto demon\xEDaco."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 120
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 483eee06bfa24baa96c7f68e2434addd, type: 2}

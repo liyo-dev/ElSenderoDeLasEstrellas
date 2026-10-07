@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339f96974e841554e98a97b47f63f440, type: 3}
+  m_Name: Q_PREPARA_VIAJE
+  m_EditorClassIdentifier: Assembly-CSharp::QuestData
+  questId: PREPARA_VIAJE
+  displayNameId: QUEST_PREPARA_VIAJE_NAME
+  displayName: "Prep\xE1rate para el viaje"
+  descriptionId: QUEST_PREPARA_VIAJE_DESC
+  description: "Antes de ir al Bosque Prohibido, prep\xE1rate en el pueblo."
+  detailedDescriptionId: QUEST_PREPARA_VIAJE_DETAIL
+  detailedDescription: "Eldran quiere que no salgas con las manos vac\xEDas: pasa por la tienda de Victoria, por la boticaria y por el campo de entrenamiento de Erika, y practica la punter\xEDa con \xE9l."
+  steps:
+  - descriptionId: QUEST_PREPARA_VIAJE_STEP1
+    description: Pide una capa a Victoria
+    conditionId: PREPARA_VIAJE_CAPA
+  - descriptionId: QUEST_PREPARA_VIAJE_STEP2
+    description: Visita a la boticaria
+    conditionId: PREPARA_VIAJE_POCION
+  - descriptionId: QUEST_PREPARA_VIAJE_STEP3
+    description: Entrena con Erika
+    conditionId: PREPARA_VIAJE_ERIKA
+  - descriptionId: QUEST_PREPARA_VIAJE_STEP4
+    description: "Practica la punter\xEDa con Eldran"
+    conditionId: PREPARA_VIAJE_ELDRAN

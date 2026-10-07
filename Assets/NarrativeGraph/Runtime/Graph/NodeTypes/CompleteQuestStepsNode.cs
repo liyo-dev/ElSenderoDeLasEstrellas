@@ -9,8 +9,17 @@ using UnityEngine;
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Quests", "Completar pasos de quest", "Marca pasos como hechos y, opcionalmente, cierra la quest.")]
-public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffect
+public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffect, INarrativeStandingLine
 {
+    [Header("Después de completar los pasos")]
+    [NarrativeKey(NarrativeKeyKind.Actor)]
+    public string standingActorId;
+    [Tooltip("Frase del actor cuando se le habla después de este encargo.")]
+    public DialogueAsset standingDialogue;
+    private string StandingFlag => "STEPS_COMPLETED_" + guid;
+    public string StandingActorId => standingActorId;
+    public DialogueAsset StandingDialogue => standingDialogue;
+    public bool IsStandingLineActive(INarrativeSignals signals) => NarrativeFlags.Has(StandingFlag);
     [Header("Quest")]
     [Tooltip("ID de la quest que se actualizará.")]
     [NarrativeKey(NarrativeKeyKind.Quest)]
@@ -38,6 +47,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
         bool porCondicion = stepConditionIds != null && stepConditionIds.Count > 0;
         state.CompleteQuestSteps(questId, porCondicion ? stepConditionIds : null, porCondicion ? null : steps);
         if (completeQuest) state.CompleteQuest(questId);
+        if (standingDialogue != null) state.SetFlag(StandingFlag, true);
     }
 
     public override void Enter(NarrativeContext ctx, Action ready)
@@ -121,6 +131,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
             Debug.LogWarning($"[CompleteQuestStepsNode] Nada que hacer para quest '{questId}'.");
         }
 
+        if (anyAction && standingDialogue != null) NarrativeFlags.Set(StandingFlag, true);
         ready?.Invoke();
     }
 }

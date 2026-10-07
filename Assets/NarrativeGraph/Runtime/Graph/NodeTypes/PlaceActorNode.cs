@@ -18,6 +18,12 @@ public sealed class PlaceActorNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("anchorId del SpawnAnchor donde se coloca.")]
     public string markId;
 
+    [Tooltip("Para Player, usa TeleportService sin fundido y aplica el entorno del anchor destino.")]
+    public bool applyPlayerEnvironment;
+
+    [Tooltip("Muestra el actor colocado, también si viene de una zona exterior oculta.")]
+    public bool showActor;
+
     public void Project(INarrativeStateWriter state)
     {
         if (!string.IsNullOrWhiteSpace(actorId) && !string.IsNullOrWhiteSpace(markId))
@@ -28,7 +34,13 @@ public sealed class PlaceActorNode : NarrativeNode, INarrativeStateEffect
     {
         var mark = string.IsNullOrWhiteSpace(markId) ? null : SpawnAnchor.FindById(markId);
         if (mark != null && SequenceActor.TryResolve(actorId, out var actor))
-            SequenceMovement.PlaceAt(actor, mark.transform.position, mark.GetCharacterRotation());
+        {
+            if (applyPlayerEnvironment && actorId == SequenceActor.PlayerId)
+                TeleportService.TeleportToAnchor(actor.Transform.gameObject, markId, false);
+            else
+                SequenceMovement.PlaceAt(actor, mark.transform.position, mark.GetCharacterRotation());
+            if (showActor) actor.SetRenderingVisible(true);
+        }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else
             Debug.LogWarning($"[PlaceActorNode:{guid}] No se coloca a '{actorId}': marca '{markId}'={(mark != null ? "ok" : "NO")}. Se sigue.");

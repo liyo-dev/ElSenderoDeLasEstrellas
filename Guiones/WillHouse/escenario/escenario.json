@@ -1,0 +1,76 @@
+{
+ "escena":"WillHouse",
+ "nota":"Coordenadas del mundo en metros. En las plantas, X crece a la derecha y Z hacia arriba.",
+ "area_general":{
+  "xmin":110,
+  "zmin":-6,
+  "xmax":128,
+  "zmax":12
+ },
+ "area_detalle":{
+  "xmin":0,
+  "zmin":0,
+  "xmax":1,
+  "zmax":1
+ },
+ "marcas":[
+  {
+   "nombre":"VentanaDcha",
+   "pos":[118.81,3.297,2.745],
+   "rumbo":0
+  },
+  {
+   "nombre":"VentanaIzq",
+   "pos":[119.39,3.297,3.795],
+   "rumbo":0
+  }],
+ "props":[],
+ "personajes":[],
+ "obstaculos":[
+  {
+   "nombre":"Will House/Bed01_a03",
+   "min":[116.632,0,-1.134],
+   "max":[118.968,1.252,2.094]
+  },
+  {
+   "nombre":"Will House/Table01_a07 (1)",
+   "min":[113.41,0,2.495],
+   "max":[115.121,0.689,4.399]
+  },
+  {
+   "nombre":"Will House/Cabinet05_a01 (1)",
+   "min":[113.34,0,-1.12],
+   "max":[115.261,2.237,-0.231]
+  },
+  {
+   "nombre":"Will House/Floor01_a01 (1)",
+   "min":[113.1,0,-1.22],
+   "max":[119.1,0,5.726]
+  },
+  {
+   "nombre":"Will House/Chair12_a08 (3)",
+   "min":[113.759,0,1.677],
+   "max":[114.441,0.985,2.374]
+  },
+  {
+   "nombre":"Will House/Light04_a01",
+   "min":[113.103,1.89,1.483],
+   "max":[113.697,2.899,2.077]
+  },
+  {
+   "nombre":"Will House/Room01_a01 (1)",
+   "min":[112.6,0,-1.72],
+   "max":[119.6,3,6.226]
+  },
+  {
+   "nombre":"Will House/Cabinet34_a01 (1)",
+   "min":[115.554,-0.015,-1.219],
+   "max":[116.471,0.78,-0.297]
+  }],
+ "navmesh":{
+  "vertices":[],
+  "triangulos":[]
+ },
+ "animaciones":{
+ }
+}

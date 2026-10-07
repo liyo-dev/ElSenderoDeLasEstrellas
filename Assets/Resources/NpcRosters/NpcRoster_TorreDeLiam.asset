@@ -24,3 +24,13 @@ MonoBehaviour:
     requireNavMesh: 0
     requiredFlag: 
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_TOBI_TORRE
+    prefab: {fileID: 3335879819108417999, guid: 1cf0cf88b09bf6e4c8e9d0093cca9400, type: 3}
+    gameObjectName: Tobi_Torre
+    persistenceId: TOBI_TORRE
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 0
+    requiredFlag: 
+    invertCondition: 0

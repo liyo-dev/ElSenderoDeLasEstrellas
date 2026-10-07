@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 4771564426222910639, guid: 814a2fe4f0436554597e4c2dff5547f3, type: 3}
   impactVFX: {fileID: 0}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Meteoro
   impactSFXKey: 

@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body06
   displayNameId: WARDROBE_BODY06_NAME
   displayName: Uniforme de guardia
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: ce90d03e31af45c5a4c0e5575172ffcf, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY06_DESC
   useDescription: El uniforme reglamentario de la guardia del pueblo.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 02b06285f03e4284b537e1c1ac9f250a, type: 2}

@@ -495,6 +495,42 @@
         {
             "key": "QUEST_ELDRAN_SIGUEME_STEP01_DESC",
             "value": "Follow Eldran."
-        }
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_NAME",
+            "value":  "Get Ready for the Journey"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_DESC",
+            "value":  "Before heading to the Forbidden Forest, get ready in the village."
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_DETAIL",
+            "value":  "Eldran wants you to be ready before you leave: stop by Victoria\u0027s shop, visit the apothecary and Erika\u0027s training field, and practise your aim with him."
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP1",
+            "value":  "Ask Victoria for a cloak"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP2",
+            "value":  "Visit the apothecary"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP3",
+            "value":  "Train with Erika"
+        },
+        {
+            "key":  "QUEST_PREPARA_VIAJE_STEP4",
+            "value":  "Practise your aim with Eldran"
+        },
+        {"key":"QUEST_RENARD_CONTRATO_1_NAME","value":"Too Many Legs"},
+        {"key":"QUEST_RENARD_CONTRATO_1_DESC","value":"Renard wants you to deal with eight spiders in the Forbidden Forest."},
+        {"key":"QUEST_RENARD_CONTRATO_1_DETAIL","value":"Defeat eight spiders in the Forbidden Forest and talk to Renard again at the edge of the forest. He'll pay you twenty Essence."},
+        {"key":"QUEST_RENARD_CONTRATO_1_STEP","value":"Defeat spiders in the Forbidden Forest"},
+        {"key":"QUEST_RENARD_CONTRATO_2_NAME","value":"Where the Light Can't Reach"},
+        {"key":"QUEST_RENARD_CONTRATO_2_DESC","value":"Renard will pay you to deal with fifteen more spiders in the Forbidden Forest."},
+        {"key":"QUEST_RENARD_CONTRATO_2_DETAIL","value":"Defeat fifteen spiders in the Forbidden Forest and talk to Renard again. He promises something he's kept for years."},
+        {"key":"QUEST_RENARD_CONTRATO_2_STEP","value":"Defeat spiders in the Forbidden Forest"}
     ]
 }

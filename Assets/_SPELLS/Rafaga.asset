@@ -19,7 +19,7 @@ MonoBehaviour:
   element: 2
   lore: Un golpe de viento que aparta lo que estorba.
   loreId: 
-  prefab: {fileID: 5610010966355794069, guid: de42963ab71b3ee4fa75fa67aff95200, type: 3}
+  prefab: {fileID: 3983036828884898428, guid: fe5a29dfb1996b942b2a6291067fbfd3, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0
   chargeStartScale: 0.1
@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
+  spawnVFX: {fileID: 5503135327009739637, guid: a1ec355707f8e6042a4b1cd49075459c, type: 3}
   impactVFX: {fileID: 7647375919561907788, guid: 035ce8c9cfc34104991ce416daf8aebe, type: 3}
-  despawnVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  despawnVFX: {fileID: 2762701776606989417, guid: a7f5797aa55665942b30a94f26b1cccd, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Rafaga
   impactSFXKey: Impacto_Viento_Pequeno

@@ -1,0 +1,38 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='2048' height='2048' viewBox='0 0 2048 2048' font-family='Segoe UI, Arial, sans-serif'>
+<rect width='100%' height='100%' fill='#202020'/>
+<image href='../../escenario/planta_detalle.png' xlink:href='../../escenario/planta_detalle.png' x='0' y='0' width='2048' height='2048' opacity='0.85'/>
+<line x1='0' y1='2048' x2='0' y2='0' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='12' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<line x1='0' y1='2048' x2='2048' y2='2048' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
+<text x='2' y='2046' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0</text>
+<polyline points='237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 237056,-5222.4 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='237060' y='-5210.4' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<circle cx='237056' cy='-5222.4' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='237060' y='-5210.4' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
+<circle cx='237056' cy='-5222.4' r='6' fill='#ffd27a' stroke='#fff' stroke-width='1'/>
+<line x1='237056' y1='-5222.4' x2='237040' y2='-5222.4' stroke='#ffd27a' stroke-width='2'/>
+<text x='237064' y='-5230.4' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
+<circle cx='237056' cy='-5222.4' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
+<polyline points='238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238387.2,-8192 238484.8,-7989.813 238690.2,-7564.367 238945.9,-7034.668 239228.9,-6448.526 239445.1,-5833.442 239519.5,-5192.171 239416.1,-4555.308 239182.5,-3945.781 238889.4,-3359.611 238596.3,-2773.441 238304.6,-2190.049 238022.8,-1626.456 237779.8,-1140.41 237579.3,-739.376 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 237568,-716.8 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='238387.2' cy='-8192' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='238391.2' y='-8180' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
+<circle cx='238387.2' cy='-8192' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='238387.2' cy='-8192' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='239182.5' cy='-3945.777' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='237568' cy='-716.8' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<circle cx='237568' cy='-716.8' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='237572' y='-704.8' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>10s</text>
+<circle cx='238387.2' cy='-8192' r='6' fill='#7ad7ff' stroke='#fff' stroke-width='1'/>
+<line x1='238387.2' y1='-8192' x2='238380.7' y2='-8177.4' stroke='#7ad7ff' stroke-width='2'/>
+<text x='238395.2' y='-8200' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
+<circle cx='237568' cy='-716.8' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
+<polygon points='234086.4,-7372.8 237752.8,-7378.573 235224.9,-3887.606' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='234086.4' cy='-7372.8' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='234093.4' y='-7368.8' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>1</text>
+<text x='12' y='26' font-size='22' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>@vela  0:00,0 – 0:10,8</text>
+</svg>

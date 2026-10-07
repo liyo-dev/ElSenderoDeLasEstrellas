@@ -53,7 +53,7 @@ MonoBehaviour:
   sendDefeatEventBeforeDeath: 0
   spell1Prefab: {fileID: 0}
   spell2Prefab: {fileID: 0}
-  spell3Prefab: {fileID: 3083376353465680284, guid: e602f0eee944e944ab747f66328e39be, type: 3}
+  spell3Prefab: {fileID: 3083376353465680284, guid: c3234b29621b3b34a821025213003adb, type: 3}
   spell1Cooldown: 2.5
   spell2Cooldown: 2.5
   spell3Cooldown: 9

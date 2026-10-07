@@ -12,6 +12,10 @@ public class OrbDropConfig : ScriptableObject
     [SerializeField] private OrbDropProfile   _defaultProfile  = new();
     [SerializeField] private OrbDropProfile[] _profiles        = {};
     [SerializeField] private TagProfileMapping[] _tagMappings  = {};
+    [Header("Informe de victoria")]
+    [SerializeField, Tooltip("Monedas cuyo cambio de cantidad durante una batalla aparece en el botín.")]
+    private ItemData[] _currenciesForBattleReport = {};
+    public System.Collections.Generic.IReadOnlyList<ItemData> CurrenciesForBattleReport => _currenciesForBattleReport;
 
     /// <summary>Devuelve el perfil con ese id, o el default si no existe.</summary>
     public OrbDropProfile GetProfile(string id)
@@ -63,6 +67,19 @@ public class OrbDropProfile
     [Tooltip("Peso de vida en el burst (0-1). vida+mana <= 1. Lo restante son slots vacios.")]
     [Range(0f, 1f)] public float deathHealthWeight = 0.5f;
     [Range(0f, 1f)] public float deathManaWeight   = 0.3f;
+
+    [Header("Moneda por muerte")]
+    public GameObject currencyOrbPrefab;
+    public ItemData currencyItem;
+    [Min(0)] public int currencyDeathMin;
+    [Min(0)] public int currencyDeathMax;
+    public string currencyPickupSFXKey;
+
+    [Header("Orbe de moneda especial")]
+    [Range(0f, 1f)] public float specialCurrencyChance;
+    [Min(1)] public int specialCurrencyMultiplier = 3;
+    public GameObject specialCurrencyOrbPrefab;
+    public string specialCurrencyPickupSFXKey;
 
     [Header("Sonidos")]
     [Tooltip("Suena cuando el orbe aparece y sale disparado del enemigo")]

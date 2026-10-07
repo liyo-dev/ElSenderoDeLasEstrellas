@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9201a7fb4aa9c454bbc45285f1dc4852, type: 3}
+  m_Name: IT_TrozoDelAro
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemId: trozo_del_aro
+  displayNameId: ITEM_TROZO_DEL_ARO_NAME
+  displayName: Trozo del aro
+  icon: {fileID: -872204089850867235, guid: d3bd3e24e8df16a41939c7ed06013fb0, type: 3}
+  usableFromInventory: 0
+  useEffects: []
+  useDescriptionId: ITEM_TROZO_DEL_ARO_DESC
+  useDescription: "Un pedazo del aro de runas del demonio. Eldran guard\xF3 el resto en el cofre de sal."
+  usageKind: 1
+  buyPrice: 0
+  sellValue: 0
+  wardrobeUnlock: {fileID: 0}

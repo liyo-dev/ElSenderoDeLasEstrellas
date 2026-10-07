@@ -1,6 +1,26 @@
 {
     "texts": [
         {
+            "key": "ITEM_COIN_NAME_PLURAL",
+            "value": "Monedas"
+        },
+        {
+            "key": "ITEM_ESENCIA_NAME_PLURAL",
+            "value": "Esencias"
+        },
+        {
+            "key": "SHOP_MISSING_CURRENCY_ONE",
+            "value": "Te falta {0} {1}"
+        },
+        {
+            "key": "SHOP_MISSING_CURRENCY_OTHER",
+            "value": "Te faltan {0} {1}"
+        },
+        {
+            "key": "SHOP_MSG_EFFECT_UNAVAILABLE",
+            "value": "No se puede aplicar el efecto de este producto."
+        },
+        {
             "key": "ABILITIES_LEVEL_LABEL",
             "value": "Nivel: {0}"
         },
@@ -1054,7 +1074,7 @@
         },
         {
             "key": "SHOP_PRICE_LABEL",
-            "value": "Precio: {0}"
+            "value": "Precio: {0} {1}"
         },
         {
             "key": "SHOP_PURCHASE_FAILED",

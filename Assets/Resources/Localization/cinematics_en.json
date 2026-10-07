@@ -947,6 +947,146 @@
         {
             "id": "PROLOGO_BAILE_NOCHE",
             "text": "Tonight we dance it in front of the whole village!"
+        },
+        {
+            "id":  "EVT_MANANA_00",
+            "text":  "A small flame. Just the wick..."
+        },
+        {
+            "id":  "EVT_MANANA_01a",
+            "text":  "Well. Not a spark too many."
+        },
+        {
+            "id":  "EVT_MANANA_01b",
+            "text":  "Promising... if what you want is to declare war on your clothes."
+        },
+        {
+            "id":  "EVT_MANANA_02",
+            "text":  "The baker gave it to me. For the village mage. But bringing it here was my idea."
+        },
+        {
+            "id":  "EVT_MANANA_02b",
+            "text":  "Did you buy it for me?"
+        },
+        {
+            "id":  "EVT_MANANA_03",
+            "text":  "And I\u0027m sorry about the forest. I shouldn\u0027t have sent you alone."
+        },
+        {
+            "id":  "EVT_MANANA_04",
+            "text":  "Yeah, but when I threw the fire at it... It was this big. No, bigger. This big."
+        },
+        {
+            "id":  "EVT_MANANA_04a",
+            "text":  "Hey, you saw the whole thing yesterday, right?"
+        },
+        {
+            "id":  "EVT_MANANA_04b",
+            "text":  "Of course. I was helping you."
+        },
+        {
+            "id":  "EVT_MANANA_05",
+            "text":  "Last night, when you told me, it was half that."
+        },
+        {
+            "id":  "EVT_MANANA_06",
+            "text":  "Have I always been able to do this?"
+        },
+        {
+            "id":  "EVT_MANANA_07",
+            "text":  "I don\u0027t know. There\u0027s something about the night I found you that I never told you."
+        },
+        {
+            "id":  "EVT_MANANA_07b",
+            "text":  "You know I found you in an overturned cart, by the road."
+        },
+        {
+            "id":  "EVT_MANANA_08",
+            "text":  "It was so dark you couldn’t see a thing. I only found you because there was a light."
+        },
+        {
+            "id":  "EVT_MANANA_09",
+            "text":  "The woman with you had a little flame burning between her fingers, so someone would see you."
+        },
+        {
+            "id":  "EVT_MANANA_09b",
+            "text":  "She was still breathing. I never found out who she was."
+        },
+        {
+            "id":  "EVT_MANANA_10",
+            "text":  "She only had time to ask me not to leave you alone. Then the flame went out."
+        },
+        {
+            "id":  "EVT_MANANA_10b",
+            "text":  "I promised her."
+        },
+        {
+            "id":  "EVT_MANANA_11",
+            "text":  "And you? What do you know about magic?"
+        },
+        {
+            "id":  "EVT_MANANA_11b",
+            "text":  "Again? We’ve talked about this a thousand times."
+        },
+        {
+            "id":  "EVT_MANANA_11c",
+            "text":  "No. A thousand times you’ve changed the subject."
+        },
+        {
+            "id":  "EVT_MANANA_12",
+            "text":  "Forty years ago I went with some friends looking for something we shouldn\u0027t have."
+        },
+        {
+            "id":  "EVT_MANANA_13",
+            "text":  "We all came back but one."
+        },
+        {
+            "id":  "EVT_MANANA_14",
+            "text":  "What were you looking for?"
+        },
+        {
+            "id":  "EVT_MANANA_15",
+            "text":  "Another day."
+        },
+        {
+            "id":  "EVT_MANANA_15b",
+            "text":  "This is what the demon wore around its neck. I brought it back from the forest and buried it in salt."
+        },
+        {
+            "id":  "EVT_MANANA_16",
+            "text":  "What if another one shows up? Next time it might not be me in the forest. It might be some kid from the village."
+        },
+        {
+            "id":  "EVT_MANANA_17",
+            "text":  "That’s why you need someone who really knows. I can’t teach you, and nobody here can read these runes."
+        },
+        {
+            "id":  "EVT_MANANA_18",
+            "text":  "There’s a sorceress in the Forbidden Forest. Her name is Estela."
+        },
+        {
+            "id":  "EVT_MANANA_19",
+            "text":  "They say she’s very powerful and, according to half the stories, impossible to put up with."
+        },
+        {
+            "id":  "EVT_MANANA_20",
+            "text":  "And according to the other half?"
+        },
+        {
+            "id":  "EVT_MANANA_21",
+            "text":  "Same. But if anyone can teach you not to set yourself on fire every time you sneeze, it’s her."
+        },
+        {
+            "id":  "EVT_MANANA_22",
+            "text":  "I\u0027ll go."
+        },
+        {
+            "id":  "EVT_MANANA_23",
+            "text":  "I know. But not like this: get ready first."
+        },
+        {
+            "id":  "EVT_MANANA_24",
+            "text":  "Take a piece of the collar. Let her see it."
         }
     ]
 }

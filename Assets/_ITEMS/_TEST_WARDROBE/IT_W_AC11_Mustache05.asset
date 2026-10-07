@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac11_mustache05
   displayNameId: ITEM_AC11_MUSTACHE05_NAME
   displayName: Bigote Real
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 75290e041d3945ef8cc1e669eac9bd77, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC11_MUSTACHE05_DESC
   useDescription: Un bigote y barba dignos de un rey.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 32a309f6d07c4d8b9387bdc5ceacd620, type: 2}

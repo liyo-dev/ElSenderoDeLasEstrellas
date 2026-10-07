@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac03_nerdglass
   displayNameId: ITEM_AC03_NERDGLASS_NAME
   displayName: "Gafas de Empoll\xF3n"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 60e1825a63264993b09e8727f09fd857, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC03_NERDGLASS_DESC
   useDescription: Gafas de pasta gruesa, muy intelectuales.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: a1ef8d24283d496a88ff17c7167e6611, type: 2}

@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body18
   displayNameId: WARDROBE_BODY18_NAME
   displayName: Delantal de panadero
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: ae022d9bc5604da0a36ffc61082f12c7, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY18_DESC
   useDescription: "Huele siempre a pan reci\xE9n hecho."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 930dcef59a6942eebe747d242a23bf97, type: 2}

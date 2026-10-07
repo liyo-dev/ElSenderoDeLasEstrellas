@@ -299,7 +299,11 @@ public sealed class GuiaDeCombate : MonoBehaviour
         if (jefe == _jefe) Ocurre(MomentoDeCombate.SePideRemate);
     }
 
-    private void AlSoltarOrbes(OrbDropper _, OrbType __) => Ocurre(MomentoDeCombate.OrbesSueltos);
+    private void AlSoltarOrbes(OrbDropper _, OrbType tipo)
+    {
+        if (tipo == OrbType.Health || tipo == OrbType.Mana || tipo == OrbType.SpecialCharge)
+            Ocurre(MomentoDeCombate.OrbesSueltos);
+    }
 
     private void AlHerirAlJugador(float _)
     {

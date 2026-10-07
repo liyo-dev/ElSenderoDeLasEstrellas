@@ -18,6 +18,37 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public static class NpcSpawner
 {
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void EscucharCondiciones()
+    {
+        NarrativeFlags.Changed -= AlCambiarFlag;
+        NarrativeFlags.Changed += AlCambiarFlag;
+    }
+
+    // Las entradas condicionadas también pueden aparecer con el mundo ya cargado.
+    static void AlCambiarFlag(string flag)
+    {
+        string clave = NarrativeFlags.Key(flag);
+        foreach (var roster in Resources.LoadAll<NpcRosterSO>(RostersResourcePath))
+        {
+            if (roster.entries == null) continue;
+            foreach (var entry in roster.entries)
+            {
+                if (entry == null || !entry.enabled || entry.requiredFlag != clave) continue;
+                SpawnAll(roster);
+                break;
+            }
+        }
+    }
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        _spawned.Clear();
+        NarrativeFlags.Changed -= AlCambiarFlag;
+    }
+#endif
     /// <summary>Carpeta dentro de Assets/Resources de la que se cargan los rosters.</summary>
     public const string RostersResourcePath = "NpcRosters";
 

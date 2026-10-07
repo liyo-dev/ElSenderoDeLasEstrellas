@@ -467,13 +467,31 @@ namespace Core.InputGlyphs
         /// </summary>
         sealed class InputGlyphServiceDriver : MonoBehaviour
         {
+            void OnEnable() => InputSystem.onDeviceChange += AlCambiarDispositivo;
+            void OnDisable() => InputSystem.onDeviceChange -= AlCambiarDispositivo;
+
+            // Conectar un mando pasa a sus iconos; desconectarlo vuelve a teclado si no queda otro.
+            static void AlCambiarDispositivo(InputDevice device, InputDeviceChange change)
+            {
+                if (device is not Gamepad) return;
+                if (change == InputDeviceChange.Added || change == InputDeviceChange.Reconnected)
+                    SetFamily(DetectFamilyFromGamepad((Gamepad)device));
+                else if ((change == InputDeviceChange.Removed || change == InputDeviceChange.Disconnected))
+                    SetFamily(Gamepad.current != null && Gamepad.current != device
+                        ? DetectFamilyFromGamepad(Gamepad.current) : InputGlyphDeviceFamily.KeyboardMouse);
+            }
+
             void Update()
             {
                 var kb = Keyboard.current;
                 var mouse = Mouse.current;
+                // Con un mando conectado, el ratón no cambia los iconos: moverlo o hacer clic (en el
+                // Editor, para enfocar la ventana de juego) no significa que se juegue con teclado.
+                // Solo una tecla pulsada pasa a los iconos de teclado.
+                bool hayMando = Gamepad.current != null;
                 bool keyboardMouseActivity =
                     (kb != null && kb.anyKey.wasPressedThisFrame) ||
-                    (mouse != null &&
+                    (!hayMando && mouse != null &&
                      (mouse.delta.ReadValue().sqrMagnitude > MouseMoveThresholdSqr ||
                       mouse.leftButton.wasPressedThisFrame || mouse.rightButton.wasPressedThisFrame ||
                       mouse.middleButton.wasPressedThisFrame ||

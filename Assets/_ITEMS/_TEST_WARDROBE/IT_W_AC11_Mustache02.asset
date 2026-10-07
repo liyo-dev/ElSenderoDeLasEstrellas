@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac11_mustache02
   displayNameId: ITEM_AC11_MUSTACHE02_NAME
   displayName: Bigote y Perilla
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 5721d4dc8f5a4c4f8dc2f1c6d73a4ad5, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC11_MUSTACHE02_DESC
   useDescription: Un bigote combinado con perilla.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: d27b409c54b44ce5b72e641886740690, type: 2}

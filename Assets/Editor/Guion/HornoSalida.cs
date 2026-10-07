@@ -38,7 +38,7 @@ internal sealed partial class Horno
 
         // Frases que se pisan (una voz corta a la otra).
         for (int i = 1; i < _lineas.Count; i++)
-            if (_lineas[i].t0 < _lineas[i - 1].t1 - 0.05f)
+            if (_lineas[i].t0 < _lineas[i - 1].t1 - 0.05f && !Alternativas(_lineas[i - 1], _lineas[i]))
                 Aviso($"{Tiempo(_lineas[i].t0)}: {_lineas[i].clave} empieza antes de que acabe {_lineas[i - 1].clave}; la segunda voz corta a la primera.");
 
         // Huecos de ritmo entre frases (informativo).
@@ -59,6 +59,10 @@ internal sealed partial class Horno
             Parados(p);
         }
     }
+
+    private static bool Alternativas(LineaHorneada a, LineaHorneada b)
+        => (!string.IsNullOrWhiteSpace(a.onlyIfFlag) && a.onlyIfFlag == b.skipIfFlag)
+           || (!string.IsNullOrWhiteSpace(b.onlyIfFlag) && b.onlyIfFlag == a.skipIfFlag);
 
     /// Gente quieta en cuadro sin hacer nada durante mucho rato.
     private void Parados(PlanoHorneado p)
@@ -478,7 +482,19 @@ internal sealed partial class Horno
                     var a = kv.Key; var soporte = kv.Value.go;
                     soporte.SetActive(a.VisibleEn(t));
                     soporte.transform.SetPositionAndRotation(a.PosEn(t), Quaternion.Euler(0f, a.RumboEn(t, _actores), 0f));
-                    if (kv.Value.clip != null) AnimationMode.SampleAnimationClip(kv.Value.inst, kv.Value.clip, t % Mathf.Max(0.1f, kv.Value.clip.length));
+                    var clip = kv.Value.clip;
+                    float inicio = 0f;
+                    bool congelar = false;
+                    var pose = a.anim.LastOrDefault(o => o.t <= t && (o.tipo == TipoDeAnimacion.Bucle || o.tipo == TipoDeAnimacion.Reposo));
+                    if (pose.tipo == TipoDeAnimacion.Bucle && !string.IsNullOrEmpty(pose.estado))
+                    {
+                        var estado = CapturaDeEscenario.Catalogo(a.prefab).FirstOrDefault(e => e.estado == pose.estado);
+                        var animator = kv.Value.inst.GetComponentInChildren<Animator>(true);
+                        var elegido = animator?.runtimeAnimatorController?.animationClips.FirstOrDefault(c => c != null && c.name == estado.clip);
+                        if (elegido != null) { clip = elegido; inicio = pose.t; congelar = pose.congelar; }
+                    }
+                    if (clip != null) AnimationMode.SampleAnimationClip(kv.Value.inst, clip,
+                        congelar ? Mathf.Min(t - inicio, clip.length) : (t - inicio) % Mathf.Max(0.1f, clip.length));
                     kv.Value.inst.transform.localPosition = Vector3.zero;
                     kv.Value.inst.transform.localRotation = Quaternion.identity;
                 }

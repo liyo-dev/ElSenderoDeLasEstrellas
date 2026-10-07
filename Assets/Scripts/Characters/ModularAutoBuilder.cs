@@ -7,7 +7,7 @@ using UnityEngine;
 // caché de partes esté lista cuando PlayerPresetService aplica la apariencia del preset.
 [DefaultExecutionOrder(-60)]
 [DisallowMultipleComponent]
-public class ModularAutoBuilder : MonoBehaviour
+public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
 {
     // Prefijos -> categorías (case-insensitive)
     // IMPORTANTE: Orden importa - más específicos primero
@@ -50,6 +50,65 @@ public class ModularAutoBuilder : MonoBehaviour
     [Header("Opcional")]
     public bool randomizeAtAwake = false;      // déjalo en false hasta que veas todo ok
     public bool preserveActivePartsOnAwake = true;  // mantiene las partes activas del prefab
+
+    // Solo el cuerpo registrado como jugador aporta los bonos de su selección actual.
+    private Estadisticas _bonos;
+    private bool _fuenteRegistrada;
+    public Estadisticas Bonos => _bonos;
+
+    void OnEnable()
+    {
+        PlayerService.OnPlayerRegistered += RegistrarBonos;
+        PlayerService.OnPlayerUnregistered += QuitarBonos;
+        WardrobeService.OnWardrobeItemUnlocked += AlDesbloquearPrenda;
+        if (PlayerService.HasInstance) RegistrarBonos(PlayerService.Player);
+    }
+
+    void OnDisable()
+    {
+        PlayerService.OnPlayerRegistered -= RegistrarBonos;
+        PlayerService.OnPlayerUnregistered -= QuitarBonos;
+        WardrobeService.OnWardrobeItemUnlocked -= AlDesbloquearPrenda;
+        if (_fuenteRegistrada) EstadisticasDelPersonaje.QuitarFuente(this);
+        _fuenteRegistrada = false;
+        _bonos = default;
+    }
+
+    void QuitarBonos() => RegistrarBonos(null);
+
+    void RegistrarBonos(GameObject jugador)
+    {
+        bool propio = jugador != null && (transform == jugador.transform || transform.IsChildOf(jugador.transform));
+        if (!propio)
+        {
+            if (_fuenteRegistrada) EstadisticasDelPersonaje.QuitarFuente(this);
+            _fuenteRegistrada = false;
+            _bonos = default;
+            return;
+        }
+        ActualizarBonos();
+        if (!_fuenteRegistrada)
+        {
+            _fuenteRegistrada = true;
+            EstadisticasDelPersonaje.RegistrarFuente(this);
+        }
+    }
+
+    void AlDesbloquearPrenda(WardrobeItemSO item) => ActualizarBonos();
+
+    void ActualizarBonos()
+    {
+        var suma = default(Estadisticas);
+        foreach (var seleccion in idx)
+        {
+            if (!parts.TryGetValue(seleccion.Key, out var lista) || seleccion.Value < 0 || seleccion.Value >= lista.Count) continue;
+            var item = WardrobeItemSO.FindPart(seleccion.Key, lista[seleccion.Value].name);
+            if (item != null) suma += item.Bonos;
+        }
+        var diferencia = suma - _bonos;
+        _bonos = suma;
+        if (_fuenteRegistrada && !diferencia.EsCero) EstadisticasDelPersonaje.AvisarCambioDeBonos(diferencia);
+    }
 
     void Awake()
     {
@@ -144,6 +203,7 @@ public class ModularAutoBuilder : MonoBehaviour
                 go.SetActive(false);
         
         idx.Clear();
+        ActualizarBonos();
         
         // Reactiva solo las que estaban activas y registra su índice
         foreach (var kvp in activePartsDetected)
@@ -231,6 +291,7 @@ public class ModularAutoBuilder : MonoBehaviour
         foreach (var list in parts.Values)
             foreach (var go in list) go.SetActive(false);
         idx.Clear();
+        ActualizarBonos();
     }
 
     void EnsureHolderActive(string holderName)
@@ -272,6 +333,7 @@ public class ModularAutoBuilder : MonoBehaviour
             foreach (var go in list)
                 go.SetActive(false);
         idx.Clear();
+        ActualizarBonos();
     }
 
     public void ApplySelection(Dictionary<PartCategory, string> sel)
@@ -340,6 +402,7 @@ public class ModularAutoBuilder : MonoBehaviour
                 kv.Value[i].SetActive(false);
         }
         idx.Clear();
+        ActualizarBonos();
 
         ApplySelection(new Dictionary<PartCategory, string>(_initialSelection));
     }
@@ -392,6 +455,8 @@ public class ModularAutoBuilder : MonoBehaviour
     
     public void SetByName(PartCategory cat, string nameOrNull)
     {
+        try
+        {
         if (!parts.TryGetValue(cat, out var list) || list.Count == 0) return;
 
         // apaga TODO lo de la categoría actual
@@ -462,7 +527,9 @@ public class ModularAutoBuilder : MonoBehaviour
         SetByName(PartCategory.Bow, null);
         SetByName(PartCategory.Arrows, null);
     }
-}
+        }
+        finally { ActualizarBonos(); }
+    }
 
 
     void EnsureAncestorsActive(Transform t)

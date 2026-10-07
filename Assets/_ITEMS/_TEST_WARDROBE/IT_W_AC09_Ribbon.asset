@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac09_ribbon
   displayNameId: ITEM_AC09_RIBBON_NAME
   displayName: Lazo
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: b4109b0028f1453ebe19598343936286, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC09_RIBBON_DESC
   useDescription: Un lazo decorativo para dar un toque elegante.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 2a996704106747bbac874a015f69ba21, type: 2}

@@ -105,6 +105,13 @@ public sealed class SequenceContext
     public Dictionary<string, SequenceActor>.ValueCollection PersonajesVisibles => _personajesVisibles.Values;
     private readonly Dictionary<string, (VfxPoolService pool, ulong uso)> _vfxRegistrados = new();
 
+    private int _relojRetenido;
+    /// Mientras alguien lo retenga, el reloj del guion horneado no avanza: la escena espera (p. ej.
+    /// a que el jugador haga la prueba que se le pide).
+    public bool RelojRetenido => _relojRetenido > 0;
+    public void RetenerReloj() => _relojRetenido++;
+    public void SoltarReloj() => _relojRetenido = Math.Max(0, _relojRetenido - 1);
+
     public SequenceContext(SequencePlayer player, SequenceStage stage)
     {
         Player = player;

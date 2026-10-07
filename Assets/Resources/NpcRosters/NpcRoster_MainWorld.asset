@@ -74,3 +74,23 @@ MonoBehaviour:
     requireNavMesh: 0
     requiredFlag: 
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Boticaria
+    prefab: {fileID: 959915347554755151, guid: 0cbfae1d342a1ca4c9bdd7e7dcc3e278, type: 3}
+    gameObjectName: Boticaria
+    persistenceId: NPC_Boticaria
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP2_INICIADO
+    invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Renard
+    prefab: {fileID: 6941739730369371496, guid: dd046d3fa6ae52c42a9fe8cd5f43f59e, type: 3}
+    gameObjectName: Renard
+    persistenceId: NPC_Renard
+    vozDeReacciones: Vecino
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP2_INICIADO
+    invertCondition: 0

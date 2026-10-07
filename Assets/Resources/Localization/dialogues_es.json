@@ -1,6 +1,34 @@
 {
     "texts": [
         {
+            "key": "CHAR_RENARD",
+            "value": "Renard"
+        },
+        {
+            "key": "DLG_RENARD_INTRO_01",
+            "value": "Quieto, chico. No pises esa raíz: ahí debajo duerme algo con más patas que tú."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_02",
+            "value": "Me llamo Renard. Cacé en este bosque más años de los que tienes tú."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_03",
+            "value": "¿Has visto ese brillo que dejan los bichos al caer? Es Esencia: lo que queda de la magia que los movía."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_04",
+            "value": "Trátala con respeto. Esa magia estuvo viva."
+        },
+        {
+            "key": "DLG_RENARD_INTRO_05",
+            "value": "Tráemela y te daré cosas que no encontrarás en ningún mercado. O monedas, si eres de los prácticos."
+        },
+        {
+            "key": "DLG_RENARD_SALUDO",
+            "value": "¿Vienes a cambiar? Enséñame qué has cazado."
+        },
+        {
             "key": "CHAR_AMIGAPEZ",
             "value": "Amiga del Niño Pez"
         },
@@ -1419,6 +1447,35 @@
         {
             "key": "DLG_ELDRAN_CHARLA_ESTRELLA_03",
             "value": "Entonces es perfecta."
-        }
+        },
+        {
+            "key":  "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
+            "value":  "Victoria, la boticaria, Erika… y luego ven a verme al campo de prácticas."
+        },
+        {"key":"DLG_VICTORIA_CAPA_01","value":"¿Y esa manga? No me lo digas. Magia."},
+        {"key":"DLG_VICTORIA_CAPA_02","value":"Solo venía a por hilo."},
+        {"key":"DLG_VICTORIA_CAPA_03","value":"Y te vas a llevar una capa. Una que no arda cada vez que te enfades."},
+        {"key":"DLG_VICTORIA_CAPA_04","value":"Quieto, que te mido."},
+        {"key":"DLG_VICTORIA_CAPA_05","value":"Otra vez. Por si acaso."},
+        {"key":"DLG_VICTORIA_CAPA_06","value":"Te he visto crecer, Will. Cada invierno, con las mangas más cortas."},
+        {"key":"DLG_VICTORIA_CAPA_07","value":"Ya tenía una medio hecha. Sabía que este día llegaría."},
+        {"key":"DLG_VICTORIA_CAPA_08","value":"Y ni se te ocurra pagarme."},
+        {"key":"DLG_VICTORIA_CAPA_DESPUES_01","value":"Esa capa te queda que ni pintada."},
+        {"key":"DLG_BOTICARIA_POCION_01","value":"Así que tú eres el del demonio. Toma."},
+        {"key":"DLG_BOTICARIA_POCION_02","value":"Es la única poción de vida que tengo. Tardaré meses en hacer otra."},
+        {"key":"DLG_BOTICARIA_POCION_03","value":"Estabiliza una herida grave. Pero no resucita a nadie."},
+        {"key":"DLG_BOTICARIA_POCION_04","value":"Y no cura el cansancio de la magia. Eso solo se cura descansando."},
+        {"key":"DLG_BOTICARIA_POCION_05","value":"Entendido. No resucita, no cura el cansancio…"},
+        {"key":"DLG_BOTICARIA_POCION_06","value":"…y no se gasta por una rozadura. Repítelo."},
+        {"key":"DLG_BOTICARIA_POCION_07","value":"Y no se gasta por una rozadura."},
+        {"key":"DLG_BOTICARIA_POCION_DESPUES_01","value":"Cuídate. Y cuida esa poción."},
+        {"key":"DLG_RENARD_CONTRATO1_OFERTA_01","value":"Una cosa más. Las arañas se han vuelto atrevidas: anoche llegaron hasta mi trampa del camino."},
+        {"key":"DLG_RENARD_CONTRATO1_OFERTA_02","value":"Acaba con ocho y te pago veinte de Esencia, aparte de lo que recojas."},
+        {"key":"DLG_RENARD_CONTRATO1_MIENTRAS_01","value":"Ocho, chico. Las cuento por las patas, así que no me engañes."},
+        {"key":"DLG_RENARD_CONTRATO1_HECHO_01","value":"Ocho. Nada mal para alguien de tu tamaño. Toma, lo prometido."},
+        {"key":"DLG_RENARD_CONTRATO2_OFERTA_01","value":"Más adentro hay más, donde la luz casi no llega. Quince, y te doy algo que guardo desde hace años."},
+        {"key":"DLG_RENARD_CONTRATO2_MIENTRAS_01","value":"Quince. Y no te alejes del camino más de lo necesario."},
+        {"key":"DLG_RENARD_CONTRATO2_HECHO_01","value":"Quince... Ya no te llamo chico."},
+        {"key":"DLG_RENARD_CONTRATO2_HECHO_02","value":"Toma este parche. Lo llevé el invierno en que un oso quiso dejarme tuerto. No lo consiguió."}
     ]
 }

@@ -15,4 +15,14 @@ MonoBehaviour:
   itemId: coin
   displayNameId: ITEM_COIN_NAME
   displayName: Moneda
+  pluralDisplayNameId: ITEM_COIN_NAME_PLURAL
+  pluralDisplayName: Monedas
   icon: {fileID: 21300000, guid: 4e0c1a90f11f41545832aac9e4985008, type: 3}
+  usableFromInventory: 0
+  useEffects: []
+  useDescriptionId: 
+  useDescription: 
+  usageKind: 3
+  buyPrice: 10
+  sellValue: 5
+  wardrobeUnlock: {fileID: 0}

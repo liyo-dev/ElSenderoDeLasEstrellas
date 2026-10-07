@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac10_mustache02
   displayNameId: ITEM_AC10_MUSTACHE02_NAME
   displayName: Bigote Fino
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: ec4025e870be4b38bd4b57a3aaa452da, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC10_MUSTACHE02_DESC
   useDescription: Un bigote fino y discreto.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: b7674e42b8594032b37bf7b32f074d15, type: 2}

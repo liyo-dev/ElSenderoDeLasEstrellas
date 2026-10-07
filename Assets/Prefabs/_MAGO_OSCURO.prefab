@@ -20952,6 +20952,8 @@ GameObject:
   - component: {fileID: 1408085124568394779}
   - component: {fileID: 1887095494044393346}
   - component: {fileID: 9109898122023115703}
+  - component: {fileID: 3105957168028139436}
+  - component: {fileID: 3378713452404266040}
   m_Layer: 8
   m_Name: _MAGO_OSCURO
   m_TagString: Untagged
@@ -21279,6 +21281,38 @@ MonoBehaviour:
   ojosYaCerrados:
   - Eye07
   - Eye09
+--- !u!114 &3105957168028139436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330914016721479921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62b6f2293afaf924e9901281974f75ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 500
+  destroyOnDeath: 0
+  deathVFX: {fileID: 0}
+  deathVFXLifetime: 3
+  invulnerabilitySeconds: 0
+  debugLogs: 0
+--- !u!114 &3378713452404266040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8330914016721479921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fd846acda22bfd41bb1c016673b9e6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
+  _profileId: boss
+  _spawnOrigin: {fileID: 0}
 --- !u!1 &8344871266714992783
 GameObject:
   m_ObjectHideFlags: 0

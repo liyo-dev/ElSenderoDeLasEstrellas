@@ -106,10 +106,10 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     private float feedbackDuration = 1.5f;
 
     [Header("Controles (INC-504)")]
-    [SerializeField, Tooltip("Panel de controles (copia del del menú principal). Se abre con X (C en teclado) desde el menú.")]
+    [SerializeField, Tooltip("Panel de controles. Se abre con X del mando, C del teclado o clic en su tarjeta de ayuda.")]
     private ControlsMenuController controlsMenu;
-    [SerializeField, Tooltip("Texto de ayuda «X Controles» (opcional).")]
-    private TextMeshProUGUI controlsHintText;
+    [SerializeField] private ContadorDeMonedas contadorDeMonedas;
+    [SerializeField] private ContadorDeMonedas[] contadoresDeMonedas = {};
     int _controlsClosedFrame = -1;
 
     [Header("Grimorio (INC-506)")]
@@ -464,15 +464,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             }
             if (controlsMenu != null && GamepadInputReader.XButtonPressedUI)
             {
-                GamepadInputReader.PlayUISound("UI_Navigate");
-                controlsMenu.Show(() =>
-                {
-                    _controlsClosedFrame = Time.frameCount;
-                    ShowTab(_activeTab);
-                });
+                AbrirControles();
                 return;
             }
-            UpdateControlsHint();
 
             // Detectar botones del gamepad usando GamepadInputReader
             
@@ -578,17 +572,16 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         grimorioLibro.Open(start);
     }
 
-    void UpdateControlsHint()
+    public void AbrirControles()
     {
-        if (controlsHintText == null) return;
-        var family = Core.InputGlyphs.InputGlyphService.CurrentFamily;
-        string key = family == Core.InputGlyphs.InputGlyphDeviceFamily.KeyboardMouse
-            ? "C"
-            : Core.InputGlyphs.InputGlyphLabels.GetLabel(Core.InputGlyphs.InputGlyphNames.West, family);
-        string label = LocalizationManager.Instance != null
-            ? LocalizationManager.Instance.Get("MENU_CONTROLS_HINT", "Controles")
-            : "Controles";
-        controlsHintText.text = $"{key}  {label}";
+        if (!_isOpen || controlsMenu == null || controlsMenu.IsVisible) return;
+        if (grimorioLibro != null && grimorioLibro.IsOpen) return;
+        GamepadInputReader.PlayUISound("UI_Navigate");
+        controlsMenu.Show(() =>
+        {
+            _controlsClosedFrame = Time.frameCount;
+            ShowTab(_activeTab);
+        });
     }
 
     bool IsYButtonPressed()
@@ -1025,6 +1018,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
     void ShowTab(int index, bool forceRebuild = false)
     {
+        if (contadorDeMonedas != null || contadoresDeMonedas.Length > 0)
+        {
+            PlayerService.TryGetComponent(out Inventory inventory, includeInactive: true, allowSceneLookup: true);
+            if (contadorDeMonedas != null) contadorDeMonedas.ConectarInventario(inventory);
+            foreach (var contador in contadoresDeMonedas)
+                if (contador != null && contador != contadorDeMonedas) contador.ConectarInventario(inventory);
+        }
         int previousTab = _activeTab;
         _activeTab = Mathf.Clamp(index, 0, 2);
 
@@ -2050,6 +2050,10 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         void BuildList()
         {
+            var seleccionPrevia = _selectedItem;
+            var eventSystem = EventSystem.current;
+            bool restaurarFoco = eventSystem != null && eventSystem.currentSelectedGameObject != null
+                && eventSystem.currentSelectedGameObject.transform.IsChildOf(_ui.rowsParent);
             ClearList();
 
             var items = _inventory.GetAllItems();
@@ -2067,6 +2071,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
             foreach (var entry in items)
             {
+                if (entry.item == null || entry.item.usageKind == ItemData.ItemUsageKind.Currency) continue;
                 InventoryRowWidget widget;
                 if (usedChildren < _ui.rowsParent.childCount)
                 {
@@ -2127,9 +2132,21 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             UpdateRowVisuals();
 
             if (_rows.Count == 0)
+            {
                 UpdateEmptyState(LocalizationManager.Instance != null
                     ? LocalizationManager.Instance.Get("INVENTORY_EMPTY", "Inventario vacío")
                     : "Inventario vacío");
+                if (restaurarFoco)
+                    eventSystem.SetSelectedGameObject(Instance != null && Instance.inventoryTabButton != null
+                        ? Instance.inventoryTabButton.gameObject : null);
+            }
+            else if (seleccionPrevia != null || restaurarFoco)
+            {
+                var destino = _rows[0];
+                foreach (var row in _rows)
+                    if (row.Item == seleccionPrevia) { destino = row; break; }
+                HandleRowActivated(destino, destino.Item, restaurarFoco);
+            }
         }
 
         void HandleRowActivated(InventoryRowWidget widget, ItemData item, bool focus)

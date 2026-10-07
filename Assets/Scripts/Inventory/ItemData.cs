@@ -16,6 +16,9 @@ public class ItemData : ScriptableObject
     [Tooltip("ID de localización para el nombre (ej: 'ITEM_COIN_NAME'). Si está vacío, usa displayName.")]
     public string displayNameId;
     public string displayName;
+    [Tooltip("Nombre plural localizado para cantidades. Vacío conserva el nombre normal.")]
+    public string pluralDisplayNameId;
+    public string pluralDisplayName;
     public Sprite icon;
 
     [Header("Uso desde inventario")]
@@ -37,6 +40,15 @@ public class ItemData : ScriptableObject
         if (!string.IsNullOrEmpty(displayNameId) && LocalizationManager.Instance != null)
             return LocalizationManager.Instance.Get(displayNameId, displayName);
         return displayName;
+    }
+
+    public string GetLocalizedName(int quantity)
+    {
+        if (quantity == 1) return GetLocalizedName();
+        string fallback = string.IsNullOrEmpty(pluralDisplayName) ? GetLocalizedName() : pluralDisplayName;
+        if (!string.IsNullOrEmpty(pluralDisplayNameId) && LocalizationManager.Instance != null)
+            return LocalizationManager.Instance.Get(pluralDisplayNameId, fallback);
+        return fallback;
     }
 
     /// <summary>Obtiene la descripción localizada del item (usa useDescriptionId si está definido).</summary>

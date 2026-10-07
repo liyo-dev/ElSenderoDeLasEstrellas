@@ -21,7 +21,28 @@ MonoBehaviour:
   - rid: 5630202263296278917
   - rid: 5630202263296278918
   - rid: 5630202263296278919
-  - rid: 5630202263296278920
+  - rid: 5630202263296278993
+  - rid: 5630202263296278994
+  - rid: 5630202263296278995
+  - rid: 5630202263296278996
+  - rid: 5630202263296278997
+  - rid: 5630202263296278998
+  - rid: 5630202263296278999
+  - rid: 5630202263296279000
+  - rid: 5630202263296279001
+  - rid: 5630202263296279101
+  - rid: 5630202263296279079
+  - rid: 5630202263296279102
+  - rid: 5630202263296279103
+  - rid: 5630202263296279104
+  - rid: 5630202263296279105
+  - rid: 5630202263296279106
+  - rid: 5630202263296279107
+  - rid: 5630202263296279108
+  - rid: 5630202263296279109
+  - rid: 5630202263296279110
+  - rid: 5630202263296279111
+  - rid: 5630202263296279125
   applicableSceneNames: []
   references:
     version: 2
@@ -51,9 +72,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: a85bfc4c-0b07-4746-8610-48591900d3e1
-        position: {x: 320, y: 0}
+        position: {x: 380, y: 0}
         outputs:
-        - 562a84cd-8ae4-43e1-92b9-36f411700e01
+        - cap2-iniciado-flag
         eventKey: CH_Cap1_BACK_1
     - rid: 5630202263296278870
       type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
@@ -66,7 +87,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 562a84cd-8ae4-43e1-92b9-36f411700e01
-        position: {x: 640, y: 0}
+        position: {x: 1140, y: 0}
         outputs:
         - 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
         checkpointId: CAP2_INICIO_TRAS_DEMONIO
@@ -83,7 +104,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 89e3c01b-4b7d-4edf-9c26-c0fa9b1db4d3
-        position: {x: 1020, y: 0}
+        position: {x: 1520, y: 0}
         outputs:
         - ccda44d1-808e-43b9-bdd1-2833e19985e5
         operacion: 0
@@ -100,7 +121,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: ccda44d1-808e-43b9-bdd1-2833e19985e5
-        position: {x: 1400, y: 0}
+        position: {x: 1900, y: 0}
         outputs:
         - f9727755-a7d3-4139-b632-6be36c051717
         eventKey: LIAM_CRYSTAL_START
@@ -115,7 +136,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: f9727755-a7d3-4139-b632-6be36c051717
-        position: {x: 1780, y: 0}
+        position: {x: 2280, y: 0}
         outputs:
         - 5d1d3c34-cd28-464d-8039-73856cd7338e
         eventKey: LIAM_CRYSTAL_DONE
@@ -130,28 +151,416 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: 5d1d3c34-cd28-464d-8039-73856cd7338e
-        position: {x: 2160, y: 0}
+        position: {x: 2660, y: 0}
         outputs:
         - c07008ca-ae29-4d50-848f-8c80e0dfa16a
         operacion: 1
         sceneName: TorreDeLiam
         waitForCompletion: 1
-    - rid: 5630202263296278920
-      type: {class: ScreenFadeNode, ns: , asm: Assembly-CSharp}
+    - rid: 5630202263296278993
+      type: {class: SetTimeOfDayNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 7.- Se destapa el mundo (vuelve la musica del lugar)
+        displayTitle: "7.- Ya es de d\xEDa"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
+        position: {x: 3040, y: 0}
+        outputs:
+        - cap2-manana-despues-8
+        targetTime: 0
+        immediate: 1
+    - rid: 5630202263296278994
+      type: {class: AdditiveSceneNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "8.- Carga la habitaci\xF3n de Will"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-8
+        position: {x: 3420, y: 0}
+        outputs:
+        - cap2-manana-despues-9
+        operacion: 0
+        sceneName: WillHouse
+        waitForCompletion: 1
+    - rid: 5630202263296278995
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "9.- Will vuelve a WillHouse \xB7 Bedroom"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-9
+        position: {x: 3800, y: 0}
+        outputs:
+        - cap2-manana-despues-10
+        actorId: Player
+        markId: Bedroom
+        applyPlayerEnvironment: 1
+        showActor: 0
+    - rid: 5630202263296278996
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10.- Eldran entra en la habitaci\xF3n"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-10
+        position: {x: 4180, y: 0}
+        outputs:
+        - cap2-rotulo-manana-siguiente
+        actorId: NPC_Eldran
+        markId: M_Manana_EldranPuerta
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 5630202263296278997
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "11.- La ma\xF1ana despu\xE9s (SEQ_MananaDespues)"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-11
+        position: {x: 4940, y: 0}
+        outputs:
+        - cap2-manana-despues-12
+        cinematicName: "La ma\xF1ana despu\xE9s"
+        signalIn: MANANA_DESPUES_START
+        signalDone: MANANA_DESPUES_DONE
+        signalFailed: 
+        secuencia: {fileID: 11400000, guid: 566e9af6db90549439f140367c79e347, type: 2}
+        plantillaDeAjustes: 
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12
+    - rid: 5630202263296278998
+      type: {class: PlaceActorNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 12.- Eldran queda junto a la mesa
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-12
+        position: {x: 5320, y: 0}
+        outputs:
+        - cap2-manana-despues-13
+        actorId: NPC_Eldran
+        markId: M_Manana_EldranMesa
+        applyPlayerEnvironment: 0
+        showActor: 1
+    - rid: 5630202263296278999
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 13.- Trozo del aro
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-13
+        position: {x: 5700, y: 0}
+        outputs:
+        - cap2-manana-despues-14
+        item: {fileID: 11400000, guid: fb04f79e6fa44b847874ba45ec777e3c, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 5630202263296279000
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "14.- Prep\xE1rate para el viaje"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-manana-despues-14
+        position: {x: 6080, y: 0}
+        outputs:
+        - cap2-manana-despues-15
+        questId: PREPARA_VIAJE
+        giverId: NPC_Eldran
+        inProgressDialogue: {fileID: 11400000, guid: 399ed6fa885f8704d8086ba334258fee, type: 2}
+        noGiver: 0
+    - rid: 5630202263296279001
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "15.- Cap. 2 \xB7 La ma\xF1ana despu\xE9s"
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
         outputAnchor: 1
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: c07008ca-ae29-4d50-848f-8c80e0dfa16a
-        position: {x: 2540, y: 0}
+        guid: cap2-manana-despues-15
+        position: {x: 6460, y: 0}
+        outputs:
+        - cap2-prepara-viaje-fork
+        checkpointId: CAP2_MANANA_DESPUES
+        spawnAnchorId: Bedroom
+        sceneName: WillHouse
+    - rid: 5630202263296279079
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "16.- Prep\xE1rate para el viaje \xB7 encargos en paralelo"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-fork
+        position: {x: 6840, y: 0}
+        outputs:
+        - cap2-prepara-viaje-victoria-0
+        - cap2-prepara-viaje-boticaria-0
+    - rid: 5630202263296279101
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 1b.- Comienza el Cap. 2
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-iniciado-flag
+        position: {x: 760, y: 0}
+        outputs:
+        - 562a84cd-8ae4-43e1-92b9-36f411700e01
+        flagKey: CAP2_INICIADO
+        value: 1
+    - rid: 5630202263296279102
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 17.- Hablar con Victoria
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-0
+        position: {x: 7220, y: 0}
+        outputs:
+        - cap2-prepara-viaje-victoria-1
+        npcId: NPC_Victoria
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+    - rid: 5630202263296279103
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 18.- Victoria entrega la capa
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-1
+        position: {x: 7600, y: 0}
+        outputs:
+        - cap2-prepara-viaje-victoria-2
+        dialogue: {fileID: 11400000, guid: fa547693d02e99e449e4b2ed340b54a9, type: 2}
+        npcId: NPC_Victoria
+        oneShotFlag: 
+    - rid: 5630202263296279104
+      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 19.- Desbloquear capa de principiante
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-2
+        position: {x: 7980, y: 0}
+        outputs:
+        - cap2-prepara-viaje-victoria-3
+        wardrobeItem: {fileID: 11400000, guid: 7367f9d40af192b45aac491cf7b33acf, type: 2}
+        logWarnings: 0
+    - rid: 5630202263296279105
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "20.- Tutorial \xB7 Equipo \u25B8 Capas"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-3
+        position: {x: 8360, y: 0}
+        outputs:
+        - cap2-prepara-viaje-victoria-4
+        action: 0
+        text: "Equ\xEDpate la capa desde el men\xFA: Equipo \u25B8 Capas."
+        textId: TUTORIAL_PREPARA_VIAJE_CAPA
+        icon: {fileID: 0}
+        buttonName: start
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 5630202263296279106
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "21.- Completar encargo \xB7 capa"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-victoria-4
+        position: {x: 8740, y: 0}
         outputs: []
-        color: {r: 0, g: 0, b: 0, a: 1}
-        duration: 0.6
-        fadeIn: 0
-        transicion: {fileID: 11400000, guid: 013263c83b6a84c4d95beaa8bd163ac8, type: 2}
-        restaurarMusicaDeEscena: 1
-        fundidoDeMusica: 3
+        standingActorId: NPC_Victoria
+        standingDialogue: {fileID: 11400000, guid: ece81f0d2f0633440ad58001b765e143, type: 2}
+        questId: PREPARA_VIAJE
+        stepConditionIds:
+        - PREPARA_VIAJE_CAPA
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 5630202263296279107
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 22.- Hablar con la boticaria
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-0
+        position: {x: 7220, y: 186}
+        outputs:
+        - cap2-prepara-viaje-boticaria-1
+        npcId: NPC_Boticaria
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+    - rid: 5630202263296279108
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "23.- La \xFAnica poci\xF3n de vida"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-1
+        position: {x: 7600, y: 256}
+        outputs:
+        - cap2-prepara-viaje-boticaria-2
+        dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
+        npcId: NPC_Boticaria
+        oneShotFlag: 
+    - rid: 5630202263296279109
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "24.- Recibir poci\xF3n de vida"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-2
+        position: {x: 7980, y: 186}
+        outputs:
+        - cap2-prepara-viaje-boticaria-3
+        item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
+        amount: 1
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 5630202263296279110
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "25.- Tutorial \xB7 usar consumibles"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-3
+        position: {x: 8360, y: 190}
+        outputs:
+        - cap2-prepara-viaje-boticaria-4
+        action: 0
+        text: "En Inventario, selecciona la poci\xF3n y confirma {BOTON}; confirma otra vez en Usar."
+        textId: TUTORIAL_PREPARA_VIAJE_POCION
+        icon: {fileID: 0}
+        buttonName: interactable_confirm
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 5630202263296279111
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "26.- Completar encargo \xB7 poci\xF3n"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-prepara-viaje-boticaria-4
+        position: {x: 8740, y: 288}
+        outputs: []
+        standingActorId: NPC_Boticaria
+        standingDialogue: {fileID: 11400000, guid: 79e721f963b681b4b83cbe507f578e4c, type: 2}
+        questId: PREPARA_VIAJE
+        stepConditionIds:
+        - PREPARA_VIAJE_POCION
+        steps: 
+        completeQuest: 0
+        logWarnings: 1
+    - rid: 5630202263296279125
+      type: {class: TitleCardNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "10b.- R\xF3tulo \xB7 A la ma\xF1ana siguiente\u2026"
+        chapter: Cap. 2
+        blockSaving: 1
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-rotulo-manana-siguiente
+        position: {x: 4560, y: 0}
+        outputs:
+        - cap2-manana-despues-11
+        text: "A la ma\xF1ana siguiente\u2026"
+        textId: ROTULO_CAP2_MANANA_SIGUIENTE
+        color: {r: 1, g: 0.83, b: 0.45, a: 1}
+        fondo: {r: 0, g: 0, b: 0, a: 1}
+        fuente: {fileID: 11400000, guid: 812c7b0dc56552d4aaa2319860b0c738, type: 2}
+        tamano: 64
+        aparecer: 1
+        mantener: 2.2
+        desaparecer: 1

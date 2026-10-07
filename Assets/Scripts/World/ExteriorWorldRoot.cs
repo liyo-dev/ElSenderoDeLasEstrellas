@@ -83,7 +83,7 @@ public class ExteriorWorldRoot : MonoBehaviour
 
         if (_renderers != null)
             foreach (var r in _renderers)
-                if (r) r.enabled = visible;
+                if (r) r.forceRenderingOff = hide;
 
         if (_lights != null)
             foreach (var l in _lights)

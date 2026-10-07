@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MagicSpellSO
   spellId: 4
   displayNameId: SPELL_LEVITATION_NAME
-  displayName: Levitation
+  displayName: "Levitaci\xF3n"
   kind: 2
   element: 4
   lore: "El suelo sigue ah\xED; simplemente deja de importar un rato."
@@ -65,8 +65,8 @@ MonoBehaviour:
     m_Bits: 4294967295
   levitationDrainDelay: 1
   levitationManaDrainPerSecond: 5
-  levitationHoldVFX: {fileID: 2020661361868494885, guid: 895c6d094b6b213418cddcfb520298e9, type: 3}
-  levitationReleaseVFX: {fileID: 8680598818964007281, guid: dcd90c4976197424b9958a7c54b6bb8c, type: 3}
+  levitationHoldVFX: {fileID: 7155335147208632822, guid: 97c43495f80a3244fad1301dfafbe252, type: 3}
+  levitationReleaseVFX: {fileID: 4035903591278710484, guid: aa122f157eac1c8428ae5db8a315ccd8, type: 3}
   levitationRangeIndicatorVFX: {fileID: 100002, guid: 28e29d76acf694c4a98b013d47c6bfc1, type: 3}
   rangeIndicatorCount: 1
   levitationCaptureShakeIntensity: 0.3
@@ -75,9 +75,9 @@ MonoBehaviour:
   levitationReleaseShakeDuration: 0.3
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
-  spawnVFX: {fileID: 0}
+  spawnVFX: {fileID: 3636086076075129118, guid: f3d3f5b8f1844be458a1eba319fd9079, type: 3}
   impactVFX: {fileID: 0}
-  despawnVFX: {fileID: 0}
+  despawnVFX: {fileID: 2730182215490797991, guid: b380379a901bc9d4094387a6e6b41402, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_Levitation
   impactSFXKey: Impacto_Levitacion

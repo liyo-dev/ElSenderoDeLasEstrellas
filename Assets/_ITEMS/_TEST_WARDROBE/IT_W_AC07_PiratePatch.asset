@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac07_piratepatch
   displayNameId: ITEM_AC07_PIRATEPATCH_NAME
   displayName: Parche de Pirata
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: e77afc2098b9417db088c6377e2eb405, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC07_PIRATEPATCH_DESC
   useDescription: Un parche que oculta un ojo... o un secreto.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}

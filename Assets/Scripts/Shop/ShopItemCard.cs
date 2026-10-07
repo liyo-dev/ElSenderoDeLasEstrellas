@@ -13,6 +13,8 @@ public class ShopItemCard : MonoBehaviour
     [SerializeField] private TextMeshProUGUI stockText;
     [SerializeField] private Button button;
     [SerializeField] private Image background;
+    [Tooltip("Icono de la moneda junto al precio. Toma el icono de la moneda de la tienda; si está vacío, se busca el hijo «CoinIcon».")]
+    [SerializeField] private Image currencyIcon;
 
     [Header("Visual Feedback")]
     [SerializeField] private Color normalColor = Color.white;
@@ -33,11 +35,20 @@ public class ShopItemCard : MonoBehaviour
         
         if (button != null)
             button.onClick.AddListener(() => _onSelect?.Invoke());
+
+        if (currencyIcon == null)
+        {
+            var hijo = transform.Find("CoinIcon");
+            if (hijo != null) currencyIcon = hijo.GetComponent<Image>();
+        }
     }
 
-    public void Setup(ShopController.ShopItemEntry entry, int index, System.Action onSelect)
+    /// <param name="moneda">Moneda con la que cobra la tienda: su icono acompaña al precio.</param>
+    public void Setup(ShopController.ShopItemEntry entry, int index, System.Action onSelect, ItemData moneda = null)
     {
         _onSelect = onSelect;
+        if (currencyIcon != null && moneda != null && moneda.icon != null)
+            currencyIcon.sprite = moneda.icon;
         
         if (entry == null || entry.item == null)
         {
@@ -74,8 +85,6 @@ public class ShopItemCard : MonoBehaviour
         
         if (priceText != null)
         {
-            // Ya no se usa el emoji 💰 literal: el icono de moneda es ahora el sprite
-            // real "coin.png" (CoinIcon) mostrado junto a este texto en el prefab.
             priceText.text = $"{price}";
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[ShopItemCard] PriceText actualizado a: {priceText.text}");

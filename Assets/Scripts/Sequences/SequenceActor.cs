@@ -20,6 +20,31 @@ using Game.NPC.Common;
 /// Por eso una SequenceDefinition se puede escribir entera como texto, sin abrir el Editor.
 public class SequenceActor
 {
+    private Renderer[] _renderersDeVisibilidad;
+
+    /// Una escena va a mover al jugador ella misma: quien lo tuviera sujeto en un sitio (p. ej.
+    /// dormido en una cama) tiene que soltarlo, o lo devolvería allí cada fotograma.
+    public static event System.Action<SequenceActor> JugadorTomadoPorEscena;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ReiniciarEstaticos() => JugadorTomadoPorEscena = null;
+#endif
+
+    public void AvisarDeQueLoTomaUnaEscena()
+    {
+        if (IsPlayer) JugadorTomadoPorEscena?.Invoke(this);
+    }
+
+    /// Muestra u oculta el actor sin pisar las mallas de expresión facial.
+    public void SetRenderingVisible(bool visible)
+    {
+        if (Transform == null) return;
+        _renderersDeVisibilidad ??= Transform.GetComponentsInChildren<Renderer>(true);
+        foreach (var r in _renderersDeVisibilidad)
+            if (r != null) r.forceRenderingOff = !visible;
+    }
+
     public const string PlayerId = "Player";
 
     public string Id { get; private set; }

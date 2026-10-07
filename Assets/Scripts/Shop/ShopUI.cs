@@ -73,6 +73,8 @@ public class ShopUI : MonoBehaviour
     private bool _buyButtonColorsCached;
     private ColorBlock _buyButtonDefaultColors;
     private Tween _currencyTween;
+    private ContadorDeMonedas _contadorDeMonedas;
+    private Inventory _inventarioObservado;
 
     // Variables de control de mensajes y estado
     private bool _skipMessageClearOnce;
@@ -117,6 +119,7 @@ public class ShopUI : MonoBehaviour
 
     void OnEnable()
     {
+        EnsurePlayerInventory();
         if (shopController != null)
             shopController.OnStockChanged += RefreshUI;
 
@@ -126,6 +129,8 @@ public class ShopUI : MonoBehaviour
 
     void OnDisable()
     {
+        if (_inventarioObservado != null) _inventarioObservado.OnInventoryChanged -= AlCambiarMoneda;
+        _inventarioObservado = null;
         if (shopController != null)
             shopController.OnStockChanged -= RefreshUI;
 
@@ -412,27 +417,52 @@ public class ShopUI : MonoBehaviour
     void UpdateCurrencyDisplay()
     {
         EnsurePlayerInventory();
-
-        if (currencyText == null || _playerInventory == null || shopController == null)
-            return;
-        
-        // El icono de moneda ahora es un Image real (CoinIcon) junto a este texto en el
-        // prefab, así que aquí solo mostramos el número (ya no el emoji 💰 literal).
-        var currencyItem = shopController.CurrencyItem;
-        if (currencyItem != null)
+        if (currencyText == null) return;
+        if (_contadorDeMonedas == null)
         {
-            int amount = _playerInventory.Count(currencyItem.itemId);
-            currencyText.text = $"{amount}";
-            return;
+            _contadorDeMonedas = currencyText.GetComponent<ContadorDeMonedas>();
+            if (_contadorDeMonedas == null)
+                _contadorDeMonedas = currencyText.gameObject.AddComponent<ContadorDeMonedas>();
         }
-
-        currencyText.text = "0";
+        var coinIcon = currencyText.transform.parent != null
+            ? currencyText.transform.parent.Find("CoinIcon") : null;
+        _contadorDeMonedas.Configurar(shopController != null ? shopController.CurrencyItem : null,
+            _playerInventory, currencyText, coinIcon != null ? coinIcon.GetComponent<Image>() : null);
     }
 
     void EnsurePlayerInventory()
     {
         if (_playerInventory == null)
             PlayerService.TryGetComponent(out _playerInventory, includeInactive: true, allowSceneLookup: true);
+        if (isActiveAndEnabled && _inventarioObservado != _playerInventory)
+        {
+            if (_inventarioObservado != null) _inventarioObservado.OnInventoryChanged -= AlCambiarMoneda;
+            _inventarioObservado = _playerInventory;
+            if (_inventarioObservado != null) _inventarioObservado.OnInventoryChanged += AlCambiarMoneda;
+        }
+    }
+
+    private void AlCambiarMoneda(ItemData item, int _)
+    {
+        if (_isOpen && item != null && shopController != null && shopController.CurrencyItem != null &&
+            item.itemId == shopController.CurrencyItem.itemId) ActualizarDescripcionYFalta();
+    }
+
+    private void ActualizarDescripcionYFalta()
+    {
+        if (detailDescription == null || _selectedEntry?.item == null) return;
+        string descripcion = _selectedEntry.item.GetLocalizedDescription();
+        var moneda = shopController != null ? shopController.CurrencyItem : null;
+        int saldo = _playerInventory != null && moneda != null ? _playerInventory.Count(moneda.itemId) : 0;
+        int falta = Mathf.Max(0, _selectedEntry.GetBuyPrice() - saldo);
+        if (falta > 0 && moneda != null)
+        {
+            string key = falta == 1 ? "SHOP_MISSING_CURRENCY_ONE" : "SHOP_MISSING_CURRENCY_OTHER";
+            string fallback = falta == 1 ? "Te falta {0} {1}" : "Te faltan {0} {1}";
+            string formato = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, fallback) : fallback;
+            descripcion += "\n\n" + string.Format(formato, falta, moneda.GetLocalizedName(falta));
+        }
+        detailDescription.text = descripcion;
     }
 
     /// <summary>
@@ -502,7 +532,7 @@ public class ShopUI : MonoBehaviour
             if (card != null)
             {
                 int index = i;
-                card.Setup(entry, index, () => SelectItem(index));
+                card.Setup(entry, index, () => SelectItem(index), shopController != null ? shopController.CurrencyItem : null);
                 _itemCards.Add(card);
             }
             else
@@ -587,18 +617,16 @@ public class ShopUI : MonoBehaviour
         if (detailName != null)
             detailName.text = item.GetLocalizedName();
 
-        if (detailDescription != null)
-            detailDescription.text = item.GetLocalizedDescription();
+        ActualizarDescripcionYFalta();
         
         if (detailPrice != null)
         {
             int price = _selectedEntry.GetBuyPrice();
-            // Ya no se usa el emoji 💰 literal: el icono de moneda es ahora el sprite
-            // real "coin.png" mostrado junto a CurrencyText en el header.
+            var moneda = shopController != null ? shopController.CurrencyItem : null;
             string priceFormat = LocalizationManager.Instance != null
-                ? LocalizationManager.Instance.Get("SHOP_PRICE_LABEL", "Precio: {0}")
-                : "Precio: {0}";
-            detailPrice.text = string.Format(priceFormat, price);
+                ? LocalizationManager.Instance.Get("SHOP_PRICE_LABEL", "Precio: {0} {1}")
+                : "Precio: {0} {1}";
+            detailPrice.text = string.Format(priceFormat, price, moneda != null ? moneda.GetLocalizedName(price) : "").TrimEnd();
         }
 
         if (detailStock != null)

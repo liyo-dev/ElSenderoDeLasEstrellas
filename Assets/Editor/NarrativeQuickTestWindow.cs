@@ -16,7 +16,10 @@ using System.Linq;
 /// real (flag, estado de quest, pregunta, objeto requerido) no se adivina la rama: se avisa.
 /// Se puede desactivar con el checkbox correspondiente para volver al comportamiento anterior (progreso
 /// vacío/neutro). Además, independientemente del Fast-Forward, el tool siempre:
-///   1. Coloca el grafo en el nodo elegido (vía blackboard "__currentNodeGuid").
+///   1. Coloca el grafo en el nodo elegido (vía blackboard "__currentNodeGuid"). Si el grafo es
+///      la continuación de otro capítulo (empieza esperando la señal final de otro grafo del Hub),
+///      los capítulos previos se dan por terminados para que no arranquen desde su inicio, y el
+///      inicio/espera de ese puente se salta. Con Fast-Forward también se proyecta su progreso.
 ///   2. Coloca físicamente al jugador en el Spawn Anchor indicado (independiente del nodo del
 ///      grafo — si no coinciden, el grafo estará en el punto correcto pero aparecerás en otro sitio).
 ///   3. Aplica el estado de habilidades/hechizos que marques a mano ADEMÁS de lo que aporte el
@@ -429,22 +432,23 @@ public class NarrativeQuickTestWindow : EditorWindow
             }
         }
 
-        // 5. Set up narrative blackboard to start from the target node
-        var bbSnapshot = new PlayerSaveData.NarrativeBlackboardSnapshot
+        // 5. Blackboards: el grafo objetivo en su nodo; los capítulos previos, terminados.
+        var objetivo = _targetNodeGuid;
+        var previos = CapitulosPrevios(_targetGraph, ref objetivo);
+        var snapshots = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
+        foreach (var previo in previos)
         {
-            graphLabel = _graphLabel,
-            blackboardData = new List<SimpleBlackboard.Entry>
-            {
-                new SimpleBlackboard.Entry
-                {
-                    key = "__currentNodeGuid",
-                    type = "string",
-                    value = _targetNodeGuid
-                }
-            }
-        };
-
-        tempPreset.narrativeBlackboards = new List<PlayerSaveData.NarrativeBlackboardSnapshot> { bbSnapshot };
+            var terminado = new SimpleBlackboard();
+            terminado.Set(NarrativeRunner.CurrentNodeKey, string.Empty);
+            terminado.Set(NarrativeRunner.FlowEndedKey, true);
+            snapshots.Add(new PlayerSaveData.NarrativeBlackboardSnapshot { graphLabel = previo.label, blackboardData = terminado.ExportToSerializable() });
+        }
+        var actual = new SimpleBlackboard();
+        actual.Set(NarrativeRunner.CurrentNodeKey, objetivo);
+        snapshots.Add(new PlayerSaveData.NarrativeBlackboardSnapshot { graphLabel = _graphLabel, blackboardData = actual.ExportToSerializable() });
+        tempPreset.narrativeBlackboards = snapshots;
+        if (previos.Count > 0)
+            Debug.Log($"[QuickTest] Capítulos previos terminados: {string.Join(", ", previos.Select(p => p.label))}.");
 
         EditorUtility.SetDirty(tempPreset);
 
@@ -454,10 +458,10 @@ public class NarrativeQuickTestWindow : EditorWindow
         EditorUtility.SetDirty(profile);
         AssetDatabase.SaveAssets();
 
-        var selectedNode = _targetGraph.FindNode(_targetNodeGuid);
+        var selectedNode = _targetGraph.FindNode(objetivo);
         string nodeDesc = selectedNode != null
             ? $"{selectedNode.GetType().Name} \"{selectedNode.displayTitle}\""
-            : _targetNodeGuid;
+            : objetivo;
 
         _status = $"Lanzando Play desde {nodeDesc} en {_graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
         Debug.Log($"[QuickTest] Configurado: grafo='{_graphLabel}', nodo='{nodeDesc}', anchor='{tempPreset.spawnAnchorId}', " +
@@ -606,7 +610,17 @@ public class NarrativeQuickTestWindow : EditorWindow
         if (_targetGraph == null || string.IsNullOrEmpty(_targetNodeGuid)) return;
 
         var writer = new PresetNarrativeStateWriter(dst);
-        var result = NarrativeStateProjector.Project(_targetGraph, _targetNodeGuid, writer);
+        var objetivo = _targetNodeGuid;
+        var previos = CapitulosPrevios(_targetGraph, ref objetivo);
+        foreach (var previo in previos)
+        {
+            var anterior = NarrativeStateProjector.Project(previo.grafo, previo.puenteGuid, writer);
+            _fastForwardWarnings.AddRange(anterior.Decisions.Select(d => $"[{previo.label}] {d}"));
+            _fastForwardNotes.Add($"Capítulo previo '{previo.label}' dado por terminado y su progreso proyectado.");
+        }
+        if (objetivo != _targetNodeGuid)
+            _fastForwardNotes.Add($"Se empieza tras el puente del capítulo previo: '{_targetGraph.FindNode(objetivo)?.displayTitle}'.");
+        var result = NarrativeStateProjector.Project(_targetGraph, objetivo, writer);
         _fastForwardActors.AddRange(writer.ApplyActorPlacements(new OpenScenesNarrativeWorld()));
 
         _fastForwardReachedTarget = result.ReachedTarget;
@@ -616,7 +630,81 @@ public class NarrativeQuickTestWindow : EditorWindow
 
     private void TryAutoDetectLabel(NarrativeGraph graph)
     {
-        if (graph == null) return;
+        var label = LabelEnHub(graph);
+        if (!string.IsNullOrEmpty(label)) _graphLabel = label;
+    }
+
+    internal sealed class CapituloPrevio
+    {
+        public NarrativeGraph grafo;
+        public string label;
+        public string puenteGuid; // RaiseCustomEventNode que da paso al capítulo siguiente
+    }
+
+    /// <summary>
+    /// Capítulos que preceden a <paramref name="grafo"/>: grafos del Hub que emiten la señal que
+    /// este espera antes del nodo objetivo. Si el objetivo es el inicio o la espera de ese puente,
+    /// se adelanta al primer nodo jugable, porque nadie va a volver a emitir la señal.
+    /// Devuelve primero los más antiguos.
+    /// </summary>
+    internal static List<CapituloPrevio> CapitulosPrevios(NarrativeGraph grafo, ref string objetivoGuid)
+    {
+        var resultado = new List<CapituloPrevio>();
+        if (grafo == null || string.IsNullOrEmpty(objetivoGuid)) return resultado;
+
+        var emisores = new Dictionary<string, CapituloPrevio>();
+        foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
+        {
+            var otro = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
+            if (otro == null || otro == grafo || otro.nodes == null) continue;
+            var label = LabelEnHub(otro);
+            if (string.IsNullOrEmpty(label)) continue;
+            foreach (var emite in otro.nodes.OfType<RaiseCustomEventNode>())
+                if (!string.IsNullOrEmpty(emite.eventKey) && !emisores.ContainsKey(emite.eventKey))
+                    emisores.Add(emite.eventKey, new CapituloPrevio { grafo = otro, label = label, puenteGuid = emite.guid });
+        }
+
+        bool EsPuente(NarrativeNode n) => n is WaitCustomEventNode w && emisores.ContainsKey(w.eventKey ?? "");
+        var nodo = grafo.FindNode(objetivoGuid);
+        bool cruzaPuente = false;
+        while (nodo != null && (nodo is StartNode || EsPuente(nodo)) && nodo.outputs != null && nodo.outputs.Count == 1)
+        {
+            cruzaPuente |= EsPuente(nodo);
+            nodo = grafo.FindNode(nodo.outputs[0]);
+        }
+        if (cruzaPuente && nodo != null) objetivoGuid = nodo.guid;
+
+        AnadirPrevios(grafo, objetivoGuid, emisores, resultado, new HashSet<NarrativeGraph> { grafo });
+        return resultado;
+    }
+
+    static void AnadirPrevios(NarrativeGraph grafo, string hastaGuid, Dictionary<string, CapituloPrevio> emisores,
+        List<CapituloPrevio> resultado, HashSet<NarrativeGraph> vistos)
+    {
+        // Esperas recorridas desde el inicio antes de llegar al nodo hasta el que se avanza.
+        var recorridos = new HashSet<string>();
+        var cola = new Queue<string>();
+        cola.Enqueue(grafo.startNodeGuid);
+        while (cola.Count > 0)
+        {
+            var guid = cola.Dequeue();
+            if (string.IsNullOrEmpty(guid) || guid == hastaGuid || !recorridos.Add(guid)) continue;
+            var n = grafo.FindNode(guid);
+            if (n == null) continue;
+            if (n is WaitCustomEventNode w && emisores.TryGetValue(w.eventKey ?? "", out var previo) && vistos.Add(previo.grafo))
+            {
+                AnadirPrevios(previo.grafo, previo.puenteGuid, emisores, resultado, vistos);
+                resultado.Add(previo);
+            }
+            if (n.outputs != null)
+                foreach (var o in n.outputs) cola.Enqueue(o);
+        }
+    }
+
+    /// <summary>Etiqueta con la que el NarrativeGraphHub de Start.unity registra el grafo, o null.</summary>
+    static string LabelEnHub(NarrativeGraph graph)
+    {
+        if (graph == null) return null;
         var graphPath = AssetDatabase.GetAssetPath(graph);
         var graphGuid = AssetDatabase.AssetPathToGUID(graphPath);
 
@@ -641,11 +729,9 @@ public class NarrativeQuickTestWindow : EditorWindow
                 if (lineEnd < 0) lineEnd = chunk.Length;
                 string labelLine = chunk.Substring(labelIdx + 6, lineEnd - labelIdx - 6).Trim();
                 if (!string.IsNullOrEmpty(labelLine))
-                {
-                    _graphLabel = labelLine;
-                    return;
-                }
+                    return labelLine;
             }
         }
+        return null;
     }
 }

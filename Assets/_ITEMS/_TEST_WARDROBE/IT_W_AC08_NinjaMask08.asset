@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac08_ninjamask08
   displayNameId: ITEM_AC08_NINJAMASK08_NAME
   displayName: "M\xE1scara Ninja VIII"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: a4b7095875a0423787d423d22105267c, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC08_NINJAMASK08_DESC
   useDescription: "Una m\xE1scara oscura que oculta el rostro, perfecta para el sigilo."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: a420e53bfac64a02afcb452b4df2a147, type: 2}

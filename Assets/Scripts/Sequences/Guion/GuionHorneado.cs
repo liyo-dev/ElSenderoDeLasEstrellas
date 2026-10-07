@@ -188,6 +188,8 @@ public struct TramoVisible
 [Serializable]
 public class LineaHorneada
 {
+    public string onlyIfFlag;
+    public string skipIfFlag;
     public float t0;
     public float t1;
     public string actor;
@@ -248,6 +250,8 @@ public class PlanoHorneado
 [Serializable]
 public class EfectoHorneado
 {
+    public string onlyIfFlag;
+    public string skipIfFlag;
     public float t;
     [SerializeReference] public SequenceBeat beat;
     [Tooltip("Línea del guion de texto, para los avisos.")]

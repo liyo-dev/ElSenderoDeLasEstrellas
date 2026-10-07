@@ -160,7 +160,7 @@ internal sealed partial class Horno
         foreach (var s in foco) { plano.sujetos.Add(s.id); plano.pesos.Add(1f); }
         if (foco.Count > 0) plano.extras.AddRange(e.extras);
         if (e.focoFijo != null) plano.focoFijo = e.focoFijo.Value;
-        plano.alturaDelFoco = AlturaDelFoco(e.tipo, foco);
+        plano.alturaDelFoco = o.OpF("altura_foco", AlturaDelFoco(e.tipo, foco));
         if (e.prop != null && foco.Count == 0) { plano.sujetos.Add(e.prop); plano.pesos.Add(1f); plano.alturaDelFoco = 0f; }
         plano.suavidad = o.OpF("suave", e.tipo == TipoDePlano.Sigue ? 0.35f : e.tipo == TipoDePlano.General ? 1.0f : 0.6f);
 
@@ -226,7 +226,7 @@ internal sealed partial class Horno
     {
         var foco = e.tipo == TipoDePlano.Hombro ? new List<ActorH> { e.sujetos[1] } : e.sujetos;
         if (foco.Count == 0) return e.focoFijo ?? Vector3.zero;
-        float alto = AlturaDelFoco(e.tipo, foco);
+        float alto = e.o.OpF("altura_foco", AlturaDelFoco(e.tipo, foco));
         Vector3 c = Vector3.zero;
         foreach (var a in foco) c += a.PosEn(t);
         foreach (var x in e.extras) c += x - Vector3.up * alto;

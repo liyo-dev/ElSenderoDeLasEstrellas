@@ -22,6 +22,8 @@ public static class InformeDeRodaje
         public readonly List<string> avisos = new();
         public string retirados;
         public float fueraDeCuadro, pequeno, muestras;
+        // Dónde estaban la cámara y el sujeto en la primera muestra del plano.
+        public string donde;
     }
 
     private static SequencePlayer s_player;
@@ -59,7 +61,7 @@ public static class InformeDeRodaje
 
     public static void Fase(string nombre) { if (s_player != null) s_fase = nombre; }
 
-    public static void PlanoNuevo(string descripcion, ShotFraming encuadre, IReadOnlyList<string> retirados)
+    public static void PlanoNuevo(string descripcion, ShotFraming encuadre, IReadOnlyList<string> retirados, string sujeto = null)
     {
         if (s_player == null) return;
         var anterior = Actual;
@@ -67,7 +69,7 @@ public static class InformeDeRodaje
         s_planos.Add(new Plano
         {
             inicio = Ahora, fase = s_fase, descripcion = descripcion,
-            sujeto = encuadre != null ? encuadre.subjectId : null,
+            sujeto = encuadre != null ? encuadre.subjectId : sujeto,
             retirados = retirados != null && retirados.Count > 0 ? string.Join(", ", retirados) : ""
         });
     }
@@ -115,6 +117,11 @@ public static class InformeDeRodaje
             if (!SequenceActor.TryResolve(plano.sujeto, out var sujeto) || sujeto?.Transform == null) continue;
             plano.muestras += Intervalo;
             Vector3 cara = sujeto.Transform.position + Vector3.up * sujeto.AlturaDeOjos;
+            if (plano.donde == null)
+            {
+                plano.donde = $"cámara {cam.transform.position:F1} mira {cam.transform.forward:F2} · sujeto {sujeto.Transform.position:F1} · {Vector3.Distance(cam.transform.position, cara):F1} m";
+                Debug.Log($"[InformeDeRodaje] Plano {s_planos.Count} «{plano.descripcion}»: {plano.donde} · cámara '{cam.name}' lejos {cam.farClipPlane:F0}");
+            }
             Vector3 v = cam.WorldToViewportPoint(cara);
             if (v.z <= 0f || v.x < 0f || v.x > 1f || v.y < 0f || v.y > 1f) plano.fueraDeCuadro += Intervalo;
             else
@@ -148,14 +155,14 @@ public static class InformeDeRodaje
         sb.AppendLine($"# Parte de rodaje: {nombre}");
         sb.AppendLine($"{DateTime.Now:yyyy-MM-dd HH:mm} · {s_planos.Count} planos · {Tiempo(Ahora)} de secuencia");
         sb.AppendLine();
-        sb.AppendLine("| # | Inicio | Dura | Fase | Plano | Líneas | Fuera de cuadro | Retirados | Avisos |");
-        sb.AppendLine("|---|---|---|---|---|---|---|---|---|");
+        sb.AppendLine("| # | Inicio | Dura | Fase | Plano | Líneas | Fuera de cuadro | Retirados | Avisos | Cámara y sujeto |");
+        sb.AppendLine("|---|---|---|---|---|---|---|---|---|---|");
         for (int i = 0; i < s_planos.Count; i++)
         {
             var p = s_planos[i];
             float dura = Mathf.Max(0f, p.fin - p.inicio);
             string fuera = p.fueraDeCuadro > 0f ? $"{p.fueraDeCuadro:F1}s" : "";
-            sb.AppendLine($"| {i + 1} | {Tiempo(p.inicio)} | {dura:F1}s | {p.fase} | {p.descripcion} | {string.Join("; ", p.lineas)} | {fuera} | {p.retirados} | {string.Join("; ", p.avisos)} |");
+            sb.AppendLine($"| {i + 1} | {Tiempo(p.inicio)} | {dura:F1}s | {p.fase} | {p.descripcion} | {string.Join("; ", p.lineas)} | {fuera} | {p.retirados} | {string.Join("; ", p.avisos)} | {p.donde} |");
             if (dura >= PlanoMuerto && p.lineas.Count == 0)
                 problemas.Add($"Plano {i + 1} ({Tiempo(p.inicio)}, {p.fase}): {dura:F1}s sin ninguna línea — posible plano muerto: «{p.descripcion}».");
             if (p.fueraDeCuadro >= 0.5f)

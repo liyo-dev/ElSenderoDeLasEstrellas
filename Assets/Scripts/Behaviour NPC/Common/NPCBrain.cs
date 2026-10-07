@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using Game.NPC; // Para NPCBehaviourManagerV2 (PersistenceId)
 using Game.NPC.Modules; // Para acceder a los Executors
@@ -119,28 +119,32 @@ namespace Game.NPC.Common
         /// <summary>
         /// Centraliza la lógica de interacción. El Brain decide qué subsistema responde.
         /// </summary>
+        /// <summary>Da prioridad al grafo sin activar encargos o servicios del NPC.</summary>
+        /// <summary>Avisa al grafo de la charla. True si el grafo la estaba esperando y se queda con ella.</summary>
+        public bool TryHandleNarrativeInteraction()
+        {
+            if (_context?.Config == null) return false;
+            return EmitirInteraccionNarrativa(out _);
+        }
+
+        bool EmitirInteraccionNarrativa(out string actorId)
+        {
+            var manager = _context.Transform.GetComponent<NPCBehaviourManagerV2>();
+            actorId = manager != null ? manager.PersistenceId : null;
+            if (string.IsNullOrEmpty(actorId)) return false;
+            string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
+            var senales = DefaultNarrativeSignals.Instance;
+            // La reserva se consulta antes de emitir: el oyente puede retirarse al recibirla.
+            bool reservada = senales != null && senales.HasCustomListener(clave);
+            senales?.RaiseCustom(clave, $"[NPCBrain] Interacción con {_context.Transform.name}");
+            return reservada;
+        }
         public bool HandleInteraction(GameObject interactor)
         {
             if (_context?.Config == null) return false;
             var config = _context.Config;
 
-            // Señal genérica "el jugador interactuó con este NPC", independiente de qué
-            // prioridad la resuelva más abajo. Puente para poder migrar NPCs individuales al
-            // grafo narrativo (WaitCustomEventNode escuchando "NPC_INTERACT_{persistenceId}")
-            // sin depender de NPCInteractiveNarrativeExecutor. No cambia ningún comportamiento
-            // existente: es un evento adicional, no gatea ni sustituye nada de lo de abajo.
-            // Si alguien del grafo ya escucha esa señal (p. ej. un WaitNpcInteractionNode), la
-            // conversación es suya y este NPC no dice su frase de «mientras tanto» (prioridad 4).
-            var manager = _context.Transform.GetComponent<NPCBehaviourManagerV2>();
-            string actorId = manager != null ? manager.PersistenceId : null;
-            bool grafoEsperaEstaCharla = false;
-            if (!string.IsNullOrEmpty(actorId))
-            {
-                string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
-                var senales = DefaultNarrativeSignals.Instance;
-                grafoEsperaEstaCharla = senales != null && senales.HasCustomListener(clave);
-                senales?.RaiseCustom(clave, $"[NPCBrain] Interacción con {_context.Transform.name}");
-            }
+            bool grafoEsperaEstaCharla = EmitirInteraccionNarrativa(out string actorId);
 
             // PRIORIDAD 1: COMBATE (Post-Derrota)
             // Si el NPC fue derrotado, tiene prioridad sobre cualquier quest o narrativa normal.
@@ -157,6 +161,11 @@ namespace Game.NPC.Common
                     }
                 }
             }
+
+            // Una charla del grafo tiene un único propietario. Los encargos congelados no
+            // abren otro diálogo encima de la conversación ni de su frase posterior.
+            if (grafoEsperaEstaCharla) return true;
+            if (NarrativeStandingLines.TryPlay(actorId, _context.Transform)) return true;
 
             // PRIORIDAD 2: NARRATIVA INTERACTIVA (Sistema Principal)
             // Este es el flujo normal para hablar con NPCs
@@ -185,12 +194,6 @@ namespace Game.NPC.Common
                 if (questHandled) return true;
                 _context.IsInteracting = false; // Revertir si falló
             }
-
-            // PRIORIDAD 4: FRASE DE «MIENTRAS TANTO» DEL GRAFO
-            // Nadie del grafo esperaba esta charla: si el NPC tiene algo que decir en este punto de
-            // la historia (p. ej. encargó una misión que sigue en curso), lo dice. Ver INC-514.
-            if (!grafoEsperaEstaCharla && NarrativeStandingLines.TryPlay(actorId, _context.Transform))
-                return true;
 
             return false;
         }

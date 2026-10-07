@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac10_mustache01
   displayNameId: ITEM_AC10_MUSTACHE01_NAME
   displayName: "Bigote Cl\xE1sico"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 53bfd3db3e764cf4b6929673a2edefd6, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC10_MUSTACHE01_DESC
   useDescription: "Un bigote cl\xE1sico, pulcro y bien peinado."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: fa44f08890cf47d4acfdaa5aa8e29038, type: 2}

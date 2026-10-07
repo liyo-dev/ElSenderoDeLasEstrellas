@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_body13
   displayNameId: WARDROBE_BODY13_NAME
   displayName: Traje de bardo
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: be54951a1fc44c9eb901d6a793f3612c, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: WARDROBE_BODY13_DESC
   useDescription: "Colores vivos que llaman la atenci\xF3n en cualquier taberna."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 100
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 409366fa94a54d289143617e78e98bb1, type: 2}

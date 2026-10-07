@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac10_mustache05
   displayNameId: ITEM_AC10_MUSTACHE05_NAME
   displayName: Bigote Elegante
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: 5d502bec38434a1ebdc2effcfc6f7ac6, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC10_MUSTACHE05_DESC
   useDescription: "Un bigote fino con un toque se\xF1orial."
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 30
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 3207723d49b145129e59712fd68d3a6a, type: 2}

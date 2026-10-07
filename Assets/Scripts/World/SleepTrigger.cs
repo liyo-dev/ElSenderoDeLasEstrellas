@@ -64,11 +64,13 @@ public class SleepTrigger : MonoBehaviour
     {
         GamepadInputReader.EnsureInputEventsSubscribed();
         GamepadInputReader.OnInput += HandleGamepadInput;
+        SequenceActor.JugadorTomadoPorEscena += AlTomarAlJugadorUnaEscena;
     }
 
     void OnDisable()
     {
         GamepadInputReader.OnInput -= HandleGamepadInput;
+        SequenceActor.JugadorTomadoPorEscena -= AlTomarAlJugadorUnaEscena;
         AvisarDeQueEstaDePie();
         MostrarHudAlLevantarse();
     }
@@ -377,6 +379,17 @@ public class SleepTrigger : MonoBehaviour
 
         if (playOnlyOnce)
             MarkAsPlayed();
+    }
+
+    /// Una escena coloca a Will en otro sitio: deja de dormir aquí, sin la escena de levantarse
+    /// ni su señal (la historia ya está en otro punto). Si siguiera dormido, el LateUpdate lo
+    /// devolvería a la cama cada fotograma y la escena lo pondría en un sitio donde no se le ve.
+    void AlTomarAlJugadorUnaEscena(SequenceActor actor)
+    {
+        if (!isSleeping) return;
+        _levantandose = false;
+        WakeUp();
+        MostrarHudAlLevantarse();
     }
 
     void HandleGamepadInput(GamepadInputReader.InputEvent input)

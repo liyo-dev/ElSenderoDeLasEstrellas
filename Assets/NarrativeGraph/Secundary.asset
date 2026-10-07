@@ -36,6 +36,25 @@ MonoBehaviour:
   - rid: 1078245657900615900
   - rid: 1788894763175737732
   - rid: 1479465354230462173
+  - rid: 5630202287041282378
+  - rid: 5630202287041282379
+  - rid: 5630202287041282380
+  - rid: 5630202287041282381
+  - rid: 5630202287041282383
+  - rid: 5630202287041282384
+  - rid: 5630202287041282385
+  - rid: 5630202287041282386
+  - rid: 5630202287041282387
+  - rid: 5630202287041282388
+  - rid: 5630202287041282389
+  - rid: 5630202287041282390
+  - rid: 5630202287041282391
+  - rid: 5630202287041282392
+  - rid: 5630202287041282393
+  - rid: 5630202287041282394
+  - rid: 5630202287041282395
+  - rid: 5630202287041282396
+  - rid: 5630202287041282397
   applicableSceneNames:
   - MainWorld
   references:
@@ -241,6 +260,7 @@ MonoBehaviour:
         - c3149093-4f7b-48e2-81e1-8bbaba2350f2
         - b38702f2-1671-472b-b58d-ce3a8050f085
         - db4b04b0-fed3-4756-b4d8-6a01b4459193
+        - 25b810b1-9ddd-48bd-9474-773389932a01
     - rid: 5623891481250759595
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:
@@ -270,7 +290,7 @@ MonoBehaviour:
         guid: f01dc9e7-de62-484e-8166-01c99735cb97
         position: {x: 760, y: 574}
         outputs: []
-        abilityKeysToUnlock: 01000000
+        abilityKeysToUnlock: 01000000i
         abilitiesToUnlock: 
         spellsToUnlock: 
         assignSpellsToEmptySlot: 1
@@ -308,7 +328,7 @@ MonoBehaviour:
         position: {x: 760, y: 170}
         outputs:
         - 19e6376b-e48c-41d5-bf3a-aa9beef62892
-        abilityKeysToUnlock: 00000000
+        abilityKeysToUnlock: 00000000i
         abilitiesToUnlock: 
         spellsToUnlock: 
         assignSpellsToEmptySlot: 1
@@ -349,6 +369,338 @@ MonoBehaviour:
         amount: 5
         logWarnings: 0
         onlyOnce: 1
+    - rid: 5630202287041282378
+      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Renard: \xBFya lo conozco?"
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-773389932a01
+        position: {x: 400, y: 2700}
+        outputs:
+        - 
+        - 25b810b1-9ddd-48bd-9474-773389932a02
+        flagKey: RENARD_CONOCIDO
+        invert: 0
+    - rid: 5630202287041282379
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Hablar con Renard
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-773389932a02
+        position: {x: 730, y: 2700}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-773389932a03
+        npcId: NPC_Renard
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+    - rid: 5630202287041282380
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard se presenta
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-773389932a03
+        position: {x: 1060, y: 2700}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-773389932a04
+        dialogue: {fileID: 11400000, guid: feeb6c6a2c373f3418b50bd08b54b207, type: 2}
+        npcId: NPC_Renard
+        oneShotFlag: 
+    - rid: 5630202287041282381
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard conocido
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-773389932a04
+        position: {x: 1390, y: 2700}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c001
+        flagKey: RENARD_CONOCIDO
+        value: 1
+    - rid: 5630202287041282383
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard ofrece el primer contrato
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c001
+        position: {x: 400, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c002
+        dialogue: {fileID: 11400000, guid: dc41e36c492c8fb40a36e3a57ce4376c, type: 2}
+        npcId: NPC_Renard
+        oneShotFlag: 
+    - rid: 5630202287041282384
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Contrato: Patas de sobra'
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c002
+        position: {x: 730, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c003
+        questId: RENARD_CONTRATO_1
+        giverId: NPC_Renard
+        inProgressDialogue: {fileID: 11400000, guid: 8282f2b59520ed3469b28e6b6be7114b, type: 2}
+        noGiver: 0
+    - rid: 5630202287041282385
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Ocho ara\xF1as"
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c003
+        position: {x: 1060, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c004
+        eventKey: ENEMIGO_DERROTADO_ARANA
+        count: 8
+        questId: RENARD_CONTRATO_1
+    - rid: 5630202287041282386
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Volver con Renard
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c004
+        position: {x: 1390, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c005
+        npcId: NPC_Renard
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+    - rid: 5630202287041282387
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard paga el primer contrato
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c005
+        position: {x: 1720, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c006
+        dialogue: {fileID: 11400000, guid: 3769c1b55ac01ef40976aa58af24bc33, type: 2}
+        npcId: NPC_Renard
+        oneShotFlag: 
+    - rid: 5630202287041282388
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Completa Patas de sobra
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c006
+        position: {x: 2050, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c007
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: RENARD_CONTRATO_1
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 5630202287041282389
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 20 de Esencia
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c007
+        position: {x: 2380, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c008
+        item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+        amount: 20
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 5630202287041282390
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard ofrece el segundo contrato
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c008
+        position: {x: 2710, y: 2950}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c009
+        dialogue: {fileID: 11400000, guid: c1c2adf255659a24bb4ffe4b3ab19183, type: 2}
+        npcId: NPC_Renard
+        oneShotFlag: 
+    - rid: 5630202287041282391
+      type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 'Contrato: Donde no llega la luz'
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c009
+        position: {x: 400, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c010
+        questId: RENARD_CONTRATO_2
+        giverId: NPC_Renard
+        inProgressDialogue: {fileID: 11400000, guid: d01ab53fb53b23445aeedc7f8ee2ea99, type: 2}
+        noGiver: 0
+    - rid: 5630202287041282392
+      type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "Quince ara\xF1as"
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c010
+        position: {x: 730, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c011
+        eventKey: ENEMIGO_DERROTADO_ARANA
+        count: 15
+        questId: RENARD_CONTRATO_2
+    - rid: 5630202287041282393
+      type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Volver con Renard
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c011
+        position: {x: 1060, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c012
+        npcId: NPC_Renard
+        acceptEarlierInteraction: 0
+        questIcon: {fileID: 0}
+    - rid: 5630202287041282394
+      type: {class: PlayDialogueNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Renard paga el segundo contrato
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c012
+        position: {x: 1390, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c013
+        dialogue: {fileID: 11400000, guid: 8da04dd077a26644989199af41e1b7b7, type: 2}
+        npcId: NPC_Renard
+        oneShotFlag: 
+    - rid: 5630202287041282395
+      type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Completa Donde no llega la luz
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c013
+        position: {x: 1720, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c014
+        standingActorId: 
+        standingDialogue: {fileID: 0}
+        questId: RENARD_CONTRATO_2
+        stepConditionIds: []
+        steps: 
+        completeQuest: 1
+        logWarnings: 1
+    - rid: 5630202287041282396
+      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: 40 de Esencia
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c014
+        position: {x: 2050, y: 3210}
+        outputs:
+        - 25b810b1-9ddd-48bd-9474-77338993c015
+        item: {fileID: 11400000, guid: 1ead5d5ebc5a3b6488df2b6e1b0f89c6, type: 2}
+        amount: 40
+        logWarnings: 1
+        onlyOnce: 1
+    - rid: 5630202287041282397
+      type: {class: UnlockWardrobeItemNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: El parche de Renard
+        chapter: Renard
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 25b810b1-9ddd-48bd-9474-77338993c015
+        position: {x: 2380, y: 3210}
+        outputs: []
+        wardrobeItem: {fileID: 11400000, guid: fd5794b29cb64c1bbed24bcf3b48866a, type: 2}
+        logWarnings: 1
     - rid: 7719302845561928001
       type: {class: WaitQuestCompleteNode, ns: , asm: Assembly-CSharp}
       data:

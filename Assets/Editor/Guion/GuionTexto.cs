@@ -41,6 +41,8 @@ using UnityEngine;
 ///   cara EMOCION [dura=s] · dice CLAVE [gesto=G] [mira=X] [oyentes=a,b|todos] [cara=E] [sin_pose] ·
 ///   aparece [en P] [mirando X] · desaparece · charla con X [cada=s] · pasea por P1, P2 [ritmo=..] [pausa=s]
 /// Otras: plano TIPO sujetos [opciones] · efecto ClaseDeBeat campo=valor ... [dura=s] · espera s
+/// Frases y efectos admiten onlyIfFlag=marca / skipIfFlag=marca; las alternativas pueden compartir instante con &.
+/// En «dice», dura=s reserva un tiempo de lectura y no recorta una voz más larga.
 public sealed class GuionTexto
 {
     public string nombre, escena, secuencia, prepara;
@@ -100,7 +102,7 @@ public sealed class GuionTexto
     private static readonly HashSet<string> VerbosDeActor = new()
     {
         "en", "anda", "corre", "huye", "mira", "gesto", "bucle", "reposo", "cara", "dice",
-        "aparece", "desaparece", "charla", "pasea", "desliza"
+        "aparece", "desaparece", "charla", "pasea", "desliza", "sienta", "levanta"
     };
 
     public static bool EsVerboDeActor(string v) => VerbosDeActor.Contains(v);

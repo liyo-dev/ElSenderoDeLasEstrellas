@@ -30,6 +30,8 @@ public class MenuNavigator : MonoBehaviour
     Vector3 _starScale;
     bool _cursorVisible;
     Tween _cursorMove, _cursorFade, _starTween;
+    RectTransform _cursorTarget;
+    float _cursorTargetY;
     readonly System.Collections.Generic.Dictionary<GameObject, Button> _buttonCache = new();
     readonly System.Collections.Generic.Dictionary<Button, RectTransform> _textCache = new();
 
@@ -62,6 +64,7 @@ public class MenuNavigator : MonoBehaviour
         if (!cursorSeleccion || !_cursorParent) return;
         if (!button || !button.transform.IsChildOf(transform))
         {
+            _cursorTarget = null;
             if (!_cursorVisible) return;
             _cursorVisible = false;
             _cursorMove?.Kill();
@@ -71,17 +74,12 @@ public class MenuNavigator : MonoBehaviour
             _cursorFade = _cursorGroup.DOFade(0f, duracionCursor).SetUpdate(true);
             return;
         }
-        var rect = (RectTransform)button.transform;
-        var local = _cursorParent.InverseTransformPoint(rect.TransformPoint(rect.rect.center));
-        float anchorY = Mathf.Lerp(_cursorParent.rect.yMin, _cursorParent.rect.yMax,
-            Mathf.Lerp(cursorSeleccion.anchorMin.y, cursorSeleccion.anchorMax.y, cursorSeleccion.pivot.y));
-        float y = local.y - anchorY;
+        _cursorTarget = (RectTransform)button.transform;
+        _cursorTargetY = AlturaDelObjetivo();
         _cursorMove?.Kill();
         if (!_cursorVisible)
         {
-            var position = cursorSeleccion.anchoredPosition;
-            position.y = y;
-            cursorSeleccion.anchoredPosition = position;
+            ColocarCursor(_cursorTargetY);
             _cursorFade?.Kill();
             _cursorGroup.alpha = 1f;
             _cursorVisible = true;
@@ -90,7 +88,35 @@ public class MenuNavigator : MonoBehaviour
                     .SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutSine).SetUpdate(true);
         }
         else
-            _cursorMove = cursorSeleccion.DOAnchorPosY(y, duracionCursor).SetEase(Ease.OutCubic).SetUpdate(true);
+            _cursorMove = cursorSeleccion.DOLocalMoveY(_cursorTargetY, duracionCursor).SetEase(Ease.OutCubic).SetUpdate(true);
+    }
+
+    /// Mantiene el cursor sobre el botón seleccionado aunque este se mueva sin cambiar la
+    /// selección (layout que se reconstruye, intro animada, filas que aparecen). Ver INC-631.
+    void SeguirAlObjetivo()
+    {
+        if (!_cursorVisible || !_cursorTarget) return;
+        float y = AlturaDelObjetivo();
+        if (Mathf.Abs(y - _cursorTargetY) <= 0.5f) return;
+        _cursorTargetY = y;
+        if (_cursorMove != null && _cursorMove.IsActive() && _cursorMove.IsPlaying())
+        {
+            _cursorMove.Kill();
+            _cursorMove = cursorSeleccion.DOLocalMoveY(y, duracionCursor).SetEase(Ease.OutCubic).SetUpdate(true);
+        }
+        else
+            ColocarCursor(y);
+    }
+
+    /// Altura del centro del botón objetivo en el espacio local del padre del cursor.
+    float AlturaDelObjetivo() =>
+        _cursorParent.InverseTransformPoint(_cursorTarget.TransformPoint(_cursorTarget.rect.center)).y;
+
+    void ColocarCursor(float y)
+    {
+        var posicion = cursorSeleccion.localPosition;
+        posicion.y = y;
+        cursorSeleccion.localPosition = posicion;
     }
 
     [Header("Debug")]
@@ -123,6 +149,7 @@ public class MenuNavigator : MonoBehaviour
         _starTween?.Kill();
         _cursorMove = _cursorFade = _starTween = null;
         _cursorVisible = false;
+        _cursorTarget = null;
         if (cursorSeleccion) cursorSeleccion.anchoredPosition = _cursorOrigin;
         if (_cursorGroup) _cursorGroup.alpha = 0f;
         if (destelloDelCursor) destelloDelCursor.localScale = _starScale;
@@ -188,7 +215,11 @@ public class MenuNavigator : MonoBehaviour
             return;
         }
 
-        if (selected == _lastSelectedGo) return;
+        if (selected == _lastSelectedGo)
+        {
+            SeguirAlObjetivo();
+            return;
+        }
         _lastSelectedGo = selected;
 
         if (!_buttonCache.TryGetValue(selected, out var btn))

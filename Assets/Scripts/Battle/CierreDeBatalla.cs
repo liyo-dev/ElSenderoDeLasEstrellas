@@ -13,6 +13,14 @@ using UnityEngine;
 public static class CierreDeBatalla
 {
     private static readonly List<IPasoDeCierre> _pasos = new();
+    public static event Action<ResultadoDeBatalla> AlIniciarBatalla;
+    public static event Action<ResultadoDeBatalla> AlCancelarBatalla;
+
+    public static void Iniciar(ResultadoDeBatalla resultado) => AlIniciarBatalla?.Invoke(resultado);
+    public static void Cancelar(ResultadoDeBatalla resultado)
+    {
+        if (resultado != null) AlCancelarBatalla?.Invoke(resultado);
+    }
 
     // Pasos que ya han llamado a Ejecutar en la pasada actual, para poder terminarlos si
     // la corrutina muere antes de llegar al bucle de Terminar.
@@ -26,15 +34,31 @@ public static class CierreDeBatalla
         _pasos.Clear();
         _activosActual = null;
         _resultadoActual = null;
+        AlIniciarBatalla = null;
+        AlCancelarBatalla = null;
     }
 #endif
 
     public static void Registrar(IPasoDeCierre paso)
     {
-        if (paso != null && !_pasos.Contains(paso)) _pasos.Add(paso);
+        if (paso == null || _pasos.Contains(paso)) return;
+        _pasos.Add(paso);
+        if (paso is IPasoConInicioDeBatalla inicio)
+        {
+            AlIniciarBatalla += inicio.Iniciar;
+            AlCancelarBatalla += inicio.Cancelar;
+        }
     }
 
-    public static void Quitar(IPasoDeCierre paso) => _pasos.Remove(paso);
+    public static void Quitar(IPasoDeCierre paso)
+    {
+        if (!_pasos.Remove(paso)) return;
+        if (paso is IPasoConInicioDeBatalla inicio)
+        {
+            AlIniciarBatalla -= inicio.Iniciar;
+            AlCancelarBatalla -= inicio.Cancelar;
+        }
+    }
 
     /// Llama Terminar en orden inverso sobre los pasos que ya ejecutaron, y limpia el
     /// tracking. Es idempotente: si no hay pasada en curso, no hace nada.
@@ -103,6 +127,13 @@ public interface IPasoDeCierre
     IEnumerator Ejecutar(ResultadoDeBatalla resultado);
     /// Al acabar todo el cierre, en orden inverso: dejarlo como estaba (cámara, control...).
     void Terminar(ResultadoDeBatalla resultado);
+}
+
+/// <summary>Ciclo opcional para pasos que necesitan tomar datos al empezar y descartarlos al cancelar.</summary>
+public interface IPasoConInicioDeBatalla
+{
+    void Iniciar(ResultadoDeBatalla resultado);
+    void Cancelar(ResultadoDeBatalla resultado);
 }
 
 /// Lo que sale de una batalla ganada: qué batalla era, qué se ha ganado y quién sale en la foto.

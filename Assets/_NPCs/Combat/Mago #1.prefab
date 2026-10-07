@@ -5268,6 +5268,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -5429,7 +5430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fd846acda22bfd41bb1c016673b9e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OrbDropper
-  _profileId: 
+  _profileId: elite
   _spawnOrigin: {fileID: 0}
 --- !u!114 &3565470341345223568
 MonoBehaviour:
@@ -5444,11 +5445,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 8586940447274397697}
-  originalMouthMesh: {fileID: 7978970903872725331}
+  ojosDeReposo: {fileID: 8586940447274397697}
+  bocaDeReposo: {fileID: 7978970903872725331}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &-4756144414930936388
 MonoBehaviour:
   m_ObjectHideFlags: 0

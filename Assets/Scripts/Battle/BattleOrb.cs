@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public enum OrbType { Health, Mana, SpecialCharge }
+public enum OrbType { Health, Mana, SpecialCharge, Currency }
 
 /// <summary>
 /// Orbe de combate.
@@ -18,6 +19,42 @@ public class BattleOrb : MonoBehaviour
     [SerializeField] private float healthAmount = 15f;
     [SerializeField] private float manaAmount   = 20f;
     [SerializeField] private float chargeAmount = 1f;
+    [SerializeField] private ItemData currencyItem;
+    [SerializeField, Min(1)] private int currencyAmount = 1;
+    private bool _collected;
+    private static readonly HashSet<BattleOrb> _monedasActivas = new();
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => _monedasActivas.Clear();
+#endif
+
+    private void OnEnable() => ActualizarRegistroDeMonedas();
+    private void OnDisable() => _monedasActivas.Remove(this);
+
+    private void ActualizarRegistroDeMonedas()
+    {
+        if (type == OrbType.Currency && isActiveAndEnabled && !_collected) _monedasActivas.Add(this);
+        else _monedasActivas.Remove(this);
+    }
+
+    /// <summary>Recoge las monedas activas sin feedback individual; los callbacks pueden modificar el registro.</summary>
+    public static void RecogerMonedasPendientes()
+    {
+        var pendientes = new List<BattleOrb>(_monedasActivas);
+        foreach (var orb in pendientes)
+            if (orb != null && orb.isActiveAndEnabled && orb.type == OrbType.Currency)
+                orb.Apply(null, false);
+    }
+
+    public void ConfigureCurrency(ItemData item, int amount, string soundKey)
+    {
+        type = OrbType.Currency;
+        currencyItem = item;
+        currencyAmount = amount;
+        pickupSFXKey = soundKey;
+        ActualizarRegistroDeMonedas();
+    }
 
     [Header("Lanzamiento")]
     [SerializeField] private float popUpForce          = 7f;
@@ -91,6 +128,7 @@ public class BattleOrb : MonoBehaviour
     public void Configure(OrbType orbType, float amount)
     {
         type = orbType;
+        ActualizarRegistroDeMonedas();
         switch (orbType)
         {
             case OrbType.Health: healthAmount = amount; break;
@@ -208,6 +246,7 @@ public class BattleOrb : MonoBehaviour
             case OrbType.Health:        return new Color(0.2f, 1f, 0.3f);
             case OrbType.Mana:          return new Color(0.3f, 0.5f, 1f);
             case OrbType.SpecialCharge: return new Color(1f, 0.85f, 0.2f);
+            case OrbType.Currency:      return new Color(1f, 0.788f, 0.302f);
             default:                    return Color.white;
         }
     }
@@ -441,10 +480,22 @@ public class BattleOrb : MonoBehaviour
         Apply(other.gameObject);
     }
 
-    private void Apply(GameObject playerGO)
+    private void Apply(GameObject playerGO, bool feedback = true)
     {
+        if (_collected) return;
+        _collected = true;
         switch (type)
         {
+            case OrbType.Currency:
+                if (currencyItem == null || currencyAmount <= 0 ||
+                    !PlayerService.TryGetComponent(out PlayerPickupCollector collector, allowSceneLookup: false) ||
+                    !collector.TryCollect(new PickupEffect { effectType = PickupEffectType.Currency,
+                        item = currencyItem, quantity = currencyAmount }, out _))
+                {
+                    _collected = false;
+                    return;
+                }
+                break;
             case OrbType.Health:
                 var phs = playerGO.GetComponentInParent<PlayerHealthSystem>();
                 if (phs) phs.Heal(healthAmount);
@@ -462,10 +513,11 @@ public class BattleOrb : MonoBehaviour
                 break;
         }
 
-        if (pickupVFX)
+        _monedasActivas.Remove(this);
+        if (feedback && pickupVFX)
             VfxPoolService.Instance.Play(pickupVFX, transform.position, Quaternion.identity, 2f);
 
-        if (!string.IsNullOrEmpty(pickupSFXKey) && AudioService.Instance != null)
+        if (feedback && !string.IsNullOrEmpty(pickupSFXKey) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(pickupSFXKey);
 
         // Efecto de absorcion: flash de escala antes de destruir

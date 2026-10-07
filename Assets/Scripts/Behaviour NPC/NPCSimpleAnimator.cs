@@ -1984,19 +1984,14 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// Este método centraliza el interruptor: en cuanto se importen y wireen los clips reales en el
     /// controller, basta con quitar la actividad del switch de abajo para reactivarla en los tres
     /// caminos que sientan a un NPC (actividad fija, refugio de lluvia y NPCWorldPoint/bancos).
+    ///
+    /// (7 oct 2026) Los clips ya están: los 12 estados Sit* del controller apuntan a las animaciones
+    /// de Kevin Iglesias (HumanM@Sit*01 Begin/Loop/Stop), comprobado GUID a GUID. Sentarse vuelve a
+    /// estar activo en todos los caminos. Se deja el interruptor por si falta alguna actividad nueva.
     /// </summary>
     public static bool HasWorkingAnimation(NPCAmbientActivity activity)
     {
-        switch (activity)
-        {
-            case NPCAmbientActivity.SitGround:
-            case NPCAmbientActivity.SitLow:
-            case NPCAmbientActivity.SitMedium:
-            case NPCAmbientActivity.SitHigh:
-                return false; // INC-130: clips de Begin/Loop aún sin importar
-            default:
-                return true;
-        }
+        return true;
     }
 
     /// <summary>
@@ -2097,11 +2092,13 @@ public class NPCSimpleAnimator : MonoBehaviour
         };
     }
 
-    private static string GetActivityBeginState(NPCAmbientActivity activity)
+    // Los nombres de estado de cada actividad. Públicos porque los guiones horneados (sienta /
+    // levanta) usan los mismos: un solo sitio dice qué animación es sentarse.
+    public static string GetActivityBeginState(NPCAmbientActivity activity)
     {
         return activity switch
         {
-            // Sentarse — pendiente de importar los clips (nombres reservados)
+            // Sentarse (clips HumanM@Sit*01 de Kevin Iglesias)
             NPCAmbientActivity.SitGround  => "SitGround_Begin",
             NPCAmbientActivity.SitLow     => "SitLow_Begin",
             NPCAmbientActivity.SitMedium  => "SitMedium_Begin",
@@ -2116,11 +2113,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         };
     }
 
-    private static string GetActivityLoopState(NPCAmbientActivity activity)
+    public static string GetActivityLoopState(NPCAmbientActivity activity)
     {
         return activity switch
         {
-            // Sentarse — pendiente de importar los clips
+            // Sentarse (clips HumanM@Sit*01 de Kevin Iglesias)
             NPCAmbientActivity.SitGround  => "SitGround_Loop",
             NPCAmbientActivity.SitLow     => "SitLow_Loop",
             NPCAmbientActivity.SitMedium  => "SitMedium_Loop",
@@ -2135,11 +2132,11 @@ public class NPCSimpleAnimator : MonoBehaviour
         };
     }
 
-    private static string GetActivityExitState(NPCAmbientActivity activity)
+    public static string GetActivityExitState(NPCAmbientActivity activity)
     {
         return activity switch
         {
-            // Sentarse — pendiente de importar los clips
+            // Sentarse (clips HumanM@Sit*01 de Kevin Iglesias)
             NPCAmbientActivity.SitGround  => "SitGround_Exit",
             NPCAmbientActivity.SitLow     => "SitLow_Exit",
             NPCAmbientActivity.SitMedium  => "SitMedium_Exit",

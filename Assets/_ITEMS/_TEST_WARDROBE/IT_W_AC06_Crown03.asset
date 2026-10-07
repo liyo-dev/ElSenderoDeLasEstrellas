@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac06_crown03
   displayNameId: ITEM_AC06_CROWN03_NAME
   displayName: Corona de Flores
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: bc8680d6d5ea4b53aad2e52dc4a43f40, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC06_CROWN03_DESC
   useDescription: Una corona tejida con flores del Sendero.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 120
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: 85db1fd2ca6b4c58931f873809f058fe, type: 2}

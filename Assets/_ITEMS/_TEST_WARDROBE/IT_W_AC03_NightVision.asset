@@ -15,12 +15,14 @@ MonoBehaviour:
   itemId: w_ac03_nightvision
   displayNameId: ITEM_AC03_NIGHTVISION_NAME
   displayName: "Gafas de Visi\xF3n Nocturna"
+  pluralDisplayNameId: 
+  pluralDisplayName: 
   icon: {fileID: 21300000, guid: b6d0df4fbcce415da07c629b6a815753, type: 3}
   usableFromInventory: 0
   useEffects: []
   useDescriptionId: ITEM_AC03_NIGHTVISION_DESC
   useDescription: Permiten ver mejor en la oscuridad... o eso parece.
   usageKind: 2
-  buyPrice: 0
+  buyPrice: 50
   sellValue: 0
   wardrobeUnlock: {fileID: 11400000, guid: cdd953d900ee4010b24d843d51b5994e, type: 2}
