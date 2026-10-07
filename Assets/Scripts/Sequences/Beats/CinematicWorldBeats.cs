@@ -236,6 +236,7 @@ public class WeatherBeat : SequenceBeat
         Viento = 1,
         Lluvia = 2,
         Niebla = 3,
+        Nieve = 4,
     }
 
     [Tooltip("Qué fenómeno se toca.")]
@@ -280,6 +281,7 @@ public static class CinematicWeather
     private static bool _nieblaPrevia;
     private static bool _vientoPrevio;
     private static bool _tormentaPrevia;
+    private static bool _nievePrevia;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -321,6 +323,10 @@ public static class CinematicWeather
             case WeatherBeat.Fenomeno.Niebla:
                 if (encender) ciclo.StartMist(); else ciclo.StopMist();
                 break;
+
+            case WeatherBeat.Fenomeno.Nieve:
+                if (encender) ciclo.StartSnow(DuracionDeEscena); else ciclo.StopSnow();
+                break;
         }
     }
 
@@ -332,6 +338,7 @@ public static class CinematicWeather
         _nieblaPrevia = ciclo.IsMisty;
         _vientoPrevio = ciclo.IsWindy;
         _tormentaPrevia = ciclo.IsThunderstorm;
+        _nievePrevia = ciclo.IsSnowing;
         _guardado = true;
     }
 
@@ -362,6 +369,11 @@ public static class CinematicWeather
         if (ciclo.IsMisty != _nieblaPrevia)
         {
             if (_nieblaPrevia) ciclo.StartMist(); else ciclo.StopMist();
+        }
+
+        if (ciclo.IsSnowing != _nievePrevia)
+        {
+            if (_nievePrevia) ciclo.StartSnow(); else ciclo.StopSnow();
         }
     }
 }

@@ -1805,6 +1805,17 @@ Al pedir "árboles pintados" para el pueblo se evaluó reusar la misma técnica 
 
 **Lo que sí se hizo:** se subió `_BaseColor` de gris neutro (`0.5, 0.5, 0.5`) a un verde natural (`0.42, 0.54, 0.4`) — multiplica el color de la textura existente hacia un verde más saturado/cálido sin depender de posición en mundo, así que se ve consistente en todos los árboles del pack estén donde estén. No es un degradado real (más plano que el efecto Rosal/Otoñal), pero es lo seguro dado que el material es compartido. Si se quiere un degradado real por árbol, la vía sería materiales de instancia (`MaterialPropertyBlock` o duplicar material) en vez de tocar el `Tree.mat` compartido — no hecho en esta pasada, pendiente de decidir si merece la pena.
 
+### Clima vigente: tipos, techo de tormenta, nieve y viento (INC-657 a INC-659)
+
+`DayNightCycle` es el único sistema de clima. Un sorteo cada `weatherCheckIntervalRange` prueba, en este orden y excluyentes: tormenta, lluvia, **nieve**, **viento** y niebla. Todos cuelgan sus partículas del ancla del clima (`AnclaDeClima` en cinemáticas, si no el jugador), se apagan y enmudecen en interiores y se pueden lanzar desde una cinemática con `WeatherBeat` (incluida `Nieve`).
+
+- **Techo de tormenta** (`CloudCoverSpawner`, modo Quibli Cloud3D): las nubes llevan por `MaterialPropertyBlock` un degradado de sombreado gris (`stormShadingGradient`, oscurecido de noche con `PesoDeNoche`) en vez del blanco del material de demo; blancas sobre el cielo gris de lluvia se leían como nubes sueltas. El menú *El Sendero/Mundo: completar el clima de las escenas abiertas* (`ClimaDelCicloWiring`) corrige además escalas desbocadas (>5), huella mínima (2 celdas) y recorte de alfa (≤0,4).
+- **Rayos en juego:** el trueno sale de `truenosDeTormenta` (por defecto los tres truenos con chasquido del prólogo). `Weather_Thunder` es un retumbo lejano casi todo por debajo de 250 Hz y se perdía bajo el loop de lluvia. En cinemáticas sigue sonando `ClaveDeTrueno`.
+- **Luz con lluvia o nieve:** se calcula siempre desde `_baseLightIntensity` (la del periodo), nunca desde la del frame anterior, para que no se componga y vuelva sola al amainar.
+- **Nieve:** `StartSnow`/`StopSnow`/`IsSnowing`. Copos de `snowPrefab` o, si está vacío, de `VfxDeClima.CrearNieve`; niebla blanquecina, cielo gris claro (`snowSkyOvercast`) y loop suave. No se solapa con la lluvia: `StartRain` la corta.
+- **Viento:** cada viento sortea `DireccionDelViento`; `FuerzaDelViento` sube y baja en `windRampDuration`. Rachas y hojas de `VfxDeClima.CrearViento` si no hay `windPrefab`; loop `Weather_WindStarted` si `windStartedSfxKey` está vacío. `VientoSobreElJugador` (movido por `DayNightCycle.Update`) frena al jugador de cara al viento con `TopeDeVelocidadDelJugador` (hasta `windVelocidadContra`), lo arrastra si está quieto con `vThirdPersonMotor.empujeExterno` (`windArrastreQuieto`) y le pone `Fear01` en la capa UpperBody solo si nadie más la usa. Solo actúa con el jugador en el suelo, en modo `Default` y sin bloqueo de `PlayerLockService`.
+- **Partículas generadas en código** (`VfxDeClima`): material `Sprites/Default` compartido con una textura de punto difuminado; `DayNightCycle.LateUpdate` las tiñe con la luz de la franja (`VfxDeClima.Iluminar`) porque el material no recibe luz.
+
 ## 17. Diseño: Refugio de NPCs bajo la lluvia + Relaciones sociales dinámicas
 
 **Proyecto:** El Sendero de las Estrellas

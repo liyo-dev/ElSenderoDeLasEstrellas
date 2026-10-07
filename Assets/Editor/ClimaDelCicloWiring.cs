@@ -3,7 +3,8 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// Le pone al ciclo día/noche el prefab de lluvia, si no lo tiene (INC-377).
+/// Completa el clima de las escenas abiertas: prefab de lluvia del ciclo día/noche (INC-377) y
+/// valores del techo de nubes de tormenta (CloudCoverSpawner) que dejan huecos. Ver INC-657.
 ///
 /// «Cuando salió el Mago Oscuro no empezó a llover.» El beat de clima está puesto y llega a
 /// ejecutarse — `CinematicWeather` llama a `DayNightCycle.StartRain()` —, pero ese método arranca
@@ -28,15 +29,72 @@ public static class ClimaDelCicloWiring
         "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Rain_01.prefab",
     };
 
-    [MenuItem("El Sendero/Mundo: asignar la lluvia al ciclo día-noche")]
+    [MenuItem("El Sendero/Mundo: completar el clima de las escenas abiertas")]
     public static void Menu()
     {
-        int n = Ejecutar(avisar: true);
-        EditorUtility.DisplayDialog("Lluvia",
+        int n = Ejecutar(avisar: true) + AjustarTechosDeNubes();
+        if (n > 0) EditorSceneManager.SaveOpenScenes();
+        EditorUtility.DisplayDialog("Clima",
             n == 0
-                ? "No he tocado nada: o el ciclo ya tenía su prefab de lluvia, o en las escenas abiertas no hay ningún DayNightCycle."
-                : $"Lluvia asignada en {n} escena(s). Guarda con Ctrl+S.",
+                ? "No he tocado nada: el clima de las escenas abiertas ya estaba completo."
+                : $"Clima completado ({n} cambio(s)) y escenas guardadas.",
             "Vale");
+    }
+
+    /// Valores del techo de nubes de tormenta con los que las nubes se tocan desde abajo. Una
+    /// escala por encima de 5 es el despiste ya visto en MainWorld (10-18 tecleado como porcentaje,
+    /// nubes de 250-600 m); una huella menor o un recorte de alfa mayor dejan cielo entre nubes.
+    private const float HuellaMinima = 2f;
+    private const float RecorteMaximo = 0.4f;
+
+    public static int AjustarTechosDeNubes()
+    {
+        int tocadas = 0;
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            var escena = SceneManager.GetSceneAt(i);
+            if (!escena.isLoaded) continue;
+
+            foreach (var raiz in escena.GetRootGameObjects())
+            {
+                foreach (var techo in raiz.GetComponentsInChildren<CloudCoverSpawner>(true))
+                {
+                    var so = new SerializedObject(techo);
+                    bool cambio = false;
+
+                    var escala = so.FindProperty("scaleRange");
+                    if (escala != null && (escala.vector2Value.x > 5f || escala.vector2Value.y > 5f))
+                    {
+                        escala.vector2Value = new Vector2(0.8f, 1.5f);
+                        var altura = so.FindProperty("cloudHeight");
+                        if (altura != null && altura.floatValue < 140f) altura.floatValue = 140f;
+                        cambio = true;
+                    }
+
+                    var huella = so.FindProperty("minFootprintInCells");
+                    if (huella != null && huella.floatValue < HuellaMinima)
+                    {
+                        huella.floatValue = HuellaMinima;
+                        cambio = true;
+                    }
+
+                    var recorte = so.FindProperty("visibleAlphaThreshold");
+                    if (recorte != null && recorte.floatValue > RecorteMaximo)
+                    {
+                        recorte.floatValue = RecorteMaximo;
+                        cambio = true;
+                    }
+
+                    if (!cambio) continue;
+                    so.ApplyModifiedPropertiesWithoutUndo();
+                    EditorUtility.SetDirty(techo);
+                    EditorSceneManager.MarkSceneDirty(escena);
+                    tocadas++;
+                    Debug.Log($"[Clima] Techo de nubes de '{escena.name}' ajustado para que no queden huecos.");
+                }
+            }
+        }
+        return tocadas;
     }
 
     public static int Ejecutar(bool avisar)
