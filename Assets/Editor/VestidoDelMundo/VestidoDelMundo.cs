@@ -41,8 +41,7 @@ public static partial class VestidoDelMundo
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
         if (!EditorUtility.DisplayDialog("Quitar el vestido de MainWorld",
                 "Se borra «" + NombreRaiz + "», las casas vuelven a su giro original y el suelo vuelve a la copia guardada.\n\n" +
-                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." +
-                (RaizRetocada(escena) ? "\n\n" + AvisoDeRetoques : ""), "Quitar", "Cancelar"))
+                "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." + AvisosAntesDeBorrar(escena), "Quitar", "Cancelar"))
             return;
 
         var informe = new List<string>();
@@ -59,7 +58,8 @@ public static partial class VestidoDelMundo
                 else
                 {
                     AssetDatabase.SaveAssets();
-                    BorrarBase();
+                    BorrarCopia(Copia.Base);
+                    BorrarCopia(Copia.Vestido);
                     EscribirEstado(HuellaSuelo(terreno.terrainData));
                     informe.Add("Suelo: repuesta la copia original.");
                 }
@@ -77,9 +77,12 @@ public static partial class VestidoDelMundo
     private static void Ejecutar(bool suelo, bool detalles)
     {
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
-        if (detalles && RaizRetocada(escena) &&
-            !EditorUtility.DisplayDialog("Vestido de MainWorld", AvisoDeRetoques, "Rehacer igualmente", "Cancelar"))
-            return;
+        if (detalles)
+        {
+            string avisos = AvisosAntesDeBorrar(escena);
+            if (avisos.Length > 0 && !EditorUtility.DisplayDialog("Vestido de MainWorld", avisos.TrimStart(), "Rehacer igualmente", "Cancelar"))
+                return;
+        }
         var informe = new List<string> { $"Vestido de MainWorld — {DateTime.Now:yyyy-MM-dd HH:mm}" };
 
         try
@@ -127,6 +130,7 @@ public static partial class VestidoDelMundo
                 int quitadas = QuitarHierbaDeSueloDuro(lienzo);
                 EditorUtility.SetDirty(terreno.terrainData);
                 AssetDatabase.SaveAssets();
+                GuardarCopia(terreno.terrainData, Copia.Vestido);
                 EscribirEstado(HuellaSuelo(terreno.terrainData));
                 informe.Add($"Suelo: pintado y guardado ({quitadas} celdas de hierba de detalle retiradas de calles y sendas).");
             }
@@ -224,19 +228,23 @@ public static partial class VestidoDelMundo
         EditorUtility.ClearProgressBar();
         int r = EditorUtility.DisplayDialogComplex("Vestido de MainWorld",
             "El suelo del terreno ha cambiado desde la última vez que se vistió (¿pintado a mano?).\n\n" +
-            "· «Partir de lo actual» guarda lo que hay ahora como base (con lo pintado a mano) y pinta encima; las próximas veces se repinta desde esa base. La copia del suelo original no cambia: «Quitar» volverá a ella.\n" +
+            "· «Partir de lo actual» conserva lo pintado a mano (las celdas que ya no son las que dejó el vestido) y repinta el resto; las próximas veces se parte de esa base. La copia del suelo original no cambia: «Quitar» volverá a ella.\n" +
             "· «Volver a la copia» repone el suelo original (se pierde lo pintado a mano) y pinta encima.",
             "Partir de lo actual", "Cancelar", "Volver a la copia");
         if (r == 1) { informe.Add("Suelo: cancelado."); return false; }
         if (r == 0)
         {
-            GuardarCopia(datos, Copia.Base);
-            informe.Add("Suelo: lo actual (con lo pintado a mano) queda como base para repintar; la copia original se conserva.");
+            string e = GuardarBaseConRetoques(datos, out int retocadas);
+            if (e == null) e = ReponerCopia(datos, Copia.Base);
+            if (e != null) { informe.Add("Suelo: " + e); return false; }
+            informe.Add(retocadas >= 0
+                ? $"Suelo: se conservan {retocadas} celdas pintadas a mano; se repinta desde la base guardada. La copia original no cambia."
+                : "Suelo: lo actual queda como base para repintar (no había copia de la última pintura). La copia original no cambia.");
             return true;
         }
         string err = ReponerCopia(datos);
         if (err != null) { informe.Add("Suelo: " + err); return false; }
-        BorrarBase();
+        BorrarCopia(Copia.Base);
         informe.Add("Suelo: repuesta la copia antigua.");
         return true;
     }
@@ -305,6 +313,55 @@ public static partial class VestidoDelMundo
     {
         var marca = new GameObject(PrefijoHuellaRaiz + HuellaRaiz(raiz)) { tag = "EditorOnly" };
         marca.transform.SetParent(raiz, false);
+    }
+
+    /// Avisos para el diálogo antes de borrar lo generado: retoques a mano y referencias desde fuera.
+    private static string AvisosAntesDeBorrar(Scene escena)
+    {
+        var sb = new StringBuilder();
+        if (RaizRetocada(escena)) sb.Append("\n\n").Append(AvisoDeRetoques);
+        Transform raiz = BuscarRaiz(escena);
+        List<string> refs = raiz != null ? ReferenciasExternas(escena, raiz) : new List<string>();
+        if (refs.Count > 0)
+        {
+            sb.Append("\n\nAlgo de fuera apunta a piezas del vestido y se quedaría sin referencia:");
+            foreach (string r in refs.Take(8)) sb.Append("\n · ").Append(r);
+            if (refs.Count > 8) sb.Append($"\n · … y {refs.Count - 8} más");
+        }
+        return sb.ToString();
+    }
+
+    private static readonly HashSet<string> TiposSinReferencias = new()
+    {
+        "float", "int", "bool", "string", "double", "long", "byte", "char", "short", "uint",
+        "Vector2", "Vector3", "Vector4", "Quaternion", "Color", "Rect", "Bounds", "Matrix4x4", "AnimationCurve", "Keyframe",
+    };
+
+    /// Scripts y directores de la escena (fuera de la raíz) con algún campo que apunte a algo de la raíz.
+    private static List<string> ReferenciasExternas(Scene escena, Transform raiz)
+    {
+        var r = new List<string>();
+        foreach (GameObject g in escena.GetRootGameObjects())
+            foreach (Component c in g.GetComponentsInChildren<Component>(true))
+            {
+                if (c == null || c.transform.IsChildOf(raiz)) continue;
+                if (!(c is MonoBehaviour) && !(c is UnityEngine.Playables.PlayableDirector)) continue;
+                var so = new SerializedObject(c);
+                SerializedProperty it = so.GetIterator();
+                bool entrar = true;
+                while (it.Next(entrar))
+                {
+                    entrar = it.propertyType == SerializedPropertyType.Generic &&
+                             !(it.isArray && TiposSinReferencias.Contains(it.arrayElementType));
+                    if (it.propertyType != SerializedPropertyType.ObjectReference) continue;
+                    UnityEngine.Object v = it.objectReferenceValue;
+                    Transform t = v is GameObject go ? go.transform : v is Component k ? k.transform : null;
+                    if (t == null || !t.IsChildOf(raiz)) continue;
+                    r.Add($"{c.gameObject.name} ({c.GetType().Name}.{it.displayName}) → {t.name}");
+                    break;
+                }
+            }
+        return r;
     }
 
     /// Si lo generado ha cambiado desde que se generó (retoques a mano dentro de la raíz).

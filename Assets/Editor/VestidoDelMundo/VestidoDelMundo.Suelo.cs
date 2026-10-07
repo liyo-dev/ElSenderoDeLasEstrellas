@@ -281,57 +281,91 @@ public static partial class VestidoDelMundo
 
     /// Original: el suelo de antes del primer vestido (no se reescribe; «Quitar» vuelve a él).
     /// Base: el suelo sobre el que se repinta cuando alguien eligió conservar lo pintado a mano.
-    private enum Copia { Original, Base }
+    /// Vestido: el suelo tal como lo dejó la última pintura (para saber qué se ha retocado a mano).
+    private enum Copia { Original, Base, Vestido }
 
-    private static string ArchivoPesosDe(Copia c) => c == Copia.Original ? ArchivoPesos : "pesos_base.bin.gz";
-    private static string ArchivoDetalleDe(Copia c) => c == Copia.Original ? ArchivoDetalle : "detalle_base.bin.gz";
+    private static string ArchivoPesosDe(Copia c) =>
+        c == Copia.Original ? ArchivoPesos : c == Copia.Base ? "pesos_base.bin.gz" : "pesos_vestido.bin.gz";
+
+    private static string ArchivoDetalleDe(Copia c) =>
+        c == Copia.Original ? ArchivoDetalle : c == Copia.Base ? "detalle_base.bin.gz" : "detalle_vestido.bin.gz";
 
     private static bool HayCopia(Copia c = Copia.Original) => File.Exists(Path.Combine(RutaCopias, ArchivoPesosDe(c)));
 
-    private static void BorrarBase()
+    private static void BorrarCopia(Copia c)
     {
-        foreach (string a in new[] { ArchivoPesosDe(Copia.Base), ArchivoDetalleDe(Copia.Base) })
+        foreach (string a in new[] { ArchivoPesosDe(c), ArchivoDetalleDe(c) })
         {
             string r = Path.Combine(RutaCopias, a);
             if (File.Exists(r)) File.Delete(r);
         }
     }
 
-    /// Guarda los pesos (cuantizados a bytes: el Terrain ya los guarda así, la copia es exacta) y la hierba de detalle.
-    private static void GuardarCopia(TerrainData datos, Copia copia = Copia.Original)
+    /// El suelo en bytes: pesos cuantizados (el Terrain ya los guarda así, la copia es exacta) y hierba de detalle.
+    private sealed class Instantanea
     {
-        Directory.CreateDirectory(RutaCopias);
+        public string Ruta;
+        public int Res, Capas;
+        public string[] Nombres;
+        /// Pesos [k, i, c] aplanados.
+        public byte[] Pesos;
+        public int DRes;
+        /// Hierba de detalle por capa, [k * DRes + i]. Null si no hay copia de la hierba.
+        public int[][] Detalle;
+
+        public bool Encaja(Instantanea o) =>
+            o.Ruta == Ruta && o.Res == Res && o.Capas == Capas && string.Join("|", o.Nombres) == string.Join("|", Nombres);
+    }
+
+    private static Instantanea Tomar(TerrainData datos)
+    {
         int res = datos.alphamapResolution, capas = datos.alphamapLayers;
         float[,,] pesos = datos.GetAlphamaps(0, 0, res, res);
+        var s = new Instantanea
+        {
+            Ruta = AssetDatabase.GetAssetPath(datos), Res = res, Capas = capas,
+            Nombres = new string[capas], Pesos = new byte[res * res * capas], DRes = datos.detailResolution,
+        };
+        TerrainLayer[] capasTerreno = datos.terrainLayers;
+        for (int c = 0; c < capas; c++) s.Nombres[c] = capasTerreno[c] != null ? capasTerreno[c].name : "";
+        int n = 0;
+        for (int k = 0; k < res; k++)
+            for (int i = 0; i < res; i++)
+                for (int c = 0; c < capas; c++)
+                    s.Pesos[n++] = (byte)Mathf.Clamp(Mathf.RoundToInt(pesos[k, i, c] * 255f), 0, 255);
+        s.Detalle = new int[datos.detailPrototypes.Length][];
+        for (int c = 0; c < s.Detalle.Length; c++)
+        {
+            int[,] capa = datos.GetDetailLayer(0, 0, s.DRes, s.DRes, c);
+            var plano = new int[s.DRes * s.DRes];
+            for (int k = 0; k < s.DRes; k++)
+                for (int i = 0; i < s.DRes; i++)
+                    plano[k * s.DRes + i] = capa[k, i];
+            s.Detalle[c] = plano;
+        }
+        return s;
+    }
+
+    private static void Escribir(Instantanea s, Copia copia)
+    {
+        Directory.CreateDirectory(RutaCopias);
         EscribirComprimido(Path.Combine(RutaCopias, ArchivoPesosDe(copia)), w =>
         {
             w.Write("VDMP1");
-            w.Write(AssetDatabase.GetAssetPath(datos));
-            w.Write(res);
-            w.Write(capas);
-            foreach (TerrainLayer t in datos.terrainLayers) w.Write(t != null ? t.name : "");
-            var bytes = new byte[res * res * capas];
-            int n = 0;
-            for (int k = 0; k < res; k++)
-                for (int i = 0; i < res; i++)
-                    for (int c = 0; c < capas; c++)
-                        bytes[n++] = (byte)Mathf.Clamp(Mathf.RoundToInt(pesos[k, i, c] * 255f), 0, 255);
-            w.Write(bytes);
+            w.Write(s.Ruta);
+            w.Write(s.Res);
+            w.Write(s.Capas);
+            foreach (string nombre in s.Nombres) w.Write(nombre);
+            w.Write(s.Pesos);
         });
-
-        int dres = datos.detailResolution, dcapas = datos.detailPrototypes.Length;
+        if (s.Detalle == null) return;
         EscribirComprimido(Path.Combine(RutaCopias, ArchivoDetalleDe(copia)), w =>
         {
             w.Write("VDMD1");
-            w.Write(dres);
-            w.Write(dcapas);
-            for (int c = 0; c < dcapas; c++)
-            {
-                int[,] capa = datos.GetDetailLayer(0, 0, dres, dres, c);
-                for (int k = 0; k < dres; k++)
-                    for (int i = 0; i < dres; i++)
-                        w.Write(capa[k, i]);
-            }
+            w.Write(s.DRes);
+            w.Write(s.Detalle.Length);
+            foreach (int[] capa in s.Detalle)
+                foreach (int v in capa) w.Write(v);
         });
     }
 
@@ -348,61 +382,122 @@ public static partial class VestidoDelMundo
         File.Move(temporal, ruta);
     }
 
-    /// Repone la copia. Devuelve un texto de error o null si todo ha ido bien.
-    private static string ReponerCopia(TerrainData datos, Copia copia = Copia.Original)
+    private static Instantanea Leer(Copia copia, out string error)
     {
+        error = null;
         string rutaPesos = Path.Combine(RutaCopias, ArchivoPesosDe(copia));
-        if (!File.Exists(rutaPesos)) return "No hay copia del suelo en " + RutaCopias + ".";
+        if (!File.Exists(rutaPesos)) { error = "No hay copia del suelo en " + RutaCopias + "."; return null; }
+        var s = new Instantanea();
         using (var fs = File.OpenRead(rutaPesos))
         using (var gz = new GZipStream(fs, CompressionMode.Decompress))
         using (var r = new BinaryReader(gz))
         {
-            if (r.ReadString() != "VDMP1") return "La copia del suelo tiene un formato desconocido.";
-            string ruta = r.ReadString();
-            int res = r.ReadInt32(), capas = r.ReadInt32();
-            var nombres = new string[capas];
-            for (int c = 0; c < capas; c++) nombres[c] = r.ReadString();
-            if (ruta != AssetDatabase.GetAssetPath(datos)) return $"La copia es de otro terreno ({ruta}).";
-            if (res != datos.alphamapResolution || capas != datos.alphamapLayers)
-                return $"La copia ({res}², {capas} capas) no encaja con el terreno actual ({datos.alphamapResolution}², {datos.alphamapLayers} capas).";
-            TerrainLayer[] actuales = datos.terrainLayers;
-            for (int c = 0; c < capas; c++)
-                if ((actuales[c] != null ? actuales[c].name : "") != nombres[c])
-                    return $"El orden de capas del terreno ha cambiado desde la copia (capa {c}: «{nombres[c]}»).";
-            byte[] bytes = r.ReadBytes(res * res * capas);
-            var pesos = new float[res, res, capas];
-            int n = 0;
-            for (int k = 0; k < res; k++)
-                for (int i = 0; i < res; i++)
-                    for (int c = 0; c < capas; c++)
-                        pesos[k, i, c] = bytes[n++] / 255f;
-            datos.SetAlphamaps(0, 0, pesos);
+            if (r.ReadString() != "VDMP1") { error = "La copia del suelo tiene un formato desconocido."; return null; }
+            s.Ruta = r.ReadString();
+            s.Res = r.ReadInt32();
+            s.Capas = r.ReadInt32();
+            s.Nombres = new string[s.Capas];
+            for (int c = 0; c < s.Capas; c++) s.Nombres[c] = r.ReadString();
+            s.Pesos = r.ReadBytes(s.Res * s.Res * s.Capas);
+            if (s.Pesos.Length != s.Res * s.Res * s.Capas) { error = "La copia del suelo está incompleta."; return null; }
         }
 
         string rutaDetalle = Path.Combine(RutaCopias, ArchivoDetalleDe(copia));
-        if (File.Exists(rutaDetalle))
+        if (!File.Exists(rutaDetalle)) return s;
+        using (var fs = File.OpenRead(rutaDetalle))
+        using (var gz = new GZipStream(fs, CompressionMode.Decompress))
+        using (var r = new BinaryReader(gz))
         {
-            using var fs = File.OpenRead(rutaDetalle);
-            using var gz = new GZipStream(fs, CompressionMode.Decompress);
-            using var r = new BinaryReader(gz);
-            if (r.ReadString() == "VDMD1")
+            if (r.ReadString() != "VDMD1") return s;
+            s.DRes = r.ReadInt32();
+            s.Detalle = new int[r.ReadInt32()][];
+            for (int c = 0; c < s.Detalle.Length; c++)
             {
-                int dres = r.ReadInt32(), dcapas = r.ReadInt32();
-                if (dres == datos.detailResolution && dcapas == datos.detailPrototypes.Length)
-                {
-                    for (int c = 0; c < dcapas; c++)
-                    {
-                        var capa = new int[dres, dres];
-                        for (int k = 0; k < dres; k++)
-                            for (int i = 0; i < dres; i++)
-                                capa[k, i] = r.ReadInt32();
-                        datos.SetDetailLayer(0, 0, c, capa);
-                    }
-                }
-                else Debug.LogWarning("[VestidoDelMundo] La copia de la hierba de detalle no encaja con el terreno actual; se deja la hierba como está.");
+                var capa = new int[s.DRes * s.DRes];
+                for (int t = 0; t < capa.Length; t++) capa[t] = r.ReadInt32();
+                s.Detalle[c] = capa;
             }
         }
+        return s;
+    }
+
+    /// Pone en el terreno una copia leída. Devuelve un texto de error o null si todo ha ido bien.
+    private static string Aplicar(TerrainData datos, Instantanea s)
+    {
+        if (s.Ruta != AssetDatabase.GetAssetPath(datos)) return $"La copia es de otro terreno ({s.Ruta}).";
+        if (s.Res != datos.alphamapResolution || s.Capas != datos.alphamapLayers)
+            return $"La copia ({s.Res}², {s.Capas} capas) no encaja con el terreno actual ({datos.alphamapResolution}², {datos.alphamapLayers} capas).";
+        TerrainLayer[] actuales = datos.terrainLayers;
+        for (int c = 0; c < s.Capas; c++)
+            if ((actuales[c] != null ? actuales[c].name : "") != s.Nombres[c])
+                return $"El orden de capas del terreno ha cambiado desde la copia (capa {c}: «{s.Nombres[c]}»).";
+
+        var pesos = new float[s.Res, s.Res, s.Capas];
+        int n = 0;
+        for (int k = 0; k < s.Res; k++)
+            for (int i = 0; i < s.Res; i++)
+                for (int c = 0; c < s.Capas; c++)
+                    pesos[k, i, c] = s.Pesos[n++] / 255f;
+        datos.SetAlphamaps(0, 0, pesos);
+
+        if (s.Detalle != null)
+        {
+            if (s.DRes == datos.detailResolution && s.Detalle.Length == datos.detailPrototypes.Length)
+                for (int c = 0; c < s.Detalle.Length; c++)
+                {
+                    var capa = new int[s.DRes, s.DRes];
+                    for (int k = 0; k < s.DRes; k++)
+                        for (int i = 0; i < s.DRes; i++)
+                            capa[k, i] = s.Detalle[c][k * s.DRes + i];
+                    datos.SetDetailLayer(0, 0, c, capa);
+                }
+            else Debug.LogWarning("[VestidoDelMundo] La copia de la hierba de detalle no encaja con el terreno actual; se deja la hierba como está.");
+        }
         EditorUtility.SetDirty(datos);
+        return null;
+    }
+
+    private static void GuardarCopia(TerrainData datos, Copia copia = Copia.Original) => Escribir(Tomar(datos), copia);
+
+    /// Repone una copia. Devuelve un texto de error o null si todo ha ido bien.
+    private static string ReponerCopia(TerrainData datos, Copia copia = Copia.Original)
+    {
+        Instantanea s = Leer(copia, out string error);
+        return s == null ? error : Aplicar(datos, s);
+    }
+
+    /// Guarda la base para repintar conservando lo retocado a mano: en las celdas donde el suelo actual ya no
+    /// es el que dejó el vestido se queda lo actual; en las demás, el suelo sobre el que se pintó. Así el
+    /// vestido no se aplica dos veces. Devuelve un texto de error o null.
+    private static string GuardarBaseConRetoques(TerrainData datos, out int retocadas)
+    {
+        retocadas = 0;
+        Instantanea actual = Tomar(datos);
+        Instantanea debajo = Leer(HayCopia(Copia.Base) ? Copia.Base : Copia.Original, out string error);
+        if (debajo == null) return error;
+        Instantanea vestido = Leer(Copia.Vestido, out _);
+        if (vestido == null || !vestido.Encaja(actual) || !debajo.Encaja(actual))
+        {
+            Escribir(actual, Copia.Base);
+            retocadas = -1;
+            return null;
+        }
+
+        int capas = actual.Capas;
+        for (int o = 0; o < actual.Pesos.Length; o += capas)
+        {
+            bool tocada = false;
+            for (int c = 0; c < capas && !tocada; c++) tocada = actual.Pesos[o + c] != vestido.Pesos[o + c];
+            if (tocada) retocadas++;
+            else Array.Copy(debajo.Pesos, o, actual.Pesos, o, capas);
+        }
+        if (vestido.Detalle != null && debajo.Detalle != null && actual.Detalle != null &&
+            vestido.DRes == actual.DRes && debajo.DRes == actual.DRes &&
+            vestido.Detalle.Length == actual.Detalle.Length && debajo.Detalle.Length == actual.Detalle.Length)
+            for (int c = 0; c < actual.Detalle.Length; c++)
+                for (int t = 0; t < actual.Detalle[c].Length; t++)
+                    if (actual.Detalle[c][t] == vestido.Detalle[c][t]) actual.Detalle[c][t] = debajo.Detalle[c][t];
+        Escribir(actual, Copia.Base);
         return null;
     }
 

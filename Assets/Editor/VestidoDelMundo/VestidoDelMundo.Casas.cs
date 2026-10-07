@@ -214,7 +214,8 @@ public static partial class VestidoDelMundo
     }
 
     /// Devuelve a su sitio las casas que giró el vestido. Si alguien ha movido una después, solo se le
-    /// deshace el giro (se respeta dónde la dejó). Las marcas de casas que no aparecen se conservan.
+    /// deshace el giro (se respeta dónde la dejó). Se conservan las marcas de lo que no aparece y de los
+    /// adornos movidos a mano.
     private static void ReponerCasas(Scene escena, List<string> informe)
     {
         Transform registro = RegistroCasas(escena, crear: false);
@@ -232,11 +233,15 @@ public static partial class VestidoDelMundo
             else
             {
                 GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
-                if (fuente != null && LadoDeLaPuerta.TryGetValue(fuente.name, out float lado))
+                if (fuente == null || !LadoDeLaPuerta.TryGetValue(fuente.name, out float lado))
                 {
-                    Bounds b = LimitesVisibles(casa.gameObject);
-                    casa.RotateAround(new Vector3(b.center.x, casa.position.y, b.center.z), Vector3.up, lado);
+                    // Un adorno movido a mano: se queda donde lo dejaron y conserva su marca, para que el
+                    // siguiente vestido no lo vuelva a girar.
+                    informe.Add($"  · «{casa.name}» se movió a mano después del vestido: se deja donde está.");
+                    continue;
                 }
+                Bounds b = LimitesVisibles(casa.gameObject);
+                casa.RotateAround(new Vector3(b.center.x, casa.position.y, b.center.z), Vector3.up, lado);
                 movidas++;
                 informe.Add($"  · «{casa.name}» se movió a mano después del vestido: se le deshace solo el giro.");
             }
