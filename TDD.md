@@ -3564,6 +3564,6 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 ### 23.5 Estado y límites
 
 - Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity).
-- La disposición se validó fuera de Unity con las alturas, los pesos y la jerarquía reales de MainWorld: simulación de la pintura, renders con las texturas de las capas y comprobación de coordenadas contra zonas, pendientes y casas.
+- La disposición se validó fuera de Unity con las alturas, los pesos y la jerarquía reales de MainWorld: simulación de la pintura, renders con las texturas de las capas y una simulación de `Poner` (desnivel, agua, zonas, corredores, solapes y choques contra los colisionadores reales de la escena y sus prefabs, incluidos los `MeshCollider` de las mallas `*_col`). Con las coordenadas finales coloca 231 de las 235 piezas de posición fija. Quedaban dos del mercado, que se arreglan separándolas del puesto según su ancho medido (cambio no simulado), una roca de la atalaya y una pared del caserío; el informe de cada ejecución dice cuáles se descartan y por qué.
 - Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas de `Pueblos.cs`, `Detalles.cs` y `Parajes.cs`, y se vuelve a ejecutar el menú.
 - Queda para Raúl lo que necesita su criterio: escaleras entre terrazas del Reino para la persecución y qué se levanta en el solar libre de Silas.

@@ -470,7 +470,7 @@ public static partial class VestidoDelMundo
         Transform mercado = Grupo(grupo, "Mercado de la terraza baja");
         var puestos = new (float x, float z, float frente)[]
         {
-            (30f, 249f, 270f), (-55f, 252f, 0f), (48f, 252f, 0f), (58f, 252f, 0f), (-64f, 265f, 180f),
+            (30f, 249f, 270f), (-55f, 252f, 0f), (48f, 252f, 0f), (58f, 252f, 0f), (-64f, 264.25f, 180f),
             (-49f, 265f, 180f), (31f, 265f, 180f), (45f, 265f, 180f), (60f, 265f, 180f),
         };
         for (int i = 0; i < puestos.Length; i++)
@@ -480,8 +480,10 @@ public static partial class VestidoDelMundo
             if (g == null) continue;
             Vector2 f = new Vector2(Mathf.Sin(frente * Mathf.Deg2Rad), Mathf.Cos(frente * Mathf.Deg2Rad));
             Vector2 l = new Vector2(f.y, -f.x);
-            Pon(o, mercado, i % 2 == 0 ? Caja : Sacos, "Género del puesto", new Vector2(x, z) + l * 3.2f, frente + 20f, camino: true, holgura: 0.02f);
-            if (i % 3 == 0) Pon(o, mercado, Barril, "Barril del puesto", new Vector2(x, z) - l * 3.2f, 0f, camino: true, holgura: 0.02f);
+            // Al costado del puesto, fuera de su huella (el de ultramarinos mide más de 7 m de ancho).
+            float costado = Mathf.Max(3.2f, HuellaOrientada(g, frente).MedioX + 0.7f);
+            Pon(o, mercado, i % 2 == 0 ? Caja : Sacos, "Género del puesto", new Vector2(x, z) + l * costado, frente + 20f, camino: true, holgura: 0.02f);
+            if (i % 3 == 0) Pon(o, mercado, Barril, "Barril del puesto", new Vector2(x, z) - l * costado, 0f, camino: true, holgura: 0.02f);
         }
         Pon(o, mercado, CarroToldo, "Carro-puesto del mercado", new Vector2(-41f, 253f), 90f, camino: true);
         Pon(o, mercado, Carreta, "Carreta de descarga", new Vector2(82f, 266f), 200f, camino: true);
@@ -489,8 +491,8 @@ public static partial class VestidoDelMundo
         // Puerta de la muralla (sureste): un estandarte a cada lado de la calle que entra por el hueco, fuera
         // de la calzada (los descarta si la tocan).
         Transform puerta = Grupo(grupo, "Puerta de la muralla");
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(88.8f, 253.9f), 210f, 5f, Medida.Alto, camino: true);
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(98.9f, 253.1f), 210f, 5f, Medida.Alto, camino: true);
+        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(88.2f, 252.92f), 118.4f, 5f, Medida.Alto, desnivel: 1.2f);
+        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(94.9f, 244.29f), -61.6f, 5f, Medida.Alto, desnivel: 1.2f);
     }
 
     private static void EscenasDelPuerto(Obra o, Transform grupo)
@@ -499,21 +501,21 @@ public static partial class VestidoDelMundo
         Pon(o, muelle, Caja, "Caja junto a la rampa", new Vector2(277f, -449f), 15f, camino: true, corredor: false);
         Pon(o, muelle, Caja, "Caja junto a la rampa", new Vector2(278f, -447.8f), 40f, camino: true, corredor: false, solapePropio: true);
         Pon(o, muelle, Barril, "Barril junto a la rampa", new Vector2(263f, -449f), 0f, camino: true, corredor: false);
-        Pon(o, muelle, Nasa, "Nasa", new Vector2(261.5f, -447.5f), 30f, camino: true, corredor: false);
+        Pon(o, muelle, Nasa, "Nasa", new Vector2(263f, -447.5f), 30f, camino: true, corredor: false);
         Pon(o, muelle, Nasa2, "Nasa", new Vector2(279.5f, -446f), -20f, camino: true, corredor: false);
-        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(235f, -458f), 115f, desnivel: 1.6f, hundir: 0.25f, inclinar: 6f);
-        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(305f, -458f), 250f, desnivel: 1.6f, hundir: 0.25f, inclinar: -5f);
+        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(232.25f, -458.25f), 115f, desnivel: 1.6f, hundir: 0.25f, inclinar: 6f);
+        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(304.25f, -458.5f), 250f, desnivel: 1.6f, hundir: 0.25f, inclinar: -5f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(249f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(251.5f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(291f, -458f), 90f);
 
         Transform plaza = Grupo(grupo, "Plaza del puerto");
         Pon(o, plaza, PrefabsEdificios + "BuildingAT41.prefab", "Puesto de pescado", new Vector2(286.5f, -440f), 270f, camino: true);
-        Pon(o, plaza, PrefabsEdificios + "BuildingAT42.prefab", "Puesto de pescado", new Vector2(253.5f, -440f), 90f, camino: true);
-        Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(256f, -425f), 90f, camino: true);
-        Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(284f, -425f), -90f, camino: true);
-        Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(256.5f, -448f), 0f, camino: true);
-        Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(283.5f, -448f), 0f, camino: true);
+        Pon(o, plaza, PrefabsEdificios + "BuildingAT42.prefab", "Puesto de pescado", new Vector2(253.5f, -441f), 90f, camino: true);
+        Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(255.25f, -425.75f), 90f, camino: true);
+        Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(284.5f, -425.75f), -90f, camino: true);
+        Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(256.25f, -446.25f), 0f, camino: true);
+        Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(283.75f, -446.25f), 0f, camino: true);
     }
 
     private static void EscenasDelVecino(Obra o, Transform grupo)
@@ -522,13 +524,13 @@ public static partial class VestidoDelMundo
         Pon(o, plaza, PrefabsEdificios + "BuildingAT36.prefab", "Puesto de la plaza", new Vector2(320f, -130f), 0f, camino: true);
         Pon(o, plaza, Banco, "Banco de la plaza", new Vector2(312f, -115f), 90f, camino: true);
         Pon(o, plaza, Banco, "Banco de la plaza", new Vector2(348f, -110f), -90f, camino: true);
-        Pon(o, plaza, Farola, "Farola de la plaza", new Vector2(313f, -101f), 0f, camino: true);
-        Pon(o, plaza, Farola, "Farola de la plaza", new Vector2(347f, -129f), 0f, camino: true);
+        Pon(o, plaza, Farola, "Farola de la plaza", new Vector2(316.25f, -99.5f), 0f, camino: true);
+        Pon(o, plaza, Farola, "Farola de la plaza", new Vector2(349.5f, -128f), 0f, camino: true);
         Transform vida = Grupo(grupo, "Vida del pueblo");
         Pon(o, vida, Carreta, "Carreta", new Vector2(323f, -88f), 160f);
         Pon(o, vida, Heno, "Paca de heno", new Vector2(366f, -128f), 0f);
         Pon(o, vida, Heno, "Paca de heno", new Vector2(367.8f, -126.5f), 40f, solapePropio: true);
-        Pon(o, vida, Lena, "Leña", new Vector2(290f, -110f), 0f);
+        Pon(o, vida, Lena, "Leña", new Vector2(290f, -118.75f), 0f);
     }
 
     private static void EscenasDeLasGranjas(Obra o, Transform grupo)

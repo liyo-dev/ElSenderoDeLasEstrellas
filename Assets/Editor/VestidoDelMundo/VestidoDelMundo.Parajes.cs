@@ -76,15 +76,15 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Atalaya rota del acantilado sur", Centro = new Vector2(-64f, -369f), RadioSuelo = 7f, Semilla = 5102,
+            Nombre = "Atalaya rota del acantilado sur", Centro = new Vector2(-57f, -373f), RadioSuelo = 7f, Semilla = 5102,
             Senda = P(-140f, -240f, -144f, -252f, -144f, -264f, -144f, -276f, -140f, -288f, -136f, -300f, -136f, -312f, -136f, -324f,
-                -132f, -336f, -124f, -348f, -112f, -360f, -100f, -368f, -90f, -378f, -78f, -381f, -68f, -375f),
+                -132f, -336f, -124f, -348f, -112f, -360f, -100f, -368f, -90f, -378f, -78f, -381f, -61f, -379f),
             Receta = RecetaAtalaya,
         },
         new Paraje
         {
-            Nombre = "Caserío abandonado", Centro = new Vector2(-176f, -200f), RadioSuelo = 13f, CapaSuelo = CapaTierra, Semilla = 5103,
-            Senda = P(-152f, -244f, -152f, -232f, -152f, -220f, -164f, -208f), Receta = RecetaCaserio,
+            Nombre = "Caserío abandonado", Centro = new Vector2(-172f, -200f), RadioSuelo = 13f, CapaSuelo = CapaTierra, Semilla = 5103,
+            Senda = P(-152f, -244f, -152f, -232f, -152f, -220f, -160f, -208f), Receta = RecetaCaserio,
         },
         new Paraje
         {
@@ -93,8 +93,8 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Redil del pastor", Centro = new Vector2(-292f, -231f), RadioSuelo = 9f, CapaSuelo = CapaTierra, Semilla = 5106,
-            Senda = P(-280f, -292f, -292f, -292f, -304f, -292f, -316f, -292f, -324f, -280f, -324f, -268f, -316f, -256f, -304f, -244f),
+            Nombre = "Redil del pastor", Centro = new Vector2(-297f, -230f), RadioSuelo = 9f, CapaSuelo = CapaTierra, Semilla = 5106,
+            Senda = P(-280f, -292f, -292f, -292f, -304f, -292f, -316f, -292f, -324f, -280f, -324f, -268f, -316f, -256f, -309f, -243f),
             Receta = RecetaRedil,
         },
         new Paraje
@@ -104,8 +104,8 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Cantera vieja", Centro = new Vector2(101f, 72f), RadioSuelo = 10f, Semilla = 5108,
-            Senda = P(76f, 60f, 88f, 68f), Receta = RecetaCantera,
+            Nombre = "Cantera vieja", Centro = new Vector2(87f, 66f), RadioSuelo = 10f, Semilla = 5108,
+            Senda = P(76f, 60f, 79.8f, 63.8f), Receta = RecetaCantera,
         },
         new Paraje
         {
@@ -131,8 +131,8 @@ public static partial class VestidoDelMundo
         },
         new Paraje
         {
-            Nombre = "Descanso del cruce", Centro = new Vector2(-90f, -125f), RadioSuelo = 6f, CapaSuelo = CapaTierra, Semilla = 5112,
-            Senda = P(-92f, -100f, -90f, -112f), Receta = RecetaDescanso,
+            Nombre = "Descanso del cruce", Centro = new Vector2(-90f, -124f), RadioSuelo = 6f, CapaSuelo = CapaTierra, Semilla = 5112,
+            Senda = P(-92f, -100f, -90f, -111f), Receta = RecetaDescanso,
         },
     };
 
