@@ -3531,7 +3531,7 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 - **Pueblo pesquero:** puestos de pescado, cajas, nasas, redes y barcas varadas fuera del embarcadero, y bancos.
 - **Pueblo vecino:** puesto y bancos en la plaza, heno, carreta y leña.
 - **Granjas:** almiar y pacas, abrevadero, carretilla, gallineros, colmena y espantapájaros fuera de los huertos.
-- **13 parajes entre zonas:** ruinas de una casa fuerte, atalaya rota del acantilado sur, caserío abandonado, claustro viejo, campamento de leñadores abandonado, redil del pastor, varadero de la playa oeste, cantera vieja, posta del cruce, era de trilla, almenara del acantilado este, mirador de la subida al Reino y descanso del cruce. Cada uno es una «receta» de piezas en coordenadas locales (muros derruidos, columnas, vanos de puerta abiertos, sillares, troncos, flores silvestres) orientada hacia su senda.
+- **12 parajes entre zonas:** ruinas de una casa fuerte, atalaya rota del acantilado sur, caserío abandonado, claustro viejo, redil del pastor, varadero de la playa oeste, cantera vieja, posta del cruce, era de trilla, almenara del acantilado este, mirador de la subida al Reino y descanso del cruce. Cada uno es una «receta» de piezas en coordenadas locales (muros derruidos, columnas, sillares sueltos, maderos, flores silvestres) orientada hacia donde llega su senda.
 
 **Comprobaciones de cada pieza** (`VestidoDelMundo.Colocar.cs`). Si una falla, la pieza no se pone y queda anotada en el informe:
 
@@ -3551,15 +3551,15 @@ Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y p
 
 ### 23.4 Canon (GDD) que respeta
 
-- Nada de ruinas en el Bosque Prohibido.
-- Nada que imite las Ruinas del Libro: sin monolitos, altares, pedestales, portales ni puertas selladas, inscripciones ni estrellas. Los vanos de los parajes son huecos de puerta abiertos del pack Modular Castle.
+- Nada en el Bosque Prohibido: ni ruinas ni oficios. Su caja (la de `Ambient_ForbidenWoods`, x −445…−135, z −152…234) es zona libre y tampoco se pinta. Sin leñadores: la propuesta del cap. 2 corta ese motivo.
+- Nada que imite las Ruinas del Libro: sin monolitos, altares, pedestales, portales ni puertas selladas, inscripciones ni estrellas. El único vano (casa fuerte) es la puerta de un muro, entre dos tramos; el claustro es de columnas; ningún anillo de piedras alrededor de algo central.
 - Nada que se lea como la torre de Liam.
 - Sin molinos ni establos fuera del puerto.
-- En el camino Gólem → Reino no se pone nada de esto: montones de 3 piedras, jaulas, luces bajas entre árboles, carros volcados, campamentos de ceniza ni nidos de araña.
+- En ningún sitio: montones de 3 piedras (por eso no se usa `Stone01_a02`, que son tres sillares apilados), jaulas (las nasas solo en el puerto), luces bajas entre árboles, carros volcados, campamentos con ceniza ni nidos de araña. Los parajes no usan edificios del pack de casas (`Building Combination`) salvo la posta, que está habitada: la Noche les encendería luz y ventanas.
 - Nada en las playas salvo el varadero; la montaña, intacta.
-- Sin carteles con texto ni objetos recogibles.
+- Sin carteles con texto ni objetos recogibles (el poste indicador del pack lleva letras talladas: no se usa).
 - La plaza real deja libres la arena de 25 m y el eje x ±6, z 300→338.
-- En el pueblo vecino queda libre un solar para Silas.
+- En el pueblo vecino queda reservado un solar para la casa y el taller de Silas (GDD § 9): x 281…299, z −118…−102, al oeste de la plaza, llano. Es zona libre: no se adorna ni se planta nada. La plaza del vecino (x 315…345, z −127…−103) tampoco se adorna.
 
 ### 23.5 Estado y límites
 

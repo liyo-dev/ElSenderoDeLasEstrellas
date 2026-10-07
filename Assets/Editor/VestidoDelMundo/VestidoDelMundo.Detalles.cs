@@ -42,7 +42,6 @@ public static partial class VestidoDelMundo
     private const string Nasa2 = FK + "Props/Goods/Fishingcage02_a01.prefab";
     private const string Red = FK + "Props/Goods/Net01_a01.prefab";
     private const string Barca = FK + "Props/Ship/Boat01_a01.prefab";
-    private const string Cartel = Tiny + "BuildingUtilityDeco/SignPost01.prefab";
 
     private static readonly string[] ArbolesDeJardin =
     {
@@ -210,6 +209,11 @@ public static partial class VestidoDelMundo
     {
         foreach (var c in o.Corredores)
             if (DistanciaAPolilinea(p, c.puntos) < c.semiancho + radio) return true;
+        return EnPlaza(o, p, radio);
+    }
+
+    private static bool EnPlaza(Obra o, Vector2 p, float radio)
+    {
         foreach (Rect r in o.PlazasLibres)
         {
             Rect g = new Rect(r.x - radio, r.y - radio, r.width + 2 * radio, r.height + 2 * radio);
@@ -275,6 +279,12 @@ public static partial class VestidoDelMundo
     /// Macetas a los lados de cada puerta y, según la casa, banco o barriles y cajas.
     private static void AdornarPuertas(Obra o, Transform grupo, List<Puerta> puertas, int semilla)
     {
+        // Pegado a la casa: puede estar junto a una senda, pero el interior de las plazas no se adorna.
+        void Junto(string prefab, string nombre, Vector2 pos, float giro)
+        {
+            if (!EnPlaza(o, pos, 0.4f)) Pon(o, grupo, prefab, nombre, pos, giro, holgura: 0.02f, corredor: false, camino: true);
+        }
+
         var dado = new Ruido.Dado(semilla);
         foreach (Puerta p in puertas)
         {
@@ -284,19 +294,19 @@ public static partial class VestidoDelMundo
             string maceta = dado.Siguiente() < 0.5f ? Maceta : Jardinera;
             // La jardinera, con el lado largo a lo largo del muro.
             float giroMaceta = maceta == Jardinera ? rumbo : rumbo + 90f;
-            Pon(o, grupo, maceta, "Maceta de la puerta", fachada + lado * 1.8f + p.Frente * 0.5f, giroMaceta, holgura: 0.02f, corredor: false, camino: true);
-            Pon(o, grupo, maceta, "Maceta de la puerta", fachada - lado * 1.8f + p.Frente * 0.5f, giroMaceta, holgura: 0.02f, corredor: false, camino: true);
+            Junto(maceta, "Maceta de la puerta", fachada + lado * 1.8f + p.Frente * 0.5f, giroMaceta);
+            Junto(maceta, "Maceta de la puerta", fachada - lado * 1.8f + p.Frente * 0.5f, giroMaceta);
             float tirada = dado.Siguiente();
             float s = dado.Siguiente() < 0.5f ? 1f : -1f;
             if (tirada < 0.35f)
-                Pon(o, grupo, Banco, "Banco junto a la puerta", fachada + lado * s * 3.6f + p.Frente * 0.7f, rumbo + 180f, holgura: 0.02f, corredor: false, camino: true);
+                Junto(Banco, "Banco junto a la puerta", fachada + lado * s * 3.6f + p.Frente * 0.7f, rumbo + 180f);
             else if (tirada < 0.7f)
             {
-                Pon(o, grupo, Barril, "Barril junto a la puerta", fachada + lado * s * 3.3f + p.Frente * 0.6f, dado.Entre(0f, 360f), holgura: 0.02f, corredor: false, camino: true);
-                Pon(o, grupo, Caja, "Caja junto a la puerta", fachada + lado * s * 4.3f + p.Frente * 0.6f, dado.Entre(0f, 360f), holgura: 0.02f, corredor: false, camino: true);
+                Junto(Barril, "Barril junto a la puerta", fachada + lado * s * 3.3f + p.Frente * 0.6f, dado.Entre(0f, 360f));
+                Junto(Caja, "Caja junto a la puerta", fachada + lado * s * 4.3f + p.Frente * 0.6f, dado.Entre(0f, 360f));
             }
             else if (tirada < 0.85f)
-                Pon(o, grupo, Lena, "Leña junto a la casa", fachada + lado * s * 3.5f + p.Frente * 0.6f, rumbo, holgura: 0.02f, corredor: false, camino: true);
+                Junto(Lena, "Leña junto a la casa", fachada + lado * s * 3.5f + p.Frente * 0.6f, rumbo);
         }
     }
 
