@@ -3,9 +3,10 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// Detalles de los pueblos: casas nuevas del Reino, macetas y bancos en las puertas, farolas en las
-/// calles, plazas adornadas sin invadir las reservadas para eventos, jardines en los solares vacíos y
-/// escenas propias de cada pueblo (mercado, puerta de la muralla, embarcadero, era de la granja…).
+/// Detalles de los pueblos: casas nuevas, macetas y bancos en las puertas, farolas en las calles, plazas
+/// adornadas sin invadir las reservadas para eventos, jardines en los solares vacíos y escenas propias de cada
+/// pueblo (embarcadero, plaza del pueblo vecino, era de la granja…). La capital se viste aparte, en
+/// VestidoDelMundo.Capital, con estas mismas piezas.
 public static partial class VestidoDelMundo
 {
     private const string FK = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/";
@@ -13,9 +14,7 @@ public static partial class VestidoDelMundo
     private const string ModularCastle = "Assets/Art/World/Modular Castle/Assets/prefabs/";
 
     private const string Farola = FK + "Props/Lighting/Light03_a01.prefab";
-    private const string FarolBajo = FK + "Props/Lighting/Light01_a01.prefab";
     private const string Estandarte = FK + "Props/Flag/Flag01_a01.prefab";
-    private const string EstandarteColor = FK + "Props/Flag/Flag01_b01.prefab";
     private const string Banco = FK + "Props/Furniture/Chair/Chair01_a01.prefab";
     private const string Mesa = FK + "Props/Furniture/Table/Table01_a01.prefab";
     private const string Barril = FK + "Props/Goods/Barrel01_a01.prefab";
@@ -27,6 +26,8 @@ public static partial class VestidoDelMundo
     private const string Lena = FK + "Props/Goods/Wood01_a01.prefab";
     private const string Maceta = FK + "Vegetation/Flowerpot/Flowerpot01_b03.prefab";
     private const string Jardinera = FK + "Vegetation/Flowerpot/Flowerpot02_a01.prefab";
+    /// Bola de boj en maceta de piedra: la maceta de las puertas de la ciudad.
+    private const string MacetaDeBola = FK + "Vegetation/Flowerpot/Flowerpot03_a01.prefab";
     private const string Pozo = FK + "Main Structures/Decoration/Well02.prefab";
     private const string Armadura = ModularCastle + "mannequin_armor.prefab";
     private const string Maniqui = ModularCastle + "mannequin.prefab";
@@ -60,39 +61,16 @@ public static partial class VestidoDelMundo
 
     private const string Flor = FK + "Vegetation/Flower02_a01.prefab";
 
-    private static readonly string[] PuestosDeMercado =
-    {
-        PrefabsEdificios + "BuildingAT36.prefab", // básico
-        PrefabsEdificios + "BuildingAT37.prefab", // bebidas
-        PrefabsEdificios + "BuildingAT40.prefab", // carnicero
-        PrefabsEdificios + "BuildingAT38.prefab", // ultramarinos
-        PrefabsEdificios + "BuildingAT43.prefab", // adivina
-        PrefabsEdificios + "BuildingAT41.prefab", // pescado
-    };
-
-    /// Lado de la puerta de los edificios que pone el vestido (grados respecto al +Z local).
+    /// Lado de la puerta de los edificios que pone el vestido (grados respecto al +Z local), medido en sus
+    /// hijos Door* (la puerta a ras de suelo o, si no hay, la principal del piso alto). En la taberna AT18 es la
+    /// terraza (−X), que es por donde se entra; en el archivo AT31, la fachada larga −Z (sus puertas, en los
+    /// testeros, dan a las calles laterales); en el cuerpo de guardia AT25, el porche de madera (−X).
     private static readonly Dictionary<string, float> LadoDeLaPuertaNuevas = new()
     {
-        { "BuildingAT02", 90f }, { "BuildingAT06", 180f }, { "BuildingAT47", 180f }, { "BuildingAT53", 180f },
-    };
-
-    /// Casas nuevas del Reino: solares libres medidos sobre MainWorld (huella, calles, muralla, pendiente y
-    /// sendas de las puertas vecinas). La puerta mira a su calle.
-    private static CasaNueva[] CasasNuevasDelReino() => new[]
-    {
-        new CasaNueva("BuildingAT47", 62.2f, 305.1f, 189.3f),
-        new CasaNueva("BuildingAT02", 70.3f, 303.5f, 192.1f),
-        new CasaNueva("BuildingAT53", 78.6f, 301.8f, 192.1f),
-        new CasaNueva("BuildingAT06", 87.9f, 299.0f, 212.4f),
-        new CasaNueva("BuildingAT02", -80.0f, 251.2f, 0f),
-        new CasaNueva("BuildingAT47", -62.0f, 251.0f, 0f),
-        new CasaNueva("BuildingAT02", -84.0f, 307.8f, 180f),
-        new CasaNueva("BuildingAT47", -62.0f, 326.0f, 90f),
-        new CasaNueva("BuildingAT53", -46.0f, 326.0f, 270f),
-        new CasaNueva("BuildingAT47", 28.5f, 308.0f, 180f),
-        new CasaNueva("BuildingAT02", 42.0f, 307.8f, 180f),
-        new CasaNueva("BuildingAT47", 46.0f, 324.0f, 90f),
-        new CasaNueva("BuildingAT53", 62.0f, 324.0f, 270f),
+        { "BuildingAT02", 90f }, { "BuildingAT06", 180f }, { "BuildingAT07", 90f }, { "BuildingAT09", 90f },
+        { "BuildingAT17", 180f }, { "BuildingAT18", 270f }, { "BuildingAT25", 270f }, { "BuildingAT27", 90f },
+        { "BuildingAT31", 180f }, { "BuildingAT46", 270f }, { "BuildingAT47", 180f }, { "BuildingAT48", 90f },
+        { "BuildingAT53", 180f }, { "BuildingAT54", 180f }, { "BuildingAT55", 180f },
     };
 
     private struct Puerta
@@ -103,7 +81,7 @@ public static partial class VestidoDelMundo
 
     private const string GrupoCasasNuevas = "Casas nuevas";
 
-    private static string NombreCasaNueva(int i, CasaNueva n) => $"Casa nueva {i} ({n.Prefab})";
+    private static string NombreCasaNueva(int i, CasaNueva n) => n.Nombre ?? $"Casa nueva {i} ({n.NombrePrefab})";
 
     private static Vector2 FrenteDe(float grados)
     {
@@ -150,6 +128,8 @@ public static partial class VestidoDelMundo
             if (grupo == null) continue;
             foreach (Transform casa in grupo)
             {
+                // Lo retirado (inactivo) no tiene puerta: ni senda ni patio.
+                if (!casa.gameObject.activeSelf) continue;
                 GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(casa.gameObject);
                 if (fuente == null || !fuente.name.StartsWith("BuildingAT")) continue;
                 Vector3 f3 = FrenteDeCasa(casa, fuente.name, giradas);
@@ -162,7 +142,7 @@ public static partial class VestidoDelMundo
             {
                 CasaNueva n = pueblo.Nuevas[i];
                 Transform casa = nuevas.Find(NombreCasaNueva(i + 1, n));
-                if (casa != null) r.Add(PuertaDe(casa.gameObject, FrenteDe(n.Frente), n.Prefab));
+                if (casa != null) r.Add(PuertaDe(casa.gameObject, FrenteDe(n.Frente), n.NombrePrefab));
             }
         return r;
     }
@@ -195,7 +175,7 @@ public static partial class VestidoDelMundo
 
     private static void RegistrarCorredores(Obra o, Pueblo pueblo, List<Puerta> puertas)
     {
-        foreach (Vector2[] c in pueblo.Calles) o.Corredores.Add((c, pueblo.AnchoCalle * 0.5f + 0.6f));
+        for (int i = 0; i < pueblo.Calles.Length; i++) o.Corredores.Add((pueblo.Calles[i], pueblo.AnchoDeCalle(i) * 0.5f + 0.6f));
         foreach (Vector2[] c in pueblo.Accesos) o.Corredores.Add((c, 3.1f));
         foreach (Puerta p in puertas)
         {
@@ -230,14 +210,16 @@ public static partial class VestidoDelMundo
         HashSet<string> giradas = CasasGiradas(escena);
         foreach (Pueblo pueblo in Pueblos())
         {
+            // La capital se viste en PonerCapital (VestidoDelMundo.Capital): sus piezas de obra van antes que
+            // las farolas y los adornos de las puertas, que se adaptan a ellas.
+            if (pueblo.Nombre == NombreDelReino) continue;
             Transform grupo = Grupo(o.Raiz, pueblo.Nombre);
             List<Puerta> puertas = PuertasDelPueblo(escena, pueblo, giradas);
             RegistrarCorredores(o, pueblo, puertas);
             int antes = o.Puestas;
-            AdornarPuertas(o, Grupo(grupo, "Puertas"), puertas, pueblo.Semilla);
+            AdornarPuertas(o, Grupo(grupo, "Puertas"), puertas, pueblo.Semilla, ciudad: false);
             FarolasEnCalles(o, Grupo(grupo, "Farolas"), pueblo);
-            if (pueblo.Nombre == "Reino") EscenasDelReino(o, grupo);
-            else if (pueblo.Nombre == "Pueblo pesquero") EscenasDelPuerto(o, grupo);
+            if (pueblo.Nombre == "Pueblo pesquero") EscenasDelPuerto(o, grupo);
             else if (pueblo.Nombre == "Pueblo vecino") EscenasDelVecino(o, grupo);
             else if (pueblo.Nombre == "Granjas de la cascada") EscenasDeLasGranjas(o, grupo);
             Jardines(o, Grupo(grupo, "Jardines"), pueblo);
@@ -258,10 +240,10 @@ public static partial class VestidoDelMundo
             for (int i = 0; i < pueblo.Nuevas.Length; i++)
             {
                 CasaNueva n = pueblo.Nuevas[i];
-                LadoDeLaPuertaNuevas.TryGetValue(n.Prefab, out float lado);
+                LadoDeLaPuertaNuevas.TryGetValue(n.NombrePrefab, out float lado);
                 var p = new Pieza
                 {
-                    Prefab = PrefabsEdificios + n.Prefab + ".prefab",
+                    Prefab = n.Ruta,
                     Nombre = NombreCasaNueva(i + 1, n),
                     Pos = n.Pos,
                     Rumbo = n.Frente - lado,
@@ -276,8 +258,9 @@ public static partial class VestidoDelMundo
         }
     }
 
-    /// Macetas a los lados de cada puerta y, según la casa, banco o barriles y cajas.
-    private static void AdornarPuertas(Obra o, Transform grupo, List<Puerta> puertas, int semilla)
+    /// Macetas a los lados de cada puerta y, según la casa, banco o barriles y cajas. En la ciudad, las macetas
+    /// son bolas de boj o jardineras y no hay leña.
+    private static void AdornarPuertas(Obra o, Transform grupo, List<Puerta> puertas, int semilla, bool ciudad)
     {
         // Pegado a la casa: puede estar junto a una senda, pero el interior de las plazas no se adorna.
         void Junto(string prefab, string nombre, Vector2 pos, float giro)
@@ -291,7 +274,7 @@ public static partial class VestidoDelMundo
             Vector2 lado = new Vector2(p.Frente.y, -p.Frente.x);
             Vector2 fachada = p.Pos - p.Frente * 1.2f;
             float rumbo = Rumbo(p.Frente);
-            string maceta = dado.Siguiente() < 0.5f ? Maceta : Jardinera;
+            string maceta = dado.Siguiente() < 0.5f ? (ciudad ? MacetaDeBola : Maceta) : Jardinera;
             // La jardinera, con el lado largo a lo largo del muro.
             float giroMaceta = maceta == Jardinera ? rumbo : rumbo + 90f;
             Junto(maceta, "Maceta de la puerta", fachada + lado * 1.8f + p.Frente * 0.5f, giroMaceta);
@@ -305,12 +288,17 @@ public static partial class VestidoDelMundo
                 Junto(Barril, "Barril junto a la puerta", fachada + lado * s * 3.3f + p.Frente * 0.6f, dado.Entre(0f, 360f));
                 Junto(Caja, "Caja junto a la puerta", fachada + lado * s * 4.3f + p.Frente * 0.6f, dado.Entre(0f, 360f));
             }
-            else if (tirada < 0.85f)
+            else if (tirada < 0.85f && !ciudad)
                 Junto(Lena, "Leña junto a la casa", fachada + lado * s * 3.5f + p.Frente * 0.6f, rumbo);
         }
     }
 
-    /// Farolas cada ~18 m a un lado y otro de calles y accesos.
+    /// Distancia del borde de una calle pavimentada al pie de lo que va en su acera (farolas, estandartes): la
+    /// acera es la franja de 0,75 m del borde, por fuera del bordillo.
+    private const float DentroDeLaAcera = 0.4f;
+
+    /// Farolas a un lado y otro de calles y accesos: cada ~18 m, junto al borde de la calle; en las calles
+    /// pavimentadas, en la acera (cada 12 m en las avenidas de 8 m o más y cada 16 m en las demás).
     private static void FarolasEnCalles(Obra o, Transform grupo, Pueblo pueblo)
     {
         void Recorrer(Vector2[] linea, float desplazamiento, float paso, int semilla)
@@ -334,7 +322,12 @@ public static partial class VestidoDelMundo
                 if (acumulado < 0f) acumulado += paso;
             }
         }
-        for (int i = 0; i < pueblo.Calles.Length; i++) Recorrer(pueblo.Calles[i], pueblo.AnchoCalle * 0.5f + 1.1f, 18f, pueblo.Semilla + i);
+        for (int i = 0; i < pueblo.Calles.Length; i++)
+        {
+            float ancho = pueblo.AnchoDeCalle(i);
+            if (pueblo.Pavimentado) Recorrer(pueblo.Calles[i], ancho * 0.5f - DentroDeLaAcera, ancho >= 8f ? 12f : 16f, pueblo.Semilla + i);
+            else Recorrer(pueblo.Calles[i], ancho * 0.5f + 1.1f, 18f, pueblo.Semilla + i);
+        }
         for (int i = 0; i < pueblo.Accesos.Length; i++) Recorrer(pueblo.Accesos[i], 3.6f, 20f, pueblo.Semilla + 40 + i);
     }
 
@@ -354,7 +347,7 @@ public static partial class VestidoDelMundo
     /// Jardines en los huecos: árbol o parterre con flores, lejos de calles, sendas, plazas y casas.
     private static void Jardines(Obra o, Transform grupo, Pueblo pueblo)
     {
-        int maximo = pueblo.Nombre == "Reino" ? 30 : 10;
+        const int maximo = 10;
         var dado = new Ruido.Dado(pueblo.Semilla + 900);
         var puestos = new List<Vector2>();
         foreach (Vector3 d in pueblo.Alfombra)
@@ -430,70 +423,6 @@ public static partial class VestidoDelMundo
     }
 
     // ── Escenas propias de cada pueblo ───────────────────────────────────────────────────────
-
-    private static void EscenasDelReino(Obra o, Transform grupo)
-    {
-        // Entrada al castillo: armaduras y estandartes delante de las torres (su cara sur está en z ≈ 318,9),
-        // fuera del eje plaza→puerta (x ±6), del acceso despejado (12 m alrededor de (0,320)) y de la plaza real.
-        Transform entrada = Grupo(grupo, "Entrada del castillo");
-        foreach (float s in new[] { -1f, 1f })
-        {
-            Pon(o, entrada, Armadura, "Armadura de la guardia", new Vector2(s * 13f, 317.8f), 180f, 2.3f, Medida.Alto, corredor: false, camino: true);
-            Pon(o, entrada, EstandarteColor, "Estandarte del castillo", new Vector2(s * 16.5f, 317f), 180f, 5f, Medida.Alto, corredor: false, camino: true);
-        }
-
-        // Plaza real (reservada para la audiencia y el Demonio 2): solo adornos fuera del rectángulo.
-        Transform plazaReal = Grupo(grupo, "Bordes de la plaza real");
-        foreach (float sx in new[] { -1f, 1f })
-            foreach (float z in new[] { 286f, 312f })
-                Pon(o, plazaReal, Estandarte, "Estandarte de la plaza real", new Vector2(sx * 22.8f, z), sx > 0 ? -90f : 90f, 4.4f, Medida.Alto, camino: true, corredor: false);
-        Pon(o, plazaReal, Jardinera, "Jardinera de la plaza real", new Vector2(-26f, 287f), 90f, camino: true);
-        Pon(o, plazaReal, Jardinera, "Jardinera de la plaza real", new Vector2(26f, 287f), -90f, camino: true);
-        Pon(o, plazaReal, Banco, "Banco de la plaza real", new Vector2(-27f, 291f), 90f, camino: true);
-        Pon(o, plazaReal, Banco, "Banco de la plaza real", new Vector2(27f, 291f), -90f, camino: true);
-
-        // Plazoletas entre casas de la terraza alta: al este, pozo y bancos; al oeste, patio de armas de la guardia.
-        Transform plazoleta = Grupo(grupo, "Plazoleta del pozo");
-        Vector2 c = new Vector2(34f, 326f);
-        Pon(o, plazoleta, Pozo, "Pozo de la plazoleta", c, 0f, 1.25f);
-        Pon(o, plazoleta, Banco, "Banco de la plazoleta", c + new Vector2(-3.4f, 0f), -90f);
-        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, 2.6f), 0f);
-        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, -2.6f), 0f);
-        Transform armas = Grupo(grupo, "Patio de armas de la guardia");
-        Vector2 a = new Vector2(-34f, 326f);
-        Pon(o, armas, Armero, "Armero de la guardia", a + new Vector2(-2.5f, 3f), 180f);
-        Pon(o, armas, Maniqui, "Maniquí de entrenamiento", a + new Vector2(1.5f, -2f), 0f, 2.1f, Medida.Alto);
-        Pon(o, armas, Diana, "Diana de tiro", a + new Vector2(2.8f, 2.8f), 225f);
-        Pon(o, armas, Barril, "Barril de la guardia", a + new Vector2(-3.2f, -2.6f), 0f);
-
-        // Mercado de la terraza baja: puestos a lo largo de la calle, fuera de la plaza de la taberna.
-        Transform mercado = Grupo(grupo, "Mercado de la terraza baja");
-        var puestos = new (float x, float z, float frente)[]
-        {
-            (30f, 249f, 270f), (-55f, 252f, 0f), (48f, 252f, 0f), (58f, 252f, 0f), (-64f, 264.25f, 180f),
-            (-49f, 265f, 180f), (31f, 265f, 180f), (45f, 265f, 180f), (60f, 265f, 180f),
-        };
-        for (int i = 0; i < puestos.Length; i++)
-        {
-            var (x, z, frente) = puestos[i];
-            GameObject g = Pon(o, mercado, PuestosDeMercado[i % PuestosDeMercado.Length], "Puesto del mercado", new Vector2(x, z), frente, camino: true, holgura: 0.1f);
-            if (g == null) continue;
-            Vector2 f = new Vector2(Mathf.Sin(frente * Mathf.Deg2Rad), Mathf.Cos(frente * Mathf.Deg2Rad));
-            Vector2 l = new Vector2(f.y, -f.x);
-            // Al costado del puesto, fuera de su huella (el de ultramarinos mide más de 7 m de ancho).
-            float costado = Mathf.Max(3.2f, HuellaOrientada(g, frente).MedioX + 0.7f);
-            Pon(o, mercado, i % 2 == 0 ? Caja : Sacos, "Género del puesto", new Vector2(x, z) + l * costado, frente + 20f, camino: true, holgura: 0.02f);
-            if (i % 3 == 0) Pon(o, mercado, Barril, "Barril del puesto", new Vector2(x, z) - l * costado, 0f, camino: true, holgura: 0.02f);
-        }
-        Pon(o, mercado, CarroToldo, "Carro-puesto del mercado", new Vector2(-41f, 253f), 90f, camino: true);
-        Pon(o, mercado, Carreta, "Carreta de descarga", new Vector2(82f, 266f), 200f, camino: true);
-
-        // Puerta de la muralla (sureste): un estandarte a cada lado de la calle que entra por el hueco, fuera
-        // de la calzada (los descarta si la tocan).
-        Transform puerta = Grupo(grupo, "Puerta de la muralla");
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(88.2f, 252.92f), 118.4f, 5f, Medida.Alto, desnivel: 1.2f);
-        Pon(o, puerta, EstandarteColor, "Estandarte de la puerta", new Vector2(94.9f, 244.29f), -61.6f, 5f, Medida.Alto, desnivel: 1.2f);
-    }
 
     private static void EscenasDelPuerto(Obra o, Transform grupo)
     {
