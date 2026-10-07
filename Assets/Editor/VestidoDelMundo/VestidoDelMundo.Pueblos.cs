@@ -40,6 +40,11 @@ public static partial class VestidoDelMundo
         public Vector3[] Alfombra = new Vector3[0];
         public Vector2[][] Calles = new Vector2[0][];
         public float AnchoCalle = 6f;
+        /// Ancho de cada calle, en el mismo orden que Calles; null (o sin entrada para una calle): AnchoCalle.
+        public float[] AnchosDeCalle;
+        /// Calles y plazas hechas con mallas de pavimento (VestidoDelMundo.Pavimento): la pintura del pueblo
+        /// pone tierra debajo y no pinta adoquín, baldosa ni alfombra donde va el pavimento.
+        public bool Pavimentado;
         public Plaza[] Plazas = new Plaza[0];
         public Vector2[][] Accesos = new Vector2[0][];
         public Rect[] Huertos = new Rect[0];
@@ -54,6 +59,9 @@ public static partial class VestidoDelMundo
         public string CapaSendaA = CapaTierraPiedras, CapaSendaB = CapaTierra;
         public float RadioNucleo = 6.5f, IntensidadNucleo = 0.8f, RadioPatio = 3.5f;
         public int Semilla;
+
+        /// Ancho de la calle «i» (ver AnchosDeCalle).
+        public float AnchoDeCalle(int i) => AnchosDeCalle != null && i >= 0 && i < AnchosDeCalle.Length ? AnchosDeCalle[i] : AnchoCalle;
     }
 
     private static Rect Huerto(float x, float z, float ancho, float largo) => new Rect(x - ancho * 0.5f - 1f, z - largo * 0.5f - 1f, ancho + 2f, largo + 2f);

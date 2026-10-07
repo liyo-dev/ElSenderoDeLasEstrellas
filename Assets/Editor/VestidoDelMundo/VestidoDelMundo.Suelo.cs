@@ -78,6 +78,10 @@ public static partial class VestidoDelMundo
 
         public float Altura(float x, float z) => Terreno.SampleHeight(new Vector3(x, 0f, z)) + origen.y;
 
+        /// Pendiente del terreno en el punto, en grados (0 = llano, 90 = vertical).
+        public float Pendiente(float x, float z) =>
+            Datos.GetSteepness(Mathf.Clamp01((x - origen.x) / tamano.x), Mathf.Clamp01((z - origen.z) / tamano.z));
+
         public float Peso(float x, float z, int capa) => capa < 0 ? 0f : Pesos[K(z), I(x), capa];
 
         /// Mezcla convexa: lleva la celda hacia la capa indicada con fuerza s (0..1).

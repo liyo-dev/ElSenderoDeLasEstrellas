@@ -3,12 +3,27 @@ using UnityEditor;
 using UnityEngine;
 
 /// Colocación de piezas sobre el Terrain de MainWorld con comprobaciones: tamaño objetivo medido en el
-/// propio prefab, apoyo en varios puntos de la huella, desnivel máximo, choque con colisionadores que ya
-/// estaban en la escena, zonas que hay que dejar libres y caminos pintados. Lo que no pasa una comprobación
-/// no se coloca y se anota en el informe.
+/// propio prefab, apoyo en el terreno (bajo la huella, bajo el tronco, en el fondo del agua o flotando),
+/// desnivel y pendiente máximos, choque con colisionadores que ya estaban en la escena, zonas que hay que
+/// dejar libres y caminos pintados. Lo que no pasa una comprobación no se coloca y se anota en el informe.
 public static partial class VestidoDelMundo
 {
     private enum Medida { Alto, Lado, Escala }
+
+    /// Cómo se apoya una pieza en el terreno.
+    private enum Apoyo
+    {
+        /// Base en el punto más bajo del terreno bajo toda la huella; el desnivel se mide en toda ella.
+        Huella,
+        /// Árboles, matas y farolas: apoyo, desnivel y choques en un círculo de radio RadioTronco alrededor
+        /// de Pos, y el solape con lo demás del vestido con la huella reducida a la mitad (las copas pueden
+        /// montarse). Se hunde 0,15 m + RadioTronco × tan(pendiente), hasta 0,6 m; Hundir no se usa.
+        Tronco,
+        /// Como Huella, pero también bajo el agua (fondo de la laguna): no mira el nivel del mar.
+        Fondo,
+        /// Sobre la lámina de agua: base en CotaAgua − Hundir, sin mirar el desnivel ni el nivel del mar.
+        Flotar,
+    }
 
     /// Una pieza a colocar. Pos es el centro de la huella visible en planta; Rumbo, el giro en grados.
     private sealed class Pieza
@@ -19,16 +34,34 @@ public static partial class VestidoDelMundo
         public float Rumbo;
         public float Tamano = 1f;
         public Medida Medida = Medida.Escala;
-        /// Metros que se hunde la base por debajo del punto más bajo del terreno bajo la huella.
+        /// Metros que se hunde la base por debajo del punto más bajo del terreno bajo la huella (en Flotar,
+        /// por debajo de CotaAgua; negativo la deja por encima). En Tronco no se usa.
         public float Hundir = 0.05f;
         /// Inclinación en grados (ruinas, troncos caídos): se aplica alrededor de un eje horizontal según Rumbo.
         public float Inclinar;
-        /// Desnivel máximo del terreno bajo la huella; por encima no se coloca.
+        /// Desnivel máximo del terreno bajo la huella (en Tronco, en su círculo); por encima no se coloca.
         public float DesnivelMax = 1.2f;
         public bool PermitirSolapePropio;
         public bool PermitirCamino;
         /// Holgura extra (m) alrededor de la huella al comprobar choques con lo que ya había.
         public float Holgura = 0.3f;
+        /// Cómo se apoya en el terreno.
+        public Apoyo Apoyo = Apoyo.Huella;
+        /// Radio (m) del círculo de apoyo en Tronco; 0: 0,25 × el lado mayor de la huella, con un mínimo de 0,3 m.
+        public float RadioTronco;
+        /// Pendiente máxima del terreno en Pos, en grados; por encima no se coloca.
+        public float PendienteMax = 90f;
+        /// Altura de la lámina de agua sobre la que flota (Apoyo.Flotar).
+        public float CotaAgua;
+        /// No pasa por las zonas libres (piezas que van dentro de ellas a propósito: muralla, escalinata).
+        public bool IgnorarZonas;
+        /// No se descarta por quedar bajo el nivel del mar o en la orilla (Fondo y Flotar ya no lo miran).
+        public bool IgnorarNivelDelMar;
+        /// No recibe NavMeshObstacle al clasificar lo generado (escalinata, puerta, pavimento, juncos…).
+        public bool SinObstaculo;
+        /// Si no es null, sustituye al Tree.mat del pack FK en todas las mallas de la pieza (follaje matizado
+        /// de los árboles verdes, cerezo). Los árboles de color se dejan con Tree.mat.
+        public Material MaterialFollaje;
     }
 
     /// Nivel del mar de MainWorld (WORLD/Mar). Lo que apoyaría por debajo de NivelDelMar + MargenDeOrilla
@@ -56,6 +89,10 @@ public static partial class VestidoDelMundo
             Vector2 d = p - Centro;
             return Mathf.Abs(Vector2.Dot(d, EjeX)) <= MedioX + margen && Mathf.Abs(Vector2.Dot(d, EjeZ)) <= MedioZ + margen;
         }
+
+        /// La misma huella con los lados multiplicados por «factor» alrededor de su centro.
+        public Huella Reducida(float factor) =>
+            new Huella { Centro = Centro, EjeX = EjeX, EjeZ = EjeZ, MedioX = MedioX * factor, MedioZ = MedioZ * factor };
     }
 
     /// Estado de una ejecución: terreno, raíz generada, informe y huellas ya ocupadas.
@@ -77,6 +114,12 @@ public static partial class VestidoDelMundo
         public readonly List<Rect> PlazasLibres = new();
         /// Ejemplares de cada prefab que ya estaban en la escena (para copiar sus materiales matizados).
         public readonly Dictionary<string, List<GameObject>> EjemplaresPorPrefab = new();
+        /// Lo generado que no debe recibir NavMeshObstacle al clasificar (ver SinObstaculo(Obra, Collider)).
+        public readonly HashSet<Transform> SinObstaculo = new();
+        /// Identificadores de lo retirado de la escena; se lee del registro la primera vez que hace falta.
+        public HashSet<string> Retirados;
+        /// Por cada motivo de retirada, su línea en el informe y cuántos objetos van.
+        public readonly Dictionary<string, (int linea, int cuenta)> RetiradosPorMotivo = new();
 
         public void Descartar(string motivo, Pieza p)
         {
@@ -141,6 +184,18 @@ public static partial class VestidoDelMundo
             }
     }
 
+    /// Altura mínima y máxima del terreno en un círculo (centro y ocho puntos del borde).
+    private static void AlturasEnCirculo(Obra o, Vector2 centro, float radio, out float min, out float max)
+    {
+        min = max = o.Suelo.Altura(centro.x, centro.y);
+        for (int i = 0; i < 8; i++)
+        {
+            float a = i * Mathf.PI * 0.25f;
+            float y = o.Suelo.Altura(centro.x + Mathf.Cos(a) * radio, centro.y + Mathf.Sin(a) * radio);
+            min = Mathf.Min(min, y); max = Mathf.Max(max, y);
+        }
+    }
+
     private static readonly int[] CapasDeCamino = new int[8];
 
     /// Peso de camino/calle pintado en el punto (capa de camino del mapa, adoquín, baldosa y tierra de pueblo).
@@ -170,10 +225,26 @@ public static partial class VestidoDelMundo
 
     private static bool ChocaConLoQueHabia(Obra o, Bounds b, float holgura)
     {
-        Physics.SyncTransforms();
         Vector3 medio = new Vector3(b.extents.x + holgura, Mathf.Max(0.2f, b.extents.y * 0.8f), b.extents.z + holgura);
         // Se sube un poco la caja para no contar el propio terreno ni los bordillos a ras de suelo.
         Vector3 centro = b.center + Vector3.up * (b.extents.y * 0.2f + 0.15f);
+        return ChocaEnCaja(o, centro, medio);
+    }
+
+    /// Choque de un tronco: columna de radio «radio» (más la holgura) desde un palmo sobre el suelo en
+    /// Pos hasta lo alto de la pieza. La copa puede pasar por encima de lo que había.
+    private static bool ChocaElTronco(Obra o, Vector2 pos, float radio, Bounds b, float holgura)
+    {
+        float suelo = o.Suelo.Altura(pos.x, pos.y) + 0.2f;
+        float techo = Mathf.Max(b.max.y, suelo + 0.4f);
+        float lado = radio + holgura;
+        return ChocaEnCaja(o, new Vector3(pos.x, (suelo + techo) * 0.5f, pos.y), new Vector3(lado, (techo - suelo) * 0.5f, lado));
+    }
+
+    /// Si algo que ya estaba en la escena (fuera de lo generado) ocupa la caja de centro y semitamaño dados.
+    private static bool ChocaEnCaja(Obra o, Vector3 centro, Vector3 medio)
+    {
+        Physics.SyncTransforms();
         int n = Physics.OverlapBoxNonAlloc(centro, medio, o.Buffer, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
         for (int i = 0; i < n; i++)
         {
@@ -256,6 +327,11 @@ public static partial class VestidoDelMundo
     {
         GameObject prefab = CargarPrefab(o, p.Prefab);
         if (prefab == null) { o.Descartar("falta el prefab", p); return null; }
+        if (p.PendienteMax < 90f && o.Suelo.Pendiente(p.Pos.x, p.Pos.y) > p.PendienteMax)
+        {
+            o.Descartar($"pendiente de más de {p.PendienteMax:0}°", p);
+            return null;
+        }
 
         var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab, grupo);
         go.name = p.Nombre;
@@ -286,30 +362,27 @@ public static partial class VestidoDelMundo
         t.position += new Vector3(p.Pos.x - b.center.x, 0f, p.Pos.y - b.center.z);
         b = LimitesVisibles(go);
 
-        AlturasBajo(o, b, out float min, out float max);
-        if (max - min > p.DesnivelMax)
+        // La huella en planta no depende de la altura: se mide antes de apoyar (el tronco sale de ella).
+        Huella huella = HuellaOrientada(go, p.Rumbo);
+        float radioTronco = p.Apoyo != Apoyo.Tronco ? 0f
+            : p.RadioTronco > 0f ? p.RadioTronco : Mathf.Max(0.3f, 0.5f * Mathf.Max(huella.MedioX, huella.MedioZ));
+        string motivo = Apoyar(o, p, t, b, radioTronco);
+        if (motivo != null)
         {
             Object.DestroyImmediate(go);
-            o.Descartar($"terreno demasiado desigual ({max - min:0.0} m)", p);
+            o.Descartar(motivo, p);
             return null;
         }
-        if (min < NivelDelMar + MargenDeOrilla)
-        {
-            Object.DestroyImmediate(go);
-            o.Descartar("en el agua o en la orilla", p);
-            return null;
-        }
-        t.position += Vector3.up * (min - p.Hundir - b.min.y);
         b = LimitesVisibles(go);
 
-        Huella huella = HuellaOrientada(go, p.Rumbo);
+        if (p.Apoyo == Apoyo.Tronco) huella = huella.Reducida(0.5f);
         if (!p.PermitirSolapePropio && SolapaPropio(o, huella))
         {
             Object.DestroyImmediate(go);
             o.Descartar("se pisa con otra pieza del vestido", p);
             return null;
         }
-        if (EnZonaLibre(o, b, out string zona))
+        if (!p.IgnorarZonas && EnZonaLibre(o, b, out string zona))
         {
             Object.DestroyImmediate(go);
             o.Descartar("zona que debe quedar libre: " + zona, p);
@@ -321,16 +394,83 @@ public static partial class VestidoDelMundo
             o.Descartar("pisa un camino o una calle", p);
             return null;
         }
-        if (ChocaConLoQueHabia(o, b, p.Holgura))
+        if (p.Apoyo == Apoyo.Tronco ? ChocaElTronco(o, p.Pos, radioTronco, b, p.Holgura) : ChocaConLoQueHabia(o, b, p.Holgura))
         {
             Object.DestroyImmediate(go);
             o.Descartar("choca con algo que ya estaba en la escena", p);
             return null;
         }
 
+        if (p.MaterialFollaje != null) CambiarFollaje(go, p.MaterialFollaje);
+        if (p.SinObstaculo) o.SinObstaculo.Add(t);
         o.Ocupado.Add(huella);
         o.Puestas++;
         return go;
+    }
+
+    /// Sube o baja la pieza (ya centrada en Pos) hasta su apoyo según p.Apoyo. Devuelve el motivo de
+    /// descarte, o null si se ha apoyado.
+    private static string Apoyar(Obra o, Pieza p, Transform t, Bounds b, float radioTronco)
+    {
+        if (p.Apoyo == Apoyo.Flotar)
+        {
+            t.position += Vector3.up * (p.CotaAgua - p.Hundir - b.min.y);
+            return null;
+        }
+
+        float min, max, baseY;
+        if (p.Apoyo == Apoyo.Tronco)
+        {
+            AlturasEnCirculo(o, p.Pos, radioTronco, out min, out max);
+            if (max - min > p.DesnivelMax) return $"terreno demasiado desigual bajo el tronco ({max - min:0.0} m)";
+            float pendiente = Mathf.Min(o.Suelo.Pendiente(p.Pos.x, p.Pos.y), 89f);
+            baseY = o.Suelo.Altura(p.Pos.x, p.Pos.y) - Mathf.Min(0.6f, 0.15f + radioTronco * Mathf.Tan(pendiente * Mathf.Deg2Rad));
+        }
+        else
+        {
+            AlturasBajo(o, b, out min, out max);
+            if (max - min > p.DesnivelMax) return $"terreno demasiado desigual ({max - min:0.0} m)";
+            baseY = min - p.Hundir;
+        }
+        bool mirarMar = p.Apoyo != Apoyo.Fondo && !p.IgnorarNivelDelMar;
+        if (mirarMar && min < NivelDelMar + MargenDeOrilla) return "en el agua o en la orilla";
+        t.position += Vector3.up * (baseY - b.min.y);
+        return null;
+    }
+
+    /// Material de serie de los árboles del pack FK: la paleta de color de todas sus variantes.
+    private const string FinRutaMaterialArbolFK = "/Fantasy_Kingdom_Pack/Materials/Tree.mat";
+
+    /// Cambia el Tree.mat del pack FK por «follaje» en todas las mallas de la pieza.
+    private static void CambiarFollaje(GameObject go, Material follaje)
+    {
+        foreach (MeshRenderer r in go.GetComponentsInChildren<MeshRenderer>(true))
+        {
+            Material[] materiales = r.sharedMaterials;
+            bool cambiado = false;
+            for (int i = 0; i < materiales.Length; i++)
+            {
+                if (materiales[i] == null || !AssetDatabase.GetAssetPath(materiales[i]).EndsWith(FinRutaMaterialArbolFK, System.StringComparison.Ordinal)) continue;
+                materiales[i] = follaje;
+                cambiado = true;
+            }
+            if (!cambiado) continue;
+            r.sharedMaterials = materiales;
+            GuardarOverrides(r);
+        }
+    }
+
+    /// Si el collider cuelga de algo que se puso con SinObstaculo (o se añadió a mano a o.SinObstaculo):
+    /// NavMeshAutoSetup.ClasificarBajo no le pone NavMeshObstacle.
+    private static bool SinObstaculo(Obra o, Collider c)
+    {
+        if (c == null || o.SinObstaculo.Count == 0) return false;
+        for (Transform t = c.transform; t != null; t = t.parent)
+        {
+            if (o.SinObstaculo.Contains(t)) return true;
+            if (t == o.Raiz) return false;
+        }
+        return false;
     }
 
     private static Transform Grupo(Transform padre, string nombre)

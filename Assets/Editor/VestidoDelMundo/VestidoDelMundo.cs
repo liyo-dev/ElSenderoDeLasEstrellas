@@ -8,13 +8,18 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// Vestido de MainWorld: suelos de calle al estilo del pueblo de Will en el resto de pueblos, ciudad del
-/// castillo más rica y parajes con ruinas y hallazgos entre zonas para que explorar no sea aburrido.
+/// Vestido de MainWorld: suelos de calle al estilo del pueblo de Will en el resto de pueblos, capital del
+/// castillo, vegetación, agua y parajes con ruinas y hallazgos entre zonas para que explorar no sea aburrido.
 ///
-/// No toca nada que ya estuviera en la escena salvo, si se pide, el giro de las casas generadas para que la
-/// puerta dé a su calle (se guarda la posición original y «Quitar» la repone). Todo lo nuevo cuelga de una
-/// sola raíz, WORLD/«Vestido del mundo (generado)», que se borra y se rehace en cada ejecución. El suelo se
-/// pinta sobre el TerrainData con copia previa exacta en _ClaudeBackups/VestidoDelMundo.
+/// De lo que ya estaba en la escena solo cambia dos cosas, y las dos con registro para deshacerlas (ver
+/// VestidoDelMundo.Casas): gira las casas del generador para que la puerta dé a su calle y retira lo que
+/// estorba a lo nuevo (inactivo y fuera de la build, nunca borrado). «Quitar» y cada nueva ejecución, antes
+/// de empezar, lo reponen. Todo lo nuevo cuelga de una sola raíz, WORLD/«Vestido del mundo (generado)», que
+/// se borra y se rehace en cada ejecución; las mallas que genera van a CarpetaGenerada, que se vacía a la
+/// vez. El suelo se pinta sobre el TerrainData con copia previa exacta en _ClaudeBackups/VestidoDelMundo.
+///
+/// Cada parte (muralla, capital, pavimento, agua, vegetación) vive en su archivo y entra en el flujo por
+/// los ganchos de abajo; el orden está en Ejecutar.
 ///
 /// El pueblo de Will no se toca: es la referencia de estilo. No usa Undo (son miles de objetos y el
 /// terreno): para deshacer está el menú «quitar el vestido».
@@ -25,6 +30,43 @@ public static partial class VestidoDelMundo
     private const string NombreRaiz = "Vestido del mundo (generado)";
     private const string NombrePadre = "WORLD";
     private const string Etiqueta = "[VestidoDelMundo]";
+    /// Mallas que genera el vestido (pavimento, lámina de agua…): se vacía al borrar lo generado y se vuelve
+    /// a llenar en cada ejecución.
+    private const string CarpetaGenerada = "Assets/Scenes/Worlds/MainWorld_data/Vestido";
+    /// Materiales y texturas propios del vestido (cerezo, agua de la laguna, preset de ambiente): se crean
+    /// una vez y se reutilizan; «Quitar» no los borra.
+    private const string CarpetaRecursos = "Assets/Art/World/Vestido";
+
+    // ── Ganchos ──────────────────────────────────────────────────────────────────────────────
+    // Cada parte del vestido implementa los suyos en su archivo con la misma firma
+    // («static partial void Nombre(...) { ... }», sin modificador de acceso). Uno sin implementar no hace nada.
+
+    /// Añade las zonas que la capital deja libres (antes de colocar nada).
+    static partial void ZonasDeLaCapital(List<Zona> libres);
+    /// Añade las zonas que el agua deja libres (antes de colocar nada).
+    static partial void ZonasDelAgua(List<Zona> libres);
+    /// Retira (Retirar) la muralla del generador que sustituye la nueva.
+    static partial void RetirarMurallaVieja(Scene escena, Obra o);
+    /// Retira (Retirar) lo que no encaja en la capital.
+    static partial void RetirarParaLaCapital(Scene escena, Obra o);
+    /// Retira (Retirar) lo que queda bajo el agua.
+    static partial void RetirarBajoElAgua(Scene escena, Obra o);
+    /// Pone la muralla nueva (antes que las casas nuevas y que la pintura del suelo).
+    static partial void PonerMuralla(Obra o);
+    /// Pinta el suelo bajo el pavimento (antes de normalizar los pesos).
+    static partial void PintarSueloDePavimento(Lienzo l, List<string> informe);
+    /// Pinta el fondo y la orilla del agua (antes de normalizar los pesos).
+    static partial void PintarSueloDeAgua(Lienzo l, List<string> informe);
+    /// Pinta flores y hierba de detalle (después de quitar la hierba del suelo duro; respeta l.DetalleBloqueado).
+    static partial void PintarFloresDeVegetacion(Lienzo l, List<string> informe);
+    /// Pone lo de la capital (después de los detalles de los pueblos).
+    static partial void PonerCapital(Obra o);
+    /// Pone las mallas de pavimento.
+    static partial void PonerPavimento(Obra o);
+    /// Pone la lámina de agua y lo de la ribera.
+    static partial void PonerAgua(Obra o);
+    /// Pone la vegetación (lo último: se adapta a todo lo demás).
+    static partial void PonerVegetacion(Obra o);
 
     [MenuItem("El Sendero/Escenario/MainWorld: vestir (suelos, castillo y parajes)", priority = 30)]
     private static void MenuVestirTodo() => Ejecutar(suelo: true, detalles: true);
@@ -40,14 +82,17 @@ public static partial class VestidoDelMundo
     {
         if (!Preparar(out Scene escena, out Terrain terreno)) return;
         if (!EditorUtility.DisplayDialog("Quitar el vestido de MainWorld",
-                "Se borra «" + NombreRaiz + "», las casas vuelven a su giro original y el suelo vuelve a la copia guardada.\n\n" +
+                "Se borra «" + NombreRaiz + "» con sus mallas, lo retirado vuelve a la escena, las casas vuelven a su giro original y el suelo vuelve a la copia guardada.\n\n" +
                 "Si has pintado el terreno a mano después del vestido, esa pintura se pierde." + AvisosAntesDeBorrar(escena), "Quitar", "Cancelar"))
             return;
 
         var informe = new List<string>();
+        OlvidarIndices();
         try
         {
             BorrarRaiz(escena, informe);
+            if (AssetDatabase.IsValidFolder(CarpetaGenerada)) AssetDatabase.DeleteAsset(CarpetaGenerada);
+            ReponerRetirados(escena, informe);
             ReponerCasas(escena, informe);
             EditorSceneManager.MarkSceneDirty(escena);
             EditorSceneManager.SaveScene(escena);
@@ -71,6 +116,10 @@ public static partial class VestidoDelMundo
             informe.Add("ERROR: " + e.Message);
             Debug.LogException(e);
         }
+        finally
+        {
+            OlvidarIndices();
+        }
         Terminar("Quitar el vestido", informe);
     }
 
@@ -84,6 +133,7 @@ public static partial class VestidoDelMundo
                 return;
         }
         var informe = new List<string> { $"Vestido de MainWorld — {DateTime.Now:yyyy-MM-dd HH:mm}" };
+        OlvidarIndices();
 
         try
         {
@@ -104,13 +154,16 @@ public static partial class VestidoDelMundo
                 return;
             }
 
-            // Las casas se giran y las nuevas se colocan antes de pintar: el suelo se pinta según lo que de
-            // verdad queda en la escena (puertas, sendas y patios).
+            // Lo retirado vuelve, lo que estorba se retira, las casas se giran y la muralla y las casas nuevas
+            // se colocan antes de pintar: el suelo se pinta según lo que de verdad queda en la escena
+            // (puertas, sendas y patios).
             Obra obra = null;
             if (detalles)
             {
-                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Girando casas y poniendo las nuevas…", 0.15f);
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Retirando lo que estorba, girando casas y poniendo la muralla y las casas nuevas…", 0.15f);
                 BorrarRaiz(escena, informe);
+                AsegurarCarpeta(CarpetaGenerada);
+                ReponerRetirados(escena, informe);
                 ReponerCasas(escena, informe);
                 obra = new Obra
                 {
@@ -119,8 +172,14 @@ public static partial class VestidoDelMundo
                     Raiz = CrearRaiz(escena),
                 };
                 obra.Libres.AddRange(ZonasLibres);
+                ZonasDeLaCapital(obra.Libres);
+                ZonasDelAgua(obra.Libres);
                 IndexarEjemplares(escena, obra);
+                RetirarMurallaVieja(escena, obra);
+                RetirarParaLaCapital(escena, obra);
+                RetirarBajoElAgua(escena, obra);
                 GirarCasasHaciaSuCalle(escena, obra);
+                PonerMuralla(obra);
                 PonerCasasNuevas(obra);
             }
 
@@ -128,9 +187,12 @@ public static partial class VestidoDelMundo
             {
                 EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Pintando calles y plazas…", 0.3f);
                 PintarZonas(lienzo, escena, informe);
+                PintarSueloDePavimento(lienzo, informe);
+                PintarSueloDeAgua(lienzo, informe);
                 lienzo.Normalizar();
                 terreno.terrainData.SetAlphamaps(0, 0, lienzo.Pesos);
                 int quitadas = QuitarHierbaDeSueloDuro(lienzo);
+                PintarFloresDeVegetacion(lienzo, informe);
                 EditorUtility.SetDirty(terreno.terrainData);
                 AssetDatabase.SaveAssets();
                 GuardarCopia(terreno.terrainData, Copia.Vestido);
@@ -142,10 +204,17 @@ public static partial class VestidoDelMundo
             {
                 EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Colocando detalles…", 0.5f);
                 PoblarZonas(obra);
-                int obstaculos = NavMeshAutoSetup.ClasificarBajo(obra.Raiz);
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Poniendo la capital, el pavimento y el agua…", 0.65f);
+                PonerCapital(obra);
+                PonerPavimento(obra);
+                PonerAgua(obra);
+                EditorUtility.DisplayProgressBar("Vestido de MainWorld", "Plantando la vegetación…", 0.8f);
+                PonerVegetacion(obra);
+                int obstaculos = NavMeshAutoSetup.ClasificarBajo(obra.Raiz, 1f, c => SinObstaculo(obra, c));
                 GuardarHuellaRaiz(obra.Raiz);
+                AssetDatabase.SaveAssets();
                 informe.AddRange(obra.Informe);
-                informe.Add($"Navegación: {obstaculos} obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta no talla el NavMesh.");
+                informe.Add($"Navegación: {obstaculos} obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo ({obra.SinObstaculo.Count} piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.");
                 informe.Add($"Detalles: {obra.Puestas} piezas colocadas, {obra.Descartadas} descartadas por comprobaciones.");
                 foreach (KeyValuePair<string, int> m in obra.Motivos.OrderByDescending(m => m.Value))
                     informe.Add($"  {m.Value,4} × {m.Key}");
@@ -163,6 +232,9 @@ public static partial class VestidoDelMundo
         finally
         {
             EditorUtility.ClearProgressBar();
+            OlvidarIndices();
+            // La carpeta de mallas solo se queda si alguna parte ha guardado algo en ella.
+            if (detalles && CarpetaVacia(CarpetaGenerada)) AssetDatabase.DeleteAsset(CarpetaGenerada);
         }
         Terminar("Vestido de MainWorld", informe);
     }
@@ -391,12 +463,85 @@ public static partial class VestidoDelMundo
         return null;
     }
 
+    /// Borra lo generado: la raíz de la escena y, después (ya sin nada que las use), las mallas de CarpetaGenerada.
     private static void BorrarRaiz(Scene escena, List<string> informe)
     {
         Transform raiz = BuscarRaiz(escena);
-        if (raiz == null) return;
-        UnityEngine.Object.DestroyImmediate(raiz.gameObject);
-        informe.Add("Borrado el vestido anterior.");
+        if (raiz != null)
+        {
+            UnityEngine.Object.DestroyImmediate(raiz.gameObject);
+            informe.Add("Borrado el vestido anterior.");
+        }
+        int mallas = VaciarCarpetaGenerada();
+        if (mallas > 0) informe.Add($"Borrados {mallas} assets generados de {CarpetaGenerada}.");
+    }
+
+    // ── Carpetas de assets del vestido ───────────────────────────────────────────────────────
+
+    /// Crea la carpeta de assets (y las que falten por encima) si no existe.
+    private static void AsegurarCarpeta(string ruta)
+    {
+        if (AssetDatabase.IsValidFolder(ruta)) return;
+        int corte = ruta.LastIndexOf('/');
+        if (corte <= 0) return;
+        string padre = ruta.Substring(0, corte);
+        AsegurarCarpeta(padre);
+        AssetDatabase.CreateFolder(padre, ruta.Substring(corte + 1));
+    }
+
+    private static bool CarpetaVacia(string ruta) =>
+        AssetDatabase.IsValidFolder(ruta) && AssetDatabase.FindAssets("", new[] { ruta }).Length == 0;
+
+    /// Borra uno a uno todos los assets de CarpetaGenerada (la carpeta se queda). Devuelve cuántos.
+    private static int VaciarCarpetaGenerada()
+    {
+        if (!AssetDatabase.IsValidFolder(CarpetaGenerada)) return 0;
+        var rutas = new List<string>();
+        foreach (string guid in AssetDatabase.FindAssets("", new[] { CarpetaGenerada }))
+        {
+            string ruta = AssetDatabase.GUIDToAssetPath(guid);
+            if (!string.IsNullOrEmpty(ruta) && !rutas.Contains(ruta)) rutas.Add(ruta);
+        }
+        // Lo más hondo primero: el contenido de una subcarpeta antes que la subcarpeta.
+        rutas.Sort((a, b) => b.Length.CompareTo(a.Length));
+        int n = 0;
+        AssetDatabase.StartAssetEditing();
+        try
+        {
+            foreach (string ruta in rutas)
+                if (AssetDatabase.DeleteAsset(ruta)) n++;
+        }
+        finally
+        {
+            AssetDatabase.StopAssetEditing();
+        }
+        return n;
+    }
+
+    /// Guarda una malla generada en CarpetaGenerada con un nombre libre a partir de «nombre» y devuelve su
+    /// ruta. Se borra con lo generado (en cada ejecución y al quitar).
+    private static string GuardarMallaGenerada(Mesh malla, string nombre)
+    {
+        AsegurarCarpeta(CarpetaGenerada);
+        foreach (char c in Path.GetInvalidFileNameChars()) nombre = nombre.Replace(c, '_');
+        string ruta = AssetDatabase.GenerateUniqueAssetPath(CarpetaGenerada + "/" + nombre + ".asset");
+        AssetDatabase.CreateAsset(malla, ruta);
+        return ruta;
+    }
+
+    /// Recurso propio del vestido que se crea una vez y se reutiliza (material, preset…: lo que se guarda con
+    /// AssetDatabase.CreateAsset): lo carga de CarpetaRecursos/«archivo» o, si no está, guarda ahí lo que
+    /// devuelva «crear» (un objeto nuevo, aún sin guardar; null: no se crea). «Quitar» no lo borra.
+    private static T RecursoPersistente<T>(string archivo, Func<T> crear) where T : UnityEngine.Object
+    {
+        string ruta = CarpetaRecursos + "/" + archivo;
+        T recurso = AssetDatabase.LoadAssetAtPath<T>(ruta);
+        if (recurso != null) return recurso;
+        recurso = crear();
+        if (recurso == null) return null;
+        AsegurarCarpeta(CarpetaRecursos);
+        AssetDatabase.CreateAsset(recurso, ruta);
+        return recurso;
     }
 
     private static void Terminar(string titulo, List<string> informe)
