@@ -12,8 +12,11 @@ using UnityEngine.SceneManagement;
 ///    objeto del `DayNightCycle`, que la sube de noche.
 /// 2. Luces: un hijo «LuzNocturna (…)» con `Light` + `LuzNocturna` en cada farol, antorcha,
 ///    hoguera y casa del pack que no tenga ya una luz.
-/// 3. Luciérnagas: zonas `LuciernagasNocturnas` donde hay más árboles juntos, lejos de las casas,
-///    bajo un objeto «Noche · Luciérnagas» (si ya existe, no se rehacen: borrarlo para regenerarlas).
+/// 3. Bosque: zonas con `LuciernagasNocturnas` y `NieblaNocturna` donde hay más árboles juntos,
+///    lejos de las casas, bajo un objeto «Noche · Luciérnagas» (si ya existe, no se rehacen: borrarlo
+///    para regenerarlas; a las zonas que ya existan sin niebla se les añade).
+/// 4. Chimeneas: un hijo «Humo» con `HumoDeChimenea` en lo alto de cada malla Chimney* del pack.
+/// 5. Cielo: `EstrellasFugaces` en el objeto del `DayNightCycle`.
 ///
 /// Se puede ejecutar varias veces: lo que ya está no se toca.
 public static class NocheDelMundoWiring
@@ -23,6 +26,9 @@ public static class NocheDelMundoWiring
     private const string CarpetaDeMascaras = "Assets/Art/Noche/";
 
     private const string MaterialDeLuciernaga = "Assets/_VFX/Hechizos/Materiales/M_Hechizo_Brillo_Aditivo.mat";
+    private const string MaterialDeNiebla = "Assets/Settings/AmbientPresets/Mat_GroundMist.mat";
+    private const string MaterialDeHumo = "Assets/_VFX/Hechizos/Materiales/M_Hechizo_Humo_Alfa.mat";
+    private const string NombreDelHumo = "Humo";
     private const string PrefijoDeLuz = "LuzNocturna";
     private const string RaizDeLuciernagas = "Noche · Luciérnagas";
 
@@ -57,12 +63,17 @@ public static class NocheDelMundoWiring
             if (ciclo == null) continue;
 
             bool ventanas = MontarVentanas(ciclo, materiales);
+            bool fugaces = MontarEstrellasFugaces(ciclo);
             var (faroles, casas, posicionesDeCasas) = MontarLuces(escena);
             int zonas = MontarLuciernagas(escena, posicionesDeCasas);
+            int nieblas = MontarNieblas(escena);
+            int chimeneas = MontarHumo(escena);
 
-            if (ventanas || faroles + casas + zonas > 0) EditorSceneManager.MarkSceneDirty(escena);
+            if (ventanas || fugaces || faroles + casas + zonas + nieblas + chimeneas > 0) EditorSceneManager.MarkSceneDirty(escena);
             resumen.AppendLine($"{escena.name}: ventanas {(ventanas ? "montadas" : "ya estaban")}, " +
-                               $"{faroles} faroles/antorchas/hogueras, {casas} casas, {zonas} zonas de luciérnagas.");
+                               $"estrellas fugaces {(fugaces ? "montadas" : "ya estaban")}, " +
+                               $"{faroles} faroles/antorchas/hogueras, {casas} casas, {zonas} zonas de luciérnagas, " +
+                               $"{nieblas} con niebla nueva, {chimeneas} chimeneas con humo.");
         }
 
         AssetDatabase.SaveAssets();
@@ -130,6 +141,57 @@ public static class NocheDelMundoWiring
         ventanas.materiales = materiales.ToArray();
         EditorUtility.SetDirty(ventanas);
         return true;
+    }
+
+    private static bool MontarEstrellasFugaces(DayNightCycle ciclo)
+    {
+        if (ciclo.GetComponent<EstrellasFugaces>() != null) return false;
+        Undo.AddComponent<EstrellasFugaces>(ciclo.gameObject);
+        return true;
+    }
+
+    /// Niebla baja en cada zona de luciérnagas que aún no la tenga, con la misma caja a ras de suelo.
+    private static int MontarNieblas(Scene escena)
+    {
+        var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialDeNiebla);
+        int n = 0;
+        foreach (var raiz in escena.GetRootGameObjects())
+            foreach (var zona in raiz.GetComponentsInChildren<LuciernagasNocturnas>(true))
+            {
+                if (zona.GetComponent<NieblaNocturna>() != null) continue;
+                var niebla = Undo.AddComponent<NieblaNocturna>(zona.gameObject);
+                niebla.tamano = new Vector3(zona.tamano.x, 1f, zona.tamano.z);
+                niebla.material = material;
+                n++;
+            }
+        return n;
+    }
+
+    /// Humo en lo alto de cada chimenea del pack (mallas Chimney*) que aún no lo tenga.
+    private static int MontarHumo(Scene escena)
+    {
+        var material = AssetDatabase.LoadAssetAtPath<Material>(MaterialDeHumo);
+        int n = 0;
+        foreach (var raiz in escena.GetRootGameObjects())
+            foreach (var malla in raiz.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (malla.sharedMesh == null || !malla.sharedMesh.name.StartsWith("Chimney")) continue;
+                if (malla.GetComponentInChildren<HumoDeChimenea>(true) != null) continue;
+                var render = malla.GetComponent<Renderer>();
+                if (render == null) continue;
+
+                var b = render.bounds;
+                var go = new GameObject(NombreDelHumo);
+                Undo.RegisterCreatedObjectUndo(go, "Noche: humo");
+                go.transform.SetParent(malla.transform, false);
+                go.transform.position = new Vector3(b.center.x, b.max.y, b.center.z);
+                go.transform.rotation = Quaternion.identity;
+                var humo = go.AddComponent<HumoDeChimenea>();
+                humo.material = material;
+                humo.distanciaDeActivacion = 120f;
+                n++;
+            }
+        return n;
     }
 
     private enum Tipo { Ninguno, Farol, Antorcha, Hoguera, Casa }
