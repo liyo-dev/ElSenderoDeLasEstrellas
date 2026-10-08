@@ -27,6 +27,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# unity-test-runner publica el resultado como un "check run" con githubToken; el token por
+# defecto del repo es de solo lectura y GitHub rechaza crearlo («Resource not accessible by
+# integration»), con lo que el job sale en rojo aunque los tests pasen. Ver INC-676.
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   test:
     name: EditMode Tests
