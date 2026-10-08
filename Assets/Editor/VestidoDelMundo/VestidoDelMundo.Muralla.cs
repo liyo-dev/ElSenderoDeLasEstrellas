@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
 /// Muralla del Reino: lienzos, torres y Puerta Real por la cresta de las dos terrazas de la capital.
@@ -72,6 +73,11 @@ public static partial class VestidoDelMundo
             PlanDeMuralla plan = PlanearMuralla(o.Suelo.Altura, (x, z) => PesoCamino(o, x, z));
             Transform muralla = Grupo(Grupo(o.Raiz, "Reino"), "Muralla");
             Transform lienzos = Grupo(muralla, "Lienzos"), torres = Grupo(muralla, "Torres");
+            Transform navegacion = Grupo(muralla, "Obstáculos de navegación");
+            // Los obstáculos de la clasificación general solo cubren los 2 m más bajos de cada malla, que aquí
+            // quedan enterrados bajo la ladera: lienzos, torres y puerta llevan los suyos, a toda la altura.
+            o.SinObstaculo.Add(lienzos);
+            o.SinObstaculo.Add(torres);
             var tocados = new SortedDictionary<string, SortedSet<string>>();
             int piezas = 0, puestas = 0;
             float largo = 0f;
@@ -85,6 +91,7 @@ public static partial class VestidoDelMundo
                     piezas++;
                     if (g == null) continue;
                     puestas++;
+                    ObstaculoDeLienzo(navegacion, g.name, m, m.Desde + m.Largo * k / m.Piezas, m.Largo / m.Piezas);
                     AnotarLoQueToca(g.name, TocaEnCaja(o, m, m.Desde + m.Largo * k / m.Piezas, m.Largo / m.Piezas), tocados);
                 }
             }
@@ -93,8 +100,11 @@ public static partial class VestidoDelMundo
             GameObject puerta = LevantarTramo(o, muralla, PrefabPuertaReal, "Puerta Real", p, p.Desde, p.Largo);
             if (puerta != null)
             {
-                // Sin obstáculo de navegación: el que le pondría la clasificación taparía el vano.
+                // La clasificación general taparía el vano: solo las jambas llevan obstáculo.
                 o.SinObstaculo.Add(puerta.transform);
+                float jamba = (LargoDeLienzo - AnchoDeVano) * 0.5f * p.Largo / LargoDeLienzo;
+                ObstaculoDeLienzo(navegacion, "Puerta Real, jamba oeste", p, p.Desde, jamba);
+                ObstaculoDeLienzo(navegacion, "Puerta Real, jamba este", p, p.Hasta - jamba, jamba);
                 AnotarLoQueToca(puerta.name, TocaEnCaja(o, p, p.Desde, p.Largo), tocados);
             }
 
@@ -113,6 +123,8 @@ public static partial class VestidoDelMundo
                 if (s > torre.Escala + 0.01f) crecidas.Add($"{torre.Nombre} ×{torre.Escala:0.0#}→×{s:0.0#}");
                 float r = RadioDeZocalo * s;
                 o.Ocupado.Add(new Huella { Centro = torre.Centro, EjeX = Vector2.right, EjeZ = Vector2.up, MedioX = r, MedioZ = r });
+                Obstaculo(navegacion, g.name, new Vector3(torre.Centro.x, (plan.Base[t] + plan.Referencia(t)) * 0.5f, torre.Centro.y),
+                    Quaternion.identity, new Vector3(2f * r, plan.Referencia(t) - plan.Base[t], 2f * r), cilindro: true);
                 // Caja dentro del cuerpo (sus esquinas no salen del dodecágono), de un palmo sobre el suelo a lo alto.
                 float abajo = Mathf.Max(o.Suelo.Altura(torre.Centro.x, torre.Centro.y), plan.Base[t]) + 0.4f;
                 float arriba = plan.Referencia(t);
@@ -668,6 +680,38 @@ public static partial class VestidoDelMundo
             go.transform.localScale = Vector3.Scale(prefab.transform.localScale, escala);
             o.Puestas++;
             return go;
+        }
+
+        /// Obstáculo de navegación (Carve) de la base a la cresta de un trozo de tramo, de «largo» metros desde
+        /// «desde»: corta el NavMesh del terreno a cualquier altura de la ladera por la que pase el muro.
+        private static void ObstaculoDeLienzo(Transform grupo, string nombre, TramoDeMuralla m, float desde, float largo)
+        {
+            Vector2 c = m.Punto(desde + largo * 0.5f, 0f);
+            Obstaculo(grupo, nombre, new Vector3(c.x, (m.Base + m.Cresta) * 0.5f, c.y),
+                Quaternion.LookRotation(new Vector3(m.Dentro.x, 0f, m.Dentro.y)), new Vector3(largo, m.Cresta - m.Base, 2f * m.MedioGrueso));
+        }
+
+        /// Un objeto sin collider con un NavMeshObstacle de caja (o de cilindro, de diámetro tamano.x) centrado en
+        /// él. Sin collider, los menús de navegación que reajustan obstáculos no lo tocan.
+        private static void Obstaculo(Transform grupo, string nombre, Vector3 centro, Quaternion giro, Vector3 tamano, bool cilindro = false)
+        {
+            var go = new GameObject("Obstáculo: " + nombre);
+            go.transform.SetParent(grupo, false);
+            go.transform.SetPositionAndRotation(centro, giro);
+            var obs = go.AddComponent<NavMeshObstacle>();
+            obs.carving = true;
+            obs.center = Vector3.zero;
+            if (cilindro)
+            {
+                obs.shape = NavMeshObstacleShape.Capsule;
+                obs.radius = tamano.x * 0.5f;
+                obs.height = tamano.y;
+            }
+            else
+            {
+                obs.shape = NavMeshObstacleShape.Box;
+                obs.size = tamano;
+            }
         }
 
         /// Un lienzo (o la puerta) de «largo» metros que empieza en «desde» a lo largo del tramo.

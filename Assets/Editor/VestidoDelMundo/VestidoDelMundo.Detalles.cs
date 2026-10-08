@@ -21,7 +21,6 @@ public static partial class VestidoDelMundo
     private const string Caja = FK + "Props/Goods/Goods03_a01.prefab";
     private const string Sacos = FK + "Props/Goods/Goods04_a01.prefab";
     private const string Carreta = FK + "Props/Goods/Cart04.prefab";
-    private const string CarroToldo = FK + "Props/Goods/Cart09.prefab";
     private const string Carretilla = FK + "Props/Goods/Cart02.prefab";
     private const string Lena = FK + "Props/Goods/Wood01_a01.prefab";
     private const string Maceta = FK + "Vegetation/Flowerpot/Flowerpot01_b03.prefab";
@@ -252,10 +251,22 @@ public static partial class VestidoDelMundo
                     PermitirCamino = true,
                     Holgura = 0.2f,
                 };
-                if (Poner(o, grupo, p) != null) puestas++;
+                GameObject casa = Poner(o, grupo, p);
+                if (casa == null) continue;
+                puestas++;
+                ApagarLlamas(casa);
             }
             o.Informe.Add($"{pueblo.Nombre}: {puestas} de {pueblo.Nuevas.Length} casas nuevas.");
         }
+    }
+
+    /// Los faroles del pack con llama de partículas («Light01_P») arden también de día y el menú Noche no los
+    /// gobierna (canon, TDD § 23.4): en las casas nuevas se apagan. Son instancias generadas: no dejan overrides
+    /// fuera de la raíz.
+    private static void ApagarLlamas(GameObject casa)
+    {
+        foreach (ParticleSystem ps in casa.GetComponentsInChildren<ParticleSystem>(true))
+            if (ps.gameObject.activeSelf && ps.name.StartsWith("Light")) ps.gameObject.SetActive(false);
     }
 
     /// Macetas a los lados de cada puerta y, según la casa, banco o barriles y cajas. En la ciudad, las macetas

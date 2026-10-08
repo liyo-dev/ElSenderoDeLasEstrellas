@@ -357,24 +357,33 @@ public static partial class VestidoDelMundo
 
     /// La cresta coincide con el borde sur de la Plaza Real (Reino()): el último peldaño llega al pavimento.
     private const float EscalinataPie = 268.8f, EscalinataCresta = 283.5f, EscalinataAncho = 12f;
-    private const int TramosDeEscalinata = 3;
+    private const int TramosDeEscalinata = 5;
+    /// Stairs01 a escala 1: los peldaños (y su rampa de colisión) suben 1,175 m y acaban en un rellano de 1,2 m;
+    /// los pretiles llegan a 2,38 m, así que el alto visible de la pieza no sirve para medir la subida.
+    private const float SubidaDeStairs01 = 1.175f;
 
-    /// Tres tramos de Stairs01 de la Plaza del Mercado (y 104) a la Plaza Real (y 112): 12 m de ancho y 29° de
-    /// pendiente. Debajo de los tramos que quedan en el aire, zócalos de sillería alineados con su costado; al pie
-    /// del talud, a cada lado, un muro bajo con jardineras; en la cresta, balaustrada a lo largo de la Plaza Real.
-    /// Escalones y zócalos van sin obstáculo de navegación: por aquí pasa la escolta del guardia.
+    /// Cinco tramos de Stairs01 de la Plaza del Mercado (y 104) a la Plaza Real (y 112), de 12 m de ancho. Cada
+    /// tramo se escala para que sus peldaños suban lo que le toca: su rellano queda a la cota del siguiente y el
+    /// último, a ras de la Plaza Real. Debajo de los tramos que quedan en el aire, zócalos de sillería alineados
+    /// con su costado; al pie del talud, a cada lado, un muro bajo con jardineras; en la cresta, balaustrada a lo
+    /// largo de la Plaza Real. Los tramos van en la capa del suelo caminable (entran en el NavMesh al hornear) y,
+    /// como los zócalos, sin obstáculo de navegación: por aquí pasa la escolta del guardia.
     private static void PonerEscalinataReal(Obra o, Transform g)
     {
         // A ras del pavimento abajo y arriba (VestidoDelMundo.Pavimento lo pone unos 4 cm sobre el terreno).
         float abajo = o.Suelo.Altura(0f, EscalinataPie) + 0.04f;
         float arriba = o.Suelo.Altura(0f, EscalinataCresta + 0.6f) + 0.04f;
         float largo = (EscalinataCresta - EscalinataPie) / TramosDeEscalinata, subida = (arriba - abajo) / TramosDeEscalinata;
+        float altoDeSerie = TamanoDeSerie(o, PiezaEscalinata).y;
+        int capaDelSuelo = LayerMask.NameToLayer("Floor");
         for (int k = 0; k < TramosDeEscalinata; k++)
         {
             float cota = abajo + subida * k, z0 = EscalinataPie + largo * k;
             // Stairs01 sube hacia su −Z local: con rumbo 180 sube hacia el norte.
-            PonerPiezaDeObra(o, g, PiezaEscalinata, $"Tramo {k + 1} de la Escalinata Real", new Vector2(0f, z0 + largo * 0.5f), 180f,
-                new Vector3(EscalinataAncho, subida, largo), cota, sinObstaculo: true, solapePropio: true);
+            GameObject tramo = PonerPiezaDeObra(o, g, PiezaEscalinata, $"Tramo {k + 1} de la Escalinata Real", new Vector2(0f, z0 + largo * 0.5f), 180f,
+                new Vector3(EscalinataAncho, subida * altoDeSerie / SubidaDeStairs01, largo), cota, sinObstaculo: true, solapePropio: true);
+            if (tramo != null && capaDelSuelo >= 0)
+                foreach (Transform t in tramo.GetComponentsInChildren<Transform>(true)) t.gameObject.layer = capaDelSuelo;
             if (k == 0) continue;
             foreach (float lado in new[] { -1f, 1f })
                 ZocaloBajoElTramo(o, g, lado * (EscalinataAncho * 0.5f - 0.45f), z0, largo, cota, k);
@@ -391,7 +400,8 @@ public static partial class VestidoDelMundo
             float baseMuro = suelo - 0.15f;
             PonerPiezaDeObra(o, g, PiezaMuroBajo, "Muro bajo del talud", new Vector2(lado * (xIniMuro + xFinMuro) * 0.5f, zMuro), 0f,
                 new Vector3(xFinMuro - xIniMuro, abajo + 3.4f - baseMuro, gruesoMuro), baseMuro, sinObstaculo: false, solapePropio: false);
-            for (float x = xIniMuro + 2.4f; x < xFinMuro - 0.5f; x += 4.5f)
+            // Ninguna a menos de 3 m de los bordes de la plaza (x ±24), por donde entran calles (la de la Taberna, al oeste).
+            for (float x = xIniMuro + 2.4f; x < xFinMuro - 3f; x += 4.5f)
                 PonFijo(o, g, PiezaJardineraDePiedra, "Jardinera del muro bajo", new Vector2(lado * x, 270f), 0f);
         }
 
@@ -529,7 +539,6 @@ public static partial class VestidoDelMundo
             PonFijo(o, g, i % 2 == 0 ? Caja : Sacos, "Género del puesto", new Vector2(x, z) + l * costado, frente + 20f);
             if (i % 3 == 0) PonFijo(o, g, Barril, "Barril del puesto", new Vector2(x, z) - l * costado, 0f);
         }
-        PonFijo(o, g, CarroToldo, "Carro-puesto del mercado", new Vector2(-20.8f, 266.5f), 90f);
         PonFijo(o, g, Carreta, "Carreta de descarga de la posada", new Vector2(57.5f, 263.5f), 90f);
     }
 
@@ -605,6 +614,8 @@ public static partial class VestidoDelMundo
 
     /// Escenas de la ciudad alta que ya ponía el vestido: armaduras y estandartes ante la puerta del castillo
     /// (fuera del eje plaza → puerta y del acceso despejado), plazoleta del pozo y patio de armas de la guardia.
+    /// En la capital la tierra con piedras es el suelo de ciudad, no un camino: las calles las guardan los
+    /// corredores.
     private static void PonerEscenasDeLaCiudadAlta(Obra o, Transform grupo)
     {
         Transform entrada = Grupo(grupo, "Entrada del castillo");
@@ -616,17 +627,17 @@ public static partial class VestidoDelMundo
 
         Transform plazoleta = Grupo(grupo, "Plazoleta del pozo");
         Vector2 c = new Vector2(34f, 326f);
-        Pon(o, plazoleta, Pozo, "Pozo de la plazoleta", c, 0f, 1.25f);
-        Pon(o, plazoleta, Banco, "Banco de la plazoleta", c + new Vector2(-3.4f, 0f), -90f);
-        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, 2.6f), 0f);
-        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, -2.6f), 0f);
+        Pon(o, plazoleta, Pozo, "Pozo de la plazoleta", c, 0f, 1.25f, camino: true);
+        Pon(o, plazoleta, Banco, "Banco de la plazoleta", c + new Vector2(-3.4f, 0f), -90f, camino: true);
+        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, 2.6f), 0f, camino: true);
+        Pon(o, plazoleta, Maceta, "Maceta de la plazoleta", c + new Vector2(2.6f, -2.6f), 0f, camino: true);
 
         Transform armas = Grupo(grupo, "Patio de armas de la guardia");
         Vector2 a = new Vector2(-34f, 326f);
-        Pon(o, armas, Armero, "Armero de la guardia", a + new Vector2(-2.5f, 3f), 180f);
-        Pon(o, armas, Maniqui, "Maniquí de entrenamiento", a + new Vector2(1.5f, -2f), 0f, 2.1f, Medida.Alto);
-        Pon(o, armas, Diana, "Diana de tiro", a + new Vector2(2.8f, 2.8f), 225f);
-        Pon(o, armas, Barril, "Barril de la guardia", a + new Vector2(-3.2f, -2.6f), 0f);
+        Pon(o, armas, Armero, "Armero de la guardia", a + new Vector2(-2.5f, 3f), 180f, camino: true);
+        Pon(o, armas, Maniqui, "Maniquí de entrenamiento", a + new Vector2(1.5f, -2f), 0f, 2.1f, Medida.Alto, camino: true);
+        Pon(o, armas, Diana, "Diana de tiro", a + new Vector2(2.8f, 2.8f), 225f, camino: true);
+        Pon(o, armas, Barril, "Barril de la guardia", a + new Vector2(-3.2f, -2.6f), 0f, camino: true);
     }
 
     // ── Rótulos de los oficios ───────────────────────────────────────────────────────────────

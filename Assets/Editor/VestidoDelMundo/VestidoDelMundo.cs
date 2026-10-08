@@ -178,8 +178,9 @@ public static partial class VestidoDelMundo
                 RetirarMurallaVieja(escena, obra);
                 RetirarParaLaCapital(escena, obra);
                 RetirarBajoElAgua(escena, obra);
-                GirarCasasHaciaSuCalle(escena, obra);
+                // La muralla, antes del giro: así el giro no mete ninguna casa en sus torres.
                 PonerMuralla(obra);
+                GirarCasasHaciaSuCalle(escena, obra);
                 PonerCasasNuevas(obra);
             }
 
@@ -353,7 +354,8 @@ public static partial class VestidoDelMundo
     private const string AvisoDeRetoques =
         "Hay cambios hechos a mano dentro de «" + NombreRaiz + "» (piezas movidas, borradas o añadidas, o componentes nuevos). " +
         "Rehacer o quitar el vestido borra esa raíz entera y lo que se haya enganchado a ella queda sin referencia. " +
-        "Si quieres conservar algo, sácalo antes de esa raíz.";
+        "Si quieres conservar algo, sácalo antes de esa raíz; las piezas con malla generada (pavimento, láminas de agua) " +
+        "no se pueden conservar así, porque sus mallas se borran con ella.";
 
     /// Huella de lo generado: nombre, pose y componentes de todo lo que cuelga de la raíz. No cuenta lo que
     /// rehacen solos otros menús: Noche (hijos «LuzNocturna…» y «Humo») y Navegación (NavMeshObstacle y sus
