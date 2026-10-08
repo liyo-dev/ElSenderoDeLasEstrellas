@@ -37,11 +37,14 @@ public class BuildVersionIncrementer : IPreprocessBuildWithReport
 
     const string SkipNextBuildKey = "ElSendero_SkipVersionIncrementOnce";
 
-    // Recuerda, solo para el resto de este mismo build, si el autoincremento se saltó — lo lee
-    // PatchNotesBuildGuard (que corre después, callbackOrder -900) para no validar ni archivar las
-    // Notas del Parche en un build de pruebas que tampoco sube de versión. Se sobrescribe siempre al
-    // principio de cada build, así que no hace falta borrarlo a mano.
+    // Recuerda, para este mismo build, si el autoincremento se salta. PatchNotesBuildGuard corre
+    // antes del incrementador y solo consulta WasLastBuildVersionSkipped en el postprocess para
+    // no resetear las Notas del Parche en un build de pruebas que tampoco sube de versión.
+    // Se sobrescribe al principio de cada build, así que no hace falta borrarlo a mano.
     const string LastBuildSkippedKey = "ElSendero_LastBuildWasVersionSkipped";
+
+    /// <summary>Indica si el build que está a punto de empezar salta el autoincremento; el aviso aún no se consume.</summary>
+    public static bool SeSaltaraElProximoBuild => SessionState.GetBool(SkipNextBuildKey, false);
 
     /// <summary>True si el build que se está generando ahora mismo saltó el autoincremento de versión.</summary>
     public static bool WasLastBuildVersionSkipped => SessionState.GetBool(LastBuildSkippedKey, false);

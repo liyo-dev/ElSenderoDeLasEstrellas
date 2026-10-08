@@ -303,6 +303,10 @@ Modos principales: `Normal`, `Combat`, `Dialogue`, `Cinematic`, `Swimming`, `Map
 
 El tope del stack determina el modo activo. Esto permite que un diálogo en medio de un combate bloquee correctamente y al cerrarse restaure el estado de combate.
 
+### Presentación de estadísticas (INC-470, INC-677)
+
+`PanelDeEstadisticasUI`, hijo de `equipmentUI.root` en Start, muestra `EstadisticasDelPersonaje.Total` y sus bonos; las etiquetas de Equipo muestran los bonos de cada prenda y ShopUI compara el total con `TotalSiSeEquipa`. `TextoDeEstadisticas` comparte nombres localizados y colores. Las prendas sin bonos no muestran líneas de estadísticas. El menú `El Sendero/UI/Equipo · cuadro de estadísticas (INC-677)` monta el cuadro y fija defensa +8 para la capa de Victoria.
+
 ### Sistema de cambio de personaje activo
 
 `ActiveCharacterSwapper.cs` permite controlar a Liam o Estela en lugar de Will.
@@ -368,7 +372,7 @@ Un solo lector de botones y un solo punto de lanzamiento. Cualquier mecánica nu
 - **`DesdeElSuelo(alturaEnCabezas, desplazamiento, estado = null)`**: salto con parábola propia sincronizada con el tramo en el aire del clip «en el sitio» (`JumpFullSpin_InPlace_NoWeapon`, tramo 0,1–0,81). Aterriza en el suelo real (raycast con `groundLayer`) y recorta el desplazamiento ante paredes (descarta personajes por `NPCSimpleAnimator`). Mientras dura: controlador apagado con `lockMovement` y `suppressAirMovement` (el motor sigue corriendo desde `vThirdPersonInput` y no debe dar velocidad a un Rigidbody cinemático), Rigidbody cinemático y `ActionMode.Stunned`. Lo usan la victoria, el desvío cuerpo a cuerpo de la B y el dúo con voltereta.
 - **`EnElAire(estado = null)`**: solo la animación (`JumpAirSpin_InPlace_NoWeapon`); el movimiento lo lleva el motor o el lanzamiento por un golpe. Al acabar vuelve a `Falling` si sigue en el aire o a `Free Locomotion` si ha tocado suelo. Lo usan el remate aéreo, la recuperación tras un golpe, el lanzador de salto y la entrada al vuelo.
 - **Animator**: los estados de voltereta no tienen transiciones. Mientras dura se pone el bool `isFlying`, que bloquea la transición «cualquier estado → Falling» (la misma que se bloquea en vuelo), y la capa `UpperBody` se pone a 0 en cada fotograma para que no tape el giro del torso.
-- **Entrada al vuelo** (INC-665): el tercer toque de A tras el doble salto da un pequeño impulso hacia arriba con voltereta y efecto antes de volar (`PlayerFlyingController`). La voltereta sola al caer desde altura (INC-656) se retiró.
+- **Entrada al vuelo** (INC-665): el tercer toque de A tras el doble salto da un pequeño impulso hacia arriba con efecto y SFX opcional, espera 0,25 s y entra en vuelo si sigue pudiendo (`PlayerFlyingController`, INC-679). La voltereta sola al caer desde altura (INC-656) se retiró.
 - **Motor** (`vThirdPersonController`, Plugins): `Impulsar(velocidadVertical, devolverSaltosEnElAire)` para impulsos desde fuera (lanzadores) y `CaerEnPicado(velocidad)`.
 - **Usos**:
   - remate aéreo: `MagicSpellSO.remateAereo` + `MagicCaster.CastRemateAereo`, el tercer golpe de la serie en el aire;

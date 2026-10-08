@@ -3880,7 +3880,10 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                     value = ResolveDisplayName(kvp.Key, part);
                 }
 
-                row.label.text = $"{FormatCategory(kvp.Key)}: {value}";
+                row.label.supportRichText = true;
+                string bonos = TextoDeEstadisticas.Bonos(_builder.BonosDeCategoria(kvp.Key));
+                row.label.text = $"{FormatCategory(kvp.Key)}: {value}" +
+                    (string.IsNullOrEmpty(bonos) ? "" : "  " + bonos);
                 UpdateRowIcon(row, kvp.Key, partName);
             }
         }

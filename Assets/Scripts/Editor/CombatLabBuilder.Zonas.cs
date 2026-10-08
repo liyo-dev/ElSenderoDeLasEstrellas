@@ -76,9 +76,11 @@ public static partial class CombatLabBuilder
         var piezas = Grupo("Puzles", mecanismos);
         CrearCubo("Suelo", zona, new Vector3(32f, -0.25f, 1f), new Vector3(36f, 0.5f, 36f), suelo, CapaSuelo);
         CrearCubo("Muro este", zona, new Vector3(50f, 1.5f, 1f), new Vector3(0.5f, 3f, 36f), muro);
-        CrearCubo("Muro norte", zona, new Vector3(32f, 1.5f, 19f), new Vector3(36f, 3f, 0.5f), muro);
+        // Puerta al norte (x = 32): paso andando a la zona de saltos y volteretas.
+        CrearMuroConHueco("Muro norte", zona, new Vector3(32f, 1.5f, 19f), 36f, true, muro);
         CrearCubo("Muro sur", zona, new Vector3(32f, 1.5f, -17f), new Vector3(36f, 3f, 0.5f), muro);
         CrearTexto("Puzles", zona, new Vector3(17f, 3.5f, 1f), 90f);
+        CrearTexto("↑ Saltos y volteretas", zona, new Vector3(32f, 3.5f, 18.5f));
 
         // 1. Dos placas abren una puerta (ActivationCounter + Door).
         CrearSala("Sala de la puerta", zona, new Vector3(42f, 0f, -11f), muro);

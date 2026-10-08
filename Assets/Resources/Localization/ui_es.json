@@ -1,6 +1,10 @@
 {
     "texts": [
         {
+            "key": "SHOP_IF_EQUIPPED",
+            "value": "Si te la equipas:"
+        },
+        {
             "key": "ITEM_COIN_NAME_PLURAL",
             "value": "Monedas"
         },

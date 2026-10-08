@@ -35,6 +35,7 @@ public static class BatallaFinalLabBuilder
     const string VfxZona = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect2.prefab";
     const string VfxMarea = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect3.prefab";
     const string VfxRegeneracion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab";
+    const string VfxProtegido = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield pink.prefab";
     const string VfxCarga = "Assets/VFX/Free Game VFX/Prefab/FX_Purple_Hit_02.prefab";
     const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
     const string VfxCorte = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_02.prefab";
@@ -135,7 +136,6 @@ public static class BatallaFinalLabBuilder
             padre = conjuros,
             matPiedra = matConjuro,
             matCristal = matCristal,
-            rayo = rayoSombra,
             vfxConjuro = Cargar<GameObject>(VfxAparicion, avisos),
             vfxRotura = Cargar<GameObject>(VfxRoturaCristal, avisos),
             lanzador = Cargar<GameObject>(PrefabLanzador, avisos),
@@ -177,7 +177,29 @@ public static class BatallaFinalLabBuilder
         mago.transform.SetPositionAndRotation(new Vector3(0f, 0f, 8f), Quaternion.Euler(0f, 180f, 0f));
         Capa(mago, "Enemy", soloRaiz: true);
         var manager = mago.GetComponent<Game.NPC.NPCBehaviourManagerV2>();
-        if (manager) manager.enabled = false;   // su IA de NPC no pinta nada aquí: manda MagoOscuroBossAI
+        if (manager)
+        {
+            // El override impide que Awake añada el módulo que fuerza combate al recibir daño.
+            var soManager = new SerializedObject(manager);
+            var config = soManager.FindProperty("configuration");
+            var tipos = config.FindPropertyRelative("behaviourType");
+            tipos.intValue &= ~(int)Game.NPC.Common.NPCBehaviourType.Combat;
+            config.FindPropertyRelative("combatConfig").objectReferenceValue = null;
+            soManager.ApplyModifiedPropertiesWithoutUndo();
+            manager.enabled = false;
+            PrefabUtility.RecordPrefabInstancePropertyModifications(manager);
+        }
+        foreach (var componente in mago.GetComponentsInChildren<Game.NPC.NPCCombatBrain>(true)) Object.DestroyImmediate(componente);
+        foreach (var componente in mago.GetComponentsInChildren<Game.NPC.NPCHealthBarSpawner>(true)) Object.DestroyImmediate(componente);
+        foreach (var componente in mago.GetComponentsInChildren<Game.NPC.Modules.NPCCombatLifecycleHandler>(true)) Object.DestroyImmediate(componente);
+        var elevacion = mago.GetComponentInChildren<ElevacionVisual>(true);
+        if (elevacion == null) elevacion = mago.AddComponent<ElevacionVisual>();
+        var soElevacion = new SerializedObject(elevacion);
+        soElevacion.FindProperty("animator").objectReferenceValue = mago.GetComponentInChildren<Animator>(true);
+        soElevacion.FindProperty("amplitudBalanceo").floatValue = 0.06f;
+        soElevacion.FindProperty("frecuenciaBalanceo").floatValue = 0.55f;
+        soElevacion.FindProperty("rebote").floatValue = 0f;
+        soElevacion.ApplyModifiedPropertiesWithoutUndo();
         var charla = mago.GetComponent<Interactable>();
         if (charla) charla.enabled = false;     // no se habla con él en mitad del combate
         // Cuerpo sólido para los golpes; el disparador de charla (si lo hay) no cuenta.
@@ -225,6 +247,7 @@ public static class BatallaFinalLabBuilder
         soIA.FindProperty("vfxZona").objectReferenceValue = Cargar<GameObject>(VfxZona, avisos);
         soIA.FindProperty("vfxTeletransporte").objectReferenceValue = Cargar<GameObject>(VfxAparicion, avisos);
         soIA.FindProperty("vfxCarga").objectReferenceValue = Cargar<GameObject>(VfxCarga, avisos);
+        soIA.FindProperty("vfxProtegido").objectReferenceValue = Cargar<GameObject>(VfxProtegido, avisos);
         soIA.FindProperty("vfxMarea").objectReferenceValue = Cargar<GameObject>(VfxMarea, avisos);
         soIA.FindProperty("vfxRebobinado").objectReferenceValue = Cargar<GameObject>(VfxRebobinado, avisos);
         soIA.FindProperty("vfxRegeneracion").objectReferenceValue = Cargar<GameObject>(VfxRegeneracion, avisos);
@@ -264,7 +287,7 @@ public static class BatallaFinalLabBuilder
     sealed class Contexto
     {
         public Transform padre;
-        public Material matPiedra, matCristal, rayo;
+        public Material matPiedra, matCristal;
         public GameObject vfxConjuro, vfxRotura, lanzador;
     }
 
@@ -364,7 +387,6 @@ public static class BatallaFinalLabBuilder
         var so = new SerializedObject(cristal);
         so.FindProperty("vida").floatValue = vida;
         so.FindProperty("visual").objectReferenceValue = visual;
-        so.FindProperty("rayo").objectReferenceValue = Rayo("Rayo", go.transform, ctx.rayo, 0.08f, false);
         so.FindProperty("vfxRotura").objectReferenceValue = ctx.vfxRotura;
         so.ApplyModifiedPropertiesWithoutUndo();
         return cristal;
