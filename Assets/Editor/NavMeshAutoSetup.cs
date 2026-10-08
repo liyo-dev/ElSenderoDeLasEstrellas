@@ -186,8 +186,9 @@ public static class NavMeshAutoSetup
 
     /// Clasifica solo lo que cuelga de una raíz (lo que coloca una herramienta), sin recorrer el resto
     /// de la escena. Lo que cabe en menos de «ladoMinimo» metros en planta (macetas, cajas, farolas) no
-    /// recibe obstáculo, para no llenar el NavMesh de agujeros diminutos. Devuelve cuántos añade.
-    public static int ClasificarBajo(Transform raiz, float ladoMinimo = 1f)
+    /// recibe obstáculo, para no llenar el NavMesh de agujeros diminutos; tampoco lo que «omitir» señale
+    /// (lo que se pisa o se cruza: escalinatas, puertas, pavimento). Devuelve cuántos añade.
+    public static int ClasificarBajo(Transform raiz, float ladoMinimo = 1f, System.Predicate<Collider> omitir = null)
     {
         int floorLayer = LayerMask.NameToLayer(WalkableLayerName);
         if (floorLayer < 0 || raiz == null) return 0;
@@ -195,6 +196,7 @@ public static class NavMeshAutoSetup
         foreach (var col in raiz.GetComponentsInChildren<Collider>(includeInactive: false))
         {
             if (ShouldExclude(col, floorLayer, ignoreExistingObstacle: false)) continue;
+            if (omitir != null && omitir(col)) continue;
             var b = col.bounds;
             if (b.size.x < ladoMinimo && b.size.z < ladoMinimo) continue;
             var obstacle = col.gameObject.AddComponent<NavMeshObstacle>();

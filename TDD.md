@@ -32,7 +32,7 @@
 20. [Convenciones de Documentación del Proyecto](#20-convenciones-de-documentación-del-proyecto)
 21. [Diseño: Vestir MainWorld con el "look" de las demos de Quibli (árboles, hierba, rayos de sol, outline)](#21-diseño-vestir-mainworld-con-el-look-de-las-demos-de-quibli-árboles-hierba-rayos-de-sol-outline)
 22. [Secuencias con guion horneado](#22-secuencias-con-guion-horneado-inc-588-a-inc-590)
-23. [Vestido de MainWorld: suelos de pueblo, castillo y parajes](#23-vestido-de-mainworld-suelos-de-pueblo-castillo-y-parajes-inc-671)
+23. [Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes](#23-vestido-de-mainworld-suelos-capital-vegetación-laguna-y-parajes-inc-671-inc-676)
 
 ---
 
@@ -3493,36 +3493,63 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 
 ---
 
-## 23. Vestido de MainWorld: suelos de pueblo, castillo y parajes (INC-671)
+## 23. Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes (INC-671, INC-684)
 
-Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real, sin tocar lo que ya había (salvo el giro de algunas casas, reversible) y con un menú que lo deshace entero.
+Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real y con un menú que lo deshace entero. De lo que ya estaba en la escena solo cambia dos cosas, las dos con registro para reponerlas: gira algunas casas y retira (deja inactivo y fuera de la build, nunca borra) lo que estorba a lo nuevo.
 
-### 23.1 Menús
+La segunda parte (INC-684) convierte el Reino en una capital amurallada con calles pavimentadas, viste el campo con vegetación de color por zonas y llena de agua una cuenca natural del terreno, la Laguna de la Era.
 
-`Assets/Editor/VestidoDelMundo/` (clase parcial `VestidoDelMundo`, 8 archivos). En *El Sendero ▸ Escenario*:
+### 23.1 Menús, archivos y orden
+
+`Assets/Editor/VestidoDelMundo/` (clase parcial `VestidoDelMundo`, 13 archivos). En *El Sendero ▸ Escenario*:
 
 | Menú | Qué hace |
 |---|---|
 | MainWorld: vestir (suelos, castillo y parajes) | Pinta los suelos y coloca los detalles. Es el normal. |
-| MainWorld: vestir solo los suelos | Solo la pintura del terreno. |
-| MainWorld: vestir solo los detalles | Solo los objetos (y el giro de casas). Usa los suelos que haya pintados. |
-| MainWorld: quitar el vestido (repone suelo y casas) | Borra lo generado, devuelve las casas a su giro y repone la copia del suelo. |
+| MainWorld: vestir solo los suelos | Solo la pintura del terreno (y las flores de la hierba de detalle). Lo retirado sigue retirado. |
+| MainWorld: vestir solo los detalles | Solo los objetos (retirada, giro de casas, muralla, capital, pavimento, agua, vegetación). Usa los suelos que haya pintados. |
+| MainWorld: quitar el vestido (repone suelo y casas) | Borra lo generado y sus mallas, devuelve a la escena lo retirado, devuelve las casas a su giro y repone la copia del suelo. |
 
 - Abre MainWorld si no está abierta (pregunta antes si hay escenas sin guardar) y no funciona en Play.
-- Al terminar guarda la escena y el `TerrainData`, y escribe el informe en `_ClaudeBackups/VestidoDelMundo/Informe.txt`: piezas colocadas, descartadas y por qué (máx. 6 ejemplos por motivo).
+- Al terminar guarda la escena, el `TerrainData` y los assets, y escribe el informe en `_ClaudeBackups/VestidoDelMundo/Informe.txt`: piezas colocadas, descartadas y por qué (máx. 6 ejemplos por motivo), retiradas por motivo, y el informe propio de cada parte.
 - Repetir el menú da el mismo resultado: todo sale de semillas fijas y la raíz generada se borra y se rehace.
+
+| Archivo | Parte |
+|---|---|
+| `VestidoDelMundo.cs` | Menús, flujo (`Ejecutar`), ganchos, raíz generada, carpetas de assets. |
+| `.Colocar.cs` | `Pieza`, `Poner` y sus comprobaciones (§ 23.3), `Obra`, zonas libres. |
+| `.Suelo.cs`, `.Ruido.cs` | Lienzo de pesos, pinceles comunes (senda, mancha), copia del suelo, ruido determinista. |
+| `.Pueblos.cs` | Datos de los pueblos (`Reino()`, puerto, vecino, granjas) y su pintura. |
+| `.Casas.cs` | Giro de casas y registro de retirados (`Retirar`, `ReponerRetirados`, búsquedas en la escena). |
+| `.Detalles.cs`, `.Parajes.cs` | Detalles de los pueblos, parajes y `ZonasLibres`. |
+| `.Muralla.cs`, `.Capital.cs`, `.Pavimento.cs` | La capital (§ 23.5). |
+| `.Vegetacion.cs` | Vegetación (§ 23.6). |
+| `.Agua.cs` | Laguna de la Era (§ 23.7). |
+
+Cada parte entra en el flujo por ganchos (`static partial void`, declarados en `VestidoDelMundo.cs`; uno sin implementar no hace nada). Orden de `Ejecutar`:
+
+1. Detalles, primero: borrar lo generado (y vaciar `CarpetaGenerada`) → reponer lo retirado → reponer las casas → zonas libres (`ZonasLibres` + `ZonasDeLaCapital` + `ZonasDelAgua`) → retirar la muralla vieja, lo de aldea de la capital y lo que queda bajo el agua → muralla nueva → girar casas (así no meten ninguna casa en las torres) → casas nuevas.
+2. Suelo: pueblos y parajes → bajo el pavimento → fondo y orilla del agua → normalizar y guardar los pesos → quitar la hierba de detalle del suelo duro → flores de la vegetación → copia del suelo pintado y huella.
+3. Detalles, al final: pueblos y parajes → capital → pavimento → agua → vegetación (lo último: se adapta a todo) → obstáculos de navegación → huella de lo generado → guardar.
+
+Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución.
+
+**Assets que crea.** Las mallas (pavimento, lámina de la laguna, agua de la fuente) van a `Assets/Scenes/Worlds/MainWorld_data/Vestido/` (`CarpetaGenerada`): se vacía en cada ejecución y *quitar* la borra. Sus GUID cambian en cada ejecución (ruido en git en esas mallas y en las referencias de la escena). Los recursos propios (`Tree_Cerezo_D.png`, `Tree_Cerezo.mat`, `AguaLaguna.mat`, `AmbientPreset_Laguna.asset`) van a `Assets/Art/World/Vestido/` (`CarpetaRecursos`): se crean la primera vez, se reutilizan y conservan lo que se retoque en el Editor; *quitar* no los borra. Todo con `AssetDatabase`, nunca escribiendo YAML.
 
 ### 23.2 Suelos (`VestidoDelMundo.Suelo.cs`, `VestidoDelMundo.Pueblos.cs`)
 
 Pinta el `TerrainData` de `Assets/Scenes/Worlds/MainWorld_data/Recursos/Terreno.asset` con las capas que ya usa el pueblo de Will (`SueloPueblo_0..3`, `SueloUrbano0/3`), con bordes de ruido y no en rectángulos.
 
-- **Reino (ciudad del castillo):** alfombra de hierba dentro de la muralla, calles de adoquín con tierra en los bordes, plaza real y plaza de la taberna en baldosa con marco de adoquín, explanada ante el castillo, senda desde cada puerta y huerto.
-- **Pueblo pesquero:** alfombra que funde la hierba con la arena a lo largo de la línea de playa (sin escalones), plaza del puerto, sendas de puerta y accesos.
+- **Todos los pueblos:** la alfombra de hierba se funde con el campo en 25 m, con el borde roto a escala de 10 m; los bordes de calles, plazas y núcleos pisados se motean con ruido de 6 m o más (nunca celda a celda: a 2,5 m por celda sale a cuadros) y el borde gastado no pasa de 1,5 m; los taludes de 28–45° de dentro y alrededor del pueblo llevan suelo de bosque (`Capa5`) y hierba, nunca roca (dentro de la muralla, hasta 55°).
+- **Reino (capital):** sin alfombra. Entre calles y casas, suelo de ciudad: tierra con piedras junto a las calles y hierba en los jardines (`Pueblo.Verdes`), al pie de la muralla, en los taludes y en el fondo de las manzanas. Las calles y plazas son mallas de pavimento (§ 23.5); debajo se pinta tierra con piedras con un margen de tierra de 0,6 m. El tramo del Camino 10 que llega a la Puerta Real se pinta aunque quede fuera del recinto, y el tramo viejo que subía en diagonal se tapa con hierba del campo.
+- **Pueblo pesquero:** alfombra que funde la hierba con la arena a lo largo de la línea de playa, plaza del puerto, sendas de puerta y accesos.
 - **Pueblo vecino** y **granjas de la cascada:** alfombra, calles de tierra con piedras, plaza / era de trilla, huertos.
 - **Parajes:** senda de tierra de 2,6 m desde el camino más cercano y suelo propio alrededor de cada paraje.
-- Quedan fuera las pendientes de más de 32°, lo que está bajo 0,6 m y los huertos.
-- Quita la hierba de detalle de lo que queda como suelo duro (calles, plazas, sendas).
-- **No se toca:** el pueblo de Will (referencia de estilo), el bosque prohibido y la montaña.
+- **Laguna:** fondo de suelo de bosque y tierra, barro en la orilla y una llegada de arena (§ 23.7).
+- **Flores:** manchas en las capas de hierba de detalle `Flower*_D`, solo sobre hierba (§ 23.6).
+- Quedan fuera las pendientes de más de 32° (salvo los taludes), lo que está bajo 0,6 m y los huertos.
+- Quita la hierba de detalle de lo que queda como suelo duro (calles, plazas, sendas, fondo de la laguna).
+- **No se toca:** el pueblo de Will (referencia de estilo), el Bosque Prohibido y la montaña.
 
 **Copia del suelo.** La primera ejecución guarda en `_ClaudeBackups/VestidoDelMundo/` los pesos originales (`pesos_originales.bin.gz`) y la hierba de detalle (`detalle_original.bin.gz`), con la ruta del asset, la resolución y los nombres de capa para comprobarlos al reponer. Esa copia no se vuelve a escribir: es el suelo de antes del vestido y *quitar* vuelve a ella. `estado.txt` guarda la huella (pesos y hierba de detalle) del suelo que dejó la herramienta:
 
@@ -3533,57 +3560,117 @@ Conviene hacer commit de `_ClaudeBackups/VestidoDelMundo/` tras el primer vestid
 
 **Comparte terreno con el menú principal.** `MainMenu.unity` usa el mismo `Terreno.asset` para las portadas: los suelos nuevos se ven también ahí.
 
-### 23.3 Detalles (`VestidoDelMundo.Detalles.cs`, `VestidoDelMundo.Parajes.cs`, `VestidoDelMundo.Casas.cs`)
+### 23.3 Detalles (`VestidoDelMundo.Detalles.cs`, `VestidoDelMundo.Parajes.cs`, `VestidoDelMundo.Casas.cs`, `VestidoDelMundo.Colocar.cs`)
 
-Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo y paraje.
+Todo cuelga de `WORLD/Vestido del mundo (generado)`, con un grupo por pueblo, paraje y parte.
 
-**Orden:** primero se giran las casas y se colocan las nuevas, después se pinta el suelo y al final se ponen los detalles. Así el suelo (puertas, sendas, patios) sale de lo que de verdad queda en la escena, también en la primera ejecución, y no se pinta el patio de una casa nueva que no cupo.
-
-- **Casas que daban la espalda a su calle** (INC-673): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva.
-- **Reino:**
-  - 13 casas nuevas en solares vacíos;
-  - armaduras y estandartes a la entrada del castillo;
-  - estandartes, jardineras y bancos en el borde de la plaza real (su interior queda libre para eventos);
-  - mercado de 9 puestos junto a la taberna;
-  - plazoleta con pozo, patio de armas con dianas y armero;
-  - árboles de jardín.
-- **En todos los pueblos:** macetas, jardineras, barriles, cajas, leña o un banco junto a las puertas y farolas cada 18 m alternando acera.
+- **Casas que daban la espalda a su calle** (INC-673): las del Reino, el puerto y el pueblo vecino se giran sobre su centro para que la puerta mire hacia donde el generador quería la fachada, que es su calle. Si al girar una casa chocara con algo, se deja como estaba. El giro original se guarda en la propia escena, en `WORLD/Vestido del mundo — giro original de las casas (no tocar)` (EditorOnly): un hijo por casa con su pose original y la que le dejó el vestido, identificado por su `GlobalObjectId` (sobrevive a renombrarla o cambiarla de grupo). Así se guarda o se descarta junto con las casas. Si alguien mueve a mano una casa girada, reponerla solo le deshace el giro. Las «Maceta junto a vivienda» del generador que estaban pegadas a la fachada que él creía delantera (a menos de 2,5 m) giran con su casa y van al mismo registro; si no, quedarían en mitad de la puerta nueva. Lo retirado no se gira.
+- **Retirada de lo que estorba** (muralla vieja, lo de aldea de la capital, lo que queda bajo la laguna): `Retirar` deja el objeto inactivo y con la etiqueta `EditorOnly` (no llega a la build) y apunta su estado de antes en `WORLD/Vestido del mundo — retirado (no tocar)` (EditorOnly, un hijo «ruta|GlobalObjectId» por objeto). Cada ejecución, antes de empezar, y *quitar* lo reponen; si lo repuesto coincide con el prefab, se revierte el override y la escena queda como estaba. `BuscarPorPrefabYPosicion` localiza las piezas del generador del mapa, que repite nombres. Lo retirado no se ve, no colisiona ni entra en el NavMesh, y la pintura no le abre senda ni patio.
+- **Reino:** ver § 23.5.
+- **En los demás pueblos:** macetas, jardineras, barriles, cajas, leña o un banco junto a las puertas y farolas cada 18 m alternando acera.
 - **Pueblo pesquero:** puestos de pescado, cajas, nasas, redes y barcas varadas fuera del embarcadero, y bancos.
 - **Pueblo vecino:** puesto y bancos en la plaza, heno, carreta y leña.
 - **Granjas:** almiar y pacas, abrevadero, carretilla, gallineros, colmena y espantapájaros fuera de los huertos.
 - **12 parajes entre zonas:** ruinas de una casa fuerte, atalaya rota del acantilado sur, caserío abandonado, claustro viejo, redil del pastor, varadero de la playa oeste, cantera vieja, posta del cruce, era de trilla, almenara del acantilado este, mirador de la subida al Reino y descanso del cruce. Cada uno es una «receta» de piezas en coordenadas locales (muros derruidos, columnas, sillares sueltos, maderos, flores silvestres) orientada hacia donde llega su senda.
 
-**Comprobaciones de cada pieza** (`VestidoDelMundo.Colocar.cs`). Si una falla, la pieza no se pone y queda anotada en el informe:
+**Comprobaciones de cada pieza** (`Poner`, en `VestidoDelMundo.Colocar.cs`). Si una falla, la pieza no se pone y queda anotada en el informe. En este orden:
 
 - tamaño medido en el propio prefab (el giro se compone con el que traiga la raíz del prefab);
-- apoyo en 9 puntos de la huella y desnivel máximo;
-- nada por debajo de 0,3 m sobre el mar (y = 0): ni en el agua ni en la orilla mojada;
+- pendiente máxima en su sitio (`PendienteMax`: 32° árboles, 42° matas, 25° setos);
+- apoyo según `Pieza.Apoyo`:
+  - `Huella` (lo normal): base en el punto más bajo de 9 puntos de la huella, con desnivel máximo;
+  - `Tronco` (árboles, matas): apoyo y desnivel en un círculo de `RadioTronco` alrededor del pie, hundido 0,15 m + radio × tan(pendiente), hasta 0,6 m; el solape con lo demás del vestido se mide con media copa (las copas pueden montarse) y el choque con lo que había, con una columna del tronco;
+  - `Fondo`: como `Huella`, también bajo el agua (juncos, troncos caídos de la laguna);
+  - `Flotar`: base en `CotaAgua` − `Hundir` (nenúfares);
+- nada por debajo de 0,3 m sobre el mar (y = 0), salvo `Fondo` y `Flotar`;
 - sin pisarse con otras piezas del vestido (huellas orientadas, no la caja de mundo, que exagera las piezas giradas);
-- fuera de las zonas que deben quedar libres (51: anclas, arenas, recorridos de escolta, plazas de eventos, el Bosque Prohibido, el solar de Silas… en `ZonasLibres`; círculos, y la plaza real como rectángulo x ±20, z 285–313);
-- fuera de calles y caminos pintados, y de los corredores de puerta;
+- fuera de las zonas que deben quedar libres (salvo `IgnorarZonas`): 52 en `ZonasLibres` (anclas, arenas, recorridos de escolta, plazas de eventos, el Bosque Prohibido, el solar de Silas…; círculos y rectángulos), más las de la capital y las del agua;
+- fuera de calles y caminos pintados, y de los corredores de puerta (salvo `PermitirCamino`);
 - sin chocar (`OverlapBoxNonAlloc`) con los colisionadores que ya había en la escena. No cuentan el terreno, los triggers ni los volúmenes de más de 60 m.
+
+Lo que necesita pose o escala exactas (lienzos de la muralla, escalinata, rótulos, hiedra, láminas de agua) no pasa por `Poner`; cada parte hace sus propias comprobaciones y apunta su huella en `Obra.Ocupado`.
 
 **Retoques a mano dentro de lo generado:** al terminar se guarda una huella (nombre, pose y componentes de todo lo que cuelga de la raíz, sin contar lo que rehacen solos los menús de Noche y de Navegación) en un hijo EditorOnly «Huella del vestido: …». Si al rehacer o quitar la huella no coincide, avisa antes de borrar la raíz: lo que se haya movido, añadido o enganchado ahí se perdería. También avisa, aunque la huella coincida, si algún script o director de la escena apunta a una pieza de la raíz (un `NarrativeActor`, un horario, una secuencia), y lista cuáles. Lo que se quiera conservar se saca antes de esa raíz.
 
-**Navegación:** `NavMeshAutoSetup.ClasificarBajo(raíz)` añade `NavMeshObstacle` con Carve a lo nuevo que mida 1 m o más en planta. El NavMesh horneado no cambia. Después conviene pasar *El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?* para el paseo de Eldran.
+**Navegación:** `NavMeshAutoSetup.ClasificarBajo(raíz, 1, omitir)` añade `NavMeshObstacle` con Carve a lo nuevo que mida 1 m o más en planta, salvo lo que se puso con `SinObstaculo` (escalinata, muralla, pavimento, terraza de la taberna, láminas y volúmenes de agua, juncos, flores, hiedra). Esos obstáculos solo cubren los 2 m más bajos de cada malla, así que la muralla lleva los suyos (grupo «Obstáculos de navegación», sin collider): caja de la base a la cresta en cada lienzo, cilindro del zócalo en cada torre y, en la Puerta Real, solo las jambas. Los tramos de la Escalinata Real van en la capa `Floor`: entran en el NavMesh al hornear. El NavMesh horneado no cambia: hay que volver a hornearlo (*El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable*) para que el fondo de la laguna deje de ser caminable, y conviene pasar *Navegación ▸ Diagnóstico: ¿dónde se corta el camino?* para el paseo de Eldran. El menú manual *Navegación ▸ Clasificar obstáculos ahora* (toda la escena) no conoce `SinObstaculo`: pondría obstáculo a la escalinata y a la Puerta Real.
 
-**Noche:** las farolas y las casas nuevas reciben su luz (y las chimeneas, su humo) al ejecutar *El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas* (§ 16 parte D) después del vestido. Por eso los parajes no llevan fuegos (`Fire0*`, que la Noche enciende): la almenara tiene leña sin encender.
+**Noche:** las farolas y las casas nuevas reciben su luz (y las chimeneas, su humo) al ejecutar *El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas* (§ 16 parte D) después del vestido; también pone luciérnagas donde hay arboledas. Por eso los parajes no llevan fuegos (`Fire0*`, que la Noche enciende): la almenara tiene leña sin encender.
 
 ### 23.4 Canon (GDD) que respeta
 
-- Nada en el Bosque Prohibido: ni ruinas ni oficios. Su caja (la de `Ambient_ForbidenWoods`, x −445…−135, z −152…234) es zona libre y tampoco se pinta. Sin leñadores: la propuesta del cap. 2 corta ese motivo.
-- Nada que imite las Ruinas del Libro: sin monolitos, altares, pedestales, portales ni puertas selladas, inscripciones ni estrellas. El único vano (casa fuerte) es la puerta de un muro, entre dos tramos; el claustro es de columnas; ningún anillo de piedras alrededor de algo central.
-- Nada que se lea como la torre de Liam.
-- Sin molinos ni establos fuera del puerto.
-- En ningún sitio: montones de 3 piedras (por eso no se usa `Stone01_a02`, que son tres sillares apilados), jaulas (las nasas solo en el puerto), luces bajas entre árboles, carros volcados, campamentos con ceniza ni nidos de araña. Los parajes no usan edificios del pack de casas (`Building Combination`) salvo la posta, que está habitada: la Noche les encendería luz y ventanas.
-- Nada en las playas salvo el varadero; la montaña, intacta.
-- Sin carteles con texto ni objetos recogibles (el poste indicador del pack lleva letras talladas: no se usa).
-- La plaza real deja libres la arena de 25 m y el eje x ±6, z 300→338.
+- Nada en el Bosque Prohibido: ni ruinas, ni oficios, ni árboles nuevos. Su caja (la de `Ambient_ForbidenWoods`, x −445…−135, z −152…234) es zona libre y tampoco se pinta. Sin leñadores: la propuesta del cap. 2 corta ese motivo.
+- Nada que imite las Ruinas del Libro: sin monolitos, altares, pedestales, portales ni puertas selladas, inscripciones ni estrellas. El único vano de los parajes (casa fuerte) es la puerta de un muro, entre dos tramos; el claustro es de columnas; ningún anillo de piedras alrededor de algo central. La fuente de la capital no lleva pedestal ni estatua.
+- Nada que se lea como la torre de Liam. Ninguna torre suelta: las de la capital van unidas a la muralla.
+- Sin molinos ni establos fuera del puerto (los molinos del Reino se retiran). Sin iglesias (`BuildingAT19–21`).
+- En ningún sitio: montones de 3 piedras (por eso no se usa `Stone01_a02`, que son tres sillares apilados; las peñas de la laguna van de 2 o de 4), jaulas (las nasas solo en el puerto), luces bajas entre árboles, luces con llama de partículas (`Light03_e–h`, `Light02_b`, `Light05_b01`), carros volcados, campamentos con ceniza, nidos de araña, tocones ni troncos apilados. Los parajes no usan edificios del pack de casas (`Building Combination`) salvo la posta, que está habitada: la Noche les encendería luz y ventanas.
+- Nada en las playas salvo el varadero; la montaña, intacta (no se planta por encima de 118 m).
+- Sin carteles con texto ni objetos recogibles (el poste indicador del pack lleva letras talladas: no se usa; los rótulos de los oficios son placas con icono).
+- La Plaza Real deja libres la arena de 25 m del Demonio 2 y el eje hacia el castillo; la Plaza del Mercado, su centro (encuentro y persecución del capítulo 3); la escalinata, el paso de la escolta del guardia.
 - En el pueblo vecino queda reservado un solar para la casa y el taller de Silas (GDD § 9): x 281…299, z −118…−102, al oeste de la plaza, llano. Es zona libre: no se adorna ni se planta nada. La plaza del vecino (x 315…345, z −127…−103) tampoco se adorna.
+- El marjal del sureste (x 196…269, z −264…−157) queda sin plantar, reservado para Risco y Vega (GDD § 10). La laguna no lleva vado, pasaderas, presa ni acequias.
+- El carmesí de los árboles (`Tree04_b01`, `Tree05_b01`) se reserva para la isla de las Ruinas.
 
-### 23.5 Estado y límites
+### 23.5 La capital (`VestidoDelMundo.Muralla.cs`, `VestidoDelMundo.Capital.cs`, `VestidoDelMundo.Pavimento.cs`, `Reino()` en `VestidoDelMundo.Pueblos.cs`)
 
-- Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity).
-- La disposición se validó fuera de Unity con las alturas, los pesos y la jerarquía reales de MainWorld: simulación de la pintura, renders con las texturas de las capas y una simulación de `Poner` (desnivel, agua, zonas, corredores, solapes y choques contra los colisionadores reales de la escena y sus prefabs, incluidos los `MeshCollider` de las mallas `*_col`). Con las coordenadas finales coloca 231 de las 235 piezas de posición fija. Quedaban dos del mercado, que se arreglan separándolas del puesto según su ancho medido (cambio no simulado), una roca de la atalaya y una pared del caserío; el informe de cada ejecución dice cuáles se descartan y por qué.
-- Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas de `Pueblos.cs`, `Detalles.cs` y `Parajes.cs`, y se vuelve a ejecutar el menú.
-- Queda para Raúl lo que necesita su criterio: escaleras entre terrazas del Reino para la persecución y qué se levanta en el solar libre de Silas.
+Ciudad amurallada en dos terrazas: la baja (y ≈ 104) de mercado y oficios y la alta (y ≈ 112) de palacios, alrededor de la Plaza Real y del castillo. Recorrido ceremonial: Puerta Real → Plaza de la Puerta → Vía Real (rampa este) o Calle Mayor → Plaza del Mercado → Escalinata Real → Plaza Real → castillo. Las dos rutas forman dos bucles alrededor del talud central (persecución del capítulo 3).
+
+**Muralla.** Se retiran los 92 lienzos `Wall02` y las 6 torres `Tower01` del grupo «Muralla del Reino», que iban a media ladera. La nueva va por la cresta de las terrazas: traza de 22 vértices (`MurallaDelReino.TrazaMedia`), 44 lienzos `Wall02` en tramos de piezas iguales, 18 torres (5 `Tower01` con tejado en las esquinas y la puerta, 13 `Tower02` almenadas) y la Puerta Real (`Wall01`). Las del norte rematan en las torres traseras del castillo.
+
+- Cada lienzo baja hasta 0,3 m bajo el punto más bajo del terreno bajo su huella y sube hasta la cresta de su tramo (110,5 en la terraza baja, 118,5 en la alta, escalonada en los lados este y oeste): ninguno cuelga. Los lienzos entran en el cuerpo de sus torres hasta que sus esquinas quedan dentro (sin rendijas); si no caben, la torre crece. El número de piezas de cada tramo es el que deja el ladrillo más cerca de la proporción del pack.
+- Las torres intermedias del frente sur rematan a 115,5 (el adarve se lee como una línea desde el Camino 10); las demás crecen hasta asomar al menos 1,5 m sobre lo que les llega.
+- Puerta Real en x = 92,85, por donde entra el Camino 10, alargada hasta encajar en sus dos torres: unos 28 × 19,5 m, con un vano de unos 7,9 m y 5 m libres bajo el arranque del arco. Solo sus jambas llevan obstáculo de navegación (el vano queda libre); sin rastrillo.
+- Escarpa: rocas tendidas en la ladera del frente sur (espolones bajo las torres que arrancan de ella y un grupo al pie de los lienzos más altos), lejos del Camino 10.
+- `TrazaMuralla` (el contorno exterior) es el recinto de la capital (`Reino().Recinto`): no se pinta ni se planta como ciudad fuera de él.
+- El informe dice si alguna pieza cuelga, las alturas vistas desde dentro y desde fuera, las hondonadas al pie interior (el terreno no se toca) y lo que sigue en la escena y se mete en la muralla.
+
+**Calles y plazas** (`Reino()`): ocho calles con su ancho (`Pueblo.AnchosDeCalle`): Paso de la Puerta Real 6,4 m, Vía Real 8 m, Calle Mayor 7 m, Calle de la Taberna 6,4 m, Rampa de poniente 6,4 m, Calle de Poniente 7 m, Calles del Cuartel y del Archivo 6,4 m. Cuatro plazas: Real (56 × 29, con rosetón), del Mercado (48 × 24), explanada del castillo y Plaza de la Puerta Real. Sin huertos ni alfombra (`Pavimentado = true`).
+
+**Pavimento.** Las calles y plazas de los pueblos con `Pavimentado` (hoy solo el Reino) son mallas propias que siguen el terreno a 4 cm (6 cm en rampa), con los materiales de suelo del pack FK y la UV en metros:
+
+- calle: calzada de adoquín (`Ground03`), bordillo de sillares (`Ground04`, 0,25 m de ancho y 0,12 m de alto) y acera de losas (`Ground01`, 0,75 m). En los cruces sigue de largo la de más prioridad (el paso de la puerta, después la más ancha) y la otra le abre el bordillo; las esquinas en L y los fondos de saco se rematan. El paso de la puerta va de adoquín de lado a lado, con cintas de piedra y un umbral;
+- plaza: baldosa (`Ground05`) centrada, marco de adoquín de 1,2 m y bordillo donde linda con tierra; se abre donde entra una calzada o se apoya obra (escalinata, muro, casa, balaustrada). Con rosetón (`Plaza.Roseton`): disco de `Ground02` con anillo de sillares y un eje de losas que lo cruza (en la Plaza Real, de la escalinata a la explanada);
+- acceso de puerta: losas de la puerta de cada casa a la acera o la plaza, si están a menos de 8 m y no se cruza otra casa;
+- las zonas verdes y los taludes de más de 38° no se pavimentan;
+- sin colisor ni sombra: no cambia la navegación ni la colocación de piezas. La malla se parte donde el terreno se arquea; lo que queda tapado por otra superficie se hunde unos centímetros para que no parpadee. Una malla por calle, otra por plaza y otra para los accesos, en `CarpetaGenerada`.
+
+**Lo de aldea, fuera** (con el registro de retirados): 3 molinos, 4 casitas de paja, 2 herrerías y 3 casas de vinatero de la ciudad alta, la taberna vieja (AT10), 3 toldos tirados en la plaza, el pozo de RPG Tiny, 4 faroles bajos de la arena, 6 mesas y asientos del centro de la Plaza del Mercado, el huerto del Reino y 18 macetas del generador (las de casas retiradas y las que, al girar con su casa, caerían en una casa nueva).
+
+**Edificios** (`CasasNuevasDelReino`, los coloca `PonerCasasNuevas`): 39 edificios completos del pack FK, comprobados contra el terreno, la muralla, las casas que se quedan, las calles, las plazas y las zonas. Públicos: taberna AT18 con la terraza a la Plaza del Mercado, cuerpo de guardia AT25 junto a la Puerta Real, posada AT48, palacio AT27, Archivo Real AT31, casa de la torre verde AT27 en lo alto de la rampa este y cuartel de la Guardia Real (`Stronghold02`). El resto, hileras de casas altas de tejado azul (AT46, AT54, AT55) y oficios en la ciudad baja. El lado de la puerta de cada prefab está en `LadoDeLaPuertaNuevas`.
+
+**Escalinata Real** (talud central, sin tocar el terreno): cinco tramos de `Stairs01` de 12 m de ancho de la Plaza del Mercado (z 268,8) a la Plaza Real (z 283,5), a ras del pavimento abajo y arriba. Cada tramo se escala por la subida de sus peldaños (1,175 m a escala 1; los pretiles llegan a 2,38 m), así que su rellano queda a la cota del siguiente; zócalos de sillería bajo los costados que quedan en el aire; al pie del talud, un muro bajo de 3,4 m con jardineras a cada lado; en la cresta, balaustrada a lo largo de la Plaza Real.
+
+**Mobiliario:** fuente en el sitio del pozo retirado (brocal `Well01_a01` ensanchado y lámina de agua), cinco puestos en el borde sur de la Plaza del Mercado (las bocas de las calles quedan libres), carreta de la posada, terraza de la taberna, estandartes azul y oro (`Flag01_a01`), farolas de dos y tres brazos (`Light03_a02/a03`) en plazas y escalinata y farolas de calle en la acera (cada 12 m en la Vía Real, cada 16 m en las demás), rótulos de los oficios (placas con icono, sin letras, junto a la puerta), entrada del castillo con armaduras, plazoleta del pozo y patio de armas. El arbolado de la capital lo pone la vegetación.
+
+**Zonas libres de la capital** (`ZonasDeLaCapital`): el paso de la escolta del guardia de la terraza de la taberna a la escalinata y los sitios de tres civiles de la persecución fuera de las plazas reservadas. La Plaza Real (x ±28, z 283,5–312,5), la Escalinata, la Plaza del Mercado y la Puerta Real están en `ZonasLibres`.
+
+### 23.6 Vegetación (`VestidoDelMundo.Vegetacion.cs`)
+
+Arbolado por zonas con un color dominante en cada una, compuesto por reglas y semillas (nunca coordenadas sueltas). El plan solo depende del terreno pintado, de lo que ya había en la escena, de los datos y de las zonas libres (incluidas las de la capital y el agua): es el mismo al pintar las flores y al plantar.
+
+- **Composición** (guía de arte): bosquetes de 3 a 7 árboles alargados 2:1 a lo largo de la curva de nivel, con una especie que pone al menos el 60 %, un dominante 1,3 veces más alto y como mucho un acento de color; si no caben tres, no se pone. Dos colores de acento distintos no quedan a menos de 30 m. Junto a los caminos se alternan tramos con vistas (30–50 m) y tramos de arboleda; los troncos quedan a 3 m o más del borde pintado.
+- **Campo:** laderas de otoño de la subida al Reino, arboleda dorada de las granjas, sotos del valle, del sur, del sureste y de las lomas de la costa, prados del oeste de Will y del redil; orlas de los pueblos (lima en el vecino, palmeras y turquesa en el puerto, oro en las granjas), ribera turquesa del arroyo de la ladera este y matas en los taludes de 28–42° que se ven desde los caminos.
+- **Reino, dentro:** cerezos en hilera en los jardines de palacio, jardín hundido de la taberna, paseo de ronda (setos al pie de la muralla y cerezos y turquesas alternos delante), matas en el talud central y un cerezo en la plazoleta del pozo, con matas de flores del pack alrededor de los cerezos. **Fuera:** pinar tras el castillo, hombros de coníferas con acentos turquesa, alameda de cipreses en el Camino 10 (con ventanas de vista al castillo), matas al pie del talud, setos al pie de los frentes oeste, norte y este y racimos de hiedra en la cara de los lienzos.
+- **Materiales:** los árboles verdes llevan el follaje matizado del mapa (`Follaje_0`; `Follaje_1` solo al borde del bosque); los de color, el `Tree.mat` de serie. El cerezo es `Tree_Cerezo.mat`, copia de `Tree.mat` con `Tree_Cerezo_D.png` (la paleta del pack con los verdes pasados a rosa pálido), que la herramienta crea la primera vez leyendo una copia temporal de `Tree_D.tga` (la del pack no se toca). Si falta el archivo de Git LFS de `Tree_D.tga`, los cerezos se plantan como turquesas y el informe lo dice.
+- **Flores:** manchas en las capas de hierba de detalle `Flower*_D`, solo sobre hierba (nunca bajo calles, suelo duro, arena, roca ni edificios), con la densidad de la hierba que ya hay y una paleta por zona; respetan lo retocado a mano.
+- **No se planta:** el Bosque Prohibido, la ladera de la montaña (por encima de 118 m), el marjal del sureste, la ribera de la laguna (la viste el agua), los parajes (a 16 m) y las vistas del Mirador al valle y al castillo. Sin `Tree04_c02/c03` (su caja cubre la copa), `Tree02_d01` (lleva obstáculo de navegación y refugio de lluvia) ni `Tree07` a más de 2,5 de escala.
+- **Informe:** recuento por zona, cifras de la guía antes → después (copa en el anillo de 0–40 m fuera de la muralla, objetivo 25–35 %; celdas de 25 m sin copa, objetivo ≤ 30 %; árboles sueltos, objetivo ≤ 15 %; árboles de color con follaje, objetivo 0) y motivos de lo que no se puso.
+- Plan simulado fuera de Unity: unos 800 árboles, 580 matas, 45 setos y unos 20 racimos de hiedra; hay 1.983 árboles en la escena (tope orientativo 2.800). Cada árbol y mata recibe `NavMeshObstacle`: medir FPS (F4) y tiempo de carga.
+
+### 23.7 Laguna de la Era (`VestidoDelMundo.Agua.cs`)
+
+Una cuenca natural del terreno al sureste de la subida a las granjas, en (185, −33), que se llena de agua sin excavar nada. Es ambientación del mapa: no es canon de la novela ni lleva misión.
+
+- **Medida:** inunda el heightmap (`GetHeights`) desde un punto del fondo subiendo la cota hasta el desborde; la lámina queda 1,2 m por debajo (≈ 24,5 m, ≈ 2.270 m², hasta ≈ 3,4 m de fondo). Si el agua se sale del recuadro de búsqueda, o la cota o el área se apartan mucho de lo esperado (el terreno ha cambiado), no se pone nada y el informe dice qué revisar.
+- **Agua:** lámina en malla (`CarpetaGenerada`) con `AguaLaguna.mat` (copia de `Water_Lake.mat` con colores de ribera); cajas trigger en la capa `Water` con la cara de arriba en la cota (`PlayerSwimmingController` nada donde cubre); `NavMeshModifierVolume` «Not Walkable» en la capa `Floor` donde hay 0,6 m o más de fondo (la superficie solo recoge los volúmenes de su máscara de capas).
+- **Suelo:** fondo de suelo de bosque y tierra (sin hierba de detalle), barro en la orilla con el borde roto, senda corta desde la de la Era de trilla y una llegada de arena.
+- **Ribera** por reglas a partir de la forma de la orilla: la que da al Camino 2 queda despejada (se ve el agua desde arriba); un árbol azul (`Tree04_e01`) en la punta de tierra, hacia el que mira la llegada; tres bosquetes de árboles de color en la orilla de enfrente con la copa hacia el agua; juncales, nenúfares al abrigo de los juncos, troncos medio hundidos, peñas, setas y flores azules y blancas.
+- **Ambiente:** `AmbientZone` con `AmbientPreset_Laguna` (niebla baja del clima en la cuenca; no cambia música ni luz), `NieblaNocturna` sobre el agua, `ZonaSinArenas` (caja del agua + 25 m: ninguna batalla en el agua) y ranas (`AudioSource` 3D en bucle, hasta 50 m, grupo `Ambience` del mezclador). El clip de las ranas se pasa a mono y Streaming la primera vez (cambio de importación que *quitar* no deshace).
+- Lo que quedaría bajo el agua se retira con el registro (más de 1 m de fondo, o tapado si es pequeño; las matas `Tree07` con 0,2 m, porque su esfera de colisión cerraría el paso a nado). Lo que tiene lógica de juego no se retira: se anota en el informe.
+- **Zonas libres** (`ZonasDelAgua`): el agua y unos 2,5 m de orilla; nada de las demás partes se pone ahí.
+
+### 23.8 Estado y límites
+
+- Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity). La primera parte (INC-671) se validó con una simulación de `Poner` contra los colisionadores reales; la segunda (INC-684), con simuladores en Python de cada parte sobre las alturas reales del terreno.
+- Tras *vestir*: leer `Logs/Editor.log` y `_ClaudeBackups/VestidoDelMundo/Informe.txt`, rehornear el NavMesh, pasar el diagnóstico del paseo de Eldran y el menú Noche, y probar *quitar* (un `git diff` de `MainWorld.unity` después de *quitar* no debe dejar restos del vestido).
+- Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas (`Pueblos.cs`, `Capital.cs`, `Detalles.cs`, `Parajes.cs`) o en las reglas de cada parte, y se vuelve a ejecutar el menú.
+- Queda para Raúl lo que necesita su criterio: las medidas de la Puerta Real (más grande que en el plan), el cuartel `Stronghold02` (bastión almenado exento junto al castillo: comprobar que no se lea como una torre suelta), los tapices y faroles de la cara de la puerta (no se han puesto), el bancal de la Plaza de la Puerta Real (queda como ribazo sin pavimentar), un rosetón también en la Plaza del Mercado, y qué se levanta en el solar libre de Silas.

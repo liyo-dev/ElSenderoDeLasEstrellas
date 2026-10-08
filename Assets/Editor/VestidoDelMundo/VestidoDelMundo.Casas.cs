@@ -4,15 +4,22 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/// Las casas que puso el generador del mapa dan la espalda a su calle: el generador suponía que la fachada
-/// de los BuildingAT es su +Z local y en casi todos la puerta está en otro lado. Aquí se giran sobre el
-/// centro de su huella para que la puerta mire a donde el generador quería que mirase la fachada. El giro y
-/// la posición originales se guardan en la propia escena (un objeto EditorOnly bajo WORLD con un hijo por
-/// casa), así se guardan o se descartan junto con las casas; «Quitar el vestido» (y cada nueva ejecución,
-/// antes de girar) los repone.
+/// Lo que el vestido cambia de lo que ya estaba en la escena, siempre con registro para deshacerlo:
+///
+/// · Giro de casas. Las casas que puso el generador del mapa dan la espalda a su calle: el generador suponía
+///   que la fachada de los BuildingAT es su +Z local y en casi todos la puerta está en otro lado. Aquí se
+///   giran sobre el centro de su huella para que la puerta mire a donde el generador quería que mirase la
+///   fachada.
+/// · Retirada. Lo que estorba a lo nuevo (muralla vieja, casas de aldea en la capital, lo que queda bajo la
+///   laguna…) no se borra: se deja inactivo y con la etiqueta EditorOnly, así no llega a la build.
+///
+/// El estado original se guarda en la propia escena (un objeto EditorOnly bajo WORLD por cada cosa, con un
+/// hijo por objeto), así se guarda o se descarta junto con lo cambiado; «Quitar el vestido» (y cada nueva
+/// ejecución, antes de empezar) lo repone.
 public static partial class VestidoDelMundo
 {
     private const string NombreRegistroCasas = "Vestido del mundo — giro original de las casas (no tocar)";
+    private const string NombreRegistroRetirados = "Vestido del mundo — retirado (no tocar)";
 
     /// Lado de la puerta a ras de suelo de cada prefab, en grados respecto al +Z local (medido en sus hijos Door*).
     private static readonly Dictionary<string, float> LadoDeLaPuerta = new()
@@ -65,26 +72,32 @@ public static partial class VestidoDelMundo
         return null;
     }
 
-    /// Objeto de la escena que guarda el giro original de cada casa girada: un hijo por casa, llamado
-    /// «ruta|GlobalObjectId», con la posición y el giro originales, y dentro un hijo «girada» con la pose
-    /// que le dejó el vestido. Con «crear», lo crea si no existe.
-    private static Transform RegistroCasas(Scene escena, bool crear)
+    /// Objeto EditorOnly de la escena (bajo WORLD o, si no hay WORLD, en la raíz) que guarda un registro del
+    /// vestido. Con «crear», lo crea si no existe.
+    ///
+    /// · Giro de las casas: un hijo por casa, llamado «ruta|GlobalObjectId», con la posición y el giro
+    ///   originales, y dentro un hijo «girada» con la pose que le dejó el vestido.
+    /// · Retirados: un hijo por objeto, «ruta|GlobalObjectId», y dentro «estado|activo|etiqueta» con su
+    ///   estado de antes.
+    private static Transform Registro(Scene escena, string nombre, bool crear)
     {
         Transform padre = null;
         foreach (GameObject raiz in escena.GetRootGameObjects())
         {
-            if (raiz.name == NombreRegistroCasas) return raiz.transform;
+            if (raiz.name == nombre) return raiz.transform;
             if (raiz.name != NombrePadre) continue;
             padre = raiz.transform;
-            Transform t = padre.Find(NombreRegistroCasas);
+            Transform t = padre.Find(nombre);
             if (t != null) return t;
         }
         if (!crear) return null;
-        var g = new GameObject(NombreRegistroCasas) { tag = "EditorOnly" };
+        var g = new GameObject(nombre) { tag = "EditorOnly" };
         SceneManager.MoveGameObjectToScene(g, escena);
         if (padre != null) g.transform.SetParent(padre, false);
         return g.transform;
     }
+
+    private static Transform RegistroCasas(Scene escena, bool crear) => Registro(escena, NombreRegistroCasas, crear);
 
     private const string NombrePoseGirada = "girada";
 
@@ -100,6 +113,28 @@ public static partial class VestidoDelMundo
             GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid) is GameObject go && go.scene == escena)
             return go.transform;
         return corte > 0 ? BuscarPorRuta(escena, marca.name.Substring(0, corte)) : null;
+    }
+
+    private static bool PareceRetirado(GameObject go) => !go.activeSelf && go.CompareTag("EditorOnly");
+
+    /// Respaldo cuando el identificador de una marca de retirado no se resuelve: el primer objeto con esa
+    /// ruta que siga retirado. Hay grupos con muchos hijos del mismo nombre (lienzos de muralla), así no se
+    /// toca uno que no estaba retirado.
+    private static Transform RetiradoPorRuta(Scene escena, string ruta)
+    {
+        int corte = ruta.LastIndexOf('/');
+        string nombre = ruta.Substring(corte + 1);
+        if (corte < 0)
+        {
+            foreach (GameObject raiz in escena.GetRootGameObjects())
+                if (raiz.name == nombre && PareceRetirado(raiz)) return raiz.transform;
+            return null;
+        }
+        Transform padre = BuscarPorRuta(escena, ruta.Substring(0, corte));
+        if (padre == null) return null;
+        foreach (Transform t in padre)
+            if (t.name == nombre && PareceRetirado(t.gameObject)) return t;
+        return null;
     }
 
     /// Identificadores de las casas que están giradas ahora mismo en la escena.
@@ -135,6 +170,8 @@ public static partial class VestidoDelMundo
     private static void GirarCasasHaciaSuCalle(Scene escena, Obra o)
     {
         HashSet<string> yaGiradas = CasasGiradas(escena);
+        // Lo retirado no se gira: está inactivo y fuera de la build.
+        HashSet<string> retirados = o.Retirados ??= IdsRetirados(escena);
         Transform registro = null;
         int giradas = 0, revertidas = 0, adornos = 0;
 
@@ -142,7 +179,11 @@ public static partial class VestidoDelMundo
         Transform vida = BuscarGrupo(escena, GrupoVidaDeLosPueblos);
         if (vida != null)
             foreach (Transform t in vida)
-                if (System.Array.IndexOf(AdornosDeCasa, t.name) >= 0 && !yaGiradas.Contains(IdDe(t.gameObject))) sueltos.Add(t);
+            {
+                if (System.Array.IndexOf(AdornosDeCasa, t.name) < 0) continue;
+                string id = IdDe(t.gameObject);
+                if (!yaGiradas.Contains(id) && !retirados.Contains(id)) sueltos.Add(t);
+            }
 
         foreach (string nombreGrupo in GruposConCasasAGirar)
         {
@@ -154,7 +195,7 @@ public static partial class VestidoDelMundo
                 if (fuente == null || !LadoDeLaPuerta.TryGetValue(fuente.name, out float lado)) continue;
                 if (Mathf.Abs(Mathf.DeltaAngle(lado, 0f)) < 1f) continue;
                 string id = IdDe(casa.gameObject);
-                if (yaGiradas.Contains(id)) continue;
+                if (yaGiradas.Contains(id) || retirados.Contains(id)) continue;
 
                 Vector3 pos = casa.position;
                 Quaternion rot = casa.rotation;
@@ -257,5 +298,208 @@ public static partial class VestidoDelMundo
         if (registro.childCount == 0) Object.DestroyImmediate(registro.gameObject);
         informe.Add($"Casas: {n} devueltas a su giro original" + (movidas > 0 ? $" ({movidas} movidas a mano)" : "") +
                     (perdidas > 0 ? $"; {perdidas} no aparecen en la escena y su marca se conserva en «{NombreRegistroCasas}»." : "."));
+    }
+
+    // ── Retirada de lo que estorba ───────────────────────────────────────────────────────────
+
+    private const string PrefijoEstado = "estado|";
+
+    /// Retira de la escena algo que estorba a lo nuevo sin borrarlo: lo deja inactivo y con la etiqueta
+    /// EditorOnly (no llega a la build) y apunta su estado de antes en el registro de retirados. Si ya está
+    /// retirado (o es parte de lo generado, que se rehace en cada ejecución), no hace nada. En el informe
+    /// queda una línea por motivo con el recuento.
+    private static void Retirar(Scene escena, Transform t, string motivo, Obra o)
+    {
+        if (t == null || t.IsChildOf(o.Raiz)) return;
+        string id = IdDe(t.gameObject);
+        o.Retirados ??= IdsRetirados(escena);
+        if (!o.Retirados.Add(id)) return;
+
+        Transform registro = Registro(escena, NombreRegistroRetirados, crear: true);
+        var marca = new GameObject(RutaJerarquia(t) + "|" + id) { tag = "EditorOnly" };
+        marca.transform.SetParent(registro, false);
+        var estado = new GameObject(PrefijoEstado + t.gameObject.activeSelf + "|" + t.gameObject.tag);
+        estado.transform.SetParent(marca.transform, false);
+        t.gameObject.SetActive(false);
+        t.gameObject.tag = "EditorOnly";
+        GuardarOverrides(t.gameObject);
+
+        if (o.RetiradosPorMotivo.TryGetValue(motivo, out (int linea, int cuenta) r))
+        {
+            o.RetiradosPorMotivo[motivo] = (r.linea, r.cuenta + 1);
+            o.Informe[r.linea] = LineaDeRetirados(motivo, r.cuenta + 1);
+        }
+        else
+        {
+            o.RetiradosPorMotivo[motivo] = (o.Informe.Count, 1);
+            o.Informe.Add(LineaDeRetirados(motivo, 1));
+        }
+    }
+
+    private static string LineaDeRetirados(string motivo, int cuenta) => $"Retirados (inactivos, fuera de la build): {cuenta} × {motivo}";
+
+    /// Identificadores (GlobalObjectId) de lo que está retirado ahora mismo en la escena.
+    private static HashSet<string> IdsRetirados(Scene escena)
+    {
+        var r = new HashSet<string>();
+        Transform registro = Registro(escena, NombreRegistroRetirados, crear: false);
+        if (registro == null) return r;
+        foreach (Transform marca in registro)
+        {
+            int corte = marca.name.LastIndexOf('|');
+            if (corte >= 0) r.Add(marca.name.Substring(corte + 1));
+        }
+        return r;
+    }
+
+    /// Devuelve lo retirado a su estado de antes (activo y etiqueta). Conserva la marca de lo que no aparece
+    /// en la escena y borra el registro si queda vacío.
+    private static void ReponerRetirados(Scene escena, List<string> informe)
+    {
+        Transform registro = Registro(escena, NombreRegistroRetirados, crear: false);
+        if (registro == null) return;
+        var marcas = new List<Transform>();
+        foreach (Transform marca in registro) marcas.Add(marca);
+
+        // Los identificadores se resuelven todos de una vez: uno a uno es lento en una escena tan grande.
+        var objetos = new Object[marcas.Count];
+        var validos = new List<int>();
+        var ids = new List<GlobalObjectId>();
+        for (int i = 0; i < marcas.Count; i++)
+        {
+            int corte = marcas[i].name.LastIndexOf('|');
+            if (corte < 0 || !GlobalObjectId.TryParse(marcas[i].name.Substring(corte + 1), out GlobalObjectId gid)) continue;
+            validos.Add(i);
+            ids.Add(gid);
+        }
+        if (ids.Count > 0)
+        {
+            var resueltos = new Object[ids.Count];
+            GlobalObjectId.GlobalObjectIdentifiersToObjectsSlow(ids.ToArray(), resueltos);
+            for (int j = 0; j < validos.Count; j++) objetos[validos[j]] = resueltos[j];
+        }
+
+        int n = 0, perdidas = 0;
+        for (int i = 0; i < marcas.Count; i++)
+        {
+            Transform marca = marcas[i];
+            int corte = marca.name.LastIndexOf('|');
+            Transform t = objetos[i] is GameObject go && go.scene == escena ? go.transform
+                : corte > 0 ? RetiradoPorRuta(escena, marca.name.Substring(0, corte)) : null;
+            if (t == null) { perdidas++; continue; }
+            ReponerEstado(t.gameObject, marca, informe);
+            Object.DestroyImmediate(marca.gameObject);
+            n++;
+        }
+        if (registro.childCount == 0) Object.DestroyImmediate(registro.gameObject);
+        informe.Add($"Retirados: {n} repuestos" +
+                    (perdidas > 0 ? $"; {perdidas} no aparecen en la escena y su marca se conserva en «{NombreRegistroRetirados}»." : "."));
+    }
+
+    /// Pone el activo y la etiqueta que apunta la marca. En las instancias de prefab, si lo repuesto coincide
+    /// con el prefab, quita además el override que dejó la retirada: la escena queda como estaba.
+    private static void ReponerEstado(GameObject go, Transform marca, List<string> informe)
+    {
+        bool activo = true;
+        string etiqueta = "Untagged";
+        foreach (Transform hijo in marca)
+        {
+            if (!hijo.name.StartsWith(PrefijoEstado)) continue;
+            string[] partes = hijo.name.Split(new[] { '|' }, 3);
+            if (partes.Length == 3 && bool.TryParse(partes[1], out bool a)) { activo = a; etiqueta = partes[2]; }
+            break;
+        }
+        try { go.tag = etiqueta; }
+        catch (UnityException)
+        {
+            go.tag = "Untagged";
+            informe.Add($"  · «{go.name}» tenía la etiqueta «{etiqueta}», que ya no existe: queda sin etiqueta.");
+        }
+        go.SetActive(activo);
+        GuardarOverrides(go);
+
+        GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(go);
+        if (fuente == null) return;
+        var so = new SerializedObject(go);
+        SerializedProperty propiedadActivo = so.FindProperty("m_IsActive"), propiedadEtiqueta = so.FindProperty("m_TagString");
+        if (propiedadActivo != null && propiedadActivo.prefabOverride && fuente.activeSelf == go.activeSelf)
+            PrefabUtility.RevertPropertyOverride(propiedadActivo, InteractionMode.AutomatedAction);
+        if (propiedadEtiqueta != null && propiedadEtiqueta.prefabOverride && fuente.tag == go.tag)
+            PrefabUtility.RevertPropertyOverride(propiedadEtiqueta, InteractionMode.AutomatedAction);
+    }
+
+    /// En una instancia de prefab, apunta como override lo cambiado por código (si no, Unity puede
+    /// perderlo al recargar el prefab).
+    private static void GuardarOverrides(Object objeto)
+    {
+        if (PrefabUtility.IsPartOfPrefabInstance(objeto)) PrefabUtility.RecordPrefabInstancePropertyModifications(objeto);
+    }
+
+    // ── Búsquedas en la escena ───────────────────────────────────────────────────────────────
+
+    /// Índice de las instancias de prefab de la escena por nombre del asset, fuera de lo generado y de los
+    /// registros. Se construye la primera vez que hace falta y se olvida al empezar y al acabar cada menú.
+    private static Dictionary<string, List<Transform>> indicePorPrefab;
+    private static Scene escenaDelIndice;
+
+    private static void OlvidarIndices() => indicePorPrefab = null;
+
+    /// Lo que no cuenta como «lo que ya estaba»: la raíz generada y los registros del vestido.
+    private static bool EsDelVestido(Transform t) =>
+        t.name == NombreRaiz || t.name == NombreRegistroCasas || t.name == NombreRegistroRetirados;
+
+    private static void IndexarPrefabs(Scene escena)
+    {
+        indicePorPrefab = new Dictionary<string, List<Transform>>();
+        escenaDelIndice = escena;
+        var pila = new Stack<Transform>();
+        foreach (GameObject raiz in escena.GetRootGameObjects()) pila.Push(raiz.transform);
+        while (pila.Count > 0)
+        {
+            Transform t = pila.Pop();
+            if (EsDelVestido(t)) continue;
+            if (PrefabUtility.IsAnyPrefabInstanceRoot(t.gameObject))
+            {
+                GameObject fuente = PrefabUtility.GetCorrespondingObjectFromSource(t.gameObject);
+                if (fuente != null)
+                {
+                    if (!indicePorPrefab.TryGetValue(fuente.name, out List<Transform> l)) indicePorPrefab[fuente.name] = l = new List<Transform>();
+                    l.Add(t);
+                }
+            }
+            foreach (Transform h in t) pila.Push(h);
+        }
+    }
+
+    /// Instancias raíz de prefab (activas o no) cuyo asset se llama «nombrePrefab» (p. ej. "BuildingAT23") y
+    /// cuya posición en planta está a menos de «tolerancia» de «xz», de la más cercana a la más lejana. Sirve
+    /// para localizar piezas del generador del mapa, que repite nombres. No mira lo generado por el vestido.
+    private static List<Transform> BuscarPorPrefabYPosicion(Scene escena, string nombrePrefab, Vector2 xz, float tolerancia)
+    {
+        if (indicePorPrefab == null || escenaDelIndice != escena) IndexarPrefabs(escena);
+        var r = new List<Transform>();
+        if (!indicePorPrefab.TryGetValue(nombrePrefab, out List<Transform> lista)) return r;
+        float Distancia(Transform t) => Vector2.Distance(new Vector2(t.position.x, t.position.z), xz);
+        foreach (Transform t in lista)
+            if (t != null && Distancia(t) < tolerancia) r.Add(t);
+        r.Sort((a, b) => Distancia(a).CompareTo(Distancia(b)));
+        return r;
+    }
+
+    /// Primer objeto llamado «nombre» a cualquier profundidad bajo WORLD (los menos hondos primero), fuera de
+    /// lo generado y de los registros. Null si no hay.
+    private static Transform BuscarGrupoPorNombre(Scene escena, string nombre)
+    {
+        var cola = new Queue<Transform>();
+        foreach (GameObject raiz in escena.GetRootGameObjects())
+            if (raiz.name == NombrePadre) cola.Enqueue(raiz.transform);
+        while (cola.Count > 0)
+            foreach (Transform h in cola.Dequeue())
+            {
+                if (EsDelVestido(h)) continue;
+                if (h.name == nombre) return h;
+                cola.Enqueue(h);
+            }
+        return null;
     }
 }
