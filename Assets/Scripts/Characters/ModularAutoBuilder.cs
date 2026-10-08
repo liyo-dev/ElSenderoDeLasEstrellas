@@ -96,15 +96,20 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
 
     void AlDesbloquearPrenda(WardrobeItemSO item) => ActualizarBonos();
 
+    /// Devuelve lo que aporta la pieza equipada en esta categoría.
+    public Estadisticas BonosDeCategoria(PartCategory categoria)
+    {
+        if (!idx.TryGetValue(categoria, out int indice) ||
+            !parts.TryGetValue(categoria, out var lista) || indice < 0 || indice >= lista.Count)
+            return default;
+        var pieza = WardrobeItemSO.FindPart(categoria, lista[indice].name);
+        return pieza != null ? pieza.Bonos : default;
+    }
     void ActualizarBonos()
     {
         var suma = default(Estadisticas);
         foreach (var seleccion in idx)
-        {
-            if (!parts.TryGetValue(seleccion.Key, out var lista) || seleccion.Value < 0 || seleccion.Value >= lista.Count) continue;
-            var item = WardrobeItemSO.FindPart(seleccion.Key, lista[seleccion.Value].name);
-            if (item != null) suma += item.Bonos;
-        }
+            suma += BonosDeCategoria(seleccion.Key);
         var diferencia = suma - _bonos;
         _bonos = suma;
         if (_fuenteRegistrada && !diferencia.EsCero) EstadisticasDelPersonaje.AvisarCambioDeBonos(diferencia);

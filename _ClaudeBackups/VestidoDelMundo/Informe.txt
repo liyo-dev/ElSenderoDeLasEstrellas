@@ -1,0 +1,122 @@
+﻿Vestido de MainWorld — 2026-10-07 17:44
+Suelo: copia del original guardada en _ClaudeBackups/VestidoDelMundo.
+Suelo de Reino: alfombra, 6 calles, 3 plazas y sendas de 32 casas.
+Suelo de Pueblo pesquero: alfombra, 0 calles, 1 plazas y sendas de 15 casas.
+Suelo de Pueblo vecino: alfombra, 0 calles, 1 plazas y sendas de 12 casas.
+Suelo de Granjas de la cascada: alfombra, 0 calles, 1 plazas y sendas de 2 casas.
+Suelo de parajes: 12 lugares con su senda desde el camino.
+Suelo: pintado y guardado (3994 celdas de hierba de detalle retiradas de calles y sendas).
+  · «Casa de la calle occidental 3» no se gira: chocaría con algo vecino.
+  · «Casa de la calle oriental 12» no se gira: chocaría con algo vecino.
+Casas: 38 giradas para que la puerta dé a su calle (38 macetas del generador giradas con ellas), 2 sin girar por espacio.
+Reino: 13 de 13 casas nuevas.
+  · descartada «Caja junto a la puerta» en (65,3, 300,5): se pisa con otra pieza del vestido
+  · descartada «Farola» en (-58,3, 329): se pisa con otra pieza del vestido
+  · descartada «Farola» en (49,7, 329): se pisa con otra pieza del vestido
+  · descartada «Farola» en (32, 304,3): se pisa con otra pieza del vestido
+  · descartada «Farola» en (-58, 254,7): se pisa con otra pieza del vestido
+  · descartada «Farola» en (-40, 263,3): choca con algo que ya estaba en la escena
+  · descartada «Farola» en (66,8, 237,9): zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
+  · descartada «Farola» en (86,6, 237,8): zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
+  · descartada «Parterre» en (-61,1, 277): terreno demasiado desigual (4,2 m)
+  · descartada «Árbol de jardín» en (-55,3, 276): terreno demasiado desigual (2,9 m)
+  · descartada «Parterre» en (-46,5, 275,1): terreno demasiado desigual (2,0 m)
+  · descartada «Árbol de jardín» en (-41,3, 275,2): terreno demasiado desigual (6,6 m)
+  · descartada «Parterre» en (-34,5, 274,6): terreno demasiado desigual (4,6 m)
+  · descartada «Árbol de jardín» en (-32,1, 270,5): terreno demasiado desigual (2,6 m)
+  · descartada «Árbol de jardín» en (-31,9, 274,5): terreno demasiado desigual (5,4 m)
+  · descartada «Árbol de jardín» en (-17,9, 276,4): terreno demasiado desigual (4,6 m)
+  · descartada «Parterre» en (-4,7, 275,7): terreno demasiado desigual (3,2 m)
+  · descartada «Parterre» en (2,7, 277,7): terreno demasiado desigual (3,6 m)
+  · descartada «Parterre» en (10,5, 275,4): terreno demasiado desigual (2,3 m)
+  · descartada «Parterre» en (26,1, 276,8): terreno demasiado desigual (4,0 m)
+  · descartada «Árbol de jardín» en (29, 276): terreno demasiado desigual (6,2 m)
+  · descartada «Árbol de jardín» en (53,6, 276,5): terreno demasiado desigual (2,0 m)
+  · descartada «Parterre» en (59,9, 274,4): terreno demasiado desigual (5,3 m)
+  · descartada «Árbol de jardín» en (85,1, 276,5): terreno demasiado desigual (1,6 m)
+  · descartada «Árbol de jardín» en (-70,7, 241): terreno demasiado desigual (11,2 m)
+  · descartada «Árbol de jardín» en (-42,8, 247,9): terreno demasiado desigual (4,9 m)
+  · descartada «Árbol de jardín» en (-57,8, 276,2): terreno demasiado desigual (6,0 m)
+  · descartada «Parterre» en (-38,1, 276,7): terreno demasiado desigual (1,8 m)
+  · descartada «Árbol de jardín» en (-18,9, 276,2): terreno demasiado desigual (4,8 m)
+  · descartada «Parterre» en (-11,9, 275,2): terreno demasiado desigual (1,9 m)
+  · descartada «Árbol de jardín» en (-1,1, 276,6): terreno demasiado desigual (5,2 m)
+  · descartada «Parterre» en (3,4, 277,2): terreno demasiado desigual (2,5 m)
+  · descartada «Parterre» en (11,9, 275,3): terreno demasiado desigual (1,8 m)
+  · descartada «Parterre» en (17,1, 275,7): terreno demasiado desigual (2,4 m)
+  · descartada «Árbol de jardín» en (24,2, 275,7): terreno demasiado desigual (7,2 m)
+  · descartada «Parterre» en (-15,2, 281,1): terreno demasiado desigual (1,8 m)
+  · descartada «Árbol de jardín» en (11,6, 281): terreno demasiado desigual (3,7 m)
+  · descartada «Parterre» en (68,5, 241,9): terreno demasiado desigual (1,8 m)
+  · descartada «Árbol de jardín» en (55,9, 271,8): terreno demasiado desigual (7,7 m)
+  · descartada «Parterre» en (84,9, 273): terreno demasiado desigual (1,6 m)
+  · descartada «Parterre» en (46,5, 278,7): terreno demasiado desigual (4,7 m)
+  · descartada «Árbol de jardín» en (55,6, 276,5): terreno demasiado desigual (1,6 m)
+Reino: 199 piezas de detalle.
+  · descartada «Farola» en (236,8, -400,8): zona que debe quedar libre: Huerto del puerto
+  · descartada «Barca varada en la arena» en (232,3, -458,3): pisa un camino o una calle
+  · descartada «Flores» en (242,3, -442,4): pisa un camino o una calle
+  · descartada «Árbol de jardín» en (231,4, -424,2): pisa un camino o una calle
+  · descartada «Parterre» en (280,1, -405,3): pisa un camino o una calle
+Pueblo pesquero: 87 piezas de detalle.
+  · descartada «Leña junto a la casa» en (329,8, -136,9): choca con algo que ya estaba en la escena
+  · descartada «Árbol de jardín» en (341,8, -131,9): pisa un camino o una calle
+  · descartada «Árbol de jardín» en (284,6, -110): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+  · descartada «Árbol de jardín» en (294,6, -112,9): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+  · descartada «Árbol de jardín» en (299,2, -113,8): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+  · descartada «Parterre» en (285,6, -106,5): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+  · descartada «Árbol de jardín» en (293,8, -105,2): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+Pueblo vecino: 65 piezas de detalle.
+  · descartada «Parterre» en (250,6, 164,6): zona que debe quedar libre: Huerto grande de las granjas
+Granjas de la cascada: 44 piezas de detalle.
+Ruinas de la casa fuerte: 24 piezas.
+Atalaya rota del acantilado sur: 17 piezas.
+Caserío abandonado: 19 piezas.
+Claustro viejo: 22 piezas.
+Redil del pastor: 9 piezas.
+Varadero de la playa oeste: 8 piezas.
+Cantera vieja: 12 piezas.
+Posta del cruce: 4 piezas.
+Era de trilla: 5 piezas.
+Almenara del acantilado este: 5 piezas.
+Mirador de la subida al Reino: 10 piezas.
+  · descartada «Parterre» en (-94, -127,5): choca con algo que ya estaba en la escena
+Descanso del cruce: 5 piezas.
+Navegación: 423 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta no talla el NavMesh.
+Detalles: 548 piezas colocadas, 56 descartadas por comprobaciones.
+     5 × se pisa con otra pieza del vestido
+     5 × pisa un camino o una calle
+     5 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+     4 × terreno demasiado desigual (1,8 m)
+     3 × choca con algo que ya estaba en la escena
+     3 × terreno demasiado desigual (1,6 m)
+     2 × zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
+     2 × terreno demasiado desigual (2,0 m)
+     2 × terreno demasiado desigual (4,6 m)
+     1 × terreno demasiado desigual (4,2 m)
+     1 × terreno demasiado desigual (2,9 m)
+     1 × terreno demasiado desigual (6,6 m)
+     1 × terreno demasiado desigual (2,6 m)
+     1 × terreno demasiado desigual (5,4 m)
+     1 × terreno demasiado desigual (3,2 m)
+     1 × terreno demasiado desigual (3,6 m)
+     1 × terreno demasiado desigual (2,3 m)
+     1 × terreno demasiado desigual (4,0 m)
+     1 × terreno demasiado desigual (6,2 m)
+     1 × terreno demasiado desigual (5,3 m)
+     1 × terreno demasiado desigual (11,2 m)
+     1 × terreno demasiado desigual (4,9 m)
+     1 × terreno demasiado desigual (6,0 m)
+     1 × terreno demasiado desigual (4,8 m)
+     1 × terreno demasiado desigual (1,9 m)
+     1 × terreno demasiado desigual (5,2 m)
+     1 × terreno demasiado desigual (2,5 m)
+     1 × terreno demasiado desigual (2,4 m)
+     1 × terreno demasiado desigual (7,2 m)
+     1 × terreno demasiado desigual (3,7 m)
+     1 × terreno demasiado desigual (7,7 m)
+     1 × terreno demasiado desigual (4,7 m)
+     1 × zona que debe quedar libre: Huerto del puerto
+     1 × zona que debe quedar libre: Huerto grande de las granjas
+Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?
+Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).

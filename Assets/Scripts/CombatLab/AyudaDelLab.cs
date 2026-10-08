@@ -32,7 +32,7 @@ public sealed class AyudaDelLab : MonoBehaviour, ISeccionDelLab
             "<b>Puzles</b> (este): puerta con dos placas, placa que eleva, objeto que se quema con fuego y runas que hay que repetir en orden.\n" +
             "<b>Agua</b> (norte): nadar en lo hondo y en lo poco hondo.\n" +
             "<b>Vuelo</b> (sur): torres y plataformas flotantes a 10, 18 y 26 m.\n" +
-            "<b>Tiendas y Esencia</b> (sur): Renard (Esencia) y Tomasa (monedas), placas de +100 y un corral de arañas para contratos.\n" +
+            "<b>Tiendas y Esencia</b> (sur): Renard (Esencia), Tomasa (monedas) y Patricia (pociones y capa por monedas), placas de +100 y un corral de arañas para contratos.\n" +
             "<b>Zona de jefes</b> (oeste, por el pasillo del plataformeo): Demonio 1, Demonio 2, Gólem y Mago Oscuro. Al ganar vuelves a la entrada con la vida llena; si caes, el LAB se recarga allí.");
         Seccion("Pestañas",
             "<b>Combate</b>: escenarios del centro. <b>Zonas</b>: viaje rápido y salir al menú. <b>Grupo</b>: pelear solo, con Estela, con Liam o con los dos. " +

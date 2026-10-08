@@ -158,7 +158,7 @@ public static partial class CombatLabBuilder
             ("Plataformeo (oeste)", "Saltos, doble salto, viga, rampa y escalada.", new Vector3(-18f, 0.1f, 1f), -90f),
             ("Puzles (este)", "Placas, puerta, plataforma que eleva, fuego y runas.", new Vector3(18f, 0.1f, 1f), 90f),
             ("Agua (norte)", "Nadar en lo hondo y en lo poco hondo.", new Vector3(0f, 0.1f, 21f), 0f),
-            ("Tiendas y Esencia (sur)", "Renard, Tomasa y placas de +100.", new Vector3(0f, 0.1f, -20f), 180f),
+            ("Tiendas y Esencia (sur)", "Renard, Tomasa, Patricia y placas de +100.", new Vector3(0f, 0.1f, -20f), 180f),
             ("Vuelo (sur)", "Torres y plataformas flotantes a 10, 18 y 26 m.", new Vector3(0f, 0.1f, -35f), 180f),
             ("Arañas y contratos (sur)", "Corral de arañas que reaparecen.", new Vector3(25f, 0.1f, -68f), 180f),
             ("Saltos y volteretas (noreste)", "Lanzadores, caída larga, doble salto, remate aéreo, B y derribo.", EntradaSaltos, 45f),

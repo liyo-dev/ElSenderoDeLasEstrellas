@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// Zona de economía del CombatLab, en la entrada del campo sur: Renard (tienda de Esencia y
-/// contratos de caza), Tomasa (tienda de Moneda), placas que dan Esencia y Monedas, y un corral
+/// contratos de caza), Tomasa (tienda de Moneda), Patricia (pociones y capa por Moneda),
+/// placas que dan Esencia y Monedas, y un corral
 /// de arañas que se reponen solas al fondo del campo. Arranca el grafo de misiones secundarias
 /// para que salgan la presentación de Renard y sus contratos. Ver INC-635, INC-636 e INC-637.
 public static partial class CombatLabBuilder
@@ -63,6 +64,10 @@ public static partial class CombatLabBuilder
         var tomasa = Instanciar("Assets/_NPCs/Pueblo/Generados/Tomasa.prefab", "Tomasa", r,
             new Vector3(-7f, 0f, -27f), 0f, avisos, null);
         if (tomasa != null) CrearTexto("Tomasa (Moneda)", r, new Vector3(-7f, 3.2f, -27f), 180f);
+
+        var patricia = Instanciar("Assets/_NPCs/Patricia.prefab", "Patricia", r,
+            new Vector3(0f, 0f, -31f), 0f, avisos, null);
+        if (patricia != null) CrearTexto("Patricia (Pociones y capa · Moneda)", r, new Vector3(0f, 3.2f, -31f), 180f);
 
         var placaEsencia = GetMaterial("Lab_PlacaEsencia", new Color(0.62f, 0.38f, 0.95f));
         var placaMoneda = GetMaterial("Lab_PlacaMoneda", new Color(0.95f, 0.75f, 0.20f));

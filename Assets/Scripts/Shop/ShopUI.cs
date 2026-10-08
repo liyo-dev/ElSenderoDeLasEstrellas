@@ -452,6 +452,19 @@ public class ShopUI : MonoBehaviour
     {
         if (detailDescription == null || _selectedEntry?.item == null) return;
         string descripcion = _selectedEntry.item.GetLocalizedDescription();
+        var pieza = _selectedEntry.item.wardrobeUnlock;
+        if (pieza != null && !pieza.Bonos.EsCero && _selectedEntry.item.usageKind != ItemData.ItemUsageKind.Consumable)
+        {
+            string comparacion = TextoDeEstadisticas.Comparacion(
+                EstadisticasDelPersonaje.Total, EstadisticasDelPersonaje.TotalSiSeEquipa(pieza));
+            if (!string.IsNullOrEmpty(comparacion))
+            {
+                string titulo = LocalizationManager.Instance != null
+                    ? LocalizationManager.Instance.Get("SHOP_IF_EQUIPPED", "Si te la equipas:") : "Si te la equipas:";
+                descripcion += "\n\n" + titulo + "\n" + comparacion;
+            }
+        }
+        detailDescription.richText = true;
         var moneda = shopController != null ? shopController.CurrencyItem : null;
         int saldo = _playerInventory != null && moneda != null ? _playerInventory.Count(moneda.itemId) : 0;
         int falta = Mathf.Max(0, _selectedEntry.GetBuyPrice() - saldo);

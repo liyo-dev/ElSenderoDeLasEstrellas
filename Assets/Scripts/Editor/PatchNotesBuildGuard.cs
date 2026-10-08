@@ -12,48 +12,29 @@ using UnityEngine;
 
 /// <summary>
 /// Mantiene las Notas del Parche in-game (<see cref="PatchNotesFlyoutPanel"/>) sincronizadas con
-/// cada build real, igual que <see cref="BuildVersionIncrementer"/> hace con el número de versión —
-/// para no volver a tener un panel de Notas del Parche que muestre una versión distinta a la que
-/// aparece en pantalla, ni texto de marcador de posición visible para los jugadores (el motivo
-/// original de este script, 24 ago 2026: el panel se quedó anunciando "v0.1.4" con
-/// PlayerSettings.bundleVersion ya en 0.1.5, y su texto de ejemplo/instrucciones para el propio
-/// desarrollador seguía visible al final).
+/// cada build real para mostrar las notas de la versión actual sin texto interno de pendiente.
 ///
-/// Trabaja sobre dos archivos de texto plano en Assets/Resources/PatchNotes/ (cargados en runtime
-/// por PatchNotesFlyoutPanel vía Resources.Load&lt;TextAsset&gt;):
-/// - CurrentEntryBullets.txt: los cambios de la build en curso, SIN cabecera ni número de versión —
-///   se edita a mano durante el desarrollo, el mismo flujo de siempre, solo que ahora es un archivo
-///   de texto en vez de un campo del Inspector.
-/// - BuildDate.txt: la fecha del build más reciente, mismo formato que la cabecera ("24 ago
-///   2026"). Se sobrescribe automáticamente en cada build.
+/// Trabaja sobre dos archivos en Assets/Resources/PatchNotes/, cargados en runtime por
+/// PatchNotesFlyoutPanel mediante Resources.Load&lt;TextAsset&gt;:
+/// - CurrentEntryBullets.txt: los cambios de la build en curso, sin cabecera ni número de versión.
+/// - BuildDate.txt: la fecha del build más reciente, en el formato de la cabecera.
 ///
-/// NOTA (25 ago 2026, a petición de Raúl): el panel ya NO mantiene histórico de versiones
-/// anteriores — se quitó HistoryEntries.txt y el archivado que hacía este script. Solo se muestran
-/// las notas de la versión que se acaba de subir. Motivo: el archivado dependía de que
-/// OnPostprocessBuild llegara a ejecutarse (solo ocurre si el build termina en éxito completo),
-/// pero BuildVersionIncrementer (que corre antes, -1000) ya sube y guarda la versión aunque el
-/// build se cancele o falle después — así que cualquier build que no completara el ciclo entero
-/// dejaba la versión avanzada pero el histórico sin archivar. El histórico se quedó así congelado
-/// desde el 24 ago mientras la versión seguía subiendo sola. Mostrar solo la entrada actual elimina
-/// esa clase de bug de raíz.
+/// OnPreprocessBuild (callbackOrder -1100) valida las notas antes de que BuildVersionIncrementer
+/// (-1000) suba y guarde la versión, para que un build cancelado por notas no gaste un número.
+/// Si CurrentEntryBullets.txt falta, está vacío o contiene el marcador de pendiente, cancela el
+/// build mediante BuildFailedException. Si las notas son válidas, escribe la fecha en BuildDate.txt.
 ///
-/// Se engancha después de BuildVersionIncrementer (callbackOrder -1000) para ver ya la versión
-/// nueva:
-/// 1. OnPreprocessBuild (callbackOrder -900): si CurrentEntryBullets.txt no existe, está vacío, o
-///    sigue con el marcador de "pendiente", CANCELA el build (BuildFailedException) — mejor que un
-///    build no salga a que salga con notas de parche en blanco o con texto interno visible para los
-///    jugadores. Si todo está bien, escribe la fecha de hoy en BuildDate.txt.
-/// 2. OnPostprocessBuild: solo si el build terminó en éxito y no se saltó el autoincremento de
-///    versión (mismo flag que consulta BuildVersionIncrementer.WasLastBuildVersionSkipped), resetea
-///    CurrentEntryBullets.txt al marcador de "pendiente" para la próxima sesión de trabajo.
+/// OnPostprocessBuild resetea CurrentEntryBullets.txt al marcador de pendiente solo si el build
+/// termina en éxito y BuildVersionIncrementer.WasLastBuildVersionSkipped indica que no se salta
+/// el autoincremento. El panel muestra únicamente la entrada actual, sin archivar un histórico.
 ///
-/// Para saltarte esto en un build de pruebas que no vas a publicar: usa el mismo menú que para la
-/// versión ("El Sendero → Build → Saltar autoincremento de versión (solo el próximo build)") — al
-/// saltarse el autoincremento, este script tampoco valida ni resetea nada en ese build.
+/// El menú "El Sendero → Build → Saltar autoincremento de versión (solo el próximo build)" permite
+/// generar un build de pruebas sin validar ni resetear las notas. El preprocess consulta
+/// BuildVersionIncrementer.SeSaltaraElProximoBuild porque el incrementador aún no consume el aviso.
 /// </summary>
 public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuildWithReport
 {
-    public int callbackOrder => -900;
+    public int callbackOrder => -1100;
 
     const string PendingPlaceholder =
         "(Pendiente: añade aquí los cambios de esta build antes de compilar.)";
@@ -64,7 +45,7 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
 
     public void OnPreprocessBuild(BuildReport report)
     {
-        if (BuildVersionIncrementer.WasLastBuildVersionSkipped)
+        if (BuildVersionIncrementer.SeSaltaraElProximoBuild)
         {
             Debug.Log("[PatchNotesBuildGuard] Autoincremento de versión saltado para este build — " +
                       "no se validan ni tocan las Notas del Parche.");
@@ -119,6 +100,4 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
         Debug.Log("[PatchNotesBuildGuard] CurrentEntryBullets.txt reseteado para la próxima build " +
                   $"(v{UnityEditor.PlayerSettings.bundleVersion} ya publicada).");
     }
-
-    static string ReadOrEmpty(string path) => File.Exists(path) ? File.ReadAllText(path) : string.Empty;
 }

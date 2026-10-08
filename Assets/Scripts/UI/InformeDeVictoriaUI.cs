@@ -199,7 +199,7 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
             if (!hay) continue;
 
             var sub = _subidaDeCadaFila[i].Value;
-            fila.nombre.text = Texto(ClaveDe(fila.tipo), NombreDe(fila.tipo));
+            fila.nombre.text = TextoDeEstadisticas.Nombre(fila.tipo);
             float sube = sub.despues - sub.antes;
             fila.textoPastilla.text = (sube >= 0f ? "+" : "-") + Mathf.Abs(sube).ToString("0");
             fila.raiz.anchoredPosition = new Vector2(fila.raiz.anchoredPosition.x, -(primeraFila + visibles * pasoDeFila));
@@ -406,19 +406,4 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
     private static string Texto(string clave, string porDefecto) =>
         LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(clave, porDefecto) : porDefecto;
 
-    private static string ClaveDe(TipoDeEstadistica tipo) => tipo switch
-    {
-        TipoDeEstadistica.Vida => "STAT_VIDA",
-        TipoDeEstadistica.Magia => "STAT_MAGIA",
-        TipoDeEstadistica.Ataque => "STAT_ATAQUE",
-        _ => "STAT_DEFENSA",
-    };
-
-    private static string NombreDe(TipoDeEstadistica tipo) => tipo switch
-    {
-        TipoDeEstadistica.Vida => "Vida",
-        TipoDeEstadistica.Magia => "Magia",
-        TipoDeEstadistica.Ataque => "Ataque",
-        _ => "Defensa",
-    };
 }

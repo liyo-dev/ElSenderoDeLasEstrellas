@@ -303,6 +303,10 @@ Modos principales: `Normal`, `Combat`, `Dialogue`, `Cinematic`, `Swimming`, `Map
 
 El tope del stack determina el modo activo. Esto permite que un diálogo en medio de un combate bloquee correctamente y al cerrarse restaure el estado de combate.
 
+### Presentación de estadísticas (INC-470, INC-677)
+
+`PanelDeEstadisticasUI`, hijo de `equipmentUI.root` en Start, muestra `EstadisticasDelPersonaje.Total` y sus bonos; las etiquetas de Equipo muestran los bonos de cada prenda y ShopUI compara el total con `TotalSiSeEquipa`. `TextoDeEstadisticas` comparte nombres localizados y colores. Las prendas sin bonos no muestran líneas de estadísticas. El menú `El Sendero/UI/Equipo · cuadro de estadísticas (INC-677)` monta el cuadro y fija defensa +8 para la capa de Victoria.
+
 ### Sistema de cambio de personaje activo
 
 `ActiveCharacterSwapper.cs` permite controlar a Liam o Estela en lugar de Will.
@@ -368,7 +372,7 @@ Un solo lector de botones y un solo punto de lanzamiento. Cualquier mecánica nu
 - **`DesdeElSuelo(alturaEnCabezas, desplazamiento, estado = null)`**: salto con parábola propia sincronizada con el tramo en el aire del clip «en el sitio» (`JumpFullSpin_InPlace_NoWeapon`, tramo 0,1–0,81). Aterriza en el suelo real (raycast con `groundLayer`) y recorta el desplazamiento ante paredes (descarta personajes por `NPCSimpleAnimator`). Mientras dura: controlador apagado con `lockMovement` y `suppressAirMovement` (el motor sigue corriendo desde `vThirdPersonInput` y no debe dar velocidad a un Rigidbody cinemático), Rigidbody cinemático y `ActionMode.Stunned`. Lo usan la victoria, el desvío cuerpo a cuerpo de la B y el dúo con voltereta.
 - **`EnElAire(estado = null)`**: solo la animación (`JumpAirSpin_InPlace_NoWeapon`); el movimiento lo lleva el motor o el lanzamiento por un golpe. Al acabar vuelve a `Falling` si sigue en el aire o a `Free Locomotion` si ha tocado suelo. Lo usan el remate aéreo, la recuperación tras un golpe, el lanzador de salto y la entrada al vuelo.
 - **Animator**: los estados de voltereta no tienen transiciones. Mientras dura se pone el bool `isFlying`, que bloquea la transición «cualquier estado → Falling» (la misma que se bloquea en vuelo), y la capa `UpperBody` se pone a 0 en cada fotograma para que no tape el giro del torso.
-- **Entrada al vuelo** (INC-665): el tercer toque de A tras el doble salto da un pequeño impulso hacia arriba con voltereta y efecto antes de volar (`PlayerFlyingController`). La voltereta sola al caer desde altura (INC-656) se retiró.
+- **Entrada al vuelo** (INC-665): el tercer toque de A tras el doble salto da un pequeño impulso hacia arriba con efecto y SFX opcional, espera 0,25 s y entra en vuelo si sigue pudiendo (`PlayerFlyingController`, INC-679). La voltereta sola al caer desde altura (INC-656) se retiró.
 - **Motor** (`vThirdPersonController`, Plugins): `Impulsar(velocidadVertical, devolverSaltosEnElAire)` para impulsos desde fuera (lanzadores) y `CaerEnPicado(velocidad)`.
 - **Usos**:
   - remate aéreo: `MagicSpellSO.remateAereo` + `MagicCaster.CastRemateAereo`, el tercer golpe de la serie en el aire;
@@ -3489,11 +3493,11 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 
 ---
 
-## 23. Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes (INC-671, INC-676)
+## 23. Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes (INC-671, INC-684)
 
 Desde el 7 de octubre de 2026. Raúl: «la aldea central (el pueblo de Will) está perfecta, con sus suelos en las calles; me falta eso mismo en el resto. La zona del castillo está pobre. Entre las zonas quiero cosas, unas ruinas, algo que haga que no sea aburrido explorar». El vestido es una herramienta de Editor que lo hace sobre la escena real y con un menú que lo deshace entero. De lo que ya estaba en la escena solo cambia dos cosas, las dos con registro para reponerlas: gira algunas casas y retira (deja inactivo y fuera de la build, nunca borra) lo que estorba a lo nuevo.
 
-La segunda parte (INC-676) convierte el Reino en una capital amurallada con calles pavimentadas, viste el campo con vegetación de color por zonas y llena de agua una cuenca natural del terreno, la Laguna de la Era.
+La segunda parte (INC-684) convierte el Reino en una capital amurallada con calles pavimentadas, viste el campo con vegetación de color por zonas y llena de agua una cuenca natural del terreno, la Laguna de la Era.
 
 ### 23.1 Menús, archivos y orden
 
@@ -3666,7 +3670,7 @@ Una cuenca natural del terreno al sureste de la subida a las granjas, en (185, �
 
 ### 23.8 Estado y límites
 
-- Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity). La primera parte (INC-671) se validó con una simulación de `Poner` contra los colisionadores reales; la segunda (INC-676), con simuladores en Python de cada parte sobre las alturas reales del terreno.
+- Compila contra las referencias de Unity, pero **no se ha ejecutado en el Editor** (se preparó sin Unity). La primera parte (INC-671) se validó con una simulación de `Poner` contra los colisionadores reales; la segunda (INC-684), con simuladores en Python de cada parte sobre las alturas reales del terreno.
 - Tras *vestir*: leer `Logs/Editor.log` y `_ClaudeBackups/VestidoDelMundo/Informe.txt`, rehornear el NavMesh, pasar el diagnóstico del paseo de Eldran y el menú Noche, y probar *quitar* (un `git diff` de `MainWorld.unity` después de *quitar* no debe dejar restos del vestido).
 - Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas (`Pueblos.cs`, `Capital.cs`, `Detalles.cs`, `Parajes.cs`) o en las reglas de cada parte, y se vuelve a ejecutar el menú.
 - Queda para Raúl lo que necesita su criterio: las medidas de la Puerta Real (más grande que en el plan), el cuartel `Stronghold02` (bastión almenado exento junto al castillo: comprobar que no se lea como una torre suelta), los tapices y faroles de la cara de la puerta (no se han puesto), el bancal de la Plaza de la Puerta Real (queda como ribazo sin pavimentar), un rosetón también en la Plaza del Mercado, y qué se levanta en el solar libre de Silas.

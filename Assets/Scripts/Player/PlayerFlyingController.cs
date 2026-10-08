@@ -5,12 +5,13 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Controla el modo de vuelo del jugador (tipo Dragon Ball): se entra pulsando saltar en el aire
 /// después del doble salto (tercer toque, vThirdPersonController.OnJumpPressedWithoutAirJumps),
 /// el joystick izquierdo dirige y saltar de nuevo sale del vuelo. Al entrar, un pequeño impulso
-/// hacia arriba con voltereta y efecto antes de echar a volar (INC-665).
+/// hacia arriba y un efecto preceden una espera corta antes de echar a volar.
 /// </summary>
 [DefaultExecutionOrder(-50)]
 [RequireComponent(typeof(Animator))]
@@ -68,7 +69,6 @@ public class PlayerFlyingController : MonoBehaviour
     private float _castPoseBlendUntil;
     private Rigidbody _rigidbody;
     private vThirdPersonController _controller;
-    private VolteretaDelJugador _voltereta;
     private Coroutine _entrada;
     private Invector.vCharacterController.vThirdPersonInput _inputController;
     private FieldInfo _lockMovementField;
@@ -104,13 +104,14 @@ public class PlayerFlyingController : MonoBehaviour
     private float _groundedWhileFlyingTimer;
     private bool _isPhysicsBobbingIdle;
 
-    [Header("Entrada al vuelo (INC-665)")]
-    [Tooltip("Al entrar en vuelo, pequeño impulso hacia arriba con voltereta (VolteretaDelJugador) y efecto antes de volar.")]
-    [SerializeField] private bool volteretaAlEntrar = true;
+    [Header("Entrada al vuelo con impulso")]
+    [Tooltip("Al entrar en vuelo, pequeño impulso hacia arriba y efecto antes de volar.")]
+    [FormerlySerializedAs("volteretaAlEntrar")]
+    [SerializeField] private bool impulsoAlEntrar = true;
     [Tooltip("Velocidad (m/s) del impulso hacia arriba al entrar.")]
     [SerializeField, Min(0f)] private float impulsoDeEntrada = 6f;
-    [Tooltip("Segundos máximos de voltereta antes de echar a volar.")]
-    [SerializeField, Min(0.1f)] private float esperaMaximaDeEntrada = 0.7f;
+    [Tooltip("Segundos entre el impulso de entrada y echar a volar.")]
+    [SerializeField, Min(0f)] private float esperaDeEntrada = 0.25f;
     [Tooltip("Efecto de un solo uso al entrar (pool de VFX). Vacío = nada.")]
     [SerializeField] private GameObject vfxDeEntrada;
     [SerializeField, Min(0.1f)] private float duracionVfxDeEntrada = 2f;
@@ -156,7 +157,6 @@ public class PlayerFlyingController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         _controller = GetComponent<vThirdPersonController>();
-        _voltereta = GetComponent<VolteretaDelJugador>();
         _inputController = GetComponent<Invector.vCharacterController.vThirdPersonInput>();
         _actionManager = GetComponent<PlayerActionManager>();
         _magicCaster = GetComponentInChildren<MagicCaster>(true) ?? GetComponentInParent<MagicCaster>();
@@ -354,15 +354,15 @@ public class PlayerFlyingController : MonoBehaviour
     private void OnJumpAfterDoubleJump()
     {
         if (_isFlying || _entrada != null || !CanEnterFlight()) return;
-        if (volteretaAlEntrar && _voltereta != null && _controller != null && _controller.enabled)
-            _entrada = StartCoroutine(Co_EntrarConVoltereta());
+        if (impulsoAlEntrar && _controller != null && _controller.enabled)
+            _entrada = StartCoroutine(Co_EntrarConImpulso());
         else
             EnterFlight();
     }
 
-    /// Impulso hacia arriba, efecto y voltereta; al acabar la voltereta (o tras
-    /// esperaMaximaDeEntrada) echa a volar si sigue pudiendo.
-    private IEnumerator Co_EntrarConVoltereta()
+    /// Aplica el impulso hacia arriba y los efectos de entrada; tras una espera corta
+    /// echa a volar si sigue pudiendo.
+    private IEnumerator Co_EntrarConImpulso()
     {
         _controller.Impulsar(impulsoDeEntrada, Vector3.zero, devolverSaltosEnElAire: false);
 
@@ -372,9 +372,8 @@ public class PlayerFlyingController : MonoBehaviour
         if (!string.IsNullOrEmpty(sfxDeEntrada) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxDeEntrada, 1f, punto.position);
 
-        bool volteando = _voltereta.EnElAire();
-        float tope = Time.time + esperaMaximaDeEntrada;
-        while (volteando && _voltereta.EnCurso && Time.time < tope) yield return null;
+        float tope = Time.time + esperaDeEntrada;
+        while (Time.time < tope) yield return null;
 
         _entrada = null;
         if (!_isFlying && CanEnterFlight()) EnterFlight();

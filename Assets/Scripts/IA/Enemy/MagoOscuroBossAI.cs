@@ -53,6 +53,30 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     [SerializeField] private GameObject vfxRebobinado;
     [Tooltip("Efecto sobre el Mago mientras el altar le devuelve la vida.")]
     [SerializeField] private GameObject vfxRegeneracion;
+    [Tooltip("Aura en bucle mientras algún cristal protege al Mago.")]
+    [SerializeField] private GameObject vfxProtegido;
+
+    [Header("Levitación y desplazamiento")]
+    [Tooltip("Altura del modelo sobre su cápsula durante el combate.")]
+    [SerializeField, Min(0f)] private float alturaLevitacion = 0.5f;
+    [Tooltip("Segundos para recuperar la levitación al dejar de estar expuesto.")]
+    [SerializeField, Min(0.05f)] private float transicionLevitacion = 0.35f;
+    [Tooltip("Distancias mínima y máxima al jugador durante el deslizamiento en arco.")]
+    [SerializeField] private Vector2 distanciaDeslizamiento = new(8f, 11f);
+    [Tooltip("Duraciones mínima y máxima del deslizamiento entre ataques.")]
+    [SerializeField] private Vector2 duracionDeslizamiento = new(1.2f, 1.8f);
+    [Tooltip("Grados que recorre alrededor del jugador entre ataques.")]
+    [SerializeField, Range(10f, 90f)] private float arcoDeslizamiento = 35f;
+    [Tooltip("Metros que intenta separarse del jugador en una retirada rápida.")]
+    [SerializeField, Min(1f)] private float distanciaRetirada = 5f;
+    [Tooltip("Segundos que dura la retirada rápida.")]
+    [SerializeField, Min(0.1f)] private float duracionRetirada = 0.5f;
+    [Tooltip("Segundos de cercanía continua que permiten escapar por teletransporte.")]
+    [SerializeField, Min(0.1f)] private float tiempoAcorralado = 1.5f;
+    [Tooltip("Separación del cuerpo respecto al altar y los objetos conjurados.")]
+    [SerializeField, Min(0.1f)] private float margenObstaculos = 0.8f;
+    [Tooltip("Radio de los desplazamientos cortos alrededor del punto de vuelo.")]
+    [SerializeField, Min(0.1f)] private float radioDerivaVuelo = 1.2f;
 
     [Header("Umbrales (vida 0..1)")]
     [SerializeField] private float umbralFase2 = 0.7f;
@@ -82,7 +106,6 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     [SerializeField] private float aturdidoSinEspinas = 4.5f;
     [Tooltip("Segundos hasta que vuelve a conjurar las espinas tras perderlas.")]
     [SerializeField] private float cadaEspinas = 10f;
-    [SerializeField] private float pausaFase1 = 1.1f;
 
     [Header("Pozo (fase 1)")]
     [Tooltip("El agujero negro del prólogo; aquí se usa en pequeño.")]
@@ -139,7 +162,14 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     private float _reconjurarEn = -1f;
     private int _juegoFase2;
     private JuegoDeConjuros _juegoActual;
-    private int _ataquesDesdeSalto;
+    private ElevacionVisual _elevacion;
+    private Transform _auraProtegido;
+    private VfxPoolService _poolProtegido;
+    private ulong _usoProtegido;
+    private float _cercaDesde = -1f;
+    private bool _levitando;
+    private int _mascaraSuelo;
+    private readonly List<Collider> _obstaculos = new();
     private int _puntoVuelo;
     private float _novaLista, _grietaLista, _pozoListo, _siguienteCorrupcion;
     private GuiaDeCombate _guia;
@@ -184,19 +214,41 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         _vida = GetComponent<Damageable>();
         _vida.SetDestroyOnDeath(false);
         _anim = GetComponentInChildren<NPCSimpleAnimator>();
+        _elevacion = GetComponentInChildren<ElevacionVisual>();
+        _mascaraSuelo = LayerMask.GetMask("Default", "Floor");
+        if (escenario != null)
+        {
+            if (escenario.altar != null) _obstaculos.AddRange(escenario.altar.GetComponentsInChildren<Collider>(true));
+            CachearObstaculos(escenario.espinas);
+            if (escenario.fase2 != null) foreach (var juego in escenario.fase2) CachearObstaculos(juego);
+        }
         _transicion = GetComponent<TransicionDeFaseDeJefe>();
         if (_transicion == null) _transicion = gameObject.AddComponent<TransicionDeFaseDeJefe>();
         _renderers = GetComponentsInChildren<Renderer>(true);
         _umbrales = new[] { umbralFase2, umbralRegeneracion };
         var agente = GetComponent<NavMeshAgent>();
-        if (agente) agente.enabled = false;   // se mueve a saltos y volando, no andando
+        if (agente) agente.enabled = false;   // la IA controla su posición sin navegación
     }
 
     void OnEnable() => PlayerShieldController.AlDevolverAtaque += AlDevolverAtaque;
 
+    void Update()
+    {
+        if (!_empezado || _fase != 0 || Expuesto || DistanciaAlJugador() >= radioNova)
+            _cercaDesde = -1f;
+        else if (_cercaDesde < 0f)
+            _cercaDesde = Time.time;
+    }
+
     void OnDisable()
     {
+        StopAllCoroutines();
         PlayerShieldController.AlDevolverAtaque -= AlDevolverAtaque;
+        RecogerProteccion();
+        SoltarLevitacion(0f);
+        _anim?.ReleasePose(true);
+        if (_juegoActual != null) Deshacer(_juegoActual);
+        ActiveCombatRegistry.UnregisterNPC(gameObject);
         SoltarTiempo();
         SoltarGrupo();
         SoltarCinematica();
@@ -213,6 +265,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     {
         if (_empezado) return;
         _empezado = true;
+        RecuperarLevitacion();
         _pozoListo = Time.time + cadaPozo * 0.5f;
         ActiveCombatRegistry.RegisterNPC(gameObject);
         var bossBar = GetComponent<BossHealthBar>();
@@ -234,6 +287,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     {
         SeguirEnElRegistro();
         yield return Co_Presentacion();
+        SostenerLevitacion();
 
         _guia = GuiaDeCombate.Empezar(gameObject, guion, gameObject);
         if (_guia != null) _guia.LanzarIntervencion();
@@ -293,8 +347,9 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
             if (c == null) continue;
             c.AlRomperse -= AlRomperseCristal;
             c.AlRomperse += AlRomperseCristal;
-            c.Activar(transform);
+            c.Activar();
         }
+        ActualizarProteccion();
     }
 
     private void Deshacer(JuegoDeConjuros juego)
@@ -310,11 +365,13 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         if (juego.objetos != null)
             foreach (var o in juego.objetos) if (o != null) o.Deshacer();
         if (_juegoActual == juego) _juegoActual = null;
+        ActualizarProteccion();
     }
 
     private void AlRomperseCristal(CristalProtector _)
     {
         if (CristalesActivos() == 0) _sinCristales = true;
+        ActualizarProteccion();
     }
 
     private int CristalesActivos()
@@ -342,7 +399,15 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
 
     private IEnumerator Co_TurnoFase1()
     {
-        if (_aturdir) { _aturdir = false; yield return Co_Aturdido(aturdidoPorContraataque); yield break; }
+        if (_aturdir)
+        {
+            _aturdir = false;
+            bool sinEspinas = _sinCristales;
+            _sinCristales = false;
+            yield return Co_Aturdido(sinEspinas ? aturdidoSinEspinas : aturdidoPorContraataque);
+            if (sinEspinas) _reconjurarEn = Time.time + cadaEspinas;
+            yield break;
+        }
         if (_sinCristales)
         {
             _sinCristales = false;
@@ -357,6 +422,17 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         }
 
         float d = DistanciaAlJugador();
+        if (_cercaDesde >= 0f && Time.time - _cercaDesde >= tiempoAcorralado)
+        {
+            yield return Co_Escapar();
+            yield break;
+        }
+        if (d < radioNova && Time.time < _novaLista)
+        {
+            yield return Co_Retirarse();
+            if (_aturdir || _sinCristales) yield break;
+            d = DistanciaAlJugador();
+        }
         if (d < radioNova + 1f && Time.time >= _novaLista)
             yield return Co_Nova();
         else if (d > radioNova + 2f && Time.time >= _pozoListo && UnityEngine.Random.value < 0.35f)
@@ -367,12 +443,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
             yield return Co_Salva(balasPorSalva + CristalesActivos());
 
         if (_aturdir || _sinCristales) yield break;
-        if (++_ataquesDesdeSalto >= 2)
-        {
-            _ataquesDesdeSalto = 0;
-            yield return Co_Teletransporte(PuntoLejosDelJugador(escenario != null ? escenario.puntosDeSalto : null));
-        }
-        yield return Esperar(pausaFase1);
+        yield return Co_Deslizar();
     }
 
     private IEnumerator Co_SalirFase1()
@@ -424,7 +495,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         _anim?.PlaySocialGesture("MagicSpecial");
         Zona(transform.position, radioNova, 1.1f, 0f, danoNova, 1f, 10f);
         yield return Esperar(1.3f);
-        yield return Co_Teletransporte(PuntoLejosDelJugador(escenario != null ? escenario.puntosDeSalto : null));
+        if (!_aturdir && !_sinCristales) yield return Co_Escapar();
     }
 
     /// Pozo: brazos arriba, nace delante de él el agujero negro y atrae al jugador mientras crece;
@@ -462,11 +533,14 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     /// Aturdido: queda expuesto mientras dura.
     private IEnumerator Co_Aturdido(float segundos)
     {
+        SoltarLevitacion(transicionLevitacion);
         _anim?.HoldPose("Dizzy_NoWeapon");
         _expuestoHasta = Time.time + segundos;
         FeedbackService.CameraShake(0.3f, 0.3f);
         yield return new WaitForSeconds(segundos);
         _anim?.ReleasePose(true);
+        RecuperarLevitacion();
+        if (_fase == 0) yield return Co_Retirarse();
     }
 
     // ── Fase 2 ────────────────────────────────────────────────────────────
@@ -482,7 +556,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     {
         _juegoFase2 = 0;
         yield return Co_Conjurar(JuegoFase2());
-        _anim?.HoldPose("fly_idle");
+        RecuperarLevitacion();
         yield return Co_Mover(transform.position + Vector3.up * alturaVuelo, 1.2f);
         _siguienteCorrupcion = Time.time + 4f;
     }
@@ -490,7 +564,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     private IEnumerator Co_TurnoFase2()
     {
         if (_sinCristales) { _sinCristales = false; yield return Co_Derribado(); yield break; }
-        if (_aturdir) { _aturdir = false; yield return Esperar(1.2f); }
+        if (_aturdir) { _aturdir = false; yield return Co_Aturdido(1.2f); }
 
         if (Time.time >= _siguienteCorrupcion)
         {
@@ -510,7 +584,19 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         if (UnityEngine.Random.value < 0.55f) yield return Co_Salva(balasPorSalva);
         else yield return Co_Lluvia();
 
-        yield return Esperar(pausaFase2);
+        if (_sinCristales) yield break;
+        SostenerLevitacion();
+        Vector3 centroVuelo = puntos != null && puntos.Length > 0 && puntos[_puntoVuelo] != null
+            ? puntos[_puntoVuelo].position : transform.position;
+        for (int i = 0; i < 8; i++)
+        {
+            Vector2 offset = UnityEngine.Random.insideUnitCircle * radioDerivaVuelo;
+            Vector3 destino = centroVuelo + new Vector3(offset.x, 0f, offset.y);
+            if (!RecorridoLibre(transform.position, destino)) continue;
+            yield return Co_Mover(destino, pausaFase2, reaccionar: true);
+            yield break;
+        }
+        yield return Esperar(pausaFase2, girarAlJugador: true);
     }
 
     private void Corromper()
@@ -549,6 +635,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     /// Si sigue por encima del umbral, conjura el siguiente juego y vuelve a subir.
     private IEnumerator Co_Derribado()
     {
+        SoltarLevitacion(transicionLevitacion);
         _anim?.HoldPose("fly_dive");
         Vector3 suelo = transform.position;
         suelo.y = SueloEn(suelo);
@@ -563,7 +650,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         if (Vida <= umbralRegeneracion + 0.001f) yield break;
         _juegoFase2++;
         yield return Co_Conjurar(JuegoFase2());
-        _anim?.HoldPose("fly_idle");
+        RecuperarLevitacion();
         yield return Co_Mover(transform.position + Vector3.up * alturaVuelo, 1f);
     }
 
@@ -735,6 +822,8 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     public void Arrodillarse()
     {
         StopAllCoroutines();
+        SoltarLevitacion(0f);
+        RecogerProteccion();
         _expuestoHasta = -1f;
         _anim?.HoldPose("Beg01");
     }
@@ -825,21 +914,186 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
 
     private float SueloEn(Vector3 p)
     {
-        if (Physics.Raycast(p + Vector3.up * 20f, Vector3.down, out var hit, 60f, LayerMask.GetMask("Default", "Floor"), QueryTriggerInteraction.Ignore))
+        if (Physics.Raycast(p + Vector3.up * 20f, Vector3.down, out var hit, 60f, _mascaraSuelo, QueryTriggerInteraction.Ignore))
             return hit.point.y;
         return escenario != null && escenario.centro != null ? escenario.centro.position.y : p.y;
     }
 
-    private Vector3 PuntoLejosDelJugador(Transform[] puntos)
+    private void ActualizarProteccion()
     {
-        var j = Jugador();
-        if (puntos == null || puntos.Length == 0 || j == null) return transform.position;
-        // Uno de los tres más lejanos al jugador, al azar: se aleja, pero no siempre al mismo sitio.
-        var orden = new List<Transform>(puntos);
-        orden.RemoveAll(p => p == null);
-        if (orden.Count == 0) return transform.position;
-        orden.Sort((a, b) => (b.position - j.position).sqrMagnitude.CompareTo((a.position - j.position).sqrMagnitude));
-        return orden[UnityEngine.Random.Range(0, Mathf.Min(3, orden.Count))].position;
+        if (CristalesActivos() == 0) { RecogerProteccion(); return; }
+        if (_auraProtegido != null || vfxProtegido == null) return;
+        _poolProtegido = VfxPoolService.Instance;
+        if (_poolProtegido == null) return;
+        _auraProtegido = _poolProtegido.Play(vfxProtegido, transform.position + Vector3.up * (1.2f + alturaLevitacion),
+            Quaternion.identity, float.MaxValue, transform);
+        _usoProtegido = _poolProtegido.ObtenerUso(_auraProtegido);
+        if (_auraProtegido == null) return;
+        // El tinte se aplica al uso del pool, sin cambiar el prefab del pack.
+        foreach (var particulas in _auraProtegido.GetComponentsInChildren<ParticleSystem>(true))
+        {
+            var main = particulas.main;
+            main.startColor = new Color(0.35f, 0.08f, 0.65f, 0.7f);
+        }
+    }
+
+    private void RecogerProteccion()
+    {
+        if (_poolProtegido != null && _auraProtegido != null && _usoProtegido != 0)
+            _poolProtegido.Recoger(_auraProtegido, _usoProtegido);
+        _auraProtegido = null;
+        _poolProtegido = null;
+        _usoProtegido = 0;
+    }
+
+    private void RecuperarLevitacion()
+    {
+        _elevacion?.Elevar(this, alturaLevitacion, transicionLevitacion);
+        _levitando = true;
+        SostenerLevitacion();
+    }
+
+    private void SoltarLevitacion(float segundos)
+    {
+        _levitando = false;
+        _elevacion?.Soltar(this, segundos);
+    }
+
+    private void SostenerLevitacion()
+    {
+        if (_levitando) _anim?.HoldPose("MagicAttackOmni01_Load", congelarAlFinal: true);
+    }
+
+    private void CachearObstaculos(JuegoDeConjuros juego)
+    {
+        if (juego?.objetos == null) return;
+        foreach (var objeto in juego.objetos)
+            if (objeto != null) _obstaculos.AddRange(objeto.GetComponentsInChildren<Collider>(true));
+    }
+
+    private bool DentroDeArena(Vector3 punto)
+    {
+        Vector3 centro = escenario != null && escenario.centro != null ? escenario.centro.position : Vector3.zero;
+        Vector3 d = punto - centro;
+        d.y = 0f;
+        float radio = Mathf.Max(1f, (escenario != null ? escenario.radio : 20f) - 2f);
+        return d.sqrMagnitude <= radio * radio;
+    }
+
+    private bool RecorridoLibre(Vector3 desde, Vector3 hasta)
+    {
+        if (!DentroDeArena(hasta)) return false;
+        // El volumen expandido reserva espacio para el cuerpo, también entre muestras del arco.
+        Vector3 origen = desde + Vector3.up;
+        Vector3 tramo = hasta - desde;
+        float longitud = tramo.magnitude;
+        foreach (var col in _obstaculos)
+        {
+            if (col == null || !col.enabled || col.isTrigger || !col.gameObject.activeInHierarchy) continue;
+            Bounds limites = col.bounds;
+            limites.Expand(new Vector3(margenObstaculos * 2f, 2f, margenObstaculos * 2f));
+            if (limites.Contains(origen) || limites.Contains(hasta + Vector3.up)) return false;
+            if (longitud > 0.001f && limites.IntersectRay(new Ray(origen, tramo / longitud), out float distancia)
+                && distancia <= longitud) return false;
+        }
+        return true;
+    }
+
+    private static Vector3 PosicionDeRecorrido(Vector3 desde, Vector3 hasta, float k, Vector3? centroArco, float angulo)
+    {
+        if (!centroArco.HasValue) return Vector3.Lerp(desde, hasta, k);
+        Vector3 centro = centroArco.Value;
+        Vector3 radial = desde - centro;
+        radial.y = 0f;
+        Vector3 final = hasta - centro;
+        final.y = 0f;
+        Vector3 punto = centro + Quaternion.AngleAxis(angulo * k, Vector3.up) * radial.normalized
+            * Mathf.Lerp(radial.magnitude, final.magnitude, k);
+        punto.y = Mathf.Lerp(desde.y, hasta.y, k);
+        return punto;
+    }
+
+    private bool ArcoLibre(Vector3 destino, Vector3 centro, float angulo)
+    {
+        Vector3 anterior = transform.position;
+        for (int i = 1; i <= 20; i++)
+        {
+            Vector3 siguiente = PosicionDeRecorrido(transform.position, destino, i / 20f, centro, angulo);
+            siguiente.y = SueloEn(siguiente);
+            if (!RecorridoLibre(anterior, siguiente)) return false;
+            anterior = siguiente;
+        }
+        return true;
+    }
+
+    private IEnumerator Co_Deslizar()
+    {
+        var jugador = Jugador();
+        if (jugador == null) yield break;
+        SostenerLevitacion();
+        Vector3 centro = jugador.position;
+        Vector3 radial = transform.position - centro;
+        radial.y = 0f;
+        if (radial.sqrMagnitude < 0.01f) radial = -transform.forward;
+        float distancia = UnityEngine.Random.Range(distanciaDeslizamiento.x, distanciaDeslizamiento.y);
+        float sentido = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+        for (int i = 0; i < 8; i++)
+        {
+            float angulo = arcoDeslizamiento * sentido * (1f + i / 2 * 0.3f);
+            sentido = -sentido;
+            Vector3 destino = centro + Quaternion.AngleAxis(angulo, Vector3.up) * radial.normalized * distancia;
+            destino.y = SueloEn(destino);
+            if (!ArcoLibre(destino, centro, angulo)) continue;
+            yield return Co_Mover(destino, UnityEngine.Random.Range(duracionDeslizamiento.x, duracionDeslizamiento.y),
+                centro, angulo, reaccionar: true);
+            yield break;
+        }
+        yield return Co_Retirarse();
+    }
+
+    private IEnumerator Co_Retirarse()
+    {
+        var jugador = Jugador();
+        if (jugador == null) yield break;
+        SostenerLevitacion();
+        Vector3 alejamiento = transform.position - jugador.position;
+        alejamiento.y = 0f;
+        if (alejamiento.sqrMagnitude < 0.01f) alejamiento = -transform.forward;
+        for (int i = 0; i < 12; i++)
+        {
+            float angulo = i == 0 ? 0f : ((i + 1) / 2) * 30f * (i % 2 == 0 ? -1f : 1f);
+            Vector3 destino = transform.position + Quaternion.AngleAxis(angulo, Vector3.up) * alejamiento.normalized * distanciaRetirada;
+            destino.y = SueloEn(destino);
+            if (!RecorridoLibre(transform.position, destino) || (destino - jugador.position).sqrMagnitude
+                <= (transform.position - jugador.position).sqrMagnitude) continue;
+            yield return Co_Mover(destino, duracionRetirada, reaccionar: true);
+            yield break;
+        }
+        yield return Esperar(duracionRetirada, girarAlJugador: true);
+    }
+
+    private IEnumerator Co_Escapar()
+    {
+        var puntos = escenario != null ? escenario.puntosDeSalto : null;
+        var jugador = Jugador();
+        Vector3 destino = transform.position;
+        float mejor = DistanciaAlJugador();
+        if (puntos != null && jugador != null)
+            foreach (var punto in puntos)
+            {
+                if (punto == null) continue;
+                Vector3 candidato = punto.position;
+                candidato.y = SueloEn(candidato);
+                if (!RecorridoLibre(candidato, candidato)) continue;
+                Vector3 d = candidato - jugador.position;
+                d.y = 0f;
+                if (d.magnitude <= mejor) continue;
+                mejor = d.magnitude;
+                destino = candidato;
+            }
+        _cercaDesde = -1f;
+        if ((destino - transform.position).sqrMagnitude > 0.1f) yield return Co_Teletransporte(destino);
+        else yield return Co_Retirarse();
     }
 
     private IEnumerator Co_Teletransporte(Vector3 destino)
@@ -854,14 +1108,21 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         MirarAlJugador(1f);
     }
 
-    private IEnumerator Co_Mover(Vector3 destino, float segundos)
+    private IEnumerator Co_Mover(Vector3 destino, float segundos, Vector3? centroArco = null, float angulo = 0f, bool reaccionar = false)
     {
         Vector3 desde = transform.position;
         float t = 0f;
         while (t < segundos)
         {
             t += Time.deltaTime;
-            transform.position = Vector3.Lerp(desde, destino, Mathf.SmoothStep(0f, 1f, t / segundos));
+            if (reaccionar && ((_aturdir && _fase == 0) || _sinCristales)) yield break;
+            if (reaccionar && centroArco.HasValue && DistanciaAlJugador() < radioNova
+                && Time.time < _novaLista) yield break;
+            float k = Mathf.SmoothStep(0f, 1f, t / Mathf.Max(0.01f, segundos));
+            Vector3 siguiente = PosicionDeRecorrido(desde, destino, k, centroArco, angulo);
+            if (centroArco.HasValue) siguiente.y = SueloEn(siguiente);
+            if (reaccionar && !RecorridoLibre(transform.position, siguiente)) yield break;
+            transform.position = siguiente;
             MirarAlJugador(Time.deltaTime * 6f);
             yield return null;
         }

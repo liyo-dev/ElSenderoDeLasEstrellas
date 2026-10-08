@@ -611,7 +611,7 @@ El estado distingue entre **cadena localizada** y **secuencia conectada/revisada
 
 ## Registro de Cambios
 
-**7 de octubre de 2026 — Capital del Reino y Laguna de la Era en MainWorld (INC-676).**
+**7 de octubre de 2026 — Capital del Reino y Laguna de la Era en MainWorld (INC-684).**
 
 Se añade a la cobertura espacial la capital amurallada (recorridos del capítulo 3: encuentro en la taberna, persecución, escolta del guardia y audiencia) y la Laguna de la Era, como adaptación de juego del vestido de MainWorld (TDD § 23). No cambia el canon de la novela.
 
@@ -730,6 +730,6 @@ La composición espacial se propuso para las variantes Eldoria Codex (INC-188), 
 | Sendero, pruebas y Caja | Se mantienen como espacios separados de Eldoria. Candyland y la feria requieren zonas propias; la Caja necesita un espacio que permita a Will y Estela observar la prueba de Liam sin entrar en ella. Revisar conexiones cuando se integre el recorrido. |
 | Biblioteca final, altar y salida | Necesidades de diseño nuevas del tramo final: deseos conservados, arena del Mago Oscuro, conducto hacia el altar y salida de resurrección. No tienen aún propuesta espacial ni integración confirmada. |
 | Puerto pesquero y playas | Ambientación del mapa de referencia. Puerto rehecho con viviendas y embarcadero; playas despejadas de falsos edificios. No se inventan misiones para justificar estos lugares. |
-| Capital del Reino y Laguna de la Era | Adaptación de juego (vestido de MainWorld, TDD § 23, INC-676), no cambio de canon. La capital es una ciudad amurallada en dos terrazas: Puerta Real al final del camino, Plaza de la Puerta, Plaza del Mercado con la taberna (encuentro y persecución), Escalinata Real (escolta del guardia) y Plaza Real ante el castillo (audiencia y arena del segundo Demonio); las dos subidas rodean el talud central y sirven de recorrido para la persecución. La Laguna de la Era es una laguna natural de ribera al sureste de la subida a las granjas: ambientación sin misión, sin presa ni acequias (el agua compartida de Risco y Vega sigue sin ubicar y el marjal del sureste queda reservado). Pendiente: comprobar que la montaña destruida no tapa la laguna. |
+| Capital del Reino y Laguna de la Era | Adaptación de juego (vestido de MainWorld, TDD § 23, INC-684), no cambio de canon. La capital es una ciudad amurallada en dos terrazas: Puerta Real al final del camino, Plaza de la Puerta, Plaza del Mercado con la taberna (encuentro y persecución), Escalinata Real (escolta del guardia) y Plaza Real ante el castillo (audiencia y arena del segundo Demonio); las dos subidas rodean el talud central y sirven de recorrido para la persecución. La Laguna de la Era es una laguna natural de ribera al sureste de la subida a las granjas: ambientación sin misión, sin presa ni acequias (el agua compartida de Risco y Vega sigue sin ubicar y el marjal del sureste queda reservado). Pendiente: comprobar que la montaña destruida no tapa la laguna. |
 
 Prioridad de trabajo: primero comprobar recorrido continuo a pie y escala de jugador; después resolver accesos, interiores y arenas; por último conectar personajes, misiones y eventos. La revisión visual por capturas no sustituye la prueba jugable.

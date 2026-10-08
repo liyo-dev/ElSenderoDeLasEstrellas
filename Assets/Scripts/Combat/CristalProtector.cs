@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 /// Un cristal que protege a su dueño mientras está entero: espinas o anclas que conjura un jefe.
-/// Se ve unido a él por un rayo, se registra como objetivo de combate (los aliados lo atacan) y
+/// Se registra como objetivo de combate (los aliados lo atacan) y
 /// avisa al romperse. Quién decide qué protege y cómo es el dueño: el cristal solo dice si sigue
 /// activo. Va junto a su Damageable; con DebilidadDePersonaje, un personaje lo rompe antes.
 /// Ver INC-663.
@@ -12,13 +12,10 @@ public sealed class CristalProtector : MonoBehaviour
     [SerializeField] private float vida = 60f;
     [Tooltip("Lo que se ve mientras está activo (el cristal).")]
     [SerializeField] private GameObject visual;
-    [Tooltip("Rayo del cristal a su dueño.")]
-    [SerializeField] private LineRenderer rayo;
     [SerializeField] private GameObject vfxRotura;
 
     private Damageable _vida;
     private Collider _col;
-    private Transform _dueno;
 
     public bool Activo { get; private set; }
     public event Action<CristalProtector> AlRomperse;
@@ -34,15 +31,13 @@ public sealed class CristalProtector : MonoBehaviour
 
     void OnDestroy() { if (_vida != null) _vida.OnDied -= AlMorir; }
 
-    public void Activar(Transform dueno)
+    public void Activar()
     {
-        _dueno = dueno;
         _vida.Revive(vida);
         _vida.SetMaxAndCurrent(vida, vida);
         Activo = true;
         if (visual) visual.SetActive(true);
         if (_col) _col.enabled = true;
-        if (rayo) rayo.enabled = true;
         ActiveCombatRegistry.RegisterNPC(gameObject, allowsCameraLock: true);
     }
 
@@ -51,7 +46,6 @@ public sealed class CristalProtector : MonoBehaviour
         Activo = false;
         if (visual) visual.SetActive(false);
         if (_col) _col.enabled = false;
-        if (rayo) rayo.enabled = false;
         ActiveCombatRegistry.UnregisterNPC(gameObject);
     }
 
@@ -70,10 +64,4 @@ public sealed class CristalProtector : MonoBehaviour
         AlRomperse?.Invoke(this);
     }
 
-    void LateUpdate()
-    {
-        if (!Activo || rayo == null || _dueno == null) return;
-        rayo.SetPosition(0, transform.position);
-        rayo.SetPosition(1, _dueno.position + Vector3.up * 1.2f);
-    }
 }
