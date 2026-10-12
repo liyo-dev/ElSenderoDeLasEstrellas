@@ -6,8 +6,7 @@ using UnityEngine;
 /// Domo de estrellas doradas hechas de GameObjects reales (no un truco de shader en el skybox ni
 /// un ParticleSystem): mallas de "estrella" (destello de 6 puntas, ver <see cref="GenerateStarMesh"/>)
 /// pequeñas repartidas sobre una esfera alrededor del jugador, concentradas hacia la parte alta del
-/// cielo (ver <see cref="topBiasExponent"/>), tema "Sendero de las Estrellas". Mismo patrón
-/// estructural que CloudCoverSpawner (rejilla/reparto +
+/// cielo (ver <see cref="topBiasExponent"/>), tema "Sendero de las Estrellas". Rejilla/reparto +
 /// pool — se construye UNA vez y se reutiliza sin volver a Instantiate en cada ciclo noche/día +
 /// fundido de alfa vía MaterialPropertyBlock + recentrado periódico, no por frame) para no
 /// introducir un patrón nuevo en el proyecto — ver ese script para el razonamiento completo de cada
@@ -253,7 +252,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     [SerializeField] private float twinkleUpdateInterval = 0.05f;
 
     [Header("Cobertura total del mundo")]
-    [Tooltip("Igual que CloudCoverSpawner: cada 'recenterCheckInterval' segundos se comprueba la distancia del jugador al centro actual del domo y, si supera la mitad del radio activo, se recoloca (solo se mueve _root, sin volver a instanciar nada).")]
+    [Tooltip("Cada 'recenterCheckInterval' segundos se comprueba la distancia del jugador al centro actual del domo y, si supera la mitad del radio activo, se recoloca (solo se mueve _root, sin volver a instanciar nada).")]
     [SerializeField] private float recenterCheckInterval = 2f;
 
     [Header("Transición")]
@@ -428,8 +427,7 @@ public class NightSkyStarSpawner : MonoBehaviour
 
     void Update()
     {
-        // FIX (25 ago 2026): mismo hueco encontrado y confirmado KO en AmbientCloudDirector (ver
-        // su Update()) — OnInteriorEntered/OnInteriorExited (ver OnEnable) solo cubren el flujo
+        // OnInteriorEntered/OnInteriorExited (ver OnEnable) solo cubren el flujo
         // "andando", nunca el cinemático (CinematicSequencerBase → BeginCinematicOverride +
         // ApplyInteriorForCinematic, p.ej. TabernaSequencer). Se corrige aquí de forma preventiva
         // (misma familia de sistemas de cielo, misma causa raíz) con el patrón ya establecido en
@@ -466,8 +464,7 @@ public class NightSkyStarSpawner : MonoBehaviour
         }
     }
 
-    /// <summary>Mismo mecanismo que CloudCoverSpawner.CheckRecenter (ver ese script): recoloca el
-    /// domo YA CONSTRUIDO cuando el jugador se acerca al borde, sin volver a instanciar nada.</summary>
+    /// <summary>Recoloca el domo YA CONSTRUIDO cuando el jugador se acerca al borde, sin volver a instanciar nada.</summary>
     void CheckRecenter()
     {
         Transform playerT = PlayerService.Player != null ? PlayerService.Player.transform : _followTransform;
@@ -798,6 +795,7 @@ public class NightSkyStarSpawner : MonoBehaviour
     /// </summary>
     void ApplyAlpha(float alpha)
     {
+        alpha *= 1f - (dayNightCycle != null ? dayNightCycle.Nublado : 0f);
         float time = Time.time;
         for (int i = 0; i < _renderers.Count; i++)
         {

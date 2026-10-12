@@ -57,6 +57,19 @@ internal sealed partial class Horno
         var giro = new ClaveDeMirada { tipo = TipoDeMirada.Rumbo, rumbo = s.rumbo };
         Vector3 delante = Suelo(new Vector3(s.pos.x, 0f, s.pos.z) + s.Frente * DelanteDelAsiento);
 
+        // Ya sentado (o recostado) en otro sitio: pasa de un punto a otro sin levantarse. Sin Begin
+        // (es el gesto de sentarse desde de pie): fundido directo al bucle mientras se desliza.
+        if (a.sentadoCon != NPCAmbientActivity.None && !o.Tiene("ya"))
+        {
+            float dura = Mathf.Max(0.05f, o.OpF("en", 0.8f));
+            Deslizar(a, t, a.PosEn(t), s.pos, dura);
+            a.Mirar(t, giro);
+            a.anim.Add(new OrdenDeAnimacion { t = t, tipo = TipoDeAnimacion.Bucle, estado = loop, fundido = dura });
+            a.bucle = loop; a.bucleDeCuerpo = true;
+            a.sentadoCon = s.actividad;
+            return dura;
+        }
+
         if (o.Tiene("ya"))
         {
             SoltarBucleSiAnda(a, t, haraCuerpo: true);

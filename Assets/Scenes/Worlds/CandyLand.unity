@@ -77406,6 +77406,7 @@ MonoBehaviour:
   hint: {fileID: 1976148356}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -92746,7 +92747,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1311901891}
   - component: {fileID: 1311901892}
-  - component: {fileID: 1311901900}
+  - component: {fileID: 1311901894}
+  - component: {fileID: 1311901893}
   m_Layer: 0
   m_Name: DayNightSystem
   m_TagString: Untagged
@@ -92783,90 +92785,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DayNightCycle
   timeSettings:
   - timeOfDay: 6
-    skybox: {fileID: 2100000, guid: 9991b6265f7f87d43b7e3c676739f203, type: 2}
-    skyboxTint: {r: 1, g: 1, b: 1, a: 1}
-    skyboxIntensity: 1
-    skyboxExponent: 1
-    skyboxDirectionYaw: 0
-    skyboxDirectionPitch: 0
+    skybox: {fileID: 2100000, guid: da746b8828a33c84f8fcfb2d04d5a251, type: 2}
     lightColor: {r: 1, g: 1, b: 1, a: 1}
     lightIntensity: 1.2
-    sunRotationX: 50
-    sunRotationY: 90
     ambientColor: {r: 0.28, g: 0.3, b: 0.42, a: 1}
     ambientIntensity: 0.8
     fogColor: {r: 0.68, g: 0.78, b: 0.92, a: 1}
     fogDensity: 0.008
     duration: 120
   - timeOfDay: 0
-    skybox: {fileID: 2100000, guid: 1cf32c17fea93ef4fb120e8e0cdfbef1, type: 2}
-    skyboxTint: {r: 1, g: 1, b: 1, a: 1}
-    skyboxIntensity: 1
-    skyboxExponent: 1
-    skyboxDirectionYaw: 0
-    skyboxDirectionPitch: 0
+    skybox: {fileID: 2100000, guid: ad94383a6a988104b9cb02b503dd0418, type: 2}
     lightColor: {r: 1, g: 1, b: 1, a: 1}
     lightIntensity: 1.3
-    sunRotationX: 80
-    sunRotationY: 165
     ambientColor: {r: 0.4, g: 0.38, b: 0.33, a: 1}
     ambientIntensity: 1.1
     fogColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
     fogDensity: 0.004
     duration: 120
   - timeOfDay: 8
-    skybox: {fileID: 2100000, guid: ac2eeb98f1b423941b373f537bc56e18, type: 2}
-    skyboxTint: {r: 1, g: 1, b: 1, a: 1}
-    skyboxIntensity: 1
-    skyboxExponent: 1
-    skyboxDirectionYaw: 0
-    skyboxDirectionPitch: 0
+    skybox: {fileID: 2100000, guid: 93044e86ecd60c443a61c5b7c5bea22e, type: 2}
     lightColor: {r: 1, g: 1, b: 1, a: 1}
     lightIntensity: 0.6
-    sunRotationX: 110
-    sunRotationY: 250
     ambientColor: {r: 0.35, g: 0.18, b: 0.1, a: 1}
     ambientIntensity: 0.65
     fogColor: {r: 0.9, g: 0.55, b: 0.3, a: 1}
     fogDensity: 0.013
     duration: 45
   - timeOfDay: 7
-    skybox: {fileID: 2100000, guid: 493bfb50af5d9424da505ba945c86600, type: 2}
-    skyboxTint: {r: 1, g: 1, b: 1, a: 1}
-    skyboxIntensity: 1
-    skyboxExponent: 1
-    skyboxDirectionYaw: 0
-    skyboxDirectionPitch: 0
+    skybox: {fileID: 2100000, guid: 7476afeb2f971ba4b8c33339a684e547, type: 2}
     lightColor: {r: 1, g: 1, b: 1, a: 1}
     lightIntensity: 0.3
-    sunRotationX: 140
-    sunRotationY: 290
     ambientColor: {r: 0.08, g: 0.08, b: 0.18, a: 1}
     ambientIntensity: 0.45
     fogColor: {r: 0.08, g: 0.08, b: 0.18, a: 1}
     fogDensity: 0.016
     duration: 90
-  sharedSkyboxMaterial: {fileID: 0}
   directionalLight: {fileID: 1449852867}
   transitionDuration: 16
   useSmoothTransitions: 1
   controlAmbientLight: 1
   controlFog: 1
-  rainPrefab: {fileID: 0}
+  rainPrefab: {fileID: 936991006463809773, guid: 78aedcd96e22f1a4bba20ba87617c81f, type: 3}
   rainDurationRange: {x: 40, y: 100}
   rainFadeOutTime: 3
-  stormSkybox: {fileID: 0}
   rainLightIntensityMultiplier: 0.55
   rainFogDensityMultiplier: 2.5
-  rainFogColorTint: {r: 0.45, g: 0.47, b: 0.5, a: 1}
-  rainFogColorBlend: 0.5
   rainMinLightIntensity: 0.28
-  rainDarkenTransitionDuration: 4
-  rainSkyboxTint: {r: 0.55, g: 0.58, b: 0.62, a: 1}
-  rainSkyboxTintBlend: 0.6
-  rainSkyboxIntensityMultiplier: 0.6
-  rainSkyOvercast: 0.9
-  rainSkyOvercastColor: {r: 0.62, g: 0.66, b: 0.72, a: 1}
   mistPrefab: {fileID: 0}
   mistDurationRange: {x: 20, y: 45}
   mistFadeOutTime: 4
@@ -92875,9 +92839,25 @@ MonoBehaviour:
   windPrefab: {fileID: 0}
   windDurationRange: {x: 30, y: 90}
   windFadeOutTime: 3
+  windRampDuration: 4
+  windVelocidadContra: 1.8
+  windArrastreQuieto: 0.9
+  windLoopVolume: 0.5
+  snowPrefab: {fileID: 0}
+  snowDurationRange: {x: 60, y: 140}
+  snowFadeOutTime: 6
+  snowLightIntensityMultiplier: 0.8
+  snowFogDensityMultiplier: 2.2
+  snowSfxKey: 
+  snowLoopVolume: 0.18
   thunderstormLightningIntervalRange: {x: 8, y: 22}
   thunderstormFlashIntensity: 3.5
   thunderstormFlashDuration: 0.12
+  truenosDeTormenta:
+  - SFX_Prologo_Trueno_1
+  - SFX_Prologo_Trueno_2
+  - SFX_Prologo_Trueno_3
+  volumenDelTrueno: 1
   thunderstormThunderDelayRange: {x: 0.3, y: 1.8}
   thunderstormBoltHeight: 220
   thunderstormBoltDistanceRange: {x: 18, y: 55}
@@ -92887,8 +92867,10 @@ MonoBehaviour:
   thunderstormBoltJitter: 7
   thunderstormBoltVisibleDuration: 0.3
   weatherCheckIntervalRange: {x: 45, y: 110}
+  sortearClima: 1
   thunderstormChancePerCheck: 0.05
   rainChancePerCheck: 0.18
+  snowChancePerCheck: 0.08
   windChancePerCheck: 0.15
   mistChancePerCheck: 0.12
   cloudsBuildingUpSfxKey: 
@@ -92932,7 +92914,20 @@ MonoBehaviour:
   onThunderstormStopped:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1311901900
+  onCloudsClearing:
+    m_PersistentCalls:
+      m_Calls: []
+  rumboDelAmanecer: 90
+  alturaMaximaDelSol: 55
+  alturaMaximaDeLaLuna: 50
+  alturaMinimaDeLaLuz: 18
+  duracionDelFundidoDelCielo: 45
+  duracionDeNublarse: 40
+  duracionDeDespejarse: 60
+  colorDeNubesDeLluvia: {r: 0.52, g: 0.58, b: 0.66, a: 1}
+  colorDeNubesDeTormenta: {r: 0.22, g: 0.27, b: 0.34, a: 1}
+  colorDeNubesDeNieve: {r: 0.86, g: 0.88, b: 0.92, a: 1}
+--- !u!114 &1311901893
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -92941,44 +92936,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 1311901890}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46127b694da402b4fbdcb98cf24529a8, type: 3}
+  m_Script: {fileID: 11500000, guid: 15a4bb266d63422bb29362c959e1b065, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  dayNightCycle: {fileID: 1311901892}
-  cloudPrefabs:
-  - {fileID: 159362, guid: 248f8272187dcc448a9d3c979531398f, type: 3}
-  - {fileID: 115772, guid: 98c20755924aa5d499600058295661ee, type: 3}
-  - {fileID: 160454, guid: 8ec774c4def159e4dba49882bd591326, type: 3}
-  - {fileID: 115846, guid: bef19769e972d0741aec3902288fcc2e, type: 3}
-  cloudHeight: 70
-  coverRadius: 150
-  cellSize: 18
-  jitter: 0.5
-  scaleRange: {x: 5, y: 9}
-  minFootprintInCells: 1.6
-  maxCloudInstances: 300
-  maxCloudsInstantiatedPerFrame: 25
-  heightJitter: 16
-  minClearanceAboveFollowTarget: 25
-  horizonElevationDegrees: 30
-  recenterCheckInterval: 2
-  recenterPanDuration: 4
-  stormCloudColor: {r: 0.42, g: 0.43, b: 0.47, a: 1}
-  stormShadowAmount: 0.55
-  cloudShaderMode: 0
-  visibleAlphaThreshold: 0.5
-  billboard: 1
-  arrivalExtraDistance: 220
-  arrivalExtraHeight: 65
-  waveSpreadDuration: 14
-  perCloudTravelDuration: 9
-  durationJitter: 0.35
-  departureDurationMultiplier: 1.3
-  cutDepartingCloudsOutsideCamera: 1
-  cameraCullCheckEveryNFrames: 3
-  syncWithRainDarken: 1
-  fadeDuration: 6
-  departureAlphaFraction: 0.55
+  m_EditorClassIdentifier: Assembly-CSharp::EstrellasFugaces
+  intervalo: {x: 8, y: 25}
+  desde: 0.75
+  elevacion: {x: 10, y: 35}
+  duracion: {x: 0.6, y: 1.1}
+  recorrido: {x: 10, y: 22}
+  color: {r: 4, g: 3.4, b: 2, a: 1}
+  grosor: 0.25
+--- !u!114 &1311901894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311901890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58dfd3c4a4b50434f898600ef9cf722b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SolYLunaEnElCielo
+  tamanoDelSol: 9
+  tamanoDeLaLuna: 7
+  margenBajoElHorizonte: 8
+  opacidadDeLaLuna: 0.9
 --- !u!1001 &1312132202
 PrefabInstance:
   m_ObjectHideFlags: 0

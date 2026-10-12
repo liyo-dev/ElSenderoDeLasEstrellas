@@ -1,17 +1,14 @@
 using Game.NPC.Common;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.NPC
 {
-    /// Dos NPCs discutiendo en bucle mientras la historia lo pide (INC-363).
+    /// Dos NPCs que discuten en bucle, en tono amistoso, mientras la historia lo pide. Ver INC-363 e INC-696.
     ///
-    /// «Durante la secuencia de Oliver, mientras hablan, veamos a Eldran y a Victoria haciendo en
-    /// bucle las dos animaciones de enfado, alternadas con la de hablar, y sobre sus cabezas un
-    /// bocadillo con el típico circulito de pelea. Entonces empieza la misión, y solo al acercarnos
-    /// empezaría la secuencia siguiente.»
-    ///
-    /// Va en el prefab de Eldran del roster y maneja a los dos: se ponen de cara, se turnan (uno se
-    /// enfada mientras el otro le habla, y al revés) y los dos llevan encima el icono de pelea.
+    /// Se ponen de cara, se turnan (uno replica con un gesto mientras el otro le habla, y al revés),
+    /// llevan la cara de `animo` y los dos tienen encima el bocadillo con el circulito de discusión.
+    /// Va en el prefab de Eldran del roster y maneja a los dos.
     ///
     /// CUÁNDO: desde que arranca el saludo de Oliver (o si la misión «Busca a Eldran» ya está en
     /// marcha, que es lo que hay al cargar una partida a medias) hasta PERAS_START, que es cuando
@@ -32,10 +29,15 @@ namespace Game.NPC
         [SerializeField] private string terminaCon = "PERAS_START";
 
         [Header("Cómo")]
-        [SerializeField] private string[] enfado = { "Angry01", "Angry02" };
+        [Tooltip("Gestos con los que replica el que escucha, por turnos.")]
+        [FormerlySerializedAs("enfado")]
+        [SerializeField] private string[] replica = { "Laugh01", "HeadShake01" };
         [SerializeField] private string[] hablar = { "Talk01", "Talk02" };
-        [Tooltip("Segundos de cada turno: en uno se enfada él y habla ella, en el siguiente al revés.")]
+        [Tooltip("Cara de los dos mientras discuten.")]
+        [SerializeField] private NPCEmotion animo = NPCEmotion.Happy;
+        [Tooltip("Segundos de cada turno: en uno replica él y habla ella, en el siguiente al revés.")]
         [SerializeField] private float turno = 1.8f;
+        [Tooltip("Icono que llevan los dos sobre la cabeza mientras discuten (Canvas Charla, animado).")]
         [SerializeField] private GameObject iconoDePelea;
 
         private SequenceActor _yo, _otro;
@@ -110,8 +112,8 @@ namespace Game.NPC
             _otro.StopMovement();
             _yo.Face(_otro.Transform.position);
             _otro.Face(_yo.Transform.position);
-            _yo.SetEmotion(NPCEmotion.Angry);
-            _otro.SetEmotion(NPCEmotion.Angry);
+            _yo.SetEmotion(animo);
+            _otro.SetEmotion(animo);
 
             _iconoYo = MostrarIcono(_yo.Transform);
             _iconoOtro = MostrarIcono(_otro.Transform);
@@ -126,7 +128,7 @@ namespace Game.NPC
         private void Turno()
         {
             bool leTocaAEl = _paso % 2 == 0;
-            string e = enfado[(_paso / 2) % enfado.Length];
+            string e = replica[(_paso / 2) % replica.Length];
             string h = hablar[(_paso / 2) % hablar.Length];
 
             (leTocaAEl ? _yo : _otro).PlayGesture(e);

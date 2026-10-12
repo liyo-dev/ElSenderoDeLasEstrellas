@@ -119,6 +119,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &26344783
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 26344784}
+  m_Layer: 0
+  m_Name: M_Manana_WillRecostado
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &26344784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 26344783}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: -0.7071068}
+  m_LocalPosition: {x: 117.01925, y: 0.70808804, z: 0.48539102}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 260382207}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &37454535
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -598,6 +629,7 @@ Transform:
   - {fileID: 1036787922}
   - {fileID: 489321474}
   - {fileID: 161336093}
+  - {fileID: 26344784}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &280659068
@@ -739,7 +771,7 @@ Transform:
   m_GameObject: {fileID: 425605858}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 114.65, y: 0.72, z: 3.9}
+  m_LocalPosition: {x: 114.65, y: 0.6910523, z: 3.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1589,7 +1621,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4429195976566410, guid: c72fa9f03c1eab641be52cc822b8f076, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1664800436}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c72fa9f03c1eab641be52cc822b8f076, type: 3}
 --- !u!4 &907483998 stripped
@@ -2057,7 +2092,7 @@ Transform:
   m_GameObject: {fileID: 1255370937}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 114.65, y: 0.75, z: 3.1}
+  m_LocalPosition: {x: 114.65, y: 0.6910523, z: 3.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2700,6 +2735,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnAnchor
   anchorId: Bedroom
   faceDoor: 0
+--- !u!1 &1664800435
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1664800436}
+  - component: {fileID: 1664800437}
+  m_Layer: 0
+  m_Name: Cama_Will_Borde
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1664800436
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664800435}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.000000015454312, y: 0.7071068, z: -0.000000015454312, w: -0.7071068}
+  m_LocalPosition: {x: -1.202713, y: 0.60318124, z: -0.0100311}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 907483998}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1664800437
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664800435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 561bfa79161a1b94499519bbd54b8038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCWorldPoint
+  activityType: 3
+  interactionPoint: {fileID: 1664800436}
+  overrideFacing: 1
+  requiredProximity: 1.5
+  prop: {fileID: 0}
+  propHandOffset: {x: 0, y: 0, z: 0}
+  propHandRotation: {x: 0, y: 0, z: 0}
+  minOccupationDuration: 15
+  maxOccupationDuration: 90
 --- !u!1 &1751419618
 GameObject:
   m_ObjectHideFlags: 0

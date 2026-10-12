@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
@@ -13,10 +14,15 @@ using UnityEngine.UI;
 public class MinimapController : MonoBehaviour
 {
     public static MinimapController Instance { get; private set; }
+    static readonly HashSet<object> s_ocultadoPor = new HashSet<object>();
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() => Instance = null;
+    static void ResetStatics()
+    {
+        Instance = null;
+        s_ocultadoPor.Clear();
+    }
 #endif
 
     [Header("Cámara")]
@@ -78,7 +84,6 @@ public class MinimapController : MonoBehaviour
     bool _hiddenByInterior;
     bool _hiddenByBattle;
     bool _hiddenByMenu;
-    bool _hiddenByCinematic;
     float _normalOrthoSize;
     bool _fogWasEnabledBeforeMinimap;
     bool _minimapFogOverrideActive;
@@ -442,18 +447,32 @@ public class MinimapController : MonoBehaviour
     }
 
     /// <summary>
-    /// Oculta/muestra el minimapa durante cinemáticas que no pasan por interior/batalla/menú
-    /// (p. ej. KingdomExitTransitionNode al revelar el título del juego).
+    /// Cada sistema que tapa el minimapa (cinemáticas, avisos, icono de saltar) pide ocultarlo
+    /// con su propia clave y lo libera mediante Mostrar con la misma clave.
     /// </summary>
-    public void SetHiddenByCinematic(bool hidden)
+    public static void Ocultar(object quien)
     {
-        _hiddenByCinematic = hidden;
-        RefreshMinimapVisibility();
+        if (quien == null) return;
+        s_ocultadoPor.Add(quien);
+        Instance?.RefreshMinimapVisibility();
+    }
+
+    /// <summary>
+    /// Libera la petición del sistema que tapa el minimapa (cinemáticas, avisos, icono de saltar)
+    /// con la misma clave que usa en Ocultar; las peticiones de otros sistemas se mantienen.
+    /// </summary>
+    public static void Mostrar(object quien)
+    {
+        if (quien == null) return;
+        s_ocultadoPor.Remove(quien);
+        Instance?.RefreshMinimapVisibility();
     }
 
     void RefreshMinimapVisibility()
     {
-        if (minimapRoot != null)
-            minimapRoot.SetActive(!_hiddenByInterior && !_hiddenByBattle && !_hiddenByMenu && !_hiddenByCinematic);
+        s_ocultadoPor.RemoveWhere(k => k is UnityEngine.Object o && o == null);
+        bool visible = !_hiddenByInterior && !_hiddenByBattle && !_hiddenByMenu && s_ocultadoPor.Count == 0;
+        if (minimapRoot != null && minimapRoot.activeSelf != visible)
+            minimapRoot.SetActive(visible);
     }
 }

@@ -384,6 +384,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             var cfg = new MagicZoneEffect.ZoneConfig
             {
                 damagePerTick  = spell.damage * damageMultiplier,
+                element        = spell.element,
                 tickInterval   = spell.zoneTickInterval,
                 radius         = spell.zoneRadius,
                 duration       = spell.zoneDuration,
@@ -492,6 +493,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             if (ignorar != null && (c.transform == ignorar.transform || c.transform.IsChildOf(ignorar.transform))) continue;
             if (c.attachedRigidbody != null && !c.attachedRigidbody.isKinematic) continue; // objetos sueltos, enemigos con física
             if (c.GetComponentInParent<Damageable>() != null) continue;                     // enemigos y compañeros no son pared
+            if (RejaAtravesable.EsAtravesable(c)) continue;                                // rejas que el paso corto cruza
             return true;
         }
         return false;
@@ -517,6 +519,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             zone.Configure(new MagicZoneEffect.ZoneConfig
             {
                 damagePerTick  = spell.damage * damageMultiplier,
+                element        = spell.element,
                 tickInterval   = spell.zoneTickInterval,
                 radius         = spell.zoneRadius,
                 duration       = spell.zoneDuration,

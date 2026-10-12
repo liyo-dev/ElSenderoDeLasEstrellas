@@ -51,6 +51,7 @@ public class PlayerPickupCollector : MonoBehaviour
             PickupEffectType.SpecialCharge => ApplySpecialCharge(effect),
             PickupEffectType.AddToInventory => ApplyAddToInventory(effect),
             PickupEffectType.UnlockWardrobeItem => ApplyUnlockWardrobeItem(effect),
+            PickupEffectType.Revivir => SaludDelGrupo.LevantarConObjeto(Mathf.Clamp01(effect.amount)),
             _ => false
         };
 

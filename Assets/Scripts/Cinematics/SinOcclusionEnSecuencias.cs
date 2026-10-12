@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 
 /// <summary>
 /// Mientras haya una secuencia en marcha, ninguna cámara usa el occlusion culling horneado
-/// (INC-601, 5 oct 2026).
+/// ni la disolución de obstáculos de la cámara jugable. Ver INC-601.
 ///
 /// El de MainWorld se hornea pensando en la cámara del jugador, a ras de suelo y por las calles.
 /// Las cámaras de las secuencias se ponen en sitios a los que el jugador nunca llega (en alto,
@@ -26,12 +26,14 @@ public static class SinOcclusionEnSecuencias
         RenderPipelineManager.beginCameraRendering -= AntesDePintar;
         s_original.Clear();
         s_activo = false;
+        CameraOcclusionShadowsOnly.Suspender(false);
     }
 
     public static void Activar()
     {
         if (s_activo) return;
         s_activo = true;
+        CameraOcclusionShadowsOnly.Suspender(true);
         RenderPipelineManager.beginCameraRendering += AntesDePintar;
         foreach (var c in Camera.allCameras) Apagar(c);
     }
@@ -40,6 +42,7 @@ public static class SinOcclusionEnSecuencias
     {
         if (!s_activo) return;
         s_activo = false;
+        CameraOcclusionShadowsOnly.Suspender(false);
         RenderPipelineManager.beginCameraRendering -= AntesDePintar;
         foreach (var par in s_original)
             if (par.Key != null) par.Key.useOcclusionCulling = par.Value;

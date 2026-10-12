@@ -2,8 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Singleton vacío — conservado para no romper la referencia en Start.unity.
-/// La vida y la magia son únicas (pertenecen al player) y se comparten entre todos
-/// los personajes. El intercambio de stats al cambiar personaje ha sido eliminado.
+/// La vida y el maná de cada personaje los lleva SaludDelGrupo (en GrupoDelJugador, INC-717).
 /// </summary>
 [DefaultExecutionOrder(-100)]
 public class PartyStatsManager : MonoBehaviour

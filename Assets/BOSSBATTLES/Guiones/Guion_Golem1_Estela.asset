@@ -41,6 +41,15 @@ MonoBehaviour:
     caducidad: 0
     interrumpe: 0
     duracion: 0
+  - momento: 0
+    fase: 0
+    key: JEFES_GOLEM_BARRO_PISTA
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 0
+    duracion: 0
   - momento: 10
     fase: 0
     key: EVT_ESTELA_GOLEM_PROVOCA_01
@@ -170,6 +179,51 @@ MonoBehaviour:
   - momento: 9
     fase: 0
     key: EVT_ESTELA_GOLEM_RECUERDA
+    anim: 
+    vecesMax: 2
+    enfriamiento: 25
+    caducidad: 3
+    interrumpe: 0
+    duracion: 0
+  - momento: 13
+    fase: 0
+    key: JEFES_GOLEM_FUEGO_01
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 3
+  - momento: 13
+    fase: 0
+    key: JEFES_GOLEM_FUEGO_02
+    anim: 
+    vecesMax: 2
+    enfriamiento: 15
+    caducidad: 2
+    interrumpe: 0
+    duracion: 0
+  - momento: 14
+    fase: 0
+    key: JEFES_GOLEM_BARRO_01
+    anim: 
+    vecesMax: 1
+    enfriamiento: 0
+    caducidad: 0
+    interrumpe: 1
+    duracion: 2.5
+  - momento: 14
+    fase: 0
+    key: JEFES_GOLEM_BARRO_02
+    anim: 
+    vecesMax: 0
+    enfriamiento: 12
+    caducidad: 1.5
+    interrumpe: 1
+    duracion: 2
+  - momento: 9
+    fase: 0
+    key: JEFES_GOLEM_RECUERDA_BARRO
     anim: 
     vecesMax: 2
     enfriamiento: 25

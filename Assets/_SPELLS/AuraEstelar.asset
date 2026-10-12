@@ -16,7 +16,7 @@ MonoBehaviour:
   displayNameId: SPELL_AURA_ESTELAR_NAME
   displayName: Aura Estelar
   kind: 0
-  element: 2
+  element: 4
   lore: Un resplandor prestado que Liam lanza como una daga.
   loreId: 
   prefab: {fileID: 220948880924743939, guid: 12f7a4e92f7ca0c43b97c994467f5228, type: 3}

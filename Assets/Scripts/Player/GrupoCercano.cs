@@ -41,22 +41,13 @@ public static class GrupoCercano
         if (PlayerService.TryGetComponent<PlayerHealthSystem>(out var vida, includeInactive: false, allowSceneLookup: true) && vida != null)
             Anadir(resultado, centro, radio, new Miembro { slot = activo, cuerpo = vida.transform, jugador = vida });
 
-        var swapper = ActiveCharacterSwapper.Instance;
-        var oculto = swapper != null ? swapper.HiddenNpc : null;
-
-        for (int s = 0; s < 3; s++)
+        for (int s = 0; s < ControlDelJugador.Personajes; s++)
         {
             var slot = (Slot)s;
             if (slot == activo) continue;
 
-            NPCPartyMember npc;
-            if (slot == Slot.Will) npc = swapper != null ? swapper.WillNpcInstance : null;
-            else
-            {
-                var party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
-                npc = party != null ? party.GetMemberByName(slot == Slot.Liam ? "Liam" : "Estela") : null;
-            }
-            if (npc == null || npc == oculto || !npc.isActiveAndEnabled) continue;
+            NPCPartyMember npc = ControlDelJugador.NpcDe(slot);
+            if (npc == null || !npc.isActiveAndEnabled) continue;
 
             var d = npc.GetComponent<Damageable>();
             if (d == null) d = npc.GetComponentInChildren<Damageable>();

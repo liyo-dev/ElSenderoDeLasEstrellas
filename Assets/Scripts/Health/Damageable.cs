@@ -30,6 +30,8 @@ public class Damageable : MonoBehaviour, IDamageable
     public event Action                    OnDied;
     /// Se ha curado (cantidad realmente recuperada). Para barras de vida y efectos.
     public event Action<float>             OnHealed;
+    /// Ha vuelto a la vida con Revive (los retratos del grupo dejan de mostrarlo caído).
+    public event Action                    OnRevived;
 
     /// Cualquier Damageable ha recibido daño: quién, cuánto y quién lo ha hecho (puede ser null).
     /// Para sistemas globales que cuentan el daño del grupo (la carga de equipo, INC-491).
@@ -168,6 +170,7 @@ public class Damageable : MonoBehaviour, IDamageable
         var rb = GetComponent<Rigidbody>();
         if (rb) { rb.isKinematic = false; rb.detectCollisions = true; }
         Current = Mathf.Clamp(Mathf.Max(0.1f, hp), 0f, maxHealth);
+        OnRevived?.Invoke();
     }
 
     void Die()

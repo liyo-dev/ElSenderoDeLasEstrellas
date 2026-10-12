@@ -17,7 +17,7 @@ namespace ElSendero.Editor.Iconos
         [SerializeField] Color contorno = new Color(43f / 255f, 30f / 255f, 22f / 255f, 1f);
         [SerializeField] float margen = 0.12f;
         [SerializeField] Vector2 anguloBody = new Vector2(20f, 8f);
-        [SerializeField] Vector2 anguloCloak = new Vector2(160f, 8f);
+        [SerializeField] Vector2 anguloCapaDesdeFuera = new Vector2(-20f, 8f);
         [SerializeField] Vector2 anguloAccessory = new Vector2(25f, 8f);
         readonly List<WardrobeItemSO> items = new List<WardrobeItemSO>();
         Texture2D previsualizacion;
@@ -62,7 +62,7 @@ namespace ElSendero.Editor.Iconos
             margen = EditorGUILayout.Slider("Margen", margen, 0.02f, 0.4f);
             EditorGUILayout.LabelField("Ángulos: giro horizontal / inclinación vertical", EditorStyles.boldLabel);
             anguloBody = EditorGUILayout.Vector2Field("Ropa (Body)", anguloBody);
-            anguloCloak = EditorGUILayout.Vector2Field("Capas (Cloak)", anguloCloak);
+            anguloCapaDesdeFuera = EditorGUILayout.Vector2Field("Capas (Cloak): giro desde fuera / inclinación", anguloCapaDesdeFuera);
             anguloAccessory = EditorGUILayout.Vector2Field("Accesorios", anguloAccessory);
             if (EditorGUI.EndChangeCheck()) LimpiarFoto();
             EditorGUILayout.BeginHorizontal();
@@ -92,10 +92,16 @@ namespace ElSendero.Editor.Iconos
 
         AjustesDeFoto Ajustes(WardrobeItemSO item)
         {
-            Vector2 angulo = item.Category == PartCategory.Cloak ? anguloCloak :
+            Vector2 angulo = item.Category == PartCategory.Cloak ? anguloCapaDesdeFuera :
                 item.Category == PartCategory.Body ? anguloBody : anguloAccessory;
+            // Capas y accesorios se fotografían desde el lado de fuera del cuerpo (la capa por la
+            // espalda, la barba o la máscara por delante) y su ángulo es un giro extra. Si la pieza
+            // queda sobre el eje del cuerpo (corona, cuernos), se usa el ángulo tal cual.
+            bool capa = item.Category == PartCategory.Cloak;
+            bool desdeFuera = item.Category != PartCategory.Body;
             return new AjustesDeFoto { tamano = tamano, grosorContorno = grosor, colorContorno = contorno,
-                margen = margen, yaw = angulo.x, pitch = angulo.y };
+                margen = margen, yaw = capa ? 180f + angulo.x : angulo.x, pitch = angulo.y,
+                mirarDesdeFuera = desdeFuera, giroExtra = desdeFuera ? angulo.x : 0f };
         }
 
         Texture2D Fotografiar(WardrobeItemSO item)

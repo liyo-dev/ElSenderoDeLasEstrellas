@@ -95,7 +95,8 @@ public sealed class CombatLabDirector : MonoBehaviour, ISeccionDelLab
         GUILayout.Label("Los jefes de verdad (Demonios, Gólem y Mago Oscuro) están en la pestaña Zonas ▸ Zona de jefes.", EstiloDelLab.Nota);
     }
 
-    private static void ReloadScene()
+    /// Recarga el LAB como al entrar (lo que se guarda en la sesión, como los puzles resueltos, se conserva).
+    public static void ReloadScene()
     {
         var scene = SceneManager.GetActiveScene();
         if (scene.buildIndex >= 0) SceneManager.LoadScene(scene.buildIndex);

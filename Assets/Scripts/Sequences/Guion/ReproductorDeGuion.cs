@@ -66,6 +66,8 @@ public sealed class ReproductorDeGuion
 
     private void Preparar()
     {
+        foreach (var efecto in _g.efectos)
+            if (efecto.beat is PropEnManoBeat prop && !prop.dejar) prop.RegistrarFinal(_ctx);
         foreach (var datos in _g.actores)
         {
             var actor = _ctx.GetActor(datos.id);
@@ -434,7 +436,7 @@ public sealed class ReproductorDeGuion
                     Actor.ReleasePose(true);
                     break;
                 case TipoDeAnimacion.Bucle:
-                    Actor.HoldPose(o.estado, o.congelar);
+                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f);
                     break;
                 case TipoDeAnimacion.Gesto:
                     Actor.PlayGesture(o.estado);

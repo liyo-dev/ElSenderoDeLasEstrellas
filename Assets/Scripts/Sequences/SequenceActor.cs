@@ -266,10 +266,10 @@ public class SequenceActor
     }
 
     private Coroutine _poseDelJugador;
-    public void HoldPose(string stateName, bool congelarAlFinal = false)
+    public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f)
     {
         if (string.IsNullOrEmpty(stateName)) return;
-        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal); return; }
+        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal, fundido: fundido); return; }
 
         // La pose del jugador cancela el gesto puntual para que su cierre no la interrumpa.
         if (PlayerAnimator == null || !PlayerAnimator.isActiveAndEnabled || !TieneEstado(stateName)) return;
@@ -278,7 +278,7 @@ public class SequenceActor
         var animador = AnimadorDeActuacion;
         int capa = AnimatorLayerUtil.ResolveLayer(animador, stateName, animador.GetLayerIndex("UpperBody"));
         if (capa > 0) animador.SetLayerWeight(capa, 1f);
-        animador.CrossFadeInFixedTime(Animator.StringToHash(stateName), 0.12f, capa, 0f);
+        animador.CrossFadeInFixedTime(Animator.StringToHash(stateName), fundido, capa, 0f);
         _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal));
     }
 

@@ -25,7 +25,9 @@ using UnityEngine.AI;
 ///     escudo aguanta la segunda. Nada de esto se puede fallar.
 ///
 /// Expuesto (aturdido o derribado) recibe más daño. Cada fase tiene un suelo de vida: no se salta
-/// a golpes. Ver INC-509, INC-663.
+/// a golpes. Amanecer abre su protección (ProteccionQueSeAbre) un rato: mientras dura, los
+/// cristales no le protegen y, ya regenerado, el arsenal entero le baja la barra de verdad (le
+/// deja con 1 de vida: el golpe final es del final). Ver INC-509, INC-663, INC-724.
 [RequireComponent(typeof(Damageable))]
 public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAlDano, IInicioDeCombate, IFiltroDeDano
 {
@@ -151,6 +153,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     private Damageable _vida;
     private NPCSimpleAnimator _anim;
     private TransicionDeFaseDeJefe _transicion;
+    private ProteccionQueSeAbre _proteccion;
     private Renderer[] _renderers;
     private float[] _umbrales;
     private int _fase;
@@ -186,26 +189,29 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     public float Vida => _vida != null && _vida.Max > 0f ? _vida.Current / _vida.Max : 0f;
     public EscenarioBatallaFinal Escenario => escenario;
     public NPCSimpleAnimator Animador => _anim;
+    /// Amanecer le ha abierto la protección y aún dura.
+    public bool ProteccionAbierta => _proteccion != null && _proteccion.Abierta;
 
     /// Regenerado, ningún golpe le hace nada. Si no, expuesto recibe más y protegido por cristales
     /// mucho menos. Nunca baja del suelo de la fase actual: el cambio de fase lo hace la IA.
     public float Filtrar(float cantidad, GameObject instigador)
     {
         if (_vida == null) return cantidad;
-        if (_regenerado)
+        bool abierta = ProteccionAbierta;
+        if (_regenerado && !abierta)
         {
             AvisosDeCombate.GolpeMalDado(gameObject);
             return 0f;
         }
 
         if (Expuesto) cantidad *= danoExpuesto;
-        else if (CristalesActivos() > 0)
+        else if (!abierta && CristalesActivos() > 0)
         {
             cantidad *= danoConCristales;
             AvisosDeCombate.GolpeMalDado(gameObject);
         }
 
-        float suelo = _vida.Max * (_fase == 0 ? umbralFase2 : umbralRegeneracion);
+        float suelo = _regenerado ? 1f : _vida.Max * (_fase == 0 ? umbralFase2 : umbralRegeneracion);
         return Mathf.Min(cantidad, Mathf.Max(0f, _vida.Current - suelo));
     }
 
@@ -224,13 +230,23 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         }
         _transicion = GetComponent<TransicionDeFaseDeJefe>();
         if (_transicion == null) _transicion = gameObject.AddComponent<TransicionDeFaseDeJefe>();
+        _proteccion = GetComponent<ProteccionQueSeAbre>();
+        if (_proteccion == null) _proteccion = gameObject.AddComponent<ProteccionQueSeAbre>();
         _renderers = GetComponentsInChildren<Renderer>(true);
         _umbrales = new[] { umbralFase2, umbralRegeneracion };
         var agente = GetComponent<NavMeshAgent>();
         if (agente) agente.enabled = false;   // la IA controla su posición sin navegación
     }
 
-    void OnEnable() => PlayerShieldController.AlDevolverAtaque += AlDevolverAtaque;
+    void OnEnable()
+    {
+        PlayerShieldController.AlDevolverAtaque += AlDevolverAtaque;
+        if (_proteccion != null)
+        {
+            _proteccion.AlAbrirse += AlAbrirseLaProteccion;
+            _proteccion.AlCerrarse += AlCerrarseLaProteccion;
+        }
+    }
 
     void Update()
     {
@@ -244,6 +260,11 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
     {
         StopAllCoroutines();
         PlayerShieldController.AlDevolverAtaque -= AlDevolverAtaque;
+        if (_proteccion != null)
+        {
+            _proteccion.AlAbrirse -= AlAbrirseLaProteccion;
+            _proteccion.AlCerrarse -= AlCerrarseLaProteccion;
+        }
         RecogerProteccion();
         SoltarLevitacion(0f);
         _anim?.ReleasePose(true);
@@ -919,9 +940,13 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         return escenario != null && escenario.centro != null ? escenario.centro.position.y : p.y;
     }
 
+    private void AlAbrirseLaProteccion(ProteccionQueSeAbre _, GameObject __) => ActualizarProteccion();
+    private void AlCerrarseLaProteccion(ProteccionQueSeAbre _) => ActualizarProteccion();
+
+    /// El aura violeta se ve mientras algún cristal le protege y Amanecer no ha abierto la protección.
     private void ActualizarProteccion()
     {
-        if (CristalesActivos() == 0) { RecogerProteccion(); return; }
+        if (CristalesActivos() == 0 || ProteccionAbierta) { RecogerProteccion(); return; }
         if (_auraProtegido != null || vfxProtegido == null) return;
         _poolProtegido = VfxPoolService.Instance;
         if (_poolProtegido == null) return;

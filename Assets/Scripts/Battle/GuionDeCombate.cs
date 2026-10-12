@@ -17,6 +17,10 @@ public enum MomentoDeCombate
     JefeVaAPorElHablante, // el jefe cambia de objetivo y va a por quien guía
     JefeVaAPorElJugador,  // el jefe vuelve a por el jugador
     SePideRemate,         // el jefe ya solo cae con un golpe especial
+    JefeSeFortalece,      // el jugador le ha dado fuerza (fuego de frente al Gólem)
+    JefeAtrapado,         // el terreno le atrapa y abre la ventana (Gólem hundido en el barro)
+    DefensaRota,          // se rompe una parte de su defensa (una runa del aro)
+    DefensaRecompuesta,   // su defensa vuelve a cerrarse entera
 }
 
 [System.Serializable]

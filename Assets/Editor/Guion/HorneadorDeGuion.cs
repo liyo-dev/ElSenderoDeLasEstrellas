@@ -54,7 +54,7 @@ public static partial class HorneadorDeGuion
         {
             horno.Error("El horneado se ha parado: " + ex.Message + "\n" + ex.StackTrace);
         }
-        finally { EditorUtility.ClearProgressBar(); }
+        finally { horno.LiberarPoses(); EditorUtility.ClearProgressBar(); }
         horno.EscribirInforme();
         string resumen = horno.Resumen();
         UltimoResumen = resumen;
@@ -208,9 +208,9 @@ internal sealed class ActorH
         miradas.Add(m);
     }
 
-    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false)
+    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f)
     {
-        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar });
+        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido });
     }
 }
 
@@ -265,6 +265,11 @@ internal sealed partial class Horno
         EscenaDelGuion = _escena;
         if (!_escena.IsValid() || !_escena.isLoaded) { Error($"No puedo abrir la escena '{_g.escena}'."); return null; }
         _stage = CapturaDeEscenario.BuscarStage(_escena);
+        if (!string.IsNullOrEmpty(_g.secuencia))
+            foreach (var raiz in _escena.GetRootGameObjects())
+                foreach (var player in raiz.GetComponentsInChildren<SequencePlayer>(true))
+                    if (player.Definition != null && AssetDatabase.GetAssetPath(player.Definition) == _g.secuencia)
+                        _stage = player.GetComponent<SequenceStage>() ?? _stage;
         Physics.SyncTransforms();
         _carpetaSalida = Path.Combine(CapturaDeEscenario.CarpetaDeGuiones, CapturaDeEscenario.CarpetaDeEscena(_g.escena, _g.zona), _g.nombre);
         Directory.CreateDirectory(_carpetaSalida);
@@ -286,6 +291,7 @@ internal sealed partial class Horno
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Actuación…", 0.5f);
         Rematar();
+        FinalizarProps();
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Cámaras…", 0.6f);
         _salida = ScriptableObject.CreateInstance<GuionHorneado>();
@@ -656,7 +662,7 @@ internal sealed partial class Horno
                 if (!Estado(a, estado, o)) return 0f;
                 if (!a.estados[estado].bucle && !o.Tiene("congela"))
                     Aviso($"{o}: '{estado}' no es un bucle; se quedará en su último fotograma (añade «congela» si es lo que quieres)");
-                a.Animar(t, TipoDeAnimacion.Bucle, estado, o.Tiene("congela") || !a.estados[estado].bucle);
+                a.Animar(t, TipoDeAnimacion.Bucle, estado, o.Tiene("congela") || !a.estados[estado].bucle, o.OpF("fundido", 0f));
                 a.bucle = estado;
                 a.bucleDeCuerpo = a.estados[estado].cuerpoEntero;
                 return o.opciones.ContainsKey("dura") ? o.OpF("dura", 0f) : 0f;
@@ -697,6 +703,8 @@ internal sealed partial class Horno
                 return Sentar(a, o, t);
             case "levanta":
                 return Levantar(a, o, t);
+            case "coge": case "deja":
+                return PropEnMano(a, o, t);
         }
         Error($"{o}: acción desconocida");
         return 0f;
@@ -705,7 +713,7 @@ internal sealed partial class Horno
     /// Sentado (un bucle «Sit…»): el cuerpo se queda como lo dejó el asiento. Ni las miradas de
     /// las frases (la suya y la de quien le habla) ni un «mira» lo giran.
     private static bool Sentado(ActorH a)
-        => a.bucle != null && a.bucle.StartsWith("Sit", System.StringComparison.OrdinalIgnoreCase);
+        => a.sentadoCon != NPCAmbientActivity.None;
 
     /// Antes de echar a andar se suelta un bucle de cuerpo entero (bailando no se anda).
     private void SoltarBucleSiAnda(ActorH a, float t, bool haraCuerpo)

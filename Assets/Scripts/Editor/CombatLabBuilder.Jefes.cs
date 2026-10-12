@@ -41,6 +41,7 @@ public static partial class CombatLabBuilder
         var centroArena = Punto("Centro de la arena", raiz, c + new Vector3(0f, 0.1f, 4f));
         Circulo(raiz, centroArena.position, RadioArenaJefes);
         CrearTexto("Arena de jefes", raiz, centroArena.position + new Vector3(0f, 6f, RadioArenaJefes));
+        CrearTerrenoDeJefes(zonaGeo, raiz, centroArena.position, muro);
 
         var zona = raiz.gameObject.AddComponent<ZonaDeJefesDelLab>();
         var soZona = new SerializedObject(zona);

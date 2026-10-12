@@ -5,7 +5,7 @@ using Sendero.Core.Feedback;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(Damageable))]
-public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
+public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 {
     [Header("Referencias")]
     [SerializeField] private Transform player;
@@ -71,6 +71,11 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [SerializeField] private float rainImpactRadius = 1.8f;
     [SerializeField] private float rainDamage = 20f;
     [SerializeField] private float rainCooldown = 22f;
+    [Tooltip("Altura desde la que caen las sombras sobre las marcas del suelo.")]
+    [SerializeField, Min(1f)] private float rainHeight = 12f;
+    [SerializeField, Min(0.1f)] private float rainFallDuration = 0.65f;
+    [SerializeField, Min(0.02f)] private float rainInterval = 0.16f;
+    private readonly System.Collections.Generic.List<(Transform efecto, ulong uso)> _efectosLluvia = new();
 
     [Header("Cadencia de Ataque")]
     [Tooltip("Tiempo minimo de 'respiro' tras CUALQUIER ataque antes de poder iniciar el siguiente. "
@@ -381,6 +386,20 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         UnregisterFromCombatRegistry();
     }
 
+    void OnDisable()
+    {
+        StopAllCoroutines();
+        RecogerLluvia();
+    }
+
+    private void RecogerLluvia()
+    {
+        if (VfxPoolService.Instance != null)
+            foreach (var efecto in _efectosLluvia)
+                VfxPoolService.Instance.Recoger(efecto.efecto, efecto.uso);
+        _efectosLluvia.Clear();
+    }
+
     void Update()
     {
         SyncCombatRegistryState();
@@ -516,6 +535,14 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         bool furia = currentPhase == BossPhase.Phase3;
 
+        // La guerra en el aire acaba en la fase final: primero baja (ver GuerraEnElAire).
+        if (_enElAire && furia)
+        {
+            yield return Aterrizar();
+            isAttacking = true; // el vuelo lo suelta al llegar: el rugido aún no ha terminado
+            if (agent && agent.isOnNavMesh) agent.isStopped = true;
+        }
+
         // Carga: ruge mientras tiembla el suelo.
         PlayAnimation(AnimCastSpell);
         _transicion.Cargar();
@@ -540,12 +567,16 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             yield return RainAttack();
         }
 
+        // Demonio 2: la fase 2 se pelea desde las almenas.
+        if (DebeSubirAlAire()) yield return Despegar();
+
         if (agent && agent.isOnNavMesh) agent.isStopped = false;
     }
 
     private void UpdateBehavior()
     {
         if (isAttacking || currentState == BossState.TakingDamage) return;
+        if (ActualizarGuerraEnElAire()) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
@@ -1062,9 +1093,14 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     // Genera una oleada de sombras que crecen, luego impactan
     private IEnumerator SpawnRainWave(Vector3 center, int count, float radius, float warningDuration, bool trackPlayer)
     {
+        var pool = VfxPoolService.Instance;
+        if (pool == null || count <= 0) yield break;
         Vector3[] positions = new Vector3[count];
         Transform[] shadowTrans = new Transform[count];
-        GameObject[] shadowGOs = new GameObject[count];
+        Vector3 shadowScale = rainShadowPrefab ? rainShadowPrefab.transform.localScale : Vector3.one;
+        float fallDuration = Mathf.Max(0.1f, rainFallDuration);
+        float interval = Mathf.Max(0.02f, rainInterval);
+        float duration = fallDuration + (count - 1) * interval;
 
         for (int i = 0; i < count; i++)
         {
@@ -1080,9 +1116,13 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             {
                 // Rotación forzada para que el quad quede plano en el suelo
                 Quaternion rot = Quaternion.Euler(90f, Random.Range(0f, 360f), 0f);
-                shadowGOs[i] = Instantiate(rainShadowPrefab, positions[i], rot);
-                shadowTrans[i] = shadowGOs[i].transform;
-                shadowTrans[i].localScale = Vector3.zero;
+                shadowTrans[i] = pool.Play(rainShadowPrefab, positions[i] + Vector3.up * 0.04f,
+                    rot, warningDuration + duration + 1f);
+                if (shadowTrans[i])
+                {
+                    _efectosLluvia.Add((shadowTrans[i], pool.ObtenerUso(shadowTrans[i])));
+                    shadowTrans[i].localScale = Vector3.zero;
+                }
             }
         }
 
@@ -1095,7 +1135,7 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             for (int i = 0; i < count; i++)
             {
                 if (shadowTrans[i])
-                    shadowTrans[i].localScale = Vector3.one * t;
+                    shadowTrans[i].localScale = shadowScale * t;
             }
 
             if (trackPlayer && player)
@@ -1106,7 +1146,7 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
                     Vector3 offset = positions[i] - center;
                     positions[i] = newCenter + offset;
                     if (shadowTrans[i])
-                        shadowTrans[i].position = positions[i];
+                        shadowTrans[i].position = positions[i] + Vector3.up * 0.04f;
                 }
                 center = newCenter;
             }
@@ -1114,17 +1154,64 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
             yield return null;
         }
 
-        for (int i = 0; i < count; i++)
+        // Las marcas quedan fijas al terminar el aviso: se puede esquivar la caída.
+        Transform[] drops = new Transform[count];
+        bool[] launched = new bool[count];
+        bool[] impacted = new bool[count];
+        elapsed = 0f;
+        int remaining = count;
+        while (remaining > 0)
         {
-            if (shadowGOs[i]) Destroy(shadowGOs[i]);
+            for (int i = 0; i < count; i++)
+            {
+                float age = elapsed - i * interval;
+                if (age < 0f || impacted[i]) continue;
+                if (!launched[i])
+                {
+                    launched[i] = true;
+                    drops[i] = CrearVisualDeLluvia(positions[i] + Vector3.up * rainHeight,
+                        fallDuration + 1f);
+                    if (drops[i])
+                        drops[i].localScale = Vector3.Scale(drops[i].localScale, new Vector3(0.22f, 0.65f, 0.22f));
+                }
+                float progress = Mathf.Clamp01(age / fallDuration);
+                if (drops[i])
+                    drops[i].position = positions[i] + Vector3.up * (rainHeight * (1f - progress * progress));
+                if (progress < 1f) continue;
 
-            if (rainImpactPrefab)
-                Instantiate(rainImpactPrefab, positions[i], Quaternion.identity);
-
-            DamagePlayerInRadius(positions[i], rainImpactRadius, rainDamage);
-
-            yield return new WaitForSeconds(0.08f);
+                impacted[i] = true;
+                remaining--;
+                pool.Recoger(drops[i]);
+                pool.Recoger(shadowTrans[i]);
+                CrearVisualDeLluvia(positions[i], 0.3f);
+                DamagePlayerInRadius(positions[i], rainImpactRadius, rainDamage);
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
         }
+        yield return new WaitForSeconds(0.3f);
+        RecogerLluvia();
+    }
+
+    // El prefab compartido puede incluir lógica de proyectil: aquí solo aporta el aspecto.
+    // La oleada controla el movimiento y aplica el daño una única vez al tocar el suelo.
+    private Transform CrearVisualDeLluvia(Vector3 posicion, float vida)
+    {
+        var pool = VfxPoolService.Instance;
+        if (!pool || !rainImpactPrefab) return null;
+        Transform efecto = pool.Play(rainImpactPrefab, posicion, Quaternion.identity, vida);
+        if (!efecto) return null;
+        foreach (var proyectil in efecto.GetComponentsInChildren<EnemyProjectile>(true))
+            proyectil.enabled = false;
+        foreach (var collider in efecto.GetComponentsInChildren<Collider>(true))
+            collider.enabled = false;
+        foreach (var cuerpo in efecto.GetComponentsInChildren<Rigidbody>(true))
+        {
+            cuerpo.isKinematic = true;
+            cuerpo.detectCollisions = false;
+        }
+        _efectosLluvia.Add((efecto, pool.ObtenerUso(efecto)));
+        return efecto;
     }
 
     private void DamagePlayerInRadius(Vector3 center, float radius, float damage)
@@ -1422,6 +1509,8 @@ public class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         }
 
         StopAllCoroutines();
+        RecogerLluvia();
+        CaerSiEstabaEnElAire();
         PlayAnimation(AnimDie);
 
         var colliders = GetComponentsInChildren<Collider>();

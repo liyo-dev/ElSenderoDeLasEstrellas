@@ -14,7 +14,7 @@ using UnityEngine;
 /// empujón, salen chispas, se enciende un anillo del círculo (de dentro afuera), el círculo gira más
 /// rápido y suena una nota más aguda.</item>
 /// <item>Al cerrar: lanzado (el orbe sale disparado al frente, destello, el círculo se encoge y sube),
-/// fallo (parpadea en rojo y se apaga), golpe (revienta) o cancelado (se apaga suave).</item>
+/// fallo (parpadea en rojo y se apaga) o cancelado (se apaga suave).</item>
 /// </list>
 /// Las animaciones usan tiempo real para que el círculo «salte» durante el frenazo. Ver INC-643.
 /// </summary>
@@ -34,8 +34,6 @@ public class PresentacionDelCombo : MonoBehaviour
     [SerializeField, Min(0f)] private float bajadaAlLanzar = 0.12f;
     [Tooltip("Segundos que tarda en bajar si la secuencia falla.")]
     [SerializeField, Min(0f)] private float bajadaAlFallar = 0.25f;
-    [Tooltip("Segundos que tarda en caer si le golpean.")]
-    [SerializeField, Min(0f)] private float bajadaAlRomperse = 0.08f;
     [Tooltip("Segundos que tarda en bajar si se cierra sin teclear.")]
     [SerializeField, Min(0f)] private float bajadaAlCancelar = 0.2f;
 
@@ -117,7 +115,6 @@ public class PresentacionDelCombo : MonoBehaviour
     [Header("Cierre (segundos)")]
     [SerializeField, Min(0.01f)] private float cierreAlLanzar = 0.3f;
     [SerializeField, Min(0.01f)] private float cierreAlFallar = 0.3f;
-    [SerializeField, Min(0.01f)] private float cierreAlRomperse = 0.1f;
     [SerializeField, Min(0.01f)] private float cierreAlCancelar = 0.2f;
     [Tooltip("Metros que sube el círculo mientras se desvanece al lanzar.")]
     [SerializeField] private float subidaAlLanzar = 0.5f;
@@ -359,13 +356,6 @@ public class PresentacionDelCombo : MonoBehaviour
                 DetenerViento(0.2f);
                 Sonar(sfxFallo);
                 break;
-            case ComboCastController.Result.Interrupted:
-                _duracionCierre = cierreAlRomperse;
-                Soltar(bajadaAlRomperse);
-                SoltarManos(0.08f);
-                DetenerViento(0.05f);
-                Sonar(sfxFallo);
-                break;
             default:
                 _duracionCierre = cierreAlCancelar;
                 Soltar(bajadaAlCancelar);
@@ -412,10 +402,6 @@ public class PresentacionDelCombo : MonoBehaviour
                     escala = 1f + 0.06f * k;
                     alfa = (1f - k) * (Mathf.Sin(_tCierre * 70f) > -0.2f ? 1f : 0.2f);
                     temblor = 0.05f * (1f - k);
-                    break;
-                case ComboCastController.Result.Interrupted:
-                    escala = 1f + 0.25f * k;
-                    alfa = 1f - k;
                     break;
                 default:
                     escala = 1f;
@@ -484,7 +470,6 @@ public class PresentacionDelCombo : MonoBehaviour
             switch (_cierre)
             {
                 case ComboCastController.Result.Cast: tam *= 1f + 0.6f * k; break;
-                case ComboCastController.Result.Interrupted: tam *= 1f + 2f * k; break;
                 default: tam *= 1f - 0.7f * k; break;
             }
         }

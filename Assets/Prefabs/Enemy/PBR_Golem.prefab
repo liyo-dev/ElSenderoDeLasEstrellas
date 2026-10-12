@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 4621281258234471913}
   - component: {fileID: 4791041056768204728}
   - component: {fileID: 2450120384487338745}
+  - component: {fileID: 444673835587567709}
   m_Layer: 7
   m_Name: PBR_Golem
   m_TagString: Boss
@@ -194,6 +195,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb1e2868dc149a8b552cd8fd7939c73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GolemBossAI
+  segundosHundido: 4
+  profundidadHundido: 0.9
+  frenoEnBarro: 0.5
+  respiroTrasHundirse: 8
+  tinteDeBarro: {r: 0.62, g: 0.5, b: 0.38, a: 1}
   player: {fileID: 0}
   animator: {fileID: 2739644448425637822}
   damageable: {fileID: 6789971062230068163}
@@ -237,6 +243,11 @@ MonoBehaviour:
   punchDamage: 50
   punchRadius: 3
   punchKnockback: 12
+  derribo:
+    activo: 1
+    distancia: 4
+    altura: 2
+    duracion: 0.7
   punchImpactVFX: {fileID: 1758473627833946668, guid: 9b21333b068a5084ba09535839bee3c8, type: 3}
   chargeCooldown: 10
   chargeOnPhaseChangeChance: 0.7
@@ -296,19 +307,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
   bossNameId: BOSS_GOLEM_HEALTHBAR_NAME
   bossName: Boss Golem
-  barSize: {x: 400, y: 40}
-  barPosition: {x: 0, y: -30}
-  healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
-  warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  criticalColor: {r: 1, g: 0, b: 0, a: 1}
-  warningThreshold: 0.5
   criticalThreshold: 0.25
   animateHealthChanges: 1
   animationSpeed: 5
   fadeInDuration: 0.4
   fadeOutDuration: 0.5
-  colorMarcaFase: {r: 1, g: 0.85, b: 0.3, a: 0.95}
-  colorMarcaSuperada: {r: 1, g: 1, b: 1, a: 0.25}
 --- !u!114 &6115329083915449752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -469,6 +472,31 @@ MonoBehaviour:
   umbral: 0.1
   vfxSello: {fileID: 3744133877081091469, guid: a2a060732547fe64581bb0cb3c2bdf1d, type: 3}
   puntoSello: {fileID: 0}
+--- !u!114 &444673835587567709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939999298480460806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e97ff732362944fb0a1a576a4f30cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FuegoQueAlimenta
+  elemento: 0
+  margen: 0.6
+  pausaEntreSubidas: 0.5
+  nivelesMaximos: 3
+  tamanoPorNivel: 0.12
+  alcancePorNivel: 0.15
+  danoPorNivel: 0.2
+  segundosPorNivel: 9
+  velocidadDeCrecer: 0.6
+  colorDeFuego: {r: 1, g: 0.45, b: 0.18, a: 1}
+  tinteMaximo: 0.6
+  luzPorNivel: 2.5
+  vfxAlCrecer: {fileID: 358637981425055526, guid: 8eb503696b886e04faff8fc0f480d473, type: 3}
 --- !u!1 &1151455076570608189
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -346,7 +346,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: PlayerHUDV2.Instance es null al bloquear la cinemática — el HUD no se ocultará (fallo silencioso con ?.).");
 #endif
         PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(true);
+        MinimapController.Ocultar(this);
         // FIX INC-058: el icono del período del día (HUD) también debe ocultarse durante secuencias.
         TimeOfDayIndicator.Instance?.Hide();
     }
@@ -381,7 +381,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
         PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(false);
+        MinimapController.Mostrar(this);
         // FIX INC-058: restaurar el icono del período del día al terminar la secuencia.
         TimeOfDayIndicator.Instance?.Show();
         ResolveActionManager()?.PopMode(ActionMode.Cinematic);

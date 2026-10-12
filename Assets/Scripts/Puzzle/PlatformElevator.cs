@@ -62,6 +62,11 @@ public class PlatformElevator : MonoBehaviour
         if (_rb == null) _rb = gameObject.AddComponent<Rigidbody>();
         _rb.isKinematic = true;
         _rb.useGravity = false;
+
+        // Posiciones en Awake (no en Start): una restauración de partida (EstadoPersistente,
+        // ActivationCounter) puede llamar a TeleportToRaised antes del Start de este objeto.
+        _originalPosition = transform.position;
+        _raisedPosition = _originalPosition + Vector3.up * raiseHeight;
     }
 
     private void Start()
@@ -72,13 +77,9 @@ public class PlatformElevator : MonoBehaviour
         var rbJugador = jugador != null ? jugador.GetComponent<Rigidbody>() : null;
         _rb.interpolation = rbJugador != null ? rbJugador.interpolation : RigidbodyInterpolation.Interpolate;
 
-        // Guardar posición original ACTUAL (donde está ahora)
-        _originalPosition = transform.position;
-        _raisedPosition = _originalPosition + Vector3.up * raiseHeight;
-        
         // Sincronizar el flag isRaised con la posición real
         // Si está marcado en Inspector pero no está en posición elevada, teletransportar
-        if (isRaised)
+        if (isRaised && (transform.position - _raisedPosition).sqrMagnitude > 0.0001f)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[PlatformElevator] {name} está marcado como 'Is Raised', teletransportando a posición elevada");

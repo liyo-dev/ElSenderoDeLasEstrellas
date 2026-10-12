@@ -121,7 +121,7 @@ public class LorePopupUI : MonoBehaviour
 
     /// <summary>
     /// Oculta el HUD del jugador (PlayerHUDV2, contador de referencias: seguro llamarlo aunque
-    /// otro sistema ya lo tenga oculto) y el minimapa (MinimapController.SetHiddenByCinematic,
+    /// otro sistema ya lo tenga oculto) y el minimapa (MinimapController.Ocultar/Mostrar con clave propia,
     /// pensado para esto: ocultarlo fuera de los casos ya cubiertos de interior/batalla/menú).
     /// </summary>
     private void HideHUDAndMinimap()
@@ -129,7 +129,7 @@ public class LorePopupUI : MonoBehaviour
         if (_hudAndMinimapHidden) return;
         _hudAndMinimapHidden = true;
         Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(true);
+        MinimapController.Ocultar(this);
     }
 
     /// <summary>Contrapartida de HideHUDAndMinimap(). Idempotente si ya se mostraron.</summary>
@@ -138,7 +138,7 @@ public class LorePopupUI : MonoBehaviour
         if (!_hudAndMinimapHidden) return;
         _hudAndMinimapHidden = false;
         Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(false);
+        MinimapController.Mostrar(this);
     }
 
     // ── MenuManager (pausa / cualquier menú) ────────────────────────────────────

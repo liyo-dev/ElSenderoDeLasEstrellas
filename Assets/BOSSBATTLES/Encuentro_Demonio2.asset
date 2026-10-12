@@ -24,7 +24,7 @@ MonoBehaviour:
     magia: 10
     ataque: 2
     defensa: 2
-  guion: {fileID: 0}
+  guion: {fileID: 11400000, guid: c6c0dce1e7ed3f14b83aeac6a2d007e9, type: 2}
   spawnProfiles:
   - label: Por defecto
     distanceFactor: 0.5

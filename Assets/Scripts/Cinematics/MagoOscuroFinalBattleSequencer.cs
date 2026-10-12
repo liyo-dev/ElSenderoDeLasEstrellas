@@ -661,7 +661,7 @@ public class MagoOscuroFinalBattleSequencer : CinematicSequencerBase
         // por su cuenta al terminar su propia secuencia — se vuelve a ocultar porque seguimos
         // dentro de esta cinemática (mismas tres llamadas que CinematicSequencerBase.LockCinematic()).
         PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(true);
+        MinimapController.Ocultar(this);
         TimeOfDayIndicator.Instance?.Hide();
 
         // Vuelta a la realidad.

@@ -21,12 +21,25 @@ public sealed class LanzaderaDelLab : MonoBehaviour
     [SerializeField, Min(0f)] private float velocidad = 12f;
 
     private float _siguiente;
+    private CargaDeDisparo _carga;
+    private System.Action<GameObject, Vector3> _inicializar;
+
+    private void Awake()
+    {
+        _carga = GetComponent<CargaDeDisparo>() ?? gameObject.AddComponent<CargaDeDisparo>();
+        _inicializar = Inicializar;
+    }
+
+    private void OnDisable()
+    {
+        if (_carga != null) _carga.Cancelar();
+    }
 
     public void Configurar(GameObject prefab) => proyectil = prefab;
 
     private void Update()
     {
-        if (proyectil == null || Time.time < _siguiente) return;
+        if (proyectil == null || _carga.EnCarga || Time.time < _siguiente) return;
         var jugador = PlayerService.Player;
         if (jugador == null) return;
 
@@ -34,11 +47,19 @@ public sealed class LanzaderaDelLab : MonoBehaviour
         Vector3 hacia = jugador.transform.position + Vector3.up - origen;
         if (hacia.sqrMagnitude > alcance * alcance || hacia.sqrMagnitude < 0.01f) return;
 
-        _siguiente = Time.time + cadencia;
-        var disparo = Instantiate(proyectil, origen, Quaternion.LookRotation(hacia));
+        if (_carga.Cargar(proyectil, boca != null ? boca : transform, boca != null ? Vector3.zero : Vector3.up,
+            jugador.transform, velocidad > 0f ? velocidad : 12f, _inicializar))
+            _siguiente = Time.time + Mathf.Max(cadencia, _carga.SegundosDeCarga + 0.1f);
+    }
+
+    private void Inicializar(GameObject disparo, Vector3 direccion)
+    {
         var p = disparo.GetComponentInChildren<EnemyProjectile>();
         if (p == null) { Destroy(disparo); return; }
+        var rb = p.GetComponent<Rigidbody>();
+        if (rb != null) rb.isKinematic = false;
+        p.AsignarLanzador(gameObject);
         if (velocidad > 0f) p.SetSpeed(velocidad);
-        p.Initialize(hacia.normalized, dano);
+        p.Initialize(direccion, dano);
     }
 }

@@ -120,7 +120,7 @@ public sealed class CamarasDeGuion : Sendero.Core.Feedback.ICameraShakeProvider
 
         // Foco: los sujetos del plano, o un punto fijo.
         e.grupo.Targets.Clear();
-        for (int i = 0; i < plano.sujetos.Count; i++)
+        for (int i = 0; i < plano.sujetos.Count && plano.focos.Count == 0; i++)
         {
             if (!_transformPorId.TryGetValue(plano.sujetos[i], out var t) || t == null) continue;
             float peso = i < plano.pesos.Count ? plano.pesos[i] : 1f;
@@ -128,7 +128,7 @@ public sealed class CamarasDeGuion : Sendero.Core.Feedback.ICameraShakeProvider
         }
         if (e.grupo.Targets.Count == 0)
         {
-            e.focoFijo.position = plano.focoFijo;
+            e.focoFijo.position = plano.focos.Count > 0 ? Interpolar.Posicion(plano.focos, plano.t0) : plano.focoFijo;
             e.grupo.Targets.Add(new CinemachineTargetGroup.Target { Object = e.focoFijo, Weight = 1f, Radius = 0.5f });
             e.compositor.TargetOffset = Vector3.zero;
         }
@@ -191,6 +191,7 @@ public sealed class CamarasDeGuion : Sendero.Core.Feedback.ICameraShakeProvider
         if (_plano == null || _activo < 0) return;
         var e = _equipos[_activo];
         e.go.transform.position = _plano.PosicionEn(t);
+        if (_plano.focos.Count > 0) e.focoFijo.position = Interpolar.Posicion(_plano.focos, t);
         if (_plano.lenteFinal > 0.1f && _plano.t1 > _plano.t0)
         {
             var lente = e.cam.Lens;

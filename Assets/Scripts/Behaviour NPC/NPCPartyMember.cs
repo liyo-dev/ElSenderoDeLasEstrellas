@@ -435,7 +435,7 @@ namespace Game.NPC
         /// </summary>
         public void StartFollowing()
         {
-            if (_npcManager?.Brain == null) return;
+            if (_npcManager?.Brain == null || EstaCaido) return;
 
             // Solo cambiar a FollowState si no estamos en combate/cinemática.
             // ✅ FIX: añadido AnySequenceActive — ver comentario detallado en Update().
@@ -452,7 +452,7 @@ namespace Game.NPC
         /// </summary>
         public void StartFollowingIgnorePartyCheck()
         {
-            if (_npcManager?.Brain == null) return;
+            if (_npcManager?.Brain == null || EstaCaido) return;
             // ✅ FIX: añadido AnySequenceActive — ver comentario detallado en Update().
             if (!_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                 && !CinematicSequencerBase.AnySequenceActive)
@@ -638,6 +638,9 @@ namespace Game.NPC
                 return;
             }
 
+            // Un compañero caído no lucha hasta que lo levantan (INC-717).
+            if (EstaCaido) return;
+
             // No interrumpir si el jugador está controlando directamente este NPC
             if (ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.HiddenNpc == this)
             {
@@ -664,11 +667,36 @@ namespace Game.NPC
         }
 
         /// <summary>
+        /// Está caído en combate (CuerpoDelGrupo, INC-717): no lucha ni sigue hasta que lo levantan.
+        /// </summary>
+        public bool EstaCaido => TryGetComponent(out CuerpoDelGrupo cuerpo) && cuerpo.Caido;
+
+        /// <summary>
+        /// Tras levantarse de una caída: vuelve al combate si sigue habiendo enemigos, o a seguir
+        /// al jugador (o a quedarse quieto si el grupo está en modo libre). Ver INC-717.
+        /// </summary>
+        public void VolverAlCombateOSeguir()
+        {
+            if (_npcManager?.Brain == null || EstaCaido) return;
+            Transform enemigo = null;
+            foreach (var go in ActiveCombatRegistry.GetAllInCombat())
+            {
+                if (go == null || go.GetComponent<NPCPartyMember>() != null) continue;
+                enemigo = go.transform;
+                break;
+            }
+            if (enemigo != null) { OnPlayerEnteredCombat(enemigo); return; }
+            _npcManager.Context.IsInCombat = false;
+            if (PartyControlManager.Instance?.IsPartyFollowing ?? true) StartFollowingIgnorePartyCheck();
+            else _npcManager.ForceIdle();
+        }
+
+        /// <summary>
         /// Llamado cuando el jugador sale del combate.
         /// </summary>
         internal void OnPlayerExitedCombat()
         {
-            if (_npcManager == null) return;
+            if (_npcManager == null || EstaCaido) return;
             
             // Si estaba en party antes del combate, volver a seguir
             if (_wasInPartyBeforeCombat && _isInParty)

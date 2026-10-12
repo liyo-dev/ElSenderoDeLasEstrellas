@@ -51,6 +51,9 @@ public class BuildVersionIncrementer : IPreprocessBuildWithReport
 
     public void OnPreprocessBuild(BuildReport report)
     {
+        // Unity puede continuar con otros callbacks tras un fallo de preprocess.
+        // La versión solo se modifica si las notas pasan su validación compartida.
+        PatchNotesBuildGuard.ValidarNotas();
         if (SessionState.GetBool(SkipNextBuildKey, false))
         {
             SessionState.EraseBool(SkipNextBuildKey);

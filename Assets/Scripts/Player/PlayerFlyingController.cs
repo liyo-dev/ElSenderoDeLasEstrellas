@@ -47,6 +47,10 @@ public class PlayerFlyingController : MonoBehaviour
     [SerializeField] private float castPoseCrossfade = 0.1f;
     [Tooltip("Tras disparar, la pose de caída se mantiene hasta que se avanza y han pasado estos segundos sin disparar; quieto en el aire se queda en caída (Raúl, INC-492).")]
     [SerializeField] private float castPoseRelease = 1f;
+    [Tooltip("Segundos del fundido entre los estados de vuelo (quieto, avance, picado).")]
+    [SerializeField, Min(0f)] private float fundidoEntreEstadosDeVuelo = 0.25f;
+    [Tooltip("Segundos que se queda en la pose de vuelo quieto al despegar antes de pasar a la de avance o picado, aunque se mueva el stick.")]
+    [SerializeField, Min(0f)] private float esperaAntesDeAvanzar = 0.35f;
 
     [Header("Movimiento")]
     [SerializeField] private float horizontalSpeed = 12f;
@@ -67,6 +71,8 @@ public class PlayerFlyingController : MonoBehaviour
     private bool _castPosePrevGrounded;
     private float _lastCastTime = -999f;
     private float _castPoseBlendUntil;
+    private string _estadoDeVueloPedido;   // último estado de vuelo pedido al Animator (null = ninguno)
+    private float _entroEnVueloEn;
     private Rigidbody _rigidbody;
     private vThirdPersonController _controller;
     private Coroutine _entrada;
@@ -151,6 +157,14 @@ public class PlayerFlyingController : MonoBehaviour
 
     public bool IsFlying => _isFlying;
     public bool IsBoosting => _isBoosting;
+
+    /// <summary>Corta el vuelo (o la entrada en vuelo) desde fuera, p. ej. una zona donde no se
+    /// puede volar. El jugador cae con normalidad.</summary>
+    public void TerminarVuelo()
+    {
+        if (_entrada != null) { StopCoroutine(_entrada); _entrada = null; }
+        if (_isFlying) ExitFlight();
+    }
 
     void Awake()
     {
@@ -404,6 +418,8 @@ public class PlayerFlyingController : MonoBehaviour
          _visualRootHasBase = false; // Resetear bobbing visual para que capture la posición base
         _isBoosting = false;
         _justEnteredFlight = true;
+        _entroEnVueloEn = Time.time;
+        _estadoDeVueloPedido = null;
         _jumpHeld = false; // evitar que el primer frame se considere dive por mantener salto
         if (_inputController != null)
             _inputController.CancelPendingJump();
@@ -489,6 +505,7 @@ public class PlayerFlyingController : MonoBehaviour
         _isFlying = false;
         _inCastPose = false;
         _castPoseBlendUntil = 0f;
+        _estadoDeVueloPedido = null;
         _currentPlanarSpeed = 0f;
         _currentPitch = 0f;
         _isBoosting = false;
@@ -650,7 +667,9 @@ public class PlayerFlyingController : MonoBehaviour
 
         if (_justEnteredFlight)
         {
+            // Se repite la petición del despegue por si en el mismo frame otro sistema cambió el estado.
             _justEnteredFlight = false;
+            _estadoDeVueloPedido = null;
             PlayFlightState(flyIdleState);
             return;
         }
@@ -674,6 +693,7 @@ public class PlayerFlyingController : MonoBehaviour
                 _inCastPose = true;
                 _castPosePrevGrounded = _animator.GetBool(groundedHash);
                 _animator.CrossFadeInFixedTime(castPoseState, castPoseCrossfade, locomotionLayerIndex);
+                _estadoDeVueloPedido = castPoseState;
             }
             _animator.SetBool(groundedHash, false);
             return;
@@ -684,6 +704,7 @@ public class PlayerFlyingController : MonoBehaviour
             _animator.SetBool(Invector.vCharacterController.vAnimatorParameters.IsGrounded, _castPosePrevGrounded);
             string next = ResolveFlightState();
             _animator.CrossFadeInFixedTime(next, castPoseCrossfade, locomotionLayerIndex);
+            _estadoDeVueloPedido = next;
             if (_inputController != null)
                 _inputController.DisableVerticalCameraRotation = !string.Equals(next, flyIdleState, StringComparison.Ordinal);
             _castPoseBlendUntil = Time.time + castPoseCrossfade;
@@ -694,9 +715,15 @@ public class PlayerFlyingController : MonoBehaviour
         PlayFlightState(ResolveFlightState());
     }
 
-    /// <summary>Estado de vuelo según el movimiento: picado, avance o quieto.</summary>
+    /// <summary>
+    /// Estado de vuelo según el movimiento: picado, avance o quieto. Al despegar se queda quieto
+    /// 'esperaAntesDeAvanzar' aunque se mueva el stick: la pose de avance es horizontal y, si entra
+    /// nada más despegar corriendo, se ve tumbarse de golpe. Ver INC-697.
+    /// </summary>
     private string ResolveFlightState()
     {
+        if (Time.time - _entroEnVueloEn < esperaAntesDeAvanzar) return flyIdleState;
+
         float verticalVel = _rigidbody != null ? _rigidbody.linearVelocity.y : 0f;
         bool diving = (!_isPhysicsBobbingIdle && verticalVel < -0.5f) || _jumpHeld;
         bool stickMoved = _moveInput.sqrMagnitude > 0.01f;
@@ -709,11 +736,16 @@ public class PlayerFlyingController : MonoBehaviour
         return useMove ? flyMoveState : flyIdleState;
     }
 
+    /// Pasa al estado de vuelo con un fundido. Pedir el mismo estado otra vez no hace nada, para no
+    /// reiniciar la transición en cada frame. Ver INC-697.
     private void PlayFlightState(string stateName)
     {
         if (string.IsNullOrEmpty(stateName) || _animator == null)
             return;
-        _animator.Play(stateName, locomotionLayerIndex);
+        if (string.Equals(stateName, _estadoDeVueloPedido, StringComparison.Ordinal))
+            return;
+        _estadoDeVueloPedido = stateName;
+        _animator.CrossFadeInFixedTime(stateName, fundidoEntreEstadosDeVuelo, locomotionLayerIndex);
 
         // Allow vertical camera rotation only in fly idle
         bool isIdle = string.Equals(stateName, flyIdleState, StringComparison.Ordinal);

@@ -126,7 +126,7 @@ public class HoldToSkipUI : MonoBehaviour
             buttonIcon.color = c;
         }
 
-        targetAlpha = showOnlyWhileHolding ? 0f : 1f;
+        FijarAlfaObjetivo(showOnlyWhileHolding ? 0f : 1f);
         ApplyAlphaInstant(targetAlpha);
     }
 
@@ -296,6 +296,7 @@ public class HoldToSkipUI : MonoBehaviour
 
         holdAction = null;
         ResetHold();
+        MinimapController.Mostrar(this);
     }
 
     void Update()
@@ -397,7 +398,7 @@ public class HoldToSkipUI : MonoBehaviour
         heldTime = 0f;
         completed = false;
         if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
-        if (showOnlyWhileHolding) targetAlpha = 1f;
+        if (showOnlyWhileHolding) FijarAlfaObjetivo(1f);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log("[HoldToSkipUI] 🎮 Input STARTED - Botón presionado");
@@ -412,7 +413,7 @@ public class HoldToSkipUI : MonoBehaviour
             heldTime = 0f;
             if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
         }
-        if (showOnlyWhileHolding) targetAlpha = 0f;
+        if (showOnlyWhileHolding) FijarAlfaObjetivo(0f);
         
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[HoldToSkipUI] 🎮 Input CANCELED - Botón soltado (completed={completed})");
@@ -425,8 +426,15 @@ public class HoldToSkipUI : MonoBehaviour
         completed = false;
         heldTime = 0f;
         if (fillOverlayIcon) fillOverlayIcon.fillAmount = 0f;
-        targetAlpha = showOnlyWhileHolding ? 0f : 1f;
+        FijarAlfaObjetivo(showOnlyWhileHolding ? 0f : 1f);
         ApplyAlphaInstant(targetAlpha);
+    }
+
+    private void FijarAlfaObjetivo(float a)
+    {
+        targetAlpha = a;
+        if (isActiveAndEnabled && a > 0f) MinimapController.Ocultar(this);
+        else MinimapController.Mostrar(this);
     }
 
     private void ApplyAlphaInstant(float a)

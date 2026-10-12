@@ -52,6 +52,18 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
             return;
         }
 
+        ValidarNotas();
+
+        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
+        string datePath = Path.Combine(projectRoot, BuildDateFile);
+        File.WriteAllText(datePath, PatchNotesDateFormatter.FormatSpanishDate(System.DateTime.Now));
+        AssetDatabase.ImportAsset(BuildDateFile);
+    }
+
+    /// Valida sin modificar archivos ni consumir el permiso de build de pruebas.
+    public static void ValidarNotas()
+    {
+        if (BuildVersionIncrementer.SeSaltaraElProximoBuild) return;
         string projectRoot = Directory.GetParent(Application.dataPath).FullName;
         string currentEntryPath = Path.Combine(projectRoot, CurrentEntryFile);
 
@@ -74,9 +86,6 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
                 "pruebas que no vas a publicar).");
         }
 
-        string datePath = Path.Combine(projectRoot, BuildDateFile);
-        File.WriteAllText(datePath, PatchNotesDateFormatter.FormatSpanishDate(System.DateTime.Now));
-        AssetDatabase.ImportAsset(BuildDateFile);
     }
 
     public void OnPostprocessBuild(BuildReport report)

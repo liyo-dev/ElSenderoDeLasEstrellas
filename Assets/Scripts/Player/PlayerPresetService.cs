@@ -236,7 +236,7 @@ public class PlayerPresetService : MonoBehaviour
         var activeSlot = PartyControlManager.Instance?.ActiveSlot ?? PartyControlManager.CharacterSlot.Will;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // Guardado tras el mismo patrón que otros logs del proyecto (p.ej. CloudCoverSpawner):
+        // Guardado tras el mismo patrón que otros logs del proyecto:
         // el ConvertAll+string.Join alocaba en cada cambio de personaje/apariencia incluso en build
         // final, donde nadie lee la consola. Ahora solo se construye el string en Editor/dev builds.
         Debug.Log($"[PlayerPresetService] 🎨 ApplyAppearanceFromPreset — preset='{preset.name}' activeSlot={activeSlot} entries=[{string.Join(", ", entries.ConvertAll(e => $"{e.category}:{e.partName}"))}] builder={_appearanceBuilder.gameObject.name}");
@@ -512,6 +512,13 @@ public class PlayerPresetService : MonoBehaviour
     private void ApplyManaFromPreset(PlayerPresetSO preset)
     {
         if (!preset) return;
+        // El maná del preset es el de Will: con otro personaje al mando, el cuerpo lleva el suyo
+        // (SaludDelGrupo, INC-717).
+        if (ControlDelJugador.Activo != PartyControlManager.CharacterSlot.Will && SaludDelGrupo.Instance != null)
+        {
+            SaludDelGrupo.Instance.CargarManaDelActivo();
+            return;
+        }
         if (_manaPool == null)
         {
             // Obtener ManaPool directamente desde el ServiceLocator
@@ -590,6 +597,19 @@ public class PlayerPresetService : MonoBehaviour
                         //Debug.Log("[PlayerPresetService] Preset maxMP was 0 and no spells found; using default maxMP=50 to satisfy preset currentMP");
                     }
                  }
+             }
+
+             // El preset guarda solo la magia de base; lo que suma el equipo (la capa, por ejemplo) va
+             // encima, igual que en EstadisticasDelPersonaje. Sin esto, cada vez que se aplica el
+             // preset (al cambiar de ropa en el menú, al desbloquear algo...) el maná máximo volvía a
+             // la base y los bonos de magia del equipo se perdían, aunque la prenda siguiera puesta.
+             float bonoMagia = EstadisticasDelPersonaje.Bonos.magia;
+             if (bonoMagia != 0f)
+             {
+                 maxMP = Mathf.Max(0f, maxMP + bonoMagia);
+                 // currentMP se recortó arriba contra la base: el maná actual guardado puede incluir
+                 // la parte del bono (GameBootProfile guarda el maná actual tal cual).
+                 currentMP = Mathf.Clamp(Mathf.Max(currentMP, preset.currentMP), 0f, maxMP);
              }
 
              _manaPool.Init(maxMP, currentMP);

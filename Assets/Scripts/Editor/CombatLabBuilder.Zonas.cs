@@ -28,6 +28,7 @@ public static partial class CombatLabBuilder
         CrearZonaAgua(geometria, mecanismos, suelo, muro, agua);
         CrearZonaVuelo(geometria, suelo, plataforma);
         CrearGeometriaDeSaltos(geometria, suelo, muro, plataforma);
+        CrearKitDePuzles(geometria, suelo, muro, plataforma, madera);
     }
 
     // ── Oeste: plataformeo ────────────────────────────────────────────────
@@ -75,7 +76,8 @@ public static partial class CombatLabBuilder
         var zona = Grupo("Zona este — puzles", g);
         var piezas = Grupo("Puzles", mecanismos);
         CrearCubo("Suelo", zona, new Vector3(32f, -0.25f, 1f), new Vector3(36f, 0.5f, 36f), suelo, CapaSuelo);
-        CrearCubo("Muro este", zona, new Vector3(50f, 1.5f, 1f), new Vector3(0.5f, 3f, 36f), muro);
+        // Hueco en el centro: paso al kit de puzles (CombatLabBuilder.KitDePuzles.cs).
+        CrearMuroConHueco("Muro este", zona, new Vector3(50f, 1.5f, 1f), 36f, false, muro);
         // Puerta al norte (x = 32): paso andando a la zona de saltos y volteretas.
         CrearMuroConHueco("Muro norte", zona, new Vector3(32f, 1.5f, 19f), 36f, true, muro);
         CrearCubo("Muro sur", zona, new Vector3(32f, 1.5f, -17f), new Vector3(36f, 3f, 0.5f), muro);

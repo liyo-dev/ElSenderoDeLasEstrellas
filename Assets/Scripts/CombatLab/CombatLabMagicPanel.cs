@@ -118,60 +118,77 @@ public sealed class CombatLabMagicPanel : MonoBehaviour, ISeccionDelLab
         if (GUILayout.Button("Recargar maná y carga de equipo", EstiloDelLab.Boton)) RefillTestResources();
         if (GUILayout.Button("Aprender el grimorio entero", EstiloDelLab.Boton)) AprenderGrimorioEntero();
         GUILayout.EndHorizontal();
+        DibujarAmanecer();
 
         GUILayout.Label($"Habilidades · Maná {GetManaReadout()}", EstiloDelLab.Titulo);
         if (_actionManager != null)
         {
             GUILayout.BeginHorizontal();
-            DrawAbilityToggle("Magia", 0);
-            DrawAbilityToggle("Salto", 1);
-            DrawAbilityToggle("Vuelo", 2);
+            DrawAbilityToggle("Magia", AbilityKey.Magic);
+            DrawAbilityToggle("Salto", AbilityKey.Jump);
+            DrawAbilityToggle("Vuelo", AbilityKey.Fly);
+            DrawAbilityToggle("Nado", AbilityKey.Swim);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            DrawAbilityToggle("Trepar", AbilityKey.Climb);
+            DrawAbilityToggle("Correr", AbilityKey.Sprint);
+            DrawAbilityToggle("Escudo", AbilityKey.Shield);
             GUILayout.EndHorizontal();
         }
         if (!string.IsNullOrEmpty(_status)) GUILayout.Label(_status, EstiloDelLab.Nota);
     }
 
-    private void DrawAbilityToggle(string label, int abilityIndex)
+    /// Amanecer se aprende en la batalla final; aquí se da o se quita para probarlo (INC-724).
+    private void DibujarAmanecer()
     {
-        bool enabled = abilityIndex switch
-        {
-            0 => _actionManager.AllowMagic,
-            1 => _actionManager.AllowJump,
-            _ => _actionManager.AllowFly
-        };
+        var preset = UnlockService.GetActivePreset();
+        if (preset == null) return;
+        bool aprendido = preset.unlockedSpells != null && preset.unlockedSpells.Contains(SpellId.Amanecer);
+        if (!EstiloDelLab.Opcion($"Amanecer (Y, luego X A B Y): {(aprendido ? "aprendido" : "sin aprender")}", aprendido)) return;
+        if (aprendido) preset.unlockedSpells.Remove(SpellId.Amanecer);
+        else UnlockService.UnlockSpell(SpellId.Amanecer, assignToEmptySlot: false);
+        _status = aprendido ? "Amanecer olvidado." : "Amanecer aprendido: Y y luego X A B Y.";
+    }
 
+    private void DrawAbilityToggle(string label, AbilityKey habilidad)
+    {
+        var actuales = HabilidadesActuales();
+        bool enabled = actuales.Tiene(habilidad);
         if (EstiloDelLab.Opcion($"{label}: {(enabled ? "Sí" : "No")}", enabled))
         {
-            bool magic = _actionManager.AllowMagic;
-            bool jump = _actionManager.AllowJump;
-            bool fly = _actionManager.AllowFly;
-            if (abilityIndex == 0) magic = !magic;
-            else if (abilityIndex == 1) jump = !jump;
-            else fly = !fly;
-            ApplyLabAbilities(magic, jump, fly);
+            actuales.Poner(habilidad, !enabled);
+            ApplyLabAbilities(actuales);
+            _status = $"Habilidad de prueba: {label} {(enabled ? "NO" : "SÍ")}.";
         }
     }
 
+    /// Copia de lo que el jugador tiene ahora mismo permitido.
+    private PlayerAbilities HabilidadesActuales() => new PlayerAbilities
+    {
+        swim = _actionManager.AllowSwim,
+        jump = _actionManager.AllowJump,
+        climb = _actionManager.AllowClimb,
+        fly = _actionManager.AllowFly,
+        sprint = _actionManager.AllowSprint,
+        magic = _actionManager.AllowMagic,
+        shield = _actionManager.AllowShield
+    };
+
     /// Las habilidades se guardan también en el preset de la sesión: si no, la siguiente
     /// re-aplicación del preset (p. ej. equipar en el menú de Start) las devolvería a lo de antes.
-    private void ApplyLabAbilities(bool magic, bool jump, bool fly)
+    private void ApplyLabAbilities(PlayerAbilities abilities)
     {
-        var abilities = new PlayerAbilities
-        {
-            swim = _actionManager.AllowSwim,
-            jump = jump,
-            climb = _actionManager.AllowClimb,
-            fly = fly,
-            sprint = _actionManager.AllowSprint,
-            magic = magic,
-            shield = _actionManager.AllowShield
-        };
         _actionManager.ApplyAbilities(abilities);
 
         var preset = UnlockService.GetActivePreset();
         if (preset != null) preset.abilities = abilities;
 
-        _status = $"Habilidades de prueba: Magia {(magic ? "SI" : "NO")}, Salto {(jump ? "SI" : "NO")}, Vuelo {(fly ? "SI" : "NO")}.";
+        // Quitar el vuelo en pleno vuelo: se cae, igual que en una zona donde no se puede volar.
+        if (!abilities.fly)
+        {
+            var vuelo = _actionManager.GetComponent<PlayerFlyingController>();
+            if (vuelo != null) vuelo.TerminarVuelo();
+        }
     }
 
     private void DrawSlotRow(int slotIndex)

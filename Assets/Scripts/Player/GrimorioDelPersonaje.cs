@@ -60,9 +60,7 @@ public static class GrimorioDelPersonaje
     /// Huracán) y las piezas internas de otro hechizo (el fuego que deja Chispa Ígnea) comparten
     /// biblioteca, pero ni se aprenden ni se equipan.
     public static bool EsDelGrimorio(MagicSpellSO s) =>
-        s != null && s.spellId != SpellId.None
-        && s.spellId != SpellId.MagoOscuroGolpe && s.spellId != SpellId.MagoOscuroGrieta
-        && s.spellId != SpellId.Huracan && s.spellId != SpellId.ChispaIgneaFuego;
+        s != null && s.spellId != SpellId.None && s.enGrimorio;
 
     /// Se equipa como básico (X, rota con LB): proyectiles y haces del grimorio. Zonas,
     /// teletransporte y levitación no.

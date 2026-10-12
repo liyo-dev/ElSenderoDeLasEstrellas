@@ -145,6 +145,13 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     private Color _mpOriginalColor;
     private bool _hpColorCached;
     private bool _mpColorCached;
+    // Último valor pintado (actual, máximo, bono del equipo): el texto solo se rehace si cambia.
+    private Vector3Int _hpPintado = new Vector3Int(int.MinValue, 0, 0);
+    private Vector3Int _mpPintado = new Vector3Int(int.MinValue, 0, 0);
+    private bool _bonosPintados;
+    private static readonly Color DestelloDeSubida = new Color(0.2f, 1f, 0.3f, 1f);
+    private static readonly Color DestelloDeBajada = new Color(1f, 0.35f, 0.35f, 1f);
+    private static readonly Color DestelloDeMagia = new Color(0.3f, 0.7f, 1f, 1f);
 
     [Header("Habilidades")]
     [SerializeField] private GameObject abilitiesRoot;
@@ -876,6 +883,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         _hpTextTween = null;
         _mpTextTween?.Kill();
         _mpTextTween = null;
+        _bonosPintados = false;
         
         // Restaurar colores originales si están cacheados
         if (_hpColorCached && hpText != null)
@@ -1566,6 +1574,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         if (hasStatsText)
         {
             CacheBaseLabelsIfNeeded();
+            var bonos = EstadisticasDelPersonaje.Bonos;
 
             if (levelText != null)
             {
@@ -1586,10 +1595,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 }
 
                 if (hpText != null)
-                {
-                    string hpValue = max > 0f ? $"{Mathf.CeilToInt(cur)} / {Mathf.CeilToInt(max)}" : "?";
-                    hpText.text = string.IsNullOrEmpty(_hpLabel) ? hpValue : $"{_hpLabel} {hpValue}";
-                }
+                    PintarVidaOMagia(hpText, _hpLabel, cur, max, bonos.vida, ref _hpPintado, esVida: true);
                 if (hpBarFill != null)
                     hpBarFill.fillAmount = max > 0f ? Mathf.Clamp01(cur / max) : 0f;
             }
@@ -1607,16 +1613,42 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 }
 
                 if (mpText != null)
-                {
-                    string mpValue = max > 0f ? $"{Mathf.CeilToInt(cur)} / {Mathf.CeilToInt(max)}" : "?";
-                    mpText.text = string.IsNullOrEmpty(_mpLabel) ? mpValue : $"{_mpLabel} {mpValue}";
-                }
+                    PintarVidaOMagia(mpText, _mpLabel, cur, max, bonos.magia, ref _mpPintado, esVida: false);
                 if (mpBarFill != null)
                     mpBarFill.fillAmount = max > 0f ? Mathf.Clamp01(cur / max) : 0f;
             }
         }
 
+        _bonosPintados = hasStatsText;
         UpdateAbilitiesPanel(preset);
+    }
+
+    /// Escribe «actual / máximo» y, si el equipo suma algo, «(+N)» en color. Cuando cambia el
+    /// bono con el menú abierto (al equiparse o quitarse una prenda) destella como al subir en combate.
+    void PintarVidaOMagia(TextMeshProUGUI texto, string etiqueta, float cur, float max, float bono,
+        ref Vector3Int pintado, bool esVida)
+    {
+        var ahora = max > 0f
+            ? new Vector3Int(Mathf.CeilToInt(cur), Mathf.CeilToInt(max), Mathf.RoundToInt(bono))
+            : new Vector3Int(int.MinValue + 1, 0, 0);
+        if (ahora == pintado) return;
+        bool cambiaBono = _bonosPintados && pintado.x != int.MinValue && ahora.z != pintado.z;
+        float antes = pintado.z;
+        pintado = ahora;
+
+        string valor = max > 0f ? $"{ahora.x} / {ahora.y}" : "?";
+        if (max > 0f && ahora.z != 0)
+            valor += " <size=80%>" + TextoDeEstadisticas.ConColor($"({ahora.z:+0;-0})", ahora.z) + "</size>";
+        texto.richText = true;
+        texto.text = string.IsNullOrEmpty(etiqueta) ? valor : $"{etiqueta} {valor}";
+        if (!cambiaBono) return;
+        if (ahora.z > antes)
+        {
+            if (esVida) AnimateHealthRestoreFeedback();
+            else AnimateManaRestoreFeedback();
+        }
+        else if (esVida) AnimarDestello(hpText, ref _hpTextTween, _hpOriginalColor, DestelloDeBajada);
+        else AnimarDestello(mpText, ref _mpTextTween, _mpOriginalColor, DestelloDeBajada);
     }
 
     void CacheBaseLabelsIfNeeded()
@@ -1667,53 +1699,28 @@ public class PlayerEquipmentMenuController : MonoBehaviour
     void AnimateHealthRestoreFeedback()
     {
         if (hpText == null) return;
-
-        // Cachear el color original
-        if (!_hpColorCached)
-        {
-            _hpOriginalColor = hpText.color;
-            _hpColorCached = true;
-        }
-
-        // Matar animación previa si existe
-        _hpTextTween?.Kill();
-
-        // Color verde para indicar curación
-        var healColor = new Color(0.2f, 1f, 0.3f, 1f);
-
-        // Secuencia de animación: escala + color + regreso
-        var sequence = DOTween.Sequence();
-        sequence.Append(hpText.transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, vibrato: 8, elasticity: 0.6f).SetUpdate(true));
-        sequence.Join(hpText.DOColor(healColor, 0.15f).SetUpdate(true));
-        sequence.Append(hpText.DOColor(_hpOriginalColor, 0.25f).SetUpdate(true));
-        
-        _hpTextTween = sequence;
+        if (!_hpColorCached) { _hpOriginalColor = hpText.color; _hpColorCached = true; }
+        AnimarDestello(hpText, ref _hpTextTween, _hpOriginalColor, DestelloDeSubida);
     }
 
     void AnimateManaRestoreFeedback()
     {
         if (mpText == null) return;
+        if (!_mpColorCached) { _mpOriginalColor = mpText.color; _mpColorCached = true; }
+        AnimarDestello(mpText, ref _mpTextTween, _mpOriginalColor, DestelloDeMagia);
+    }
 
-        // Cachear el color original
-        if (!_mpColorCached)
-        {
-            _mpOriginalColor = mpText.color;
-            _mpColorCached = true;
-        }
-
-        // Matar animación previa si existe
-        _mpTextTween?.Kill();
-
-        // Color azul/cyan para indicar restauración de maná
-        var manaColor = new Color(0.3f, 0.7f, 1f, 1f);
-
-        // Secuencia de animación: escala + color + regreso
-        var sequence = DOTween.Sequence();
-        sequence.Append(mpText.transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, vibrato: 8, elasticity: 0.6f).SetUpdate(true));
-        sequence.Join(mpText.DOColor(manaColor, 0.15f).SetUpdate(true));
-        sequence.Append(mpText.DOColor(_mpOriginalColor, 0.25f).SetUpdate(true));
-        
-        _mpTextTween = sequence;
+    /// Escala y color de destello y vuelta al color original.
+    static void AnimarDestello(TextMeshProUGUI texto, ref Tween tween, Color original, Color destello)
+    {
+        if (texto == null) return;
+        tween?.Kill();
+        texto.transform.localScale = Vector3.one;
+        texto.color = original;
+        tween = DOTween.Sequence().SetUpdate(true)
+            .Append(texto.transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, vibrato: 8, elasticity: 0.6f))
+            .Join(texto.DOColor(destello, 0.15f))
+            .Append(texto.DOColor(original, 0.25f));
     }
 
     bool EnsureViews()

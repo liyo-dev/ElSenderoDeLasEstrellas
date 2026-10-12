@@ -195,6 +195,9 @@ internal sealed partial class Horno
         }
         plano.encuadre = Composicion(e, foco);
         plano.descripcion = Describir(e);
+        if (!o.opciones.ContainsKey("altura_foco") && e.focoFijo == null && foco.Any(a => PoseHorizontal(a, Mathf.Lerp(t0, t1, 0.35f))))
+            for (float t = t0; t <= t1 + 0.049f; t += 0.05f)
+                plano.focos.Add(new ClaveDePosicion(Mathf.Min(t, t1), Foco(e, Mathf.Min(t, t1))));
         if (e.tipo != TipoDePlano.Sigue && !o.opciones.ContainsKey("desde"))
             NotasDePlano[plano.t0] = $"coste {e.coste:0}: {e.desglose}";
         if (e.coste >= 1000f) Aviso($"{o}: no hay ángulo limpio para «{plano.descripcion}» (algo tapa la cara). Prueba con desde= o lado=.");
@@ -228,7 +231,8 @@ internal sealed partial class Horno
         if (foco.Count == 0) return e.focoFijo ?? Vector3.zero;
         float alto = e.o.OpF("altura_foco", AlturaDelFoco(e.tipo, foco));
         Vector3 c = Vector3.zero;
-        foreach (var a in foco) c += a.PosEn(t);
+        foreach (var a in foco) c += !e.o.opciones.ContainsKey("altura_foco") && PoseHorizontal(a, t)
+            ? CabezaEn(a, t) - Vector3.up * alto : a.PosEn(t);
         foreach (var x in e.extras) c += x - Vector3.up * alto;
         c /= foco.Count + e.extras.Count;
         return c + Vector3.up * alto;

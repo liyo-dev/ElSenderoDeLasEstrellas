@@ -70,7 +70,10 @@ public sealed class CombatLabBootstrap : MonoBehaviour
         // Panel del LAB y sus pestañas que no dependen de la escena (ver PanelDelLab).
         Asegurar<VueltaAlLab>();
         Asegurar<JukeboxDelLab>();
+        Asegurar<ClimaDelLab>();
         Asegurar<TrucosDelLab>();
+        Asegurar<CaidasDelLab>();
+        Asegurar<PuzlesDelLab>();
         Asegurar<AyudaDelLab>();
         if (FindAnyObjectByType<ViajeDelLab>() == null) gameObject.AddComponent<ViajeDelLab>();
         Asegurar<PanelDelLab>();

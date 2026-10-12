@@ -9,12 +9,8 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public sealed class PlacaDeDerriboDelLab : MonoBehaviour
 {
-    [Tooltip("Metros que sale despedido el jugador (hacia atrás de la placa, su eje Z azul).")]
-    [SerializeField, Min(0f)] private float distancia = 4f;
-    [Tooltip("Altura del vuelo, en metros.")]
-    [SerializeField, Min(0f)] private float altura = 2f;
-    [Tooltip("Segundos que dura el vuelo.")]
-    [SerializeField, Min(0.1f)] private float duracion = 0.7f;
+    [Tooltip("Lanzamiento y derribo que aplica la placa para practicar la recuperación en el aire.")]
+    [SerializeField] private DerriboDelJugador derribo = DerriboDelJugador.Estandar;
     [Tooltip("Segundos sin volver a lanzar tras un derribo (el jugador tiene varios colliders y se levanta encima).")]
     [SerializeField, Min(0f)] private float pausa = 3f;
 
@@ -26,8 +22,10 @@ public sealed class PlacaDeDerriboDelLab : MonoBehaviour
     {
         if (Time.time < _siguiente || !other.CompareTag(GameTags.Player)) return;
         // El golpe viene de delante de la placa: el jugador sale despedido hacia atrás.
-        Vector3 origen = other.transform.position + transform.forward;
-        if (AerialKnockbackReceiver.Derribar(other.gameObject, origen, distancia, altura, duracion))
+        var cuerpo = other.GetComponentInParent<Invector.vCharacterController.vThirdPersonController>();
+        if (cuerpo == null) return;
+        Vector3 origen = cuerpo.transform.position + Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+        if (derribo.Aplicar(other.gameObject, origen))
             _siguiente = Time.time + pausa;
     }
 }

@@ -108,10 +108,17 @@ public class NPCWorldPoint : MonoBehaviour
         _propOriginalLocalPos = prop.localPosition;
         _propOriginalLocalRot = prop.localRotation;
 
-        prop.SetParent(handBone, worldPositionStays: false);
-        prop.localPosition = propHandOffset;
-        prop.localRotation = Quaternion.Euler(propHandRotation);
+        ColocarPropEnMano(prop, handBone, propHandOffset, propHandRotation);
         _propAttached = true;
+    }
+
+    /// Coloca un objeto en un hueso conservando su escala de mundo. Sirve también para secuencias.
+    public static void ColocarPropEnMano(Transform objeto, Transform mano, Vector3 offset, Vector3 giro)
+    {
+        if (objeto == null || mano == null) return;
+        objeto.SetParent(mano, true);
+        objeto.localPosition = offset;
+        objeto.localRotation = Quaternion.Euler(giro);
     }
 
     /// <summary>

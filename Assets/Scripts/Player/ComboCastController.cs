@@ -13,18 +13,21 @@ using Invector.vCharacterController;
 /// <item>Si lo tecleado ya no puede ser ninguna secuencia, se disipa al momento y cuesta
 /// <see cref="fizzleManaCost"/> de maná.</item>
 /// <item>Más de <see cref="inputTimeout"/> sin pulsar: se cierra (gratis si no se había tecleado nada).</item>
-/// <item>Si golpean al jugador, se rompe el círculo.</item>
 /// <item>Tras un combo lanzado hay un enfriamiento compartido (<see cref="comboCooldown"/>).</item>
 /// </list>
 /// Mientras está abierto (<see cref="IsComposing"/>), los demás lectores de botones de combate
 /// (X, LB, B, LT+RT, salto) no hacen nada, y el jugador no se mueve.
+/// El mundo va a cámara lenta (<see cref="escalaDeTiempo"/>), el reloj del combo usa tiempo real
+/// y el jugador no recibe daño (<see cref="FiltroDelCombo"/>).
+/// Mientras está abierto, la capa base queda en la pose de flotar (<see cref="airPoseState"/>)
+/// y la superior en la del orbe.
 /// Lo que se ve y se oye (círculo, elevación, viento, luz, sonidos) lo pone
 /// <see cref="PresentacionDelCombo"/> escuchando los eventos de este componente.
 /// </summary>
 [DisallowMultipleComponent]
 public class ComboCastController : MonoBehaviour
 {
-    public enum Result { Cast, Fizzled, Cancelled, Interrupted }
+    public enum Result { Cast, Fizzled, Cancelled }
 
     /// <summary>
     /// El jugador está tecleando un combo (también el fotograma en que se cierra, para que el último
@@ -51,6 +54,8 @@ public class ComboCastController : MonoBehaviour
     [SerializeField] private vThirdPersonController controller;
 
     [Header("Reglas")]
+    [Tooltip("Escala de tiempo del mundo mientras se teclea el combo (1 = sin cámara lenta).")]
+    [SerializeField, Range(0.05f, 1f)] private float escalaDeTiempo = 0.25f;
     [Tooltip("Segundos máximos entre pulsaciones.")]
     [SerializeField] private float inputTimeout = 1.5f;
     [Tooltip("Maná que se pierde al fallar la secuencia.")]
@@ -60,11 +65,12 @@ public class ComboCastController : MonoBehaviour
     [Tooltip("Botones máximos de una secuencia.")]
     [SerializeField, Range(2, 8)] private int maxLength = 5;
 
-    [Header("Poses (rutas completas en la capa superior)")]
+    [Header("Poses")]
+    [Tooltip("Estado de la capa base mientras se teclea (pose de flotar). Vacío = no cambia la capa base.")]
+    [SerializeField] private string airPoseState = "Falling";
     [Tooltip("Pose mientras se teclea (en bucle). Los brazos los coloca ManosIK sosteniendo el orbe de PresentacionDelCombo.")]
     [SerializeField] private string enterState = "UpperBody.Magic.ComboIdle";
     [SerializeField] private string exitState = "UpperBody.Magic.ComboExit";
-    [SerializeField] private string breakState = "UpperBody.Magic.ComboBreak";
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs;
@@ -103,7 +109,7 @@ public class ComboCastController : MonoBehaviour
         comboCooldown <= 0f || Time.time >= _cooldownUntil ? 0f : (_cooldownUntil - Time.time) / comboCooldown;
 
     /// <summary>Segundos que quedan para poder pulsar otra vez sin que se cierre.</summary>
-    public float TimeLeftNormalized => _open ? Mathf.Clamp01(1f - (Time.time - _lastInputTime) / inputTimeout) : 0f;
+    public float TimeLeftNormalized => _open ? Mathf.Clamp01(1f - (Time.unscaledTime - _lastInputTime) / inputTimeout) : 0f;
 
     void Awake()
     {
@@ -118,7 +124,11 @@ public class ComboCastController : MonoBehaviour
     {
         _health = GetComponentInParent<PlayerHealthSystem>() ?? GetComponentInChildren<PlayerHealthSystem>();
         if (_health == null) PlayerService.TryGetComponent(out _health, allowSceneLookup: false);
-        if (_health != null) _health.OnDamageReceived += OnDamaged;
+        if (_health != null)
+        {
+            var filtro = _health.GetComponent<FiltroDelCombo>() ?? _health.gameObject.AddComponent<FiltroDelCombo>();
+            filtro.Owner = this;
+        }
         if (_shield == null && controller != null) _shield = controller.GetComponentInChildren<PlayerShieldController>();
     }
 
@@ -129,8 +139,12 @@ public class ComboCastController : MonoBehaviour
 
     void OnDestroy()
     {
-        if (_health != null) _health.OnDamageReceived -= OnDamaged;
-        if (_open) SetComposing(false);
+        TimeScaleArbiterService.Release(this);
+        if (_open)
+        {
+            if (controller) controller.ReleaseAirbornePose();
+            SetComposing(false);
+        }
     }
 
     // ── Entrada ────────────────────────────────────────────────────────────
@@ -158,7 +172,7 @@ public class ComboCastController : MonoBehaviour
             return;
         }
 
-        if (Time.time - _lastInputTime > inputTimeout)
+        if (Time.unscaledTime - _lastInputTime > inputTimeout)
         {
             if (_typed.Count == 0) Close(Result.Cancelled, null, playExit: true);
             else Fizzle("se acabó el tiempo");
@@ -189,12 +203,11 @@ public class ComboCastController : MonoBehaviour
         BuildRepertoire();
         if (_repertoire.Count == 0) { Deny("no hay combos aprendidos", "COMBO_DENIED_NONE", "Aún no conoces ningún combo."); return; }
 
-        _open = true;
-        SetComposing(true);
+        SetOpen(true);
         _typed.Clear();
         _possible.Clear();
         for (int i = 0; i < _repertoire.Count; i++) _possible.Add(true);
-        _lastInputTime = Time.time;
+        _lastInputTime = Time.unscaledTime;
 
         if (controller) controller.HoldUpperBodyPose(enterState);
         OnOpened?.Invoke(_repertoire);
@@ -240,7 +253,7 @@ public class ComboCastController : MonoBehaviour
     private void AddButton(ComboButton button)
     {
         _typed.Add(button);
-        _lastInputTime = Time.time;
+        _lastInputTime = Time.unscaledTime;
 
         MagicSpellSO match = null;
         int stillPossible = 0;
@@ -270,8 +283,7 @@ public class ComboCastController : MonoBehaviour
     private void CastMatch(MagicSpellSO spell)
     {
         // Se cierra antes de lanzar: Cast comprueba permisos y el gesto sustituye a la pose.
-        _open = false;
-        SetComposing(false);
+        SetOpen(false);
         bool cast = magicCaster.Cast(spell, CastHand.Center, 1f);
         if (cast)
         {
@@ -295,20 +307,22 @@ public class ComboCastController : MonoBehaviour
         Log("Se disipa: " + why);
     }
 
-    private void OnDamaged(float _)
+    private void SetOpen(bool open)
     {
-        if (!_open) return;
-        _open = false;
-        SetComposing(false);
-        if (controller) controller.PlayUpperBodyAction(breakState);
-        OnClosed?.Invoke(Result.Interrupted, null);
-        Log("Círculo roto por un golpe");
+        _open = open;
+        SetComposing(open);
+        if (open)
+        {
+            if (controller && !string.IsNullOrEmpty(airPoseState)) controller.HoldAirbornePose(airPoseState);
+        }
+        else if (controller) controller.ReleaseAirbornePose();
+        if (open && escalaDeTiempo < 1f) TimeScaleArbiterService.Request(this, escalaDeTiempo);
+        else TimeScaleArbiterService.Release(this);
     }
 
     private void Close(Result result, MagicSpellSO spell, bool playExit)
     {
-        _open = false;
-        SetComposing(false);
+        SetOpen(false);
         if (playExit && controller) controller.PlayUpperBodyAction(exitState);
         OnClosed?.Invoke(result, spell);
     }

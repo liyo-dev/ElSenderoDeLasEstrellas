@@ -268,6 +268,8 @@ MonoBehaviour:
         position: {x: 15960, y: 0}
         outputs:
         - 0a923444-f2e4-42d4-be51-49d30c40e362
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: ELDRAN_MISSION2
         stepConditionIds: []
         steps: 
@@ -294,7 +296,7 @@ MonoBehaviour:
     - rid: 6000000000000000022
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: 30.- SE DESBLOQUEA EL ATAQUE MAGICO Y LA BOLA DE FUEGO
+        displayTitle: "30.- SE DESBLOQUEA EL ATAQUE M\xC1GICO Y LLAMA ASTRAL"
         chapter: Cap. 1
         blockSaving: 0
         inputAnchor: 0
@@ -368,6 +370,8 @@ MonoBehaviour:
         position: {x: 17860, y: 0}
         outputs:
         - 036db357-3031-43d4-a75e-9ebd27b9fb77
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: ELDRAN_MISSION3
         stepConditionIds: []
         steps: 
@@ -539,6 +543,8 @@ MonoBehaviour:
         position: {x: 5320, y: 0}
         outputs:
         - a468c3fc-72f5-4541-b174-81017ba71bc2
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: WILL_MISSION0
         stepConditionIds: []
         steps: 
@@ -710,6 +716,8 @@ MonoBehaviour:
         position: {x: 7980, y: 0}
         outputs:
         - d8370db5-0930-49a6-b96c-70e9f05977bd
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: ELDRAN_MISSION1
         stepConditionIds: []
         steps: 
@@ -729,6 +737,8 @@ MonoBehaviour:
         position: {x: 10640, y: 0}
         outputs:
         - 5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: WILL_MISSION1
         stepConditionIds: []
         steps: 
@@ -930,6 +940,8 @@ MonoBehaviour:
         position: {x: 13300, y: 0}
         outputs:
         - 18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba
+        standingActorId: 
+        standingDialogue: {fileID: 0}
         questId: ELDRAN_SIGUEME
         stepConditionIds: []
         steps: 

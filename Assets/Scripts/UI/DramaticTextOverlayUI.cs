@@ -249,7 +249,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
         if (_gameplayUiHidden) return;
         _gameplayUiHidden = true;
         PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(true);
+        MinimapController.Ocultar(this);
         TimeOfDayIndicator.Instance?.Hide();
     }
 
@@ -259,7 +259,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
         if (!_gameplayUiHidden) return;
         _gameplayUiHidden = false;
         PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Instance?.SetHiddenByCinematic(false);
+        MinimapController.Mostrar(this);
         TimeOfDayIndicator.Instance?.Show();
     }
 

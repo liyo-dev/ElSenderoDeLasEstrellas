@@ -165,14 +165,14 @@ namespace Game.NPC
         #endregion
 
         #region 🔌 Dependencies & State
-        private static readonly WaitForSeconds s_wait02 = s_wait02;
-        private static readonly WaitForSeconds s_wait03 = s_wait03;
-        private static readonly WaitForSeconds s_wait04 = s_wait04;
-        private static readonly WaitForSeconds s_wait05 = s_wait05;
-        private static readonly WaitForSeconds s_wait08 = s_wait08;
-        private static readonly WaitForSeconds s_wait1  = s_wait1;
-        private static readonly WaitForSeconds s_wait15 = s_wait15;
-        private static readonly WaitForSeconds s_wait2  = s_wait2;
+        private static readonly WaitForSeconds s_wait02 = new WaitForSeconds(0.2f);
+        private static readonly WaitForSeconds s_wait03 = new WaitForSeconds(0.3f);
+        private static readonly WaitForSeconds s_wait04 = new WaitForSeconds(0.4f);
+        private static readonly WaitForSeconds s_wait05 = new WaitForSeconds(0.5f);
+        private static readonly WaitForSeconds s_wait08 = new WaitForSeconds(0.8f);
+        private static readonly WaitForSeconds s_wait1  = new WaitForSeconds(1f);
+        private static readonly WaitForSeconds s_wait15 = new WaitForSeconds(1.5f);
+        private static readonly WaitForSeconds s_wait2  = new WaitForSeconds(2f);
 
         public Settings settings; // Visible en inspector
 
@@ -2143,33 +2143,16 @@ namespace Game.NPC
         }
 
         /// <summary>
-        /// Selecciona el objetivo de ataque más cercano entre el jugador y los miembros del equipo visibles.
+        /// Elige a qué personaje del grupo atacar (CombatTargetProvider reparte entre los que siguen en pie).
         /// Se llama cada vez que el cerebro entra en estado EVALUATE.
         /// </summary>
         private void ReevaluateTarget()
         {
             if (_player == null) return;
 
-            _combatTarget = _player;
-            float bestDist = Vector3.Distance(transform.position, _player.position);
-
-            var party = PlayerParty.Instance;
-            if (party == null || party.MemberCount == 0) return;
-
-            var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
-
-            foreach (var member in party.Members)
-            {
-                if (member == null)                     continue;
-                if (member == hiddenNpc)                continue; // Controlado por el jugador, no tiene cuerpo propio
-
-                float dist = Vector3.Distance(transform.position, member.transform.position);
-                if (dist < bestDist)
-                {
-                    bestDist      = dist;
-                    _combatTarget = member.transform;
-                }
-            }
+            // Reparte entre los personajes del grupo que siguen en pie (INC-717).
+            _combatTarget = CombatTargetProvider.ElegirObjetivo(transform.position, this);
+            if (_combatTarget == null) _combatTarget = _player;
         }
 
         private void SpawnProjectile(int slotIndex)

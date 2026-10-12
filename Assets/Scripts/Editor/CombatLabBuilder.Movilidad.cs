@@ -7,9 +7,9 @@ using UnityEngine.SceneManagement;
 /// lo del salto y de la voltereta del jugador en un mismo sitio.
 /// <list type="bullet">
 /// <item>Lanzadores en cadena: suelo → torre de 6 m → torre de 12 m.</item>
-/// <item>Entrada al vuelo: doble salto y A otra vez (impulso, voltereta y a volar).</item>
+/// <item>Entrada al vuelo: doble salto y A otra vez (impulso y a volar).</item>
 /// <item>Doble salto: pilares de 1,5, 2,6 y 4,2 m.</item>
-/// <item>Remate aéreo y desvío con la B: corral de arañas con un lanzador al lado.</item>
+/// <item>Remate aéreo: lanzador vertical (los enemigos para practicarlo están en la zona de arañas).</item>
 /// <item>Derribo y recuperación: placa que lanza al jugador como un golpe de jefe.</item>
 /// <item>Devolver con la B y aviso de combate: lanzadera que dispara las bolas del Demonio.</item>
 /// </list>
@@ -46,7 +46,7 @@ public static partial class CombatLabBuilder
         Pilar("Pilar 4,2 m", zona, new Vector3(34f, 0f, 50f), new Vector2(3f, 3f), 4.2f, plataforma);
     }
 
-    /// Lanzadores, corral, placa de derribo y rótulos (fuera del NavMesh).
+    /// Lanzadores, placa de derribo, lanzadera y rótulos (fuera del NavMesh).
     private static List<string> CrearZonaMovilidad(Scene escena)
     {
         var avisos = new List<string>();
@@ -69,53 +69,31 @@ public static partial class CombatLabBuilder
             Lanzador(lanzador, r, "Lanzador 1 (a la torre de 6 m)", new Vector3(20f, 0f, 31.5f), 0f);
             // En lo alto de la torre de 6 m, empujando hacia la de 12 m (+X).
             Lanzador(lanzador, r, "Lanzador 2 (a la torre de 12 m)", new Vector3(20.5f, 6f, 37f), 90f);
-            // Junto al corral: sube en vertical para rematar desde arriba.
+            // Sube en vertical para rematar desde arriba.
             Lanzador(lanzador, r, "Lanzador 3 (remate desde arriba)", new Vector3(36f, 0f, 30f), 0f, empuje: 0f);
         }
         CrearTexto("1. Runa: sube a la torre de 6 m", r, new Vector3(20f, 3f, 30f), 0f);
         CrearTexto("2. Runa arriba: a la de 12 m", r, new Vector3(20f, 8f, 37f), 0f);
-        CrearTexto("Doble salto y A otra vez: voltereta y a volar", r, new Vector3(25.5f, 14f, 37f), 0f);
+        CrearTexto("Doble salto y A otra vez: impulso y a volar", r, new Vector3(25.5f, 14f, 37f), 0f);
         CrearTexto("Doble salto: 1,5 · 2,6 · 4,2 m", r, new Vector3(28f, 6.5f, 50f), 0f);
 
-        // ── Remate aéreo y desvío con la B ──
-        var arana = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/Spider1.prefab");
-        if (arana != null)
-        {
-            var corral = new GameObject("Corral de arañas (remate aéreo y B)");
-            corral.transform.SetParent(r);
-            corral.transform.position = new Vector3(42f, 0f, 30f);
-            corral.AddComponent<CorralDeEnemigosDelLab>().Configurar(arana, 3, 4f);
-        }
-        else avisos.Add("No encuentro Spider1.prefab: no hay arañas para el remate aéreo.");
+        // ── Remate aéreo ──
         CrearTexto("Remate: salta y X, X, X", r, new Vector3(40f, 4f, 24f), 0f);
-        CrearTexto("B justo al morder: voltereta atrás", r, new Vector3(40f, 3.2f, 24f), 0f);
 
         // ── Derribo y recuperación ──
         var rojo = GetMaterial("Lab_Derribo", new Color(0.85f, 0.25f, 0.25f));
-        var placa = CrearCubo("Placa de derribo", r, new Vector3(42f, 0.05f, 46f), new Vector3(2.5f, 0.1f, 2.5f), rojo, estatico: false);
+        var placa = CrearCubo("Placa de derribo", r, new Vector3(32f, 0.05f, 41f), new Vector3(2.5f, 0.1f, 2.5f), rojo, estatico: false);
         var caja = placa.GetComponent<BoxCollider>();
         caja.isTrigger = true;
         caja.size = new Vector3(1f, 20f, 1f);
         caja.center = new Vector3(0f, 10f, 0f);
         placa.AddComponent<PlacaDeDerriboDelLab>();
-        CrearTexto("Placa de derribo", r, new Vector3(42f, 2.6f, 43.5f), 0f);
-        CrearTexto("A en el aire: caes de pie", r, new Vector3(42f, 1.9f, 43.5f), 0f);
+        CrearTexto("Placa de derribo", r, new Vector3(32f, 2.6f, 43.5f), 0f);
+        CrearTexto("A en el aire: caes de pie", r, new Vector3(32f, 1.9f, 43.5f), 0f);
 
         // ── Devolver con la B (y aviso de combate) ──
-        var demonio = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/Demon.prefab");
-        var ia = demonio != null ? demonio.GetComponentInChildren<ImpDemonAI>(true) : null;
-        var bola = ia != null ? new SerializedObject(ia).FindProperty("projectilePrefab")?.objectReferenceValue as GameObject : null;
-        if (bola != null)
+        if (CrearLanzadera(r, new Vector3(47f, 1.5f, 53f), 225f, rojo, cadencia: 2.5f, alcance: 7f) != null)
         {
-            CrearCubo("Pedestal de la lanzadera", r, new Vector3(47f, 0.75f, 53f), new Vector3(1f, 1.5f, 1f), rojo);
-            var lanzadera = new GameObject("Lanzadera (bolas del Demonio)");
-            lanzadera.transform.SetParent(r);
-            lanzadera.transform.SetPositionAndRotation(new Vector3(47f, 1.5f, 53f), Quaternion.Euler(0f, 225f, 0f));
-            var componente = lanzadera.AddComponent<LanzaderaDelLab>();
-            componente.Configurar(bola);
-            var so = new SerializedObject(componente);
-            so.FindProperty("alcance").floatValue = 7f;
-            so.ApplyModifiedPropertiesWithoutUndo();
             CrearMarcador("Puesto de la lanzadera", r, new Vector3(43f, 0.02f, 50f), GetMaterial("Lab_Marcadores", new Color(0.20f, 0.48f, 0.70f)));
             CrearTexto("Devuelve sus bolas con B", r, new Vector3(43f, 3f, 48f), 0f);
         }
@@ -134,5 +112,40 @@ public static partial class CombatLabBuilder
         var so = new SerializedObject(lanzador.GetComponent<LanzadorDeSalto>());
         so.FindProperty("empujeHaciaDelante").floatValue = empuje;
         so.ApplyModifiedPropertiesWithoutUndo();
+    }
+
+    /// Lanzadera de bolas del Demonio sobre un pedestal (para devolverlas con la B). 'posicion' es la
+    /// de la lanzadera (encima del pedestal). 'boca': desde dónde salen las bolas (null = un metro
+    /// por encima). Devuelve null si no se encuentra el proyectil del Demonio.
+    private static LanzaderaDelLab CrearLanzadera(Transform padre, Vector3 posicion, float giro, Material pedestal,
+                                                  float cadencia, float alcance, Vector3? bocaLocal = null)
+    {
+        var demonio = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/Demon.prefab");
+        var ia = demonio != null ? demonio.GetComponentInChildren<ImpDemonAI>(true) : null;
+        var bola = ia != null ? new SerializedObject(ia).FindProperty("projectilePrefab")?.objectReferenceValue as GameObject : null;
+        if (bola == null) return null;
+
+        CrearCubo("Pedestal de la lanzadera", padre, posicion - Vector3.up * 0.75f, new Vector3(1f, 1.5f, 1f), pedestal);
+        var lanzadera = new GameObject("Lanzadera (bolas del Demonio)");
+        lanzadera.transform.SetParent(padre);
+        lanzadera.transform.SetPositionAndRotation(posicion, Quaternion.Euler(0f, giro, 0f));
+        var componente = lanzadera.AddComponent<LanzaderaDelLab>();
+        componente.Configurar(bola);
+        var carga = lanzadera.AddComponent<CargaDeDisparo>();
+        var cargaSerializada = new SerializedObject(carga);
+        cargaSerializada.FindProperty("segundosDeCarga").floatValue = 0.6f;
+        cargaSerializada.ApplyModifiedPropertiesWithoutUndo();
+        var so = new SerializedObject(componente);
+        so.FindProperty("cadencia").floatValue = cadencia;
+        so.FindProperty("alcance").floatValue = alcance;
+        if (bocaLocal.HasValue)
+        {
+            var boca = new GameObject("Boca").transform;
+            boca.SetParent(lanzadera.transform, false);
+            boca.localPosition = bocaLocal.Value;
+            so.FindProperty("boca").objectReferenceValue = boca;
+        }
+        so.ApplyModifiedPropertiesWithoutUndo();
+        return componente;
     }
 }

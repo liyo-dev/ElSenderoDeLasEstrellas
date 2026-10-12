@@ -271,7 +271,7 @@ namespace Sendero.UI
                     _hints[k].transform.DOPunchScale(Vector3.one * 0.35f, 0.3f, 6, 0.6f).SetUpdate(true);
                 }
             }
-            else if (result == ComboCastController.Result.Fizzled || result == ComboCastController.Result.Interrupted)
+            else if (result == ComboCastController.Result.Fizzled)
             {
                 _symbolsBg.color = failColor;
                 _symbolsRow.DOKill(true);

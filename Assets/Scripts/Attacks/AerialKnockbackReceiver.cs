@@ -1,32 +1,12 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using Invector.vCharacterController;
 using Core;
 
 /// <summary>
-/// Lanza al objetivo hacia atrás describiendo un arco por el aire (estilo "knockback aéreo" de
-/// Kingdom Hearts) en vez de un simple deslizamiento por el suelo. Pensado para reacciones a
-/// impactos fuertes (choque de hechizos, etc.).
-///
-/// Es la ÚNICA fuente de movimiento durante el lanzamiento: desactiva Root Motion y el
-/// vThirdPersonController (Invector) mientras dura, y empuja ActionMode.Stunned en
-/// PlayerActionManager para que ningún otro sistema (input de movimiento, gravedad de Invector)
-/// compita por mover al personaje al mismo tiempo. Antes de este componente, el roll hacia atrás
-/// podía "irse hacia el lado" precisamente porque el controlador normal seguía aplicando el
-/// movimiento/input del jugador en paralelo al desplazamiento del knockback.
-///
-/// IMPORTANTE: este rig (Invector LITE, ver `vThirdPersonMotor.cs`) NO usa CharacterController,
-/// usa un Rigidbody no-kinemático con `useGravity = true`. Desactivar `vThirdPersonController`
-/// detiene la lógica de movimiento del script, pero el motor de físicas de Unity le sigue
-/// aplicando gravedad al Rigidbody en cada FixedUpdate durante todo el arco (~0.6s), acumulando
-/// velocidad vertical negativa mientras este componente fuerza la posición por encima del suelo.
-/// Al terminar la corrutina y devolver el control a Invector, esa velocidad acumulada se
-/// descarga de golpe y el jugador se hunde/atraviesa el suelo. Por eso aquí también hay que
-/// poner el Rigidbody en kinemático (sin gravedad, sin velocidad) mientras dura el lanzamiento.
-///
-/// Recuperación (INC-654): pulsar saltar durante el vuelo hace una voltereta
-/// (<see cref="VolteretaDelJugador"/>) y el jugador cae de pie. Un lanzamiento que derriba
-/// (golpes fuertes de los jefes) deja al jugador en el suelo hasta que se levanta si no se recupera.
+/// Es la única fuente de movimiento durante el arco: desactiva el controlador y el root motion.
+/// Invector LITE usa Rigidbody; se mantiene cinemático y sin gravedad para que no acumule
+/// velocidad de caída mientras la trayectoria mueve al jugador. Permite recuperarse en el aire.
 /// </summary>
 [DisallowMultipleComponent]
 public class AerialKnockbackReceiver : MonoBehaviour
@@ -45,13 +25,35 @@ public class AerialKnockbackReceiver : MonoBehaviour
     [Tooltip("Clave de SFX al recuperarse en el aire. Vacío = sin sonido.")]
     [SerializeField] private string sfxDeRecuperacion = "";
 
+    [Tooltip("Estado del Animator durante el vuelo de un derribo.")]
+    [SerializeField] private string estadoEnVuelo = "Derribo_Vuelo";
+    [Tooltip("Fracción del clip que recorre durante el arco, sin alcanzar la pose final.")]
+    [UnityEngine.Serialization.FormerlySerializedAs("velocidadDeLaPoseDeVuelo")]
+    [SerializeField, Range(0.1f, 0.9f)] private float fraccionDelClipEnVuelo = 0.65f;
+    [Tooltip("Estado de la voltereta de recuperación; vacío usa el de VolteretaDelJugador.")]
+    [SerializeField] private string estadoDeRecuperacion = "JumpAirSpin_InPlace_NoWeapon";
+    [Tooltip("Velocidad vertical del impulso de recuperación, en metros por segundo.")]
+    [SerializeField, Min(0f)] private float impulsoVerticalAlRecuperarse = 6f;
+    [Tooltip("Inercia horizontal inicial sin girar al jugador, en metros por segundo. Con entrada, el control aéreo la dirige hacia donde mira; cero evita ese arrastre.")]
+    [SerializeField, Min(0f)] private float arrastreHorizontalAlRecuperarse = 0f;
+    [Tooltip("Segundos de invulnerabilidad sin parpadeo al recuperarse.")]
+    [SerializeField, Min(0f)] private float invulnerabilidadAlRecuperarse = 0.4f;
+    [Tooltip("Efecto breve de la recuperación en el aire.")]
+    [SerializeField] private GameObject vfxDeRecuperacion;
+    [Tooltip("Segundos que permanece activo el efecto de recuperación antes de volver al pool.")]
+    [SerializeField, Min(0.01f)] private float duracionDelVfxDeRecuperacion = 1f;
+
+    private PlayerHealthSystem _salud;
+    private int _hashVuelo, _hashBloqueo;
+    private bool _tieneBloqueo, _bloqueoTomado, _bloqueoAnterior;
+    private Vector3 _direccionDelVuelo;
     private VolteretaDelJugador _voltereta;
     private bool _recuperado;
 
-    /// <summary>El jugador se ha recuperado en el aire durante el último lanzamiento.</summary>
+    /// <summary>Indica si el jugador se recupera en el aire durante el último lanzamiento.</summary>
     public bool SeRecupero => _recuperado;
 
-    /// <summary>Ahora mismo, saltar haría la voltereta de recuperación (para el aviso de combate).</summary>
+    /// <summary>Indica si pulsar saltar permite recuperarse; lo consulta el aviso de combate.</summary>
     public bool VentanaDeRecuperacionAbierta { get; private set; }
 
     private CharacterController _controller;
@@ -67,68 +69,24 @@ public class AerialKnockbackReceiver : MonoBehaviour
     private bool _cachedRigidbodyKinematic;
     private bool _cachedRigidbodyUseGravity;
 
-    // Sondeo de suelo real durante el arco: sin esto, la Y de aterrizaje se calculaba como
-    // "startPos.y + curva seno" (siempre vuelve a la altura de despegue), así que si el suelo
-    // bajo el punto de caída no está exactamente a esa misma altura (escalones, pendiente,
-    // terreno irregular, bordes de plataforma) el jugador terminaba flotando sobre el suelo o
-    // incrustado en él al recuperar el control físico. Ahora cada frame se lanza un rayo hacia
-    // abajo en la XZ del arco y la curva de altura se suma sobre el suelo real detectado, no
-    // sobre la altura de despegue.
     private const float GroundProbeHeight = 3f;
     private const float GroundProbeMaxDistance = 10f;
     private const float GroundSkin = 0.05f;
     private float _lastGroundY;
 
-    // Red de seguridad post-aterrizaje: tras devolver el control a la física normal, se vigila
-    // durante un rato corto que la posición no quede por debajo del suelo detectado. Esto no
-    // sustituye al arco (que ya debería aterrizar bien), es un catch-all para si, por lo que sea
-    // (colisión con otro collider durante el tramo kinemático, orden de ejecución de scripts,
-    // Invector reactivando su propia gravedad antes de que el frame se estabilice, etc.), el
-    // jugador queda incrustado de todas formas: aquí se detecta y se corrige en vez de dejar que
-    // el juego se rompa.
     private const float PostLandingWatchDuration = 0.4f;
     private const float SinkTolerance = 0.15f;
 
-    // Máscara de suelo cacheada en Awake (regla del proyecto: LayerMask.GetMask nunca en un
-    // bucle por frame). Usar SOLO `vThirdPersonController.groundLayer` resultó insuficiente en
-    // la práctica: si esa layer mask no incluye la layer real del suelo en algún escenario/arena
-    // (p. ej. una zona de test cuyo suelo se quedó en "Default" en vez de "Floor"), el raycast no
-    // golpea nada nunca y el aterrizaje vuelve a fallar exactamente igual que antes de este fix,
-    // en silencio. Para no depender de que esa única layer esté bien configurada en cada escena,
-    // se golpea "todo lo que no sea explícitamente no-sólido" (jugador, proyectiles, enemigos,
-    // agua, UI, triggers de interacción...), igual que se calcularía por exclusión.
     private LayerMask _groundProbeMask;
 
-    // Radio del SphereCast de suelo, ajustado en Awake al CapsuleCollider real del jugador.
-    // Con un Raycast fino era posible colarse por las rendijas entre piezas del suelo (una losa
-    // hecha de trozos sueltos, como la de la arena del Boss Demonio) y detectar lo que hay debajo
-    // (agua, vacío) en vez de la losa real — eso es lo que causaba el hundimiento momentáneo.
-    // Invector usa el mismo truco (SphereCast en vez de Raycast) en su propio ground check, ver
-    // CheckGroundDistance en vThirdPersonMotor.cs.
     private float _groundProbeRadius = 0.3f;
 
-    // Chequeo de obstrucción horizontal del arco: sin esto, el lanzamiento mueve al jugador de
-    // forma puramente cinemática (Rigidbody.MovePosition/CharacterController.Move sobre una
-    // posición ya calculada, ver comentario de clase) y puede empujarlo DENTRO de un collider
-    // sólido que tenga detrás en vez de detenerse ante él — por ejemplo el collider de un
-    // RoomExitBlocker bloqueado (una quest gate, como la que exige ayudar al niño pez antes de
-    // entrar al agua: mientras está bloqueada su collider es sólido, no trigger). El síntoma es
-    // exactamente "el choque de hechizos no me lanza por el aire, me mete en el suelo/geometría" y,
-    // si el gate estaba detrás, dispara además el mensaje de bloqueo de esa quest al solaparse con
-    // su collider. Se usa "todo" como máscara y se filtra en el propio chequeo, porque personajes y
-    // geometría estática comparten la layer "Default" en este proyecto y no se pueden separar por
-    // layer (mismo criterio que PlayerParty.FindClearDialogueFormationPosition, ver CLAUDE.md §2).
     private LayerMask _obstructionMask;
     private float _obstructionProbeHeight = 1f;
 
-    // Buffer del SphereCast de obstrucción (regla del proyecto: nunca alloc en runtime, ver
-    // MagicProjectil.cs). Se usa la variante *NonAlloc* y, sobre todo, la variante "All": con la
-    // variante de un solo resultado el propio collider del jugador (el sphere-cast arranca
-    // solapándolo, está justo en el origin) siempre habría sido el hit más cercano y habría tapado
-    // cualquier obstáculo real detrás; con el buffer se recorren todos los hits y se descartan los
-    // que sean personajes (ver ClampLaunchDistance).
     private readonly RaycastHit[] _obstructionHitsBuffer = new RaycastHit[8];
 
+    /// <summary>El receptor controla el arco o mantiene al jugador derribado hasta levantarse.</summary>
     public bool IsLaunching => _isLaunching;
 
     void Awake()
@@ -137,16 +95,19 @@ public class AerialKnockbackReceiver : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
         _voltereta = GetComponentInParent<VolteretaDelJugador>();
+        _salud = GetComponentInParent<PlayerHealthSystem>();
+        _hashVuelo = Animator.StringToHash(estadoEnVuelo);
+        _hashBloqueo = Animator.StringToHash("isFlying");
+        if (_animator != null)
+            for (int i = 0; i < _animator.parameterCount; i++)
+            {
+                var parametro = _animator.GetParameter(i);
+                if (parametro.nameHash == _hashBloqueo && parametro.type == AnimatorControllerParameterType.Bool)
+                    _tieneBloqueo = true;
+            }
         _thirdPersonController = GetComponent<vThirdPersonController>() ?? GetComponentInParent<vThirdPersonController>();
         _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
-
-        // Antes se usaba "todo menos lo explícitamente no-suelo" por si el suelo real no estaba
-        // en la layer "Floor" en alguna escena. Confirmado que sí lo está siempre, así que se
-        // restringe a las layers que son de verdad terreno sólido (Floor + Obstacle): con la
-        // máscara amplia, el SphereCast (más ancho que un Raycast, necesario para no colarse por
-        // las rendijas entre losas) empezaba a detectar props/decoración cercanos por encima del
-        // suelo real como si fueran "suelo", aplastando la altura del arco (el lanzamiento se
-        // quedaba casi en el sitio en vez de subir).
+        // Floor y Obstacle limitan el sondeo al terreno sólido, sin tomar decoración por suelo.
         _groundProbeMask = LayerMask.GetMask("Floor", "Obstacle");
 
         var capsule = GetComponent<CapsuleCollider>() ?? GetComponentInChildren<CapsuleCollider>();
@@ -160,58 +121,49 @@ public class AerialKnockbackReceiver : MonoBehaviour
     }
 
     /// <summary>
-    /// FIX C7 (auditoría 2026-08-07): si el GameObject se desactiva a mitad de un lanzamiento
-    /// (cambio de personaje activo, muerte, descarga de escena...), Unity detiene LaunchRoutine
-    /// en seco sin ejecutar su bloque de restauración final: el Rigidbody se queda kinemático y
-    /// sin gravedad, el vThirdPersonController y el root motion siguen desactivados, y
-    /// ActionMode.Stunned queda apilado para siempre en PlayerActionManager. Sin este OnDisable,
-    /// el personaje queda permanentemente bloqueado (inmóvil, sin animación de movimiento)
-    /// incluso después de reactivarse.
+    /// Devuelve física, animación y bloqueos porque desactivar el objeto detiene las corrutinas
+    /// sin garantizar que alcancen su restauración final.
     /// </summary>
     private void OnDisable()
     {
+        StopAllCoroutines();
+        Restaurar();
+    }
+
+    /// <summary>Devuelve todos los recursos tomados una sola vez, incluso al cancelar el arco.</summary>
+    private void Restaurar()
+    {
         VentanaDeRecuperacionAbierta = false;
         if (!_isLaunching) return;
-
-        StopAllCoroutines();
         _isLaunching = false;
-
         if (_rigidbody != null)
         {
+            // La velocidad solo se puede limpiar después de devolver el cuerpo a dinámico.
             _rigidbody.isKinematic = _cachedRigidbodyKinematic;
             _rigidbody.useGravity = _cachedRigidbodyUseGravity;
-            if (!_cachedRigidbodyKinematic)
+            if (!_rigidbody.isKinematic)
             {
                 _rigidbody.linearVelocity = Vector3.zero;
                 _rigidbody.angularVelocity = Vector3.zero;
             }
         }
-
-        if (_thirdPersonController != null)
-            _thirdPersonController.enabled = _controllerWasEnabled;
-
+        if (_thirdPersonController != null) _thirdPersonController.enabled = _controllerWasEnabled;
         if (_animator != null)
-            _animator.applyRootMotion = _cachedApplyRootMotion;
-
-        if (_stunnedModePushed && _actionManager != null)
         {
-            _actionManager.PopMode(ActionMode.Stunned);
-            _stunnedModePushed = false;
+            _animator.applyRootMotion = _cachedApplyRootMotion;
+            if (_bloqueoTomado) _animator.SetBool(_hashBloqueo, _bloqueoAnterior);
         }
+        _bloqueoTomado = false;
+        if (_stunnedModePushed && _actionManager != null) _actionManager.PopMode(ActionMode.Stunned);
+        _stunnedModePushed = false;
     }
-
-    /// <summary>
-    /// Lanza al objetivo hacia atrás (dirección ya calculada por el llamador, normalmente
-    /// -transform.forward del propio objetivo para garantizar que SIEMPRE va hacia atrás,
-    /// sin depender de vectores geométricos como la posición del proyectil o del impacto).
-    /// </summary>
+    /// <summary>Lanza en la dirección indicada sin derribar; permite recuperarse durante el arco.</summary>
     public void Launch(Vector3 backwardDirection, float distance, float height, float duration) =>
         Launch(backwardDirection, distance, height, duration, derriba: false);
 
     /// <summary>
-    /// Lanza y derriba al jugador por un golpe fuerte, alejándolo de 'origen'. Solo actúa sobre el
-    /// cuerpo del jugador (no sobre compañeros), vivo y sin defenderse (escudo o ventana de la B).
-    /// True si lo ha lanzado: quien llama no debe empujarlo además con fuerzas.
+    /// Lanza al cuerpo del jugador alejándolo del origen. Solo acepta al jugador vivo y sin
+    /// escudo ni ventana de parada; devuelve true cuando aplica el derribo.
     /// </summary>
     public static bool Derribar(GameObject objetivo, Vector3 origen, float distancia, float altura, float duracion)
     {
@@ -236,13 +188,13 @@ public class AerialKnockbackReceiver : MonoBehaviour
     }
 
     /// <summary>
-    /// Como el anterior; con 'derriba', si el jugador no se recupera en el aire (saltar durante el
-    /// vuelo) se queda tumbado y se levanta antes de recuperar el control.
+    /// Lanza en la dirección indicada. Si derriba, mira al golpe y permanece tumbado al aterrizar
+    /// salvo que se recupere en el aire. No solapa lanzamientos.
     /// </summary>
     public void Launch(Vector3 backwardDirection, float distance, float height, float duration, bool derriba)
     {
         if (_isLaunching) return; // no solapar lanzamientos
-        if (duration <= 0f) return;
+        if (duration <= 0f || !isActiveAndEnabled) return;
 
         StopAllCoroutines();
         StartCoroutine(LaunchRoutine(backwardDirection, distance, height, duration, derriba));
@@ -252,18 +204,11 @@ public class AerialKnockbackReceiver : MonoBehaviour
     {
         _isLaunching = true;
         _recuperado = false;
-
-        // Desactivar Root Motion mientras dura el lanzamiento: la trayectoria la controla
-        // este script en exclusiva, no el clip de animación (evita el "tironeo" por doble
-        // fuente de movimiento que causaba el desvío lateral).
         if (_animator != null)
         {
             _cachedApplyRootMotion = _animator.applyRootMotion;
             _animator.applyRootMotion = false;
         }
-
-        // Desactivar el controlador de Invector: si sigue activo, su propia gravedad/input
-        // seguiría llamando a CharacterController.Move() en paralelo a este script.
         if (_thirdPersonController != null)
         {
             _controllerWasEnabled = _thirdPersonController.enabled;
@@ -275,18 +220,15 @@ public class AerialKnockbackReceiver : MonoBehaviour
             _actionManager.PushMode(ActionMode.Stunned);
             _stunnedModePushed = true;
         }
-
-        // Neutralizar el Rigidbody de Invector: si se deja no-kinemático con gravedad activa,
-        // el motor de físicas sigue acelerándolo hacia abajo durante todo el arco aunque el
-        // script de Invector esté desactivado, y esa velocidad se descarga de golpe al terminar
-        // (el jugador se hunde en el suelo). Kinemático + velocidad a cero = el Rigidbody no
-        // acumula nada mientras este componente controla la posición a mano.
         if (_rigidbody != null)
         {
             _cachedRigidbodyKinematic = _rigidbody.isKinematic;
             _cachedRigidbodyUseGravity = _rigidbody.useGravity;
-            _rigidbody.linearVelocity = Vector3.zero;
-            _rigidbody.angularVelocity = Vector3.zero;
+            if (!_rigidbody.isKinematic)
+            {
+                _rigidbody.linearVelocity = Vector3.zero;
+                _rigidbody.angularVelocity = Vector3.zero;
+            }
             _rigidbody.useGravity = false;
             _rigidbody.isKinematic = true;
         }
@@ -295,10 +237,24 @@ public class AerialKnockbackReceiver : MonoBehaviour
         flatDir.y = 0f;
         if (flatDir.sqrMagnitude < 0.0001f) flatDir = -transform.forward;
         flatDir.Normalize();
-
-        // Recortar la distancia si hay geometría sólida (pared, puerta, quest gate bloqueada...) en
-        // el camino del arco: ver comentario de _obstructionMask. Sin esto la trayectoria se calcula
-        // a ciegas y puede terminar empujando al jugador dentro de un collider sólido.
+        _direccionDelVuelo = flatDir;
+        bool poseDeVuelo = derriba && _animator != null && _animator.HasState(0, _hashVuelo);
+        if (derriba)
+        {
+            Quaternion mirandoAlGolpe = Quaternion.LookRotation(-flatDir, Vector3.up);
+            if (_rigidbody != null) _rigidbody.rotation = mirandoAlGolpe;
+            else transform.rotation = mirandoAlGolpe;
+            if (poseDeVuelo)
+            {
+                if (_tieneBloqueo)
+                {
+                    _bloqueoAnterior = _animator.GetBool(_hashBloqueo);
+                    _bloqueoTomado = true;
+                    _animator.SetBool(_hashBloqueo, true);
+                }
+                _animator.CrossFadeInFixedTime(_hashVuelo, 0.08f, 0, 0f);
+            }
+        }
         Vector3 obstructionOrigin = transform.position + Vector3.up * _obstructionProbeHeight;
         distance = ClampLaunchDistance(obstructionOrigin, flatDir, distance);
 
@@ -307,24 +263,38 @@ public class AerialKnockbackReceiver : MonoBehaviour
         _lastGroundY = startPos.y;
 
         float elapsed = 0f;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        // Diagnóstico temporal de INC-687 (recuperación que no salta): se quita al cerrarla.
+        int diagFramesVentana = 0;
+        bool diagFisicoEnVentana = false, diagFisicoFuera = false;
+#endif
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             VentanaDeRecuperacionAbierta = !_recuperado && t >= ventanaDeRecuperacion.x && t <= ventanaDeRecuperacion.y;
-            if (VentanaDeRecuperacionAbierta && GamepadInputReader.JumpPressed)
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            {
+                var mando = UnityEngine.InputSystem.Gamepad.current;
+                var teclado = UnityEngine.InputSystem.Keyboard.current;
+                bool fisico = (mando != null && mando.buttonSouth.isPressed) || (teclado != null && teclado.spaceKey.isPressed);
+                if (VentanaDeRecuperacionAbierta) { diagFramesVentana++; diagFisicoEnVentana |= fisico; }
+                else diagFisicoFuera |= fisico;
+            }
+#endif
+            // Durante el lanzamiento el modo Stunned bloquea el mapa GamePlay: la A se lee sin ese bloqueo.
+            if (VentanaDeRecuperacionAbierta && GamepadInputReader.JumpPressedAunqueBloqueado)
+            {
                 Recuperarse();
-
-            // Arco parabólico: avance horizontal con ease-out (rápido al inicio, se frena al final)
-            // y altura con una curva de seno (sube, alcanza el pico, y vuelve a bajar).
+                yield break;
+            }
+            if (poseDeVuelo && !_animator.IsInTransition(0))
+                _animator.Play(_hashVuelo, 0, t * fraccionDelClipEnVuelo);
             float horizontalT = 1f - (1f - t) * (1f - t);
             float verticalY = Mathf.Sin(t * Mathf.PI) * height;
 
             Vector3 targetPos = startPos + flatDir * (distance * horizontalT);
-
-            // La curva de altura se apoya sobre el suelo real bajo la XZ actual del arco, no sobre
-            // "startPos.y": así el aterrizaje (verticalY = 0 en t = 1) cae exactamente sobre el
-            // suelo detectado aunque el terreno de llegada esté más alto/bajo que el de despegue.
+            // El suelo se sondea en cada posición del arco para aterrizar sobre pendientes y escalones.
             float groundY = SampleGroundY(targetPos.x, targetPos.z);
             targetPos.y = groundY + GroundSkin + verticalY;
 
@@ -340,11 +310,6 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
             yield return null;
         }
-
-        // Snap final de seguridad: aunque la curva ya converge a "suelo + GroundSkin" en el
-        // último frame, esto corrige cualquier residuo de redondeo por duración de frame y deja
-        // al jugador exactamente sobre el suelo real antes de devolver el control a la física
-        // normal (evita el hundimiento al restaurar el Rigidbody a no-kinemático).
         float finalGroundY = SampleGroundY(transform.position.x, transform.position.z);
         Vector3 finalPos = transform.position;
         finalPos.y = finalGroundY + GroundSkin;
@@ -353,66 +318,50 @@ public class AerialKnockbackReceiver : MonoBehaviour
         else
             transform.position = finalPos;
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AerialKnockbackReceiver] Fin del arco. groundY detectado={finalGroundY:F2}, posición final={finalPos}, rb.isKinematic (antes de restaurar)={_rigidbody?.isKinematic}");
-#endif
 
         VentanaDeRecuperacionAbierta = false;
-
-        // Derribo sin recuperarse: tumbado y levantarse, con todo aún tomado.
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log($"[Derribo-diag] Sin recuperarse. duración={duration:F2}s, frames con ventana={diagFramesVentana}, " +
+                  $"A física pulsada en la ventana={diagFisicoEnVentana}, A física fuera de la ventana={diagFisicoFuera}, " +
+                  $"mando={(UnityEngine.InputSystem.Gamepad.current != null ? UnityEngine.InputSystem.Gamepad.current.displayName : "ninguno")}, timeScale={Time.timeScale:F2}");
+#endif
         if (derriba && !_recuperado)
             yield return Co_DerriboEnElSuelo();
 
-        // Restaurar todo en orden inverso
-        // El Rigidbody se restaura primero y con velocidad a cero: así Invector retoma el
-        // control desde reposo, sin gravedad acumulada que descargar de golpe.
-        // IMPORTANTE: isKinematic hay que restaurarlo ANTES de tocar linearVelocity/angularVelocity.
-        // Unity ignora (con warning) cualquier asignación de velocidad mientras el Rigidbody sigue
-        // siendo kinemático, así que poner primero la velocidad a cero y el kinemático después
-        // (como estaba antes) no tenía ningún efecto real: el Rigidbody volvía a dinámico con la
-        // velocidad que tuviera cacheada por el motor de físicas, no con cero.
-        if (_rigidbody != null)
-        {
-            _rigidbody.isKinematic = _cachedRigidbodyKinematic;
-            _rigidbody.useGravity = _cachedRigidbodyUseGravity;
-            if (!_cachedRigidbodyKinematic)
-            {
-                _rigidbody.linearVelocity = Vector3.zero;
-                _rigidbody.angularVelocity = Vector3.zero;
-            }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[AerialKnockbackReceiver] Rigidbody restaurado: isKinematic={_rigidbody.isKinematic}, useGravity={_rigidbody.useGravity}, posición={_rigidbody.position}");
-#endif
-        }
-
-        if (_thirdPersonController != null)
-            _thirdPersonController.enabled = _controllerWasEnabled;
-
-        if (_animator != null)
-            _animator.applyRootMotion = _cachedApplyRootMotion;
-
-        if (_stunnedModePushed && _actionManager != null)
-        {
-            _actionManager.PopMode(ActionMode.Stunned);
-            _stunnedModePushed = false;
-        }
-
-        _isLaunching = false;
+        Restaurar();
 
         StartCoroutine(PostLandingSafetyNet());
     }
 
-    /// Voltereta de recuperación: el jugador cae de pie (no se queda tumbado).
     private void Recuperarse()
     {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.Log("[Derribo-diag] Recuperación con A detectada.");
+#endif
         _recuperado = true;
-        if (_voltereta != null) _voltereta.EnElAire();
+        Restaurar();
+        if (_thirdPersonController != null)
+        {
+            // El empuje cero evita que Impulsar gire al jugador y deje de mirar al golpe.
+            _thirdPersonController.Impulsar(impulsoVerticalAlRecuperarse,
+                Vector3.zero, devolverSaltosEnElAire: false);
+            if (_thirdPersonController.isActiveAndEnabled && !_thirdPersonController.suppressAirMovement &&
+                _rigidbody != null && !_rigidbody.isKinematic && arrastreHorizontalAlRecuperarse > 0f)
+            {
+                // Sin entrada se frena esta inercia; con entrada Invector la orienta hacia donde mira.
+                Vector3 velocidad = _direccionDelVuelo * arrastreHorizontalAlRecuperarse;
+                velocidad.y = _rigidbody.linearVelocity.y;
+                _rigidbody.linearVelocity = velocidad;
+            }
+        }
+        if (_voltereta != null) _voltereta.EnElAire(estadoDeRecuperacion);
+        if (_salud != null) _salud.HacerInvulnerable(invulnerabilidadAlRecuperarse, parpadeo: false);
+        if (vfxDeRecuperacion != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(vfxDeRecuperacion, transform.position, transform.rotation, duracionDelVfxDeRecuperacion);
         if (!string.IsNullOrEmpty(sfxDeRecuperacion) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxDeRecuperacion);
     }
 
-    /// Tumbado unos segundos y levantarse. Si el Animator no tiene los estados, solo espera.
     private IEnumerator Co_DerriboEnElSuelo()
     {
         int suelo = Animator.StringToHash(estadoEnElSuelo);
@@ -436,11 +385,8 @@ public class AerialKnockbackReceiver : MonoBehaviour
     }
 
     /// <summary>
-    /// Vigila un instante corto tras devolver el control a la física normal y corrige la posición
-    /// si el jugador queda por debajo del suelo detectado (ver comentario del campo
-    /// PostLandingWatchDuration). No debería activarse nunca si el arco aterriza bien; si se ve
-    /// el warning en consola con frecuencia, es la pista de que el problema real está en otro
-    /// sitio (otro sistema tocando el Rigidbody justo al recuperar el control, por ejemplo).
+    /// Corrige hundimientos breves al reactivar la física, que puede resolver contactos bajo el
+    /// suelo tras el movimiento cinemático. Solo vigila el aterrizaje, nunca la recuperación aérea.
     /// </summary>
     private IEnumerator PostLandingSafetyNet()
     {
@@ -456,9 +402,6 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
                 if (sinkAmount > SinkTolerance)
                 {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.LogWarning($"[AerialKnockbackReceiver] Corrección post-aterrizaje: jugador {sinkAmount:F2}m por debajo del suelo detectado (rb.isKinematic={_rigidbody.isKinematic}, useGravity={_rigidbody.useGravity}). Reposicionando.");
-#endif
                     Vector3 corrected = _rigidbody.position;
                     corrected.y = groundY + GroundSkin;
                     _rigidbody.position = corrected;
@@ -476,25 +419,15 @@ public class AerialKnockbackReceiver : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Sondea hacia abajo en la XZ dada para encontrar la altura real del suelo. Usa un
-    /// SphereCast (no un Raycast fino) precisamente para no colarse por las rendijas entre piezas
-    /// del suelo. Si no detecta nada (hueco real, borde de plataforma, vacío), devuelve la última
-    /// altura de suelo válida conocida en vez de dejar caer el arco al vacío.
-    /// </summary>
+    /// <summary>Sondea con SphereCast para no caer por rendijas entre piezas del suelo.</summary>
     private float SampleGroundY(float x, float z)
     {
         Vector3 origin = new Vector3(x, _lastGroundY + GroundProbeHeight, z);
 
         if (Physics.SphereCast(origin, _groundProbeRadius, Vector3.down, out RaycastHit hit, GroundProbeHeight + GroundProbeMaxDistance, _groundProbeMask, QueryTriggerInteraction.Ignore))
         {
-            // Truco conocido de Unity: si el SphereCast arranca ya solapando un collider (p. ej.
-            // un banner/arco/estructura por encima de la arena, dentro del radio de la esfera en
-            // el punto de origen), hit.point/hit.normal vienen a (0,0,0) en vez del punto real de
-            // contacto. Sin filtrar esto, _lastGroundY se corrompía a 0 (altura de mundo, no del
-            // suelo) y el arco entero se aplastaba contra esa referencia falsa: por eso el
-            // lanzamiento se quedaba casi en el sitio en vez de subir. Se descarta ese resultado y
-            // se mantiene la última altura de suelo válida.
+            // Un sondeo que empieza solapando puede devolver punto y normal nulos: no es suelo válido.
+            // Se comprueban ambos para no descartar un suelo real situado en el origen del mundo.
             bool isBogusZeroHit = hit.point == Vector3.zero && hit.normal == Vector3.zero;
             if (!isBogusZeroHit)
                 _lastGroundY = hit.point.y;
@@ -503,26 +436,17 @@ public class AerialKnockbackReceiver : MonoBehaviour
         return _lastGroundY;
     }
 
-    /// <summary>
-    /// Recorta la distancia horizontal solicitada si hay un collider sólido en el camino (ver
-    /// comentario de _obstructionMask). Ignora triggers (QueryTriggerInteraction.Ignore) y también
-    /// ignora impactos contra otros personajes: NPCs y player comparten la layer "Default" con la
-    /// geometría estática, así que se filtran por el marcador NPCSimpleAnimator (mismo criterio que
-    /// PlayerParty.FindClearDialogueFormationPosition) en vez de por layer. Usa la variante "All"
-    /// (NonAlloc) precisamente porque el propio collider del jugador está en el origin del cast y
-    /// sería el hit más cercano con la variante de un solo resultado, tapando cualquier obstáculo
-    /// real que hubiera detrás.
-    /// </summary>
     private float ClampLaunchDistance(Vector3 origin, Vector3 direction, float requestedDistance)
     {
         if (requestedDistance <= 0f) return requestedDistance;
 
+        // NonAlloc recoge todos los hits en el buffer: el collider propio no debe ocultar una pared.
+        // Personajes y geometría comparten Default, por lo que se consulta todo y se filtran personajes.
         int count = Physics.SphereCastNonAlloc(origin, _groundProbeRadius, direction, _obstructionHitsBuffer, requestedDistance, _obstructionMask, QueryTriggerInteraction.Ignore);
         if (count <= 0) return requestedDistance;
 
         bool foundObstruction = false;
         float closestDistance = requestedDistance;
-        string hitName = null;
 
         for (int i = 0; i < count; i++)
         {
@@ -535,7 +459,6 @@ public class AerialKnockbackReceiver : MonoBehaviour
             {
                 closestDistance = hit.distance;
                 foundObstruction = true;
-                hitName = hit.collider.name;
             }
         }
 
@@ -543,18 +466,7 @@ public class AerialKnockbackReceiver : MonoBehaviour
 
         float clamped = Mathf.Max(0f, closestDistance - GroundSkin);
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AerialKnockbackReceiver] Obstrucción detectada en el arco ('{hitName}'), distancia recortada de {requestedDistance:F2}m a {clamped:F2}m.");
-#endif
         return clamped;
     }
 
-#if UNITY_EDITOR
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics()
-    {
-        // Este componente no tiene estado estático, pero se documenta el patrón por si en el
-        // futuro se añade algo compartido entre sesiones de PlayMode (ver CLAUDE.md §3).
-    }
-#endif
 }

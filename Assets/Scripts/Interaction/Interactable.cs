@@ -90,6 +90,8 @@ public class Interactable : MonoBehaviour
     {
         get
         {
+            // La conversación apunta a la cara, no al icono que puede estar sobre un toldo.
+            if (EsPersonaje) return transform.position + Vector3.up * defaultSightHeight;
             Vector3 point = hint != null ? hint.transform.position : transform.position + Vector3.up * defaultSightHeight;
             float minY = transform.position.y + defaultSightHeight;
             if (point.y < minY)
@@ -100,6 +102,7 @@ public class Interactable : MonoBehaviour
 
     void Awake()
     {
+        EsPersonaje = GetComponent<NPCSimpleAnimator>() != null;
         enabledForUse = initiallyEnabled;
         if (hint)
         {
@@ -119,6 +122,8 @@ public class Interactable : MonoBehaviour
         _partyMember = GetComponent<NPCPartyMember>() ?? GetComponentInParent<NPCPartyMember>();
         _worldPoint = GetComponent<NPCWorldPoint>();
     }
+
+    public bool EsPersonaje { get; private set; }
 
     void OnEnable()
     {
@@ -793,6 +798,9 @@ public class Interactable : MonoBehaviour
         }
         SetHintVisible(false);
     }
+
+    /// Se puede usar ahora (EnableInteraction).
+    public bool HabilitadoParaUsar => enabledForUse;
 
     public void EnableInteraction(bool enable)
     {

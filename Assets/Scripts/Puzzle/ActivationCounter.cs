@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 /// <summary>
 /// Recibe activaciones de múltiples fuentes (antorchas, placas, palancas…) y lanza
@@ -44,48 +43,27 @@ public class ActivationCounter : MonoBehaviour
 
     string FlagKey => $"ACTIVATION_COMPLETE_{ResolveId()}";
 
+    FlagDePartida _flag;
+
+    void Awake() => _flag = new FlagDePartida(nameof(ActivationCounter), () => FlagKey, RestoreFromPreset);
+
     void OnEnable()
     {
-        if (!persistOnComplete) return;
-
-        GameBootService.OnProfileReady += OnProfileReady;
-        PlayerPresetService.OnPresetApplied += OnPresetApplied;
-        ProfileReadyDiagnostics.RegisterSubscriber(nameof(ActivationCounter));
-
-        if (GameBootService.IsAvailable)
-            OnProfileReady();
-        else if (PlayerPresetService.HasAppliedPreset)
-            OnPresetApplied();
+        if (persistOnComplete) _flag?.Escuchar();
     }
 
-    void OnDisable()
-    {
-        if (!persistOnComplete) return;
-        GameBootService.OnProfileReady -= OnProfileReady;
-        PlayerPresetService.OnPresetApplied -= OnPresetApplied;
-    }
+    void OnDisable() => _flag?.DejarDeEscuchar();
 
-    void OnProfileReady() => TryRestoreFromPreset();
-
-    void OnPresetApplied()
-    {
-        if (!_isComplete) TryRestoreFromPreset();
-    }
-
-    void TryRestoreFromPreset()
+    void RestoreFromPreset()
     {
         if (_isComplete) return;
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
-        if (preset?.flags != null && preset.flags.Contains(FlagKey))
-        {
-            _isComplete = true;
-            currentCount = requiredCount;
-            onRequirementMet.Invoke();
+        _isComplete = true;
+        currentCount = requiredCount;
+        onRequirementMet.Invoke();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ActivationCounter] {name}: restaurado desde preset.");
+        Debug.Log($"[ActivationCounter] {name}: restaurado desde preset.");
 #endif
-        }
     }
 
     /// <summary>
@@ -133,6 +111,8 @@ public class ActivationCounter : MonoBehaviour
     /// Reinicia el contador a 0. Invoca onReset para que cada PressurePlate
     /// llame a ForceReset() y vuelva a responder a ocupantes.
     /// Si lockOnComplete es true y el contador está completo, no hace nada.
+    /// Unity también llama a Reset() en el Editor al añadir el componente, antes de que exista
+    /// onReset: de ahí el «?.». Ver INC-692.
     /// </summary>
     public void Reset()
     {
@@ -140,21 +120,15 @@ public class ActivationCounter : MonoBehaviour
 
         currentCount = 0;
         _isComplete = false;
-        onReset.Invoke();
+        onReset?.Invoke();
     }
 
     void SetFlag()
     {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
-        if (preset == null) return;
-
-        if (preset.flags == null) preset.flags = new List<string>();
-        var flag = FlagKey;
-        if (!preset.flags.Contains(flag))
-            preset.flags.Add(flag);
+        _flag.Marcar();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ActivationCounter] Flag '{flag}' guardada en preset.");
+        Debug.Log($"[ActivationCounter] Flag '{FlagKey}' guardada en preset.");
 #endif
     }
 

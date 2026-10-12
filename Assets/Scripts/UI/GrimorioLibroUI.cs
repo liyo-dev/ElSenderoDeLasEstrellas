@@ -598,7 +598,6 @@ public class GrimorioLibroUI : MonoBehaviour
     private static Color ElementColor(MagicElement e) => e switch
     {
         MagicElement.Fire => new Color(0.75f, 0.29f, 0.17f),
-        MagicElement.Ice => new Color(0.25f, 0.55f, 0.72f),
         MagicElement.Storm => new Color(0.3f, 0.6f, 0.48f),
         MagicElement.Light => new Color(0.79f, 0.59f, 0.16f),
         MagicElement.Mind => new Color(0.48f, 0.29f, 0.66f),
@@ -615,7 +614,6 @@ public class GrimorioLibroUI : MonoBehaviour
     private static string ElementName(MagicElement e) => e switch
     {
         MagicElement.Fire => Loc("ELEMENT_FIRE", "Fuego"),
-        MagicElement.Ice => Loc("ELEMENT_ICE", "Hielo"),
         MagicElement.Storm => Loc("ELEMENT_STORM", "Viento"),
         MagicElement.Light => Loc("ELEMENT_LIGHT", "Luz"),
         MagicElement.Mind => Loc("ELEMENT_MIND", "Mente"),

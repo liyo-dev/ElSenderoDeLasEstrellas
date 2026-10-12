@@ -4,107 +4,15 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
 
-/// <summary>
-/// 30 ago 2026 — dos cambios pedidos por Raúl el mismo día que el pase de la estrella protagonista
-/// (ver NightSkyStarSpawner.cs), para poder probar más rápido:
-///
-/// 1) **Botones de prueba en el Inspector** ("testeos"): Ir a Amanecer/Día/Atardecer/Noche, Lluvia
-/// iniciar/detener, Niebla iniciar/detener, y forzar un sorteo de clima ya — todos como
-/// <c>[ContextMenu]</c> con el prefijo "Testeo:" (ver el final de la clase). Los de periodo usan
-/// <c>immediate: true</c> a propósito, sin esperar la transición suave, para poder saltar
-/// directamente a noche y ver el cielo estrellado sin esperar al ciclo automático.
-///
-/// 2) **El clima (lluvia/niebla) deja de estar atado al periodo del día**. Petición textual: *"la
-/// lluvia esta metida como si fuera parte del dia siempre llueve y luego se hace de noche y eso no
-/// es esa [...] deben ocurrir en cualquier momento. Los estados del dia son: amanecer, de dia,
-/// atardecer, de noche"*. Antes, <c>ApplyTimeOfDay</c> sorteaba lluvia (<c>forceRain</c>/
-/// <c>rainChance</c>) y niebla ocasional (<c>fogChance</c>) UNA SOLA VEZ, en el instante exacto de
-/// entrar en cada periodo — así que el clima solo podía "decidirse" en esos 4 instantes concretos
-/// del ciclo, dando la sensación de estar pegado al ciclo día/noche en vez de ser un sistema aparte.
-/// Se ha quitado ese acoplamiento de raíz: <c>forceRain</c>/<c>rainChance</c>/<c>fogChance</c>
-/// desaparecen de <see cref="TimeOfDaySettings"/> (ya no existen "por periodo"), y en su lugar hay un
-/// temporizador de clima completamente independiente (<see cref="WeatherRollLoop"/> +
-/// <see cref="TryRollWeather"/>, ver Header("Clima — sorteo independiente del periodo")): cada
-/// <see cref="weatherCheckIntervalRange"/> segundos (aleatorio dentro del rango, para que no sea
-/// predecible) se sortea si arranca lluvia (<see cref="rainChancePerCheck"/>) o niebla
-/// (<see cref="mistChancePerCheck"/>), sin importar en qué periodo del día se esté ni si se acaba de
-/// entrar en uno o se lleva ya un rato — el clima puede empezar, seguir activo, o terminar a mitad
-/// de cualquier periodo. <c>rainLastsWholePeriod</c>/<c>mistLastsWholePeriod</c> también desaparecen
-/// (ya no tiene sentido "durar todo el periodo" si el clima no depende del periodo): la lluvia ahora
-/// siempre sortea su propia duración dentro de <see cref="rainDurationRange"/> (igual que la niebla
-/// ya hacía con <c>mistDurationRange</c>). <c>ApplyTimeOfDay</c> ya no toca el clima en absoluto —
-/// si ya estaba lloviendo/con niebla al cambiar de periodo, sigue exactamente igual.
-///
-/// 30 ago 2026 (mismo día, pasada siguiente) — "añade lo que se quedó fuera de esta tanda": viento y
-/// tormenta, inicialmente dejados fuera por falta de assets/VFX (ver más abajo por qué). Añadidos con
-/// el mismo patrón que lluvia/niebla, degradando con elegancia donde faltan assets en vez de
-/// bloquearse por ellos:
-/// - **Viento** (<see cref="IsWindy"/>, <see cref="StartWind"/>/<see cref="StopWind"/>,
-///   <see cref="windChancePerCheck"/>/<see cref="windDurationRange"/>): mismo patrón que la niebla
-///   ocasional, con dirección (<see cref="DireccionDelViento"/>) y fuerza gradual
-///   (<see cref="FuerzaDelViento"/>). Sin <see cref="windPrefab"/>, las rachas y hojas las genera
-///   <see cref="VfxDeClima"/>; el efecto sobre el jugador (frenar contra el viento, taparse la cara,
-///   arrastrarlo si está quieto) lo aplica <see cref="VientoSobreElJugador"/>.
-/// - **Nieve** (<see cref="IsSnowing"/>, <see cref="StartSnow"/>/<see cref="StopSnow"/>): como la
-///   niebla ocasional; copos de <see cref="snowPrefab"/> o de <see cref="VfxDeClima"/>, niebla
-///   blanquecina y cielo gris claro.
-/// - **Tormenta** (<see cref="IsThunderstorm"/>, <see cref="StartThunderstorm"/>/
-///   <see cref="StopThunderstorm"/>): NO es un sistema de lluvia paralelo — una tormenta ES lluvia
-///   normal (reutiliza <see cref="StartRain"/> tal cual) más una capa de rayos periódicos
-///   (<see cref="LightningLoop"/>/<see cref="FlashLightningRoutine"/>) que SÍ es un efecto visual
-///   real que funciona ya, sin ningún asset nuevo: cada rayo crea una Light direccional temporal a
-///   <see cref="thunderstormFlashIntensity"/> durante <see cref="thunderstormFlashDuration"/>
-///   segundos y la destruye — DELIBERADAMENTE una luz nueva y no un cambio directo sobre
-///   <c>directionalLight.intensity</c>, porque esa propiedad ya se recalcula cada frame en
-///   <c>LateUpdate</c> a partir de su propio valor anterior mientras llueve (oscurecimiento por
-///   lluvia), así que escribir el destello ahí se pelearía con ese cálculo frame a frame. El trueno
-///   (<see cref="thunderstormThunderSfxKey"/>) suena con un retraso aleatorio tras el destello
-///   (<see cref="thunderstormThunderDelayRange"/>), como en la realidad.
-///
-/// Además, revisando este script para hacer este cambio se encontró y corrigió una regresión
-/// independiente y bastante más vieja: el comentario del propio código (ver más abajo, "13 ago
-/// 2026") ya decía que <see cref="timeSettings"/> se había reducido de 7 franjas a 4
-/// (Amanecer/Día/Atardecer/Noche) a petición de Raúl — pero las 4 escenas que usan este componente
-/// (MainWorld, CandyLand, Sendero, PlayerTest) seguían con el array de 7 franjas ANTIGUO serializado
-/// tal cual desde antes de ese cambio (BrightMorning/EarlyDusk/Midnight incluidas), porque Unity no
-/// vuelve a sincronizar un array ya serializado en la escena con un array por defecto distinto del
-/// código — el mismo tipo de bug ya documentado varias veces en este proyecto (ver
-/// `contexto-proyecto.md` y el comentario de clase de NightSkyStarSpawner.cs). Es decir: el ciclo
-/// del día llevaba 17 días pasando por 7 franjas en el juego real de Raúl, no por las 4 que el
-/// código decía desde el 13 de agosto — probablemente parte de por qué el clima se sentía errático
-/// y "pegado" a un ciclo más largo y raro de lo esperado. Corregido en las 4 escenas: se han quitado
-/// las 3 franjas obsoletas (BrightMorning/EarlyDusk/Midnight) del array serializado, dejando solo
-/// las 4 correctas con los valores que YA tenían en cada escena (ninguna tonalidad de luz/niebla
-/// tocada, solo se han quitado las franjas de más).
-/// </summary>
 [DisallowMultipleComponent]
-// 30 ago 2026 — debe ejecutar su Awake() ANTES que AmbientZone (orden no garantizado entre
-// scripts sin esto). AmbientZone.CaptureDefaults() guarda RenderSettings.fog tal cual esté en
-// ese instante para restaurarlo al salir de una zona — si captura el valor ANTES de que este
-// Awake ponga RenderSettings.fog = controlFog, se queda con el "false" horneado en la escena, y
-// la niebla (que aquí depende solo de fogDensity, sin mistPrefab) deja de verse en cuanto el
-// jugador sale de cualquier interior una vez. Ver comentario de clase.
+
 [DefaultExecutionOrder(-100)]
+/// Coordina las franjas de luz, el fundido del cielo y el clima independiente del periodo.
 public class DayNightCycle : MonoBehaviour
 {
-    // FIX (5 sept 2026, AGENTS.md §2 "nunca FindObjectOfType/FindObjectsByType en Update/LateUpdate,
-    // usar registros"): SunRayBeam.cs necesita la luz direccional cada LateUpdate para orientar el
-    // rayo de sol, y hasta ahora la buscaba con FindObjectsByType como fallback cada frame mientras
-    // no la encontraba - exactamente el patron prohibido. Registro estatico minimo: se rellena en
-    // Awake() y se limpia en OnDestroy(), sin DontDestroyOnLoad (DayNightCycle vive por escena, no
-    // es un manager persistente de Start.unity).
+
     public static Transform Sun { get; private set; }
 
-    /// DE QUIÉN CUELGAN la lluvia, la niebla y el viento (INC-380).
-    ///
-    /// Normalmente, del jugador: los efectos de clima son una cajita de partículas alrededor de
-    /// quien mira, no una tormenta simulada sobre el valle entero. Pero en una cinemática el
-    /// jugador NO es quien mira — en el prólogo está dormido en su habitación mientras la cámara
-    /// rueda en el valle —, así que la lluvia caía dentro de la casa de Will y encima se creaba
-    /// APAGADA, porque el interior bloquea el cielo (ver IsSkyboxLockedByEnvironment). De ahí el
-    /// «cuando salió el Mago Oscuro no empezó a llover»: llovía, pero en el dormitorio y apagada.
-    ///
-    /// Lo pone y lo quita CinematicTimeOfDay, que es quien sabe con qué cámara se está rodando.
     public static Transform AnclaDeClima
     {
         get => s_anclaDeClima;
@@ -117,9 +25,6 @@ public class DayNightCycle : MonoBehaviour
     }
     private static Transform s_anclaDeClima;
 
-    /// Recoloca lo que ya estuviera lloviendo/soplando cuando cambia el ancla, y lo ENCIENDE si
-    /// se había creado apagado por estar el jugador en un interior. Sin esto, una tormenta que
-    /// empezó antes de la cinemática se queda en el sitio de antes toda la escena.
     private void ReanclarClima()
     {
         foreach (var efecto in new[] { _activeRainInstance, _activeMistInstance, _activeWindInstance, _activeSnowInstance })
@@ -138,32 +43,31 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    /// El ciclo día/noche de la partida, o null si no hay ninguno cargado (escenas de prueba,
-    /// interiores sueltos). Lo necesitan las cinemáticas que cambian la hora del día a propósito
-    /// (ver CinematicTimeOfDay): antes solo se podía llegar aquí con un FindObjectOfType.
     public static DayNightCycle Instance { get; private set; }
 
-    /// Mientras una cinemática manda en el cielo, el clima NO se sortea (INC-409). En la grabación
-    /// prologo17 salió una niebla ocasional a mitad del prólogo: ×4 sobre la noche con tormenta
-    /// (densidad 0,16) y dos planos enteros sin verse nada. La ponen a true CinematicTimeOfDay y
-    /// CinematicWeather, y la devuelve a false CinematicTimeOfDay.Restore().
     public static bool SorteoDeClimaEnPausa;
 
 #if UNITY_EDITOR
-    // FIX (17 sep 2026): este archivo llegó a tener DOS 'ResetStatics' (error CS0111 al recompilar,
-    // misma familia que INC-238). El que se quedó es este, que limpia las dos estáticas; el otro,
-    // más abajo entre 'AutoAdvance' y el enum 'TimeOfDay', era anterior y solo limpiaba 'Sun'.
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics() { Instance = null; Sun = null; s_anclaDeClima = null; SorteoDeClimaEnPausa = false; }
 #endif
 
-    /// Si el ciclo avanza solo con el tiempo. Se apaga mientras una cinemática manda sobre la hora
-    /// del día, para que no se le cambie el cielo a mitad de plano.
     public bool AutoAdvance
     {
         get => autoAdvance;
         set => autoAdvance = value;
     }
+
+    /// Si el clima se sortea solo. Apagado, solo cambia cuando alguien lo pide (cinemáticas, LAB).
+    public bool SorteoAutomatico
+    {
+        get => sortearClima;
+        set => sortearClima = value;
+    }
+
+    /// Si ahora puede empezar un clima que nadie ha pedido (sorteo propio o nubes que se cargan).
+    public bool PuedeSortearClima => sortearClima && !SorteoDeClimaEnPausa;
 
     public enum TimeOfDay
     {
@@ -183,26 +87,12 @@ public class DayNightCycle : MonoBehaviour
     {
         public TimeOfDay timeOfDay;
 
-        [Tooltip("LEGACY — ya no se usa en el ciclo (ver más abajo skyboxTint/skyboxIntensity/skyboxExponent/skyboxDirectionYaw/skyboxDirectionPitch y DayNightCycle.sharedSkyboxMaterial). Se deja el campo para no perder la referencia histórica, pero el ciclo actual pinta un único material de skybox en vez de cambiar de asset.")]
+        [Tooltip("Cielo de esta franja, con el shader El Sendero/Cielo.")]
         public Material skybox;
-
-        [Header("Skybox único (shader Quibli/Skybox — degradado por ángulo, tintado)")]
-        [Tooltip("Color por el que se multiplica el degradado del único skybox del juego (_Tint del shader Quibli/Skybox). Con el material recomendado (City_Skybox, degradado azul claro→azul) esto es lo que pinta amanecer/atardecer cálidos y noche oscura sin cambiar de material ni de textura.")]
-        public Color skyboxTint = Color.white;
-        [Tooltip("Brillo del cielo en este periodo (_Intensity del shader Quibli/Skybox). Actúa como la 'exposición': bajo de noche, alto de día.")]
-        [Range(0f, 5f)] public float skyboxIntensity = 1f;
-        [Tooltip("Dureza del degradado (_Exponent). Alto = el color queda concentrado cerca de la dirección marcada por skyboxDirectionYaw/Pitch; bajo = se reparte más uniforme por todo el cielo.")]
-        [Range(0f, 5f)] public float skyboxExponent = 1f;
-        [Tooltip("Eje horizontal del degradado (_DirectionYaw, 0-1 en el shader). Punto de partida razonable: sunRotationY / 360, luego ajustar a ojo — no hace falta que coincida exactamente con el sol.")]
-        [Range(0f, 1f)] public float skyboxDirectionYaw = 0f;
-        [Tooltip("Eje vertical del degradado (_DirectionPitch, 0-1 en el shader). Punto de partida razonable: sunRotationX / 180, luego ajustar a ojo.")]
-        [Range(0f, 1f)] public float skyboxDirectionPitch = 0f;
 
         [Header("Luz direccional")]
         public Color lightColor = Color.white;
         [Range(0f, 2f)] public float lightIntensity = 1f;
-        [Range(0f, 360f)] public float sunRotationX = 50f;
-        [Range(0f, 360f)] public float sunRotationY = 170f;
 
         [Header("Luz ambiental")]
         public Color ambientColor = new Color(0.2f, 0.2f, 0.25f);
@@ -217,20 +107,6 @@ public class DayNightCycle : MonoBehaviour
         public float duration = 60f;
     }
 
-    // 13 ago 2026 — Reducido de 7 franjas activas a 4 (Amanecer/Día/Atardecer/Noche), a petición
-    // directa: "quiero amanecer, dia, atardecer, noche y lluvia FIN". Deliberadamente NO se toca el
-    // enum TimeOfDay (ver comentario de la clase) para no romper CampfireRestInteractable.cs,
-    // DayOnlyInspectionTrigger.cs ni TimeIconEntry[] de TimeOfDayIndicator.cs, que referencian
-    // valores concretos del enum — auditado antes de este cambio, ninguno usa BrightMorning/
-    // EarlyDusk/Midnight/Cloudy/HaloSky, así que quitarlas del ciclo automático no les afecta.
-    // Mapeo: Amanecer→Morning, Día→AfterNoon, Atardecer→Sunset, Noche→Night (ver TDD.md §16 A.3
-    // para la justificación completa de por qué estos 4 y no sus alternativas).
-    //
-    // Los deltas de lightIntensity/ambientIntensity entre franjas se han suavizado a propósito
-    // respecto a las 7 franjas originales (p.ej. Night pasaba de 1.3 a 0.25 de golpe): un cambio de
-    // luz tan grande afecta mucho a la dureza/dirección de las sombras y se notaba como un salto, no
-    // como una transición. Con transitionDuration también subido (10s → 16s) el cambio se lee como
-    // gradual de verdad.
     [Header("Periodos del día")]
     [SerializeField] private TimeOfDaySettings[] timeSettings = new TimeOfDaySettings[]
     {
@@ -238,47 +114,31 @@ public class DayNightCycle : MonoBehaviour
             timeOfDay = TimeOfDay.Morning,
             duration = 90f,
             lightColor = new Color(1f, 0.88f, 0.72f), lightIntensity = 0.95f,
-            sunRotationX = 15f, sunRotationY = 90f,
             ambientColor = new Color(0.3f, 0.31f, 0.4f), ambientIntensity = 0.85f,
-            fogColor = new Color(0.7f, 0.79f, 0.9f), fogDensity = 0.007f,
-            skyboxTint = new Color(1f, 0.83f, 0.72f), skyboxIntensity = 0.85f, skyboxExponent = 1f,
-            skyboxDirectionYaw = 0.25f, skyboxDirectionPitch = 0.08f
+            fogColor = new Color(0.7f, 0.79f, 0.9f), fogDensity = 0.007f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.AfterNoon,
             duration = 220f,
             lightColor = new Color(1f, 0.97f, 0.88f), lightIntensity = 1.2f,
-            sunRotationX = 60f, sunRotationY = 165f,
             ambientColor = new Color(0.38f, 0.37f, 0.34f), ambientIntensity = 1f,
-            fogColor = new Color(0.85f, 0.87f, 0.88f), fogDensity = 0.0045f,
-            skyboxTint = new Color(1f, 0.99f, 0.97f), skyboxIntensity = 1.15f, skyboxExponent = 1f,
-            skyboxDirectionYaw = 0.46f, skyboxDirectionPitch = 0.33f
+            fogColor = new Color(0.85f, 0.87f, 0.88f), fogDensity = 0.0045f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Sunset,
             duration = 65f,
             lightColor = new Color(1f, 0.6f, 0.28f), lightIntensity = 0.85f,
-            sunRotationX = 95f, sunRotationY = 245f,
             ambientColor = new Color(0.35f, 0.22f, 0.14f), ambientIntensity = 0.78f,
-            fogColor = new Color(0.88f, 0.58f, 0.34f), fogDensity = 0.011f,
-            skyboxTint = new Color(1f, 0.58f, 0.4f), skyboxIntensity = 0.9f, skyboxExponent = 1.1f,
-            skyboxDirectionYaw = 0.68f, skyboxDirectionPitch = 0.53f
+            fogColor = new Color(0.88f, 0.58f, 0.34f), fogDensity = 0.011f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Night,
             duration = 150f,
             lightColor = new Color(0.5f, 0.6f, 0.95f), lightIntensity = 0.4f,
-            sunRotationX = 150f, sunRotationY = 300f,
             ambientColor = new Color(0.1f, 0.1f, 0.2f), ambientIntensity = 0.55f,
-            fogColor = new Color(0.09f, 0.09f, 0.19f), fogDensity = 0.015f,
-            skyboxTint = new Color(0.22f, 0.26f, 0.5f), skyboxIntensity = 0.35f, skyboxExponent = 1f,
-            skyboxDirectionYaw = 0.83f, skyboxDirectionPitch = 0.83f
+            fogColor = new Color(0.09f, 0.09f, 0.19f), fogDensity = 0.015f
         }
     };
-
-    [Header("Skybox único")]
-    [Tooltip("El ÚNICO material de skybox del juego. Recomendado: Assets/Plugins/Quibli/Demos/City/Materials/City_Skybox.mat (shader Quibli/Skybox, degradado azul claro→azul, sin sol/nubes pintados — 'cielo liso'). Se instancia una copia en runtime (_runtimeSkybox) para poder animar tint/intensity/exponent/direction por franja sin ensuciar este asset compartido. Hay que arrastrarlo aquí a mano en cada escena que use DayNightCycle (MainWorld, Sendero, CandyLand, PlayerTest...); esto no se puede cablear desde fuera del Editor.")]
-    [SerializeField] private Material sharedSkyboxMaterial;
 
     [Header("Luz direccional")]
     [SerializeField] private Light directionalLight;
@@ -303,32 +163,13 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Segundos que tardan en desaparecer las partículas al detener la lluvia.")]
     [SerializeField] private float rainFadeOutTime = 3f;
 
-    [Header("Clima - Nubosidad previa a la lluvia")]
-    [Tooltip("OPCIONAL. Skybox de cielo nublado/tormenta que se muestra mientras el cielo se cubre de nubes, antes de que empiece a llover. Con un único skybox persistente (sharedSkyboxMaterial) esto ya NO hace falta para tapar huecos — se deja null y es CloudCoverSpawner (nubes 3D reales) quien cubre el cielo. Solo asigna esto si además quieres tintar el fondo lejano de otra forma durante la tormenta.")]
-    [SerializeField] private Material stormSkybox;
-
     [Header("Clima - Oscurecimiento por lluvia")]
     [Tooltip("Multiplicador de la intensidad de la luz direccional mientras llueve a tope (1 = sin cambio).")]
     [SerializeField, Range(0f, 1f)] private float rainLightIntensityMultiplier = 0.55f;
     [Tooltip("Multiplicador de la densidad de niebla mientras llueve a tope (1 = sin cambio, más alto = más densa).")]
     [SerializeField, Range(1f, 6f)] private float rainFogDensityMultiplier = 2.5f;
-    [Tooltip("Color hacia el que se tiñe la niebla mientras llueve (mezclado según rainFogColorBlend).")]
-    [SerializeField] private Color rainFogColorTint = new Color(0.45f, 0.47f, 0.5f);
-    [Range(0f, 1f)] [SerializeField] private float rainFogColorBlend = 0.5f;
     [Tooltip("Suelo ABSOLUTO de intensidad de la luz direccional mientras llueve a tope. Sin esto, rainLightIntensityMultiplier se aplica sobre la intensidad que ya tenga el periodo actual, así que un periodo ya oscuro (Night) puede quedarse en negro casi total. Con este suelo, la luz nunca baja de este valor por mucho que se multiplique.")]
     [SerializeField, Range(0f, 1f)] private float rainMinLightIntensity = 0.28f;
-    [Tooltip("Segundos que tarda el cielo en nublarse (oscurecer + espesar niebla + cubrirse de nubes 3D) ANTES de que arranque la lluvia, y lo que tarda en despejarse otra vez al terminar. La lluvia no empieza a caer hasta que termina esta transición.")]
-    [SerializeField] private float rainDarkenTransitionDuration = 4f;
-    [Tooltip("Color hacia el que se tiñe el ÚNICO skybox (_Tint) mientras llueve a tope (mezclado según rainSkyboxTintBlend). Por defecto un gris azulado apagado: sin esto, el cielo entre nubes se queda con el tinte brillante/saturado del periodo del día (Mediodía, Amanecer...) aunque esté lloviendo, porque el ciclo día/noche solo pinta el skybox por franja horaria, ajeno al clima.")]
-    [SerializeField] private Color rainSkyboxTint = new Color(0.55f, 0.58f, 0.62f);
-    [Tooltip("Cuánto se mezcla rainSkyboxTint sobre el tinte base del periodo, con lluvia a tope (0 = no se nota, 1 = sustituye del todo al tinte del periodo).")]
-    [Range(0f, 1f)] [SerializeField] private float rainSkyboxTintBlend = 0.6f;
-    [Tooltip("Multiplicador de _Intensity del skybox mientras llueve a tope (1 = sin cambio). Baja el brillo del cielo para que combine con la luz direccional atenuada (rainLightIntensityMultiplier) en vez de quedarse tan luminoso como en un periodo despejado.")]
-    [SerializeField, Range(0f, 1f)] private float rainSkyboxIntensityMultiplier = 0.6f;
-    [Tooltip("Cuánto se encapota el cielo con lluvia a tope (_Overcast del shader Quibli/Skybox): 0 = el degradado del periodo, solo más oscuro; 1 = gris plano de cielo de lluvia. rainSkyboxTint solo multiplica el degradado, así que por sí solo no lo vuelve gris.")]
-    [SerializeField, Range(0f, 1f)] private float rainSkyOvercast = 0.9f;
-    [Tooltip("Color del cielo encapotado con lluvia a tope. Se escala con el brillo del periodo (tinte e intensidad base × rainSkyboxIntensityMultiplier), así que de noche sale oscuro y a mediodía un gris medio.")]
-    [SerializeField] private Color rainSkyOvercastColor = new Color(0.62f, 0.66f, 0.72f);
 
     [Header("Clima - Niebla ocasional")]
     [Tooltip("Prefab opcional de niebla volumétrica (partículas) para el evento de niebla ocasional. Si es null, solo se espesa la niebla global (RenderSettings.fog), sin partículas.")]
@@ -351,7 +192,9 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private float windFadeOutTime = 3f;
     [Tooltip("Segundos que tarda el viento en coger toda su fuerza al empezar y en amainar al terminar (FuerzaDelViento de 0 a 1).")]
     [SerializeField] private float windRampDuration = 4f;
-    [Tooltip("Velocidad (m/s) a la que anda el jugador de cara contra el viento con el viento a toda fuerza. Ver VientoSobreElJugador.")]
+    [Tooltip("Velocidad máxima (m/s) del jugador con el viento a toda fuerza, vaya hacia donde vaya. Ver ClimaSobreElJugador.")]
+    [SerializeField] private float windVelocidadConViento = 2.6f;
+    [Tooltip("Velocidad (m/s) a la que anda el jugador de cara contra el viento con el viento a toda fuerza. Ver ClimaSobreElJugador.")]
     [SerializeField] private float windVelocidadContra = 1.8f;
     [Tooltip("Velocidad (m/s) a la que el viento arrastra al jugador si se queda quieto, con el viento a toda fuerza. 0 = no lo arrastra.")]
     [SerializeField] private float windArrastreQuieto = 0.9f;
@@ -365,19 +208,10 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private Vector2 snowDurationRange = new Vector2(60f, 140f);
     [Tooltip("Segundos que tardan en desaparecer los copos al terminar la nevada.")]
     [SerializeField] private float snowFadeOutTime = 6f;
-    [Tooltip("Segundos que tarda el cielo en blanquearse al empezar a nevar y en despejarse al terminar.")]
-    [SerializeField] private float snowTransitionDuration = 8f;
     [Tooltip("Multiplicador de la intensidad de la luz direccional con la nevada a tope (1 = sin cambio).")]
     [SerializeField, Range(0f, 1f)] private float snowLightIntensityMultiplier = 0.8f;
     [Tooltip("Multiplicador de la densidad de niebla con la nevada a tope (la nieve quita visibilidad a lo lejos).")]
     [SerializeField, Range(1f, 6f)] private float snowFogDensityMultiplier = 2.2f;
-    [Tooltip("Color hacia el que se tiñe la niebla mientras nieva (mezclado según snowFogColorBlend).")]
-    [SerializeField] private Color snowFogColor = new Color(0.82f, 0.85f, 0.9f);
-    [SerializeField, Range(0f, 1f)] private float snowFogColorBlend = 0.55f;
-    [Tooltip("Cuánto se encapota el cielo con la nevada a tope (_Overcast del skybox, como la lluvia pero más claro).")]
-    [SerializeField, Range(0f, 1f)] private float snowSkyOvercast = 0.6f;
-    [Tooltip("Color del cielo encapotado por la nieve, escalado con el brillo del periodo.")]
-    [SerializeField] private Color snowSkyOvercastColor = new Color(0.86f, 0.88f, 0.92f);
     [Tooltip("Event Key del AudioGraphProfile del ambiente de nevada (loop). Vacío = el viento suave de Weather_WindStarted.")]
     [SerializeField] private string snowSfxKey;
     [Tooltip("Volumen del loop de la nevada (0-1). Bajo: la nieve apenas suena.")]
@@ -394,7 +228,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private string[] truenosDeTormenta = { "SFX_Prologo_Trueno_1", "SFX_Prologo_Trueno_2", "SFX_Prologo_Trueno_3" };
     [Tooltip("Volumen de los truenos de una tormenta en juego (0-1).")]
     [SerializeField, Range(0f, 1f)] private float volumenDelTrueno = 1f;
-    [Tooltip("Retraso (min, max) en segundos entre el destello del rayo y el trueno — la luz llega antes que el sonido, igual que en la realidad. Solo afecta a CUÁNDO suena thunderstormThunderSfxKey, no al destello en sí.")]
+    [Tooltip("Retraso (min, max) en segundos entre el destello del rayo y el trueno — la luz llega antes que el sonido, igual que en la realidad") ]
     [SerializeField] private Vector2 thunderstormThunderDelayRange = new Vector2(0.3f, 1.8f);
     [Tooltip("Altura (unidades de mundo) desde la que 'cae' el rayo visible, por encima de la posición del jugador. No depende de ningún terreno/collider real (no se hace Raycast): el extremo inferior del rayo se dibuja a la altura actual del jugador, como aproximación razonable del suelo cercano.")]
     [SerializeField] private float thunderstormBoltHeight = 220f;
@@ -414,6 +248,8 @@ public class DayNightCycle : MonoBehaviour
     [Header("Clima — sorteo independiente del periodo (30 ago 2026, ver comentario de clase)")]
     [Tooltip("Cada cuánto se vuelve a intentar un cambio de clima (sorteo de lluvia/niebla/viento/tormenta), en segundos — se elige un valor aleatorio dentro de este rango cada vez, para que no sea predecible. Corre en un temporizador propio, totalmente independiente de a qué periodo del día (amanecer/día/atardecer/noche) corresponda ese instante — el clima puede empezar, seguir o terminar en cualquier periodo, incluso a mitad de uno.")]
     [SerializeField] private Vector2 weatherCheckIntervalRange = new Vector2(45f, 110f);
+    [Tooltip("Si es falso, el clima no se sortea solo: solo cambia cuando se pide (cinemáticas, LAB).")]
+    [SerializeField] private bool sortearClima = true;
     [Tooltip("Probabilidad (0-1) de que arranque una TORMENTA en cada sorteo (lluvia + rayos) — se comprueba ANTES que rainChancePerCheck, así que si sale, no se vuelve a tirar el dado para lluvia normal ese mismo sorteo. Deliberadamente baja: las tormentas deben ser un evento poco frecuente y notable, no una lluvia más.")]
     [SerializeField, Range(0f, 1f)] private float thunderstormChancePerCheck = 0.05f;
     [Tooltip("Probabilidad (0-1) de que arranque a llover (lluvia normal, sin rayos) en cada sorteo — solo se comprueba si el sorteo de tormenta de ese mismo intento no salió.")]
@@ -434,7 +270,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float rainLoopVolume = 0.3f;
     [Tooltip("Event Key opcional del AudioGraphProfile para un one-shot adicional cuando para de llover (p.ej. un cue corto de viento amainando). El loop de rainStartedSfxKey se detiene siempre, tenga o no clave este campo.")]
     [SerializeField] private string rainStoppedSfxKey;
-    /// <summary>Clave interna usada en AudioService.PlayLoopingSFX/StopLoopingSFX para el loop de ambiente de lluvia.</summary>
+
     const string RainWeatherSfxLoopId = "Weather_Rain";
     [Tooltip("Event Key del AudioGraphProfile que se reproduce al empezar un evento de niebla ocasional.")]
     [SerializeField] private string mistStartedSfxKey;
@@ -466,7 +302,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] private UnityEvent onThunderstormStopped;
 
     public event Action<TimeOfDay> TimeOfDayChanged;
-    /// <summary>Se dispara al empezar a nublarse el cielo, ANTES de que arranque la lluvia (también con tormenta, que arranca como una lluvia normal). Útil para SFX de viento/truenos.</summary>
+
     public event Action CloudsBuildingUp;
     public event Action RainStarted;
     public event Action RainStopped;
@@ -474,91 +310,310 @@ public class DayNightCycle : MonoBehaviour
     public event Action MistStopped;
     public event Action WindStarted;
     public event Action WindStopped;
-    /// <summary>Se dispara al arrancar/terminar la capa de tormenta (rayos) por encima de la lluvia — ver StartThunderstorm. No confundir con RainStarted/RainStopped, que también se disparan (una tormenta ES lluvia, más rayos).</summary>
+
     public event Action ThunderstormStarted;
     public event Action ThunderstormStopped;
     public event Action SnowStarted;
     public event Action SnowStopped;
+    public event Action CloudsClearing;
+    [SerializeField] private UnityEvent onCloudsClearing;
 
     public TimeOfDay CurrentTimeOfDay { get; private set; }
     public bool IsRaining { get; private set; }
     public bool IsMisty { get; private set; }
     public bool IsWindy { get; private set; }
-    /// <summary>True mientras la capa de rayos está activa (ver StartThunderstorm). Independiente de IsRaining a nivel de flag, aunque en la práctica una tormenta siempre implica IsRaining == true a la vez (StartThunderstorm arranca la lluvia por debajo).</summary>
+
     public bool IsThunderstorm { get; private set; }
     public bool IsSnowing { get; private set; }
-    /// Hacia dónde sopla el viento (horizontal, normalizado). Se sortea al empezar cada viento.
+
     public Vector3 DireccionDelViento { get; private set; } = Vector3.forward;
-    /// Fuerza del viento (0-1), con subida y bajada graduales (windRampDuration).
+
     public float FuerzaDelViento { get; private set; }
-    /// La fuerza que se nota donde está el jugador: 0 dentro de un interior.
+
     public float FuerzaDelVientoAqui => AnclaDeClima == null && IsSkyboxLockedByEnvironment() ? 0f : FuerzaDelViento;
     public float TimeProgress => _currentDuration > 0 ? Mathf.Clamp01(_timeElapsed / _currentDuration) : 1f;
 
-    /// <summary>Segundos que tarda el cielo en nublarse/despejarse. Expuesto para que sistemas
-    /// externos (p.ej. un spawner de nubes 3D) sincronicen su propio fundido con este tiempo.</summary>
-    public float RainDarkenTransitionDuration => rainDarkenTransitionDuration;
+    public float DuracionDeNublarse => duracionDeNublarse;
+
+    [Header("Recorrido de los astros")]
+    [Tooltip("Rumbo por el que salen el sol y la luna, en grados sobre el plano horizontal.")]
+    [SerializeField] private float rumboDelAmanecer = 90f;
+    [SerializeField, Range(1f, 89f)] private float alturaMaximaDelSol = 55f;
+    [SerializeField, Range(1f, 89f)] private float alturaMaximaDeLaLuna = 50f;
+    [Tooltip("Elevación mínima de la luz que produce sombras, independiente del disco del astro.")]
+    [SerializeField, Range(1f, 89f)] private float alturaMinimaDeLaLuz = 18f;
+
+    public float HoraDelDia
+    {
+        get
+        {
+            TimeOfDay franja = timeSettings != null && timeSettings.Length > 0
+                ? timeSettings[Mathf.Clamp(_currentIndex, 0, timeSettings.Length - 1)].timeOfDay : CurrentTimeOfDay;
+            Vector2 horas = HorasDeLaFranja(franja);
+            return Mathf.Repeat(Mathf.Lerp(horas.x, horas.y, TimeProgress), 24f);
+        }
+    }
+    public Vector3 DireccionDelSol { get; private set; } = Vector3.right;
+    public Vector3 DireccionDeLaLuna { get; private set; } = Vector3.left;
+
+    private static Vector2 HorasDeLaFranja(TimeOfDay franja)
+    {
+        switch (franja)
+        {
+            case TimeOfDay.Morning: return new Vector2(6f, 9f);
+            case TimeOfDay.AfterNoon: return new Vector2(9f, 18f);
+            case TimeOfDay.Sunset: return new Vector2(18f, 20.5f);
+            case TimeOfDay.Night: return new Vector2(20.5f, 30f);
+            default: return new Vector2(9f, 18f);
+        }
+    }
+
+    private Vector3 DireccionDelAstro(float fase, float alturaMaxima)
+    {
+        float elevacion = Mathf.Sin(fase) * alturaMaxima;
+        float rumbo = rumboDelAmanecer + fase * Mathf.Rad2Deg;
+        return Quaternion.Euler(-elevacion, rumbo, 0f) * Vector3.forward;
+    }
+
+    private void ActualizarDireccionesDeAstros()
+    {
+        float hora = HoraDelDia;
+        float horaNocturna = hora < 6f ? hora + 24f : hora;
+        // La mitad diurna dura 14 horas; la nocturna dura 10. Ambas cruzan el horizonte sin saltos.
+        float faseSolar = hora >= 6f && hora <= 20f ? Mathf.PI * (hora - 6f) / 14f
+            : Mathf.PI + Mathf.PI * (horaNocturna - 20f) / 10f;
+        float faseLunar = hora >= 6f && hora < 20f ? Mathf.PI + Mathf.PI * (hora - 6f) / 14f
+            : Mathf.PI * (horaNocturna - 20f) / 10f;
+        DireccionDelSol = DireccionDelAstro(faseSolar, alturaMaximaDelSol);
+        DireccionDeLaLuna = DireccionDelAstro(faseLunar, alturaMaximaDeLaLuna);
+    }
+
+    private Vector3 DireccionDeLuzRecortada(Vector3 astro)
+    {
+        float elevacion = Mathf.Max(alturaMinimaDeLaLuz, Mathf.Asin(Mathf.Clamp(astro.y, -1f, 1f)) * Mathf.Rad2Deg);
+        float rumbo = Mathf.Atan2(astro.x, astro.z) * Mathf.Rad2Deg;
+        return Quaternion.Euler(-elevacion, rumbo, 0f) * Vector3.forward;
+    }
+
+    private void ActualizarLuzDeAstros()
+    {
+        if (directionalLight == null) return;
+        Vector3 direccion = Vector3.Slerp(DireccionDeLuzRecortada(DireccionDelSol),
+            DireccionDeLuzRecortada(DireccionDeLaLuna), PesoDeNoche).normalized;
+        directionalLight.transform.rotation = Quaternion.LookRotation(-direccion, Vector3.up);
+    }
+
+    private float AtenuacionDelRelevo => 1f - 0.6f * 4f * PesoDeNoche * (1f - PesoDeNoche);
 
     private int _currentIndex;
     private float _timeElapsed;
     private float _currentDuration;
     private bool _isTransitioning;
 
-    // Instancia propia de sharedSkyboxMaterial (ver Awake/OnDestroy). RenderSettings.skybox no
-    // auto-instancia el material al asignarlo (a diferencia de renderer.material): sin esta copia,
-    // animar tint/intensity/exponent/direction en Play Mode ensuciaría el .mat compartido de verdad
-    // en el Editor.
     private Material _runtimeSkybox;
-    private static readonly int SkyboxTintId = Shader.PropertyToID("_Tint");
-    private static readonly int SkyboxIntensityId = Shader.PropertyToID("_Intensity");
-    private static readonly int SkyboxOvercastId = Shader.PropertyToID("_Overcast");
-    private static readonly int SkyboxOvercastColorId = Shader.PropertyToID("_OvercastColor");
-    // Último _Overcast escrito, para dejarlo a 0 una sola vez cuando deja de llover (LateUpdate
-    // sale antes de tiempo sin lluvia ni niebla y si no se quedaría el último valor pequeño).
-    private float _lastSkyOvercast;
-    private static readonly int SkyboxExponentId = Shader.PropertyToID("_Exponent");
-    private static readonly int SkyboxDirectionYawId = Shader.PropertyToID("_DirectionYaw");
-    private static readonly int SkyboxDirectionPitchId = Shader.PropertyToID("_DirectionPitch");
+
+    [Header("Cielo y nubosidad")]
+    [SerializeField, Min(0f)] private float duracionDelFundidoDelCielo = 45f;
+    [SerializeField, Min(0.01f)] private float duracionDeNublarse = 40f;
+    [SerializeField, Min(0.01f)] private float duracionDeDespejarse = 60f;
+    [SerializeField] private Color colorDeNubesDeLluvia = new Color(0.52f, 0.58f, 0.66f);
+    [SerializeField] private Color colorDeNubesDeTormenta = new Color(0.22f, 0.27f, 0.34f);
+    [SerializeField] private Color colorDeNubesDeNieve = new Color(0.86f, 0.88f, 0.92f);
+    private Material _cieloDeSalida;
+    private Material _destinoDelCielo;
+    private float _tiempoDeFundido;
+    private bool _actualizarAmbientePendiente;
+    private bool _lluviaSolicitada, _nieveSolicitada;
+    private float _objetivoAnterior;
+    private bool _despejadoPendiente;
+    private float _inicioDeNubosidad, _tiempoDeNubosidad;
+    private Color _colorDeClima;
+    private static readonly int NubosidadId = Shader.PropertyToID("_Nubosidad");
+    private static readonly int NubesClimaId = Shader.PropertyToID("_ColorDeNubesDeClima");
+    private static readonly int SombraClimaId = Shader.PropertyToID("_ColorDeNubesDeClimaEnSombra");
+    private static readonly int FrenteId = Shader.PropertyToID("_AvanceDelFrente");
+    private static readonly int HorizonteId = Shader.PropertyToID("_ColorHorizonte");
+    private static readonly int VientoCieloId = Shader.PropertyToID("_CieloViento");
+    private static readonly int DireccionFrenteId = Shader.PropertyToID("_CieloDireccionDelFrente");
+    private Vector3 _direccionDelFrente = Vector3.forward;
+    private FundidoDePeso _fundidoDeTormenta, _fundidoDeNieve, _fundidoDePrecipitacion;
+
+    private struct FundidoDePeso
+    {
+        private float _objetivo, _inicio, _tiempo;
+        private bool _iniciado;
+
+        public float Actualizar(float actual, float objetivo, float nublarse, float despejarse)
+        {
+            if (!_iniciado || objetivo != _objetivo)
+            {
+                _iniciado = true;
+                _inicio = actual;
+                _objetivo = objetivo;
+                _tiempo = 0f;
+            }
+            _tiempo += Time.deltaTime;
+            float duracion = objetivo >= _inicio ? nublarse : despejarse;
+            return Mathf.Lerp(_inicio, objetivo, Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(_tiempo / Mathf.Max(0.01f, duracion))));
+        }
+    }
+
+    private Material ObtenerCielo(TimeOfDaySettings franja)
+    {
+        if (franja.skybox != null) return franja.skybox;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        Debug.LogWarning($"[DayNightCycle] La franja {franja.timeOfDay} no tiene cielo; se usa otra franja disponible.", this);
+#endif
+        for (int i = 0; i < timeSettings.Length; i++)
+            if (timeSettings[i].skybox != null) return timeSettings[i].skybox;
+        return null;
+    }
+
+    private void CrearCielo(TimeOfDaySettings franja)
+    {
+        if (_runtimeSkybox != null) return;
+        Material fuente = ObtenerCielo(franja);
+        if (fuente != null) _runtimeSkybox = new Material(fuente);
+        else
+        {
+            Shader shader = Shader.Find("El Sendero/Cielo");
+            if (shader == null) return;
+            _runtimeSkybox = new Material(shader);
+        }
+        _runtimeSkybox.hideFlags = HideFlags.HideAndDontSave;
+        _cieloDeSalida = new Material(_runtimeSkybox) { hideFlags = HideFlags.HideAndDontSave };
+        ReapplyPendingSkybox();
+    }
+
+    private void IniciarFundidoDelCielo(TimeOfDaySettings franja, bool inmediato)
+    {
+        CrearCielo(franja);
+        Material destino = ObtenerCielo(franja);
+        if (_runtimeSkybox == null || destino == null) return;
+        if (inmediato || duracionDelFundidoDelCielo <= 0f)
+        {
+            _destinoDelCielo = null;
+            _runtimeSkybox.CopyPropertiesFromMaterial(destino);
+            if (Application.isPlaying) _actualizarAmbientePendiente = true;
+            else DynamicGI.UpdateEnvironment();
+        }
+        else
+        {
+            // La copia conserva el estado visible si otra franja interrumpe el fundido.
+            _cieloDeSalida.CopyPropertiesFromMaterial(_runtimeSkybox);
+            _destinoDelCielo = destino;
+            _tiempoDeFundido = 0f;
+        }
+        ReapplyPendingSkybox();
+    }
+
+    private void FijarNubosidadCompleta()
+    {
+        PesoDePrecipitacion = 1f;
+        Nublado = _inicioDeNubosidad = _objetivoAnterior = 1f;
+        _tiempoDeNubosidad = duracionDeNublarse;
+        _fundidoDeTormenta = _fundidoDeNieve = _fundidoDePrecipitacion = default;
+        if (!IsWindy) DireccionDelViento = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f) * Vector3.forward;
+        _direccionDelFrente = DireccionDelViento;
+        if (IsThunderstorm) PesoDeTormenta = 1f;
+    }
+
+    private float ObjetivoDeNubosidad()
+    {
+        if (_lluviaSolicitada || IsRaining || IsThunderstorm || _nieveSolicitada || IsSnowing) return 1f;
+        if (IsMisty) return 0.5f;
+        return IsWindy ? 0.3f : 0f;
+    }
+
+    private void AvisarDespejado()
+    {
+        if (!_despejadoPendiente || ObjetivoDeNubosidad() > 0f) return;
+        _despejadoPendiente = false;
+        onCloudsClearing?.Invoke();
+        CloudsClearing?.Invoke();
+    }
+
+    private void ActualizarCieloYClima()
+    {
+        float objetivo = ObjetivoDeNubosidad();
+        if (objetivo != _objetivoAnterior)
+        {
+            _inicioDeNubosidad = Nublado;
+            _tiempoDeNubosidad = 0f;
+            if (objetivo > _objetivoAnterior)
+            {
+                if (!IsWindy)
+                    DireccionDelViento = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f) * Vector3.forward;
+                _direccionDelFrente = DireccionDelViento;
+            }
+            // El despejado también llega tras finalizar un clima secundario que mantiene nubes.
+            if (objetivo == 0f && _objetivoAnterior > 0f) AvisarDespejado();
+            _objetivoAnterior = objetivo;
+        }
+        _tiempoDeNubosidad += Time.deltaTime;
+        float duracion = objetivo >= _inicioDeNubosidad ? duracionDeNublarse : duracionDeDespejarse;
+        float progreso = Mathf.Clamp01(_tiempoDeNubosidad / Mathf.Max(0.01f, duracion));
+        Nublado = Mathf.Lerp(_inicioDeNubosidad, objetivo, Mathf.SmoothStep(0f, 1f, progreso));
+        PesoDeTormenta = _fundidoDeTormenta.Actualizar(PesoDeTormenta, IsThunderstorm ? 1f : 0f, duracionDeNublarse, duracionDeDespejarse);
+        PesoDeNieve = _fundidoDeNieve.Actualizar(PesoDeNieve, _nieveSolicitada || IsSnowing ? 1f : 0f, duracionDeNublarse, duracionDeDespejarse);
+        PesoDePrecipitacion = _fundidoDePrecipitacion.Actualizar(PesoDePrecipitacion, HayNubesDePrecipitacion ? 1f : 0f, duracionDeNublarse, duracionDeDespejarse);
+        if (_runtimeSkybox == null) return;
+        if (_destinoDelCielo != null)
+        {
+            _tiempoDeFundido += Time.deltaTime;
+            float t = Mathf.Clamp01(_tiempoDeFundido / Mathf.Max(0.01f, duracionDelFundidoDelCielo));
+            _runtimeSkybox.Lerp(_cieloDeSalida, _destinoDelCielo, Mathf.SmoothStep(0f, 1f, t));
+            if (t >= 1f)
+            {
+                _destinoDelCielo = null;
+                _actualizarAmbientePendiente = true;
+            }
+        }
+        Color horizonte = _runtimeSkybox.HasProperty(HorizonteId) ? _runtimeSkybox.GetColor(HorizonteId) : Color.white;
+        float brillo = Mathf.Max(0.18f, horizonte.r * 0.2126f + horizonte.g * 0.7152f + horizonte.b * 0.0722f);
+        _colorDeClima = Color.Lerp(Color.Lerp(colorDeNubesDeLluvia, colorDeNubesDeTormenta, PesoDeTormenta),
+            colorDeNubesDeNieve, PesoDeNieve) * brillo * Mathf.Lerp(1f, 0.75f, PesoDeNoche);
+        _colorDeClima.a = 1f;
+        float frente = objetivo > _inicioDeNubosidad && objetivo == 1f ? Mathf.Sin(progreso * Mathf.PI) : 0f;
+        // Las propiedades meteorológicas se escriben después del Lerp incluso con cielo bloqueado.
+        _runtimeSkybox.SetFloat(NubosidadId, Nublado);
+        _runtimeSkybox.SetColor(NubesClimaId, _colorDeClima);
+        Color sombra = _colorDeClima * 0.65f;
+        sombra.a = 1f;
+        _runtimeSkybox.SetColor(SombraClimaId, sombra);
+        _runtimeSkybox.SetFloat(FrenteId, frente);
+        float velocidad = 0.1f + FuerzaDelViento * 0.7f + PesoDeTormenta * 0.5f;
+        Shader.SetGlobalVector(VientoCieloId, new Vector4(DireccionDelViento.x * velocidad, DireccionDelViento.z * velocidad, 0f, 0f));
+        Shader.SetGlobalVector(DireccionFrenteId, new Vector4(_direccionDelFrente.x, _direccionDelFrente.z, 0f, 0f));
+        if (_actualizarAmbientePendiente)
+        {
+            _actualizarAmbientePendiente = false;
+            DynamicGI.UpdateEnvironment();
+        }
+    }
 
     private GameObject _activeRainInstance;
     private Coroutine _rainCoroutine;
     private Coroutine _transitionCoroutine;
     private Coroutine _rainFadeCoroutine;
-    private Coroutine _rainDarkenCoroutine;
-    private float _rainDarkenAmount;
-    // Intensidad de la luz direccional que marca el periodo (sin lluvia ni nieve). -1 = aún sin leer.
+
     private float _baseLightIntensity = -1f;
 
-    /// Cuánto tapan las nubes de lluvia/tormenta el cielo ahora mismo (0-1). Lo lee
-    /// SolYLunaEnElCielo para esconder el sol y la luna detrás de la tormenta (INC-410).
-    public float Nublado => _rainDarkenAmount;
+    public float Nublado { get; private set; }
+    public float PesoDeTormenta { get; private set; }
+    public float PesoDeNieve { get; private set; }
+    public float PesoDePrecipitacion { get; private set; }
+    public bool HayNubesDePrecipitacion => _lluviaSolicitada || _nieveSolicitada || IsRaining || IsSnowing || IsThunderstorm;
+    /// Lluvia pedida, tanto si ya cae como si el cielo aún se está cubriendo (incluye la de la tormenta).
+    public bool LluviaPedida => _lluviaSolicitada || IsRaining;
+    /// Nieve pedida, tanto si ya cae como si el cielo aún se está cubriendo.
+    public bool NievePedida => _nieveSolicitada || IsSnowing;
 
-    /// Cuánto es de noche (0-1), fundido con las transiciones. De noche la luz direccional hace de
-    /// LUNA: en el periodo Night apunta desde 30° sobre el horizonte, y sin esto
-    /// SolYLunaEnElCielo pintaba ahí un SOL en plena noche (INC-410).
     public float PesoDeNoche { get; private set; }
 
-    /// PesoDeNoche del ciclo cargado, o 0 si no hay ninguno. Lo leen las luces, ventanas y
-    /// luciérnagas que se encienden de noche (VentanasIluminadas, LuzNocturna, LuciernagasNocturnas).
     public static float NocheActual => Instance != null ? Instance.PesoDeNoche : 0f;
 
-    // True mientras el cielo se está nublando (nubes 3D de CloudCoverSpawner + oscurecimiento) pero
-    // la lluvia todavía no ha empezado a caer (IsRaining sigue en false hasta que termina la transición).
     private bool _isCloudBuildingUp;
-    // Skybox que había activo justo antes de aplicar stormSkybox, para poder restaurarlo si ninguna
-    // transición de periodo lo ha pisado mientras tanto. Solo se usa si stormSkybox está asignado.
-    private Material _preStormSkybox;
-
-    // Cámara principal cacheada en Awake (nunca Camera.main en Update/LateUpdate). Se usa como red
-    // de seguridad SOLO cuando no hay un único skybox persistente (_runtimeSkybox == null, es decir,
-    // sharedSkyboxMaterial sin asignar): en ese caso el skybox despejado seguiría viéndose en el
-    // horizonte más allá del alcance de CloudCoverSpawner. Con _runtimeSkybox activo esto no hace
-    // falta — el cielo despejado por encima/alrededor del techo de nubes es el comportamiento
-    // deseado (ver tooltip de stormSkybox), no un hueco que tapar.
-    private Camera _mainCamera;
-    private CameraClearFlags _preStormClearFlags;
-    private Color _preStormBackgroundColor;
-    private bool _cameraOverrideActive;
 
     private GameObject _activeMistInstance;
     private Coroutine _mistCoroutine;
@@ -575,67 +630,25 @@ public class DayNightCycle : MonoBehaviour
     private GameObject _activeSnowInstance;
     private Coroutine _snowCoroutine;
     private Coroutine _snowFadeCoroutine;
-    private Coroutine _snowAmountCoroutine;
-    private float _snowAmount;
     const string SnowWeatherSfxLoopId = "Weather_Snow";
 
-    // La tormenta reutiliza StartRain/StopRain por debajo (mismas partículas/oscurecimiento/niebla
-    // de siempre) — _thunderstormCoroutine solo controla CUÁNTO dura la capa extra de rayos,
-    // _lightningCoroutine es el bucle que va disparando cada rayo individual mientras tanto.
     private Coroutine _thunderstormCoroutine;
     private Coroutine _lightningCoroutine;
-    // Material compartido del trazo visible del rayo (construido en Awake, liberado en OnDestroy) —
-    // ver SpawnLightningBolt.
+
     private Material _lightningBoltMaterial;
-    // 30 ago 2026 — true mientras el jugador está dentro de una AmbientZone con forcesMist activo
-    // (ver SetZoneMistOverride). Mientras esté a true, TryRollWeather deja de sortear NADA nuevo
-    // (ni lluvia, ni tormenta, ni viento) y solo mantiene la niebla — a petición de Raúl, "la
-    // niebla manda, bloquea el resto" mientras estás en una zona así. Si ya estaba lloviendo al
-    // entrar en la zona, esa lluvia sigue igual (no se le pisa) hasta que termine sola.
+
     private bool _zoneMistForced;
 
-    // Niebla "base" del periodo actual (sin el oscurecimiento de lluvia/niebla ocasional aplicado).
-    // LateUpdate() recalcula el fog final SIEMPRE a partir de esta base, en vez de multiplicar el
-    // RenderSettings.fogDensity ya mutado del frame anterior — eso causaba un crecimiento exponencial
-    // frame a frame (density *= multiplier cada frame) que saturaba la pantalla entera de niebla en
-    // cuestión de segundos.
     private float _baseFogDensity;
     private Color _baseFogColor;
-    // Mismos motivos que _baseFogDensity/_baseFogColor (ver comentario ahí): LateUpdate() recalcula
-    // el tinte/intensidad del skybox SIEMPRE a partir de esta base cacheada, nunca leyendo de vuelta
-    // el valor que el propio LateUpdate ya mutó el frame anterior — eso compondría geométricamente
-    // (rainSkyboxIntensityMultiplier aplicado sobre sí mismo cada frame) hasta apagar el cielo del
-    // todo en un puñado de frames.
-    private Color _baseSkyboxTint;
-    private float _baseSkyboxIntensity;
 
-    // Suprime la lluvia y la niebla VISUALMENTE mientras el jugador está en un interior
-    // (AnchorEnvironment.isInterior), sin tocar el ciclo lógico (IsRaining/IsMisty, temporizadores)
-    // para que al salir se reanuden si el clima sigue activo.
-    // OJO: esto solo se actualiza vía OnInteriorEntered/OnInteriorExited, que EnvironmentController
-    // dispara únicamente desde ApplyInterior/ApplyExterior (el flujo "real" de entrar/salir andando).
-    // NO se actualiza durante un override cinemático (BeginCinematicOverride + ApplyInteriorForCinematic,
-    // ver CinematicSequencerBase/SimpleCinematicDirector), porque ese flujo no toca _mode a propósito.
-    // Por eso IsSkyboxLockedByEnvironment() de abajo comprueba también IsCinematicOverrideActive.
     private bool _outdoorWeatherSuppressedIndoors;
 
-    // Para detectar cuándo un override cinemático termina y poder re-aplicar el skybox correcto
-    // (periodo actual o tormenta) que se haya quedado pendiente mientras estaba bloqueado.
     private bool _wasCinematicOverrideActive;
 
-    // Para detectar el inicio de un minijuego (TagMinigameController.IsAnyMinigameActive) y cortar
-    // la lluvia que ya estuviera cayendo en ese instante. StartRain() ya bloquea que arranque lluvia
-    // NUEVA mientras haya un minijuego activo, pero eso no cubre el caso de que empezara a llover
-    // justo antes de que el jugador entrara en el minijuego.
     private bool _wasMinigameActive;
 
-    /// El material de skybox vivo, el que el ciclo va tintando por franja horaria. Lo necesita
-    /// CinematicTimeOfDay.MostrarExterior: una cinemática que transcurre a cielo abierto mientras el
-    /// jugador está dentro de una casa tiene que poder recuperar el cielo, y el snapshot que guarda
-    /// EnvironmentController no sirve cuando el jugador ENTRÓ en el interior antes de que existiera
-    /// snapshot alguno — que es justo lo que pasa en el prólogo, donde Will se acuesta y sueña.
-    /// Null si no hay sharedSkyboxMaterial asignado (entonces no hay nada que recuperar).
-    public Material SkyboxEnUso => _runtimeSkybox != null ? _runtimeSkybox : sharedSkyboxMaterial;
+    public Material SkyboxEnUso => _runtimeSkybox;
 
     void Awake()
     {
@@ -652,33 +665,15 @@ public class DayNightCycle : MonoBehaviour
 
         Instance = this;
 
-        _mainCamera = Camera.main;
         Sun = directionalLight != null ? directionalLight.transform : null;
 
-        if (sharedSkyboxMaterial != null)
-        {
-            _runtimeSkybox = new Material(sharedSkyboxMaterial);
-            RenderSettings.skybox = _runtimeSkybox;
-        }
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        else
-        {
-            Debug.LogWarning("[DayNightCycle] No hay sharedSkyboxMaterial asignado (recomendado: Assets/Plugins/Quibli/Demos/City/Materials/City_Skybox.mat); el ciclo día/noche no podrá animar el skybox único y se queda con el que ya hubiera en RenderSettings.skybox.");
-        }
-#endif
+        CrearCielo(timeSettings[_currentIndex]);
 
         if (controlAmbientLight)
             RenderSettings.ambientMode = AmbientMode.Flat;
 
-        // Si controlFog está desactivado, forzamos el fog a apagado en vez de dejarlo tal cual
-        // estuviera horneado en la escena — así "desactivar niebla" en el Inspector apaga de
-        // verdad la niebla, en lugar de depender de lo último que hubiera en Lighting Settings.
         RenderSettings.fog = controlFog;
 
-        // Material del rayo visible (30 ago 2026) — construido UNA vez y compartido por todos los
-        // rayos, igual que _starMaterial en NightSkyStarSpawner.cs. Sprites/Default: mismo shader ya
-        // confirmado compatible con URP en este proyecto (ver comentario de clase de
-        // NightSkyStarSpawner), sin arriesgarse a un shader nuevo sin Editor para comprobarlo.
         _lightningBoltMaterial = new Material(Shader.Find("Sprites/Default"));
     }
 
@@ -687,14 +682,13 @@ public class DayNightCycle : MonoBehaviour
         if (Instance == this) Instance = null;
 
         if (Sun == (directionalLight != null ? directionalLight.transform : null)) Sun = null;
-        // _runtimeSkybox es una copia en memoria de sharedSkyboxMaterial (ver Awake), no el asset
-        // compartido: hay que liberarla explícitamente o queda huérfana hasta la siguiente carga
-        // de escena/recolección de basura.
+
         if (_runtimeSkybox != null)
         {
             Destroy(_runtimeSkybox);
             _runtimeSkybox = null;
         }
+        if (_cieloDeSalida != null) Destroy(_cieloDeSalida);
         if (_lightningBoltMaterial != null)
         {
             Destroy(_lightningBoltMaterial);
@@ -707,33 +701,11 @@ public class DayNightCycle : MonoBehaviour
         EnvironmentController.OnInteriorEntered += HandleInteriorEntered;
         EnvironmentController.OnInteriorExited  += HandleInteriorExited;
 
-        // Si ya estábamos en un interior al activarnos (p.ej. carga directa a una escena de
-        // interior), arrancar ya suprimidos para no mostrar/oír lluvia un frame de más.
         var ec = EnvironmentController.Instance;
         _outdoorWeatherSuppressedIndoors = ec != null && ec.CurrentMode == EnvironmentMode.Interior;
 
-        // Un frame de margen antes de aplicar el periodo inicial. Si esta escena se abre y
-        // se le da Play directamente (AutoBootstrapOnPlay carga 'Start' aditivamente ANTES de
-        // entrar en PlayMode, ver Editor/AutoBootstrapOnPlay.cs), el orden de Awake/OnEnable entre
-        // la escena 'Start' y esta escena no está garantizado, y tampoco lo está el orden relativo
-        // a otros scripts de esta misma escena con prioridad por defecto (0), como
-        // CloudCoverSpawner. Si InitializeCycle() corriera ya mismo de forma síncrona:
-        //  - CloudCoverSpawner.OnEnable() podría no haberse suscrito aún a CloudsBuildingUp/
-        //    RainStopped → el evento se dispara al vacío y el techo de nubes nunca aparece.
-        //  - AudioService.Awake() (en 'Start') podría no haber corrido aún → AudioService.Instance
-        //    sigue siendo null y PlayLoopingSFX/PlaySFX no hacen nada.
-        // Resultado: "le doy a Play y sale lluvia directamente pero sin nubes y sin sfx". Esperar
-        // un frame garantiza que todos los Awake/OnEnable de la carga inicial ya han corrido (mismo
-        // patrón que usa WorldBootstrap.InitializeWorldDelayed / AmbientZone.CheckInitialOverlapNextFrame).
         StartCoroutine(InitializeCycleDelayed());
 
-        // 30 ago 2026: temporizador de clima independiente del ciclo día/noche — ver
-        // Header("Clima — sorteo independiente del periodo") y comentario de clase. Arranca aquí
-        // (no hace falta esperar ningún frame de margen como InitializeCycleDelayed: el primer
-        // sorteo no llega hasta pasado weatherCheckIntervalRange.x segundos como mínimo, tiempo de
-        // sobra para que todo lo demás — AudioService, CloudCoverSpawner, etc. — ya esté listo).
-        // Se detiene solo con StopAllCoroutines() en OnDisable, igual que el resto de corrutinas de
-        // este componente.
         StartCoroutine(WeatherRollLoop());
     }
 
@@ -743,13 +715,6 @@ public class DayNightCycle : MonoBehaviour
         InitializeCycle();
     }
 
-    /// <summary>
-    /// Bucle infinito con su PROPIO temporizador (weatherCheckIntervalRange), sin ninguna relación
-    /// con las transiciones de periodo del día — ver TryRollWeather. Antes de este fix, ApplyTimeOfDay
-    /// sorteaba lluvia/niebla una única vez cada vez que se ENTRABA en un periodo nuevo, así que el
-    /// clima solo podía cambiar en esos instantes concretos; ahora puede cambiar en cualquier momento,
-    /// esté el ciclo del día en amanecer/día/atardecer/noche o a mitad de transición entre dos.
-    /// </summary>
     IEnumerator WeatherRollLoop()
     {
         while (true)
@@ -760,30 +725,14 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Un único sorteo de clima, completamente independiente de qué periodo del día esté activo en
-    /// este instante. No hace nada si ya hay clima en marcha (lluvia, nublándose, o niebla ocasional)
-    /// — así un evento de clima activo no se ve interrumpido/reemplazado por el siguiente sorteo, se
-    /// deja que termine solo (StartRain/StartMist ya gestionan su propia duración y desvanecido). El
-    /// guard de minijuego activo ya lo hace StartRain() por su cuenta, pero se comprueba aquí también
-    /// para no gastar el sorteo de niebla en ese caso (que StartMist SÍ dejaría arrancar, al no tener
-    /// ese guard — la niebla no afecta a los minijuegos como sí lo hace la lluvia).
-    /// </summary>
     void TryRollWeather()
     {
         if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm || IsSnowing) return;
         if (TagMinigameController.IsAnyMinigameActive) return;
-        if (SorteoDeClimaEnPausa) return;
+        if (!PuedeSortearClima) return;
 
-        // Zona con niebla forzada (30 ago 2026, ver SetZoneMistOverride): nada de sorteo nuevo
-        // (ni lluvia, ni tormenta, ni viento) mientras esté activa, solo se asegura de que la
-        // niebla esté puesta — "la niebla manda, bloquea el resto" mientras estés dentro.
         if (_zoneMistForced) { TryActivateZoneMist(); return; }
 
-        // Escalera de exclusión mutua (30 ago 2026): un único tipo de clima a la vez en esta
-        // pasada — se prueba tormenta primero (la más rara/notable), luego lluvia normal, luego
-        // viento, y por último niebla ocasional. Si uno "sale", los siguientes de ESTE mismo
-        // sorteo ya no se comprueban (el siguiente sorteo llega solo en weatherCheckIntervalRange).
         if (UnityEngine.Random.value < thunderstormChancePerCheck)
         {
             StartThunderstorm(UnityEngine.Random.Range(rainDurationRange.x, rainDurationRange.y));
@@ -814,21 +763,19 @@ public class DayNightCycle : MonoBehaviour
         StopAllCoroutines();
         IsRaining = false;
         _isCloudBuildingUp = false;
-        _rainDarkenAmount = 0f;
-        _rainDarkenCoroutine = null;
-        _preStormSkybox = null;
-        // Corta el loop de ambiente de lluvia (ver ActivateRain/BeginRainFadeOut). Sin esto, al
-        // desactivarse este componente (p.ej. escena descargada al ir al menú principal) el SFX de
-        // lluvia sigue sonando porque vive en una fuente dedicada de AudioService, en la escena
-        // persistente 'Start' — no se para solo al desaparecer esta escena. Corte inmediato (sin
-        // fade) porque la escena ya se está descargando.
+        Nublado = 0f;
+        _lluviaSolicitada = _nieveSolicitada = false;
+        _destinoDelCielo = null;
+        _actualizarAmbientePendiente = false;
+        _objetivoAnterior = _inicioDeNubosidad = _tiempoDeNubosidad = 0f;
+        _despejadoPendiente = false;
+        _rainCoroutine = _rainFadeCoroutine = _transitionCoroutine = null;
+        _isTransitioning = false;
+        PesoDePrecipitacion = PesoDeNieve = PesoDeTormenta = 0f;
+        _fundidoDeTormenta = _fundidoDeNieve = default;
+
         AudioService.Instance?.StopLoopingSFX(RainWeatherSfxLoopId);
-        if (_cameraOverrideActive && _mainCamera != null)
-        {
-            _mainCamera.clearFlags = _preStormClearFlags;
-            _mainCamera.backgroundColor = _preStormBackgroundColor;
-            _cameraOverrideActive = false;
-        }
+
         if (_activeRainInstance != null)
         {
             Destroy(_activeRainInstance);
@@ -854,17 +801,15 @@ public class DayNightCycle : MonoBehaviour
         }
 
         FuerzaDelViento = 0f;
-        VientoSobreElJugador.Soltar();
+        ClimaSobreElJugador.Soltar();
 
         IsThunderstorm = false;
         _thunderstormCoroutine = null;
         _lightningCoroutine = null;
 
         IsSnowing = false;
-        _snowAmount = 0f;
         _snowCoroutine = null;
         _snowFadeCoroutine = null;
-        _snowAmountCoroutine = null;
         AudioService.Instance?.StopLoopingSFX(SnowWeatherSfxLoopId);
         if (_activeSnowInstance != null)
         {
@@ -873,108 +818,31 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Aplica el oscurecimiento por lluvia DESPUÉS de que Update haya fijado los valores del
-    /// periodo del día actual, para no pelearse con la lógica de transición existente: primero se
-    /// pone el "look" base del periodo, y aquí se atenúa por encima si está lloviendo.
-    /// </summary>
     void LateUpdate()
     {
-        if (_rainDarkenAmount <= 0f && _snowAmount <= 0f && _lastSkyOvercast > 0f && _runtimeSkybox != null)
+        ActualizarCieloYClima();
+        ClimaSobreElJugador.AplicarFrio(Time.deltaTime);
+        bool visible = !(AnclaDeClima == null && IsSkyboxLockedByEnvironment());
+        float cobertura = visible ? Nublado : 0f;
+        float nieve = visible ? PesoDeNieve : 0f;
+        float precipitacion = visible ? PesoDePrecipitacion : 0f;
+        float lluvia = precipitacion * (1f - nieve);
+        if (visible && directionalLight != null && _baseLightIntensity >= 0f)
         {
-            _runtimeSkybox.SetFloat(SkyboxOvercastId, 0f);
-            _lastSkyOvercast = 0f;
+            float multiplicador = Mathf.Lerp(rainLightIntensityMultiplier, snowLightIntensityMultiplier, nieve);
+            float atenuada = Mathf.Min(_baseLightIntensity, Mathf.Max(_baseLightIntensity * multiplicador, rainMinLightIntensity));
+            directionalLight.intensity = Mathf.Lerp(_baseLightIntensity, atenuada, precipitacion)
+                * Mathf.Lerp(1f, 0.9f, cobertura) * AtenuacionDelRelevo;
         }
-
-        // Las partículas de nieve y viento no reciben luz: se tiñen con la de la franja.
+        if (controlFog && visible)
+        {
+            RenderSettings.fogDensity = _baseFogDensity * Mathf.Lerp(1f, rainFogDensityMultiplier, lluvia)
+                * Mathf.Lerp(1f, mistFogDensityMultiplier, _mistAmount)
+                * Mathf.Lerp(1f, snowFogDensityMultiplier, precipitacion * nieve);
+            RenderSettings.fogColor = Color.Lerp(_baseFogColor, _colorDeClima, precipitacion);
+        }
         if (_activeSnowInstance != null || _activeWindInstance != null)
             VfxDeClima.Iluminar(Color.Lerp(RenderSettings.fogColor, Color.white, 0.55f));
-
-        if (_rainDarkenAmount <= 0f && _mistAmount <= 0f && _snowAmount <= 0f) return;
-
-        // Dentro de un interior el clima no se ve. Ver INC-606.
-        bool climaVisible = !(AnclaDeClima == null && IsSkyboxLockedByEnvironment());
-        float lluviaVisible = climaVisible ? _rainDarkenAmount : 0f;
-        float nieblaVisible = climaVisible ? _mistAmount : 0f;
-        float nieveVisible = climaVisible ? _snowAmount : 0f;
-
-        // Se parte siempre de la intensidad del periodo (_baseLightIntensity), no de la ya
-        // oscurecida del frame anterior: así no se compone frame a frame y la luz vuelve sola a la
-        // del periodo cuando amaina.
-        if (directionalLight != null && _baseLightIntensity < 0f) _baseLightIntensity = directionalLight.intensity;
-
-        if (lluviaVisible > 0f && directionalLight != null)
-        {
-            float baseIntensity = _baseLightIntensity;
-            float darkened = baseIntensity * rainLightIntensityMultiplier;
-            // Suelo absoluto: en periodos ya oscuros (Night...) el multiplicador por sí solo puede
-            // dejar la luz casi a cero. Nunca baja de rainMinLightIntensity.
-            float floored = Mathf.Min(baseIntensity, Mathf.Max(darkened, rainMinLightIntensity));
-            directionalLight.intensity = Mathf.Lerp(baseIntensity, floored, lluviaVisible);
-        }
-
-        if (nieveVisible > 0f && directionalLight != null)
-            directionalLight.intensity = Mathf.Min(directionalLight.intensity,
-                _baseLightIntensity * Mathf.Lerp(1f, snowLightIntensityMultiplier, nieveVisible));
-
-        if (lluviaVisible > 0f && _runtimeSkybox != null)
-        {
-            // Mismo patrón que la niebla (_baseFogDensity/_baseFogColor): se parte SIEMPRE de
-            // _baseSkyboxTint/_baseSkyboxIntensity (la base cacheada del periodo actual), nunca de
-            // GetColor/GetFloat sobre _runtimeSkybox, que ya estaría mutado por este mismo bloque
-            // en el frame anterior y compondría geométricamente hasta apagar el cielo del todo.
-            // Sin esto, el cielo entre las nubes se quedaba con el look brillante/saturado del
-            // periodo (p.ej. Mediodía) aunque estuviera lloviendo a tope, porque el ciclo día/noche
-            // nunca conocía el estado de lluvia al pintar el skybox.
-            Color rainedTint = Color.Lerp(_baseSkyboxTint, rainSkyboxTint, rainSkyboxTintBlend);
-            float rainedIntensity = _baseSkyboxIntensity * rainSkyboxIntensityMultiplier;
-            _runtimeSkybox.SetColor(SkyboxTintId, Color.Lerp(_baseSkyboxTint, rainedTint, lluviaVisible));
-            _runtimeSkybox.SetFloat(SkyboxIntensityId, Mathf.Lerp(_baseSkyboxIntensity, rainedIntensity, lluviaVisible));
-
-            // Encapotado: el tinte de arriba solo oscurece el azul; esto lo lleva a gris.
-            float periodBrightness = (0.2126f * _baseSkyboxTint.r + 0.7152f * _baseSkyboxTint.g + 0.0722f * _baseSkyboxTint.b) * rainedIntensity;
-            Color overcastColor = rainSkyOvercastColor * periodBrightness;
-            overcastColor.a = 1f;
-            _lastSkyOvercast = rainSkyOvercast * lluviaVisible;
-            _runtimeSkybox.SetColor(SkyboxOvercastColorId, overcastColor);
-            _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
-        }
-        else if (nieveVisible > 0f && _runtimeSkybox != null)
-        {
-            // Nevada: cielo blanquecino, más claro que el de lluvia y sin oscurecer el periodo.
-            float brillo = (0.2126f * _baseSkyboxTint.r + 0.7152f * _baseSkyboxTint.g + 0.0722f * _baseSkyboxTint.b) * _baseSkyboxIntensity;
-            Color colorNevado = snowSkyOvercastColor * brillo;
-            colorNevado.a = 1f;
-            _lastSkyOvercast = snowSkyOvercast * nieveVisible;
-            _runtimeSkybox.SetColor(SkyboxOvercastColorId, colorNevado);
-            _runtimeSkybox.SetFloat(SkyboxOvercastId, _lastSkyOvercast);
-        }
-
-        if (controlFog)
-        {
-            // Siempre se parte de la densidad/color BASE del periodo actual, nunca del valor ya
-            // escrito en RenderSettings el frame anterior (eso era lo que compondía exponencialmente).
-            float density = _baseFogDensity;
-            Color color   = _baseFogColor;
-
-            if (lluviaVisible > 0f)
-            {
-                density *= Mathf.Lerp(1f, rainFogDensityMultiplier, lluviaVisible);
-                color    = Color.Lerp(color, rainFogColorTint, lluviaVisible * rainFogColorBlend);
-            }
-
-            if (nieblaVisible > 0f)
-                density *= Mathf.Lerp(1f, mistFogDensityMultiplier, nieblaVisible);
-
-            if (nieveVisible > 0f)
-            {
-                density *= Mathf.Lerp(1f, snowFogDensityMultiplier, nieveVisible);
-                color = Color.Lerp(color, snowFogColor, nieveVisible * snowFogColorBlend);
-            }
-
-            RenderSettings.fogDensity = density;
-            RenderSettings.fogColor   = color;
-        }
     }
 
     void HandleInteriorEntered()
@@ -996,10 +864,6 @@ public class DayNightCycle : MonoBehaviour
         SetSnowVisualActive(true);
         SetWeatherAudioSuppressed(false);
 
-        // Si la tormenta arrancó mientras estábamos dentro, o cambió el periodo del día,
-        // ApplyStormSkybox()/ApplySettingsImmediate()/TransitionToSettings() se saltaron el cambio
-        // de skybox (ver IsSkyboxLockedByEnvironment). Al volver a exterior hay que aplicarlo ahora,
-        // si no el cielo se queda con el look de antes de entrar aunque haya cambiado mientras dentro.
         ReapplyPendingSkybox();
     }
 
@@ -1027,15 +891,6 @@ public class DayNightCycle : MonoBehaviour
             _activeSnowInstance.SetActive(active);
     }
 
-    // FIX (30 ago 2026, incidencia reportada por Raúl: "se escuchaba como caía la lluvia" estando
-    // dentro del castillo): HandleInteriorEntered/Exited y el sondeo cinemático de más abajo ya
-    // suprimían la lluvia/niebla/viento VISUALMENTE al entrar en un interior, pero nunca tocaban
-    // el audio — el loop de ambiente (PlayLoopingSFX, RainWeatherSfxLoopId/WindWeatherSfxLoopId)
-    // es un AudioSource global sin spatial blend, así que seguía sonando igual de fuerte estando
-    // dentro de cualquier interior, incluida una cinemática. Silenciar (no detener) el loop existente
-    // conserva su posición de reproducción y el temporizador/fade-out real de la lluvia (IsRaining,
-    // BeginRainFadeOut) intactos: si deja de llover mientras el jugador está dentro, el loop se para
-    // igualmente vía StopLoopingSFX en su momento; esto solo evita que se OIGA mientras dure.
     void SetWeatherAudioSuppressed(bool suppressed)
     {
         AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, suppressed);
@@ -1043,11 +898,6 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, suppressed);
     }
 
-    /// <summary>
-    /// Reproduce un SFX por Event Key del AudioGraphProfile (AudioService.PlaySFX), si hay una
-    /// clave configurada. Llamada directa a AudioService.Instance, igual que hace AmbientZone
-    /// para sus propios sonidos de ambiente.
-    /// </summary>
     void PlayWeatherSfx(string eventKey)
     {
         if (string.IsNullOrWhiteSpace(eventKey)) return;
@@ -1063,28 +913,13 @@ public class DayNightCycle : MonoBehaviour
 
     void Update()
     {
-        // Detectar el final de un override cinemático (cinemática en un interior vía
-        // CinematicSequencerBase/SimpleCinematicDirector) para re-aplicar aquí el skybox que se
-        // haya quedado pendiente (ver IsSkyboxLockedByEnvironment). EnvironmentController no avisa
-        // de esto con un evento, así que se sondea igual que hace el propio EnvironmentController
-        // con su _cinematicReapplyPending.
+
         var ec = EnvironmentController.Instance;
         bool cinematicActiveNow = ec != null && ec.IsCinematicOverrideActive;
         if (_wasCinematicOverrideActive && !cinematicActiveNow)
             ReapplyPendingSkybox();
         _wasCinematicOverrideActive = cinematicActiveNow;
 
-        // FIX: la supresión visual de lluvia/niebla (_outdoorWeatherSuppressedIndoors) solo se
-        // actualizaba vía OnInteriorEntered/OnInteriorExited, que EnvironmentController dispara
-        // únicamente desde ApplyInterior/ApplyExterior (entrar andando). El flujo cinemático
-        // (CinematicSequencerBase → BeginCinematicOverride + ApplyInteriorForCinematic, ver p.ej.
-        // TabernaSequencer) nunca pasa por ahí, así que si llovía justo al entrar en una cinemática
-        // de interior, la lluvia seguía cayendo "dentro" durante toda la secuencia. Sondeamos aquí
-        // IsEffectivelyInterior (que sí tiene en cuenta el override cinemático) y sincronizamos la
-        // supresión con el mismo patrón edge-triggered que ya usa el resto de este método.
-        // Con la cámara de una cinemática al mando (AnclaDeClima), el interior del jugador no cuenta
-        // (INC-427): el loop de lluvia se quedaba MUDO durante todo el prólogo porque Will duerme
-        // en su casa — «me faltan sfx de lluvia».
         bool effectivelyInteriorNow = ec != null && ec.IsEffectivelyInterior && AnclaDeClima == null;
         if (effectivelyInteriorNow != _outdoorWeatherSuppressedIndoors)
         {
@@ -1097,16 +932,10 @@ public class DayNightCycle : MonoBehaviour
             if (!effectivelyInteriorNow) ReapplyPendingSkybox();
         }
 
-        // Minijuegos: durante un minijuego activo no puede llover (ver StartRain). Ese guard
-        // solo bloquea lluvia NUEVA; aquí cortamos también la que ya estuviera cayendo justo al
-        // entrar en el minijuego. Sondeo edge-triggered porque IsAnyMinigameActive es un flag
-        // estático sin evento propio de inicio/fin (mismo patrón que el resto de este método).
         bool minigameActiveNow = TagMinigameController.IsAnyMinigameActive;
         if (minigameActiveNow && !_wasMinigameActive)
         {
-            // Si era una tormenta, StopThunderstorm() ya para la lluvia de debajo (ver su cuerpo) —
-            // llamarla en vez de StopRain() a secas evita dejar IsThunderstorm/los rayos colgados
-            // con la lluvia ya parada.
+
             if (IsThunderstorm) StopThunderstorm();
             else if (IsRaining || _isCloudBuildingUp) StopRain();
         }
@@ -1114,50 +943,24 @@ public class DayNightCycle : MonoBehaviour
 
         ActualizarViento();
 
-        if (!autoAdvance || _isTransitioning) return;
-
-        _timeElapsed += Time.deltaTime;
-
-        if (_timeElapsed >= _currentDuration)
-            AdvanceToNextPeriod();
+        if (autoAdvance)
+        {
+            _timeElapsed += Time.deltaTime;
+            if (_timeElapsed >= _currentDuration && !_isTransitioning) AdvanceToNextPeriod();
+        }
+        ActualizarDireccionesDeAstros();
+        ActualizarLuzDeAstros();
     }
 
-    /// <summary>
-    /// True mientras algo ajeno al ciclo día/noche debe tener el control exclusivo de
-    /// RenderSettings.skybox: el jugador está físicamente en un interior (AnchorEnvironment), o hay
-    /// una cinemática con override activo (BeginCinematicOverride, típicamente con un anchor de
-    /// interior propio vía ApplyInteriorForCinematic). En ambos casos escribir el skybox del periodo
-    /// o de la tormenta aquí pisaría lo que EnvironmentController ya está mostrando — el bug de
-    /// "sale un azul de fondo en medio de la secuencia" era justo esto: la transición de periodo o el
-    /// inicio de lluvia ignoraban por completo el override cinemático.
-    /// </summary>
     bool IsSkyboxLockedByEnvironment()
     {
         return _outdoorWeatherSuppressedIndoors
             || (EnvironmentController.Instance != null && EnvironmentController.Instance.IsCinematicOverrideActive);
     }
 
-    /// <summary>
-    /// Re-aplica el skybox correcto (tormenta si está lloviendo/nublando, si no el único skybox con
-    /// los valores del periodo actual) cuando algo que lo tenía bloqueado (interior real o
-    /// cinemática) deja de bloquearlo.
-    /// </summary>
     void ReapplyPendingSkybox()
     {
-        if (IsSkyboxLockedByEnvironment()) return; // seguimos bloqueados por otro motivo, no tocar
-
-        if (IsRaining || _isCloudBuildingUp)
-        {
-            ApplyStormSkybox();
-        }
-        else if (_runtimeSkybox != null && RenderSettings.skybox != _runtimeSkybox)
-        {
-            // _runtimeSkybox ya tiene los valores correctos del periodo actual (se han seguido
-            // actualizando en ApplySettingsImmediate/TransitionToSettings aunque estuviéramos
-            // bloqueados), solo hace falta restaurar la referencia.
-            RenderSettings.skybox = _runtimeSkybox;
-            DynamicGI.UpdateEnvironment();
-        }
+        if (!IsSkyboxLockedByEnvironment() && _runtimeSkybox != null) RenderSettings.skybox = _runtimeSkybox;
     }
 
     void InitializeCycle()
@@ -1177,7 +980,7 @@ public class DayNightCycle : MonoBehaviour
         {
             if (timeSettings[i].timeOfDay == timeOfDay)
             {
-                ApplyTimeOfDay(i, immediate, invokeEvents: true);
+                ApplyTimeOfDay(i, immediate, invokeEvents: true, saltoExplicito: true);
                 return;
             }
         }
@@ -1197,7 +1000,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
             return;
         }
-        ApplyTimeOfDay(index, immediate, invokeEvents: true);
+        ApplyTimeOfDay(index, immediate, invokeEvents: true, saltoExplicito: true);
     }
 
     public void ToggleRain()
@@ -1206,12 +1009,6 @@ public class DayNightCycle : MonoBehaviour
         else StartRain();
     }
 
-    /// <summary>
-    /// Arranca la lluvia. Por defecto, primero se nubla el cielo (nubes 3D de CloudCoverSpawner +
-    /// oscurecimiento, ver rainDarkenTransitionDuration) y solo cuando termina esa transición
-    /// empiezan a caer las partículas. Con immediate=true (carga de escena / test mode) se salta
-    /// la nubosidad previa y la lluvia queda activa desde el primer frame.
-    /// </summary>
     public void StartRain(float? duration = null, bool immediate = false)
     {
         if (rainPrefab == null)
@@ -1221,7 +1018,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
             return;
         }
-        if (IsRaining || _isCloudBuildingUp)
+        if (IsRaining || (_isCloudBuildingUp && !_nieveSolicitada))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log("[DayNightCycle] StartRain() no ha hecho nada: ya está lloviendo o nublándose (IsRaining/_isCloudBuildingUp). Usa StopRain() primero si quieres reiniciarla.");
@@ -1229,9 +1026,6 @@ public class DayNightCycle : MonoBehaviour
             return;
         }
 
-        // Durante los minijuegos no puede llover (p.ej. TagMinigameController): bloqueamos aquí
-        // cualquier intento de arrancar lluvia, tanto el sorteo automático de ApplyTimeOfDay como
-        // una llamada manual/narrativa a StartRain o ToggleRain.
         if (TagMinigameController.IsAnyMinigameActive)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1240,8 +1034,7 @@ public class DayNightCycle : MonoBehaviour
             return;
         }
 
-        // Lluvia y nieve no se solapan: la lluvia (narrativa, tormenta) manda.
-        if (IsSnowing) StopSnow();
+        if (IsSnowing || _nieveSolicitada) StopSnow();
 
         if (_rainCoroutine != null)
             StopCoroutine(_rainCoroutine);
@@ -1252,7 +1045,7 @@ public class DayNightCycle : MonoBehaviour
 
     public void StopRain()
     {
-        if (!IsRaining && !_isCloudBuildingUp) return;
+        if (!IsRaining && !_lluviaSolicitada) return;
 
         if (_rainCoroutine != null)
         {
@@ -1262,11 +1055,11 @@ public class DayNightCycle : MonoBehaviour
 
         if (_isCloudBuildingUp)
         {
-            // Se canceló mientras el cielo aún se estaba nublando: la lluvia nunca llegó a caer,
-            // así que solo revertimos el look sin disparar onRainStarted/onRainStopped.
+
             _isCloudBuildingUp = false;
-            RevertStormSkybox();
-            StartRainDarken(0f);
+            ReapplyPendingSkybox();
+            _lluviaSolicitada = false;
+            AvisarDespejado();
             return;
         }
 
@@ -1279,7 +1072,6 @@ public class DayNightCycle : MonoBehaviour
         else StartMist();
     }
 
-    /// <summary>Arranca un evento de niebla ocasional, independiente de la lluvia.</summary>
     public void StartMist(float? duration = null)
     {
         if (IsMisty) return;
@@ -1304,18 +1096,6 @@ public class DayNightCycle : MonoBehaviour
         BeginMistFadeOut();
     }
 
-    /// <summary>
-    /// Llamado por AmbientZone (ver AmbientPreset.forcesMist, 30 ago 2026) al entrar/salir de una
-    /// zona con niebla forzada — por ejemplo el Bosque. Con active=true fuerza la niebla ocasional
-    /// mientras dure la zona (y bloquea nuevos sorteos de lluvia/tormenta/viento vía TryRollWeather,
-    /// "la niebla manda, bloquea el resto"); si ya estaba lloviendo al entrar, esa lluvia sigue tal
-    /// cual (no se apila niebla encima) hasta que termine sola — ver BeginRainFadeOut, que llama a
-    /// TryActivateZoneMist() al terminar por si sigue activa esta zona. Con active=false libera el
-    /// bloqueo y apaga la niebla si la había puesto la zona. IMPORTANTE: esto NO se salta el
-    /// bloqueo de interiores — sigue pasando por ActivateMist()/BeginMistFadeOut(), que ya
-    /// respetan IsSkyboxLockedByEnvironment() igual que la niebla ocasional normal, así que no
-    /// puede reintroducir niebla/lluvia dentro de un interior.
-    /// </summary>
     public void SetZoneMistOverride(bool active)
     {
         if (_zoneMistForced == active) return;
@@ -1339,7 +1119,6 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    /// <summary>Activa la niebla YA (sin coroutine de duración) si toca — ver SetZoneMistOverride.</summary>
     void TryActivateZoneMist()
     {
         if (!_zoneMistForced) return;
@@ -1361,7 +1140,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
     }
 
-    void ApplyTimeOfDay(int index, bool immediate, bool invokeEvents)
+    void ApplyTimeOfDay(int index, bool immediate, bool invokeEvents, bool saltoExplicito = false)
     {
         if (_transitionCoroutine != null)
         {
@@ -1373,12 +1152,14 @@ public class DayNightCycle : MonoBehaviour
         _currentIndex = index;
         var settings = timeSettings[index];
         _currentDuration = Mathf.Max(1f, settings.duration);
-        _timeElapsed = 0f;
+        _timeElapsed = saltoExplicito ? _currentDuration * 0.35f : 0f;
+        ActualizarDireccionesDeAstros();
 
         if (immediate || !useSmoothTransitions || !Application.isPlaying)
         {
             CurrentTimeOfDay = settings.timeOfDay;
-            ApplySettingsImmediate(settings);
+            if (!immediate && Application.isPlaying) IniciarFundidoDelCielo(settings, false);
+            ApplySettingsImmediate(settings, aplicarCielo: immediate || !Application.isPlaying);
             if (invokeEvents)
             {
                 onTimeOfDayChanged?.Invoke(settings.timeOfDay);
@@ -1388,25 +1169,10 @@ public class DayNightCycle : MonoBehaviour
         else
             _transitionCoroutine = StartCoroutine(TransitionToSettings(settings, invokeEvents));
 
-        // 30 ago 2026: el clima (lluvia/niebla) YA NO se sortea aquí — ver
-        // Header("Clima — sorteo independiente del periodo") y WeatherRollLoop/TryRollWeather más
-        // abajo. Antes, cambiar de periodo era el ÚNICO momento en que se sorteaba lluvia/niebla, lo
-        // que hacía que el clima se sintiera "pegado" al ciclo del día (petición explícita de Raúl:
-        // el clima debe poder ocurrir en cualquier momento, no solo al entrar en un periodo nuevo).
-        // Si ya estaba lloviendo/con niebla al cambiar de periodo, simplemente sigue como estaba —
-        // ninguna transición de periodo interrumpe ni fuerza clima por sí sola.
     }
 
 #if UNITY_EDITOR
-    /// Aplica una hora del día AHORA, fuera de Play, para poder ver en el Editor cómo queda una
-    /// escena a esa luz — y para que las herramientas que renderizan planos (SequenceShotCapture)
-    /// capturen con la luz que va a tener el plano de verdad y no con la que hubiera guardada en
-    /// la escena.
-    ///
-    /// Fuera de Play no se ha ejecutado Awake, así que no existe la copia del skybox: se crea aquí
-    /// una temporal (HideAndDontSave, no se guarda en la escena ni ensucia el asset compartido).
-    /// Quien llame a esto es responsable de restaurar RenderSettings si no quiere dejar la escena
-    /// cambiada.
+
     public void PreviewTimeOfDay(TimeOfDay hora)
     {
         if (timeSettings == null) return;
@@ -1415,18 +1181,18 @@ public class DayNightCycle : MonoBehaviour
         {
             if (timeSettings[i].timeOfDay != hora) continue;
 
-            if (_runtimeSkybox == null && sharedSkyboxMaterial != null)
-            {
-                _runtimeSkybox = new Material(sharedSkyboxMaterial) { hideFlags = HideFlags.HideAndDontSave };
-                RenderSettings.skybox = _runtimeSkybox;
-            }
+            CrearCielo(timeSettings[i]);
 
             if (controlAmbientLight) RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.fog = controlFog;
 
             _currentIndex = i;
             CurrentTimeOfDay = hora;
+            _currentDuration = Mathf.Max(1f, timeSettings[i].duration);
+            _timeElapsed = _currentDuration * 0.35f;
             ApplySettingsImmediate(timeSettings[i]);
+            ActualizarDireccionesDeAstros();
+            ActualizarLuzDeAstros();
             return;
         }
 
@@ -1434,36 +1200,15 @@ public class DayNightCycle : MonoBehaviour
     }
 #endif
 
-    void ApplySettingsImmediate(TimeOfDaySettings settings)
+    void ApplySettingsImmediate(TimeOfDaySettings settings, bool aplicarCielo = true)
     {
-        if (_runtimeSkybox != null)
-        {
-            _runtimeSkybox.SetColor(SkyboxTintId, settings.skyboxTint);
-            _runtimeSkybox.SetFloat(SkyboxIntensityId, settings.skyboxIntensity);
-            _runtimeSkybox.SetFloat(SkyboxExponentId, settings.skyboxExponent);
-            _runtimeSkybox.SetFloat(SkyboxDirectionYawId, settings.skyboxDirectionYaw);
-            _runtimeSkybox.SetFloat(SkyboxDirectionPitchId, settings.skyboxDirectionPitch);
-            _baseSkyboxTint = settings.skyboxTint;
-            _baseSkyboxIntensity = settings.skyboxIntensity;
-
-            // No pisar la REFERENCIA de RenderSettings.skybox si un interior (real o cinemático)
-            // tiene el control ahora mismo — ver IsSkyboxLockedByEnvironment. Los valores de arriba
-            // ya han quedado guardados en _runtimeSkybox y se verán en cuanto ReapplyPendingSkybox
-            // restaure la referencia al salir/terminar, sin esperar a la siguiente transición.
-            if (!IsSkyboxLockedByEnvironment())
-            {
-                if (RenderSettings.skybox != _runtimeSkybox)
-                    RenderSettings.skybox = _runtimeSkybox;
-                DynamicGI.UpdateEnvironment();
-            }
-        }
+        if (aplicarCielo && !_isTransitioning) IniciarFundidoDelCielo(settings, true);
 
         if (directionalLight != null)
         {
             directionalLight.color = settings.lightColor;
             directionalLight.intensity = settings.lightIntensity;
             _baseLightIntensity = settings.lightIntensity;
-            directionalLight.transform.eulerAngles = new Vector3(settings.sunRotationX, settings.sunRotationY, 0f);
         }
         PesoDeNoche = settings.timeOfDay == TimeOfDay.Night ? 1f : 0f;
 
@@ -1483,31 +1228,18 @@ public class DayNightCycle : MonoBehaviour
     {
         _isTransitioning = true;
 
-        // Asegurar que RenderSettings.skybox apunta a nuestra instancia ANTES de animar sus
-        // propiedades, salvo que un interior/cinemática tenga el control ahora mismo (ver
-        // IsSkyboxLockedByEnvironment). _runtimeSkybox se sigue actualizando cada frame más abajo
-        // aunque estemos bloqueados: en cuanto se libere, ReapplyPendingSkybox restaura la
-        // referencia y ya se ve con los valores correctos, sin esperar a la siguiente transición.
         if (_runtimeSkybox != null && RenderSettings.skybox != _runtimeSkybox && !IsSkyboxLockedByEnvironment())
             RenderSettings.skybox = _runtimeSkybox;
 
         var light = directionalLight;
         Color startLightColor = light ? light.color : Color.white;
-        float startIntensity = light ? light.intensity : 1f;
-        float startRotX = light ? light.transform.eulerAngles.x : 0f;
-        float startRotY = light ? light.transform.eulerAngles.y : 0f;
+        float startIntensity = _baseLightIntensity >= 0f ? _baseLightIntensity : 1f;
         Color startAmbient = RenderSettings.ambientLight;
-        // Partimos de la base guardada, no de RenderSettings.fogColor/fogDensity: si hay lluvia o
-        // niebla ocasional activa en ese instante, esos valores ya están inflados por LateUpdate()
-        // y arrastrarían el multiplicador a la transición.
+
         Color startFogColor = _baseFogColor;
         float startFogDensity = _baseFogDensity;
 
-        Color startSkyboxTint = _runtimeSkybox != null ? _runtimeSkybox.GetColor(SkyboxTintId) : target.skyboxTint;
-        float startSkyboxIntensity = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxIntensityId) : target.skyboxIntensity;
-        float startSkyboxExponent = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxExponentId) : target.skyboxExponent;
-        float startSkyboxYaw = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxDirectionYawId) : target.skyboxDirectionYaw;
-        float startSkyboxPitch = _runtimeSkybox != null ? _runtimeSkybox.GetFloat(SkyboxDirectionPitchId) : target.skyboxDirectionPitch;
+        IniciarFundidoDelCielo(target, false);
 
         float startNoche = PesoDeNoche;
         float targetNoche = target.timeOfDay == TimeOfDay.Night ? 1f : 0f;
@@ -1524,11 +1256,6 @@ public class DayNightCycle : MonoBehaviour
                 light.color = Color.Lerp(startLightColor, target.lightColor, t);
                 light.intensity = Mathf.Lerp(startIntensity, target.lightIntensity, t);
                 _baseLightIntensity = light.intensity;
-                light.transform.eulerAngles = new Vector3(
-                    Mathf.LerpAngle(startRotX, target.sunRotationX, t),
-                    Mathf.LerpAngle(startRotY, target.sunRotationY, t),
-                    0f
-                );
             }
 
             if (controlAmbientLight)
@@ -1539,9 +1266,6 @@ public class DayNightCycle : MonoBehaviour
                 Color lerpedColor   = Color.Lerp(startFogColor, target.fogColor, t);
                 float lerpedDensity = Mathf.Lerp(startFogDensity, target.fogDensity, t);
 
-                // Actualizamos la base ya, no solo RenderSettings: si en este mismo frame hay
-                // lluvia/niebla ocasional activa, LateUpdate() (que corre después) recalculará el
-                // fog final multiplicando sobre esta base, en vez de dejar el valor sin oscurecer.
                 _baseFogColor   = lerpedColor;
                 _baseFogDensity = lerpedDensity;
 
@@ -1549,28 +1273,9 @@ public class DayNightCycle : MonoBehaviour
                 RenderSettings.fogDensity = lerpedDensity;
             }
 
-            if (_runtimeSkybox != null)
-            {
-                Color lerpedSkyboxTint     = Color.Lerp(startSkyboxTint, target.skyboxTint, t);
-                float lerpedSkyboxIntensity = Mathf.Lerp(startSkyboxIntensity, target.skyboxIntensity, t);
-
-                // Misma razón que _baseFogColor/_baseFogDensity un poco más arriba: si hay
-                // lluvia activa en este mismo frame, LateUpdate() (que corre después) debe
-                // oscurecer a partir de ESTA base ya actualizada, no de la del frame anterior.
-                _baseSkyboxTint      = lerpedSkyboxTint;
-                _baseSkyboxIntensity = lerpedSkyboxIntensity;
-
-                _runtimeSkybox.SetColor(SkyboxTintId, lerpedSkyboxTint);
-                _runtimeSkybox.SetFloat(SkyboxIntensityId, lerpedSkyboxIntensity);
-                _runtimeSkybox.SetFloat(SkyboxExponentId, Mathf.Lerp(startSkyboxExponent, target.skyboxExponent, t));
-                _runtimeSkybox.SetFloat(SkyboxDirectionYawId, Mathf.Lerp(startSkyboxYaw, target.skyboxDirectionYaw, t));
-                _runtimeSkybox.SetFloat(SkyboxDirectionPitchId, Mathf.Lerp(startSkyboxPitch, target.skyboxDirectionPitch, t));
-            }
-
             yield return null;
         }
 
-        // Asegurar valores exactos al finalizar y actualizar el estado lógico cuando la visual ya coincide
         ApplySettingsImmediate(target);
         CurrentTimeOfDay = target.timeOfDay;
 
@@ -1586,110 +1291,28 @@ public class DayNightCycle : MonoBehaviour
 
     IEnumerator RainRoutine(float duration, bool immediate)
     {
-        if (immediate)
-        {
-            // Carga de escena / test mode: sin nubosidad previa, igual que el resto del "look"
-            // del periodo se aplica de golpe con ApplySettingsImmediate.
-            if (_rainDarkenCoroutine != null)
-            {
-                StopCoroutine(_rainDarkenCoroutine);
-                _rainDarkenCoroutine = null;
-            }
-            ApplyStormSkybox();
-            _rainDarkenAmount = 1f;
-            RaiseCloudsBuildingUp();
-        }
-        else
-        {
-            yield return CloudBuildUpRoutine();
-        }
-
+        _lluviaSolicitada = true;
+        if (immediate) FijarNubosidadCompleta();
+        yield return CloudBuildUpRoutine();
         ActivateRain();
         yield return new WaitForSeconds(duration);
         BeginRainFadeOut();
         _rainCoroutine = null;
     }
 
-    /// <summary>
-    /// Cubre el cielo de nubes (nubes 3D vía CloudsBuildingUp + empieza a oscurecer luz/niebla) ANTES
-    /// de que arranque la lluvia. Se puede cancelar desde StopRain() mientras está en curso.
-    /// </summary>
     IEnumerator CloudBuildUpRoutine()
     {
         _isCloudBuildingUp = true;
-        // Momento señalado en la revisión de rendimiento del 24/08 como el más caro del clima
-        // (formación del techo de nubes + DynamicGI.UpdateEnvironment) — se anota aparte de
-        // "LluviaInicio" para poder distinguir en el .json la transición de la lluvia ya establecida.
-        GameplayEventLog.Log("TormentaFormandoseInicio");
-
-        ApplyStormSkybox();
+        _despejadoPendiente = true;
         RaiseCloudsBuildingUp();
-        StartRainDarken(1f);
-
-        yield return new WaitForSeconds(Mathf.Max(0.01f, rainDarkenTransitionDuration));
-
+        while (Nublado < 0.8f) yield return null;
         _isCloudBuildingUp = false;
-    }
-
-    void ApplyStormSkybox()
-    {
-        // No tocar cámara/skybox mientras el jugador está en un interior (real o cinemático):
-        // EnvironmentController ya está aplicando el fondo/skybox de la AnchorEnvironment actual
-        // (ver ApplyInteriorTo / ApplyInteriorForCinematic). Pisarlo aquí sin comprobar esto causaba
-        // el bug "llueve dentro de la casa" / "sale un azul de fondo en medio de la secuencia": la
-        // lluvia VISUAL sí se suprimía (ver ActivateRain), pero el fondo de cámara se sobrescribía
-        // con el stormSkybox / el tinte gris de lluvia igualmente, en cuanto empezaba a nublarse.
-        if (IsSkyboxLockedByEnvironment()) return;
-
-        if (stormSkybox != null && RenderSettings.skybox != stormSkybox)
-        {
-            _preStormSkybox = RenderSettings.skybox;
-            RenderSettings.skybox = stormSkybox;
-            DynamicGI.UpdateEnvironment();
-        }
-
-        // Red de seguridad HEREDADA del sistema de skyboxes por franja: sin un stormSkybox asignado,
-        // el skybox despejado (con sol y rayos) seguía viéndose en el horizonte, más allá de donde
-        // llega CloudCoverSpawner. Con un único skybox persistente (_runtimeSkybox) esto ya NO hace
-        // falta — es justo el "como pasaría de verdad" que ya explicaba el tooltip de stormSkybox:
-        // el cielo despejado por encima/alrededor del techo de nubes es el comportamiento deseado,
-        // no un hueco que tapar. Forzar aquí un color sólido literalmente OCULTA el skybox único que
-        // tanto costó dejar bonito. Por eso este fallback ahora solo se activa si NO hay
-        // _runtimeSkybox (es decir, si sharedSkyboxMaterial no está asignado).
-        if (stormSkybox == null && _runtimeSkybox == null && _mainCamera != null && !_cameraOverrideActive)
-        {
-            _preStormClearFlags = _mainCamera.clearFlags;
-            _preStormBackgroundColor = _mainCamera.backgroundColor;
-            _mainCamera.clearFlags = CameraClearFlags.SolidColor;
-            _mainCamera.backgroundColor = rainFogColorTint;
-            _cameraOverrideActive = true;
-        }
-    }
-
-    void RevertStormSkybox()
-    {
-        if (stormSkybox != null && RenderSettings.skybox == stormSkybox)
-        {
-            // Si ninguna transición de periodo cambió el skybox mientras tanto, volvemos al que
-            // había antes de nublarse (o al único skybox persistente si no se guardó ninguno).
-            RenderSettings.skybox = _preStormSkybox != null ? _preStormSkybox : _runtimeSkybox;
-            DynamicGI.UpdateEnvironment();
-            _preStormSkybox = null;
-        }
-
-        if (_cameraOverrideActive && _mainCamera != null)
-        {
-            _mainCamera.clearFlags = _preStormClearFlags;
-            _mainCamera.backgroundColor = _preStormBackgroundColor;
-            _cameraOverrideActive = false;
-        }
     }
 
     void ActivateRain()
     {
         if (IsRaining || rainPrefab == null) return;
 
-        // Cancelar fade-out activo antes de instanciar nueva lluvia
         if (_rainFadeCoroutine != null)
         {
             StopCoroutine(_rainFadeCoroutine);
@@ -1718,9 +1341,6 @@ public class DayNightCycle : MonoBehaviour
 #endif
         }
 
-        // Si el jugador ya está en un interior (real o cinemático) cuando empieza a llover, que no
-        // se vea/oiga hasta que salga (evita el problema de "llueve dentro de la casa").
-        // Ver AnclaDeClima: con la cámara de una cinemática al mando, el interior no cuenta.
         if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             _activeRainInstance.SetActive(false);
 
@@ -1728,23 +1348,13 @@ public class DayNightCycle : MonoBehaviour
         onRainStarted?.Invoke();
         RainStarted?.Invoke();
         GameplayEventLog.Log("LluviaInicio");
-        // El SFX de lluvia (rain-sfx.mp3 en el profile) es una pista de ambiente, no un one-shot
-        // corto: si se reproduce con PlaySFX normal, el AudioSource se autodevuelve al pool cuando
-        // el CLIP termina, no cuando deja de llover. Con lluvias cortas o interrumpidas por
-        // StopRain(), eso deja el SFX sonando de fondo mucho después de que IsRaining ya es false
-        // (bug reportado: "ha terminado de llover y no ha parado el sfx"). PlayLoopingSFX usa una
-        // fuente dedicada que solo se detiene explícitamente en BeginRainFadeOut vía StopLoopingSFX.
+
         AudioService.Instance?.PlayLoopingSFX(RainWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(rainStartedSfxKey) ? "rain" : rainStartedSfxKey, rainLoopVolume);
-        // FIX (30 ago 2026): el comentario de arriba ("que no se vea/oiga hasta que salga") solo se
-        // cumplía a medias — _activeRainInstance.SetActive(false) oculta el visual, pero el loop de
-        // audio arrancaba igual de audible aunque el jugador ya estuviera dentro de un interior (o de
-        // una cinemática con override de interior) en el instante exacto en que empieza a llover.
+
         if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, true);
-        // El oscurecimiento (luz + niebla) y la cobertura de nubes ya se aplicaron durante la
-        // nubosidad previa (CloudBuildUpRoutine) o de golpe si immediate=true, así que aquí solo
-        // queda instanciar las partículas de lluvia.
+
     }
 
     void BeginRainFadeOut()
@@ -1755,12 +1365,12 @@ public class DayNightCycle : MonoBehaviour
         onRainStopped?.Invoke();
         RainStopped?.Invoke();
         GameplayEventLog.Log("LluviaFin");
-        // Corta el loop de ambiente arrancado en ActivateRain (ver comentario allí). Fundido con
-        // la misma duración que el fade-out visual de las partículas para que no se note el corte.
+
         AudioService.Instance?.StopLoopingSFX(RainWeatherSfxLoopId, rainFadeOutTime);
         PlayWeatherSfx(rainStoppedSfxKey);
-        StartRainDarken(0f);
-        RevertStormSkybox();
+        _lluviaSolicitada = false;
+        AvisarDespejado();
+        ReapplyPendingSkybox();
 
         if (_rainFadeCoroutine != null)
             StopCoroutine(_rainFadeCoroutine);
@@ -1768,39 +1378,12 @@ public class DayNightCycle : MonoBehaviour
         if (_activeRainInstance != null)
             _rainFadeCoroutine = StartCoroutine(RainFadeOutRoutine(_activeRainInstance));
 
-        // Si la lluvia termina mientras seguimos dentro de una zona con niebla forzada (ver
-        // SetZoneMistOverride) — porque ya estaba lloviendo al entrar en la zona, así que no se le
-        // pisó — la niebla de zona toma el relevo aquí mismo, sin esperar al siguiente sorteo.
         TryActivateZoneMist();
-    }
-
-    void StartRainDarken(float target)
-    {
-        if (_rainDarkenCoroutine != null)
-            StopCoroutine(_rainDarkenCoroutine);
-        _rainDarkenCoroutine = StartCoroutine(RainDarkenRoutine(target));
-    }
-
-    IEnumerator RainDarkenRoutine(float target)
-    {
-        float start = _rainDarkenAmount;
-        float elapsed = 0f;
-        float duration = Mathf.Max(0.01f, rainDarkenTransitionDuration);
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            _rainDarkenAmount = Mathf.Lerp(start, target, elapsed / duration);
-            yield return null;
-        }
-
-        _rainDarkenAmount = target;
-        _rainDarkenCoroutine = null;
     }
 
     IEnumerator RainFadeOutRoutine(GameObject rainInstance)
     {
-        // Detener emisión para que las partículas existentes terminen de caer
+
         var particles = rainInstance.GetComponentsInChildren<ParticleSystem>();
         foreach (var ps in particles)
         {
@@ -1831,7 +1414,6 @@ public class DayNightCycle : MonoBehaviour
     {
         if (IsMisty) return;
 
-        // Cancelar fade-out activo antes de instanciar nueva niebla
         if (_mistFadeCoroutine != null)
         {
             StopCoroutine(_mistFadeCoroutine);
@@ -1862,10 +1444,6 @@ public class DayNightCycle : MonoBehaviour
 #endif
             }
 
-            // Igual que con la lluvia: si el jugador ya está en un interior (real o cinemático),
-            // que no se vea hasta salir.
-            // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
-            // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
             if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
                 _activeMistInstance.SetActive(false);
         }
@@ -1873,7 +1451,7 @@ public class DayNightCycle : MonoBehaviour
         IsMisty = true;
         onMistStarted?.Invoke();
         MistStarted?.Invoke();
-        // SFX de inicio de niebla quitado a petición de Raúl (no le gustaba) — 1 sep 2026.
+
         StartMistAmount(1f);
     }
 
@@ -1884,10 +1462,7 @@ public class DayNightCycle : MonoBehaviour
         IsMisty = false;
         onMistStopped?.Invoke();
         MistStopped?.Invoke();
-        // SFX de fin de niebla quitado a petición de Raúl (no quiere que suene nada al
-        // salir la niebla) — 1 sep 2026. Mismo criterio que el SFX de inicio, ya quitado
-        // antes (ver ActivateMist). mistStoppedSfxKey se deja serializado sin más, por si se
-        // quiere reactivar más adelante.
+
         StartMistAmount(0f);
 
         if (_mistFadeCoroutine != null)
@@ -1941,14 +1516,6 @@ public class DayNightCycle : MonoBehaviour
         _mistFadeCoroutine = null;
     }
 
-    // ==================== Viento ====================
-    // Mismo patrón que la niebla ocasional (StartMist/StopMist/MistRoutine/ActivateMist/
-    // BeginMistFadeOut/MistFadeOutRoutine). Cada viento sortea su dirección (DireccionDelViento);
-    // FuerzaDelViento sube y baja en windRampDuration y es lo que lee VientoSobreElJugador para
-    // frenar al jugador contra el viento y arrastrarlo si está quieto. Sin windPrefab, las
-    // partículas las genera VfxDeClima.CrearViento.
-
-    /// Sube o baja la fuerza del viento hacia su objetivo y aplica su efecto sobre el jugador.
     void ActualizarViento()
     {
         float objetivo = IsWindy ? 1f : 0f;
@@ -1956,16 +1523,18 @@ public class DayNightCycle : MonoBehaviour
             FuerzaDelViento = Mathf.MoveTowards(FuerzaDelViento, objetivo,
                 Time.deltaTime / Mathf.Max(0.01f, windRampDuration));
 
-        // Con una cinemática al mando (AnclaDeClima) el jugador no está en juego.
         float fuerza = AnclaDeClima != null ? 0f : FuerzaDelVientoAqui;
-        if (fuerza > 0f || _vientoSobreElJugador)
+        // Frío: con lluvia o nieve cayendo de verdad, al aire libre.
+        bool alAireLibre = AnclaDeClima == null && !IsSkyboxLockedByEnvironment();
+        float frio = alAireLibre && (IsRaining || IsSnowing) ? PesoDePrecipitacion : 0f;
+        if (fuerza > 0f || frio > 0f || _climaSobreElJugador)
         {
-            VientoSobreElJugador.Actualizar(fuerza, DireccionDelViento, windVelocidadContra,
-                windArrastreQuieto, Time.deltaTime);
-            _vientoSobreElJugador = fuerza > 0f;
+            ClimaSobreElJugador.Actualizar(fuerza, DireccionDelViento, windVelocidadConViento,
+                windVelocidadContra, windArrastreQuieto, frio, Time.deltaTime);
+            _climaSobreElJugador = fuerza > 0f || frio > 0f;
         }
     }
-    private bool _vientoSobreElJugador;
+    private bool _climaSobreElJugador;
 
     public void ToggleWind()
     {
@@ -1973,7 +1542,6 @@ public class DayNightCycle : MonoBehaviour
         else StartWind();
     }
 
-    /// <summary>Arranca un evento de viento, independiente de la lluvia/niebla/tormenta.</summary>
     public void StartWind(float? duration = null)
     {
         if (IsWindy) return;
@@ -1982,7 +1550,7 @@ public class DayNightCycle : MonoBehaviour
             StopCoroutine(_windCoroutine);
 
         float windDuration = duration ?? UnityEngine.Random.Range(windDurationRange.x, windDurationRange.y);
-        // Solo se cambia de dirección si el viento anterior ya amainó del todo.
+
         if (FuerzaDelViento <= 0f)
             DireccionDelViento = Quaternion.Euler(0f, UnityEngine.Random.Range(0f, 360f), 0f) * Vector3.forward;
         _windCoroutine = StartCoroutine(WindRoutine(windDuration));
@@ -2046,8 +1614,6 @@ public class DayNightCycle : MonoBehaviour
 #endif
         }
 
-        // Con ancla de cinemática NO se apaga: el "interior" es el dormitorio de Will, que no
-        // sale en ningún plano — la cámara está en el valle. Ver AnclaDeClima.
         if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             _activeWindInstance.SetActive(false);
 
@@ -2055,12 +1621,10 @@ public class DayNightCycle : MonoBehaviour
         onWindStarted?.Invoke();
         WindStarted?.Invoke();
         GameplayEventLog.Log("VientoInicio");
-        // Igual que la lluvia (ver ActivateRain): loop dedicado, no un one-shot que se autodevuelve
-        // al pool cuando termina el CLIP en vez de cuando termina el viento de verdad.
+
         AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(windStartedSfxKey) ? VientoPorDefecto : windStartedSfxKey, windLoopVolume);
-        // FIX (30 ago 2026): mismo hueco que ActivateRain (ver comentario ahí) — silenciar también
-        // si ya estamos en un interior/cinemática cuando arranca el viento.
+
         if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
             AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, true);
     }
@@ -2103,26 +1667,20 @@ public class DayNightCycle : MonoBehaviour
         _windFadeCoroutine = null;
     }
 
-    // ==================== Nieve ====================
-    // Mismo patrón que la niebla ocasional: partículas colgadas del ancla del clima (snowPrefab o,
-    // si no hay, VfxDeClima.CrearNieve), loop de ambiente suave y _snowAmount gradual, que LateUpdate
-    // usa para blanquear la niebla y encapotar el cielo de gris claro.
-
-    /// Empieza a nevar. No hace nada si ya nieva o si llueve (no se solapan).
-    public void StartSnow(float? duration = null)
+    public void StartSnow(float? duration = null, bool immediate = false)
     {
-        if (IsSnowing || IsRaining || _isCloudBuildingUp) return;
+        if (IsSnowing || _nieveSolicitada || IsRaining || _isCloudBuildingUp || IsThunderstorm) return;
 
         if (_snowCoroutine != null)
             StopCoroutine(_snowCoroutine);
 
         float snowDuration = duration ?? UnityEngine.Random.Range(snowDurationRange.x, snowDurationRange.y);
-        _snowCoroutine = StartCoroutine(SnowRoutine(snowDuration));
+        _snowCoroutine = StartCoroutine(SnowRoutine(snowDuration, immediate));
     }
 
     public void StopSnow()
     {
-        if (!IsSnowing) return;
+        if (!IsSnowing && !_nieveSolicitada) return;
 
         if (_snowCoroutine != null)
         {
@@ -2130,11 +1688,21 @@ public class DayNightCycle : MonoBehaviour
             _snowCoroutine = null;
         }
 
+        _nieveSolicitada = false;
+        _isCloudBuildingUp = false;
+        AvisarDespejado();
         BeginSnowFadeOut();
     }
 
-    IEnumerator SnowRoutine(float duration)
+    IEnumerator SnowRoutine(float duration, bool immediate)
     {
+        _nieveSolicitada = true;
+        if (immediate)
+        {
+            FijarNubosidadCompleta();
+            PesoDeNieve = 1f;
+        }
+        yield return CloudBuildUpRoutine();
         ActivateSnow();
         yield return new WaitForSeconds(duration);
         BeginSnowFadeOut();
@@ -2175,7 +1743,6 @@ public class DayNightCycle : MonoBehaviour
             _activeSnowInstance = Instantiate(snowPrefab, transform.position, Quaternion.identity);
         }
 
-        // Dentro de un interior no se ve ni se oye (ver AnclaDeClima para la excepción de las cinemáticas).
         bool dentro = AnclaDeClima == null && IsSkyboxLockedByEnvironment();
         if (dentro) _activeSnowInstance.SetActive(false);
 
@@ -2185,7 +1752,6 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(SnowWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(snowSfxKey) ? VientoPorDefecto : snowSfxKey, snowLoopVolume);
         if (dentro) AudioService.Instance?.SetLoopingSFXMuted(SnowWeatherSfxLoopId, true);
-        StartSnowAmount(1f);
     }
 
     void BeginSnowFadeOut()
@@ -2193,40 +1759,17 @@ public class DayNightCycle : MonoBehaviour
         if (!IsSnowing) return;
 
         IsSnowing = false;
+        _nieveSolicitada = false;
+        AvisarDespejado();
         SnowStopped?.Invoke();
         GameplayEventLog.Log("NieveFin");
         AudioService.Instance?.StopLoopingSFX(SnowWeatherSfxLoopId, snowFadeOutTime);
-        StartSnowAmount(0f);
 
         if (_snowFadeCoroutine != null)
             StopCoroutine(_snowFadeCoroutine);
 
         if (_activeSnowInstance != null)
             _snowFadeCoroutine = StartCoroutine(SnowFadeOutRoutine(_activeSnowInstance));
-    }
-
-    void StartSnowAmount(float target)
-    {
-        if (_snowAmountCoroutine != null)
-            StopCoroutine(_snowAmountCoroutine);
-        _snowAmountCoroutine = StartCoroutine(SnowAmountRoutine(target));
-    }
-
-    IEnumerator SnowAmountRoutine(float target)
-    {
-        float start = _snowAmount;
-        float elapsed = 0f;
-        float duration = Mathf.Max(0.01f, snowTransitionDuration);
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            _snowAmount = Mathf.Lerp(start, target, elapsed / duration);
-            yield return null;
-        }
-
-        _snowAmount = target;
-        _snowAmountCoroutine = null;
     }
 
     IEnumerator SnowFadeOutRoutine(GameObject snowInstance)
@@ -2249,16 +1792,6 @@ public class DayNightCycle : MonoBehaviour
         _snowFadeCoroutine = null;
     }
 
-    // ==================== Tormenta / Rayos (30 ago 2026) ====================
-    // Una tormenta ES lluvia (reutiliza StartRain/StopRain tal cual — mismas partículas,
-    // oscurecimiento, niebla, nubosidad previa y SFX de siempre) MÁS una capa de rayos periódicos
-    // por encima. No se ha creado un sistema de lluvia paralelo: solo se añade la parte de rayos.
-
-    /// <summary>
-    /// Arranca una tormenta: lluvia normal (StartRain) + rayos periódicos (LightningLoop) durante
-    /// <paramref name="duration"/> segundos. Si ya está lloviendo (narrativa, u otra llamada), no
-    /// hace nada — igual que StartRain, para no pisar una lluvia ya en marcha por otro motivo.
-    /// </summary>
     public void StartThunderstorm(float? duration = null, bool immediate = false)
     {
         if (IsThunderstorm)
@@ -2290,12 +1823,6 @@ public class DayNightCycle : MonoBehaviour
         _thunderstormCoroutine = StartCoroutine(ThunderstormRoutine(stormDuration, immediate));
     }
 
-    /// <summary>
-    /// Para la tormenta YA (rayos + lluvia), sin esperar a que acabe su temporizador. Si la lluvia
-    /// de una tormenta se para con StopRain() en vez de con esta función, los rayos seguirán
-    /// sonando/destellando hasta que acabe el temporizador de la tormenta — usar siempre
-    /// StopThunderstorm() para pararla del todo de golpe (p.ej. narrativa, minijuego).
-    /// </summary>
     public void StopThunderstorm()
     {
         if (!IsThunderstorm) return;
@@ -2321,16 +1848,11 @@ public class DayNightCycle : MonoBehaviour
 
         if (_lightningCoroutine != null)
             StopCoroutine(_lightningCoroutine);
-        // El primer rayo llega YA (sin esperar thunderstormLightningIntervalRange) — una tormenta
-        // que empieza con un trueno inmediato se lee mejor que un silencio de hasta 22s, y de paso
-        // da feedback instantáneo al testear ("Testeo: Tormenta (iniciar)"). Los rayos siguientes
-        // dentro del mismo LightningLoop sí respetan el intervalo normal.
+
         _lightningCoroutine = StartCoroutine(LightningLoop(firstStrikeImmediate: true));
 
+        while (_isCloudBuildingUp) yield return null;
         yield return new WaitForSeconds(duration);
-
-        // La lluvia de debajo ya se para sola (StartRain(duration) programó su propio fin) — aquí
-        // solo queda cerrar la capa extra de rayos.
         FinishThunderstorm();
         _thunderstormCoroutine = null;
     }
@@ -2358,68 +1880,36 @@ public class DayNightCycle : MonoBehaviour
         {
             if (first && firstStrikeImmediate)
             {
-                // Nada de espera para el primer rayo — ver comentario en ThunderstormRoutine.
+
             }
             else
             {
-                // En una cinemática, más seguidos (INC-432): los planos duran pocos segundos y con
-                // 8-22 s entre rayo y rayo casi todos caían entre dos cortes o fuera de cuadro.
+
                 float wait = AnclaDeClima != null ? UnityEngine.Random.Range(5f, 11f)
                            : UnityEngine.Random.Range(thunderstormLightningIntervalRange.x, thunderstormLightningIntervalRange.y);
                 yield return new WaitForSeconds(wait);
             }
             first = false;
-            // Dentro de un interior no se ve ni se oye el rayo, igual que la lluvia. Ver INC-606.
+
             if (AnclaDeClima == null && IsSkyboxLockedByEnvironment()) continue;
             yield return FlashLightningRoutine();
         }
     }
 
-    /// <summary>
-    /// Un único rayo: destello + trueno con retraso. El destello es una Light DIRECCIONAL NUEVA y
-    /// temporal (no toca directionalLight para nada) — ver el tooltip de thunderstormFlashIntensity
-    /// para el porqué: directionalLight.intensity ya se recalcula cada frame en LateUpdate a partir
-    /// de SU PROPIO valor actual mientras llueve (oscurecimiento por lluvia, ver
-    /// rainLightIntensityMultiplier), así que escribir ahí directamente para el destello se pelearía
-    /// con ese cálculo y dejaría un resultado impredecible en vez de un destello limpio.
-    /// </summary>
-    /// <summary>
-    /// El trazo del rayo en sí (el "zigzag" que cae del cielo), no solo el destello de luz
-    /// ambiental de FlashLightningRoutine — sin esto un "rayo" era indistinguible de un simple
-    /// parpadeo de brillo general, que es justo lo que Raúl señaló que faltaba ("debe verse con
-    /// rayos caer"). GameObject temporal con LineRenderer en world space (mismo patrón de líneas
-    /// que NightSkyConstellationSpawner), material compartido _lightningBoltMaterial (ver Awake).
-    /// Nace en el cielo (thunderstormBoltHeight) y "golpea" un punto en el suelo a una distancia y
-    /// ángulo aleatorios alrededor del jugador (thunderstormBoltDistanceRange) — los extremos
-    /// (cielo/impacto) quedan fijos, y solo los puntos intermedios se desvían horizontalmente
-    /// (thunderstormBoltJitter) para dar la forma quebrada característica de un rayo, en vez de una
-    /// línea recta. Se autodestruye a los pocos instantes, igual que el destello de luz.
-    /// </summary>
     void SpawnLightningBolt(Vector3? punto = null, bool destello = true)
     {
         if (_lightningBoltMaterial == null)
             return;
 
-        // En una cinemática, el rayo se coloca EN EL PLANO (INC-432), como el sol en cuadro.
         if (AnclaDeClima != null && RayoEnCuadro(destello, punto))
             return;
 
-        // En una cinemática (INC-420 → INC-427): con el ancla en la cámara, el zigzag caía a 18-55 m
-        // y se veía como una barra blanca fija («se ve una cosa blanca»). Quitarlo dejó la tormenta
-        // sin rayos («me faltan rayos de tormenta»). Ahora, en cinemática, el rayo cae LEJOS (al
-        // fondo del valle, contra el cielo), más quebrado, y PARPADEA dos o tres veces en vez de
-        // quedarse quieto: es lo que hace que se lea como un rayo y no como un palo.
         bool enCinematica = AnclaDeClima != null;
 
-        // Con una cinemática rodando, el rayo cae donde está la cámara, no donde duerme el jugador
-        // (INC-417; mismo patrón que la lluvia, INC-380).
         Transform reference = AnclaDeClima != null ? AnclaDeClima :
                               PlayerService.Player != null ? PlayerService.Player.transform :
                               Camera.main != null ? Camera.main.transform : transform;
 
-        // Sesgado hacia donde mira la cámara (±65°) en vez de 360° completos — con ángulo
-        // totalmente libre, la mayoría de los rayos nacían fuera de la vista de la cámara y era
-        // imposible verlos por pura geometría, sin que hubiera nada mal en el material/shader.
         float cameraYaw = Camera.main != null ? Camera.main.transform.eulerAngles.y : reference.eulerAngles.y;
         float boltYaw = cameraYaw + UnityEngine.Random.Range(-65f, 65f);
         float distance = enCinematica ? UnityEngine.Random.Range(110f, 230f)
@@ -2441,7 +1931,7 @@ public class DayNightCycle : MonoBehaviour
         line.widthMultiplier = enCinematica ? 2.4f : thunderstormBoltWidth;
         if (enCinematica)
         {
-            // Más fino abajo, como los de verdad.
+
             line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.35f));
         }
         line.numCapVertices = 2;
@@ -2452,8 +1942,6 @@ public class DayNightCycle : MonoBehaviour
             float t = (float)i / segments;
             Vector3 point = Vector3.Lerp(topPoint, groundPoint, t);
 
-            // Los extremos se dejan sin desviar (nace arriba, golpea el punto elegido) — el
-            // zigzag va solo en los puntos intermedios.
             if (i != 0 && i != segments)
             {
                 float jitterX = UnityEngine.Random.Range(-jitter, jitter);
@@ -2468,16 +1956,6 @@ public class DayNightCycle : MonoBehaviour
         else Destroy(boltObj, Mathf.Max(0.05f, thunderstormBoltVisibleDuration));
     }
 
-    /// El rayo de una cinemática, colocado en el ENCUADRE (INC-432).
-    ///
-    /// En prologo20 «los rayos no los he visto»: caían a 110-230 m en una dirección al azar de
-    /// ±65° alrededor de la cámara, con un campo de visión de unos ±40°, y en planos que cambian
-    /// cada pocos segundos; los que entraban en cuadro quedaban detrás de casas o montañas, o eran
-    /// una raya de pocos píxeles que duraba dos décimas. Ahora se cuelga del plano que se está
-    /// rodando: baja desde encima del borde de arriba hasta el tercio de abajo del cielo, a un lado
-    /// del cuadro (el centro es de los personajes), lejos, con un halo azulado alrededor del trazo
-    /// y una rama. Si la cámara mira muy hacia abajo (no hay cielo en el plano), no se cuelga y
-    /// cae como siempre.
     bool RayoEnCuadro(bool destello = true, Vector3? punto = null)
     {
         Camera cam = SolYLunaEnElCielo.CamaraActual();
@@ -2501,7 +1979,6 @@ public class DayNightCycle : MonoBehaviour
         float largo = Vector3.Distance(arriba, abajo);
         var raiz = new GameObject("[Rayo en cuadro]");
 
-        // Trazo principal, quebrado: cada tramo se desvía algo del anterior, no al azar puro.
         const int tramos = 12;
         var puntos = new Vector3[tramos + 1];
         float desvio = 0f;
@@ -2516,7 +1993,6 @@ public class DayNightCycle : MonoBehaviour
         TrazoDelRayo(raiz, puntos, grosor * 4.5f, new Color(0.55f, 0.65f, 1f, 0.22f), -1);   // halo
         TrazoDelRayo(raiz, puntos, grosor, new Color(1f, 1f, 1f, 1f), 0);                     // núcleo
 
-        // Una rama, desde el primer tercio, hacia fuera del cuadro.
         int desde = UnityEngine.Random.Range(tramos / 4, tramos / 2);
         float haciaFuera = x < 0.5f ? -1f : 1f;
         var rama = new Vector3[6];
@@ -2552,7 +2028,6 @@ public class DayNightCycle : MonoBehaviour
         line.SetPositions(puntos);
     }
 
-    /// Como un rayo de verdad: destello, se apaga, vuelve más fuerte, se apaga, un último latido.
     IEnumerator Co_ParpadeoDelRayoEnCuadro(GameObject raiz)
     {
         float[] pasos = { 0.08f, 0.05f, 0.13f, 0.06f, 0.16f };
@@ -2567,7 +2042,6 @@ public class DayNightCycle : MonoBehaviour
         if (raiz != null) Destroy(raiz);
     }
 
-    /// Encendido, apagado, encendido, apagado, un último destello: así parpadea un rayo.
     IEnumerator Co_ParpadeoDelRayo(LineRenderer line, GameObject bolt)
     {
         float[] pasos = { 0.07f, 0.05f, 0.09f, 0.06f, 0.05f };
@@ -2584,7 +2058,6 @@ public class DayNightCycle : MonoBehaviour
 
     public string ClaveDeTrueno => string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey;
 
-    /// Lanza un rayo del sistema de clima en un punto concreto; no requiere tormenta activa.
     public void LanzarRayo(Vector3 punto, bool conTrueno = true, string trueno = null, float volumen = 1f, bool destello = true)
     {
         if (!isActiveAndEnabled) return;
@@ -2602,7 +2075,7 @@ public class DayNightCycle : MonoBehaviour
     IEnumerator FlashLightningRoutine()
     {
         SpawnLightningBolt();
-        // En una cinemática suena el trueno de siempre (ClaveDeTrueno); en juego, uno con chasquido.
+
         if (AnclaDeClima == null && truenosDeTormenta != null && truenosDeTormenta.Length > 0)
             ProgramarTrueno(truenosDeTormenta[UnityEngine.Random.Range(0, truenosDeTormenta.Length)], volumenDelTrueno);
         else
@@ -2618,21 +2091,13 @@ public class DayNightCycle : MonoBehaviour
         flash.intensity = thunderstormFlashIntensity;
         flash.shadows = LightShadows.None;
         if (directionalLight != null) flashObj.transform.rotation = directionalLight.transform.rotation;
-        // Destroy con retardo garantiza la retirada incluso si se apaga el componente del clima.
+
         Destroy(flashObj, Mathf.Max(0.01f, thunderstormFlashDuration));
         yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, thunderstormFlashDuration));
         if (flashObj != null) Destroy(flashObj);
     }
     const string TruenoPorDefecto = "Weather_Thunder";
 
-    // 30 ago 2026 — Raúl pidió botones de prueba en el Inspector ("testeos") para poder forzar cada
-    // periodo del día y el clima sin esperar al ciclo automático, sobre todo para probar cambios de
-    // arte del cielo (p.ej. el domo de estrellas, ver NightSkyStarSpawner) sin tener que esperar a
-    // que le toque la noche por turno. Todos con el prefijo "Testeo:" para que aparezcan agrupados y
-    // se distingan a simple vista de las acciones "de verdad" (SetTimeOfDay/StartRain/etc., ya
-    // públicas y usadas por narrativa). Los periodos usan immediate:true a propósito (sin la
-    // transición suave de transitionDuration, ~10-16s) — para testear rápido interesa el cambio ya,
-    // no verlo animarse.
     [ContextMenu("Testeo: Ir a Amanecer")]
     public void DebugGoToMorning() => SetTimeOfDay(TimeOfDay.Morning, immediate: true);
 
@@ -2648,11 +2113,6 @@ public class DayNightCycle : MonoBehaviour
     [ContextMenu("Testeo: Avanzar al siguiente periodo")]
     public void DebugAdvanceTime() => AdvanceToNextPeriod();
 
-    // Antes había un único "Activar/Desactivar lluvia" (ToggleRain) — con un solo ítem que hace lo
-    // contrario según el estado interno, es fácil pulsar esperando que empiece y que en realidad
-    // pare (o al revés) si no se tiene clara la etiqueta ni el estado actual. Separado en dos
-    // acciones explícitas: cada una hace SIEMPRE lo que dice, sin depender de IsRaining. StartRain()/
-    // StopRain() ya no hacen nada si ya está en ese estado (no hace falta guardia extra aquí).
     [ContextMenu("Testeo: Lluvia (iniciar)")]
     public void DebugStartRain() => StartRain();
 

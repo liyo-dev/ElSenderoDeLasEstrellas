@@ -15,6 +15,9 @@ public sealed class FichaDePersonaje : ScriptableObject
     [Tooltip("Retrato redondo del personaje (cara y hombros), para los paneles que lo presentan: el informe de fin de batalla.")]
     [SerializeField] private Sprite retrato;
 
+    [Tooltip("Color del personaje en la interfaz: halo y luz del borde de su retrato en el HUD. Alfa 0 = sin configurar.")]
+    [SerializeField] private Color colorDelPersonaje = new Color(1f, 1f, 1f, 0f);
+
     [Tooltip("Vida y magia máximas, ataque y defensa con los que empieza.")]
     [SerializeField] private Estadisticas estadisticasIniciales = new Estadisticas(100f, 50f, EstadisticasDelPersonaje.AtaqueInicial, EstadisticasDelPersonaje.DefensaInicial);
 
@@ -58,6 +61,8 @@ public sealed class FichaDePersonaje : ScriptableObject
 
     public PartyControlManager.CharacterSlot Personaje => personaje;
     public Sprite Retrato => retrato;
+    /// Color del personaje en la interfaz (alfa 0 = sin configurar).
+    public Color ColorDelPersonaje => colorDelPersonaje;
 
     /// La ficha de un personaje del grupo, entre las cargadas (las lleva el cuerpo de cada uno en
     /// su componente Personaje). Null si no hay ninguna cargada para ese hueco.

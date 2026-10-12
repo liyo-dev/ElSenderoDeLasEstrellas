@@ -4,10 +4,10 @@ using UnityEngine;
 /// Un cristal que protege a su dueño mientras está entero: espinas o anclas que conjura un jefe.
 /// Se registra como objetivo de combate (los aliados lo atacan) y
 /// avisa al romperse. Quién decide qué protege y cómo es el dueño: el cristal solo dice si sigue
-/// activo. Va junto a su Damageable; con DebilidadDePersonaje, un personaje lo rompe antes.
-/// Ver INC-663.
+/// activo. Va junto a su Damageable; con DebilidadDePersonaje, un personaje lo rompe antes. Un
+/// hechizo que abre protecciones (Amanecer) lo rompe al alcanzarlo. Ver INC-663, INC-724.
 [RequireComponent(typeof(Damageable))]
-public sealed class CristalProtector : MonoBehaviour
+public sealed class CristalProtector : MonoBehaviour, IProteccionQueSeAbre
 {
     [SerializeField] private float vida = 60f;
     [Tooltip("Lo que se ve mientras está activo (el cristal).")]
@@ -54,6 +54,9 @@ public sealed class CristalProtector : MonoBehaviour
     {
         if (Activo) _vida.Kill();
     }
+
+    /// Abrir la protección de un cristal es romperlo.
+    public void AbrirProteccion(float segundos, GameObject quien, GameObject vfx) => Romper();
 
     private void AlMorir()
     {

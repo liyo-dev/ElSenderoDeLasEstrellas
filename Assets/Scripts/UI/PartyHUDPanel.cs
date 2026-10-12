@@ -4,38 +4,53 @@ using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using Game.NPC;
+using Slot = PartyControlManager.CharacterSlot;
 
 namespace Sendero.UI
 {
     /// <summary>
-    /// Panel de HUD del equipo con los retratos de los 3 personajes.
+    /// Panel del grupo en el HUD: los retratos de busto de Liam, Will y Estela, el nombre del que
+    /// va al mando y el aviso de Siguiendo / Libre.
     ///
-    /// Disposición: Liam (índice 0, izquierda) | Will (índice 1, centro) | Estela (índice 2, derecha)
+    /// Carrusel: el personaje al mando va en el centro; a cada lado, el personaje al que se pasaría
+    /// con DPad hacia ese lado (<see cref="PartyControlManager.SlotVecino"/>), así lo que se ve
+    /// coincide con lo que hace el botón. Quien no está en el grupo no se muestra.
     ///
-    /// Alfa de los retratos:
-    ///   - Personaje NO en el equipo: 0 (oculto)
-    ///   - En el equipo, inactivo:    0.5
-    ///   - Activo (controlado):       1.0
-    ///
-    /// Referencia de escena: añade este componente al GameObject del panel de equipo en el HUD.
+    /// Este panel decide quién va dónde; cómo se ve y reacciona cada retrato lo hace
+    /// <see cref="RetratoDelGrupo"/>, y la vida, las caídas y el trío los da
+    /// <see cref="EstadoDelGrupoParaRetratos"/>. Se monta con
+    /// <c>El Sendero/UI/Montar retratos del grupo</c>.
     /// </summary>
     public class PartyHUDPanel : MonoBehaviour
     {
-        [Header("Retratos del equipo")]
-        [SerializeField] private Image liamPortrait;
-        [SerializeField] private Image willPortrait;
-        [SerializeField] private Image estelaPortrait;
+        private static readonly Color[] ColoresPorDefecto =
+        {
+            new Color(0.482f, 0.749f, 0.353f, 1f), // Liam #7BBF5A
+            new Color(1f, 0.604f, 0.235f, 1f),     // Will #FF9A3C
+            new Color(0.310f, 0.553f, 1f, 1f),     // Estela #4F8DFF
+        };
 
-        [Header("Alfa de los retratos")]
-        [Tooltip("Alfa cuando el personaje está en el equipo pero no activo")]
-        [SerializeField] private float inactiveAlpha = 0.5f;
-        [Tooltip("Alfa cuando el personaje es el activo")]
-        [SerializeField] private float activeAlpha = 1f;
-        [Tooltip("Duración del tween de alpha al cambiar")]
-        [SerializeField] private float alphaTweenDuration = 0.25f;
-        [Tooltip("Escala de punch al activarse (ej: 0.1 = 10% de agrandamiento momentáneo)")]
-        [SerializeField] private float portraitPunchStrength = 0.1f;
-        [SerializeField] private float portraitPunchDuration = 0.35f;
+        [Header("Retratos del grupo")]
+        [SerializeField] private RetratoDelGrupo retratoDeLiam;
+        [SerializeField] private RetratoDelGrupo retratoDeWill;
+        [SerializeField] private RetratoDelGrupo retratoDeEstela;
+        [SerializeField] private EstadoDelGrupoParaRetratos estado;
+        [Tooltip("De dónde salen las imágenes: un JuegoDeRetratos u otro componente o asset que implemente IFuenteDeRetrato.")]
+        [SerializeField] private Object fuenteDeRetratos;
+        [Tooltip("Imágenes que se usan si la fuente principal no tiene la que toca.")]
+        [SerializeField] private JuegoDeRetratos retratosDeRespaldo;
+        [Tooltip("Distancia horizontal del centro a los retratos de los lados (unidades del contenedor).")]
+        [SerializeField] private float separacionLateral = 290f;
+        [Tooltip("Por debajo de esta vida (0-1), el retrato se ve cansado.")]
+        [SerializeField, Range(0f, 1f)] private float vidaBaja = 0.25f;
+
+        [Header("Nombre y luz del borde")]
+        [SerializeField] private TMP_Text nombreDelActivo;
+        [SerializeField] private Graphic lineaDeLuz;
+
+        [Header("Aviso del trío")]
+        [SerializeField] private CanvasGroup avisoDelTrio;
+        [SerializeField] private float avisoVisible = 1.6f;
 
         [Header("Panel de estado de seguimiento")]
         [SerializeField] private CanvasGroup followStatusPanel;
@@ -51,28 +66,25 @@ namespace Sendero.UI
         [SerializeField] private string liamDisplayName = "Liam";
         [SerializeField] private string estelaDisplayName = "Estela";
 
-        private Image[] _portraits; // 0=Liam, 1=Will, 2=Estela
-        // Escala base de cada retrato tal cual quedó configurada en el Canvas (ej: 0.31055).
-        // TweenAlpha() necesita reiniciar la escala antes de cada punch (ver comentario ahí abajo),
-        // pero si reinicia a Vector3.one en vez de a esta escala original, pisa el ajuste manual
-        // hecho en el editor y el retrato se ve gigante en cuanto arranca el HUD (Awake/OnEnable
-        // llaman a Refresh() -> RefreshPortraits() -> TweenAlpha() para los 3 retratos siempre).
-        private Vector3[] _portraitBaseScales;
+        private RetratoDelGrupo[] _retratos; // 0=Liam, 1=Will, 2=Estela
+        private readonly bool[] _presente = new bool[3];
+        private readonly Color[] _colores = new Color[3];
+        private readonly string[] _nombres = { "LIAM", "WILL", "ESTELA" };
+        private int _activoMostrado = -1;
+        private readonly bool[] _saludMostrada = new bool[3];
+        private readonly bool[] _cansadoMostrado = new bool[3];
+        private readonly bool[] _caidoMostrado = new bool[3];
+        private bool _trioMostrado;
         private Sequence _panelSequence;
+        private Sequence _avisoSequence;
         private RectTransform _followStatusRect;
         private Vector2 _panelStartPos;
+        private bool _configurado;
 
         private void Awake()
         {
-            _portraits = new[] { liamPortrait, willPortrait, estelaPortrait };
-            _portraitBaseScales = new Vector3[_portraits.Length];
-            for (int i = 0; i < _portraits.Length; i++)
-            {
-                _portraitBaseScales[i] = _portraits[i] != null
-                    ? _portraits[i].transform.localScale
-                    : Vector3.one;
-            }
-            InitPortraits();
+            _retratos = new[] { retratoDeLiam, retratoDeWill, retratoDeEstela };
+            if (avisoDelTrio != null) { avisoDelTrio.alpha = 0f; avisoDelTrio.gameObject.SetActive(false); }
         }
 
         private void OnEnable()
@@ -80,9 +92,14 @@ namespace Sendero.UI
             PlayerParty.OnPartyChanged += OnPartyChanged;
             PartyControlManager.OnActiveCharacterChanged += OnActiveCharacterChanged;
             PartyControlManager.OnFollowModeChanged += OnFollowModeChanged;
-            // El HUD es persistente (Start.unity): al re-activarse necesita refrescar
-            // el estado del party, ya que Start() solo se ejecuta una vez.
-            if (_portraits != null) Refresh();
+            if (estado != null)
+            {
+                estado.Golpeado += AlGolpear;
+                estado.SaludCambiada += AlCambiarSalud;
+                estado.TrioCambiado += AlCambiarTrio;
+            }
+            // El HUD es persistente (Start.unity): al reactivarse refresca el estado del grupo.
+            Refresh(false);
         }
 
         private void OnDisable()
@@ -90,7 +107,15 @@ namespace Sendero.UI
             PlayerParty.OnPartyChanged -= OnPartyChanged;
             PartyControlManager.OnActiveCharacterChanged -= OnActiveCharacterChanged;
             PartyControlManager.OnFollowModeChanged -= OnFollowModeChanged;
+            if (estado != null)
+            {
+                estado.Golpeado -= AlGolpear;
+                estado.SaludCambiada -= AlCambiarSalud;
+                estado.TrioCambiado -= AlCambiarTrio;
+            }
             _panelSequence?.Kill();
+            _avisoSequence?.Kill();
+            if (avisoDelTrio != null) { avisoDelTrio.alpha = 0f; avisoDelTrio.gameObject.SetActive(false); }
         }
 
         private void Start()
@@ -102,36 +127,170 @@ namespace Sendero.UI
                 followStatusPanel.alpha = 0f;
                 followStatusPanel.gameObject.SetActive(false);
             }
-            Refresh();
+            Refresh(false);
         }
 
-        // ─── Estado inicial ────────────────────────────────────────────────────────
+        // ─── Configuración ─────────────────────────────────────────────────────
 
-        private void InitPortraits()
+        private void Configurar()
         {
-            // Solo Will visible al inicio, los demás ocultos hasta que se unan
-            SetAlphaImmediate(0, 0f);   // Liam oculto
-            SetAlphaImmediate(1, 1f);   // Will activo
-            SetAlphaImmediate(2, 0f);   // Estela oculta
+            if (_configurado) return;
+            _configurado = true;
+            var fuente = fuenteDeRetratos as IFuenteDeRetrato;
+            if (fuente == null && fuenteDeRetratos is GameObject go) fuente = go.GetComponent<IFuenteDeRetrato>();
+            for (int i = 0; i < _retratos.Length; i++)
+            {
+                var ficha = FichaDePersonaje.Buscar((Slot)i);
+                _colores[i] = ficha != null && ficha.ColorDelPersonaje.a > 0f ? ficha.ColorDelPersonaje : ColoresPorDefecto[i];
+                if (_retratos[i] != null) _retratos[i].Configurar((Slot)i, _colores[i], fuente, retratosDeRespaldo);
+            }
         }
 
-        // ─── Callbacks de eventos ──────────────────────────────────────────────────
+        // ─── Callbacks de eventos ──────────────────────────────────────────────
 
-        private void OnPartyChanged(IReadOnlyList<NPCPartyMember> members)
-        {
-            RefreshPortraits(PartyControlManager.Instance?.ActiveIndex ?? 1);
-        }
-
-        private void OnActiveCharacterChanged(int newIndex)
-        {
-            RefreshPortraits(newIndex);
-        }
+        private void OnPartyChanged(IReadOnlyList<NPCPartyMember> members) => Recolocar(true);
+        private void OnActiveCharacterChanged(int newIndex) => Recolocar(true);
 
         private void OnFollowModeChanged(bool isFollowing)
         {
             UpdateFollowText(isFollowing);
             ShowFollowStatusPanel();
         }
+
+        private void AlGolpear(Slot personaje)
+        {
+            var r = Retrato((int)personaje);
+            if (r != null) r.Golpe();
+        }
+
+        private void AlCambiarSalud(Slot personaje) => PonerSalud((int)personaje);
+
+        private void AlCambiarTrio(bool listo) => PonerTrio(true);
+
+        // ─── Refresco ──────────────────────────────────────────────────────────
+
+        private void Refresh(bool animar)
+        {
+            if (_retratos == null) return;
+            Configurar();
+            bool following = PartyControlManager.Instance == null || PartyControlManager.Instance.IsPartyFollowing;
+            Recolocar(animar);
+            for (int i = 0; i < _retratos.Length; i++) PonerSalud(i);
+            _trioMostrado = estado != null && estado.TrioListo && Presentes() == 3;
+            PonerTrio(false);
+            UpdateFollowText(following);
+        }
+
+        private void Recolocar(bool animar)
+        {
+            if (_retratos == null) return;
+            Configurar();
+            var pcm = PartyControlManager.Instance;
+            int activo = pcm != null ? pcm.ActiveIndex : (int)Slot.Will;
+            _presente[(int)Slot.Liam] = IsInParty(liamDisplayName);
+            _presente[(int)Slot.Will] = true;
+            _presente[(int)Slot.Estela] = IsInParty(estelaDisplayName);
+
+            int izquierda = pcm != null ? pcm.SlotVecino(activo, -1) : -1;
+            int derecha = pcm != null ? pcm.SlotVecino(activo, 1) : -1;
+            if (izquierda >= 0 && izquierda == derecha)
+            {
+                // Con dos en el grupo los dos lados llevan al mismo: va al lado de su hueco.
+                if (izquierda < activo) derecha = -1; else izquierda = -1;
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                if (i == activo || i == izquierda || i == derecha || !_presente[i]) continue;
+                if (izquierda < 0) izquierda = i; else if (derecha < 0) derecha = i;
+            }
+
+            for (int i = 0; i < 3; i++)
+            {
+                var r = Retrato(i);
+                if (r == null) continue;
+                if (!_presente[i]) { r.Colocar(PosicionDeRetrato.Oculto, 0f, false); continue; }
+                if (i == activo) r.Colocar(PosicionDeRetrato.Centro, 0f, animar);
+                else if (i == izquierda) r.Colocar(PosicionDeRetrato.Izquierda, -separacionLateral, animar);
+                else if (i == derecha) r.Colocar(PosicionDeRetrato.Derecha, separacionLateral, animar);
+                else r.Colocar(PosicionDeRetrato.Oculto, 0f, false);
+            }
+            var central = Retrato(activo);
+            if (central != null) central.transform.SetAsLastSibling();
+
+            if (activo != _activoMostrado)
+            {
+                _activoMostrado = activo;
+                if (nombreDelActivo != null && activo >= 0 && activo < _nombres.Length) nombreDelActivo.text = _nombres[activo];
+                if (lineaDeLuz != null && activo >= 0 && activo < _colores.Length)
+                {
+                    var c = _colores[activo];
+                    lineaDeLuz.DOKill();
+                    lineaDeLuz.DOColor(new Color(c.r, c.g, c.b, lineaDeLuz.color.a), animar ? 0.35f : 0f).SetUpdate(true);
+                }
+            }
+            PonerTrio(false);
+        }
+
+        private void PonerSalud(int slot)
+        {
+            var r = Retrato(slot);
+            if (r == null || estado == null) return;
+            var s = (Slot)slot;
+            bool caido = estado.Caido(s);
+            bool cansado = !caido && estado.Vida(s) <= vidaBaja;
+            r.PonerBarras(estado.Vida(s), estado.Mana(s), cansado);
+            // El maná cambia a menudo (se regenera): el aspecto del retrato solo si cambia la vida baja o la caída.
+            if (_saludMostrada[slot] && _cansadoMostrado[slot] == cansado && _caidoMostrado[slot] == caido) return;
+            _saludMostrada[slot] = true;
+            _cansadoMostrado[slot] = cansado;
+            _caidoMostrado[slot] = caido;
+            r.PonerSalud(cansado, caido);
+        }
+
+        /// Halo dorado en todos con el trío listo (y los tres en el grupo); el aviso, solo al llenarse.
+        private void PonerTrio(bool avisar)
+        {
+            bool listo = estado != null && estado.TrioListo && Presentes() == 3;
+            for (int i = 0; i < 3; i++)
+            {
+                var r = Retrato(i);
+                if (r != null) r.PonerTrioListo(listo);
+            }
+            if (listo && !_trioMostrado && avisar) MostrarAvisoDelTrio();
+            _trioMostrado = listo;
+        }
+
+        private void MostrarAvisoDelTrio()
+        {
+            if (avisoDelTrio == null) return;
+            _avisoSequence?.Kill();
+            var t = avisoDelTrio.transform;
+            avisoDelTrio.gameObject.SetActive(true);
+            avisoDelTrio.alpha = 0f;
+            t.localScale = Vector3.one * 0.8f;
+            _avisoSequence = DOTween.Sequence().SetUpdate(true)
+                .Append(avisoDelTrio.DOFade(1f, 0.2f))
+                .Join(t.DOScale(1f, 0.35f).SetEase(Ease.OutBack))
+                .AppendInterval(avisoVisible)
+                .Append(avisoDelTrio.DOFade(0f, 0.3f))
+                .OnComplete(() =>
+                {
+                    if (avisoDelTrio != null) avisoDelTrio.gameObject.SetActive(false);
+                    _avisoSequence = null;
+                });
+        }
+
+        private int Presentes()
+        {
+            int n = 0;
+            for (int i = 0; i < 3; i++) if (_presente[i]) n++;
+            return n;
+        }
+
+        private RetratoDelGrupo Retrato(int slot) =>
+            _retratos != null && slot >= 0 && slot < _retratos.Length ? _retratos[slot] : null;
+
+        // ─── Siguiendo / Libre ─────────────────────────────────────────────────
 
         private void ShowFollowStatusPanel()
         {
@@ -160,33 +319,6 @@ namespace Sendero.UI
             });
         }
 
-        // ─── Refresco completo ─────────────────────────────────────────────────────
-
-        private void Refresh()
-        {
-            int activeIdx = PartyControlManager.Instance?.ActiveIndex ?? 1;
-            bool following = PartyControlManager.Instance == null || PartyControlManager.Instance.IsPartyFollowing;
-            RefreshPortraits(activeIdx);
-            UpdateFollowText(following);
-        }
-
-        private void RefreshPortraits(int activeIndex)
-        {
-            bool liamInParty = IsInParty(liamDisplayName);
-            bool estelaInParty = IsInParty(estelaDisplayName);
-
-            // Liam (0)
-            float liamTarget = !liamInParty ? 0f : (activeIndex == 0 ? activeAlpha : inactiveAlpha);
-            TweenAlpha(0, liamTarget);
-
-            // Will (1) — siempre en el equipo
-            TweenAlpha(1, activeIndex == 1 ? activeAlpha : inactiveAlpha);
-
-            // Estela (2)
-            float estelaTarget = !estelaInParty ? 0f : (activeIndex == 2 ? activeAlpha : inactiveAlpha);
-            TweenAlpha(2, estelaTarget);
-        }
-
         private void UpdateFollowText(bool isFollowing)
         {
             if (followStatusText == null) return;
@@ -197,43 +329,58 @@ namespace Sendero.UI
                 : fallback;
         }
 
-        // ─── Helpers ──────────────────────────────────────────────────────────────
-
         private bool IsInParty(string displayName)
         {
             return PlayerParty.Instance?.GetMemberByName(displayName) != null;
         }
 
-        private void TweenAlpha(int index, float target)
-        {
-            if (_portraits[index] == null) return;
-            _portraits[index].DOKill();
-            _portraits[index].DOFade(target, alphaTweenDuration).SetUpdate(true);
+#if UNITY_EDITOR
+        // Para ver las reacciones en Play sin tener que provocarlas (menú ⋮ del componente).
+        private int ActivoActual => PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveIndex : (int)Slot.Will;
 
-            var t = _portraits[index].transform;
-            t.DOKill();
-            // Reiniciar la escala antes de lanzar un nuevo punch: si el cambio de personaje activo
-            // llega mientras el punch anterior todavía está en marcha (p.ej. mashing de DPad-Izq/Der
-            // en PartyControlManager, que no tiene cooldown), DOKill() deja la escala a mitad de la
-            // vibración en vez de en la escala base, y el siguiente DOPunchScale se acumula sobre ese
-            // valor ya deformado en vez de partir de la escala normal — el retrato se ve estirado/
-            // encogido de forma no uniforme. Mismo patrón ya usado en DialogueManager.cs (submitHint).
-            // FIX: se reiniciaba a Vector3.one (escala 1:1) en vez de a la escala real del retrato
-            // configurada en el Canvas (_portraitBaseScales, ej: 0.31055). Como esto corre en cada
-            // Refresh() -- incluido el primero, en Awake/OnEnable/Start -- el retrato se veía
-            // "gigante" desde el instante en que arrancaba el HUD, aunque en el Canvas del editor
-            // la escala estuviera bien ajustada.
-            t.localScale = _portraitBaseScales[index];
-            if (target >= activeAlpha)
-                t.DOPunchScale(Vector3.one * portraitPunchStrength, portraitPunchDuration, 1, 0.5f).SetUpdate(true);
+        [ContextMenu("Retratos: probar golpe al que va al mando")]
+        private void ProbarGolpe()
+        {
+            var r = Retrato(ActivoActual);
+            if (r != null) r.Golpe();
         }
 
-        private void SetAlphaImmediate(int index, float alpha)
+        [ContextMenu("Retratos: probar vida baja del que va al mando")]
+        private void ProbarVidaBaja()
         {
-            if (_portraits[index] == null) return;
-            var c = _portraits[index].color;
-            c.a = alpha;
-            _portraits[index].color = c;
+            var r = Retrato(ActivoActual);
+            if (r != null) r.PonerSalud(true, false);
         }
+
+        [ContextMenu("Retratos: probar un compañero caído")]
+        private void ProbarCaido()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var r = Retrato(i);
+                if (i == ActivoActual || r == null || !_presente[i]) continue;
+                r.PonerSalud(false, true);
+                return;
+            }
+        }
+
+        [ContextMenu("Retratos: probar trío listo")]
+        private void ProbarTrio()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                var r = Retrato(i);
+                if (r != null) r.PonerTrioListo(true);
+            }
+            MostrarAvisoDelTrio();
+        }
+
+        [ContextMenu("Retratos: volver al estado real")]
+        private void VolverAlEstadoReal()
+        {
+            System.Array.Clear(_saludMostrada, 0, _saludMostrada.Length);
+            Refresh(false);
+        }
+#endif
     }
 }

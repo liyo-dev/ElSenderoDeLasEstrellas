@@ -10,6 +10,7 @@ namespace Invector.vCharacterController
         public const float walkSpeed = 0.5f;
         public const float runningSpeed = 1f;
         public const float sprintSpeed = 1.5f;
+        protected bool holdingAirbornePose;
 
         #endregion  
 
@@ -19,7 +20,7 @@ namespace Invector.vCharacterController
 
             animator.SetBool(vAnimatorParameters.IsStrafing, isStrafing); ;
             animator.SetBool(vAnimatorParameters.IsSprinting, isSprinting);
-            animator.SetBool(vAnimatorParameters.IsGrounded, isGrounded);
+            animator.SetBool(vAnimatorParameters.IsGrounded, isGrounded && !holdingAirbornePose);
             animator.SetFloat(vAnimatorParameters.GroundDistance, groundDistance);
 
             // Cuando lockMovement está activo el motor no llama a SetAnimatorMoveSpeed(),

@@ -85,6 +85,7 @@ public class SolForzado : MonoBehaviour
         if (segundos <= 0.01f) { _peso = 0f; OpacidadDelSol = 1f; DireccionDelDisco = null; Destroy(this); }
     }
 
+    void OnDisable() { OpacidadDelSol = 1f; DireccionDelDisco = null; }
     void OnDestroy() { OpacidadDelSol = 1f; DireccionDelDisco = null; }
 
     void LateUpdate()
@@ -106,6 +107,7 @@ public class SolForzado : MonoBehaviour
         else
         {
             // Al soltarse, el disco se va con el peso: el sol no «sale» hacia donde lo tenga el ciclo.
+            DireccionDelDisco = -transform.forward;
             OpacidadDelSol = _pesoDestino > 0f ? 1f : _peso * _peso;
         }
     }

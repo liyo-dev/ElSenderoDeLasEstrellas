@@ -58,6 +58,7 @@ public class GameBootProfile : ScriptableObject
         dst.unlockedSpells    = new List<SpellId>(src.unlockedSpells    ?? new List<SpellId>());
         dst.basicSpellIds = new List<SpellId>(src.basicSpellIds ?? new List<SpellId>());
         dst.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(src.companionBasics);
+        dst.companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(src.companionHealth); // INC-717
         dst.flags = new List<string>(src.flags ?? new List<string>());
         dst.appearance = new List<AppearanceEntry>(src.appearance ?? new List<AppearanceEntry>());
         dst.unlockedWardrobeIds = new List<string>(src.unlockedWardrobeIds ?? new List<string>());
@@ -281,6 +282,7 @@ public class GameBootProfile : ScriptableObject
         if (p.basicSpellIds.Count == 0 && unlocked.Count > 0)
             p.basicSpellIds.Add(unlocked[0]);
         p.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(data.companionBasics); // INC-503
+        p.companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(data.companionHealth); // INC-717
 
         // === NUEVO: restaurar permisos de abilities desde el save (si existen) ===
         if (p.abilities == null) p.abilities = new PlayerAbilities();
@@ -366,6 +368,7 @@ public class GameBootProfile : ScriptableObject
         
         data.basicSpellIds = new List<SpellId>(activePreset.basicSpellIds ?? new List<SpellId>());
         data.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(activePreset.companionBasics);
+        data.companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(activePreset.companionHealth);
 
         // === NUEVO: incluir permisos de abilities en el save ===
         if (activePreset.abilities != null)
@@ -574,6 +577,10 @@ public class GameBootProfile : ScriptableObject
             p.currentMP = manaPool.Current;
             syncedSystems.Add($"Mana({p.currentMP:F0}/{p.maxMP:F0})");
         }
+
+        // Con otro personaje al mando, la vida y el maná del cuerpo no son los de Will: cada uno a
+        // su sitio (INC-717).
+        SaludDelGrupo.Instance?.VolcarEnPreset(p);
         
         // === NUEVO: sincronizar flags de quests desde QuestManager =================
         var qm = QuestManager.Instance;
@@ -1263,6 +1270,7 @@ public class GameBootProfile : ScriptableObject
         p.unlockedSpells = new List<SpellId>();
         p.basicSpellIds = new List<SpellId>();
         p.companionBasics = new List<PlayerPresetSO.BasicosDeCompanero>();
+        p.companionHealth = new List<PlayerPresetSO.SaludDeCompanero>();
         p.flags = new List<string>();
         p.appearance = new List<AppearanceEntry>();
         p.inventoryItems = new List<InventoryItemSave>();

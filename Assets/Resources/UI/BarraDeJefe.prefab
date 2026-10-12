@@ -384,6 +384,7 @@ GameObject:
   - component: {fileID: 6277586533767971426}
   - component: {fileID: 420125854521298868}
   - component: {fileID: 4302151560202502666}
+  - component: {fileID: 3419355504953089451}
   m_Layer: 0
   m_Name: Fondo
   m_TagString: Untagged
@@ -451,6 +452,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1.6666666
+--- !u!114 &3419355504953089451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4062169171161210071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60559d84434c1734c892f6e43a0c085f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BordesProporcionales
 --- !u!1 &7117254181909788963
 GameObject:
   m_ObjectHideFlags: 0

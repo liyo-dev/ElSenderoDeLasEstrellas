@@ -84,7 +84,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
         // --- Ocultar toda la UI de gameplay para la revelación del título ---
         PlayerHUDV2.Instance?.HideHUD(this);
         TimeOfDayIndicator.Instance?.Hide();
-        MinimapController.Instance?.SetHiddenByCinematic(true);
+        MinimapController.Ocultar(this);
 
         // --- Corte de cámara al plano general fijo ---
         var cam = Camera.main;
@@ -171,7 +171,7 @@ public sealed class KingdomExitTransitionNode : NarrativeNode
         // --- Restaurar la UI de gameplay (oculta tras el negro, junto con la cámara) ---
         PlayerHUDV2.Instance?.ShowHUD(this);
         TimeOfDayIndicator.Instance?.Show();
-        MinimapController.Instance?.SetHiddenByCinematic(false);
+        MinimapController.Mostrar(this);
 
         // Margen para que el smooth-snap de la cámara termine mientras la pantalla sigue en negro
         if (cameraReturnHoldSeconds > 0f)

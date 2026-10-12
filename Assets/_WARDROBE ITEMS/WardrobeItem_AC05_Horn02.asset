@@ -20,3 +20,8 @@ MonoBehaviour:
   descriptionId: ITEM_AC05_HORN02_DESC
   description: Un cuerno recto y afilado.
   icon: {fileID: 21300000, guid: 8dcd34294e0540458cb1766d559dc8f7, type: 3}
+  bonos:
+    vida: 0
+    magia: 0
+    ataque: 3
+    defensa: 0

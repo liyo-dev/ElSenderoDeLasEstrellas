@@ -7,7 +7,7 @@ using Core;
 /// Defensa del jugador en la B (INC-491/INC-493).
 /// <list type="bullet">
 /// <item>Pulsar B abre una ventana corta (<see cref="parryWindow"/>): un proyectil enemigo que
-/// llegue en ella se devuelve como hechizo propio y más fuerte (contraataque, con parón de
+/// llegue en ella cambia de dueño y regresa más fuerte (contraataque, con parón de
 /// impacto); un golpe cuerpo a cuerpo se anula, empuja al enemigo y el jugador se aparta con una
 /// voltereta hacia atrás (INC-653).</item>
 /// <item>Mantener B = escudo (gasta maná): bloquea proyectiles y reduce el daño cuerpo a cuerpo.
@@ -25,9 +25,10 @@ public class PlayerShieldController : MonoBehaviour
     [SerializeField] private Vector3 shieldOffset = Vector3.zero;
 
     [Header("Animaciones")]
-    [SerializeField] private string defendAnimation = "Defend_NoWeapon";
-    [SerializeField] private string defendHitAnimation = "DefendHit_NoWeapon";
-    [SerializeField] private string locomotionAnimation = "Free Locomotion";
+    [SerializeField] private string preparacionAnimation = "UpperBody.Magic.HumanM@MagicAttackDirect2H01 - Load";
+    [SerializeField] private string defendAnimation = "UpperBody.Defend_NoWeapon";
+    [SerializeField] private string defendHitAnimation = "UpperBody.DefendHit_NoWeapon";
+    [SerializeField] private string locomotionAnimation = "UpperBody.UpperIdle";
     [SerializeField] private int upperBodyLayer = 1;
     [SerializeField] private float upperBodyTransitionDuration = 0.1f;
     [SerializeField, Min(0f)] private float hitFeedbackDuration = 0.3f; // tiempo de feedback antes de volver a defensa
@@ -41,9 +42,13 @@ public class PlayerShieldController : MonoBehaviour
 
     [Header("Contraataque (B en el momento justo)")]
     [Tooltip("Segundos tras pulsar B en los que un golpe enemigo se devuelve.")]
-    [SerializeField, Range(0.05f, 0.5f)] private float parryWindow = 0.2f;
-    [Tooltip("Distancia a la que se detectan los proyectiles enemigos durante la ventana.")]
-    [SerializeField] private float parryRadius = 2.6f;
+    [SerializeField, Range(0.05f, 0.5f)] private float parryWindow = 0.25f;
+    [Tooltip("Radio mínimo de contacto que permite devolver incluso sin vuelo restante.")]
+    [SerializeField, Min(0.1f)] private float parryRadius = 1.2f;
+    [Tooltip("Tiempo máximo restante hasta el pecho para capturar la bola durante la ventana.")]
+    [SerializeField, Min(0f)] private float segundosDeAtrapado = 0.3f;
+    [Tooltip("Distancia lateral máxima al pecho para considerar que la bola se dirige al jugador.")]
+    [SerializeField, Min(0.1f)] private float margenLateral = 1.2f;
     [Tooltip("Espera tras una ventana fallida antes de poder abrir otra.")]
     [SerializeField] private float parryWhiffCooldown = 0.45f;
     [Tooltip("Daño del contraataque respecto al del proyectil devuelto.")]
@@ -88,15 +93,21 @@ public class PlayerShieldController : MonoBehaviour
     private bool _parryOpen;
     private bool _parried;
     private float _parryCooldownUntil = -1f;
-    private int _parryMask;
+    private float _pulsadoEn;
     private int _deflectMask;
     private readonly Collider[] _parryBuffer = new Collider[16];
-    private readonly HashSet<GameObject> _countered = new();
 
+
+    private bool _preparando;
+    private float _fundidoHasta;
+    private float _pesoAlSalir;
     public bool IsDefending => _isDefending;
-
-    /// <summary>Distancia a la que la ventana de contraataque atrapa un proyectil (para el aviso de combate).</summary>
-    public float RadioDeContraataque => parryRadius;
+    public bool PuedeAbrirContraataque => isActiveAndEnabled && Time.time >= _parryCooldownUntil &&
+        (_magicCaster == null || !_magicCaster.IsCasting) && (_playerActionManager == null || _playerActionManager.AllowShield);
+    public float SegundosDeAtrapado => segundosDeAtrapado;
+    public Vector3 CentroDeAtrapado => transform.position + Vector3.up;
+    public float TiempoHastaElPecho(IAmenazaEntrante amenaza) =>
+        AmenazasAlJugador.SegundosHastaAlcanzar(amenaza, CentroDeAtrapado, parryRadius, margenLateral);
 
     /// <summary>Segundos que dura la ventana de contraataque tras pulsar B.</summary>
     public float VentanaDeContraataque => parryWindow;
@@ -134,7 +145,7 @@ public class PlayerShieldController : MonoBehaviour
         _controller = GetComponentInParent<Invector.vCharacterController.vThirdPersonController>();
         _manaPool = GetComponentInParent<ManaPool>();
         _playerActionManager = GetComponentInParent<PlayerActionManager>();
-        _parryMask = LayerMask.GetMask("ProjectileEnemy", "EnemyProjectile", "Projectile", "Enemy");
+
         _deflectMask = LayerMask.GetMask("Enemy", "Boss");
         CreateShieldInstance();
     }
@@ -165,12 +176,14 @@ public class PlayerShieldController : MonoBehaviour
     {
         UnlockService.OnSpellUnlocked -= OnSpellUnlocked;
 
-        if (_controls == null) return;
-
-        if (_ownsControls)
-            _controls.Disable();
-
+        CloseParryWindow();
         StopDefending();
+        SalirDePreparacion();
+        CancelInvoke();
+        _bWasDown = false;
+        _fundidoHasta = 0f;
+        ResetUpperBodyWeight();
+        if (_controls != null && _ownsControls) _controls.Disable();
     }
 
     // INC-078: la proteccion contra magia enemiga se desbloquea en el mismo momento en que
@@ -206,7 +219,17 @@ public class PlayerShieldController : MonoBehaviour
             return;
         }
 
-        if (bPressed) OpenParryWindow();
+        if (_fundidoHasta > 0f)
+        {
+            float k = Mathf.Clamp01(1f - (_fundidoHasta - Time.time) / Mathf.Max(0.01f, upperBodyTransitionDuration));
+            SetUpperBodyWeight(Mathf.Lerp(_pesoAlSalir, _originalUpperBodyWeight, k));
+            if (k >= 1f) _fundidoHasta = 0f;
+        }
+        if (bPressed)
+        {
+            _pulsadoEn = Time.time;
+            if (PuedeAbrirContraataque) OpenParryWindow();
+        }
         if (IsParryWindowOpen) ScanForParry();
         else if (_parryOpen) CloseParryWindow();
 
@@ -238,7 +261,12 @@ public class PlayerShieldController : MonoBehaviour
         _parryUntil = Time.time + parryWindow;
         _parryOpen = true;
         _parried = false;
-        _countered.Clear();
+        _pulsadoEn = Time.time;
+        StopDefending();
+        _preparando = true;
+        _fundidoHasta = 0f;
+        SetUpperBodyWeight(1f);
+        PlayUpperBodyAnimation(preparacionAnimation);
         ScanForParry();
     }
 
@@ -247,50 +275,40 @@ public class PlayerShieldController : MonoBehaviour
         if (!_parryOpen) return;
         _parryOpen = false;
         _parryUntil = -1f;
-        if (!_parried) _parryCooldownUntil = Time.time + parryWhiffCooldown;
+        if (!_parried)
+        {
+            _parryCooldownUntil = Time.time + parryWhiffCooldown;
+            SalirDePreparacion();
+        }
     }
 
     private void ScanForParry()
     {
-        Vector3 center = transform.position + Vector3.up;
-        int count = Physics.OverlapSphereNonAlloc(center, parryRadius, _parryBuffer, _parryMask, QueryTriggerInteraction.Collide);
-        for (int i = 0; i < count; i++)
+        var proyectiles = AmenazasAlJugador.Proyectiles;
+        for (int i = proyectiles.Count - 1; i >= 0; i--)
         {
-            var col = _parryBuffer[i];
-            if (col == null) continue;
-
-            var enemyProjectile = col.GetComponentInParent<EnemyProjectile>();
-            if (enemyProjectile != null)
-            {
-                if (!_countered.Add(enemyProjectile.gameObject)) continue;
-                Vector3 back = -enemyProjectile.Direction;
-                Counter(enemyProjectile.transform.position, enemyProjectile.Damage, back);
-                enemyProjectile.DestroyProjectile();
-                continue;
-            }
-
-            var magic = col.GetComponentInParent<MagicProjectile>();
-            if (magic != null && !AmenazasAlJugador.EsDelGrupoDelJugador(magic.Instigator))
-            {
-                if (!_countered.Add(magic.gameObject)) continue;
-                Vector3 back = magic.Instigator != null
-                    ? magic.Instigator.transform.position - transform.position
-                    : -magic.transform.forward;
-                Counter(magic.transform.position, magic.Damage, back);
-                AlDevolverAtaque?.Invoke(magic.Instigator);
-                magic.End(true);
-            }
+            if (!(proyectiles[i] is IDevolvible bola) || bola.TipoDeAmenaza != TipoDeAmenaza.Devolvible ||
+                TiempoHastaElPecho(bola) > segundosDeAtrapado) continue;
+            Transform objetivo = null;
+            if (_magicCaster != null) _magicCaster.TryGetTarget(out objetivo);
+            if (objetivo == null && bola.Lanzador != null) objetivo = bola.Lanzador.transform;
+            Vector3 direccion = -bola.VelocidadDeAmenaza;
+            Vector3 punto = bola.PosicionDeAmenaza;
+            GameObject lanzador = bola.Lanzador;
+            float dano = Mathf.Max(minCounterDamage, bola.DanoEntrante * counterDamageMultiplier);
+            _preparando = false;
+            _fundidoHasta = 0f;
+            CancelInvoke(nameof(ReturnToDefendAnimation));
+            StopDefending();
+            bola.Devolver(gameObject, objetivo, direccion, dano);
+            Vector3 facing = objetivo != null ? objetivo.position - transform.position : direccion;
+            if (_magicCaster != null) _magicCaster.BeginCounterGesture(counterLockSeconds, facing);
+            CounterFeedback(punto);
+            AlDevolverAtaque?.Invoke(lanzador);
+            CloseParryWindow();
+            break;
         }
     }
-
-    private void Counter(Vector3 where, float incomingDamage, Vector3 backDirection)
-    {
-        float damage = Mathf.Max(minCounterDamage, incomingDamage * counterDamageMultiplier);
-        backDirection.y = 0f;
-        if (_magicCaster != null) _magicCaster.CastCounter(damage, backDirection, counterLockSeconds);
-        CounterFeedback(where);
-    }
-
     /// <summary>
     /// Un golpe cuerpo a cuerpo ha llegado dentro de la ventana: se anula, empuja al enemigo y el
     /// jugador se aparta de él con una voltereta (en el aire, solo la voltereta).
@@ -315,7 +333,9 @@ public class PlayerShieldController : MonoBehaviour
             Vector3 dir = rb.position - transform.position; dir.y = 0f;
             rb.AddForce(dir.normalized * meleeDeflectPush, ForceMode.VelocityChange);
         }
+        SalirDePreparacion();
         CounterFeedback(center + transform.forward * 0.8f);
+        CloseParryWindow();
         VolteretaDeDesvio(alejarse);
     }
 
@@ -333,11 +353,12 @@ public class PlayerShieldController : MonoBehaviour
     private void CounterFeedback(Vector3 where)
     {
         _parried = true;
+        _preparando = false;
         if (counterVfx != null && VfxPoolService.Instance != null)
-            VfxPoolService.Instance.Play(counterVfx, where, Quaternion.identity, 1.5f);
+            VfxPoolService.Instance.Play(counterVfx, where, Quaternion.identity, 0.6f);
         if (!string.IsNullOrEmpty(counterSfxKey) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(counterSfxKey);
-        OnShieldHit();
+
         OnCounter?.Invoke();
         AlContraatacar?.Invoke(where);
     }
@@ -355,8 +376,8 @@ public class PlayerShieldController : MonoBehaviour
 
     private void EvaluateDefenseState()
     {
-        // Mantener B (clic derecho en teclado y ratón). Antes era LT+RT, que ahora es el trío (INC-491).
-        bool wantsDefense = GamepadInputReader.AttackMagicRightHeld;
+        // La pose de bloqueo empieza al mantener B más allá de la preparación.
+        bool wantsDefense = GamepadInputReader.AttackMagicRightHeld && Time.time >= _pulsadoEn + parryWindow && !IsParryWindowOpen;
 
         bool hasMana = _manaPool == null || manaPerSecond <= 0f || _manaPool.Current > 0f;
         bool isAllowed = _playerActionManager == null || _playerActionManager.AllowShield;
@@ -378,6 +399,7 @@ public class PlayerShieldController : MonoBehaviour
             return;
 
         _isDefending = true;
+        _fundidoHasta = 0f;
         ActivateShield();
         SetUpperBodyWeight(1f);
         PlayUpperBodyAnimation(defendAnimation);
@@ -385,15 +407,21 @@ public class PlayerShieldController : MonoBehaviour
 
     private void StopDefending()
     {
-        if (!_isDefending)
-            return;
-
+        if (!_isDefending) return;
         _isDefending = false;
         DeactivateShield();
-        ResetUpperBodyWeight();
-        PlayAnimation(locomotionAnimation);
+        CancelInvoke(nameof(ReturnToDefendAnimation));
+        SalirDePreparacion(true);
     }
 
+    private void SalirDePreparacion(bool forzar = false)
+    {
+        if (!_preparando && !forzar) return;
+        _preparando = false;
+        PlayUpperBodyAnimation(locomotionAnimation);
+        _pesoAlSalir = _animator != null && upperBodyLayer >= 0 && upperBodyLayer < _animator.layerCount ? _animator.GetLayerWeight(upperBodyLayer) : 0f;
+        _fundidoHasta = Time.time + Mathf.Max(0.01f, upperBodyTransitionDuration);
+    }
     /// <summary>
     /// Instancia el escudo una única vez (en Awake) en lugar de crearlo/destruirlo
     /// en cada activación — el jugador puede alternar el escudo muy seguido en combate.
@@ -418,20 +446,14 @@ public class PlayerShieldController : MonoBehaviour
 
     private void ActivateShield()
     {
-        if (_shieldInstance != null)
+        if (_shieldInstance != null && !_shieldInstance.activeSelf)
             _shieldInstance.SetActive(true);
     }
 
     private void DeactivateShield()
     {
-        if (_shieldInstance != null)
+        if (_shieldInstance != null && _shieldInstance.activeSelf)
             _shieldInstance.SetActive(false);
-    }
-
-    private void PlayAnimation(string animationName)
-    {
-        if (_animator == null || string.IsNullOrEmpty(animationName)) return;
-        _animator.Play(animationName);
     }
 
     private void PlayUpperBodyAnimation(string animationName)
@@ -441,7 +463,7 @@ public class PlayerShieldController : MonoBehaviour
         if (upperBodyLayer >= 0 && upperBodyLayer < _animator.layerCount)
             _animator.CrossFade(animationName, upperBodyTransitionDuration, upperBodyLayer);
         else
-            _animator.Play(animationName);
+            _animator.CrossFade(animationName, upperBodyTransitionDuration, 0);
     }
 
     private void CacheUpperBodyWeight()
@@ -512,7 +534,7 @@ public class PlayerShieldController : MonoBehaviour
     internal void OnShieldHit()
     {
         // Reproduce animación de impacto breve en la capa superior y vuelve a defensa.
-        if (string.IsNullOrEmpty(defendHitAnimation)) return;
+        if (!_isDefending || string.IsNullOrEmpty(defendHitAnimation)) return;
         PlayUpperBodyAnimation(defendHitAnimation);
         if (hitFeedbackDuration > 0f)
         {
@@ -601,4 +623,3 @@ public class PlayerShieldController : MonoBehaviour
     // Componente público y ligero para identificar el escudo en colisiones externas
     public class ShieldMarker : MonoBehaviour {}
 }
-

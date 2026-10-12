@@ -46,6 +46,7 @@ public static class NpcSpawner
     static void ResetStatics()
     {
         _spawned.Clear();
+        _destroyedSpawnIds.Clear();
         NarrativeFlags.Changed -= AlCambiarFlag;
     }
 #endif
@@ -55,9 +56,9 @@ public static class NpcSpawner
     /// <summary>Radio máximo de búsqueda de NavMesh alrededor del marcador.</summary>
     private const float NavMeshSampleRadius = 3f;
 
-    // spawnId -> instancia, para no duplicar si SpawnAll se llama dos veces (p. ej. modo preset
-    // y modo normal, o al recargar una escena aditiva).
+    // Conserva las instancias vivas por spawnId para evitar duplicados en la misma escena.
     private static readonly Dictionary<string, GameObject> _spawned = new();
+    private static readonly List<string> _destroyedSpawnIds = new();
 
     public static IReadOnlyDictionary<string, GameObject> Spawned => _spawned;
 
@@ -246,11 +247,18 @@ public static class NpcSpawner
     }
 
     /// <summary>
-    /// Limpia el registro de instanciados. Se llama al cambiar de partida/escena para que un
-    /// nuevo arranque vuelva a instanciar desde cero.
+    /// Retira del registro solo las instancias destruidas o descargadas con su escena.
+    /// Conserva las instancias vivas para evitar duplicados al inicializar la misma escena.
     /// </summary>
     public static void Reset()
     {
-        _spawned.Clear();
+        _destroyedSpawnIds.Clear();
+        foreach (var entry in _spawned)
+        {
+            if (entry.Value == null) _destroyedSpawnIds.Add(entry.Key);
+        }
+        foreach (var spawnId in _destroyedSpawnIds)
+            _spawned.Remove(spawnId);
+        _destroyedSpawnIds.Clear();
     }
 }

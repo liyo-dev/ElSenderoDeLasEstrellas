@@ -98,6 +98,8 @@ GameObject:
   - component: {fileID: 1989725794296337795}
   - component: {fileID: 8209643088191323375}
   - component: {fileID: 1759466094439441556}
+  - component: {fileID: 4396209073108528636}
+  - component: {fileID: 9050542513031802828}
   m_Layer: 0
   m_Name: GrupoDelJugador
   m_TagString: Untagged
@@ -183,9 +185,41 @@ MonoBehaviour:
   damagePerSegment: 150
   duoCost: 1
   chordWindow: 0.12
-  triggerThreshold: 0.5
   magicCaster: {fileID: 0}
   targetReach: 9
   frontDistance: 2.5
   notAvailableSFXKey: ui_denied
   showDebugLogs: 0
+--- !u!114 &4396209073108528636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7613925751593065874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e66f85ca40022f4e899c6dec77936d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaludDelGrupo
+  vidaAlGanar: 0.25
+  vidaAlReanimar: 0.3
+  vidaConBrisa: 0.25
+  vidaConObjeto: 0.5
+  invulnerableAlRelevar: 1.5
+  regeneracionDeMana: 5
+--- !u!114 &9050542513031802828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7613925751593065874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f985d76f1e9a6b46aece2c377e19a62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ReanimarManteniendoA
+  radio: 1.8
+  segundos: 2
+  anillo: {fileID: 21300000, guid: 4966736b19064a95a5f29a9ae43293fa, type: 3}

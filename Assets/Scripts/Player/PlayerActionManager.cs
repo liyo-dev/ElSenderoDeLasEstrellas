@@ -308,6 +308,34 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         ApplyTopMode();
     }
 
+    // Bloqueos que ponen otros sistemas (una zona donde no se puede volar, una prueba…).
+    // Cada fuente pone y quita los suyos; la habilidad sigue bloqueada mientras quede alguna.
+    private readonly Dictionary<PlayerAbility, HashSet<UnityEngine.Object>> _bloqueosExternos =
+        new Dictionary<PlayerAbility, HashSet<UnityEngine.Object>>();
+
+    /// <summary>Bloquea una habilidad mientras <paramref name="fuente"/> no la libere.</summary>
+    public void AnadirBloqueo(PlayerAbility habilidad, UnityEngine.Object fuente)
+    {
+        if (fuente == null) return;
+        if (!_bloqueosExternos.TryGetValue(habilidad, out var fuentes))
+            _bloqueosExternos[habilidad] = fuentes = new HashSet<UnityEngine.Object>();
+        fuentes.Add(fuente);
+    }
+
+    /// <summary>Quita el bloqueo que puso <paramref name="fuente"/>.</summary>
+    public void QuitarBloqueo(PlayerAbility habilidad, UnityEngine.Object fuente)
+    {
+        if (_bloqueosExternos.TryGetValue(habilidad, out var fuentes)) fuentes.Remove(fuente);
+    }
+
+    /// <summary>true si alguna fuente externa (viva) bloquea la habilidad.</summary>
+    public bool EstaBloqueadaDesdeFuera(PlayerAbility habilidad)
+    {
+        if (!_bloqueosExternos.TryGetValue(habilidad, out var fuentes) || fuentes.Count == 0) return false;
+        fuentes.RemoveWhere(f => f == null); // fuentes destruidas sin avisar
+        return fuentes.Count > 0;
+    }
+
     public bool CanUse(PlayerAbility ability)
     {
         // Comprueba permisos globales aplicados desde preset u otros sistemas
@@ -366,6 +394,15 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
             //    }
             //    break;
             // Otros mapeos pueden añadirse si se utiliza swim/climb en otras partes
+        }
+
+        // Bloqueos externos (zonas, pruebas…): ver AnadirBloqueo.
+        if (EstaBloqueadaDesdeFuera(ability))
+        {
+#if UNITY_EDITOR
+            if (debugLogs) Debug.Log($"[PlayerActionManager] ❌ {ability} bloqueado desde fuera");
+#endif
+            return false;
         }
 
         // Recorre de arriba a abajo (prioridad)

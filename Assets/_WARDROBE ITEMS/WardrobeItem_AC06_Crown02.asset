@@ -20,3 +20,8 @@ MonoBehaviour:
   descriptionId: ITEM_AC06_CROWN02_DESC
   description: Una corona sobria de plata pulida.
   icon: {fileID: 21300000, guid: c03b5aca0547402f84afbeca9234d6ea, type: 3}
+  bonos:
+    vida: 15
+    magia: 0
+    ataque: 0
+    defensa: 0

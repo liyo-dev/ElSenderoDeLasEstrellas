@@ -21,17 +21,27 @@ public sealed class ArmaduraFrontal : MonoBehaviour, IFiltroDeDano
     [SerializeField] private GameObject vfxRebote;
     [SerializeField] private float alturaVfx = 2f;
 
-    public float Filtrar(float cantidad, GameObject instigador)
+    /// true si algo situado en 'posicion' le queda por delante o de lado (no por la espalda).
+    /// La usan otras reglas del mismo jefe que dependen del lado (el fuego que alimenta al Gólem).
+    public bool EsDeFrente(Vector3 posicion)
     {
-        if (instigador == null) return cantidad;
-
-        Vector3 haciaAtacante = instigador.transform.position - transform.position;
+        Vector3 haciaAtacante = posicion - transform.position;
         haciaAtacante.y = 0f;
-        if (haciaAtacante.sqrMagnitude < 0.01f) return cantidad;
+        if (haciaAtacante.sqrMagnitude < 0.01f) return false;
 
         Vector3 frente = Quaternion.Euler(0f, desfaseFrente, 0f) * transform.forward;
         frente.y = 0f;
-        if (Vector3.Angle(frente, haciaAtacante) >= anguloEspalda) return cantidad;
+        return Vector3.Angle(frente, haciaAtacante) < anguloEspalda;
+    }
+
+    public float Filtrar(float cantidad, GameObject instigador)
+    {
+        // Apagada (p. ej. el Gólem hundido en el barro): todo golpe entra completo.
+        if (instigador == null || !isActiveAndEnabled) return cantidad;
+        if (!EsDeFrente(instigador.transform.position)) return cantidad;
+
+        Vector3 haciaAtacante = instigador.transform.position - transform.position;
+        haciaAtacante.y = 0f;
 
         if (vfxRebote != null && VfxPoolService.Instance != null)
             VfxPoolService.Instance.Play(vfxRebote,

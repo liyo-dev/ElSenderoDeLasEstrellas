@@ -4,6 +4,35 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CameraOcclusionShadowsOnly : MonoBehaviour
 {
+    private static readonly HashSet<CameraOcclusionShadowsOnly> s_instancias = new();
+    private static bool s_suspendido;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void ReiniciarEstado()
+    {
+        s_instancias.Clear();
+        s_suspendido = false;
+        _loggedShaderLoadAttempt = false;
+    }
+#endif
+
+    /// Suspende la disolución y devuelve inmediatamente los materiales originales.
+    /// Las cámaras creadas durante la suspensión también respetan este estado.
+    public static void Suspender(bool suspendido)
+    {
+        s_suspendido = suspendido;
+        if (!suspendido) return;
+        foreach (var instancia in s_instancias)
+            if (instancia != null) instancia.RestoreAll();
+    }
+
+    private void OnEnable()
+    {
+        s_instancias.Add(this);
+        if (s_suspendido) RestoreAll();
+    }
+
     [Header("Detección")]
     [SerializeField] private LayerMask obstructionMask = ~0;
     [Tooltip("Radio del SphereCast. 0.2 cubre obstáculos finos sin falsas detecciones.")]
@@ -107,6 +136,11 @@ public class CameraOcclusionShadowsOnly : MonoBehaviour
     /// <summary>Llamado cada frame por vThirdPersonCamera con los puntos cámara → objetivo.</summary>
     public void Process(Vector3 from, Vector3 to)
     {
+        if (s_suspendido)
+        {
+            RestoreAll();
+            return;
+        }
         float now = Time.time;
         Vector3 dir = to - from;
         float dist = dir.magnitude;
@@ -195,7 +229,11 @@ public class CameraOcclusionShadowsOnly : MonoBehaviour
 
     // ─── Lógica interna ───────────────────────────────────────────────────────
 
-    void OnDisable() => RestoreAll();
+    void OnDisable()
+    {
+        RestoreAll();
+        s_instancias.Remove(this);
+    }
 
     private void UpdateEntries(float now)
     {

@@ -1,64 +1,45 @@
-﻿Vestido de MainWorld — 2026-10-07 17:44
-Suelo: copia del original guardada en _ClaudeBackups/VestidoDelMundo.
-Suelo de Reino: alfombra, 6 calles, 3 plazas y sendas de 32 casas.
-Suelo de Pueblo pesquero: alfombra, 0 calles, 1 plazas y sendas de 15 casas.
-Suelo de Pueblo vecino: alfombra, 0 calles, 1 plazas y sendas de 12 casas.
-Suelo de Granjas de la cascada: alfombra, 0 calles, 1 plazas y sendas de 2 casas.
+﻿Vestido de MainWorld — 2026-10-08 09:32
+Suelo: se parte de la copia original para repintar.
+Borrado el vestido anterior.
+Casas: 76 devueltas a su giro original.
+Suelo de Reino: suelo de ciudad (3508 celdas: tierra en las traseras, hierba en jardines, al pie de la muralla y en los taludes), 8 calles y 4 plazas en malla de pavimento, sendas de 45 casas, 449 celdas de talud sin roca, camino de la puerta desviado.
+Suelo de Pueblo pesquero: alfombra con fundido de 25 m, 1 plazas, 2 accesos, sendas de 15 casas y 444 celdas de talud sin roca.
+Suelo de Pueblo vecino: alfombra con fundido de 25 m, 1 plazas, 1 accesos, sendas de 12 casas y 310 celdas de talud sin roca.
+Suelo de Granjas de la cascada: alfombra con fundido de 25 m, 1 plazas, 2 accesos, sendas de 2 casas y 87 celdas de talud sin roca.
 Suelo de parajes: 12 lugares con su senda desde el camino.
-Suelo: pintado y guardado (3994 celdas de hierba de detalle retiradas de calles y sendas).
-  · «Casa de la calle occidental 3» no se gira: chocaría con algo vecino.
-  · «Casa de la calle oriental 12» no se gira: chocaría con algo vecino.
-Casas: 38 giradas para que la puerta dé a su calle (38 macetas del generador giradas con ellas), 2 sin girar por espacio.
-Reino: 13 de 13 casas nuevas.
-  · descartada «Caja junto a la puerta» en (65,3, 300,5): se pisa con otra pieza del vestido
-  · descartada «Farola» en (-58,3, 329): se pisa con otra pieza del vestido
-  · descartada «Farola» en (49,7, 329): se pisa con otra pieza del vestido
-  · descartada «Farola» en (32, 304,3): se pisa con otra pieza del vestido
-  · descartada «Farola» en (-58, 254,7): se pisa con otra pieza del vestido
-  · descartada «Farola» en (-40, 263,3): choca con algo que ya estaba en la escena
-  · descartada «Farola» en (66,8, 237,9): zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
-  · descartada «Farola» en (86,6, 237,8): zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
-  · descartada «Parterre» en (-61,1, 277): terreno demasiado desigual (4,2 m)
-  · descartada «Árbol de jardín» en (-55,3, 276): terreno demasiado desigual (2,9 m)
-  · descartada «Parterre» en (-46,5, 275,1): terreno demasiado desigual (2,0 m)
-  · descartada «Árbol de jardín» en (-41,3, 275,2): terreno demasiado desigual (6,6 m)
-  · descartada «Parterre» en (-34,5, 274,6): terreno demasiado desigual (4,6 m)
-  · descartada «Árbol de jardín» en (-32,1, 270,5): terreno demasiado desigual (2,6 m)
-  · descartada «Árbol de jardín» en (-31,9, 274,5): terreno demasiado desigual (5,4 m)
-  · descartada «Árbol de jardín» en (-17,9, 276,4): terreno demasiado desigual (4,6 m)
-  · descartada «Parterre» en (-4,7, 275,7): terreno demasiado desigual (3,2 m)
-  · descartada «Parterre» en (2,7, 277,7): terreno demasiado desigual (3,6 m)
-  · descartada «Parterre» en (10,5, 275,4): terreno demasiado desigual (2,3 m)
-  · descartada «Parterre» en (26,1, 276,8): terreno demasiado desigual (4,0 m)
-  · descartada «Árbol de jardín» en (29, 276): terreno demasiado desigual (6,2 m)
-  · descartada «Árbol de jardín» en (53,6, 276,5): terreno demasiado desigual (2,0 m)
-  · descartada «Parterre» en (59,9, 274,4): terreno demasiado desigual (5,3 m)
-  · descartada «Árbol de jardín» en (85,1, 276,5): terreno demasiado desigual (1,6 m)
-  · descartada «Árbol de jardín» en (-70,7, 241): terreno demasiado desigual (11,2 m)
-  · descartada «Árbol de jardín» en (-42,8, 247,9): terreno demasiado desigual (4,9 m)
-  · descartada «Árbol de jardín» en (-57,8, 276,2): terreno demasiado desigual (6,0 m)
-  · descartada «Parterre» en (-38,1, 276,7): terreno demasiado desigual (1,8 m)
-  · descartada «Árbol de jardín» en (-18,9, 276,2): terreno demasiado desigual (4,8 m)
-  · descartada «Parterre» en (-11,9, 275,2): terreno demasiado desigual (1,9 m)
-  · descartada «Árbol de jardín» en (-1,1, 276,6): terreno demasiado desigual (5,2 m)
-  · descartada «Parterre» en (3,4, 277,2): terreno demasiado desigual (2,5 m)
-  · descartada «Parterre» en (11,9, 275,3): terreno demasiado desigual (1,8 m)
-  · descartada «Parterre» en (17,1, 275,7): terreno demasiado desigual (2,4 m)
-  · descartada «Árbol de jardín» en (24,2, 275,7): terreno demasiado desigual (7,2 m)
-  · descartada «Parterre» en (-15,2, 281,1): terreno demasiado desigual (1,8 m)
-  · descartada «Árbol de jardín» en (11,6, 281): terreno demasiado desigual (3,7 m)
-  · descartada «Parterre» en (68,5, 241,9): terreno demasiado desigual (1,8 m)
-  · descartada «Árbol de jardín» en (55,9, 271,8): terreno demasiado desigual (7,7 m)
-  · descartada «Parterre» en (84,9, 273): terreno demasiado desigual (1,6 m)
-  · descartada «Parterre» en (46,5, 278,7): terreno demasiado desigual (4,7 m)
-  · descartada «Árbol de jardín» en (55,6, 276,5): terreno demasiado desigual (1,6 m)
-Reino: 199 piezas de detalle.
+Suelo bajo el pavimento de Reino: 1421 celdas de tierra con piedras y un margen de tierra de 0,6 m (sin hierba de detalle); las zonas verdes se quedan con su hierba.
+Agua — Laguna de la Era: suelo de fondo en 339 celdas y barro de orilla en 114; llegada de arena en (147, -52) con su senda desde la de la Era de trilla; sin hierba de detalle bajo el agua.
+Flores: 361 manchas pintadas como hierba de detalle (107136 celdas en 11 capas Flower*_D; densidad hasta 2, la de la hierba que ya había).
+Suelo: pintado y guardado (4753 celdas de hierba de detalle retiradas de calles y sendas).
+Retirados (inactivos, fuera de la build): 98 × muralla vieja del Reino (a media ladera; la sustituye la nueva, sobre la cresta)
+Retirados (inactivos, fuera de la build): 3 × molino: en la capital no cabe nada de aldea (canon: sin molinos fuera del puerto)
+Retirados (inactivos, fuera de la build): 4 × casita de paja de aldea
+Retirados (inactivos, fuera de la build): 2 × herrería de aldea pegada al castillo
+Retirados (inactivos, fuera de la build): 3 × casa de vinatero de aire rural en la ciudad alta
+Retirados (inactivos, fuera de la build): 1 × taberna vieja (le falta una malla y la calle la atravesaba): la sustituye la taberna de la plaza
+Retirados (inactivos, fuera de la build): 3 × toldo sin postes tirado en el suelo de la plaza
+Retirados (inactivos, fuera de la build): 1 × pozo de otro estilo (RPG Tiny): en su sitio va la fuente
+Retirados (inactivos, fuera de la build): 4 × farol bajo dentro de la arena del Demonio 2
+Retirados (inactivos, fuera de la build): 6 × mesa o asiento en medio de la Plaza del Mercado: van a la terraza de la taberna
+Retirados (inactivos, fuera de la build): 18 × maceta de una casa retirada o que quedaría en una calle, una plaza o una casa nueva
+Retirados (inactivos, fuera de la build): 2 × huerto del Reino: lo atraviesa la muralla nueva y es rural
+Retirados (inactivos, fuera de la build): 10 × bajo el agua de la laguna (más de 1 m de fondo)
+Retirados (inactivos, fuera de la build): 1 × tapado por el agua de la laguna (planta pequeña, o mata cuya esfera cerraría el paso a nado)
+Laguna de la Era: 11 objetos de la escena quedarían bajo el agua y se retiran (10 con más de 1 m de fondo, 1 pequeños o matas); los de menos fondo se quedan como arboleda inundada.
+Muralla del Reino: 44 de 44 lienzos (Wall02, 499 m en 18 tramos), 18 torres (5 con tejado, 13 almenadas) y la Puerta Real (Wall01), por la cresta de las dos terrazas.
+  · Puerta Real: 28,1 × 19,5 m, centrada en x = 92,85; vano de 7,9 m con 5,0 m libres bajo el arranque del arco y 7,6 m bajo la clave (suelo del vano 102,5–103,9). Sin obstáculo de navegación.
+  · Ninguna pieza cuelga: la base más alta respecto a su terreno queda 0,24 m enterrada (torre SO).
+  · Cresta del adarve de 110,5 (terraza baja) a 118,5 (terraza alta): desde dentro se ven al menos 6,5 m de muro; desde fuera, hasta 13,8 m.
+  · Tramos: SO–S1 2×12,2 m (base 97,9, ×0,76/1,18); S1–S2 1×25,7 m (base 96,4, ×1,60/1,32); S2–S3 1×20,6 m (base 97,4, ×1,28/1,22); S3–J1 2×17,4 m (base 99,2, ×1,08/1,06); J1–J2 1×17,4 m (base 96,9, ×1,08/1,27); J2–PO 2×13,0 m (base 97,1, ×0,81/1,25); PE–E1 1×14,6 m (base 100,3, ×0,91/1,19); E1–E2 1×16,0 m (base 107,1, ×0,99/0,93); E2–E3 3×10,4 m (base 111,0, ×0,65/0,70); E3–NE 3×10,2 m (base 111,7, ×0,63/0,63); NE–N1 5×8,5 m (base 111,7, ×0,53/0,63); N1–CE 5×8,3 m (base 111,7, ×0,52/0,63); CO–N2 5×8,3 m (base 111,7, ×0,52/0,63); N2–NO 4×9,6 m (base 111,7, ×0,60/0,63); NO–O1 3×10,2 m (base 111,7, ×0,63/0,63); O1–O2 3×9,7 m (base 110,9, ×0,61/0,71); O2–O3 1×16,5 m (base 105,8, ×1,03/1,10); O3–SO 1×16,9 m (base 102,2, ×1,05/0,86).
+  · Hondonadas del terreno al pie interior (la terraza no llega a la muralla; no se toca el terreno): S1–S2, hasta 3,1 m en el 63 % del tramo (desde el fondo se ven 12,8 m de muro); S2–S3, hasta 3,0 m en el 52 % del tramo (desde el fondo se ven 12,8 m de muro); J1–J2, hasta 2,9 m en el 20 % del tramo (desde el fondo se ven 9,4 m de muro); J2–PO, hasta 4,4 m en el 56 % del tramo (desde el fondo se ven 10,7 m de muro); PE–E1, hasta 2,1 m en el 30 % del tramo (desde el fondo se ven 11,2 m de muro).
+  · Torres: las del frente sur (S1, S2, S3, J1, J2) rematan sus almenas a 115,5; las demás asoman entre 2,3 y 10,6 m sobre lo que les llega. Crecen para abrazar sus muros o asomar: PE ×1,5→×1,7.
+  · Escarpa: 10 rocas tendidas en la ladera del frente sur. Omitidas: Espolón de la torre S1 (tercera roca): se pisa con otra roca; Espolón de la torre J1: junto al Camino 10; Espolón de la torre J2: junto al Camino 10; Roca al pie del lienzo J1–J2: junto al Camino 10; Roca al pie del lienzo J2–PO: junto al Camino 10.
+Casas: 30 giradas para que la puerta dé a su calle (29 macetas del generador giradas con ellas), 0 sin girar por espacio.
+Reino: 39 de 39 casas nuevas.
   · descartada «Farola» en (236,8, -400,8): zona que debe quedar libre: Huerto del puerto
-  · descartada «Barca varada en la arena» en (232,3, -458,3): pisa un camino o una calle
   · descartada «Flores» en (242,3, -442,4): pisa un camino o una calle
-  · descartada «Árbol de jardín» en (231,4, -424,2): pisa un camino o una calle
   · descartada «Parterre» en (280,1, -405,3): pisa un camino o una calle
-Pueblo pesquero: 87 piezas de detalle.
+Pueblo pesquero: 88 piezas de detalle.
   · descartada «Leña junto a la casa» en (329,8, -136,9): choca con algo que ya estaba en la escena
   · descartada «Árbol de jardín» en (341,8, -131,9): pisa un camino o una calle
   · descartada «Árbol de jardín» en (284,6, -110): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
@@ -67,8 +48,10 @@ Pueblo pesquero: 87 piezas de detalle.
   · descartada «Parterre» en (285,6, -106,5): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
   · descartada «Árbol de jardín» en (293,8, -105,2): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
 Pueblo vecino: 65 piezas de detalle.
+  · descartada «Flores» en (219,2, 161,4): pisa un camino o una calle
+  · descartada «Flores» en (219,9, 161,8): pisa un camino o una calle
   · descartada «Parterre» en (250,6, 164,6): zona que debe quedar libre: Huerto grande de las granjas
-Granjas de la cascada: 44 piezas de detalle.
+Granjas de la cascada: 42 piezas de detalle.
 Ruinas de la casa fuerte: 24 piezas.
 Atalaya rota del acantilado sur: 17 piezas.
 Caserío abandonado: 19 piezas.
@@ -82,41 +65,157 @@ Almenara del acantilado este: 5 piezas.
 Mirador de la subida al Reino: 10 piezas.
   · descartada «Parterre» en (-94, -127,5): choca con algo que ya estaba en la escena
 Descanso del cruce: 5 piezas.
-Navegación: 423 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta no talla el NavMesh.
-Detalles: 548 piezas colocadas, 56 descartadas por comprobaciones.
-     5 × se pisa con otra pieza del vestido
+  · descartada «Barril del puesto» en (12,3, 249,8): se pisa con otra pieza del vestido
+  · descartada «Puesto del mercado» en (21,4, 249,9): se pisa con otra pieza del vestido
+  · descartada «Caja junto a la puerta» en (-74,3, 253,1): se pisa con otra pieza del vestido
+  · descartada «Farola» en (90,1, 244): se pisa con otra pieza del vestido
+  · descartada «Farola» en (43,8, 296,4): se pisa con otra pieza del vestido
+  · descartada «Farola» en (52, 261,1): se pisa con otra pieza del vestido
+Reino: 270 piezas de la capital — escalinata, muro bajo y balaustrada 37, fuente 2, mercado 10, terraza de la taberna 8, estandartes y farolas de plazas, escalinata, puerta y Vía Real 25, entrada del castillo, plazoleta y patio de armas 12, rótulos (dos placas cada uno) 20, adornos de puertas 138, farolas de calle 18.
+Reino: 39 de 39 edificios de la capital en pie.
+Pavimento de Reino: 8 calles (407 m de calzada, 855 m² de acera), 4 plazas (3398 m², 1 con rosetón y eje de losas), 966 m de bordillo y 37 accesos de puerta; 13 mallas, 56737 vértices, 38304 triángulos, sin colisor ni sombra. Bordillo de plaza abierto en 173 celdas por obra al lado (escalinata, muros, casas).
+  · Calle 0 (6,4 m): 12 m; empieza con umbral (paso de la puerta) y acaba en una plaza.
+  · Calle 1 (8 m): 96 m; empieza en una plaza y acaba en una plaza.
+  · Calle 2 (7 m): 54 m; empieza en una plaza y acaba en una plaza.
+  · Calle 3 (6,4 m): 70 m; empieza en una plaza y acaba en esquina con la calle 4 (rematada).
+  · Calle 4 (6,4 m): 41 m; empieza en esquina con la calle 3 y acaba en esquina con la calle 5.
+  · Calle 5 (7 m): 61 m; empieza en una plaza y acaba en esquina con la calle 4 (rematada).
+  · Calle 6 (6,4 m): 39 m; empieza en la calle 5 y acaba en un fondo rematado.
+  · Calle 7 (6,4 m): 39 m; empieza en la calle 1 y acaba en un fondo rematado.
+  · descartada «Árbol hito de la punta» en (205, -22): choca con algo que ya estaba en la escena
+  · descartada «Peña de la orilla» en (159,3, -21,8): terreno demasiado desigual (1,7 m)
+  · descartada «Nenúfar en flor» en (214,7, -33,4): choca con algo que ya estaba en la escena
+  · descartada «Nenúfar» en (213,9, -34): choca con algo que ya estaba en la escena
+  · descartada «Nenúfar» en (214,8, -32,6): choca con algo que ya estaba en la escena
+  · descartada «Junco» en (195,2, -12,6): terreno demasiado desigual (1,0 m)
+  · descartada «Flor azul» en (151,5, -27,5): pendiente de más de 25°
+Agua — Laguna de la Era: lámina a 24,50 m (1,2 m bajo el desborde, a 25,70 m), 2276 m² de agua y hasta 3,4 m de fondo. Lámina de 1380 triángulos con AguaLaguna.mat.
+  Nado: 25 cajas en la capa Water con la cara de arriba en la cota. Navegación: 20 volúmenes «Not Walkable» donde hay 0,6 m o más de fondo.
+  Ribera: 6 árboles de orilla (oliva), 3 árboles de orilla (turquesa), 46 flores (azules y blancas), 101 juncos, 2 losas para sentarse en la llegada, 22 nenúfares, 3 nenúfares en flor, 9 peñas de la orilla, 2 piedras al pie del hito, 19 setas, 6 troncos caídos medio hundidos.
+  Hito: árbol azul en la punta de tierra de (205, -22); la llegada desde la Era de trilla mira hacia él.
+  Ambiente: AmbientZone con AmbientPreset_Laguna.asset (niebla baja del clima en la cuenca), niebla nocturna sobre el agua, ninguna arena de batalla a menos de 25 m del agua, ranas en el juncal de (173, -54) (clip pasado a mono y a Streaming).
+  Pendiente: vuelve a hornear el NavMesh (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable); hasta entonces el fondo de Laguna de la Era sigue siendo caminable.
+  · descartada «Seto (Plant03_a03)» en (-47,2, 245,8): terreno demasiado desigual (2,2 m)
+  · descartada «Seto (Plant03_a03)» en (103,8, 251,6): terreno demasiado desigual (1,7 m)
+  · descartada «Seto (Plant03_a02)» en (103,7, 275,3): terreno demasiado desigual (0,9 m)
+  · descartada «Seto (Plant03_a03)» en (-98,4, 292,9): terreno demasiado desigual (1,0 m)
+  · descartada «Seto (Plant03_a02)» en (-97,2, 281,8): terreno demasiado desigual (1,4 m)
+  · descartada «Seto (Plant03_a03)» en (-94,9, 272,6): terreno demasiado desigual (2,2 m)
+  · descartada «Mata (Tree07_c01)» en (79, 273): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Seto (Plant02_a04)» en (113,7, 254,9): terreno demasiado desigual (2,7 m)
+  · descartada «Seto (Plant01_a04)» en (113,5, 263,2): terreno demasiado desigual (2,2 m)
+  · descartada «Seto (Plant02_a04)» en (113,7, 272,8): terreno demasiado desigual (1,6 m)
+  · descartada «Seto (Plant02_a04)» en (-109,9, 353,7): terreno demasiado desigual (1,5 m)
+  · descartada «Seto (Plant02_a04)» en (-106, 275,5): terreno demasiado desigual (1,2 m)
+  · descartada «Seto (Plant02_a04)» en (-98,2, 251,8): terreno demasiado desigual (2,4 m)
+  · descartada «Árbol dominante (Tree03_a01)» en (253,2, 184,2): zona que debe quedar libre: Huerto grande de las granjas
+  · descartada «Árbol (Tree03_a01)» en (260,1, 181,7): zona que debe quedar libre: Huerto grande de las granjas
+  · descartada «Mata (Tree06_a01)» en (-107,2, -210,8): zona que debe quedar libre: Puente_camino_5
+  · descartada «Árbol (Tree03_c02)» en (-210,5, -288,7): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol dominante (Tree05_a01)» en (-247,4, -271,2): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Árbol (Tree03_a01)» en (76,7, 154): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol (Tree03_e02)» en (59,3, 178,1): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol (Tree05_a01)» en (-18,4, 175,8): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol (Tree03_c02)» en (50,5, 159,4): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Árbol (Tree05_a01)» en (45,7, 165): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol (Tree01_b02)» en (104,7, 147,7): la copa se mete en algo que ya estaba en la escena
+  · descartada «Árbol (Tree05_a01)» en (155,4, 173,6): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Árbol (Tree05_a01)» en (162,1, 175,4): terreno demasiado desigual bajo el tronco (1,4 m)
+  · descartada «Árbol (Tree05_a01)» en (131,2, -162,1): zona que debe quedar libre: Huerta del pueblo 3
+  · descartada «Árbol dominante (Tree03_a02)» en (96,9, -158,6): zona que debe quedar libre: Huerta del pueblo 2
+  · descartada «Árbol (Tree03_a02)» en (278,5, -123,1): zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
+  · descartada «Árbol (Tree05_a01)» en (3,2, -206,6): zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca)
+  · descartada «Árbol (Tree05_a01)» en (-4,5, -209,9): zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca)
+  · descartada «Árbol (Tree03_e02)» en (61,7, -299,8): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Árbol (Tree05_a01)» en (-135,6, -157,3): zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods)
+  · descartada «Mata (Tree06_a01)» en (-140,3, -183,3): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Árbol dominante (Tree03_c02)» en (-148,1, -203,9): terreno demasiado desigual bajo el tronco (1,6 m)
+  · descartada «Árbol (Tree06_a02)» en (133,1, -368,9): terreno demasiado desigual bajo el tronco (1,3 m)
+  · descartada «Árbol (Tree05_a01)» en (-132,5, -400,2): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Árbol dominante (Tree05_a01)» en (-159,7, -278,6): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Árbol (Tree05_a01)» en (-170,6, -281,9): terreno demasiado desigual bajo el tronco (1,4 m)
+  · descartada «Árbol (Tree03_a01)» en (-138, -213,3): terreno demasiado desigual bajo el tronco (1,6 m)
+  · descartada «Árbol (Tree06_a02)» en (327,2, -392,9): terreno demasiado desigual bajo el tronco (1,4 m)
+  · descartada «Árbol (Tree02_f01)» en (288,9, 187,6): terreno demasiado desigual bajo el tronco (1,5 m)
+  · descartada «Árbol dominante (Tree04_a02)» en (188,6, 239): zona que debe quedar libre: Cascada, poza y mirador
+  · descartada «Árbol (Tree04_a02)» en (192,7, 241,6): zona que debe quedar libre: Cascada, poza y mirador
+  · descartada «Mata (Tree06_a01)» en (-285,2, -269,4): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Mata (Tree06_a01)» en (-279,8, -267): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Mata (Tree06_a01)» en (-130,7, 180,7): terreno demasiado desigual bajo el tronco (1,2 m)
+  · descartada «Mata (Tree06_a01)» en (-56,4, 173,7): terreno demasiado desigual bajo el tronco (1,5 m)
+  · Hiedra de la muralla: 0 racimos (0 hojas) en la cara exterior de los lienzos.
+Vegetación: 722 árboles (154 de color), 516 matas, 30 setos, 0 racimos de hiedra en la muralla y 39 matas de flores en los jardines del Reino.
+Cerezo: creados Assets/Art/World/Vestido/Tree_Cerezo_D.png y Tree_Cerezo.mat (se reutilizan en las próximas ejecuciones).
+  · Alameda de cipreses del Camino 10: 7 de 7 árboles (0 % de color), 19 matas.
+  · Arboleda dorada de las granjas: 59 de 62 árboles (58 % de color), 18 matas.
+  · Camino de las granjas: 14 de 17 árboles (0 % de color), 23 matas.
+  · Camino del Reino: 10 de 10 árboles (0 % de color), 28 matas.
+  · Camino del borde del bosque: 4 de 4 árboles (0 % de color), 9 matas.
+  · Camino del puerto: 7 de 7 árboles (0 % de color), 21 matas.
+  · Camino del varadero: 20 de 22 árboles (10 % de color), 27 matas.
+  · Entrada al pueblo vecino: 3 de 3 árboles (0 % de color), 17 matas.
+  · Hombro este del Reino: 10 de 10 árboles (0 % de color), 4 matas.
+  · Hombro oeste del Reino: 24 de 25 árboles (13 % de color), 4 matas.
+  · Jardines de palacio: 9 de 9 árboles (100 % de color), 27 flores.
+  · Jardín hundido de la taberna: 4 de 4 árboles (100 % de color), 8 matas, 12 flores.
+  · Ladera de otoño de la subida al Reino: 49 de 54 árboles (24 % de color), 19 matas.
+  · Lazo oeste de la subida: 14 de 15 árboles (36 % de color), 6 matas.
+  · Lomas de la costa sur: 68 de 77 árboles (1 % de color), 28 matas.
+  · Matas en los taludes: 127 matas.
+  · Oeste: redil y varadero: 52 de 60 árboles (2 % de color), 20 matas.
+  · Orla de las granjas: 23 de 27 árboles (65 % de color), 7 matas.
+  · Orla del pueblo vecino: 39 de 40 árboles (28 % de color), 13 matas.
+  · Orla del puerto: 21 de 24 árboles (43 % de color), 7 matas.
+  · Paseo de ronda: 14 de 14 árboles (100 % de color).
+  · Pie del talud de la muralla: 25 matas.
+  · Pinar tras el castillo: 47 de 48 árboles (6 % de color).
+  · Prados del oeste de Will: 21 de 23 árboles (10 % de color), 8 matas.
+  · Ribera del arroyo de la ladera este: 1 de 6 árboles (100 % de color), 2 matas.
+  · Setos al pie de la muralla: 15 setos.
+  · Setos al pie exterior de la muralla: 15 setos.
+  · Sotos del arroyo de las granjas: 9 de 9 árboles (33 % de color), 3 matas.
+  · Sotos del sur: 50 de 55 árboles (16 % de color), 24 matas.
+  · Sotos del sureste: 110 de 116 árboles (12 % de color), 32 matas.
+  · Sotos del valle: 33 de 35 árboles (12 % de color), 10 matas.
+  · Talud central: 7 matas.
+  Guía de arte (contando los árboles que ya había; antes → con la vegetación nueva):
+    copa en el anillo de 0–40 m fuera de la muralla del Reino: 0 % → 21 % (objetivo 25–35 %; solo suelo de menos de 35°: la escarpa sur y el Camino 10 no se plantan)
+    celdas de 25 m del campo sin copa: 54 % → 25 % de 676 (objetivo ≤ 30 %)
+    árboles nuevos sueltos o en pareja: 6 % (objetivo ≤ 15 %; sin contar las hileras de los jardines, el paseo de ronda y la alameda)
+    árboles de color con follaje matizado: 0 (objetivo 0)
+  Al planear se han dejado sin poner: 107 × bosquete en el que no caben 3 árboles; 102 × tramo de camino con vistas; 86 × junto a un árbol que ya estaba; 73 × mata: junto a otra pieza de la vegetación; 43 × mata de talud: junto a otra pieza de la vegetación; 42 × mata de talud: junto a un árbol que ya estaba; 33 × pendiente; 29 × sobre un camino.
+  Al plantar no han cabido 96: 23 × la copa se mete en algo que ya estaba en la escena; 19 × se pisa con otra pieza del vestido; 13 × terreno demasiado desigual bajo el tronco (1,3 m); 7 × terreno demasiado desigual bajo el tronco (1,2 m); 4 × choca con algo que ya estaba en la escena; 3 × terreno demasiado desigual bajo el tronco (1,4 m); 3 × terreno demasiado desigual (2,2 m); 2 × terreno demasiado desigual bajo el tronco (1,6 m); 2 × zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca); 2 × terreno demasiado desigual bajo el tronco (1,5 m); 2 × zona que debe quedar libre: Cascada, poza y mirador; 2 × zona que debe quedar libre: Huerto grande de las granjas; 1 × terreno demasiado desigual (1,6 m); 1 × terreno demasiado desigual (1,4 m); 1 × terreno demasiado desigual (1,2 m); 1 × terreno demasiado desigual (2,4 m); 1 × zona que debe quedar libre: Puente_camino_5; 1 × terreno demasiado desigual (0,9 m); 1 × terreno demasiado desigual (1,0 m); 1 × terreno demasiado desigual (1,7 m); 1 × zona que debe quedar libre: Huerta del pueblo 3; 1 × zona que debe quedar libre: Huerta del pueblo 2; 1 × zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods); 1 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir; 1 × terreno demasiado desigual (2,7 m); 1 × terreno demasiado desigual (1,5 m).
+  Hornea de nuevo la navegación (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable) y pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).
+Navegación: 2398 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo (270 piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.
+Detalles: 2243 piezas colocadas, 167 descartadas por comprobaciones.
+    54 × choca con algo que ya estaba en la escena
+    25 × se pisa con otra pieza del vestido
+    23 × la copa se mete en algo que ya estaba en la escena
+    13 × terreno demasiado desigual bajo el tronco (1,3 m)
+     7 × terreno demasiado desigual bajo el tronco (1,2 m)
+     6 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
      5 × pisa un camino o una calle
-     5 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir
-     4 × terreno demasiado desigual (1,8 m)
-     3 × choca con algo que ya estaba en la escena
-     3 × terreno demasiado desigual (1,6 m)
-     2 × zona que debe quedar libre: Puerta del Reino (hueco de la muralla)
-     2 × terreno demasiado desigual (2,0 m)
-     2 × terreno demasiado desigual (4,6 m)
-     1 × terreno demasiado desigual (4,2 m)
-     1 × terreno demasiado desigual (2,9 m)
-     1 × terreno demasiado desigual (6,6 m)
-     1 × terreno demasiado desigual (2,6 m)
-     1 × terreno demasiado desigual (5,4 m)
-     1 × terreno demasiado desigual (3,2 m)
-     1 × terreno demasiado desigual (3,6 m)
-     1 × terreno demasiado desigual (2,3 m)
-     1 × terreno demasiado desigual (4,0 m)
-     1 × terreno demasiado desigual (6,2 m)
-     1 × terreno demasiado desigual (5,3 m)
-     1 × terreno demasiado desigual (11,2 m)
-     1 × terreno demasiado desigual (4,9 m)
-     1 × terreno demasiado desigual (6,0 m)
-     1 × terreno demasiado desigual (4,8 m)
-     1 × terreno demasiado desigual (1,9 m)
-     1 × terreno demasiado desigual (5,2 m)
-     1 × terreno demasiado desigual (2,5 m)
-     1 × terreno demasiado desigual (2,4 m)
-     1 × terreno demasiado desigual (7,2 m)
-     1 × terreno demasiado desigual (3,7 m)
-     1 × terreno demasiado desigual (7,7 m)
-     1 × terreno demasiado desigual (4,7 m)
+     3 × zona que debe quedar libre: Huerto grande de las granjas
+     3 × terreno demasiado desigual (2,2 m)
+     3 × terreno demasiado desigual bajo el tronco (1,4 m)
+     2 × terreno demasiado desigual (1,7 m)
+     2 × terreno demasiado desigual (1,0 m)
+     2 × zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca)
+     2 × terreno demasiado desigual bajo el tronco (1,6 m)
+     2 × terreno demasiado desigual bajo el tronco (1,5 m)
+     2 × zona que debe quedar libre: Cascada, poza y mirador
      1 × zona que debe quedar libre: Huerto del puerto
-     1 × zona que debe quedar libre: Huerto grande de las granjas
+     1 × pendiente de más de 25°
+     1 × terreno demasiado desigual (0,9 m)
+     1 × terreno demasiado desigual (1,4 m)
+     1 × terreno demasiado desigual (2,7 m)
+     1 × terreno demasiado desigual (1,6 m)
+     1 × terreno demasiado desigual (1,5 m)
+     1 × terreno demasiado desigual (1,2 m)
+     1 × terreno demasiado desigual (2,4 m)
+     1 × zona que debe quedar libre: Puente_camino_5
+     1 × zona que debe quedar libre: Huerta del pueblo 3
+     1 × zona que debe quedar libre: Huerta del pueblo 2
+     1 × zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods)
 Escena guardada. Comprueba el paseo de Eldran: El Sendero ▸ Navegación ▸ Diagnóstico: ¿dónde se corta el camino?
 Las farolas y las casas nuevas reciben su luz y su humo de noche al ejecutar El Sendero ▸ Mundo ▸ Noche: luces de casas, faroles y luciérnagas (lo que ya estaba no se toca).

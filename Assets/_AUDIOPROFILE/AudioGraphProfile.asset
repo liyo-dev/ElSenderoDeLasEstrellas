@@ -460,6 +460,10 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 583556f6e1b03c64bbdd356fee7f4447, type: 3}
   - eventKey: Impacto_Levitacion
     sfx: {fileID: 8300000, guid: a9d2eae040eff14429c17c40d05fa67e, type: 3}
+  - eventKey: Hechizo_Amanecer
+    sfx: {fileID: 8300000, guid: 2690cb346555c164ea1f561b5d5bbe8c, type: 3}
+  - eventKey: Impacto_Amanecer
+    sfx: {fileID: 8300000, guid: 3935921342943d1459fe2f9cd36bdae9, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}

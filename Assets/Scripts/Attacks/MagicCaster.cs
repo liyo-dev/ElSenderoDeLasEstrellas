@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -85,6 +85,7 @@ public class MagicCaster : MonoBehaviour
     private Coroutine _omniRelease;
     private Coroutine _remate;
     private bool _esperandoAterrizaje;
+    private bool _gestoDeDevolucion;
     private float _esperaDeAterrizajeHasta;
     private readonly Dictionary<MagicSpellSO, MagicSpellSO> _variantesEnPicado = new Dictionary<MagicSpellSO, MagicSpellSO>();
 
@@ -111,6 +112,17 @@ public class MagicCaster : MonoBehaviour
 
     void OnDisable()
     {
+        if (_gestoDeDevolucion)
+        {
+            _gestoDeDevolucion = false;
+            _castingUntil = 0f;
+            if (controller)
+            {
+                controller.CancelActionCommit();
+                controller.CancelAirHold();
+                controller.ReleaseUpperBodyPose();
+            }
+        }
         if (_remate != null) { StopCoroutine(_remate); _remate = null; }
         _esperandoAterrizaje = false;
 
@@ -142,6 +154,7 @@ public class MagicCaster : MonoBehaviour
 
     void Update()
     {
+        if (_gestoDeDevolucion && !IsCasting) _gestoDeDevolucion = false;
         // Tras el remate aéreo: al tocar suelo queda un momento vendido.
         if (!_esperandoAterrizaje) return;
         if (!controller || Time.time > _esperaDeAterrizajeHasta) { _esperandoAterrizaje = false; return; }
@@ -392,49 +405,15 @@ public class MagicCaster : MonoBehaviour
         return true;
     }
 
-    /// <summary>
-    /// Contraataque (B en el momento justo, INC-493): devuelve el golpe como un hechizo propio, al
-    /// instante y sin maná. Usa el básico activo o, si no es un proyectil, el siguiente que lo sea.
-    /// Apunta al objetivo si lo hay; si no, a 'fallbackDirection' (por donde vino el proyectil).
-    /// </summary>
-    public bool CastCounter(float damage, Vector3 fallbackDirection, float lockSeconds)
+    /// <summary>Giro, bloqueo, sostén en el aire y empuje a dos manos al devolver una bola.</summary>
+    public void BeginCounterGesture(float lockSeconds, Vector3 facing)
     {
-        MagicSpellSO spell = FindCounterSpell();
-        if (!spell || !spawner) return false;
-
-        Vector3 toTarget = GetDirectionToTarget();
-        bool hasTarget = toTarget.sqrMagnitude > 0.0001f;
-        Vector3 facing = hasTarget ? toTarget : fallbackDirection;
-        facing.y = 0f;
-
         lockSeconds = Mathf.Max(0.1f, lockSeconds);
         _castingUntil = Time.time + lockSeconds;
-        if (controller)
-        {
-            controller.CommitToAction(lockSeconds, facing);
-            controller.HoldAirborne(lockSeconds);
-            controller.PlayUpperBodyAction(centerState);
-        }
-
-        Vector3? direction = hasTarget || fallbackDirection.sqrMagnitude < 0.0001f ? (Vector3?)null : fallbackDirection.normalized;
-        float multiplier = Mathf.Max(0.1f, damage / Mathf.Max(1f, spell.damage));
-        spawner.SpawnNow(spell, spawner.GetOrigin(CastHand.Center), true, direction, multiplier);
-
-        OnSpellCast?.Invoke(spell, CastHand.Center);
-        Log($"Contraataque con {spell.displayName} ({damage:0.#} de daño)");
-        return true;
+        _gestoDeDevolucion = true;
+        if (!controller) return;
+        PlayCastGesture(MagicCastStyle.TwoHanded, CastHand.Center, lockSeconds, facing);
     }
-
-    private MagicSpellSO FindCounterSpell()
-    {
-        for (int k = 0; k < BasicSlotCount; k++)
-        {
-            var s = _basics[(_activeBasic + k) % BasicSlotCount];
-            if (s && s.prefab && s.kind == MagicKind.Projectile) return s;
-        }
-        return null;
-    }
-
     /// <summary>Cuerpo del jugador (el del controlador), para situar efectos de equipo.</summary>
     public Transform Body => controller ? controller.transform : transform;
 

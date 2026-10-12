@@ -91,6 +91,13 @@
         {"key":"CHAR_TOBI","value":"Tobi"},
         {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Equip the cloak from the menu: Equipment ▸ Cloaks."},
         {"key":"TUTORIAL_PREPARA_VIAJE_POCION","value":"In Inventory, select the potion and confirm {BOTON}; confirm again on Use."},
-        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"The next morning…"}
+        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"The next morning…"},
+        {"key":"TUTORIAL_CAP2_CUPULA_ESTELAR","value":"Press {BOTON} and type X, B, A: Star Dome shields whoever stands beneath it."},
+        {"key":"ITEM_PLUMA_BRILLANTE_NAME","value":"Glowing feather"},
+        {"key":"ITEM_PLUMA_BRILLANTE_DESC","value":"It got caught on a bramble. It still holds a little white light."},
+        {"key":"ITEM_CUERDA_NAME","value":"Rope"},
+        {"key":"ITEM_CUERDA_DESC","value":"A sturdy rope. Good for tying down a loose plank."},
+        {"key":"ITEM_CLAVOS_NAME","value":"Nails"},
+        {"key":"ITEM_CLAVOS_DESC","value":"Two slightly bent nails. They still hold."}
     ]
 }

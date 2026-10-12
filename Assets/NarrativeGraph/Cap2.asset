@@ -43,6 +43,21 @@ MonoBehaviour:
   - rid: 5630202263296279110
   - rid: 5630202263296279111
   - rid: 5630202263296279125
+  - rid: 5630202403377381376
+  - rid: 5630202403377381377
+  - rid: 5630202403377381378
+  - rid: 5630202403377381379
+  - rid: 5630202403377381380
+  - rid: 5630202403377381381
+  - rid: 5630202403377381382
+  - rid: 5630202403377381383
+  - rid: 5630202403377381384
+  - rid: 5630202403377381385
+  - rid: 5630202403377381386
+  - rid: 5630202403377381387
+  - rid: 5630202403377381388
+  - rid: 5630202403377381389
+  - rid: 5630202403377381390
   applicableSceneNames: []
   references:
     version: 2
@@ -456,7 +471,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-0
-        position: {x: 7220, y: 184}
+        position: {x: 7220, y: 186}
         outputs:
         - cap2-prepara-viaje-boticaria-1
         npcId: NPC_Boticaria
@@ -473,7 +488,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-1
-        position: {x: 7600, y: 251.20001}
+        position: {x: 7600, y: 256}
         outputs:
         - cap2-prepara-viaje-boticaria-2
         dialogue: {fileID: 11400000, guid: a4a02d6147efb0045818a78facdef920, type: 2}
@@ -490,7 +505,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-2
-        position: {x: 7980, y: 184}
+        position: {x: 7980, y: 186}
         outputs:
         - cap2-prepara-viaje-boticaria-3
         item: {fileID: 11400000, guid: cd7bbd4a76acaf04da947d03b56a071a, type: 2}
@@ -508,7 +523,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-3
-        position: {x: 8360, y: 188.79999}
+        position: {x: 8360, y: 190}
         outputs:
         - cap2-prepara-viaje-boticaria-4
         action: 0
@@ -531,7 +546,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-boticaria-4
-        position: {x: 8740, y: 282.4}
+        position: {x: 8740, y: 288}
         outputs: []
         standingActorId: NPC_Boticaria
         standingDialogue: {fileID: 11400000, guid: 79e721f963b681b4b83cbe507f578e4c, type: 2}
@@ -564,3 +579,265 @@ MonoBehaviour:
         aparecer: 1
         mantener: 2.2
         desaparecer: 1
+    - rid: 5630202403377381376
+      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.3d \xB7 Aprende Bola Prisma (tras los cubos de Eldran)"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-desbloqueo-bola-prisma
+        position: {x: 8400, y: 900}
+        outputs: []
+        abilityKeysToUnlock: 
+        abilitiesToUnlock: 
+        spellsToUnlock: 02000000i
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+        saveAfterUnlock: 0
+    - rid: 5630202403377381377
+      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.9 \xB7 Primera receta: C\xFApula Estelar"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-desbloqueo-cupula-estelar
+        position: {x: 8400, y: 2700}
+        outputs:
+        - cap2-tutorial-cupula-estelar
+        abilityKeysToUnlock: 
+        abilitiesToUnlock: 
+        spellsToUnlock: 1a000000i
+        assignSpellsToEmptySlot: 0
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+        saveAfterUnlock: 0
+    - rid: 5630202403377381378
+      type: {class: TutorialPromptNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.9 \xB7 Tutorial \xB7 combo m\xE1gico (Y \u2192 X \u2192 B \u2192 A)"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-tutorial-cupula-estelar
+        position: {x: 8780, y: 2700}
+        outputs: []
+        action: 0
+        text: "Pulsa {BOTON} y teclea X, B, A: C\xFApula Estelar protege a quien est\xE9 debajo."
+        textId: TUTORIAL_CAP2_CUPULA_ESTELAR
+        icon: {fileID: 0}
+        buttonName: interactable_y
+        dismissWithCancel: 1
+        cerrarConSenal: 
+        cerrarAlEmpezarCinematica: 1
+        cerrarAlEmpezarDialogo: 1
+    - rid: 5630202403377381379
+      type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.10 \xB7 Will sostiene la figura: aprende Levitaci\xF3n"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-desbloqueo-levitacion
+        position: {x: 8400, y: 3300}
+        outputs: []
+        abilityKeysToUnlock: 
+        abilitiesToUnlock: 
+        spellsToUnlock: 04000000i
+        assignSpellsToEmptySlot: 1
+        forceWillBeforeSpellUnlock: 1
+        oneShotFlag: 
+        applyPresetAfterUnlock: 1
+        saveAfterUnlock: 0
+    - rid: 5630202403377381380
+      type: {class: ForkNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Contrabandistas: \xBFc\xF3mo act\xFAa Will?"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-0
+        position: {x: 8400, y: 1500}
+        outputs:
+        - cap2-contrabandistas-ataque-0
+        - cap2-contrabandistas-pluma-0
+        - cap2-contrabandistas-jaula-0
+    - rid: 5630202403377381381
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Will entra en el claro"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-ataque-0
+        position: {x: 8780, y: 1250}
+        outputs:
+        - cap2-contrabandistas-ataque-1
+        eventKey: CAP2_CONTRABANDISTAS_ATAQUE
+    - rid: 5630202403377381382
+      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 \xBFYa hab\xEDa elegido el sigilo?"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-ataque-1
+        position: {x: 9160, y: 1250}
+        outputs:
+        - 
+        - cap2-contrabandistas-ataque-2
+        flagKey: CAP2_CONTRABANDISTAS_SIGILO
+        invert: 0
+    - rid: 5630202403377381383
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Elige pelear"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-ataque-2
+        position: {x: 9540, y: 1250}
+        outputs:
+        - cap2-contrabandistas-ataque-3
+        flagKey: CAP2_CONTRABANDISTAS_COMBATE
+        value: 1
+    - rid: 5630202403377381384
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Contrabandistas vencidos"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-ataque-3
+        position: {x: 9920, y: 1250}
+        outputs:
+        - cap2-contrabandistas-fin
+        eventKey: CAP2_CONTRABANDISTAS_VENCIDOS
+    - rid: 5630202403377381385
+      type: {class: WaitForItemAddedNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Coge la pluma brillante"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-pluma-0
+        position: {x: 8780, y: 1750}
+        outputs:
+        - cap2-contrabandistas-pluma-1
+        itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
+        minimumAmount: 0
+        completeIfAlreadyOwned: 1
+        debugLogs: 0
+    - rid: 5630202403377381386
+      type: {class: BranchFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 \xBFYa hab\xEDa empezado a pelear?"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-pluma-1
+        position: {x: 9160, y: 1750}
+        outputs:
+        - 
+        - cap2-contrabandistas-pluma-2
+        flagKey: CAP2_CONTRABANDISTAS_COMBATE
+        invert: 0
+    - rid: 5630202403377381387
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Elige avisar a la guardia"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-pluma-2
+        position: {x: 9540, y: 1750}
+        outputs:
+        - cap2-contrabandistas-fin
+        flagKey: CAP2_CONTRABANDISTAS_SIGILO
+        value: 1
+    - rid: 5630202403377381388
+      type: {class: WaitCustomEventNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Arde una jaula"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-jaula-0
+        position: {x: 8780, y: 2150}
+        outputs:
+        - cap2-contrabandistas-jaula-1
+        eventKey: CAP2_CONTRABANDISTAS_JAULA_QUEMADA
+    - rid: 5630202403377381389
+      type: {class: SetFlagNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Consecuencia: jaulas quemadas"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-jaula-1
+        position: {x: 9160, y: 2150}
+        outputs: []
+        flagKey: CAP2_JAULAS_QUEMADAS
+        value: 1
+    - rid: 5630202403377381390
+      type: {class: CheckpointNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: "2.7 \xB7 Cap. 2 \xB7 Tras los contrabandistas"
+        chapter: Cap. 2
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: cap2-contrabandistas-fin
+        position: {x: 10300, y: 1500}
+        outputs: []
+        checkpointId: CAP2_TRAS_CONTRABANDISTAS
+        spawnAnchorId: 
+        sceneName: 

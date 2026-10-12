@@ -1,0 +1,108 @@
+n,bloque,fuente,clave,hablante,texto,nota
+1,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_INTRO,Archimago,"Buenos días, valle. ¿Qué se te ha estropeado hoy?",
+2,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_FAVOR_CARRETA,Vecino,¡Maestro! Se me ha volcado otra vez la carreta. Y eso que hoy iba despacio.,
+3,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_CARRETA_GRACIAS,Vecino,"¡Gracias, maestro! No habría podido enderezarla yo solo.","Lo DICE, no lo asiente. Tres HeadNod01 seguidos no son un agradecimiento, son un tic."
+4,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE,Archimago,"¡Me encanta vuestro baile!",""
+5,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE_RESPUESTA,Vecino,"¡Gracias, maestro! ¡Seguiremos bailando!","""Antes solo gesticulaba hablando, sin bocadillo: \xABle esta diciendo algo al Archimago pero no le sale el bocadillo\xBB."""
+6,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_FAVOR_GLOBO,Nina,¡Maestro! El globo se ha enganchado en lo alto del campanario.,
+7,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_GLOBO_OK,Archimago,Con cuidado... Eso es.,"Con cuidado...'' se dice AL HACER el hechizo, no despues de que el globo ya se haya ido. Es una advertencia, no un comentario."
+8,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_GLOBO_ROTO,Archimago,"¡Ups! Lo siento, se me ha escapado.",""
+9,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_LIORA_1,Liora,¿Has pensado qué contestar a la academia? Llevas semanas con la carta.,
+10,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_ARCHIMAGO,Archimago,Hoy pensaba contestar. Pero siempre acaba surgiendo algo en el valle.,
+11,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_LIORA_2,Liora,No tienes que quedarte solo porque aquí te necesiten. ¿Qué quieres hacer tú?,
+12,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_LIORA_1,Liora,¿Quién es? ¿Qué quiere?,
+13,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_ARCHIMAGO_1,Archimago,"No lo sé. Llévatelos al puente, deprisa.",
+14,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_HORA_ARCHIMAGO,Archimago,"¡Al puente! ¡Todos, ahora!",
+15,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_LIORA_2,Liora,¿Y tú?,
+16,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_ARCHIMAGO,Archimago,Ve. Yo me encargo de él.,
+17,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_LIORA,Liora,Vuelve pronto.,
+18,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_ELEGIR,Liora,"Y cuando vuelvas, nada de encargos. Te toca descansar.","La broma del rio, devuelta. Es lo que convierte la despedida en una promesa en vez de en un discurso."
+19,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_EVACUACION_LIORA,Liora,"¡Al puente, todos! ¡Deprisa, no miréis atrás!",
+20,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO,Mago Oscuro,¿Vas a salvarlos a todos tú solo?,
+21,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO_2,Mago Oscuro,Ni a ti mismo puedes salvarte.,
+22,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_ARCHIMAGO,Archimago,"Mientras siga en pie, no llegarás a ellos.",
+23,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MAGO_VALLE,Mago Oscuro,"Que este valle no haya existido nunca.","Calma absoluta, casi un susurro; sostiene el hechizo sobre la cabeza."
+24,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_01,Archimago,"No... No voy a dejar que los toques.
+¡Liora! ¡Nina! ¡Todos vosotros!","Se le quiebra la voz mirando hacia el puente; grita los nombres."
+25,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_02,Archimago,"Luz primera... tú que ardías antes de que hubiera cielo...
+tú que encendiste las estrellas y tendiste caminos entre ellas cuando aún no había nadie para recorrerlos...","Llorando, casi en susurro; manos juntas, ojos cerrados."
+26,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_03,Archimago,"No conozco ningún hechizo capaz de pararlo...
+Así que no te pido uno que exista. Nada arde sin ti... Te lo ruego... ¡préstame tu fuego!","Suplicando; la voz se rompe en 'te lo ruego'... sube en 'préstame tu fuego'."
+27,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_04,Archimago,"Sé que de esto no se vuelve. Sé que nunca contestaré esa carta...
+¡Me da igual lo que quede de mí!","Desesperado, con rabia contra sí mismo."
+28,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_05,Archimago,"¡Toma mis años! ¡Toma mi voz, mi nombre!
+¡Llévate mi alma si la quieres! ¡Pero que ellos vean amanecer!","Gritando entre lágrimas, crescendo."
+29,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_06,Archimago,"Perdóname, Liora... no voy a volver pronto.","Susurro roto, íntimo."
+30,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_HECHIZO,Archimago,"¡Protégelos a todos!","Grito largo y desgarrado entre lágrimas, unos 4 s; brazos arriba en el aire tras la carrera y el salto."
+31,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_1,Vecina,"¡Hala, ya vuela!",
+32,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_2,Vecino,¡Mira cómo sube!,
+33,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_3,Vecino,¡Va a llegar hasta las nubes!,
+34,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_01,Eldran,"¡Victoria, no pongas las manzanas encima de las peras!","Eldran, desde fuera - las cajas de fruta"
+35,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_02,Victoria,"¿Y dónde las pongo? Solo hay una caja, Eldran.",Victoria le responde
+36,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_03,Eldran,¡Si esta mañana había dos!,Eldran insiste - esta linea va en paralelo con la reaccion de Will
+37,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_04,Will,Ya están otra vez… Voy a ver qué pasa.,"Will comenta la escena - remate, deja claro que ya les conoce"
+38,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_SPOT_WILL,Oliver,¡Will! ¡Espera!,Cheer02 dos veces - el primer ciclo se pierde con la transicion de entrada
+39,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_NEW_SPELL_INTRO,Oliver,He aprendido un hechizo nuevo. Mira.,He aprendido un hechizo nuevo
+40,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_OUT_OF_BREATH,Oliver,Espera un momento... Necesito recuperar el aliento.,Ay que me ahogo
+41,2. Mañana de Will,SEQ_OliverSaludo,WILL_GREETING_OLIVER_CUT_OFF,Will,"¡Ja, sigues igual! ¿Por qué discuten Eldran y Victoria? Se les oye desde aquí.","Will pregunta por Eldran y Victoria - gancho hacia SEQ_PerasEldran (cambia el motivo de antes, ya no es Eldran quien le necesita)"
+42,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_BEFORE_MENUS_HANDOFF,Oliver,"¿Siguen discutiendo? Llevan así un buen rato...
+Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de Eldran/Victoria, promete ir luego, y engancha con la explicacion de menus (doblaje ya grabado, sin tocar)"
+43,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_PERAS_HANDOFF,Oliver,Pues vamos a ver qué pasa.,"NUEVO (adapta el gancho): Oliver se anima a ir con Will, en vez del viejo ""por si se te ha olvidado que te conozco"" desconectado de la discusion. Engancha directo con PERAS_START (OLIVER_GREETING_DONE se levanta al terminar la secuencia)."
+44,2. Mañana de Will,SEQ_OliverSaludo,WILL_GREETING_PERAS_HANDOFF,Will,Vamos.,NUEVO: Will remata y los dos salen juntos hacia el mercado
+45,2. Mañana de Will,SEQ_PerasEldran,PERAS_01,Eldran,¿Y las peras? ¿Están bien?,Eldran sigue con lo de las cajas
+46,2. Mañana de Will,SEQ_PerasEldran,PERAS_02,Victoria,"Mira: manzanas abajo, peras arriba. Ni un golpe.",Victoria no da su brazo a torcer
+47,2. Mañana de Will,SEQ_PerasEldran,PERAS_03,Eldran,…Vale. Siguen enteras.,"Eldran cede, entre risas"
+48,2. Mañana de Will,SEQ_PerasEldran,PERAS_04,Victoria,"Tú sabrás dónde dejaste la otra caja. Anda, saluda a Will.",Victoria tambien se rie y avisa de que Will esta esperando
+49,2. Mañana de Will,SEQ_PerasEldran,PERAS_05,Eldran,¡Will! Perdona el follón. Ya sabes cómo nos ponemos con la fruta.,Eldran saluda a Will
+50,2. Mañana de Will,SEQ_PerasEldran,PERAS_OLIVER_VOY,Oliver,¿Os echo una mano?,NUEVO: Oliver se apunta a ir con Will
+51,2. Mañana de Will,SEQ_PerasEldran,PERAS_VICTORIA_QUEDATE,Victoria,"Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis.","NUEVO: Victoria se queda con Oliver, no hace falta marca para el -- se une"
+52,2. Mañana de Will,tutorial/pensamiento,NIGHTMARE_AGAIN,Will (pensamiento),Otra vez esa pesadilla.,"Si prefieres no doblar pensamientos, sáltala"
+53,3. Eldran y la caja,SEQ_EldranCaja,DLG_ELDRAN_CAJA_LLAMADA,Eldran,¡Will! ¡Espera!,"Will, espera! - Cheer01 dos veces, el primer ciclo se pierde con la transicion de entrada (como Oliver)"
+54,3. Eldran y la caja,Cap1.asset,EVT_ELDRAN_GUIA_LLAMADA,Eldran,"¡Por aquí, Will!",
+55,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_01,Eldran,"Esto es un Punto de Guardado, Will.",
+56,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_02,Eldran,"Aquí podrás guardar tu partida y descansar para recuperar fuerzas, así que no dudes en usarlo cuando lo necesites.",
+57,3. Eldran y la caja,DG_ELDRAN_PUNTO_GUARDADO.asset,DLG_ELDRAN_SAVEPOINT_04,Eldran,"Venga, sigamos, que ya queda poco.",
+58,3. Eldran y la caja,DG_ELDRAN_CHARLA_VICTORIA.asset,DLG_ELDRAN_CHARLA_VICTORIA_01,Will,¿Y la otra caja?,
+59,3. Eldran y la caja,DG_ELDRAN_CHARLA_VICTORIA.asset,DLG_ELDRAN_CHARLA_VICTORIA_02,Eldran,En el bosque. La dejé allí esta mañana.,
+60,3. Eldran y la caja,DG_ELDRAN_CHARLA_VICTORIA.asset,DLG_ELDRAN_CHARLA_VICTORIA_03,Oliver,Victoria no te va a dejar olvidarlo.,
+61,3. Eldran y la caja,DG_ELDRAN_CHARLA_ESTRELLA.asset,DLG_ELDRAN_CHARLA_ESTRELLA_01,Eldran,¿Y en qué te has gastado la moneda?,
+62,3. Eldran y la caja,DG_ELDRAN_CHARLA_ESTRELLA.asset,DLG_ELDRAN_CHARLA_ESTRELLA_02,Will,En una estrella de madera. Algo torcida.,
+63,3. Eldran y la caja,DG_ELDRAN_CHARLA_ESTRELLA.asset,DLG_ELDRAN_CHARLA_ESTRELLA_03,Eldran,Entonces es perfecta.,
+64,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_02,Eldran,"Ahí dentro está la caja, con las manzanas. ¿Puedes ir a por ella?",
+65,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_03,Will,Claro. ¿Dónde la busco?,
+66,3. Eldran y la caja,DG_ELDRAN_CAJA.asset,DLG_ELDRAN_CAJA_04,Eldran,"Al pie de un fresno, junto al camino. Te espero aquí.",
+67,3. Eldran y la caja,DLG_ELDRAN_SIGUEME_INPROGRESS.asset,DLG_ELDRAN_SIGUEME_INPROGRESS_01,Eldran,"No te quedes atrás, Will. Ya casi estamos.",
+68,3. Eldran y la caja,DLG_ELDRAN_WILL_MISSION1_INPROGRESS.asset,DLG_ELDRAN_WILL_MISSION1_INPROGRESS_01,Eldran,"¿Todavía no te la has gastado? Una tontería, Will, lo que tú quieras.",
+69,3. Eldran y la caja,DLG_ELDRAN_WILL_MISSION1_INPROGRESS.asset,DLG_ELDRAN_WILL_MISSION1_INPROGRESS_02,Eldran,Date una vuelta por los puestos del mercado; seguro que algo te llama.,
+70,3. Eldran y la caja,DLG_ELDRAN_MISSION2_INPROGRESS.asset,DLG_ELDRAN_MISSION2_INPROGRESS_01,Eldran,La caja está al pie de un fresno.,
+71,3. Eldran y la caja,DLG_ELDRAN_MISSION2_INPROGRESS.asset,DLG_ELDRAN_MISSION2_INPROGRESS_02,Eldran,Sigue el camino; no debe andar lejos.,
+72,3. Eldran y la caja,DLG_ELDRAN_MISSION2_TURNIN.asset,DLG_ELDRAN_MISSION2_TURNIN_01,Eldran,¡Perfecto! Has traído las manzanas sanas y salvas.,
+73,3. Eldran y la caja,DLG_ELDRAN_MISSION2_TURNIN.asset,DLG_ELDRAN_MISSION2_TURNIN_02,Eldran,"Y a Victoria, ni una palabra, ¿eh?",
+74,3. Eldran y la caja,DLG_ELDRAN_MISSION2_TURNIN.asset,DLG_ELDRAN_MISSION2_TURNIN_03,Eldran,"Toma, unas monedas por tu ayuda.",
+75,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_01,Eldran,"¡Will, cuidado!","EVT_AWAKEN_01 = Will, cuidado!"
+76,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_02,Will,¡...!,EVT_AWAKEN_02 = ...! Will se queda mudo.
+77,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_06,Eldran,¡Will apartate!,EVT_AWAKEN_06 = Will apartate! Ya existia en el json y nadie lo usaba.
+78,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_03,Will,¡NOO!,EVT_AWAKEN_03 = NOO!
+79,4. El Despertar de la Estrella,SEQ_StarAwakening,EVT_AWAKEN_05,Will,¿Qué... qué acabo de hacer?,EVT_AWAKEN_05 = Que... que acabo de hacer?
+80,5. Demonio,DLG_ELDRAN_MISSION3_INPROGRESS.asset,DLG_ELDRAN_MISSION3_INPROGRESS_01,Eldran,"¡Ahora no, Will! ¡Atento al aro de su cuello!",
+81,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_10,Eldran,El ataque del demonio ha despertado tu magia.,frase de combate (suena según lo que haga el jugador)
+82,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_08,Eldran,"¡Will! Usa tu magia, presiona y derrota al demonio.",frase de combate (suena según lo que haga el jugador)
+83,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_HINT_ARO,Eldran,¡Fíjate en el aro de runas de su cuello! Solo le haces daño cuando brilla.,frase de combate (suena según lo que haga el jugador)
+84,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_GUIA_RITMO,Eldran,Esquiva su ataque y dispara justo después: se queda agotado y el aro sigue brillando.,frase de combate (suena según lo que haga el jugador)
+85,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_AHORA_01,Eldran,"¡Ahora, Will! ¡El aro brilla!",frase de combate (suena según lo que haga el jugador)
+86,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_AHORA_02,Eldran,¡Brilla! ¡Dispara ya!,frase de combate (suena según lo que haga el jugador)
+87,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_ACIERTO_01,Eldran,¡Eso es! ¡Así se le hace daño!,frase de combate (suena según lo que haga el jugador)
+88,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CHEER_01,Eldran,"¡Así se hace, Will! ¡Lo tienes!",frase de combate (suena según lo que haga el jugador)
+89,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CHEER_02,Eldran,"¡Vamos, muchacho! ¡Sé que puedes!",frase de combate (suena según lo que haga el jugador)
+90,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_HINT_SIN_ARO,Eldran,¡Así no! Sin el aro encendido no le haces nada. ¡Espera a que brille!,frase de combate (suena según lo que haga el jugador)
+91,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_SIN_ARO_02,Eldran,¡No le ha hecho nada! Guarda tu magia hasta que brille el aro.,frase de combate (suena según lo que haga el jugador)
+92,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_WILL_HERIDO,Eldran,"¡Cuidado! Si levanta las garras o marca el suelo, apártate y luego contraataca.",frase de combate (suena según lo que haga el jugador)
+93,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_POCA_VIDA,Eldran,¡Estás herido! Recoge los orbes naranjas que suelta al golpearle.,frase de combate (suena según lo que haga el jugador)
+94,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_HINT_ORBES,Eldran,¡Suelta orbes cuando le aciertas! Los naranjas te curan y los azules te dan magia. ¡Recógelos!,frase de combate (suena según lo que haga el jugador)
+95,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_FASE_2,Eldran,¡Se ha enfurecido! Ahora también lanza fuego de lejos: ¡no te quedes quieto!,frase de combate (suena según lo que haga el jugador)
+96,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_FASE_3,Eldran,¡Está desesperado! Mira las sombras del suelo: ¡de ahí caerá su magia!,frase de combate (suena según lo que haga el jugador)
+97,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_CASI,Eldran,"¡Ya casi es tuyo! ¡Un último esfuerzo, Will!",frase de combate (suena según lo que haga el jugador)
+98,5. Demonio,Guion_Demonio1_Eldran.asset,EVT_ELDRAN_RECUERDA_ARO,Eldran,No malgastes tu magia: espera a que brille el aro.,frase de combate (suena según lo que haga el jugador)
+99,6. Liam y la bola de cristal,LiamCrystalBallSequencer.cs,EVT_LIAM_CRYSTAL_01,Liam,Y ese es el chico de corazón puro que abrirá el Sendero.,
+100,6. Liam y la bola de cristal,LiamCrystalBallSequencer.cs,EVT_LIAM_CRYSTAL_02,Liam,Me alegra que ese demonio haya despertado su magia.,
+101,6. Liam y la bola de cristal,LiamCrystalBallSequencer.cs,EVT_LIAM_CRYSTAL_03,Liam,"Ja… ja, ja…",risa: usar [laughs]

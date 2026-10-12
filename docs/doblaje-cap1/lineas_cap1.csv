@@ -37,9 +37,9 @@ Así que no te pido uno que exista. Nada arde sin ti... Te lo ruego... ¡présta
 31,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_1,Vecina,"¡Hala, ya vuela!",
 32,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_2,Vecino,¡Mira cómo sube!,
 33,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_3,Vecino,¡Va a llegar hasta las nubes!,
-34,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_01,Eldran,"¡Victoria, no pongas las manzanas encima de las peras!","Eldran, desde fuera - las cajas de fruta"
-35,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_02,Victoria,"¿Y dónde las pongo? Solo hay una caja, Eldran.",Victoria le responde
-36,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_03,Eldran,¡Si esta mañana había dos!,Eldran insiste - esta linea va en paralelo con la reaccion de Will
+34,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_01,Eldran,"Victoria, ¿no habrás visto la otra caja de manzanas?","Eldran, desde fuera, en tono amistoso: busca la caja que falta"
+35,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_02,Victoria,¿Qué otra caja? Esta mañana solo trajiste una.,Victoria le responde con guasa
+36,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_03,Eldran,Juraría que eran dos. ¡Me dolía la espalda el doble!,Eldran insiste riéndose - esta linea va en paralelo con la reaccion de Will
 37,2. Mañana de Will,SEQ_DiscusionVentana,HOOK_DISCUSION_04,Will,Ya están otra vez… Voy a ver qué pasa.,"Will comenta la escena - remate, deja claro que ya les conoce"
 38,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_SPOT_WILL,Oliver,¡Will! ¡Espera!,Cheer02 dos veces - el primer ciclo se pierde con la transicion de entrada
 39,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_NEW_SPELL_INTRO,Oliver,He aprendido un hechizo nuevo. Mira.,He aprendido un hechizo nuevo
@@ -49,11 +49,11 @@ Así que no te pido uno que exista. Nada arde sin ti... Te lo ruego... ¡présta
 Antes de ir a ver qué pasa, quería enseñarte algo.","Oliver confirma lo de Eldran/Victoria, promete ir luego, y engancha con la explicacion de menus (doblaje ya grabado, sin tocar)"
 43,2. Mañana de Will,SEQ_OliverSaludo,OLIVER_GREETING_PERAS_HANDOFF,Oliver,Pues vamos a ver qué pasa.,"NUEVO (adapta el gancho): Oliver se anima a ir con Will, en vez del viejo ""por si se te ha olvidado que te conozco"" desconectado de la discusion. Engancha directo con PERAS_START (OLIVER_GREETING_DONE se levanta al terminar la secuencia)."
 44,2. Mañana de Will,SEQ_OliverSaludo,WILL_GREETING_PERAS_HANDOFF,Will,Vamos.,NUEVO: Will remata y los dos salen juntos hacia el mercado
-45,2. Mañana de Will,SEQ_PerasEldran,PERAS_01,Eldran,¿Y las peras? ¿Están bien?,Eldran sigue con lo de las cajas
-46,2. Mañana de Will,SEQ_PerasEldran,PERAS_02,Victoria,"Mira: manzanas abajo, peras arriba. Ni un golpe.",Victoria no da su brazo a torcer
-47,2. Mañana de Will,SEQ_PerasEldran,PERAS_03,Eldran,…Vale. Siguen enteras.,"Eldran cede, entre risas"
-48,2. Mañana de Will,SEQ_PerasEldran,PERAS_04,Victoria,"Tú sabrás dónde dejaste la otra caja. Anda, saluda a Will.",Victoria tambien se rie y avisa de que Will esta esperando
-49,2. Mañana de Will,SEQ_PerasEldran,PERAS_05,Eldran,¡Will! Perdona el follón. Ya sabes cómo nos ponemos con la fruta.,Eldran saluda a Will
+45,2. Mañana de Will,SEQ_PerasEldran,PERAS_01,Eldran,"Dos cajas, Victoria. Las cargué yo mismo, una encima de otra.","Eldran explica, amistoso: trajo dos cajas"
+46,2. Mañana de Will,SEQ_PerasEldran,PERAS_02,Victoria,Pues aquí solo ha llegado una. ¿Paraste por el camino?,Victoria pregunta si paró por el camino
+47,2. Mañana de Will,SEQ_PerasEldran,PERAS_03,Eldran,Solo un momento… a descansar a la sombra de un árbol.,"Eldran cae en la cuenta, risa nerviosa"
+48,2. Mañana de Will,SEQ_PerasEldran,PERAS_04,Victoria,"Pues allí la tendrás. Anda, saluda a Will, que lleva un rato esperando.",Victoria se ríe y avisa de que Will está esperando
+49,2. Mañana de Will,SEQ_PerasEldran,PERAS_05,Eldran,"¡Will! Ya ves, perdiendo cajas a mi edad. Ya aparecerá.",Eldran saluda a Will riéndose de sí mismo
 50,2. Mañana de Will,SEQ_PerasEldran,PERAS_OLIVER_VOY,Oliver,¿Os echo una mano?,NUEVO: Oliver se apunta a ir con Will
 51,2. Mañana de Will,SEQ_PerasEldran,PERAS_VICTORIA_QUEDATE,Victoria,"Sí, por favor. Ayúdame a colocar la fruta antes de que os vayáis.","NUEVO: Victoria se queda con Oliver, no hace falta marca para el -- se une"
 52,2. Mañana de Will,tutorial/pensamiento,NIGHTMARE_AGAIN,Will (pensamiento),Otra vez esa pesadilla.,"Si prefieres no doblar pensamientos, sáltala"

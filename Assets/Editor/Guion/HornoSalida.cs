@@ -93,6 +93,7 @@ internal sealed partial class Horno
 
     private Vector3 FocoDePlano(PlanoHorneado p, float t)
     {
+        if (p.focos.Count > 0) return Interpolar.Posicion(p.focos, t);
         if (p.sujetos.Count == 0 || p.sujetos[0].StartsWith("PROP_")) return p.focoFijo;
         Vector3 c = Vector3.zero; int n = 0;
         foreach (var id in p.sujetos)
@@ -260,6 +261,7 @@ internal sealed partial class Horno
         if (_salida != null)
             sb.AppendLine($"**{Tiempo(_salida.duracion)}** de secuencia · {_lineas.Count} frases · {_salida.planos.Count} planos · {_efectos.Count} efectos · {_actores.Count} personajes\n");
         sb.AppendLine("Reparto medido (m): " + string.Join(" · ", _actores.Values.Select(x => $"{x.alias} {x.altura:0.00}/ojos {x.AlturaDeOjos:0.00}")) + "\n");
+        if (_manipulaciones.Count > 0) sb.AppendLine("\n## Objetos en la mano\n\n" + string.Join("\n", _manipulaciones.Select(x => "- " + x)) + "\n");
         sb.AppendLine($"## Errores ({Errores.Count})\n");
         foreach (var e in Errores) sb.AppendLine("- " + e);
         sb.AppendLine($"\n## Avisos ({Avisos.Count})\n");
@@ -432,6 +434,7 @@ internal sealed partial class Horno
 
         var proxies = new Dictionary<ActorH, (GameObject go, GameObject inst, AnimationClip clip)>();
         var materiales = new List<Material>();
+        var props = new Dictionary<string, (Transform original, GameObject copia, Vector3 pos, Quaternion giro, bool activo)>();
         var go = new GameObject("Storyboard · cámara") { hideFlags = HideFlags.HideAndDontSave };
         const int W = 960, H = 540;
         var rt = new RenderTexture(W, H, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
@@ -440,6 +443,18 @@ internal sealed partial class Horno
         bool modo = false;
         try
         {
+            if (_stage != null)
+                foreach (var prop in _stage.Props)
+                {
+                    if (prop.target == null) continue;
+                    var copia = UnityEngine.Object.Instantiate(prop.target.gameObject);
+                    copia.hideFlags = HideFlags.HideAndDontSave;
+                    copia.transform.SetParent(null, true);
+                    SceneManager.MoveGameObjectToScene(copia, _escena);
+                    foreach (var c in copia.GetComponentsInChildren<MonoBehaviour>(true)) c.enabled = false;
+                    props[prop.id] = (prop.target, copia, prop.target.position, prop.target.rotation, prop.target.gameObject.activeSelf);
+                    if (prop.target.gameObject.activeSelf) prop.target.gameObject.SetActive(false);
+                }
             foreach (var a in _actores.Values)
             {
                 if (a.prefab == null) continue;
@@ -450,6 +465,7 @@ internal sealed partial class Horno
                 var inst = (GameObject)PrefabUtility.InstantiatePrefab(a.prefab, _escena);
                 inst.hideFlags = HideFlags.DontSave;
                 inst.transform.SetParent(soporte.transform, false);
+                foreach (var c in inst.GetComponentsInChildren<MonoBehaviour>(true)) c.enabled = false;
                 if (!SeVe(inst)) PonerMuneco(inst, a, materiales);
                 var anim = inst.GetComponentInChildren<Animator>(true);
                 AnimationClip idle = null;
@@ -493,12 +509,51 @@ internal sealed partial class Horno
                         var elegido = animator?.runtimeAnimatorController?.animationClips.FirstOrDefault(c => c != null && c.name == estado.clip);
                         if (elegido != null) { clip = elegido; inicio = pose.t; congelar = pose.congelar; }
                     }
-                    if (clip != null) AnimationMode.SampleAnimationClip(kv.Value.inst, clip,
+                    if (clip != null) AnimationMode.SampleAnimationClip(kv.Value.inst.GetComponentInChildren<Animator>(true).gameObject, clip,
                         congelar ? Mathf.Min(t - inicio, clip.length) : (t - inicio) % Mathf.Max(0.1f, clip.length));
                     kv.Value.inst.transform.localPosition = Vector3.zero;
                     kv.Value.inst.transform.localRotation = Quaternion.identity;
                 }
                 AnimationMode.EndSampling();
+
+                foreach (var kv in props)
+                {
+                    var objeto = kv.Value.copia;
+                    objeto.transform.SetParent(null, true);
+                    objeto.transform.SetPositionAndRotation(kv.Value.pos, kv.Value.giro);
+                    bool activo = kv.Value.activo;
+                    foreach (var efecto in asset.efectos)
+                    {
+                        if (efecto.t > t) break;
+                        if (efecto.beat is SetPropActiveBeat activar && activar.propId == kv.Key) activo = activar.active;
+                        if (efecto.beat is PropMoveBeat mover && mover.propId == kv.Key)
+                        {
+                            float u = mover.segundos > 0f ? Mathf.Clamp01((t - efecto.t) / mover.segundos) : 1f;
+                            if (mover.suavizar) u = Mathf.SmoothStep(0f, 1f, u);
+                            Vector3 desde = mover.desdeDondeEstaba ? kv.Value.pos : objeto.transform.position;
+                            Quaternion rot = mover.desdeDondeEstaba ? kv.Value.giro : objeto.transform.rotation;
+                            objeto.transform.SetPositionAndRotation(desde + mover.deltaPosicion * u, Quaternion.Slerp(rot, Quaternion.Euler(mover.deltaRotacion) * rot, u));
+                        }
+                        if (!(efecto.beat is PropEnManoBeat mano) || mano.propId != kv.Key) continue;
+                        activo = true;
+                        if (mano.dejar)
+                        {
+                            objeto.transform.SetParent(null, true);
+                            objeto.transform.SetPositionAndRotation(mano.posicionFinal, Quaternion.Euler(mano.giroFinal));
+                        }
+                        else
+                        {
+                            var actor = _actores.Values.FirstOrDefault(a => a.id == mano.actorId);
+                            if (actor != null && proxies.TryGetValue(actor, out var proxy))
+                            {
+                                var animador = proxy.inst.GetComponentInChildren<Animator>(true);
+                                var hueso = animador != null && animador.isHuman ? animador.GetBoneTransform(mano.mano) : null;
+                                NPCWorldPoint.ColocarPropEnMano(objeto.transform, hueso, mano.offset, mano.giro);
+                            }
+                        }
+                    }
+                    if (objeto.activeSelf != activo) objeto.SetActive(activo);
+                }
 
                 Vector3 c = p.PosicionEn(t);
                 Vector3 foco = FocoDePlano(p, t);
@@ -540,6 +595,11 @@ internal sealed partial class Horno
         finally
         {
             if (modo) AnimationMode.StopAnimationMode();
+            foreach (var prop in props.Values)
+            {
+                if (prop.copia != null) UnityEngine.Object.DestroyImmediate(prop.copia);
+                if (prop.original != null && prop.original.gameObject.activeSelf != prop.activo) prop.original.gameObject.SetActive(prop.activo);
+            }
             foreach (var kv in proxies) if (kv.Value.go != null) UnityEngine.Object.DestroyImmediate(kv.Value.go);
             foreach (var m in materiales) if (m != null) UnityEngine.Object.DestroyImmediate(m);
             UnityEngine.Object.DestroyImmediate(go);

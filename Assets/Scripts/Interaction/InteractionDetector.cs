@@ -6,6 +6,8 @@ public class InteractionDetector : MonoBehaviour
 {
     [Header("Detección")]
     [SerializeField] private float range = 2.2f;
+    [Tooltip("Alcance adicional para conversar con personajes al otro lado de un mostrador.")]
+    [SerializeField, Min(0f)] private float margenDeConversacion = 1.2f;
     [SerializeField] private float focusRadius = 0.35f;
     [SerializeField] private LayerMask interactableMask;
     [Tooltip("Opcional: origen/dirección para el ray (p.ej. pivot de cámara). Si está vacío usa el transform del Player.")]
@@ -367,7 +369,7 @@ public class InteractionDetector : MonoBehaviour
         var t = aimSource ? aimSource : transform;
         Vector3 origin = t.position + Vector3.up * 1.1f;
 
-        int hitCount = Physics.OverlapSphereNonAlloc(origin, range, _interactableBuffer, interactableMask, QueryTriggerInteraction.Collide); // ✅ OPTIMIZACIÓN FASE 2: NonAlloc
+        int hitCount = Physics.OverlapSphereNonAlloc(origin, range + margenDeConversacion, _interactableBuffer, interactableMask, QueryTriggerInteraction.Collide);
         if (hitCount == 0) return null;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -390,6 +392,11 @@ public class InteractionDetector : MonoBehaviour
             var c = _interactableBuffer[i];
             var it = c.GetComponentInParent<Interactable>();
             if (!it || !it.CanInteract(gameObject)) continue;
+            float alcance = range + (it.EsPersonaje ? margenDeConversacion : 0f);
+            if ((c.ClosestPoint(origin) - origin).sqrMagnitude > alcance * alcance) continue;
+
+            // Un mostrador bajo no tapa una conversación a la altura de la cara.
+            Vector3 sightOrigin = it.EsPersonaje ? t.position + Vector3.up * 1.5f : origin;
 
             // FIX (2026-08-12): la línea de visión se comprobaba contra it.transform.position,
             // que en un NPC es la base/los pies. Cualquier mueble de altura media entre el player
@@ -404,7 +411,7 @@ public class InteractionDetector : MonoBehaviour
             // Si el jugador puede ver ese punto, el mostrador ya no cuenta como obstrucción.
             Vector3 sightPoint = it.SightPoint;
             float d = Vector3.Distance(origin, it.transform.position);
-            float sightDistance = Vector3.Distance(origin, sightPoint);
+            float sightDistance = Vector3.Distance(sightOrigin, sightPoint);
             if (d < best)
             {
                 // FIX M7 (auditoría 2026-08-07): la comprobación estaba invertida. Antes se
@@ -419,8 +426,9 @@ public class InteractionDetector : MonoBehaviour
                 // el suelo ("Floor"), marcando el interactuable como obstruido siempre. Se usa
                 // _obstructionMask (cacheado en Awake), que además excluye la capa del propio
                 // jugador y "Floor", pero SIGUE incluyendo muros/puertas/obstáculos.
-                Vector3 dir = (sightPoint - origin).normalized;
-                bool obstructed = Physics.SphereCast(origin, focusRadius, dir, out RaycastHit obstructionHit, sightDistance, _obstructionMask, QueryTriggerInteraction.Ignore);
+                Vector3 dir = (sightPoint - sightOrigin).normalized;
+                float radio = it.EsPersonaje ? Mathf.Min(focusRadius, 0.1f) : focusRadius;
+                bool obstructed = Physics.SphereCast(sightOrigin, radio, dir, out RaycastHit obstructionHit, sightDistance, _obstructionMask, QueryTriggerInteraction.Ignore);
                 if (!obstructed)
                 {
                     best = d;

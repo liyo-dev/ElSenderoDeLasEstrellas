@@ -1,0 +1,79 @@
+﻿personaje,tipo,archivo,texto_enviado,voz,duracion_s
+Victoria,laugh,audio/reacciones/Victoria/laugh_01.mp3,"[laughs] ¡Ja, ja, ja!",08_06_Cristina - Empathetic Customer support,2.35
+Victoria,laugh,audio/reacciones/Victoria/laugh_02.mp3,"[laughs] ¡Ja, ja, ja!",08_06_Cristina - Empathetic Customer support,1.65
+Victoria,sigh,audio/reacciones/Victoria/sigh_01.mp3,[sighs] Ay…,09_32_Cristina - Empathetic Customer support,1.57
+Victoria,sigh,audio/reacciones/Victoria/sigh_02.mp3,[sighs] Ay…,09_32_Cristina - Empathetic Customer support,1.8
+Victoria,hmm,audio/reacciones/Victoria/hmm_01.mp3,Mmm… hmm.,10_21_Cristina - Empathetic Customer support,1.65
+Victoria,hmm,audio/reacciones/Victoria/hmm_02.mp3,Mmm… hmm.,10_21_Cristina - Empathetic Customer support,1.96
+Eldran,laugh,audio/reacciones/Eldran/laugh_01.mp3,"[chuckles] Je, je, je…",12_58_Rafael - Expressive and Theatrical,1.72
+Eldran,laugh,audio/reacciones/Eldran/laugh_02.mp3,"[chuckles] Je, je, je…",12_58_Rafael - Expressive and Theatrical,1.8
+Eldran,hmm,audio/reacciones/Eldran/hmm_01.mp3,"Mmm… hmm, hmm.",13_52_Rafael - Expressive and Theatrical,2.35
+Eldran,hmm,audio/reacciones/Eldran/hmm_02.mp3,"Mmm… hmm, hmm.",13_52_Rafael - Expressive and Theatrical,2.43
+Eldran,sigh,audio/reacciones/Eldran/sigh_01.mp3,"[sighs] Ay, ay, ay…",15_03_Rafael - Expressive and Theatrical,2.77
+Eldran,sigh,audio/reacciones/Eldran/sigh_02.mp3,"[sighs] Ay, ay, ay…",15_03_Rafael - Expressive and Theatrical,2.69
+Will,hurt,audio/reacciones/Will/hurt_01.mp3,[groans] ¡Agh!,27_52_Kaito Renji - Youthful and Warm,1.96
+Will,hurt,audio/reacciones/Will/hurt_02.mp3,[groans] ¡Agh!,27_52_Kaito Renji - Youthful and Warm,2.12
+Will,hurt,audio/reacciones/Will/hurt_03.mp3,"[groans] ¡Ugh, ah!",29_13_Kaito Renji - Youthful and Warm,2.93
+Will,hurt,audio/reacciones/Will/hurt_04.mp3,"[groans] ¡Ugh, ah!",29_13_Kaito Renji - Youthful and Warm,2.77
+Will,death,audio/reacciones/Will/death_01.mp3,[groans] Aaagh… [gasps] [exhales],30_27_Kaito Renji - Youthful and Warm,4.52
+Will,death,audio/reacciones/Will/death_02.mp3,[groans] Aaagh… [gasps] [exhales],30_27_Kaito Renji - Youthful and Warm,5.49
+Will,effort,audio/reacciones/Will/effort_01.mp3,[grunts] ¡Hup! [exhales] ¡Ah!,32_49_Kaito Renji - Youthful and Warm,3.24
+Will,effort,audio/reacciones/Will/effort_02.mp3,[grunts] ¡Hup! [exhales] ¡Ah!,32_49_Kaito Renji - Youthful and Warm,3.24
+Will,laugh,audio/reacciones/Will/laugh_01.mp3,"[laughs] ¡Ja, ja, ja! [chuckles]",34_08_Kaito Renji - Youthful and Warm,3.0
+Will,laugh,audio/reacciones/Will/laugh_02.mp3,"[laughs] ¡Ja, ja, ja! [chuckles]",34_08_Kaito Renji - Youthful and Warm,2.51
+Will,gasp,audio/reacciones/Will/gasp_01.mp3,[gasps] ¡Ah! ¿Qué...?,35_23_Kaito Renji - Youthful and Warm,2.19
+Will,gasp,audio/reacciones/Will/gasp_02.mp3,[gasps] ¡Ah! ¿Qué...?,35_23_Kaito Renji - Youthful and Warm,2.04
+Will,sigh,audio/reacciones/Will/sigh_01.mp3,[sighs] Haaah… [exhales] ¡Uf!,36_40_Kaito Renji - Youthful and Warm,3.24
+Will,sigh,audio/reacciones/Will/sigh_02.mp3,[sighs] Haaah… [exhales] ¡Uf!,36_40_Kaito Renji - Youthful and Warm,4.44
+Oliver,laugh,audio/reacciones/Oliver/laugh_01.mp3,"[laughs] ¡Ja, ja, ja! [chuckles] ¡Ay, qué risa!","38_53_Loren - Mannered, Parodic and Playful",3.71
+Oliver,laugh,audio/reacciones/Oliver/laugh_02.mp3,"[laughs] ¡Ja, ja, ja! [chuckles] ¡Ay, qué risa!","38_53_Loren - Mannered, Parodic and Playful",3.87
+Oliver,gasp,audio/reacciones/Oliver/gasp_01.mp3,[gasps] ¡Oh! ¡Ah!,"39_52_Loren - Mannered, Parodic and Playful",2.77
+Oliver,gasp,audio/reacciones/Oliver/gasp_02.mp3,[gasps] ¡Oh! ¡Ah!,"39_52_Loren - Mannered, Parodic and Playful",2.43
+Oliver,effort,audio/reacciones/Oliver/effort_01.mp3,"[grunts] ¡Uf! [panting] ¡Uf, uf!","41_30_Loren - Mannered, Parodic and Playful",4.36
+Oliver,effort,audio/reacciones/Oliver/effort_02.mp3,"[grunts] ¡Uf! [panting] ¡Uf, uf!","41_30_Loren - Mannered, Parodic and Playful",4.44
+Oliver,cheer,audio/reacciones/Oliver/cheer_01.mp3,[cheerfully] ¡Yujuuu! ¡Bien hecho!,"42_49_Loren - Mannered, Parodic and Playful",2.43
+Oliver,cheer,audio/reacciones/Oliver/cheer_02.mp3,[cheerfully] ¡Yujuuu! ¡Bien hecho!,"42_49_Loren - Mannered, Parodic and Playful",2.51
+Liam,laugh,audio/reacciones/Liam/laugh_01.mp3,"[laughs] Ja, ja… [chuckles] ¡Ja, ja, ja!","44_34_Pablo - Deep, Confident and Clear",3.32
+Liam,laugh,audio/reacciones/Liam/laugh_02.mp3,"[laughs] Ja, ja… [chuckles] ¡Ja, ja, ja!","44_34_Pablo - Deep, Confident and Clear",3.4
+Liam,hmm,audio/reacciones/Liam/hmm_01.mp3,"[thoughtfully] Mmm… hmm, ya veo.","45_55_Pablo - Deep, Confident and Clear",3.4
+Liam,hmm,audio/reacciones/Liam/hmm_02.mp3,"[thoughtfully] Mmm… hmm, ya veo.","45_55_Pablo - Deep, Confident and Clear",2.85
+Archimago,effort,audio/reacciones/Archimago/effort_01.mp3,[grunts] ¡Hmpf! [exhales] Ah…,"47_41_Luis - Polished, Mature and Credible",3.47
+Archimago,effort,audio/reacciones/Archimago/effort_02.mp3,[grunts] ¡Hmpf! [exhales] Ah…,"47_41_Luis - Polished, Mature and Credible",3.24
+Archimago,hurt,audio/reacciones/Archimago/hurt_01.mp3,[groans] ¡Agh! [gasps] ¡Ngh…!,"48_40_Luis - Polished, Mature and Credible",4.13
+Archimago,hurt,audio/reacciones/Archimago/hurt_02.mp3,[groans] ¡Agh! [gasps] ¡Ngh…!,"48_40_Luis - Polished, Mature and Credible",3.79
+Archimago,hmm,audio/reacciones/Archimago/hmm_01.mp3,[thoughtfully] Mmm… hmm. Interesante.,"49_56_Luis - Polished, Mature and Credible",4.05
+Archimago,hmm,audio/reacciones/Archimago/hmm_02.mp3,[thoughtfully] Mmm… hmm. Interesante.,"49_56_Luis - Polished, Mature and Credible",3.16
+MagoOscuro,laugh,audio/reacciones/MagoOscuro/laugh_01.mp3,"[sinister laugh] Ja, ja… [laughs] ¡Ja, ja, ja, ja!","51_51_Victor - Deep, Malevolent and Ancient",6.35
+MagoOscuro,laugh,audio/reacciones/MagoOscuro/laugh_02.mp3,"[sinister laugh] Ja, ja… [laughs] ¡Ja, ja, ja, ja!","51_51_Victor - Deep, Malevolent and Ancient",6.03
+MagoOscuro,hurt,audio/reacciones/MagoOscuro/hurt_01.mp3,[groans] ¡Aaagh! [growls] ¡Maldito…!,"52_49_Victor - Deep, Malevolent and Ancient",5.33
+MagoOscuro,hurt,audio/reacciones/MagoOscuro/hurt_02.mp3,[groans] ¡Aaagh! [growls] ¡Maldito…!,"52_49_Victor - Deep, Malevolent and Ancient",4.52
+Liora,gasp,audio/reacciones/Liora/gasp_01.mp3,"[gasps] ¡Oh! ¡Ay, no…!",54_38_Sara Martin - Gentle and Layered,3.0
+Liora,gasp,audio/reacciones/Liora/gasp_02.mp3,"[gasps] ¡Oh! ¡Ay, no…!",54_38_Sara Martin - Gentle and Layered,2.77
+Liora,laugh,audio/reacciones/Liora/laugh_01.mp3,"[laughs softly] Ji, ji, ji… [giggles] ¡Ay, qué gracia!",55_37_Sara Martin - Gentle and Layered,4.05
+Liora,laugh,audio/reacciones/Liora/laugh_02.mp3,"[laughs softly] Ji, ji, ji… [giggles] ¡Ay, qué gracia!",55_37_Sara Martin - Gentle and Layered,4.05
+Liora,sigh,audio/reacciones/Liora/sigh_01.mp3,[sighs] Haaah… [sadly] Ay…,56_54_Sara Martin - Gentle and Layered,2.51
+Liora,sigh,audio/reacciones/Liora/sigh_02.mp3,[sighs] Haaah… [sadly] Ay…,56_54_Sara Martin - Gentle and Layered,3.63
+Nina,gasp,audio/reacciones/Nina/gasp_01.mp3,[gasps] ¡Oh! ¡Mira!,58_44_Sara Martin  - Young and Reflective,2.19
+Nina,gasp,audio/reacciones/Nina/gasp_02.mp3,[gasps] ¡Oh! ¡Mira!,58_44_Sara Martin  - Young and Reflective,2.12
+Nina,laugh,audio/reacciones/Nina/laugh_01.mp3,"[giggles] ¡Ji, ji, ji! [laughs] ¡Ja, ja!",59_44_Sara Martin  - Young and Reflective,3.24
+Nina,laugh,audio/reacciones/Nina/laugh_02.mp3,"[giggles] ¡Ji, ji, ji! [laughs] ¡Ja, ja!",59_44_Sara Martin  - Young and Reflective,3.47
+Nina,cheer,audio/reacciones/Nina/cheer_01.mp3,[cheerfully] ¡Yuju! ¡Bien! ¡Sí!,00_58_Sara Martin  - Young and Reflective,2.77
+Nina,cheer,audio/reacciones/Nina/cheer_02.mp3,[cheerfully] ¡Yuju! ¡Bien! ¡Sí!,00_58_Sara Martin  - Young and Reflective,2.85
+Archimago,laugh,audio/reacciones/Archimago/laugh_01.mp3,"[laughs warmly] Ja, ja, ja… [laughing] ¡Ja, ja!",Luis - Polished, Mature and Credible (Eleven v4; 5 oct 2026),3.21
+Archimago,laugh,audio/reacciones/Archimago/laugh_02.mp3,"[laughs warmly] Ja, ja, ja… [laughing] ¡Ja, ja!",Luis - Polished, Mature and Credible (Eleven v4; 5 oct 2026),4.55
+Vecino,laugh,audio/reacciones/Vecino/laugh_01.mp3,"[laughs] ¡Ja, ja, ja! [laughing] ¡Qué bueno!",Julio (Eleven v4; 5 oct 2026),3.81
+Vecino,laugh,audio/reacciones/Vecino/laugh_02.mp3,"[laughs] ¡Ja, ja, ja! [laughing] ¡Qué bueno!",Julio (Eleven v4; 5 oct 2026),3.0
+Vecino,cheer,audio/reacciones/Vecino/cheer_01.mp3,"[cheerfully] ¡Bravo! ¡Eso es! [laughs] ¡Muy bien!",Julio (Eleven v4; 5 oct 2026),4.02
+Vecino,cheer,audio/reacciones/Vecino/cheer_02.mp3,"[cheerfully] ¡Bravo! ¡Eso es! [laughs] ¡Muy bien!",Julio (Eleven v4; 5 oct 2026),3.58
+Vecino,gasp,audio/reacciones/Vecino/gasp_01.mp3,"[gasps] ¡Ah! [scared] ¡Madre mía!",Julio (Eleven v4; 5 oct 2026),2.53
+Vecino,gasp,audio/reacciones/Vecino/gasp_02.mp3,"[gasps] ¡Ah! [scared] ¡Madre mía!",Julio (Eleven v4; 5 oct 2026),2.72
+Vecino,sigh,audio/reacciones/Vecino/sigh_01.mp3,"[sighs] Ay… [sadly] qué pena…",Julio (Eleven v4; 5 oct 2026),2.74
+Vecino,sigh,audio/reacciones/Vecino/sigh_02.mp3,"[sighs] Ay… [sadly] qué pena…",Julio (Eleven v4; 5 oct 2026),2.87
+Vecina,laugh,audio/reacciones/Vecina/laugh_01.mp3,"[laughs] ¡Ja, ja, ja! [laughing] ¡Ay, qué bueno!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),3.81
+Vecina,laugh,audio/reacciones/Vecina/laugh_02.mp3,"[laughs] ¡Ja, ja, ja! [laughing] ¡Ay, qué bueno!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),4.28
+Vecina,cheer,audio/reacciones/Vecina/cheer_01.mp3,"[cheerfully] ¡Bravo! ¡Eso es! [laughs] ¡Bien!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),3.68
+Vecina,cheer,audio/reacciones/Vecina/cheer_02.mp3,"[cheerfully] ¡Bravo! ¡Eso es! [laughs] ¡Bien!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),3.6
+Vecina,gasp,audio/reacciones/Vecina/gasp_01.mp3,"[gasps] ¡Ah! [scared] ¡Ay, Dios mío!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),2.53
+Vecina,gasp,audio/reacciones/Vecina/gasp_02.mp3,"[gasps] ¡Ah! [scared] ¡Ay, Dios mío!",Cristina - Casual conversation (Eleven v4; 5 oct 2026),2.72
+Vecina,sigh,audio/reacciones/Vecina/sigh_01.mp3,"[sighs] Ay… [sadly] qué pena…",Cristina - Casual conversation (Eleven v4; 5 oct 2026),2.4
+Vecina,sigh,audio/reacciones/Vecina/sigh_02.mp3,"[sighs] Ay… [sadly] qué pena…",Cristina - Casual conversation (Eleven v4; 5 oct 2026),2.32

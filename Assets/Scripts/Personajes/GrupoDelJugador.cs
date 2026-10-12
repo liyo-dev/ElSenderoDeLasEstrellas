@@ -8,7 +8,13 @@ using UnityEngine;
 [DefaultExecutionOrder(-900)]
 public sealed class GrupoDelJugador : MonoBehaviour
 {
-    private void Awake() => PlayerService.RegistrarGrupo(gameObject);
+    private void Awake()
+    {
+        PlayerService.RegistrarGrupo(gameObject);
+        // Vida, maná y caídas de cada personaje (INC-717): si el prefab aún no lo trae, se pone aquí.
+        if (GetComponent<SaludDelGrupo>() == null) gameObject.AddComponent<SaludDelGrupo>();
+        if (GetComponent<ReanimarManteniendoA>() == null) gameObject.AddComponent<ReanimarManteniendoA>();
+    }
 
     private void OnDestroy() => PlayerService.QuitarGrupo(gameObject);
 }

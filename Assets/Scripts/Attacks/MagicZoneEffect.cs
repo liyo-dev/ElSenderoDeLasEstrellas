@@ -40,6 +40,7 @@ public class MagicZoneEffect : MonoBehaviour
         public float groupShieldFactor;
         public GameObject groupShieldVFX;
         public float teamGaugeGain;       // tramos de carga de equipo al curar/proteger (una vez)
+        public MagicElement element;      // para las piezas del mundo que reaccionan a la magia
     }
 
     readonly List<GrupoCercano.Miembro> _grupo = new List<GrupoCercano.Miembro>(3);
@@ -52,6 +53,8 @@ public class MagicZoneEffect : MonoBehaviour
 
     // Buffer reutilizable para no generar basura en cada tick (mismo criterio que MagicProjectile).
     readonly Collider[] _hitBuffer = new Collider[32];
+    // Piezas del mundo ya avisadas por esta zona (se avisa una vez, no en cada tick).
+    readonly HashSet<Component> _piezasAvisadas = new HashSet<Component>();
 
     /// <summary>Inyecta la configuración de la zona y quién la lanzó. Llamar justo tras instanciar.</summary>
     public void Configure(in ZoneConfig cfg, GameObject instigator)
@@ -59,6 +62,7 @@ public class MagicZoneEffect : MonoBehaviour
         _cfg = cfg;
         _instigator = instigator;
         _configured = true;
+        _piezasAvisadas.Clear();
     }
 
     void OnEnable()
@@ -101,6 +105,9 @@ public class MagicZoneEffect : MonoBehaviour
         {
             var col = _hitBuffer[i];
             if (!col) continue;
+
+            // Piezas del mundo (cristales, lo que arde…): antes del filtro de capas de daño.
+            ReaccionesAMagia.NotificarUnaVez(col, new ImpactoDeMagia(_cfg.element, col.bounds.ClosestPoint(transform.position), _instigator, false), _piezasAvisadas);
 
             // Mismo filtro que la rama AOE de MagicProjectile: solo se aplica si hitLayers está
             // explícitamente configurado (!= 0); si se deja vacío no se filtra por capa.
@@ -148,6 +155,9 @@ public class MagicZoneEffect : MonoBehaviour
         bool heal = _cfg.healPerTick > 0f;
         bool shield = _cfg.groupShieldSeconds > 0f && !_shieldDone;
         if (!heal && !shield) return;
+
+        // La magia que cura (Brisa Sanadora) también levanta a los caídos de su zona (INC-717).
+        if (heal) SaludDelGrupo.LevantarEnZona(transform.position, _cfg.radius);
 
         GrupoCercano.Buscar(transform.position, _cfg.radius, _grupo);
         bool helped = false;

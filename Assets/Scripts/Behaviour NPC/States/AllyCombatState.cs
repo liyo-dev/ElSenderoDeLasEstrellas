@@ -789,6 +789,14 @@ namespace Game.NPC.States
         /// </summary>
         private void StartCasting(NPCStateContext context, MagicSpellSO spell)
         {
+            // Cada personaje tiene su maná: sin maná no lanza y lo vuelve a intentar en un rato (INC-717).
+            if (!SaludDelGrupo.GastarManaDe(context.Transform.gameObject, spell.manaCost))
+            {
+                _attackCooldown = DEFAULT_ATTACK_COOLDOWN;
+                _lastAttackTime = Time.time;
+                return;
+            }
+
             _pendingSpell = spell;
             _isCasting = true;
             

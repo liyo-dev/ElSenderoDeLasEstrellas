@@ -239,14 +239,9 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     {
         if (slot == active) return magicCaster != null ? magicCaster.Body : null;
 
-        if (slot == Slot.Will)
-        {
-            var will = ActiveCharacterSwapper.Instance != null ? ActiveCharacterSwapper.Instance.WillNpcInstance : null;
-            return will != null && will.isActiveAndEnabled ? will.transform : null;
-        }
-
-        var party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
-        var member = party != null ? party.GetMemberByName(slot == Slot.Liam ? "Liam" : "Estela") : null;
+        // Un compañero caído no se une a dúos ni al trío (INC-717).
+        if (SaludDelGrupo.EstaCaido(slot)) return null;
+        var member = ControlDelJugador.NpcDe(slot);
         return member != null && member.isActiveAndEnabled ? member.transform : null;
     }
 

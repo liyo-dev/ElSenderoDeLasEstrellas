@@ -62,6 +62,7 @@ public static class InformeDeVictoriaBuilder
         var raiz = Construir(avisos);
         try
         {
+            PildorasProporcionadasBuilder.AplicarEn(raiz, PrefabPath, null);
             PrefabUtility.SaveAsPrefabAsset(raiz, PrefabPath);
             log.AppendLine("   Prefab: " + PrefabPath);
         }
@@ -243,7 +244,8 @@ public static class InformeDeVictoriaBuilder
             var chapa = Imagen("Cantidad", hueco, Cargar(Arte + "pastilla.png", avisos), new Color32(0x2A, 0x23, 0x50, 0xFF), Image.Type.Sliced, new Vector2(32f, -14f), new Vector2(62f, 30f));
             var cantidad = Texto("Texto", chapa.rectTransform, _gruesa, 20f, Color.white, TextAlignmentOptions.Center, Vector2.zero, Vector2.zero);
             Estirar(cantidad.rectTransform);
-            var nombre = Texto("Nombre", hueco, _normal, 18f, Suave, TextAlignmentOptions.Center, new Vector2(0f, -52f), new Vector2(150f, 26f));
+            var nombre = Texto("Nombre", hueco, _normal, 18f, Suave, TextAlignmentOptions.Center, new Vector2(0f, -52f), new Vector2(150f, 26f),
+                ancla: new Vector2(0.5f, 0.5f));
             huecos.Add((hueco, icono, cantidad, nombre));
         }
 

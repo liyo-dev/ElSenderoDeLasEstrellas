@@ -16,8 +16,20 @@ namespace ElSendero.Editor.Iconos
         public float margen = 0.12f;
         public float yaw = 20f;
         public float pitch = 8f;
+        [Tooltip("Coloca la cámara en el lado de la pieza que da hacia fuera del cuerpo (una capa se ve por la espalda aunque la pieza esté girada en el modelo). Si la pieza está centrada sobre el cuerpo, usa yaw.")]
+        public bool mirarDesdeFuera;
+        [Tooltip("Giro que se suma a la dirección de fuera, para un 3/4 suave.")]
+        public float giroExtra;
         public int grosorContorno = 6;
         public Color colorContorno = new Color(43f / 255f, 30f / 255f, 22f / 255f, 1f);
+        [Tooltip("Fotografía el esqueleto en la pose que tiene el origen (p. ej. una animación muestreada) en vez de en la pose de bind.")]
+        public bool poseDelOrigen;
+        [Tooltip("Encuadra solo esta fracción del alto, desde arriba (0 = todo). Para retratos: cabeza y pecho.")]
+        [Range(0f, 1f)] public float alturaDesdeArriba;
+        /// Encuadre que se usa en vez de calcularlo (mismo encuadre para varias fotos del mismo modelo).
+        [NonSerialized] public Bounds? encuadre;
+        /// Encuadre que ha usado la última fotografía hecha con estos ajustes.
+        [NonSerialized] public Bounds encuadreUsado;
     }
 
     /// <summary>Fotografía geometría sin instanciar comportamientos del objeto de origen.</summary>
@@ -51,6 +63,14 @@ namespace ElSendero.Editor.Iconos
                 RenderSettings.reflectionIntensity = 0f;
                 var mapa = new Dictionary<Transform, Transform>();
                 CopiarJerarquia(raiz.transform, null, escena, mapa);
+                if (ajustes.poseDelOrigen) mapa[raiz.transform].rotation = raiz.transform.rotation;
+                // El prefab guarda los huesos en una pose cualquiera; las piezas se fotografían en
+                // la pose en que se modelaron (la de bind), donde todas encajan entre sí.
+                _puestos.Clear();
+                if (!ajustes.poseDelOrigen)
+                foreach (var piel in raiz.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                    if (piel.sharedMesh != null && mapa.TryGetValue(piel.transform, out var copiaPiel))
+                        PonerEnPoseDeBind(piel.sharedMesh.bindposes, Copias(piel.bones, mapa), copiaPiel, soloSinPoner: true);
                 var renderers = new List<Renderer>();
                 foreach (var original in raiz.GetComponentsInChildren<Renderer>(true))
                 {
@@ -74,6 +94,8 @@ namespace ElSendero.Editor.Iconos
                         for (int i = 0; i < piel.sharedMesh.blendShapeCount; i++) temporal.SetBlendShapeWeight(i, piel.GetBlendShapeWeight(i));
                         malla = new Mesh { hideFlags = HideFlags.HideAndDontSave };
                         mallas.Add(malla);
+                        if (!ajustes.poseDelOrigen)
+                            PonerEnPoseDeBind(piel.sharedMesh.bindposes, nuevos, copia.transform, soloSinPoner: false);
                         temporal.BakeMesh(malla, false);
                         UnityEngine.Object.DestroyImmediate(temporal);
                     }
@@ -92,6 +114,14 @@ namespace ElSendero.Editor.Iconos
                 if (renderers.Count == 0) throw new InvalidOperationException("No hay mallas fotografiables en la selección.");
                 var bounds = renderers[0].bounds;
                 foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
+                if (ajustes.encuadre.HasValue) bounds = ajustes.encuadre.Value;
+                else if (ajustes.alturaDesdeArriba > 0f && ajustes.alturaDesdeArriba < 1f)
+                {
+                    var min = bounds.min;
+                    min.y = bounds.max.y - bounds.size.y * ajustes.alturaDesdeArriba;
+                    bounds.SetMinMax(min, bounds.max);
+                }
+                ajustes.encuadreUsado = bounds;
                 var camara = CrearObjeto("Cámara de iconos", escena).AddComponent<Camera>();
                 camara.enabled = false;
                 camara.scene = escena;
@@ -109,7 +139,8 @@ namespace ElSendero.Editor.Iconos
                 datos.requiresDepthOption = CameraOverrideOption.Off;
                 datos.volumeLayerMask = 0;
                 // El ángulo describe desde dónde se mira: cero muestra el frente (+Z).
-                var vista = Quaternion.Euler(ajustes.pitch, ajustes.yaw + 180f, 0f);
+                float yaw = ajustes.mirarDesdeFuera ? GiroDesdeFuera(mapa.Values, bounds, ajustes) : ajustes.yaw;
+                var vista = Quaternion.Euler(ajustes.pitch, yaw + 180f, 0f);
                 float radio = Mathf.Max(bounds.size.magnitude, 0.01f);
                 camara.transform.SetPositionAndRotation(bounds.center - vista * Vector3.forward * (radio * 2f), vista);
                 float extension = 0f;
@@ -190,6 +221,41 @@ namespace ElSendero.Editor.Iconos
             return objeto;
         }
 
+        static readonly HashSet<Transform> _puestos = new HashSet<Transform>();
+
+        static Transform[] Copias(Transform[] huesos, Dictionary<Transform, Transform> mapa)
+        {
+            var copias = new Transform[huesos.Length];
+            for (int i = 0; i < huesos.Length; i++)
+                if (huesos[i] != null) mapa.TryGetValue(huesos[i], out copias[i]);
+            return copias;
+        }
+
+        /// Coloca los huesos donde estaban al enlazar la malla (bindposes), de padre a hijo.
+        /// soloSinPoner: no mueve huesos que ya colocó otra malla (pose común de todo el esqueleto).
+        static void PonerEnPoseDeBind(Matrix4x4[] bindposes, Transform[] huesos, Transform renderer, bool soloSinPoner)
+        {
+            if (bindposes == null || huesos == null) return;
+            var mundo = renderer.localToWorldMatrix;
+            int n = Mathf.Min(bindposes.Length, huesos.Length);
+            var orden = new List<int>(n);
+            for (int i = 0; i < n; i++) if (huesos[i] != null) orden.Add(i);
+            orden.Sort((a, b) => Profundidad(huesos[a]).CompareTo(Profundidad(huesos[b])));
+            foreach (int i in orden)
+            {
+                if (soloSinPoner && !_puestos.Add(huesos[i])) continue;
+                var m = mundo * bindposes[i].inverse;
+                huesos[i].SetPositionAndRotation(m.GetColumn(3), m.rotation);
+            }
+        }
+
+        static int Profundidad(Transform t)
+        {
+            int d = 0;
+            for (; t != null; t = t.parent) d++;
+            return d;
+        }
+
         static void CopiarJerarquia(Transform origen, Transform padre, Scene escena, Dictionary<Transform, Transform> mapa)
         {
             var copia = CrearObjeto(origen.name, escena).transform;
@@ -199,6 +265,29 @@ namespace ElSendero.Editor.Iconos
             copia.localScale = origen.localScale;
             mapa.Add(origen, copia);
             foreach (Transform hijo in origen) CopiarJerarquia(hijo, copia, escena, mapa);
+        }
+
+        /// Dirección horizontal del centro del esqueleto al centro de la pieza, como giro de cámara
+        /// (0 = cámara en +Z). Si la pieza queda casi sobre el eje del cuerpo, el giro configurado.
+        static float GiroDesdeFuera(IEnumerable<Transform> esqueleto, Bounds pieza, AjustesDeFoto ajustes)
+        {
+            var suma = Vector3.zero;
+            int n = 0;
+            var extension = new Bounds();
+            foreach (var t in esqueleto)
+            {
+                if (t == null) continue;
+                if (n == 0) extension = new Bounds(t.position, Vector3.zero);
+                else extension.Encapsulate(t.position);
+                suma += t.position;
+                n++;
+            }
+            if (n == 0) return ajustes.yaw;
+            var fuera = pieza.center - suma / n;
+            fuera.y = 0f;
+            float tamano = Mathf.Max(extension.size.x, extension.size.y, extension.size.z, 0.01f);
+            if (fuera.magnitude < tamano * 0.05f) return ajustes.yaw;
+            return Mathf.Atan2(fuera.x, fuera.z) * Mathf.Rad2Deg + ajustes.giroExtra;
         }
 
         static void CrearLuz(Scene escena, Quaternion rotacion, float intensidad)

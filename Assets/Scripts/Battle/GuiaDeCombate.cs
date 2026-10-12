@@ -65,6 +65,10 @@ public sealed class GuiaDeCombate : MonoBehaviour
     {
         AvisosDeCombate.AlGolpeMalDado += AlGolpeMalDado;
         AvisosDeCombate.AlPedirseRemate += AlPedirseRemate;
+        AvisosDeCombate.AlFortalecerse += AlFortalecerse;
+        AvisosDeCombate.AlQuedarAtrapado += AlQuedarAtrapado;
+        AvisosDeCombate.AlRomperseDefensa += AlRomperseDefensa;
+        AvisosDeCombate.AlRecomponerseDefensa += AlRecomponerseDefensa;
         OrbDropper.AlSoltarOrbes += AlSoltarOrbes;
     }
 
@@ -73,6 +77,10 @@ public sealed class GuiaDeCombate : MonoBehaviour
         Parar();
         AvisosDeCombate.AlGolpeMalDado -= AlGolpeMalDado;
         AvisosDeCombate.AlPedirseRemate -= AlPedirseRemate;
+        AvisosDeCombate.AlFortalecerse -= AlFortalecerse;
+        AvisosDeCombate.AlQuedarAtrapado -= AlQuedarAtrapado;
+        AvisosDeCombate.AlRomperseDefensa -= AlRomperseDefensa;
+        AvisosDeCombate.AlRecomponerseDefensa -= AlRecomponerseDefensa;
         OrbDropper.AlSoltarOrbes -= AlSoltarOrbes;
     }
 
@@ -297,6 +305,26 @@ public sealed class GuiaDeCombate : MonoBehaviour
     private void AlPedirseRemate(GameObject jefe)
     {
         if (jefe == _jefe) Ocurre(MomentoDeCombate.SePideRemate);
+    }
+
+    private void AlFortalecerse(GameObject jefe)
+    {
+        if (jefe == _jefe) Ocurre(MomentoDeCombate.JefeSeFortalece);
+    }
+
+    private void AlQuedarAtrapado(GameObject jefe)
+    {
+        if (jefe == _jefe) Ocurre(MomentoDeCombate.JefeAtrapado);
+    }
+
+    private void AlRomperseDefensa(GameObject jefe)
+    {
+        if (jefe == _jefe) Ocurre(MomentoDeCombate.DefensaRota);
+    }
+
+    private void AlRecomponerseDefensa(GameObject jefe)
+    {
+        if (jefe == _jefe) Ocurre(MomentoDeCombate.DefensaRecompuesta);
     }
 
     private void AlSoltarOrbes(OrbDropper _, OrbType tipo)

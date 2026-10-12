@@ -1,6 +1,42 @@
 {
     "texts": [
         {
+            "key": "STAT_EFECTO_ATAQUE_MAS",
+            "value": "Tus hechizos hacen un {0} % más de daño"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_MENOS",
+            "value": "Tus hechizos hacen un {0} % menos de daño"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_NORMAL",
+            "value": "Tus hechizos hacen su daño normal"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA",
+            "value": "Recibes un {0} % menos de daño"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_NORMAL",
+            "value": "Recibes el daño normal"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO",
+            "value": "Daño {0} %"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO_NORMAL",
+            "value": "Daño normal"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO",
+            "value": "Daño recibido -{0} %"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO_NORMAL",
+            "value": "Daño recibido normal"
+        },
+        {
             "key": "SHOP_IF_EQUIPPED",
             "value": "Si te la equipas:"
         },
@@ -889,6 +925,18 @@
             "value": "Poción de vida"
         },
         {
+            "key": "ITEM_PLUMAESTELAR_NAME",
+            "value": "Pluma estelar"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_NAME_PLURAL",
+            "value": "Plumas estelares"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_DESC",
+            "value": "Una pluma que brilla como una estrella fugaz. Levanta al compañero caído más cercano con la mitad de su vida."
+        },
+        {
             "key": "MainMenu_BugReport",
             "value": "Reportar un Fallo"
         },
@@ -1086,7 +1134,7 @@
         },
         {
             "key": "SHOP_PRICE_LABEL",
-            "value": "Precio: {0} {1}"
+            "value": "Precio: {0}"
         },
         {
             "key": "SHOP_PURCHASE_FAILED",
@@ -1897,10 +1945,6 @@
             "value": "Fuego"
         },
         {
-            "key": "ELEMENT_ICE",
-            "value": "Hielo"
-        },
-        {
             "key": "ELEMENT_STORM",
             "value": "Viento"
         },
@@ -1979,6 +2023,155 @@
         {
             "key": "GAME_OVER_MENSAJE",
             "value": "Has caído. ¿Continuar desde el último punto de guardado?"
+        },
+        {
+            "key": "REQUISITO_FALTA_FLY",
+            "value": "Necesitas volar para llegar aquí."
+        },
+        {
+            "key": "REQUISITO_FALTA_SWIM",
+            "value": "Necesitas saber nadar para seguir por aquí."
+        },
+        {
+            "key": "REQUISITO_FALTA_JUMP",
+            "value": "Necesitas saber saltar para pasar por aquí."
+        },
+        {
+            "key": "REQUISITO_FALTA_CLIMB",
+            "value": "Necesitas saber trepar para subir aquí."
+        },
+        {
+            "key": "REQUISITO_FALTA_MAGIC",
+            "value": "Aquí hace falta magia."
+        },
+        {
+            "key": "REQUISITO_FALTA_SPRINT",
+            "value": "Necesitas correr para llegar a tiempo."
+        },
+        {
+            "key": "REQUISITO_FALTA_SHIELD",
+            "value": "Necesitas el escudo para pasar por aquí."
+        },
+        {
+            "key": "REQUISITO_FALTA_ALGO",
+            "value": "Todavía te falta algo para pasar por aquí."
+        },
+        {
+            "key": "ZONA_SIN_VUELO_AVISO",
+            "value": "Una magia antigua te impide volar aquí."
+        },
+        {
+            "key": "HUD_RETRATO_KO",
+            "value": "K.O."
+        },
+        {
+            "key": "HUD_TRIO_LISTO",
+            "value": "¡TRÍO LISTO!"
+        },
+        {
+            "key": "SPELL_AMANECER_NAME",
+            "value": "Amanecer"
+        },
+        {
+            "key": "SPELL_AMANECER_LORE",
+            "value": "Una luz que no existía cuando él pidió su deseo."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_01",
+            "value": "¡Para! ¡El fuego de frente le da fuerza! Mira cómo crece."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_02",
+            "value": "¡Otra vez fuego por delante! Así solo le haces más grande."
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_PISTA",
+            "value": "Y si lo llevamos al barro del arroyo, se hundirá. ¡Que te persiga hasta allí!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_01",
+            "value": "¡Se ha hundido en el barro! ¡Ahora, dale por donde sea!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_02",
+            "value": "¡Atascado otra vez! ¡Aprovecha!"
+        },
+        {
+            "key": "JEFES_GOLEM_RECUERDA_BARRO",
+            "value": "¡Llévalo al barro, Will! Ahí no puede con su peso."
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_01",
+            "value": "¡Ese aro tiene tres runas! Naranja, azul y verde... ¡una por cada uno de nosotros!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_02",
+            "value": "Cada runa solo cede ante uno de nosotros. ¡Hay que turnarse: cambia de personaje y rompámoslas las tres!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RUNA_ROTA",
+            "value": "¡Una menos! ¡Ahora otro de nosotros!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_YA_ROTA",
+            "value": "Esa runa ya está rota. ¡Cambia de personaje!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_EXPUESTO",
+            "value": "¡Sin aro! ¡Ahora, todos a por él!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECOMPUESTO",
+            "value": "¡El aro se ha vuelto a cerrar! Otra vez, una runa cada uno."
+        },
+        {
+            "key": "JEFES_DEMONIO2_AIRE",
+            "value": "¡Se ha subido a las almenas! ¡Dale desde lejos o sube a por él!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_BAJA",
+            "value": "¡Ha bajado, y viene furioso! ¡Cuidado con las sombras!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECUERDA",
+            "value": "Mira de qué color es la runa que queda y cambia a quien le toca."
+        },
+        {"key":"CAP2_PUENTE_FALTAN_PIEZAS","value":"La tabla está rota. Hace falta una cuerda y unos clavos para arreglarla."},
+        {
+            "key": "REQUISITO_FALTA_OBJETO",
+            "value": "Te falta algo para esto: {0}."
+        },
+        {
+            "key": "REQUISITO_FALTA_HECHIZO",
+            "value": "Lo protege una magia que todavía no conoces."
+        },
+        {
+            "key": "TESORO_REGISTRO_TITULO",
+            "value": "Tesoros"
+        },
+        {
+            "key": "TESORO_REGISTRO_VACIO",
+            "value": "Aún no sabes de ningún tesoro."
+        },
+        {
+            "key": "TESORO_REGISTRO_FILA",
+            "value": "{0}: {1} / {2}"
+        },
+        {
+            "key": "TESORO_REGION_MUNDO",
+            "value": "El mundo"
+        },
+        {
+            "key": "TESORO_REGION_LAB",
+            "value": "Laboratorio"
+        },
+        {
+            "key": "TESORO_MAPA_LAB_NOMBRE",
+            "value": "Mapa del tesoro (LAB)"
+        },
+        {
+            "key": "TESORO_MAPA_LAB_DESC",
+            "value": "Marca dónde hay algo enterrado en la sala de tesoros del LAB. Míralo en el minimapa."
         }
     ]
 }

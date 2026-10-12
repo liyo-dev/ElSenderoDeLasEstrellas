@@ -700,7 +700,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 
     /// Mantiene una pose hasta que alguien diga lo contrario. Idempotente: pedir la pose que ya
     /// está puesta no la reinicia.
-    public void HoldPose(string stateName, int layer = -1, bool congelarAlFinal = false)
+    public void HoldPose(string stateName, int layer = -1, bool congelarAlFinal = false, float fundido = 0.12f)
     {
         if (string.IsNullOrEmpty(stateName) || animator == null || _currentState == AnimationState.Dead ||
             !isActiveAndEnabled || !gameObject.activeInHierarchy)
@@ -727,7 +727,7 @@ public class NPCSimpleAnimator : MonoBehaviour
 
         _poseSostenida = stateName;
         _congelarPoseAlFinal = congelarAlFinal;
-        _poseCoroutine = StartCoroutine(SostenerPose(stateName, layer));
+        _poseCoroutine = StartCoroutine(SostenerPose(stateName, layer, fundido));
     }
 
     /// Suelta la pose. Por defecto devuelve al personaje a su pose normal; con `aIdle` a false lo
@@ -753,13 +753,13 @@ public class NPCSimpleAnimator : MonoBehaviour
         _poseSostenida = null;
     }
 
-    private IEnumerator SostenerPose(string stateName, int layer)
+    private IEnumerator SostenerPose(string stateName, int layer, float fundido)
     {
         _currentState = AnimationState.OneShot;
         animator.speed = 1f;
         if (layer > 0 && layer < animator.layerCount) animator.SetLayerWeight(layer, 1f);
 
-        CrossFadeToState(stateName, 0.12f, layer);
+        CrossFadeToState(stateName, fundido, layer);
         yield return null;
 
         while (true)
@@ -1199,6 +1199,32 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
     }
     
+    [Tooltip("Animación de levantarse del suelo tras caer en combate (compañeros del grupo, INC-717). Vacío o inexistente = vuelve directamente a idle.")]
+    [SerializeField] private string getUpState = "GetUp_NoWeapon";
+
+    /// <summary>
+    /// Sale de la pose de muerte: se levanta y vuelve a su animación normal. Lo usan los
+    /// compañeros del grupo al ser reanimados (CuerpoDelGrupo, INC-717).
+    /// </summary>
+    public void Levantarse()
+    {
+        if (_currentState != AnimationState.Dead) return;
+        _currentState = AnimationState.Idle;
+
+        if (navAgent != null)
+        {
+            if (navAgent.isOnNavMesh) navAgent.Warp(transform.position);
+            navAgent.updatePosition = true;
+            navAgent.updateRotation = true;
+            if (navAgent.isOnNavMesh) navAgent.isStopped = false;
+        }
+
+        if (animator != null && !string.IsNullOrEmpty(getUpState) && animator.HasState(0, Animator.StringToHash(getUpState)))
+            PlayOneShot(getUpState);
+        else
+            TransitionToIdle();
+    }
+
     /// <summary>
     /// Reproduce animación de victoria
     /// </summary>

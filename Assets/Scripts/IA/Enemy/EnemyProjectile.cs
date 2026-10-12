@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
@@ -6,12 +6,14 @@ using System.Collections.Generic;
 /// </summary>
 [RequireComponent(typeof(SphereCollider))]
 [RequireComponent(typeof(Rigidbody))]
-public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
+public class EnemyProjectile : MonoBehaviour, IDevolvible
 {
     [Header("Configuración")]
     [SerializeField] private float speed = 15f;
     [SerializeField] private float lifetime = 5f;
     [SerializeField] private GameObject hitEffectPrefab;
+    [Tooltip("Segundos que vive el efecto de impacto (pool de VFX).")]
+    [SerializeField, Min(0.1f)] private float vidaDelImpacto = 2f;
 
     [Header("Daño")]
     [Tooltip("Daño usado cuando Initialize() recibe un valor negativo (ej: -1). Permite que el prefab defina su propio daño por defecto.")]
@@ -50,7 +52,19 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
         : direction * EffectiveSpeed;
     public TipoDeAmenaza TipoDeAmenaza => TipoDeAmenaza.Devolvible;
 
-    void OnEnable() => AmenazasAlJugador.Registrar(this);
+    public GameObject Lanzador { get; private set; }
+    public float DanoEntrante => damage;
+    public float VelocidadDeVuelo => EffectiveSpeed;
+    public void AsignarLanzador(GameObject lanzador) => Lanzador = lanzador;
+    public void Devolver(GameObject nuevoDueno, Transform objetivo, Vector3 direccionSiNoHayObjetivo, float dano)
+    {
+        if (!initialized || hasHit) return;
+        float velocidad = VelocidadDeAmenaza.magnitude;
+        hasHit = true;
+        var devuelto = GetComponent<ProyectilDevuelto>() ?? gameObject.AddComponent<ProyectilDevuelto>();
+        devuelto.TomarControl(this, nuevoDueno, objetivo, direccionSiNoHayObjetivo, velocidad, dano, hitEffectPrefab, Lanzador);
+    }
+    void OnEnable() { if (initialized && !hasHit) AmenazasAlJugador.Registrar(this); }
     void OnDisable() => AmenazasAlJugador.Quitar(this);
     private bool hasHit = false;
     private float _spawnTime;
@@ -69,8 +83,6 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
     private Vector3 _lastCheckedPosition;
     private bool _hasLastCheckedPosition;
 
-    // Pool estático para VFX de impacto — evita GC spikes cuando muchos proyectiles mueren a la vez
-    private static readonly Dictionary<EntityId, Stack<GameObject>> _hitFxPool = new Dictionary<EntityId, Stack<GameObject>>(4);
 
     // Layers cacheados en Awake para evitar string lookups en OnTriggerEnter
     private int _enemyLayer;
@@ -151,6 +163,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
         // PlayerHealthSystem.TakeDamage() lo descartaba (damageAmount <= 0f) y la roca no dañaba nunca.
         damage = dmg >= 0f ? dmg : baseDamage;
         initialized = true;
+        AmenazasAlJugador.Registrar(this);
         _spawnTime = Time.time;
         _hasLastCheckedPosition = false; // reinicia el sweep de proximidad (INC-027)
 
@@ -173,8 +186,10 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
         }
         
         // Destruir después del tiempo de vida
-        Destroy(gameObject, lifetime);
+        Invoke(nameof(Expirar), lifetime);
     }
+
+    private void Expirar() => Destroy(gameObject);
 
     /// <summary>
     /// FIX INC-082: permite que quien lanza el proyectil (GolemBossAI: rockSpeed/rockRainSpeed)
@@ -301,7 +316,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
     /// </summary>
     private void CheckPlayerProximity()
     {
-        if (hasHit) return;
+        if (!initialized || hasHit) return;
 
         const float detectionRadius = 0.8f;
         Vector3 currentPos = transform.position;
@@ -408,7 +423,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
     // ✅ OnTriggerEnter: PRINCIPAL - Para colisiones con triggers (jugador, obstáculos)
     void OnTriggerEnter(Collider other)
     {
-        if (hasHit) return;
+        if (!initialized || hasHit) return;
         // Grace period: ignorar colisiones inmediatas al spawnear (evita explotar dentro del lanzador)
         if (Time.time - _spawnTime < 0.15f) return;
 
@@ -480,7 +495,18 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
             return;
         }
 
-        // Aliados NPC del party: el proyectil los atraviesa sin dañarlos (solo el player recibe daño)
+        // Personajes del grupo que lleva la IA: tienen su propia vida (INC-717). Caídos, se atraviesan.
+        var cuerpoDelGrupo = other.GetComponentInParent<CuerpoDelGrupo>();
+        if (cuerpoDelGrupo != null)
+        {
+            if (!cuerpoDelGrupo.PuedeRecibirDano) return;
+            hasHit = true;
+            cuerpoDelGrupo.RecibirGolpe(damage, gameObject);
+            DestroyProjectile();
+            return;
+        }
+
+        // Otros NPCs del party sin vida propia: el proyectil los atraviesa sin dañarlos
         var partyMember = other.GetComponentInParent<Game.NPC.NPCPartyMember>();
         if (partyMember != null && partyMember.IsInParty)
             return;
@@ -531,7 +557,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
     // OnCollisionEnter: Fallback para colisiones físicas (si el collider NO es trigger)
     void OnCollisionEnter(Collision collision)
     {
-        if (hasHit) return;
+        if (!initialized || hasHit) return;
         if (Time.time - _spawnTime < 0.15f) return;
 
         Collider other = collision.collider;
@@ -614,56 +640,7 @@ public class EnemyProjectile : MonoBehaviour, IAmenazaEntrante
 
     private void SpawnHitEffect()
     {
-        if (!hitEffectPrefab) return;
-
-        EntityId id = hitEffectPrefab.GetEntityId();
-        if (!_hitFxPool.TryGetValue(id, out var stack))
-            _hitFxPool[id] = stack = new Stack<GameObject>(8);
-
-        GameObject fx;
-        if (stack.Count > 0 && (fx = stack.Pop()) != null)
-        {
-            fx.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
-            fx.SetActive(true);
-        }
-        else
-        {
-            fx = Instantiate(hitEffectPrefab, transform.position, Quaternion.identity);
-        }
-
-        var returner = fx.GetComponent<HitFxAutoReturn>();
-        if (returner == null) returner = fx.AddComponent<HitFxAutoReturn>();
-        returner.Init(id, 2f);
-    }
-
-    // Devuelve el VFX de impacto al pool estático tras reproducirse
-    private sealed class HitFxAutoReturn : MonoBehaviour
-    {
-        private EntityId _poolKey;
-
-        public void Init(EntityId key, float delay)
-        {
-            _poolKey = key;
-            CancelInvoke(nameof(ReturnToPool));
-            Invoke(nameof(ReturnToPool), delay);
-        }
-
-        private void ReturnToPool()
-        {
-            if (!_hitFxPool.TryGetValue(_poolKey, out var stack))
-            {
-                Destroy(gameObject);
-                return;
-            }
-            if (stack.Count < 8)
-            {
-                gameObject.SetActive(false);
-                stack.Push(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-        }
+        if (hitEffectPrefab != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(hitEffectPrefab, transform.position, Quaternion.identity, vidaDelImpacto);
     }
 }

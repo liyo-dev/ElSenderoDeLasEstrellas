@@ -7,7 +7,8 @@ public enum PickupEffectType
     HealthRestore,
     SpecialCharge,
     AddToInventory, // Añade el item al inventario del jugador (para items de historia/quest)
-    UnlockWardrobeItem
+    UnlockWardrobeItem,
+    Revivir // Levanta al compañero caído más cercano; 'amount' = parte de su vida (0..1, 0 = la de por defecto). INC-717
 }
 
 /// <summary>

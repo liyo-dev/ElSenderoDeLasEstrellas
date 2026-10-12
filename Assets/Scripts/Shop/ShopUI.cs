@@ -11,7 +11,7 @@ using UnityEngine.InputSystem;
 
 /// <summary>
 /// UI genérica para tiendas. Se conecta a un ShopController y muestra sus items.
-/// Reutilizable para múltiples tiendas.
+/// Reutilizable para múltiples tiendas; explica en palabras el efecto de las estadísticas al equiparse.
 /// </summary>
 public class ShopUI : MonoBehaviour
 {
@@ -36,6 +36,8 @@ public class ShopUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI detailName;
     [SerializeField] private TextMeshProUGUI detailDescription;
     [SerializeField] private TextMeshProUGUI detailPrice;
+    [Tooltip("Icono junto al precio: toma el icono de la moneda de la tienda.")]
+    [SerializeField] private Image detailPriceCurrencyIcon;
     [SerializeField] private TextMeshProUGUI detailStock;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button sellButton;
@@ -455,13 +457,16 @@ public class ShopUI : MonoBehaviour
         var pieza = _selectedEntry.item.wardrobeUnlock;
         if (pieza != null && !pieza.Bonos.EsCero && _selectedEntry.item.usageKind != ItemData.ItemUsageKind.Consumable)
         {
-            string comparacion = TextoDeEstadisticas.Comparacion(
-                EstadisticasDelPersonaje.Total, EstadisticasDelPersonaje.TotalSiSeEquipa(pieza));
+            var total = EstadisticasDelPersonaje.Total;
+            var equipado = EstadisticasDelPersonaje.TotalSiSeEquipa(pieza);
+            string comparacion = TextoDeEstadisticas.Comparacion(total, equipado);
             if (!string.IsNullOrEmpty(comparacion))
             {
                 string titulo = LocalizationManager.Instance != null
                     ? LocalizationManager.Instance.Get("SHOP_IF_EQUIPPED", "Si te la equipas:") : "Si te la equipas:";
                 descripcion += "\n\n" + titulo + "\n" + comparacion;
+                string efectos = TextoDeEstadisticas.Efectos(total, equipado);
+                if (!string.IsNullOrEmpty(efectos)) descripcion += "\n" + efectos;
             }
         }
         detailDescription.richText = true;
@@ -636,10 +641,17 @@ public class ShopUI : MonoBehaviour
         {
             int price = _selectedEntry.GetBuyPrice();
             var moneda = shopController != null ? shopController.CurrencyItem : null;
+            // La moneda la dice el icono de al lado; {1} (su nombre) sigue disponible para otros idiomas.
             string priceFormat = LocalizationManager.Instance != null
-                ? LocalizationManager.Instance.Get("SHOP_PRICE_LABEL", "Precio: {0} {1}")
-                : "Precio: {0} {1}";
+                ? LocalizationManager.Instance.Get("SHOP_PRICE_LABEL", "Precio: {0}")
+                : "Precio: {0}";
             detailPrice.text = string.Format(priceFormat, price, moneda != null ? moneda.GetLocalizedName(price) : "").TrimEnd();
+        }
+
+        if (detailPriceCurrencyIcon != null)
+        {
+            var moneda = shopController != null ? shopController.CurrencyItem : null;
+            if (moneda != null && moneda.icon != null) detailPriceCurrencyIcon.sprite = moneda.icon;
         }
 
         if (detailStock != null)

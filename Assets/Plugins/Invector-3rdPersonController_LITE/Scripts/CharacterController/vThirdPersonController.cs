@@ -369,6 +369,29 @@ namespace Invector.vCharacterController
             OnUpperBodyActionEnded?.Invoke();
         }
 
+        // ========================= Pose en el aire de la capa base =========================
+
+        /// <summary>
+        /// Sostiene una pose en el aire de la capa base incluso con el personaje en el suelo,
+        /// como en el combo mágico. Mantiene IsGrounded del Animator a false para evitar aterrizar.
+        /// </summary>
+        public void HoldAirbornePose(string stateName, float crossfade = 0.1f)
+        {
+            if (animator == null || string.IsNullOrEmpty(stateName)) return;
+            holdingAirbornePose = true;
+            animator.SetBool(vAnimatorParameters.IsGrounded, false);
+            animator.CrossFadeInFixedTime(stateName, crossfade, 0);
+        }
+
+        /// <summary>
+        /// Suelta la pose en el aire: UpdateAnimator vuelve a escribir IsGrounded real y el propio
+        /// Animator hace la salida al aterrizar, sin forzar otro estado de la capa base.
+        /// </summary>
+        public void ReleaseAirbornePose()
+        {
+            holdingAirbornePose = false;
+        }
+
         // ========================= Ciclo de vida =========================
         private void Start()
         {

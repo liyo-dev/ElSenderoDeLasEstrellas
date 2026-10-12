@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Componente para objetos que pueden ser destruidos con elementos mágicos (fuego, hielo, etc.).
+/// Componente para objetos que pueden ser destruidos con los elementos mágicos aceptados.
 /// Puede quemar objetos adicionales en cadena o destruir solo los hijos con mesh.
 /// Añadir al GameObject con su Collider.
 /// </summary>
 [RequireComponent(typeof(Collider))]
-public class Burnable : MonoBehaviour
+public class Burnable : MonoBehaviour, IReaccionaAMagia
 {
     [Header("Configuración")]
     [Tooltip("Elementos que pueden destruir este objeto (normalmente solo Fire)")]
@@ -64,8 +64,11 @@ public class Burnable : MonoBehaviour
     [Tooltip("Si es true, este objeto ya fue quemado")]
     [SerializeField] private bool isBurned;
 
+    /// <summary>Entrada común de la magia (proyectiles, zonas y bolas devueltas).</summary>
+    public void RecibirMagia(in ImpactoDeMagia impacto) => OnHitByMagic(impacto.Elemento, impacto.Punto);
+
     /// <summary>
-    /// Llamado cuando un proyectil mágico impacta este objeto
+    /// Quema el objeto si el elemento es aceptado (también lo usa la quema en cadena).
     /// </summary>
     public void OnHitByMagic(MagicElement element, Vector3 hitPoint)
     {
@@ -265,4 +268,3 @@ public class Burnable : MonoBehaviour
     }
     #endif
 }
-

@@ -1,6 +1,42 @@
 {
     "texts": [
         {
+            "key": "STAT_EFECTO_ATAQUE_MAS",
+            "value": "Your spells deal {0} % more damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_MENOS",
+            "value": "Your spells deal {0} % less damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_NORMAL",
+            "value": "Your spells deal normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA",
+            "value": "You take {0} % less damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_NORMAL",
+            "value": "You take normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO",
+            "value": "Damage {0} %"
+        },
+        {
+            "key": "STAT_EFECTO_ATAQUE_CORTO_NORMAL",
+            "value": "Normal damage"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO",
+            "value": "Damage taken -{0} %"
+        },
+        {
+            "key": "STAT_EFECTO_DEFENSA_CORTO_NORMAL",
+            "value": "Normal damage taken"
+        },
+        {
             "key": "SHOP_IF_EQUIPPED",
             "value": "If equipped:"
         },
@@ -889,6 +925,18 @@
             "value": "Health Potion"
         },
         {
+            "key": "ITEM_PLUMAESTELAR_NAME",
+            "value": "Star Feather"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_NAME_PLURAL",
+            "value": "Star Feathers"
+        },
+        {
+            "key": "ITEM_PLUMAESTELAR_DESC",
+            "value": "A feather that shines like a shooting star. Revives the nearest fallen companion with half their health."
+        },
+        {
             "key": "MainMenu_BugReport",
             "value": "Bug Report"
         },
@@ -1086,7 +1134,7 @@
         },
         {
             "key": "SHOP_PRICE_LABEL",
-            "value": "Price: {0} {1}"
+            "value": "Price: {0}"
         },
         {
             "key": "SHOP_PURCHASE_FAILED",
@@ -1897,10 +1945,6 @@
             "value": "Fire"
         },
         {
-            "key": "ELEMENT_ICE",
-            "value": "Ice"
-        },
-        {
             "key": "ELEMENT_STORM",
             "value": "Wind"
         },
@@ -1979,6 +2023,155 @@
         {
             "key": "GAME_OVER_MENSAJE",
             "value": "You have fallen. Continue from the last save point?"
+        },
+        {
+            "key": "REQUISITO_FALTA_FLY",
+            "value": "You need to fly to get here."
+        },
+        {
+            "key": "REQUISITO_FALTA_SWIM",
+            "value": "You need to know how to swim to go this way."
+        },
+        {
+            "key": "REQUISITO_FALTA_JUMP",
+            "value": "You need to know how to jump to get past here."
+        },
+        {
+            "key": "REQUISITO_FALTA_CLIMB",
+            "value": "You need to know how to climb to get up here."
+        },
+        {
+            "key": "REQUISITO_FALTA_MAGIC",
+            "value": "You need magic here."
+        },
+        {
+            "key": "REQUISITO_FALTA_SPRINT",
+            "value": "You need to run to make it in time."
+        },
+        {
+            "key": "REQUISITO_FALTA_SHIELD",
+            "value": "You need the shield to get past here."
+        },
+        {
+            "key": "REQUISITO_FALTA_ALGO",
+            "value": "You're still missing something to get past here."
+        },
+        {
+            "key": "ZONA_SIN_VUELO_AVISO",
+            "value": "An ancient magic keeps you from flying here."
+        },
+        {
+            "key": "HUD_RETRATO_KO",
+            "value": "K.O."
+        },
+        {
+            "key": "HUD_TRIO_LISTO",
+            "value": "TRIO READY!"
+        },
+        {
+            "key": "SPELL_AMANECER_NAME",
+            "value": "Dawn"
+        },
+        {
+            "key": "SPELL_AMANECER_LORE",
+            "value": "A light that did not exist when he made his wish."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_01",
+            "value": "Stop! Fire to its face makes it stronger! Look how it grows."
+        },
+        {
+            "key": "JEFES_GOLEM_FUEGO_02",
+            "value": "Fire from the front again! You're only making it bigger."
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_PISTA",
+            "value": "And if we lure it into the mud by the stream, it'll sink. Make it chase you there!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_01",
+            "value": "It's sunk into the mud! Now, hit it anywhere!"
+        },
+        {
+            "key": "JEFES_GOLEM_BARRO_02",
+            "value": "Stuck again! Go for it!"
+        },
+        {
+            "key": "JEFES_GOLEM_RECUERDA_BARRO",
+            "value": "Lead it into the mud, Will! It can't carry its own weight there."
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_01",
+            "value": "That ring has three runes! Orange, blue and green... one for each of us!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_INICIO_02",
+            "value": "Each rune only yields to one of us. We have to take turns: switch character and let's break all three!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RUNA_ROTA",
+            "value": "One down! Now one of the others!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_YA_ROTA",
+            "value": "That rune's already broken. Switch character!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_EXPUESTO",
+            "value": "No ring! Now, everyone at it!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECOMPUESTO",
+            "value": "The ring has closed again! Once more, one rune each."
+        },
+        {
+            "key": "JEFES_DEMONIO2_AIRE",
+            "value": "It's up on the battlements! Hit it from afar or climb up after it!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_BAJA",
+            "value": "It's come down, and it's furious! Watch out for the shadows!"
+        },
+        {
+            "key": "JEFES_DEMONIO2_RECUERDA",
+            "value": "Check the colour of the rune that's left and switch to whoever it belongs to."
+        },
+        {"key":"CAP2_PUENTE_FALTAN_PIEZAS","value":"The plank is broken. You need a rope and some nails to fix it."},
+        {
+            "key": "REQUISITO_FALTA_OBJETO",
+            "value": "You need something for this: {0}."
+        },
+        {
+            "key": "REQUISITO_FALTA_HECHIZO",
+            "value": "It is sealed by a magic you don't know yet."
+        },
+        {
+            "key": "TESORO_REGISTRO_TITULO",
+            "value": "Treasures"
+        },
+        {
+            "key": "TESORO_REGISTRO_VACIO",
+            "value": "You don't know of any treasure yet."
+        },
+        {
+            "key": "TESORO_REGISTRO_FILA",
+            "value": "{0}: {1} / {2}"
+        },
+        {
+            "key": "TESORO_REGION_MUNDO",
+            "value": "The world"
+        },
+        {
+            "key": "TESORO_REGION_LAB",
+            "value": "Lab"
+        },
+        {
+            "key": "TESORO_MAPA_LAB_NOMBRE",
+            "value": "Treasure map (LAB)"
+        },
+        {
+            "key": "TESORO_MAPA_LAB_DESC",
+            "value": "Marks where something is buried in the LAB treasure room. Check the minimap."
         }
     ]
 }

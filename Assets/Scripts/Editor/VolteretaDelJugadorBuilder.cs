@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEngine;
 using Invector.vCharacterController;
 
@@ -85,6 +86,25 @@ public static class VolteretaDelJugadorBuilder
             }
             else hecho.Add("_WILL ya tenía VolteretaDelJugador.");
 
+            var receptor = controller.GetComponent<AerialKnockbackReceiver>();
+            if (receptor == null)
+            {
+                receptor = controller.gameObject.AddComponent<AerialKnockbackReceiver>();
+                cambiado = true;
+                hecho.Add("Añadido AerialKnockbackReceiver a _WILL.");
+            }
+            var efecto = AssetDatabase.LoadAssetAtPath<GameObject>(VfxDeEntradaAlVuelo);
+            var receptorSerializado = new SerializedObject(receptor);
+            var recuperacion = receptorSerializado.FindProperty("vfxDeRecuperacion");
+            if (recuperacion.objectReferenceValue == null && efecto != null)
+            {
+                recuperacion.objectReferenceValue = efecto;
+                receptorSerializado.ApplyModifiedPropertiesWithoutUndo();
+                EditorUtility.SetDirty(receptor);
+                cambiado = true;
+            }
+            MontarPoseDeDerribo(controller, hecho, avisos);
+
             // Efecto de la entrada al vuelo (INC-665), si no tiene ninguno puesto.
             var vuelo = controller.GetComponent<PlayerFlyingController>();
             var vfx = AssetDatabase.LoadAssetAtPath<GameObject>(VfxDeEntradaAlVuelo);
@@ -102,12 +122,56 @@ public static class VolteretaDelJugadorBuilder
             }
             else if (vfx == null) avisos.Add($"No encuentro {VfxDeEntradaAlVuelo}: la entrada al vuelo queda sin efecto.");
 
-            if (cambiado) PrefabUtility.SaveAsPrefabAsset(raiz, RutaJugador);
+            if (cambiado)
+            {
+                EditorUtility.SetDirty(raiz);
+                PrefabUtility.SaveAsPrefabAsset(raiz, RutaJugador);
+            }
         }
         finally
         {
             PrefabUtility.UnloadPrefabContents(raiz);
         }
+    }
+
+    private static void MontarPoseDeDerribo(vThirdPersonController jugador, List<string> hecho, List<string> avisos)
+    {
+        var animator = jugador.GetComponent<Animator>();
+        if (animator == null) animator = jugador.GetComponentInChildren<Animator>(true);
+        RuntimeAnimatorController runtime = animator != null ? animator.runtimeAnimatorController : null;
+        while (runtime is AnimatorOverrideController variante) runtime = variante.runtimeAnimatorController;
+        var controller = runtime as AnimatorController;
+        if (controller == null || controller.layers.Length == 0)
+        {
+            avisos.Add("No encuentro el AnimatorController principal de _WILL: falta Derribo_Vuelo.");
+            return;
+        }
+        const string rutaClip = "Assets/Art/Characters/RPG Tiny Hero Duo/Animation/NoWeapon/Die01_NoWeapon.fbx";
+        AnimationClip clip = null;
+        foreach (var asset in AssetDatabase.LoadAllAssetsAtPath(rutaClip))
+            if (asset is AnimationClip candidato && candidato.name == "Die01_NoWeapon") { clip = candidato; break; }
+        if (clip == null) { avisos.Add("No encuentro Die01_NoWeapon: falta Derribo_Vuelo."); return; }
+        var maquina = controller.layers[0].stateMachine;
+        var estado = BuscarEstado(maquina, "Derribo_Vuelo");
+        if (estado == null) estado = maquina.AddState("Derribo_Vuelo");
+        estado.motion = clip;
+        estado.speed = 0f; // El receptor recorre solo el tramo de caída del clip durante el arco.
+        estado.writeDefaultValues = false;
+        EditorUtility.SetDirty(estado);
+        EditorUtility.SetDirty(maquina);
+        EditorUtility.SetDirty(controller);
+        hecho.Add($"Derribo_Vuelo con Die01_NoWeapon en {AssetDatabase.GetAssetPath(controller)}.");
+    }
+
+    private static AnimatorState BuscarEstado(AnimatorStateMachine maquina, string nombre)
+    {
+        foreach (var estado in maquina.states) if (estado.state.name == nombre) return estado.state;
+        foreach (var submaquina in maquina.stateMachines)
+        {
+            var estado = BuscarEstado(submaquina.stateMachine, nombre);
+            if (estado != null) return estado;
+        }
+        return null;
     }
 
     /// Crea (o actualiza) una zona de remate por elemento y se la pone a los básicos de ese

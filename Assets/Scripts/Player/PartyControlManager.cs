@@ -42,6 +42,10 @@ public class PartyControlManager : MonoBehaviour
     [Header("Nombres en el party (deben coincidir con NPCPartyConfig.displayName)")]
     [SerializeField] private string liamDisplayName = "Liam";
     [SerializeField] private string estelaDisplayName = "Estela";
+
+    [Tooltip("Al llegar a un extremo, DPad sigue por el otro (de Liam a la izquierda se pasa a Estela). " +
+             "Así los retratos del HUD pueden poner siempre al que va al mando en el centro.")]
+    [SerializeField] private bool cambioCircular = true;
     #endregion
 
     #region State
@@ -68,6 +72,20 @@ public class PartyControlManager : MonoBehaviour
     public bool IsPartyFollowing => _isPartyFollowing;
     public CharacterSlot ActiveSlot => (CharacterSlot)_activeIndex;
     public bool IsSwitchingLocked => _switchingLocked;
+    /// DPad da la vuelta al llegar a un extremo (ver cambioCircular).
+    public bool CambioCircular => cambioCircular;
+    /// El personaje al que se cambiaría con DPad hacia la izquierda (-1) o la derecha (+1); -1 si no hay.
+    public int SlotVecino(int desde, int direccion)
+    {
+        for (int paso = 1; paso <= 2; paso++)
+        {
+            int i = desde + direccion * paso;
+            if (cambioCircular) i = (i % 3 + 3) % 3;
+            else if (i < 0 || i > 2) return -1;
+            if (i != desde && IsSlotAvailable(i)) return i;
+        }
+        return -1;
+    }
     #endregion
 
     #region Lifecycle
@@ -163,13 +181,11 @@ public class PartyControlManager : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchLeft — _activeIndex={_activeIndex}");
 #endif
-        for (int i = _activeIndex - 1; i >= 0; i--)
+        int izquierda = SlotVecino(_activeIndex, -1);
+        if (izquierda >= 0)
         {
-            if (IsSlotAvailable(i))
-            {
-                SwitchToCharacter(i);
-                return;
-            }
+            SwitchToCharacter(izquierda);
+            return;
         }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchLeft — no hay slot disponible a la izquierda de {_activeIndex}");
@@ -196,13 +212,11 @@ public class PartyControlManager : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchRight — _activeIndex={_activeIndex}");
 #endif
-        for (int i = _activeIndex + 1; i <= 2; i++)
+        int derecha = SlotVecino(_activeIndex, 1);
+        if (derecha >= 0)
         {
-            if (IsSlotAvailable(i))
-            {
-                SwitchToCharacter(i);
-                return;
-            }
+            SwitchToCharacter(derecha);
+            return;
         }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[PartyControlManager] TrySwitchRight — no hay slot disponible a la derecha de {_activeIndex}");
@@ -216,6 +230,8 @@ public class PartyControlManager : MonoBehaviour
 
     private bool IsSlotAvailable(int index)
     {
+        // A un personaje caído no se le puede pasar el mando hasta que se levante (INC-717).
+        if (SaludDelGrupo.EstaCaido((CharacterSlot)index)) return false;
         if (index == (int)CharacterSlot.Will) return true;
         string name = index == (int)CharacterSlot.Liam ? liamDisplayName : estelaDisplayName;
         return PlayerParty.Instance?.GetMemberByName(name) != null;

@@ -47,6 +47,26 @@ public class PlayerPresetSO : ScriptableObject
     [Tooltip("Básicos equipados de Estela y Liam (hasta cuatro cada uno). Vacío = los de su ficha.")]
     public List<BasicosDeCompanero> companionBasics = new();
 
+    /// Vida y maná de Estela o Liam (INC-717). Los de Will son maxHP/currentHP/maxMP/currentMP.
+    [Serializable]
+    public class SaludDeCompanero
+    {
+        public PartyControlManager.CharacterSlot personaje;
+        public float maxHP, currentHP, maxMP, currentMP;
+
+        public SaludDeCompanero Copia() => (SaludDeCompanero)MemberwiseClone();
+
+        public static List<SaludDeCompanero> CopiarLista(List<SaludDeCompanero> src)
+        {
+            var dst = new List<SaludDeCompanero>();
+            if (src != null) foreach (var e in src) if (e != null) dst.Add(e.Copia());
+            return dst;
+        }
+    }
+
+    [Tooltip("Vida y maná de Estela y Liam. Sin entrada = los máximos de su ficha.")]
+    public List<SaludDeCompanero> companionHealth = new();
+
     [Header("Flags (misiones/estados simples)")]
     public List<string> flags = new();
 

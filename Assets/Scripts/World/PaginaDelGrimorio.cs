@@ -77,6 +77,18 @@ public class PaginaDelGrimorio : MonoBehaviour
         visual.Rotate(Vector3.up, gradosPorSegundo * Time.deltaTime, Space.World);
     }
 
+    /// <summary>
+    /// El grupo aprende el hechizo como al recoger una página (aviso de hechizo aprendido y
+    /// preset aplicado). Lo usan también los tesoros que dan una página.
+    /// </summary>
+    public static void Aprender(SpellId hechizo)
+    {
+        if (hechizo == SpellId.None) return;
+        UnlockService.UnlockSpell(hechizo, assignToEmptySlot: true);
+        if (PlayerService.TryGetComponent<PlayerPresetService>(out var pps, includeInactive: true, allowSceneLookup: true) && pps != null)
+            pps.ApplyCurrentPreset(includeInventory: false, includeAbilities: false);
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (_recogida || _pendiente || hechizo == SpellId.None) return;
@@ -84,11 +96,8 @@ public class PaginaDelGrimorio : MonoBehaviour
         if (player == null || (other.gameObject != player && !other.transform.IsChildOf(player.transform))) return;
 
         _recogida = true;
-        UnlockService.UnlockSpell(hechizo, assignToEmptySlot: true);
+        Aprender(hechizo);
         UnlockService.AddFlag(Flag);
-
-        if (PlayerService.TryGetComponent<PlayerPresetService>(out var pps, includeInactive: true, allowSceneLookup: true) && pps != null)
-            pps.ApplyCurrentPreset(includeInventory: false, includeAbilities: false);
 
         if (efectoAlRecoger != null && VfxPoolService.Instance != null)
         {

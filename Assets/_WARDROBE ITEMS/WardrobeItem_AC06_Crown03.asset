@@ -20,3 +20,8 @@ MonoBehaviour:
   descriptionId: ITEM_AC06_CROWN03_DESC
   description: Una corona tejida con flores del Sendero.
   icon: {fileID: 21300000, guid: bc8680d6d5ea4b53aad2e52dc4a43f40, type: 3}
+  bonos:
+    vida: 15
+    magia: 0
+    ataque: 0
+    defensa: 0

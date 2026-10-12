@@ -11855,6 +11855,7 @@ GameObject:
   - component: {fileID: 6175552821911066800}
   - component: {fileID: 1553048706587922655}
   - component: {fileID: 9134696940597055789}
+  - component: {fileID: 2171862623072908792}
   m_Layer: 3
   m_Name: vBasicController_MaleCharacterPBR
   m_TagString: Player
@@ -12471,10 +12472,10 @@ MonoBehaviour:
   tiltSpeed: 5
   boostMultiplier: 1.5
   debugLogs: 0
-  volteretaAlEntrar: 1
+  impulsoAlEntrar: 1
   impulsoDeEntrada: 6
-  esperaMaximaDeEntrada: 0.7
-  vfxDeEntrada: {fileID: 0}
+  esperaDeEntrada: 0.25
+  vfxDeEntrada: {fileID: 9080140021571130472, guid: 82066d902ed0dd6488ddfd32eb994801, type: 3}
   duracionVfxDeEntrada: 2
   sfxDeEntrada: 
   vfxAttach: {fileID: 4420504159218681614}
@@ -12502,9 +12503,10 @@ MonoBehaviour:
   shieldPrefab: {fileID: 1289543790355709915, guid: b99922c2f59b1a542bdd06ae8bee47ae, type: 3}
   shieldAnchor: {fileID: 0}
   shieldOffset: {x: 0, y: 0, z: 0}
-  defendAnimation: Defend_NoWeapon
-  defendHitAnimation: DefendHit_NoWeapon
-  locomotionAnimation: Free Locomotion
+  preparacionAnimation: UpperBody.Magic.HumanM@MagicAttackDirect2H01 - Load
+  defendAnimation: UpperBody.Defend_NoWeapon
+  defendHitAnimation: UpperBody.DefendHit_NoWeapon
+  locomotionAnimation: UpperBody.UpperIdle
   upperBodyLayer: 1
   upperBodyTransitionDuration: 0.1
   hitFeedbackDuration: 0.3
@@ -12512,8 +12514,10 @@ MonoBehaviour:
   - Enemy
   - ProjectileEnemy
   manaPerSecond: 10
-  parryWindow: 0.2
-  parryRadius: 2.6
+  parryWindow: 0.25
+  parryRadius: 1.2
+  segundosDeAtrapado: 0.3
+  margenLateral: 1.2
   parryWhiffCooldown: 0.45
   counterDamageMultiplier: 2
   minCounterDamage: 20
@@ -12804,13 +12808,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ComboCastController
   magicCaster: {fileID: 0}
   controller: {fileID: 0}
+  escalaDeTiempo: 0.25
   inputTimeout: 1.5
   fizzleManaCost: 5
   comboCooldown: 4
   maxLength: 5
+  airPoseState: Falling
   enterState: UpperBody.Magic.ComboIdle
   exitState: UpperBody.Magic.ComboExit
-  breakState: UpperBody.Magic.ComboBreak
   showDebugLogs: 0
 --- !u!114 &7986244161915090015
 MonoBehaviour:
@@ -12844,7 +12849,6 @@ MonoBehaviour:
   segundosSubida: 0.25
   bajadaAlLanzar: 0.12
   bajadaAlFallar: 0.25
-  bajadaAlRomperse: 0.08
   bajadaAlCancelar: 0.2
   materialOrbe: {fileID: 2100000, guid: 32cc483f9636edd4bbb82e26419fd290, type: 2}
   diametroOrbe: 0.16
@@ -12886,7 +12890,6 @@ MonoBehaviour:
   colorY: {r: 1, g: 0.85, b: 0.2, a: 1}
   cierreAlLanzar: 0.3
   cierreAlFallar: 0.3
-  cierreAlRomperse: 0.1
   cierreAlCancelar: 0.2
   subidaAlLanzar: 0.5
   materialChispas: {fileID: 2100000, guid: e546d2d7171981b468cf29388d902e99, type: 2}
@@ -12948,8 +12951,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AvisoDeAmenazas
   anticipacion: 0.6
-  margenDeAcierto: 1.2
-  alturaDelPecho: 1
   rutaDelIcono: UI/AvisoDeAmenaza
 --- !u!114 &1553048706587922655
 MonoBehaviour:
@@ -12991,6 +12992,32 @@ MonoBehaviour:
   sfxDelAcierto: Star_Collision
   ondaEnLosPies: {fileID: 9080140021571130472, guid: 82066d902ed0dd6488ddfd32eb994801, type: 3}
   duracionDeLaOnda: 2
+--- !u!114 &2171862623072908792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4951141271202639922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41761c242fd576c4e85f187d073d26e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AerialKnockbackReceiver
+  ventanaDeRecuperacion: {x: 0.15, y: 0.9}
+  estadoEnElSuelo: Knockdown01_Ground
+  estadoLevantarse: Knockdown01_StandUp
+  segundosEnElSuelo: 0.7
+  topeParaLevantarse: 2
+  sfxDeRecuperacion: 
+  estadoEnVuelo: Derribo_Vuelo
+  fraccionDelClipEnVuelo: 0.65
+  estadoDeRecuperacion: JumpAirSpin_InPlace_NoWeapon
+  impulsoVerticalAlRecuperarse: 6
+  arrastreHorizontalAlRecuperarse: 0
+  invulnerabilidadAlRecuperarse: 0.4
+  vfxDeRecuperacion: {fileID: 9080140021571130472, guid: 82066d902ed0dd6488ddfd32eb994801, type: 3}
+  duracionDelVfxDeRecuperacion: 1
 --- !u!1 &4956991213707944661
 GameObject:
   m_ObjectHideFlags: 0

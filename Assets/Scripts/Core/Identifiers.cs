@@ -87,7 +87,9 @@ public enum SpellId
     NovaDeLuz,
     PasoSombrio,
     // Bola de Fuego de Estela: antes compartía el id Fireball con Llama Astral (INC-503).
-    BolaDeFuegoEstela
+    BolaDeFuegoEstela,
+    // Hechizo final de Will: abre la protección de lo que la tiene (INC-724).
+    Amanecer
 }
 
 /// <summary>
@@ -130,16 +132,12 @@ public enum MagicKind
 /// <summary>Elementos mágicos disponibles.</summary>
 public enum MagicElement
 {
-    Fire,
-    Ice,
-    Storm,
-    Light,
-    Mind,
-    // NUEVO (30/08/2026): magia de corrupcion del Mago Oscuro / el Sendero corrompido —
-    // ver guion-tecnico-batalla-final-2026-08-30.md. Antes de este cambio no habia un
-    // elemento propio para la magia oscura del jefe final; reutilizar Mind o Storm habria
-    // sido enganoso (esos elementos ya representan a Liam/Estela).
-    Dark
+    // Los valores se guardan en los assets. El 1 queda reservado y no se reutiliza.
+    Fire = 0,
+    Storm = 2,
+    Light = 3,
+    Mind = 4,
+    Dark = 5
 }
 
 /// <summary>Tipos de ranuras para asignar hechizos.</summary>

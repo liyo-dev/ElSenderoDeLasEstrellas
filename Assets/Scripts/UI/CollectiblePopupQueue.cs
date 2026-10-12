@@ -53,6 +53,11 @@ public class CollectiblePopupQueue : MonoBehaviour
     // inventario no saca pop-up y se descarta: no se enseña después.
     private static readonly HashSet<object> _silenciadores = new();
 
+    private static CollectiblePopupQueue _activa;
+
+    /// <summary>La cola que está activa en escena, o null. Una copia desactivada no puede lanzar pop-ups.</summary>
+    public static CollectiblePopupQueue Activa => _activa != null && _activa.isActiveAndEnabled ? _activa : null;
+
     /// <summary>True mientras algún sistema tenga silenciados los pop-ups de objetos.</summary>
     public static bool Silenciada => _silenciadores.Count > 0;
 
@@ -70,7 +75,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { _silenciadores.Clear(); }
+    static void ResetStatics() { _silenciadores.Clear(); _activa = null; }
 #endif
 
     void Awake()
@@ -90,6 +95,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     void OnEnable()
     {
+        _activa = this;
         if (_pendingEnable && _enableRoutine == null)
         {
             _pendingEnable = false;
@@ -109,6 +115,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     void OnDisable()
     {
+        if (_activa == this) _activa = null;
         if (_enableRoutine != null)
         {
             StopCoroutine(_enableRoutine);
@@ -164,7 +171,7 @@ public class CollectiblePopupQueue : MonoBehaviour
 
     private void OnItemAdded(ItemData item, int addedAmount, int newTotal)
     {
-        if (!_popupsEnabled || Silenciada) return;
+        if (!_popupsEnabled || Silenciada || !isActiveAndEnabled) return;
         if (item == null || addedAmount <= 0) return;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -250,7 +257,7 @@ public class CollectiblePopupQueue : MonoBehaviour
     /// </summary>
     public void SpawnWardrobePopup(WardrobeItemSO wardrobeItem, int amount = 1)
     {
-        if (wardrobeItem == null) return;
+        if (wardrobeItem == null || !isActiveAndEnabled) return;
 
         // Crear un ItemData efímero para reutilizar el flujo de popups existente
         var temp = ScriptableObject.CreateInstance<ItemData>();

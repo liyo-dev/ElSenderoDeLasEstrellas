@@ -64,6 +64,8 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
     [SerializeField] private float primeraFila = 192f;
     [SerializeField] private float pasoDeFila = 94f;
     [SerializeField] private float altoDelBotin = 200f;
+    [Tooltip("Distancia entre los centros de dos huecos del botín; los que se ven quedan centrados en el bloque.")]
+    [SerializeField] private float pasoDeHueco = 150f;
     [Tooltip("Lo que queda debajo de la última fila o del botín: el «Continuar» y el margen.")]
     [SerializeField] private float altoDelPie = 84f;
 
@@ -126,7 +128,8 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
             if (ocultar) PlayerHUDV2.Instance.HideHUD(this);
             else PlayerHUDV2.Instance.ShowHUD(this);
         }
-        if (MinimapController.Instance != null) MinimapController.Instance.SetHiddenByCinematic(ocultar);
+        if (ocultar) MinimapController.Ocultar(this);
+        else MinimapController.Mostrar(this);
     }
 
     /// Enseña el informe y espera a que el jugador lo cierre.
@@ -221,6 +224,15 @@ public sealed class InformeDeVictoriaUI : MonoBehaviour
         }
         if (bloqueBotin != null)
         {
+            // Los huecos que se ven, centrados en el ancho del bloque (no pegados a la izquierda).
+            float centro = bloqueBotin.rect.width * 0.5f;
+            for (int i = 0, visto = 0; i < huecos.Length && visto < botin; i++)
+            {
+                if (!huecos[i].raiz.gameObject.activeSelf) continue;
+                var p = huecos[i].raiz.anchoredPosition;
+                huecos[i].raiz.anchoredPosition = new Vector2(centro + (visto - (botin - 1) * 0.5f) * pasoDeHueco, p.y);
+                visto++;
+            }
             bloqueBotin.gameObject.SetActive(botin > 0);
             bloqueBotin.anchoredPosition = new Vector2(bloqueBotin.anchoredPosition.x, -(primeraFila + visibles * pasoDeFila));
         }

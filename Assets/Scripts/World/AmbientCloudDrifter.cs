@@ -4,9 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// Nube ambiental suelta que cruza el cielo de un lado a otro. A diferencia del techo fijo de
-/// <see cref="CloudCoverSpawner"/> (que se materializa/disipa EN SITIO con fundido de alfa), esta
-/// nube está SIEMPRE en movimiento: nace lejos del jugador, deriva hacia/más allá de él y sigue
+/// Nube ambiental suelta que cruza el cielo de un lado a otro. Está SIEMPRE en movimiento: nace lejos del jugador, deriva hacia/más allá de él y sigue
 /// alejándose mientras se disipa — nunca aparece ni desaparece de golpe delante de la cámara.
 ///
 /// La instancia solo se entrega de vuelta al pool de <see cref="AmbientCloudDirector"/> (vía el
@@ -17,9 +15,12 @@ using UnityEngine.Rendering;
 [DisallowMultipleComponent]
 public class AmbientCloudDrifter : MonoBehaviour
 {
-    [Tooltip("Shader de este prefab de nube en concreto. Igual que en CloudCoverSpawner: QuibliCloud3D anima el recorte de alfa (_AlphaThreshold, efecto de materializarse/disiparse), QuibliCloud2D anima _Opacity, LegacyBaseColor anima el alfa de _BaseColor.")]
-    [SerializeField] private CloudCoverSpawner.CloudShaderMode shaderMode = CloudCoverSpawner.CloudShaderMode.QuibliCloud3D;
-    [Tooltip("Solo QuibliCloud3D: _AlphaThreshold cuando la nube está completamente formada (mismo valor que sueles usar en CloudCoverSpawner, p.ej. 0.5 en el material SampleScene_Cloud3D).")]
+    /// Cómo se funde cada tipo de material de nube.
+    public enum CloudShaderMode { QuibliCloud3D, QuibliCloud2D, LegacyBaseColor }
+
+    [Tooltip("Shader de este prefab de nube en concreto. QuibliCloud3D anima el recorte de alfa (_AlphaThreshold, efecto de materializarse/disiparse), QuibliCloud2D anima _Opacity, LegacyBaseColor anima el alfa de _BaseColor.")]
+    [SerializeField] private CloudShaderMode shaderMode = CloudShaderMode.QuibliCloud3D;
+    [Tooltip("Solo QuibliCloud3D: _AlphaThreshold cuando la nube está completamente formada (p. ej. 0.5 en el material SampleScene_Cloud3D).")]
     [SerializeField, Range(0.05f, 1f)] private float visibleAlphaThreshold = 0.5f;
 
     private static readonly int AlphaThresholdId = Shader.PropertyToID("_AlphaThreshold");
@@ -113,10 +114,10 @@ public class AmbientCloudDrifter : MonoBehaviour
             r.GetPropertyBlock(_mpb);
             switch (shaderMode)
             {
-                case CloudCoverSpawner.CloudShaderMode.QuibliCloud3D:
+                case CloudShaderMode.QuibliCloud3D:
                     _mpb.SetFloat(AlphaThresholdId, alphaThreshold);
                     break;
-                case CloudCoverSpawner.CloudShaderMode.QuibliCloud2D:
+                case CloudShaderMode.QuibliCloud2D:
                     _mpb.SetFloat(OpacityId, alpha);
                     break;
                 default:

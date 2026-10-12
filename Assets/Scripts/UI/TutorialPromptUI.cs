@@ -74,6 +74,9 @@ public class TutorialPromptUI : MonoBehaviour
     Button _closeButton;
     TextMeshProUGUI _closeLabel;
     Image _closeIcon;
+    HorizontalLayoutGroup _rowLayout;
+    RectTransform _rowRect;
+    int _originalRightPadding;
 
     /// <summary>Se dispara al hacer clic en la X. TutorialPromptNode se suscribe solo cuando el
     /// aviso activo usa dismissWithCancel — el resto de avisos no muestran la X (ver Show()).</summary>
@@ -89,6 +92,13 @@ public class TutorialPromptUI : MonoBehaviour
 
         _rootGroup.alpha = 0f;
         _rootGroup.blocksRaycasts = false;
+
+        _rowLayout = _rootGroup.GetComponentInChildren<HorizontalLayoutGroup>(true);
+        if (_rowLayout != null)
+        {
+            _originalRightPadding = _rowLayout.padding.right;
+            _rowRect = (RectTransform)_rowLayout.transform;
+        }
 
         BuildCloseButton();
     }
@@ -300,7 +310,17 @@ public class TutorialPromptUI : MonoBehaviour
 
     void SetCloseButtonVisible(bool visible)
     {
-        if (_closeButton != null) _closeButton.gameObject.SetActive(visible);
+        if (_closeButton != null && _closeButton.gameObject.activeSelf != visible)
+            _closeButton.gameObject.SetActive(visible);
+
+        // Reserva el espacio del cierre y restaura el margen cuando se oculta.
+        if (_rowLayout == null) return;
+        int rightPadding = visible
+            ? Mathf.Max(_originalRightPadding, Mathf.CeilToInt(_closeButtonSize + _closeButtonMargin * 2 + 4))
+            : _originalRightPadding;
+        if (_rowLayout.padding.right == rightPadding) return;
+        _rowLayout.padding.right = rightPadding;
+        LayoutRebuilder.MarkLayoutForRebuild(_rowRect);
     }
 
     // La X de toda la vida (texto "X", clic de ratón) solo tiene sentido en KeyboardMouse. En
@@ -316,7 +336,7 @@ public class TutorialPromptUI : MonoBehaviour
     {
         if (_closeButton == null) return;
 
-        _closeButton.gameObject.SetActive(_allowManualClose);
+        SetCloseButtonVisible(_allowManualClose);
         if (!_allowManualClose) return;
 
         bool isKeyboardMouse = InputGlyphService.CurrentFamily == InputGlyphDeviceFamily.KeyboardMouse;

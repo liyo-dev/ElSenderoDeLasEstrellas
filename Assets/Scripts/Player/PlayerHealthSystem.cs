@@ -94,6 +94,8 @@ public class PlayerHealthSystem : MonoBehaviour
     private bool _isInvulnerable = false;
     private bool _isDead; // por defecto false
     private float _invulnerableUntil = -999f;
+    // La próxima muerte va directa al Game Over aunque quede alguien del grupo en pie.
+    private bool _sinRelevo;
 
     // Evitar doble inicialización
     private bool _initialized;
@@ -446,6 +448,9 @@ public class PlayerHealthSystem : MonoBehaviour
     /// </summary>
     private void UpdateGameBootProfile()
     {
+        // La vida del preset es la de Will. Con otro personaje al mando, este cuerpo lleva la suya,
+        // que guarda SaludDelGrupo. Ver INC-717.
+        if (ControlDelJugador.Activo != PartyControlManager.CharacterSlot.Will) return;
         var bootProfile = GameBootService.Profile;
         if (bootProfile != null)
         {
@@ -499,6 +504,10 @@ public class PlayerHealthSystem : MonoBehaviour
     private void Die()
     {
         if (_isDead) return;
+
+        // Si queda otro personaje del grupo en pie, este cae y el mando pasa a él: no hay Game Over.
+        if (!_sinRelevo && SaludDelGrupo.IntentarRelevo(this)) return;
+        _sinRelevo = false;
 
         _isDead = true;
 
@@ -742,6 +751,43 @@ public class PlayerHealthSystem : MonoBehaviour
 #endif
     }
     
+    /// <summary>
+    /// Pone la vida del personaje que pasa a llevar el jugador, sin efectos de daño ni de curación.
+    /// La usa SaludDelGrupo al cambiar de personaje (cada uno tiene su vida). Ver INC-717.
+    /// </summary>
+    public void CargarPersonaje(float vidaMaxima, float vidaActual)
+    {
+        _maxHp = Mathf.Max(1f, vidaMaxima);
+        _currentHp = Mathf.Clamp(vidaActual, 0f, _maxHp);
+        if (_isDead && _currentHp > 0f)
+        {
+            _isDead = false;
+            _caidaIniciada = false;
+            RestaurarAnimatorTrasCaida();
+        }
+        _lastNotifiedHealth = _currentHp;
+        ResetDamageVisuals();
+        UpdateGameBootProfile();
+        UpdateUI();
+    }
+
+    /// <summary>Muere sin pasar el mando a otro personaje: Game Over. Ver INC-717.</summary>
+    public void MorirSinRelevo()
+    {
+        if (_isDead || godMode) return;
+        _currentHp = 0f;
+        _sinRelevo = true;
+        Die();
+    }
+
+    /// <summary>Amplía la protección temporal sin acortar una invulnerabilidad vigente.</summary>
+    public void HacerInvulnerable(float segundos, bool parpadeo)
+    {
+        if (segundos <= 0f || !IsAlive) return;
+        _invulnerableUntil = Mathf.Max(_invulnerableUntil, Time.time + segundos);
+        if (parpadeo) StartInvulnerabilityFlash();
+    }
+
     private void StartInvulnerability()
     {
         _invulnerableUntil = Time.time + invulnerabilityDuration;

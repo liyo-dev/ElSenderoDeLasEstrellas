@@ -30,11 +30,38 @@ public class WardrobeItemSO : ScriptableObject
 
     public static WardrobeItemSO FindPart(PartCategory category, string part)
     {
+        var item = BuscarRegistrada(category, part);
+        // Una prenda solo se registra cuando su asset está cargado. Si falta, se carga el registro
+        // de objetos (cada ItemData de prenda referencia su WardrobeItemSO) y se busca otra vez.
+        if (item == null && CargarCatalogo()) item = BuscarRegistrada(category, part);
+        return item;
+    }
+
+    static WardrobeItemSO BuscarRegistrada(PartCategory category, string part)
+    {
         foreach (var item in Registry.Values)
             if (item != null && item.Category == category &&
                 string.Equals(item.PartName, part, System.StringComparison.OrdinalIgnoreCase)) return item;
         return null;
     }
+
+    static bool _catalogoCargado;
+
+    static bool CargarCatalogo()
+    {
+        if (_catalogoCargado) return false;
+        _catalogoCargado = true;
+        var registro = ItemRegistrySO.LoadDefault();
+        if (registro == null) return false;
+        foreach (var objeto in registro.Items)
+            if (objeto != null && objeto.wardrobeUnlock != null) objeto.wardrobeUnlock.Register();
+        return true;
+    }
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() => _catalogoCargado = false;
+#endif
 
     /// <summary>Obtiene el nombre localizado del item de armario (usa displayNameId si está definido).</summary>
     public string GetLocalizedDisplayName()

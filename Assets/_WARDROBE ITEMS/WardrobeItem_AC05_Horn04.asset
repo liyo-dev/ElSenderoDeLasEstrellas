@@ -20,3 +20,8 @@ MonoBehaviour:
   descriptionId: ITEM_AC05_HORN04_DESC
   description: "Un imponente cuerno con forma de drag\xF3n."
   icon: {fileID: 21300000, guid: 9f802a5ab24646d5b3299854d56f73a9, type: 3}
+  bonos:
+    vida: 0
+    magia: 0
+    ataque: 3
+    defensa: 0

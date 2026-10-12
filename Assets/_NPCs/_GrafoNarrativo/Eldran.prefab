@@ -11413,6 +11413,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -11584,11 +11585,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 8975327509349052620}
-  originalMouthMesh: {fileID: 4730294353661995776}
+  ojosDeReposo: {fileID: 8975327509349052620}
+  bocaDeReposo: {fileID: 4730294353661995776}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &6938378013747625067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11706,14 +11715,15 @@ MonoBehaviour:
   empiezaCon: OLIVER_GREETING_START
   oConLaMision: ELDRAN_MISSION1
   terminaCon: PERAS_START
-  enfado:
-  - Angry01
-  - Angry02
+  replica:
+  - Laugh01
+  - HeadShake01
   hablar:
   - Talk01
   - Talk02
+  animo: 1
   turno: 1.8
-  iconoDePelea: {fileID: 6303534759802428624, guid: 8ac55e1a38b030042a6ca26a95f2b64b, type: 3}
+  iconoDePelea: {fileID: 1311414923061137857, guid: 5e0d4d96ab6fccf4c8132c753e310812, type: 3}
 --- !u!1 &8911537771988408263
 GameObject:
   m_ObjectHideFlags: 0

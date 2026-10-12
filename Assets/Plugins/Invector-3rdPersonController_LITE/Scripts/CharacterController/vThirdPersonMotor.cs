@@ -146,7 +146,7 @@ namespace Invector.vCharacterController
         [System.NonSerialized] public float topeDeAnimacion = float.PositiveInfinity;
         /// <summary>
         /// Desplazamiento horizontal que se suma al del jugador mientras pisa el suelo, en m/s
-        /// (p. ej. el viento que lo arrastra si se queda quieto). Lo pone VientoSobreElJugador.
+        /// (p. ej. el viento que lo arrastra si se queda quieto). Lo pone ClimaSobreElJugador.
         /// </summary>
         [System.NonSerialized] public Vector3 empujeExterno;
         /// <summary>Dirección de movimiento pedida por el mando, en mundo (sin normalizar).</summary>

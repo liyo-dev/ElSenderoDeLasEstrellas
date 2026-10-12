@@ -1179,6 +1179,28 @@ namespace Core
     }
 
     /// <summary>
+    /// El botón de saltar (A / Espacio) está pulsado, aunque el salto esté ignorado por
+    /// <see cref="IgnoreJumpButton"/>. Para acciones de «mantener A», como reanimar a un compañero
+    /// caído (INC-717). Respeta la supresión de gameplay.
+    /// </summary>
+    public static bool JumpHeld
+    {
+        get
+        {
+            if (IsGameplaySuppressed())
+                return false;
+            if (Controls != null && Controls.GamePlay.Jump.IsPressed())
+                return true;
+#if ENABLE_INPUT_SYSTEM
+            var gp = GetGamepad();
+            if (gp != null && gp.buttonSouth.isPressed)
+                return true;
+#endif
+            return false;
+        }
+    }
+
+    /// <summary>
     /// Lee si el botón de jump fue presionado este frame.
     /// Respeta supresión de gameplay y cooldown de interacción.
     /// </summary>
@@ -1203,6 +1225,35 @@ namespace Core
                 return true;
 #endif
 
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Como <see cref="JumpPressed"/>, pero también se lee mientras el bloqueo de movimiento
+    /// (PlayerLockService, p. ej. ActionMode.Stunned) tiene apagado el mapa GamePlay: es para las
+    /// acciones que el jugador hace estando aturdido, como recuperarse en el aire tras un derribo.
+    /// Respeta la supresión explícita de gameplay, los menús abiertos, la pausa y el cooldown de
+    /// interacción.
+    /// </summary>
+    public static bool JumpPressedAunqueBloqueado
+    {
+        get
+        {
+            if (_gameplaySuppressionOwners.Count > 0 || MenuManager.HasOpenMenus || Time.timeScale <= 0f)
+                return false;
+            if (Time.unscaledTime < _ignoreJumpUntil)
+                return false;
+            if (Controls != null && Controls.GamePlay.enabled && Controls.GamePlay.Jump.triggered)
+                return true;
+#if ENABLE_INPUT_SYSTEM
+            var gp = GetGamepad();
+            if (gp != null && gp.buttonSouth.wasPressedThisFrame)
+                return true;
+            var teclado = Keyboard.current;
+            if (teclado != null && teclado.spaceKey.wasPressedThisFrame)
+                return true;
+#endif
             return false;
         }
     }

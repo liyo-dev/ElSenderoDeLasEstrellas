@@ -91,6 +91,13 @@
         {"key":"CHAR_TOBI","value":"Tobi"},
         {"key":"TUTORIAL_PREPARA_VIAJE_CAPA","value":"Equípate la capa desde el menú: Equipo ▸ Capas."},
         {"key":"TUTORIAL_PREPARA_VIAJE_POCION","value":"En Inventario, selecciona la poción y confirma {BOTON}; confirma otra vez en Usar."},
-        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"A la mañana siguiente…"}
+        {"key":"ROTULO_CAP2_MANANA_SIGUIENTE","value":"A la mañana siguiente…"},
+        {"key":"TUTORIAL_CAP2_CUPULA_ESTELAR","value":"Pulsa {BOTON} y teclea X, B, A: Cúpula Estelar protege a quien esté debajo."},
+        {"key":"ITEM_PLUMA_BRILLANTE_NAME","value":"Pluma brillante"},
+        {"key":"ITEM_PLUMA_BRILLANTE_DESC","value":"Se quedó enganchada en una zarza. Todavía guarda un poco de luz blanca."},
+        {"key":"ITEM_CUERDA_NAME","value":"Cuerda"},
+        {"key":"ITEM_CUERDA_DESC","value":"Una cuerda fuerte. Sirve para atar una tabla suelta."},
+        {"key":"ITEM_CLAVOS_NAME","value":"Clavos"},
+        {"key":"ITEM_CLAVOS_DESC","value":"Dos clavos algo torcidos. Todavía sujetan."}
     ]
 }

@@ -11,8 +11,10 @@ using Game.NPC.States;
 /// 'llamadaKey' en un bocadillo cada pocos segundos; sigue cuando llega. Mientras el jugador va
 /// cerca, no puede ir más rápido que el NPC (así no le adelanta, INC-536), y si hay 'charla', la
 /// van diciendo en bocadillos por el camino (INC-537). El nodo avanza cuando el NPC ha llegado a
-/// la marca, el jugador está a 'radioLlegada' de él y la charla ha terminado. El paseo lo hace
-/// CinematicState.LeadPlayerToAnchorSequence, la misma escolta que usa el guardia del castillo.
+/// la marca, el jugador está a 'radioLlegada' de él y la charla ha terminado. Ya en la marca, el
+/// NPC se vuelve hacia el jugador y le sigue con la mirada mientras llega y terminan la charla. El
+/// paseo lo hace CinematicState.LeadPlayerToAnchorSequence, la misma escolta que usa el guardia
+/// del castillo. Al acabar, el animador del NPC queda con la rotación como la tenía antes.
 [Serializable]
 [NarrativeNodeInfo("NPCs", "Guiar al jugador", "Un NPC camina hasta una marca (SpawnAnchor) y el jugador le sigue con el control, sin poder adelantarle. Si el jugador se queda atrás, el NPC le espera y le llama. Por el camino pueden ir charlando (bocadillos). Avanza cuando los dos están en la marca y la charla ha terminado.")]
 public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
@@ -75,6 +77,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [NonSerialized] private bool _topePuesto;
     [NonSerialized] private NPCBehaviourManagerV2 _npcEscortado;
     [NonSerialized] private NPCSimpleAnimator _animTocado;
+    [NonSerialized] private bool _rotacionManualPrevia;
     [NonSerialized] private bool _updatePositionOriginal;
 
     /// El actor acaba en la marca de destino.
@@ -118,7 +121,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         {
             if (_npcEscortado.Brain?.CurrentState is CinematicState cs)
                 cs.CancelSequence();
-            if (_animTocado != null) _animTocado.AllowManualRotation = true;
+            if (_animTocado != null) _animTocado.AllowManualRotation = _rotacionManualPrevia;
             if (_agenteTocado != null) _agenteTocado.updatePosition = _updatePositionOriginal;
             _npcEscortado = null;
             _animTocado = null;
@@ -143,6 +146,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         if (anim != null)
         {
             _animTocado = anim;
+            _rotacionManualPrevia = anim.AllowManualRotation;
             anim.AllowManualRotation = false;
             anim.EnableAutoRotation();
         }
@@ -213,30 +217,44 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         Diagnostico(npc, destino, "paseo terminado");
 #endif
 
-        if (anim != null) anim.AllowManualRotation = true;
         float velocidadGuia = agent != null ? agent.speed : velocidad;
         DevolverVelocidad();
 
-        // Ya en la marca, espera a que el jugador llegue hasta él.
+        // Ya en la marca, espera a que el jugador llegue hasta él mirándole.
+        if (anim != null) anim.EnableAutoRotation();
         float radio2 = radioLlegada * radioLlegada;
         while (player != null && (player.position - npc.transform.position).sqrMagnitude > radio2)
         {
             LimitarJugador(npc, player, velocidadGuia);
+            MirarAlJugador(npc, player);
             yield return null;
         }
         QuitarTope();
 
-        if (player != null && anim != null) anim.FaceTarget(player.position);
-
-        // Si llegan antes de acabar la charla, la terminan allí.
-        while (_charla != null && !_charla.Terminada) yield return null;
+        // Si llegan antes de acabar la charla, la terminan allí, cara a cara.
+        while (_charla != null && !_charla.Terminada)
+        {
+            MirarAlJugador(npc, player);
+            yield return null;
+        }
+        MirarAlJugador(npc, player);
         _rutinaCharla = null;
         _charla = null;
 
+        if (anim != null) anim.AllowManualRotation = _rotacionManualPrevia;
         _npcEscortado = null;
         _animTocado = null;
         _rutina = null;
         onReadyToAdvance?.Invoke();
+    }
+
+    /// Gira al NPC hacia el jugador mientras está parado; si se está moviendo, manda la marcha.
+    private static void MirarAlJugador(NPCBehaviourManagerV2 npc, Transform player)
+    {
+        if (player == null || npc == null) return;
+        var agent = npc.Agent;
+        if (agent != null && agent.enabled && agent.velocity.sqrMagnitude > 0.04f) return;
+        npc.SimpleAnimator?.FaceTarget(player.position);
     }
 
     /// Los puntos de paso que existen, sobre el NavMesh, y el destino al final.

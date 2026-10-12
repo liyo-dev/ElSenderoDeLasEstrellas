@@ -5,8 +5,6 @@ public static class WardrobeService
 {
     public static event System.Action<WardrobeItemSO> OnWardrobeItemUnlocked;
 
-    // Cache liviano para el popup de feedback
-    static CollectiblePopupQueue _popupQueue;
 
     public static bool UnlockWardrobeItem(WardrobeItemSO item, bool logWarnings = true)
     {
@@ -119,15 +117,7 @@ public static class WardrobeService
     {
         if (item == null) return;
 
-        // Reutiliza CollectiblePopupQueue si está en escena
-        if (_popupQueue == null || !_popupQueue)
-        {
-            _popupQueue = ServiceLocator.Get<CollectiblePopupQueue>(false);
-        }
-
-        if (_popupQueue != null)
-        {
-            _popupQueue.SpawnWardrobePopup(item, 1);
-        }
+        // La cola activa en escena; una copia desactivada (p. ej. un duplicado de Start) no puede lanzarlo.
+        CollectiblePopupQueue.Activa?.SpawnWardrobePopup(item, 1);
     }
 }

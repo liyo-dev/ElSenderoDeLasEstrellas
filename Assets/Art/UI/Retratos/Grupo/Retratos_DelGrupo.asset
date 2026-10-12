@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fb6c134529293a4f84b8c4cabc58807, type: 3}
+  m_Name: Retratos_DelGrupo
+  m_EditorClassIdentifier: Assembly-CSharp::Sendero.UI.JuegoDeRetratos
+  retratos:
+  - personaje: 0
+    normal: {fileID: 21300000, guid: 8c6bd8d1ebfdec9499496e2f545f15be, type: 3}
+    dolorido: {fileID: 21300000, guid: 176bd601b5e2445418d64766d7a5a89d, type: 3}
+    caido: {fileID: 21300000, guid: c3f5d6993f0de37488c1f2b190fbc442, type: 3}
+    contento: {fileID: 21300000, guid: bea19698a06ac72468be30895f22d4f8, type: 3}
+    fraccionBajoElBorde: 0.1
+  - personaje: 1
+    normal: {fileID: 21300000, guid: 79293b33d23bb994f96f5de953804229, type: 3}
+    dolorido: {fileID: 21300000, guid: fabb7f46791b1c8489a1c09a7390c07d, type: 3}
+    caido: {fileID: 21300000, guid: 5f23c956a6ed6a1448b2660d251b19d5, type: 3}
+    contento: {fileID: 21300000, guid: 8274e91cbbec8c94cbe3bbb043408f0a, type: 3}
+    fraccionBajoElBorde: 0.1
+  - personaje: 2
+    normal: {fileID: 21300000, guid: 3952e384d9057c34ea294315ebad42c4, type: 3}
+    dolorido: {fileID: 21300000, guid: 2e6abf9f86bc060459f5cdeee375df7e, type: 3}
+    caido: {fileID: 21300000, guid: 0f2447bfe917f5b4f845be92dcf57813, type: 3}
+    contento: {fileID: 21300000, guid: 8f48ed97052107d438b4ff969e8b8ae6, type: 3}
+    fraccionBajoElBorde: 0.1

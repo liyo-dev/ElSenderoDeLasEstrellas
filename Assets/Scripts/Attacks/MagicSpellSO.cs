@@ -180,7 +180,7 @@ public class MagicSpellSO : ScriptableObject
     [Min(0f)] public float vfxLifetime = 3f;
     
     [Header("Audio")]
-    [Tooltip("Clave del SFX en AudioGraphProfile para reproducir al lanzar el hechizo (ej: 'Spell_Fire', 'Spell_Ice')")]
+    [Tooltip("Clave del SFX en AudioGraphProfile para reproducir al lanzar el hechizo (ej: 'Spell_Fire')")]
     public string castSFXKey;
     [Tooltip("Clave del SFX en AudioGraphProfile para reproducir al impactar/explotar (ej: 'Spell_Fire_Explosion')")]
     public string impactSFXKey;
@@ -241,6 +241,16 @@ public class MagicSpellSO : ScriptableObject
     [Header("Paso corto (INC-502)")]
     [Tooltip("Metros que avanza el teletransporte (MagicKind.Teleport). Se queda antes si hay pared o no hay suelo.")]
     [Min(1f)] public float teleportDistance = 6f;
+
+    [Header("Abre la protección (INC-724)")]
+    [Tooltip("Segundos que abre la protección de lo que alcanza (IProteccionQueSeAbre: el Mago Oscuro, sellos, guardianes). 0 = no abre nada.")]
+    [Min(0f)] public float abreProteccionSegundos = 0f;
+    [Tooltip("Efecto en bucle sobre el blanco mientras su protección sigue abierta (si el blanco no trae uno propio).")]
+    public GameObject vfxProteccionAbierta;
+
+    [Header("Grimorio")]
+    [Tooltip("Falso para lo que no aprende ningún personaje: el arsenal de los enemigos (Mago Oscuro) y los efectos secundarios de otro hechizo. No aparece en el grimorio, en los menús ni en el LAB.")]
+    public bool enGrimorio = true;
 
     [Header("Quién lo lanza")]
     [Tooltip("Personaje al que pertenece el hechizo. Los combos solo salen con ese personaje al mando (Will: los desbloqueados en su preset; Estela y Liam: los de su ficha).")]

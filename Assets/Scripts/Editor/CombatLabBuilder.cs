@@ -135,9 +135,17 @@ public static partial class CombatLabBuilder
             Debug.LogWarning("[CombatLab] " + aviso);
 
         CrearDestinos(entradaJefes);
+        foreach (var aviso in CrearZonaBestiario(scene))
+            Debug.LogWarning("[CombatLab] " + aviso);
+        foreach (var aviso in CrearZonaCap2(scene))
+            Debug.LogWarning("[CombatLab] " + aviso);
+        CrearEstacionAmanecer();
 
         if (!AssetDatabase.IsValidFolder("Assets/Scenes/Test"))
             AssetDatabase.CreateFolder("Assets/Scenes", "Test");
+        EditorSceneManager.SaveScene(scene, ScenePath);
+        foreach (var aviso in CrearClima(scene, sceneLight))
+            Debug.LogWarning("[CombatLab] " + aviso);
         EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene, ScenePath);
         RetirarEscenaAntigua();
@@ -157,6 +165,11 @@ public static partial class CombatLabBuilder
             ("Combate (centro)", "Escenarios F1–F4: blanco, duelo, grupo y Gólem.", new Vector3(0f, 0.1f, -8f), 0f),
             ("Plataformeo (oeste)", "Saltos, doble salto, viga, rampa y escalada.", new Vector3(-18f, 0.1f, 1f), -90f),
             ("Puzles (este)", "Placas, puerta, plataforma que eleva, fuego y runas.", new Vector3(18f, 0.1f, 1f), 90f),
+            ("Kit de puzles (más al este)", "Cristal de luz, molinete, brasero, bola devuelta, zona sin vuelo y barrera de vuelo.", EntradaKitDePuzles, 90f),
+            ("Prueba: luz y saltos", "Cristales de luz, bola devuelta y plataformas temporales; acaba en un cofre.", EntradaPruebaLuz, 90f),
+            ("Prueba: viento y levitación", "Molinetes y bloques levitados como escalón; acaba en un cofre.", EntradaPruebaViento, 90f),
+            ("Prueba: Liam y cambio de personaje", "Paso Sombrío por la reja y placa para dos; acaba en un cofre.", EntradaPruebaLiam, 90f),
+            ("Tesoros", "Un tesoro por capa de requisito, la placa de la llave y el punto que marca el mapa.", EntradaTesoros, 90f),
             ("Agua (norte)", "Nadar en lo hondo y en lo poco hondo.", new Vector3(0f, 0.1f, 21f), 0f),
             ("Tiendas y Esencia (sur)", "Renard, Tomasa, Patricia y placas de +100.", new Vector3(0f, 0.1f, -20f), 180f),
             ("Vuelo (sur)", "Torres y plataformas flotantes a 10, 18 y 26 m.", new Vector3(0f, 0.1f, -35f), 180f),
@@ -273,15 +286,55 @@ public static partial class CombatLabBuilder
         label.fontSize = 32;
         label.characterSize = 0.5f;
         label.color = Color.white;
+
+        // Solicita también acentos y flechas antes de medir la malla en el Editor.
+        if (label.font != null)
+            label.font.RequestCharactersInTexture(text, label.fontSize, label.fontStyle);
+        var textRenderer = textObject.GetComponent<MeshRenderer>();
+        Bounds bounds = textRenderer.localBounds;
+        if (bounds.size.x <= 0f || bounds.size.y <= 0f ||
+            !float.IsFinite(bounds.size.x) || !float.IsFinite(bounds.size.y))
+        {
+            // Respaldo para una malla aún no generada, con el mismo anclaje central.
+            string[] lineas = text.Replace("\r", "").Split('\n');
+            int caracteres = 1;
+            foreach (string linea in lineas) caracteres = Mathf.Max(caracteres, linea.Length);
+            const float unidadesLocalesPorPunto = 0.1f;
+            int tamanoFuente = label.fontSize > 0 ? label.fontSize :
+                (label.font != null && label.font.fontSize > 0 ? label.font.fontSize : 13);
+            float alturaDeLinea = tamanoFuente * label.characterSize * unidadesLocalesPorPunto;
+            bounds = new Bounds(Vector3.zero,
+                new Vector3(caracteres * alturaDeLinea * 0.6f,
+                    lineas.Length * alturaDeLinea * 1.15f, 0f));
+        }
+
+        var placa = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        placa.name = "Placa del rótulo";
+        Object.DestroyImmediate(placa.GetComponent<Collider>());
+        placa.transform.SetParent(textObject.transform, false);
+        // TextMesh y Quad miran hacia -Z; +Z sitúa la placa detrás de las letras.
+        placa.transform.localPosition = new Vector3(bounds.center.x, bounds.center.y, 0.05f);
+        const float margen = 0.2f;
+        placa.transform.localScale = new Vector3(bounds.size.x + margen * 2f,
+            bounds.size.y + margen * 2f, 1f);
+        var placaRenderer = placa.GetComponent<MeshRenderer>();
+        placaRenderer.sharedMaterial = GetMaterial("Lab_PlacaRotulo", new Color(0.035f, 0.035f, 0.035f),
+            "Universal Render Pipeline/Unlit");
+        placaRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        placaRenderer.receiveShadows = false;
+        textRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        textRenderer.receiveShadows = false;
+        // La placa opaca escribe profundidad antes del texto transparente, situado delante.
+        placaRenderer.sortingOrder = textRenderer.sortingOrder - 1;
     }
 
-    private static Material GetMaterial(string name, Color color)
+    private static Material GetMaterial(string name, Color color, string shaderName = "Universal Render Pipeline/Lit")
     {
         string path = MaterialsPath + "/" + name + ".mat";
         var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
         if (existing != null) return existing;
 
-        Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+        Shader shader = Shader.Find(shaderName) ?? Shader.Find("Standard");
         var material = new Material(shader) { name = name };
         if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
         else if (material.HasProperty("_Color")) material.SetColor("_Color", color);

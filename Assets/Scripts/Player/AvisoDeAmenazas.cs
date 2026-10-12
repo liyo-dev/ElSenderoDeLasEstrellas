@@ -42,10 +42,6 @@ public class AvisoDeAmenazas : MonoBehaviour
     [Header("Cuándo avisar")]
     [Tooltip("Segundos antes del momento justo en los que el icono empieza a verse (tenue).")]
     [SerializeField, Min(0.1f)] private float anticipacion = 0.6f;
-    [Tooltip("Metros máximos entre el jugador y la línea de vuelo de un proyectil para considerar que va a por él.")]
-    [SerializeField, Min(0.1f)] private float margenDeAcierto = 1.2f;
-    [Tooltip("Altura (m) sobre los pies del punto al que apuntan los proyectiles (el pecho).")]
-    [SerializeField, Min(0f)] private float alturaDelPecho = 1f;
 
     [Header("Icono")]
     [Tooltip("Prefab de la UI del aviso en Resources (sin extensión). Vacío = sin icono (el HUD sigue latiendo).")]
@@ -109,11 +105,10 @@ public class AvisoDeAmenazas : MonoBehaviour
         }
 
         float defensa = SegundosHastaElMomentoDeDefensa(out float esquiva);
-        float ventana = _escudo != null ? _escudo.VentanaDeContraataque : 0.2f;
 
-        if (defensa <= ventana) Cambiar(TipoDeAviso.Defensa, EstadoDeAviso.Ahora);
+        if (defensa <= 0f) Cambiar(TipoDeAviso.Defensa, EstadoDeAviso.Ahora);
         else if (esquiva <= anticipacion) Cambiar(TipoDeAviso.NoBloqueable, EstadoDeAviso.Aviso);
-        else if (defensa <= ventana + anticipacion) Cambiar(TipoDeAviso.Defensa, EstadoDeAviso.Aviso);
+        else if (defensa <= anticipacion) Cambiar(TipoDeAviso.Defensa, EstadoDeAviso.Aviso);
         else Cambiar(TipoDeAviso.Ninguno, EstadoDeAviso.Nada);
     }
 
@@ -131,9 +126,7 @@ public class AvisoDeAmenazas : MonoBehaviour
     {
         esquiva = float.PositiveInfinity;
         float defensa = float.PositiveInfinity;
-        bool puedeDefender = _escudo != null && _escudo.isActiveAndEnabled && (_acciones == null || _acciones.AllowShield);
-        float radio = _escudo != null ? _escudo.RadioDeContraataque : 2.6f;
-        Vector3 pecho = transform.position + Vector3.up * alturaDelPecho;
+        bool puedeDefender = _escudo != null && _escudo.isActiveAndEnabled && _escudo.PuedeAbrirContraataque;
 
         if (puedeDefender)
         {
@@ -142,7 +135,9 @@ public class AvisoDeAmenazas : MonoBehaviour
             {
                 var p = proyectiles[i];
                 if (p == null || p.TipoDeAmenaza != TipoDeAmenaza.Devolvible) continue;
-                float t = SegundosHastaElRadio(p.PosicionDeAmenaza, p.VelocidadDeAmenaza, pecho, radio);
+                if (!(p is IDevolvible)) continue;
+                // Pulsar abre una ventana: también sirve si la bola entra en captura antes de cerrarse.
+                float t = Mathf.Max(0f, _escudo.TiempoHastaElPecho(p) - _escudo.SegundosDeAtrapado - _escudo.VentanaDeContraataque);
                 if (t < defensa) defensa = t;
             }
         }
@@ -154,25 +149,13 @@ public class AvisoDeAmenazas : MonoBehaviour
         {
             float t = Mathf.Max(0f, anuncios[i].impactoEn - ahora);
             if (anuncios[i].tipo == TipoDeAmenaza.NoBloqueable) { if (t < esquiva) esquiva = t; }
-            else if (puedeDefender && t < defensa) defensa = t;
+            else if (puedeDefender)
+            {
+                float momento = Mathf.Max(0f, t - _escudo.VentanaDeContraataque);
+                if (momento < defensa) defensa = momento;
+            }
         }
         return defensa;
-    }
-
-    /// Segundos hasta que algo que vuela desde 'pos' a 'vel' entre en la esfera de 'radio' alrededor
-    /// de 'centro'. Infinito si no va hacia ella o pasa lejos.
-    private float SegundosHastaElRadio(Vector3 pos, Vector3 vel, Vector3 centro, float radio)
-    {
-        float v = vel.magnitude;
-        if (v < 0.5f) return float.PositiveInfinity;
-        Vector3 hasta = centro - pos;
-        Vector3 dir = vel / v;
-        float avance = Vector3.Dot(hasta, dir);
-        if (avance <= 0f) return float.PositiveInfinity;                       // ya ha pasado o se aleja
-        float lateral = (hasta - dir * avance).magnitude;
-        if (lateral > margenDeAcierto) return float.PositiveInfinity;           // no va a por él
-        if (hasta.sqrMagnitude <= radio * radio) return 0f;                    // ya está dentro
-        return Mathf.Max(0f, avance - radio) / v;
     }
 
     private void Cambiar(TipoDeAviso tipo, EstadoDeAviso estado)

@@ -67,6 +67,7 @@ public class PlayerSaveData
     // Hechizos básicos equipados, en orden de rotación (hasta cuatro).
     public List<SpellId> basicSpellIds = new();
     public List<PlayerPresetSO.BasicosDeCompanero> companionBasics = new(); // INC-503
+    public List<PlayerPresetSO.SaludDeCompanero> companionHealth = new(); // INC-717
 
     // Ranuras del sistema anterior: solo se leen para convertir partidas guardadas antes de
     // INC-486 (GameBootProfile). No se escriben.
@@ -187,6 +188,7 @@ public class PlayerSaveData
 
         d.basicSpellIds = new List<SpellId>(preset.basicSpellIds ?? new List<SpellId>());
         d.companionBasics = PlayerPresetSO.BasicosDeCompanero.CopiarLista(preset.companionBasics);
+        d.companionHealth = PlayerPresetSO.SaludDeCompanero.CopiarLista(preset.companionHealth);
 
         // === NUEVO: persistir permisos de abilities desde el preset ===
         if (preset.abilities != null)

@@ -305,8 +305,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
 
     void Update()
     {
-        // FIX (25 ago 2026): mismo hueco encontrado y confirmado KO en AmbientCloudDirector (ver
-        // su Update()) — OnInteriorEntered/OnInteriorExited (ver OnEnable) solo cubren el flujo
+        // OnInteriorEntered/OnInteriorExited (ver OnEnable) solo cubren el flujo
         // "andando", nunca el cinemático (CinematicSequencerBase → BeginCinematicOverride +
         // ApplyInteriorForCinematic, p.ej. TabernaSequencer). Se corrige aquí de forma preventiva
         // (misma familia de sistemas de cielo, misma causa raíz) con el patrón ya establecido en
@@ -702,6 +701,7 @@ public class NightSkyConstellationSpawner : MonoBehaviour
     /// para que se lean como una guía estable y no compitan visualmente con las estrellas).</summary>
     void ApplyAlpha(float alpha)
     {
+        alpha *= 1f - (dayNightCycle != null ? dayNightCycle.Nublado : 0f);
         float time = Time.time;
         for (int i = 0; i < _starRenderers.Count; i++)
         {

@@ -258,6 +258,13 @@ public static class UnlockService
         return true;
     }
 
+    /// Verifica si una habilidad (Swim, Jump, Fly…) está desbloqueada en el preset activo.
+    public static bool HasAbility(AbilityKey key)
+    {
+        var preset = GetActivePreset();
+        return preset && preset.abilities != null && preset.abilities.Tiene(key);
+    }
+
     /// Verifica si un flag existe en el preset activo.
     public static bool HasFlag(string flag)
     {

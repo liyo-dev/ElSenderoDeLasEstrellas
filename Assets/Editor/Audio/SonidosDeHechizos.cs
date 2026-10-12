@@ -9,7 +9,8 @@ using UnityEngine;
 /// Cada hechizo tiene su sonido de lanzamiento (clave «Hechizo_&lt;Asset&gt;»), hecho a la medida de
 /// cómo se lanza: carga durante el gesto (castDelaySeconds), salida, y cola según la velocidad;
 /// las zonas suenan lo que dura la zona. Los impactos van por elemento y tamaño
-/// («Impacto_&lt;Elemento&gt;_&lt;Pequeno|Grande&gt;»). Las zonas y el Paso Sombrío no llevan impacto
+/// («Impacto_&lt;Elemento&gt;_&lt;Pequeno|Grande&gt;»), salvo Amanecer, que lleva el suyo
+/// (Herramientas/SFX/disenar_amanecer.py, INC-724). Las zonas y el Paso Sombrío no llevan impacto
 /// (los golpes de cada 0,5 s de una zona saturarían el oído).
 ///
 /// Los audios salen de Herramientas/SFX/disenar_hechizos.py y viven en Assets/Audio/SFX_Hechizos/.
@@ -36,6 +37,7 @@ public static class SonidosDeHechizos
         ("EstrellaFugaz",    "Impacto_Luz_Pequeno"),
         ("LluviaDeChispas",  "Impacto_Luz_Pequeno"),
         ("CorazonEstelar",   "Impacto_Luz_Grande"),
+        ("Amanecer",         "Impacto_Amanecer"),
         ("GarraDelPacto",    "Impacto_Mente_Grande"),
         ("DardoMental",      "Impacto_Mente_Pequeno"),
         ("Eco",              "Impacto_Mente_Grande"),
@@ -61,6 +63,7 @@ public static class SonidosDeHechizos
         "Impacto_Fuego_Pequeno", "Impacto_Fuego_Grande", "Impacto_Viento_Pequeno", "Impacto_Viento_Grande",
         "Impacto_Luz_Pequeno", "Impacto_Luz_Grande", "Impacto_Mente_Pequeno", "Impacto_Mente_Grande",
         "Impacto_Oscuro_Pequeno", "Impacto_Oscuro_Grande", "Impacto_Levitacion",
+        "Impacto_Amanecer",
     };
 
     [MenuItem("El Sendero/Audio/SFX propios de los hechizos (INC-600)")]

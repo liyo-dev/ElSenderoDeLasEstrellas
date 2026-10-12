@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Collider))]
-public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
+public class MagicProjectile : MonoBehaviour, IDevolvible
 {
     // ==== Config que inyecta el Spawner (no hay referencia a SO) =============
 
@@ -36,7 +36,7 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
         public string impactSFXKey;      // clave SFX al impactar
         
         // Elemento de magia (para interacciones con puzzle)
-        public MagicElement element;     // Fire, Ice, etc.
+    public MagicElement element;     // Elemento que reciben las piezas del mundo.
 
         // Modo preciso (Paso 5/6 del refactor Tramo 1): true si este proyectil concreto es la
         // variante "precisa" de un hechizo con MagicSpellSO.supportsPreciseMode (mantener el
@@ -60,6 +60,8 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
     int          _pierceLeft;
     MagicSpellSO _impactZone;
     MagicSpellSO _statusSpell;   // estado que pone al impactar (INC-499)
+    float _abreProteccion;       // segundos que abre la protección de lo que alcanza (INC-724)
+    GameObject _vfxProteccion;
     LayerMask    _zoneLayers;
     float        _zoneDamageMultiplier = 1f;
     readonly System.Collections.Generic.HashSet<Transform> _alreadyHit = new System.Collections.Generic.HashSet<Transform>();
@@ -88,6 +90,18 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
     public float Damage => _cfg.damage;
     /// <summary>Quién lanzó el proyectil (puede ser null). Lo usa el contraataque (INC-493).</summary>
     public GameObject Instigator => _instigator;
+    public GameObject Lanzador => _instigator;
+    /// <summary>Elemento del hechizo (lo conserva la bola si se devuelve con la B).</summary>
+    public MagicElement Elemento => _cfg.element;
+    public float DanoEntrante => Damage;
+    public void Devolver(GameObject nuevoDueno, Transform objetivo, Vector3 direccionSiNoHayObjetivo, float dano)
+    {
+        if (_ended || AmenazasAlJugador.EsDelGrupoDelJugador(_instigator)) return;
+        float velocidad = VelocidadDeAmenaza.magnitude;
+        _ended = true;
+        var devuelto = GetComponent<ProyectilDevuelto>() ?? gameObject.AddComponent<ProyectilDevuelto>();
+        devuelto.TomarControl(this, nuevoDueno, objetivo, direccionSiNoHayObjetivo, velocidad, dano, _cfg.impactVFX, _instigator);
+    }
 
     // Amenaza para el aviso de combate (INC-666): solo si lo lanza alguien ajeno al grupo.
     public Vector3 PosicionDeAmenaza => transform.position;
@@ -233,6 +247,8 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
         _zoneLayers = zoneLayers;
         _zoneDamageMultiplier = damageMultiplier;
         _statusSpell = spell.statusEffect != EstadoDeCombate.Ninguno ? spell : null;
+        _abreProteccion = spell.abreProteccionSegundos;
+        _vfxProteccion = spell.vfxProteccionAbierta;
     }
 
     static Transform HitRoot(Collider c)
@@ -496,11 +512,18 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
             return;
         }
 
-        // ✅ PRIORIDAD 3: Detectar interacción con puzzle (enredaderas, etc.)
-        var burnable = other.GetComponent<Burnable>();
-        if (burnable != null)
+        // Sellos y piezas sin vida con una protección que este hechizo abre (Amanecer, INC-724).
+        if (_abreProteccion > 0f && other.GetComponentInParent<Damageable>() == null && AbrirProteccion(other))
         {
-            burnable.OnHitByMagic(_cfg.element, hitPoint);
+            SpawnImpactEffects(hitPoint);
+            if (_cfg.destroyOnHit) End(true);
+            return;
+        }
+
+        // ✅ PRIORIDAD 3: piezas del mundo que reaccionan a la magia (lo que arde, cristales,
+        // molinetes…). Ver ReaccionesAMagia.
+        if (ReaccionesAMagia.Notificar(other, new ImpactoDeMagia(_cfg.element, hitPoint, _instigator, false)))
+        {
             SpawnImpactEffects(hitPoint);
             if (_cfg.destroyOnHit) End(true);
             return;
@@ -588,6 +611,36 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
 
     void ApplyDamageAndKnockback(Collider col, Vector3 hitPoint)
     {
+        // La protección se abre antes del daño, para que el propio golpe ya entre (INC-724).
+        if (_abreProteccion > 0f) AbrirProteccion(col);
+        AplicarImpactoDirecto(col, hitPoint, _instigator, _cfg.damage, _cfg.knockbackForce, _statusSpell);
+    }
+
+    /// Abre la protección de lo alcanzado (en el collider, sus padres o junto a su Damageable).
+    bool AbrirProteccion(Collider col)
+    {
+        var proteccion = ProteccionQueSeAbre.De(col);
+        if (proteccion == null)
+        {
+            var receptor = EncontrarReceptor(col);
+            if (receptor != null) proteccion = receptor.GetComponent<IProteccionQueSeAbre>();
+        }
+        if (proteccion == null) return false;
+        proteccion.AbrirProteccion(_abreProteccion, _instigator, _vfxProteccion);
+        return true;
+    }
+
+    /// <summary>Receptor del impacto, también para bolas devueltas y hitboxes en ramas distintas.</summary>
+    public static Damageable EncontrarReceptor(Collider col)
+    {
+        if (col == null) return null;
+        return col.GetComponent<Damageable>() ?? col.GetComponentInParent<Damageable>() ??
+               col.GetComponentInChildren<Damageable>(true) ?? col.transform.root.GetComponentInChildren<Damageable>(true);
+    }
+
+    /// <summary>Camino compartido de daño, defensa, estados y empuje de los proyectiles del jugador.</summary>
+    public static void AplicarImpactoDirecto(Collider col, Vector3 hitPoint, GameObject instigador, float dano, float empuje = 0f, MagicSpellSO estado = null)
+    {
         // Si el objetivo está defendiendo con escudo NPC, no recibe daño ni knockback.
         if (col != null && TryGetDefendingNpcShield(col, out var defendingShield))
         {
@@ -603,21 +656,16 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
             // algunos enemigos con hitboxes en una rama distinta a la del Damageable (ej. sub-objetos de
             // colisión que no son ancestros directos) recibían el impacto visual (VFX/SFX) pero no
             // perdían vida, porque GetComponentInParent no encontraba el componente.
-            if (!col.TryGetComponent<Damageable>(out var d))
-                d = col.GetComponentInParent<Damageable>();
-            if (d == null)
-                d = col.GetComponentInChildren<Damageable>(true);
-            if (d == null && col.transform.root != null)
-                d = col.transform.root.GetComponentInChildren<Damageable>(true);
+            var d = EncontrarReceptor(col);
 
             if (d != null)
             {
                 // Con el ataque de quien lo lanzó (FormulasDeCombate, INC-470).
-                d.TakeDamage(FormulasDeCombate.DanoDe(_instigator, _cfg.damage), _instigator);
-                if (_statusSpell != null)
-                    EstadosDeCombate.Aplicar(d, _statusSpell.statusEffect, _statusSpell.statusDuration,
-                                             _statusSpell.statusStrength, hitPoint != Vector3.zero ? hitPoint : transform.position,
-                                             _statusSpell.statusVFX);
+                d.TakeDamage(FormulasDeCombate.DanoDe(instigador, dano), instigador);
+                if (estado != null)
+                    EstadosDeCombate.Aplicar(d, estado.statusEffect, estado.statusDuration,
+                                             estado.statusStrength, hitPoint != Vector3.zero ? hitPoint : col.transform.position,
+                                             estado.statusVFX);
             }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             else
@@ -628,14 +676,14 @@ public class MagicProjectile : MonoBehaviour, IAmenazaEntrante
         }
 
         // Knockback simple (si hay RB dinámico)
-        if (_cfg.knockbackForce > 0f && col)
+        if (empuje > 0f && col)
         {
             var rb = col.attachedRigidbody ? col.attachedRigidbody : col.GetComponentInParent<Rigidbody>();
             if (rb != null && !rb.isKinematic)
             {
-                Vector3 dir = (rb.worldCenterOfMass - (hitPoint != Vector3.zero ? hitPoint : transform.position)).normalized;
+                Vector3 dir = (rb.worldCenterOfMass - (hitPoint != Vector3.zero ? hitPoint : col.transform.position)).normalized;
                 dir.y = 0f; // empuje horizontal
-                rb.AddForce(dir * _cfg.knockbackForce, ForceMode.Impulse);
+                rb.AddForce(dir * empuje, ForceMode.Impulse);
             }
         }
     }

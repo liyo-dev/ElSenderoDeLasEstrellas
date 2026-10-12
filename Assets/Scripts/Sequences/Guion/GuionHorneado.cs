@@ -35,6 +35,7 @@ public class GuionHorneado : ScriptableObject
         if (peso > 0f && p.extras != null)
             foreach (var x in p.extras) { foco += x - Vector3.up * p.alturaDelFoco; peso += 1f; }
         foco = peso > 0f ? foco / peso + Vector3.up * p.alturaDelFoco : p.focoFijo;
+        if (p.focos.Count > 0) foco = Interpolar.Posicion(p.focos, t);
         Vector3 d = foco - posicion;
         if (d.sqrMagnitude < 1e-4f) return false;
         fov = p.lente;
@@ -161,6 +162,8 @@ public enum TipoDeAnimacion
 [Serializable]
 public struct OrdenDeAnimacion
 {
+    [Tooltip("Duración del fundido de entrada de la pose; 0 conserva el valor habitual.")]
+    public float fundido;
     public float t;
     public TipoDeAnimacion tipo;
     public string estado;
@@ -208,6 +211,8 @@ public enum TipoDePlano { General = 0, Conjunto = 1, Medio = 2, Primer = 3, Deta
 [Serializable]
 public class PlanoHorneado
 {
+    [Tooltip("Foco medido en la pose horneada para sujetos horizontales.")]
+    public List<ClaveDePosicion> focos = new();
     public float t0;
     public float t1;
     public TipoDePlano tipo;

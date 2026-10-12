@@ -18,6 +18,14 @@ public interface IAmenazaEntrante
     TipoDeAmenaza TipoDeAmenaza { get; }
 }
 
+/// <summary>Proyectil hostil cuya trayectoria y propiedad se pueden transferir.</summary>
+public interface IDevolvible : IAmenazaEntrante
+{
+    GameObject Lanzador { get; }
+    float DanoEntrante { get; }
+    void Devolver(GameObject nuevoDueno, Transform objetivo, Vector3 direccionSiNoHayObjetivo, float dano);
+}
+
 /// <summary>
 /// Registro de lo que puede alcanzar al jugador, para avisarle en el momento justo
 /// (<see cref="AvisoDeAmenazas"/>) sin que el aviso conozca a cada enemigo:
@@ -30,6 +38,20 @@ public interface IAmenazaEntrante
 /// </summary>
 public static class AmenazasAlJugador
 {
+    /// <summary>Tiempo hasta el pecho; el radio mínimo permite atrapar contactos cercanos.</summary>
+    public static float SegundosHastaAlcanzar(IAmenazaEntrante amenaza, Vector3 centro, float radioMinimo, float margenLateral)
+    {
+        Vector3 hasta = centro - amenaza.PosicionDeAmenaza;
+        if (hasta.sqrMagnitude <= radioMinimo * radioMinimo) return 0f;
+        Vector3 velocidad = amenaza.VelocidadDeAmenaza;
+        float rapidez = velocidad.magnitude;
+        if (rapidez < 0.01f) return float.PositiveInfinity;
+        Vector3 direccion = velocidad / rapidez;
+        float avance = Vector3.Dot(hasta, direccion);
+        if (avance <= 0f || (hasta - direccion * avance).sqrMagnitude > margenLateral * margenLateral)
+            return float.PositiveInfinity;
+        return avance / rapidez;
+    }
     /// <summary>Golpe anunciado: quién lo da, cuándo llega (Time.time) y de qué tipo es.</summary>
     public struct Anuncio
     {

@@ -202,7 +202,7 @@ public class VolteretaDelJugador : MonoBehaviour
         while (Time.time < tope)
         {
             BajarBrazos();
-            if (Time.time > empezo + 0.15f && controller && !controller.IsAirborne) break;   // ya en el suelo
+            if (Time.time > empezo + 0.15f && controller && controller.isActiveAndEnabled && !controller.IsAirborne) break;   // ya en el suelo
             if (controller && controller.suppressAirMovement) { _animacionAjena = true; break; }   // ha echado a volar
             if (animado)
             {

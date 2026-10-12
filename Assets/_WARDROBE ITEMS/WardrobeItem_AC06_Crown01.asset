@@ -20,3 +20,8 @@ MonoBehaviour:
   descriptionId: ITEM_AC06_CROWN01_DESC
   description: Una corona reluciente digna de la realeza.
   icon: {fileID: 21300000, guid: 116e9d3d2667452a8d7d2326cd283f29, type: 3}
+  bonos:
+    vida: 15
+    magia: 0
+    ataque: 0
+    defensa: 0
