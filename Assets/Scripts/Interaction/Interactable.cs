@@ -54,6 +54,8 @@ public class Interactable : MonoBehaviour
     bool used, enabledForUse;
     NPCBehaviourManagerV2 _npcManager;
     NPCPartyMember _partyMember;
+    Personaje _personaje;
+    CuerpoDelGrupo _cuerpoDelGrupo;
     Game.NPC.CompanionFollowPrompt _followPrompt;
     NPCWorldPoint _worldPoint;
     bool _hintVisible;
@@ -121,6 +123,43 @@ public class Interactable : MonoBehaviour
         _npcManager = GetComponent<NPCBehaviourManagerV2>();
         _partyMember = GetComponent<NPCPartyMember>() ?? GetComponentInParent<NPCPartyMember>();
         _worldPoint = GetComponent<NPCWorldPoint>();
+
+        if (EsPersonajeDelGrupo())
+        {
+            enabledForUse = false;
+            if (hint)
+            {
+                hint.transform.localScale = Vector3.zero;
+                hint.SetActive(false);
+            }
+        }
+    }
+
+    public bool EsPersonajeDelGrupo()
+    {
+        if (_personaje == null)
+            _personaje = GetComponent<Personaje>() ?? GetComponentInParent<Personaje>();
+        if (_personaje != null)
+        {
+            if (ControlDelJugador.PersonajeDe(gameObject, out var slot))
+                return ControlDelJugador.EnElGrupo(slot);
+            return true;
+        }
+
+        if (_cuerpoDelGrupo == null)
+            _cuerpoDelGrupo = GetComponent<CuerpoDelGrupo>() ?? GetComponentInParent<CuerpoDelGrupo>();
+        if (_cuerpoDelGrupo != null)
+            return true;
+
+        if (_partyMember == null)
+            _partyMember = GetComponent<NPCPartyMember>() ?? GetComponentInParent<NPCPartyMember>();
+        if (_partyMember != null && _partyMember.IsInParty)
+            return true;
+
+        if (ControlDelJugador.PersonajeDe(gameObject, out var slotDirecto))
+            return ControlDelJugador.EnElGrupo(slotDirecto);
+
+        return false;
     }
 
     public bool EsPersonaje { get; private set; }
@@ -195,6 +234,18 @@ public class Interactable : MonoBehaviour
     {
         if (hint == null) return;
         
+        // Los personajes del grupo nunca muestran el icono de interactuar
+        if (EsPersonajeDelGrupo())
+        {
+            if (_hintVisible)
+            {
+                _hintVisible = false;
+                _hintTween?.Kill();
+                hint.SetActive(false);
+            }
+            return;
+        }
+
         // Solo mostrar hint si puede interactuar
         bool canShow = visible && !used && enabledForUse && CanInteract(interactor);
         
@@ -272,18 +323,10 @@ public class Interactable : MonoBehaviour
         if (_npcManager != null && _npcManager.Context != null && _npcManager.Context.IsInCinematic)
             return false;
 
-        // Los NPCs en el equipo no deben ser interactuables (sin botón A ni acción),
-        // excepto cuando están en estado "Sígueme"/"Dejar de seguir".
-        // Usamos CanShowFollowPrompt() en lugar de IsShowingPrompt para evitar dependencia circular:
-        // IsShowingPrompt depende de IsHintVisible, que a su vez depende de CanInteract().
-        if (_partyMember != null && _partyMember.IsInParty)
-        {
-            // Lazy-init: CompanionFollowPrompt se añade dinámicamente y puede no existir en Awake.
-            if (_followPrompt == null)
-                _followPrompt = GetComponent<Game.NPC.CompanionFollowPrompt>();
-            if (_followPrompt == null || !_followPrompt.CanShowFollowPrompt())
-                return false;
-        }
+        // Los personajes del grupo (Will, Liam, Estela) no son interactuables entre sí
+        // ni muestran iconos de interacción ordinaria (botón A).
+        if (EsPersonajeDelGrupo())
+            return false;
 
         // Bloqueo central: durante combate/diálogo/cinemática no permitir nuevas interacciones
         if (IsInteractionBlockedByCurrentState(interactor))
@@ -604,7 +647,11 @@ public class Interactable : MonoBehaviour
             );
             PlayPromptVoice();
         }
-        catch (System.Exception ex)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[Interactable] ShowWithChoices failed: {ex.Message}\n{ex.StackTrace}");

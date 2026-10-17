@@ -1504,7 +1504,11 @@ public class DialogueManager : MonoBehaviour
             bodyText.ForceMeshUpdate();
             return true;
         }
-        catch (NullReferenceException ex)
+        catch (NullReferenceException
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
             // LogWarning (no LogError) a propósito: este catch ya deja el diálogo en un estado
             // usable (ver arriba), así que no es un error que deba parar el Play Mode con "Error

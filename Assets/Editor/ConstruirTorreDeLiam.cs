@@ -259,7 +259,7 @@ public static class ConstruirTorreDeLiam
         var prefab=AssetDatabase.LoadAssetAtPath<GameObject>(path)??throw new InvalidOperationException("Falta prop: "+path);
         var go=new GameObject(nombre);go.transform.SetParent(padre!=null?padre:raiz,false);
         var modelo=(GameObject)PrefabUtility.InstantiatePrefab(prefab,go.transform);modelo.transform.localPosition=Vector3.zero;modelo.transform.localRotation=Quaternion.Euler(giro);
-        var rr=go.GetComponentsInChildren<Renderer>().Where(r=>!(r is CanvasRenderer)&&r.GetComponentInParent<Canvas>()==null).ToArray();
+        var rr=go.GetComponentsInChildren<Renderer>().Where(r=>r.GetComponentInParent<Canvas>()==null).ToArray();
         var b=rr[0].bounds;foreach(var r in rr)b.Encapsulate(r.bounds);
         go.transform.position+=Origen+pos-new Vector3(b.center.x,b.min.y,b.center.z);
         foreach(var c in go.GetComponentsInChildren<Collider>())UnityEngine.Object.DestroyImmediate(c);

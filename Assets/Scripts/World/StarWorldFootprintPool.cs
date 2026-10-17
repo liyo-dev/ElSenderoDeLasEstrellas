@@ -21,6 +21,14 @@ public class StarWorldFootprintPool : MonoBehaviour
 
     private void Awake()
     {
+        if (_prefab == null)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning("[StarWorldFootprintPool] _prefab no está asignado en el Inspector.");
+#endif
+            return;
+        }
+
         for (int i = 0; i < _poolSize; i++)
         {
             FootprintEffect effect = Instantiate(_prefab, transform);

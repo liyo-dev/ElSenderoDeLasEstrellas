@@ -14,7 +14,6 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [SerializeField] private NavMeshAgent agent;
 
     [Header("Configuración General")]
-    [SerializeField] private float detectionRange = 20f;
     [SerializeField] private float attackRange = 3f;
     [SerializeField] private float projectileRange = 10f;
     [SerializeField] private LayerMask playerLayer;
@@ -23,6 +22,12 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [SerializeField] private float slashDamage = 15f;
     [SerializeField] private float stabDamage = 20f;
     [SerializeField] private float projectileDamage = 10f;
+    [SerializeField, Min(0.1f), Tooltip("Radio de daño al explotar una esfera de plasma contra el suelo.")]
+    private float projectileImpactRadius = 2.2f;
+    [SerializeField, Range(0f, 1f), Tooltip("Probabilidad de que el Demonio 2 use la carga de plasma en vez de su abanico.")]
+    private float plasmaChargeAttackChance = 0.35f;
+    [SerializeField, Min(0.5f), Tooltip("Duración de la cuenta atrás de la carga de plasma del Demonio 2.")]
+    private float plasmaChargeDuration = 2.1f;
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform projectileSpawnPoint;
     [SerializeField] private GameObject spellEffectPrefab;
@@ -174,6 +179,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
     private static readonly Collider[] _overlapBuffer = new Collider[16];
     private float _targetRefreshTimer;
+    private Vector3 _destinoDeMovimiento;
+    private bool _tieneDestinoDeMovimiento;
+    private float _proximaActualizacionDeRuta;
+    private float _atascadoDesde = -1f;
 
     // Hashes de animaciones
     private static readonly int AnimIdle            = Animator.StringToHash("Idle");
@@ -580,15 +589,6 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer > detectionRange)
-        {
-            currentState = BossState.Idle;
-            _persiguiendoDesde = -1f;
-            PlayAnimation(AnimIdle);
-            if (agent && agent.isOnNavMesh) agent.isStopped = true;
-            return;
-        }
-
         LookAtPlayer();
         bool puedeAtacar = CanStartNewAttack();
 
@@ -650,7 +650,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         if (agent && agent.isOnNavMesh)
         {
             agent.isStopped = false;
-            agent.SetDestination(player.position);
+            ActualizarDestinoDeMovimiento(player.position);
 
             if (agent.velocity.sqrMagnitude > 0.1f)
                 LookAtDirection(agent.velocity.normalized);
@@ -678,8 +678,42 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         Vector3 dir = Quaternion.Euler(0f, 40f * _ladoRodeo, 0f) * desdeWill.normalized;
 
         agent.isStopped = false;
-        agent.SetDestination(player.position + dir * attackRange * 1.2f);
+        ActualizarDestinoDeMovimiento(player.position + dir * attackRange * 1.2f);
         PlayAnimation(AnimFlyForward);
+    }
+
+    /// Actualiza la ruta cuando el jugador se mueve o el agente deja de avanzar, sin reiniciarla cada fotograma.
+    private void ActualizarDestinoDeMovimiento(Vector3 destino)
+    {
+        if (!agent || !agent.enabled || !agent.isOnNavMesh) return;
+
+        bool cambioDestino = !_tieneDestinoDeMovimiento ||
+                            (destino - _destinoDeMovimiento).sqrMagnitude >= 0.16f;
+        bool rutaInvalida = !agent.pathPending && (!agent.hasPath || agent.pathStatus == NavMeshPathStatus.PathInvalid);
+        bool necesitaAvanzar = agent.hasPath && !agent.pathPending &&
+                               agent.remainingDistance > agent.stoppingDistance + 0.65f;
+
+        if (necesitaAvanzar && agent.velocity.sqrMagnitude < 0.04f)
+        {
+            if (_atascadoDesde < 0f) _atascadoDesde = Time.time;
+        }
+        else
+        {
+            _atascadoDesde = -1f;
+        }
+
+        bool atascado = _atascadoDesde >= 0f && Time.time - _atascadoDesde >= 0.8f;
+        if (Time.time < _proximaActualizacionDeRuta || (!cambioDestino && !rutaInvalida && !atascado)) return;
+
+        if (NavMesh.SamplePosition(destino, out NavMeshHit hit, Mathf.Max(1.5f, agent.radius * 3f), agent.areaMask))
+            destino = hit.position;
+
+        bool solicitada = agent.SetDestination(destino);
+        _proximaActualizacionDeRuta = Time.time + 0.35f;
+        if (!solicitada) return;
+        _destinoDeMovimiento = destino;
+        _tieneDestinoDeMovimiento = true;
+        _atascadoDesde = -1f;
     }
 
     /// Tras encajar varios golpes en una ventana, se aparta de Will antes de volver a la carga.
@@ -885,7 +919,9 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         if (projectilePrefab && projectileSpawnPoint && player)
         {
-            bool triple = isSecondEncounter && currentPhase != BossPhase.Phase1;
+            bool puedeCargarPlasma = isSecondEncounter && currentPhase != BossPhase.Phase1;
+            bool cargaExplosiva = puedeCargarPlasma && Random.value < plasmaChargeAttackChance;
+            bool triple = puedeCargarPlasma && !cargaExplosiva;
             int count = triple ? 3 : 1;
             float spreadAngle = 20f;
             int volleys = triple ? Random.Range(2, 4) : 1;
@@ -907,7 +943,12 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                     if (!proj) Debug.LogError($"[ImpDemonAI] El prefab '{projectilePrefab.name}' no tiene componente EnemyProjectile en la raíz ni en hijos.");
 #endif
-                    if (proj) proj.Initialize(direction, projectileDamage);
+                    if (proj)
+                    {
+                        proj.ConfigureAoE(projectileImpactRadius, projectileDamage,
+                            cargaExplosiva ? plasmaChargeDuration : 0f);
+                        proj.Initialize(direction, projectileDamage);
+                    }
                 }
             }
         }
@@ -1156,6 +1197,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         // Las marcas quedan fijas al terminar el aviso: se puede esquivar la caída.
         Transform[] drops = new Transform[count];
+        float[] alturaDelCentro = new float[count];
         bool[] launched = new bool[count];
         bool[] impacted = new bool[count];
         elapsed = 0f;
@@ -1172,18 +1214,22 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
                     drops[i] = CrearVisualDeLluvia(positions[i] + Vector3.up * rainHeight,
                         fallDuration + 1f);
                     if (drops[i])
+                    {
                         drops[i].localScale = Vector3.Scale(drops[i].localScale, new Vector3(0.22f, 0.65f, 0.22f));
+                        var render = drops[i].GetComponentInChildren<Renderer>(true);
+                        if (render) alturaDelCentro[i] = render.bounds.extents.y;
+                    }
                 }
                 float progress = Mathf.Clamp01(age / fallDuration);
                 if (drops[i])
-                    drops[i].position = positions[i] + Vector3.up * (rainHeight * (1f - progress * progress));
+                    drops[i].position = positions[i] + Vector3.up * Mathf.Lerp(rainHeight, alturaDelCentro[i], progress * progress);
                 if (progress < 1f) continue;
 
                 impacted[i] = true;
                 remaining--;
                 pool.Recoger(drops[i]);
                 pool.Recoger(shadowTrans[i]);
-                CrearVisualDeLluvia(positions[i], 0.3f);
+                CrearImpactoDeLluvia(positions[i]);
                 DamagePlayerInRadius(positions[i], rainImpactRadius, rainDamage);
             }
             elapsed += Time.deltaTime;
@@ -1214,10 +1260,19 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         return efecto;
     }
 
+    private void CrearImpactoDeLluvia(Vector3 posicion)
+    {
+        var pool = VfxPoolService.Instance;
+        if (!pool || !spellEffectPrefab) return;
+        pool.Play(spellEffectPrefab, posicion + Vector3.up * 0.05f, Quaternion.identity, 2f);
+    }
+
     private void DamagePlayerInRadius(Vector3 center, float radius, float damage)
     {
         if (!player) return;
-        if (Vector3.Distance(center, player.position) <= radius)
+        Vector3 distancia = player.position - center;
+        distancia.y = 0f;
+        if (distancia.sqrMagnitude <= radius * radius)
             DamagePlayer(damage);
     }
 
@@ -1315,7 +1370,11 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
                 _lastPlayedLayer = info.layer;
                 return;
             }
-            catch (System.Exception ex)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación mapeada hash={animHash}: {ex.Message}");
@@ -1333,7 +1392,11 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
                 _lastPlayedAnimHash = animHash;
                 _lastPlayedLayer = layerIndex;
             }
-            catch (System.Exception ex)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[ImpDemonAI] Error al reproducir animación hash={animHash} en capa={layerIndex}: {ex.Message}");
@@ -1528,9 +1591,6 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
-
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
 

@@ -55,7 +55,11 @@ public class TeleportService : MonoBehaviour
         foreach (var d in evt.GetInvocationList())
         {
             try { ((System.Action)d).Invoke(); }
-            catch (System.Exception ex)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogError($"[TeleportService] Excepción en suscriptor de {eventName}: {ex.Message}\n{ex.StackTrace}");

@@ -2,11 +2,11 @@ n,bloque,fuente,clave,hablante,texto,nota
 1,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_INTRO,Archimago,"Buenos días, valle. ¿Qué se te ha estropeado hoy?",
 2,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_FAVOR_CARRETA,Vecino,¡Maestro! Se me ha volcado otra vez la carreta. Y eso que hoy iba despacio.,
 3,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_CARRETA_GRACIAS,Vecino,"¡Gracias, maestro! No habría podido enderezarla yo solo.","Lo DICE, no lo asiente. Tres HeadNod01 seguidos no son un agradecimiento, son un tic."
-4,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE,Archimago,"¡Me encanta vuestro baile!",""
+4,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE,Archimago,¡Me encanta vuestro baile!,
 5,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE_RESPUESTA,Vecino,"¡Gracias, maestro! ¡Seguiremos bailando!","""Antes solo gesticulaba hablando, sin bocadillo: \xABle esta diciendo algo al Archimago pero no le sale el bocadillo\xBB."""
 6,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_FAVOR_GLOBO,Nina,¡Maestro! El globo se ha enganchado en lo alto del campanario.,
 7,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_GLOBO_OK,Archimago,Con cuidado... Eso es.,"Con cuidado...'' se dice AL HACER el hechizo, no despues de que el globo ya se haya ido. Es una advertencia, no un comentario."
-8,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_GLOBO_ROTO,Archimago,"¡Ups! Lo siento, se me ha escapado.",""
+8,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_GLOBO_ROTO,Archimago,"¡Ups! Lo siento, se me ha escapado.",
 9,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_LIORA_1,Liora,¿Has pensado qué contestar a la academia? Llevas semanas con la carta.,
 10,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_ARCHIMAGO,Archimago,Hoy pensaba contestar. Pero siempre acaba surgiendo algo en el valle.,
 11,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLAZA_LIORA_2,Liora,No tienes que quedarte solo porque aquí te necesiten. ¿Qué quieres hacer tú?,
@@ -21,19 +21,19 @@ n,bloque,fuente,clave,hablante,texto,nota
 20,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO,Mago Oscuro,¿Vas a salvarlos a todos tú solo?,
 21,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO_2,Mago Oscuro,Ni a ti mismo puedes salvarte.,
 22,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_ARCHIMAGO,Archimago,"Mientras siga en pie, no llegarás a ellos.",
-23,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MAGO_VALLE,Mago Oscuro,"Que este valle no haya existido nunca.","Calma absoluta, casi un susurro; sostiene el hechizo sobre la cabeza."
-24,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_01,Archimago,"No... No voy a dejar que los toques.
-¡Liora! ¡Nina! ¡Todos vosotros!","Se le quiebra la voz mirando hacia el puente; grita los nombres."
-25,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_02,Archimago,"Luz primera... tú que ardías antes de que hubiera cielo...
-tú que encendiste las estrellas y tendiste caminos entre ellas cuando aún no había nadie para recorrerlos...","Llorando, casi en susurro; manos juntas, ojos cerrados."
-26,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_03,Archimago,"No conozco ningún hechizo capaz de pararlo...
-Así que no te pido uno que exista. Nada arde sin ti... Te lo ruego... ¡préstame tu fuego!","Suplicando; la voz se rompe en 'te lo ruego'... sube en 'préstame tu fuego'."
-27,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_04,Archimago,"Sé que de esto no se vuelve. Sé que nunca contestaré esa carta...
-¡Me da igual lo que quede de mí!","Desesperado, con rabia contra sí mismo."
-28,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_05,Archimago,"¡Toma mis años! ¡Toma mi voz, mi nombre!
-¡Llévate mi alma si la quieres! ¡Pero que ellos vean amanecer!","Gritando entre lágrimas, crescendo."
-29,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_06,Archimago,"Perdóname, Liora... no voy a volver pronto.","Susurro roto, íntimo."
-30,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_HECHIZO,Archimago,"¡Protégelos a todos!","Grito largo y desgarrado entre lágrimas, unos 4 s; brazos arriba en el aire tras la carrera y el salto."
+23,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MAGO_VALLE,Mago Oscuro,Que este valle no haya existido nunca.,"Calma absoluta, casi un susurro; sostiene el hechizo sobre la cabeza."
+24,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_01,Archimago,"No daré ni un paso atrás...
+¡No dejaré que los toques! ¡Liora! ¡Nina! ¡A ninguno de ellos!",Se alza con rabia y determinación; grita los nombres antes de iniciar el conjuro.
+25,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_02,Archimago,"Más allá de la noche y del silencio...
+¡Luz que naciste antes que el cielo y tendiste el camino entre las estrellas!",Cántico de invocación solemne con eco místico al estilo Giga Slave.
+26,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_03,Archimago,"Ningún poder de este mundo puede detenerlo...
+¡Por eso llamo a lo que aún no existe! ¡Escucha mi voz y despierta en mis manos!",Crece la intensidad del conjuro y el eco místico.
+27,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_04,Archimago,"Que mi vida sea el precio y mi alma el sello...
+¡No importa lo que quede de mí cuando la luz se apague!",Sacrificio heroico con determinación absoluta y eco denso.
+28,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_05,Archimago,"¡Haz de mi último aliento un escudo inquebrantable!
+¡Arde conmigo y detén la oscuridad!","Clímax del cántico de invocación, energía desbordada."
+29,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_PLEGARIA_06,Archimago,"Perdóname, Liora... No voy a volver a casa.","Susurro íntimo y seco, sin eco de conjuro, antes del estallido final."
+30,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_HECHIZO,Archimago,¡¡Protégelos a todos!!,Grito épico con eco y cola astral al lanzar el hechizo definitivo.
 31,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_1,Vecina,"¡Hala, ya vuela!",
 32,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_2,Vecino,¡Mira cómo sube!,
 33,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_GLOBO_VECINO_3,Vecino,¡Va a llegar hasta las nubes!,

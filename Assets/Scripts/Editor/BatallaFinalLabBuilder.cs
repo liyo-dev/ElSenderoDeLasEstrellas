@@ -9,11 +9,11 @@ using UnityEngine.SceneManagement;
 using M = MomentoDeCombate;
 
 /// Genera una escena de prueba de la batalla final contra el Mago Oscuro: el final del camino de
-/// luz, con el suelo de luz, bordes invisibles y solo el altar de piedra blanca. Lo demás (espinas,
-/// pilares con anclas, plataformas y lanzadores) está oculto hasta que el Mago lo conjura. Trae el
-/// grupo completo (Will, Estela y Liam) y rellena el guion de comentarios de Estela. Usa el
-/// jugador, los compañeros y el Mago reales; no toca el Sendero ni los prefabs. Regenerarla borra
-/// los cambios hechos a mano dentro de la escena. Ver INC-509, INC-663.
+/// luz, con el suelo de luz, bordes invisibles y solo el altar de piedra blanca.
+/// Sin pilares, sin rocas moradas ni plataformas flotantes: un duelo implacable estilo KH2 Sephiroth
+/// con combate en tierra, mar del abismo (vuelo 3D obligatorio) y ruptura de barrera final con Amanecer.
+/// Trae el grupo completo (Will, Estela y Liam). Regenerarla borra los cambios hechos a mano dentro de la escena.
+/// Ver INC-509, INC-663, INC-761.
 public static class BatallaFinalLabBuilder
 {
     const string ScenePath = "Assets/Scenes/Test/BatallaFinal.unity";
@@ -24,29 +24,30 @@ public static class BatallaFinalLabBuilder
     const string PrefabMago = "Assets/Prefabs/_MAGO_OSCURO.prefab";
     const string PrefabCamara = "Assets/Prefabs/CamaraDelJugador.prefab";
     const string PrefabGrupo = "Assets/Prefabs/GrupoDelJugador.prefab";
-    const string PrefabLanzador = "Assets/Prefabs/Exploracion/LanzadorDeSalto.prefab";
     const string HechizoGolpe = "Assets/_SPELLS/MagoOscuroGolpe.asset";
 
-    // Efectos (los que falten se avisan y se dejan vacíos)
-    const string VfxAparicion = "Assets/_VFX/BatallaFinal/VFX_MagoOscuro_Aparicion.prefab";
+    // Efectos
+    const string VfxAparicion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect5.prefab";
     const string VfxDerrota = "Assets/_VFX/BatallaFinal/VFX_MagoOscuro_Derrota.prefab";
     const string VfxRebobinado = "Assets/_VFX/BatallaFinal/VFX_Rebobinado.prefab";
     const string VfxSacrificio = "Assets/_VFX/BatallaFinal/VFX_SacrificioLiam.prefab";
-    const string VfxZona = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect2.prefab";
+    const string VfxZona = "Assets/_VFX/Hechizos/VFX_Hechizo_MagoOscuroGrieta_Zona.prefab";
     const string VfxMarea = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect3.prefab";
     const string VfxRegeneracion = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab";
     const string VfxProtegido = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield pink.prefab";
     const string VfxCarga = "Assets/VFX/Free Game VFX/Prefab/FX_Purple_Hit_02.prefab";
     const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
     const string VfxCorte = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_02.prefab";
-    const string VfxRoturaCristal = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
+    const string VfxExplosionBomba = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/vfx_Explosion_01.prefab";
     const string VfxPozo = "Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab";
     const string VfxImplosionPozo = "Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect4.prefab";
 
     [MenuItem("El Sendero/Combate/Crear o regenerar la Batalla Final (prueba)")]
-    public static void Crear()
+    public static void MenuCrear() => Crear(pedirConfirmacion: false);
+
+    public static void Crear(bool pedirConfirmacion = false)
     {
-        if (File.Exists(ScenePath) && !EditorUtility.DisplayDialog("Batalla Final",
+        if (pedirConfirmacion && File.Exists(ScenePath) && !EditorUtility.DisplayDialog("Batalla Final",
                 "Se reemplazará BatallaFinal.unity (los cambios hechos a mano dentro se pierden). El Sendero y los prefabs no se tocan.",
                 "Regenerar", "Cancelar"))
             return;
@@ -78,13 +79,11 @@ public static class BatallaFinalLabBuilder
 
         var matSuelo = Mat("BF_SueloDeLuz", new Color(0.72f, 0.78f, 0.95f), emision: new Color(0.2f, 0.25f, 0.4f));
         var matAltar = Mat("BF_AltarBlanco", new Color(0.93f, 0.91f, 0.86f));
-        var matConjuro = Mat("BF_PiedraConjurada", new Color(0.16f, 0.12f, 0.2f));
-        var matCristal = Mat("BF_Ancla", new Color(0.55f, 0.2f, 0.9f), emision: new Color(0.6f, 0.15f, 1f));
         var rayoSombra = MatRayo("BF_RayoSombra", new Color(0.45f, 0.05f, 0.7f));
         var rayoEnergia = MatRayo("BF_RayoEnergia", new Color(1f, 0.55f, 0.75f));
         var rayoAguja = MatRayo("BF_RayoAguja", new Color(1f, 0.97f, 0.8f));
 
-        // ── Geometría fija: suelo de luz, bordes invisibles y el altar ────
+        // ── Geometría fija: arena diáfana, bordes invisibles y el altar ──
         var arena = new GameObject("BF_ARENA");
         var plaza = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         plaza.name = "Suelo de luz";
@@ -121,41 +120,23 @@ public static class BatallaFinalLabBuilder
         var raiz = new GameObject("BF_ESCENARIO");
         var escenario = raiz.AddComponent<EscenarioBatallaFinal>();
         escenario.centro = Punto("Centro", raiz.transform, Vector3.zero);
-        escenario.radio = 20f;
+        escenario.radio = 21f;
         escenario.altar = altar.transform;
         escenario.puntoDelAltar = puntoAltar;
-        escenario.puntosDeSalto = Anillo("Salto", raiz.transform, 9.5f, 8, 0f);
-        escenario.cuadrantes = Anillo("Cuadrante", raiz.transform, 10f, 4, 45f);
+
+        // Puntos de combate en tierra (deslizamientos y teletransportes)
+        var saltos = new List<Transform>();
+        saltos.AddRange(Anillo("Salto_Int", raiz.transform, 9.5f, 8, 0f));
+        saltos.AddRange(Anillo("Salto_Ext", raiz.transform, 16f, 6, 15f));
+        escenario.puntosDeSalto = saltos.ToArray();
+
+        // Puntos de vuelo en fase 2 (combate aéreo obligatorio mid-air)
+        var vuelos = new List<Transform>();
+        vuelos.AddRange(Anillo("Vuelo_Int", raiz.transform, 10f, 8, 0f, altura: 6.5f));
+        vuelos.AddRange(Anillo("Vuelo_Ext", raiz.transform, 15f, 4, 45f, altura: 7.0f));
+        escenario.puntosDeVuelo = vuelos.ToArray();
+
         escenario.registro = raiz.AddComponent<RegistroTemporal>();
-
-        // ── Lo que conjura (oculto hasta entonces) ────────────────────────
-        var conjuros = new GameObject("BF_CONJUROS").transform;
-        conjuros.SetParent(raiz.transform);
-        var ctx = new Contexto
-        {
-            padre = conjuros,
-            matPiedra = matConjuro,
-            matCristal = matCristal,
-            vfxConjuro = Cargar<GameObject>(VfxAparicion, avisos),
-            vfxRotura = Cargar<GameObject>(VfxRoturaCristal, avisos),
-            lanzador = Cargar<GameObject>(PrefabLanzador, avisos),
-        };
-
-        // Fase 1: tres espinas bajas.
-        escenario.espinas = Juego(ctx, "Espinas",
-            pilares: new[] { 60f, 180f, 300f }, radioPilares: 9f, altoPilar: 2.6f, anchoPilar: 1.1f, vidaCristal: 40f,
-            plataformas: new (float, float)[0], lanzadores: new float[0]);
-
-        // Fase 2: dos juegos de pilares con anclas, plataformas y lanzadores, en sitios alternos.
-        escenario.fase2 = new[]
-        {
-            Juego(ctx, "Fase 2 · A",
-                pilares: new[] { 45f, 135f, 225f, 315f }, radioPilares: 13f, altoPilar: 7f, anchoPilar: 2f, vidaCristal: 60f,
-                plataformas: new[] { (90f, 3f), (180f, 4f), (270f, 5f) }, lanzadores: new[] { 70f, 250f }),
-            Juego(ctx, "Fase 2 · B",
-                pilares: new[] { 22.5f, 112.5f, 202.5f, 292.5f }, radioPilares: 13f, altoPilar: 7f, anchoPilar: 2f, vidaCristal: 60f,
-                plataformas: new[] { (67.5f, 4f), (157.5f, 3f), (247.5f, 5f) }, lanzadores: new[] { 135f, 315f }),
-        };
 
         // El final (traición, Liam, Estela, aguja)
         var finalGo = new GameObject("Final del conducto");
@@ -175,11 +156,10 @@ public static class BatallaFinalLabBuilder
         var mago = (GameObject)PrefabUtility.InstantiatePrefab(magoPrefab, escena);
         mago.name = "MAGO_OSCURO (jefe)";
         mago.transform.SetPositionAndRotation(new Vector3(0f, 0f, 8f), Quaternion.Euler(0f, 180f, 0f));
-        Capa(mago, "Enemy", soloRaiz: true);
+        Capa(mago, "Enemy", soloRaiz: false);
         var manager = mago.GetComponent<Game.NPC.NPCBehaviourManagerV2>();
         if (manager)
         {
-            // El override impide que Awake añada el módulo que fuerza combate al recibir daño.
             var soManager = new SerializedObject(manager);
             var config = soManager.FindProperty("configuration");
             var tipos = config.FindPropertyRelative("behaviourType");
@@ -201,8 +181,22 @@ public static class BatallaFinalLabBuilder
         soElevacion.FindProperty("rebote").floatValue = 0f;
         soElevacion.ApplyModifiedPropertiesWithoutUndo();
         var charla = mago.GetComponent<Interactable>();
-        if (charla) charla.enabled = false;     // no se habla con él en mitad del combate
-        // Cuerpo sólido para los golpes; el disparador de charla (si lo hay) no cuenta.
+        if (charla) charla.enabled = false;
+
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+        if (enemyLayer != -1)
+        {
+            mago.layer = enemyLayer;
+            foreach (Transform hijo in mago.GetComponentsInChildren<Transform>(true))
+                hijo.gameObject.layer = enemyLayer;
+        }
+
+        var targetable = mago.GetComponent<Targetable>() ?? mago.AddComponent<Targetable>();
+        targetable.targetingRadius = 45f;
+        targetable.isInActiveCombat = false;
+        if (mago.GetComponent<EnemyMarker>() == null)
+            mago.AddComponent<EnemyMarker>();
+
         bool tieneCuerpo = false;
         foreach (var c in mago.GetComponents<Collider>())
         {
@@ -248,13 +242,61 @@ public static class BatallaFinalLabBuilder
         soIA.FindProperty("vfxTeletransporte").objectReferenceValue = Cargar<GameObject>(VfxAparicion, avisos);
         soIA.FindProperty("vfxCarga").objectReferenceValue = Cargar<GameObject>(VfxCarga, avisos);
         soIA.FindProperty("vfxProtegido").objectReferenceValue = Cargar<GameObject>(VfxProtegido, avisos);
-        soIA.FindProperty("vfxMarea").objectReferenceValue = Cargar<GameObject>(VfxMarea, avisos);
-        soIA.FindProperty("vfxRebobinado").objectReferenceValue = Cargar<GameObject>(VfxRebobinado, avisos);
         soIA.FindProperty("vfxRegeneracion").objectReferenceValue = Cargar<GameObject>(VfxRegeneracion, avisos);
         soIA.FindProperty("vfxPozo").objectReferenceValue = Cargar<GameObject>(VfxPozo, avisos);
         soIA.FindProperty("vfxImplosionPozo").objectReferenceValue = Cargar<GameObject>(VfxImplosionPozo, avisos);
+        soIA.FindProperty("vfxBomba").objectReferenceValue = Cargar<GameObject>(VfxZona, avisos);
+        soIA.FindProperty("vfxExplosionBomba").objectReferenceValue = Cargar<GameObject>(VfxExplosionBomba, avisos);
+        soIA.FindProperty("vfxMarAbismo").objectReferenceValue = Cargar<GameObject>(VfxZona, avisos);
         soIA.FindProperty("esperaInicial").floatValue = 4f;
+        soIA.FindProperty("empezarSolo").boolValue = false;
         soIA.ApplyModifiedPropertiesWithoutUndo();
+
+        // ── Plataforma del Vacío Tibio (en x = 80, aislada de la arena de combate) ──
+        var vacio = new GameObject("BF_VACIO_TIBIO");
+        var sueloVacio = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        sueloVacio.name = "Suelo del Vacío Tibio";
+        sueloVacio.transform.SetParent(vacio.transform);
+        sueloVacio.transform.position = new Vector3(80f, -0.25f, 0f);
+        sueloVacio.transform.localScale = new Vector3(28f, 0.25f, 28f);
+        Object.DestroyImmediate(sueloVacio.GetComponent<Collider>());
+        sueloVacio.AddComponent<MeshCollider>();
+        var matVacio = Mat("BF_SueloVacioTibio", new Color(0.96f, 0.94f, 0.88f), emision: new Color(0.35f, 0.32f, 0.24f));
+        sueloVacio.GetComponent<Renderer>().sharedMaterial = matVacio;
+        sueloVacio.isStatic = true;
+        Capa(sueloVacio, "Floor");
+
+        for (int i = 0; i < 16; i++)
+        {
+            float a = i * 22.5f;
+            var borde = new GameObject($"Borde invisible Vacío {i}");
+            borde.transform.SetParent(vacio.transform);
+            borde.transform.SetPositionAndRotation(new Vector3(80f, 0f, 0f) + Polar(14f, a) + Vector3.up * 2f, Quaternion.Euler(0f, a + 90f, 0f));
+            borde.transform.localScale = new Vector3(5.6f, 4f, 0.8f);
+            borde.AddComponent<BoxCollider>();
+            borde.isStatic = true;
+        }
+
+        var luzVacio = new GameObject("Luz_VacioTibio").AddComponent<Light>();
+        luzVacio.transform.SetParent(vacio.transform);
+        luzVacio.transform.position = new Vector3(80f, 4f, 0f);
+        luzVacio.type = LightType.Point;
+        luzVacio.color = new Color(1f, 0.94f, 0.82f);
+        luzVacio.intensity = 2.5f;
+        luzVacio.range = 25f;
+
+        var vfxCirculo = Cargar<GameObject>("Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Healing circle.prefab", avisos);
+        if (vfxCirculo != null)
+        {
+            var circ = (GameObject)PrefabUtility.InstantiatePrefab(vfxCirculo, vacio.transform);
+            circ.transform.position = new Vector3(80f, 0.05f, 0f);
+            circ.transform.localScale = Vector3.one * 2.5f;
+        }
+
+        var navVacio = vacio.AddComponent<NavMeshSurface>();
+        navVacio.collectObjects = CollectObjects.Children;
+        navVacio.useGeometry = UnityEngine.AI.NavMeshCollectGeometry.PhysicsColliders;
+        navVacio.BuildNavMesh();
 
         // ── Jugador y grupo ───────────────────────────────────────────────
         var jugador = (GameObject)PrefabUtility.InstantiatePrefab(will, escena);
@@ -265,11 +307,176 @@ public static class BatallaFinalLabBuilder
         var grupo = Cargar<GameObject>(PrefabGrupo, avisos);
         if (grupo) PrefabUtility.InstantiatePrefab(grupo, escena);
 
+        var estelaPrefab = Cargar<GameObject>("Assets/Prefabs/_ESTELA.prefab", avisos);
+        var liamPrefab = Cargar<GameObject>("Assets/Prefabs/_LIAM.prefab", avisos);
+        var archimagoPrefab = Cargar<GameObject>("Assets/Prefabs/_WILL_ORIGINAL.prefab", avisos);
+
+        GameObject estela = null;
+        if (estelaPrefab != null)
+        {
+            estela = (GameObject)PrefabUtility.InstantiatePrefab(estelaPrefab, escena);
+            estela.name = "LAB_Estela";
+            estela.transform.SetPositionAndRotation(new Vector3(1.6f, 0.1f, -12.3f), Quaternion.identity);
+        }
+
+        GameObject liam = null;
+        if (liamPrefab != null)
+        {
+            liam = (GameObject)PrefabUtility.InstantiatePrefab(liamPrefab, escena);
+            liam.name = "LAB_Liam";
+            liam.transform.SetPositionAndRotation(new Vector3(-1.6f, 0.1f, -12.3f), Quaternion.identity);
+        }
+
+        if (estela != null && liam != null)
+        {
+            var porteo = estela.AddComponent<PorteoDeCompanero>();
+            var soPorteo = new SerializedObject(porteo);
+            soPorteo.FindProperty("cuerpo").objectReferenceValue = liam.transform;
+            soPorteo.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        GameObject archimago = null;
+        if (archimagoPrefab != null)
+        {
+            archimago = (GameObject)PrefabUtility.InstantiatePrefab(archimagoPrefab, escena);
+            archimago.name = "BF_ARCHIMAGO_VISION";
+            archimago.transform.SetPositionAndRotation(new Vector3(81.15f, 0.05f, 0f), Quaternion.Euler(0f, -90f, 0f));
+            var mArch = archimago.GetComponent<Game.NPC.NPCBehaviourManagerV2>();
+            if (mArch != null) mArch.enabled = false;
+            var cArch = archimago.GetComponent<Interactable>();
+            if (cArch != null) cArch.enabled = false;
+        }
+
         var inicio = new GameObject("BF_INICIALIZACION").AddComponent<CombatLabBootstrap>();
         var soInicio = new SerializedObject(inicio);
         soInicio.FindProperty("player").objectReferenceValue = jugador;
-        soInicio.FindProperty("grupoInicial").intValue = 3;   // Estela y Liam: la batalla final es de los tres
+        soInicio.FindProperty("grupoInicial").intValue = 3;
         soInicio.ApplyModifiedPropertiesWithoutUndo();
+
+        // ── Cinemática de Entrada (Sistema Oficial: SequencePlayer + SequenceStage + ModuloBatallaFinal) ──
+        var raizCine = new GameObject("SEQ_BatallaFinal");
+        var driver = raizCine.AddComponent<CinematicCameraDriver>();
+        var stage = raizCine.AddComponent<SequenceStage>();
+
+        var soStage = new SerializedObject(stage);
+        var actorsProp = soStage.FindProperty("_actors");
+        actorsProp.ClearArray();
+
+        void AddBoundActor(string id, Transform target)
+        {
+            if (target == null) return;
+            int idx = actorsProp.arraySize;
+            actorsProp.InsertArrayElementAtIndex(idx);
+            var elem = actorsProp.GetArrayElementAtIndex(idx);
+            elem.FindPropertyRelative("id").stringValue = id;
+            elem.FindPropertyRelative("target").objectReferenceValue = target;
+            elem.FindPropertyRelative("eyeHeight").floatValue = 0f;
+            elem.FindPropertyRelative("animator").objectReferenceValue = target.GetComponentInChildren<Animator>(true);
+            elem.FindPropertyRelative("emotionController").objectReferenceValue = Game.NPC.Common.EmotionControllerResolver.Resolve(target.gameObject);
+        }
+
+        var willCuerpo = jugador.GetComponentInChildren<Invector.vCharacterController.vThirdPersonMotor>(true)?.transform ?? jugador.transform;
+        AddBoundActor("Player", willCuerpo);
+        AddBoundActor("NPC_MagoOscuro", mago.transform);
+        if (estela != null) AddBoundActor("NPC_Estela", estela.transform);
+        if (liam != null) AddBoundActor("NPC_Liam", liam.transform);
+        if (archimago != null) AddBoundActor("NPC_Archimago", archimago.transform);
+        soStage.ApplyModifiedPropertiesWithoutUndo();
+
+        var modulo = raizCine.AddComponent<ModuloBatallaFinal>();
+        var soMod = new SerializedObject(modulo);
+        soMod.FindProperty("_magoBossAI").objectReferenceValue = ia;
+        soMod.FindProperty("_willActor").objectReferenceValue = willCuerpo;
+        soMod.FindProperty("_estelaActor").objectReferenceValue = estela != null ? estela.transform : null;
+        soMod.FindProperty("_liamActor").objectReferenceValue = liam != null ? liam.transform : null;
+        soMod.FindProperty("_magoActor").objectReferenceValue = mago.transform;
+        soMod.FindProperty("_archimagoActor").objectReferenceValue = archimago != null ? archimago.transform : null;
+        soMod.FindProperty("_willAwakenedAuraVfx").objectReferenceValue = Cargar<GameObject>("Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", avisos);
+        soMod.FindProperty("_vfxAparicionMago").objectReferenceValue = null;
+        var vfxPechoPrefab = Cargar<GameObject>("Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Character auras/Star aura.prefab", avisos)
+            ?? Cargar<GameObject>("Assets/_VFX/Hechizos/VFX_Hechizo_Destello_Luz.prefab", avisos);
+        soMod.FindProperty("_vfxDestelloPechoWill").objectReferenceValue = vfxPechoPrefab;
+        soMod.ApplyModifiedPropertiesWithoutUndo();
+
+        stage.AgregarModulos(new[] { modulo });
+        soStage.Update();
+        var modulesProp = soStage.FindProperty("_modules");
+        modulesProp.ClearArray();
+        modulesProp.InsertArrayElementAtIndex(0);
+        modulesProp.GetArrayElementAtIndex(0).objectReferenceValue = modulo;
+        soStage.ApplyModifiedPropertiesWithoutUndo();
+
+        const string SeqPath = "Assets/_SEQUENCES/SEQ_BatallaFinal.asset";
+        var seqDef = AssetDatabase.LoadAssetAtPath<SequenceDefinition>(SeqPath);
+        var guionHorneado = AssetDatabase.LoadAssetAtPath<GuionHorneado>("Assets/_SEQUENCES/Guiones/BatallaFinal_Intro_Horneado.asset");
+        if (seqDef == null)
+        {
+            seqDef = ScriptableObject.CreateInstance<SequenceDefinition>();
+            seqDef.displayName = "Batalla Final — Intro";
+            seqDef.summary = "Encuentro con el Mago Oscuro, viaje al Vacío Tibio y despertar de los cinco elementos antes de la Fase 1.";
+            seqDef.signalIn = "BATALLA_FINAL_INTRO_START";
+            seqDef.signalOut = "BATALLA_FINAL_COMBATE_START";
+            seqDef.presentacionDeTexto = PresentacionDeTexto.Subtitulo;
+            seqDef.protagonistas = new List<string> { "Player", "NPC_MagoOscuro", "NPC_Estela", "NPC_Liam" };
+            if (guionHorneado != null)
+            {
+                seqDef.phases = new List<SequencePhase>
+                {
+                    new SequencePhase
+                    {
+                        name = "Guion: BatallaFinal_Intro",
+                        beats = new List<SequenceBeat>
+                        {
+                            new GuionBeat
+                            {
+                                note = "Generado por el horneado del guion",
+                                guion = guionHorneado,
+                                empezarEn = 0f
+                            }
+                        }
+                    }
+                };
+            }
+            AssetDatabase.CreateAsset(seqDef, SeqPath);
+            AssetDatabase.SaveAssets();
+        }
+        else if (guionHorneado != null && (seqDef.phases == null || seqDef.phases.Count == 0 || seqDef.phases[0].beats == null || seqDef.phases[0].beats.Count == 0))
+        {
+            seqDef.phases = new List<SequencePhase>
+            {
+                new SequencePhase
+                {
+                    name = "Guion: BatallaFinal_Intro",
+                    beats = new List<SequenceBeat>
+                    {
+                        new GuionBeat
+                        {
+                            note = "Generado por el horneado del guion",
+                            guion = guionHorneado,
+                            empezarEn = 0f
+                        }
+                    }
+                }
+            };
+            EditorUtility.SetDirty(seqDef);
+            AssetDatabase.SaveAssets();
+        }
+
+        var seqPlayer = raizCine.AddComponent<SequencePlayer>();
+        var soPlayer = new SerializedObject(seqPlayer);
+        soPlayer.FindProperty("_definition").objectReferenceValue = seqDef;
+        soPlayer.FindProperty("_stage").objectReferenceValue = stage;
+        soPlayer.FindProperty("_signalIn").stringValue = "BATALLA_FINAL_INTRO_START";
+        soPlayer.FindProperty("_signalOut").stringValue = "BATALLA_FINAL_COMBATE_START";
+        soPlayer.FindProperty("_cinematicCamera").objectReferenceValue = driver;
+        soPlayer.FindProperty("_idleGraceAfterSequence").floatValue = 0f;
+        soPlayer.ApplyModifiedPropertiesWithoutUndo();
+
+        var autoStart = raizCine.AddComponent<SenderoBattleAutoStart>();
+        var soAuto = new SerializedObject(autoStart);
+        soAuto.FindProperty("_startSignal").stringValue = "BATALLA_FINAL_INTRO_START";
+        soAuto.FindProperty("_startDelaySeconds").floatValue = 0.25f;
+        soAuto.ApplyModifiedPropertiesWithoutUndo();
 
         if (!AssetDatabase.IsValidFolder("Assets/Scenes/Test")) AssetDatabase.CreateFolder("Assets/Scenes", "Test");
         EditorSceneManager.MarkSceneDirty(escena);
@@ -277,125 +484,13 @@ public static class BatallaFinalLabBuilder
         AnadirABuild(ScenePath);
         AssetDatabase.SaveAssets();
 
-        string resumen = "Batalla Final creada en " + ScenePath + ". Pulsa Play: el Mago empieza a los 4 s.";
+        string resumen = "Batalla Final creada en " + ScenePath + ". Pulsa Play: arranca la cinemática de entrada (Actos 1-5) y enlaza con el combate.";
         if (avisos.Count > 0) resumen += "\nAvisos:\n- " + string.Join("\n- ", avisos);
         Debug.Log("[BatallaFinalLabBuilder] " + resumen);
     }
 
-    // ── Conjuros ──────────────────────────────────────────────────────────
-
-    sealed class Contexto
-    {
-        public Transform padre;
-        public Material matPiedra, matCristal;
-        public GameObject vfxConjuro, vfxRotura, lanzador;
-    }
-
-    /// Un juego de conjuros: pilares con un cristal arriba, plataformas flotantes (ángulo, altura) y
-    /// lanzadores de salto en el suelo mirando hacia fuera. Todo queda oculto.
-    static JuegoDeConjuros Juego(Contexto ctx, string nombre, float[] pilares, float radioPilares, float altoPilar,
-                                 float anchoPilar, float vidaCristal, (float angulo, float alto)[] plataformas, float[] lanzadores)
-    {
-        var raiz = new GameObject(nombre).transform;
-        raiz.SetParent(ctx.padre);
-        var objetos = new List<ObjetoConjurado>();
-        var cristales = new List<CristalProtector>();
-        var vuelo = new List<Transform>();
-
-        foreach (float a in pilares)
-        {
-            var pilar = Conjuro(ctx, $"Pilar {a}", raiz, Polar(radioPilares, a));
-            Pieza("Cuerpo", pilar.transform, Vector3.up * altoPilar * 0.5f, new Vector3(anchoPilar, altoPilar, anchoPilar), ctx.matPiedra);
-            var obstaculo = pilar.gameObject.AddComponent<NavMeshObstacle>();
-            obstaculo.shape = NavMeshObstacleShape.Box;
-            obstaculo.center = Vector3.up * altoPilar * 0.5f;
-            obstaculo.size = new Vector3(anchoPilar, altoPilar, anchoPilar);
-            obstaculo.carving = true;
-            float tamCristal = Mathf.Lerp(0.8f, 1.3f, Mathf.InverseLerp(2f, 7f, altoPilar));
-            cristales.Add(Cristal(ctx, pilar.transform, Vector3.up * (altoPilar + tamCristal * 0.5f), tamCristal, vidaCristal));
-            objetos.Add(pilar);
-            var p = Polar(radioPilares * 0.85f, a);
-            vuelo.Add(Punto("Vuelo", raiz, new Vector3(p.x, altoPilar + 1.5f, p.z)));
-        }
-
-        foreach (var (a, alto) in plataformas)
-        {
-            var plataforma = Conjuro(ctx, $"Plataforma {a}", raiz, Polar(10f, a) + Vector3.up * alto);
-            Pieza("Losa", plataforma.transform, Vector3.zero, new Vector3(5f, 0.5f, 5f), ctx.matPiedra);
-            objetos.Add(plataforma);
-        }
-
-        foreach (float a in lanzadores)
-        {
-            var runa = Conjuro(ctx, $"Lanzador {a}", raiz, Polar(6f, a));
-            runa.transform.rotation = Quaternion.LookRotation(Polar(1f, a));
-            if (ctx.lanzador != null)
-            {
-                var l = (GameObject)PrefabUtility.InstantiatePrefab(ctx.lanzador, runa.transform);
-                l.transform.localPosition = Vector3.zero;
-                l.transform.localRotation = Quaternion.identity;
-            }
-            objetos.Add(runa);
-        }
-
-        foreach (var o in objetos) o.gameObject.SetActive(false);
-        return new JuegoDeConjuros { objetos = objetos.ToArray(), cristales = cristales.ToArray(), puntosDeVuelo = vuelo.ToArray() };
-    }
-
-    static ObjetoConjurado Conjuro(Contexto ctx, string nombre, Transform padre, Vector3 pos)
-    {
-        var go = new GameObject(nombre);
-        go.transform.SetParent(padre);
-        go.transform.position = pos;
-        var oc = go.AddComponent<ObjetoConjurado>();
-        var so = new SerializedObject(oc);
-        so.FindProperty("vfxAparecer").objectReferenceValue = ctx.vfxConjuro;
-        so.FindProperty("vfxDeshacer").objectReferenceValue = ctx.vfxConjuro;
-        so.ApplyModifiedPropertiesWithoutUndo();
-        return oc;
-    }
-
-    /// Geometría de un conjuro: no estática, porque crece y se encoge.
-    static GameObject Pieza(string nombre, Transform padre, Vector3 local, Vector3 escala, Material mat)
-    {
-        var c = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        c.name = nombre;
-        c.transform.SetParent(padre, false);
-        c.transform.localPosition = local;
-        c.transform.localScale = escala;
-        c.GetComponent<Renderer>().sharedMaterial = mat;
-        return c;
-    }
-
-    static CristalProtector Cristal(Contexto ctx, Transform padre, Vector3 local, float tam, float vida)
-    {
-        var go = new GameObject("Cristal");
-        go.transform.SetParent(padre, false);
-        go.transform.localPosition = local;
-        Capa(go, "Enemy");
-        var col = go.AddComponent<SphereCollider>();
-        col.radius = tam * 0.7f;
-        go.AddComponent<Damageable>();
-        go.AddComponent<DebilidadDePersonaje>();
-        var visual = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        visual.name = "Visual";
-        Object.DestroyImmediate(visual.GetComponent<Collider>());
-        visual.transform.SetParent(go.transform, false);
-        visual.transform.localScale = Vector3.one * tam;
-        visual.GetComponent<Renderer>().sharedMaterial = ctx.matCristal;
-        var cristal = go.AddComponent<CristalProtector>();
-        var so = new SerializedObject(cristal);
-        so.FindProperty("vida").floatValue = vida;
-        so.FindProperty("visual").objectReferenceValue = visual;
-        so.FindProperty("vfxRotura").objectReferenceValue = ctx.vfxRotura;
-        so.ApplyModifiedPropertiesWithoutUndo();
-        return cristal;
-    }
-
     // ── Guion de Estela ───────────────────────────────────────────────────
 
-    /// Rellena (o crea) el guion: Estela reacciona a lo que pasa y no enseña controles; como mucho
-    /// señala lo propio de este jefe con sus palabras.
     static GuionDeCombate RellenarGuion(List<string> avisos)
     {
         var g = AssetDatabase.LoadAssetAtPath<GuionDeCombate>(GuionPath);
@@ -413,13 +508,9 @@ public static class BatallaFinalLabBuilder
         g.comentarios = new List<ComentarioDeCombate>
         {
             new(M.Inicio, "FINAL_ESTELA_INICIO_01", null),
-            new(M.JefeExpuesto, "FINAL_ESTELA_AHORA", null, vecesMax: 3, enfriamiento: 8f, caducidad: 0.8f, interrumpe: true, duracion: 1.6f),
-            new(M.GolpeMalDado, "FINAL_ESTELA_ESCUDO", null, vecesMax: 2, enfriamiento: 25f, caducidad: 2f),
-            new(M.GolpeValido, "FINAL_ESTELA_ACIERTO", null, vecesMax: 0, enfriamiento: 18f, caducidad: 2f),
-            new(M.JugadorHerido, "FINAL_ESTELA_HERIDO", null, caducidad: 4f),
-            new(M.JugadorPocaVida, "FINAL_ESTELA_POCA_VIDA", null, vecesMax: 2, enfriamiento: 30f, caducidad: 4f),
-            new(M.CambioDeFase, "FINAL_ESTELA_FASE_2", null, interrumpe: true, duracion: 3f, fase: 1),
-            new(M.SinAcertar, "FINAL_ESTELA_RECUERDA", null, vecesMax: 2, enfriamiento: 30f, caducidad: 3f),
+            new(M.JefeExpuesto, "FINAL_ESTELA_AHORA", null, vecesMax: 2, enfriamiento: 15f, caducidad: 0.8f, interrumpe: true, duracion: 1.5f),
+            new(M.JugadorHerido, "FINAL_ESTELA_HERIDO", null, vecesMax: 1, enfriamiento: 45f, caducidad: 3f),
+            new(M.JugadorPocaVida, "FINAL_ESTELA_POCA_VIDA", null, vecesMax: 1, enfriamiento: 60f, caducidad: 3f),
         };
         EditorUtility.SetDirty(g);
         return g;
@@ -434,7 +525,6 @@ public static class BatallaFinalLabBuilder
         return a;
     }
 
-    /// La misma sombra de aviso que usa la lluvia del Demonio 2.
     static GameObject SombraDeAviso(List<string> avisos)
     {
         var demonio = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Enemy/Demon2.prefab");
@@ -455,10 +545,26 @@ public static class BatallaFinalLabBuilder
         return t;
     }
 
-    static Transform[] Anillo(string nombre, Transform padre, float radio, int n, float desfase)
+    static Transform PuntoConLente(string nombre, Transform padre, Vector3 pos, Quaternion rot, float fov)
+    {
+        var go = new GameObject(nombre);
+        go.transform.SetParent(padre);
+        go.transform.SetPositionAndRotation(pos, rot);
+        var cam = go.AddComponent<Camera>();
+        cam.enabled = false;
+        cam.fieldOfView = fov;
+        return go.transform;
+    }
+
+    static Transform[] Anillo(string nombre, Transform padre, float radio, int n, float desfase, float altura = 0f)
     {
         var r = new Transform[n];
-        for (int i = 0; i < n; i++) r[i] = Punto($"{nombre} {i}", padre, Polar(radio, desfase + i * 360f / n));
+        for (int i = 0; i < n; i++)
+        {
+            Vector3 p = Polar(radio, desfase + i * 360f / n);
+            p.y = altura;
+            r[i] = Punto($"{nombre} {i}", padre, p);
+        }
         return r;
     }
 

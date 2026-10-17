@@ -71,19 +71,21 @@ Usa el navegador del que dispongas (Claude in Chrome tiene preferencia; si Eleve
 - Líneas muy cortas de Eldran en combate (`EVT_ELDRAN_AHORA_01/02` y similares): en el juego deben oírse como mucho en 1-2 segundos y pueden interrumpirse. Procura que el audio dure poco, con energía alta.
 - En las secuencias, cada burbuja de texto dura unos 2,6 s por defecto. Al terminar, calcula la duración de cada audio y avisa de las líneas que pasen claramente de ese tiempo, para que Raúl decida si ajusta el texto o el tiempo.
 
-### Voces ya aprobadas por Raúl (2 oct 2026)
+### Voces aprobadas con estilo anime peninsular (17 oct 2026)
 
-- **Will:** Kaito Renji - Youthful and Warm.
-- **Oliver:** Loren - Mannered, Parodic and Playful.
-- **Victoria:** Cristina - Empathetic Customer support.
-- **Eldran:** Rafael - Expressive and Theatrical (acento peninsular, voz de anciano; Raúl descartó las voces con acento latino).
-- **Archimago:** Luis - Polished, Mature and Credible (acento peninsular; cuesta el doble de créditos por generación, unos 940 créditos para sus 12 líneas).
-- **Mago Oscuro:** Victor - Deep, Malevolent and Ancient (acento peninsular; Raúl lo quiere con aire de Jafar: suave, siniestro y teatral. Probar etiquetas como [sinister] o [whispers] si hace falta).
-- **Liam:** Pablo - Deep, Confident and Clear (acento peninsular; Raúl lo ve como Eric de La Sirenita: joven, cálido y seguro. Ojo: la tercera línea es una risa contenida).
-- **Nina:** Sara Martin - Young and Reflective (acento peninsular, voz joven de mujer; es la voz de la niña del globo).
-- **Liora:** Sara Martin - Gentle and Layered (acento peninsular, voz de mujer de edad media, suave y amable; distinta de la de Nina).
+- **Estela:** `Estela - Lina candidata 1` (ID `9MKgqtaIyv28bwBeybox`): estilo Lina Inverse (*Slayers*, Megumi Hayashibara). Joven de 18 años, brillante, explosiva, descarada y cómica en castellano peninsular.
+- **Will:** `Will - Anime España 1.2` (ID `JwXx2SOucScqglxgpL6T`): protagonista shōnen clásico (estilo Edward Elric / Tanjiro / Sora). 18 años, cálido y carismático en calma, con garra heroica al gritar.
+- **Liam:** `Liam - Anime candidata 1` (ID `hwazPFcispEO8ANIs7LE`): rival/deuteragonista de anime (estilo Sasuke / Kurapika). 18-20 años, sereno, seco, irónico, con fondo melancólico por su hermano Tobías.
+- **Eldran:** `Eldran - Anime candidata 2` (ID `RL0oxYTUxBdVxuByUCtW`): mentor veterano de anime (estilo Jiraiya / Silvers Rayleigh). ~60 años, entrañable y bonachón en el día a día, e imponente en combate.
+- **Mago Oscuro:** `Mago Oscuro - Anime candidata 3` (ID `uE9bcSSRFJvj5BdWjLpf`): villano ancestral (estilo Aizen / Dio Brando / Jafar). Grave, sedoso, teatral y escalofriante.
+- **Archimago:** `Archimago - Anime candidata 2` (ID `JOlPriKZ6hldygMIxHSm`): noble héroe/sabio paternal (estilo Minato Namikaze / Hohenheim). 35-45 años, cálido en reposo, desgarrador en el sacrificio.
+- **Oliver:** `Oliver - Anime candidata 1` (ID `GyyGyS0WACM14Hkzduei`): mejor amigo fiel y cómico (estilo Usopp / Zenitsu). 18 años, rápido, expresivo, entusiasta y nervioso.
+- **Victoria:** `Victoria - Anime candidata 3` (ID `YdH8EmiKzVcrI4UltjiQ`): vecina práctica y despierta. 30-40 años, con retranca y pique risueño con Eldran.
+- **Nina:** `Nina - Anime candidata 2` (ID `U6p8vPqRYiiCAw7v94oR`): niña pequeña del globo. Dulce, inocente, alegre y expresiva estilo Ghibli.
+- **Liora:** `Sara Martin - Gentle and Layered` (ID `KHCvMklQZZo0O30ERnVn`): voz de mujer adulta dulce, amable y cariñosa (conservada por decisión de Raúl).
+- **Tomasa:** `Tomasa - Anime candidata 1` (ID `7F6LSLBol0zaPBiXCvwe`): artesana mayor del mercado (55-65 años, humilde, cómplice y risueña).
 
-**Reparto cerrado: los 9 personajes principales tienen ya voz aprobada.**
+**Reparto cerrado: los personajes clave cuentan con voz original anime peninsular diseñada.**
 
 ### Extras y voces de resguardo (decidido por Raúl, 2 oct 2026)
 

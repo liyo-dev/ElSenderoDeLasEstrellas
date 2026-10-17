@@ -127,9 +127,9 @@ public class DayNightCycle : MonoBehaviour
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Sunset,
             duration = 65f,
-            lightColor = new Color(1f, 0.6f, 0.28f), lightIntensity = 0.85f,
-            ambientColor = new Color(0.35f, 0.22f, 0.14f), ambientIntensity = 0.78f,
-            fogColor = new Color(0.88f, 0.58f, 0.34f), fogDensity = 0.011f
+            lightColor = new Color(1f, 0.82f, 0.64f), lightIntensity = 0.92f,
+            ambientColor = new Color(0.30f, 0.28f, 0.34f), ambientIntensity = 0.80f,
+            fogColor = new Color(0.86f, 0.70f, 0.56f), fogDensity = 0.008f
         },
         new TimeOfDaySettings {
             timeOfDay = TimeOfDay.Night,

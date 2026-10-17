@@ -137,12 +137,38 @@ public class ScreenFlashBeat : SequenceBeat
     }
 }
 
+/// Anima la opacidad de un CanvasGroup registrado como actor del escenario.
+[Serializable]
+public sealed class CanvasGroupBeat : SequenceBeat
+{
+    public string actorId;
+    [Range(0f, 1f)] public float alpha = 1f;
+    public float duration = 0.5f;
+
+    public override string Describe() => $"Opacidad de {actorId}: {alpha:0.##}";
+
+    public override IEnumerator Run(SequenceContext ctx)
+    {
+        var group = ctx.GetActor(actorId)?.Transform?.GetComponent<CanvasGroup>();
+        if (group == null) yield break;
+        float start = group.alpha;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            group.alpha = Mathf.Lerp(start, alpha, Mathf.Clamp01(elapsed / Mathf.Max(0.01f, duration)));
+            yield return null;
+        }
+        group.alpha = alpha;
+    }
+}
+
 /// Muestra o retira las bandas de cine; el reproductor las retira en cuanto devuelve el juego.
 [Serializable]
 public class BandasDeCineBeat : SequenceBeat
 {
     public bool mostrar = true;
-    [Range(0f, 0.45f)] public float altura = 0.12f;
+    [Range(0f, 0.45f)] public float altura = 0.13f;
     [Min(0f)] public float duracion = 0.5f;
     public bool esperar = true;
 
@@ -191,7 +217,7 @@ public class CutInBeat : SequenceBeat
     public LadoCutIn lado = LadoCutIn.Izquierda;
     [Range(0f, 1f)] public float alturaEnPantalla = .62f;
     [Min(0f)] public float duracion;
-    [Tooltip("Franja que se usa (0 o 1). Dos ranuras permiten enfrentar a dos personajes a la vez.")]
+    [Tooltip("Franja que se usa (0, 1 o 2). Dos ranuras enfrentan a dos personajes; tres presentan a tres.")]
     [Range(0, CutInUI.Ranuras - 1)] public int ranura;
     [Tooltip("Clave de SFX que suena al entrar la franja (vacío = sin sonido).")]
     public string sonido;
@@ -201,7 +227,9 @@ public class CutInBeat : SequenceBeat
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (ctx?.Player == null) yield break;
-        var actor = mostrar ? ctx.GetActor(actorId) : null;
+        var actor = mostrar ? (ctx.GetActor(actorId)
+            ?? (actorId != null && actorId.StartsWith("NPC_") ? ctx.GetActor(actorId.Substring(4).ToLowerInvariant()) : null)
+            ?? (actorId != null && actorId.Length > 0 ? ctx.GetActor("NPC_" + char.ToUpperInvariant(actorId[0]) + actorId.Substring(1)) : null)) : null;
         if (mostrar && actor?.Transform == null) yield break;
         var ui = CutInUI.Obtener(ctx.Player.transform);
         if (mostrar)

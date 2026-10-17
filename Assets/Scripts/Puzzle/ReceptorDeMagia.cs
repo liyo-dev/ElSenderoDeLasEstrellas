@@ -46,8 +46,8 @@ public sealed class ReceptorDeMagia : MonoBehaviour, IReaccionaAMagia
     [SerializeField] private string sfxAlApagar;
 
     [Header("Eventos")]
-    public UnityEvent alActivarse;
-    public UnityEvent alApagarse;
+    public UnityEvent alActivarse = new UnityEvent();
+    public UnityEvent alApagarse = new UnityEvent();
 
     private bool _encendido;
     private Coroutine _apagado;

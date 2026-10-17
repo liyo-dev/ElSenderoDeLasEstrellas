@@ -1,251 +1,296 @@
 # Parte de horneado: Cap2_02_MananaDespues
 
-2026-10-08 17:27 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
+2026-10-13 13:43 · guion `Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt`
 
-**3:39,0** de secuencia · 35 frases · 35 planos · 13 efectos · 2 personajes
+**3:13,6** de secuencia · 35 frases · 36 planos · 13 efectos · 2 personajes
 
 Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 
 
 ## Objetos en la mano
 
-- eldran deja PROP_Bollo: FoundSomething_NoWeapon; suelta +0,917 s (guion 16,412 s), mano a 0,290 m del apoyo. Tanteo: Opening01_Begin 0,93, Opening01_Stop 0,93, Loot01_Begin 1,10, Loot01_Stop 1,18, FoundSomething_NoWeapon 0,34.
-- eldran deja PROP_Aro: FoundSomething_NoWeapon; suelta +0,917 s (guion 154,536 s), mano a 0,286 m del apoyo. Tanteo: Opening01_Begin 0,92, Opening01_Stop 0,92, Loot01_Begin 1,08, Loot01_Stop 1,15, FoundSomething_NoWeapon 0,33.
+- eldran deja PROP_Bollo: FoundSomething_NoWeapon; suelta +0,833 s (guion 16,068 s), mano a 0,450 m del apoyo. Tanteo: Opening01_Begin 1,22, Opening01_Stop 1,22, Loot01_Begin 1,35, Loot01_Stop 1,48, FoundSomething_NoWeapon 0,61.
+- eldran deja PROP_Aro: FoundSomething_NoWeapon; suelta +0,833 s (guion 133,247 s), mano a 0,394 m del apoyo. Tanteo: Opening01_Begin 1,14, Opening01_Stop 1,14, Loot01_Begin 1,28, Loot01_Stop 1,40, FoundSomething_NoWeapon 0,53.
 
 ## Errores (0)
 
 
-## Avisos (50)
+## Avisos (71)
 
 - línea 9: 'Player' no tiene punto de aparición en WillHouse; necesita un «en» al principio.
 - línea 10: 'NPC_Eldran' no tiene punto de aparición en WillHouse; necesita un «en» al principio.
-- línea 75: & eldran anda a entrada ritmo=1.4: un punto queda fuera del NavMesh (116,4, 3,7); voy en línea recta
-- línea 90: eldran anda a paso_mesa, dejar_bollo ritmo=normal llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
-- línea 90: eldran anda a paso_mesa, dejar_bollo ritmo=normal llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,3, 2,6); voy en línea recta
-- línea 92: eldran sienta silla: un punto queda fuera del NavMesh (114,6, 2,5); voy en línea recta
-- línea 116: will anda a paso_silla, cama_paso ritmo=normal: un punto queda fuera del NavMesh (116,0, 1,4); voy en línea recta
-- línea 116: will anda a paso_silla, cama_paso ritmo=normal: un punto queda fuera del NavMesh (116,0, 0,5); voy en línea recta
-- línea 154: eldran anda a ventana ritmo=paseo llega_mirando=fuera: un punto queda fuera del NavMesh (118,5, 3,3); voy en línea recta
-- línea 168: eldran anda a paso_cofre, cofre ritmo=normal llega_mirando=180: un punto queda fuera del NavMesh (115,6, 1,2); voy en línea recta
-- línea 168: eldran anda a paso_cofre, cofre ritmo=normal llega_mirando=180: un punto queda fuera del NavMesh (115,7, 0,0); voy en línea recta
-- línea 176: eldran anda a paso_silla, dejar_aro ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (116,0, 1,4); voy en línea recta
-- línea 176: eldran anda a paso_silla, dejar_aro ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,3, 3,0); voy en línea recta
-- línea 178: eldran sienta silla: un punto queda fuera del NavMesh (114,6, 2,5); voy en línea recta
-- línea 183: +1.0 will anda a paso_silla, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (116,0, 1,4); voy en línea recta
-- línea 183: +1.0 will anda a paso_silla, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,8, 3,6); voy en línea recta
-- línea 65: plano general will vela desde=cam_general altura=2.2 lente=50 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 76: & eldran anda a entrada ritmo=1.4: un punto queda fuera del NavMesh (116,4, 4,8); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (116,4, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: un punto queda fuera del NavMesh (115,1, 2,4); voy en línea recta
+- línea 91: eldran anda a paso_mesa, dejar_bollo ritmo=1.5 llega_mirando=apoyo_bollo: eldran roza a will a 13,5 s y no he encontrado otro camino. Mueve el destino o el momento.
+- línea 93: eldran deja PROP_Bollo en apoyo_bollo: la mano se queda a 0,45 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
+- línea 95: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 95: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
+- línea 118: will anda a paso_silla, cama_paso ritmo=normal: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 118: will anda a paso_silla, cama_paso ritmo=normal: un punto queda fuera del NavMesh (116,0, 0,5); voy en línea recta
+- línea 156: eldran anda a paso_silla, ventana ritmo=1.4 llega_mirando=fuera: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 156: eldran anda a paso_silla, ventana ritmo=1.4 llega_mirando=fuera: un punto queda fuera del NavMesh (118,5, 3,3); voy en línea recta
+- línea 170: eldran anda a paso_cofre, cofre ritmo=1.5 llega_mirando=180: un punto queda fuera del NavMesh (115,6, 1,2); voy en línea recta
+- línea 170: eldran anda a paso_cofre, cofre ritmo=1.5 llega_mirando=180: un punto queda fuera del NavMesh (115,7, 0,0); voy en línea recta
+- línea 178: eldran anda a paso_silla, dejar_aro ritmo=1.5 llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 178: eldran anda a paso_silla, dejar_aro ritmo=1.5 llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,2, 2,7); voy en línea recta
+- línea 179: eldran deja PROP_Aro en apoyo_aro: la mano se queda a 0,39 m del apoyo; acerca al personaje o el apoyo al borde del mueble.
+- línea 182: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 182: & eldran sienta silla por=paso_silla: un punto queda fuera del NavMesh (114,5, 2,3); voy en línea recta
+- línea 188: will anda a paso_silla, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,8, 1,5); voy en línea recta
+- línea 188: will anda a paso_silla, will_mesa ritmo=normal llega_mirando=apoyo_aro: un punto queda fuera del NavMesh (115,8, 3,6); voy en línea recta
+- línea 65: plano general will vela desde=cam_general altura=2.0 lente=48 quieta: algo del decorado se mete delante y tapa un 55% del cuadro. Prueba lado= o desde=.
 - línea 67: plano medio will solo desde=cam_vela altura=1.13 lente=48: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 89: plano dos will eldran desde=cam_habitacion altura=1.65 lente=58: algo del decorado se mete delante y tapa un 78% del cuadro. Prueba lado= o desde=.
-- línea 93: plano dos will eldran desde=cam_dos altura=1.5 lente=52: algo del decorado se mete delante y tapa un 73% del cuadro. Prueba lado= o desde=.
-- línea 95: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
-- línea 97: plano medio eldran solo desde=cam_sentado altura=1.15 lente=48 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 94% del cuadro. Prueba lado= o desde=.
-- línea 99: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
-- línea 101: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 103: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
-- línea 110: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 115: plano conjunto will eldran desde=cam_habitacion altura=1.8 lente=68 quieta: algo del decorado se mete delante y tapa un 96% del cuadro. Prueba lado= o desde=.
-- línea 118: plano medio will solo desde=cam_cama altura=1.4 lente=42: algo del decorado se mete delante y tapa un 89% del cuadro. Prueba lado= o desde=.
-- línea 120: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 124: plano medio will solo desde=cam_lado altura=2.0 lente=46 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 130: plano primer will solo desde=cam_picado altura=2.7 lente=40 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 132: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 134: plano primer will solo desde=cam_picado altura=2.7 lente=40 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 138: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 144: plano medio will solo desde=cam_cama altura=1.4 lente=42: algo del decorado se mete delante y tapa un 87% del cuadro. Prueba lado= o desde=.
-- línea 147: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 149: plano primer will solo desde=cam_cama altura=1.4 lente=38: algo del decorado se mete delante y tapa un 63% del cuadro. Prueba lado= o desde=.
-- línea 152: plano conjunto will eldran desde=cam_general altura=2.2 lente=60: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 156: plano medio eldran solo desde=cam_espalda altura=1.45 lente=44 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 158: plano primer will solo desde=cam_cama altura=1.4 lente=38: algo del decorado se mete delante y tapa un 63% del cuadro. Prueba lado= o desde=.
-- línea 161: plano medio eldran solo desde=cam_vuelta altura=1.45 lente=36: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 167: plano dos eldran will desde=cam_cofre altura=1.6 lente=45: algo del decorado se mete delante y tapa un 64% del cuadro. Prueba lado= o desde=.
-- línea 175: plano medio eldran solo desde=cam_general altura=1.6 lente=40: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 184: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
-- línea 186: plano dos will eldran desde=cam_dos altura=1.5 lente=52: algo del decorado se mete delante y tapa un 73% del cuadro. Prueba lado= o desde=.
-- línea 189: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 191: plano primer will solo desde=cam_will altura=1.13 lente=38: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 193: plano dos will eldran desde=cam_dos altura=1.5 lente=48: algo del decorado se mete delante y tapa un 79% del cuadro. Prueba lado= o desde=.
-- línea 195: plano primer will solo desde=cam_will altura=1.13 lente=38: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
-- línea 198: plano medio eldran solo desde=cam_sentado altura=1.15 lente=48 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 94% del cuadro. Prueba lado= o desde=.
+- línea 94: plano dos will eldran desde=cam_dos altura=1.45 lente=50: algo del decorado se mete delante y tapa un 74% del cuadro. Prueba lado= o desde=.
+- línea 97: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
+- línea 99: plano medio eldran solo desde=cam_sentado altura=1.15 lente=46 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 91% del cuadro. Prueba lado= o desde=.
+- línea 101: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
+- línea 103: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 105: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
+- línea 112: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 117: plano conjunto will eldran desde=cam_habitacion altura=1.75 lente=60 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 120: plano medio will solo desde=cam_cama altura=1.35 lente=42: algo del decorado se mete delante y tapa un 87% del cuadro. Prueba lado= o desde=.
+- línea 122: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 126: plano medio will solo desde=cam_lado altura=1.85 lente=46 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 132: plano primer will solo desde=cam_picado altura=2.4 lente=40 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 134: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 136: plano primer will solo desde=cam_picado altura=2.4 lente=40 quieta: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 140: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 146: plano medio will solo desde=cam_cama altura=1.35 lente=42: algo del decorado se mete delante y tapa un 83% del cuadro. Prueba lado= o desde=.
+- línea 149: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 151: plano primer will solo desde=cam_cama altura=1.35 lente=38: algo del decorado se mete delante y tapa un 62% del cuadro. Prueba lado= o desde=.
+- línea 154: plano conjunto will eldran desde=cam_dos altura=1.5 lente=50: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 160: plano primer will solo desde=cam_cama altura=1.35 lente=38: algo del decorado se mete delante y tapa un 62% del cuadro. Prueba lado= o desde=.
+- línea 163: plano medio eldran solo desde=cam_vuelta altura=1.35 lente=38: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 169: plano dos eldran will desde=cam_cofre altura=1.5 lente=45: algo del decorado se mete delante y tapa un 65% del cuadro. Prueba lado= o desde=.
+- línea 177: plano conjunto will eldran desde=cam_habitacion altura=1.65 lente=52: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 187: plano dos will eldran desde=cam_dos altura=1.45 lente=50: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 189: plano medio will solo desde=cam_will altura=1.13 lente=48: algo del decorado se mete delante y tapa un 95% del cuadro. Prueba lado= o desde=.
+- línea 191: plano dos will eldran desde=cam_dos altura=1.45 lente=48: algo del decorado se mete delante y tapa un 84% del cuadro. Prueba lado= o desde=.
+- línea 194: plano primer eldran solo desde=cam_sentado altura=1.15 lente=38 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 196: plano primer will solo desde=cam_will altura=1.13 lente=38: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 198: plano dos will eldran desde=cam_dos altura=1.45 lente=46: algo del decorado se mete delante y tapa un 85% del cuadro. Prueba lado= o desde=.
+- línea 200: plano primer will solo desde=cam_will altura=1.13 lente=38: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- línea 203: plano medio eldran solo desde=cam_sentado altura=1.15 lente=45 mira=silla altura_foco=0.85: algo del decorado se mete delante y tapa un 92% del cuadro. Prueba lado= o desde=.
 
-## Silencios largos entre frases (4)
+## Silencios largos entre frases (5)
 
-- 0:13,3 → 0:19,2: 5,9 s sin voz entre EVT_MANANA_01b y EVT_MANANA_03
-- 0:51,7 → 0:55,4: 3,7 s sin voz entre EVT_MANANA_05 y EVT_MANANA_06
-- 1:59,3 → 2:05,5: 6,1 s sin voz entre EVT_MANANA_11c y EVT_MANANA_12
-- 2:23,8 → 2:37,5: 13,8 s sin voz entre EVT_MANANA_15 y EVT_MANANA_15b
+- 0:10,6 → 0:17,6: 7,0 s sin voz entre EVT_MANANA_01b y EVT_MANANA_03
+- 0:46,4 → 0:50,1: 3,7 s sin voz entre EVT_MANANA_05 y EVT_MANANA_06
+- 1:44,6 → 1:49,3: 4,7 s sin voz entre EVT_MANANA_11c y EVT_MANANA_12
+- 2:05,0 → 2:14,7: 9,8 s sin voz entre EVT_MANANA_15 y EVT_MANANA_15b
+- 2:20,8 → 2:24,6: 3,8 s sin voz entre EVT_MANANA_15b y EVT_MANANA_16
 
 ## Línea de tiempo
 
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@vela** |  |
-| 0:00,0 | plano 1 | general de will · 2,5 s · lente 50° |
+| 0:00,0 | plano 1 | general de will · 1,2 s · lente 48° |
 | 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
-| 0:02,5 | plano 2 | medio de will · 10,8 s · lente 48° |
-| 0:03,5 | will | «Una llama pequeña. Solo la mecha…» (3,5 s) · pose |
-| 0:07,0 | efecto | Entrada HoldRelease → velaControlada |
-| 0:07,0 | efecto | Coger PROP_Bollo (RightHand) |
-| 0:07,3 | eldran | «Vaya. Ni una chispa de más.» (6,0 s) |
-| 0:07,3 | eldran | «Prometedor… si lo que quieres es declararle la guerra a tu ropa.» (6,0 s) · pose |
-| 0:07,3 | efecto | VFX: VFX_VelaPequena en vela |
-| 0:07,3 | efecto | VFX: VFX_VelaGrande en vela |
-| 0:07,3 | efecto | VFX: VFX_Manga en Player |
-| 0:07,3 | efecto | Gesto: Player → CastingDamage01 ×2 |
-| 0:08,0 | efecto | VFX: VFX_VelaPequena en vela |
-| 0:13,3 | **@bollo** |  |
-| 0:13,3 | plano 3 | dos: will y eldran · 5,9 s · lente 58° |
-| 0:13,3 | efecto | Música: MANANA_DESPUES |
-| 0:16,4 | efecto | Dejar PROP_Bollo: FoundSomething_NoWeapon, suelta en 0,917 s del gesto |
-| 0:19,2 | plano 4 | dos: will y eldran · 5,0 s · lente 52° |
-| 0:19,2 | eldran | «Y perdona por lo del bosque. No debí mandarte solo.» (5,0 s) |
-| 0:24,2 | plano 5 | medio de will · 3,0 s · lente 48° |
-| 0:24,2 | will | «¿Me lo has comprado tú?» (3,0 s) · pose |
-| 0:27,2 | plano 6 | medio de eldran · 7,0 s · lente 48° |
-| 0:27,2 | eldran | «Me lo ha dado la panadera. Para el mago del pueblo. Pero la idea de traértelo ha sido mía.» (7,0 s) |
-| 0:34,2 | plano 7 | medio de will · 4,0 s · lente 48° |
-| 0:34,2 | will | «Oye, ayer lo viste todo, ¿no?» (4,0 s) · pose |
-| 0:38,2 | plano 8 | primer plano de eldran · 3,0 s · lente 38° |
-| 0:38,2 | eldran | «Claro. Si te estaba ayudando.» (3,0 s) |
-| 0:41,2 | plano 9 | medio de will · 6,5 s · lente 48° |
-| 0:41,2 | will | «Ya, pero cuando le lancé el fuego… Era así de grande. No, más. Así.» (6,5 s) · pose |
-| 0:47,7 | plano 10 | primer plano de eldran · 4,0 s · lente 38° |
-| 0:47,7 | eldran | «Anoche, cuando me lo contaste, era la mitad.» (4,0 s) |
-| 0:51,7 | **@origen** |  |
-| 0:51,7 | plano 11 | conjunto de will y eldran · 3,7 s · lente 68° |
-| 0:55,4 | plano 12 | medio de will · 5,0 s · lente 42° |
-| 0:55,4 | will | «¿Siempre he podido hacer esto?» (5,0 s) |
-| 1:00,4 | plano 13 | primer plano de eldran · 12,2 s · lente 38° |
-| 1:00,4 | eldran | «No lo sé. Hay algo de la noche en que te encontré que nunca te he contado.» (7,0 s) |
-| 1:07,6 | eldran | «Ya sabes que te encontré en un carro volcado, junto al camino.» (5,0 s) |
-| 1:12,6 | plano 14 | medio de will · 7,9 s · lente 46° |
-| 1:13,2 | eldran | «Estaba todo tan oscuro que no se veía nada. Si os encontré fue porque había una luz.» (7,3 s) |
-| 1:20,5 | plano 15 | primer plano de will · 8,0 s · lente 40° |
-| 1:20,5 | eldran | «La mujer que iba contigo tenía una llamita encendida entre los dedos, para que alguien os viera.» (8,0 s) |
-| 1:28,5 | plano 16 | primer plano de eldran · 5,0 s · lente 38° |
-| 1:28,5 | eldran | «Todavía respiraba. Nunca supe quién era.» (5,0 s) |
-| 1:33,5 | plano 17 | primer plano de will · 8,5 s · lente 40° |
-| 1:33,5 | eldran | «Solo le dio tiempo a pedirme que no te dejara solo. Luego la llama se apagó.» (7,0 s) |
-| 1:42,0 | plano 18 | primer plano de eldran · 3,5 s · lente 38° |
-| 1:42,0 | eldran | «Se lo prometí.» (3,0 s) |
-| 1:45,0 | **@eldran** |  |
-| 1:45,5 | plano 19 | medio de will · 5,0 s · lente 42° |
-| 1:46,5 | will | «¿Y tú? ¿Qué sabes tú de magia?» (4,0 s) |
-| 1:50,5 | plano 20 | primer plano de eldran · 4,9 s · lente 38° |
-| 1:50,5 | eldran | «¿Otra vez? Ya hemos hablado de eso mil veces.» (4,9 s) |
-| 1:55,3 | plano 21 | primer plano de will · 4,0 s · lente 38° |
-| 1:55,3 | will | «No. Mil veces me has cambiado de tema.» (4,0 s) |
-| 1:59,3 | plano 22 | conjunto de will y eldran · 6,1 s · lente 60° |
-| 2:05,5 | plano 23 | medio de eldran · 8,0 s · lente 44° |
-| 2:05,5 | eldran | «Hace cuarenta años me fui con unos amigos a buscar algo que no debíamos buscar.» (8,0 s) |
-| 2:13,5 | plano 24 | primer plano de will · 7,3 s · lente 38° |
-| 2:13,5 | eldran | «Volvimos todos menos una.» (4,0 s) |
-| 2:17,8 | will | «¿Qué buscabais?» (3,0 s) |
-| 2:20,8 | plano 25 | medio de eldran · 3,0 s · lente 36° |
-| 2:20,8 | eldran | «Otro día.» (3,0 s) |
-| 2:23,8 | **@aro** |  |
-| 2:23,8 | plano 26 | dos: eldran y will · 6,8 s · lente 45° |
-| 2:28,8 | efecto | Coger PROP_Aro (RightHand) |
-| 2:30,6 | plano 27 | medio de eldran · 6,9 s · lente 40° |
-| 2:34,5 | efecto | Dejar PROP_Aro: FoundSomething_NoWeapon, suelta en 0,917 s del gesto |
-| 2:37,5 | plano 28 | detalle de el punto · 7,0 s · lente 40° |
-| 2:37,5 | eldran | «Esto es lo que llevaba el demonio al cuello. Lo traje del bosque y lo guardé en sal.» (7,0 s) |
-| 2:44,5 | plano 29 | medio de will · 8,0 s · lente 48° |
-| 2:44,5 | will | «¿Y si aparece otro? La próxima vez puede que no sea yo quien esté en el bosque. Puede que sea un crío del pueblo.» (8,0 s) · pose |
-| 2:52,5 | plano 30 | dos: will y eldran · 13,2 s · lente 52° |
-| 2:52,5 | eldran | «Por eso necesitas a alguien que sepa de verdad. Yo no puedo enseñarte, y aquí nadie sabe leer estas runas.» (8,0 s) |
-| 3:00,7 | eldran | «Hay una hechicera en el Bosque Prohibido. Se llama Estela.» (5,0 s) |
-| 3:05,7 | plano 31 | primer plano de eldran · 6,7 s · lente 38° |
-| 3:05,7 | eldran | «Dicen que es muy poderosa y, según la mitad de las historias, imposible de soportar.» (6,7 s) |
-| 3:12,3 | plano 32 | primer plano de will · 3,0 s · lente 38° |
-| 3:12,3 | will | «¿Y según la otra mitad?» (3,0 s) · pose |
-| 3:15,3 | plano 33 | dos: will y eldran · 7,9 s · lente 48° |
-| 3:15,3 | eldran | «También. Pero si alguien puede enseñarte a no incendiarte cada vez que estornudas, es ella.» (7,9 s) |
-| 3:23,2 | plano 34 | primer plano de will · 3,0 s · lente 38° |
-| 3:23,2 | will | «Iré.» (3,0 s) · pose |
-| 3:26,2 | plano 35 | medio de eldran · 12,8 s · lente 48° |
-| 3:26,2 | eldran | «Ya lo sé. Pero no así: primero, prepárate.» (5,0 s) |
-| 3:31,4 | eldran | «Llévate un trozo del aro. Que ella lo vea.» (6,0 s) |
-| 3:38,5 | efecto | Bandas de cine: retirar (0,5s) |
+| 0:01,2 | plano 2 | medio de will · 8,3 s · lente 48° |
+| 0:01,8 | will | «Una llama pequeña. Solo la mecha…» (3,2 s) · pose |
+| 0:05,0 | efecto | Entrada HoldRelease → velaControlada |
+| 0:05,0 | efecto | Coger PROP_Bollo (RightHand) |
+| 0:05,3 | eldran | «Vaya. Ni una chispa de más.» (4,2 s) |
+| 0:05,3 | eldran | «Prometedor… si lo que quieres es declararle la guerra a tu ropa.» (5,3 s) · pose |
+| 0:05,3 | efecto | VFX: VFX_VelaPequena en vela |
+| 0:05,3 | efecto | VFX: VFX_VelaGrande en vela |
+| 0:05,3 | efecto | VFX: VFX_Manga en Player |
+| 0:05,3 | efecto | Gesto: Player → CastingDamage01 ×2 |
+| 0:06,0 | efecto | VFX: VFX_VelaPequena en vela |
+| 0:09,5 | **@bollo** |  |
+| 0:09,5 | plano 3 | dos: will y eldran · 8,1 s · lente 55° |
+| 0:09,5 | efecto | Música: MANANA_DESPUES |
+| 0:16,1 | efecto | Dejar PROP_Bollo: FoundSomething_NoWeapon, suelta en 0,833 s del gesto |
+| 0:17,6 | plano 4 | dos: will y eldran · 3,8 s · lente 50° |
+| 0:17,6 | eldran | «Y perdona por lo del bosque. No debí mandarte solo.» (3,8 s) |
+| 0:21,4 | plano 5 | medio de will · 2,8 s · lente 48° |
+| 0:21,4 | will | «¿Me lo has comprado tú?» (2,8 s) · pose |
+| 0:24,2 | plano 6 | medio de eldran · 6,7 s · lente 46° |
+| 0:24,2 | eldran | «Me lo ha dado la panadera. Para el mago del pueblo. Pero la idea de traértelo ha sido mía.» (6,7 s) |
+| 0:30,9 | plano 7 | medio de will · 3,2 s · lente 48° |
+| 0:30,9 | will | «Oye, ayer lo viste todo, ¿no?» (3,2 s) · pose |
+| 0:34,1 | plano 8 | primer plano de eldran · 2,8 s · lente 38° |
+| 0:34,1 | eldran | «Claro. Si te estaba ayudando.» (2,8 s) |
+| 0:37,0 | plano 9 | medio de will · 5,8 s · lente 48° |
+| 0:37,0 | will | «Ya, pero cuando le lancé el fuego… Era así de grande. No, más. Así.» (5,8 s) · pose |
+| 0:42,7 | plano 10 | primer plano de eldran · 3,7 s · lente 38° |
+| 0:42,7 | eldran | «Anoche, cuando me lo contaste, era la mitad.» (3,7 s) |
+| 0:46,4 | **@origen** |  |
+| 0:46,4 | plano 11 | conjunto de will y eldran · 3,7 s · lente 60° |
+| 0:50,1 | plano 12 | medio de will · 3,5 s · lente 42° |
+| 0:50,1 | will | «¿Siempre he podido hacer esto?» (3,5 s) |
+| 0:53,6 | plano 13 | primer plano de eldran · 10,7 s · lente 38° |
+| 0:53,6 | eldran | «No lo sé. Hay algo de la noche en que te encontré que nunca te he contado.» (6,2 s) |
+| 0:59,9 | eldran | «Ya sabes que te encontré en un carro volcado, junto al camino.» (4,3 s) |
+| 1:04,3 | plano 14 | medio de will · 7,7 s · lente 46° |
+| 1:04,7 | eldran | «Estaba todo tan oscuro que no se veía nada. Si os encontré fue porque había una luz.» (7,3 s) |
+| 1:12,0 | plano 15 | primer plano de will · 7,0 s · lente 40° |
+| 1:12,0 | eldran | «La mujer que iba contigo tenía una llamita encendida entre los dedos, para que alguien os viera.» (7,0 s) |
+| 1:18,9 | plano 16 | primer plano de eldran · 4,0 s · lente 38° |
+| 1:18,9 | eldran | «Todavía respiraba. Nunca supe quién era.» (4,0 s) |
+| 1:23,0 | plano 17 | primer plano de will · 6,6 s · lente 40° |
+| 1:23,0 | eldran | «Solo le dio tiempo a pedirme que no te dejara solo. Luego la llama se apagó.» (5,8 s) |
+| 1:29,5 | plano 18 | primer plano de eldran · 3,1 s · lente 38° |
+| 1:29,5 | eldran | «Se lo prometí.» (2,8 s) |
+| 1:32,3 | **@eldran** |  |
+| 1:32,6 | plano 19 | medio de will · 4,0 s · lente 42° |
+| 1:33,4 | will | «¿Y tú? ¿Qué sabes tú de magia?» (3,2 s) |
+| 1:36,6 | plano 20 | primer plano de eldran · 4,9 s · lente 38° |
+| 1:36,6 | eldran | «¿Otra vez? Ya hemos hablado de eso mil veces.» (4,9 s) |
+| 1:41,5 | plano 21 | primer plano de will · 3,1 s · lente 38° |
+| 1:41,5 | will | «No. Mil veces me has cambiado de tema.» (3,1 s) |
+| 1:44,6 | plano 22 | conjunto de will y eldran · 4,7 s · lente 50° |
+| 1:49,3 | plano 23 | medio de eldran · 7,0 s · lente 42° |
+| 1:49,3 | eldran | «Hace cuarenta años me fui con unos amigos a buscar algo que no debíamos buscar.» (7,0 s) · pose |
+| 1:56,2 | plano 24 | primer plano de will · 5,9 s · lente 38° |
+| 1:56,2 | eldran | «Volvimos todos menos una.» (3,2 s) · pose |
+| 1:59,7 | will | «¿Qué buscabais?» (2,5 s) |
+| 2:02,2 | plano 25 | medio de eldran · 2,8 s · lente 38° |
+| 2:02,2 | eldran | «Otro día.» (2,8 s) · pose |
+| 2:05,0 | **@aro** |  |
+| 2:05,0 | plano 26 | dos: eldran y will · 5,3 s · lente 45° |
+| 2:09,1 | efecto | Coger PROP_Aro (RightHand) |
+| 2:10,3 | plano 27 | conjunto de will y eldran · 4,5 s · lente 52° |
+| 2:13,2 | efecto | Dejar PROP_Aro: FoundSomething_NoWeapon, suelta en 0,833 s del gesto |
+| 2:14,7 | plano 28 | detalle de el punto · 6,8 s · lente 42° |
+| 2:14,7 | eldran | «Esto es lo que llevaba el demonio al cuello. Lo traje del bosque y lo guardé en sal.» (6,0 s) |
+| 2:21,6 | plano 29 | dos: will y eldran · 3,0 s · lente 50° |
+| 2:24,6 | plano 30 | medio de will · 6,4 s · lente 48° |
+| 2:24,6 | will | «¿Y si aparece otro? La próxima vez puede que no sea yo quien esté en el bosque. Puede que sea un crío del pueblo.» (6,4 s) · pose |
+| 2:31,0 | plano 31 | dos: will y eldran · 12,8 s · lente 48° |
+| 2:31,0 | eldran | «Por eso necesitas a alguien que sepa de verdad. Yo no puedo enseñarte, y aquí nadie sabe leer estas runas.» (7,9 s) |
+| 2:39,0 | eldran | «Hay una hechicera en el Bosque Prohibido. Se llama Estela.» (4,8 s) |
+| 2:43,8 | plano 32 | primer plano de eldran · 6,7 s · lente 38° |
+| 2:43,8 | eldran | «Dicen que es muy poderosa y, según la mitad de las historias, imposible de soportar.» (6,7 s) |
+| 2:50,4 | plano 33 | primer plano de will · 2,5 s · lente 38° |
+| 2:50,4 | will | «¿Y según la otra mitad?» (2,5 s) · pose |
+| 2:52,9 | plano 34 | dos: will y eldran · 7,9 s · lente 46° |
+| 2:52,9 | eldran | «También. Pero si alguien puede enseñarte a no incendiarte cada vez que estornudas, es ella.» (7,9 s) |
+| 3:00,8 | plano 35 | primer plano de will · 2,5 s · lente 38° |
+| 3:00,8 | will | «Iré.» (2,5 s) · pose |
+| 3:03,3 | plano 36 | medio de eldran · 10,3 s · lente 45° |
+| 3:03,3 | eldran | «Ya lo sé. Pero no así: primero, prepárate.» (4,8 s) |
+| 3:08,3 | eldran | «Llévate un trozo del aro. Que ella lo vea.» (3,8 s) |
+| 3:13,1 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 
 ### will (Player)
 
-- 0:03,5–0:07,0 habla
-- 0:24,2–0:27,2 habla
-- 0:34,2–0:38,2 habla
-- 0:41,2–0:47,7 habla
-- 0:41,7 gesto CastingDamage01
-- 0:43,5 gesto Cheer01
-- 0:45,0 gesto HeadShake01
-- 0:46,2 gesto Cheer02
-- 0:51,7–0:54,7 anda de (115,8, 3,5) a (116,1, 0,5)
-- 0:54,7 gesto SitMedium_Begin
-- 0:55,3 bucle SitMedium_Loop
-- 0:55,4–1:00,4 habla
-- 1:12,6 bucle Knockdown01_Ground
-- 1:45,5 bucle SitMedium_Loop
-- 1:46,5–1:50,5 habla
-- 1:55,3–1:59,3 habla
-- 2:17,8–2:20,8 habla
-- 2:37,5 gesto SitMedium_Exit
-- 2:38,4 reposo 
-- 2:38,7–2:41,6 anda de (116,1, 0,6) a (115,8, 3,6)
-- 2:44,5–2:52,5 habla
-- 3:12,3–3:15,3 habla
-- 3:23,2–3:26,2 habla
-- 3:23,6 gesto HeadNod01
-- 3:38,5 reposo 
+- 0:01,8–0:05,0 habla
+- 0:21,4–0:24,2 habla
+- 0:30,9–0:34,1 habla
+- 0:37,0–0:42,7 habla
+- 0:37,4 gesto CastingDamage01
+- 0:38,8 gesto Cheer01
+- 0:40,0 gesto HeadShake01
+- 0:41,0 gesto Cheer02
+- 0:46,5–0:49,5 anda de (115,8, 3,5) a (116,1, 0,5)
+- 0:49,4 gesto SitMedium_Begin
+- 0:50,1 bucle SitMedium_Loop
+- 0:50,1–0:53,6 habla
+- 1:04,3 bucle Knockdown01_Ground
+- 1:32,6 bucle SitMedium_Loop
+- 1:33,4–1:36,6 habla
+- 1:41,5–1:44,6 habla
+- 1:59,7–2:02,2 habla
+- 2:14,7 gesto SitMedium_Exit
+- 2:15,7 reposo 
+- 2:21,6–2:24,6 anda de (116,0, 0,5) a (115,8, 3,6)
+- 2:24,6–2:31,0 habla
+- 2:50,4–2:52,9 habla
+- 3:00,8–3:03,3 habla
+- 3:01,1 gesto HeadNod01
+- 3:13,1 reposo 
 
 ### eldran (NPC_Eldran)
 
 - 0:00,0 desaparece
-- 0:07,0 aparece
-- 0:07,1–0:08,1 anda de (116,4, 4,9) a (116,4, 3,7)
-- 0:07,3–0:13,3 habla
-- 0:07,3–0:13,3 habla
-- 0:13,3–0:15,5 anda de (116,4, 3,7) a (115,3, 2,6)
-- 0:15,5 gesto FoundSomething_NoWeapon
-- 0:17,9–0:18,5 anda de (115,2, 2,5) a (114,6, 2,5)
-- 0:18,5 gesto SitHigh_Begin
-- 0:19,2 bucle SitHigh_Loop
-- 0:19,2–0:24,2 habla
-- 0:27,2–0:34,2 habla
-- 0:38,2–0:41,2 habla
-- 0:47,7–0:51,7 habla
-- 1:00,4–1:07,4 habla
-- 1:07,6–1:12,6 habla
-- 1:13,2–1:20,5 habla
-- 1:20,5–1:28,5 habla
-- 1:28,5–1:33,5 habla
-- 1:33,5–1:40,5 habla
-- 1:42,0–1:45,0 habla
-- 1:50,5–1:55,3 habla
-- 1:59,3 gesto SitHigh_Exit
-- 2:00,3 reposo 
-- 2:00,5–2:05,5 anda de (114,7, 2,5) a (118,5, 3,3)
-- 2:05,5–2:13,5 habla
-- 2:13,5–2:17,5 habla
-- 2:20,8–2:23,8 habla
-- 2:23,8–2:28,2 anda de (118,4, 3,3) a (115,7, 0,0)
-- 2:28,1 gesto Loot01_Begin
-- 2:28,8 bucle Loot01_Loop
-- 2:29,7 gesto Loot01_Stop
-- 2:30,6 bucle Loot01_Loop
-- 2:30,6 reposo 
-- 2:30,6–2:33,7 anda de (115,7, 0,0) a (115,3, 3,0)
-- 2:33,6 gesto FoundSomething_NoWeapon
-- 2:36,0–2:36,9 anda de (115,2, 3,0) a (114,5, 2,4)
-- 2:36,8 gesto SitHigh_Begin
-- 2:37,5 bucle SitHigh_Loop
-- 2:37,5–2:44,5 habla
-- 2:52,5–3:00,5 habla
-- 3:00,7–3:05,7 habla
-- 3:05,7–3:12,3 habla
-- 3:15,3–3:23,2 habla
-- 3:26,2–3:31,2 habla
-- 3:31,4–3:37,4 habla
-- 3:37,4 gesto SitHigh_Exit
-- 3:38,3 reposo 
+- 0:05,0 bucle CarryMoveIdle_NoWeapon
+- 0:05,0 aparece
+- 0:05,1–0:05,2 anda de (116,4, 4,9) a (116,4, 4,8)
+- 0:05,3–0:09,5 habla
+- 0:05,3–0:10,6 habla
+- 0:12,7–0:15,3 anda de (116,4, 4,8) a (115,1, 2,4)
+- 0:15,2 reposo 
+- 0:15,2 gesto FoundSomething_NoWeapon
+- 0:17,6–0:21,4 habla
+- 0:17,6–0:19,9 anda de (115,1, 2,3) a (114,4, 2,3)
+- 0:17,6 gesto HeadNod01
+- 0:19,8 gesto SitMedium_Begin
+- 0:20,5 bucle SitMedium_Loop
+- 0:24,2–0:30,9 habla
+- 0:24,3 gesto Talk01
+- 0:34,1–0:37,0 habla
+- 0:34,2 gesto HeadNod01
+- 0:42,7–0:46,4 habla
+- 0:42,8 gesto Talk02
+- 0:53,6–0:59,8 habla
+- 0:53,7 gesto Talk01
+- 0:59,9–1:04,3 habla
+- 1:00,0 gesto HeadShake01
+- 1:04,7–1:12,0 habla
+- 1:04,8 gesto Talk01
+- 1:12,0–1:18,9 habla
+- 1:12,0 gesto HeadShake01
+- 1:18,9–1:23,0 habla
+- 1:19,0 gesto Talk02
+- 1:23,0–1:28,7 habla
+- 1:23,0 gesto Talk01
+- 1:29,5–1:32,3 habla
+- 1:29,6 gesto HeadNod01
+- 1:36,6–1:41,5 habla
+- 1:36,7 gesto Talk01
+- 1:44,6 gesto SitMedium_Exit
+- 1:45,5 reposo 
+- 1:45,8–1:49,3 anda de (114,6, 2,2) a (118,5, 3,3)
+- 1:49,3–1:56,2 habla
+- 1:56,2–1:59,4 habla
+- 2:02,2–2:05,0 habla
+- 2:02,3 gesto HeadNod01
+- 2:05,0–2:08,4 anda de (118,4, 3,3) a (115,7, 0,0)
+- 2:08,3 gesto Loot01_Begin
+- 2:09,1 bucle Loot01_Loop
+- 2:09,5 gesto Loot01_Stop
+- 2:10,3 bucle Loot01_Loop
+- 2:10,3 reposo 
+- 2:10,3–2:12,5 anda de (115,7, 0,0) a (115,2, 2,7)
+- 2:12,4 gesto FoundSomething_NoWeapon
+- 2:14,7–2:20,8 habla
+- 2:14,8–2:17,3 anda de (115,2, 2,7) a (114,4, 2,2)
+- 2:14,8 gesto Talk01
+- 2:17,2 gesto SitMedium_Begin
+- 2:17,9 bucle SitMedium_Loop
+- 2:31,0–2:38,8 habla
+- 2:31,0 gesto Talk01
+- 2:39,0–2:43,8 habla
+- 2:39,0 gesto HeadShake01
+- 2:43,8–2:50,4 habla
+- 2:43,9 gesto Talk02
+- 2:52,9–3:00,8 habla
+- 2:53,0 gesto Talk01
+- 3:03,3–3:08,1 habla
+- 3:03,4 gesto HeadNod01
+- 3:08,3–3:12,1 habla
+- 3:08,3 gesto Talk01
+- 3:12,1 gesto SitMedium_Exit
+- 3:13,0 reposo 
 

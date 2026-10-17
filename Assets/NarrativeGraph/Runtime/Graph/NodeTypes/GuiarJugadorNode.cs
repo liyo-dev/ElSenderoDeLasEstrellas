@@ -47,6 +47,10 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("Cuando el jugador llega a esta distancia, en metros, el NPC sigue andando.")]
     public float distanciaReanudar = 3f;
 
+    [Min(0.1f)]
+    [Tooltip("Espacio que el jugador conserva detrás del guía mientras camina, en metros.")]
+    public float separacionDelGuia = 1.2f;
+
     [Min(1f)]
     [Tooltip("Cuando el NPC ya está en la marca, el nodo avanza en cuanto el jugador llega a esta distancia de él, en metros.")]
     public float radioLlegada = 4f;
@@ -59,15 +63,11 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("Tope de segundos del paseo. Si se agota, el NPC se queda donde esté y se sigue esperando a que llegue el jugador.")]
     public float duracionMaxima = 240f;
 
-    [Tooltip("Lo que se cuentan por el camino: un diálogo normal (hablante y texto por línea) que sale en bocadillos sobre quien habla mientras el jugador va cerca. Si llegan antes de acabarlo, lo terminan allí. Vacío = van en silencio.")]
+    [Tooltip("Lo que se cuentan por el camino: un diálogo normal (hablante y texto por línea) que sale en bocadillos sobre quien habla mientras el NPC guía. Se pausa si el NPC se detiene a esperar al jugador o hay un menú abierto. Si llegan antes de acabarlo, lo terminan allí. Vacío = van en silencio.")]
     public DialogueAsset charla;
 
     // Mientras sigue al NPC, el jugador va como mucho a esta fracción de la velocidad del NPC.
     private const float FraccionVelocidadJugador = 0.9f;
-    // La charla solo habla con el jugador a menos de esta fracción de 'distanciaMaxima': se calla
-    // antes de que el NPC se pare a llamarle.
-    private const float FraccionDistanciaCharla = 0.75f;
-
     [NonSerialized] private Coroutine _rutina;
     [NonSerialized] private NarrativeRunner _runner;
     [NonSerialized] private UnityEngine.AI.NavMeshAgent _agenteTocado;
@@ -75,6 +75,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [NonSerialized] private Coroutine _rutinaCharla;
     [NonSerialized] private CharlaEnBocadillos _charla;
     [NonSerialized] private bool _topePuesto;
+    [NonSerialized] private Vector3 _direccionGuia;
     [NonSerialized] private NPCBehaviourManagerV2 _npcEscortado;
     [NonSerialized] private NPCSimpleAnimator _animTocado;
     [NonSerialized] private bool _rotacionManualPrevia;
@@ -179,13 +180,11 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         var paseo = new LeadPlayerToAnchorSequence(Ruta(destino), player, duracionMaxima, distanciaMaxima, distanciaReanudar);
         npc.StartCinematicSequence(paseo);
 
-        float radioCharla = distanciaMaxima * FraccionDistanciaCharla;
         if (charla != null)
         {
             _charla = new CharlaEnBocadillos(charla, npc);
             _rutinaCharla = _runner.StartCoroutine(_charla.Co_Hablar(
-                () => player != null && !paseo.WaitingForRetrievedDialogue && !MenuManager.AnyOpen() &&
-                      (player.position - npc.transform.position).sqrMagnitude <= radioCharla * radioCharla,
+                () => player != null && !paseo.WaitingForRetrievedDialogue && !MenuManager.AnyOpen(),
                 pausaInicial: 1f));
         }
 
@@ -219,6 +218,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
 
         float velocidadGuia = agent != null ? agent.speed : velocidad;
         DevolverVelocidad();
+        QuitarTope();
 
         // Ya en la marca, espera a que el jugador llegue hasta él mirándole.
         if (anim != null) anim.EnableAutoRotation();
@@ -289,7 +289,20 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     }
 
     private void LimitarJugador(NPCBehaviourManagerV2 npc, Transform player, UnityEngine.AI.NavMeshAgent agent)
-        => LimitarJugador(npc, player, agent != null ? agent.speed : velocidad);
+    {
+        bool cerca = player != null && (player.position - npc.transform.position).sqrMagnitude <= distanciaMaxima * distanciaMaxima;
+        if (player == null) { QuitarTope(); return; }
+        Vector3 direccion = agent != null && agent.enabled && agent.isOnNavMesh && agent.hasPath
+            ? agent.steeringTarget - npc.transform.position : _direccionGuia;
+        direccion.y = 0f;
+        if (direccion.sqrMagnitude > 0.01f) _direccionGuia = direccion.normalized;
+        if (_direccionGuia.sqrMagnitude < 0.01f) _direccionGuia = npc.transform.forward;
+        float avance = agent != null ? Mathf.Max(0f, Vector3.Dot(agent.velocity, _direccionGuia)) : 0f;
+        float tope = cerca ? (agent != null ? agent.speed : velocidad) * FraccionVelocidadJugador : float.PositiveInfinity;
+        TopeDeVelocidadDelJugador.PonerSeguimiento(this, tope,
+            npc.transform, _direccionGuia, avance, separacionDelGuia);
+        _topePuesto = true;
+    }
 
     /// Cerca del NPC, el jugador no va más rápido que él (no le adelanta). Lejos, va a su paso
     /// normal para poder alcanzarle.
@@ -297,7 +310,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     {
         bool cerca = player != null &&
                      (player.position - npc.transform.position).sqrMagnitude <= distanciaMaxima * distanciaMaxima;
-        if (cerca == _topePuesto) return;
+        // En el destino se permite acercarse por cualquier lado para cerrar el paseo.
         if (cerca) TopeDeVelocidadDelJugador.Poner(this, velocidadNpc * FraccionVelocidadJugador);
         else TopeDeVelocidadDelJugador.Quitar(this);
         _topePuesto = cerca;
@@ -308,6 +321,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
         if (!_topePuesto) return;
         TopeDeVelocidadDelJugador.Quitar(this);
         _topePuesto = false;
+        _direccionGuia = Vector3.zero;
     }
 
     private void DevolverVelocidad()

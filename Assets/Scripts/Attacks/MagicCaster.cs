@@ -74,7 +74,9 @@ public class MagicCaster : MonoBehaviour
     [SerializeField, Min(0f)] private float remateSacudida = 0.3f;
 
     [Header("Debug")]
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [SerializeField] private bool showDebugLogs = false;
+#endif
 
     private readonly MagicSpellSO[] _basics = new MagicSpellSO[BasicSlotCount];
     private int _activeBasic;
@@ -365,7 +367,13 @@ public class MagicCaster : MonoBehaviour
         if (style == MagicCastStyle.Area) castLock = Mathf.Max(castLock, areaMinSeconds);
         _castingUntil = Time.time + castLock;
 
-        if (controller) PlayCastGesture(style, hand, castLock, GetDirectionToTarget());
+        Vector3 toTarget = GetDirectionToTarget();
+        if (toTarget.sqrMagnitude > 0.0001f && controller != null)
+        {
+            controller.transform.rotation = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
+        }
+
+        if (controller) PlayCastGesture(style, hand, castLock, toTarget);
 
         var toSpawn = precise && spell.supportsPreciseMode ? spell.BuildPreciseVariant() : spell;
         if (spawner) spawner.Cast(toSpawn, hand, damageMultiplier);
@@ -384,14 +392,17 @@ public class MagicCaster : MonoBehaviour
     public bool BeginTeamGesture(float lockSeconds, out Vector3 facing) =>
         BeginTeamGesture(lockSeconds, MagicCastStyle.TwoHanded, out facing);
 
+    /// <summary>Consulta sin efectos para que el HUD anuncie solo acciones que pueden comenzar.</summary>
+    public bool CanBeginTeamGesture => !IsCasting
+        && (!actionManager || actionManager.CanCastMagic())
+        && (shieldController == null || !shieldController.IsDefending);
+
     /// <summary>Como el anterior, con el gesto que se pida (el trío usa el de área).</summary>
     public bool BeginTeamGesture(float lockSeconds, MagicCastStyle style, out Vector3 facing)
     {
         facing = controller ? controller.transform.forward : transform.forward;
 
-        if (IsCasting) return false;
-        if (actionManager && !actionManager.CanCastMagic()) return false;
-        if (shieldController != null && shieldController.IsDefending) return false;
+        if (!CanBeginTeamGesture) return false;
 
         Vector3 toTarget = GetDirectionToTarget();
         if (toTarget.sqrMagnitude > 0.0001f) facing = toTarget.normalized;
@@ -421,13 +432,48 @@ public class MagicCaster : MonoBehaviour
     public bool TryGetTarget(out Transform target)
     {
         target = null;
-        return _targets != null && _targets.TryGetTarget(out target) && target;
+        if (spawner != null)
+        {
+            target = spawner.GetAimedTarget();
+            if (target != null) return true;
+        }
+        if (_targets == null)
+            _targets = GetComponentInParent<ITargetProvider>() ?? GetComponentInChildren<ITargetProvider>();
+        if (_targets != null && _targets.TryGetTarget(out target) && target)
+            return true;
+        if (CombatCameraTargeting.Instance != null && CombatCameraTargeting.Instance.CurrentTarget != null)
+        {
+            target = CombatCameraTargeting.Instance.CurrentTarget.transform;
+            return true;
+        }
+        var cam = Camera.main;
+        if (cam != null && cam.TryGetComponent<vThirdPersonCamera>(out var tpCam) && tpCam.LockTarget != null)
+        {
+            target = tpCam.LockTarget;
+            return true;
+        }
+        if (ActiveCombatRegistry.Count > 0 && controller != null)
+        {
+            var nearest = ActiveCombatRegistry.GetClosestCombatNPC(controller.transform.position, 45f);
+            if (nearest != null)
+            {
+                target = nearest.transform;
+                return true;
+            }
+        }
+        return false;
     }
 
     /// <summary>Gesto, giro, bloqueo y sostén en el aire de un lanzamiento según su estilo.</summary>
     private void PlayCastGesture(MagicCastStyle style, CastHand hand, float lockSeconds, Vector3 facing)
     {
         if (_omniRelease != null) { StopCoroutine(_omniRelease); _omniRelease = null; }
+
+        if (facing.sqrMagnitude > 0.0001f && controller != null)
+        {
+            // Orientar de inmediato hacia el objetivo para que el lanzamiento comience bien alineado
+            controller.transform.rotation = Quaternion.LookRotation(facing.normalized, Vector3.up);
+        }
 
         if (style == MagicCastStyle.Omni && lockSeconds > omniBurstTime)
         {
@@ -519,7 +565,7 @@ public class MagicCaster : MonoBehaviour
     /// Dirección horizontal hacia el objetivo actual (fijado o automático); cero si no hay.
     private Vector3 GetDirectionToTarget()
     {
-        if (_targets == null || !controller || !_targets.TryGetTarget(out Transform t) || !t)
+        if (!controller || !TryGetTarget(out Transform t) || !t)
             return Vector3.zero;
         Vector3 to = t.position - controller.transform.position;
         to.y = 0f;

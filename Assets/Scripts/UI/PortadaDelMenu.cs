@@ -20,8 +20,10 @@ public class PortadaDelMenu : MonoBehaviour
     [SerializeField] private Camera camara;
 
     [Header("Pruebas")]
+#if UNITY_EDITOR
     [Tooltip("Solo en el Editor: enseña esta etapa (índice en la lista) sin mirar la partida. -1 = según la partida.")]
     [SerializeField] private int forzarEtapaEnEditor = -1;
+#endif
 
     public PortadaEtapa Activa { get; private set; }
 

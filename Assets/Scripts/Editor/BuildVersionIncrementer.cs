@@ -37,17 +37,8 @@ public class BuildVersionIncrementer : IPreprocessBuildWithReport
 
     const string SkipNextBuildKey = "ElSendero_SkipVersionIncrementOnce";
 
-    // Recuerda, para este mismo build, si el autoincremento se salta. PatchNotesBuildGuard corre
-    // antes del incrementador y solo consulta WasLastBuildVersionSkipped en el postprocess para
-    // no resetear las Notas del Parche en un build de pruebas que tampoco sube de versión.
-    // Se sobrescribe al principio de cada build, así que no hace falta borrarlo a mano.
-    const string LastBuildSkippedKey = "ElSendero_LastBuildWasVersionSkipped";
-
     /// <summary>Indica si el build que está a punto de empezar salta el autoincremento; el aviso aún no se consume.</summary>
     public static bool SeSaltaraElProximoBuild => SessionState.GetBool(SkipNextBuildKey, false);
-
-    /// <summary>True si el build que se está generando ahora mismo saltó el autoincremento de versión.</summary>
-    public static bool WasLastBuildVersionSkipped => SessionState.GetBool(LastBuildSkippedKey, false);
 
     public void OnPreprocessBuild(BuildReport report)
     {
@@ -57,13 +48,10 @@ public class BuildVersionIncrementer : IPreprocessBuildWithReport
         if (SessionState.GetBool(SkipNextBuildKey, false))
         {
             SessionState.EraseBool(SkipNextBuildKey);
-            SessionState.SetBool(LastBuildSkippedKey, true);
             Debug.Log("[BuildVersionIncrementer] Autoincremento saltado para este build (una sola vez). " +
                       $"La versión se queda en {UnityEditor.PlayerSettings.bundleVersion}.");
             return;
         }
-
-        SessionState.SetBool(LastBuildSkippedKey, false);
 
         string current = UnityEditor.PlayerSettings.bundleVersion;
         string[] parts = current.Split('.');

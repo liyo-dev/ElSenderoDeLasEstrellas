@@ -60,13 +60,37 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     private Tween _markerTween;
     private bool _markerVisible;
     private bool _hiddenByDialogue;
+    private PlayerActionManager _actionManager;
     private readonly List<Material> _runtimeMarkerMaterials = new();
     // Centro local del collider del target actual, cacheado para evitar bounds.center en LateUpdate
     private Vector3 _cachedTargetLocalCenter = Vector3.up;
 
+    /// True mientras hay una secuencia cinemática activa, la cámara está reclamada para cine,
+    /// hay un diálogo abierto o el jugador está en modo Cinematic.
+    public bool DebeOcultarMarcador()
+    {
+        if (ActiveCombatRegistry.Count > 0) return false;
+        if (_hiddenByDialogue) return true;
+        if (CinematicSequencerBase.AnySequenceActive) return true;
+        if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;
+        if (_actionManager != null && _actionManager.IsInMode(ActionMode.Cinematic)) return true;
+        return false;
+    }
+
     void Awake()
     {
         _cam = Camera.main;
+        _actionManager = GetComponent<PlayerActionManager>() ?? GetComponentInParent<PlayerActionManager>();
+
+        if (enemyMask.value == 0)
+        {
+            int defaultLayer = LayerMask.NameToLayer("Default");
+            int enemyLayer = LayerMask.NameToLayer("Enemy");
+            int mask = 0;
+            if (defaultLayer >= 0) mask |= (1 << defaultLayer);
+            if (enemyLayer >= 0) mask |= (1 << enemyLayer);
+            enemyMask = mask;
+        }
 
         if (enableMarker && markerPrefab)
         {
@@ -85,35 +109,49 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     {
         DialogueManager.OnDialogueStarted += HandleDialogueStarted;
         DialogueManager.OnDialogueClosed += HandleDialogueClosed;
+        CinematicSequencerBase.OnAnySequenceActiveChanged += HandleSequenceActiveChanged;
     }
 
     void OnDisable()
     {
         DialogueManager.OnDialogueStarted -= HandleDialogueStarted;
         DialogueManager.OnDialogueClosed -= HandleDialogueClosed;
+        CinematicSequencerBase.OnAnySequenceActiveChanged -= HandleSequenceActiveChanged;
+    }
+
+    void HandleSequenceActiveChanged(bool active)
+    {
+        if (active) OcultarMarcadorInmediato();
+    }
+
+    void OcultarMarcadorInmediato()
+    {
+        if (!_marker) return;
+        _markerVisible = false;
+        _markerTween?.Kill();
+        _marker.localScale = Vector3.zero;
+        if (_marker.gameObject.activeSelf)
+            _marker.gameObject.SetActive(false);
     }
 
     void HandleDialogueStarted(Transform _)
     {
-        if (!_marker) return;
         _hiddenByDialogue = true;
-        if (!_markerVisible) return;
+        if (!_marker || !_markerVisible) return;
+        _markerVisible = false;
         _markerTween?.Kill();
         _markerTween = _marker.DOScale(Vector3.zero, markerHideDuration).SetEase(Ease.InBack)
-            .OnComplete(() => _marker.gameObject.SetActive(false));
+            .OnComplete(() =>
+            {
+                if (_marker && _marker.gameObject.activeSelf)
+                    _marker.gameObject.SetActive(false);
+            });
     }
 
     void HandleDialogueClosed(Transform _)
     {
         if (!_hiddenByDialogue) return;
         _hiddenByDialogue = false;
-        if (_marker && _markerVisible && CurrentTarget != null)
-        {
-            _markerTween?.Kill();
-            _marker.gameObject.SetActive(true);
-            _marker.localScale = Vector3.zero;
-            _markerTween = _marker.DOScale(_markerOriginalScale, markerShowDuration).SetEase(Ease.OutBack);
-        }
     }
 
     void OnDestroy()
@@ -276,6 +314,16 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
 
     void Update()
     {
+        if (DebeOcultarMarcador())
+        {
+            if (!_isManualTargetActive && CurrentTarget != null)
+            {
+                CurrentTarget = null;
+                OnTargetChanged(null);
+            }
+            return;
+        }
+
         if (_isManualTargetActive)
         {
             if (CurrentTarget == null || !CurrentTarget.gameObject.activeInHierarchy || (_currentTargetDamageable != null && !_currentTargetDamageable.IsAlive))
@@ -312,7 +360,8 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         var origin = aimOrigin ? aimOrigin.position : transform.position + Vector3.up;
         var fwd = aimOrigin ? aimOrigin.forward : transform.forward;
 
-        int hitCount = Physics.OverlapSphereNonAlloc(origin, scanRadius, _overlapBuffer, enemyMask, QueryTriggerInteraction.Collide);
+        float effectiveScanRadius = Mathf.Max(scanRadius, 35f);
+        int hitCount = Physics.OverlapSphereNonAlloc(origin, effectiveScanRadius, _overlapBuffer, enemyMask, QueryTriggerInteraction.Collide);
         float bestScore = float.NegativeInfinity;
         Transform best = null;
 
@@ -324,13 +373,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             if (requireDamageableAlive)
             {
                 var damageable = h.GetComponentInParent<Damageable>();
-                if (damageable == null || !damageable.IsAlive)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: sin Damageable vivo (damageable={(damageable == null ? "NULL" : "existe")}, alive={(damageable != null && damageable.IsAlive)})");
-#endif
-                    continue;
-                }
+                if (damageable == null || !damageable.IsAlive) continue;
             }
 
             Vector3 center = GetTargetCenter(h.transform);
@@ -339,60 +382,33 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             if (dist < 0.01f) continue;
 
             var cfg = h.GetComponentInParent<Targetable>();
-            if (cfg && !cfg.isInActiveCombat)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: Targetable.isInActiveCombat=false");
-#endif
-                continue;
-            }
+            if (cfg && !cfg.isInActiveCombat) continue;
+
             float allowedRadius = (cfg && cfg.targetingRadius > 0) ? cfg.targetingRadius : radius;
-            if (dist > allowedRadius)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: dist={dist:F2} > allowedRadius={allowedRadius:F2}");
-#endif
-                continue;
-            }
+            if (dist > allowedRadius) continue;
 
             Vector3 dir = to / dist;
             float angle = Vector3.Angle(fwd, dir);
-            if (angle > fovDegrees * 0.5f)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: fuera de FOV (angle={angle:F1} > {fovDegrees * 0.5f:F1}) fwd={fwd} dir={dir}");
-#endif
-                continue;
-            }
+            if (angle > fovDegrees * 0.5f) continue;
 
-            if (mustBeOnScreen && _cam)
+            if (mustBeOnScreen)
             {
-                Vector3 vp = _cam.WorldToViewportPoint(center);
-                if (vp.z <= 0f || vp.x < screenEdgePadding || vp.x > 1f - screenEdgePadding || vp.y < screenEdgePadding || vp.y > 1f - screenEdgePadding)
+                if (_cam == null || !_cam.gameObject.activeInHierarchy) _cam = Camera.main;
+                if (_cam != null)
                 {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: fuera de pantalla (viewport={vp})");
-#endif
-                    continue;
+                    Vector3 vp = _cam.WorldToViewportPoint(center);
+                    if (vp.z <= 0f || vp.x < screenEdgePadding || vp.x > 1f - screenEdgePadding || vp.y < screenEdgePadding || vp.y > 1f - screenEdgePadding)
+                        continue;
                 }
             }
 
             if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) && rh.collider.transform.root != h.transform.root)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[DEBUG-AIM] '{h.gameObject.name}' descartado: línea de visión bloqueada por '{rh.collider.gameObject.name}' (root='{rh.collider.transform.root.name}') a {rh.distance:F2}m de {dist:F2}m totales");
-#endif
                 continue;
-            }
 
             float score = Vector3.Dot(fwd, dir) - (dist / allowedRadius) * 0.35f;
             if (score > bestScore) { bestScore = score; best = h.transform; }
         }
         CurrentTarget = best;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        if (hitCount > 0)
-            Debug.Log($"[DEBUG-AIM] Scan() candidatos={hitCount} CurrentTarget={(best ? best.name : "NULL")}");
-#endif
     }
 
     void OnTargetChanged(Transform newT)
@@ -425,18 +441,22 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
         
         if (!_marker) return;
 
+        if (DebeOcultarMarcador())
+        {
+            OcultarMarcadorInmediato();
+            return;
+        }
+
         if (newT)
         {
             if (!_markerVisible)
             {
                 _markerVisible = true;
-                if (!_hiddenByDialogue)
-                {
-                    _markerTween?.Kill();
+                _markerTween?.Kill();
+                if (!_marker.gameObject.activeSelf)
                     _marker.gameObject.SetActive(true);
-                    _marker.localScale = Vector3.zero;
-                    _markerTween = _marker.DOScale(_markerOriginalScale, markerShowDuration).SetEase(Ease.OutBack);
-                }
+                _marker.localScale = Vector3.zero;
+                _markerTween = _marker.DOScale(_markerOriginalScale, markerShowDuration).SetEase(Ease.OutBack);
             }
         }
         else
@@ -445,7 +465,12 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             {
                 _markerVisible = false;
                 _markerTween?.Kill();
-                _markerTween = _marker.DOScale(Vector3.zero, markerHideDuration).SetEase(Ease.InBack).OnComplete(() => _marker.gameObject.SetActive(false));
+                _markerTween = _marker.DOScale(Vector3.zero, markerHideDuration).SetEase(Ease.InBack)
+                    .OnComplete(() =>
+                    {
+                        if (_marker && _marker.gameObject.activeSelf)
+                            _marker.gameObject.SetActive(false);
+                    });
             }
         }
     }
@@ -454,7 +479,11 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     {
         if (!_marker) return;
 
-        if (_hiddenByDialogue) return;
+        if (DebeOcultarMarcador())
+        {
+            OcultarMarcadorInmediato();
+            return;
+        }
 
         if (CurrentTarget == null)
         {
@@ -463,18 +492,23 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             return;
         }
 
-        if (!_marker.gameObject.activeSelf)
-            _marker.gameObject.SetActive(true);
+        if (!_markerVisible || !_marker.gameObject.activeSelf)
+        {
+            _markerVisible = true;
+            _markerTween?.Kill();
+            if (!_marker.gameObject.activeSelf)
+                _marker.gameObject.SetActive(true);
+            _marker.localScale = Vector3.zero;
+            _markerTween = _marker.DOScale(_markerOriginalScale, markerShowDuration).SetEase(Ease.OutBack);
+        }
 
         // Usar el centro local cacheado con TransformPoint para seguir al transform interpolado,
         // en lugar de bounds.center que salta al ritmo de FixedUpdate y causa temblor.
         Vector3 pos = CurrentTarget.TransformPoint(_cachedTargetLocalCenter) + markerOffset;
         _marker.position = pos;
         
-        // DEBUG: Verificar posición del marcador
         if (verboseLogging)
         {
-            // Solo loguear cada 60 frames para no saturar
             if (Time.frameCount % 60 == 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

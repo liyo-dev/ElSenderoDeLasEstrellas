@@ -171,7 +171,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7613925751593065874}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34fba07050c9cec4ab8a24994f574e26, type: 3}
   m_Name: 
@@ -186,6 +186,14 @@ MonoBehaviour:
   duoCost: 1
   chordWindow: 0.12
   magicCaster: {fileID: 0}
+  auraLevitacionEstela: {fileID: 96914625151753802, guid: b8256ce35f073054cb5bd20bf33a2d48, type: 3}
+  focoManoEstela: {fileID: 3635025639706939075, guid: f3006e95f3b50374fb2508e363c6c2a4, type: 3}
+  auraConcentracionWill: {fileID: 4106469250010796196, guid: 19f90e18c960c7d49aefc3373bb5c15a, type: 3}
+  auraConcentracionLiam: {fileID: 7571731933742264817, guid: 481f9a5396ea8814b8d174a06a1f8d75, type: 3}
+  auraFormacionTrio: {fileID: 2903447236599790647, guid: 6372e6d139991454d92eecd5d1baa6a7, type: 3}
+  impactoRemateEstela: {fileID: 646682446945498171, guid: ab57a1d2c0594b34dbb8d9019bee87d5, type: 3}
+  impactoRemateLiam: {fileID: 4245156406205210032, guid: a18f64334c39ae5438575549be624722, type: 3}
+  impactoRemateTrio: {fileID: 5739765518032061657, guid: bfdb70d9a05f23b43a461078a7e3a494, type: 3}
   targetReach: 9
   frontDistance: 2.5
   notAvailableSFXKey: ui_denied

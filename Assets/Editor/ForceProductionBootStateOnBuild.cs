@@ -33,14 +33,13 @@ public class ForceProductionBootStateOnBuild : IPreprocessBuildWithReport
     private const string StartScenePath = "Assets/Scenes/Systems/Start.unity";
     private const string BootProfilePath = "Assets/_BootProfile/GameBootProfile.asset";
     private const string BootLoaderObjectName = "START_BootLoader";
-    private const string DedicationObjectName = "START_Dedication";
 
     public void OnPreprocessBuild(BuildReport report)
     {
         ApplyProductionBootState();
     }
 
-    [MenuItem("El Sendero/Build/Aplicar estado de Build (BootLoader ON / Dedication OFF)")]
+    [MenuItem("El Sendero/Build/Aplicar estado de Build (BootLoader ON)")]
     public static void ApplyProductionBootStateMenuItem()
     {
         ApplyProductionBootState();
@@ -84,13 +83,12 @@ public class ForceProductionBootStateOnBuild : IPreprocessBuildWithReport
 
         bool changed = false;
         changed |= SetObjectActiveIfNeeded(scene, BootLoaderObjectName, true);
-        changed |= SetObjectActiveIfNeeded(scene, DedicationObjectName, false);
 
         if (changed)
         {
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
-            Debug.Log("[ForceProductionBootStateOnBuild] ✅ Estado de build forzado en 'Start': START_BootLoader ON / START_Dedication OFF.");
+            Debug.Log("[ForceProductionBootStateOnBuild] ✅ Estado de build forzado en 'Start': START_BootLoader ON.");
         }
 
         if (openedByUs)

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Core;
 using Game.NPC;
+using Sendero.Core.Feedback;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// <summary>
@@ -21,7 +22,7 @@ using Slot = PartyControlManager.CharacterSlot;
 /// Vive en GrupoDelJugador (INC-484).
 /// </summary>
 [DisallowMultipleComponent]
-public class DuoSpecialAttackSystem : MonoBehaviour
+public partial class DuoSpecialAttackSystem : MonoBehaviour
 {
     [Header("Ataques")]
     [Tooltip("Un dúo por pareja (Will+Estela, Will+Liam, Estela+Liam).")]
@@ -45,10 +46,70 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private MagicCaster magicCaster;
 
+    [Header("VFX de Coreografía y Acción")]
+    [Tooltip("Aura/disco de fuego a los pies de Estela mientras levita.")]
+    [SerializeField] private GameObject auraLevitacionEstela;
+    [Tooltip("Foco/orbe de fuego en la mano alzada de Estela convocando meteoros.")]
+    [SerializeField] private GameObject focoManoEstela;
+    [Tooltip("Aura de concentración mágica en Will/compañero activo.")]
+    [SerializeField] private GameObject auraConcentracionWill;
+    [Tooltip("Aura de concentración psíquica/cósmica en Liam.")]
+    [SerializeField] private GameObject auraConcentracionLiam;
+    [Tooltip("Círculo rúnico y pilares celestiales a los pies de la formación del Trío.")]
+    [SerializeField] private GameObject auraFormacionTrio;
+    [Tooltip("Impacto sísmico / detonación terrestre al concluir el golpe de Estela.")]
+    [SerializeField] private GameObject impactoRemateEstela;
+    [Tooltip("Supernova cósmica / detonación gravitacional al concluir el golpe de Liam.")]
+    [SerializeField] private GameObject impactoRemateLiam;
+    [Tooltip("Cataclismo celestial / detonación suprema de las tres estrellas.")]
+    [SerializeField] private GameObject impactoRemateTrio;
+
     [Header("Alcance")]
     [Tooltip("Si el objetivo está a esta distancia o menos, el golpe cae sobre él; si no, delante.")]
     [SerializeField] private float targetReach = 9f;
     [SerializeField] private float frontDistance = 2.5f;
+
+    [Header("Poses (estados del Animator)")]
+    [Tooltip("Brazos arriba: pose para saltos.")]
+    [SerializeField] private string poseBrazosArriba = "Cheer01";
+    [Tooltip("Pose de conjuración / sostén mágico con ambas manos hacia el agujero negro (Liam y Will).")]
+    [SerializeField] private string poseSostenerMagia = "CastingIdle01";
+    [Tooltip("Dúo con Estela en el aire: mano alzada/adelante de conjuración mientras caen los meteoritos.")]
+    [SerializeField] private string poseInvocacionDuoEstela = "MagicRight";
+    [Tooltip("Pose de la Y del combo (cara a cara en el dúo con Liam). Capa superior.")]
+    [SerializeField] private string poseDeLaY = "ComboIdle";
+    [Tooltip("Pose de cuerpo entero en el aire (capa base).")]
+    [SerializeField] private string poseEnElAire = "JumpAir_InPlace_NoWeapon";
+    [Tooltip("Pose de carrera (capa base).")]
+    [SerializeField] private string poseCarrera = "Run";
+    [Tooltip("Dúo con Estela al tocar el suelo: pose firme espalda con espalda.")]
+    [SerializeField] private string poseAterrizajeDuoEstela = "Idle_Battle_NoWeapon";
+    [Tooltip("Trío: «aquí hemos llegado», mientras salen las caras en las franjas.")]
+    [SerializeField] private string poseLlegadaTrio = "Challenging_NoWeapon";
+    [Tooltip("Trío, al aterrizar: pose de Will.")]
+    [SerializeField] private string poseAterrizajeWill = "Idle_Battle_NoWeapon";
+    [Tooltip("Trío, al aterrizar: pose de Estela.")]
+    [SerializeField] private string poseAterrizajeEstela = "MagicSpecial";
+    [Tooltip("Trío, al aterrizar: pose de Liam.")]
+    [SerializeField] private string poseAterrizajeLiam = "HumanM@MagicAttackOmni01 - Cast";
+
+    [Header("Coreografía (segundos reales salvo que se diga)")]
+    [Tooltip("Velocidad de la carrera previa al salto (m/s).")]
+    [SerializeField, Min(1f)] private float velocidadDeCarrera = 11f;
+    [Tooltip("Dúo con Estela: altura del salto sobre el suelo (m).")]
+    [SerializeField, Min(0.5f)] private float alturaSaltoDuoEstela = 2.4f;
+    [Tooltip("Trío: altura del salto sobre el suelo (m).")]
+    [SerializeField, Min(0.5f)] private float alturaSaltoTrio = 3.4f;
+    [Tooltip("Dúos y trío: escala de tiempo mientras están en el aire (cámara lenta).")]
+    [SerializeField, Range(0.1f, 1f)] private float escalaDeTiempoEnElAire = 0.45f;
+    [Tooltip("Dúo con Estela: segundos suspendidos en lo alto, con el hechizo cayendo.")]
+    [SerializeField, Min(0.2f)] private float segundosEnLoAltoDuo = 1.5f;
+    [Tooltip("Dúo con Liam: segundos que el agujero negro atrae (tiempo de juego).")]
+    [SerializeField, Min(0.5f)] private float segundosDelAgujero = 1.8f;
+    [Tooltip("Dúo con Liam: radio horizontal bajo el agujero donde los enemigos chocan con él (m).")]
+    [SerializeField, Min(0.5f)] private float radioDeChoqueDelAgujero = 2.0f;
+    [Tooltip("Trío: segundos con las tres caras en las franjas y la pose de llegada.")]
+    [SerializeField, Min(0.5f)] private float segundosDeLasCaras = 1.8f;
 
     [Header("Feedback de no disponible")]
     [SerializeField] private string notAvailableSFXKey = "ui_denied";
@@ -101,8 +162,13 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     {
         AvisosDeCombate.AlPedirseRemate -= AlPedirseRemate;
         Damageable.AlRecibirDanoCualquiera -= AlHacerDanoAlguien;
+        StopAllCoroutines();
         _pendingSide = 0;
-        _isExecuting = false;
+        if (_isExecuting)
+        {
+            LimpiarPuestaEnEscena();
+            _isExecuting = false;
+        }
     }
 
     // ── Carga ──────────────────────────────────────────────────────────────
@@ -151,9 +217,6 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         if ((ltPressed && rt) || (rtPressed && lt))
         {
             _pendingSide = 0;
-#if UNITY_EDITOR
-            Debug.Log("[EquipoEspecial] LT+RT pulsados.", this);
-#endif
             TryTeamAttack();
             return;
         }
@@ -179,49 +242,72 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// LT+RT: ataque de equipo con quien esté cerca (Raúl: «acercándome al personaje; si quiero
-    /// solo a uno uso el sígueme»). Los dos compañeros cerca y la carga llena = trío; uno cerca (o
-    /// los dos sin la carga llena) = dúo con el más cercano, un tramo.
-    /// </summary>
+    /// <summary>La misma selección que se ejecuta con LT+RT, para anunciarla en el HUD.</summary>
+    public bool TryGetAvailableAttack(out SpecialAttackSO attack)
+        => TrySelectAttack(out attack, out _, out _, out _, out _);
+
     private void TryTeamAttack()
     {
-        Slot active = ActiveSlot;
-        float maxDistance = 0f;
-        for (int i = 0; i < duoAttacks.Count; i++)
-            if (duoAttacks[i] != null) maxDistance = Mathf.Max(maxDistance, duoAttacks[i].companionMaxDistance);
-        if (trioAttack != null) maxDistance = Mathf.Max(maxDistance, trioAttack.companionMaxDistance);
+        if (!TrySelectAttack(out var attack, out float cost, out var firstPartner, out var secondPartner, out string reason))
+        {
+            string key = reason == "Falta carga de equipo." ? "TEAM_DENIED_CHARGE"
+                : reason == "No hay ningún compañero cerca." ? "TEAM_DENIED_NOBODY" : "TEAM_DENIED_BUSY";
+            Deny(reason, key, reason);
+            return;
+        }
+        _partners.Clear();
+        _partners.Add(firstPartner);
+        if (secondPartner != null) _partners.Add(secondPartner);
+        Execute(attack, cost);
+    }
 
+    private bool TrySelectAttack(out SpecialAttackSO attack, out float cost,
+        out Transform firstPartner, out Transform secondPartner, out string reason)
+    {
+        attack = null;
+        cost = duoCost;
+        firstPartner = secondPartner = null;
+        reason = "Ahora no se puede.";
+        if (!isActiveAndEnabled || _isExecuting || !GameState.CanProcessGameplayInput || ComboCastController.IsComposing) return false;
+        ResolveCaster();
+        if (magicCaster == null || !magicCaster.CanBeginTeamGesture) return false;
+        Slot active = ActiveSlot;
         _nearby.Clear();
         for (int s = 0; s < 3; s++)
         {
             var slot = (Slot)s;
             if (slot == active) continue;
+            var duo = FindDuo(active, slot);
+            float maxDistance = Mathf.Max(duo != null ? duo.companionMaxDistance : 0f,
+                trioAttack != null ? trioAttack.companionMaxDistance : 0f);
             if (TryGetPartnerDistance(slot, active, out Transform t, out float d) && d <= maxDistance)
                 _nearby.Add((slot, t, d));
         }
-        if (_nearby.Count == 0) { Deny("No hay ningún compañero cerca", "TEAM_DENIED_NOBODY", "No hay ningún compañero cerca."); return; }
-        _nearby.Sort((a, b) => a.distance.CompareTo(b.distance));
-
-        if (_nearby.Count >= 2 && trioAttack != null && teamGauge != null && teamGauge.IsFullyCharged
+        reason = "No hay ningún compañero cerca.";
+        if (_nearby.Count == 0) return false;
+        if (_nearby.Count == 2 && _nearby[1].distance < _nearby[0].distance)
+            (_nearby[0], _nearby[1]) = (_nearby[1], _nearby[0]);
+        if (_nearby.Count == 2 && trioAttack != null && teamGauge != null && teamGauge.IsFullyCharged
             && _nearby[1].distance <= trioAttack.companionMaxDistance)
         {
-            _partners.Clear();
-            _partners.Add(_nearby[0].t);
-            _partners.Add(_nearby[1].t);
-            Execute(trioAttack, teamGauge.MaxCharge);
-            return;
+            attack = trioAttack;
+            cost = teamGauge.MaxCharge;
+            firstPartner = _nearby[0].t;
+            secondPartner = _nearby[1].t;
+            return true;
         }
-
-        var partner = _nearby[0];
-        var attack = FindDuo(active, partner.slot);
-        if (attack == null) { Deny($"No hay dúo {active}+{partner.slot}", "TEAM_DENIED_BUSY", "Ahora no se puede."); return; }
-        if (partner.distance > attack.companionMaxDistance) { Deny($"{partner.slot} está lejos", "TEAM_DENIED_NOBODY", "No hay ningún compañero cerca."); return; }
-        if (teamGauge == null || teamGauge.CurrentCharge < duoCost - 0.001f) { Deny($"Carga insuficiente ({teamGauge?.CurrentCharge:0.##}/{duoCost})", "TEAM_DENIED_CHARGE", "Falta carga de equipo."); return; }
-
-        _partners.Clear();
-        _partners.Add(partner.t);
-        Execute(attack, duoCost);
+        for (int i = 0; i < _nearby.Count; i++)
+        {
+            var partner = _nearby[i];
+            var duo = FindDuo(active, partner.slot);
+            if (duo == null || partner.distance > duo.companionMaxDistance) continue;
+            reason = "Falta carga de equipo.";
+            if (teamGauge == null || teamGauge.CurrentCharge < duoCost - 0.001f) return false;
+            attack = duo;
+            firstPartner = partner.t;
+            return true;
+        }
+        return false;
     }
 
     private bool TryGetPartnerDistance(Slot slot, Slot active, out Transform t, out float distance)
@@ -247,74 +333,8 @@ public class DuoSpecialAttackSystem : MonoBehaviour
 
     private void ResolveCaster()
     {
-        if (!magicCaster) PlayerService.TryGetComponent(out magicCaster, allowSceneLookup: false);
-    }
-
-    // ── Ejecución ──────────────────────────────────────────────────────────
-
-    private void Execute(SpecialAttackSO attack, float cost)
-    {
-        if (_isExecuting) return;
-        ResolveCaster();
-        if (magicCaster == null) { Deny("Sin MagicCaster", "TEAM_DENIED_BUSY", "Ahora no se puede."); return; }
-        if (!magicCaster.BeginTeamGesture(attack.gestureSeconds, attack.isTrio ? MagicCastStyle.Area : MagicCastStyle.TwoHanded, out Vector3 facing)) { Deny("El personaje no puede lanzar ahora", "TEAM_DENIED_BUSY", "Ahora no se puede."); return; }
-        if (!teamGauge.TryConsume(cost)) { Deny("Carga insuficiente", "TEAM_DENIED_CHARGE", "Falta carga de equipo."); return; }
-
-        StartCoroutine(Co_Execute(attack, facing));
-        OnTeamAttack?.Invoke(attack);
-        Log($"{attack.displayName} (gasta {cost:0.#} tramo/s)");
-    }
-
-    private IEnumerator Co_Execute(SpecialAttackSO attack, Vector3 facing)
-    {
-        _isExecuting = true;
-        Transform body = magicCaster.Body;
-        if (body == null) { _isExecuting = false; yield break; }
-
-        for (int i = 0; i < _partners.Count; i++)
-        {
-            var p = _partners[i];
-            if (p == null) continue;
-            Vector3 look = body.position - p.position; look.y = 0f;
-            if (look.sqrMagnitude > 0.01f) p.rotation = Quaternion.LookRotation(facing.sqrMagnitude > 0.01f ? facing : look);
-            TriggerAnimation(p.gameObject, attack.companionAnimationTrigger);
-        }
-
-        if (!string.IsNullOrEmpty(attack.castSFXKey) && AudioService.Instance != null)
-            AudioService.Instance.PlaySFX(attack.castSFXKey);
-
-        Vector3 center = body.position + facing * frontDistance;
-        if (magicCaster.TryGetTarget(out Transform target))
-        {
-            Vector3 flat = target.position - body.position; flat.y = 0f;
-            if (flat.sqrMagnitude <= targetReach * targetReach) center = target.position;
-        }
-
-        // Con voltereta, el efecto y el daño llegan al aterrizar (INC-654).
-        bool enElAire = body.TryGetComponent(out Invector.vCharacterController.vThirdPersonController motor) && motor.IsAirborne;
-        if (attack.volteretaDelActivo && !enElAire && body.TryGetComponent(out VolteretaDelJugador voltereta))
-        {
-            Vector3 haciaElGolpe = center - body.position; haciaElGolpe.y = 0f;
-            float avance = Mathf.Clamp(haciaElGolpe.magnitude - 1.5f, 0f, attack.avanceDeLaVoltereta);
-            Vector3 desplazamiento = haciaElGolpe.sqrMagnitude > 0.0001f ? haciaElGolpe.normalized * avance : Vector3.zero;
-            if (voltereta.DesdeElSuelo(attack.alturaDeLaVoltereta, desplazamiento))
-            {
-                float tope = Time.time + 2.5f;
-                while (voltereta.EnCurso && Time.time < tope) yield return null;
-                PlayTeamVfx(attack, center, facing, body);
-                ApplyAoeDamage(attack, center);
-                _isExecuting = false;
-                yield break;
-            }
-        }
-
-        PlayTeamVfx(attack, center, facing, body);
-
-        if (attack.damageDelay > 0f)
-            yield return new WaitForSeconds(attack.damageDelay);
-
-        ApplyAoeDamage(attack, center);
-        _isExecuting = false;
+        // El cuerpo activo cambia al relevar el mando: no conserva el lanzador del anterior.
+        PlayerService.TryGetComponent(out magicCaster, allowSceneLookup: false);
     }
 
     private void ApplyAoeDamage(SpecialAttackSO attack, Vector3 center)
@@ -327,8 +347,36 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             var hit = _aoeHitsBuffer[i];
+            if (_absorbidos.Count > 0 && hit.TryGetComponent<Damageable>(out var yaAbsorbido) && _absorbidos.Contains(yaAbsorbido))
+                continue;
             if (hit.TryGetComponent<IDamageable>(out var damageable))
                 damageable.TakeDamage(attack.damage);
+
+            // Mecánicas diferenciadas según el dúo o trío:
+            // 1. Will + Estela: Ralentiza a los enemigos en el área
+            if (attack.IsDuoOf(Slot.Will, Slot.Estela) && hit.TryGetComponent<Damageable>(out var dmgWillEstela))
+            {
+                EstadosDeCombate.Aplicar(dmgWillEstela, EstadoDeCombate.Ralentizar, 4f, 0.4f, center, null);
+            }
+            // 2. Will + Liam: Succiona, daña y los EXPULSA violentamente con onda gravitacional
+            else if (attack.IsDuoOf(Slot.Will, Slot.Liam) && hit.TryGetComponent<Damageable>(out var dmgWillLiam))
+            {
+                EstadosDeCombate.Aplicar(dmgWillLiam, EstadoDeCombate.Empujar, 1.2f, 26f, center, null);
+            }
+            // 3. Estela + Liam: Rompe escudos y protecciones e inmoviliza
+            else if (attack.IsDuoOf(Slot.Estela, Slot.Liam))
+            {
+                ProteccionQueSeAbre.De(hit)?.AbrirProteccion(6f, gameObject, null);
+                if (hit.TryGetComponent<Damageable>(out var dmgEstelaLiam))
+                    EstadosDeCombate.Aplicar(dmgEstelaLiam, EstadoDeCombate.Inmovilizar, 3.5f, 0f, center, null);
+            }
+            // 4. Trío: Rompe todas las protecciones e inmoviliza
+            else if (attack.isTrio)
+            {
+                ProteccionQueSeAbre.De(hit)?.AbrirProteccion(8f, gameObject, null);
+                if (hit.TryGetComponent<Damageable>(out var dmgTrio))
+                    EstadosDeCombate.Aplicar(dmgTrio, EstadoDeCombate.Inmovilizar, 4f, 0f, center, null);
+            }
 
             if (attack.knockbackForce > 0f && hit.TryGetComponent<Rigidbody>(out var rb))
             {
@@ -339,14 +387,28 @@ public class DuoSpecialAttackSystem : MonoBehaviour
         Log($"AoE de {attack.displayName}: {count} objetivos en radio {attack.aoeRadius} m");
     }
 
+    private static SequenceActor ResolveActor(Transform t, bool isPlayer)
+    {
+        if (isPlayer && SequenceActor.TryResolve(SequenceActor.PlayerId, out var playerActor))
+            return playerActor;
+        if (t != null)
+        {
+            var mgr = t.GetComponentInParent<NPCBehaviourManagerV2>();
+            if (mgr != null && SequenceActor.TryResolve(mgr.PersistenceId, out var npcActor))
+                return npcActor;
+            return SequenceActor.ForTransform(t.name, t, 1.2f);
+        }
+        return null;
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────
 
-    private static void PlayTeamVfx(SpecialAttackSO attack, Vector3 center, Vector3 facing, Transform body)
+    private static Transform PlayTeamVfx(SpecialAttackSO attack, Vector3 center, Vector3 facing, Transform body)
     {
-        if (attack.vfxPrefab == null || VfxPoolService.Instance == null) return;
-        VfxPoolService.Instance.Play(
+        if (attack.vfxPrefab == null || VfxPoolService.Instance == null) return null;
+        return VfxPoolService.Instance.Play(
             attack.vfxPrefab,
-            center,
+            center + Vector3.up * attack.elevacionDelVfx,
             Quaternion.LookRotation(facing.sqrMagnitude > 0.01f ? facing : body.forward),
             Mathf.Max(0.5f, attack.vfxLifetime));
     }
@@ -354,17 +416,13 @@ public class DuoSpecialAttackSystem : MonoBehaviour
     private static void TriggerAnimation(GameObject go, string trigger)
     {
         if (string.IsNullOrEmpty(trigger)) return;
-        var anim = go.GetComponentInChildren<Animator>();
-        if (anim == null) return;
-        foreach (var p in anim.parameters)
-            if (p.type == AnimatorControllerParameterType.Trigger && p.name == trigger) { anim.SetTrigger(trigger); return; }
+        // El Animator de los compañeros usa estados en la capa de brazos, no triggers.
+        var actor = go.GetComponent<NPCSimpleAnimator>();
+        if (actor != null) actor.PlaySpellCastSpecial();
     }
 
     private void Deny(string reason, string messageKey, string fallback)
     {
-#if UNITY_EDITOR
-        Debug.Log("[EquipoEspecial] LT+RT sin efecto: " + reason, this);
-#endif
         string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(messageKey, fallback) : fallback;
         OnDenied?.Invoke(msg);
         if (!string.IsNullOrEmpty(notAvailableSFXKey) && AudioService.Instance != null)

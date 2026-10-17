@@ -37,8 +37,8 @@ using DG.Tweening;
 ///   los bullets, sin cabecera). Esto SÍ se sigue editando a mano durante el desarrollo, igual que
 ///   antes, solo que ahora es un archivo de texto plano en vez de un campo del Inspector.
 /// El panel muestra únicamente esta entrada (la de la versión que se acaba de subir) — ya no hay
-/// histórico de versiones anteriores. <c>PatchNotesBuildGuard</c> (Editor) resetea
-/// CurrentEntryBullets.txt automáticamente después de cada build real, para la siguiente. Ese mismo
+/// histórico de versiones anteriores. <c>PatchNotesBuildGuard</c> (Editor) conserva
+/// CurrentEntryBullets.txt entre builds para permitir recompilar sin perder las notas. Ese mismo
 /// script CANCELA el build si CurrentEntryBullets.txt está vacío o sin rellenar, para que nunca
 /// vuelva a salir una build con notas de parche en blanco o con texto de marcador de posición
 /// visible para los jugadores.

@@ -22,7 +22,7 @@ MonoBehaviour:
   prefab: {fileID: 2433827667492258285, guid: 802dbf8837dddbb40b2b6b33dafc7f78, type: 3}
   castDelaySeconds: 0.5
   chargeTime: 0.6
-  chargeStartScale: 0.2
+  chargeStartScale: 0.25
   followOriginDuringCharge: 1
   initialSpeed: 22
   useGravity: 0
@@ -30,9 +30,9 @@ MonoBehaviour:
   lifeTime: 2.5
   damage: 120
   aoeRadius: 0
-  knockbackForce: 20
+  knockbackForce: 25
   destroyOnHit: 1
-  forwardOffset: 0.5
+  forwardOffset: 0.6
   positionOffset: {x: 0, y: 0.65, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
   spawnVFX: {fileID: 1276012286414491472, guid: 99965f256b728a44cb59c2aee7811d0b, type: 3}
   impactVFX: {fileID: 6815310619204724786, guid: 9999fa07fb25aa744b0fdbdc3c1d8f74, type: 3}
   despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
-  vfxLifetime: 3
+  vfxLifetime: 3.5
   castSFXKey: Hechizo_Amanecer
   impactSFXKey: Impacto_Amanecer
   slotType: 1

@@ -17,6 +17,10 @@ public class NarrativeGraphStarter : MonoBehaviour
     [Tooltip("Si está activo, solo se inician los grafos cuando la escena que contiene este componente es la activa.")]
     [SerializeField] private bool requireActiveScene = true;
 
+    [Header("Grafo local opcional")]
+    [Tooltip("Runner de un grafo que pertenece solo a esta escena. Si se asigna, se inicia directamente y no se consulta el Hub.")]
+    [SerializeField] private NarrativeRunner localRunner;
+
     [Header("Debug")]
     [SerializeField] private bool logDebug = true;
 
@@ -108,6 +112,12 @@ public class NarrativeGraphStarter : MonoBehaviour
         {
             // if (logDebug)
             //     Debug.Log($"[NarrativeGraphStarter] Escena '{gameObject.scene.name}' no es la activa. Inicio de grafos omitido.");
+            return;
+        }
+
+        if (localRunner != null)
+        {
+            localRunner.StartFromStartNode();
             return;
         }
 

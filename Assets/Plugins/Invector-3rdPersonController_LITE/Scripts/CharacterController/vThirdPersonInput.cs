@@ -80,6 +80,10 @@ namespace Invector.vCharacterController
 
                 cc.UpdateAnimator();
             }
+            else if (cc != null && cc.overrideInputMagnitude >= 0f)
+            {
+                cc.UpdateAnimator();
+            }
         }
 
         private void ReadInput()

@@ -451,7 +451,7 @@ public class SpeechBubbleUI : MonoBehaviour
             CrearSubtitulo();
             medida = _textoSubtitulo;
             medida.fontSize = TamanoDeSubtitulo(presentacion);
-            ancho = _canvasSubtitulo.rect.width * 0.7f;
+            ancho = AnchoCanvasSubtitulo * 0.75f;
             lineas = 2;
         }
         else
@@ -684,19 +684,27 @@ public class SpeechBubbleUI : MonoBehaviour
         ColocarSubtitulo();
     }
 
+    float AlturaCanvasSubtitulo => _canvasSubtitulo != null && _canvasSubtitulo.rect.height > 50f
+        ? _canvasSubtitulo.rect.height
+        : (_parentCanvasRect != null && _parentCanvasRect.rect.height > 50f ? _parentCanvasRect.rect.height : 1080f);
+
+    float AnchoCanvasSubtitulo => _canvasSubtitulo != null && _canvasSubtitulo.rect.width > 50f
+        ? _canvasSubtitulo.rect.width
+        : (_parentCanvasRect != null && _parentCanvasRect.rect.width > 50f ? _parentCanvasRect.rect.width : 1920f);
+
     void CrearSubtitulo()
     {
         if (_grupoSubtitulo != null) return;
         var go = new GameObject("Subtitulos", typeof(RectTransform), typeof(Canvas));
         go.transform.SetParent(_parentCanvasRect, false);
         var canvas = go.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
         canvas.overrideSorting = true;
-        canvas.sortingOrder = 9996;
+        canvas.sortingOrder = 9997;
         _canvasSubtitulo = (RectTransform)go.transform;
         _canvasSubtitulo.anchorMin = Vector2.zero;
         _canvasSubtitulo.anchorMax = Vector2.one;
         _canvasSubtitulo.offsetMin = _canvasSubtitulo.offsetMax = Vector2.zero;
+        Canvas.ForceUpdateCanvases();
         var panel = new GameObject("Linea", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
         panel.transform.SetParent(go.transform, false);
         _rectSubtitulo = (RectTransform)panel.transform;
@@ -726,43 +734,94 @@ public class SpeechBubbleUI : MonoBehaviour
         texto.alignment = TextAlignmentOptions.Center;
         texto.textWrappingMode = TextWrappingModes.Normal;
         texto.raycastTarget = false;
-        texto.outlineColor = new Color32(0, 0, 0, 220);
-        texto.outlineWidth = 0.15f;
+        texto.outlineColor = new Color32(0, 0, 0, 255);
+        texto.outlineWidth = 0.22f;
         return texto;
     }
 
     float TamanoDeSubtitulo(PresentacionDeTexto presentacion)
     {
         float altura = BandasDeCineUI.Instance != null && BandasDeCineUI.Instance.AlturaObjetivo > 0f
-            ? BandasDeCineUI.Instance.AlturaObjetivo : 0.12f;
-        float normal = Mathf.Min(_textoBocadillo.fontSize, Mathf.Max(1f, (_canvasSubtitulo.rect.height * altura - 12f) / 3.5f));
-        return normal * (presentacion == PresentacionDeTexto.SubtituloGrande ? 2.2f : 1f);
+            ? BandasDeCineUI.Instance.AlturaObjetivo : 0.13f;
+        float altoCanvas = AlturaCanvasSubtitulo;
+        float normal = Mathf.Clamp((altoCanvas * altura - 16f) / 3.4f, 18f, 26f);
+        return normal * (presentacion == PresentacionDeTexto.SubtituloGrande ? 1.8f : 1f);
     }
 
     void ColocarSubtitulo()
     {
+        if (_canvasSubtitulo == null || _rectSubtitulo == null || _textoSubtitulo == null || _nombreSubtitulo == null) return;
         bool grande = _presentacion == PresentacionDeTexto.SubtituloGrande;
         var bandas = BandasDeCineUI.Instance;
-        float banda = bandas != null ? bandas.AlturaVisible : 0f;
-        float altoCanvas = _canvasSubtitulo.rect.height;
-        float ancho = _canvasSubtitulo.rect.width * 0.7f;
-        float altoTexto = _textoSubtitulo.fontSize * 2.5f;
-        float altoNombre = string.IsNullOrEmpty(_nombreSubtitulo.text) ? 0f : _nombreSubtitulo.fontSize * 1.3f;
-        float alto = altoTexto + altoNombre + 12f;
-        bool dentroDeBanda = banda * altoCanvas >= alto;
+        bool hayBanda = bandas != null && (bandas.AlturaVisible > 0.02f || bandas.AlturaObjetivo > 0.02f);
+        float banda = hayBanda ? Mathf.Max(bandas.AlturaVisible, bandas.AlturaObjetivo) : 0f;
+        float altoCanvas = AlturaCanvasSubtitulo;
+        float anchoCanvas = AnchoCanvasSubtitulo;
+        float anchoMax = anchoCanvas * 0.75f;
+
+        bool tieneNombre = !string.IsNullOrEmpty(_nombreSubtitulo.text) && !grande;
+
+        string txt = _textoSubtitulo.text ?? string.Empty;
+        Vector2 tamTexto = !string.IsNullOrEmpty(txt) ? _textoSubtitulo.GetPreferredValues(txt, anchoMax, 0f) : Vector2.zero;
+        float altoTexto = Mathf.Max(_textoSubtitulo.fontSize * 1.15f, tamTexto.y);
+
+        float altoNombre = tieneNombre
+            ? Mathf.Max(_nombreSubtitulo.fontSize * 1.15f, _nombreSubtitulo.GetPreferredValues(_nombreSubtitulo.text, anchoMax, 0f).y)
+            : 0f;
+
+        float espaciado = tieneNombre ? 4f : 0f;
+        float paddingY = 6f;
+        float altoTotal = altoTexto + altoNombre + espaciado + (paddingY * 2f);
+
+        float altoBanda = altoCanvas * banda;
+
         _rectSubtitulo.anchorMin = _rectSubtitulo.anchorMax = new Vector2(0.5f, grande ? 0.5f : 0f);
         _rectSubtitulo.pivot = new Vector2(0.5f, grande ? 0.5f : 0f);
-        _rectSubtitulo.sizeDelta = new Vector2(ancho, alto);
-        _rectSubtitulo.anchoredPosition = grande ? Vector2.zero : new Vector2(0f, dentroDeBanda ? (altoCanvas * banda - alto) * 0.5f : altoCanvas * 0.025f);
+
+        float anchoCaja = anchoMax;
+
+        if (grande)
+        {
+            _rectSubtitulo.sizeDelta = new Vector2(anchoMax, altoTotal);
+            _rectSubtitulo.anchoredPosition = Vector2.zero;
+            _franjaSubtitulo.color = Color.clear;
+        }
+        else if (hayBanda)
+        {
+            // Dentro de la banda de cine: centrado vertical simétrico en la franja negra inferior
+            _rectSubtitulo.sizeDelta = new Vector2(anchoMax, altoTotal);
+            float yCentrado = (altoBanda - altoTotal) * 0.5f;
+            _rectSubtitulo.anchoredPosition = new Vector2(0f, Mathf.Max(4f, yCentrado));
+            _franjaSubtitulo.color = Color.clear; // La banda ya es 100% negra opaca; nunca dibujar caja gris
+        }
+        else
+        {
+            // Sin banda de cine: caja semitransparente suave ajustada al ancho del texto
+            anchoCaja = Mathf.Clamp(Mathf.Max(tamTexto.x, tieneNombre ? _nombreSubtitulo.preferredWidth : 0f) + 40f, 200f, anchoMax);
+            _rectSubtitulo.sizeDelta = new Vector2(anchoCaja, altoTotal);
+            _rectSubtitulo.anchoredPosition = new Vector2(0f, altoCanvas * 0.035f);
+            _franjaSubtitulo.color = new Color(0f, 0f, 0f, 0.55f);
+        }
+
+        float anchoContenido = hayBanda || grande ? anchoMax : anchoCaja;
+
+        // 1. Texto de diálogo en la parte inferior
         _textoSubtitulo.rectTransform.anchorMin = _textoSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);
         _textoSubtitulo.rectTransform.pivot = new Vector2(0.5f, 0f);
-        _textoSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, 6f);
-        _textoSubtitulo.rectTransform.sizeDelta = new Vector2(ancho, altoTexto);
-        _nombreSubtitulo.rectTransform.anchorMin = _nombreSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);
-        _nombreSubtitulo.rectTransform.pivot = new Vector2(0.5f, 0f);
-        _nombreSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, altoTexto + 6f);
-        _nombreSubtitulo.rectTransform.sizeDelta = new Vector2(ancho, altoNombre);
-        _franjaSubtitulo.color = new Color(0f, 0f, 0f, grande || dentroDeBanda ? 0f : 0.45f);
+        _textoSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, paddingY);
+        _textoSubtitulo.rectTransform.sizeDelta = new Vector2(anchoContenido, altoTexto);
+        _textoSubtitulo.alignment = TextAlignmentOptions.Center;
+
+        // 2. Nombre del hablante sobre el texto
+        _nombreSubtitulo.gameObject.SetActive(tieneNombre);
+        if (tieneNombre)
+        {
+            _nombreSubtitulo.rectTransform.anchorMin = _nombreSubtitulo.rectTransform.anchorMax = new Vector2(0.5f, 0f);
+            _nombreSubtitulo.rectTransform.pivot = new Vector2(0.5f, 0f);
+            _nombreSubtitulo.rectTransform.anchoredPosition = new Vector2(0f, paddingY + altoTexto + espaciado);
+            _nombreSubtitulo.rectTransform.sizeDelta = new Vector2(anchoContenido, altoNombre);
+            _nombreSubtitulo.alignment = TextAlignmentOptions.Center;
+        }
     }
 
     /// El ancho del bocadillo para un texto: el que ocuparía en una línea, entre el mínimo y el

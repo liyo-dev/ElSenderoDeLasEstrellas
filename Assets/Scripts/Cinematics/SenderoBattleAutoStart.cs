@@ -2,44 +2,12 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Arranca automáticamente la cinemática de la Batalla Final al cargar `Sendero.unity`, sin
-/// depender de que el grafo narrativo real (que hoy no llega hasta aquí — ver
-/// `biblia-del-universo.md`, escenas 15-22 son "especulativo, no implementado todavía") dispare
-/// la señal de entrada. Decisión de Raúl (30/08/2026): como esta escena es dedicada solo a este
-/// tramo, no hace falta enganche narrativo real para poder montarla y probarla — basta con
-/// lanzar la primera señal en cuanto la escena arranca.
-///
-/// Encadenamiento de señales (mismo sistema `DefaultNarrativeSignals`/`RaiseSignalOut()` que ya
-/// usa el resto de cinemáticas del proyecto — ver `CinematicSequencerBase.cs`):
-///
-///   (este script) --SENDERO_FINAL_START--> MagoOscuroFinalBattleSequencer
-///   MagoOscuroFinalBattleSequencer --SENDERO_SACRIFICIO_START--> WillSacrificeSequencer
-///   WillSacrificeSequencer --SENDERO_EPILOGO_START--> EpilogueSequencer
-///
-/// Para que esto funcione hay que escribir estos mismos strings, EXACTOS y sin errores, en el
-/// Inspector de cada componente:
-///   - `MagoOscuroFinalBattleSequencer._signalIn`  = "SENDERO_FINAL_START"
-///   - `MagoOscuroFinalBattleSequencer._signalOut` = "SENDERO_SACRIFICIO_START"
-///   - `WillSacrificeSequencer._signalIn`          = "SENDERO_SACRIFICIO_START"
-///   - `WillSacrificeSequencer._signalOut`         = "SENDERO_EPILOGO_START"
-///   - `EpilogueSequencer._signalIn`               = "SENDERO_EPILOGO_START"
-///   - `EpilogueSequencer._signalOut`              — libre, nada lo escucha todavía (no pasa
-///     nada, `RaiseSignalOut()` sobre una señal sin oyentes no da error).
-///
-/// Colocar este componente en cualquier GameObject de la escena (p. ej. junto al resto de
-/// managers ya existentes: `DayNightSystem`, `StarWorldLighting`, `WorldBootstrap`...).
-///
-/// Nota importante: los tres sequencers se suscriben a su `_signalIn` en su propio `Awake()`
-/// (`CinematicSequencerBase.Awake()`). Unity garantiza que TODOS los `Awake()` de la escena
-/// terminan antes de que se ejecute NINGÚN `Start()` — así que lanzar la señal desde `Start()`
-/// aquí es seguro sin necesidad de `[DefaultExecutionOrder]` ni de esperar un frame extra. El
-/// pequeño retraso opcional (`startDelaySeconds`) es solo para dar margen a que el jugador/cámara
-/// terminen de colocarse (spawn del `WorldBootstrap`) antes de que la cámara cinemática tome el
-/// control — auméntalo si ves que la cinemática arranca antes de que el jugador esté listo.
+/// Arranca automáticamente la secuencia de apertura de la Batalla Final al cargar la escena de
+/// prueba o de combate, disparando la señal de entrada configurada en el `SequencePlayer`.
 /// </summary>
 public class SenderoBattleAutoStart : MonoBehaviour
 {
-    [Tooltip("Señal que dispara MagoOscuroFinalBattleSequencer al arrancar la escena. Debe coincidir EXACTAMENTE con el campo _signalIn de ese componente en el Inspector.")]
+    [Tooltip("Señal que dispara el SequencePlayer de la Batalla Final al arrancar la escena.")]
     [SerializeField] private string _startSignal = "SENDERO_FINAL_START";
 
     [Tooltip("Margen antes de lanzar la señal, para dar tiempo a que el jugador/cámara terminen de colocarse (spawn de WorldBootstrap) antes de que la cinemática tome el control. Sube este valor si la cinemática arranca demasiado pronto.")]

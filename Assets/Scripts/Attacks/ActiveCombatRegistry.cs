@@ -52,6 +52,9 @@ public static class ActiveCombatRegistry
         else
             _cameraLockExempt.Remove(npc);
 
+        if (npc.TryGetComponent<Targetable>(out var targetable))
+            targetable.isInActiveCombat = true;
+
         if (_npcsInCombat.Add(npc))
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -69,6 +72,9 @@ public static class ActiveCombatRegistry
         if (npc == null) return;
 
         _cameraLockExempt.Remove(npc);
+
+        if (npc.TryGetComponent<Targetable>(out var targetable))
+            targetable.isInActiveCombat = false;
 
         if (_npcsInCombat.Remove(npc))
         {

@@ -11,6 +11,21 @@ internal sealed partial class Horno
     private readonly Dictionary<ActorH, GameObject> _poses = new();
     private readonly Dictionary<(ActorH, int), Vector3> _cabezas = new();
     private readonly List<string> _manipulaciones = new();
+    private readonly List<GameObject> _actoresDeEscenaApagados = new();
+
+    private void OcultarActoresDeEscena()
+    {
+        if (_stage == null || _stage.Actors == null) return;
+        foreach (var a in _stage.Actors)
+        {
+            if (a.target != null && a.target.gameObject.activeSelf)
+            {
+                a.target.gameObject.SetActive(false);
+                _actoresDeEscenaApagados.Add(a.target.gameObject);
+            }
+        }
+        Physics.SyncTransforms();
+    }
 
     private GameObject PoseDe(ActorH actor)
     {
@@ -28,6 +43,9 @@ internal sealed partial class Horno
     {
         foreach (var pose in _poses.Values) if (pose != null) UnityEngine.Object.DestroyImmediate(pose);
         _poses.Clear();
+        foreach (var go in _actoresDeEscenaApagados) if (go != null) go.SetActive(true);
+        _actoresDeEscenaApagados.Clear();
+        Physics.SyncTransforms();
     }
 
     private static AnimationClip ClipDe(ActorH actor, GameObject pose, string estado)

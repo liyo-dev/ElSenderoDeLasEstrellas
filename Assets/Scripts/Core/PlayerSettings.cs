@@ -341,7 +341,11 @@ public static class PlayerSettings
                     return data;
             }
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerSettings] Error al leer settings: {e.Message}");
@@ -364,7 +368,11 @@ public static class PlayerSettings
             Debug.Log($"[PlayerSettings] Guardado en: {SettingsPath}");
 #endif
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerSettings] Error al guardar settings: {e.Message}");

@@ -56,6 +56,23 @@ public class SequenceActor
     public PlayerDialogueAnimator PlayerAnimator { get; private set; }
     public NPCEmotionController Emotion { get; private set; }
     public NavMeshAgent Agent { get; private set; }
+    private Animator _animadorDeActuacion;
+    private bool _animadorDeActuacionResuelto;
+    private Invector.vCharacterController.vThirdPersonMotor _motor;
+    private bool _motorResuelto;
+
+    public Invector.vCharacterController.vThirdPersonMotor Motor
+    {
+        get
+        {
+            if (!_motorResuelto)
+            {
+                _motorResuelto = true;
+                _motor = Transform != null ? Transform.GetComponentInChildren<Invector.vCharacterController.vThirdPersonMotor>(true) : null;
+            }
+            return _motor;
+        }
+    }
 
     /// Reserva de llegada compartida por los movimientos paralelos de la secuencia.
     public Vector3? DestinoReservado { get; set; }
@@ -179,15 +196,28 @@ public class SequenceActor
     ///
     /// No tiene animador, ni cara, ni NavMeshAgent, así que los beats que piden esas cosas no
     /// hacen nada con él — sin romperse.
-    public static SequenceActor ForTransform(string id, Transform transform, float eyeHeight = 0f)
+    public static SequenceActor ForTransform(string id, Transform transform, float eyeHeight = 0f,
+        Animator animator = null, NPCEmotionController emotionController = null)
     {
         if (transform == null) return null;
+        var npcAnim = transform.GetComponentInChildren<NPCSimpleAnimator>(true);
+        var playerAnim = transform.GetComponentInChildren<PlayerDialogueAnimator>(true);
+        var manager = transform.GetComponentInChildren<NPCBehaviourManagerV2>(true);
+        bool esPersonaje = npcAnim != null || playerAnim != null || manager != null || animator != null;
         return new SequenceActor
         {
             Id = id,
             Transform = transform,
-            IsDynamic = true,
-            _eyeHeight = Mathf.Max(0f, eyeHeight),
+            IsPlayer = id == PlayerId,
+            IsDynamic = !esPersonaje,
+            _eyeHeight = eyeHeight > 0f ? eyeHeight : -1f,
+            _animadorDeActuacion = animator,
+            _animadorDeActuacionResuelto = animator != null,
+            Emotion = emotionController != null ? emotionController : EmotionControllerResolver.Resolve(transform.gameObject),
+            NpcAnimator = npcAnim,
+            PlayerAnimator = playerAnim,
+            Manager = manager,
+            Agent = manager != null ? manager.Agent : transform.GetComponentInChildren<NavMeshAgent>(true),
         };
     }
 
@@ -204,8 +234,6 @@ public class SequenceActor
     /// también funciona en Will.
     /// Mantiene una pose hasta que alguien la suelte. Ver NPCSimpleAnimator.HoldPose: un gesto es
     /// un disparo que acaba en idle, y hay poses —volar, sostener un hechizo— que tienen que durar.
-    private Animator _animadorDeActuacion;
-    private bool _animadorDeActuacionResuelto;
     public Animator AnimadorDeActuacion
     {
         get
@@ -287,6 +315,7 @@ public class SequenceActor
         var animador = AnimadorDeActuacion;
         int capa = AnimatorLayerUtil.ResolveLayer(animador, nombre, animador.GetLayerIndex("UpperBody"));
         int hash = Animator.StringToHash(nombre);
+        bool poseCongelada = false;
         while (animador != null && PlayerAnimator != null && PlayerAnimator.isActiveAndEnabled)
         {
             yield return null;
@@ -295,10 +324,24 @@ public class SequenceActor
             if (estado.IsName(nombre))
             {
                 bool sale = animador.IsInTransition(capa) && !animador.GetNextAnimatorStateInfo(capa).IsName(nombre);
-                if ((sale && (estado.loop || congelar)) || (congelar && !estado.loop && estado.normalizedTime >= 1f))
-                    animador.Play(hash, capa, estado.loop ? Mathf.Repeat(estado.normalizedTime, 1f) : Mathf.Min(1f, estado.normalizedTime));
+                if (sale && (estado.loop || congelar))
+                {
+                    animador.Play(hash, capa, estado.loop ? Mathf.Repeat(estado.normalizedTime, 1f) : 1f);
+                }
+                else if (congelar && !estado.loop && estado.normalizedTime >= 1f)
+                {
+                    if (!poseCongelada)
+                    {
+                        animador.Play(hash, capa, 1f);
+                        poseCongelada = true;
+                    }
+                }
             }
-            else if (!animador.IsInTransition(capa)) animador.CrossFadeInFixedTime(hash, 0.12f, capa);
+            else if (!animador.IsInTransition(capa))
+            {
+                poseCongelada = false;
+                animador.CrossFadeInFixedTime(hash, 0.12f, capa);
+            }
         }
         _poseDelJugador = null;
     }
@@ -332,8 +375,26 @@ public class SequenceActor
 
         if (_poseDelJugador != null) ReleasePose(false);
 
-        if (NpcAnimator != null) { NpcAnimator.PlaySocialGesture(stateName); return; }
-        if (PlayerAnimator != null) { PlayerAnimator.PlayGesture(stateName); return; }
+        if (NpcAnimator != null)
+        {
+            if (!NpcAnimator.enabled) NpcAnimator.enabled = true;
+            NpcAnimator.PlaySocialGesture(stateName);
+            return;
+        }
+        if (PlayerAnimator != null)
+        {
+            if (!PlayerAnimator.enabled) PlayerAnimator.enabled = true;
+            PlayerAnimator.PlayGesture(stateName);
+            return;
+        }
+
+        var animator = AnimadorDeActuacion;
+        if (animator != null)
+        {
+            int layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, animator.GetLayerIndex("UpperBody"));
+            if (layer >= 0) animator.CrossFadeInFixedTime(Animator.StringToHash(stateName), 0.12f, layer);
+            return;
+        }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning($"[SequenceActor:{Id}] No tiene NPCSimpleAnimator ni PlayerDialogueAnimator " +
@@ -644,10 +705,46 @@ public class SequenceActor
     /// Idle_Normal_NoWeapon cae sin condiciones al blend tree "Free Locomotion" al terminar su
     /// ciclo, el actor acaba "andando en el sitio". Este es el bug que costó ocho pasadas de
     /// INC-206; que viva aquí una sola vez es media razón de ser de este sistema.
+    public void SetMovementSpeed(float speed)
+    {
+        if (IsPlayer)
+        {
+            var motor = Motor;
+            if (motor != null)
+            {
+                motor.overrideInputMagnitude = Mathf.Clamp01(speed);
+                if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
+                    tpAnim.UpdateAnimator();
+            }
+        }
+        else if (NpcAnimator != null)
+        {
+            NpcAnimator.SetMovementSpeed(speed);
+        }
+    }
+
+    public void ResetMovement()
+    {
+        if (IsPlayer)
+        {
+            var motor = Motor;
+            if (motor != null)
+            {
+                motor.overrideInputMagnitude = 0f;
+                if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
+                    tpAnim.UpdateAnimator();
+            }
+        }
+        else if (NpcAnimator != null)
+        {
+            NpcAnimator.ResetMovement();
+        }
+    }
+
     public void StopMovement()
     {
         if (Agent != null) NavMeshAgentUtility.HardStop(Agent);
-        NpcAnimator?.ResetMovement();
+        ResetMovement();
         NpcAnimator?.TransitionToIdle();
     }
 
@@ -661,6 +758,17 @@ public class SequenceActor
         {
             NpcAnimator.EndInteraction();
             NpcAnimator.TransitionToIdle();
+        }
+
+        if (IsPlayer)
+        {
+            var motor = Motor;
+            if (motor != null)
+            {
+                motor.overrideInputMagnitude = -1f;
+                if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
+                    tpAnim.UpdateAnimator();
+            }
         }
 
         PlayerAnimator?.ReturnToLocomotion();
@@ -734,10 +842,13 @@ public class SequenceActor
         // herramientas de Editor que resuelven planos (ver SequenceShotCapture) resuelven actores
         // igual que el juego, y pasan por aquí.
         if (!Application.isPlaying) return;
+        if (IsPlayer || _hold != null) return;
 
-        if (IsPlayer || Manager == null || _hold != null) return;
-        _hold = new HoldSequence();
-        Manager.StartCinematicSequence(_hold);
+        if (Manager != null && Manager.enabled && Manager.gameObject.activeInHierarchy)
+        {
+            _hold = new HoldSequence();
+            Manager.StartCinematicSequence(_hold);
+        }
 
         // Y sin empujones (INC-301). El obstacle avoidance del NavMeshAgent solo se apagaba
         // DURANTE una caminata (BeginAgentOverride) y se devolvía al acabarla. El resto del tiempo
@@ -745,7 +856,7 @@ public class SequenceActor
         // otros se separan a empujones: es «el Archimago empuja a la del pelo rosa y los NPCs se
         // empujan entre sí» de la sexta grabación. Mientras la secuencia manda, nadie se aparta
         // solo; quien decide dónde está cada uno es el montaje.
-        if (Agent != null)
+        if (Agent != null && !_avoidanceGuardada)
         {
             _avoidanceAntesDelCandado = Agent.obstacleAvoidanceType;
             _avoidanceGuardada = true;
@@ -759,6 +870,7 @@ public class SequenceActor
     /// Devuelve al NPC el control de su comportamiento ambiental. Idempotente.
     public void Release()
     {
+        SetRenderingVisible(true);
         _hold?.Finish();
         _hold = null;
 

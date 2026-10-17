@@ -177,7 +177,7 @@ Shader "El Sendero/Eldoria/Agua MainWorld corregida"
 	            float2 uv_ss = varyings.position_ss.xy / varyings.position_ss.w;
 
 	            // Calculating Normal
-	            half3 normal = SampleNormalMap(_NormalMap, varyings.uv_ws * _NormalMap_ST.xy + _Time * _NormalMap_ST.zw);
+	            half3 normal = SampleNormalMap(_NormalMap, varyings.uv_ws * _NormalMap_ST.xy + _Time.y * _NormalMap_ST.zw);
 	            normal = NormalStrength(normal, _NormalStrength);
 	            normal = TransformNormalToWS(half3(1, 0, 0), half3(0, 1, 0), half3(0, 0, 1), normal);
 
@@ -198,7 +198,7 @@ Shader "El Sendero/Eldoria/Agua MainWorld corregida"
 	            waterColor = lerp(waterColor, half3(1, 1, 1), specMask);
 
 	            // Surface Mask Coloring
-	            half surfaceMask = tex2D(_MaskSurface, varyings.uv_ws * _MaskSurface_ST.xy + _Time.y * _MaskSurface_ST.zw);
+	            half surfaceMask = tex2D(_MaskSurface, varyings.uv_ws * _MaskSurface_ST.xy + _Time.y * _MaskSurface_ST.zw).r;
 	            waterColor = lerp(waterColor, _ColorSurface, surfaceMask * _SurfaceOpacity);
 
 	            // Fade Fresnel Coloring

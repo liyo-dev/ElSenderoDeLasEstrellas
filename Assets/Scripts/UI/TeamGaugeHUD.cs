@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
+using Core.InputGlyphs;
 using Game.NPC;
 using System.Collections.Generic;
 
@@ -37,6 +38,10 @@ namespace Sendero.UI
         private float _nextBindAttempt;
         private TextMeshProUGUI _message;
         private Sequence _messageSeq;
+        private TextMeshProUGUI _readyText;
+        private GameObject _ready;
+        private SpecialAttackSO _announcedAttack;
+        private float _nextReadyCheck;
 
         private void OnEnable()
         {
@@ -49,15 +54,95 @@ namespace Sendero.UI
         {
             PlayerParty.OnPartyChanged -= OnPartyChanged;
             Unbind();
+            _messageSeq?.Kill();
+            if (_message != null) _message.gameObject.SetActive(false);
+            if (_ready != null) _ready.SetActive(false);
+            _announcedAttack = null;
             if (star != null) star.transform.DOKill(true);
         }
 
         private void Update()
         {
-            if (_gauge != null || Time.unscaledTime < _nextBindAttempt) return;
-            _nextBindAttempt = Time.unscaledTime + 1f;
-            TryBind();
-            RefreshSolo();
+            if (_gauge == null && Time.unscaledTime >= _nextBindAttempt)
+            {
+                _nextBindAttempt = Time.unscaledTime + 1f;
+                TryBind();
+                RefreshSolo();
+            }
+            if (Time.unscaledTime < _nextReadyCheck) return;
+            _nextReadyCheck = Time.unscaledTime + 0.1f;
+            RefreshReady();
+        }
+
+        private void RefreshReady()
+        {
+            SpecialAttackSO attack = null;
+            bool ready = _team != null && _team.TryGetAvailableAttack(out attack);
+            if (ready && _ready == null) CreateReadyHint();
+            if (_ready == null) return;
+            if (_ready.activeSelf != ready) _ready.SetActive(ready);
+            if (ready && _announcedAttack != attack) _readyText.text = attack.displayName;
+            _announcedAttack = ready ? attack : null;
+        }
+
+        private void CreateReadyHint()
+        {
+            _ready = new GameObject("Ataque de equipo disponible", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            _ready.layer = gameObject.layer;
+            var rt = (RectTransform)_ready.transform;
+            rt.SetParent(transform, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(1f, 0.5f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.anchoredPosition = new Vector2(35f, 0f);
+            rt.sizeDelta = new Vector2(620f, 100f);
+            var background = _ready.GetComponent<UnityEngine.UI.Image>();
+            background.color = new Color(0.07f, 0.04f, 0.14f, 0.9f);
+            background.raycastTarget = false;
+            CreateGlyph(InputGlyphNames.TriggerLeft, 8f);
+            CreateGlyph(InputGlyphNames.TriggerRight, 94f);
+            var plus = new GameObject("Más", typeof(RectTransform), typeof(TextMeshProUGUI));
+            plus.layer = gameObject.layer;
+            var plusRect = (RectTransform)plus.transform;
+            plusRect.SetParent(rt, false);
+            plusRect.anchorMin = plusRect.anchorMax = new Vector2(0f, 0.5f);
+            plusRect.pivot = new Vector2(0f, 0.5f);
+            plusRect.anchoredPosition = new Vector2(66f, 0f);
+            plusRect.sizeDelta = new Vector2(28f, 70f);
+            var plusText = plus.GetComponent<TextMeshProUGUI>();
+            plusText.text = "+";
+            plusText.fontSize = 42f;
+            plusText.alignment = TextAlignmentOptions.Center;
+            plusText.color = fullColor;
+            plusText.raycastTarget = false;
+            var label = new GameObject("Nombre", typeof(RectTransform), typeof(TextMeshProUGUI));
+            label.layer = gameObject.layer;
+            var rect = (RectTransform)label.transform;
+            rect.SetParent(rt, false);
+            rect.anchorMin = new Vector2(0f, 0f);
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = new Vector2(166f, 4f);
+            rect.offsetMax = new Vector2(-8f, -4f);
+            _readyText = label.GetComponent<TextMeshProUGUI>();
+            var existing = GetComponentInParent<Canvas>()?.GetComponentInChildren<TMP_Text>(true);
+            if (existing != null) _readyText.font = existing.font;
+            _readyText.fontSize = 44f;
+            _readyText.alignment = TextAlignmentOptions.MidlineLeft;
+            _readyText.color = fullColor;
+            _readyText.raycastTarget = false;
+        }
+
+        private void CreateGlyph(string glyph, float x)
+        {
+            var go = new GameObject(glyph, typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            go.layer = gameObject.layer;
+            var rt = (RectTransform)go.transform;
+            rt.SetParent(_ready.transform, false);
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 0.5f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.sizeDelta = new Vector2(70f, 70f);
+            rt.anchoredPosition = new Vector2(x, 0f);
+            go.GetComponent<UnityEngine.UI.Image>().raycastTarget = false;
+            go.AddComponent<InputGlyphIcon>().SetGlyphName(glyph);
         }
 
         private void TryBind()

@@ -1,0 +1,2364 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9471c0020d8ae7b4c84bb70d2567b2f0, type: 3}
+  m_Name: BatallaFinal_Intro_Horneado
+  m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
+  nombre: BatallaFinal_Intro
+  duracion: 169.11638
+  presentacion: 1
+  huella: "2026-10-17 20:55 \xB7 5ecbf8b2b0fb970ddcf1868a79657af2"
+  actores:
+  - id: Player
+    alias: will
+    colorDelNombre: {r: 1, g: 0.8901961, b: 0.65882355, a: 1}
+    claveDelNombre: Will
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 0, z: -11.5}
+    - t: 0.20433648
+      p: {x: 0, y: 0, z: -11.352273}
+    - t: 0.52470094
+      p: {x: 0, y: 0, z: -11.056818}
+    - t: 0.7942068
+      p: {x: 0, y: 0, z: -10.761364}
+    - t: 1.0511242
+      p: {x: 0, y: 0, z: -10.465909}
+    - t: 1.3080407
+      p: {x: 0, y: 0, z: -10.170455}
+    - t: 1.5649581
+      p: {x: 0, y: 0, z: -9.875}
+    - t: 1.8218746
+      p: {x: 0, y: 0, z: -9.579546}
+    - t: 2.078792
+      p: {x: 0, y: 0, z: -9.284091}
+    - t: 2.3357096
+      p: {x: 0, y: 0, z: -8.988636}
+    - t: 2.592626
+      p: {x: 0, y: 0, z: -8.693182}
+    - t: 2.8495436
+      p: {x: 0, y: 0, z: -8.397727}
+    - t: 3.10646
+      p: {x: 0, y: 0, z: -8.102273}
+    - t: 3.3633776
+      p: {x: 0, y: 0, z: -7.806818}
+    - t: 3.6202946
+      p: {x: 0, y: 0, z: -7.5113635}
+    - t: 3.8772116
+      p: {x: 0, y: 0, z: -7.215909}
+    - t: 4.1341286
+      p: {x: 0, y: 0, z: -6.9204545}
+    - t: 4.3910456
+      p: {x: 0, y: 0, z: -6.625}
+    - t: 4.6479626
+      p: {x: 0, y: 0, z: -6.3295455}
+    - t: 4.9048796
+      p: {x: 0, y: 0, z: -6.034091}
+    - t: 5.1617966
+      p: {x: 0, y: 0, z: -5.7386365}
+    - t: 5.4313025
+      p: {x: 0, y: 0, z: -5.443182}
+    - t: 5.751667
+      p: {x: 0, y: 0, z: -5.147727}
+    - t: 5.9560037
+      p: {x: 0, y: 0, z: -5}
+    - t: 65.53388
+      p: {x: 0, y: 0, z: -5}
+    - t: 65.53488
+      p: {x: 78.85, y: 0, z: 0}
+    - t: 126.49837
+      p: {x: 78.85, y: 0, z: 0}
+    - t: 126.70397
+      p: {x: 78.9875, y: 0, z: 0}
+    - t: 127.02749
+      p: {x: 79.2625, y: 0, z: 0}
+    - t: 127.23309
+      p: {x: 79.4, y: 0, z: 0}
+    - t: 129.0831
+      p: {x: 79.4, y: 0, z: 0}
+    - t: 129.0841
+      p: {x: 0, y: 0, z: -5}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 5.9560037
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 65.53388
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Archimago
+    - t: 127.23309
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Archimago
+    - t: 129.0831
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    - t: 152.58209
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_Estela
+    - t: 164.43924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    animacion:
+    - fundido: 0
+      t: 26.030273
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 26.110273
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 28.57694
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 30.468843
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 57.159878
+      tipo: 2
+      estado: IdleWounded01
+      congelar: 0
+    - fundido: 0
+      t: 65.53388
+      tipo: 0
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 65.98388
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 66.06388
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - fundido: 0
+      t: 68.98572
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 71.15612
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 71.23612
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+    - fundido: 0
+      t: 72.90279
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 74.863266
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 89.049995
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 89.13
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - fundido: 0
+      t: 92.286934
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 101.90224
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 101.98224
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+    - fundido: 0
+      t: 104.747345
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 129.0831
+      tipo: 1
+      estado: Knockdown01_Ground
+      congelar: 1
+    - fundido: 0
+      t: 142.23462
+      tipo: 2
+      estado: GetUp_NoWeapon
+      congelar: 0
+    - fundido: 0
+      t: 142.23462
+      tipo: 0
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 148.03679
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 148.11679
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 149.91536
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 152.58209
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 152.6621
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 155.22876
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 157.1774
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 164.43924
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 164.51924
+      tipo: 2
+      estado: Cheer01
+      congelar: 0
+    - fundido: 0
+      t: 166.86638
+      tipo: 4
+      estado: 
+      congelar: 0
+    caras:
+    - t: 26.030273
+      emocion: 2
+      dura: 0
+    - t: 57.159878
+      emocion: 4
+      dura: 0
+    - t: 65.53388
+      emocion: 4
+      dura: 0
+    - t: 71.15612
+      emocion: 2
+      dura: 0
+    - t: 89.049995
+      emocion: 4
+      dura: 0
+    - t: 101.90224
+      emocion: 2
+      dura: 0
+    - t: 110.83612
+      emocion: 10
+      dura: 0
+    - t: 148.03679
+      emocion: 10
+      dura: 0
+    - t: 152.58209
+      emocion: 10
+      dura: 0
+    - t: 164.43924
+      emocion: 10
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_MagoOscuro
+    alias: mago
+    colorDelNombre: {r: 0.7058824, g: 0.54901963, b: 1, a: 1}
+    claveDelNombre: Mago Oscuro
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 0, z: 6.2}
+    - t: 129.0841
+      p: {x: 0, y: 0, z: 6.2}
+    miradas:
+    - t: 0
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 12.866751
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 129.0831
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 15.55517
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 15.63517
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 18.101837
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 20.718504
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 23.935171
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 26.080273
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 30.418844
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 30.498844
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 34.493946
+      tipo: 2
+      estado: Laugh01
+      congelar: 0
+    - fundido: 0
+      t: 34.543945
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 40.26539
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 40.34539
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 42.912056
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 46.76763
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 46.867634
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 46.947636
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+    - fundido: 0
+      t: 50.0143
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 52.630966
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 55.847633
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 57.209877
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 62.957214
+      tipo: 2
+      estado: Fear01
+      congelar: 0
+    - fundido: 0
+      t: 144.30128
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 144.38129
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 148.08679
+      tipo: 4
+      estado: 
+      congelar: 0
+    caras:
+    - t: 15.55517
+      emocion: 3
+      dura: 0
+    - t: 30.418844
+      emocion: 8
+      dura: 0
+    - t: 40.26539
+      emocion: 3
+      dura: 0
+    - t: 62.957214
+      emocion: 5
+      dura: 0
+    - t: 144.30128
+      emocion: 4
+      dura: 0
+    visible:
+    - desde: 12.866751
+      hasta: 229.11638
+    deslizando: []
+  - id: NPC_Estela
+    alias: estela
+    colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
+    claveDelNombre: Estela
+    posiciones:
+    - t: 0
+      p: {x: 1.6, y: 0, z: -12.3}
+    - t: 0.2032643
+      p: {x: 1.5978724, y: 0, z: -12.153192}
+    - t: 0.52209616
+      p: {x: 1.5936171, y: 0, z: -11.859574}
+    - t: 0.7903871
+      p: {x: 1.5893617, y: -0.000000014901161, z: -11.565958}
+    - t: 1.0457333
+      p: {x: 1.5851064, y: 0, z: -11.272341}
+    - t: 1.3010794
+      p: {x: 1.5808511, y: -0.000000014901161, z: -10.978724}
+    - t: 1.5564255
+      p: {x: 1.5765958, y: 0, z: -10.685106}
+    - t: 1.8117707
+      p: {x: 1.5723405, y: 0, z: -10.39149}
+    - t: 2.067117
+      p: {x: 1.5680851, y: 0, z: -10.097873}
+    - t: 2.3224633
+      p: {x: 1.5638298, y: 0, z: -9.8042555}
+    - t: 2.5778096
+      p: {x: 1.5595745, y: 0, z: -9.510638}
+    - t: 2.8331559
+      p: {x: 1.5553192, y: 0, z: -9.217021}
+    - t: 3.0885015
+      p: {x: 1.5510639, y: 0, z: -8.923405}
+    - t: 3.3438478
+      p: {x: 1.5468085, y: 0, z: -8.629787}
+    - t: 3.599194
+      p: {x: 1.5425532, y: 0, z: -8.33617}
+    - t: 3.8545399
+      p: {x: 1.5382979, y: 0, z: -8.042553}
+    - t: 4.1098847
+      p: {x: 1.5340426, y: 0, z: -7.7489367}
+    - t: 4.365231
+      p: {x: 1.5297873, y: 0, z: -7.4553194}
+    - t: 4.620577
+      p: {x: 1.5255319, y: 0, z: -7.1617026}
+    - t: 4.875923
+      p: {x: 1.5212766, y: 0, z: -6.868085}
+    - t: 5.131269
+      p: {x: 1.5170213, y: 0, z: -6.574468}
+    - t: 5.3866153
+      p: {x: 1.512766, y: 0, z: -6.280851}
+    - t: 5.643992
+      p: {x: 1.5085106, y: 0, z: -5.987234}
+    - t: 5.9330883
+      p: {x: 1.5042553, y: 0, z: -5.693617}
+    - t: 6.3046746
+      p: {x: 1.5, y: 0, z: -5.4}
+    - t: 129.0831
+      p: {x: 1.5, y: 0, z: -5.4}
+    - t: 129.0841
+      p: {x: 0.5, y: 0, z: -4.55}
+    - t: 141.47272
+      p: {x: 0.5, y: 0, z: -4.55}
+    - t: 141.74431
+      p: {x: 0.8333334, y: 0, z: -4.8333335}
+    - t: 141.96303
+      p: {x: 1.1666667, y: 0, z: -5.116667}
+    - t: 142.23462
+      p: {x: 1.5, y: 0, z: -5.4}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 6.3046746
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 129.0831
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 142.23462
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 149.86536
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 157.1274
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 164.43924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    animacion:
+    - fundido: 0
+      t: 14.040068
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 14.120068
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - fundido: 0
+      t: 15.60517
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 61.94388
+      tipo: 2
+      estado: Defend_NoWeapon
+      congelar: 0
+    - fundido: 0
+      t: 62.957214
+      tipo: 2
+      estado: Defend_NoWeapon
+      congelar: 0
+    - fundido: 0
+      t: 129.0831
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 133.79576
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 133.87576
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 136.7976
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 149.86536
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 149.94536
+      tipo: 2
+      estado: Question01
+      congelar: 0
+    - fundido: 0
+      t: 152.6321
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 157.1274
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 157.2074
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 159.67406
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 162.68924
+      tipo: 4
+      estado: 
+      congelar: 0
+    caras:
+    - t: 14.040068
+      emocion: 4
+      dura: 0
+    - t: 61.94388
+      emocion: 4
+      dura: 0
+    - t: 62.957214
+      emocion: 5
+      dura: 0
+    - t: 129.0831
+      emocion: 4
+      dura: 0
+    - t: 149.86536
+      emocion: 4
+      dura: 0
+    - t: 157.1274
+      emocion: 8
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Liam
+    alias: liam
+    colorDelNombre: {r: 0.61960787, g: 0.85882354, b: 1, a: 1}
+    claveDelNombre: Liam
+    posiciones:
+    - t: 0
+      p: {x: -1.6, y: 0, z: -12.3}
+    - t: 0.2032643
+      p: {x: -1.5978724, y: 0, z: -12.153192}
+    - t: 0.52209616
+      p: {x: -1.5936171, y: 0, z: -11.859574}
+    - t: 0.7903871
+      p: {x: -1.5893617, y: 0, z: -11.565958}
+    - t: 1.0457333
+      p: {x: -1.5851064, y: 0, z: -11.272341}
+    - t: 1.3010794
+      p: {x: -1.5808511, y: 0, z: -10.978724}
+    - t: 1.5564255
+      p: {x: -1.5765958, y: 0, z: -10.685106}
+    - t: 1.8117707
+      p: {x: -1.5723405, y: 0, z: -10.39149}
+    - t: 2.067117
+      p: {x: -1.5680851, y: 0, z: -10.097873}
+    - t: 2.3224633
+      p: {x: -1.5638298, y: 0, z: -9.8042555}
+    - t: 2.5778096
+      p: {x: -1.5595745, y: 0, z: -9.510638}
+    - t: 2.8331559
+      p: {x: -1.5553192, y: 0, z: -9.217021}
+    - t: 3.0885015
+      p: {x: -1.5510639, y: 0, z: -8.923405}
+    - t: 3.3438478
+      p: {x: -1.5468085, y: 0, z: -8.629787}
+    - t: 3.599194
+      p: {x: -1.5425532, y: 0, z: -8.33617}
+    - t: 3.8545399
+      p: {x: -1.5382979, y: 0, z: -8.042553}
+    - t: 4.1098847
+      p: {x: -1.5340426, y: 0, z: -7.7489367}
+    - t: 4.365231
+      p: {x: -1.5297873, y: 0, z: -7.4553194}
+    - t: 4.620577
+      p: {x: -1.5255319, y: 0, z: -7.1617026}
+    - t: 4.875923
+      p: {x: -1.5212766, y: 0, z: -6.868085}
+    - t: 5.131269
+      p: {x: -1.5170213, y: 0, z: -6.574468}
+    - t: 5.3866153
+      p: {x: -1.512766, y: 0, z: -6.280851}
+    - t: 5.643992
+      p: {x: -1.5085106, y: 0, z: -5.987234}
+    - t: 5.9330883
+      p: {x: -1.5042553, y: 0, z: -5.693617}
+    - t: 6.3046746
+      p: {x: -1.5, y: 0, z: -5.4}
+    - t: 6.3060036
+      p: {x: -1.5, y: 0, z: -5.4}
+    - t: 6.5744267
+      p: {x: -1.4357142, y: 0, z: -5.2714286}
+    - t: 6.796414
+      p: {x: -1.3714286, y: 0, z: -5.142857}
+    - t: 7.1773415
+      p: {x: -1.2428571, y: 0, z: -4.8857145}
+    - t: 7.5172634
+      p: {x: -1.1142857, y: 0, z: -4.6285715}
+    - t: 7.8554926
+      p: {x: -0.98571426, y: 0, z: -4.3714285}
+    - t: 8.195414
+      p: {x: -0.85714287, y: 0, z: -4.1142855}
+    - t: 8.576342
+      p: {x: -0.7285714, y: 0, z: -3.8571427}
+    - t: 8.798328
+      p: {x: -0.6642858, y: 0, z: -3.7285714}
+    - t: 9.0667515
+      p: {x: -0.6, y: 0, z: -3.6}
+    - t: 12.866751
+      p: {x: -0.6, y: 0, z: -3.6}
+    - t: 13.075174
+      p: {x: -0.7285715, y: 0, z: -3.8571427}
+    - t: 13.309662
+      p: {x: -0.9214286, y: 0, z: -4.242857}
+    - t: 13.525283
+      p: {x: -1.1142857, y: 0, z: -4.6285715}
+    - t: 13.74734
+      p: {x: -1.3071429, y: 0, z: -5.0142856}
+    - t: 14.040068
+      p: {x: -1.5, y: 0, z: -5.4}
+    - t: 129.0831
+      p: {x: -1.5, y: 0, z: -5.4}
+    - t: 129.0841
+      p: {x: -0.5, y: 0, z: -4.55}
+    - t: 141.47272
+      p: {x: -0.5, y: 0, z: -4.55}
+    - t: 141.74431
+      p: {x: -0.8333334, y: 0, z: -4.8333335}
+    - t: 141.96303
+      p: {x: -1.1666667, y: 0, z: -5.116667}
+    - t: 142.23462
+      p: {x: -1.5, y: 0, z: -5.4}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 6.3046746
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 9.0667515
+      tipo: 1
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 16}
+      actor: 
+    - t: 14.040068
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    - t: 129.0831
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 142.23462
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 164.43924
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: NPC_MagoOscuro
+    animacion:
+    - fundido: 0
+      t: 37.966614
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 38.046616
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+    - fundido: 0
+      t: 40.315388
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 62.957214
+      tipo: 2
+      estado: Defend_NoWeapon
+      congelar: 0
+    - fundido: 0
+      t: 131.16843
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    caras:
+    - t: 12.866751
+      emocion: 4
+      dura: 0
+    - t: 37.966614
+      emocion: 3
+      dura: 0
+    - t: 62.957214
+      emocion: 5
+      dura: 0
+    - t: 131.16843
+      emocion: 2
+      dura: 0
+    visible: []
+    deslizando: []
+  - id: NPC_Archimago
+    alias: archimago
+    colorDelNombre: {r: 1, g: 0.8235294, b: 0.47843137, a: 1}
+    claveDelNombre: Archimago
+    posiciones:
+    - t: 0
+      p: {x: 81.15, y: 0, z: 0}
+    - t: 126.49837
+      p: {x: 81.15, y: 0, z: 0}
+    - t: 126.70397
+      p: {x: 81.0125, y: 0, z: 0}
+    - t: 127.02749
+      p: {x: 80.7375, y: 0, z: 0}
+    - t: 127.23309
+      p: {x: 80.6, y: 0, z: 0}
+    miradas:
+    - t: 0
+      tipo: 1
+      rumbo: 0
+      punto: {x: 78.85, y: 0, z: 0}
+      actor: 
+    - t: 65.53388
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 127.23309
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    animacion:
+    - fundido: 0
+      t: 68.935715
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 69.01572
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 71.20612
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 74.81326
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 74.893265
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 77.45993
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 80.6766
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 83.19327
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 85.80994
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 89.1
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 92.23693
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 92.31693
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 94.7836
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 98.00027
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 100.51694
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 101.95224
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 104.69734
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 104.77734
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 107.34401
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 110.88612
+      tipo: 4
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 112.99306
+      tipo: 3
+      estado: 
+      congelar: 0
+    - fundido: 0
+      t: 113.07306
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 115.53973
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 118.156395
+      tipo: 2
+      estado: Talk03
+      congelar: 0
+    - fundido: 0
+      t: 121.37306
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+    - fundido: 0
+      t: 123.88973
+      tipo: 2
+      estado: Talk02
+      congelar: 0
+    - fundido: 0
+      t: 126.54837
+      tipo: 4
+      estado: 
+      congelar: 0
+    caras:
+    - t: 65.53388
+      emocion: 0
+      dura: 0
+    - t: 74.81326
+      emocion: 0
+      dura: 0
+    - t: 92.23693
+      emocion: 1
+      dura: 0
+    - t: 104.69734
+      emocion: 0
+      dura: 0
+    - t: 112.99306
+      emocion: 1
+      dura: 0
+    visible:
+    - desde: 65.53388
+      hasta: 129.0831
+    deslizando: []
+  lineas:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 14.040068
+    t1: 15.55517
+    actor: NPC_Estela
+    clave: BF_INTRO_ESTELA_01
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 15.55517
+    t1: 26.030273
+    actor: NPC_MagoOscuro
+    clave: BF_INTRO_MAGO_01
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 26.030273
+    t1: 30.418844
+    actor: Player
+    clave: BF_INTRO_WILL_01
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 30.418844
+    t1: 34.493946
+    actor: NPC_MagoOscuro
+    clave: BF_INTRO_MAGO_02
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 37.966614
+    t1: 40.26539
+    actor: NPC_Liam
+    clave: BF_INTRO_LIAM_01
+    gesto: Angry01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 40.26539
+    t1: 46.717632
+    actor: NPC_MagoOscuro
+    clave: BF_INTRO_MAGO_03
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 46.867634
+    t1: 57.159878
+    actor: NPC_MagoOscuro
+    clave: BF_INTRO_MAGO_04
+    gesto: Angry01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 65.98388
+    t1: 68.935715
+    actor: Player
+    clave: BF_VISION_WHERE_AM_I
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 68.935715
+    t1: 71.15612
+    actor: NPC_Archimago
+    clave: BF_VISION_WITH_ME
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 71.15612
+    t1: 74.81326
+    actor: Player
+    clave: BF_VISION_HE_KNOWS
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 74.81326
+    t1: 89.049995
+    actor: NPC_Archimago
+    clave: BF_VISION_BRIDGE_STORY
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 89.049995
+    t1: 92.23693
+    actor: Player
+    clave: BF_VISION_AM_I_YOU
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 92.23693
+    t1: 101.90224
+    actor: NPC_Archimago
+    clave: BF_VISION_TWO_SOULS
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 101.90224
+    t1: 104.69734
+    actor: Player
+    clave: BF_VISION_FEAR
+    gesto: HeadShake01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 104.69734
+    t1: 110.83612
+    actor: NPC_Archimago
+    clave: BF_VISION_ALONE_MISTAKE
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 110.83612
+    t1: 112.74306
+    actor: Player
+    clave: BF_VISION_NOT_ALONE
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 112.99306
+    t1: 126.49837
+    actor: NPC_Archimago
+    clave: BF_VISION_CREATE_SPELLS
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 133.79576
+    t1: 136.7476
+    actor: NPC_Estela
+    clave: BF_POV_ESTELA_IDIOT
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 137.0476
+    t1: 141.12271
+    actor: Player
+    clave: BF_POV_WILL_HERE
+    gesto: 
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 144.30128
+    t1: 148.03679
+    actor: NPC_MagoOscuro
+    clave: BF_MOMENT_MAGO_REMEMBER
+    gesto: Talk03
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 148.03679
+    t1: 149.86536
+    actor: Player
+    clave: BF_MOMENT_WILL_EVERYTHING
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 149.86536
+    t1: 152.58209
+    actor: NPC_Estela
+    clave: BF_MOMENT_ESTELA_WHAT
+    gesto: Question01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 152.58209
+    t1: 157.1274
+    actor: Player
+    clave: BF_MOMENT_WILL_EXPLAIN_LATER
+    gesto: Talk02
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 157.1274
+    t1: 162.63924
+    actor: NPC_Estela
+    clave: BF_MOMENT_ESTELA_BETTER
+    gesto: Talk01
+    sinPose: 0
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 164.43924
+    t1: 166.81638
+    actor: Player
+    clave: BF_MOMENT_WILL_NOT_ALONE
+    gesto: Cheer01
+    sinPose: 0
+    presentacion: -1
+  planos:
+  - focos: []
+    t0: 0
+    t1: 6.3060036
+    tipo: 0
+    descripcion: general de will y estela y liam
+    posiciones:
+    - t: 0
+      p: {x: 0, y: 3.2, z: 0.58742046}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Estela
+    - NPC_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8702643
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 6.3060036
+    t1: 9.516751
+    tipo: 1
+    descripcion: conjunto de will y estela y liam
+    posiciones:
+    - t: 6.3060036
+      p: {x: 0.9422817, y: 1.9, z: 1.2901521}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Estela
+    - NPC_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.107609
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 9.516751
+    t1: 12.866751
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 9.516751
+      p: {x: 0, y: 1.35, z: 1.8}
+    lente: 32
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 1.25, z: 6.2}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 12.866751
+    t1: 14.040068
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 12.866751
+      p: {x: -3.5505147, y: 0.89723605, z: -6.478668}
+    - t: 13.116751
+      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+    - t: 13.366751
+      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+    - t: 13.616751
+      p: {x: -3.6512284, y: 0.89723605, z: -6.6800957}
+    - t: 13.866751
+      p: {x: -3.746968, y: 0.89723605, z: -6.8715754}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 14.040068
+    t1: 15.55517
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 14.040068
+      p: {x: 2.7403693, y: 0.8986882, z: -1.6908824}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1251935
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 15.55517
+    t1: 26.030273
+    tipo: 2
+    descripcion: medio de mago
+    posiciones:
+    - t: 15.55517
+      p: {x: -1.15, y: 2.6999998, z: 3.8}
+    lente: 38
+    lenteFinal: 0
+    sujetos:
+    - NPC_MagoOscuro
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1287622
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.8
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 26.030273
+    t1: 30.418844
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 26.030273
+      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 30.418844
+    t1: 37.966614
+    tipo: 3
+    descripcion: primer plano de mago
+    posiciones:
+    - t: 30.418844
+      p: {x: 0.85, y: 2.8, z: 4.4}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - NPC_MagoOscuro
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1287622
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 37.966614
+    t1: 40.26539
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 37.966614
+      p: {x: -1.0470462, y: 0.89723605, z: -1.8971572}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: 0, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 40.26539
+    t1: 57.159878
+    tipo: 3
+    descripcion: primer plano de mago
+    posiciones:
+    - t: 40.26539
+      p: {x: -1.4, y: 2.5, z: 4.2}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - NPC_MagoOscuro
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1287622
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 57.159878
+    t1: 60.09388
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 57.159878
+      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 60.09388
+    t1: 61.94388
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 60.09388
+      p: {x: 0, y: 1.25, z: -3.6}
+    lente: 28
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 1.2, z: -5}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 61.94388
+    t1: 62.957214
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 61.94388
+      p: {x: 2.7403693, y: 0.8986882, z: -1.6908824}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1251935
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 62.957214
+    t1: 65.53388
+    tipo: 0
+    descripcion: general de will y estela y liam
+    posiciones:
+    - t: 62.957214
+      p: {x: 0, y: 4.45, z: -2.5}
+    lente: 44
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Estela
+    - NPC_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.8702643
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 65.53388
+    t1: 65.98388
+    tipo: 1
+    descripcion: conjunto de will y archimago
+    posiciones:
+    - t: 65.53388
+      p: {x: 80, y: 1.9, z: 4.1379037}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - NPC_Archimago
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0919913
+    encuadre: {x: 0, y: 0}
+    suavidad: 1
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 65.98388
+    t1: 68.935715
+    tipo: 6
+    descripcion: sobre el hombro de archimago a will
+    posiciones:
+    - t: 65.98388
+      p: {x: 81.42881, y: 1.440418, z: 2.3663795}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 68.935715
+    t1: 71.15612
+    tipo: 6
+    descripcion: sobre el hombro de will a archimago
+    posiciones:
+    - t: 68.935715
+      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0864509
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 71.15612
+    t1: 74.81326
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 71.15612
+      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 74.81326
+    t1: 89.049995
+    tipo: 6
+    descripcion: sobre el hombro de will a archimago
+    posiciones:
+    - t: 74.81326
+      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0864509
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 89.049995
+    t1: 92.23693
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 89.049995
+      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 92.23693
+    t1: 101.90224
+    tipo: 6
+    descripcion: sobre el hombro de will a archimago
+    posiciones:
+    - t: 92.23693
+      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0864509
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 101.90224
+    t1: 104.69734
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 101.90224
+      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 104.69734
+    t1: 110.83612
+    tipo: 6
+    descripcion: sobre el hombro de will a archimago
+    posiciones:
+    - t: 104.69734
+      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0864509
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 110.83612
+    t1: 112.99306
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 110.83612
+      p: {x: 81.27477, y: 0.89116585, z: 1.860592}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 112.99306
+    t1: 126.49837
+    tipo: 6
+    descripcion: sobre el hombro de will a archimago
+    posiciones:
+    - t: 112.99306
+      p: {x: 78.42089, y: 1.4299594, z: 2.1913445}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0864509
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 126.49837
+    t1: 129.0831
+    tipo: 1
+    descripcion: conjunto de archimago y will
+    posiciones:
+    - t: 126.49837
+      p: {x: 80, y: 1.9, z: 4.868122}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - NPC_Archimago
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0919913
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 129.0831
+    t1: 142.23462
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 129.0831
+      p: {x: 0, y: 0.25, z: -5.1}
+    lente: 42
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 1.35, z: -4.6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 142.23462
+    t1: 144.30128
+    tipo: 2
+    descripcion: medio de will
+    posiciones:
+    - t: 142.23462
+      p: {x: 1.3897173, y: 0.89116585, z: -1.6449258}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 144.30128
+    t1: 148.03679
+    tipo: 3
+    descripcion: primer plano de mago
+    posiciones:
+    - t: 144.30128
+      p: {x: -1.15, y: 2.6999998, z: 3.8}
+    lente: 36
+    lenteFinal: 0
+    sujetos:
+    - NPC_MagoOscuro
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1287622
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 148.03679
+    t1: 149.86536
+    tipo: 3
+    descripcion: primer plano de will
+    posiciones:
+    - t: 148.03679
+      p: {x: 1.3760201, y: 0.89116585, z: -1.6779938}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.5
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 149.86536
+    t1: 152.58209
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 149.86536
+      p: {x: 0.9848687, y: 0.8986882, z: -1.5230544}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - NPC_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1251935
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 152.58209
+    t1: 157.1274
+    tipo: 6
+    descripcion: sobre el hombro de estela a will
+    posiciones:
+    - t: 152.58209
+      p: {x: 2.5767431, y: 1.5499327, z: -2.769897}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - Player
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0869503
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 157.1274
+    t1: 162.63924
+    tipo: 6
+    descripcion: sobre el hombro de will a estela
+    posiciones:
+    - t: 157.1274
+      p: {x: 0.51367694, y: 1.4299594, z: -1.8665569}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.1251935
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 162.63924
+    t1: 164.43924
+    tipo: 3
+    descripcion: primer plano de liam
+    posiciones:
+    - t: 162.63924
+      p: {x: 0.5116551, y: 0.89723605, z: -8.028147}
+    lente: 24
+    lenteFinal: 0
+    sujetos:
+    - NPC_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.0798978
+    encuadre: {x: -0.09, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 164.43924
+    t1: 169.11638
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 164.43924
+      p: {x: 0, y: 1.3, z: -1.5}
+    lente: 32
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 0, y: 1.2, z: -5.2}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.6
+    mezcla: 0
+    mano: 0.12
+  efectos:
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202522337804937
+    linea: 60
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202522337804938
+    linea: 61
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202522337804939
+    linea: 62
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
+    beat:
+      rid: 5630202522337804940
+    linea: 73
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 9.516751
+    beat:
+      rid: 5630202522337804941
+    linea: 86
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 57.159878
+    beat:
+      rid: 5630202522337804942
+    linea: 128
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 62.957214
+    beat:
+      rid: 5630202522337804943
+    linea: 142
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 65.53388
+    beat:
+      rid: 5630202522337804944
+    linea: 152
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 65.53388
+    beat:
+      rid: 5630202522337804945
+    linea: 161
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 127.633095
+    beat:
+      rid: 5630202522337804946
+    linea: 209
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 129.0831
+    beat:
+      rid: 5630202522337804947
+    linea: 213
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 129.0831
+    beat:
+      rid: 5630202522337804948
+    linea: 215
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 129.0831
+    beat:
+      rid: 5630202522337804949
+    linea: 222
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 129.0831
+    beat:
+      rid: 5630202522337804950
+    linea: 224
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 141.47272
+    beat:
+      rid: 5630202522337804951
+    linea: 238
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 162.63924
+    beat:
+      rid: 5630202522337804952
+    linea: 272
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 162.63924
+    beat:
+      rid: 5630202522337804953
+    linea: 273
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 164.43924
+    beat:
+      rid: 5630202522337804954
+    linea: 275
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 168.01637
+    beat:
+      rid: 5630202522337804955
+    linea: 288
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 168.61638
+    beat:
+      rid: 5630202522337804956
+    linea: 290
+  etiquetas:
+  - nombre: inicio
+    t: 0
+  puntos:
+  - nombre: p_will_entrada
+    posicion: {x: 0, y: 0, z: -11.5}
+  - nombre: p_estela_entrada
+    posicion: {x: 1.6, y: 0, z: -12.3}
+  - nombre: p_liam_entrada
+    posicion: {x: -1.6, y: 0, z: -12.3}
+  - nombre: p_will_centro
+    posicion: {x: 0, y: 0, z: -5}
+  - nombre: p_estela_centro
+    posicion: {x: 1.5, y: 0, z: -5.4}
+  - nombre: p_liam_centro
+    posicion: {x: -1.5, y: 0, z: -5.4}
+  - nombre: p_altar_mirar
+    posicion: {x: 0, y: 0, z: 16}
+  - nombre: p_liam_paso
+    posicion: {x: -0.6, y: 0, z: -3.6}
+  - nombre: p_mago_trono
+    posicion: {x: 0, y: 0, z: 8}
+  - nombre: p_mago_paso
+    posicion: {x: 0, y: 0, z: 6.2}
+  - nombre: p_vacio_will
+    posicion: {x: 78.85, y: 0, z: 0}
+  - nombre: p_vacio_archimago
+    posicion: {x: 81.15, y: 0, z: 0}
+  - nombre: p_vacio_will_parada
+    posicion: {x: 79.4, y: 0, z: 0}
+  - nombre: p_vacio_arch_parada
+    posicion: {x: 80.6, y: 0, z: 0}
+  - nombre: p_estela_reanimar
+    posicion: {x: 0.5, y: 0, z: -4.55}
+  - nombre: p_liam_reanimar
+    posicion: {x: -0.5, y: 0, z: -4.55}
+  - nombre: cam_mago_amenaza
+    posicion: {x: -1.15, y: 1.15, z: 3.8}
+  - nombre: cam_mago_risa
+    posicion: {x: 0.85, y: 1.25, z: 4.4}
+  - nombre: cam_mago_holandes
+    posicion: {x: -1.4, y: 0.95, z: 4.2}
+  - nombre: cam_rasgar_aire
+    posicion: {x: 0, y: 1.35, z: 1.8}
+  - nombre: mira_rasgar_aire
+    posicion: {x: 0, y: 1.25, z: 6.2}
+  - nombre: cam_pov_suelo
+    posicion: {x: 0, y: 0.25, z: -5.1}
+  - nombre: mira_pov_suelo
+    posicion: {x: 0, y: 1.35, z: -4.6}
+  - nombre: cam_pecho_will
+    posicion: {x: 0, y: 1.25, z: -3.6}
+  - nombre: mira_pecho_will
+    posicion: {x: 0, y: 1.2, z: -5}
+  - nombre: cam_deslumbramiento
+    posicion: {x: 0, y: 1.45, z: -2.5}
+  - nombre: cam_heroe_trio
+    posicion: {x: 0, y: 1.3, z: -1.5}
+  - nombre: mira_heroe_trio
+    posicion: {x: 0, y: 1.2, z: -5.2}
+  ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202522337804937
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202522337804938
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 0.01
+        waitForEnd: 0
+    - rid: 5630202522337804939
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 1
+        musicId: BattleTheme
+        fadeOut: 0.5
+    - rid: 5630202522337804940
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 0
+        color: {r: 0, g: 0, b: 0, a: 1}
+        duration: 1.1
+        waitForEnd: 0
+    - rid: 5630202522337804941
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: RasgarAireMago
+        waitForEnd: 1
+    - rid: 5630202522337804942
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: PulsoPechoWill
+        waitForEnd: 1
+    - rid: 5630202522337804943
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ExpandirLuzPecho
+        waitForEnd: 1
+    - rid: 5630202522337804944
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: EntrarVacioTibio
+        waitForEnd: 1
+    - rid: 5630202522337804945
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 0
+        color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
+        duration: 0.85
+        waitForEnd: 0
+    - rid: 5630202522337804946
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: FusionArchimagoWill
+        waitForEnd: 1
+    - rid: 5630202522337804947
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
+        duration: 0.65
+        waitForEnd: 0
+    - rid: 5630202522337804948
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: SalirVacioTibio
+        waitForEnd: 1
+    - rid: 5630202522337804949
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: IniciarDespertarPov
+        waitForEnd: 1
+    - rid: 5630202522337804950
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 0
+        color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
+        duration: 0.85
+        waitForEnd: 0
+    - rid: 5630202522337804951
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: FinalizarDespertarPov
+        waitForEnd: 1
+    - rid: 5630202522337804952
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ReaccionAnimeLiam
+        waitForEnd: 1
+    - rid: 5630202522337804953
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: NPC_Liam
+        encuadre: 1
+        lado: 1
+        alturaEnPantalla: 0.62
+        duracion: 2.4
+        ranura: 0
+        sonido: 
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202522337804954
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: 
+        encuadre: 1
+        lado: 0
+        alturaEnPantalla: 0.62
+        duracion: 0
+        ranura: 0
+        sonido: 
+        mostrar: 0
+        esperar: 0
+    - rid: 5630202522337804955
+      type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        altura: 0.13
+        duracion: 0.5
+        esperar: 0
+    - rid: 5630202522337804956
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: EmpezarCombate
+        waitForEnd: 1

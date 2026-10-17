@@ -19,7 +19,7 @@ public class CollectiblePopupPanel : MonoBehaviour
     [SerializeField] private float slideInDuration = 0.18f;
 
     [Header("Layout")]
-    [SerializeField] private float minPreferredHeight = 32f;
+    [SerializeField] private float minPreferredHeight = 100f;
     
     [Header("Safety")]
     [Tooltip("Timeout máximo de seguridad para destruir el popup si algo falla (segundos)")]
@@ -29,6 +29,7 @@ public class CollectiblePopupPanel : MonoBehaviour
 
     // Runtime state for aggregation
     private string _itemId;
+    private string _itemName;
     private int _currentAmount;
     private float _displayDuration;
     private float _expiryTime;
@@ -55,16 +56,12 @@ public class CollectiblePopupPanel : MonoBehaviour
 #endif
 
         _itemId = item != null ? (item.itemId ?? item.displayName) : "__null__";
+        _itemName = item != null ? item.GetLocalizedName() : "";
         _currentAmount = amount;
         _displayDuration = displayDuration;
         _creationTime = Time.realtimeSinceStartup;
 
-        // Ensure visible on top of siblings
         var rt = transform as RectTransform;
-        if (rt != null)
-        {
-            transform.SetAsLastSibling();
-        }
 
         if (item != null)
         {
@@ -74,7 +71,7 @@ public class CollectiblePopupPanel : MonoBehaviour
                 Debug.LogWarning("[CollectiblePopupPanel] nameText is not assigned on prefab.");
                 #endif
             }
-            else nameText.text = item.GetLocalizedName();
+            else nameText.text = _itemName;
 
             if (iconImage == null)
             {
@@ -96,10 +93,7 @@ public class CollectiblePopupPanel : MonoBehaviour
             Debug.LogWarning("[CollectiblePopupPanel] amountText is not assigned on prefab.");
 #endif
         }
-        else
-        {
-            amountText.text = _currentAmount > 0 ? $"+{_currentAmount}" : "";
-        }
+        else ActualizarCantidad();
 
         // Ensure LayoutElement exists and provides a preferred height so the VerticalLayoutGroup can size children correctly
         LayoutElement le = GetComponent<LayoutElement>();
@@ -111,15 +105,8 @@ public class CollectiblePopupPanel : MonoBehaviour
             le = gameObject.AddComponent<LayoutElement>();
         }
 
-        // Try to infer a reasonable preferred height from the rect; if not available use minPreferredHeight
-        float inferredHeight = minPreferredHeight;
-        if (rt != null)
-        {
-            // sizeDelta might be zero before layout; use rect height if present
-            if (rt.rect.height > 0f) inferredHeight = rt.rect.height;
-        }
-
-        le.preferredHeight = Mathf.Max(le.preferredHeight, inferredHeight, minPreferredHeight);
+        // La altura del prefab puede ser provisional; la tarjeta visible mide 100 unidades.
+        le.preferredHeight = Mathf.Max(100f, minPreferredHeight);
 
         // Force rebuild of parent layout so the layout system accounts for the preferredHeight immediately
         if (rt != null && rt.parent is RectTransform parentRect)
@@ -174,12 +161,22 @@ public class CollectiblePopupPanel : MonoBehaviour
     {
         if (extra <= 0) return;
         _currentAmount += extra;
-        if (amountText != null) amountText.text = _currentAmount > 0 ? $"+{_currentAmount}" : "";
+        ActualizarCantidad();
         // extend expiry
         _expiryTime = Time.realtimeSinceStartup + _displayDuration;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[CollectiblePopupPanel] AddAmount called for {_itemId}, newAmount={_currentAmount}, extended expiry by {_displayDuration}s");
 #endif
+    }
+
+    private void ActualizarCantidad()
+    {
+        if (amountText == null) return;
+        string cantidad = _currentAmount > 0 ? $"+{_currentAmount}" : "";
+        // Algunos prefabs comparten el mismo TMP para el nombre y la cantidad.
+        amountText.text = amountText == nameText && !string.IsNullOrEmpty(_itemName)
+            ? $"{_itemName}  {cantidad}"
+            : cantidad;
     }
 
     private IEnumerator PlayLifecycle()
@@ -193,12 +190,8 @@ public class CollectiblePopupPanel : MonoBehaviour
         Canvas.ForceUpdateCanvases();
 
         var rt = transform as RectTransform;
-        Vector2 targetAnchored = Vector2.zero;
         if (rt != null)
         {
-            targetAnchored = rt.anchoredPosition;
-            // start below
-            rt.anchoredPosition = targetAnchored - new Vector2(0f, slideDistance);
             rt.localScale = Vector3.one * 0.85f;
         }
 
@@ -211,7 +204,6 @@ public class CollectiblePopupPanel : MonoBehaviour
             float sf = Mathf.SmoothStep(0f, 1f, f);
             if (rt != null)
             {
-                rt.anchoredPosition = Vector2.Lerp(targetAnchored - new Vector2(0f, slideDistance), targetAnchored, sf);
                 rt.localScale = Vector3.Lerp(Vector3.one * 0.85f, Vector3.one, sf);
             }
             if (_cg != null) _cg.alpha = Mathf.Lerp(0f, 1f, f);

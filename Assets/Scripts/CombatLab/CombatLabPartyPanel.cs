@@ -30,18 +30,31 @@ public sealed class CombatLabPartyPanel : MonoBehaviour, ISeccionDelLab
             return;
         }
 
-        Vector3 playerPosition = player != null ? player.transform.position : Vector3.zero;
-        var membersRoot = new GameObject("LAB_COMPANEROS_DE_PRUEBA");
-        _liamObject = Instantiate(config.liamPrefab, playerPosition + new Vector3(-2f, 0f, 0f),
-            Quaternion.identity, membersRoot.transform);
-        _liamObject.name = "LAB_Liam";
-        _estelaObject = Instantiate(config.estelaPrefab, playerPosition + new Vector3(2f, 0f, 0f),
-            Quaternion.identity, membersRoot.transform);
-        _estelaObject.name = "LAB_Estela";
-        SilenciarEscuchasDeCompanero(_liamObject);
-        SilenciarEscuchasDeCompanero(_estelaObject);
-        _liamObject.SetActive(false);
-        _estelaObject.SetActive(false);
+        var existingLiam = GameObject.Find("LAB_Liam");
+        var existingEstela = GameObject.Find("LAB_Estela");
+
+        if (existingLiam != null && existingEstela != null)
+        {
+            _liamObject = existingLiam;
+            _estelaObject = existingEstela;
+            SilenciarEscuchasDeCompanero(_liamObject);
+            SilenciarEscuchasDeCompanero(_estelaObject);
+        }
+        else
+        {
+            Vector3 playerPosition = player != null ? player.transform.position : Vector3.zero;
+            var membersRoot = new GameObject("LAB_COMPANEROS_DE_PRUEBA");
+            _liamObject = Instantiate(config.liamPrefab, playerPosition + new Vector3(-2f, 0f, 0f),
+                Quaternion.identity, membersRoot.transform);
+            _liamObject.name = "LAB_Liam";
+            _estelaObject = Instantiate(config.estelaPrefab, playerPosition + new Vector3(2f, 0f, 0f),
+                Quaternion.identity, membersRoot.transform);
+            _estelaObject.name = "LAB_Estela";
+            SilenciarEscuchasDeCompanero(_liamObject);
+            SilenciarEscuchasDeCompanero(_estelaObject);
+            _liamObject.SetActive(false);
+            _estelaObject.SetActive(false);
+        }
 
         if (GameBootService.Profile != null)
         {
@@ -138,6 +151,12 @@ public sealed class CombatLabPartyPanel : MonoBehaviour, ISeccionDelLab
 
     private IEnumerator JoinWhenReady(GameObject memberObject, bool isLiam)
     {
+        // Si hay una secuencia cinemática en marcha al arrancar la escena, esperar a que termine
+        // para que FollowPlayerState no compita con el reproductor de guion por mover al compañero.
+        yield return null;
+        while (CinematicSequencerBase.AnySequenceActive)
+            yield return null;
+
         float timeout = 12f;
         NPCPartyMember member = isLiam ? _liamMember : _estelaMember;
 

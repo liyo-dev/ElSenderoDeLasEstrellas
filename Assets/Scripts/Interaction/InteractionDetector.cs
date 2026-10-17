@@ -304,6 +304,7 @@ public class InteractionDetector : MonoBehaviour
         bool choicePromptActive = GameState.Is(GamePhase.SavePrompt);
         bool menusBlock = !GameState.CanInteractGlobally; // incluye PauseMenu/MainMenu
         bool cinematicPlaying = CinematicSequencerBase.AnySequenceActive;
+        bool comboComposing = ComboCastController.IsComposing;
         bool combatBlocked = IsCombatBlockingInteractions();
 
         if (dialogueActive)
@@ -330,6 +331,13 @@ public class InteractionDetector : MonoBehaviour
         if (cinematicPlaying)
         {
             reason = "Cinemática activa";
+            forceDisableInteractAction = true;
+            return true;
+        }
+
+        if (comboComposing)
+        {
+            reason = "Combo mágico activo";
             forceDisableInteractAction = true;
             return true;
         }

@@ -130,7 +130,11 @@ public sealed class SequenceContext
     public SequenceActor GetActor(string actorId)
     {
         if (string.IsNullOrEmpty(actorId)) return null;
-        if (_actors.TryGetValue(actorId, out var cached)) return cached;
+        if (_actors.TryGetValue(actorId, out var cached))
+        {
+            cached?.Hold();
+            return cached;
+        }
 
         if (!_personajesVisibles.TryGetValue(actorId, out var actor))
         {
@@ -169,9 +173,13 @@ public sealed class SequenceContext
     /// 'eyeHeight' es la altura, sobre el pivot del objeto, a la que apuntan los planos: 0 para
     /// algo que ya está a la altura que le toca, como un proyectil en vuelo.
     public void RegisterActor(string id, Transform transform, float eyeHeight = 0f)
+        => RegisterActor(id, transform, eyeHeight, null, null);
+
+    public void RegisterActor(string id, Transform transform, float eyeHeight, Animator animator,
+        NPCEmotionController emotionController)
     {
         if (string.IsNullOrWhiteSpace(id) || transform == null) return;
-        _actors[id] = SequenceActor.ForTransform(id, transform, eyeHeight);
+        _actors[id] = SequenceActor.ForTransform(id, transform, eyeHeight, animator, emotionController);
 
         // Y se guarda CÓMO ESTABA antes de que la secuencia le toque nada. Ver PoseInicial.
         transform.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);

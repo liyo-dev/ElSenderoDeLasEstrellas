@@ -639,6 +639,12 @@ public class ActiveCharacterSwapper : MonoBehaviour
         Vector3 pos = NavMesh.SamplePosition(spawnPos, out NavMeshHit hit, 2f, NavMesh.AllAreas) ? hit.position : spawnPos;
 
         var go = Instantiate(willNpcPrefab, pos, spawnRot);
+        var willInteractable = go.GetComponent<Interactable>();
+        if (willInteractable != null)
+        {
+            willInteractable.EnableInteraction(false);
+            willInteractable.SetHintVisible(false);
+        }
         _willNpcInstance = go.GetComponent<NPCPartyMember>();
         _willNpcInstance?.SetRuntimeBasics(_willBasics);
         _willFollowCheckTimer = 0f;
@@ -909,6 +915,13 @@ public class ActiveCharacterSwapper : MonoBehaviour
         // no choquen físicamente con el NPC y puedan alcanzar el CharacterController del jugador.
         foreach (var col in npc.GetComponentsInChildren<Collider>(true))
             col.enabled = visible;
+
+        var it = npc.GetComponent<Interactable>();
+        if (it != null && npc.IsInParty)
+        {
+            it.EnableInteraction(false);
+            it.SetHintVisible(false);
+        }
 
         var agent = npc.GetComponent<NavMeshAgent>();
         if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh)

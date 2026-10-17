@@ -102,5 +102,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  abreProteccionSegundos: 0
+  vfxProteccionAbierta: {fileID: 0}
+  enGrimorio: 1
   caster: 2
   comboSequence: 

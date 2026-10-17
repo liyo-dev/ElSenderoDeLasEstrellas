@@ -49,7 +49,11 @@ public class SaveSystem : MonoBehaviour
 #endif
             return true;
         }
-        catch (System.Exception e)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SaveSystem] Error al guardar: {e}");
@@ -105,7 +109,11 @@ public class SaveSystem : MonoBehaviour
             
             return data != null;
         }
-        catch (System.Exception e)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SaveSystem] Error al cargar ({path}): {e}");
@@ -128,7 +136,11 @@ public class SaveSystem : MonoBehaviour
             }
             return true;
         }
-        catch (System.Exception e)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[SaveSystem] Error al borrar: {e}");

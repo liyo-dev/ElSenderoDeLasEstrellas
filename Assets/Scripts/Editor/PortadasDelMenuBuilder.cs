@@ -712,7 +712,7 @@ public static class PortadasDelMenuBuilder
         // El lienzo del menú es el que contiene el logo (en la escena hay varios Canvas).
         Canvas canvas = null;
         RectTransform logo = null, panel = null;
-        foreach (var c in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        foreach (var c in Object.FindObjectsByType<Canvas>(FindObjectsInactive.Include))
         {
             logo = BuscarHijo(c.transform, "LogoTitulo") as RectTransform;
             panel = BuscarHijo(c.transform, "ButtonPanel") as RectTransform;

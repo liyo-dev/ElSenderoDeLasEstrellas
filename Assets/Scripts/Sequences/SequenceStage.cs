@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -16,6 +16,30 @@ using UnityEngine.Serialization;
 [AddComponentMenu("Cinematics/Sequence Stage")]
 public class SequenceStage : MonoBehaviour
 {
+    [Serializable]
+    public struct BoundActor
+    {
+        [Tooltip("Id con el que los beats localizan al actor.")]
+        public string id;
+
+        [Tooltip("Transform que ocupa en la escena.")]
+        public Transform target;
+
+        [Tooltip("Altura de la mirada sobre el pivot del actor.")]
+        public float eyeHeight;
+
+        [Tooltip("Animator asociado al actor, para reproducir gestos sin volver a buscarlo.")]
+        public Animator animator;
+
+        [Tooltip("Controlador de emociones del actor; vacío si no necesita cambios de expresión.")]
+        public NPCEmotionController emotionController;
+    }
+
+    [Header("Actores colocados en la escena")]
+    [SerializeField] private List<BoundActor> _actors = new();
+
+    public IReadOnlyList<BoundActor> Actors => _actors;
+
     [Serializable]
     public struct NamedTransform
     {
@@ -119,6 +143,28 @@ public class SequenceStage : MonoBehaviour
 
     public IReadOnlyList<SequenceModule> Modules => _modules;
 
+    private void Awake()
+    {
+        AsegurarModulosLocales();
+    }
+
+    private void AsegurarModulosLocales()
+    {
+        _modules ??= new List<SequenceModule>();
+        if (_modules.Count == 0)
+        {
+            var locales = GetComponentsInChildren<SequenceModule>(true);
+            if (locales != null && locales.Length > 0)
+            {
+                foreach (var m in locales)
+                {
+                    if (m != null && !_modules.Contains(m))
+                        _modules.Add(m);
+                }
+            }
+        }
+    }
+
     /// Añade módulos al escenario (los del prefab 'modulos' de una secuencia montada en vivo).
     public void AgregarModulos(IEnumerable<SequenceModule> modulos)
     {
@@ -131,7 +177,9 @@ public class SequenceStage : MonoBehaviour
     /// El módulo que sabe ejecutar esa rutina, o null (con aviso) si no hay ninguno.
     public SequenceModule GetModuleFor(string routine)
     {
-        if (string.IsNullOrWhiteSpace(routine) || _modules == null) return null;
+        if (string.IsNullOrWhiteSpace(routine)) return null;
+        AsegurarModulosLocales();
+        if (_modules == null) return null;
 
         foreach (var module in _modules)
             if (module != null && module.Handles(routine))
@@ -153,6 +201,7 @@ public class SequenceStage : MonoBehaviour
     /// en el final normal como al saltar la secuencia o si algo falla.
     public void CleanupModules()
     {
+        AsegurarModulosLocales();
         if (_modules == null) return;
         foreach (var module in _modules)
             if (module != null) module.OnSequenceCleanup();

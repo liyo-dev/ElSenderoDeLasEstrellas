@@ -178,6 +178,21 @@ public static class CapturaDeEscenario
                     pos = p.transform.position, rumbo = p.transform.eulerAngles.y, prefab = e?.prefab
                 });
             }
+        foreach (var raiz in escena.GetRootGameObjects())
+            foreach (var stage in raiz.GetComponentsInChildren<SequenceStage>(true))
+                if (stage.Actors != null)
+                    foreach (var a in stage.Actors)
+                    {
+                        if (a.target == null || string.IsNullOrWhiteSpace(a.id)) continue;
+                        string id = a.id.Trim();
+                        if (lista.Any(x => x.persistenceId == id)) continue;
+                        var pf = PrefabUtility.GetCorrespondingObjectFromOriginalSource(a.target.gameObject) as GameObject;
+                        lista.Add(new Aparicion
+                        {
+                            spawnId = id, persistenceId = id, nombre = a.target.name,
+                            pos = a.target.position, rumbo = a.target.eulerAngles.y, prefab = pf
+                        });
+                    }
         return lista.OrderBy(a => a.persistenceId ?? a.spawnId).ToList();
     }
 

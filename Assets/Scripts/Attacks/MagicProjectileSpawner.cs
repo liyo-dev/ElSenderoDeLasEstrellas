@@ -292,19 +292,30 @@ public class MagicProjectileSpawner : MonoBehaviour
             mp.SetKinematic(true);
         }
 
+        Vector3 targetScale = spell.useScaleOverride ? spell.scaleOverride : go.transform.localScale;
+        Vector3 initialScale = spell.chargeStartScale > 0f ? targetScale * spell.chargeStartScale : targetScale;
+        go.transform.localScale = initialScale;
+
         float charge = Mathf.Max(0f, spell.chargeTime);
         float elapsed = 0f;
         while (elapsed < charge)
         {
             elapsed += Time.deltaTime;
+            float t = charge > 0.001f ? Mathf.Clamp01(elapsed / charge) : 1f;
+            if (go != null) go.transform.localScale = Vector3.Lerp(initialScale, targetScale, t);
             yield return null;
             if (go == null) yield break;
         }
+        if (go != null) go.transform.localScale = targetScale;
 
         if (spell.followOriginDuringCharge)
             go.transform.SetParent(previousParent, worldPositionStays: true);
 
         _chargingProjectiles.Remove(go);
+
+        // Recalcular la dirección exacta hacia el objetivo en el fotograma en que se suelta el proyectil
+        Vector3 releaseDir = ResolveProjectileDirection(spell, origin, null);
+        go.transform.rotation = Quaternion.LookRotation(releaseDir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
         // La velocidad se calcula al soltar: durante la carga el jugador puede empezar o dejar de
         // volar o esprintar (INC-049).
@@ -313,7 +324,7 @@ public class MagicProjectileSpawner : MonoBehaviour
         if (mp != null)
         {
             mp.SetKinematic(false);
-            mp.Launch(dir, effectiveSpeed, spell.useGravity);
+            mp.Launch(releaseDir, effectiveSpeed, spell.useGravity);
         }
         else if (cachedRb != null)
         {
@@ -322,29 +333,174 @@ public class MagicProjectileSpawner : MonoBehaviour
             if (!cachedRb.isKinematic)
             {
                 cachedRb.angularVelocity = Vector3.zero;
-                cachedRb.linearVelocity = dir * Mathf.Max(0f, effectiveSpeed);
+                cachedRb.linearVelocity = releaseDir * Mathf.Max(0f, effectiveSpeed);
             }
         }
     }
 
-    /// Dirección de salida de un proyectil. Con objetivo va a su centro en 3D (también desde el
-    /// aire o hacia un saliente); sin objetivo, o con dirección forzada, respeta
-    /// flattenDirection. Ver INC-484.
+    /// <summary>
+    /// Devuelve el Transform del objetivo actual fijado o enfocado.
+    /// Prioriza PlayerTargeting.CurrentTarget, y si no hay, consulta el LockTarget de la cámara o CombatCameraTargeting.
+    /// </summary>
+    public Transform GetAimedTarget()
+    {
+        if (targeting == null)
+        {
+            targeting = GetComponentInParent<PlayerTargeting>() ?? GetComponentInChildren<PlayerTargeting>();
+            if (targeting == null && PlayerService.Player != null)
+                targeting = PlayerService.Player.GetComponentInChildren<PlayerTargeting>();
+        }
+
+        if (targeting != null && targeting.CurrentTarget != null)
+            return targeting.CurrentTarget;
+
+        if (CombatCameraTargeting.Instance != null && CombatCameraTargeting.Instance.CurrentTarget != null)
+            return CombatCameraTargeting.Instance.CurrentTarget.transform;
+
+        var cam = Camera.main;
+        if (cam != null && cam.TryGetComponent<vThirdPersonCamera>(out var tpCam) && tpCam.LockTarget != null)
+            return tpCam.LockTarget;
+
+        if (ActiveCombatRegistry.Count > 0 && PlayerService.Player != null)
+        {
+            var nearest = ActiveCombatRegistry.GetClosestCombatNPC(PlayerService.Player.transform.position, 45f);
+            if (nearest != null) return nearest.transform;
+        }
+
+        return null;
+    }
+
+    private static Vector3 GetTargetCenter(Transform target)
+    {
+        var col = target.GetComponentInParent<Collider>();
+        return col ? col.bounds.center : target.position + Vector3.up;
+    }
+
+    /// <summary>
+    /// Dirección de salida de un proyectil. Con objetivo fijado o enfocado, se dirige a su centro en 3D
+    /// (también si está elevado, levitando o en el aire); sin objetivo, o con dirección forzada sin target,
+    /// respeta flattenDirection para tiro libre en horizontal. Ver INC-484, INC-761.
+    /// </summary>
     private Vector3 ResolveProjectileDirection(MagicSpellSO spell, Transform origin, Vector3? directionOverride)
     {
         Vector3 baseForward = transform.forward;
-        bool aimAtTarget = directionOverride == null && targeting != null && targeting.CurrentTarget != null;
-        Vector3 dir = directionOverride ?? ((targeting != null)
+        if (directionOverride.HasValue)
+        {
+            Vector3 custom = directionOverride.Value;
+            if (spell.flattenDirection) custom = Vector3.ProjectOnPlane(custom, Vector3.up).normalized;
+            return custom.sqrMagnitude < 0.001f ? baseForward : custom;
+        }
+
+        Transform target = GetAimedTarget();
+        if (target != null)
+        {
+            Vector3 targetCenter = GetTargetCenter(target);
+            Vector3 toTarget = targetCenter - origin.position;
+            if (toTarget.sqrMagnitude > 0.001f)
+            {
+                // Con objetivo fijado, el disparo va en 3D directo a su centro (sin aplanar, para alcanzar
+                // enemigos en vuelo o diferente cota).
+                return toTarget.normalized;
+            }
+        }
+
+        Vector3 dir = (targeting != null)
             ? targeting.GetAimDirectionFrom(origin, baseForward)
-            : baseForward);
-        dir = (spell.flattenDirection && !aimAtTarget) ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
+            : baseForward;
+        dir = spell.flattenDirection ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
         return dir.sqrMagnitude < 0.001f ? baseForward : dir;
+    }
+
+    private static readonly RaycastHit[] s_groundHits = new RaycastHit[16];
+
+    /// <summary>
+    /// Busca la superficie de suelo real debajo de samplePoint usando raycast hacia abajo,
+    /// ignorando colisionadores de personajes (jugador, enemigos, NPCs) y triggers.
+    /// </summary>
+    public static bool TryFindGround(Vector3 samplePoint, LayerMask groundLayers, out Vector3 groundPoint, float checkAbove = 5f, float checkBelow = 100f)
+    {
+        LayerMask safeMask = groundLayers.value != 0 ? groundLayers.value : LayerMask.GetMask("Floor", "Default");
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int projectileLayer = LayerMask.NameToLayer("Projectile");
+        int enemyProjectileLayer = LayerMask.NameToLayer("ProjectileEnemy");
+        int uiLayer = LayerMask.NameToLayer("UI");
+
+        if (playerLayer != -1) safeMask &= ~(1 << playerLayer);
+        if (projectileLayer != -1) safeMask &= ~(1 << projectileLayer);
+        if (enemyProjectileLayer != -1) safeMask &= ~(1 << enemyProjectileLayer);
+        if (uiLayer != -1) safeMask &= ~(1 << uiLayer);
+
+        Vector3 rayStart = samplePoint + Vector3.up * checkAbove;
+        float totalDist = checkAbove + checkBelow;
+        int count = Physics.RaycastNonAlloc(rayStart, Vector3.down, s_groundHits, totalDist, safeMask, QueryTriggerInteraction.Ignore);
+
+        float bestDist = float.MaxValue;
+        RaycastHit bestHit = default;
+        bool found = false;
+
+        for (int i = 0; i < count; i++)
+        {
+            var hit = s_groundHits[i];
+            if (hit.collider == null || hit.collider.isTrigger) continue;
+
+            // Regla AGENTS.md: personajes viven en Default o capas de actores. Descartar solo si es personaje real.
+            if (hit.collider.GetComponentInParent<NPCSimpleAnimator>() != null ||
+                hit.collider.GetComponentInParent<CharacterController>() != null ||
+                hit.collider.GetComponentInParent<PlayerHealthSystem>() != null)
+            {
+                continue;
+            }
+
+            if (hit.distance < bestDist)
+            {
+                bestDist = hit.distance;
+                bestHit = hit;
+                found = true;
+            }
+        }
+
+        if (found)
+        {
+            groundPoint = bestHit.point;
+            return true;
+        }
+
+        // Fallback: buscar con máscara explícita Floor y Default estático
+        int floorAndDefault = LayerMask.GetMask("Floor", "Default");
+        count = Physics.RaycastNonAlloc(rayStart, Vector3.down, s_groundHits, totalDist, floorAndDefault, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            var hit = s_groundHits[i];
+            if (hit.collider == null || hit.collider.isTrigger) continue;
+            if (hit.collider.GetComponentInParent<NPCSimpleAnimator>() != null ||
+                hit.collider.GetComponentInParent<CharacterController>() != null ||
+                hit.collider.GetComponentInParent<PlayerHealthSystem>() != null)
+            {
+                continue;
+            }
+
+            if (hit.distance < bestDist)
+            {
+                bestDist = hit.distance;
+                bestHit = hit;
+                found = true;
+            }
+        }
+
+        if (found)
+        {
+            groundPoint = bestHit.point;
+            return true;
+        }
+
+        groundPoint = samplePoint;
+        return false;
     }
 
     /// <summary>
     /// Hechizo de MagicKind.Zone: VFX de lanzamiento en la mano y la zona, al instante, en su
     /// sitio: centrada en el objetivo si 'zoneSnapToTarget' y hay uno, o a 'zoneRange' metros
-    /// delante. Un raycast hacia abajo la apoya en el suelo real.
+    /// delante. Un raycast hacia abajo la apoya en el suelo real descartando personajes.
     /// </summary>
     private GameObject SpawnZoneNow(MagicSpellSO spell, Transform origin, Vector3? directionOverride, float damageMultiplier)
     {
@@ -352,27 +508,50 @@ public class MagicProjectileSpawner : MonoBehaviour
 
         Transform o = origin ? origin : transform;
 
+        Transform aimedTarget = GetAimedTarget();
         Vector3 baseForward = transform.forward;
-        Vector3 dir = directionOverride ?? ((targeting != null)
-            ? targeting.GetAimDirectionFrom(o, baseForward)
-            : baseForward);
+        Vector3 dir;
+        if (directionOverride.HasValue)
+        {
+            dir = directionOverride.Value;
+        }
+        else if (aimedTarget != null)
+        {
+            Vector3 toTarget = aimedTarget.position - o.position;
+            toTarget.y = 0f;
+            dir = toTarget.sqrMagnitude > 0.001f ? toTarget.normalized : baseForward;
+        }
+        else if (targeting != null)
+        {
+            dir = targeting.GetAimDirectionFrom(o, baseForward);
+        }
+        else
+        {
+            dir = baseForward;
+        }
         dir = spell.flattenDirection ? Vector3.ProjectOnPlane(dir, Vector3.up).normalized : dir.normalized;
         if (dir.sqrMagnitude < 0.001f) dir = baseForward;
 
         Vector3 zonePos;
         if (spell.zoneOnCaster)
             zonePos = Instigator.transform.position;   // Nova de Luz, Brisa Sanadora (INC-500/501)
-        else if (spell.zoneSnapToTarget && targeting != null && targeting.TryGetTarget(out Transform aimedTarget) && aimedTarget != null)
+        else if (spell.zoneSnapToTarget && aimedTarget != null)
             zonePos = aimedTarget.position;
         else
-            zonePos = o.position + dir * spell.zoneRange;
+            zonePos = Instigator.transform.position + dir * spell.zoneRange;
 
-        // Se eleva zoneGroundOffset sobre el suelo: a ras, el VFX hace z-fighting con la geometría.
-        Vector3 rayStart = zonePos + Vector3.up * 25f;
-        if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit groundHit, 60f, spell.zoneGroundLayers, QueryTriggerInteraction.Ignore))
-            zonePos.y = groundHit.point.y + spell.zoneGroundOffset;
+        // Se eleva zoneGroundOffset sobre el suelo real descartando personajes
+        if (TryFindGround(zonePos, spell.zoneGroundLayers, out Vector3 groundHitPoint))
+        {
+            zonePos.y = groundHitPoint.y + spell.zoneGroundOffset;
+        }
         else
-            zonePos.y = o.position.y + spell.zoneGroundOffset;
+        {
+            if (TryFindGround(Instigator.transform.position, spell.zoneGroundLayers, out Vector3 casterGround))
+                zonePos.y = casterGround.y + spell.zoneGroundOffset;
+            else
+                zonePos.y = Instigator.transform.position.y + spell.zoneGroundOffset;
+        }
 
         Quaternion handRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
         PlaySpawnVfx(spell, o.position + dir * spell.forwardOffset, handRt);
@@ -508,8 +687,10 @@ public class MagicProjectileSpawner : MonoBehaviour
         if (spell == null || spell.prefab == null || spell.kind != MagicKind.Zone) return null;
 
         Vector3 pos = position;
-        if (Physics.Raycast(position + Vector3.up * 3f, Vector3.down, out RaycastHit hit, 15f, spell.zoneGroundLayers, QueryTriggerInteraction.Ignore))
-            pos.y = hit.point.y + spell.zoneGroundOffset;
+        if (TryFindGround(pos, spell.zoneGroundLayers, out Vector3 groundHitPoint))
+            pos.y = groundHitPoint.y + spell.zoneGroundOffset;
+        else if (instigator != null)
+            pos.y = instigator.transform.position.y + spell.zoneGroundOffset;
 
         GameObject go = Instantiate(spell.prefab, pos, Quaternion.identity);
         if (spell.useScaleOverride) go.transform.localScale = spell.scaleOverride;
@@ -577,9 +758,9 @@ public class MagicProjectileSpawner : MonoBehaviour
         {
             mp.Configure(BuildProjectileConfig(spell, effectiveSpeed, damageMultiplier), Instigator);
             mp.ConfigureExtras(spell, GetDamageLayers(), damageMultiplier);
+            mp.Launch(dir, effectiveSpeed, spell.useGravity);
         }
-
-        if (go.TryGetComponent<Rigidbody>(out var rb))
+        else if (go.TryGetComponent<Rigidbody>(out var rb))
         {
             rb.useGravity = spell.useGravity;
             rb.isKinematic = false;

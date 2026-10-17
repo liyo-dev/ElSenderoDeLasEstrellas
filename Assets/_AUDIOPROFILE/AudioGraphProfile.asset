@@ -181,9 +181,9 @@ MonoBehaviour:
   - eventKey: ProjectileClash
     sfx: {fileID: 8300000, guid: 2876b236a191740e9992b2bd31a41c2d, type: 3}
   - eventKey: SpecialAttack_Liam
-    sfx: {fileID: 8300000, guid: ceede7a829d41470a86526620500b878, type: 3}
+    sfx: {fileID: 8300000, guid: 58cd03b8939d6894a86fe687d3c4491e, type: 3}
   - eventKey: SpecialAttack_Estela
-    sfx: {fileID: 8300000, guid: 63ab46d1f43f673338691ce52bb3f9ee, type: 3}
+    sfx: {fileID: 8300000, guid: b49c989b8e5e38f4c9c0139a07910698, type: 3}
   - eventKey: Levitation_Cast
     sfx: {fileID: 8300000, guid: 330f38e71fb1bcf2dbb5e9e33b155cbd, type: 3}
   - eventKey: Levitation_Impact
@@ -464,6 +464,16 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 2690cb346555c164ea1f561b5d5bbe8c, type: 3}
   - eventKey: Impacto_Amanecer
     sfx: {fileID: 8300000, guid: 3935921342943d1459fe2f9cd36bdae9, type: 3}
+  - eventKey: SpecialAttack_Meteoros
+    sfx: {fileID: 8300000, guid: be1b952bf37515545ac2c304a7ae7946, type: 3}
+  - eventKey: SpecialAttack_Impacto
+    sfx: {fileID: 8300000, guid: be1087e06770df142ac84f0b2d58c536, type: 3}
+  - eventKey: SpecialAttack_AgujeroNegro
+    sfx: {fileID: 8300000, guid: f6aad008630b3944282e880373f7e759, type: 3}
+  - eventKey: SpecialAttack_Trio
+    sfx: {fileID: 8300000, guid: 6308d1134e303e84494c440ca94aba77, type: 3}
+  - eventKey: SpecialAttack_Trio_Bucle
+    sfx: {fileID: 8300000, guid: 83def554885275545a1d534824725972, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}

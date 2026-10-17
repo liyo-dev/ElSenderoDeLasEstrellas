@@ -66,8 +66,32 @@ public static class PanelDeDetalleDeTiendaBuilder
         var stock = Buscar(panel, "DetailStock")?.GetComponent<TextMeshProUGUI>();
         var comprar = Buscar(panel, "BuyButton") as RectTransform;
         var vender = Buscar(panel, "SellButton") as RectTransform;
+        var descripcion = Buscar(panel, "DetailDescription")?.GetComponent<TextMeshProUGUI>();
+        var nombre = Buscar(panel, "DetailName") as RectTransform;
+        var icono = Buscar(panel, "DetailIcon") as RectTransform;
         if (precio == null || moneda == null || chip == null || stock == null || comprar == null)
         { avisos.Add($"{ruta}: le falta alguna pieza del panel de detalle."); return false; }
+
+        // La comparación de equipo y la moneda que falta comparten el espacio de descripción.
+        // El texto se ajusta dentro de su zona y nunca invade los controles de compra.
+        if (nombre != null) Estirar(nombre, new Vector2(0.1f, 0.66f), new Vector2(0.9f, 0.74f));
+        if (icono != null)
+        {
+            icono.anchorMin = icono.anchorMax = new Vector2(0.5f, 0.85f);
+            icono.anchoredPosition = Vector2.zero;
+        }
+        if (descripcion != null)
+        {
+            Estirar(descripcion.rectTransform, new Vector2(0.1f, 0.35f), new Vector2(0.9f, 0.63f));
+            descripcion.textWrappingMode = TextWrappingModes.Normal;
+            descripcion.verticalAlignment = VerticalAlignmentOptions.Top;
+            descripcion.enableAutoSizing = true;
+            descripcion.fontSizeMin = 16f;
+            descripcion.fontSizeMax = 20f;
+            descripcion.overflowMode = TextOverflowModes.Ellipsis;
+            descripcion.margin = Vector4.zero;
+            EditorUtility.SetDirty(descripcion);
+        }
 
         // Fila de precio: texto en una línea y la moneda a su derecha, centrados juntos.
         var fila = Buscar(panel, "FilaDePrecio") as RectTransform;

@@ -122,7 +122,11 @@ public class LocalizationManager : MonoBehaviour
                 foreach (var entry in data.timedSubtitles)
                     _subs[entry.id] = entry;
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogError($"[Localization] Error parsing JSON: {e.Message}");

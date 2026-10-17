@@ -53,6 +53,9 @@ public class SayBeat : SequenceBeat
     [Tooltip("Clave de localización del texto. Los saltos de línea dentro del texto separan páginas.")]
     public string textKey;
 
+    [Tooltip("Clave de voz opcional si no coincide con textKey. Vacío usa la propia clave del texto.")]
+    public string voiceKey;
+
     [Tooltip("Segundos que dura cada página en pantalla. Se ignora si la línea tiene voz.")]
     public float pageDuration = 2.6f;
 
@@ -211,7 +214,8 @@ public class SayBeat : SequenceBeat
             if (!string.IsNullOrEmpty(trozo)) pages.AddRange(bubble.Paginar(trozo, estilo));
         }
 
-        bool hasVoice = VoiceLines.TryGet(textKey, out AudioClip voiceClip);
+        string resolvedVoiceKey = string.IsNullOrWhiteSpace(voiceKey) ? textKey : voiceKey;
+        bool hasVoice = VoiceLines.TryGet(resolvedVoiceKey, out AudioClip voiceClip);
         int totalCharacters = 0;
         foreach (string page in pages) totalCharacters += page.Length;
         bool[] expresionesAplicadas = expresiones != null ? new bool[expresiones.Count] : null;

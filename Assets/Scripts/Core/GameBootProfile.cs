@@ -1077,7 +1077,11 @@ public class GameBootProfile : ScriptableObject
                 Debug.Log($"[GameBootProfile] NPC '{id}' reposicionado a {pos} desde preset runtime.");
 #endif
             }
-            catch (Exception ex)
+            catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[GameBootProfile] No se pudo reposicionar NPC '{id}': {ex.Message}");

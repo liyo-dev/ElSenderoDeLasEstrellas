@@ -29,11 +29,11 @@ MonoBehaviour:
   maxRange: 40
   lifeTime: 2
   damage: 9
-  aoeRadius: 0
+  aoeRadius: 1.4
   knockbackForce: 10
   destroyOnHit: 1
   forwardOffset: 0.35
-  positionOffset: {x: 0, y: 0, z: 0}
+  positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
   useScaleOverride: 0
@@ -76,7 +76,7 @@ MonoBehaviour:
   levitationImpactDamage: 25
   levitationImpactMinSpeed: 4
   spawnVFX: {fileID: 4771564426222910639, guid: 814a2fe4f0436554597e4c2dff5547f3, type: 3}
-  impactVFX: {fileID: 496913248247719083, guid: c483142edbf33dc4d9014c13724a0175, type: 3}
+  impactVFX: {fileID: 1057324642254954024, guid: a0f1738cace9fcf468151b3b68f97941, type: 3}
   despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_LluviaDeChispas
@@ -102,5 +102,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  abreProteccionSegundos: 0
+  vfxProteccionAbierta: {fileID: 0}
+  enGrimorio: 1
   caster: 1
   comboSequence: 

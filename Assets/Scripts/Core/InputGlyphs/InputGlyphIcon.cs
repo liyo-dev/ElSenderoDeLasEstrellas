@@ -30,6 +30,13 @@ namespace Core.InputGlyphs
         [SerializeField] private string glyphName;
         [SerializeField] private Image icon;
 
+        /// <summary>Configura un aviso creado por el HUD con la misma familia de entrada.</summary>
+        public void SetGlyphName(string name)
+        {
+            glyphName = name;
+            Refresh();
+        }
+
         void Awake()
         {
             if (icon == null) icon = GetComponent<Image>();

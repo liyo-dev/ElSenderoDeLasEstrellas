@@ -89,6 +89,7 @@ MonoBehaviour:
   spreadCount: 1
   spreadAngle: 24
   impactZone: {fileID: 0}
+  remateAereo: {fileID: 0}
   castStyle: 3
   statusEffect: 0
   statusDuration: 2
@@ -101,5 +102,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  abreProteccionSegundos: 0
+  vfxProteccionAbierta: {fileID: 0}
+  enGrimorio: 1
   caster: 0
   comboSequence: 010000000300000001000000i

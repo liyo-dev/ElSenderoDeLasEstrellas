@@ -39,7 +39,9 @@ public class SolForzado : MonoBehaviour
     private float _alturaDePuesta = 0.42f;
     private float _puesta = 20f;
     private float _inicio;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private Camera _ultimaCamara;
+#endif
     private float _siguienteLog;
 
 #if UNITY_EDITOR
@@ -65,7 +67,9 @@ public class SolForzado : MonoBehaviour
         _alturaDePuesta = Mathf.Clamp01(alturaDePuesta);
         _puesta = Mathf.Max(0.1f, puesta);
         _inicio = Time.time;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         _ultimaCamara = null;
+#endif
         _objetivo = transform.rotation;
         Subir(segundos);
     }

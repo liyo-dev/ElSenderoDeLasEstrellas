@@ -706,31 +706,31 @@
         },
         {
             "id": "PROLOGO_HECHIZO",
-            "text": "Protect them all!"
+            "text": "Protect them all!!"
         },
         {
             "id": "PROLOGO_PLEGARIA_01",
-            "text": "No... I won't let you touch them.\nLiora! Nina! All of you!"
+            "text": "I won't take a single step back...\nI won't let you touch them! Liora! Nina! Not a single one of them!"
         },
         {
             "id": "PROLOGO_PLEGARIA_02",
-            "text": "First light... you who burned before there was a sky...\nyou who lit the stars and laid paths between them when there was no one yet to walk them..."
+            "text": "Beyond the night and the silence...\nLight born before the sky, who laid the path among the stars!"
         },
         {
             "id": "PROLOGO_PLEGARIA_03",
-            "text": "I know no spell that can stop him...\nSo I'm not asking for one that exists. Nothing burns without you... I beg you... lend me your fire!"
+            "text": "No power of this world can stop him...\nSo I call upon what does not yet exist! Hear my voice and awaken in my hands!"
         },
         {
             "id": "PROLOGO_PLEGARIA_04",
-            "text": "I know there's no coming back from this. I know I'll never answer that letter...\nI don't care what's left of me!"
+            "text": "Let my life be the price and my soul the seal...\nNo matter what remains of me when the light fades!"
         },
         {
             "id": "PROLOGO_PLEGARIA_05",
-            "text": "Take my years! Take my voice, my name!\nTake my soul if you want it! Just let them see the dawn!"
+            "text": "Make of my final breath an unbreakable shield!\nBurn with me and halt the darkness!"
         },
         {
             "id": "PROLOGO_PLEGARIA_06",
-            "text": "Forgive me, Liora... I won't be back soon."
+            "text": "Forgive me, Liora... I'm not coming home."
         },
         {
             "id": "PROLOGO_MAGO_VALLE",
@@ -1071,6 +1071,88 @@
         {
             "id":  "EVT_MANANA_24",
             "text":  "Take a piece of the collar. Let her see it."
-        }
+        },
+        { "id": "PROMO01_ESTELA_01", "text": "I'm cooking tonight! I've invented a recipe with wild mushrooms." },
+        { "id": "PROMO01_LIAM_01", "text": "That stew you could use to repair city walls again?" },
+        { "id": "PROMO01_ESTELA_02", "text": "It was just... a little crunchy!" },
+        { "id": "PROMO01_WILL_01", "text": "If you want... I could make some mild soup." },
+        { "id": "PROMO01_LIAM_02", "text": "With salt this time?" },
+        { "id": "PROMO01_WILL_02", "text": "Yes. With salt." },
+        { "id": "PROMO01_ESTELA_03", "text": "Settled! I make the stew, Will the soup, and Liam..." },
+        { "id": "PROMO01_LIAM_03", "text": "Liam is booking a table at the inn." },
+        { "id": "PROMO01_WILL_03", "text": "Wait... they're watching us! Hello! If you'd like to follow our journey, subscribe to the newsletter on our website." },
+        { "id": "PROMO01_LIAM_04", "text": "The first twenty people will receive a copy of the game. Free." },
+        { "id": "PROMO01_ESTELA_04", "text": "Exactly! And I promise the game won't come burnt!" },
+        { "id": "PROMO01_WILL_04", "text": "See you on the path!" },
+        { "id": "BF_INTRO_ESTELA_01", "text": "And who is this guy?" },
+        { "id": "BF_INTRO_MAGO_01", "text": "Someone with a great deal of patience.\nI've waited centuries for someone to arrive here with an unspent wish. I didn't expect three children." },
+        { "id": "BF_INTRO_WILL_01", "text": "It's him. The one from my nightmare.\nThe Dark Mage." },
+        { "id": "BF_INTRO_MAGO_02", "text": "The Dark Mage?\nIs that what you call me out there?" },
+        { "id": "BF_INTRO_LIAM_01", "text": "The wish is for my brother." },
+        { "id": "BF_INTRO_MAGO_03", "text": "I already used mine. It keeps me alive, but binds me to this stone.\nYours will set me free." },
+        { "id": "BF_INTRO_MAGO_04", "text": "You should understand better than anyone, boy.\nHave you never wondered why you remember nothing before that old man found you? Not a face, not a home?" },
+        { "id": "BF_VISION_WHERE_AM_I", "text": "Where am I? Am I dead?" },
+        { "id": "BF_VISION_WITH_ME", "text": "No. You are with me." },
+        { "id": "BF_VISION_HE_KNOWS", "text": "He knows something about me... something I don't." },
+        { "id": "BF_VISION_BRIDGE_STORY", "text": "A long time ago, a man stayed behind in a valley to hold off the Dark Mage while people crossed a bridge.\nCenturies later, he found a child whose heart had just stopped. He made it beat again and stayed with him." },
+        { "id": "BF_VISION_AM_I_YOU", "text": "It was you... Then am I you?" },
+        { "id": "BF_VISION_TWO_SOULS", "text": "No. We are two souls.\nI've lived with you ever since, nothing more. Your years, your people, and your mistakes are yours." },
+        { "id": "BF_VISION_FEAR", "text": "I'm afraid. You lost." },
+        { "id": "BF_VISION_ALONE_MISTAKE", "text": "I sealed him alone. That was my mistake.\nI thought I had to carry everything by myself." },
+        { "id": "BF_VISION_NOT_ALONE", "text": "I am not alone." },
+        { "id": "BF_VISION_CREATE_SPELLS", "text": "No. You never have been. That is why this time can be different.\nYou can create spells the way anything is created: by wanting it with all your strength.\nGo back to them. They are waiting for you." },
+        { "id": "BF_POV_ESTELA_IDIOT", "text": "Hey, idiot... Are you okay?" },
+        { "id": "BF_POV_WILL_HERE", "text": "Yes... I'm here." },
+        { "id": "BF_MOMENT_MAGO_REMEMBER", "text": "Now you know.\nThen you will remember me." },
+        { "id": "BF_MOMENT_WILL_EVERYTHING", "text": "I remember everything." },
+        { "id": "BF_MOMENT_ESTELA_WHAT", "text": "Everything? What is he talking about?" },
+        { "id": "BF_MOMENT_WILL_EXPLAIN_LATER", "text": "It's a long story. I'll tell you later.\nEverything, I promise." },
+        { "id": "BF_MOMENT_ESTELA_BETTER", "text": "You'd better.\nWe already have one in the group who keeps secrets." },
+        { "id": "BF_MOMENT_WILL_NOT_ALONE", "text": "This time, I didn't come alone." },
+        { "id": "FINAL_ESTELA_PORTAL_01", "text": "What are you doing?! Get out of there!" },
+        { "id": "FINAL_WILL_PORTAL_01", "text": "Take care of Tobias." },
+        { "id": "FINAL_ESTELA_PORTAL_02", "text": "No! You take care of him!\nWill, get out of there right now!" },
+        { "id": "FINAL_ESTELA_PORTAL_03", "text": "You have to give it back to me!\nWhen we get out! You promised!" },
+        { "id": "FINAL_WILL_PORTAL_02", "text": "I know.\nIdiot... I will never forget you." },
+        { "id": "FINAL_LIAM_AWAKE_01", "text": "Estela...? What...?" },
+        { "id": "FINAL_ESTELA_AWAKE_01", "text": "You're alive...\nYou're alive." },
+        { "id": "FINAL_LIAM_AWAKE_02", "text": "Where is Will?" },
+        { "id": "FINAL_ESTELA_AWAKE_02", "text": "He pushed me out. He stayed inside with you...\nAnd now you are here, and he isn't." },
+        { "id": "FINAL_LIAM_AWAKE_03", "text": "That idiot..." },
+        { "id": "FINAL_ESTELA_ARCHIMAGO_01", "text": "Idiot? Is that what you... really look like?" },
+        { "id": "FINAL_ARCHIMAGO_01", "text": "I am sorry.\nI am not Will." },
+        { "id": "FINAL_ESTELA_ARCHIMAGO_02", "text": "Then who are you?" },
+        { "id": "FINAL_ARCHIMAGO_02", "text": "Someone who lived inside him since he was a child.\nHe was going to tell you. He promised." },
+        { "id": "FINAL_ARCHIMAGO_03", "text": "He wrote on a list that he wanted to return alive.\nI wanted that once too, long ago. I couldn't." },
+        { "id": "FINAL_ESTELA_ARCHIMAGO_03", "text": "And what does that mean?" },
+        { "id": "FINAL_ARCHIMAGO_04", "text": "I have no one left out there.\nMine have been waiting for me for centuries. Thank you for finishing what I left undone. Now I can join them." },
+        { "id": "FINAL_WILL_RETURN_01", "text": "I think this ribbon belongs to someone." },
+        { "id": "FINAL_WILL_RETURN_02", "text": "Give it back when we get out, you said.\nWell, we are out." },
+        { "id": "FINAL_LIAM_RETURN_01", "text": "How...? The spell...?" },
+        { "id": "FINAL_WILL_RETURN_03", "text": "He brought me back.\nIt was the last thing he did before leaving." },
+        { "id": "FINAL_ESTELA_RETURN_01", "text": "Idiot... Don't you dare do something like that again." },
+        { "id": "FINAL_WILL_RETURN_04", "text": "Promised." },
+        { "id": "FINAL_SEMANAS_DESPUES", "text": "Weeks later..." },
+        { "id": "FINAL_LIAM_RIO_01", "text": "I don't know how to fish." },
+        { "id": "FINAL_TOBIAS_RIO_01", "text": "Neither do I.\nThat's why we're going to learn." },
+        { "id": "FINAL_TOBIAS_RIO_02", "text": "This is you, right?\nThen hold still." },
+        { "id": "FINAL_WILL_RIO_01", "text": "A bite!\nSomething huge is biting!" },
+        { "id": "FINAL_ESTELA_RIO_01", "text": "Did they tell you about the syrup?" },
+        { "id": "FINAL_WILL_LIAM_RIO_01", "text": "NO!!" },
+        { "id": "FINAL_ESTELA_RIO_02", "text": "Then I'll tell you..." },
+        { "id": "FINAL_TOBIAS_RIO_03", "text": "Did you get married?" },
+        { "id": "FINAL_WILL_LIAM_RIO_02", "text": "No!" },
+        { "id": "FINAL_ESTELA_RIO_03", "text": "Almost." },
+        { "id": "FINAL_WILL_NOCHE_01", "text": "Look...\nMy star stayed up there." },
+        { "id": "FINAL_ESTELA_NOCHE_01", "text": "He traded it for a life.\nYou come out winning." },
+        { "id": "FINAL_TOBIAS_NOCHE_01", "text": "Again... Again, Liam." },
+        { "id": "FINAL_LIAM_NOCHE_01", "text": "Just one more, it's getting late." },
+        { "id": "FINAL_WILL_NOCHE_02", "text": "It all started with a fruit crate…" },
+        { "id": "FINAL_FRASE_LIBRO", "text": "Above their heads, among thousands of stars, one shone a little brighter than the rest." },
+        { "id": "FINAL_WILL_DESEO_01", "text": "I wish for his brother to live." },
+        { "id": "FINAL_WILL_CONJURO_01", "text": "The formula from the Ancient Stone... I haven't forgotten a single line." },
+        { "id": "FINAL_WILL_CONJURO_02", "text": "\"You who keep the breath where the stars are born...\nlet no threshold close upon one still called by name.\"" },
+        { "id": "FINAL_WILL_CONJURO_03", "text": "\"A life for a life. My pulse for his pulse.\nLet my light cross the gate and his burn once more!\"" },
+        { "id": "FINAL_WILL_CONJURO_04", "text": "GO BACK TO THEM, LIAM!!" }
     ]
 }

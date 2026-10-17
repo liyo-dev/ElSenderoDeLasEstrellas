@@ -530,7 +530,11 @@ public class PlayerHealthSystem : MonoBehaviour
             OnPlayerDeath?.Invoke();
             OnDied?.Invoke();
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar eventos de muerte: {e}");
@@ -556,7 +560,11 @@ public class PlayerHealthSystem : MonoBehaviour
                 _caidaIniciada = true;
             }
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error al reproducir animación/sonido de muerte: {e}");
@@ -570,7 +578,11 @@ public class PlayerHealthSystem : MonoBehaviour
             // con el final real de la animación de caída (ver HasDeathAnimationFinished()).
             GameOverManager.NotifyGameOver(this);
         }
-        catch (Exception e)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            e
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error notificando GameOver: {e}");
@@ -723,7 +735,11 @@ public class PlayerHealthSystem : MonoBehaviour
 #endif
             }
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Error al teletransportar en ReviveInternal: {ex.Message}");
@@ -739,7 +755,11 @@ public class PlayerHealthSystem : MonoBehaviour
         {
             OnPlayerRevived?.Invoke();
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealth] Excepción al invocar OnPlayerRevived: {ex.Message}");
@@ -1122,7 +1142,11 @@ public class PlayerHealthSystem : MonoBehaviour
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: no se encontró '{nameOrPath}'. Candidatos probados: {string.Join(", ", candidates)}");
 #endif
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerHealthSystem] EnsureResolved: excepción al listar candidatos: {ex.Message}");

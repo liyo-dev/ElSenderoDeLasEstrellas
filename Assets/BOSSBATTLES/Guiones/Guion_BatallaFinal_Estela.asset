@@ -36,62 +36,26 @@ MonoBehaviour:
     fase: 0
     key: FINAL_ESTELA_AHORA
     anim: 
-    vecesMax: 3
-    enfriamiento: 8
+    vecesMax: 2
+    enfriamiento: 15
     caducidad: 0.8
     interrumpe: 1
-    duracion: 1.6
-  - momento: 3
-    fase: 0
-    key: FINAL_ESTELA_ESCUDO
-    anim: 
-    vecesMax: 2
-    enfriamiento: 25
-    caducidad: 2
-    interrumpe: 0
-    duracion: 0
-  - momento: 2
-    fase: 0
-    key: FINAL_ESTELA_ACIERTO
-    anim: 
-    vecesMax: 0
-    enfriamiento: 18
-    caducidad: 2
-    interrumpe: 0
-    duracion: 0
+    duracion: 1.5
   - momento: 4
     fase: 0
     key: FINAL_ESTELA_HERIDO
     anim: 
     vecesMax: 1
-    enfriamiento: 0
-    caducidad: 4
+    enfriamiento: 45
+    caducidad: 3
     interrumpe: 0
     duracion: 0
   - momento: 5
     fase: 0
     key: FINAL_ESTELA_POCA_VIDA
     anim: 
-    vecesMax: 2
-    enfriamiento: 30
-    caducidad: 4
-    interrumpe: 0
-    duracion: 0
-  - momento: 7
-    fase: 1
-    key: FINAL_ESTELA_FASE_2
-    anim: 
     vecesMax: 1
-    enfriamiento: 0
-    caducidad: 0
-    interrumpe: 1
-    duracion: 3
-  - momento: 9
-    fase: 0
-    key: FINAL_ESTELA_RECUERDA
-    anim: 
-    vecesMax: 2
-    enfriamiento: 30
+    enfriamiento: 60
     caducidad: 3
     interrumpe: 0
     duracion: 0

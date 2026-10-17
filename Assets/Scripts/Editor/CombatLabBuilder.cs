@@ -102,6 +102,8 @@ public static partial class CombatLabBuilder
         dummy.name = "Blanco de práctica — sin IA";
         dummy.transform.SetParent(stations[0].transform);
         dummy.transform.SetPositionAndRotation(new Vector3(0f, 1f, 5f), Quaternion.identity);
+        int enemyLyr = LayerMask.NameToLayer("Enemy");
+        if (enemyLyr != -1) dummy.layer = enemyLyr;
         dummy.AddComponent<Damageable>();
         CrearTexto("Base: blanco quieto", stations[0].transform, new Vector3(0f, 3f, 5f));
 

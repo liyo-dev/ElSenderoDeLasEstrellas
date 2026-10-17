@@ -65,6 +65,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
     LayerMask    _zoneLayers;
     float        _zoneDamageMultiplier = 1f;
     readonly System.Collections.Generic.HashSet<Transform> _alreadyHit = new System.Collections.Generic.HashSet<Transform>();
+    readonly System.Collections.Generic.HashSet<Transform> _aoeTargets = new System.Collections.Generic.HashSet<Transform>();
     static readonly Collider[] s_bounceBuffer = new Collider[24];
     // La máscara se calcula la primera vez que se usa: Unity no permite LayerMask.GetMask en
     // inicializadores de campo ni constructores estáticos de un MonoBehaviour. Ver INC-626.
@@ -544,15 +545,16 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             }
             if (IsAlreadyHit(other)) return; // INC-497
 
-            // FIX M8 (auditoría 2026-08-07): _cfg.hitLayers se leía del SO pero nunca se
-            // comprobaba — el impacto directo y, sobre todo, el AOE de abajo aplicaban daño a
-            // CUALQUIER Damageable en el radio, incluidos aliados del party. Solo se filtra
-            // cuando el SO tiene hitLayers explícitamente configurado (!= 0); si se deja vacío
-            // (el estado de todos los assets existentes hoy) el comportamiento no cambia, para no
-            // romper en silencio proyectiles ya afinados que nunca tocaron ese campo.
-            if (_cfg.hitLayers.value != 0 && ((1 << other.gameObject.layer) & _cfg.hitLayers.value) == 0)
+            // FIX M8 + INC-640: Si coincide con hitLayers, objetivo directo. Si no coincide
+            // pero tiene Damageable, se permite siempre que no sea un aliado del grupo
+            // (evita que dummies de prueba o enemigos en layer Default sean inmunes al daño).
+            bool capaValida = _cfg.hitLayers.value == 0 || ((1 << other.gameObject.layer) & _cfg.hitLayers.value) != 0;
+            if (!capaValida)
             {
-                return;
+                int playerLayer = LayerMask.NameToLayer("Player");
+                if (playerLayer != -1 && other.gameObject.layer == playerLayer) return;
+                if (ControlDelJugador.PersonajeDe(other.gameObject, out _)) return;
+                if (other.GetComponentInParent<CuerpoDelGrupo>() != null) return;
             }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -563,13 +565,21 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
             {
                 // Para AOE, buscar todos los Damageable en el radio
                 int aoeCount = Physics.OverlapSphereNonAlloc(hitPoint, _cfg.aoeRadius, _aoeHitBuffer); // ✅ OPTIMIZACIÓN FASE 2: NonAlloc
+                _aoeTargets.Clear();
                 for (int i = 0; i < aoeCount; i++)
                 {
                     var c = _aoeHitBuffer[i];
-                    if (_cfg.hitLayers.value != 0 && ((1 << c.gameObject.layer) & _cfg.hitLayers.value) == 0)
-                        continue;
+                    if (c == null) continue;
+                    bool aoeCapaValida = _cfg.hitLayers.value == 0 || ((1 << c.gameObject.layer) & _cfg.hitLayers.value) != 0;
+                    if (!aoeCapaValida)
+                    {
+                        int playerLayer = LayerMask.NameToLayer("Player");
+                        if (playerLayer != -1 && c.gameObject.layer == playerLayer) continue;
+                        if (ControlDelJugador.PersonajeDe(c.gameObject, out _)) continue;
+                        if (c.GetComponentInParent<CuerpoDelGrupo>() != null) continue;
+                    }
                     var d = c.GetComponent<Damageable>() ?? c.GetComponentInParent<Damageable>();
-                    if (d != null && (_instigator == null || d.gameObject != _instigator))
+                    if (d != null && (_instigator == null || d.gameObject != _instigator) && _aoeTargets.Add(d.transform))
                     {
                         ApplyDamageAndKnockback(c, hitPoint);
                     }

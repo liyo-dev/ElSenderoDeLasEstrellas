@@ -85,8 +85,17 @@ internal sealed partial class Horno
         float t0 = t;
         SoltarBucleSiAnda(a, t, haraCuerpo: true);
         Vector3 aqui = a.PosEn(t);
-        if (new Vector2(aqui.x - delante.x, aqui.z - delante.z).sqrMagnitude > 0.15f * 0.15f)
-            t += Caminar(a, t, new List<Vector3> { delante }, Velocidad(o.Op("ritmo", "normal"), o), o);
+        var pasos = new List<Vector3>();
+        if (o.opciones.TryGetValue("por", out var porStr))
+        {
+            foreach (var paso in porStr.Split(new[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (Punto(paso.Trim(), o.linea, out var pt)) pasos.Add(pt);
+            }
+        }
+        pasos.Add(delante);
+        if (pasos.Count > 1 || new Vector2(aqui.x - delante.x, aqui.z - delante.z).sqrMagnitude > 0.15f * 0.15f)
+            t += Caminar(a, t, pasos, Velocidad(o.Op("ritmo", "normal"), o), o);
 
         a.dePie = a.PosEn(t);
         a.Mirar(t, giro);

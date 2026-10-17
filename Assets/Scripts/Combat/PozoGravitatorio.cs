@@ -25,6 +25,8 @@ public sealed class PozoGravitatorio : MonoBehaviour
         public GameObject vfxImplosion;
         public string sfxCarga;
         public string sfxImplosion;
+        public bool muerteInstantaneaAlPisar; // Si es true, pisar el núcleo mata del tirón
+        public float radioMortal;             // Radio interior letal (default 1.8m)
     }
 
     private const float DuracionImplosion = 0.18f;
@@ -60,12 +62,33 @@ public sealed class PozoGravitatorio : MonoBehaviour
             _salud = jugador.GetComponent<PlayerHealthSystem>();
         }
 
-        Vector3 puntoVfx = transform.position + Vector3.up * _c.alturaVfx;
+        Vector3 puntoVfx = transform.position + Vector3.up * Mathf.Max(0.04f, _c.alturaVfx);
         if (_c.vfxPozo != null)
         {
             _vfx = Instantiate(_c.vfxPozo, puntoVfx, Quaternion.identity, transform).transform;
             _vfx.localScale = Vector3.one * _c.escalaInicial;
         }
+
+        // Anillo de peligro a ras de suelo para que el área de atracción y peligro sea 100% visible
+        var anilloSuelo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        anilloSuelo.name = "MarcaSuelo_Pozo";
+        anilloSuelo.transform.SetParent(transform, false);
+        anilloSuelo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+        anilloSuelo.transform.localScale = new Vector3(_c.radioAtraccion * 2f, 0.01f, _c.radioAtraccion * 2f);
+        Destroy(anilloSuelo.GetComponent<Collider>());
+        var shaderLit = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+        if (shaderLit != null)
+        {
+            var mat = new Material(shaderLit) { color = new Color(0.25f, 0.04f, 0.35f, 0.45f) };
+            if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", new Color(0.25f, 0.04f, 0.35f, 0.45f));
+            if (mat.HasProperty("_EmissionColor"))
+            {
+                mat.EnableKeyword("_EMISSION");
+                mat.SetColor("_EmissionColor", new Color(0.4f, 0.05f, 0.55f));
+            }
+            anilloSuelo.GetComponent<Renderer>().sharedMaterial = mat;
+        }
+
         if (!string.IsNullOrEmpty(_c.sfxCarga) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(_c.sfxCarga, 1f, puntoVfx);
 
@@ -112,6 +135,15 @@ public sealed class PozoGravitatorio : MonoBehaviour
         if (-haciaElCentro.y > AlturaMax) return;
         haciaElCentro.y = 0f;
         float distancia = haciaElCentro.magnitude;
+
+        // Si pisa el núcleo del vórtice, recibe daño periódico severo en vez de muerte instantánea sin feedback
+        float radioMuerte = _c.radioMortal > 0f ? _c.radioMortal : 1.8f;
+        if (_c.muerteInstantaneaAlPisar && distancia <= radioMuerte && _salud != null)
+        {
+            FeedbackService.CameraShake(0.2f, 0.1f);
+            _salud.TakeDamage(30f * Time.fixedDeltaTime);
+        }
+
         if (distancia > _c.radioAtraccion || distancia < 0.6f) return;
 
         float cercania = 1f - distancia / _c.radioAtraccion;

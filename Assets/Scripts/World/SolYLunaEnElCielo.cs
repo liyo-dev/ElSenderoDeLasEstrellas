@@ -71,7 +71,7 @@ public class SolYLunaEnElCielo : MonoBehaviour
     {
         _luzDeEscena = RenderSettings.sun != null ? RenderSettings.sun.transform : null;
         if (_luzDeEscena != null) return;
-        var luces = FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var luces = FindObjectsByType<Light>(FindObjectsInactive.Exclude);
         for (int i = 0; i < luces.Length; i++)
         {
             Light luz = luces[i];

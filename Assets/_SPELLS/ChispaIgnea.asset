@@ -33,7 +33,7 @@ MonoBehaviour:
   knockbackForce: 10
   destroyOnHit: 1
   forwardOffset: 0
-  positionOffset: {x: 0, y: 0, z: 0}
+  positionOffset: {x: 0, y: 1.1, z: 0}
   visualRotationOffsetEuler: {x: 0, y: 0, z: 0}
   flattenDirection: 1
   useScaleOverride: 0
@@ -102,5 +102,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  abreProteccionSegundos: 0
+  vfxProteccionAbierta: {fileID: 0}
+  enGrimorio: 1
   caster: 2
   comboSequence: 

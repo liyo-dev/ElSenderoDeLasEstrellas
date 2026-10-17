@@ -288,6 +288,8 @@ public class NPCSimpleAnimator : MonoBehaviour
     void Reset()
     {
         animator = GetComponent<Animator>();
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
         navAgent = GetComponent<NavMeshAgent>();
     }
     
@@ -295,7 +297,11 @@ public class NPCSimpleAnimator : MonoBehaviour
     {
         // Get components
         if (animator == null)
+        {
             animator = GetComponent<Animator>();
+            if (animator == null)
+                animator = GetComponentInChildren<Animator>();
+        }
         
         if (navAgent == null)
             navAgent = GetComponent<NavMeshAgent>();
@@ -762,6 +768,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         CrossFadeToState(stateName, fundido, layer);
         yield return null;
 
+        bool poseCongelada = false;
         while (true)
         {
             yield return null;
@@ -776,17 +783,24 @@ public class NPCSimpleAnimator : MonoBehaviour
             {
                 if (actual.loop || _congelarPoseAlFinal)
                     animator.Play(Animator.StringToHash(stateName), layer,
-                        actual.loop ? Mathf.Repeat(actual.normalizedTime, 1f) : Mathf.Min(actual.normalizedTime, 1f));
+                        actual.loop ? Mathf.Repeat(actual.normalizedTime, 1f) : 1f);
                 continue;
             }
             if (actual.IsName(stateName))
             {
                 if (_congelarPoseAlFinal && !actual.loop && actual.normalizedTime >= 1f)
-                    animator.Play(Animator.StringToHash(stateName), layer, 1f);
+                {
+                    if (!poseCongelada)
+                    {
+                        animator.Play(Animator.StringToHash(stateName), layer, 1f);
+                        poseCongelada = true;
+                    }
+                }
                 continue;
             }
             if (animator.IsInTransition(layer)) continue;
 
+            poseCongelada = false;
             CrossFadeToState(stateName, 0.12f, layer);
         }
     }
@@ -859,21 +873,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
         else if (_isInteracting)
         {
-            // FIX (30/08/2026, Raul: "hace la animacion de enfado, el bocadillo continua... se
-            // queda [congelado]"; ronda siguiente: "no hace las anumaciones de hablar tras la de
-            // enfado"): sin esto, al terminar el one-shot con _isInteracting=true (ver
-            // BeginInteraction/EndInteraction en ShowBubblePaged, CinematicSequencerBase.cs) este
-            // metodo no hacia NADA -- ni transicion a Idle (correctamente evitada, eso ya estaba
-            // bien) ni ningun otro estado -- dejando el Animator congelado en el ultimo frame del
-            // gesto (p.ej. "Angry01") indefinidamente. Con paginas de dialogo (ShowBubblePaged) mas
-            // largas que el clip del gesto, y sobre todo con loopAnim repitiendo el MISMO trigger en
-            // varias paginas seguidas, volver a cruzar a un estado en el que el Animator ya esta
-            // parado (congelado en su ultimo frame) no siempre reinicia el clip de forma visible.
-            // Se vuelve al interactState entre gestos -- mismo patron que PlayBodyEmotion() ya usa
-            // con exito mas abajo en este archivo -- asi el personaje queda con una pose neutra de
-            // "hablando" hasta el siguiente trigger, y cada retrigger es un crossfade limpio desde
-            // un estado distinto, siempre visible.
-            CrossFadeToState(interactState, 0.15f);
+            PlayInteractionPose(0.15f);
         }
         
         _oneShotCoroutine = null;
@@ -908,15 +908,12 @@ public class NPCSimpleAnimator : MonoBehaviour
         _isInteracting = true;
         _currentState = AnimationState.Interacting;
         
-        // ✅ FIX: Solo girar hacia el jugador si la rotación automática NO está deshabilitada
-        // Si DialogueManager ya controló la rotación, no interferir
         if (girarAlJugador && _player != null && !_disableAutoRotation)
         {
             FaceTarget(_player.position);
         }
         
-        // Play interaction animation
-        CrossFadeToState(interactState, 0.15f);
+        PlayInteractionPose(0.15f);
         
         if (debugMode)
             {
@@ -924,6 +921,32 @@ public class NPCSimpleAnimator : MonoBehaviour
             Debug.Log("[NPCAnimator] Begin interaction");
 #endif
             }
+    }
+
+    private void PlayInteractionPose(float transitionTime)
+    {
+        if (animator == null || _currentState == AnimationState.Dead)
+            return;
+
+        if (!_isSeated && !_isInBattle)
+        {
+            const string baseInteractState = "InteractWithPeople_NoWeapon";
+            if (animator.HasState(0, Animator.StringToHash(baseInteractState)))
+            {
+                CrossFadeToState(baseInteractState, transitionTime, 0);
+            }
+        }
+
+        if (!string.IsNullOrEmpty(interactState))
+        {
+            int layer = AnimatorLayerUtil.ResolveLayer(animator, interactState, upperBodyLayer);
+            if (layer >= 0)
+            {
+                if (layer > 0 && layer < animator.layerCount)
+                    animator.SetLayerWeight(layer, 1f);
+                CrossFadeToState(interactState, transitionTime, layer);
+            }
+        }
     }
     
     /// <summary>
@@ -935,6 +958,15 @@ public class NPCSimpleAnimator : MonoBehaviour
             return;
         
         _isInteracting = false;
+
+        if (!_isInBattle && !SosteniendoPose && _activityCoroutine == null &&
+            animator != null && upperBodyLayer > 0 && upperBodyLayer < animator.layerCount)
+        {
+            if (animator.HasState(upperBodyLayer, Animator.StringToHash("Empty")))
+                CrossFadeToState("Empty", 0.15f, upperBodyLayer);
+            else
+                animator.SetLayerWeight(upperBodyLayer, 0f);
+        }
         
         // Return to appropriate state
         if (_isInBattle)
@@ -2544,14 +2576,18 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Try to find clip length
         float length = 0f;
         
-        if (animator != null)
+        if (animator != null && animator.runtimeAnimatorController != null)
         {
-            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            var clips = animator.runtimeAnimatorController.animationClips;
+            if (clips != null)
             {
-                if (clip.name.Contains(stateName))
+                foreach (AnimationClip clip in clips)
                 {
-                    length = clip.length;
-                    break;
+                    if (clip != null && clip.name.Contains(stateName))
+                    {
+                        length = clip.length;
+                        break;
+                    }
                 }
             }
         }
@@ -2570,9 +2606,13 @@ public class NPCSimpleAnimator : MonoBehaviour
         if (animator == null || animator.runtimeAnimatorController == null)
             return;
         
-        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+        var clips = animator.runtimeAnimatorController.animationClips;
+        if (clips == null)
+            return;
+
+        foreach (AnimationClip clip in clips)
         {
-            if (!_clipLengthCache.ContainsKey(clip.name))
+            if (clip != null && !_clipLengthCache.ContainsKey(clip.name))
             {
                 _clipLengthCache[clip.name] = clip.length;
             }

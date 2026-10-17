@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bce0c04b63bb2b54ea79195a041cd17d, type: 3}
+  m_Name: SEQ_Final_02_ElRio
+  m_EditorClassIdentifier: Assembly-CSharp::SequenceDefinition
+  displayName: "Final \u2014 Parte 2: El R\xEDo con Tob\xEDas"
+  summary: 
+  signalIn: FINAL_PARTE_02_START
+  signalOut: FINAL_CREDITOS_START
+  musicId: 
+  presentacionDeTexto: 1
+  protagonistas: []
+  openingShotName: 
+  openingShot:
+    type: 3
+    subjectId: 
+    secondaryId: 
+    heightBias: 0
+    distanceScale: 1
+    fovOverride: 0
+    crossTheLine: 0
+    headroom: 1
+    encara: 1
+  endStayBlack: 0
+  modulos: {fileID: 0}
+  phases:
+  - name: 'Guion: Final_02_ElRio'
+    onlyIfFlag: 
+    skipIfFlag: 
+    beats:
+    - rid: 5630202527032279229
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202527032279229
+      type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: Generado por el horneado del guion
+        guion: {fileID: 11400000, guid: 14bb819fe7e5912428518d3752598d99, type: 2}
+        empezarEn: 0

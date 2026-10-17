@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 namespace Invector.vCharacterController
@@ -30,7 +30,7 @@ namespace Invector.vCharacterController
             // También cubrimos el caso en que el jugador choca contra un obstáculo físico
             // (ej: el modelo sólido de la hoguera) que no está en groundLayer: en ese caso
             // stopMove no se activa, pero la velocidad horizontal del rigidbody sí cae a 0.
-            bool forceZeroMotion = lockMovement || stopMove;
+            bool forceZeroMotion = (lockMovement || stopMove) && overrideInputMagnitude < 0f;
             if (!forceZeroMotion && isGrounded && inputMagnitude > 0.3f &&
                 _rigidbody != null && !_rigidbody.isKinematic)
             {
@@ -40,17 +40,19 @@ namespace Invector.vCharacterController
                     forceZeroMotion = true;
             }
 
+            float finalInputVertical = overrideInputMagnitude >= 0f ? overrideInputMagnitude : (forceZeroMotion ? 0 : verticalSpeed);
             if (isStrafing)
             {
                 animator.SetFloat(vAnimatorParameters.InputHorizontal, forceZeroMotion ? 0 : horizontalSpeed, strafeSpeed.animationSmooth, Time.deltaTime);
-                animator.SetFloat(vAnimatorParameters.InputVertical, forceZeroMotion ? 0 : verticalSpeed, strafeSpeed.animationSmooth, Time.deltaTime);
+                animator.SetFloat(vAnimatorParameters.InputVertical, finalInputVertical, strafeSpeed.animationSmooth, Time.deltaTime);
             }
             else
             {
-                animator.SetFloat(vAnimatorParameters.InputVertical, forceZeroMotion ? 0 : verticalSpeed, freeSpeed.animationSmooth, Time.deltaTime);
+                animator.SetFloat(vAnimatorParameters.InputVertical, finalInputVertical, freeSpeed.animationSmooth, Time.deltaTime);
             }
 
-            animator.SetFloat(vAnimatorParameters.InputMagnitude, forceZeroMotion ? 0f : inputMagnitude, isStrafing ? strafeSpeed.animationSmooth : freeSpeed.animationSmooth, Time.deltaTime);
+            float finalInputMagnitude = overrideInputMagnitude >= 0f ? overrideInputMagnitude : (forceZeroMotion ? 0f : inputMagnitude);
+            animator.SetFloat(vAnimatorParameters.InputMagnitude, finalInputMagnitude, isStrafing ? strafeSpeed.animationSmooth : freeSpeed.animationSmooth, Time.deltaTime);
         }
 
         public virtual void SetAnimatorMoveSpeed(vMovementSpeed speed)

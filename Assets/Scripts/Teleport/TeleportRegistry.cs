@@ -227,7 +227,11 @@ public static class TeleportRegistry
 #endif
             }
         }
-        catch (System.Exception ex)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[TeleportRegistry] Error sincronizando con preset: {ex.Message}");

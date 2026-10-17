@@ -24,6 +24,7 @@ MonoBehaviour:
   unlockedSpells: 01000000i
   basicSpellIds: 01000000i
   companionBasics: []
+  companionHealth: []
   flags:
   - QUEST_ACTIVE:WILL_MISSION0
   - QUEST_COMPLETED:WILL_MISSION0
@@ -59,8 +60,6 @@ MonoBehaviour:
   unlockedWardrobeIds:
   - Body05
   inventoryItems:
-  - itemId: mermelada
-    count: 1
   - itemId: coin
     count: 1
   defeatedBossIds: []
@@ -78,13 +77,7 @@ MonoBehaviour:
     - key: __currentNodeGuid
       type: string
       value: cap2-iniciado-flag
-  npcPositions:
-  - npcId: Eldran
-    position: {x: 25.8, y: 27.01, z: -82.61}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    hasRotation: 1
-    hasActiveState: 0
-    isActive: 0
+  npcPositions: []
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

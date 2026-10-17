@@ -137,7 +137,7 @@ El daño depende de la mecánica, la posición y la ventana del enemigo. Las reg
 | Enemigo | Qué enseña | Cómo se le hace daño |
 |---|---|---|
 | Demonio 1 | Leer el aro, esquivar y castigar la recuperación; Eldran guía el aprendizaje. | Solo con el aro encendido, durante el aviso, ataque y agotamiento. Fuera de esa ventana no recibe daño y **no se cura**. El aro admite impactos precisos mientras brilla; romperlo ofrece el final de Demonio caído. Tres fases: garras/embestida, fuego y sombras/subsuelo/combos. |
-| Demonio 2 | Usar a los tres personajes y el espacio del castillo al defender el Reino. | **Aro de tres runas**, una por personaje (Will, Estela, Liam): cada runa solo la rompe su personaje, así que obliga a cambiar de personaje o a usar dúos; rotas las tres, queda expuesto. **Guerra en el aire:** en la fase 2 sube a las almenas y ataca desde arriba; el jugador sube (plataformas, levitación, vuelo si ya lo tiene) para alcanzarlo. (Hoy el prefab recibe daño normal: falta construirlo.) |
+| Demonio 2 | Usar a los tres personajes y el espacio del castillo al defender el Reino. | **Aro de tres runas**, una por personaje (Will, Estela, Liam): cada runa solo la rompe su personaje, así que obliga a cambiar de personaje o a usar dúos; rotas las tres, queda expuesto. **Guerra en el aire:** en la fase 2 sube a las almenas y ataca desde arriba; el jugador sube (plataformas, levitación, vuelo si ya lo tiene) para alcanzarlo. Desde la fase 2, algunas ráfagas se sustituyen por una carga de plasma ocasional: cae donde estaba Will, queda fija y cambia de azul a amarillo y rojo antes de explotar con daño de área. La cuenta atrás da tiempo para apartarse. (Hoy el prefab recibe daño normal: falta construirlo.) |
 | Gólem | Rodear una armadura, alternar objetivos y coordinar un remate. | Recibe el **20 %** del daño por delante/lados y el daño completo por detrás. Estela atrae su atención y protege al grupo. Lluvia de rocas y salto con onda amplían los patrones. **El fuego de frente lo hace crecer** (regla propia de este jefe, no una debilidad elemental general). Llevarlo al **barro** del arroyo lo hunde unos segundos y abre la ventana de la fase 2. El sello final exige el dúo Will + Estela; la magia normal no lo remata. |
 | Araña | Distancia, esquiva y control de grupos pequeños. | Daño normal al cuerpo; no tiene una ventana elemental ni armadura frontal especial. Su acercamiento y preparación del ataque dejan leer cuándo apartarse y responder. |
 | Guardián de la Piedra | Cooperar antes de acceder a las fórmulas y leer el escenario reflejado. | Recibe daño normal; no se acredita un filtro de exposición. Will sostiene, Estela presiona y Liam busca aperturas. **Adaptación del juego:** en la novela examina a Will y se aparta. |
@@ -454,6 +454,8 @@ Lectura de `Assets/_SPELLS/*.asset` y `MagicSpellSO`, 8 de octubre de 2026. Los 
 | Sello del Pacto | Liam | Mente | Zona | 12 | 25 | B → A → X | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Tormenta de Fuego | Estela | Fuego | Zona | 18 | 40 | Y → X → B → A | Lo enseña un personaje o la historia (quién, al construir el capítulo) |
 | Ciclón | Estela | Viento | Proyectil | 30 | 5 | Sin combo | Página del grimorio |
+
+Lluvia de Chispas lanza tres estrellas en abanico. Cada estrella cubre un radio de 1,2 m al impactar, visible en su efecto; los tres impactos pueden alcanzar zonas distintas.
 
 ### Remates aéreos
 

@@ -17,6 +17,8 @@ public sealed class BarraDeJefeUI : MonoBehaviour
     [Header("Piezas")]
     [SerializeField] private CanvasGroup grupo;
     [SerializeField] private RectTransform contenedor;
+    [Tooltip("Máscara RectMask2D que recorta el relleno según la vida sin deformar sus extremos.")]
+    [SerializeField] private RectTransform mascaraRelleno;
     [SerializeField] private Image relleno;
     [SerializeField] private TMP_Text nombre;
     [SerializeField] private TMP_Text vida;
@@ -71,9 +73,23 @@ public sealed class BarraDeJefeUI : MonoBehaviour
         if (contenedor) contenedor.DOKill();
     }
 
+    public bool TieneMascaraConfigurada => mascaraRelleno != null;
+
     public void PonerNombre(string texto) => nombre.text = texto;
 
-    public void PonerRelleno(float fraccion) => relleno.fillAmount = fraccion;
+    public void PonerRelleno(float fraccion)
+    {
+        float f = Mathf.Clamp01(fraccion);
+        if (mascaraRelleno != null)
+        {
+            mascaraRelleno.anchorMax = new Vector2(f, 1f);
+            mascaraRelleno.gameObject.SetActive(f > 0.0001f);
+        }
+        else if (relleno != null)
+        {
+            relleno.fillAmount = f;
+        }
+    }
 
     /// Texto «actual / máx» y tinte según si la vida está en zona crítica.
     public void PonerVida(float actual, float maximo, bool critico)

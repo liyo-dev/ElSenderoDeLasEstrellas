@@ -42,7 +42,6 @@ MonoBehaviour:
   - rid: 6000000000000000038
   - rid: 6000000000000000039
   - rid: 6000000000000000040
-  - rid: 6000000000000000041
   - rid: 6000000000000000042
   - rid: 6000000000000000043
   - rid: 5983492470211221218
@@ -578,26 +577,8 @@ MonoBehaviour:
         guid: 18a57f1d-20e3-4539-b920-ac49b3750703
         position: {x: 8740, y: 0}
         outputs:
-        - 721fd475-997e-4f7d-b54b-cedcbb5c1c2e
-        eventKey: PERAS_DONE
-    - rid: 6000000000000000041
-      type: {class: GiveInventoryItemNode, ns: , asm: Assembly-CSharp}
-      data:
-        displayTitle: 17.- Primer objeto del bolsillo (IT_Mermelada)
-        chapter: Cap. 1
-        blockSaving: 0
-        inputAnchor: 0
-        outputAnchor: 1
-        overrideNodeColor: 0
-        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
-        guid: 721fd475-997e-4f7d-b54b-cedcbb5c1c2e
-        position: {x: 9120, y: 0}
-        outputs:
         - 041162d9-cc08-4d17-ae7c-6067257e952b
-        item: {fileID: 11400000, guid: ed49627c2362432a9b8d1f43f02b23c1, type: 2}
-        amount: 1
-        logWarnings: 0
-        onlyOnce: 1
+        eventKey: PERAS_DONE
     - rid: 6000000000000000042
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
@@ -845,6 +826,7 @@ MonoBehaviour:
         duracionLlamada: 2.2
         distanciaMaxima: 9
         distanciaReanudar: 3
+        separacionDelGuia: 1.2
         radioLlegada: 4
         velocidad: 2.6
         duracionMaxima: 240
@@ -887,6 +869,7 @@ MonoBehaviour:
         duracionLlamada: 2.2
         distanciaMaxima: 9
         distanciaReanudar: 3
+        separacionDelGuia: 1.2
         radioLlegada: 4
         velocidad: 2.6
         duracionMaxima: 240

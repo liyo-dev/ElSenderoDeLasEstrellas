@@ -43,24 +43,8 @@ namespace Game.NPC
         /// </summary>
         public bool CanShowFollowPrompt()
         {
-            if (_partyMember == null) return false;
-            if (CinematicSequencerBase.AnySequenceActive) return false;
-            if (_npcManager?.Context != null &&
-                (_npcManager.Context.IsInCinematic || _npcManager.Context.IsInCombat))
-                return false;
-
-            bool partyInLibreMode = !(PartyControlManager.Instance?.IsPartyFollowing ?? true);
-            if (!partyInLibreMode || !_partyMember.IsInParty) return false;
-
-            bool isActivelyFollowing = _npcManager?.Context?.IsPinnedByParty == false;
-            if (isActivelyFollowing) return true;
-
-            var party = PlayerParty.Instance;
-            bool fullParty = (party?.MemberCount ?? 0) >= 2;
-            if (!fullParty) return false;
-
-            bool isPinned = _npcManager?.Context?.IsPinnedByParty == true;
-            return isPinned && !AnyOtherMemberActivelyFollowing();
+            // Entre los personajes del grupo no hay interacción con botón A ni prompts ordinarios (INC-754).
+            return false;
         }
 
         public void SetFollowIcon(GameObject iconPrefab)     => _followIconPrefab = iconPrefab;

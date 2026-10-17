@@ -34,6 +34,18 @@ public static partial class HorneadorDeGuion
     [MenuItem("El Sendero/Guion/3. Hornear el prólogo + storyboard", priority = 3)]
     public static void MenuPrologoConStoryboard() => Hornear(RutaPrologo, storyboard: true);
 
+    [MenuItem("El Sendero/Guion/4. Hornear Batalla Final (Intro)", priority = 10)]
+    public static void MenuBatallaFinal() => Hornear("Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt", storyboard: false);
+
+    [MenuItem("El Sendero/Guion/5. Hornear Promo (Encuentro en el camino)", priority = 11)]
+    public static void MenuPromo() => Hornear("Assets/_SEQUENCES/Guiones/Promo_EncuentroEnElCamino.guion.txt", storyboard: false);
+
+    [MenuItem("El Sendero/Guion/6. Hornear Final Parte 1 (El Sacrificio)", priority = 12)]
+    public static void MenuFinalParte1() => Hornear("Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt", storyboard: false);
+
+    [MenuItem("El Sendero/Guion/7. Hornear Final Parte 2 (El Río)", priority = 13)]
+    public static void MenuFinalParte2() => Hornear("Assets/_SEQUENCES/Guiones/Final_02_ElRio.guion.txt", storyboard: false);
+
     public static GuionHorneado Hornear(string rutaTexto, bool storyboard)
     {
         var texto = AssetDatabase.LoadAssetAtPath<TextAsset>(rutaTexto);
@@ -283,6 +295,7 @@ internal sealed partial class Horno
         }
         PrepararReparto();
         PrepararPuntos();
+        OcultarActoresDeEscena();
         if (Errores.Count > 0) return null;
 
         EditorUtility.DisplayProgressBar("Hornear guion", "Tiempos y caminos…", 0.2f);
@@ -867,9 +880,52 @@ internal sealed partial class Horno
                 bool anda = false;
                 for (float t = t0; t <= t1; t += 0.2f) if (a.AndandoEn(t)) { anda = true; break; }
                 string bucle = BucleEn(a, t0);
-                if (anda || bucle != null || linea.sinPose) { linea.sinPose = true; continue; }
+                if (anda || linea.sinPose) { linea.sinPose = true; continue; }
+                if (bucle != null)
+                {
+                    // Sentado: no se toca la capa base (bucle de asiento), pero si la línea no trae gesto
+                    // se anima el tren superior con gestos de habla para que los brazos no queden congelados.
+                    if (Sentado(a) && string.IsNullOrEmpty(linea.gesto))
+                    {
+                        string[] gestosSentado = { "Talk01", "Talk02", "HeadNod01" };
+                        string g = gestosSentado[Mathf.Abs(linea.clave.GetHashCode()) % gestosSentado.Length];
+                        if (a.estados.ContainsKey(g))
+                        {
+                            linea.gesto = g;
+                            a.Animar(t0 + 0.08f, TipoDeAnimacion.Gesto, g);
+                        }
+                    }
+                    linea.sinPose = true;
+                    continue;
+                }
                 a.Animar(t0, TipoDeAnimacion.HablaEmpieza);
                 a.Animar(t1 + 0.05f, TipoDeAnimacion.HablaTermina);
+
+                string[] candidatosHabla = { "Talk01", "Talk02", "Talk03" };
+                string[] gestosHabla = candidatosHabla.Where(g => a.estados.ContainsKey(g)).ToArray();
+                if (gestosHabla.Length > 0)
+                {
+                    int idxGesto = Mathf.Abs(linea.clave.GetHashCode());
+                    if (string.IsNullOrEmpty(linea.gesto))
+                    {
+                        string gIni = gestosHabla[idxGesto % gestosHabla.Length];
+                        linea.gesto = gIni;
+                        a.Animar(t0 + 0.08f, TipoDeAnimacion.Gesto, gIni);
+                    }
+                    float durIni = !string.IsNullOrEmpty(linea.gesto) && a.estados.TryGetValue(linea.gesto, out var infoIni)
+                        ? infoIni.largo
+                        : 2.2f;
+                    float tCursor = t0 + 0.08f + durIni + 0.2f;
+                    idxGesto++;
+                    while (tCursor + 1.3f <= t1)
+                    {
+                        bool ocupado = a.anim.Any(o => o.tipo == TipoDeAnimacion.Gesto && o.t >= tCursor - 0.5f && o.t <= tCursor + 1.0f);
+                        string gSig = gestosHabla[idxGesto++ % gestosHabla.Length];
+                        float durSig = a.estados.TryGetValue(gSig, out var infoSig) ? infoSig.largo : 2.2f;
+                        if (!ocupado) a.Animar(tCursor, TipoDeAnimacion.Gesto, gSig);
+                        tCursor += durSig + 0.25f;
+                    }
+                }
             }
             // Charlas de fondo: gestos de conversación hasta la siguiente orden del personaje.
             var rnd = new System.Random(a.id.GetHashCode());
@@ -1030,7 +1086,13 @@ internal sealed partial class Horno
                 if (o.args.Count > 1) campos["duration"] = o.args[1]; break;
             case "destello": clase = "ScreenFlashBeat"; if (a0 != null) campos["color"] = a0; if (o.args.Count > 1) campos["duration"] = o.args[1]; break;
             case "sacudida": clase = "ShakeBeat"; if (a0 != null) campos["intensity"] = a0; if (o.args.Count > 1) campos["duration"] = o.args[1]; break;
-            case "cutin": clase = "CutInBeat"; if (a0 != null) campos["actorId"] = a0; break;
+            case "cutin": clase = "CutInBeat";
+                if (a0 != null)
+                {
+                    if (a0 == "quita" || a0 == "oculta") campos["mostrar"] = "false";
+                    else campos["actorId"] = _actores.TryGetValue(a0, out var a) ? a.id : a0;
+                }
+                break;
             case "vfx": clase = "VfxBeat"; if (a0 != null) campos["vfxPrefab"] = a0; RenombrarActorOMarca(campos); break;
             case "bandas": clase = "BandasDeCineBeat"; campos["mostrar"] = a0 == "quita" ? "false" : "true"; campos["esperar"] = "false"; break;
             case "lento": clase = "TimeScaleBeat"; if (a0 != null) campos["timeScale"] = a0; if (o.args.Count > 1) campos["rampDuration"] = o.args[1]; break;
@@ -1068,8 +1130,21 @@ internal sealed partial class Horno
         if (p.y == 0f && EscenaDelGuion.IsValid())
         {
             float mejor = float.NegativeInfinity;
+            float mejorPiso = float.NegativeInfinity;
+            int layerFloor = LayerMask.NameToLayer("Floor");
             foreach (var h in Physics.RaycastAll(new Vector3(p.x, 2.5f, p.z), Vector3.down, 6f, ~0, QueryTriggerInteraction.Ignore))
-                if (h.collider.gameObject.scene == EscenaDelGuion && h.point.y > mejor) mejor = h.point.y;
+            {
+                if (h.collider.gameObject.scene != EscenaDelGuion || !EsColliderDeSuelo(h.collider)) continue;
+                if ((layerFloor >= 0 && h.collider.gameObject.layer == layerFloor) || h.collider.name.IndexOf("Floor", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    if (h.point.y > mejorPiso) mejorPiso = h.point.y;
+                }
+                else if (h.point.y > mejor)
+                {
+                    mejor = h.point.y;
+                }
+            }
+            if (!float.IsNegativeInfinity(mejorPiso)) return new Vector3(p.x, mejorPiso, p.z);
             if (!float.IsNegativeInfinity(mejor)) return new Vector3(p.x, mejor, p.z);
         }
         float y = p.y;
@@ -1081,6 +1156,17 @@ internal sealed partial class Horno
             if (!hayNav || Mathf.Abs(rh.point.y - y) < 0.35f) y = rh.point.y;
         }
         return new Vector3(p.x, y, p.z);
+    }
+
+    private static bool EsColliderDeSuelo(Collider col)
+    {
+        if (col == null || col.isTrigger) return false;
+        var go = col.gameObject;
+        if (go.GetComponent<NavMeshObstacle>() != null) return false;
+        int layer = go.layer;
+        if (layer == 2 /* Ignore Raycast */ || layer == 8 /* Interactable */ || layer == 16 /* Obstacle */) return false;
+        if (GameObjectUtility.GetNavMeshArea(go) == 1 /* Not Walkable */) return false;
+        return true;
     }
 }
 #endif

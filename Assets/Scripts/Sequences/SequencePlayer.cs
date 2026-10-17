@@ -349,7 +349,11 @@ public class SequencePlayer : CinematicSequencerBase
         for (int i = 0; i < _pendingScreenCleanups.Count; i++)
         {
             try { _pendingScreenCleanups[i]?.Invoke(); }
-            catch (System.Exception ex)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SequencePlayer:{name}] Una limpieza de pantalla ha fallado: {ex.Message}");
@@ -364,7 +368,11 @@ public class SequencePlayer : CinematicSequencerBase
         for (int i = 0; i < _pendingCleanups.Count; i++)
         {
             try { _pendingCleanups[i]?.Invoke(); }
-            catch (System.Exception ex)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                ex
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[SequencePlayer:{name}] Una limpieza pendiente ha fallado: {ex.Message}");
@@ -508,6 +516,16 @@ public class SequencePlayer : CinematicSequencerBase
         }
 
         _context = new SequenceContext(this, _stage);
+
+        if (_stage != null && _stage.Actors != null)
+        {
+            foreach (var actor in _stage.Actors)
+            {
+                if (actor.target == null || string.IsNullOrWhiteSpace(actor.id)) continue;
+                _context.RegisterActor(actor.id.Trim(), actor.target, actor.eyeHeight,
+                    actor.animator, actor.emotionController);
+            }
+        }
 
         // Objetos del decorado que esta escena quiere poder encuadrar (el horno, la carreta, el
         // portón). Se registran aquí, antes del primer beat, para que un ShotBeat pueda nombrarlos
@@ -805,6 +823,7 @@ public class SequencePlayer : CinematicSequencerBase
         StopBackgroundRoutines();
         RunScreenCleanups();
         RunPendingCleanups();
+        SpeechBubbleUI.Instance?.Hide();
         Time.timeScale = 1f;
         if (_stage != null) _stage.CleanupModules();
         CinematicTimeOfDay.Restore();
@@ -843,6 +862,7 @@ public class SequencePlayer : CinematicSequencerBase
         if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen)
             DialogueManager.Instance.Close();
 
+        SpeechBubbleUI.Instance?.Hide();
         ReleaseAllActors();
 
         // El cierre genérico de skip deja la pantalla cubierta a propósito. Estas secuencias no

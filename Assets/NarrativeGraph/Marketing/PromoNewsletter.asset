@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e12d267b89a9ff841983167bc75c8b77, type: 3}
+  m_Name: PromoNewsletter
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeGraph
+  startNodeGuid: 1c5d74ef-a8ce-4f63-bc6d-da2965318326
+  nodes:
+  - rid: 5630202448546889738
+  - rid: 5630202448546889739
+  applicableSceneNames:
+  - PromoMundo
+  references:
+    version: 2
+    RefIds:
+    - rid: 5630202448546889738
+      type: {class: StartNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Inicio de la promo
+        chapter: Marketing
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: 1c5d74ef-a8ce-4f63-bc6d-da2965318326
+        position: {x: 0, y: 0}
+        outputs:
+        - c24f7620-bb6a-4458-a7cc-35dca39e8b5e
+    - rid: 5630202448546889739
+      type: {class: PlayCinematicNode, ns: , asm: Assembly-CSharp}
+      data:
+        displayTitle: Encuentro en el camino
+        chapter: Marketing
+        blockSaving: 0
+        inputAnchor: 0
+        outputAnchor: 1
+        overrideNodeColor: 0
+        nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
+        guid: c24f7620-bb6a-4458-a7cc-35dca39e8b5e
+        position: {x: 300, y: 0}
+        outputs:
+        - 
+        - 
+        cinematicName: "Promo \u2014 Encuentro en el camino"
+        signalIn: PROMO_VIDEO_01_START
+        signalDone: PROMO_VIDEO_01_END
+        signalFailed: PROMO_VIDEO_01_FAILED
+        secuencia: {fileID: 11400000, guid: ed23c74cac4dfeb4eb8b6238a1c27f0f, type: 2}
+        plantillaDeAjustes: SEQ_PerasEldran
+        acercarActor: 
+        distanciaMaxima: 24
+        distanciaDeAparicion: 12

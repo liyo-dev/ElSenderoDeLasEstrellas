@@ -380,6 +380,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
 
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
+        SpeechBubbleUI.Instance?.Hide();
         PlayerHUDV2.Instance?.ShowHUD(this);
         MinimapController.Mostrar(this);
         // FIX INC-058: restaurar el icono del período del día al terminar la secuencia.

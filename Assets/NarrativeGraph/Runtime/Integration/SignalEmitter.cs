@@ -66,7 +66,9 @@ public class SignalEmitter : MonoBehaviour
     public float radioDeProximidad = 0f;
 
     [Header("Debug")]
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [SerializeField] private bool debugLogs = false;
+#endif
 
     private bool _used;
     private DefaultNarrativeSignals _signals;

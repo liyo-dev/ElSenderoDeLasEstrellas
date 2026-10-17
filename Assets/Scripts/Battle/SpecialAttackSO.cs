@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>Compañero de un dúo antiguo (solo con Will). Se conserva para convertir los assets
 /// anteriores a INC-491; los ataques nuevos usan <see cref="SpecialAttackSO.first"/>/<see cref="SpecialAttackSO.second"/>.</summary>
@@ -31,7 +31,7 @@ public class SpecialAttackSO : ScriptableObject
     public float companionMaxDistance = 10f;
 
     [Header("Animaciones")]
-    [Tooltip("Trigger del Animator para los compañeros (el personaje activo hace el gesto del centro de MagicCaster)")]
+    [Tooltip("Si se rellena, el compañero reproduce su gesto de hechizo especial; el personaje activo usa MagicCaster.")]
     public string companionAnimationTrigger;
     [Tooltip("Sin uso desde INC-491: el personaje activo hace el gesto del centro de MagicCaster.")]
     public string playerAnimationTrigger;
@@ -40,6 +40,8 @@ public class SpecialAttackSO : ScriptableObject
 
     [Header("Visual y Audio")]
     public GameObject vfxPrefab;
+    [Tooltip("Altura del origen visual sobre el punto de impacto. No altera el centro del daño.")]
+    [Min(0f)] public float elevacionDelVfx = 0.12f;
     [Tooltip("Clave de SFX en AudioService")]
     public string castSFXKey;
     [Tooltip("Duración del VFX antes de destruirse")]
@@ -52,7 +54,7 @@ public class SpecialAttackSO : ScriptableObject
     public bool volteretaDelActivo;
     [Tooltip("Altura de la voltereta, en alturas de la cabeza del personaje.")]
     [Min(0f)] public float alturaDeLaVoltereta = 1.2f;
-    [Tooltip("Metros máximos que avanza hacia el punto del golpe (se queda a 1,5 m de él).")]
+    [Tooltip("Metros máximos que avanza hacia el punto del golpe (sin superar el punto del impacto).")]
     [Min(0f)] public float avanceDeLaVoltereta = 3f;
 
     [Header("Daño")]

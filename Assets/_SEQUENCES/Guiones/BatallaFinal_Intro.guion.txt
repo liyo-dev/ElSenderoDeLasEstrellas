@@ -1,0 +1,290 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+# Batalla Final — Apertura (Encuentro con el Mago Oscuro, Vacío Tibio con el Archimago y
+# despertar de los cinco elementos antes de la Fase 1).
+# Se hornea con: hornear Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt storyboard
+# ═══════════════════════════════════════════════════════════════════════════════════════════
+
+GUION BatallaFinal_Intro
+ESCENA BatallaFinal
+SECUENCIA Assets/_SEQUENCES/SEQ_BatallaFinal.asset
+TEXTO subtitulo
+RITMO entre_frases=0.3 mismo_hablante=0.15
+
+REPARTO
+will       Player         nombre=Will color=FFE3A8
+mago       NPC_MagoOscuro nombre="Mago Oscuro" color=B48CFF oculto
+estela     NPC_Estela     nombre=Estela color=FFB3C7
+liam       NPC_Liam       nombre=Liam color=9EDBFF
+archimago  NPC_Archimago  nombre=Archimago color=FFD27A oculto
+
+PUNTOS
+p_will_entrada       0.0 -11.5
+p_estela_entrada     1.6 -12.3
+p_liam_entrada      -1.6 -12.3
+p_will_centro        0.0 -5.0
+p_estela_centro      1.5 -5.4
+p_liam_centro       -1.5 -5.4
+p_altar_mirar        0.0 16.0
+p_liam_paso         -0.6 -3.6
+p_mago_trono         0.0 8.0
+p_mago_paso          0.0 6.2
+
+# Vacío Tibio: separación de 1.2m entre Will y Archimago para evitar colisión de mallas
+p_vacio_will         78.85 0.0
+p_vacio_archimago    81.15 0.0
+p_vacio_will_parada  79.40 0.0
+p_vacio_arch_parada  80.60 0.0
+
+# Posiciones de reanimación inclinados sobre Will en el suelo
+p_estela_reanimar    0.50 -4.55
+p_liam_reanimar     -0.50 -4.55
+
+cam_mago_amenaza    -1.15 3.8 1.15
+cam_mago_risa        0.85 4.4 1.25
+cam_mago_holandes   -1.40 4.2 0.95
+cam_rasgar_aire      0.0 1.80 1.35
+mira_rasgar_aire     0.0 6.20 1.25
+
+# Cámara de suelo en primera persona (ojos de Will mirando hacia arriba a Estela y Liam)
+cam_pov_suelo        0.0 -5.10 0.25
+mira_pov_suelo       0.0 -4.60 1.35
+
+cam_pecho_will       0.0 -3.60 1.25
+mira_pecho_will      0.0 -5.00 1.20
+cam_deslumbramiento  0.0 -2.5 1.45
+cam_heroe_trio       0.0 -1.50 1.30
+mira_heroe_trio      0.0 -5.20 1.20
+
+HILO
+@inicio
+bandas muestra
+fundido cubre 0.01
+musica BattleTheme
+will en p_will_entrada mirando p_altar_mirar
+estela en p_estela_entrada mirando p_altar_mirar
+liam en p_liam_entrada mirando p_altar_mirar
+mago en p_mago_paso mirando will
+mago desaparece
+archimago en p_vacio_archimago mirando p_vacio_will
+archimago desaparece
+
+# Tramo 1: Entrada hacia el altar vacío
+plano general will estela liam lado=sur
+fundido entra 1.1
+will anda a p_will_centro ritmo=normal llega_mirando=p_altar_mirar
+& estela anda a p_estela_centro ritmo=normal llega_mirando=p_altar_mirar
+& liam anda a p_liam_centro ritmo=normal llega_mirando=p_altar_mirar
+espera 0.35
+
+# Liam da dos pasos hacia el altar
+plano conjunto will estela liam lado=sur
+liam anda a p_liam_paso ritmo=paseo llega_mirando=p_altar_mirar
+espera 0.45
+
+# Se rasga el aire frente al altar y surge el Mago Oscuro
+plano fijo desde=cam_rasgar_aire mira=mira_rasgar_aire altura=0 altura_foco=0 lente=32 suave=0.5
+efecto ModuleBeat routine=RasgarAireMago
+espera 3.35
+
+# El Mago ya está presente en el altar
+mago aparece en p_mago_paso mirando will
+
+# Reacción del grupo
+plano medio liam lado=sur suave=0.4
+liam cara sorpresa
+liam anda a p_liam_centro ritmo=trote llega_mirando=mago
+plano medio estela lado=sur suave=0.4
+estela cara sorpresa
+estela dice BF_INTRO_ESTELA_01 gesto=Question01
+
+# Tramo 2: Confrontación con el Mago Oscuro
+plano medio mago contrapicado desde=cam_mago_amenaza lente=38 suave=0.8
+mago cara enfadado
+mago dice BF_INTRO_MAGO_01 gesto=Talk01
+
+plano medio will sobre=mago suave=0.6
+will cara triste
+will dice BF_INTRO_WILL_01 gesto=Talk01
+
+# Risa del Mago Oscuro
+plano primer mago desde=cam_mago_risa lente=32 suave=0.4
+mago cara picaro
+mago dice BF_INTRO_MAGO_02 gesto=Talk03
+mago gesto Laugh01
+espera 1.05
+
+plano medio liam sobre=mago
+liam cara enfadado
+liam dice BF_INTRO_LIAM_01 gesto=Angry01
+
+plano primer mago desde=cam_mago_holandes lente=36
+mago cara enfadado
+mago dice BF_INTRO_MAGO_03 gesto=Talk02
+mago dice BF_INTRO_MAGO_04 gesto=Angry01
+
+# Tramo 3: Despertar de la luz pura en el pecho de Will (antes del Vacío Tibio)
+plano medio will sobre=mago suave=0.4
+will cara sorpresa
+efecto ModuleBeat routine=PulsoPechoWill
+will gesto IdleWounded01
+espera 0.45
+
+plano fijo desde=cam_pecho_will mira=mira_pecho_will altura=0 altura_foco=0 lente=28 suave=0.3
+espera 1.85
+
+plano medio estela sobre=will
+estela cara sorpresa
+estela gesto Defend_NoWeapon
+espera 0.40
+
+# La luz pura se expande envolviendo la escena entera
+plano general will estela liam desde=cam_deslumbramiento lente=44
+efecto ModuleBeat routine=ExpandirLuzPecho
+mago cara miedo
+mago gesto Fear01
+& estela cara miedo
+& estela gesto Defend_NoWeapon
+& liam cara miedo
+& liam gesto Defend_NoWeapon
+espera 1.35
+
+# Tramo 4: Vacío Tibio (encuentro etéreo con el Archimago)
+efecto ModuleBeat routine=EntrarVacioTibio
+will en p_vacio_will mirando archimago
+will reposo
+will cara sorpresa
+archimago aparece en p_vacio_archimago mirando will
+archimago mira will
+archimago cara neutral
+
+plano conjunto will archimago lado=sur lente=42 suave=1.0
+fundido entra 0.85 color=FAF5EB
+espera 0.45
+
+plano medio will lado=sur suave=0.5
+will dice BF_VISION_WHERE_AM_I gesto=Question01
+
+plano medio archimago lado=sur suave=0.5
+archimago dice BF_VISION_WITH_ME gesto=Talk01
+
+plano primer will suave=0.4
+will cara triste
+will dice BF_VISION_HE_KNOWS gesto=HeadShake01
+
+plano medio archimago suave=0.4
+archimago cara neutral
+archimago dice BF_VISION_BRIDGE_STORY gesto=Talk02
+
+plano primer will suave=0.4
+will cara sorpresa
+will dice BF_VISION_AM_I_YOU gesto=Question01
+
+plano medio archimago suave=0.4
+archimago cara alegre
+archimago dice BF_VISION_TWO_SOULS gesto=Talk01
+
+plano primer will suave=0.4
+will cara triste
+will dice BF_VISION_FEAR gesto=HeadShake01
+
+plano medio archimago suave=0.4
+archimago cara neutral
+archimago dice BF_VISION_ALONE_MISTAKE gesto=Talk02
+
+# Primer plano emotivo de Will comprendiendo que no está solo
+plano primer will suave=0.4
+will cara decidido
+will dice BF_VISION_NOT_ALONE sin_pose
+espera 0.25
+
+plano medio archimago lado=sur suave=0.4
+archimago cara alegre
+archimago dice BF_VISION_CREATE_SPELLS gesto=Talk01
+
+# Entrega del alma de luz pura
+plano conjunto archimago will lado=sur lente=42 suave=0.5
+archimago anda a p_vacio_arch_parada ritmo=paseo llega_mirando=will
+& will anda a p_vacio_will_parada ritmo=paseo llega_mirando=archimago
+espera 0.40
+efecto ModuleBeat routine=FusionArchimagoWill
+espera 1.45
+
+# Tramo 5: Regreso a la arena, reanimación y despertar en primera persona (POV)
+fundido cubre 0.65 color=FAF5EB
+archimago desaparece
+efecto ModuleBeat routine=SalirVacioTibio
+will en p_will_centro mirando mago
+will bucle Knockdown01_Ground congela
+estela en p_estela_reanimar mirando will
+liam en p_liam_reanimar mirando will
+mago en p_mago_paso mirando will
+
+efecto ModuleBeat routine=IniciarDespertarPov
+plano fijo desde=cam_pov_suelo mira=mira_pov_suelo altura=0 altura_foco=0 lente=42
+fundido entra 0.85 color=FAF5EB
+estela mira will
+liam mira will
+estela cara sorpresa
+estela gesto Talk01
+liam cara triste
+liam gesto Talk02
+espera 0.45
+
+estela dice BF_POV_ESTELA_IDIOT gesto=Talk01
+will dice BF_POV_WILL_HERE sin_pose
+espera 0.35
+
+# Transición a tercera persona: Estela y Liam dan espacio a Will y este se levanta
+efecto ModuleBeat routine=FinalizarDespertarPov
+estela anda a p_estela_centro ritmo=trote llega_mirando=will
+& liam anda a p_liam_centro ritmo=trote llega_mirando=will
+plano medio will sobre=mago suave=0.5
+will reposo
+will gesto GetUp_NoWeapon
+espera 1.30
+
+# Tramo 6: Confrontación final con los cinco elementos despiertos
+plano primer mago desde=cam_mago_amenaza lente=36
+mago cara sorpresa
+mago dice BF_MOMENT_MAGO_REMEMBER gesto=Talk03
+
+plano primer will sobre=mago suave=0.5
+will cara decidido
+will dice BF_MOMENT_WILL_EVERYTHING gesto=Talk01
+
+plano medio estela sobre=will
+estela mira will
+estela cara sorpresa
+estela dice BF_MOMENT_ESTELA_WHAT gesto=Question01
+
+plano medio will sobre=estela
+will mira estela
+will cara decidido
+will dice BF_MOMENT_WILL_EXPLAIN_LATER gesto=Talk02
+
+plano medio estela sobre=will
+estela mira will
+estela cara picaro
+estela dice BF_MOMENT_ESTELA_BETTER gesto=Talk01
+
+# Reacción cómica de Liam con franja anime y gota de sudor en 3D
+plano primer liam lado=sur suave=0.3
+efecto ModuleBeat routine=ReaccionAnimeLiam
+cutin liam encuadre=Cara lado=Derecha duracion=2.4
+espera 1.80
+cutin quita
+
+# Los tres héroes se encaran al Mago Oscuro
+will mira mago
+& estela mira mago
+& liam mira mago
+
+# Plano heroico final del trío al completo
+plano fijo desde=cam_heroe_trio mira=mira_heroe_trio altura=0 altura_foco=0 lente=32 suave=0.6
+will cara decidido
+will dice BF_MOMENT_WILL_NOT_ALONE gesto=Cheer01
+espera 1.20
+
+bandas retira
+espera 0.60
+efecto ModuleBeat routine=EmpezarCombate

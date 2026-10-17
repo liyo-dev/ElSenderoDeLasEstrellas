@@ -31,8 +31,38 @@ public static class BarraDeJefeBuilder
 
     private static readonly Color Crema = new Color32(0xFF, 0xF4, 0xDC, 0xFF);
 
+    [InitializeOnLoadMethod]
+    private static void AutoRegenerarSiEsNecesario()
+    {
+        EditorApplication.delayCall += () =>
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
+            if (prefab == null)
+            {
+                ConstruirYGuardar(silencioso: true);
+                return;
+            }
+            var ui = prefab.GetComponent<BarraDeJefeUI>();
+            if (ui == null || !ui.TieneMascaraConfigurada)
+            {
+                ConstruirYGuardar(silencioso: true);
+            }
+        };
+    }
+
     [MenuItem("El Sendero/UI/Crear o regenerar la barra de jefe (INC-645)")]
     public static void Montar()
+    {
+        ConstruirYGuardar(silencioso: false);
+    }
+
+    [MenuItem("El Sendero/UI/Regenerar barra de jefe (silencioso)")]
+    public static void MontarSilencioso()
+    {
+        ConstruirYGuardar(silencioso: true);
+    }
+
+    public static void ConstruirYGuardar(bool silencioso)
     {
         var log = new StringBuilder("=== Barra de jefe (INC-645) ===\n");
         var avisos = new List<string>();
@@ -58,13 +88,30 @@ public static class BarraDeJefeBuilder
             foreach (var a in avisos) log.AppendLine("  • " + a);
             Debug.LogWarning(log.ToString());
         }
-        EditorUtility.DisplayDialog("Barra de jefe", avisos.Count == 0
-            ? "Listo. Entra en una pelea de jefe para verla."
-            : "Hecho con avisos; mira la consola.", "OK");
+        if (!silencioso)
+        {
+            EditorUtility.DisplayDialog("Barra de jefe", avisos.Count == 0
+                ? "Listo. Entra en una pelea de jefe para verla."
+                : "Hecho con avisos; mira la consola.", "OK");
+        }
+    }
+
+    private static void AsegurarBordesDeSprite(string ruta, Vector4 bordes)
+    {
+        var importer = AssetImporter.GetAtPath(ruta) as TextureImporter;
+        if (importer == null) return;
+        if (importer.spriteBorder != bordes)
+        {
+            importer.spriteBorder = bordes;
+            EditorUtility.SetDirty(importer);
+            importer.SaveAndReimport();
+        }
     }
 
     private static GameObject Construir(TMP_FontAsset gruesa, TMP_FontAsset normal, List<string> avisos)
     {
+        AsegurarBordesDeSprite(RellenoPath, new Vector4(40f, 0f, 40f, 0f));
+
         var raiz = new GameObject("BarraDeJefe", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler));
         var canvas = raiz.GetComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -106,15 +153,40 @@ public static class BarraDeJefeBuilder
         rtFondo.pivot = new Vector2(0.5f, 0f);
         rtFondo.sizeDelta = new Vector2(0f, AltoBarra);
         rtFondo.anchoredPosition = Vector2.zero;
+        fondo.gameObject.AddComponent<BordesProporcionales>();
 
-        var relleno = Imagen("Relleno", fondo.transform, Cargar(RellenoPath, avisos), Color.white);
-        Estirar(relleno.rectTransform, MargenRelleno);
-        relleno.type = Image.Type.Filled;
-        relleno.fillMethod = Image.FillMethod.Horizontal;
-        relleno.fillOrigin = (int)Image.OriginHorizontal.Left;
-        relleno.fillAmount = 1f;
+        // Área interior donde vive el relleno (inset MargenRelleno).
+        float anchoRelleno = AnchoBarra - 2f * MargenRelleno;
+        float altoRelleno = AltoBarra - 2f * MargenRelleno;
 
-        // Las marcas de fase comparten el rectángulo del relleno para caer en su porcentaje exacto.
+        var areaRellenoGo = new GameObject("AreaRelleno", typeof(RectTransform));
+        var rtArea = (RectTransform)areaRellenoGo.transform;
+        rtArea.SetParent(fondo.transform, false);
+        Estirar(rtArea, MargenRelleno);
+
+        // Máscara rectangular que recorta el relleno según la vida sin deformar sus extremos.
+        var mascaraGo = new GameObject("MascaraRelleno", typeof(RectTransform), typeof(RectMask2D));
+        var rtMascara = (RectTransform)mascaraGo.transform;
+        rtMascara.SetParent(rtArea, false);
+        rtMascara.anchorMin = new Vector2(0f, 0f);
+        rtMascara.anchorMax = new Vector2(1f, 1f);
+        rtMascara.pivot = new Vector2(0f, 0.5f);
+        rtMascara.offsetMin = Vector2.zero;
+        rtMascara.offsetMax = Vector2.zero;
+
+        // Relleno: pastilla Sliced con BordesProporcionales, fija al ancho completo del área.
+        var relleno = Imagen("Relleno", rtMascara, Cargar(RellenoPath, avisos), Color.white);
+        relleno.type = Image.Type.Sliced;
+        relleno.pixelsPerUnitMultiplier = AltoSprite / altoRelleno;
+        var rtRelleno = relleno.rectTransform;
+        rtRelleno.anchorMin = new Vector2(0f, 0f);
+        rtRelleno.anchorMax = new Vector2(0f, 1f);
+        rtRelleno.pivot = new Vector2(0f, 0.5f);
+        rtRelleno.anchoredPosition = Vector2.zero;
+        rtRelleno.sizeDelta = new Vector2(anchoRelleno, 0f);
+        relleno.gameObject.AddComponent<BordesProporcionales>();
+
+        // Las marcas de fase comparten el rectángulo del área para caer en su porcentaje exacto.
         var capaGo = new GameObject("Marcas", typeof(RectTransform));
         var capa = (RectTransform)capaGo.transform;
         capa.SetParent(fondo.transform, false);
@@ -135,6 +207,7 @@ public static class BarraDeJefeBuilder
         var so = new SerializedObject(ui);
         so.FindProperty("grupo").objectReferenceValue = grupo;
         so.FindProperty("contenedor").objectReferenceValue = contenedor;
+        so.FindProperty("mascaraRelleno").objectReferenceValue = rtMascara;
         so.FindProperty("relleno").objectReferenceValue = relleno;
         so.FindProperty("nombre").objectReferenceValue = nombre;
         so.FindProperty("vida").objectReferenceValue = vida;

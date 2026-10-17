@@ -111,7 +111,11 @@ public class GameOverManager : MonoBehaviour
                     DontDestroyOnLoad(existing.gameObject);
             }
         }
-        catch (System.Exception ex)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GameOverManager] EnsurePersistentIfPlacedInStartScene failed: {ex}");
@@ -527,7 +531,11 @@ public class GameOverManager : MonoBehaviour
                 ServiceLocator.Register(transitionManager);
             }
         }
-        catch (System.Exception ex)
+        catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[GameOverManager] TransitionManager.Instance() falló: {ex.Message}");

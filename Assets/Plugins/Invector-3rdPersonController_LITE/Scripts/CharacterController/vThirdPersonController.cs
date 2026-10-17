@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 namespace Invector.vCharacterController
@@ -286,6 +286,18 @@ namespace Invector.vCharacterController
             if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
             animator.SetLayerWeight(upperLayerIndex, 1f);
             animator.CrossFadeInFixedTime(fullPath, crossfade, upperLayerIndex);
+        }
+
+        /// <summary>
+        /// Cancela la bajada pendiente de la capa superior (la de un gesto anterior) y la deja a peso 1,
+        /// sin cambiar de estado: otro sistema sostiene la pose de los brazos. Se sale con
+        /// <see cref="ReleaseUpperBodyPose"/>.
+        /// </summary>
+        public void SostenerCapaSuperior()
+        {
+            if (animator == null) return;
+            if (upperBodyCo != null) { StopCoroutine(upperBodyCo); upperBodyCo = null; }
+            animator.SetLayerWeight(upperLayerIndex, 1f);
         }
 
         /// <summary>

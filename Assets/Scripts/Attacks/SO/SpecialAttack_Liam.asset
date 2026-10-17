@@ -21,12 +21,16 @@ MonoBehaviour:
   companionMaxDistance: 10
   companionAnimationTrigger: MagicSpecial
   playerAnimationTrigger: MagicSpecial
-  gestureSeconds: 0.6
-  vfxPrefab: {fileID: 4262623056482241364, guid: b7001a552767ee943852979358986930, type: 3}
+  gestureSeconds: 0.7
+  vfxPrefab: {fileID: 3554967480066199438, guid: 1fcd3dfc3f0e4804b9fd842f2c4fc9d2, type: 3}
+  elevacionDelVfx: 0.15
   castSFXKey: SpecialAttack_Liam
-  vfxLifetime: 3
-  damageDelay: 0.4
-  damage: 80
-  aoeRadius: 4
-  knockbackForce: 18
+  vfxLifetime: 3.8
+  damageDelay: 0.8
+  volteretaDelActivo: 1
+  alturaDeLaVoltereta: 1.4
+  avanceDeLaVoltereta: 4.5
+  damage: 130
+  aoeRadius: 10
+  knockbackForce: 25
   shakeCameraOnCast: 1

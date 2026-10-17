@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
@@ -1009,29 +1009,38 @@ namespace Game.NPC
         public void StartCinematicSequence(States.CinematicSequence sequence)
         {
             if (sequence == null) return;
+            if (_brain == null)
+            {
+                if (_context == null)
+                {
+                    _agent = GetComponent<NavMeshAgent>();
+                    _animator = GetComponent<NPCSimpleAnimator>();
+                    _unityAnimator = GetComponent<Animator>();
+                    _rigidbody = GetComponent<Rigidbody>();
+                    _context = new NPCStateContext(null, transform, _agent, _animator, _unityAnimator, _rigidbody)
+                    {
+                        Config = configuration,
+                        DebugMode = debugMode,
+                        RelationshipId = ResolveRelationshipId()
+                    };
+                }
+                _brain = new NPCBrain(_context);
+                _context.Brain = _brain;
+            }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            // FIX 15 sep 2026 (Raúl: "ahora se pone a andar en mitad de la conversación del
-            // tutorial de menús", OliverSaludoSequencer) -- ForceState() de más abajo NO
-            // comprueba si ya hay una CinematicState activa: si dos sistemas distintos llaman a
-            // StartCinematicSequence() sobre el mismo NPC (p.ej. un sequencer nuevo tipo
-            // OliverSaludoSequencer Y el legacy NPCInteractiveNarrativeExecutor.MoveToPosition
-            // ambos a la vez), el segundo pisa silenciosamente al primero -- la CinematicState
-            // vieja recibe OnExit() (AllowManualMovement=false) sin que el código dueño de la
-            // primera secuencia se entere, y el NPC puede echarse a andar a mitad de lo que ese
-            // primer sistema creía que seguía bajo su control. Este aviso deja constancia en
-            // consola de cualquier caso así, con el nombre del NPC y el tipo de las dos
-            // secuencias en conflicto, para poder localizar quién está pisando a quién sin tener
-            // que adivinar por lectura de código.
-            if (_brain.CurrentState is States.CinematicState)
+            if (_brain != null && _brain.CurrentState is States.CinematicState)
             {
                 Debug.LogWarning($"[NPCBehaviourManagerV2:{name}] StartCinematicSequence({sequence.GetType().Name}) " +
                     "llamado mientras YA había una CinematicState activa -- la secuencia anterior va a ser " +
                     "desalojada sin avisar a quien la lanzo (ForceState no comprueba solapes).");
             }
 #endif
-            var state = new States.CinematicState();
-            state.StartSequence(sequence);
-            _brain.ForceState(state);
+            if (_brain != null)
+            {
+                var state = new States.CinematicState();
+                state.StartSequence(sequence);
+                _brain.ForceState(state);
+            }
         }
 
         private System.Collections.IEnumerator WaitForSequence(States.CinematicSequence seq, Action callback)

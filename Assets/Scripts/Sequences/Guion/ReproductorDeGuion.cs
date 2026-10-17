@@ -25,7 +25,9 @@ public sealed class ReproductorDeGuion
     private bool _terminado;
     private float _t;
     private LineaHorneada _lineaEnCurso;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private float _tFoto = float.MaxValue;
+#endif
     private int _nPlano;
     private float _tRevision;
     private readonly HashSet<string> _desviados = new();
@@ -121,6 +123,7 @@ public sealed class ReproductorDeGuion
         if (_terminado) return;
         _terminado = true;
         CerrarLinea();
+        SpeechBubbleUI.Instance?.Hide();
         Sendero.Core.Feedback.FeedbackService.SetCameraShakeProvider(null);
         _camaras?.Terminar();
         _ctx.Stage?.QuitarMarcasTemporales();
@@ -277,6 +280,7 @@ public sealed class ReproductorDeGuion
         if (_porId.TryGetValue(_lineaEnCurso.actor, out var quien) && quien.Actor != null)
             _ctx.MarcarHabla(quien.Actor, false);
         _lineaEnCurso = null;
+        SpeechBubbleUI.Instance?.Hide();
     }
 
     // ── Un personaje ────────────────────────────────────────────────────────────────────────
@@ -316,6 +320,7 @@ public sealed class ReproductorDeGuion
             var npc = Actor.NpcAnimator;
             if (npc != null)
             {
+                if (!npc.enabled) npc.enabled = true;
                 _manualMovimiento = npc.AllowManualMovement;
                 _manualGiro = npc.AllowManualRotation;
                 npc.AllowManualMovement = true;
@@ -323,6 +328,8 @@ public sealed class ReproductorDeGuion
                 npc.DisableAutoRotation();
                 npc.ResetMovement();
             }
+            var player = Actor.PlayerAnimator;
+            if (player != null && !player.enabled) player.enabled = true;
             Actor.ReleasePose(true);
 
             if (Datos.posiciones.Count > 0)
@@ -340,7 +347,21 @@ public sealed class ReproductorDeGuion
         {
             if (Actor?.Transform == null) return;
             if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
-            AplicarVisible(true);
+            if (Datos.visible != null && Datos.visible.Count > 0)
+                AplicarVisible(_visible);
+            else
+                AplicarVisible(true);
+            Actor.ResetMovement();
+            if (Actor.IsPlayer)
+            {
+                var motor = Actor.Motor;
+                if (motor != null)
+                {
+                    motor.overrideInputMagnitude = -1f;
+                    if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
+                        tpAnim.UpdateAnimator();
+                }
+            }
             var npc = Actor.NpcAnimator;
             if (npc != null)
             {
@@ -408,13 +429,18 @@ public sealed class ReproductorDeGuion
             bool moviendo = rapidez > 0.08f && !desliza;
             var npc = Actor.NpcAnimator;
             // Al echar a andar se corta el gesto que hubiera: si no, se desliza con él puesto (INC-602).
-            if (moviendo && !_moviendo && npc != null && npc.IsPlayingAnimation())
-                npc.CortarGestoParaAndar();
-            if (npc != null) npc.SetMovementSpeed(moviendo ? NavMeshAgentUtility.FactorDeLocomocion(rapidez) : 0f);
+            if (moviendo && !_moviendo)
+            {
+                if (npc != null && npc.IsPlayingAnimation())
+                    npc.CortarGestoParaAndar();
+                Actor.ReleasePose(true);
+                Actor.PlayerAnimator?.ReturnToLocomotion(0.15f);
+            }
+            Actor.SetMovementSpeed(moviendo ? NavMeshAgentUtility.FactorDeLocomocion(rapidez) : 0f);
             if (moviendo != _moviendo)
             {
                 _moviendo = moviendo;
-                if (!moviendo && npc != null) npc.ResetMovement();
+                if (!moviendo) Actor.ResetMovement();
             }
 
             // Giro: andando mira a donde va; quieto, a lo que diga su mirada.

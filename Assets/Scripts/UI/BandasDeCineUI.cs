@@ -6,7 +6,7 @@ public sealed class BandasDeCineUI : MonoBehaviour
 {
     public static BandasDeCineUI Instance { get; private set; }
     public float AlturaVisible { get; private set; }
-    public bool Visibles => AlturaVisible > 0f;
+    public bool Visibles => AlturaVisible > 0f || _destino > 0f;
     public float AlturaObjetivo => _destino;
     public bool Animando => _animando;
     RectTransform _superior, _inferior;
@@ -52,7 +52,7 @@ public sealed class BandasDeCineUI : MonoBehaviour
         return rect;
     }
 
-    public void Mostrar(bool mostrar, float altura = 0.12f, float duracion = 0.5f)
+    public void Mostrar(bool mostrar, float altura = 0.13f, float duracion = 0.5f)
     {
         _origen = AlturaVisible;
         _destino = mostrar ? Mathf.Clamp(altura, 0f, 0.45f) : 0f;

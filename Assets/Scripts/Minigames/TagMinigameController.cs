@@ -2331,7 +2331,11 @@ public class TagMinigameController : MonoBehaviour
 #endif
                 }
             }
-            catch (System.Exception e)
+            catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                e
+#endif
+            )
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[TagMinigame] ⚠️ Error al reproducir animación: {e.Message}");

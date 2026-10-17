@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -519,6 +519,7 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             if (limpio) return;
             limpio = true;
             actor.DestinoReservado = null;
+            actor.ResetMovement();
             anim?.ResetMovement();
             if (anim != null)
             {
@@ -602,6 +603,7 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             if (limpio) return;
             limpio = true;
             actor.DestinoReservado = null;
+            actor.ResetMovement();
             anim?.ResetMovement();
             if (anim != null)
             {
@@ -722,6 +724,7 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             siguiente.y += alturaExtra;
             if (pegarAlSuelo && esquivar && SequenceMovement.Obstaculo(actor, pos, siguiente, out _))
             {
+                actor.ResetMovement();
                 anim?.ResetMovement();
                 yield break;
             }
@@ -731,7 +734,7 @@ public class WalkPathBeat : SequenceBeat, INarrativeStateEffect
             // locomoción, SetMovementSpeed vuelve a llamar a TransitionToLocomotion en cuanto el
             // gesto de vuelo termina su ciclo — y lo que se ve es un mago cruzando el cielo a
             // pasitos, que es literalmente lo que salió en la novena grabación.
-            if (animarAndando) anim?.SetMovementSpeed(Mathf.Clamp01(
+            if (animarAndando) actor.SetMovementSpeed(Mathf.Clamp01(
                 Vector3.Distance(pos, siguiente) / Mathf.Max(Time.deltaTime, 0.0001f) / VelocidadMaximaPorDefecto));
 
             // Girar hacia donde se anda: escribe la rotación (ver SequenceMovement.GirarHaciaAvance).

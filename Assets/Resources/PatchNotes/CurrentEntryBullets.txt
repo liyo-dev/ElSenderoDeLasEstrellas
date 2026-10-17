@@ -1,1 +1,5 @@
-(Pendiente: añade aquí los cambios de esta build antes de compilar.)
+- Corregida la lluvia de sombras del demonio: caída escalonada y retirada de efectos al terminar.
+- Los edificios conservan su aspecto durante las secuencias, sin el efecto de transparencia de la cámara jugable.
+- Mejorados los retratos del grupo: orientación, persistencia y altura de la cara en el HUD.
+- Ampliado el alcance de conversación con personajes detrás de mostradores.
+- Ajustado el seguimiento de guías para frenar al acercarse y evitar adelantarlos, también al saltar.

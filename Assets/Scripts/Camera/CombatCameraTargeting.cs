@@ -20,6 +20,14 @@ public class CombatCameraTargeting : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = false;
     
+    public static CombatCameraTargeting Instance { get; private set; }
+    public GameObject CurrentTarget => currentTarget;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics() { Instance = null; }
+#endif
+
     private GameObject currentTarget;
     private bool isLockActive;
     private bool wasInCombatLastFrame;
@@ -35,6 +43,8 @@ public class CombatCameraTargeting : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         if (thirdPersonCamera == null)
             thirdPersonCamera = GetComponent<vThirdPersonCamera>();
         
@@ -44,6 +54,11 @@ public class CombatCameraTargeting : MonoBehaviour
         
         if (playerTargeting == null && playerTransform != null)
             playerTargeting = playerTransform.GetComponentInChildren<PlayerTargeting>();
+    }
+
+    private void OnDestroy()
+    {
+        if (Instance == this) Instance = null;
     }
     
     private void OnEnable()
@@ -79,13 +94,23 @@ public class CombatCameraTargeting : MonoBehaviour
         playerTargeting = playerTransform != null ? playerTransform.GetComponentInChildren<PlayerTargeting>() : null;
     }
 
+    private bool DebeSuprimirMarcador()
+    {
+        if (ActiveCombatRegistry.Count > 0) return false;
+        if (_isInDialogue) return true;
+        if (CinematicSequencerBase.AnySequenceActive) return true;
+        if (CameraDirectorService.HasOwner || vThirdPersonCamera.lockCameraForCinematic) return true;
+        if (playerTargeting != null && playerTargeting.DebeOcultarMarcador()) return true;
+        return false;
+    }
+
     private void OnDialogueStarted(Transform _) => _isInDialogue = true;
 
     private void OnDialogueClosed(Transform _)
     {
         _isInDialogue = false;
         // Forzar resync inmediato del marker al cerrar el diálogo
-        if (isLockActive && currentTarget != null)
+        if (isLockActive && currentTarget != null && !DebeSuprimirMarcador())
         {
             _lastVisualResync = 0f;
             if (syncWithProjectileTargeting && playerTargeting != null)
@@ -116,13 +141,13 @@ public class CombatCameraTargeting : MonoBehaviour
         
         wasInCombatLastFrame = isInCombat;
         
-        if (isInCombat && !isLockActive && !_suppressedByLevitation && !_targetingSuppressedByPlayer) TryAutoLock();
+        if (isInCombat && !isLockActive && !_suppressedByLevitation && !_targetingSuppressedByPlayer && !DebeSuprimirMarcador()) TryAutoLock();
         if (isLockActive) EnsureVisualLockSync();
     }
     
     private void TryAutoLock()
     {
-        if (_targetingSuppressedByPlayer) return;
+        if (_targetingSuppressedByPlayer || DebeSuprimirMarcador()) return;
         if (Time.time - _lastAutoLockAttempt < 0.5f) return;
         _lastAutoLockAttempt = Time.time;
         
@@ -228,6 +253,8 @@ public class CombatCameraTargeting : MonoBehaviour
     
     private void OnNPCEnteredCombat(GameObject npc)
     {
+        if (DebeSuprimirMarcador()) return;
+
         // Petición de Raúl (1 sep 2026): enemigos menores (arañas) no deben enganchar la cámara
         // solos al entrar en combate — ver ActiveCombatRegistry.IsCameraLockExempt. Siguen
         // registrados en ActiveCombatRegistry (Battle Mode, ciclo manual L1/R1), y el marcador de
@@ -275,7 +302,7 @@ public class CombatCameraTargeting : MonoBehaviour
             playerTargeting.SetAutoScanSuppressed(true);
         }
 
-        if (syncWithProjectileTargeting && playerTargeting != null && !_isInDialogue)
+        if (syncWithProjectileTargeting && playerTargeting != null && !DebeSuprimirMarcador())
         {
             playerTargeting.SetManualTarget(newTarget.transform);
             playerTargeting.ForceVisualRefresh();
@@ -375,8 +402,8 @@ public class CombatCameraTargeting : MonoBehaviour
             Log($"🔁 Resync cámara -> {currentTarget.name}");
         }
 
-        // No sincronizar el marcador durante diálogos para evitar que aparezca
-        if (_isInDialogue) return;
+        // No sincronizar el marcador durante diálogos ni cinemáticas para evitar que aparezca
+        if (DebeSuprimirMarcador()) return;
 
         if (syncWithProjectileTargeting && playerTargeting != null)
         {

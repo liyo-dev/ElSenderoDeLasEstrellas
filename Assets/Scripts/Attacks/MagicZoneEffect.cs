@@ -109,10 +109,15 @@ public class MagicZoneEffect : MonoBehaviour
             // Piezas del mundo (cristales, lo que arde…): antes del filtro de capas de daño.
             ReaccionesAMagia.NotificarUnaVez(col, new ImpactoDeMagia(_cfg.element, col.bounds.ClosestPoint(transform.position), _instigator, false), _piezasAvisadas);
 
-            // Mismo filtro que la rama AOE de MagicProjectile: solo se aplica si hitLayers está
-            // explícitamente configurado (!= 0); si se deja vacío no se filtra por capa.
-            if (_cfg.hitLayers.value != 0 && ((1 << col.gameObject.layer) & _cfg.hitLayers.value) == 0)
-                continue;
+            // FIX M8 + INC-640: Si coincide con hitLayers o tiene Damageable legítimo y no es aliado
+            bool capaValida = _cfg.hitLayers.value == 0 || ((1 << col.gameObject.layer) & _cfg.hitLayers.value) != 0;
+            if (!capaValida)
+            {
+                int playerLayer = LayerMask.NameToLayer("Player");
+                if (playerLayer != -1 && col.gameObject.layer == playerLayer) continue;
+                if (ControlDelJugador.PersonajeDe(col.gameObject, out _)) continue;
+                if (col.GetComponentInParent<CuerpoDelGrupo>() != null) continue;
+            }
 
             var d = col.GetComponent<Damageable>() ?? col.GetComponentInParent<Damageable>();
             if (d == null) continue;

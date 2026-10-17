@@ -1,4 +1,4 @@
----
+﻿---
 title: Guion de diálogos para doblaje con ElevenLabs (ES) — El Sendero de las Estrellas
 date: 2026-08-30
 ---
@@ -39,17 +39,20 @@ La mayoría de líneas tienen el hablante claro por el nombre de la clave (`DLG_
 
 # Ficha de casting de voces
 
-Perfiles de personalidad para elegir voz de IA (edad, tono, energía). Basado en `identificacion-personajes-principales.md` y en cómo habla cada uno en el propio guion.
+Perfiles de personalidad y voces oficiales aprobadas en ElevenLabs (diseñadas con estilo *seiyuu* de anime en castellano de España, octubre de 2026):
 
-- **Will** — protagonista, chico joven. Voz cálida, algo insegura al principio (no recuerda su pasado), se vuelve más firme y resuelta hacia el final. Tartamudea cuando está nervioso.
-- **Estela** — maga joven, caótica y bocazas, obsesionada con la comida, explosiva (literal y emocionalmente). Voz enérgica, rápida, con mucho colorido cómico; también tiene un lado protector/valiente bajo la fachada.
-- **Liam** — el más calculador y reservado del trío; parece el "sensato" pero en realidad lo mueve una agenda oculta (controla al Golem, orquesta parte de los ataques). Voz serena, algo seca, con un fondo más oscuro/melancólico que se revela al final (es el hermano de alguien importante en la trama final).
-- **Eldran** — mentor y tutor de Will, cariñoso pero un poco despistado/torpe en las situaciones de acción (corre gritando, se pierde el hilo). Voz de adulto mayor, cálida y protectora, con momentos cómicos de pánico.
-- **Mago Oscuro** — el villano final, la reencarnación que busca volver a la vida. Voz grave, imponente (`[booming]`), con un monólogo largo y revelador — el punto más "cinemático" de todo el guion.
-- **La Voz / el mago bueno de la visión** — entidad mística que guía a Will en la visión final (nota: en un documento de trabajo reciente se la describe como "el mago bueno del prólogo"; confirmar con Raúl si tiene nombre propio antes de grabar). Voz etérea, calmada, casi susurrada.
-- **Rey** — autoritario pero fácilmente asustable cuando aparece una amenaza real. Voz adulta, grandilocuente al principio, nerviosa después.
-- **Erika (Guerrera China)** — entrenadora marcial, voz firme y directa, sin adornos.
-- Resto de NPCs — voces de reparto, un párrafo de tono por personaje está indicado la primera vez que aparecen abajo.
+- **Will** (Will - Anime España 1.2 — JwXx2SOucScqglxgpL6T) — Protagonista, chico joven de 18 años. Estilo shōnen clásico (Edward Elric / Tanjiro / Sora): timbre tenor heroico, cálido y carismático en momentos cotidianos, y con garra rotunda al gritar en combate.
+- **Estela** (Estela - Lina candidata 1 — 9MKgqtaIyv28bwBeybox) — Maga prodigio de 18 años. Estilo Lina Inverse (*Slayers*, Megumi Hayashibara): brillante, explosiva, descarada, cómica y rápida, pasando de la altanería al enfado histriónico en un instante.
+- **Liam** (Liam - Anime candidata 1 — hwazPFcispEO8ANIs7LE) — Rival/compañero del trío, 18-20 años. Estilo anime frío y calculador (Sasuke / Kurapika): sereno, seco, irónico, con voz aterciopelada y trasfondo melancólico por salvar a su hermano Tobías.
+- **Eldran** (Eldran - Anime candidata 2 — RL0oxYTUxBdVxuByUCtW) — Mentor y tutor de Will, ~60 años. Estilo sabio anime veterano (Jiraiya / Silvers Rayleigh): voz rasgada y entrañable en sus despistes cotidianos, e imponente y fiera al mandar órdenes en combate.
+- **Mago Oscuro** (Mago Oscuro - Anime candidata 3 — uE9bcSSRFJvj5BdWjLpf) — Villano ancestral. Estilo archienemigo teatral (Aizen / Dio Brando / Jafar): voz grave, sedosa, pausada, condescendiente y aterradoramente fría.
+- **Archimago** (Archimago - Anime candidata 2 — JOlPriKZ6hldygMIxHSm) — Noble héroe del prólogo y antepasado de Will, 35-45 años. Estilo noble protector (Minato Namikaze / Hohenheim): voz cálida y paternal en calma, con desgarro heroico y devoción en el cántico del sacrificio.
+- **Oliver** (Oliver - Anime candidata 1 — GyyGyS0WACM14Hkzduei) — Mejor amigo de Will, 18 años. Estilo compañero cómico anime (Usopp / Zenitsu): hablador rápido, alegre, nervioso y jadeante tras correr, con gran expresividad y lealtad.
+- **Victoria** (Victoria - Anime candidata 3 — YdH8EmiKzVcrI4UltjiQ) — Vecina de 30-40 años. Estilo mujer despierta y práctica: irónica, risueña y con retranca constante en sus piques con Eldran.
+- **Nina** (Nina - Anime candidata 2 — U6p8vPqRYiiCAw7v94oR) — Niña del globo del campanario. Registro dulce, agudo, adorable y tierno estilo Ghibli.
+- **Liora** (Sara Martin - Gentle and Layered — KHCvMklQZZo0O30ERnVn) — Pareja del Archimago. Voz femenina madura, suave, cariñosa y protectora (conservada por Raúl).
+- **Tomasa** (Tomasa - Anime candidata 1 — 7F6LSLBol0zaPBiXCvwe) — Tallista del mercado (55-65 años, entrañable, humilde y risueña).
+- **Resto de NPCs** — Voces de reparto peninsulares de resguardo (Julio para hombres maduros, Cristina para mujeres).
 
 ---
 

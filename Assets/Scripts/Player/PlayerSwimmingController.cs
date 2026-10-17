@@ -89,7 +89,9 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     [SerializeField] private string sfxEntrada = "Agua_Entrada";
     [SerializeField] private string sfxSalirAFlote = "Agua_SalirAFlote";
 
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     [SerializeField] private bool debugLogs = false;
+#endif
 
     private readonly List<Collider> _waterVolumes = new();
     private readonly HashSet<Collider> _waterSet = new();

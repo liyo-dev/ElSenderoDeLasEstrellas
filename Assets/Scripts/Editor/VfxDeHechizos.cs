@@ -42,6 +42,9 @@ public static class VfxDeHechizos
         public string LevitacionSoltar;
         public MagicElement? Elemento;
         public string Nombre;
+        public float? AlturaSalida;
+        public float? RadioImpacto;
+        public float? RadioColision;
     }
 
     /// Fuente de verdad de los efectos de cada hechizo (Huracan no está: no lo usa nadie).
@@ -49,29 +52,29 @@ public static class VfxDeHechizos
     {
         // Will
         new Ficha { Asset = "LlamaAstral",     Impacto = Fuego + "effects/fireBall/hitVFX.prefab" },
-        new Ficha { Asset = "BolaPrisma",      Visual = Propio(VfxPropiosDeHechizosBuilder.BolaPrisma), Impacto = Lana + "Flash/Flash_star_ellow_purple.prefab", Elemento = MagicElement.Light },
+        new Ficha { Asset = "BolaPrisma",      Visual = Propio(VfxPropiosDeHechizosBuilder.BolaPrismaClasica), Impacto = Lana + "Flash/Flash_star_ellow_purple.prefab", Elemento = MagicElement.Light },
         new Ficha { Asset = "CorazonEstelar",  Impacto = Propio(VfxPropiosDeHechizosBuilder.CorazonImpacto) },
-        new Ficha { Asset = "EstrellaFugaz" },
-        new Ficha { Asset = "LluviaDeChispas" },
+        new Ficha { Asset = "EstrellaFugaz", Visual = Propio(VfxPropiosDeHechizosBuilder.EstrellaFugazProyectil), AlturaSalida = 1.1f },
+        new Ficha { Asset = "LluviaDeChispas", Visual = Propio(VfxPropiosDeHechizosBuilder.TresEstrellasProyectil), Impacto = Propio(VfxPropiosDeHechizosBuilder.TresEstrellasImpacto), AlturaSalida = 1.1f, RadioImpacto = 1.4f, RadioColision = 0.6f },
         new Ficha { Asset = "Meteoro",         Visual = Propio(VfxPropiosDeHechizosBuilder.MeteoroZona) },
         new Ficha { Asset = "NovaDeLuz",       Visual = Best + "HolyEffect/HolyEffect2.prefab" },
         new Ficha { Asset = "CupulaEstelar" },
         new Ficha { Asset = "Levitation",      LevitacionMantener = Hovl + "Character auras/Buff.prefab", LevitacionSoltar = Lana + "Flash/Flash_ellow.prefab", Nombre = "Levitación" },
         // Estela
         new Ficha { Asset = "BolaFuego" },
-        new Ficha { Asset = "ChispaIgnea" },
+        new Ficha { Asset = "ChispaIgnea", Visual = Propio(VfxPropiosDeHechizosBuilder.ChispaFuego), AlturaSalida = 1.1f },
         new Ficha { Asset = "ChispaIgneaFuego" },
-        new Ficha { Asset = "Rafaga" },
+        new Ficha { Asset = "Rafaga", Visual = Propio(VfxPropiosDeHechizosBuilder.RafagaViento), AlturaSalida = 1.1f },
         new Ficha { Asset = "Tornado",         Impacto = Gabriel + "vfx_Smoke_01.prefab", Nombre = "Ciclón" },
         new Ficha { Asset = "Remolino" },
         new Ficha { Asset = "BrisaSanadora" },
         new Ficha { Asset = "MuroDeFuego",     Visual = Fuego + "prefabs/fireZoneVFX.prefab" },
         new Ficha { Asset = "TormentaDeFuego", Visual = Fuego + "prefabs/meteorFireRainVFX.prefab" },
         // Liam
-        new Ficha { Asset = "AuraEstelar",     Visual = Best + "Kunai/Kunai5.prefab", Impacto = Hovl + "Sparks/Sparks explode white.prefab" },
-        new Ficha { Asset = "DardoMental",     Visual = Propio(VfxPropiosDeHechizosBuilder.Dardo) },
-        new Ficha { Asset = "Eco",             Impacto = Free + "FX_Purple_Hit_02.prefab" },
-        new Ficha { Asset = "GarraDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.Garra), Impacto = Hovl + "Sparks/Sparks explode pink.prefab" },
+        new Ficha { Asset = "AuraEstelar",     Visual = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarProyectil), Impacto = Propio(VfxPropiosDeHechizosBuilder.AuraEstelarImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "DardoMental",     Visual = Propio(VfxPropiosDeHechizosBuilder.Dardo),                 Impacto = Propio(VfxPropiosDeHechizosBuilder.DardoMentalImpacto), AlturaSalida = 1.1f },
+        new Ficha { Asset = "Eco",             Visual = Propio(VfxPropiosDeHechizosBuilder.EcoProyectil),         Impacto = Propio(VfxPropiosDeHechizosBuilder.EcoImpacto),         AlturaSalida = 1.1f },
+        new Ficha { Asset = "GarraDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.Garra),                Impacto = Propio(VfxPropiosDeHechizosBuilder.GarraImpacto),       AlturaSalida = 1.1f },
         new Ficha { Asset = "CadenasDelPacto", Visual = Propio(VfxPropiosDeHechizosBuilder.CadenasZona), Estado = Propio(VfxPropiosDeHechizosBuilder.CadenasEstado) },
         new Ficha { Asset = "SelloDelPacto",   Visual = Propio(VfxPropiosDeHechizosBuilder.SelloZona) },
         new Ficha { Asset = "JuicioDelPacto",  Visual = Propio(VfxPropiosDeHechizosBuilder.JuicioZona) },
@@ -82,6 +85,7 @@ public static class VfxDeHechizos
     };
 
     [MenuItem("El Sendero/Magia/VFX de los hechizos · aplicar (INC-640)")]
+    [MenuItem("El Sendero/Magia/Aplicar VFX Liam")]
     public static void AplicarMenu()
     {
         var log = new StringBuilder("=== VFX de los hechizos (INC-640) ===\n");
@@ -149,6 +153,18 @@ public static class VfxDeHechizos
             spell.displayName = f.Nombre;
             log.AppendLine($"   {spell.name}: nombre «{f.Nombre}».");
         }
+        if (f.AlturaSalida.HasValue && !Mathf.Approximately(spell.positionOffset.y, f.AlturaSalida.Value))
+        {
+            var offset = spell.positionOffset;
+            offset.y = f.AlturaSalida.Value;
+            spell.positionOffset = offset;
+            log.AppendLine($"   {spell.name}: altura de salida {offset.y:0.##} m.");
+        }
+        if (f.RadioImpacto.HasValue && !Mathf.Approximately(spell.aoeRadius, f.RadioImpacto.Value))
+        {
+            spell.aoeRadius = f.RadioImpacto.Value;
+            log.AppendLine($"   {spell.name}: radio de impacto {spell.aoeRadius:0.##} m.");
+        }
 
         var visual = f.Visual != null ? Load(f.Visual, warnings) : null;
         if (spell.kind == MagicKind.Zone)
@@ -163,6 +179,8 @@ public static class VfxDeHechizos
         {
             AsegurarProyectil(spell, visual, log, warnings);
         }
+        if (f.RadioColision.HasValue && spell.prefab != null)
+            AjustarRadioColision(spell.prefab, f.RadioColision.Value, spell.name, log, warnings);
 
         if (f.Impacto != null) Asignar(ref spell.impactVFX, Load(f.Impacto, warnings), spell.name, "impacto", log);
         else if (f.SinImpacto && spell.impactVFX != null) { spell.impactVFX = null; log.AppendLine($"   {spell.name}: sin impacto."); }
@@ -184,6 +202,26 @@ public static class VfxDeHechizos
     }
 
     private static bool EsProyectil(MagicSpellSO s) => s.kind == MagicKind.Projectile || s.kind == MagicKind.Special;
+
+    private static void AjustarRadioColision(GameObject prefab, float radio, string hechizo, StringBuilder log, List<string> warnings)
+    {
+        string path = AssetDatabase.GetAssetPath(prefab);
+        if (!path.StartsWith(EnvoltorioFolder)) { warnings.Add($"{hechizo}: no encuentro su envoltorio para ajustar el radio."); return; }
+        var root = PrefabUtility.LoadPrefabContents(path);
+        try
+        {
+            var collider = root.GetComponent<SphereCollider>();
+            if (collider == null) { warnings.Add($"{hechizo}: su envoltorio no tiene SphereCollider."); return; }
+            if (Mathf.Approximately(collider.radius, radio)) return;
+            collider.radius = radio;
+            PrefabUtility.SaveAsPrefabAsset(root, path);
+            log.AppendLine($"   {hechizo}: radio de colisión {radio:0.##} m.");
+        }
+        finally
+        {
+            PrefabUtility.UnloadPrefabContents(root);
+        }
+    }
 
     // ── Proyectiles: siempre con MagicProjectile en la raíz ──────────────
 

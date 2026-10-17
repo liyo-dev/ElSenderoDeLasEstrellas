@@ -22,14 +22,15 @@ MonoBehaviour:
   companionAnimationTrigger: MagicSpecial
   playerAnimationTrigger: MagicSpecial
   gestureSeconds: 0.6
-  vfxPrefab: {fileID: 8240083682830294036, guid: 3eebe64e41953e842b2d3509bf070d1b, type: 3}
+  vfxPrefab: {fileID: 4387095595598500983, guid: 23fb094561598c84f8e49f3995a5aa25, type: 3}
+  elevacionDelVfx: 0.15
   castSFXKey: SpecialAttack_Estela
-  vfxLifetime: 3
-  damageDelay: 0.4
+  vfxLifetime: 3.8
+  damageDelay: 0.8
   volteretaDelActivo: 1
   alturaDeLaVoltereta: 1.2
   avanceDeLaVoltereta: 3
-  damage: 80
-  aoeRadius: 4
-  knockbackForce: 18
+  damage: 120
+  aoeRadius: 10
+  knockbackForce: 22
   shakeCameraOnCast: 1

@@ -998,7 +998,11 @@ public class PlayerEquipmentMenuController : MonoBehaviour
                 ServiceLocator.Register(transitionManager);
             }
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[PlayerEquipmentMenuController] TransitionManager.Instance() falló: {ex.Message}");

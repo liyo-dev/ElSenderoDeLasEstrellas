@@ -1,4 +1,4 @@
-﻿using Invector;
+using Invector;
 using UnityEngine;
 
 public class vThirdPersonCamera : MonoBehaviour
@@ -196,7 +196,8 @@ public class vThirdPersonCamera : MonoBehaviour
         // CameraMovement() tenía que "recuperar" de golpe todo ese input acumulado — eso es lo
         // que se veía como cámara a trompicones justo tras cerrar el inventario, hasta que dejar
         // de mover la cámara le daba tiempo a converger.
-        if (!isActiveAndEnabled || lockCameraForCinematic || _lockTarget != null || zoneRotationLocked) return;
+        // En lock-on no bloqueamos el input del jugador: le permitimos ajustar suavemente la orientación
+        if (!isActiveAndEnabled || lockCameraForCinematic || zoneRotationLocked) return;
 
         mouseX += x * xMouseSensitivity;
         mouseY -= y * yMouseSensitivity;
@@ -225,10 +226,11 @@ public class vThirdPersonCamera : MonoBehaviour
             {
                 Quaternion targetRot = Quaternion.LookRotation(dirToTarget);
                 
-                // Asignar directamente los ángulos objetivo.
-                // La suavidad vendrá del Slerp final de targetLookAt.rotation.
-                mouseX = targetRot.eulerAngles.y;
-                mouseY = targetRot.eulerAngles.x;
+                // Seguimiento suave del objetivo para no dar latigazos si el enemigo se mueve o desliza rápido
+                float targetY = targetRot.eulerAngles.y;
+                float targetX = targetRot.eulerAngles.x;
+                mouseX = Mathf.LerpAngle(mouseX, targetY, Mathf.Min(1f, 4.5f * Time.deltaTime));
+                mouseY = Mathf.LerpAngle(mouseY, targetX, Mathf.Min(1f, 4.5f * Time.deltaTime));
             }
             
             // Asegurar que mouseY respete los límites incluso en lock-on

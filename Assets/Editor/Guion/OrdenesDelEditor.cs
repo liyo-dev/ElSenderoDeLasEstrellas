@@ -113,7 +113,9 @@ public static class OrdenesDelEditor
                 return GeminiDelBuzon.Empezar(resto, pregunta);
             }
             case "refrescar":
+                UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
                 AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
+                EditorUtility.RequestScriptReload();
                 return "refresco pedido";
             case "capturar":
             {

@@ -11,6 +11,9 @@ using Core.InputGlyphs;
 /// </summary>
 public class TutorialPromptUI : MonoBehaviour
 {
+    const string BackgroundResourcePath = "UI/TutorialPromptBackground";
+    const float BackgroundBorderPixels = 56f;
+
     public static TutorialPromptUI Instance { get; private set; }
 
 #if UNITY_EDITOR
@@ -77,6 +80,8 @@ public class TutorialPromptUI : MonoBehaviour
     HorizontalLayoutGroup _rowLayout;
     RectTransform _rowRect;
     int _originalRightPadding;
+    Image _backgroundImage;
+    Sprite _runtimeBackgroundSprite;
 
     /// <summary>Se dispara al hacer clic en la X. TutorialPromptNode se suscribe solo cuando el
     /// aviso activo usa dismissWithCancel — el resto de avisos no muestran la X (ver Show()).</summary>
@@ -100,6 +105,7 @@ public class TutorialPromptUI : MonoBehaviour
             _rowRect = (RectTransform)_rowLayout.transform;
         }
 
+        ApplyBackgroundStyle();
         BuildCloseButton();
     }
 
@@ -138,6 +144,9 @@ public class TutorialPromptUI : MonoBehaviour
 
     void OnDestroy()
     {
+        if (_runtimeBackgroundSprite != null)
+            Destroy(_runtimeBackgroundSprite);
+
         if (Instance == this)
         {
             Instance = null;
@@ -299,6 +308,63 @@ public class TutorialPromptUI : MonoBehaviour
     {
         if (_iconContainer != null) _iconContainer.SetActive(icon != null);
         if (_icon != null) _icon.sprite = icon;
+    }
+
+    void ApplyBackgroundStyle()
+    {
+        var promptRect = transform as RectTransform;
+        if (promptRect != null)
+            promptRect.sizeDelta = new Vector2(900f, 100f);
+
+        var background = transform.Find("Background");
+        _backgroundImage = background != null ? background.GetComponent<Image>() : null;
+        if (_backgroundImage == null) return;
+
+        if (_iconContainer != null)
+        {
+            var iconRect = _iconContainer.GetComponent<RectTransform>();
+            if (iconRect != null) iconRect.sizeDelta = new Vector2(52f, 52f);
+
+            var iconLayout = _iconContainer.GetComponent<LayoutElement>();
+            if (iconLayout != null)
+            {
+                iconLayout.minHeight = 52f;
+                iconLayout.preferredHeight = 52f;
+                iconLayout.flexibleHeight = 0f;
+            }
+        }
+
+        var texture = Resources.Load<Texture2D>(BackgroundResourcePath);
+        if (texture != null)
+        {
+            var rect = new Rect(0f, 0f, texture.width, texture.height);
+            var border = new Vector4(BackgroundBorderPixels, BackgroundBorderPixels,
+                BackgroundBorderPixels, BackgroundBorderPixels);
+            _runtimeBackgroundSprite = Sprite.Create(texture, rect, new Vector2(0.5f, 0.5f),
+                100f, 0, SpriteMeshType.FullRect, border);
+            _backgroundImage.sprite = _runtimeBackgroundSprite;
+            _backgroundImage.type = Image.Type.Sliced;
+            _backgroundImage.color = Color.white;
+        }
+        else
+        {
+            _backgroundImage.sprite = null;
+            _backgroundImage.type = Image.Type.Simple;
+            _backgroundImage.color = new Color(0.035f, 0.025f, 0.10f, 0.96f);
+
+            var outline = _backgroundImage.GetComponent<Outline>();
+            if (outline == null) outline = _backgroundImage.gameObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0.55f, 0.40f, 1f, 0.85f);
+            outline.effectDistance = new Vector2(1.5f, -1.5f);
+        }
+
+        // El panel glass mantiene legible el aviso y lo integra con los marcos del HUD.
+        if (_rowLayout != null)
+        {
+            _rowLayout.padding.top = 12;
+            _rowLayout.padding.bottom = 12;
+            LayoutRebuilder.MarkLayoutForRebuild(_rowRect);
+        }
     }
 
     void FadeIn()

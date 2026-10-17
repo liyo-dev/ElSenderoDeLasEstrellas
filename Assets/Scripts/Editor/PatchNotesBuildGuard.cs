@@ -24,15 +24,15 @@ using UnityEngine;
 /// Si CurrentEntryBullets.txt falta, está vacío o contiene el marcador de pendiente, cancela el
 /// build mediante BuildFailedException. Si las notas son válidas, escribe la fecha en BuildDate.txt.
 ///
-/// OnPostprocessBuild resetea CurrentEntryBullets.txt al marcador de pendiente solo si el build
-/// termina en éxito y BuildVersionIncrementer.WasLastBuildVersionSkipped indica que no se salta
-/// el autoincremento. El panel muestra únicamente la entrada actual, sin archivar un histórico.
+/// Las notas se conservan después del build para permitir recompilar y probar sin reescribirlas.
+/// Se actualizan al preparar cambios nuevos; generar un ejecutable no equivale a publicarlo.
+/// El panel muestra únicamente la entrada actual, sin archivar un histórico. Ver INC-737.
 ///
 /// El menú "El Sendero → Build → Saltar autoincremento de versión (solo el próximo build)" permite
-/// generar un build de pruebas sin validar ni resetear las notas. El preprocess consulta
+/// generar un build de pruebas sin validar las notas. El preprocess consulta
 /// BuildVersionIncrementer.SeSaltaraElProximoBuild porque el incrementador aún no consume el aviso.
 /// </summary>
-public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuildWithReport
+public class PatchNotesBuildGuard : IPreprocessBuildWithReport
 {
     public int callbackOrder => -1100;
 
@@ -61,6 +61,7 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
     }
 
     /// Valida sin modificar archivos ni consumir el permiso de build de pruebas.
+    [MenuItem("El Sendero/Build/Validar notas del parche")]
     public static void ValidarNotas()
     {
         if (BuildVersionIncrementer.SeSaltaraElProximoBuild) return;
@@ -88,25 +89,4 @@ public class PatchNotesBuildGuard : IPreprocessBuildWithReport, IPostprocessBuil
 
     }
 
-    public void OnPostprocessBuild(BuildReport report)
-    {
-        if (BuildVersionIncrementer.WasLastBuildVersionSkipped)
-            return;
-
-        if (report.summary.result != BuildResult.Succeeded)
-        {
-            Debug.LogWarning("[PatchNotesBuildGuard] El build no terminó en éxito — no se resetean " +
-                              "las Notas del Parche (se dejan tal cual para reintentar).");
-            return;
-        }
-
-        string projectRoot = Directory.GetParent(Application.dataPath).FullName;
-        string currentEntryPath = Path.Combine(projectRoot, CurrentEntryFile);
-
-        File.WriteAllText(currentEntryPath, PendingPlaceholder);
-        AssetDatabase.ImportAsset(CurrentEntryFile);
-
-        Debug.Log("[PatchNotesBuildGuard] CurrentEntryBullets.txt reseteado para la próxima build " +
-                  $"(v{UnityEditor.PlayerSettings.bundleVersion} ya publicada).");
-    }
 }

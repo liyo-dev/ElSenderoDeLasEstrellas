@@ -166,6 +166,21 @@ public class PlayerFlyingController : MonoBehaviour
         if (_isFlying) ExitFlight();
     }
 
+    /// <summary>
+    /// Fuerza al jugador a entrar en modo de vuelo inmediatamente con un impulso vertical,
+    /// pensado para mecánicas de combate (suelo impisable) o cinemáticas.
+    /// </summary>
+    public void ForzarVuelo(float impulsoHaciaArriba = 4.5f)
+    {
+        if (_isFlying) return;
+        if (_entrada != null) { StopCoroutine(_entrada); _entrada = null; }
+        if (_controller != null && _controller.enabled)
+        {
+            _controller.Impulsar(impulsoHaciaArriba, Vector3.zero, devolverSaltosEnElAire: false);
+        }
+        EnterFlight();
+    }
+
     void Awake()
     {
         _animator = GetComponent<Animator>();

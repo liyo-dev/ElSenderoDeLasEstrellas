@@ -108,24 +108,40 @@ public static class RecursosDelPrologo
             return c;
         }
         var blanco = Componente<UnityEngine.Rendering.Universal.WhiteBalance>();
-        blanco.temperature.Override(48f);
-        blanco.tint.Override(14f);
+        blanco.temperature.Override(14f);
+        blanco.tint.Override(2f);
         var color = Componente<UnityEngine.Rendering.Universal.ColorAdjustments>();
-        color.colorFilter.Override(new Color(1f, 0.8f, 0.62f));
-        color.saturation.Override(14f);
+        color.colorFilter.Override(Color.white);
+        color.saturation.Override(5f);
         color.contrast.Override(10f);
-        color.postExposure.Override(0.05f);
+        color.postExposure.Override(0.02f);
         var tonos = Componente<UnityEngine.Rendering.Universal.SplitToning>();
-        tonos.shadows.Override(new Color(0.42f, 0.25f, 0.55f));
-        tonos.highlights.Override(new Color(1f, 0.62f, 0.32f));
-        tonos.balance.Override(-15f);
+        tonos.shadows.Override(new Color(0.50f, 0.46f, 0.58f));
+        tonos.highlights.Override(new Color(1f, 0.90f, 0.76f));
+        tonos.balance.Override(0f);
         var brillo = Componente<UnityEngine.Rendering.Universal.Bloom>();
-        brillo.intensity.Override(0.7f);
-        brillo.threshold.Override(0.85f);
-        brillo.tint.Override(new Color(1f, 0.75f, 0.5f));
+        brillo.intensity.Override(0.45f);
+        brillo.threshold.Override(0.9f);
+        brillo.tint.Override(new Color(1f, 0.95f, 0.88f));
         var vineta = Componente<UnityEngine.Rendering.Universal.Vignette>();
-        vineta.intensity.Override(0.3f);
-        vineta.color.Override(new Color(0.25f, 0.08f, 0.04f));
+        vineta.intensity.Override(0.2f);
+        vineta.color.Override(new Color(0.05f, 0.03f, 0.08f));
+
+        foreach (var comp in perfil.components)
+        {
+            if (comp is UnityEngine.Rendering.Universal.ChannelMixer mixer)
+            {
+                mixer.redOutRedIn.Override(100f); mixer.redOutGreenIn.Override(0f); mixer.redOutBlueIn.Override(0f);
+                mixer.greenOutRedIn.Override(0f); mixer.greenOutGreenIn.Override(100f); mixer.greenOutBlueIn.Override(0f);
+                mixer.blueOutRedIn.Override(0f); mixer.blueOutGreenIn.Override(0f); mixer.blueOutBlueIn.Override(100f);
+                EditorUtility.SetDirty(mixer);
+            }
+            else if (comp != null && comp.GetType().Name == "ColorGrading")
+            {
+                comp.active = false;
+                EditorUtility.SetDirty(comp);
+            }
+        }
         EditorUtility.SetDirty(perfil);
     }
 

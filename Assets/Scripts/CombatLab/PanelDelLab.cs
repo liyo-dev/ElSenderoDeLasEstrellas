@@ -73,7 +73,7 @@ public sealed class PanelDelLab : MonoBehaviour
         // Las secciones se añaden en el arranque del laboratorio; se recogen un par de fotogramas después.
         yield return null;
         yield return null;
-        foreach (var mb in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
+        foreach (var mb in FindObjectsByType<MonoBehaviour>())
             if (mb is ISeccionDelLab s && !_secciones.Contains(s)) _secciones.Add(s);
         _secciones.Sort((a, b) => a.Orden.CompareTo(b.Orden));
 

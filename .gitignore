@@ -1,6 +1,10 @@
 # --- Claude Code (no versionar configuracion local) ---
 .claude/
 
+# --- Credenciales locales / Suno (no versionar tokens privados) ---
+Tools/Audio/suno_config.json
+*.env
+
 # --- IDEs (configuracion local, no compartir) ---
 .idea/
 .vscode/

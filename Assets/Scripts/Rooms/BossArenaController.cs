@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -1069,7 +1069,11 @@ public class BossArenaController : MonoBehaviour
             if (!string.IsNullOrEmpty(BattleId) && AudioService.Instance != null)
                 AudioService.Instance.EndBattleById(BattleId);
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error cerrando la música de batalla: {ex.Message}");
@@ -1081,7 +1085,11 @@ public class BossArenaController : MonoBehaviour
             // Usar BattleId (fallback a bossId ya fue aplicado en Awake)
             DefaultNarrativeSignals.Instance?.RaiseBattleWon(BattleId);
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error notificando BattleWon: {ex.Message}");
@@ -1509,7 +1517,11 @@ public class BossArenaController : MonoBehaviour
                 }
             }
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error durante fallback de búsqueda de BattleId '{id}': {ex.Message}");
@@ -1533,7 +1545,11 @@ public class BossArenaController : MonoBehaviour
 #endif
             }
         }
-        catch (Exception ex)
+        catch (Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            ex
+#endif
+        )
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[BossArenaController] Error al listar ids registrados: {ex.Message}");

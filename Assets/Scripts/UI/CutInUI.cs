@@ -5,11 +5,12 @@ using UnityEngine.Rendering.Universal;
 public enum EncuadreCutIn { Ojos = 0, Cara = 1, Busto = 2 }
 public enum LadoCutIn { Izquierda, Derecha }
 
-/// Primeros planos en vivo en franjas que entran y salen con tiempo real. Hay dos ranuras
-/// independientes para enfrentar a dos personajes a la vez (pantalla partida de anime).
+/// Primeros planos en vivo en franjas que entran y salen con tiempo real. Hay tres ranuras
+/// independientes: dos enfrentan a dos personajes (pantalla partida de anime) y tres presentan al
+/// equipo entero.
 public sealed class CutInUI : MonoBehaviour
 {
-    public const int Ranuras = 2;
+    public const int Ranuras = 3;
     public static CutInUI Instance { get; private set; }
 
     /// Alguna franja está visible o entrando/saliendo.
@@ -83,8 +84,8 @@ public sealed class CutInUI : MonoBehaviour
         go.transform.SetParent(transform, false);
         f.imagen = go.GetComponent<RawImage>();
         f.imagen.raycastTarget = false;
-        // Las dos franjas se inclinan en sentidos opuestos: se leen como un enfrentamiento.
-        f.imagen.rectTransform.localRotation = Quaternion.Euler(0f, 0f, indice == 0 ? 6f : -6f);
+        // Las franjas se inclinan en sentidos alternos: se leen como un enfrentamiento.
+        f.imagen.rectTransform.localRotation = Quaternion.Euler(0f, 0f, indice % 2 == 0 ? 6f : -6f);
         CrearBorde(f.imagen.transform, true);
         CrearBorde(f.imagen.transform, false);
         AjustarTextura(f, indice);

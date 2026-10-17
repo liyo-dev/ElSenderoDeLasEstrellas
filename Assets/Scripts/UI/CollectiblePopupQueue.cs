@@ -394,18 +394,11 @@ public class CollectiblePopupQueue : MonoBehaviour
         else
             go.transform.SetAsLastSibling();
 
-        // Force layout rebuild so sizes/positions are updated immediately
-        var parentRect = parent as RectTransform;
-        if (parentRect != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-
-        // Ensure RectTransform is reset so it appears inside the parent
+        // El layout del contenedor decide la posición de cada aviso.
         var rt = go.GetComponent<RectTransform>();
         if (rt != null)
         {
             rt.localScale = Vector3.one;
-            rt.localPosition = Vector3.zero;
-            rt.anchoredPosition = Vector2.zero;
             rt.localRotation = Quaternion.identity;
         }
         else
@@ -425,6 +418,8 @@ public class CollectiblePopupQueue : MonoBehaviour
             Debug.Log($"[CollectiblePopupQueue] Spawned popup for {item?.displayName} amount={amountToShow}");
 #endif
             panel.Init(item, amountToShow, displayDuration);
+            if (parent is RectTransform parentRect)
+                LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
 
             // schedule removal of creation reservation after expected life (displayDuration + small buffer)
             if (item != null)

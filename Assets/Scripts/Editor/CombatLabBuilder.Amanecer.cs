@@ -48,6 +48,8 @@ public static partial class CombatLabBuilder
         guardian.name = "Guardián protegido";
         guardian.transform.SetParent(raiz);
         guardian.transform.SetPositionAndRotation(pie + Vector3.up, Quaternion.identity);
+        int enemyLyr = LayerMask.NameToLayer("Enemy");
+        if (enemyLyr != -1) guardian.layer = enemyLyr;
 
         var aura = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         aura.name = "Protección (cerrada)";

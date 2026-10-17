@@ -31,7 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8603411883792518239}
+  - {fileID: 7785008585835984613}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &2207382559586151636
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MagicProjectile
   lifeTimeSeconds: 0
---- !u!1001 &8604789272144869171
+--- !u!1001 &3560604846010314044
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -76,59 +76,57 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4745469021974983435}
     m_Modifications:
-    - target: {fileID: 1725317912486240, guid: e55149ba6f4d00741984987e258c3378, type: 3}
-      propertyPath: m_Name
-      value: Magic fire pro orange
-      objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7902306875234833906, guid: e55149ba6f4d00741984987e258c3378, type: 3}
-    - {fileID: 1052489527978193378, guid: e55149ba6f4d00741984987e258c3378, type: 3}
+    - target: {fileID: 8563814583165548852, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
+      propertyPath: m_Name
+      value: VFX_Hechizo_ChispaIgnea_Fuego
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e55149ba6f4d00741984987e258c3378, type: 3}
---- !u!4 &8603411883792518239 stripped
+  m_SourcePrefab: {fileID: 100100000, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
+--- !u!4 &7785008585835984613 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4274653050354540, guid: e55149ba6f4d00741984987e258c3378, type: 3}
-  m_PrefabInstance: {fileID: 8604789272144869171}
+  m_CorrespondingSourceObject: {fileID: 6728420938790214617, guid: 47cba42e51caf5f4594a368b63ac6572, type: 3}
+  m_PrefabInstance: {fileID: 3560604846010314044}
   m_PrefabAsset: {fileID: 0}

@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   temperature:
     m_OverrideState: 1
-    m_Value: 48
+    m_Value: 14
   tint:
     m_OverrideState: 1
-    m_Value: 14
+    m_Value: 2
 --- !u!114 &-7515115142699265403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,13 +62,13 @@ MonoBehaviour:
   active: 1
   shadows:
     m_OverrideState: 1
-    m_Value: {r: 0.42, g: 0.25, b: 0.55, a: 1}
+    m_Value: {r: 0.5, g: 0.46, b: 0.58, a: 1}
   highlights:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.62, b: 0.32, a: 1}
+    m_Value: {r: 1, g: 0.9, b: 0.76, a: 1}
   balance:
     m_OverrideState: 1
-    m_Value: -15
+    m_Value: 0
 --- !u!114 &-6197429105526921371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,10 +112,10 @@ MonoBehaviour:
     m_Value: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 0.85
+    m_Value: 0.9
   intensity:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.45
   scatter:
     m_OverrideState: 1
     m_Value: 0.318
@@ -124,7 +124,7 @@ MonoBehaviour:
     m_Value: 65472
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.75, b: 0.5, a: 1}
+    m_Value: {r: 1, g: 0.95, b: 0.88, a: 1}
   highQualityFiltering:
     m_OverrideState: 0
     m_Value: 0
@@ -247,19 +247,19 @@ MonoBehaviour:
   active: 1
   postExposure:
     m_OverrideState: 1
-    m_Value: 0.05
+    m_Value: 0.02
   contrast:
     m_OverrideState: 1
     m_Value: 10
   colorFilter:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 0.8, b: 0.62, a: 1}
+    m_Value: {r: 1, g: 1, b: 1, a: 1}
   hueShift:
     m_OverrideState: 1
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 14
+    m_Value: 5
 --- !u!114 &3479497917372626825
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -275,13 +275,13 @@ MonoBehaviour:
   active: 1
   color:
     m_OverrideState: 1
-    m_Value: {r: 0.25, g: 0.08, b: 0.04, a: 1}
+    m_Value: {r: 0.05, g: 0.03, b: 0.08, a: 1}
   center:
     m_OverrideState: 1
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.2
   smoothness:
     m_OverrideState: 1
     m_Value: 0.2
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8f6e43869a48f991285995d4df1e93, type: 3}
   m_Name: ColorGrading
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   intensity:
     m_OverrideState: 1
     m_Value: 1
@@ -337,21 +337,21 @@ MonoBehaviour:
   active: 1
   redOutRedIn:
     m_OverrideState: 1
-    m_Value: 80
+    m_Value: 100
   redOutGreenIn:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   redOutBlueIn:
-    m_OverrideState: 0
-    m_Value: -10
+    m_OverrideState: 1
+    m_Value: 0
   greenOutRedIn:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   greenOutGreenIn:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 100
   greenOutBlueIn:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   blueOutRedIn:
     m_OverrideState: 1
@@ -360,7 +360,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 0
   blueOutBlueIn:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 100
 --- !u!114 &8106436439642758281
 MonoBehaviour:

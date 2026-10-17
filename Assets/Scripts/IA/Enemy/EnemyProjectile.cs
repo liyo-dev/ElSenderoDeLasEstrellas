@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -109,7 +110,13 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private bool _dealAoEOnImpact;
     private float _aoeRadius;
     private float _aoeDamage;
+    private float _groundChargeDuration;
+    private Renderer[] _renderersForGroundCharge;
+    private MaterialPropertyBlock _groundChargeProperties;
     private bool _bypassInvulnerabilityOnHit;
+    private static readonly int BaseColorProperty = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorProperty = Shader.PropertyToID("_Color");
+    private static readonly int EmissionColorProperty = Shader.PropertyToID("_EmissionColor");
 
     // VFX de "grieta en el suelo" al impactar contra terreno (configurado por GolemBossAI para que
     // sus rocas reutilicen el mismo VFX que el aterrizaje de Fase 3 — ver ConfigureGroundImpactVfx)
@@ -142,6 +149,8 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         _floorLayer          = LayerMask.NameToLayer("Floor");
 
         rb = GetComponent<Rigidbody>();
+        _renderersForGroundCharge = GetComponentsInChildren<Renderer>(true);
+        _groundChargeProperties = new MaterialPropertyBlock();
         if (rb)
         {
             rb.useGravity = false;
@@ -203,15 +212,79 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     }
 
     /// <summary>
-    /// Activa el daño de área al aterrizar. Usado para rocas de lluvia del Golem.
-    /// El AoE ignora iframes pero respeta el escudo del jugador.
+    /// Activa el daño de área cuando el proyectil impacta el suelo u otro obstáculo sólido.
+    /// El daño de área ignora los fotogramas de invulnerabilidad y respeta el escudo del jugador.
     /// </summary>
-    public void ConfigureAoE(float radius, float aoeDmg)
+    public void ConfigureAoE(float radius, float aoeDmg, float groundChargeDuration = 0f)
     {
         _dealAoEOnImpact = true;
         _aoeRadius = radius;
         _aoeDamage = aoeDmg;
+        _groundChargeDuration = Mathf.Max(0f, groundChargeDuration);
         _bypassInvulnerabilityOnHit = true;
+    }
+
+    private bool IniciarCargaDePlasmaEnElSuelo()
+    {
+        if (!_dealAoEOnImpact || _groundChargeDuration <= 0f) return false;
+
+        CancelInvoke(nameof(Expirar));
+        hasHit = true;
+        AmenazasAlJugador.Quitar(this);
+        if (rb)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = true;
+            rb.detectCollisions = false;
+        }
+        foreach (var collider in GetComponentsInChildren<Collider>(true))
+            collider.enabled = false;
+
+        StartCoroutine(CargarYExplotarEnElSuelo());
+        return true;
+    }
+
+    private IEnumerator CargarYExplotarEnElSuelo()
+    {
+        float transcurrido = 0f;
+        int faseColor = -1;
+        while (transcurrido < _groundChargeDuration)
+        {
+            float progreso = transcurrido / _groundChargeDuration;
+            int nuevaFase = Mathf.Min(2, Mathf.FloorToInt(progreso * 3f));
+            if (nuevaFase != faseColor)
+            {
+                faseColor = nuevaFase;
+                Color color = faseColor == 0
+                    ? new Color(0.2f, 0.9f, 1f, 1f)
+                    : faseColor == 1
+                        ? new Color(1f, 0.9f, 0.12f, 1f)
+                        : new Color(1f, 0.18f, 0.06f, 1f);
+                AplicarColorDeCarga(color);
+            }
+
+            transcurrido += Time.deltaTime;
+            yield return null;
+        }
+
+        ApplyAoEImpact();
+        DestroyProjectile();
+    }
+
+    private void AplicarColorDeCarga(Color color)
+    {
+        if (_renderersForGroundCharge == null) return;
+        _groundChargeProperties ??= new MaterialPropertyBlock();
+        foreach (var render in _renderersForGroundCharge)
+        {
+            if (!render) continue;
+            render.GetPropertyBlock(_groundChargeProperties);
+            _groundChargeProperties.SetColor(BaseColorProperty, color);
+            _groundChargeProperties.SetColor(ColorProperty, color);
+            _groundChargeProperties.SetColor(EmissionColorProperty, color * 1.5f);
+            render.SetPropertyBlock(_groundChargeProperties);
+        }
     }
 
     /// <summary>
@@ -259,7 +332,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             if (shield != null && shield.IsDefending)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[EnemyProjectile] 🛡️ AoE de lluvia bloqueado por escudo");
+                Debug.Log("[EnemyProjectile] 🛡️ Daño de área bloqueado por escudo");
 #endif
                 continue;
             }
@@ -268,7 +341,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
             if (playerHealth != null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[EnemyProjectile] 💥 AoE lluvia: {_aoeDamage} daño (ignora iframes)");
+                Debug.Log($"[EnemyProjectile] 💥 Daño de área: {_aoeDamage} (ignora invulnerabilidad)");
 #endif
                 playerHealth.TakeDamage(_aoeDamage, ignoreInvulnerability: true);
                 return;
@@ -372,6 +445,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     private bool TryResolvePlayerHit(Collider hit)
     {
         if (hit == null) return false;
+        if (_groundChargeDuration > 0f) return false;
 
         var playerHealth = hit.GetComponent<PlayerHealthSystem>() ?? hit.GetComponentInParent<PlayerHealthSystem>();
         if (playerHealth != null)
@@ -430,6 +504,11 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         // Ignorar enemigos y el boss (proyectil de enemy no debe dañar a otros enemies)
         // Nota: "Boss" es un Tag, no un Layer → usar CompareTag, no LayerMask
         int otherLayer = other.gameObject.layer;
+
+        if (_groundChargeDuration > 0f &&
+            (otherLayer == _playerLayer || other.CompareTag(GameTags.Player) ||
+             other.GetComponentInParent<PlayerHealthSystem>() != null))
+            return;
 
         // FIX INC-082 (diagnóstico): log de cada impacto real para poder ver en Console, sin abrir el
         // profiler ni instrumentar nada, contra qué layer/trigger está chocando cada roca — pensado
@@ -528,6 +607,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 #endif
                 return;
             }
+            if (IniciarCargaDePlasmaEnElSuelo()) return;
             hasHit = true;
             PlayGroundImpactVfx();
             if (_dealAoEOnImpact) ApplyAoEImpact();
@@ -537,6 +617,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
 
         if (!other.isTrigger)
         {
+            if (IniciarCargaDePlasmaEnElSuelo()) return;
             hasHit = true;
             PlayGroundImpactVfx();
             if (_dealAoEOnImpact) ApplyAoEImpact();

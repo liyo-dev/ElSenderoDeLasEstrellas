@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Invector.vCharacterController
 {
@@ -136,6 +136,7 @@ namespace Invector.vCharacterController
         /// TopeDeVelocidadDelJugador (p. ej. mientras se sigue a un NPC, para no adelantarle).
         /// </summary>
         [System.NonSerialized] public float topeDeVelocidad = float.PositiveInfinity;
+        [System.NonSerialized] public System.Func<Vector3, Vector3> filtroDeTopesDeVelocidad;
         /// <summary>
         /// Valor máximo de InputMagnitude (la animación de locomoción) mientras hay tope de
         /// velocidad. Infinito = sin tope. Lo pone TopeDeVelocidadDelJugador con el MISMO criterio
@@ -149,6 +150,11 @@ namespace Invector.vCharacterController
         /// (p. ej. el viento que lo arrastra si se queda quieto). Lo pone ClimaSobreElJugador.
         /// </summary>
         [System.NonSerialized] public Vector3 empujeExterno;
+        /// <summary>
+        /// Permite que una cinemática o guion controle InputMagnitude directamente sin que lockMovement lo anule a 0.
+        /// -1 = sin anulación (comportamiento normal). >= 0 = fuerza este valor de InputMagnitude en el Animator.
+        /// </summary>
+        [System.NonSerialized] public float overrideInputMagnitude = -1f;
         /// <summary>Dirección de movimiento pedida por el mando, en mundo (sin normalizar).</summary>
         public Vector3 DireccionDeMovimiento => moveDirection;
         /// <summary>Cuánto empuja el jugador el stick (0-1).</summary>
@@ -404,7 +410,17 @@ namespace Invector.vCharacterController
             }
 
             if (!_rigidbody.isKinematic)
-                _rigidbody.linearVelocity = targetVelocity;
+                _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(targetVelocity);
+        }
+
+        private Vector3 LimitarVelocidadDeMovimiento(Vector3 velocidad)
+        {
+            Vector3 horizontal = new Vector3(velocidad.x, 0f, velocidad.z);
+            if (!float.IsPositiveInfinity(topeDeVelocidad))
+                horizontal = Vector3.ClampMagnitude(horizontal, topeDeVelocidad);
+            velocidad.x = horizontal.x;
+            velocidad.z = horizontal.z;
+            return filtroDeTopesDeVelocidad != null ? filtroDeTopesDeVelocidad(velocidad) : velocidad;
         }
 
         public virtual void CheckSlopeLimit()
@@ -589,14 +605,14 @@ namespace Invector.vCharacterController
                 Vector3 targetHoriz = facingDir * horizSpeed;
                 if (!IsFiniteVector(targetHoriz)) return;
 
-                _rigidbody.linearVelocity = new Vector3(targetHoriz.x, safeY, targetHoriz.z);
+                _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(new Vector3(targetHoriz.x, safeY, targetHoriz.z));
             }
             else
             {
                 // Sin input: frenar suavemente pero sin forzar a cero bruscamente.
                 Vector3 newHoriz = Vector3.Lerp(currentHoriz, Vector3.zero, airSmooth * Time.deltaTime);
                 if (!IsFiniteVector(newHoriz)) return;
-                _rigidbody.linearVelocity = new Vector3(newHoriz.x, safeY, newHoriz.z);
+                _rigidbody.linearVelocity = LimitarVelocidadDeMovimiento(new Vector3(newHoriz.x, safeY, newHoriz.z));
             }
         }
 

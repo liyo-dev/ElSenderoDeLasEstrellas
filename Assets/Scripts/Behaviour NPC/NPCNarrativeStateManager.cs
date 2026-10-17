@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Game.NPC.Modules;
 
 namespace Game.NPC
@@ -46,7 +46,11 @@ namespace Game.NPC
                         executor.ResetState();
                         resetCount++;
                     }
-                    catch (System.Exception ex)
+                    catch (System.Exception
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                        ex
+#endif
+                    )
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                         Debug.LogError($"[NPCNarrativeStateManager] ❌ Error al resetear {executor.name}: {ex.Message}");

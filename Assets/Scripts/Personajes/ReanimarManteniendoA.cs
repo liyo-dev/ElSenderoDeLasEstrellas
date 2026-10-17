@@ -44,7 +44,15 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
         // Al lado de un caído, A reanima en vez de saltar.
         GamepadInputReader.IgnoreJumpButton(0.2f);
         float paso = Time.deltaTime / segundos;
-        _progreso = GamepadInputReader.JumpHeld ? _progreso + paso : Mathf.Max(0f, _progreso - paso * 2f);
+        bool pulsado = GamepadInputReader.JumpHeld;
+        _progreso = pulsado ? _progreso + paso : Mathf.Max(0f, _progreso - paso * 2f);
+
+        // Gesto del personaje al canalizar la reanimación
+        if (pulsado && _progreso > 0.1f)
+        {
+            var actor = jugador.GetComponent<NPCSimpleAnimator>();
+            if (actor != null) actor.PlaySpellCastSpecial();
+        }
 
         if (_aviso == null) _aviso = AvisoDeReanimarUI.Crear(transform, anillo);
         _aviso.Mostrar(caido.transform, _progreso);
@@ -52,6 +60,19 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
         if (_progreso < 1f) return;
         _progreso = 0f;
         grupo.Reanimar(caido);
+
+        // Efectos de reanimación completada
+        if (AudioService.Instance != null)
+            AudioService.Instance.PlaySFX("Hechizo_BrisaSanadora", 1f, caido.transform.position);
+
+        var vfxBrisa = Resources.Load<GameObject>("BrisaSanadora");
+#if UNITY_EDITOR
+        if (vfxBrisa == null)
+            vfxBrisa = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_SPELLS/Prefabs/BrisaSanadora.prefab");
+#endif
+        if (vfxBrisa != null)
+            VfxPoolService.Instance.Play(vfxBrisa, caido.transform.position, Quaternion.identity, 2f);
+
         _objetivo = null;
         _aviso.Ocultar();
     }
