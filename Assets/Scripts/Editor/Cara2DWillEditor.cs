@@ -14,7 +14,13 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class Cara2DWillEditor : EditorWindow
 {
-    private const string RutaShader = "El Sendero/Personajes/Face2D_Decal";
+    private const string RutaShaderCaraDecal = "El Sendero/Personajes/Face2D_DecalProyectado";
+    private const string RutaArchivoShaderCaraDecal = "Assets/Art/Characters/Face2D_DecalProyectado.shader";
+    private const string RutaRendererPC = "Assets/Settings/PC_Renderer.asset";
+    // Cuánto entra la caja del decal hacia dentro de la cabeza desde el plano del dibujo.
+    private const float ProfundidadDeLaCajaDecal = 0.030f;
+    private const float DistanciaMaximaDecal = 25f;
+    private const float PixelesPorMetroDelDibujo = 250f;
 
     private const string RutaSpritesWill = "Assets/Art/Characters/Will_Face2D";
     private const string RutaPrefabWill = "Assets/Prefabs/_WILL.prefab";
@@ -55,7 +61,7 @@ public class Cara2DWillEditor : EditorWindow
     [SerializeField] private float offsetYOjos = 0.040f;
     [SerializeField] private float offsetYBoca = 0.038f;
     // Cuánto va cada quad por delante de la cara frontal de su pieza 3D, para que la cabeza no lo tape.
-    [SerializeField] private float offsetZ = 0.015f;
+    [SerializeField] private float offsetZ = 0.003f;
 
     private GameObject _personajeEnEscena;
     private GameObject _npcPrefabPersonalizado;
@@ -75,10 +81,10 @@ public class Cara2DWillEditor : EditorWindow
         escalaBoca = EditorGUILayout.Slider("Escala Boca", escalaBoca, 0.3f, 1.2f);
         offsetYOjos = EditorGUILayout.Slider("Subir/Bajar Ojos (Y)", offsetYOjos, -0.1f, 0.1f);
         offsetYBoca = EditorGUILayout.Slider("Subir/Bajar Boca (Y)", offsetYBoca, -0.1f, 0.1f);
-        offsetZ = EditorGUILayout.Slider("Adelanto de la piel (m)", offsetZ, 0.004f, 0.06f);
+        offsetZ = EditorGUILayout.Slider("Adelanto de la piel (m)", offsetZ, 0.001f, 0.06f);
 
         EditorGUILayout.Space(5);
-        if (GUILayout.Button("👉 REAJUSTAR PROPORCIONES Y OCULTAR CEJAS 3D 👈", GUILayout.Height(34)))
+        if (GUILayout.Button("�Y'? REAJUSTAR PROPORCIONES Y OCULTAR CEJAS 3D �Y'^", GUILayout.Height(34)))
         {
             ActualizarMaterialesConShaderDecal();
             ReajustarProporcionesEnTodos(escalaOjos, escalaBoca, offsetYOjos, offsetYBoca, offsetZ);
@@ -202,9 +208,13 @@ public class Cara2DWillEditor : EditorWindow
 
     public static void ActualizarMaterialesConShaderDecal()
     {
-        Shader shader = Shader.Find(RutaShader);
-        if (shader == null) shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
-        if (shader == null) shader = Shader.Find("Sprites/Default");
+        // Los materiales base de los personajes usan el shader de decal proyectado de la cara 2D.
+        Shader shader = BuscarShaderCaraDecal();
+        if (shader == null)
+        {
+            Debug.LogError($"[Cara2D] No encuentro el shader {RutaShaderCaraDecal}.");
+            return;
+        }
 
         string[] rutas = { RutaMaterialWill, RutaMaterialEstela, RutaMaterialLiam, RutaMaterialEldran, RutaMaterialNPC };
         foreach (var r in rutas)
@@ -305,23 +315,29 @@ public class Cara2DWillEditor : EditorWindow
 
         foreach (Transform child in face2D)
         {
-            if (child.name.StartsWith("Eye2D_"))
+            bool ojos = child.name.StartsWith("Eye2D_");
+            if (!ojos && !child.name.StartsWith("Mouth2D_")) continue;
+
+            Vector3 plano = ojos ? posOjosFinal : posBocaFinal;
+            float escala = ojos ? escOjos : escBoca;
+
+            DecalProjector proyector = child.GetComponent<DecalProjector>();
+            if (proyector != null)
             {
-                child.localPosition = posOjosFinal;
-                child.localScale = Vector3.one * escOjos;
+                proyector.size = TamanoDeLaCaja(TamañoDelDibujo(child), escala);
+                child.localPosition = plano + HaciaDentro(child) * (proyector.size.z * 0.5f);
+                continue;
             }
-            else if (child.name.StartsWith("Mouth2D_"))
-            {
-                child.localPosition = posBocaFinal;
-                child.localScale = Vector3.one * escBoca;
-            }
+
+            child.localPosition = plano;
+            child.localScale = Vector3.one * escala;
         }
     }
 
     public static void PrepararSpritesYMaterial(string rutaSprites, string rutaMaterial, string rutaProfile, bool esFemenino)
     {
-        string[] nombresOjos = { "Eye2D_Neutro", "Eye2D_Alegre", "Eye2D_Triste", esFemenino ? "Eye2D_Enfadada" : "Eye2D_Enfadado", esFemenino ? "Eye2D_Sorprendida" : "Eye2D_Sorprendido", "Eye2D_Cerrado" };
-        string[] nombresBocas = { "Mouth2D_Neutra", "Mouth2D_Alegre", "Mouth2D_Habla", "Mouth2D_Triste", "Mouth2D_Enfadada", "Mouth2D_Sorprendida" };
+        string[] nombresOjos = NombresDeOjos(esFemenino);
+        string[] nombresBocas = NombresDeBocas();
 
         List<string> todos = new List<string>(nombresOjos);
         todos.AddRange(nombresBocas);
@@ -344,9 +360,13 @@ public class Cara2DWillEditor : EditorWindow
             }
         }
 
-        Shader shader = Shader.Find(RutaShader);
-        if (shader == null) shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
-        if (shader == null) shader = Shader.Find("Sprites/Default");
+        // El material base usa ya el shader de decal proyectado: de él salen los materiales por dibujo.
+        Shader shader = BuscarShaderCaraDecal();
+        if (shader == null)
+        {
+            Debug.LogError($"[Cara2D] No encuentro el shader {RutaShaderCaraDecal}: los decales no se pintarán.");
+            return;
+        }
 
         Material mat = AssetDatabase.LoadAssetAtPath<Material>(rutaMaterial);
         if (mat == null)
@@ -401,7 +421,7 @@ public class Cara2DWillEditor : EditorWindow
         AssetDatabase.SaveAssets();
     }
 
-    public static void AplicarCara2DAPersonaje(string rutaSprites, string rutaPrefab, string rutaProfile, string rutaMaterial, string nombrePersonaje, bool esFemenino, float escOjos = 0.65f, float escBoca = 0.55f, float offYOjos = 0.040f, float offYBoca = 0.038f, float offZ = 0.015f)
+    public static void AplicarCara2DAPersonaje(string rutaSprites, string rutaPrefab, string rutaProfile, string rutaMaterial, string nombrePersonaje, bool esFemenino, float escOjos = 0.65f, float escBoca = 0.55f, float offYOjos = 0.040f, float offYBoca = 0.038f, float offZ = 0.003f)
     {
         PrepararSpritesYMaterial(rutaSprites, rutaMaterial, rutaProfile, esFemenino);
 
@@ -437,24 +457,27 @@ public class Cara2DWillEditor : EditorWindow
 
         Material mat = AssetDatabase.LoadAssetAtPath<Material>(rutaMaterial);
 
-        string eyeEnfadado = esFemenino ? "Eye2D_Enfadada" : "Eye2D_Enfadado";
-        string eyeSorprendido = esFemenino ? "Eye2D_Sorprendida" : "Eye2D_Sorprendido";
-        string[] nombresOjos = { "Eye2D_Neutro", "Eye2D_Alegre", "Eye2D_Triste", eyeEnfadado, eyeSorprendido, "Eye2D_Cerrado" };
+        string[] nombresOjos = NombresDeOjos(esFemenino);
         foreach (var nom in nombresOjos)
         {
             MontarElementoFacial(face2D, nom, $"{rutaSprites}/{nom}.png", posOjosFinal, rotacionCara, mat, nom == "Eye2D_Neutro", escOjos);
         }
 
-        string[] nombresBocas = { "Mouth2D_Neutra", "Mouth2D_Alegre", "Mouth2D_Habla", "Mouth2D_Triste", "Mouth2D_Enfadada", "Mouth2D_Sorprendida" };
+        string[] nombresBocas = NombresDeBocas();
         foreach (var nom in nombresBocas)
         {
             MontarElementoFacial(face2D, nom, $"{rutaSprites}/{nom}.png", posBocaFinal, rotacionCara, mat, nom == "Mouth2D_Neutra", escBoca);
         }
 
-        AjustarControladorDeEmociones(root, rutaProfile);
+        string informe = AjustarControladorDeEmociones(root, rutaProfile);
 
         PrefabUtility.SaveAsPrefabAsset(root, rutaPrefab);
         PrefabUtility.UnloadPrefabContents(root);
+
+        // El informe del controlador se guarda junto a las medidas, para poder revisarlo sin abrir Unity.
+        string carpeta = Path.Combine(Directory.GetParent(Application.dataPath).FullName, CarpetaDiagnostico);
+        Directory.CreateDirectory(carpeta);
+        File.WriteAllText(Path.Combine(carpeta, $"controlador_{nombrePersonaje}.txt"), informe);
         Debug.Log($"[Cara2D] ¡Cara 2D montada con éxito en {nombrePersonaje} ({rutaPrefab})!");
     }
 
@@ -608,28 +631,229 @@ public class Cara2DWillEditor : EditorWindow
         }
     }
 
-    private static void MontarElementoFacial(Transform parent, string nombre, string rutaSprite, Vector3 posLocal, Quaternion rotLocal, Material mat, bool activoPorDefecto, float escala = 1f)
+    /// Monta un elemento de la cara 2D (ojos o boca) como proyector de decal sobre la piel.
+    /// «posLocal» es el plano del dibujo (donde estaba la cartulina) y «rotLocal» la orientación que
+    /// mira al frente: la caja del proyector entra hacia dentro de la cabeza desde ese plano, así que
+    /// la piel queda dentro y lo que esté por delante (flequillo, pelo) la tapa en vez de recibirla.
+    private static void MontarElementoFacial(Transform parent, string nombre, string rutaSprite, Vector3 posLocal, Quaternion rotLocal, Material matBase, bool activoPorDefecto, float escala = 1f)
     {
         Transform existente = parent.Find(nombre);
         GameObject go = existente != null ? existente.gameObject : new GameObject(nombre);
         go.transform.SetParent(parent, false);
-        go.transform.localPosition = posLocal;
-        go.transform.localRotation = rotLocal;
-        go.transform.localScale = Vector3.one * escala;
 
-        SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-        if (sr == null) sr = go.AddComponent<SpriteRenderer>();
+        SpriteRenderer cartulina = go.GetComponent<SpriteRenderer>();
+        if (cartulina != null) Object.DestroyImmediate(cartulina, true);
 
         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(rutaSprite);
-        sr.sprite = sprite;
-        sr.sharedMaterial = mat;
-        sr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        sr.receiveShadows = false;
+        Vector2 dibujo = sprite != null ? (Vector2)sprite.bounds.size : new Vector2(0.35f, 0.25f);
+
+        // El proyector proyecta a lo largo de su eje Z y dibuja el sprite en su plano XY, con los
+        // mismos ejes que tenía la cartulina: se le da su misma orientación.
+        go.transform.localRotation = rotLocal;
+        go.transform.localScale = Vector3.one;
+
+        DecalProjector proyector = go.GetComponent<DecalProjector>();
+        if (proyector == null) proyector = go.AddComponent<DecalProjector>();
+
+        // La cara de la caja que da al frente se queda donde estaba la cartulina y la caja entra
+        // hacia dentro de la cabeza: ahí dentro está la piel que hay que pintar.
+        proyector.size = TamanoDeLaCaja(dibujo, escala);
+        go.transform.localPosition = posLocal + HaciaDentro(go.transform) * (proyector.size.z * 0.5f);
+
+        proyector.material = MaterialDeDecal(rutaSprite, matBase);
+        proyector.scaleMode = DecalScaleMode.ScaleInvariant;
+        proyector.pivot = Vector3.zero;
+        proyector.drawDistance = DistanciaMaximaDecal;
+        proyector.fadeScale = 0.5f;
+        proyector.startAngleFade = 180f;
+        proyector.endAngleFade = 180f;
+        proyector.uvScale = Vector2.one;
+        proyector.uvBias = Vector2.zero;
 
         go.SetActive(activoPorDefecto);
     }
 
-    // ── Medir y ver la cara sin abrir el prefab a mano ────────────────────────────────────────
+    // �"?�"? Decal proyectado: materiales y feature de URP �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?
+
+    /// Tamaño de la caja del decal (ancho, alto y fondo).
+    private static Vector3 TamanoDeLaCaja(Vector2 dibujo, float escala) =>
+        new Vector3(dibujo.x * escala, dibujo.y * escala, ProfundidadDeLaCajaDecal);
+
+    /// Shader de la cara 2D: por ruta del proyecto (más fiable que Shader.Find con shaders propios
+    /// que no usa nadie más) y, si falla, por nombre.
+    private static Shader BuscarShaderCaraDecal()
+    {
+        Shader shader = AssetDatabase.LoadAssetAtPath<Shader>(RutaArchivoShaderCaraDecal);
+        if (shader == null) shader = Shader.Find(RutaShaderCaraDecal);
+        return shader;
+    }
+
+    /// Nombres de los dibujos de ojos de la cara 2D (sirven para los sprites y para los objetos).
+    private static string[] NombresDeOjos(bool esFemenino = false) => new[]
+    {
+        "Eye2D_Neutro", "Eye2D_Alegre", "Eye2D_Triste",
+        esFemenino ? "Eye2D_Enfadada" : "Eye2D_Enfadado",
+        esFemenino ? "Eye2D_Sorprendida" : "Eye2D_Sorprendido",
+        "Eye2D_Cerrado"
+    };
+
+    /// Nombres de los dibujos de bocas de la cara 2D (habla incluida).
+    private static string[] NombresDeBocas() => new[]
+    {
+        "Mouth2D_Neutra", "Mouth2D_Alegre", "Mouth2D_Habla", "Mouth2D_Triste", "Mouth2D_Enfadada", "Mouth2D_Sorprendida"
+    };
+
+    [MenuItem("El Sendero/Personajes/Caras 2D/Preparar decals de la cara 2D (URP PC)", priority = 43)]
+    public static void PrepararDecalsDeLaCara2D()
+    {
+        StringBuilder informe = new StringBuilder();
+        informe.AppendLine("=== Decals de la cara 2D ===");
+
+        ScriptableRendererData renderer = AssetDatabase.LoadAssetAtPath<ScriptableRendererData>(RutaRendererPC);
+        informe.AppendLine(renderer == null
+            ? $"No encuentro el renderer {RutaRendererPC}"
+            : AsegurarFeatureDeDecal(renderer));
+
+        Material baseDelPersonaje = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialWill);
+        foreach (string nombre in TodosLosNombresDeLaCara())
+        {
+            Material material = MaterialDeDecal($"{RutaSpritesWill}/{nombre}.png", baseDelPersonaje);
+            informe.AppendLine($"material: {(material != null ? AssetDatabase.GetAssetPath(material) : "NO CREADO")}");
+        }
+
+        Directory.CreateDirectory(CarpetaDiagnostico);
+        File.WriteAllText(Path.Combine(CarpetaDiagnostico, "decals.txt"), informe.ToString());
+        Debug.Log("[Cara2D] Decals preparados:\n" + informe);
+    }
+
+    private static List<string> TodosLosNombresDeLaCara()
+    {
+        List<string> todos = new List<string>(NombresDeOjos());
+        todos.AddRange(NombresDeBocas());
+        return todos;
+    }
+
+    /// Material de decal de un dibujo concreto (una expresión): se guarda junto al material base, en
+    /// una carpeta «Decals», y sólo se diferencia en la textura.
+    private static Material MaterialDeDecal(string rutaSprite, Material baseDelPersonaje)
+    {
+        if (baseDelPersonaje == null) return null;
+
+        string carpetaBase = Path.GetDirectoryName(AssetDatabase.GetAssetPath(baseDelPersonaje)).Replace('\\', '/');
+        string carpeta = carpetaBase + "/Decals";
+        if (!AssetDatabase.IsValidFolder(carpeta) && string.IsNullOrEmpty(AssetDatabase.CreateFolder(carpetaBase, "Decals"))) return null;
+
+        string ruta = $"{carpeta}/{Path.GetFileNameWithoutExtension(rutaSprite)}.mat";
+        Material material = AssetDatabase.LoadAssetAtPath<Material>(ruta);
+        if (material == null)
+        {
+            material = new Material(baseDelPersonaje);
+            AssetDatabase.CreateAsset(material, ruta);
+        }
+
+        material.shader = baseDelPersonaje.shader;
+        Texture2D textura = AssetDatabase.LoadAssetAtPath<Texture2D>(rutaSprite);
+        if (textura != null) material.SetTexture("_BaseMap", textura);
+        material.SetColor("_BaseColor", Color.white);
+        EditorUtility.SetDirty(material);
+        return material;
+    }
+
+    /// Deja el renderer de PC con la Renderer Feature de decals, en la técnica de espacio de pantalla
+    /// (la que funciona con cualquier shader de piel, sin que éste lea la DBuffer).
+    private static string AsegurarFeatureDeDecal(ScriptableRendererData renderer)
+    {
+        SerializedObject soRenderer = new SerializedObject(renderer);
+        SerializedProperty features = soRenderer.FindProperty("m_RendererFeatures");
+        SerializedProperty mapa = soRenderer.FindProperty("m_RendererFeatureMap");
+        if (features == null || mapa == null) return "el renderer no expone su lista de features";
+
+        for (int i = 0; i < features.arraySize; i++)
+        {
+            if (features.GetArrayElementAtIndex(i).objectReferenceValue is DecalRendererFeature existente)
+            {
+                ConfigurarFeatureDeDecal(existente);
+                soRenderer.ApplyModifiedProperties();
+                AssetDatabase.SaveAssets();
+                return "la feature de decals ya estaba: técnica de espacio de pantalla asegurada";
+            }
+        }
+
+        DecalRendererFeature nueva = ScriptableObject.CreateInstance<DecalRendererFeature>();
+        nueva.name = "Decal Renderer Feature";
+        nueva.hideFlags |= HideFlags.HideInHierarchy;
+        AssetDatabase.AddObjectToAsset(nueva, renderer);
+        AssetDatabase.TryGetGUIDAndLocalFileIdentifier(nueva, out string guid, out long idLocal);
+
+        features.arraySize++;
+        features.GetArrayElementAtIndex(features.arraySize - 1).objectReferenceValue = nueva;
+        mapa.arraySize++;
+        mapa.GetArrayElementAtIndex(mapa.arraySize - 1).longValue = idLocal;
+        soRenderer.ApplyModifiedProperties();
+
+        ConfigurarFeatureDeDecal(nueva);
+        EditorUtility.SetDirty(renderer);
+        AssetDatabase.SaveAssets();
+        return $"feature de decals añadida a {RutaRendererPC} (id={idLocal}, guid={guid})";
+    }
+
+    /// Ajustes de la feature: técnica de espacio de pantalla, sin capas de decal (no las admite esa
+    /// técnica) y con un alcance corto: la cara 2D sólo interesa de cerca.
+    private static void ConfigurarFeatureDeDecal(DecalRendererFeature feature)
+    {
+        SerializedObject so = new SerializedObject(feature);
+        SerializedProperty ajustes = so.FindProperty("m_Settings");
+        if (ajustes == null) return;
+
+        SerializedProperty tecnica = ajustes.FindPropertyRelative("technique");
+        if (tecnica != null)
+        {
+            string[] nombres = tecnica.enumNames;
+            for (int i = 0; i < nombres.Length; i++)
+            {
+                if (nombres[i] == "ScreenSpace") tecnica.enumValueIndex = i;
+            }
+        }
+
+        SerializedProperty alcance = ajustes.FindPropertyRelative("maxDrawDistance");
+        if (alcance != null) alcance.floatValue = DistanciaMaximaDecal;
+
+        SerializedProperty capas = ajustes.FindPropertyRelative("decalLayers");
+        if (capas != null) capas.boolValue = false;
+
+        so.ApplyModifiedProperties();
+    }
+
+    /// Tamaño en metros del dibujo de un elemento de la cara 2D: el de su sprite o, si es un decal
+    /// (que no lo referencia), el de su textura a los píxeles por metro con los que se importa.
+    private static Vector2 TamañoDelDibujo(Transform elemento)
+    {
+        SpriteRenderer sr = elemento.GetComponent<SpriteRenderer>();
+        if (sr != null && sr.sprite != null) return sr.sprite.bounds.size;
+
+        DecalProjector proyector = elemento.GetComponent<DecalProjector>();
+        Texture2D textura = proyector != null && proyector.material != null
+            ? proyector.material.GetTexture("_BaseMap") as Texture2D
+            : null;
+        if (textura != null) return new Vector2(textura.width / PixelesPorMetroDelDibujo, textura.height / PixelesPorMetroDelDibujo);
+
+        return proyector != null ? new Vector2(proyector.size.x, proyector.size.y) : new Vector2(0.35f, 0.25f);
+    }
+
+    /// Dirección «hacia dentro de la cabeza» de un elemento, en el espacio de su padre (Face2D): el
+    /// dibujo mira hacia fuera por su eje Z, así que el fondo de la caja va en sentido contrario.
+    private static Vector3 HaciaDentro(Transform elemento) =>
+        elemento.GetComponent<DecalProjector>() != null ? elemento.localRotation * Vector3.back : Vector3.zero;
+
+    /// Dónde cae la cara frontal de la caja de un proyector (el plano del dibujo), en mundo.
+    private static Vector3 FrenteDeLaCaja(Transform elemento)
+    {
+        DecalProjector proyector = elemento.GetComponent<DecalProjector>();
+        float fondo = proyector != null ? proyector.size.z : ProfundidadDeLaCajaDecal;
+        return elemento.position + elemento.rotation * Vector3.forward * (fondo * 0.5f);
+    }
+
+    // �"?�"? Medir y ver la cara sin abrir el prefab a mano �"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?�"?
 
     private const string CarpetaDiagnostico = "Logs/Caras2D";
     private const int Lado = 512;
@@ -640,23 +864,13 @@ public class Cara2DWillEditor : EditorWindow
     [MenuItem("El Sendero/Personajes/Caras 2D/Foto de la cara de Will", priority = 41)]
     public static void FotografiarWill() => Fotografiar("Will", RutaPrefabWill);
 
+    /// Vuelve a montar la cara 2D de Will entera (proyectores de decal, material por expresión y
+    /// controlador) y la deja colocada con las medidas afinadas: así queda como está hoy.
     [MenuItem("El Sendero/Personajes/Caras 2D/Recolocar y conectar la cara de Will", priority = 42)]
     public static void RecolocarWill()
     {
         if (!File.Exists(RutaPrefabWill)) return;
-        GameObject root = PrefabUtility.LoadPrefabContents(RutaPrefabWill);
-        if (root == null) return;
-
-        CalibrarTransformCara(root.transform, 0.62f, 0.55f, 0.040f, 0.038f, 0.015f);
-        string informe = AjustarControladorDeEmociones(root, RutaProfileWill);
-
-        PrefabUtility.SaveAsPrefabAsset(root, RutaPrefabWill);
-        PrefabUtility.UnloadPrefabContents(root);
-
-        string carpeta = Path.Combine(Directory.GetParent(Application.dataPath).FullName, CarpetaDiagnostico);
-        Directory.CreateDirectory(carpeta);
-        File.WriteAllText(Path.Combine(carpeta, "controlador_Will.txt"), informe);
-        Debug.Log("[Cara2D] Cara 2D de Will recolocada y controlador conectado:\n" + informe);
+        AplicarCara2DAPersonaje(RutaSpritesWill, RutaPrefabWill, RutaProfileWill, RutaMaterialWill, "Will", false, 0.62f, 0.55f, 0.040f, 0.038f, 0.003f);
     }
 
     /// Vuelca a «Logs/Caras2D/medidas_<nombre>.txt» dónde cae cada pieza de la cabeza y cada
@@ -724,6 +938,17 @@ public class Cara2DWillEditor : EditorWindow
                 sb.AppendLine($"-- Face2D: posLocal={F(face2D.localPosition)} escalaMundo={F(face2D.lossyScale)}");
                 foreach (Transform hijo in face2D)
                 {
+                    DecalProjector proyector = hijo.GetComponent<DecalProjector>();
+                    if (proyector != null)
+                    {
+                        Texture textura = proyector.material != null ? proyector.material.GetTexture("_BaseMap") : null;
+                        sb.AppendLine($"   {hijo.name,-22} activo={Estado(hijo.gameObject.activeSelf)} decal " +
+                                      $"dibujo={(textura != null ? textura.name : "SIN TEXTURA")} " +
+                                      $"posLocal={F(hijo.localPosition)} tamañoCaja={F(proyector.size)} " +
+                                      $"planoMundo={F(FrenteDeLaCaja(hijo))}");
+                        continue;
+                    }
+
                     SpriteRenderer sr = hijo.GetComponent<SpriteRenderer>();
                     if (sr == null) continue;
                     Bounds b = sr.bounds;
@@ -746,8 +971,27 @@ public class Cara2DWillEditor : EditorWindow
         return Volcar(nombre, sb);
     }
 
+    // La feature de decales de URP puede quedarse apuntando a un gestor de entidades ya liberado: el
+    // envoltorio compartido es estático y sobrevive a las recargas del dominio, pero la instancia de
+    // la feature vive en el asset del renderer. Al rehacer sus sistemas vuelve a recoger el gestor en
+    // uso, y la foto puede dar de alta en él los proyectores de la escena de previsualización.
+    private static void ReiniciarSistemasDeDecales()
+    {
+        const System.Reflection.BindingFlags EnElObjeto = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic;
+        System.Type tipoFeature = typeof(DecalProjector).Assembly.GetType("UnityEngine.Rendering.Universal.DecalRendererFeature");
+        if (tipoFeature == null) return;
+
+        foreach (Object objeto in Resources.FindObjectsOfTypeAll(tipoFeature))
+        {
+            if (objeto == null) continue;
+            tipoFeature.GetField("m_RecreateSystems", EnElObjeto)?.SetValue(objeto, true);
+            tipoFeature.GetField("m_DecalEntityManager", EnElObjeto)?.SetValue(objeto, null);
+        }
+    }
+
     /// Fotos de la cara a «Logs/Caras2D/<nombre>_*.png»: de frente, tres cuartos, perfil, la cabeza
-    /// entera, la cara 3D de referencia y una serie con la cara 2D a distintas profundidades.
+    /// entera, la cara 3D de referencia, una por emoción (la del perfil del personaje), el parpadeo y
+    /// una serie con la cara 2D a distintas profundidades.
     /// Se monta todo en una escena de previsualización para no tocar nada de lo que esté abierto.
     public static string Fotografiar(string nombre, string rutaPrefab)
     {
@@ -797,6 +1041,9 @@ public class Cara2DWillEditor : EditorWindow
             datosCamara.renderType = CameraRenderType.Base;
             datosCamara.renderPostProcessing = false;
             datosCamara.renderShadows = false;
+            // El pase de decales de URP necesita una textura de color intermedia: sin ella, el
+            // render es directo al destino y el pase revienta con una NullReferenceException.
+            datosCamara.requiresColorOption = CameraOverrideOption.On;
             nieblaPrevia = RenderSettings.fog;
             RenderSettings.fog = false;
 
@@ -811,12 +1058,35 @@ public class Cara2DWillEditor : EditorWindow
             rt = new RenderTexture(Lado, Lado, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
             cam.targetTexture = rt;
 
+            ReiniciarSistemasDeDecales();
+
+            // Los decales se envían al «siguiente» render de la cámara, así que cada foto necesita un
+            // render previo que deje las llamadas preparadas.
+            void RenderDeCalentamiento()
+            {
+                RenderTexture calentamiento = RenderTexture.GetTemporary(8, 8, 24, RenderTextureFormat.ARGB32);
+                RenderPipeline.SubmitRenderRequest(cam, new UniversalRenderPipeline.SingleCameraRequest { destination = calentamiento });
+                RenderTexture.ReleaseTemporary(calentamiento);
+            }
+
+            // Primer render: URP crea el gestor de entidades de los decales. Después hay que dar de
+            // alta en él los proyectores de esta copia (los de la escena de previsualización no los
+            // encuentra el barrido que hace URP al crear el gestor).
+            RenderDeCalentamiento();
+            foreach (DecalProjector proyector in copia.GetComponentsInChildren<DecalProjector>(true))
+            {
+                if (!proyector.gameObject.activeInHierarchy) continue;
+                proyector.enabled = false;
+                proyector.enabled = true;
+            }
+
             void Disparar(string toma, Vector3 foco, float ancho, float azimut)
             {
                 Vector3 direccion = Quaternion.AngleAxis(azimut, arriba) * frente;
                 float distancia = (ancho * 0.5f) / Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
                 camGo.transform.position = foco + direccion * distancia;
                 camGo.transform.rotation = Quaternion.LookRotation(foco - camGo.transform.position, arriba);
+                RenderDeCalentamiento();
                 UniversalRenderPipeline.SingleCameraRequest peticion = new UniversalRenderPipeline.SingleCameraRequest { destination = rt };
                 if (RenderPipeline.SupportsRenderRequest(cam, peticion)) RenderPipeline.SubmitRenderRequest(cam, peticion);
                 else cam.Render();
@@ -836,17 +1106,56 @@ public class Cara2DWillEditor : EditorWindow
             Disparar("cara_perfil", focoCara, anchoCara, 80f);
             Disparar("cabeza_frente", craneo.center, anchoCraneo, 0f);
 
+            // Una foto por emoción, activando las mismas mallas que el perfil le da al controlador en
+            // Play: así cada cara se puede comparar con la hoja de expresiones del personaje.
+            NPCEmotionController controlador = copia.GetComponentInChildren<NPCEmotionController>(true);
+            if (face2D != null && controlador != null && controlador.EmotionProfile != null)
+            {
+                EmotionProfile perfil = controlador.EmotionProfile;
+                SerializedObject soControlador = new SerializedObject(controlador);
+                string prefijoOjos = soControlador.FindProperty("eyePrefix").stringValue;
+                string prefijoBocas = soControlador.FindProperty("mouthPrefix").stringValue;
+                string ojosCerrados = soControlador.FindProperty("ojosDelParpadeo").stringValue;
+
+                string[] nombres = { "neutro", "alegre", "triste", "enfadado", "sorprendido" };
+                NPCEmotion[] emociones = { NPCEmotion.Neutral, NPCEmotion.Happy, NPCEmotion.Sad, NPCEmotion.Angry, NPCEmotion.Surprised };
+
+                for (int i = 0; i < emociones.Length; i++)
+                {
+                    EmotionMeshData datos = perfil.GetEmotionData(emociones[i]);
+                    string nombreOjos = string.IsNullOrEmpty(datos.eyeMeshName) ? perfil.ojosDeReposoPorDefecto : datos.eyeMeshName;
+                    string nombreBoca = string.IsNullOrEmpty(datos.mouthMeshName) ? perfil.bocaDeReposoPorDefecto : datos.mouthMeshName;
+                    if (!ActivarSoloMallaDeCara(face2D, prefijoOjos, nombreOjos) || !ActivarSoloMallaDeCara(face2D, prefijoBocas, nombreBoca))
+                    {
+                        diario.AppendLine($"   cara_{nombres[i]}: el perfil pide «{nombreOjos}» / «{nombreBoca}» y no están en la cara");
+                        continue;
+                    }
+                    Disparar($"cara_{nombres[i]}", focoCara, anchoCara, 0f);
+                }
+
+                // Parpadeo: los ojos cerrados con la boca de reposo.
+                ActivarSoloMallaDeCara(face2D, prefijoOjos, ojosCerrados);
+                ActivarSoloMallaDeCara(face2D, prefijoBocas, perfil.bocaDeReposoPorDefecto);
+                Disparar("cara_parpadeo", focoCara, anchoCara, 0f);
+
+                // La copia se deja en reposo antes del resto de tomas.
+                ActivarSoloMallaDeCara(face2D, prefijoOjos, perfil.ojosDeReposoPorDefecto);
+                ActivarSoloMallaDeCara(face2D, prefijoBocas, perfil.bocaDeReposoPorDefecto);
+            }
+
             if (face2D != null)
             {
                 face2D.gameObject.SetActive(false);
                 Disparar("cara_sin2D", focoCara, anchoCara, 0f);
                 face2D.gameObject.SetActive(true);
 
-                float[] adelantos = { 0.000f, 0.010f, 0.020f, 0.040f };
+                float[] adelantos = { 0.000f, 0.003f, 0.010f, 0.020f, 0.040f };
                 foreach (float adelanto in adelantos)
                 {
                     MoverCara2DAProfundidad(head, face2D, adelanto);
-                    Disparar($"cara_adelanto_{adelanto * 1000f:F0}mm", focoCara, anchoCara, 0f);
+                    string etiqueta = $"cara_adelanto_{adelanto * 1000f:F0}mm";
+                    Disparar(etiqueta, focoCara, anchoCara, 0f);
+                    Disparar($"{etiqueta}_perfil", focoCara, anchoCara, 65f);
                 }
             }
             else
@@ -875,6 +1184,23 @@ public class Cara2DWillEditor : EditorWindow
         return rutaDiario;
     }
 
+    /// Deja activa sólo la malla indicada dentro de un grupo de la cara 2D (ojos o bocas), igual que
+    /// hace el controlador de emociones en Play. Devuelve false si el nombre no existe en la cara.
+    private static bool ActivarSoloMallaDeCara(Transform face2D, string prefijo, string nombre)
+    {
+        if (face2D == null || string.IsNullOrEmpty(nombre)) return false;
+
+        bool encontrada = false;
+        foreach (Transform hijo in face2D)
+        {
+            if (!hijo.name.StartsWith(prefijo)) continue;
+            bool activar = hijo.name == nombre;
+            if (activar) encontrada = true;
+            if (hijo.gameObject.activeSelf != activar) hijo.gameObject.SetActive(activar);
+        }
+        return encontrada;
+    }
+
     /// Cuánta superficie acaba dibujada de verdad, para saber si el render ha salido vacío.
     private static float PorcentajeDibujado(Texture2D tex)
     {
@@ -893,18 +1219,26 @@ public class Cara2DWillEditor : EditorWindow
     private static void MoverCara2DAProfundidad(Transform head, Transform face2D, float adelanto)
     {
         Transform raiz = head.root;
-        foreach (Transform quad in face2D)
+        foreach (Transform elemento in face2D)
         {
-            if (quad.GetComponent<SpriteRenderer>() == null) continue;
-            string parte = quad.name.StartsWith("Eye2D_") ? "Eye01" : "Mouth01";
+            bool esOjos = elemento.name.StartsWith("Eye2D_");
+            bool esBoca = elemento.name.StartsWith("Mouth2D_");
+            if (!esOjos && !esBoca) continue;
+            if (elemento.GetComponent<DecalProjector>() == null && elemento.GetComponent<SpriteRenderer>() == null) continue;
+
+            string parte = esOjos ? "Eye01" : "Mouth01";
             Bounds caja = CajaDeParte(head, parte, out bool hayParte);
             if (!hayParte) continue;
 
             Vector3 centro = raiz.InverseTransformPoint(caja.center);
             float mediaProfundidad = Mathf.Abs(Vector3.Dot(raiz.InverseTransformVector(caja.extents), Vector3.forward));
-            Vector3 enRaiz = raiz.InverseTransformPoint(head.TransformPoint(quad.localPosition));
+            Vector3 enRaiz = raiz.InverseTransformPoint(head.TransformPoint(elemento.localPosition));
             enRaiz.z = centro.z + mediaProfundidad + adelanto;
-            quad.localPosition = head.InverseTransformPoint(raiz.TransformPoint(enRaiz));
+            Vector3 plano = head.InverseTransformPoint(raiz.TransformPoint(enRaiz));
+
+            // En un proyector, «adelanto» es dónde queda la cara frontal de la caja; la caja va hacia dentro.
+            DecalProjector proyector = elemento.GetComponent<DecalProjector>();
+            elemento.localPosition = plano + HaciaDentro(elemento) * (proyector != null ? proyector.size.z * 0.5f : 0f);
         }
     }
 

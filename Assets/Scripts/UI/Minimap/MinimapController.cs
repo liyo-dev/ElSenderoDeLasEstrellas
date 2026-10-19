@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -155,6 +156,10 @@ public class MinimapController : MonoBehaviour
     void SetupCamera()
     {
         if (minimapCamera == null) return;
+
+        // El pase de decales de URP necesita textura de color intermedia; el minimapa renderiza a
+        // textura sin post-proceso y sin ella el pase falla.
+        minimapCamera.GetUniversalAdditionalCameraData().requiresColorOption = CameraOverrideOption.On;
 
         if (renderTexture != null)
         {
