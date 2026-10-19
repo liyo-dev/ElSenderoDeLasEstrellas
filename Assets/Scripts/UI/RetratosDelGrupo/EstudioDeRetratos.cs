@@ -239,8 +239,7 @@ namespace Sendero.UI
             datos.renderPostProcessing = false;
             datos.renderShadows = false;
             datos.antialiasing = AntialiasingMode.None;
-            // El pase de decales de URP necesita textura de color intermedia; sin ella falla.
-            datos.requiresColorOption = CameraOverrideOption.On;
+            datos.requiresColorOption = CameraOverrideOption.Off;
             datos.requiresDepthOption = CameraOverrideOption.Off;
             datos.volumeLayerMask = 0;
             c.textura = new RenderTexture(resolucion, resolucion, 24, RenderTextureFormat.ARGB32)

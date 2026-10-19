@@ -118,9 +118,7 @@ public class SequenceShotCapture : EditorWindow
 
         var camGo = new GameObject("~VistaGeneral") { hideFlags = HideFlags.HideAndDontSave };
         var cam = camGo.AddComponent<Camera>();
-        var datosCamara = camGo.AddComponent<UniversalAdditionalCameraData>();
-        // El pase de decales de URP necesita textura de color intermedia; sin ella falla.
-        datosCamara.requiresColorOption = CameraOverrideOption.On;
+        camGo.AddComponent<UniversalAdditionalCameraData>();
         cam.clearFlags = CameraClearFlags.Skybox;
         cam.nearClipPlane = 0.3f;
         cam.farClipPlane = 900f;
@@ -225,9 +223,7 @@ public class SequenceShotCapture : EditorWindow
 
         var camGo = new GameObject("~CapturaDePlanos") { hideFlags = HideFlags.HideAndDontSave };
         var cam = camGo.AddComponent<Camera>();
-        var datosCamara = camGo.AddComponent<UniversalAdditionalCameraData>();
-        // El pase de decales de URP necesita textura de color intermedia; sin ella falla.
-        datosCamara.requiresColorOption = CameraOverrideOption.On;
+        camGo.AddComponent<UniversalAdditionalCameraData>();
         cam.clearFlags = CameraClearFlags.Skybox;
         cam.nearClipPlane = 0.05f;
         cam.farClipPlane = 900f;

@@ -341,10 +341,6 @@ public class NPCEmotionController : MonoBehaviour
     }
     private bool SeVenLosOjos()
     {
-        // Cara de proyectores de decal: no hay Renderer que consultar, cuenta la malla activa.
-        if (_ojosVisibles != null && _ojosVisibles.Length == 0)
-            return _ojosDeLaCara != null && _eyeMeshes.TryGetValue(_ojosDeLaCara, out GameObject malla) && malla != null && malla.activeInHierarchy;
-
         if (_ojosVisibles == null) return false;
         for (int i = 0; i < _ojosVisibles.Length; i++)
         {
