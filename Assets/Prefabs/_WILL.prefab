@@ -12148,6 +12148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractionDetector
   range: 2.2
+  margenDeConversacion: 1.2
   focusRadius: 0.35
   interactableMask:
     serializedVersion: 2
@@ -12463,6 +12464,8 @@ MonoBehaviour:
   castPoseState: Falling
   castPoseCrossfade: 0.1
   castPoseRelease: 1
+  fundidoEntreEstadosDeVuelo: 0.25
+  esperaAntesDeAvanzar: 0.35
   horizontalSpeed: 12
   verticalSpeed: 8
   descendSpeed: 12
@@ -12965,6 +12968,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ManosIK
   animator: {fileID: 0}
+  delante: 0.7
+  bajoHombros: 0.45
+  cabezaAlFrente: 0.6
   aperturaDeCodos: 0.25
 --- !u!114 &9134696940597055789
 MonoBehaviour:
@@ -22939,6 +22945,7 @@ GameObject:
   - component: {fileID: 4489745728442047556}
   - component: {fileID: 5611707248103941706}
   - component: {fileID: 6485564656748958217}
+  - component: {fileID: 242837876127653390}
   m_Layer: 0
   m_Name: Hair01
   m_TagString: Untagged
@@ -23018,6 +23025,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &242837876127653390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8872017054573630166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 4712360369832361797}
+  mallaDelPelo: {fileID: 5611707248103941706}
+  ojosDeReferencia: {fileID: 2658690165011895993}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &8875381700379141536
 GameObject:
   m_ObjectHideFlags: 0

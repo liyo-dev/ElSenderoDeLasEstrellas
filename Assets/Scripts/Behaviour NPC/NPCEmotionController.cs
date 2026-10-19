@@ -62,6 +62,9 @@ public class NPCEmotionController : MonoBehaviour
     private float _finDelHabla, _proximoCambioDeBoca;
     private float _finDeReaccion = float.PositiveInfinity;
 
+    /// Se dispara cuando cambia la emoción actual, incluida la vuelta al reposo.
+    public event System.Action<NPCEmotion> OnEmotionChanged;
+
     void Awake()
     {
         _npcManager = GetComponent<Game.NPC.NPCBehaviourManagerV2>();
@@ -170,10 +173,17 @@ public class NPCEmotionController : MonoBehaviour
 #endif
             return;
         }
-        _currentEmotion = emotion;
         var datos = emotionProfile.GetEmotionData(emotion);
         AplicarCara(string.IsNullOrEmpty(datos.eyeMeshName) ? _ojosDeReposo : datos.eyeMeshName,
             string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
+        FijarEmocion(emotion);
+    }
+
+    private void FijarEmocion(NPCEmotion emocion)
+    {
+        if (_currentEmotion == emocion) return;
+        _currentEmotion = emocion;
+        OnEmotionChanged?.Invoke(emocion);
     }
     /// Sustituye los ojos sin cambiar boca, emoci?n ni pose.
     public void AplicarOjos(string malla)
@@ -207,7 +217,7 @@ public class NPCEmotionController : MonoBehaviour
     public void VolverAReposo()
     {
         _finDeReaccion = float.PositiveInfinity;
-        _currentEmotion = _caraDeFondo == NPCEmotion.None ? NPCEmotion.Neutral : _caraDeFondo;
+        NPCEmotion emocion = _caraDeFondo == NPCEmotion.None ? NPCEmotion.Neutral : _caraDeFondo;
         if (_caraDeFondo != NPCEmotion.None && _caraDeFondo != NPCEmotion.Neutral && emotionProfile != null)
         {
             var datos = emotionProfile.GetEmotionData(_caraDeFondo);
@@ -215,6 +225,7 @@ public class NPCEmotionController : MonoBehaviour
                 string.IsNullOrEmpty(datos.mouthMeshName) ? _bocaDeReposo : datos.mouthMeshName);
         }
         else AplicarCara(_ojosDeReposo, _bocaDeReposo);
+        FijarEmocion(emocion);
     }
     private void AplicarCara(string ojos, string boca)
     {
