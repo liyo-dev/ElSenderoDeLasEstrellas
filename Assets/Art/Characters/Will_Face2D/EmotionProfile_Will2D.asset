@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bb9917ab1e49e8964383e4fc141e9f, type: 3}
+  m_Name: EmotionProfile_Will2D
+  m_EditorClassIdentifier: Assembly-CSharp::EmotionProfile
+  transitionDuration: 0.1
+  ojosNeutros:
+  - Eye2D_Neutro
+  bocasNeutras:
+  - Mouth2D_Neutra
+  ojosDeReposoPorDefecto: Eye2D_Neutro
+  bocaDeReposoPorDefecto: Mouth2D_Neutra
+  segundosDeReaccion: 1.5
+  bocaHablandoEntreabierta: Mouth2D_Habla
+  bocaHablandoAbierta: Mouth2D_Alegre
+  segundosPorBoca: 0.08
+  umbralVozAbierta: 0.08
+  tiempoMinimoPorBocaConVoz: 0.06
+  emotions:
+  - emotion: 0
+    eyeMeshName: Eye2D_Neutro
+    mouthMeshName: Mouth2D_Neutra
+    bodyAnimStateName: 
+    bodyAnimVariants: []
+  - emotion: 1
+    eyeMeshName: Eye2D_Alegre
+    mouthMeshName: Mouth2D_Alegre
+    bodyAnimStateName: HeadNod01
+    bodyAnimVariants: []
+  - emotion: 2
+    eyeMeshName: Eye2D_Triste
+    mouthMeshName: Mouth2D_Triste
+    bodyAnimStateName: Cry01
+    bodyAnimVariants: []
+  - emotion: 3
+    eyeMeshName: Eye2D_Enfadado
+    mouthMeshName: Mouth2D_Enfadada
+    bodyAnimStateName: Angry02
+    bodyAnimVariants: []
+  - emotion: 4
+    eyeMeshName: Eye2D_Sorprendido
+    mouthMeshName: Mouth2D_Sorprendida
+    bodyAnimStateName: SenseSomethingStart_NoWeapon
+    bodyAnimVariants: []
+  - emotion: 5
+    eyeMeshName: Eye2D_Sorprendido
+    mouthMeshName: Mouth2D_Triste
+    bodyAnimStateName: Beg01
+    bodyAnimVariants: []
+  - emotion: 6
+    eyeMeshName: Eye2D_Neutro
+    mouthMeshName: Mouth2D_Habla
+    bodyAnimStateName: Question01
+    bodyAnimVariants: []
+  - emotion: 7
+    eyeMeshName: Eye2D_Triste
+    mouthMeshName: Mouth2D_Neutra
+    bodyAnimStateName: IdleWounded01
+    bodyAnimVariants: []
+  - emotion: 8
+    eyeMeshName: Eye2D_Alegre
+    mouthMeshName: Mouth2D_Alegre
+    bodyAnimStateName: Laugh01
+    bodyAnimVariants: []
+  - emotion: 9
+    eyeMeshName: Eye2D_Triste
+    mouthMeshName: Mouth2D_Triste
+    bodyAnimStateName: HeadShake02
+    bodyAnimVariants: []
+  - emotion: 10
+    eyeMeshName: Eye2D_Enfadado
+    mouthMeshName: Mouth2D_Neutra
+    bodyAnimStateName: Challenging_NoWeapon
+    bodyAnimVariants: []
+  - emotion: 11
+    eyeMeshName: Eye2D_Alegre
+    mouthMeshName: Mouth2D_Neutra
+    bodyAnimStateName: Talk02
+    bodyAnimVariants: []
+  - emotion: 12
+    eyeMeshName: Eye2D_Sorprendido
+    mouthMeshName: Mouth2D_Habla
+    bodyAnimStateName: Question02
+    bodyAnimVariants: []
+  - emotion: 13
+    eyeMeshName: Eye2D_Alegre
+    mouthMeshName: Mouth2D_Alegre
+    bodyAnimStateName: Cheer02
+    bodyAnimVariants: []
+  - emotion: 14
+    eyeMeshName: Eye2D_Enfadado
+    mouthMeshName: Mouth2D_Triste
+    bodyAnimStateName: HeadShake01
+    bodyAnimVariants: []
+  - emotion: 15
+    eyeMeshName: Eye2D_Alegre
+    mouthMeshName: Mouth2D_Neutra
+    bodyAnimStateName: Reverence01
+    bodyAnimVariants: []
+  neutralBodyAnims:
+  - Talk01
+  - Talk02
+  - Talk03
