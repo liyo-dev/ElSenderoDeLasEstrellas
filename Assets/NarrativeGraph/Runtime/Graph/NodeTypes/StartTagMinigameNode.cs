@@ -48,7 +48,7 @@ public sealed class StartTagMinigameNode : NarrativeNode
 
         if (controller.IsAlreadyCompleted())
         {
-            Debug.Log($"[StartTagMinigameNode] Minijuego '{minigameId}' ya completado → avanzando.");
+            NarrativeLog.Info($"[StartTagMinigameNode] Minijuego '{minigameId}' ya completado → avanzando.");
             onReadyToAdvance?.Invoke();
             return;
         }
@@ -59,7 +59,7 @@ public sealed class StartTagMinigameNode : NarrativeNode
         _eventKey = $"MINIGAME_{minigameId}_WON";
         _onWinCallback = () =>
         {
-            Debug.Log($"[StartTagMinigameNode] Minijuego '{minigameId}' ganado. Avanzando en el grafo.");
+            NarrativeLog.Info($"[StartTagMinigameNode] Minijuego '{minigameId}' ganado. Avanzando en el grafo.");
             if (deactivateOnEnd && controller != null)
                 controller.gameObject.SetActive(false);
             SafeUnsubscribe();
@@ -70,7 +70,7 @@ public sealed class StartTagMinigameNode : NarrativeNode
         _abortKey = $"MINIGAME_ABORTED:{minigameId}";
         _onAbortCallback = () =>
         {
-            Debug.Log($"[StartTagMinigameNode] Minijuego '{minigameId}' abortado.");
+            NarrativeLog.Info($"[StartTagMinigameNode] Minijuego '{minigameId}' abortado.");
             SafeUnsubscribe();
         };
 
@@ -79,7 +79,7 @@ public sealed class StartTagMinigameNode : NarrativeNode
             signals.OnCustom(_eventKey, _onWinCallback);
             signals.OnCustom(_abortKey, _onAbortCallback);
             _subscribedSignals = signals;
-            Debug.Log($"[StartTagMinigameNode] Suscrito a '{_eventKey}' y '{_abortKey}'. Iniciando minijuego...");
+            NarrativeLog.Info($"[StartTagMinigameNode] Suscrito a '{_eventKey}' y '{_abortKey}'. Iniciando minijuego...");
         }
         catch (Exception ex)
         {

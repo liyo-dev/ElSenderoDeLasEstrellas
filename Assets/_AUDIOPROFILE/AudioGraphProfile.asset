@@ -17,17 +17,19 @@ MonoBehaviour:
     musicDb: -12
     ambienceDb: -8
     sfxDb: -5
+    voiceGainDb: 0
     attackSeconds: 0.15
     releaseSeconds: 0.6
     holdAfterVoiceSeconds: 0.25
   cinematicVoiceDuck:
     enabled: 1
-    musicDb: -8
-    ambienceDb: -5
-    sfxDb: -3
-    attackSeconds: 0.15
-    releaseSeconds: 0.6
-    holdAfterVoiceSeconds: 0.25
+    musicDb: -18
+    ambienceDb: -10
+    sfxDb: -8
+    voiceGainDb: 8
+    attackSeconds: 0.08
+    releaseSeconds: 0.65
+    holdAfterVoiceSeconds: 0.5
   battles:
   - battleId: Demon_1
     music: {fileID: 8300000, guid: 24a71dab734d1bc438901f99872ee849, type: 3}
@@ -57,7 +59,7 @@ MonoBehaviour:
     loop: 0
   ambientZones:
   - zoneId: Woods
-    music: {fileID: 8300000, guid: 48f0139b886c977498318294d28eff29, type: 3}
+    music: {fileID: 0}
     fade: 1
     loop: 1
   - zoneId: Mountains
@@ -492,7 +494,7 @@ MonoBehaviour:
     fadeIn: 1
     fadeOut: 2
   - sequenceId: LIAM_CRYSTAL
-    music: {fileID: 8300000, guid: 8e63bf0204db797478d778ef7b3c6821, type: 3}
+    music: {fileID: 8300000, guid: fe0855e721ee5cf4aa3e0430de965f55, type: 3}
     fadeIn: 1
     fadeOut: 2
   - sequenceId: ESTELA_APPEARS

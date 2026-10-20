@@ -43,7 +43,7 @@ public sealed class PlayDialogueNode : NarrativeNode
         {
             if (ctx.Blackboard.Get<bool>(OneShotKey, false))
             {
-                Debug.Log($"[PlayDialogueNode] Diálogo ya reproducido (flag: {oneShotFlag}) → saltando");
+                NarrativeLog.Info($"[PlayDialogueNode] Diálogo ya reproducido (flag: {oneShotFlag}) → saltando");
                 onReadyToAdvance?.Invoke();
                 return;
             }

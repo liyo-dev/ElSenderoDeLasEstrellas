@@ -56,6 +56,7 @@ public static partial class CombatLabBuilder
         var c = CentroPruebaLuz;
         SalaDePrueba(zona, raiz, c, suelo, muro, velo);
         var fin = EstrellaDePrueba("LUZ", raiz, c, estrella);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(110f, 0f, -45f), EntradaPruebaLuz);
         CrearTexto("Prueba: luz y saltos", zona, new Vector3(110f, 4.2f, -42f), 90f);
         CrearTexto("Enciende los cristales con luz o con la bola devuelta", zona, new Vector3(110f, 3.5f, -42f), 90f);
 
@@ -113,6 +114,7 @@ public static partial class CombatLabBuilder
         var c = CentroPruebaViento;
         SalaDePrueba(zona, raiz, c, suelo, muro, velo);
         var fin = EstrellaDePrueba("VIENTO", raiz, c, estrella);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(110f, 0f, 4f), EntradaPruebaViento);
         CrearTexto("Prueba: viento y levitación", zona, new Vector3(110f, 4.2f, 8f), 90f);
         CrearTexto("Viento a los molinetes · Levitación a los bloques", zona, new Vector3(110f, 3.5f, 8f), 90f);
 
@@ -181,6 +183,7 @@ public static partial class CombatLabBuilder
         var c = CentroPruebaLiam;
         SalaDePrueba(zona, raiz, c, suelo, muro, velo);
         var fin = EstrellaDePrueba("LIAM", raiz, c, estrella);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(110f, 0f, 50f), EntradaPruebaLiam);
         var puzle = GetMaterial("Lab_Puzle", new Color(0.55f, 0.35f, 0.80f));
         var barreraMat = GetMaterialTransparente("Lab_BarreraDeVuelo", new Color(0.95f, 0.75f, 0.30f, 0.35f));
         CrearTexto("Prueba: Liam y cambio de personaje", zona, new Vector3(110f, 4.2f, 54f), 90f);
@@ -321,7 +324,8 @@ public static partial class CombatLabBuilder
         var esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         esfera.name = "Estrella de la prueba";
         esfera.transform.SetParent(raiz);
-        esfera.transform.SetPositionAndRotation(c + new Vector3(-LadoPrueba * 0.5f, AltoMuroPrueba + 2f, 0f), Quaternion.identity);
+        // Sobre la entrada, pero dentro de la sala: en el muro se colgaba a medias del lado de fuera.
+        esfera.transform.SetPositionAndRotation(c + new Vector3(-LadoPrueba * 0.5f + 2.5f, AltoMuroPrueba + 1.5f, 0f), Quaternion.identity);
         esfera.transform.localScale = Vector3.one * 1.2f;
         Object.DestroyImmediate(esfera.GetComponent<Collider>());
         var r = esfera.GetComponent<Renderer>();

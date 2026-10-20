@@ -51,6 +51,8 @@ public class AudioGraphProfile : ScriptableObject
         [Range(-80f, 0f)] public float musicDb = -12f;
         [Range(-80f, 0f)] public float ambienceDb = -8f;
         [Range(-80f, 0f)] public float sfxDb = -5f;
+        [Tooltip("Ganancia en dB para realzar el canal de diálogo durante las voces")]
+        [Range(0f, 12f)] public float voiceGainDb = 0f;
         [Min(0f)] public float attackSeconds = 0.15f;
         [Min(0f)] public float releaseSeconds = 0.6f;
         [Min(0f)] public float holdAfterVoiceSeconds = 0.25f;
@@ -62,8 +64,8 @@ public class AudioGraphProfile : ScriptableObject
     [Header("Atenuación de voces en cinemáticas")]
     public VoiceDuckSettings cinematicVoiceDuck = new()
     {
-        musicDb = -8f, ambienceDb = -5f, sfxDb = -3f,
-        attackSeconds = 0.15f, releaseSeconds = 0.6f, holdAfterVoiceSeconds = 0.25f
+        musicDb = -16f, ambienceDb = -10f, sfxDb = -6f, voiceGainDb = 4f,
+        attackSeconds = 0.12f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
     };
 
     public List<BattleRule> battles = new();

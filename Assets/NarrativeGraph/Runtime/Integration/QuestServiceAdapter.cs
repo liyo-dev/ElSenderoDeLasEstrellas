@@ -42,7 +42,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
 
     public void StartQuest(string questId)
     {
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] StartQuest({questId})");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] StartQuest({questId})");
         var qm = QuestManager.Instance;
         if (qm == null) { Debug.LogWarning("[QuestServiceAdapter] QuestManager.Instance = null"); return; }
         qm.StartQuest(questId);
@@ -54,7 +54,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         Qm.OnQuestsChanged += HandleQuestsChanged;
         Qm.OnQuestCompleted += HandleQuestCompleted; // suscripción directa para disparo inmediato
         _subscribed = true;
-        if (debugLogs) Debug.Log("[QuestServiceAdapter] Subscribed");
+        if (debugLogs) NarrativeLog.Info("[QuestServiceAdapter] Subscribed");
     }
     void TryUnsubscribe()
     {
@@ -81,7 +81,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
             try { st = Qm.GetState(qid); } catch { continue; }
             if (st == QuestState.Completed)
             {
-                if (debugLogs) Debug.Log($"[QuestServiceAdapter] Completed → {qid}");
+                if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] Completed → {qid}");
 
                 // Iterar sobre una copia de la lista de callbacks porque los callbacks pueden modificarla
                 var callbacks = kv.Value?.ToArray();
@@ -103,7 +103,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         if (_waitingCompleted.Count == 0)
         {
             TryUnsubscribe();
-            if (debugLogs) Debug.Log("[QuestServiceAdapter] No pending completions; unsubscribed.");
+            if (debugLogs) NarrativeLog.Info("[QuestServiceAdapter] No pending completions; unsubscribed.");
         }
     }
 
@@ -149,7 +149,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         if (cb == null || string.IsNullOrEmpty(questId)) return;
         if (IsCompleted(questId))
         {
-            if (debugLogs) Debug.Log($"[QuestServiceAdapter] Quest {questId} already completed; invoking callback now");
+            if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] Quest {questId} already completed; invoking callback now");
             cb();
             return;
         }
@@ -160,7 +160,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         }
         list.Add(cb);
         TrySubscribe();
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] OnCompleted subscribed → {questId}");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] OnCompleted subscribed → {questId}");
     }
 
     public void OffCompleted(string questId, Action cb)
@@ -176,7 +176,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
     public void Complete(string questId)
     {
         if (Qm == null || string.IsNullOrWhiteSpace(questId)) return;
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] Complete → CompleteQuest({questId})");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] Complete → CompleteQuest({questId})");
         try { Qm.CompleteQuest(questId); } catch (Exception e) { Debug.LogException(e); }
     }
 
@@ -187,7 +187,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         try
         {
             Qm.MarkStepDone(questId, stepIndex);
-            if (debugLogs) Debug.Log($"[QuestServiceAdapter] CompleteStep {questId} -> {stepIndex}");
+            if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] CompleteStep {questId} -> {stepIndex}");
         }
         catch (Exception e)
         {
@@ -205,7 +205,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         if (string.IsNullOrWhiteSpace(questId) || string.IsNullOrWhiteSpace(stepConditionId)) return;
 
         Qm.CompleteQuestStepByConditionId(questId, stepConditionId);
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] CompleteStepByConditionId {questId} -> {stepConditionId}");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] CompleteStepByConditionId {questId} -> {stepConditionId}");
     }
 
     // Disparo diferido cuando QuestManager anuncia completada
@@ -214,7 +214,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
     {
         if (!_waitingCompleted.TryGetValue(questId, out var list) || list == null || list.Count == 0)
             return;
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] HandleQuestCompleted → {questId} (callbacks={list.Count}) - Diferiendo al siguiente frame");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] HandleQuestCompleted → {questId} (callbacks={list.Count}) - Diferiendo al siguiente frame");
         
         // Copiar callbacks y remover de la lista antes de diferir
         var callbacks = list.ToArray();
@@ -229,7 +229,7 @@ public class QuestServiceAdapter : MonoBehaviour, IQuestService
         // Esperar al siguiente frame
         yield return null;
         
-        if (debugLogs) Debug.Log($"[QuestServiceAdapter] Ejecutando callbacks diferidos para {questId}");
+        if (debugLogs) NarrativeLog.Info($"[QuestServiceAdapter] Ejecutando callbacks diferidos para {questId}");
         
         foreach (var cb in callbacks)
         {

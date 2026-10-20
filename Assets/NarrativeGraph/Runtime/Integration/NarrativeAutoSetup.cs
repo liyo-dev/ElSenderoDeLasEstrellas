@@ -31,7 +31,7 @@ public class NarrativeAutoSetup : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            if (debugLogs) Debug.Log("[NarrativeAutoSetup] Duplicado detectado. Destruyendo este.");
+            if (debugLogs) NarrativeLog.Info("[NarrativeAutoSetup] Duplicado detectado. Destruyendo este.");
             Destroy(gameObject);
             return;
         }
@@ -56,7 +56,7 @@ public class NarrativeAutoSetup : MonoBehaviour
         // Snapshot narrativo eliminado; no hay pending que aplicar
 
         if (debugLogs)
-            Debug.Log("[NarrativeAutoSetup] Listo: runner + signals + questService conectados.");
+            NarrativeLog.Info("[NarrativeAutoSetup] Listo: runner + signals + questService conectados.");
     }
 
     void OnDestroy()
@@ -72,7 +72,7 @@ public class NarrativeAutoSetup : MonoBehaviour
         // 2. Iniciar el grafo, que verificará __currentNodeGuid y continuará desde ahí
         //
         // Esto garantiza que el sistema es agnóstico al origen de los datos.
-        if (debugLogs) Debug.Log("[NarrativeAutoSetup] Start() - grafo NO iniciado aquí (lo hará NarrativeGraphStarter)");
+        if (debugLogs) NarrativeLog.Info("[NarrativeAutoSetup] Start() - grafo NO iniciado aquí (lo hará NarrativeGraphStarter)");
     }
 
     void TryBootstrapQuestSignals()
@@ -88,7 +88,7 @@ public class NarrativeAutoSetup : MonoBehaviour
         var questState = qm.GetState("ELDRAN_MISSION1");
         if (questState >= QuestState.Completed)
         {
-            if (debugLogs) Debug.Log("[NarrativeAutoSetup] Quest ELDRAN_MISSION1 completed; raising LETTER_START");
+            if (debugLogs) NarrativeLog.Info("[NarrativeAutoSetup] Quest ELDRAN_MISSION1 completed; raising LETTER_START");
             _signals.RaiseCustom("LETTER_START");
         }
         */
@@ -120,7 +120,7 @@ public class NarrativeAutoSetup : MonoBehaviour
 
     void HandleReset(string reason, bool clearBlackboard = false, bool restartGraph = false, bool preservePending = false)
     {
-        if (debugLogs) Debug.Log($"[NarrativeAutoSetup] {reason}() - clearBlackboard={clearBlackboard}, restartGraph={restartGraph}, preservePending={preservePending}");
+        if (debugLogs) NarrativeLog.Info($"[NarrativeAutoSetup] {reason}() - clearBlackboard={clearBlackboard}, restartGraph={restartGraph}, preservePending={preservePending}");
 
         _signals?.ResetState(preservePending);
         _questService?.ResetState();

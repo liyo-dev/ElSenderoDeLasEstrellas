@@ -77,7 +77,13 @@ MonoBehaviour:
     - key: __currentNodeGuid
       type: string
       value: cap2-iniciado-flag
-  npcPositions: []
+  npcPositions:
+  - npcId: Eldran
+    position: {x: 25.8, y: 27.01, z: -82.61}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    hasRotation: 1
+    hasActiveState: 0
+    isActive: 0
   npcRelationships: []
   objetosDelMundo: []
   consumedInteractableIds: []

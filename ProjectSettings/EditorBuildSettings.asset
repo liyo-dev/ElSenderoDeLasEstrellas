@@ -44,5 +44,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Test/Lab.unity
     guid: 8a92a62cbca6c014f94feaa014690fc5
+  - enabled: 1
+    path: Assets/Scenes/Test/EscapeSendero.unity
+    guid: 8188d09c41532c24e870ccfc4c789921
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

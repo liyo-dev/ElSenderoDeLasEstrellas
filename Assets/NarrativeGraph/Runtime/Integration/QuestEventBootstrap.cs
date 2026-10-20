@@ -51,7 +51,7 @@ public sealed class QuestEventBootstrap : MonoBehaviour
         if ((int)state < (int)minimumState) return;
         var signals = DefaultNarrativeSignals.Instance;
         if (signals == null) return;
-        Debug.Log($"[QuestEventBootstrap] Raising '{eventKey}' because quest '{questId}' is {state}");
+        NarrativeLog.Info($"[QuestEventBootstrap] Raising '{eventKey}' because quest '{questId}' is {state}");
         signals.RaiseCustom(eventKey);
         if (runOnce) _fired = true;
         */

@@ -291,7 +291,18 @@ internal sealed partial class Horno
             var clase = AppDomain.CurrentDomain.GetAssemblies().Select(asm => asm.GetType(_g.prepara)).FirstOrDefault(t => t != null);
             var metodo = clase?.GetMethod("Asegurar", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
             if (metodo == null) Error($"PREPARA {_g.prepara}: no existe esa clase con un Asegurar() estático");
-            else metodo.Invoke(null, null);
+            else
+            {
+                metodo.Invoke(null, null);
+                if (!_escena.IsValid() || !_escena.isLoaded)
+                {
+                    _escena = SceneManager.GetSceneByName(_g.escena);
+                    if (!_escena.IsValid() || !_escena.isLoaded)
+                        _escena = CapturaDeEscenario.AbrirEscena(_g.escena);
+                    EscenaDelGuion = _escena;
+                }
+                _stage = CapturaDeEscenario.BuscarStage(_escena);
+            }
         }
         PrepararReparto();
         PrepararPuntos();
@@ -787,7 +798,7 @@ internal sealed partial class Horno
 
     private float Decir(ActorH a, GuionTexto.Orden o, float t)
     {
-        string clave = o.args.FirstOrDefault();
+        string clave = o.args.Count > 1 ? string.Join(" ", o.args) : o.args.FirstOrDefault();
         if (string.IsNullOrEmpty(clave)) { Error($"{o}: ¿qué frase?"); return 0f; }
         float dura = DuracionDeVoz(clave, o);
         var linea = new LineaHorneada { t0 = t, t1 = t + dura, actor = a.id, clave = clave, sinPose = o.Tiene("sin_pose"),

@@ -18,7 +18,7 @@ public sealed class UnlockWardrobeItemNode : NarrativeNode
             if (logWarnings)
             {
                 // Cambiado a Log normal para evitar spam de warnings
-                Debug.Log($"[UnlockWardrobeItemNode] El item '{wardrobeItem?.name}' ya estaba desbloqueado o no se pudo desbloquear.");
+                NarrativeLog.Info($"[UnlockWardrobeItemNode] El item '{wardrobeItem?.name}' ya estaba desbloqueado o no se pudo desbloquear.");
             }
         }
 

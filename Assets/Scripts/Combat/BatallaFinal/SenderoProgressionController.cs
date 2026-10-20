@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Sendero.Core.Feedback;
+using Invector.vCharacterController;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -56,6 +58,13 @@ public class SenderoProgressionController : MonoBehaviour
     [Header("Señal de Batalla Final")]
     [SerializeField] private string _senialBatallaFinal = "SENDERO_FINAL_START";
 
+    [Header("Seguridad en el Vacío")]
+    [Tooltip("Altura límite Y bajo la cual el jugador cae al abismo cósmico y es rescatado.")]
+    [SerializeField] private float _alturaCaidaVacio = -10f;
+
+    private Transform _jugadorTransform;
+    private bool _enRespawn = false;
+
     public static SenderoProgressionController Instance { get; private set; }
 
     public static event Action<EstadoSendero> OnEstadoCambiado;
@@ -90,6 +99,92 @@ public class SenderoProgressionController : MonoBehaviour
         {
             StartCoroutine(Co_SecuenciaLlegadaYSellado());
         }
+    }
+
+    private void Update()
+    {
+        if (_enRespawn) return;
+
+        if (_jugadorTransform == null)
+        {
+            if (PlayerService.PlayerTransform != null)
+            {
+                _jugadorTransform = PlayerService.PlayerTransform;
+            }
+            else
+            {
+                var willGo = GameObject.Find("_WILL");
+                if (willGo != null) _jugadorTransform = willGo.transform;
+            }
+        }
+
+        if (_jugadorTransform != null && _jugadorTransform.position.y < _alturaCaidaVacio)
+        {
+            StartCoroutine(Co_RespawnJugador());
+        }
+    }
+
+    private IEnumerator Co_RespawnJugador()
+    {
+        _enRespawn = true;
+        FeedbackService.ScreenFlash(new Color(0.15f, 0.05f, 0.35f, 0.8f), 0.4f);
+
+        yield return new WaitForSeconds(0.15f);
+
+        Vector3 posDestino;
+        Quaternion rotDestino = Quaternion.identity;
+
+        switch (_estado)
+        {
+            case EstadoSendero.Llegada:
+            case EstadoSendero.HaciaPruebaWill:
+                posDestino = new Vector3(0f, 0.5f, 0f);
+                break;
+            case EstadoSendero.EnPruebaWill:
+            case EstadoSendero.HaciaPruebaEstela:
+                posDestino = new Vector3(0f, 1.2f, 60f);
+                break;
+            case EstadoSendero.EnPruebaEstela:
+            case EstadoSendero.HaciaPruebaLiam:
+                posDestino = new Vector3(8f, 3.2f, 125f);
+                break;
+            case EstadoSendero.EnPruebaLiam:
+            case EstadoSendero.RupturaYReconciliacion:
+                posDestino = new Vector3(0f, 1.8f, 205f);
+                break;
+            case EstadoSendero.FrenteAlAltar:
+            case EstadoSendero.BatallaIniciada:
+                posDestino = new Vector3(0f, 2.8f, 260f);
+                break;
+            default:
+                posDestino = new Vector3(0f, 0.5f, 0f);
+                break;
+        }
+
+        if (_jugadorTransform != null)
+        {
+            var motor = _jugadorTransform.GetComponent<vThirdPersonMotor>();
+            if (motor != null)
+            {
+                motor.transform.position = posDestino;
+                motor.transform.rotation = rotDestino;
+            }
+            else
+            {
+                _jugadorTransform.position = posDestino;
+                _jugadorTransform.rotation = rotDestino;
+            }
+
+            var rb = _jugadorTransform.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
+        }
+
+        yield return new WaitForSeconds(0.25f);
+        _enRespawn = false;
     }
 
     /// <summary>

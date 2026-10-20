@@ -139,6 +139,16 @@ public sealed class PlayerSwimmingController : MonoBehaviour
     /// <summary>True mientras está en el agua (zambulléndose o flotando).</summary>
     public bool EstaEnElAgua => _fase != Fase.Fuera;
 
+    /// <summary>
+    /// Sale del agua a propósito (p. ej. al subir a un barco). Es la misma salida que se hace
+    /// sola, pero—forzada: quien la llama necesita que el nado se corte aquí y ahora.
+    /// </summary>
+    public void SalirDelAgua()
+    {
+        if (_fase == Fase.Fuera) return;
+        ExitSwimming(force: true);
+    }
+
     /// <summary>Altura del pivote a la que flota. Solo válida con <see cref="EstaEnElAgua"/>.</summary>
     public float AlturaDeFlote => _alturaFlote;
 
@@ -215,6 +225,11 @@ public sealed class PlayerSwimmingController : MonoBehaviour
 
         if (_fase == Fase.Fuera)
         {
+            // A bordo de un barco el jugador está sobre el agua, pero no se nada: lo lleva el
+            // barco. Sin esto, al bajar la cubierta al nivel del agua volvería a meterse en el
+            // agua y pelearía con la conducción por el Rigidbody.
+            if (_actionManager != null && _actionManager.IsInMode(ActionMode.Boating)) return;
+
             if (hasSurface && ShouldEnter(surfaceY) && (_actionManager == null || _actionManager.CanSwim()))
                 EnterSwimming(surfaceY);
             return;

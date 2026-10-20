@@ -23,6 +23,7 @@ public sealed class ReproductorDeGuion
     private GameObject _puntos;
     private int _iLinea, _iPlano, _iEfecto;
     private bool _terminado;
+    private bool _preparado;
     private float _t;
     private LineaHorneada _lineaEnCurso;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -51,7 +52,6 @@ public sealed class ReproductorDeGuion
     {
         Preparar();
         _t = _inicio;
-        SaltarHasta(_inicio);
 
         while (_t < _g.duracion && !_terminado)
         {
@@ -66,8 +66,14 @@ public sealed class ReproductorDeGuion
 
     // ── Preparación y cierre ────────────────────────────────────────────────────────────────
 
-    private void Preparar()
+    /// Coloca a los actores y les pone su estado del segundo inicial. Se llama con la pantalla
+    /// cubierta (ver GuionBeat.Preparar) para que la escena aparezca ya compuesta; si no, se llama
+    /// desde Reproducir. Idempotente: la segunda vez no hace nada.
+    public void Preparar()
     {
+        if (_preparado) return;
+        _preparado = true;
+
         foreach (var efecto in _g.efectos)
             if (efecto.beat is PropEnManoBeat prop && !prop.dejar) prop.RegistrarFinal(_ctx);
         foreach (var datos in _g.actores)
@@ -116,6 +122,10 @@ public sealed class ReproductorDeGuion
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         InformeDeRodaje.Fase("Guion: " + _g.nombre);
 #endif
+
+        // También en el segundo 0: el guion puede empezar con alguien ya sentado o tumbado y la
+        // escena tiene que aparecer así desde el primer fotograma, no recomponerse a la vista.
+        SaltarHasta(_inicio);
     }
 
     public void Terminar()
@@ -384,15 +394,16 @@ public sealed class ReproductorDeGuion
         {
             // Solo el último estado de animación y de cara que tocaba en t.
             string bucle = null;
-            while (_iAnim < Datos.animacion.Count && Datos.animacion[_iAnim].t < t)
+            while (_iAnim < Datos.animacion.Count && Datos.animacion[_iAnim].t <= t)
             {
                 var o = Datos.animacion[_iAnim++];
                 if (o.tipo == TipoDeAnimacion.Bucle) bucle = o.estado;
                 else if (o.tipo == TipoDeAnimacion.Reposo) bucle = null;
             }
-            if (bucle != null) Actor.HoldPose(bucle);
+            // Sin fundido: es el estado con el que la escena ya tiene que aparecer.
+            if (bucle != null) Actor.HoldPose(bucle, fundido: 0f);
             NPCEmotion cara = NPCEmotion.None;
-            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t < t) cara = Datos.caras[_iCara++].emocion;
+            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = Datos.caras[_iCara++].emocion;
             if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
             if (Datos.posiciones.Count > 0) Actor.Transform.position = Interpolar.Posicion(Datos.posiciones, t);
         }

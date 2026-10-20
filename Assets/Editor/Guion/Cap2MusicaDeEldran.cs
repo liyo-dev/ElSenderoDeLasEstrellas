@@ -14,7 +14,7 @@ public static class Cap2MusicaDeEldran
     public static void Aplicar()
     {
         var perfil = AssetDatabase.LoadAssetAtPath<AudioGraphProfile>("Assets/_AUDIOPROFILE/AudioGraphProfile.asset") ?? throw new InvalidOperationException("Falta el perfil de audio.");
-        var clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/la-melodia-de-eldran.mp3") ?? throw new InvalidOperationException("Falta la melodía de Eldran.");
+        var clip = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/Cinematicas/la-melodia-de-eldran.mp3") ?? throw new InvalidOperationException("Falta la melodía de Eldran.");
         var regla = perfil.GetSequenceRule(Regla);
         if (regla == null) { regla = new AudioGraphProfile.SequenceRule { sequenceId = Regla }; perfil.sequences.Add(regla); }
         regla.music = clip; regla.fadeIn = 2f; regla.fadeOut = 1.5f;

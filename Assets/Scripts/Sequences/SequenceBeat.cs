@@ -423,6 +423,13 @@ public abstract class SequenceBeat
     /// Ejecuta el beat. Debe terminar por sí solo: un beat que nunca acaba cuelga la secuencia
     /// entera (y con ella el input del jugador, ya bloqueado por la cinemática).
     public abstract IEnumerator Run(SequenceContext ctx);
+
+    /// Deja montado lo que tenga que estar listo ANTES de que la secuencia descubra la pantalla.
+    /// Se llama en el cut point de la entrada, con el telón cerrado. Un beat que coloca actores
+    /// (el guion horneado) lo aprovecha para que la escena aparezca ya compuesta, en vez de
+    /// enseñar el estado anterior durante el fundido y recomponerlo a la vista. Por defecto no
+    /// hace nada.
+    public virtual void Preparar(SequenceContext ctx) { }
 }
 
 /// Un tramo con nombre de la secuencia ("Saludo a distancia", "El hechizo fallido"...).

@@ -177,6 +177,7 @@ public class SayBeat : SequenceBeat
         {
             if (hablaCerrada) return;
             hablaCerrada = true;
+            if (anchor != null) SenalesDeHabla.Para(anchor);
             ctx.MarcarHabla(actor, false);
             actor?.Emotion?.VolverAReposo();
             foreach (var escucha in escuchas) escucha.Cerrar();
@@ -249,6 +250,7 @@ public class SayBeat : SequenceBeat
                 if (pageIndex == pages.Count - 1) duracion += 0.3f;
             }
 
+            if (anchor != null) SenalesDeHabla.Empieza(anchor, duracion);
             AplicarExpresiones(ctx, totalCharacters > 0 ? (float)caracteresLeidos / totalCharacters : 0f, expresionesAplicadas);
             turnoDelBocadillo = bubble.Show(anchor, page, duracion, () => done = true,
                 trigger, speakerName: speakerName, worldOffset: offsetOverride,
@@ -306,6 +308,7 @@ public class SayBeat : SequenceBeat
                     "seguridad. Lo normal es que otro bocadillo lo haya pisado: mira si hay dos beats de " +
                     "hablar a la vez.");
 #endif
+            if (anchor != null) SenalesDeHabla.Para(anchor);
             caracteresLeidos += page.Length;
         }
 

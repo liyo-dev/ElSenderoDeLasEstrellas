@@ -33,6 +33,19 @@ public class GuionBeat : SequenceBeat
     public override string Describe()
         => guion == null ? "Guion (sin asignar)" : $"Guion «{guion.nombre}» ({guion.duracion:0.0} s)";
 
+    private ReproductorDeGuion _preparado;
+
+    /// Monta el guion con la pantalla cubierta: deja a los actores en su sitio y con la pose del
+    /// segundo inicial, para que la entrada descubra la escena ya compuesta. Reproducir reutiliza
+    /// este mismo reproductor en vez de volver a colocar a todo el mundo a la vista.
+    public override void Preparar(SequenceContext ctx)
+    {
+        if (guion == null || ctx == null || _preparado != null) return;
+        _preparado = new ReproductorDeGuion(guion, ctx, Inicio);
+        _preparado.Preparar();
+        ctx.Player?.RegisterCleanup(_preparado.Terminar);
+    }
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (guion == null)
@@ -43,12 +56,14 @@ public class GuionBeat : SequenceBeat
             yield break;
         }
 
-        float inicio = 0f;
-#if UNITY_EDITOR
-        inicio = Mathf.Clamp(empezarEn, 0f, guion.duracion);
-#endif
-        var reproductor = new ReproductorDeGuion(guion, ctx, inicio);
-        ctx.Player?.RegisterCleanup(reproductor.Terminar);
+        var reproductor = _preparado;
+        _preparado = null;
+        if (reproductor == null)
+        {
+            reproductor = new ReproductorDeGuion(guion, ctx, Inicio);
+            ctx.Player?.RegisterCleanup(reproductor.Terminar);
+        }
+
         yield return reproductor.Reproducir();
         reproductor.Terminar();
     }

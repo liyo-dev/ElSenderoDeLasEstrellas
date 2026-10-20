@@ -25,9 +25,14 @@ public static class SenderoLevelBuilder
     private const string PrefabHuellas = "Assets/Prefabs/FootprintEffect.prefab";
 
     [MenuItem("El Sendero/Escenario/Construir Sendero de las Estrellas (Nivel Final)")]
-    public static void MenuConstruir()
+    public static void MenuConstruir() => Construir(pedirConfirmacion: true);
+
+    [MenuItem("El Sendero/Escenario/Reconstruir Sendero de las Estrellas (Directo)")]
+    public static void MenuConstruirDirecto() => Construir(pedirConfirmacion: false);
+
+    public static void Construir(bool pedirConfirmacion = true)
     {
-        if (File.Exists(ScenePath) &&
+        if (pedirConfirmacion && File.Exists(ScenePath) &&
             !EditorUtility.DisplayDialog("El Sendero de las Estrellas",
                 "Se reconstruirá el escenario del nivel final en Sendero.unity.\n\n" +
                 "Se aplicará el arte cósmico 3D, la calzada de cristal astral, los 4 portales narrativos " +
@@ -86,16 +91,16 @@ public static class SenderoLevelBuilder
         // 4. Raíces organizadas
         var raizMundo = new GameObject("SENDERO_WORLD");
         var raizCosmos = new GameObject("COSMIC_ENVIRONMENT_3D");
-        raizCosmos.transform.SetParent(raizMundo.transform);
+        raizCosmos.transform.SetParent(raizMundo.transform, false);
 
         var raizCamino = new GameObject("SENDERO_CAMINO_ASTRAL");
-        raizCamino.transform.SetParent(raizMundo.transform);
+        raizCamino.transform.SetParent(raizMundo.transform, false);
 
         var raizPortales = new GameObject("PORTALES_CELESTIALES");
-        raizPortales.transform.SetParent(raizMundo.transform);
+        raizPortales.transform.SetParent(raizMundo.transform, false);
 
         var raizAltar = new GameObject("PLAZA_ALTAR_BLANCO");
-        raizAltar.transform.SetParent(raizMundo.transform);
+        raizAltar.transform.SetParent(raizMundo.transform, false);
 
         // 5. Entorno Cósmico 3D (Cuerpos Celestes y Constelaciones Físicas)
         ConstruirCosmos3D(raizCosmos.transform, matOroAstral);
@@ -117,7 +122,7 @@ public static class SenderoLevelBuilder
 
         // 10. Controlador de Progresión
         var ctrlObj = new GameObject("SENDERO_PROGRESSION_CONTROLLER");
-        ctrlObj.transform.SetParent(raizMundo.transform);
+        ctrlObj.transform.SetParent(raizMundo.transform, false);
         var ctrl = ctrlObj.AddComponent<SenderoProgressionController>();
 
         var soCtrl = new SerializedObject(ctrl);
@@ -132,16 +137,28 @@ public static class SenderoLevelBuilder
         soCtrl.ApplyModifiedPropertiesWithoutUndo();
 
         // 11. Huellas de Constelaciones
+        var fpAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabHuellas);
+        if (fpAsset != null)
+        {
+            var c = fpAsset.GetComponent<Collider>();
+            if (c != null)
+            {
+                Object.DestroyImmediate(c, true);
+                EditorUtility.SetDirty(fpAsset);
+            }
+        }
+
         var footprintObj = new GameObject("StarWorldFootprintPool");
-        footprintObj.transform.SetParent(raizMundo.transform);
+        footprintObj.transform.SetParent(raizMundo.transform, false);
         var pool = footprintObj.AddComponent<StarWorldFootprintPool>();
         var footprintPrefab = AssetDatabase.LoadAssetAtPath<FootprintEffect>(PrefabHuellas);
         if (footprintPrefab != null)
         {
             var soPool = new SerializedObject(pool);
             soPool.FindProperty("_prefab").objectReferenceValue = footprintPrefab;
-            soPool.FindProperty("_footprintColor").colorValue = new Color(0.5f, 0.8f, 1f, 0.35f);
+            soPool.FindProperty("_footprintColor").colorValue = new Color(0.5f, 0.8f, 1f, 0.4f);
             soPool.FindProperty("_footprintScale").floatValue = 0.35f;
+            soPool.FindProperty("_yOffset").floatValue = 0.02f;
             soPool.ApplyModifiedPropertiesWithoutUndo();
         }
 
@@ -168,7 +185,7 @@ public static class SenderoLevelBuilder
         {
             var cam = (GameObject)PrefabUtility.InstantiatePrefab(camaraPrefab, escena);
             cam.name = "CamaraDelJugador";
-            cam.transform.SetPositionAndRotation(new Vector3(0f, 2.5f, -6f), Quaternion.Euler(15f, 0f, 0f));
+            cam.transform.SetPositionAndRotation(new Vector3(0f, 2.5f, -4f), Quaternion.Euler(15f, 0f, 0f));
         }
 
         // 13. Guardar escena
@@ -205,7 +222,7 @@ public static class SenderoLevelBuilder
         {
             var starObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             starObj.name = $"Astro_Celeste_3D_{i + 1}";
-            starObj.transform.SetParent(padre);
+            starObj.transform.SetParent(padre, false);
             starObj.transform.position = posicionesEstrellas[i];
             float escala = Random.Range(3.5f, 7.5f);
             starObj.transform.localScale = Vector3.one * escala;
@@ -223,7 +240,7 @@ public static class SenderoLevelBuilder
 
         // Constelación de Will (tres estrellas desiguales conectadas por filamentos de luz)
         var constelacionObj = new GameObject("Constelacion_Guia_Will");
-        constelacionObj.transform.SetParent(padre);
+        constelacionObj.transform.SetParent(padre, false);
         var lr = constelacionObj.AddComponent<LineRenderer>();
         lr.positionCount = 4;
         lr.useWorldSpace = true;
@@ -264,9 +281,11 @@ public static class SenderoLevelBuilder
         // Banco de luz estelar para sentarse
         var banco = GameObject.CreatePrimitive(PrimitiveType.Cube);
         banco.name = "Banco_Luz_Estelar";
-        banco.transform.SetParent(padre);
-        banco.transform.SetPositionAndRotation(new Vector3(4f, 2.2f, 208f), Quaternion.Euler(0f, -35f, 0f));
+        banco.transform.SetParent(padre, false);
+        banco.transform.localPosition = new Vector3(4f, 2.2f, 208f);
+        banco.transform.localRotation = Quaternion.Euler(0f, -35f, 0f);
         banco.transform.localScale = new Vector3(3f, 0.6f, 1.2f);
+        banco.layer = LayerMask.NameToLayer("Floor");
         var rBanco = banco.GetComponent<Renderer>();
         if (rBanco) rBanco.sharedMaterial = matOro;
 
@@ -279,10 +298,15 @@ public static class SenderoLevelBuilder
         {
             var losa = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             losa.name = $"Losa_Constelacion_{i + 1}";
-            losa.transform.SetParent(padre);
-            losa.transform.SetPositionAndRotation(new Vector3(0f, 2.0f + i * 0.1f, zPuente[i]), Quaternion.identity);
+            losa.transform.SetParent(padre, false);
+            losa.transform.localPosition = new Vector3(0f, 2.0f + i * 0.1f, zPuente[i]);
+            losa.transform.localRotation = Quaternion.identity;
             losa.transform.localScale = new Vector3(3.2f, 0.15f, 3.2f);
             losa.layer = LayerMask.NameToLayer("Floor");
+            var cap = losa.GetComponent<CapsuleCollider>();
+            if (cap != null) Object.DestroyImmediate(cap);
+            if (losa.GetComponent<MeshCollider>() == null)
+                losa.AddComponent<MeshCollider>();
             var rL = losa.GetComponent<Renderer>();
             if (rL) rL.sharedMaterial = matOro;
         }
@@ -293,33 +317,41 @@ public static class SenderoLevelBuilder
     private static GameObject ConstruirPortalTierra(Transform padre, Material matPiedra, Material matVelo)
     {
         var root = new GameObject("Portal_00_UmbralTierra");
-        root.transform.SetParent(padre);
-        root.transform.position = new Vector3(0f, 0f, -6f);
+        root.transform.SetParent(padre, false);
+        root.transform.localPosition = new Vector3(0f, 0f, -6f);
+        root.transform.localRotation = Quaternion.identity;
 
         // Megalitos flotantes
         var m1 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        m1.transform.SetParent(root.transform);
-        m1.transform.SetPositionAndRotation(new Vector3(-2.8f, 2.5f, 0f), Quaternion.Euler(0f, 15f, 8f));
+        m1.name = "Megalito_Izq";
+        m1.transform.SetParent(root.transform, false);
+        m1.transform.localPosition = new Vector3(-2.8f, 2.5f, 0f);
+        m1.transform.localRotation = Quaternion.Euler(0f, 15f, 8f);
         m1.transform.localScale = new Vector3(1.2f, 5.5f, 1.2f);
         if (m1.GetComponent<Renderer>()) m1.GetComponent<Renderer>().sharedMaterial = matPiedra;
 
         var m2 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        m2.transform.SetParent(root.transform);
-        m2.transform.SetPositionAndRotation(new Vector3(2.8f, 2.5f, 0f), Quaternion.Euler(0f, -15f, -8f));
+        m2.name = "Megalito_Der";
+        m2.transform.SetParent(root.transform, false);
+        m2.transform.localPosition = new Vector3(2.8f, 2.5f, 0f);
+        m2.transform.localRotation = Quaternion.Euler(0f, -15f, -8f);
         m2.transform.localScale = new Vector3(1.2f, 5.5f, 1.2f);
         if (m2.GetComponent<Renderer>()) m2.GetComponent<Renderer>().sharedMaterial = matPiedra;
 
         var dintel = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        dintel.transform.SetParent(root.transform);
-        dintel.transform.SetPositionAndRotation(new Vector3(0f, 5.2f, 0f), Quaternion.Euler(5f, 0f, 0f));
+        dintel.name = "Dintel_Piedra";
+        dintel.transform.SetParent(root.transform, false);
+        dintel.transform.localPosition = new Vector3(0f, 5.2f, 0f);
+        dintel.transform.localRotation = Quaternion.Euler(5f, 0f, 0f);
         dintel.transform.localScale = new Vector3(6.5f, 1.1f, 1.4f);
         if (dintel.GetComponent<Renderer>()) dintel.GetComponent<Renderer>().sharedMaterial = matPiedra;
 
         // Velo del portal
         var velo = GameObject.CreatePrimitive(PrimitiveType.Quad);
         velo.name = "Velo_Tierra";
-        velo.transform.SetParent(root.transform);
-        velo.transform.SetPositionAndRotation(new Vector3(0f, 2.6f, 0f), Quaternion.identity);
+        velo.transform.SetParent(root.transform, false);
+        velo.transform.localPosition = new Vector3(0f, 2.6f, 0f);
+        velo.transform.localRotation = Quaternion.identity;
         velo.transform.localScale = new Vector3(4.5f, 4.8f, 1f);
         Object.DestroyImmediate(velo.GetComponent<Collider>());
         if (velo.GetComponent<Renderer>()) velo.GetComponent<Renderer>().sharedMaterial = matVelo;
@@ -336,34 +368,42 @@ public static class SenderoLevelBuilder
     private static GameObject ConstruirPortalWill(Transform padre, Material matOro, Material matVelo)
     {
         var root = new GameObject("Portal_01_Will_Memorias");
-        root.transform.SetParent(padre);
-        root.transform.position = new Vector3(0f, 1.1f, 65f);
+        root.transform.SetParent(padre, false);
+        root.transform.localPosition = new Vector3(0f, 1.1f, 65f);
+        root.transform.localRotation = Quaternion.identity;
 
         // Alas de luz dorada
         var alaIzq = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        alaIzq.transform.SetParent(root.transform);
-        alaIzq.transform.SetPositionAndRotation(new Vector3(-2.6f, 3.2f, 0f), Quaternion.Euler(0f, 0f, 16f));
+        alaIzq.name = "Ala_Izquierda";
+        alaIzq.transform.SetParent(root.transform, false);
+        alaIzq.transform.localPosition = new Vector3(-2.6f, 3.2f, 0f);
+        alaIzq.transform.localRotation = Quaternion.Euler(0f, 0f, 16f);
         alaIzq.transform.localScale = new Vector3(0.5f, 3.2f, 0.5f);
         if (alaIzq.GetComponent<Renderer>()) alaIzq.GetComponent<Renderer>().sharedMaterial = matOro;
 
         var alaDer = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        alaDer.transform.SetParent(root.transform);
-        alaDer.transform.SetPositionAndRotation(new Vector3(2.6f, 3.2f, 0f), Quaternion.Euler(0f, 0f, -16f));
+        alaDer.name = "Ala_Derecha";
+        alaDer.transform.SetParent(root.transform, false);
+        alaDer.transform.localPosition = new Vector3(2.6f, 3.2f, 0f);
+        alaDer.transform.localRotation = Quaternion.Euler(0f, 0f, -16f);
         alaDer.transform.localScale = new Vector3(0.5f, 3.2f, 0.5f);
         if (alaDer.GetComponent<Renderer>()) alaDer.GetComponent<Renderer>().sharedMaterial = matOro;
 
         // Orbe celestial superior
         var orbe = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        orbe.transform.SetParent(root.transform);
-        orbe.transform.SetPositionAndRotation(new Vector3(0f, 6.4f, 0f), Quaternion.identity);
+        orbe.name = "Orbe_Superior";
+        orbe.transform.SetParent(root.transform, false);
+        orbe.transform.localPosition = new Vector3(0f, 6.4f, 0f);
+        orbe.transform.localRotation = Quaternion.identity;
         orbe.transform.localScale = Vector3.one * 1.4f;
         if (orbe.GetComponent<Renderer>()) orbe.GetComponent<Renderer>().sharedMaterial = matOro;
 
         // Velo dorado líquido
         var velo = GameObject.CreatePrimitive(PrimitiveType.Quad);
         velo.name = "Velo_Will";
-        velo.transform.SetParent(root.transform);
-        velo.transform.SetPositionAndRotation(new Vector3(0f, 3.2f, 0f), Quaternion.identity);
+        velo.transform.SetParent(root.transform, false);
+        velo.transform.localPosition = new Vector3(0f, 3.2f, 0f);
+        velo.transform.localRotation = Quaternion.identity;
         velo.transform.localScale = new Vector3(4.2f, 5.2f, 1f);
         Object.DestroyImmediate(velo.GetComponent<Collider>());
         if (velo.GetComponent<Renderer>()) velo.GetComponent<Renderer>().sharedMaterial = matVelo;
@@ -380,27 +420,33 @@ public static class SenderoLevelBuilder
     private static GameObject ConstruirPortalEstela(Transform padre, Material matCuarzo, Material matVelo)
     {
         var root = new GameObject("Portal_02_Estela_Corazon");
-        root.transform.SetParent(padre);
-        root.transform.position = new Vector3(8f, 3.1f, 128f);
+        root.transform.SetParent(padre, false);
+        root.transform.localPosition = new Vector3(8f, 3.1f, 128f);
+        root.transform.localRotation = Quaternion.identity;
 
         // Arco de cuarzo en forma de cerradura/corazón estilizado
         var pilarIzq = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        pilarIzq.transform.SetParent(root.transform);
-        pilarIzq.transform.SetPositionAndRotation(new Vector3(-2.4f, 3.0f, 0f), Quaternion.Euler(0f, 0f, 10f));
+        pilarIzq.name = "Pilar_Izquierdo";
+        pilarIzq.transform.SetParent(root.transform, false);
+        pilarIzq.transform.localPosition = new Vector3(-2.4f, 3.0f, 0f);
+        pilarIzq.transform.localRotation = Quaternion.Euler(0f, 0f, 10f);
         pilarIzq.transform.localScale = new Vector3(0.9f, 5.5f, 0.9f);
         if (pilarIzq.GetComponent<Renderer>()) pilarIzq.GetComponent<Renderer>().sharedMaterial = matCuarzo;
 
         var pilarDer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        pilarDer.transform.SetParent(root.transform);
-        pilarDer.transform.SetPositionAndRotation(new Vector3(2.4f, 3.0f, 0f), Quaternion.Euler(0f, 0f, -10f));
+        pilarDer.name = "Pilar_Derecho";
+        pilarDer.transform.SetParent(root.transform, false);
+        pilarDer.transform.localPosition = new Vector3(2.4f, 3.0f, 0f);
+        pilarDer.transform.localRotation = Quaternion.Euler(0f, 0f, -10f);
         pilarDer.transform.localScale = new Vector3(0.9f, 5.5f, 0.9f);
         if (pilarDer.GetComponent<Renderer>()) pilarDer.GetComponent<Renderer>().sharedMaterial = matCuarzo;
 
         // Cinta roja danzante de Mara
         var cinta = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         cinta.name = "Cinta_Roja_Mara";
-        cinta.transform.SetParent(root.transform);
-        cinta.transform.SetPositionAndRotation(new Vector3(0f, 5.8f, 0f), Quaternion.Euler(0f, 0f, 90f));
+        cinta.transform.SetParent(root.transform, false);
+        cinta.transform.localPosition = new Vector3(0f, 5.8f, 0f);
+        cinta.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
         cinta.transform.localScale = new Vector3(0.35f, 2.5f, 0.35f);
         var rC = cinta.GetComponent<Renderer>();
         if (rC) rC.sharedMaterial = ObtenerOCrearMatCintaRoja();
@@ -408,8 +454,9 @@ public static class SenderoLevelBuilder
         // Velo rosa/fuego
         var velo = GameObject.CreatePrimitive(PrimitiveType.Quad);
         velo.name = "Velo_Estela";
-        velo.transform.SetParent(root.transform);
-        velo.transform.SetPositionAndRotation(new Vector3(0f, 3.0f, 0f), Quaternion.identity);
+        velo.transform.SetParent(root.transform, false);
+        velo.transform.localPosition = new Vector3(0f, 3.0f, 0f);
+        velo.transform.localRotation = Quaternion.identity;
         velo.transform.localScale = new Vector3(4.2f, 5.0f, 1f);
         Object.DestroyImmediate(velo.GetComponent<Collider>());
         if (velo.GetComponent<Renderer>()) velo.GetComponent<Renderer>().sharedMaterial = matVelo;
@@ -426,43 +473,56 @@ public static class SenderoLevelBuilder
     private static GameObject ConstruirPortalLiam(Transform padre, Material matObsidiana, Material matMadera, Material matVelo)
     {
         var root = new GameObject("Portal_03_Liam_LaCaja");
-        root.transform.SetParent(padre);
-        root.transform.position = new Vector3(-6f, 2.3f, 180f);
+        root.transform.SetParent(padre, false);
+        root.transform.localPosition = new Vector3(-6f, 2.3f, 180f);
+        root.transform.localRotation = Quaternion.identity;
 
-        // Pedestal de obsidiana
+        // Pedestal de obsidiana con collider de suelo sólido
         var pedestal = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         pedestal.name = "Pedestal_Obsidiana";
-        pedestal.transform.SetParent(root.transform);
-        pedestal.transform.SetPositionAndRotation(new Vector3(0f, 0.5f, 0f), Quaternion.identity);
+        pedestal.transform.SetParent(root.transform, false);
+        pedestal.transform.localPosition = new Vector3(0f, 0.5f, 0f);
+        pedestal.transform.localRotation = Quaternion.identity;
         pedestal.transform.localScale = new Vector3(2.4f, 0.5f, 2.4f);
+        pedestal.layer = LayerMask.NameToLayer("Floor");
+        var capPedestal = pedestal.GetComponent<CapsuleCollider>();
+        if (capPedestal != null) Object.DestroyImmediate(capPedestal);
+        if (pedestal.GetComponent<MeshCollider>() == null)
+            pedestal.AddComponent<MeshCollider>();
         if (pedestal.GetComponent<Renderer>()) pedestal.GetComponent<Renderer>().sharedMaterial = matObsidiana;
 
         // La Caja misteriosa sobre el pedestal
         var caja = GameObject.CreatePrimitive(PrimitiveType.Cube);
         caja.name = "La_Caja_Misteriosa";
-        caja.transform.SetParent(root.transform);
-        caja.transform.SetPositionAndRotation(new Vector3(0f, 1.3f, 0f), Quaternion.identity);
+        caja.transform.SetParent(root.transform, false);
+        caja.transform.localPosition = new Vector3(0f, 1.3f, 0f);
+        caja.transform.localRotation = Quaternion.identity;
         caja.transform.localScale = new Vector3(1.4f, 0.9f, 1.1f);
         if (caja.GetComponent<Renderer>()) caja.GetComponent<Renderer>().sharedMaterial = matMadera;
 
         // Marco del espejo gótico agrietado que surge de la caja
         var marcoIzq = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        marcoIzq.transform.SetParent(root.transform);
-        marcoIzq.transform.SetPositionAndRotation(new Vector3(-2.0f, 4.2f, 0f), Quaternion.identity);
+        marcoIzq.name = "Marco_Izquierdo";
+        marcoIzq.transform.SetParent(root.transform, false);
+        marcoIzq.transform.localPosition = new Vector3(-2.0f, 4.2f, 0f);
+        marcoIzq.transform.localRotation = Quaternion.identity;
         marcoIzq.transform.localScale = new Vector3(0.35f, 3.2f, 0.35f);
         if (marcoIzq.GetComponent<Renderer>()) marcoIzq.GetComponent<Renderer>().sharedMaterial = matObsidiana;
 
         var marcoDer = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        marcoDer.transform.SetParent(root.transform);
-        marcoDer.transform.SetPositionAndRotation(new Vector3(2.0f, 4.2f, 0f), Quaternion.identity);
+        marcoDer.name = "Marco_Derecho";
+        marcoDer.transform.SetParent(root.transform, false);
+        marcoDer.transform.localPosition = new Vector3(2.0f, 4.2f, 0f);
+        marcoDer.transform.localRotation = Quaternion.identity;
         marcoDer.transform.localScale = new Vector3(0.35f, 3.2f, 0.35f);
         if (marcoDer.GetComponent<Renderer>()) marcoDer.GetComponent<Renderer>().sharedMaterial = matObsidiana;
 
         // Velo de espejo frío
         var velo = GameObject.CreatePrimitive(PrimitiveType.Quad);
         velo.name = "Velo_Espejo_Liam";
-        velo.transform.SetParent(root.transform);
-        velo.transform.SetPositionAndRotation(new Vector3(0f, 4.2f, 0f), Quaternion.identity);
+        velo.transform.SetParent(root.transform, false);
+        velo.transform.localPosition = new Vector3(0f, 4.2f, 0f);
+        velo.transform.localRotation = Quaternion.identity;
         velo.transform.localScale = new Vector3(3.8f, 5.5f, 1f);
         Object.DestroyImmediate(velo.GetComponent<Collider>());
         if (velo.GetComponent<Renderer>()) velo.GetComponent<Renderer>().sharedMaterial = matVelo;
@@ -481,32 +541,32 @@ public static class SenderoLevelBuilder
     private static GameObject ConstruirPlazaAltar(Transform padre, Material matAltar, Material matOro, Material matObsidiana)
     {
         var plazaRoot = new GameObject("Plaza_Circular_Altar");
-        plazaRoot.transform.SetParent(padre);
-        plazaRoot.transform.position = new Vector3(0f, 2.3f, 266f);
+        plazaRoot.transform.SetParent(padre, false);
+        plazaRoot.transform.localPosition = new Vector3(0f, 2.3f, 266f);
+        plazaRoot.transform.localRotation = Quaternion.identity;
 
         // Gran plataforma circular (diámetro 24m)
         var plataforma = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         plataforma.name = "Plataforma_Altar";
-        plataforma.transform.SetParent(plazaRoot.transform);
-        plataforma.transform.SetPositionAndRotation(new Vector3(0f, 0f, 0f), Quaternion.identity);
+        plataforma.transform.SetParent(plazaRoot.transform, false);
+        plataforma.transform.localPosition = Vector3.zero;
+        plataforma.transform.localRotation = Quaternion.identity;
         plataforma.transform.localScale = new Vector3(24f, 0.5f, 24f);
         plataforma.layer = LayerMask.NameToLayer("Floor");
+        var capCol = plataforma.GetComponent<CapsuleCollider>();
+        if (capCol != null) Object.DestroyImmediate(capCol);
+        if (plataforma.GetComponent<MeshCollider>() == null)
+            plataforma.AddComponent<MeshCollider>();
         if (plataforma.GetComponent<Renderer>()) plataforma.GetComponent<Renderer>().sharedMaterial = matAltar;
 
-        // Anillos celestes concéntricos
-        var anillo1 = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        anillo1.name = "Anillo_Celeste_Interior";
-        anillo1.transform.SetParent(plazaRoot.transform);
-        anillo1.transform.SetPositionAndRotation(new Vector3(0f, 0.05f, 0f), Quaternion.identity);
-        anillo1.transform.localScale = new Vector3(16f, 0.45f, 16f);
-        anillo1.layer = LayerMask.NameToLayer("Floor");
-        if (anillo1.GetComponent<Renderer>()) anillo1.GetComponent<Renderer>().sharedMaterial = matOro;
+
 
         // Monolito sagrado del Altar Blanco (en el centro, Z=266)
         var altar = GameObject.CreatePrimitive(PrimitiveType.Cube);
         altar.name = "Altar_De_Piedra_Blanca";
-        altar.transform.SetParent(plazaRoot.transform);
-        altar.transform.SetPositionAndRotation(new Vector3(0f, 1.4f, 2.5f), Quaternion.identity);
+        altar.transform.SetParent(plazaRoot.transform, false);
+        altar.transform.localPosition = new Vector3(0f, 1.4f, 2.5f);
+        altar.transform.localRotation = Quaternion.identity;
         altar.transform.localScale = new Vector3(2.4f, 1.8f, 1.6f);
         if (altar.GetComponent<Renderer>()) altar.GetComponent<Renderer>().sharedMaterial = matAltar;
 
@@ -519,8 +579,9 @@ public static class SenderoLevelBuilder
 
         // Punto de rasgado del aire (donde emerge el Mago Oscuro en Z=260)
         var spawnerMago = new GameObject("Punto_Rasgado_Aire_MagoOscuro");
-        spawnerMago.transform.SetParent(plazaRoot.transform);
-        spawnerMago.transform.position = new Vector3(0f, 1.2f, -1.0f);
+        spawnerMago.transform.SetParent(plazaRoot.transform, false);
+        spawnerMago.transform.localPosition = new Vector3(0f, 1.2f, -6.0f);
+        spawnerMago.transform.localRotation = Quaternion.identity;
 
         return altar;
     }
@@ -530,7 +591,7 @@ public static class SenderoLevelBuilder
     private static void ConstruirTriggers(Transform padre)
     {
         var raizTriggers = new GameObject("TRIGGERS_DE_PROGRESION");
-        raizTriggers.transform.SetParent(padre);
+        raizTriggers.transform.SetParent(padre, false);
 
         // 1. Manifestar y entrar Will
         CrearTrigger("Trigger_01_Manifestar_Will", raizTriggers.transform, new Vector3(0f, 1.5f, 48f), new Vector3(10f, 4f, 3f), SenderoTriggerArea.TipoAccionTrigger.ManifestarPortalWill);
@@ -554,8 +615,9 @@ public static class SenderoLevelBuilder
     private static void CrearTrigger(string nombre, Transform padre, Vector3 pos, Vector3 tam, SenderoTriggerArea.TipoAccionTrigger accion)
     {
         var go = new GameObject(nombre);
-        go.transform.SetParent(padre);
-        go.transform.position = pos;
+        go.transform.SetParent(padre, false);
+        go.transform.localPosition = pos;
+        go.transform.localRotation = Quaternion.identity;
 
         var col = go.AddComponent<BoxCollider>();
         col.isTrigger = true;
@@ -571,8 +633,9 @@ public static class SenderoLevelBuilder
     {
         var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         obj.name = nombre;
-        obj.transform.SetParent(padre);
-        obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        obj.transform.SetParent(padre, false);
+        obj.transform.localPosition = pos;
+        obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = escala;
         obj.layer = LayerMask.NameToLayer("Floor");
         var r = obj.GetComponent<Renderer>();

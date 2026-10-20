@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 /// Zonas de prueba alrededor de la arena de CombatLab, una por lado y con un hueco en el muro
 /// para entrar: oeste plataformeo, este puzles, norte agua, sur vuelo. Ver INC-508.
@@ -221,9 +223,35 @@ public static partial class CombatLabBuilder
         var volumen = CrearCubo("Agua", piscina, new Vector3(0f, -1.65f, 37f), new Vector3(20f, 2.7f, 28f), agua, "Water", estatico: false);
         volumen.GetComponent<Collider>().isTrigger = true;
         volumen.GetComponent<Renderer>().shadowCastingMode = ShadowCastingMode.Off;
+
+        CrearBarcoNavegable(piscina, zona);
     }
 
-    // ── Sur: vuelo ────────────────────────────────────────────────────────
+    /// <summary>
+    /// Barco navegable en la piscina: el jugador embarca (botón de interactuar), conduce con el
+    /// stick y vuelve a bajar. El modelo es el barco grande del pack; el montador calcula su proa
+    /// y su cubierta a partir de los vértices, porque el modelo no viene con la proa en +Z.
+    /// </summary>
+    private static void CrearBarcoNavegable(Transform piscina, Transform zona)
+    {
+        const string rutaBarco = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Props/Ship/Ship01_a01.prefab";
+        const float profundidadDeQuilla = 1f;
+        const float superficieDelAgua = -0.3f;
+
+        // El barco se deja junto a la zona poco honda, pero sin invadirla: si el casco se solapara
+        // con el escalón, el jugador que va andando por ahí se metería dentro del casco. La
+        // flotación en runtime lo asienta; aquí solo se calcula la altura de partida.
+        float altura = superficieDelAgua + 0.96f - profundidadDeQuilla;
+        var musica = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/Zonas/El Barco de Silas.mp3");
+
+        var barco = MontadorDeBarco.Montar(rutaBarco, piscina, new Vector3(-1.5f, altura, 29f),
+                                           Vector3.forward, profundidadDeQuilla, musica,
+                                           new Vector3(-4.4f, -0.5f, 26.2f));   // punto de amarre: junto al barco
+        if (barco != null) barco.name = "Barco — navega";
+
+        CrearTexto("Barco: súbete (A) y navega (WASD)", zona, new Vector3(-1.5f, 3.5f, 22f));
+        CrearTexto("Baja del barco con A otra vez", zona, new Vector3(-1.5f, 3.5f, 19f));
+    }
 
     private static void CrearZonaVuelo(Transform g, Material suelo, Material plataforma)
     {
@@ -285,6 +313,7 @@ public static partial class CombatLabBuilder
             case int i: p.intValue = i; break;
             case float f: p.floatValue = f; break;
             case bool b: p.boolValue = b; break;
+            case Vector3 v3: p.vector3Value = v3; break;
             case Object o: p.objectReferenceValue = o; break;
         }
         so.ApplyModifiedPropertiesWithoutUndo();

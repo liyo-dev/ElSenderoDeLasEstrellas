@@ -42,6 +42,7 @@ public static partial class CombatLabBuilder
         CrearCubo("Muro sur", zona, c + new Vector3(0f, 1.5f, -m), new Vector3(LadoPrueba, 3f, 0.5f), muro);
         CrearCubo("Muro este", zona, c + new Vector3(m, 1.5f, 0f), new Vector3(0.5f, 3f, LadoPrueba), muro);
         CrearCubo("Muro oeste", zona, c + new Vector3(-m, 1.5f, 0f), new Vector3(0.5f, 3f, LadoPrueba), muro);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(110f, 0f, 92f), EntradaTesoros);
         CrearTexto("Tesoros: uno por capa de requisito", zona, new Vector3(110f, 4.2f, 96f), 90f);
         CrearTexto("Quita y pon habilidades en Magia ▸ Habilidades · el registro, en Start ▸ Objetos", zona, new Vector3(110f, 3.5f, 96f), 90f);
 
@@ -188,8 +189,14 @@ public static partial class CombatLabBuilder
         if (cuerpoModelo != null && tapaModelo != null &&
             cuerpoModelo.GetComponent<MeshFilter>() != null && tapaModelo.GetComponent<MeshFilter>() != null)
         {
-            CopiarMalla("Cuerpo", visual, cuerpoModelo, material);
-            tapa = CopiarMalla("Tapa", visual, tapaModelo, material).transform;
+            // El asset viene con el pivote desplazado (el nodo del FBX está a 6,6 m de su origen):
+            // copiado tal cual, el cofre se dibujaba 9 m lejos de su ancla y se salía de la sala.
+            // Se ancla el cuerpo en su punto (centrado y apoyado en el suelo) y la tapa conserva su
+            // sitio respecto al cuerpo, que es donde está su bisagra.
+            var anclaje = AnclajeDelCuerpo(cuerpoModelo);
+            var separacion = tapaModelo.localPosition - cuerpoModelo.localPosition;
+            CopiarMalla("Cuerpo", visual, cuerpoModelo, material, anclaje);
+            tapa = CopiarMalla("Tapa", visual, tapaModelo, material, anclaje + separacion).transform;
         }
         else
         {
@@ -218,11 +225,21 @@ public static partial class CombatLabBuilder
         return tapa;
     }
 
-    private static GameObject CopiarMalla(string nombre, Transform padre, Transform origen, Material material)
+    /// Posición local del cuerpo del cofre para que quede centrado en su ancla y apoyado en el suelo.
+    private static Vector3 AnclajeDelCuerpo(Transform cuerpoModelo)
+    {
+        var malla = cuerpoModelo.GetComponent<MeshFilter>()?.sharedMesh;
+        if (malla == null) return Vector3.zero;
+        var b = malla.bounds;
+        return new Vector3(-b.center.x, -b.min.y, -b.center.z);
+    }
+
+    private static GameObject CopiarMalla(string nombre, Transform padre, Transform origen, Material material,
+                                          Vector3 posicionLocal)
     {
         var copia = new GameObject(nombre);
         copia.transform.SetParent(padre, false);
-        copia.transform.localPosition = origen.localPosition;
+        copia.transform.localPosition = posicionLocal;
         copia.transform.localRotation = origen.localRotation;
         copia.transform.localScale = origen.localScale;
         copia.AddComponent<MeshFilter>().sharedMesh = origen.GetComponent<MeshFilter>().sharedMesh;

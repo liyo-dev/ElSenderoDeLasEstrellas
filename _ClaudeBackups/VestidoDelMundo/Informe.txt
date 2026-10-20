@@ -1,16 +1,8 @@
-﻿Vestido de MainWorld — 2026-10-08 09:32
-Suelo: se parte de la copia original para repintar.
+﻿Vestido de MainWorld — 2026-10-20 16:55
 Borrado el vestido anterior.
-Casas: 76 devueltas a su giro original.
-Suelo de Reino: suelo de ciudad (3508 celdas: tierra en las traseras, hierba en jardines, al pie de la muralla y en los taludes), 8 calles y 4 plazas en malla de pavimento, sendas de 45 casas, 449 celdas de talud sin roca, camino de la puerta desviado.
-Suelo de Pueblo pesquero: alfombra con fundido de 25 m, 1 plazas, 2 accesos, sendas de 15 casas y 444 celdas de talud sin roca.
-Suelo de Pueblo vecino: alfombra con fundido de 25 m, 1 plazas, 1 accesos, sendas de 12 casas y 310 celdas de talud sin roca.
-Suelo de Granjas de la cascada: alfombra con fundido de 25 m, 1 plazas, 2 accesos, sendas de 2 casas y 87 celdas de talud sin roca.
-Suelo de parajes: 12 lugares con su senda desde el camino.
-Suelo bajo el pavimento de Reino: 1421 celdas de tierra con piedras y un margen de tierra de 0,6 m (sin hierba de detalle); las zonas verdes se quedan con su hierba.
-Agua — Laguna de la Era: suelo de fondo en 339 celdas y barro de orilla en 114; llegada de arena en (147, -52) con su senda desde la de la Era de trilla; sin hierba de detalle bajo el agua.
-Flores: 361 manchas pintadas como hierba de detalle (107136 celdas en 11 capas Flower*_D; densidad hasta 2, la de la hierba que ya había).
-Suelo: pintado y guardado (4753 celdas de hierba de detalle retiradas de calles y sendas).
+Borrados 15 assets generados de Assets/Scenes/Worlds/MainWorld_data/Vestido.
+Retirados: 156 repuestos.
+Casas: 59 devueltas a su giro original.
 Retirados (inactivos, fuera de la build): 98 × muralla vieja del Reino (a media ladera; la sustituye la nueva, sobre la cresta)
 Retirados (inactivos, fuera de la build): 3 × molino: en la capital no cabe nada de aldea (canon: sin molinos fuera del puerto)
 Retirados (inactivos, fuera de la build): 4 × casita de paja de aldea
@@ -37,6 +29,7 @@ Muralla del Reino: 44 de 44 lienzos (Wall02, 499 m en 18 tramos), 18 torres (5 c
 Casas: 30 giradas para que la puerta dé a su calle (29 macetas del generador giradas con ellas), 0 sin girar por espacio.
 Reino: 39 de 39 casas nuevas.
   · descartada «Farola» en (236,8, -400,8): zona que debe quedar libre: Huerto del puerto
+  Barco de Silas: amarrado en (270, -467), a 5 m del embarcadero, fondo a -1,57 m. Se navega con el botón de interactuar.
   · descartada «Flores» en (242,3, -442,4): pisa un camino o una calle
   · descartada «Parterre» en (280,1, -405,3): pisa un camino o una calle
 Pueblo pesquero: 88 piezas de detalle.
@@ -93,7 +86,7 @@ Agua — Laguna de la Era: lámina a 24,50 m (1,2 m bajo el desborde, a 25,70 m)
   Nado: 25 cajas en la capa Water con la cara de arriba en la cota. Navegación: 20 volúmenes «Not Walkable» donde hay 0,6 m o más de fondo.
   Ribera: 6 árboles de orilla (oliva), 3 árboles de orilla (turquesa), 46 flores (azules y blancas), 101 juncos, 2 losas para sentarse en la llegada, 22 nenúfares, 3 nenúfares en flor, 9 peñas de la orilla, 2 piedras al pie del hito, 19 setas, 6 troncos caídos medio hundidos.
   Hito: árbol azul en la punta de tierra de (205, -22); la llegada desde la Era de trilla mira hacia él.
-  Ambiente: AmbientZone con AmbientPreset_Laguna.asset (niebla baja del clima en la cuenca), niebla nocturna sobre el agua, ninguna arena de batalla a menos de 25 m del agua, ranas en el juncal de (173, -54) (clip pasado a mono y a Streaming).
+  Ambiente: AmbientZone con AmbientPreset_Laguna.asset (niebla baja del clima en la cuenca), niebla nocturna sobre el agua, ninguna arena de batalla a menos de 25 m del agua, ranas en el juncal de (173, -54).
   Pendiente: vuelve a hornear el NavMesh (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable); hasta entonces el fondo de Laguna de la Era sigue siendo caminable.
   · descartada «Seto (Plant03_a03)» en (-47,2, 245,8): terreno demasiado desigual (2,2 m)
   · descartada «Seto (Plant03_a03)» en (103,8, 251,6): terreno demasiado desigual (1,7 m)
@@ -145,7 +138,6 @@ Agua — Laguna de la Era: lámina a 24,50 m (1,2 m bajo el desborde, a 25,70 m)
   · descartada «Mata (Tree06_a01)» en (-56,4, 173,7): terreno demasiado desigual bajo el tronco (1,5 m)
   · Hiedra de la muralla: 0 racimos (0 hojas) en la cara exterior de los lienzos.
 Vegetación: 722 árboles (154 de color), 516 matas, 30 setos, 0 racimos de hiedra en la muralla y 39 matas de flores en los jardines del Reino.
-Cerezo: creados Assets/Art/World/Vestido/Tree_Cerezo_D.png y Tree_Cerezo.mat (se reutilizan en las próximas ejecuciones).
   · Alameda de cipreses del Camino 10: 7 de 7 árboles (0 % de color), 19 matas.
   · Arboleda dorada de las granjas: 59 de 62 árboles (58 % de color), 18 matas.
   · Camino de las granjas: 14 de 17 árboles (0 % de color), 23 matas.
@@ -186,7 +178,7 @@ Cerezo: creados Assets/Art/World/Vestido/Tree_Cerezo_D.png y Tree_Cerezo.mat (se
   Al planear se han dejado sin poner: 107 × bosquete en el que no caben 3 árboles; 102 × tramo de camino con vistas; 86 × junto a un árbol que ya estaba; 73 × mata: junto a otra pieza de la vegetación; 43 × mata de talud: junto a otra pieza de la vegetación; 42 × mata de talud: junto a un árbol que ya estaba; 33 × pendiente; 29 × sobre un camino.
   Al plantar no han cabido 96: 23 × la copa se mete en algo que ya estaba en la escena; 19 × se pisa con otra pieza del vestido; 13 × terreno demasiado desigual bajo el tronco (1,3 m); 7 × terreno demasiado desigual bajo el tronco (1,2 m); 4 × choca con algo que ya estaba en la escena; 3 × terreno demasiado desigual bajo el tronco (1,4 m); 3 × terreno demasiado desigual (2,2 m); 2 × terreno demasiado desigual bajo el tronco (1,6 m); 2 × zona que debe quedar libre: Pueblo de Will (referencia de estilo, no se toca); 2 × terreno demasiado desigual bajo el tronco (1,5 m); 2 × zona que debe quedar libre: Cascada, poza y mirador; 2 × zona que debe quedar libre: Huerto grande de las granjas; 1 × terreno demasiado desigual (1,6 m); 1 × terreno demasiado desigual (1,4 m); 1 × terreno demasiado desigual (1,2 m); 1 × terreno demasiado desigual (2,4 m); 1 × zona que debe quedar libre: Puente_camino_5; 1 × terreno demasiado desigual (0,9 m); 1 × terreno demasiado desigual (1,0 m); 1 × terreno demasiado desigual (1,7 m); 1 × zona que debe quedar libre: Huerta del pueblo 3; 1 × zona que debe quedar libre: Huerta del pueblo 2; 1 × zona que debe quedar libre: Bosque Prohibido (caja de Ambient_ForbidenWoods); 1 × zona que debe quedar libre: Solar de Silas: casa y taller del reloj (GDD § 9), por construir; 1 × terreno demasiado desigual (2,7 m); 1 × terreno demasiado desigual (1,5 m).
   Hornea de nuevo la navegación (El Sendero ▸ Navegación ▸ Bakear solo la superficie caminable) y pasa el menú Noche: pone luciérnagas donde hay 6 árboles cada 24 m (revisa que no caigan en la ruta del Fuego Fatuo, Camino 6).
-Navegación: 2398 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo (270 piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.
+Navegación: 2397 obstáculos (Carve) añadidos a lo nuevo; lo menor de 1 m en planta y lo que se puso sin obstáculo (270 piezas: escalinatas, puertas, pavimento…) no tallan el NavMesh.
 Detalles: 2243 piezas colocadas, 167 descartadas por comprobaciones.
     54 × choca con algo que ya estaba en la escena
     25 × se pisa con otra pieza del vestido

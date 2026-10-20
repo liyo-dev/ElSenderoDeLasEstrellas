@@ -22,12 +22,54 @@ public class FootprintEffect : MonoBehaviour
     private static Texture2D _sharedStarTexture;
 
     private MaterialPropertyBlock _mpb;
+    private static Mesh _sharedQuadMesh;
     private Coroutine _fadeCoroutine;
     private Action<FootprintEffect> _returnToPool;
+
+    private static Mesh GetSharedQuadMesh()
+    {
+        if (_sharedQuadMesh != null) return _sharedQuadMesh;
+
+        _sharedQuadMesh = new Mesh { name = "FootprintQuad_Shared" };
+        _sharedQuadMesh.vertices = new Vector3[]
+        {
+            new Vector3(-0.5f, 0f, -0.5f),
+            new Vector3(0.5f, 0f, -0.5f),
+            new Vector3(-0.5f, 0f, 0.5f),
+            new Vector3(0.5f, 0f, 0.5f)
+        };
+        _sharedQuadMesh.uv = new Vector2[]
+        {
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f)
+        };
+        _sharedQuadMesh.normals = new Vector3[]
+        {
+            Vector3.up, Vector3.up, Vector3.up, Vector3.up
+        };
+        _sharedQuadMesh.triangles = new int[] { 0, 2, 1, 2, 3, 1 };
+        return _sharedQuadMesh;
+    }
 
     private void Awake()
     {
         _mpb = new MaterialPropertyBlock();
+
+        // Destruir cualquier collider: las huellas son solo VFX visual, nunca deben tener colisión física
+        var colliders = GetComponentsInChildren<Collider>(true);
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            Destroy(colliders[i]);
+        }
+
+        // Asignar malla Quad plana horizontal (1x1m en XZ) para evitar el plano de 10m por defecto
+        var filter = GetComponent<MeshFilter>();
+        if (filter != null)
+        {
+            filter.sharedMesh = GetSharedQuadMesh();
+        }
 
         // Forzar material transparente en URP por código, sin depender de la configuración del prefab
         var mat = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
@@ -37,7 +79,7 @@ public class FootprintEffect : MonoBehaviour
         mat.SetFloat("_DstBlend", 10f);         // OneMinusSrcAlpha
         mat.SetFloat("_ZWrite", 0f);
         mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        mat.renderQueue = 3000;
+        mat.renderQueue = 3100;
         _renderer.material = mat;
 
         if (_sharedStarTexture == null)
@@ -47,6 +89,7 @@ public class FootprintEffect : MonoBehaviour
     public void Activate(Vector3 position, float scale, Color color, Action<FootprintEffect> returnToPool)
     {
         transform.position = position;
+        transform.rotation = Quaternion.identity;
         transform.localScale = new Vector3(scale, 1f, scale);
         _returnToPool = returnToPool;
 
@@ -136,6 +179,11 @@ public class FootprintEffect : MonoBehaviour
         {
             Destroy(_sharedStarTexture);
             _sharedStarTexture = null;
+        }
+        if (_sharedQuadMesh != null)
+        {
+            Destroy(_sharedQuadMesh);
+            _sharedQuadMesh = null;
         }
     }
 #endif

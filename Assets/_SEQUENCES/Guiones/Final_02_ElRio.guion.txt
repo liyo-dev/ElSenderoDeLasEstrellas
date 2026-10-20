@@ -12,7 +12,7 @@ TEXTO subtitulo
 RITMO entre_frases=0.40 mismo_hablante=0.22
 
 REPARTO
-will       Actor_Will       nombre=Will color=FFE3A8 prefab=Assets/Prefabs/_WILL.prefab
+will       Player           nombre=Will color=FFE3A8 prefab=Assets/Prefabs/_WILL.prefab
 estela     Actor_Estela     nombre=Estela color=FFB3C7 prefab=Assets/Prefabs/_ESTELA.prefab
 liam       Actor_Liam       nombre=Liam color=9EDBFF prefab=Assets/Prefabs/_LIAM.prefab
 tobias     Actor_Tobias     nombre=Tobías color=FFE3A8 prefab=Assets/_NPCs/_GrafoNarrativo/Tobi.prefab
@@ -59,22 +59,22 @@ espera 2.50
 # ───────────────────────────────────────────────────────────────────────────────────────────
 plano dos liam tobias rumbo=180 suave=0.4
 liam cara alegre
-liam dice No sé pescar. dura=2.8
+liam dice FINAL_LIAM_RIO_01 dura=2.8
 espera 0.40
 
 tobias cara alegre
-tobias dice Yo tampoco. Por eso vamos a aprender. dura=3.5
+tobias dice FINAL_TOBIAS_RIO_01 dura=3.5
 espera 0.40
 
 # Liam saca el cuaderno con el retrato sin cara; Tobías mira a Will y le dibuja la cara
 tobias cara sorpresa
-tobias dice Este eres tú, ¿no? dura=2.8
+tobias dice FINAL_TOBIAS_RIO_02 dura=2.8
 espera 0.35
 will mira tobias
 will cara picaro
-will dice Supongo. dura=2.0
+will dice FINAL_WILL_RIO_02 dura=2.0
 espera 0.35
-tobias dice Pues estate quieto, que te dibujo la cara. dura=3.5
+tobias dice FINAL_TOBIAS_RIO_02b dura=3.5
 espera 0.60
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ will mira p_rio_agua
 will gesto CastingEnter01
 espera 0.35
 will cara sorpresa
-will dice ¡Pica! ¡Pica algo grande! dura=3.0
+will dice FINAL_WILL_RIO_01 dura=3.0
 espera 0.40
 
 # Will tira con todas sus fuerzas y Estela sale despedida al agua con un gran chapuzón
@@ -105,24 +105,22 @@ espera 0.80
 
 # Estela se venga contando a Tobías la historia del sirope y los "recién casados"
 estela cara picaro
-estela dice ¿Te han contado lo del sirope? dura=3.2
+estela dice FINAL_ESTELA_RIO_01 dura=3.2
 espera 0.35
 will cara miedo
 & liam cara miedo
-will dice ¡NO! dura=2.0
-& liam dice ¡No le hagas caso! dura=2.0
+will dice FINAL_WILL_LIAM_RIO_01 dura=2.0
 espera 0.35
-estela dice Pues te lo cuento yo: la fuente de sirope, el mantel como vestido de novia, y el cartel de '¡TE QUIERO!' encima de Liam. dura=6.5
+estela dice FINAL_ESTELA_RIO_02 dura=6.5
 espera 0.40
 
 tobias cara alegre
-tobias dice ¿Os casasteis? dura=2.8
+tobias dice FINAL_TOBIAS_RIO_03 dura=2.8
 espera 0.35
-will dice ¡Que no! dura=2.0
-& liam dice ¡Ni hablar! dura=2.0
+will dice FINAL_WILL_LIAM_RIO_02 dura=2.0
 espera 0.35
 estela cara alegre
-estela dice Casi. dura=2.5
+estela dice FINAL_ESTELA_RIO_03 dura=2.5
 espera 0.80
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
@@ -145,32 +143,32 @@ espera 0.60
 
 # Will descubre en el cielo su estrella de cinco puntas un poco torcida brillando más que las demás
 will cara alegre
-will dice Anda... Se ha quedado mi estrella. dura=3.5
+will dice FINAL_WILL_NOCHE_01 dura=3.5
 espera 0.40
 
 liam cara sorpresa
-liam dice ¿Qué estrella? dura=2.5
+liam dice FINAL_LIAM_NOCHE_01b dura=2.5
 espera 0.40
 
 will cara alegre
-will dice Una de madera que compré en el mercado del pueblo, antes de todo esto. Estaba tan mal tallada que no servía para nada. dura=6.5
+will dice FINAL_WILL_NOCHE_01b dura=6.5
 espera 0.40
 
 estela cara alegre
-estela dice Pues te la ha cambiado por una vida... Sales ganando. dura=4.5
+estela dice FINAL_ESTELA_NOCHE_01 dura=4.5
 espera 0.50
 
 # Tobías bosteza apoyado en su hermano y pide que le cuenten la historia otra vez
 tobias cara neutral
-tobias dice Otra vez... Otra vez, Liam. dura=3.0
+tobias dice FINAL_TOBIAS_NOCHE_01 dura=3.0
 espera 0.40
 
 liam cara alegre
-liam dice Solo una más, que ya es tarde. dura=3.5
+liam dice FINAL_LIAM_NOCHE_01 dura=3.5
 espera 0.40
 
 will cara alegre
-will dice Todo empezó con una caja de fruta... dura=4.0
+will dice FINAL_WILL_NOCHE_02 dura=4.0
 espera 1.0
 
 # ───────────────────────────────────────────────────────────────────────────────────────────

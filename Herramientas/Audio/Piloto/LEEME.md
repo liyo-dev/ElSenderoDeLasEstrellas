@@ -43,18 +43,18 @@ nuevas vuelve el eco, más la música que crece por debajo.
 
 | | LUFS | Pico de la mezcla | True peak del fichero | Build 0:12→0:46 | Respiro | Golpe |
 |---|---:|---:|---:|---:|---:|---:|
-| `antes.wav` | −9,7 | **+5,2 dBFS** | +1,5 dBTP (satura) | −13,3 → −14,4 (nada) | ninguno | −9,3 |
-| `despues_diseno.wav` | −6,3 | +7,5 dBFS | +1,7 dBTP (satura) | −11,8 → −5,2 (**6,6 dB**) | −16,8 (**12 dB de caída**) | −8,9 |
-| `despues.wav` | −14,0 | −1,0 dBFS | −0,8 dBTP | −19,5 → −12,9 (**6,6 dB**) | −24,6 (**11,7 dB**) | −16,7 |
+| `antes.wav` | −9,5 | **+6,5 dBFS** | +1,5 dBTP (satura) | −15,6 → −14,1 (nada) | ninguno | −8,4 |
+| `despues_diseno.wav` | −6,9 | +7,4 dBFS | +1,7 dBTP (satura) | −11,9 → −6,1 (**5,8 dB**) | −16,9 (**10,8 dB de caída**) | −9,0 |
+| `despues.wav` | −14,0 | −1,0 dBFS | −0,8 dBTP | −19,0 → −13,3 (**5,7 dB**) | −24,1 (**10,8 dB**) | −16,1 |
 
-(El LUFS se ha medido también con `ffmpeg ebur128`: −9,5 / −6,1 / −14,0. Coincide con la
+(El LUFS se ha medido también con `ffmpeg ebur128`: −9,5 / −6,9 / −14,0. Coincide con la
 implementación propia en ±0,2 dB. El «pico de la mezcla» es lo que sale de sumar los buses;
 el WAV se escribe recortado a 0 dBFS, así que en `antes.wav` y `despues_diseno.wav` se
 oye el recorte.)
 
 Lo que dice la tabla:
 
-1. **La mezcla de hoy clipea 5,2 dB.** No hay limiter en el `AudioMixer`: todo lo que
+1. **La mezcla de hoy clipea 6,5 dB.** No hay limiter en el `AudioMixer`: todo lo que
    suma la cinemática satura el digital. Es la mitad de por qué suena «amateur».
 2. **Hoy no hay arco.** El nivel va del −19 al −13 sin dirección: no hay build, no hay
    respiro, no hay contraste. La referencia de Slayers tiene 8 dB de caída justo antes

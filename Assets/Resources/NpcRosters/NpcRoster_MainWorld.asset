@@ -94,3 +94,13 @@ MonoBehaviour:
     requireNavMesh: 1
     requiredFlag: NARRATIVE_FLAG:CAP2_INICIADO
     invertCondition: 0
+  - enabled: 1
+    spawnId: SPAWN_Erika
+    prefab: {fileID: 7770552252693826820, guid: d4af2660e8bc7534a897eda24b2b1169, type: 3}
+    gameObjectName: Erika
+    persistenceId: NPC_Erika
+    vozDeReacciones: Vecina
+    startActive: 1
+    requireNavMesh: 1
+    requiredFlag: NARRATIVE_FLAG:CAP2_INICIADO
+    invertCondition: 0

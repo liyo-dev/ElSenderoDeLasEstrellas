@@ -437,6 +437,17 @@ public class InteractionDetector : MonoBehaviour
                 Vector3 dir = (sightPoint - sightOrigin).normalized;
                 float radio = it.EsPersonaje ? Mathf.Min(focusRadius, 0.1f) : focusRadius;
                 bool obstructed = Physics.SphereCast(sightOrigin, radio, dir, out RaycastHit obstructionHit, sightDistance, _obstructionMask, QueryTriggerInteraction.Ignore);
+
+                // Un objeto con colisión propia no puede taparse a sí mismo: el casco de un barco
+                // (o la tapa de un cofre) está entre el jugador y su propio icono, pero eso no es
+                // un muro delante. Solo se descarta la obstrucción si lo que golpea la sonda
+                // pertenece al propio objeto interactuable.
+                if (obstructed && obstructionHit.collider != null)
+                {
+                    Transform golpeado = obstructionHit.collider.transform;
+                    if (golpeado == it.transform || golpeado.IsChildOf(it.transform)) obstructed = false;
+                }
+
                 if (!obstructed)
                 {
                     best = d;

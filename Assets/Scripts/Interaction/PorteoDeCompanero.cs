@@ -225,15 +225,18 @@ public class PorteoDeCompanero : MonoBehaviour
         // 3. Poner ojos cerrados en Liam
         CerrarOjos(cuerpo, mallaOjosCerrados);
 
-        // 4. Pose del cuerpo en reposo
+        // 4. Pose del cuerpo en reposo (Liam yace inerte en brazos, sin respiración ni T-pose)
         if (_animatorCuerpo != null)
         {
             _animatorCuerpo.applyRootMotion = false;
+            _animatorCuerpo.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            _animatorCuerpo.enabled = true;
             if (Application.isPlaying)
             {
                 _animatorCuerpo.Play(poseCuerpoTransportado, 0, 0f);
                 _animatorCuerpo.Update(0f);
             }
+            _animatorCuerpo.speed = 0f;
         }
 
         // 5. Activar postura de carga en portador (UpperBody layer 1)

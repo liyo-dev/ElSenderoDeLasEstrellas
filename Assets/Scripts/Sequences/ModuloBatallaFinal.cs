@@ -521,7 +521,7 @@ public class ModuloBatallaFinal : SequenceModule
         {
             _tinnitusSource = gameObject.AddComponent<AudioSource>();
 #if UNITY_EDITOR
-            _tinnitusSource.clip = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/tinnitus.mp3");
+            _tinnitusSource.clip = UnityEditor.AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/SFX_Prologo/tinnitus.mp3");
 #endif
             if (_tinnitusSource.clip != null)
             {

@@ -323,43 +323,18 @@ public class PortalTrigger : MonoBehaviour
             cc.transform.position = player.transform.position;
         }
 
-        // Resetear variables de movimiento en vThirdPersonController si existen
+        // Resetear el estado cinético del motor con su API pública: moveDirection e inputSmooth
+        // son 'internal' de Invector y quedaban congelados tras el CharacterController apagado
+        // (ver vThirdPersonMotor.ResetInputSmoothing). El resto de campos privados de
+        // vThirdPersonInput se releen de CharacterControllerBridge cada Update, así que no
+        // necesitan reset; solo el salto en cola puede sobrevivir al teletransporte.
         var controller = player.GetComponent<vThirdPersonController>() ?? player.GetComponentInChildren<vThirdPersonController>(true);
         if (controller != null)
-        {
-            var type = controller.GetType();
-            var moveDirField = type.GetField("moveDirection", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (moveDirField != null) moveDirField.SetValue(controller, Vector3.zero);
-            var extraImpulseField = type.GetField("extraImpulse", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (extraImpulseField != null) extraImpulseField.SetValue(controller, Vector3.zero);
-        }
+            controller.ResetInputSmoothing();
 
-        // Resetear input y valores internos en vThirdPersonInput
         var input = player.GetComponent<vThirdPersonInput>() ?? player.GetComponentInChildren<vThirdPersonInput>(true);
         if (input != null)
-        {
-            // Deshabilitar y habilitar el InputActionAsset
-            var inputActionsField = input.GetType().GetField("inputActions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            var inputActions = inputActionsField?.GetValue(input) as UnityEngine.InputSystem.InputActionAsset;
-            input.enabled = false;
-            input.enabled = true;
-            if (inputActions != null)
-            {
-                inputActions.Disable();
-                inputActions.Enable();
-            }
-            // Resetear campos privados relevantes
-            var moveInputField = input.GetType().GetField("moveInput", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (moveInputField != null) moveInputField.SetValue(input, Vector2.zero);
-            var cameraInputField = input.GetType().GetField("cameraInput", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (cameraInputField != null) cameraInputField.SetValue(input, Vector2.zero);
-            var jumpPressedField = input.GetType().GetField("jumpPressed", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (jumpPressedField != null) jumpPressedField.SetValue(input, false);
-            var sprintHeldField = input.GetType().GetField("sprintHeld", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (sprintHeldField != null) sprintHeldField.SetValue(input, false);
-            var strafePressedField = input.GetType().GetField("strafePressed", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (strafePressedField != null) strafePressedField.SetValue(input, false);
-        }
+            input.CancelPendingJump();
 
         // Esperar un frame antes de reactivar movimiento
         StartCoroutine(RestoreMovementCoroutine(player, cc));

@@ -444,10 +444,11 @@ public static partial class VestidoDelMundo
         Pon(o, muelle, Nasa, "Nasa", new Vector2(263f, -447.5f), 30f, camino: true, corredor: false);
         Pon(o, muelle, Nasa2, "Nasa", new Vector2(279.5f, -446f), -20f, camino: true, corredor: false);
         Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(232.25f, -458.25f), 115f, desnivel: 1.6f, hundir: 0.25f, inclinar: 6f);
-        Pon(o, muelle, Barca, "Barca varada en la arena", new Vector2(304.25f, -458.5f), 250f, desnivel: 1.6f, hundir: 0.25f, inclinar: -5f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(249f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(251.5f, -458f), 90f);
         Pon(o, muelle, Red, "Red puesta a secar", new Vector2(291f, -458f), 90f);
+
+        ColocarBarcoDeSilas(o, muelle);
 
         Transform plaza = Grupo(grupo, "Plaza del puerto");
         Pon(o, plaza, PrefabsEdificios + "BuildingAT41.prefab", "Puesto de pescado", new Vector2(286.5f, -440f), 270f, camino: true);
@@ -456,6 +457,130 @@ public static partial class VestidoDelMundo
         Pon(o, plaza, Banco, "Banco de la plaza del puerto", new Vector2(284.5f, -425.75f), -90f, camino: true);
         Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(256.25f, -446.25f), 0f, camino: true);
         Pon(o, plaza, Farola, "Farola de la plaza del puerto", new Vector2(283.75f, -446.25f), 0f, camino: true);
+    }
+
+    /// <summary>
+    /// Barco de Silas: el que se navega. Va amarrado en el agua, junto al embarcadero del Pueblo
+    /// Pesquero (GDD: "está amarrado en el Pueblo Pesquero"): se busca la orilla mirando la altura
+    /// del terreno y se amarra un poco mar adentro. También se pone la caja de agua de la capa
+    /// "Water" de la zona, que es lo que hace que el barco flote y que el jugador pueda nadar
+    /// hasta él.
+    /// </summary>
+    private static void ColocarBarcoDeSilas(Obra o, Transform grupo)
+    {
+        var origen = new Vector2(270f, -462f);   // el embarcadero
+        if (!BuscarOrilla(o, origen, 120f, out Vector2 enElAgua, out Vector2 haciaElMar))
+        {
+            o.Informe.Add("  Barco de Silas: no se encontró agua cerca del embarcadero: no se amarra.");
+            return;
+        }
+
+        // Se amarra un poco mar adentro, hasta que haya fondo para que el casco flote suelto.
+        var amarre = enElAgua;
+        for (int i = 0; i < 60; i++)
+        {
+            amarre += haciaElMar * 1.5f;
+            if (o.Suelo.Altura(amarre.x, amarre.y) <= NivelDelMar - 1.5f) break;
+        }
+
+        var pieza = new Pieza
+        {
+            Prefab = Barca, Nombre = "Barco de Silas", Pos = amarre, Rumbo = Rumbo(haciaElMar),
+            Apoyo = Apoyo.Flotar, CotaAgua = NivelDelMar, Hundir = 0.35f, DesnivelMax = 9f,
+            Holgura = 0.8f, PermitirSolapePropio = true, IgnorarZonas = true, SinObstaculo = false,
+        };
+        var barco = Poner(o, grupo, pieza);
+        if (barco == null)
+        {
+            o.Informe.Add("  Barco de Silas: no se pudo colocar en el amarre.");
+            return;
+        }
+
+        var musica = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/Zonas/El Barco de Silas.mp3");
+        MontadorDeBarco.Preparar(barco, grupo, haciaElMar, 0.35f, musica, amarre);
+
+        PonerAguaDelPuerto(o, grupo, amarre, haciaElMar);
+
+        float fondo = o.Suelo.Altura(amarre.x, amarre.y);
+        o.Informe.Add($"  Barco de Silas: amarrado en ({amarre.x:0.#}, {amarre.y:0.#}), a {Vector2.Distance(amarre, origen):0.#} m del embarcadero, " +
+                      $"fondo a {fondo:0.##} m. Se navega con el botón de interactuar.");
+    }
+
+    /// <summary>
+    /// Caja de agua del puerto en la capa "Water" (la que buscan el nado y el barco para saber
+    /// dónde está la superficie). Sin ella el barco no flotaría. Lleva además su volumen «Not
+    /// Walkable» para que los vecinos no anden por el mar.
+    /// </summary>
+    private static void PonerAguaDelPuerto(Obra o, Transform grupo, Vector2 amarre, Vector2 haciaElMar)
+    {
+        const float lado = 60f;
+        var centro = amarre + haciaElMar * (lado * 0.35f);
+
+        float fondo = float.MaxValue;
+        for (int a = -1; a <= 1; a++)
+            for (int b = -1; b <= 1; b++)
+                fondo = Mathf.Min(fondo, o.Suelo.Altura(centro.x + a * lado * 0.5f, centro.y + b * lado * 0.5f));
+        float suelo = Mathf.Min(fondo, NivelDelMar) - 1f;
+
+        var go = new GameObject("Agua del puerto (para nadar)");
+        go.transform.SetParent(grupo, false);
+        int capaAgua = LayerMask.NameToLayer("Water");
+        if (capaAgua >= 0) go.layer = capaAgua;
+
+        var caja = go.AddComponent<BoxCollider>();
+        caja.isTrigger = true;
+        caja.center = new Vector3(centro.x, (suelo + NivelDelMar) * 0.5f, centro.y);
+        caja.size = new Vector3(lado, NivelDelMar - suelo, lado);
+
+        int capaSuelo = LayerMask.NameToLayer("Floor");
+        var noCaminable = new GameObject("Fondo no caminable del puerto");
+        noCaminable.transform.SetParent(grupo, false);
+        if (capaSuelo >= 0) noCaminable.layer = capaSuelo;
+        noCaminable.transform.position = new Vector3(centro.x, (suelo + NivelDelMar + 0.5f) * 0.5f, centro.y);
+        var volumen = noCaminable.AddComponent<Unity.AI.Navigation.NavMeshModifierVolume>();
+        volumen.center = Vector3.zero;
+        volumen.size = new Vector3(lado, NivelDelMar + 0.5f - suelo, lado);
+        volumen.area = 1;
+    }
+
+    /// <summary>
+    /// Busca el punto de agua (terreno por debajo del nivel del mar) más cerca de un punto, y la
+    /// dirección hacia el mar desde ahí.
+    /// </summary>
+    private static bool BuscarOrilla(Obra o, Vector2 origen, float radioMaximo, out Vector2 enElAgua, out Vector2 haciaElAgua)
+    {
+        enElAgua = origen;
+        haciaElAgua = Vector2.down;
+
+        const float paso = 2f;
+        bool encontrado = false;
+        float mejorDistancia = float.MaxValue;
+        Vector2 mejor = origen;
+
+        for (float dz = -radioMaximo; dz <= radioMaximo; dz += paso)
+        {
+            for (float dx = -radioMaximo; dx <= radioMaximo; dx += paso)
+            {
+                if (dx * dx + dz * dz > radioMaximo * radioMaximo) continue;
+                var p = origen + new Vector2(dx, dz);
+                if (o.Suelo.Altura(p.x, p.y) > NivelDelMar - 0.15f) continue;   // no está bajo el mar
+                float d = dx * dx + dz * dz;
+                if (d < mejorDistancia)
+                {
+                    mejorDistancia = d;
+                    mejor = p;
+                    encontrado = true;
+                }
+            }
+        }
+
+        if (!encontrado) return false;
+
+        enElAgua = mejor;
+        haciaElAgua = (mejor - origen);
+        if (haciaElAgua.sqrMagnitude < 0.0001f) haciaElAgua = Vector2.down;
+        haciaElAgua.Normalize();
+        return true;
     }
 
     private static void EscenasDelVecino(Obra o, Transform grupo)

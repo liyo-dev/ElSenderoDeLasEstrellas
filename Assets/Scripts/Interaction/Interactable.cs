@@ -464,6 +464,10 @@ public class Interactable : MonoBehaviour
             case InteractableMode.ConfirmationPopup:
                 StartConfirmationPopup();
                 break;
+            case InteractableMode.Custom:
+                // El evento OnInteract (que se ha disparado antes) es todo el comportamiento: no
+                // hay diálogo ni popup que abrir.
+                break;
         }
     }
 

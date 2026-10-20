@@ -40,9 +40,9 @@ public static class PortadasDelMenuBuilder
     const string BancoPath = FK + "Props/Furniture/Chair/Chair02_a01.prefab";
     const string FarolaPath = FK + "Props/Lighting/Light01_a01.prefab";
     const string MainWorldPath = "Assets/Scenes/Worlds/MainWorld.unity";
-        const string MusicaPeninsula = "Assets/Audio/Music/menu-principal-el-sendero-v2-alegre.mp3";
-    const string MusicaViaje     = "Assets/Audio/Music/Brisa del Puerto.mp3";
-    const string MusicaSendero   = "Assets/Audio/Music/El Sendero de las Estrellas (Tema Principal).mp3";
+        const string MusicaPeninsula = "Assets/Audio/Music/Zonas/menu-principal-el-sendero-v2-alegre.mp3";
+    const string MusicaViaje     = "Assets/Audio/Music/Zonas/Brisa del Puerto.mp3";
+    const string MusicaSendero   = "Assets/Audio/Music/Cinematicas/El Sendero de las Estrellas (Tema Principal).mp3";
 
     const string CarpetaMateriales = "Assets/Art/MainMenu";
     const string CieloNochePath = CarpetaMateriales + "/CieloNocheMenu.mat";

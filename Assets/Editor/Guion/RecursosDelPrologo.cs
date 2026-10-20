@@ -89,6 +89,17 @@ public static class RecursosDelPrologo
             else perfil.eventSfx.Add(new AudioGraphProfile.EventSfx { eventKey = clave, sfx = clip });
             cambiado = true;
         }
+        if (perfil.cinematicVoiceDuck != null)
+        {
+            if (perfil.cinematicVoiceDuck.voiceGainDb < 8f || perfil.cinematicVoiceDuck.musicDb > -18f)
+            {
+                perfil.cinematicVoiceDuck.voiceGainDb = 8f;
+                perfil.cinematicVoiceDuck.musicDb = -18f;
+                perfil.cinematicVoiceDuck.sfxDb = -8f;
+                perfil.cinematicVoiceDuck.attackSeconds = 0.08f;
+                cambiado = true;
+            }
+        }
         if (cambiado) EditorUtility.SetDirty(perfil);
     }
 

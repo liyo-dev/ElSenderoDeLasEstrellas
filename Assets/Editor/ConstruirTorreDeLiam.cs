@@ -19,7 +19,7 @@ public static class ConstruirTorreDeLiam
     const string Pack = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/";
     static readonly Vector3 Origen = new(-6000, 100, 6000);
     const float AlturaMesa = 0.4f;
-    const string MusicaDeLaTorre = "Assets/Audio/Music/Pesadilla en Suspenso.mp3";
+    const string MusicaDeLaTorre = "Assets/Audio/Music/Cinematicas/La Melodia de Liam.mp3";
     static Transform raiz;
 
     [MenuItem("El Sendero/Mundo/Construir torre de Liam")]

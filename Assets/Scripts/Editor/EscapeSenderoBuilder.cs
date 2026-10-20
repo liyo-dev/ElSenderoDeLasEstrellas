@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
-using UnityEditor.Events;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,9 +10,8 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Genera el nivel jugable de huida del Sendero de las Estrellas mientras colapsa.
 /// Clona la estética, cielo, iluminación cósmica y plataformas reales de Sendero.unity,
-/// integrando el escape en sentido inverso desde el Altar Blanco (Z=266) hasta el Umbral (Z=-6).
-/// Resuelve las 3 secciones con plataformeo atlético (sin vuelo), dianas en el aire que abren puentes,
-/// elevador astral y porteo de Liam por parte de Estela.
+/// integrando la huida con Estela portando a Liam (inerte, con animaciones congeladas) y
+/// Will abriendo camino por delante (3 obstáculos) mientras el vacío cósmico persigue desde atrás.
 /// </summary>
 public static class EscapeSenderoBuilder
 {
@@ -24,15 +23,13 @@ public static class EscapeSenderoBuilder
     private const string PrefabEstela = "Assets/Prefabs/_ESTELA.prefab";
     private const string PrefabLiam = "Assets/Prefabs/_LIAM.prefab";
     private const string PrefabCamara = "Assets/Prefabs/CamaraDelJugador.prefab";
-
-    // VFX
-    private const string VfxSalto = "Assets/VFX/Free Game VFX/Prefab/FX_Greenlight_shrink.prefab";
+    private const string PrefabHuellas = "Assets/Prefabs/FootprintEffect.prefab";
 
     // Materiales auténticos de Sendero
     private const string MatCristalPath = "Assets/Art/Materials/Sendero/Mat_Sendero_CristalAstral.mat";
     private const string MatOroPath = "Assets/Art/Materials/Sendero/Mat_OroAstral.mat";
     private const string MatAltarPath = "Assets/Art/Materials/Sendero/Mat_AltarBlancoPuro.mat";
-    private const string MatBraseroPath = "Assets/Scenes/Test/CombatLabMaterials/Lab_Brasero.mat";
+    private const string MatObsidianaPath = "Assets/Art/Materials/Sendero/Mat_ObsidianaAstral.mat";
 
     [MenuItem("El Sendero/Escenario/Crear o regenerar Nivel de Escape del Sendero")]
     public static void MenuCrear() => Crear(pedirConfirmacion: false);
@@ -68,7 +65,7 @@ public static class EscapeSenderoBuilder
 
         var escena = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
 
-        // 2. Limpiar elementos de la historia previa y piezas que se han derrumbado
+        // 2. Limpiar elementos de la historia previa y piezas viejas
         LimpiarObjetoEnEscena(escena, "TRIGGERS_DE_PROGRESION");
         LimpiarObjetoEnEscena(escena, "SENDERO_PROGRESSION_CONTROLLER");
         LimpiarObjetoEnEscena(escena, "_WILL");
@@ -78,139 +75,223 @@ public static class EscapeSenderoBuilder
         LimpiarObjetoEnEscena(escena, "ESCAPE_MECANICAS");
         LimpiarObjetoEnEscena(escena, "ESCAPE_NIVEL_CONTROLLER");
         LimpiarObjetoEnEscena(escena, "BOOTSTRAP_ESCAPE");
+        LimpiarObjetoEnEscena(escena, "Anillo_Celeste_Interior");
 
-        // Retirar los 6 tramos de calzada que han colapsado en el abismo para crear los 3 retos reales
-        LimpiarObjetoEnEscena(escena, "Losa_Constelacion_1");
-        LimpiarObjetoEnEscena(escena, "Losa_Constelacion_2");
-        LimpiarObjetoEnEscena(escena, "Losa_Constelacion_3");
-        LimpiarObjetoEnEscena(escena, "Losa_Constelacion_4");
-        LimpiarObjetoEnEscena(escena, "Losa_Constelacion_5");
-        LimpiarObjetoEnEscena(escena, "Suelo_05_CorteDelCamino");
-        LimpiarObjetoEnEscena(escena, "Suelo_03_CaminoLiam_A");
-        LimpiarObjetoEnEscena(escena, "Suelo_03_CaminoLiam_B");
-        LimpiarObjetoEnEscena(escena, "Suelo_02_CaminoEstela_A");
-        LimpiarObjetoEnEscena(escena, "Suelo_01_CaminoWill_A");
+        // 3. Cargar materiales
+        var matCristal = AssetDatabase.LoadAssetAtPath<Material>(MatCristalPath) ??
+                         CrearMatFallback("Mat_Cristal_Fallback", new Color(0.2f, 0.6f, 0.9f, 0.6f), new Color(0.4f, 0.8f, 1.2f));
+        var matOro = AssetDatabase.LoadAssetAtPath<Material>(MatOroPath) ??
+                     CrearMatFallback("Mat_Oro_Fallback", new Color(1.0f, 0.82f, 0.35f), new Color(1.2f, 0.9f, 0.4f));
+        var matObsidiana = AssetDatabase.LoadAssetAtPath<Material>(MatObsidianaPath) ??
+                           CrearMatFallback("Mat_Obsidiana_Fallback", new Color(0.08f, 0.04f, 0.12f), new Color(0.25f, 0.05f, 0.4f));
 
-        // Materiales
-        var matCristal = Cargar<Material>(MatCristalPath, avisos) ?? CrearMatFallback("Mat_Sendero_CristalAstral", new Color(0.75f, 0.85f, 1f));
-        var matOro = Cargar<Material>(MatOroPath, avisos) ?? CrearMatFallback("Mat_OroAstral", new Color(1f, 0.85f, 0.4f));
-        var matBrasero = Cargar<Material>(MatBraseroPath, avisos) ?? CrearMatFallback("Lab_Brasero", new Color(0.95f, 0.45f, 0.2f), new Color(0.8f, 0.3f, 0.1f));
-        var vfxSaltoPrefab = Cargar<GameObject>(VfxSalto, avisos);
+        // 4. Asegurar el Altar Blanco con suelo único y collider sólido
+        var plaza = escena.GetRootGameObjects()
+            .SelectMany(g => g.GetComponentsInChildren<Transform>(true))
+            .FirstOrDefault(t => t.name == "Plaza_Circular_Altar")?.gameObject;
 
-        // Raíces del controlador y mecánicas de escape
-        var raizMecanicas = new GameObject("ESCAPE_MECANICAS");
+        if (plaza != null)
+        {
+            plaza.transform.position = new Vector3(0f, 2.30f, 266f);
+
+            var plataformaAltar = plaza.transform.Find("Plataforma_Altar");
+            if (plataformaAltar != null)
+            {
+                plataformaAltar.localPosition = Vector3.zero;
+                plataformaAltar.localRotation = Quaternion.identity;
+                plataformaAltar.localScale = new Vector3(24f, 0.5f, 24f);
+                var cap = plataformaAltar.GetComponent<CapsuleCollider>();
+                if (cap != null) Object.DestroyImmediate(cap);
+                if (plataformaAltar.GetComponent<MeshCollider>() == null)
+                    plataformaAltar.gameObject.AddComponent<MeshCollider>();
+                plataformaAltar.gameObject.layer = LayerMask.NameToLayer("Floor");
+            }
+        }
+
+        // 5. Controlador de Escape y puntos de avance
         var nivelCtrlObj = new GameObject("ESCAPE_NIVEL_CONTROLLER");
         var nivelCtrl = nivelCtrlObj.AddComponent<NivelEscapeSendero>();
 
-        // Checkpoints de Will a lo largo del Sendero (en sentido Altar Z=266 -> Umbral Z=-6)
+        RenderSettings.fog = false;
+
+        // ── Muro de Colapso Cósmico Persecutor (Limpio, sin humo ni niebla que tape la cámara) ──
+        var muroColapso = new GameObject("Muro_De_Colapso_Cosmico");
+        muroColapso.transform.SetPositionAndRotation(new Vector3(0f, 3.5f, 290f), Quaternion.Euler(0f, 180f, 0f));
+        muroColapso.transform.SetParent(nivelCtrlObj.transform);
+
+        var luzVacio = muroColapso.AddComponent<Light>();
+        luzVacio.type = LightType.Point;
+        luzVacio.color = new Color(0.55f, 0.08f, 0.85f);
+        luzVacio.range = 35f;
+        luzVacio.intensity = 2.5f;
+
+        nivelCtrl.MuroColapso = muroColapso.transform;
+
+        // ── Obstáculo 1: Barrera de Cristales Celestes en la Calzada (Z ≈ 220) ───
+        // La calzada original (Suelo_04) se mantiene 100% continua y sólida.
+        var barreraCristalObj = new GameObject("Barrera_Cristal_Astral");
+        barreraCristalObj.transform.SetParent(nivelCtrlObj.transform, false);
+        barreraCristalObj.transform.SetPositionAndRotation(new Vector3(0f, 1.5f, 220f), Quaternion.identity);
+        barreraCristalObj.layer = LayerMask.NameToLayer("Enemy");
+
+        CrearBloque("Cristal_Centro", barreraCristalObj.transform, new Vector3(0f, 2.2f, 0f), new Vector3(2.6f, 4.4f, 2.0f), matCristal);
+        CrearBloque("Cristal_Izq", barreraCristalObj.transform, new Vector3(-2.6f, 2.0f, 0.3f), new Vector3(2.2f, 4.0f, 1.8f), matCristal);
+        CrearBloque("Cristal_Der", barreraCristalObj.transform, new Vector3(2.6f, 2.0f, -0.3f), new Vector3(2.2f, 4.0f, 1.8f), matCristal);
+        CrearBloque("Cristal_ExtIzq", barreraCristalObj.transform, new Vector3(-5.0f, 1.6f, -0.2f), new Vector3(2.0f, 3.4f, 1.6f), matCristal);
+        CrearBloque("Cristal_ExtDer", barreraCristalObj.transform, new Vector3(5.0f, 1.6f, 0.2f), new Vector3(2.0f, 3.4f, 1.6f), matCristal);
+
+        var colCristal = barreraCristalObj.AddComponent<BoxCollider>();
+        colCristal.center = new Vector3(0f, 2.0f, 0f);
+        colCristal.size = new Vector3(12.0f, 5.0f, 2.5f);
+
+        var luzCristal = barreraCristalObj.AddComponent<Light>();
+        luzCristal.type = LightType.Point;
+        luzCristal.color = new Color(0.3f, 0.85f, 1f);
+        luzCristal.range = 16f;
+        luzCristal.intensity = 4.0f;
+
+        barreraCristalObj.AddComponent<Damageable>();
+        var diana1 = barreraCristalObj.AddComponent<DianaAstralSendero>();
+        diana1.NivelCtrl = nivelCtrl;
+        diana1.NumeroObstaculo = 1;
+        diana1.ObjetoDesactivarAlRomper = barreraCristalObj;
+
+        nivelCtrl.BarreraCristal = barreraCristalObj;
+
+        // ── Obstáculo 2: Barrera de Obsidiana Astral en el Desfiladero (Z ≈ 142) ─
+        var barreraObsidianaObj = new GameObject("Barrera_Obsidiana_Astral");
+        barreraObsidianaObj.transform.SetParent(nivelCtrlObj.transform, false);
+        barreraObsidianaObj.transform.SetPositionAndRotation(new Vector3(3.0f, 2.5f, 142f), Quaternion.identity);
+        barreraObsidianaObj.layer = LayerMask.NameToLayer("Enemy");
+
+        CrearBloque("Pilar_Obsidiana_1", barreraObsidianaObj.transform, new Vector3(-2.2f, 2.0f, 0f), new Vector3(1.8f, 4.5f, 1.8f), matObsidiana);
+        CrearBloque("Pilar_Obsidiana_2", barreraObsidianaObj.transform, new Vector3(-0.6f, 2.5f, 0.3f), new Vector3(2.0f, 5.4f, 2.0f), matObsidiana);
+        CrearBloque("Pilar_Obsidiana_3", barreraObsidianaObj.transform, new Vector3(1.0f, 2.2f, -0.2f), new Vector3(1.8f, 4.8f, 1.8f), matObsidiana);
+        CrearBloque("Pilar_Obsidiana_4", barreraObsidianaObj.transform, new Vector3(2.4f, 1.7f, 0.1f), new Vector3(1.6f, 4.0f, 1.6f), matObsidiana);
+
+        var colBarrera = barreraObsidianaObj.AddComponent<BoxCollider>();
+        colBarrera.center = new Vector3(0f, 2.0f, 0f);
+        colBarrera.size = new Vector3(8.0f, 5.0f, 2.5f);
+
+        barreraObsidianaObj.AddComponent<Damageable>();
+        var diana2 = barreraObsidianaObj.AddComponent<DianaAstralSendero>();
+        diana2.NivelCtrl = nivelCtrl;
+        diana2.NumeroObstaculo = 2;
+        diana2.ObjetoDesactivarAlRomper = barreraObsidianaObj;
+
+        nivelCtrl.BarreraObsidiana = barreraObsidianaObj;
+
+        // ── Obstáculo 3: Sello Celestial del Umbral (Z ≈ 58) y Megalito Rúnico (Z = 64) ───
+        var selloUmbralObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        selloUmbralObj.name = "Sello_Celestial_Umbral";
+        selloUmbralObj.transform.SetParent(nivelCtrlObj.transform, false);
+        selloUmbralObj.transform.SetPositionAndRotation(new Vector3(0f, 1.8f, 58f), Quaternion.identity);
+        selloUmbralObj.transform.localScale = new Vector3(8.5f, 4.2f, 0.5f);
+        var rSello = selloUmbralObj.GetComponent<Renderer>();
+        if (rSello != null) rSello.sharedMaterial = matOro;
+
+        var luzSello = selloUmbralObj.AddComponent<Light>();
+        luzSello.type = LightType.Point;
+        luzSello.color = new Color(1f, 0.85f, 0.4f);
+        luzSello.range = 10f;
+        luzSello.intensity = 2.5f;
+
+        nivelCtrl.SelloUmbral = selloUmbralObj;
+
+        // Megalito rúnico en la terraza del santuario que Will golpea para abrir el sello
+        var megalitoObj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        megalitoObj.name = "Megalito_Runa_Amanecer";
+        megalitoObj.transform.SetParent(nivelCtrlObj.transform, false);
+        megalitoObj.transform.SetPositionAndRotation(new Vector3(3.5f, 2.0f, 64f), Quaternion.identity);
+        megalitoObj.transform.localScale = new Vector3(1.6f, 3.4f, 1.6f);
+        megalitoObj.layer = LayerMask.NameToLayer("Enemy");
+        var rMegalito = megalitoObj.GetComponent<Renderer>();
+        if (rMegalito != null) rMegalito.sharedMaterial = matOro;
+
+        var luzMegalito = megalitoObj.AddComponent<Light>();
+        luzMegalito.type = LightType.Point;
+        luzMegalito.color = new Color(0.4f, 1f, 0.85f);
+        luzMegalito.range = 8f;
+        luzMegalito.intensity = 2.8f;
+
+        megalitoObj.AddComponent<Damageable>();
+        var diana3 = megalitoObj.AddComponent<DianaAstralSendero>();
+        diana3.NivelCtrl = nivelCtrl;
+        diana3.NumeroObstaculo = 3;
+        diana3.ObjetoDesactivarAlRomper = selloUmbralObj;
+
+        // ── Checkpoints de Will ──────────────────────────────────────────────────
         var cp0 = new GameObject("Checkpoint 0 (Altar)").transform;
-        cp0.SetPositionAndRotation(new Vector3(0f, 2.30f, 258f), Quaternion.Euler(0f, 180f, 0f));
+        cp0.SetPositionAndRotation(new Vector3(0.5f, 2.95f, 260f), Quaternion.Euler(0f, 180f, 0f));
         cp0.SetParent(nivelCtrlObj.transform);
 
-        var cp1 = new GameObject("Checkpoint 1 (Reconciliacion Z208)").transform;
-        cp1.SetPositionAndRotation(new Vector3(0f, 1.60f, 208f), Quaternion.Euler(0f, 180f, 0f));
+        var cp1 = new GameObject("Checkpoint 1 (Reconciliacion Z227)").transform;
+        cp1.SetPositionAndRotation(new Vector3(0.5f, 1.95f, 227f), Quaternion.Euler(0f, 180f, 0f));
         cp1.SetParent(nivelCtrlObj.transform);
 
-        var cp2 = new GameObject("Checkpoint 2 (Mirador Z128)").transform;
-        cp2.SetPositionAndRotation(new Vector3(8f, 2.90f, 128f), Quaternion.Euler(0f, 180f, 0f));
+        var cp2 = new GameObject("Checkpoint 2 (Desfiladero Z155)").transform;
+        cp2.SetPositionAndRotation(new Vector3(2.5f, 2.95f, 155f), Quaternion.Euler(0f, 180f, 0f));
         cp2.SetParent(nivelCtrlObj.transform);
 
-        var cp3 = new GameObject("Checkpoint 3 (Llegada Z6.5)").transform;
-        cp3.SetPositionAndRotation(new Vector3(0f, 0.10f, 6.5f), Quaternion.Euler(0f, 180f, 0f));
+        var cp3 = new GameObject("Checkpoint 3 (Santuario Z64)").transform;
+        cp3.SetPositionAndRotation(new Vector3(0f, 1.25f, 64f), Quaternion.Euler(0f, 180f, 0f));
         cp3.SetParent(nivelCtrlObj.transform);
 
-        // Puntos seguros para el avance de Estela con Liam
-        var puntoEstela1 = new GameObject("Punto Estela 1 (Z208)").transform;
-        puntoEstela1.SetPositionAndRotation(new Vector3(0f, 1.60f, 208f), Quaternion.Euler(0f, 180f, 0f));
+        var cp4 = new GameObject("Checkpoint 4 (Llegada Z15)").transform;
+        cp4.SetPositionAndRotation(new Vector3(0f, 0.20f, 15f), Quaternion.Euler(0f, 180f, 0f));
+        cp4.SetParent(nivelCtrlObj.transform);
+
+        // ── Puntos de acompañamiento de Estela ────────────────────────────────────
+        var puntoEstela0 = new GameObject("Punto Estela 0 (Ante Barrera Cristal Z226)").transform;
+        puntoEstela0.SetPositionAndRotation(new Vector3(-0.5f, 1.95f, 226f), Quaternion.Euler(0f, 180f, 0f));
+        puntoEstela0.SetParent(nivelCtrlObj.transform);
+
+        var puntoEstela1 = new GameObject("Punto Estela 1 (Ante Barrera Obsidiana Z149)").transform;
+        puntoEstela1.SetPositionAndRotation(new Vector3(2.8f, 2.95f, 149f), Quaternion.Euler(0f, 180f, 0f));
         puntoEstela1.SetParent(nivelCtrlObj.transform);
 
-        var puntoEstela2 = new GameObject("Punto Estela 2 (Z128)").transform;
-        puntoEstela2.SetPositionAndRotation(new Vector3(8f, 2.90f, 128f), Quaternion.Euler(0f, 180f, 0f));
+        var puntoEstela2 = new GameObject("Punto Estela 2 (Santuario Z64)").transform;
+        puntoEstela2.SetPositionAndRotation(new Vector3(0f, 1.25f, 64f), Quaternion.Euler(0f, 180f, 0f));
         puntoEstela2.SetParent(nivelCtrlObj.transform);
 
         var puntoEstela3 = new GameObject("Punto Estela 3 (Umbral Z-4)").transform;
-        puntoEstela3.SetPositionAndRotation(new Vector3(0f, 0.10f, -4f), Quaternion.Euler(0f, 180f, 0f));
+        puntoEstela3.SetPositionAndRotation(new Vector3(0f, 0.20f, -4f), Quaternion.Euler(0f, 180f, 0f));
         puntoEstela3.SetParent(nivelCtrlObj.transform);
 
-        // ── Sección 1: El Gran Abismo del Altar a la Terraza Astral (Z: 254 a 230) ───
-        // Plataforma de salto en el borde del Altar con halo luminoso
-        CrearLanzador("Lanzador 1 (Salto al Vacio Z253)", raizMecanicas.transform,
-            new Vector3(0f, 2.30f, 253.5f), rotacionY: 180f, vertical: 18f, forward: 16f, vfxSaltoPrefab, matCristal, matOro);
-
-        // Monolito de Luz con pedestal de cristal y núcleo brillante en Z=222
-        var receptorLuz = CrearMonolitoReceptor("Monolito de Luz Astral", raizMecanicas.transform,
-            new Vector3(0f, 1.50f, 222f), alturaColumna: 5.5f, escalaOrbe: 1.6f,
-            matCristal, matOro, new Color(1f, 0.95f, 0.55f), MagicElement.Light);
-
-        // Puente temporal de 3 grandes losas hexagonales de cristal que salvan el abismo
-        var temporalesPuenteLuz = new List<PlataformaTemporal>();
-        float[] zHex = { 247f, 239f, 231f };
-        for (int i = 0; i < zHex.Length; i++)
+        // ── Huellas estelares limpias ───────────────────────────────────────────
+        var fpGo = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabHuellas);
+        if (fpGo != null)
         {
-            var losa = CrearBloque($"Hexagono Luz {i + 1}", raizMecanicas.transform,
-                new Vector3(0f, 2.05f - (i * 0.18f), zHex[i]), new Vector3(5f, 0.4f, 5f), matCristal, capaSuelo: true);
-            var temp = losa.AddComponent<PlataformaTemporal>();
-            temporalesPuenteLuz.Add(temp);
-            UnityEventTools.AddPersistentListener(receptorLuz.alActivarse, temp.Mostrar);
-            UnityEventTools.AddPersistentListener(receptorLuz.alApagarse, temp.Ocultar);
+            var col = fpGo.GetComponent<Collider>();
+            if (col != null)
+            {
+                Object.DestroyImmediate(col, true);
+                EditorUtility.SetDirty(fpGo);
+            }
         }
-        UnityEventTools.AddPersistentListener(receptorLuz.alActivarse, nivelCtrl.ActivarPuenteSeccion1);
 
-        // ── Sección 2: El Desnivel, Pebeteros Elementales y Elevador (Z: 186 a 128) ──
-        // Elevador de cristal para Estela y Liam
-        var elevadorObj = CrearBloque("Elevador Astral Estela", raizMecanicas.transform,
-            new Vector3(3f, 1.5f, 170f), new Vector3(6f, 0.5f, 6f), matCristal, capaSuelo: true);
-        var elevador = elevadorObj.AddComponent<PlatformElevator>();
-        var soElev = new SerializedObject(elevador);
-        soElev.FindProperty("raiseHeight").floatValue = 5.0f;
-        soElev.FindProperty("moveSpeed").floatValue = 3.0f;
-        soElev.ApplyModifiedPropertiesWithoutUndo();
+        var pool = escena.GetRootGameObjects()
+            .SelectMany(g => g.GetComponentsInChildren<StarWorldFootprintPool>(true))
+            .FirstOrDefault();
+        if (pool == null)
+        {
+            var poolObj = new GameObject("StarWorldFootprintPool");
+            pool = poolObj.AddComponent<StarWorldFootprintPool>();
+        }
+        var footprintPrefab = AssetDatabase.LoadAssetAtPath<FootprintEffect>(PrefabHuellas);
+        if (footprintPrefab != null)
+        {
+            var soPool = new SerializedObject(pool);
+            soPool.FindProperty("_prefab").objectReferenceValue = footprintPrefab;
+            soPool.FindProperty("_footprintColor").colorValue = new Color(0.5f, 0.8f, 1f, 0.4f);
+            soPool.FindProperty("_footprintScale").floatValue = 0.35f;
+            soPool.FindProperty("_yOffset").floatValue = 0.02f;
+            soPool.ApplyModifiedPropertiesWithoutUndo();
+        }
 
-        // Peldaños de acceso para Will hacia las terrazas laterales
-        CrearBloque("Paso Astral Izq", raizMecanicas.transform, new Vector3(-2.5f, 1.8f, 175f), new Vector3(3.2f, 0.4f, 3.2f), matCristal, capaSuelo: true);
-        CrearBloque("Paso Astral Der", raizMecanicas.transform, new Vector3(4.5f, 2.0f, 175f), new Vector3(3.2f, 0.4f, 3.2f), matCristal, capaSuelo: true);
-
-        // Terraza y Pebetero de Fuego en X=-5.5
-        var pilarFuego = CrearMonolitoReceptor("Pebetero de Fuego", raizMecanicas.transform,
-            new Vector3(-5.5f, 1.5f, 165f), alturaColumna: 4.5f, escalaOrbe: 1.4f,
-            matCristal, matBrasero, new Color(1f, 0.45f, 0.15f), MagicElement.Fire);
-
-        // Terraza y Molinete de Viento en X=+7.0
-        var molineteViento = CrearMonolitoReceptor("Molinete de Viento", raizMecanicas.transform,
-            new Vector3(7.0f, 2.0f, 165f), alturaColumna: 4.5f, escalaOrbe: 1.4f,
-            matCristal, matOro, new Color(0.5f, 1f, 0.9f), MagicElement.Storm);
-
-        nivelCtrl.ElevadorAstral = elevador;
-        UnityEventTools.AddPersistentListener(pilarFuego.alActivarse, nivelCtrl.ActivarAvanceSeccion2);
-        UnityEventTools.AddPersistentListener(molineteViento.alActivarse, nivelCtrl.ActivarAvanceSeccion2);
-
-        // ── Sección 3: Islas de Cristal Aéreas hacia el Umbral (Z: 120 a -6) ────────
-        CrearBloque("Isla Lanzador 3A", raizMecanicas.transform, new Vector3(4f, 2.2f, 96f), new Vector3(4.5f, 0.6f, 4.5f), matCristal, capaSuelo: true);
-        CrearLanzador("Lanzador Aéreo 3A", raizMecanicas.transform, new Vector3(4f, 2.55f, 96f), 180f, 16f, 16f, vfxSaltoPrefab, matCristal, matOro);
-
-        CrearBloque("Isla Lanzador 3B", raizMecanicas.transform, new Vector3(-2f, 1.6f, 62f), new Vector3(4.5f, 0.6f, 4.5f), matCristal, capaSuelo: true);
-        CrearLanzador("Lanzador Aéreo 3B", raizMecanicas.transform, new Vector3(-2f, 1.95f, 62f), 180f, 16f, 16f, vfxSaltoPrefab, matCristal, matOro);
-
-        CrearBloque("Isla Lanzador 3C", raizMecanicas.transform, new Vector3(1f, 0.8f, 28f), new Vector3(4.5f, 0.6f, 4.5f), matCristal, capaSuelo: true);
-        CrearLanzador("Lanzador Aéreo 3C", raizMecanicas.transform, new Vector3(1f, 1.15f, 28f), 180f, 15f, 16f, vfxSaltoPrefab, matCristal, matOro);
-
-        // Runa Maestra de Retorno frente al Umbral en Z=4
-        var runaPuenteFinal = CrearMonolitoReceptor("Runa Maestra de Retorno", raizMecanicas.transform,
-            new Vector3(2.5f, 0.1f, 4.0f), alturaColumna: 3.5f, escalaOrbe: 1.4f,
-            matCristal, matOro, new Color(1f, 0.9f, 0.35f), MagicElement.Light);
-
-        // Gran Calzada Dorada que se extiende cruzando el abismo para Estela
-        var calzadaDorada = CrearBloque("Gran Calzada Dorada", raizMecanicas.transform,
-            new Vector3(0f, 1.0f, 60f), new Vector3(5f, 0.4f, 126f), matOro, capaSuelo: true);
-        calzadaDorada.SetActive(false);
-
-        nivelCtrl.PuenteFinalVisual = calzadaDorada;
-        UnityEventTools.AddPersistentListener(runaPuenteFinal.alActivarse, nivelCtrl.ActivarPuenteFinalUmbral);
-
-        // Trigger de fin de nivel en Portal_00_UmbralTierra (Z=-6)
+        // ── Trigger de Meta en el Umbral ─────────────────────────────────────────
         var triggerMeta = new GameObject("Trigger_MetaUmbral");
         triggerMeta.transform.SetPositionAndRotation(new Vector3(0f, 1.5f, -6f), Quaternion.identity);
-        triggerMeta.transform.SetParent(raizMecanicas.transform);
         var colMeta = triggerMeta.AddComponent<BoxCollider>();
         colMeta.isTrigger = true;
         colMeta.size = new Vector3(10f, 6f, 4f);
@@ -220,15 +301,27 @@ public static class EscapeSenderoBuilder
         // ── Personajes y Porteo Calibrado en el Altar ────────────────────────────
         var jugador = (GameObject)PrefabUtility.InstantiatePrefab(willPrefab, escena);
         jugador.name = "_WILL";
-        jugador.transform.SetPositionAndRotation(new Vector3(0f, 2.30f, 258f), Quaternion.Euler(0f, 180f, 0f));
+        jugador.transform.SetPositionAndRotation(new Vector3(0.5f, 2.95f, 260f), Quaternion.Euler(0f, 180f, 0f));
 
         var estela = (GameObject)PrefabUtility.InstantiatePrefab(estelaPrefab, escena);
         estela.name = "_ESTELA";
-        estela.transform.SetPositionAndRotation(new Vector3(-1.8f, 2.30f, 259f), Quaternion.Euler(0f, 180f, 0f));
+        estela.transform.SetPositionAndRotation(new Vector3(-0.5f, 2.95f, 260f), Quaternion.Euler(0f, 180f, 0f));
 
         var liam = (GameObject)PrefabUtility.InstantiatePrefab(liamPrefab, escena);
         liam.name = "_LIAM";
-        liam.transform.SetPositionAndRotation(new Vector3(-1.8f, 2.30f, 259f), Quaternion.Euler(0f, 180f, 0f));
+        liam.transform.SetPositionAndRotation(new Vector3(-0.5f, 2.95f, 260f), Quaternion.Euler(0f, 180f, 0f));
+
+        // Inmovilizar a Liam totalmente (sin respiración ni gestos, conservando pose Mecanim sin caer a T-pose)
+        var animsLiam = liam.GetComponentsInChildren<Animator>(true);
+        for (int i = 0; i < animsLiam.Length; i++)
+        {
+            if (animsLiam[i] != null)
+            {
+                animsLiam[i].enabled = true;
+                animsLiam[i].cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animsLiam[i].speed = 0f;
+            }
+        }
 
         var porteo = estela.AddComponent<PorteoDeCompanero>();
         var soPorteo = new SerializedObject(porteo);
@@ -237,7 +330,24 @@ public static class EscapeSenderoBuilder
         soPorteo.FindProperty("offsetPosicion").vector3Value = new Vector3(-0.08f, -0.16f, 0f);
         soPorteo.ApplyModifiedPropertiesWithoutUndo();
 
-        // Cámara del jugador mirando al sur (siguiendo el escape hacia Z=-6)
+        foreach (var it in estela.GetComponentsInChildren<Interactable>(true))
+        {
+            it.enabled = false;
+            var soIt = new SerializedObject(it);
+            var initProp = soIt.FindProperty("initiallyEnabled");
+            if (initProp != null) initProp.boolValue = false;
+            soIt.ApplyModifiedPropertiesWithoutUndo();
+        }
+        foreach (var it in liam.GetComponentsInChildren<Interactable>(true))
+        {
+            it.enabled = false;
+            var soIt = new SerializedObject(it);
+            var initProp = soIt.FindProperty("initiallyEnabled");
+            if (initProp != null) initProp.boolValue = false;
+            soIt.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        // Cámara del jugador mirando al sur
         if (camaraPrefab != null)
         {
             var cam = (GameObject)PrefabUtility.InstantiatePrefab(camaraPrefab, escena);
@@ -245,7 +355,7 @@ public static class EscapeSenderoBuilder
             cam.transform.SetPositionAndRotation(new Vector3(0f, 4.0f, 264f), Quaternion.Euler(14f, 180f, 0f));
         }
 
-        // Bootstrap limpio de Escape: registra a Will, configura habilidades sin vuelo y oculta HUD
+        // Bootstrap limpio de Escape
         var inicio = new GameObject("BOOTSTRAP_ESCAPE").AddComponent<EscapeSenderoBootstrap>();
         var soInicio = new SerializedObject(inicio);
         soInicio.FindProperty("player").objectReferenceValue = jugador;
@@ -255,186 +365,85 @@ public static class EscapeSenderoBuilder
         var soNivel = new SerializedObject(nivelCtrl);
         soNivel.FindProperty("jugador").objectReferenceValue = jugador.transform;
         soNivel.FindProperty("porteoEstela").objectReferenceValue = porteo;
-        soNivel.FindProperty("elevadorAstral").objectReferenceValue = elevador;
-        soNivel.FindProperty("puenteFinalVisual").objectReferenceValue = calzadaDorada;
 
         var puntosProp = soNivel.FindProperty("puntosSegurosEstela");
-        puntosProp.arraySize = 3;
-        puntosProp.GetArrayElementAtIndex(0).objectReferenceValue = puntoEstela1;
-        puntosProp.GetArrayElementAtIndex(1).objectReferenceValue = puntoEstela2;
-        puntosProp.GetArrayElementAtIndex(2).objectReferenceValue = puntoEstela3;
+        puntosProp.arraySize = 4;
+        puntosProp.GetArrayElementAtIndex(0).objectReferenceValue = puntoEstela0;
+        puntosProp.GetArrayElementAtIndex(1).objectReferenceValue = puntoEstela1;
+        puntosProp.GetArrayElementAtIndex(2).objectReferenceValue = puntoEstela2;
+        puntosProp.GetArrayElementAtIndex(3).objectReferenceValue = puntoEstela3;
 
         var cpsProp = soNivel.FindProperty("checkpointsWill");
-        cpsProp.arraySize = 4;
+        cpsProp.arraySize = 5;
         cpsProp.GetArrayElementAtIndex(0).objectReferenceValue = cp0;
         cpsProp.GetArrayElementAtIndex(1).objectReferenceValue = cp1;
         cpsProp.GetArrayElementAtIndex(2).objectReferenceValue = cp2;
         cpsProp.GetArrayElementAtIndex(3).objectReferenceValue = cp3;
+        cpsProp.GetArrayElementAtIndex(4).objectReferenceValue = cp4;
 
         soNivel.ApplyModifiedPropertiesWithoutUndo();
 
-        // Guardar escena final clonada y enriquecida
+        // Guardar escena final
         EditorSceneManager.SaveScene(escena, ScenePath);
+        AddToBuildSettings(ScenePath);
         AssetDatabase.SaveAssets();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[EscapeSenderoBuilder] ¡Nivel de Escape generado con éxito basado 100% en Sendero.unity!");
+        Debug.Log($"[EscapeSenderoBuilder] ¡Nivel de Escape generado con éxito con colapso persecutor y 3 obstáculos dinámicos!");
 #endif
+    }
+
+    public static void AddToBuildSettings(string scenePath)
+    {
+        var scenes = new System.Collections.Generic.List<EditorBuildSettingsScene>(EditorBuildSettings.scenes);
+        for (int i = 0; i < scenes.Count; i++)
+        {
+            if (scenes[i].path != scenePath) continue;
+            if (!scenes[i].enabled)
+            {
+                scenes[i] = new EditorBuildSettingsScene(scenePath, true);
+                EditorBuildSettings.scenes = scenes.ToArray();
+            }
+            return;
+        }
+
+        scenes.Add(new EditorBuildSettingsScene(scenePath, true));
+        EditorBuildSettings.scenes = scenes.ToArray();
     }
 
     private static void LimpiarObjetoEnEscena(Scene escena, string nombre)
     {
-        foreach (var root in escena.GetRootGameObjects())
+        var encontrados = escena.GetRootGameObjects()
+            .SelectMany(g => g.GetComponentsInChildren<Transform>(true))
+            .Where(t => t.name == nombre)
+            .Select(t => t.gameObject)
+            .ToList();
+
+        foreach (var go in encontrados)
         {
-            if (root.name == nombre)
-            {
-                Object.DestroyImmediate(root);
-                return;
-            }
-            var h = root.transform.Find(nombre);
-            if (h != null)
-            {
-                Object.DestroyImmediate(h.gameObject);
-                return;
-            }
+            Object.DestroyImmediate(go);
         }
     }
 
-    private static GameObject CrearBloque(string nombre, Transform padre, Vector3 pos, Vector3 escala, Material mat, bool capaSuelo = false)
+    private static GameObject CrearBloque(string nombre, Transform padre, Vector3 posLocal, Vector3 escala, Material mat, bool capaSuelo = false)
     {
         var obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
         obj.name = nombre;
-        obj.transform.SetParent(padre);
-        obj.transform.SetPositionAndRotation(pos, Quaternion.identity);
+        obj.transform.SetParent(padre, false);
+        obj.transform.localPosition = posLocal;
+        obj.transform.localRotation = Quaternion.identity;
         obj.transform.localScale = escala;
         var r = obj.GetComponent<Renderer>();
         if (r && mat) r.sharedMaterial = mat;
-        if (capaSuelo) obj.layer = LayerMask.NameToLayer("Floor");
+        if (capaSuelo)
+        {
+            obj.layer = LayerMask.NameToLayer("Floor");
+            var cap = obj.GetComponent<CapsuleCollider>();
+            if (cap != null) Object.DestroyImmediate(cap);
+            if (obj.GetComponent<MeshCollider>() == null)
+                obj.AddComponent<MeshCollider>();
+        }
         return obj;
-    }
-
-    private static LanzadorDeSalto CrearLanzador(string nombre, Transform padre, Vector3 pos, float rotacionY, float vertical, float forward,
-        GameObject vfxPrefab, Material matBase, Material matBorde)
-    {
-        var raiz = new GameObject(nombre);
-        raiz.transform.SetParent(padre);
-        raiz.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, rotacionY, 0f));
-
-        // Base estética de cristal
-        var baseVisual = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        baseVisual.name = "Base_Cristal";
-        baseVisual.transform.SetParent(raiz.transform, false);
-        baseVisual.transform.localScale = new Vector3(2.6f, 0.08f, 2.6f);
-        if (matBase && baseVisual.GetComponent<Renderer>()) baseVisual.GetComponent<Renderer>().sharedMaterial = matBase;
-        Object.DestroyImmediate(baseVisual.GetComponent<Collider>());
-
-        // Anillo de oro astral
-        var anillo = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        anillo.name = "Anillo_Oro";
-        anillo.transform.SetParent(raiz.transform, false);
-        anillo.transform.localPosition = new Vector3(0f, 0.02f, 0f);
-        anillo.transform.localScale = new Vector3(2.0f, 0.09f, 2.0f);
-        if (matBorde && anillo.GetComponent<Renderer>()) anillo.GetComponent<Renderer>().sharedMaterial = matBorde;
-        Object.DestroyImmediate(anillo.GetComponent<Collider>());
-
-        // Trigger físico y lógica del lanzador
-        var colTrigger = raiz.AddComponent<CapsuleCollider>();
-        colTrigger.isTrigger = true;
-        colTrigger.radius = 1.3f;
-        colTrigger.height = 1.5f;
-        colTrigger.center = new Vector3(0f, 0.75f, 0f);
-
-        var lanzador = raiz.AddComponent<LanzadorDeSalto>();
-        var so = new SerializedObject(lanzador);
-        so.FindProperty("velocidadVertical").floatValue = vertical;
-        so.FindProperty("empujeHaciaDelante").floatValue = forward;
-        if (vfxPrefab) so.FindProperty("vfxDeImpulso").objectReferenceValue = vfxPrefab;
-        so.ApplyModifiedPropertiesWithoutUndo();
-
-        // Luz tenue para señalizar la runa en el suelo
-        var luz = raiz.AddComponent<Light>();
-        luz.type = LightType.Point;
-        luz.color = new Color(0.4f, 1f, 0.8f);
-        luz.range = 4f;
-        luz.intensity = 1.5f;
-
-        return lanzador;
-    }
-
-    private static ReceptorDeMagia CrearMonolitoReceptor(string nombre, Transform padre, Vector3 pos, float alturaColumna, float escalaOrbe,
-        Material matColumna, Material matOrbe, Color colorLuz, MagicElement elementoPrincipal)
-    {
-        var raiz = new GameObject(nombre);
-        raiz.transform.SetParent(padre);
-        raiz.transform.SetPositionAndRotation(pos, Quaternion.identity);
-
-        // Columna de cristal
-        var columna = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        columna.name = "Columna_Cristal";
-        columna.transform.SetParent(raiz.transform, false);
-        columna.transform.localPosition = new Vector3(0f, alturaColumna * 0.5f, 0f);
-        columna.transform.localScale = new Vector3(1.8f, alturaColumna, 1.8f);
-        if (matColumna && columna.GetComponent<Renderer>()) columna.GetComponent<Renderer>().sharedMaterial = matColumna;
-
-        // Anillo superior
-        var collar = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        collar.name = "Collar_Oro";
-        collar.transform.SetParent(raiz.transform, false);
-        collar.transform.localPosition = new Vector3(0f, alturaColumna + 0.1f, 0f);
-        collar.transform.localScale = new Vector3(2.4f, 0.25f, 2.4f);
-        if (matOrbe && collar.GetComponent<Renderer>()) collar.GetComponent<Renderer>().sharedMaterial = matOrbe;
-
-        // Orbe flotante receptor de magia
-        var orbe = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        orbe.name = "Orbe_Receptor";
-        orbe.transform.SetParent(raiz.transform, false);
-        orbe.transform.localPosition = new Vector3(0f, alturaColumna + 0.9f + (escalaOrbe * 0.5f), 0f);
-        orbe.transform.localScale = Vector3.one * escalaOrbe;
-
-        var r = orbe.GetComponent<Renderer>();
-        if (r && matOrbe) r.sharedMaterial = matOrbe;
-
-        var col = orbe.GetComponent<SphereCollider>();
-        if (col) col.radius = 0.85f;
-
-        // Luz de señalización
-        var luzObj = new GameObject("Luz");
-        luzObj.transform.SetParent(orbe.transform, false);
-        var l = luzObj.AddComponent<Light>();
-        l.type = LightType.Point;
-        l.color = colorLuz;
-        l.range = 10f;
-        l.intensity = 3f;
-
-        var receptor = orbe.AddComponent<ReceptorDeMagia>();
-        receptor.alActivarse ??= new UnityEvent();
-        receptor.alApagarse ??= new UnityEvent();
-        var so = new SerializedObject(receptor);
-
-        // Acepta el elemento principal y también los demás básicos para garantizar que Will nunca se bloquee
-        var elemArray = so.FindProperty("elementosAceptados");
-        elemArray.ClearArray();
-        elemArray.InsertArrayElementAtIndex(0);
-        elemArray.GetArrayElementAtIndex(0).enumValueIndex = (int)elementoPrincipal;
-        elemArray.InsertArrayElementAtIndex(1);
-        elemArray.GetArrayElementAtIndex(1).enumValueIndex = (int)MagicElement.Light;
-        elemArray.InsertArrayElementAtIndex(2);
-        elemArray.GetArrayElementAtIndex(2).enumValueIndex = (int)MagicElement.Fire;
-        elemArray.InsertArrayElementAtIndex(3);
-        elemArray.GetArrayElementAtIndex(3).enumValueIndex = (int)MagicElement.Storm;
-
-        so.FindProperty("modo").enumValueIndex = (int)ReceptorDeMagia.Modo.Permanente;
-        so.FindProperty("segundosEncendido").floatValue = 0f;
-        so.FindProperty("colorEncendido").colorValue = colorLuz;
-        so.FindProperty("luz").objectReferenceValue = l;
-
-        var brp = so.FindProperty("brillo");
-        brp.ClearArray();
-        brp.InsertArrayElementAtIndex(0);
-        brp.GetArrayElementAtIndex(0).objectReferenceValue = r;
-
-        so.ApplyModifiedPropertiesWithoutUndo();
-        return receptor;
     }
 
     private static T Cargar<T>(string ruta, List<string> avisos) where T : Object

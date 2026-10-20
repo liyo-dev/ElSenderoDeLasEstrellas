@@ -1,5 +1,5 @@
 n,bloque,fuente,clave,hablante,texto,nota
-1,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_INTRO,Archimago,"Buenos días, valle. ¿Qué se te ha estropeado hoy?",
+1,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_MANANA_INTRO,Archimago,"Buenos días, pueblo. ¿Qué se te ha estropeado hoy?",
 2,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_FAVOR_CARRETA,Vecino,¡Maestro! Se me ha volcado otra vez la carreta. Y eso que hoy iba despacio.,
 3,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_CARRETA_GRACIAS,Vecino,"¡Gracias, maestro! No habría podido enderezarla yo solo.","Lo DICE, no lo asiente. Tres HeadNod01 seguidos no son un agradecimiento, son un tic."
 4,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_BAILE,Archimago,¡Me encanta vuestro baile!,
@@ -17,7 +17,7 @@ n,bloque,fuente,clave,hablante,texto,nota
 16,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_ARCHIMAGO,Archimago,Ve. Yo me encargo de él.,
 17,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_LIORA,Liora,Vuelve pronto.,
 18,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DESPEDIDA_ELEGIR,Liora,"Y cuando vuelvas, nada de encargos. Te toca descansar.","La broma del rio, devuelta. Es lo que convierte la despedida en una promesa en vez de en un discurso."
-19,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_EVACUACION_LIORA,Liora,"¡Al puente, todos! ¡Deprisa, no miréis atrás!",
+19,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_EVACUACION_LIORA,Liora,"¡Vamos, Nina! ...Ten mucho cuidado, por favor.",
 20,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO,Mago Oscuro,¿Vas a salvarlos a todos tú solo?,
 21,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_MAGO_2,Mago Oscuro,Ni a ti mismo puedes salvarte.,
 22,1. Prólogo jugable,SEQ_Prologo_UltimaNoche,PROLOGO_DUELO_ARCHIMAGO,Archimago,"Mientras siga en pie, no llegarás a ellos.",

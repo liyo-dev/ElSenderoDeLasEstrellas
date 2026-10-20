@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using DG.Tweening;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -40,7 +41,6 @@ public class ConfirmationPopupUI : MonoBehaviour
     private bool _isShown;
     private float _savedTimeScale;
     private bool _confirmSelected = false;
-    private Coroutine _blinkRoutine;
     private float _shownAt;
     private GameObject _previousSelected;
 
@@ -61,6 +61,11 @@ public class ConfirmationPopupUI : MonoBehaviour
         PrepararBoton(confirmButton, confirmLabel, out _anchoBaseConfirmar, out _letraBaseConfirmar);
         PrepararBoton(cancelButton, cancelLabel, out _anchoBaseCancelar, out _letraBaseCancelar);
         if (panel) panel.SetActive(false);
+    }
+
+    void OnDisable()
+    {
+        StopSelectionAnimation();
     }
 
     /// <param name="confirmText">Texto del botón de confirmar. Vacío = «Sí».</param>
@@ -109,10 +114,13 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (messageText) messageText.text = message;
 
         var loc = LocalizationManager.Instance;
-        if (confirmLabel) confirmLabel.text = !string.IsNullOrEmpty(confirmText) ? confirmText
-            : loc != null ? loc.Get("COMMON_YES", "Sí") : "Sí";
-        if (cancelLabel)  cancelLabel.text  = !string.IsNullOrEmpty(cancelText) ? cancelText
-            : loc != null ? loc.Get("COMMON_NO",  "No") : "No";
+        string textoSi = !string.IsNullOrEmpty(confirmText) ? confirmText.Trim()
+            : loc != null ? loc.Get("COMMON_YES", "Sí").Trim() : "Sí";
+        string textoNo = !string.IsNullOrEmpty(cancelText) ? cancelText.Trim()
+            : loc != null ? loc.Get("COMMON_NO",  "No").Trim() : "No";
+
+        if (confirmLabel) confirmLabel.text = textoSi;
+        if (cancelLabel)  cancelLabel.text  = textoNo;
 
         if (confirmButton) { confirmButton.onClick.RemoveAllListeners(); confirmButton.onClick.AddListener(Confirm); }
         if (cancelButton)  { cancelButton.onClick.RemoveAllListeners();  cancelButton.onClick.AddListener(Cancel);  }
@@ -124,7 +132,7 @@ public class ConfirmationPopupUI : MonoBehaviour
         AjustarBotonesAlTexto();
 
         SelectButton(_confirmSelected);
-        StartBlink();
+        AnimateSelection(_confirmSelected, instant: true);
     }
 
     // ── Botones que se ajustan a su texto ─────────────────────────────────────
@@ -137,6 +145,12 @@ public class ConfirmationPopupUI : MonoBehaviour
         anchoBase = 0f;
         letraBase = texto != null ? texto.fontSize : 0f;
         if (boton == null) return;
+
+        if (texto != null)
+        {
+            texto.alignment = TextAlignmentOptions.Center;
+            texto.textWrappingMode = TextWrappingModes.NoWrap;
+        }
 
         var rt = (RectTransform)boton.transform;
         anchoBase = rt.rect.width > 0f ? rt.rect.width : rt.sizeDelta.x;
@@ -232,6 +246,21 @@ public class ConfirmationPopupUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.Tab))
             ToggleSelection();
 #endif
+
+        if (EventSystem.current != null)
+        {
+            var cur = EventSystem.current.currentSelectedGameObject;
+            if (confirmButton != null && cur == confirmButton.gameObject && !_confirmSelected)
+            {
+                _confirmSelected = true;
+                AnimateSelection(true, instant: false);
+            }
+            else if (cancelButton != null && cur == cancelButton.gameObject && _confirmSelected)
+            {
+                _confirmSelected = false;
+                AnimateSelection(false, instant: false);
+            }
+        }
     }
 
     // FIX: el botón Sur/Enter confirmaba siempre, incluso con "No" resaltado (el jugador
@@ -247,48 +276,51 @@ public class ConfirmationPopupUI : MonoBehaviour
     {
         _confirmSelected = !_confirmSelected;
         SelectButton(_confirmSelected);
-        StopBlink();
-        StartBlink();
+        AnimateSelection(_confirmSelected, instant: false);
     }
 
     void SelectButton(bool confirm)
     {
         var target = confirm ? confirmButton : cancelButton;
-        if (target) EventSystem.current?.SetSelectedGameObject(target.gameObject);
+        if (target && EventSystem.current != null) EventSystem.current.SetSelectedGameObject(target.gameObject);
     }
 
-    void StartBlink()
+    void AnimateSelection(bool confirm, bool instant = false)
     {
-        if (_blinkRoutine != null) StopCoroutine(_blinkRoutine);
-        _blinkRoutine = StartCoroutine(BlinkSelected());
-    }
+        var selectedBtn = confirm ? confirmButton : cancelButton;
+        var unselectedBtn = confirm ? cancelButton : confirmButton;
 
-    void StopBlink()
-    {
-        if (_blinkRoutine != null) { StopCoroutine(_blinkRoutine); _blinkRoutine = null; }
-        ResetButtonScale(confirmButton);
-        ResetButtonScale(cancelButton);
-    }
-
-    void ResetButtonScale(Button btn)
-    {
-        if (btn) btn.transform.localScale = Vector3.one;
-    }
-
-    System.Collections.IEnumerator BlinkSelected()
-    {
-        float t = 0f;
-        const float speed = 4f;
-        const float amplitude = 0.07f;
-        var btn = _confirmSelected ? confirmButton : cancelButton;
-        while (_isShown && btn != null)
+        if (unselectedBtn != null)
         {
-            t += Time.unscaledDeltaTime * speed;
-            float s = 1f + Mathf.Sin(t) * amplitude;
-            btn.transform.localScale = new Vector3(s, s, 1f);
-            yield return null;
+            unselectedBtn.transform.DOKill();
+            if (instant)
+                unselectedBtn.transform.localScale = Vector3.one;
+            else
+                unselectedBtn.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutCubic).SetUpdate(true);
         }
-        if (btn) btn.transform.localScale = Vector3.one;
+
+        if (selectedBtn != null)
+        {
+            selectedBtn.transform.DOKill();
+            if (instant)
+                selectedBtn.transform.localScale = new Vector3(1.08f, 1.08f, 1f);
+            else
+                selectedBtn.transform.DOScale(new Vector3(1.08f, 1.08f, 1f), 0.15f).SetEase(Ease.OutCubic).SetUpdate(true);
+        }
+    }
+
+    void StopSelectionAnimation()
+    {
+        if (confirmButton != null)
+        {
+            confirmButton.transform.DOKill();
+            confirmButton.transform.localScale = Vector3.one;
+        }
+        if (cancelButton != null)
+        {
+            cancelButton.transform.DOKill();
+            cancelButton.transform.localScale = Vector3.one;
+        }
     }
 
     void Confirm()
@@ -310,7 +342,7 @@ public class ConfirmationPopupUI : MonoBehaviour
     void Hide()
     {
         _isShown = false;
-        StopBlink();
+        StopSelectionAnimation();
         Time.timeScale = _savedTimeScale;
         Core.PlayerInputManager.Instance?.PopUIMode();
 

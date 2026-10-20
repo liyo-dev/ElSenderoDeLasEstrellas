@@ -1,232 +1,228 @@
 # Parte de horneado: Final_01_ElSacrificio
 
-2026-10-17 23:33 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
+2026-10-18 15:00 · guion `Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt`
 
-**2:24,4** de secuencia · 28 frases · 15 planos · 25 efectos · 4 personajes
+**2:35,3** de secuencia · 26 frases · 27 planos · 48 efectos · 4 personajes
 
 Reparto medido (m): will 1,55/ojos 0,93 · estela 1,68/ojos 0,94 · liam 1,51/ojos 0,94 · archimago 1,57/ojos 0,93
 
 ## Errores (0)
 
 
-## Avisos (38)
+## Avisos (10)
 
-- línea 61: estela dice ¡¿Qué haces?! ¡Sal de ahí! dura=3.5: la frase ¡¿Qué no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 65: will dice Cuida de Tobías. dura=3.0: la frase Cuida no tiene voz en Voices/es; usa los 3,0 s del guion
-- línea 69: estela dice ¡No! ¡Cuídalo tú! dura=2.8: la frase ¡No! no tiene voz en Voices/es; usa los 2,8 s del guion
-- línea 71: estela dice ¡Will, sal de ahí ahora mismo! dura=3.5: la frase ¡Will no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 73: estela dice ¡Me la tienes que devolver al salir! ¡Me lo prometiste! dura=4.5: la frase ¡Me no tiene voz en Voices/es; usa los 4,5 s del guion
-- línea 77: will dice Lo sé... Idiota. Nunca me voy a olvidar de ti. dura=4.8: la frase Lo no tiene voz en Voices/es; usa los 4,8 s del guion
-- línea 87: will anda a p_will_conjuro ritmo=paseo llega_mirando=liam: un punto queda fuera del NavMesh (0,0, 4,5); voy en línea recta
-- línea 92: will dice Quiero vivir... pero tú tienes que volver con tu hermano. dura=4.5: la frase Quiero no tiene voz en Voices/es; usa los 4,5 s del guion
-- línea 98: will dice ¡Espíritus del sendero, luz que sostiene la vida...! dura=4.5: la frase ¡Espíritus no tiene voz en Voices/es; usa los 4,5 s del guion
-- línea 107: will dice ¡Entregad mi alma a cambio de la suya! ¡Que vuelva a respirar! dura=5.5: la frase ¡Entregad no tiene voz en Voices/es; usa los 5,5 s del guion
-- línea 112: will dice ¡RESURRECCIÓN! dura=3.5: la frase ¡RESURRECCIÓN! no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 135: liam dice ¿Estela? ¿Qué...? dura=3.0: la frase ¿Estela? no tiene voz en Voices/es; usa los 3,0 s del guion
-- línea 140: estela dice ¡Estás vivo! ¡Liam, estás vivo! dura=3.5: la frase ¡Estás no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 145: liam dice ¿Dónde está Will? dura=2.8: la frase ¿Dónde no tiene voz en Voices/es; usa los 2,8 s del guion
-- línea 150: estela dice Me empujó fuera... Se quedó dentro contigo. Y ahora tú estás aquí... y él no. dura=5.5: la frase Me no tiene voz en Voices/es; usa los 5,5 s del guion
-- línea 153: liam dice Ese idiota... Se entregó por nosotros... dura=3.8: la frase Ese no tiene voz en Voices/es; usa los 3,8 s del guion
-- línea 163: estela dice ¿Idiota? ¿Así eres... de verdad? dura=3.5: la frase ¿Idiota? no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 168: archimago dice Lo siento. No soy Will. dura=3.2: la frase Lo no tiene voz en Voices/es; usa los 3,2 s del guion
-- línea 173: estela dice Entonces, ¿quién eres? dura=2.8: la frase Entonces no tiene voz en Voices/es; usa los 2,8 s del guion
-- línea 178: archimago dice Alguien que vivió dentro de él desde pequeño. Os lo iba a contar. Lo prometió. dura=5.0: la frase Alguien no tiene voz en Voices/es; usa los 5,0 s del guion
-- línea 180: archimago dice Él escribió que quería regresar vivo. Yo también lo quise una vez, hace siglos. No pude. dura=5.5: la frase Él no tiene voz en Voices/es; usa los 5,5 s del guion
-- línea 184: estela dice ¿Y eso qué significa? dura=2.8: la frase ¿Y no tiene voz en Voices/es; usa los 2,8 s del guion
-- línea 188: archimago dice Gracias por terminar lo que dejé a medias. Ya puedo descansar con los míos. dura=5.5: la frase Gracias no tiene voz en Voices/es; usa los 5,5 s del guion
-- línea 208: will dice Creo que esta cinta es de alguien... dura=3.5: la frase Creo no tiene voz en Voices/es; usa los 3,5 s del guion
-- línea 222: will dice Me la devuelves al salir, dijiste... Pues ya hemos salido. dura=4.5: la frase Me no tiene voz en Voices/es; usa los 4,5 s del guion
-- línea 229: liam dice ¿Cómo...? ¡¿El hechizo...?! dura=3.0: la frase ¿Cómo...? no tiene voz en Voices/es; usa los 3,0 s del guion
-- línea 231: will dice Me ha devuelto él. Fue lo último que hizo antes de irse. dura=5.0: la frase Me no tiene voz en Voices/es; usa los 5,0 s del guion
-- línea 238: estela dice ¡Eres el mayor idiota de todo el reino! ¡No vuelvas a asustarme así jamás! dura=4.8: la frase ¡Eres no tiene voz en Voices/es; usa los 4,8 s del guion
-- línea 241: will dice Te lo prometo. Ya estamos todos en casa. dura=3.5: la frase Te no tiene voz en Voices/es; usa los 3,5 s del guion
-- El primer plano empieza en 25,7 s: hasta entonces la cámara se queda donde estuviera.
-- línea 86: plano conjunto will liam suave=0.4: algo del decorado se mete delante y tapa un 12% del cuadro. Prueba lado= o desde=.
-- línea 86: plano conjunto will liam suave=0.4: no hay ángulo limpio para «conjunto de will y liam» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 129: plano dos liam estela rumbo=180 suave=0.4: algo del decorado se mete delante y tapa un 63% del cuadro. Prueba lado= o desde=.
-- línea 129: plano dos liam estela rumbo=180 suave=0.4: no hay ángulo limpio para «dos: liam y estela» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 176: plano medio archimago sobre=estela rumbo=180 suave=0.3: no hay ángulo limpio para «medio de archimago» (algo tapa la cara). Prueba con desde= o lado=.
-- línea 206: plano medio will rumbo=180 suave=0.4: algo del decorado se mete delante y tapa un 96% del cuadro. Prueba lado= o desde=.
-- 1:27,6: en «medio de archimago» estela está 12 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- línea 316: will dice FINAL_WILL_RETURN_04 gesto=HandWave02 dura=3.0: la frase FINAL_WILL_RETURN_04 no tiene voz en Voices/es; usa los 3,0 s del guion
+- línea 184: plano conjunto liam estela desde=cam_piedra_orbita_inicio mover=cam_piedra_orbita_fin suave=0.8 lente=32: algo del decorado se mete delante y tapa un 94% del cuadro. Prueba lado= o desde=.
+- línea 211: plano medio liam lado=frente suave=0.3: no hay ángulo limpio para «medio de liam» (algo tapa la cara). Prueba con desde= o lado=.
+- línea 237: plano medio estela lado=frente suave=0.3: no cabe el contraplano sobre el hombro de archimago; hago un plano medio de estela.
+- línea 251: plano medio estela lado=frente suave=0.3: no cabe el contraplano sobre el hombro de archimago; hago un plano medio de estela.
+- línea 292: plano medio will desde=cam_piedra_will_regreso suave=0.0: algo del decorado se mete delante y tapa un 100% del cuadro. Prueba lado= o desde=.
+- 1:12,0: en «medio de estela» liam está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 1:34,7: en «sobre el hombro de estela a archimago» liam está 14 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 1:51,3: en «sobre el hombro de estela a archimago» liam está 10 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.
 
-## Silencios largos entre frases (6)
+## Silencios largos entre frases (5)
 
-- 0:24,5 → 0:29,9: 5,5 s sin voz entre Lo y Quiero
-- 0:34,4 → 0:37,4: 3,0 s sin voz entre Quiero y ¡Espíritus
-- 0:48,7 → 0:51,4: 2,7 s sin voz entre ¡Entregad y ¡RESURRECCIÓN!
-- 1:47,6 → 1:50,2: 2,6 s sin voz entre Gracias y Creo
-- 1:53,7 → 1:57,4: 3,8 s sin voz entre Creo y Me
-- 2:11,4 → 2:14,2: 2,7 s sin voz entre Me y ¡Eres
+- 0:22,5 → 0:28,8: 6,3 s sin voz entre FINAL_WILL_PORTAL_02 y FINAL_WILL_CONJURO_01
+- 0:42,3 → 0:43,9: 1,6 s sin voz entre FINAL_WILL_CONJURO_02 y FINAL_WILL_CONJURO_03
+- 0:55,5 → 0:60,0: 4,5 s sin voz entre FINAL_WILL_CONJURO_04 y FINAL_LIAM_AWAKE_01
+- 2:00,7 → 2:07,3: 6,6 s sin voz entre FINAL_ARCHIMAGO_04 y FINAL_WILL_RETURN_01
+- 2:14,5 → 2:20,5: 6,1 s sin voz entre FINAL_WILL_RETURN_02 y FINAL_LIAM_RETURN_01
 
 ## Línea de tiempo
 
 | Tiempo | Qué | Detalle |
 |---|---|---|
 | 0:00,0 | **@inicio** |  |
+| 0:00,0 | plano 1 | medio de estela · 4,3 s · lente 30° · coste 142: cara 100, ángulo 36 |
 | 0:00,0 | efecto | Bandas de cine: mostrar (0,5s) |
 | 0:00,0 | efecto | Pantalla: cubrir (0,01s) |
-| 0:00,0 | efecto | Mecánica: PrepararSendero |
-| 0:00,0 | efecto | Mecánica: ActivarPantallaDividida |
+| 0:00,0 | efecto | Mecánica: AmbientePiedra |
+| 0:00,0 | efecto | Mecánica: AbrirPortalUmbral |
 | 0:00,0 | efecto | Pantalla: descubrir (0,8s) |
-| 0:00,4 | estela | «¡¿Qué» (3,5 s) |
-| 0:04,3 | will | «Cuida» (3,0 s) · pose |
-| 0:07,7 | estela | «¡No!» (2,8 s) |
-| 0:10,9 | estela | «¡Will» (3,5 s) |
-| 0:14,8 | estela | «¡Me» (4,5 s) |
-| 0:19,7 | will | «Lo» (4,8 s) · pose |
-| 0:25,3 | efecto | Mecánica: DesactivarPantallaDividida |
-| 0:25,7 | plano 1 | conjunto de will y liam · 9,3 s · lente 34° · coste 5000: decorado 5000 |
-| 0:29,9 | will | «Quiero» (4,5 s) · pose |
-| 0:29,9 | efecto | Voz: Epico, +3,0 dB |
-| 0:34,4 | efecto | Mecánica: ConjuroResurreccionInicio |
-| 0:34,9 | plano 2 | medio de will · 8,3 s · lente 28° · coste 2: ángulo 2 |
-| 0:37,4 | will | «¡Espíritus» (4,5 s) · pose |
-| 0:41,9 | efecto | Mecánica: ConjuroResurreccionCarga |
-| 0:42,4 | efecto | Cut-in 0: Actor_Will (Ojos) |
-| 0:43,2 | plano 3 | primer plano de will · 6,0 s · lente 24° · coste 2: ángulo 2 |
-| 0:43,2 | will | «¡Entregad» (5,5 s) · pose |
-| 0:43,2 | efecto | Cut-in 0: retirar (Cara) |
-| 0:49,2 | plano 4 | medio de will · 6,2 s · lente 30° · coste 2: ángulo 2 |
-| 0:51,4 | will | «¡RESURRECCIÓN!» (3,5 s) · pose |
-| 0:54,9 | efecto | Pantalla: cubrir (0,35s) |
-| 0:54,9 | efecto | Voz: Ninguno, +0,0 dB |
-| 0:54,9 | efecto | Sacudida de cámara (0,9, 1,5s) |
-| 0:54,9 | efecto | Mecánica: ConjuroResurreccionClimax |
-| 0:55,4 | plano 5 | dos: liam y estela · 4,1 s · lente 32° · coste 2148: decorado 1250, cara 871, ángulo 27 |
-| 0:55,4 | efecto | Mecánica: AmbientePiedraAncestral |
-| 0:55,4 | efecto | Pantalla: descubrir (1,2s) |
-| 0:56,1 | liam | «¿Estela?» (3,0 s) |
-| 0:59,5 | plano 6 | medio de estela · 3,9 s · lente 30° · coste 156: cara 142, ángulo 14 |
-| 0:59,5 | estela | «¡Estás» (3,5 s) · pose |
-| 1:03,4 | plano 7 | medio de liam · 3,2 s · lente 30° · coste 307: cara 238, ángulo 63 |
-| 1:03,4 | liam | «¿Dónde» (2,8 s) |
-| 1:06,6 | plano 8 | medio de estela · 10,3 s · lente 30° · coste 156: cara 142, ángulo 14 |
-| 1:06,6 | estela | «Me» (5,5 s) · pose |
-| 1:12,5 | liam | «Ese» (3,8 s) |
-| 1:16,9 | plano 9 | conjunto de archimago y estela · 7,5 s · lente 34° · coste 335: delante 320, cara 3, ángulo 5 |
-| 1:16,9 | estela | «¿Idiota?» (3,5 s) · pose |
-| 1:16,9 | efecto | Mecánica: EspirituArchimago |
-| 1:20,8 | archimago | «Lo» (3,2 s) · pose |
-| 1:20,8 | efecto | Voz: Plegaria, +2,0 dB |
-| 1:24,4 | plano 10 | medio de estela · 3,2 s · lente 30° · coste 156: cara 142, ángulo 14 |
-| 1:24,4 | estela | «Entonces» (2,8 s) · pose |
-| 1:27,6 | plano 11 | medio de archimago · 22,6 s · lente 30° · coste 2395: tapado 122, delante 2260, ángulo 5 |
-| 1:27,6 | archimago | «Alguien» (5,0 s) · pose |
-| 1:33,0 | archimago | «Él» (5,5 s) · pose |
-| 1:38,9 | estela | «¿Y» (2,8 s) · pose |
-| 1:42,1 | archimago | «Gracias» (5,5 s) · pose |
-| 1:47,6 | efecto | Voz: Ninguno, +0,0 dB |
-| 1:48,1 | efecto | Mecánica: DespedidaArchimago |
-| 1:50,2 | plano 12 | medio de will · 4,0 s · lente 30° · coste 86: ángulo 86 |
-| 1:50,2 | will | «Creo» (3,5 s) · pose |
-| 1:50,2 | efecto | Mecánica: RegresoWill |
-| 1:54,2 | plano 13 | dos: estela y liam · 3,3 s · lente 32° · coste 599: delante 480, cara 82, ángulo 32 |
-| 1:57,4 | plano 14 | sobre el hombro de estela a will · 4,9 s · lente 24° · coste 93: cara 93 |
-| 1:57,4 | will | «Me» (4,5 s) · pose |
-| 2:02,3 | plano 15 | conjunto de will y estela y liam · 22,0 s · lente 34° · coste 327: tapado 61, cara 262, ángulo 5 |
-| 2:03,0 | liam | «¿Cómo...?» (3,0 s) · pose |
-| 2:06,4 | will | «Me» (5,0 s) · pose |
-| 2:14,2 | estela | «¡Eres» (4,8 s) · pose |
-| 2:19,4 | will | «Te» (3,5 s) · pose |
-| 2:23,9 | efecto | Pantalla: cubrir (1,2s) |
-| 2:23,9 | efecto | Bandas de cine: retirar (0,5s) |
-| 2:23,9 | efecto | Mecánica: EncadenarParte2 |
+| 0:00,4 | estela | «¡¿Qué haces?! ¡Sal de ahí!» (3,5 s) · pose |
+| 0:00,4 | efecto | Cut-in 0: Actor_Estela (Ojos) |
+| 0:04,3 | plano 2 | medio de will · 3,4 s · lente 30° · coste 100: cara 62, ángulo 32 |
+| 0:04,3 | will | «Cuida de Tobías.» (3,0 s) · pose |
+| 0:07,7 | plano 3 | medio de estela · 5,1 s · lente 30° · coste 142: cara 100, ángulo 36 |
+| 0:07,7 | estela | «¡No! ¡Cuídalo tú! ¡Will, sal de ahí ahora mismo!» (4,7 s) · pose |
+| 0:12,8 | plano 4 | primer plano de estela · 4,9 s · lente 24° · coste 178: cara 138, ángulo 41 |
+| 0:12,8 | estela | «¡Me la tienes que devolver! ¡Al salir! ¡Me lo prometiste!» (4,5 s) · pose |
+| 0:12,8 | efecto | Cut-in 0: Actor_Estela (Cara) |
+| 0:17,7 | plano 5 | medio de will · 5,4 s · lente 30° · coste 100: cara 62, ángulo 32 |
+| 0:17,7 | will | «Lo sé. Idiota... Nunca me voy a olvidar de ti.» (4,8 s) · pose |
+| 0:20,1 | efecto | Mecánica: CerrarPortalSendero |
+| 0:23,1 | plano 6 | conjunto de estela · 4,5 s · lente 34° · coste 243: cara 165, ángulo 72 |
+| 0:23,1 | efecto | Fogonazo (0,4s) |
+| 0:23,1 | efecto | Sacudida de cámara (0,8, 1,4s) |
+| 0:23,1 | efecto | Cut-in 0: Actor_Estela (Ojos) |
+| 0:23,5 | efecto | SFX: SFX_Impacto_DBZ |
+| 0:27,5 | plano 7 | general de will y liam · 1,2 s · lente 42° |
+| 0:27,5 | efecto | Mecánica: AmbienteSendero |
+| 0:28,8 | plano 8 | conjunto de will y liam · 6,0 s · lente 34° |
+| 0:28,8 | will | «La fórmula de la Piedra Ancestral... No se me ha olvidado ni una sola línea.» (5,7 s) |
+| 0:28,8 | efecto | Mecánica: ConjuroResurreccionInicio |
+| 0:28,8 | efecto | Cut-in 0: Player (Ojos) |
+| 0:28,8 | efecto | Líneas de concentración: mostrar |
+| 0:28,8 | efecto | SFX: Prologo_MagiaLevitar |
+| 0:28,8 | efecto | Voz: Ninguno, +0,0 dB |
+| 0:34,8 | plano 9 | conjunto de will y liam · 7,9 s · lente 34° |
+| 0:34,8 | will | ««Tú que guardas el aliento donde las estrellas nacen... que ningún umbral se cierre para quien aún llaman por su nombre.»» (7,5 s) |
+| 0:34,8 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
+| 0:34,8 | efecto | Voz: Epico, +4,0 dB |
+| 0:42,7 | plano 10 | general de will y liam · 9,0 s · lente 42° |
+| 0:43,9 | will | ««Una vida por otra vida. Mi pulso por su pulso. ¡Que mi luz cruce la puerta y la suya vuelva a arder!»» (7,4 s) |
+| 0:43,9 | efecto | SFX: Prologo_Carga |
+| 0:43,9 | efecto | Sacudida de cámara (0,5, 1,5s) |
+| 0:45,9 | efecto | Mecánica: ConjuroResurreccionCarga |
+| 0:51,7 | plano 11 | primer plano de will · 5,5 s · lente 24° · coste 0: limpio |
+| 0:51,7 | will | «¡¡VUELVE CON ELLOS, LIAM!!» (3,8 s) |
+| 0:51,7 | efecto | Líneas de concentración: mostrar |
+| 0:51,7 | efecto | Cut-in 0: Player (Cara) |
+| 0:55,5 | efecto | Mecánica: ConjuroResurreccionClimax |
+| 0:55,5 | efecto | SFX: SFX_Prologo_ExplosionFinal |
+| 0:55,5 | efecto | Fogonazo (0,6s) |
+| 0:55,5 | efecto | Sacudida de cámara (0,9, 2s) |
+| 0:55,5 | efecto | Mecánica: ColapsoSendero |
+| 0:55,5 | efecto | Voz: Ninguno, +0,0 dB |
+| 0:56,7 | efecto | Pantalla: cubrir (1,2s) |
+| 0:57,2 | plano 12 | conjunto de liam y estela · 6,2 s · lente 32° |
+| 0:57,2 | efecto | Mecánica: AmbientePiedra |
+| 0:57,2 | efecto | Pantalla: descubrir (1,2s) |
+| 0:60,0 | liam | «¿Estela...? ¿Qué...?» (3,0 s) · pose |
+| 1:03,4 | plano 13 | medio de estela · 5,4 s · lente 30° · coste 178: cara 137, ángulo 41 |
+| 1:03,4 | estela | «Estás vivo... Estás vivo.» (5,0 s) |
+| 1:03,4 | efecto | Cut-in 0: Actor_Estela (Cara) |
+| 1:08,8 | plano 14 | medio de liam · 3,2 s · lente 30° · coste 894: cara 825, ángulo 63 |
+| 1:08,8 | liam | «¿Dónde está Will?» (2,8 s) · pose |
+| 1:12,0 | plano 15 | medio de estela · 6,9 s · lente 30° · coste 178: cara 137, ángulo 41 |
+| 1:12,0 | estela | «Me empujó fuera. Se quedó dentro contigo... Y ahora tú estás aquí, y él no.» (6,5 s) |
+| 1:18,9 | plano 16 | medio de liam · 4,4 s · lente 30° · coste 1062: cara 975, ángulo 81 |
+| 1:18,9 | liam | «Ese idiota...» (3,8 s) · pose |
+| 1:23,3 | plano 17 | conjunto de archimago y estela y liam · 4,6 s · lente 34° · coste 337: cara 247, ángulo 90 |
+| 1:23,3 | estela | «¿Idiota? ¿Así eres... de verdad?» (4,2 s) |
+| 1:23,3 | efecto | Mecánica: EspirituArchimago |
+| 1:27,9 | plano 18 | sobre el hombro de estela a archimago · 3,6 s · lente 24° · coste 933: delante 891, cara 34 |
+| 1:27,9 | archimago | «Lo siento. No soy Will.» (3,2 s) |
+| 1:27,9 | efecto | Voz: Plegaria, +1,5 dB |
+| 1:31,5 | plano 19 | medio de estela · 3,2 s · lente 24° · coste 220: cara 175, ángulo 45 |
+| 1:31,5 | estela | «Entonces, ¿quién eres?» (2,8 s) |
+| 1:31,5 | efecto | Voz: Ninguno, +0,0 dB |
+| 1:34,7 | plano 20 | sobre el hombro de estela a archimago · 13,4 s · lente 24° · coste 933: delante 891, cara 34 |
+| 1:34,7 | archimago | «Alguien que vivió dentro de él desde que era pequeño. Os lo iba a contar. Lo prometió.» (5,5 s) |
+| 1:34,7 | efecto | Voz: Plegaria, +1,5 dB |
+| 1:40,6 | archimago | «Él escribió en una lista que quería regresar vivo. Yo también lo quise una vez, hace mucho. No pude.» (7,1 s) |
+| 1:48,1 | plano 21 | medio de estela · 3,2 s · lente 24° · coste 220: cara 175, ángulo 45 |
+| 1:48,1 | estela | «¿Y eso qué significa?» (2,8 s) |
+| 1:48,1 | efecto | Voz: Ninguno, +0,0 dB |
+| 1:51,3 | plano 22 | sobre el hombro de estela a archimago · 9,9 s · lente 24° · coste 933: delante 891, cara 34 |
+| 1:51,3 | archimago | «Yo ya no tengo a nadie ahí fuera. Los míos llevan siglos esperándome. Gracias por terminar lo que dejé a medias. Ya puedo irme con ellos.» (9,4 s) |
+| 1:51,3 | efecto | Voz: Plegaria, +1,5 dB |
+| 2:00,7 | efecto | Voz: Ninguno, +0,0 dB |
+| 2:01,2 | plano 23 | conjunto de archimago · 4,2 s · lente 34° · coste 108: cara 53, ángulo 50 |
+| 2:01,2 | efecto | Mecánica: DespedidaArchimago |
+| 2:05,4 | plano 24 | dos: estela y liam · 5,0 s · lente 32° · coste 312: cara 225, ángulo 87 |
+| 2:07,3 | will | «Creo que esta cinta es de alguien.» (2,5 s) |
+| 2:10,0 | efecto | Cut-in 0: Actor_Estela (Cara) |
+| 2:10,4 | plano 25 | medio de will · 6,0 s · lente 30° |
+| 2:10,4 | will | «Me la devuelves al salir, dijiste. Pues ya hemos salido.» (4,1 s) |
+| 2:10,4 | efecto | Mecánica: RegresoWill |
+| 2:16,4 | plano 26 | conjunto de will y estela y liam · 16,6 s · lente 34° · coste 444: tapado 61, cara 284, ángulo 99 |
+| 2:20,5 | liam | «¿Cómo...? ¿El hechizo...?» (2,5 s) · pose |
+| 2:23,4 | will | «Me ha devuelto él. Fue lo último que hizo antes de irse.» (4,9 s) |
+| 2:28,8 | will | «Prometido.» (3,0 s) |
+| 2:33,0 | plano 27 | conjunto de will y estela y liam · 2,3 s · lente 34° · coste 643: cara 284, ángulo 99, eje 260 |
+| 2:34,8 | efecto | Pantalla: cubrir (1,4s) |
+| 2:34,8 | efecto | Bandas de cine: retirar (0,5s) |
+| 2:34,8 | efecto | Mecánica: EncadenarParte2 |
 
 ## Qué hace cada personaje
 
-### will (Actor_Will)
+### will (Player)
 
 - 0:04,3–0:07,3 habla
-- 0:04,4 gesto Talk03
-- 0:19,7–0:24,5 habla
-- 0:19,7 gesto Talk03
-- 0:22,9 gesto Talk01
-- 0:25,7–0:29,6 anda de (0,0, 7,5) a (0,0, 4,5)
-- 0:29,9–0:34,4 habla
-- 0:30,0 gesto Talk01
-- 0:32,5 gesto Talk02
-- 0:34,9 gesto MagicRight
-- 0:37,4–0:41,9 habla
-- 0:37,5 gesto Talk03
-- 0:43,2–0:48,7 habla
-- 0:43,3 gesto Talk01
-- 0:45,8 gesto Talk02
-- 0:49,2 gesto MagicSpecial
-- 0:51,4–0:54,9 habla
-- 0:51,5 gesto Talk03
-- 1:50,2–1:53,7 habla
-- 1:50,2 aparece
-- 1:50,2 gesto Talk02
-- 1:54,6–1:57,5 anda de (200,0, -5,5) a (200,0, -3,4)
-- 1:57,4–2:01,9 habla
-- 1:57,5 gesto Talk01
-- 1:60,0 gesto Talk02
-- 2:06,4–2:11,4 habla
-- 2:06,5 gesto Talk01
-- 2:09,0 gesto Talk02
-- 2:13,9 gesto DefendHit_NoWeapon
-- 2:19,4–2:22,9 habla
-- 2:19,4 gesto Talk01
+- 0:04,4 gesto Talk01
+- 0:17,7–0:22,5 habla
+- 0:17,7 gesto HandWave01
+- 0:20,5 gesto Talk03
+- 0:27,6–0:28,4 anda de (0,0, 4,8) a (0,0, 4,2)
+- 0:28,8 bucle Challenging_NoWeapon
+- 0:28,8–0:34,4 habla
+- 0:34,8 bucle CastingIdle01
+- 0:34,8–0:42,3 habla
+- 0:42,7 gesto MagicSpecial
+- 0:43,9–0:51,3 habla
+- 0:51,7 bucle MagicAttackOmni01_Load
+- 0:51,7–0:55,5 habla
+- 2:07,3–2:09,8 habla
+- 2:10,4–2:14,5 habla
+- 2:10,4 aparece
+- 2:10,5 gesto Greeting01_NoWeapon
+- 2:19,2 gesto DefendHit_NoWeapon
+- 2:19,6 bucle MagicAttackOmni01_Load
+- 2:23,4–2:28,3 habla
+- 2:28,8–2:31,8 habla
+- 2:28,9 gesto HandWave02
 
 ### estela (Actor_Estela)
 
-- 0:00,0 bucle SitGround_Loop
 - 0:00,4–0:03,9 habla
-- 0:07,7–0:10,5 habla
-- 0:10,9–0:14,4 habla
-- 0:14,8–0:19,3 habla
-- 0:55,4 reposo 
-- 0:59,5–1:03,0 habla
-- 0:59,6 gesto Talk02
-- 1:06,6–1:12,1 habla
-- 1:06,7 gesto Talk01
-- 1:09,1 gesto Talk02
-- 1:16,9–1:20,4 habla
-- 1:17,0 gesto Talk01
-- 1:24,4–1:27,2 habla
-- 1:24,5 gesto Talk02
-- 1:38,9–1:41,7 habla
-- 1:39,0 gesto Talk01
-- 1:48,7 bucle Beg01
-- 1:54,2 reposo 
-- 2:12,0–2:12,6 anda de (200,4, -2,4) a (200,5, -3,2)
-- 2:12,6 gesto Angry02
-- 2:14,2–2:19,0 habla
-- 2:14,2 gesto Talk03
-- 2:17,4 gesto Talk01
+- 0:00,5 gesto Beg01
+- 0:07,7–0:12,4 habla
+- 0:07,8 gesto Angry02
+- 0:09,3 gesto Talk01
+- 0:12,8–0:17,3 habla
+- 0:12,8 gesto Beg01
+- 0:23,1 gesto Attack1
+- 0:24,3 bucle Cry01_Loop
+- 0:57,2 bucle Cry01_Loop
+- 0:57,2 reposo 
+- 1:03,4–1:08,4 habla
+- 1:03,5 gesto Beg01
+- 1:12,0–1:18,5 habla
+- 1:12,1 gesto HeadShake01
+- 1:23,3–1:27,5 habla
+- 1:23,3 gesto Question01
+- 1:31,5–1:34,3 habla
+- 1:31,6 gesto Question01
+- 1:48,1–1:50,9 habla
+- 1:48,2 gesto HeadShake01
+- 2:14,9 gesto GetUp_NoWeapon
+- 2:15,6 bucle Cry01_Loop
+- 2:16,4 reposo 
+- 2:16,5–2:17,0 anda de (200,0, 4,7) a (200,0, 3,8)
+- 2:16,9 gesto HandWave01
 
 ### liam (Actor_Liam)
 
 - 0:00,0 bucle Die01Stay_NoWeapon
-- 0:55,4 bucle Die01Stay_NoWeapon
-- 0:55,4 aparece
-- 0:55,8 gesto DefendHit_NoWeapon
-- 0:56,1 bucle Die01Stay_NoWeapon
-- 0:56,1–0:59,1 habla
-- 1:03,4–1:06,2 habla
-- 1:12,5–1:16,3 habla
-- 1:48,7 reposo 
-- 1:48,7–1:49,4 anda de (199,2, -2,6) a (199,6, -2,3)
-- 2:02,4–2:03,1 anda de (199,6, -2,4) a (199,5, -3,2)
-- 2:03,0–2:06,0 habla
-- 2:03,1 gesto Talk02
+- 0:57,2 bucle Die01Stay_NoWeapon
+- 0:57,2 aparece
+- 0:57,8 gesto GetUp_NoWeapon
+- 0:58,6 bucle Die01Stay_NoWeapon
+- 0:60,0 reposo 
+- 0:60,0–1:03,0 habla
+- 1:00,1 gesto Question01
+- 1:08,8–1:11,6 habla
+- 1:08,9 gesto Question01
+- 1:18,9–1:22,7 habla
+- 1:18,9 gesto Angry01
+- 2:05,5–2:06,3 anda de (198,8, 4,2) a (199,4, 4,4)
+- 2:20,2–2:20,6 anda de (199,4, 4,3) a (199,2, 3,6)
+- 2:20,5–2:23,0 habla
+- 2:20,6 gesto Talk02
 
 ### archimago (Actor_Archimago)
 
 - 0:00,0 desaparece
-- 0:55,4 desaparece
-- 1:16,9 aparece
-- 1:20,8–1:24,0 habla
-- 1:20,9 gesto Talk03
-- 1:27,6–1:32,6 habla
-- 1:27,7 gesto Talk02
-- 1:30,2 gesto Talk03
-- 1:33,0–1:38,5 habla
-- 1:33,1 gesto Talk02
-- 1:35,6 gesto Talk03
-- 1:42,1–1:47,6 habla
-- 1:42,2 gesto Talk03
-- 1:45,3 gesto Talk01
-- 1:48,1 desaparece
+- 0:57,2 desaparece
+- 1:23,3 bucle fly_idle
+- 1:23,3 aparece
+- 1:27,9–1:31,1 habla
+- 1:34,7–1:40,2 habla
+- 1:40,6–1:47,7 habla
+- 1:51,3–2:00,7 habla
+- 1:51,4 gesto HandWave02
+- 2:04,8 desaparece
 

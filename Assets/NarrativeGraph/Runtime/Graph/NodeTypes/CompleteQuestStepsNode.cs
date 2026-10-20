@@ -85,7 +85,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
                 {
                     ctx.Signals.CompleteQuestStepByConditionId(questId, conditionId);
                     anyAction = true;
-                    Debug.Log($"[CompleteQuestStepsNode] ✅ Completando step con conditionId '{conditionId}' en quest '{questId}'");
+                    NarrativeLog.Info($"[CompleteQuestStepsNode] ✅ Completando step con conditionId '{conditionId}' en quest '{questId}'");
                 }
                 else
                 {
@@ -111,7 +111,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
 
                 ctx.Signals?.CompleteQuestStep(questId, stepIndex);
                 anyAction = true;
-                Debug.Log($"[CompleteQuestStepsNode] ✅ Completando step índice {stepIndex} en quest '{questId}'");
+                NarrativeLog.Info($"[CompleteQuestStepsNode] ✅ Completando step índice {stepIndex} en quest '{questId}'");
             }
         }
         else if (!completeQuest && logWarnings)
@@ -124,7 +124,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
         {
             ctx.Signals?.CompleteQuest(questId);
             anyAction = true;
-            Debug.Log($"[CompleteQuestStepsNode] ✅ Completando quest '{questId}'");
+            NarrativeLog.Info($"[CompleteQuestStepsNode] ✅ Completando quest '{questId}'");
         }
         else if (!anyAction && logWarnings && !warnedNoSteps)
         {

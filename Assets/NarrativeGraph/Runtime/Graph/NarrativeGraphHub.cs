@@ -158,7 +158,7 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             if (runner != null)
                 runner.StopExecution();
         }
-        Debug.Log("[NarrativeGraphHub] Todos los runners detenidos.");
+        NarrativeLog.Info("[NarrativeGraphHub] Todos los runners detenidos.");
     }
 
     /// <summary>

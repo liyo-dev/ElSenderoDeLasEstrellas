@@ -107,23 +107,28 @@ public static class MontarCinematicaFinal
 
     public static void ConstruirEscenaCompleta()
     {
+        try { RecursosDelPrologo.Asegurar(); } catch (Exception ex) { Debug.LogWarning("[Cinemática Final] Recursos prólogo: " + ex.Message); }
+
         if (!Directory.Exists(CarpetaMallasGeneradas))
         {
             Directory.CreateDirectory(CarpetaMallasGeneradas);
             AssetDatabase.Refresh();
         }
 
-        Scene escenaPreview = SceneManager.GetActiveScene();
-        if (escenaPreview.IsValid() && escenaPreview.path == RutaEscenaPreview)
+        Scene escenaPreview = SceneManager.GetSceneByPath(RutaEscenaPreview);
+        if (!escenaPreview.IsValid())
+            escenaPreview = SceneManager.GetSceneByName("CinematicaFinal_Preview");
+
+        if (!escenaPreview.IsValid() || !escenaPreview.isLoaded)
         {
-            foreach (var rootGo in escenaPreview.GetRootGameObjects())
-                UnityEngine.Object.DestroyImmediate(rootGo);
+            if (File.Exists(RutaEscenaPreview))
+                escenaPreview = EditorSceneManager.OpenScene(RutaEscenaPreview, OpenSceneMode.Single);
+            else
+                escenaPreview = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         }
-        else
-        {
-            escenaPreview = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
-            SceneManager.SetActiveScene(escenaPreview);
-        }
+        SceneManager.SetActiveScene(escenaPreview);
+        foreach (var rootGo in escenaPreview.GetRootGameObjects())
+            UnityEngine.Object.DestroyImmediate(rootGo);
 
         int floorLayer = LayerMask.NameToLayer("Floor");
         if (floorLayer < 0) floorLayer = 0;
@@ -156,7 +161,16 @@ public static class MontarCinematicaFinal
         RenderSettings.ambientIntensity = 1.0f;
 
         // 2. Construir Zona 1: Santuario Astral de El Sendero (Altar y Umbral)
-        var rootZona1 = ConstruirZona1Sendero(escenaPreview, floorLayer, out Transform altarTr, out Transform portalTr, out GameObject estrellasNocturnasRoot, out GameObject estrellaTorcidaGo);
+        var rootZona1 = ConstruirZona1Sendero(
+            escenaPreview,
+            floorLayer,
+            out Transform altarTr,
+            out Transform portalTr,
+            out GameObject estrellasNocturnasRoot,
+            out GameObject estrellaTorcidaGo,
+            out GameObject portalSenderoGo,
+            out GameObject ventanaPortalPiedraGo,
+            out Camera camPortalSendero);
 
         // 3. Construir Zona 2 (Piedra Ancestral) y Zona 3 (Río / Laguna) copiando de MainWorld sin tocar MainWorld
         var rootZona2 = new GameObject("ZONA_2_PIEDRA_ANCESTRAL");
@@ -165,7 +179,17 @@ public static class MontarCinematicaFinal
         var rootZona3 = new GameObject("ZONA_3_EL_RIO");
         rootZona3.transform.position = CentroZonaRio;
 
-        CopiarZonasDesdeMainWorld(escenaPreview, rootZona2.transform, rootZona3.transform, floorLayer, out Transform piedraTr, out Transform orillaAguaTr);
+        CopiarZonasDesdeMainWorld(
+            escenaPreview,
+            rootZona2.transform,
+            rootZona3.transform,
+            floorLayer,
+            portalSenderoGo,
+            out Transform piedraTr,
+            out Transform orillaAguaTr,
+            out GameObject portalPiedraGo,
+            out GameObject ventanaPortalSenderoGo,
+            out Camera camPortalPiedra);
         LimpiarCollidersYTriggersDecorativos(rootZona2);
         LimpiarCollidersYTriggersDecorativos(rootZona3);
 
@@ -259,7 +283,13 @@ public static class MontarCinematicaFinal
             canaTobias,
             vfxSalpicaduraRio,
             estrellaTorcidaGo,
-            estrellasNocturnasRoot);
+            estrellasNocturnasRoot,
+            portalSenderoGo,
+            portalPiedraGo,
+            ventanaPortalSenderoGo,
+            ventanaPortalPiedraGo,
+            camPortalSendero,
+            camPortalPiedra);
 
         EditorSceneManager.MarkSceneDirty(escenaPreview);
         EditorSceneManager.SaveScene(escenaPreview, RutaEscenaPreview);
@@ -297,6 +327,46 @@ public static class MontarCinematicaFinal
         var player1 = root.GetComponent<SequencePlayer>();
         var player2Tr = root.transform.Find("SequencePlayer_Parte2");
         var player2 = player2Tr != null ? player2Tr.GetComponent<SequencePlayer>() : null;
+
+        if (stage != null)
+        {
+            var willGo = GameObject.Find("Actor_Will");
+            var estelaGo = GameObject.Find("Actor_Estela");
+            var liamGo = GameObject.Find("Actor_Liam");
+            var archimagoGo = GameObject.Find("Actor_Archimago");
+            var tobiasGo = GameObject.Find("Actor_Tobias");
+
+            var soStage = new SerializedObject(stage);
+            var propActors = soStage.FindProperty("_actors");
+            propActors.ClearArray();
+            if (willGo != null)
+            {
+                AgregarBindingActor(propActors, propActors.arraySize, "Player", willGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "Actor_Will", willGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "will", willGo.transform);
+            }
+            if (estelaGo != null)
+            {
+                AgregarBindingActor(propActors, propActors.arraySize, "Actor_Estela", estelaGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "estela", estelaGo.transform);
+            }
+            if (liamGo != null)
+            {
+                AgregarBindingActor(propActors, propActors.arraySize, "Actor_Liam", liamGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "liam", liamGo.transform);
+            }
+            if (archimagoGo != null)
+            {
+                AgregarBindingActor(propActors, propActors.arraySize, "Actor_Archimago", archimagoGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "archimago", archimagoGo.transform);
+            }
+            if (tobiasGo != null)
+            {
+                AgregarBindingActor(propActors, propActors.arraySize, "Actor_Tobias", tobiasGo.transform);
+                AgregarBindingActor(propActors, propActors.arraySize, "tobias", tobiasGo.transform);
+            }
+            soStage.ApplyModifiedPropertiesWithoutUndo();
+        }
 
         if (player1 != null)
         {
@@ -342,13 +412,19 @@ public static class MontarCinematicaFinal
         out Transform altarTransform,
         out Transform portalTransform,
         out GameObject estrellasNocturnasRoot,
-        out GameObject estrellaTorcidaGo)
+        out GameObject estrellaTorcidaGo,
+        out GameObject portalSenderoGo,
+        out GameObject ventanaPortalPiedraGo,
+        out Camera camPortalSendero)
     {
         var root = new GameObject("ZONA_1_EL_SENDERO");
         root.transform.position = CentroZonaSendero;
 
         altarTransform = root.transform;
         portalTransform = root.transform;
+        portalSenderoGo = null;
+        ventanaPortalPiedraGo = null;
+        camPortalSendero = null;
 
         if (File.Exists(RutaEscenaSendero))
         {
@@ -367,33 +443,51 @@ public static class MontarCinematicaFinal
 
                 if (worldSendero != null)
                 {
-                    // 1. Copiar la Plaza del Altar Blanco con su suelo circular cósmico auténtico
-                    var plaza = worldSendero.transform.Find("PLAZA_ALTAR_BLANCO");
-                    if (plaza != null)
+                    // 1. Copiar el Suelo Astral auténtico de Sendero (Suelo_00_Llegada)
+                    Transform suelo = worldSendero.transform.Find("SENDERO_CAMINO_ASTRAL/Suelo_00_Llegada");
+                    if (suelo == null)
                     {
-                        var copiaPlaza = UnityEngine.Object.Instantiate(plaza.gameObject, root.transform);
-                        copiaPlaza.name = "PLAZA_ALTAR_BLANCO";
-                        copiaPlaza.transform.localPosition = Vector3.zero;
-                        copiaPlaza.transform.localRotation = Quaternion.identity;
-
-                        var plazaCirc = copiaPlaza.transform.Find("Plaza_Circular_Altar");
-                        if (plazaCirc != null)
+                        foreach (var t in worldSendero.GetComponentsInChildren<Transform>(true))
                         {
-                            var altar = plazaCirc.Find("Altar_De_Piedra_Blanca");
-                            if (altar != null) altarTransform = altar;
-                            else altarTransform = plazaCirc;
+                            if (t.name == "Suelo_00_Llegada") { suelo = t; break; }
                         }
                     }
+                    if (suelo != null)
+                    {
+                        var copiaSuelo = UnityEngine.Object.Instantiate(suelo.gameObject, root.transform);
+                        copiaSuelo.name = "Suelo_Astral_Sendero";
+                        copiaSuelo.transform.localPosition = new Vector3(0f, -0.3f, 4.5f);
+                        copiaSuelo.transform.localRotation = Quaternion.identity;
+                        altarTransform = copiaSuelo.transform;
+                    }
 
-                    // 2. Copiar el Umbral de salida (Portal_00_UmbralTierra) en Z=9.5
-                    var portal = worldSendero.transform.Find("PORTALES_CELESTIALES/Portal_00_UmbralTierra");
+                    // 2. Copiar el Umbral de salida (Portal_00_UmbralTierra) en Z=8.0
+                    Transform portal = worldSendero.transform.Find("PORTALES_CELESTIALES/Portal_00_UmbralTierra");
+                    if (portal == null)
+                    {
+                        foreach (var t in worldSendero.GetComponentsInChildren<Transform>(true))
+                        {
+                            if (t.name == "Portal_00_UmbralTierra") { portal = t; break; }
+                        }
+                    }
                     if (portal != null)
                     {
                         var copiaPortal = UnityEngine.Object.Instantiate(portal.gameObject, root.transform);
                         copiaPortal.name = "Umbral_Salida_Sendero";
-                        copiaPortal.transform.localPosition = new Vector3(0f, 0f, 9.5f);
+                        copiaPortal.transform.localPosition = new Vector3(0f, 0f, 8.0f);
                         copiaPortal.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
                         portalTransform = copiaPortal.transform;
+                        portalSenderoGo = copiaPortal.gameObject;
+
+                        // Quad de ventana hacia La Piedra (en la cara sur del portal)
+                        var quadPiedra = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                        quadPiedra.name = "Ventana_Portal_Piedra";
+                        UnityEngine.Object.DestroyImmediate(quadPiedra.GetComponent<Collider>());
+                        quadPiedra.transform.SetParent(copiaPortal.transform, false);
+                        quadPiedra.transform.localPosition = new Vector3(0f, 1.8f, -0.05f);
+                        quadPiedra.transform.localRotation = Quaternion.identity;
+                        quadPiedra.transform.localScale = new Vector3(3.2f, 4.2f, 1.0f);
+                        ventanaPortalPiedraGo = quadPiedra;
                     }
 
                     // 3. Copiar el entorno cósmico de estrellas 3D
@@ -412,6 +506,18 @@ public static class MontarCinematicaFinal
                 SceneManager.SetActiveScene(escenaDestino);
             }
         }
+
+        // Cámara en Zona 1 mirando hacia Will en Z=4.8 (para emitir la textura que se ve desde el portal de La Piedra)
+        var goCamSendero = new GameObject("CamPortal_Sendero");
+        goCamSendero.transform.SetParent(root.transform, false);
+        goCamSendero.transform.localPosition = new Vector3(0f, 1.35f, 7.6f);
+        goCamSendero.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+        camPortalSendero = goCamSendero.AddComponent<Camera>();
+        camPortalSendero.nearClipPlane = 0.1f;
+        camPortalSendero.farClipPlane = 120f;
+        camPortalSendero.fieldOfView = 40f;
+        var uacSendero = goCamSendero.AddComponent<UniversalAdditionalCameraData>();
+        uacSendero.renderPostProcessing = false;
 
         estrellasNocturnasRoot = new GameObject("Estrellas_Nocturnas");
         estrellasNocturnasRoot.transform.SetParent(root.transform, false);
@@ -488,7 +594,7 @@ public static class MontarCinematicaFinal
         {
             if (col == null) continue;
             string n = col.gameObject.name;
-            if (n.Contains("Plataforma") || n.Contains("Anillo") || n.StartsWith("Terreno_") || n.Contains("Camino") || n.Contains("Floor") || n.Contains("Suelo"))
+            if (n.Contains("Plataforma") || n.Contains("Anillo") || n.StartsWith("Terreno_") || n.Contains("Camino") || n.Contains("Floor") || n.Contains("Suelo") || n.Contains("Piedra") || n.Contains("Monolito") || n.Contains("monolito") || n.Contains("Rock"))
                 continue;
 
             col.enabled = false;
@@ -538,11 +644,18 @@ public static class MontarCinematicaFinal
         Transform rootZonaPiedra,
         Transform rootZonaRio,
         int floorLayer,
+        GameObject portalSenderoModelo,
         out Transform piedraAncestralTransform,
-        out Transform orillaAguaTransform)
+        out Transform orillaAguaTransform,
+        out GameObject portalPiedraGo,
+        out GameObject ventanaPortalSenderoGo,
+        out Camera camPortalPiedra)
     {
         piedraAncestralTransform = rootZonaPiedra;
         orillaAguaTransform = rootZonaRio;
+        portalPiedraGo = null;
+        ventanaPortalSenderoGo = null;
+        camPortalPiedra = null;
 
         if (!File.Exists(RutaEscenaMainWorld))
         {
@@ -556,12 +669,64 @@ public static class MontarCinematicaFinal
             Terrain terreno = null;
             GameObject worldRoot = null;
 
+            Transform santuario = null;
+            Transform aguaLaguna = null;
+
             foreach (var go in escenaMain.GetRootGameObjects())
             {
+                Debug.Log($"[MAINWORLD ROOT] '{go.name}'");
                 if (terreno == null)
                     terreno = go.GetComponentInChildren<Terrain>(true);
-                if (go.name == "WORLD")
+
+                if (go.name.ToUpperInvariant().Contains("WORLD") && worldRoot == null)
                     worldRoot = go;
+
+                if (santuario == null)
+                {
+                    foreach (var t in go.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (t.name.Contains("Santuario ancestral"))
+                        {
+                            santuario = t;
+                            break;
+                        }
+                    }
+                }
+                if (aguaLaguna == null)
+                {
+                    foreach (var t in go.GetComponentsInChildren<Transform>(true))
+                    {
+                        if (t.name.Contains("Laguna de la Era"))
+                        {
+                            aguaLaguna = t;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine("=== INSPECCION DE MAINWORLD ===");
+                foreach (var go in escenaMain.GetRootGameObjects())
+                    sb.AppendLine($"ROOT: {go.name}");
+                sb.AppendLine($"santuario: {(santuario != null ? santuario.name : "null")}");
+                sb.AppendLine($"aguaLaguna: {(aguaLaguna != null ? aguaLaguna.name : "null")}");
+                if (santuario != null)
+                {
+                    sb.AppendLine($"santuario world pos: {santuario.position}");
+                    foreach (Transform t in santuario.GetComponentsInChildren<Transform>(true))
+                    {
+                        var r = t.GetComponent<Renderer>();
+                        sb.AppendLine($"  CHILD: {t.name} localPos={t.localPosition} worldPos={t.position} bounds={(r != null ? r.bounds.ToString() : "null")}");
+                    }
+                }
+                File.WriteAllText("Logs/MontarCinematica.txt", sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
             }
 
             // 1. Generar mallas de terreno fieles a MainWorld para ambas zonas
@@ -587,21 +752,37 @@ public static class MontarCinematicaFinal
             }
 
             // 2. Copiar jerarquías y objetos de vestimenta de MainWorld sin modificar MainWorld
+            // 2A. Santuario de la Piedra Ancestral
+            if (santuario != null)
+            {
+                var copiaSantuario = UnityEngine.Object.Instantiate(santuario.gameObject, rootZonaPiedra);
+                copiaSantuario.name = "Santuario_Piedra_Ancestral";
+                copiaSantuario.transform.position = santuario.position - OrigenMainWorldPiedra + CentroZonaPiedra;
+
+                Transform monolito = null;
+                foreach (Transform t in copiaSantuario.GetComponentsInChildren<Transform>(true))
+                {
+                    if (t.name.Contains("monolito") || t.name.Contains("Monolito"))
+                    {
+                        monolito = t;
+                        break;
+                    }
+                }
+                if (monolito != null)
+                {
+                    piedraAncestralTransform = monolito;
+                    var rend = monolito.GetComponent<Renderer>() ?? monolito.GetComponentInChildren<Renderer>();
+                    Debug.Log($"[SANTUARIO] Monolito pos={monolito.position}, bounds={(rend != null ? rend.bounds.ToString() : "null")}");
+                }
+                foreach (Transform ch in copiaSantuario.transform)
+                {
+                    var rend = ch.GetComponent<Renderer>() ?? ch.GetComponentInChildren<Renderer>();
+                    Debug.Log($"[SANTUARIO CHILD] {ch.name} pos={ch.position}, bounds={(rend != null ? rend.bounds.ToString() : "null")}");
+                }
+            }
+
             if (worldRoot != null)
             {
-                // 2A. Santuario de la Piedra Ancestral
-                var santuario = worldRoot.transform.Find("Hitos del mapa — faro, velero, puentes, cascada/Santuario ancestral — recinto de piedra y ruinas");
-                if (santuario != null)
-                {
-                    var copiaSantuario = UnityEngine.Object.Instantiate(santuario.gameObject, rootZonaPiedra);
-                    copiaSantuario.name = "Santuario_Piedra_Ancestral";
-                    copiaSantuario.transform.position = santuario.position - OrigenMainWorldPiedra + CentroZonaPiedra;
-
-                    var monolito = copiaSantuario.transform.Find("Piedra ancestral — monolito");
-                    if (monolito != null)
-                        piedraAncestralTransform = monolito;
-                }
-
                 // Árboles y rocas alrededor de la Piedra Ancestral (radio 42 m)
                 CopiarObjetosCercanosDeMainWorld(
                     worldRoot.transform,
@@ -610,16 +791,18 @@ public static class MontarCinematicaFinal
                     CentroZonaPiedra,
                     rootZonaPiedra,
                     excluirSubarbol: santuario);
+            }
 
-                // 2B. Laguna de la Era / Río y vegetación de ribera
-                var aguaLaguna = worldRoot.transform.Find("Vestido del mundo (generado)/Agua — Laguna de la Era");
-                if (aguaLaguna != null)
-                {
-                    var copiaAgua = UnityEngine.Object.Instantiate(aguaLaguna.gameObject, rootZonaRio);
-                    copiaAgua.name = "Agua_Y_Ribera_Del_Rio";
-                    copiaAgua.transform.position = aguaLaguna.position - OrigenMainWorldRio + CentroZonaRio;
-                }
+            // 2B. Laguna de la Era / Río y vegetación de ribera
+            if (aguaLaguna != null)
+            {
+                var copiaAgua = UnityEngine.Object.Instantiate(aguaLaguna.gameObject, rootZonaRio);
+                copiaAgua.name = "Agua_Y_Ribera_Del_Rio";
+                copiaAgua.transform.position = aguaLaguna.position - OrigenMainWorldRio + CentroZonaRio;
+            }
 
+            if (worldRoot != null)
+            {
                 // Árboles, piedras, setas y flores alrededor de la orilla (radio 48 m)
                 CopiarObjetosCercanosDeMainWorld(
                     worldRoot.transform,
@@ -630,10 +813,58 @@ public static class MontarCinematicaFinal
                     excluirSubarbol: aguaLaguna);
             }
 
+            // 2C. Umbral de La Piedra Ancestral (portal que conecta con El Sendero, situado en el claro frente al monolito)
+            if (portalSenderoModelo != null)
+            {
+                portalPiedraGo = UnityEngine.Object.Instantiate(portalSenderoModelo, rootZonaPiedra);
+                portalPiedraGo.name = "Umbral_Piedra_Ancestral";
+                portalPiedraGo.transform.localPosition = new Vector3(0f, 0f, 2.0f);
+                portalPiedraGo.transform.localRotation = Quaternion.identity;
+
+                var quadSendero = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                quadSendero.name = "Ventana_Portal_Sendero";
+                UnityEngine.Object.DestroyImmediate(quadSendero.GetComponent<Collider>());
+                quadSendero.transform.SetParent(portalPiedraGo.transform, false);
+                quadSendero.transform.localPosition = new Vector3(0f, 1.8f, 0.05f);
+                quadSendero.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                quadSendero.transform.localScale = new Vector3(3.2f, 4.2f, 1.0f);
+                ventanaPortalSenderoGo = quadSendero;
+            }
+            else
+            {
+                portalPiedraGo = new GameObject("Umbral_Piedra_Ancestral");
+                portalPiedraGo.transform.SetParent(rootZonaPiedra, false);
+                portalPiedraGo.transform.localPosition = new Vector3(0f, 0f, 2.0f);
+                ventanaPortalSenderoGo = null;
+            }
+
+            var goCamPiedra = new GameObject("CamPortal_Piedra");
+            goCamPiedra.transform.SetParent(rootZonaPiedra, false);
+            goCamPiedra.transform.localPosition = new Vector3(0f, 1.35f, 2.3f);
+            goCamPiedra.transform.localRotation = Quaternion.identity;
+            camPortalPiedra = goCamPiedra.AddComponent<Camera>();
+            camPortalPiedra.nearClipPlane = 0.1f;
+            camPortalPiedra.farClipPlane = 120f;
+            camPortalPiedra.fieldOfView = 40f;
+            var uacPiedra = goCamPiedra.AddComponent<UniversalAdditionalCameraData>();
+            uacPiedra.renderPostProcessing = false;
+
             var marcadorOrilla = new GameObject("Punto_Agua_Salpicadura_Estela");
             marcadorOrilla.transform.SetParent(rootZonaRio, false);
             marcadorOrilla.transform.position = CentroZonaRio + new Vector3(4.2f, -0.35f, -3.5f);
             orillaAguaTransform = marcadorOrilla.transform;
+
+            // Bóveda de estrellas nocturnas sobre el santuario de La Piedra Ancestral (es de noche en esta escena)
+            CrearCampoEstelarEnZona(rootZonaPiedra, "Campo_Estelar_Piedra", CentroZonaPiedra, 80f, 105);
+
+            var goLuzPiedra = new GameObject("Luz_Nocturna_Santuario");
+            goLuzPiedra.transform.SetParent(rootZonaPiedra, false);
+            goLuzPiedra.transform.localPosition = new Vector3(0f, 3.5f, 4.0f);
+            var lPiedra = goLuzPiedra.AddComponent<Light>();
+            lPiedra.type = LightType.Point;
+            lPiedra.color = new Color(0.72f, 0.85f, 1.0f);
+            lPiedra.intensity = 1.6f;
+            lPiedra.range = 22f;
 
             LimpiarCollidersYTriggersDecorativos(rootZonaPiedra.gameObject);
             LimpiarCollidersYTriggersDecorativos(rootZonaRio.gameObject);
@@ -832,7 +1063,7 @@ public static class MontarCinematicaFinal
             "Assets/Prefabs/_WILL.prefab",
             "Actor_Will",
             "Assets/_NPCs/_GrafoNarrativo/CHAR_WILL.asset",
-            new Vector3(0f, 0f, 6f),
+            new Vector3(0f, 0f, 4.8f),
             0f);
 
         estelaGo = InstanciarActor(
@@ -840,15 +1071,15 @@ public static class MontarCinematicaFinal
             "Assets/Prefabs/_ESTELA.prefab",
             "Actor_Estela",
             "Assets/_NPCs/_GrafoNarrativo/CHAR_ESTELA.asset",
-            new Vector3(1.5f, 0f, 5.5f),
-            -12f);
+            CentroZonaPiedra + new Vector3(0f, 0f, 4.8f),
+            180f);
 
         liamGo = InstanciarActor(
             parent,
             "Assets/Prefabs/_LIAM.prefab",
             "Actor_Liam",
             "Assets/_NPCs/_GrafoNarrativo/CHAR_LIAM.asset",
-            new Vector3(-1.4f, 0f, 10.5f),
+            new Vector3(-1.2f, 0f, 4.2f),
             15f);
 
         archimagoGo = InstanciarActor(
@@ -856,8 +1087,8 @@ public static class MontarCinematicaFinal
             "Assets/Prefabs/_WILL_ORIGINAL.prefab",
             "Actor_Archimago",
             "Assets/_NPCs/_GrafoNarrativo/CHAR_ARCHIMAGO.asset",
-            CentroZonaPiedra + new Vector3(0f, 1.5f, 0f),
-            180f);
+            CentroZonaPiedra + new Vector3(-1.8f, 1.0f, 3.4f),
+            150f);
         archimagoGo.SetActive(false);
 
         tobiasGo = InstanciarActor(
@@ -906,8 +1137,44 @@ public static class MontarCinematicaFinal
 
         DesactivarComponentesDeGameplayEnActor(instancia);
 
-        if (instancia.GetComponent<NPCSimpleAnimator>() == null)
-            instancia.AddComponent<NPCSimpleAnimator>();
+        // Buscar el Animator principal con controller válido
+        var anims = instancia.GetComponentsInChildren<Animator>(true);
+        Animator animValido = null;
+        for (int i = 0; i < anims.Length; i++)
+        {
+            if (anims[i] != null && anims[i].runtimeAnimatorController != null)
+            {
+                animValido = anims[i];
+                break;
+            }
+        }
+
+        var simpleAnim = instancia.GetComponent<NPCSimpleAnimator>();
+        if (simpleAnim == null)
+            simpleAnim = instancia.AddComponent<NPCSimpleAnimator>();
+
+        if (animValido != null)
+        {
+            var soAnim = new SerializedObject(simpleAnim);
+            soAnim.FindProperty("animator").objectReferenceValue = animValido;
+            soAnim.ApplyModifiedPropertiesWithoutUndo();
+
+            var rootAnim = instancia.GetComponent<Animator>();
+            if (rootAnim != null && rootAnim != animValido)
+            {
+                rootAnim.enabled = false;
+            }
+        }
+
+        // Desactivar cualquier Animator secundario o sin controller para evitar warnings
+        for (int i = 0; i < anims.Length; i++)
+        {
+            if (anims[i] == null) continue;
+            if (anims[i].runtimeAnimatorController == null || (animValido != null && anims[i] != animValido))
+            {
+                anims[i].enabled = false;
+            }
+        }
 
         return instancia;
     }
@@ -919,7 +1186,7 @@ public static class MontarCinematicaFinal
             if (comp == null) continue;
             string n = comp.GetType().Name;
             if (n.Contains("Input") ||
-                n.Contains("Controller") && !n.Contains("Animator") && !n.Contains("AlertIcon") ||
+                n.Contains("Controller") && !n.Contains("Animator") && !n.Contains("AlertIcon") && !n.Contains("Emotion") ||
                 n.Contains("Brain") ||
                 n.Contains("BehaviourManager"))
             {
@@ -1014,19 +1281,18 @@ public static class MontarCinematicaFinal
         out GameObject vfxSalpicaduraRio)
     {
         Vector3 posAltarLuz = altarTr != null ? altarTr.position + Vector3.up * 1.1f : new Vector3(0f, 1.2f, 2.5f);
-        Vector3 posPortalLuz = portalTr != null ? portalTr.position + Vector3.up * 1.6f : new Vector3(0f, 1.6f, 9.5f);
+        Vector3 posPortalLuz = portalTr != null ? portalTr.position + Vector3.up * 1.6f : new Vector3(0f, 1.6f, 8.0f);
 
-        vfxDeseoAltar = InstanciarVfx(parent, "VFX_DeseoAltar", "Assets/EffectCore/prefabs/FX_LightPillar.prefab", posAltarLuz);
-        // El umbral es celestial/astral sagrado: sin fuego naranja (vfx_Portal_01 eliminado)
-        vfxPortal = InstanciarVfx(parent, "VFX_PortalUmbral", "Assets/Hovl Studio/HSFiles/Prefabs/Auras/Star aura.prefab", posPortalLuz);
-        vfxEmpujeLuz = InstanciarVfx(parent, "VFX_EmpujeLuz", "Assets/Prefabs/Effects/SpecialAttack/VFX_LuzProtectora.prefab", posPortalLuz);
-        vfxCirculoConjuro = InstanciarVfx(parent, "VFX_CirculoConjuroAnime", "Assets/Hovl Studio/HSFiles/Prefabs/Circles/Healing circle.prefab", new Vector3(0f, 0.05f, 4.5f));
-        vfxAuraConjuroWill = InstanciarVfx(parent, "VFX_AuraConjuroWill", "Assets/Hovl Studio/HSFiles/Prefabs/Auras/Star aura.prefab", new Vector3(0f, 0.9f, 4.5f));
-        vfxPilarResurreccion = InstanciarVfx(parent, "VFX_PilarResurreccion", "Assets/Hovl Studio/HSFiles/Prefabs/Circles/Magic circle.prefab", new Vector3(-1.2f, 0.05f, 4.5f));
-        vfxResurreccion = InstanciarVfx(parent, "VFX_ResurreccionLiam", "Assets/Hovl Studio/HSFiles/Prefabs/Auras/Star aura.prefab", new Vector3(-1.2f, 0.5f, 4.5f));
-        vfxColapsoSendero = InstanciarVfx(parent, "VFX_ColapsoSendero", "Assets/Prefabs/Effects/SpecialAttack/VFX_TormentaArcana.prefab", new Vector3(0f, 1f, 4.5f));
-        vfxEspirituArchimago = InstanciarVfx(parent, "VFX_EspirituArchimago", "Assets/Hovl Studio/HSFiles/Prefabs/Auras/Star aura.prefab", CentroZonaPiedra + new Vector3(0f, 1.8f, 0f));
-        vfxLlamaWill = InstanciarVfx(parent, "VFX_LlamaPequenaWill", "Assets/Hovl Studio/HSFiles/Prefabs/Auras/Star aura.prefab", CentroZonaPiedra);
+        vfxDeseoAltar = InstanciarVfx(parent, "VFX_DeseoAltar", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", posAltarLuz);
+        vfxPortal = InstanciarVfx(parent, "VFX_PortalUmbral", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Portals/Portal blue.prefab", posPortalLuz);
+        vfxEmpujeLuz = InstanciarVfx(parent, "VFX_EmpujeLuz", "Assets/_VFX/Prologo/VFX_LuzProtectora.prefab", posPortalLuz);
+        vfxCirculoConjuro = InstanciarVfx(parent, "VFX_CirculoConjuroAnime", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Healing circle.prefab", new Vector3(0f, 0.05f, 4.2f));
+        vfxAuraConjuroWill = InstanciarVfx(parent, "VFX_AuraConjuroWill", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Character auras/Buff.prefab", new Vector3(0f, 0.9f, 4.2f));
+        vfxPilarResurreccion = InstanciarVfx(parent, "VFX_PilarResurreccion", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", new Vector3(-1.2f, 0.05f, 4.2f));
+        vfxResurreccion = InstanciarVfx(parent, "VFX_ResurreccionLiam", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab", new Vector3(-1.2f, 0.5f, 4.2f));
+        vfxColapsoSendero = InstanciarVfx(parent, "VFX_ColapsoSendero", "Assets/Prefabs/Effects/SpecialAttack/VFX_TormentaArcana.prefab", new Vector3(0f, 1f, 4.2f));
+        vfxEspirituArchimago = InstanciarVfx(parent, "VFX_EspirituArchimago", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Character auras/Buff.prefab", CentroZonaPiedra + new Vector3(-1.8f, 1.0f, 3.4f));
+        vfxLlamaWill = InstanciarVfx(parent, "VFX_LlamaPequenaWill", "Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Magic fire 0.prefab", CentroZonaPiedra);
         vfxSalpicaduraRio = InstanciarVfx(parent, "VFX_SalpicaduraRio", "Assets/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Water/CFXR2 Water Splash.prefab", CentroZonaRio);
     }
 
@@ -1084,7 +1350,13 @@ public static class MontarCinematicaFinal
         GameObject canaTobias,
         GameObject vfxSalpicaduraRio,
         GameObject estrellaTorcidaGo,
-        GameObject estrellasNocturnasRoot)
+        GameObject estrellasNocturnasRoot,
+        GameObject portalUmbralSendero,
+        GameObject portalUmbralPiedra,
+        GameObject ventanaPortalSendero,
+        GameObject ventanaPortalPiedra,
+        Camera camPortalSendero,
+        Camera camPortalPiedra)
     {
         // 1. SequenceStage: registrar actores (por ID y alias) y módulo
         var soStage = new SerializedObject(stage);
@@ -1183,7 +1455,16 @@ public static class MontarCinematicaFinal
 
         soModulo.FindProperty("_estrellaTorcidaObjeto").objectReferenceValue = estrellaTorcidaGo;
         soModulo.FindProperty("_estrellasNocturnasRoot").objectReferenceValue = estrellasNocturnasRoot;
+
+        soModulo.FindProperty("_portalUmbralSendero").objectReferenceValue = portalUmbralSendero;
+        soModulo.FindProperty("_portalUmbralPiedra").objectReferenceValue = portalUmbralPiedra;
+        soModulo.FindProperty("_ventanaPortalSendero").objectReferenceValue = ventanaPortalSendero;
+        soModulo.FindProperty("_ventanaPortalPiedra").objectReferenceValue = ventanaPortalPiedra;
+        soModulo.FindProperty("_camPortalSendero").objectReferenceValue = camPortalSendero;
+        soModulo.FindProperty("_camPortalPiedra").objectReferenceValue = camPortalPiedra;
         soModulo.ApplyModifiedPropertiesWithoutUndo();
+
+        RenderSettings.skybox = skyNoche;
 
         // 5. SenderoBattleAutoStart para arrancar SEQ_Final_01_ElSacrificio automáticamente en PlayMode
         var soAuto = new SerializedObject(autoStart);

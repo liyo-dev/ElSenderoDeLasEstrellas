@@ -18,6 +18,11 @@ public sealed class EscapeSenderoBootstrap : MonoBehaviour
         {
             PlayerService.RegisterPlayer(player);
         }
+
+        if (GetComponent<VueltaAlLab>() == null)
+        {
+            gameObject.AddComponent<VueltaAlLab>();
+        }
     }
 
     private void Start()

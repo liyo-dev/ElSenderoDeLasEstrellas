@@ -682,7 +682,7 @@
         },
         {
             "id": "PROLOGO_EVACUACION_LIORA",
-            "text": "¡Al puente, todos! ¡Deprisa, no miréis atrás!"
+            "text": "¡Vamos, Nina! ...Ten mucho cuidado, por favor."
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
@@ -754,7 +754,7 @@
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
-            "text": "Buenos días, valle. ¿Qué se te ha estropeado hoy?"
+            "text": "Buenos días, pueblo. ¿Qué se te ha estropeado hoy?"
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
@@ -1135,15 +1135,19 @@
         { "id": "FINAL_SEMANAS_DESPUES", "text": "Semanas después..." },
         { "id": "FINAL_LIAM_RIO_01", "text": "No sé pescar." },
         { "id": "FINAL_TOBIAS_RIO_01", "text": "Yo tampoco.\nPor eso vamos a aprender." },
-        { "id": "FINAL_TOBIAS_RIO_02", "text": "Este eres tú, ¿no?\nPues estate quieto." },
+        { "id": "FINAL_TOBIAS_RIO_02", "text": "Este eres tú, ¿no?" },
+        { "id": "FINAL_WILL_RIO_02", "text": "Supongo." },
+        { "id": "FINAL_TOBIAS_RIO_02b", "text": "Pues estate quieto, que te dibujo la cara." },
         { "id": "FINAL_WILL_RIO_01", "text": "¡Pica!\n¡Pica algo grande!" },
         { "id": "FINAL_ESTELA_RIO_01", "text": "¿Te han contado lo del sirope?" },
         { "id": "FINAL_WILL_LIAM_RIO_01", "text": "¡¡NO!!" },
-        { "id": "FINAL_ESTELA_RIO_02", "text": "Pues te lo cuento yo..." },
+        { "id": "FINAL_ESTELA_RIO_02", "text": "Pues te lo cuento yo: la fuente de sirope, el mantel como vestido de novia, y el cartel de «¡TE QUIERO!» encima de Liam." },
         { "id": "FINAL_TOBIAS_RIO_03", "text": "¿Os casasteis?" },
         { "id": "FINAL_WILL_LIAM_RIO_02", "text": "¡Que no!" },
         { "id": "FINAL_ESTELA_RIO_03", "text": "Casi." },
         { "id": "FINAL_WILL_NOCHE_01", "text": "Anda...\nSe ha quedado mi estrella." },
+        { "id": "FINAL_LIAM_NOCHE_01b", "text": "¿Qué estrella?" },
+        { "id": "FINAL_WILL_NOCHE_01b", "text": "Una de madera que compré en el mercado del pueblo, antes de todo esto. Estaba tan mal tallada que no servía para nada." },
         { "id": "FINAL_ESTELA_NOCHE_01", "text": "Pues te la ha cambiado por una vida.\nSales ganando." },
         { "id": "FINAL_TOBIAS_NOCHE_01", "text": "Otra vez... Otra vez, Liam." },
         { "id": "FINAL_LIAM_NOCHE_01", "text": "Solo una más, que ya es tarde." },

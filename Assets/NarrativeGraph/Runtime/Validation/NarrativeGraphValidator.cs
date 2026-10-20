@@ -17,7 +17,7 @@ public static class NarrativeGraphValidator
         {
             if (IsValid && Warnings.Count == 0)
             {
-                Debug.Log($"[NarrativeGraphValidator] ✅ Grafo '{graphName}' es válido");
+                NarrativeLog.Info($"[NarrativeGraphValidator] ✅ Grafo '{graphName}' es válido");
                 return;
             }
             

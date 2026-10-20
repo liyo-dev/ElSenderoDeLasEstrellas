@@ -12,7 +12,7 @@ using Core.InputGlyphs;
 public class TutorialPromptUI : MonoBehaviour
 {
     const string BackgroundResourcePath = "UI/TutorialPromptBackground";
-    const float BackgroundBorderPixels = 56f;
+    const float BackgroundBorderPixels = 36f;
 
     public static TutorialPromptUI Instance { get; private set; }
 
@@ -75,6 +75,7 @@ public class TutorialPromptUI : MonoBehaviour
     [SerializeField] float _closeButtonMargin = 6f;
 
     Button _closeButton;
+    Image _closeBgImage;
     TextMeshProUGUI _closeLabel;
     Image _closeIcon;
     HorizontalLayoutGroup _rowLayout;
@@ -365,6 +366,15 @@ public class TutorialPromptUI : MonoBehaviour
             _rowLayout.padding.bottom = 12;
             LayoutRebuilder.MarkLayoutForRebuild(_rowRect);
         }
+
+        if (_label != null)
+        {
+            _label.textWrappingMode = TextWrappingModes.Normal;
+            _label.overflowMode = TextOverflowModes.Truncate;
+            _label.enableAutoSizing = true;
+            _label.fontSizeMin = 18f;
+            _label.fontSizeMax = 24f;
+        }
     }
 
     void FadeIn()
@@ -410,6 +420,11 @@ public class TutorialPromptUI : MonoBehaviour
         {
             if (_closeLabel != null) _closeLabel.gameObject.SetActive(true);
             if (_closeIcon != null) _closeIcon.gameObject.SetActive(false);
+            if (_closeBgImage != null)
+            {
+                _closeBgImage.enabled = true;
+                _closeBgImage.color = Color.clear;
+            }
             return;
         }
 
@@ -423,6 +438,7 @@ public class TutorialPromptUI : MonoBehaviour
         // Sin arte de Cancelar para esta familia todavía: mejor no mostrar ni la X (no se puede
         // pulsar con mando) ni el icono (quedaría en blanco) que confundir con un botón muerto.
         if (_closeLabel != null) _closeLabel.gameObject.SetActive(false);
+        if (_closeBgImage != null) _closeBgImage.enabled = false;
     }
 
     void BuildCloseButton()
@@ -438,7 +454,9 @@ public class TutorialPromptUI : MonoBehaviour
         closeRt.sizeDelta = new Vector2(_closeButtonSize, _closeButtonSize);
         closeRt.anchoredPosition = new Vector2(-_closeButtonMargin, -_closeButtonMargin);
 
-        closeGo.AddComponent<Image>().color = new Color(1f, 1f, 1f, 0.12f);
+        _closeBgImage = closeGo.AddComponent<Image>();
+        _closeBgImage.color = Color.clear;
+        _closeBgImage.raycastTarget = true;
         _closeButton = closeGo.AddComponent<Button>();
         _closeButton.onClick.AddListener(() => CloseButtonClicked?.Invoke());
 

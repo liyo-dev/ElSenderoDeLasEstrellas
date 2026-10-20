@@ -87,7 +87,29 @@ def cruzar_extremos(x, segundos=2.0):
     return np.vstack([inicio * (1 - mezcla) + fin * mezcla, cuerpo, fin * mezcla + inicio * (1 - mezcla)])
 
 
-def ajustar(entrada, salida, modo, duracion=None, objetivo=None, tope=None):
+def mejor_lecho(curva, duracion):
+    """Para el lecho bajo la voz no sirve el trozo más ruidoso: sirve uno de energía
+    constante y moderada (que no compita con el cántico). Se puntúa por lo llano que
+    es el tramo y por lo cerca de la mediana de la pista."""
+    paso = int(duracion / 0.5)
+    if paso >= len(curva):
+        return 0.0, 0.0
+    mediana_global = float(np.median(curva))
+    mejor = 0
+    mejor_puntuacion = -1e9
+    for inicio in range(0, len(curva) - paso):
+        tramo = curva[inicio:inicio + paso]
+        mediana = float(np.median(tramo))
+        llanura = -float(np.std(tramo))
+        distancia = -abs(mediana - mediana_global) * 0.5
+        puntuacion = llanura + distancia
+        if puntuacion > mejor_puntuacion:
+            mejor_puntuacion = puntuacion
+            mejor = inicio
+    return mejor * 0.5, mejor_puntuacion
+
+
+def ajustar(entrada, salida, modo, duracion=None, objetivo=None, tope=None, inicio=None):
     x = decodificar(entrada, SR)
     if x.ndim == 1:
         x = x[:, None]
@@ -98,16 +120,26 @@ def ajustar(entrada, salida, modo, duracion=None, objetivo=None, tope=None):
     duracion_original = len(x) / SR
     if modo in ("lecho", "estrofa"):
         curva = curva_de_energia(x)
-        inicio, build = mejor_tramo(curva, duracion)
-        i = int(inicio * SR)
-        x = x[i:i + int(duracion * SR)]
+        if inicio is not None:
+            i = int(inicio * SR)
+            x = x[i:i + int(duracion * SR)]
+            informe = f"cortado desde el segundo {inicio:.1f} (a mano)"
+        elif modo == "lecho":
+            chosen, puntuacion = mejor_lecho(curva, duracion)
+            i = int(chosen * SR)
+            x = x[i:i + int(duracion * SR)]
+            informe = f"lecho plano desde el segundo {chosen:.1f} (llanura {puntuacion:+.1f})"
+        else:
+            chosen, build = mejor_tramo(curva, duracion)
+            i = int(chosen * SR)
+            x = x[i:i + int(duracion * SR)]
+            informe = f"recortado del segundo {chosen:.1f} (build {build:+.1f} dB)"
         if len(x) < int(duracion * SR):
             x = np.vstack([x, np.zeros((int(duracion * SR) - len(x), 2), dtype=np.float32)])
         if PREDETERMINADOS[modo][2]:
             x = cruzar_extremos(x, 2.0)
-        informe = f"recortado del segundo {inicio:.1f} (build {build:+.1f} dB)"
     else:
-        golpe = impacto_mas_fuerte(x)
+        golpe = impacto_mas_fuerte(x) if inicio is None else inicio
         i = max(0, int((golpe - 0.05) * SR))
         x = x[i:i + int(duracion * SR)]
         if len(x) < int(duracion * SR):
@@ -124,6 +156,41 @@ def ajustar(entrada, salida, modo, duracion=None, objetivo=None, tope=None):
     return salida
 
 
+def informe(entrada):
+    """Mapa de la pista: silueta de energía y dónde cortar."""
+    x = decodificar(entrada, SR)
+    if x.ndim == 1:
+        x = x[:, None]
+    duracion = len(x) / SR
+    curva = curva_de_energia(x, 0.5)
+    lecho, build = mejor_lecho(curva, 38.0)
+    estrofa, build_estrofa = mejor_tramo(curva, 22.0)
+    golpe = impacto_mas_fuerte(x)
+    valle = float(np.argmin(curva)) * 0.5
+
+    print(f"  {os.path.basename(entrada)}  ({duracion:.1f} s, LUFS {lufs(x):.1f}, "
+          f"true peak {true_peak(x):.1f} dBTP)")
+    print("    silueta (cada bloque = 5 s):")
+    paso = int(5 / 0.5)
+    for i in range(0, len(curva) - paso, paso):
+        bloque = curva[i:i + paso]
+        barra = "".join("#" if v > max(curva) - 6 else ("." if v > max(curva) - 18 else " ") for v in bloque)
+        marca = ""
+        if lecho <= i * 0.5 < lecho + 38:
+            marca = "  <-- lecho del cántico (38 s)"
+        elif estrofa <= i * 0.5 < estrofa + 22:
+            marca = "  <-- estrofa (build)"
+        if abs(i * 0.5 - golpe) < 2.5:
+            marca = marca or "  <-- impacto más fuerte"
+        if abs(i * 0.5 - valle) < 2.5:
+            marca = marca or "  <-- punto más silencioso"
+        print(f"    {i * 0.5:6.1f}s {barra}{marca}")
+    print(f"    lecho recomendado: de {lecho:.1f}s a {lecho + 38:.1f}s (build {build:+.1f} dB)")
+    print(f"    estrofa recomendada: de {estrofa:.1f}s a {estrofa + 22:.1f}s (build {build_estrofa:+.1f} dB)")
+    print(f"    impacto: {golpe:.2f}s | punto más silencioso: {valle:.1f}s")
+    print("    (el resto de la pista se descarta: el juego coloca el trozo, no la pieza entera)")
+
+
 def main():
     import argparse
     p = argparse.ArgumentParser(description="Ajusta generaciones de Suno al tiempo del juego")
@@ -135,7 +202,22 @@ def main():
     p.add_argument("--duracion", type=float, default=None)
     p.add_argument("--objetivo", type=float, default=None)
     p.add_argument("--tope", type=float, default=None)
+    p.add_argument("--informe", action="store_true", help="Solo dibuja la silueta de la pista")
+    p.add_argument("--inicio", type=float, default=None, help="Segundo por el que empieza el corte (a mano)")
     args = p.parse_args()
+
+    if args.informe:
+        if args.carpeta:
+            carpeta = args.carpeta if os.path.isabs(args.carpeta) else os.path.join(RAIZ, args.carpeta)
+            for nombre in sorted(os.listdir(carpeta)):
+                if nombre.lower().endswith((".mp3", ".wav")):
+                    informe(os.path.join(carpeta, nombre))
+            return
+        if not args.entrada:
+            print("Falta --entrada o --carpeta")
+            return
+        informe(args.entrada if os.path.isabs(args.entrada) else os.path.join(RAIZ, args.entrada))
+        return
 
     if args.carpeta:
         carpeta = args.carpeta if os.path.isabs(args.carpeta) else os.path.join(RAIZ, args.carpeta)
@@ -149,7 +231,7 @@ def main():
                 continue
             origen = os.path.join(carpeta, nombre)
             final = os.path.join(destino, f"{os.path.splitext(nombre)[0]} [{args.modo}]{os.path.splitext(nombre)[1]}")
-            ajustar(origen, final, args.modo, args.duracion, args.objetivo, args.tope)
+            ajustar(origen, final, args.modo, args.duracion, args.objetivo, args.tope, args.inicio)
         print(f"\nAjustados en {destino}")
         return
 
@@ -159,7 +241,7 @@ def main():
     salida = args.salida or os.path.join(RAIZ, "Herramientas", "Audio", "_generaciones",
                                          f"{os.path.splitext(os.path.basename(args.entrada))[0]} [{args.modo}].wav")
     os.makedirs(os.path.dirname(salida), exist_ok=True)
-    ajustar(args.entrada, salida, args.modo, args.duracion, args.objetivo, args.tope)
+    ajustar(args.entrada, salida, args.modo, args.duracion, args.objetivo, args.tope, args.inicio)
 
 
 if __name__ == "__main__":

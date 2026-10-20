@@ -158,6 +158,22 @@ public static partial class CombatLabBuilder
     }
 
     /// Destinos del viaje rápido (pestaña Zonas del panel).
+    /// <summary>
+    /// Portal de vuelta al centro del laboratorio para las zonas selladas (las tres pruebas,
+    /// tesoros, bestiario, amanecer y los extras del capítulo 2): se llega con el viaje rápido y no
+    /// hay por dónde salir, así que sin este portal quien entra se queda atrapado dentro.
+    /// 'desde' es el punto de llegada de la zona: el marco y su rótulo miran hacia allí.
+    /// </summary>
+    private static void CrearVueltaAlLaboratorio(Transform raiz, Vector3 posicion, Vector3 desde)
+    {
+        var llegada = Punto("Llegada al laboratorio", raiz, new Vector3(0f, 0.1f, -8f));
+        var mat = GetMaterial("Lab_PortalPaso", new Color(0.22f, 0.55f, 0.95f));
+        Vector3 dir = desde - posicion;
+        dir.y = 0f;
+        float yaw = dir.sqrMagnitude < 0.01f ? 0f : Mathf.Atan2(-dir.x, -dir.z) * Mathf.Rad2Deg;
+        PortalDeSalto("← Volver al laboratorio", raiz, posicion, mat, llegada, yaw);
+    }
+
     private static void CrearDestinos(Transform entradaJefes)
     {
         var raiz = new GameObject("LAB_DESTINOS");

@@ -2009,6 +2009,17 @@ public class NPCSimpleAnimator : MonoBehaviour
         TrySetBool(HashIsFlying, false);
     }
 
+    /// <summary>
+    /// Fuerza al NPC a estar en el suelo (IsGrounded / GroundDistance / isFlying). Hace falta
+    /// cuando se le mueve a mano (al subirlo a un barco, por ejemplo): si no, el «Any State →
+    /// Falling» del Animator lo saca de cualquier estado y se queda en un bucle de caída
+    /// (parece que está convulsando).
+    /// </summary>
+    public void ForzarEnElSuelo()
+    {
+        ForceGroundedForSit();
+    }
+
     private void TrySetBool(int paramHash, bool value)
     {
         if (animator == null) return;

@@ -48,7 +48,7 @@ public sealed class GiveInventoryItemNode : NarrativeNode, INarrativeStateEffect
             if (ctx.Blackboard.Get<bool>(key, false))
             {
                 if (logWarnings)
-                    Debug.Log($"[GiveInventoryItemNode] Ítem '{item.itemId}' ya entregado por este nodo. Omitiendo duplicado.");
+                    NarrativeLog.Info($"[GiveInventoryItemNode] Ítem '{item.itemId}' ya entregado por este nodo. Omitiendo duplicado.");
                 onReadyToAdvance?.Invoke();
                 return;
             }

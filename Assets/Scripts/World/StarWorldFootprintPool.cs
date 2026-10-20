@@ -13,9 +13,9 @@ public class StarWorldFootprintPool : MonoBehaviour
     [SerializeField] private Color _footprintColor = new Color(0.5f, 0.8f, 1f, 1f);
 
     [Tooltip("Diámetro de cada huella en unidades de mundo. Ajustar según la escala de los personajes.")]
-    [SerializeField] private float _footprintScale = 0.4f;
+    [SerializeField] private float _footprintScale = 0.35f;
 
-    [SerializeField] private float _yOffset = 0.01f;
+    [SerializeField] private float _yOffset = 0.02f;
 
     private readonly Queue<FootprintEffect> _pool = new();
 

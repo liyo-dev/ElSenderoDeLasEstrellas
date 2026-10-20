@@ -216,6 +216,21 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
         _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Interact);
         _blockedByMode[ActionMode.Climbing].Add(PlayerAbility.Fly);
 
+        // GARANTIZAR bloqueos básicos para Boating (independiente del Inspector)
+        if (!_blockedByMode.ContainsKey(ActionMode.Boating))
+            _blockedByMode[ActionMode.Boating] = new HashSet<PlayerAbility>();
+
+        // Movimiento e interacción NO se bloquean: el barco lee el stick y el jugador necesita
+        // poder volver a interactuar para bajar.
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Jump);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Sprint);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Roll);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Attack);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Magic);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Carry);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Climb);
+        _blockedByMode[ActionMode.Boating].Add(PlayerAbility.Fly);
+
         // GARANTIZAR bloqueo de interacción durante combate
         if (!_blockedByMode.ContainsKey(ActionMode.Combat))
             _blockedByMode[ActionMode.Combat] = new HashSet<PlayerAbility>();

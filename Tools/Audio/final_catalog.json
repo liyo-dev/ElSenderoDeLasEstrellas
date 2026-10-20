@@ -1,0 +1,769 @@
+[
+  {
+    "file": "Adios al Reino.mp3",
+    "suno_id": "638ff1bd-a5fb-47f0-82bb-e13813019621",
+    "suno_url": "https://suno.com/song/638ff1bd-a5fb-47f0-82bb-e13813019621",
+    "created": "2026-02-04T16:51:00.103Z",
+    "title": "(Piano suave y melancólico, tempo lento)",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: REINO_EXIT"
+    ]
+  },
+  {
+    "file": "Alerta de Combate.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": null,
+    "artist": null,
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: Npc_Battle_Alert"
+    ]
+  },
+  {
+    "file": "Amanecer en el Valle.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Prologo 1 - Manana del valle (tema propio)",
+    "artist": "liyodev",
+    "album": "Prologo 1 - Manana del valle (tema propio)",
+    "prompt": "Cinematic game music, instrumental with a high-register melodic lead, lively around 112 BPM, steady loopable energy with a seamless open loop and no fade-out, sparkling piano, high violins, celesta, glockenspiel, playful flutes and clarinet, harp arpeggios, light pizzicato strings, major key throughout, cheerful catchy village theme with a playful magical RPG-town character.",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Batalla de las Sombras.mp3",
+    "suno_id": "72c324be-50e7-4931-b83b-681a36230e69",
+    "suno_url": "https://suno.com/song/72c324be-50e7-4931-b83b-681a36230e69",
+    "created": "2026-07-13T18:52:42.671469Z",
+    "title": "Seamless Loop End",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: Golem_1"
+    ]
+  },
+  {
+    "file": "Batalla magos oscuro principal.mp3",
+    "suno_id": "f3b57c0b-9686-48e0-bbb9-04a185b96013",
+    "suno_url": "https://suno.com/song/f3b57c0b-9686-48e0-bbb9-04a185b96013",
+    "created": "2026-02-15T11:15:59.216Z",
+    "title": "Batalla melodia principal 2",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Battle_song.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": null,
+    "artist": null,
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Brisa del Puerto.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Village by the Sea",
+    "artist": "liyodev",
+    "album": "Village by the Sea",
+    "prompt": "bright cinematic fantasy coastal village, warm optimistic orchestral, sense of open sea and salty breeze, sparkling harp arpeggios evoking sunlight on water, airy woodwind trills (flute, piccolo) suggesting distant seagulls, gentle swelling strings, soft mallet percussion like a calm tide, light buoyant rhythm, relaxed unhurried village-by-the-sea atmosphere, hopeful and welcoming, no folk or medieval instruments, no sea-shanty accordion or fiddle, steady continuous energy with no climactic build, open-ended loop structure with no clear ending, no fade-out, no final cadence, 85-95 BPM, loopable video game coastal village theme, inspired by Wind Waker's Outset Island warmth and Ni no Kuni's bright seaside villages",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\Scenes\\Systems\\MainMenu.unity",
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: VillageSea"
+    ]
+  },
+  {
+    "file": "Cena con Estela.mp3",
+    "suno_id": "936c7703-fe9a-4fc7-985e-edf21822bdb6",
+    "suno_url": "https://suno.com/song/936c7703-fe9a-4fc7-985e-edf21822bdb6",
+    "created": "2026-07-19T09:32:22.961527Z",
+    "title": "Lina y el Ramen",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: COMER"
+    ]
+  },
+  {
+    "file": "Clumsy Best Friend.mp3",
+    "suno_id": "1694ffa4-6fa2-452b-926c-508b1074fb2b",
+    "suno_url": "https://suno.com/song/1694ffa4-6fa2-452b-926c-508b1074fb2b",
+    "created": "2026-09-15T15:35:57.965461",
+    "title": "Clumsy Best Friend",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Combate del Reino.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": null,
+    "artist": null,
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: Npc_Battle"
+    ]
+  },
+  {
+    "file": "Caminos del Mundo.mp3",
+    "suno_id": "e0bc63a1-ffa8-4569-8ab1-4e363d714441",
+    "suno_url": "https://suno.com/song/e0bc63a1-ffa8-4569-8ab1-4e363d714441",
+    "created": "2026-09-12T06:26:49.728270",
+    "title": "Horizon of Wonder",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sceneName: MainWorld"
+    ]
+  },
+  {
+    "file": "El Hogar de Will.mp3",
+    "suno_id": "672df512-7123-46bc-8809-c75a001789a8",
+    "suno_url": "https://suno.com/song/672df512-7123-46bc-8809-c75a001789a8",
+    "created": "2026-09-12T09:14:57.753442",
+    "title": "Cozy Village Loop",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: WillTown"
+    ]
+  },
+  {
+    "file": "El Poder Apocaliptico.mp3",
+    "suno_id": "592a0725-56fe-4c8b-a8de-046101bd3b55",
+    "suno_url": "https://suno.com/song/592a0725-56fe-4c8b-a8de-046101bd3b55",
+    "created": "2026-08-30T12:17:05.192575",
+    "title": "Apocalyptic Power",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: AWAKEN"
+    ]
+  },
+  {
+    "file": "El Sendero de las Estrellas (Tema Principal).mp3",
+    "suno_id": "638ff1bd-a5fb-47f0-82bb-e13813019621",
+    "suno_url": "https://suno.com/song/638ff1bd-a5fb-47f0-82bb-e13813019621",
+    "created": "2026-02-04T16:51:00.103Z",
+    "title": "(Piano suave y melancólico, tempo lento)",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\Scenes\\Systems\\MainMenu.unity",
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: EPILOGUE"
+    ]
+  },
+  {
+    "file": "El Trono de Piedra.mp3",
+    "suno_id": "2cb6d2fb-9767-4f4f-9e80-1effb2a8ff3b",
+    "suno_url": "https://suno.com/song/2cb6d2fb-9767-4f4f-9e80-1effb2a8ff3b",
+    "created": "2026-08-04T16:14:42Z",
+    "title": "Throne of Stone",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: MAGOOSCURO_VISION"
+    ]
+  },
+  {
+    "file": "El Ultimo Duelo.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Prologo 3 - El duelo",
+    "artist": "liyodev",
+    "album": "Prologo 3 - El duelo",
+    "prompt": "Cinematic video game combat music production, instrumental orchestral score with cinematic mix, fast string ostinato, powerful brass theme statements, war drums, low taiko hits and Spanish choir accents, fast relentless momentum, two short drops, melody returning before an abrupt no-fade ending.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: MAGOOSCURO_CLIMAX"
+    ]
+  },
+  {
+    "file": "El Viaje Continua.mp3",
+    "suno_id": "6edd711a-033e-43a9-a9f4-1ec63de874b1",
+    "suno_url": "https://suno.com/song/6edd711a-033e-43a9-a9f4-1ec63de874b1",
+    "created": "2026-08-03T17:47:41Z",
+    "title": "Créditos Finales Animados",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sceneName: Credits"
+    ]
+  },
+  {
+    "file": "Estela Furiosa.mp3",
+    "suno_id": "ebe5a3da-686b-4636-999f-b18ed3d196e7",
+    "suno_url": "https://suno.com/song/ebe5a3da-686b-4636-999f-b18ed3d196e7",
+    "created": "2026-02-15T21:38:27.965Z",
+    "title": "Para nivel animado melodia principal",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": []
+  },
+  {
+    "file": "Fuga del Calabozo.mp3",
+    "suno_id": "2816c946-9ed0-4fd5-a0f3-73d315d8397d",
+    "suno_url": "https://suno.com/song/2816c946-9ed0-4fd5-a0f3-73d315d8397d",
+    "created": "2026-09-15T15:54:25.371745",
+    "title": "Sneak Through the Puzzle",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: Dungeon"
+    ]
+  },
+  {
+    "file": "La Llegada de la Sombra.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Prologo 2 - La llegada",
+    "artist": "liyodev",
+    "album": "Prologo 2 - La llegada",
+    "prompt": "Score, cinematic cold production with metallic shimmer and stripped-back bridge, slow pulse building into driving urgency, low brass and minor-key cellos stating the melody menacingly, sparse deep percussion hits, distant wordless choir hum, then intimate solo violin and piano with an unresolved suspended ending",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: MAGOOSCURO_REVEAL"
+    ]
+  },
+  {
+    "file": "La Marcha del Heroe Torpe.mp3",
+    "suno_id": "b1fd9d1e-f497-40f8-a5ae-d54c2d60e164",
+    "suno_url": "https://suno.com/song/b1fd9d1e-f497-40f8-a5ae-d54c2d60e164",
+    "created": "2026-09-15T15:35:57.965374",
+    "title": "Bumbling Hero's March",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: OLIVER_1"
+    ]
+  },
+  {
+    "file": "Olla En Fuga.mp3",
+    "suno_id": "1c936708-3edc-47f1-975b-938afaf1f0e1",
+    "suno_url": "https://suno.com/song/1c936708-3edc-47f1-975b-938afaf1f0e1",
+    "created": "2026-07-19T10:14:12Z",
+    "title": "Olla En Fuga",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Patio del Reino v2.mp3",
+    "suno_id": "728abd76-3a3a-432c-9473-7876bcdbced5",
+    "suno_url": "https://suno.com/song/728abd76-3a3a-432c-9473-7876bcdbced5",
+    "created": "2026-07-29T10:38:17.742014Z",
+    "title": "Patio del Reino",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Patio del Reino.mp3",
+    "suno_id": "e6a8093d-1ba3-4a3e-a9ff-50282a84311b",
+    "suno_url": "https://suno.com/song/e6a8093d-1ba3-4a3e-a9ff-50282a84311b",
+    "created": "2026-07-29T10:38:17.742100Z",
+    "title": "Patio del Reino",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Pesadilla en Suspenso.mp3",
+    "suno_id": "aeca2ee7-2920-495d-bc31-cd07232819c0",
+    "suno_url": "https://suno.com/song/aeca2ee7-2920-495d-bc31-cd07232819c0",
+    "created": "2026-08-03T16:09:04Z",
+    "title": "Pesadilla en Suspenso",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Pueblecito.mp3",
+    "suno_id": "d544aa72-7502-44e2-a5ed-563bee7dc110",
+    "suno_url": "https://suno.com/song/d544aa72-7502-44e2-a5ed-563bee7dc110",
+    "created": "2026-02-15T10:24:07.430Z",
+    "title": "(Piano suave y melancólico, tempo lento)",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: PROLOGUE_DANCE"
+    ]
+  },
+  {
+    "file": "Sesión de Estudio.mp3",
+    "suno_id": "c5a64e69-8abf-453b-82a5-a9060065dfad",
+    "suno_url": "https://suno.com/song/c5a64e69-8abf-453b-82a5-a9060065dfad",
+    "created": "2026-08-23T22:29:21.654424",
+    "title": "Sesión de Estudio (Promo)",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: PROMO_1"
+    ]
+  },
+  {
+    "file": "Shadows and Radiance.mp3",
+    "suno_id": "03f34be5-86a4-40eb-926e-124990358815",
+    "suno_url": "https://suno.com/song/03f34be5-86a4-40eb-926e-124990358815",
+    "created": "2026-08-13T05:33:29.147780",
+    "title": "Shadows and Radiance",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "Susurros del Bosque.mp3",
+    "suno_id": "603fdb39-2459-491b-b3c5-57a32af7435b",
+    "suno_url": "https://suno.com/song/603fdb39-2459-491b-b3c5-57a32af7435b",
+    "created": "2026-09-04T12:15:14.611210",
+    "title": "Moonlit Maproom",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: Woods"
+    ]
+  },
+  {
+    "file": "Umbral Entre Estrellas.mp3",
+    "suno_id": "5e4d7f06-3560-4919-b278-f6c9c4e3bcb9",
+    "suno_url": "https://suno.com/song/5e4d7f06-3560-4919-b278-f6c9c4e3bcb9",
+    "created": "2026-08-30T12:15:38.838796",
+    "title": "Vast Silent Wonder",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sceneName: Sendero",
+      "sceneName: WillHouse"
+    ]
+  },
+  {
+    "file": "Umbral del Castillo.mp3",
+    "suno_id": "d2f95f9f-94ba-42f2-8f91-1aa3beb94b10",
+    "suno_url": "https://suno.com/song/d2f95f9f-94ba-42f2-8f91-1aa3beb94b10",
+    "created": "2026-08-04T16:22:10Z",
+    "title": "Umbral del Castillo",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: Castle"
+    ]
+  },
+  {
+    "file": "Victoria del Sendero.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": null,
+    "artist": null,
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: Npc_Battle_Victory"
+    ]
+  },
+  {
+    "file": "Vientos de las Cumbres.mp3",
+    "suno_id": "340e8858-5046-4bdf-8164-6c31ccf86149",
+    "suno_url": "https://suno.com/song/340e8858-5046-4bdf-8164-6c31ccf86149",
+    "created": "2026-02-22T11:12:50.653Z",
+    "title": "Para nivel animado melodia principal",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "zoneId: Mountains"
+    ]
+  },
+  {
+    "file": "Wonderland Path.mp3",
+    "suno_id": "754a18c2-3d41-4ec1-a9e1-893b4ea44b8b",
+    "suno_url": "https://suno.com/song/754a18c2-3d41-4ec1-a9e1-893b4ea44b8b",
+    "created": "2026-09-12T05:47:17.348824",
+    "title": "Wonderland Path",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "batalla-de-las-sombras-nueva.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Batalla de las Sombras (nueva)",
+    "artist": "liyodev",
+    "album": "Batalla de las Sombras (nueva)",
+    "prompt": "Video game boss music, low male Spanish choir chant, layered heavy looping production with constant pressure and industrial impact, fast steady tempo, pounding low taiko and war drums, driving low-string ostinato, snarling low brass repeating the twisted melody, metallic hits, seamless unresolved loop.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: MagoOscuro"
+    ]
+  },
+  {
+    "file": "batalla-el-demonio.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Batalla - El Demonio",
+    "artist": "liyodev",
+    "album": "Batalla - El Demonio",
+    "prompt": "Video game boss music, cinematic orchestral combat; ritual male Spanish chanting, forceful and ominous, with whispered bridge layers; minor-key blazing brass stabs lead frantic fast string ostinatos, screeching high strings, and heavy pounding low percussion; loop-tight mix with dry impacts, searing brass presence, and irregular accent hits; fast relentless tempo, constant high energy, seamless cyclic phrasing.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "battleId: Demon_1",
+      "battleId: Demon_2"
+    ]
+  },
+  {
+    "file": "castle-at-altitude.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Castle at Altitude",
+    "artist": "liyodev",
+    "album": "Castle at Altitude",
+    "prompt": "majestic cinematic fantasy mountain-town theme, bright noble regal calm, warm brass held gently in reserve rather than fanfare, delicate glockenspiel and bell textures catching snow-light, sparkling high strings suggesting thin mountain air, warm lower string bed for castle presence, light airy choir-like pad for altitude and grandeur, quiet dignity and order, hopeful heroic rather than battle-epic, no folk instruments, no medieval instruments, steady continuous energy, no climactic build, open-ended loop structure, seamless loop feel, no clear ending, no fade-out, no final cadence, 80-95 BPM, loopable video game mountain-castle town music, variety 1/4",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "combate-con-npcs-v3-melodia 1.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Combate con NPCs (v3 melodia)",
+    "artist": "liyodev",
+    "album": "Combate con NPCs (v3 melodia)",
+    "prompt": "JRPG battle theme, fast string ostinato, bold brass carrying the same main melody, tight punchy orchestral drums with a snare backbeat and timpani hits, instrumental around 150 BPM with constant driving energy, aggressive but heroic lighter-than-a-battle intensity, clean loopable mix with seamless continuation",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "combate-con-npcs-v3-melodia.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Combate con NPCs (v3 melodia)",
+    "artist": "liyodev",
+    "album": "Combate con NPCs (v3 melodia)",
+    "prompt": "JRPG battle theme, fast string ostinato, bold brass carrying the same main melody, tight punchy orchestral drums with a snare backbeat and timpani hits, instrumental around 150 BPM with constant driving energy, aggressive but heroic lighter-than-a-battle intensity, clean loopable mix with seamless continuation",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "combate-contra-npc 1.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Combate contra NPC",
+    "artist": "liyodev",
+    "album": "Combate contra NPC",
+    "prompt": "Orchestral fantasy RPG battle music: rapid, darting string runs lead the entire arrangement, with urgent orchestral swells and sharp percussion; breathless, frantic pacing, tightly layered studio mix.",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "combate-contra-npc.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Combate contra NPC",
+    "artist": "liyodev",
+    "album": "Combate contra NPC",
+    "prompt": "Orchestral fantasy RPG battle music: rapid, darting string runs lead the entire arrangement, with urgent orchestral swells and sharp percussion; breathless, frantic pacing, tightly layered studio mix.",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "first-magic-awakening.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "First Magic Awakening",
+    "artist": "liyodev",
+    "album": "First Magic Awakening",
+    "prompt": "cinematic orchestral action fantasy score, epic RPG character-awakening cue, ominous low-string ostinato, subtle heartbeat-like low percussion, sparse dark brass stabs, tense 90–130 BPM feel with dramatic tempo and dynamic swing, build from restrained dread into a sudden explosive full-orchestra hit, monstrous emergence from smoke and fire, swelling strings for a first-magic awakening, brief awed hush after the magical burst, distant thunderous impact for a fireball collision, return to mounting tension, unresolved suspended ending that hands directly into a boss-battle cue, wide theatrical mix, deep low end, sharp transient impacts, no vocals",
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "la-melodia-de-eldran.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "La Melodia de Eldran",
+    "artist": "liyodev",
+    "album": "La Melodia de Eldran",
+    "prompt": "Fantasy orchestral, instrumental; solo cello and oboe trade a simple, noble, hummable major-key theme, joined by soft French horn, harp, and warm strings, with faint mysterious celesta over low strings; seamless loop, no clear ending or fade-out; gentle, unhurried flow.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: MANANA_DESPUES"
+    ]
+  },
+  {
+    "file": "Tobias.mp3",
+    "suno_id": "69894cf8-51f9-4674-8b6d-fa9d5b060ec4",
+    "suno_url": "https://suno.com/song/69894cf8-51f9-4674-8b6d-fa9d5b060ec4",
+    "created": null,
+    "title": "Tobias (Six-Note Motif)",
+    "artist": "liyodev",
+    "album": "Six-Note Motif",
+    "prompt": "Intimate melancholic fantasy orchestral character theme, 70 BPM, minor key. Open immediately with a clearly articulated, memorable six-note motif on solo piano; let solo cello answer and carry the melody. Build gently with soft celesta and glass harmonica, delicate crystal-like overtones, and warm low strings. Keep the arrangement spacious and tender, colored by guilt and an older brother’s protective love and quiet resolve. Give the middle a brief, modest hopeful lift, then return to the opening motif in a changed, more accepting harmony. Close the emotional arc with a soft, unresolved final chord. Natural acoustic dynamics, close piano and cello, subtle room ambience, finely detailed orchestral balance.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Cinemáticas y diálogos de Liam sobre su hermano Tobías"
+    ],
+    "agp_usages": [
+      "Tema emocional de Tobías"
+    ]
+  },
+  {
+    "file": "menu-principal-el-sendero-v2-alegre.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Menu principal - El Sendero (v2 alegre)",
+    "artist": "liyodev",
+    "album": "Menu principal - El Sendero (v2 alegre)",
+    "prompt": "J-RPG orchestral, warm piano leading with soft high strings, mystical celesta and glockenspiel, light harp and airy woodwinds; slightly slower spacious tempo with a quiet steady pulse, wide airy mix and gentle loopable phrasing; instrumental",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\Scenes\\Systems\\MainMenu.unity",
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sceneName: MainMenu"
+    ]
+  },
+  {
+    "file": "prologo-1-manana-del-valle-v4-leitmotiv.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": "Prologo 1 - Manana del valle (v4 leitmotiv)",
+    "artist": "liyodev",
+    "album": "Prologo 1 - Manana del valle (v4 leitmotiv)",
+    "prompt": "bright sunny village morning theme, same cheerful melody kept intact, warm lively J-RPG orchestral, sparkling piano, high strings, mystical celesta and glockenspiel, playful flutes and clarinet, harp, major key, optimistic and gently lively, a village waking up and going about its day, light and airy mix, no melancholy, no sadness, no dark low strings, no brass, no epic crescendo, no big finish, no folk or medieval instruments, instrumental, loopable game music, steady continuous energy, no clear ending, no fade-out",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: PROLOGUE_DREAM"
+    ]
+  },
+  {
+    "file": "tinnitus.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": null,
+    "title": null,
+    "artist": null,
+    "album": null,
+    "prompt": null,
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets\\_AUDIOPROFILE\\AudioGraphProfile.asset"
+    ],
+    "agp_usages": []
+  },
+  {
+    "file": "trailer o algo pa mostrar.mp3",
+    "suno_id": "5ff3be0b-f347-4060-b66f-173ebb220b75",
+    "suno_url": "https://suno.com/song/5ff3be0b-f347-4060-b66f-173ebb220b75",
+    "created": "2026-07-10T18:48:58.963861Z",
+    "title": "JRPG City of Echoes (Epic Trailer Cut)",
+    "artist": "liyodev",
+    "album": null,
+    "prompt": null,
+    "used_in_project": false,
+    "usage_refs": [],
+    "agp_usages": []
+  },
+  {
+    "file": "La Melodia de Liam.mp3",
+    "suno_id": null,
+    "suno_url": null,
+    "created": "2026-10-18",
+    "title": "La melodía de Liam",
+    "artist": "liyodev",
+    "album": "La melodía de Liam",
+    "prompt": "Intimate melancholic fantasy orchestral instrumental in a slow 70 BPM minor-key feel. Open immediately with a clearly articulated, memorable six-note solo piano motif, close-miked and unhurried; let a solo cello answer, then take over the melody with expressive legato phrasing. Gradually add soft celesta and glass harmonica for delicate crystal-like overtones, supported by warm low strings that enter in restrained, breathing swells. Keep generous space, tender dynamics, natural acoustic detail, subtle room ambience, and finely balanced orchestral depth. Color the melody with guilt, protective older-brother devotion, and quiet resolve. In the middle, give a brief modest hopeful lift through a warmer harmonic turn and slightly fuller strings, then return to the opening piano motif in a changed, more accepting harmony. End on a soft unresolved chord with a lingering emotional aftertaste.",
+    "used_in_project": true,
+    "usage_refs": [
+      "Assets/Editor/ConstruirTorreDeLiam.cs",
+      "Assets/_AUDIOPROFILE/AudioGraphProfile.asset"
+    ],
+    "agp_usages": [
+      "sequenceId: LIAM_CRYSTAL"
+    ]
+  }
+]

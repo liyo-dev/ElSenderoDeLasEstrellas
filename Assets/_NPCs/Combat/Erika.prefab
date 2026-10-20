@@ -9965,6 +9965,7 @@ GameObject:
   - component: {fileID: 1598830340271549642}
   - component: {fileID: 2775683701247765321}
   - component: {fileID: 8292955864976573195}
+  - component: {fileID: -2049874257353199566}
   m_Layer: 7
   m_Name: Erika
   m_TagString: Untagged
@@ -10164,6 +10165,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -10181,6 +10183,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &7490619964796838480
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10235,7 +10238,7 @@ MonoBehaviour:
   aiWakeUpMargin: 8
   aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
-  persistenceId: 
+  persistenceId: NPC_Erika
   dialogueCharacterId: CHAR_GUERRERACHINA
   rotateToPlayerOnInteract: 1
   rotationDuration: 0.3
@@ -10260,11 +10263,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 0}
-  originalMouthMesh: {fileID: 0}
+  ojosDeReposo: {fileID: 0}
+  bocaDeReposo: {fileID: 0}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &1598830340271549642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10311,6 +10322,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCInteractiveNarrativeExecutor
   verboseLogging: 0
   persistentIconMaxDistance: 30
+--- !u!114 &-2049874257353199566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770552252693826820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afeed46f44267e241ac19e3dcd512930, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestObjectiveMarker
+  questId: PREPARA_VIAJE
+  stepIndex: 2
+  showAfterStep: -1
+  icon: {fileID: 0}
+  color: {r: 1, g: 0.92, b: 0.016, a: 1}
+  iconoSobreLaCabeza: {fileID: 0}
 --- !u!1 &7783949281983813713
 GameObject:
   m_ObjectHideFlags: 0

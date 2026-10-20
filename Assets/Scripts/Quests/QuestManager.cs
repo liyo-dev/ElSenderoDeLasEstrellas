@@ -1301,6 +1301,10 @@ public class QuestManager : MonoBehaviour
 #endif
             return;
         }
+
+        // El índice pudo construirse antes de que este NPC existiera (miembro instanciado al
+        // unirse): se fuerza un escaneo para que su QuestChainEntry entre en juego.
+        _questChainIndexDirty = true;
         
         // Obtener el ID de persistencia del miembro
         string persistenceId = member.NPCManager?.PersistenceId;

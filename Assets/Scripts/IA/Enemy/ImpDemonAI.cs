@@ -968,7 +968,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         if (spellEffectPrefab && player)
         {
-            Instantiate(spellEffectPrefab, player.position, Quaternion.identity);
+            // VFX de un solo uso: siempre por el pool (auto-creado al arrancar). Si no estuviera,
+            // se pierde el efecto pero no se instancia nada fuera del pool (regla TDD § 12).
+            if (VfxPoolService.Instance != null)
+                VfxPoolService.Instance.Play(spellEffectPrefab, player.position, Quaternion.identity, 3f);
 
             int hitCount = Physics.OverlapSphereNonAlloc(player.position, 5f, _overlapBuffer, playerLayer);
             for (int i = 0; i < hitCount; i++)

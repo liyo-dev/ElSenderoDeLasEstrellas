@@ -30,7 +30,7 @@ public sealed class WaitForItemAddedNode : NarrativeNode
     void Log(string msg)
     {
         if (debugLogs)
-            Debug.Log($"[WaitForItemAdded:{guid}] {msg}");
+            NarrativeLog.Info($"[WaitForItemAdded:{guid}] {msg}");
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

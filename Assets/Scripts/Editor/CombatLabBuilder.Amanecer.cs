@@ -32,6 +32,9 @@ public static partial class CombatLabBuilder
         CrearCubo("Muro norte", raiz, c + new Vector3(0f, 1.5f, mz), new Vector3(AnchoAmanecer, 3f, 0.5f), muro);
         CrearCubo("Muro oeste", raiz, c + new Vector3(-mx, 1.5f, 0f), new Vector3(0.5f, 3f, FondoAmanecer), muro);
         CrearCubo("Muro este", raiz, c + new Vector3(mx, 1.5f, 0f), new Vector3(0.5f, 3f, FondoAmanecer), muro);
+        // El sur también se cierra: la estación es una plataforma flotante y sin muro se caía al vacío.
+        CrearCubo("Muro sur", raiz, c + new Vector3(0f, 1.5f, -mz), new Vector3(AnchoAmanecer, 3f, 0.5f), muro);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(-76f, 0f, 54f), EntradaAmanecer);
         CrearTexto("Amanecer: Y y luego X A B Y\n(pestaña Magia para darlo o quitarlo)", raiz, c + new Vector3(0f, 4.5f, -3f));
 
         CrearGuardianProtegido(raiz, c + new Vector3(-6f, 0f, 4f), velo);

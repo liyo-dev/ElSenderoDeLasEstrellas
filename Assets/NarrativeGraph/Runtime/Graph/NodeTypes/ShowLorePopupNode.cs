@@ -39,7 +39,7 @@ public sealed class ShowLorePopupNode : NarrativeNode
             return;
         }
 
-        Debug.Log($"[ShowLorePopupNode] ✅ Mostrando popup '{config.name}' ({config.entries.Length} entradas).");
+        NarrativeLog.Info($"[ShowLorePopupNode] ✅ Mostrando popup '{config.name}' ({config.entries.Length} entradas).");
         ui.Show(config, onReadyToAdvance);
     }
 }

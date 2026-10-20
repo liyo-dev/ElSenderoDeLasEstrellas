@@ -88,12 +88,12 @@ public sealed class StartBattleNode : NarrativeNode
                     else if (!string.IsNullOrEmpty(missionStringId) && missionId >= 0)
                     {
                         s.CompleteQuestStep(missionStringId, missionId);
-                        Debug.Log($"[StartBattleNode] CompleteQuestStep('{missionStringId}', {missionId}) vía Signals al ganar.");
+                        NarrativeLog.Info($"[StartBattleNode] CompleteQuestStep('{missionStringId}', {missionId}) vía Signals al ganar.");
                     }
                     else if (!string.IsNullOrEmpty(missionStringId))
                     {
                         s.CompleteQuest(missionStringId);
-                        Debug.Log($"[StartBattleNode] CompleteQuest('{missionStringId}') vía Signals al ganar.");
+                        NarrativeLog.Info($"[StartBattleNode] CompleteQuest('{missionStringId}') vía Signals al ganar.");
                     }
                     else
                     {
@@ -114,7 +114,7 @@ public sealed class StartBattleNode : NarrativeNode
             signals.OnBattleWon(contextKey, _onBattleWonCb);
             _subscribedSignals = signals;
             _subscriptionOk = true;
-            Debug.Log($"[StartBattleNode] Suscrito a OnBattleWon con context='{contextKey}'.");
+            NarrativeLog.Info($"[StartBattleNode] Suscrito a OnBattleWon con context='{contextKey}'.");
         }
         catch (Exception ex)
         {
@@ -159,7 +159,7 @@ public sealed class StartBattleNode : NarrativeNode
         // 4) Verificar si la batalla ya fue ganada (al restaurar desde save)
         if (targetArena != null && IsBattleAlreadyWon(targetArena))
         {
-            Debug.Log($"[StartBattleNode] Batalla '{battleId}' ya fue ganada. Avanzando inmediatamente sin disparar.");
+            NarrativeLog.Info($"[StartBattleNode] Batalla '{battleId}' ya fue ganada. Avanzando inmediatamente sin disparar.");
             SafeUnsubscribe(ctx);
             onReadyToAdvance?.Invoke();
             return;
@@ -215,12 +215,12 @@ public sealed class StartBattleNode : NarrativeNode
             if (encounter != null)
             {
                 arena.TriggerStartBattle(encounter, spawnProfileIndex);
-                Debug.Log($"[StartBattleNode] TriggerStartBattle(encounter='{encounter.name}') ejecutado en arena encontrada.");
+                NarrativeLog.Info($"[StartBattleNode] TriggerStartBattle(encounter='{encounter.name}') ejecutado en arena encontrada.");
             }
             else
             {
                 arena.TriggerStartBattle();
-                Debug.Log("[StartBattleNode] TriggerStartBattle() ejecutado en arena encontrada.");
+                NarrativeLog.Info("[StartBattleNode] TriggerStartBattle() ejecutado en arena encontrada.");
             }
             return true;
         }
@@ -244,7 +244,7 @@ public sealed class StartBattleNode : NarrativeNode
             {
                 var s = _subscribedSignals ?? ctx?.Signals ?? DefaultNarrativeSignals.Instance;
                 s?.OffBattleWon(_usedContextKey, _onBattleWonCb);
-                Debug.Log($"[StartBattleNode] Desuscrito de OnBattleWon para context='{_usedContextKey}'.");
+                NarrativeLog.Info($"[StartBattleNode] Desuscrito de OnBattleWon para context='{_usedContextKey}'.");
             }
             catch { /* silencioso */ }
             finally

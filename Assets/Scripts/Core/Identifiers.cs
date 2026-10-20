@@ -186,7 +186,8 @@ public enum ActionMode
     Climbing,
     Combat,
     Minigame,
-    UsingWorldPoint
+    UsingWorldPoint,
+    Boating
 }
 
 /// <summary>Habilidades básicas que puede usar el jugador.</summary>
@@ -216,7 +217,10 @@ public enum InteractableMode
     // FIX INC-048: confirmación Sí/No usando el popup unificado (ConfirmationPopupUI) en lugar
     // del cuadro de diálogo con opciones. Pensado para casos simples como confirmar el guardado
     // en un SavePoint, sin diálogo de seguimiento narrativo.
-    ConfirmationPopup
+    ConfirmationPopup,
+    // El comportamiento lo lleva el componente que acompaña al interactuable (se ha suscrito al
+    // evento OnInteract). No hay diálogo ni popup que abrir: el propio evento es todo.
+    Custom
 }
 
 /// <summary>Cómo seleccionar una sesión: por campo, automáticamente por GameObject, o por nombre de tipo.</summary>

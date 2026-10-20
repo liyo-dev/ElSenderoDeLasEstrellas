@@ -1,6 +1,18 @@
 {
     "texts": [
         {
+            "key": "BARCO_BAJAR",
+            "value": "¿Bajar del barco?"
+        },
+        {
+            "key": "BARCO_BOTON_BAJAR",
+            "value": "Bajar"
+        },
+        {
+            "key": "BARCO_BOTON_ACELERAR",
+            "value": "Acelerar"
+        },
+        {
             "key": "ITEM_BOLSA_MONEDAS_GRANDE_DESC",
             "value": "Contiene 75 monedas."
         },

@@ -14,7 +14,7 @@ public sealed class WaitQuestCompleteNode : NarrativeNode
     void Log(string msg)
     {
         if (debugLogs)
-            UnityEngine.Debug.Log($"[WaitQuestCompleteNode] {msg}");
+            NarrativeLog.Info($"[WaitQuestCompleteNode] {msg}");
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

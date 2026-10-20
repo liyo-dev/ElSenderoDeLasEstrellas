@@ -586,47 +586,6 @@ La conversión lineal→dB actual usa interpolación lineal entre -80 y 0, que n
 float dB = linear01 <= 0f ? -80f : 20f * Mathf.Log10(linear01);
 ```
 
-### Mezcla y diseño por capas (INC-786)
-
-El audio del juego se mezcla con una receta pensada para que un hechizo y un conjuro suenen
-a golpe de cine. El detalle completo (diagnóstico medido, referencia analizada y plan por
-fases) está en `docs/audio/PLAN_MEZCLA_ANIME.md`.
-
-**Eventos por capas.** `AudioEventSO` (`Assets/Scripts/Audio/AudioEventSO.cs`) describe un
-evento como una lista de capas: cada capa tiene sus clips (se elige uno al azar sin repetir
-el anterior), su retardo, su ganancia en dB, su rango de pitch, su paneo y su probabilidad.
-`AudioService.PlayEvent(evento, posicion, volumen, tono)` las reproduce en orden: un hechizo
-con transitorio, cuerpo, sub y cola suena como golpe, no como un clip suelto.
-
-**Carga, salida e impacto.** `MagicSpellSO` separa `chargeSFXKey` (bucle de carga),
-`castSFXKey`/`releaseSFXKey` (salida) e `impactSFXKey`, y admite `castEvent`/`impactEvent`
-(eventos por capas) que sustituyen a las claves. `MagicProjectileSpawner` ya no suena nada
-al empezar el gesto: la carga suena mientras se prepara (`PlayLoopingSFX`), la salida suena
-cuando el hechizo sale de la mano y el impacto lo pone `MagicProjectil`. La clave de la
-salida es `releaseSFXKey` si está puesta; si no, `castSFXKey`.
-
-**El respiro y el golpe musical.** `RespiroBeat` y `GolpeMusicalBeat`
-(`Assets/Scripts/Sequences/Beats/AudioBeats.cs`) son beats de secuencia (se escriben en el
-guion como `efecto RespiroBeat ...` / `efecto GolpeMusicalBeat ...`). El respiro aparta la
-mezcla un instante y la devuelve sola (`AudioService.IniciarRespiro`); el golpe musical
-suena un stinger y aparta la música para que se oiga (`AudioService.GolpeMusical`). El
-silencio antes del impacto es lo que más se nota de una cinemática de acción.
-
-**La voz del conjuro.** `PresetDeVoz` (`Plegaria`, `Epico`) aplica a la voz un `AudioReverbFilter`
-y un `AudioEchoFilter` (el eco slap que hace que una voz gritada suene a anime). Durante el
-cántico la música **no** se atenúa: `_duckEpico` la deja a 0 dB mientras dura el conjuro, y la
-voz sube con ella. En el diálogo normal sí se duckea (`voiceDuck`/`cinematicVoiceDuck`).
-
-**Loudness.** Objetivos por bus: voz −18 LUFS, reacciones −20, lanzamiento de hechizo −18,
-impacto −14, cola −24, música −20, ambiente −26, y el master con limiter a −1 dBTP. La
-herramienta `Herramientas/Audio/normalizar_assets.py` normaliza por categoría (con copia de
-seguridad en `Herramientas/Audio/_backup_originales/`) y `Herramientas/Audio/medir_loudness.py`
-mide. Los imports de voz se importan **sin Normalize** (el *Normalize* de Unity lleva cada
-clip a −1 dBFS de pico y aplasta la interpretación): lo pone el menú *El Sendero ▸ Audio ▸
-Ajustar imports de audio*. El estado del `AudioMixer` se comprueba con *El Sendero ▸ Audio ▸
-Informar de la mezcla*: sin compresores ni limiter, las cinemáticas suman por encima de 0 dBFS
-y el digital satura.
-
 ---
 
 ## 7. Quests
@@ -3853,13 +3812,15 @@ Subir al barco no es un teletransporte: el jugador **salta desde el agua hasta l
 
 **Los compañeros suben cada uno a su manera** (`TripulacionDelBarco`):
 
-| Personaje | Cómo entra |
-|---|---|
-| Will (el jugador) | salto con voltereta |
-| Estela | salto sencillo, primero |
-| Liam | salto sencillo, después (cuando Estela ya está dentro) |
+| Personaje | Cómo entra | Cómo se queda |
+|---|---|---|
+| Will (el jugador) | salto con voltereta (0,45 s) | de pie al timón |
+| Estela | salto sencillo, primero (0,4 s) | **sentada** (`PlayAmbientActivity(SitLow)`) |
+| Liam | salto sencillo, después (0,4 s) | **apoyado en el borde**, con el idle normal |
 
-(En una tanda anterior Liam trepaba con `ClimbUp_RM_NoWeapon` y se quedaba en una pose rara; ahora los dos hacen un salto normal.)
+(En una tanda anterior Liam trepaba con `ClimbUp_RM_NoWeapon` y se quedaba en una pose rara; ahora los dos hacen un salto normal y, al terminar, se les cambia de estado: el del salto se quedaba en bucle y parecía que convulsaban.)
+
+El embarque es **casi instantáneo**: el salto dura 0,45 s y los compañeros tardan como mucho 1,5 s en llegar andando al casco (si no llegan, se les sube igualmente).
 
 Para moverlos se usa el sistema oficial: `NPCPartyMember.MoveToDialoguePosition` los lleva **andando** hasta el casco por su cuenta (su IA), y al llegar el agente deja de llevar su posición (el estado `DialoguePositionState` los deja quietos), así que la red puede llevarlos a su sitio a mano con un arco corto. Mientras la tripulación sube, **el barco no zarpa** (`TripulacionDelBarco.Subiendo`): espera a que suban.
 
@@ -3867,7 +3828,18 @@ Al bajar del barco, los compañeros se sueltan en el punto de desembarque y vuel
 
 **Para bajar hay un sitio propio: el puerto, no el barco.** El icono de bajar vive en el **punto de amarre** (`PuntoDeAmarre`), que es un GO del mundo puesto en el muelle o en la playa: el barco se arrima a él y, cuando el jugador va a bordo, el punto enciende su icono; al pulsarlo aparece el popup de confirmación del juego (`ConfirmationPopupUI`) con la pregunta "¿Bajar del barco?" (clave de localización `BARCO_BAJAR`) y, si se acepta, el jugador baja a tierra firme.
 
-El barco busca su punto de amarre al subir (`PuntoDeAmarre.MasCerca`, con un radio de 30 m) y lo apaga al bajar. En el LAB, el punto de amarre es el escalón de entrada de la piscina; en MainWorld, el embarcadero del Pueblo Pesquero.
+El barco busca su punto de amarre al subir (`PuntoDeAmarre.MasCerca`, con un radio de 30 m) y lo apaga al bajar. En el LAB, el punto de amarre está junto al barco; en MainWorld, en el embarcadero del Pueblo Pesquero.
+
+> Ojo: el icono solo aparece si el punto está **a menos de 3,4 m del jugador** (el alcance del `InteractionDetector`). Por eso en el LAB el punto de amarre va pegado al barco: si está lejos, el icono no sale nunca.
+
+**Los botones del barco sustituyen a los hechizos en el HUD.** Mientras el jugador va a bordo, la cruz de combate (X hechizo, Y combo, B escudo) se esconde y aparecen los controles del barco (`ControlesDelBarcoHUD`, que se crea al subir y se destruye al bajar, sin tocar ningún prefab):
+
+| Botón | Acción | Mando | Teclado |
+|---|---|---|---|
+| Bajar | baja del barco (por el punto de amarre) | Y | Q |
+| Acelerar | sube la velocidad máxima del barco ×1,6 | LT | Ctrl |
+
+El Y es el mismo botón que el ataque mágico especial (`GamePlay.AttackMagicNorth`), que con el modo `Boating` está bloqueado, así que queda libre. Los iconos salen del sistema de glifos del proyecto (`InputGlyphService`), así que cambian solos según el mando que estés usando.
 
 ### 24.4 Efectos y música
 

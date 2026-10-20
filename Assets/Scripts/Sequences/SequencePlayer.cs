@@ -476,6 +476,30 @@ public class SequencePlayer : CinematicSequencerBase
     private static bool EsDeCamara(SequenceBeat beat)
         => beat is ShotBeat;
 
+    /// Deja montada, con la pantalla cubierta, la primera fase de la secuencia: es la única que
+    /// se sabe con certeza que va a correr en el cut point (las demás pueden depender de marcas
+    /// que todavía no existen). El guion horneado aprovecha para colocar a los actores y ponerles
+    /// su pose del segundo inicial. Sin esto la entrada descubre la escena con los actores en su
+    /// sitio y su pose de escena, y el primer fotograma del guion los recoloca a la vista: Liam
+    /// aparecía de pie dentro de la silla hasta que arrancaba su pose de sentado.
+    private void PrepararBeats()
+    {
+        if (_definition?.phases == null || _definition.phases.Count == 0) return;
+
+        int indice = 0;
+#if UNITY_EDITOR
+        if (!string.IsNullOrWhiteSpace(_startAtPhase))
+        {
+            int idx = _definition.IndexOfPhase(_startAtPhase);
+            if (idx >= 0) indice = idx;
+        }
+#endif
+
+        var fase = _definition.phases[indice];
+        if (fase?.beats == null || !fase.ShouldRun(_context)) return;
+        foreach (var beat in fase.beats) beat?.Preparar(_context);
+    }
+
     /// Beats que solo colocan: son instantáneos y no se ve nada de lo que hacen hasta que haya un
     /// plano. Con el telón cerrado se ejecutan a oscuras. Cualquier otro beat destapa antes de
     /// correr — si hay duda, mejor destapar que dejar la pantalla negra mientras pasan cosas.
@@ -600,6 +624,8 @@ public class SequencePlayer : CinematicSequencerBase
         yield return Co_BeginCinematicWithTransition(opening, () =>
         {
             if (opening == null) ApplyOpeningShotIfDescribed();
+
+            PrepararBeats();
 
             if (!string.IsNullOrEmpty(_definition.musicId))
                 PlaySequenceMusic(_definition.musicId);

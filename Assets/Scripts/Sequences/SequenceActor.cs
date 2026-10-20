@@ -113,13 +113,20 @@ public class SequenceActor
         actor = null;
         if (string.IsNullOrEmpty(actorId)) return false;
 
-        if (actorId == PlayerId)
+        if (actorId == PlayerId || actorId == "Actor_Will" || actorId == "will")
         {
             var playerTransform = PlayerLocator.ResolvePlayer();
             if (playerTransform == null)
             {
+#if UNITY_EDITOR
+                var go = GameObject.Find("Actor_Will") ?? GameObject.Find("Player");
+                if (go != null) playerTransform = go.transform;
+#endif
+            }
+            if (playerTransform == null)
+            {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[SequenceActor] No se ha podido resolver al jugador ('Player'). " +
+                Debug.LogWarning("[SequenceActor] No se ha podido resolver al jugador ('Player' / 'Actor_Will'). " +
                     "¿Está la escena arrancada desde Start.unity?");
 #endif
                 return false;
@@ -127,7 +134,7 @@ public class SequenceActor
 
             actor = new SequenceActor
             {
-                Id = PlayerId,
+                Id = actorId,
                 IsPlayer = true,
                 Transform = playerTransform,
                 PlayerAnimator = playerTransform.GetComponentInChildren<PlayerDialogueAnimator>(true),
@@ -241,7 +248,20 @@ public class SequenceActor
             if (!_animadorDeActuacionResuelto)
             {
                 _animadorDeActuacionResuelto = true;
-                _animadorDeActuacion = Transform != null ? Transform.GetComponentInChildren<Animator>(true) : null;
+                if (Transform != null)
+                {
+                    var anims = Transform.GetComponentsInChildren<Animator>(true);
+                    for (int i = 0; i < anims.Length; i++)
+                    {
+                        if (anims[i] != null && anims[i].runtimeAnimatorController != null)
+                        {
+                            _animadorDeActuacion = anims[i];
+                            break;
+                        }
+                    }
+                    if (_animadorDeActuacion == null && anims.Length > 0)
+                        _animadorDeActuacion = anims[0];
+                }
             }
             return _animadorDeActuacion;
         }
@@ -710,11 +730,15 @@ public class SequenceActor
         if (IsPlayer)
         {
             var motor = Motor;
-            if (motor != null)
+            if (motor != null && motor.enabled)
             {
                 motor.overrideInputMagnitude = Mathf.Clamp01(speed);
                 if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
                     tpAnim.UpdateAnimator();
+            }
+            else if (NpcAnimator != null)
+            {
+                NpcAnimator.SetMovementSpeed(speed);
             }
         }
         else if (NpcAnimator != null)
@@ -728,11 +752,15 @@ public class SequenceActor
         if (IsPlayer)
         {
             var motor = Motor;
-            if (motor != null)
+            if (motor != null && motor.enabled)
             {
                 motor.overrideInputMagnitude = 0f;
                 if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
                     tpAnim.UpdateAnimator();
+            }
+            else if (NpcAnimator != null)
+            {
+                NpcAnimator.ResetMovement();
             }
         }
         else if (NpcAnimator != null)
@@ -763,11 +791,15 @@ public class SequenceActor
         if (IsPlayer)
         {
             var motor = Motor;
-            if (motor != null)
+            if (motor != null && motor.enabled)
             {
                 motor.overrideInputMagnitude = -1f;
                 if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
                     tpAnim.UpdateAnimator();
+            }
+            else if (NpcAnimator != null)
+            {
+                NpcAnimator.TransitionToIdle();
             }
         }
 

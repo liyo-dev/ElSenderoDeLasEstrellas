@@ -682,7 +682,7 @@
         },
         {
             "id": "PROLOGO_EVACUACION_LIORA",
-            "text": "Everyone, to the bridge! Quickly, don’t look back!"
+            "text": "Come on, Nina! ...Please, be very careful."
         },
         {
             "id": "PROLOGO_FAVOR_CARRETA",
@@ -754,7 +754,7 @@
         },
         {
             "id": "PROLOGO_MANANA_INTRO",
-            "text": "Good morning, valley. What needs fixing today?"
+            "text": "Good morning, village. What needs fixing today?"
         },
         {
             "id": "PROLOGO_PLAZA_ARCHIMAGO",
@@ -1135,15 +1135,19 @@
         { "id": "FINAL_SEMANAS_DESPUES", "text": "Weeks later..." },
         { "id": "FINAL_LIAM_RIO_01", "text": "I don't know how to fish." },
         { "id": "FINAL_TOBIAS_RIO_01", "text": "Neither do I.\nThat's why we're going to learn." },
-        { "id": "FINAL_TOBIAS_RIO_02", "text": "This is you, right?\nThen hold still." },
+        { "id": "FINAL_TOBIAS_RIO_02", "text": "This is you, right?" },
+        { "id": "FINAL_WILL_RIO_02", "text": "I guess so." },
+        { "id": "FINAL_TOBIAS_RIO_02b", "text": "Then hold still, so I can draw your face." },
         { "id": "FINAL_WILL_RIO_01", "text": "A bite!\nSomething huge is biting!" },
         { "id": "FINAL_ESTELA_RIO_01", "text": "Did they tell you about the syrup?" },
         { "id": "FINAL_WILL_LIAM_RIO_01", "text": "NO!!" },
-        { "id": "FINAL_ESTELA_RIO_02", "text": "Then I'll tell you..." },
+        { "id": "FINAL_ESTELA_RIO_02", "text": "Then I'll tell you: the syrup fountain, the tablecloth as a wedding gown, and the giant 'I LOVE YOU!' sign over Liam." },
         { "id": "FINAL_TOBIAS_RIO_03", "text": "Did you get married?" },
         { "id": "FINAL_WILL_LIAM_RIO_02", "text": "No!" },
         { "id": "FINAL_ESTELA_RIO_03", "text": "Almost." },
         { "id": "FINAL_WILL_NOCHE_01", "text": "Look...\nMy star stayed up there." },
+        { "id": "FINAL_LIAM_NOCHE_01b", "text": "What star?" },
+        { "id": "FINAL_WILL_NOCHE_01b", "text": "A wooden one I bought in the village market, before all this. It was carved so badly it wasn't good for anything." },
         { "id": "FINAL_ESTELA_NOCHE_01", "text": "He traded it for a life.\nYou come out winning." },
         { "id": "FINAL_TOBIAS_NOCHE_01", "text": "Again... Again, Liam." },
         { "id": "FINAL_LIAM_NOCHE_01", "text": "Just one more, it's getting late." },

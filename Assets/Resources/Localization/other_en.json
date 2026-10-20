@@ -1,6 +1,18 @@
 {
     "texts": [
         {
+            "key": "BARCO_BAJAR",
+            "value": "Get off the boat?"
+        },
+        {
+            "key": "BARCO_BOTON_BAJAR",
+            "value": "Get off"
+        },
+        {
+            "key": "BARCO_BOTON_ACELERAR",
+            "value": "Speed up"
+        },
+        {
             "key": "ITEM_BOLSA_MONEDAS_GRANDE_DESC",
             "value": "Contains 75 coins."
         },
