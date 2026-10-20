@@ -321,7 +321,8 @@ public static partial class CombatLabBuilder
         var esfera = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         esfera.name = "Estrella de la prueba";
         esfera.transform.SetParent(raiz);
-        esfera.transform.SetPositionAndRotation(c + new Vector3(-LadoPrueba * 0.5f, AltoMuroPrueba + 2f, 0f), Quaternion.identity);
+        // Sobre la entrada, pero dentro de la sala: en el muro se colgaba a medias del lado de fuera.
+        esfera.transform.SetPositionAndRotation(c + new Vector3(-LadoPrueba * 0.5f + 2.5f, AltoMuroPrueba + 1.5f, 0f), Quaternion.identity);
         esfera.transform.localScale = Vector3.one * 1.2f;
         Object.DestroyImmediate(esfera.GetComponent<Collider>());
         var r = esfera.GetComponent<Renderer>();
