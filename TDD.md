@@ -586,6 +586,47 @@ La conversión lineal→dB actual usa interpolación lineal entre -80 y 0, que n
 float dB = linear01 <= 0f ? -80f : 20f * Mathf.Log10(linear01);
 ```
 
+### Mezcla y diseño por capas (INC-786)
+
+El audio del juego se mezcla con una receta pensada para que un hechizo y un conjuro suenen
+a golpe de cine. El detalle completo (diagnóstico medido, referencia analizada y plan por
+fases) está en `docs/audio/PLAN_MEZCLA_ANIME.md`.
+
+**Eventos por capas.** `AudioEventSO` (`Assets/Scripts/Audio/AudioEventSO.cs`) describe un
+evento como una lista de capas: cada capa tiene sus clips (se elige uno al azar sin repetir
+el anterior), su retardo, su ganancia en dB, su rango de pitch, su paneo y su probabilidad.
+`AudioService.PlayEvent(evento, posicion, volumen, tono)` las reproduce en orden: un hechizo
+con transitorio, cuerpo, sub y cola suena como golpe, no como un clip suelto.
+
+**Carga, salida e impacto.** `MagicSpellSO` separa `chargeSFXKey` (bucle de carga),
+`castSFXKey`/`releaseSFXKey` (salida) e `impactSFXKey`, y admite `castEvent`/`impactEvent`
+(eventos por capas) que sustituyen a las claves. `MagicProjectileSpawner` ya no suena nada
+al empezar el gesto: la carga suena mientras se prepara (`PlayLoopingSFX`), la salida suena
+cuando el hechizo sale de la mano y el impacto lo pone `MagicProjectil`. La clave de la
+salida es `releaseSFXKey` si está puesta; si no, `castSFXKey`.
+
+**El respiro y el golpe musical.** `RespiroBeat` y `GolpeMusicalBeat`
+(`Assets/Scripts/Sequences/Beats/AudioBeats.cs`) son beats de secuencia (se escriben en el
+guion como `efecto RespiroBeat ...` / `efecto GolpeMusicalBeat ...`). El respiro aparta la
+mezcla un instante y la devuelve sola (`AudioService.IniciarRespiro`); el golpe musical
+suena un stinger y aparta la música para que se oiga (`AudioService.GolpeMusical`). El
+silencio antes del impacto es lo que más se nota de una cinemática de acción.
+
+**La voz del conjuro.** `PresetDeVoz` (`Plegaria`, `Epico`) aplica a la voz un `AudioReverbFilter`
+y un `AudioEchoFilter` (el eco slap que hace que una voz gritada suene a anime). Durante el
+cántico la música **no** se atenúa: `_duckEpico` la deja a 0 dB mientras dura el conjuro, y la
+voz sube con ella. En el diálogo normal sí se duckea (`voiceDuck`/`cinematicVoiceDuck`).
+
+**Loudness.** Objetivos por bus: voz −18 LUFS, reacciones −20, lanzamiento de hechizo −18,
+impacto −14, cola −24, música −20, ambiente −26, y el master con limiter a −1 dBTP. La
+herramienta `Herramientas/Audio/normalizar_assets.py` normaliza por categoría (con copia de
+seguridad en `Herramientas/Audio/_backup_originales/`) y `Herramientas/Audio/medir_loudness.py`
+mide. Los imports de voz se importan **sin Normalize** (el *Normalize* de Unity lleva cada
+clip a −1 dBFS de pico y aplasta la interpretación): lo pone el menú *El Sendero ▸ Audio ▸
+Ajustar imports de audio*. El estado del `AudioMixer` se comprueba con *El Sendero ▸ Audio ▸
+Informar de la mezcla*: sin compresores ni limiter, las cinemáticas suman por encima de 0 dBFS
+y el digital satura.
+
 ---
 
 ## 7. Quests
@@ -3766,3 +3807,129 @@ Una cuenca natural del terreno al sureste de la subida a las granjas, en (185, �
 - Tras *vestir*: leer `Logs/Editor.log` y `_ClaudeBackups/VestidoDelMundo/Informe.txt`, rehornear el NavMesh, pasar el diagnóstico del paseo de Eldran y el menú Noche, y probar *quitar* (un `git diff` de `MainWorld.unity` después de *quitar* no debe dejar restos del vestido).
 - Lo que falte o sobre al verlo en el Editor se ajusta en las tablas de coordenadas (`Pueblos.cs`, `Capital.cs`, `Detalles.cs`, `Parajes.cs`) o en las reglas de cada parte, y se vuelve a ejecutar el menú.
 - Queda para Raúl lo que necesita su criterio: las medidas de la Puerta Real (más grande que en el plan), el cuartel `Stronghold02` (bastión almenado exento junto al castillo: comprobar que no se lea como una torre suelta), los tapices y faroles de la cara de la puerta (no se han puesto), el bancal de la Plaza de la Puerta Real (queda como ribazo sin pavimentar), un rosetón también en la Plaza del Mercado, y qué se levanta en el solar libre de Silas.
+
+## 24. Barcos: vehículo navegable (INC-792)
+
+Hasta INC-792 el juego **no tenía ningún sistema de barco**: `Boat01/02_a01` y `Ship01_a01` del Fantasy Kingdom Pack son prefabs solo visuales (MeshFilter + MeshRenderer), y el único "vaivén" que existía era `BalloonFloatingMotion` (el de la portada del menú). Las barcas varadas del embarcadero de MainWorld y el barco de la portada son decorado.
+
+### 24.1 Los dos componentes
+
+| Componente | Archivo | De qué se ocupa |
+|---|---|---|
+| `BarcoNavegable` | `Assets/Scripts/World/BarcoNavegable.cs` | El barco: flota, vaivén, timón y gas, freno si tiene algo delante. Es el que lee el stick y el que sabe cuál es la proa. |
+| `ConductorDeBarco` | `Assets/Scripts/World/ConductorDeBarco.cs` | El jugador a bordo: bloquea su locomoción y lo cuelga del puesto de conducción para que el barco se lo lleve. |
+
+**Flotación.** La superficie del agua se busca con un rayo hacia abajo contra la capa `Water` (la misma que usa `PlayerSwimmingController`): el trigger "Agua" de la piscina del LAB tiene la cara de arriba en `y = -0,3`, que es la línea de agua. La parte más baja del casco (`Renderer.bounds` del modelo, en espacio local) queda `profundidadDeQuilla` metros por debajo de esa superficie; con eso el barco se asienta solo y el vaivén (seno vertical + balanceo al virar + cabeceo al acelerar) lo hace parecer vivo. Sin agua debajo, el barco se queda donde está.
+
+**Proa.** La dirección de la proa **no se supone que sea +Z**: los barcos del pack vienen con la proa en ejes distintos según el modelo (ver 24.4). `direccionDeProa` la declara en espacio local y el barco trabaja con un *rumbo* (grados) del que deduce la rotación del transform. Así el mismo componente sirve para cualquier barco del pack o de otro.
+
+**Conducción.** Stick Y = gas (avance/freno), stick X = timón. El timón gira más cuanto más gas hay (`giroEnElSitio` = 0,35 es el giro con el barco parado). La sonda de freno sale **de la proa**, no del centro: el pivote de estos modelos no está en el centro del casco y desde el centro el barco se colaba en el muro del_pool antes de frenar.
+
+### 24.2 El jugador a bordo
+
+`ConductorDeBarco` usa la misma técnica que `PlayerAmbientActivityHandler` (que sienta al jugador en un banco), pero con un punto de apoyo que **se mueve**:
+
+- Motor de Invector (`vThirdPersonMotor.lockMovement`) parado, `vThirdPersonInput.SuppressMoveInput` a true, `CharacterController` desactivado y `Rigidbody` cinemático (la velocidad se pone a cero *antes* de marcarlo cinemático: al revés Unity avisa).
+- El jugador pasa a ser **hijo del puesto de conducción** (un `Transform` hijo del barco), con un lerp corto de 0,25 s para que no dé un salto. A partir de ahí el barco se lo lleva.
+- Al desembarcar se devuelve todo: padre, posición (al punto de desembarque, mirando hacia fuera del barco), física, input y modo de acción. Si el barco desaparece (cambio de escena), el jugador se suelta igual.
+- **Cámara**: a bordo, la cámara de exploración (2,5 m detrás del personaje) se queda dentro del casco, así que `ConductorDeBarco` la aleja 1,6 m más mientras el jugador está a bordo y la devuelve a su sitio al bajar. Se toca `vThirdPersonCamera.defaultDistance`, que la propia cámara va interpolando cada frame (`distance = Lerp(distance, defaultDistance, …)`), así que el alejamiento es suave y no da un tirón.
+
+**Integración con los sistemas oficiales:**
+
+- **Modo de acción nuevo `ActionMode.Boating`** (`Identifiers.cs` + `PlayerActionManager`): bloquea salto, sprint, voltereta, ataque, magia, porteo, trepar y volar. **No** bloquea movimiento (el barco lo lee del stick) ni interacción (para poder pulsar otra vez y bajar del barco).
+- **`PlayerSwimmingController.SalirDelAgua()`**: nuevo método público para sacar al jugador del nado a propósito (al subir al barco). A la inversa, el nado **ya no recupera** al jugador mientras esté en modo `Boating` (si no, al bajar la cubierta al nivel del agua volvería a meterse en el agua y pelearía con la conducción por el Rigidbody).
+- **`Interactable`**: el barco lleva un `Interactable` **en su raíz** (no en el trigger): así, cuando el detector comprueba que no haya un muro entre el jugador y el icono, el casco del propio barco no lo tapa. El trigger (capa "Interactable") es un hijo que cubre el casco, y es el que encuentra el detector. El `OnInteract` embarca o desembarca según haya conductor, y el modo es **`InteractableMode.Custom`** (nuevo): el comportamiento lo lleva el propio barco y no hay diálogo ni popup que abrir, así que no sale el aviso de "diálogo vacío".
+- **Icono de interactuar**: el hint se monta como en el resto del juego (Canvas en el mundo + `BillboardUI` + `Image` con el sprite del botón, en la capa "InteractHint"), colgado sobre la cubierta. El sprite correcto según el mando lo pone el `InteractionHintIconSet` compartido (`Assets/_UI/InteractionHintIconSet.asset`): Xbox "A" / PS "X" / Switch "B" / teclado "E".
+- **Línea de visión del detector** (`InteractionDetector.FindNearest`): la sonda que comprueba que no haya un muro delante del icono **descarta la obstrucción si lo que golpea pertenece al propio objeto interactuable**. Sin eso, el casco del barco (o la tapa de un cofre) tapaba su propio icono y el objeto quedaba sin poder interactuar nunca.
+
+### 24.3 El embarque: salto con voltereta y la tripulación
+
+Subir al barco no es un teletransporte: el jugador **salta desde el agua hasta la cubierta con una voltereta**.
+
+- El giro lo pone el sistema oficial: `VolteretaDelJugador.EnElAire()` (solo la animación; el movimiento lo lleva quien lo mueva). Es el modo pensado justamente para eso.
+- La parábola la lleva `ConductorDeBarco`: el jugador está ya colgado del puesto (hijo del barco) y se acerca a él en un arco de 0,85 s, con el pico por encima del borde. Mientras dura, el `vThirdPersonController` está apagado (si siguiera vivo, el motor creería que el jugador sigue en el suelo y cortaría la voltereta) y el `CharacterController` y el Rigidbody siguen bloqueados como en el resto del embarque.
+
+**Tres sitios a bordo, no uno.** El generador crea el "Puesto de conducción" (Will, a la popa, en la línea de crujía, bien atrás) y dos sitios más a **un lado y al otro del mástil** (no en fila): "Puesto de Estela" (babor) y "Puesto de Liam" (estribor). Así los tres van en su sitio y no se ven apegotonados.
+
+**Los compañeros suben cada uno a su manera** (`TripulacionDelBarco`):
+
+| Personaje | Cómo entra |
+|---|---|
+| Will (el jugador) | salto con voltereta |
+| Estela | salto sencillo, primero |
+| Liam | salto sencillo, después (cuando Estela ya está dentro) |
+
+(En una tanda anterior Liam trepaba con `ClimbUp_RM_NoWeapon` y se quedaba en una pose rara; ahora los dos hacen un salto normal.)
+
+Para moverlos se usa el sistema oficial: `NPCPartyMember.MoveToDialoguePosition` los lleva **andando** hasta el casco por su cuenta (su IA), y al llegar el agente deja de llevar su posición (el estado `DialoguePositionState` los deja quietos), así que la red puede llevarlos a su sitio a mano con un arco corto. Mientras la tripulación sube, **el barco no zarpa** (`TripulacionDelBarco.Subiendo`): espera a que suban.
+
+Al bajar del barco, los compañeros se sueltan en el punto de desembarque y vuelven a seguir al jugador (`ReleaseDialoguePosition`).
+
+**Para bajar hay un sitio propio: el puerto, no el barco.** El icono de bajar vive en el **punto de amarre** (`PuntoDeAmarre`), que es un GO del mundo puesto en el muelle o en la playa: el barco se arrima a él y, cuando el jugador va a bordo, el punto enciende su icono; al pulsarlo aparece el popup de confirmación del juego (`ConfirmationPopupUI`) con la pregunta "¿Bajar del barco?" (clave de localización `BARCO_BAJAR`) y, si se acepta, el jugador baja a tierra firme.
+
+El barco busca su punto de amarre al subir (`PuntoDeAmarre.MasCerca`, con un radio de 30 m) y lo apaga al bajar. En el LAB, el punto de amarre es el escalón de entrada de la piscina; en MainWorld, el embarcadero del Pueblo Pesquero.
+
+### 24.4 Efectos y música
+
+**Estela y spray.** El barco lleva un `SalpicaduraDeAgua` (el mismo emisor que usa el nado: ondas, gotas y burbujas, sin instanciar nada) como hijo. Mientras navega:
+
+- **Estela**: anillos que se abren en la superficie detrás de la popa, más grandes cuanto más rápido va (cada `intervaloDeEstela` segundos, más a menudo a mayor velocidad).
+- **Spray**: gotas pequeñas en la proa, en proporción a la velocidad.
+- **Salpicadura de choque**: si el barco topa con el fondo o con un muro (`HayObsticuloAdelante`), salpica en la proa.
+
+**Música.** El barco tiene un clip propio (`musicaDelBarco`). Al subir, `ConductorDeBarco` lo pone con `AudioService.PlayMusic(clip, fundido)`; al bajar, pide la música del sitio con `AudioService.PedirMusicaDelLugar` (el mismo relevo con gracia que usa el resto del juego, para que no se pise la música del lugar con la del barco). El clip del barco de Silas es `Assets/Audio/Music/Zonas/El Barco de Silas.mp3`.
+
+### 24.5 Cómo lo monta el LAB
+
+`CombatLabBuilder.Zonas.cs` → `CrearZonaAgua` llama a `CrearBarcoNavegable`, que instancia `Ship01_a01` en la piscina y **lee su malla** para no tener que suponer nada:
+
+- **Eje de eslora**: el más largo de los dos horizontales.
+- **Proa**: el extremo más estrecho del casco (perfil de anchura en 16 tramos; la proa es la que se afila). Con eso el generador gira el barco para que la proa mire al norte de la piscina.
+- **Casco**: desde el primer tramo con anchura hasta el último (la verga es más fina que el 20 % de la manga máxima y queda fuera).
+- **Cubierta**: la altura de la superficie horizontal **con más área** alrededor del timón (los triángulos de la malla, con su normal hacia arriba, agrupados por altura en pasos de 5 cm). La cubierta es un suelo ancho; los mástiles, las vergas y las bordas son tiras estrechas. Con la moda de las alturas de los vértices salía la borda de popa (2,70 m en el `Ship01_a01`) y el jugador se quedaba flotando más de un metro por encima del suelo real (1,55 m).
+- **Quilla**: la parte más baja del modelo.
+
+Con eso deja puestos el "Puesto de conducción" (a la popa, donde está el timón), el "Punto de desembarque" (al costado, a la altura del agua), el `Interactable` con su icono y la zona de interacción (un trigger con la forma del casco, en la capa "Interactable", que el detector encuentra; su altura generosa llega al jugador que nada al costado). El barco queda con la quilla 1 m bajo el agua (asienta el casco) y aparece ya en su sitio: en runtime la flotación lo afina.
+
+> El barco se monta **en el generador**, no a mano en la escena: `Lab.unity` se regenera entera con *El Sendero ▸ Combate ▸ Crear o regenerar el LAB*, así que cualquier cosa colocada a mano dentro de la escena se pierde.
+
+### 24.6 El montador compartido y el barco del mundo
+
+`Assets/Scripts/Editor/MontadorDeBarco.cs` (`MontadorDeBarco`) es **el único sitio** donde se monta un barco navegable, y lo usan los dos:
+
+- `Montar(rutaPrefab, padre, posicion, proaMundo, profundidadDeQuilla, musica)`: instancia el prefab, lo pone en su sitio y llama a `Preparar`.
+- `Preparar(barco, proaMundo, profundidadDeQuilla, musica)`: analiza la malla (proa, cubierta, quilla), gira el barco para que su proa mire a `proaMundo`, y le pone el puesto de conducción, el punto de desembarque, el `Interactable` con su icono, la zona de interacción y los componentes.
+
+**El barco de Silas (MainWorld).** Lo monta el vestido del mundo (`VestidoDelMundo.Detalles.cs` → `EscenasDelPuerto` → `ColocarBarcoDeSilas`):
+
+- Se busca la **orilla** mirando la altura del terreno alrededor del embarcadero (270, −462): el punto más cercano cuyo terreno está por debajo del nivel del mar (0). Si no hay agua en 120 m, no se amarra y se avisa en el informe.
+- Se amarra un poco mar adentro, hasta que hay fondo para que el casco flote suelto, y se coloca con `Apoyo.Flotar` (el apoyo del vestido para lo que flota sobre una lámina de agua) y `CotaAgua = 0` (el nivel del mar de MainWorld).
+- Se pone la **caja de agua del puerto** en la capa "Water": es lo que hace que el barco flote (busca la superficie del agua en esa capa) y lo que permite al jugador nadar hasta él. Lleva su volumen «Not Walkable» para que los vecinos no anden por el mar.
+- La proa del barco mira hacia el mar.
+- El informe del vestido dice dónde ha quedado amarrado y a qué distancia del embarcadero.
+
+El barco que se usa es el `Boat01_a01` (3,12 m de eslora, la "barca" del pack), el mismo que estaba varado en la arena; la otra barca varada se queda como decorado.
+
+### 24.7 La trampa de los ejes del pack
+
+Los FBX del Fantasy Kingdom Pack **no vienen todos en el mismo sistema de ejes**:
+
+| Modelo | Ejes en el FBX | En Unity |
+|---|---|---|
+| `Boat02_a01` | eslora en **Y** (167 u), manga en X (26 u), fondo en Z | aparece **de pie** (la eslora en vertical): es la "astilla" que se veía en la piscina |
+| `Ship01_a01` | eslora en Z (1.075 u ≈ 10,75 m), manga en X (413 u ≈ 4,13 m), altura en Y (836 u ≈ 8,36 m con el mástil) | correcto, con la proa en +Z |
+
+Por eso `Boat02_a01` no servía para probar nada: no es que estuviera mal colocado, es que **el modelo es una barca pequeña con la eslora en el eje vertical** (el FBX es Z-up y Unity lo importa sin convertir los ejes). El sistema no depende de esto: la proa se declara y el generador la calcula.
+
+### 24.8 Cómo se prueba
+
+1. *El Sendero ▸ Combate ▸ Crear o regenerar el LAB* (la piscina se monta con el barco).
+2. En la piscina, al lado del barco: el botón de interactuar (A en mando, **E** en teclado) para subir; el jugador sube a la cubierta de popa.
+3. **WASD** para navegar (W gas, S atrás, A/D timón). El barco flota, se inclina al virar y frena si tiene el muro delante.
+4. El botón de interactuar otra vez para bajar (el jugador sale al costado, al agua, y sigue nadando).
+5. Con el mando: stick izquierdo para conducir, A (botón sur) para subir y bajar.
+6. Al navegar: estela detrás, spray en la proa y la música del barco; al bajar, vuelve la música del lugar.
+
+**En MainWorld**: *El Sendero ▸ Mundo ▸ Vestir MainWorld* (el menú del vestido del mundo) monta el barco de Silas amarrado en el puerto, con su caja de agua. El informe dice dónde ha quedado: `Barco de Silas: amarrado en (x, z), a N m del embarcadero, fondo a Y m`.
+
+Pendiente de comprobar en Play: que la cubierta quede a la altura correcta, que el timón no esté al revés y que el barco no atraviese el muro de la piscina.

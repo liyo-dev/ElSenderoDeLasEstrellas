@@ -34,6 +34,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         
         // Audio
         public string impactSFXKey;      // clave SFX al impactar
+        public AudioEventSO impactEvent; // evento por capas al impactar (si tiene capas, sustituye a la clave)
         
         // Elemento de magia (para interacciones con puzzle)
     public MagicElement element;     // Elemento que reciben las piezas del mundo.
@@ -613,7 +614,11 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         }
         
         // SFX de impacto
-        if (!string.IsNullOrEmpty(_cfg.impactSFXKey))
+        if (_cfg.impactEvent != null && _cfg.impactEvent.TieneCapas())
+        {
+            AudioService.Instance?.PlayEvent(_cfg.impactEvent, hitPoint);
+        }
+        else if (!string.IsNullOrEmpty(_cfg.impactSFXKey))
         {
             AudioService.Instance?.PlaySFX(_cfg.impactSFXKey, worldPosition: hitPoint);
         }

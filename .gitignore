@@ -145,3 +145,14 @@ Assets/Art/World/Fantasy_Kingdom_Pack/Demo/**
 # --- Archivos de licencia de Unity (generados localmente para CI, no versionar) ---
 *.alf
 *.ulf
+
+# --- Audio: copias de seguridad de la normalizacion (no versionar) ---
+Herramientas/Audio/_backup_originales/
+
+# --- Audio: mezclas grandes del piloto (regenerables con Herramientas/Audio/piloto_prologo.py) ---
+Herramientas/Audio/Piloto/antes.wav
+Herramientas/Audio/Piloto/despues.wav
+Herramientas/Audio/Piloto/despues_diseno.wav
+
+# --- Python: cache de bytecode ---
+__pycache__/

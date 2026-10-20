@@ -52,10 +52,23 @@ public sealed class AudioService : MonoBehaviour
     bool _gananciaDeVozAplicada;
     float _dialogoDbOriginal;
     float _gananciaDeVozDb;
+    float _gananciaDeDuckingDb;
+    float GananciaDeVozTotalDb => _gananciaDeVozDb + _gananciaDeDuckingDb;
     readonly AudioGraphProfile.VoiceDuckSettings _duckCinematico = new()
     {
-        musicDb = -8f, ambienceDb = -5f, sfxDb = -3f,
-        attackSeconds = 0.15f, releaseSeconds = 0.6f, holdAfterVoiceSeconds = 0.25f
+        musicDb = -18f, ambienceDb = -12f, sfxDb = -8f, voiceGainDb = 8f,
+        attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
+    };
+    PresetDeVoz _presetDeVozActual = PresetDeVoz.Ninguno;
+    readonly AudioGraphProfile.VoiceDuckSettings _duckEpico = new()
+    {
+        musicDb = 0f, // Durante conjuros épicos la música se mantiene a tope sin atenuar (estilo anime)
+        ambienceDb = -12f,
+        sfxDb = -4f,
+        voiceGainDb = 8f,
+        attackSeconds = 0.08f,
+        releaseSeconds = 0.65f,
+        holdAfterVoiceSeconds = 0.5f
     };
     AudioGraphProfile.VoiceDuckSettings _ajustesDeVozActiva;
     readonly Dictionary<string, Vector3> _mezclas = new();
@@ -1236,6 +1249,8 @@ public sealed class AudioService : MonoBehaviour
         }
         if (token != _voiceToken) yield break;
         _voiceDuckActive = false;
+        _gananciaDeDuckingDb = 0f;
+        ActualizarGananciaDeDialogo();
         RefreshDuck(VoiceDuck.releaseSeconds);
         _ajustesDeVozActiva = null;
         _voiceDuckRoutine = null;
@@ -1244,6 +1259,8 @@ public sealed class AudioService : MonoBehaviour
     void OnDisable()
     {
         QuitarEfectoDeVoz();
+        _gananciaDeDuckingDb = 0f;
+        ActualizarGananciaDeDialogo();
         _mezclas.Clear();
         _ajustesDeVozActiva = null;
         CancelVoiceMonitor();
@@ -1490,6 +1507,7 @@ public sealed class AudioService : MonoBehaviour
     {
         if (_voiceSource == null) return;
         QuitarEfectoDeVoz();
+        _presetDeVozActual = preset;
         if (preset != PresetDeVoz.Ninguno)
         {
             if (_reverbDeVoz == null)
@@ -1527,35 +1545,67 @@ public sealed class AudioService : MonoBehaviour
             _reverbDeVoz.diffusion = 90f;
             _reverbDeVoz.density = 100f;
             _reverbDeVoz.enabled = true;
-            _ecoDeVoz.delay = 320f;
-            _ecoDeVoz.decayRatio = 0.35f;
-            _ecoDeVoz.wetMix = 0.22f;
-            _ecoDeVoz.dryMix = 1f;
-            _ecoDeVoz.enabled = preset == PresetDeVoz.Epico;
+            if (preset == PresetDeVoz.Epico)
+            {
+                _ecoDeVoz.delay = 340f;
+                _ecoDeVoz.decayRatio = 0.40f;
+                _ecoDeVoz.wetMix = 0.32f;
+                _ecoDeVoz.dryMix = 1f;
+                _ecoDeVoz.enabled = true;
+            }
+            else if (preset == PresetDeVoz.Plegaria)
+            {
+                _ecoDeVoz.delay = 260f;
+                _ecoDeVoz.decayRatio = 0.32f;
+                _ecoDeVoz.wetMix = 0.25f;
+                _ecoDeVoz.dryMix = 1f;
+                _ecoDeVoz.enabled = true;
+            }
+            else
+            {
+                _ecoDeVoz.enabled = false;
+            }
         }
         float ganancia = Mathf.Clamp(gananciaDb, 0f, 20f);
-        if (ganancia <= 0f) return;
-        if (mixer != null && dialogueGroup != null && dialogueGroup.audioMixer == mixer
-            && mixer.GetFloat(dialogueVolumeParam, out _dialogoDbOriginal))
-        {
-            _gananciaDeVozAplicada = mixer.SetFloat(dialogueVolumeParam,
-                Mathf.Clamp(_dialogoDbOriginal + ganancia, -80f, 20f));
-            _gananciaDeVozDb = ganancia;
-        }
+        _gananciaDeVozDb = ganancia;
+        ActualizarGananciaDeDialogo();
         // Sin bus expuesto, la misma relación señal/fondo se obtiene atenuando el resto.
-        if (!_gananciaDeVozAplicada)
-            BeginDuck("efectoDeVoz", -ganancia, -ganancia, -ganancia, 0.15f);
+        if (!_gananciaDeVozAplicada && _gananciaDeVozDb > 0f)
+            BeginDuck("efectoDeVoz", -_gananciaDeVozDb, -_gananciaDeVozDb, -_gananciaDeVozDb, 0.15f);
+    }
+
+    void ActualizarGananciaDeDialogo()
+    {
+        float gananciaTotal = GananciaDeVozTotalDb;
+        if (gananciaTotal > 0f)
+        {
+            if (mixer != null && dialogueGroup != null && dialogueGroup.audioMixer == mixer)
+            {
+                if (!_gananciaDeVozAplicada)
+                {
+                    if (!mixer.GetFloat(dialogueVolumeParam, out _dialogoDbOriginal))
+                        _dialogoDbOriginal = 0f;
+                }
+                _gananciaDeVozAplicada = mixer.SetFloat(dialogueVolumeParam,
+                    Mathf.Clamp(_dialogoDbOriginal + gananciaTotal, -80f, 20f));
+            }
+        }
+        else
+        {
+            if (_gananciaDeVozAplicada && mixer != null)
+                mixer.SetFloat(dialogueVolumeParam, _dialogoDbOriginal);
+            _gananciaDeVozAplicada = false;
+        }
     }
 
     /// Retira filtros y ganancia incluso al deshabilitar el servicio o saltar una secuencia.
     public void QuitarEfectoDeVoz()
     {
+        _presetDeVozActual = PresetDeVoz.Ninguno;
         if (_reverbDeVoz != null) _reverbDeVoz.enabled = false;
         if (_ecoDeVoz != null) _ecoDeVoz.enabled = false;
-        if (_gananciaDeVozAplicada && mixer != null)
-            mixer.SetFloat(dialogueVolumeParam, _dialogoDbOriginal);
-        _gananciaDeVozAplicada = false;
         _gananciaDeVozDb = 0f;
+        ActualizarGananciaDeDialogo();
         EndDuck("efectoDeVoz", 0f);
     }
 
@@ -1564,6 +1614,58 @@ public sealed class AudioService : MonoBehaviour
 
     public void PlaySFXAt(AudioClip clip, Vector3 worldPos, float volume = 1f, float tono = 1f)
         => PlayEffect(clip, volume, worldPos, false, pitch: Mathf.Clamp(tono, 0.01f, 3f));
+
+    /// Reproduce un evento por capas (cada capa con su retardo, ganancia, pitch y paneo).
+    /// Un hechizo o un impacto suenan a golpe cuando el transitorio, el cuerpo y la cola
+    /// entran por separado y no de golpe en un único clip.
+    public void PlayEvent(AudioEventSO evento, Vector3? worldPosition = null, float volumen = 1f, float tono = 1f)
+    {
+        if (evento == null || !evento.TieneCapas()) return;
+        if (!isActiveAndEnabled) return;
+        StartCoroutine(ReproducirEvento(evento, worldPosition, volumen, tono));
+    }
+
+    IEnumerator ReproducirEvento(AudioEventSO evento, Vector3? worldPosition, float volumen, float tono)
+    {
+        var capas = evento.capas;
+        for (int i = 0; i < capas.Count; i++)
+        {
+            var capa = capas[i];
+            if (capa == null || capa.clips == null || capa.clips.Count == 0) continue;
+            if (capa.probabilidad < 1f && UnityEngine.Random.value > capa.probabilidad) continue;
+            var clip = capa.ElegirClip();
+            if (clip == null) continue;
+            if (capa.retardo > 0f) yield return new WaitForSeconds(capa.retardo);
+            float pitch = Mathf.Clamp(tono * UnityEngine.Random.Range(capa.rangoPitch.x, capa.rangoPitch.y), 0.01f, 3f);
+            float vol = Mathf.Clamp01(volumen * Mathf.Pow(10f, Mathf.Clamp(capa.gananciaDb, -40f, 20f) / 20f));
+            bool espacial = capa.espacial && worldPosition.HasValue;
+            PlayEffect(clip, vol, espacial ? worldPosition : null, false, pitch: pitch, pan: capa.paneo);
+        }
+    }
+
+    /// El respiro: la mezcla se aparta un instante y vuelve sola. Es el silencio que da
+    /// peso al golpe que viene detrás.
+    public Coroutine IniciarRespiro(string propietario, float musicaDb, float sfxDb, float ambienteDb,
+                                     float duracion, float ataque, float fundido)
+    {
+        if (string.IsNullOrWhiteSpace(propietario)) return null;
+        BeginDuck(propietario, musicaDb, sfxDb, ambienteDb, Mathf.Max(0f, ataque));
+        return StartCoroutine(RespiroYVuelta(propietario, duracion, fundido));
+    }
+
+    IEnumerator RespiroYVuelta(string propietario, float duracion, float fundido)
+    {
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, duracion));
+        EndDuck(propietario, Mathf.Max(0f, fundido));
+    }
+
+    /// El golpe musical: la música se aparta un momento para que el stinger se oiga por encima.
+    public Coroutine GolpeMusical(string propietario, float musicaDb, float duracion)
+    {
+        if (string.IsNullOrWhiteSpace(propietario)) return null;
+        BeginDuck(propietario, musicaDb, 0f, 0f, 0.05f);
+        return StartCoroutine(RespiroYVuelta(propietario, duracion, 0.25f));
+    }
 
     /// Reproduce una reacción sobre el diálogo mediante una fuente independiente del pool.
     /// El sonido del rayo sobrevive a detener la tormenta y usa el volumen SFX del usuario.
@@ -1638,12 +1740,14 @@ public sealed class AudioService : MonoBehaviour
     }
 
     void PlayEffect(AudioClip clip, float volume, Vector3? worldPosition, bool ambience, bool ui = false,
-        bool dialogue = false, float pitch = 1f)
+        bool dialogue = false, float pitch = 1f, float pan = 0f)
     {
         if (!clip) return;
         var src = worldPosition.HasValue ? Rent3D() : Rent2D();
         src.outputAudioMixerGroup = dialogue ? dialogueGroup : ui ? uiGroup : ambience ? ambienceGroup : sfxGroup;
         src.pitch = pitch;
+        // Las fuentes vuelven al pool con su último paneo, así que se escribe siempre.
+        src.panStereo = pan;
         if (worldPosition.HasValue) src.transform.position = worldPosition.Value;
         else src.transform.localPosition = Vector3.zero;
         if (ambience)
@@ -1686,7 +1790,7 @@ public sealed class AudioService : MonoBehaviour
         if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam)
         {
             _dialogoDbOriginal = dB;
-            dB = Mathf.Clamp(dB + _gananciaDeVozDb, -80f, 20f);
+            dB = Mathf.Clamp(dB + GananciaDeVozTotalDb, -80f, 20f);
         }
         mixer.SetFloat(exposedParam, dB);
     }
@@ -1899,10 +2003,14 @@ public sealed class AudioService : MonoBehaviour
         _voiceSource.clip = clip;
         _voiceSource.volume = Mathf.Clamp01(volume);
         _voiceSource.Play();
-        _ajustesDeVozActiva = CinematicSequencerBase.AnySequenceActive
-            ? (profile != null && profile.cinematicVoiceDuck != null ? profile.cinematicVoiceDuck : _duckCinematico)
-            : (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck);
+        _ajustesDeVozActiva = _presetDeVozActual == PresetDeVoz.Epico
+            ? _duckEpico
+            : (CinematicSequencerBase.AnySequenceActive
+                ? (profile != null && profile.cinematicVoiceDuck != null ? profile.cinematicVoiceDuck : _duckCinematico)
+                : (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck));
         _voiceDuckActive = VoiceDuck.enabled;
+        _gananciaDeDuckingDb = _voiceDuckActive ? Mathf.Max(0f, VoiceDuck.voiceGainDb) : 0f;
+        ActualizarGananciaDeDialogo();
         RefreshDuck(VoiceDuck.attackSeconds);
         _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken));
     }

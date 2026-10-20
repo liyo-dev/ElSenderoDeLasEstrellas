@@ -184,6 +184,14 @@ public class MagicSpellSO : ScriptableObject
     public string castSFXKey;
     [Tooltip("Clave del SFX en AudioGraphProfile para reproducir al impactar/explotar (ej: 'Spell_Fire_Explosion')")]
     public string impactSFXKey;
+    [Tooltip("Clave del SFX en bucle mientras el hechizo se prepara (solo hechizos con 'chargeTime').")]
+    public string chargeSFXKey;
+    [Tooltip("Clave del SFX de salida: suena cuando el hechizo sale de la mano. Si está vacía se usa 'castSFXKey'.")]
+    public string releaseSFXKey;
+    [Tooltip("Evento por capas del lanzamiento. Si tiene capas, sustituye a la clave de SFX del lanzamiento.")]
+    public AudioEventSO castEvent;
+    [Tooltip("Evento por capas del impacto. Si tiene capas, sustituye a la clave de SFX del impacto.")]
+    public AudioEventSO impactEvent;
 
     [Header("Reglas de slot")]
     public SpellSlotType slotType = SpellSlotType.Any;

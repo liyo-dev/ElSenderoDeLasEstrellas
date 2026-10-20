@@ -28,6 +28,9 @@ public class MagicProjectileSpawner : MonoBehaviour
     [Header("Referencias")]
     [SerializeField] private PlayerTargeting targeting;
 
+    // Cada carga necesita su propio bucle de sonido: el identificador se numera aquí.
+    static int _contadorDeCargas;
+
     [Header("Configuración Global")]
     [SerializeField] private ProjectileSettingsSO projectileSettings;
 
@@ -152,21 +155,49 @@ public class MagicProjectileSpawner : MonoBehaviour
 
     private IEnumerator Co_SpawnAfterDelay(MagicSpellSO spell, Transform origin, float damageMultiplier)
     {
-        // El sonido sale al empezar el gesto, no cuando aparece el proyectil.
-        if (!string.IsNullOrEmpty(spell.castSFXKey) && AudioService.Instance != null)
-            AudioService.Instance.PlaySFX(spell.castSFXKey);
-
         float d = Mathf.Max(0f, spell.castDelaySeconds);
         if (d > 0f) yield return new WaitForSeconds(d);
 
         if (spell.kind == MagicKind.Zone)
+        {
             SpawnZoneNow(spell, origin, null, damageMultiplier);
+            SonarSalida(spell, origin);
+        }
         else if (spell.kind == MagicKind.Teleport)
+        {
             Teleport(spell);
+            SonarSalida(spell, origin);
+        }
         else if (spell.chargeTime > 0f)
+        {
             yield return Co_SpawnWithCharge(spell, origin, damageMultiplier);
+        }
         else
+        {
             SpawnNow(spell, origin, playSFX: false, damageMultiplier: damageMultiplier);
+            SonarSalida(spell, origin);
+        }
+    }
+
+    /// Cierra el bucle de carga si quedó abierto (hechizo cancelado o destruido a mitad).
+    private void CerrarCarga(string loopCarga)    {
+        if (string.IsNullOrEmpty(loopCarga) || AudioService.Instance == null) return;
+        AudioService.Instance.StopLoopingSFX(loopCarga, 0.2f);
+    }
+
+    /// El sonido de salida suena cuando el hechizo sale de la mano, no al empezar el gesto:
+    /// es lo que hace que el impacto se oiga como un golpe y no como un aviso.
+    private void SonarSalida(MagicSpellSO spell, Transform origin)
+    {
+        if (spell == null || AudioService.Instance == null) return;
+        if (spell.castEvent != null && spell.castEvent.TieneCapas())
+        {
+            Vector3? pos = origin != null ? origin.position : (Vector3?)null;
+            AudioService.Instance.PlayEvent(spell.castEvent, pos);
+            return;
+        }
+        string clave = !string.IsNullOrEmpty(spell.releaseSFXKey) ? spell.releaseSFXKey : spell.castSFXKey;
+        if (!string.IsNullOrEmpty(clave)) AudioService.Instance.PlaySFX(clave);
     }
 
     private float GetSpeedMultiplier()
@@ -212,6 +243,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             despawnVFX      = spell.despawnVFX,
             vfxLifetime     = spell.vfxLifetime,
             impactSFXKey    = spell.impactSFXKey,
+            impactEvent     = spell.impactEvent,
             element         = spell.element,
             isPrecise       = spell.isRuntimePreciseInstance
         };
@@ -253,13 +285,26 @@ public class MagicProjectileSpawner : MonoBehaviour
         if (!spell || !spell.prefab) yield break;
 
         Transform origin = originOverride ? originOverride : transform;
+
+        // El bucle de carga suena mientras el hechizo se prepara: sin él, la carga es muda.
+        string loopCarga = null;
+        if (!string.IsNullOrEmpty(spell.chargeSFXKey) && AudioService.Instance != null)
+        {
+            loopCarga = $"carga_{++_contadorDeCargas}";
+            AudioService.Instance.PlayLoopingSFX(loopCarga, spell.chargeSFXKey, 0.9f);
+        }
+
         Vector3 dir = ResolveProjectileDirection(spell, origin, null);
         Vector3 spawnPos = ComputeSpawnPosition(spell, origin, dir);
         Quaternion spawnRt = Quaternion.LookRotation(dir, Vector3.up) * Quaternion.Euler(spell.visualRotationOffsetEuler);
 
         PlaySpawnVfx(spell, spawnPos, spawnRt);
         GameObject go = InstantiateSpellPrefab(spell, spawnPos, spawnRt);
-        if (go == null) yield break;
+        if (go == null)
+        {
+            CerrarCarga(loopCarga);
+            yield break;
+        }
 
         _chargingProjectiles.Add(go);
 
@@ -304,7 +349,11 @@ public class MagicProjectileSpawner : MonoBehaviour
             float t = charge > 0.001f ? Mathf.Clamp01(elapsed / charge) : 1f;
             if (go != null) go.transform.localScale = Vector3.Lerp(initialScale, targetScale, t);
             yield return null;
-            if (go == null) yield break;
+            if (go == null)
+            {
+                CerrarCarga(loopCarga);
+                yield break;
+            }
         }
         if (go != null) go.transform.localScale = targetScale;
 
@@ -320,6 +369,14 @@ public class MagicProjectileSpawner : MonoBehaviour
         // La velocidad se calcula al soltar: durante la carga el jugador puede empezar o dejar de
         // volar o esprintar (INC-049).
         float effectiveSpeed = spell.initialSpeed * GetSpeedMultiplier();
+
+        // Al soltar se cierra el bucle de carga y suena la salida.
+        if (loopCarga != null && AudioService.Instance != null)
+        {
+            AudioService.Instance.StopLoopingSFX(loopCarga, 0.25f);
+            loopCarga = null;
+        }
+        SonarSalida(spell, origin);
 
         if (mp != null)
         {
