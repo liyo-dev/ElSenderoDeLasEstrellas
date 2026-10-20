@@ -505,6 +505,8 @@ archimago bucle Challenging_NoWeapon
 efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=-4 ambienteDb=-10 fundido=1.0
 ambiente CORO eventKey=SFX_Prologo_CoroBucle volumen=0.45
+# El lecho ritual bajo el cántico (38 s, compatible en bucle).
+ambiente CORA eventKey=Prologue_CoraCanto volumen=0.5
 archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 +3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
 +5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn
@@ -552,6 +554,8 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 # Estrofa 4: clímax del cántico; líneas de concentración y poder desbordado.
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
 efecto LineasDeConcentracionBeat mostrar=true
+# La estrofa que sube (18 s) entra sobre el lecho: el cántico crece hacia el grito.
+ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.55
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
 +0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=archimago offset=0,1.2,0 lifetime=2.0
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.95 destello=true trueno=SFX_Prologo_Trueno_2
@@ -576,12 +580,15 @@ cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=
 cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
 efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
+# El lecho y la estrofa se apagan aquí: el impacto tiene que entrar en seco.
+ambiente CORA sonar=false fundido=0.3
+ambiente ESTROFA sonar=false fundido=0.3
 @hechizo
 plano general archimago mago agujero desde=cam_final altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle MagicAttackOmni01_Load congela
 # El grito va con la voz épica (el eco largo del conjuro) y la música a tope.
 efecto EfectoDeVozBeat preset=Epico gananciaDb=4
-efecto GolpeMusicalBeat eventKey=Prologue_WarClashStinger_A volumen=1 musicaDb=-6 duracion=0.35
+efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
 +0.5 sonido Prologo_ProteccionAbsoluta en=archimago volume=0.95
@@ -607,7 +614,7 @@ efecto LineasDeConcentracionBeat mostrar=false fundido=0
 efecto ScreenFadeBeat fadeIn=true color=FFFFFFFF duration=1.2 waitForEnd=false
 ambiente TORMENTA sonar=false fundido=0.2
 +1.2 hora Morning immediate=true esLaHoraDeVolver=true
-efecto GolpeMusicalBeat eventKey=Prologue_WarClashStinger_A volumen=1 musicaDb=-4 duracion=0.5
+efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinalCola volumen=1 musicaDb=-4 duracion=0.5
 +0.4 sacudida 0.9 1.6
 # Tras el estallido, silencio: la música se va y queda el pitido de oídos hasta Will.
 +0.9 silencio 1.2
