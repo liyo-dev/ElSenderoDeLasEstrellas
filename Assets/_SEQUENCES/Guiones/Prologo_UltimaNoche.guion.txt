@@ -471,7 +471,7 @@ espera 2.0
 
 # ── 7. EL ÚLTIMO HECHIZO ──────────────────────────────────────────────────────────────────
 @ultimo
-desde @ultimo+3.6 efecto RayoBeat cantidad=2 intervalo=0.7 alFondoDelPlano=true conTrueno=true volumen=0.9 trueno=SFX_Prologo_Trueno_2
+desde @ultimo+3.6 efecto RayoBeat cantidad=2 intervalo=0.7 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_2
 plano primer mago lado=izq contrapicado
 mago dice PROLOGO_MAGO_VALLE cara=enfado
 plano general mago agujero desde=duelo_a altura=1.1 lente=38 suave=0.5
@@ -481,9 +481,9 @@ mago bucle MagicAttackOmni01_Load congela
 & mago desliza aqui altura=3 dura=2.6
 +0.1 sonido Prologo_Despegue en=mago
 +0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=mago offset=0,0.2,0 lifetime=1.6
-+0.6 sonido Prologo_HechizoGrande en=mago
-+0.8 sonido SFX_Prologo_AgujeroNegro_Carga volume=0.9
-+0.8 ambiente AGUJERO_NEGRO eventKey=SFX_Prologo_AgujeroNegro_Bucle volumen=0.5
++0.6 sonido Prologo_HechizoGrande en=mago volume=0.6
++0.8 sonido SFX_Prologo_AgujeroNegro_Carga volume=0.5
++0.8 ambiente AGUJERO_NEGRO eventKey=SFX_Prologo_AgujeroNegro_Bucle volumen=0.12
 +0.8 vfx Assets/_VFX/Prologo/VFX_AgujeroNegro.prefab en=agujero lifetime=160 registrarComo=CARGA_ESFERA
 +0.85 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=0.35 duracion=0
 +0.9 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.0 duracion=3.5
@@ -499,17 +499,17 @@ archimago bucle Challenging_NoWeapon
 & liora mira centro_plaza
 & nina mira centro_plaza
 +0.2 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Healing circle.prefab" en=archimago offset=0,0.05,0 lifetime=75 registrarComo=CIRCULO_PLEGARIA
-+0.2 sonido Prologo_MagiaLevitar en=archimago volume=0.8
++0.2 sonido Prologo_MagiaLevitar en=archimago volume=0.5
 # El cántico va con la voz de plegaria (eco largo, la voz suena ritual) y la música SUBE en vez
 # de duckearse: es la mezcla que hace que un conjuro suene a anime.
 efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
-efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=-4 ambienteDb=-10 fundido=1.0
-ambiente CORO eventKey=SFX_Prologo_CoroBucle volumen=0.45
+efecto MezclaBeat fuente=plegaria musicaDb=-14 sfxDb=0 ambienteDb=-10 fundido=1.0
+ambiente CORO eventKey=SFX_Prologo_CoroBucle volumen=0.14
 # El lecho ritual bajo el cántico (38 s, compatible en bucle).
-ambiente CORA eventKey=Prologue_CoraCanto volumen=0.5
+ambiente CORA eventKey=Prologue_CoraCanto volumen=0.64
 archimago dice PROLOGO_PLEGARIA_01 cara=decidido
-+3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-+5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn
++3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
++5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 
 plano general mago agujero desde=duelo_a altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
@@ -522,23 +522,23 @@ plano primer archimago lado=der contrapicado zoom=20
 archimago bucle CastingIdle01
 archimago dice PROLOGO_PLEGARIA_02 cara=decidido
 +0.4 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.08,0 lifetime=60 registrarComo=CIRCULO_CONJURO
-+0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.45
++0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
 +4.2 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.2,0 lifetime=2.4 seguirAlActor=true
 
 # Estrofa 2: llama a lo que aún no existe y la energía despierta en sus manos.
 plano medio archimago lado=izq contrapicado zoom=24 mano=0.15
 archimago dice PROLOGO_PLEGARIA_03 cara=decidido
-+3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.8 destello=true trueno=SFX_Prologo_Trueno_1
++3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_1
 +3.3 archimago gesto MagicSpecial
 +3.3 archimago cara enfado
-+3.5 sonido Prologo_Carga volume=0.75
++3.5 sonido Prologo_Carga volume=0.5
 +3.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.25,0 lifetime=1.6
 +4.8 archimago bucle CastingIdle01
 +5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
 +5.6 sacudida 0.35 1.2
 
 plano general mago agujero desde=duelo_a altura=0.9 lente=34
-& efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.85 trueno=SFX_Prologo_Trueno_3
+& efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_3
 espera 1.2
 
 # Estrofa 3: ofrece su vida y su alma como sello.
@@ -547,7 +547,7 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 +3.4 archimago gesto Angry02
 +3.4 archimago cara enfado
 +3.5 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=archimago lifetime=2.2
-+3.5 sonido Prologo_MagiaLevitar en=archimago volume=0.85
++3.5 sonido Prologo_MagiaLevitar en=archimago volume=0.55
 +3.5 sacudida 0.3 0.9
 +5.0 archimago bucle MagicAttackOmni01_Load congela
 
@@ -555,12 +555,12 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
 efecto LineasDeConcentracionBeat mostrar=true
 # La estrofa que sube (18 s) entra sobre el lecho: el cántico crece hacia el grito.
-ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.55
+ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.6
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
 +0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=archimago offset=0,1.2,0 lifetime=2.0
-+3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.95 destello=true trueno=SFX_Prologo_Trueno_2
++3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
 +3.5 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.6 duracion=1.4
-+3.5 sonido Prologo_Carga volume=0.85
++3.5 sonido Prologo_Carga volume=0.5
 +3.5 sacudida 0.5 1.6
 
 # Silencio íntimo antes del estallido: se despide de Liora en voz baja.
@@ -574,10 +574,10 @@ espera 0.35
 efecto MezclaBeat fuente=plegaria quitar=true fundido=0.3
 efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
 ambiente CORO sonar=false fundido=1.5
-cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0
-& sonido Prologo_Carga volume=0.65
+cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0 volumen=0.5
+& sonido Prologo_Carga volume=0.4
 & efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
-cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1
+cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1 volumen=0.5
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
 efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
 # El lecho y la estrofa se apagan aquí: el impacto tiene que entrar en seco.

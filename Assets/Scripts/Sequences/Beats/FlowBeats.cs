@@ -221,6 +221,8 @@ public class CutInBeat : SequenceBeat
     [Range(0, CutInUI.Ranuras - 1)] public int ranura;
     [Tooltip("Clave de SFX que suena al entrar la franja (vacío = sin sonido).")]
     public string sonido;
+    [Tooltip("Volumen del sonido de entrada. Bajo en los primeros planos del prólogo: el corte no tiene que tapar la voz.")]
+    [Range(0f, 1f)] public float volumen = 1f;
     public bool mostrar = true;
     public bool esperar;
     public override string Describe() => $"Cut-in {ranura}: {(mostrar ? actorId : "retirar")} ({encuadre})";
@@ -236,7 +238,7 @@ public class CutInBeat : SequenceBeat
         {
             ctx.Player.RegisterCleanup(() => { if (ui != null) ui.OcultarInmediato(); });
             ui.Mostrar(actor, encuadre, lado, alturaEnPantalla, duracion, ranura);
-            if (!string.IsNullOrWhiteSpace(sonido)) AudioService.Instance?.PlaySFX(sonido);
+            if (!string.IsNullOrWhiteSpace(sonido)) AudioService.Instance?.PlaySFX(sonido, volumen);
         }
         else ui.Retirar(ranura);
         if (esperar)
