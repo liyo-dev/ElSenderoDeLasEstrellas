@@ -156,3 +156,6 @@ Herramientas/Audio/Piloto/despues_diseno.wav
 
 # --- Python: cache de bytecode ---
 __pycache__/
+
+# --- Audio: generaciones de Suno en bruto y sus recortes (no versionar) ---
+Herramientas/Audio/_generaciones/
