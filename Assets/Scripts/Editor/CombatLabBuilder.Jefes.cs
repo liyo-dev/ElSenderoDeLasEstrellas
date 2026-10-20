@@ -111,18 +111,22 @@ public static partial class CombatLabBuilder
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static void PortalDeSalto(string nombre, Transform padre, Vector3 pos, Material mat, Transform destino)
+    private static void PortalDeSalto(string nombre, Transform padre, Vector3 pos, Material mat, Transform destino,
+                                      float yaw = 0f)
     {
-        var portal = CrearPortal<PortalDeSaltoDelLab>(nombre, padre, pos, mat, VfxPortalPaso);
+        var portal = CrearPortal<PortalDeSaltoDelLab>(nombre, padre, pos, mat, VfxPortalPaso, yaw);
         var so = new SerializedObject(portal);
         so.FindProperty("destino").objectReferenceValue = destino;
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     /// Marco que se atraviesa (disparador), con el efecto de portal y su rótulo encima.
-    private static T CrearPortal<T>(string nombre, Transform padre, Vector3 pos, Material mat, string vfx) where T : PortalDelLab
+    /// 'yaw': hacia dónde mira el marco y el rótulo (para el que se cruza de frente).
+    private static T CrearPortal<T>(string nombre, Transform padre, Vector3 pos, Material mat, string vfx,
+                                    float yaw = 0f) where T : PortalDelLab
     {
         var marco = CrearCubo("Portal — " + nombre, padre, pos + Vector3.up * 1.5f, new Vector3(2.4f, 3f, 0.4f), mat, estatico: false);
+        marco.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
         marco.GetComponent<Collider>().isTrigger = true;
         var portal = marco.AddComponent<T>();
 
@@ -130,9 +134,9 @@ public static partial class CombatLabBuilder
         if (efecto != null)
         {
             var e = (GameObject)PrefabUtility.InstantiatePrefab(efecto, padre);
-            e.transform.position = pos + Vector3.up * 1.5f;
+            e.transform.SetPositionAndRotation(pos + Vector3.up * 1.5f, Quaternion.Euler(0f, yaw, 0f));
         }
-        CrearTexto(nombre, padre, pos + Vector3.up * 3.8f);
+        CrearTexto(nombre, padre, pos + Vector3.up * 3.8f, yaw);
         return portal;
     }
 

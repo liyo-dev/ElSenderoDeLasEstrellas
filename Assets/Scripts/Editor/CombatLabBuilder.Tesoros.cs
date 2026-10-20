@@ -42,6 +42,7 @@ public static partial class CombatLabBuilder
         CrearCubo("Muro sur", zona, c + new Vector3(0f, 1.5f, -m), new Vector3(LadoPrueba, 3f, 0.5f), muro);
         CrearCubo("Muro este", zona, c + new Vector3(m, 1.5f, 0f), new Vector3(0.5f, 3f, LadoPrueba), muro);
         CrearCubo("Muro oeste", zona, c + new Vector3(-m, 1.5f, 0f), new Vector3(0.5f, 3f, LadoPrueba), muro);
+        CrearVueltaAlLaboratorio(raiz, new Vector3(110f, 0f, 92f), EntradaTesoros);
         CrearTexto("Tesoros: uno por capa de requisito", zona, new Vector3(110f, 4.2f, 96f), 90f);
         CrearTexto("Quita y pon habilidades en Magia ▸ Habilidades · el registro, en Start ▸ Objetos", zona, new Vector3(110f, 3.5f, 96f), 90f);
 

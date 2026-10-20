@@ -21,12 +21,19 @@ public static partial class CombatLabBuilder
         var suelo = GetMaterial("Lab_Suelo", new Color(0.19f, 0.22f, 0.28f));
         var madera = GetMaterial("Lab_Cap2_Madera", new Color(0.45f, 0.31f, 0.18f));
         var fondo = GetMaterial("Lab_Cap2_Zanja", new Color(0.12f, 0.20f, 0.30f));
+        var muro = GetMaterial("Lab_Cobertura", new Color(0.35f, 0.40f, 0.47f));
 
         // Zanja de 6 m a lo largo de X; el puente la cruza por el centro, a lo largo de Z.
         CrearCubo("Suelo sur", raiz.transform, c + new Vector3(0f, -0.25f, -9f), new Vector3(30f, 0.5f, 12f), suelo, "Floor");
         CrearCubo("Suelo norte", raiz.transform, c + new Vector3(0f, -0.25f, 9f), new Vector3(30f, 0.5f, 12f), suelo, "Floor");
         CrearCubo("Fondo de la zanja", raiz.transform, c + new Vector3(0f, -1.25f, 0f), new Vector3(30f, 0.5f, 6f), fondo, "Floor");
         CrearCubo("Escalón para salir de la zanja", raiz.transform, c + new Vector3(13f, -0.75f, 0f), new Vector3(3f, 0.5f, 6f), suelo, "Floor");
+        // La zona es una plataforma flotante: se cierra por los cuatro lados para no caer al vacío.
+        CrearCubo("Muro oeste", raiz.transform, c + new Vector3(-15f, 1.5f, 0f), new Vector3(0.5f, 3f, 30f), muro);
+        CrearCubo("Muro este", raiz.transform, c + new Vector3(15f, 1.5f, 0f), new Vector3(0.5f, 3f, 30f), muro);
+        CrearCubo("Muro sur", raiz.transform, c + new Vector3(0f, 1.5f, -15f), new Vector3(30f, 3f, 0.5f), muro);
+        CrearCubo("Muro norte", raiz.transform, c + new Vector3(0f, 1.5f, 15f), new Vector3(30f, 3f, 0.5f), muro);
+        CrearVueltaAlLaboratorio(raiz.transform, c + new Vector3(-6f, 0f, -10f), c + new Vector3(0f, 0.1f, -12f));
         float tramo = (6f - Cap2ExtrasPrefabs.Hueco) * 0.5f;
         float centroTramo = (Cap2ExtrasPrefabs.Hueco + tramo) * 0.5f;
         var anchoTablero = new Vector3(Cap2ExtrasPrefabs.AnchoPuente, 0.2f, tramo);

@@ -88,6 +88,7 @@ public static partial class CombatLabBuilder
         navMesh.BuildNavMesh();
 
         CrearTexto("Enemigos del mundo: cada uno pide una respuesta", r, EntradaBestiario + new Vector3(0f, 3.6f, -3f), 180f);
+        CrearVueltaAlLaboratorio(r, new Vector3(94f, 0f, -70f), EntradaBestiario);
 
         // ── Fantasmas ──
         var fantasma = AssetDatabase.LoadAssetAtPath<GameObject>(EnemigosDelMundoBuilder.RutaFantasma);
