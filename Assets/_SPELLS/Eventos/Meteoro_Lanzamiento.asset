@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c105b3fd2fb2c334fb026d985d6b6b77, type: 3}
+  m_Name: Meteoro_Lanzamiento
+  m_EditorClassIdentifier: Assembly-CSharp::AudioEventSO
+  capas:
+  - clips:
+    - {fileID: 8300000, guid: c1b768f0c038cec488f1b3606c2bd37b, type: 3}
+    retardo: 0
+    gananciaDb: 0
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1
+  - clips:
+    - {fileID: 8300000, guid: 963d166a5ec55f34fbd02abb0dea1bfc, type: 3}
+    retardo: 0.3
+    gananciaDb: -6
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1

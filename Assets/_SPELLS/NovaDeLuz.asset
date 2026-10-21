@@ -80,7 +80,11 @@ MonoBehaviour:
   despawnVFX: {fileID: 2279151756160307920, guid: 98fd08852fd783c4fa2babac422a0869, type: 3}
   vfxLifetime: 3
   castSFXKey: Hechizo_NovaDeLuz
-  impactSFXKey: 
+  impactSFXKey: Impacto_Luz_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 11400000, guid: 54b1ba9ac4311774183f9f2b3504791c, type: 2}
+  impactEvent: {fileID: 11400000, guid: 235f2974107992240acb195d80a7a985, type: 2}
   slotType: 1
   attackIcon: {fileID: 21300000, guid: 6d9b172b711152d42b883e7d0ad3a652, type: 3}
   bounceCount: 0

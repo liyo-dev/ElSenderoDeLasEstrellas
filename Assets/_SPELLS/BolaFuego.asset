@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_BolaFuego
   impactSFXKey: Impacto_Fuego_Pequeno
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 11400000, guid: 698aae8d08956604185ee7c7d155551c, type: 2}
+  impactEvent: {fileID: 11400000, guid: f307066e3e6ac884599e1007413555e1, type: 2}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 2e669deaf2534d94687bc34177076565, type: 3}
   bounceCount: 0

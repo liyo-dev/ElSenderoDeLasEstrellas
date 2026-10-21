@@ -39,7 +39,7 @@ cart_maestro     6006.4 6000.6
 v06_carro        6010.4 5999.9
 carreta          6008.4 5997.4
 nina_iglesia     5990.9 6001.0
-nina_carro       6004.6 5999.9
+nina_carro       6003.4 5999.4
 globo            5987.4 6005.1 105.9
 cielo_globo      5989.5 6015.0 118.0
 bajo_iglesia     5991.8 5999.6
@@ -54,6 +54,8 @@ k3               5999.0 6001.6
 k4               5994.8 6001.3
 k5               5997.3 5997.6
 v01_saluda       6002.3 6000.6
+v02_saluda       6004.3 6000.6
+v02_camara       6004.2 6002.2
 v04_a            5997.8 5995.8
 v04_b            6003.9 5995.9
 v03_charla       6000.3 6004.9
@@ -64,6 +66,7 @@ mira_v03         5998.6 6001.0
 mira_v08         6000.2 6002.6
 centro_plaza     6001.5 6000.5
 cam_calle        6003.6 5999.3
+cam_carreta      6003.4 5997.2
 cam_general      6013.5 5992.0
 # El río
 rio_a_ini        6016.9 6002.7
@@ -123,7 +126,7 @@ v04 0  en v04_a mirando v04_b
 v04 0  bucle CarryMoveIdle_NoWeapon
 v04 +0.8 pasea por v04_b, v04_a ritmo=paseo pausa=1.8
 v06 0  en v06_carro mirando carreta
-v06 0  bucle Loot01_Loop
+v06 0  bucle CarryMoveIdle_NoWeapon
 nina 0 en nina_iglesia mirando globo
 nina 0 bucle SenseSomethingSearching_NoWeapon
 liora 0 en liora_mesa mirando v08_mesa
@@ -133,13 +136,18 @@ v08 +1.0 charla con liora cada=3.2
 mago 0 en colina mirando entrada
 
 # Los niños paran a saludar y vuelven a jugar.
-v01 @saludo        anda a v01_saluda ritmo=trote llega_mirando=archimago
+# La que dice «¡Muy buenas, maestro!» (v02) da un paso adelante: si no, dentro del grupo no se
+# sabe de quién es la voz. v01 se queda con los demás y solo mira al maestro.
+v01 @saludo        mira archimago
 v01 @saludo_fin+0.6  pasea por k2, k3, k4, k1 ritmo=trote pausa=0.5
+v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago
+v02 @saludo_fin+0.8 pasea por v02_horno ritmo=paseo pausa=1.4
 v07 @saludo+0.8    mira archimago
 v07 @saludo_fin+1.2  pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6
-# El carretero suelta la carreta cuando llega el maestro.
-v06 @carreta_magia reposo
+# El carretero suelta la carreta cuando llega el maestro: se queda de pie junto a ella, mirando
+# las asas, y salta para intentar bajarla.
 v06 @carreta_magia mira carreta
+v06 @carreta_magia+0.2 bucle CarryMoveIdle_NoWeapon
 # El globo: se acercan a mirar.
 v03 @globo_sube    anda a mira_v03 ritmo=normal llega_mirando=cielo_globo
 v08 @globo_sube+0.4 anda a mira_v08 ritmo=normal llega_mirando=cielo_globo
@@ -238,6 +246,9 @@ plano medio archimago lado=der
 archimago dice PROLOGO_MANANA_INTRO gesto=HandWave02 cara=alegre
 plano conjunto archimago v01 v02 lado=frente
 v01 dice PROLOGO_MANANA_SALUDO_1 gesto=HandWave01 mira=archimago cara=alegre
+# La que dice «¡Muy buenas, maestro!» tiene su propio plano: si no, dentro del grupo no se sabe
+# de quién es la voz.
+plano conjunto v02 desde=v02_camara altura=1.5 lente=30
 v02 dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
 @saludo_fin
 
@@ -245,12 +256,21 @@ v02 dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
 plano medio v06 lado=der
 v06 dice PROLOGO_FAVOR_CARRETA gesto=Question01 mira=archimago cara=preocupado
 & archimago mira v06
-plano conjunto archimago v06 lado=frente
+plano conjunto archimago v06 desde=cam_carreta altura=1.7 lente=34
+# El carretero salta para alcanzar las asas. No llega, y por eso pide ayuda al maestro.
+# Sin 'dura': el salto va en paralelo con la caminata del maestro (si bloquease el hilo, el
+# encuadre de la carreta se calcularía en otro momento y salía tapado).
+efecto SaltoBeat actorId=v06 altura=1.2 desplazamiento=0.4 subida=0.35 sostener=0.3 caida=0.4
 archimago anda a cart_maestro ritmo=normal llega_mirando=carreta
 @carreta_magia
 archimago gesto MagicRight
+& archimago cara alegre dura=3
 +0.3 sonido Prologo_MagiaLevitar en=archimago
-+0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.1,0 lifetime=2.4 seguirAlActor=true
+# La bola de conjuro: pequeña, entre las manos, y se mueve y crece con la carga. Antes era un
+# destello del pack (una partícula de 19 m) que se comía la pantalla y parecía el hechizo del final.
++0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.15,0 duracion=2.6 periodo=1.4 escalaInicial=0.7 escalaFinal=1.9
+# El remolino debajo de la carreta: es lo que la levanta.
++0.4 vfx "Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab" en=PROP_Carreta offset=0,0.1,0 lifetime=2.8
 +0.5 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=PROP_Carreta offset=0,0.5,0 lifetime=2.6 seguirAlActor=true
 +0.6 efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=0,1.5,0 segundos=1.4 desdeDondeEstaba=true esperar=false
 espera 1.6
@@ -258,14 +278,14 @@ efecto PropMoveBeat propId=PROP_Carreta segundos=0.9 desdeDondeEstaba=true apoya
 +0.85 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=PROP_Carreta offset=0,0.4,0 lifetime=1.6
 +0.85 sonido Prologo_CarretaCae en=PROP_Carreta
 espera 0.7
-plano dos archimago v06
-v06 dice PROLOGO_CARRETA_GRACIAS gesto=Reverence01 mira=archimago cara=agradecido
+plano dos archimago v06 lado=izq
+v06 dice PROLOGO_CARRETA_GRACIAS gesto=HeadNod01 mira=archimago cara=agradecido
 & archimago gesto HeadNod01
 
 # El globo de Nina, atascado en el campanario.
 desde @carreta_magia+0.4 nina reposo
 desde @carreta_magia+0.5 nina anda a nina_carro ritmo=trote llega_mirando=archimago
-plano medio nina lado=izq
+plano medio nina lado=izq solo
 -0.2 nina dice PROLOGO_FAVOR_GLOBO gesto=Beg01 mira=archimago cara=preocupado
 & archimago mira nina
 plano medio archimago lado=izq
@@ -274,7 +294,7 @@ archimago mira globo
 archimago bucle CastingIdle01
 && archimago dice PROLOGO_MANANA_GLOBO_OK cara=decidido
 +0.4 sonido Prologo_MagiaLevitar en=archimago
-+0.4 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.1,0 lifetime=1.8
++0.4 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.15,0 duracion=2.2 periodo=1.2 escalaInicial=0.7 escalaFinal=1.6
 +0.9 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=PROP_Globo lifetime=2.0 seguirAlActor=true
 +1.1 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=PROP_Globo lifetime=1.8
 @globo_sube
@@ -523,7 +543,8 @@ archimago bucle CastingIdle01
 archimago dice PROLOGO_PLEGARIA_02 cara=decidido
 +0.4 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.08,0 lifetime=60 registrarComo=CIRCULO_CONJURO
 +0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
-+4.2 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.2,0 lifetime=2.4 seguirAlActor=true
+# La energía despierta en sus manos: la bola se forma y crece mientras el cántico sube.
++4.2 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.15,0 duracion=8 periodo=1.8 escalaInicial=0.6 escalaFinal=2.4
 
 # Estrofa 2: llama a lo que aún no existe y la energía despierta en sus manos.
 plano medio archimago lado=izq contrapicado zoom=24 mano=0.15
@@ -557,7 +578,7 @@ efecto LineasDeConcentracionBeat mostrar=true
 # La estrofa que sube (18 s) entra sobre el lecho: el cántico crece hacia el grito.
 ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.6
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
-+0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=archimago offset=0,1.2,0 lifetime=2.0
++0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.15,0 duracion=6 periodo=1.1 escalaInicial=1.6 escalaFinal=3.2
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
 +3.5 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.6 duracion=1.4
 +3.5 sonido Prologo_Carga volume=0.5

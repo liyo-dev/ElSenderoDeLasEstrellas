@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c105b3fd2fb2c334fb026d985d6b6b77, type: 3}
+  m_Name: Huracan_Impacto
+  m_EditorClassIdentifier: Assembly-CSharp::AudioEventSO
+  capas:
+  - clips:
+    - {fileID: 8300000, guid: 10f458588d9ccef4d9886b980f32ad00, type: 3}
+    retardo: 0
+    gananciaDb: 0
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1
+  - clips:
+    - {fileID: 8300000, guid: 68ac612595145e940a1f9e7af26877c5, type: 3}
+    retardo: 0.005
+    gananciaDb: 0
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1
+  - clips:
+    - {fileID: 8300000, guid: c34b12a7edcd77a4c9fa7a75f857d2b4, type: 3}
+    retardo: 0.05
+    gananciaDb: 2
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1
+  - clips:
+    - {fileID: 8300000, guid: 1e55ce7fc2624ad4896d15e019033bb2, type: 3}
+    retardo: 0.03
+    gananciaDb: -4
+    rangoPitch: {x: 1, y: 1}
+    paneo: 1
+    probabilidad: 1
+    espacial: 1

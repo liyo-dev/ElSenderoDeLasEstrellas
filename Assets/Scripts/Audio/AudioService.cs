@@ -1190,6 +1190,33 @@ public sealed class AudioService : MonoBehaviour
 
     float GetDuckedVolume(float baseVol) => baseVol * _duckMultiplier.x;
 
+    // --- Cabecera de mezcla (INC-802) ---
+    // El AudioMixer del proyecto no tiene limiter ni compresores (solo 'Attenuation'), y las
+    // cinematicas llegaban a sumar +6,5 dBFS: el digital saturaba. Unity no expone por API la
+    // creacion de efectos nativos del mixer, asi que la proteccion se hace aqui: se calcula
+    // la energia que sale hacia el master (todo lo que el servicio reproduce, menos la voz)
+    // y se atenua lo que sobra. La voz nunca se toca: es la protagonista y, si hay que
+    // apartar a alguien, se aparta el resto.
+    const float CabeceraObjetivo = 0.6f;   // suma de potencias objetivo
+    const float FactorMinimo = 0.25f;
+    float _factorCabecera = 1f;
+
+    float CalcularFactorDeCabecera()
+    {
+        float suma = 0f;
+        foreach (var kv in _sourceVolumes)
+        {
+            var src = kv.Key;
+            if (src == null || !src.isPlaying) continue;
+            if (src == _voiceSource) continue;
+            if (uiGroup != null && src.outputAudioMixerGroup == uiGroup) continue;
+            if (dialogueGroup != null && src.outputAudioMixerGroup == dialogueGroup) continue;
+            suma += kv.Value * kv.Value;
+        }
+        if (suma <= CabeceraObjetivo) return 1f;
+        return Mathf.Clamp(Mathf.Sqrt(CabeceraObjetivo / suma), FactorMinimo, 1f);
+    }
+
     private readonly HashSet<AudioSource> _truenos = new();
     float SourceMultiplier(AudioSource src)
     {
@@ -1197,9 +1224,9 @@ public sealed class AudioService : MonoBehaviour
         var group = src.outputAudioMixerGroup;
         if (src == _voiceSource || (uiGroup != null && group == uiGroup)
             || (dialogueGroup != null && group == dialogueGroup)) return 1f;
-        if (src == _musicA || src == _musicB) return GetDuckedVolume(1f);
-        return _ambienceSources.Contains(src) || (ambienceGroup != null && group == ambienceGroup)
-            ? _duckMultiplier.y : _duckMultiplier.z;
+        if (src == _musicA || src == _musicB) return GetDuckedVolume(1f) * _factorCabecera;
+        return (_ambienceSources.Contains(src) || (ambienceGroup != null && group == ambienceGroup)
+            ? _duckMultiplier.y : _duckMultiplier.z) * _factorCabecera;
     }
 
     float BaseVolume(AudioSource src) => _sourceVolumes.TryGetValue(src, out float volume) ? volume : src.volume;
@@ -1218,6 +1245,11 @@ public sealed class AudioService : MonoBehaviour
             _duckElapsed += Time.unscaledDeltaTime;
             float progress = _duckDuration > 0f ? Mathf.Clamp01(_duckElapsed / _duckDuration) : 1f;
             _duckMultiplier = Vector3.Lerp(_duckStart, _duckTarget, Mathf.SmoothStep(0f, 1f, progress));
+
+            // Cabecera: baja rapido (que no se oiga el recorte) y vuelve despacio.
+            float objetivo = CalcularFactorDeCabecera();
+            float k = objetivo < _factorCabecera ? 25f : 3f;
+            _factorCabecera = Mathf.Lerp(_factorCabecera, objetivo, 1f - Mathf.Exp(-k * Time.unscaledDeltaTime));
         }
         foreach (var entry in _sourceVolumes)
             if (entry.Key != null) entry.Key.volume = entry.Value * SourceMultiplier(entry.Key);

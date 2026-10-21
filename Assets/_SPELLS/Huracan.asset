@@ -81,6 +81,10 @@ MonoBehaviour:
   vfxLifetime: 3
   castSFXKey: Hechizo_Huracan
   impactSFXKey: Impacto_Viento_Grande
+  chargeSFXKey: 
+  releaseSFXKey: 
+  castEvent: {fileID: 11400000, guid: 16b2e19fc1fd64848bb8adc51b5fffec, type: 2}
+  impactEvent: {fileID: 11400000, guid: 87d8ad8d00dd68b4abee906822c9adee, type: 2}
   slotType: 0
   attackIcon: {fileID: 21300000, guid: 2547bf26ce04dbc47a652e866e2245c2, type: 3}
   bounceCount: 0
@@ -102,5 +106,8 @@ MonoBehaviour:
   groupShieldVFX: {fileID: 0}
   teamGaugeGain: 0
   teleportDistance: 6
+  abreProteccionSegundos: 0
+  vfxProteccionAbierta: {fileID: 0}
+  enGrimorio: 1
   caster: 1
   comboSequence: 
