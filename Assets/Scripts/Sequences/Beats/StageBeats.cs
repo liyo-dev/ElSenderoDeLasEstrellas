@@ -109,11 +109,33 @@ public class VfxBeat : SequenceBeat
             return true;
         }
 
-        var mark = ctx.Stage != null ? ctx.Stage.GetMark(markName) : null;
-        if (mark == null) return false;
-        point = mark.position;
-        rotation = mark.rotation;
-        return true;
+        // Se busca sin aviso: un nombre que no es una marca puede ser un objeto del decorado, y
+        // el SequencePlayer los da de alta como actores (la carreta, el globo, el horno). Sin este
+        // respaldo, «vfx ... en=PROP_Carreta» no encontraba nada y el efecto no salía nunca.
+        var mark = ctx.Stage != null ? ctx.Stage.BuscarMarca(markName) : null;
+        if (mark != null)
+        {
+            point = mark.position;
+            rotation = mark.rotation;
+            return true;
+        }
+
+        if (ctx.EstaRegistrado(markName))
+        {
+            var actor = ctx.GetActor(markName);
+            if (actor?.Transform != null)
+            {
+                point = actor.Transform.position;
+                rotation = actor.Transform.rotation;
+                return true;
+            }
+        }
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (!string.IsNullOrEmpty(markName))
+            Debug.LogWarning($"[Efectos] No hay ninguna marca ni ningún objeto del decorado llamado " +
+                             $"'{markName}': el efecto o el sonido no se coloca en ese sitio.");
+#endif
+        return false;
     }
 }
 
@@ -205,6 +227,9 @@ public class AmbienteBeat : SequenceBeat
 
     [Range(0f, 1f)] public float volumen = 0.6f;
 
+    [Tooltip("Es musica (el lecho del cantico): va al bus de musica y no se duckea con la voz.")]
+    public bool ritual;
+
     [Tooltip("Desmarcado: detiene el bucle 'loopId' con el fundido indicado.")]
     public bool sonar = true;
 
@@ -218,7 +243,7 @@ public class AmbienteBeat : SequenceBeat
         var audio = AudioService.Instance;
         if (audio == null || string.IsNullOrWhiteSpace(loopId)) yield break;
         if (!sonar) { audio.StopLoopingSFX(loopId, fundido); yield break; }
-        audio.PlayLoopingSFX(loopId, eventKey, volumen);
+        audio.PlayLoopingSFX(loopId, eventKey, volumen, ritual);
         string id = loopId;
         ctx?.Player?.RegisterCleanup(() => AudioService.Instance?.StopLoopingSFX(id, 0.5f));
     }

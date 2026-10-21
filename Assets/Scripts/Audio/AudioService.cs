@@ -1197,8 +1197,8 @@ public sealed class AudioService : MonoBehaviour
     // la energia que sale hacia el master (todo lo que el servicio reproduce, menos la voz)
     // y se atenua lo que sobra. La voz nunca se toca: es la protagonista y, si hay que
     // apartar a alguien, se aparta el resto.
-    const float CabeceraObjetivo = 0.6f;   // suma de potencias objetivo
-    const float FactorMinimo = 0.25f;
+    const float CabeceraObjetivo = 4f;   // suma de potencias: solo actua si se apilan muchas fuentes
+    const float FactorMinimo = 0.55f;    // como mucho, -5 dB
     float _factorCabecera = 1f;
 
     float CalcularFactorDeCabecera()
@@ -1224,6 +1224,8 @@ public sealed class AudioService : MonoBehaviour
         var group = src.outputAudioMixerGroup;
         if (src == _voiceSource || (uiGroup != null && group == uiGroup)
             || (dialogueGroup != null && group == dialogueGroup)) return 1f;
+        // La musica ritual no se duckea: solo la protege la cabecera.
+        if (_musicaRitual.Contains(src)) return _factorCabecera;
         if (src == _musicA || src == _musicB) return GetDuckedVolume(1f) * _factorCabecera;
         return (_ambienceSources.Contains(src) || (ambienceGroup != null && group == ambienceGroup)
             ? _duckMultiplier.y : _duckMultiplier.z) * _factorCabecera;
@@ -1428,6 +1430,9 @@ public sealed class AudioService : MonoBehaviour
     // por loopId, fuera del pool, que solo se detiene cuando se llama
     // explícitamente a StopLoopingSFX.
     readonly Dictionary<string, AudioSource> _loopingSfxSources = new();
+    // Fuentes de musica ritual (el lecho del cantico): van al bus de musica y no se
+    // duckean con la voz, porque si no el conjuro se queda sin musica.
+    readonly HashSet<AudioSource> _musicaRitual = new();
     // FIX M4 (auditoría 2026-08-07): fade-out en curso por loopId, para poder cancelarlo si el
     // mismo loop se reinicia (PlayLoopingSFX) o si se pide otro StopLoopingSFX antes de que
     // termine el anterior. Antes, un fade-out viejo seguía corriendo tras rearrancar el loop y
@@ -1438,7 +1443,7 @@ public sealed class AudioService : MonoBehaviour
     /// Arranca (o reinicia) en loop el SFX asociado a eventKey en el AudioGraphProfile, bajo la
     /// clave lógica loopId. Llamar a StopLoopingSFX con el mismo loopId para detenerlo.
     /// </summary>
-    public void PlayLoopingSFX(string loopId, string eventKey, float volume = 1f)
+    public void PlayLoopingSFX(string loopId, string eventKey, float volume = 1f, bool musicaRitual = false)
     {
         if (string.IsNullOrWhiteSpace(loopId) || string.IsNullOrWhiteSpace(eventKey)) return;
 
@@ -1453,9 +1458,13 @@ public sealed class AudioService : MonoBehaviour
 
         if (!_loopingSfxSources.TryGetValue(loopId, out var src) || src == null)
         {
-            src = CreateChildSource($"LoopSFX_{loopId}", sfxGroup, spatial: false, loop: true);
+            // La musica ritual va al bus de musica y no se duckea: es la que sostiene el
+            // conjuro, y duckearla con la voz la dejaba inaudible.
+            src = CreateChildSource($"LoopSFX_{loopId}", musicaRitual ? musicGroup : sfxGroup, spatial: false, loop: true);
             _loopingSfxSources[loopId] = src;
         }
+        if (musicaRitual) _musicaRitual.Add(src);
+        else _musicaRitual.Remove(src);
 
         // FIX M4: si había un fade-out en curso para este loopId (StopLoopingSFX con fadeOut>0
         // seguido de un reinicio), cancelarlo — si no, el fade viejo termina llamando src.Stop()
@@ -1497,7 +1506,10 @@ public sealed class AudioService : MonoBehaviour
         if (fadeOut > 0f)
             _loopFadeRoutines[loopId] = StartCoroutine(FadeOutAndStopLoop(loopId, src, fadeOut));
         else
+        {
             src.Stop();
+            _musicaRitual.Remove(src);
+        }
     }
 
     /// <summary>
