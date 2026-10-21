@@ -155,18 +155,23 @@ public class MagicProjectileSpawner : MonoBehaviour
 
     private IEnumerator Co_SpawnAfterDelay(MagicSpellSO spell, Transform origin, float damageMultiplier)
     {
+        // El clip de lanzamiento lleva dentro la carga y la salida (están diseñados así), así
+        // que suena al empezar el gesto. La salida aparte es para los hechizos que la llevan
+        // por capas: entonces el evento se encarga de la preparation y de la salida.
+        SonarLanzamiento(spell);
+
         float d = Mathf.Max(0f, spell.castDelaySeconds);
         if (d > 0f) yield return new WaitForSeconds(d);
 
         if (spell.kind == MagicKind.Zone)
         {
             SpawnZoneNow(spell, origin, null, damageMultiplier);
-            SonarSalida(spell, origin);
+            SonarSalida(spell);
         }
         else if (spell.kind == MagicKind.Teleport)
         {
             Teleport(spell);
-            SonarSalida(spell, origin);
+            SonarSalida(spell);
         }
         else if (spell.chargeTime > 0f)
         {
@@ -175,29 +180,36 @@ public class MagicProjectileSpawner : MonoBehaviour
         else
         {
             SpawnNow(spell, origin, playSFX: false, damageMultiplier: damageMultiplier);
-            SonarSalida(spell, origin);
+            SonarSalida(spell);
         }
     }
 
     /// Cierra el bucle de carga si quedó abierto (hechizo cancelado o destruido a mitad).
-    private void CerrarCarga(string loopCarga)    {
+    private void CerrarCarga(string loopCarga)
+    {
         if (string.IsNullOrEmpty(loopCarga) || AudioService.Instance == null) return;
         AudioService.Instance.StopLoopingSFX(loopCarga, 0.2f);
     }
 
-    /// El sonido de salida suena cuando el hechizo sale de la mano, no al empezar el gesto:
-    /// es lo que hace que el impacto se oiga como un golpe y no como un aviso.
-    private void SonarSalida(MagicSpellSO spell, Transform origin)
+    /// El lanzamiento: el clip de toda la vida (que lleva dentro carga y salida) o el evento
+    /// por capas, que es el que separa la preparación de la salida.
+    private void SonarLanzamiento(MagicSpellSO spell)
     {
         if (spell == null || AudioService.Instance == null) return;
         if (spell.castEvent != null && spell.castEvent.TieneCapas())
         {
-            Vector3? pos = origin != null ? origin.position : (Vector3?)null;
-            AudioService.Instance.PlayEvent(spell.castEvent, pos);
+            AudioService.Instance.PlayEvent(spell.castEvent, null);
             return;
         }
-        string clave = !string.IsNullOrEmpty(spell.releaseSFXKey) ? spell.releaseSFXKey : spell.castSFXKey;
-        if (!string.IsNullOrEmpty(clave)) AudioService.Instance.PlaySFX(clave);
+        if (!string.IsNullOrEmpty(spell.castSFXKey)) AudioService.Instance.PlaySFX(spell.castSFXKey);
+    }
+
+    /// La salida: solo suena si el hechizo tiene su propio sonido de salida. El clip de
+    /// lanzamiento ya lleva la suya dentro, así que no se repite.
+    private void SonarSalida(MagicSpellSO spell)
+    {
+        if (spell == null || AudioService.Instance == null) return;
+        if (!string.IsNullOrEmpty(spell.releaseSFXKey)) AudioService.Instance.PlaySFX(spell.releaseSFXKey);
     }
 
     private float GetSpeedMultiplier()
@@ -376,7 +388,7 @@ public class MagicProjectileSpawner : MonoBehaviour
             AudioService.Instance.StopLoopingSFX(loopCarga, 0.25f);
             loopCarga = null;
         }
-        SonarSalida(spell, origin);
+        SonarSalida(spell);
 
         if (mp != null)
         {
