@@ -69,6 +69,8 @@ public static class RecursosDelPrologo
         AsegurarSonidos();
         try { CrearAgujeroNegro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Agujero negro: " + ex.Message); }
         try { CrearLuzProtectora.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Luz protectora: " + ex.Message); }
+        try { CrearBolaDeConjuro.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Bola de conjuro: " + ex.Message); }
+        try { CrearRemolinoDelPrologo.Asegurar(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Remolino: " + ex.Message); }
         try { PrologoPostprocesoSueno.CrearPerfiles(); } catch (System.Exception ex) { Debug.LogWarning("[Prólogo] Perfiles: " + ex.Message); }
         AsegurarAtardecer();
         AsegurarNina();
@@ -91,12 +93,19 @@ public static class RecursosDelPrologo
         }
         if (perfil.cinematicVoiceDuck != null)
         {
-            if (perfil.cinematicVoiceDuck.voiceGainDb < 8f || perfil.cinematicVoiceDuck.musicDb > -18f)
+            // El ducking de las cinemáticas: la voz no se realza (las voces ya están
+            // normalizadas a -18 LUFS) y la música se aparta solo -8 dB, no -18. Con
+            // +8 dB de voz y -18 de música, el cántico se quedaba 20 dB bajo la voz
+            // (INC-804).
+            if (perfil.cinematicVoiceDuck.voiceGainDb != 0f || perfil.cinematicVoiceDuck.musicDb != -8f)
             {
-                perfil.cinematicVoiceDuck.voiceGainDb = 8f;
-                perfil.cinematicVoiceDuck.musicDb = -18f;
-                perfil.cinematicVoiceDuck.sfxDb = -8f;
-                perfil.cinematicVoiceDuck.attackSeconds = 0.08f;
+                perfil.cinematicVoiceDuck.voiceGainDb = 0f;
+                perfil.cinematicVoiceDuck.musicDb = -8f;
+                perfil.cinematicVoiceDuck.ambienceDb = -10f;
+                perfil.cinematicVoiceDuck.sfxDb = -6f;
+                perfil.cinematicVoiceDuck.attackSeconds = 0.12f;
+                perfil.cinematicVoiceDuck.releaseSeconds = 0.65f;
+                perfil.cinematicVoiceDuck.holdAfterVoiceSeconds = 0.5f;
                 cambiado = true;
             }
         }

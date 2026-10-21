@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public enum PresetDeVoz { Ninguno, ExteriorDia, ExteriorNoche, Plegaria, Epico }
+public enum PresetDeVoz { Ninguno, ExteriorDia, ExteriorNoche, Plegaria, Epico, Conjuro }
 
 /// Mantiene la postproducción de la voz hasta cambiarla o cerrar la secuencia.
 [Serializable]

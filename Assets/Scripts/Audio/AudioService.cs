@@ -1561,6 +1561,7 @@ public sealed class AudioService : MonoBehaviour
             }
             // Valores en milibelios salvo tiempos en segundos; la señal seca permanece íntegra.
             float cola = 0.45f, sala = -2200f, nivel = -2600f, reflexiones = -3000f;
+            float seco = 0f;
             switch (preset)
             {
                 case PresetDeVoz.ExteriorNoche:
@@ -1572,9 +1573,14 @@ public sealed class AudioService : MonoBehaviour
                 case PresetDeVoz.Epico:
                     cola = 6.5f; sala = -500f; nivel = -500f; reflexiones = -1200f;
                     break;
+                case PresetDeVoz.Conjuro:
+                    // El eco "a tope" del conjuro: nueve segundos de sala, la voz un poco
+                    // mas atras dentro de ella y el slap bien presente.
+                    cola = 9f; sala = -300f; nivel = -300f; reflexiones = -900f; seco = -200f;
+                    break;
             }
             _reverbDeVoz.reverbPreset = AudioReverbPreset.User;
-            _reverbDeVoz.dryLevel = 0f;
+            _reverbDeVoz.dryLevel = seco;
             _reverbDeVoz.room = sala;
             _reverbDeVoz.roomHF = -600f;
             _reverbDeVoz.roomLF = 0f;
@@ -1594,6 +1600,15 @@ public sealed class AudioService : MonoBehaviour
                 _ecoDeVoz.delay = 340f;
                 _ecoDeVoz.decayRatio = 0.40f;
                 _ecoDeVoz.wetMix = 0.32f;
+                _ecoDeVoz.dryMix = 1f;
+                _ecoDeVoz.enabled = true;
+            }
+            else if (preset == PresetDeVoz.Conjuro)
+            {
+                // El slap del conjuro, a tope: mas largo, mas presente y mas repetido.
+                _ecoDeVoz.delay = 400f;
+                _ecoDeVoz.decayRatio = 0.45f;
+                _ecoDeVoz.wetMix = 0.38f;
                 _ecoDeVoz.dryMix = 1f;
                 _ecoDeVoz.enabled = true;
             }
