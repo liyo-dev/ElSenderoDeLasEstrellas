@@ -535,10 +535,8 @@ archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true
 efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=0
-efecto MezclaBeat fuente=plegaria musicaDb=-6 sfxDb=0 ambienteDb=-10 fundido=0.6
-ambiente CORO eventKey=SFX_Prologo_CoroBucle volumen=0.14
-# El lecho ritual bajo el cántico (38 s, compatible en bucle).
-ambiente CORA eventKey=Prologue_CoraCanto volumen=0.75 ritual=si
+# La música del hechizo es la canción original, sin retoques: una sola pista, a tope.
+efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
 
 plano general mago agujero desde=duelo_a altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
@@ -584,8 +582,6 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 # Estrofa 4: clímax del cántico; líneas de concentración y poder desbordado.
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
 efecto LineasDeConcentracionBeat mostrar=true
-# La estrofa que sube (18 s) entra sobre el lecho: el cántico crece hacia el grito.
-ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.75 ritual=si
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
 +0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.95,0 duracion=6 periodo=1.1 escalaInicial=1.0 escalaFinal=1.9
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
@@ -603,7 +599,6 @@ espera 0.35
 # Duelo de miradas en franja (Mago Oscuro y Archimago) y el grito final.
 efecto MezclaBeat fuente=plegaria quitar=true fundido=0.3
 efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
-ambiente CORO sonar=false fundido=1.5
 cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0 volumen=0.5
 & sonido Prologo_Carga volume=0.4
 & efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
@@ -611,14 +606,11 @@ cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
 efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
 # El lecho y la estrofa se apagan aquí: el impacto tiene que entrar en seco.
-ambiente CORA sonar=false fundido=0.3
-ambiente ESTROFA sonar=false fundido=0.3
 @hechizo
 plano general archimago mago agujero desde=cam_final altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle MagicAttackOmni01_Load congela
 # El grito va con la voz épica (el eco largo del conjuro) y la música a tope.
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=0
-efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
 +0.5 sonido Prologo_ProteccionAbsoluta en=archimago volume=0.95
@@ -644,7 +636,6 @@ efecto LineasDeConcentracionBeat mostrar=false fundido=0
 efecto ScreenFadeBeat fadeIn=true color=FFFFFFFF duration=1.2 waitForEnd=false
 ambiente TORMENTA sonar=false fundido=0.2
 +1.2 hora Morning immediate=true esLaHoraDeVolver=true
-efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinalCola volumen=1 musicaDb=-4 duracion=0.5
 +0.4 sacudida 0.9 1.6
 # Tras el estallido, silencio: la música se va y queda el pitido de oídos hasta Will.
 +0.9 silencio 1.2

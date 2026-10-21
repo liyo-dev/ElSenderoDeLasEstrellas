@@ -14,7 +14,7 @@ using UnityEngine;
 /// que acordarse de la lista de clics: basta con que Unity refresque.
 public static class AplicarPendientesDeAudio
 {
-    const string CLAVE_HASH = "ElSendero.Audio.HashGuionPrologo";
+    const string CLAVE_HASH = "ElSendero.Audio.HashGuionPrologo.v2";
 
     [InitializeOnLoadMethod]
     static void Programar()
@@ -60,6 +60,7 @@ public static class AplicarPendientesDeAudio
         profile.cinematicVoiceDuck.sfxDb = -6f;
         EditorUtility.SetDirty(profile);
         AssetDatabase.SaveAssets();
+        Debug.Log("[Audio] Balance de voz aplicado (voz +0 dB, música -8 dB con la voz).");
     }
 
     static void CrearEventosDeHechizoSiFalta()
@@ -72,14 +73,18 @@ public static class AplicarPendientesDeAudio
 
     static void RehornearSiHaCambiado()
     {
-        string ruta = HorneadorDeGuion.RutaPrologo;
-        if (!File.Exists(ruta)) return;
-        string hash = Hash(File.ReadAllText(ruta));
-        if (EditorPrefs.GetString(CLAVE_HASH, "") == hash) return;
+        // Para leer el texto, ruta absoluta (la relativa no resuelve en el proceso del
+        // editor). Para hornear, la relativa: el horneador la usa para localizar el
+        // asset de salida.
+        string rutaAbsoluta = Path.Combine(Application.dataPath, "_SEQUENCES", "Guiones", "Prologo_UltimaNoche.guion.txt");
+        if (!File.Exists(rutaAbsoluta)) return;
+        string hash = Hash(File.ReadAllText(rutaAbsoluta));
+        string guardada = EditorPrefs.GetString(CLAVE_HASH, "");
+        if (guardada == hash) return;
 
         EditorPrefs.SetString(CLAVE_HASH, hash);
-        HorneadorDeGuion.Hornear(ruta, storyboard: false);
-        Debug.Log("[Audio] Guion del prólogo rehorneado (cambió desde la última vez).");
+        HorneadorDeGuion.Hornear(HorneadorDeGuion.RutaPrologo, storyboard: false);
+        Debug.Log("[Audio] Guion del prologo rehorneado (cambio desde la ultima vez).");
     }
 
     static string Hash(string texto)
