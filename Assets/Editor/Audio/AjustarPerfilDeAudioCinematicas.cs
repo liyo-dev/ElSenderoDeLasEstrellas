@@ -18,19 +18,19 @@ public static class AjustarPerfilDeAudioCinematicas
 
         // Ducking y realce en cinemáticas
         profile.cinematicVoiceDuck.enabled = true;
-        profile.cinematicVoiceDuck.musicDb = -16f;
+        profile.cinematicVoiceDuck.musicDb = -8f;
         profile.cinematicVoiceDuck.ambienceDb = -10f;
         profile.cinematicVoiceDuck.sfxDb = -6f;
-        profile.cinematicVoiceDuck.voiceGainDb = 4f;
+        profile.cinematicVoiceDuck.voiceGainDb = 0f;
         profile.cinematicVoiceDuck.attackSeconds = 0.12f;
         profile.cinematicVoiceDuck.releaseSeconds = 0.65f;
         profile.cinematicVoiceDuck.holdAfterVoiceSeconds = 0.5f;
 
         // Ducking de gameplay
         profile.voiceDuck.enabled = true;
-        profile.voiceDuck.musicDb = -12f;
-        profile.voiceDuck.ambienceDb = -8f;
-        profile.voiceDuck.sfxDb = -5f;
+        profile.voiceDuck.musicDb = -6f;
+        profile.voiceDuck.ambienceDb = -6f;
+        profile.voiceDuck.sfxDb = -4f;
         profile.voiceDuck.voiceGainDb = 0f;
         profile.voiceDuck.attackSeconds = 0.15f;
         profile.voiceDuck.releaseSeconds = 0.6f;
@@ -38,7 +38,7 @@ public static class AjustarPerfilDeAudioCinematicas
 
         EditorUtility.SetDirty(profile);
         AssetDatabase.SaveAssets();
-        Debug.Log("[Audio] AudioGraphProfile actualizado correctamente con AssetDatabase: música -16dB, voces +4dB, hold 0.5s.");
+        Debug.Log("[Audio] AudioGraphProfile actualizado: la música baja solo -8 dB con la voz (antes -16) y el bus de diálogo ya no realza la voz (antes +4 dB).");
     }
 
     [MenuItem("El Sendero/Audio/Actualizar Tema Liam")]

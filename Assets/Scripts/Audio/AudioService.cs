@@ -56,16 +56,16 @@ public sealed class AudioService : MonoBehaviour
     float GananciaDeVozTotalDb => _gananciaDeVozDb + _gananciaDeDuckingDb;
     readonly AudioGraphProfile.VoiceDuckSettings _duckCinematico = new()
     {
-        musicDb = -18f, ambienceDb = -12f, sfxDb = -8f, voiceGainDb = 8f,
+        musicDb = -8f, ambienceDb = -10f, sfxDb = -6f, voiceGainDb = 0f,
         attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
     };
     PresetDeVoz _presetDeVozActual = PresetDeVoz.Ninguno;
     readonly AudioGraphProfile.VoiceDuckSettings _duckEpico = new()
     {
-        musicDb = 0f, // Durante conjuros épicos la música se mantiene a tope sin atenuar (estilo anime)
+        musicDb = -6f, // Durante conjuros épicos la música se aparta lo justo: el lecho ritual va aparte
         ambienceDb = -12f,
         sfxDb = -4f,
-        voiceGainDb = 8f,
+        voiceGainDb = 0f,
         attackSeconds = 0.08f,
         releaseSeconds = 0.65f,
         holdAfterVoiceSeconds = 0.5f
@@ -1830,7 +1830,10 @@ public sealed class AudioService : MonoBehaviour
     public void SetExposedVolume(string exposedParam, float linear01)
     {
         if (!mixer || string.IsNullOrEmpty(exposedParam)) return;
-        float dB = Mathf.Lerp(-80f, 0f, Mathf.Clamp01(linear01));
+        // Curva perceptiva: el oyente espera que a la mitad del deslizador baje ~6 dB, no 40.
+        // Con la interpolacion lineal la musica se quedaba 14 dB por debajo de donde
+        // el jugador la habia puesto (INC-805).
+        float dB = linear01 <= 0f ? -80f : 20f * Mathf.Log10(Mathf.Clamp01(linear01));
         if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam)
         {
             _dialogoDbOriginal = dB;
@@ -1842,9 +1845,10 @@ public sealed class AudioService : MonoBehaviour
     public float GetExposedVolume01(string exposedParam, float def01 = 1f)
     {
         if (!mixer || string.IsNullOrEmpty(exposedParam)) return def01;
-        if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam)
-            return Mathf.InverseLerp(-80f, 0f, _dialogoDbOriginal);
-        return mixer.GetFloat(exposedParam, out float dB) ? Mathf.InverseLerp(-80f, 0f, dB) : def01;
+        float dB;
+        if (_gananciaDeVozAplicada && exposedParam == dialogueVolumeParam) dB = _dialogoDbOriginal;
+        else if (!mixer.GetFloat(exposedParam, out dB)) return def01;
+        return dB <= -80f ? 0f : Mathf.Clamp(Mathf.Pow(10f, dB / 20f), 0f, 1f);
     }
 
     AudioSource CreateChildSource(string name, AudioMixerGroup group, bool spatial, bool loop=false)

@@ -522,11 +522,11 @@ archimago bucle Challenging_NoWeapon
 +0.2 sonido Prologo_MagiaLevitar en=archimago volume=0.5
 # El cántico va con la voz de plegaria (eco largo, la voz suena ritual) y la música SUBE en vez
 # de duckearse: es la mezcla que hace que un conjuro suene a anime.
-efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
-efecto MezclaBeat fuente=plegaria musicaDb=-8 sfxDb=0 ambienteDb=-10 fundido=1.0
+efecto EfectoDeVozBeat preset=Plegaria gananciaDb=0
+efecto MezclaBeat fuente=plegaria musicaDb=-6 sfxDb=0 ambienteDb=-10 fundido=1.0
 ambiente CORO eventKey=SFX_Prologo_CoroBucle volumen=0.14
 # El lecho ritual bajo el cántico (38 s, compatible en bucle).
-ambiente CORA eventKey=Prologue_CoraCanto volumen=0.85 ritual=si
+ambiente CORA eventKey=Prologue_CoraCanto volumen=0.75 ritual=si
 archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 +3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 +5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
@@ -576,7 +576,7 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
 efecto LineasDeConcentracionBeat mostrar=true
 # La estrofa que sube (18 s) entra sobre el lecho: el cántico crece hacia el grito.
-ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.85 ritual=si
+ambiente ESTROFA eventKey=Prologue_EstrofaCanto volumen=0.75 ritual=si
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
 +0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.15,0 duracion=6 periodo=1.1 escalaInicial=1.6 escalaFinal=3.2
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
@@ -608,7 +608,7 @@ ambiente ESTROFA sonar=false fundido=0.3
 plano general archimago mago agujero desde=cam_final altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle MagicAttackOmni01_Load congela
 # El grito va con la voz épica (el eco largo del conjuro) y la música a tope.
-efecto EfectoDeVozBeat preset=Epico gananciaDb=4
+efecto EfectoDeVozBeat preset=Epico gananciaDb=0
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
