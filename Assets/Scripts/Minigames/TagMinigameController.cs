@@ -2877,9 +2877,11 @@ public class TagMinigameController : MonoBehaviour
         // ✅ Unir NPCs adicionales al party
         JoinAdditionalNPCsToParty();
 
-        // ✅ Reunir a todos los miembros del party junto al jugador inmediatamente
+        // ✅ Reunir a todos los miembros del party junto al jugador inmediatamente. El reinicio del
+        // minijuego es un reagrupado legítimo: mueve a todos aunque haya geometría entre medias.
+        // Ver INC-819.
         if (Game.NPC.PlayerParty.HasInstance)
-            Game.NPC.PlayerParty.Instance.TeleportAllMembersToPlayer();
+            Game.NPC.PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true);
 
         DisableMinigameActionRestrictions();
         UpdateObjectiveUI();

@@ -838,7 +838,7 @@ public class DialogueCinematicController : MonoBehaviour
             var willSwapper = ActiveCharacterSwapper.Instance;
             if (willSwapper != null && willSwapper.WillNpcInstance != null)
             {
-                willSwapper.TeleportWillNpcToPlayer();
+                willSwapper.TeleportWillNpcToPlayer(forzar: true);
             }
 
             // Calcular centro del grupo para orientar a los participantes

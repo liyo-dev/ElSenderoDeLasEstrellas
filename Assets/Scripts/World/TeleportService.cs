@@ -407,12 +407,13 @@ public class TeleportService : MonoBehaviour
     /// </summary>
     private static void TeleportCompanionsToPlayer()
     {
-        // 1. Teleportar party members registrados
+        // 1. Teleportar party members registrados. Un viaje rápido mueve a todo el grupo aunque
+        // haya geometría entre medias, así que se omite la comprobación de alcance. Ver INC-819.
         if (Game.NPC.PlayerParty.HasInstance)
-            Game.NPC.PlayerParty.Instance.TeleportAllMembersToPlayer();
+            Game.NPC.PlayerParty.Instance.TeleportAllMembersToPlayer(forzar: true);
 
         // 2. Teleportar Will NPC instanciado (no está en el party formal)
-        ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer();
+        ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer(forzar: true);
     }
 
     /// <summary>

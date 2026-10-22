@@ -2061,6 +2061,10 @@
             "value": "Una magia antigua te impide volar aquí."
         },
         {
+            "key": "PARTY_NO_PUEDE_LLEGAR",
+            "value": "{0} no puede llegar hasta ti."
+        },
+        {
             "key": "HUD_RETRATO_KO",
             "value": "K.O."
         },

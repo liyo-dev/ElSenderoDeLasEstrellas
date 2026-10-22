@@ -105,6 +105,13 @@ namespace Game.NPC
         
         // ✅ OPTIMIZACIÓN FASE 1: Buffer reutilizable para Physics queries
         private Collider[] _enemySearchBuffer = new Collider[32];
+
+        // Buffer y ruta reutilizables para comprobar si un compañero puede llegar hasta el
+        // jugador sin cruzar una pared o una reja. Ver INC-819.
+        private static readonly NavMeshPath _rutaHastaElJugador = new NavMeshPath();
+        private static readonly RaycastHit[] _paredesHastaElJugador = new RaycastHit[32];
+        private const float AlturaDelPecho = 1f;
+        private const float RadioDelCuerpo = 0.3f;
         
         // IDs de miembros pendientes de restaurar (si no se encontraron en la escena actual)
         private List<string> _pendingMemberIds = new();
@@ -427,19 +434,99 @@ namespace Game.NPC
 
         /// <summary>
         /// Fuerza a todos los miembros a teletransportarse cerca del jugador.
+        /// Con <paramref name="forzar"/> se omite la comprobación de alcance (viaje rápido, fin de
+        /// escalada, reinicios de minijuego); si no, un compañero no cruza paredes ni rejas.
+        /// <paramref name="avisar"/> muestra el aviso HUD cuando un compañero no puede llegar.
+        /// Ver INC-819.
         /// </summary>
-        public void TeleportAllMembersToPlayer()
+        public void TeleportAllMembersToPlayer(bool forzar = false, bool avisar = false)
         {
             if (_playerTransform == null) return;
 
             var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
             for (int i = 0; i < _members.Count; i++)
             {
-                if (_members[i] == hiddenNpc) continue;
+                var member = _members[i];
+                if (member == null || member == hiddenNpc) continue;
                 // En modo libre, solo se teletransportan los que están siguiendo activamente
-                if (_members[i].NPCManager?.Context?.IsPinnedByParty == true) continue;
-                TeleportMemberToPlayer(_members[i], i);
+                if (member.NPCManager?.Context?.IsPinnedByParty == true) continue;
+                TeleportMemberToPlayer(member, i, forzar, avisar);
             }
+        }
+
+        /// <summary>
+        /// ¿Puede un compañero llegar hasta <paramref name="destino"/> sin cruzar una pared o
+        /// una reja? El paso corto de Liam (Paso Sombrío) sí cruza <see cref="RejaAtravesable"/>;
+        /// el resto del equipo no, así que aquí la reja cuenta como muro. Con
+        /// <paramref name="forzar"/> se omite la comprobación (viaje rápido, fin de escalada,
+        /// cinemáticas y reinicios de minijuego). Ver INC-819.
+        /// </summary>
+        public static bool PuedeLlegarHasta(Transform origen, Vector3 destino, bool forzar = false)
+        {
+            if (forzar || origen == null) return true;
+
+            Vector3 desde = origen.position;
+            bool origenEnMalla = NavMesh.SamplePosition(desde, out NavMeshHit origenNav, 2f, NavMesh.AllAreas);
+            if (!NavMesh.SamplePosition(destino, out NavMeshHit destinoNav, 5f, NavMesh.AllAreas))
+                return false;
+
+            // Islas de NavMesh separadas (muro, portón cerrado, precipicio): el agente no puede
+            // llegar andando. Si el origen está fuera de malla (spawn, plataforma), se deja pasar
+            // a la comprobación física para no bloquear una recuperación legítima.
+            if (origenEnMalla)
+            {
+                if (!NavMesh.CalculatePath(origenNav.position, destinoNav.position, NavMesh.AllAreas, _rutaHastaElJugador))
+                    return false;
+                if (_rutaHastaElJugador.status != NavMeshPathStatus.PathComplete)
+                    return false;
+            }
+
+            return !HayParedEntre(desde + Vector3.up * AlturaDelPecho,
+                                  destinoNav.position + Vector3.up * AlturaDelPecho,
+                                  origen);
+        }
+
+        /// <summary>
+        /// Comprueba si una pared, reja o puerta se interpone entre dos puntos a la altura del
+        /// pecho. Los personajes (jugador, compañeros y enemigos), los objetos sueltos y los
+        /// triggers no cuentan; las rejas sí, porque solo las cruza el paso corto.
+        /// </summary>
+        private static bool HayParedEntre(Vector3 desde, Vector3 hasta, Transform ignorar)
+        {
+            Vector3 delta = hasta - desde;
+            float distancia = delta.magnitude;
+            if (distancia < 0.01f) return false;
+
+            int n = Physics.SphereCastNonAlloc(desde, RadioDelCuerpo, delta / distancia,
+                _paredesHastaElJugador, distancia, Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Ignore);
+            for (int i = 0; i < n; i++)
+            {
+                var c = _paredesHastaElJugador[i].collider;
+                if (c == null) continue;
+                if (ignorar != null && (c.transform == ignorar || c.transform.IsChildOf(ignorar))) continue;
+                // Suelo, rampas y escalones: se puede andar por ellos, no son una pared.
+                if (_paredesHastaElJugador[i].normal.y > 0.4f) continue;
+                if (c.attachedRigidbody != null && !c.attachedRigidbody.isKinematic) continue;
+                if (c.GetComponentInParent<Damageable>() != null) continue;
+                if (c.GetComponentInParent<NPCSimpleAnimator>() != null) continue;
+                return true; // las rejas NO se ignoran: el equipo no las cruza andando
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Aviso HUD cuando un compañero no puede reunirse con el jugador (el mismo toast que usa
+        /// la zona sin vuelo). Ver INC-819.
+        /// </summary>
+        public static void AvisarNoPuedeLlegar(string nombre)
+        {
+            if (HudToastService.Instance == null) return;
+
+            string plantilla = LocalizationManager.Instance != null
+                ? LocalizationManager.Instance.Get("PARTY_NO_PUEDE_LLEGAR", "{0} no puede llegar hasta ti.")
+                : "{0} no puede llegar hasta ti.";
+            HudToastService.Instance.ShowRaw(string.Format(plantilla, nombre));
         }
         
         /// <summary>
@@ -1433,9 +1520,9 @@ namespace Game.NPC
             }
         }
 
-        private void TeleportMemberToPlayer(NPCPartyMember member, int index)
+        private bool TeleportMemberToPlayer(NPCPartyMember member, int index, bool forzar = false, bool avisar = false)
         {
-            if (_playerTransform == null || member == null) return;
+            if (_playerTransform == null || member == null) return false;
 
             Vector3 targetPos = GetFormationPosition(index);
 
@@ -1443,8 +1530,21 @@ namespace Game.NPC
             // teletransporta: el agente quedaría fuera de malla. Se reintenta en la siguiente
             // comprobación de distancias. Ver INC-454.
             if (!NavMesh.SamplePosition(targetPos, out NavMeshHit hit, 5f, NavMesh.AllAreas))
-                return;
+                return false;
             targetPos = hit.position;
+
+            if (!forzar)
+            {
+                // El hueco de formación puede caer al otro lado de una pared aunque el jugador esté
+                // cerca: se comprueban tanto la posición del jugador (conectividad) como el hueco
+                // exacto (línea de visión) antes de mover al agente. Ver INC-819.
+                if (!PuedeLlegarHasta(member.transform, _playerTransform.position) ||
+                    !PuedeLlegarHasta(member.transform, targetPos))
+                {
+                    if (avisar) AvisarNoPuedeLlegar(member.DisplayName);
+                    return false;
+                }
+            }
 
             // FIX (17 ago 2026): mismo anti-patrón que GameBootProfile.ApplyNpcPositionsToScene —
             // no gatear Warp() detrás de isOnNavMesh, porque si da false en ese instante deja al
@@ -1462,6 +1562,7 @@ namespace Game.NPC
             }
 
             member.OnTeleportedToPlayer();
+            return true;
         }
 
         // -----------------------------------------------------------------
@@ -1511,8 +1612,10 @@ namespace Game.NPC
         public void NotifyPlayerClimbStopped(Vector3 stopPosition)
         {
             Log($"🔔 NotifyPlayerClimbStopped en {stopPosition} - teleportando miembros al jugador");
-            // Teletransportar todos los miembros cerca del jugador cuando el player termine de escalar
-            TeleportAllMembersToPlayer();
+            // Teletransportar todos los miembros cerca del jugador cuando el player termine de escalar.
+            // Es un reagrupado legítimo (el jugador puede haber subido a una cornisa inaccesible
+            // andando), así que se omite la comprobación de alcance. Ver INC-819.
+            TeleportAllMembersToPlayer(forzar: true);
         }
 
         /// <summary>

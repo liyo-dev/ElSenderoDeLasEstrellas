@@ -2061,6 +2061,10 @@
             "value": "An ancient magic keeps you from flying here."
         },
         {
+            "key": "PARTY_NO_PUEDE_LLEGAR",
+            "value": "{0} can't reach you."
+        },
+        {
             "key": "HUD_RETRATO_KO",
             "value": "K.O."
         },

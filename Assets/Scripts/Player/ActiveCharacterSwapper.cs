@@ -555,9 +555,12 @@ public class ActiveCharacterSwapper : MonoBehaviour
 
     /// <summary>
     /// Teleporta el NPC instanciado de Will cerca del jugador.
-    /// Llamado por TeleportService tras teleportar al jugador.
+    /// Llamado por TeleportService tras teleportar al jugador. Con <paramref name="forzar"/> se
+    /// omite la comprobación de alcance (viaje rápido, cinemáticas); si no, Will no cruza paredes
+    /// ni rejas y, con <paramref name="avisar"/>, muestra el aviso de que no puede llegar.
+    /// Ver INC-819.
     /// </summary>
-    public void TeleportWillNpcToPlayer()
+    public void TeleportWillNpcToPlayer(bool forzar = false, bool avisar = false)
     {
         if (_willNpcInstance == null) return;
         // No teletransportar si el NPC de Will está anclado (equipo disuelto o modo libre)
@@ -585,6 +588,18 @@ public class ActiveCharacterSwapper : MonoBehaviour
             behind = playerGO.transform.position - playerGO.transform.forward * 1.5f;
             if (NavMesh.SamplePosition(behind, out NavMeshHit hit, 3f, NavMesh.AllAreas))
                 behind = hit.position;
+        }
+
+        if (!forzar)
+        {
+            // Mismo criterio que los miembros del party: Will no atraviesa una pared ni una reja
+            // para reunirse con el jugador. Ver INC-819.
+            if (!PlayerParty.PuedeLlegarHasta(_willNpcInstance.transform, playerGO.transform.position) ||
+                !PlayerParty.PuedeLlegarHasta(_willNpcInstance.transform, behind))
+            {
+                if (avisar) PlayerParty.AvisarNoPuedeLlegar(_willNpcInstance.DisplayName);
+                return;
+            }
         }
 
         var agent = _willNpcInstance.GetComponent<NavMeshAgent>();

@@ -292,8 +292,10 @@ public class PartyControlManager : MonoBehaviour
                     member.NPCManager.Context.IsPinnedByParty = false;
             }
 
-            // Teletransportar a todos al personaje activo
-            party.TeleportAllMembersToPlayer();
+            // Teletransportar a todos al personaje activo. Es un reagrupado explícito del jugador:
+            // si alguien no puede cruzar una pared o una reja, se avisa por el toast del HUD.
+            // Ver INC-819.
+            party.TeleportAllMembersToPlayer(avisar: true);
 
             // Will NPC fuera del party: solo seguir si hay compañeros activos (excluyendo el NPC oculto)
             var willNpc = swapper?.WillNpcInstance;
@@ -308,7 +310,7 @@ public class PartyControlManager : MonoBehaviour
                 {
                     if (willNpc.NPCManager?.Context != null)
                         willNpc.NPCManager.Context.IsPinnedByParty = false;
-                    swapper.TeleportWillNpcToPlayer();
+                    swapper.TeleportWillNpcToPlayer(avisar: true);
                     willNpc.StartFollowingIgnorePartyCheck();
                 }
             }
