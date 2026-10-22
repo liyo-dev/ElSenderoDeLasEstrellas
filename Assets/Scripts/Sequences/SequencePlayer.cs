@@ -739,8 +739,9 @@ public class SequencePlayer : CinematicSequencerBase
             _ => _definition.endStayBlack,
         };
 
-        if (stayBlack) yield return Co_EndCinematicStayBlack(RestoreMusic);
-        else yield return Co_EndCinematicWithTransition(RestoreMusic);
+        bool skipMusic = _definition.skipMusicRestore;
+        if (stayBlack) yield return Co_EndCinematicStayBlack(skipMusic ? null : RestoreMusic);
+        else yield return Co_EndCinematicWithTransition(skipMusic ? null : RestoreMusic);
 
         // La señal de salida va EN CUANTO la pantalla vuelve al gameplay (INC-359). Antes iba
         // detrás de la gracia de 3,5 s de abajo, y todo lo que el grafo hace al acabar una escena

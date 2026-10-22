@@ -27,7 +27,7 @@ MonoBehaviour:
     ambienceDb: -10
     sfxDb: -6
     voiceGainDb: 0
-    attackSeconds: 0.08
+    attackSeconds: 0.12
     releaseSeconds: 0.65
     holdAfterVoiceSeconds: 0.5
   battles:

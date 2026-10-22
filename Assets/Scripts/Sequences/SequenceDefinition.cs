@@ -63,6 +63,10 @@ public class SequenceDefinition : ScriptableObject, INarrativeStateEffect
              "nada detrás que revele, esto deja la pantalla en negro para siempre.")]
     public bool endStayBlack = false;
 
+    [Tooltip("Marcado = al terminar, NO se restaura la música de zona/escena/interior. " +
+             "Útil para secuencias que dejan el mundo en silencio (p. ej. el final del prólogo).")]
+    public bool skipMusicRestore = false;
+
     [Tooltip("Prefab con los SequenceModule que necesita esta secuencia (mecánicas en C#, p. ej. el " +
              "panic input del Despertar). Solo se usa cuando la secuencia se monta en vivo desde " +
              "PlayCinematicNode: se instancia dentro del SequencePlayer y sus módulos se añaden al " +
