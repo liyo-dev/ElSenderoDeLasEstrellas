@@ -84,18 +84,25 @@ public static partial class CombatLabBuilder
         return go;
     }
 
-    /// Añade un destino al viaje rápido del LAB sin tocar la lista de CrearDestinos.
+    /// Añade (o actualiza) el destino de la zona en el viaje rápido del LAB, sin tocar la lista
+    /// de CrearDestinos.
     private static void AnadirDestinoCap2(string nombre, string queHay, Vector3 posicion, float giro)
     {
         var viaje = Object.FindAnyObjectByType<ViajeDelLab>();
         if (viaje == null) return;
-        var punto = new GameObject("Destino — " + nombre).transform;
-        punto.SetParent(viaje.transform);
+        var punto = PuntoDeDestino(viaje.transform, nombre);
         punto.SetPositionAndRotation(posicion, Quaternion.Euler(0f, giro, 0f));
         var so = new SerializedObject(viaje);
         var destinos = so.FindProperty("destinos");
-        destinos.arraySize++;
-        Destino(destinos.GetArrayElementAtIndex(destinos.arraySize - 1), nombre, queHay, punto);
+        int indice = -1;
+        for (int i = 0; i < destinos.arraySize; i++)
+            if (destinos.GetArrayElementAtIndex(i).FindPropertyRelative("nombre").stringValue == nombre) indice = i;
+        if (indice < 0)
+        {
+            indice = destinos.arraySize;
+            destinos.arraySize++;
+        }
+        Destino(destinos.GetArrayElementAtIndex(indice), nombre, queHay, punto);
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 }

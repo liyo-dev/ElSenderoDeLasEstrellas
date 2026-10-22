@@ -37,13 +37,10 @@ public static partial class HorneadorDeGuion
     [MenuItem("El Sendero/Guion/4. Hornear Batalla Final (Intro)", priority = 10)]
     public static void MenuBatallaFinal() => Hornear("Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt", storyboard: false);
 
-    [MenuItem("El Sendero/Guion/5. Hornear Promo (Encuentro en el camino)", priority = 11)]
-    public static void MenuPromo() => Hornear("Assets/_SEQUENCES/Guiones/Promo_EncuentroEnElCamino.guion.txt", storyboard: false);
-
-    [MenuItem("El Sendero/Guion/6. Hornear Final Parte 1 (El Sacrificio)", priority = 12)]
+    [MenuItem("El Sendero/Guion/5. Hornear Final Parte 1 (El Sacrificio)", priority = 12)]
     public static void MenuFinalParte1() => Hornear("Assets/_SEQUENCES/Guiones/Final_01_ElSacrificio.guion.txt", storyboard: false);
 
-    [MenuItem("El Sendero/Guion/7. Hornear Final Parte 2 (El Río)", priority = 13)]
+    [MenuItem("El Sendero/Guion/6. Hornear Final Parte 2 (El Río)", priority = 13)]
     public static void MenuFinalParte2() => Hornear("Assets/_SEQUENCES/Guiones/Final_02_ElRio.guion.txt", storyboard: false);
 
     public static GuionHorneado Hornear(string rutaTexto, bool storyboard)

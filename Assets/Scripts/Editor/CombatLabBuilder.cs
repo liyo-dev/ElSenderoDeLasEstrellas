@@ -216,6 +216,21 @@ public static partial class CombatLabBuilder
         d.FindPropertyRelative("punto").objectReferenceValue = punto;
     }
 
+    /// Marcador de un destino del viaje rápido. Si ya hay uno con ese nombre bajo el mismo
+    /// padre, se reutiliza en vez de crear otro: rehacer una zona no deja marcadores huérfanos.
+    private static Transform PuntoDeDestino(Transform padre, string nombre)
+    {
+        string completo = "Destino — " + nombre;
+        for (int i = 0; i < padre.childCount; i++)
+        {
+            var hijo = padre.GetChild(i);
+            if (hijo.name == completo) return hijo;
+        }
+        var punto = new GameObject(completo).transform;
+        punto.SetParent(padre);
+        return punto;
+    }
+
     /// La escena se llamaba CombatLab: se quita del build y del proyecto al crear Lab.
     private static void RetirarEscenaAntigua()
     {

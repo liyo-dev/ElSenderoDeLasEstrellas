@@ -111,8 +111,8 @@ using UnityEngine;
 /// seguridad del farClipPlane...) son campos serializados de un componente que ya existía en la
 /// escena de Raúl. Unity NO aplica retroactivamente un nuevo valor por defecto de C# a un campo que
 /// ya tiene un valor guardado en la escena/prefab (el mismo tipo de bug ya documentado en este
-/// proyecto para <c>PromoVideo01Sequencer</c>, ver `contexto-proyecto.md`) — así que aunque el
-/// código cambiara, el Inspector podía seguir mostrando (y USANDO) los números viejos hasta que
+/// proyecto en otros componentes montados a mano) — así que aunque el código cambiara, el
+/// Inspector podía seguir mostrando (y USANDO) los números viejos hasta que
 /// alguien los tocara a mano o el campo se borrara/renombrara. Varios campos de este fix se han
 /// renombrado o eliminado a propósito (<c>desiredScreenSizePixels</c> →
 /// <see cref="starScreenSizePixelsRange"/>; <c>farClipSafetyMargin</c> pasa de campo serializado a
