@@ -9,10 +9,11 @@ namespace Sendero.UI
     /// <summary>
     /// Retratos vivos del grupo: un estudio fuera del mundo (muy por debajo del suelo, más allá
     /// del plano lejano de las cámaras de juego) con una copia de cada personaje —solo mallas,
-    /// Animator, cara y ropa, sin nada de juego— y una cámara por personaje que la filma a una
-    /// RenderTexture. El retrato del HUD la pinta como cualquier otra imagen
-    /// (<see cref="IFuenteDeRetrato"/>); además le avisa de cuándo se ve y de qué reacciones hacer
-    /// (<see cref="IFuenteDeRetratoVivo"/>).
+    /// Animator, cara y ropa, sin nada de juego— y dos cámaras por personaje que la filman a sendas
+    /// RenderTexture, una sobre negro y otra sobre blanco. URP no conserva el alfa de la
+    /// RenderTexture, así que el retrato del HUD saca la transparencia de la diferencia entre las
+    /// dos (ver <see cref="ImagenDeRetrato.TexturaSobreFondo"/>). Además le avisa de cuándo se ve y
+    /// de qué reacciones hacer (<see cref="IFuenteDeRetratoVivo"/>).
     ///
     /// Cada cara es un estado del Animator del estudio (Normal, Cansado, Caido, Contento) más la
     /// emoción de su <see cref="NPCEmotionController"/> (parpadea solo); el golpe, el saludo y la
@@ -22,8 +23,7 @@ namespace Sendero.UI
     /// mundo se apaga en ese momento, así que el retrato no cambia con la hora ni el clima.
     ///
     /// Si el componente está desactivado o una copia no se puede crear, no da imagen y el retrato
-    /// usa su respaldo (los retratos horneados). Se monta con
-    /// <c>El Sendero/UI/Montar retratos vivos</c>.
+    /// usa su respaldo (los retratos horneados).
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class EstudioDeRetratos : MonoBehaviour, IFuenteDeRetratoVivo
@@ -37,7 +37,7 @@ namespace Sendero.UI
         private static readonly int EstadoVictoria = Animator.StringToHash("Victoria");
 
         [Header("Modelos (0 = Liam, 1 = Will, 2 = Estela)")]
-        [Tooltip("Copias del personaje sin componentes de juego (las crea «Montar retratos vivos»).")]
+        [Tooltip("Copias del personaje sin componentes de juego: mallas, Animator y ropa.")]
         [SerializeField] private GameObject[] modelos = new GameObject[3];
         [SerializeField] private RuntimeAnimatorController controlador;
 
@@ -72,6 +72,8 @@ namespace Sendero.UI
             public ModularAutoBuilder ropa;
             public Camera camara;
             public RenderTexture textura;
+            public Camera camaraDelFondo;
+            public RenderTexture texturaDelFondo;
             public bool visible;
             public ExpresionDeRetrato expresion;
             public int estadoBase = EstadoNormal;
@@ -95,7 +97,7 @@ namespace Sendero.UI
             var c = Asegurar((int)personaje);
             if (c == null) return false;
             PonerCara(c, expresion);
-            imagen = new ImagenDeRetrato(c.textura, new Rect(0f, 0f, 1f, 1f), 1f, fraccionBajoElBorde);
+            imagen = new ImagenDeRetrato(c.textura, new Rect(0f, 0f, 1f, 1f), 1f, fraccionBajoElBorde, c.texturaDelFondo);
             return true;
         }
 
@@ -104,10 +106,13 @@ namespace Sendero.UI
             var c = _copias[(int)personaje];
             if (c == null) { if (visible && isActiveAndEnabled) c = Asegurar((int)personaje); if (c == null) return; }
             if (c.visible == visible) return;
+            // Al salir del Play, el retrato puede pedir que lo escondan con las copias ya destruidas.
+            if (c.raiz == null || c.camara == null || c.camaraDelFondo == null) return;
             c.visible = visible;
             _camarasVisibles += visible ? 1 : -1;
             if (c.raiz.activeSelf != visible) c.raiz.SetActive(visible);
             c.camara.enabled = visible;
+            c.camaraDelFondo.enabled = visible;
             if (visible) { PonerEstado(c, c.estadoBase, 0f); SincronizarRopa((int)personaje, c); }
         }
 
@@ -145,8 +150,9 @@ namespace Sendero.UI
                 var c = _copias[i];
                 if (c == null || !c.visible) continue;
                 c.visible = false;
-                c.camara.enabled = false;
-                c.raiz.SetActive(false);
+                if (c.camara != null) c.camara.enabled = false;
+                if (c.camaraDelFondo != null) c.camaraDelFondo.enabled = false;
+                if (c.raiz != null) c.raiz.SetActive(false);
             }
             _camarasVisibles = 0;
         }
@@ -158,7 +164,9 @@ namespace Sendero.UI
                 var c = _copias[i];
                 if (c == null) continue;
                 if (c.camara != null) c.camara.targetTexture = null;
+                if (c.camaraDelFondo != null) c.camaraDelFondo.targetTexture = null;
                 if (c.textura != null) { c.textura.Release(); Destroy(c.textura); }
+                if (c.texturaDelFondo != null) { c.texturaDelFondo.Release(); Destroy(c.texturaDelFondo); }
                 if (c.raiz != null) Destroy(c.raiz);
             }
         }
@@ -219,21 +227,41 @@ namespace Sendero.UI
             var vista = Quaternion.Euler(inclinacion, giro + 180f, 0f);
             float distancia = Mathf.Max(limites.size.magnitude, 0.5f) * 2f;
 
-            var camGo = new GameObject("Cámara de retrato", typeof(Camera), typeof(UniversalAdditionalCameraData));
+            var posicion = centro - vista * Vector3.forward * distancia;
+            float tamanoDelPlano = alto * 0.5f * (1f + margen);
+            int mascara = layer >= 0 ? 1 << layer : ~0;
+            // Dos cámaras idénticas, una sobre negro y otra sobre blanco: el shader del retrato
+            // compara las dos imágenes y saca de la diferencia lo que cubre el personaje, porque
+            // URP no conserva el alfa de la RenderTexture.
+            c.camara = CrearCamara(c.raiz.name, posicion, vista, tamanoDelPlano, distancia, mascara, Color.black, out c.textura);
+            c.camaraDelFondo = CrearCamara(c.raiz.name + " (fondo)", posicion, vista, tamanoDelPlano, distancia, mascara, Color.white, out c.texturaDelFondo);
+            c.raiz.SetActive(false);
+            c.expresion = (ExpresionDeRetrato)(-1);
+            _copias[slot] = c;
+            return c;
+        }
+
+        /// Cámara del estudio que dibuja al personaje sobre un color plano. Las dos cámaras de una
+        /// copia comparten posición, encuadre y capa y solo cambian el fondo; el retrato compara sus
+        /// dos imágenes para quedarse con la transparencia.
+        private Camera CrearCamara(string nombre, Vector3 posicion, Quaternion rotacion, float tamano,
+            float distancia, int mascara, Color fondo, out RenderTexture textura)
+        {
+            var camGo = new GameObject("Cámara de retrato de " + nombre, typeof(Camera), typeof(UniversalAdditionalCameraData));
             camGo.transform.SetParent(transform, false);
-            camGo.transform.SetPositionAndRotation(centro - vista * Vector3.forward * distancia, vista);
-            c.camara = camGo.GetComponent<Camera>();
-            c.camara.orthographic = true;
-            c.camara.orthographicSize = alto * 0.5f * (1f + margen);
-            c.camara.nearClipPlane = 0.05f;
-            c.camara.farClipPlane = distancia * 2f;
-            c.camara.clearFlags = CameraClearFlags.SolidColor;
-            c.camara.backgroundColor = new Color(0f, 0f, 0f, 0f);
-            c.camara.cullingMask = layer >= 0 ? 1 << layer : ~0;
-            c.camara.allowHDR = false;
-            c.camara.allowMSAA = true;
-            c.camara.useOcclusionCulling = false;
-            c.camara.depth = -100f;
+            camGo.transform.SetPositionAndRotation(posicion, rotacion);
+            var camara = camGo.GetComponent<Camera>();
+            camara.orthographic = true;
+            camara.orthographicSize = tamano;
+            camara.nearClipPlane = 0.05f;
+            camara.farClipPlane = distancia * 2f;
+            camara.clearFlags = CameraClearFlags.SolidColor;
+            camara.backgroundColor = fondo;
+            camara.cullingMask = mascara;
+            camara.allowHDR = false;
+            camara.allowMSAA = true;
+            camara.useOcclusionCulling = false;
+            camara.depth = -100f;
             var datos = camGo.GetComponent<UniversalAdditionalCameraData>();
             datos.renderType = CameraRenderType.Base;
             datos.renderPostProcessing = false;
@@ -242,15 +270,12 @@ namespace Sendero.UI
             datos.requiresColorOption = CameraOverrideOption.Off;
             datos.requiresDepthOption = CameraOverrideOption.Off;
             datos.volumeLayerMask = 0;
-            c.textura = new RenderTexture(resolucion, resolucion, 24, RenderTextureFormat.ARGB32)
-                { name = "Retrato vivo " + c.raiz.name, antiAliasing = 4 };
-            c.textura.Create();
-            c.camara.targetTexture = c.textura;
-            c.camara.enabled = false;
-            c.raiz.SetActive(false);
-            c.expresion = (ExpresionDeRetrato)(-1);
-            _copias[slot] = c;
-            return c;
+            textura = new RenderTexture(resolucion, resolucion, 24, RenderTextureFormat.ARGB32)
+                { name = "Retrato vivo de " + nombre, antiAliasing = 4 };
+            textura.Create();
+            camara.targetTexture = textura;
+            camara.enabled = false;
+            return camara;
         }
 
         /// La derecha anatómica y la vertical del cuerpo definen el frente, aunque el avatar
@@ -398,7 +423,7 @@ namespace Sendero.UI
         private bool EsCamaraDelEstudio(Camera camara)
         {
             for (int i = 0; i < _copias.Length; i++)
-                if (_copias[i] != null && _copias[i].camara == camara) return true;
+                if (_copias[i] != null && (_copias[i].camara == camara || _copias[i].camaraDelFondo == camara)) return true;
             return false;
         }
 

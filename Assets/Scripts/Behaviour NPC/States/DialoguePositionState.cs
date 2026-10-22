@@ -17,11 +17,14 @@ namespace Game.NPC.States
         private readonly Vector3 _targetPosition;
         private readonly Transform _npcTarget;
         private readonly float _maxTime;
+        private readonly bool _mantenerFueraDelParty;
         
         private float _elapsedTime;
         private bool _hasReachedPosition;
         private bool _hasTeleported;
         private float _originalStoppingDistance;
+        private bool _anclado;
+        private NPCStateContext _contexto;
 
         // Override dinámico del objetivo de mirada: en diálogos grupales,
         // DialogueCinematicController lo actualiza en cada línea para que el compañero
@@ -39,26 +42,57 @@ namespace Game.NPC.States
             _lookTargetOverride = target;
         }
 
+        /// <summary>
+        /// Deja al NPC fijo donde está: deja de mirar al objetivo y de moverlo, sin salir del
+        /// estado. Así tampoco entra en encuentros sociales ni vuelve a Idle. Lo usa la
+        /// tripulación del barco al colgarlo de su puesto; se suelta saliendo del estado, como
+        /// cualquier posición de diálogo.
+        /// </summary>
+        public void Anclar()
+        {
+            _anclado = true;
+            _hasReachedPosition = true;
+            _hasTeleported = true;
+
+            if (_contexto == null) return;
+
+            var agent = _contexto.Agent;
+            if (agent != null && agent.enabled && agent.isOnNavMesh)
+            {
+                agent.isStopped = true;
+                agent.ResetPath();
+                agent.updatePosition = false;
+                agent.updateRotation = false;
+            }
+
+            _contexto.Animator?.SetMovementSpeed(0f);
+            _contexto.Animator?.DisableAutoRotation();
+        }
+
         private const float ARRIVAL_THRESHOLD = 0.5f;  // Distancia para considerar que llegó
         // Grados/segundo del giro continuo en posición. Bajado de 360 a 120: a 360 el compañero
         // daba latigazos de cuerpo cada vez que cambiaba el speaker del diálogo grupal — a 120
         // el giro se lee como "se vuelve hacia quien habla", no como un tic nervioso.
         private const float ROTATION_SPEED = 120f;
 
-        public DialoguePositionState(NPCPartyMember partyMember, Vector3 targetPosition, float maxTime, Transform npcTarget = null)
+        public DialoguePositionState(NPCPartyMember partyMember, Vector3 targetPosition, float maxTime,
+                                     Transform npcTarget = null, bool mantenerFueraDelParty = false)
         {
             _partyMember = partyMember;
             _targetPosition = targetPosition;
             _maxTime = maxTime;
             _npcTarget = npcTarget;
+            _mantenerFueraDelParty = mantenerFueraDelParty;
         }
 
         public override void OnEnter(NPCStateContext context)
         {
             base.OnEnter(context);
+            _contexto = context;
             _elapsedTime = 0f;
             _hasReachedPosition = false;
             _hasTeleported = false;
+            _anclado = false;
             
             if (context.Agent != null && context.Agent.isOnNavMesh)
             {
@@ -93,6 +127,9 @@ namespace Game.NPC.States
         public override void OnUpdate(NPCStateContext context)
         {
             base.OnUpdate(context);
+
+            // Anclado: el barco lleva el cuerpo; no se gira, no se teletransporta y no se mueve.
+            if (_anclado) return;
             
             if (context.Agent == null || !context.Agent.isOnNavMesh)
                 return;
@@ -248,14 +285,20 @@ namespace Game.NPC.States
 
         public override INPCState CheckTransitions(NPCStateContext context)
         {
+            // Anclado (barco): el puesto manda hasta que se libere con Soltar(). Si no, una
+            // transición de combate o cinemática lo saca del barco y lo devuelve a AllyCombatState
+            // mientras sigue colgado de su puesto (ver INC-808).
+            if (_anclado) return null;
+
             // Prioridad 1: Cinemática
             if (context.IsInCinematic) return new CinematicState();
             
             // Prioridad 2: Combate
             if (context.IsInCombat) return new AllyCombatState();
             
-            // Prioridad 3: Ya no está en el party
-            if (_partyMember == null || !_partyMember.IsInParty)
+            // Prioridad 3: Ya no está en el party (salvo que quien lo llamó pida mantenerlo,
+            // como el Will de la IA al subir al barco).
+            if (!_mantenerFueraDelParty && (_partyMember == null || !_partyMember.IsInParty))
             {
                 return new IdleState();
             }

@@ -18,8 +18,8 @@ namespace Sendero.UI
     ///
     /// Este panel decide quién va dónde; cómo se ve y reacciona cada retrato lo hace
     /// <see cref="RetratoDelGrupo"/>, y la vida, las caídas y el trío los da
-    /// <see cref="EstadoDelGrupoParaRetratos"/>. Se monta con
-    /// <c>El Sendero/UI/Montar retratos del grupo</c>.
+    /// <see cref="EstadoDelGrupoParaRetratos"/>. Las imágenes salen del estudio en vivo (con el
+    /// saludo al cambiar de personaje); apagando <c>retratosVivos</c> se usan los horneados.
     /// </summary>
     public class PartyHUDPanel : MonoBehaviour
     {
@@ -35,9 +35,11 @@ namespace Sendero.UI
         [SerializeField] private RetratoDelGrupo retratoDeWill;
         [SerializeField] private RetratoDelGrupo retratoDeEstela;
         [SerializeField] private EstadoDelGrupoParaRetratos estado;
-        [Tooltip("De dónde salen las imágenes: un JuegoDeRetratos u otro componente o asset que implemente IFuenteDeRetrato.")]
+        [Tooltip("Retratos vivos: el EstudioDeRetratos filma a los modelos reales (se mueven y saludan al cambiar de personaje). Apagado, el HUD usa los retratos horneados.")]
+        [SerializeField] private bool retratosVivos = true;
+        [Tooltip("De dónde salen las imágenes vivas: un JuegoDeRetratos u otro componente o asset que implemente IFuenteDeRetrato.")]
         [SerializeField] private Object fuenteDeRetratos;
-        [Tooltip("Imágenes que se usan si la fuente principal no tiene la que toca.")]
+        [Tooltip("Imágenes fijas del grupo: las que se usan con los retratos vivos apagados y el respaldo si la fuente viva falla.")]
         [SerializeField] private JuegoDeRetratos retratosDeRespaldo;
         [Tooltip("Distancia horizontal del centro a los retratos de los lados (unidades del contenedor).")]
         [SerializeField] private float separacionLateral = 290f;
@@ -136,14 +138,23 @@ namespace Sendero.UI
         {
             if (_configurado) return;
             _configurado = true;
-            var fuente = fuenteDeRetratos as IFuenteDeRetrato;
-            if (fuente == null && fuenteDeRetratos is GameObject go) fuente = go.GetComponent<IFuenteDeRetrato>();
+            var fuente = FuentePrincipal();
+            var respaldo = retratosVivos ? retratosDeRespaldo : null;
             for (int i = 0; i < _retratos.Length; i++)
             {
                 var ficha = FichaDePersonaje.Buscar((Slot)i);
                 _colores[i] = ficha != null && ficha.ColorDelPersonaje.a > 0f ? ficha.ColorDelPersonaje : ColoresPorDefecto[i];
-                if (_retratos[i] != null) _retratos[i].Configurar((Slot)i, _colores[i], fuente, retratosDeRespaldo);
+                if (_retratos[i] != null) _retratos[i].Configurar((Slot)i, _colores[i], fuente, respaldo);
             }
+        }
+
+        /// Con los retratos vivos apagados, la fuente principal son los horneados.
+        private IFuenteDeRetrato FuentePrincipal()
+        {
+            if (!retratosVivos) return retratosDeRespaldo;
+            var fuente = fuenteDeRetratos as IFuenteDeRetrato;
+            if (fuente == null && fuenteDeRetratos is GameObject go) fuente = go.GetComponent<IFuenteDeRetrato>();
+            return fuente != null ? fuente : retratosDeRespaldo;
         }
 
         // ─── Callbacks de eventos ──────────────────────────────────────────────

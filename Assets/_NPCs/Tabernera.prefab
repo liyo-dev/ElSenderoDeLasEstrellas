@@ -4823,6 +4823,7 @@ GameObject:
   - component: {fileID: 4623782820887965498}
   - component: {fileID: 3718468533866254928}
   - component: {fileID: 3666521845913853480}
+  - component: {fileID: 5233043314015396400}
   m_Layer: 8
   m_Name: Hair09
   m_TagString: Untagged
@@ -4902,6 +4903,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5233043314015396400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1746492406928604962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 7182422735080617453}
+  mallaDelPelo: {fileID: 3718468533866254928}
+  ojosDeReferencia: {fileID: 5516894194662112686}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &1749433972297365097
 GameObject:
   m_ObjectHideFlags: 0
@@ -18221,6 +18239,7 @@ MonoBehaviour:
   hint: {fileID: 3271472478285902274}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -18305,6 +18324,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -18322,6 +18342,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &3055595692753884557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18387,11 +18408,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 6642882937718305454}
-  originalMouthMesh: {fileID: 1396208374774616623}
+  ojosDeReposo: {fileID: 6642882937718305454}
+  bocaDeReposo: {fileID: 1396208374774616623}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &7115466088064550203
 GameObject:
   m_ObjectHideFlags: 0

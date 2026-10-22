@@ -18,14 +18,25 @@ public class PuntoDeAmarre : MonoBehaviour
 
     private Interactable _interactuable;
     private BarcoNavegable _barco;
+    private bool _suscrito;
 
     /// <summary>El barco que está atracado aquí ahora mismo (null si no hay ninguno).</summary>
     public BarcoNavegable Barco => _barco;
 
-    /// <summary>
-    /// El interactuable del punto (el que lleva el icono). Se busca solo si aún no está: en el
-    /// Editor los Awake no se ejecutan, así que no se puede guardar en el Awake.
-    /// </summary>
+    /// <summary>Asigna el interactuable (lo llama el generador, que lo crea).</summary>
+    public void AsignarInteractuable(Interactable interactuable)
+    {
+        _interactuable = interactuable;
+        if (_interactuable != null)
+        {
+            _interactuable.SetMode(InteractableMode.Custom);
+            _interactuable.OnInteract.AddListener(HandleInteract);
+            _suscrito = true;
+            _interactuable.EnableInteraction(false);
+        }
+    }
+
+    /// <summary>El interactuable del punto (el que lleva el icono).</summary>
     public Interactable Interactuable
     {
         get
@@ -45,7 +56,13 @@ public class PuntoDeAmarre : MonoBehaviour
         if (_interactuable != null)
         {
             _interactuable.SetMode(InteractableMode.Custom);
-            _interactuable.OnInteract.AddListener(HandleInteract);
+            // En el Editor el Awake no se ejecuta, así que el generador ya lo enganchó: no se
+            // vuelve a suscribir o el evento se dispararía dos veces.
+            if (!_suscrito)
+            {
+                _interactuable.OnInteract.AddListener(HandleInteract);
+                _suscrito = true;
+            }
             _interactuable.EnableInteraction(false);
         }
     }

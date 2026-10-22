@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 8194082150134540598}
   - component: {fileID: 3006353091249577372}
   - component: {fileID: 106155275800776809}
+  - component: {fileID: 6739785023304474753}
   m_Layer: 0
   m_Name: Hair01
   m_TagString: Untagged
@@ -360,6 +361,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6739785023304474753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108195400256176828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 8747877491027333718}
+  mallaDelPelo: {fileID: 3006353091249577372}
+  ojosDeReferencia: {fileID: 4555394604292449540}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &118639684906225380
 GameObject:
   m_ObjectHideFlags: 0
@@ -16088,6 +16106,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -16105,6 +16124,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &3240005844653516724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16240,6 +16260,15 @@ MonoBehaviour:
   bocaDeReposo: {fileID: 1761894409013522335}
   eyePrefix: Eye
   mouthPrefix: Mouth
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &1093861493971799819
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10679,6 +10679,7 @@ GameObject:
   - component: {fileID: 3984034529601057683}
   - component: {fileID: 8402628536051502245}
   - component: {fileID: 600987872836913083}
+  - component: {fileID: 6499725602893169141}
   m_Layer: 0
   m_Name: Hair13
   m_TagString: Untagged
@@ -10758,6 +10759,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6499725602893169141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8762348684316870603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 5014074110871755233}
+  mallaDelPelo: {fileID: 8402628536051502245}
+  ojosDeReferencia: {fileID: 3446048701086914736}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &8784123019591236477
 GameObject:
   m_ObjectHideFlags: 0
@@ -11336,6 +11354,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -11353,6 +11372,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &1301072731070886384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11507,11 +11527,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 8975327509349052620}
-  originalMouthMesh: {fileID: 4730294353661995776}
+  ojosDeReposo: {fileID: 8975327509349052620}
+  bocaDeReposo: {fileID: 4730294353661995776}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &671181542998378555
 MonoBehaviour:
   m_ObjectHideFlags: 0

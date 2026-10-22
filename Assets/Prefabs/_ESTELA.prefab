@@ -17462,6 +17462,7 @@ GameObject:
   - component: {fileID: 732352680391503075}
   - component: {fileID: 5526212711652006628}
   - component: {fileID: 6601794589266627543}
+  - component: {fileID: 7718603461740059484}
   m_Layer: 0
   m_Name: Hair08
   m_TagString: Untagged
@@ -17541,6 +17542,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7718603461740059484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7974455547802228836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 9069736355997653958}
+  mallaDeLasCejas: {fileID: 5526212711652006628}
+  ojosDeReferencia: {fileID: 8233039290009638661}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &8022916129199227797
 GameObject:
   m_ObjectHideFlags: 0

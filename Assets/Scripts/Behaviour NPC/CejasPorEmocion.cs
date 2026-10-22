@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 
 /// Mueve las cejas del personaje según la emoción. En este modelo las cejas son dos islas
 /// sueltas dentro de la malla del pelo: este componente copia la malla por instancia y deforma
@@ -13,8 +14,9 @@ public class CejasPorEmocion : MonoBehaviour
     [Header("Referencias")]
     [Tooltip("Controlador de emociones del personaje. Si se deja vacío se busca en los padres.")]
     [SerializeField] private NPCEmotionController controlador;
-    [Tooltip("Malla del pelo que contiene las cejas. Si se deja vacío se usa la de este objeto.")]
-    [SerializeField] private MeshFilter mallaDelPelo;
+    [Tooltip("Malla que contiene las cejas: el pelo o el sombrero del personaje, o la pieza suelta de ceja cuando no lleva pelo. Si se deja vacío se usa la de este objeto.")]
+    [FormerlySerializedAs("mallaDelPelo")]
+    [SerializeField] private MeshFilter mallaDeLasCejas;
     [Tooltip("Ojos que sirven de referencia para localizar las cejas. Si se deja vacío se buscan.")]
     [SerializeField] private Renderer ojosDeReferencia;
 
@@ -118,8 +120,8 @@ public class CejasPorEmocion : MonoBehaviour
     {
         if (controlador != null) controlador.OnEmotionChanged -= AlCambiarEmocion;
         if (!_preparado) return;
-        if (mallaDelPelo != null && mallaDelPelo.sharedMesh == _mallaCopia)
-            mallaDelPelo.sharedMesh = _mallaOriginal;
+        if (mallaDeLasCejas != null && mallaDeLasCejas.sharedMesh == _mallaCopia)
+            mallaDeLasCejas.sharedMesh = _mallaOriginal;
         Destruir(_mallaCopia);
         _mallaCopia = null;
         _mallaOriginal = null;
@@ -142,13 +144,13 @@ public class CejasPorEmocion : MonoBehaviour
     {
         if (_preparado) return;
         ResolverReferencias();
-        if (mallaDelPelo == null || mallaDelPelo.sharedMesh == null)
+        if (mallaDeLasCejas == null || mallaDeLasCejas.sharedMesh == null)
         {
             Avisar("No hay una malla de pelo que contenga las cejas.");
             return;
         }
 
-        _mallaOriginal = mallaDelPelo.sharedMesh;
+        _mallaOriginal = mallaDeLasCejas.sharedMesh;
         if (!CopiarMalla(_mallaOriginal, out _mallaCopia, out _verticesBase, out int[] todosLosIndices))
         {
             Avisar("No se pudo copiar la malla del pelo.");
@@ -166,15 +168,15 @@ public class CejasPorEmocion : MonoBehaviour
         }
 
         _verticesActuales = (Vector3[])_verticesBase.Clone();
-        mallaDelPelo.sharedMesh = _mallaCopia;
+        mallaDeLasCejas.sharedMesh = _mallaCopia;
         _preparado = true;
     }
 
     private void ResolverReferencias()
     {
         if (controlador == null) controlador = GetComponentInParent<NPCEmotionController>(true);
-        if (mallaDelPelo == null) mallaDelPelo = GetComponent<MeshFilter>();
-        if (ojosDeReferencia == null && mallaDelPelo != null)
+        if (mallaDeLasCejas == null) mallaDeLasCejas = GetComponent<MeshFilter>();
+        if (ojosDeReferencia == null && mallaDeLasCejas != null)
             ojosDeReferencia = BuscarOjosDeReferencia();
     }
 
@@ -190,15 +192,21 @@ public class CejasPorEmocion : MonoBehaviour
     }
 
     private Bounds BoundsDeOjosEnEspacioDelPelo()
+        => BoundsDeOjosEnEspacio(ojosDeReferencia, mallaDeLasCejas != null ? mallaDeLasCejas.transform : null);
+
+    /// Caja que ocupan los ojos de referencia dentro del espacio de la malla de las cejas. La
+    /// usan tanto el componente en runtime como la herramienta de Editor que prepara a los
+    /// personajes.
+    public static Bounds BoundsDeOjosEnEspacio(Renderer ojos, Transform espacioDeLasCejas)
     {
-        if (ojosDeReferencia == null || mallaDelPelo == null) return default;
-        var filtro = ojosDeReferencia.GetComponent<MeshFilter>();
+        if (ojos == null || espacioDeLasCejas == null) return default;
+        var filtro = ojos.GetComponent<MeshFilter>();
         if (filtro == null || filtro.sharedMesh == null) return default;
         Bounds enOjos = filtro.sharedMesh.bounds;
-        Vector3 centro = mallaDelPelo.transform.InverseTransformPoint(
-            ojosDeReferencia.transform.TransformPoint(enOjos.center));
-        Vector3 tam = mallaDelPelo.transform.InverseTransformVector(
-            ojosDeReferencia.transform.TransformVector(enOjos.size));
+        Vector3 centro = espacioDeLasCejas.InverseTransformPoint(
+            ojos.transform.TransformPoint(enOjos.center));
+        Vector3 tam = espacioDeLasCejas.InverseTransformVector(
+            ojos.transform.TransformVector(enOjos.size));
         return new Bounds(centro, new Vector3(Mathf.Abs(tam.x), Mathf.Abs(tam.y), Mathf.Abs(tam.z)));
     }
 
@@ -245,6 +253,34 @@ public class CejasPorEmocion : MonoBehaviour
         {
             int i = indices[k];
             _verticesActuales[i] = centro + rotacion * (_verticesBase[i] - centro) + desplazamiento;
+        }
+    }
+
+    /// Comprueba, sin tocar nada, si la malla del pelo contiene el par de cejas. La herramienta
+    /// de Editor la usa para avisar de los personajes a los que no se les puede montar el
+    /// componente, en lugar de esperar a verlos en Play.
+    public static bool ComprobarParesDeCejas(Mesh malla, Bounds ojosEnEspacioDeLasCejas,
+        out int verticesIzquierda, out int verticesDerecha)
+    {
+        verticesIzquierda = 0;
+        verticesDerecha = 0;
+        if (malla == null) return false;
+        if (!CopiarMalla(malla, out Mesh copia, out Vector3[] vertices, out int[] indices))
+            return false;
+        try
+        {
+            bool encontrado = BuscarIslasDeCejas(vertices, indices, ojosEnEspacioDeLasCejas,
+                out int[] izquierda, out int[] derecha, out _, out _);
+            if (encontrado)
+            {
+                verticesIzquierda = izquierda.Length;
+                verticesDerecha = derecha.Length;
+            }
+            return encontrado;
+        }
+        finally
+        {
+            Destruir(copia);
         }
     }
 
@@ -295,7 +331,25 @@ public class CejasPorEmocion : MonoBehaviour
         copia = null;
         vertices = null;
         indices = null;
-        Mesh.MeshDataArray datos = Mesh.AcquireReadOnlyMeshData(original);
+
+        // Mesh.AcquireReadOnlyMeshData requiere que la malla tenga "Read/Write Enabled" en sus import settings.
+        // Algunas mallas de pelo/cejas de NPCs no lo tienen (p.ej. Hair13, Hair09, Hair06, Hair03, Eyebrow02).
+        // En ese caso, atrapamos la excepción y devolvemos false para desactivar la animación de cejas
+        // en ese NPC concreto, permitiendo que el spawn continúe normalmente.
+        Mesh.MeshDataArray datos;
+        try
+        {
+            datos = Mesh.AcquireReadOnlyMeshData(original);
+        }
+        catch (InvalidOperationException e)
+        {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.LogWarning($"[CejasPorEmocion] La malla '{original.name}' no tiene Read/Write Enabled en sus import settings; " +
+                             "la animación de cejas se desactiva para este NPC. Detalle: " + e.Message);
+#endif
+            return false;
+        }
+
         try
         {
             Mesh.MeshData d = datos[0];
@@ -368,7 +422,9 @@ public class CejasPorEmocion : MonoBehaviour
         }
     }
 
-    private static bool BuscarIslasDeCejas(Vector3[] vertices, int[] indices, Bounds ojos,
+    /// Localiza el par de cejas dentro de la malla del pelo. Las cejas son dos islas sueltas
+    /// que se distinguen por estar sobre los ojos, en dos lados simétricos de la cara.
+    public static bool BuscarIslasDeCejas(Vector3[] vertices, int[] indices, Bounds ojos,
         out int[] izquierda, out int[] derecha, out Vector3 centroIzquierdo, out Vector3 centroDerecho)
     {
         izquierda = null;

@@ -627,14 +627,17 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// </summary>
     public void PlayIdleNormal()
     {
-        if (!string.IsNullOrEmpty(idleNormalState))
-        {
-            // Desactivar modo batalla para permitir transiciones de locomoción
-            _isInBattle = false;
-            _isSeated = false; // fuerza de pie explícitamente (usado al liberar un asiento)
-            _currentState = AnimationState.Idle;
-            CrossFadeToState(idleNormalState, 0.2f);
-        }
+        // Una actividad ambiental en curso (sentarse, comer, beber) dejaría viva su corrutina y,
+        // al terminar su tramo Begin, volvería a poner el Loop pisando esta pose. Forzar idle
+        // normal cancela también esa actividad. Va fuera del if del estado porque hay
+        // controladores sin idleNormalState (ver PosarIdleDePie).
+        DetenerActividadAmbiental();
+
+        // Desactivar modo batalla para permitir transiciones de locomoción
+        _isInBattle = false;
+        _isSeated = false; // fuerza de pie explícitamente (usado al liberar un asiento)
+        _currentState = AnimationState.Idle;
+        PosarIdleDePie(0.2f);
     }
     
     /// <summary>
@@ -2002,6 +2005,15 @@ public class NPCSimpleAnimator : MonoBehaviour
         _activityCoroutine = StartCoroutine(AmbientActivityRoutine(activity, worldPoint));
     }
 
+    /// <summary>
+    /// Quita el root motion del Animator. Lo necesitan las poses "en el sitio": con root motion,
+    /// el clip mueve al personaje y se nota el tirón.
+    /// </summary>
+    public void QuitarRootMotion()
+    {
+        if (animator != null) animator.applyRootMotion = false;
+    }
+
     private void ForceGroundedForSit()
     {
         TrySetBool(HashIsGrounded, true);
@@ -2061,6 +2073,28 @@ public class NPCSimpleAnimator : MonoBehaviour
     public static bool HasWorkingAnimation(NPCAmbientActivity activity)
     {
         return true;
+    }
+
+    /// <summary>
+    /// Detiene la actividad ambiental en curso sin reproducir su animación de salida. Se usa
+    /// cuando otro sistema toma el control de la pose (p. ej. subir a un barco): si la corrutina
+    /// siguiera viva, al terminar su tramo Begin volvería a poner el Loop y pisaría la pose nueva.
+    /// </summary>
+    public void DetenerActividadAmbiental()
+    {
+        _isSeated = false;
+        _seatedActivity = NPCAmbientActivity.None;
+
+        if (_activityCoroutine != null)
+        {
+            StopCoroutine(_activityCoroutine);
+            _activityCoroutine = null;
+        }
+
+        // Comer/beber viven en la UpperBody layer; al quitar la actividad hay que soltar su
+        // peso o el torso se queda con el gesto congelado encima de la pose nueva.
+        if (animator != null && upperBodyLayer > 0 && upperBodyLayer < animator.layerCount)
+            animator.SetLayerWeight(upperBodyLayer, 0f);
     }
 
     /// <summary>
@@ -2487,17 +2521,19 @@ public class NPCSimpleAnimator : MonoBehaviour
             }
         }
 
-        // Elegir el idle correcto según el modo (batalla o normal)
-        string targetIdle = _isInBattle ? idleBattleState : idleNormalState;
-        // ✅ FIX (5 sep 2026): en batalla, Idle_Battle_NoWeapon vive en UpperBody layer (ver
-        // SetBattleMode) -- la Base Layer (capa 0) se queda siempre en el blend tree de
-        // locomoción, así que las piernas nunca dependen de este idle para poder caminar.
-        int targetLayer = _isInBattle ? upperBodyLayer : 0;
-
-        // ✅ Seguridad: Si el estado no existe, no intentar CrossFade para evitar errores en consola
-        if (!string.IsNullOrEmpty(targetIdle) && animator != null && animator.HasState(targetLayer, Animator.StringToHash(targetIdle)))
+        if (_isInBattle)
         {
-            CrossFadeToState(targetIdle, 0.2f, targetLayer);
+            // En batalla, Idle_Battle_NoWeapon vive en UpperBody layer (ver SetBattleMode): la
+            // Base Layer (capa 0) se queda siempre en el blend tree de locomoción, así que las
+            // piernas nunca dependen de este idle para poder caminar.
+            if (TieneEstado(idleBattleState, upperBodyLayer))
+                CrossFadeToState(idleBattleState, 0.2f, upperBodyLayer);
+        }
+        else
+        {
+            // Fuera de batalla, idle de pie de la capa base, con respaldo al blend tree de
+            // locomoción cuando el controlador no tiene idleNormalState.
+            PosarIdleDePie(0.2f);
         }
 
         StartIdleVariations();
@@ -2543,6 +2579,42 @@ public class NPCSimpleAnimator : MonoBehaviour
     
     #region Private Methods - Animation Helpers
     
+    /// <summary>True si ese layer del Animator tiene el estado (y el nombre no está vacío).</summary>
+    private bool TieneEstado(string stateName, int layer)
+    {
+        return !string.IsNullOrEmpty(stateName) && animator != null &&
+               animator.HasState(layer, Animator.StringToHash(stateName));
+    }
+
+    /// <summary>
+    /// Pone la capa base en el idle de pie. Los controladores de Invector (Invector@BasicLocomotion,
+    /// el de _LIAM y _ESTELA) no tienen idleNormalState —Idle_Normal_NoWeapon, que es del
+    /// NPC_NoWeapon—: su idle de pie es el propio blend tree de locomoción con el InputMagnitude a
+    /// cero. Sin este respaldo la llamada no hacía nada y el NPC se quedaba en el estado anterior
+    /// (un salto de un solo uso en bucle, andando en el sitio...).
+    /// </summary>
+    private void PosarIdleDePie(float transitionTime)
+    {
+        if (animator == null) return;
+
+        if (TieneEstado(idleNormalState, 0))
+        {
+            CrossFadeToState(idleNormalState, transitionTime);
+            return;
+        }
+
+        if (!TieneEstado(locomotionState, 0)) return;
+
+        // InputMagnitude a cero: sin esto el blend tree seguiría en el tramo de caminar.
+        ResetMovement();
+
+        // Si ya está en el blend tree no se recruza: reiniciaría el idle en cada aviso.
+        if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash == Animator.StringToHash(locomotionState))
+            return;
+
+        CrossFadeToState(locomotionState, transitionTime);
+    }
+
     private void CrossFadeToState(string stateName, float transitionTime, int layer = 0)
     {
         if (string.IsNullOrEmpty(stateName) || animator == null)

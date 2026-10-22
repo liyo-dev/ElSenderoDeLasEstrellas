@@ -879,6 +879,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -896,6 +897,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &6853653513531688349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1031,6 +1033,15 @@ MonoBehaviour:
   bocaDeReposo: {fileID: 1265583525838024853}
   eyePrefix: Eye
   mouthPrefix: Mouth
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &1190421531180316540
 GameObject:
   m_ObjectHideFlags: 0
@@ -3666,6 +3677,7 @@ GameObject:
   - component: {fileID: 3645506366750578015}
   - component: {fileID: 5587464806790975776}
   - component: {fileID: 5971333684510157424}
+  - component: {fileID: 941402603205407269}
   m_Layer: 0
   m_Name: Hair08
   m_TagString: Untagged
@@ -3745,6 +3757,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &941402603205407269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4338134708662429834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 1827232821105861067}
+  mallaDelPelo: {fileID: 5587464806790975776}
+  ojosDeReferencia: {fileID: 9052769950252631504}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &4348584043158994991
 GameObject:
   m_ObjectHideFlags: 0

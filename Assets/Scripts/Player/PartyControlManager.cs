@@ -55,7 +55,7 @@ public class PartyControlManager : MonoBehaviour
     private int _pendingSlotToRestore = -1;
     // FIX A12 (auditoría 2026-08-07): resuelto perezosamente vía ServiceLocator (mismo patrón que
     // CinematicSequencerBase.ResolveActionManager) para poder gatear el swap de personaje por
-    // ActionMode — ver IsSwapAllowedByCurrentMode más abajo.
+    // ActionMode — ver IsPartyChangeAllowedByCurrentMode más abajo.
     private PlayerActionManager _actionManager;
     #endregion
 
@@ -144,14 +144,19 @@ public class PartyControlManager : MonoBehaviour
     #region Character Switching
 
     /// <summary>
+    /// El modo activo permite cambiar el grupo: relevo o modo seguir. Solo en el reposo normal
+    /// (Default) o en combate; en vuelo, nado, carga, aturdimiento, cinemática, barco o uso de
+    /// punto del mundo, no.
+    ///
     /// FIX A12 (auditoría 2026-08-07): antes HandleInput solo comprobaba IsInUIMode antes de
     /// permitir el swap — se podía cambiar de personaje en pleno vuelo/nado/carry/knockback,
     /// aplicando el controller a un personaje que quizá no tiene esa habilidad activa, con los
-    /// modos de PlayerActionManager aún apilados sobre el personaje anterior. Solo se permite el
-    /// swap si el modo activo es el "reposo" normal del gameplay (Default) o Combat — cualquier
-    /// otro modo (Flying, Swimming, Carrying, Stunned, Cinematic, UsingWorldPoint...) lo bloquea.
+    /// modos de PlayerActionManager aún apilados sobre el personaje anterior.
+    ///
+    /// El modo seguir también teletransporta al grupo, así que se bloquea igual: en el barco
+    /// saca a la tripulación de su puesto (INC-808).
     /// </summary>
-    private bool IsSwapAllowedByCurrentMode()
+    private bool IsPartyChangeAllowedByCurrentMode()
     {
         if (_actionManager == null)
             _actionManager = ServiceLocator.Get<PlayerActionManager>(logIfMissing: false);
@@ -170,10 +175,10 @@ public class PartyControlManager : MonoBehaviour
             #endif
             return;
         }
-        if (!IsSwapAllowedByCurrentMode())
+        if (!IsPartyChangeAllowedByCurrentMode())
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
+            Debug.LogWarning($"[PartyControlManager] DPad-Left ignorado — ActionMode actual no permite cambiar de personaje ({_actionManager?.Top}).");
             #endif
             return;
         }
@@ -201,10 +206,10 @@ public class PartyControlManager : MonoBehaviour
             #endif
             return;
         }
-        if (!IsSwapAllowedByCurrentMode())
+        if (!IsPartyChangeAllowedByCurrentMode())
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite swap ({_actionManager?.Top}).");
+            Debug.LogWarning($"[PartyControlManager] DPad-Right ignorado — ActionMode actual no permite cambiar de personaje ({_actionManager?.Top}).");
             #endif
             return;
         }
@@ -269,6 +274,10 @@ public class PartyControlManager : MonoBehaviour
     #region Follow Mode
     private void ToggleFollowMode()
     {
+        // En el barco (y en vuelo, nado, cinemáticas...) el grupo está anclado: cambiar a
+        // «seguir» lo teletransportaría al jugador y sacaría a la tripulación de su puesto.
+        if (!IsPartyChangeAllowedByCurrentMode()) return;
+
         _isPartyFollowing = !_isPartyFollowing;
         ApplyFollowModeToParty();
         OnFollowModeChanged?.Invoke(_isPartyFollowing);

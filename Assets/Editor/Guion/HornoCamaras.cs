@@ -6,7 +6,8 @@ using UnityEngine;
 /// Cámaras: cada plano se resuelve con las posiciones ya conocidas de todo el reparto.
 ///
 /// Tipos: general · conjunto · medio · primer · detalle · dos A B · hombro A B · sigue A · fijo
-/// Opciones: desde=P (sitio de la cámara) · mira=P (foco fijo) · altura=m · distancia=m · lente=°
+/// Opciones: desde=P (sitio de la cámara) · mira=P (a dónde mira, aunque el plano tenga
+///   personajes) · altura=m · distancia=m · lente=°
 ///   · zoom=° (lente al final) · lado=izq|der|frente|espalda · rumbo=° · picado · contrapicado
 ///   · mezcla=s · mano=0..1 · encuadre=izq|centro|der · mover=P (travelling hasta P) · suave=s · cruza
 internal sealed partial class Horno
@@ -28,6 +29,7 @@ internal sealed partial class Horno
         public List<Vector3> extras = new();   // puntos que también entran en el cuadro
         public float banda;      // alto de cada banda de cine en ese momento (0 = sin bandas)
         public bool aireArriba;  // con bocadillos, sitio encima de la cabeza para el globo
+        public bool miraFija;    // el autor fijó la mirada con «mira=»: manda sobre los personajes
     }
 
     /// Alto de las bandas de cine en el instante t (lo que tapan arriba y abajo, en tanto por uno
@@ -110,7 +112,7 @@ internal sealed partial class Horno
             e.focoFijo = e.extras[0] + Vector3.up * o.OpF("altura_foco", 1.2f);
             e.extras.Clear();
         }
-        if (o.opciones.TryGetValue("mira", out var mira) && Punto(mira, o.linea, out var pm)) e.focoFijo = pm + Vector3.up * o.OpF("altura_foco", 1.2f);
+        if (o.opciones.TryGetValue("mira", out var mira) && Punto(mira, o.linea, out var pm)) { e.focoFijo = pm + Vector3.up * o.OpF("altura_foco", 1.2f); e.miraFija = true; }
         if (e.sujetos.Count == 0 && e.focoFijo == null)
         {
             Error($"{o}: el plano no dice a quién (o a dónde) mira");
@@ -172,7 +174,7 @@ internal sealed partial class Horno
             {
                 if (!Punto(desde, o.linea, out var pc)) return null;
                 e.camara = pc + Vector3.up * o.OpF("altura", e.tipo == TipoDePlano.General ? 3f : 1.55f);
-                e.azimut = Rumbo(e.camara - Foco(e, t0));
+                e.azimut = Rumbo(e.camara - FocoDeMirada(e, t0));
             }
             else if (e.tipo == TipoDePlano.Hombro) Hombro(e);
             else Buscar(e);
@@ -195,7 +197,13 @@ internal sealed partial class Horno
         }
         plano.encuadre = Composicion(e, foco);
         plano.descripcion = Describir(e);
-        if (!o.opciones.ContainsKey("altura_foco") && e.focoFijo == null && foco.Any(a => PoseHorizontal(a, Mathf.Lerp(t0, t1, 0.35f))))
+        if (e.miraFija && e.focoFijo != null)
+        {
+            // Con «mira=» la mirada es fija: el punto del autor manda aunque el plano tenga
+            // personajes (si no, la cámara apuntaría al promedio de ellos y se iría al cielo).
+            plano.focos.Add(new ClaveDePosicion(t0, e.focoFijo.Value));
+        }
+        else if (!o.opciones.ContainsKey("altura_foco") && e.focoFijo == null && foco.Any(a => PoseHorizontal(a, Mathf.Lerp(t0, t1, 0.35f))))
             for (float t = t0; t <= t1 + 0.049f; t += 0.05f)
                 plano.focos.Add(new ClaveDePosicion(Mathf.Min(t, t1), Foco(e, Mathf.Min(t, t1))));
         if (e.tipo != TipoDePlano.Sigue && !o.opciones.ContainsKey("desde"))
@@ -224,6 +232,10 @@ internal sealed partial class Horno
             _ => foco.Average(a => a.altura) * 0.7f,
         };
     }
+
+    /// Punto al que mira la cámara. Con «mira=» manda el punto del autor, aunque el plano tenga
+    /// personajes: si no, la cámara miraría al promedio de los personajes y se iría al cielo.
+    private Vector3 FocoDeMirada(Encuadre e, float t) => e.miraFija && e.focoFijo != null ? e.focoFijo.Value : Foco(e, t);
 
     private Vector3 Foco(Encuadre e, float t)
     {

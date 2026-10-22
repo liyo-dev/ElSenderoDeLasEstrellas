@@ -11291,6 +11291,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -11308,6 +11309,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &4778633306348117431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11324,6 +11326,7 @@ MonoBehaviour:
   hint: {fileID: 6901712575972534801}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -11438,11 +11441,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 1521963535611480189}
-  originalMouthMesh: {fileID: 4821277567482746128}
+  ojosDeReposo: {fileID: 1521963535611480189}
+  bocaDeReposo: {fileID: 4821277567482746128}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &4335299423442092697
 GameObject:
   m_ObjectHideFlags: 0
@@ -19017,6 +19028,7 @@ GameObject:
   - component: {fileID: 1147418095593246443}
   - component: {fileID: 2508264213196923800}
   - component: {fileID: 6518968029970521296}
+  - component: {fileID: 1989613716794755544}
   m_Layer: 0
   m_Name: Eyebrow02
   m_TagString: Untagged
@@ -19096,6 +19108,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1989613716794755544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7660207226452399270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 5189074635744377520}
+  mallaDelPelo: {fileID: 2508264213196923800}
+  ojosDeReferencia: {fileID: 5434742920523868923}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &7687135934613768218
 GameObject:
   m_ObjectHideFlags: 0

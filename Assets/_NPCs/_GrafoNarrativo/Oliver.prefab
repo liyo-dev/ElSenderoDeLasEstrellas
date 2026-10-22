@@ -1187,6 +1187,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -1204,6 +1205,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &818761283699374176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1352,11 +1354,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 7056693747400581968}
-  originalMouthMesh: {fileID: 2661037518950784880}
+  ojosDeReposo: {fileID: 7056693747400581968}
+  bocaDeReposo: {fileID: 2661037518950784880}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!114 &6032231274682188275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3121,6 +3131,7 @@ GameObject:
   - component: {fileID: 237855683607436901}
   - component: {fileID: 9148980901628610399}
   - component: {fileID: 8182436589536394075}
+  - component: {fileID: 4761979127565504954}
   m_Layer: 0
   m_Name: Eyebrow02
   m_TagString: Untagged
@@ -3200,6 +3211,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4761979127565504954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4700311081674616575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 5725277032407328577}
+  mallaDelPelo: {fileID: 9148980901628610399}
+  ojosDeReferencia: {fileID: 503736492068637730}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &4834252652641159049
 GameObject:
   m_ObjectHideFlags: 0

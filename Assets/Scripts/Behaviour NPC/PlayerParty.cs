@@ -1364,6 +1364,10 @@ namespace Game.NPC
                 var member = _members[i];
                 if (member == null) continue;
 
+                // Un miembro anclado (barco, asiento, modo Libre) no se teletransporta al
+                // combate: si no, se lo lleva de su puesto y empieza a pelear allí (INC-808).
+                if (member.NPCManager?.Context?.IsPinnedByParty ?? false) continue;
+
                 // No operar sobre el NPC oculto (controlado por el jugador vía character swap)
                 if (member == hiddenNpc) continue;
 

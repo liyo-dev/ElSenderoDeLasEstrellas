@@ -3332,6 +3332,7 @@ MonoBehaviour:
   retratoDeWill: {fileID: 1548362534}
   retratoDeEstela: {fileID: 1939038779}
   estado: {fileID: 206708494}
+  retratosVivos: 1
   fuenteDeRetratos: {fileID: 22572039}
   retratosDeRespaldo: {fileID: 11400000, guid: 8ea15efa0713dc049824c46a37c78448, type: 2}
   separacionLateral: 290

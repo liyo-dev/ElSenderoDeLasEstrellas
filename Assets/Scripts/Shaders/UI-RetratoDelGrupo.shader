@@ -8,12 +8,19 @@
 // Sirve para Image y RawImage, así que vale igual para un sprite horneado que para la
 // RenderTexture de un retrato vivo. Respeta RectMask2D (UNITY_UI_CLIP_RECT), que es lo que
 // corta el retrato a la altura del pecho.
+//
+// Los retratos vivos llegan en dos texturas, la misma imagen sobre negro y sobre blanco; con
+// _UsarTexturaSobreFondo encendido, el alfa sale de lo que cambian entre ellas (el fondo) y el
+// color se desmultiplica, porque URP no conserva el alfa de una RenderTexture.
 Shader "UI/RetratoDelGrupo"
 {
     Properties
     {
         [PerRendererData] _MainTex ("Textura", 2D) = "white" {}
         _Color ("Tinte", Color) = (1,1,1,1)
+
+        _TexturaSobreFondo ("Textura sobre fondo claro", 2D) = "white" {}
+        _UsarTexturaSobreFondo ("Recuperar el alfa del fondo", Range(0, 1)) = 0
 
         _Saturacion ("Saturación", Range(0, 1.5)) = 1
         _Brillo ("Brillo", Range(0, 2)) = 1
@@ -89,10 +96,12 @@ Shader "UI/RetratoDelGrupo"
             };
 
             sampler2D _MainTex;
+            sampler2D _TexturaSobreFondo;
             float4 _MainTex_ST;
             fixed4 _Color;
             fixed4 _TextureSampleAdd;
             float4 _ClipRect;
+            half _UsarTexturaSobreFondo;
             half _Saturacion;
             half _Brillo;
             half4 _Destello;
@@ -112,6 +121,18 @@ Shader "UI/RetratoDelGrupo"
             fixed4 frag(v2f IN) : SV_Target
             {
                 half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
+
+                if (_UsarTexturaSobreFondo > 0.5h)
+                {
+                    // La misma imagen sobre fondo claro: lo que se diferencia de la de fondo negro
+                    // es el fondo, así que la cobertura sale de la diferencia media.
+                    half4 sobreFondo = tex2D(_TexturaSobreFondo, IN.texcoord) * IN.color;
+                    half cobertura = saturate(1.0h - dot(sobreFondo.rgb - color.rgb, half3(0.333333h, 0.333333h, 0.333333h)));
+                    // El color llega multiplicado por la cobertura: se desmultiplica para que los
+                    // bordes no se vean oscuros.
+                    color.rgb /= max(cobertura, 0.004h);
+                    color.a = cobertura;
+                }
 
                 half gris = dot(color.rgb, half3(0.299, 0.587, 0.114));
                 color.rgb = lerp(gris.xxx, color.rgb, _Saturacion) * _Brillo;

@@ -1225,6 +1225,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -1242,6 +1243,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &7738520757001359799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1373,11 +1375,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 9163950292262591468}
-  originalMouthMesh: {fileID: 7178186616828132627}
+  ojosDeReposo: {fileID: 9163950292262591468}
+  bocaDeReposo: {fileID: 7178186616828132627}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &1893816277265045502
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2509,7 @@ GameObject:
   - component: {fileID: 7116993529101831942}
   - component: {fileID: 2719383495076836366}
   - component: {fileID: 5152500631534542223}
+  - component: {fileID: 7099781943621624716}
   m_Layer: 0
   m_Name: Hat07
   m_TagString: Untagged
@@ -2578,6 +2589,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7099781943621624716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3988513407038762269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 1015401723773616517}
+  mallaDeLasCejas: {fileID: 2719383495076836366}
+  ojosDeReferencia: {fileID: 6714926185066947780}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &4024862623149206882
 GameObject:
   m_ObjectHideFlags: 0
@@ -2789,7 +2817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4530981407965766578
 Transform:
   m_ObjectHideFlags: 0

@@ -34,6 +34,7 @@ public class ConductorDeBarco : MonoBehaviour
     private vThirdPersonMotor _motor;
     private vThirdPersonInput _entrada;
     private vThirdPersonController _controladorInvector;
+    private Animator _animador;
     private VolteretaDelJugador _voltereta;
     private PlayerActionManager _acciones;
     private vThirdPersonCamera _camara;
@@ -142,6 +143,7 @@ public class ConductorDeBarco : MonoBehaviour
         _motor = jugador.GetComponent<vThirdPersonMotor>();
         _entrada = jugador.GetComponent<vThirdPersonInput>();
         _controladorInvector = jugador.GetComponentInParent<vThirdPersonController>();
+        _animador = jugador.GetComponentInChildren<Animator>();
         _voltereta = jugador.GetComponentInParent<VolteretaDelJugador>();
         _acciones = jugador.GetComponent<PlayerActionManager>();
 
@@ -228,6 +230,16 @@ public class ConductorDeBarco : MonoBehaviour
         {
             _suppressEstabaActivo = _entrada.SuppressMoveInput;
             _entrada.SuppressMoveInput = true;
+        }
+
+        // El Animator del jugador lo lleva otro componente (el de animación de Invector), que sigue
+        // vivo aunque el motor esté parado: sin bajar el InputMagnitude a cero, Will se queda
+        // "caminando" en el sitio mientras va en el barco.
+        if (_animador != null)
+        {
+            try { _animador.SetFloat(vAnimatorParameters.InputMagnitude, 0f); } catch { }
+            try { _animador.SetFloat(vAnimatorParameters.InputHorizontal, 0f); } catch { }
+            try { _animador.SetFloat(vAnimatorParameters.InputVertical, 0f); } catch { }
         }
 
         // El controlador de Invector se apaga mientras dura el salto al barco: si siguiera

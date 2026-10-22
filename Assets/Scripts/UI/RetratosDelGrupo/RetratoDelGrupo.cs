@@ -27,6 +27,8 @@ namespace Sendero.UI
         private static readonly int IdSaturacion = Shader.PropertyToID("_Saturacion");
         private static readonly int IdBrillo = Shader.PropertyToID("_Brillo");
         private static readonly int IdDestello = Shader.PropertyToID("_Destello");
+        private static readonly int IdTexturaSobreFondo = Shader.PropertyToID("_TexturaSobreFondo");
+        private static readonly int IdUsarTexturaSobreFondo = Shader.PropertyToID("_UsarTexturaSobreFondo");
 
         [Header("Piezas")]
         [SerializeField] private RawImage imagen;
@@ -316,6 +318,13 @@ namespace Sendero.UI
             _expresion = expresion;
             imagen.texture = img.Textura;
             imagen.uvRect = img.Uv;
+            // Un retrato vivo llega también sobre blanco: el shader saca de la diferencia con la
+            // imagen sobre negro lo que cubre el personaje (URP pierde el alfa de la textura).
+            if (_material != null)
+            {
+                _material.SetTexture(IdTexturaSobreFondo, img.TexturaSobreFondo);
+                _material.SetFloat(IdUsarTexturaSobreFondo, img.TexturaSobreFondo != null ? 1f : 0f);
+            }
             var rt = imagen.rectTransform;
             float alto = altoVisible / Mathf.Max(0.1f, 1f - img.FraccionBajoElBorde);
             rt.sizeDelta = new Vector2(alto * img.Aspecto, alto);

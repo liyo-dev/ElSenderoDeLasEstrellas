@@ -242,15 +242,49 @@ public static partial class CombatLabBuilder
         // con el escalón, el jugador que va andando por ahí se metería dentro del casco. La
         // flotación en runtime lo asienta; aquí solo se calcula la altura de partida.
         float altura = superficieDelAgua + 0.96f - profundidadDeQuilla;
-        var musica = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/Zonas/El Barco de Silas.mp3");
+        var posicion = new Vector3(-1.5f, altura, 29f);
+        var puntoDeAmarre = new Vector3(-4.4f, -0.5f, 26.2f);   // junto al barco
 
-        var barco = MontadorDeBarco.Montar(rutaBarco, piscina, new Vector3(-1.5f, altura, 29f),
-                                           Vector3.forward, profundidadDeQuilla, musica,
-                                           new Vector3(-4.4f, -0.5f, 26.2f));   // punto de amarre: junto al barco
+        // Si ya hay prefab del barco, se usa tal cual (con los sitios de Will, Estela y Liam
+        // donde se hayan puesto a mano). Se guarda con *El Sendero ▸ Combate ▸ Barco: guardar el
+        // de la escena como prefab*.
+        var prefab = BarcoNavegablePrefab.Cargar();
+        if (prefab != null)
+        {
+            var instancia = (GameObject)PrefabUtility.InstantiatePrefab(prefab, piscina);
+            instancia.name = "Barco — navega";
+            instancia.transform.position = posicion;
+            CrearPuntoDeAmarre(piscina, puntoDeAmarre);
+            CrearTexto("Barco: súbete (A) y navega (WASD)", zona, new Vector3(-1.5f, 3.5f, 22f));
+            CrearTexto("Baja del barco con A otra vez", zona, new Vector3(-1.5f, 3.5f, 19f));
+            return;
+        }
+
+        var musica = AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Audio/Music/Zonas/El Barco de Silas.mp3");
+        var barco = MontadorDeBarco.Montar(rutaBarco, piscina, posicion,
+                                           Vector3.forward, profundidadDeQuilla, musica, puntoDeAmarre);
         if (barco != null) barco.name = "Barco — navega";
 
         CrearTexto("Barco: súbete (A) y navega (WASD)", zona, new Vector3(-1.5f, 3.5f, 22f));
         CrearTexto("Baja del barco con A otra vez", zona, new Vector3(-1.5f, 3.5f, 19f));
+    }
+
+    /// <summary>El punto donde el barco se arrima: el icono de bajar a tierra.</summary>
+    private static void CrearPuntoDeAmarre(Transform padre, Vector3 posicion)
+    {
+        int capaInteractuable = LayerMask.NameToLayer("Interactable");
+        var amarre = new GameObject("Punto de amarre");
+        amarre.transform.SetParent(padre, false);
+        amarre.transform.position = posicion;
+        if (capaInteractuable >= 0) amarre.layer = capaInteractuable;
+        var esfera = amarre.AddComponent<SphereCollider>();
+        esfera.isTrigger = true;
+        esfera.radius = 1.5f;
+        var interactuable = amarre.AddComponent<Interactable>();
+        interactuable.SetMode(InteractableMode.Custom);
+        var punto = amarre.AddComponent<PuntoDeAmarre>();
+        punto.AsignarInteractuable(interactuable);
+        MontadorDeBarco.CrearHint(amarre.transform, Vector3.up * 1.2f, interactuable);
     }
 
     private static void CrearZonaVuelo(Transform g, Material suelo, Material plataforma)

@@ -111,11 +111,22 @@ public class NPCEmotionController : MonoBehaviour
     {
         foreach (Transform child in parent)
         {
-            if (child.name.StartsWith(eyePrefix) && !_eyeMeshes.ContainsKey(child.name)) _eyeMeshes[child.name] = child.gameObject;
-            if (child.name.StartsWith(mouthPrefix) && !_mouthMeshes.ContainsKey(child.name)) _mouthMeshes[child.name] = child.gameObject;
+            if (EsPiezaDelPrefijo(child.name, eyePrefix) && !_eyeMeshes.ContainsKey(child.name)) _eyeMeshes[child.name] = child.gameObject;
+            if (EsPiezaDelPrefijo(child.name, mouthPrefix) && !_mouthMeshes.ContainsKey(child.name)) _mouthMeshes[child.name] = child.gameObject;
             CacheMeshesRecursive(child);
         }
     }
+
+    /// Una pieza del rig modular se llama por prefijo y número («Eye01», «Mouth07»). El dígito
+    /// que va justo detrás del prefijo es lo que distingue una pieza de ojo de una de ceja:
+    /// «Eyebrow01» empieza igual que «Eye…», pero no es un ojo. Si se recogiera como malla de
+    /// ojo, cada cambio de cara apagaría la ceja y la ceja equipada desaparecería.
+    private static bool EsPiezaDelPrefijo(string nombre, string prefijo)
+        => !string.IsNullOrEmpty(prefijo)
+           && nombre.StartsWith(prefijo, System.StringComparison.Ordinal)
+           && nombre.Length > prefijo.Length
+           && char.IsDigit(nombre[prefijo.Length]);
+
     private static bool TieneParte(GameObject asignada, Dictionary<string, GameObject> mallas)
     {
         if (asignada != null) return true;

@@ -329,6 +329,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -346,6 +347,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &7706700132190196151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,11 +479,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 8059262612033470538}
-  originalMouthMesh: {fileID: 6725990725184528514}
+  ojosDeReposo: {fileID: 8059262612033470538}
+  bocaDeReposo: {fileID: 6725990725184528514}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &200269717189473182
 GameObject:
   m_ObjectHideFlags: 0
@@ -1563,6 +1573,7 @@ GameObject:
   - component: {fileID: 1111364730345942129}
   - component: {fileID: 9141136801496820377}
   - component: {fileID: 6130691250984755329}
+  - component: {fileID: 5320783935165339700}
   m_Layer: 0
   m_Name: Eyebrow01
   m_TagString: Untagged
@@ -1642,6 +1653,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5320783935165339700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2948393951782629495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 2377954531385805600}
+  mallaDelPelo: {fileID: 9141136801496820377}
+  ojosDeReferencia: {fileID: 4612403135168108202}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &3100002921421671353
 GameObject:
   m_ObjectHideFlags: 0

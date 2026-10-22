@@ -257,6 +257,7 @@ GameObject:
   - component: {fileID: 6565038094225024930}
   - component: {fileID: 1260581732800036541}
   - component: {fileID: 4603703045081796206}
+  - component: {fileID: 3720811345298223431}
   m_Layer: 0
   m_Name: Hair11
   m_TagString: Untagged
@@ -336,6 +337,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3720811345298223431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649073864107942616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 3835469547263956832}
+  mallaDeLasCejas: {fileID: 1260581732800036541}
+  ojosDeReferencia: {fileID: 3604766136416091979}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &698935275204249130
 GameObject:
   m_ObjectHideFlags: 0
@@ -3185,7 +3203,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1327906771701615737
 Transform:
   m_ObjectHideFlags: 0
@@ -3525,6 +3543,7 @@ MonoBehaviour:
   - Idle03
   minIdleVariationInterval: 8
   maxIdleVariationInterval: 20
+  variacionVelocidadIdle: 0.05
   challengingState: Challenging_NoWeapon
   senseSomethingState: SenseSomethingStart_NoWeapon
   searchingState: SenseSomethingSearching_NoWeapon
@@ -3542,6 +3561,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &9016889065703109349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3677,6 +3697,15 @@ MonoBehaviour:
   bocaDeReposo: {fileID: 8033833326215953414}
   eyePrefix: Eye
   mouthPrefix: Mouth
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &7037520701856772269
 GameObject:
   m_ObjectHideFlags: 0

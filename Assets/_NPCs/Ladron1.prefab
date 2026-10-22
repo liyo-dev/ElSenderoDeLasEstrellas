@@ -4423,6 +4423,7 @@ MonoBehaviour:
   hint: {fileID: 0}
   hideHintAtStart: 1
   hintAnimDuration: 0.25
+  hintScale: 0.5
   iconSet: {fileID: 11400000, guid: 9120cc0f8d6f411aa56d4ef968de44c5, type: 2}
   singleUse: 0
   initiallyEnabled: 1
@@ -4449,6 +4450,7 @@ MonoBehaviour:
   OnConsumed:
     m_PersistentCalls:
       m_Calls: []
+  defaultSightHeight: 1.4
 --- !u!114 &1799065412488671633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4462,11 +4464,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCEmotionController
   emotionProfile: {fileID: 11400000, guid: 16d5ab4386c36fb4794a8154b6410158, type: 2}
-  originalEyeMesh: {fileID: 1854598921869480575}
-  originalMouthMesh: {fileID: 0}
+  ojosDeReposo: {fileID: 1854598921869480575}
+  bocaDeReposo: {fileID: 0}
   eyePrefix: Eye
   mouthPrefix: Mouth
-  debugMode: 0
+  parpadeoAutomatico: 1
+  intervaloMinimoParpadeo: 2
+  intervaloMaximoParpadeo: 6
+  duracionParpadeo: 0.12
+  probabilidadDobleParpadeo: 0.15
+  ojosDelParpadeo: Eye09
+  ojosYaCerrados:
+  - Eye07
+  - Eye09
 --- !u!1 &7955254484887153876
 GameObject:
   m_ObjectHideFlags: 0
@@ -11484,11 +11494,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3803285941263477451, guid: 71742d6dfc5a1b64387cfb4751203a19, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 944944005295349537}
   m_SourcePrefab: {fileID: 100100000, guid: 71742d6dfc5a1b64387cfb4751203a19, type: 3}
 --- !u!4 &23035357287263894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4579084146530283633, guid: 71742d6dfc5a1b64387cfb4751203a19, type: 3}
+  m_PrefabInstance: {fileID: 4602109599622815463}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &799958642124256300 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3803285941263477451, guid: 71742d6dfc5a1b64387cfb4751203a19, type: 3}
+  m_PrefabInstance: {fileID: 4602109599622815463}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &944944005295349537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 799958642124256300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 1799065412488671633}
+  mallaDelPelo: {fileID: 4034676731530879283}
+  ojosDeReferencia: {fileID: 197076002528424874}
+  intensidad: 1
+  velocidad: 14
+--- !u!33 &4034676731530879283 stripped
+MeshFilter:
+  m_CorrespondingSourceObject: {fileID: 586584301210992596, guid: 71742d6dfc5a1b64387cfb4751203a19, type: 3}
   m_PrefabInstance: {fileID: 4602109599622815463}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4665373133258867738
@@ -17670,6 +17710,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0fdf02ce20da6614c89517189eb8c2ad, type: 3}
+--- !u!23 &197076002528424874 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8375051783003647934, guid: 0fdf02ce20da6614c89517189eb8c2ad, type: 3}
+  m_PrefabInstance: {fileID: 8540529882786618388}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1366573416473823429 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7237572561183233233, guid: 0fdf02ce20da6614c89517189eb8c2ad, type: 3}

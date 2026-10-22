@@ -17,13 +17,18 @@ namespace Sendero.UI
         /// Fracción del alto del dibujo que queda por debajo del borde del panel: 0 en un busto ya
         /// recortado; ~0,4 en una imagen de cuerpo entero (el corte cae a la altura del pecho).
         public readonly float FraccionBajoElBorde;
+        /// El mismo dibujo sobre un fondo opaco claro, para recuperar la transparencia que una
+        /// RenderTexture no conserva: el shader compara las dos imágenes y lo que cambia es el
+        /// fondo. Nulo en las fuentes que ya traen alfa (los retratos horneados).
+        public readonly Texture TexturaSobreFondo;
 
-        public ImagenDeRetrato(Texture textura, Rect uv, float aspecto, float fraccionBajoElBorde)
+        public ImagenDeRetrato(Texture textura, Rect uv, float aspecto, float fraccionBajoElBorde, Texture texturaSobreFondo = null)
         {
             Textura = textura;
             Uv = uv;
             Aspecto = aspecto > 0f ? aspecto : 1f;
             FraccionBajoElBorde = Mathf.Clamp(fraccionBajoElBorde, 0f, 0.9f);
+            TexturaSobreFondo = texturaSobreFondo;
         }
 
         public bool Valida => Textura != null;

@@ -2719,7 +2719,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5580542292979833548
 Transform:
   m_ObjectHideFlags: 0
@@ -9160,6 +9160,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &5479229407467563129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18888,6 +18889,7 @@ GameObject:
   - component: {fileID: 7063919350939564156}
   - component: {fileID: 2537446810376641115}
   - component: {fileID: 4211399606712908747}
+  - component: {fileID: 2091933721953289592}
   m_Layer: 0
   m_Name: Hair08
   m_TagString: Untagged
@@ -18967,6 +18969,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &2091933721953289592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7633338875534156656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 6671290099410408466}
+  mallaDeLasCejas: {fileID: 2537446810376641115}
+  ojosDeReferencia: {fileID: 9016143214156695083}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &7640029656023296662
 GameObject:
   m_ObjectHideFlags: 0

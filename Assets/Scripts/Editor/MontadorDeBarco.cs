@@ -59,6 +59,8 @@ public static class MontadorDeBarco
         Debug.Log($"[Barco] {barco.name}: cubierta a {datos.timonLocal.y:F2} m (local), quilla a {datos.cascoMin.y:F2} m, " +
                   $"proa {datos.proaLocal}, eslora {Vector3.Dot(datos.cascoMax - datos.cascoMin, datos.proaLocal):F2} m, " +
                   $"manga {Vector3.Dot(datos.cascoMax - datos.cascoMin, datos.ejeAncho):F2} m. " +
+                  $"Will {datos.timonLocal}, Estela {datos.sitioDeEstela} (ancho {datos.anchoDeEstela:F2} m), " +
+                  $"Liam {datos.sitioDeLiam} (ancho {datos.anchoDeLiam:F2} m). " +
                   $"Música a bordo: {(musicaDelBarco != null ? musicaDelBarco.name : "NINGUNA")}.");
 
         // La proa mira hacia donde se le ha pedido.
@@ -73,24 +75,21 @@ public static class MontadorDeBarco
         puesto.transform.SetParent(barco.transform, false);
         puesto.transform.localPosition = datos.timonLocal;
 
-        // Los sitios de los compañeros: Estela donde está (se sienta) y Liam pegado al borde
-        // del barco, apoyado. Así los tres se ven separados y no se pegotonan.
-        float semianchoCasco = Mathf.Abs(Vector3.Dot(datos.cascoMax - datos.cascoMin, datos.ejeAncho)) * 0.5f;
-        Vector3 sitioEstela = datos.timonLocal + datos.proaLocal * 1.4f - datos.ejeAncho * 1.1f;
-        Vector3 sitioLiam = datos.timonLocal + datos.proaLocal * 1.4f + datos.ejeAncho * Mathf.Max(0.6f, semianchoCasco - 0.4f);
-        // Que no se salgan del casco.
-        float limiteProa = Vector3.Dot(datos.cascoMax, datos.proaLocal) - 0.4f;
-        if (Vector3.Dot(sitioLiam, datos.proaLocal) > limiteProa)
-            sitioLiam -= datos.proaLocal * (Vector3.Dot(sitioLiam, datos.proaLocal) - limiteProa);
-        sitioEstela.y = datos.timonLocal.y;
-        sitioLiam.y = datos.timonLocal.y;
+        // Los dos puestos de los compañeros, a babor y estribor, a la altura de la cubierta que
+        // calcula el análisis para cada sitio.
+        Vector3 sitioBabor = datos.sitioDeEstela;
+        Vector3 sitioEstribor = datos.sitioDeLiam;
 
-        var puestoEstela = new GameObject("Puesto de Estela");
-        puestoEstela.transform.SetParent(barco.transform, false);
-        puestoEstela.transform.localPosition = sitioEstela;
-        var puestoLiam = new GameObject("Puesto de Liam");
-        puestoLiam.transform.SetParent(barco.transform, false);
-        puestoLiam.transform.localPosition = sitioLiam;
+        // Los puestos miran a proa: el compañero se cuelga de ellos y hereda su orientación.
+        Quaternion mirandoAProa = Quaternion.FromToRotation(Vector3.forward, datos.proaLocal);
+        var puestoBabor = new GameObject("Puesto de babor");
+        puestoBabor.transform.SetParent(barco.transform, false);
+        puestoBabor.transform.localPosition = sitioBabor;
+        puestoBabor.transform.localRotation = mirandoAProa;
+        var puestoEstribor = new GameObject("Puesto de estribor");
+        puestoEstribor.transform.SetParent(barco.transform, false);
+        puestoEstribor.transform.localPosition = sitioEstribor;
+        puestoEstribor.transform.localRotation = mirandoAProa;
 
         // Punto de desembarque: al costado del casco, a la altura del agua.
         Vector3 costado = Vector3.Cross(Vector3.up, datos.proaLocal).normalized;
@@ -112,9 +111,9 @@ public static class MontadorDeBarco
         var navegable = barco.AddComponent<BarcoNavegable>();
         navegable.Configurar(datos.proaLocal, puesto.transform, desembarque.transform,
                               profundidadDeQuilla, musicaDelBarco);
-        // Los compañeros (Estela y Liam) con sus sitios a bordo.
+        // La tripulación (todos los del grupo menos quien conduce) y sus dos puestos.
         var tripulacion = barco.AddComponent<TripulacionDelBarco>();
-        tripulacion.Configurar(puestoEstela.transform, puestoLiam.transform, desembarque.transform);
+        tripulacion.Configurar(puestoBabor.transform, puestoEstribor.transform, desembarque.transform);
 
         // Zona de interacción: el jugador tiene que poder subir desde cualquier punto del casco.
         // El centro va a la altura de la cubierta (no al centro de la caja del modelo, que
@@ -143,12 +142,12 @@ public static class MontadorDeBarco
         esferaAmarre.radius = 1.5f;
         var interactuableAmarre = amarre.AddComponent<Interactable>();
         var puntoDeAmarre = amarre.AddComponent<PuntoDeAmarre>();
-        CrearHintDeInteraccion(amarre.transform, Vector3.up * 1.2f, interactuableAmarre);
+        CrearHint(amarre.transform, Vector3.up * 1.2f, interactuableAmarre);
         navegable.ConfigurarAmarre(puntoDeAmarre);
 
         // Icono del botón de interactuar sobre la cubierta (misma estructura que los
         // interactuables del juego: Canvas en el mundo + BillboardUI + Image con el icono).
-        CrearHintDeInteraccion(barco.transform, datos.timonLocal + Vector3.up * 0.9f, interactuable);
+        CrearHint(barco.transform, datos.timonLocal + Vector3.up * 0.9f, interactuable);
 
         return barco;
     }
@@ -161,6 +160,10 @@ public static class MontadorDeBarco
         public Vector3 cascoMin;    // esquina mínima del casco, en espacio local
         public Vector3 cascoMax;    // esquina máxima del casco, en espacio local
         public Vector3 timonLocal;  // punto del timón (a la popa), en espacio local
+        public Vector3 sitioDeEstela;
+        public Vector3 sitioDeLiam;
+        public float anchoDeEstela;   // medio ancho pisable en su lado
+        public float anchoDeLiam;
     }
 
     /// <summary>
@@ -218,6 +221,16 @@ public static class MontadorDeBarco
         int b85 = Mathf.Clamp(Mathf.RoundToInt(bins * 0.85f), 0, bins - 1);
         datos.proaLocal = anchos[b15] < anchos[b85] ? -ejeEs : ejeEs;
 
+        // El ancho del casco en una estación concreta. En la popa el casco es bastante más
+        // estrecho que en el centro: con la manga máxima del barco, los compañeros de al lado
+        // quedaban metidos dentro de la borda.
+        float AnchoDelCascoEn(Vector3 puntoLocal)
+        {
+            float t = (Vector3.Dot(puntoLocal, ejeEs) - minEje) / Mathf.Max(0.01f, largo);
+            int b = Mathf.Clamp(Mathf.FloorToInt(t * bins), 0, bins - 1);
+            return anchos[b];
+        }
+
         // Casco: desde el primer sitio con anchura hasta el último (la verga no es casco).
         float anchoMax = 0f;
         for (int b = 0; b < bins; b++) anchoMax = Mathf.Max(anchoMax, anchos[b]);
@@ -241,21 +254,92 @@ public static class MontadorDeBarco
         Vector3 timon = (datos.cascoMin + datos.cascoMax) * 0.5f - datos.proaLocal * (eslora * 0.5f - distanciaDesdeLaPopa);
         timon.y = 0f;
         datos.ejeAncho = ejeAn;
-        // Los sitios de los compañeros: a un lado y al otro del mástil, no en fila.
-        Vector3 sitioEstela = timon + datos.proaLocal * 1.4f - ejeAn * 1.1f;
-        Vector3 sitioLiam = timon + datos.proaLocal * 1.4f + ejeAn * 1.1f;
 
-        // Cubierta: la altura de la superficie horizontal con más superficie (área) alrededor del
-        // timón. Con la moda de las alturas de los vértices salía la borda o el techo de la popa y
-        // el jugador se quedaba flotando por encima de la cubierta.
-        timon.y = AlturaDeCubierta(vertices, triangulos, timon, datos.proaLocal, ejeAn, local.min.y);
+        // Cubierta: la altura del suelo REAL, con un rayo contra el MeshCollider del propio barco,
+        // por la LÍNEA DE CRUJÍA (donde no hay borda que estorbe).
+        float topeDeCubierta = local.min.y + 3.8f;   // por encima están las vergas y los mástiles
+        Vector3 crujia = timon - ejeAn * Vector3.Dot(timon, ejeAn);
+        timon.y = AlturaDelSuelo(barco, crujia, topeDeCubierta);
+        if (float.IsNegativeInfinity(timon.y))
+            timon.y = AlturaDeCubierta(vertices, triangulos, timon, datos.proaLocal, ejeAn, local.min.y);
         datos.timonLocal = timon;
+
+        // Los compañeros: a la MISMA altura que Will, un poco por delante de él (sin llegar al
+        // mástil) y separados entre sí, uno a cada lado. Simétricos: los dos a la misma distancia
+        // de la línea de crujía.
+        Vector3 centro = timon + datos.proaLocal * 0.4f;
+        float separacion = 0.8f;
+        Vector3 sitioEstela = centro - ejeAn * separacion;
+        Vector3 sitioLiam = centro + ejeAn * separacion;
+        sitioEstela.y = timon.y;
+        sitioLiam.y = timon.y;
+        datos.sitioDeEstela = sitioEstela;
+        datos.sitioDeLiam = sitioLiam;
+        datos.anchoDeEstela = separacion;
+        datos.anchoDeLiam = separacion;
         return datos;
     }
 
+    private static readonly RaycastHit[] _hitsDelSuelo = new RaycastHit[16];
+
     /// <summary>
-    /// Altura local de la cubierta: la altura de la superficie horizontal con más superficie (área)
-    /// alrededor del timón. La cubierta es un suelo ancho; los mástiles, las vergas y las bordas
+    /// La altura del suelo del barco en un punto: se lanza un rayo contra el MeshCollider del propio
+    /// barco y se devuelve el PRIMER impacto horizontal que no sea verga ni mástil (de arriba abajo).
+    ///
+    /// Importa que sea el primero y no el más alto: en la popa, encima de la cubierta está la
+    /// borda, y cogiendo la más alta la cubierta salía a la altura de la regola (los personajes
+    /// quedaban dentro de la borda o colgando fuera). Con el primero, en el centro sale el suelo y
+    /// en los bordes sale la parte de arriba de la borda, que no es pisable.
+    /// </summary>
+    private static float AlturaDelSuelo(GameObject barco, Vector3 puntoLocal, float alturaMaxima)
+    {
+        Physics.SyncTransforms();
+        Vector3 origen = barco.transform.TransformPoint(puntoLocal + Vector3.up * 20f);
+        int hits = Physics.RaycastNonAlloc(origen, Vector3.down, _hitsDelSuelo, 40f, ~0, QueryTriggerInteraction.Ignore);
+
+        // Los impactos horizontales: gana el más cercano (el primero de arriba). Si se cogiera el
+        // más alto, en la popa saldría la parte de arriba de la borda en vez del suelo.
+        float mejor = float.MinValue;
+        float mejorDistancia = float.MaxValue;
+        for (int i = 0; i < hits; i++)
+        {
+            var col = _hitsDelSuelo[i].collider;
+            if (col == null || !col.transform.IsChildOf(barco.transform)) continue;   // solo el barco
+            if (_hitsDelSuelo[i].normal.y < 0.7f) continue;                        // tiene que ser un suelo
+            float y = barco.transform.InverseTransformPoint(_hitsDelSuelo[i].point).y;
+            if (y > alturaMaxima) continue;                                          // mástiles y vergas
+            if (_hitsDelSuelo[i].distance < mejorDistancia)
+            {
+                mejorDistancia = _hitsDelSuelo[i].distance;
+                mejor = y;
+            }
+        }
+        return mejor;
+    }
+
+    /// <summary>
+    /// El ancho de la cubierta que se puede pisar en una estación: se recorre la manga desde la
+    /// línea de crujía hacia fuera y se mira dónde el suelo sigue a la misma altura que en el
+    /// centro. Donde ya no (donde está la borda) no se puede estar de pie.
+    /// </summary>
+    private static float AnchoPisable(GameObject barco, Vector3 centro, Vector3 ejeAn,
+                                      float alturaCubierta, float alturaMaxima)
+    {
+        float medio = 0f;
+        for (float d = 0.1f; d <= 2.4f; d += 0.1f)
+        {
+            float y = AlturaDelSuelo(barco, centro + ejeAn * d, alturaMaxima);
+            if (float.IsNegativeInfinity(y)) break;              // aquí no hay suelo
+            if (Mathf.Abs(y - alturaCubierta) > 0.3f) break;    // ya es la borda, no la cubierta
+            medio = d;
+        }
+        return medio;
+    }
+
+    /// <summary>
+    /// Altura local de la cubierta por el método de área (el de respaldo, cuando el rayo contra el
+    /// casco no encuentra suelo): la altura de la superficie horizontal con más superficie (área)
+    /// alrededor del punto. La cubierta es un suelo ancho; los mástiles, las vergas y las bordas
     /// son tiras estrechas.
     /// </summary>
     private static float AlturaDeCubierta(List<Vector3> vertices, List<int> triangulos, Vector3 timon,
@@ -305,7 +389,7 @@ public static class MontadorDeBarco
     /// Image con el icono), porque el <see cref="Interactable"/> lo enciende, lo escala y lo
     /// apaga por su cuenta; el sprite correcto según el mando lo pone el icon set.
     /// </summary>
-    private static void CrearHintDeInteraccion(Transform padre, Vector3 posicionLocal, Interactable interactuable)
+    public static void CrearHint(Transform padre, Vector3 posicionLocal, Interactable interactuable)
     {
         var canvasGo = new GameObject("Canvas", typeof(RectTransform));
         canvasGo.transform.SetParent(padre, false);

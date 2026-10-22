@@ -260,6 +260,49 @@
 
 ---
 
+## 9-bis. Prólogo: los cinco fallos de la grabación Prologo_3 (INC-801..INC-806)
+
+> **Antes de empezar:** rehornear el guion — *El Sendero ▸ Guion ▸ 2. Hornear el guion del prólogo*. Ese horneado crea además los dos prefabs nuevos (`VFX_BolaDeConjuro` y `VFX_RemolinoDelPrologo`). Después, jugar el prólogo entero (Nueva partida) y mirar sobre todo la parte de la mañana.
+
+### INC-801 — La bola del conjuro (Media)
+
+- [ ] En el cántico del Archimago (la plegaria del final del prólogo), mira las manos.
+- **OK:** se ve una bola blanca PEQUEña entre las manos; va adelante, arriba y adelante otra vez; crece y se agita más conforme sube el cántico; **nunca** se come la pantalla ni tapa la cara.
+- **Falla:** la pantalla se vuelve blanca, la bola es enorme o no se mueve.
+
+### INC-802 — El hechizo de la carreta (Media)
+
+- [ ] Cuando el Archimago levanta la carreta, mira debajo de ella y después al maestro.
+- **OK:** se ve un remolino bajo la carreta y un destello en ella; el maestro no está parado ni serio (está alegre) y el efecto suena.
+- **Falla:** la carreta sube sola sin nada debajo, el maestro se queda quieto y serio, o no hay destello ni sonido al caer la carreta.
+
+### INC-803 — El vecino de la carreta (Media)
+
+- [ ] Al principio, cuando el vecino pide ayuda, y mientras el maestro conjura.
+- **OK:** el vecino está DE PIE junto a la carreta (no arrodillado ni recogiendo del suelo) y salta para intentar alcanzar las asas; al dar las gracias hace un cabeceo, no una reverencia profunda.
+- **Falla:** sigue con la pose de agachado o con la reverencia.
+
+### INC-804 — El saludo «¡Muy buenas, maestro!» (Media)
+
+- [ ] Cuando el Archimago llega a la plaza.
+- **OK:** la mujer que dice «¡Muy buenas, maestro!» se ve (tiene plano propio) y da un paso adelante; el otro vecino se queda con el grupo.
+- **Falla:** sigue sin verse de quién es la voz, o la que saluda no se acerca.
+
+### INC-805 — El plano de Nina (Media)
+
+- [ ] Cuando Nina llega pidiendo ayuda con el globo del campanario.
+- **OK:** se ve la cara de Nina; la cabeza del Archimago no la tapa.
+- **Falla:** la melena del Archimago ocupa media pantalla y Nina queda detrás.
+
+### INC-806 — Los efectos anclados a la carreta y al globo (Media)
+
+- [ ] Al levantarse la carreta y al subir el globo.
+- **OK:** se ve y se oye el destello de la carreta, el ruido al caer y el aura del globo; en la consola **no** sale «No hay ningún marca de posición llamada 'PROP_Carreta'».
+- **Falla:** la carreta sube muda y sin luz, o la consola avisa de la marca que no encuentra.
+
+
+---
+
 ## 10. Cierre
 
 - **Todo OK:** actualizar en `TRACKER.md` el estado de cada fila a `Resuelto (validado en Play)` y anotar la fecha en la columna Validación. No cambiar la prioridad.

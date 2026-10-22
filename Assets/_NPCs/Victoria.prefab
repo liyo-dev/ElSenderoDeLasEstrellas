@@ -493,6 +493,7 @@ GameObject:
   - component: {fileID: 7328747627460509299}
   - component: {fileID: 6794390474496637073}
   - component: {fileID: 3122297938807399633}
+  - component: {fileID: 5213157139523825127}
   m_Layer: 0
   m_Name: Hair06
   m_TagString: Untagged
@@ -572,6 +573,23 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5213157139523825127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090670037909959624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b077fa42a81a8545b9ef7ff32d23b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
+  controlador: {fileID: 4424460848909321129}
+  mallaDelPelo: {fileID: 6794390474496637073}
+  ojosDeReferencia: {fileID: 1494078463281646364}
+  intensidad: 1
+  velocidad: 14
 --- !u!1 &1150987442759855370
 GameObject:
   m_ObjectHideFlags: 0
@@ -4483,6 +4501,7 @@ MonoBehaviour:
   useRootMotionForSpecialAnims: 0
   debugMode: 0
   drawGizmos: 1
+  getUpState: GetUp_NoWeapon
 --- !u!114 &473005947799749894
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -548,7 +548,7 @@ public class BarcoNavegable : MonoBehaviour
             : (puntoDeDesembarque != null ? puntoDeDesembarque.position : transform.position + transform.right * 2f);
 
         _conductor.Desembarcar(destino);
-        _tripulacion?.BajarATripulacion();
+        _tripulacion?.BajarATripulacion(destino);
 
         // El HUD vuelve a la cruz de combate.
         if (_controlesDelHud != null)
