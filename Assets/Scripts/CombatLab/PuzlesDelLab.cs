@@ -12,7 +12,7 @@ public sealed class PuzlesDelLab : MonoBehaviour, ISeccionDelLab
     private float _siguienteRecuento;
 
     public string Titulo => "Puzles";
-    public int Orden => 55;
+    public int Orden => 56;
 
     public void Dibujar()
     {

@@ -783,9 +783,8 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     /// monólogo del Mago Oscuro) — en cuanto el clip del gesto termina, NPCSimpleAnimator (si
     /// "_isInteracting" es false, que es el caso por defecto aquí) fuerza la vuelta a Idle de pie
     /// por su cuenta (PlayOneShotCoroutine), mucho antes de que la página cambie. Exactamente el
-    /// mismo bug ya diagnosticado y resuelto para NPCs reales en otra escena de esta sesión (ver
-    /// cabecera de PromoVideo01Sequencer.cs, sección "GESTOS QUE NO SE QUEDAN IDLE A MITAD DE
-    /// LÍNEA") — el mecanismo que ya lo resuelve ahí es NPCSimpleAnimator.BeginInteraction(), que
+    /// mismo bug ya diagnosticado y resuelto para NPCs reales en el motor de gestos de este
+    /// proyecto — el mecanismo que lo resuelve es NPCSimpleAnimator.BeginInteraction(), que
     /// dejaría al NPC en su interactState ("Talk01" por defecto, tras el cambio del 5 sep 2026) en vez de caer
     /// a Idle entre gesto y gesto — simplemente no se estaba llamando desde este helper compartido.
     /// Arreglo: se llama aquí, una sola vez, para que todo bocadillo cinemático de este archivo
@@ -969,8 +968,8 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // Enum.IsDefined la primera vez (evita repetir esa comprobación, que usa reflection, en cada
     // Update() — ver regla de no-Reflection-en-runtime-frecuente de CLAUDE.md); si el valor no es
     // válido, el atajo queda desactivado con un aviso en consola en vez de reventar. El builder
-    // también se autocorrige en el próximo re-run (ver SetInputKeyIfNoneOrInvalid en
-    // PromoStudioSceneBuilder.cs).
+    // que monta la escena también se autocorrige en el próximo re-run (ver
+    // SetInputKeyIfNoneOrInvalid).
     private bool? _simulateHotkeyValid;
     private bool _invalidHotkeyWarned;
 

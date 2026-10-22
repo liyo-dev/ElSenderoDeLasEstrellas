@@ -219,8 +219,7 @@ public static partial class CombatLabBuilder
             if ((viaje = go.GetComponentInChildren<ViajeDelLab>(true)) != null) break;
         if (viaje == null) { avisos.Add("No hay viaje rápido en el LAB: la zona no tiene destino."); return; }
 
-        var punto = new GameObject("Destino — " + NombreDestinoBestiario).transform;
-        punto.SetParent(raiz);
+        var punto = PuntoDeDestino(raiz, NombreDestinoBestiario);
         punto.SetPositionAndRotation(EntradaBestiario, Quaternion.Euler(0f, 180f, 0f));
 
         var so = new SerializedObject(viaje);

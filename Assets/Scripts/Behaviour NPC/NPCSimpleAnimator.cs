@@ -1878,7 +1878,7 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Los gestos sociales pueden vivir en el Base Layer (locomoción/pose completa) o en el
         // UpperBody layer (gestos que no deben congelar las piernas, p.ej. Greeting01/HandWave01).
         // AnimatorLayerUtil resuelve en qué layer existe realmente el estado antes de reproducirlo
-        // (misma utilidad compartida que usan PromoVideo01Sequencer y PlayerDialogueAnimator).
+        // (misma utilidad compartida que usa PlayerDialogueAnimator).
         int resolvedLayer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

@@ -12,7 +12,7 @@ public sealed class AyudaDelLab : MonoBehaviour, ISeccionDelLab
     public void Dibujar()
     {
         GUILayout.Label("¡Bienvenido al LAB!", EstiloDelLab.Titulo);
-        GUILayout.Label("Un laboratorio para probar el juego por partes: combate, magia, compañeros, plataformas, puzles, agua, vuelo, tiendas y jefes. Nada de lo que hagas aquí toca tu partida guardada.", EstiloDelLab.Etiqueta);
+        GUILayout.Label("Un laboratorio para probar el juego por partes: combate, magia, compañeros, plataformas, puzles, agua, vuelo, tiendas, caídas y jefes. Nada de lo que hagas aquí toca tu partida guardada.", EstiloDelLab.Etiqueta);
 
         GUILayout.Space(4f);
         if (GUILayout.Button("Copiar datos para el reporte", EstiloDelLab.BotonActivo, GUILayout.Width(300f))) CopiarReporte();
@@ -31,15 +31,22 @@ public sealed class AyudaDelLab : MonoBehaviour, ISeccionDelLab
             "<b>Plataformeo</b> (oeste): escalones, saltos cortos y largos, doble salto, viga estrecha, rampa y muro de escalada.\n" +
             "<b>Puzles</b> (este): puerta con dos placas, placa que eleva, objeto que se quema con fuego y runas que hay que repetir en orden.\n" +
             "<b>Kit de puzles</b> (más al este, por el hueco del muro de Puzles): cristal de luz, molinete de viento, brasero de fuego, cristal que solo enciende una bola devuelta, zona sin vuelo y barrera que pide volar.\n" +
-            "<b>Pruebas</b> (lejos al este, solo por la pestaña Zonas): luz y saltos, viento y levitación, Liam y cambio de personaje. Zona sin vuelo; cada una acaba en un cofre y enciende su estrella.\n" +
-            "<b>Tesoros</b> (pestaña Zonas): un cofre por capa de requisito (nada, nadar, llave, vuelo, Amanecer) y un punto de tesoro que marca el mapa. El registro está en Start ▸ Objetos.\n" +
+            "<b>Pruebas</b> (lejos al este): luz y saltos, viento y levitación, Liam y cambio de personaje. Zona sin vuelo; cada una acaba en un cofre y enciende su estrella.\n" +
+            "<b>Tesoros</b>: un cofre por capa de requisito (nada, nadar, llave, vuelo, Amanecer) y un punto de tesoro que marca el mapa. El registro está en Start ▸ Objetos.\n" +
             "<b>Agua</b> (norte): nadar en lo hondo y en lo poco hondo.\n" +
             "<b>Vuelo</b> (sur): torres y plataformas flotantes a 10, 18 y 26 m.\n" +
             "<b>Tiendas y Esencia</b> (sur): Renard (Esencia), Tomasa (monedas) y Patricia (pociones y capa por monedas), placas de +100 y un corral de arañas para contratos.\n" +
-            "<b>Zona de jefes</b> (oeste, por el pasillo del plataformeo): Demonio 1, Demonio 2, Gólem y Mago Oscuro. Al ganar vuelves a la entrada con la vida llena; si caes, el LAB se recarga allí.");
+            "<b>Arañas y contratos</b> (sur): el corral de arañas que se repone solo y los contratos de las misiones secundarias.\n" +
+            "<b>Saltos y volteretas</b> (noreste): lanzadores, caída larga, doble salto, remate aéreo, B y derribo.\n" +
+            "<b>Extras del Cap. 2</b> (norte): el puente sin magia sobre una zanja, el plato que persigue con una silla y el campamento de los contrabandistas.\n" +
+            "<b>Enemigos del mundo</b> (sureste): fantasmas, mímicos, imps ladrones, Beholder y la Roca tras los muros rompibles.\n" +
+            "<b>Amanecer</b> (noroeste): la estación para probar el hechizo que abre la protección del Mago Oscuro.\n" +
+            "<b>Zona de jefes</b> (oeste, por el pasillo del plataformeo): Demonio 1, Demonio 2, Gólem y Mago Oscuro. Al ganar vuelves a la entrada con la vida llena; si caes, el LAB se recarga allí.\n" +
+            "Las zonas cerradas (Pruebas, Tesoros, Arañas, Extras del Cap. 2, Enemigos del mundo y Amanecer) tienen un portal «← Volver al laboratorio» junto a la llegada: se sale andando, sin usar el viaje rápido.");
         Seccion("Pestañas",
             "<b>Combate</b>: escenarios del centro. <b>Zonas</b>: viaje rápido y salir al menú. <b>Grupo</b>: pelear solo, con Estela, con Liam o con los dos. " +
-            "<b>Magia</b>: cambiar hechizos y habilidades. <b>Música</b>: toda la música del juego. <b>Clima</b>: hora del día, lluvia, tormenta, nieve, viento y niebla; se ponen y se quitan con un botón. <b>Trucos</b>: invencible, maná infinito, cámara lenta y curar. <b>Puzles</b>: qué hechizo usar en cada pieza del kit y reiniciarlas.");
+            "<b>Caídas</b>: vida y maná de cada uno del grupo, tumbar, levantar y las formas de revivir. " +
+            "<b>Magia</b>: cambiar hechizos y habilidades. <b>Música</b>: toda la música del juego. <b>Clima</b>: hora del día, lluvia, tormenta, nieve, viento y niebla; se ponen y se quitan con un botón. <b>Puzles</b>: qué hechizo usar en cada pieza del kit y reiniciarlas. <b>Trucos</b>: invencible, maná infinito, cámara lenta y curar.");
         Seccion("Qué mirar",
             "Que cada hechizo se vea, vuele e impacte bien · que los enemigos y jefes reaccionen y se les pueda ganar · que los compañeros ayuden · " +
             "que la cámara no se quede atascada · que los textos se lean · que la música y los sonidos encajen · cualquier cosa rara, aunque parezca pequeña.");

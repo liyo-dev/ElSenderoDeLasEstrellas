@@ -95,7 +95,7 @@ public class PlayerDialogueAnimator : MonoBehaviour
 
         int stateHash = Animator.StringToHash(stateName);
         // AnimatorLayerUtil resuelve en qué layer vive realmente el estado (misma utilidad
-        // compartida que usan NPCSimpleAnimator.PlaySocialGesture() y PromoVideo01Sequencer).
+        // compartida que usa NPCSimpleAnimator.PlaySocialGesture()).
         int capa = AnimatorLayerUtil.ResolveLayer(animator, stateHash, CapaUpperBody);
         if (capa < 0)
         {

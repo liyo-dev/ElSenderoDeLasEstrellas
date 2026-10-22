@@ -101,13 +101,11 @@ public class GlobalCinematicSkipController : MonoBehaviour
             skipButtonRoot.SetActive(false);
     }
 
-    // FIX (24 ago 2026): supresión a nivel de escena para PromoEstudio.unity (ver
-    // PromoStudioUISuppressor, Assets/Scripts/Cinematics/) — un "plató" de grabación donde
-    // PromoVideo01Sequencer (un CinematicSequencerBase normal) pone AnySequenceActive a true igual
-    // que cualquier cinemática real, pero el botón de skip no tiene ningún sentido ahí y arruinaría
-    // la grabación si apareciera en pantalla. Mientras _suppressed es true, Refresh() no reacciona a
-    // ningún evento — el botón se queda oculto pase lo que pase en NarrativeSkipHub/
+    // Supresión a nivel de escena: mientras _suppressed es true, Refresh() no reacciona a ningún
+    // evento — el botón se queda oculto pase lo que pase en NarrativeSkipHub/
     // CinematicSequencerBase — sin afectar a su funcionamiento normal en el resto del juego.
+    // La usa el prompt de salto de los guiones (InputPromptBeat), que necesita el botón oculto
+    // mientras le pide una pulsación al jugador.
     private bool _suppressed;
 
     private void OnEnable()
@@ -152,8 +150,7 @@ public class GlobalCinematicSkipController : MonoBehaviour
     }
 
     /// Oculta el botón y deja de reaccionar a NarrativeSkipHub/CinematicSequencerBase mientras dure
-    /// la supresión. Pensado para escenas que no son gameplay real (ver PromoStudioUISuppressor) —
-    /// no toca el comportamiento del botón en ninguna otra escena.
+    /// la supresión. No toca el comportamiento del botón en ninguna otra escena.
     public void Suppress()
     {
         if (_suppressed) return;
