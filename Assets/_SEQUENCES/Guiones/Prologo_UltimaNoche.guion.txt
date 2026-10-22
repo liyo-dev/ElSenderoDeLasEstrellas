@@ -655,6 +655,8 @@ desde @hechizo+3.3 sacudida 0.7 1.2
 desde @hechizo+4.5 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.75 lente=48 mano=0.85
 desde @hechizo+4.5 sacudida 0.95 1.4
 desde @hechizo+5.6 destello FFFFFFFF 0.14
+# La música del conjuro se va antes de la explosión: el estallido se oye en silencio.
+desde @hechizo+3.4 silencio 0.8
 espera 2.2
 
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
@@ -668,8 +670,7 @@ ambiente TORMENTA sonar=false fundido=0.2
 +1.2 hora Morning immediate=true esLaHoraDeVolver=true
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinalCola volumen=1 musicaDb=-4 duracion=0.5
 +0.4 sacudida 0.9 1.6
-# Tras el estallido, silencio: la música se va y queda el pitido de oídos hasta Will.
-+0.9 silencio 1.2
+# Tras el estallido, silencio: solo queda el pitido de oídos hasta Will.
 +1.0 sonido SFX_Prologo_SilencioBlanco volume=0.6
 espera 3.0
 bandas quita

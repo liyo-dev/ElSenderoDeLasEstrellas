@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-22 16:22 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-22 16:36 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **3:41,7** de secuencia · 32 frases · 56 planos · 159 efectos · 13 personajes
 
@@ -302,18 +302,18 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:35,9 | efecto | Líneas de concentración: mostrar |
 | 3:37,2 | plano 55 | primer plano de mago · 1,2 s · lente 24° · coste 115: cara 63, ángulo 53 |
 | 3:37,2 | efecto | Sacudida de cámara (0,7, 1,2s) |
+| 3:37,3 | efecto | Música: parar (0,8s) |
 | 3:38,2 | **@explosion** |  |
-| 3:38,2 | efecto | Pantalla: cubrir (1,2s) |
+| 3:38,2 | efecto | Líneas de concentración: retirar |
 | 3:38,2 | efecto | Ambiente: parar AGUJERO_NEGRO |
 | 3:38,2 | efecto | VFX: recoger efectos registrados |
 | 3:38,2 | efecto | Mezcla: grito (quitar) |
-| 3:38,2 | efecto | Líneas de concentración: retirar |
+| 3:38,2 | efecto | Pantalla: cubrir (1,2s) |
 | 3:38,2 | efecto | Ambiente: parar TORMENTA |
 | 3:38,2 | efecto | Golpe musical: Prologue_GolpeFinalCola |
 | 3:38,4 | plano 56 | general de archimago y mago · 3,3 s · lente 48° |
 | 3:38,4 | efecto | Sacudida de cámara (0,95, 1,4s) |
 | 3:38,6 | efecto | Sacudida de cámara (0,9, 1,6s) |
-| 3:39,1 | efecto | Música: parar (1,2s) |
 | 3:39,2 | efecto | SFX: SFX_Prologo_SilencioBlanco |
 | 3:39,4 | efecto | Hora del día: Morning (de golpe) (y es con la que se queda el mundo) |
 | 3:39,5 | efecto | Fogonazo (0,14s) |
