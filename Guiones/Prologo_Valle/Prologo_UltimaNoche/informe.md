@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-22 17:23 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-22 17:31 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **3:39,2** de secuencia · 32 frases · 56 planos · 155 efectos · 13 personajes
 
