@@ -547,21 +547,22 @@ archimago bucle CastingIdle01
 # "No daré ni un paso atrás... ¡Liora! ¡Nina!": la voz a pelo. Sin eco y sin música de
 # fondo: la frase sola, y el silencio alrededor es lo que hace que pese.
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-# La plegaria se dice SIN MÚSICA: el bus de música se aparta del todo hasta el grito.
-efecto MezclaBeat fuente=plegaria musicaDb=-80 sfxDb=-4 ambienteDb=-14 fundido=0.6
+efecto MezclaBeat fuente=plegaria musicaDb=-20 sfxDb=-4 ambienteDb=-14 fundido=0.6
 archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 +3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 +5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 
-# El paso al conjuro: fundido a negro y, al descubrir, el tema del duelo se corta y el
-# cántico se dice solo, con la voz abierta en el eco. La música entra con el grito.
+# El paso a la música del hechizo: fundido a negro y, al descubrir, el tema del duelo se
+# corta y entra Ultimo Incantazione, que va a culminar en el grito; la voz se abre en el eco.
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true dura=1.35
 efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
-# El bus de música sigue apagado: la plegaria es solo voz y eco.
-efecto MezclaBeat fuente=plegaria musicaDb=-80 sfxDb=0 ambienteDb=-10 fundido=0.6
-# El tema del duelo se corta aquí: desde ahora hasta el grito no suena música.
+# El bus de música se queda a 0 dB: lo que suena ahora es el tema del conjuro.
+efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
+# El tema del duelo se corta aquí y entra Ultimo Incantazione: el cántico se sostiene
+# con este tema, que culmina justo en el grito.
 silencio 0.8
+musica ULTIMO_INCANTAZIONE
 
 plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
@@ -632,18 +633,13 @@ efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
 & efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
 cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1 volumen=0.5
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
-# La música no se aparta (aún no suena): si se apartara, el tema entraría mientras el bus
-# se recupera y el clímax caería fuera del grito.
-efecto RespiroBeat musicaDb=0 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
+efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
 @hechizo
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle CastingIdle01
 # El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
-# La música entra en el mismo instante que el grito: el recorte del tema empieza en su
-# punto más fuerte, así que el clímax cae en la palabra (entrada casi seca, sin fundido).
-musica ULTIMO_INCANTAZIONE fadeIn=0.03
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
 +0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.15,0 lifetime=1.8 escala=0.12

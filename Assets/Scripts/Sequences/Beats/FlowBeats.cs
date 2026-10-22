@@ -382,10 +382,6 @@ public class MusicBeat : SequenceBeat
     [Tooltip("Segundos de desvanecido al parar. Solo se usa cuando 'musicId' está vacío.")]
     public float fadeOut = 0.5f;
 
-    [Tooltip("Segundos de entrada de la música. Negativo = el fundido que pone el perfil de audio. " +
-             "Un clímax que tiene que caer en un fotograma se entra casi seco (0,03 s).")]
-    public float fadeIn = -1f;
-
     public override string Describe()
         => string.IsNullOrEmpty(musicId) ? $"Música: parar ({fadeOut}s)" : $"Música: {musicId}";
 
@@ -398,7 +394,7 @@ public class MusicBeat : SequenceBeat
         if (player == null) yield break;
 
         if (string.IsNullOrWhiteSpace(musicId)) player.StopMusicNow(fadeOut);
-        else player.PlayMusic(musicId, continuarDondeIba, fadeIn);
+        else player.PlayMusic(musicId, continuarDondeIba);
 
         yield break;
     }

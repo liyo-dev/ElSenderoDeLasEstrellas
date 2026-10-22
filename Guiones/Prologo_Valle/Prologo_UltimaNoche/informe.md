@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-22 14:41 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-22 15:00 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **3:41,7** de secuencia · 32 frases · 56 planos · 159 efectos · 13 personajes
 
@@ -9,17 +9,16 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 ## Errores (0)
 
 
-## Avisos (24)
+## Avisos (22)
 
-- línea 125: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 13,3 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 125: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 52,9 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 125: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 92,6 s y no he encontrado otro camino. Mueve el destino o el momento.
-- línea 401: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: no se llega del todo a (5988,0, 6000,5) por el NavMesh
-- línea 251: plano conjunto archimago desde=cam_calle altura=1.55 lente=36 suave=0.8: algo del decorado se mete delante y tapa un 60% del cuadro. Prueba lado= o desde=.
-- línea 275: plano medio archimago lado=der: algo del decorado se mete delante y tapa un 18% del cuadro. Prueba lado= o desde=.
-- línea 417: plano medio archimago lado=izq: algo del decorado se mete delante y tapa un 34% del cuadro. Prueba lado= o desde=.
-- línea 422: plano general v06 v04 v09 v03 desde=cam_puente_este altura=2.3 lente=38 suave=0.8: la cámara de «cam_puente_este» no ve al sujeto (dentro del decorado o tapada); busco otro ángulo.
-- línea 432: plano medio archimago lado=der: no cabe el contraplano sobre el hombro de liora; hago un plano medio de archimago.
+- línea 126: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 13,3 s y no he encontrado otro camino. Mueve el destino o el momento.
+- línea 126: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 52,9 s y no he encontrado otro camino. Mueve el destino o el momento.
+- línea 126: v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6: v07 roza a v02 a 92,6 s y no he encontrado otro camino. Mueve el destino o el momento.
+- línea 402: mago anda a ladera, entrada ritmo=normal llega_mirando=centro_plaza sin_esperar: no se llega del todo a (5988,0, 6000,5) por el NavMesh
+- línea 252: plano conjunto archimago desde=cam_calle altura=1.55 lente=36 suave=0.8: algo del decorado se mete delante y tapa un 60% del cuadro. Prueba lado= o desde=.
+- línea 276: plano medio archimago lado=der: algo del decorado se mete delante y tapa un 18% del cuadro. Prueba lado= o desde=.
+- línea 418: plano medio archimago lado=izq: algo del decorado se mete delante y tapa un 34% del cuadro. Prueba lado= o desde=.
+- línea 423: plano general v06 v04 v09 v03 desde=cam_puente_este altura=2.3 lente=38 suave=0.8: la cámara de «cam_puente_este» no ve al sujeto (dentro del decorado o tapada); busco otro ángulo.
 - 0:07,8: v01 y v07 se atraviesan.
 - 0:09,2: v01 y v07 se atraviesan.
 - 0:26,6: v01 y v07 se atraviesan.
@@ -34,7 +33,6 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 1:25,2: v01 y v07 se atraviesan.
 - 1:49,0: v01 y v07 se atraviesan.
 - 0:29,4: en «medio de archimago» v07 está 6 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
-- 1:55,1: en «medio de liora» archimago está 7 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 
 ## Silencios largos entre frases (11)
 
@@ -170,8 +168,8 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 1:55,1 | plano 31 | medio de liora · 7,5 s · lente 30° |
 | 1:55,1 | liora | «Vuelve pronto.» (1,9 s) · pose |
 | 1:57,2 | liora | «Y cuando vuelvas, nada de encargos. Te toca descansar.» (5,4 s) · pose |
-| 2:02,6 | plano 32 | medio de archimago · 1,8 s · lente 24° · coste 79: cara 25, ángulo 48 |
-| 2:04,5 | plano 33 | conjunto de liora y nina · 3,6 s · lente 34° · coste 301: cara 210, ángulo 86 |
+| 2:02,6 | plano 32 | sobre el hombro de liora a archimago · 1,8 s · lente 24° · coste 755: estorbo 399, eje 350 |
+| 2:04,5 | plano 33 | conjunto de liora y nina · 3,6 s · lente 34° · coste 583: estorbo 332, cara 164, ángulo 81 |
 | 2:04,5 | liora | «¡Vamos, Nina! ...Ten mucho cuidado, por favor.» (3,6 s) · pose |
 | 2:08,0 | **@acercan** |  |
 | 2:08,0 | plano 34 | siguiendo a archimago · 4,5 s · lente 34° |
@@ -246,13 +244,14 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 2:52,9 | efecto | Cut-in 0: NPC_Aldeano_05 (Cara) |
 | 2:55,2 | efecto | Pantalla: cubrir (1,2s) |
 | 2:56,6 | plano 46 | general de mago · 1,4 s · lente 36° |
-| 2:56,6 | efecto | Sacudida de cámara (0,25, 1s) |
 | 2:56,6 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
-| 2:56,6 | efecto | Música: parar (0,8s) |
+| 2:56,6 | efecto | Sacudida de cámara (0,25, 1s) |
 | 2:56,6 | efecto | VFX: Magic circle en agujero |
+| 2:56,6 | efecto | Música: ULTIMO_INCANTAZIONE |
+| 2:56,6 | efecto | Mezcla: plegaria |
 | 2:56,6 | efecto | Voz: Conjuro, +6,0 dB |
 | 2:56,6 | efecto | Pantalla: descubrir (1,2s) |
-| 2:56,6 | efecto | Mezcla: plegaria |
+| 2:56,6 | efecto | Música: parar (0,8s) |
 | 2:58,0 | plano 47 | primer plano de archimago · 8,2 s · lente 24° · coste 2: ángulo 2 |
 | 2:58,0 | archimago | «Más allá de la noche y del silencio... ¡Luz que naciste antes que el cielo y tendiste el camino entre las estrellas!» (8,2 s) |
 | 2:58,4 | efecto | VFX: Magic circle en NPC_Archimago |
@@ -269,9 +268,9 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:14,8 | efecto | Rayo: 1 × fondo del plano |
 | 3:16,0 | plano 50 | primer plano de archimago · 6,3 s · lente 24° · coste 17: ángulo 17 |
 | 3:16,0 | archimago | «Que mi vida sea el precio y mi alma el sello... ¡No importa lo que quede de mí cuando la luz se apague!» (6,3 s) |
-| 3:19,5 | efecto | Sacudida de cámara (0,3, 0,9s) |
 | 3:19,5 | efecto | VFX: FX_LightPillar en NPC_Archimago |
 | 3:19,5 | efecto | SFX: Prologo_MagiaLevitar |
+| 3:19,5 | efecto | Sacudida de cámara (0,3, 0,9s) |
 | 3:22,3 | plano 51 | medio de archimago · 6,1 s · lente 30° · coste 2: ángulo 2 |
 | 3:22,3 | archimago | «¡Haz de mi último aliento un escudo inquebrantable! ¡Arde conmigo y detén la oscuridad!» (6,1 s) |
 | 3:22,3 | efecto | Líneas de concentración: mostrar |
@@ -283,17 +282,16 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:28,5 | plano 52 | primer plano de archimago · 5,5 s · lente 24° · coste 2: ángulo 2 |
 | 3:28,5 | archimago | «Perdóname, Liora... No voy a volver a casa.» (3,8 s) |
 | 3:28,5 | efecto | Líneas de concentración: retirar |
-| 3:32,8 | efecto | Cut-in 1: NPC_Archimago (Cara) |
-| 3:32,8 | efecto | Líneas de concentración: mostrar |
-| 3:32,8 | efecto | Mezcla: grito |
 | 3:32,8 | efecto | Mezcla: plegaria (quitar) |
+| 3:32,8 | efecto | Mezcla: grito |
+| 3:32,8 | efecto | Líneas de concentración: mostrar |
+| 3:32,8 | efecto | Cut-in 1: NPC_Archimago (Cara) |
 | 3:33,9 | **@hechizo** |  |
 | 3:33,9 | plano 53 | general de archimago y mago · 2,0 s · lente 44° |
 | 3:33,9 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
-| 3:33,9 | efecto | Respiro: 0,9 s (música 0 dB) |
+| 3:33,9 | efecto | Respiro: 0,9 s (música -10 dB) |
 | 3:33,9 | efecto | Voz: Conjuro, +6,0 dB |
 | 3:33,9 | efecto | Golpe musical: Prologue_GolpeFinal |
-| 3:33,9 | efecto | Música: ULTIMO_INCANTAZIONE |
 | 3:34,1 | efecto | Rayo: 2 × fondo del plano |
 | 3:34,2 | efecto | VFX: 1 Flash_magic_ellow_blue en NPC_Archimago |
 | 3:34,4 | efecto | Fusión: CARGA_ESFERA +  |
@@ -305,11 +303,11 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:37,2 | plano 55 | primer plano de mago · 1,2 s · lente 24° · coste 115: cara 63, ángulo 53 |
 | 3:37,2 | efecto | Sacudida de cámara (0,7, 1,2s) |
 | 3:38,2 | **@explosion** |  |
+| 3:38,2 | efecto | Pantalla: cubrir (1,2s) |
 | 3:38,2 | efecto | Ambiente: parar AGUJERO_NEGRO |
 | 3:38,2 | efecto | VFX: recoger efectos registrados |
 | 3:38,2 | efecto | Mezcla: grito (quitar) |
 | 3:38,2 | efecto | Líneas de concentración: retirar |
-| 3:38,2 | efecto | Pantalla: cubrir (1,2s) |
 | 3:38,2 | efecto | Ambiente: parar TORMENTA |
 | 3:38,2 | efecto | Golpe musical: Prologue_GolpeFinalCola |
 | 3:38,4 | plano 56 | general de archimago y mago · 3,3 s · lente 48° |
@@ -348,7 +346,7 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 1:52,8–1:55,1 habla
 - 1:52,9 gesto HeadNod01
 - 2:02,6 gesto HeadNod01
-- 2:08,1–2:17,1 anda de (6014,4, 6000,3) a (6004,4, 5999,8)
+- 2:08,5–2:17,5 anda de (6014,4, 6000,3) a (6004,4, 5999,8)
 - 2:25,6–2:28,9 habla
 - 2:25,6 gesto Angry02
 - 2:27,2 gesto Talk03
@@ -446,8 +444,8 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 1:18,9 gesto Laugh01
 - 1:21,8 gesto Talk03
 - 1:23,7 reposo 
-- 1:47,6–1:57,7 anda de (5995,2, 6001,0) a (6014,1, 5998,5)
-- 2:08,1–2:18,5 anda de (6014,2, 5998,6) a (6026,6, 6007,5)
+- 1:47,6–1:55,6 anda de (5995,2, 6001,0) a (6010,5, 6000,0)
+- 2:08,1–2:19,7 anda de (6010,6, 6000,0) a (6026,6, 6007,5)
 
 ### v01 (NPC_Aldeano_01)
 
