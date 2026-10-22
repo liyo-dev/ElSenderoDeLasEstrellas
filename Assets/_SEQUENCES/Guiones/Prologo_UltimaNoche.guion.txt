@@ -544,7 +544,7 @@ archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 # corta y el cántico entra con su lecho ritual; la voz se abre en el eco a tope.
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true dura=1.35
 efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
-efecto EfectoDeVozBeat preset=Conjuro gananciaDb=0
+efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 # El bus de música se queda a 0 dB: lo que suena ahora es el lecho ritual del cántico.
 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
 # El tema del duelo se corta aquí: el conjuro lo sostiene el lecho del cántico.
@@ -636,7 +636,7 @@ silencio 0.3
 # El Archimago dice su línea de Liora/Nina, y arranca el tema del conjuro.
 musica THE_FINAL_BELL
 # El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
-efecto EfectoDeVozBeat preset=Conjuro gananciaDb=0
+efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
