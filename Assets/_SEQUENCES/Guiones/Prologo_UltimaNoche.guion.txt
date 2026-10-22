@@ -98,6 +98,11 @@ liora_puente     6015.0 5997.8
 nina_puente      6010.5 6000.0
 mira_k1          5993.4 5999.2
 mira_k2          5994.9 5998.4
+# Cámara de la Vecina: al noroeste de ella (ella mira al maestro, que está al norte).
+cam_v02         6002.4 6001.4
+# La esquina de la Vecina (v07), al oeste de la plaza: lejos de las marcas del vecino (k1-k5).
+v07_a           5991.5 6004.0
+v07_b           5993.0 6005.5
 k6               5998.0 6000.2
 # El duelo
 duelo_a          6004.4 5999.8
@@ -122,8 +127,10 @@ PISTAS
 # Mañana: el pueblo ya está vivo cuando llega el Archimago.
 v01 0  en k1 mirando k2
 v01 +0.6 pasea por k2, k3, k4, k1 ritmo=trote pausa=0.4
-v07 0  en k3 mirando k4
-v07 +1.6 pasea por k4, k1, k5, k2, k3 ritmo=trote pausa=0.6
+# La Vecina (v07) tiene su propia esquina, al oeste: antes paseaba por las mismas marcas que
+# el vecino (k1-k5) y se cruzaban con él 13 veces, y se veían superpuestos al fondo.
+v07 0  en v07_a mirando v07_b
+v07 +1.6 pasea por v07_b, v07_a, v07_b ritmo=paseo pausa=0.8
 v10 0  en v10_lena mirando horno
 v10 0  bucle Opening01_Loop
 v02 0  en v02_horno mirando v10
@@ -154,7 +161,7 @@ v01 @saludo_fin+1.4  pasea por k4, k1, k5, k1 ritmo=trote pausa=0.8
 v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago
 v02 @saludo_fin+0.8 pasea por v02_horno ritmo=paseo pausa=1.4
 v07 @saludo+0.8    mira archimago
-v07 @saludo_fin+1.2  pasea por k5, k1, k4, k1, k5 ritmo=trote pausa=0.6
+v07 @saludo_fin+1.2  pasea por v07_a, v07_b, v07_a, v07_b ritmo=paseo pausa=0.8
 # El carretero suelta la carreta cuando llega el maestro: se queda de pie junto a ella, mirando
 # las asas, y salta para intentar bajarla.
 v06 @carreta_magia mira carreta
@@ -168,7 +175,7 @@ v02 @globo_sube+0.8 mira cielo_globo
 v01 @globo_sube    anda a mira_k1 ritmo=trote llega_mirando=cielo_globo
 v07 @globo_sube+0.3 anda a mira_k2 ritmo=trote llega_mirando=cielo_globo
 v01 @globo_fin+1.5 pasea por k1, k6, k2, k5 ritmo=trote pausa=0.5
-v07 @globo_fin+2.4 pasea por k2, k5, k1, k6 ritmo=trote pausa=0.7
+v07 @globo_fin+2.4 pasea por v07_a, v07_b, v07_a ritmo=paseo pausa=0.9
 archimago @globo_sube+3.2 gesto Laugh01
 v03 @globo_fin     charla con v08 cada=3.0
 v08 @globo_fin+0.5 charla con v03 cada=3.0
@@ -181,7 +188,7 @@ v06 +0.2           bucle Opening01_Loop
 # El cielo cambia: todos paran y miran al oeste.
 v01 @cielo+0.3  reposo
 v01 @cielo+0.3  anda a junto_v02 ritmo=trote llega_mirando=oeste
-v07 @cielo+0.5  anda a k3 ritmo=trote llega_mirando=oeste
+v07 @cielo+0.5  anda a v07_a ritmo=trote llega_mirando=oeste
 v02 @cielo+0.4  reposo
 v02 @cielo+0.5  gesto SenseSomethingStart_NoWeapon
 v02 @cielo+0.6  mira oeste
@@ -257,7 +264,9 @@ plano medio archimago lado=der
 archimago dice PROLOGO_MANANA_INTRO gesto=HandWave02 cara=alegre
 # Solo el maestro y la Vecina: v01 anda por el otro lado de la plaza y, al meterlo en el plano,
 # la cámara se alejaba y el grupo entero quedaba en miniatura. La voz de v01 sale del grupo.
-plano hombro archimago v02
+# La Vecina (v02), de frente y a su altura: el contraplano sobre el hombro del maestro dejaba su
+# sombrero en primer plano y el maestro diminuto al fondo.
+plano medio v02 desde=cam_v02
 v01 dice PROLOGO_MANANA_SALUDO_1 gesto=HandWave01 mira=archimago cara=alegre
 & archimago mira v02
 v02 dice PROLOGO_MANANA_SALUDO_2 gesto=HandWave02 mira=archimago cara=alegre
@@ -277,7 +286,8 @@ plano medio archimago lado=der
 archimago anda a cart_maestro ritmo=normal llega_mirando=carreta
 # Los dos en la carreta. El maestro mira al vecino (no al carro, que tiene delante y tapaba
 # la cara): asi se le ve la cara y la bola de conjuro en las manos.
-espera 4
+# Antes eran 4 s de plano parado mirándola: se acorta para que no se eternice.
+espera 1.5
 plano medio archimago desde=cam_magia altura=1.7 lente=30
 @carreta_magia
 archimago gesto MagicRight
@@ -437,7 +447,11 @@ archimago gesto HeadNod01
 & archimago cara triste
 espera 0.8
 plano conjunto liora nina lado=frente
-liora dice PROLOGO_EVACUACION_LIORA gesto=Talk01 mira=centro_plaza cara=decidido
+# «¡Vamos, Nina!» mirando a Nina y «Ten mucho cuidado» al Archimago: la mirada se gira a mitad
+# de frase, así que seiece en dos (la frase es una sola pista de voz).
+liora mira nina
++1.3 liora mira archimago
+liora dice PROLOGO_EVACUACION_LIORA gesto=Talk01 cara=decidido
 liora huye a puente_c, otro_lado_c, M_Lejos_10 sin_esperar
 & nina huye a puente_n, otro_lado_n, M_Puente_06 sin_esperar
 plano sigue archimago lado=espalda distancia=3.6 altura=1.8
