@@ -13,7 +13,7 @@ namespace Sendero.UI
     /// Vida, maná y visibilidad del HUD. Los círculos de combate (X, Y, B) los lleva
     /// CombatButtonsHUD (INC-485).
     /// </summary>
-    public class PlayerHUDV2 : MonoBehaviour
+    public class PlayerHUDV2 : MonoBehaviour, IOcultableDuranteCinematica
     {
         // Singleton instance
         public static PlayerHUDV2 Instance { get; private set; }
@@ -100,7 +100,15 @@ namespace Sendero.UI
             
             // Validar referencias críticas
             ValidateReferences();
+
+            // Se apunta al registro de lo que se esconde durante una cinemática. El registro
+            // va con la vida del objeto, no con la del enabled: el HUD puede tener hijos
+            // apagados y aun así tiene que poder esconderse.
+            OcultablesDeCinematica.Registrar(this);
         }
+
+        void IOcultableDuranteCinematica.Ocultar(object quien) => HideHUD(quien);
+        void IOcultableDuranteCinematica.Mostrar(object quien) => ShowHUD(quien);
         
         private void Start()
         {
@@ -149,6 +157,8 @@ namespace Sendero.UI
         
         private void OnDestroy()
         {
+            OcultablesDeCinematica.Quitar(this);
+
             // Limpiar Singleton
             if (Instance == this)
             {

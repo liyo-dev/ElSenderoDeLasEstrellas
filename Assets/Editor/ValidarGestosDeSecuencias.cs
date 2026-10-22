@@ -315,8 +315,9 @@ public static class ValidarGestosDeSecuencias
     // El validador de arriba cubre los `SequenceDefinition`, que es donde vive el 90% de los
     // gestos. Pero no todos: hay nombres de estado escritos directamente en el código, como
     // defaults de `[SerializeField]` o como hashes cacheados. Ese es exactamente el hueco por el
-    // que `Attack2` sobrevivió en `OliverSaludoSequencer` después de que INC-214 lo arreglara en
-    // el asset — el default de C# se quedó como estaba, y cualquier escena nueva nacía rota.
+    // que `Attack2` sobrevivió en un secuenciador escrito a mano después de que INC-214 lo
+    // arreglara en el asset — el default de C# se quedó como estaba, y cualquier escena nueva
+    // nacía rota.
     //
     // Aquí no se puede saber a qué actor va cada literal (es un string suelto en un fichero), así
     // que esto NO dice "esto está mal": dice "este nombre existe en UN SOLO controller, mira si

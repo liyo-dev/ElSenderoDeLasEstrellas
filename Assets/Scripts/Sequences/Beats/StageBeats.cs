@@ -46,6 +46,11 @@ public class VfxBeat : SequenceBeat
     [Tooltip("ID opcional que registra el efecto como actor para encuadrarlo o recogerlo con RecogerVfxBeat.")]
     public string registrarComo;
 
+    [Tooltip("Multiplicador del tamaño del efecto. 1 = tal cual sale del prefab. Sirve para que un " +
+             "destello enorme (los del pack Lana Studio miden 19 m de ancho) se pueda usar como un " +
+             "halo pequeño sin tener que tocar el prefab.")]
+    [Min(0.01f)] public float escala = 1f;
+
     public override string Describe()
         => $"VFX: {(vfxPrefab != null ? vfxPrefab.name : "SIN ASIGNAR")} en {(string.IsNullOrEmpty(atActorId) ? markName : atActorId)}";
 
@@ -88,8 +93,13 @@ public class VfxBeat : SequenceBeat
 
         var pool = VfxPoolService.Instance;
         Transform instancia = pool.Play(vfxPrefab, point + offset, rotation, life, aQuienSigue);
-        if (instancia != null && !string.IsNullOrWhiteSpace(registrarComo))
-            ctx.RegisterVfx(registrarComo, instancia, pool);
+        if (instancia != null)
+        {
+            if (Mathf.Abs(escala - 1f) > 0.001f)
+                instancia.localScale = vfxPrefab.transform.localScale * escala;
+            if (!string.IsNullOrWhiteSpace(registrarComo))
+                ctx.RegisterVfx(registrarComo, instancia, pool);
+        }
         yield break;
     }
 
@@ -237,6 +247,9 @@ public class AmbienteBeat : SequenceBeat
     [Min(0f)] public float fundido = 1.5f;
 
     public override string Describe() => sonar ? $"Ambiente: {loopId} ← {eventKey}" : $"Ambiente: parar {loopId}";
+
+    public override bool SoloColoca => true;
+    public override bool CambiaElEscenario => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -469,6 +482,10 @@ public class TimeOfDayBeat : SequenceBeat
     public override string Describe() => $"Hora del día: {timeOfDay}" + (immediate ? " (de golpe)" : "")
         + (esLaHoraDeVolver ? " (y es con la que se queda el mundo)" : "");
 
+    /// Sin transición que esperar, el cambio de luz se puede hacer con la pantalla tapada.
+    public override bool SoloColoca => !waitForTransition;
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (esLaHoraDeVolver) CinematicTimeOfDay.HoraAlVolver = timeOfDay;
@@ -504,6 +521,9 @@ public class SetPropActiveBeat : SequenceBeat
     public bool active = true;
 
     public override string Describe() => (active ? "Encender: " : "Apagar: ") + propId;
+
+    public override bool SoloColoca => true;
+    public override bool CambiaElEscenario => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -579,6 +599,9 @@ public class PropMoveBeat : SequenceBeat
 
     public override string Describe()
         => $"Decorado: mover {propId}" + (segundos > 0f ? $" en {segundos:F1}s" : " (al instante)");
+
+    /// Un movimiento instantáneo, o uno que no se espera, se puede hacer con la pantalla tapada.
+    public override bool SoloColoca => segundos <= 0.001f || !esperar;
 
     public override IEnumerator Run(SequenceContext ctx)
     {

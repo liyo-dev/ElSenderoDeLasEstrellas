@@ -131,8 +131,8 @@ public class SayBeat : SequenceBeat
             yield break;
         }
 
-        string text = Localize(textKey);
-        string speakerName = string.IsNullOrEmpty(speakerNameKey) ? null : Localize(speakerNameKey);
+        string text = PresentadorDeLinea.Texto(textKey);
+        string speakerName = PresentadorDeLinea.NombreDelHablante(speakerNameKey);
 
         bool animar = playGestures && actor != null;
         ActuacionAutomatica.Memoria(actor, out string anteriorActor, out string anteriorHablante);
@@ -204,9 +204,8 @@ public class SayBeat : SequenceBeat
         var bubble = SpeechBubbleUI.Instance;
         int turnoDelBocadillo = 0;
         ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
-        var estilo = presentacion == PresentacionDeLinea.HeredarDeLaSecuencia
-            ? (ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo)
-            : (PresentacionDeTexto)((int)presentacion - 1);
+        var estilo = PresentadorDeLinea.Estilo(presentacion,
+            ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo);
         ctx.CambiarPresentacionDeLinea(estilo);
         var pages = new System.Collections.Generic.List<string>();
         foreach (string raw in text.Split('\n'))
@@ -216,7 +215,7 @@ public class SayBeat : SequenceBeat
         }
 
         string resolvedVoiceKey = string.IsNullOrWhiteSpace(voiceKey) ? textKey : voiceKey;
-        bool hasVoice = VoiceLines.TryGet(resolvedVoiceKey, out AudioClip voiceClip);
+        bool hasVoice = PresentadorDeLinea.Voz(resolvedVoiceKey, out AudioClip voiceClip);
         int totalCharacters = 0;
         foreach (string page in pages) totalCharacters += page.Length;
         bool[] expresionesAplicadas = expresiones != null ? new bool[expresiones.Count] : null;
@@ -252,9 +251,8 @@ public class SayBeat : SequenceBeat
 
             if (anchor != null) SenalesDeHabla.Empieza(anchor, duracion);
             AplicarExpresiones(ctx, totalCharacters > 0 ? (float)caracteresLeidos / totalCharacters : 0f, expresionesAplicadas);
-            turnoDelBocadillo = bubble.Show(anchor, page, duracion, () => done = true,
-                trigger, speakerName: speakerName, worldOffset: offsetOverride,
-                presentacion: estilo, colorDelNombre: colorDelNombre);
+            turnoDelBocadillo = PresentadorDeLinea.Mostrar(anchor, page, duracion, estilo,
+                speakerName, colorDelNombre, offsetOverride, () => done = true, trigger);
 
             if (hasVoice && !voiceStarted)
             {
@@ -412,12 +410,7 @@ public class SayBeat : SequenceBeat
             }
         }
     }
-
-    private static string Localize(string key)
-        => LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(key, key) : key;
 }
-
-public enum PresentacionDeLinea { HeredarDeLaSecuencia, Bocadillo, Subtitulo, SubtituloGrande }
 
 /// Un diálogo normal, con el componente de siempre (DialogueManager): avance manual, doblaje,
 /// retratos.

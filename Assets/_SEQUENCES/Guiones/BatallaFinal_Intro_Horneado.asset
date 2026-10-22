@@ -285,34 +285,34 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 26.030273
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 57.159878
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 65.53388
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 71.15612
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 89.049995
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 101.90224
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 110.83612
-      emocion: 10
+      emocion: decidido
       dura: 0
     - t: 148.03679
-      emocion: 10
+      emocion: decidido
       dura: 0
     - t: 152.58209
-      emocion: 10
+      emocion: decidido
       dura: 0
     - t: 164.43924
-      emocion: 10
+      emocion: decidido
       dura: 0
     visible: []
     deslizando: []
@@ -464,19 +464,19 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 15.55517
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 30.418844
-      emocion: 8
+      emocion: picaro
       dura: 0
     - t: 40.26539
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 62.957214
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 144.30128
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     visible:
     - desde: 12.866751
@@ -668,22 +668,22 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 14.040068
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 61.94388
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 62.957214
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 129.0831
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 149.86536
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 157.1274
-      emocion: 8
+      emocion: picaro
       dura: 0
     visible: []
     deslizando: []
@@ -850,16 +850,16 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 12.866751
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 37.966614
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 62.957214
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 131.16843
-      emocion: 2
+      emocion: triste
       dura: 0
     visible: []
     deslizando: []
@@ -1032,19 +1032,19 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 65.53388
-      emocion: 0
+      emocion: neutral
       dura: 0
     - t: 74.81326
-      emocion: 0
+      emocion: neutral
       dura: 0
     - t: 92.23693
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 104.69734
-      emocion: 0
+      emocion: neutral
       dura: 0
     - t: 112.99306
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible:
     - desde: 65.53388
@@ -2333,6 +2333,7 @@ MonoBehaviour:
         duracion: 2.4
         ranura: 0
         sonido: 
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202522337804954
@@ -2346,6 +2347,7 @@ MonoBehaviour:
         duracion: 0
         ranura: 0
         sonido: 
+        volumen: 1
         mostrar: 0
         esperar: 0
     - rid: 5630202522337804955

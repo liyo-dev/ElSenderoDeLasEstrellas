@@ -31,40 +31,41 @@ MonoBehaviour:
       punto: {x: 0, y: 0, z: 0}
       actor: 
     animacion:
-    - t: 0
+    - fundido: 0
+      t: 0
       tipo: 1
       estado: SitHigh_Loop
       congelar: 0
     caras:
     - t: 0
-      emocion: 6
+      emocion: pensativo
       dura: 0
     - t: 3
-      emocion: 6
+      emocion: pensativo
       dura: 2.1240816
     - t: 7.7240815
-      emocion: 4
+      emocion: sorpresa
       dura: 6.669388
     - t: 15.693469
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 16.99347
-      emocion: 9
+      emocion: preocupado
       dura: 1.8106122
     - t: 21.404081
-      emocion: 6
+      emocion: pensativo
       dura: 1.9673469
     - t: 25.171427
-      emocion: 10
+      emocion: decidido
       dura: 2.9861226
     - t: 30.75755
-      emocion: 10
+      emocion: decidido
       dura: 2.7510204
     - t: 34.60857
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 38.40857
-      emocion: 2
+      emocion: triste
       dura: 3.7959185
     visible: []
     deslizando: []
@@ -82,19 +83,20 @@ MonoBehaviour:
       punto: {x: -5988, y: 0, z: 5998.5}
       actor: 
     animacion:
-    - t: 0
+    - fundido: 0
+      t: 0
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
     caras:
     - t: 0
-      emocion: 7
+      emocion: cansado
       dura: 0
     - t: 36.40857
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 37.30857
-      emocion: 7
+      emocion: cansado
       dura: 0
     visible: []
     deslizando: []
@@ -163,7 +165,8 @@ MonoBehaviour:
     sinPose: 1
     presentacion: -1
   planos:
-  - t0: 0
+  - focos: []
+    t0: 0
     t1: 3
     tipo: 0
     descripcion: general de liam
@@ -183,7 +186,8 @@ MonoBehaviour:
     suavidad: 1
     mezcla: 0
     mano: 0.12
-  - t0: 3
+  - focos: []
+    t0: 3
     t1: 15.693469
     tipo: 3
     descripcion: primer plano de liam
@@ -203,7 +207,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 15.693469
+  - focos: []
+    t0: 15.693469
     t1: 19.404081
     tipo: 2
     descripcion: medio de liam
@@ -223,7 +228,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 19.404081
+  - focos: []
+    t0: 19.404081
     t1: 23.871428
     tipo: 4
     descripcion: detalle de el punto
@@ -241,7 +247,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 23.871428
+  - focos: []
+    t0: 23.871428
     t1: 25.171427
     tipo: 2
     descripcion: medio de liam
@@ -261,7 +268,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 25.171427
+  - focos: []
+    t0: 25.171427
     t1: 30.75755
     tipo: 4
     descripcion: detalle de el punto
@@ -281,7 +289,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 30.75755
+  - focos: []
+    t0: 30.75755
     t1: 45.80449
     tipo: 3
     descripcion: primer plano de liam
@@ -398,6 +407,7 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
+        escala: 1
     - rid: 5630202287041282354
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -415,6 +425,7 @@ MonoBehaviour:
         duracion: 2.6
         ranura: 0
         sonido: 
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202287041282356

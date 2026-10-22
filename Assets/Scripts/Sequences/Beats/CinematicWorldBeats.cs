@@ -252,6 +252,8 @@ public class WeatherBeat : SequenceBeat
 
     public override string Describe() => $"Tiempo: {(encender ? "encender" : "apagar")} {fenomeno}";
 
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         CinematicWeather.Apply(fenomeno, encender, immediate);
@@ -1142,6 +1144,8 @@ public class SolDeFondoBeat : SequenceBeat
         : enCuadro
             ? $"Sol: en cuadro, poniéndose en {puesta:F0} s"
             : $"Sol: al fondo, a {elevacion:F0}° (cámara a {ladoDeLaCamara:F0}°)";
+
+    public override bool CambiaElEscenario => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {

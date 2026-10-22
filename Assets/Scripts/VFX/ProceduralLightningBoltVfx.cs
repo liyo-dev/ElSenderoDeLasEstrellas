@@ -2,14 +2,14 @@ using UnityEngine;
 
 /// <summary>
 /// VFX de rayo/trueno generado ENTERAMENTE por código, sin depender de ningún asset de terceros —
-/// pensado para sustituir a lightImpactVfx/darkImpactVfx en PrologueDreamSequencer (pedido de
+/// pensado para sustituir a lightImpactVfx/darkImpactVfx en la secuencia del prólogo (pedido de
 /// Raúl, 12/09/2026: "en el centro debe salir el rayo", en vez del orbe actual). Genera un
 /// LineRenderer en zigzag desde justo encima del punto de impacto hasta su posición, más 1-2
 /// ramas secundarias más finas, y un flash de luz puntual que decae.
 ///
 /// FIX (12 sep 2026): "MissingReferenceException... ObjectPool.Get()" — reportado justo después
 /// de que el rayo ya se viera bien en el centro. Causa: lightImpactVfx/darkImpactVfx se reproducen
-/// vía VfxPoolService (ver Co_Collision/Co_WarFlashes en PrologueDreamSequencer), que NUNCA
+/// vía VfxPoolService (ver Co_Collision/Co_WarFlashes en la secuencia del prólogo), que NUNCA
 /// destruye sus instancias — las pre-crea una vez (ObjectPool.CreateNewObject) y luego solo hace
 /// SetActive(true)/SetActive(false) para reutilizarlas. La primera versión de este script llamaba
 /// Destroy(gameObject, lifetime) en Awake() — pero Awake() ya se dispara en el PRE-WARM del pool

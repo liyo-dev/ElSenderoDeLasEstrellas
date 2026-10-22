@@ -10,7 +10,7 @@ namespace Sendero.UI
     /// Cuando llueve, sobreescribe el icono con rainSprite hasta que para la lluvia.
     /// Busca DayNightCycle automáticamente cada vez que se carga una escena nueva.
     /// </summary>
-    public class TimeOfDayIndicator : MonoBehaviour
+    public class TimeOfDayIndicator : MonoBehaviour, IOcultableDuranteCinematica
     {
         public static TimeOfDayIndicator Instance { get; private set; }
 
@@ -38,6 +38,7 @@ namespace Sendero.UI
         private void Awake()
         {
             Instance = this;
+            OcultablesDeCinematica.Registrar(this);
         }
 
         private void OnEnable()
@@ -59,6 +60,7 @@ namespace Sendero.UI
         {
             if (Instance == this)
                 Instance = null;
+            OcultablesDeCinematica.Quitar(this);
         }
 
         /// <summary>
@@ -80,6 +82,9 @@ namespace Sendero.UI
             else
                 ApplySprite(SpriteForPeriod(_currentPeriod));
         }
+
+        void IOcultableDuranteCinematica.Ocultar(object quien) => Hide();
+        void IOcultableDuranteCinematica.Mostrar(object quien) => Show();
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {

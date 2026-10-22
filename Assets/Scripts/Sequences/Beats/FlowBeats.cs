@@ -15,6 +15,8 @@ public sealed class PostprocesoBeat : SequenceBeat
 
     public override string Describe() => $"Post-procesado: {(perfil != null ? perfil.name : "sin perfil")} ({transicion}s)";
 
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var control = PostprocesoDeEscena.Activo;
@@ -174,6 +176,8 @@ public class BandasDeCineBeat : SequenceBeat
 
     public override string Describe() => $"Bandas de cine: {(mostrar ? "mostrar" : "retirar")} ({duracion}s)";
 
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         if (ctx?.Player == null) yield break;
@@ -262,6 +266,9 @@ public class SetFlagBeat : SequenceBeat
     public bool value = true;
 
     public override string Describe() => $"Marca: {flag} = {(value ? "sí" : "no")}";
+
+    public override bool SoloColoca => true;
+    public override bool CambiaElEscenario => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -377,6 +384,9 @@ public class MusicBeat : SequenceBeat
 
     public override string Describe()
         => string.IsNullOrEmpty(musicId) ? $"Música: parar ({fadeOut}s)" : $"Música: {musicId}";
+
+    public override bool SoloColoca => true;
+    public override bool CambiaElEscenario => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {

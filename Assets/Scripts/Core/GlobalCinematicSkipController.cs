@@ -36,7 +36,7 @@ using UnityEngine;
 ///
 /// FIX (16/08/2026): el cambio a NarrativeSkipHub como única fuente de visibilidad (ver más
 /// arriba) dejó fuera, sin querer, a las cinemáticas del sistema VIEJO (CinematicSequencerBase —
-/// PrologueDreamSequencer, StarAwakeningSequencer, LiamCrystalBallSequencer,
+/// la secuencia del prólogo, la del Despertar, la de la bola de cristal,
 /// EstelaAppearsSequencer, LiamGolemSummonSequencer, TabernaSequencer...), que siguen en uso y
 /// nunca se suscriben a NarrativeSkipHub (solo llevan su propio contador estático
 /// s_activeSequenceCount / OnAnySequenceActiveChanged, que es lo que el controlador ANTERIOR sí

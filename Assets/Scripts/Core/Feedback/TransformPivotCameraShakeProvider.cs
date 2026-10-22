@@ -65,7 +65,7 @@ namespace Sendero.Core.Feedback
             // se mueve) pero nunca llega a renderizarse - exactamente el sintoma reportado ("no he
             // notado ninguna mejoria" tras anadir camera shake a los cambios de fase de jefe).
             // Se pausa el Brain mientras dura el shake -mismo patron ya usado en
-            // SimpleCinematicDirector para tomar control directo de Camera.main durante
+            // CinematicCameraDriver para tomar control directo de Camera.main durante
             // cinematicas- con recuento de referencias por si hay shakes solapados sobre el mismo
             // Brain. Camaras sin Brain (p.ej. _stageCamera de las cinematicas) no se ven afectadas.
             var brain = targetCamera.GetComponent<CinemachineBrain>();

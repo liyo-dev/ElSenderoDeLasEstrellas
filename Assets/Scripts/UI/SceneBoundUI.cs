@@ -14,7 +14,7 @@ using DG.Tweening;
 /// Por el mismo motivo, SceneBoundUI.BeginBossIntro() tampoco opacará este objeto a alpha 0
 /// mientras BlocksSceneHide() devuelva true (ver comentario en BeginBossIntro): el desbloqueo de
 /// un hechizo puede encadenar síncronamente con el arranque de la intro de un boss en el mismo
-/// frame (ej: "Despertar de la Estrella" → StarAwakeningSequencer → UnlockAbilitiesNode →
+/// frame (ej: "Despertar de la Estrella" → la secuencia → UnlockAbilitiesNode →
 /// StartBattleNode → BossIntroPresentation), y el popup no debe perderse por esa carrera.
 /// </summary>
 public interface ISceneBoundUIHideGuard

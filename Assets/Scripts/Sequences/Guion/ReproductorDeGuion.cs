@@ -24,7 +24,9 @@ public sealed class ReproductorDeGuion
     private int _iLinea, _iPlano, _iEfecto;
     private bool _terminado;
     private bool _preparado;
+    private bool _pausado;
     private float _t;
+    private float _saltoPedido = -1f;
     private LineaHorneada _lineaEnCurso;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
     private float _tFoto = float.MaxValue;
@@ -46,7 +48,46 @@ public sealed class ReproductorDeGuion
     const float TironMaximo = 0.5f;
     const float PasoTrasTiron = 0.1f;
 
+    /// El guion que se está reproduciendo.
+    public GuionHorneado Guion => _g;
+
+    /// La secuencia que reproduce este guion.
+    public SequencePlayer Player => _ctx?.Player;
+
+    /// Duración total del guion, en segundos.
+    public float Duracion => _g != null ? _g.duracion : 0f;
+
+    /// El segundo del guion que se está viendo ahora mismo.
     public float Tiempo => _t;
+
+    /// ¿Está el guion montado y sin terminar?
+    public bool EnMarcha => _preparado && !_terminado;
+
+    /// ¿Está el reloj del guion detenido?
+    public bool Pausado => _pausado;
+
+    /// El plano que cubre el segundo actual: el que se está viendo.
+    public PlanoHorneado PlanoActual
+    {
+        get
+        {
+            if (_g?.planos == null) return null;
+            PlanoHorneado p = null;
+            foreach (var q in _g.planos) if (q.t0 <= _t) p = q;
+            return p;
+        }
+    }
+
+    /// La frase que se está diciendo en el segundo actual, si la hay.
+    public LineaHorneada LineaActual
+    {
+        get
+        {
+            if (_g?.lineas == null) return null;
+            foreach (var l in _g.lineas) if (l.t0 <= _t && _t < l.t1) return l;
+            return null;
+        }
+    }
 
     public IEnumerator Reproducir()
     {
@@ -55,6 +96,12 @@ public sealed class ReproductorDeGuion
 
         while (_t < _g.duracion && !_terminado)
         {
+            if (_saltoPedido >= 0f)
+            {
+                float destino = _saltoPedido;
+                _saltoPedido = -1f;
+                SaltarA(destino);
+            }
             Avanzar(_t);
             yield return null;
             if (_ctx.RelojRetenido) continue;
@@ -62,6 +109,48 @@ public sealed class ReproductorDeGuion
             _t += paso > TironMaximo ? PasoTrasTiron : paso;
         }
         Avanzar(_g.duracion);
+    }
+
+    /// Pide saltar a un segundo exacto. El salto se hace en el siguiente fotograma, con la escena
+    /// ya montada, para que no se vea un salto a pelo.
+    public void PedirSalto(float t) => _saltoPedido = Mathf.Max(0f, t);
+
+    /// Va a un segundo exacto: deja a los actores donde toca a ese instante, vuelve a aplicar el
+    /// estado del mundo y coloca la cámara en el plano que cubre ese momento.
+    ///
+    /// Funciona también hacia atrás. Para eso los cursores vuelven al principio y el estado se
+    /// vuelve a aplicar desde el segundo 0: es lo único que hay en la información horneada, así
+    /// que rebobinar es «repetir hasta aquí».
+    public void SaltarA(float t)
+    {
+        if (_terminado || _g == null) return;
+        t = Mathf.Clamp(t, 0f, _g.duracion);
+
+        CerrarLinea();
+
+        _iLinea = 0;
+        _iPlano = 0;
+        _iEfecto = 0;
+        foreach (var i in _interpretes) i.Rebobinar();
+
+        _t = t;
+        SaltarHasta(t);
+    }
+
+    /// Detiene el reloj del guion: la escena se queda quieta en el segundo actual.
+    public void Pausar()
+    {
+        if (_pausado || _terminado) return;
+        _pausado = true;
+        _ctx?.RetenerReloj();
+    }
+
+    /// Vuelve a dejar avanzar el reloj del guion.
+    public void Reanudar()
+    {
+        if (!_pausado) return;
+        _pausado = false;
+        _ctx?.SoltarReloj();
     }
 
     // ── Preparación y cierre ────────────────────────────────────────────────────────────────
@@ -73,9 +162,10 @@ public sealed class ReproductorDeGuion
     {
         if (_preparado) return;
         _preparado = true;
+        _t = _inicio;
 
         foreach (var efecto in _g.efectos)
-            if (efecto.beat is PropEnManoBeat prop && !prop.dejar) prop.RegistrarFinal(_ctx);
+            efecto.beat?.PrepararEnManos(_ctx);
         foreach (var datos in _g.actores)
         {
             var actor = _ctx.GetActor(datos.id);
@@ -119,6 +209,11 @@ public sealed class ReproductorDeGuion
         }
         _camaras.Preparar(_ctx.Player != null ? _ctx.Player.CachedCamera : Camera.main);
         Sendero.Core.Feedback.FeedbackService.SetCameraShakeProvider(_camaras);
+        // El guion lleva la cámara con Cinemachine, así que el driver de la secuencia deja de
+        // escribir en ella mientras dure. Sin este relevo, un plano calculado a mitad de guion se
+        // pelearía con el plano horneado por la misma cámara.
+        _ctx.Player?.ActiveCamera?.CederElControl();
+        GuionEnMarcha.Registrar(this);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         InformeDeRodaje.Fase("Guion: " + _g.nombre);
 #endif
@@ -132,10 +227,13 @@ public sealed class ReproductorDeGuion
     {
         if (_terminado) return;
         _terminado = true;
+        Reanudar();
         CerrarLinea();
         SpeechBubbleUI.Instance?.Hide();
         Sendero.Core.Feedback.FeedbackService.SetCameraShakeProvider(null);
         _camaras?.Terminar();
+        _ctx.Player?.ActiveCamera?.DevolverElControl();
+        GuionEnMarcha.Quitar(this);
         _ctx.Stage?.QuitarMarcasTemporales();
         if (_puntos != null) Object.Destroy(_puntos);
         foreach (var i in _interpretes) i.Soltar();
@@ -204,9 +302,7 @@ public sealed class ReproductorDeGuion
     }
 
     private static bool EsDeEstado(SequenceBeat beat)
-        => beat is TimeOfDayBeat || beat is MusicBeat || beat is PostprocesoBeat || beat is AmbienteBeat
-           || beat is WeatherBeat || beat is SetPropActiveBeat || beat is SetFlagBeat || beat is MezclaBeat
-           || beat is BandasDeCineBeat || beat is SolDeFondoBeat;
+        => beat != null && beat.CambiaElEscenario;
 
     private bool CumpleCondicion(string onlyIfFlag, string skipIfFlag)
         => (string.IsNullOrWhiteSpace(onlyIfFlag) || _ctx.GetFlag(onlyIfFlag))
@@ -267,21 +363,20 @@ public sealed class ReproductorDeGuion
         InformeDeRodaje.Linea(linea.actor, linea.clave);
 #endif
 
-        var bocadillo = SpeechBubbleUI.Instance;
-        if (bocadillo != null && actor?.Transform != null)
+        // El guion y los beats de diálogo enseñan las frases por el mismo camino, para que se
+        // vean y se oigan igual (ver PresentadorDeLinea).
+        if (actor?.Transform != null)
         {
-            string texto = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(linea.clave, linea.clave) : linea.clave;
-            string nombre = datos != null && !string.IsNullOrEmpty(datos.claveDelNombre) && LocalizationManager.Instance != null
-                ? LocalizationManager.Instance.Get(datos.claveDelNombre, datos.claveDelNombre) : null;
+            string texto = PresentadorDeLinea.Texto(linea.clave);
+            string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
             var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
             _ctx.CambiarPresentacionDeLinea(presentacion);
-            bocadillo.Show(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
-                speakerName: nombre, worldOffset: new Vector3(0f, actor.HeadTopHeight + 0.3f, 0f),
-                presentacion: presentacion, colorDelNombre: datos != null ? datos.colorDelNombre : default);
+            PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
+                presentacion, nombre, datos != null ? datos.colorDelNombre : default,
+                new Vector3(0f, actor.HeadTopHeight + 0.3f, 0f));
         }
 
-        if (VoiceLines.TryGet(linea.clave, out var voz) && AudioService.Instance != null)
-            AudioService.Instance.PlayVoice(voz);
+        PresentadorDeLinea.SonarLaVoz(linea.clave);
     }
 
     private void CerrarLinea()
@@ -307,6 +402,7 @@ public sealed class ReproductorDeGuion
         private bool _moviendo;
         private bool _visible = true;
         private bool _hablando;
+        private bool _caraDesconocidaAvisada;
 
         private const float GiroAndando = 360f;   // grados por segundo
         private const float GiroQuieto = 220f;
@@ -403,9 +499,41 @@ public sealed class ReproductorDeGuion
             // Sin fundido: es el estado con el que la escena ya tiene que aparecer.
             if (bucle != null) Actor.HoldPose(bucle, fundido: 0f);
             NPCEmotion cara = NPCEmotion.None;
-            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = Datos.caras[_iCara++].emocion;
+            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = CaraDe(Datos.caras[_iCara++].emocion);
             if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
             if (Datos.posiciones.Count > 0) Actor.Transform.position = Interpolar.Posicion(Datos.posiciones, t);
+        }
+
+        /// Traduce la palabra de la cara a la cara del juego. Si el juego no la reconoce, se avisa
+        /// una vez y la frase se queda sin cara: es mejor una cara de más que un aviso por fotograma.
+        private NPCEmotion CaraDe(string palabra)
+        {
+            if (CarasDelGuion.Intentar(palabra, out var e)) return e;
+            if (!_caraDesconocidaAvisada)
+            {
+                _caraDesconocidaAvisada = true;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[Guion] Cara desconocida «{palabra}»: este juego no la reconoce. " +
+                    "La frase se queda sin cara. (¿Está en CarasDelGuion?)");
+#endif
+            }
+            return NPCEmotion.None;
+        }
+
+        /// Devuelve al actor a un estado neutro y rebobina sus órdenes. Al saltar a otro punto
+        /// del guion, las órdenes de animación, cara y mirada que ya se habían gastado vuelven a
+        /// empezar desde el principio: las que tocan a partir de ese instante se aplican de nuevo.
+        public void Rebobinar()
+        {
+            _iAnim = 0;
+            _iCara = 0;
+            _iMirada = 0;
+            _moviendo = false;
+            if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
+            Actor.ReleasePose(true);
+            Actor.ResetMovement();
+            _visible = true;
+            Actor.SetRenderingVisible(true);
         }
 
         public void Actualizar(float t, Dictionary<string, Interprete> todos)
@@ -423,8 +551,10 @@ public sealed class ReproductorDeGuion
             while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t)
             {
                 var c = Datos.caras[_iCara++];
-                if (c.dura > 0f) Actor.Reaccionar(c.emocion, c.dura);
-                else Actor.SetEmotion(c.emocion);
+                var emocion = CaraDe(c.emocion);
+                if (emocion == NPCEmotion.None) continue;
+                if (c.dura > 0f) Actor.Reaccionar(emocion, c.dura);
+                else Actor.SetEmotion(emocion);
             }
             while (_iMirada + 1 < Datos.miradas.Count && Datos.miradas[_iMirada + 1].t <= t) _iMirada++;
 

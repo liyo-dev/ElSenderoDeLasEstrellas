@@ -33,6 +33,17 @@ public class GuionBeat : SequenceBeat
     public override string Describe()
         => guion == null ? "Guion (sin asignar)" : $"Guion «{guion.nombre}» ({guion.duracion:0.0} s)";
 
+    /// El guion compone la cámara de apertura con su primer plano, para que la escena aparezca ya
+    /// encuadrada al abrirse el telón.
+    public override bool ColocarCamaraDeApertura(SequencePlayer player)
+    {
+        var driver = player != null ? player.ActiveCamera : null;
+        if (driver == null || guion == null) return false;
+        if (!guion.PoseDeCamara(Inicio, out var pos, out var rot, out var fov)) return false;
+        driver.Cut(pos, rot, fov);
+        return true;
+    }
+
     private ReproductorDeGuion _preparado;
 
     /// Monta el guion con la pantalla cubierta: deja a los actores en su sitio y con la pose del

@@ -24,7 +24,7 @@ public class NarrativeRunner : MonoBehaviour
 
     // FIX (Agosto 2026): generación activa por nodo-fork. Cada vez que un fork se (re)lanza —ya sea
     // la primera vez, al reanudar tras una recarga, o al re-forkear en vivo por un bucle de
-    // reintento (ej. AWAKEN_START/AWAKEN_FAILED en StarAwakeningSequencer, ver comentario en
+    // reintento (ej. AWAKEN_START/AWAKEN_FAILED en la secuencia del Despertar, ver comentario en
     // RunSubGraph)— se incrementa el contador de esa guid. Las ramas que quedan de una generación
     // anterior se descartan en cuanto se detectan obsoletas, en vez de seguir avanzando y duplicar
     // el tramo de éxito si el evento que esperaban (p. ej. AWAKEN_DONE) termina llegando igualmente

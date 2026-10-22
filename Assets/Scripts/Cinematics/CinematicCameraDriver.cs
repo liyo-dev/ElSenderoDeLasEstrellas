@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using DG.Tweening;
 using UnityEngine;
 
 /// Controlador de cámara cinemático reutilizable.
@@ -10,15 +9,13 @@ using UnityEngine;
 ///      como "shot points" en los scripts que orquesten la cinemática.
 ///   3. Llama Activate() al inicio de la cinemática y Deactivate() al final.
 ///
-/// Internamente congela vThirdPersonCamera y mueve Camera.main directamente,
-/// igual que hace SimpleCinematicDirector en modo forceDirectCameraControl.
+/// Internamente congela vThirdPersonCamera y mueve Camera.main directamente, a
+/// través de CameraDirectorService, que es el protocolo de propiedad de la cámara.
 [DisallowMultipleComponent]
 public class CinematicCameraDriver : MonoBehaviour
 {
     [Tooltip("Duración por defecto de los movimientos suaves cuando no se especifica.")]
     [SerializeField] private float defaultMoveDuration = 0.5f;
-    [Tooltip("Ease por defecto para movimientos suaves.")]
-    [SerializeField] private Ease  defaultMoveEase     = Ease.InOutSine;
 
     private Coroutine _followRoutine;
 
@@ -30,6 +27,11 @@ public class CinematicCameraDriver : MonoBehaviour
     private Coroutine _moveRoutine;
 
     private bool      _active;
+
+    /// Cuando otro sistema lleva la cámara (el guion horneado, que usa Cinemachine), el driver
+    /// deja de escribir en ella. Sin este relevo, un plano calculado a mitad de un guion se
+    /// pelearía con el plano horneado por la misma cámara.
+    private bool      _cedido;
 
     // Camera.main hace una búsqueda por tag cada vez que se consulta. Los planos calculados en
     // modo 'live' aplican una pose por frame, así que aquí se cachea (CLAUDE.md § 2). Se vuelve a
@@ -82,10 +84,27 @@ public class CinematicCameraDriver : MonoBehaviour
         CameraDirectorService.Release(this);
     }
 
+    /// Cede la cámara a otro sistema: el driver deja de escribir en ella hasta que se la
+    /// devuelvan. Lo usa el guion horneado, que lleva la cámara con Cinemachine.
+    public void CederElControl()
+    {
+        if (_cedido) return;
+        _cedido = true;
+        StopFollow();
+        StopMove();
+    }
+
+    /// Vuelve a tomar la cámara el driver, que sigue siendo su dueño.
+    public void DevolverElControl()
+    {
+        if (!_cedido) return;
+        _cedido = false;
+    }
+
     /// Corte instantáneo: mueve la cámara al shot point sin transición.
     public void Cut(Transform shot)
     {
-        if (!shot) return;
+        if (!shot || _cedido) return;
         StopFollow();
         StopMove();
         var cam = MainCamera;
@@ -97,13 +116,12 @@ public class CinematicCameraDriver : MonoBehaviour
 
     /// Pan suave hacia un shot point en tiempo real (funciona en slow motion).
     /// Devuelve la coroutine para poder hacer yield si se necesita esperar.
-    public Coroutine MoveTo(Transform shot, float duration = -1f, Ease ease = Ease.Unset)
+    public Coroutine MoveTo(Transform shot, float duration = -1f)
     {
+        if (_cedido) return null;
         StopFollow();
         StopMove();
-        _moveRoutine = StartCoroutine(Co_MoveTo(shot,
-            duration < 0f ? defaultMoveDuration : duration,
-            ease == Ease.Unset ? defaultMoveEase : ease));
+        _moveRoutine = StartCoroutine(Co_MoveTo(shot, duration < 0f ? defaultMoveDuration : duration));
         return _moveRoutine;
     }
 
@@ -111,6 +129,7 @@ public class CinematicCameraDriver : MonoBehaviour
     /// Útil para seguir proyectiles u objetos en movimiento.
     public void StartFollowing(Transform target, Vector3 worldOffset = default, bool lookAt = false)
     {
+        if (_cedido) return;
         StopFollow();
         StopMove();
         _followRoutine = StartCoroutine(Co_Follow(target, worldOffset, lookAt));
@@ -130,6 +149,7 @@ public class CinematicCameraDriver : MonoBehaviour
     /// Corte instantáneo a una pose calculada.
     public void Cut(Vector3 position, Quaternion rotation, float fieldOfView)
     {
+        if (_cedido) return;
         StopFollow();
         StopMove();
         SetPose(position, rotation, fieldOfView);
@@ -141,7 +161,7 @@ public class CinematicCameraDriver : MonoBehaviour
     public void SetPose(Vector3 position, Quaternion rotation, float fieldOfView)
     {
         var cam = MainCamera;
-        if (!cam) return;
+        if (!cam || _cedido) return;
         cam.transform.SetPositionAndRotation(position, rotation);
         if (fieldOfView > 0f) cam.fieldOfView = fieldOfView;
     }
@@ -160,6 +180,7 @@ public class CinematicCameraDriver : MonoBehaviour
     public Coroutine MoveTo(Vector3 position, Quaternion rotation, float fieldOfView,
         float duration = -1f, bool arrancaLanzado = false, Vector3? porEncima = null)
     {
+        if (_cedido) return null;
         StopFollow();
         StopMove();
         _moveRoutine = StartCoroutine(Co_MoveToPose(position, rotation, fieldOfView,
@@ -213,7 +234,7 @@ public class CinematicCameraDriver : MonoBehaviour
 
     // ── Coroutines internas ───────────────────────────────────────────────────
 
-    private IEnumerator Co_MoveTo(Transform shot, float duration, Ease ease)
+    private IEnumerator Co_MoveTo(Transform shot, float duration)
     {
         var cam = MainCamera;
         if (!shot || !cam) yield break;

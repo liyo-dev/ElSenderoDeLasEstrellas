@@ -33,46 +33,53 @@ MonoBehaviour:
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
     animacion:
-    - t: 0
+    - fundido: 0
+      t: 0
       tipo: 3
       estado: 
       congelar: 0
-    - t: 0.08
+    - fundido: 0
+      t: 0.08
       tipo: 2
       estado: Angry02
       congelar: 0
-    - t: 1.6173469
+    - fundido: 0
+      t: 1.6173469
       tipo: 4
       estado: 
       congelar: 0
-    - t: 3.4
+    - fundido: 0
+      t: 3.4
       tipo: 3
       estado: 
       congelar: 0
-    - t: 3.48
+    - fundido: 0
+      t: 3.48
       tipo: 2
       estado: Question01
       congelar: 0
-    - t: 4.6
+    - fundido: 0
+      t: 4.6
       tipo: 2
       estado: Question01
       congelar: 0
-    - t: 5.8010206
+    - fundido: 0
+      t: 5.8010206
       tipo: 4
       estado: 
       congelar: 0
     caras:
     - t: 0
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 0
-      emocion: 3
+      emocion: enfado
       dura: 1.9673469
     - t: 3.4
-      emocion: 12
+      emocion: confuso
       dura: 2.7510204
     - t: 4.6
-      emocion: 12
+      emocion: confuso
       dura: 0
     visible: []
     deslizando: []
@@ -123,19 +130,23 @@ MonoBehaviour:
     animacion: []
     caras:
     - t: 4.6
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     visible: []
     deslizando: []
   lineas:
-  - t0: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 0
     t1: 1.5673469
     actor: Player
     clave: EVT_AWAKEN_03
     gesto: Angry02
     sinPose: 0
     presentacion: -1
-  - t0: 3.4
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 3.4
     t1: 5.7510204
     actor: Player
     clave: EVT_AWAKEN_05
@@ -143,7 +154,8 @@ MonoBehaviour:
     sinPose: 0
     presentacion: -1
   planos:
-  - t0: 0
+  - focos: []
+    t0: 0
     t1: 0.9
     tipo: 3
     descripcion: primer plano de will
@@ -163,7 +175,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 0.9
+  - focos: []
+    t0: 0.9
     t1: 3
     tipo: 1
     descripcion: conjunto de will
@@ -184,7 +197,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 3
+  - focos: []
+    t0: 3
     t1: 4.6
     tipo: 2
     descripcion: medio de will
@@ -204,7 +218,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 4.6
+  - focos: []
+    t0: 4.6
     t1: 7.339473
     tipo: 5
     descripcion: 'dos: will y eldran'
@@ -227,47 +242,69 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   efectos:
-  - t: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
     beat:
       rid: 5630202263296278776
     linea: 33
-  - t: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
     beat:
       rid: 5630202263296278777
     linea: 39
-  - t: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
     beat:
       rid: 5630202263296278778
     linea: 40
-  - t: 0.9
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0.9
     beat:
       rid: 5630202263296278779
     linea: 43
-  - t: 2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
     beat:
       rid: 5630202263296278780
     linea: 48
-  - t: 2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
     beat:
       rid: 5630202263296278781
     linea: 49
-  - t: 2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
     beat:
       rid: 5630202263296278782
     linea: 50
-  - t: 2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 2
     beat:
       rid: 5630202263296278783
     linea: 51
-  - t: 6.6
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.6
     beat:
       rid: 5630202263296278784
     linea: 64
-  - t: 6.6
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.6
     beat:
       rid: 5630202263296278785
     linea: 65
-  - t: 6.6
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.6
     beat:
       rid: 5630202263296278786
     linea: 66
@@ -322,6 +359,7 @@ MonoBehaviour:
         duracion: 1.2
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202263296278778

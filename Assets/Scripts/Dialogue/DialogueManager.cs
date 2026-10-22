@@ -98,7 +98,7 @@ public class DialogueManager : MonoBehaviour
 
     // FIX: al leer objetos sin cámara cinemática (cartas, save points, etc.) el HUD no se
     // ocultaba porque ese hide/show solo estaba conectado a los controladores cinemáticos
-    // (DialogueCinematicController / SimpleCinematicDirector / CinematicSequencerBase), y este
+    // (DialogueCinematicController / CinematicSequencerBase), y este
     // camino de diálogo "no-NPC" nunca pasa por ninguno de ellos. Se ocupa aquí, de forma
     // acotada, para no interferir con el HUD hide/show ya gestionado por esos sistemas
     // cuando sí hay un NPC real con cámara cinemática.
@@ -454,7 +454,7 @@ public class DialogueManager : MonoBehaviour
 
     /// <param name="isSequenceDialogue">
     /// FIX (24/08/2026): true SOLO cuando este diálogo forma parte de una secuencia/cinemática real
-    /// (hoy en día, únicamente SimpleCinematicDirector lo pasa así) — es lo único que habilita el
+    /// (hoy en día, únicamente la cinemática lo pasa así) — es lo único que habilita el
     /// registro en NarrativeSkipHub y por tanto que HoldToSkipUI pueda aparecer. Las secuencias que
     /// derivan de CinematicSequencerBase (Prólogo, Taberna, etc.) no pasan por aquí en absoluto:
     /// ya muestran el botón por su cuenta vía CinematicSequencerBase.OnAnySequenceActiveChanged

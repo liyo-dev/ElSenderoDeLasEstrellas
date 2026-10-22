@@ -22,7 +22,7 @@ public class WorldBootstrap : MonoBehaviour
     };
 
     // Anchors cuyo arranque normal desemboca en una cinemática narrativa que se encarga ELLA
-    // MISMA de revelar la pantalla (ej. "Bedroom" → PrologueDreamSequencer, disparada por el
+    // MISMA de revelar la pantalla (ej. "Bedroom" → la secuencia del prólogo, disparada por el
     // grafo con la señal PROLOGUE_DREAM_START). Si el anchor está aquí, el fade final de este
     // script se OMITE — la pantalla se queda en negro (ya cubierta desde OnEnable) hasta que esa
     // cinemática la revele con su propia transición, en vez de destaparla nosotros un instante
@@ -267,7 +267,7 @@ public class WorldBootstrap : MonoBehaviour
             yield return WaitForBootCinematicOrTimeout();
             if (CinematicSequencerBase.AnySequenceActive)
             {
-                // Ya hay una cinemática de arranque en marcha (ej. PrologueDreamSequencer). La
+                // Ya hay una cinemática de arranque en marcha (ej. la del prólogo). La
                 // cinemática decide el CUÁNDO y el CÓMO de su propia puesta en escena (su
                 // transición de entrada vía TransitionManager/EasyTransitions), pero ese sistema
                 // es independiente del overlay negro que WorldBootstrap puso en OnEnable() a

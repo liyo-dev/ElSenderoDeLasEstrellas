@@ -132,7 +132,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // FIX (Agosto 2026): guarda contra solapamiento. Si la señal de entrada se dispara dos veces
     // seguidas (p. ej. un bucle de reintento del grafo narrativo que reenvía la señal antes de que
     // el jugador termine el intento anterior — bug reproducido con AWAKEN_FAILED/AWAKEN_START en
-    // StarAwakeningSequencer), dos Co_Sequence() concurrentes llaman ambos a LockCinematic() pero
+    // la secuencia del Despertar), dos Co_Sequence() concurrentes llaman ambos a LockCinematic() pero
     // EndCinematic() solo restaura una vez (por el guard de _cinematicLocked de más abajo): el
     // segundo Push de ActionMode.Cinematic se queda sin su Pop y el jugador se queda pillado en
     // modo Cinematic en vez de volver al gameplay. Ignorar la señal mientras ya hay una secuencia
@@ -341,14 +341,15 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             OnAnySequenceActiveChanged?.Invoke(true);
         }
         ResolveActionManager()?.PushMode(ActionMode.Cinematic);
+        // El HUD, el minimapa y el indicador de la hora se esconden solos: el reproductor no
+        // los conoce, solo pide que se escondan los que estén apuntados al registro.
+        int ocultos = OcultablesDeCinematica.OcultarTodos(this);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        if (PlayerHUDV2.Instance == null)
-            Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: PlayerHUDV2.Instance es null al bloquear la cinemática — el HUD no se ocultará (fallo silencioso con ?.).");
+        if (ocultos == 0)
+            Debug.LogWarning($"[CinematicSequencerBase] {GetType().Name}: no hay ningún sistema que se " +
+                "esconda durante una cinemática, así que el HUD se quedará en pantalla. " +
+                "¿La escena se ha arrancado por Start.unity?");
 #endif
-        PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Ocultar(this);
-        // FIX INC-058: el icono del período del día (HUD) también debe ocultarse durante secuencias.
-        TimeOfDayIndicator.Instance?.Hide();
     }
 
     /// Activa la cámara cinemática y prepara la regla de música. Se llama en el cut point de la transición.
@@ -356,7 +357,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     {
         MusicRule = ResolveAudioProfile()?.GetSequenceRule(_sequenceMusicId);
         if (_interiorAnchor != null) EnvironmentController.Instance?.BeginCinematicOverride();
-        // Null-safe: secuencias que no transcurren en el mundo (ej. PrologueDreamSequencer, un
+        // Null-safe: secuencias que no transcurren en el mundo (una secuencia de sueño, un
         // "sueño" fuera de cualquier localización real) no necesitan controlar la cámara de mundo
         // y no asignan _cinematicCamera en el Inspector.
         _cinematicCamera?.Activate();
@@ -381,17 +382,14 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         FeedbackService.CancelAllShakes();
         _cinematicCamera?.Deactivate();
         SpeechBubbleUI.Instance?.Hide();
-        PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Mostrar(this);
-        // FIX INC-058: restaurar el icono del período del día al terminar la secuencia.
-        TimeOfDayIndicator.Instance?.Show();
+        OcultablesDeCinematica.MostrarTodos(this);
         ResolveActionManager()?.PopMode(ActionMode.Cinematic);
         if (_interiorAnchor != null) EnvironmentController.Instance?.EndCinematicOverride();
     }
 
     /// Devuelve _actionManager si está asignado en el Inspector; si no, lo resuelve vía
     /// ServiceLocator (y lo cachea ahí mismo para las siguientes llamadas). Esto permite que
-    /// secuencias que no viven junto al jugador en la escena (ej. PrologueDreamSequencer, que no
+    /// secuencias que no viven junto al jugador en la escena (la del sueño, que no
     /// transcurre en ningún lugar del mundo) no necesiten arrastrar la referencia a mano — antes,
     /// dejarla vacía provocaba un NullReferenceException aquí mismo que abortaba la coroutine sin
     /// restaurar nada ni levantar la señal de salida: la pantalla se quedaba en negro para siempre
@@ -484,7 +482,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
         }
 
         var tm = TransitionManager.Instance();
-        // FIX 15 sep 2026 (Raúl: "las cámaras no funcionan" en OliverSaludoSequencer, confirmado
+        // Las cámaras tienen que estar encendidas en la jerarquía: confirmado
         // con log de consola real — "se queda en la vista normal" del jugador). Causa raíz: esta
         // corrutina se suscribe a tm.onTransitionCutPointReached/onTransitionEnd y LUEGO llama
         // tm.Transition(settings, 0f) — pero si TransitionManager.Transition() encuentra
@@ -619,7 +617,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     protected virtual void OnSkipCleanup() { }
 
     /// Señal narrativa a levantar al saltar, en vez de RaiseSignalOut() (_signalOut heredado).
-    /// Usar cuando el sequencer no emite _signalOut en su flujo normal (ej. StarAwakeningSequencer,
+    /// Usar cuando la secuencia no emite _signalOut en su flujo normal (la del Despertar,
     /// que levanta señales propias de éxito/fallo) — sin este override el WaitCustomEventNode real
     /// del grafo nunca recibiría nada y el juego se quedaría bloqueado tras el skip. Vacío/null
     /// (por defecto) = usar RaiseSignalOut() normal.
@@ -729,7 +727,7 @@ public abstract class CinematicSequencerBase : MonoBehaviour
     // INC-075 (05/08/2026): EstelaAppearsSequencer llevaba su propia clave de flag
     // ("CINEMATIC_SEEN:ESTELA_APPEARS", añadida a mano el 27/28 jul) que NO coincidía con la
     // convención real del proyecto ("CINEMATIC_SEEN:Cinematic_{id}", la misma que genera
-    // SimpleCinematicDirector.GetPersistenceId()/MarkAsSeen() y la que ya llevan escrita los 9
+    // la que ya llevan escrita los 9
     // PlayerPreset_*.asset existentes como "CINEMATIC_SEEN:Cinematic_EstelaAppears"). Al activar
     // modo test contra un preset con la clave "buena", HasSequencePlayed() nunca la encontraba y
     // las arañas/guerreros volvían a aparecer aunque la secuencia constara como vista.

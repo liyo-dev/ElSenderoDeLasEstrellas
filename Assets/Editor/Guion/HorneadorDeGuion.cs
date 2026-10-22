@@ -697,9 +697,9 @@ internal sealed partial class Horno
                 return 0f;
             case "cara":
             {
-                var e = Emocion(o.args.FirstOrDefault(), o);
-                if (e == NPCEmotion.None) return 0f;
-                a.caras.Add(new OrdenDeCara { t = t, emocion = e, dura = o.OpF("dura", 0f) });
+                string palabra = Emocion(o.args.FirstOrDefault(), o);
+                if (palabra == null) return 0f;
+                a.caras.Add(new OrdenDeCara { t = t, emocion = palabra, dura = o.OpF("dura", 0f) });
                 return 0f;
             }
             case "aparece":
@@ -759,23 +759,17 @@ internal sealed partial class Horno
         return false;
     }
 
-    private static readonly Dictionary<string, NPCEmotion> EmocionesEnCastellano = new(StringComparer.OrdinalIgnoreCase)
+    /// La palabra de la cara. El asset horneado guarda la palabra y no el enum, para que no
+    /// dependa del arte de este juego (ver CarasDelGuion).
+    private string Emocion(string nombre, GuionTexto.Orden o)
     {
-        { "neutral", NPCEmotion.Neutral }, { "alegre", NPCEmotion.Happy }, { "feliz", NPCEmotion.Happy },
-        { "triste", NPCEmotion.Sad }, { "enfado", NPCEmotion.Angry }, { "enfadado", NPCEmotion.Angry },
-        { "sorpresa", NPCEmotion.Surprised }, { "miedo", NPCEmotion.Scared }, { "pensativo", NPCEmotion.Thinking },
-        { "cansado", NPCEmotion.Tired }, { "picaro", NPCEmotion.Smirk }, { "preocupado", NPCEmotion.Worried },
-        { "decidido", NPCEmotion.Determined }, { "aliviado", NPCEmotion.Relieved }, { "confuso", NPCEmotion.Confused },
-        { "ilusionado", NPCEmotion.Excited }, { "molesto", NPCEmotion.Annoyed }, { "agradecido", NPCEmotion.Grateful },
-    };
-
-    private NPCEmotion Emocion(string nombre, GuionTexto.Orden o)
-    {
-        if (string.IsNullOrEmpty(nombre)) { Error($"{o}: falta la emoción"); return NPCEmotion.None; }
-        if (EmocionesEnCastellano.TryGetValue(nombre, out var e)) return e;
-        if (Enum.TryParse(nombre, true, out e)) return e;
-        Error($"{o}: emoción desconocida '{nombre}' ({string.Join(", ", EmocionesEnCastellano.Keys)})");
-        return NPCEmotion.None;
+        if (string.IsNullOrEmpty(nombre)) { Error($"{o}: falta la emoción"); return null; }
+        if (!CarasDelGuion.Intentar(nombre, out var e))
+        {
+            Error($"{o}: emoción desconocida '{nombre}' ({string.Join(", ", CarasDelGuion.Palabras)})");
+            return null;
+        }
+        return CarasDelGuion.Canonica(e);
     }
 
     private float Velocidad(string ritmo, GuionTexto.Orden o)
@@ -818,8 +812,8 @@ internal sealed partial class Horno
         if (o.opciones.TryGetValue("mira", out var x) && Objetivo(x, o.linea, out var m) && !Sentado(a)) a.Mirar(t, m);
         if (o.opciones.TryGetValue("cara", out var c))
         {
-            var e = Emocion(c, o);
-            if (e != NPCEmotion.None) a.caras.Add(new OrdenDeCara { t = t, emocion = e, dura = dura + 0.4f });
+            string palabra = Emocion(c, o);
+            if (palabra != null) a.caras.Add(new OrdenDeCara { t = t, emocion = palabra, dura = dura + 0.4f });
         }
 
         // Los que escuchan se giran hacia quien habla, cada uno a su ritmo.

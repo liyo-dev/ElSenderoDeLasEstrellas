@@ -90,7 +90,7 @@ public class SequenceActor
 
     /// Secuencia "vacía" de CinematicState: no hace nada cada frame, solo existe para que la FSM
     /// del NPC sepa que está ocupado y no vuelva a Idle/Wander por su cuenta. Mismo truco que
-    /// usaba OliverSaludoSequencer a mano; aquí vive una sola vez para todas las secuencias.
+    /// se usaba a mano en cada secuencia; aquí vive una sola vez para todas.
     private class HoldSequence : Game.NPC.States.CinematicSequence
     {
         /// La FSM ha salido de este CinematicState sin que la secuencia lo soltara.

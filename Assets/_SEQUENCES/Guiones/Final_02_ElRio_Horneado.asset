@@ -127,22 +127,22 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 13.372042
-      emocion: 8
+      emocion: picaro
       dura: 0
     - t: 20.816042
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 32.788704
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 52.19911
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 58.99911
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 79.97953
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible: []
     deslizando: []
@@ -231,16 +231,16 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 26.01604
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 29.238707
-      emocion: 8
+      emocion: picaro
       dura: 0
     - t: 47.61217
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 65.89912
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible: []
     deslizando: []
@@ -289,16 +289,16 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 2.5
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 32.788704
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 56.09911
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 76.07953
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible: []
     deslizando: []
@@ -347,16 +347,16 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 5.7000003
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 9.6
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 42.038704
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 70.89912
-      emocion: 0
+      emocion: neutral
       dura: 0
     visible: []
     deslizando: []

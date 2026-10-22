@@ -43,24 +43,27 @@ MonoBehaviour:
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
     animacion:
-    - t: 3.554694
+    - fundido: 0
+      t: 3.554694
       tipo: 3
       estado: 
       congelar: 0
-    - t: 5.0153065
+    - fundido: 0
+      t: 5.0153065
       tipo: 4
       estado: 
       congelar: 0
-    - t: 10.725512
+    - fundido: 0
+      t: 10.725512
       tipo: 1
       estado: Idle_Battle_NoWeapon
       congelar: 0
     caras:
     - t: 3.4046938
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 9.125512
-      emocion: 10
+      emocion: decidido
       dura: 0
     visible: []
     deslizando: []
@@ -112,46 +115,55 @@ MonoBehaviour:
       punto: {x: 30.5, y: 30.5, z: -61}
       actor: 
     animacion:
-    - t: 1.2
+    - fundido: 0
+      t: 1.2
       tipo: 3
       estado: 
       congelar: 0
-    - t: 1.2800001
+    - fundido: 0
+      t: 1.2800001
       tipo: 2
       estado: SenseSomethingStart_NoWeapon
       congelar: 0
-    - t: 3.104694
+    - fundido: 0
+      t: 3.104694
       tipo: 4
       estado: 
       congelar: 0
     caras:
     - t: 1.2
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 1.2
-      emocion: 5
+      emocion: miedo
       dura: 2.254694
     - t: 6.604694
-      emocion: 5
+      emocion: miedo
       dura: 2.489796
     visible: []
     deslizando: []
   lineas:
-  - t0: 1.2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 1.2
     t1: 3.054694
     actor: NPC_Eldran
     clave: EVT_AWAKEN_01
     gesto: SenseSomethingStart_NoWeapon
     sinPose: 0
     presentacion: -1
-  - t0: 3.554694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 3.554694
     t1: 4.9653063
     actor: Player
     clave: EVT_AWAKEN_02
     gesto: 
     sinPose: 0
     presentacion: -1
-  - t0: 6.604694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 6.604694
     t1: 8.6944895
     actor: NPC_Eldran
     clave: EVT_AWAKEN_06
@@ -159,7 +171,8 @@ MonoBehaviour:
     sinPose: 1
     presentacion: -1
   planos:
-  - t0: 0
+  - focos: []
+    t0: 0
     t1: 1.7
     tipo: 5
     descripcion: 'dos: eldran y will'
@@ -181,7 +194,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 1.7
+  - focos: []
+    t0: 1.7
     t1: 3.4046938
     tipo: 2
     descripcion: medio de eldran
@@ -201,7 +215,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 3.4046938
+  - focos: []
+    t0: 3.4046938
     t1: 4.954694
     tipo: 3
     descripcion: primer plano de will
@@ -221,7 +236,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 4.954694
+  - focos: []
+    t0: 4.954694
     t1: 6.354694
     tipo: 2
     descripcion: medio de will
@@ -242,7 +258,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 6.354694
+  - focos: []
+    t0: 6.354694
     t1: 9.125512
     tipo: 7
     descripcion: siguiendo a eldran
@@ -284,7 +301,8 @@ MonoBehaviour:
     suavidad: 0.35
     mezcla: 0
     mano: 0.12
-  - t0: 9.125512
+  - focos: []
+    t0: 9.125512
     t1: 10.725512
     tipo: 3
     descripcion: primer plano de will
@@ -304,7 +322,8 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - t0: 10.725512
+  - focos: []
+    t0: 10.725512
     t1: 13.425511
     tipo: 2
     descripcion: medio de will
@@ -325,59 +344,87 @@ MonoBehaviour:
     mezcla: 0
     mano: 0.12
   efectos:
-  - t: 0
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 0
     beat:
       rid: 5630202263296278791
     linea: 34
-  - t: 1.2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1.2
     beat:
       rid: 5630202263296278792
     linea: 40
-  - t: 1.2
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 1.2
     beat:
       rid: 5630202263296278793
     linea: 41
-  - t: 3.054694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 3.054694
     beat:
       rid: 5630202263296278794
     linea: 49
-  - t: 3.054694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 3.054694
     beat:
       rid: 5630202263296278795
     linea: 50
-  - t: 3.254694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 3.254694
     beat:
       rid: 5630202263296278796
     linea: 51
-  - t: 3.4046938
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 3.4046938
     beat:
       rid: 5630202263296278797
     linea: 52
-  - t: 3.4046938
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 3.4046938
     beat:
       rid: 5630202263296278798
     linea: 53
-  - t: 6.354694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.354694
     beat:
       rid: 5630202263296278799
     linea: 62
-  - t: 6.354694
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 6.354694
     beat:
       rid: 5630202263296278800
     linea: 63
-  - t: 9.125512
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 9.125512
     beat:
       rid: 5630202263296278801
     linea: 71
-  - t: 9.825512
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 9.825512
     beat:
       rid: 5630202263296278802
     linea: 76
-  - t: 9.825512
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 9.825512
     beat:
       rid: 5630202263296278803
     linea: 77
-  - t: 9.825512
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 9.825512
     beat:
       rid: 5630202263296278804
     linea: 78
@@ -500,6 +547,7 @@ MonoBehaviour:
         duracion: 1.6
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202263296278803

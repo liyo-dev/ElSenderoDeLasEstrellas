@@ -460,7 +460,7 @@ public sealed class AudioService : MonoBehaviour
         // FIX (12 sep 2026, reporte de Raúl — "ha sonado la música de la casa de will durante la
         // secuencia del prólogo"): el jugador puede empezar la partida directamente dentro de un
         // interior (WorldBootstrap resuelve el anchor de arranque 'Bedroom' → WillHouse), y ese
-        // mismo instante coincide con el arranque de una cinemática (PrologueDreamSequencer) que
+        // mismo instante coincide con el arranque de una cinemática (la del prólogo) que
         // gestiona su propia música (heartbeat, "MAGOOSCURO_VISION"...). Si HandleInteriorEntered
         // reproduce la música del interior ahí mismo, pisa por completo lo que la cinemática está
         // montando. Mismo guard que ya usa el resto del archivo (Co_MusicaDelLugar) para no chocar con una cinemática en curso — cuando termine, su propio

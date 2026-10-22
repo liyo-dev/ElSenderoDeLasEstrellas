@@ -75,7 +75,7 @@ public class AudioGraphProfile : ScriptableObject
     [Serializable]
     public class SequenceRule
     {
-        [Tooltip("ID de la secuencia de gameplay (debe coincidir con el campo sequenceMusicId del StarAwakeningSequencer u otro orquestador)")]
+        [Tooltip("ID de la secuencia de gameplay (debe coincidir con el campo musicId de su SequenceDefinition)")]
         public string sequenceId;
         public AudioClip music;
         [Min(0f)] public float fadeIn  = 0.5f;

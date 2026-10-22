@@ -12,7 +12,7 @@ namespace Core.InputGlyphs.EditorTools
     /// Asigna los assets InteractionHintIconSet compartidos (Assets/_UI/*.asset) al campo
     /// correspondiente de cada sitio del proyecto que muestra un icono de botón según el mando/
     /// teclado activo: Interactable.iconSet, TeleportHintUI.teleportIconSet,
-    /// StarAwakeningSequencer.interactIconSet. Solo toca los campos que todavía estén vacíos — si
+    /// su SequenceDefinition. Solo toca los campos que todavía estén vacíos — si
     /// alguna vez se asigna un set distinto a mano en una instancia concreta, esta herramienta lo
     /// deja intacto.
     ///

@@ -7,7 +7,7 @@ using UnityEngine;
 /// Antes, al menos 4 actores independientes leían y escribían Time.timeScale directamente, cada
 /// uno capturando "el valor de antes" y restaurándolo al terminar, sin coordinarse entre ellos:
 /// SimpleHitStopProvider (hitstop de golpes), DeathCameraEffect (slowmotion de muerte),
-/// SimpleCinematicDirector (slowmotion por paso de cinemática) y NPCCombatLifecycleHandler.OnDestroy
+/// CinematicSequencerBase (slowmotion por paso de cinemática) y NPCCombatLifecycleHandler.OnDestroy
 /// (salvaguarda que forzaba timeScale=1 "por si acaso"). Dos hitstops solapados (trivial en
 /// combate, menos de 0.2s entre golpes) dejaban el juego en cámara lenta permanente: A capturaba
 /// 1.0, B capturaba el 0.1 que había puesto A, A restauraba 1.0, B restauraba 0.1 encima. Y las

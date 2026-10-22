@@ -430,6 +430,36 @@ public abstract class SequenceBeat
     /// enseñar el estado anterior durante el fundido y recomponerlo a la vista. Por defecto no
     /// hace nada.
     public virtual void Preparar(SequenceContext ctx) { }
+
+    /// ¿Este beat solo COLOCA cosas? Son los que se pueden ejecutar con la pantalla tapada:
+    /// poner a alguien en su marca, volcar la carreta, cambiar la hora del día... Su resultado
+    /// no se ve hasta que hay un plano, así que no pasa nada por hacerlos a oscuras.
+    ///
+    /// Lo declara el propio beat y no el reproductor: así el reproductor no necesita saber qué
+    /// tipos de beat existen, y añadir un beat nuevo no lo obliga a tocar nada.
+    public virtual bool SoloColoca => false;
+
+    /// ¿Este beat cambia el estado del mundo (la hora, el clima, la música, un prop, una
+    /// marca)? El guion horneado lo usa al saltar a un punto de la escena: estos se vuelven a
+    /// aplicar desde el principio, porque su efecto se queda puesto; los que son un efecto
+    /// puntual (un VFX, un sonido) no, porque ya pasaron.
+    public virtual bool CambiaElEscenario => false;
+
+    /// ¿Es un plano de cámara? El reproductor suelta el telón justo antes de aplicarlo, para
+    /// que la pantalla se abra ya encuadrada.
+    public virtual bool EsPlano => false;
+
+    /// Un beat que deja algo en la mano de un personaje lo coloca aquí, antes de que se vea la
+    /// escena: el objeto tiene que estar en la mano desde el primer fotograma, no aparecer de
+    /// golpe a mitad de plano.
+    public virtual void PrepararEnManos(SequenceContext ctx) { }
+
+    /// Coloca la cámara de apertura de la secuencia, si este beat sabe hacerlo. Devuelve true si
+    /// se ha colocado (y entonces el reproductor no busca el plano de apertura del asset).
+    ///
+    /// Lo declara el propio beat para que el reproductor no tenga que reconocer tipos: el guion
+    /// horneado compone la apertura con su primer plano, y el resto de beats no abren la cámara.
+    public virtual bool ColocarCamaraDeApertura(SequencePlayer player) => false;
 }
 
 /// Un tramo con nombre de la secuencia ("Saludo a distancia", "El hechizo fallido"...).

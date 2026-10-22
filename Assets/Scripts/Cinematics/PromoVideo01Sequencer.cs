@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using Sendero.Core.Feedback;
 
@@ -30,7 +29,7 @@ using Sendero.Core.Feedback;
 ///     TabernaSequencer), busca culpable, nadie responde, se recompone.
 ///   PARTE 2 (Comedia) — pan al plano medio Estela+Liam: Liam le roba la frase, se pican, Liam
 ///     señala fuera de plano ("Falta uno"), los dos dicen "...Will." y un whip-pan rápido
-///     (MoveTo con Ease.Linear y duración muy corta, no un corte seco) descubre a Will de
+///     (MoveTo con duración muy corta, no un corte seco) descubre a Will de
 ///     espaldas practicando; Will se gira pillado; corte/contracorte para el remate.
 ///   PARTE 3 (Promo) — corte al plano de grupo (los 3 recolocados en sus marcas de grupo justo en
 ///     el frame del corte, así el reposicionamiento es invisible): frase encadenada de los tres y
@@ -296,7 +295,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
 
     [Header("PARTE 2 — Whip-pan y revelación de Will")]
     [Tooltip("Duración del whip-pan. Muy corta a propósito: se busca un giro brusco de cámara, no un " +
-             "movimiento elegante. Con Ease.Linear y ~0.15s se lee como un latigazo.")]
+             "movimiento elegante. Con ~0,15 s se lee como un latigazo.")]
     [SerializeField] private float _whipPanDuracion = 0.15f;
     [Tooltip("Tiempo que se ve a Will de espaldas practicando antes de que se dé cuenta y se gire.")]
     [SerializeField] private float _holdWillDeEspaldas = 0.8f;
@@ -618,7 +617,7 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
     {
         // Pan al plano medio: Liam ya está en cuadro (no camina, lo descubre la cámara).
         if (_cinematicCamera != null && _shotEstelaLiam != null)
-            yield return _cinematicCamera.MoveTo(_shotEstelaLiam, _panAEstelaLiamDuracion, Ease.InOutSine);
+            yield return _cinematicCamera.MoveTo(_shotEstelaLiam, _panAEstelaLiamDuracion);
 
         // Liam le roba la frase: habla hacia cámara, no hacia Estela.
         FaceTarget(_liamTransform, _shotEstelaLiam);
@@ -679,12 +678,12 @@ public class PromoVideo01Sequencer : CinematicSequencerBase
         _estelaEmotion?.SetEmotion(NPCEmotion.Smirk);
         yield return Co_Linea(_estelaTransform, NombreConjunto, TextoConjunta, _conjuntaDuracion, _animConjunta);
 
-        // Whip-pan: Ease.Linear + duración muy corta = latigazo de cámara, no un pan elegante.
+        // Whip-pan: duración muy corta = latigazo de cámara, no un pan elegante.
         // Will sigue de espaldas, practicando su pose con la espada. mantenerConversando: false —
         // nadie le ve todavía, así que se congela en la pose en vez de saltar a "hablando".
         ReproducirGesto(_willAnimator, _animWillPracticando, mantenerConversando: false);
         if (_cinematicCamera != null && _shotRevelacionWill != null)
-            yield return _cinematicCamera.MoveTo(_shotRevelacionWill, _whipPanDuracion, Ease.Linear);
+            yield return _cinematicCamera.MoveTo(_shotRevelacionWill, _whipPanDuracion);
 
         if (_holdWillDeEspaldas > 0f) yield return new WaitForSeconds(_holdWillDeEspaldas);
 

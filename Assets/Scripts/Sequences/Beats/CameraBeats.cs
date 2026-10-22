@@ -69,6 +69,8 @@ public class ShotBeat : SequenceBeat
             : $"'{shotName}' (colocado a mano)")
            + (live ? " [siguiendo]" : "");
 
+    public override bool EsPlano => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var player = ctx?.Player;
@@ -319,6 +321,8 @@ public class SetActionAxisBeat : SequenceBeat
     public float sideDegrees = 0f;
 
     public override string Describe() => $"Cámara: fijar el eje de acción a {sideDegrees:F0}°";
+
+    public override bool SoloColoca => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {

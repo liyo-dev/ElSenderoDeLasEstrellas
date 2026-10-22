@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Explosión de chispas/rayos radiales — pensada como el "boom" real de Co_Collision en
-/// PrologueDreamSequencer, distinto de los dos ProceduralLightningBoltVfx (que son cada rayo
+/// la secuencia del prólogo, distinto de los dos ProceduralLightningBoltVfx (que son cada rayo
 /// individual, uno por bando). Pedido de Raúl (12/09/2026): "cuando ambos hechizos se unen debe
 /// ocurrir una explosion y lo que vemos es el mismo prefab" — antes la colisión solo mostraba los
 /// dos mismos rayos de siempre, sin ningún efecto distinto que se leyera como impacto/explosión.

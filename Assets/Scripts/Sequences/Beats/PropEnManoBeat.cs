@@ -45,6 +45,14 @@ public class PropEnManoBeat : SequenceBeat
         });
     }
 
+    /// Una suelta no se coloca antes de la escena: el objeto solo tiene que volver a su sitio
+    /// cuando se suelta, no estar en la mano de nadie al empezar.
+    public override void PrepararEnManos(SequenceContext ctx)
+    {
+        if (dejar) return;
+        RegistrarFinal(ctx);
+    }
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var prop = ctx.GetActor(propId)?.Transform;

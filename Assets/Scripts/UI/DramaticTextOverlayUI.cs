@@ -201,7 +201,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
     /// <summary>
     /// Activa solo los efectos visuales de "modo sueño" (nebulosa + chispas), sin reproducir
     /// ninguna frase. Pensado para cinemáticas ajenas a este overlay que necesitan el mismo fondo
-    /// onírico pero llevan su propio timing/texto (o ninguno) — ej. PrologueDreamSequencer.
+    /// onírico pero llevan su propio timing/texto (o ninguno) — ej. la secuencia del prólogo.
     /// </summary>
     public void StartDreamVisuals()
     {
@@ -283,7 +283,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
 
                 // FIX: si nos llaman con la pantalla ya cubierta por el overlay de FeedbackService
                 // (ej: una cinemática que terminó con Co_EndCinematicStayBlack y nos pasa el
-                // testigo, como PrologueDreamSequencer → DramaticTextNode), la frase 0 haciendo su
+                // testigo, como la secuencia del prólogo → DramaticTextNode), la frase 0 haciendo su
                 // fade-in normal desde alpha=0 exponía durante entryDuration lo que hubiera detrás
                 // (la escena/cámara de gameplay ya reactivada) antes de que este overlay llegara a
                 // opacidad completa. Tratarla como "ya estamos en negro" evita ese hueco — solo
@@ -299,7 +299,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
                 // FIX (12 sep 2026): "Will, ¡DESPIERTA!" sale de golpe, sin letreo — reportado por
                 // Raúl con captura + log confirmando 'Anim: LetterFlyIn' disparándose igualmente.
                 // Causa: esta condición solo eximía a KingdomHearts. La frase del prólogo llega con
-                // la pantalla ya en negro (Co_Awaken de PrologueDreamSequencer termina en fundido a
+                // la pantalla ya en negro (la awake de la secuencia del prólogo termina en fundido a
                 // negro, screenAlreadyCovered=true) y su propio fondo es FullBlack, así que
                 // skipEntry daba true y ShowPhrase() saltaba directo a la rama skipEntry de abajo
                 // (snap instantáneo del texto, sin pasar por EntryAnimation()/LetterFlyInRoutine en

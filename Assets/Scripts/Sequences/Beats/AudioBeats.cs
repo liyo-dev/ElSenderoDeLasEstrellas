@@ -36,6 +36,8 @@ public class MezclaBeat : SequenceBeat
 
     public override string Describe() => $"Mezcla: {fuente}" + (quitar ? " (quitar)" : "");
 
+    public override bool CambiaElEscenario => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var audio = AudioService.Instance;

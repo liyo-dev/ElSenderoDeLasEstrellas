@@ -11,7 +11,7 @@ using UnityEngine.UI;
 /// - Oculta el minimapa al entrar en interiores
 /// </summary>
 [DisallowMultipleComponent]
-public class MinimapController : MonoBehaviour
+public class MinimapController : MonoBehaviour, IOcultableDuranteCinematica
 {
     public static MinimapController Instance { get; private set; }
     static readonly HashSet<object> s_ocultadoPor = new HashSet<object>();
@@ -131,6 +131,11 @@ public class MinimapController : MonoBehaviour
 
         if (playerArrow != null)
             playerArrow.sizeDelta = Vector2.one * playerArrowSize;
+
+        // Se apunta al registro de lo que se esconde durante una cinemática. Va en el Awake
+        // (y no en el OnEnable) por lo mismo que las suscripciones de arriba: el minimapaRoot
+        // se apaga y se enciende, y eso no debe desregistrar el minimapa.
+        OcultablesDeCinematica.Registrar(this);
     }
 
     void OnDestroy()
@@ -145,6 +150,7 @@ public class MinimapController : MonoBehaviour
         RenderPipelineManager.endCameraRendering   -= OnEndCameraRendering;
         SceneManager.sceneLoaded                   -= OnSceneLoaded;
         SceneManager.sceneUnloaded                 -= OnSceneUnloaded;
+        OcultablesDeCinematica.Quitar(this);
     }
 
     void Start()
@@ -467,6 +473,9 @@ public class MinimapController : MonoBehaviour
         s_ocultadoPor.Remove(quien);
         Instance?.RefreshMinimapVisibility();
     }
+
+    void IOcultableDuranteCinematica.Ocultar(object quien) => Ocultar(quien);
+    void IOcultableDuranteCinematica.Mostrar(object quien) => Mostrar(quien);
 
     void RefreshMinimapVisibility()
     {

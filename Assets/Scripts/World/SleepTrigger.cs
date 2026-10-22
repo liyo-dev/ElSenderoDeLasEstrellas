@@ -409,7 +409,7 @@ public class SleepTrigger : MonoBehaviour
         // InputAction (Controls.UI.Submit) como hold — y GamepadInputReader emite el evento Submit
         // ya en el primer frame de pulsación (performed), no al completar el hold. Resultado: en
         // cuanto el jugador empieza a mantener pulsado para saltar cualquier secuencia que ocurra
-        // mientras Will sigue dormido (p. ej. el sueño del Prólogo, PrologueDreamSequencer, que se
+        // mientras Will sigue dormido (p. ej. el sueño del Prólogo, que se
         // reproduce con Will ya en la cama), este listener recibía ese mismo Submit como "orden de
         // despertar" y sacaba a Will de la cama al instante — sin esperar a que la propia secuencia
         // terminase ni a que empezara de verdad la escena de despertar. Ignorar el input de

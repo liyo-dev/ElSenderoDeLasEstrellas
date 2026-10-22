@@ -94,6 +94,8 @@ public class PoseBeat : SequenceBeat
     public override string Describe()
         => soltar ? $"Soltar pose: {actorId}" : $"Pose: {actorId} → {pose}";
 
+    public override bool SoloColoca => true;
+
     public override IEnumerator Run(SequenceContext ctx)
     {
         var actor = ctx.GetActor(actorId);
@@ -129,6 +131,8 @@ public class EmotionBeat : SequenceBeat
 
     public override string Describe() => $"Cara: {actorId} → {emotion}" +
         (mantener ? " (se mantiene)" : duracion > 0f ? $" ({duracion:0.##} s)" : " (duración del perfil)");
+
+    public override bool SoloColoca => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -176,6 +180,9 @@ public class FaceBeat : SequenceBeat
     public override string Describe()
         => $"Mirar: {actorId} → {(string.IsNullOrEmpty(targetActorId) ? markName : targetActorId)}"
            + (lookAway ? " (de espaldas)" : "") + (mutual ? " (mutuo)" : "");
+
+    /// Un giro que tarda lo mismo que un fotograma se puede hacer a oscuras: no se ve.
+    public override bool SoloColoca => turnDuration <= 0.001f;
 
     public override IEnumerator Run(SequenceContext ctx)
     {
@@ -485,6 +492,8 @@ public class PlaceAtMarkBeat : SequenceBeat, INarrativeStateEffect
     }
 
     public override string Describe() => $"Colocar: {actorId} en '{markName}'";
+
+    public override bool SoloColoca => true;
 
     public override IEnumerator Run(SequenceContext ctx)
     {

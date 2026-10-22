@@ -175,7 +175,12 @@ public struct OrdenDeAnimacion
 public struct OrdenDeCara
 {
     public float t;
-    public NPCEmotion emocion;
+
+    /// La palabra de la cara («alegre»), no el enum: el asset horneado no depende del arte de
+    /// este juego. Quien lo use en otro proyecto la traduce a la cara que tenga (ver
+    /// `CarasDelGuion`).
+    public string emocion;
+
     [Tooltip("Segundos; 0 = hasta la siguiente orden.")]
     public float dura;
 }

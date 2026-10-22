@@ -78,7 +78,6 @@ Puedes hacer Play desde cualquier escena (MainWorld, Woods, etc.) sin configurac
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
 - `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` — valida que quests/eventos no estén referenciados a la vez por el grafo y por el sistema legacy (ver § 10 — Política formal: convivencia Interactive ↔ Grafo narrativo)
-- `El Sendero/Personajes/Animaciones/…` — audita, corrige, aplica y revierte las animaciones humanoides que atraviesan cabeza o torso (INC-816; ver § 3)
 
 ### Presets de testing vs partida guardada
 
@@ -807,15 +806,32 @@ Los eventos entre el mundo y el grafo se comunican vía `DefaultNarrativeSignals
 
 **Oclusión durante secuencias (INC-601):** `SinOcclusionEnSecuencias`, activado por el bloqueo de la primera secuencia de `CinematicSequencerBase` y liberado por la última, apaga el culling horneado de las cámaras y suspende la disolución jugable con `CameraOcclusionShadowsOnly.Suspender`. La suspensión restaura inmediatamente los materiales de los obstáculos registrados y bloquea `Process`, también en cámaras creadas durante la secuencia. Al liberar la última secuencia se permite de nuevo la disolución y se recupera el estado original de culling por cámara. Desactivar solo `Camera.useOcclusionCulling` no evita el shader de disolución.
 
-### SimpleCinematicDirector
+### Cinemáticas: un solo reproductor
 
-`Assets/Scripts/Cinematics/SimpleCinematicDirector.cs`
+`SimpleCinematicDirector` se retiró el 5 de octubre de 2026 (INC-588, ver § 22.4). Hoy **toda** cinemática se reproduce con `SequencePlayer` + `SequenceDefinition`, y las que se montan con guion horneado usan `GuionBeat` (ver § 22). No se escriben `*Sequencer.cs` nuevos: lo que se necesita va al catálogo de beats, a un `SequenceModule` de la escena, o al guion de texto.
 
-Reproduce secuencias de cinemáticas definidas como listas de steps. Cada step puede incluir: animación, movimiento de cámara, audio, slow motion, subtítulos.
+La única excepción que sigue viva es `PromoVideo01Sequencer` (`Assets/Scenes/Marketing/PromoEstudio.unity`), que es una grabación de plató, no una cinemática del juego. No se amplía.
 
-**Importante:** Si hay un step con `slowMotion = true` y se para la cinemática externamente con `StopCoroutine`, `Time.timeScale` queda en el valor reducido indefinidamente. `OnDestroy` lo restaura, pero un stop sin destroy no. El método `Stop()` debe garantizar la limpieza de `timeScale`.
+**Regla de la cámara:** el `CinematicCameraDriver` es el dueño de la cámara durante una secuencia (pasa por `CameraDirectorService.Claim`/`Release`, que es el protocolo oficial). Cuando un `GuionBeat` entra, sus cámaras de Cinemachine (`CamarasDeGuion`) toman el control: el driver **cede** la cámara (`CinematicCameraDriver.CederElControl`) y deja de escribir en ella, y la devuelve al terminar el guion (`DevolverElControl`). Sin este relevo, un plano calculado a mitad de un guion se pelearía con el plano horneado por la misma cámara.
 
-**Audio en cinemáticas:** no usar `AudioSource.PlayClipAtPoint` (bypasa el AudioMixer y el pool). Usar `AudioService.Instance.PlaySFX`.
+**Regla de los beats:** el reproductor no reconoce tipos de beat. Cada beat declara lo que hace de sí mismo:
+
+| Propiedad | Qué declara | Quién la usa |
+|---|---|---|
+| `SoloColoca` | «Solo coloco cosas: no se ve nada de lo que hago hasta que haya un plano» | `SequencePlayer` lo ejecuta con la pantalla tapada |
+| `CambiaElEscenario` | «Dejo el mundo en otro estado (hora, clima, música, un prop, una marca)» | El guion horneado, al saltar a un punto, vuelve a aplicar estos efectos |
+| `EsPlano` | «Soy un plano de cámara» | `SequencePlayer` suelta el telón justo antes de aplicarlo |
+| `PrepararEnManos` | «Dejo algo en la mano de alguien antes de que se vea la escena» | El guion horneado, al montarse |
+| `ColocarCamaraDeApertura` | «Sé colocar la cámara de apertura de la secuencia» | `SequencePlayer`, en el corte de entrada |
+
+Añadir un beat nuevo no obliga a tocar el reproductor, y el reproductor no se entera de qué tipos de beat existen.
+
+**Regla de lo que se esconde:** el reproductor no llama al HUD, al minimapa ni al indicador de la hora. Pide que se escondan todos los sistemas apuntados al registro de `OcultablesDeCinematica` (`Assets/Scripts/Cinematics/IOcultableDuranteCinematica.cs`), y cada uno se esconde con su propia clave. Un sistema nuevo que quiera taparse durante una cinemática implementa la interfaz y se apunta en su `Awake`: no hay que tocar el reproductor.
+
+**Regla del texto:** las frases salen siempre por `PresentadorDeLinea` (`Assets/Scripts/Sequences/PresentadorDeLinea.cs`), tanto las de los beats de diálogo como las del reproductor de guiones horneados. Ahí se resuelve la clave de localización, se elige el estilo, se enseña el bocadillo y se busca la voz. Hay dos enums de presentación (`PresentacionDeTexto`, el de la UI, y `PresentacionDeLinea`, el de una frase) porque sus valores están guardados en los assets y no pueden coincidir: la conversión entre ellos vive solo en `PresentadorDeLinea.Estilo`.
+
+
+**Audio en cinemáticas:** no usar `AudioSource.PlayClipAtPoint` (bypassa el AudioMixer y el pool). Usar `AudioService.Instance.PlaySFX`.
 
 ### Reacciones de escena y continuidad de audio (INC-578)
 
@@ -3570,6 +3586,7 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
   - cada plano lleva su desglose de coste en el storyboard y en la línea de tiempo del informe (p. ej. «coste 732: delante 412, cara 270»);
   - avisos «algo del decorado se mete delante y tapa un N %» y «no hay ángulo limpio».
 - **Arranque:** en el corte de entrada, `SequencePlayer` coloca la cámara en la pose del primer plano del guion (`GuionHorneado.PoseDeCamara`). Así no se ve otro encuadre al abrirse el telón.
+- **Relevo de cámara:** mientras dura el guion, el `CinematicCameraDriver` cede la cámara a las cámaras de Cinemachine del guion (`CederElControl` / `DevolverElControl`): los dos sistemas nunca escriben en la misma cámara a la vez. Ver § 10.
 
 ### 22.3 Comprobación en juego
 
@@ -3587,6 +3604,8 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
   - los beats sin uso (`CutBeat`, `MoveCameraBeat`, `ReactionBeat`, `SignalBeat`, `StopTrackingBeat`, `ResetActionAxisBeat`, `HoldActorBeat`, `InputPromptBeat`);
   - los cableadores de un solo uso.
 - La versión de beats del prólogo está en `Versiones antiguas/Secuencias de beats (antes del guion)/`.
+- Los dos secuenciadores sueltos que quedaban sin montar (`EpilogueSequencer`, escena 22, y `WillSacrificeSequencer`, escena 21) se retiraron también ahí el 21 de octubre de 2026 (INC-810): sus GUID no aparecían en ninguna escena, prefab ni asset, y sus dos escenas ya están montadas con guion horneado (`SEQ_Final_01_ElSacrificio` y `SEQ_Final_02_ElRio`). Con ellos, `Assets/Scripts/Cinematics/` queda solo con lo que vive: `CinematicSequencerBase`, `CinematicCameraDriver`, `CinematicShot`, `CinematicShotPreview` y los controladores de escena.
+
 
 ### 22.5 Cuerpo y objetos en el guion (INC-718)
 
@@ -3595,6 +3614,28 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 - **Coger y dejar objetos:** «eldran coge PROP_Aro [mano=izquierda] [offset=x;y;z] [giro=x;y;z]» engancha el objeto del `SequenceStage` al hueso de la mano (por defecto la derecha) y lo enciende si estaba apagado. «eldran deja PROP_Aro en apoyo [gesto=Estado]» hace un gesto de alcanzar y, en el fotograma en que la mano queda más cerca del apoyo, suelta el objeto: pasa de la mano al apoyo en 0,25 s (`PropEnManoBeat.segundosDeApoyo`) y queda apoyado por la base de sus mallas. Sin `gesto`, el horno prueba los gestos de alcanzar del catálogo del actor y elige el que más acerca la mano; el informe lo apunta con el tanteo de cada uno y avisa si la mano se queda a más de 0,3 m (hay que acercar al personaje o el apoyo al borde del mueble). Si la secuencia se salta, el objeto acaba en su apoyo final, nunca colgado de una mano. Runtime: `PropEnManoBeat` (`Scripts/Sequences/Beats`); horno: `HornoProps.cs`.
 - **Planos de alguien tumbado:** si la cabeza de la pose horneada queda por debajo de la mitad de la altura de cara de pie, el foco del plano es la cabeza real de la pose (medida en el horneado), no la altura de pie. Sirve para picados sobre alguien recostado o dormido.
 - **Puntos con altura:** un apoyo sobre un mueble se escribe con su altura en PUNTOS («apoyo_aro 115.0 3.1 0.691»).
+
+### 22.6 Reproductor con barra de tiempo (INC-809)
+
+**El problema:** una cinemática de tres minutos bien montada obliga a verla entera para retocar el final. Con el guion horneado, que es una tabla con el segundo exacto de cada cosa, eso ya no es necesario.
+
+**La herramienta:** *El Sendero → Guion → Reproductor* (`Assets/Editor/Guion/ReproductorDeGuionWindow.cs`). Se engancha sola al guion que esté en marcha y ofrece:
+
+- la barra de tiempo, con los planos en verde, las frases en azul y los efectos en naranja;
+- los mandos: ir al principio, ±5 s, pausar, ir al final;
+- un campo para saltar a un segundo concreto (`mm:ss` o segundos);
+- la lectura en vivo: el segundo actual, el plano que suena y la frase que se está diciendo;
+- «Fotograma»: guarda un PNG del frame que se está viendo en `Logs/Reproductor/`.
+
+**Cómo salta:** `ReproductorDeGuion.SaltarA(t)`. Los cursores (plano, efecto, línea, y las órdenes de animación y cara de cada actor) vuelven al principio y el estado se vuelve a aplicar desde el segundo 0 hasta `t`: es la única forma de rebobinar con la información horneada, que no tiene operaciones inversas. Por eso **el estado del mundo solo avanza hacia delante**: un cambio de clima o de hora que ya se aplicó sigue puesto aunque se salte hacia atrás. El salto es de cámara y de puesta en escena.
+
+**Pausa:** `Pausar()` retiene el reloj del guion (`SequenceContext.RetenerReloj`), el mismo mecanismo que usa una secuencia que espera al jugador. La escena sigue respirando (los personajes animate, la cámara se actualiza), pero el segundo no avanza.
+
+**Punto de entrada:** la ventana puede guardar el momento actual como **punto de entrada** del guion (`GuionBeat.empezarEn`, solo en el Editor): la secuencia empieza ahí, con el mundo ya en su estado. Es lo que evita verse la escena entera para retocar el final.
+
+**El registro:** `GuionEnMarcha` (`Assets/Scripts/Sequences/Guion/`) es el punto único que dice qué guion se está reproduciendo. Lo usan las herramientas del Editor; el runtime no depende de él.
+
+
 
 ---
 
@@ -3918,3 +3959,103 @@ Por eso `Boat02_a01` no servía para probar nada: no es que estuviera mal coloca
 **En MainWorld**: *El Sendero ▸ Mundo ▸ Vestir MainWorld* (el menú del vestido del mundo) monta el barco de Silas amarrado en el puerto, con su caja de agua. El informe dice dónde ha quedado: `Barco de Silas: amarrado en (x, z), a N m del embarcadero, fondo a Y m`.
 
 Pendiente de comprobar en Play: que la cubierta quede a la altura correcta, que el timón no esté al revés y que el barco no atraviese el muro de la piscina.
+
+## 25. El sistema de cinemáticas como producto reutilizable
+
+**Fecha:** 22 de octubre de 2026
+**Estado:** plan. No se ejecuta hasta que el juego esté en producción (ver § 15 para el gemelo del grafo narrativo).
+
+### 25.1 Qué se midió
+
+El sistema de cinemáticas son **25.538 líneas en 70 ficheros**:
+
+| Ámbito | Ficheros | Líneas |
+|---|---:|---:|
+| Runtime (`Assets/Scripts/Sequences/**` + los 4 vivos de `Cinematics/`) | 39 | 16.918 |
+| Editor, el horneador (`Assets/Editor/Guion/**`) | 25 | 7.088 |
+| Pegamento con este juego (módulos de escena, `CinematicTimeOfDay`, los dos ficheros sueltos de `Cinematics/`) | 28 | 7.268 |
+
+El acoplamiento con el juego son **~30 tipos y ~500 hits**, y el 70 % se concentra en ocho: `AudioService` (70), `FeedbackService` (46), `DayNightCycle` (30), `NPCEmotion` (30), `NPCSimpleAnimator` (27), `DialogueManager` (21), `VfxPoolService` (19) y `SpeechBubbleUI` (18).
+
+**El punto importante: el acoplamiento no está donde se feared.** `SequenceContext` no toca audio, hora ni diálogo. `HornoCamaras` (765 líneas, el solver de planos) no tiene ni un nombre de este juego. `GuionTexto` (el parser del formato `.guion.txt`) tampoco: los nombres propios solo aparecen en los *datos* de los guiones, nunca en el código. `CapturaDeEscenario` tiene el acoplamiento duro en **tres líneas** (`NpcRosterSO`, `NpcSpawnPoint`, `NPCBehaviourManagerV2`).
+
+### 25.2 Veredicto
+
+**Hoy el sistema no funciona en otro proyecto.** Compilado tal cual, necesita `AudioService`, `DayNightCycle`, `NPCSimpleAnimator`, `DialogueManager`, `SpeechBubbleUI`, `PlayerHUDV2`, `MinimapController`, `PlayerActionManager`, Invector y EasyTransition.
+
+**Con 5-8 días de trabajo, sí**, y no es un rewrite: es un trabajo fino y acotado.
+
+- **4 de las 11 costuras ya están hechas**: `INarrativeSignals`, `INarrativeStateEffect`/`NarrativeStateWriter`, las 5 interfaces de proveedor de `Sendero.Core.Feedback`, y `IOcultableDuranteCinematica` (22 oct 2026).
+- **26 de los 54 beats ya son genéricos**, y concentran el 46 % de las líneas de beats. Entre ellos están las cinco piezas más valiosas: `ShotBeat` (encuadre), `WalkPathBeat` (movimiento), `SaltoBeat`, `NubesDeAperturaBeat` y `PropMoveBeat`. Los 28 acoplados son beats finos de 18-55 líneas, salvo cinco excepciones.
+- **El patrón a replicar ya existe en el repo**: `Sendero.Core.Feedback` define interfaces de 5-15 líneas que `FeedbackService` resuelve por setter.
+
+### 25.3 Las siete costuras que faltan
+
+| # | Costura | Qué elimina | Coste |
+|---|---|---|---|
+| 1 | `IActuableDeEscena` (12 métodos) | Las dos ramas por tipo de `SequenceActor` (913 líneas) y nueve bloques `if (IsPlayer)`. Saca **Invector** del núcleo | ~150 l. |
+| 2 | `ITransicionDePantalla` | La dependencia dura de EasyTransition (12 hits en la base) | ~30 l. |
+| 3 | `IMusicaDeEscena` | `AudioService` + `AudioGraphProfile` (26 hits) | ~30 l. |
+| 4 | `ICicloDeDia` | `DayNightCycle` (30 hits) | ~25 l. |
+| 5 | `ITextoEnPantalla` | `SpeechBubbleUI` (18 hits). El presentador común ya existe (`PresentadorDeLinea`) | ~25 l. |
+| 6 | `INavegador` | `NavMeshAgent` en el núcleo (15 hits) | ~40 l. |
+| 7 | `IRostros` | `NPCEmotionController` + el enum `NPCEmotion` (40 hits) | ~40 l. |
+
+Y después, **28 adaptadores pequeños** (unos 15 líneas cada uno) para que los beats hablen con interfaces en vez de con singletons: **~420 líneas**.
+
+### 25.4 El orden
+
+Cada paso vale por sí solo para el juego (quita una dependencia dura y hace el sistema extensible), así que no es trabajo perdido si el paquete nunca se vende:
+
+1. `IOcultableDuranteCinematica` — **hecho** (22 oct 2026).
+2. `ITransicionDePantalla` — 30 líneas, mata la dependencia de EasyTransition de la base.
+3. `IActuableDeEscena` — la más grande y la que más mejora el código: de paso desaparecen nueve ramas por tipo.
+4. `IMusicaDeEscena` + `ICicloDeDia` + `ITextoEnPantalla`.
+5. Los 28 adaptadores de beats.
+6. `NPCEmotion` → `string` (ver 25.5).
+7. Empaquetado: un `.asmdef` con el núcleo, el grafo narrativo como integración, y un proyecto de ejemplo.
+
+### 25.5 Los dos bloqueos para vender
+
+   **Estado: HECHO (22 oct 2026, INC-815).** El asset horneado ya guarda la palabra y no el enum:
+   - `GuionHorneado.OrdenDeCara.emocion` es un `string` (la palabra: «alegre»).
+   - `CarasDelGuion` (`Assets/Scripts/Dialogue/`) es el vocabulario del juego: traduce la palabra a la cara que se pone, y da la palabra canónica de cada emoción. El horneador escribe la palabra canónica; el reproductor la traduce al aplicarla.
+   - Los **9 assets horneados se migraron** (213 caras) con una herramienta de un solo uso, ya archivada en `Versiones antiguas/Herramientas de un solo uso (2026-10-22) - caras del guion/`. La migración **no re-horneó**: solo cambió el campo de la cara. Lo único que se movió aparte fue que Unity rellenó los campos que faltaban en los assets (el `fundido` de las animaciones, los `focos` de los planos, los `onlyIfFlag`/`skipIfFlag`), con sus valores por defecto.
+   - Lo que **sigue** usando el enum: los beats de la capa A (`EmotionBeat.emocion`, que se guarda en los `SequenceDefinition`) y el runtime de `SequenceActor`/`NPCEmotionController`. Eso es la costura 7 de 25.3, y no crece con el contenido: son ~200 líneas fijas que se hacen cuando exista la decisión de empaquetar.
+
+1. **`NPCEmotion` está horneado en el asset** (`GuionHorneado.cs:178`) y con un diccionario duro de palabras en castellano → enum (`HorneadorDeGuion.cs:762`). Para un paquete tiene que ser un `string`.
+
+   **Por qué importa:** `NPCEmotion` no es un vocabulario neutro, es el **alanario de caras de este juego** (17 valores, cada uno = unos meshes de ojos y boca del rig de los personajes). Las caras las aplica `NPCEmotionController`, que es 100 % arte de este juego. El asset horneado es justo lo que se vendería, así que si lleva «la cara nº 9 de este juego», quien lo compre necesita este rig.
+
+   **Las tres salidas, y cuál es la barata:**
+
+   | | Qué | Coste |
+   |---|---|---|
+   | **A. Nada** | Se deja el enum. El asset sigue atado a este arte. | 0 hoy. Lo único que crece es el número de assets que habría que cambiar el día de la extracción. |
+   | **B. El cambio entero** | El dato es `string` **y** el runtime aplica las caras por una interfaz (`IRostros`, costura 7 de 25.3). | ~150-200 líneas, y toca el sistema de caras en producción. |
+   | **C. Solo el dato** | El asset guarda la palabra (`«alegre»`) y el juego la traduce a `NPCEmotion` al aplicarla. El sistema de caras no se toca. | ~50 líneas. El asset pasa a ser independiente del arte: quien lo compre mapea «alegre» a lo que tenga. |
+
+   **Aviso importante: re-hornear NO es «cambiar un campo».** Re-hornear vuelve a pasar el solver de cámaras, así que **si el solver ha cambiado desde el último horneado, los planos cambian** y las cinemáticas habría que revisarlas otra vez. Por eso la opción C se hace con una **migración de un solo uso** (recorre los assets y cambia el número por su palabra, sin re-hornear), no re-hornando.
+
+   **Antes de tocar nada, la comprobación barata (5 min):** hornear una copia de un asset y compararla con el actual. Si sale idéntica, el horneado es estable y la migración es trivial. Si sale distinta, el solver ha cambiado y hay que hablarlo antes.
+
+   **Cuándo decidirlo:** no es urgente mientras el paquete no exista, y **el número de assets no es la razón por la que haya que decidirse ya**: la migración es un script que recorre N assets en minutos, así que da igual si son 9 o 30. Lo que sí tiene fecha es el **cambio de código** (el tipo del campo, el horneador que escribe la palabra y la traducción al aplicar la cara): son ~50 líneas y no crecen con el contenido, pero cuanto más contenido dependa de la forma actual, más caro es el cambio y más tentador es re-hornear, que es lo caro de verdad. Lo que **no** hay que hacer nunca, en ninguno de los caminos: renumerar el enum (su propio comentario lo prohíbe: el enum se serializa por número) ni re-hornear para cambiar un campo.
+
+   **Proyección:** el GDD tiene 21 secciones de capítulo (§ 5.1 a § 5.21) y están hechas las 5 primeras. Cada sección puede necesitar más de una cinemática (§ 5.2 ya tiene dos), así que el punto de llegada son **20-30 assets horneados** frente a los 9 de hoy.
+2. **El `.asset` horneado infla 7,6×** (10,5 KB de texto → 80,8 KB de asset en *La mañana después*) y no está troceado. A 20 minutos de cinemática son 200 KB de YAML por secuencia, inmanejable en diffs. Mitigación: la fuente de verdad es el `.guion.txt` (texto, se versiona y se mergea) y el `.asset` es un artefacto generado; y trocear el horneado en contenido + actores + planos.
+
+### 25.6 Qué se vendería
+
+**El producto no es la capa de beats: es el horneador.** El formato `.guion.txt` + `CapturaDeEscenario` + `HorneadorDeGuion` es lo que hace que **quien use el paquete no coloque ni un plano ni una marca**: describe la escena en texto, le da a un botón, y sale la cinemática montada con la cámara resuelta y sin tirones. Eso es justo lo que no ofrece la Timeline de Unity (manual y caro) ni nada de la Asset Store.
+
+La capa de beats se vende como parte del runtime que sostiene al horneador (`GuionHorneado` → `GuionBeat` → `SequencePlayer` → `SequenceContext` → `SequenceActor` → `ShotComposer`), y el grafo narrativo (`PlayCinematicNode`) es el punto de integración.
+
+### 25.7 Paquetes de Unity
+
+El núcleo **no necesita** Cinemachine (solo la capa de guiones), Timeline, TextMeshPro ni Post-processing. Sí necesita `modules.ai` (NavMesh), `modules.animation`, `ugui` y URP (para `VolumeProfile`).
+
+### 25.8 Lo que ya se ha hecho de esta lista
+
+- **22 oct 2026** (INC-812): `IOcultableDuranteCinematica` + registro. El reproductor deja de llamar al HUD, al minimapa y al indicador de la hora; ahora pide que se escondan los sistemas apuntados, y cada uno se esconde con su clave.
+- **22 oct 2026** (INC-813): el texto sale por un solo camino (`PresentadorDeLinea`), que usan tanto los beats de diálogo como el reproductor de guiones. Se retira la conversión `(PresentacionDeTexto)((int)presentacion - 1)`, que era el tipo de conversión que se cuela sin que nadie se entere.
+- **22 oct 2026** (INC-813): DOTween era una dependencia vestigial del driver de cámara: el `Ease` se pasaba y nunca se aplicaba (el movimiento usa smoothstep). Retirado.

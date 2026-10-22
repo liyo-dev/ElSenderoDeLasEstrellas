@@ -98,9 +98,10 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Lo que dice un NPC si se le habla y el grafo no espera esa charla (p. ej. misión en curso) | `INarrativeStandingLine` (en `StartQuestNode`: «Mientras está en curso») | `QuestChainEntry.dlgInProgress` de `NPCQuestConfig` |
 | Ocultar el HUD | `PlayerHUDV2.HideHUD(quien)`/`ShowHUD(quien)` (cada sistema con su clave) | contar ocultados a mano |
 | Ocultar el minimapa | MinimapController.Ocultar(quien)/Mostrar(quien) (cada sistema con su clave; HoldToSkipUI lo oculta mientras se ve el icono de saltar) | un bool compartido entre sistemas; SetActive del minimapa a mano |
+| Tapar lo que hay en pantalla durante una cinemática (HUD, minimapa, hora) | `IOcultableDuranteCinematica` + el registro `OcultablesDeCinematica`: el sistema se apunta en su `Awake` y se esconde con su clave | llamar al HUD y al minimapa a mano desde la cinemática |
 | Seguir a un NPC (escolta jugable) | `GuiarJugadorNode` (tope de velocidad con `TopeDeVelocidadDelJugador`, charla por el camino con `CharlaEnBocadillos`) | escoltas de `NPCInteractiveNarrativeExecutor` |
 | Iconos sobre la cabeza | `NPCAlertIconController` (quests vía `NarrativeActor`) | `NPCQuestIconManager`, `NPCPersistentIconController` |
-| Texto | `SpeechBubbleUI` (cinemática, auto; bocadillo o subtítulo mediante `SayBeat.presentacion` / `SequenceDefinition.presentacionDeTexto`; bandas con `BandasDeCineBeat`) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
+| Texto | `PresentadorDeLinea` (el camino único de las frases de cinemática: traduce, elige el estilo, enseña el bocadillo y suelta la voz) sobre `SpeechBubbleUI` (bocadillo o subtítulo según `SayBeat.presentacion` / `SequenceDefinition.presentacionDeTexto`; bandas con `BandasDeCineBeat`) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
 | Tiempo (`timeScale`) | `TimeScaleArbiterService` | escribir `Time.timeScale` directamente |
 | Botones de combate del jugador (X, LB…) | `PlayerCombatInput` | leer botones de magia en cada sistema; reflexión en `vThirdPersonInput` |
 | Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`) | leer B en otro sitio; bloquear daño con `if` en cada IA |

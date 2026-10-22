@@ -178,7 +178,7 @@ public struct ShotSolution
 /// ── Por qué existe ────────────────────────────────────────────────────────────────────────────
 /// Un plano colocado a mano guarda una posición del mundo, que es información sobre el mapa y
 /// caduca: el jugador llega por otro sitio, un NPC deriva medio metro, el terreno se remodela, y
-/// el plano ya no encuadra lo que encuadraba. StarAwakeningSequencer ya se topó con esto y lo
+/// el plano ya no encuadra lo que encuadraba. La secuencia del Despertar ya se topó con esto y lo
 /// resolvió a su manera (AlignSequenceRigToWill: mover el molde entero de planos hasta la posición
 /// real de Will). Aquello iba en la dirección correcta, pero se queda corto en tres cosas: ancla a
 /// un solo actor (si el otro se mueve, el two-shot deja de encuadrarlo), es código suelto de esa

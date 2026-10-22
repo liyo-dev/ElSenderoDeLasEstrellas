@@ -357,40 +357,40 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 1.8000001
-      emocion: 6
+      emocion: pensativo
       dura: 3.6000001
     - t: 21.408487
-      emocion: 4
+      emocion: sorpresa
       dura: 3.2
     - t: 30.948078
-      emocion: 13
+      emocion: ilusionado
       dura: 3.6000001
     - t: 36.969303
-      emocion: 4
+      emocion: sorpresa
       dura: 6.1730614
     - t: 50.12171
-      emocion: 6
+      emocion: pensativo
       dura: 3.9
     - t: 64.272934
-      emocion: 6
+      emocion: pensativo
       dura: 0
     - t: 93.431725
-      emocion: 6
+      emocion: pensativo
       dura: 3.6000001
     - t: 101.51662
-      emocion: 10
+      emocion: decidido
       dura: 3.4563267
     - t: 119.68881
-      emocion: 6
+      emocion: pensativo
       dura: 2.9
     - t: 144.55067
-      emocion: 9
+      emocion: preocupado
       dura: 6.8
     - t: 170.43127
-      emocion: 6
+      emocion: pensativo
       dura: 2.9
     - t: 180.79413
-      emocion: 10
+      emocion: decidido
       dura: 2.9
     visible: []
     deslizando:
@@ -868,70 +868,70 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 17.568487
-      emocion: 2
+      emocion: triste
       dura: 4.24
     - t: 24.208487
-      emocion: 8
+      emocion: picaro
       dura: 7.1395917
     - t: 34.14808
-      emocion: 1
+      emocion: alegre
       dura: 3.2212245
     - t: 42.742363
-      emocion: 8
+      emocion: picaro
       dura: 4.0832653
     - t: 53.62171
-      emocion: 6
+      emocion: pensativo
       dura: 6.564898
     - t: 59.93661
-      emocion: 6
+      emocion: pensativo
       dura: 4.7363267
     - t: 64.672935
-      emocion: 2
+      emocion: triste
       dura: 7.6881633
     - t: 71.9611
-      emocion: 2
+      emocion: triste
       dura: 7.374694
     - t: 78.93579
-      emocion: 2
+      emocion: triste
       dura: 4.4228573
     - t: 82.95865
-      emocion: 2
+      emocion: triste
       dura: 6.1730614
     - t: 89.531715
-      emocion: 2
+      emocion: triste
       dura: 3.2
     - t: 96.63172
-      emocion: 8
+      emocion: picaro
       dura: 5.2848983
     - t: 109.26412
-      emocion: 6
+      emocion: pensativo
       dura: 7.374694
     - t: 116.238815
-      emocion: 2
+      emocion: triste
       dura: 3.6000001
     - t: 122.18881
-      emocion: 6
+      emocion: pensativo
       dura: 3.2
     - t: 134.74646
-      emocion: 0
+      emocion: neutral
       dura: 6.4081635
     - t: 150.95067
-      emocion: 0
+      emocion: neutral
       dura: 8.262857
     - t: 158.96352
-      emocion: 6
+      emocion: pensativo
       dura: 5.2065306
     - t: 163.77005
-      emocion: 8
+      emocion: picaro
       dura: 7.0612245
     - t: 172.93127
-      emocion: 8
+      emocion: picaro
       dura: 8.262857
     - t: 183.29413
-      emocion: 0
+      emocion: neutral
       dura: 5.2065306
     - t: 188.25066
-      emocion: 1
+      emocion: alegre
       dura: 4.2
     visible:
     - desde: 0
@@ -3107,6 +3107,7 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
+        escala: 1
     - rid: 5630202422490562826
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -3119,6 +3120,7 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
+        escala: 1
     - rid: 5630202422490562827
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -3131,6 +3133,7 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 1
         registrarComo: 
+        escala: 1
     - rid: 5630202422490562828
       type: {class: GestureBeat, ns: , asm: Assembly-CSharp}
       data:
@@ -3153,6 +3156,7 @@ MonoBehaviour:
         earlyDespawn: 0
         seguirAlActor: 0
         registrarComo: 
+        escala: 1
     - rid: 5630202422490562830
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:

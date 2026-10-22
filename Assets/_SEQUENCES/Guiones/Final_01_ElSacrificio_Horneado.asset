@@ -172,28 +172,28 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 4.3
-      emocion: 10
+      emocion: decidido
       dura: 3.4
     - t: 17.65204
-      emocion: 1
+      emocion: alegre
       dura: 5.2000003
     - t: 28.750286
-      emocion: 10
+      emocion: decidido
       dura: 6.0685716
     - t: 34.768856
-      emocion: 10
+      emocion: decidido
       dura: 7.897143
     - t: 43.892666
-      emocion: 10
+      emocion: decidido
       dura: 7.8187757
     - t: 51.71144
-      emocion: 3
+      emocion: enfado
       dura: 4.2138777
     - t: 130.39018
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 148.80534
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible:
     - desde: 0
@@ -348,43 +348,43 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 0
-      emocion: 5
+      emocion: miedo
       dura: 0
     - t: 0.4
-      emocion: 5
+      emocion: miedo
       dura: 3.9
     - t: 7.7000003
-      emocion: 2
+      emocion: triste
       dura: 5.102041
     - t: 12.752041
-      emocion: 2
+      emocion: triste
       dura: 4.9
     - t: 23.052042
-      emocion: 3
+      emocion: enfado
       dura: 0
     - t: 24.342709
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 63.391987
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 72.0075
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 83.25975
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 91.491585
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 108.108734
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 129.99019
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 136.91307
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible: []
     deslizando: []
@@ -522,25 +522,25 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 59.991985
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 68.807495
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 78.85975
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 83.25975
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 126.29019
-      emocion: 2
+      emocion: triste
       dura: 0
     - t: 129.99019
-      emocion: 4
+      emocion: sorpresa
       dura: 0
     - t: 140.54657
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible:
     - desde: 0
@@ -574,13 +574,13 @@ MonoBehaviour:
       congelar: 0
     caras:
     - t: 87.89159
-      emocion: 0
+      emocion: neutral
       dura: 0
     - t: 94.69159
-      emocion: 1
+      emocion: alegre
       dura: 0
     - t: 111.30874
-      emocion: 1
+      emocion: alegre
       dura: 0
     visible:
     - desde: 83.25975
@@ -3043,6 +3043,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119610
@@ -3056,6 +3057,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119611
@@ -3088,6 +3090,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119615
@@ -3123,6 +3126,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119619
@@ -3211,6 +3215,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119629
@@ -3287,6 +3292,7 @@ MonoBehaviour:
         duracion: 1.8
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119639
@@ -3348,6 +3354,7 @@ MonoBehaviour:
         duracion: 1.6
         ranura: 0
         sonido: SFX_Prologo_CutIn
+        volumen: 1
         mostrar: 1
         esperar: 0
     - rid: 5630202542015119648

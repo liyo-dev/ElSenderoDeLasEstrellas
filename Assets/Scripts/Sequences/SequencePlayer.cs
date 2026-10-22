@@ -473,9 +473,6 @@ public class SequencePlayer : CinematicSequencerBase
     /// El telón lo suelta el propio bucle de beats, en el primer plano. Ver Co_Play.
     protected override bool SueltaElTelonEnSuPrimerPlano => true;
 
-    private static bool EsDeCamara(SequenceBeat beat)
-        => beat is ShotBeat;
-
     /// Deja montada, con la pantalla cubierta, la primera fase de la secuencia: es la única que
     /// se sabe con certeza que va a correr en el cut point (las demás pueden depender de marcas
     /// que todavía no existen). El guion horneado aprovecha para colocar a los actores y ponerles
@@ -503,28 +500,10 @@ public class SequencePlayer : CinematicSequencerBase
     /// Beats que solo colocan: son instantáneos y no se ve nada de lo que hacen hasta que haya un
     /// plano. Con el telón cerrado se ejecutan a oscuras. Cualquier otro beat destapa antes de
     /// correr — si hay duda, mejor destapar que dejar la pantalla negra mientras pasan cosas.
-    private static bool EsPreparacion(SequenceBeat beat)
-    {
-        switch (beat)
-        {
-            case PlaceAtMarkBeat _:
-            case SetActionAxisBeat _:
-            case SetPropActiveBeat _:
-            case EmotionBeat _:
-            case SetFlagBeat _:
-            case MusicBeat _:
-            case PoseBeat _:
-                return true;
-            case PropMoveBeat m:
-                return m.segundos <= 0.001f || !m.esperar;
-            case FaceBeat f:
-                return f.turnDuration <= 0.001f;
-            case TimeOfDayBeat h:
-                return !h.waitForTransition;
-            default:
-                return false;
-        }
-    }
+    ///
+    /// Lo declara el propio beat (SequenceBeat.SoloColoca), no el reproductor: así el reproductor
+    /// no necesita saber qué tipos de beat existen.
+    private static bool EsPreparacion(SequenceBeat beat) => beat != null && beat.SoloColoca;
 
     protected override IEnumerator Co_Sequence()
     {
@@ -697,7 +676,7 @@ public class SequencePlayer : CinematicSequencerBase
                 // de entrada, con el Mago Oscuro todavía en mitad de la plaza y la carreta sin volcar.
                 if (Telon.Retiene(ClaveTelon) && !EsPreparacion(beat))
                 {
-                    if (EsDeCamara(beat))
+                    if (beat.EsPlano)
                     {
                         // Se deja aplicar el corte un fotograma y entonces se destapa: la pantalla
                         // se abre ya encuadrada. Si el plano tiene movimiento, se ve moverse.
@@ -786,14 +765,14 @@ public class SequencePlayer : CinematicSequencerBase
     {
         var driver = ActiveCamera;
 
-        // Secuencia hecha con guion: el plano de apertura es el primer plano del guion.
+        // El primer beat puede saber colocarse la cámara de apertura él mismo (el guion horneado
+        // la compone con su primer plano). Lo declara el propio beat, para que el reproductor no
+        // tenga que reconocer tipos.
         if (_definition != null && _definition.phases != null && _definition.phases.Count > 0
-            && _definition.phases[0].beats != null && _definition.phases[0].beats.Count > 0
-            && _definition.phases[0].beats[0] is GuionBeat gb && gb.guion != null)
+            && _definition.phases[0].beats != null && _definition.phases[0].beats.Count > 0)
         {
-            if (driver != null && gb.guion.PoseDeCamara(gb.Inicio, out var pos, out var rot, out var fov))
-                driver.Cut(pos, rot, fov);
-            return;
+            var primero = _definition.phases[0].beats[0];
+            if (primero != null && primero.ColocarCamaraDeApertura(this)) return;
         }
 
         var framing = _definition != null ? _definition.openingShot : null;
@@ -851,6 +830,9 @@ public class SequencePlayer : CinematicSequencerBase
         RunPendingCleanups();
         SpeechBubbleUI.Instance?.Hide();
         Time.timeScale = 1f;
+        // Si el guion se cerró sin soltar la cámara (una excepción a mitad), el driver se la
+        // queda cedida y la cámara de juego no vuelve nunca.
+        ActiveCamera?.DevolverElControl();
         if (_stage != null) _stage.CleanupModules();
         CinematicTimeOfDay.Restore();
 
