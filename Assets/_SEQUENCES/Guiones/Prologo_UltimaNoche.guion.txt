@@ -100,9 +100,6 @@ mira_k1          5993.4 5999.2
 mira_k2          5994.9 5998.4
 # Cámara de la Vecina: al noroeste de ella (ella mira al maestro, que está al norte).
 cam_v02         6002.4 6001.4
-# La esquina de la Vecina (v07), al oeste de la plaza: lejos de las marcas del vecino (k1-k5).
-v07_a           5991.5 6004.0
-v07_b           5993.0 6005.5
 k6               5998.0 6000.2
 # El duelo
 duelo_a          6004.4 5999.8
@@ -127,10 +124,11 @@ PISTAS
 # Mañana: el pueblo ya está vivo cuando llega el Archimago.
 v01 0  en k1 mirando k2
 v01 +0.6 pasea por k2, k3, k4, k1 ritmo=trote pausa=0.4
-# La Vecina (v07) tiene su propia esquina, al oeste: antes paseaba por las mismas marcas que
-# el vecino (k1-k5) y se cruzaban con él 13 veces, y se veían superpuestos al fondo.
-v07 0  en v07_a mirando v07_b
-v07 +1.6 pasea por v07_b, v07_a, v07_b ritmo=paseo pausa=0.8
+# La Vecina (v07) tiene su propia esquina en el centro de la plaza (k6 y centro_plaza): antes
+# paseaba por las mismas marcas que el vecino (k1-k5) y se cruzaban con él 13 veces, y se veían
+# superpuestos al fondo del plano de la carreta.
+v07 0  en k6 mirando centro_plaza
+v07 +1.6 pasea por centro_plaza, k6, centro_plaza, k6 ritmo=paseo pausa=0.8
 v10 0  en v10_lena mirando horno
 v10 0  bucle Opening01_Loop
 v02 0  en v02_horno mirando v10
@@ -161,7 +159,7 @@ v01 @saludo_fin+1.4  pasea por k4, k1, k5, k1 ritmo=trote pausa=0.8
 v02 @saludo        anda a v02_saluda ritmo=trote llega_mirando=archimago
 v02 @saludo_fin+0.8 pasea por v02_horno ritmo=paseo pausa=1.4
 v07 @saludo+0.8    mira archimago
-v07 @saludo_fin+1.2  pasea por v07_a, v07_b, v07_a, v07_b ritmo=paseo pausa=0.8
+v07 @saludo_fin+1.2  pasea por k6, centro_plaza, k6, centro_plaza ritmo=paseo pausa=0.8
 # El carretero suelta la carreta cuando llega el maestro: se queda de pie junto a ella, mirando
 # las asas, y salta para intentar bajarla.
 v06 @carreta_magia mira carreta
@@ -174,8 +172,8 @@ v10 @globo_sube+0.7 mira cielo_globo
 v02 @globo_sube+0.8 mira cielo_globo
 v01 @globo_sube    anda a mira_k1 ritmo=trote llega_mirando=cielo_globo
 v07 @globo_sube+0.3 anda a mira_k2 ritmo=trote llega_mirando=cielo_globo
-v01 @globo_fin+1.5 pasea por k1, k6, k2, k5 ritmo=trote pausa=0.5
-v07 @globo_fin+2.4 pasea por v07_a, v07_b, v07_a ritmo=paseo pausa=0.9
+v01 @globo_fin+1.5 pasea por k1, k2, k3, k4 ritmo=trote pausa=0.5
+v07 @globo_fin+2.4 pasea por mira_k2, k6, centro_plaza ritmo=paseo pausa=0.9
 archimago @globo_sube+3.2 gesto Laugh01
 v03 @globo_fin     charla con v08 cada=3.0
 v08 @globo_fin+0.5 charla con v03 cada=3.0
@@ -188,7 +186,7 @@ v06 +0.2           bucle Opening01_Loop
 # El cielo cambia: todos paran y miran al oeste.
 v01 @cielo+0.3  reposo
 v01 @cielo+0.3  anda a junto_v02 ritmo=trote llega_mirando=oeste
-v07 @cielo+0.5  anda a v07_a ritmo=trote llega_mirando=oeste
+v07 @cielo+0.5  anda a k6 ritmo=trote llega_mirando=oeste
 v02 @cielo+0.4  reposo
 v02 @cielo+0.5  gesto SenseSomethingStart_NoWeapon
 v02 @cielo+0.6  mira oeste
