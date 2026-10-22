@@ -296,7 +296,6 @@ archimago gesto MagicRight
 +0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=2.6 periodo=1.4 escalaInicial=0.6 escalaFinal=1.3
 # El remolino debajo de la carreta: es lo que la levanta.
 +0.4 vfx "Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab" en=carreta offset=0,0.2,0 lifetime=2.8
-+0.5 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=PROP_Carreta offset=0,0.5,0 lifetime=2.6 escala=0.12
 +0.6 efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=0,1.5,0 segundos=1.4 desdeDondeEstaba=true esperar=false
 espera 1.6
 efecto PropMoveBeat propId=PROP_Carreta segundos=0.9 desdeDondeEstaba=true apoyarEnElSuelo=true esperar=false
@@ -320,7 +319,6 @@ archimago bucle CastingIdle01
 && archimago dice PROLOGO_MANANA_GLOBO_OK cara=decidido
 +0.4 sonido Prologo_MagiaLevitar en=archimago
 +0.4 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=2.2 periodo=1.2 escalaInicial=0.6 escalaFinal=1.1
-+0.9 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=PROP_Globo lifetime=2.0 seguirAlActor=true
 +1.1 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=PROP_Globo lifetime=1.8
 @globo_sube
 efecto PropMoveBeat propId=PROP_Globo deltaPosicion=2,22,1 segundos=8 esperar=false
@@ -477,7 +475,7 @@ archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
 # El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
 plano dos archimago mago lente=36 mano=0.25
 mago gesto MagicRight
-+0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
 +0.3 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
 +0.3 archimago gesto Defend_NoWeapon
 +0.8 sonido Prologo_EscudoBloquea en=archimago
@@ -486,8 +484,7 @@ mago gesto MagicRight
 espera 1.4
 plano hombro mago archimago mano=0.25
 archimago gesto MagicLeft
-+0.2 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.15,0 lifetime=1.4 escala=0.14
-+0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
 +0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
 +0.85 mago gesto TakeDamage
 espera 1.8
@@ -654,7 +651,6 @@ efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
-+0.3 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" en=archimago offset=0,1.15,0 lifetime=1.8 escala=0.12
 +0.5 sonido Prologo_ProteccionAbsoluta en=archimago volume=0.95
 +0.5 sacudida 0.45 2.0
 +0.5 efecto FusionDeHechizosBeat efectoARegistrado=CARGA_ESFERA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,1.1,0 duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.2 eventKeySubida=SFX_Prologo_LuchaFinal eventKeyExplosion=SFX_Prologo_ExplosionFinal esperar=false
