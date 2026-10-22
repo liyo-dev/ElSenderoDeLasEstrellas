@@ -66,7 +66,7 @@ mira_v08         6002.3 6000.5
 centro_plaza     6001.5 6000.5
 cam_calle        6003.6 5999.3
 # Camara del globo: al noroeste, que es donde mira el grupo al ballon.
-cam_globo        5998.8 6004.4
+cam_globo        6007.5 5995.5
 # Cámara del conjuro: al oeste del maestro, a un lado. Así se le ve la cara de tres cuartos
 # y la carreta queda a la derecha, sin taparle.
 cam_magia        6011.7 5997.8
@@ -608,9 +608,9 @@ efecto LineasDeConcentracionBeat mostrar=true
 # Silencio íntimo antes del estallido: se despide de Liora en voz baja.
 plano primer archimago lado=der suave=0.3
 efecto LineasDeConcentracionBeat mostrar=false
-archimago gesto ApretonDeManos_A
 # La despedida se dice en voz baja: la estrofa se apaga y solo queda el lecho.
 ambiente ESTROFA sonar=false fundido=0.5
+archimago gesto ApretonDeManos_A
 && archimago dice PROLOGO_PLEGARIA_06 cara=triste
 espera 0.35
 

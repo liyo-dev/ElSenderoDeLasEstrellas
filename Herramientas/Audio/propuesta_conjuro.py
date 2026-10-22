@@ -264,6 +264,23 @@ def fundido(capa, t_inicio=None, dur_inicio=0.0, t_fin=None, dur_fin=0.0):
     capa.muestras = x
 
 
+def fundir_desde(capa, t_ini, duracion):
+    """Apaga la capa desde el instante t_ini (como el fundido de StopLoopingSFX)."""
+    x = capa.muestras
+    if x.ndim == 1:
+        x = x[:, None]
+    i = int((t_ini - capa.t0) * SR)
+    if i < 0:
+        i = 0
+    if i >= len(x):
+        return
+    n = min(int(duracion * SR), len(x) - i)
+    if n <= 1:
+        return
+    x[i:i + n] *= np.linspace(1.0, 0.0, n)[:, None]
+    capa.muestras = x
+
+
 def escribir_mp3(ruta, x):
     base = os.path.splitext(ruta)[0]
     wav = base + ".wav"
@@ -460,30 +477,33 @@ def main():
         fundido(tema, t_fin=corte, dur_fin=0.8)
         capas.append(tema)
         cola = musica if desde_cabeza else musica[hasta_corte:]
-        capas.append(Capa("tema del duelo (vuelve)", "musica", cola, vuelve, 1.0))
+        vuelve_capa = Capa("tema del duelo (vuelve)", "musica", cola, vuelve, 1.0)
+        fundido(vuelve_capa, t_inicio=vuelve, dur_inicio=0.5)
+        capas.append(vuelve_capa)
 
         # Lecho ritual: el cántico sostiene el conjuro (exento de ducking).
         lecho = claves.get("Prologue_CoraCanto")
         if lecho:
             muestras = decodificar(lecho, SR, mono=False)
-            muestras = muestras[:int((tl["grito"][0] + 0.3 - corte) * SR)]
+            muestras = muestras[:int((tl["respiro"] + 0.3 - corte) * SR)]
             capa = Capa("lecho del cántico", "ritual", muestras, corte, 0.75)
-            fundido(capa, t_fin=tl["grito"][0], dur_fin=0.3)
+            fundir_desde(capa, tl["respiro"], 0.3)
             capas.append(capa)
         estrofa = claves.get("Prologue_EstrofaCanto")
         if estrofa:
             muestras = decodificar(estrofa, SR, mono=False)
             capa = Capa("estrofa", "ritual", muestras, tl["p05"][0], 0.75)
             # La estrofa se apaga en la despedida ("Perdóname, Liora").
-            fundido(capa, t_fin=tl["p06"][0] + 0.5, dur_fin=0.5)
+            fundir_desde(capa, tl["p06"][0], 0.5)
             capas.append(capa)
         coro = claves.get("SFX_Prologo_CoroBucle")
         if coro:
             muestras = decodificar(coro, SR, mono=False)
-            largo = int((tl["grito"][0] + 0.3 - corte) * SR)
+            largo = int((tl["respiro"] + 0.3 - corte) * SR)
             repetido = np.tile(muestras, (int(largo / len(muestras)) + 1, 1))[:largo]
             capa = Capa("coro", "sfx", repetido, corte, 0.14)
-            fundido(capa, t_fin=tl["grito"][0], dur_fin=0.3)
+            # El coro se apaga con el duelo de miradas.
+            fundir_desde(capa, tl["grito_mix"], 1.5)
             capas.append(capa)
         for clave, t in (("Prologue_GolpeFinal", vuelve),
                          ("Prologue_GolpeFinalCola", tl["estallido"])):
