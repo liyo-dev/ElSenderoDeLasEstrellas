@@ -497,6 +497,10 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: 0ba4e6cc6b6573a4d97ac1c6ec57b8ec, type: 3}
     fadeIn: 2
     fadeOut: 3
+  - sequenceId: THE_FINAL_BELL
+    music: {fileID: 8300000, guid: 2e2f03db1776c5845b36585f2d17fa76, type: 3}
+    fadeIn: 1.5
+    fadeOut: 2.5
   - sequenceId: AWAKEN
     music: {fileID: 8300000, guid: 6225624124611d3409894d8c340a342b, type: 3}
     fadeIn: 1

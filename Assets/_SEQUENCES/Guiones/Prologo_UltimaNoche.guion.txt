@@ -1,4 +1,4 @@
-# ═══════════════════════════════════════════════════════════════════════════════════════════
+﻿# ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
 #  Guion de rodaje. Se hornea con «El Sendero → Guion → 2. Hornear el guion del prólogo».
 #  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
@@ -619,8 +619,9 @@ efecto MezclaBeat fuente=plegaria quitar=true fundido=0.3
 efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
 # El coro se apaga con el duelo de miradas: la despedida se queda sola.
 ambiente CORO sonar=false fundido=1.5
-cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0 volumen=0.5
-& sonido Prologo_Carga volume=0.4
+# El Mago Oscuro no habla aquí: su voz no se oye en el conjuro.
+# cutin mago encuadre=Cara lado=Derecha alturaEnPantalla=0.58 duracion=1.8 ranura=0 sonido=SFX_Prologo_CutIn dura=1.0 volumen=0.5
+# & sonido Prologo_Carga volume=0.4
 & efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
 cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1 volumen=0.5
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
@@ -630,9 +631,11 @@ ambiente CORA sonar=false fundido=0.3
 @hechizo
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=1.4 altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle CastingIdle01
-# El tema del duelo vuelve con el grito, donde se había quedado.
-musica MAGOOSCURO_CLIMAX
-# El grito va con la voz épica (el eco largo del conjuro) y la música a tope.
+# La música se para en seco: empieza el conjuro en silencio.
+silencio 0.3
+# El Archimago dice su línea de Liora/Nina, y arranca el tema del conjuro.
+musica THE_FINAL_BELL
+# El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=0
 efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
