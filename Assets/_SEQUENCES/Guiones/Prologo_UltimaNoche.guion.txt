@@ -424,7 +424,7 @@ espera 1.6
 archimago mira liora
 liora anda a liora_puente ritmo=prisa llega_mirando=archimago sin_esperar
 plano dos archimago liora
-liora dice PROLOGO_DESPEDIDA_LIORA_2 cara=miedo
+plano hombro archimago liora
 archimago dice PROLOGO_DESPEDIDA_ARCHIMAGO gesto=HeadNod01 cara=decidido
 plano hombro liora archimago
 liora dice PROLOGO_DESPEDIDA_LIORA cara=triste
