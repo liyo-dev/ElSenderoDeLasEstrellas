@@ -78,6 +78,7 @@ Puedes hacer Play desde cualquier escena (MainWorld, Woods, etc.) sin configurac
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
 - `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` — valida que quests/eventos no estén referenciados a la vez por el grafo y por el sistema legacy (ver § 10 — Política formal: convivencia Interactive ↔ Grafo narrativo)
+- `El Sendero/Personajes/Animaciones/…` — audita, corrige, aplica y revierte las animaciones humanoides que atraviesan cabeza o torso (INC-816; ver § 3)
 
 ### Presets de testing vs partida guardada
 
@@ -224,6 +225,18 @@ Los gestos sociales y corporales de conversación de NPCSimpleAnimator entran co
 **El Sendero/Archivo/Animación/Aplicar mejora de personajes INC-571** prepara NPC_NoWeapon e Invector@BasicLocomotion mediante AnimatorController/AssetDatabase: convierte únicamente transiciones sociales o idle de duración cero con destino explícito social/idle/UpperIdle/Free Locomotion a 0,20 s fijos. Conserva condiciones, exit time, AnyState, salidas sin destino, máscaras y transiciones de combate. Añade `VariacionIdle` (float, defecto 1) como multiplicador de velocidad solo en Idle_Normal_NoWeapon e Idle02/03 disponibles, sin pisar otros parámetros de velocidad activos. NPCSimpleAnimator asigna en Awake un factor individual entre 0,95 y 1,05; `variacionVelocidadIdle` permite reducirlo o desactivarlo. No cambia Animator.speed global ni el blend tree Free Locomotion, que mezcla idle y caminar: variar este árbol entero también alteraría la marcha y requiere otro diseño. El jugador sin NPCSimpleAnimator conserva factor 1.
 
 El mismo menú corrige en prefabs editables las listas de variantes que no contienen ningún estado válido en la capa base, usando los Idle02/03 que realmente existan. Respeta listas con variantes válidas y los interruptores individuales. Es idempotente y guarda con PrefabUtility; ejecutar tras importar los scripts. Pendiente de probar visualmente gestos, vuelta a conversación, poses encadenadas, idles, pausa y combate. Los cambios generales de UpperBody, clips nuevos y encadenados con tiempos narrativos se proponen para una revisión visual posterior.
+
+### Corrección de animaciones humanoides (INC-816)
+
+Los packs de animación (Kevin Iglesias, RPG Tiny Hero Duo, Mixamo) están autorados para proporciones humanas, pero los personajes del juego son chibi: la cabeza y la melena son mucho mayores que el esqueleto del pack. En poses de brazos cruzados, plegaria, aplauso, saludo, magia o incorporación tras una caída, el antebrazo o la mano atravesaban la cabeza o el torso. No se tocan los FBX originales: se hornea una copia `<nombre>_corregida.anim` en `Assets/Art/Animations/Corregidas/`, que conserva el nombre del clip original (para que las búsquedas por nombre sigan funcionando), y los controllers pasan a referenciar la copia.
+
+Herramientas en *El Sendero ▸ Personajes ▸ Animaciones*:
+
+- **Auditor** (`AuditorDeAnimaciones`): mide la pose real sobre Eldran, Will, Liam y Estela. La cabeza se aproxima con un elipsoide construido con las mallas de cabeza y pelo (sin sombreros, cintas ni gorros) y el torso con una cápsula. *Auditar todas* recorre el catálogo y *Auditar solo las usadas* los cuatro controllers; escribe `docs/auditoria-animaciones.md` y su `.csv`.
+- **Corrector** (`CorrectorDeAnimaciones`): en cada frame con penetración calcula un Jacobiano numérico de la mano y el codo respecto a los músculos de hombro, brazo y antebrazo del lado afectado, resuelve por mínimos cuadrados con amortiguación, dilata y suaviza el delta conservando su signo y hornea curvas de músculo (`HumanTrait.MuscleName`) en la copia. El resultado queda en `ManifestDeCorrecciones` (original, copia, antes/después, uso y estado).
+- **Aplicar / Revertir**: sustituye las referencias en `NPC_NoWeapon`, `Invector@BasicLocomotion`, `ArrowsCTRL` y `BowsCTRL`, o las devuelve a los originales.
+
+Criterios: umbral de cabeza 0,5 cm y de torso 2 cm; el cuello ≥55° se informa pero no se corrige (la medida mezcla giro y esfuerzo). La tanda de octubre de 2026 dejó 1063 clips auditados, 75 copias, 32 referencias en 4 controllers y los 132 clips humanoides usados sin penetraciones; las dos volteretas sin usar (`HumanM@Roll01` y `[RM]`) quedan en 2,3 cm (antes 17,6 cm). Informes: `docs/auditoria-animaciones-completa.md`, `docs/auditoria-animaciones-usadas.md` y `docs/correccion-animaciones.md`.
 
 ### Configuración vía ScriptableObjects
 

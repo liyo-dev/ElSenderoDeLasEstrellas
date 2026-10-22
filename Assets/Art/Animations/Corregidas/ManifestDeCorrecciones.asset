@@ -1,0 +1,991 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ad999d9772f72f41bf1f7879bf858c5, type: 3}
+  m_Name: ManifestDeCorrecciones
+  m_EditorClassIdentifier: Assembly-CSharp-Editor::ManifestDeCorrecciones
+  fecha: 2026-10-22 09:10
+  entradas:
+  - original: {fileID: 3094330708855449807, guid: e8e308d98a0a6d140a39520fb42e1d59, type: 3}
+    corregida: {fileID: 7400000, guid: 80c47618e492dc74c94018002936b9b8, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Emotions/HumanM@Pain01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Pain01_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / Base Layer / Pain01 | Invector@BasicLocomotion / Base Layer / Pain01
+    rig: _ESTELA
+    cabezaAntes: 0.0030139515
+    cabezaDespues: 0
+    torsoAntes: 0.036668688
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: eacc54d9d8365904d94158fc710abf73, type: 3}
+    corregida: {fileID: 7400000, guid: 405196195623f62429df3b01aef3d43c, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/HumanM@Knockdown01 - StandUp.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Knockdown01 - StandUp_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / Base Layer / Knockdown01_StandUp | Invector@BasicLocomotion / Base Layer / Knockdown01_StandUp | ArrowsCTRL / Base Layer / Knockdown01_StandUp | BowsCTRL / Base Layer / Knockdown01_StandUp
+    rig: Eldran
+    cabezaAntes: 0.14134859
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 7400012, guid: 13d2640367521314591db34597e3f5d6, type: 3}
+    corregida: {fileID: 7400000, guid: c3075c7e3bcd4fc4ab01035fa5a2fd53, type: 2}
+    rutaOriginal: Assets/Plugins/Invector-3rdPersonController_LITE/3D Models/Animations/Basic_StrafeMoveset.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/RunForwardRight_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / Base Layer / Strafing Movement | Invector@BasicLocomotion / Base Layer / Strafing Movement
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.047037482
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 4e96c7df0f905f046a8cfe9d7a6a4093, type: 3}
+    corregida: {fileID: 7400000, guid: f8c4aed7094894749b441efe105f7edc, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Conversation/HumanM@HandWave02.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@HandWave02_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / HandWave02 | Invector@BasicLocomotion / UpperBody / HandWave02
+    rig: Eldran
+    cabezaAntes: 0.060737964
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 752e273b7999f7e4eaa4390978480df9, type: 3}
+    corregida: {fileID: 7400000, guid: 7b44b3048a8a8f74587ec05941962417, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Emotions/HumanM@Angry01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Angry01_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / Angry01 | Invector@BasicLocomotion / UpperBody / Angry01
+    rig: Eldran
+    cabezaAntes: 0.03487646
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: -1642266488065989393, guid: c3bf33eff3342714987135f7f91f89ca, type: 3}
+    corregida: {fileID: 7400000, guid: 7be92f70b9d405f44904500ebc17dd6e, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Conversation/HumanM@Beg01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Beg01_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / Beg01 | Invector@BasicLocomotion / UpperBody / Beg01
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.04562816
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 3896161f581ae2142b00aace91cc37ed, type: 3}
+    corregida: {fileID: 7400000, guid: f7cd738d0b226f4419ea8e96fb9d5c2b, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Emotions/HumanM@Cheer01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Cheer01_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / Cheer01 | Invector@BasicLocomotion / UpperBody / Cheer01
+    rig: Eldran
+    cabezaAntes: 0.11139536
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: feb6672689596ad4aa6979829abc6679, type: 3}
+    corregida: {fileID: 7400000, guid: fb0f5c999f13af8448fdbfea3c28531f, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Emotions/HumanM@Cheer02.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Cheer02_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / Cheer02 | Invector@BasicLocomotion / UpperBody / Cheer02
+    rig: Eldran
+    cabezaAntes: 0.111539416
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: fd3c4482d0a246e4d8b14696506e7dd2, type: 3}
+    corregida: {fileID: 7400000, guid: cc6ca0950f669db40b426695cddc786c, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Conversation/HumanM@HandClap01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@HandClap01_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / HandClap01 | Invector@BasicLocomotion / UpperBody / HandClap01
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.028707102
+    torsoDespues: 0.003513649
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: -4580781190854103279, guid: f7ad096b36b576144911e27cc9e58724, type: 3}
+    corregida: {fileID: 7400000, guid: 09da26ceddc527446b0801416c51740e, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Social/Conversation/HumanM@Beg01 - Loop.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Beg01 - Loop_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / Beg01_Loop | Invector@BasicLocomotion / UpperBody / Beg01_Loop
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.042564645
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 48740288977d86d4b8adad7dd6194798, type: 3}
+    corregida: {fileID: 7400000, guid: a0ec5a39602dacc4a8512885983aa818, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanM@MagicAttackOmni01 - Load.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackOmni01 - Load_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / MagicAttackOmni01_Load | Invector@BasicLocomotion / UpperBody / MagicAttackOmni01_Load
+    rig: Eldran
+    cabezaAntes: 0.09148249
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 87be09935c99d144e869e2f4db162593, type: 3}
+    corregida: {fileID: 7400000, guid: eb3a7ed89c31e09458fd69ca4cacf51a, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Directional/HumanM@MagicAttackDirect2H01 - Load.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackDirect2H01 - Load_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / HumanM@MagicAttackDirect2H01 - Load | Invector@BasicLocomotion / UpperBody / HumanM@MagicAttackDirect2H01 - Load
+    rig: Eldran
+    cabezaAntes: 0.1257664
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 39e2b573902399d4fbd58117e24ea1d2, type: 3}
+    corregida: {fileID: 7400000, guid: 4af684f5ef441c14faf085374ee61126, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanM@MagicAttackOmni01 - Cast.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackOmni01 - Cast_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / HumanM@MagicAttackOmni01 - Cast | Invector@BasicLocomotion / UpperBody / HumanM@MagicAttackOmni01 - Cast
+    rig: _ESTELA
+    cabezaAntes: 0.07760721
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: bc8cbcd09bf81b646b58bf68f9f55d95, type: 3}
+    corregida: {fileID: 7400000, guid: 4865f0a12fea42544b032d106f31cb92, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Directional/HumanM@MagicAttackDirect2H01 - Cast.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackDirect2H01 - Cast_corregida.anim
+    usado: 1
+    usos: NPC_NoWeapon / UpperBody / HumanM@MagicAttackDirect2H01 - Cast | Invector@BasicLocomotion / UpperBody / HumanM@MagicAttackDirect2H01 - Cast
+    rig: Eldran
+    cabezaAntes: 0.14032158
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 478630a679ca0fe47b5ac7f115969086, type: 3}
+    corregida: {fileID: 7400000, guid: 6a646dd71ff15d84d90eae734c66ed4b, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/Attack01_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Attack01_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.0326858
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: b9e421ece8412464dbc04308e708e50e, type: 3}
+    corregida: {fileID: 7400000, guid: b4355f1aef44537428c8afadffe68179, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/Attack02_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Attack02_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.042510197
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: becee167687032042aa26ca746db187b, type: 3}
+    corregida: {fileID: 7400000, guid: 24576736444739b44919f82b535c0c0f, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/Attack03_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Attack03_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.03266515
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 70bacc1ce117f1940b4cbb5d756af6c9, type: 3}
+    corregida: {fileID: 7400000, guid: 37c9df0294af5bb4ab85e2c5c9d1f733, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/InPlace/Combo01_InPlace_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo01_InPlace_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.0326858
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: ae49fce71aaeb6143866051a42aefa43, type: 3}
+    corregida: {fileID: 7400000, guid: 359ca6056bbd73c469de8b3647472e0c, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/InPlace/Combo02_InPlace_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo02_InPlace_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.032685816
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 85ad97f6c2b0cfe409ce141800b4df0d, type: 3}
+    corregida: {fileID: 7400000, guid: 67ae7f2e93c085644b7e376e2211b010, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/InPlace/Combo03_InPlace_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo03_InPlace_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.04251042
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 099b5c0e685fd7b4db1db9ac1a18ad41, type: 3}
+    corregida: {fileID: 7400000, guid: 1be99fd8ddfdc1842b04d961ee9982b7, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/InPlace/Combo05_InPlace_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo05_InPlace_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.03266515
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 32d1f75b9dfa59242972e92dbc9e2de9, type: 3}
+    corregida: {fileID: 7400000, guid: 0fe2a0c36ce6f4d4ca4cb2648f582a02, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/RootMotion/Combo01_RM_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo01_RM_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.0326858
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 084a8b14440c1a949b7eaf5e3a1aa365, type: 3}
+    corregida: {fileID: 7400000, guid: d9dfae350248da44ab1f41032abdf2b3, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/RootMotion/Combo02_RM_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo02_RM_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.032685786
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 05bff64dab1f6c84aaaca440defb50e6, type: 3}
+    corregida: {fileID: 7400000, guid: ec7dd6b68b6f1464687487868161ad4f, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/RootMotion/Combo03_RM_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo03_RM_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.042510405
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 320d51a2d2449e84f8765d4ba87d2dac, type: 3}
+    corregida: {fileID: 7400000, guid: be6b56bfcab4db8498e31c3e945d7410, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/BowAndArrow/RootMotion/Combo05_RM_BowAndArrow.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo05_RM_BowAndArrow_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.032665163
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: e668a0a042c711542a130cbc2301f880, type: 3}
+    corregida: {fileID: 7400000, guid: e9be76ae34b66054aa1164dfe74945f4, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/Attack01_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Attack01_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.07266429
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 805e637028a2fe748b4468482c855e71, type: 3}
+    corregida: {fileID: 7400000, guid: 8f5d7ed95bcd8754387a7a3bedf687fb, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/Attack02_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Attack02_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.0827758
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 35d58de7d6717124d9a416885ea4be19, type: 3}
+    corregida: {fileID: 7400000, guid: a674ec56309e0df4eae9879583620fc6, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/InPlace/Combo01_InPlace_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo01_InPlace_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.09012605
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 59d9baec827ec3b48b0f6ba00ce40a6a, type: 3}
+    corregida: {fileID: 7400000, guid: 70c1512de28434b4abec32d2dae7a1e9, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/InPlace/Combo02_InPlace_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo02_InPlace_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.088610455
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 6d4a73eec6cc05a4b8d8f041053e584b, type: 3}
+    corregida: {fileID: 7400000, guid: ef3cc5e6ad5d7c944b1d90347d26c1eb, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/InPlace/Combo03_InPlace_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo03_InPlace_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.08858581
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: c4fb05f4ab6339c4f8b65ce83a0133b4, type: 3}
+    corregida: {fileID: 7400000, guid: 77e7ad4ba5d9a6d46afafaaf91c795b0, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/InPlace/JumpFullSpin_InPlace_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/JumpFullSpin_InPlace_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.036466688
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 11a34cc21d2b8a34b9f3546b4e986c1d, type: 3}
+    corregida: {fileID: 7400000, guid: 796edf40c7edb99458125b1b20d2f5ec, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/RootMotion/Combo01_RM_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo01_RM_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.09012602
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 5f100ef1b5095cc459a09835f16d56c1, type: 3}
+    corregida: {fileID: 7400000, guid: f823c6f70d1f84a41b174db90367cc21, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/RootMotion/Combo02_RM_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo02_RM_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.088610396
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: a70ed562a14657e4aa46c160ff9cd1f2, type: 3}
+    corregida: {fileID: 7400000, guid: 6181b93fb5a00584ea2836953c56c113, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/RootMotion/Combo03_RM_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/Combo03_RM_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.08858581
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: 1b1d9c28ed4573343888ed7b04426e18, type: 3}
+    corregida: {fileID: 7400000, guid: 075dace6464d7924297354fe4d1d0537, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/RootMotion/JumpFullSpin_RM_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/JumpFullSpin_RM_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.036466658
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 1827226128182048838, guid: a7f68a396c8b1ec4ab92f7f7363c671e, type: 3}
+    corregida: {fileID: 7400000, guid: 8cd3b9329d0f63e498178e9a83830467, type: 2}
+    rutaOriginal: Assets/Art/Characters/RPG Tiny Hero Duo/Animation/TwoHandSword/SenseSomethingSearching_THS.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/SenseSomethingSearching_THS_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.020765588
+    torsoDespues: 0.006369829
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 358ba99f0aadce742a16b410af044e33, type: 3}
+    corregida: {fileID: 7400000, guid: a2ec434838bb44942bf50e42069e79a6, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/HumanF@Knockdown01 - StandUp.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Knockdown01 - StandUp_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.13383654
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 72b86c822a91b5c4da93cfdd8382c30e, type: 3}
+    corregida: {fileID: 7400000, guid: 1b27799e8625ab143bc29c8ad9fc5d0d, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Directional/HumanF@MagicAttackDirect2H01 - Cast.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackDirect2H01 - Cast_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.14927469
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: aee6e53bac94cf340afd69e71388de0c, type: 3}
+    corregida: {fileID: 7400000, guid: f83ced61899bb084faa5ff247d232bf4, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Directional/HumanF@MagicAttackDirect2H01 - Load.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackDirect2H01 - Load_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.12746203
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: afc0d7b05fc184d49a7e863d9eec0f9e, type: 3}
+    corregida: {fileID: 7400000, guid: e93d290c31fa7a445989a974539df9e0, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Directional/HumanF@MagicAttackDirect2H01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackDirect2H01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.14927433
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: f933ebfa1a6efc94fada1443b124ad3b, type: 3}
+    corregida: {fileID: 7400000, guid: f200f01fc15bec24282be7361eea74b1, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanF@MagicAttackOmni01 - Cast.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackOmni01 - Cast_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.08479986
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 6fdb1182b412d014e8f6c12f3296fd26, type: 3}
+    corregida: {fileID: 7400000, guid: d9ccb255bd83b0e4083b49c9290dc1a7, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanF@MagicAttackOmni01 - Load.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackOmni01 - Load_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.0954293
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 6ce5c8cc7157f2542b78acd83e609475, type: 3}
+    corregida: {fileID: 7400000, guid: b33bfb547359d804faabbbc04fefa8bc, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanF@MagicAttackOmni01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@MagicAttackOmni01_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.084799685
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: bc2a475bab6f9ad4b93434d854575dff, type: 3}
+    corregida: {fileID: 7400000, guid: 794eedd578fc6264abecffd1cb73655d, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/HumanF@Roll01 [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Roll01 [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.21708335
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 18ac3839faabb84479975bd5dc0f8d94, type: 3}
+    corregida: {fileID: 7400000, guid: 5ae8eade34b763847bbf920d36612ab4, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/HumanF@Roll01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Roll01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.2170835
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: f47990c404c3cdd43b03602a4c8e228f, type: 3}
+    corregida: {fileID: 7400000, guid: 15e3597911d48f3468f1c8460661dce9, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/HumanF@SwimDrown01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@SwimDrown01_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.04052373
+    cabezaDespues: 0.0022609103
+    torsoAntes: 0.055290833
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 6489392237b0b73468e868789af76042, type: 3}
+    corregida: {fileID: 7400000, guid: 3126827720a65714db1a21ee08b8613c, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/HumanF@Swim01_Down.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_Down_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.07861129
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 189658045e5a53e47a50275bd444f434, type: 3}
+    corregida: {fileID: 7400000, guid: 47d72cc8bf5841044b2625ef1be536a2, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/HumanF@Swim01_Forward.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_Forward_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.04257704
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 8b141fb0a6243aa4e919ee3712dc985c, type: 3}
+    corregida: {fileID: 7400000, guid: 63a9dd17d66f1f848871f1663adb5e87, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/HumanF@Swim01_ForwardLeft.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_ForwardLeft_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.104812615
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: a653f3bca9c3ca340bf62676254e964a, type: 3}
+    corregida: {fileID: 7400000, guid: 1196976d30c89f34facde31271047067, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/HumanF@Swim01_ForwardRight.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_ForwardRight_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.09277333
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 9ab5196d7b53e9c4cb50acf24703d053, type: 3}
+    corregida: {fileID: 7400000, guid: a52528d54ce533a4bbaddc12b939b919, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/RootMotion/HumanF@Swim01_Down [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_Down [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.078611255
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 5346b968715d10340a3ca2d71cc4530f, type: 3}
+    corregida: {fileID: 7400000, guid: 41e1be15ca3edb341afb27f8b8948acf, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/RootMotion/HumanF@Swim01_Forward [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_Forward [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.042576984
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 39d16f4633910ab4d9fac844d94ec74c, type: 3}
+    corregida: {fileID: 7400000, guid: 5da6aecb3d987864b863a23da19a6a47, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/RootMotion/HumanF@Swim01_ForwardLeft [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_ForwardLeft [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.10481231
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 1e59254a5eff3c443bff40fa3c420d77, type: 3}
+    corregida: {fileID: 7400000, guid: e29528ea5c6fdd444b138626db337d55, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Movement/Swim/SwimMovement/RootMotion/HumanF@Swim01_ForwardRight [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Swim01_ForwardRight [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.092773296
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 1b9bde77606351b4492c21098afc05e0, type: 3}
+    corregida: {fileID: 7400000, guid: bbf4615df187731418ab20aff5614d82, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Conversation/HumanF@HandWave02.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@HandWave02_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.043308396
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: abb4fa69f941f9a4487a3a2f8d3ff75d, type: 3}
+    corregida: {fileID: 7400000, guid: 4c58b5306a588ea4fbbe4c268183621d, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Emotions/HumanF@Angry01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Angry01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.03964245
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 9a413baa832b7df449f1509cb4d02ea0, type: 3}
+    corregida: {fileID: 7400000, guid: f198971a69fc4ca469cbe75007082206, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Emotions/HumanF@Cheer01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Cheer01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.10528712
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 4c981c780e9b0c24dac86126c3539b93, type: 3}
+    corregida: {fileID: 7400000, guid: faf1c2a000dada74db741118989d3924, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Emotions/HumanF@Cheer02.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Cheer02_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.13226244
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 45308f601b6cf424f98117caa0a53bd7, type: 3}
+    corregida: {fileID: 7400000, guid: 31e13afc08d039744a0ae0d0bf258756, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Emotions/HumanF@Fear01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Fear01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.011592947
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 7dc76a7da0e4b484a98bf80217ec04ba, type: 3}
+    corregida: {fileID: 7400000, guid: 05bd1767e994ce0408e2c057db34de90, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Female/Social/Emotions/HumanF@Pain01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanF@Pain01_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0
+    cabezaDespues: 0
+    torsoAntes: 0.051940963
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 8f2199c73306dcc439cb3d6c3a6b920b, type: 3}
+    corregida: {fileID: 7400000, guid: fb5ea4c6d552510489ee6a5ec2ebb9de, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Directional/HumanM@MagicAttackDirect2H01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackDirect2H01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.14032133
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: b98582042c1292a4e81193a2e417a4d2, type: 3}
+    corregida: {fileID: 7400000, guid: 9167aace0bcd02d4e81d349833b614ed, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanM@MagicAttackOmni01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackOmni01_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.077607185
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: c34f03334e5d0e041b87c888064e3515, type: 3}
+    corregida: {fileID: 7400000, guid: 15a39111a03b27f479c9d3f13553746b, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/HumanM@Roll01 [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Roll01 [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.17612223
+    cabezaDespues: 0.022579378
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 1
+  - original: {fileID: 3094330708855449807, guid: f58871d9345644f46901b59542797f2e, type: 3}
+    corregida: {fileID: 7400000, guid: c8db437134fb0fb4b8e5dfb2e915799d, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/HumanM@Roll01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Roll01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.17612228
+    cabezaDespues: 0.022579802
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 1
+  - original: {fileID: 3094330708855449807, guid: 8d9d33358a4c5324c885f7d8413538ae, type: 3}
+    corregida: {fileID: 7400000, guid: 23d82eaf50d125c47b1bda1516a3d8d8, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/HumanM@SwimDrown01.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@SwimDrown01_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.07389264
+    cabezaDespues: 0
+    torsoAntes: 0.066974044
+    torsoDespues: 0.014815226
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 47a23467117d477448c606974a076f3f, type: 3}
+    corregida: {fileID: 7400000, guid: f229474a5637d44418992c59fb2d2901, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/HumanM@Swim01_Down.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_Down_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.08777371
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: d0f7fa28358402f44bdd854e084e297a, type: 3}
+    corregida: {fileID: 7400000, guid: 353ad34aaa94bbe47af3f9fad3c3bb01, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/HumanM@Swim01_Forward.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_Forward_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.03264785
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 2a101b43675b15f41890cc44ba397d1c, type: 3}
+    corregida: {fileID: 7400000, guid: 86e0fb491759b804fa2996ef9c21459a, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/HumanM@Swim01_ForwardLeft.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_ForwardLeft_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.023682587
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: bb030e54bf6c7f441a173ee1384cf858, type: 3}
+    corregida: {fileID: 7400000, guid: 0e2d0707a744e6c4a99760498a8e1639, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/HumanM@Swim01_ForwardRight.fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_ForwardRight_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.038628865
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 9b3327331b0ec9b4981cd784fb2ae034, type: 3}
+    corregida: {fileID: 7400000, guid: feb41912035e9f248b263ee3bcee22ea, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/RootMotion/HumanM@Swim01_Down [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_Down [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.08777378
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 34d2ce178cc20994ca4ecfbd1d860d61, type: 3}
+    corregida: {fileID: 7400000, guid: 5f35fff60a0c7454bb473812fa1c9675, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/RootMotion/HumanM@Swim01_Forward [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_Forward [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.03264766
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: 210ee76f88c477247aa3c2d7e0804b89, type: 3}
+    corregida: {fileID: 7400000, guid: 968e8bd19ff1e9940a0978f0fb2aa344, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/RootMotion/HumanM@Swim01_ForwardLeft [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_ForwardLeft [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.02368253
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 3094330708855449807, guid: a36c6dc76fa09c84e8817a2c184e88e7, type: 3}
+    corregida: {fileID: 7400000, guid: 298a645da5e1c3242a101bfcd4359079, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Movement/Swim/SwimMovement/RootMotion/HumanM@Swim01_ForwardRight [RM].fbx
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@Swim01_ForwardRight [RM]_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.038628973
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 7400000, guid: f1780c27e19c38647b9f1e65a48404c2, type: 2}
+    corregida: {fileID: 7400000, guid: e2495b7e7c71dc3439e15a484917db58, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Directional/HumanM@MagicAttackDirect2H01.anim
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackDirect2H01_f1780c27_corregida.anim
+    usado: 0
+    usos: 
+    rig: Eldran
+    cabezaAntes: 0.14032133
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
+  - original: {fileID: 7400000, guid: a78227af1e9c1ab46a85cc3c3f0be81b, type: 2}
+    corregida: {fileID: 7400000, guid: c9f3906008997fc419078bbf8618fce5, type: 2}
+    rutaOriginal: Assets/Plugins/Kevin Iglesias/Human Animations/Animations/Male/Combat/Spellcasting/MagicAttacks/Omnidirectional/HumanM@MagicAttackOmni01 - Cast.anim
+    rutaCorregida: Assets/Art/Animations/Corregidas/HumanM@MagicAttackOmni01 - Cast_a78227af_corregida.anim
+    usado: 0
+    usos: 
+    rig: _ESTELA
+    cabezaAntes: 0.07760721
+    cabezaDespues: 0
+    torsoAntes: 0
+    torsoDespues: 0
+    aplicada: 1
+    sinResolver: 0
