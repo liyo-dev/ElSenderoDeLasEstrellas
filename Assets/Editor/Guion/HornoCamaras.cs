@@ -415,11 +415,15 @@ internal sealed partial class Horno
     /// ¿La cámara ha quedado dentro de algo? Una malla con collider (el terreno, una casa) o un
     /// prop sin collider que la envuelve (una carreta volcada). Con la cámara dentro, el plano
     /// sale un gris liso: no se ve ni el sujeto ni el decorado.
+    /// Las cajas de los renderers solo cuentan si son pequeñas (un prop): la caja de una casa
+    /// incluye el espacio de delante, y una cámara en la calle «dentro» de esa caja no está dentro
+    /// de la casa. Para las casas está el collider, que sí es exacto.
     private bool CamaraAdentro(Vector3 c)
     {
         if (Physics.CheckSphere(c, 0.3f, ~0, QueryTriggerInteraction.Ignore)) return true;
         foreach (var b in Cajas())
         {
+            if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) > 4.5f) continue;
             var caja = b;
             caja.Expand(0.1f);
             if (caja.Contains(c)) return true;

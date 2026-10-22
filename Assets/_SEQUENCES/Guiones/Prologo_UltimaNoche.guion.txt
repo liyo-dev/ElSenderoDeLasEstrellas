@@ -36,7 +36,9 @@ tras_casa        6002.6 6012.4
 salida_hueco     6003.1 6005.6
 plaza_archimago  6003.2 6002.3
 cart_maestro     6006.4 6000.6
-v06_carro        6008.0 5995.9
+# El vecino de la carreta, al otro lado del carro y en campo abierto: dentro de la huella
+# de la carreta (x 6006,5-6010,1 · z 5995,3-5999,4) no había ni un ángulo de cámara limpio.
+v06_carro        6010.0 6000.4
 carreta          6008.4 5997.4
 nina_iglesia     5990.9 6001.0
 nina_carro       6004.9 5998.8
@@ -67,9 +69,9 @@ centro_plaza     6001.5 6000.5
 cam_calle        6003.6 5999.3
 # Camara del globo: al noroeste, que es donde mira el grupo al ballon.
 cam_globo        6007.5 5995.5
-# Cámara del conjuro: al oeste del maestro, a un lado. Así se le ve la cara de tres cuartos
-# y la carreta queda a la derecha, sin taparle.
-cam_magia        6011.7 5997.8
+# Cámara del conjuro: al noroeste del maestro, a un lado. Así se le ve la cara de tres cuartos y
+# la carreta queda a la derecha, en el borde, sin taparle.
+cam_magia        6003.4 6001.6
 cam_general      6013.5 5992.0
 # El río
 rio_a_ini        6016.9 6002.7
