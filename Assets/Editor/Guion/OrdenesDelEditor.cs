@@ -130,6 +130,7 @@ public static class OrdenesDelEditor
             }
             case "hornear":
             {
+                if (EditorApplication.isPlaying) return "no se puede hornear en Play: sale de Play y vuelve a pedirlo";
                 bool storyboard = resto.EndsWith(" storyboard");
                 string ruta = storyboard ? resto.Substring(0, resto.Length - " storyboard".Length).Trim() : resto;
                 if (string.IsNullOrEmpty(ruta)) ruta = HorneadorDeGuion.RutaPrologo;

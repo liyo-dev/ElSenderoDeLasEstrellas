@@ -73,6 +73,10 @@ public static class AplicarPendientesDeAudio
 
     static void RehornearSiHaCambiado()
     {
+        // En Play no se puede abrir la escena, así que el horneado se aplaza: se
+        // reintenta en el siguiente refresco (al salir de Play) sin gastar el hash.
+        if (EditorApplication.isPlaying) return;
+
         // Para leer el texto, ruta absoluta (la relativa no resuelve en el proceso del
         // editor). Para hornear, la relativa: el horneador la usa para localizar el
         // asset de salida.
