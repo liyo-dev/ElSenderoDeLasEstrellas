@@ -23,11 +23,11 @@ MonoBehaviour:
     holdAfterVoiceSeconds: 0.25
   cinematicVoiceDuck:
     enabled: 1
-    musicDb: -3
-    ambienceDb: -6
-    sfxDb: -4
+    musicDb: -8
+    ambienceDb: -10
+    sfxDb: -6
     voiceGainDb: 0
-    attackSeconds: 0.08
+    attackSeconds: 0.12
     releaseSeconds: 0.65
     holdAfterVoiceSeconds: 0.5
   battles:
