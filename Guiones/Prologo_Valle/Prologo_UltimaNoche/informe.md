@@ -1,6 +1,6 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-22 15:00 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-22 16:15 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
 **3:41,7** de secuencia · 32 frases · 56 planos · 159 efectos · 13 personajes
 
@@ -244,16 +244,16 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 2:52,9 | efecto | Cut-in 0: NPC_Aldeano_05 (Cara) |
 | 2:55,2 | efecto | Pantalla: cubrir (1,2s) |
 | 2:56,6 | plano 46 | general de mago · 1,4 s · lente 36° |
-| 2:56,6 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
-| 2:56,6 | efecto | Sacudida de cámara (0,25, 1s) |
 | 2:56,6 | efecto | VFX: Magic circle en agujero |
-| 2:56,6 | efecto | Música: ULTIMO_INCANTAZIONE |
-| 2:56,6 | efecto | Mezcla: plegaria |
+| 2:56,6 | efecto | Sacudida de cámara (0,25, 1s) |
+| 2:56,6 | efecto | Música: parar (0,8s) |
+| 2:56,6 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
 | 2:56,6 | efecto | Voz: Conjuro, +6,0 dB |
 | 2:56,6 | efecto | Pantalla: descubrir (1,2s) |
-| 2:56,6 | efecto | Música: parar (0,8s) |
+| 2:56,6 | efecto | Mezcla: plegaria |
 | 2:58,0 | plano 47 | primer plano de archimago · 8,2 s · lente 24° · coste 2: ángulo 2 |
 | 2:58,0 | archimago | «Más allá de la noche y del silencio... ¡Luz que naciste antes que el cielo y tendiste el camino entre las estrellas!» (8,2 s) |
+| 2:58,0 | efecto | Música: ULTIMO_INCANTAZIONE |
 | 2:58,4 | efecto | VFX: Magic circle en NPC_Archimago |
 | 2:58,8 | efecto | SFX: SFX_Prologo_Trueno_Lejano |
 | 3:02,2 | efecto | Conjuro en las manos: NPC_Archimago (8,0 s) |

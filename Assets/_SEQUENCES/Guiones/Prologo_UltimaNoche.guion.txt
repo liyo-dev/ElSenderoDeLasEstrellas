@@ -552,17 +552,15 @@ archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 +3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 +5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 
-# El paso a la música del hechizo: fundido a negro y, al descubrir, el tema del duelo se
-# corta y entra Ultimo Incantazione, que va a culminar en el grito; la voz se abre en el eco.
+# El paso al conjuro: fundido a negro y, al descubrir, el tema del duelo se corta y la
+# voz se abre en el eco. El tema del conjuro entra con la frase de la Luz, más abajo.
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true dura=1.35
 efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 # El bus de música se queda a 0 dB: lo que suena ahora es el tema del conjuro.
 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
-# El tema del duelo se corta aquí y entra Ultimo Incantazione: el cántico se sostiene
-# con este tema, que culmina justo en el grito.
+# El tema del duelo se corta aquí: el cántico se sostiene con Ultimo Incantazione.
 silencio 0.8
-musica ULTIMO_INCANTAZIONE
 
 plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
@@ -573,6 +571,8 @@ espera 1.4
 # Estrofa 1 del cántico: invocación solemne a la luz ancestral.
 plano primer archimago lado=der contrapicado zoom=20
 archimago bucle CastingIdle01
+# El tema del conjuro entra aquí, con la frase de la Luz, y sigue hasta el final.
+musica ULTIMO_INCANTAZIONE
 archimago dice PROLOGO_PLEGARIA_02 cara=decidido
 +0.4 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.08,0 lifetime=60 registrarComo=CIRCULO_CONJURO
 +0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2

@@ -42,7 +42,8 @@ T_PLEGARIA_06 = 208.50
 T_GRITO = 213.90          # el grito, el respiro y la campana
 T_ESTALLIDO = 218.20      # la explosión
 T_FIN_MUSICA = 219.10     # «Música: parar (1,2s)»
-T_NEGRO = 176.60          # el negro: el tema del duelo se corta y entra el tema del conjuro
+T_NEGRO = 176.60          # el negro: el tema del duelo se corta y la voz se abre en el eco
+T_TEMA = 178.00           # «¡Luz que naciste antes que el cielo...!»: entra el tema del conjuro
 T_MEZCLA_GRITO = 212.80   # la mezcla «grito» (SFX -3 dB)
 
 # La voz con el conjuro: +6 dB en el bus de diálogo, y el resto de buses (música,
@@ -135,12 +136,12 @@ def construir(nombre_salida, inicio, fin):
         x = preparar_voz(ruta, preset, gan)
         colocar(voz, x, t_local(t), 0.0)
 
-    # --- El tema: entra en el negro y se queda hasta el final --------
+    # --- El tema: entra con la frase de la Luz y se queda hasta el final --------
     musica = np.zeros((n, 2), dtype=np.float32)
     tema = decodificar(TEMA, SR, mono=False)
     f_in = max(1, int(FUNDIDO_ENTRADA_TEMA * SR))
     tema[:f_in] *= np.linspace(0.0, 1.0, f_in)[:, None]
-    colocar(musica, tema, t_local(T_NEGRO), 0.0)
+    colocar(musica, tema, t_local(T_TEMA), 0.0)
 
     # --- Los efectos del guion --------------------------------------
     efectos = np.zeros((n, 2), dtype=np.float32)
@@ -226,7 +227,7 @@ def main():
     os.makedirs(SALIDA, exist_ok=True)
     tema = decodificar(TEMA, SR, mono=True)
     print(f"Tema: {TEMA}")
-    print(f"  {len(tema)/SR:.2f} s, entra en el negro ({T_NEGRO:.2f} s) y suena hasta el final")
+    print(f"  {len(tema)/SR:.2f} s, entra con la frase de la Luz ({T_TEMA:.2f} s) y suena hasta el final")
     print(f"Plegaria: {T_PLEGARIA_01:.2f} -> {T_PLEGARIA_06 + 3.8:.2f} s")
     print(f"Estallido: {T_ESTALLIDO:.2f} s | la música se apaga en {T_FIN_MUSICA:.2f} s\n")
 
