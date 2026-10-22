@@ -648,10 +648,9 @@ plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura
 archimago bucle CastingIdle01
 # El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
-efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinal volumen=1 musicaDb=-6 duracion=0.35
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
-+0.5 sonido Prologo_ProteccionAbsoluta en=archimago volume=0.95
++0.5 sonido SFX_Proteccion_Absoluta en=archimago volume=1.0
 +0.5 sacudida 0.45 2.0
 +0.5 efecto FusionDeHechizosBeat efectoARegistrado=CARGA_ESFERA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,1.1,0 duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.2 eventKeySubida=SFX_Prologo_LuchaFinal eventKeyExplosion=SFX_Prologo_ExplosionFinal esperar=false
 # La lucha: cortes cada vez más rápidos y el temblor que crece hasta el blanco.
@@ -670,6 +669,7 @@ espera 2.2
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
 @explosion
 ambiente AGUJERO_NEGRO sonar=false fundido=0.3
+ambiente TORMENTA sonar=false fundido=0.2
 efecto RecogerVfxBeat ids=CARGA_ESFERA|CARGA_CRECE|CARGA_REFUERZO|CIRCULO_PLEGARIA|CIRCULO_CONJURO
 efecto MezclaBeat fuente=grito quitar=true fundido=0.6
 efecto LineasDeConcentracionBeat mostrar=false fundido=0

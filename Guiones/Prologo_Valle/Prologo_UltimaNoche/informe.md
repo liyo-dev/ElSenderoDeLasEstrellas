@@ -1,8 +1,8 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-22 17:36 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-22 17:54 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
-**3:39,2** de secuencia · 32 frases · 56 planos · 155 efectos · 13 personajes
+**3:39,2** de secuencia · 32 frases · 56 planos · 154 efectos · 13 personajes
 
 Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,68/ojos 0,94 · nina 1,44/ojos 0,96 · v01 1,31/ojos 0,95 · v02 1,58/ojos 0,94 · v03 1,51/ojos 0,96 · v04 1,68/ojos 0,95 · v06 1,64/ojos 0,95 · v07 1,30/ojos 0,96 · v08 1,58/ojos 0,96 · v09 1,46/ojos 0,95 · v10 1,58/ojos 0,94
 
@@ -127,9 +127,9 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 1:27,3 | plano 22 | conjunto de mago · 2,6 s · lente 30° · coste 0: limpio |
 | 1:27,3 | efecto | Sacudida de cámara (0,55, 0,6s) |
 | 1:27,3 | efecto | SFX: Prologo_Golpe |
+| 1:27,3 | efecto | Voz: ExteriorNoche, +0,0 dB |
 | 1:27,3 | efecto | Fogonazo (0,18s) |
 | 1:27,3 | efecto | Rayo: 1 × fondo del plano |
-| 1:27,3 | efecto | Voz: ExteriorNoche, +0,0 dB |
 | 1:27,6 | efecto | SFX: Prologo_PresenciaOscura |
 | 1:27,7 | efecto | Música: MAGOOSCURO_REVEAL |
 | 1:27,9 | efecto | Ambiente: TORMENTA ← Ambience_Prologo_Tormenta |
@@ -178,24 +178,24 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 2:26,4 | plano 39 | dos: archimago y mago · 2,5 s · lente 36° · coste 239: cara 125, ángulo 108 |
 | 2:26,6 | efecto | Hechizo: NPC_MagoOscuro → NPC_Archimago |
 | 2:26,7 | efecto | VFX: Magic shield blue en NPC_Archimago |
-| 2:27,2 | efecto | Sacudida de cámara (0,35, 0,4s) |
 | 2:27,2 | efecto | SFX: Prologo_EscudoBloquea |
 | 2:27,2 | efecto | Fogonazo (0,12s) |
+| 2:27,2 | efecto | Sacudida de cámara (0,35, 0,4s) |
 | 2:28,9 | plano 40 | sobre el hombro de mago a archimago · 6,7 s · lente 24° · coste 0: limpio |
 | 2:29,1 | efecto | Hechizo: NPC_Archimago → NPC_MagoOscuro |
 | 2:31,8 | **@choque** |  |
 | 2:31,9 | efecto | SFX: Prologo_Carga |
 | 2:31,9 | efecto | VFX: Magic circle en NPC_Archimago |
 | 2:31,9 | efecto | VFX: Magic circle en NPC_MagoOscuro |
-| 2:32,5 | efecto | SFX: SFX_Prologo_Latigazo |
-| 2:32,5 | efecto | VFX: Charge slash blue en NPC_Archimago |
 | 2:32,5 | efecto | VFX: Charge slash purple en NPC_MagoOscuro |
-| 2:32,8 | efecto | Sacudida de cámara (0,75, 1s) |
+| 2:32,5 | efecto | VFX: Charge slash blue en NPC_Archimago |
+| 2:32,5 | efecto | SFX: SFX_Prologo_Latigazo |
 | 2:32,8 | efecto | SFX: Prologo_Choque |
 | 2:32,8 | efecto | Líneas de concentración: mostrar |
 | 2:32,8 | efecto | VFX: Red energy explosion en choque |
 | 2:32,8 | efecto | VFX: FX_LightPillar en choque |
 | 2:32,8 | efecto | Fogonazo (0,28s) |
+| 2:32,8 | efecto | Sacudida de cámara (0,75, 1s) |
 | 2:32,9 | efecto | SFX: Prologue_WarClashStinger_A |
 | 2:35,6 | plano 41 | medio de mago · 1,1 s · lente 30° · coste 2: ángulo 2 |
 | 2:35,8 | efecto | SFX: Prologo_SueloSeAbre |
@@ -223,18 +223,18 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 2:43,0 | efecto | Sacudida de cámara (0,35, 1,6s) |
 | 2:45,4 | plano 45 | medio de archimago · 8,7 s · lente 30° · coste 17: ángulo 17 |
 | 2:45,4 | archimago | «No daré ni un paso atrás... ¡No dejaré que los toques! ¡Liora! ¡Nina! ¡A ninguno de ellos!» (7,3 s) |
-| 2:45,4 | efecto | Voz: Ninguno, +0,0 dB |
 | 2:45,4 | efecto | Mezcla: plegaria |
+| 2:45,4 | efecto | Voz: Ninguno, +0,0 dB |
 | 2:45,6 | efecto | SFX: Prologo_MagiaLevitar |
 | 2:45,6 | efecto | VFX: Healing circle en NPC_Archimago |
 | 2:48,7 | efecto | Cut-in 0: NPC_Liora (Cara) |
 | 2:50,4 | efecto | Cut-in 0: NPC_Aldeano_05 (Cara) |
 | 2:52,7 | efecto | Pantalla: cubrir (1,2s) |
 | 2:54,1 | plano 46 | general de mago · 1,4 s · lente 36° |
-| 2:54,1 | efecto | VFX: Magic circle en agujero |
 | 2:54,1 | efecto | Sacudida de cámara (0,25, 1s) |
-| 2:54,1 | efecto | Música: parar (0,8s) |
 | 2:54,1 | efecto | Escalar: CARGA_ESFERA ×1,5 en 2 s |
+| 2:54,1 | efecto | Música: parar (0,8s) |
+| 2:54,1 | efecto | VFX: Magic circle en agujero |
 | 2:54,1 | efecto | Voz: Conjuro, +6,0 dB |
 | 2:54,1 | efecto | Pantalla: descubrir (1,2s) |
 | 2:54,1 | efecto | Mezcla: plegaria |
@@ -249,8 +249,8 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:06,9 | efecto | Rayo: 1 × fondo del plano |
 | 3:07,2 | efecto | SFX: Prologo_Carga |
 | 3:07,2 | efecto | VFX: Charge slash blue en NPC_Archimago |
-| 3:09,3 | efecto | Escalar: CARGA_ESFERA ×2 en 2 s |
 | 3:09,3 | efecto | Sacudida de cámara (0,35, 1,2s) |
+| 3:09,3 | efecto | Escalar: CARGA_ESFERA ×2 en 2 s |
 | 3:12,3 | plano 49 | general de mago · 1,2 s · lente 34° |
 | 3:12,3 | efecto | Rayo: 1 × fondo del plano |
 | 3:13,5 | plano 50 | primer plano de archimago · 6,3 s · lente 24° · coste 17: ángulo 17 |
@@ -263,9 +263,9 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:19,8 | efecto | Líneas de concentración: mostrar |
 | 3:20,1 | efecto | Conjuro en las manos: NPC_Archimago (6,0 s) |
 | 3:23,2 | efecto | Rayo: 2 × fondo del plano |
-| 3:23,3 | efecto | Escalar: CARGA_ESFERA ×2,6 en 1,4 s |
-| 3:23,3 | efecto | SFX: Prologo_Carga |
 | 3:23,3 | efecto | Sacudida de cámara (0,5, 1,6s) |
+| 3:23,3 | efecto | SFX: Prologo_Carga |
+| 3:23,3 | efecto | Escalar: CARGA_ESFERA ×2,6 en 1,4 s |
 | 3:26,0 | plano 52 | primer plano de archimago · 5,5 s · lente 24° · coste 2: ángulo 2 |
 | 3:26,0 | archimago | «Perdóname, Liora... No voy a volver a casa.» (3,8 s) |
 | 3:26,0 | efecto | Líneas de concentración: retirar |
@@ -278,7 +278,6 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:31,4 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
 | 3:31,4 | efecto | Respiro: 0,9 s (música -10 dB) |
 | 3:31,4 | efecto | Voz: Conjuro, +6,0 dB |
-| 3:31,4 | efecto | Golpe musical: Prologue_GolpeFinal |
 | 3:31,6 | efecto | Rayo: 2 × fondo del plano |
 | 3:31,9 | efecto | Fusión: CARGA_ESFERA +  |
 | 3:31,9 | efecto | SFX: Prologo_ProteccionAbsoluta |
@@ -290,10 +289,10 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:34,7 | efecto | Sacudida de cámara (0,7, 1,2s) |
 | 3:34,8 | efecto | Música: parar (0,8s) |
 | 3:35,7 | **@explosion** |  |
-| 3:35,7 | efecto | Líneas de concentración: retirar |
 | 3:35,7 | efecto | Ambiente: parar AGUJERO_NEGRO |
 | 3:35,7 | efecto | VFX: recoger efectos registrados |
 | 3:35,7 | efecto | Mezcla: grito (quitar) |
+| 3:35,7 | efecto | Líneas de concentración: retirar |
 | 3:35,7 | efecto | Pantalla: cubrir (1,2s) |
 | 3:35,7 | efecto | Ambiente: parar TORMENTA |
 | 3:35,7 | efecto | Golpe musical: Prologue_GolpeFinalCola |
