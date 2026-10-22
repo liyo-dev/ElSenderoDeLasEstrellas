@@ -3581,6 +3581,12 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 - **Diagnóstico:**
   - cada plano lleva su desglose de coste en el storyboard y en la línea de tiempo del informe (p. ej. «coste 732: delante 412, cara 270»);
   - avisos «algo del decorado se mete delante y tapa un N %» y «no hay ángulo limpio».
+- **Cámara dentro del decorado (INC-824):** un plano se hornea aunque su cámara esté *dentro* de una malla: el encuadre está bien, lo que está mal es la cámara, y el plano sale un gris liso (o con el decorado tapando). Ahora:
+  - `CamaraAdentro()` (`HornoCamaras.cs`) mira la cámara contra los collider **y** contra las cajas de los renderers (`Cajas()`), así que también la pillan los props sin collider (una carreta volcada);
+  - `SinVerAlSujeto()` detecta que un decorado le corte la línea a la cara;
+  - un plano con `desde=` que no ve al sujeto **avisa y busca otro ángulo** (`e.reubicado`): el parte lo anota con su coste;
+  - `Buscar` se queda con el mejor ángulo **aunque cueste 5000**, así que tiene escalera de rescate: si el mejor cuesta 1000 o más, se prueba más lejos y más alto (×1,5 y ×2 de distancia, +0,8 y +1,8 m de altura). Es lo que saca la cámara de dentro de una carreta o de detrás de un tejado.
+- **Nombrar un punto para que entre en el cuadro (INC-825):** si un plano nombra un punto del guion (o una marca), ese punto entra en el grupo de enfoque: el horneador lo promedia con los sujetos, ensancha el encuadre y en runtime se añade como objetivo extra del `CinemachineTargetGroup` (`CamarasDeGuion.Activar`). Sirve para encuadrar algo que no es un personaje, como el agujero negro del prólogo: `plano general mago desde=cam_final agujero …` apunta al punto medio entre el Mago y el agujero, y los dos quedan dentro del cuadro sin calcular ángulos a mano. **Ojo**: si el plano además lleva `mira=`, manda el punto del autor (`HornoCamaras.FocoDeMirada`) y el punto nombrado deja de contar: para el agujero negro se quitó el `mira=` de esos planos.
 - **Arranque:** en el corte de entrada, `SequencePlayer` coloca la cámara en la pose del primer plano del guion (`GuionHorneado.PoseDeCamara`). Así no se ve otro encuadre al abrirse el telón.
 - **Relevo de cámara:** mientras dura el guion, el `CinematicCameraDriver` cede la cámara a las cámaras de Cinemachine del guion (`CederElControl` / `DevolverElControl`): los dos sistemas nunca escriben en la misma cámara a la vez. Ver § 10.
 

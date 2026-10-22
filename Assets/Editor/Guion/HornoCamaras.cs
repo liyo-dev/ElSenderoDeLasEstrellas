@@ -30,6 +30,7 @@ internal sealed partial class Horno
         public float banda;      // alto de cada banda de cine en ese momento (0 = sin bandas)
         public bool aireArriba;  // con bocadillos, sitio encima de la cabeza para el globo
         public bool miraFija;    // el autor fijó la mirada con «mira=»: manda sobre los personajes
+        public bool reubicado;   // la cámara de «desde=» no servía y se ha buscado otro ángulo
     }
 
     /// Alto de las bandas de cine en el instante t (lo que tapan arriba y abajo, en tanto por uno
@@ -175,6 +176,16 @@ internal sealed partial class Horno
                 if (!Punto(desde, o.linea, out var pc)) return null;
                 e.camara = pc + Vector3.up * o.OpF("altura", e.tipo == TipoDePlano.General ? 3f : 1.55f);
                 e.azimut = Rumbo(e.camara - FocoDeMirada(e, t0));
+                // Una cámara colocada a mano puede quedarse dentro de una malla (una carreta
+                // volcada) o con un decorado entre ella y el sujeto: el plano sale un gris liso o
+                // tapado, y no hay forma de arreglarlo mirando el plano, porque el encuadre está
+                // bien: lo que está mal es la cámara. Si es así, se busca otro ángulo.
+                if (CamaraAdentro(e.camara) || SinVerAlSujeto(e))
+                {
+                    Aviso($"{o}: la cámara de «{desde}» no ve al sujeto (dentro del decorado o tapada); busco otro ángulo.");
+                    Buscar(e);
+                    e.reubicado = true;
+                }
             }
             else if (e.tipo == TipoDePlano.Hombro) Hombro(e);
             else Buscar(e);
@@ -206,7 +217,7 @@ internal sealed partial class Horno
         else if (!o.opciones.ContainsKey("altura_foco") && e.focoFijo == null && foco.Any(a => PoseHorizontal(a, Mathf.Lerp(t0, t1, 0.35f))))
             for (float t = t0; t <= t1 + 0.049f; t += 0.05f)
                 plano.focos.Add(new ClaveDePosicion(Mathf.Min(t, t1), Foco(e, Mathf.Min(t, t1))));
-        if (e.tipo != TipoDePlano.Sigue && !o.opciones.ContainsKey("desde"))
+        if (e.tipo != TipoDePlano.Sigue && (!o.opciones.ContainsKey("desde") || e.reubicado))
             NotasDePlano[plano.t0] = $"coste {e.coste:0}: {e.desglose}";
         if (e.coste >= 1000f) Aviso($"{o}: no hay ángulo limpio para «{plano.descripcion}» (algo tapa la cara). Prueba con desde= o lado=.");
         _anterior = e;
@@ -365,6 +376,28 @@ internal sealed partial class Horno
             }
         }
         e.coste = mejorCoste;
+
+        // Escalera de rescate: si con la distancia y la altura de pedir no sale un encuadre
+        // limpio, se prueba más lejos y más arriba. Es lo que saca la cámara de dentro de una
+        // carreta volcada o de detrás de un tejado sin tener que tocar el guion a mano.
+        if (mejorCoste >= 1000f)
+        {
+            foreach (float escala in new[] { 1.5f, 2f })
+                foreach (float extra in new[] { 0.8f, 1.8f })
+                    for (int k = 0; k < 48; k++)
+                    {
+                        float off = -180f + k * 7.5f;
+                        float az = referencia + off;
+                        Vector3 dir = Direccion(az);
+                        Vector3 c = foco + dir * distancia * escala;
+                        Vector3 suelo = Suelo(new Vector3(c.x, foco.y, c.z));
+                        c.y = suelo.y + alturaCam + extra;
+                        float coste = Coste(e, c, az, referencia, preferido, foco);
+                        coste += Mathf.Abs(escala - 1f) * 40f + extra * 60f;
+                        if (coste < mejorCoste) { mejorCoste = coste; e.camara = c; e.azimut = az; e.desglose = _d.ToString(); }
+                    }
+            e.coste = mejorCoste;
+        }
     }
 
     private float AlturaDeCamara(Encuadre e)
@@ -379,11 +412,40 @@ internal sealed partial class Horno
         };
     }
 
+    /// ¿La cámara ha quedado dentro de algo? Una malla con collider (el terreno, una casa) o un
+    /// prop sin collider que la envuelve (una carreta volcada). Con la cámara dentro, el plano
+    /// sale un gris liso: no se ve ni el sujeto ni el decorado.
+    private bool CamaraAdentro(Vector3 c)
+    {
+        if (Physics.CheckSphere(c, 0.3f, ~0, QueryTriggerInteraction.Ignore)) return true;
+        foreach (var b in Cajas())
+        {
+            var caja = b;
+            caja.Expand(0.1f);
+            if (caja.Contains(c)) return true;
+        }
+        return false;
+    }
+
+    /// ¿Le corta el decorado la línea de visión al sujeto? (En el «hombro», el que está de espaldas
+    /// es el que tapa: ese no cuenta.)
+    private bool SinVerAlSujeto(Encuadre e)
+    {
+        if (e.sujetos.Count == 0) return false;
+        var vistos = e.tipo == TipoDePlano.Hombro ? e.sujetos.Skip(1).ToList() : e.sujetos;
+        foreach (var s in vistos)
+        {
+            if (!s.VisibleEn(e.t0)) continue;
+            if (Linea(e.camara, s.PosEn(e.t0) + Vector3.up * s.AlturaDeOjos)) return true;
+        }
+        return false;
+    }
+
     private float Coste(Encuadre e, Vector3 c, float az, float referencia, float preferido, Vector3 foco)
     {
         float coste = 0f;
         _d.vista = _d.tapado = _d.pegado = _d.delante = _d.estorbo = _d.cara = _d.angulo = _d.eje = 0f;
-        if (Physics.CheckSphere(c, 0.3f, ~0, QueryTriggerInteraction.Ignore)) { _d.vista = 5000f; return 5000f; }
+        if (CamaraAdentro(c)) { _d.vista = 5000f; return 5000f; }
         var suelo = Suelo(c);
         if (c.y < suelo.y + 0.4f) { _d.vista = 5000f; return 5000f; }
 

@@ -104,7 +104,9 @@ choque           6002.6 5999.8
 arch_caida       6007.4 6000.2
 mago_retrocede   5998.7 5999.8
 # El agujero negro: fijo en el cielo, por encima y por delante del Mago (que levita 3 m).
-agujero          6000.8 5999.8 107.0
+# Está a 8 m del suelo (el valle está a 100 m de altura): con la cámara del duelo a ras de calle,
+# a 14,7 m, el agujero queda a 25° y el Mago a 7°: caben los dos en el mismo cuadro.
+agujero          6000.8 5999.8 108.0
 # Cámara del final: al este, detrás del Archimago, baja; el Mago y el agujero al fondo, arriba.
 cam_final        6015.5 6000.4
 
@@ -506,7 +508,10 @@ espera 2.0
 desde @ultimo+3.6 efecto RayoBeat cantidad=2 intervalo=0.7 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_2
 plano primer mago lado=izq contrapicado
 mago dice PROLOGO_MAGO_VALLE cara=enfado
-plano general mago desde=cam_final mira=mago_retrocede altura_foco=1.8 altura=1.1 lente=38 suave=0.5
+# Sin «mira=»: el punto del autor manda sobre la mirada, y el Mago y el agujero no caben
+# juntos en el mismo punto. Sin «mira=», el foco es el promedio del Mago y del agujero (que se
+# nombra aquí), y la cámara los abarca a los dos.
+plano general mago desde=cam_final agujero altura_foco=0 altura=1.1 lente=38 suave=0.5
 efecto PostprocesoBeat perfil=Assets/Art/World/Prologo_Valle/Prologo_Climax.asset transicion=2.5
 # Brazos arriba mientras lo conjura (se queda con los brazos en alto).
 mago bucle MagicAttackOmni01_Load congela
@@ -552,7 +557,7 @@ efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
 silencio 0.8
 musica ULTIMO_INCANTAZIONE
 
-plano general mago desde=cam_final mira=mago_retrocede altura_foco=1.8 altura=1.0 lente=36
+plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
 & vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=agujero offset=0,-1.3,0 lifetime=160 registrarComo=CARGA_REFUERZO
 & sacudida 0.25 1.0
@@ -579,7 +584,7 @@ archimago dice PROLOGO_PLEGARIA_03 cara=decidido
 +5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
 +5.6 sacudida 0.35 1.2
 
-plano general mago desde=cam_final mira=mago_retrocede altura_foco=1.8 altura=0.9 lente=34
+plano general mago desde=cam_final agujero altura_foco=0 altura=0.9 lente=34
 & efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 trueno=SFX_Prologo_Trueno_3
 espera 1.2
 
@@ -623,7 +628,7 @@ cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 
 # El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
 efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
 @hechizo
-plano general archimago mago desde=cam_final mira=duelo_a altura_foco=1.4 altura=0.9 lente=44 suave=0.7 mano=0.35
+plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle CastingIdle01
 # El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
@@ -640,7 +645,7 @@ desde @hechizo+2.0 sacudida 0.55 1.3
 desde @hechizo+2.0 efecto LineasDeConcentracionBeat mostrar=true duracion=3.8
 desde @hechizo+3.3 plano primer mago lado=izq contrapicado zoom=20 mano=0.65
 desde @hechizo+3.3 sacudida 0.7 1.2
-desde @hechizo+4.5 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=1.4 altura=0.75 lente=48 mano=0.85
+desde @hechizo+4.5 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.75 lente=48 mano=0.85
 desde @hechizo+4.5 sacudida 0.95 1.4
 desde @hechizo+5.6 destello FFFFFFFF 0.14
 espera 2.2
