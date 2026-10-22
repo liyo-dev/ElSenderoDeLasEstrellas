@@ -399,11 +399,12 @@ public class SequencePlayer : CinematicSequencerBase
     }
 
     /// Cambia la música a mitad de secuencia. Usado por MusicBeat.
-    public void PlayMusic(string musicId, bool continuarDondeIba = true)
+    /// <param name="fadeIn">Segundos de entrada. Negativo = el fundido de la regla del perfil.</param>
+    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = -1f)
     {
         var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
         if (regla?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(regla.music, regla.fadeIn, continuarDondeIba);
+            AudioService.Instance.PlayMusic(regla.music, fadeIn >= 0f ? fadeIn : regla.fadeIn, continuarDondeIba);
         else PlaySequenceMusic(musicId);
     }
 
