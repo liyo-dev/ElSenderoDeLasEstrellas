@@ -95,7 +95,7 @@ otro_lado_c      6030.0 6000.4
 otro_lado_s      6030.0 5999.5
 cam_puente_este  6034.0 6004.6
 liora_puente     6015.0 5997.8
-nina_puente      6014.1 5998.5
+nina_puente      6012.3 5999.2
 mira_k1          5993.4 5999.2
 mira_k2          5994.9 5998.4
 k6               5998.0 6000.2
@@ -112,7 +112,7 @@ agujero          6000.8 5999.8 108.0
 # Cámara del final: al este, detrás del Archimago, baja; el Mago y el agujero al fondo, arriba.
 cam_final        6015.5 6000.4
 # Cámara de Liora: al sur de ella, para verle la cara (ella mira al Archimago, que está al norte).
-cam_liora        6015.0 5995.6
+cam_liora        6013.0 6001.2
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PISTAS: lo que hace cada vecino mientras pasa la historia
