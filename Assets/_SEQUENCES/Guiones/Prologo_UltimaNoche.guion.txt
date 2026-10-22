@@ -68,11 +68,11 @@ mira_v08         6002.3 6000.5
 centro_plaza     6001.5 6000.5
 cam_calle        6003.6 5999.3
 # Camara del globo: al noroeste, que es donde mira el grupo al ballon.
-cam_globo        6007.5 5995.5
+cam_globo        6005.8 5996.4
 # Cámara del conjuro: al noroeste del maestro, a un lado. Así se le ve la cara de tres cuartos y
 # la carreta queda a la derecha, en el borde, sin taparle.
-cam_magia        6003.4 6001.6
-cam_general      6013.5 5992.0
+cam_magia        6009.0 6000.0
+cam_general      6012.0 6001.0
 # El río
 rio_a_ini        6016.9 6002.7
 rio_l_ini        6015.8 6002.3
@@ -111,6 +111,8 @@ mago_retrocede   5998.7 5999.8
 agujero          6000.8 5999.8 108.0
 # Cámara del final: al este, detrás del Archimago, baja; el Mago y el agujero al fondo, arriba.
 cam_final        6015.5 6000.4
+# Cámara de Liora: al sur de ella, para verle la cara (ella mira al Archimago, que está al norte).
+cam_liora        6015.0 5995.6
 
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PISTAS: lo que hace cada vecino mientras pasa la historia
@@ -241,7 +243,7 @@ efecto SetPropActiveBeat propId=PROP_Nube_Oeste active=false
 efecto SetPropActiveBeat propId=PROP_Nube_Este active=false
 efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
 archimago en tras_casa mirando salida_hueco
-plano general centro_plaza desde=cam_general altura=7 lente=46 suave=1.5
+plano general centro_plaza desde=cam_general altura=6 lente=46 suave=1.5
 espera 4.5
 
 # Sale de detrás de su casa y baja a la plaza: el pueblo ya está en marcha.
@@ -424,7 +426,7 @@ liora anda a liora_puente ritmo=prisa llega_mirando=archimago sin_esperar
 plano dos archimago liora
 liora dice PROLOGO_DESPEDIDA_LIORA_2 cara=miedo
 archimago dice PROLOGO_DESPEDIDA_ARCHIMAGO gesto=HeadNod01 cara=decidido
-plano medio liora lado=der
+plano medio liora desde=cam_liora lado=der
 liora dice PROLOGO_DESPEDIDA_LIORA cara=triste
 liora dice PROLOGO_DESPEDIDA_ELEGIR gesto=Talk03 cara=triste
 plano medio archimago lado=der
