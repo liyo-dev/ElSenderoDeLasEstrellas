@@ -206,6 +206,8 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 61b85a9f921d76faface6e1dfe190aa9, type: 3}
   - eventKey: Weather_MistStopped
     sfx: {fileID: 8300000, guid: 859447f3da3b289058c65926ab3e1f51, type: 3}
+  - eventKey: Weather_RainStopped
+    sfx: {fileID: 8300000, guid: 859447f3da3b289058c65926ab3e1f51, type: 3}
   - eventKey: FootStep00
     sfx: {fileID: 8300000, guid: 22b5b26c3429f42c482afafb562afc2a, type: 3}
   - eventKey: FootStep01
