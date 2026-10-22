@@ -95,7 +95,7 @@ otro_lado_c      6030.0 6000.4
 otro_lado_s      6030.0 5999.5
 cam_puente_este  6034.0 6004.6
 liora_puente     6015.0 5997.8
-nina_puente      6012.3 5999.2
+nina_puente      6010.5 6000.0
 mira_k1          5993.4 5999.2
 mira_k2          5994.9 5998.4
 k6               5998.0 6000.2
@@ -426,7 +426,7 @@ liora anda a liora_puente ritmo=prisa llega_mirando=archimago sin_esperar
 plano dos archimago liora
 liora dice PROLOGO_DESPEDIDA_LIORA_2 cara=miedo
 archimago dice PROLOGO_DESPEDIDA_ARCHIMAGO gesto=HeadNod01 cara=decidido
-plano medio liora desde=cam_liora lado=der
+plano hombro liora archimago
 liora dice PROLOGO_DESPEDIDA_LIORA cara=triste
 liora dice PROLOGO_DESPEDIDA_ELEGIR gesto=Talk03 cara=triste
 plano medio archimago lado=der
