@@ -52,7 +52,7 @@ Ante cualquier duda de arquitectura, se consulta `TDD.md` primero. Si vas a aña
 
 ## ✅ Estado del proyecto
 
-Estado revisado el **22 de octubre de 2026**: el trabajo reciente se ha centrado en el laboratorio de pruebas (mecánicas, cinemáticas y escenas de lucha montadas y probadas ahí antes de llevarlas a la campaña), en la rehacición del sistema de cinemáticas con guion horneado y en el ajuste fino de audio del prólogo. La historia principal está montada hasta el final del capítulo 2 (fin de la demo). Los detalles y las comprobaciones pendientes están en `TRACKER.md`; un arreglo aplicado no implica que esté confirmado en juego.
+Estado revisado el **22 de octubre de 2026**: el trabajo reciente se ha centrado en el laboratorio de pruebas (mecánicas, cinemáticas y escenas de lucha montadas y probadas ahí antes de llevarlas a la campaña), en la rehacición del sistema de cinemáticas con guion horneado y en el ajuste fino de audio del prólogo. La historia principal está montada hasta el bloque 2.4 del capítulo 2 (preparación del viaje y despedida); los bloques 2.5–2.13 (aldea del mar, contrabandistas, Bosque Prohibido, Estela, Prueba de la campana, Gólem y vado) están sin construir. Los detalles y las comprobaciones pendientes están en `TRACKER.md`; un arreglo aplicado no implica que esté confirmado en juego.
 
 La última auditoría general documentada es la del 12 de agosto (`TDD.md` § 19.4); sus conclusiones corresponden a esa fecha. Ya existe `Assets/Scripts/Editor/Tests/PlayerActionManagerTests.cs`. Esta revisión documental no ejecuta tests ni certifica una build; tampoco verifica que todo el contenido nuevo esté conectado a la historia principal.
 
