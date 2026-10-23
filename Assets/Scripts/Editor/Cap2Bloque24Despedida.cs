@@ -54,6 +54,7 @@ public static class Cap2Bloque24Despedida
         Undo.RecordObject(grafo, "Cap2: montar bloque 2.4 Despedida");
 
         // 2. Conectar las 4 ramas al nodo común "Lista de motivos + brújula"
+        ConectarRamasInternas(grafo);
         ConectarRamasAlComun(grafo);
 
         // 3. Crear nodo "Lista de motivos y brújula" (PlayDialogue con Eldran)
@@ -172,9 +173,38 @@ public static class Cap2Bloque24Despedida
             ?? throw new InvalidOperationException("No se encuentra Cap2.asset");
 
         Undo.RecordObject(grafo, "Cap2: esperar los 4 encargos");
+        ConectarRamasInternas(grafo);
         ConectarRamasAlComun(grafo);
         EditorUtility.SetDirty(grafo);
         AssetDatabase.SaveAssets();
+    }
+
+    /// <summary>
+    /// Cierra el tramo interno de las ramas de Erika y Eldran, que quedaron creadas sin cables:
+    /// sin esto el contador de los cuatro encargos nunca recibe sus dos señales y la despedida
+    /// no puede abrirse. El desbloqueo de Bola Prisma va entre la charla de Eldran y la túnica.
+    /// </summary>
+    static void ConectarRamasInternas(NarrativeGraph grafo)
+    {
+        Enlazar(grafo, "cap2-prepara-viaje-erika-0", "cap2-prepara-viaje-erika-1");
+        Enlazar(grafo, "cap2-prepara-viaje-erika-1", "cap2-prepara-viaje-erika-2");
+
+        Enlazar(grafo, "cap2-prepara-viaje-eldran-0", "cap2-prepara-viaje-eldran-1");
+        Enlazar(grafo, "cap2-prepara-viaje-eldran-1", "cap2-desbloqueo-bola-prisma");
+        Enlazar(grafo, "cap2-desbloqueo-bola-prisma", "cap2-prepara-viaje-eldran-2");
+        Enlazar(grafo, "cap2-prepara-viaje-eldran-2", "cap2-prepara-viaje-eldran-3");
+    }
+
+    static void Enlazar(NarrativeGraph grafo, string desde, string hasta)
+    {
+        var nodo = grafo.FindNode(desde);
+        if (nodo == null || grafo.FindNode(hasta) == null)
+        {
+            Debug.LogWarning($"[Cap2Bloque24Despedida] No se enlaza {desde} → {hasta}: falta uno de los nodos.");
+            return;
+        }
+        if (nodo.outputs == null) nodo.outputs = new List<string>();
+        if (!nodo.outputs.Contains(hasta)) nodo.outputs.Add(hasta);
     }
 
     /// <summary>
