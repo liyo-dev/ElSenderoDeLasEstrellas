@@ -301,11 +301,17 @@ namespace Sendero.Narrative.Editor
             List<string> flags, List<SimpleBlackboard.Entry> bb)
         {
             _headline.text = $"EN PLAY · {(_graph != null ? _graph.name : "sin grafo")} · {sceneName}";
-            _current.text = node != null
-                ? $"Nodo actual: {node.displayTitle ?? NarrativeNodeCatalog.TitleOf(node.GetType())}  ({node.GetType().Name})"
-                : CurrentNodeGuid != null
-                    ? "Sin nodo principal: el flujo está en una rama de fork o esperando."
-                    : "Sin nodo actual: el grafo no ha empezado o ya terminó.";
+            var shown = node;
+            bool branches = false;
+            if (shown == null && _graph != null && !string.IsNullOrEmpty(CurrentNodeGuid))
+            {
+                shown = _graph.FindNode(CurrentNodeGuid);
+                branches = shown != null;
+            }
+            _current.text = shown != null
+                ? $"Nodo actual: {shown.displayTitle ?? NarrativeNodeCatalog.TitleOf(shown.GetType())}  ({shown.GetType().Name})" +
+                  (branches ? "  ·  ramas en curso" : "")
+                : "Sin nodo actual: el grafo no ha empezado o ya terminó.";
             _focusButton.SetEnabled(!string.IsNullOrEmpty(CurrentNodeGuid));
 
             _player.text = salud != null
@@ -315,7 +321,7 @@ namespace Sendero.Narrative.Editor
             if (preset != null)
             {
                 var abilities = new List<string>();
-                var a = preset.abilities;
+                var a = preset.abilities ?? new PlayerAbilities();
                 if (a.jump) abilities.Add("saltar");
                 if (a.swim) abilities.Add("nadar");
                 if (a.climb) abilities.Add("trepar");

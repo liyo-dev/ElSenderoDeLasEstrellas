@@ -406,10 +406,8 @@ namespace Sendero.Narrative.Editor
                 StartChanged?.Invoke();
             }, _ => Model is StartNode ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
 
-            evt.menu.AppendAction("Quick Test desde aquí", _ =>
-            {
-                if (_graph != null) NarrativeQuickTestWindow.OpenWithNode(_graph, Model);
-            });
+            if (Model is not GraphNoteNode)
+                evt.menu.AppendAction("Probar desde aquí", _ => TestRequested?.Invoke(this));
             evt.menu.AppendSeparator();
             base.BuildContextualMenu(evt);
         }

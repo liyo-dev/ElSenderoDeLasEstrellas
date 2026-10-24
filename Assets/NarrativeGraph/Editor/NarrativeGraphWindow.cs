@@ -62,6 +62,7 @@ namespace Sendero.Narrative.Editor
         ToolbarButton _playButton;
         ToolbarButton _stopButton;
         string _lastCurrentGuid;
+        readonly HashSet<string> _visitedNodes = new();
 
         [MenuItem("El Sendero/Narrativa/Abrir Editor %#n")]
         public static void OpenWindow()
@@ -210,6 +211,13 @@ namespace Sendero.Narrative.Editor
             string guid = FindCurrentNodeGuid();
             if (guid != _lastCurrentGuid)
             {
+                // Deja rastro de por dónde ha pasado el flujo, para poder reconstruir la sesión.
+                if (!string.IsNullOrEmpty(_lastCurrentGuid) && _nodeViews.TryGetValue(_lastCurrentGuid, out var previous))
+                {
+                    previous.AddToClassList("narrative-node--visited");
+                    _visitedNodes.Add(_lastCurrentGuid);
+                }
+
                 _lastCurrentGuid = guid;
                 foreach (var kv in _nodeViews)
                     kv.Value.EnableInClassList("narrative-node--current",
@@ -248,7 +256,15 @@ namespace Sendero.Narrative.Editor
             {
                 NarrativeTestLauncher.RestoreIfNeeded();
                 _lastCurrentGuid = null;
+                // El rastro de nodos visitados se conserva al salir de Play para poder revisar
+                // por dónde pasó la sesión; se limpia al empezar la siguiente.
                 foreach (var nv in _nodeViews.Values) nv.RemoveFromClassList("narrative-node--current");
+            }
+            else
+            {
+                _lastCurrentGuid = null;
+                _visitedNodes.Clear();
+                foreach (var nv in _nodeViews.Values) nv.RemoveFromClassList("narrative-node--visited");
             }
             _livePanel?.RefreshNow();
         }
@@ -258,12 +274,12 @@ namespace Sendero.Narrative.Editor
             bool playing = EditorApplication.isPlaying;
             if (_playButton != null)
             {
-                _playButton.text = "▶ Probar";
+                _playButton.text = "▶";
                 _playButton.SetEnabled(!playing);
             }
             if (_stopButton != null)
             {
-                _stopButton.text = "■ Parar";
+                _stopButton.text = "■";
                 _stopButton.SetEnabled(playing);
             }
         }
@@ -349,13 +365,16 @@ namespace Sendero.Narrative.Editor
 
             _statusLabel = new Label();
             _statusLabel.AddToClassList("narrative-toolbar__status");
+            _statusLabel.style.maxWidth = 280f;
+            _statusLabel.style.overflow = Overflow.Hidden;
+            _statusLabel.style.textOverflow = TextOverflow.Ellipsis;
             toolbar.Add(_statusLabel);
 
-            _playButton = new ToolbarButton(PlayFromSelection) { text = "▶ Probar", tooltip = "Lanza una prueba desde el nodo seleccionado con la configuración de la pestaña Prueba" };
+            _playButton = new ToolbarButton(PlayFromSelection) { text = "▶", tooltip = "Probar desde el nodo seleccionado con la configuración de la pestaña Prueba" };
             _playButton.AddToClassList("narrative-toolbar__play-btn");
             toolbar.Add(_playButton);
 
-            _stopButton = new ToolbarButton(StopPlay) { text = "■ Parar", tooltip = "Sale de Play y restaura el boot preset" };
+            _stopButton = new ToolbarButton(StopPlay) { text = "■", tooltip = "Parar la prueba y restaurar el boot preset" };
             _stopButton.AddToClassList("narrative-toolbar__stop-btn");
             toolbar.Add(_stopButton);
 
@@ -495,6 +514,7 @@ namespace Sendero.Narrative.Editor
             _pendingPortRebuild.Clear();
             _lastSelected = null;
             _lastCurrentGuid = null;
+            _visitedNodes.Clear();
             _livePanel?.RefreshNow();
 
             if (_graph == null)
@@ -1227,7 +1247,9 @@ namespace Sendero.Narrative.Editor
 
         void SetStatus(string text)
         {
-            if (_statusLabel != null) _statusLabel.text = text;
+            if (_statusLabel == null) return;
+            _statusLabel.text = text;
+            _statusLabel.tooltip = text;
         }
     }
 }

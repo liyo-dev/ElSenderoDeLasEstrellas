@@ -387,6 +387,14 @@ GridBackground {
     border-color: #ffd54a;
 }
 
+.narrative-node--visited > #node-border {
+    border-color: rgba(143, 227, 154, 0.5);
+}
+
+.narrative-node--current > #node-border {
+    border-color: #ffd54a;
+}
+
 .narrative-node__live-badge {
     display: none;
     font-size: 10px;

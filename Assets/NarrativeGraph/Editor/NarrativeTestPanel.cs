@@ -30,8 +30,7 @@ namespace Sendero.Narrative.Editor
         readonly Label _labelWarning;
         readonly Toggle _fastForwardToggle;
         readonly Toggle _autoRestoreToggle;
-        readonly List<EnumField> _basicSpellFields = new();
-        EnumField _comboSpellField;
+
 
         public NarrativeTestPanel()
         {
@@ -137,16 +136,15 @@ namespace Sendero.Narrative.Editor
                     _config.basicSpellIds[slot] = (SpellId)evt.newValue;
                     _config.Save();
                 });
-                _basicSpellFields.Add(field);
                 body.Add(field);
             }
-            _comboSpellField = new EnumField("Combo (Y)", _config.comboSpellId);
-            _comboSpellField.RegisterValueChangedCallback(evt =>
+            var combo = new EnumField("Combo (Y)", _config.comboSpellId);
+            combo.RegisterValueChangedCallback(evt =>
             {
                 _config.comboSpellId = (SpellId)evt.newValue;
                 _config.Save();
             });
-            body.Add(_comboSpellField);
+            body.Add(combo);
 
             // ── Fast-Forward ────────────────────────────────────────────
             var forward = Section("Progreso previo (Fast-Forward)");
