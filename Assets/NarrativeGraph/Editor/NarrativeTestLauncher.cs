@@ -102,6 +102,7 @@ namespace Sendero.Narrative.Editor
         static PlayerPresetSO _originalBootPreset;
         static bool _originalUsePreset;
         static bool _needsRestore;
+        static bool _launching;
 
         public static bool IsPlaying => EditorApplication.isPlaying;
         public static bool NeedsRestore => _needsRestore;
@@ -130,6 +131,13 @@ namespace Sendero.Narrative.Editor
                 status = "Ya estás en Play Mode. Para primero la prueba en curso.";
                 return false;
             }
+            if (_launching)
+            {
+                status = "Ya se está preparando otra prueba; espera un momento.";
+                return false;
+            }
+            _launching = true;
+            EditorApplication.delayCall += () => _launching = false;
             if (graph == null || string.IsNullOrEmpty(nodeGuid))
             {
                 status = "Selecciona un nodo del grafo antes de lanzar la prueba.";
@@ -300,6 +308,8 @@ namespace Sendero.Narrative.Editor
 
         static readonly Dictionary<string, string> LabelCache = new();
 
+        public static void InvalidateLabelCache() => LabelCache.Clear();
+
         public static string DetectGraphLabel(NarrativeGraph graph)
         {
             if (graph == null) return null;
@@ -376,7 +386,7 @@ namespace Sendero.Narrative.Editor
             {
                 var otro = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
                 if (otro == null || otro == grafo || otro.nodes == null) continue;
-                var label = LabelEnHub(otro);
+                var label = DetectGraphLabel(otro);
                 if (string.IsNullOrEmpty(label)) continue;
                 foreach (var emite in otro.nodes.OfType<RaiseCustomEventNode>())
                     if (!string.IsNullOrEmpty(emite.eventKey) && !emisores.ContainsKey(emite.eventKey))

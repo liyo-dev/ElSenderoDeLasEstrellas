@@ -492,6 +492,7 @@ namespace Sendero.Narrative.Editor
             _suppressGraphCallbacks = true;
             _view.DeleteElements(_view.graphElements.ToList());
             _nodeViews.Clear();
+            _pendingPortRebuild.Clear();
             _lastSelected = null;
             _lastCurrentGuid = null;
             _livePanel?.RefreshNow();

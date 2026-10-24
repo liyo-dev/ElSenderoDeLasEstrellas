@@ -675,6 +675,11 @@ GridBackground {
     margin-left: auto;
 }
 
+/* A esa distancia las etiquetas Sí/No no se leen: quedan solo las bolitas. */
+.narrative-view--far .narrative-port--named > #type {
+    display: none;
+}
+
 /* ─── Aristas ─────────────────────────────────────────────────── */
 
 .narrative-edge--dimmed {

@@ -21,6 +21,7 @@ namespace Sendero.Narrative.Editor
         readonly Label _targetLabel;
         readonly Label _statusLabel;
         readonly Button _playButton;
+        readonly Button _restoreButton;
         readonly VisualElement _previewBox;
         readonly ScrollView _scroll;
         readonly TextField _graphLabelField;
@@ -52,7 +53,12 @@ namespace Sendero.Narrative.Editor
             var where = Section("Dónde apareces");
             _graphLabelField = new TextField("Etiqueta del grafo") { isDelayed = true, value = _config.graphLabel ?? "" };
             _graphLabelField.tooltip = "Etiqueta con la que el NarrativeGraphHub de Start.unity registra este grafo.";
-            _graphLabelField.RegisterValueChangedCallback(evt => { _config.graphLabel = evt.newValue; _config.Save(); });
+            _graphLabelField.RegisterValueChangedCallback(evt =>
+            {
+                _config.graphLabel = evt.newValue;
+                _config.Save();
+                _labelWarning.style.display = DisplayStyle.None;
+            });
             where.Add(_graphLabelField);
 
             _labelWarning = new Label("No se encontró este grafo en el Hub de Start.unity. Revisa la etiqueta antes de lanzar.");
@@ -62,6 +68,7 @@ namespace Sendero.Narrative.Editor
 
             var detectLabel = new Button(() =>
             {
+                NarrativeTestLauncher.InvalidateLabelCache();
                 var label = NarrativeTestLauncher.DetectGraphLabel(_graph);
                 if (string.IsNullOrEmpty(label))
                 {
@@ -173,6 +180,15 @@ namespace Sendero.Narrative.Editor
             _playButton = new Button(TogglePlay) { text = "▶ Probar desde el nodo" };
             _playButton.AddToClassList("narrative-test__play");
             actions.Add(_playButton);
+
+            _restoreButton = new Button(() =>
+            {
+                NarrativeTestLauncher.RestoreOriginalBootPreset();
+                RefreshPlayButton();
+            }) { text = "Restaurar boot preset original" };
+            _restoreButton.AddToClassList("narrative-test__small-button");
+            _restoreButton.style.display = DisplayStyle.None;
+            actions.Add(_restoreButton);
             _scroll.Add(actions);
 
             _statusLabel = new Label();
@@ -360,6 +376,12 @@ namespace Sendero.Narrative.Editor
             _playButton.text = playing ? "■ Parar prueba" : "▶ Probar desde el nodo";
             _playButton.EnableInClassList("is-playing", playing);
             _playButton.SetEnabled(playing || (!string.IsNullOrEmpty(_targetGuid) && _graph != null));
+            if (_restoreButton != null)
+            {
+                _restoreButton.style.display = NarrativeTestLauncher.NeedsRestore
+                    ? DisplayStyle.Flex
+                    : DisplayStyle.None;
+            }
         }
 
         void SetStatus(string text)
