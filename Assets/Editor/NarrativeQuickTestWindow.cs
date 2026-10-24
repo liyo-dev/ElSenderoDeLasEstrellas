@@ -90,12 +90,6 @@ public class NarrativeQuickTestWindow : EditorWindow
     private bool _autoRestore = true;
     private string _status = "";
 
-    // Saved original state for restore
-    private static PlayerPresetSO _originalBootPreset;
-    private static bool _originalUsePreset;
-    private static bool _needsRestore;
-
-    private const string QuickTestPresetPath = "Assets/Editor/QuickTestPreset_Temp.asset";
 
     [MenuItem("El Sendero/Narrativa/Quick Test from Node")]
     public static void ShowWindow()
@@ -136,10 +130,8 @@ public class NarrativeQuickTestWindow : EditorWindow
 
     private static void OnPlayModeStateChanged(PlayModeStateChange state)
     {
-        if (state == PlayModeStateChange.EnteredEditMode && _needsRestore)
-        {
-            RestoreOriginalBootPreset();
-        }
+        if (state == PlayModeStateChange.EnteredEditMode)
+            Sendero.Narrative.Editor.NarrativeTestLauncher.RestoreIfNeeded();
     }
 
     private void OnGUI()
@@ -355,12 +347,12 @@ public class NarrativeQuickTestWindow : EditorWindow
         EditorGUILayout.Space(8);
 
         // Manual restore button
-        if (_needsRestore)
+        if (Sendero.Narrative.Editor.NarrativeTestLauncher.NeedsRestore)
         {
             GUI.backgroundColor = new Color(0.85f, 0.6f, 0.2f);
             if (GUILayout.Button("Restaurar bootPreset original"))
             {
-                RestoreOriginalBootPreset();
+                Sendero.Narrative.Editor.NarrativeTestLauncher.RestoreOriginalBootPreset();
             }
             GUI.backgroundColor = Color.white;
         }
@@ -370,183 +362,59 @@ public class NarrativeQuickTestWindow : EditorWindow
 
     private void LaunchQuickTest()
     {
-        if (EditorApplication.isPlaying)
+        var cfg = BuildConfig();
+        if (!Sendero.Narrative.Editor.NarrativeTestLauncher.Launch(
+                _targetGraph, _targetNodeGuid, cfg, out var status, out var preview))
         {
-            _status = "Ya estás en Play Mode. Sal primero.";
+            _status = status;
             return;
         }
 
-        // 1. Find GameBootProfile
-        var profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>("Assets/_BootProfile/GameBootProfile.asset");
-        if (profile == null)
+        CopyPreview(preview);
+        if (cfg.fastForward)
         {
-            var guids = AssetDatabase.FindAssets("t:GameBootProfile");
-            if (guids.Length > 0)
-                profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>(AssetDatabase.GUIDToAssetPath(guids[0]));
-        }
-        if (profile == null)
-        {
-            _status = "GameBootProfile no encontrado.";
-            return;
-        }
-
-        // 2. Save original state for restore
-        _originalBootPreset = profile.bootPreset;
-        _originalUsePreset = profile.usePresetInsteadOfSave;
-        _needsRestore = _autoRestore;
-
-        // 3. Create/update temp preset
-        var tempPreset = AssetDatabase.LoadAssetAtPath<PlayerPresetSO>(QuickTestPresetPath);
-        if (tempPreset == null)
-        {
-            tempPreset = ScriptableObject.CreateInstance<PlayerPresetSO>();
-            AssetDatabase.CreateAsset(tempPreset, QuickTestPresetPath);
-        }
-
-        // 4. Rellenar el preset temporal solo con lo que se configura en esta ventana.
-        //    Deliberadamente NO se copia ningún "Base Preset": el progreso de historia previo
-        //    (flags, misiones, items, bosses, etc.) se deja vacío/neutro. La apariencia/vestuario
-        //    se hereda del defaultPlayerPreset del profile solo por motivos cosméticos (para no
-        //    aparecer con el aspecto por defecto/sin ropa), nunca su progreso narrativo.
-        ApplyPlayerStateToPreset(tempPreset, profile.defaultPlayerPreset);
-        tempPreset.name = "QuickTest_Temp";
-
-        // 4b. Fast-Forward: simula el camino desde el inicio del grafo y aplica el progreso previo
-        //     (quests, items, habilidades/hechizos, flags) ENCIMA del estado manual de arriba.
-        if (_fastForward)
-        {
-            RunFastForward(tempPreset);
-            _fastForwardPreviewRan = true;
-
-            if (_fastForwardWarnings.Count > 0)
-            {
-                Debug.LogWarning($"[QuickTest] Fast-Forward encontró {_fastForwardWarnings.Count} bifurcación(es):\n" +
-                    string.Join("\n", _fastForwardWarnings));
-            }
-            if (_fastForwardNotes.Count > 0)
-                Debug.LogWarning("[QuickTest] Fast-Forward, a revisar:\n" + string.Join("\n", _fastForwardNotes));
-            if (!_fastForwardReachedTarget)
-            {
+            if (preview.warnings.Count > 0)
+                Debug.LogWarning($"[QuickTest] Fast-Forward encontró {preview.warnings.Count} bifurcación(es):\n" +
+                    string.Join("\n", preview.warnings));
+            if (preview.notes.Count > 0)
+                Debug.LogWarning("[QuickTest] Fast-Forward, a revisar:\n" + string.Join("\n", preview.notes));
+            if (!preview.reachedTarget)
                 Debug.LogWarning("[QuickTest] Fast-Forward no llegó al nodo objetivo automáticamente " +
                     "(revisa las bifurcaciones). Se lanzará igualmente con el progreso parcial acumulado.");
-            }
         }
-
-        // 5. Blackboards: el grafo objetivo en su nodo; los capítulos previos, terminados.
-        var objetivo = _targetNodeGuid;
-        var previos = CapitulosPrevios(_targetGraph, ref objetivo);
-        var snapshots = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
-        foreach (var previo in previos)
-        {
-            var terminado = new SimpleBlackboard();
-            terminado.Set(NarrativeRunner.CurrentNodeKey, string.Empty);
-            terminado.Set(NarrativeRunner.FlowEndedKey, true);
-            snapshots.Add(new PlayerSaveData.NarrativeBlackboardSnapshot { graphLabel = previo.label, blackboardData = terminado.ExportToSerializable() });
-        }
-        var actual = new SimpleBlackboard();
-        actual.Set(NarrativeRunner.CurrentNodeKey, objetivo);
-        snapshots.Add(new PlayerSaveData.NarrativeBlackboardSnapshot { graphLabel = _graphLabel, blackboardData = actual.ExportToSerializable() });
-        tempPreset.narrativeBlackboards = snapshots;
-        if (previos.Count > 0)
-            Debug.Log($"[QuickTest] Capítulos previos terminados: {string.Join(", ", previos.Select(p => p.label))}.");
-
-        EditorUtility.SetDirty(tempPreset);
-
-        // 6. Configure GameBootProfile
-        profile.usePresetInsteadOfSave = true;
-        profile.bootPreset = tempPreset;
-        EditorUtility.SetDirty(profile);
-        AssetDatabase.SaveAssets();
-
-        var selectedNode = _targetGraph.FindNode(objetivo);
-        string nodeDesc = selectedNode != null
-            ? $"{selectedNode.GetType().Name} \"{selectedNode.displayTitle}\""
-            : objetivo;
-
-        _status = $"Lanzando Play desde {nodeDesc} en {_graphLabel} (anchor: {tempPreset.spawnAnchorId})...";
-        Debug.Log($"[QuickTest] Configurado: grafo='{_graphLabel}', nodo='{nodeDesc}', anchor='{tempPreset.spawnAnchorId}', " +
-            $"habilidades=(swim:{_abilitySwim}, jump:{_abilityJump}, climb:{_abilityClimb}, magic:{_abilityMagic}, fly:{_abilityFly}, sprint:{_abilitySprint}, shield:{_abilityShield}), " +
-            $"básicos=({string.Join(", ", _basicSpellIds)}), combo={_comboSpellId}");
-
-        // 7. Enter Play Mode
-        EditorApplication.isPlaying = true;
+        _status = status;
     }
 
-    /// <summary>
-    /// Aplica a <paramref name="dst"/> el nivel/vida/maná/habilidades/hechizos configurados en la
-    /// ventana. El progreso de historia (flags, misiones, inventario de quest, bosses, etc.) se deja
-    /// vacío a propósito — este tool no simula partidas avanzadas, solo coloca el grafo en un nodo y
-    /// te da el "cuerpo" (habilidades/hechizos) necesario para probarlo.
-    /// <paramref name="cosmeticBase"/> (normalmente el defaultPlayerPreset del profile) se usa
-    /// únicamente para apariencia/vestuario, nunca para progreso.
-    /// </summary>
-    private void ApplyPlayerStateToPreset(PlayerPresetSO dst, PlayerPresetSO cosmeticBase)
+    private Sendero.Narrative.Editor.NarrativeTestConfig BuildConfig()
     {
-        dst.spawnAnchorId = string.IsNullOrEmpty(_spawnAnchorId) ? "Bedroom" : _spawnAnchorId;
-
-        dst.level = _level;
-        dst.maxHP = _maxHP;
-        dst.currentHP = _maxHP;
-        dst.maxMP = _maxMP;
-        dst.currentMP = _maxMP;
-
-        dst.abilities = new PlayerAbilities
+        return new Sendero.Narrative.Editor.NarrativeTestConfig
         {
-            swim = _abilitySwim,
-            jump = _abilityJump,
-            climb = _abilityClimb,
-            magic = _abilityMagic,
-            fly = _abilityFly,
-            sprint = _abilitySprint,
-            shield = _abilityShield
+            graphLabel = _graphLabel,
+            spawnAnchorId = _spawnAnchorId,
+            level = _level,
+            maxHP = _maxHP,
+            maxMP = _maxMP,
+            abilitySwim = _abilitySwim,
+            abilityJump = _abilityJump,
+            abilityClimb = _abilityClimb,
+            abilityMagic = _abilityMagic,
+            abilityFly = _abilityFly,
+            abilitySprint = _abilitySprint,
+            abilityShield = _abilityShield,
+            basicSpellIds = (SpellId[])_basicSpellIds.Clone(),
+            comboSpellId = _comboSpellId,
+            fastForward = _fastForward,
+            autoRestore = _autoRestore
         };
-        dst.unlockedAbilities = new List<AbilityId>();
-
-        dst.basicSpellIds = _basicSpellIds.Where(id => id != SpellId.None).Distinct().ToList();
-        dst.unlockedSpells = _basicSpellIds.Append(_comboSpellId)
-            .Where(id => id != SpellId.None)
-            .Distinct()
-            .ToList();
-
-        // Cosmético únicamente — apariencia/vestuario del preset por defecto, para no aparecer
-        // con el aspecto en blanco. No incluye progreso.
-        dst.appearance = new List<AppearanceEntry>(cosmeticBase?.appearance ?? new List<AppearanceEntry>());
-        dst.unlockedWardrobeIds = new List<string>(cosmeticBase?.unlockedWardrobeIds ?? new List<string>());
-
-        // Progreso de historia: siempre vacío/neutro en Quick Test.
-        dst.flags = new List<string>();
-        dst.inventoryItems = new List<InventoryItemSave>();
-        dst.defeatedBossIds = new List<string>();
-        dst.consumedInteractableIds = new List<string>();
-        dst.objetosDelMundo = new List<ObjetoPersistente.Estado>();
-        dst.completedInteractiveNarratives = new List<string>();
-        dst.seenLorePopupIds = new List<string>();
-        dst.partyMemberIds = new List<string>();
-        dst.activeCharacterSlot = 1;
-        dst.unlockedTeleportPoints = new List<string>();
-        dst.npcPositions = new List<PlayerPresetSO.NpcPosEntry>();
     }
 
-    private static void RestoreOriginalBootPreset()
+    private void CopyPreview(Sendero.Narrative.Editor.NarrativeFastForwardPreview preview)
     {
-        var profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>("Assets/_BootProfile/GameBootProfile.asset");
-        if (profile == null)
-        {
-            var guids = AssetDatabase.FindAssets("t:GameBootProfile");
-            if (guids.Length > 0)
-                profile = AssetDatabase.LoadAssetAtPath<GameBootProfile>(AssetDatabase.GUIDToAssetPath(guids[0]));
-        }
-
-        if (profile != null)
-        {
-            profile.bootPreset = _originalBootPreset;
-            profile.usePresetInsteadOfSave = _originalUsePreset;
-            EditorUtility.SetDirty(profile);
-            AssetDatabase.SaveAssets();
-            Debug.Log("[QuickTest] bootPreset restaurado al original.");
-        }
-
-        _needsRestore = false;
+        _fastForwardPreviewRan = preview != null && preview.ran;
+        _fastForwardReachedTarget = preview != null && preview.reachedTarget;
+        _fastForwardWarnings = preview?.warnings ?? new List<string>();
+        _fastForwardActors = preview?.actors ?? new List<string>();
+        _fastForwardNotes = preview?.notes ?? new List<string>();
     }
 
     /// <summary>
@@ -556,18 +424,9 @@ public class NarrativeQuickTestWindow : EditorWindow
     /// </summary>
     private void RefreshDetectedAnchors()
     {
-        var anchors = Object.FindObjectsByType<SpawnAnchor>();
-        _detectedAnchors = anchors
-            .Select(a => a.anchorId)
-            .Where(id => !string.IsNullOrEmpty(id))
-            .Distinct()
-            .OrderBy(id => id)
-            .ToArray();
-
+        _detectedAnchors = Sendero.Narrative.Editor.NarrativeTestLauncher.DetectSpawnAnchors();
         if (_detectedAnchors.Length == 0)
-        {
             _status = "No se han encontrado SpawnAnchor en las escenas abiertas. Abre la escena del nodo objetivo primero.";
-        }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -587,151 +446,18 @@ public class NarrativeQuickTestWindow : EditorWindow
             return;
         }
 
-        var scratch = ScriptableObject.CreateInstance<PlayerPresetSO>();
-        try
-        {
-            RunFastForward(scratch);
-            _fastForwardPreviewRan = true;
-        }
-        finally
-        {
-            DestroyImmediate(scratch);
-        }
+        CopyPreview(Sendero.Narrative.Editor.NarrativeTestLauncher.Preview(_targetGraph, _targetNodeGuid, BuildConfig()));
         Repaint();
-    }
-
-    /// <summary>Proyecta el grafo hasta el nodo objetivo y escribe el resultado en <paramref name="dst"/>.</summary>
-    private void RunFastForward(PlayerPresetSO dst)
-    {
-        _fastForwardWarnings.Clear();
-        _fastForwardActors.Clear();
-        _fastForwardNotes.Clear();
-        _fastForwardReachedTarget = false;
-        if (_targetGraph == null || string.IsNullOrEmpty(_targetNodeGuid)) return;
-
-        var writer = new PresetNarrativeStateWriter(dst);
-        var objetivo = _targetNodeGuid;
-        var previos = CapitulosPrevios(_targetGraph, ref objetivo);
-        foreach (var previo in previos)
-        {
-            var anterior = NarrativeStateProjector.Project(previo.grafo, previo.puenteGuid, writer);
-            _fastForwardWarnings.AddRange(anterior.Decisions.Select(d => $"[{previo.label}] {d}"));
-            _fastForwardNotes.Add($"Capítulo previo '{previo.label}' dado por terminado y su progreso proyectado.");
-        }
-        if (objetivo != _targetNodeGuid)
-            _fastForwardNotes.Add($"Se empieza tras el puente del capítulo previo: '{_targetGraph.FindNode(objetivo)?.displayTitle}'.");
-        var result = NarrativeStateProjector.Project(_targetGraph, objetivo, writer);
-        _fastForwardActors.AddRange(writer.ApplyActorPlacements(new OpenScenesNarrativeWorld()));
-
-        _fastForwardReachedTarget = result.ReachedTarget;
-        _fastForwardWarnings.AddRange(result.Decisions);
-        _fastForwardNotes.AddRange(writer.Notes);
     }
 
     private void TryAutoDetectLabel(NarrativeGraph graph)
     {
-        var label = LabelEnHub(graph);
+        var label = Sendero.Narrative.Editor.NarrativeTestLauncher.DetectGraphLabel(graph);
         if (!string.IsNullOrEmpty(label)) _graphLabel = label;
     }
 
-    internal sealed class CapituloPrevio
-    {
-        public NarrativeGraph grafo;
-        public string label;
-        public string puenteGuid; // RaiseCustomEventNode que da paso al capítulo siguiente
-    }
-
-    /// <summary>
-    /// Capítulos que preceden a <paramref name="grafo"/>: grafos del Hub que emiten la señal que
-    /// este espera antes del nodo objetivo. Si el objetivo es el inicio o la espera de ese puente,
-    /// se adelanta al primer nodo jugable, porque nadie va a volver a emitir la señal.
-    /// Devuelve primero los más antiguos.
-    /// </summary>
-    internal static List<CapituloPrevio> CapitulosPrevios(NarrativeGraph grafo, ref string objetivoGuid)
-    {
-        var resultado = new List<CapituloPrevio>();
-        if (grafo == null || string.IsNullOrEmpty(objetivoGuid)) return resultado;
-
-        var emisores = new Dictionary<string, CapituloPrevio>();
-        foreach (var guid in AssetDatabase.FindAssets("t:NarrativeGraph"))
-        {
-            var otro = AssetDatabase.LoadAssetAtPath<NarrativeGraph>(AssetDatabase.GUIDToAssetPath(guid));
-            if (otro == null || otro == grafo || otro.nodes == null) continue;
-            var label = LabelEnHub(otro);
-            if (string.IsNullOrEmpty(label)) continue;
-            foreach (var emite in otro.nodes.OfType<RaiseCustomEventNode>())
-                if (!string.IsNullOrEmpty(emite.eventKey) && !emisores.ContainsKey(emite.eventKey))
-                    emisores.Add(emite.eventKey, new CapituloPrevio { grafo = otro, label = label, puenteGuid = emite.guid });
-        }
-
-        bool EsPuente(NarrativeNode n) => n is WaitCustomEventNode w && emisores.ContainsKey(w.eventKey ?? "");
-        var nodo = grafo.FindNode(objetivoGuid);
-        bool cruzaPuente = false;
-        while (nodo != null && (nodo is StartNode || EsPuente(nodo)) && nodo.outputs != null && nodo.outputs.Count == 1)
-        {
-            cruzaPuente |= EsPuente(nodo);
-            nodo = grafo.FindNode(nodo.outputs[0]);
-        }
-        if (cruzaPuente && nodo != null) objetivoGuid = nodo.guid;
-
-        AnadirPrevios(grafo, objetivoGuid, emisores, resultado, new HashSet<NarrativeGraph> { grafo });
-        return resultado;
-    }
-
-    static void AnadirPrevios(NarrativeGraph grafo, string hastaGuid, Dictionary<string, CapituloPrevio> emisores,
-        List<CapituloPrevio> resultado, HashSet<NarrativeGraph> vistos)
-    {
-        // Esperas recorridas desde el inicio antes de llegar al nodo hasta el que se avanza.
-        var recorridos = new HashSet<string>();
-        var cola = new Queue<string>();
-        cola.Enqueue(grafo.startNodeGuid);
-        while (cola.Count > 0)
-        {
-            var guid = cola.Dequeue();
-            if (string.IsNullOrEmpty(guid) || guid == hastaGuid || !recorridos.Add(guid)) continue;
-            var n = grafo.FindNode(guid);
-            if (n == null) continue;
-            if (n is WaitCustomEventNode w && emisores.TryGetValue(w.eventKey ?? "", out var previo) && vistos.Add(previo.grafo))
-            {
-                AnadirPrevios(previo.grafo, previo.puenteGuid, emisores, resultado, vistos);
-                resultado.Add(previo);
-            }
-            if (n.outputs != null)
-                foreach (var o in n.outputs) cola.Enqueue(o);
-        }
-    }
-
-    /// <summary>Etiqueta con la que el NarrativeGraphHub de Start.unity registra el grafo, o null.</summary>
-    static string LabelEnHub(NarrativeGraph graph)
-    {
-        if (graph == null) return null;
-        var graphPath = AssetDatabase.GetAssetPath(graph);
-        var graphGuid = AssetDatabase.AssetPathToGUID(graphPath);
-
-        // Search Start.unity scene for NarrativeGraphHub configuration
-        var sceneGuids = AssetDatabase.FindAssets("t:Scene Start");
-        foreach (var sceneGuid in sceneGuids)
-        {
-            var scenePath = AssetDatabase.GUIDToAssetPath(sceneGuid);
-            if (!scenePath.Contains("Start")) continue;
-
-            var sceneText = System.IO.File.ReadAllText(scenePath);
-            int idx = sceneText.IndexOf(graphGuid, System.StringComparison.Ordinal);
-            if (idx < 0) continue;
-
-            // Look backwards for "label:" line
-            int searchStart = Mathf.Max(0, idx - 200);
-            string chunk = sceneText.Substring(searchStart, idx - searchStart);
-            int labelIdx = chunk.LastIndexOf("label:", System.StringComparison.Ordinal);
-            if (labelIdx >= 0)
-            {
-                int lineEnd = chunk.IndexOf('\n', labelIdx);
-                if (lineEnd < 0) lineEnd = chunk.Length;
-                string labelLine = chunk.Substring(labelIdx + 6, lineEnd - labelIdx - 6).Trim();
-                if (!string.IsNullOrEmpty(labelLine))
-                    return labelLine;
-            }
-        }
-        return null;
-    }
+    /// <summary>Compatibilidad con VerificarCapitulosEncadenados: delega en el lanzador único.</summary>
+    internal static List<Sendero.Narrative.Editor.NarrativeTestLauncher.CapituloPrevio> CapitulosPrevios(
+        NarrativeGraph grafo, ref string objetivoGuid)
+        => Sendero.Narrative.Editor.NarrativeTestLauncher.CapitulosPrevios(grafo, ref objetivoGuid);
 }
