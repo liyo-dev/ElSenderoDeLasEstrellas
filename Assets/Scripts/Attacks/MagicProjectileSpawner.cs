@@ -442,6 +442,7 @@ public class MagicProjectileSpawner : MonoBehaviour
     private static Vector3 GetTargetCenter(Transform target)
     {
         var col = target.GetComponentInParent<Collider>();
+        if (col == null) col = target.GetComponentInChildren<Collider>();
         return col ? col.bounds.center : target.position + Vector3.up;
     }
 

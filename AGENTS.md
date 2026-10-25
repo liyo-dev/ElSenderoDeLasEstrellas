@@ -85,6 +85,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 7. **`PushMode`/`PopMode`, suscripciones y bloqueos** se liberan también en `OnDisable`/`Exit()`: un `finally` de corrutina no se ejecuta si se para o se destruye el objeto.
 8. **Menús de un solo uso:** evitarlos; si hacen falta, pasan a `El Sendero/Archivo/` en cuanto se han ejecutado.
 9. **Grafo narrativo = producto reutilizable (regla prioritaria).** Todo lo que toque el grafo narrativo (núcleo, nodos, editor, herramientas) se diseña SOLID, escalable y con nomenclatura genérica: nada de nombres de este juego (personajes, capítulos, escenas) en el núcleo, nada de `switch` por tipo de nodo fuera del propio nodo (cada nodo declara su comportamiento), dependencias del juego solo a través de interfaces. Objetivo: reutilizarlo en el siguiente juego y venderlo en la Asset Store con soporte para IA.
+10. **Dónde se trabaja: siempre en este proyecto (`C:/Users/luarb/dev/unity/ElSenderoDeLasEstrellas`, rama `main`).** Prohibido crear worktrees, ramas paralelas o carpetas de trabajo aparte para editar: los cambios hechos fuera no llegan a Unity y acaban en un sitio que Raúl no ve. Si una sesión arranca en otra ruta (worktree, `witty-star`, etc.), pasar el trabajo a este proyecto antes de dar nada por hecho. No commitear ni tocar cambios sin commitear que no sean de la tanda actual.
 
 **Sistema oficial por responsabilidad** (lo demás está congelado: se mantiene, no se amplía):
 
@@ -122,6 +123,7 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Abrir la protección de algo con un hechizo (Amanecer: jefes, cristales, sellos, guardianes) | `IProteccionQueSeAbre` + `ProteccionQueSeAbre` (campo `abreProteccionSegundos` del `MagicSpellSO`; con `SoloDanoCuandoExpuesto`) | flags o `if` a medida por jefe o sello |
 | Enemigos del mundo (no jefes) | heredar de `EnemigoDelMundo` (objetivo con `CombatTargetProvider`, daño con `Damageable`, avisos con `AmenazasAlJugador`, Esencia con `OrbDropper`); reglas de daño propias como `IFiltroDeDano` (`ReveladoPorLuz`…) | IA de enemigo escrita desde cero en cada uno |
 | Retratos del grupo en el HUD (busto, reacciones, retratos vivos) | `RetratoDelGrupo` + `IFuenteDeRetrato` (`JuegoDeRetratos` horneado con *Hornear retratos del grupo*, `EstudioDeRetratos` en vivo); la vida y las caídas solo vía `EstadoDelGrupoParaRetratos` (TDD § 11) | sprites, alfas o imágenes de IA puestos a mano en `PartyHUDPanel` |
+| Oficios ambientales de NPCs (mover cajas de un lado a otro, puestos con ida y vuelta) | `NPCWorkRoute` + `WorkState` + `NPCAmbientConfig.permitirTrabajo`/`puestoId` (TDD § 3) | IA de oficio escrita desde cero en cada NPC; activar el wander para que no estén quietos |
 
 ---
 

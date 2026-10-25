@@ -45,6 +45,14 @@ namespace Game.NPC.States
                 return;
             }
 
+            // Un NPC con enableWander=false (actor narrativo, oficio con ruta...) no debe salir
+            // vagando tras un encuentro social: vuelve a Idle y, si tiene ruta, retoma su oficio.
+            if (context.Config != null && !context.Config.enableWander)
+            {
+                context.Brain.ChangeState(new IdleState());
+                return;
+            }
+
             _hasSetDestination  = false;
             _stuckTimer         = 0f;
             _lastPosition       = context.Transform.position;

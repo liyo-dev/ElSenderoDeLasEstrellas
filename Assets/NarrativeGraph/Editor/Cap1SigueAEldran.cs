@@ -27,7 +27,7 @@ public static class Cap1SigueAEldran
     private const string Nodo20e  = "c7d1e2a4-5b36-4f18-9e20-3a4b5c6d7e02";
     private const string Nodo21   = "18dc4ae9-acd5-4ec7-b3ec-389ed5af4fba";
 
-    private const string Eldran = "CHAR_ELDRAN", Will = "CHAR_WILL", Oliver = "CHAR_OLIVER";
+    private const string Eldran = "CHAR_ELDRAN", Will = "CHAR_WILL";
 
     [MenuItem("El Sendero/Narrativa/Cap1: misión «Sigue a Eldran» y charla por el camino (INC-535, INC-537)")]
     public static void Aplicar()
@@ -52,8 +52,7 @@ public static class Cap1SigueAEldran
             (Eldran, "DLG_ELDRAN_SIGUEME_INPROGRESS_01", NPCEmotion.Happy));
         var charlaVictoria = Dialogo($"{CarpetaEldran}/DG_ELDRAN_CHARLA_VICTORIA.asset",
             (Will,   "DLG_ELDRAN_CHARLA_VICTORIA_01", NPCEmotion.Neutral),
-            (Eldran, "DLG_ELDRAN_CHARLA_VICTORIA_02", NPCEmotion.Neutral),
-            (Oliver, "DLG_ELDRAN_CHARLA_VICTORIA_03", NPCEmotion.Happy));
+            (Eldran, "DLG_ELDRAN_CHARLA_VICTORIA_02", NPCEmotion.Neutral));
         var charlaEstrella = Dialogo($"{CarpetaEldran}/DG_ELDRAN_CHARLA_ESTRELLA.asset",
             (Eldran, "DLG_ELDRAN_CHARLA_ESTRELLA_01", NPCEmotion.Neutral),
             (Will,   "DLG_ELDRAN_CHARLA_ESTRELLA_02", NPCEmotion.Neutral),

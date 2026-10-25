@@ -17,6 +17,7 @@ public sealed class PuzlesDelLab : MonoBehaviour, ISeccionDelLab
     public void Dibujar()
     {
         GUILayout.Label("Kit de puzles: más al este, por el hueco del muro de la zona de Puzles (o pestaña Zonas).", EstiloDelLab.Etiqueta);
+        GUILayout.Label("R3/F fija el cristal que estás mirando; RB cambia al siguiente (enemigo o pieza). Mantén R3/F para activar/desactivar el autoapuntado.", EstiloDelLab.Nota);
         Pieza("Cristal de luz", "Bola Prisma, Estrella Fugaz o Lluvia de Chispas (luz). Se encienden 6 s las plataformas: cruza antes de que se apaguen.");
         Pieza("Molinete", "Ráfaga, Huracán, Ciclón o la zona Remolino (viento). Abre la puerta de la sala. Tormenta de Fuego y Muro de Fuego son de fuego: sirven para el brasero, no para el molinete.");
         Pieza("Brasero", "Bola de Fuego, Chispa Ígnea o Llama Astral (fuego). Sube el ascensor y se queda guardado: pulsa R y sigue arriba.");

@@ -31,8 +31,46 @@ public class SpeechBubbleUI : MonoBehaviour
     [SerializeField] RectTransform _parentCanvasRect;
 
     [Header("Sprites")]
+    [Tooltip("Sprite del bocadillo antiguo (elipse blanca del atlas). Solo se usa si el arte " +
+             "generado está desactivado.")]
     [SerializeField] Sprite _defaultSprite;
+    [Tooltip("Sprite de énfasis del atlas (burbuja explosiva). Solo se usa si el arte generado " +
+             "está desactivado.")]
     [SerializeField] Sprite _emphasisSprite;
+
+    [Header("Arte del bocadillo (dibujado por código)")]
+    [Tooltip("El bocadillo se dibuja por código: papel cálido con el borde dibujado a mano, " +
+             "cola propia y sombra proyectada. Desactívalo para volver al sprite del prefab.")]
+    [SerializeField] bool _usarArteGenerado = true;
+    [Tooltip("Color del papel del bocadillo.")]
+    [SerializeField] Color _colorPapel = new Color(0.965f, 0.914f, 0.82f, 1f);
+    [Tooltip("Color del borde dibujado alrededor del papel.")]
+    [SerializeField] Color _colorBorde = new Color(0.38f, 0.30f, 0.23f, 1f);
+    [Tooltip("Grosor del borde, en píxeles de lienzo. A 0 el bocadillo queda sin contorno.")]
+    [SerializeField, Min(0f)] float _grosorBorde = 3f;
+    [Tooltip("Radio de las esquinas del papel, en píxeles de lienzo.")]
+    [SerializeField, Min(2f)] float _radioEsquina = 26f;
+    [Tooltip("Margen entre el texto y el borde del papel, en píxeles de lienzo.")]
+    [SerializeField, Min(0f)] float _margenTexto = 14f;
+    [Tooltip("Cola del bocadillo: ancho y alto, en píxeles de lienzo. A 0 de alto, no hay cola.")]
+    [SerializeField] Vector2 _cola = new Vector2(52f, 26f);
+    [Tooltip("Irregularidad del borde: a 0 el papel es un rectángulo perfecto; a 2-3 parece " +
+             "dibujado a mano.")]
+    [SerializeField, Min(0f)] float _desdibujo = 1.6f;
+    [Tooltip("Color del texto dentro del papel.")]
+    [SerializeField] Color _colorTexto = new Color(0.14f, 0.12f, 0.10f, 1f);
+    [Tooltip("Sombra proyectada: color, alcance del difuminado, desplazamiento y opacidad.")]
+    [SerializeField] Color _colorSombra = new Color(0.10f, 0.08f, 0.06f, 1f);
+    [Tooltip("Hasta dónde llega la sombra alrededor del papel, en píxeles de lienzo.")]
+    [SerializeField, Min(0f)] float _radioSombra = 9f;
+    [SerializeField] Vector2 _sombraDesplazamiento = new Vector2(2f, -6f);
+    [SerializeField, Range(0f, 0.6f)] float _sombraOpacidad = 0.3f;
+    [Tooltip("Tamaño del texto, en proporción del alto del lienzo (0,036 = 39 px a 1080).")]
+    [SerializeField, Range(0.015f, 0.06f)] float _tamanoTextoDelCanvas = 0.036f;
+    [Tooltip("Ancho mínimo del papel, en múltiplos del tamaño de letra: el texto corto no baja de aquí.")]
+    [SerializeField, Min(4f)] float _anchoMinimoEnLetras = 9f;
+    [Tooltip("Ancho máximo del papel, en múltiplos del tamaño de letra, antes de partir el texto en líneas.")]
+    [SerializeField, Min(8f)] float _anchoMaximoEnLetras = 20f;
 
     [Header("Animación")]
     [SerializeField] float _fadeInDuration  = 0.15f;
@@ -123,6 +161,18 @@ public class SpeechBubbleUI : MonoBehaviour
     VerticalLayoutGroup _layout;
     RectOffset _paddingConPico;
 
+    // Arte generado por código (papel con borde dibujado a mano).
+    // El bocadillo se pinta como un campo de distancia y se cachea por tamaño: cada
+    // medida distinta que aparezca en el juego se dibuja una sola vez.
+    readonly Dictionary<long, Sprite> _spritesGenerados = new();
+    readonly List<Texture2D> _texturasGeneradas = new();
+    float[] _ruido;                 // tabla de ruido para el borde irregular
+    const int LadoRuido = 32;
+    float _tamanoTextoOriginal;     // tamaño de letra del prefab, para el arte antiguo
+    const float SolapeCola = 8f;    // la cola entra este tramo en el papel: sin costura
+    const int TopeDeSpritesGenerados = 64;   // texturas de papel vivas a la vez
+    const float PasoDeAncho = 8f;    // el ancho se redondea: menos medidas distintas
+
     // Caché de componentes de animación: evita GetComponentInChildren repetido
     readonly Dictionary<Transform, Animator> _animatorCache = new();
     readonly Dictionary<Transform, NPCSimpleAnimator> _npcAnimCache = new();
@@ -152,6 +202,19 @@ public class SpeechBubbleUI : MonoBehaviour
         _grupoBocadillo = _rootGroup;
         _rectBocadillo = _bubbleRect;
         _textoBocadillo = _label;
+
+        PrepararRuido();
+        if (_label != null) _tamanoTextoOriginal = _label.fontSize;
+    }
+
+    /// Tabla de ruido con la que se irregulariza el borde del papel. Se genera una vez
+    /// con semilla fija: el bocadillo se ve igual en todas las partidas.
+    void PrepararRuido()
+    {
+        _ruido = new float[LadoRuido * LadoRuido];
+        var aleatorio = new System.Random(20261022);
+        for (int i = 0; i < _ruido.Length; i++)
+            _ruido[i] = (float)(aleatorio.NextDouble() * 2.0 - 1.0);
     }
 
     void OnEnable()
@@ -194,6 +257,10 @@ public class SpeechBubbleUI : MonoBehaviour
         if (_canvasSubtitulo != null) Destroy(_canvasSubtitulo.gameObject);
         DestruirSprite(_spriteSinPico);
         DestruirSprite(_spriteCirculito);
+        foreach (var s in _spritesGenerados.Values) if (s != null) Destroy(s);
+        foreach (var t in _texturasGeneradas) if (t != null) Destroy(t);
+        _spritesGenerados.Clear();
+        _texturasGeneradas.Clear();
     }
 
     static void DestruirSprite(Sprite s)
@@ -325,11 +392,12 @@ public class SpeechBubbleUI : MonoBehaviour
             PonerNombre(fijoEnPantalla ? speakerName : null);
             PonerEstiloADistancia(fijoEnPantalla);
         }
-
-        // Frases de más de _maxLineas líneas: páginas (INC-435).
+        // Frases de más de _maxLineas líneas: páginas (INC-435). La medición aplica el estilo
+        // del papel por su cuenta; después se deja con cola o sin ella según el modo.
         List<string> paginas = Paginar(text, presentacion);
         if (paginas.Count == 0) paginas.Add(text ?? string.Empty);
         string primera = paginas[0];
+        if (presentacion == PresentacionDeTexto.Bocadillo) AplicarEstilo(!fijoEnPantalla);
         // Los mismos iconos que los diálogos: «presiona <sprite name="interactable_x">» sin esto
         // salía como «?» en el bocadillo (INC-468).
         Core.InputGlyphs.InputGlyphService.UsarIconos(_label);
@@ -344,27 +412,22 @@ public class SpeechBubbleUI : MonoBehaviour
 
         // Margen horizontal para que el texto no roque los bordes del bocadillo
         _label.margin = presentacion == PresentacionDeTexto.Bocadillo
-            ? new Vector4(_labelHorizontalMargin, _label.margin.y, _labelHorizontalMargin, _label.margin.w)
+            ? new Vector4(MargenHorizontal, _label.margin.y, MargenHorizontal, _label.margin.w)
             : Vector4.zero;
 
         // BUGFIX (Agosto 2026): el bocadillo solo tenía un ancho MÍNIMO fijo (_bubbleMinWidth) y
         // nunca se adaptaba al texto real, así que cualquier línea más larga que ese mínimo se
         // salía por los lados — pasaba en todas las secuencias, no era un caso puntual. Ahora se
         // mide el ancho que ocuparía el texto en una sola línea (GetPreferredValues) y el
-        // bocadillo crece hasta _bubbleMaxWidth para acomodarlo antes de partir el texto en
+        // bocadillo crece hasta el máximo para acomodarlo antes de partir el texto en
         // varias líneas (word wrap).
         //
         // OJO — el ALTO no se toca aquí a mano. El GameObject "Bubble" (padre de _label, ver
-        // prefab SpeechBubbleUI/Bubble) ya tiene un VerticalLayoutGroup (padding real: 18 arriba,
-        // 58 abajo para dejar sitio al pico del bocadillo) + ContentSizeFitter con
-        // m_VerticalFit=PreferredSize — es decir, el alto SIEMPRE lo calcula ese sistema a partir
-        // del preferredHeight del texto ya envuelto, no nosotros. El primer intento de este
-        // arreglo calculaba también el alto a mano con un margen inventado que no coincidía con
-        // ese padding real (18/58, asimétrico por el pico) — el resultado quedaba más bajo que el
-        // texto de verdad y la primera línea se salía por ARRIBA del bocadillo (bug reportado tras
-        // el primer pase). Ahora solo tocamos el ancho y forzamos un rebuild de layout inmediato
-        // para que el ContentSizeFitter recalcule el alto ANTES del pop-in — si no, se ve un frame
-        // con el alto del texto anterior mientras el ancho ya ha cambiado.
+        // prefab SpeechBubbleUI/Bubble) tiene un VerticalLayoutGroup + ContentSizeFitter con
+        // m_VerticalFit=PreferredSize: el alto SIEMPRE lo calcula ese sistema a partir del
+        // preferredHeight del texto ya envuelto. El padding del layout lo pone AplicarEstilo()
+        // según el arte activo (con el papel dibujado por código, el hueco es el de la sombra
+        // proyectada más el borde más el margen del texto, y abajo el de la cola).
         if (_bubbleRect != null && _label != null)
         {
             _label.textWrappingMode = TextWrappingModes.Normal;
@@ -374,11 +437,18 @@ public class SpeechBubbleUI : MonoBehaviour
 
         if (_bubbleImage != null && presentacion == PresentacionDeTexto.Bocadillo)
         {
-            Sprite sprite = fijoEnPantalla ? SpriteSinPico()
-                          : emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
-            if (sprite != null) _bubbleImage.sprite = sprite;
+            if (_usarArteGenerado)
+            {
+                // El papel se dibuja a la medida exacta del bocadillo: sin deformarlo.
+                AplicarSpriteGenerado(!fijoEnPantalla);
+            }
+            else
+            {
+                Sprite sprite = fijoEnPantalla ? SpriteSinPico()
+                              : emphasis && _emphasisSprite != null ? _emphasisSprite : _defaultSprite;
+                if (sprite != null) _bubbleImage.sprite = sprite;
+            }
         }
-
         // Animación del personaje: preferir el wrapper de alto nivel para respetar el state machine
         if (!string.IsNullOrEmpty(animTrigger) && target != null)
         {
@@ -432,6 +502,8 @@ public class SpeechBubbleUI : MonoBehaviour
     /// Parte el texto con la fuente y ancho reales de su presentación: como máximo _maxLineas
     /// en bocadillo o dos en subtítulo. Corta por frases y, si no caben, por palabras.
     /// Show y SayBeat comparten esta medición para temporizar cada página.
+    /// Si el texto contiene saltos de línea explícitos (\n), se respeta como una unidad:
+    /// no se pagina, se muestra completo en un solo bocadillo (el alto crece con el texto).
     public List<string> Paginar(string text, PresentacionDeTexto presentacion = PresentacionDeTexto.Bocadillo)
     {
         var paginas = new List<string>();
@@ -441,6 +513,14 @@ public class SpeechBubbleUI : MonoBehaviour
             return paginas;
         }
         text = text.Trim();
+
+        // Si el texto trae saltos de línea explícitos, no se pagina: va entero en un bocadillo.
+        // Así se respetan los diálogos escritos con \n y no se cortan con voces.
+        if (text.Contains("\n"))
+        {
+            paginas.Add(text);
+            return paginas;
+        }
 
         TextMeshProUGUI medida = _textoBocadillo;
         int lineas = _maxLineas;
@@ -456,17 +536,21 @@ public class SpeechBubbleUI : MonoBehaviour
         }
         else
         {
+            // Se mide con el mismo estilo con el que se va a pintar. Si no, la primera frase
+            // de la sesión se mide con la letra y el hueco que trae el prefab y sale con otro
+            // tamaño que las siguientes.
+            AplicarEstilo(true);
             medida.alignment = TextAlignmentOptions.Center;
             medida.textWrappingMode = TextWrappingModes.Normal;
-            medida.margin = new Vector4(_labelHorizontalMargin, medida.margin.y, _labelHorizontalMargin, medida.margin.w);
-            float preferido = medida.GetPreferredValues(text, 0f, 0f).x + _labelHorizontalMargin * 2f;
+            medida.margin = new Vector4(MargenHorizontal, medida.margin.y, MargenHorizontal, medida.margin.w);
+            float preferido = AnchoEnUnaLinea(medida, text);
             Vector2 tamano = _rectBocadillo.sizeDelta;
-            tamano.x = Mathf.Clamp(preferido, _bubbleMinWidth, _bubbleMaxWidth);
+            tamano.x = AnchoDelBocadillo(preferido);
             _rectBocadillo.sizeDelta = tamano;
             LayoutRebuilder.ForceRebuildLayoutImmediate(_rectBocadillo);
             ancho = medida.rectTransform.rect.width - medida.margin.x - medida.margin.z;
         }
-        if (ancho < 50f) ancho = _bubbleMaxWidth - _labelHorizontalMargin * 2f;
+        if (ancho < 50f) ancho = AnchoMaximo - MargenTotalHorizontal;
         float altoMaximo = medida.GetPreferredValues(RenglonesDePrueba(lineas), ancho, 0f).y + 0.5f;
         bool Cabe(string s) => medida.GetPreferredValues(s, ancho, 0f).y <= altoMaximo;
 
@@ -505,6 +589,20 @@ public class SpeechBubbleUI : MonoBehaviour
         return paginas;
     }
 
+    /// Ancho que ocupa un texto en una sola línea. TMP mide mal con ancho 0: envuelve el texto
+    /// a cero píxeles y devuelve el ancho de una sola letra, así que el papel se quedaba siempre
+    /// en su mínimo y las frases se partían en trozos de dos palabras. Se mide sin ajuste de
+    /// línea y se deja la etiqueta como estaba.
+    static float AnchoEnUnaLinea(TextMeshProUGUI etiqueta, string texto)
+    {
+        if (etiqueta == null || string.IsNullOrEmpty(texto)) return 0f;
+        TextWrappingModes modo = etiqueta.textWrappingMode;
+        etiqueta.textWrappingMode = TextWrappingModes.NoWrap;
+        float ancho = etiqueta.GetPreferredValues(texto, 0f, 0f).x;
+        etiqueta.textWrappingMode = modo;
+        return ancho;
+    }
+
     static string RenglonesDePrueba(int n)
     {
         var sb = new System.Text.StringBuilder("Ágj");
@@ -535,6 +633,13 @@ public class SpeechBubbleUI : MonoBehaviour
         return frases;
     }
 
+    /// Distancia desde el borde superior del rectángulo hasta el borde superior del papel:
+    /// con el arte generado es el hueco de la sombra más el borde; con el sprite antiguo,
+    /// el padding del prefab.
+    float DesplazamientoDelPapel => _usarArteGenerado
+        ? MargenDeSombra + _grosorBorde
+        : (_paddingConPico != null ? _paddingConPico.top : 0f);
+
     /// Nombre de quien habla encima del bocadillo. Solo en el modo fijo en pantalla: siguiendo al
     /// personaje, el pico ya dice quién es. No cuenta como línea del bocadillo (va fuera del layout).
     void PonerNombre(string nombre)
@@ -553,7 +658,7 @@ public class SpeechBubbleUI : MonoBehaviour
             var rt = (RectTransform)go.transform;
             rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0f, 0f);
-            rt.anchoredPosition = new Vector2(4f, AlturaNombre);
+            rt.anchoredPosition = new Vector2(4f, AlturaNombre - DesplazamientoDelPapel);
             rt.sizeDelta = new Vector2(400f, 40f);
 
             _nombre = go.AddComponent<TextMeshProUGUI>();
@@ -575,9 +680,11 @@ public class SpeechBubbleUI : MonoBehaviour
 
     /// Cuerpo sin pico (el relleno de abajo reservado al pico se iguala al de arriba) y los
     /// circulitos que llevan al nombre. Con fijo = false deja el bocadillo con pico de siempre.
+    /// El padding solo se toca con el arte antiguo: con el papel dibujado por código el
+    /// hueco lo calcula AplicarEstilo().
     void PonerEstiloADistancia(bool fijo)
     {
-        if (_layout != null && _paddingConPico != null)
+        if (!_usarArteGenerado && _layout != null && _paddingConPico != null)
         {
             int arriba = _paddingConPico.top;
             _layout.padding = fijo
@@ -587,6 +694,7 @@ public class SpeechBubbleUI : MonoBehaviour
 
         if (fijo && _circulitos.Count == 0)
         {
+            float subida = DesplazamientoDelPapel;
             foreach (var (centro, diametro) in Circulitos)
             {
                 var go = new GameObject("Circulito", typeof(RectTransform));
@@ -595,7 +703,7 @@ public class SpeechBubbleUI : MonoBehaviour
                 var rt = (RectTransform)go.transform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
                 rt.pivot = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = centro;
+                rt.anchoredPosition = new Vector2(centro.x, centro.y - subida);
                 rt.sizeDelta = new Vector2(diametro, diametro);
                 var img = go.AddComponent<Image>();
                 img.sprite = SpriteCirculito();
@@ -657,6 +765,242 @@ public class SpeechBubbleUI : MonoBehaviour
         tex.SetPixels32(px);
         tex.Apply(false, true);
         return tex;
+    }
+
+    // ── Arte del bocadillo dibujado por código ─────────────────────────────────
+
+    /// Margen horizontal del texto: con el arte generado lo aporta el papel, no la etiqueta.
+    float MargenHorizontal => _usarArteGenerado ? 0f : _labelHorizontalMargin;
+
+    /// Hueco horizontal total que el texto necesita dentro del bocadillo: el margen de la
+    /// etiqueta más el padding del layout (con el papel generado, solo el padding).
+    float MargenTotalHorizontal => MargenHorizontal * 2f
+                                 + (_layout != null ? _layout.padding.left + _layout.padding.right : 0f);
+
+    /// Rango de ancho del bocadillo según el arte activo.
+    float AnchoMinimo => _usarArteGenerado
+        ? TamanoDeTextoDelBocadillo * _anchoMinimoEnLetras : _bubbleMinWidth;
+    float AnchoMaximo => _usarArteGenerado
+        ? TamanoDeTextoDelBocadillo * _anchoMaximoEnLetras : _bubbleMaxWidth;
+
+    /// Ancho del bocadillo para un texto: el que ocuparía en una línea, entre el mínimo y
+    /// el máximo. Con el papel dibujado por código se redondea hacia arriba a un paso fijo, para que
+    /// haya pocas medidas distintas y el papel no se repinte por cada frase.
+    float AnchoDelBocadillo(float anchoDelTexto)
+    {
+        float ancho = Mathf.Clamp(anchoDelTexto + MargenTotalHorizontal, AnchoMinimo, AnchoMaximo);
+        if (_usarArteGenerado) ancho = Mathf.Ceil(ancho / PasoDeAncho) * PasoDeAncho;
+        return ancho;
+    }
+
+    /// Hueco que hay que dejar alrededor del papel para que quepa la sombra proyectada.
+    float MargenDeSombra => _radioSombra
+                          + Mathf.Max(Mathf.Abs(_sombraDesplazamiento.x), Mathf.Abs(_sombraDesplazamiento.y));
+
+    /// Alto del lienzo donde vive el bocadillo (1080 si todavía no se ha medido).
+    float AlturaDelCanvas => _parentCanvasRect != null && _parentCanvasRect.rect.height > 50f
+        ? _parentCanvasRect.rect.height
+        : 1080f;
+
+    /// Tamaño de letra del bocadillo, proporcional al alto del lienzo: se lee igual en cualquier
+    /// resolución, como los subtítulos, y crece con la pantalla en vez de quedarse en un valor fijo.
+    float TamanoDeTextoDelBocadillo => Mathf.Clamp(AlturaDelCanvas * _tamanoTextoDelCanvas, 22f, 64f);
+
+    /// Prepara el estilo según el arte activo: el padding del layout lo marca el papel
+    /// (borde + margen del texto, y la cola por debajo) y la imagen pasa a "simple",
+    /// porque el bocadillo dibujado por código no se trocea.
+    void AplicarEstilo(bool conCola)
+    {
+        if (_label == null) return;
+
+        if (!_usarArteGenerado)
+        {
+            if (_layout != null && _paddingConPico != null) _layout.padding = _paddingConPico;
+            _label.margin = new Vector4(_labelHorizontalMargin, _label.margin.y,
+                                        _labelHorizontalMargin, _label.margin.w);
+            _label.fontSize = _tamanoTextoOriginal;
+            if (_bubbleImage != null) _bubbleImage.type = Image.Type.Sliced;
+            return;
+        }
+
+        // Padding = hueco de la sombra + borde del papel + margen del texto (+ la cola).
+        int margen = Mathf.RoundToInt(MargenDeSombra + _grosorBorde
+                                      + Mathf.Max(_margenTexto, TamanoDeTextoDelBocadillo * 0.6f));
+        int abajo = margen + (conCola ? Mathf.RoundToInt(_cola.y) : 0);
+        if (_layout != null) _layout.padding = new RectOffset(margen, margen, margen, abajo);
+
+        _label.margin = new Vector4(0f, _label.margin.y, 0f, _label.margin.w);
+        _label.fontSize = TamanoDeTextoDelBocadillo;
+        _label.color = _colorTexto;
+        if (_bubbleImage != null) _bubbleImage.type = Image.Type.Simple;
+    }
+
+    /// El papel del bocadillo dibujado por código, a la medida exacta del rectángulo:
+    /// como la imagen es "simple" (no troceada), la textura tiene que coincidir con el
+    /// tamaño del bocadillo o se deformaría.
+    void AplicarSpriteGenerado(bool conCola)
+    {
+        if (_bubbleImage == null || _bubbleRect == null) return;
+        Sprite sprite = SpriteGenerado(_bubbleRect.rect.size, conCola);
+        if (sprite != null) _bubbleImage.sprite = sprite;
+    }
+
+    /// El bocadillo del tamaño pedido, dibujado por código y cacheado por medidas:
+    /// cada ancho/alto distinto que aparezca en el juego se pinta una sola vez.
+    Sprite SpriteGenerado(Vector2 tamano, bool conCola)
+    {
+        int ancho = Mathf.Max(16, Mathf.RoundToInt(tamano.x));
+        int alto = Mathf.Max(16, Mathf.RoundToInt(tamano.y));
+        long clave = ((long)ancho << 33) | ((long)alto << 1) | (conCola ? 1L : 0L);
+        if (_spritesGenerados.TryGetValue(clave, out Sprite sprite) && sprite != null) return sprite;
+
+        // Tope de memoria: cada medida distinta es una textura. Cuando se llena, se
+        // empieza de cero (las medidas que vuelven a salir se vuelven a pintar).
+        if (_spritesGenerados.Count >= TopeDeSpritesGenerados)
+        {
+            foreach (var s in _spritesGenerados.Values) if (s != null) Destroy(s);
+            foreach (var t in _texturasGeneradas) if (t != null) Destroy(t);
+            _spritesGenerados.Clear();
+            _texturasGeneradas.Clear();
+        }
+
+        var tex = PintarBocadillo(ancho, alto, conCola);
+        sprite = Sprite.Create(tex, new Rect(0, 0, ancho, alto), new Vector2(0.5f, 0.5f), 100f);
+        sprite.name = conCola ? "BocadilloPapel" : "BocadilloPapelSinCola";
+        _spritesGenerados[clave] = sprite;
+        _texturasGeneradas.Add(tex);
+        return sprite;
+    }
+
+    /// Pinta el papel: rectángulo redondeado con borde difuso, cola y sombra proyectada,
+    /// todo sobre un campo de distancia. La cola entra en el papel para que el borde no
+    /// se corte con ella.
+    Texture2D PintarBocadillo(int ancho, int alto, bool conCola)
+    {
+        var tex = new Texture2D(ancho, alto, TextureFormat.RGBA32, false)
+        {
+            wrapMode = TextureWrapMode.Clamp,
+            filterMode = FilterMode.Bilinear,
+            name = "BocadilloPapel",
+        };
+        var px = new Color32[ancho * alto];
+
+        float borde = Mathf.Max(0f, _grosorBorde);
+        // El papel vive dentro del hueco que necesita la sombra proyectada.
+        float margen = MargenDeSombra;
+        float anchoPapel = Mathf.Max(4f, ancho - 2f * margen);
+        float altoPapel = Mathf.Max(4f, alto - 2f * margen - (conCola ? _cola.y : 0f));
+
+        float x0 = margen, x1 = margen + anchoPapel;
+        float y1 = alto - margen;             // la textura crece hacia arriba
+        float y0 = y1 - altoPapel;
+        float cx = (x0 + x1) * 0.5f, cy = (y0 + y1) * 0.5f;
+        float hw = anchoPapel * 0.5f, hh = altoPapel * 0.5f;
+        float radio = Mathf.Min(_radioEsquina, Mathf.Min(hw, hh));
+
+        // La cola asoma por debajo del papel; su base se mete dentro para no dejar costura.
+        float colaPunta = conCola ? margen : -1000f;
+        float colaBase = y0 + (conCola ? SolapeCola : 0f);
+        float colaIzq = cx - _cola.x * 0.5f, colaDer = cx + _cola.x * 0.5f;
+
+        for (int y = 0; y < alto; y++)
+        for (int x = 0; x < ancho; x++)
+        {
+            float fx = x + 0.5f, fy = y + 0.5f;
+            float d = DistanciaPapel(fx, fy, cx, cy, hw, hh, radio,
+                                     colaIzq, colaDer, colaBase, colaPunta, conCola);
+
+            // La sombra es el mismo papel desplazado: su opacidad sale de lo lejos que
+            // está de la forma, así que sale difusa sin necesidad de difuminar nada.
+            float ds = DistanciaPapel(fx - _sombraDesplazamiento.x, fy - _sombraDesplazamiento.y,
+                                      cx, cy, hw, hh, radio,
+                                      colaIzq, colaDer, colaBase, colaPunta, conCola);
+            float aSombra = Mathf.Clamp01((_radioSombra - ds) / Mathf.Max(0.001f, _radioSombra));
+            aSombra *= aSombra * _sombraOpacidad;
+
+            // Relleno dentro del papel; el borde es un halo que se desvanece hacia fuera.
+            float aRelleno = Mathf.Clamp01(0.5f - d);
+            float aBorde = borde > 0.01f ? Mathf.Clamp01((borde - d) / borde) : 0f;
+            float aPapel = Mathf.Max(aRelleno, aBorde);
+            Color c = Color.Lerp(_colorBorde, _colorPapel, aRelleno);
+
+            // La sombra va detrás del papel.
+            Color final = Color.Lerp(_colorSombra, c, aPapel);
+            float alfa = aPapel + aSombra * (1f - aPapel);
+            px[y * ancho + x] = new Color(final.r, final.g, final.b, alfa);
+        }
+
+        tex.SetPixels32(px);
+        tex.Apply(false, true);
+        return tex;
+    }
+
+    /// Distancia con signo al papel (cuerpo redondeado + cola), con el borde irregular.
+    float DistanciaPapel(float fx, float fy, float cx, float cy, float hw, float hh, float radio,
+                         float colaIzq, float colaDer, float colaBase, float colaPunta, bool conCola)
+    {
+        float d = DistanciaRectRedondeado(fx, fy, cx, cy, hw, hh, radio);
+        if (conCola)
+        {
+            float dt = DistanciaTriangulo(fx, fy,
+                new Vector2(colaIzq, colaBase), new Vector2(cx, colaPunta),
+                new Vector2(colaDer, colaBase));
+            d = Mathf.Min(d, dt);
+        }
+        return d + Desdibujo(fx, fy);
+    }
+
+    /// Distancia con signo a un rectángulo redondeado (negativa dentro).
+    static float DistanciaRectRedondeado(float x, float y, float cx, float cy,
+                                          float hw, float hh, float r)
+    {
+        float qx = Mathf.Abs(x - cx) - (hw - r);
+        float qy = Mathf.Abs(y - cy) - (hh - r);
+        float dx = Mathf.Max(qx, 0f), dy = Mathf.Max(qy, 0f);
+        float fuera = Mathf.Sqrt(dx * dx + dy * dy);
+        float dentro = Mathf.Min(Mathf.Max(qx, qy), 0f);
+        return fuera + dentro - r;
+    }
+
+    /// Distancia con signo aproximada a un triángulo (intersección de tres medios
+    /// planos): basta para pintar la cola.
+    static float DistanciaTriangulo(float x, float y, Vector2 a, Vector2 b, Vector2 c)
+    {
+        float area = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+        float signo = area >= 0f ? 1f : -1f;
+        float h1 = signo * DistanciaMediaPlano(x, y, a, b);
+        float h2 = signo * DistanciaMediaPlano(x, y, b, c);
+        float h3 = signo * DistanciaMediaPlano(x, y, c, a);
+        return -Mathf.Min(h1, Mathf.Min(h2, h3));
+    }
+
+    static float DistanciaMediaPlano(float x, float y, Vector2 p, Vector2 q)
+    {
+        float ex = q.x - p.x, ey = q.y - p.y;
+        float largo = Mathf.Sqrt(ex * ex + ey * ey);
+        if (largo < 0.0001f) return 0f;
+        return (ex * (y - p.y) - ey * (x - p.x)) / largo;
+    }
+
+    /// Irregularidad del borde: el papel no es un rectángulo de plástico.
+    float Desdibujo(float x, float y)
+    {
+        if (_desdibujo <= 0f || _ruido == null) return 0f;
+        return MuestraRuido(x * 0.055f, y * 0.055f) * _desdibujo;
+    }
+
+    float MuestraRuido(float x, float y)
+    {
+        int x0 = Mathf.FloorToInt(x), y0 = Mathf.FloorToInt(y);
+        float fx = x - x0, fy = y - y0;
+        fx = fx * fx * (3f - 2f * fx);
+        fy = fy * fy * (3f - 2f * fy);
+        int m = LadoRuido - 1;
+        float v00 = _ruido[(y0 & m) * LadoRuido + (x0 & m)];
+        float v10 = _ruido[(y0 & m) * LadoRuido + ((x0 + 1) & m)];
+        float v01 = _ruido[((y0 + 1) & m) * LadoRuido + (x0 & m)];
+        float v11 = _ruido[((y0 + 1) & m) * LadoRuido + ((x0 + 1) & m)];
+        return Mathf.Lerp(Mathf.Lerp(v00, v10, fx), Mathf.Lerp(v01, v11, fx), fy);
     }
 
     // La presentación cambia las referencias visuales; el ciclo de habla y cierre es compartido.
@@ -829,9 +1173,7 @@ public class SpeechBubbleUI : MonoBehaviour
     void AjustarAncho(string texto)
     {
         if (_presentacion != PresentacionDeTexto.Bocadillo) { ColocarSubtitulo(); return; }
-        Vector2 singleLineSize = _label.GetPreferredValues(texto, 0f, 0f);
-        float desiredWidth = singleLineSize.x + _labelHorizontalMargin * 2f;
-        float bubbleWidth = Mathf.Clamp(desiredWidth, _bubbleMinWidth, _bubbleMaxWidth);
+        float bubbleWidth = AnchoDelBocadillo(AnchoEnUnaLinea(_label, texto));
 
         Vector2 sd = _bubbleRect.sizeDelta;
         sd.x = bubbleWidth;
@@ -856,6 +1198,8 @@ public class SpeechBubbleUI : MonoBehaviour
             {
                 _label.text = paginas[i];
                 AjustarAncho(paginas[i]);
+                // La página nueva puede ocupar otra altura: el papel se repinta a su medida.
+                if (_usarArteGenerado) AplicarSpriteGenerado(!_fijoEnPantalla);
                 _bubbleRect.DOKill();
                 _bubbleRect.localScale = Vector3.one;
                 if (_presentacion == PresentacionDeTexto.Bocadillo)

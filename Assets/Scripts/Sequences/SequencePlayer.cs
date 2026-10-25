@@ -399,11 +399,11 @@ public class SequencePlayer : CinematicSequencerBase
     }
 
     /// Cambia la música a mitad de secuencia. Usado por MusicBeat.
-    public void PlayMusic(string musicId, bool continuarDondeIba = true)
+    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f)
     {
         var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
         if (regla?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(regla.music, regla.fadeIn, continuarDondeIba);
+            AudioService.Instance.PlayMusic(regla.music, fadeIn > 0f ? fadeIn : regla.fadeIn, continuarDondeIba);
         else PlaySequenceMusic(musicId);
     }
 
@@ -718,6 +718,10 @@ public class SequencePlayer : CinematicSequencerBase
         if (_stage != null) _stage.CleanupModules();
         CinematicTimeOfDay.Restore();
         RunScreenCleanups();
+
+        // Los bucles de sonido y demás limpiezas se paran antes de levantar la señal de salida:
+        // el grafo puede cargar la escena siguiente en cuanto la reciba.
+        RunPendingCleanups();
 
         // Red de seguridad del tiempo: si la escena iba en cámara lenta y su beat de vuelta no se
         // llegó a ejecutar (una rama que salió antes, un beat mal puesto), la partida se quedaría

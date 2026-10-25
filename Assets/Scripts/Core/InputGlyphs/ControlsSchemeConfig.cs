@@ -71,12 +71,13 @@ namespace Core.InputGlyphs
                 // Flechas Unicode (←/→) sustituidas por texto: ni LiberationSans SDF ni Nunito-Bold
                 // SDF (las fuentes que usa el menú) tienen esos glifos, así que TMP los pintaba como
                 // "□" y llenaba la consola de avisos de fuente en cada refresco del ScrollRect.
-                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_TARGET_NEXT", "Siguiente objetivo de combate"),
-                // Nuevo (1 sep 2026, petición Raúl): activar/desactivar el lock-on automático de
-                // cámara/objetivo en combate. Sin glyph propio (botón sin icono de familia) — fila
-                // manual como la de Cámara, mismo patrón. Ver GamepadInputReader.InputEventType.
-                // ToggleTargetLock / CombatCameraTargeting.ToggleTargetingSuppressed.
-                Manual("CONTROLS_TARGET_TOGGLE", "Activar/desactivar el bloqueo automático de objetivo",
+                Entry(InputGlyphNames.ShoulderRight, "CONTROLS_TARGET_NEXT", "Siguiente objetivo (enemigo o marcable)"),
+                // Nuevo (1 sep 2026, petición Raúl): fijar objetivo con R3/F; mantener pulsado
+                // activa/desactiva el lock-on automático de cámara/objetivo (INC-141). Sin glyph
+                // propio (botón sin icono de familia) — fila manual como la de Cámara, mismo
+                // patrón. Ver GamepadInputReader.InputEventType.ToggleTargetLock /
+                // CombatCameraTargeting.ProcesarPulsacionDeLock.
+                Manual("CONTROLS_TARGET_TOGGLE", "Fijar objetivo (mantener: activar/desactivar el autoapuntado)",
                        "GLYPH_KEY_F", "F",
                        "GLYPH_STICK_RIGHT_CLICK", "Clic stick derecho (R3)"),
                 Entry(InputGlyphNames.DpadLeft, "CONTROLS_CHARACTER_PREV", "Cambiar de personaje (anterior)"),

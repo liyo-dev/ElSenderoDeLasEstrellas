@@ -5,11 +5,10 @@ Monta el tramo real del guion horneado con:
   - la voz del Archimago tal y como suena en el juego (preset `Ninguno` en la
     primera frase, preset `Conjuro` —9 s de sala + slap— en el cántico, y +6 dB
     de ganancia en el conjuro);
-  - el tema del conjuro entrando en el negro (su propio primer segundo) y
-    quedarse hasta que acaba el prólogo;
-  - los ducks reales: el bus de música baja 6 dB mientras suena la voz con
-    ganancia, el respiro aparta la música 10 dB y el golpe musical la aparta 6 dB;
-  - los efectos del guion (truenos, cargas, campana, protección, explosión).
+  - el tema del conjuro entrando con el fundido a negro y con su final en el grito;
+  - los ducks reales: el bus de música abre a 0 dB en la plegaria, el ducking de la voz
+    lo deja a -3 dB y el `silencio` final lo apaga 1,2 s;
+  - los efectos del guion (truenos, cargas, protección, explosión).
 
 Salida en `Herramientas/Audio/Piloto/Grito/`.
 
@@ -33,25 +32,25 @@ TEMA = os.path.join(RAIZ, "Assets", "Audio", "Music", "Cinematicas", "Ultimo Inc
 SALIDA = os.path.join(RAIZ, "Herramientas", "Audio", "Piloto", "Grito")
 
 # Tiempos reales del guion horneado (el parte del horneado, en segundos).
-T_PLEGARIA_01 = 167.90
-T_PLEGARIA_02 = 178.00
-T_PLEGARIA_03 = 186.20
-T_PLEGARIA_04 = 196.00
-T_PLEGARIA_05 = 202.30
-T_PLEGARIA_06 = 208.50
-T_GRITO = 213.90          # el grito, el respiro y la campana
-T_ESTALLIDO = 218.20      # la explosión
-T_FIN_MUSICA = 217.30     # «Música: parar (0,8s)»: la música se va antes de la explosión
-T_NEGRO = 176.60          # el negro: el tema del duelo se corta y la voz se abre en el eco
-T_TEMA = 178.00           # «¡Luz que naciste antes que el cielo...!»: entra el tema del conjuro
-T_MEZCLA_GRITO = 212.80   # la mezcla «grito» (SFX -3 dB)
+T_PLEGARIA_01 = 168.30
+T_PLEGARIA_02 = 178.40
+T_PLEGARIA_03 = 186.60
+T_PLEGARIA_04 = 196.40
+T_PLEGARIA_05 = 202.70
+T_PLEGARIA_06 = 208.90
+T_GRITO = 214.10          # el grito y la entrada del tema
+T_ESTALLIDO = 218.40      # la explosión
+T_FIN_MUSICA = 219.30     # «Música: parar (1,2 s)»: el tema se apaga en el blanco
+T_NEGRO = 177.00          # el negro: se apaga el tema del duelo (3 s)
+T_TEMA = 175.70           # entra con el fundido a negro, 2,7 s antes de la frase de la Luz
+T_MEZCLA_GRITO = 213.00   # la mezcla «grito» (SFX -3 dB)
 
 # La voz con el conjuro: +6 dB en el bus de diálogo, y el resto de buses (música,
 # SFX, ambiente) bajan 6 dB para que la voz siga siendo la protagonista.
 GANANCIA_VOZ_CONJURO = 6.0
-DUCK_BUSES_POR_VOZ = -6.0
-FUNDIDO_ENTRADA_TEMA = 1.5     # el fundido que pone el perfil de audio
-DUCK_RESPIRO_MUSICA = -10.0
+DUCK_BUSES_POR_VOZ = -3.0     # cinematicVoiceDuck: música -3, SFX -4, ambiente -6
+FUNDIDO_ENTRADA_TEMA = 0.3    # el fadeIn corto que pide el guion
+DUCK_RESPIRO_MUSICA = 0.0      # el respiro ya no aparta la música
 DUCK_GOLPE_MUSICA = -6.0
 DURACION_GOLPE = 0.35
 DURACION_RESPIRO = 0.9
@@ -136,7 +135,7 @@ def construir(nombre_salida, inicio, fin):
         x = preparar_voz(ruta, preset, gan)
         colocar(voz, x, t_local(t), 0.0)
 
-    # --- El tema: entra con la frase de la Luz y se queda hasta el final --------
+    # --- El tema: entra con el fundido a negro y su final cae en el grito --------
     musica = np.zeros((n, 2), dtype=np.float32)
     tema = decodificar(TEMA, SR, mono=False)
     f_in = max(1, int(FUNDIDO_ENTRADA_TEMA * SR))
@@ -165,28 +164,16 @@ def construir(nombre_salida, inicio, fin):
             colocar(efectos, x, t_local(t), db)
 
     # --- Los buses como en el juego ---------------------------------
-    # La música: -6 dB desde que la voz con ganancia está puesta (el negro), el
-    # respiro del grito la aparta 10 dB y el golpe musical 6 dB.
+    # La música: el bus abre a 0 dB en la plegaria y el ducking de la voz lo deja
+    # a -3 dB; se apaga con el silencio final.
     musica_bus = np.ones(n, dtype=np.float32)
-    i_negro = int(t_local(T_NEGRO) * SR)
-    if i_negro < n:
-        musica_bus[i_negro:] *= db_a_ganancia(DUCK_BUSES_POR_VOZ)
+    i_tema = int(t_local(T_TEMA) * SR)
+    if 0 <= i_tema < n:
+        musica_bus[i_tema:] = db_a_ganancia(DUCK_BUSES_POR_VOZ)
+    # El respiro ya no aparta la música (DUCK_RESPIRO_MUSICA = 0).
     r0 = int(t_local(T_GRITO) * SR)
     r1 = min(int((t_local(T_GRITO) + DURACION_RESPIRO) * SR), n)
-    if 0 <= r0 < n and r1 > r0:
-        factor = np.ones(r1 - r0, dtype=np.float32)
-        k = min(int(ATAQUE_RESPIRO * SR), r1 - r0)
-        if k > 1:
-            factor[:k] *= np.linspace(1.0, db_a_ganancia(DUCK_RESPIRO_MUSICA), k, dtype=np.float32)
-        k = min(int(FUNDIDO_RESPIRO * SR), r1 - r0)
-        if k > 1:
-            factor[-k:] *= np.linspace(db_a_ganancia(DUCK_RESPIRO_MUSICA), 1.0, k, dtype=np.float32)
-        musica_bus[r0:r1] *= factor
-    g0 = int(t_local(T_GRITO) * SR)
-    g1 = min(int((t_local(T_GRITO) + DURACION_GOLPE) * SR), n)
-    if 0 <= g0 < n:
-        musica_bus[g0:g1] *= db_a_ganancia(DUCK_GOLPE_MUSICA)
-    # Y se apaga sola con la explosión.
+    # Y se apaga sola con el silencio final.
     f0 = int(t_local(T_FIN_MUSICA) * SR)
     f1 = min(int((t_local(T_FIN_MUSICA) + FUNDIDO_MUSICA_FINAL) * SR), n)
     if 0 <= f0 < n:
@@ -196,6 +183,7 @@ def construir(nombre_salida, inicio, fin):
     # Los SFX: -6 dB por la voz con ganancia, -3 dB por la mezcla «grito» y el
     # respiro del grito (0,9 s) los aparta 8 dB más.
     sfx_bus = np.ones(n, dtype=np.float32)
+    i_negro = int(t_local(T_NEGRO) * SR)
     if i_negro < n:
         sfx_bus[i_negro:] *= db_a_ganancia(DUCK_BUSES_POR_VOZ)
     g0 = int(t_local(T_MEZCLA_GRITO) * SR)
@@ -227,7 +215,7 @@ def main():
     os.makedirs(SALIDA, exist_ok=True)
     tema = decodificar(TEMA, SR, mono=True)
     print(f"Tema: {TEMA}")
-    print(f"  {len(tema)/SR:.2f} s, entra con la frase de la Luz ({T_TEMA:.2f} s) y suena hasta el final")
+    print(f"  {len(tema)/SR:.2f} s, entra con el fundido a negro ({T_TEMA:.2f} s) y su final cae en el grito")
     print(f"Plegaria: {T_PLEGARIA_01:.2f} -> {T_PLEGARIA_06 + 3.8:.2f} s")
     print(f"Estallido: {T_ESTALLIDO:.2f} s | la música se apaga en {T_FIN_MUSICA:.2f} s\n")
 

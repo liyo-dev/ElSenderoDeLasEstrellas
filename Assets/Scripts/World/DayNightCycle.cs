@@ -901,6 +901,7 @@ public class DayNightCycle : MonoBehaviour
     void PlayWeatherSfx(string eventKey)
     {
         if (string.IsNullOrWhiteSpace(eventKey)) return;
+        if (AnclaDeClima == null && ClimaExteriorSilenciado()) return;
         AudioService.Instance?.PlaySFX(eventKey);
     }
 
@@ -956,6 +957,15 @@ public class DayNightCycle : MonoBehaviour
     {
         return _outdoorWeatherSuppressedIndoors
             || (EnvironmentController.Instance != null && EnvironmentController.Instance.IsCinematicOverrideActive);
+    }
+
+    /// El clima de exterior no debe oírse dentro de una casa: ni el loop ni los cues de
+    /// arranque/parada. `IsEffectivelyInterior` cubre también el override de cinemática.
+    bool ClimaExteriorSilenciado()
+    {
+        var ec = EnvironmentController.Instance;
+        return _outdoorWeatherSuppressedIndoors
+            || (ec != null && (ec.IsCinematicOverrideActive || ec.IsEffectivelyInterior));
     }
 
     void ReapplyPendingSkybox()
@@ -1341,7 +1351,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
         }
 
-        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && ClimaExteriorSilenciado())
             _activeRainInstance.SetActive(false);
 
         IsRaining = true;
@@ -1352,7 +1362,7 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(RainWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(rainStartedSfxKey) ? "rain" : rainStartedSfxKey, rainLoopVolume);
 
-        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && ClimaExteriorSilenciado())
             AudioService.Instance?.SetLoopingSFXMuted(RainWeatherSfxLoopId, true);
 
     }
@@ -1444,7 +1454,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
             }
 
-            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+            if (AnclaDeClima == null && ClimaExteriorSilenciado())
                 _activeMistInstance.SetActive(false);
         }
 
@@ -1614,7 +1624,7 @@ public class DayNightCycle : MonoBehaviour
 #endif
         }
 
-        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && ClimaExteriorSilenciado())
             _activeWindInstance.SetActive(false);
 
         IsWindy = true;
@@ -1625,7 +1635,7 @@ public class DayNightCycle : MonoBehaviour
         AudioService.Instance?.PlayLoopingSFX(WindWeatherSfxLoopId,
             string.IsNullOrWhiteSpace(windStartedSfxKey) ? VientoPorDefecto : windStartedSfxKey, windLoopVolume);
 
-        if (AnclaDeClima == null && IsSkyboxLockedByEnvironment())
+        if (AnclaDeClima == null && ClimaExteriorSilenciado())
             AudioService.Instance?.SetLoopingSFXMuted(WindWeatherSfxLoopId, true);
     }
 
@@ -1743,7 +1753,7 @@ public class DayNightCycle : MonoBehaviour
             _activeSnowInstance = Instantiate(snowPrefab, transform.position, Quaternion.identity);
         }
 
-        bool dentro = AnclaDeClima == null && IsSkyboxLockedByEnvironment();
+        bool dentro = AnclaDeClima == null && ClimaExteriorSilenciado();
         if (dentro) _activeSnowInstance.SetActive(false);
 
         IsSnowing = true;
@@ -1891,7 +1901,7 @@ public class DayNightCycle : MonoBehaviour
             }
             first = false;
 
-            if (AnclaDeClima == null && IsSkyboxLockedByEnvironment()) continue;
+            if (AnclaDeClima == null && ClimaExteriorSilenciado()) continue;
             yield return FlashLightningRoutine();
         }
     }

@@ -298,7 +298,7 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Next combat target"
+            "value": "Next target (enemy or markable)"
         },
         {
             "key": "CONTROLS_TEAM_ATTACK",
@@ -338,7 +338,7 @@
         },
         {
             "key": "CONTROLS_TARGET_TOGGLE",
-            "value": "Toggle automatic target lock"
+            "value": "Lock target (hold: toggle automatic targeting)"
         },
         {
             "key": "CONTROLS_TELEPORT",

@@ -39,7 +39,13 @@ cart_maestro     6006.4 6000.6
 # El vecino de la carreta, al otro lado del carro y en campo abierto: dentro de la huella
 # de la carreta (x 6006,5-6010,1 · z 5995,3-5999,4) no había ni un ángulo de cámara limpio.
 v06_carro        6010.0 6000.4
-carreta          6008.4 5997.4
+carreta          6008.4 5997.4 99.97
+# Frío de apertura: la carreta entra por el camino del puente y v06 la lleva tirando de la vara,
+# por la calle (que sí está en el NavMesh). El aparcamiento en su marca se resuelve en el corte.
+carreta_paseo   6010.0 6000.4 99.97
+carreta_entra   6012.2 6000.4 99.97
+v06_entra       6011.2 6000.4 99.97
+v06_tira        6007.2 6000.4 99.97
 nina_iglesia     5990.9 6001.0
 nina_carro       6004.9 5998.8
 globo            5987.4 6005.1 105.9
@@ -67,6 +73,9 @@ mira_v03         6001.3 6000.9
 mira_v08         6002.3 6000.5
 centro_plaza     6001.5 6000.5
 cam_calle        6003.6 5999.3
+# Cámara del frío de apertura: al noroeste de la carreta, en la plaza, mirando al camino del
+# puente. Desde cam_calle, mirando al este, hay una casa en medio y el plano sale en marrón.
+cam_carreta      6001.8 6001.2
 # Camara del globo: al noroeste, que es donde mira el grupo al ballon.
 cam_globo        6005.8 5996.4
 # Cámara del conjuro: al noroeste del maestro, a un lado. Así se le ve la cara de tres cuartos y
@@ -107,6 +116,8 @@ duelo_m          6000.8 5999.8
 choque           6002.6 5999.8
 arch_caida       6007.4 6000.2
 mago_retrocede   5998.7 5999.8
+# La bola del hechizo final sube desde el Archimago hasta aquí (4 m sobre el suelo).
+cielo_conjuro    6007.4 6000.2 104.0
 # El agujero negro: fijo en el cielo, por encima y por delante del Mago (que levita 3 m).
 # Está a 8 m del suelo (el valle está a 100 m de altura): con la cámara del duelo a ras de calle,
 # a 14,7 m, el agujero queda a 25° y el Mago a 7°: caben los dos en el mismo cuadro.
@@ -140,8 +151,7 @@ v09 +1.4 charla con v03 cada=3.6
 v04 0  en v04_a mirando v04_b
 v04 0  bucle Idle_Normal_NoWeapon
 v04 +0.8 pasea por v04_b, v04_a ritmo=paseo pausa=1.8
-v06 0  en v06_carro mirando carreta
-v06 0  bucle Idle_Normal_NoWeapon
+v06 0  en v06_entra mirando oeste
 nina 0 en nina_iglesia mirando globo
 nina 0 bucle SenseSomethingSearching_NoWeapon
 liora 0 en liora_mesa mirando v08_mesa
@@ -244,16 +254,33 @@ efecto EfectoDeVozBeat preset=ExteriorDia
 ambiente AMBIENTE eventKey=Ambience_Prologo_Pueblo volumen=0.5
 postproceso Assets/Art/World/Prologo_Valle/Prologo_Dia.asset
 hora Morning immediate=true
-efecto PropMoveBeat propId=PROP_Carreta deltaRotacion=0,0,62 segundos=0 desdeDondeEstaba=true apoyarEnElSuelo=true
+# La carreta empieza DERECHA y fuera de cuadro, en el camino del puente: en el frío de apertura
+# se la ve llegar y volcarse. Los 62° de la volcadura son los mismos que antes se aplicaban aquí
+# a ciegas, así que la magia la sigue enderezando desde la misma pose de siempre.
+efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=3.91,0,3.12 deltaRotacion=0,-118,0 segundos=0 desdeDondeEstaba=true
 efecto SetPropActiveBeat propId=PROP_Nube_Oeste active=false
 efecto SetPropActiveBeat propId=PROP_Nube_Este active=false
 efecto NubesDeAperturaBeat nube=Assets/Prefabs/Clouds/Cloud3D-MeshCarrier_Cloud_01.prefab distancia=4.5 separacionInicial=1.6 separacionFinal=18 escala=9 segundos=5.5
 archimago en tras_casa mirando salida_hueco
+
+# Aéreo de apertura: las nubes se abren sobre el pueblo, como siempre.
 plano general centro_plaza desde=cam_general altura=6 lente=46 suave=1.5
 espera 4.5
 
+# Frío de la carreta: v06 tira de la vara desde delante; la carreta le sigue detrás, pegada a él.
+plano general carreta_paseo desde=cam_carreta altura=1.7 lente=35 suave=0.5
+v06 anda a v06_tira ritmo=prisa llega_mirando=oeste sin_esperar
++0.2 v06 bucle Push_InPlace_NoWeapon
+efecto PropMoveBeat propId=PROP_Carreta seguirActorId=v06 seguirOffset=1,0,0 segundos=2.6
+espera 2.6
+espera 0.3
+
 # Sale de detrás de su casa y baja a la plaza: el pueblo ya está en marcha.
 @entra
+# El vuelco ocurre en el corte, fuera de cámara, para que el resto de la escena lo encuentre como
+# siempre (y v06 vuelve a su sitio para el plano medio).
+efecto PropMoveBeat propId=PROP_Carreta deltaRotacion=0,0,62 segundos=0 desdeDondeEstaba=true apoyarEnElSuelo=true
+v06 anda a v06_carro ritmo=prisa sin_esperar
 plano conjunto archimago desde=cam_calle altura=1.55 lente=36 suave=0.8
 archimago anda a salida_hueco, plaza_archimago ritmo=normal llega_mirando=centro_plaza
 desde @entra+5.5 plano conjunto v01 v07 v02 lado=frente
@@ -291,15 +318,13 @@ plano medio archimago desde=cam_magia altura=1.7 lente=30
 archimago gesto MagicRight
 & archimago cara alegre dura=3
 +0.3 sonido Prologo_MagiaLevitar en=archimago
-# La bola de conjuro: pequeña, entre las manos, y se mueve y crece con la carga. Antes era un
-# destello del pack (una partícula de 19 m) que se comía la pantalla y parecía el hechizo del final.
-+0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=2.6 periodo=1.4 escalaInicial=0.6 escalaFinal=1.3
+# La carreta se levanta con el remolino y el sonido; sin bola de luz delante del maestro (la
+# chispa blanca que se veía en el plano).
 # El remolino debajo de la carreta: es lo que la levanta.
 +0.4 vfx "Assets/_VFX/Prologo/VFX_RemolinoDelPrologo.prefab" en=carreta offset=0,0.2,0 lifetime=2.8
 +0.6 efecto PropMoveBeat propId=PROP_Carreta deltaPosicion=0,1.5,0 segundos=1.4 desdeDondeEstaba=true esperar=false
 espera 1.6
 efecto PropMoveBeat propId=PROP_Carreta segundos=0.9 desdeDondeEstaba=true apoyarEnElSuelo=true esperar=false
-+0.85 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=PROP_Carreta offset=0,0.4,0 lifetime=1.6 escala=0.12
 +0.85 sonido Prologo_CarretaCae en=PROP_Carreta
 espera 0.7
 plano dos archimago v06 lado=izq
@@ -318,8 +343,7 @@ archimago mira globo
 archimago bucle CastingIdle01
 && archimago dice PROLOGO_MANANA_GLOBO_OK cara=decidido
 +0.4 sonido Prologo_MagiaLevitar en=archimago
-+0.4 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=2.2 periodo=1.2 escalaInicial=0.6 escalaFinal=1.1
-+1.1 vfx "Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/2 Flash_round_ellow.prefab" en=PROP_Globo lifetime=1.8
+# Sin bola de luz delante del maestro: el globo sube con su movimiento y el sonido.
 @globo_sube
 efecto PropMoveBeat propId=PROP_Globo deltaPosicion=2,22,1 segundos=8 esperar=false
 plano general PROP_Globo desde=bajo_iglesia altura=1.1 lente=48 suave=0.4
@@ -475,7 +499,7 @@ archimago dice PROLOGO_DUELO_ARCHIMAGO gesto=Angry02 mira=mago cara=decidido
 # El combate: en un dos de perfil se lee todo (nada de cortes en cada golpe).
 plano dos archimago mago lente=36 mano=0.25
 mago gesto MagicRight
-+0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
++0.2 efecto SpellBeat lanzaId=mago objetivoId=archimago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil=Assets/VFX/100BestEffectPack/Effects/DarkEffect/DarkEffect1.prefab vfxImpacto="Assets/VFX/Hovl Studio/Procedural fire/Prefabs/Explosion.prefab" sfxLanzamiento=Prologo_BolaDeFuego sfxImpacto=Prologo_ImpactoHechizo velocidad=13 esperarAlImpacto=false
 +0.3 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic shields/Magic shield blue.prefab" en=archimago offset=0,-0.1,0 lifetime=1.6 seguirAlActor=true
 +0.3 archimago gesto Defend_NoWeapon
 +0.8 sonido Prologo_EscudoBloquea en=archimago
@@ -484,7 +508,7 @@ mago gesto MagicRight
 espera 1.4
 plano hombro mago archimago mano=0.25
 archimago gesto MagicLeft
-+0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
++0.2 efecto SpellBeat lanzaId=archimago objetivoId=mago vfxEnLaMano="Assets/VFX/Lana Studio/Hyper Casual FX/Prefabs/Flash/1 Flash_magic_ellow_blue.prefab" vfxProyectil="Assets/VFX/Free Game VFX/Prefab/FX_Fireball.prefab" vfxImpacto="Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Hits and explosions/Star hit.prefab" sfxLanzamiento=Prologo_HechizoArchimago sfxImpacto=Prologo_ImpactoHechizo velocidad=14 esperarAlImpacto=false
 +0.85 mago desliza a mago_retrocede dura=0.3 seco mirando=archimago
 +0.85 mago gesto TakeDamage
 espera 1.8
@@ -561,15 +585,11 @@ archimago dice PROLOGO_PLEGARIA_01 cara=decidido
 +3.3 cutin liora encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 +5.0 cutin nina encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn volumen=0.5
 
-# El paso al conjuro: fundido a negro y, al descubrir, el tema del duelo se corta y la
-# voz se abre en el eco. El tema del conjuro entra con la frase de la Luz, más abajo.
+# El paso al conjuro: fundido a negro y, al descubrir, el tema del duelo se funde con
+# Ultimo Incantazione y la voz se abre en el eco. El tema entra 3 s antes de la frase.
 efecto ScreenFadeBeat fadeIn=true color=000000FF duration=1.2 waitForEnd=true dura=1.35
 efecto ScreenFadeBeat fadeIn=false duration=1.2 waitForEnd=false
 efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
-# El bus de música se queda a 0 dB: lo que suena ahora es el tema del conjuro.
-efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.6
-# El tema del duelo se corta aquí: el cántico se sostiene con Ultimo Incantazione.
-silencio 0.8
 
 plano general mago desde=cam_final agujero altura_foco=0 altura=1.0 lente=36
 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=1.5 duracion=2
@@ -580,13 +600,11 @@ espera 1.4
 # Estrofa 1 del cántico: invocación solemne a la luz ancestral.
 plano primer archimago lado=der contrapicado zoom=20
 archimago bucle CastingIdle01
-# El tema del conjuro entra aquí, con la frase de la Luz, y sigue hasta el final.
-musica ULTIMO_INCANTAZIONE
+# La plegaria va sin música: Ultimo Incantazione entra en el hechizo, con el grito.
 archimago dice PROLOGO_PLEGARIA_02 cara=decidido
 +0.4 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab" en=archimago offset=0,0.08,0 lifetime=60 registrarComo=CIRCULO_CONJURO
 +0.8 sonido SFX_Prologo_Trueno_Lejano volume=0.2
-# La energía despierta en sus manos: la bola se forma y crece mientras el cántico sube.
-+4.2 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=8 periodo=1.8 escalaInicial=0.5 escalaFinal=1.2
+# Sin bola de luz delante del maestro: el cántico se sostiene con los círculos y los rayos.
 
 # Estrofa 2: llama a lo que aún no existe y la energía despierta en sus manos.
 plano medio archimago lado=izq contrapicado zoom=24 mano=0.15
@@ -618,7 +636,6 @@ archimago dice PROLOGO_PLEGARIA_04 cara=decidido
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
 efecto LineasDeConcentracionBeat mostrar=true
 && archimago dice PROLOGO_PLEGARIA_05 cara=enfado
-+0.3 efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.85,0 avance=0.4 duracion=6 periodo=1.1 escalaInicial=0.8 escalaFinal=1.4
 +3.4 efecto RayoBeat cantidad=2 intervalo=0.5 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_2
 +3.5 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.6 duracion=1.4
 +3.5 sonido Prologo_Carga volume=0.5
@@ -628,7 +645,8 @@ efecto LineasDeConcentracionBeat mostrar=true
 plano primer archimago lado=der suave=0.3
 efecto LineasDeConcentracionBeat mostrar=false
 
-archimago gesto ApretonDeManos_A
+# Manos juntas en el pecho: reza la despedida, no ofrece la mano.
+archimago bucle Beg01_Loop
 && archimago dice PROLOGO_PLEGARIA_06 cara=triste
 espera 0.35
 
@@ -641,44 +659,53 @@ efecto MezclaBeat fuente=grito musicaDb=0 sfxDb=-3 ambienteDb=-6 fundido=0.3
 # & sonido Prologo_Carga volume=0.4
 & efecto LineasDeConcentracionBeat mostrar=true duracion=4.5
 cutin archimago encuadre=Cara lado=Izquierda alturaEnPantalla=0.42 duracion=1.8 ranura=1 sonido=SFX_Prologo_CutIn dura=1.1 volumen=0.5
-# El respiro: un instante de silencio antes del grito, para que el golpe entre grande.
-efecto RespiroBeat musicaDb=-10 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
+# El respiro: un instante de silencio antes del grito, para que entre grande.
+# No aparta la música: el tema entra justo en el hechizo y tiene que oírse.
+efecto RespiroBeat musicaDb=0 ambienteDb=-16 sfxDb=-8 duracion=0.9 ataque=0.25 fundido=0.35 esperar=true
 @hechizo
+# El tema del duelo se apaga 3 s antes del fundido a negro; el del conjuro entra con
+# ese fundido a negro, 2,7 s antes de la frase de la Luz.
+desde @hechizo-41.4 silencio 3
+desde @hechizo-38.4 efecto MezclaBeat fuente=plegaria musicaDb=0 sfxDb=0 ambienteDb=-10 fundido=0.3
+desde @hechizo-38.4 musica ULTIMO_INCANTAZIONE fadeIn=0.3 continuarDondeIba=false
+# La bola se forma pequeña entre las manos, en un plano medio.
+plano medio archimago lado=der
+archimago bucle CastingIdle01
+efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.1,0 avance=0.12 elevacion=0.06 duracion=0.9 periodo=1.2 escalaInicial=0.6 escalaFinal=0.8 registrarComo=BOLA_PROTECTORA vidaEnPool=12
+espera 0.9
+
+# El grito: brazos arriba y la bola al cielo. La fusión la sube y la expande hasta el blanco.
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
 archimago bucle CastingIdle01
-# El grito va con la voz épica (el eco largo del conjuro) y la música nueva.
-efecto EfectoDeVozBeat preset=Conjuro gananciaDb=6
 archimago dice PROLOGO_HECHIZO cara=enfado
++0.0 archimago bucle MagicAttackOmni01_Load congela
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
-+0.5 sonido SFX_Proteccion_Absoluta en=archimago volume=1.0
 +0.5 sacudida 0.45 2.0
-+0.5 efecto FusionDeHechizosBeat efectoARegistrado=CARGA_ESFERA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,1.1,0 duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.2 eventKeySubida=SFX_Prologo_LuchaFinal eventKeyExplosion=SFX_Prologo_ExplosionFinal esperar=false
+# Sin subida ni explosión de SFX: sus colas (8-9 s) se metían en la escena de Will dormido.
++0.5 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,1.1,0 puntoDeEncuentro=cielo_conjuro duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.2 esperar=false
 # La lucha: cortes cada vez más rápidos y el temblor que crece hasta el blanco.
-desde @hechizo+2.0 plano primer archimago lado=der contrapicado zoom=22 mano=0.65
-desde @hechizo+2.0 sacudida 0.55 1.3
-desde @hechizo+2.0 efecto LineasDeConcentracionBeat mostrar=true duracion=3.8
-desde @hechizo+3.3 plano primer mago lado=izq contrapicado zoom=20 mano=0.65
-desde @hechizo+3.3 sacudida 0.7 1.2
-desde @hechizo+4.5 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.75 lente=48 mano=0.85
-desde @hechizo+4.5 sacudida 0.95 1.4
-desde @hechizo+5.6 destello FFFFFFFF 0.14
-# La música del conjuro se va antes de la explosión: el estallido se oye en silencio.
-desde @hechizo+3.4 silencio 0.8
+desde @hechizo+2.9 plano primer archimago lado=der contrapicado zoom=22 mano=0.65
+desde @hechizo+2.9 sacudida 0.55 1.3
+desde @hechizo+2.9 efecto LineasDeConcentracionBeat mostrar=true duracion=3.8
+desde @hechizo+4.2 plano primer mago lado=izq contrapicado zoom=20 mano=0.65
+desde @hechizo+4.2 sacudida 0.7 1.2
+desde @hechizo+5.4 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.75 lente=48 mano=0.85
+desde @hechizo+5.4 sacudida 0.95 1.4
+desde @hechizo+6.5 destello FFFFFFFF 0.14
 espera 2.2
 
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
 @explosion
 ambiente AGUJERO_NEGRO sonar=false fundido=0.3
-ambiente TORMENTA sonar=false fundido=0.2
 efecto RecogerVfxBeat ids=CARGA_ESFERA|CARGA_CRECE|CARGA_REFUERZO|CIRCULO_PLEGARIA|CIRCULO_CONJURO
 efecto MezclaBeat fuente=grito quitar=true fundido=0.6
 efecto LineasDeConcentracionBeat mostrar=false fundido=0
 efecto ScreenFadeBeat fadeIn=true color=FFFFFFFF duration=1.2 waitForEnd=false
 ambiente TORMENTA sonar=false fundido=0.2
 +1.2 hora Morning immediate=true esLaHoraDeVolver=true
-efecto GolpeMusicalBeat eventKey=Prologue_GolpeFinalCola volumen=1 musicaDb=-4 duracion=0.5
 +0.4 sacudida 0.9 1.6
-# Tras el estallido, silencio: solo queda el pitido de oídos hasta Will.
-+1.0 sonido SFX_Prologo_SilencioBlanco volume=0.6
+# Tras el estallido, silencio: la música se va y no queda ningún SFX largo que se cuele
+# en la habitación de Will.
++0.9 silencio 1.2
 espera 3.0
 bandas quita

@@ -373,7 +373,7 @@ public sealed class ReproductorDeGuion
             _ctx.CambiarPresentacionDeLinea(presentacion);
             PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
                 presentacion, nombre, datos != null ? datos.colorDelNombre : default,
-                new Vector3(0f, actor.HeadTopHeight + 0.3f, 0f));
+                new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));
         }
 
         PresentadorDeLinea.SonarLaVoz(linea.clave);

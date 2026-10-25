@@ -478,14 +478,6 @@ MonoBehaviour:
     sfx: {fileID: 8300000, guid: 6308d1134e303e84494c440ca94aba77, type: 3}
   - eventKey: SpecialAttack_Trio_Bucle
     sfx: {fileID: 8300000, guid: 83def554885275545a1d534824725972, type: 3}
-  - eventKey: Prologue_CoraCanto
-    sfx: {fileID: 8300000, guid: 8e5d7c971af8e3f42b0757e14d47f4ae, type: 3}
-  - eventKey: Prologue_EstrofaCanto
-    sfx: {fileID: 8300000, guid: 5273a00545cfdb844aee414afeef26a0, type: 3}
-  - eventKey: Prologue_GolpeFinal
-    sfx: {fileID: 8300000, guid: 3ee6e0d6131fa22489b5d104851730f2, type: 3}
-  - eventKey: Prologue_GolpeFinalCola
-    sfx: {fileID: 8300000, guid: 70229f3ecc965e244b4fa9f3bc7f80cb, type: 3}
   sequences:
   - sequenceId: PROLOGUE_DREAM
     music: {fileID: 8300000, guid: da3563191f6d0e240bb9b9332d30a3a9, type: 3}

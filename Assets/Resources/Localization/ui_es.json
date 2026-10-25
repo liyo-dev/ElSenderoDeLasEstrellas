@@ -298,7 +298,7 @@
         },
         {
             "key": "CONTROLS_TARGET_NEXT",
-            "value": "Siguiente objetivo de combate"
+            "value": "Siguiente objetivo (enemigo o marcable)"
         },
         {
             "key": "CONTROLS_TEAM_ATTACK",
@@ -338,7 +338,7 @@
         },
         {
             "key": "CONTROLS_TARGET_TOGGLE",
-            "value": "Activar/desactivar el bloqueo automático de objetivo"
+            "value": "Fijar objetivo (mantener: activar/desactivar el autoapuntado)"
         },
         {
             "key": "CONTROLS_TELEPORT",

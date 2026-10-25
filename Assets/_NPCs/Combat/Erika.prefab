@@ -6089,7 +6089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
   controlador: {fileID: 7524877161275503629}
-  mallaDelPelo: {fileID: 2643025996728427552}
+  mallaDeLasCejas: {fileID: 2643025996728427552}
   ojosDeReferencia: {fileID: 6210578227702546612}
   intensidad: 1
   velocidad: 14
@@ -9984,7 +9984,8 @@ GameObject:
   - component: {fileID: 2775683701247765321}
   - component: {fileID: 8292955864976573195}
   - component: {fileID: -2049874257353199566}
-  m_Layer: 7
+  - component: {fileID: -3863952739383490235}
+  m_Layer: 8
   m_Name: Erika
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10229,11 +10230,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.NPCBehaviourManagerV2
   configuration:
-    behaviourType: 128
+    behaviourType: 0
     ambientConfig: {fileID: 0}
     combatConfig: {fileID: 0}
     questConfig: {fileID: 0}
-    interactiveNarrativeConfig: {fileID: 11400000, guid: eef1d5d110a11e44bb9eeae5e9e1ebbb, type: 2}
+    interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 0}
     socialConfig: {fileID: 0}
     walkSpeed: 1.5
@@ -10358,6 +10359,23 @@ MonoBehaviour:
   icon: {fileID: 0}
   color: {r: 1, g: 0.92, b: 0.016, a: 1}
   iconoSobreLaCabeza: {fileID: 0}
+--- !u!114 &-3863952739383490235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770552252693826820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4060c2369f82b7d4f96e31235bb2b284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NarrativeActor
+  narrativeDetectionRange: 10
+  walkTowardsPlayerOnAlert: 1
+  stopDistanceFromPlayer: 2
+  narrativeAlertIconPrefab: {fileID: 0}
+  defaultQuestIconPrefab: {fileID: 0}
 --- !u!1 &7783949281983813713
 GameObject:
   m_ObjectHideFlags: 0

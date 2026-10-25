@@ -586,7 +586,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
   controlador: {fileID: 4424460848909321129}
-  mallaDelPelo: {fileID: 6794390474496637073}
+  mallaDeLasCejas: {fileID: 6794390474496637073}
   ojosDeReferencia: {fileID: 1494078463281646364}
   intensidad: 1
   velocidad: 14
@@ -4609,7 +4609,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.NPCBehaviourManagerV2
   configuration:
     behaviourType: 128
-    ambientConfig: {fileID: 0}
+    ambientConfig: {fileID: 11400000, guid: c343635ccaa79024b998754510ffd286, type: 2}
     combatConfig: {fileID: 0}
     questConfig: {fileID: 0}
     interactiveNarrativeConfig: {fileID: 11400000, guid: dfd094198cdd07f479181a36a54e66af, type: 2}

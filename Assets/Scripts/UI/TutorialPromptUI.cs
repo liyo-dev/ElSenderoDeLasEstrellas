@@ -479,16 +479,18 @@ public class TutorialPromptUI : MonoBehaviour
 
         CenterGlyphOnRenderedInk(_closeLabel);
 
-        // Icono alternativo para mando (ver RefreshCloseButton) — mismo rect que el Label de
-        // arriba, con un pequeño margen para que el glifo no toque el borde del cuadrado de fondo.
+        // Icono alternativo para mando (ver RefreshCloseButton) — MÁS GRANDE que el botón
+        // para que la "B" se vea bien y sobresalga del cuadrado de fondo.
         var iconGo = new GameObject("Icon", typeof(RectTransform));
         iconGo.transform.SetParent(closeRt, false);
         var iconRt = (RectTransform)iconGo.transform;
-        iconRt.anchorMin = Vector2.zero;
-        iconRt.anchorMax = Vector2.one;
-        float iconInset = _closeButtonSize * 0.12f;
-        iconRt.offsetMin = new Vector2(iconInset, iconInset);
-        iconRt.offsetMax = new Vector2(-iconInset, -iconInset);
+        iconRt.anchorMin = new Vector2(0.5f, 0.5f);
+        iconRt.anchorMax = new Vector2(0.5f, 0.5f);
+        iconRt.pivot = new Vector2(0.5f, 0.5f);
+        // Tamaño del icono: 1.5x el botón para que sobresalga y se vea claro
+        float iconSize = _closeButtonSize * 1.5f;
+        iconRt.sizeDelta = new Vector2(iconSize, iconSize);
+        iconRt.anchoredPosition = Vector2.zero;
 
         _closeIcon = iconGo.AddComponent<Image>();
         _closeIcon.preserveAspect = true;

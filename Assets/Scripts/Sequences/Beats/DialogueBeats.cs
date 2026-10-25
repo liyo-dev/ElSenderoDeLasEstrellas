@@ -188,15 +188,16 @@ public class SayBeat : SequenceBeat
 
         int specificFired = 0;
         int talkIndex = 0;
-        // Dónde se apoya el bocadillo. Sin override, SpeechBubbleUI usa su offset de siempre
-        // (2,2 m sobre los pies), que es la altura de la cabeza de una persona de verdad y deja el
-        // bocadillo flotando muy por encima del pelo de estos personajes. Cuando hay un actor de
-        // carne y hueso se mide su altura real y el bocadillo se apoya justo encima; hablando desde
-        // una marca no hay a quién medir, así que ahí se deja el comportamiento de siempre.
+        // Dónde se apoya el bocadillo. Un actor de carne y hueso se mide (su transform está en
+        // los pies) y el bocadillo se le pega a lo alto de la cabeza. Una marca ya está colocada
+        // a la altura de la cabeza, así que solo lleva el hueco de la cola: sumarle el offset de
+        // los pies la mandaba muy por encima del personaje (VentanaIzq, en la discusión de las
+        // cajas, acababa pegada al borde superior de la pantalla).
+        const float HuecoSobreLaCabeza = 0.05f;
         Vector3? offsetOverride;
         if (overrideBubbleOffset) offsetOverride = bubbleOffset;
-        else if (actor != null) offsetOverride = new Vector3(0f, actor.HeadTopHeight + 0.30f, 0f);
-        else offsetOverride = null;
+        else if (actor != null) offsetOverride = new Vector3(0f, actor.HeadTopHeight + HuecoSobreLaCabeza, 0f);
+        else offsetOverride = new Vector3(0f, HuecoSobreLaCabeza, 0f);
 
         // Páginas: los saltos de línea del texto, y además ninguna de más de tres líneas en el
         // bocadillo (INC-435): SpeechBubbleUI las mide con la fuente y el ancho de verdad. Cada

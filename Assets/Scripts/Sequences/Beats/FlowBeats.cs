@@ -379,6 +379,9 @@ public class MusicBeat : SequenceBeat
     [Tooltip("ID de regla de secuencia del AudioGraphProfile. Vacío = PARAR la música.")]
     public string musicId;
 
+    [Tooltip("Segundos de fundido de entrada. 0 o menos = el de la regla del perfil.")]
+    public float fadeIn;
+
     [Tooltip("Segundos de desvanecido al parar. Solo se usa cuando 'musicId' está vacío.")]
     public float fadeOut = 0.5f;
 
@@ -394,7 +397,7 @@ public class MusicBeat : SequenceBeat
         if (player == null) yield break;
 
         if (string.IsNullOrWhiteSpace(musicId)) player.StopMusicNow(fadeOut);
-        else player.PlayMusic(musicId, continuarDondeIba);
+        else player.PlayMusic(musicId, continuarDondeIba, fadeIn);
 
         yield break;
     }

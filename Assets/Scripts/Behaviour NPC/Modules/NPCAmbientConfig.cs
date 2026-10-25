@@ -37,6 +37,14 @@ namespace Game.NPC.Modules
         [Tooltip("Actividad que realiza el NPC mientras está parado. Requiere enableWander = false.")]
         public NPCAmbientActivity ambientActivity = NPCAmbientActivity.None;
 
+        [Header("Oficio ambiental")]
+        [Tooltip("Si está activo, el NPC puede hacer una ruta de trabajo (NPCWorkRoute) cuando está idle. " +
+                 "No necesita enableWander: el NPC no vaga, pero sí recorre su oficio.")]
+        public bool permitirTrabajo = false;
+
+        [Tooltip("ID de la NPCWorkRoute que usa este NPC. Ej: 'mercado_victoria'.")]
+        public string puestoId = "";
+
         [Header("Refugio de lluvia")]
         [Tooltip("Si está activo, el NPC interrumpe lo que está haciendo y busca un NPCShelterPoint " +
                  "cuando empieza a llover (ver SeekShelterState). Desactivar para NPCs que deben seguir " +
@@ -59,7 +67,19 @@ namespace Game.NPC.Modules
                 errorMessage = "maxIdleTime debe ser mayor o igual a minIdleTime";
                 return false;
             }
-            
+
+            if (permitirTrabajo && string.IsNullOrEmpty(puestoId))
+            {
+                errorMessage = "puestoId no puede estar vacío si permitirTrabajo está activo";
+                return false;
+            }
+
+            if (permitirTrabajo && ambientActivity != NPCAmbientActivity.None)
+            {
+                errorMessage = "permitirTrabajo no se combina con una ambientActivity fija";
+                return false;
+            }
+
             return true;
         }
     }

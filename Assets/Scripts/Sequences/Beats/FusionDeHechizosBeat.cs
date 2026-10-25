@@ -75,7 +75,7 @@ public class FusionDeHechizosBeat : SequenceBeat
     }
 
     private Efecto Obtener(SequenceContext ctx, string registrado, GameObject prefab,
-        string actorId, Vector3 offset, float radioBase)
+        string actorId, Vector3 offset, float radioBase, string label)
     {
         Transform instancia;
         VfxPoolService pool;
@@ -85,11 +85,37 @@ public class FusionDeHechizosBeat : SequenceBeat
         {
             pool = VfxPoolService.Instance;
             var actor = ctx.GetActor(actorId);
-            if (pool == null || prefab == null || actor?.Transform == null) return null;
+            if (pool == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[FusionDeHechizosBeat:{label}] VfxPoolService.Instance es null");
+#endif
+                return null;
+            }
+            if (prefab == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[FusionDeHechizosBeat:{label}] Prefab es null");
+#endif
+                return null;
+            }
+            if (actor?.Transform == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[FusionDeHechizosBeat:{label}] Actor '{actorId}' no encontrado en el contexto");
+#endif
+                return null;
+            }
             // El pool cuenta tiempo escalado: una vida holgada protege también una subida acelerada.
             float vida = Mathf.Max(60f, (duracionCrecimiento + duracionMezcla + duracionBlanco + 1f) * 100f);
             instancia = pool.Play(prefab, actor.Transform.position + offset, Quaternion.identity, vida);
-            if (instancia == null) return null;
+            if (instancia == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[FusionDeHechizosBeat:{label}] pool.Play devolvió null para prefab '{prefab.name}'");
+#endif
+                return null;
+            }
             uso = pool.ObtenerUso(instancia);
             creado = true;
         }
@@ -106,13 +132,13 @@ public class FusionDeHechizosBeat : SequenceBeat
 
     private IEnumerator Fusionar(SequenceContext ctx)
     {
-        Efecto a = Obtener(ctx, efectoARegistrado, prefabA, actorAId, offsetA, radioBaseA);
-        Efecto b = Obtener(ctx, efectoBRegistrado, prefabB, actorBId, offsetB, radioBaseB);
+        Efecto a = Obtener(ctx, efectoARegistrado, prefabA, actorAId, offsetA, radioBaseA, "A");
+        Efecto b = Obtener(ctx, efectoBRegistrado, prefabB, actorBId, offsetB, radioBaseB, "B");
         if (a == null || b == null || a.transform == b.transform)
         {
             a?.Restaurar(); b?.Restaurar();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[FusionDeHechizosBeat] Se necesitan dos VFX distintos y vigentes.");
+            Debug.LogWarning($"[FusionDeHechizosBeat] Se necesitan dos VFX distintos y vigentes. A={a != null}, B={b != null}, SameTransform={(a != null && b != null && a.transform == b.transform)}");
 #endif
             yield break;
         }

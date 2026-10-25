@@ -828,7 +828,7 @@ MonoBehaviour:
         distanciaReanudar: 3
         separacionDelGuia: 1.2
         radioLlegada: 4
-        velocidad: 2.6
+        velocidad: 3
         duracionMaxima: 240
         charla: {fileID: 11400000, guid: 2fb8a6bf4e53a1c49949ffb3fc7c9714, type: 2}
     - rid: 7428272564026736785
@@ -871,7 +871,7 @@ MonoBehaviour:
         distanciaReanudar: 3
         separacionDelGuia: 1.2
         radioLlegada: 4
-        velocidad: 2.6
+        velocidad: 3
         duracionMaxima: 240
         charla: {fileID: 11400000, guid: 76c1f7cfa227e6b429a3091f1df6ae35, type: 2}
     - rid: 7428272564026736787

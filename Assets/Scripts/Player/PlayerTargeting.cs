@@ -370,45 +370,83 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             var h = _overlapBuffer[i];
             if (!h || !h.enabled || !h.gameObject.activeInHierarchy) continue;
 
-            if (requireDamageableAlive)
-            {
-                var damageable = h.GetComponentInParent<Damageable>();
-                if (damageable == null || !damageable.IsAlive) continue;
-            }
-
-            Vector3 center = GetTargetCenter(h.transform);
-            Vector3 to = center - origin;
-            float dist = to.magnitude;
-            if (dist < 0.01f) continue;
-
             var cfg = h.GetComponentInParent<Targetable>();
-            if (cfg && !cfg.isInActiveCombat) continue;
-
-            float allowedRadius = (cfg && cfg.targetingRadius > 0) ? cfg.targetingRadius : radius;
-            if (dist > allowedRadius) continue;
-
-            Vector3 dir = to / dist;
-            float angle = Vector3.Angle(fwd, dir);
-            if (angle > fovDegrees * 0.5f) continue;
-
-            if (mustBeOnScreen)
-            {
-                if (_cam == null || !_cam.gameObject.activeInHierarchy) _cam = Camera.main;
-                if (_cam != null)
-                {
-                    Vector3 vp = _cam.WorldToViewportPoint(center);
-                    if (vp.z <= 0f || vp.x < screenEdgePadding || vp.x > 1f - screenEdgePadding || vp.y < screenEdgePadding || vp.y > 1f - screenEdgePadding)
-                        continue;
-                }
-            }
-
-            if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) && rh.collider.transform.root != h.transform.root)
-                continue;
-
-            float score = Vector3.Dot(fwd, dir) - (dist / allowedRadius) * 0.35f;
-            if (score > bestScore) { bestScore = score; best = h.transform; }
+            EvaluarCandidato(h.transform, h, cfg, origin, fwd, ref bestScore, ref best);
         }
+
+        // Piezas marcables fuera de combate (cristales, molinetes, braseros): se registran
+        // solas al activarse y no dependen de la capa Enemy ni de tener Damageable.
+        int marcablesCount = Targetable.ActivosCount;
+        for (int i = 0; i < marcablesCount; i++)
+        {
+            var targetable = Targetable.ActivoEn(i);
+            if (targetable == null || !targetable.esMarcableSiempre || !targetable.isActiveAndEnabled) continue;
+
+            var col = targetable.ColliderDeApuntado;
+            if (col == null || !col.enabled || !col.gameObject.activeInHierarchy) continue;
+
+            EvaluarCandidato(targetable.transform, col, targetable, origin, fwd, ref bestScore, ref best);
+        }
+
         CurrentTarget = best;
+    }
+
+    void EvaluarCandidato(Transform objetivo, Collider collider, Targetable cfg, Vector3 origin, Vector3 fwd,
+                          ref float bestScore, ref Transform best)
+    {
+        bool marcableSiempre = cfg != null && cfg.esMarcableSiempre;
+        var damageable = objetivo.GetComponentInParent<Damageable>();
+
+        if (requireDamageableAlive && damageable != null && !damageable.IsAlive) return;
+
+        if (!marcableSiempre)
+        {
+            if (requireDamageableAlive && damageable == null) return;
+            if (cfg != null && !cfg.isInActiveCombat) return;
+        }
+
+        Vector3 center = collider ? collider.bounds.center : GetTargetCenter(objetivo);
+        Vector3 to = center - origin;
+        float dist = to.magnitude;
+        if (dist < 0.01f) return;
+
+        float allowedRadius = (cfg && cfg.targetingRadius > 0) ? cfg.targetingRadius : radius;
+        if (dist > allowedRadius) return;
+
+        Vector3 dir = to / dist;
+        float angle = Vector3.Angle(fwd, dir);
+        if (angle > fovDegrees * 0.5f) return;
+
+        if (mustBeOnScreen)
+        {
+            if (_cam == null || !_cam.gameObject.activeInHierarchy) _cam = Camera.main;
+            if (_cam != null)
+            {
+                Vector3 vp = _cam.WorldToViewportPoint(center);
+                if (vp.z <= 0f || vp.x < screenEdgePadding || vp.x > 1f - screenEdgePadding || vp.y < screenEdgePadding || vp.y > 1f - screenEdgePadding)
+                    return;
+            }
+        }
+
+        if (requireLineOfSight && Physics.Raycast(origin, dir, out var rh, dist, ~0, QueryTriggerInteraction.Ignore) && rh.collider.transform.root != objetivo.root)
+            return;
+
+        // Las piezas de puzle siempre exigen línea de visión: marcar un cristal a través de una
+        // pared y fijarlo con R3 solo llevaría el hechizo contra el muro. Se ignora el cuerpo del
+        // propio jugador si el origen es la cámara.
+        if (marcableSiempre &&
+            Physics.Raycast(origin, dir, out var rhObjeto, dist, ~0, QueryTriggerInteraction.Ignore) &&
+            rhObjeto.collider.transform.root != objetivo.root &&
+            rhObjeto.collider.transform.root != transform.root)
+            return;
+
+        float score = Vector3.Dot(fwd, dir) - (dist / allowedRadius) * 0.35f;
+
+        // En igualdad de condiciones, un enemigo en combate pesa más que una pieza de puzle:
+        // el marcador libre no debe robar la puntería en mitad de una pelea.
+        if (!marcableSiempre && cfg != null && cfg.isInActiveCombat) score += 0.5f;
+
+        if (score > bestScore) { bestScore = score; best = objetivo; }
     }
 
     void OnTargetChanged(Transform newT)
@@ -430,6 +468,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
             // Cachear el centro local del collider una sola vez para no leer bounds.center cada frame.
             // bounds.center se actualiza en FixedUpdate y causa temblor si se lee en LateUpdate.
             var col = newT.GetComponentInParent<Collider>();
+            if (col == null) col = newT.GetComponentInChildren<Collider>();
             _cachedTargetLocalCenter = col
                 ? newT.InverseTransformPoint(col.bounds.center)
                 : Vector3.up;
@@ -538,6 +577,7 @@ public class PlayerTargeting : MonoBehaviour, ITargetProvider
     static Vector3 GetTargetCenter(Transform target)
     {
         var col = target.GetComponentInParent<Collider>();
+        if (col == null) col = target.GetComponentInChildren<Collider>();
         return col ? col.bounds.center : target.position + Vector3.up;
     }
 

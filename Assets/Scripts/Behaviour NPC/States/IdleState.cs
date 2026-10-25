@@ -25,6 +25,12 @@ namespace Game.NPC.States
         private const float SOCIAL_SCAN_INTERVAL = 3f;
         private readonly Collider[] _socialBuffer = new Collider[8];
 
+        // Oficio ambiental: la ruta se busca cada medio segundo, no cada frame. Es una lista
+        // estática pequeña (NPCWorkRoute), pero no hace falta recorrerla 60 veces por segundo.
+        private float _workCheckTimer;
+        private const float WORK_CHECK_INTERVAL = 0.5f;
+        private NPCWorkRoute _rutaDeTrabajo;
+
         // ✅ FIX rendimiento: cacheado en OnEnter, no GetComponent en cada CheckPlayerDetection
         // (cada 0.2s por NPC parado). Mismo patrón que AlertState (FIX #10). La mayoría de NPCs
         // ambiente no tiene NPCTeamMember, así que el GetComponent fallaba constantemente y
@@ -65,6 +71,8 @@ namespace Game.NPC.States
             _idleTimer = 0f;
             _playerDetectionTimer = 0f;
             _socialScanTimer = 0f;
+            _workCheckTimer = 0f;
+            _rutaDeTrabajo = null;
             _teamMember = context.Transform.GetComponent<NPCTeamMember>(); // ✅ FIX rendimiento: una vez por entrada al estado
         }
 
@@ -123,6 +131,14 @@ namespace Game.NPC.States
                 _socialScanTimer = 0f;
                 CheckSocialEncounter(context, _socialBuffer);
             }
+
+            // Oficio ambiental: buscar una ruta libre de su puesto.
+            _workCheckTimer += Time.deltaTime;
+            if (_workCheckTimer >= WORK_CHECK_INTERVAL)
+            {
+                _workCheckTimer = 0f;
+                _rutaDeTrabajo = BuscarRutaDeTrabajo(context);
+            }
         }
         
         public override INPCState CheckTransitions(NPCStateContext context)
@@ -144,6 +160,10 @@ namespace Game.NPC.States
                 return new SeekShelterState();
             }
 
+            // 3c. Oficio ambiental: va a su ruta de trabajo antes de plantearse vagar.
+            if (_rutaDeTrabajo != null && !context.IsPinnedByParty)
+                return new WorkState(_rutaDeTrabajo);
+
             // 4. Lógica de Patrulla (Wander) - bloqueada si el NPC está anclado por el sistema de party
             if (context.Config != null && context.Config.enableWander && !context.IsPinnedByParty)
             {
@@ -154,6 +174,22 @@ namespace Game.NPC.States
             }
             
             return null;
+        }
+
+        /// <summary>
+        /// Busca una ruta de oficio libre para este NPC. Devuelve null si no tiene puesto
+        /// asignado, si está anclado por el party o si la ruta está ocupada o desactivada por
+        /// la narrativa.
+        /// </summary>
+        private static NPCWorkRoute BuscarRutaDeTrabajo(NPCStateContext context)
+        {
+            if (context.IsPinnedByParty) return null;
+
+            var ambient = context.Config?.ambientConfig;
+            if (ambient == null || !ambient.permitirTrabajo || string.IsNullOrEmpty(ambient.puestoId))
+                return null;
+
+            return NPCWorkRoute.TryFindFor(ambient.puestoId, out var ruta) ? ruta : null;
         }
         
         /// <summary>

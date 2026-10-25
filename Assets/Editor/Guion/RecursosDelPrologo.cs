@@ -93,17 +93,16 @@ public static class RecursosDelPrologo
         }
         if (perfil.cinematicVoiceDuck != null)
         {
-            // El ducking de las cinemáticas: la voz no se realza (las voces ya están
-            // normalizadas a -18 LUFS) y la música se aparta solo -8 dB, no -18. Con
-            // +8 dB de voz y -18 de música, el cántico se quedaba 20 dB bajo la voz
-            // (INC-804).
-            if (perfil.cinematicVoiceDuck.voiceGainDb != 0f || perfil.cinematicVoiceDuck.musicDb != -8f)
+            // El ducking oficial de las cinemáticas: la música se aparta -3 dB, no -8
+            // (INC-827). El horneado no puede volver a pisar el balance que fija el menú
+            // «Actualizar Perfil de Voces Cinematicas».
+            if (perfil.cinematicVoiceDuck.voiceGainDb != 0f || perfil.cinematicVoiceDuck.musicDb != -3f)
             {
                 perfil.cinematicVoiceDuck.voiceGainDb = 0f;
-                perfil.cinematicVoiceDuck.musicDb = -8f;
-                perfil.cinematicVoiceDuck.ambienceDb = -10f;
-                perfil.cinematicVoiceDuck.sfxDb = -6f;
-                perfil.cinematicVoiceDuck.attackSeconds = 0.12f;
+                perfil.cinematicVoiceDuck.musicDb = -3f;
+                perfil.cinematicVoiceDuck.ambienceDb = -6f;
+                perfil.cinematicVoiceDuck.sfxDb = -4f;
+                perfil.cinematicVoiceDuck.attackSeconds = 0.08f;
                 perfil.cinematicVoiceDuck.releaseSeconds = 0.65f;
                 perfil.cinematicVoiceDuck.holdAfterVoiceSeconds = 0.5f;
                 cambiado = true;

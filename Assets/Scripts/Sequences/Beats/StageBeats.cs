@@ -579,6 +579,14 @@ public class PropMoveBeat : SequenceBeat
              "mientras la cámara ya está en otro sitio.")]
     public bool esperar = true;
 
+    [Tooltip("Si no está vacío, el objeto no va a un punto: se mueve pegado a este actor mientras " +
+             "dura 'segundos'. Es lo que hace que una carreta parezca empujada por quien la lleva.")]
+    public string seguirActorId;
+
+    [Tooltip("Dónde va el objeto respecto al actor, en coordenadas del MUNDO (x derecha, z norte). " +
+             "Solo se usa con 'seguirActorId'.")]
+    public Vector3 seguirOffset;
+
     [Tooltip("CONTAR DESDE COMO ESTABA. Con esto marcado, 'deltaPosicion' y 'deltaRotacion' no " +
              "se suman a donde esté el objeto AHORA, sino a la posición y la rotación que tenía " +
              "cuando empezó la secuencia. Con los dos a cero, el objeto vuelve exactamente a su " +
@@ -598,7 +606,9 @@ public class PropMoveBeat : SequenceBeat
     public bool apoyarEnElSuelo = false;
 
     public override string Describe()
-        => $"Decorado: mover {propId}" + (segundos > 0f ? $" en {segundos:F1}s" : " (al instante)");
+        => !string.IsNullOrWhiteSpace(seguirActorId)
+            ? $"Decorado: {propId} empujado por {seguirActorId} ({segundos:F1}s)"
+            : $"Decorado: mover {propId}" + (segundos > 0f ? $" en {segundos:F1}s" : " (al instante)");
 
     /// Un movimiento instantáneo, o uno que no se espera, se puede hacer con la pantalla tapada.
     public override bool SoloColoca => segundos <= 0.001f || !esperar;
@@ -616,6 +626,29 @@ public class PropMoveBeat : SequenceBeat
         }
 
         var t = actor.Transform;
+
+        if (!string.IsNullOrWhiteSpace(seguirActorId))
+        {
+            var quien = ctx.GetActor(seguirActorId);
+            if (quien?.Transform == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[PropMoveBeat] '{propId}' quiere seguir a '{seguirActorId}', " +
+                    "pero no está en la escena. El objeto se queda quieto.");
+#endif
+                yield break;
+            }
+
+            // Durante el seguimiento manda el actor: si él se para, el objeto se para. La rotación
+            // va a la que pida el beat; sin 'desdeDondeEstaba', se queda con la que ya tenía, para
+            // que la carreta no gire sola mientras la empujan.
+            Quaternion giroHastaSeguir = desdeDondeEstaba && ctx.TryGetPoseInicial(propId, out _, out var poseSeguir)
+                ? Quaternion.Euler(deltaRotacion) * poseSeguir
+                : Quaternion.Euler(deltaRotacion) * t.rotation;
+            yield return SeguirA(t, quien.Transform, seguirOffset, giroHastaSeguir, Mathf.Max(0.01f, segundos));
+            yield break;
+        }
+
         Vector3 hasta;
         Quaternion giroHasta;
         if (desdeDondeEstaba && ctx.TryGetPoseInicial(propId, out Vector3 sitio, out Quaternion pose))
@@ -707,6 +740,29 @@ public class PropMoveBeat : SequenceBeat
             x = x.parent;
         }
         return false;
+    }
+
+    /// Mueve el objeto pegado al actor: cada fotograma se coloca en su posición más el
+    /// desplazamiento. Es lo que convierte «la carreta va sola» en «la carreta va empujada».
+    private static IEnumerator SeguirA(Transform t, Transform quien, Vector3 offset,
+        Quaternion giroHasta, float duracion)
+    {
+        Quaternion giroDesde = t.rotation;
+        float pasado = 0f;
+        while (pasado < duracion)
+        {
+            if (t == null || quien == null) yield break;
+            pasado += Time.unscaledDeltaTime;
+            float k = Mathf.Clamp01(pasado / duracion);
+            t.position = quien.position + offset;
+            t.rotation = Quaternion.Slerp(giroDesde, giroHasta, Mathf.SmoothStep(0f, 1f, k));
+            yield return null;
+        }
+        if (t != null && quien != null)
+        {
+            t.position = quien.position + offset;
+            t.rotation = giroHasta;
+        }
     }
 
     private static IEnumerator MoverA(Transform t, Vector3 hasta, Quaternion giroHasta,

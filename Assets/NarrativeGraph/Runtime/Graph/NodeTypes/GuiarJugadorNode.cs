@@ -57,7 +57,7 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
 
     [Min(1f)]
     [Tooltip("Velocidad, en m/s, a la que anda el NPC mientras guía. Si su velocidad normal es mayor, se usa esa.")]
-    public float velocidad = 2.6f;
+    public float velocidad = 3f;
 
     [Min(10f)]
     [Tooltip("Tope de segundos del paseo. Si se agota, el NPC se queda donde esté y se sigue esperando a que llegue el jugador.")]
@@ -66,8 +66,9 @@ public sealed class GuiarJugadorNode : NarrativeNode, INarrativeStateEffect
     [Tooltip("Lo que se cuentan por el camino: un diálogo normal (hablante y texto por línea) que sale en bocadillos sobre quien habla mientras el NPC guía. Se pausa si el NPC se detiene a esperar al jugador o hay un menú abierto. Si llegan antes de acabarlo, lo terminan allí. Vacío = van en silencio.")]
     public DialogueAsset charla;
 
-    // Mientras sigue al NPC, el jugador va como mucho a esta fracción de la velocidad del NPC.
-    private const float FraccionVelocidadJugador = 0.9f;
+    // Mientras sigue al NPC, el jugador va como mucho a la velocidad del NPC. No le adelanta
+    // porque TopeDeVelocidadDelJugador conserva la separación detrás del guía (INC-736).
+    private const float FraccionVelocidadJugador = 1f;
     [NonSerialized] private Coroutine _rutina;
     [NonSerialized] private NarrativeRunner _runner;
     [NonSerialized] private UnityEngine.AI.NavMeshAgent _agenteTocado;

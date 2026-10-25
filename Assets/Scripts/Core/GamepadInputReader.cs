@@ -872,6 +872,31 @@ namespace Core
         }
     }
 
+    /// <summary>
+    /// True mientras el botón de fijar objetivo sigue pulsado (R3 o F). CombatCameraTargeting
+    /// lo usa para distinguir la pulsación corta (fijar/soltar) de la mantenida (activar o
+    /// desactivar el autoapuntado, INC-141).
+    /// </summary>
+    public static bool TargetLockHeld
+    {
+        get
+        {
+            if (IsGameplaySuppressed())
+                return false;
+
+#if ENABLE_INPUT_SYSTEM
+            var kb = Keyboard.current;
+            if (kb != null && kb.fKey.isPressed)
+                return true;
+
+            var gp = GetGamepad();
+            return gp != null && gp.rightStickButton != null && gp.rightStickButton.isPressed;
+#else
+            return false;
+#endif
+        }
+    }
+
     public static bool YButtonPressed
     {
         get

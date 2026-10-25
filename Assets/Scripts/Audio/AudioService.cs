@@ -102,6 +102,9 @@ public sealed class AudioService : MonoBehaviour
     readonly Dictionary<string, float> _duckRequests = new();
     readonly Dictionary<AudioSource, float> _sourceVolumes = new();
     readonly HashSet<AudioSource> _ambienceSources = new();
+    // Vuelta al pool de cada SFX de un solo uso, para poder cancelarla si el sonido se para antes
+    // de que termine (p. ej. una explosión que se alarga más que la secuencia).
+    readonly Dictionary<AudioSource, Coroutine> _sfxReturnRoutines = new();
     readonly AudioGraphProfile.VoiceDuckSettings _defaultVoiceDuck = new();
     Coroutine _voiceDuckRoutine;
     uint _voiceToken;
@@ -1344,24 +1347,23 @@ public sealed class AudioService : MonoBehaviour
     /// <summary>
     /// Reproduce un SFX por clave de evento configurada en el AudioGraphProfile.
     /// Ejemplo: PlaySFX("Ambience_Cave"), PlaySFX("Spell01"), PlaySFX("FootStep00")
+    /// Devuelve la fuente para poder pararla antes de que termine con StopSFX.
     /// </summary>
-    public void PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null, float tono = 1f)
+    public AudioSource PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null, float tono = 1f)
     {
-        if (string.IsNullOrWhiteSpace(eventKey)) return;
+        if (string.IsNullOrWhiteSpace(eventKey)) return null;
         
         AudioClip clip = FindSfxClipByKey(eventKey);
         if (clip != null)
         {
-            PlayEffect(clip, volume, worldPosition,
+            return PlayEffect(clip, volume, worldPosition,
                 eventKey.StartsWith("Ambience", StringComparison.OrdinalIgnoreCase),
                 eventKey.StartsWith("UI_", StringComparison.OrdinalIgnoreCase), pitch: Mathf.Clamp(tono, 0.01f, 3f));
         }
-        else
-        {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[AudioService] SFX no encontrado para clave '{eventKey}'.");
+        Debug.LogWarning($"[AudioService] SFX no encontrado para clave '{eventKey}'.");
 #endif
-        }
+        return null;
     }
     
     /// <summary>
@@ -1510,6 +1512,38 @@ public sealed class AudioService : MonoBehaviour
             src.Stop();
             _musicaRitual.Remove(src);
         }
+    }
+
+    /// <summary>
+    /// Detiene antes de tiempo un SFX de un solo uso lanzado con PlaySFX (por ejemplo, una
+    /// explosión que se alarga más que la secuencia). Con fadeOut &gt; 0 hace un fundido; la
+    /// fuente vuelve al pool.
+    /// </summary>
+    public void StopSFX(AudioSource src, float fadeOut = 0f)
+    {
+        if (src == null || !src.isPlaying) return;
+
+        if (_sfxReturnRoutines.TryGetValue(src, out var routine))
+        {
+            if (routine != null) StopCoroutine(routine);
+            _sfxReturnRoutines.Remove(src);
+        }
+
+        if (fadeOut > 0f) StartCoroutine(FadeOutAndRelease(src, fadeOut));
+        else ReleaseSource(src);
+    }
+
+    IEnumerator FadeOutAndRelease(AudioSource src, float duration)
+    {
+        float startVolume = BaseVolume(src);
+        float t = 0f;
+        while (src != null && src.isPlaying && t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            SetSourceVolume(src, Mathf.Lerp(startVolume, 0f, Mathf.Clamp01(t / duration)));
+            yield return null;
+        }
+        ReleaseSource(src);
     }
 
     /// <summary>
@@ -1798,10 +1832,10 @@ public sealed class AudioService : MonoBehaviour
         PlayEffect(clip, volume, worldPosition, false, dialogue: true, pitch: pitch);
     }
 
-    void PlayEffect(AudioClip clip, float volume, Vector3? worldPosition, bool ambience, bool ui = false,
+    AudioSource PlayEffect(AudioClip clip, float volume, Vector3? worldPosition, bool ambience, bool ui = false,
         bool dialogue = false, float pitch = 1f, float pan = 0f)
     {
-        if (!clip) return;
+        if (!clip) return null;
         var src = worldPosition.HasValue ? Rent3D() : Rent2D();
         src.outputAudioMixerGroup = dialogue ? dialogueGroup : ui ? uiGroup : ambience ? ambienceGroup : sfxGroup;
         src.pitch = pitch;
@@ -1821,7 +1855,9 @@ public sealed class AudioService : MonoBehaviour
         }
         src.clip = clip;
         src.Play();
-        StartCoroutine(ReturnWhenDone(src, worldPosition.HasValue ? _pool3D : _pool2D));
+        var pool = worldPosition.HasValue ? _pool3D : _pool2D;
+        _sfxReturnRoutines[src] = StartCoroutine(ReturnWhenDone(src, pool));
+        return src;
     }
     void PlaySfxForKey(string key)
     {
@@ -1890,8 +1926,23 @@ public sealed class AudioService : MonoBehaviour
         // pausa. WaitForSecondsRealtime no depende de timeScale.
         float wait = src.clip ? Mathf.Max(0.02f, src.clip.length / Mathf.Max(0.01f, src.pitch)) : 1f;
         yield return new WaitForSecondsRealtime(wait);
-        _truenos.Remove(src); src.priority = 128;
-        src.Stop(); src.clip = null; src.pitch = 1f; _sourceVolumes.Remove(src); _ambienceSources.Remove(src); pool.Enqueue(src);
+        ReleaseSource(src, pool);
+    }
+
+    /// Saca una fuente del pool: la para, la limpia y la devuelve a su cola.
+    void ReleaseSource(AudioSource src, Queue<AudioSource> pool = null)
+    {
+        if (src == null) return;
+        _sfxReturnRoutines.Remove(src);
+        _truenos.Remove(src);
+        src.priority = 128;
+        src.Stop();
+        src.clip = null;
+        src.pitch = 1f;
+        _sourceVolumes.Remove(src);
+        _ambienceSources.Remove(src);
+        if (pool == null) pool = src.spatialBlend > 0f ? _pool3D : _pool2D;
+        pool.Enqueue(src);
     }
 
     AudioClip GetCurrentMusicClip()

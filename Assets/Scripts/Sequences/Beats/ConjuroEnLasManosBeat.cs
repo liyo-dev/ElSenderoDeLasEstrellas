@@ -43,6 +43,10 @@ public class ConjuroEnLasManosBeat : SequenceBeat
     [Tooltip("Escala de la bola al final: la intensidad con la que sale el hechizo.")]
     public float escalaFinal = 2f;
 
+    [Tooltip("Vida del uso en el pool, en segundos. 0 = duración + 1. Se sube cuando la bola tiene " +
+             "que sobrevivir al beat para entregarse a otro (p. ej. a una fusión).")]
+    public float vidaEnPool;
+
     [Tooltip("ID con el que el efecto queda registrado (para recogerlo con RecogerVfxBeat).")]
     public string registrarComo;
 
@@ -60,7 +64,7 @@ public class ConjuroEnLasManosBeat : SequenceBeat
         Transform raiz = actor.Transform;
         // La vida del uso en el pool es holgada: el conjuro puede acabar solo, y lo que lo apague
         // es la limpieza de la secuencia, que lo devuelve al pool.
-        float vida = duracion > 0f ? duracion + 1f : 600f;
+        float vida = vidaEnPool > 0f ? vidaEnPool : (duracion > 0f ? duracion + 1f : 600f);
         var instancia = pool.Play(vfxPrefab, raiz.position + raiz.rotation * offset, raiz.rotation, vida, raiz);
         if (instancia == null) yield break;
 
@@ -96,6 +100,9 @@ public class ConjuroEnLasManosBeat : SequenceBeat
             instancia.localRotation = Quaternion.identity;
             instancia.localScale = escalaBase * Mathf.Lerp(escalaInicial, escalaFinal, carga);
             t += Time.unscaledDeltaTime;
+            // La duración es la del conjuro, no la de la secuencia: al acabarse, la bola se queda
+            // donde esté (pequeña, en las manos) para que otro beat la recoja, como la fusión final.
+            if (duracion > 0f && t >= duracion) break;
             yield return null;
         }
     }

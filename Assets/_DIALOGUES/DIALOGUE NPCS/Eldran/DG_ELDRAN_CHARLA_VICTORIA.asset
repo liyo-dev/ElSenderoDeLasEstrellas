@@ -27,11 +27,5 @@ MonoBehaviour:
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
-  - speakerNameId: CHAR_OLIVER
-    textId: DLG_ELDRAN_CHARLA_VICTORIA_03
-    text: 
-    portrait: {fileID: 0}
-    isPlayerSpeaking: 0
-    lookAtOverrideId: 
-    emotion: 1
+  maxLinesPerPage: 0
   isGroupConversation: 0

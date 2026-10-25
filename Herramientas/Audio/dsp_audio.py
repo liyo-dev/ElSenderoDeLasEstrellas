@@ -39,12 +39,12 @@ def decodificar(ruta, sr=SR, mono=False):
 
 
 def escribir(ruta, x, sr=SR):
-    """Guarda un array (n,) mono o (n, 2) estéreo como WAV de 24 bits."""
+    """Guarda un array (n,) mono o (n, 2) estéreo como WAV de 32 bits."""
     import wave
     if x.ndim == 1:
         canales, datos = 1, x
     else:
-        canales, datos = 2, x.T
+        canales, datos = 2, x     # (n, 2): el WAV va entrelazado L,R,L,R
     pcm = np.clip(datos, -1.0, 1.0).astype(np.float64)
     entero = (pcm * 2147483647.0).astype(np.int32)
     with wave.open(ruta, "wb") as w:

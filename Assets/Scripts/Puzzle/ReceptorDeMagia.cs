@@ -41,6 +41,12 @@ public sealed class ReceptorDeMagia : MonoBehaviour, IReaccionaAMagia
     [SerializeField] private Transform parteQueGira;
     [SerializeField] private float gradosPorSegundo = 360f;
 
+    [Header("Apuntado")]
+    [Tooltip("Si está activo, esta pieza NO se puede marcar ni fijar con R3/RB como objetivo.")]
+    [SerializeField] private bool desactivarApuntado;
+    [Tooltip("Distancia máxima desde la que se puede marcar la pieza (m). Si es 0, se usan 25 m.")]
+    [SerializeField, Min(0f)] private float radioDeApuntado = 25f;
+
     [Header("Audio")]
     [SerializeField] private string sfxAlActivar = "RuneActivate";
     [SerializeField] private string sfxAlApagar;
@@ -56,7 +62,24 @@ public sealed class ReceptorDeMagia : MonoBehaviour, IReaccionaAMagia
 
     public bool Encendido => _encendido;
 
-    private void Awake() => Pintar(false);
+    private void Awake()
+    {
+        Pintar(false);
+        ConfigurarApuntado();
+    }
+
+    private void ConfigurarApuntado()
+    {
+        if (!TryGetComponent<Targetable>(out var targetable))
+        {
+            if (desactivarApuntado) return;
+            targetable = gameObject.AddComponent<Targetable>();
+        }
+
+        targetable.esMarcableSiempre = !desactivarApuntado;
+        if (!desactivarApuntado)
+            targetable.targetingRadius = radioDeApuntado > 0f ? radioDeApuntado : 25f;
+    }
 
     public void RecibirMagia(in ImpactoDeMagia impacto)
     {

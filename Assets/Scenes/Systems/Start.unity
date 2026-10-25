@@ -34220,6 +34220,22 @@ MonoBehaviour:
   _parentCanvasRect: {fileID: 1743630769}
   _defaultSprite: {fileID: 21300000, guid: 7c099b7ea0db77f4db04f4cb0e3c14ae, type: 3}
   _emphasisSprite: {fileID: 21300000, guid: f1c746f567204bd41874d9941946e1f5, type: 3}
+  _usarArteGenerado: 1
+  _colorPapel: {r: 0.965, g: 0.914, b: 0.82, a: 1}
+  _colorBorde: {r: 0.38, g: 0.3, b: 0.23, a: 1}
+  _grosorBorde: 3
+  _radioEsquina: 26
+  _margenTexto: 14
+  _cola: {x: 52, y: 26}
+  _desdibujo: 1.6
+  _colorTexto: {r: 0.14, g: 0.12, b: 0.1, a: 1}
+  _colorSombra: {r: 0.1, g: 0.08, b: 0.06, a: 1}
+  _radioSombra: 9
+  _sombraDesplazamiento: {x: 2, y: -6}
+  _sombraOpacidad: 0.3
+  _tamanoTextoDelCanvas: 0.036
+  _anchoMinimoEnLetras: 9
+  _anchoMaximoEnLetras: 20
   _fadeInDuration: 0.25
   _fadeOutDuration: 0.2
   _popInDuration: 0.35

@@ -32,13 +32,22 @@ public static class NpcSpawner
         foreach (var roster in Resources.LoadAll<NpcRosterSO>(RostersResourcePath))
         {
             if (roster.entries == null) continue;
+            bool afectado = false;
             foreach (var entry in roster.entries)
             {
                 if (entry == null || !entry.enabled || entry.requiredFlag != clave) continue;
-                SpawnAll(roster);
-                break;
+                if (!entry.ConditionMet()) Retirar(entry.spawnId);
+                afectado = true;
             }
+            if (afectado) SpawnAll(roster);
         }
+    }
+
+    static void Retirar(string spawnId)
+    {
+        if (!_spawned.TryGetValue(spawnId, out var go)) return;
+        _spawned.Remove(spawnId);
+        if (go != null) Object.Destroy(go);
     }
 
 #if UNITY_EDITOR

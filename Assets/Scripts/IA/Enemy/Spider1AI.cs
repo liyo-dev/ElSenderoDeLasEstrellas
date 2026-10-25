@@ -318,7 +318,7 @@ public class Spider1AI : MonoBehaviour
 
         // FIX (petición Raúl, 1 sep 2026): Spider1AI no pasaba por ActiveCombatRegistry (a
         // diferencia de CombatState/ImpDemonAI/GolemBossAI), así que si se unía a una pelea ya en
-        // marcha (p.ej. contra Lety+Vicky) L1/R1 (CombatCameraTargeting.GetOrderedEnemies) nunca
+        // marcha (p.ej. contra Lety+Vicky) L1/R1 (CombatCameraTargeting.GetOrderedTargets) nunca
         // la incluía en el ciclo de objetivos — quedaba imposible de seleccionar aunque estuviera
         // atacando. Registrarla aquí la hace ciclable igual que cualquier otro enemigo.
         // Petición de Raúl (1 sep 2026, misma sesión): enemigo "menor" — cuenta como combate

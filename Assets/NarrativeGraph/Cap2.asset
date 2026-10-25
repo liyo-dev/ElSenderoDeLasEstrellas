@@ -74,9 +74,9 @@ MonoBehaviour:
   - rid: 5630202570100441224
   - rid: 5630202570100441225
   - rid: 5630202570100441226
-  - rid: 5630202583873487179
-  - rid: 5630202583873487180
-  - rid: 5630202583873487181
+  - rid: 5630202655468159109
+  - rid: 5630202655468159110
+  - rid: 5630202655468159111
   applicableSceneNames: []
   references:
     version: 2
@@ -614,8 +614,9 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-desbloqueo-bola-prisma
-        position: {x: 0, y: 1540.7999}
-        outputs: []
+        position: {x: -505, y: 1167}
+        outputs:
+        - cap2-prepara-viaje-eldran-2
         abilityKeysToUnlock: 
         abilitiesToUnlock: 
         spellsToUnlock: 02000000i
@@ -635,7 +636,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-desbloqueo-cupula-estelar
-        position: {x: 0, y: 902.39996}
+        position: {x: 45, y: 546}
         outputs:
         - cap2-tutorial-cupula-estelar
         abilityKeysToUnlock: 
@@ -700,7 +701,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-contrabandistas-0
-        position: {x: 0, y: 1132}
+        position: {x: -645, y: 619}
         outputs:
         - cap2-contrabandistas-ataque-0
         - cap2-contrabandistas-pluma-0
@@ -779,7 +780,7 @@ MonoBehaviour:
         overrideNodeColor: 0
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-contrabandistas-pluma-0
-        position: {x: 380, y: 380}
+        position: {x: 240, y: 370}
         outputs:
         - cap2-contrabandistas-pluma-1
         itemToWaitFor: {fileID: 11400000, guid: 8f9ba5fd085d98d4db490f6ac29cf3fa, type: 2}
@@ -877,7 +878,8 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-0
         position: {x: 7220, y: 368}
-        outputs: []
+        outputs:
+        - cap2-prepara-viaje-erika-1
         npcId: NPC_Erika
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
@@ -893,7 +895,8 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-erika-1
         position: {x: 0, y: 1303.2}
-        outputs: []
+        outputs:
+        - cap2-prepara-viaje-erika-2
         dialogue: {fileID: 11400000, guid: 4d7e29d781db19a44b19a032275208f2, type: 2}
         npcId: NPC_Erika
         oneShotFlag: 
@@ -931,7 +934,8 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-eldran-0
         position: {x: 7220, y: 552}
-        outputs: []
+        outputs:
+        - cap2-prepara-viaje-eldran-1
         npcId: NPC_Eldran
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
@@ -947,7 +951,8 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-eldran-1
         position: {x: 0, y: 1770.4}
-        outputs: []
+        outputs:
+        - cap2-desbloqueo-bola-prisma
         dialogue: {fileID: 11400000, guid: 9e790c4c2d8b35445932bbe8fc743226, type: 2}
         npcId: NPC_Eldran
         oneShotFlag: 
@@ -963,7 +968,8 @@ MonoBehaviour:
         nodeColor: {r: 0.35, g: 0.35, b: 0.35, a: 1}
         guid: cap2-prepara-viaje-eldran-2
         position: {x: 0, y: 2007.9999}
-        outputs: []
+        outputs:
+        - cap2-prepara-viaje-eldran-3
         wardrobeItem: {fileID: 11400000, guid: 7a534d57f71d61c478607f7af14308c0, type: 2}
         logWarnings: 0
     - rid: 5630202568397029512
@@ -1136,7 +1142,7 @@ MonoBehaviour:
         checkpointId: CAP2_FIN
         spawnAnchorId: Bedroom
         sceneName: MainWorld
-    - rid: 5630202583873487179
+    - rid: 5630202655468159109
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "25.- Encargo terminado (se\xF1al)"
@@ -1150,7 +1156,7 @@ MonoBehaviour:
         position: {x: 9120, y: -300}
         outputs: []
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
-    - rid: 5630202583873487180
+    - rid: 5630202655468159110
       type: {class: WaitSignalCountNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: 25b.- Esperar los 4 encargos
@@ -1167,7 +1173,7 @@ MonoBehaviour:
         eventKey: CAP2_PREPARA_VIAJE_ENCARGO_HECHO
         count: 4
         questId: 
-    - rid: 5630202583873487181
+    - rid: 5630202655468159111
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
         displayTitle: "25c.- Completar misi\xF3n \xB7 Prep\xE1rate para el viaje"

@@ -7,7 +7,7 @@ using UnityEngine;
 /// adelantarle). Cada sistema pone y quita su propio tope; manda el más bajo de los que haya.
 /// Lo aplica el motor del jugador (vThirdPersonMotor.topeDeVelocidad). La animación se ajusta a esa
 /// velocidad con el MISMO criterio que los NPCs (NavMeshAgentUtility.FactorDeLocomocion), así que
-/// al seguir a un NPC el jugador se mueve como él, un poco más despacio. Ver INC-536 e INC-545.
+/// al seguir a un NPC el jugador se mueve a su misma velocidad, sin adelantarle. Ver INC-536 e INC-545.
 public static class TopeDeVelocidadDelJugador
 {
     private static readonly Dictionary<object, float> Topes = new();

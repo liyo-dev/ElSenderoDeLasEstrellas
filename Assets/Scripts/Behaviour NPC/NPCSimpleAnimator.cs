@@ -755,6 +755,19 @@ public class NPCSimpleAnimator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Suelta la pose de carga de dos manos y devuelve la capa UpperBody a su peso normal.
+    /// No usa ReleasePose(true): eso devolvería TODO el personaje a idle y pisaría la animación
+    /// de dejar la caja, que vive en la capa base.
+    /// </summary>
+    public void SoltarPoseDeCarga()
+    {
+        ReleasePose(false);
+
+        if (animator != null && upperBodyLayer > 0 && upperBodyLayer < animator.layerCount)
+            animator.SetLayerWeight(upperBodyLayer, 0f);
+    }
+
     private void PararLaPose()
     {
         if (_poseCoroutine != null) StopCoroutine(_poseCoroutine);
