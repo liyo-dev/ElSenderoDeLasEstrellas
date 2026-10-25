@@ -40,6 +40,8 @@ namespace Sendero.Narrative.Editor
         NodeView _selected;
         string _lastSignature;
         double _nextRefresh;
+        NarrativeGraph _projectedGraph;
+        string _projectedNodeGuid;
 
         public string CurrentNodeGuid { get; private set; }
         public bool Active => style.display != DisplayStyle.None;
@@ -130,6 +132,16 @@ namespace Sendero.Narrative.Editor
 
             if (!EditorApplication.isPlaying)
             {
+                // La simulación de posiciones es de un nodo concreto: si cambia el grafo o la
+                // selección, el resultado anterior ya no corresponde y se limpia.
+                string selectedGuid = selected?.Model?.guid;
+                if (graph != _projectedGraph || selectedGuid != _projectedNodeGuid)
+                {
+                    _projectedBox.Clear();
+                    _projectedGraph = graph;
+                    _projectedNodeGuid = selectedGuid;
+                }
+
                 CurrentNodeGuid = null;
                 _playingBox.style.display = DisplayStyle.None;
                 _notPlaying.style.display = DisplayStyle.Flex;
@@ -330,8 +342,10 @@ namespace Sendero.Narrative.Editor
                 if (a.shield) abilities.Add("escudo");
                 if (a.magic) abilities.Add("magia");
                 var spells = preset.basicSpellIds ?? new List<SpellId>();
+                var unlocked = preset.unlockedSpells ?? new List<SpellId>();
                 _loadout.text = $"Habilidades: {(abilities.Count == 0 ? "ninguna" : string.Join(", ", abilities))}\n" +
-                                $"Hechizos: {(spells.Count == 0 ? "ninguno" : string.Join(", ", spells))}";
+                                $"Hechizos equipados: {(spells.Count == 0 ? "ninguno" : string.Join(", ", spells))}\n" +
+                                $"Hechizos desbloqueados: {(unlocked.Count == 0 ? "ninguno" : string.Join(", ", unlocked))}";
             }
             else
             {
