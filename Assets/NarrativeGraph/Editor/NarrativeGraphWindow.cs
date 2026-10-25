@@ -47,6 +47,23 @@ namespace Sendero.Narrative.Editor
         int _searchMatchIndex = -1;
         NodeView _lastSelected;
 
+        // Reconstrucción diferida de las bolitas de un nodo (una por salida).
+        readonly HashSet<string> _pendingPortRebuild = new();
+        float _lastZoom = -1f;
+        bool _wasPlaying;
+
+        // Panel derecho con pestañas: nodo / prueba.
+        NarrativeTestPanel _testPanel;
+        NarrativeLivePanel _livePanel;
+        VisualElement _sidePanel;
+        Button _tabNode;
+        Button _tabTest;
+        Button _tabLive;
+        ToolbarButton _playButton;
+        ToolbarButton _stopButton;
+        string _lastCurrentGuid;
+        readonly HashSet<string> _visitedNodes = new();
+
         [MenuItem("El Sendero/Narrativa/Abrir Editor %#n")]
         public static void OpenWindow()
         {
@@ -106,16 +123,45 @@ namespace Sendero.Narrative.Editor
             if (sheet != null) _view.styleSheets.Add(sheet);
             right.Add(_view);
 
+            _sidePanel = new VisualElement();
+            _sidePanel.AddToClassList("narrative-side");
+
+            var tabs = new VisualElement();
+            tabs.AddToClassList("narrative-side__tabs");
+            _tabNode = new Button(() => ShowSideTab(0)) { text = "Nodo" };
+            _tabTest = new Button(() => ShowSideTab(1)) { text = "Prueba" };
+            _tabLive = new Button(() => ShowSideTab(2)) { text = "En vivo" };
+            _tabNode.AddToClassList("narrative-side__tab");
+            _tabTest.AddToClassList("narrative-side__tab");
+            _tabLive.AddToClassList("narrative-side__tab");
+            tabs.Add(_tabNode);
+            tabs.Add(_tabTest);
+            tabs.Add(_tabLive);
+            _sidePanel.Add(tabs);
+
             _inspector = new NarrativeInspectorPanel();
             _inspector.NodeFieldChanged += OnNodeFieldChanged;
             _inspector.NavigateToNode += FocusNode;
-            right.Add(_inspector);
+            _sidePanel.Add(_inspector);
+
+            _testPanel = new NarrativeTestPanel();
+            _sidePanel.Add(_testPanel);
+
+            _livePanel = new NarrativeLivePanel();
+            _livePanel.FocusNodeRequested += FocusNode;
+            _sidePanel.Add(_livePanel);
+            right.Add(_sidePanel);
+            ShowSideTab(0);
 
             NodeView.StartChanged += OnStartChanged;
             NarrativeProjectIndex.Rebuilt += OnIndexRebuilt;
             Undo.undoRedoPerformed += OnUndoRedo;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 
             rootVisualElement.schedule.Execute(PollSelection).Every(150);
+            rootVisualElement.schedule.Execute(PollZoom).Every(120);
+            rootVisualElement.schedule.Execute(PollPlayMode).Every(300);
+            rootVisualElement.schedule.Execute(PollLiveState).Every(300);
 
             // Restaurar último grafo abierto
             var lastPath = EditorPrefs.GetString(PrefLastGraph, "");
@@ -132,6 +178,138 @@ namespace Sendero.Narrative.Editor
             NodeView.StartChanged -= OnStartChanged;
             NarrativeProjectIndex.Rebuilt -= OnIndexRebuilt;
             Undo.undoRedoPerformed -= OnUndoRedo;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            if (_livePanel != null) _livePanel.FocusNodeRequested -= FocusNode;
+        }
+
+        void ShowSideTab(int tab)
+        {
+            if (_testPanel == null || _inspector == null || _livePanel == null) return;
+            bool node = tab == 0;
+            bool test = tab == 1;
+            bool live = tab == 2;
+            _inspector.style.display = node ? DisplayStyle.Flex : DisplayStyle.None;
+            _testPanel.style.display = test ? DisplayStyle.Flex : DisplayStyle.None;
+            _livePanel.style.display = live ? DisplayStyle.Flex : DisplayStyle.None;
+            _tabNode?.EnableInClassList("is-selected", node);
+            _tabTest?.EnableInClassList("is-selected", test);
+            _tabLive?.EnableInClassList("is-selected", live);
+            if (test) _testPanel.SetTarget(_lastSelected);
+            if (live)
+            {
+                _livePanel.RefreshNow();
+                _livePanel.Refresh(_graph, _lastSelected, true);
+            }
+        }
+
+        void PollLiveState()
+        {
+            if (_livePanel == null || _view == null) return;
+
+            // El resaltado del nodo actual es barato y va siempre; el resto del panel solo se
+            // relee cuando la pestaña En vivo está a la vista.
+            string guid = FindCurrentNodeGuid();
+            if (guid != _lastCurrentGuid)
+            {
+                // Deja rastro de por dónde ha pasado el flujo, para poder reconstruir la sesión.
+                if (!string.IsNullOrEmpty(_lastCurrentGuid) && _nodeViews.TryGetValue(_lastCurrentGuid, out var previous))
+                {
+                    previous.AddToClassList("narrative-node--visited");
+                    _visitedNodes.Add(_lastCurrentGuid);
+                }
+
+                _lastCurrentGuid = guid;
+                foreach (var kv in _nodeViews)
+                    kv.Value.EnableInClassList("narrative-node--current",
+                        !string.IsNullOrEmpty(guid) && kv.Key == guid);
+            }
+
+            if (_livePanel.Active) _livePanel.Refresh(_graph, _lastSelected);
+        }
+
+        string FindCurrentNodeGuid()
+        {
+            if (!EditorApplication.isPlaying || _graph == null || NarrativeGraphHub.Instance == null) return null;
+            var runner = NarrativeGraphHub.Instance.GetAllRunners()
+                .FirstOrDefault(r => r != null && r.graph == _graph);
+            if (runner == null) return null;
+            return runner.CurrentNode != null
+                ? runner.CurrentNode.guid
+                : runner.Blackboard?.Get<string>(NarrativeRunner.CurrentNodeKey, null);
+        }
+
+        void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredEditMode)
+                NarrativeTestLauncher.RestoreIfNeeded();
+            RefreshPlayButtons();
+        }
+
+        void PollPlayMode()
+        {
+            bool playing = EditorApplication.isPlaying;
+            if (playing == _wasPlaying) return;
+            _wasPlaying = playing;
+            foreach (var nv in _nodeViews.Values) nv.SetTestPlaying(playing);
+            RefreshPlayButtons();
+            if (!playing)
+            {
+                NarrativeTestLauncher.RestoreIfNeeded();
+                _lastCurrentGuid = null;
+                // El rastro de nodos visitados se conserva al salir de Play para poder revisar
+                // por dónde pasó la sesión; se limpia al empezar la siguiente.
+                foreach (var nv in _nodeViews.Values) nv.RemoveFromClassList("narrative-node--current");
+            }
+            else
+            {
+                _lastCurrentGuid = null;
+                _visitedNodes.Clear();
+                foreach (var nv in _nodeViews.Values) nv.RemoveFromClassList("narrative-node--visited");
+            }
+            _livePanel?.RefreshNow();
+        }
+
+        void RefreshPlayButtons()
+        {
+            bool playing = EditorApplication.isPlaying;
+            if (_playButton != null)
+            {
+                _playButton.text = "▶";
+                _playButton.SetEnabled(!playing);
+            }
+            if (_stopButton != null)
+            {
+                _stopButton.text = "■";
+                _stopButton.SetEnabled(playing);
+            }
+        }
+
+        void PlayFromSelection()
+        {
+            ShowSideTab(1);
+            _testPanel?.PlayFrom(_lastSelected?.Model?.guid);
+        }
+
+        void StopPlay()
+        {
+            if (EditorApplication.isPlaying) EditorApplication.isPlaying = false;
+        }
+
+        void OnTestRequested(NodeView nv)
+        {
+            if (nv?.Model == null) return;
+            if (EditorApplication.isPlaying)
+            {
+                EditorApplication.isPlaying = false;
+                return;
+            }
+            _view.ClearSelection();
+            _view.AddToSelection(nv);
+            _lastSelected = nv;
+            _inspector.Show(nv);
+            ShowSideTab(1);
+            _testPanel?.SetTarget(nv);
+            _testPanel?.PlayFrom(nv.Model.guid);
         }
 
         void BuildToolbar()
@@ -187,13 +365,25 @@ namespace Sendero.Narrative.Editor
 
             _statusLabel = new Label();
             _statusLabel.AddToClassList("narrative-toolbar__status");
+            _statusLabel.style.maxWidth = 280f;
+            _statusLabel.style.overflow = Overflow.Hidden;
+            _statusLabel.style.textOverflow = TextOverflow.Ellipsis;
             toolbar.Add(_statusLabel);
+
+            _playButton = new ToolbarButton(PlayFromSelection) { text = "▶", tooltip = "Probar desde el nodo seleccionado con la configuración de la pestaña Prueba" };
+            _playButton.AddToClassList("narrative-toolbar__play-btn");
+            toolbar.Add(_playButton);
+
+            _stopButton = new ToolbarButton(StopPlay) { text = "■", tooltip = "Parar la prueba y restaurar el boot preset" };
+            _stopButton.AddToClassList("narrative-toolbar__stop-btn");
+            toolbar.Add(_stopButton);
 
             var saveBtn = new ToolbarButton(Save) { text = "Guardar" };
             saveBtn.AddToClassList("narrative-toolbar__save-btn");
             toolbar.Add(saveBtn);
 
             rootVisualElement.Add(toolbar);
+            RefreshPlayButtons();
         }
 
         static VisualElement Separator()
@@ -321,12 +511,17 @@ namespace Sendero.Narrative.Editor
             _suppressGraphCallbacks = true;
             _view.DeleteElements(_view.graphElements.ToList());
             _nodeViews.Clear();
+            _pendingPortRebuild.Clear();
             _lastSelected = null;
+            _lastCurrentGuid = null;
+            _visitedNodes.Clear();
+            _livePanel?.RefreshNow();
 
             if (_graph == null)
             {
                 _suppressGraphCallbacks = false;
                 _inspector.SetGraph(null, null);
+                _testPanel?.SetGraph(null);
                 RebuildChapterMenu();
                 RebuildGraphMenu();
                 return;
@@ -343,6 +538,7 @@ namespace Sendero.Narrative.Editor
             _view.FrameAll();
             _suppressGraphCallbacks = false;
             _inspector.SetGraph(_graph, _so);
+            _testPanel?.SetGraph(_graph);
             RebuildChapterMenu();
             RebuildGraphMenu();
             ApplyChapterFilter();
@@ -356,6 +552,8 @@ namespace Sendero.Narrative.Editor
         {
             var view = new NodeView(model, _graph, _so);
             view.LabelChanged += v => { RefreshSearchIfNeeded(); };
+            view.TestRequested += OnTestRequested;
+            view.SetTestPlaying(EditorApplication.isPlaying);
             _view.AddElement(view);
             _nodeViews[model.guid] = view;
         }
@@ -364,18 +562,57 @@ namespace Sendero.Narrative.Editor
         {
             if (model.outputs == null) return;
             if (!_nodeViews.TryGetValue(model.guid, out var from)) return;
-            var ports = model.GetOutputPorts();
             for (int i = 0; i < model.outputs.Count; i++)
             {
                 var outGuid = model.outputs[i];
                 if (string.IsNullOrEmpty(outGuid)) continue;
                 if (!_nodeViews.TryGetValue(outGuid, out var to) || to.Input == null) continue;
-                var port = ports != null ? from.GetOutputPort(i) : from.GetOutputPort(0);
+                var port = from.GetOutputPort(i);
                 if (port == null) continue;
                 var edge = port.ConnectTo(to.Input);
                 edge.AddToClassList("narrative-edge");
                 _view.AddElement(edge);
+                ApplyEdgeStyle(edge, false);
             }
+        }
+
+        /// <summary>Color de categoría, grosor y atenuación de una arista según la selección.</summary>
+        void ApplyEdgeStyle(Edge edge, bool active)
+        {
+            if (edge?.edgeControl == null) return;
+            var source = edge.output?.node as NodeView;
+            var color = source != null ? NarrativeNodeCatalog.ColorOf(source.Model.GetType()) : new Color(0.7f, 0.7f, 0.7f);
+
+            bool noSelection = _lastSelected == null;
+            bool touchesSelection = _lastSelected != null && (source == _lastSelected || edge.input?.node == _lastSelected);
+            float alpha = noSelection || active || touchesSelection ? 1f : 0.25f;
+            color.a = alpha;
+
+            edge.edgeControl.inputColor = color;
+            edge.edgeControl.outputColor = color;
+            edge.edgeControl.edgeWidth = active || touchesSelection ? 3 : 2;
+        }
+
+        void RefreshEdgeHighlight()
+        {
+            if (_view == null) return;
+            foreach (var edge in _view.edges)
+            {
+                if (edge == null) continue;
+                bool active = _lastSelected != null &&
+                              (edge.output?.node == _lastSelected || edge.input?.node == _lastSelected);
+                ApplyEdgeStyle(edge, active);
+            }
+        }
+
+        /// <summary>Reordena las bolitas de todas las tarjetas (la Y de los destinos acaba de cambiar).</summary>
+        void RefreshAllPortOrders()
+        {
+            foreach (var nv in _nodeViews.Values) nv.RefreshOutputOrder();
+            if (_view == null) return;
+            foreach (var edge in _view.edges)
+                edge?.UpdateEdgeControl();
+            RefreshEdgeHighlight();
         }
 
         void CreateNode(Type t, Vector2? pos = null)
@@ -431,20 +668,26 @@ namespace Sendero.Narrative.Editor
 
             Undo.RecordObject(_graph, "Conectar nodos");
             if (from.Model.outputs == null) from.Model.outputs = new List<string>();
+            int idx = from.PortIndex(e.output);
             if (from.HasNamedOutputs)
             {
-                int idx = from.PortIndex(e.output);
                 int count = from.Model.GetOutputPorts().Length;
                 while (from.Model.outputs.Count < count) from.Model.outputs.Add("");
+                if (idx >= 0 && idx < from.Model.outputs.Count) from.Model.outputs[idx] = to.Model.guid;
+            }
+            else if (idx >= 0 && idx < from.Model.outputs.Count && string.IsNullOrEmpty(from.Model.outputs[idx]))
+            {
                 from.Model.outputs[idx] = to.Model.guid;
             }
             else if (!from.Model.outputs.Contains(to.Model.guid))
             {
+                // La bolita ya tenía arista: esto es una rama nueva, no un reemplazo.
                 from.Model.outputs.Add(to.Model.guid);
             }
             EditorUtility.SetDirty(_graph);
             from.RefreshWarnings();
             RefreshForkBadge(from);
+            SchedulePortRebuild(from);
             if (_lastSelected == from || _lastSelected == to) _inspector.Show(_lastSelected);
         }
 
@@ -458,7 +701,7 @@ namespace Sendero.Narrative.Editor
                 if (from.HasNamedOutputs)
                 {
                     int idx = from.PortIndex(e.output);
-                    if (idx < from.Model.outputs.Count && from.Model.outputs[idx] == to.Model.guid)
+                    if (idx >= 0 && idx < from.Model.outputs.Count && from.Model.outputs[idx] == to.Model.guid)
                         from.Model.outputs[idx] = "";
                 }
                 else
@@ -469,7 +712,49 @@ namespace Sendero.Narrative.Editor
             EditorUtility.SetDirty(_graph);
             from.RefreshWarnings();
             RefreshForkBadge(from);
+            SchedulePortRebuild(from);
             if (_lastSelected == from || _lastSelected == to) _inspector.Show(_lastSelected);
+        }
+
+        /// <summary>
+        /// Rehace las bolitas de un nodo después de que GraphView termine el gesto de conectar.
+        /// Hacerlo dentro del callback de GraphViewChange es frágil (la arista recién creada aún
+        /// está en la lista de cambios), así que se difiere un tick.
+        /// </summary>
+        void SchedulePortRebuild(NodeView nv)
+        {
+            if (nv?.Model == null || _view == null) return;
+            string guid = nv.Model.guid;
+            if (!_pendingPortRebuild.Add(guid)) return;
+            _view.schedule.Execute(() =>
+            {
+                _pendingPortRebuild.Remove(guid);
+                if (_graph == null || !_nodeViews.TryGetValue(guid, out var view)) return;
+                RebuildNodeEdges(view);
+            });
+        }
+
+        /// <summary>Quita las aristas que salen del nodo, rehace sus bolitas y las vuelve a conectar.</summary>
+        void RebuildNodeEdges(NodeView nv)
+        {
+            if (nv?.Model == null || _view == null) return;
+
+            bool previousSuppress = _suppressGraphCallbacks;
+            _suppressGraphCallbacks = true;
+            foreach (var edge in _view.edges.ToList())
+            {
+                if (edge?.output?.node != nv) continue;
+                edge.output.Disconnect(edge);
+                edge.input?.Disconnect(edge);
+                _view.RemoveElement(edge);
+            }
+            _suppressGraphCallbacks = previousSuppress;
+
+            nv.RebuildOutputPorts();
+            DrawEdgesFrom(nv.Model);
+            RefreshForkBadge(nv);
+            nv.RefreshWarnings();
+            RefreshAllPortOrders();
         }
 
         void OnNodeDeleted(NodeView nv)
@@ -502,6 +787,9 @@ namespace Sendero.Narrative.Editor
             Undo.RecordObject(_graph, "Mover nodos");
             foreach (var nv in moved) nv.Model.position = nv.GetPosition().position;
             EditorUtility.SetDirty(_graph);
+            // Al mover un nodo cambia el orden vertical de sus destinos (y de los de sus
+            // predecesores): recolocar las bolitas para que las líneas sigan sin cruzarse.
+            RefreshAllPortOrders();
         }
 
         void RefreshForkBadges()
@@ -532,7 +820,27 @@ namespace Sendero.Narrative.Editor
             {
                 _lastSelected = sel;
                 _inspector.Show(sel);
+                _testPanel?.SetTarget(sel);
+                RefreshEdgeHighlight();
             }
+        }
+
+        /// <summary>
+        /// Ajusta el nivel de detalle de las tarjetas según el zoom: de cerca se ve el resumen
+        /// completo; a media distancia, solo título y etiqueta; de lejos, solo el título grande.
+        /// Sin esto, a 0,5× el texto es ilegible y el grafo entero parece una maraña.
+        /// </summary>
+        void PollZoom()
+        {
+            if (_view == null) return;
+            float zoom = _view.scale;
+            if (Mathf.Abs(zoom - _lastZoom) < 0.01f) return;
+            _lastZoom = zoom;
+
+            bool far = zoom < 0.62f;
+            bool mid = !far && zoom < 0.9f;
+            _view.EnableInClassList("narrative-view--far", far);
+            _view.EnableInClassList("narrative-view--mid", mid);
         }
 
         void OnNodeFieldChanged(NodeView view)
@@ -547,6 +855,8 @@ namespace Sendero.Narrative.Editor
         void FocusNode(string guid)
         {
             if (string.IsNullOrEmpty(guid) || !_nodeViews.TryGetValue(guid, out var nv)) return;
+            // Si el filtro de capítulo lo tenía oculto, se quita el filtro para poder verlo.
+            if (nv.style.display == DisplayStyle.None) SetChapterFilter(AllChaptersLabel);
             _view.ClearSelection();
             _view.AddToSelection(nv);
             _view.FrameSelection();
@@ -920,6 +1230,7 @@ namespace Sendero.Narrative.Editor
                 }
             }
             EditorUtility.SetDirty(_graph);
+            RefreshAllPortOrders();
             _view.FrameAll();
             SetStatus("Nodos reordenados (cruces minimizados)");
         }
@@ -936,7 +1247,9 @@ namespace Sendero.Narrative.Editor
 
         void SetStatus(string text)
         {
-            if (_statusLabel != null) _statusLabel.text = text;
+            if (_statusLabel == null) return;
+            _statusLabel.text = text;
+            _statusLabel.tooltip = text;
         }
     }
 }

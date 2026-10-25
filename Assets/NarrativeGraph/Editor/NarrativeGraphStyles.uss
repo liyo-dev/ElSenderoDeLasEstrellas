@@ -72,6 +72,36 @@
     background-color: #4a9d54;
 }
 
+.narrative-toolbar__play-btn {
+    background-color: rgba(58, 125, 68, 0.25);
+    color: #8fe39a;
+    border-radius: 4px;
+    padding: 2px 8px;
+    border-width: 0;
+    -unity-font-style: bold;
+}
+
+.narrative-toolbar__play-btn:hover {
+    background-color: rgba(58, 125, 68, 0.45);
+}
+
+.narrative-toolbar__stop-btn {
+    background-color: rgba(170, 55, 55, 0.2);
+    color: #ff9b9b;
+    border-radius: 4px;
+    padding: 2px 8px;
+    border-width: 0;
+}
+
+.narrative-toolbar__stop-btn:hover {
+    background-color: rgba(170, 55, 55, 0.4);
+}
+
+.narrative-toolbar__stop-btn:disabled,
+.narrative-toolbar__play-btn:disabled {
+    opacity: 0.4;
+}
+
 /* ─── Paleta (izquierda) ──────────────────────────────────────── */
 
 .narrative-palette {
@@ -134,9 +164,9 @@
 /* ─── Lienzo ──────────────────────────────────────────────────── */
 
 GridBackground {
-    --grid-background-color: #1e2128;
-    --line-color: rgba(255, 255, 255, 0.04);
-    --thick-line-color: rgba(255, 255, 255, 0.08);
+    --grid-background-color: #1b1e24;
+    --line-color: rgba(255, 255, 255, 0.055);
+    --thick-line-color: rgba(255, 255, 255, 0.10);
     --spacing: 24;
 }
 
@@ -150,19 +180,19 @@ GridBackground {
 /* ─── Nodos ───────────────────────────────────────────────────── */
 
 .narrative-node {
-    min-width: 280px;
-    max-width: 340px;
+    min-width: 290px;
+    max-width: 330px;
 }
 
 .narrative-node > #node-border {
-    border-radius: 8px;
+    border-radius: 9px;
     border-width: 1px;
-    border-color: rgba(0, 0, 0, 0.55);
-    background-color: #2b303a;
+    border-color: rgba(0, 0, 0, 0.6);
+    background-color: #262b34;
 }
 
 .narrative-node:hover > #node-border {
-    border-color: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .narrative-node:selected > #node-border,
@@ -172,29 +202,31 @@ GridBackground {
 }
 
 .narrative-node > #selection-border {
-    border-radius: 9px;
+    border-radius: 10px;
 }
 
 .narrative-node__main {
-    border-radius: 8px;
-    background-color: #2b303a;
+    border-radius: 9px;
+    background-color: #262b34;
 }
 
 .narrative-node__title-bar {
-    height: auto;
-    min-height: 26px;
-    padding: 3px 8px;
+    height: 24px;
+    min-height: 24px;
+    padding: 2px 8px;
     flex-direction: row;
     align-items: center;
-    border-radius: 7px 7px 0 0;
+    border-radius: 8px 8px 0 0;
 }
 
 .narrative-node__type-title {
-    font-size: 11px;
+    font-size: 10px;
     -unity-font-style: bold;
-    color: rgba(255, 255, 255, 0.95);
+    color: rgba(255, 255, 255, 0.92);
     margin: 0;
     padding: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .narrative-node__start-badge {
@@ -204,25 +236,54 @@ GridBackground {
     background-color: #ffd54a;
     border-radius: 3px;
     padding: 1px 5px;
-    margin-right: 6px;
+    margin-right: 5px;
 }
 
 .narrative-node__chapter-badge {
     font-size: 9px;
     -unity-font-style: bold;
     border-radius: 8px;
-    padding: 1px 7px;
+    padding: 1px 6px;
     margin-left: auto;
     color: white;
     white-space: nowrap;
-    max-width: 110px;
+    max-width: 92px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+/* ▶ de la tarjeta: aparece al pasar el ratón y lanza una prueba desde ese nodo. */
+.narrative-node__test-button {
+    display: none;
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    margin: 0 0 0 4px;
+    padding: 0;
+    border-width: 0;
+    border-radius: 9px;
+    background-color: rgba(255, 255, 255, 0.14);
+    color: #f2f3f7;
+    font-size: 9px;
+    -unity-text-align: middle-center;
+}
+
+.narrative-node:hover .narrative-node__test-button {
+    display: flex;
+}
+
+.narrative-node__test-button:hover {
+    background-color: #3a7d44;
+    color: white;
+}
+
+.narrative-node--note .narrative-node__test-button {
+    display: none;
+}
+
 .narrative-node__label-row {
-    padding: 4px 8px 2px 8px;
-    background-color: rgba(0, 0, 0, 0.18);
+    padding: 3px 10px 1px 10px;
+    background-color: rgba(0, 0, 0, 0.14);
 }
 
 .narrative-node__label-field {
@@ -233,10 +294,10 @@ GridBackground {
     background-color: transparent;
     border-width: 0;
     border-bottom-width: 1px;
-    border-bottom-color: rgba(255, 255, 255, 0.12);
+    border-bottom-color: rgba(255, 255, 255, 0.10);
     border-radius: 0;
     padding: 1px 2px;
-    font-size: 12px;
+    font-size: 13px;
     -unity-font-style: bold;
     color: #f2f3f7;
 }
@@ -246,18 +307,42 @@ GridBackground {
 }
 
 .narrative-node__extension {
-    padding: 4px 8px 8px 8px;
-    background-color: #2b303a;
-    border-radius: 0 0 7px 7px;
+    padding: 2px 10px 7px 10px;
+    background-color: #262b34;
+    border-radius: 0 0 8px 8px;
 }
 
-.narrative-node #contents > #top {
-    background-color: #2b303a;
-}
-
-.narrative-node #contents > #top > #input,
-.narrative-node #contents > #top > #output {
+/* Sin franja de puertos: los docks son bolitas absolutas en el borde de la tarjeta y no
+   consumen una fila de alto. Los nodos con puertos con nombre (Sí/No) reservan espacio a la
+   derecha para que sus etiquetas no pisen el resumen. */
+.narrative-node #node-border #contents > #top {
     background-color: transparent;
+    height: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+.narrative-node #node-border #contents > #top > #input,
+.narrative-node #node-border #contents > #top > #output {
+    background-color: transparent;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+}
+
+.narrative-node #node-border #contents > #top > #input {
+    align-items: flex-start;
+    margin-left: -2px;
+}
+
+.narrative-node #node-border #contents > #top > #output {
+    align-items: flex-end;
+    margin-right: -2px;
 }
 
 .narrative-node #contents > #divider {
@@ -291,7 +376,43 @@ GridBackground {
     border-color: rgba(255, 170, 60, 0.7);
 }
 
+/* Nodo que está ejecutándose ahora mismo (Play Mode). */
+.narrative-node--current > #node-border,
+.narrative-node--current:selected > #node-border {
+    border-color: #ffd54a;
+    border-width: 3px;
+}
+
+.narrative-node--current > #selection-border {
+    border-color: #ffd54a;
+}
+
+.narrative-node--visited > #node-border {
+    border-color: rgba(143, 227, 154, 0.5);
+}
+
+.narrative-node--current > #node-border {
+    border-color: #ffd54a;
+}
+
+.narrative-node__live-badge {
+    display: none;
+    font-size: 10px;
+    color: #ffd54a;
+    margin-right: 4px;
+    -unity-font-style: bold;
+}
+
+.narrative-node--current .narrative-node__live-badge {
+    display: flex;
+}
+
 /* ─── Resumen dentro del nodo ─────────────────────────────────── */
+
+.narrative-node__summary {
+    max-height: 68px;
+    overflow: hidden;
+}
 
 .narrative-summary {
     padding-top: 2px;
@@ -445,8 +566,13 @@ GridBackground {
 /* ─── Puertos ─────────────────────────────────────────────────── */
 
 .narrative-port-dock {
-    padding: 2px 2px;
-    justify-content: center;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .narrative-port-dock--right {
@@ -454,30 +580,52 @@ GridBackground {
 }
 
 .narrative-port {
-    height: 20px;
+    height: 15px;
+    margin: 0;
+    padding: 0;
 }
 
 .narrative-port > #connector {
-    width: 12px;
-    height: 12px;
-    border-radius: 6px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
     border-width: 2px;
-    border-color: rgba(255, 255, 255, 0.55);
-    background-color: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.5);
+    background-color: #1e2128;
 }
 
 .narrative-port:hover > #connector {
-    background-color: rgba(255, 255, 255, 0.55);
+    background-color: #e6e8ee;
+    border-color: #ffffff;
 }
 
 .narrative-port > #type {
     font-size: 10px;
-    color: rgba(230, 232, 238, 0.85);
-    margin: 0 4px;
+    color: rgba(230, 232, 238, 0.8);
+    margin: 0 3px;
 }
 
 .narrative-port--named > #type {
     -unity-font-style: bold;
+}
+
+/* Sí / No (y equivalentes) con color propio: se leen de un vistazo. */
+.narrative-port--positive > #connector {
+    border-color: #6fdc8c;
+    background-color: rgba(111, 220, 140, 0.18);
+}
+
+.narrative-port--positive > #type {
+    color: #8fe39a;
+}
+
+.narrative-port--negative > #connector {
+    border-color: #ff7a7a;
+    background-color: rgba(255, 122, 122, 0.16);
+}
+
+.narrative-port--negative > #type {
+    color: #ff9b9b;
 }
 
 .narrative-node__fork-badge {
@@ -487,8 +635,57 @@ GridBackground {
     background-color: #ffb054;
     border-radius: 3px;
     padding: 1px 5px;
-    margin: 2px 4px;
-    align-self: flex-end;
+    margin: 0 0 4px 0;
+    align-self: flex-start;
+}
+
+/* ─── Nivel de detalle por zoom ───────────────────────────────── */
+
+/* De cerca: tarjeta completa. A media distancia: título + etiqueta. De lejos: solo título
+   grande, para que el mapa del grafo se lea aunque el texto esté a 0,4×. */
+.narrative-view--mid .narrative-node__summary,
+.narrative-view--mid .narrative-node__warnings,
+.narrative-view--mid .narrative-node__extension {
+    display: none;
+}
+
+.narrative-view--mid .narrative-node__type-title {
+    font-size: 13px;
+}
+
+.narrative-view--mid .narrative-node__label-field > #unity-text-input {
+    font-size: 12px;
+}
+
+.narrative-view--far .narrative-node__label-row,
+.narrative-view--far .narrative-node__extension,
+.narrative-view--far .narrative-node__chapter-badge {
+    display: none;
+}
+
+.narrative-view--far .narrative-node__title-bar {
+    height: 38px;
+    min-height: 38px;
+    padding: 5px 10px;
+    border-radius: 9px;
+}
+
+.narrative-view--far .narrative-node__type-title {
+    font-size: 19px;
+}
+
+.narrative-view--far .narrative-node__start-badge {
+    font-size: 13px;
+    padding: 2px 6px;
+}
+
+.narrative-view--far .narrative-node__test-button {
+    margin-left: auto;
+}
+
+/* A esa distancia las etiquetas Sí/No no se leen: quedan solo las bolitas. */
+.narrative-view--far .narrative-port--named > #type {
+    display: none;
 }
 
 /* ─── Aristas ─────────────────────────────────────────────────── */
@@ -598,4 +795,306 @@ GridBackground {
 
 .narrative-inspector__link:hover {
     background-color: rgba(255, 255, 255, 0.14);
+}
+
+/* ─── Panel derecho con pestañas ─────────────────────────────── */
+
+.narrative-side {
+    flex-grow: 1;
+    flex-direction: column;
+    min-width: 280px;
+    background-color: #262a33;
+}
+
+.narrative-side__tabs {
+    flex-direction: row;
+    height: 26px;
+    flex-shrink: 0;
+    background-color: #1e2128;
+    border-bottom-width: 1px;
+    border-bottom-color: #14161b;
+}
+
+.narrative-side__tab {
+    flex-grow: 1;
+    height: 26px;
+    margin: 0;
+    padding: 0 10px;
+    border-width: 0;
+    border-radius: 0;
+    background-color: transparent;
+    color: rgba(230, 232, 238, 0.55);
+    font-size: 11px;
+    -unity-text-align: middle-center;
+}
+
+.narrative-side__tab:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #e6e8ee;
+}
+
+.narrative-side__tab.is-selected {
+    background-color: #2b303a;
+    color: #ffffff;
+    -unity-font-style: bold;
+    border-bottom-width: 2px;
+    border-bottom-color: #6fb1ff;
+}
+
+.narrative-inspector,
+.narrative-test {
+    flex-grow: 1;
+    min-height: 0;
+}
+
+/* ─── Pestaña Prueba ─────────────────────────────────────────── */
+
+.narrative-test {
+    background-color: #262a33;
+}
+
+.narrative-test__scroll {
+    flex-grow: 1;
+    padding: 6px 8px;
+}
+
+.narrative-test__title {
+    font-size: 13px;
+    -unity-font-style: bold;
+    padding: 4px 2px 2px 2px;
+    color: #f2f3f7;
+}
+
+.narrative-test__target {
+    font-size: 11px;
+    color: #9ed0ff;
+    padding: 0 2px 8px 2px;
+    white-space: normal;
+}
+
+.narrative-test__section {
+    margin: 4px 0;
+}
+
+.narrative-test__section > Toggle {
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.narrative-test__hint {
+    font-size: 10px;
+    color: rgba(230, 232, 238, 0.55);
+    white-space: normal;
+    margin: 2px 0 6px 0;
+}
+
+.narrative-test__small-button {
+    margin: 3px 0;
+    font-size: 10px;
+    height: 20px;
+}
+
+.narrative-test__grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.narrative-test__ability {
+    width: 50%;
+    font-size: 10px;
+}
+
+.narrative-test__preview {
+    margin-top: 4px;
+}
+
+.narrative-test__preview-line {
+    font-size: 10px;
+    white-space: normal;
+    margin: 1px 0;
+}
+
+.narrative-test__preview-line.is-ok { color: #8fe39a; }
+.narrative-test__preview-line.is-warning { color: #ffb054; }
+.narrative-test__preview-line.is-error { color: #ff7a7a; }
+.narrative-test__preview-line.is-muted { color: rgba(230, 232, 238, 0.55); }
+
+.narrative-test__actions {
+    margin-top: 14px;
+}
+
+.narrative-test__play {
+    height: 34px;
+    border-width: 0;
+    border-radius: 4px;
+    background-color: #3a7d44;
+    color: white;
+    -unity-font-style: bold;
+    font-size: 12px;
+}
+
+.narrative-test__play:hover {
+    background-color: #4a9d54;
+}
+
+.narrative-test__play.is-playing {
+    background-color: #a33f3f;
+}
+
+.narrative-test__status {
+    font-size: 10px;
+    color: rgba(230, 232, 238, 0.6);
+    white-space: normal;
+    margin-top: 6px;
+    padding-bottom: 8px;
+}
+
+/* ─── Pestaña En vivo ────────────────────────────────────────── */
+
+.narrative-live {
+    flex-grow: 1;
+    min-height: 0;
+    background-color: #262a33;
+}
+
+.narrative-live__scroll {
+    flex-grow: 1;
+    padding: 6px 8px;
+}
+
+.narrative-live__title {
+    font-size: 13px;
+    -unity-font-style: bold;
+    padding: 4px 2px 6px 2px;
+    color: #f2f3f7;
+}
+
+.narrative-live__hint {
+    font-size: 10px;
+    color: rgba(230, 232, 238, 0.55);
+    white-space: normal;
+    padding: 2px;
+}
+
+.narrative-live__playing {
+    flex-direction: column;
+}
+
+.narrative-live__headline {
+    font-size: 10px;
+    -unity-font-style: bold;
+    color: #8fe39a;
+    margin-bottom: 4px;
+}
+
+.narrative-live__current {
+    font-size: 12px;
+    -unity-font-style: bold;
+    color: #ffd54a;
+    white-space: normal;
+    margin-bottom: 6px;
+}
+
+.narrative-live__line {
+    font-size: 11px;
+    color: #dfe2ea;
+    white-space: normal;
+    margin: 1px 0;
+}
+
+.narrative-live__section {
+    margin: 4px 0;
+}
+
+.narrative-live__section > Toggle {
+    -unity-font-style: bold;
+    font-size: 11px;
+}
+
+.narrative-live__list {
+    flex-direction: column;
+}
+
+.narrative-live__row {
+    font-size: 10px;
+    color: rgba(223, 226, 234, 0.8);
+    white-space: normal;
+    margin: 1px 0;
+}
+
+.narrative-live__muted {
+    font-size: 10px;
+    color: rgba(230, 232, 238, 0.45);
+    white-space: normal;
+}
+
+.narrative-test__warning {
+    font-size: 10px;
+    color: #ffb054;
+    white-space: normal;
+    margin: 2px 0 4px 0;
+}
+
+/* ─── Selector de habilidades del nodo ───────────────────────── */
+
+.unlock-editor {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top-width: 1px;
+    border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.unlock-editor__title {
+    font-size: 10px;
+    -unity-font-style: bold;
+    color: rgba(230, 232, 238, 0.7);
+    margin: 6px 0 3px 0;
+}
+
+.unlock-editor__chips {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.unlock-editor__chip {
+    margin: 2px 4px 2px 0;
+    padding: 2px 7px;
+    border-width: 0;
+    border-radius: 9px;
+    background-color: rgba(111, 177, 255, 0.16);
+    color: #cfe6ff;
+    font-size: 10px;
+}
+
+.unlock-editor__chip:hover {
+    background-color: rgba(255, 122, 122, 0.25);
+    color: #ffd0d0;
+}
+
+.unlock-editor__add {
+    flex-direction: row;
+    align-items: center;
+    margin: 3px 0;
+}
+
+.unlock-editor__dropdown {
+    flex-grow: 1;
+    margin-right: 4px;
+}
+
+.unlock-editor__add-button {
+    width: 26px;
+    height: 20px;
+    min-width: 26px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 4px;
+    background-color: #3a7d44;
+    color: white;
+    -unity-font-style: bold;
+}
+
+.unlock-editor__add-button:hover {
+    background-color: #4a9d54;
 }

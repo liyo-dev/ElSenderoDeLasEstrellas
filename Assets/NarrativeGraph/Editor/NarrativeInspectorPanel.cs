@@ -87,6 +87,8 @@ namespace Sendero.Narrative.Editor
                 var name = child.name;
                 if (name == "guid" || name == "position" || name == "outputs") continue;
                 if (name == "inputAnchor" || name == "outputAnchor" || name == "overrideNodeColor" || name == "nodeColor") continue;
+                // UnlockAbilitiesNode tiene su editor propio de chips más abajo.
+                if (model is UnlockAbilitiesNode && (name == "abilityKeysToUnlock" || name == "spellsToUnlock")) continue;
 
                 var pf = new PropertyField(child.Copy());
                 if (name == "displayTitle") pf.label = "Etiqueta";
@@ -104,6 +106,8 @@ namespace Sendero.Narrative.Editor
                 });
                 fields.Add(pf);
             }
+
+            if (model is UnlockAbilitiesNode unlock) BuildUnlockEditor(fields, unlock, view);
 
             _suppressChangeEvents = true;
             schedule.Execute(() => _suppressChangeEvents = false).ExecuteLater(50);
@@ -152,6 +156,111 @@ namespace Sendero.Narrative.Editor
             fold.AddToClassList("narrative-inspector__section");
             _body.Add(fold);
             return fold;
+        }
+
+        // ─── Editor de habilidades de UnlockAbilitiesNode ───────────────
+
+        /// <summary>
+        /// Sustituye las listas en crudo de habilidades/hechizos por chips con botón de quitar y
+        /// un desplegable para añadir. Se aplica al ejecutar el nodo; aquí solo se edita la lista.
+        /// </summary>
+        void BuildUnlockEditor(VisualElement root, UnlockAbilitiesNode node, NodeView view)
+        {
+            var box = new VisualElement();
+            box.AddToClassList("unlock-editor");
+            root.Add(box);
+            Rebuild();
+
+            void Changed(string undo)
+            {
+                Undo.RecordObject(_graph, undo);
+                EditorUtility.SetDirty(_graph);
+                _so.Update();
+                NodeFieldChanged?.Invoke(view);
+                schedule.Execute(Rebuild);
+            }
+
+            void Rebuild()
+            {
+                box.Clear();
+
+                box.Add(SectionLabel("Habilidades a desbloquear"));
+                var abilityChips = new VisualElement();
+                abilityChips.AddToClassList("unlock-editor__chips");
+                if (node.abilityKeysToUnlock == null) node.abilityKeysToUnlock = new List<AbilityKey>();
+                for (int i = 0; i < node.abilityKeysToUnlock.Count; i++)
+                {
+                    int index = i;
+                    var key = node.abilityKeysToUnlock[i];
+                    var chip = new Button(() =>
+                    {
+                        node.abilityKeysToUnlock.RemoveAt(index);
+                        Changed("Quitar habilidad");
+                    }) { text = key + "  ×", tooltip = "Quitar del nodo" };
+                    chip.AddToClassList("unlock-editor__chip");
+                    abilityChips.Add(chip);
+                }
+                if (node.abilityKeysToUnlock.Count == 0) abilityChips.Add(Muted("Ninguna."));
+                box.Add(abilityChips);
+
+                var abilityOptions = Enum.GetValues(typeof(AbilityKey)).Cast<AbilityKey>()
+                    .Where(k => !node.abilityKeysToUnlock.Contains(k)).ToList();
+                if (abilityOptions.Count > 0)
+                    box.Add(AddRow(abilityOptions.Select(o => o.ToString()).ToList(), "Añadir habilidad", choice =>
+                    {
+                        node.abilityKeysToUnlock.Add((AbilityKey)Enum.Parse(typeof(AbilityKey), choice));
+                        Changed("Añadir habilidad");
+                    }));
+
+                box.Add(SectionLabel("Hechizos a desbloquear"));
+                var spellChips = new VisualElement();
+                spellChips.AddToClassList("unlock-editor__chips");
+                if (node.spellsToUnlock == null) node.spellsToUnlock = new List<SpellId>();
+                for (int i = 0; i < node.spellsToUnlock.Count; i++)
+                {
+                    int index = i;
+                    var spell = node.spellsToUnlock[i];
+                    var chip = new Button(() =>
+                    {
+                        node.spellsToUnlock.RemoveAt(index);
+                        Changed("Quitar hechizo");
+                    }) { text = spell + "  ×", tooltip = "Quitar del nodo" };
+                    chip.AddToClassList("unlock-editor__chip");
+                    spellChips.Add(chip);
+                }
+                if (node.spellsToUnlock.Count == 0) spellChips.Add(Muted("Ninguno."));
+                box.Add(spellChips);
+
+                var spellOptions = Enum.GetValues(typeof(SpellId)).Cast<SpellId>()
+                    .Where(s => s != SpellId.None && !node.spellsToUnlock.Contains(s))
+                    .Select(s => s.ToString()).ToList();
+                if (spellOptions.Count > 0)
+                    box.Add(AddRow(spellOptions, "Añadir hechizo", choice =>
+                    {
+                        node.spellsToUnlock.Add((SpellId)Enum.Parse(typeof(SpellId), choice));
+                        Changed("Añadir hechizo");
+                    }));
+            }
+        }
+
+        static Label SectionLabel(string text)
+        {
+            var l = new Label(text);
+            l.AddToClassList("unlock-editor__title");
+            return l;
+        }
+
+        VisualElement AddRow(List<string> options, string label, Action<string> add)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("unlock-editor__add");
+            var dropdown = new DropdownField(label, options, 0);
+            dropdown.AddToClassList("unlock-editor__dropdown");
+            row.Add(dropdown);
+            var button = new Button(() => add(dropdown.value)) { text = "＋" };
+            button.AddToClassList("unlock-editor__add-button");
+            row.Add(button);
+            return row;
         }
 
         // ─── Contenido resuelto ─────────────────────────────────────────
