@@ -1919,7 +1919,7 @@ public class DayNightCycle : MonoBehaviour
         Camera cam = SolYLunaEnElCielo.CamaraActual();
         if (cam == null) cam = Camera.main;
 
-        Vector3 arriba, abajo;
+        Vector3 arriba = Vector3.zero, abajo = Vector3.zero;
         bool enCuadro = false;
 
         if (punto.HasValue)
