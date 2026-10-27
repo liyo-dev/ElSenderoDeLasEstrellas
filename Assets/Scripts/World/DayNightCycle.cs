@@ -1911,83 +1911,62 @@ public class DayNightCycle : MonoBehaviour
         if (_lightningBoltMaterial == null)
             return;
 
-        if (AnclaDeClima != null && RayoEnCuadro(destello, punto))
-            return;
-
-        bool enCinematica = AnclaDeClima != null;
-
-        Transform reference = AnclaDeClima != null ? AnclaDeClima :
-                              PlayerService.Player != null ? PlayerService.Player.transform :
-                              Camera.main != null ? Camera.main.transform : transform;
-
-        float cameraYaw = Camera.main != null ? Camera.main.transform.eulerAngles.y : reference.eulerAngles.y;
-        float boltYaw = cameraYaw + UnityEngine.Random.Range(-65f, 65f);
-        float distance = enCinematica ? UnityEngine.Random.Range(110f, 230f)
-                                      : UnityEngine.Random.Range(thunderstormBoltDistanceRange.x, thunderstormBoltDistanceRange.y);
-        Vector3 horizontalOffset = (Quaternion.Euler(0f, boltYaw, 0f) * Vector3.forward) * distance;
-
-        Vector3 groundPoint = punto ?? (reference.position + horizontalOffset);
-        Vector3 topPoint = groundPoint + Vector3.up * thunderstormBoltHeight;
-
-        int segments = enCinematica ? 11 : Mathf.Max(2, thunderstormBoltSegments);
-        float jitter = enCinematica ? 16f : thunderstormBoltJitter;
-
-        var boltObj = new GameObject("[ThunderstormLightningBolt]");
-        var line = boltObj.AddComponent<LineRenderer>();
-        line.useWorldSpace = true;
-        line.material = _lightningBoltMaterial;
-        line.startColor = thunderstormBoltColor;
-        line.endColor = thunderstormBoltColor;
-        line.widthMultiplier = enCinematica ? 2.4f : thunderstormBoltWidth;
-        if (enCinematica)
-        {
-
-            line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.35f));
-        }
-        line.numCapVertices = 2;
-        line.positionCount = segments + 1;
-
-        for (int i = 0; i <= segments; i++)
-        {
-            float t = (float)i / segments;
-            Vector3 point = Vector3.Lerp(topPoint, groundPoint, t);
-
-            if (i != 0 && i != segments)
-            {
-                float jitterX = UnityEngine.Random.Range(-jitter, jitter);
-                float jitterZ = UnityEngine.Random.Range(-jitter, jitter);
-                point += new Vector3(jitterX, 0f, jitterZ);
-            }
-
-            line.SetPosition(i, point);
-        }
-
-        if (enCinematica) StartCoroutine(Co_ParpadeoDelRayo(line, boltObj));
-        else Destroy(boltObj, Mathf.Max(0.05f, thunderstormBoltVisibleDuration));
+        GenerarRayo(destello, punto);
     }
 
-    bool RayoEnCuadro(bool destello = true, Vector3? punto = null)
+    private void GenerarRayo(bool destello = true, Vector3? punto = null)
     {
         Camera cam = SolYLunaEnElCielo.CamaraActual();
         if (cam == null) cam = Camera.main;
-        if (cam == null || !cam.isActiveAndEnabled) return false;
-        if (cam.transform.forward.y < -0.45f) return false;
 
-        float lejos = punto.HasValue ? cam.transform.InverseTransformPoint(punto.Value).z
-            : Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
-        if (lejos < 30f) return false;
+        Vector3 arriba, abajo;
+        bool enCuadro = false;
 
-        float x = UnityEngine.Random.value < 0.5f ? UnityEngine.Random.Range(0.10f, 0.36f)
-                                                  : UnityEngine.Random.Range(0.64f, 0.90f);
-        if (punto.HasValue) x = cam.WorldToViewportPoint(punto.Value).x;
-        Vector3 arriba = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.05f, 0.05f), 1.10f, lejos));
-        Vector3 abajo = punto ?? cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.12f, 0.12f),
-                                                             UnityEngine.Random.Range(0.30f, 0.48f), lejos));
-        if (arriba.y < abajo.y + (punto.HasValue ? 1f : 15f)) return false;
+        if (punto.HasValue)
+        {
+            // Rayo dirigido a un punto concreto en el mundo (suelo, marca, etc.)
+            abajo = punto.Value;
+            arriba = punto.Value + Vector3.up * thunderstormBoltHeight + UnityEngine.Random.insideUnitSphere * 4f;
+            if (arriba.y < abajo.y + 15f) arriba.y = abajo.y + 15f;
+        }
+        else if (cam != null && cam.isActiveAndEnabled && cam.transform.forward.y > -0.65f)
+        {
+            // Rayo de fondo en el encuadre de la cámara (técnica cinematográfica con halo y ramas)
+            float lejos = Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
+            if (lejos >= 30f)
+            {
+                float x = UnityEngine.Random.value < 0.5f ? UnityEngine.Random.Range(0.10f, 0.36f)
+                                                          : UnityEngine.Random.Range(0.64f, 0.90f);
+                arriba = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.05f, 0.05f), 1.10f, lejos));
+                abajo = cam.ViewportToWorldPoint(new Vector3(x + UnityEngine.Random.Range(-0.12f, 0.12f),
+                                                             UnityEngine.Random.Range(0.28f, 0.46f), lejos));
+                enCuadro = arriba.y >= abajo.y + 15f;
+            }
+        }
 
-        Vector3 lado = cam.transform.right;
+        if (!punto.HasValue && !enCuadro)
+        {
+            // Fallback en espacio de mundo en frente del jugador/cámara
+            Transform reference = AnclaDeClima != null ? AnclaDeClima :
+                                  PlayerService.Player != null ? PlayerService.Player.transform :
+                                  cam != null ? cam.transform : transform;
+
+            float yawBase = cam != null ? cam.transform.eulerAngles.y : reference.eulerAngles.y;
+            float boltYaw = yawBase + (UnityEngine.Random.value < 0.5f ? -1f : 1f) * UnityEngine.Random.Range(15f, 55f);
+            float distance = UnityEngine.Random.Range(thunderstormBoltDistanceRange.x, thunderstormBoltDistanceRange.y);
+            Vector3 offset = (Quaternion.Euler(0f, boltYaw, 0f) * Vector3.forward) * distance;
+
+            abajo = reference.position + offset;
+            arriba = abajo + Vector3.up * thunderstormBoltHeight + UnityEngine.Random.insideUnitSphere * 6f;
+            if (arriba.y < abajo.y + 15f) arriba.y = abajo.y + 15f;
+        }
+
+        Vector3 dir = (abajo - arriba).normalized;
         float largo = Vector3.Distance(arriba, abajo);
-        var raiz = new GameObject("[Rayo en cuadro]");
+        Vector3 lado = cam != null ? cam.transform.right : Vector3.Cross(dir, Vector3.up).normalized;
+        if (lado.sqrMagnitude < 0.01f) lado = Vector3.right;
+
+        var raiz = new GameObject("[ThunderstormLightningBolt]");
 
         const int tramos = 12;
         var puntos = new Vector3[tramos + 1];
@@ -1999,23 +1978,30 @@ public class DayNightCycle : MonoBehaviour
             else desvio = 0f;
             puntos[i] = Vector3.Lerp(arriba, abajo, t) + lado * desvio;
         }
-        float grosor = lejos * 0.0065f;
-        TrazoDelRayo(raiz, puntos, grosor * 4.5f, new Color(0.55f, 0.65f, 1f, 0.22f), -1);   // halo
-        TrazoDelRayo(raiz, puntos, grosor, new Color(1f, 1f, 1f, 1f), 0);                     // núcleo
 
+        float distCam = cam != null ? Vector3.Distance(cam.transform.position, (arriba + abajo) * 0.5f) : 100f;
+        float grosor = Mathf.Clamp(distCam * 0.0065f, 0.25f, 2.5f);
+
+        // Doble trazo cinematográfico: halo translúcido + núcleo brillante puro
+        TrazoDelRayo(raiz, puntos, grosor * 4.5f, new Color(0.55f, 0.65f, 1f, 0.22f), -1);   // halo
+        TrazoDelRayo(raiz, puntos, grosor, thunderstormBoltColor, 0);                         // núcleo
+
+        // Ramificación lateral del rayo
         int desde = UnityEngine.Random.Range(tramos / 4, tramos / 2);
-        float haciaFuera = x < 0.5f ? -1f : 1f;
+        float haciaFuera = (cam != null && cam.WorldToViewportPoint(abajo).x < 0.5f) ? -1f : 1f;
         var rama = new Vector3[6];
         rama[0] = puntos[desde];
-        Vector3 bajada = (abajo - arriba).normalized * (largo * 0.07f);
+        Vector3 bajada = dir * (largo * 0.07f);
         for (int i = 1; i < rama.Length; i++)
             rama[i] = rama[i - 1] + bajada + lado * (haciaFuera * largo * UnityEngine.Random.Range(0.02f, 0.06f));
         TrazoDelRayo(raiz, rama, grosor * 2.6f, new Color(0.55f, 0.65f, 1f, 0.15f), -1);
-        TrazoDelRayo(raiz, rama, grosor * 0.55f, new Color(1f, 1f, 1f, 0.9f), 0);
+        TrazoDelRayo(raiz, rama, grosor * 0.55f, thunderstormBoltColor * 0.9f, 0);
 
+        // Parpadeo estroboscópico realista (5 pulsos)
         StartCoroutine(Co_ParpadeoDelRayoEnCuadro(raiz));
+
+        // Fogonazo en pantalla completa
         if (destello) Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, 0.16f), 0.12f);
-        return true;
     }
 
     void TrazoDelRayo(GameObject raiz, Vector3[] puntos, float ancho, Color color, int orden)
@@ -2050,20 +2036,6 @@ public class DayNightCycle : MonoBehaviour
             on = !on;
         }
         if (raiz != null) Destroy(raiz);
-    }
-
-    IEnumerator Co_ParpadeoDelRayo(LineRenderer line, GameObject bolt)
-    {
-        float[] pasos = { 0.07f, 0.05f, 0.09f, 0.06f, 0.05f };
-        bool on = true;
-        foreach (float p in pasos)
-        {
-            if (line == null) yield break;
-            line.enabled = on;
-            yield return new WaitForSecondsRealtime(p);
-            on = !on;
-        }
-        if (bolt != null) Destroy(bolt);
     }
 
     public string ClaveDeTrueno => string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey;
