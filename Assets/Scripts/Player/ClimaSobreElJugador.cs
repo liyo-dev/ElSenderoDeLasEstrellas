@@ -99,6 +99,7 @@ public static class ClimaSobreElJugador
 
         bool taparse = viento > VientoParaTaparse;
         ActualizarGesto(taparse, dt);
+        ActualizarCompaneros(taparse, dt);
 
         // El frío solo se nota quieto y con el torso libre (sin taparse ni otro gesto).
         _quietoYLibre = quieto && !taparse && !_gestoNuestro && _capaTorso > 0
@@ -140,22 +141,56 @@ public static class ClimaSobreElJugador
     {
         float objetivo = _quietoYLibre ? Mathf.Clamp01(_frioPedido) : 0f;
         _pesoFrio = Mathf.MoveTowards(_pesoFrio, objetivo, dt / FundidoDelFrio);
-        if (_pesoFrio <= 0f || _animator == null || !_animator.isActiveAndEnabled || _pecho == null) return;
+        if (_pesoFrio <= 0f) return;
 
-        Transform raiz = _jugador.transform;
+        // Jugador
+        if (_animator != null && _animator.isActiveAndEnabled && _pecho != null)
+        {
+            AplicarHuesosFrio(_jugador.transform, _pecho, _cabeza, _hombroI, _hombroD, _brazoI, _brazoD, _pesoFrio);
+        }
+
+        // Compañeros del grupo
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+        {
+            var slot = (PartyControlManager.CharacterSlot)i;
+            if (slot == ControlDelJugador.Activo) continue;
+            if (!ControlDelJugador.EnElGrupo(slot)) continue;
+
+            var npc = ControlDelJugador.NpcDe(slot);
+            if (npc == null || !npc.gameObject.activeInHierarchy) continue;
+
+            var anim = npc.GetComponent<Animator>();
+            if (anim == null || !anim.isActiveAndEnabled || !anim.isHuman) continue;
+
+            var pecho = anim.GetBoneTransform(HumanBodyBones.UpperChest) ?? anim.GetBoneTransform(HumanBodyBones.Chest);
+            if (pecho == null) continue;
+
+            var cabeza = anim.GetBoneTransform(HumanBodyBones.Head);
+            var hombroI = anim.GetBoneTransform(HumanBodyBones.LeftShoulder);
+            var hombroD = anim.GetBoneTransform(HumanBodyBones.RightShoulder);
+            var brazoI = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+            var brazoD = anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
+
+            AplicarHuesosFrio(npc.transform, pecho, cabeza, hombroI, hombroD, brazoI, brazoD, _pesoFrio);
+        }
+    }
+
+    private static void AplicarHuesosFrio(Transform raiz, Transform pecho, Transform cabeza,
+        Transform hombroI, Transform hombroD, Transform brazoI, Transform brazoD, float peso)
+    {
         Vector3 derecha = raiz.right, delante = raiz.forward, arriba = raiz.up;
         float t = Time.time * FrecuenciaDeTiritona;
-        float temblor = (Mathf.PerlinNoise(t, 0.37f) - 0.5f) * 2f * Tiritona * _pesoFrio;
-        float temblor2 = (Mathf.PerlinNoise(0.71f, t) - 0.5f) * 2f * Tiritona * _pesoFrio;
+        float temblor = (Mathf.PerlinNoise(t, 0.37f) - 0.5f) * 2f * Tiritona * peso;
+        float temblor2 = (Mathf.PerlinNoise(0.71f, t) - 0.5f) * 2f * Tiritona * peso;
 
-        Girar(_pecho, derecha, PechoEncorvado * _pesoFrio);
-        Girar(_pecho, arriba, temblor);
-        Girar(_cabeza, derecha, CabezaGacha * _pesoFrio);
+        Girar(pecho, derecha, PechoEncorvado * peso);
+        Girar(pecho, arriba, temblor);
+        Girar(cabeza, derecha, CabezaGacha * peso);
         // Alrededor de 'delante', un ángulo positivo sube lo que apunta a la derecha.
-        Girar(_hombroD, delante, HombrosEncogidos * _pesoFrio + temblor2);
-        Girar(_hombroI, delante, -HombrosEncogidos * _pesoFrio - temblor2);
-        Girar(_brazoD, delante, -BrazosPegados * _pesoFrio);
-        Girar(_brazoI, delante, BrazosPegados * _pesoFrio);
+        Girar(hombroD, delante, HombrosEncogidos * peso + temblor2);
+        Girar(hombroI, delante, -HombrosEncogidos * peso - temblor2);
+        Girar(brazoD, delante, -BrazosPegados * peso);
+        Girar(brazoI, delante, BrazosPegados * peso);
     }
 
     private static void Girar(Transform hueso, Vector3 eje, float grados)
@@ -171,6 +206,7 @@ public static class ClimaSobreElJugador
         _empujando = false;
         _quietoYLibre = false;
         if (_gestoNuestro) ActualizarGesto(false, Time.unscaledDeltaTime, inmediato: true);
+        ActualizarCompaneros(false, Time.unscaledDeltaTime, inmediato: true);
     }
 
     private static void QuitarTope()
@@ -216,10 +252,10 @@ public static class ClimaSobreElJugador
         if (taparse && !_gestoNuestro)
         {
             // Solo si nadie más usa el torso (diálogo, magia, modo batalla...).
-            if (_animator.GetLayerWeight(_capaTorso) > 0.05f) return;
+            if (_pesoGesto <= 0.05f && _animator.GetLayerWeight(_capaTorso) > 0.05f) return;
             _animator.CrossFadeInFixedTime(_hashGesto, FundidoDelGesto, _capaTorso);
             _gestoNuestro = true;
-            _pesoGesto = _animator.GetLayerWeight(_capaTorso);
+            _pesoGesto = Mathf.Max(0.01f, _animator.GetLayerWeight(_capaTorso));
             _frameDelCruce = Time.frameCount;
         }
         if (!_gestoNuestro) return;
@@ -230,8 +266,24 @@ public static class ClimaSobreElJugador
         bool enGesto = estado.shortNameHash == _hashGesto ||
                        (_animator.IsInTransition(_capaTorso) &&
                         _animator.GetNextAnimatorStateInfo(_capaTorso).shortNameHash == _hashGesto);
-        bool pesoAjeno = Mathf.Abs(_animator.GetLayerWeight(_capaTorso) - _pesoGesto) > 0.01f;
-        if ((!enGesto && Time.frameCount - _frameDelCruce > 1) || pesoAjeno)
+        bool pesoAjeno = Mathf.Abs(_animator.GetLayerWeight(_capaTorso) - _pesoGesto) > 0.08f;
+
+        if (!enGesto && Time.frameCount - _frameDelCruce > 1)
+        {
+            if (taparse)
+            {
+                // El clip terminó (Fear01 tiene tiempo de salida): lo relanzamos en bucle
+                // continuo mientras siga el viento, sin soltar la capa.
+                _animator.CrossFadeInFixedTime(_hashGesto, 0.12f, _capaTorso);
+                _frameDelCruce = Time.frameCount;
+            }
+            else
+            {
+                _gestoNuestro = false;
+                return;
+            }
+        }
+        else if (pesoAjeno)
         {
             _gestoNuestro = false;
             return;
@@ -246,6 +298,50 @@ public static class ClimaSobreElJugador
             if (_animator.HasState(_capaTorso, HashReposo))
                 _animator.CrossFadeInFixedTime(HashReposo, 0f, _capaTorso);
             _gestoNuestro = false;
+        }
+    }
+
+    private static void ActualizarCompaneros(bool taparse, float dt, bool inmediato = false)
+    {
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+        {
+            var slot = (PartyControlManager.CharacterSlot)i;
+            if (slot == ControlDelJugador.Activo) continue;
+            if (!ControlDelJugador.EnElGrupo(slot)) continue;
+
+            var npc = ControlDelJugador.NpcDe(slot);
+            if (npc == null || !npc.gameObject.activeInHierarchy) continue;
+
+            var anim = npc.GetComponent<Animator>();
+            if (anim == null || !anim.isActiveAndEnabled) continue;
+
+            int capa = anim.GetLayerIndex("UpperBody");
+            if (capa <= 0) continue;
+
+            int hash = anim.HasState(capa, HashTaparse) ? HashTaparse
+                     : anim.HasState(capa, HashReserva) ? HashReserva : 0;
+            if (hash == 0) continue;
+
+            float pesoActual = anim.GetLayerWeight(capa);
+            float pesoObj = taparse ? 1f : 0f;
+            float nuevoPeso = inmediato && !taparse ? 0f : Mathf.MoveTowards(pesoActual, pesoObj, dt / FundidoDelGesto);
+            anim.SetLayerWeight(capa, nuevoPeso);
+
+            var st = anim.GetCurrentAnimatorStateInfo(capa);
+            bool enGesto = st.shortNameHash == hash ||
+                           (anim.IsInTransition(capa) && anim.GetNextAnimatorStateInfo(capa).shortNameHash == hash);
+
+            if (taparse)
+            {
+                if (!enGesto || (st.normalizedTime >= 0.95f && !anim.IsInTransition(capa)))
+                {
+                    anim.CrossFadeInFixedTime(hash, 0.15f, capa);
+                }
+            }
+            else if (nuevoPeso <= 0f && anim.HasState(capa, HashReposo))
+            {
+                anim.CrossFadeInFixedTime(HashReposo, 0f, capa);
+            }
         }
     }
 }

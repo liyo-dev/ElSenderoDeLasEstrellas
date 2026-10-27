@@ -245,6 +245,18 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Cuánto tiempo (segundos) queda visible el trazo del rayo en sí, independiente de thunderstormFlashDuration (que solo controla el destello de luz ambiental). 0.12s resultaba casi imperceptible — un solo parpadeo de un frame o dos.")]
     [SerializeField] private float thunderstormBoltVisibleDuration = 0.3f;
 
+    [Header("Clima - Peligro de Rayo en Tormenta")]
+    [Tooltip("Prefab del aviso circular en el suelo antes de la caída del rayo (RainShadowIndicator).")]
+    [SerializeField] private GameObject dangerLightningTelegraphPrefab;
+    [Tooltip("Intervalo (min, max) en segundos entre rayos con aviso dirigidos al suelo durante la tormenta.")]
+    [SerializeField] private Vector2 dangerLightningIntervalRange = new Vector2(14f, 26f);
+    [Tooltip("Radio de la explosión del rayo en metros.")]
+    [SerializeField] private float dangerLightningRadius = 3.6f;
+    [Tooltip("Daño del impacto directo del rayo al jugador.")]
+    [SerializeField] private float dangerLightningDamage = 25f;
+    [Tooltip("Tiempo de aviso (segundos) de la marca en el suelo antes de que caiga el rayo.")]
+    [SerializeField] private float dangerLightningTelegraphDuration = 1.8f;
+
     [Header("Clima — sorteo independiente del periodo (30 ago 2026, ver comentario de clase)")]
     [Tooltip("Cada cuánto se vuelve a intentar un cambio de clima (sorteo de lluvia/niebla/viento/tormenta), en segundos — se elige un valor aleatorio dentro de este rango cada vez, para que no sea predecible. Corre en un temporizador propio, totalmente independiente de a qué periodo del día (amanecer/día/atardecer/noche) corresponda ese instante — el clima puede empezar, seguir o terminar en cualquier periodo, incluso a mitad de uno.")]
     [SerializeField] private Vector2 weatherCheckIntervalRange = new Vector2(45f, 110f);
@@ -634,6 +646,8 @@ public class DayNightCycle : MonoBehaviour
 
     private Coroutine _thunderstormCoroutine;
     private Coroutine _lightningCoroutine;
+    private Coroutine _dangerLightningCoroutine;
+    private readonly Collider[] _lightningHitBuffer = new Collider[16];
 
     private Material _lightningBoltMaterial;
 
@@ -1843,6 +1857,12 @@ public class DayNightCycle : MonoBehaviour
             _thunderstormCoroutine = null;
         }
 
+        if (_dangerLightningCoroutine != null)
+        {
+            StopCoroutine(_dangerLightningCoroutine);
+            _dangerLightningCoroutine = null;
+        }
+
         FinishThunderstorm();
         StopRain();
     }
@@ -1860,6 +1880,10 @@ public class DayNightCycle : MonoBehaviour
             StopCoroutine(_lightningCoroutine);
 
         _lightningCoroutine = StartCoroutine(LightningLoop(firstStrikeImmediate: true));
+
+        if (_dangerLightningCoroutine != null)
+            StopCoroutine(_dangerLightningCoroutine);
+        _dangerLightningCoroutine = StartCoroutine(DangerLightningLoop());
 
         while (_isCloudBuildingUp) yield return null;
         yield return new WaitForSeconds(duration);
@@ -1880,6 +1904,12 @@ public class DayNightCycle : MonoBehaviour
         {
             StopCoroutine(_lightningCoroutine);
             _lightningCoroutine = null;
+        }
+
+        if (_dangerLightningCoroutine != null)
+        {
+            StopCoroutine(_dangerLightningCoroutine);
+            _dangerLightningCoroutine = null;
         }
     }
 
@@ -1903,6 +1933,91 @@ public class DayNightCycle : MonoBehaviour
 
             if (AnclaDeClima == null && ClimaExteriorSilenciado()) continue;
             yield return FlashLightningRoutine();
+        }
+    }
+
+    IEnumerator DangerLightningLoop()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 9f));
+
+        while (IsThunderstorm)
+        {
+            float wait = UnityEngine.Random.Range(dangerLightningIntervalRange.x, dangerLightningIntervalRange.y);
+            yield return new WaitForSeconds(wait);
+
+            if (!IsThunderstorm) yield break;
+            if (AnclaDeClima != null || ClimaExteriorSilenciado()) continue;
+
+            var player = PlayerService.Player;
+            if (player == null || !player.activeInHierarchy) continue;
+
+            PlayerService.TryGetComponent<PlayerHealthSystem>(out var health);
+            if (health != null && !health.IsAlive) continue;
+
+            Vector3 playerPos = player.transform.position;
+
+            // Cobijo: raycast hacia arriba para comprobar si hay techo/porche/cueva
+            if (Physics.Raycast(playerPos + Vector3.up * 1f, Vector3.up, 35f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                continue;
+
+            Vector3 targetPos = playerPos;
+            if (Physics.Raycast(playerPos + Vector3.up * 2f, Vector3.down, out var groundHit, 6f, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
+                targetPos = groundHit.point;
+
+            yield return Co_EjecutarRayoPeligroso(targetPos);
+        }
+    }
+
+    private IEnumerator Co_EjecutarRayoPeligroso(Vector3 targetPos)
+    {
+        GameObject telegraphPrefab = dangerLightningTelegraphPrefab;
+#if UNITY_EDITOR
+        if (telegraphPrefab == null)
+            telegraphPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/VFX/RainShadowIndicator.prefab");
+#endif
+        Transform telegraph = null;
+        if (telegraphPrefab != null && VfxPoolService.Instance != null)
+        {
+            Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
+            telegraph = VfxPoolService.Instance.Play(telegraphPrefab, targetPos + Vector3.up * 0.04f, rot, dangerLightningTelegraphDuration);
+        }
+
+        AudioService.Instance?.PlaySFX("PlasmaSphere", 0.7f, worldPosition: targetPos);
+
+        float elapsed = 0f;
+        Vector3 endScale = telegraph != null ? telegraph.localScale : Vector3.one;
+        if (telegraph != null) telegraph.localScale = Vector3.zero;
+
+        while (elapsed < dangerLightningTelegraphDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / dangerLightningTelegraphDuration);
+            if (telegraph != null) telegraph.localScale = endScale * t;
+            yield return null;
+        }
+
+        LanzarRayo(targetPos, conTrueno: true, volumen: 1f, destello: true);
+        Sendero.Core.Feedback.FeedbackService.CameraShake(0.45f, 0.35f);
+        Sendero.Core.Feedback.FeedbackService.Vibrar(0.6f, 0.8f, 0.35f);
+
+        int hitCount = Physics.OverlapSphereNonAlloc(targetPos, dangerLightningRadius, _lightningHitBuffer, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < hitCount; i++)
+        {
+            var hit = _lightningHitBuffer[i];
+            if (hit == null) continue;
+
+            if (PlayerService.Player != null && (hit.gameObject == PlayerService.Player || hit.transform.IsChildOf(PlayerService.Player.transform)))
+            {
+                if (PlayerService.TryGetComponent<PlayerHealthSystem>(out var phs))
+                    phs.TakeDamage(dangerLightningDamage);
+                continue;
+            }
+
+            var dmg = hit.GetComponentInParent<Damageable>();
+            if (dmg != null && dmg.IsAlive)
+            {
+                dmg.TakeDamage(dangerLightningDamage * 2.5f);
+            }
         }
     }
 
@@ -2127,6 +2242,13 @@ public class DayNightCycle : MonoBehaviour
 
     [ContextMenu("Testeo: Rayo ya (un solo destello + trueno)")]
     public void DebugStrikeLightning() => StartCoroutine(FlashLightningRoutine());
+
+    [ContextMenu("Testeo: Rayo peligroso en jugador ya (aviso de 1.8s)")]
+    public void DebugStrikeDangerLightning()
+    {
+        var pos = PlayerService.Player != null ? PlayerService.Player.transform.position : transform.position;
+        StartCoroutine(Co_EjecutarRayoPeligroso(pos));
+    }
 
     [ContextMenu("Testeo: Forzar sorteo de clima ya (sin esperar weatherCheckIntervalRange)")]
     public void DebugForceWeatherRoll() => TryRollWeather();

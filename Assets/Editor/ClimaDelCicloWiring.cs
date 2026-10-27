@@ -30,6 +30,12 @@ public static class ClimaDelCicloWiring
 
     private const string ControladorDelJugador = "Assets/Plugins/Invector-3rdPersonController_LITE/Animator/Invector@BasicLocomotion.controller";
 
+    [InitializeOnLoadMethod]
+    private static void AutoAsegurarAlCompilar()
+    {
+        EditorApplication.delayCall += () => AsegurarEstadoDeTaparse();
+    }
+
     /// Estado en bucle de la capa UpperBody para taparse del viento (ClimaSobreElJugador): el mismo
     /// clip que Fear01, pero sin salida, para que dure mientras sople. Ver INC-699.
     public static int AsegurarEstadoDeTaparse()
