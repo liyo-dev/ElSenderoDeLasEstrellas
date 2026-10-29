@@ -49,7 +49,6 @@ public class PropEnManoBeat : SequenceBeat
     /// cuando se suelta, no estar en la mano de nadie al empezar.
     public override void PrepararEnManos(SequenceContext ctx)
     {
-        if (dejar) return;
         RegistrarFinal(ctx);
     }
 
@@ -60,17 +59,9 @@ public class PropEnManoBeat : SequenceBeat
         if (dejar)
         {
             prop.SetParent(null, true);
-            if (!prop.gameObject.activeSelf) prop.gameObject.SetActive(true);
-            prop.GetPositionAndRotation(out var desde, out var giroDesde);
             var hasta = Quaternion.Euler(giroFinal);
-            for (float t = 0f; t < segundosDeApoyo; t += Time.deltaTime)
-            {
-                if (prop == null) yield break;
-                float u = Mathf.SmoothStep(0f, 1f, t / segundosDeApoyo);
-                prop.SetPositionAndRotation(Vector3.Lerp(desde, posicionFinal, u), Quaternion.Slerp(giroDesde, hasta, u));
-                yield return null;
-            }
             prop.SetPositionAndRotation(posicionFinal, hasta);
+            if (!prop.gameObject.activeSelf) prop.gameObject.SetActive(true);
             yield break;
         }
 

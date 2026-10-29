@@ -12,6 +12,13 @@ public sealed class PasoPremioDeEstadisticas : IPasoDeCierre
 
     public IEnumerator Ejecutar(ResultadoDeBatalla resultado)
     {
+        // Otorga Sintonía Estelar por el encuentro (INC-847)
+        int puntosSintonia = resultado.Encuentro != null ? resultado.Encuentro.premioSintonia : 100;
+        if (puntosSintonia > 0 && SintoniaEstelarService.Instance != null)
+        {
+            SintoniaEstelarService.Instance.SumarSintonia(puntosSintonia);
+        }
+
         var premio = resultado.Encuentro != null ? resultado.Encuentro.premioEstadisticas : default;
         if (premio.EsCero) yield break;
 

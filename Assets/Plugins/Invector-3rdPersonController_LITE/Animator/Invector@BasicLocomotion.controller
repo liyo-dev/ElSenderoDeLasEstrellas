@@ -1728,6 +1728,32 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!1102 &-2183309224382940136
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ClimaTaparse
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 3094330708855449807, guid: 57a6198c7e569494da39554adf7413e4, type: 3}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-2131116494056473965
 AnimatorState:
   serializedVersion: 6
@@ -20979,9 +21005,6 @@ AnimatorStateMachine:
   - first: {fileID: 1107506797744640886}
     second:
     - {fileID: 1109927482572850522}
-  - first: {fileID: 1107865078091249908}
-    second:
-    - {fileID: 1109909195487945666}
   - first: {fileID: 1107569600986851642}
     second:
     - {fileID: 1109293809391653936}
@@ -20991,6 +21014,9 @@ AnimatorStateMachine:
   - first: {fileID: 1107745156728524436}
     second:
     - {fileID: 1109008362476421668}
+  - first: {fileID: 1107865078091249908}
+    second:
+    - {fileID: 1109909195487945666}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 84, y: -72, z: 0}
   m_EntryPosition: {x: 84, y: -36, z: 0}
@@ -21364,14 +21390,14 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
+  - first: {fileID: 1107104955920651142}
+    second:
+    - {fileID: 1109981457133502986}
   - first: {fileID: 1107519898883084802}
     second: []
   - first: {fileID: 1107810179377412380}
     second:
     - {fileID: 1109460178702702496}
-  - first: {fileID: 1107104955920651142}
-    second:
-    - {fileID: 1109981457133502986}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 48, y: 84, z: 0}
   m_EntryPosition: {x: 50, y: 120, z: 0}
@@ -22591,6 +22617,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 3005628912342063299}
     m_Position: {x: 1790, y: 750, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -2183309224382940136}
+    m_Position: {x: 50, y: 120, z: 0}
   m_ChildStateMachines:
   - serializedVersion: 1
     m_StateMachine: {fileID: -1022598099276960656}

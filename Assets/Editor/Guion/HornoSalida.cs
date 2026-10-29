@@ -418,10 +418,10 @@ internal sealed partial class Horno
             }
             svg.Texto(new Vector2(12, 26), $"@{nombre}  {Tiempo(t0)} – {Tiempo(t1)}", 22, "#ffffff");
             string archivo = $"{w + 1:00}_{nombre}.svg";
-            File.WriteAllText(Path.Combine(carpeta, archivo), svg.Cerrar());
+            try { File.WriteAllText(Path.Combine(carpeta, archivo), svg.Cerrar()); } catch { }
             html.Append($"<h2>{w + 1}. @{nombre} · {Tiempo(t0)} – {Tiempo(t1)}</h2><img src='{archivo}' style='width:100%;max-width:1600px'>\n");
         }
-        File.WriteAllText(Path.Combine(carpeta, "recorridos.html"), html.ToString());
+        try { File.WriteAllText(Path.Combine(carpeta, "recorridos.html"), html.ToString()); } catch { }
     }
 
     // ── Storyboard: una foto por plano, con los personajes de verdad en su sitio ────────────
@@ -466,16 +466,44 @@ internal sealed partial class Horno
                 inst.hideFlags = HideFlags.DontSave;
                 inst.transform.SetParent(soporte.transform, false);
                 foreach (var c in inst.GetComponentsInChildren<MonoBehaviour>(true)) c.enabled = false;
+                foreach (var tr in inst.GetComponentsInChildren<Transform>(true))
+                {
+                    if (tr == null) continue;
+                    string nTr = tr.name;
+                    if (nTr.StartsWith("Eye0", StringComparison.Ordinal) || nTr.StartsWith("Eye1", StringComparison.Ordinal) ||
+                        nTr.StartsWith("Mouth0", StringComparison.Ordinal) || nTr.StartsWith("Mouth1", StringComparison.Ordinal))
+                    {
+                        var rTr = tr.GetComponent<Renderer>();
+                        if (rTr != null && !rTr.enabled) rTr.enabled = true;
+                    }
+                }
+                foreach (var emo in inst.GetComponentsInChildren<NPCEmotionController>(true))
+                {
+                    if (emo == null) continue;
+                    var soEmo = new SerializedObject(emo);
+                    var pOjos = soEmo.FindProperty("ojosDeReposo")?.objectReferenceValue as GameObject;
+                    var pBoca = soEmo.FindProperty("bocaDeReposo")?.objectReferenceValue as GameObject;
+                    if (pOjos != null) pOjos.SetActive(true);
+                    if (pBoca != null) pBoca.SetActive(true);
+                }
                 if (!SeVe(inst)) PonerMuneco(inst, a, materiales);
-                var anim = inst.GetComponentInChildren<Animator>(true);
+                var anim = inst.GetComponent<Animator>();
+                if (anim == null || anim.runtimeAnimatorController == null)
+                    anim = inst.GetComponentsInChildren<Animator>(true)
+                        .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null && x.isHuman)
+                        ?? inst.GetComponentsInChildren<Animator>(true)
+                            .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null)
+                        ?? inst.GetComponentsInChildren<Animator>(true)
+                            .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null && x.isHuman)
+                        ?? inst.GetComponentsInChildren<Animator>(true)
+                            .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null)
+                        ?? inst.GetComponentInChildren<Animator>(true);
                 AnimationClip idle = null;
                 if (anim != null && anim.runtimeAnimatorController != null)
                     idle = anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle_Normal"))
                         ?? anim.runtimeAnimatorController.animationClips.FirstOrDefault(c => c != null && c.name.Contains("Idle"));
                 proxies[a] = (soporte, inst, idle);
             }
-            AnimationMode.StartAnimationMode();
-            modo = true;
 
             var cam = go.AddComponent<Camera>();
             cam.targetTexture = rt;
@@ -486,14 +514,56 @@ internal sealed partial class Horno
             datos.renderPostProcessing = true;
             var png = new Texture2D(W, H, TextureFormat.RGB24, false);
 
+            GameObject z1 = null, z2 = null, z3 = null;
+            foreach (var root in _escena.GetRootGameObjects())
+            {
+                if (root.name == "ZONA_1_EL_SENDERO") z1 = root;
+                else if (root.name == "ZONA_2_PIEDRA_ANCESTRAL") z2 = root;
+                else if (root.name == "ZONA_3_EL_RIO") z3 = root;
+            }
+
             int n = 0;
             foreach (var p in asset.planos)
             {
                 n++;
                 EditorUtility.DisplayProgressBar("Storyboard", $"Plano {n} de {asset.planos.Count}", n / (float)asset.planos.Count);
                 float t = Mathf.Lerp(p.t0, p.t1, 0.35f);
-                AnimationMode.BeginSampling();
-                foreach (var kv in proxies)
+                Vector3 cPos = p.PosicionEn(t);
+                if (z1 != null && z2 != null)
+                {
+                    if (asset.name.Contains("Rio") || cPos.x > 300f)
+                    {
+                        if (z1.activeSelf) z1.SetActive(false);
+                        if (z2.activeSelf) z2.SetActive(false);
+                        if (z3 != null && !z3.activeSelf) z3.SetActive(true);
+                    }
+                    else if (cPos.x > 100f)
+                    {
+                        // Cámara en La Piedra Ancestral (Acto 3 o planos en la Piedra)
+                        if (z1.activeSelf) z1.SetActive(false);
+                        if (!z2.activeSelf) z2.SetActive(true);
+                        if (z3 != null && z3.activeSelf) z3.SetActive(false);
+                    }
+                    else
+                    {
+                        // Cámara en El Sendero (Altar o Umbral Astral)
+                        if (!z1.activeSelf) z1.SetActive(true);
+                        // ZONA_2 (La Piedra Ancestral) NUNCA debe estar activa en planos de Sendero (evita ver islas del mundo al fondo)
+                        // Solo en el plano 1-5 donde la cámara mira estrictamente al umbral hacia Z.
+                        // En cualquier plano a partir de t >= 18s o que no mire al umbral, ZONA_2 APAGADA.
+                        bool esUmbralPortal = t < 18.0f && p.descripcion.ToLowerInvariant().Contains("umbral");
+                        if (esUmbralPortal)
+                        {
+                            if (!z2.activeSelf) z2.SetActive(true);
+                        }
+                        else
+                        {
+                            if (z2.activeSelf) z2.SetActive(false);
+                        }
+                        if (z3 != null && z3.activeSelf) z3.SetActive(false);
+                    }
+                }
+                foreach (var kv in proxies.ToList())
                 {
                     var a = kv.Key; var soporte = kv.Value.go;
                     soporte.SetActive(a.VisibleEn(t));
@@ -502,19 +572,74 @@ internal sealed partial class Horno
                     float inicio = 0f;
                     bool congelar = false;
                     var pose = a.anim.LastOrDefault(o => o.t <= t && (o.tipo == TipoDeAnimacion.Bucle || o.tipo == TipoDeAnimacion.Reposo));
+                    var animator = kv.Value.inst.GetComponent<Animator>();
+                    if (animator == null || animator.runtimeAnimatorController == null)
+                        animator = kv.Value.inst.GetComponentsInChildren<Animator>(true)
+                            .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null && x.isHuman)
+                            ?? kv.Value.inst.GetComponentsInChildren<Animator>(true)
+                                .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null)
+                            ?? kv.Value.inst.GetComponentsInChildren<Animator>(true)
+                                .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null && x.isHuman)
+                            ?? kv.Value.inst.GetComponentsInChildren<Animator>(true)
+                                .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null)
+                            ?? kv.Value.inst.GetComponentInChildren<Animator>(true);
+                    if (animator != null)
+                    {
+                        var nuevoInst = (GameObject)PrefabUtility.InstantiatePrefab(a.prefab, _escena);
+                        nuevoInst.hideFlags = HideFlags.DontSave;
+                        nuevoInst.transform.SetParent(soporte.transform, false);
+                        foreach (var mb in nuevoInst.GetComponentsInChildren<MonoBehaviour>(true)) mb.enabled = false;
+                        foreach (var tr in nuevoInst.GetComponentsInChildren<Transform>(true))
+                        {
+                            if (tr == null) continue;
+                            string nTr = tr.name;
+                            if (nTr.StartsWith("Eye0", StringComparison.Ordinal) || nTr.StartsWith("Eye1", StringComparison.Ordinal) ||
+                                nTr.StartsWith("Mouth0", StringComparison.Ordinal) || nTr.StartsWith("Mouth1", StringComparison.Ordinal))
+                            {
+                                var rTr = tr.GetComponent<Renderer>();
+                                if (rTr != null && !rTr.enabled) rTr.enabled = true;
+                            }
+                        }
+                        foreach (var emo in nuevoInst.GetComponentsInChildren<NPCEmotionController>(true))
+                        {
+                            if (emo == null) continue;
+                            var soEmo = new SerializedObject(emo);
+                            var pOjos = soEmo.FindProperty("ojosDeReposo")?.objectReferenceValue as GameObject;
+                            var pBoca = soEmo.FindProperty("bocaDeReposo")?.objectReferenceValue as GameObject;
+                            if (pOjos != null) pOjos.SetActive(true);
+                            if (pBoca != null) pBoca.SetActive(true);
+                        }
+                        if (!SeVe(nuevoInst)) PonerMuneco(nuevoInst, a, materiales);
+                        UnityEngine.Object.DestroyImmediate(kv.Value.inst);
+                        proxies[a] = (soporte, nuevoInst, kv.Value.clip);
+                        animator = nuevoInst.GetComponent<Animator>();
+                        if (animator == null || animator.runtimeAnimatorController == null)
+                            animator = nuevoInst.GetComponentsInChildren<Animator>(true)
+                                .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null && x.isHuman)
+                                ?? nuevoInst.GetComponentsInChildren<Animator>(true)
+                                    .FirstOrDefault(x => x != null && x.gameObject.activeInHierarchy && x.runtimeAnimatorController != null)
+                                ?? nuevoInst.GetComponentsInChildren<Animator>(true)
+                                    .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null && x.isHuman)
+                                ?? nuevoInst.GetComponentsInChildren<Animator>(true)
+                                    .FirstOrDefault(x => x != null && x.runtimeAnimatorController != null)
+                                ?? nuevoInst.GetComponentInChildren<Animator>(true);
+                    }
+                    string nombreEstado = "Idle01";
                     if (pose.tipo == TipoDeAnimacion.Bucle && !string.IsNullOrEmpty(pose.estado))
                     {
+                        nombreEstado = pose.estado;
                         var estado = CapturaDeEscenario.Catalogo(a.prefab).FirstOrDefault(e => e.estado == pose.estado);
-                        var animator = kv.Value.inst.GetComponentInChildren<Animator>(true);
                         var elegido = animator?.runtimeAnimatorController?.animationClips.FirstOrDefault(c => c != null && c.name == estado.clip);
                         if (elegido != null) { clip = elegido; inicio = pose.t; congelar = pose.congelar; }
                     }
-                    if (clip != null) AnimationMode.SampleAnimationClip(kv.Value.inst.GetComponentInChildren<Animator>(true).gameObject, clip,
-                        congelar ? Mathf.Min(t - inicio, clip.length) : (t - inicio) % Mathf.Max(0.1f, clip.length));
-                    kv.Value.inst.transform.localPosition = Vector3.zero;
-                    kv.Value.inst.transform.localRotation = Quaternion.identity;
+                    if (clip != null && animator != null)
+                    {
+                        float sampleTime = congelar ? Mathf.Min(t - inicio, clip.length) : (t - inicio) % Mathf.Max(0.1f, clip.length);
+                        MuestrearEstado(proxies[a].inst, clip, nombreEstado, sampleTime);
+                    }
+                    proxies[a].inst.transform.localPosition = Vector3.zero;
+                    proxies[a].inst.transform.localRotation = Quaternion.identity;
                 }
-                AnimationMode.EndSampling();
 
                 foreach (var kv in props)
                 {
@@ -607,7 +732,7 @@ internal sealed partial class Horno
             UnityEngine.Object.DestroyImmediate(rt);
         }
         html.Append("</div>");
-        File.WriteAllText(Path.Combine(carpeta, "storyboard.html"), html.ToString());
+        try { File.WriteAllText(Path.Combine(carpeta, "storyboard.html"), html.ToString()); } catch { }
     }
 
     /// ¿El prefab se ve tal cual? Los aldeanos modulares montan su cuerpo al jugar y en el

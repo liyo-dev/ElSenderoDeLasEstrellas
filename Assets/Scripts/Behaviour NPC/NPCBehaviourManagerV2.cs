@@ -148,6 +148,7 @@ namespace Game.NPC
 
         private bool _identityRegistered;
         public string DialogueCharacterId => dialogueCharacterId;
+        public bool IsInCombatOrAlert => _brain != null && (_brain.CurrentState is States.CombatState || _brain.CurrentState is States.AlertState);
 
         // Interacción
         public bool RotateToPlayerOnInteract => rotateToPlayerOnInteract;
@@ -265,12 +266,37 @@ namespace Game.NPC
             // incluida la primera activación. Ver NPCAmbientRegistry para el uso (radar de amistad).
             if (_context != null)
                 NPCAmbientRegistry.Register(_context.RelationshipId, this);
+
+            DialogueManager.OnDialogueStarted += HandleDialogueStarted;
+            DialogueManager.OnDialogueClosed += HandleDialogueClosed;
         }
 
         void OnDisable()
         {
             if (_context != null)
+            {
                 NPCAmbientRegistry.Unregister(_context.RelationshipId, this);
+                _context.IsInteracting = false;
+            }
+
+            DialogueManager.OnDialogueStarted -= HandleDialogueStarted;
+            DialogueManager.OnDialogueClosed -= HandleDialogueClosed;
+        }
+
+        private void HandleDialogueStarted(Transform speaker)
+        {
+            if (speaker == transform || (speaker != null && speaker.IsChildOf(transform)))
+            {
+                if (_context != null) _context.IsInteracting = true;
+            }
+        }
+
+        private void HandleDialogueClosed(Transform speaker)
+        {
+            if (_context != null && _context.IsInteracting)
+            {
+                _context.IsInteracting = false;
+            }
         }
 
         void Start()

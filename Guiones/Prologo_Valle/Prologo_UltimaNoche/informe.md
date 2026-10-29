@@ -1,8 +1,8 @@
 # Parte de horneado: Prologo_UltimaNoche
 
-2026-10-24 10:44 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
+2026-10-27 11:55 · guion `Assets/_SEQUENCES/Guiones/Prologo_UltimaNoche.guion.txt`
 
-**3:42,8** de secuencia · 32 frases · 58 planos · 147 efectos · 13 personajes
+**3:42,9** de secuencia · 32 frases · 58 planos · 147 efectos · 13 personajes
 
 Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,68/ojos 0,94 · nina 1,44/ojos 0,96 · v01 1,31/ojos 0,95 · v02 1,58/ojos 0,94 · v03 1,51/ojos 0,96 · v04 1,68/ojos 0,95 · v06 1,64/ojos 0,95 · v07 1,30/ojos 0,96 · v08 1,58/ojos 0,96 · v09 1,46/ojos 0,95 · v10 1,58/ojos 0,94
 
@@ -35,7 +35,7 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 2:29,3 → 2:41,6: 12,3 s sin voz entre PROLOGO_DUELO_ARCHIMAGO y PROLOGO_MAGO_VALLE
 - 2:44,9 → 2:48,3: 3,4 s sin voz entre PROLOGO_MAGO_VALLE y PROLOGO_PLEGARIA_01
 - 2:55,7 → 2:58,4: 2,8 s sin voz entre PROLOGO_PLEGARIA_01 y PROLOGO_PLEGARIA_02
-- 3:32,7 → 3:35,0: 2,4 s sin voz entre PROLOGO_PLEGARIA_06 y PROLOGO_HECHIZO
+- 3:32,7 → 3:35,1: 2,5 s sin voz entre PROLOGO_PLEGARIA_06 y PROLOGO_HECHIZO
 
 ## Línea de tiempo
 
@@ -270,33 +270,33 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 | 3:33,0 | efecto | Cut-in 1: NPC_Archimago (Cara) |
 | 3:33,0 | efecto | Líneas de concentración: mostrar |
 | 3:34,1 | **@hechizo** |  |
-| 3:34,1 | plano 54 | medio de archimago · 0,9 s · lente 30° · coste 2: ángulo 2 |
+| 3:34,1 | plano 54 | medio de archimago · 1,0 s · lente 30° · coste 2: ángulo 2 |
 | 3:34,1 | efecto | Respiro: 0,9 s (música 0 dB) |
-| 3:34,1 | efecto | Conjuro en las manos: NPC_Archimago (0,9 s) |
-| 3:35,0 | plano 55 | general de archimago y mago · 2,0 s · lente 44° |
-| 3:35,0 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
-| 3:35,2 | efecto | Rayo: 2 × fondo del plano |
-| 3:35,5 | efecto | Fusión: BOLA_PROTECTORA +  |
-| 3:35,5 | efecto | Sacudida de cámara (0,45, 2s) |
+| 3:34,1 | efecto | Conjuro en las manos: NPC_Archimago (1,5 s) |
+| 3:35,1 | plano 55 | general de archimago y mago · 1,9 s · lente 44° |
+| 3:35,1 | archimago | «¡¡Protégelos a todos!!» (2,1 s) |
+| 3:35,3 | efecto | Rayo: 2 × fondo del plano |
+| 3:35,4 | efecto | Fusión: BOLA_PROTECTORA +  |
+| 3:35,4 | efecto | Sacudida de cámara (0,45, 2s) |
 | 3:37,0 | plano 56 | primer plano de archimago · 1,3 s · lente 24° · coste 21: ángulo 21 |
 | 3:37,0 | efecto | Sacudida de cámara (0,55, 1,3s) |
 | 3:37,0 | efecto | Líneas de concentración: mostrar |
 | 3:38,3 | plano 57 | primer plano de mago · 1,2 s · lente 24° · coste 115: cara 63, ángulo 53 |
 | 3:38,3 | efecto | Sacudida de cámara (0,7, 1,2s) |
-| 3:39,3 | **@explosion** |  |
-| 3:39,3 | efecto | Ambiente: parar AGUJERO_NEGRO |
-| 3:39,3 | efecto | VFX: recoger efectos registrados |
-| 3:39,3 | efecto | Mezcla: grito (quitar) |
-| 3:39,3 | efecto | Líneas de concentración: retirar |
-| 3:39,3 | efecto | Pantalla: cubrir (1,2s) |
-| 3:39,3 | efecto | Ambiente: parar TORMENTA |
-| 3:39,5 | plano 58 | general de archimago y mago · 3,3 s · lente 48° |
+| 3:39,4 | **@explosion** |  |
+| 3:39,4 | efecto | Ambiente: parar AGUJERO_NEGRO |
+| 3:39,4 | efecto | VFX: recoger efectos registrados |
+| 3:39,4 | efecto | Mezcla: grito (quitar) |
+| 3:39,4 | efecto | Líneas de concentración: retirar |
+| 3:39,4 | efecto | Pantalla: cubrir (1,2s) |
+| 3:39,4 | efecto | Ambiente: parar TORMENTA |
+| 3:39,5 | plano 58 | general de archimago y mago · 3,4 s · lente 48° |
 | 3:39,5 | efecto | Sacudida de cámara (0,95, 1,4s) |
-| 3:39,7 | efecto | Sacudida de cámara (0,9, 1,6s) |
-| 3:40,2 | efecto | Música: parar (1,2s) |
-| 3:40,5 | efecto | Hora del día: Morning (de golpe) (y es con la que se queda el mundo) |
+| 3:39,8 | efecto | Sacudida de cámara (0,9, 1,6s) |
+| 3:40,3 | efecto | Música: parar (1,2s) |
+| 3:40,6 | efecto | Hora del día: Morning (de golpe) (y es con la que se queda el mundo) |
 | 3:40,6 | efecto | Fogonazo (0,14s) |
-| 3:42,3 | efecto | Bandas de cine: retirar (0,5s) |
+| 3:42,4 | efecto | Bandas de cine: retirar (0,5s) |
 
 ## Qué hace cada personaje
 
@@ -339,18 +339,13 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 2:58,4 bucle CastingIdle01
 - 2:58,4–3:06,6 habla
 - 3:06,6–3:15,2 habla
-- 3:09,9 gesto Angry01
-- 3:11,4 bucle CastingIdle01
 - 3:16,4–3:22,7 habla
-- 3:19,8 gesto Angry02
-- 3:21,4 bucle CastingIdle01
 - 3:22,7–3:28,9 habla
 - 3:28,9 bucle Beg01_Loop
 - 3:28,9–3:32,7 habla
 - 3:34,1 bucle CastingIdle01
-- 3:35,0 bucle CastingIdle01
-- 3:35,0 bucle MagicAttackOmni01_Load
-- 3:35,0–3:37,1 habla
+- 3:35,1 bucle MagicAttackOmni01_Load
+- 3:35,1–3:37,2 habla
 
 ### liora (NPC_Liora)
 
@@ -406,7 +401,8 @@ Reparto medido (m): archimago 1,57/ojos 0,93 · liora 1,58/ojos 0,95 · mago 1,6
 - 2:38,5 gesto MagicRight
 - 2:41,6–2:44,9 habla
 - 2:41,7 gesto Talk03
-- 2:44,9 bucle MagicAttackOmni01_Load
+- 2:44,9 bucle Falling
+- 2:44,9 bucle FoundSomething_NoWeapon
 
 ### nina (NPC_Aldeano_05)
 

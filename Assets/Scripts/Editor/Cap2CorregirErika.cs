@@ -22,7 +22,7 @@ public static class Cap2CorregirErika
     const float DistanciaDeBusqueda = 400f;
     const float RadioNavMesh = 2f;
 
-    [MenuItem("El Sendero/Capítulo 2/Corregir Erika (INC-829)")]
+    [MenuItem("El Sendero/Archivo/Capítulo 2/Corregir Erika (INC-829)")]
     public static void Corregir()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)

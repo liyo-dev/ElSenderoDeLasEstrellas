@@ -110,14 +110,14 @@ MonoBehaviour:
     bodyAnimVariants:
     - HeadNod01
   - emotion: 12
-    eyeMeshName: Eye05
+    eyeMeshName: Eye01
     mouthMeshName: Mouth11
     bodyAnimStateName: Question02
     bodyAnimVariants:
     - HeadShake01
     - Question01
   - emotion: 13
-    eyeMeshName: Eye05
+    eyeMeshName: Eye07
     mouthMeshName: Mouth09
     bodyAnimStateName: Cheer02
     bodyAnimVariants:

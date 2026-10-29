@@ -210,11 +210,17 @@ public sealed class TutorialPromptNode : NarrativeNode
 
             // INC-442: «o lo cierra el jugador, o se quita solo cuando se cumple lo que dice».
             var senales = DefaultNarrativeSignals.Instance;
-            if (!string.IsNullOrEmpty(cerrarConSenal) && senales != null && !SenalYaEmitida(cerrarConSenal))
+            if (!string.IsNullOrEmpty(cerrarConSenal) && senales != null)
             {
-                _signalKey = cerrarConSenal;
-                _signalHandler = CloseInformationalPrompt;
-                senales.OnCustom(_signalKey, _signalHandler);
+                if (cerrarConSenal.StartsWith("NPC_INTERACT_"))
+                    senales.ClearPendingCustom(cerrarConSenal);
+
+                if (!SenalYaEmitida(cerrarConSenal))
+                {
+                    _signalKey = cerrarConSenal;
+                    _signalHandler = CloseInformationalPrompt;
+                    senales.OnCustom(_signalKey, _signalHandler);
+                }
             }
             if (cerrarAlEmpezarDialogo)
             {
@@ -256,8 +262,12 @@ public sealed class TutorialPromptNode : NarrativeNode
 
     /// La señal ya se emitió y nadie la ha recogido todavía. Se mira sin suscribirse: OnCustom
     /// consumiría la señal pendiente y el nodo que de verdad la espera se quedaría sin ella.
+    /// Las señales de interacción con NPCs (NPC_INTERACT_*) son recurrentes a lo largo de la partida
+    /// y no representan el cumplimiento de este aviso; no deben provocar que se salte.
     private static bool SenalYaEmitida(string key)
     {
+        if (string.IsNullOrWhiteSpace(key)) return false;
+        if (key.StartsWith("NPC_INTERACT_")) return false;
         var s = DefaultNarrativeSignals.Instance;
         return s != null && s.IsPendingDelivery(key);
     }

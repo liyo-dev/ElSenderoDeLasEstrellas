@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Game.NPC;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +22,10 @@ public static class Cap2MananaDespues
     const string Inicio = "Assets/Scenes/Systems/Start.unity";
     const string Carpeta = "Assets/_VFX/MananaDespues";
 
+    [MenuItem("El Sendero/Capítulo 2/Montar la mañana después")]
+    [MenuItem("El Sendero/Capítulo 2/Montar la expedición de hace 40 años")]
+    [MenuItem("El Sendero/Cinematicas/Montar Expedicion")]
+    [MenuItem("El Sendero/Cinematicas/Montar Manana")]
     [MenuItem("El Sendero/Archivo/Capítulo 2/Montar la mañana después")]
     public static void Asegurar()
     {
@@ -36,6 +42,8 @@ public static class Cap2MananaDespues
         if (dormitorio == null || molde == null) throw new InvalidOperationException("Faltan Bedroom o SEQ_DiscusionVentana.");
         var entorno = dormitorio.GetComponent<AnchorEnvironment>();
         if (entorno == null) throw new InvalidOperationException("Bedroom necesita AnchorEnvironment.");
+        dormitorio.transform.localPosition = new Vector3(dormitorio.transform.localPosition.x, 0f, dormitorio.transform.localPosition.z);
+        EditorUtility.SetDirty(dormitorio.gameObject);
 
         var item = Asset<ItemData>(Objeto);
         item.itemId = "trozo_del_aro";
@@ -161,6 +169,8 @@ public static class Cap2MananaDespues
         Fuego("VFX_VelaPequena", 0.10f);
         Fuego("VFX_VelaGrande", 0.25f);
         Fuego("VFX_Manga", 0.14f);
+        MontarExpedicion(casa, raiz, stage);
+        Cap2PuntosDeLaManana.Aplicar();
         var acciones = AssetDatabase.LoadAssetAtPath<InputActionAsset>("Assets/Scripts/Core/PlayerControls.inputactions");
         string rutaInput = "Assets/_SEQUENCES/Guiones/EntradaMantenerSoltar.asset";
         if (AssetDatabase.LoadAssetAtPath<InputActionReference>(rutaInput) == null)
@@ -206,9 +216,363 @@ public static class Cap2MananaDespues
         if (cerrar) EditorSceneManager.CloseScene(start, true);
         AssetDatabase.SaveAssets();
         Directory.CreateDirectory("Guiones/WillHouse/Cap2_02_MananaDespues");
-        File.WriteAllText("Guiones/WillHouse/Cap2_02_MananaDespues/reparto.md", string.Join("\n", new[] { "Assets/Prefabs/_WILL.prefab", "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab" }
-            .SelectMany(r => new[] { "# " + r }.Concat(CapturaDeEscenario.Catalogo(AssetDatabase.LoadAssetAtPath<GameObject>(r)).Select(e => e.estado)))));
-        Debug.Log("[Cap2MananaDespues] Montaje guardado. Icono provisional: llave metálica IT_Key. Hornear Cap2_02_MananaDespues con storyboard.");
+        try
+        {
+            File.WriteAllText("Guiones/WillHouse/Cap2_02_MananaDespues/reparto.md", string.Join("\n", new[] {
+                "Assets/Prefabs/_WILL.prefab",
+                "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab",
+                "Assets/_NPCs/_GrafoNarrativo/Selene.prefab",
+                "Assets/_NPCs/MagoPrimero.prefab"
+            }.SelectMany(r => new[] { "# " + r }.Concat(CapturaDeEscenario.Catalogo(AssetDatabase.LoadAssetAtPath<GameObject>(r)).Select(e => e.estado)))));
+        }
+        catch { }
+        Debug.Log("[Cap2MananaDespues] Montaje guardado. Escenario de expedición recreado a X=300.");
+    }
+
+    private static void AsegurarPrefabSelene()
+    {
+        string rutaSelene = "Assets/_NPCs/_GrafoNarrativo/Selene.prefab";
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(rutaSelene) != null) return;
+
+        var pfErika = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_NPCs/Combat/Erika.prefab");
+        if (pfErika == null) return;
+
+        var go = UnityEngine.Object.Instantiate(pfErika);
+        go.name = "Selene";
+
+        var combatHandler = go.GetComponent<Game.NPC.Modules.NPCCombatLifecycleHandler>();
+        if (combatHandler != null) UnityEngine.Object.DestroyImmediate(combatHandler);
+
+        var beh = go.GetComponent<NPCBehaviourManagerV2>();
+        if (beh != null)
+        {
+            var so = new SerializedObject(beh);
+            var pId = so.FindProperty("persistenceId");
+            if (pId != null) pId.stringValue = "Selene";
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        var actor = go.GetComponent<NarrativeActor>();
+        if (actor != null)
+        {
+            var so = new SerializedObject(actor);
+            var pId = so.FindProperty("actorId");
+            if (pId != null) pId.stringValue = "Selene";
+            so.ApplyModifiedPropertiesWithoutUndo();
+        }
+
+        foreach (var t in go.GetComponentsInChildren<Transform>(true))
+        {
+            if (t.name.StartsWith("Head") && t.name != "head")
+                t.gameObject.SetActive(t.name == "Head02_Female");
+            else if (t.name.StartsWith("Hat"))
+                t.gameObject.SetActive(t.name == "Hat06");
+            else if (t.name.StartsWith("Hair"))
+                t.gameObject.SetActive(t.name == "Hair07");
+            else if (t.name.StartsWith("Body"))
+                t.gameObject.SetActive(t.name == "Body08");
+            else if (t.name.StartsWith("Wand") || t.name.StartsWith("Shield") || t.name.StartsWith("Spear") || t.name.StartsWith("OHS") || t.name.StartsWith("THS"))
+                t.gameObject.SetActive(false);
+        }
+
+        PrefabUtility.SaveAsPrefabAsset(go, rutaSelene);
+        UnityEngine.Object.DestroyImmediate(go);
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void MontarExpedicion(Scene casa, GameObject raizSeq, SequenceStage stage)
+    {
+        var todos = casa.GetRootGameObjects().SelectMany(r => r.GetComponentsInChildren<Transform>(true)).ToArray();
+        var raizExp = todos.FirstOrDefault(t => t != null && t.name == "EXPEDICION_FLASHBACK")?.gameObject;
+        if (raizExp == null)
+        {
+            raizExp = new GameObject("EXPEDICION_FLASHBACK");
+            SceneManager.MoveGameObjectToScene(raizExp, casa);
+        }
+        raizExp.transform.position = Vector3.zero;
+
+        Transform Subnodo(string nombre)
+        {
+            var t = raizExp.transform.Find(nombre);
+            if (t == null)
+            {
+                var go = new GameObject(nombre);
+                go.transform.SetParent(raizExp.transform, false);
+                t = go.transform;
+            }
+            return t;
+        }
+
+        AsegurarPrefabSelene();
+
+        var arq = Subnodo("Arquitectura");
+        for (int i = arq.childCount - 1; i >= 0; i--)
+            UnityEngine.Object.DestroyImmediate(arq.GetChild(i).gameObject);
+
+        var luz = Subnodo("Iluminacion");
+        var actores = Subnodo("Actores");
+        for (int i = actores.childCount - 1; i >= 0; i--)
+            UnityEngine.Object.DestroyImmediate(actores.GetChild(i).gameObject);
+
+        // 1. Suelo de losas de piedra planas (Modular Castle floor2).
+        // La malla floor2 tiene min.y=0 y max.y=2 (bloque de 2 m de grosor); colocarlo a Y=-2
+        // hace que la superficie transitable quede exactamente a Y=0 nivelada con la escena.
+        string rutaFloor = "Assets/Art/World/Modular Castle/Assets/prefabs/floor2.prefab";
+        var pfFloor = AssetDatabase.LoadAssetAtPath<GameObject>(rutaFloor);
+        if (pfFloor != null)
+        {
+            float[] xs = { 296f, 300f, 304f };
+            float[] zs = { 0f, 4f, 8f, 12f };
+            for (int i = 0; i < xs.Length; i++)
+            {
+                for (int j = 0; j < zs.Length; j++)
+                {
+                    string id = $"Floor_{i}_{j}";
+                    var go = (GameObject)PrefabUtility.InstantiatePrefab(pfFloor, casa);
+                    go.name = id;
+                    var t = go.transform;
+                    t.SetParent(arq, false);
+                    t.position = new Vector3(xs[i], -2.0f, zs[j]);
+                    t.rotation = Quaternion.identity;
+                }
+            }
+        }
+
+        // 2. Columnas en ruinas flanqueando el camino (pillar1 y pillar2)
+        string rutaPillar1 = "Assets/Art/World/Modular Castle/Assets/prefabs/pillar1.prefab";
+        string rutaPillar2 = "Assets/Art/World/Modular Castle/Assets/prefabs/pillar2.prefab";
+        var pfPillar1 = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPillar1);
+        var pfPillar2 = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPillar2);
+        if (pfPillar1 != null && pfPillar2 != null)
+        {
+            Vector3[] posPillars = {
+                new Vector3(295.0f, 0f, 2f), new Vector3(305.0f, 0f, 2f),
+                new Vector3(295.0f, 0f, 6f), new Vector3(305.0f, 0f, 6f),
+                new Vector3(295.0f, 0f, 10f), new Vector3(305.0f, 0f, 10f)
+            };
+            for (int k = 0; k < posPillars.Length; k++)
+            {
+                string id = $"Pillar_{k}";
+                var pf = (k % 2 == 0) ? pfPillar1 : pfPillar2;
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, casa);
+                go.name = id;
+                var t = go.transform;
+                t.SetParent(arq, false);
+                t.position = posPillars[k];
+                t.rotation = Quaternion.Euler(0f, (k % 2 == 0) ? 90f : -90f, 0f);
+            }
+        }
+
+        // 3. Antorchas con luz cálida en las primeras columnas
+        string rutaTorch = "Assets/Art/World/Modular Castle/Assets/prefabs/torch.prefab";
+        var pfTorch = AssetDatabase.LoadAssetAtPath<GameObject>(rutaTorch);
+        if (pfTorch != null)
+        {
+            Vector3[] posTorches = { new Vector3(295.95f, 1.8f, 2f), new Vector3(304.05f, 1.8f, 2f) };
+            float[] yRots = { 90f, -90f };
+            for (int k = 0; k < posTorches.Length; k++)
+            {
+                string id = $"Torch_{k}";
+                var go = (GameObject)PrefabUtility.InstantiatePrefab(pfTorch, casa);
+                go.name = id;
+                var t = go.transform;
+                t.SetParent(arq, false);
+                var l = go.GetComponentInChildren<Light>() ?? go.AddComponent<Light>();
+                l.type = LightType.Point;
+                l.color = new Color(1.0f, 0.65f, 0.3f);
+                l.range = 6f;
+                l.intensity = 1.8f;
+                t.position = posTorches[k];
+                t.rotation = Quaternion.Euler(0f, yRots[k], 0f);
+            }
+        }
+
+        // 4. Umbral Arruinado (doorway1) hacia lo desconocido
+        string rutaDoor = "Assets/Art/World/Modular Castle/Assets/prefabs/doorway1.prefab";
+        var pfDoor = AssetDatabase.LoadAssetAtPath<GameObject>(rutaDoor);
+        if (pfDoor != null)
+        {
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(pfDoor, casa);
+            go.name = "Umbral_Ruinas";
+            var t = go.transform;
+            t.SetParent(arq, false);
+            t.position = new Vector3(300f, 0f, 11f);
+            t.rotation = Quaternion.identity;
+            PrefabUtility.UnpackPrefabInstance(go, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            var puerta = t.Find("door");
+            if (puerta != null)
+            {
+                UnityEngine.Object.DestroyImmediate(puerta.gameObject);
+            }
+        }
+
+        // 5. Pared de fondo que bloquea el vacío tras el umbral
+        string rutaWall = "Assets/Art/World/Modular Castle/Assets/prefabs/wall1.prefab";
+        var pfWall = AssetDatabase.LoadAssetAtPath<GameObject>(rutaWall);
+        if (pfWall != null)
+        {
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(pfWall, casa);
+            go.name = "Fondo_Oscuro";
+            var t = go.transform;
+            t.SetParent(arq, false);
+            t.position = new Vector3(300f, 0f, 14.5f);
+            t.rotation = Quaternion.identity;
+        }
+
+        // 6. Iluminación atmosférica (luz fría a contraluz por el umbral y ambiente nocturno)
+        var tLuzPortal = luz.Find("Luz_UmbralMistico");
+        if (tLuzPortal == null)
+        {
+            var goLuz = new GameObject("Luz_UmbralMistico");
+            goLuz.transform.SetParent(luz, false);
+            var l = goLuz.AddComponent<Light>();
+            l.type = LightType.Spot;
+            l.color = new Color(0.45f, 0.70f, 1.0f);
+            l.range = 22f;
+            l.spotAngle = 65f;
+            l.intensity = 3.5f;
+            tLuzPortal = goLuz.transform;
+        }
+        tLuzPortal.position = new Vector3(300f, 4.5f, 13f);
+        tLuzPortal.rotation = Quaternion.Euler(22f, 180f, 0f);
+
+        var tLuzAmb = luz.Find("Luz_AmbienteFrio");
+        if (tLuzAmb == null)
+        {
+            var goAmb = new GameObject("Luz_AmbienteFrio");
+            goAmb.transform.SetParent(luz, false);
+            var l = goAmb.AddComponent<Light>();
+            l.type = LightType.Point;
+            l.color = new Color(0.25f, 0.40f, 0.70f);
+            l.range = 16f;
+            l.intensity = 1.2f;
+            tLuzAmb = goAmb.transform;
+        }
+        tLuzAmb.position = new Vector3(300f, 3f, 5f);
+
+        // 7. Niebla nocturna misteriosa en el suelo
+        var tNiebla = luz.Find("Niebla_Ruinas");
+        if (tNiebla == null)
+        {
+            var goNiebla = new GameObject("Niebla_Ruinas");
+            goNiebla.transform.SetParent(luz, false);
+            var n = goNiebla.AddComponent<NieblaNocturna>();
+            n.tamano = new Vector3(14f, 1.5f, 16f);
+            n.cantidad = 30;
+            n.desde = 0f;
+            n.color = new Color(0.5f, 0.65f, 0.85f);
+            n.opacidad = 0.38f;
+            n.tamanoDeNube = new Vector2(3.5f, 6.5f);
+            tNiebla = goNiebla.transform;
+        }
+        tNiebla.position = new Vector3(300f, 0f, 6f);
+
+        // 8. Actores: Selene, Eldran Joven, Silas Joven
+        GameObject ColocarActor(string id, string prefabRuta, Vector3 pos, float rumbo)
+        {
+            var pf = AssetDatabase.LoadAssetAtPath<GameObject>(prefabRuta);
+            if (pf == null) throw new InvalidOperationException("Falta " + prefabRuta);
+            var go = (GameObject)PrefabUtility.InstantiatePrefab(pf, casa);
+            go.name = id;
+            var t = go.transform;
+            t.SetParent(actores, false);
+            foreach (var col in go.GetComponentsInChildren<Collider>(true)) col.enabled = false;
+            var agent = go.GetComponent<NavMeshAgent>();
+            if (agent != null) agent.enabled = false;
+            var mgr = go.GetComponent<NPCBehaviourManagerV2>();
+            if (mgr != null)
+            {
+                var soMgr = new SerializedObject(mgr);
+                var pId = soMgr.FindProperty("persistenceId");
+                if (pId != null) { pId.stringValue = id; soMgr.ApplyModifiedPropertiesWithoutUndo(); }
+            }
+            var anchor = go.GetComponent<SpawnAnchor>() ?? go.AddComponent<SpawnAnchor>();
+            anchor.anchorId = id;
+            t.position = pos;
+            t.rotation = Quaternion.Euler(0f, rumbo, 0f);
+            return t.gameObject;
+        }
+
+        foreach (var col in arq.GetComponentsInChildren<Collider>(true))
+        {
+            bool esSuelo = col.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) >= 0
+                        || (col.transform.parent != null && col.transform.parent.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) >= 0)
+                        || col.gameObject.layer == 10;
+            col.enabled = esSuelo;
+            EditorUtility.SetDirty(col);
+        }
+
+        var seleneGo = ColocarActor("Actor_Selene", "Assets/_NPCs/_GrafoNarrativo/Selene.prefab", new Vector3(300.0f, 0f, 3.5f), 0f);
+        var eldranGo = ColocarActor("Actor_EldranJoven", "Assets/_NPCs/_GrafoNarrativo/Eldran.prefab", new Vector3(298.5f, 0f, 1.5f), 15f);
+        var silasGo = ColocarActor("Actor_SilasJoven", "Assets/_NPCs/MagoPrimero.prefab", new Vector3(301.5f, 0f, 1.2f), -15f);
+
+        var bigote = eldranGo.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(x => x.name.Contains("Mustache"));
+        if (bigote != null) bigote.gameObject.SetActive(false);
+
+        // 9. Registrar actores en SequenceStage
+        var soStage = new SerializedObject(stage);
+        var propActors = soStage.FindProperty("_actors");
+        var bindingsExistentes = new List<(string id, Transform target, float eyeHeight, Animator anim, NPCEmotionController emotion)>();
+        for (int i = 0; i < propActors.arraySize; i++)
+        {
+            var elem = propActors.GetArrayElementAtIndex(i);
+            string id = elem.FindPropertyRelative("id").stringValue;
+            if (id == "Actor_Selene" || id == "selene" ||
+                id == "Actor_EldranJoven" || id == "eldran_joven" ||
+                id == "Actor_SilasJoven" || id == "silas_joven") continue;
+            bindingsExistentes.Add((
+                id,
+                elem.FindPropertyRelative("target").objectReferenceValue as Transform,
+                elem.FindPropertyRelative("eyeHeight").floatValue,
+                elem.FindPropertyRelative("animator").objectReferenceValue as Animator,
+                elem.FindPropertyRelative("emotionController").objectReferenceValue as NPCEmotionController
+            ));
+        }
+
+        propActors.ClearArray();
+        void BindActor(string id, Transform target)
+        {
+            if (target == null) return;
+            int idx = propActors.arraySize;
+            propActors.InsertArrayElementAtIndex(idx);
+            var elem = propActors.GetArrayElementAtIndex(idx);
+            elem.FindPropertyRelative("id").stringValue = id;
+            elem.FindPropertyRelative("target").objectReferenceValue = target;
+            elem.FindPropertyRelative("eyeHeight").floatValue = 0f;
+            Animator animActivo = null;
+            var anims = target.GetComponentsInChildren<Animator>(true);
+            for (int i = 0; i < anims.Length; i++)
+            {
+                if (anims[i] != null && anims[i].runtimeAnimatorController != null)
+                {
+                    animActivo = anims[i];
+                    break;
+                }
+            }
+            elem.FindPropertyRelative("animator").objectReferenceValue = animActivo;
+            elem.FindPropertyRelative("emotionController").objectReferenceValue = target.GetComponentInChildren<NPCEmotionController>(true);
+        }
+
+        foreach (var b in bindingsExistentes)
+        {
+            int idx = propActors.arraySize;
+            propActors.InsertArrayElementAtIndex(idx);
+            var elem = propActors.GetArrayElementAtIndex(idx);
+            elem.FindPropertyRelative("id").stringValue = b.id;
+            elem.FindPropertyRelative("target").objectReferenceValue = b.target;
+            elem.FindPropertyRelative("eyeHeight").floatValue = b.eyeHeight;
+            elem.FindPropertyRelative("animator").objectReferenceValue = b.anim;
+            elem.FindPropertyRelative("emotionController").objectReferenceValue = b.emotion;
+        }
+
+        BindActor("Actor_Selene", seleneGo.transform);
+        BindActor("selene", seleneGo.transform);
+        BindActor("Actor_EldranJoven", eldranGo.transform);
+        BindActor("eldran_joven", eldranGo.transform);
+        BindActor("Actor_SilasJoven", silasGo.transform);
+        BindActor("silas_joven", silasGo.transform);
+
+        soStage.ApplyModifiedPropertiesWithoutUndo();
     }
 
     static T Asset<T>(string ruta) where T : ScriptableObject

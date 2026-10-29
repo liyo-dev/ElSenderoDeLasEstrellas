@@ -74,6 +74,7 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         UnlockService.OnAbilityUnlocked += HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey += HandleAbilityUnlockedKey;
         UnlockService.OnSpellUnlocked += HandleSpellUnlocked;
+        SceneBoundUI.OnBossIntroStarted += HandleBossIntroStarted;
         SceneBoundUI.OnBossIntroEnded += HandleBossIntroEnded;
         // Mismo sistema que ya usan BossHealthBar/MinimapController: ocultarse mientras
         // hay un menú abierto (pausa incluida) y restaurarse al cerrar el último.
@@ -88,6 +89,7 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         UnlockService.OnAbilityUnlocked -= HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey -= HandleAbilityUnlockedKey;
         UnlockService.OnSpellUnlocked -= HandleSpellUnlocked;
+        SceneBoundUI.OnBossIntroStarted -= HandleBossIntroStarted;
         SceneBoundUI.OnBossIntroEnded -= HandleBossIntroEnded;
         MenuManager.MenuOpened -= OnMenuOpened;
         MenuManager.MenuClosed -= OnMenuClosed;
@@ -212,6 +214,13 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         AnimateIn();
     }
 
+    private void HandleBossIntroStarted()
+    {
+        if (!_isShowing) return;
+        _awaitingBossIntroEnd = true;
+        HidePopup();
+    }
+
     private void HandleBossIntroEnded()
     {
         if (!_awaitingBossIntroEnd) return;
@@ -238,9 +247,12 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (MenuManager.AnyOpen()) return; // todavía queda otro menú abierto
         _hiddenByMenu = false;
 
-        if (!_isShowing || popupCanvasGroup == null) return; // se auto-cerró mientras estaba oculto
+        if (!_isShowing || popupCanvasGroup == null) return;
+        popupRoot.DOKill();
+        popupRoot.anchoredPosition = new Vector2(slideOffscreenX, popupRoot.anchoredPosition.y);
+        popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
         popupCanvasGroup.DOKill();
-        popupCanvasGroup.DOFade(1f, 0.2f).SetUpdate(true);
+        popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
         popupCanvasGroup.blocksRaycasts = true;
     }
 
@@ -317,16 +329,33 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
         _isShowing = true;
 
-        popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
-        if (popupCanvasGroup != null)
-            popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
+        if (MenuManager.AnyOpen())
+        {
+            _hiddenByMenu = true;
+            if (popupCanvasGroup != null) popupCanvasGroup.alpha = 0f;
+        }
+        else
+        {
+            _hiddenByMenu = false;
+            popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
+            if (popupCanvasGroup != null)
+                popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
+        }
 
         _autoDismissCoroutine = StartCoroutine(AutoDismiss());
     }
 
     private IEnumerator AutoDismiss()
     {
-        yield return new WaitForSecondsRealtime(displayDuration);
+        float timer = 0f;
+        while (timer < displayDuration)
+        {
+            if (!_hiddenByMenu && !MenuManager.AnyOpen())
+            {
+                timer += Time.unscaledDeltaTime;
+            }
+            yield return null;
+        }
         HidePopup();
     }
 
@@ -387,6 +416,13 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (string.IsNullOrEmpty(flag)) return false;
         ReloadShownFlags();
         return _shownFlags.Contains(flag);
+    }
+
+    public static void ResetFlag(string flag)
+    {
+        if (string.IsNullOrEmpty(flag)) return;
+        var preset = UnlockService.GetActivePreset();
+        if (preset?.flags != null) preset.flags.Remove(flag);
     }
 
     void MarkFlag(string flag)

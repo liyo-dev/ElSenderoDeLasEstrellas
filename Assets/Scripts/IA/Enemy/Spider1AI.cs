@@ -578,6 +578,11 @@ public class Spider1AI : MonoBehaviour
         if (_targetable != null) _targetable.isInActiveCombat = false;
         ActiveCombatRegistry.UnregisterNPC(gameObject);
 
+        if (SintoniaEstelarService.Instance != null)
+        {
+            SintoniaEstelarService.Instance.SumarSintonia(15, transform.position);
+        }
+
         if (agent && agent.isOnNavMesh)
         {
             agent.isStopped = true;

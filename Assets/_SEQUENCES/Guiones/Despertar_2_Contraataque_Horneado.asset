@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: Despertar_2_Contraataque
   duracion: 7.339473
   presentacion: 1
-  huella: "2026-10-06 08:09 \xB7 614a736534b133af2c722a654bc30e9e"
+  huella: "2026-10-27 11:54 \xB7 614a736534b133af2c722a654bc30e9e"
   actores:
   - id: Player
     alias: will
@@ -23,8 +23,6 @@ MonoBehaviour:
     claveDelNombre: Will
     posiciones:
     - t: 0
-      p: {x: 0, y: 0, z: 0}
-    - t: 0.001
       p: {x: 25.3, y: 26.537277, z: -79.4}
     miradas:
     - t: 0
@@ -38,46 +36,53 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 0.08
       tipo: 2
       estado: Angry02
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 1.6173469
+      t: 1.6695918
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 3.4
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 3.48
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 4.6
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 5.8010206
+      t: 5.853266
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     caras:
     - t: 0
       emocion: enfado
       dura: 0
     - t: 0
       emocion: enfado
-      dura: 1.9673469
+      dura: 2.0195918
     - t: 3.4
       emocion: confuso
-      dura: 2.7510204
+      dura: 2.8032653
     - t: 4.6
       emocion: confuso
       dura: 0
@@ -89,8 +94,6 @@ MonoBehaviour:
     claveDelNombre: Eldran
     posiciones:
     - t: 0
-      p: {x: -1.91, y: 26.281815, z: -142.75}
-    - t: 0.001
       p: {x: 21.3, y: 26.281815, z: -85.7}
     - t: 3
       p: {x: 21.3, y: 26.281815, z: -85.7}
@@ -138,7 +141,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 0
-    t1: 1.5673469
+    t1: 1.6195918
     actor: Player
     clave: EVT_AWAKEN_03
     gesto: Angry02
@@ -147,7 +150,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 3.4
-    t1: 5.7510204
+    t1: 5.8032656
     actor: Player
     clave: EVT_AWAKEN_05
     gesto: Question01
@@ -171,7 +174,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0869503
-    encuadre: {x: -0.09, y: -0.076}
+    encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -182,7 +185,7 @@ MonoBehaviour:
     descripcion: conjunto de will
     posiciones:
     - t: 0.9
-      p: {x: 36.0236, y: 30.839151, z: -68.936104}
+      p: {x: 36.29586, y: 30.839151, z: -68.733025}
     lente: 28
     lenteFinal: 0
     sujetos:
@@ -204,7 +207,7 @@ MonoBehaviour:
     descripcion: medio de will
     posiciones:
     - t: 3
-      p: {x: 27.247118, y: 28.797731, z: -76.932816}
+      p: {x: 27.29472, y: 28.821325, z: -76.872505}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -214,7 +217,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0869503
-    encuadre: {x: -0.13, y: -0.076}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -246,67 +249,67 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202263296278776
+      rid: 5630202741379040074
     linea: 33
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202263296278777
+      rid: 5630202741379040075
     linea: 39
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202263296278778
+      rid: 5630202741379040076
     linea: 40
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0.9
     beat:
-      rid: 5630202263296278779
+      rid: 5630202741379040077
     linea: 43
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202263296278780
+      rid: 5630202741379040078
     linea: 48
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202263296278781
+      rid: 5630202741379040079
     linea: 49
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202263296278782
+      rid: 5630202741379040080
     linea: 50
   - onlyIfFlag: 
     skipIfFlag: 
     t: 2
     beat:
-      rid: 5630202263296278783
+      rid: 5630202741379040081
     linea: 51
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202263296278784
+      rid: 5630202741379040082
     linea: 64
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202263296278785
+      rid: 5630202741379040083
     linea: 65
   - onlyIfFlag: 
     skipIfFlag: 
     t: 6.6
     beat:
-      rid: 5630202263296278786
+      rid: 5630202741379040084
     linea: 66
   etiquetas:
   - nombre: inicio
@@ -340,15 +343,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202263296278776
+    - rid: 5630202741379040074
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         mostrar: 1
-        altura: 0.12
+        altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202263296278777
+    - rid: 5630202741379040075
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -362,7 +365,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202263296278778
+    - rid: 5630202741379040076
       type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -372,38 +375,38 @@ MonoBehaviour:
         fundido: 0.1
         duracion: 1.4
         esperar: 0
-    - rid: 5630202263296278779
+    - rid: 5630202741379040077
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: WillContraataca
         waitForEnd: 1
-    - rid: 5630202263296278780
+    - rid: 5630202741379040078
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: Aturdimiento
         waitForEnd: 1
-    - rid: 5630202263296278781
+    - rid: 5630202741379040079
       type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         intensity: 0.35
         duration: 0.5
         waitForEnd: 0
-    - rid: 5630202263296278782
+    - rid: 5630202741379040080
       type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         color: {r: 1, g: 0.6, b: 0.2, a: 1}
         duration: 0.25
-    - rid: 5630202263296278783
+    - rid: 5630202741379040081
       type: {class: TimeScaleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         timeScale: 1
         rampDuration: 0
-    - rid: 5630202263296278784
+    - rid: 5630202741379040082
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -411,16 +414,17 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.25
         waitForEnd: 0
-    - rid: 5630202263296278785
+    - rid: 5630202741379040083
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: Tinnitus
         waitForEnd: 1
-    - rid: 5630202263296278786
+    - rid: 5630202741379040084
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         continuarDondeIba: 1
         musicId: 
+        fadeIn: 0
         fadeOut: 1.5

@@ -26,14 +26,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _EdgeFadePower: 2.5
-    - _RuneIntensity: 1.8
+    - _RuneIntensity: 1.5
     - _RunePulseSpeed: 1.2
-    - _RuneScale: 4
-    - _Smoothness: 0.92
+    - _RuneScale: 3.5
+    - _Smoothness: 0.94
     m_Colors:
-    - _BaseColor: {r: 0.059999965, g: 0.079999976, b: 0.15999997, a: 0.92}
-    - _EdgeGlowColor: {r: 0.29999998, g: 0.6, b: 1, a: 1}
-    - _RuneEmission: {r: 0.45, g: 0.75, b: 1.2, a: 1}
+    - _BaseColor: {r: 0.015, g: 0.025, b: 0.055, a: 0.96}
+    - _EdgeGlowColor: {r: 0.22, g: 0.45, b: 0.85, a: 1}
+    - _RuneEmission: {r: 0.75, g: 0.90, b: 1.35, a: 1}
     - _SpecularColor: {r: 0.75, g: 0.85, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

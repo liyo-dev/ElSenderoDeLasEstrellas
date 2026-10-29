@@ -43,6 +43,9 @@ public static partial class HorneadorDeGuion
     [MenuItem("El Sendero/Guion/6. Hornear Final Parte 2 (El Río)", priority = 13)]
     public static void MenuFinalParte2() => Hornear("Assets/_SEQUENCES/Guiones/Final_02_ElRio.guion.txt", storyboard: false);
 
+    [MenuItem("El Sendero/Guion/7. Hornear Mañana Después (Capítulo 2)", priority = 14)]
+    public static void MenuMananaDespues() => Hornear("Assets/_SEQUENCES/Guiones/Cap2_02_MananaDespues.guion.txt", storyboard: false);
+
     public static GuionHorneado Hornear(string rutaTexto, bool storyboard)
     {
         var texto = AssetDatabase.LoadAssetAtPath<TextAsset>(rutaTexto);
@@ -61,7 +64,8 @@ public static partial class HorneadorDeGuion
         }
         catch (Exception ex)
         {
-            horno.Error("El horneado se ha parado: " + ex.Message + "\n" + ex.StackTrace);
+            var realEx = (ex is System.Reflection.TargetInvocationException tie && tie.InnerException != null) ? tie.InnerException : ex;
+            horno.Error("El horneado se ha parado: " + realEx.Message + "\n" + realEx.StackTrace);
         }
         finally { horno.LiberarPoses(); EditorUtility.ClearProgressBar(); }
         horno.EscribirInforme();
@@ -217,9 +221,9 @@ internal sealed class ActorH
         miradas.Add(m);
     }
 
-    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f)
+    public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f, bool alFinal = false)
     {
-        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido });
+        anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido, alFinal = alFinal });
     }
 }
 
@@ -240,6 +244,7 @@ internal sealed partial class Horno
     private readonly List<LineaHorneada> _lineas = new();
     private readonly List<EfectoHorneado> _efectos = new();
     private readonly List<PlanoPedido> _planosPedidos = new();
+    private readonly Dictionary<string, (float tiempo, string gesto)> _ultimasReaccionesPorActor = new();
     private GuionHorneado _salida;
     private float _fin;
     private string _carpetaSalida;
@@ -299,6 +304,11 @@ internal sealed partial class Horno
                     EscenaDelGuion = _escena;
                 }
                 _stage = CapturaDeEscenario.BuscarStage(_escena);
+                if (!string.IsNullOrEmpty(_g.secuencia))
+                    foreach (var raiz in _escena.GetRootGameObjects())
+                        foreach (var player in raiz.GetComponentsInChildren<SequencePlayer>(true))
+                            if (player.Definition != null && AssetDatabase.GetAssetPath(player.Definition) == _g.secuencia)
+                                _stage = player.GetComponent<SequenceStage>() ?? _stage;
             }
         }
         PrepararReparto();
@@ -668,7 +678,7 @@ internal sealed partial class Horno
             case "gesto":
             {
                 string estado = o.args.FirstOrDefault();
-                if (!Estado(a, estado, o)) return 0f;
+                if (!Estado(a, ref estado, o)) return 0f;
                 int veces = Mathf.Max(1, (int)o.OpF("veces", 1));
                 float largo = a.estados[estado].largo;
                 for (int i = 0; i < veces; i++) a.Animar(t + i * largo * 0.92f, TipoDeAnimacion.Gesto, estado);
@@ -680,10 +690,12 @@ internal sealed partial class Horno
             case "bucle":
             {
                 string estado = o.args.FirstOrDefault();
-                if (!Estado(a, estado, o)) return 0f;
+                if (!Estado(a, ref estado, o)) return 0f;
+                bool congela = o.Tiene("congela") || !a.estados[estado].bucle;
+                bool alFinal = o.Tiene("al_final") || o.Tiene("ya");
                 if (!a.estados[estado].bucle && !o.Tiene("congela"))
                     Aviso($"{o}: '{estado}' no es un bucle; se quedará en su último fotograma (añade «congela» si es lo que quieres)");
-                a.Animar(t, TipoDeAnimacion.Bucle, estado, o.Tiene("congela") || !a.estados[estado].bucle, o.OpF("fundido", 0f));
+                a.Animar(t, TipoDeAnimacion.Bucle, estado, congela, o.OpF("fundido", 0f), alFinal);
                 a.bucle = estado;
                 a.bucleDeCuerpo = a.estados[estado].cuerpoEntero;
                 return o.opciones.ContainsKey("dura") ? o.OpF("dura", 0f) : 0f;
@@ -746,12 +758,24 @@ internal sealed partial class Horno
         }
     }
 
-    private bool Estado(ActorH a, string estado, GuionTexto.Orden o)
+    internal bool Estado(ActorH a, string estado, GuionTexto.Orden o)
+    {
+        return Estado(a, ref estado, o);
+    }
+
+    private bool Estado(ActorH a, ref string estado, GuionTexto.Orden o)
     {
         if (string.IsNullOrEmpty(estado)) { Error($"{o}: falta el nombre de la animación"); return false; }
+        // Alias de magia para comodidad de guiones
+        if (estado == "MagicAttackDirect2H01" && a.estados.ContainsKey("HumanM@MagicAttackDirect2H01 - Cast"))
+            estado = "HumanM@MagicAttackDirect2H01 - Cast";
+        else if (estado == "MagicAttackOmni01" && a.estados.ContainsKey("HumanM@MagicAttackOmni01 - Cast"))
+            estado = "HumanM@MagicAttackOmni01 - Cast";
+
         if (a.estados.Count == 0) { a.estados[estado] = new InfoDeEstado { largo = 2f }; return true; }
         if (a.estados.ContainsKey(estado)) return true;
-        var parecidos = a.estados.Keys.Where(k => k.IndexOf(estado, StringComparison.OrdinalIgnoreCase) >= 0 || estado.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0).Take(4);
+        string buscado = estado;
+        var parecidos = a.estados.Keys.Where(k => k.IndexOf(buscado, StringComparison.OrdinalIgnoreCase) >= 0 || buscado.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0).Take(4);
         Error($"{o}: {a.alias} no tiene la animación '{estado}'. ¿{string.Join(", ", parecidos)}? (ver animaciones.md)");
         return false;
     }
@@ -800,7 +824,7 @@ internal sealed partial class Horno
         a.habla.Add((t, t + dura));
         _ultimoHablante = a.alias;
 
-        if (o.opciones.TryGetValue("gesto", out var g) && Estado(a, g, o))
+        if (o.opciones.TryGetValue("gesto", out var g) && Estado(a, ref g, o))
         {
             linea.gesto = g;
             a.Animar(t + 0.08f, TipoDeAnimacion.Gesto, g);
@@ -824,11 +848,50 @@ internal sealed partial class Horno
                     .Select(n => _actores.TryGetValue(n, out var b) ? b : null).Where(b => b != null);
         }
         else if (x != null && _actores.TryGetValue(x, out var mirado)) oyentes = new[] { mirado };
+        else
+        {
+            // Auto-detectar oyentes cercanos visibles dentro del rango de conversación
+            oyentes = _actores.Values.Where(b => b != a && b.VisibleEn(t) && Vector3.Distance(b.PosEn(t), a.PosEn(t)) < 12f);
+        }
+
         int k = 0;
+        string textoFrase = TextoDe(clave);
         foreach (var b in oyentes)
         {
             if (b == a || b.AndandoEn(t) || Sentado(b)) continue;
             b.Mirar(t + 0.15f + (k++ % 4) * 0.12f, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
+
+            // Reacción corporal y facial del oyente si no está hablando él a la vez
+            if (!b.habla.Any(h => t < h.t1 && t + dura > h.t0))
+            {
+                _ultimasReaccionesPorActor.TryGetValue(b.id, out var infoReaccion);
+                int lineasSinReaccionar = (t - infoReaccion.tiempo > 3.0f) ? 1 : 0;
+
+                if (ActuacionAutomatica.CalcularReaccionOyente(
+                    textoFrase,
+                    NPCEmotion.None,
+                    lineasSinReaccionar,
+                    infoReaccion.gesto,
+                    out string gestoOyente,
+                    out NPCEmotion caraOyente))
+                {
+                    if (!string.IsNullOrEmpty(gestoOyente) && (b.estados.Count == 0 || b.estados.ContainsKey(gestoOyente)))
+                    {
+                        float tGesto = t + Mathf.Min(0.7f, dura * 0.4f);
+                        b.Animar(tGesto, TipoDeAnimacion.Gesto, gestoOyente);
+                        _ultimasReaccionesPorActor[b.id] = (t, gestoOyente);
+                    }
+                    if (caraOyente != NPCEmotion.None && caraOyente != NPCEmotion.Neutral)
+                    {
+                        string palabraCara = CarasDelGuion.Canonica(caraOyente);
+                        if (!string.IsNullOrEmpty(palabraCara))
+                        {
+                            float tCara = t + Mathf.Min(0.6f, dura * 0.35f);
+                            b.caras.Add(new OrdenDeCara { t = tCara, emocion = palabraCara, dura = Mathf.Min(dura, 2.0f) });
+                        }
+                    }
+                }
+            }
         }
         return dura;
     }
@@ -863,6 +926,14 @@ internal sealed partial class Horno
                 foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(ta.text,
                     "\"id\"\\s*:\\s*\"([^\"]+)\"\\s*,\\s*\"text\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\""))
                     _textos[m.Groups[1].Value] = System.Text.RegularExpressions.Regex.Unescape(m.Groups[2].Value);
+            }
+            var taDlg = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resources/Localization/dialogues_es.json");
+            if (taDlg != null)
+            {
+                foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(taDlg.text,
+                    "\"id\"\\s*:\\s*\"([^\"]+)\"\\s*,\\s*\"text\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\""))
+                    if (!_textos.ContainsKey(m.Groups[1].Value))
+                        _textos[m.Groups[1].Value] = System.Text.RegularExpressions.Regex.Unescape(m.Groups[2].Value);
             }
         }
         return _textos.TryGetValue(clave, out var s) ? s : null;
@@ -1149,6 +1220,8 @@ internal sealed partial class Horno
             if (!float.IsNegativeInfinity(mejorPiso)) return new Vector3(p.x, mejorPiso, p.z);
             if (!float.IsNegativeInfinity(mejor)) return new Vector3(p.x, mejor, p.z);
         }
+        if (EscenaDelGuion.IsValid() && EscenaDelGuion.path.IndexOf("Interior", StringComparison.OrdinalIgnoreCase) >= 0)
+            return new Vector3(p.x, p.y, p.z);
         float y = p.y;
         bool hayNav = NavMesh.SamplePosition(new Vector3(p.x, p.y == 0f ? 100f : p.y, p.z), out var hit, p.y == 0f ? 200f : 3f, NavMesh.AllAreas);
         if (hayNav && Mathf.Abs(hit.position.x - p.x) < 0.6f && Mathf.Abs(hit.position.z - p.z) < 0.6f) y = hit.position.y;

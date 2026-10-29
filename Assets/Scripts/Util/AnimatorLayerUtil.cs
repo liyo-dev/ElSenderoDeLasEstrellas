@@ -40,13 +40,59 @@ public static class AnimatorLayerUtil
 
     /// <summary>
     /// Igual que <see cref="ResolveLayer(Animator, int, int)"/> pero a partir del nombre de
-    /// estado en vez de su hash ya calculado.
+    /// estado en vez de su hash ya calculado. Comprueba también sub-máquinas de estado comunes
+    /// (<c>Base Layer.Locomotion.&lt;stateName&gt;</c> y <c>Base Layer.&lt;stateName&gt;</c>).
     /// </summary>
     public static int ResolveLayer(Animator animator, string stateName, int preferredLayer = 1)
     {
-        if (string.IsNullOrEmpty(stateName))
+        if (animator == null || string.IsNullOrEmpty(stateName))
             return -1;
 
-        return ResolveLayer(animator, Animator.StringToHash(stateName), preferredLayer);
+        int capa = ResolveLayer(animator, Animator.StringToHash(stateName), preferredLayer);
+        if (capa >= 0)
+            return capa;
+
+        if (!stateName.Contains('.'))
+        {
+            if (animator.HasState(0, Animator.StringToHash($"Base Layer.Locomotion.{stateName}")))
+                return 0;
+            if (animator.HasState(0, Animator.StringToHash($"Base Layer.{stateName}")))
+                return 0;
+            if (preferredLayer > 0 && animator.layerCount > preferredLayer
+                && animator.HasState(preferredLayer, Animator.StringToHash($"UpperBody.{stateName}")))
+                return preferredLayer;
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    /// Devuelve el nombre o ruta válida del estado en <paramref name="layer"/> para pasarlo a
+    /// <see cref="Animator.Play(int, int, float)"/> o <see cref="Animator.CrossFadeInFixedTime(int, float, int, float)"/>.
+    /// </summary>
+    public static string ResolveStatePath(Animator animator, string stateName, int layer = 0)
+    {
+        if (animator == null || string.IsNullOrEmpty(stateName))
+            return stateName;
+
+        if (animator.HasState(layer, Animator.StringToHash(stateName)))
+            return stateName;
+
+        if (!stateName.Contains('.'))
+        {
+            string locPath = $"Base Layer.Locomotion.{stateName}";
+            if (layer == 0 && animator.HasState(0, Animator.StringToHash(locPath)))
+                return locPath;
+
+            string basePath = $"Base Layer.{stateName}";
+            if (layer == 0 && animator.HasState(0, Animator.StringToHash(basePath)))
+                return basePath;
+
+            string upperPath = $"UpperBody.{stateName}";
+            if (layer > 0 && layer < animator.layerCount && animator.HasState(layer, Animator.StringToHash(upperPath)))
+                return upperPath;
+        }
+
+        return stateName;
     }
 }

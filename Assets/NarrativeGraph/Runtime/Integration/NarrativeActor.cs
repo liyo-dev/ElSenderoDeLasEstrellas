@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Game.NPC;
 using Game.NPC.Common;
 
@@ -87,7 +87,7 @@ public class NarrativeActor : MonoBehaviour
     private bool _isInDialogue;
     private bool _cinematicActive;
 
-    private bool IsIconSuppressed => _isInDialogue || _cinematicActive;
+    private bool IsIconSuppressed => _isInDialogue || _cinematicActive || (_manager != null && _manager.IsInCombatOrAlert);
 
     /// <summary>El persistenceId de <see cref="NPCBehaviourManagerV2"/> — no hay dos identidades.</summary>
     public string ActorId => _manager != null ? _manager.PersistenceId : null;

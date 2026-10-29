@@ -151,26 +151,40 @@ public static class JefesMontarGuiasYGolem
         g.hablanteId = "NPC_Eldran";
         g.nombreHablante = "Eldran";
         g.mirarAlJugador = true;
+        g.introDelay = 0.8f;
+        g.duracionBocadillo = 2.4f;
+        g.pausaEntreFrases = 2.5f; // Respiro entre indicaciones para no saturar al jugador
+        g.segundosSinAcertar = 25f;
         g.comentarios = new List<ComentarioDeCombate>
         {
-            new(M.Inicio, "EVT_10", "FoundSomething_NoWeapon"),
-            new(M.Inicio, "EVT_08", "Challenging_NoWeapon"),
-            new(M.Inicio, "EVT_ELDRAN_HINT_ARO", "FoundSomething_NoWeapon"),
-            new(M.Inicio, "EVT_ELDRAN_GUIA_RITMO", "Cheer02"),
-            new(M.JefeExpuesto, "EVT_ELDRAN_AHORA_01", "Challenging_NoWeapon", vecesMax: 2, caducidad: 0.8f, interrumpe: true, duracion: 1.6f),
-            new(M.JefeExpuesto, "EVT_ELDRAN_AHORA_02", "Challenging_NoWeapon", vecesMax: 1, caducidad: 0.8f, interrumpe: true, duracion: 1.6f),
-            new(M.GolpeValido, "EVT_ELDRAN_ACIERTO_01", "Cheer01"),
-            new(M.GolpeValido, "EVT_ELDRAN_CHEER_01", "Cheer01", vecesMax: 0, enfriamiento: 12f, caducidad: 2f),
-            new(M.GolpeValido, "EVT_ELDRAN_CHEER_02", "Cheer01", vecesMax: 0, enfriamiento: 12f, caducidad: 2f),
-            new(M.GolpeMalDado, "EVT_ELDRAN_HINT_SIN_ARO", "HeadShake01", interrumpe: true),
-            new(M.GolpeMalDado, "EVT_ELDRAN_SIN_ARO_02", "HeadShake01", enfriamiento: 20f, caducidad: 3f),
-            new(M.JugadorHerido, "EVT_ELDRAN_WILL_HERIDO", "Challenging_NoWeapon", caducidad: 4f),
-            new(M.JugadorPocaVida, "EVT_ELDRAN_POCA_VIDA", "FoundSomething_NoWeapon", vecesMax: 2, enfriamiento: 30f, caducidad: 4f),
-            new(M.OrbesSueltos, "EVT_ELDRAN_HINT_ORBES", "FoundSomething_NoWeapon", caducidad: 6f),
-            new(M.CambioDeFase, "EVT_ELDRAN_FASE_2", "FoundSomething_NoWeapon", interrumpe: true, duracion: 3.5f, fase: 1),
-            new(M.CambioDeFase, "EVT_ELDRAN_FASE_3", "FoundSomething_NoWeapon", interrumpe: true, duracion: 3.5f, fase: 2),
-            new(M.JefeCasiVencido, "EVT_ELDRAN_CASI", "Cheer02", caducidad: 4f),
-            new(M.SinAcertar, "EVT_ELDRAN_RECUERDA_ARO", "HeadShake01", vecesMax: 2, enfriamiento: 25f, caducidad: 3f),
+            // Inicio: 2 frases tutorial directas (botón de ataque y aro de runas)
+            new(M.Inicio, "EVT_08", "Challenging_NoWeapon", vecesMax: 1),
+            new(M.Inicio, "EVT_ELDRAN_HINT_ARO", "FoundSomething_NoWeapon", vecesMax: 1),
+
+            // Mecánica del Aro: 1 sola vez cuando brilla (aviso de vulnerabilidad)
+            new(M.JefeExpuesto, "EVT_ELDRAN_AHORA_01", "Challenging_NoWeapon", vecesMax: 1, caducidad: 0.8f, interrumpe: false, duracion: 1.6f),
+
+            // Confirmación de primer acierto (1 sola vez; fuera los cheers infinitos)
+            new(M.GolpeValido, "EVT_ELDRAN_ACIERTO_01", "Cheer01", vecesMax: 1),
+
+            // Error al golpear sin el aro encendido (1 sola vez de aviso tutorial)
+            new(M.GolpeMalDado, "EVT_ELDRAN_HINT_SIN_ARO", "HeadShake01", vecesMax: 1, interrumpe: false),
+
+            // Primer golpe recibido (1 sola vez)
+            new(M.JugadorHerido, "EVT_ELDRAN_WILL_HERIDO", "Challenging_NoWeapon", vecesMax: 1, caducidad: 4f),
+
+            // Poca vida (1 sola vez)
+            new(M.JugadorPocaVida, "EVT_ELDRAN_POCA_VIDA", "FoundSomething_NoWeapon", vecesMax: 1, enfriamiento: 30f, caducidad: 4f),
+
+            // Primeros orbes que caen (1 sola vez)
+            new(M.OrbesSueltos, "EVT_ELDRAN_HINT_ORBES", "FoundSomething_NoWeapon", vecesMax: 1, caducidad: 6f),
+
+            // Fases (momentos narrativos clave del combate)
+            new(M.CambioDeFase, "EVT_ELDRAN_FASE_2", "FoundSomething_NoWeapon", vecesMax: 1, interrumpe: true, duracion: 3.2f, fase: 1),
+            new(M.CambioDeFase, "EVT_ELDRAN_FASE_3", "FoundSomething_NoWeapon", vecesMax: 1, interrumpe: true, duracion: 3.2f, fase: 2),
+
+            // Recta final del jefe (1 sola vez)
+            new(M.JefeCasiVencido, "EVT_ELDRAN_CASI", "Cheer02", vecesMax: 1, caducidad: 4f),
         };
     }
 
@@ -180,6 +194,7 @@ public static class JefesMontarGuiasYGolem
         g.nombreHablante = "Estela";
         g.mirarAlJugador = false; // pelea: si se la girara a mano se le rompería el movimiento
         g.umbralJefeCasiVencido = 0.2f;
+        g.pausaEntreFrases = 2.2f;
         g.comentarios = new List<ComentarioDeCombate>
         {
             new(M.Inicio, "EVT_ESTELA_GOLEM_01", null),
@@ -190,7 +205,7 @@ public static class JefesMontarGuiasYGolem
             new(M.GolpeMalDado, "EVT_ESTELA_GOLEM_REBOTA_01", null, interrumpe: true),
             new(M.GolpeMalDado, "EVT_ESTELA_GOLEM_REBOTA_02", null, vecesMax: 2, enfriamiento: 15f, caducidad: 2f),
             new(M.GolpeValido, "EVT_ESTELA_GOLEM_ACIERTO", null),
-            new(M.GolpeValido, "EVT_ESTELA_GOLEM_ANIMO", null, vecesMax: 0, enfriamiento: 14f, caducidad: 2f),
+            new(M.GolpeValido, "EVT_ESTELA_GOLEM_ANIMO", null, vecesMax: 1, enfriamiento: 14f, caducidad: 2f),
             new(M.JugadorHerido, "EVT_ESTELA_GOLEM_HERIDO", null, caducidad: 4f),
             new(M.JugadorPocaVida, "EVT_ESTELA_GOLEM_POCA_VIDA", null, vecesMax: 2, enfriamiento: 30f, caducidad: 4f),
             new(M.OrbesSueltos, "EVT_ESTELA_GOLEM_ORBES", null, caducidad: 6f),

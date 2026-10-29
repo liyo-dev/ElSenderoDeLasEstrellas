@@ -164,8 +164,20 @@ namespace Game.NPC.Common
 
             // Una charla del grafo tiene un único propietario. Los encargos congelados no
             // abren otro diálogo encima de la conversación ni de su frase posterior.
-            if (grafoEsperaEstaCharla) return true;
-            if (NarrativeStandingLines.TryPlay(actorId, _context.Transform)) return true;
+            if (grafoEsperaEstaCharla)
+            {
+                _context.IsInteracting = true;
+                if (config.combatConfig != null && config.combatConfig.isAggressive && !(CurrentState is States.CombatState || CurrentState is States.AlertState))
+                {
+                    ChangeState(new States.AlertState(config.combatConfig.alertIconDuration, config.combatConfig.isAggressive, config.combatConfig.minAttackDistance));
+                }
+                return true;
+            }
+            if (NarrativeStandingLines.TryPlay(actorId, _context.Transform))
+            {
+                _context.IsInteracting = true;
+                return true;
+            }
 
             // PRIORIDAD 2: NARRATIVA INTERACTIVA (Sistema Principal)
             // Este es el flujo normal para hablar con NPCs

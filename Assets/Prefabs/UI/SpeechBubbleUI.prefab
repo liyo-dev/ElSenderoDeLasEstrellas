@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 421d1b86164635c4589d6ae6b26d2317, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpeechBubbleUI
   _rootGroup: {fileID: 1214596908240388125}
   _bubbleRect: {fileID: 1876604298512144809}
@@ -68,11 +68,38 @@ MonoBehaviour:
   _parentCanvasRect: {fileID: 0}
   _defaultSprite: {fileID: 21300000, guid: 7c099b7ea0db77f4db04f4cb0e3c14ae, type: 3}
   _emphasisSprite: {fileID: 21300000, guid: f1c746f567204bd41874d9941946e1f5, type: 3}
+  _usarArteGenerado: 1
+  _colorPapel: {r: 0.965, g: 0.914, b: 0.82, a: 1}
+  _colorBorde: {r: 0.38, g: 0.3, b: 0.23, a: 1}
+  _grosorBorde: 3
+  _radioEsquina: 26
+  _margenTexto: 14
+  _cola: {x: 52, y: 26}
+  _desdibujo: 1.6
+  _colorTexto: {r: 0.14, g: 0.12, b: 0.1, a: 1}
+  _colorSombra: {r: 0.1, g: 0.08, b: 0.06, a: 1}
+  _radioSombra: 9
+  _sombraDesplazamiento: {x: 2, y: -6}
+  _sombraOpacidad: 0.3
+  _tamanoTextoDelCanvas: 0.036
+  _anchoMinimoEnLetras: 9
+  _anchoMaximoEnLetras: 20
   _fadeInDuration: 0.15
   _fadeOutDuration: 0.15
   _popInDuration: 0.35
   _popOutDuration: 0.18
+  _bubbleMinWidth: 420
+  _bubbleMaxWidth: 620
+  _labelHorizontalMargin: 44
+  _maxLineas: 3
+  _caracteresPorSegundo: 15
+  _lecturaMinima: 1.6
+  _caracteresHabladosPorSegundo: 14
   _worldOffset: {x: 0, y: 2.2, z: 0}
+  _posicionFija: {x: 0, y: 0.7}
+  _margenFijo: 40
+  _colorNombre: {r: 1, g: 0.85, b: 0.35, a: 1}
+  _colorContornoADistancia: {r: 0.08, g: 0.08, b: 0.1, a: 1}
 --- !u!1 &1929041173897752551
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,6 +158,8 @@ MonoBehaviour:
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+  m_MaxWidth: -1
+  m_MaxHeight: -1
 --- !u!222 &6258598357419922416
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -209,7 +238,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
+  m_ActiveFontFeatures: 6e72656bu
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1

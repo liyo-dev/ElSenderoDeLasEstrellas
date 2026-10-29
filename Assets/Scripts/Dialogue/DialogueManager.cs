@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -154,6 +155,8 @@ public class DialogueManager : MonoBehaviour
     // ID de personaje del NPC principal para matching en ActivateSpeakerTalkAnimation
     // Se obtiene de NPCBehaviourManagerV2.dialogueCharacterId o de Interactable.dialogueCharacterId
     private string _currentNpcDialogueCharacterId;
+    // Seguimiento de cadencia y gestos para oyentes durante el diálogo
+    private readonly Dictionary<NPCSimpleAnimator, (int lineasSinReaccionar, string ultimoGesto)> _reaccionesOyentes = new();
     
     // Protección contra input inmediato al abrir diálogo
     private float _dialogueOpenedAt = -999f;
@@ -495,7 +498,7 @@ public class DialogueManager : MonoBehaviour
         if (isSequenceDialogue)
             NarrativeSkipHub.RegisterSkipHandler(HandleSkipRequested);
 
-        ClearActiveSpeakerAnimations();
+        FinalizarInteraccionDeTodosLosParticipantes();
         _current = asset;
         _onEnd = onFinished;
         _index = -1;
@@ -683,6 +686,15 @@ public class DialogueManager : MonoBehaviour
     public void StartBattleDialogue(DialogueAsset asset, Transform npc, Action onFinished = null, bool applyBattlePrep = true)
     {
         _currentNpc = npc;
+        if (npc != null)
+        {
+            var npcMgr = npc.GetComponent<Game.NPC.NPCBehaviourManagerV2>();
+            _currentNpcDialogueCharacterId = npcMgr != null
+                ? npcMgr.DialogueCharacterId
+                : npc.GetComponent<Interactable>()?.DialogueCharacterId;
+        }
+        else
+            _currentNpcDialogueCharacterId = null;
 
         // Preparar al jugador para el diálogo de batalla
         if (applyBattlePrep && PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) && playerGo != null && npc != null)
@@ -876,8 +888,8 @@ public class DialogueManager : MonoBehaviour
             Game.NPC.PlayerParty.Instance.ReleaseDialoguePositioning();
         }
 
-        // ✅ Finalizar visuales del speaker activo (sea player, NPC o party member)
-        ClearActiveSpeakerAnimations();
+        // ✅ Finalizar visuales de todos los participantes (speaker y oyentes)
+        FinalizarInteraccionDeTodosLosParticipantes();
         _playerDialogueAnimator = null;
         _currentNpcDialogueCharacterId = null;
 
@@ -1687,11 +1699,12 @@ public class DialogueManager : MonoBehaviour
                     _hablanteDeLaLinea = willAnimator.transform;
                     willAnimator.SetTalking(true);
                     willAnimator.PlayBodyEmotion(line.emotion);
+                    ActualizarReaccionesDeOyentes(line, false, willAnimator);
                     return;
                 }
 
                 ClearActiveSpeakerAnimations();
-                willAnimator.BeginInteraction();
+                willAnimator.BeginInteraction(girarAlJugador: false);
                 willAnimator.SetTalking(true);
                 willAnimator.PlayBodyEmotion(line.emotion);
                 _activeDialogueSpeakerAnimator = willAnimator;
@@ -1702,6 +1715,7 @@ public class DialogueManager : MonoBehaviour
                     Debug.Log("[DialogueManager] 🗣️ Speaker 'Will (NPC)' activado -- el controller físico es otro personaje");
                     #endif
                 }
+                ActualizarReaccionesDeOyentes(line, false, willAnimator);
                 return;
             }
         }
@@ -1712,6 +1726,7 @@ public class DialogueManager : MonoBehaviour
             {
                 SetPlayerTalkingAnimation(true);
                 _playerDialogueAnimator?.PlayBodyEmotion(line.emotion);
+                ActualizarReaccionesDeOyentes(line, true, _playerDialogueAnimator);
                 return;
             }
 
@@ -1726,18 +1741,22 @@ public class DialogueManager : MonoBehaviour
                 Debug.Log("[DialogueManager] 🗣️ Player speaker activado");
                 #endif
             }
+            ActualizarReaccionesDeOyentes(line, true, _playerDialogueAnimator);
             return;
         }
 
         NPCSimpleAnimator speakerAnimator = null;
         string speakerDebugName = speakerId;
 
-        // Caso 1: NPC principal (matching por nombre de GO, por dialogueCharacterId, o por "MainNPC" genérico)
+        // Caso 1: NPC principal (matching por nombre de GO, por dialogueCharacterId, persistenceId o prefijo CHAR_)
         if (_currentNpc != null)
         {
+            var mgr = _currentNpc.GetComponent<Game.NPC.NPCBehaviourManagerV2>();
             bool isMainNpc = speakerId == "MainNPC"
                 || _currentNpc.name == speakerId
-                || (!string.IsNullOrEmpty(_currentNpcDialogueCharacterId) && _currentNpcDialogueCharacterId == speakerId);
+                || (!string.IsNullOrEmpty(_currentNpcDialogueCharacterId) && _currentNpcDialogueCharacterId == speakerId)
+                || (mgr != null && (mgr.PersistenceId == speakerId || (!string.IsNullOrEmpty(mgr.DialogueCharacterId) && mgr.DialogueCharacterId == speakerId)))
+                || (speakerId.StartsWith("CHAR_") && _currentNpc.name.Equals(speakerId.Substring(5), StringComparison.OrdinalIgnoreCase));
             if (isMainNpc)
             {
                 speakerAnimator = _currentNpc.GetComponent<NPCSimpleAnimator>();
@@ -1794,11 +1813,12 @@ public class DialogueManager : MonoBehaviour
             _hablanteDeLaLinea = speakerAnimator.transform;
             speakerAnimator.SetTalking(true);
             speakerAnimator.PlayBodyEmotion(line.emotion);
+            ActualizarReaccionesDeOyentes(line, false, speakerAnimator);
             return;
         }
 
         ClearActiveSpeakerAnimations();
-        speakerAnimator.BeginInteraction();
+        speakerAnimator.BeginInteraction(girarAlJugador: false);
         speakerAnimator.SetTalking(true);
         speakerAnimator.PlayBodyEmotion(line.emotion);
         _activeDialogueSpeakerAnimator = speakerAnimator;
@@ -1809,6 +1829,76 @@ public class DialogueManager : MonoBehaviour
             Debug.Log($"[DialogueManager] 🗣️ Speaker '{speakerDebugName}' activado");
             #endif
         }
+        ActualizarReaccionesDeOyentes(line, false, speakerAnimator);
+    }
+
+    /// <summary>
+    /// Actualiza la escucha activa y reacciones de los participantes que no están hablando.
+    /// Mantiene la pose de interacción y aplica gestos o idle atento según el contenido y cadencia.
+    /// </summary>
+    private void ActualizarReaccionesDeOyentes(DialogueLine line, bool speakerIsPlayer, NPCSimpleAnimator speakerAnimator)
+    {
+        string texto = !string.IsNullOrEmpty(line.textId) && LocalizationManager.Instance != null
+            ? LocalizationManager.Instance.Get(line.textId, line.text ?? string.Empty)
+            : (line.text ?? string.Empty);
+
+        var oyentes = new List<NPCSimpleAnimator>();
+
+        // Si el jugador no es el hablante actual, es oyente
+        if (!speakerIsPlayer && _playerDialogueAnimator != null)
+            oyentes.Add(_playerDialogueAnimator);
+
+        // Si el NPC principal no es el hablante, es oyente
+        if (_currentNpc != null)
+        {
+            var npcAnim = _currentNpc.GetComponent<NPCSimpleAnimator>();
+            if (npcAnim != null && npcAnim != speakerAnimator && !oyentes.Contains(npcAnim))
+                oyentes.Add(npcAnim);
+        }
+
+        // Miembros del grupo presentes
+        if (Game.NPC.PlayerParty.HasInstance)
+        {
+            foreach (var member in Game.NPC.PlayerParty.Instance.Members)
+            {
+                if (member == null) continue;
+                var memberAnim = member.GetComponent<NPCSimpleAnimator>();
+                if (memberAnim != null && memberAnim != speakerAnimator && !oyentes.Contains(memberAnim))
+                    oyentes.Add(memberAnim);
+            }
+        }
+
+        foreach (var oyente in oyentes)
+        {
+            if (oyente == null) continue;
+
+            // Mantener interacción y apagar habla
+            oyente.BeginInteraction(girarAlJugador: false);
+            oyente.SetTalking(false);
+
+            _reaccionesOyentes.TryGetValue(oyente, out var estado);
+
+            if (ActuacionAutomatica.CalcularReaccionOyente(
+                texto,
+                line.emotion,
+                estado.lineasSinReaccionar,
+                estado.ultimoGesto,
+                out string gesto,
+                out NPCEmotion cara))
+            {
+                if (!string.IsNullOrEmpty(gesto))
+                    oyente.PlaySocialGesture(gesto);
+                if (cara != NPCEmotion.None)
+                    oyente.SetFaceEmotion(cara);
+
+                _reaccionesOyentes[oyente] = (0, gesto);
+            }
+            else
+            {
+                // Idle atento: conserva la pose de escucha sin gesticular
+                _reaccionesOyentes[oyente] = (estado.lineasSinReaccionar + 1, estado.ultimoGesto);
+            }
+        }
     }
 
     private void ClearActiveSpeakerAnimations()
@@ -1818,16 +1908,48 @@ public class DialogueManager : MonoBehaviour
         if (_activeDialogueSpeakerIsPlayer)
         {
             SetPlayerTalkingAnimation(false);
-            ActivatePlayerInteractionAnimation(false);
             _activeDialogueSpeakerIsPlayer = false;
         }
 
         if (_activeDialogueSpeakerAnimator != null)
         {
             _activeDialogueSpeakerAnimator.SetTalking(false);
-            _activeDialogueSpeakerAnimator.EndInteraction();
             _activeDialogueSpeakerAnimator = null;
         }
+    }
+
+    private void FinalizarInteraccionDeTodosLosParticipantes()
+    {
+        ClearActiveSpeakerAnimations();
+        ActivatePlayerInteractionAnimation(false);
+        if (_playerDialogueAnimator != null)
+        {
+            _playerDialogueAnimator.SetTalking(false);
+            _playerDialogueAnimator.EndInteraction();
+        }
+        if (_currentNpc != null)
+        {
+            var npcAnim = _currentNpc.GetComponent<NPCSimpleAnimator>();
+            if (npcAnim != null)
+            {
+                npcAnim.SetTalking(false);
+                npcAnim.EndInteraction();
+            }
+        }
+        if (Game.NPC.PlayerParty.HasInstance)
+        {
+            foreach (var member in Game.NPC.PlayerParty.Instance.Members)
+            {
+                if (member == null) continue;
+                var memberAnim = member.GetComponent<NPCSimpleAnimator>();
+                if (memberAnim != null)
+                {
+                    memberAnim.SetTalking(false);
+                    memberAnim.EndInteraction();
+                }
+            }
+        }
+        _reaccionesOyentes.Clear();
     }
 
     private bool SetPlayerTalkingAnimation(bool isTalking)

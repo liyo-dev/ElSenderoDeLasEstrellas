@@ -31,17 +31,18 @@ MonoBehaviour:
     headroom: 1
     encara: 1
   endStayBlack: 0
+  skipMusicRestore: 0
   modulos: {fileID: 0}
   phases:
   - name: 'Guion: Final_02_ElRio'
     onlyIfFlag: 
     skipIfFlag: 
     beats:
-    - rid: 5630202542015119432
+    - rid: 5630202748678438953
   references:
     version: 2
     RefIds:
-    - rid: 5630202542015119432
+    - rid: 5630202748678438953
       type: {class: GuionBeat, ns: , asm: Assembly-CSharp}
       data:
         note: Generado por el horneado del guion

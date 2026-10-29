@@ -38,6 +38,8 @@ public abstract class EnemigoDelMundo : MonoBehaviour
     [SerializeField, Min(0.1f)] private float segundosHastaDesaparecer = 2.5f;
     [Tooltip("Efecto al desaparecer (opcional).")]
     [SerializeField] protected GameObject vfxAlDesaparecer;
+    [Tooltip("Puntos de Sintonía Estelar que otorga al morir (INC-847).")]
+    [SerializeField, Min(0)] protected int puntosDeSintonia = 20;
 
     protected Damageable Vida { get; private set; }
     protected Transform Objetivo { get; private set; }
@@ -253,6 +255,10 @@ public abstract class EnemigoDelMundo : MonoBehaviour
         AmenazasAlJugador.RetirarAnuncio(transform);
         SalirDeCombate();
         StopAllCoroutines();
+        if (puntosDeSintonia > 0 && SintoniaEstelarService.Instance != null)
+        {
+            SintoniaEstelarService.Instance.SumarSintonia(puntosDeSintonia, transform.position);
+        }
         AlMorir();
         _animacionActual = 0;
         Animar(animacionDeMuerte);

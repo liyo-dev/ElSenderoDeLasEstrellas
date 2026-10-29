@@ -50,6 +50,9 @@ public class SceneBoundUI : MonoBehaviour
     /// <summary>True mientras una intro de boss tiene la UI persistente oculta (entre BeginBossIntro y EndBossIntro).</summary>
     public static bool IsBossIntroActive => _bossIntroActive;
 
+    /// <summary>Se dispara al iniciar BeginBossIntro para que avisos activos puedan replegarse.</summary>
+    public static event System.Action OnBossIntroStarted;
+
     /// <summary>
     /// Se dispara justo al terminar EndBossIntro (UI restaurada). Pensado para que sistemas como
     /// AbilityUnlockPopupUI puedan diferir una animación hasta que la intro del boss haya acabado
@@ -89,26 +92,11 @@ public class SceneBoundUI : MonoBehaviour
     public static void BeginBossIntro(float fadeDuration = 0.3f)
     {
         _bossIntroActive = true;
+        OnBossIntroStarted?.Invoke();
         foreach (var inst in Instances.Values)
         {
             if (inst == null || !inst.gameObject.activeSelf) continue;
             if (inst.excludeFromBossIntroHide) continue;
-
-            // BUG (ago 2026): un popup importante en pantalla (ej: AbilityUnlockPopupUI mostrando
-            // "Bola Prisma" recién desbloqueada) podía arrancar su animación de entrada y, en el
-            // MISMO frame — porque UnlockAbilitiesNode → StartQuestNode → StartBattleNode →
-            // BossIntroPresentation se ejecutan síncronamente detrás del mismo evento narrativo —
-            // esta llamada lo apagaba a alpha 0 igualmente. El guard de ApplySceneState() (más
-            // abajo) no protegía este camino porque BeginBossIntro nunca lo consultaba: el jugador
-            // nunca llegaba a ver el popup pese a que HidePopup/AnimateIn se ejecutaban bien.
-            // Mismo criterio que ApplySceneState ya aplica para cambios de escena: si el guard
-            // sigue bloqueando, no tocar el CanvasGroup — se deja pendiente y el propio guard debe
-            // llamar a ReapplySceneState() cuando termine de mostrar su contenido.
-            if (inst._hideGuard != null && inst._hideGuard.BlocksSceneHide())
-            {
-                inst._pendingBossIntroHide = true;
-                continue;
-            }
 
             var cg = inst.GetOrAddCanvasGroup();
             inst._preBossAlpha = cg.alpha;

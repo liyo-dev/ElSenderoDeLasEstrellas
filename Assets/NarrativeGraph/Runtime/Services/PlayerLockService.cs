@@ -215,6 +215,7 @@ public class PlayerLockService : MonoBehaviour
         {
             _motorWasLocked = _lockedMotor.lockMovement;
             _lockedMotor.lockMovement = true;
+            _lockedMotor.ForzarEnElSuelo();
 
             // lockMovement no resetea inputSmooth/moveDirection (Invector: "lock the movement,
             // not the animation"). ControlAnimatorRootMotion (OnAnimatorMove) ignora lockMovement,

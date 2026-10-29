@@ -333,7 +333,16 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         }
 
         if (levelText != null)
+        {
             _levelLabel = levelText.text;
+            var btn = levelText.GetComponent<Button>();
+            if (btn == null)
+            {
+                btn = levelText.gameObject.AddComponent<Button>();
+                btn.transition = Selectable.Transition.None;
+                btn.onClick.AddListener(AbrirSintoniaEstelar);
+            }
+        }
         if (hpText != null)
             _hpLabel = hpText.text;
         if (mpText != null)
@@ -589,6 +598,16 @@ public class PlayerEquipmentMenuController : MonoBehaviour
             _controlsClosedFrame = Time.frameCount;
             ShowTab(_activeTab);
         });
+    }
+
+    public void AbrirSintoniaEstelar()
+    {
+        if (!_isOpen || PopupEleccionSintoniaUI.EstaAbierto) return;
+        if (SintoniaEstelarService.Instance != null && SintoniaEstelarService.Instance.HitosPendientes > 0)
+        {
+            GamepadInputReader.PlayUISound("UI_Submit");
+            PopupEleccionSintoniaUI.Abrir();
+        }
     }
 
     bool IsYButtonPressed()
@@ -1564,7 +1583,9 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         return go == gameObject || go.transform.IsChildOf(transform);
     }
 
-    void UpdatePlayerInfoPanel()
+    public void RefreshPlayerInfo() => UpdatePlayerInfoPanel();
+
+    public void UpdatePlayerInfoPanel()
     {
         bool hasStatsText = levelText != null || hpText != null || mpText != null
                             || hpBarFill != null || mpBarFill != null;
@@ -1582,8 +1603,20 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
             if (levelText != null)
             {
-                var value = preset != null ? preset.level.ToString() : "?";
-                levelText.text = string.IsNullOrEmpty(_levelLabel) ? value : $"{_levelLabel} {value}";
+                if (SintoniaEstelarService.Instance != null)
+                {
+                    int hitos = SintoniaEstelarService.Instance.HitosPendientes;
+                    int alcanzados = SintoniaEstelarService.Instance.HitosAlcanzados;
+                    if (hitos > 0)
+                        levelText.text = $"Sintonía: {alcanzados} <color=#FFD700>(✨ {hitos} disponible{(hitos > 1 ? "s" : "")} · Clic)</color>";
+                    else
+                        levelText.text = $"Sintonía: {alcanzados}";
+                }
+                else
+                {
+                    var value = preset != null ? preset.level.ToString() : "?";
+                    levelText.text = string.IsNullOrEmpty(_levelLabel) ? value : $"{_levelLabel} {value}";
+                }
             }
 
             // Vida: se resuelve una sola vez y alimenta tanto el texto como la barra.
@@ -1661,7 +1694,16 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         // Capturar las etiquetas ya traducidas por LocalizedText una sola vez
         if (levelText != null)
+        {
             _levelLabel = levelText.text;
+            var btn = levelText.GetComponent<Button>();
+            if (btn == null)
+            {
+                btn = levelText.gameObject.AddComponent<Button>();
+                btn.transition = Selectable.Transition.None;
+                btn.onClick.AddListener(AbrirSintoniaEstelar);
+            }
+        }
         if (hpText != null)
             _hpLabel = hpText.text;
         if (mpText != null)

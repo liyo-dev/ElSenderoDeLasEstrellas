@@ -640,6 +640,9 @@ public class BossArenaController : MonoBehaviour
         if (_playerPendingPlacement)
             StartCoroutine(Co_ColocarJugadorBajoPresentacion());
 
+        // Colocar al boss en el suelo ANTES de la presentación cinemática para que no quede flotando en el aire
+        PlaceBossOnFloor(boss);
+
         // Configurar y reproducir presentación: componente propio de la arena si lo tiene
         // asignado (comportamiento sin cambios), o si no el servicio global (INC-207).
         if (bossIntroPresentation != null)
@@ -665,10 +668,7 @@ public class BossArenaController : MonoBehaviour
         // 1. Desactivar la cámara del boss
         bossCamera.gameObject.SetActive(false);
 
-        // 2. Colocar en el suelo
-        PlaceBossOnFloor(boss);
-
-        // 3. Activar combate del boss
+        // 2. Activar combate del boss
         EnableBossCombat(boss);
 
         // 4. Mostrar barra de vida del boss con DOTween

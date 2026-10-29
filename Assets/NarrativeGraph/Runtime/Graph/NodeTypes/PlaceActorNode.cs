@@ -40,6 +40,7 @@ public sealed class PlaceActorNode : NarrativeNode, INarrativeStateEffect
             else
                 SequenceMovement.PlaceAt(actor, mark.transform.position, mark.GetCharacterRotation());
             if (showActor) actor.SetRenderingVisible(true);
+            actor.ForzarEnElSuelo();
         }
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         else

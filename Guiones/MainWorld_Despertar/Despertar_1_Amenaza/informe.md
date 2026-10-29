@@ -1,6 +1,6 @@
 # Parte de horneado: Despertar_1_Amenaza
 
-2026-10-06 09:09 · guion `Assets/_SEQUENCES/Guiones/Despertar_1_Amenaza.guion.txt`
+2026-10-27 11:54 · guion `Assets/_SEQUENCES/Guiones/Despertar_1_Amenaza.guion.txt`
 
 **0:13,4** de secuencia · 3 frases · 7 planos · 14 efectos · 2 personajes
 
@@ -12,10 +12,6 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 ## Avisos (1)
 
 - línea 17: 'Player' no tiene punto de aparición en MainWorld; necesita un «en» al principio.
-
-## Silencios largos entre frases (1)
-
-- 0:05,0 → 0:06,6: 1,6 s sin voz entre EVT_AWAKEN_02 y EVT_AWAKEN_06
 
 ## Línea de tiempo
 
@@ -36,7 +32,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 | 0:03,4 | plano 3 | primer plano de will · 1,6 s · lente 34° · coste 2: ángulo 2 |
 | 0:03,4 | efecto | Pantalla: descubrir (0,35s) |
 | 0:03,4 | efecto | Sacudida de cámara (0,08, 0,25s) |
-| 0:03,6 | will | «¡...!» (1,4 s) · pose |
+| 0:03,6 | will | «¡...!» (1,5 s) · pose |
 | 0:05,0 | plano 4 | medio de will · 1,4 s · lente 30° |
 | 0:06,4 | **@huida** |  |
 | 0:06,4 | plano 5 | siguiendo a eldran · 2,8 s · lente 34° |
@@ -56,6 +52,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · eldran 1,55/ojos 0,95
 ### will (Player)
 
 - 0:03,6–0:05,0 habla
+- 0:03,6 gesto Talk01
 - 0:10,7 bucle Idle_Battle_NoWeapon
 
 ### eldran (NPC_Eldran)

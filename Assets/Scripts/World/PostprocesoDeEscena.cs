@@ -10,7 +10,17 @@ public sealed class PostprocesoDeEscena : MonoBehaviour
     public VolumeProfile perfilInicial;
     public bool exclusivo = true;
     [Min(0)] public float entrada = 1.5f;
-    public static PostprocesoDeEscena Activo { get; private set; }
+    private static PostprocesoDeEscena s_activo;
+    public static PostprocesoDeEscena Activo
+    {
+        get
+        {
+            if (s_activo == null || !s_activo.isActiveAndEnabled)
+                s_activo = Object.FindFirstObjectByType<PostprocesoDeEscena>();
+            return s_activo;
+        }
+        private set => s_activo = value;
+    }
     public bool EnTransicion => _tiempo < _duracion;
 
     private Volume _base, _a, _b;
@@ -21,7 +31,7 @@ public sealed class PostprocesoDeEscena : MonoBehaviour
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetStatics() => Activo = null;
+    private static void ResetStatics() => s_activo = null;
 #endif
 
     private void Awake() => _base = GetComponent<Volume>();

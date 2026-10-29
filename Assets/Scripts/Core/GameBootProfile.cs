@@ -54,6 +54,9 @@ public class GameBootProfile : ScriptableObject
         dst.maxHP = src.maxHP; dst.currentHP = src.currentHP;
         dst.maxMP = src.maxMP; dst.currentMP = src.currentMP;
         dst.ataque = src.ataque; dst.defensa = src.defensa;
+        dst.sintoniaPuntos = src.sintoniaPuntos;
+        dst.sintoniaHitos = src.sintoniaHitos;
+        dst.sintoniaHitosPendientes = src.sintoniaHitosPendientes;
         dst.unlockedAbilities = new List<AbilityId>(src.unlockedAbilities ?? new List<AbilityId>());
         dst.unlockedSpells    = new List<SpellId>(src.unlockedSpells    ?? new List<SpellId>());
         dst.basicSpellIds = new List<SpellId>(src.basicSpellIds ?? new List<SpellId>());
@@ -190,6 +193,9 @@ public class GameBootProfile : ScriptableObject
         p.maxHP      = data.maxHp;     p.currentHP = Mathf.Clamp(data.currentHp, 0f, data.maxHp);
         p.maxMP      = data.maxMp;     p.currentMP = Mathf.Clamp(data.currentMp, 0f, data.maxMp);
         p.ataque = data.ataque; p.defensa = data.defensa;
+        p.sintoniaPuntos = data.sintoniaPuntos;
+        p.sintoniaHitos = data.sintoniaHitos;
+        p.sintoniaHitosPendientes = data.sintoniaHitosPendientes;
         p.unlockedAbilities = new List<AbilityId>(data.abilities ?? new List<AbilityId>());
         p.unlockedSpells    = new List<SpellId>(data.spells    ?? new List<SpellId>());
         p.flags             = new List<string>(data.flags      ?? new List<string>());
@@ -346,6 +352,9 @@ public class GameBootProfile : ScriptableObject
         data.maxMp = activePreset.maxMP;
         data.currentMp = activePreset.currentMP;
         data.ataque = activePreset.ataque; data.defensa = activePreset.defensa;
+        data.sintoniaPuntos = activePreset.sintoniaPuntos;
+        data.sintoniaHitos = activePreset.sintoniaHitos;
+        data.sintoniaHitosPendientes = activePreset.sintoniaHitosPendientes;
         data.abilities = new List<AbilityId>(activePreset.unlockedAbilities ?? new List<AbilityId>());
         data.spells = new List<SpellId>(activePreset.unlockedSpells ?? new List<SpellId>());
         data.flags = new List<string>(activePreset.flags ?? new List<string>());

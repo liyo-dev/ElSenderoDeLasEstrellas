@@ -206,7 +206,12 @@ public class NPCEmotionController : MonoBehaviour
         if (emotion == NPCEmotion.None) return;
         SetEmotion(emotion);
         if (emotion != NPCEmotion.Neutral && emotionProfile != null)
-            _finDeReaccion = Time.unscaledTime + (segundos > 0f ? segundos : emotionProfile.segundosDeReaccion);
+        {
+            float dura = segundos > 0f ? segundos : emotionProfile.segundosDeReaccion;
+            // Las reacciones de sorpresa (ojos Eye05) son un espasmo breve; no deben congelarse durante toda una frase larga.
+            if (emotion == NPCEmotion.Surprised) dura = Mathf.Min(dura, 0.9f);
+            _finDeReaccion = Time.unscaledTime + dura;
+        }
     }
     private object _propietarioDeFondo;
     private NPCEmotion _caraDeFondo = NPCEmotion.None;
@@ -316,7 +321,16 @@ public class NPCEmotionController : MonoBehaviour
     {
         if ((mallas == _eyeMeshes && !_tieneOjos) || (mallas == _mouthMeshes && !_tieneBoca)) return;
         if (string.IsNullOrEmpty(nombre) || !mallas.TryGetValue(nombre, out var destino) || destino == null) return;
-        if (mallas == _eyeMeshes) _renderersDeOjos.TryGetValue(nombre, out _ojosVisibles);
+        if (mallas == _eyeMeshes && _renderersDeOjos.TryGetValue(nombre, out _ojosVisibles) && _ojosVisibles != null)
+        {
+            for (int i = 0; i < _ojosVisibles.Length; i++)
+                if (_ojosVisibles[i] != null && !_ojosVisibles[i].enabled) _ojosVisibles[i].enabled = true;
+        }
+        else if (mallas == _mouthMeshes)
+        {
+            var rBoca = destino.GetComponent<Renderer>();
+            if (rBoca != null && !rBoca.enabled) rBoca.enabled = true;
+        }
         foreach (var malla in mallas)
         {
             if (malla.Value == null) continue;

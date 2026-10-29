@@ -447,6 +447,7 @@ public sealed class ReproductorDeGuion
             t.rotation = Quaternion.Euler(0f, _rumbo, 0f);
             Actor.SyncRotation();
             AplicarVisible(EsVisible(0f));
+            Actor.ForzarEnElSuelo();
         }
 
         public void Soltar()
@@ -498,6 +499,7 @@ public sealed class ReproductorDeGuion
             }
             // Sin fundido: es el estado con el que la escena ya tiene que aparecer.
             if (bucle != null) Actor.HoldPose(bucle, fundido: 0f);
+            else Actor.ForzarEnElSuelo();
             NPCEmotion cara = NPCEmotion.None;
             while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = CaraDe(Datos.caras[_iCara++].emocion);
             if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
@@ -534,6 +536,7 @@ public sealed class ReproductorDeGuion
             Actor.ResetMovement();
             _visible = true;
             Actor.SetRenderingVisible(true);
+            Actor.ForzarEnElSuelo();
         }
 
         public void Actualizar(float t, Dictionary<string, Interprete> todos)
@@ -601,9 +604,10 @@ public sealed class ReproductorDeGuion
                 case TipoDeAnimacion.Reposo:
                     if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
                     Actor.ReleasePose(true);
+                    Actor.ForzarEnElSuelo();
                     break;
                 case TipoDeAnimacion.Bucle:
-                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f);
+                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f, o.alFinal);
                     break;
                 case TipoDeAnimacion.Gesto:
                     Actor.PlayGesture(o.estado);

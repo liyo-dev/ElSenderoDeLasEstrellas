@@ -159,3 +159,7 @@ __pycache__/
 
 # --- Audio: generaciones de Suno en bruto y sus recortes (no versionar) ---
 Herramientas/Audio/_generaciones/
+
+# --- Buzón de órdenes del Editor: marcas de órdenes ya ejecutadas y órdenes en tránsito (no versionar) ---
+Guiones/_ordenes/*.hecha
+Guiones/_ordenes/*.orden

@@ -994,9 +994,13 @@ namespace Core
                     return true;
             }
 
-            // Ratón: clic derecho = magia slot derecho (equivalente a East/Circle).
+            // Ratón: clic derecho = magia slot derecho (equivalente a East/Circle); Teclado: tecla B
             var mouse = Mouse.current;
             if (mouse != null && mouse.rightButton.wasPressedThisFrame)
+                return true;
+
+            var kb = Keyboard.current;
+            if (kb != null && kb.bKey.wasPressedThisFrame)
                 return true;
 #endif
 
@@ -1108,6 +1112,10 @@ namespace Core
 
             var mouse = Mouse.current;
             if (mouse != null && mouse.rightButton.isPressed)
+                return true;
+
+            var kb = Keyboard.current;
+            if (kb != null && kb.bKey.isPressed)
                 return true;
 #endif
 

@@ -6,15 +6,15 @@
         },
         {
             "key": "DLG_RENARD_INTRO_01",
-            "value": "Hold it, boy. Don\u0027t step on that root. Something with more legs than you is sleeping underneath."
+            "value": "Hold it, boy. Don't step on that root. Something with more legs than you is sleeping underneath."
         },
         {
             "key": "DLG_RENARD_INTRO_02",
-            "value": "Name\u0027s Renard. Hunted these woods longer than you\u0027ve been alive."
+            "value": "Name's Renard. Hunted these woods longer than you've been alive."
         },
         {
             "key": "DLG_RENARD_INTRO_03",
-            "value": "Seen that glow the beasts leave when they fall? That\u0027s Essence. What\u0027s left of the magic that moved them."
+            "value": "Seen that glow the beasts leave when they fall? That's Essence. What's left of the magic that moved them."
         },
         {
             "key": "DLG_RENARD_INTRO_04",
@@ -22,11 +22,11 @@
         },
         {
             "key": "DLG_RENARD_INTRO_05",
-            "value": "Bring it here. I\u0027ll give you things no market sells. Or coins, if you\u0027re the practical sort."
+            "value": "Bring it here. I'll give you things no market sells. Or coins, if you're the practical sort."
         },
         {
             "key": "DLG_RENARD_SALUDO",
-            "value": "Here to trade? Show me what you\u0027ve hunted."
+            "value": "Here to trade? Show me what you've hunted."
         },
         {
             "key": "CHAR_AMIGAPEZ",
@@ -814,7 +814,7 @@
         },
         {
             "key": "DLG_GUERRERACHINA_01",
-            "value": "So, you're Will… Eldran told me about you."
+            "value": "They say you are leaving the village. Before you do, learn to defend yourself: I attack, you hold."
         },
         {
             "key": "DLG_GUERRERACHINA_02",
@@ -830,11 +830,11 @@
         },
         {
             "key": "DLG_GUERRERACHINA_05",
-            "value": "You can use PROTECTION if you hold down <sprite name=\"interactable_b\">."
+            "value": "You can use PROTECTION by holding down <sprite name=\"interactable_b\">. If you block at the right moment, you will parry the blow!"
         },
         {
             "key": "DLG_GUERRERACHINA_06",
-            "value": "I'm going to give you a new spell: PRISM BALL. Pick it with <sprite name=\"interactable_lb\"> and attack me with <sprite name=\"interactable_x\">."
+            "value": "Take this new spell: PRISM BALL. Select it with <sprite name=\"interactable_lb\"> and attack me with <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_GUERRERACHINA_07",
@@ -842,11 +842,11 @@
         },
         {
             "key": "DLG_GUERRERACHINA_08",
-            "value": "Get ready, Will. Training starts now."
+            "value": "Then get ready, Will! Training starts now!"
         },
         {
             "key": "DLG_GUERRERACHINA_AFTER",
-            "value": "That's how it's done."
+            "value": "That handkerchief suits you. Come back in one piece."
         },
         {
             "key": "DLG_GUERRERACHINA_BEFORE",
@@ -854,7 +854,7 @@
         },
         {
             "key": "DLG_GUERRERACHINA_DEFEAT",
-            "value": "Keep training to become a great wizard."
+            "value": "Whoa! Not bad at all. You have got quick reflexes."
         },
         {
             "key": "DLG_GUERRERACHINA_TARGETLOCK",
@@ -1449,57 +1449,232 @@
             "value": "Then it's perfect."
         },
         {
-            "key":  "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
-            "value":  "Victoria, the apothecary, Erika... and then come and find me at the practice field."
+            "key": "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
+            "value": "Victoria, the apothecary, Erika... and then come and find me at the practice field."
         },
-        {"key":"DLG_VICTORIA_CAPA_01","value":"Eldran told me. So you\u0027re off to the Forbidden Forest."},
-        {"key":"DLG_VICTORIA_CAPA_02","value":"He said I should ask you for a cloak."},
-        {"key":"DLG_VICTORIA_CAPA_03","value":"A travelling one. And one that won\u0027t catch fire every time you get angry."},
-        {"key":"DLG_VICTORIA_CAPA_04","value":"Hold still, let me measure you."},
-        {"key":"DLG_VICTORIA_CAPA_05","value":"Again. Just in case."},
-        {"key":"DLG_VICTORIA_CAPA_06","value":"I\u0027ve watched you grow up, Will. Every winter, with shorter sleeves."},
-        {"key":"DLG_VICTORIA_CAPA_07","value":"I already had one half made. I knew this day would come."},
-        {"key":"DLG_VICTORIA_CAPA_08","value":"And don\u0027t you dare pay me."},
-        {"key":"DLG_VICTORIA_CAPA_DESPUES_01","value":"That cloak suits you perfectly."},
-        {"key":"DLG_BOTICARIA_POCION_01","value":"So you\u0027re the one with the demon. Here."},
-        {"key":"DLG_BOTICARIA_POCION_02","value":"It\u0027s the only life potion I have. It\u0027ll take me months to make another."},
-        {"key":"DLG_BOTICARIA_POCION_03","value":"It stabilises a serious wound. But it won\u0027t bring anyone back."},
-        {"key":"DLG_BOTICARIA_POCION_04","value":"And it won\u0027t cure magic fatigue. Only rest does that."},
-        {"key":"DLG_BOTICARIA_POCION_05","value":"Got it. Doesn\u0027t revive, doesn\u0027t cure fatigue..."},
-        {"key":"DLG_BOTICARIA_POCION_06","value":"...and isn\u0027t wasted on a scratch. Say it."},
-        {"key":"DLG_BOTICARIA_POCION_07","value":"And isn\u0027t wasted on a scratch."},
-        {"key":"DLG_BOTICARIA_POCION_DESPUES_01","value":"Take care. And take care of that potion."},
-        {"key":"DLG_RENARD_CONTRATO1_OFERTA_01","value":"One more thing. The spiders have grown bold: last night they came right up to my trap by the path."},
-        {"key":"DLG_RENARD_CONTRATO1_OFERTA_02","value":"Take care of eight and I'll pay you twenty Essence, on top of whatever you pick up."},
-        {"key":"DLG_RENARD_CONTRATO1_MIENTRAS_01","value":"Eight, kid. I count them by the legs, so don't try to fool me."},
-        {"key":"DLG_RENARD_CONTRATO1_HECHO_01","value":"Eight. Not bad for someone your size. Here, as promised."},
-        {"key":"DLG_RENARD_CONTRATO2_OFERTA_01","value":"There are more deeper in, where the light barely reaches. Fifteen, and I'll give you something I've kept for years."},
-        {"key":"DLG_RENARD_CONTRATO2_MIENTRAS_01","value":"Fifteen. And don't stray from the path more than you need to."},
-        {"key":"DLG_RENARD_CONTRATO2_HECHO_01","value":"Fifteen... I'll stop calling you kid."},
-        {"key":"DLG_RENARD_CONTRATO2_HECHO_02","value":"Take this eyepatch. I wore it the winter a bear tried to take my eye. It didn't manage."},
-        {"key":"DLG_ELDRAN_PUNTERIA_01","value":"Before you leave I want to see how you aim. Those buckets over there are your target."},
-        {"key":"DLG_ELDRAN_PUNTERIA_02","value":"A Prism Ball won\u0027t fly on its own: breathe, watch the bucket, and let go only when you are sure."},
-        {"key":"DLG_ELDRAN_PUNTERIA_03","value":"What if I miss?"},
-        {"key":"DLG_ELDRAN_PUNTERIA_04","value":"You will. But you will know why. That is also learning to aim."},
-        {"key":"DLG_ELDRAN_PUNTERIA_DESPUES_01","value":"You aim the way you should now. Don\u0027t shoot unless you have to."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_01","value":"They say you are leaving the village. Before you do, learn to defend yourself: I attack, you hold."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_02","value":"Watch where the other one puts their weight, not their hand. The body warns you before the blow."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_03","value":"I\u0027ll try not to trip."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_04","value":"Not bad. Here, a handkerchief: for the sweat and to remind you to come back."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_05","value":"And don\u0027t lose it."},
-        {"key":"DLG_ERIKA_DESPUES_01","value":"That handkerchief suits you. Come back in one piece."},
-        {"key":"DLG_ELDRAN_MOTIVOS_01","value":"You have a cloak, a potion, a handkerchief and a good aim. What is missing is the important part: knowing why you are leaving."},
-        {"key":"DLG_ELDRAN_MOTIVOS_02","value":"Make a list of reasons. When you doubt, read it."},
-        {"key":"DLG_ELDRAN_MOTIVOS_03","value":"To find Estela. And to understand what is happening to me."},
-        {"key":"DLG_ELDRAN_MOTIVOS_04","value":"Good reasons. Make sure they are yours, not mine."},
-        {"key":"DLG_ELDRAN_BRUJULA_01","value":"And take this compass. It always points the way back home."},
-        {"key":"DLG_OLIVER_DESPEDIDA_01","value":"So it is true: you are leaving."},
-        {"key":"DLG_OLIVER_DESPEDIDA_02","value":"I am staying in the village. Someone has to look after P\u00eda... and your house."},
-        {"key":"DLG_OLIVER_DESPEDIDA_03","value":"Thank you for everything, Oliver. I will be back soon."},
-        {"key":"DLG_OLIVER_DESPEDIDA_04","value":"You had better. See you soon."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_01","value":"I have to go to the capital. Some things can only be settled there."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_02","value":"I trust you, even if I do not like what it makes me let go of."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_03","value":"Thank you for raising me, Eldran."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_04","value":"Go on. The door of home will always be open."}
+        {
+            "key": "DLG_VICTORIA_CAPA_01",
+            "value": "Eldran told me. So you're off to the Forbidden Forest."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_02",
+            "value": "He said I should ask you for a cloak."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_03",
+            "value": "A travelling one. And one that won't catch fire every time you get angry."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_04",
+            "value": "Hold still, let me measure you."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_05",
+            "value": "Again. Just in case."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_06",
+            "value": "I've watched you grow up, Will. Every winter, with shorter sleeves."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_07",
+            "value": "I already had one half made. I knew this day would come."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_08",
+            "value": "And don't you dare pay me."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_DESPUES_01",
+            "value": "That cloak suits you perfectly."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_01",
+            "value": "So you're the one with the demon. Here."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_02",
+            "value": "It's the only life potion I have. It'll take me months to make another."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_03",
+            "value": "It stabilises a serious wound. But it won't bring anyone back."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_04",
+            "value": "And it won't cure magic fatigue. Only rest does that."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_05",
+            "value": "Got it. Doesn't revive, doesn't cure fatigue..."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_06",
+            "value": "...and isn't wasted on a scratch. Say it."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_07",
+            "value": "And isn't wasted on a scratch."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_DESPUES_01",
+            "value": "Take care. And take care of that potion."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_OFERTA_01",
+            "value": "One more thing. The spiders have grown bold: last night they came right up to my trap by the path."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_OFERTA_02",
+            "value": "Take care of eight and I'll pay you twenty Essence, on top of whatever you pick up."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_MIENTRAS_01",
+            "value": "Eight, kid. I count them by the legs, so don't try to fool me."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_HECHO_01",
+            "value": "Eight. Not bad for someone your size. Here, as promised."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_OFERTA_01",
+            "value": "There are more deeper in, where the light barely reaches. Fifteen, and I'll give you something I've kept for years."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_MIENTRAS_01",
+            "value": "Fifteen. And don't stray from the path more than you need to."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_HECHO_01",
+            "value": "Fifteen... I'll stop calling you kid."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_HECHO_02",
+            "value": "Take this eyepatch. I wore it the winter a bear tried to take my eye. It didn't manage."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_01",
+            "value": "Before you leave I want to see how you aim. Those buckets over there are your target."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_02",
+            "value": "A Prism Ball won't fly on its own: breathe, watch the bucket, and let go only when you are sure."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_03",
+            "value": "What if I miss?"
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_04",
+            "value": "You will. But you will know why. That is also learning to aim."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_DESPUES_01",
+            "value": "You aim the way you should now. Don't shoot unless you have to."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_01",
+            "value": "They say you are leaving the village, Will. Before crossing those gates, you must learn to defend yourself: I attack, you hold."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_02",
+            "value": "See that book on your belt? That is your spellbook. Mages do not make up spells from thin air: they awaken the pages of their grimoire. This page resonates with your power... it is the PRISM BALL."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_03",
+            "value": "When awakened, the spellbook binds it to your memory. Select it in battle with <sprite name=\"interactable_lb\"> and fire with <sprite name=\"interactable_x\">."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_04",
+            "value": "And if I strike you head-on, hold <sprite name=\"interactable_b\"> to raise your PROTECTION. Time your block right, and you will parry the blow!"
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_05",
+            "value": "I can feel the page resonating in my hands! I am ready, Erika!"
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_06",
+            "value": "Then show me your guard! Let us see if you can keep up with me!"
+        },
+        {
+            "key": "DLG_ERIKA_DESPUES_01",
+            "value": "That handkerchief suits you. Come back in one piece."
+        },
+        {
+            "key": "ITEM_PANUELO_NAME",
+            "value": "Erika's Handkerchief"
+        },
+        {
+            "key": "ITEM_PANUELO_DESC",
+            "value": "A sturdy cloth handkerchief given by Erika after training. For the sweat and to remind you to come back in one piece."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_01",
+            "value": "You have a cloak, a potion, a handkerchief and a good aim. What is missing is the important part: knowing why you are leaving."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_02",
+            "value": "Make a list of reasons. When you doubt, read it."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_03",
+            "value": "To find Estela. And to understand what is happening to me."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_04",
+            "value": "Good reasons. Make sure they are yours, not mine."
+        },
+        {
+            "key": "DLG_ELDRAN_BRUJULA_01",
+            "value": "And take this compass. It always points the way back home."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_01",
+            "value": "So it is true: you are leaving."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_02",
+            "value": "I am staying in the village. Someone has to look after Pía... and your house."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_03",
+            "value": "Thank you for everything, Oliver. I will be back soon."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_04",
+            "value": "You had better. See you soon."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_01",
+            "value": "I have to go to the capital. Some things can only be settled there."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_02",
+            "value": "I trust you, even if I do not like what it makes me let go of."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_03",
+            "value": "Thank you for raising me, Eldran."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_04",
+            "value": "Go on. The door of home will always be open."
+        },
+        {
+            "key": "CHAR_ERIKA",
+            "value": "Erika"
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_01",
+            "value": "Whoa! Not bad at all. You have got quick reflexes."
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_02",
+            "value": "Here, an embroidered handkerchief: for the sweat and to remind you to come back."
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_03",
+            "value": "And do not lose it along the way."
+        }
     ]
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
   introDelay: 0.6
   introFallbackSeconds: 12
   duracionBocadillo: 2.8
-  pausaEntreFrases: 0.6
+  pausaEntreFrases: 2.2
   umbralPocaVida: 0.35
   umbralJefeCasiVencido: 0.2
   segundosSinAcertar: 18
@@ -90,7 +90,7 @@ MonoBehaviour:
     fase: 0
     key: EVT_ESTELA_GOLEM_ANIMO
     anim: 
-    vecesMax: 0
+    vecesMax: 1
     enfriamiento: 14
     caducidad: 2
     interrumpe: 0

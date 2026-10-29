@@ -139,21 +139,47 @@ public class SayBeat : SequenceBeat
         string[] gestosAutomaticos = animar && string.IsNullOrEmpty(gesture) ? ActuacionAutomatica.Preparar(text) : null;
         var escuchas = new List<EscuchaDuranteLinea>();
         EscuchaDuranteLinea miradaDelHablante = null;
-        if (actor != null && oyentes != null)
+        if (actor != null)
         {
-            string reaccion = ActuacionAutomatica.Reaccion(text, reaccionDeOyentes, ctx.AnimoVigente);
-            foreach (string id in oyentes)
+            var listaOyentes = new List<SequenceActor>();
+            if (oyentes != null && oyentes.Count > 0)
             {
-                if (string.IsNullOrEmpty(id) || id == actorId) continue;
-                var oyente = ctx.GetActor(id);
-                if (oyente == null || escuchas.Exists(e => e.Actor == oyente)) continue;
-                var escucha = new EscuchaDuranteLinea(oyente, actor, reaccion, ctx, girar: true);
-                escuchas.Add(escucha);
-                ctx.Player?.RegisterCleanup(escucha.Cerrar);
-                if (miradaDelHablante == null && oyente.PuedeEscuchar && actor.PuedeEscuchar)
+                foreach (string id in oyentes)
                 {
-                    miradaDelHablante = new EscuchaDuranteLinea(actor, oyente, null, ctx, girar: false);
-                    ctx.Player?.RegisterCleanup(miradaDelHablante.Cerrar);
+                    if (string.IsNullOrEmpty(id) || id == actorId) continue;
+                    var oyente = ctx.GetActor(id);
+                    if (oyente != null && !listaOyentes.Contains(oyente)) listaOyentes.Add(oyente);
+                }
+            }
+            else
+            {
+                // Auto-detectar actores de la secuencia en rango de conversación (< 15 m)
+                if (ctx.Actores != null)
+                {
+                    foreach (var act in ctx.Actores)
+                    {
+                        if (act == null || act == actor || act.Transform == null || !act.PuedeEscuchar) continue;
+                        if (Vector3.Distance(act.Transform.position, actor.Transform.position) < 15f)
+                            if (!listaOyentes.Contains(act)) listaOyentes.Add(act);
+                    }
+                }
+            }
+
+            if (listaOyentes.Count > 0)
+            {
+                string reaccion = ActuacionAutomatica.Reaccion(text, reaccionDeOyentes, ctx.AnimoVigente);
+                NPCEmotion caraReaccion = ActuacionAutomatica.ReaccionCara(text, NPCEmotion.None, ctx.AnimoVigente);
+                foreach (var oyente in listaOyentes)
+                {
+                    if (oyente == null || escuchas.Exists(e => e.Actor == oyente)) continue;
+                    var escucha = new EscuchaDuranteLinea(oyente, actor, reaccion, caraReaccion, ctx, girar: true);
+                    escuchas.Add(escucha);
+                    ctx.Player?.RegisterCleanup(escucha.Cerrar);
+                    if (miradaDelHablante == null && oyente.PuedeEscuchar && actor.PuedeEscuchar)
+                    {
+                        miradaDelHablante = new EscuchaDuranteLinea(actor, oyente, null, NPCEmotion.None, ctx, girar: false);
+                        ctx.Player?.RegisterCleanup(miradaDelHablante.Cerrar);
+                    }
                 }
             }
         }
@@ -356,6 +382,7 @@ public class SayBeat : SequenceBeat
         public SequenceActor Actor { get; }
         private readonly SequenceActor _objetivo;
         private string _reaccion;
+        private readonly NPCEmotion _caraReaccion;
         private readonly SequenceContext _contexto;
         private readonly bool _girar;
         private IEnumerator _giro;
@@ -363,8 +390,8 @@ public class SayBeat : SequenceBeat
         private Transform _objetivoAnterior;
         private bool _iniciada, _cerrada, _reaccionHecha;
 
-        public EscuchaDuranteLinea(SequenceActor actor, SequenceActor objetivo, string reaccion, SequenceContext contexto, bool girar)
-        { Actor = actor; _objetivo = objetivo; _reaccion = reaccion; _contexto = contexto; _girar = girar; }
+        public EscuchaDuranteLinea(SequenceActor actor, SequenceActor objetivo, string reaccion, NPCEmotion caraReaccion, SequenceContext contexto, bool girar)
+        { Actor = actor; _objetivo = objetivo; _reaccion = reaccion; _caraReaccion = caraReaccion; _contexto = contexto; _girar = girar; }
 
         public void Actualizar(float progreso)
         {
@@ -380,7 +407,7 @@ public class SayBeat : SequenceBeat
                 _mirada.SetTarget(_objetivo.Transform);
             }
             if (_giro != null && !_giro.MoveNext()) _giro = null;
-            if (!_reaccionHecha && progreso >= 0.5f)
+            if (!_reaccionHecha && progreso >= 0.4f)
             {
                 _reaccionHecha = true;
                 if (!_contexto.PuedeReaccionar(Actor)) return;
@@ -388,7 +415,8 @@ public class SayBeat : SequenceBeat
                 if (animo == AnimoDeAccion.Amenaza || animo == AnimoDeAccion.Miedo ||
                     animo == AnimoDeAccion.Triste || animo == AnimoDeAccion.Enfado || animo == AnimoDeAccion.Sorpresa)
                     _reaccion = ReaccionesDeEscena.ElegirGesto(Actor, animo);
-                if (Actor.TieneEstado(_reaccion)) Actor.PlayGesture(_reaccion);
+                if (!string.IsNullOrEmpty(_reaccion) && Actor.TieneEstado(_reaccion)) Actor.PlayGesture(_reaccion);
+                if (_caraReaccion != NPCEmotion.None && Actor.Emotion != null) Actor.Emotion.Reaccionar(_caraReaccion);
             }
         }
 

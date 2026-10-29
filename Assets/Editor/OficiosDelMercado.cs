@@ -32,13 +32,14 @@ public static class OficiosDelMercado
     private const string PuestoEldran = "mercado_eldran";
     private const string PuestoOliver = "mercado_oliver";
 
-    // La caja real Goods03_a02 mide ~0,69 m de lado. Con una caja por pila, el montón nunca pasa
-    // de dos cajas de alto (1,38 m), que el NPC alcanza con el gesto de coger/dejar. Si se apilan
-    // más, la de arriba le queda por encima de la cabeza.
-    private const int CajasPorPila = 1;
-    private static readonly Vector2 SeparacionCajas = new(0.01f, 0.72f);
+    // La caja real Goods03_a02 mide ~0,69 m de lado. Con 2 cajas y separación horizontal de 0,72 m,
+    // se apilan a modo de mostrador (una al lado de la otra).
+    private const int CajasPorPila = 2;
+    private static readonly Vector2 SeparacionCajas = new(0.72f, 0.70f);
     private static readonly Vector3 OffsetPila = new(0f, 0f, 0.8f);
     private const string PoseDeCarga = "CarryMoveIdle_NoWeapon";
+    private static readonly Vector3 OffsetCargaFrontal = new(0f, 0.65f, 0.42f);
+    private static readonly Vector3 RotacionCargaFrontal = Vector3.zero;
     private static readonly Vector3 OffsetEnMano = new(0f, 0.04f, 0.06f);
     private static readonly Vector3 GiroEnMano = new(0f, 90f, 0f);
 
@@ -94,17 +95,17 @@ public static class OficiosDelMercado
         }
 
         if (victoria != null)
-            CrearOActualizarRuta(padre, "Oficio_Victoria", PuestoVictoria, victoria, -1f, null, null);
+            CrearOActualizarRuta(padre, "Oficio_Victoria", PuestoVictoria, victoria, -1f, null, null, "WILL_MISSION1");
         else
             Debug.LogWarning("[OficiosDelMercado] No encuentro a Victoria; no creo su ruta.");
 
         if (eldran != null)
-            CrearOActualizarRuta(padre, "Oficio_Eldran", PuestoEldran, eldran, 1f, "ELDRAN_SIGUEME", null);
+            CrearOActualizarRuta(padre, "Oficio_Eldran", PuestoEldran, eldran, 1f, "ELDRAN_SIGUEME", "ESTRELLA_COMPRADA", "WILL_MISSION1");
         else
             Debug.LogWarning("[OficiosDelMercado] No encuentro a Eldran; no creo su ruta.");
 
         if (oliver != null)
-            CrearOActualizarRuta(padre, "Oficio_Oliver", PuestoOliver, oliver, 2f, null, "OLIVER_JOIN_PARTY");
+            CrearOActualizarRuta(padre, "Oficio_Oliver", PuestoOliver, oliver, 2f, "ELDRAN_SIGUEME", "ESTRELLA_COMPRADA", "WILL_MISSION1");
         else
             Debug.LogWarning("[OficiosDelMercado] No encuentro a Oliver; no creo su ruta.");
 
@@ -196,7 +197,7 @@ public static class OficiosDelMercado
     }
 
     private static void CrearOActualizarRuta(Transform padre, string nombre, string puestoId,
-        Transform baseNpc, float lado, string dejaDeSiQuest, string dejaDeSiSenal)
+        Transform baseNpc, float lado, string dejaDeSiQuest, string dejaDeSiSenal, string soloSiQuest = null)
     {
         var prefabCaja = AssetDatabase.LoadAssetAtPath<GameObject>(RutaPrefabCaja);
         if (prefabCaja == null)
@@ -208,17 +209,19 @@ public static class OficiosDelMercado
 
             // La ruta ya está montada: se actualizan las cajas y el ritmo, pero NO se tocan los
             // puntos, que el diseñador ha podido ajustar a mano en la Scene View.
-            // Al pasar del cubo provisional a la caja real, la pila tiene que separarse más del
-            // NPC (la caja mide 0,69 m y, si no, le atraviesa la cápsula). Solo se toca en esa
-            // migración: si el diseñador ya ha ajustado offsetPila, se respeta.
             bool veniaDeMockup = rutaExistente.prefabCaja == null;
 
             rutaExistente.prefabCaja = prefabCaja;
             rutaExistente.cajasPorPila = CajasPorPila;
+            rutaExistente.cajasEnDestinoAlEmpezar = 0;
+            rutaExistente.terminarAlVaciarOrigen = true;
             rutaExistente.separacionCajas = SeparacionCajas;
             rutaExistente.materialCaja = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCaja);
+            rutaExistente.soloSiQuest = soloSiQuest;
             rutaExistente.dejaDeSiQuest = dejaDeSiQuest;
             rutaExistente.dejaDeSiSenal = dejaDeSiSenal;
+            rutaExistente.offsetCargaFrontal = OffsetCargaFrontal;
+            rutaExistente.rotacionCargaFrontal = RotacionCargaFrontal;
             if (string.IsNullOrEmpty(rutaExistente.poseDeCarga))
                 rutaExistente.poseDeCarga = PoseDeCarga;
             if (veniaDeMockup || (rutaExistente.offsetEnMano == Vector3.zero &&
@@ -229,7 +232,7 @@ public static class OficiosDelMercado
             }
             if (veniaDeMockup) rutaExistente.offsetPila = OffsetPila;
             EditorUtility.SetDirty(rutaExistente);
-            Debug.Log($"[OficiosDelMercado] '{puestoId}' actualizada con la caja real; los puntos no se han tocado.");
+            Debug.Log($"[OficiosDelMercado] '{puestoId}' actualizada con la caja frontal y condiciones narrativas; los puntos no se han tocado.");
             return;
         }
 
@@ -241,11 +244,16 @@ public static class OficiosDelMercado
         ruta.puestoId = puestoId;
         ruta.prefabCaja = prefabCaja;
         ruta.cajasPorPila = CajasPorPila;
+        ruta.cajasEnDestinoAlEmpezar = 0;
+        ruta.terminarAlVaciarOrigen = true;
         ruta.separacionCajas = SeparacionCajas;
         ruta.offsetPila = OffsetPila;
         ruta.materialCaja = AssetDatabase.LoadAssetAtPath<Material>(RutaMaterialCaja);
+        ruta.soloSiQuest = soloSiQuest;
         ruta.dejaDeSiQuest = dejaDeSiQuest;
         ruta.dejaDeSiSenal = dejaDeSiSenal;
+        ruta.offsetCargaFrontal = OffsetCargaFrontal;
+        ruta.rotacionCargaFrontal = RotacionCargaFrontal;
         ruta.poseDeCarga = PoseDeCarga;
         ruta.offsetEnMano = OffsetEnMano;
         ruta.giroEnMano = GiroEnMano;
@@ -292,6 +300,9 @@ public static class OficiosDelMercado
             if (escena.isLoaded && escena.path.EndsWith("MainWorld.unity"))
                 return escena;
         }
+
+        if (System.IO.File.Exists("Assets/Scenes/Worlds/MainWorld.unity"))
+            return EditorSceneManager.OpenScene("Assets/Scenes/Worlds/MainWorld.unity", OpenSceneMode.Additive);
 
         return default;
     }

@@ -104,6 +104,7 @@ MonoBehaviour:
         outputs:
         - 32febd1e-bce7-478d-aab9-792eddddd73d
         eventKey: WILL_EXITS_HOUSE_OLIVER_GREETING
+        acceptEarlierEvent: 1
     - rid: 6000000000000000001
       type: {class: StartNode, ns: , asm: Assembly-CSharp}
       data:
@@ -219,6 +220,7 @@ MonoBehaviour:
         outputs:
         - 71cf01b8-b417-47c7-8688-648106590000
         eventKey: CAP1_CAJA_ELDRAN
+        acceptEarlierEvent: 1
     - rid: 6000000000000000015
       type: {class: WaitNpcInteractionNode, ns: , asm: Assembly-CSharp}
       data:
@@ -420,6 +422,7 @@ MonoBehaviour:
         outputs:
         - 72854966-4210-4108-aa56-b1f0cb33d3bb
         eventKey: PROLOGUE_DONE
+        acceptEarlierEvent: 1
     - rid: 6000000000000000032
       type: {class: WaitItemDeliveryNode, ns: , asm: Assembly-CSharp}
       data:
@@ -457,14 +460,14 @@ MonoBehaviour:
         outputs:
         - a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
         action: 0
-        text: Cuando el icono sobre la cabeza de un personaje cambie asi, significa que debes hablar con el.
+        text: "Cuando veas este icono sobre un personaje, significa que quiere algo. Habla con \xE9l."
         textId: TUTORIAL_NPC_TALK_ICON
         icon: {fileID: 21300000, guid: 7193393970ac6314784af948391ee381, type: 3}
         buttonName: 
         dismissWithCancel: 1
         cerrarConSenal: NPC_INTERACT_NPC_Eldran
         cerrarAlEmpezarCinematica: 1
-        cerrarAlEmpezarDialogo: 0
+        cerrarAlEmpezarDialogo: 1
     - rid: 6000000000000000034
       type: {class: RaiseCustomEventNode, ns: , asm: Assembly-CSharp}
       data:
@@ -495,6 +498,7 @@ MonoBehaviour:
         outputs:
         - c748956c-7df0-4031-8789-65aab639f278
         eventKey: HOOK_DISCUSION_DONE
+        acceptEarlierEvent: 1
     - rid: 6000000000000000036
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
@@ -528,6 +532,7 @@ MonoBehaviour:
         outputs:
         - f1f3bb59-d765-41ae-a849-2b3035f2b905
         eventKey: WILL_EXITS_HOUSE
+        acceptEarlierEvent: 1
     - rid: 6000000000000000038
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
@@ -579,6 +584,7 @@ MonoBehaviour:
         outputs:
         - 041162d9-cc08-4d17-ae7c-6067257e952b
         eventKey: PERAS_DONE
+        acceptEarlierEvent: 1
     - rid: 6000000000000000042
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
@@ -612,6 +618,7 @@ MonoBehaviour:
         outputs:
         - f393b1c0-87f6-4793-a705-a151a01af989
         eventKey: ESTRELLA_COMPRADA
+        acceptEarlierEvent: 1
     - rid: 6000000000000000044
       type: {class: StartQuestNode, ns: , asm: Assembly-CSharp}
       data:
@@ -683,6 +690,7 @@ MonoBehaviour:
         outputs:
         - ce67dfa7-968b-420d-87e6-f46ad317d154
         eventKey: WILL_REACHED_ELDRAN
+        acceptEarlierEvent: 1
     - rid: 6000000000000000048
       type: {class: CompleteQuestStepsNode, ns: , asm: Assembly-CSharp}
       data:
@@ -965,3 +973,4 @@ MonoBehaviour:
         outputs:
         - 95228e84-0a1a-4e3b-9ef9-e36ad502e222
         eventKey: will_wake_up
+        acceptEarlierEvent: 1

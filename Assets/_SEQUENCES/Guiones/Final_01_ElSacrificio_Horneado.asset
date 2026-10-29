@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Final_01_ElSacrificio_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Final_01_ElSacrificio
-  duracion: 155.30534
+  duracion: 139.80962
   presentacion: 1
-  huella: "2026-10-18 15:00 \xB7 f813e11b11612ebe4ccec528cd8f7506"
+  huella: "2026-10-27 17:17 \xB7 ffaa1f1235ccffad71ec38cc8dd2b44d"
   actores:
   - id: Player
     alias: will
@@ -23,369 +23,690 @@ MonoBehaviour:
     claveDelNombre: Will
     posiciones:
     - t: 0
-      p: {x: 0, y: 0, z: 4.8}
-    - t: 27.54271
-      p: {x: 0, y: 0, z: 4.8}
-    - t: 27.87591
-      p: {x: 0, y: 0, z: 4.5599995}
-    - t: 28.162363
-      p: {x: 0, y: 0, z: 4.3199987}
-    - t: 28.350286
+      p: {x: 0, y: 0, z: 4.6}
+    - t: 22.392708
+      p: {x: 0, y: 0, z: 4.6}
+    - t: 22.736557
+      p: {x: 0, y: 0, z: 4.333332}
+    - t: 22.923542
       p: {x: 0, y: 0, z: 4.1999984}
-    - t: 45.892666
+    - t: 38.489258
       p: {x: 0, y: 0, z: 4.1999984}
-    - t: 45.992664
-      p: {x: 0, y: 0.011600001, z: 4.1999984}
-    - t: 46.092667
-      p: {x: 0, y: 0.044800002, z: 4.1999984}
-    - t: 46.192665
-      p: {x: 0, y: 0.097200006, z: 4.1999984}
-    - t: 46.292667
-      p: {x: 0, y: 0.1664, z: 4.1999984}
-    - t: 46.392666
-      p: {x: 0, y: 0.25, z: 4.1999984}
-    - t: 46.492664
-      p: {x: 0, y: 0.34560004, z: 4.1999984}
-    - t: 46.592667
-      p: {x: 0, y: 0.4508, z: 4.1999984}
-    - t: 46.692665
-      p: {x: 0, y: 0.5632, z: 4.1999984}
-    - t: 46.792667
-      p: {x: 0, y: 0.6804, z: 4.1999984}
-    - t: 46.892666
-      p: {x: 0, y: 0.8, z: 4.1999984}
-    - t: 46.992664
-      p: {x: 0, y: 0.9196, z: 4.1999984}
-    - t: 47.092667
-      p: {x: 0, y: 1.0368001, z: 4.1999984}
-    - t: 47.192665
-      p: {x: 0, y: 1.1492, z: 4.1999984}
-    - t: 47.292667
-      p: {x: 0, y: 1.2544, z: 4.1999984}
-    - t: 47.392666
-      p: {x: 0, y: 1.35, z: 4.1999984}
-    - t: 47.492664
-      p: {x: 0, y: 1.4336001, z: 4.1999984}
-    - t: 47.592667
-      p: {x: 0, y: 1.5028, z: 4.1999984}
-    - t: 47.692665
-      p: {x: 0, y: 1.5552, z: 4.1999984}
-    - t: 47.792667
-      p: {x: 0, y: 1.5884, z: 4.1999984}
-    - t: 47.892666
-      p: {x: 0, y: 1.6, z: 4.1999984}
-    - t: 130.39018
-      p: {x: 0, y: 1.6, z: 4.1999984}
-    - t: 130.39119
-      p: {x: 200, y: -0.6042118, z: 2.5}
+    - t: 38.589256
+      p: {x: 0, y: 0.008700001, z: 4.1999984}
+    - t: 38.68926
+      p: {x: 0, y: 0.033600003, z: 4.1999984}
+    - t: 38.789257
+      p: {x: 0, y: 0.072900005, z: 4.1999984}
+    - t: 38.88926
+      p: {x: 0, y: 0.124800004, z: 4.1999984}
+    - t: 38.989258
+      p: {x: 0, y: 0.1875, z: 4.1999984}
+    - t: 39.089256
+      p: {x: 0, y: 0.25920004, z: 4.1999984}
+    - t: 39.18926
+      p: {x: 0, y: 0.33810002, z: 4.1999984}
+    - t: 39.289257
+      p: {x: 0, y: 0.42240003, z: 4.1999984}
+    - t: 39.38926
+      p: {x: 0, y: 0.51030004, z: 4.1999984}
+    - t: 39.489258
+      p: {x: 0, y: 0.6, z: 4.1999984}
+    - t: 39.589256
+      p: {x: 0, y: 0.6897, z: 4.1999984}
+    - t: 39.68926
+      p: {x: 0, y: 0.7776001, z: 4.1999984}
+    - t: 39.789257
+      p: {x: 0, y: 0.86190003, z: 4.1999984}
+    - t: 39.88926
+      p: {x: 0, y: 0.9408, z: 4.1999984}
+    - t: 39.989258
+      p: {x: 0, y: 1.0125, z: 4.1999984}
+    - t: 40.089256
+      p: {x: 0, y: 1.0752001, z: 4.1999984}
+    - t: 40.18926
+      p: {x: 0, y: 1.1271, z: 4.1999984}
+    - t: 40.289257
+      p: {x: 0, y: 1.1664001, z: 4.1999984}
+    - t: 40.38926
+      p: {x: 0, y: 1.1913, z: 4.1999984}
+    - t: 40.489258
+      p: {x: 0, y: 1.2, z: 4.1999984}
+    - t: 113.3039
+      p: {x: 0, y: 1.2, z: 4.1999984}
+    - t: 113.3049
+      p: {x: 200, y: 0, z: 2.4}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 8}
+      punto: {x: 0, y: 0, z: 8.2}
       actor: 
-    - t: 28.350286
+    - t: 0.25
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 6.95
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 11.752041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 22.923542
       tipo: 1
       rumbo: 0
       punto: {x: -1.2, y: 0, z: 4.2}
       actor: 
-    - t: 130.39018
+    - t: 113.3039
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 4.8}
+      actor: 
+    - t: 123.46695
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 126.26695
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 131.31694
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 131.46693
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
     animacion:
     - fundido: 0
-      t: 4.3
+      t: 0.8
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 3.6999998
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 4.38
+      t: 3.7799997
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 7.3500004
+      t: 6.75
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 17.65204
-      tipo: 3
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 17.73204
+      t: 7.4999995
       tipo: 2
-      estado: HandWave01
+      estado: SenseSomethingStart_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 20.465374
+      t: 12.302041
       tipo: 2
-      estado: Talk03
+      estado: HeadNod01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 22.50204
-      tipo: 4
-      estado: 
+      t: 16.282042
+      tipo: 2
+      estado: HeadNod01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 28.750286
-      tipo: 1
-      estado: Challenging_NoWeapon
-      congelar: 0
-    - fundido: 0
-      t: 34.768856
+      t: 23.023542
       tipo: 1
       estado: CastingIdle01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 42.666
-      tipo: 2
-      estado: MagicSpecial
-      congelar: 0
-    - fundido: 0
-      t: 51.71144
+      t: 23.023542
       tipo: 1
-      estado: MagicAttackOmni01_Load
-      congelar: 1
+      estado: CastingIdle01
+      congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 130.47018
+      t: 28.842113
+      tipo: 1
+      estado: CastingIdle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 36.489258
+      tipo: 1
+      estado: CastingIdle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 44.058037
+      tipo: 1
+      estado: CastingIdle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 110.603905
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 113.3039
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 113.4839
       tipo: 2
       estado: Greeting01_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 139.24374
+      t: 121.427
       tipo: 2
       estado: DefendHit_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 139.55042
+      t: 121.733665
       tipo: 1
-      estado: MagicAttackOmni01_Load
+      estado: Idle01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 148.88535
+      t: 124.016945
       tipo: 2
-      estado: HandWave02
+      estado: Question01
       congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 126.346954
+      tipo: 2
+      estado: Talk01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 132.01694
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 137.11694
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
     caras:
-    - t: 4.3
+    - t: 0.70000005
+      emocion: sorpresa
+      dura: 2
+    - t: 3.6999998
       emocion: decidido
       dura: 3.4
-    - t: 17.65204
-      emocion: alegre
+    - t: 7.3999996
+      emocion: sorpresa
+      dura: 2
+    - t: 16.202042
+      emocion: triste
       dura: 5.2000003
-    - t: 28.750286
+    - t: 23.023542
       emocion: decidido
       dura: 6.0685716
-    - t: 34.768856
+    - t: 28.842113
       emocion: decidido
       dura: 7.897143
-    - t: 43.892666
+    - t: 36.489258
       emocion: decidido
       dura: 7.8187757
-    - t: 51.71144
-      emocion: enfado
+    - t: 44.058037
+      emocion: decidido
       dura: 4.2138777
-    - t: 130.39018
+    - t: 113.4039
       emocion: alegre
       dura: 0
-    - t: 148.80534
+    - t: 123.91695
+      emocion: sorpresa
+      dura: 2
+    - t: 126.26695
+      emocion: alegre
+      dura: 0
+    - t: 137.11694
       emocion: alegre
       dura: 0
     visible:
     - desde: 0
-      hasta: 215.30534
+      hasta: 199.80962
     deslizando:
-    - desde: 45.892666
-      hasta: 47.942665
+    - desde: 38.489258
+      hasta: 40.539257
   - id: Actor_Estela
     alias: estela
     colorDelNombre: {r: 1, g: 0.7019608, b: 0.78039217, a: 1}
     claveDelNombre: Estela
     posiciones:
     - t: 0
-      p: {x: 200, y: -0.60421175, z: 4.8}
-    - t: 136.43195
-      p: {x: 200, y: -0.60421175, z: 4.8}
-    - t: 136.64275
-      p: {x: 200, y: -0.6042118, z: 4.3714285}
-    - t: 136.91307
-      p: {x: 200, y: -0.6042118, z: 3.8}
+      p: {x: 200, y: 0, z: 4.8}
+    - t: 21.942707
+      p: {x: 200, y: 0, z: 4.8}
+    - t: 21.943707
+      p: {x: 201.2, y: 0, z: 5.4}
+    - t: 117.7539
+      p: {x: 201.2, y: 0, z: 5.4}
+    - t: 117.99956
+      p: {x: 201.14749, y: 0, z: 4.9725}
+    - t: 118.24565
+      p: {x: 201.0775, y: 0, z: 4.4025}
+    - t: 118.48494
+      p: {x: 201.0075, y: 0, z: 3.8325}
+    - t: 118.72423
+      p: {x: 200.9375, y: 0, z: 3.2625}
+    - t: 119.00079
+      p: {x: 200.86751, y: 0, z: 2.6924999}
+    - t: 119.09634
+      p: {x: 200.85, y: 0, z: 2.55}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 200, y: -0.6042118, z: 2}
+      punto: {x: 200, y: 0, z: 0.4}
       actor: 
-    - t: 57.22532
+    - t: 3.85
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 16.352041
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 21.942707
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 0.4}
+      actor: 
+    - t: 48.421913
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Liam
-    - t: 129.99019
+    - t: 50.03858
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 59.020756
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 68.473
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 71.973
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 76.454834
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 82.65483
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 88.26666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 98.37197
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 113.3039
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 2.4}
+      actor: 
+    - t: 113.5539
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 119.09634
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 123.586945
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Liam
+    - t: 126.26695
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 126.416954
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 131.31694
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Player
     animacion:
     - fundido: 0
-      t: 0.4
+      t: 0.1
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 0.48000002
+      t: 0.18
       tipo: 2
       estado: Beg01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 3.95
+      t: 3.6499999
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 7.7000003
+      t: 4.3999996
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 6.7999997
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 7.78
+      t: 6.8799996
       tipo: 2
       estado: Angry02
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 9.346667
+      t: 8.446667
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 12.452041
+      t: 11.552041
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 12.752041
+      t: 11.602041
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 12.832041
+      t: 11.682041
       tipo: 2
       estado: Beg01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 17.30204
+      t: 16.15204
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 23.052042
+      t: 16.902042
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 21.15204
       tipo: 2
       estado: Attack1
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 24.342709
+      t: 21.942707
       tipo: 1
       estado: Cry01_Loop
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 57.22532
-      tipo: 1
-      estado: Cry01_Loop
-      congelar: 0
-    - fundido: 0
-      t: 57.22532
+      t: 48.421913
       tipo: 0
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 63.47199
-      tipo: 2
-      estado: Beg01
+      t: 48.421913
+      tipo: 1
+      estado: Cry01_Loop
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 72.0875
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-    - fundido: 0
-      t: 83.33975
+      t: 50.58858
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 91.57159
-      tipo: 2
-      estado: Question01
-      congelar: 0
-    - fundido: 0
-      t: 108.188736
-      tipo: 2
-      estado: HeadShake01
-      congelar: 0
-    - fundido: 0
-      t: 134.86528
+      t: 52.98858
       tipo: 2
       estado: GetUp_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 135.63194
+      t: 52.98858
       tipo: 1
-      estado: Cry01_Loop
+      estado: Idle01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 136.43195
+      t: 53.755245
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 53.835247
+      tipo: 2
+      estado: Beg01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 59.570755
+      tipo: 2
+      estado: Question02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 61.850754
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 69.022995
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 72.053
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 77.00483
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 79.68483
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 83.20483
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 88.81666
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 95.40197
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 98.92197
+      tipo: 2
+      estado: HeadShake02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 114.1039
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 117.7539
       tipo: 0
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 136.91307
+      t: 119.09634
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 119.09634
       tipo: 2
       estado: HandWave01
       congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 124.016945
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 131.39694
+      tipo: 2
+      estado: Angry01
+      congelar: 0
+      alFinal: 0
     caras:
     - t: 0
       emocion: miedo
       dura: 0
-    - t: 0.4
+    - t: 0.1
       emocion: miedo
       dura: 3.9
-    - t: 7.7000003
+    - t: 6.7999997
       emocion: triste
       dura: 5.102041
-    - t: 12.752041
+    - t: 11.602041
       emocion: triste
       dura: 4.9
-    - t: 23.052042
+    - t: 21.15204
       emocion: enfado
       dura: 0
-    - t: 24.342709
+    - t: 21.942707
       emocion: triste
       dura: 0
-    - t: 63.391987
+    - t: 50.48858
+      emocion: sorpresa
+      dura: 2
+    - t: 53.755245
       emocion: alegre
       dura: 0
-    - t: 72.0075
+    - t: 59.470753
+      emocion: sorpresa
+      dura: 2
+    - t: 61.770752
       emocion: triste
       dura: 0
-    - t: 83.25975
+    - t: 71.973
       emocion: sorpresa
       dura: 0
-    - t: 91.491585
+    - t: 71.973
+      emocion: sorpresa
+      dura: 4.631837
+    - t: 79.60483
       emocion: sorpresa
       dura: 0
-    - t: 108.108734
+    - t: 95.32197
       emocion: triste
       dura: 0
-    - t: 129.99019
+    - t: 110.40391
+      emocion: triste
+      dura: 0
+    - t: 113.3039
       emocion: sorpresa
       dura: 0
-    - t: 136.91307
+    - t: 119.09634
       emocion: alegre
       dura: 0
+    - t: 123.91695
+      emocion: sorpresa
+      dura: 2
+    - t: 131.31694
+      emocion: aliviado
+      dura: 0
+    - t: 131.31694
+      emocion: aliviado
+      dura: 6.1
     visible: []
     deslizando: []
   - id: Actor_Liam
@@ -395,41 +716,109 @@ MonoBehaviour:
     posiciones:
     - t: 0
       p: {x: -1.2, y: 0, z: 4.2}
-    - t: 57.22532
+    - t: 48.421913
       p: {x: -1.2, y: 0, z: 4.2}
-    - t: 57.22632
-      p: {x: 198.8, y: -0.6042118, z: 4.2}
-    - t: 125.43894
-      p: {x: 198.8, y: -0.6042118, z: 4.2}
-    - t: 125.79015
-      p: {x: 199.04, y: -0.6042118, z: 4.2799997}
-    - t: 126.09211
-      p: {x: 199.28, y: -0.6042118, z: 4.36}
-    - t: 126.29019
-      p: {x: 199.4, y: -0.6042118, z: 4.4}
-    - t: 140.15042
-      p: {x: 199.4, y: -0.6042118, z: 4.4}
-    - t: 140.40576
-      p: {x: 199.26666, y: -0.6042118, z: 3.8666666}
-    - t: 140.54657
-      p: {x: 199.2, y: -0.6042118, z: 3.6}
+    - t: 48.422913
+      p: {x: 198.8, y: 0, z: 5.4}
+    - t: 109.45218
+      p: {x: 198.8, y: 0, z: 5.4}
+    - t: 109.673645
+      p: {x: 198.94, y: 0, z: 5.42}
+    - t: 110.01123
+      p: {x: 199.22, y: 0, z: 5.46}
+    - t: 110.40391
+      p: {x: 199.5, y: 0, z: 5.5}
+    - t: 121.93366
+      p: {x: 199.5, y: 0, z: 5.5}
+    - t: 122.1862
+      p: {x: 199.4475, y: 0, z: 5.0575}
+    - t: 122.43964
+      p: {x: 199.3775, y: 0, z: 4.4675}
+    - t: 122.687195
+      p: {x: 199.3075, y: 0, z: 3.8775}
+    - t: 122.93475
+      p: {x: 199.23749, y: 0, z: 3.2875}
+    - t: 123.13717
+      p: {x: 199.185, y: 0, z: 2.845}
+    - t: 123.31695
+      p: {x: 199.15, y: 0, z: 2.55}
     miradas:
     - t: 0
       tipo: 1
       rumbo: 0
-      punto: {x: 0, y: 0, z: 8}
+      punto: {x: 0, y: 0, z: 8.2}
       actor: 
-    - t: 57.22532
-      tipo: 1
-      rumbo: 0
-      punto: {x: 200, y: -0.6042118, z: 2}
-      actor: 
-    - t: 126.29019
+    - t: 48.421913
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
-    - t: 129.99019
+    - t: 53.905247
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 61.920753
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 71.973
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 76.57483
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 79.75483
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 82.774826
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 88.38666
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 95.47197
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 98.49197
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Archimago
+    - t: 110.40391
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 113.3039
+      tipo: 1
+      rumbo: 0
+      punto: {x: 200, y: 0, z: 2.4}
+      actor: 
+    - t: 113.6739
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 123.31695
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Player
+    - t: 126.26695
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
@@ -440,111 +829,158 @@ MonoBehaviour:
       tipo: 1
       estado: Die01Stay_NoWeapon
       congelar: 1
+      alFinal: 0
     - fundido: 0
-      t: 57.22532
+      t: 48.421913
       tipo: 1
       estado: Die01Stay_NoWeapon
       congelar: 1
+      alFinal: 0
     - fundido: 0
-      t: 57.825317
+      t: 48.571915
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 48.571915
       tipo: 2
       estado: GetUp_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 58.591984
+      t: 49.33858
       tipo: 1
-      estado: Die01Stay_NoWeapon
+      estado: Idle01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 59.991985
-      tipo: 3
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 59.991985
-      tipo: 0
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 60.071987
+      t: 49.968582
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 63.041985
-      tipo: 4
-      estado: 
+      t: 54.455246
+      tipo: 2
+      estado: HeadNod01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 68.807495
-      tipo: 3
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 68.8875
+      t: 58.950756
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 71.6575
-      tipo: 4
-      estado: 
+      t: 62.470753
+      tipo: 2
+      estado: HeadShake01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 78.85975
-      tipo: 3
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 78.93975
+      t: 68.403
       tipo: 2
       estado: Angry01
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 82.709755
-      tipo: 4
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 140.54657
-      tipo: 3
-      estado: 
-      congelar: 0
-    - fundido: 0
-      t: 140.62657
+      t: 77.00483
       tipo: 2
-      estado: Talk02
+      estado: HeadShake02
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 143.09657
-      tipo: 4
+      t: 80.304825
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 88.81666
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 96.021965
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 98.92197
+      tipo: 2
+      estado: HeadShake01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 109.45218
+      tipo: 0
       estado: 
       congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 110.40391
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 114.1039
+      tipo: 2
+      estado: HeadNod01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 121.93366
+      tipo: 0
+      estado: 
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 123.31695
+      tipo: 1
+      estado: Idle01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 123.39695
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
     caras:
-    - t: 59.991985
+    - t: 49.88858
       emocion: sorpresa
       dura: 0
-    - t: 68.807495
+    - t: 58.870754
       emocion: sorpresa
       dura: 0
-    - t: 78.85975
+    - t: 68.323
       emocion: triste
       dura: 0
-    - t: 83.25975
+    - t: 71.973
       emocion: sorpresa
       dura: 0
-    - t: 126.29019
+    - t: 80.20483
+      emocion: sorpresa
+      dura: 2
+    - t: 95.92197
+      emocion: sorpresa
+      dura: 2
+    - t: 110.40391
       emocion: triste
       dura: 0
-    - t: 129.99019
+    - t: 113.3039
       emocion: sorpresa
       dura: 0
-    - t: 140.54657
+    - t: 123.31695
       emocion: alegre
       dura: 0
     visible:
     - desde: 0
-      hasta: 215.30534
+      hasta: 199.80962
     deslizando: []
   - id: Actor_Archimago
     alias: archimago
@@ -552,45 +988,91 @@ MonoBehaviour:
     claveDelNombre: Archimago
     posiciones:
     - t: 0
-      p: {x: 198.2, y: -0.6042118, z: 3.4}
-    - t: 83.26075
-      p: {x: 198.2, y: -0.6042118, z: 3.4}
+      p: {x: 215, y: -0.013725335, z: -10}
+    - t: 71.973
+      p: {x: 215, y: -0.013725335, z: -10}
+    - t: 71.974
+      p: {x: 200, y: 0, z: 2.6}
     miradas:
-    - t: 83.25975
+    - t: 71.973
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 72.123
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 79.874825
+      tipo: 2
+      rumbo: 0
+      punto: {x: 0, y: 0, z: 0}
+      actor: Actor_Estela
+    - t: 95.591965
       tipo: 2
       rumbo: 0
       punto: {x: 0, y: 0, z: 0}
       actor: Actor_Estela
     animacion:
     - fundido: 0
-      t: 83.25975
+      t: 71.973
       tipo: 1
       estado: fly_idle
       congelar: 0
+      alFinal: 0
     - fundido: 0
-      t: 111.38874
+      t: 72.673
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 80.304825
+      tipo: 2
+      estado: Question02
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 96.021965
+      tipo: 2
+      estado: Question01
+      congelar: 0
+      alFinal: 0
+    - fundido: 0
+      t: 98.30197
       tipo: 2
       estado: HandWave02
       congelar: 0
+      alFinal: 0
     caras:
-    - t: 87.89159
+    - t: 72.573
+      emocion: sorpresa
+      dura: 2
+    - t: 76.30483
       emocion: neutral
       dura: 0
-    - t: 94.69159
+    - t: 80.20483
+      emocion: sorpresa
+      dura: 2
+    - t: 82.50483
       emocion: alegre
       dura: 0
-    - t: 111.30874
+    - t: 95.92197
+      emocion: sorpresa
+      dura: 2
+    - t: 98.22197
       emocion: alegre
       dura: 0
     visible:
-    - desde: 83.25975
-      hasta: 124.83894
+    - desde: 71.973
+      hasta: 109.30218
     deslizando: []
   lineas:
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 0.4
-    t1: 3.9
+    t0: 0.1
+    t1: 3.6
     actor: Actor_Estela
     clave: FINAL_ESTELA_PORTAL_01
     gesto: Beg01
@@ -598,8 +1080,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 4.3
-    t1: 7.3
+    t0: 3.6999998
+    t1: 6.7
     actor: Player
     clave: FINAL_WILL_PORTAL_01
     gesto: Talk01
@@ -607,8 +1089,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 7.7000003
-    t1: 12.4020405
+    t0: 6.7999997
+    t1: 11.502041
     actor: Actor_Estela
     clave: FINAL_ESTELA_PORTAL_02
     gesto: Angry02
@@ -616,8 +1098,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 12.752041
-    t1: 17.25204
+    t0: 11.602041
+    t1: 16.102041
     actor: Actor_Estela
     clave: FINAL_ESTELA_PORTAL_03
     gesto: Beg01
@@ -625,17 +1107,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 17.65204
-    t1: 22.452042
+    t0: 16.202042
+    t1: 21.00204
     actor: Player
     clave: FINAL_WILL_PORTAL_02
-    gesto: HandWave01
-    sinPose: 0
+    gesto: HeadNod01
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 28.750286
-    t1: 34.418858
+    t0: 23.023542
+    t1: 28.692114
     actor: Player
     clave: FINAL_WILL_CONJURO_01
     gesto: 
@@ -643,8 +1125,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 34.768856
-    t1: 42.266
+    t0: 28.842113
+    t1: 36.339256
     actor: Player
     clave: FINAL_WILL_CONJURO_02
     gesto: 
@@ -652,8 +1134,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 43.892666
-    t1: 51.31144
+    t0: 36.489258
+    t1: 43.908035
     actor: Player
     clave: FINAL_WILL_CONJURO_03
     gesto: 
@@ -661,8 +1143,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 51.71144
-    t1: 55.52532
+    t0: 44.058037
+    t1: 47.871914
     actor: Player
     clave: FINAL_WILL_CONJURO_04
     gesto: 
@@ -670,17 +1152,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 59.991985
-    t1: 62.991985
+    t0: 49.88858
+    t1: 52.88858
     actor: Actor_Liam
     clave: FINAL_LIAM_AWAKE_01
     gesto: Question01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 63.391987
-    t1: 68.40749
+    t0: 53.755245
+    t1: 58.770756
     actor: Actor_Estela
     clave: FINAL_ESTELA_AWAKE_01
     gesto: Beg01
@@ -688,17 +1170,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 68.807495
-    t1: 71.6075
+    t0: 58.870754
+    t1: 61.670753
     actor: Actor_Liam
     clave: FINAL_LIAM_AWAKE_02
     gesto: Question01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 72.0075
-    t1: 78.45975
+    t0: 61.770752
+    t1: 68.223
     actor: Actor_Estela
     clave: FINAL_ESTELA_AWAKE_02
     gesto: HeadShake01
@@ -706,17 +1188,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 78.85975
-    t1: 82.65975
+    t0: 68.323
+    t1: 71.823
     actor: Actor_Liam
     clave: FINAL_LIAM_AWAKE_03
     gesto: Angry01
-    sinPose: 0
+    sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 83.25975
-    t1: 87.491585
+    t0: 71.973
+    t1: 76.204834
     actor: Actor_Estela
     clave: FINAL_ESTELA_ARCHIMAGO_01
     gesto: Question01
@@ -724,8 +1206,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 87.89159
-    t1: 91.09158
+    t0: 76.30483
+    t1: 79.50483
     actor: Actor_Archimago
     clave: FINAL_ARCHIMAGO_01
     gesto: 
@@ -733,8 +1215,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 91.491585
-    t1: 94.29159
+    t0: 79.60483
+    t1: 82.40483
     actor: Actor_Estela
     clave: FINAL_ESTELA_ARCHIMAGO_02
     gesto: Question01
@@ -742,8 +1224,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 94.69159
-    t1: 100.20342
+    t0: 82.50483
+    t1: 88.01666
     actor: Actor_Archimago
     clave: FINAL_ARCHIMAGO_02
     gesto: 
@@ -751,8 +1233,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 100.603424
-    t1: 107.70873
+    t0: 88.11666
+    t1: 95.22197
     actor: Actor_Archimago
     clave: FINAL_ARCHIMAGO_03
     gesto: 
@@ -760,8 +1242,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 108.108734
-    t1: 110.90874
+    t0: 95.32197
+    t1: 98.12197
     actor: Actor_Estela
     clave: FINAL_ESTELA_ARCHIMAGO_03
     gesto: HeadShake01
@@ -769,8 +1251,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 111.30874
-    t1: 120.738945
+    t0: 98.22197
+    t1: 107.652176
     actor: Actor_Archimago
     clave: FINAL_ARCHIMAGO_04
     gesto: HandWave02
@@ -778,8 +1260,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 127.29019
-    t1: 129.79019
+    t0: 110.603905
+    t1: 113.2039
     actor: Player
     clave: FINAL_WILL_RETURN_01
     gesto: 
@@ -787,8 +1269,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 130.39018
-    t1: 134.46529
+    t0: 113.4039
+    t1: 117.6039
     actor: Player
     clave: FINAL_WILL_RETURN_02
     gesto: Greeting01_NoWeapon
@@ -796,40 +1278,40 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 140.54657
-    t1: 143.04657
+    t0: 123.31695
+    t1: 126.11695
     actor: Actor_Liam
     clave: FINAL_LIAM_RETURN_01
-    gesto: Talk02
-    sinPose: 0
-    presentacion: -1
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t0: 143.44656
-    t1: 148.30534
-    actor: Player
-    clave: FINAL_WILL_RETURN_03
-    gesto: 
+    gesto: Question01
     sinPose: 1
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 148.80534
-    t1: 151.80534
+    t0: 126.26695
+    t1: 131.16695
     actor: Player
-    clave: FINAL_WILL_RETURN_04
-    gesto: HandWave02
+    clave: FINAL_WILL_RETURN_03
+    gesto: Talk01
+    sinPose: 1
+    presentacion: -1
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t0: 131.31694
+    t1: 137.01694
+    actor: Actor_Estela
+    clave: FINAL_ESTELA_RETURN_01
+    gesto: Angry01
     sinPose: 1
     presentacion: -1
   planos:
   - focos: []
     t0: 0
-    t1: 4.3
+    t1: 3.6999998
     tipo: 2
     descripcion: medio de estela
     posiciones:
     - t: 0
-      p: {x: 197.12102, y: 0.2944764, z: 3.137817}
+      p: {x: 199.6, y: 1.1, z: 2.1}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -838,19 +1320,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
-    encuadre: {x: -0.13, y: -0.074}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0, y: -0.074}
     suavidad: 0
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 4.3
-    t1: 7.7000003
+    t0: 3.6999998
+    t1: 6.7999997
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 4.3
-      p: {x: 2.4489074, y: 0.89116585, z: 6.6791134}
+    - t: 3.6999998
+      p: {x: 0.35, y: 1.1, z: 7.2}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -859,19 +1341,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.25
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 7.7000003
-    t1: 12.752041
+    t0: 6.7999997
+    t1: 11.602041
     tipo: 2
     descripcion: medio de estela
     posiciones:
-    - t: 7.7000003
-      p: {x: 197.12102, y: 0.2944764, z: 3.137817}
+    - t: 6.7999997
+      p: {x: 199.6, y: 1.1, z: 2.1}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -880,19 +1362,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.25
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 12.752041
-    t1: 17.65204
+    t0: 11.602041
+    t1: 16.202042
     tipo: 3
     descripcion: primer plano de estela
     posiciones:
-    - t: 12.752041
-      p: {x: 203.74713, y: 0.2944764, z: 3.247889}
+    - t: 11.602041
+      p: {x: 199.7, y: 1.1, z: 2.6}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -901,1131 +1383,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1.05
     encuadre: {x: 0.09, y: -0.074}
     suavidad: 0.2
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 17.65204
-    t1: 23.052042
-    tipo: 2
-    descripcion: medio de will
-    posiciones:
-    - t: 17.65204
-      p: {x: 2.4489074, y: 0.89116585, z: 6.6791134}
-    lente: 30
-    lenteFinal: 0
-    sujetos:
-    - Player
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 23.052042
-    t1: 27.54271
-    tipo: 1
-    descripcion: conjunto de estela
-    posiciones:
-    - t: 23.052042
-      p: {x: 204.69301, y: 1.2957882, z: 7.509507}
-    lente: 34
-    lenteFinal: 0
-    sujetos:
-    - Actor_Estela
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1792966
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.2
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 27.54271
-      p: {x: -0.6750102, y: 0.5088612, z: 4.2337074}
-    - t: 27.592709
-      p: {x: -0.67501026, y: 0.5088612, z: 4.2157}
-    - t: 27.642708
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1976933}
-    - t: 27.692707
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1796865}
-    - t: 27.742706
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1616793}
-    - t: 27.792706
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1436725}
-    - t: 27.842705
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1256657}
-    - t: 27.892704
-      p: {x: -0.67501026, y: 0.5088612, z: 4.1066713}
-    - t: 27.942703
-      p: {x: -0.67501026, y: 0.5088612, z: 4.085726}
-    - t: 27.992702
-      p: {x: -0.67501026, y: 0.5088612, z: 4.06478}
-    - t: 28.042702
-      p: {x: -0.67501026, y: 0.5088612, z: 4.0438347}
-    - t: 28.092701
-      p: {x: -0.67501026, y: 0.5088612, z: 4.022889}
-    - t: 28.1427
-      p: {x: -0.67501026, y: 0.5088612, z: 4.0019436}
-    - t: 28.1927
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9840207}
-    - t: 28.242699
-      p: {x: -0.67501026, y: 0.5088612, z: 3.968057}
-    - t: 28.292698
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9520931}
-    - t: 28.342697
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9361293}
-    - t: 28.392696
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.442696
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.492695
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.542694
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.592693
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.642693
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.692692
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.742691
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 28.750286
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    t0: 27.54271
-    t1: 28.750286
-    tipo: 0
-    descripcion: general de will y liam
-    posiciones:
-    - t: 27.54271
-      p: {x: -3.5, y: 1.8, z: 4.2}
-    lente: 42
-    lenteFinal: 0
-    sujetos:
-    - Player
-    - Actor_Liam
-    pesos:
-    - 1
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8421012
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.5
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 28.750286
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 28.800285
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 28.850285
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 28.900284
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 28.950283
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.000282
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.050282
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.10028
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.15028
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.20028
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.250278
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.300278
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.350277
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.400276
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.450275
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.500275
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.550274
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.600273
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.650272
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.700272
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.75027
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.80027
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.85027
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.900269
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 29.950268
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.000267
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.050266
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.100266
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.150265
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.200264
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.250263
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.300262
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.350262
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.40026
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.45026
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.50026
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.550259
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.600258
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.650257
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.700256
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.750256
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.800255
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.850254
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.900253
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 30.950253
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.000252
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.050251
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.10025
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.15025
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.200249
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.250248
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.300247
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.350246
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.400246
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.450245
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.500244
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.550243
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.600243
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.650242
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.700241
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.75024
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.80024
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.850239
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.900238
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 31.950237
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.000237
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.050236
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.100235
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.150234
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.200233
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.250233
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.300232
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.35023
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.40023
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.45023
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.50023
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.55023
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.600227
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.650227
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.700226
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.750225
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.800224
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.850224
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.900223
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 32.950222
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.00022
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.05022
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.10022
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.15022
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.20022
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.250217
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.300217
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.350216
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.400215
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.450214
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.500214
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.550213
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.600212
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.65021
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.70021
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.75021
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.80021
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.85021
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.900208
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 33.950207
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.000206
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.050205
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.100204
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.150204
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.200203
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.250202
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.3002
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.3502
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.4002
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.4502
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.5002
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.550198
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.600197
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.650196
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.700195
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.750195
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.768856
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    t0: 28.750286
-    t1: 34.768856
-    tipo: 1
-    descripcion: conjunto de will y liam
-    posiciones:
-    - t: 28.750286
-      p: {x: 0, y: 1.6, z: 1.2}
-    lente: 34
-    lenteFinal: 0
-    sujetos:
-    - Player
-    - Actor_Liam
-    pesos:
-    - 1
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0717652
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.4
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 34.768856
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.818855
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.868855
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.918854
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 34.968853
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.018852
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.06885
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.11885
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.16885
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.21885
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.26885
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.318848
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.368847
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.418846
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.468845
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.518845
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.568844
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.618843
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.668842
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.71884
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.76884
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.81884
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.86884
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.91884
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 35.968838
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.018837
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.068836
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.118835
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.168835
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.218834
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.268833
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.318832
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.36883
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.41883
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.46883
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.51883
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.56883
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.618828
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.668827
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.718826
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.768826
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.818825
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.868824
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.918823
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 36.968822
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.01882
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.06882
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.11882
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.16882
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.21882
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.268818
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.318817
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.368816
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.418816
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.468815
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.518814
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.568813
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.618813
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.66881
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.71881
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.76881
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.81881
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.86881
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.918808
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 37.968807
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.018806
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.068806
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.118805
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.168804
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.218803
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.268803
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.3188
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.3688
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.4188
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.4688
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.5188
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.568798
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.618797
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.668797
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.718796
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.768795
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.818794
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.868793
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.918793
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 38.968792
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.01879
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.06879
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.11879
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.16879
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.21879
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.268787
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.318787
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.368786
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.418785
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.468784
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.518784
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.568783
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.618782
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.66878
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.71878
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.76878
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.81878
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.86878
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.918777
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 39.968777
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.018776
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.068775
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.118774
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.168774
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.218773
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.268772
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.31877
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.36877
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.41877
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.46877
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.51877
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.568768
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.618767
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.668766
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.718765
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.768764
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.818764
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.868763
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.918762
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 40.96876
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.01876
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.06876
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.11876
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.16876
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.218758
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.268757
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.318756
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.368755
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.418755
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.468754
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.518753
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.568752
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.61875
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.66875
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.71875
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.76875
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.81875
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.868748
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.918747
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 41.968746
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.018745
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.068745
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.118744
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.168743
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.218742
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.26874
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.31874
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.36874
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.41874
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.46874
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.518738
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.568737
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.618736
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    - t: 42.666
-      p: {x: -0.67501026, y: 0.62369317, z: 3.9337063}
-    t0: 34.768856
-    t1: 42.666
-    tipo: 1
-    descripcion: conjunto de will y liam
-    posiciones:
-    - t: 34.768856
-      p: {x: 0, y: 2.8, z: 2.2}
-    lente: 34
-    lenteFinal: 0
-    sujetos:
-    - Player
-    - Actor_Liam
-    pesos:
-    - 1
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0717652
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.5
-    mezcla: 0
-    mano: 0.12
-  - focos:
-    - t: 42.666
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.716
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.766
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.815998
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.865997
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.915997
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 42.965996
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.015995
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.065994
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.115993
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.165993
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.215992
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.26599
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.31599
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.36599
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.41599
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.46599
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.515987
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.565987
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.615986
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.665985
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.715984
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.765984
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.815983
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.865982
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.91598
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 43.96598
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.01598
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.06598
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.11598
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.165977
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.215977
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.265976
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.315975
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.365974
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.415974
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.465973
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.515972
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.56597
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.61597
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.66597
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.71597
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.76597
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.815968
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.865967
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.915966
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 44.965965
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.015965
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.065964
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.115963
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.165962
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.21596
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.26596
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.31596
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.36596
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.41596
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.465958
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.515957
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.565956
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.615955
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.665955
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.715954
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.765953
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.815952
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.86595
-      p: {x: -0.67501026, y: 0.5088612, z: 3.9337063}
-    - t: 45.91595
-      p: {x: -0.67501026, y: 0.5102117, z: 3.9337063}
-    - t: 45.96595
-      p: {x: -0.67501026, y: 0.5131117, z: 3.9337063}
-    - t: 46.01595
-      p: {x: -0.67501026, y: 0.51852643, z: 3.9337063}
-    - t: 46.06595
-      p: {x: -0.67501026, y: 0.5268261, z: 3.9337063}
-    - t: 46.115948
-      p: {x: -0.67501026, y: 0.5373609, z: 3.9337063}
-    - t: 46.165947
-      p: {x: -0.67501026, y: 0.55046093, z: 3.9337063}
-    - t: 46.215946
-      p: {x: -0.67501026, y: 0.56551623, z: 3.9337063}
-    - t: 46.265945
-      p: {x: -0.67501026, y: 0.5828156, z: 3.9337063}
-    - t: 46.315945
-      p: {x: -0.67501026, y: 0.60179126, z: 3.9337063}
-    - t: 46.365944
-      p: {x: -0.67501026, y: 0.6226913, z: 3.9337063}
-    - t: 46.415943
-      p: {x: -0.67501026, y: 0.6449879, z: 3.9337063}
-    - t: 46.465942
-      p: {x: -0.67501026, y: 0.6688879, z: 3.9337063}
-    - t: 46.51594
-      p: {x: -0.67501026, y: 0.69390476, z: 3.9337063}
-    - t: 46.56594
-      p: {x: -0.67501026, y: 0.72020376, z: 3.9337063}
-    - t: 46.61594
-      p: {x: -0.67501026, y: 0.74734104, z: 3.9337063}
-    - t: 46.66594
-      p: {x: -0.67501026, y: 0.77544105, z: 3.9337063}
-    - t: 46.71594
-      p: {x: -0.67501026, y: 0.8040991, z: 3.9337063}
-    - t: 46.765938
-      p: {x: -0.67501026, y: 0.833398, z: 3.9337063}
-    - t: 46.815937
-      p: {x: -0.67501026, y: 0.8629767, z: 3.9337063}
-    - t: 46.865936
-      p: {x: -0.67501026, y: 0.8928766, z: 3.9337063}
-    - t: 46.915936
-      p: {x: -0.67501026, y: 0.9227767, z: 3.9337063}
-    - t: 46.965935
-      p: {x: -0.67501026, y: 0.95267665, z: 3.9337063}
-    - t: 47.015934
-      p: {x: -0.67501026, y: 0.98229694, z: 3.9337063}
-    - t: 47.065933
-      p: {x: -0.67501026, y: 1.0115958, z: 3.9337063}
-    - t: 47.115932
-      p: {x: -0.67501026, y: 1.0403368, z: 3.9337063}
-    - t: 47.16593
-      p: {x: -0.67501026, y: 1.0684369, z: 3.9337063}
-    - t: 47.21593
-      p: {x: -0.67501026, y: 1.0956987, z: 3.9337063}
-    - t: 47.26593
-      p: {x: -0.67501026, y: 1.1219977, z: 3.9337063}
-    - t: 47.31593
-      p: {x: -0.67501026, y: 1.1471806, z: 3.9337063}
-    - t: 47.36593
-      p: {x: -0.67501026, y: 1.1710806, z: 3.9337063}
-    - t: 47.415928
-      p: {x: -0.67501026, y: 1.1935849, z: 3.9337063}
-    - t: 47.465927
-      p: {x: -0.67501026, y: 1.2144849, z: 3.9337063}
-    - t: 47.515926
-      p: {x: -0.67501026, y: 1.2337097, z: 3.9337063}
-    - t: 47.565926
-      p: {x: -0.67501026, y: 1.251009, z: 3.9337063}
-    - t: 47.615925
-      p: {x: -0.67501026, y: 1.2663549, z: 3.9337063}
-    - t: 47.665924
-      p: {x: -0.67501026, y: 1.279455, z: 3.9337063}
-    - t: 47.715923
-      p: {x: -0.67501026, y: 1.290322, z: 3.9337063}
-    - t: 47.765923
-      p: {x: -0.67501026, y: 1.2986217, z: 3.9337063}
-    - t: 47.81592
-      p: {x: -0.67501026, y: 1.30441, z: 3.9337063}
-    - t: 47.86592
-      p: {x: -0.67501026, y: 1.30731, z: 3.9337063}
-    - t: 47.91592
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 47.96592
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.01592
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.065918
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.115917
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.165916
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.215916
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.265915
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.315914
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.365913
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.415913
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.46591
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.51591
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.56591
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.61591
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.66591
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.715908
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.765907
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.815907
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.865906
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.915905
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 48.965904
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.015903
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.065903
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.115902
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.1659
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.2159
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.2659
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.3159
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.3659
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.415897
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.465897
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.515896
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.565895
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.615894
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.665894
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.715893
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.765892
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.81589
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.86589
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.91589
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 49.96589
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.01589
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.065887
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.115887
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.165886
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.215885
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.265884
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.315884
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.365883
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.415882
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.46588
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.51588
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.56588
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.61588
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.66588
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.715878
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.765877
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.815876
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.865875
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.915874
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 50.965874
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.015873
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.065872
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.11587
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.16587
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.21587
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.26587
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.31587
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.365868
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.415867
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.465866
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.515865
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.565865
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.615864
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.665863
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    - t: 51.71144
-      p: {x: -0.67501026, y: 1.3088613, z: 3.9337063}
-    t0: 42.666
-    t1: 51.71144
-    tipo: 0
-    descripcion: general de will y liam
-    posiciones:
-    - t: 42.666
-      p: {x: -3.5, y: 1.6, z: 4.2}
-    lente: 42
-    lenteFinal: 0
-    sujetos:
-    - Player
-    - Actor_Liam
-    pesos:
-    - 1
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8421012
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.4
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 51.71144
-    t1: 57.22532
+    t0: 16.202042
+    t1: 21.15204
     tipo: 3
     descripcion: primer plano de will
     posiciones:
-    - t: 51.71144
-      p: {x: -3.5957136, y: 1.3000001, z: 4.200002}
+    - t: 16.202042
+      p: {x: 0.25, y: 1.1, z: 6.8}
     lente: 24
     lenteFinal: 0
     sujetos:
@@ -2034,529 +1404,527 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
-    encuadre: {x: 0, y: -0.074}
-    suavidad: 0.2
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.09, y: -0.074}
+    suavidad: 0.25
     mezcla: 0
     mano: 0.12
   - focos:
-    - t: 57.22532
-      p: {x: 99.1234, y: 0.34440827, z: 4.4943633}
-    - t: 57.27532
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.325317
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.375317
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.425316
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.475315
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.525314
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.575314
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.625313
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.675312
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.72531
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.77531
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.82531
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 57.87531
-      p: {x: 199.26118, y: 0.0009202957, z: 4.73636}
-    - t: 57.92531
-      p: {x: 199.26651, y: -0.032770157, z: 4.726735}
-    - t: 57.975307
-      p: {x: 199.27231, y: -0.051058292, z: 4.716032}
-    - t: 58.025307
-      p: {x: 199.27698, y: -0.061387777, z: 4.7073092}
-    - t: 58.075306
-      p: {x: 199.27943, y: -0.06663799, z: 4.702815}
-    - t: 58.125305
-      p: {x: 199.28188, y: 0.019467592, z: 4.698189}
-    - t: 58.175304
-      p: {x: 199.28696, y: 0.06989503, z: 4.6906323}
-    - t: 58.225304
-      p: {x: 199.28674, y: 0.08308518, z: 4.6941495}
-    - t: 58.275303
-      p: {x: 199.27658, y: 0.12160003, z: 4.7174644}
-    - t: 58.325302
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.3753
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.4253
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.4753
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.5253
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.5753
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 58.625298
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.675297
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.725296
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.775295
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.825294
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.875294
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.925293
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 58.975292
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.02529
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.07529
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.12529
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.17529
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.22529
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.275288
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.325287
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.375286
-      p: {x: 199.25998, y: 0.04230237, z: 4.738609}
-    - t: 59.425285
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.475285
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.525284
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.575283
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.625282
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.67528
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.72528
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.77528
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.82528
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.87528
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.925278
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 59.975277
-      p: {x: 199.26, y: 0.04230237, z: 4.738609}
-    - t: 60.025276
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.075275
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.125275
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.175274
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.225273
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.275272
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.32527
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.37527
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.42527
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.47527
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.52527
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.575268
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.625267
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.675266
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.725266
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.775265
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.825264
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.875263
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.925262
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 60.97526
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.02526
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.07526
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.12526
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.17526
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.225258
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.275257
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.325256
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.375256
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.425255
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.475254
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.525253
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.575253
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.62525
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.67525
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.72525
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.77525
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.82525
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.875248
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.925247
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 61.975246
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.025246
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.075245
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.125244
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.175243
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.225243
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.27524
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.32524
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.37524
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.42524
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.47524
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.525238
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.575237
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.625237
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.675236
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.725235
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.775234
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.825233
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.875233
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.925232
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 62.97523
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.02523
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.07523
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.12523
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.17523
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.225227
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.275227
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.325226
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.375225
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    - t: 63.391987
-      p: {x: 199.4, y: 0.5131954, z: 4.5}
-    t0: 57.22532
-    t1: 63.391987
+    - t: 21.15204
+      p: {x: 200, y: 1.1, z: 0.4}
+    t0: 21.15204
+    t1: 21.942707
     tipo: 1
-    descripcion: conjunto de liam y estela
+    descripcion: conjunto de estela
     posiciones:
-    - t: 57.22532
-      p: {x: 198, y: 0.94578815, z: 6.2}
-    - t: 63.391987
-      p: {x: 202.8, y: 0.94578815, z: 4.8}
-    lente: 32
-    lenteFinal: 0
-    sujetos:
-    - Actor_Liam
-    - Actor_Estela
-    pesos:
-    - 1
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1174072
-    encuadre: {x: 0, y: 0}
-    suavidad: 0.8
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 63.391987
-    t1: 68.807495
-    tipo: 2
-    descripcion: medio de estela
-    posiciones:
-    - t: 63.391987
-      p: {x: 197.0454, y: 0.2944764, z: 7.362502}
-    lente: 30
-    lenteFinal: 0
-    sujetos:
-    - Actor_Estela
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 68.807495
-    t1: 72.0075
-    tipo: 2
-    descripcion: medio de liam
-    posiciones:
-    - t: 68.807495
-      p: {x: 195.88211, y: 0.29302424, z: 3.4935246}
-    lente: 30
-    lenteFinal: 0
-    sujetos:
-    - Actor_Liam
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 72.0075
-    t1: 78.85975
-    tipo: 2
-    descripcion: medio de estela
-    posiciones:
-    - t: 72.0075
-      p: {x: 197.0454, y: 0.2944764, z: 7.362502}
-    lente: 30
-    lenteFinal: 0
-    sujetos:
-    - Actor_Estela
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 78.85975
-    t1: 83.25975
-    tipo: 2
-    descripcion: medio de liam
-    posiciones:
-    - t: 78.85975
-      p: {x: 195.91978, y: 0.29302424, z: 5.0471234}
-    lente: 30
-    lenteFinal: 0
-    sujetos:
-    - Actor_Liam
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0798978
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 83.25975
-    t1: 87.89159
-    tipo: 1
-    descripcion: conjunto de archimago y estela y liam
-    posiciones:
-    - t: 83.25975
-      p: {x: 199.25302, y: 0.84578824, z: 10.503622}
+    - t: 21.15204
+      p: {x: 201.4, y: 1.35, z: 6.6}
     lente: 34
     lenteFinal: 0
     sujetos:
-    - Actor_Archimago
     - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 200, y: 1.1, z: 0.4}
+    alturaDelFoco: 1.1
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.2
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 21.942707
+    t1: 22.392708
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 21.942707
+      p: {x: 199.6, y: 1.05, z: 2.1}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.95
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.35
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 22.392708
+    t1: 23.023542
+    tipo: 0
+    descripcion: general de will y liam
+    posiciones:
+    - t: 22.392708
+      p: {x: -3.6, y: 1.5, z: 4.2}
+    lente: 42
+    lenteFinal: 0
+    sujetos:
+    - Player
     - Actor_Liam
     pesos:
     - 1
     - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 23.023542
+    t1: 28.842113
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 23.023542
+      p: {x: 0, y: 1.4, z: 0.6}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1102616
+    alturaDelFoco: 0.95
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.4
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 28.842113
+    t1: 36.489258
+    tipo: 1
+    descripcion: conjunto de will y liam
+    posiciones:
+    - t: 28.842113
+      p: {x: 0, y: 2.3, z: 1.4}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 0.9
     encuadre: {x: 0, y: 0}
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 87.89159
-    t1: 91.491585
-    tipo: 6
-    descripcion: sobre el hombro de estela a archimago
+    t0: 36.489258
+    t1: 44.058037
+    tipo: 0
+    descripcion: general de will y liam
     posiciones:
-    - t: 87.89159
-      p: {x: 198.57803, y: 0.9457209, z: 7.384514}
-    lente: 24
+    - t: 36.489258
+      p: {x: -3.6, y: 1.5, z: 4.2}
+    lente: 42
     lenteFinal: 0
     sujetos:
-    - Actor_Archimago
+    - Player
+    - Actor_Liam
     pesos:
+    - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
-    encuadre: {x: 0.13, y: -0.074}
+    alturaDelFoco: 1
+    encuadre: {x: 0, y: 0}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 91.491585
-    t1: 94.69159
+    t0: 44.058037
+    t1: 48.421913
     tipo: 2
-    descripcion: medio de estela
+    descripcion: medio de will
     posiciones:
-    - t: 91.491585
-      p: {x: 196.7808, y: 0.2944764, z: 8.430319}
-    lente: 24
+    - t: 44.058037
+      p: {x: 0.2, y: 1.8, z: 6.5}
+    lente: 30
     lenteFinal: 0
     sujetos:
-    - Actor_Estela
+    - Player
     pesos:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1
     encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
+    suavidad: 0.2
     mezcla: 0
     mano: 0.12
-  - focos: []
-    t0: 94.69159
-    t1: 108.108734
-    tipo: 6
-    descripcion: sobre el hombro de estela a archimago
+  - focos:
+    - t: 48.421913
+      p: {x: 99.72353, y: 0.5117358, z: 4.7897}
+    - t: 48.471912
+      p: {x: 199.72348, y: 0.5117358, z: 5.3913393}
+    - t: 48.52191
+      p: {x: 199.72348, y: 0.5117358, z: 5.3913393}
+    - t: 48.57191
+      p: {x: 199.72348, y: 0.5117358, z: 5.3913393}
+    - t: 48.62191
+      p: {x: 199.72604, y: 0.4703506, z: 5.3913164}
+    - t: 48.67191
+      p: {x: 199.73703, y: 0.4366609, z: 5.391375}
+    - t: 48.72191
+      p: {x: 199.7492, y: 0.41837418, z: 5.391342}
+    - t: 48.771908
+      p: {x: 199.7591, y: 0.40804487, z: 5.3912673}
+    - t: 48.821907
+      p: {x: 199.76422, y: 0.40279508, z: 5.391267}
+    - t: 48.871906
+      p: {x: 199.76944, y: 0.48891106, z: 5.391196}
+    - t: 48.921906
+      p: {x: 199.7785, y: 0.5393301, z: 5.3920336}
+    - t: 48.971905
+      p: {x: 199.78021, y: 0.54594976, z: 5.3923497}
+    - t: 49.021904
+      p: {x: 199.74998, y: 0.5910392, z: 5.395772}
+    - t: 49.071903
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.121902
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.1719
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.2219
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.2719
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.3219
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.3719
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.421898
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.471897
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.521896
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.571896
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.621895
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.671894
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.721893
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.771893
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.82189
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.87189
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    - t: 49.88858
+      p: {x: 200, y: 0.8478503, z: 5.4}
+    t0: 48.421913
+    t1: 49.88858
+    tipo: 5
+    descripcion: 'dos: liam y estela'
     posiciones:
-    - t: 94.69159
-      p: {x: 198.57803, y: 0.9457209, z: 7.384514}
-    lente: 24
-    lenteFinal: 0
-    sujetos:
-    - Actor_Archimago
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
-    encuadre: {x: 0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 108.108734
-    t1: 111.30874
-    tipo: 2
-    descripcion: medio de estela
-    posiciones:
-    - t: 108.108734
-      p: {x: 196.7808, y: 0.2944764, z: 8.430319}
-    lente: 24
-    lenteFinal: 0
-    sujetos:
-    - Actor_Estela
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
-    encuadre: {x: -0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 111.30874
-    t1: 121.238945
-    tipo: 6
-    descripcion: sobre el hombro de estela a archimago
-    posiciones:
-    - t: 111.30874
-      p: {x: 198.57803, y: 0.9457209, z: 7.384514}
-    lente: 24
-    lenteFinal: 0
-    sujetos:
-    - Actor_Archimago
-    pesos:
-    - 1
-    extras: []
-    focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0864509
-    encuadre: {x: 0.13, y: -0.074}
-    suavidad: 0.3
-    mezcla: 0
-    mano: 0.12
-  - focos: []
-    t0: 121.238945
-    t1: 125.43894
-    tipo: 1
-    descripcion: conjunto de archimago
-    posiciones:
-    - t: 121.238945
-      p: {x: 195.5729, y: -0.10421181, z: 7.8822513}
+    - t: 48.421913
+      p: {x: 174.78021, y: 1.4375, z: 1.9817014}
+    - t: 48.671913
+      p: {x: 179.78021, y: 1.38, z: 2.0117013}
+    - t: 48.921913
+      p: {x: 183.11354, y: 1.3416667, z: 2.0317013}
+    - t: 49.171913
+      p: {x: 183.11354, y: 1.3416667, z: 2.0317013}
+    - t: 49.421913
+      p: {x: 199.78021, y: 1.15, z: 2.1317012}
+    - t: 49.671913
+      p: {x: 199.78021, y: 1.15, z: 2.1317012}
     lente: 34
     lenteFinal: 0
     sujetos:
-    - Actor_Archimago
+    - Actor_Liam
+    - Actor_Estela
     pesos:
+    - 1
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0959702
+    alturaDelFoco: 0.8478503
     encuadre: {x: 0, y: 0}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 125.43894
-    t1: 130.39018
+    t0: 49.88858
+    t1: 53.755245
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 49.88858
+      p: {x: 199.2, y: 1.1, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.02
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 53.755245
+    t1: 58.870754
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 53.755245
+      p: {x: 200.8, y: 1.12, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 58.870754
+    t1: 61.770752
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 58.870754
+      p: {x: 199.2, y: 1.1, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.02
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.25
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 61.770752
+    t1: 68.323
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 61.770752
+      p: {x: 200.8, y: 1.12, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.25
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 68.323
+    t1: 71.973
+    tipo: 2
+    descripcion: medio de liam
+    posiciones:
+    - t: 68.323
+      p: {x: 199.2, y: 1.1, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Liam
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.02
+    encuadre: {x: -0.13, y: -0.074}
+    suavidad: 0.25
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 71.973
+    t1: 76.30483
+    tipo: 1
+    descripcion: conjunto de archimago y estela y liam
+    posiciones:
+    - t: 71.973
+      p: {x: 194.8, y: 1.35, z: 4.6}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Archimago
+    - Actor_Estela
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.35
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 76.30483
+    t1: 79.60483
+    tipo: 2
+    descripcion: medio de archimago
+    posiciones:
+    - t: 76.30483
+      p: {x: 200, y: 1.22, z: 4.8}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.35
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 79.60483
+    t1: 82.50483
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 79.60483
+      p: {x: 200.8, y: 1.12, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 82.50483
+    t1: 95.32197
+    tipo: 2
+    descripcion: medio de archimago
+    posiciones:
+    - t: 82.50483
+      p: {x: 200, y: 1.22, z: 4.8}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 95.32197
+    t1: 98.22197
+    tipo: 2
+    descripcion: medio de estela
+    posiciones:
+    - t: 95.32197
+      p: {x: 200.8, y: 1.12, z: 2.7}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 98.22197
+    t1: 107.80218
+    tipo: 2
+    descripcion: medio de archimago
+    posiciones:
+    - t: 98.22197
+      p: {x: 200, y: 1.22, z: 4.8}
+    lente: 34
+    lenteFinal: 0
+    sujetos:
+    - Actor_Archimago
+    pesos:
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.05
+    encuadre: {x: 0.13, y: -0.074}
+    suavidad: 0.3
+    mezcla: 0
+    mano: 0.12
+  - focos:
+    - t: 107.80218
+      p: {x: 200, y: 16, z: -6}
+    t0: 107.80218
+    t1: 109.45218
+    tipo: 8
+    descripcion: fijo a el punto
+    posiciones:
+    - t: 107.80218
+      p: {x: 200, y: 1.8, z: 7.4}
+    lente: 44
+    lenteFinal: 0
+    sujetos: []
+    pesos: []
+    extras: []
+    focoFijo: {x: 200, y: 16, z: -6}
+    alturaDelFoco: 0
+    encuadre: {x: 0, y: 0}
+    suavidad: 1.6
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 109.45218
+    t1: 113.4039
     tipo: 5
     descripcion: 'dos: estela y liam'
     posiciones:
-    - t: 125.43894
-      p: {x: 197.44229, y: 0.28375036, z: 7.9866037}
+    - t: 109.45218
+      p: {x: 200.4, y: 1.15, z: 2.5}
     lente: 32
     lenteFinal: 0
     sujetos:
@@ -2567,19 +1935,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 0.8441659
+    alturaDelFoco: 1
     encuadre: {x: 0, y: 0}
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 130.39018
-    t1: 136.43195
+    t0: 113.4039
+    t1: 117.7539
     tipo: 2
     descripcion: medio de will
     posiciones:
-    - t: 130.39018
-      p: {x: 200, y: 0.94578815, z: 4.2}
+    - t: 113.4039
+      p: {x: 200, y: 1.15, z: 4.8}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -2588,19 +1956,19 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.0869503
+    alturaDelFoco: 1.02
     encuadre: {x: 0, y: -0.074}
     suavidad: 0
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 136.43195
-    t1: 153.00534
+    t0: 117.7539
+    t1: 126.26695
     tipo: 1
     descripcion: conjunto de will y estela y liam
     posiciones:
-    - t: 136.43195
-      p: {x: 202.82765, y: 0.8957882, z: 8.874028}
+    - t: 117.7539
+      p: {x: 200, y: 1.3, z: 5.6}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -2613,19 +1981,67 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1
     encuadre: {x: 0, y: 0}
-    suavidad: 0.4
+    suavidad: 0.35
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 153.00534
-    t1: 155.30534
+    t0: 126.26695
+    t1: 131.31694
     tipo: 1
     descripcion: conjunto de will y estela y liam
     posiciones:
-    - t: 153.00534
-      p: {x: 202.82765, y: 0.9957882, z: 8.874028}
+    - t: 126.26695
+      p: {x: 200, y: 1.22, z: 5.6}
+    lente: 30
+    lenteFinal: 0
+    sujetos:
+    - Player
+    - Actor_Estela
+    - Actor_Liam
+    pesos:
+    - 1
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1.02
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.25
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 131.31694
+    t1: 138.50961
+    tipo: 5
+    descripcion: 'dos: estela y will'
+    posiciones:
+    - t: 131.31694
+      p: {x: 200.4, y: 1.15, z: 4.8}
+    lente: 32
+    lenteFinal: 0
+    sujetos:
+    - Actor_Estela
+    - Player
+    pesos:
+    - 1
+    - 1
+    extras: []
+    focoFijo: {x: 0, y: 0, z: 0}
+    alturaDelFoco: 1
+    encuadre: {x: 0, y: 0}
+    suavidad: 0.25
+    mezcla: 0
+    mano: 0.12
+  - focos: []
+    t0: 138.50961
+    t1: 139.80962
+    tipo: 1
+    descripcion: conjunto de will y estela y liam
+    posiciones:
+    - t: 138.50961
+      p: {x: 199.8, y: 1.35, z: 6}
     lente: 34
     lenteFinal: 0
     sujetos:
@@ -2638,9 +2054,9 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.107609
+    alturaDelFoco: 1
     encuadre: {x: 0, y: 0}
-    suavidad: 1
+    suavidad: 0.9
     mezcla: 0
     mano: 0.12
   efectos:
@@ -2648,290 +2064,314 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202542015119604
-    linea: 61
+      rid: 5630202748678439007
+    linea: 71
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202542015119605
-    linea: 62
+      rid: 5630202748678439008
+    linea: 72
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202542015119606
-    linea: 63
+      rid: 5630202748678439009
+    linea: 73
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202542015119607
-    linea: 64
+      rid: 5630202748678439010
+    linea: 74
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202542015119608
-    linea: 76
+      rid: 5630202748678439011
+    linea: 75
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 0.4
+    t: 0
     beat:
-      rid: 5630202542015119609
-    linea: 79
+      rid: 5630202748678439012
+    linea: 88
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 12.752041
+    t: 0.1
     beat:
-      rid: 5630202542015119610
-    linea: 93
+      rid: 5630202748678439013
+    linea: 91
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 20.05204
+    t: 11.602041
     beat:
-      rid: 5630202542015119611
-    linea: 101
+      rid: 5630202748678439014
+    linea: 105
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 23.052042
+    t: 18.602041
     beat:
-      rid: 5630202542015119612
-    linea: 106
+      rid: 5630202748678439015
+    linea: 113
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 23.052042
+    t: 21.15204
     beat:
-      rid: 5630202542015119613
-    linea: 107
+      rid: 5630202748678439016
+    linea: 118
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 23.052042
+    t: 21.15204
     beat:
-      rid: 5630202542015119614
-    linea: 108
+      rid: 5630202748678439017
+    linea: 119
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 23.54271
+    t: 21.15204
     beat:
-      rid: 5630202542015119615
-    linea: 111
+      rid: 5630202748678439018
+    linea: 120
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 27.54271
+    t: 21.642708
     beat:
-      rid: 5630202542015119616
-    linea: 121
+      rid: 5630202748678439019
+    linea: 124
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.750286
+    t: 21.642708
     beat:
-      rid: 5630202542015119617
-    linea: 129
+      rid: 5630202748678439020
+    linea: 123
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.750286
+    t: 22.392708
     beat:
-      rid: 5630202542015119618
-    linea: 130
+      rid: 5630202748678439021
+    linea: 136
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.750286
+    t: 23.023542
     beat:
-      rid: 5630202542015119619
-    linea: 131
+      rid: 5630202748678439022
+    linea: 144
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.750286
+    t: 23.023542
     beat:
-      rid: 5630202542015119620
-    linea: 132
+      rid: 5630202748678439023
+    linea: 145
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 28.750286
+    t: 23.023542
     beat:
-      rid: 5630202542015119621
-    linea: 133
+      rid: 5630202748678439024
+    linea: 146
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 34.768856
+    t: 23.023542
     beat:
-      rid: 5630202542015119622
-    linea: 140
+      rid: 5630202748678439025
+    linea: 147
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 34.768856
+    t: 23.023542
     beat:
-      rid: 5630202542015119623
-    linea: 141
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 43.892666
-    beat:
-      rid: 5630202542015119624
+      rid: 5630202748678439026
     linea: 148
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 43.892666
+    t: 28.842113
     beat:
-      rid: 5630202542015119625
-    linea: 149
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 45.892666
-    beat:
-      rid: 5630202542015119626
-    linea: 152
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 51.71144
-    beat:
-      rid: 5630202542015119627
-    linea: 158
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 51.71144
-    beat:
-      rid: 5630202542015119628
+      rid: 5630202748678439027
     linea: 156
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 55.52532
+    t: 28.842113
     beat:
-      rid: 5630202542015119629
-    linea: 161
+      rid: 5630202748678439028
+    linea: 157
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 55.52532
+    t: 36.489258
     beat:
-      rid: 5630202542015119630
-    linea: 162
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 55.52532
-    beat:
-      rid: 5630202542015119631
-    linea: 163
-  - onlyIfFlag: 
-    skipIfFlag: 
-    t: 55.52532
-    beat:
-      rid: 5630202542015119632
+      rid: 5630202748678439029
     linea: 164
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 55.52532
+    t: 36.489258
     beat:
-      rid: 5630202542015119633
+      rid: 5630202748678439030
     linea: 165
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 55.52532
+    t: 38.489258
     beat:
-      rid: 5630202542015119634
-    linea: 166
+      rid: 5630202748678439031
+    linea: 168
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 56.72532
+    t: 44.058037
     beat:
-      rid: 5630202542015119635
-    linea: 169
+      rid: 5630202748678439032
+    linea: 174
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 57.22532
+    t: 44.058037
     beat:
-      rid: 5630202542015119636
-    linea: 175
+      rid: 5630202748678439033
+    linea: 172
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 57.22532
+    t: 47.871914
     beat:
-      rid: 5630202542015119637
+      rid: 5630202748678439034
+    linea: 177
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.871914
+    beat:
+      rid: 5630202748678439035
+    linea: 178
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.871914
+    beat:
+      rid: 5630202748678439036
+    linea: 179
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.871914
+    beat:
+      rid: 5630202748678439037
+    linea: 180
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.871914
+    beat:
+      rid: 5630202748678439038
+    linea: 181
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 47.871914
+    beat:
+      rid: 5630202748678439039
     linea: 182
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 63.391987
+    t: 48.221912
     beat:
-      rid: 5630202542015119638
-    linea: 195
+      rid: 5630202748678439040
+    linea: 185
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 83.25975
+    t: 48.421913
     beat:
-      rid: 5630202542015119639
-    linea: 219
+      rid: 5630202748678439041
+    linea: 191
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 87.89159
+    t: 48.421913
     beat:
-      rid: 5630202542015119640
-    linea: 230
+      rid: 5630202748678439042
+    linea: 192
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 91.491585
+    t: 48.421913
     beat:
-      rid: 5630202542015119641
-    linea: 236
+      rid: 5630202748678439043
+    linea: 199
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 94.69159
+    t: 48.571915
     beat:
-      rid: 5630202542015119642
-    linea: 243
+      rid: 5630202748678439044
+    linea: 204
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 108.108734
+    t: 53.755245
     beat:
-      rid: 5630202542015119643
-    linea: 250
+      rid: 5630202748678439045
+    linea: 216
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 111.30874
+    t: 71.973
     beat:
-      rid: 5630202542015119644
-    linea: 257
+      rid: 5630202748678439046
+    linea: 242
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 120.738945
+    t: 76.30483
     beat:
-      rid: 5630202542015119645
-    linea: 260
+      rid: 5630202748678439047
+    linea: 253
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 121.238945
+    t: 79.60483
     beat:
-      rid: 5630202542015119646
+      rid: 5630202748678439048
+    linea: 258
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 82.50483
+    beat:
+      rid: 5630202748678439049
     linea: 265
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 129.99019
+    t: 95.32197
     beat:
-      rid: 5630202542015119647
+      rid: 5630202748678439050
+    linea: 272
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 98.22197
+    beat:
+      rid: 5630202748678439051
+    linea: 279
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 107.652176
+    beat:
+      rid: 5630202748678439052
     linea: 282
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 130.39018
+    t: 107.80218
     beat:
-      rid: 5630202542015119648
-    linea: 291
+      rid: 5630202748678439053
+    linea: 287
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 154.80534
+    t: 113.3039
     beat:
-      rid: 5630202542015119649
-    linea: 323
+      rid: 5630202748678439054
+    linea: 307
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 154.80534
+    t: 113.4039
     beat:
-      rid: 5630202542015119650
-    linea: 324
+      rid: 5630202748678439055
+    linea: 317
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 154.80534
+    t: 139.30962
     beat:
-      rid: 5630202542015119651
-    linea: 325
+      rid: 5630202748678439056
+    linea: 362
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 139.30962
+    beat:
+      rid: 5630202748678439057
+    linea: 363
+  - onlyIfFlag: 
+    skipIfFlag: 
+    t: 139.30962
+    beat:
+      rid: 5630202748678439058
+    linea: 364
   etiquetas:
   - nombre: inicio
     t: 0
@@ -2939,64 +2379,84 @@ MonoBehaviour:
   - nombre: p_liam_caido
     posicion: {x: -1.2, y: 0, z: 4.2}
   - nombre: p_will_umbral
-    posicion: {x: 0, y: 0, z: 4.8}
+    posicion: {x: 0, y: 0, z: 4.6}
   - nombre: p_will_conjuro
     posicion: {x: 0, y: 0, z: 4.2}
   - nombre: p_portal_salida
-    posicion: {x: 0, y: 0, z: 8}
-  - nombre: cam_sendero_general
-    posicion: {x: 0, y: 0, z: -1.5}
-  - nombre: cam_will_hacia_portal
-    posicion: {x: 0, y: 0, z: 3.2}
-  - nombre: cam_will_rostro
-    posicion: {x: 0, y: 0, z: 6.5}
+    posicion: {x: 0, y: 0, z: 8.2}
+  - nombre: cam_will_umbral_frente
+    posicion: {x: 0.35, y: 0, z: 7.2}
+  - nombre: cam_will_umbral_cerca
+    posicion: {x: 0.25, y: 0, z: 6.8}
   - nombre: cam_sendero_conjuro_general
-    posicion: {x: 0, y: 0, z: 1.2}
+    posicion: {x: 0, y: 0, z: 0.6}
   - nombre: cam_sendero_conjuro_perfil
-    posicion: {x: -3.5, y: 0, z: 4.2}
+    posicion: {x: -3.6, y: 0, z: 4.2}
   - nombre: cam_sendero_conjuro_cenital
-    posicion: {x: 0, y: 0, z: 2.2}
+    posicion: {x: 0, y: 0, z: 1.4}
+  - nombre: cam_will_climax
+    posicion: {x: 0.2, y: 0, z: 6.5}
   - nombre: p_piedra_portal
-    posicion: {x: 200, y: -0.6042118, z: 2}
+    posicion: {x: 200, y: 0, z: 0.4}
   - nombre: p_piedra_estela
-    posicion: {x: 200, y: -0.60421175, z: 4.8}
+    posicion: {x: 200, y: 0, z: 4.8}
   - nombre: p_piedra_estela_cae
-    posicion: {x: 200, y: -0.60421175, z: 4.8}
+    posicion: {x: 201.2, y: 0, z: 5.4}
   - nombre: p_piedra_liam
-    posicion: {x: 198.8, y: -0.6042118, z: 4.2}
+    posicion: {x: 198.8, y: 0, z: 5.4}
   - nombre: p_piedra_liam_consuelo
-    posicion: {x: 199.4, y: -0.6042118, z: 4.4}
+    posicion: {x: 199.5, y: 0, z: 5.5}
   - nombre: p_piedra_archimago
-    posicion: {x: 198.2, y: -0.6042118, z: 3.4}
+    posicion: {x: 200, y: 0, z: 2.6}
   - nombre: p_piedra_will_llega
-    posicion: {x: 200, y: -0.6042118, z: 2.5}
-  - nombre: p_piedra_abrazo
-    posicion: {x: 200, y: -0.6042118, z: 3.6}
+    posicion: {x: 200, y: 0, z: 2.4}
   - nombre: p_piedra_abrazo_estela
-    posicion: {x: 200, y: -0.6042118, z: 3.8}
+    posicion: {x: 200.85, y: 0, z: 2.55}
   - nombre: p_piedra_abrazo_liam
-    posicion: {x: 199.2, y: -0.6042118, z: 3.6}
-  - nombre: cam_estela_frontal
-    posicion: {x: 200, y: -0.6042118, z: 3.4}
+    posicion: {x: 199.15, y: 0, z: 2.55}
+  - nombre: p_archimago_espera
+    posicion: {x: 215, y: -0.013725335, z: -10}
+  - nombre: cam_estela_umbral_frente
+    posicion: {x: 199.6, y: 0, z: 2.1}
+  - nombre: cam_estela_umbral_cerca
+    posicion: {x: 199.7, y: 0, z: 2.6}
   - nombre: cam_estela_hacia_portal
-    posicion: {x: 200, y: -0.6042118, z: 6.2}
+    posicion: {x: 201.4, y: 0, z: 6.6}
   - nombre: cam_piedra_orbita_inicio
-    posicion: {x: 198, y: -0.6042118, z: 6.2}
+    posicion: {x: 198.2, y: 0, z: 8.2}
   - nombre: cam_piedra_orbita_fin
-    posicion: {x: 202.8, y: -0.6042118, z: 4.8}
-  - nombre: cam_piedra_llanto
-    posicion: {x: 201.2, y: -0.6042118, z: 3.8}
-  - nombre: cam_piedra_archimago
-    posicion: {x: 196.8, y: -0.6042118, z: 1.8}
+    posicion: {x: 201.8, y: 0, z: 8.2}
+  - nombre: cam_despertar_liam
+    posicion: {x: 199.2, y: 0, z: 2.7}
+  - nombre: cam_despertar_estela
+    posicion: {x: 200.8, y: 0, z: 2.7}
+  - nombre: cam_despertar_conjunto
+    posicion: {x: 200, y: 0, z: 1.2}
+  - nombre: cam_archimago_conjunto
+    posicion: {x: 194.8, y: 0, z: 4.6}
+  - nombre: cam_archimago_frente
+    posicion: {x: 200, y: 0, z: 4.8}
+  - nombre: cam_estela_archimago
+    posicion: {x: 200.8, y: 0, z: 2.7}
+  - nombre: cam_archimago_ascenso
+    posicion: {x: 200, y: 1.8, z: 7.4}
+  - nombre: mira_archimago_cielo
+    posicion: {x: 200, y: 16, z: -6}
+  - nombre: cam_consuelo_dos
+    posicion: {x: 200.4, y: 0, z: 2.5}
   - nombre: cam_piedra_will_regreso
-    posicion: {x: 200, y: -0.6042118, z: 4.2}
-  - nombre: cam_piedra_general
-    posicion: {x: 200, y: -0.6042118, z: 6.8}
+    posicion: {x: 200, y: 0, z: 4.8}
+  - nombre: cam_piedra_abrazo_trio
+    posicion: {x: 200, y: 0, z: 5.6}
+  - nombre: cam_estela_will_reencuentro
+    posicion: {x: 200.4, y: 0, z: 4.8}
+  - nombre: cam_piedra_cierre_trio
+    posicion: {x: 199.8, y: 0, z: 6}
   ruidoDeMano: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   references:
     version: 2
     RefIds:
-    - rid: 5630202542015119604
+    - rid: 5630202748678439007
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3004,7 +2464,15 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202542015119605
+    - rid: 5630202748678439008
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 1
+        musicId: ULTIMO_INCANTAZIONE
+        fadeIn: 1.2
+        fadeOut: 0.5
+    - rid: 5630202748678439009
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3012,19 +2480,19 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 5630202542015119606
+    - rid: 5630202748678439010
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AmbientePiedra
         waitForEnd: 1
-    - rid: 5630202542015119607
+    - rid: 5630202748678439011
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: AbrirPortalUmbral
         waitForEnd: 1
-    - rid: 5630202542015119608
+    - rid: 5630202748678439012
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3032,7 +2500,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.8
         waitForEnd: 0
-    - rid: 5630202542015119609
+    - rid: 5630202748678439013
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3040,310 +2508,13 @@ MonoBehaviour:
         encuadre: 0
         lado: 0
         alturaEnPantalla: 0.62
-        duracion: 1.8
+        duracion: 1.6
         ranura: 0
         sonido: SFX_Prologo_CutIn
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202542015119610
-      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: Actor_Estela
-        encuadre: 1
-        lado: 0
-        alturaEnPantalla: 0.62
-        duracion: 1.8
-        ranura: 0
-        sonido: SFX_Prologo_CutIn
-        volumen: 1
-        mostrar: 1
-        esperar: 0
-    - rid: 5630202542015119611
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: CerrarPortalSendero
-        waitForEnd: 1
-    - rid: 5630202542015119612
-      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        color: {r: 1, g: 1, b: 1, a: 1}
-        duration: 0.4
-    - rid: 5630202542015119613
-      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        intensity: 0.8
-        duration: 1.4
-        waitForEnd: 0
-    - rid: 5630202542015119614
-      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: Actor_Estela
-        encuadre: 0
-        lado: 0
-        alturaEnPantalla: 0.62
-        duracion: 1.8
-        ranura: 0
-        sonido: SFX_Prologo_CutIn
-        volumen: 1
-        mostrar: 1
-        esperar: 0
-    - rid: 5630202542015119615
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: SFX_Impacto_DBZ
-        clip: {fileID: 0}
-        atActorId: Actor_Estela
-        markName: 
-        volume: 1
-        tono: 1
-    - rid: 5630202542015119616
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: AmbienteSendero
-        waitForEnd: 1
-    - rid: 5630202542015119617
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: ConjuroResurreccionInicio
-        waitForEnd: 1
-    - rid: 5630202542015119618
-      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: Player
-        encuadre: 0
-        lado: 0
-        alturaEnPantalla: 0.62
-        duracion: 1.8
-        ranura: 0
-        sonido: SFX_Prologo_CutIn
-        volumen: 1
-        mostrar: 1
-        esperar: 0
-    - rid: 5630202542015119619
-      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        mostrar: 1
-        color: {r: 1, g: 1, b: 1, a: 0.85}
-        huecoCentral: 0.35
-        fundido: 0.1
-        duracion: 2
-        esperar: 0
-    - rid: 5630202542015119620
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: Prologo_MagiaLevitar
-        clip: {fileID: 0}
-        atActorId: Player
-        markName: 
-        volume: 0.8
-        tono: 1
-    - rid: 5630202542015119621
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 0
-        gananciaDb: 0
-    - rid: 5630202542015119622
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: SFX_Prologo_Trueno_Lejano
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 0.45
-        tono: 1
-    - rid: 5630202542015119623
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 4
-        gananciaDb: 4
-    - rid: 5630202542015119624
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: Prologo_Carga
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 0.8
-        tono: 1
-    - rid: 5630202542015119625
-      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        intensity: 0.5
-        duration: 1.5
-        waitForEnd: 0
-    - rid: 5630202542015119626
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: ConjuroResurreccionCarga
-        waitForEnd: 1
-    - rid: 5630202542015119627
-      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        mostrar: 1
-        color: {r: 1, g: 1, b: 1, a: 0.85}
-        huecoCentral: 0.35
-        fundido: 0.1
-        duracion: 3.5
-        esperar: 0
-    - rid: 5630202542015119628
-      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: Player
-        encuadre: 1
-        lado: 1
-        alturaEnPantalla: 0.62
-        duracion: 1.8
-        ranura: 0
-        sonido: SFX_Prologo_CutIn
-        volumen: 1
-        mostrar: 1
-        esperar: 0
-    - rid: 5630202542015119629
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: ConjuroResurreccionClimax
-        waitForEnd: 1
-    - rid: 5630202542015119630
-      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        eventKey: SFX_Prologo_ExplosionFinal
-        clip: {fileID: 0}
-        atActorId: 
-        markName: 
-        volume: 1
-        tono: 1
-    - rid: 5630202542015119631
-      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        color: {r: 1, g: 1, b: 1, a: 1}
-        duration: 0.6
-    - rid: 5630202542015119632
-      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        intensity: 0.9
-        duration: 2
-        waitForEnd: 0
-    - rid: 5630202542015119633
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: ColapsoSendero
-        waitForEnd: 1
-    - rid: 5630202542015119634
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 0
-        gananciaDb: 0
-    - rid: 5630202542015119635
-      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        fadeIn: 1
-        color: {r: 1, g: 1, b: 1, a: 1}
-        duration: 1.2
-        waitForEnd: 0
-    - rid: 5630202542015119636
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: AmbientePiedra
-        waitForEnd: 1
-    - rid: 5630202542015119637
-      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        fadeIn: 0
-        color: {r: 1, g: 1, b: 1, a: 1}
-        duration: 1.2
-        waitForEnd: 0
-    - rid: 5630202542015119638
-      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        actorId: Actor_Estela
-        encuadre: 1
-        lado: 0
-        alturaEnPantalla: 0.62
-        duracion: 1.8
-        ranura: 0
-        sonido: SFX_Prologo_CutIn
-        volumen: 1
-        mostrar: 1
-        esperar: 0
-    - rid: 5630202542015119639
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: EspirituArchimago
-        waitForEnd: 1
-    - rid: 5630202542015119640
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 3
-        gananciaDb: 1.5
-    - rid: 5630202542015119641
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 0
-        gananciaDb: 0
-    - rid: 5630202542015119642
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 3
-        gananciaDb: 1.5
-    - rid: 5630202542015119643
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 0
-        gananciaDb: 0
-    - rid: 5630202542015119644
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 3
-        gananciaDb: 1.5
-    - rid: 5630202542015119645
-      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        preset: 0
-        gananciaDb: 0
-    - rid: 5630202542015119646
-      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
-      data:
-        note: 
-        routine: DespedidaArchimago
-        waitForEnd: 1
-    - rid: 5630202542015119647
+    - rid: 5630202748678439014
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3357,13 +2528,338 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202542015119648
+    - rid: 5630202748678439015
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: CerrarPortalSendero
+        waitForEnd: 1
+    - rid: 5630202748678439016
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 0.4
+    - rid: 5630202748678439017
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.8
+        duration: 1.4
+        waitForEnd: 0
+    - rid: 5630202748678439018
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Estela
+        encuadre: 0
+        lado: 0
+        alturaEnPantalla: 0.62
+        duracion: 1.6
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        volumen: 1
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202748678439019
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: SFX_Prologo_ExplosionFinal
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 5630202748678439020
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologue_SpellRelease
+        clip: {fileID: 0}
+        atActorId: Actor_Estela
+        markName: 
+        volume: 1
+        tono: 1
+    - rid: 5630202748678439021
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: AmbienteSendero
+        waitForEnd: 1
+    - rid: 5630202748678439022
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ConjuroResurreccionInicio
+        waitForEnd: 1
+    - rid: 5630202748678439023
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        encuadre: 0
+        lado: 0
+        alturaEnPantalla: 0.62
+        duracion: 1.6
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        volumen: 1
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202748678439024
+      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        color: {r: 1, g: 1, b: 1, a: 0.85}
+        huecoCentral: 0.35
+        fundido: 0.1
+        duracion: 2
+        esperar: 0
+    - rid: 5630202748678439025
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologo_MagiaLevitar
+        clip: {fileID: 0}
+        atActorId: Player
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 5630202748678439026
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202748678439027
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: SFX_Prologo_Trueno_Lejano
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.45
+        tono: 1
+    - rid: 5630202748678439028
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 4
+        gananciaDb: 4
+    - rid: 5630202748678439029
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Prologo_Carga
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.8
+        tono: 1
+    - rid: 5630202748678439030
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.5
+        duration: 1.5
+        waitForEnd: 0
+    - rid: 5630202748678439031
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ConjuroResurreccionCarga
+        waitForEnd: 1
+    - rid: 5630202748678439032
+      type: {class: LineasDeConcentracionBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        mostrar: 1
+        color: {r: 1, g: 1, b: 1, a: 0.85}
+        huecoCentral: 0.35
+        fundido: 0.1
+        duracion: 3.5
+        esperar: 0
+    - rid: 5630202748678439033
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Player
+        encuadre: 1
+        lado: 1
+        alturaEnPantalla: 0.62
+        duracion: 1.6
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        volumen: 1
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202748678439034
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ConjuroResurreccionClimax
+        waitForEnd: 1
+    - rid: 5630202748678439035
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: SFX_Prologo_ExplosionFinal
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 1
+        tono: 1
+    - rid: 5630202748678439036
+      type: {class: ScreenFlashBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 0.6
+    - rid: 5630202748678439037
+      type: {class: ShakeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        intensity: 0.9
+        duration: 2
+        waitForEnd: 0
+    - rid: 5630202748678439038
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: ColapsoSendero
+        waitForEnd: 1
+    - rid: 5630202748678439039
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202748678439040
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 1
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 1.1
+        waitForEnd: 0
+    - rid: 5630202748678439041
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: AmbientePiedra
+        waitForEnd: 1
+    - rid: 5630202748678439042
+      type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        continuarDondeIba: 1
+        musicId: EPILOGUE
+        fadeIn: 2
+        fadeOut: 0.5
+    - rid: 5630202748678439043
+      type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        fadeIn: 0
+        color: {r: 1, g: 1, b: 1, a: 1}
+        duration: 1.1
+        waitForEnd: 0
+    - rid: 5630202748678439044
+      type: {class: SfxBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        eventKey: Hechizo_BrisaSanadora
+        clip: {fileID: 0}
+        atActorId: 
+        markName: 
+        volume: 0.85
+        tono: 1
+    - rid: 5630202748678439045
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Estela
+        encuadre: 1
+        lado: 0
+        alturaEnPantalla: 0.62
+        duracion: 1.6
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        volumen: 1
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202748678439046
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: EspirituArchimago
+        waitForEnd: 1
+    - rid: 5630202748678439047
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 3
+        gananciaDb: 1.5
+    - rid: 5630202748678439048
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202748678439049
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 3
+        gananciaDb: 1.5
+    - rid: 5630202748678439050
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202748678439051
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 3
+        gananciaDb: 1.5
+    - rid: 5630202748678439052
+      type: {class: EfectoDeVozBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        preset: 0
+        gananciaDb: 0
+    - rid: 5630202748678439053
+      type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        routine: DespedidaArchimago
+        waitForEnd: 1
+    - rid: 5630202748678439054
+      type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
+      data:
+        note: 
+        actorId: Actor_Estela
+        encuadre: 1
+        lado: 0
+        alturaEnPantalla: 0.62
+        duracion: 1.5
+        ranura: 0
+        sonido: SFX_Prologo_CutIn
+        volumen: 1
+        mostrar: 1
+        esperar: 0
+    - rid: 5630202748678439055
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: RegresoWill
         waitForEnd: 1
-    - rid: 5630202542015119649
+    - rid: 5630202748678439056
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3371,7 +2867,7 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.4
         waitForEnd: 0
-    - rid: 5630202542015119650
+    - rid: 5630202748678439057
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -3379,7 +2875,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202542015119651
+    - rid: 5630202748678439058
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

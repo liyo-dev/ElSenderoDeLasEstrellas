@@ -399,6 +399,12 @@ public class TeleportService : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
+
+        var motor = player.GetComponent<Invector.vCharacterController.vThirdPersonMotor>() ?? player.GetComponentInChildren<Invector.vCharacterController.vThirdPersonMotor>(true);
+        if (motor != null)
+        {
+            motor.ForzarEnElSuelo();
+        }
     }
 
     /// <summary>

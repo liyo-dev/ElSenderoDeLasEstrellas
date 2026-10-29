@@ -15,23 +15,14 @@ MonoBehaviour:
   hablanteId: NPC_Eldran
   nombreHablante: Eldran
   mirarAlJugador: 1
-  introDelay: 0.6
+  introDelay: 0.8
   introFallbackSeconds: 12
-  duracionBocadillo: 2.8
-  pausaEntreFrases: 0.6
+  duracionBocadillo: 2.4
+  pausaEntreFrases: 2.5
   umbralPocaVida: 0.35
   umbralJefeCasiVencido: 0.2
-  segundosSinAcertar: 15
+  segundosSinAcertar: 25
   comentarios:
-  - momento: 0
-    fase: 0
-    key: EVT_10
-    anim: FoundSomething_NoWeapon
-    vecesMax: 1
-    enfriamiento: 0
-    caducidad: 0
-    interrumpe: 0
-    duracion: 0
   - momento: 0
     fase: 0
     key: EVT_08
@@ -50,32 +41,14 @@ MonoBehaviour:
     caducidad: 0
     interrumpe: 0
     duracion: 0
-  - momento: 0
-    fase: 0
-    key: EVT_ELDRAN_GUIA_RITMO
-    anim: Cheer02
-    vecesMax: 1
-    enfriamiento: 0
-    caducidad: 0
-    interrumpe: 0
-    duracion: 0
   - momento: 1
     fase: 0
     key: EVT_ELDRAN_AHORA_01
     anim: Challenging_NoWeapon
-    vecesMax: 2
-    enfriamiento: 0
-    caducidad: 0.8
-    interrumpe: 1
-    duracion: 1.6
-  - momento: 1
-    fase: 0
-    key: EVT_ELDRAN_AHORA_02
-    anim: Challenging_NoWeapon
     vecesMax: 1
     enfriamiento: 0
     caducidad: 0.8
-    interrumpe: 1
+    interrumpe: 0
     duracion: 1.6
   - momento: 2
     fase: 0
@@ -86,24 +59,6 @@ MonoBehaviour:
     caducidad: 0
     interrumpe: 0
     duracion: 0
-  - momento: 2
-    fase: 0
-    key: EVT_ELDRAN_CHEER_01
-    anim: Cheer01
-    vecesMax: 0
-    enfriamiento: 12
-    caducidad: 2
-    interrumpe: 0
-    duracion: 0
-  - momento: 2
-    fase: 0
-    key: EVT_ELDRAN_CHEER_02
-    anim: Cheer01
-    vecesMax: 0
-    enfriamiento: 12
-    caducidad: 2
-    interrumpe: 0
-    duracion: 0
   - momento: 3
     fase: 0
     key: EVT_ELDRAN_HINT_SIN_ARO
@@ -111,15 +66,6 @@ MonoBehaviour:
     vecesMax: 1
     enfriamiento: 0
     caducidad: 0
-    interrumpe: 1
-    duracion: 0
-  - momento: 3
-    fase: 0
-    key: EVT_ELDRAN_SIN_ARO_02
-    anim: HeadShake01
-    vecesMax: 1
-    enfriamiento: 20
-    caducidad: 3
     interrumpe: 0
     duracion: 0
   - momento: 4
@@ -135,7 +81,7 @@ MonoBehaviour:
     fase: 0
     key: EVT_ELDRAN_POCA_VIDA
     anim: FoundSomething_NoWeapon
-    vecesMax: 2
+    vecesMax: 1
     enfriamiento: 30
     caducidad: 4
     interrumpe: 0
@@ -157,7 +103,7 @@ MonoBehaviour:
     enfriamiento: 0
     caducidad: 0
     interrumpe: 1
-    duracion: 3.5
+    duracion: 3.2
   - momento: 7
     fase: 2
     key: EVT_ELDRAN_FASE_3
@@ -166,7 +112,7 @@ MonoBehaviour:
     enfriamiento: 0
     caducidad: 0
     interrumpe: 1
-    duracion: 3.5
+    duracion: 3.2
   - momento: 8
     fase: 0
     key: EVT_ELDRAN_CASI
@@ -174,14 +120,5 @@ MonoBehaviour:
     vecesMax: 1
     enfriamiento: 0
     caducidad: 4
-    interrumpe: 0
-    duracion: 0
-  - momento: 9
-    fase: 0
-    key: EVT_ELDRAN_RECUERDA_ARO
-    anim: HeadShake01
-    vecesMax: 2
-    enfriamiento: 25
-    caducidad: 3
     interrumpe: 0
     duracion: 0

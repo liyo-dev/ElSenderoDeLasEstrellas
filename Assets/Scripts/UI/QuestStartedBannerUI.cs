@@ -36,17 +36,26 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
     [SerializeField] private float dropOffsetY = 40f;
     [SerializeField] private float animInDuration = 0.5f;
     [SerializeField] private float animOutDuration = 0.3f;
-    [SerializeField] private float displayDuration = 2.8f;
+    [SerializeField] private float displayDuration = 2.2f;
     [Tooltip("Punch de escala del icono al entrar, para dar más 'chispa' -- 0 lo desactiva.")]
     [SerializeField] private float iconPunchScale = 0.25f;
 
     [Header("Audio")]
-    [Tooltip("Clave de evento en AudioGraphProfile (AudioService.PlaySFX). Vacío = sin sonido. " +
-             "Pendiente (15 sept 2026): no existe todavía ninguna clave dedicada a este aviso -- " +
-             "añadir una entrada nueva (p.ej. 'UI_QuestStarted') en AudioGraphProfile con el clip " +
-             "elegido antes de rellenar este campo. Sin clave asignada, o si la clave no se " +
-             "encuentra, esto no falla: simplemente no suena nada (AudioService.PlaySFX ya es así).")]
+    [Tooltip("Clave de evento en AudioGraphProfile (AudioService.PlaySFX). Vacío = sin sonido.")]
     [SerializeField] private string sfxEventKey = "";
+
+    /// <summary>True mientras el banner esté visible o animando en pantalla.</summary>
+    public static bool IsShowing { get; private set; }
+    public static event System.Action OnBannerDismissed;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        IsShowing = false;
+        OnBannerDismissed = null;
+    }
+#endif
 
     private Vector2 _shownAnchoredPos;
     private Coroutine _autoDismissCoroutine;
@@ -55,6 +64,18 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
     private QuestManager _lastQuestManager;
     private Coroutine _waitCo;
     private SceneBoundUI _sceneBoundUI;
+    private string _pendingQuestId;
+    private string _lastActiveQuestId;
+
+    /// <summary>Descarta inmediatamente el banner si está activo (ej: combate anticipado).</summary>
+    public static void DismissCurrent()
+    {
+        var inst = Object.FindAnyObjectByType<QuestStartedBannerUI>();
+        if (inst != null && inst._isShowing)
+        {
+            inst.HideBanner();
+        }
+    }
 
     /// <summary>ISceneBoundUIHideGuard: mientras el banner esté en pantalla, no se apaga por cambio de escena.</summary>
     public bool BlocksSceneHide() => _isShowing;
@@ -62,6 +83,12 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
     void Awake()
     {
         _sceneBoundUI = GetComponent<SceneBoundUI>();
+        var canvas = GetComponentInChildren<Canvas>(true);
+        if (canvas != null)
+        {
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 110;
+        }
         if (bannerRoot != null)
         {
             _shownAnchoredPos = bannerRoot.anchoredPosition;
@@ -78,6 +105,8 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
         // que este banner puede convivir con él sin parpadear entre los dos.
         MenuManager.MenuOpened += OnMenuOpened;
         MenuManager.MenuClosed += OnMenuClosed;
+        SceneBoundUI.OnBossIntroStarted += HandleBossIntroStarted;
+        SceneBoundUI.OnBossIntroEnded += HandleBossIntroEnded;
     }
 
     void OnDisable()
@@ -86,8 +115,30 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (_waitCo != null) { StopCoroutine(_waitCo); _waitCo = null; }
         MenuManager.MenuOpened -= OnMenuOpened;
         MenuManager.MenuClosed -= OnMenuClosed;
+        SceneBoundUI.OnBossIntroStarted -= HandleBossIntroStarted;
+        SceneBoundUI.OnBossIntroEnded -= HandleBossIntroEnded;
         if (_autoDismissCoroutine != null) { StopCoroutine(_autoDismissCoroutine); _autoDismissCoroutine = null; }
         _isShowing = false;
+        IsShowing = false;
+    }
+
+    private void HandleBossIntroStarted()
+    {
+        if (_isShowing)
+        {
+            _pendingQuestId = _lastActiveQuestId;
+            HideBanner();
+        }
+    }
+
+    private void HandleBossIntroEnded()
+    {
+        if (!string.IsNullOrEmpty(_pendingQuestId))
+        {
+            string id = _pendingQuestId;
+            _pendingQuestId = null;
+            HandleQuestStarted(id);
+        }
     }
 
     void OnDestroy()
@@ -120,6 +171,13 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     void HandleQuestStarted(string questId)
     {
+        _lastActiveQuestId = questId;
+        if (SceneBoundUI.IsBossIntroActive)
+        {
+            _pendingQuestId = questId;
+            return;
+        }
+
         string questName = questId;
         if (QuestManager.Instance != null && QuestManager.Instance.TryGetQuestData(questId, out var data) && data != null)
             questName = data.GetLocalizedName();
@@ -176,6 +234,7 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (bannerCanvasGroup != null) bannerCanvasGroup.alpha = 0f;
 
         _isShowing = true;
+        IsShowing = true;
         _hiddenByMenu = false;
 
         bannerRoot.DOAnchorPos(_shownAnchoredPos, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
@@ -202,6 +261,9 @@ public class QuestStartedBannerUI : MonoBehaviour, ISceneBoundUIHideGuard
         if (bannerRoot == null || !_isShowing) return;
 
         _isShowing = false;
+        IsShowing = false;
+        OnBannerDismissed?.Invoke();
+
         if (_autoDismissCoroutine != null) { StopCoroutine(_autoDismissCoroutine); _autoDismissCoroutine = null; }
 
         bannerRoot.DOKill();

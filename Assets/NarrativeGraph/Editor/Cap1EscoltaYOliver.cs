@@ -27,7 +27,7 @@ public static class Cap1EscoltaYOliver
     private const string Nodo20b = "f393b1c0-87f6-4793-a705-a151a01af989"; // Completa WILL_MISSION1
     private const string Nodo20c = "5b0e2c8a-3f41-4d7e-9a1c-6e2f8d4b7c13"; // Eldran le llama
 
-    [MenuItem("El Sendero/Narrativa/Cap1: escolta más ágil y Oliver se queda con Victoria")]
+    [MenuItem("El Sendero/Archivo/Capítulo 1/Cap1: escolta más ágil y Oliver se queda con Victoria")]
     public static void Aplicar()
     {
         if (EditorApplication.isPlaying)

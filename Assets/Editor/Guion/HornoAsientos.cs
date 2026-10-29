@@ -56,6 +56,7 @@ internal sealed partial class Horno
 
         var giro = new ClaveDeMirada { tipo = TipoDeMirada.Rumbo, rumbo = s.rumbo };
         Vector3 delante = Suelo(new Vector3(s.pos.x, 0f, s.pos.z) + s.Frente * DelanteDelAsiento);
+        if (Mathf.Abs(delante.y) < 1.0f) delante.y = 0f;
 
         // Ya sentado (o recostado) en otro sitio: pasa de un punto a otro sin levantarse. Sin Begin
         // (es el gesto de sentarse desde de pie): fundido directo al bucle mientras se desliza.
@@ -127,11 +128,15 @@ internal sealed partial class Horno
             largo = infoExit.largo;
             a.Animar(t, TipoDeAnimacion.Gesto, exit);
         }
-        Deslizar(a, t + largo * 0.85f, a.PosEn(t), a.dePie, AlPunto);
+        Vector3 pie = a.dePie;
+        if (Mathf.Abs(pie.y) < 1.0f) pie.y = 0f;
+        float iniDeslizar = largo > 0.3f ? t + largo * 0.25f : t;
+        float duraDeslizar = largo > 0.3f ? largo * 0.75f : AlPunto;
+        Deslizar(a, iniDeslizar, a.PosEn(t), pie, duraDeslizar);
         a.Animar(t + largo, TipoDeAnimacion.Reposo);
         a.bucle = null; a.bucleDeCuerpo = false;
         a.sentadoCon = NPCAmbientActivity.None;
-        return largo * 0.85f + AlPunto;
+        return Mathf.Max(largo, duraDeslizar);
     }
 
     /// Mueve la raíz sin andar (no gira el cuerpo ni pone la locomoción).

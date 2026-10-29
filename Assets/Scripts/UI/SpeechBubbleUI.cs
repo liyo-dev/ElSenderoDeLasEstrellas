@@ -109,7 +109,7 @@ public class SpeechBubbleUI : MonoBehaviour
     [Tooltip("Dónde se queda el bocadillo cuando se muestra fijo en pantalla, en proporción del " +
              "canvas (0,0 abajo a la izquierda; 1,1 arriba a la derecha). En este modo el bocadillo " +
              "no tiene pico: una fila de circulitos sube de él hasta el nombre de quien habla.")]
-    [SerializeField] Vector2 _posicionFija = new Vector2(0f, 0.42f);
+    [SerializeField] Vector2 _posicionFija = new Vector2(0f, 0.70f);
     [Tooltip("Separación del borde de la pantalla, en píxeles de canvas.")]
     [SerializeField] float _margenFijo = 40f;
     [SerializeField] Color _colorNombre = new Color(1f, 0.85f, 0.35f);
@@ -128,6 +128,13 @@ public class SpeechBubbleUI : MonoBehaviour
     public int Turno => _turno;
     /// Hay un bocadillo en pantalla (aunque sea saliendo).
     public bool Mostrando => _isShowing;
+
+    /// <summary>Posición del bocadillo cuando es fijo en pantalla (proporción 0..1 del canvas).</summary>
+    public Vector2 PosicionFija
+    {
+        get => _posicionFija;
+        set => _posicionFija = value;
+    }
     Coroutine _autoHideRoutine;
     // Callback pendiente del Show() en curso — solo relevante mientras _autoHideRoutine != null.
     // Guardado aparte (además del parámetro local que ya recibe la propia corrutina AutoHide) para
@@ -192,6 +199,12 @@ public class SpeechBubbleUI : MonoBehaviour
         if (_layout != null)
             _paddingConPico = new RectOffset(_layout.padding.left, _layout.padding.right,
                                              _layout.padding.top, _layout.padding.bottom);
+
+        // Migración: si la posición fija guardada en la escena o prefab estaba por debajo de 0.6f
+        // (el antiguo 0.42f quedaba en pleno centro tapando el gameplay y a los enemigos),
+        // se eleva al 0.70f para situarse limpiamente en el tercio superior.
+        if (_posicionFija.y < 0.6f)
+            _posicionFija.y = 0.70f;
 
         if (_parentCanvasRect == null)
             _parentCanvasRect = GetComponentInParent<Canvas>()?.GetComponent<RectTransform>();
@@ -321,7 +334,8 @@ public class SpeechBubbleUI : MonoBehaviour
         Rect canvasRect = _parentCanvasRect.rect;
         float halfWidth    = _bubbleRect.rect.width * 0.5f;
         float bottomMargin = _bubbleRect.rect.height * _bubbleRect.pivot.y;
-        float topMargin    = _bubbleRect.rect.height * (1f - _bubbleRect.pivot.y);
+        float extraArriba  = (_fijoEnPantalla && _nombre != null && _nombre.gameObject.activeSelf) ? 60f : 0f;
+        float topMargin    = _bubbleRect.rect.height * (1f - _bubbleRect.pivot.y) + extraArriba;
 
         float minX = canvasRect.xMin + halfWidth;
         float maxX = canvasRect.xMax - halfWidth;

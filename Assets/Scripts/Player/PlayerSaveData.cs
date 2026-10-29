@@ -12,6 +12,11 @@ public class PlayerSaveData
     public float maxMp, currentMp;
     public float ataque, defensa; // INC-470; 0 en partidas anteriores (se inicializan al cargar)
 
+    // Sintonía Estelar (INC-847)
+    public int sintoniaPuntos;
+    public int sintoniaHitos;
+    public int sintoniaHitosPendientes;
+
     // Hechizos/skills
     public List<AbilityId> abilities = new();
     public List<SpellId>   spells    = new();
@@ -124,6 +129,9 @@ public class PlayerSaveData
         d.currentMp = preset.currentMP;
         d.ataque = preset.ataque;
         d.defensa = preset.defensa;
+        d.sintoniaPuntos = preset.sintoniaPuntos;
+        d.sintoniaHitos = preset.sintoniaHitos;
+        d.sintoniaHitosPendientes = preset.sintoniaHitosPendientes;
 
         d.abilities = new List<AbilityId>(preset.unlockedAbilities ?? new List<AbilityId>());
         d.spells = new List<SpellId>(preset.unlockedSpells ?? new List<SpellId>());

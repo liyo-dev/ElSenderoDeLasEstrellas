@@ -9985,6 +9985,7 @@ GameObject:
   - component: {fileID: 8292955864976573195}
   - component: {fileID: -2049874257353199566}
   - component: {fileID: -3863952739383490235}
+  - component: {fileID: 1327374795516445142}
   m_Layer: 8
   m_Name: Erika
   m_TagString: Untagged
@@ -10217,6 +10218,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 10
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!114 &6743273565896207114
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10232,7 +10234,7 @@ MonoBehaviour:
   configuration:
     behaviourType: 0
     ambientConfig: {fileID: 0}
-    combatConfig: {fileID: 0}
+    combatConfig: {fileID: 11400000, guid: b54f3041f65a9eb44b9fd6d038dc206f, type: 2}
     questConfig: {fileID: 0}
     interactiveNarrativeConfig: {fileID: 0}
     partyConfig: {fileID: 0}
@@ -10258,7 +10260,7 @@ MonoBehaviour:
   aiDistanceCheckInterval: 0.5
   persistLastPosition: 0
   persistenceId: NPC_Erika
-  dialogueCharacterId: CHAR_GUERRERACHINA
+  dialogueCharacterId: CHAR_ERIKA
   rotateToPlayerOnInteract: 1
   rotationDuration: 0.3
   initialLayer: 0
@@ -10322,7 +10324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Damageable
   maxHealth: 100
-  destroyOnDeath: 1
+  destroyOnDeath: 0
   deathVFX: {fileID: 0}
   deathVFXLifetime: 3
   invulnerabilitySeconds: 0
@@ -10375,7 +10377,36 @@ MonoBehaviour:
   walkTowardsPlayerOnAlert: 1
   stopDistanceFromPlayer: 2
   narrativeAlertIconPrefab: {fileID: 0}
-  defaultQuestIconPrefab: {fileID: 0}
+  defaultQuestIconPrefab: {fileID: 6303534759802428624, guid: 07a0b7801b6ad424eae696bee0e938ff, type: 3}
+--- !u!114 &1327374795516445142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7770552252693826820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f253e776628d4739bc050a3c4b4966a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCCombatLifecycleHandler
+  playDamageAnimation: 1
+  damageStunDuration: 0.8
+  invulnerabilityDuration: 0.5
+  enableCameraShake: 1
+  cameraShakeIntensity: 0.2
+  cameraShakeDuration: 0.15
+  enableHitStop: 1
+  hitStopTimeScale: 0.1
+  hitStopDuration: 0.15
+  enableDeathEffects: 1
+  deathSlowMoScale: 0.2
+  deathSlowMoDuration: 1
+  deathVFXPrefab: {fileID: 0}
+  deathVFXOffset: {x: 0, y: 1, z: 0}
+  deathZoomFactor: 0.85
+  deathZoomDuration: 0.15
+  deathReturnDuration: 0.35
 --- !u!1 &7783949281983813713
 GameObject:
   m_ObjectHideFlags: 0

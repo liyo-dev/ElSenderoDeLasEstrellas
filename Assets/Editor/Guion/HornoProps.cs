@@ -48,16 +48,32 @@ internal sealed partial class Horno
         Physics.SyncTransforms();
     }
 
+    private static Animator BuscarAnimatorConControlador(GameObject go)
+    {
+        if (go == null) return null;
+        var propio = go.GetComponent<Animator>();
+        if (propio != null && propio.runtimeAnimatorController != null) return propio;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.gameObject.activeInHierarchy && a.runtimeAnimatorController != null && a.isHuman) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.gameObject.activeInHierarchy && a.runtimeAnimatorController != null) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.runtimeAnimatorController != null && a.isHuman) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.runtimeAnimatorController != null) return a;
+        return go.GetComponentInChildren<Animator>(true);
+    }
+
     private static AnimationClip ClipDe(ActorH actor, GameObject pose, string estado)
     {
         var catalogo = CapturaDeEscenario.Catalogo(actor.prefab).FirstOrDefault(e => e.estado == estado);
-        return pose.GetComponentInChildren<Animator>(true)?.runtimeAnimatorController?.animationClips
+        return BuscarAnimatorConControlador(pose)?.runtimeAnimatorController?.animationClips
             .FirstOrDefault(c => c != null && c.name == catalogo.clip);
     }
 
     private void MuestrearPose(ActorH actor, GameObject pose, float t)
     {
-        var anim = pose.GetComponentInChildren<Animator>(true);
+        var anim = BuscarAnimatorConControlador(pose);
         anim.Rebind();
         var orden = actor.anim.LastOrDefault(o => o.t <= t && (o.tipo == TipoDeAnimacion.Bucle || o.tipo == TipoDeAnimacion.Reposo));
         string estado = orden.tipo == TipoDeAnimacion.Bucle ? orden.estado : "Idle01";
@@ -75,17 +91,25 @@ internal sealed partial class Horno
     /// Evalúa el clip y el Avatar humanoide: las curvas de músculos necesitan el Animator.
     internal static void MuestrearEstado(GameObject pose, AnimationClip clip, string estado, float t)
     {
-        var anim = pose.GetComponentInChildren<Animator>(true);
-        if (anim == null) { clip.SampleAnimation(pose, t); return; }
-        clip.SampleAnimation(anim.gameObject, t);
-        if (!anim.isHuman) return;
+        var anim = BuscarAnimatorConControlador(pose);
+        if (anim == null || !anim.isHuman) { clip.SampleAnimation(anim != null ? anim.gameObject : pose, t); return; }
         anim.enabled = true;
         anim.cullingMode = AnimatorCullingMode.AlwaysAnimate;
         anim.applyRootMotion = false;
         int capa = AnimatorLayerUtil.ResolveLayer(anim, estado, 0);
-        if (capa < 0) return;
+        if (capa < 0 && !string.IsNullOrEmpty(clip.name))
+            capa = AnimatorLayerUtil.ResolveLayer(anim, clip.name, 0);
+        if (capa < 0)
+            capa = AnimatorLayerUtil.ResolveLayer(anim, "Idle_Normal_NoWeapon", 0);
+        if (capa < 0)
+            capa = AnimatorLayerUtil.ResolveLayer(anim, "Idle01", 0);
+        if (capa < 0) { Debug.LogWarning($"[HornoProps] Fallback SampleAnimation en {pose.name} estado={estado} clip={clip.name}"); clip.SampleAnimation(anim.gameObject, t); return; }
         if (capa > 0) anim.SetLayerWeight(capa, 1f);
-        anim.Play(Animator.StringToHash(estado), capa, Mathf.Clamp01(t / Mathf.Max(0.01f, clip.length)));
+        string estadoCandidato = AnimatorLayerUtil.ResolveLayer(anim, estado, 0) >= 0 ? estado
+            : (AnimatorLayerUtil.ResolveLayer(anim, clip.name, 0) >= 0 ? clip.name
+            : (AnimatorLayerUtil.ResolveLayer(anim, "Idle_Normal_NoWeapon", 0) >= 0 ? "Idle_Normal_NoWeapon" : "Idle01"));
+        string estadoReal = AnimatorLayerUtil.ResolveStatePath(anim, estadoCandidato, capa);
+        anim.Play(Animator.StringToHash(estadoReal), capa, Mathf.Clamp01(t / Mathf.Max(0.01f, clip.length)));
         anim.Update(0f);
     }
 
@@ -96,7 +120,7 @@ internal sealed partial class Horno
         if (actor.prefab == null) return actor.PosEn(t) + Vector3.up * actor.AlturaDeCara;
         var pose = PoseDe(actor);
         MuestrearPose(actor, pose, t);
-        var anim = pose.GetComponentInChildren<Animator>(true);
+        var anim = BuscarAnimatorConControlador(pose);
         var hueso = anim != null && anim.isHuman ? anim.GetBoneTransform(HumanBodyBones.Head) : null;
         cabeza = hueso != null ? hueso.position + hueso.up * actor.Cabeza * 0.12f : actor.PosEn(t) + Vector3.up * actor.AlturaDeCara;
         _cabezas[clave] = cabeza;
@@ -140,7 +164,7 @@ internal sealed partial class Horno
             var hueso = anim != null && anim.isHuman ? anim.GetBoneTransform(beat.mano) : null;
             if (hueso == null) { Error($"{orden}: el actor necesita un esqueleto humanoide con {beat.mano}."); return 0f; }
             string explicito = orden.Op("gesto");
-            string[] candidatos = explicito != null ? new[] { explicito } : new[] { "Opening01_Begin", "Opening01_Stop", "Loot01_Begin", "Loot01_Stop", "FoundSomething_NoWeapon", "InteractWithGateObject_NoWeapon" };
+            string[] candidatos = explicito != null ? new[] { explicito } : new[] { "Opening01_Begin", "Opening01_Stop", "Loot01_Begin", "Loot01_Stop", "InteractWithGateObject_NoWeapon" };
             float mejor = float.PositiveInfinity, segundo = 0f;
             AnimationClip elegido = null;
             var tanteo = new List<string>();

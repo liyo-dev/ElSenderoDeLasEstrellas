@@ -86,7 +86,13 @@ public static class Cap1CajaDeEldranAjustes
             {
                 aviso.icon = icono;
                 aviso.buttonName = "";   // antes enseñaba el botón del mapa, que no pinta nada aquí
-                informe.Add("El aviso 25 («cuando veas este icono…») enseña el icono «?», no el botón del mapa.");
+                aviso.textId = "TUTORIAL_NPC_TALK_ICON";
+                aviso.text = "Cuando veas este icono sobre un personaje, significa que quiere algo. Habla con él.";
+                aviso.dismissWithCancel = true;
+                aviso.cerrarAlEmpezarCinematica = true;
+                aviso.cerrarAlEmpezarDialogo = true;
+                aviso.cerrarConSenal = "NPC_INTERACT_NPC_Eldran";
+                informe.Add("El aviso 25 («cuando veas este icono…») enseña el icono «?», texto de tutorial y se cierra al dialogar/cancelar.");
             }
             else informe.Add($"⚠ No encuentro {RutaIconoHablar}: el aviso 25 no se ha tocado.");
         }

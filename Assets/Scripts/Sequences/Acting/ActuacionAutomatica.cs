@@ -112,11 +112,13 @@ public static class ActuacionAutomatica
         }
         if (reaccion == ReaccionDeOyente.Automatica)
         {
-            if (EsPregunta(texto)) return null;
+            if (EsPregunta(texto)) return "Question01";
             if (EsRisa(texto)) return "Laugh01";
             if (EsAlarma(texto)) return "SenseSomethingStart_NoWeapon";
-            bool negativa = Palabra(texto, "no") || Palabra(texto, "nunca") || Palabra(texto, "jamás") || Palabra(texto, "tampoco");
-            return !string.IsNullOrWhiteSpace(texto) && !negativa ? "HeadNod01" : null;
+            bool negativa = Palabra(texto, "no") || Palabra(texto, "nunca") || Palabra(texto, "jamás") ||
+                            Palabra(texto, "tampoco") || Palabra(texto, "imposible");
+            if (negativa) return "HeadShake01";
+            return !string.IsNullOrWhiteSpace(texto) ? "HeadNod01" : null;
         }
         return reaccion switch
         {
@@ -126,6 +128,97 @@ public static class ActuacionAutomatica
             ReaccionDeOyente.Aplaudir => "HandClap01",
             _ => null
         };
+    }
+
+    /// <summary>
+    /// Devuelve la emoción facial que corresponde al oyente según el texto y la actitud del hablante.
+    /// </summary>
+    public static NPCEmotion ReaccionCara(string texto, NPCEmotion emocionHablante = NPCEmotion.None, AnimoDeAccion animo = AnimoDeAccion.Neutral)
+    {
+        if (animo != AnimoDeAccion.Neutral && animo != AnimoDeAccion.PorAccion)
+            return ReaccionesDeEscena.Cara(animo);
+
+        if (emocionHablante == NPCEmotion.Happy || EsRisa(texto)) return NPCEmotion.Happy;
+        if (emocionHablante == NPCEmotion.Angry) return NPCEmotion.Surprised;
+        if (emocionHablante == NPCEmotion.Sad) return NPCEmotion.Sad;
+        if (emocionHablante == NPCEmotion.Scared || EsAlarma(texto)) return NPCEmotion.Surprised;
+        if (EsPregunta(texto)) return NPCEmotion.Surprised;
+
+        return NPCEmotion.Neutral;
+    }
+
+    /// <summary>
+    /// Evalúa la reacción corporal y facial de un oyente equilibrando expresividad y cadencia natural.
+    /// Si el oyente ya reaccionó en la frase anterior y la frase actual es informativa normal, devuelve false
+    /// para que permanezca escuchando con atención en reposo ("en algún momento si pega que esté idle, no siempre").
+    /// </summary>
+    public static bool CalcularReaccionOyente(
+        string texto,
+        NPCEmotion emocionHablante,
+        int lineasDesdeUltimaReaccion,
+        string anteriorGesto,
+        out string gesto,
+        out NPCEmotion cara)
+    {
+        gesto = null;
+        cara = NPCEmotion.None;
+
+        bool esPregunta = EsPregunta(texto);
+        bool esAlarma = EsAlarma(texto);
+        bool esRisa = EsRisa(texto) || emocionHablante == NPCEmotion.Happy;
+        bool esNegativa = Palabra(texto, "no") || Palabra(texto, "nunca") || Palabra(texto, "jamás") ||
+                          Palabra(texto, "tampoco") || Palabra(texto, "imposible");
+
+        // Casos de reacción enfática inmediata: siempre disparan
+        if (esPregunta)
+        {
+            gesto = anteriorGesto == "Question01" ? "Question02" : "Question01";
+            cara = NPCEmotion.Surprised;
+            return true;
+        }
+        if (esAlarma)
+        {
+            gesto = "SenseSomethingStart_NoWeapon";
+            cara = NPCEmotion.Surprised;
+            return true;
+        }
+        if (esRisa)
+        {
+            gesto = "Laugh01";
+            cara = NPCEmotion.Happy;
+            return true;
+        }
+        if (esNegativa)
+        {
+            gesto = anteriorGesto == "HeadShake01" ? "HeadShake02" : "HeadShake01";
+            cara = NPCEmotion.Neutral;
+            return true;
+        }
+        if (emocionHablante == NPCEmotion.Angry)
+        {
+            gesto = "HeadShake01";
+            cara = NPCEmotion.Surprised;
+            return true;
+        }
+        if (emocionHablante == NPCEmotion.Sad)
+        {
+            gesto = "HeadNod01";
+            cara = NPCEmotion.Sad;
+            return true;
+        }
+
+        // Frases normales o explicativas: respetar cadencia natural.
+        // Si el personaje acaba de reaccionar en la línea previa, escucha en idle atento sin nuevo gesto
+        if (lineasDesdeUltimaReaccion == 0)
+        {
+            cara = NPCEmotion.Neutral;
+            return false;
+        }
+
+        // Si ha habido margen de escucha previa, asiente con la cabeza
+        gesto = "HeadNod01";
+        cara = NPCEmotion.Neutral;
+        return true;
     }
 }
 

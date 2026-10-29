@@ -9,11 +9,19 @@ public sealed class WaitCustomEventNode : NarrativeNode
     [NarrativeKey(NarrativeKeyKind.Signal)]
     public string eventKey;
 
+    [Tooltip("Si está marcado (por defecto), una señal ocurrida ANTES de llegar a este nodo también cuenta (comportamiento sticky). Si se desmarca, se descarta cualquier emisión previa y solo avanza si la señal ocurre mientras este nodo está esperando.")]
+    public bool acceptEarlierEvent = true;
+
     public override void Enter(NarrativeContext ctx, Action ready)
     {
+        if (!acceptEarlierEvent)
+        {
+            ctx?.Signals?.ClearPendingCustom(eventKey);
+        }
+
         // Usar GUID del nodo para hacer el flag específico a esta instancia
         var eventReceivedKey = $"__event_{guid}_{eventKey}_received";
-        if (ctx.Blackboard.Get<bool>(eventReceivedKey, false))
+        if (acceptEarlierEvent && ctx.Blackboard.Get<bool>(eventReceivedKey, false))
         {
             // El flag se consume al leerlo: si no se limpia, un nodo dentro de un bucle de reintento
             // avanzaría sin esperar el evento real en la segunda vuelta. Ver INC-448.
@@ -26,7 +34,7 @@ public sealed class WaitCustomEventNode : NarrativeNode
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[WaitCustom:{guid}] Suscribiéndose a '{eventKey}'...");
+        Debug.Log($"[WaitCustom:{guid}] Suscribiéndose a '{eventKey}' (acceptEarlier={acceptEarlierEvent})...");
 #endif
         void Handler()
         {

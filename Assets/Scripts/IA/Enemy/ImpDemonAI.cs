@@ -67,8 +67,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [Header("Lluvia de sombras (fase 3; en la revancha desde la fase 2)")]
     [Tooltip("Prefab con un quad/decal semitransparente que hace de sombra de aviso.")]
     [SerializeField] private GameObject rainShadowPrefab;
-    [Tooltip("Efecto de explosión/impacto que aparece tras el aviso.")]
+    [Tooltip("Visual del proyectil que cae del cielo sobre cada marca de aviso (lluvia de sombras).")]
     [SerializeField] private GameObject rainImpactPrefab;
+    [Tooltip("VFX que estalla en el suelo al impactar la lluvia de sombras. Si se deja vacío, usa spellEffectPrefab.")]
+    [SerializeField] private GameObject rainExplosionVFXPrefab;
     [SerializeField] private int rainCount = 8;
     [SerializeField] private float rainRadius = 7f;
     [Tooltip("Tiempo que las sombras permanecen en el suelo antes del impacto.")]
@@ -129,7 +131,11 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     [Tooltip("Permite iniciar el combate. Se activa externamente después de la presentación.")]
     public bool canStartCombat = false;
 
-    public void EmpezarCombate() => canStartCombat = true;
+    public void EmpezarCombate()
+    {
+        canStartCombat = true;
+        PlayAnimation(AnimIdle);
+    }
 
     [Header("Aro de runas / final alternativo (Paso 6 del refactor Tramo 1)")]
     [Tooltip("Al romper RuneCollar el demonio queda 'caído' en vez de morir (ver " +
@@ -478,6 +484,8 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
 
         if (agent && agent.isOnNavMesh)
             agent.isStopped = false;
+
+        PlayAnimation(AnimIdle);
     }
 
     private void UpdatePhase()
@@ -1218,7 +1226,7 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
                         fallDuration + 1f);
                     if (drops[i])
                     {
-                        drops[i].localScale = Vector3.Scale(drops[i].localScale, new Vector3(0.22f, 0.65f, 0.22f));
+                        drops[i].localScale = rainImpactPrefab ? rainImpactPrefab.transform.localScale : Vector3.one;
                         var render = drops[i].GetComponentInChildren<Renderer>(true);
                         if (render) alturaDelCentro[i] = render.bounds.extents.y;
                     }
@@ -1266,8 +1274,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
     private void CrearImpactoDeLluvia(Vector3 posicion)
     {
         var pool = VfxPoolService.Instance;
-        if (!pool || !spellEffectPrefab) return;
-        pool.Play(spellEffectPrefab, posicion + Vector3.up * 0.05f, Quaternion.identity, 2f);
+        if (!pool) return;
+        GameObject fx = rainExplosionVFXPrefab ? rainExplosionVFXPrefab : spellEffectPrefab;
+        if (fx) pool.Play(fx, posicion + Vector3.up * 0.05f, Quaternion.identity, 2f);
+        AudioService.Instance?.PlaySFX("Impacto_Oscuro_Grande", 0.9f, posicion);
     }
 
     private void DamagePlayerInRadius(Vector3 center, float radius, float damage)

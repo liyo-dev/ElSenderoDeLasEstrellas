@@ -100,6 +100,22 @@ namespace Game.NPC.States
             // ✅ FIX #10: cachear una vez, en vez de GetComponent en cada frame de OnUpdate
             _teamMember = context.Transform.GetComponent<NPCTeamMember>();
 
+            // Ocultar de inmediato el icono de quest del grafo si este NPC tiene uno (INC-851)
+            var narrativeActor = context.Transform != null ? context.Transform.GetComponent<NarrativeActor>() : null;
+            if (narrativeActor != null)
+            {
+                narrativeActor.HideQuestIcon();
+            }
+
+            // Notificar al grafo que el NPC interactuó/vio al jugador
+            var manager = context.Transform != null ? context.Transform.GetComponent<NPCBehaviourManagerV2>() : null;
+            string actorId = manager != null ? manager.PersistenceId : null;
+            if (!string.IsNullOrEmpty(actorId))
+            {
+                string clave = WaitNpcInteractionNode.SignalKeyFor(actorId);
+                DefaultNarrativeSignals.Instance?.RaiseCustom(clave, $"[AlertState] {actorId} vio al jugador");
+            }
+
             // FIX INC-019: el icono de detección (❗) estaba definido en NPCCombatConfig
             // (alertIconPrefab/questionIconPrefab/exclamationIconPrefab) y el sistema que lo
             // dibuja (NPCAlertIconController) ya existía, pero solo se usaba dentro del
@@ -388,6 +404,15 @@ namespace Game.NPC.States
             if (config != null && config.dialogueOnAlert != null)
             {
                 if (config.waitForAlertDialogue) _waitingForDialogue = true;
+
+                // Si es Erika, asegurar desbloqueo y equipamiento de Bola Prisma y Protección antes del combate (INC-851)
+                var mgr = context.Transform != null ? context.Transform.GetComponent<NPCBehaviourManagerV2>() : null;
+                if (mgr != null && mgr.PersistenceId == "NPC_Erika")
+                {
+                    AbilityUnlockPopupUI.ResetFlag("SPELL_UNLOCKED_Plasmaball");
+                    UnlockService.UnlockSpell(SpellId.Plasmaball, assignToEmptySlot: true);
+                    UnlockService.UnlockAbility(AbilityKey.Shield);
+                }
 
                 DialogueManager.Instance?.StartBattleDialogue(config.dialogueOnAlert, context.Transform, () =>
                 {

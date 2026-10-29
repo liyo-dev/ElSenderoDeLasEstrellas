@@ -18,6 +18,14 @@ public class PlayerPresetSO : ScriptableObject
              "al ganar combates. 0 = aún sin inicializar: se pone el valor inicial (ver EstadisticasDelPersonaje, INC-470).")]
     public float ataque, defensa;
 
+    [Header("Sintonía Estelar (Progresión sin niveles — INC-847)")]
+    [Tooltip("Puntos acumulados hacia el siguiente hito de sintonía.")]
+    public int sintoniaPuntos;
+    [Tooltip("Total de hitos alcanzados.")]
+    public int sintoniaHitos;
+    [Tooltip("Hitos pendientes de elegir.")]
+    public int sintoniaHitosPendientes;
+
     [Header("Desbloqueos")]
     [HideInInspector] public List<AbilityId> unlockedAbilities = new();
     public List<SpellId>   unlockedSpells    = new();

@@ -21,7 +21,8 @@ namespace Game.NPC.States
             Recoger,
             IrAEntregar,
             Entregar,
-            Pausa
+            Pausa,
+            IrAPuestoFinal
         }
 
         private readonly NPCWorkRoute _ruta;
@@ -30,7 +31,7 @@ namespace Game.NPC.States
         private float _temporizador;
         private float _tiempoSinProgreso;
         private Vector3 _ultimaPosicion;
-        private Transform _manoDerecha;
+        private Transform _carryPoint;
         private Transform _cajaEnMano;
         private bool _ocupada;
         private float _velocidad;
@@ -67,9 +68,7 @@ namespace Game.NPC.States
             }
 
             _ocupada = true;
-            _manoDerecha = context.UnityAnimator != null
-                ? context.UnityAnimator.GetBoneTransform(HumanBodyBones.RightHand)
-                : null;
+            _carryPoint = ObtenerOCrearCarryPoint(context);
 
             _velocidad = ambient.walkSpeed;
 
@@ -88,10 +87,20 @@ namespace Game.NPC.States
 
             if (!_ocupada || _ruta == null || !_ruta.isActiveAndEnabled) return;
 
+            // Mantener la caja estable horizontalmente (yaw del NPC) como en PlayerCarrySystem
+            if (_cajaEnMano != null && _carryPoint != null)
+            {
+                float npcYaw = context.Transform.eulerAngles.y;
+                float rotExtra = _ruta.rotacionCargaFrontal.y;
+                _cajaEnMano.position = _carryPoint.position;
+                _cajaEnMano.rotation = Quaternion.Euler(0f, npcYaw + rotExtra, 0f);
+            }
+
             switch (_fase)
             {
                 case Fase.IrARecoger:
                     ComprobarAtasco(context);
+                    UpdateMovementAnimation(context);
                     if (HaLlegado(context, _ruta.PuntoRecogida)) LlegarARecoger(context);
                     break;
 
@@ -102,6 +111,7 @@ namespace Game.NPC.States
 
                 case Fase.IrAEntregar:
                     ComprobarAtasco(context);
+                    UpdateMovementAnimation(context);
                     if (HaLlegado(context, _ruta.PuntoEntrega)) LlegarAEntregar(context);
                     break;
 
@@ -113,6 +123,12 @@ namespace Game.NPC.States
                 case Fase.Pausa:
                     _temporizador += Time.deltaTime;
                     if (_temporizador >= _ruta.pausaAntesDeVolver) EmpezarSiguienteViaje(context);
+                    break;
+
+                case Fase.IrAPuestoFinal:
+                    ComprobarAtasco(context);
+                    UpdateMovementAnimation(context);
+                    if (HaLlegado(context, _ruta.puntoAlTerminar)) LlegarAPuestoFinal(context);
                     break;
             }
         }
@@ -140,7 +156,7 @@ namespace Game.NPC.States
             if (_ruta == null || !_ruta.isActiveAndEnabled || !_ruta.EstaDisponible())
                 return new IdleState();
 
-            if (_fase == Fase.IrARecoger || _fase == Fase.IrAEntregar)
+            if (_fase == Fase.IrARecoger || _fase == Fase.IrAEntregar || _fase == Fase.IrAPuestoFinal)
             {
                 if (IsPathBlocked(context)) return new IdleState();
                 if (_tiempoSinProgreso > 3f) return new IdleState();
@@ -220,13 +236,13 @@ namespace Game.NPC.States
 
         private void CogerCajaYMarchar(NPCStateContext context)
         {
-            if (_manoDerecha != null)
+            if (_carryPoint != null)
             {
-                _cajaEnMano = _ruta.CogerCaja(_manoDerecha);
+                _cajaEnMano = _ruta.CogerCaja(_carryPoint);
             }
             else
             {
-                context.LogWarning("[WorkState] El NPC no tiene hueso de mano derecha; sigue la rutina sin caja visible.");
+                context.LogWarning("[WorkState] El NPC no tiene CarryPoint; sigue la rutina sin caja visible.");
             }
 
             if (_cajaEnMano != null) ActivarPoseDeCarga(context);
@@ -263,13 +279,40 @@ namespace Game.NPC.States
         {
             _ruta.SiguienteViaje();
 
-            if (!_ruta.QuedanCajas)
+            if (_ruta.EstaTerminada || !_ruta.QuedanCajas)
             {
+                if (_ruta.puntoAlTerminar != null)
+                {
+                    IrAPuestoFinal(context);
+                    return;
+                }
+
                 context.Brain?.ChangeState(new IdleState());
                 return;
             }
 
             IrARecoger(context);
+        }
+
+        private void IrAPuestoFinal(NPCStateContext context)
+        {
+            _fase = Fase.IrAPuestoFinal;
+            _temporizador = 0f;
+            _tiempoSinProgreso = 0f;
+            _ultimaPosicion = context.Transform.position;
+            IrA(context, _ruta.puntoAlTerminar);
+        }
+
+        private void LlegarAPuestoFinal(NPCStateContext context)
+        {
+            StopMovement(context);
+            MirarA(context, _ruta.puntoAlTerminar);
+            if (_ocupada)
+            {
+                _ruta.Soltar(context.Transform);
+                _ocupada = false;
+            }
+            context.Brain?.ChangeState(new IdleState());
         }
 
         // ── Utilidades ──────────────────────────────────────────────────────────
@@ -314,9 +357,7 @@ namespace Game.NPC.States
 
         /// <summary>
         /// Llegada propia del oficio: el NPC tiene que acercarse de verdad al punto para que la
-        /// caja quede a mano. La tolerancia de <see cref="NPCStateBase.HasReachedDestination"/> es
-        /// el stoppingDistance de la configuración (0,5 m por defecto), demasiado lejos para
-        /// recoger una caja de 0,3 m.
+        /// caja quede a mano.
         /// </summary>
         private bool HaLlegado(NPCStateContext context, Transform punto)
         {
@@ -327,7 +368,23 @@ namespace Game.NPC.States
             Vector3 b = punto.position;
             a.y = 0f;
             b.y = 0f;
-            return (a - b).sqrMagnitude <= 0.04f; // 0,2 m
+            return (a - b).sqrMagnitude <= 0.09f; // 0,3 m
+        }
+
+        private Transform ObtenerOCrearCarryPoint(NPCStateContext context)
+        {
+            if (context.Transform == null) return null;
+            var cp = context.Transform.Find("CarryPoint");
+            if (cp == null)
+            {
+                var go = new GameObject("CarryPoint");
+                cp = go.transform;
+                cp.SetParent(context.Transform, false);
+            }
+            Vector3 offset = _ruta != null ? _ruta.offsetCargaFrontal : new Vector3(0f, 0.65f, 0.42f);
+            cp.localPosition = offset;
+            cp.localRotation = Quaternion.identity;
+            return cp;
         }
     }
 }

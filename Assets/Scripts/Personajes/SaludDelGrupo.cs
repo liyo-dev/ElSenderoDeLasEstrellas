@@ -526,6 +526,54 @@ public sealed class SaludDelGrupo : MonoBehaviour
         for (int i = 0; i < _estado.Length; i++) EscribirEnPreset((Slot)i, preset);
     }
 
+    /// <summary>
+    /// Aumenta de forma permanente la vida y/o maná máximos de todos los miembros del grupo (INC-847, Sintonía Estelar).
+    /// </summary>
+    public void AumentarMaximosDelGrupo(float masVida, float masMana)
+    {
+        var preset = UnlockService.GetActivePreset();
+        for (int i = 0; i < _estado.Length; i++)
+        {
+            var p = (Slot)i;
+            if (p == _activo)
+            {
+                if (_salud != null)
+                {
+                    _estado[i].vidaMax = _salud.MaxHealth;
+                    _estado[i].vida = _salud.CurrentHealth;
+                }
+                if (_mana != null)
+                {
+                    _estado[i].manaMax = _mana.Max;
+                    _estado[i].mana = _mana.Current;
+                }
+            }
+            else
+            {
+                if (masVida > 0f)
+                {
+                    _estado[i].vidaMax += masVida;
+                    _estado[i].vida += masVida;
+                    if (_cuerpos[i] != null && _cuerpos[i].Vida != null)
+                    {
+                        _cuerpos[i].Vida.SetMaxHealth(_estado[i].vidaMax);
+                        _cuerpos[i].Vida.Heal(masVida);
+                    }
+                }
+                if (masMana > 0f)
+                {
+                    _estado[i].manaMax += masMana;
+                    _estado[i].mana += masMana;
+                }
+                if (preset != null)
+                {
+                    EscribirEnPreset(p, preset);
+                }
+            }
+            SaludCambiada?.Invoke(p);
+        }
+    }
+
     // ─── Caídas y relevo ───────────────────────────────────────────────────
 
     /// El que va al mando ha llegado a 0. Si queda alguien del grupo en pie, cae y el mando pasa

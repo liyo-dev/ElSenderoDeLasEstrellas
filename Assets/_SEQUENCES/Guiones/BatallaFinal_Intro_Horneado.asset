@@ -15,7 +15,7 @@ MonoBehaviour:
   nombre: BatallaFinal_Intro
   duracion: 169.11638
   presentacion: 1
-  huella: "2026-10-17 20:55 \xB7 5ecbf8b2b0fb970ddcf1868a79657af2"
+  huella: "2026-10-27 11:53 \xB7 5ecbf8b2b0fb970ddcf1868a79657af2"
   actores:
   - id: Player
     alias: will
@@ -128,161 +128,193 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 26.110273
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 28.57694
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 30.468843
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 57.159878
       tipo: 2
       estado: IdleWounded01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 65.53388
       tipo: 0
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 65.98388
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 66.06388
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 68.98572
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 71.15612
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 71.23612
       tipo: 2
       estado: HeadShake01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 72.90279
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 74.863266
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 89.049995
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 89.13
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 92.286934
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 101.90224
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 101.98224
       tipo: 2
       estado: HeadShake01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 104.747345
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 129.0831
       tipo: 1
       estado: Knockdown01_Ground
       congelar: 1
+      alFinal: 0
     - fundido: 0
       t: 142.23462
       tipo: 2
       estado: GetUp_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 142.23462
       tipo: 0
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 148.03679
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 148.11679
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 149.91536
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 152.58209
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 152.6621
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 155.22876
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 157.1774
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 164.43924
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 164.51924
       tipo: 2
       estado: Cheer01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 166.86638
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     caras:
     - t: 26.030273
       emocion: triste
@@ -347,121 +379,145 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 15.63517
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 18.101837
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 20.718504
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 23.935171
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 26.080273
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 30.418844
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 30.498844
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 34.493946
       tipo: 2
       estado: Laugh01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 34.543945
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 40.26539
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 40.34539
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 42.912056
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 46.76763
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 46.867634
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 46.947636
       tipo: 2
       estado: Angry01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 50.0143
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 52.630966
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 55.847633
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 57.209877
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 62.957214
       tipo: 2
       estado: Fear01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 144.30128
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 144.38129
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 148.08679
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     caras:
     - t: 15.55517
       emocion: enfado
@@ -591,81 +647,97 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 14.120068
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 15.60517
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 61.94388
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 62.957214
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 129.0831
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 133.79576
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 133.87576
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 136.7976
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 149.86536
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 149.94536
       tipo: 2
       estado: Question01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 152.6321
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 157.1274
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 157.2074
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 159.67406
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 162.68924
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     caras:
     - t: 14.040068
       emocion: sorpresa
@@ -828,26 +900,31 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 38.046616
       tipo: 2
       estado: Angry01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 40.315388
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 62.957214
       tipo: 2
       estado: Defend_NoWeapon
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 131.16843
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     caras:
     - t: 12.866751
       emocion: sorpresa
@@ -900,136 +977,163 @@ MonoBehaviour:
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 69.01572
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 71.20612
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 74.81326
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 74.893265
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 77.45993
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 80.6766
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 83.19327
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 85.80994
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 89.1
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 92.23693
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 92.31693
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 94.7836
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 98.00027
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 100.51694
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 101.95224
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 104.69734
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 104.77734
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 107.34401
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 110.88612
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 112.99306
       tipo: 3
       estado: 
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 113.07306
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 115.53973
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 118.156395
       tipo: 2
       estado: Talk03
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 121.37306
       tipo: 2
       estado: Talk01
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 123.88973
       tipo: 2
       estado: Talk02
       congelar: 0
+      alFinal: 0
     - fundido: 0
       t: 126.54837
       tipo: 4
       estado: 
       congelar: 0
+      alFinal: 0
     caras:
     - t: 65.53388
       emocion: neutral
@@ -1327,7 +1431,9 @@ MonoBehaviour:
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
-  - focos: []
+  - focos:
+    - t: 9.516751
+      p: {x: 0, y: 1.25, z: 6.2}
     t0: 9.516751
     t1: 12.866751
     tipo: 8
@@ -1382,7 +1488,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 14.040068
-      p: {x: 2.7403693, y: 0.8986882, z: -1.6908824}
+      p: {x: 2.7403693, y: 0.90687585, z: -1.6908824}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1391,7 +1497,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1.1313343
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.4
     mezcla: 0
@@ -1522,7 +1628,9 @@ MonoBehaviour:
     suavidad: 0.4
     mezcla: 0
     mano: 0.12
-  - focos: []
+  - focos:
+    - t: 60.09388
+      p: {x: 0, y: 1.2, z: -5}
     t0: 60.09388
     t1: 61.94388
     tipo: 8
@@ -1548,7 +1656,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 61.94388
-      p: {x: 2.7403693, y: 0.8986882, z: -1.6908824}
+      p: {x: 2.7403693, y: 0.90687585, z: -1.6908824}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1557,7 +1665,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1.1313343
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -1843,14 +1951,16 @@ MonoBehaviour:
     suavidad: 0.5
     mezcla: 0
     mano: 0.12
-  - focos: []
+  - focos:
+    - t: 129.0831
+      p: {x: 0, y: 1.35, z: -4.6}
     t0: 129.0831
     t1: 142.23462
     tipo: 8
     descripcion: fijo a el punto
     posiciones:
     - t: 129.0831
-      p: {x: 0, y: 0.25, z: -5.1}
+      p: {x: 0, y: 0.8, z: 1.4000001}
     lente: 42
     lenteFinal: 0
     sujetos: []
@@ -1932,7 +2042,7 @@ MonoBehaviour:
     descripcion: medio de estela
     posiciones:
     - t: 149.86536
-      p: {x: 0.9848687, y: 0.8986882, z: -1.5230544}
+      p: {x: 0.9848687, y: 0.90687585, z: -1.5230544}
     lente: 30
     lenteFinal: 0
     sujetos:
@@ -1941,7 +2051,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1.1313343
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -1983,7 +2093,7 @@ MonoBehaviour:
     - 1
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
-    alturaDelFoco: 1.1251935
+    alturaDelFoco: 1.1313343
     encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
@@ -2009,7 +2119,9 @@ MonoBehaviour:
     suavidad: 0.3
     mezcla: 0
     mano: 0.12
-  - focos: []
+  - focos:
+    - t: 164.43924
+      p: {x: 0, y: 1.2, z: -5.2}
     t0: 164.43924
     t1: 169.11638
     tipo: 8
@@ -2033,121 +2145,121 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202522337804937
+      rid: 5630202741379040004
     linea: 60
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202522337804938
+      rid: 5630202741379040005
     linea: 61
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202522337804939
+      rid: 5630202741379040006
     linea: 62
   - onlyIfFlag: 
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202522337804940
+      rid: 5630202741379040007
     linea: 73
   - onlyIfFlag: 
     skipIfFlag: 
     t: 9.516751
     beat:
-      rid: 5630202522337804941
+      rid: 5630202741379040008
     linea: 86
   - onlyIfFlag: 
     skipIfFlag: 
     t: 57.159878
     beat:
-      rid: 5630202522337804942
+      rid: 5630202741379040009
     linea: 128
   - onlyIfFlag: 
     skipIfFlag: 
     t: 62.957214
     beat:
-      rid: 5630202522337804943
+      rid: 5630202741379040010
     linea: 142
   - onlyIfFlag: 
     skipIfFlag: 
     t: 65.53388
     beat:
-      rid: 5630202522337804944
+      rid: 5630202741379040011
     linea: 152
   - onlyIfFlag: 
     skipIfFlag: 
     t: 65.53388
     beat:
-      rid: 5630202522337804945
+      rid: 5630202741379040012
     linea: 161
   - onlyIfFlag: 
     skipIfFlag: 
     t: 127.633095
     beat:
-      rid: 5630202522337804946
+      rid: 5630202741379040013
     linea: 209
   - onlyIfFlag: 
     skipIfFlag: 
     t: 129.0831
     beat:
-      rid: 5630202522337804947
+      rid: 5630202741379040014
     linea: 213
   - onlyIfFlag: 
     skipIfFlag: 
     t: 129.0831
     beat:
-      rid: 5630202522337804948
+      rid: 5630202741379040015
     linea: 215
   - onlyIfFlag: 
     skipIfFlag: 
     t: 129.0831
     beat:
-      rid: 5630202522337804949
+      rid: 5630202741379040016
     linea: 222
   - onlyIfFlag: 
     skipIfFlag: 
     t: 129.0831
     beat:
-      rid: 5630202522337804950
+      rid: 5630202741379040017
     linea: 224
   - onlyIfFlag: 
     skipIfFlag: 
     t: 141.47272
     beat:
-      rid: 5630202522337804951
+      rid: 5630202741379040018
     linea: 238
   - onlyIfFlag: 
     skipIfFlag: 
     t: 162.63924
     beat:
-      rid: 5630202522337804952
+      rid: 5630202741379040019
     linea: 272
   - onlyIfFlag: 
     skipIfFlag: 
     t: 162.63924
     beat:
-      rid: 5630202522337804953
+      rid: 5630202741379040020
     linea: 273
   - onlyIfFlag: 
     skipIfFlag: 
     t: 164.43924
     beat:
-      rid: 5630202522337804954
+      rid: 5630202741379040021
     linea: 275
   - onlyIfFlag: 
     skipIfFlag: 
     t: 168.01637
     beat:
-      rid: 5630202522337804955
+      rid: 5630202741379040022
     linea: 288
   - onlyIfFlag: 
     skipIfFlag: 
     t: 168.61638
     beat:
-      rid: 5630202522337804956
+      rid: 5630202741379040023
     linea: 290
   etiquetas:
   - nombre: inicio
@@ -2213,7 +2325,7 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202522337804937
+    - rid: 5630202741379040004
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2221,7 +2333,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202522337804938
+    - rid: 5630202741379040005
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2229,14 +2341,15 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 0.01
         waitForEnd: 0
-    - rid: 5630202522337804939
+    - rid: 5630202741379040006
       type: {class: MusicBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         continuarDondeIba: 1
         musicId: BattleTheme
+        fadeIn: 0
         fadeOut: 0.5
-    - rid: 5630202522337804940
+    - rid: 5630202741379040007
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2244,31 +2357,31 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.1
         waitForEnd: 0
-    - rid: 5630202522337804941
+    - rid: 5630202741379040008
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: RasgarAireMago
         waitForEnd: 1
-    - rid: 5630202522337804942
+    - rid: 5630202741379040009
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: PulsoPechoWill
         waitForEnd: 1
-    - rid: 5630202522337804943
+    - rid: 5630202741379040010
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ExpandirLuzPecho
         waitForEnd: 1
-    - rid: 5630202522337804944
+    - rid: 5630202741379040011
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: EntrarVacioTibio
         waitForEnd: 1
-    - rid: 5630202522337804945
+    - rid: 5630202741379040012
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2276,13 +2389,13 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.85
         waitForEnd: 0
-    - rid: 5630202522337804946
+    - rid: 5630202741379040013
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: FusionArchimagoWill
         waitForEnd: 1
-    - rid: 5630202522337804947
+    - rid: 5630202741379040014
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2290,19 +2403,19 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.65
         waitForEnd: 0
-    - rid: 5630202522337804948
+    - rid: 5630202741379040015
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: SalirVacioTibio
         waitForEnd: 1
-    - rid: 5630202522337804949
+    - rid: 5630202741379040016
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: IniciarDespertarPov
         waitForEnd: 1
-    - rid: 5630202522337804950
+    - rid: 5630202741379040017
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2310,19 +2423,19 @@ MonoBehaviour:
         color: {r: 0.98039216, g: 0.9607843, b: 0.92156863, a: 1}
         duration: 0.85
         waitForEnd: 0
-    - rid: 5630202522337804951
+    - rid: 5630202741379040018
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: FinalizarDespertarPov
         waitForEnd: 1
-    - rid: 5630202522337804952
+    - rid: 5630202741379040019
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         routine: ReaccionAnimeLiam
         waitForEnd: 1
-    - rid: 5630202522337804953
+    - rid: 5630202741379040020
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2336,7 +2449,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202522337804954
+    - rid: 5630202741379040021
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2350,7 +2463,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 0
         esperar: 0
-    - rid: 5630202522337804955
+    - rid: 5630202741379040022
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -2358,7 +2471,7 @@ MonoBehaviour:
         altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202522337804956
+    - rid: 5630202741379040023
       type: {class: ModuleBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 

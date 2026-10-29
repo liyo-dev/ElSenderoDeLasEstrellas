@@ -3331,6 +3331,16 @@ La esfera de la lluvia termina el descenso con el límite inferior de su malla s
   - `SelloDelPacto_Zona`: Construcción procedural propia basada en el círculo rúnico del pacto ceremonial, con velo de sombra y runas flotantes, reemplazando la antigua variante de hielo.
   - Ejecutado el menú `El Sendero/Magia/Aplicar VFX Liam` para regenerar todos los prefabs y actualizar los assets `MagicSpellSO`.
 
+### 19.9 Rediseño épico de la Lluvia de Sombras del Demonio (INC-855)
+
+- **Causa raíz de los proyectiles desfigurados:** En `ImpDemonAI.cs` (`SpawnRainWave`), cada proyectil de lluvia escalaba con `Vector3.Scale(drops[i].localScale, new Vector3(0.22f, 0.65f, 0.22f))`, aplastando el orbe de plasma en los ejes X y Z al 22% y estirándolo en Y al 65%. Visualmente aparecía como un fideo o huso distorsionado que no guardaba relación estética con el resto de efectos.
+- **Diferenciación respecto al orbe de plasma frontal:** El Demonio ya usa proyectiles de plasma frontal (`Plasma Sphere (1)`). Para la lluvia mágica celestial se creó un cometa de sombras propio procedural (`VFX_Demonio_LluviaSombras_Proyectil.prefab`) en `Assets/_VFX/Jefes/Demonio/`, compuesto por un núcleo sombrío estelar violeta oscuro (`#2C124D` y `#7A28CB`), estela vertical densa de brasas oscuras y distorsión mística, respetando su escala nativa sin deformaciones forzadas.
+- **Aviso en el suelo temático:** El indicador de suelo previo reutilizaba `RainShadowIndicator.prefab` (compartido con la lluvia de rocas del Gólem) con material naranja de fuego. Se sustituyó por `VFX_Demonio_LluviaSombras_Aviso.prefab` con un disco rúnico de vacío violeta (`M_Demonio_LluviaSombras_Aviso.mat`, shader `Liyo/RainShadowURP` con tinte `#5A189A`) y vaho espectral ascendente, coordinado con la advertencia en combate de Eldran: *«¡Está desesperado! Mira las sombras del suelo: ¡de ahí caerá su magia!»*.
+- **Desacople del impacto visual y SFX:** En `ImpDemonAI.cs` se incorporó el campo serializado `rainExplosionVFXPrefab` para evitar disparar la explosión de fuego genérica frontal (`spellEffectPrefab`). Se asigna `VFX_Demonio_LluviaSombras_Impacto.prefab` (onda expansiva de vacío, nova de esquirlas oscuras y humo negro) junto al SFX de impacto pesado `Impacto_Oscuro_Grande` (0.9f).
+- **Asignación en Prefabs y Menú de Editor:** `DemonioLluviaSombrasBuilder.cs` y `DemoniosAjustesDeCombate.cs` construyen los assets y los vinculan mediante `PrefabUtility` en `Demon.prefab` y `Demon2.prefab`. Menú disponible en *El Sendero ▸ Combate ▸ Demonios: actualizar lluvia de sombras épica (INC-855)*.
+
+---
+
 ## 20. Convenciones de documentación del proyecto
 
 Desde el 12 de agosto de 2026, este proyecto mantiene su documentación en un único sitio para que no se disperse en archivos `.md` sueltos que nadie vuelve a mirar. La regla, a partir de ahora:

@@ -40,6 +40,16 @@ Esta es la biblia de diseño del juego: historia, personajes, recorrido, reglas 
 - Todo objeto conseguido muestra un pop-up, salvo el botín de batalla, que se presenta en el informe de victoria.
 - El arte sigue el estilo Quibli.
 
+### Filosofía y Manifiesto de Diseño (Nuestra Brújula)
+
+*Para consultar en momentos de duda, bloqueo o fatiga creativa. Este juego no compite contra gigantes en horas de cinemáticas ni en fotorrealismo: compite en alma, profundidad, misterio y respeto a la inteligencia del jugador.*
+
+1. **Sin pintura amarilla ni pilotos automáticos:** El juego no resuelve los puzles por el jugador. No hay acompañantes gritando la solución a los cuatro segundos ni flechas fluorescentes guiando cada paso. El mapa sitúa los puntos de interés y da orientación, pero el misterio y la solución se conquistan con el ingenio y la observación del jugador (espíritu de la Cueva Helada de Pokémon o los templos clásicos de Zelda).
+2. **Combates que hacen pensar (No machacar botones):** El combate exige estrategia, lectura de aperturas, gestión de amenazas y sinergia real de los tres personajes (Will, Estela, Liam). Cada jefe es un **jefe-puzle** dinámico (aperturas rúnicas, interacción con el entorno, debilidades mecánicas, coordinación en dúo), no un saco de vida.
+3. **Maestría real (La memoria muscular del mago):** El grimorio no es un menú de pausa cómodo para elegir hechizos mientras el tiempo se detiene; los combos avanzados ($X, A, B, Y$) se aprenden a fuego en la memoria de los dedos. Lanzar un conjuro potente bajo la presión de un enemigo que embiste hace que el jugador sienta el auténtico mérito de ser mago.
+4. **Progresión orgánica (Sin niveles numéricos de relleno):** No hay nivel 1 ni nivel 99, ni inflación numérica de estadísticas artificiales. El jugador se vuelve más fuerte porque amplía su repertorio, domina a su grupo y toma decisiones reales sobre su crecimiento.
+5. **Recompensas con propósito y botín escaso:** Los combates normales alimentan la economía universal de **Esencia y Monedas** para comprar y mejorar en los pueblos (Renard, Tomasa, Patricia) y recargan orbes en caliente. Las piezas de equipo y las mejoras permanentes son **escasas y celebradas**, custodiadas por victorias reales y secretos del mundo.
+
 ## 2. Historia
 
 ### Premisa
@@ -157,13 +167,25 @@ El Duque de Regaliz, el Gólem de azúcar y la criatura de gominola pertenecen a
 | Slime | Se divide al golpearlo; cerca del agua. Pack gratuito de Dungeon Mason. |
 | Tortuga | Bloquea de frente; un empujón (Ráfaga, Nova de Luz) la voltea y queda expuesta. Pack gratuito de Dungeon Mason. |
 
+**Regla de diseño de encuentros (no colocar enemigos al azar):**
+En *MainWorld* y mazmorras **nunca se colocan enemigos sueltos simplemente para rellenar espacio vacío o patrullar caminos sin sentido**. Se diseñan **encuentros situacionales** con cuatro pilares obligatorios:
+1. **El escenario como actor:** alturas, coberturas, desfiladeros o cuellos de botella, zonas de sombra/luz o elementos destructibles.
+2. **Propósito táctico y sinergia del grupo:** la situación debe invitar a alternar personajes o mecánicas (el escudo de Estela, el posicionamiento de Liam, la magia a distancia de Will o el contraataque con B).
+3. **Composición de roles:** no agrupar enemigos idénticos; combinar presión frontal con molestias a distancia o disruptores.
+4. **Contexto ambiental o narrativo:** cada combate responde a una situación reconocible: un puesto de guardia/bloqueo de paso, una emboscada de codicia (mímicos / imps ladrones), un claro espectral nocturno (fantasmas) o un puzle en combate (engañar a una roca para derribar un muro agrietado y abrir un cofre). Menos combates, pero cada uno con identidad propia, lectura clara y recompensa.
+
+
 ## 4. Estructura del juego
 
 ### Capítulos y ritmo
 
-La historia principal combina acción, exploración, puzles, conversación y descanso. Capítulo 1: prólogo, vida del pueblo y despertar. Capítulo 2, «El camino elegido»: preparación, Estela, Gólem y entrada de Liam; termina con la bota en el vado, fin de la Primera Parte y de la demo. Su ruta principal dura unos 60 minutos, con unos 15 opcionales. El resto del arco recorre el Reino, Silas, la Piedra y el Sendero hasta el epílogo. La distribución numérica de esos capítulos posteriores no se fija a partir de los grafos archivados.
+La historia principal combina acción, exploración, puzles, conversación y descanso estructurada en capítulos cortos y autónomos para marcar un progreso claro:
+- **Capítulo 1: El Despertar** (novelas I–II): prólogo de la última noche del Archimago, vida cotidiana en el pueblo y combate contra el Demonio 1.
+- **Capítulo 2: Prepárate para el viaje** (novelas III–IV): la mañana después en WillHouse, los 4 encargos del pueblo (incluyendo combate de entrenamiento de defensa con Erika y puntería con Eldran) y la despedida con Oliver y Eldran.
+- **Capítulo 3: La pista del mar** (novelas V–VI): interludio del espejo de Tobías, investigación en la aldea de la costa y dilema con los contrabandistas.
+- **Capítulo 4: El Bosque Prohibido y el Gólem** (novelas VII–VIII): encuentro con Estela, Cúpula Estelar, puzle de Levitación, batalla contra el Gólem y unión de Liam en el vado (fin de la Primera Parte y de la demo).
 
-Los grafos activos de referencia son **Cap1.asset, Cap2.asset y Secundary.asset**. El guion siguiente fija el contenido, no su grado de implementación.
+El resto del arco recorre el Reino, Silas, la Piedra y el Sendero hasta el epílogo. Los grafos activos de referencia son **Cap1.asset, Cap2.asset y Secundary.asset**, continuándose en los activos modulares de cada capítulo.
 
 ### Mundo abierto
 
@@ -217,46 +239,57 @@ Después de la victoria se completa el encargo de Eldran y se vuelve a un punto 
 
 **ADAPTACIÓN DEL JUEGO frente a la novela V:** Liam provoca el ataque para encontrar a alguien de buen corazón, con el tono de la novela. En la escena del cristal no se ríe; se levanta cuando Will cae y la llave del aro se apaga al romperse el aro. Su frase clave: «No hace falta que me caiga bien. Solo tengo que llevarlo hasta allí.» En la novela manda al lobo por error, creyendo que Will es un ladrón; en el juego no hay cuneta ni trozo robado.
 
-### 5.6. Capítulo 2: El camino elegido — novelas III–VIII
+### 5.6. Capítulo 2: Prepárate para el viaje — novelas III–IV
 
-El capítulo empieza al ganar al Demonio y abarca del final de la novela III a la VIII. Will se prepara en el pueblo, investiga los aros, encuentra a Estela y vence al Gólem con ella. Termina cuando Liam entra en el grupo y pierde la bota en el vado.
-
-**Ritmo aprobado:**
+El capítulo empieza al ganar al Demonio 1 y abarca la recuperación y preparación de Will en su pueblo natal hasta su partida oficial. Se estructura en cuatro momentos bien diferenciados:
 
 | Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
 |---|---|---|---|
-| 2.1 | Liam observa a Will en el cristal | Cinemática | El jugador sabe más que Will |
-| 2.2 | La mañana después: vela, origen de Will y trozo del aro | Cinemática con interacción | Control de la magia y objetivo: encontrar a Estela |
-| 2.3 | Cuatro encargos en orden libre: capa de Victoria, poción regalada por la boticaria, pañuelo con Erika y cubos y piedras con Eldran | Gameplay | Equipo, consumibles, defensa con Oliver y Pía, tiro preciso y Bola Prisma con Eldran; «¿Debes hacerlo?» |
-| 2.4 | Lista de motivos, brújula y despedida; Oliver sale del grupo y Eldran parte a la capital | Cinemática | Elegir el viaje y conservar el camino a casa |
-| 2.5 | Liam habla con Tobías por el espejo | Cinemática de interludio | Para quién busca la cura |
-| 2.6 | Will reúne pistas en la aldea del mar para la hoja de avistamientos | Investigación | Escuchar, inspeccionar y unir pistas |
-| 2.7 | Sigue el carro de los contrabandistas y decide cómo actuar | Sigilo ligero y decisión | Aplicar la lección de Eldran: combate opcional, evitable, con consecuencia según lo que elijas |
-| 2.8 | Explora el Bosque Prohibido; Estela lee el aro y la hoja y entra en el grupo | Exploración y cinemática cómica | Runas de sometimiento y magia cuya fuerza no es propia |
-| 2.9 | Descanso en la casa entre raíces y primera receta: Cúpula Estelar | Respiro cómico y tutorial | Combo mágico |
-| 2.10 | Prueba de la campana en cuatro rondas; Will aprende Levitación | Puzle de combate por rondas | Maná, cambio de personaje, avisar y cooperar; fuego amigo y aviso de área |
-| 2.11 | Liam invoca al Gólem; Will y Estela lo vencen y encuentran la esquirla | Jefe | Aplicar lo aprendido y rematar en dúo |
-| 2.12 | Comparten la manzana harinosa y continúan apoyándose | Respiro | Aceptar ayuda sin imponerla |
-| 2.13 | Bifurcación, entrada de Liam al grupo y recuperación de su bota en el vado | Cinemática y gameplay | Viajar juntos; fin de la demo |
+| **2.1** | Liam observa a Will en el cristal | Cinemática | El jugador sabe más que Will (Liam busca a alguien de buen corazón; no es villano típico). |
+| **2.2** | La mañana después: vela, origen de Will y trozo del aro | Cinemática con interacción | Control fino de la magia con la vela. Eldran revela el origen de Will y le entrega el **Trozo del aro** (guardando el resto en sal). Meta: encontrar a Estela. |
+| **2.3** | Cuatro encargos de preparación en orden libre | Gameplay / Tutoriales | **Victoria:** Capa de viaje (+3 defensa).<br>**Boticaria:** Poción de vida regalada (uso de consumibles).<br>**Erika:** Reto, combate de entrenamiento (defensa/lectura corporal con escudo B) y entrega del **Pañuelo**.<br>**Eldran:** Tiro a cubos y piedras en la plaza; aprende **Bola Prisma** y túnica de viaje. «¿Debes hacerlo?» |
+| **2.4** | Lista de motivos, brújula y despedida | Cinemática / Diálogo | Despedida emotiva en el cruce: Oliver sale del grupo (permanece en el pueblo) y Eldran parte a la capital. Checkpoint `CAP2_FIN`. |
 
-**ADAPTACIONES DEL JUEGO** (no cambian el canon de la novela):
+**ADAPTACIONES DEL JUEGO:**
+1. **El aro roto del Demonio sustituye al trozo de hierro.** No hay lobo ni cuneta. Eldran guarda el aro en el cofre de sal y Will lleva el objeto «Trozo del aro» en su inventario.
+2. **Entrenamiento con Erika:** Retoma el combate de duelo tutorial. Erika reta a Will; Will pone a prueba su defensa frente a los ataques y escudo de Erika. Tras vencerla, Erika le entrega el **Pañuelo** (*«para el sudor y para acordarte de volver»*).
+3. **Oliver participa en la preparación**, acompañando a Will hasta la despedida en el cruce. No sale del pueblo; el grupo final será Will, Estela y Liam.
 
-1. **El aro roto del Demonio sustituye al trozo de hierro.** No hay lobo ni cuneta. Eldran guarda el aro en el cofre de sal y Will lleva el objeto «Trozo del aro»: lo muestra en la posada y lo leen Estela y Liam.
-2. **Liam provoca el ataque para encontrar a alguien de buen corazón**, como establece la GDD, con el tono de la novela. La escena del cristal y sus líneas al invocar al Gólem se reescriben sin tono de villano. En la novela V envía al lobo por error, creyendo que Will es un ladrón.
-3. **Oliver participa en la preparación**, junto a Pía en la prueba de Erika. Sale del grupo en la despedida y no sale del pueblo; el grupo final es Will, Estela y Liam.
-4. **«¿Debes hacerlo?» guía el aprendizaje.** La pregunta de Eldran se juega mediante contención y cooperación: parar, avisar, descansar y apoyarse en otro, con más peso que el daño.
+---
 
-**Canon que debe conservarse:** la novela muestra el miedo de Will a no estar a la altura, los planes de Liam y la desconfianza de Estela hacia su conducta controladora. Liam invoca al Gólem. Estela reconoce la invocación sin acusarlo.
+### 5.7. Capítulo 3: La pista del mar — novelas V–VI
 
-**Diseño del combate:** la armadura se resuelve rodeándolo (ficha en §3). Estela le provoca: tras unos ataques contra Will, el Gólem va a por ella, que levanta el escudo, y deja la espalda a Will. Estela guía el combate. Fase 2: lluvia de rocas. Fase 3: arranca rocas del claro, crece y salta con una onda. Al final aparece el sello de invocación y el dúo Will + Estela lo remata.
+Will viaja en solitario hacia la costa buscando pistas sobre los aros y las personas vistas en la visión.
 
-**Ajustes del Gólem (decididos):**
+| Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
+|---|---|---|---|
+| **3.1** | Liam habla con Tobías por el espejo | Cinemática de interludio | Para quién busca la cura Liam y su dilema interno. |
+| **3.2** | Will reúne pistas en la aldea del mar | Investigación | Escuchar, inspeccionar y unir pistas en la hoja de avistamientos. |
+| **3.3** | Sigue el carro de los contrabandistas y decide cómo actuar | Sigilo ligero y decisión | Aplicar la lección de Eldran: combate opcional, evitable, con consecuencias según la elección (avisar a la guardia o combatir; jaulas quemadas). |
 
-- Una explosión frontal muestra la armadura. El fuego de frente lo hace crecer: es una regla propia de este jefe, no una resistencia elemental general.
+---
+
+### 5.8. Capítulo 4: El Bosque Prohibido y el Gólem — novelas VII–VIII
+
+Will se adentra en el bosque, encuentra a Estela y se enfrentan a la primera gran prueba de invocación.
+
+| Bloque | Qué pasa | Tipo | Qué enseña o pone a prueba |
+|---|---|---|---|
+| **4.1** | Explora el Bosque Prohibido; Estela lee el aro y la hoja | Exploración y cinemática | Estela reconoce las runas de sometimiento y entra en el grupo. |
+| **4.2** | Descanso en la casa entre raíces y primera receta | Respiro cómico y tutorial | Aprende el combo mágico **Cúpula Estelar** (Y → X → B → A). |
+| **4.3** | Prueba de la campana en cuatro rondas | Puzle de combate por rondas | Aprende **Levitación**: gestión de maná, cambio de personaje, fuego amigo y áreas. |
+| **4.4** | Liam invoca al Gólem; Will y Estela lo vencen | Combate de Jefe | Mecánica de armadura, Cúpula Estelar, zona de barro y remate en dúo. |
+| **4.5** | Comparten la manzana harinosa y continúan apoyándose | Respiro | Aceptar ayuda sin imponerla. |
+| **4.6** | Bifurcación, entrada de Liam al grupo y bota en el vado | Cinemática y gameplay | Los tres viajan juntos; fin de la Primera Parte y de la demo jugable. |
+
+**Diseño del combate del Gólem:**
+- Una explosión frontal muestra la armadura. El fuego de frente lo hace crecer: regla propia de este jefe.
 - Un manotazo tira a Will delante de Estela; ella corta su hechizo para no alcanzarlo y Will levanta Cúpula Estelar sobre ambos. Bajo la barrera acuerdan llevar al Gólem al barro.
-- Una zona de barro junto al arroyo lo hunde unos segundos. Abre la ventana de la fase 2 para atacar las grietas y mostrar las runas de la espalda.
+- Una zona de barro junto al arroyo lo hunde unos segundos. Abre la ventana de la fase 2 para atacar las grietas y mostrar las runas de la espalda. Remate final en dúo Will + Estela.
 
-### 5.7. La taberna, el arresto y la deuda del Rey — novelas IX–XII
+---
+
+### 5.9. Capítulo 5: La taberna, el arresto y la deuda del Rey — novelas IX–XII
 
 La escena de la taberna combina un respiro cómico con una persecución de Estela que pone al pueblo en peligro. La explosión que daña la montaña tiene que sentirse como consecuencia de la persecución, no como un gag aislado: el jugador ayuda a evacuar o proteger a los vecinos antes del remate de la secuencia.
 
@@ -264,7 +297,7 @@ Después, la guardia conduce al grupo ante el Rey. La tensión por los daños y 
 
 **Adaptación jugable:** persecución con rutas y rescate de civiles; audiencia que establezca la condena; puzzle de celda basado en habilidades complementarias; defensa del castillo como combate distinto del primer Demonio. Separar claramente los dos jefes y dar a la victoria una consecuencia narrativa visible.
 
-### 5.8. La biblioteca y la salida del Reino — novelas XIII–XV
+### 5.10. La biblioteca y la salida del Reino — novelas XIII–XV
 
 En la biblioteca real, el grupo investiga las versiones contradictorias del Sendero y las referencias a deseos de curación. Liam oculta para quién busca una cura; Will acaba preguntándoselo directamente. Antes de partir, una conversación con Tobías a través del espejo conecta la aventura con la persona concreta que Liam intenta salvar. La escena importa porque Liam deja de ser solo «el compañero misterioso»: el jugador ve el vínculo fraternal y lo que está en juego.
 
@@ -272,7 +305,7 @@ Durante el viaje, el grupo aprende a leer rastros mágicos. La ruta del Fuego Fa
 
 **Diseño jugable:** intercalar búsqueda de información, conversación opcional y exploración; evitar que el Fuego Fatuo sea únicamente un puzzle de seguir un color. Las pistas deben poder leerse por forma, movimiento o reacción del entorno, además del color, y el jugador debe poder recuperarse de una ruta falsa sin reiniciar un tramo largo.
 
-### 5.9. Silas y el hechizo del tiempo — novela XVI
+### 5.11. Silas y el hechizo del tiempo — novela XVI
 
 El amigo de Eldran se llama Silas. Su petición no es un favor de recadero: el grupo recupera un reloj perdido en un taller atrapado en un ciclo de cuarenta segundos. Resolverlo requiere observar qué cambia, recordar qué persiste entre ciclos y combinar las capacidades de Will, Estela y Liam. La historia revela la amistad de juventud entre Silas y Eldran y el duelo de Eldran por Selene, que explica parte de su sobreprotección.
 
@@ -284,7 +317,7 @@ Silas explica el ritual para llegar a la Piedra y la regla del Sendero: no premi
 
 Silas explica que la Piedra elige, que el altar concede un único deseo literal y que no resucita a los muertos. Revela cómo las runas de sometimiento filtran la corrupción del Sendero. El grupo elige entrar también para detener esa fuente. Silas entrega el barco y sus mapas viejos del Pueblo Pesquero como adaptación de juego; no enseña todavía la fórmula del tiempo, que se obtiene en la Piedra.
 
-### 5.10. El precio pequeño: Risco y Vega — novela XVII
+### 5.12. El precio pequeño: Risco y Vega — novela XVII
 
 Antes de llegar a la Piedra, Will y sus amigos encuentran dos aldeas que comparten un manantial. Una construyó la presa; la otra depende del agua. Ambas tienen documentos que justifican sus reclamos. Liam propone resolverlo con persuasión mágica; Estela se opone a decidir por la gente. Will propone investigar y negociar, aunque no exista una solución perfecta ni todos queden satisfechos.
 
@@ -292,7 +325,7 @@ Antes de llegar a la Piedra, Will y sus amigos encuentran dos aldeas que compart
 
 Este episodio es una prueba del carácter de Will antes de la prueba mágica. El «precio pequeño» es aceptar que un acuerdo imperfecto puede ser mejor que imponer una solución definitiva.
 
-### 5.11. La Piedra Ancestral y el acceso al Sendero — novela XVIII
+### 5.13. La Piedra Ancestral y el acceso al Sendero — novela XVIII
 
 El camino atraviesa ruinas donde quienes llegaron antes dejaron sus nombres y motivos. La cámara de la Piedra solo se ve reflejada en el agua; el grupo debe avanzar confiando en ese reflejo. Al recitar Will el conjuro de Silas, aparece el Guardián. El combate se gana cooperando: Will sostiene la línea, Estela presiona y Liam encuentra puntos débiles con su magia de pacto.
 
@@ -304,13 +337,13 @@ El grupo estudia las reglas, acuerda señales y un punto de reunión y decide cr
 
 **Adaptación del juego:** el combate del Guardián sustituye al examen de Will tras el que se aparta en la novela. En la Piedra, Will aprende también el vuelo: levantarse a sí mismo completa el ejercicio de la cuchara. El umbral ofrece aviso de punto sin retorno y guardado explícito.
 
-### 5.12. Entrada al Sendero y prueba de Will — novelas XIX–XX
+### 5.14. Entrada al Sendero y prueba de Will — novelas XIX–XX
 
 Los tres cruzan juntos. La primera prueba enfrenta a Will con recuerdos, no con una sucesión de caminos individuales para cada personaje. Al principio el laberinto convierte una vergüenza social en humor; después llega a la pesadilla recurrente y a recuerdos que alimentan el miedo de Will a no llegar a tiempo. Estela y Liam lo acompañan hasta que el Sendero los separa y Will debe dejar de obedecer cada llamada de auxilio ilusoria. La salida consiste en reconocer que no puede salvar a todo el mundo y aun así elegir a quién escuchar.
 
 **Diseño jugable:** laberinto de recuerdos con cambios de tono y una mecánica de priorización. Las voces falsas reutilizan patrones aprendidos, pero el jugador obtiene señales para distinguirlas. No castigar la exploración con un fallo terminal por atender a una ilusión; el conflicto debe expresar el límite emocional de Will, no parecer una trampa arbitraria.
 
-### 5.13. Chuchelandia — novela XXI
+### 5.15. Chuchelandia — novela XXI
 
 La segunda prueba pertenece a Estela, pero el grupo la afronta unido. El reino obliga a sus habitantes a declararse felices y castiga cualquier muestra de tristeza. A Estela le asignan el papel de reina; Will y Liam quedan disfrazados y pueden investigar el palacio y ayudar a quienes esconden lo que sienten. El antagonista no es solo un reino cursi: es una falsa misericordia que evita el dolor borrando la libertad de sentirlo.
 
@@ -320,7 +353,7 @@ Estela debe enfrentarse a la pérdida de su hermana Mara y a la culpa que arrast
 
 **Adaptación del juego:** se conserva el diseño de esta prueba y su puesta en escena del GDD. No se presenta como reproducción literal de la novela.
 
-### 5.14. La feria y la pausa del grupo — novela XXII
+### 5.16. La feria y la pausa del grupo — novela XXII
 
 Después de las pruebas, los amigos descansan en una isla segura y luego visitan una feria. Comparten atracciones, comida y conversación. Will recibe un peluche con forma de bola de fuego. La feria ofrece al jugador un respiro real: lavar ropa, reparar equipo, jugar y conversar sin una amenaza inmediata. Durante esta pausa Liam se acerca a confesar algo, pero aún no se atreve a decirlo.
 
@@ -328,7 +361,7 @@ Después de las pruebas, los amigos descansan en una isla segura y luego visitan
 
 **Adaptación del juego:** se conserva el diseño de esta prueba y su puesta en escena del GDD. No se presenta como reproducción literal de la novela.
 
-### 5.15. La Caja: prueba de Liam — novela XXIII
+### 5.17. La Caja: prueba de Liam — novela XXIII
 
 La tercera prueba es la única que separa al grupo. Liam entra solo en la Caja, un laberinto de espejos; Will y Estela ven parte de la prueba desde fuera a través de una superficie de luz. La Caja muestra primero un recuerdo feliz de Liam con Tobías y después el deterioro de sus decisiones: el diagnóstico, el libro robado, el pacto y el uso de Will como cebo.
 
@@ -336,7 +369,7 @@ Liam se enfrenta a una sombra que representa sus propias decisiones. La salida n
 
 **Diseño jugable:** tramo de Liam en solitario que combina navegación, combate y recuerdos interactivos. Cada espejo ofrece contexto y también una decisión de Liam. Evitar que el combate venza a la responsabilidad moral: la sombra se supera admitiendo la autoría de los actos. Alternar control de Liam con la observación de Will y Estela solo en momentos que añadan contexto.
 
-### 5.16. La ruptura y sus consecuencias — novela XXIV
+### 5.18. La ruptura y sus consecuencias — novela XXIV
 
 Al salir Liam, Estela exige una explicación. Will pregunta directamente si Liam pensaba matarlo; Liam admite que quiso usar su poder para abrir el altar y que se dijo que evitaría su muerte. No consigue justificar haberle quitado la posibilidad de elegir. Estela ataca impulsivamente; Will recibe parte del golpe al interponerse. Estela se marcha y Liam se aleja por otro camino.
 
@@ -346,7 +379,7 @@ No resolver el conflicto con una sola disculpa ni con un QTE que haga creer que 
 
 **Recorrido:** al salir de la Caja, Will atiende su herida y revisa sus objetos sin una amenaza activa. Luego cruza un tramo compacto de orientación, obstáculo y emboscada, leyendo rastros de Estela y Liam. Encuentros cortos enseñan a sobrevivir solo; la magia abre un bloqueo y permite castigar blancos expuestos. El final tiene un punto seguro. No se alarga como una zona de farmeo.
 
-### 5.17. Reunión con límites y confianza reconstruida — novela XXV
+### 5.19. Reunión con límites y confianza reconstruida — novela XXV
 
 Will encuentra primero a Estela y reconoce que ella le hizo daño; decide acompañarla sin exigir que finja estar bien. Juntos rescatan a Liam de las bestias. Will le ofrece la mano, pero el reencuentro no borra la traición: el grupo acuerda reglas concretas. Liam responde preguntas, no toma decisiones por ellos y no usa magia oscura sin consentimiento; Estela no tiene que declarar perdón inmediato. Los tres vuelven a cooperar porque eligen hacerlo con límites claros.
 
@@ -354,15 +387,15 @@ Will encuentra primero a Estela y reconoce que ella le hizo daño; decide acompa
 
 **Recorrido:** Will y Estela avanzan por una ruta compartida con conversaciones opcionales. El rescate de Liam combina contener bestias y liberarlo del peligro; una amenaza cambia de objetivo para premiar la protección del compañero. No hay barra de amistad ni perdón automático.
 
-### 5.18. Preparación antes del altar
+### 5.20. Preparación antes del altar
 
 Los tres revisan sus recursos, acuerdan señales de retirada y dejan claro que nadie es sacrificable. Hablan de la cura de Tobías y de lo que aún desconocen de Will. No anticipan como certeza la separación del Archimago antes de su revelación.
 
 **Diseño jugable:** área segura para revisar objetos, hechizos y grupo; conversación opcional y entrada al combate cuando el jugador quiera. Sin temporizador ni puzle de confirmación. El simulacro de práctica previo al altar no entra por ahora.
 
-El grupo aplica lo aprendido sobre los deseos literales en los archivos de Silas (5.9).
+El grupo aplica lo aprendido sobre los deseos literales en los archivos de Silas.
 
-### 5.19. El Mago Oscuro y la batalla final — novelas XXVI–XXVII
+### 5.21. El Mago Oscuro y la batalla final — novelas XXVI–XXVII
 
 El grupo llega junto al altar y se enfrenta al Mago Oscuro. La verdad sobre el Archimago que vive con Will se revela durante el conflicto; no convertir una explicación monologada en una cinemática interminable. Repartir la revelación entre líneas y recuerdos breves que permitan al jugador conservar orientación y control.
 
@@ -380,7 +413,7 @@ Will intenta otra vez el tiempo y no le queda nada. Le pide a la Luz primera alg
 - **La Marea:** la primera no tiene hueco; el tiempo se para y Will rebobina (se conservan heridas y cansancio). Después Will grita «¡Conmigo! ¡Ya!», los compañeros se colocan tras él y su escudo aguanta la segunda. Nada se puede fallar.
 - **El hechizo final se llama Amanecer.** La energía de Estela solo aparece en la cinemática en la que Will lo crea; después es un combo normal de la Y, y LT+RT con Estela sigue siendo el dúo. Con Amanecer la barra baja de verdad hasta romperse. La hoja de sombra, el sacrificio de Liam, la plegaria y el choque final reflejan el prólogo.
 
-### 5.20. El deseo, el derrumbe y la resurrección
+### 5.22. El deseo, el derrumbe y la resurrección
 
 Tras destruir al Mago, Will pide al altar la cura de Tobías: conserva sus recuerdos y voluntad, y nadie carga con la enfermedad ni con el daño de curarlo. El altar cura a Tobías; no devuelve a Liam.
 
@@ -388,7 +421,7 @@ El Sendero se cierra. Estela carga con Liam hacia el umbral. Allí deja el cuerp
 
 **Diseño jugable:** deseo y resurrección son decisiones distintas y comprensibles. No se pueden fallar por un QTE ni por tardar en confirmar. El colapso conduce al umbral con obstáculos breves que reutilizan habilidades conocidas, sin un cronómetro que obligue a repetir el duelo. La elección final conserva el deseo de Will de vivir y su decisión voluntaria; el regreso se revela en el epílogo.
 
-### 5.21. Epílogo: el adiós del Archimago y el regreso de Will
+### 5.23. Epílogo: el adiós del Archimago y el regreso de Will
 
 Liam despierta junto a Estela y la Piedra apagada. Ella cuenta que Will la empujó fuera. Una figura aparece sobre la piedra. Estela cree que es Will; la figura responde «No soy Will». Es el Archimago. Usó la fuerza que le quedaba para devolver a Will a casa y se marcha con Liora, su familia y sus amigos.
 
@@ -407,6 +440,15 @@ Los elementos son **identidad y herramientas de puzle**. No hay debilidades ni r
 **El grupo en combate (decidido 8 oct).** Will, Estela y Liam tienen **vida y maná propios**, igual al mando que con IA. Los enemigos reparten a quién atacan, así que proteger al compañero tiene sentido. Un personaje que llega a 0 queda **caído** en el suelo y deja de luchar; si era el que llevaba el jugador, el control pasa solo a otro que siga en pie. **Game Over solo si caen los tres.** Se revive de cuatro formas: otro personaje se acerca y **mantiene A** unos segundos (expuesto mientras lo hace); un **objeto** raro (pluma o elixir); **Brisa Sanadora** levanta a los caídos de su zona; y **al ganar el combate** los caídos se levantan con poca vida. La muerte de Liam en la batalla final es historia, no una caída de combate.
 
 El maná y el gesto de lanzamiento marcan el ritmo; los hechizos no tienen recarga propia. El escudo sostenido consume maná. Se alternan presión y descanso. Los momentos narrativos del jefe final, la muerte de Liam y las decisiones finales no tienen posibilidad de fallo.
+
+**Progresión del jugador: sin niveles numéricos, elección entre Vida y Maná (decidido 25 oct 2026).**
+El jugador no acumula niveles clásicos (1 a 50) ni sube estadísticas de ataque/defensa. La progresión sigue la fórmula de acción-aventura:
+1. **Medidor de Sintonía Estelar:** Los combates derrotando criaturas y purificando amenazas llenan una barra de progreso. Al completarse, el jugador alcanza un hito de expansión y **elige libremente entre dos dones**:
+   - 💚 **Vigor (+Vida Máxima):** Aumenta permanentemente la barra de vida y la resistencia a errores.
+   - 💙 **Flujo (+Maná Máximo):** Amplía la reserva mágica para sostener escudos y encadenar combos y hechizos potentes.
+2. **Sin estadísticas frías de Ataque/Defensa:** El daño base de los hechizos es predecible y depende de la ejecución y el punto débil del enemigo. El equipo (túnicas, capas, accesorios) no da números flotantes de ataque/defensa; otorga **rasgos y pasivas de estilo de juego** (ej: reducción de coste de maná en magias de Viento, mayor ventana de aturdimiento en contraataques, bonos de evasión).
+3. **Flujo de economía (Esencia y Monedas):** Los combates comunes otorgan Esencia y Monedas (`IT_Esencia`, `IT_Coin`) y orbes de recuperación en caliente. La Esencia acumulada se invierte en los pueblos (tienda y contratos de Renard, sastres y artesanos) para adquirir nuevas prendas y mejoras.
+4. **Equipo escaso y significativo:** Las piezas de equipo nunca caen de enemigos comunes al azar; se obtienen como recompensa de jefes, pruebas opcionales o cofres fuertemente custodiados.
 
 ### 6.2. Magia
 

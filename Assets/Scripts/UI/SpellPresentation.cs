@@ -16,7 +16,7 @@ public static class SpellPresentationLookup
     private static readonly Dictionary<SpellId, SpellPresentation> Defaults = new()
     {
         { SpellId.Fireball,     new SpellPresentation { spellId = SpellId.Fireball,     title = "Bola de fuego",  description = "Proyectil ardiente que abrasa a los enemigos." } },
-        { SpellId.Plasmaball,   new SpellPresentation { spellId = SpellId.Plasmaball,   title = "Plasmaball",     description = "Orbe de energía pura de alto impacto." } },
+        { SpellId.Plasmaball,   new SpellPresentation { spellId = SpellId.Plasmaball,   title = "Página: Bola Prisma", description = "Orbe de luz estelar pura concentrada. Cambia de hechizo con [LB] y lánzalo con [X]." } },
         { SpellId.CorazonEstelar, new SpellPresentation { spellId = SpellId.CorazonEstelar, title = "Corazón Estelar", description = "Un haz de energía estelar pura." } },
         { SpellId.Levitation,   new SpellPresentation { spellId = SpellId.Levitation,   title = "Levitación",     description = "Permite flotar sobre el terreno." } },
         { SpellId.AuraEstelar,  new SpellPresentation { spellId = SpellId.AuraEstelar,  title = "Aura Estelar",   description = "Rodéate de un aura de energía estelar." } },
@@ -36,7 +36,14 @@ public static class SpellPresentationLookup
         }
 
         if (Defaults.TryGetValue(spellId, out var preset))
+        {
+            if (preset.icon == null)
+            {
+                var sp = GrimorioDelPersonaje.Hechizo(spellId);
+                if (sp != null) preset.icon = sp.attackIcon;
+            }
             return preset;
+        }
 
         // Hechizos del grimorio (INC-503): nombre, icono, de quién es y cómo se lanza, del propio hechizo.
         var spell = GrimorioDelPersonaje.Hechizo(spellId);

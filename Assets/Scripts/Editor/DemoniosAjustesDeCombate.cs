@@ -24,6 +24,7 @@ public static class DemoniosAjustesDeCombate
         Object onda = LeerReferencia<GolemBossAI>(Golem, "shockwaveVFX");
         Object sombra = LeerReferencia<ImpDemonAI>(Demonio2, "rainShadowPrefab");
         Object impacto = LeerReferencia<ImpDemonAI>(Demonio2, "rainImpactPrefab");
+        Object explosion = LeerReferencia<ImpDemonAI>(Demonio2, "rainExplosionVFXPrefab");
         if (onda == null) informe.Add("⚠ El Gólem no tiene shockwaveVFX: el rugido irá sin onda.");
         if (sombra == null) informe.Add("⚠ El Demonio 2 no tiene rainShadowPrefab: el Demonio 1 no tendrá lluvia ni marca de embestida.");
 
@@ -37,6 +38,7 @@ public static class DemoniosAjustesDeCombate
             var ia = new SerializedObject(raiz.GetComponentInChildren<ImpDemonAI>(true));
             PonerSiVacio(ia, "rainShadowPrefab", sombra);
             PonerSiVacio(ia, "rainImpactPrefab", impacto);
+            PonerSiVacio(ia, "rainExplosionVFXPrefab", explosion);
             PonerSiVacio(ia, "vfxOndaDeFase", onda);
             ia.FindProperty("dashDamage").floatValue = 18f;
             ia.FindProperty("rainDamage").floatValue = 15f;

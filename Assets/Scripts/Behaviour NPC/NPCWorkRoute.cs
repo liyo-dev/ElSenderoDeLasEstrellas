@@ -39,8 +39,12 @@ public class NPCWorkRoute : MonoBehaviour
     public Material materialCaja;
 
     [Min(1)]
-    [Tooltip("Cajas que empiezan en cada pila.")]
-    public int cajasPorPila = 3;
+    [Tooltip("Cajas que empiezan en la pila de recogida.")]
+    public int cajasPorPila = 2;
+
+    [Min(0)]
+    [Tooltip("Cajas que empiezan ya en la pila de entrega (0 = vacía al empezar, para llenarse con las que se traen).")]
+    public int cajasEnDestinoAlEmpezar = 0;
 
     [Tooltip("Tamaño del cubo provisional. No afecta a un prefabCaja asignado.")]
     public Vector3 tamanoCaja = new Vector3(0.3f, 0.26f, 0.3f);
@@ -74,18 +78,35 @@ public class NPCWorkRoute : MonoBehaviour
     [Tooltip("Si tiene texto, la ruta solo está disponible cuando esa señal se ha levantado alguna vez.")]
     public string soloSiSenal;
 
+    [Tooltip("Si tiene texto, la ruta solo está disponible cuando esa quest está activa.")]
+    public string soloSiQuest;
+
     [Tooltip("Si tiene texto, la ruta deja de estar disponible cuando esa señal se ha levantado.")]
     public string dejaDeSiSenal;
 
     [Tooltip("Si tiene texto, la ruta deja de estar disponible cuando esa quest está activa o completada.")]
     public string dejaDeSiQuest;
 
-    [Header("Caja en la mano")]
-    [Tooltip("Posición local de la caja respecto al hueso de la mano derecha.")]
-    public Vector3 offsetEnMano = Vector3.zero;
+    [Header("Punto de carga (CarryPoint frontal)")]
+    [Tooltip("Posición local del punto de carga frontal respecto al NPC mientras transporta la caja.")]
+    public Vector3 offsetCargaFrontal = new Vector3(0f, 0.65f, 0.42f);
 
-    [Tooltip("Rotación local de la caja respecto al hueso de la mano derecha.")]
-    public Vector3 giroEnMano = Vector3.zero;
+    [Tooltip("Rotación local de la caja en el punto de carga.")]
+    public Vector3 rotacionCargaFrontal = Vector3.zero;
+
+    [Header("Caja en la mano (compatibilidad legacy)")]
+    [Tooltip("Posición local legacy respecto al hueso de la mano derecha.")]
+    public Vector3 offsetEnMano = new Vector3(-0.154f, -0.365f, -0.262f);
+
+    [Tooltip("Rotación local legacy respecto al hueso de la mano derecha.")]
+    public Vector3 giroEnMano = new Vector3(18.2f, 122.4f, 87.5f);
+
+    [Header("Finalización de la rutina")]
+    [Tooltip("Si es true, cuando la pila de origen se vacía la rutina se da por terminada y no se invierte el recorrido.")]
+    public bool terminarAlVaciarOrigen = false;
+
+    [Tooltip("Punto al que se desplaza el NPC al terminar la faena (ej: puesto de venta en la carreta). Si es null, se queda en el punto de entrega.")]
+    public Transform puntoAlTerminar;
 
     // ── Estado de runtime ───────────────────────────────────────────────────────
     private List<Transform> _cajasOrigen = new();
@@ -98,9 +119,11 @@ public class NPCWorkRoute : MonoBehaviour
     private Transform _ocupante;
     private Transform _cajaEnMano;
     private bool _construida;
+    private bool _terminada;
 
     public bool IsOccupied => _ocupante != null;
     public bool QuedanCajas => _cajasOrigen.Count > 0;
+    public bool EstaTerminada => _terminada;
     public Transform PuntoRecogida => _puntoOrigen != null ? _puntoOrigen : puntoRecogida;
     public Transform PuntoEntrega => _puntoDestino != null ? _puntoDestino : puntoEntrega;
 
@@ -167,12 +190,26 @@ public class NPCWorkRoute : MonoBehaviour
 
     public bool EstaDisponible()
     {
+        if (_terminada) return false;
         if (puntoRecogida == null || puntoEntrega == null) return false;
 
-        var senales = DefaultNarrativeSignals.Instance;
-        if (senales == null) return true;
+        var senales = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
+        if (senales == null)
+        {
+            if (!string.IsNullOrEmpty(soloSiSenal) || !string.IsNullOrEmpty(soloSiQuest))
+                return false;
+            return true;
+        }
 
         if (!string.IsNullOrEmpty(soloSiSenal) && !senales.HasEverRaised(soloSiSenal)) return false;
+
+        if (!string.IsNullOrEmpty(soloSiQuest))
+        {
+            var estado = senales.GetQuestState(soloSiQuest);
+            if (estado != NarrativeQuestState.Active)
+                return false;
+        }
+
         if (!string.IsNullOrEmpty(dejaDeSiSenal) && senales.HasEverRaised(dejaDeSiSenal)) return false;
 
         if (!string.IsNullOrEmpty(dejaDeSiQuest))
@@ -204,13 +241,12 @@ public class NPCWorkRoute : MonoBehaviour
     // ── Cajas ───────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Coge la última caja de la pila de recogida y la cuelga de la mano. Devuelve null si no
-    /// quedan cajas o no hay hueso de mano.
+    /// Coge la última caja de la pila de recogida y la acopla al socket de carga frontal (CarryPoint).
     /// </summary>
-    public Transform CogerCaja(Transform mano)
+    public Transform CogerCaja(Transform socketCarga)
     {
         if (_cajaEnMano != null) return _cajaEnMano;
-        if (mano == null) return null;
+        if (socketCarga == null) return null;
 
         if (_cajasOrigen.Count == 0)
         {
@@ -223,7 +259,19 @@ public class NPCWorkRoute : MonoBehaviour
         _cajasOrigen.RemoveAt(ultimo);
         if (caja == null) return null;
 
-        NPCWorldPoint.ColocarPropEnMano(caja, mano, offsetEnMano, giroEnMano);
+        // Si el socket es el CarryPoint frontal (estilo PlayerCarrySystem), se acopla centrado
+        if (socketCarga.name.Contains("CarryPoint"))
+        {
+            caja.SetParent(socketCarga, worldPositionStays: false);
+            caja.localPosition = Vector3.zero;
+            caja.localRotation = Quaternion.Euler(rotacionCargaFrontal);
+        }
+        else
+        {
+            // Fallback para hueso legacy de mano derecha
+            NPCWorldPoint.ColocarPropEnMano(caja, socketCarga, offsetEnMano, giroEnMano);
+        }
+
         _cajaEnMano = caja;
         return caja;
     }
@@ -264,8 +312,17 @@ public class NPCWorkRoute : MonoBehaviour
     /// </summary>
     public void SiguienteViaje()
     {
-        if (_cajasOrigen.Count == 0 && _cajasDestino.Count > 0)
-            IntercambiarPilas();
+        if (_cajasOrigen.Count == 0)
+        {
+            if (terminarAlVaciarOrigen)
+            {
+                _terminada = true;
+                return;
+            }
+
+            if (_cajasDestino.Count > 0)
+                IntercambiarPilas();
+        }
     }
 
     private void IntercambiarPilas()
@@ -292,8 +349,11 @@ public class NPCWorkRoute : MonoBehaviour
         _puntoDestino = puntoEntrega;
         _pilaOrigen = CrearPila(puntoRecogida, "Pila de recogida");
         _pilaDestino = CrearPila(puntoEntrega, "Pila de entrega");
-        LlenarPila(_pilaOrigen, _cajasOrigen);
-        LlenarPila(_pilaDestino, _cajasDestino);
+        LlenarPila(_pilaOrigen, _cajasOrigen, cajasPorPila);
+        if (!terminarAlVaciarOrigen)
+            LlenarPila(_pilaDestino, _cajasDestino, cajasPorPila);
+        else if (cajasEnDestinoAlEmpezar > 0)
+            LlenarPila(_pilaDestino, _cajasDestino, cajasEnDestinoAlEmpezar);
         _construida = true;
     }
 
@@ -306,9 +366,9 @@ public class NPCWorkRoute : MonoBehaviour
         return pila;
     }
 
-    private void LlenarPila(Transform pila, List<Transform> cajas)
+    private void LlenarPila(Transform pila, List<Transform> cajas, int cantidad)
     {
-        for (int i = 0; i < cajasPorPila; i++)
+        for (int i = 0; i < cantidad; i++)
         {
             var caja = CrearCaja(pila, i);
             if (caja != null) cajas.Add(caja);

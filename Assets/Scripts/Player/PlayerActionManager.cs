@@ -91,6 +91,8 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     private readonly Dictionary<ActionMode, HashSet<PlayerAbility>> _blockedByMode = new();
     private readonly Dictionary<ActionMode, ModeRule> _ruleByMode = new();
     private Animator _anim;
+    private Invector.vCharacterController.vThirdPersonMotor _motor;
+    private PlayerDialogueAnimator _dialogueAnimator;
     private float _originalUpperWeight = 0f;
     private readonly object _lockOwner = new();
     private bool _hasMovementLock;
@@ -102,6 +104,8 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
     void Awake()
     {
         _anim = GetComponent<Animator>();
+        _motor = GetComponent<Invector.vCharacterController.vThirdPersonMotor>();
+        _dialogueAnimator = GetComponentInChildren<PlayerDialogueAnimator>(true);
         if (_anim == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -470,10 +474,11 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
 #endif
             }
 
-            // Zeroa los parámetros de movimiento del Animator inmediatamente.
+            // Zeroa los parámetros de movimiento del Animator inmediatamente y asegura estado en el suelo.
             // ControlLocomotionType() queda bloqueado por lockMovement=true y nunca llama a
             // SetAnimatorMoveSpeed(), por lo que InputMagnitude quedaría con el valor del
             // frame anterior y la animación de caminar seguiría reproduciéndose.
+            // Si el jugador entra a cinemática en el aire, IsGrounded quedaría en false congelado (INC-843).
             if (_anim != null)
             {
                 try
@@ -481,11 +486,26 @@ public class PlayerActionManager : MonoBehaviour, IActionValidator
                     _anim.SetFloat(Invector.vCharacterController.vAnimatorParameters.InputMagnitude, 0f);
                     _anim.SetFloat(Invector.vCharacterController.vAnimatorParameters.InputHorizontal, 0f);
                     _anim.SetFloat(Invector.vCharacterController.vAnimatorParameters.InputVertical, 0f);
+                    _anim.SetBool(Invector.vCharacterController.vAnimatorParameters.IsGrounded, true);
+                    _anim.SetFloat(Invector.vCharacterController.vAnimatorParameters.GroundDistance, 0f);
+
+                    var state = _anim.GetCurrentAnimatorStateInfo(0);
+                    if (state.IsName("Falling") || state.IsName("Jump") || state.IsName("JumpMove") || state.IsName("Airborne"))
+                    {
+                        if (_dialogueAnimator != null) _dialogueAnimator.ReturnToLocomotion(0f);
+                        else if (_anim.HasState(0, Animator.StringToHash("Free Locomotion")))
+                            _anim.CrossFadeInFixedTime(Animator.StringToHash("Free Locomotion"), 0.1f, 0, 0f);
+                    }
 #if UNITY_EDITOR
-                    if (debugLogs) Debug.Log("[PlayerActionManager] InputMagnitude/H/V reseteados a 0 (modo Cinematic)");
+                    if (debugLogs) Debug.Log("[PlayerActionManager] InputMagnitude/H/V reseteados a 0 e IsGrounded=true (modo Cinematic)");
 #endif
                 }
                 catch { }
+            }
+
+            if (_motor != null)
+            {
+                _motor.ForzarEnElSuelo();
             }
         }
 

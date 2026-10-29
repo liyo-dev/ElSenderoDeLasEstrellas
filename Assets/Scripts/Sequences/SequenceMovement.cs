@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.AI;
@@ -109,6 +109,7 @@ public static class SequenceMovement
         actor.SyncRotation();
         if ((position - puntoSolicitado).sqrMagnitude > 0.01f) actor.Face(puntoSolicitado);
         actor.DestinoReservado = null;
+        actor.ForzarEnElSuelo();
     }
 
     /// Lleva a un actor hasta una posición del mundo.

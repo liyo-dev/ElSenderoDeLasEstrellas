@@ -80,39 +80,28 @@ Shader "El Sendero/CristalAstral"
                 return frac(p.x * p.y);
             }
 
-            // Red de constelaciones Voronoi
-            float voronoiLines(float2 uv)
+            // Campo estelar puntual limpio y brillante (estrellas bajo el cristal astral)
+            float starField(float2 uv, float threshold, float twinkleSpeed)
             {
                 float2 g = floor(uv);
-                float2 f = frac(uv);
+                float2 f = frac(uv) - 0.5;
+                float h = hash21(g);
+                if (h < threshold) return 0.0;
 
-                float minDist1 = 8.0;
-                float minDist2 = 8.0;
+                float2 offset = float2(hash21(g + 13.5), hash21(g + 47.2)) - 0.5;
+                float dist = length(f - offset * 0.7);
+                float star = smoothstep(0.08, 0.01, dist);
 
-                for (int y = -1; y <= 1; y++)
-                {
-                    for (int x = -1; x <= 1; x++)
-                    {
-                        float2 lattice = float2(x, y);
-                        float2 offset = float2(hash21(g + lattice), hash21(g + lattice + 15.7));
-                        float2 p = lattice + offset - f;
-                        float d = dot(p, p);
+                float twinkle = sin(_Time.y * twinkleSpeed + h * 6.28) * 0.35 + 0.65;
+                return star * twinkle;
+            }
 
-                        if (d < minDist1)
-                        {
-                            minDist2 = minDist1;
-                            minDist1 = d;
-                        }
-                        else if (d < minDist2)
-                        {
-                            minDist2 = d;
-                        }
-                    }
-                }
-
-                // Las líneas son la frontera entre celdas de Voronoi
-                float lineVal = abs(sqrt(minDist2) - sqrt(minDist1));
-                return 1.0 - smoothstep(0.02, 0.12, lineVal);
+            // Velo suave de nebulosa cósmica (ondas etéreas suaves, sin aristas)
+            float nebulaField(float2 p)
+            {
+                float n1 = sin(p.x * 0.25 + sin(p.y * 0.20 + _Time.y * 0.12));
+                float n2 = cos(p.y * 0.30 + cos(p.x * 0.22 - _Time.y * 0.09));
+                return (n1 + n2) * 0.25 + 0.5;
             }
 
             Varyings vert(Attributes IN)
@@ -138,26 +127,35 @@ Shader "El Sendero/CristalAstral"
                 float3 viewDirWS = normalize(GetCameraPositionWS() - IN.positionWS);
                 float3 normalWS = normalize(IN.normalWS);
 
-                // 1. Fresnell y borde del camino
+                // 1. Fresnell y borde suave del camino
                 float NdotV = saturate(dot(normalWS, viewDirWS));
                 float fresnel = pow(1.0 - NdotV, _EdgeFadePower);
 
-                // 2. Respiración de constelaciones y runas
-                float pulse = sin(_Time.y * _RunePulseSpeed + IN.positionWS.x * 0.2 + IN.positionWS.z * 0.2) * 0.5 + 0.5;
-                float runes = voronoiLines(IN.positionWS.xz * (_RuneScale * 0.1));
-                float3 emission = _RuneEmission.rgb * (runes * _RuneIntensity * lerp(0.6, 1.4, pulse));
+                // 2. Manto de estrellas bajo el cristal astral
+                float2 posXZ = IN.positionWS.xz * (_RuneScale * 0.35);
+                float stars1 = starField(posXZ * 3.0, 0.45, 2.2);
+                float stars2 = starField(posXZ * 1.6 + 23.4, 0.70, 1.4);
+                float totalStars = stars1 * 0.6 + stars2 * 1.3;
 
-                // 3. Brillo y reflejo especular suave
+                // 3. Velo de nebulosa suave
+                float neb = nebulaField(IN.positionWS.xz * 0.12);
+                float3 colNebula = lerp(float3(0.015, 0.030, 0.075), float3(0.045, 0.020, 0.085), neb);
+
+                // 4. Emisión estelar viva
+                float pulse = sin(_Time.y * _RunePulseSpeed + IN.positionWS.x * 0.1 + IN.positionWS.z * 0.1) * 0.2 + 0.8;
+                float3 emission = _RuneEmission.rgb * (totalStars * _RuneIntensity * pulse);
+
+                // 5. Brillo y reflejo especular suave
                 Light mainLight = GetMainLight();
                 float3 halfDir = normalize(mainLight.direction + viewDirWS);
                 float NdotH = saturate(dot(normalWS, halfDir));
                 float spec = pow(NdotH, _Smoothness * 64.0) * _Smoothness;
 
-                // 4. Color final compuesto
-                float3 col = _BaseColor.rgb + spec * _SpecularColor.rgb + emission;
-                col += _EdgeGlowColor.rgb * (fresnel * 0.5);
+                // 6. Color final compuesto
+                float3 col = _BaseColor.rgb + colNebula + spec * _SpecularColor.rgb + emission;
+                col += _EdgeGlowColor.rgb * (fresnel * 0.45);
 
-                float alpha = saturate(_BaseColor.a + fresnel * 0.3 + runes * 0.2);
+                float alpha = saturate(_BaseColor.a + fresnel * 0.25);
 
                 return half4(col, alpha);
             }

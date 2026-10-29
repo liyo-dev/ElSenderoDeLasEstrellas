@@ -1,6 +1,6 @@
 # Parte de horneado: Despertar_2_Contraataque
 
-2026-10-06 08:09 · guion `Assets/_SEQUENCES/Guiones/Despertar_2_Contraataque.guion.txt`
+2026-10-27 11:54 · guion `Assets/_SEQUENCES/Guiones/Despertar_2_Contraataque.guion.txt`
 
 **0:07,3** de secuencia · 2 frases · 4 planos · 11 efectos · 2 personajes
 

@@ -54,7 +54,23 @@ public class SequenceActor
     public NPCBehaviourManagerV2 Manager { get; private set; }
     public NPCSimpleAnimator NpcAnimator { get; private set; }
     public PlayerDialogueAnimator PlayerAnimator { get; private set; }
-    public NPCEmotionController Emotion { get; private set; }
+    private NPCEmotionController _emotion;
+    private NPCEmotionController _emotionControllerExplicito;
+    public NPCEmotionController Emotion
+    {
+        get
+        {
+            if (_emotion == null && Transform != null)
+            {
+                if (_emotionControllerExplicito != null && (_emotionControllerExplicito.EyeMeshCount > 0 || _emotionControllerExplicito.MouthMeshCount > 0))
+                    _emotion = _emotionControllerExplicito;
+                else
+                    _emotion = EmotionControllerResolver.Resolve(Transform.gameObject) ?? _emotionControllerExplicito;
+            }
+            return _emotion;
+        }
+        private set => _emotion = value;
+    }
     public NavMeshAgent Agent { get; private set; }
     private Animator _animadorDeActuacion;
     private bool _animadorDeActuacionResuelto;
@@ -220,7 +236,7 @@ public class SequenceActor
             _eyeHeight = eyeHeight > 0f ? eyeHeight : -1f,
             _animadorDeActuacion = animator,
             _animadorDeActuacionResuelto = animator != null,
-            Emotion = emotionController != null ? emotionController : EmotionControllerResolver.Resolve(transform.gameObject),
+            _emotionControllerExplicito = emotionController,
             NpcAnimator = npcAnim,
             PlayerAnimator = playerAnim,
             Manager = manager,
@@ -253,10 +269,21 @@ public class SequenceActor
                     var anims = Transform.GetComponentsInChildren<Animator>(true);
                     for (int i = 0; i < anims.Length; i++)
                     {
-                        if (anims[i] != null && anims[i].runtimeAnimatorController != null)
+                        if (anims[i] != null && anims[i].gameObject.activeInHierarchy && anims[i].runtimeAnimatorController != null)
                         {
                             _animadorDeActuacion = anims[i];
                             break;
+                        }
+                    }
+                    if (_animadorDeActuacion == null)
+                    {
+                        for (int i = 0; i < anims.Length; i++)
+                        {
+                            if (anims[i] != null && anims[i].runtimeAnimatorController != null)
+                            {
+                                _animadorDeActuacion = anims[i];
+                                break;
+                            }
                         }
                     }
                     if (_animadorDeActuacion == null && anims.Length > 0)
@@ -314,10 +341,10 @@ public class SequenceActor
     }
 
     private Coroutine _poseDelJugador;
-    public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f)
+    public void HoldPose(string stateName, bool congelarAlFinal = false, float fundido = 0.12f, bool alFinal = false)
     {
         if (string.IsNullOrEmpty(stateName)) return;
-        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal, fundido: fundido); return; }
+        if (NpcAnimator != null) { NpcAnimator.HoldPose(stateName, congelarAlFinal: congelarAlFinal, fundido: fundido, alFinal: alFinal); return; }
 
         // La pose del jugador cancela el gesto puntual para que su cierre no la interrumpa.
         if (PlayerAnimator == null || !PlayerAnimator.isActiveAndEnabled || !TieneEstado(stateName)) return;
@@ -326,44 +353,73 @@ public class SequenceActor
         var animador = AnimadorDeActuacion;
         int capa = AnimatorLayerUtil.ResolveLayer(animador, stateName, animador.GetLayerIndex("UpperBody"));
         if (capa > 0) animador.SetLayerWeight(capa, 1f);
-        animador.CrossFadeInFixedTime(Animator.StringToHash(stateName), fundido, capa, 0f);
-        _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal));
+        string rutaEstado = AnimatorLayerUtil.ResolveStatePath(animador, stateName, capa);
+        float targetNorm = stateName == "FoundSomething_NoWeapon" ? 0.65f : 0.98f;
+        if (alFinal)
+        {
+            animador.Play(Animator.StringToHash(rutaEstado), capa, targetNorm);
+        }
+        else
+        {
+            animador.CrossFadeInFixedTime(Animator.StringToHash(rutaEstado), fundido, capa, 0f);
+        }
+        _poseDelJugador = PlayerAnimator.StartCoroutine(SostenerPoseDelJugador(stateName, congelarAlFinal, alFinal));
     }
 
-    private System.Collections.IEnumerator SostenerPoseDelJugador(string nombre, bool congelar)
+    private System.Collections.IEnumerator SostenerPoseDelJugador(string nombre, bool congelar, bool alFinal = false)
     {
         var animador = AnimadorDeActuacion;
         int capa = AnimatorLayerUtil.ResolveLayer(animador, nombre, animador.GetLayerIndex("UpperBody"));
-        int hash = Animator.StringToHash(nombre);
-        bool poseCongelada = false;
-        while (animador != null && PlayerAnimator != null && PlayerAnimator.isActiveAndEnabled)
+        string rutaEstado = AnimatorLayerUtil.ResolveStatePath(animador, nombre, capa);
+        int hash = Animator.StringToHash(rutaEstado);
+        float targetNorm = nombre == "FoundSomething_NoWeapon" ? 0.65f : 0.98f;
+        bool poseCongelada = alFinal;
+        try
         {
-            yield return null;
-            if (animador == null) yield break;
-            var estado = animador.GetCurrentAnimatorStateInfo(capa);
-            if (estado.IsName(nombre))
+            while (animador != null && PlayerAnimator != null && PlayerAnimator.isActiveAndEnabled)
             {
-                bool sale = animador.IsInTransition(capa) && !animador.GetNextAnimatorStateInfo(capa).IsName(nombre);
-                if (sale && (estado.loop || congelar))
+                yield return null;
+                if (animador == null) yield break;
+                var estado = animador.GetCurrentAnimatorStateInfo(capa);
+                if (estado.IsName(nombre))
                 {
-                    animador.Play(hash, capa, estado.loop ? Mathf.Repeat(estado.normalizedTime, 1f) : 1f);
-                }
-                else if (congelar && !estado.loop && estado.normalizedTime >= 1f)
-                {
-                    if (!poseCongelada)
+                    bool sale = animador.IsInTransition(capa) && !animador.GetNextAnimatorStateInfo(capa).IsName(nombre);
+                    if (congelar)
                     {
-                        animador.Play(hash, capa, 1f);
-                        poseCongelada = true;
+                        if (estado.normalizedTime >= targetNorm || sale || poseCongelada)
+                        {
+                            animador.Play(hash, capa, targetNorm);
+                            if (capa == 0) animador.speed = 0f;
+                            poseCongelada = true;
+                            continue;
+                        }
+                    }
+                    else if (sale && estado.loop)
+                    {
+                        animador.Play(hash, capa, Mathf.Repeat(estado.normalizedTime, 1f));
+                    }
+                }
+                else if (!animador.IsInTransition(capa))
+                {
+                    if (poseCongelada)
+                    {
+                        animador.Play(hash, capa, targetNorm);
+                    }
+                    else
+                    {
+                        poseCongelada = false;
+                        animador.speed = 1f;
+                        animador.CrossFadeInFixedTime(hash, 0.12f, capa, 0f);
                     }
                 }
             }
-            else if (!animador.IsInTransition(capa))
-            {
-                poseCongelada = false;
-                animador.CrossFadeInFixedTime(hash, 0.12f, capa);
-            }
         }
-        _poseDelJugador = null;
+        finally
+        {
+            if (animador != null && animador.speed == 0f)
+                animador.speed = 1f;
+            _poseDelJugador = null;
+        }
     }
 
     /// Suelta la pose sostenida. `aIdle` a false la deja puesta y no devuelve a nadie a su pose
@@ -375,9 +431,10 @@ public class SequenceActor
         if (_poseDelJugador != null && PlayerAnimator != null) PlayerAnimator.StopCoroutine(_poseDelJugador);
         bool teniaPose = _poseDelJugador != null;
         _poseDelJugador = null;
+        var animador = AnimadorDeActuacion;
+        if (animador != null && animador.speed == 0f) animador.speed = 1f;
         if (teniaPose && aIdle)
         {
-            var animador = AnimadorDeActuacion;
             int capa = animador != null ? animador.GetLayerIndex("UpperBody") : -1;
             int idle = Animator.StringToHash("UpperIdle");
             if (capa >= 0 && animador.HasState(capa, idle)) animador.CrossFadeInFixedTime(idle, 0.2f, capa);
@@ -866,7 +923,7 @@ public class SequenceActor
     // ── Candado de comportamiento ambiental ──────────────────────────────────
 
     /// Saca al NPC de su comportamiento ambiental (Wander/Idle) y lo deja bajo control de la
-    /// secuencia. Idempotente. No aplica al jugador (su input ya lo bloquea ActionMode.Cinematic).
+    /// secuencia. Idempotente.
     public void Hold()
     {
         // Fuera de Play no hay corrutinas ni FSM corriendo: retener a un NPC no significa nada y
@@ -874,7 +931,12 @@ public class SequenceActor
         // herramientas de Editor que resuelven planos (ver SequenceShotCapture) resuelven actores
         // igual que el juego, y pasan por aquí.
         if (!Application.isPlaying) return;
-        if (IsPlayer || _hold != null) return;
+        if (IsPlayer)
+        {
+            ForzarEnElSuelo();
+            return;
+        }
+        if (_hold != null) return;
 
         if (Manager != null && Manager.enabled && Manager.gameObject.activeInHierarchy)
         {
@@ -909,5 +971,48 @@ public class SequenceActor
         if (_avoidanceGuardada && Agent != null)
             Agent.obstacleAvoidanceType = _avoidanceAntesDelCandado;
         _avoidanceGuardada = false;
+    }
+
+    /// <summary>
+    /// Asegura que el actor (NPC o jugador) quede en estado de suelo, anulando caídas residuales
+    /// que puedan atraparlo en Falling/Jump al ser colocado o al entrar en cinemáticas.
+    /// Ver INC-843.
+    /// </summary>
+    public void ForzarEnElSuelo()
+    {
+        if (NpcAnimator != null)
+        {
+            NpcAnimator.ForzarEnElSuelo();
+        }
+
+        if (IsPlayer || Motor != null)
+        {
+            if (Motor != null)
+            {
+                Motor.ForzarEnElSuelo();
+            }
+
+            var anim = AnimadorDeActuacion;
+            if (anim != null)
+            {
+                anim.SetBool(Invector.vCharacterController.vAnimatorParameters.IsGrounded, true);
+                anim.SetFloat(Invector.vCharacterController.vAnimatorParameters.GroundDistance, 0f);
+
+                var state = anim.GetCurrentAnimatorStateInfo(0);
+                if (state.IsName("Falling") || state.IsName("Jump") || state.IsName("JumpMove") || state.IsName("Airborne"))
+                {
+                    PlayerAnimator?.ReturnToLocomotion(0f);
+                }
+            }
+            else
+            {
+                PlayerAnimator?.ReturnToLocomotion(0f);
+            }
+
+            if (Transform != null && Transform.TryGetComponent<Rigidbody>(out var rb) && !rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+            }
+        }
     }
 }

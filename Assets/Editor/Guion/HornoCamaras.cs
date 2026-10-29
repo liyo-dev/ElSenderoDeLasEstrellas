@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -420,7 +421,8 @@ internal sealed partial class Horno
     /// de la casa. Para las casas está el collider, que sí es exacto.
     private bool CamaraAdentro(Vector3 c)
     {
-        if (Physics.CheckSphere(c, 0.3f, ~0, QueryTriggerInteraction.Ignore)) return true;
+        int mascara = ~(1 << 10);
+        if (Physics.CheckSphere(c, 0.3f, mascara, QueryTriggerInteraction.Ignore)) return true;
         foreach (var b in Cajas())
         {
             if (Mathf.Max(b.size.x, Mathf.Max(b.size.y, b.size.z)) > 4.5f) continue;
@@ -578,6 +580,7 @@ internal sealed partial class Horno
             foreach (var r in raiz.GetComponentsInChildren<Renderer>(false))
             {
                 if (!r.enabled || r is ParticleSystemRenderer || r is TrailRenderer || r is LineRenderer) continue;
+                if (r.gameObject.layer == 10 || r.name.IndexOf("floor", StringComparison.OrdinalIgnoreCase) >= 0) continue;
                 var b = r.bounds;
                 if (b.size.y < 0.4f) continue;                          // suelo, alfombras, charcos
                 if (Mathf.Max(b.size.x, b.size.z) > 14f) continue;      // terreno, río
@@ -680,9 +683,9 @@ internal sealed partial class Horno
         Vector3 d = b - a;
         float largo = d.magnitude;
         if (largo < 0.3f) return false;
-        // Se ignoran los últimos 40 cm (el propio personaje no está en la escena del Editor, pero
-        // sí puede haber un prop pegado a él).
-        return Physics.Raycast(a, d / largo, largo - 0.4f, ~0, QueryTriggerInteraction.Ignore);
+        // Se ignoran los últimos 40 cm y la capa de suelo (capa 10 Floor).
+        int mascara = ~(1 << 10);
+        return Physics.Raycast(a, d / largo, largo - 0.4f, mascara, QueryTriggerInteraction.Ignore);
     }
 
     /// ¿Un personaje de pie en pb (alto h) se mete entre la cámara y el objetivo?

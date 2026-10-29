@@ -19,6 +19,6 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 1
+    emotion: 10
   maxLinesPerPage: 3
   isGroupConversation: 0

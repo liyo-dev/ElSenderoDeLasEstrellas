@@ -1,18 +1,19 @@
 # Parte de horneado: BatallaFinal_Intro
 
-2026-10-17 20:55 · guion `Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt`
+2026-10-27 11:53 · guion `Assets/_SEQUENCES/Guiones/BatallaFinal_Intro.guion.txt`
 
 **2:49,1** de secuencia · 25 frases · 35 planos · 20 efectos · 5 personajes
 
-Reparto medido (m): will 1,55/ojos 0,93 · mago 1,68/ojos 0,94 · estela 1,68/ojos 0,94 · liam 1,51/ojos 0,94 · archimago 1,57/ojos 0,93
+Reparto medido (m): will 1,55/ojos 0,93 · mago 1,68/ojos 0,94 · estela 1,68/ojos 0,95 · liam 1,51/ojos 0,94 · archimago 1,57/ojos 0,93
 
 ## Errores (0)
 
 
-## Avisos (3)
+## Avisos (4)
 
+- línea 223: plano fijo desde=cam_pov_suelo mira=mira_pov_suelo altura=0 altura_foco=0 lente=42: la cámara de «cam_pov_suelo» no ve al sujeto (dentro del decorado o tapada); busco otro ángulo.
 - 1:05,5: el plano «conjunto de will y archimago» dura 0,4 s (un corte tan corto se lee como un salto).
-- 2:09,1: en «fijo a el punto» mago está 14 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
+- 2:09,1: en «fijo a el punto» liam está 8 s en cuadro sin hacer nada. Dale algo en su pista (charla, bucle, pasea…).
 - No hay captura del escenario: usa «El Sendero → Guion → 1. Capturar el escenario» para tener los dibujos.
 
 ## Silencios largos entre frases (5)
@@ -81,7 +82,7 @@ Reparto medido (m): will 1,55/ojos 0,93 · mago 1,68/ojos 0,94 · estela 1,68/oj
 | 1:53,0 | archimago | «No. Nunca lo has estado. Por eso esta vez puede salir distinto. Puedes crear hechizos como se crea cualquier cosa: queriendo con todas tus fuerzas. Vuelve con ellos. Te están esperando.» (13,5 s) · pose |
 | 2:06,5 | plano 26 | conjunto de archimago y will · 2,6 s · lente 42° · coste 108: cara 54, ángulo 54 |
 | 2:07,6 | efecto | Mecánica: FusionArchimagoWill |
-| 2:09,1 | plano 27 | fijo a el punto · 13,2 s · lente 42° |
+| 2:09,1 | plano 27 | fijo a el punto · 13,2 s · lente 42° · coste 68: limpio |
 | 2:09,1 | efecto | Pantalla: cubrir (0,65s) |
 | 2:09,1 | efecto | Mecánica: SalirVacioTibio |
 | 2:09,1 | efecto | Mecánica: IniciarDespertarPov |

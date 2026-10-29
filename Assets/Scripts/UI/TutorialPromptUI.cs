@@ -83,6 +83,9 @@ public class TutorialPromptUI : MonoBehaviour
     int _originalRightPadding;
     Image _backgroundImage;
     Sprite _runtimeBackgroundSprite;
+    RectTransform _promptRect;
+    RectTransform _canvasRect;
+    float _baseAnchoredY = 70f;
 
     /// <summary>Se dispara al hacer clic en la X. TutorialPromptNode se suscribe solo cuando el
     /// aviso activo usa dismissWithCancel — el resto de avisos no muestran la X (ver Show()).</summary>
@@ -96,6 +99,21 @@ public class TutorialPromptUI : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(transform.root.gameObject);
 
+        _promptRect = transform as RectTransform;
+        if (_promptRect != null)
+        {
+            _baseAnchoredY = _promptRect.anchoredPosition.y;
+            if (_baseAnchoredY <= 0f) _baseAnchoredY = 70f;
+        }
+
+        var canvas = GetComponentInParent<Canvas>();
+        if (canvas != null)
+        {
+            _canvasRect = canvas.transform as RectTransform;
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = 9996;
+        }
+
         _rootGroup.alpha = 0f;
         _rootGroup.blocksRaycasts = false;
 
@@ -108,6 +126,47 @@ public class TutorialPromptUI : MonoBehaviour
 
         ApplyBackgroundStyle();
         BuildCloseButton();
+    }
+
+    void Update()
+    {
+        if (_isShowing)
+            UpdatePosition(false);
+    }
+
+    void UpdatePosition(bool instant)
+    {
+        if (_promptRect == null) return;
+
+        float altoCanvas = _canvasRect != null ? _canvasRect.rect.height : 1080f;
+        var bandas = BandasDeCineUI.Instance;
+        bool hayBanda = bandas != null && (bandas.AlturaVisible > 0.01f || bandas.AlturaObjetivo > 0.01f);
+        float banda = hayBanda ? Mathf.Max(bandas.AlturaVisible, bandas.AlturaObjetivo) : 0f;
+
+        float targetY = _baseAnchoredY;
+        if (hayBanda)
+        {
+            float altoBanda = altoCanvas * banda;
+            targetY = altoBanda + 24f;
+        }
+
+        Vector2 pos = _promptRect.anchoredPosition;
+        if (instant || (bandas != null && !bandas.Animando))
+        {
+            if (!Mathf.Approximately(pos.y, targetY))
+            {
+                pos.y = targetY;
+                _promptRect.anchoredPosition = pos;
+            }
+        }
+        else
+        {
+            if (Mathf.Abs(pos.y - targetY) > 0.25f)
+            {
+                pos.y = Mathf.MoveTowards(pos.y, targetY, Time.unscaledDeltaTime * 600f);
+                _promptRect.anchoredPosition = pos;
+            }
+        }
     }
 
     void OnEnable()
@@ -194,6 +253,7 @@ public class TutorialPromptUI : MonoBehaviour
         SetIcon(icon);
         _allowManualClose = allowManualClose;
         RefreshCloseButton();
+        UpdatePosition(true);
         FadeIn();
     }
 
@@ -217,6 +277,7 @@ public class TutorialPromptUI : MonoBehaviour
         RefreshContent();
         _allowManualClose = allowManualClose;
         RefreshCloseButton();
+        UpdatePosition(true);
         FadeIn();
     }
 
@@ -372,7 +433,7 @@ public class TutorialPromptUI : MonoBehaviour
             _label.textWrappingMode = TextWrappingModes.Normal;
             _label.overflowMode = TextOverflowModes.Truncate;
             _label.enableAutoSizing = true;
-            _label.fontSizeMin = 18f;
+            _label.fontSizeMin = 16f;
             _label.fontSizeMax = 24f;
         }
     }

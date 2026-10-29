@@ -19,7 +19,7 @@ MonoBehaviour:
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 10
   - speakerNameId: CHAR_ERIKA
     textId: DLG_ERIKA_ENTRENAMIENTO_02
     text: 
@@ -27,22 +27,29 @@ MonoBehaviour:
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 10
-  - speakerNameId: CHAR_WILL
+  - speakerNameId: CHAR_ERIKA
     textId: DLG_ERIKA_ENTRENAMIENTO_03
     text: 
     portrait: {fileID: 0}
-    isPlayerSpeaking: 1
+    isPlayerSpeaking: 0
     lookAtOverrideId: 
-    emotion: 0
+    emotion: 10
   - speakerNameId: CHAR_ERIKA
     textId: DLG_ERIKA_ENTRENAMIENTO_04
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0
     lookAtOverrideId: 
+    emotion: 10
+  - speakerNameId: CHAR_WILL
+    textId: DLG_ERIKA_ENTRENAMIENTO_05
+    text: 
+    portrait: {fileID: 0}
+    isPlayerSpeaking: 1
+    lookAtOverrideId: 
     emotion: 1
   - speakerNameId: CHAR_ERIKA
-    textId: DLG_ERIKA_ENTRENAMIENTO_05
+    textId: DLG_ERIKA_ENTRENAMIENTO_06
     text: 
     portrait: {fileID: 0}
     isPlayerSpeaking: 0

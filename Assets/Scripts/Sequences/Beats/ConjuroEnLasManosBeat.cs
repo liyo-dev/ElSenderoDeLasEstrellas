@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Sendero.Core.Feedback;
 
@@ -14,6 +15,18 @@ using Sendero.Core.Feedback;
 [Serializable]
 public class ConjuroEnLasManosBeat : SequenceBeat
 {
+    private static readonly Dictionary<Transform, int> _controladorActivo = new();
+    private static int _siguienteControladorId = 0;
+
+#if UNITY_EDITOR
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void ResetStatics()
+    {
+        _controladorActivo.Clear();
+        _siguienteControladorId = 0;
+    }
+#endif
+
     [Tooltip("Prefab de la bola (VFX_BolaDeConjuro).")]
     public GameObject vfxPrefab;
 
@@ -50,58 +63,117 @@ public class ConjuroEnLasManosBeat : SequenceBeat
     [Tooltip("ID con el que el efecto queda registrado (para recogerlo con RecogerVfxBeat).")]
     public string registrarComo;
 
+    [Tooltip("ID del efecto registrado previamente si se quiere reutilizar en lugar de crear uno nuevo.")]
+    public string efectoRegistrado;
+
+    [Tooltip("Si es true, la bola asciende suavemente hacia offsetFinal al unísono con la subida de brazos.")]
+    public bool subirACabeza;
+
+    [Tooltip("Posición final respecto al conjurante cuando sube a la cabeza (por encima de las manos alzadas).")]
+    public Vector3 offsetFinal = new Vector3(0f, 2.85f, 0f);
+
+    [Tooltip("Segundos que tarda en subir desde offset hasta offsetFinal al alzar los brazos.")]
+    public float tiempoSubida = 1.4f;
+
+    /// Desvincula cualquier beat de conjuro activo sobre la instancia dada para ceder el control.
+    public static void Desvincular(Transform instancia)
+    {
+        if (instancia != null) _controladorActivo.Remove(instancia);
+    }
+
     public override string Describe()
-        => $"Conjuro en las manos: {actorId} ({duracion:F1} s)";
+        => subirACabeza
+            ? $"Conjuro a la cabeza: {actorId} ({duracion:F1} s)"
+            : $"Conjuro en las manos: {actorId} ({duracion:F1} s)";
 
     public override IEnumerator Run(SequenceContext ctx)
     {
-        if (vfxPrefab == null || ctx?.Player == null) yield break;
-        var pool = VfxPoolService.Instance;
-        if (pool == null) yield break;
+        if (ctx?.Player == null) yield break;
         var actor = ctx.GetActor(actorId);
         if (actor?.Transform == null) yield break;
 
         Transform raiz = actor.Transform;
-        // La vida del uso en el pool es holgada: el conjuro puede acabar solo, y lo que lo apague
-        // es la limpieza de la secuencia, que lo devuelve al pool.
-        float vida = vidaEnPool > 0f ? vidaEnPool : (duracion > 0f ? duracion + 1f : 600f);
-        var instancia = pool.Play(vfxPrefab, raiz.position + raiz.rotation * offset, raiz.rotation, vida, raiz);
+        Transform instancia = null;
+        VfxPoolService pool = null;
+        ulong uso = 0;
+        bool esReutilizado = false;
+
+        if (!string.IsNullOrWhiteSpace(efectoRegistrado) && ctx.TryGetVfx(efectoRegistrado, out instancia, out pool, out uso))
+        {
+            esReutilizado = true;
+            if (instancia != null && instancia.parent != raiz)
+                instancia.SetParent(raiz, true);
+        }
+        else
+        {
+            if (vfxPrefab == null) yield break;
+            pool = VfxPoolService.Instance;
+            if (pool == null) yield break;
+
+            float vida = vidaEnPool > 0f ? vidaEnPool : (duracion > 0f ? duracion + 1f : 600f);
+            instancia = pool.Play(vfxPrefab, raiz.position + raiz.rotation * offset, raiz.rotation, vida, raiz);
+            if (instancia == null) yield break;
+            uso = pool.ObtenerUso(instancia);
+        }
+
         if (instancia == null) yield break;
 
-        // Siempre se da de alta: al terminar la secuencia hay que devolver el uso al pool.
-        // Solo si el guion le da un nombre: si no, la bola se queda como un actor más de la
-        // escena y el compositor de cámara puede intentar encuadrarla.
         bool conNombre = !string.IsNullOrWhiteSpace(registrarComo);
-        ulong uso = pool.ObtenerUso(instancia);
-        if (conNombre) ctx.RegisterVfx(registrarComo, instancia, pool);
+        if (conNombre && pool != null) ctx.RegisterVfx(registrarComo, instancia, pool);
+
+        int miControladorId = ++_siguienteControladorId;
+        _controladorActivo[instancia] = miControladorId;
 
         bool vivo = true;
         ctx.Player.RegisterCleanup(() =>
         {
             vivo = false;
-            if (!conNombre && instancia != null && pool.ObtenerUso(instancia) == uso)
+            if (_controladorActivo.TryGetValue(instancia, out int id) && id == miControladorId)
+                _controladorActivo.Remove(instancia);
+            if (!esReutilizado && !conNombre && instancia != null && pool != null && pool.ObtenerUso(instancia) == uso)
                 pool.Recoger(instancia, uso);
         });
 
-        Vector3 escalaBase = instancia.localScale;
+        Vector3 escalaBase = vfxPrefab != null ? vfxPrefab.transform.localScale : Vector3.one;
         Vector3 adelante = new Vector3(0f, 0f, avance);
         Vector3 arriba = new Vector3(0f, elevacion, 0f);
         float t = 0f;
+
         while (vivo)
         {
-            // La intensidad sube con el tiempo; el reloj del guion es real (ver ReproductorDeGuion),
-            // así que la bola se mueve en tiempo real también.
-            float intensidad = duracion > 0f ? Mathf.Clamp01(t / duracion) : 1f;
-            float carga = Mathf.SmoothStep(0f, 1f, intensidad);
-            // El ciclo se acorta con la carga: la bola se agita más cuanto más fuerza tiene.
-            float ciclo = Mathf.Max(0.25f, periodo * Mathf.Lerp(1f, 0.45f, carga));
-            float fase = Mathf.PingPong(t / ciclo, 1f);
-            instancia.localPosition = offset + Vector3.Lerp(adelante, arriba, Mathf.SmoothStep(0f, 1f, fase));
-            instancia.localRotation = Quaternion.identity;
-            instancia.localScale = escalaBase * Mathf.Lerp(escalaInicial, escalaFinal, carga);
+            if (!_controladorActivo.TryGetValue(instancia, out int idActual) || idActual != miControladorId)
+                yield break;
+
+            if (subirACabeza)
+            {
+                float tSubida = tiempoSubida > 0f ? tiempoSubida : (duracion > 0f ? duracion : 1.4f);
+                float kSubida = Mathf.Clamp01(t / tSubida);
+                float suavizado = Mathf.SmoothStep(0f, 1f, kSubida);
+                Vector3 pos = Vector3.Lerp(offset, offsetFinal, suavizado);
+                if (kSubida >= 1f)
+                {
+                    float flote = Mathf.Sin((t - tSubida) * 2.5f) * 0.03f;
+                    pos.y += flote;
+                }
+                instancia.localPosition = pos;
+                instancia.localRotation = Quaternion.identity;
+
+                float kEscala = duracion > 0f ? Mathf.Clamp01(t / duracion) : kSubida;
+                float escala = Mathf.Lerp(escalaInicial, escalaFinal, Mathf.SmoothStep(0f, 1f, kEscala));
+                instancia.localScale = escalaBase * escala;
+            }
+            else
+            {
+                float intensidad = duracion > 0f ? Mathf.Clamp01(t / duracion) : 1f;
+                float carga = Mathf.SmoothStep(0f, 1f, intensidad);
+                float ciclo = Mathf.Max(0.25f, periodo * Mathf.Lerp(1f, 0.45f, carga));
+                float fase = Mathf.PingPong(t / ciclo, 1f);
+                instancia.localPosition = offset + Vector3.Lerp(adelante, arriba, Mathf.SmoothStep(0f, 1f, fase));
+                instancia.localRotation = Quaternion.identity;
+                instancia.localScale = escalaBase * Mathf.Lerp(escalaInicial, escalaFinal, carga);
+            }
+
             t += Time.unscaledDeltaTime;
-            // La duración es la del conjuro, no la de la secuencia: al acabarse, la bola se queda
-            // donde esté (pequeña, en las manos) para que otro beat la recoja, como la fusión final.
             if (duracion > 0f && t >= duracion) break;
             yield return null;
         }

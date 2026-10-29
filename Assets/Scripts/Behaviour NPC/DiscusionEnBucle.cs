@@ -76,18 +76,20 @@ namespace Game.NPC
 
         private bool TocaDiscutir()
         {
-            var s = DefaultNarrativeSignals.Instance;
+            var s = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
             if (s == null || YaSeAcabo()) return false;
 
-            bool empezo = s.HasEverRaised(empiezaCon);
-            bool misionActiva = !string.IsNullOrEmpty(oConLaMision)
-                                && s.GetQuestState(oConLaMision) == NarrativeQuestState.Active;
+            bool empezo = s.HasEverRaised(empiezaCon)
+                          || s.HasEverRaised("PROLOGUE_DONE")
+                          || s.HasEverRaised("HOOK_DISCUSION_START");
+            bool misionActiva = (!string.IsNullOrEmpty(oConLaMision) && s.GetQuestState(oConLaMision) == NarrativeQuestState.Active)
+                                || s.GetQuestState("WILL_MISSION0") == NarrativeQuestState.Active;
             return empezo || misionActiva;
         }
 
         private bool YaSeAcabo()
         {
-            var s = DefaultNarrativeSignals.Instance;
+            var s = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
             if (s == null) return false;
             if (s.HasEverRaised(terminaCon)) return true;
             return !string.IsNullOrEmpty(oConLaMision)

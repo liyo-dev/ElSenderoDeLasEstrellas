@@ -20,9 +20,12 @@ MonoBehaviour:
   currentMP: 50
   ataque: 0
   defensa: 0
+  sintoniaPuntos: 0
+  sintoniaHitos: 0
+  sintoniaHitosPendientes: 0
   unlockedAbilities: 
-  unlockedSpells: 01000000i
-  basicSpellIds: 01000000i
+  unlockedSpells: 
+  basicSpellIds: 
   companionBasics: []
   companionHealth: []
   flags:
@@ -35,14 +38,11 @@ MonoBehaviour:
   - QUEST_ACTIVE:ELDRAN_SIGUEME
   - QUEST_COMPLETED:ELDRAN_SIGUEME
   - QUEST_ACTIVE:ELDRAN_MISSION2
-  - QUEST_COMPLETED:ELDRAN_MISSION2
-  - QUEST_ACTIVE:ELDRAN_MISSION3
-  - QUEST_COMPLETED:ELDRAN_MISSION3
   abilities:
     swim: 0
     jump: 0
     climb: 0
-    magic: 1
+    magic: 0
     fly: 0
     sprint: 0
     shield: 0
@@ -68,15 +68,7 @@ MonoBehaviour:
     blackboardData:
     - key: __currentNodeGuid
       type: string
-      value: 
-    - key: __flowEnded
-      type: bool
-      value: 1
-  - graphLabel: Cap2
-    blackboardData:
-    - key: __currentNodeGuid
-      type: string
-      value: cap2-iniciado-flag
+      value: a48b6d65-8a01-4e7f-91b5-03ec8a38ae6d
   npcPositions:
   - npcId: Eldran
     position: {x: 25.8, y: 27.01, z: -82.61}

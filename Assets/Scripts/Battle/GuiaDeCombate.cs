@@ -358,6 +358,9 @@ public sealed class GuiaDeCombate : MonoBehaviour
             return true;
         }
 
+        // Evitar saturar al jugador: no acumular frases si ya hay una en cola esperando turno
+        if (_cola.Count >= 1) return false;
+
         for (int k = 0; k < _cola.Count; k++)
             if (_comentarios[_cola[k].indice].momento == momento) return true; // ya está esperando
         _cola.Add((i, Time.time));

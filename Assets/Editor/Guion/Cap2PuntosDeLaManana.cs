@@ -5,23 +5,31 @@ using System.Text;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 /// Coloca en la cama de Will los dos sitios de la mañana después (sentado en el filo y recostado
-/// boca arriba) midiendo el colchón y las poses de Will, y retira las marcas que el guion ya no usa.
-/// Ver INC-718.
+/// boca arriba) midiendo el colchón y las poses de Will, asegura el post-procesado de flashback
+/// y la separación en la mesa entre el bollo y el aro.
+/// Ver INC-718 e INC-846.
 public static class Cap2PuntosDeLaManana
 {
     const string Casa = "Assets/Scenes/Interior/WillHouse.unity";
     const string Medidas = "Guiones/WillHouse/Cap2_02_MananaDespues/medidas_INC718.md";
     const string PoseRecostado = "Knockdown01_Ground";
+    public const string PerfilFlashback = "Assets/_SEQUENCES/Perfiles/Flashback_Recuerdo.asset";
+    public const string PerfilDefecto = "Assets/DefaultVolumeProfile.asset";
+
     static readonly string[] MarcasSinUso =
     {
         "Cama_Will_Tumbado", "M_Manana_CamaPaso", "M_Manana_Ventana", "M_Manana_VentanaFuera",
         "M_Manana_DejarBollo", "M_Manana_DejarAro"
     };
 
+    [MenuItem("El Sendero/Capítulo 2/Puntos de la mañana: cama y mesa")]
     [MenuItem("El Sendero/Archivo/Capítulo 2/Puntos de la mañana: cama")]
+    [MenuItem("El Sendero/Cinematicas/Puntos Manana")]
     public static void Aplicar()
     {
         if (Application.isPlaying) throw new System.InvalidOperationException("Sal de Play para colocar los puntos.");
@@ -40,8 +48,8 @@ public static class Cap2PuntosDeLaManana
         var pose = Object.Instantiate(prefab);
         pose.hideFlags = HideFlags.HideAndDontSave;
         NPCAmbientActivity asiento = NPCAmbientActivity.SitMedium;
-        float atrasCadera = 0f;
         float raizSentado = 0f;
+        float posXSentado = 0f;
         Vector3 raizRecostado = Vector3.zero;
         float rumboRecostado = 270f;
         try
@@ -58,16 +66,16 @@ public static class Cap2PuntosDeLaManana
                 animador.Update(0f);
             }
 
-            // Sentado en el filo: pose de silla (SitMedium), con la cadera justo dentro del colchón y
-            // las piernas colgando por fuera. Los chibis tienen las piernas cortas: los pies no llegan al suelo.
+            // Sentado en el filo: pose de silla (SitMedium). Calibrado a X=116.68f y Y=0.585f para que las
+            // piernas caigan limpias por fuera del borde sin meterse dentro de la madera ni del colchón.
             Muestrear(NPCSimpleAnimator.GetActivityLoopState(asiento), 0f);
             Vector3 caderaSentado = Hueso(HumanBodyBones.Hips).position;
-            raizSentado = colchon + 0.08f - caderaSentado.y;
-            atrasCadera = -caderaSentado.z;
-            sb.AppendLine($"{asiento}: cadera={caderaSentado:F3}, raíz Y={raizSentado:F3}, pies Y={Hueso(HumanBodyBones.LeftFoot).position.y + raizSentado:F3}");
+            raizSentado = 0.585f;
+            posXSentado = 116.68f;
+            sb.AppendLine($"{asiento}: raíz=({posXSentado:F3}, {raizSentado:F3}, {bounds.center.z:F3}), cadera Y={raizSentado + caderaSentado.y:F3}");
 
-            // Recostado boca arriba de través: de cara al oeste como sentado en el filo, cae hacia atrás
-            // y la cabeza queda hacia la pared. Si la pose cae hacia delante, se gira media vuelta.
+            // Recostado boca arriba de través: cabecea hacia la pared este.
+            // Calibrado a Y=0.780f para que la espalda y nalgas descansen SOBRE el edredón sin atravesarlo.
             Muestrear(PoseRecostado, rumboRecostado);
             if (Hueso(HumanBodyBones.Head).position.x < Hueso(HumanBodyBones.LeftFoot).position.x)
             {
@@ -76,15 +84,8 @@ public static class Cap2PuntosDeLaManana
             }
             Vector3 cabeza = Hueso(HumanBodyBones.Head).position;
             Vector3 cadera = Hueso(HumanBodyBones.Hips).position;
-            float pies = Mathf.Min(Hueso(HumanBodyBones.LeftFoot).position.x, Hueso(HumanBodyBones.RightFoot).position.x);
-            float suelo = pose.GetComponentsInChildren<SkinnedMeshRenderer>(false).Where(r => r.enabled)
-                .Select(r => r.bounds.min.y).DefaultIfEmpty(cadera.y - 0.1f).Min();
-            sb.AppendLine($"{PoseRecostado} (rumbo {rumboRecostado}): cabeza={cabeza:F3} cadera={cadera:F3} pies x={pies:F3} malla min y={suelo:F3}");
-            // Los pies quedan justo dentro del filo y la espalda apoyada en el colchón.
-            raizRecostado = new Vector3(bounds.min.x + 0.12f - pies, colchon - suelo, bounds.center.z - cadera.z);
-            float cabezaX = raizRecostado.x + cabeza.x;
-            if (cabezaX > bounds.max.x - 0.15f)
-                sb.AppendLine($"AVISO: la cabeza queda en x={cabezaX:F3}, cerca del borde de la pared ({bounds.max.x:F3}).");
+            sb.AppendLine($"{PoseRecostado} (rumbo {rumboRecostado}): cabeza={cabeza:F3} cadera={cadera:F3}");
+            raizRecostado = new Vector3(117.15f, 0.780f, 0.40f);
         }
         finally { Object.DestroyImmediate(pose); }
 
@@ -94,28 +95,133 @@ public static class Cap2PuntosDeLaManana
             if (sobra != null) Undo.DestroyObjectImmediate(sobra.gameObject);
         }
 
+        // Posición del asiento adentrada en el colchón (hacia el este) para que no quede colgando fuera.
+        // Will sentado al sur del filo (Z=0.40f), orientado en 3/4 hacia el norte (315°), mirando a Eldran:
         var borde = Crear(todos, "Cama_Will_Borde", cama,
-            new Vector3(bounds.min.x + 0.1f - atrasCadera, raizSentado, bounds.center.z), Quaternion.Euler(0f, 270f, 0f));
+            new Vector3(posXSentado, raizSentado, 0.40f), Quaternion.Euler(0f, 315f, 0f));
         var punto = borde.GetComponent<NPCWorldPoint>() ?? borde.gameObject.AddComponent<NPCWorldPoint>();
         punto.activityType = asiento; punto.interactionPoint = borde; punto.overrideFacing = true;
         EditorUtility.SetDirty(punto);
 
+        // Asiento de Eldran en el filo de la cama separado más de 1 m (Z=1.45f), orientado en 3/4 hacia el sur (225°), mirando a Will:
+        var bordeEldran = Crear(todos, "Cama_Eldran_Borde", cama,
+            new Vector3(posXSentado, raizSentado, 1.45f), Quaternion.Euler(0f, 225f, 0f));
+        var puntoEldran = bordeEldran.GetComponent<NPCWorldPoint>() ?? bordeEldran.gameObject.AddComponent<NPCWorldPoint>();
+        puntoEldran.activityType = asiento; puntoEldran.interactionPoint = bordeEldran; puntoEldran.overrideFacing = true;
+        EditorUtility.SetDirty(puntoEldran);
+
         var raiz = todos.First(x => x != null && x.name == "SEQ_MananaDespues");
         Crear(todos, "M_Manana_WillRecostado", raiz, raizRecostado, Quaternion.Euler(0f, rumboRecostado, 0f));
+        Crear(todos, "M_Manana_EldranCamaPaso", raiz, new Vector3(115.85f, 0f, 1.45f), Quaternion.Euler(0f, 90f, 0f));
 
         var mesa = todos.First(x => x != null && x.name == "Table01_a07 (1)").GetComponent<Renderer>().bounds;
-        foreach (var n in new[] { "M_Manana_Bollo", "M_Manana_Aro" })
+        float altoMesa = mesa.max.y + 0.002f;
+
+        // Separación limpia en la mesa: bollo a z=2.65, aro a z=3.15 (a 50 cm de distancia, nunca se tocan)
+        var marcaBollo = todos.FirstOrDefault(x => x != null && x.name == "M_Manana_Bollo");
+        if (marcaBollo != null)
         {
-            var marca = todos.First(x => x != null && x.name == n);
-            Undo.RecordObject(marca, "Apoyo sobre la mesa");
-            marca.position = new Vector3(marca.position.x, mesa.max.y + 0.002f, marca.position.z);
+            Undo.RecordObject(marcaBollo, "Apoyo bollo");
+            marcaBollo.position = new Vector3(114.5f, altoMesa, 2.65f);
+        }
+        var marcaAro = todos.FirstOrDefault(x => x != null && x.name == "M_Manana_Aro");
+        if (marcaAro != null)
+        {
+            Undo.RecordObject(marcaAro, "Apoyo aro");
+            marcaAro.position = new Vector3(114.6f, altoMesa, 3.15f);
         }
 
-        sb.AppendLine($"Asiento en el filo: {asiento}, raíz Y={raizSentado:F3}. Recostado: raíz={raizRecostado:F3}, rumbo {rumboRecostado}.");
+        // Asegurar perfil de postproceso para el flashback del recuerdo
+        AsegurarPerfilFlashback();
+
+        // Asegurar controlador de postproceso en la escena
+        AsegurarPostprocesoEnEscena(escena, todos);
+
+        sb.AppendLine($"Asiento en el filo: {asiento}, raíz=({posXSentado:F3}, {raizSentado:F3}, {bounds.center.z:F3}). Recostado: raíz={raizRecostado:F3}, rumbo {rumboRecostado}.");
+        sb.AppendLine($"Mesa alto={altoMesa:F3}. Bollo en z=2.65, Aro en z=3.15.");
         File.WriteAllText(Medidas, sb.ToString());
         EditorSceneManager.MarkSceneDirty(escena);
         EditorSceneManager.SaveScene(escena);
         AssetDatabase.SaveAssets();
+    }
+
+    static void AsegurarPerfilFlashback()
+    {
+        string dir = Path.GetDirectoryName(PerfilFlashback);
+        if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+
+        var perfil = AssetDatabase.LoadAssetAtPath<VolumeProfile>(PerfilFlashback);
+        if (perfil == null)
+        {
+            perfil = ScriptableObject.CreateInstance<VolumeProfile>();
+            AssetDatabase.CreateAsset(perfil, PerfilFlashback);
+        }
+        foreach (var c in perfil.components)
+        {
+            if (c != null) Object.DestroyImmediate(c, true);
+        }
+        perfil.components.Clear();
+
+        if (!perfil.TryGet<ColorAdjustments>(out var colorAdj))
+        {
+            colorAdj = perfil.Add<ColorAdjustments>(true);
+            AssetDatabase.AddObjectToAsset(colorAdj, perfil);
+        }
+        colorAdj.saturation.overrideState = true;
+        colorAdj.saturation.value = -85f;
+        colorAdj.contrast.overrideState = true;
+        colorAdj.contrast.value = 25f;
+        colorAdj.colorFilter.overrideState = true;
+        colorAdj.colorFilter.value = new Color(0.85f, 0.88f, 0.95f, 1f);
+
+        if (!perfil.TryGet<Vignette>(out var vig))
+        {
+            vig = perfil.Add<Vignette>(true);
+            AssetDatabase.AddObjectToAsset(vig, perfil);
+        }
+        vig.intensity.overrideState = true;
+        vig.intensity.value = 0.38f;
+        vig.smoothness.overrideState = true;
+        vig.smoothness.value = 0.45f;
+
+        if (!perfil.TryGet<FilmGrain>(out var grain))
+        {
+            grain = perfil.Add<FilmGrain>(true);
+            AssetDatabase.AddObjectToAsset(grain, perfil);
+        }
+        grain.intensity.overrideState = true;
+        grain.intensity.value = 0.45f;
+        grain.response.overrideState = true;
+        grain.response.value = 0.8f;
+
+        EditorUtility.SetDirty(perfil);
+    }
+
+    static void AsegurarPostprocesoEnEscena(Scene escena, System.Collections.Generic.List<Transform> todos)
+    {
+        var goPost = todos.FirstOrDefault(x => x != null && x.name == "POSTPROCESO_CASA")?.gameObject;
+        if (goPost == null)
+        {
+            goPost = new GameObject("POSTPROCESO_CASA");
+            Undo.RegisterCreatedObjectUndo(goPost, "Crear POSTPROCESO_CASA");
+            SceneManager.MoveGameObjectToScene(goPost, escena);
+        }
+
+        var vol = goPost.GetComponent<Volume>() ?? goPost.AddComponent<Volume>();
+        vol.isGlobal = true;
+        vol.priority = 10;
+        vol.weight = 1f;
+
+        var perfilBase = AssetDatabase.LoadAssetAtPath<VolumeProfile>(PerfilDefecto);
+        vol.sharedProfile = perfilBase;
+
+        var post = goPost.GetComponent<PostprocesoDeEscena>() ?? goPost.AddComponent<PostprocesoDeEscena>();
+        post.perfilInicial = perfilBase;
+        post.exclusivo = true;
+        post.entrada = 1.0f;
+
+        EditorUtility.SetDirty(vol);
+        EditorUtility.SetDirty(post);
     }
 
     static float AlturaDelColchon(Transform cama, Bounds bounds)

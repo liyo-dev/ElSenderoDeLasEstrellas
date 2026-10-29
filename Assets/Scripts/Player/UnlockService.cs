@@ -1,4 +1,4 @@
-﻿﻿using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// Utilidades para modificar el preset activo del jugador (runtimePreset) de forma segura/idempotente.
@@ -226,6 +226,12 @@ public static class UnlockService
                 preset.basicSpellIds.Add(spell);
                 changed = true;
             }
+        }
+
+        // ✅ CRÍTICO: Aplicar cambios al jugador inmediatamente (para que MagicCaster sincronice los slots)
+        if (changed)
+        {
+            ApplyPresetToPlayer();
         }
 
         return changed;

@@ -169,6 +169,8 @@ public struct OrdenDeAnimacion
     public string estado;
     [Tooltip("Si es un bucle de pose que debe quedarse congelado en su último fotograma.")]
     public bool congelar;
+    [Tooltip("Si debe colocarse directamente en el fotograma final congelado desde el inicio.")]
+    public bool alFinal;
 }
 
 [Serializable]

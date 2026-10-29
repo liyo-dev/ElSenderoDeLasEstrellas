@@ -10772,7 +10772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CejasPorEmocion
   controlador: {fileID: 5014074110871755233}
-  mallaDelPelo: {fileID: 8402628536051502245}
+  mallaDeLasCejas: {fileID: 8402628536051502245}
   ojosDeReferencia: {fileID: 3446048701086914736}
   intensidad: 1
   velocidad: 14

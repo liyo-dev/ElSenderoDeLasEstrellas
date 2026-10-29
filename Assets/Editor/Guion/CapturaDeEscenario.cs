@@ -108,7 +108,7 @@ public static class CapturaDeEscenario
 
     public struct Marca { public string nombre; public Vector3 pos; public float rumbo; }
     public struct Aparicion { public string spawnId, persistenceId, nombre; public Vector3 pos; public float rumbo; public GameObject prefab; }
-    public struct EstadoDeAnimacion { public int capa; public string nombreCapa, estado, clip, etiqueta; public float largo; public bool bucle, mezcla; }
+    public struct EstadoDeAnimacion { public int capa; public string nombreCapa, estado, ruta, clip, etiqueta; public float largo; public bool bucle, mezcla; }
     public struct Obstaculo { public string nombre; public Bounds caja; }
 
     public static Scene AbrirEscena(string nombre)
@@ -237,10 +237,26 @@ public static class CapturaDeEscenario
 
     // ── Animaciones ─────────────────────────────────────────────────────────────────────────
 
+    private static Animator BuscarAnimatorConControlador(GameObject go)
+    {
+        if (go == null) return null;
+        var propio = go.GetComponent<Animator>();
+        if (propio != null && propio.runtimeAnimatorController != null) return propio;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.gameObject.activeInHierarchy && a.runtimeAnimatorController != null && a.isHuman) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.gameObject.activeInHierarchy && a.runtimeAnimatorController != null) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.runtimeAnimatorController != null && a.isHuman) return a;
+        foreach (var a in go.GetComponentsInChildren<Animator>(true))
+            if (a != null && a.runtimeAnimatorController != null) return a;
+        return go.GetComponentInChildren<Animator>(true);
+    }
+
     public static List<EstadoDeAnimacion> Catalogo(GameObject prefab)
     {
         var lista = new List<EstadoDeAnimacion>();
-        var animator = prefab != null ? prefab.GetComponentInChildren<Animator>(true) : null;
+        var animator = BuscarAnimatorConControlador(prefab);
         var rac = animator != null ? animator.runtimeAnimatorController : null;
         if (rac == null) return lista;
 
@@ -258,19 +274,19 @@ public static class CapturaDeEscenario
         for (int capa = 0; capa < controller.layers.Length; capa++)
         {
             var l = controller.layers[capa];
-            RecorrerMaquina(l.stateMachine, capa, l.name, sustituciones, lista);
+            RecorrerMaquina(l.stateMachine, capa, l.name, l.name, sustituciones, lista);
         }
         return lista;
     }
 
-    private static void RecorrerMaquina(AnimatorStateMachine sm, int capa, string nombreCapa,
+    private static void RecorrerMaquina(AnimatorStateMachine sm, int capa, string nombreCapa, string prefijoRuta,
         Dictionary<AnimationClip, AnimationClip> sust, List<EstadoDeAnimacion> lista)
     {
         if (sm == null) return;
         foreach (var cs in sm.states)
         {
             var st = cs.state;
-            var e = new EstadoDeAnimacion { capa = capa, nombreCapa = nombreCapa, estado = st.name, etiqueta = st.tag };
+            var e = new EstadoDeAnimacion { capa = capa, nombreCapa = nombreCapa, estado = st.name, ruta = prefijoRuta + "." + st.name, etiqueta = st.tag };
             if (st.motion is AnimationClip clip)
             {
                 if (sust.TryGetValue(clip, out var otro)) clip = otro;
@@ -281,7 +297,8 @@ public static class CapturaDeEscenario
             else if (st.motion is BlendTree bt) { e.clip = "(mezcla) " + bt.name; e.mezcla = true; e.bucle = true; }
             lista.Add(e);
         }
-        foreach (var sub in sm.stateMachines) RecorrerMaquina(sub.stateMachine, capa, nombreCapa, sust, lista);
+        foreach (var sub in sm.stateMachines)
+            RecorrerMaquina(sub.stateMachine, capa, nombreCapa, prefijoRuta + "." + sub.stateMachine.name, sust, lista);
     }
 
     public static float Altura(GameObject prefab) => Medidas(prefab).altura;

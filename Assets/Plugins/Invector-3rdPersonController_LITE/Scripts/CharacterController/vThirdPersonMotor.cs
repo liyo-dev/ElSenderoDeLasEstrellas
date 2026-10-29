@@ -256,6 +256,19 @@ namespace Invector.vCharacterController
             moveDirection = Vector3.zero;
         }
 
+        /// <summary>
+        /// Fuerza las variables internas de estado en el suelo (isGrounded, groundDistance, verticalVelocity).
+        /// Necesario al entrar en cinemáticas, teleports o locks donde CheckGround() queda congelado.
+        /// Ver INC-843.
+        /// </summary>
+        public void ForzarEnElSuelo()
+        {
+            isGrounded = true;
+            groundDistance = 0f;
+            verticalVelocity = 0f;
+            isJumping = false;
+        }
+
         /// <summary>True en el aire: sin tocar suelo o en pleno despegue de un salto.</summary>
         public bool IsAirborne => !isGrounded || isJumping;
 

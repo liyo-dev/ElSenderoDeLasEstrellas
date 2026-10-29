@@ -20,4 +20,5 @@ MonoBehaviour:
     isPlayerSpeaking: 0
     lookAtOverrideId: 
     emotion: 0
+  maxLinesPerPage: 0
   isGroupConversation: 0

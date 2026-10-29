@@ -1,4 +1,4 @@
-﻿# ═══════════════════════════════════════════════════════════════════════════════════════════
+# ═══════════════════════════════════════════════════════════════════════════════════════════
 #  PRÓLOGO — LA ÚLTIMA NOCHE DEL ARCHIMAGO
 #  Guion de rodaje. Se hornea con «El Sendero → Guion → 2. Hornear el guion del prólogo».
 #  El horneado calcula tiempos, caminos sin choques y cámaras, y deja el parte y los dibujos
@@ -554,7 +554,8 @@ mago dice PROLOGO_MAGO_VALLE cara=enfado
 plano general mago desde=cam_final agujero altura_foco=0 altura=1.1 lente=38 suave=0.5
 efecto PostprocesoBeat perfil=Assets/Art/World/Prologo_Valle/Prologo_Climax.asset transicion=2.5
 # Brazos arriba mientras lo conjura (se queda con los brazos en alto).
-mago bucle MagicAttackOmni01_Load congela
+mago bucle Falling
+& mago bucle FoundSomething_NoWeapon congela al_final
 & mago desliza aqui altura=3 dura=2.6
 +0.1 sonido Prologo_Despegue en=mago
 +0.1 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Smoke effects/Dust ground.prefab" en=mago offset=0,0.2,0 lifetime=1.6
@@ -610,11 +611,9 @@ archimago dice PROLOGO_PLEGARIA_02 cara=decidido
 plano medio archimago lado=izq contrapicado zoom=24 mano=0.15
 archimago dice PROLOGO_PLEGARIA_03 cara=decidido
 +3.2 efecto RayoBeat cantidad=1 alFondoDelPlano=true conTrueno=true volumen=0.35 destello=true trueno=SFX_Prologo_Trueno_1
-+3.3 archimago gesto Angry01
 +3.3 archimago cara enfado
 +3.5 sonido Prologo_Carga volume=0.5
 +3.5 vfx "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Slash effects/Charge slash blue.prefab" en=archimago offset=0,1.25,0 lifetime=1.6
-+4.8 archimago bucle CastingIdle01
 +5.6 efecto EscalarActorBeat actorId=CARGA_ESFERA escala=2.0 duracion=2
 +5.6 sacudida 0.35 1.2
 
@@ -625,12 +624,10 @@ espera 1.2
 # Estrofa 3: ofrece su vida y su alma como sello.
 plano primer archimago lado=izq contrapicado zoom=20 mano=0.2
 archimago dice PROLOGO_PLEGARIA_04 cara=decidido
-+3.4 archimago gesto Angry02
 +3.4 archimago cara enfado
 +3.5 vfx "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab" en=archimago lifetime=2.2
 +3.5 sonido Prologo_MagiaLevitar en=archimago volume=0.55
 +3.5 sacudida 0.3 0.9
-+5.0 archimago bucle CastingIdle01
 
 # Estrofa 4: clímax del cántico; líneas de concentración y poder desbordado.
 plano medio archimago lado=der contrapicado zoom=22 mano=0.3
@@ -671,18 +668,16 @@ desde @hechizo-38.4 musica ULTIMO_INCANTAZIONE fadeIn=0.3 continuarDondeIba=fals
 # La bola se forma pequeña entre las manos, en un plano medio.
 plano medio archimago lado=der
 archimago bucle CastingIdle01
-efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,1.1,0 avance=0.12 elevacion=0.06 duracion=0.9 periodo=1.2 escalaInicial=0.6 escalaFinal=0.8 registrarComo=BOLA_PROTECTORA vidaEnPool=12
-espera 0.9
+efecto ConjuroEnLasManosBeat actorId=archimago vfxPrefab=Assets/_VFX/Prologo/VFX_BolaDeConjuro.prefab offset=0,0.52,0.22 avance=0.06 elevacion=0.04 duracion=1.5 periodo=1.2 escalaInicial=0.5 escalaFinal=1.2 registrarComo=BOLA_PROTECTORA vidaEnPool=20
+espera 1.0
 
 # El grito: brazos arriba y la bola al cielo. La fusión la sube y la expande hasta el blanco.
 plano general archimago mago desde=cam_final mira=duelo_a altura_foco=2.6 altura=0.9 lente=44 suave=0.7 mano=0.35
-archimago bucle CastingIdle01
 archimago dice PROLOGO_HECHIZO cara=enfado
 +0.0 archimago bucle MagicAttackOmni01_Load congela
 +0.2 efecto RayoBeat cantidad=2 intervalo=0.4 alFondoDelPlano=true conTrueno=true volumen=1.0 destello=true trueno=SFX_Prologo_Trueno_2
-+0.5 sacudida 0.45 2.0
-# Sin subida ni explosión de SFX: sus colas (8-9 s) se metían en la escena de Will dormido.
-+0.5 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,1.1,0 puntoDeEncuentro=cielo_conjuro duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.2 esperar=false
++0.3 sacudida 0.45 2.0
++0.3 efecto FusionDeHechizosBeat efectoARegistrado=BOLA_PROTECTORA prefabB=Assets/_VFX/Prologo/VFX_LuzProtectora.prefab actorBId=archimago offsetB=0,0.76,0 puntoDeEncuentro=cielo_conjuro duracionCrecimiento=3.4 duracionMezcla=2.2 duracionBlanco=0.35 crecimientoA=2.0 crecimientoB=3.5 esperar=false
 # La lucha: cortes cada vez más rápidos y el temblor que crece hasta el blanco.
 desde @hechizo+2.9 plano primer archimago lado=der contrapicado zoom=22 mano=0.65
 desde @hechizo+2.9 sacudida 0.55 1.3
@@ -697,7 +692,7 @@ espera 2.2
 # ── 8. LA EXPLOSIÓN ───────────────────────────────────────────────────────────────────────
 @explosion
 ambiente AGUJERO_NEGRO sonar=false fundido=0.3
-efecto RecogerVfxBeat ids=CARGA_ESFERA|CARGA_CRECE|CARGA_REFUERZO|CIRCULO_PLEGARIA|CIRCULO_CONJURO
+efecto RecogerVfxBeat ids=CARGA_ESFERA|CARGA_CRECE|CARGA_REFUERZO|CIRCULO_PLEGARIA|CIRCULO_CONJURO|BOLA_PROTECTORA
 efecto MezclaBeat fuente=grito quitar=true fundido=0.6
 efecto LineasDeConcentracionBeat mostrar=false fundido=0
 efecto ScreenFadeBeat fadeIn=true color=FFFFFFFF duration=1.2 waitForEnd=false

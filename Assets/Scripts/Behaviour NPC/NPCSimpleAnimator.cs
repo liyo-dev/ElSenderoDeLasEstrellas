@@ -463,6 +463,10 @@ public class NPCSimpleAnimator : MonoBehaviour
         {
             // ✅ IMPERATIVO: Velocidad normal cuando está quieto (evita temblor)
             animator.speed = 1f;
+            if ((_currentState == AnimationState.Walking || _currentState == AnimationState.Running) && _poseSostenida != null)
+            {
+                TransitionToIdle();
+            }
         }
         // Adjust animation speed to match movement speed (reduces foot sliding)
         else if (_currentMovementSpeed > movementThreshold)
@@ -477,7 +481,7 @@ public class NPCSimpleAnimator : MonoBehaviour
                     TransitionToLocomotion();
                 }
             }
-            else if ((_currentState == AnimationState.Idle) && !_isInteracting)
+            else if ((_currentState == AnimationState.Idle || (_currentState == AnimationState.OneShot && _poseSostenida != null)) && !_isInteracting)
             {
                 TransitionToLocomotion();
             }
@@ -674,8 +678,9 @@ public class NPCSimpleAnimator : MonoBehaviour
             StopCoroutine(_oneShotCoroutine);
         }
 
-        // Y cualquier pose sostenida: un gesto nuevo manda sobre la pose que hubiera.
-        PararLaPose();
+        // Y cualquier pose sostenida en este layer: un gesto nuevo manda sobre la pose que hubiera en su misma capa,
+        // sin romper poses de otra capa (p.ej. un gesto de manos no debe interrumpir caer/volar en la capa base).
+        PararLaPose(layer);
         
         _oneShotCoroutine = StartCoroutine(PlayOneShotCoroutine(stateName, layer, onComplete, fundido));
     }
@@ -699,44 +704,46 @@ public class NPCSimpleAnimator : MonoBehaviour
     // así que en el caso normal el clip no se reinicia nunca. Un clip cíclico se ve en bucle; uno
     // que no lo es se queda congelado en su último fotograma, que para una pose en el aire es
     // justo lo que se quiere.
-    private Coroutine _poseCoroutine;
-    private string _poseSostenida;
-    private bool _congelarPoseAlFinal;
+    private readonly Coroutine[] _poseCoroutines = new Coroutine[4];
+    private readonly string[] _posesSostenidas = new string[4];
+    private readonly bool[] _congelarPoseAlFinal = new bool[4];
+    private string _poseSostenida => (_posesSostenidas.Length > 1 && !string.IsNullOrEmpty(_posesSostenidas[1])) ? _posesSostenidas[1] : _posesSostenidas[0];
 
     /// ¿Hay ahora mismo una pose sostenida? Lo pregunta quien podría pisarla sin querer — el
     /// relanzador de gestos de hablar de SayBeat, sin ir más lejos.
-    public bool SosteniendoPose => _poseCoroutine != null && !string.IsNullOrEmpty(_poseSostenida);
+    public bool SosteniendoPose => (_poseCoroutines[0] != null && !string.IsNullOrEmpty(_posesSostenidas[0]))
+        || (_poseCoroutines[1] != null && !string.IsNullOrEmpty(_posesSostenidas[1]));
 
     /// Mantiene una pose hasta que alguien diga lo contrario. Idempotente: pedir la pose que ya
     /// está puesta no la reinicia.
-    public void HoldPose(string stateName, int layer = -1, bool congelarAlFinal = false, float fundido = 0.12f)
+    public void HoldPose(string stateName, int layer = -1, bool congelarAlFinal = false, float fundido = 0.12f, bool alFinal = false)
     {
         if (string.IsNullOrEmpty(stateName) || animator == null || _currentState == AnimationState.Dead ||
             !isActiveAndEnabled || !gameObject.activeInHierarchy)
             return;
 
-        if (_poseSostenida == stateName && _poseCoroutine != null)
-        {
-            _congelarPoseAlFinal = congelarAlFinal;
-            return;
-        }
-
         if (layer < 0) layer = AnimatorLayerUtil.ResolveLayer(animator, stateName, upperBodyLayer);
-        if (layer < 0)
+        if (layer < 0 || layer >= _poseCoroutines.Length)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[NPCAnimator:{gameObject.name}] HoldPose('{stateName}'): ese estado no " +
-                "existe en ningún layer de este Animator Controller. La pose no se va a ver.");
+                "existe en ningún layer válido de este Animator Controller. La pose no se va a ver.");
 #endif
             return;
         }
 
-        if (_oneShotCoroutine != null) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
-        PararLaPose();
+        if (_posesSostenidas[layer] == stateName && _poseCoroutines[layer] != null)
+        {
+            _congelarPoseAlFinal[layer] = congelarAlFinal;
+            return;
+        }
 
-        _poseSostenida = stateName;
-        _congelarPoseAlFinal = congelarAlFinal;
-        _poseCoroutine = StartCoroutine(SostenerPose(stateName, layer, fundido));
+        if (_oneShotCoroutine != null && layer == 0) { StopCoroutine(_oneShotCoroutine); _oneShotCoroutine = null; }
+        PararLaPose(layer);
+
+        _posesSostenidas[layer] = stateName;
+        _congelarPoseAlFinal[layer] = congelarAlFinal;
+        _poseCoroutines[layer] = StartCoroutine(SostenerPose(stateName, layer, fundido, congelarAlFinal, alFinal));
     }
 
     /// Suelta la pose. Por defecto devuelve al personaje a su pose normal; con `aIdle` a false lo
@@ -744,14 +751,14 @@ public class NPCSimpleAnimator : MonoBehaviour
     /// un idle de un fotograma entre medias.
     public void ReleasePose(bool aIdle = true)
     {
-        if (_poseCoroutine == null && string.IsNullOrEmpty(_poseSostenida)) return;
-
-        PararLaPose();
+        PararLaPose(-1);
 
         if (aIdle && _currentState != AnimationState.Dead)
         {
             _currentState = AnimationState.Idle;
             TransitionToIdle();
+            if (animator != null && upperBodyLayer > 0 && upperBodyLayer < animator.layerCount)
+                animator.SetLayerWeight(upperBodyLayer, 0f);
         }
     }
 
@@ -768,56 +775,100 @@ public class NPCSimpleAnimator : MonoBehaviour
             animator.SetLayerWeight(upperBodyLayer, 0f);
     }
 
-    private void PararLaPose()
+    private void PararLaPose(int layer = -1)
     {
-        if (_poseCoroutine != null) StopCoroutine(_poseCoroutine);
-        _poseCoroutine = null;
-        _poseSostenida = null;
+        if (layer < 0)
+        {
+            for (int i = 0; i < _poseCoroutines.Length; i++)
+            {
+                if (_poseCoroutines[i] != null) StopCoroutine(_poseCoroutines[i]);
+                _poseCoroutines[i] = null;
+                _posesSostenidas[i] = null;
+                _congelarPoseAlFinal[i] = false;
+            }
+            if (animator != null && animator.speed == 0f) animator.speed = 1f;
+            return;
+        }
+
+        if (layer < _poseCoroutines.Length)
+        {
+            if (_poseCoroutines[layer] != null) StopCoroutine(_poseCoroutines[layer]);
+            _poseCoroutines[layer] = null;
+            _posesSostenidas[layer] = null;
+            _congelarPoseAlFinal[layer] = false;
+            if (layer == 0 && animator != null && animator.speed == 0f) animator.speed = 1f;
+        }
     }
 
-    private IEnumerator SostenerPose(string stateName, int layer, float fundido)
+    private IEnumerator SostenerPose(string stateName, int layer, float fundido, bool congelarAlFinal, bool alFinal)
     {
-        _currentState = AnimationState.OneShot;
-        animator.speed = 1f;
+        if (layer == 0) _currentState = AnimationState.OneShot;
         if (layer > 0 && layer < animator.layerCount) animator.SetLayerWeight(layer, 1f);
 
-        CrossFadeToState(stateName, fundido, layer);
-        yield return null;
+        string resolvedStatePath = AnimatorLayerUtil.ResolveStatePath(animator, stateName, layer);
+        int hash = Animator.StringToHash(resolvedStatePath);
+        float targetNorm = stateName == "FoundSomething_NoWeapon" ? 0.65f : 0.98f;
 
         bool poseCongelada = false;
-        while (true)
+        if (alFinal)
         {
-            yield return null;
-            if (animator == null) yield break;
+            animator.Play(hash, layer, targetNorm);
+            poseCongelada = true;
+        }
+        else
+        {
+            CrossFadeToState(stateName, fundido, layer);
+        }
+        yield return null;
 
-            // Solo se recruza si se ha salido de verdad. Mientras esté en la pose —o entrando en
-            // ella— no se toca, que es lo que evita el reinicio del clip.
-            var actual = animator.GetCurrentAnimatorStateInfo(layer);
-            var siguiente = animator.IsInTransition(layer) ? animator.GetNextAnimatorStateInfo(layer) : actual;
-            // Cancela la salida del estado sin detener las otras capas del animador.
-            if (actual.IsName(stateName) && animator.IsInTransition(layer) && !siguiente.IsName(stateName))
+        try
+        {
+            while (true)
             {
-                if (actual.loop || _congelarPoseAlFinal)
-                    animator.Play(Animator.StringToHash(stateName), layer,
-                        actual.loop ? Mathf.Repeat(actual.normalizedTime, 1f) : 1f);
-                continue;
-            }
-            if (actual.IsName(stateName))
-            {
-                if (_congelarPoseAlFinal && !actual.loop && actual.normalizedTime >= 1f)
+                yield return null;
+                if (animator == null) yield break;
+
+                // Solo se recruza si se ha salido de verdad. Mientras esté en la pose —o entrando en
+                // ella— no se toca, que es lo que evita el reinicio del clip.
+                var actual = animator.GetCurrentAnimatorStateInfo(layer);
+                var siguiente = animator.IsInTransition(layer) ? animator.GetNextAnimatorStateInfo(layer) : actual;
+
+                if (actual.IsName(stateName))
                 {
-                    if (!poseCongelada)
+                    bool sale = animator.IsInTransition(layer) && !siguiente.IsName(stateName);
+                    if (congelarAlFinal && !actual.loop)
                     {
-                        animator.Play(Animator.StringToHash(stateName), layer, 1f);
-                        poseCongelada = true;
+                        if (actual.normalizedTime >= targetNorm || sale || poseCongelada)
+                        {
+                            animator.Play(hash, layer, targetNorm);
+                            if (layer == 0) animator.speed = 0f;
+                            poseCongelada = true;
+                            continue;
+                        }
                     }
+                    else if (sale && actual.loop)
+                    {
+                        animator.Play(hash, layer, Mathf.Repeat(actual.normalizedTime, 1f));
+                        continue;
+                    }
+                    continue;
                 }
-                continue;
-            }
-            if (animator.IsInTransition(layer)) continue;
+                if (animator.IsInTransition(layer)) continue;
 
-            poseCongelada = false;
-            CrossFadeToState(stateName, 0.12f, layer);
+                if (poseCongelada)
+                {
+                    animator.Play(hash, layer, targetNorm);
+                }
+                else
+                {
+                    CrossFadeToState(stateName, 0.12f, layer);
+                }
+            }
+        }
+        finally
+        {
+            if (layer == 0 && animator != null && animator.speed == 0f)
+                animator.speed = 1f;
         }
     }
     
@@ -884,8 +935,15 @@ public class NPCSimpleAnimator : MonoBehaviour
         // Return to idle if not interacting (let the callback handle battle state)
         if (!_isInteracting && !_isInBattle)
         {
-            _currentState = AnimationState.Idle;
-            TransitionToIdle();
+            if (layer == 0)
+            {
+                _currentState = AnimationState.Idle;
+                TransitionToIdle();
+            }
+            else if (animator != null && layer < animator.layerCount)
+            {
+                animator.SetLayerWeight(layer, 0f);
+            }
         }
         else if (_isInteracting)
         {
@@ -2642,7 +2700,8 @@ public class NPCSimpleAnimator : MonoBehaviour
             return;
         }
         
-        int stateHash = Animator.StringToHash(stateName);
+        string resolvedPath = AnimatorLayerUtil.ResolveStatePath(animator, stateName, layer);
+        int stateHash = Animator.StringToHash(resolvedPath);
         
         // Check if state exists in specified layer
         if (animator.HasState(layer, stateHash))

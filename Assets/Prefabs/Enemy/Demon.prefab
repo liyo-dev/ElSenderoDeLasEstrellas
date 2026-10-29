@@ -3048,19 +3048,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthBar
   bossNameId: BOSS_DEMONIO_HEALTHBAR_NAME
   bossName: Boss Demonio
-  barSize: {x: 400, y: 40}
-  barPosition: {x: 0, y: -30}
-  healthyColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
-  warningColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  criticalColor: {r: 1, g: 0, b: 0, a: 1}
-  warningThreshold: 0.5
   criticalThreshold: 0.25
   animateHealthChanges: 1
   animationSpeed: 5
   fadeInDuration: 0.4
   fadeOutDuration: 0.5
-  colorMarcaFase: {r: 1, g: 0.85, b: 0.3, a: 0.95}
-  colorMarcaSuperada: {r: 1, g: 1, b: 1, a: 0.25}
 --- !u!114 &4847328099168740309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3091,11 +3083,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d07ef7ecf1d7642909fb36b8123186, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ImpDemonAI
+  guerraEnElAire: 0
+  radioDeAlmenas: 40
+  alturaDeVuelo: 6
+  radioDeVuelo: 11
+  segundosEnCadaAlmena: 6
+  duracionDelVuelo: 1.3
+  alturaDelArco: 2.5
   player: {fileID: 0}
   animator: {fileID: 0}
   damageable: {fileID: 0}
   agent: {fileID: 0}
-  detectionRange: 20
   attackRange: 3
   projectileRange: 10
   playerLayer:
@@ -3104,6 +3102,9 @@ MonoBehaviour:
   slashDamage: 15
   stabDamage: 20
   projectileDamage: 10
+  projectileImpactRadius: 2.2
+  plasmaChargeAttackChance: 0.35
+  plasmaChargeDuration: 2.1
   projectilePrefab: {fileID: 6916111140770829, guid: e299c82e955f8cf4997f7573f2fd8672, type: 3}
   projectileSpawnPoint: {fileID: 2156623539970524872}
   spellEffectPrefab: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
@@ -3120,14 +3121,18 @@ MonoBehaviour:
   isSecondEncounter: 0
   secondCooldownMultiplier: 0.65
   phase3HealthPercentSecond: 0.5
-  rainShadowPrefab: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}
-  rainImpactPrefab: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+  rainShadowPrefab: {fileID: 2048943519762858860, guid: e04bd1cf92ebd23479963617598b5322, type: 3}
+  rainImpactPrefab: {fileID: 5855226060593206312, guid: adb060b720f894548823870ca035ed30, type: 3}
+  rainExplosionVFXPrefab: {fileID: 2053018119804519932, guid: ff2cbc49a80f1a84888ca31cc045fe24, type: 3}
   rainCount: 6
   rainRadius: 7
   rainWarningDuration: 1.5
   rainImpactRadius: 1.8
   rainDamage: 15
   rainCooldown: 22
+  rainHeight: 12
+  rainFallDuration: 0.65
+  rainInterval: 0.16
   attackRecoveryBeat: 0.45
   agotamientoPorFase:
   - 1.6
@@ -3164,6 +3169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 90
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!54 &8310206665460091007
 Rigidbody:
   m_ObjectHideFlags: 0

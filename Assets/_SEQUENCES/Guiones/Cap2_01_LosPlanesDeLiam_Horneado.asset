@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Cap2_01_LosPlanesDeLiam_Horneado
   m_EditorClassIdentifier: Assembly-CSharp::GuionHorneado
   nombre: Cap2_01_LosPlanesDeLiam
-  duracion: 45.80449
+  duracion: 46.1702
   presentacion: 1
-  huella: "2026-10-07 09:40 \xB7 63a81953d7e6fe3f2bafd19d848460fc"
+  huella: "2026-10-27 11:53 \xB7 63a81953d7e6fe3f2bafd19d848460fc"
   actores:
   - id: LIAM_TORRE
     alias: liam
@@ -34,39 +34,40 @@ MonoBehaviour:
     - fundido: 0
       t: 0
       tipo: 1
-      estado: SitHigh_Loop
+      estado: SitMedium_Loop
       congelar: 0
+      alFinal: 0
     caras:
     - t: 0
       emocion: pensativo
       dura: 0
     - t: 3
       emocion: pensativo
-      dura: 2.1240816
-    - t: 7.7240815
+      dura: 2.1763265
+    - t: 7.7763267
       emocion: sorpresa
-      dura: 6.669388
-    - t: 15.693469
+      dura: 6.721633
+    - t: 15.797959
       emocion: sorpresa
       dura: 0
-    - t: 16.99347
+    - t: 17.09796
       emocion: preocupado
-      dura: 1.8106122
-    - t: 21.404081
+      dura: 1.8628571
+    - t: 21.560816
       emocion: pensativo
-      dura: 1.9673469
-    - t: 25.171427
+      dura: 2.0195918
+    - t: 25.380407
       emocion: decidido
-      dura: 2.9861226
-    - t: 30.75755
+      dura: 3.0383675
+    - t: 31.018774
       emocion: decidido
-      dura: 2.7510204
-    - t: 34.60857
+      dura: 2.8032653
+    - t: 34.92204
       emocion: triste
       dura: 0
-    - t: 38.40857
+    - t: 38.72204
       emocion: triste
-      dura: 3.7959185
+      dura: 3.8481634
     visible: []
     deslizando: []
   - id: TOBI_TORRE
@@ -88,14 +89,15 @@ MonoBehaviour:
       tipo: 1
       estado: SitGround_Loop
       congelar: 0
+      alFinal: 0
     caras:
     - t: 0
       emocion: cansado
       dura: 0
-    - t: 36.40857
+    - t: 36.72204
       emocion: triste
       dura: 0
-    - t: 37.30857
+    - t: 37.62204
       emocion: cansado
       dura: 0
     visible: []
@@ -104,7 +106,7 @@ MonoBehaviour:
   - onlyIfFlag: 
     skipIfFlag: 
     t0: 3
-    t1: 4.7240815
+    t1: 4.7763267
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_01
     gesto: 
@@ -112,8 +114,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 7.7240815
-    t1: 13.993469
+    t0: 7.7763267
+    t1: 14.0979595
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_02
     gesto: 
@@ -121,8 +123,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 16.99347
-    t1: 18.404081
+    t0: 17.09796
+    t1: 18.560816
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_03
     gesto: 
@@ -130,8 +132,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 21.404081
-    t1: 22.971428
+    t0: 21.560816
+    t1: 23.180408
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_04
     gesto: 
@@ -139,8 +141,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 25.171427
-    t1: 27.75755
+    t0: 25.380407
+    t1: 28.018774
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_05
     gesto: 
@@ -148,8 +150,8 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 30.75755
-    t1: 33.10857
+    t0: 31.018774
+    t1: 33.42204
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_06
     gesto: 
@@ -157,15 +159,17 @@ MonoBehaviour:
     presentacion: -1
   - onlyIfFlag: 
     skipIfFlag: 
-    t0: 38.40857
-    t1: 41.80449
+    t0: 38.72204
+    t1: 42.1702
     actor: LIAM_TORRE
     clave: EVT_LIAM_CRYSTAL_07
     gesto: 
     sinPose: 1
     presentacion: -1
   planos:
-  - focos: []
+  - focos:
+    - t: 0
+      p: {x: -6000, y: 101.75, z: 6001}
     t0: 0
     t1: 3
     tipo: 0
@@ -188,7 +192,7 @@ MonoBehaviour:
     mano: 0.12
   - focos: []
     t0: 3
-    t1: 15.693469
+    t1: 15.797959
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
@@ -203,17 +207,17 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0798978
-    encuadre: {x: -0.09, y: -0.076}
+    encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 15.693469
-    t1: 19.404081
+    t0: 15.797959
+    t1: 19.560816
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 15.693469
+    - t: 15.797959
       p: {x: -6001.4, y: 101.4, z: 5997.4}
     lente: 42
     lenteFinal: 0
@@ -224,17 +228,17 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: -5999.6, y: 100.40358, z: 5999.85}
     alturaDelFoco: 1.0798978
-    encuadre: {x: -0.13, y: -0.076}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 19.404081
-    t1: 23.871428
+    t0: 19.560816
+    t1: 24.080408
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
-    - t: 19.404081
+    - t: 19.560816
       p: {x: -6000.65, y: 101, z: 5998.6}
     lente: 48
     lenteFinal: 0
@@ -243,17 +247,17 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: -6000.15, y: 100.62, z: 5999.75}
     alturaDelFoco: 0
-    encuadre: {x: 0, y: -0.076}
+    encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 23.871428
-    t1: 25.171427
+    t0: 24.080408
+    t1: 25.380407
     tipo: 2
     descripcion: medio de liam
     posiciones:
-    - t: 23.871428
+    - t: 24.080408
       p: {x: -6001.3, y: 101.25, z: 5998.7}
     lente: 40
     lenteFinal: 0
@@ -264,17 +268,17 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0798978
-    encuadre: {x: -0.13, y: -0.076}
+    encuadre: {x: -0.13, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 25.171427
-    t1: 30.75755
+    t0: 25.380407
+    t1: 31.018774
     tipo: 4
     descripcion: detalle de el punto
     posiciones:
-    - t: 25.171427
+    - t: 25.380407
       p: {x: -6000.6, y: 101.9, z: 6001.2}
     lente: 65
     lenteFinal: 0
@@ -285,17 +289,17 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: -6000.6, y: 102, z: 6002.86}
     alturaDelFoco: 0
-    encuadre: {x: 0, y: -0.076}
+    encuadre: {x: 0, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
   - focos: []
-    t0: 30.75755
-    t1: 45.80449
+    t0: 31.018774
+    t1: 46.1702
     tipo: 3
     descripcion: primer plano de liam
     posiciones:
-    - t: 30.75755
+    - t: 31.018774
       p: {x: -6001.2, y: 101.25, z: 5998.9}
     lente: 40
     lenteFinal: 0
@@ -306,7 +310,7 @@ MonoBehaviour:
     extras: []
     focoFijo: {x: 0, y: 0, z: 0}
     alturaDelFoco: 1.0798978
-    encuadre: {x: -0.09, y: -0.076}
+    encuadre: {x: -0.09, y: -0.074}
     suavidad: 0.6
     mezcla: 0
     mano: 0.12
@@ -315,37 +319,37 @@ MonoBehaviour:
     skipIfFlag: 
     t: 0
     beat:
-      rid: 5630202287041282352
+      rid: 5630202741379040025
     linea: 34
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 15.693469
+    t: 15.797959
     beat:
-      rid: 5630202287041282353
+      rid: 5630202741379040026
     linea: 48
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 20.404081
+    t: 20.560816
     beat:
-      rid: 5630202287041282354
+      rid: 5630202741379040027
     linea: 57
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 35.60857
+    t: 35.92204
     beat:
-      rid: 5630202287041282355
+      rid: 5630202741379040028
     linea: 81
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 43.80449
+    t: 44.1702
     beat:
-      rid: 5630202287041282356
+      rid: 5630202741379040029
     linea: 88
   - onlyIfFlag: 
     skipIfFlag: 
-    t: 45.30449
+    t: 45.6702
     beat:
-      rid: 5630202287041282357
+      rid: 5630202741379040030
     linea: 90
   etiquetas:
   - nombre: inicio
@@ -353,13 +357,13 @@ MonoBehaviour:
   - nombre: mira
     t: 3
   - nombre: cae
-    t: 15.693469
+    t: 15.797959
   - nombre: llave
-    t: 19.404081
+    t: 19.560816
   - nombre: decide
-    t: 23.871428
+    t: 24.080408
   - nombre: final
-    t: 34.60857
+    t: 34.92204
   puntos:
   - nombre: silla
     posicion: {x: -6000, y: 100.25001, z: 6000.626}
@@ -387,15 +391,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 5630202287041282352
+    - rid: 5630202741379040025
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         mostrar: 1
-        altura: 0.12
+        altura: 0.13
         duracion: 0.5
         esperar: 0
-    - rid: 5630202287041282353
+    - rid: 5630202741379040026
       type: {class: VfxBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -408,13 +412,13 @@ MonoBehaviour:
         seguirAlActor: 0
         registrarComo: 
         escala: 1
-    - rid: 5630202287041282354
+    - rid: 5630202741379040027
       type: {class: SetPropActiveBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         propId: PROP_BrilloLlave
         active: 0
-    - rid: 5630202287041282355
+    - rid: 5630202741379040028
       type: {class: CutInBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -428,7 +432,7 @@ MonoBehaviour:
         volumen: 1
         mostrar: 1
         esperar: 0
-    - rid: 5630202287041282356
+    - rid: 5630202741379040029
       type: {class: ScreenFadeBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
@@ -436,11 +440,11 @@ MonoBehaviour:
         color: {r: 0, g: 0, b: 0, a: 1}
         duration: 1.5
         waitForEnd: 0
-    - rid: 5630202287041282357
+    - rid: 5630202741379040030
       type: {class: BandasDeCineBeat, ns: , asm: Assembly-CSharp}
       data:
         note: 
         mostrar: 0
-        altura: 0.12
+        altura: 0.13
         duracion: 0.5
         esperar: 0

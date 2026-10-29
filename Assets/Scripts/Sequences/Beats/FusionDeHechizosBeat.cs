@@ -143,6 +143,9 @@ public class FusionDeHechizosBeat : SequenceBeat
             yield break;
         }
 
+        if (a.transform != null) ConjuroEnLasManosBeat.Desvincular(a.transform);
+        if (b.transform != null) ConjuroEnLasManosBeat.Desvincular(b.transform);
+
         GameObject velo = null, punto = null;
         Texture2D textura = null;
         bool limpio = false, temblando = false, fundiendo = false, blancoEntregado = false;

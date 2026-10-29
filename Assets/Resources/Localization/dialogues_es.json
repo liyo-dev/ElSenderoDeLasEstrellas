@@ -814,15 +814,15 @@
         },
         {
             "key": "DLG_GUERRERACHINA_01",
-            "value": "Así que tú eres Will… Eldran me habló de ti."
+            "value": "Dicen que te vas del pueblo. Antes de que lo hagas, aprende a defenderte: yo ataco, tú aguantas."
         },
         {
             "key": "DLG_GUERRERACHINA_02",
-            "value": "Si te ha enviado aquí, es que cree que aún puedes mejorar."
+            "value": "Podrás usar PROTECCIÓN manteniendo pulsado <sprite name=\"interactable_b\">."
         },
         {
             "key": "DLG_GUERRERACHINA_03",
-            "value": "Voy a enseñarte un nuevo ataque y una técnica de protección."
+            "value": "Voy a enseñarte un nuevo ataque y una técnica de defensa."
         },
         {
             "key": "DLG_GUERRERACHINA_04",
@@ -830,23 +830,23 @@
         },
         {
             "key": "DLG_GUERRERACHINA_05",
-            "value": "Podrás usar PROTECCIÓN si mantienes pulsado <sprite name=\"interactable_b\">."
+            "value": "Podrás usar PROTECCIÓN manteniendo pulsado <sprite name=\"interactable_b\">. Si bloqueas en el momento justo, ¡devolverás el golpe!"
         },
         {
             "key": "DLG_GUERRERACHINA_06",
-            "value": "Voy a darte un hechizo nuevo: BOLA PRISMA. Elígelo con <sprite name=\"interactable_lb\"> y atácame con <sprite name=\"interactable_x\">."
+            "value": "Toma este nuevo hechizo: BOLA PRISMA. Elígelo con <sprite name=\"interactable_lb\"> y atácame con <sprite name=\"interactable_x\">."
         },
         {
             "key": "DLG_GUERRERACHINA_07",
-            "value": "Por último espero que traigas al menos una POCIÓN DE VIDA. Desde el menú inventario puedes usarla y recuperar vida."
+            "value": "También puedes pulsar F o el stick derecho en cualquier combate para fijar o liberar tu objetivo."
         },
         {
             "key": "DLG_GUERRERACHINA_08",
-            "value": "Prepárate, Will. El entrenamiento empieza ahora."
+            "value": "¡Pues prepárate, Will! ¡El entrenamiento empieza ahora!"
         },
         {
             "key": "DLG_GUERRERACHINA_AFTER",
-            "value": "Así se hace."
+            "value": "Ese pañuelo te sienta bien. Vuelve entero."
         },
         {
             "key": "DLG_GUERRERACHINA_BEFORE",
@@ -854,7 +854,7 @@
         },
         {
             "key": "DLG_GUERRERACHINA_DEFEAT",
-            "value": "Sigue entrenando para ser un gran mago."
+            "value": "¡Vaya! No lo has hecho nada mal. Tienes buenos reflejos."
         },
         {
             "key": "DLG_GUERRERACHINA_TARGETLOCK",
@@ -1449,57 +1449,232 @@
             "value": "Entonces es perfecta."
         },
         {
-            "key":  "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
-            "value":  "Victoria, la boticaria, Erika… y luego ven a verme al campo de prácticas."
+            "key": "DLG_ELDRAN_PREPARA_VIAJE_EN_CURSO",
+            "value": "Victoria, la boticaria, Erika… y luego ven a verme al campo de prácticas."
         },
-        {"key":"DLG_VICTORIA_CAPA_01","value":"Eldran ya me ha avisado. Así que te vas al Bosque Prohibido."},
-        {"key":"DLG_VICTORIA_CAPA_02","value":"Me ha dicho que te pida una capa."},
-        {"key":"DLG_VICTORIA_CAPA_03","value":"Una de viaje. Y que no arda cada vez que te enfades."},
-        {"key":"DLG_VICTORIA_CAPA_04","value":"Quieto, que te mido."},
-        {"key":"DLG_VICTORIA_CAPA_05","value":"Otra vez. Por si acaso."},
-        {"key":"DLG_VICTORIA_CAPA_06","value":"Te he visto crecer, Will. Cada invierno, con las mangas más cortas."},
-        {"key":"DLG_VICTORIA_CAPA_07","value":"Ya tenía una medio hecha. Sabía que este día llegaría."},
-        {"key":"DLG_VICTORIA_CAPA_08","value":"Y ni se te ocurra pagarme."},
-        {"key":"DLG_VICTORIA_CAPA_DESPUES_01","value":"Esa capa te queda que ni pintada."},
-        {"key":"DLG_BOTICARIA_POCION_01","value":"Así que tú eres el del demonio. Toma."},
-        {"key":"DLG_BOTICARIA_POCION_02","value":"Es la única poción de vida que tengo. Tardaré meses en hacer otra."},
-        {"key":"DLG_BOTICARIA_POCION_03","value":"Estabiliza una herida grave. Pero no resucita a nadie."},
-        {"key":"DLG_BOTICARIA_POCION_04","value":"Y no cura el cansancio de la magia. Eso solo se cura descansando."},
-        {"key":"DLG_BOTICARIA_POCION_05","value":"Entendido. No resucita, no cura el cansancio…"},
-        {"key":"DLG_BOTICARIA_POCION_06","value":"…y no se gasta por una rozadura. Repítelo."},
-        {"key":"DLG_BOTICARIA_POCION_07","value":"Y no se gasta por una rozadura."},
-        {"key":"DLG_BOTICARIA_POCION_DESPUES_01","value":"Cuídate. Y cuida esa poción."},
-        {"key":"DLG_RENARD_CONTRATO1_OFERTA_01","value":"Una cosa más. Las arañas se han vuelto atrevidas: anoche llegaron hasta mi trampa del camino."},
-        {"key":"DLG_RENARD_CONTRATO1_OFERTA_02","value":"Acaba con ocho y te pago veinte de Esencia, aparte de lo que recojas."},
-        {"key":"DLG_RENARD_CONTRATO1_MIENTRAS_01","value":"Ocho, chico. Las cuento por las patas, así que no me engañes."},
-        {"key":"DLG_RENARD_CONTRATO1_HECHO_01","value":"Ocho. Nada mal para alguien de tu tamaño. Toma, lo prometido."},
-        {"key":"DLG_RENARD_CONTRATO2_OFERTA_01","value":"Más adentro hay más, donde la luz casi no llega. Quince, y te doy algo que guardo desde hace años."},
-        {"key":"DLG_RENARD_CONTRATO2_MIENTRAS_01","value":"Quince. Y no te alejes del camino más de lo necesario."},
-        {"key":"DLG_RENARD_CONTRATO2_HECHO_01","value":"Quince... Ya no te llamo chico."},
-        {"key":"DLG_RENARD_CONTRATO2_HECHO_02","value":"Toma este parche. Lo llevé el invierno en que un oso quiso dejarme tuerto. No lo consiguió."},
-        {"key":"DLG_ELDRAN_PUNTERIA_01","value":"Antes de salir quiero ver c\u00f3mo apuntas. Esos cubos de ah\u00ed ser\u00e1n tu blanco."},
-        {"key":"DLG_ELDRAN_PUNTERIA_02","value":"Una Bola Prisma no sale sola: respira, mira el cubo y suelta solo cuando est\u00e9s seguro."},
-        {"key":"DLG_ELDRAN_PUNTERIA_03","value":"\u00bfY si fallo?"},
-        {"key":"DLG_ELDRAN_PUNTERIA_04","value":"Fallar\u00e1s. Pero sabr\u00e1s por qu\u00e9. Eso tambi\u00e9n es aprender a apuntar."},
-        {"key":"DLG_ELDRAN_PUNTERIA_DESPUES_01","value":"Ya apuntas como debe ser. No dispares si no hace falta."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_01","value":"Dicen que te vas del pueblo. Antes de que lo hagas, aprende a defenderte: yo ataco, t\u00fa aguantas."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_02","value":"F\u00edjate en d\u00f3nde pone el peso el otro, no en la mano. El cuerpo avisa antes que el golpe."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_03","value":"Intentar\u00e9 no tropezar."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_04","value":"No est\u00e1 mal. Toma, un pa\u00f1uelo: para el sudor y para acordarte de volver."},
-        {"key":"DLG_ERIKA_ENTRENAMIENTO_05","value":"Y no lo pierdas."},
-        {"key":"DLG_ERIKA_DESPUES_01","value":"Ese pa\u00f1uelo te sienta bien. Vuelve entero."},
-        {"key":"DLG_ELDRAN_MOTIVOS_01","value":"Ya tienes capa, poci\u00f3n, pa\u00f1uelo y buena punter\u00eda. Falta lo importante: saber por qu\u00e9 te vas."},
-        {"key":"DLG_ELDRAN_MOTIVOS_02","value":"Haz una lista de motivos. Cuando dudes, l\u00e9ela."},
-        {"key":"DLG_ELDRAN_MOTIVOS_03","value":"Encontrar a Estela. Y entender qu\u00e9 me pasa."},
-        {"key":"DLG_ELDRAN_MOTIVOS_04","value":"Buenos motivos. Que sean tuyos, no m\u00edos."},
-        {"key":"DLG_ELDRAN_BRUJULA_01","value":"Y ll\u00e9vate esta br\u00fajula. Siempre apunta al camino de vuelta a casa."},
-        {"key":"DLG_OLIVER_DESPEDIDA_01","value":"As\u00ed que es verdad: te vas."},
-        {"key":"DLG_OLIVER_DESPEDIDA_02","value":"Yo me quedo en el pueblo. Alguien tiene que cuidar de P\u00eda... y de tu casa."},
-        {"key":"DLG_OLIVER_DESPEDIDA_03","value":"Gracias por todo, Oliver. Volver\u00e9 pronto."},
-        {"key":"DLG_OLIVER_DESPEDIDA_04","value":"M\u00e1s te vale. Nos vemos pronto."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_01","value":"Tengo que ir a la capital. Hay cosas que solo se arreglan all\u00ed."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_02","value":"Conf\u00edo en ti, aunque no me guste lo que eso me obliga a soltar."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_03","value":"Gracias por criarme, Eldran."},
-        {"key":"DLG_ELDRAN_DESPEDIDA_04","value":"Anda, ve. La puerta de casa siempre estar\u00e1 abierta."}
+        {
+            "key": "DLG_VICTORIA_CAPA_01",
+            "value": "Eldran ya me ha avisado. Así que te vas al Bosque Prohibido."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_02",
+            "value": "Me ha dicho que te pida una capa."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_03",
+            "value": "Una de viaje. Y que no arda cada vez que te enfades."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_04",
+            "value": "Quieto, que te mido."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_05",
+            "value": "Otra vez. Por si acaso."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_06",
+            "value": "Te he visto crecer, Will. Cada invierno, con las mangas más cortas."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_07",
+            "value": "Ya tenía una medio hecha. Sabía que este día llegaría."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_08",
+            "value": "Y ni se te ocurra pagarme."
+        },
+        {
+            "key": "DLG_VICTORIA_CAPA_DESPUES_01",
+            "value": "Esa capa te queda que ni pintada."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_01",
+            "value": "Así que tú eres el del demonio. Toma."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_02",
+            "value": "Es la única poción de vida que tengo. Tardaré meses en hacer otra."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_03",
+            "value": "Estabiliza una herida grave. Pero no resucita a nadie."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_04",
+            "value": "Y no cura el cansancio de la magia. Eso solo se cura descansando."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_05",
+            "value": "Entendido. No resucita, no cura el cansancio…"
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_06",
+            "value": "…y no se gasta por una rozadura. Repítelo."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_07",
+            "value": "Y no se gasta por una rozadura."
+        },
+        {
+            "key": "DLG_BOTICARIA_POCION_DESPUES_01",
+            "value": "Cuídate. Y cuida esa poción."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_OFERTA_01",
+            "value": "Una cosa más. Las arañas se han vuelto atrevidas: anoche llegaron hasta mi trampa del camino."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_OFERTA_02",
+            "value": "Acaba con ocho y te pago veinte de Esencia, aparte de lo que recojas."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_MIENTRAS_01",
+            "value": "Ocho, chico. Las cuento por las patas, así que no me engañes."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO1_HECHO_01",
+            "value": "Ocho. Nada mal para alguien de tu tamaño. Toma, lo prometido."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_OFERTA_01",
+            "value": "Más adentro hay más, donde la luz casi no llega. Quince, y te doy algo que guardo desde hace años."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_MIENTRAS_01",
+            "value": "Quince. Y no te alejes del camino más de lo necesario."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_HECHO_01",
+            "value": "Quince... Ya no te llamo chico."
+        },
+        {
+            "key": "DLG_RENARD_CONTRATO2_HECHO_02",
+            "value": "Toma este parche. Lo llevé el invierno en que un oso quiso dejarme tuerto. No lo consiguió."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_01",
+            "value": "Antes de salir quiero ver cómo apuntas. Esos cubos de ahí serán tu blanco."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_02",
+            "value": "Una Bola Prisma no sale sola: respira, mira el cubo y suelta solo cuando estés seguro."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_03",
+            "value": "¿Y si fallo?"
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_04",
+            "value": "Fallarás. Pero sabrás por qué. Eso también es aprender a apuntar."
+        },
+        {
+            "key": "DLG_ELDRAN_PUNTERIA_DESPUES_01",
+            "value": "Ya apuntas como debe ser. No dispares si no hace falta."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_01",
+            "value": "Dicen que te vas del pueblo, Will. Antes de cruzar esas puertas, necesitas saber defenderte de verdad: yo ataco, tú aguantas."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_02",
+            "value": "¿Ves ese libro al cinto? Es tu grimorio. Los magos no inventan la magia del aire: despiertan las páginas de su libro. Esta página resuena con tu energía... es la BOLA PRISMA."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_03",
+            "value": "Al despertar la página, el grimorio la fija en tu memoria. Elígela en combate con <sprite name=\"interactable_lb\"> y dispara con <sprite name=\"interactable_x\">."
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_04",
+            "value": "Y si te ataco de frente, mantén <sprite name=\"interactable_b\"> para alzar tu PROTECCIÓN. ¡Si bloqueas en el momento exacto, devolverás el golpe!"
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_05",
+            "value": "¡Siento cómo la página resuena en mis manos! ¡Estoy listo, Erika!"
+        },
+        {
+            "key": "DLG_ERIKA_ENTRENAMIENTO_06",
+            "value": "¡Pues demuéstralo en guardia! ¡A ver si aguantas mi ritmo!"
+        },
+        {
+            "key": "DLG_ERIKA_DESPUES_01",
+            "value": "Ese pañuelo te sienta bien. Vuelve entero."
+        },
+        {
+            "key": "ITEM_PANUELO_NAME",
+            "value": "Pañuelo de Erika"
+        },
+        {
+            "key": "ITEM_PANUELO_DESC",
+            "value": "Un pañuelo de tela resistente entregado por Erika tras el entrenamiento. Para el sudor y para acordarte de volver de una pieza."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_01",
+            "value": "Ya tienes capa, poción, pañuelo y buena puntería. Falta lo importante: saber por qué te vas."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_02",
+            "value": "Haz una lista de motivos. Cuando dudes, léela."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_03",
+            "value": "Encontrar a Estela. Y entender qué me pasa."
+        },
+        {
+            "key": "DLG_ELDRAN_MOTIVOS_04",
+            "value": "Buenos motivos. Que sean tuyos, no míos."
+        },
+        {
+            "key": "DLG_ELDRAN_BRUJULA_01",
+            "value": "Y llévate esta brújula. Siempre apunta al camino de vuelta a casa."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_01",
+            "value": "Así que es verdad: te vas."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_02",
+            "value": "Yo me quedo en el pueblo. Alguien tiene que cuidar de Pía... y de tu casa."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_03",
+            "value": "Gracias por todo, Oliver. Volveré pronto."
+        },
+        {
+            "key": "DLG_OLIVER_DESPEDIDA_04",
+            "value": "Más te vale. Nos vemos pronto."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_01",
+            "value": "Tengo que ir a la capital. Hay cosas que solo se arreglan allí."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_02",
+            "value": "Confío en ti, aunque no me guste lo que eso me obliga a soltar."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_03",
+            "value": "Gracias por criarme, Eldran."
+        },
+        {
+            "key": "DLG_ELDRAN_DESPEDIDA_04",
+            "value": "Anda, ve. La puerta de casa siempre estará abierta."
+        },
+        {
+            "key": "CHAR_ERIKA",
+            "value": "Erika"
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_01",
+            "value": "¡Vaya! No lo has hecho nada mal. Tienes buenos reflejos."
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_02",
+            "value": "Toma, un pañuelo bordado: para el sudor y para acordarte de volver."
+        },
+        {
+            "key": "DLG_ERIKA_VICTORIA_03",
+            "value": "Y no lo pierdas por el camino."
+        }
     ]
 }

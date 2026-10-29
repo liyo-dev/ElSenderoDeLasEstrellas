@@ -3093,7 +3093,6 @@ MonoBehaviour:
   animator: {fileID: 0}
   damageable: {fileID: 0}
   agent: {fileID: 0}
-  detectionRange: 20
   attackRange: 3
   projectileRange: 10
   playerLayer:
@@ -3102,6 +3101,9 @@ MonoBehaviour:
   slashDamage: 15
   stabDamage: 20
   projectileDamage: 10
+  projectileImpactRadius: 2.2
+  plasmaChargeAttackChance: 0.35
+  plasmaChargeDuration: 2.1
   projectilePrefab: {fileID: 7541299261854152833, guid: 71b502122a0cfe640969b5a2538bcdc1, type: 3}
   projectileSpawnPoint: {fileID: 2156623539970524872}
   spellEffectPrefab: {fileID: 1845955007268882, guid: 67a684e320da6e7439421a07e3fa265c, type: 3}
@@ -3118,14 +3120,18 @@ MonoBehaviour:
   isSecondEncounter: 1
   secondCooldownMultiplier: 0.65
   phase3HealthPercentSecond: 0.5
-  rainShadowPrefab: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}
-  rainImpactPrefab: {fileID: 1957592409648599577, guid: 3ce62e84dab46f54a9c51523f8057ac0, type: 3}
+  rainShadowPrefab: {fileID: 2048943519762858860, guid: e04bd1cf92ebd23479963617598b5322, type: 3}
+  rainImpactPrefab: {fileID: 5855226060593206312, guid: adb060b720f894548823870ca035ed30, type: 3}
+  rainExplosionVFXPrefab: {fileID: 2053018119804519932, guid: ff2cbc49a80f1a84888ca31cc045fe24, type: 3}
   rainCount: 8
   rainRadius: 7
   rainWarningDuration: 1.5
   rainImpactRadius: 1.8
   rainDamage: 40
   rainCooldown: 22
+  rainHeight: 12
+  rainFallDuration: 0.65
+  rainInterval: 0.16
   attackRecoveryBeat: 0.45
   agotamientoPorFase:
   - 1.6
@@ -3162,6 +3168,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Targetable
   targetingRadius: 90
   isInActiveCombat: 0
+  esMarcableSiempre: 0
 --- !u!54 &8310206665460091007
 Rigidbody:
   m_ObjectHideFlags: 0

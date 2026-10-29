@@ -121,9 +121,9 @@
 <line x1='0' y1='87.04' x2='2048' y2='87.04' stroke='#ffffff' stroke-opacity='0.08' stroke-width='1'/>
 <line x1='0' y1='35.84' x2='2048' y2='35.84' stroke='#ffffff' stroke-opacity='0.144' stroke-width='1'/>
 <text x='2' y='33.84' font-size='10' fill='#ffffff' fill-opacity='0.8' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>-44</text>
-<polyline points='1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
-<circle cx='363.52' cy='-1090.56' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
-<text x='367.52' y='-1078.56' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
+<polyline points='1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 1011.2,942.08 ' fill='none' stroke='#ffd27a' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='1011.2' cy='942.08' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
+<text x='1015.2' y='954.08' font-size='10' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
 <circle cx='1011.2' cy='942.08' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='1011.2' cy='942.08' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
 <circle cx='1011.2' cy='942.08' r='2.5' fill='#ffd27a' stroke='#000' stroke-width='1'/>
@@ -131,9 +131,9 @@
 <line x1='1011.2' y1='942.08' x2='1015.551' y2='926.683' stroke='#ffd27a' stroke-width='2'/>
 <text x='1019.2' y='934.08' font-size='14' fill='#ffd27a' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>will</text>
 <circle cx='1011.2' cy='942.08' r='4' fill='#000' stroke='#ffd27a' stroke-width='1'/>
-<polyline points='908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 910.194,1099.938 911.967,1095.588 913.878,1090.896 915.996,1085.697 918.218,1080.244 920.439,1074.791 922.661,1069.338 924.882,1063.885 927.104,1058.432 929.325,1052.98 931.466,1047.727 933.443,1042.873 935.219,1038.513 936.685,1034.915 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
-<circle cx='314.624' cy='2563.84' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
-<text x='318.624' y='2575.84' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
+<polyline points='908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 908.8,1103.36 910.194,1099.938 911.967,1095.588 913.878,1090.896 915.996,1085.697 918.218,1080.244 920.439,1074.791 922.661,1069.338 924.882,1063.885 927.104,1058.432 929.325,1052.98 931.466,1047.727 933.443,1042.873 935.219,1038.513 936.685,1034.915 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 936.96,1034.24 ' fill='none' stroke='#7ad7ff' stroke-width='3' stroke-opacity='0.9' stroke-linejoin='round' stroke-linecap='round'/>
+<circle cx='908.8' cy='1103.36' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
+<text x='912.8' y='1115.36' font-size='10' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>0s</text>
 <circle cx='908.8' cy='1103.36' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='918.218' cy='1080.244' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
 <circle cx='936.96' cy='1034.24' r='2.5' fill='#7ad7ff' stroke='#000' stroke-width='1'/>
@@ -141,15 +141,15 @@
 <line x1='908.8' y1='1103.36' x2='917.376' y2='1089.853' stroke='#7ad7ff' stroke-width='2'/>
 <text x='916.8' y='1095.36' font-size='14' fill='#7ad7ff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>eldran</text>
 <circle cx='936.96' cy='1034.24' r='4' fill='#000' stroke='#7ad7ff' stroke-width='1'/>
-<polygon points='1064.96,865.28 810.519,612.872 1100.993,508.696' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<polygon points='1064.96,865.28 1049.5,957.743 983.374,911.454' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='1064.96' cy='865.28' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='1071.96' y='869.28' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>1</text>
-<polygon points='1285.724,674.204 1113.903,946.201 976.035,761.366' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
-<circle cx='1285.724' cy='674.204' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
-<text x='1292.724' y='678.204' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>2</text>
-<polygon points='1061.046,878.92 1043.247,957.387 988.865,914.468' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
-<circle cx='1061.046' cy='878.92' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
-<text x='1068.046' y='882.92' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>3</text>
+<polygon points='1292.694,669.006 1116.229,948.354 974.634,758.523' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='1292.694' cy='669.006' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='1299.694' y='673.006' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>2</text>
+<polygon points='1062.265,877.376 1044.03,957.761 988.319,913.793' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
+<circle cx='1062.265' cy='877.376' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
+<text x='1069.265' y='881.376' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>3</text>
 <polygon points='1110.812,887.334 1036.106,1055.194 931.099,925.561' fill='#ffffff' fill-opacity='0.12' stroke='#ffffff' stroke-opacity='0.24'/>
 <circle cx='1110.812' cy='887.334' r='5' fill='#ffffff' stroke='#000' stroke-width='1'/>
 <text x='1117.812' y='891.334' font-size='13' fill='#ffffff' fill-opacity='1' text-anchor='start' stroke='#000' stroke-width='2.5' paint-order='stroke' stroke-opacity='0.7'>4</text>

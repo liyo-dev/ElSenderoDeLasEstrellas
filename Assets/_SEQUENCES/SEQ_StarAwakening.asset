@@ -31,6 +31,7 @@ MonoBehaviour:
     headroom: 1
     encara: 1
   endStayBlack: 1
+  skipMusicRestore: 0
   modulos: {fileID: 3468072592841052729, guid: 9c4f628711288c3498f463432caf410a, type: 3}
   phases:
   - name: 1 - La amenaza (guion)

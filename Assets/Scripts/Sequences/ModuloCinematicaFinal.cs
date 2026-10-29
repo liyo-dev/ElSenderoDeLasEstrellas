@@ -23,6 +23,9 @@ public class ModuloCinematicaFinal : SequenceModule
     [SerializeField] private Transform _tobiasActor;
 
     [Header("Escenario y Zonas")]
+    [SerializeField] private GameObject _zonaSenderoRoot;
+    [SerializeField] private GameObject _zonaPiedraRoot;
+    [SerializeField] private GameObject _zonaRioRoot;
     [SerializeField] private Transform _altarTransform;
     [SerializeField] private Transform _portalUmbralTransform;
     [SerializeField] private Transform _piedraAncestralTransform;
@@ -40,14 +43,15 @@ public class ModuloCinematicaFinal : SequenceModule
 
     [Header("Efectos del Archimago y Will")]
     [SerializeField] private GameObject _vfxEspirituArchimago;
-    [SerializeField] private GameObject _vfxLlamaPequenaWill;
     [SerializeField] private GameObject _cintaRojaWill;
 
     [Header("Efectos del Río y Noche")]
     [SerializeField] private GameObject _canaPescarWill;
     [SerializeField] private GameObject _canaPescarTobias;
+    [SerializeField] private GameObject _cuadernoDibujoTobias;
     [SerializeField] private GameObject _vfxSalpicaduraRio;
     [SerializeField] private Light _luzSolar;
+    [SerializeField] private Light _luzNocheRioGrupo;
     [SerializeField] private Material _skyboxSendero;
     [SerializeField] private Material _skyboxDia;
     [SerializeField] private Material _skyboxAtardecer;
@@ -71,6 +75,7 @@ public class ModuloCinematicaFinal : SequenceModule
     private readonly List<GameObject> _instanciasTemporales = new();
     private Coroutine _corutinaHacesLuz;
     private Coroutine _corutinaFlotacionEspiritu;
+    private Coroutine _corutinaPulsoEstrella;
     private RenderTexture _rtPortalSendero;
     private RenderTexture _rtPortalPiedra;
 
@@ -250,6 +255,12 @@ public class ModuloCinematicaFinal : SequenceModule
             _corutinaFlotacionEspiritu = null;
         }
 
+        if (_corutinaPulsoEstrella != null)
+        {
+            StopCoroutine(_corutinaPulsoEstrella);
+            _corutinaPulsoEstrella = null;
+        }
+
         if (_rtPortalSendero != null)
         {
             _rtPortalSendero.Release();
@@ -292,6 +303,32 @@ public class ModuloCinematicaFinal : SequenceModule
         _instanciasTemporales.Clear();
     }
 
+    private static void LimpiarSubemisoresDeFlechasEnVfx(GameObject vfxRoot)
+    {
+        if (vfxRoot == null) return;
+        var sistemas = vfxRoot.GetComponentsInChildren<ParticleSystem>(true);
+        for (int i = 0; i < sistemas.Length; i++)
+        {
+            var ps = sistemas[i];
+            if (ps == null) continue;
+            string n = ps.gameObject.name.ToLowerInvariant();
+            var pr = ps.GetComponent<ParticleSystemRenderer>();
+            string matName = (pr != null && pr.sharedMaterial != null) ? pr.sharedMaterial.name.ToLowerInvariant() : string.Empty;
+            string texName = (pr != null && pr.sharedMaterial != null && pr.sharedMaterial.mainTexture != null)
+                ? pr.sharedMaterial.mainTexture.name.ToLowerInvariant()
+                : string.Empty;
+
+            if (n.Contains("arrow") || n.Contains("cross") || n.Contains("plus") || n.Contains("icon") ||
+                matName.Contains("arrow") || matName.Contains("cross") || matName.Contains("plus") ||
+                texName.Contains("arrow") || texName.Contains("cross") || texName.Contains("plus"))
+            {
+                ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+                if (pr != null) pr.enabled = false;
+                ps.gameObject.SetActive(false);
+            }
+        }
+    }
+
     private void CrearPantallaDivididaSiNecesario()
     {
         if (_splitScreenCanvasGo != null) return;
@@ -310,7 +347,6 @@ public class ModuloCinematicaFinal : SequenceModule
         };
         _rtSplitEstela.Create();
 
-        // 1. Cámara de Will (Sendero Astral)
         var goCamWill = new GameObject("CamSplit_Will");
         _camSplitWill = goCamWill.AddComponent<Camera>();
         _camSplitWill.targetTexture = _rtSplitWill;
@@ -334,13 +370,12 @@ public class ModuloCinematicaFinal : SequenceModule
 
         _instanciasTemporales.Add(goCamWill);
 
-        // 2. Cámara de Estela (La Piedra Ancestral)
         var goCamEstela = new GameObject("CamSplit_Estela");
         _camSplitEstela = goCamEstela.AddComponent<Camera>();
         _camSplitEstela.targetTexture = _rtSplitEstela;
         _camSplitEstela.clearFlags = CameraClearFlags.Skybox;
         var skyEstela = goCamEstela.AddComponent<Skybox>();
-        if (_skyboxDia != null) skyEstela.material = _skyboxDia;
+        if (_skyboxNoche != null) skyEstela.material = _skyboxNoche;
         _camSplitEstela.cullingMask = ~0;
         _camSplitEstela.fieldOfView = 34f;
         _camSplitEstela.nearClipPlane = 0.1f;
@@ -358,7 +393,6 @@ public class ModuloCinematicaFinal : SequenceModule
 
         _instanciasTemporales.Add(goCamEstela);
 
-        // 3. Canvas con las dos vistas y la costura mágica dorada central
         _splitScreenCanvasGo = new GameObject("Canvas_PantallaDividida_Final");
         var canvas = _splitScreenCanvasGo.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -409,16 +443,15 @@ public class ModuloCinematicaFinal : SequenceModule
         var will = ResolverActor("will", _willActor);
         if (_camSplitWill != null)
         {
-            Vector3 posBase = will != null ? will.position : new Vector3(0f, 0f, 5.5f);
+            Vector3 posBase = will != null ? will.position : new Vector3(0f, 0f, 5.2f);
             Vector3 fwd = will != null ? will.forward : Vector3.forward;
             fwd.y = 0f;
             if (fwd.sqrMagnitude < 0.01f) fwd = Vector3.forward;
             else fwd.Normalize();
             Vector3 rgt = Vector3.Cross(Vector3.up, fwd);
 
-            // Will de pie: encuadre de plano medio en formato vertical (pecho, rostro y pelo con espacio arriba)
             Vector3 targetPos = posBase + Vector3.up * 1.05f;
-            Vector3 camPos = posBase + fwd * 2.2f - rgt * 0.35f + Vector3.up * 1.20f;
+            Vector3 camPos = posBase + fwd * 2.15f - rgt * 0.32f + Vector3.up * 1.18f;
             _camSplitWill.transform.position = camPos;
             _camSplitWill.transform.LookAt(targetPos);
         }
@@ -426,16 +459,15 @@ public class ModuloCinematicaFinal : SequenceModule
         var estela = ResolverActor("estela", _estelaActor);
         if (_camSplitEstela != null)
         {
-            Vector3 posBase = estela != null ? estela.position : new Vector3(200.4f, -0.6f, -2.3f);
-            Vector3 fwdE = estela != null ? estela.forward : Vector3.forward;
+            Vector3 posBase = estela != null ? estela.position : new Vector3(200.0f, 0f, 4.8f);
+            Vector3 fwdE = estela != null ? estela.forward : Vector3.back;
             fwdE.y = 0f;
-            if (fwdE.sqrMagnitude < 0.01f) fwdE = Vector3.forward;
+            if (fwdE.sqrMagnitude < 0.01f) fwdE = Vector3.back;
             else fwdE.Normalize();
             Vector3 rgtE = Vector3.Cross(Vector3.up, fwdE);
 
-            // Estela sentada en el suelo: torso y rostro encuadrados limpiamente a distancia de plano medio
-            Vector3 targetPos = posBase + Vector3.up * 0.40f;
-            Vector3 camPos = posBase + fwdE * 2.05f - rgtE * 0.30f + Vector3.up * 0.65f;
+            Vector3 targetPos = posBase + Vector3.up * 1.02f;
+            Vector3 camPos = posBase + fwdE * 2.10f + rgtE * 0.32f + Vector3.up * 1.15f;
             _camSplitEstela.transform.position = camPos;
             _camSplitEstela.transform.LookAt(targetPos);
         }
@@ -453,21 +485,6 @@ public class ModuloCinematicaFinal : SequenceModule
     private IEnumerator Co_ActivarPantallaDividida()
     {
         CrearPantallaDivididaSiNecesario();
-
-        var will = ResolverActor("will", _willActor);
-        if (will != null && (will.position.y > 4f || will.position.y < -2f))
-        {
-            will.position = new Vector3(0f, 0f, 5.5f);
-            will.rotation = Quaternion.LookRotation(Vector3.forward);
-        }
-
-        var estela = ResolverActor("estela", _estelaActor);
-        if (estela != null && (estela.position.y > 2f || estela.position.y < -3f))
-        {
-            estela.position = new Vector3(200.4f, -0.6f, -2.3f);
-            estela.rotation = Quaternion.LookRotation(Vector3.forward);
-        }
-
         ActualizarPosicionesCamarasSplit();
 
         if (_camSplitWill != null) _camSplitWill.gameObject.SetActive(true);
@@ -478,7 +495,7 @@ public class ModuloCinematicaFinal : SequenceModule
             StopCoroutine(_corutinaSplitTracking);
         _corutinaSplitTracking = StartCoroutine(Co_ActualizarCamarasPantallaDividida());
 
-        float dur = 0.45f;
+        float dur = 0.40f;
         float t = 0f;
         while (t < dur)
         {
@@ -492,7 +509,7 @@ public class ModuloCinematicaFinal : SequenceModule
 
     private IEnumerator Co_DesactivarPantallaDividida()
     {
-        float dur = 0.4f;
+        float dur = 0.35f;
         float t = 0f;
         while (t < dur)
         {
@@ -535,21 +552,33 @@ public class ModuloCinematicaFinal : SequenceModule
         return null;
     }
 
+    private void ResolverZonasSiFaltan()
+    {
+        if (_zonaSenderoRoot == null) _zonaSenderoRoot = GameObject.Find("ZONA_1_EL_SENDERO");
+        if (_zonaPiedraRoot == null) _zonaPiedraRoot = GameObject.Find("ZONA_2_PIEDRA_ANCESTRAL");
+        if (_zonaRioRoot == null) _zonaRioRoot = GameObject.Find("ZONA_3_EL_RIO");
+    }
+
     private void AplicarAmbienteSendero()
     {
+        ResolverZonasSiFaltan();
+        if (_zonaSenderoRoot != null && !_zonaSenderoRoot.activeSelf) _zonaSenderoRoot.SetActive(true);
+        if (_zonaPiedraRoot != null && _zonaPiedraRoot.activeSelf) _zonaPiedraRoot.SetActive(false);
+        if (_zonaRioRoot != null && _zonaRioRoot.activeSelf) _zonaRioRoot.SetActive(false);
+
         if (_skyboxSendero != null)
             RenderSettings.skybox = _skyboxSendero;
 
         ActualizarSkyboxCamaraPrincipal(_skyboxSendero);
 
         RenderSettings.ambientMode = AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.18f, 0.22f, 0.38f);
-        RenderSettings.fog = false; // Sin niebla terrestre en el Santuario Astral para que se aprecie el cielo cósmico
+        RenderSettings.ambientLight = new Color(0.24f, 0.28f, 0.44f);
+        RenderSettings.fog = false;
 
         if (_luzSolar != null)
         {
             _luzSolar.color = _colorSolSendero;
-            _luzSolar.intensity = 1.05f;
+            _luzSolar.intensity = 1.15f;
             _luzSolar.transform.rotation = Quaternion.Euler(38f, -30f, 0f);
         }
 
@@ -575,23 +604,31 @@ public class ModuloCinematicaFinal : SequenceModule
 
         if (_estrellaTorcidaObjeto != null && _estrellaTorcidaObjeto.activeSelf)
             _estrellaTorcidaObjeto.SetActive(false);
+
+        if (_luzNocheRioGrupo != null && _luzNocheRioGrupo.gameObject.activeSelf)
+            _luzNocheRioGrupo.gameObject.SetActive(false);
     }
 
     private void AplicarAmbienteNochePiedra()
     {
+        ResolverZonasSiFaltan();
+        if (_zonaSenderoRoot != null && _zonaSenderoRoot.activeSelf) _zonaSenderoRoot.SetActive(false);
+        if (_zonaPiedraRoot != null && !_zonaPiedraRoot.activeSelf) _zonaPiedraRoot.SetActive(true);
+        if (_zonaRioRoot != null && _zonaRioRoot.activeSelf) _zonaRioRoot.SetActive(false);
+
         if (_skyboxNoche != null)
             RenderSettings.skybox = _skyboxNoche;
 
         ActualizarSkyboxCamaraPrincipal(_skyboxNoche);
 
         RenderSettings.ambientMode = AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.15f, 0.20f, 0.36f);
+        RenderSettings.ambientLight = new Color(0.20f, 0.26f, 0.42f);
         RenderSettings.fog = false;
 
         if (_luzSolar != null)
         {
             _luzSolar.color = _colorLuzNoche;
-            _luzSolar.intensity = 0.85f;
+            _luzSolar.intensity = 0.90f;
             _luzSolar.transform.rotation = Quaternion.Euler(52f, -38f, 0f);
         }
 
@@ -624,15 +661,18 @@ public class ModuloCinematicaFinal : SequenceModule
         ActualizarSkyboxCamaraPrincipal(_skyboxDia);
 
         RenderSettings.ambientMode = AmbientMode.Flat;
-        RenderSettings.ambientLight = new Color(0.62f, 0.65f, 0.72f);
+        RenderSettings.ambientLight = new Color(0.66f, 0.69f, 0.75f);
         RenderSettings.fog = false;
 
         if (_luzSolar != null)
         {
             _luzSolar.color = _colorSolDia;
             _luzSolar.intensity = 1.35f;
-            _luzSolar.transform.rotation = Quaternion.Euler(48f, -35f, 0f);
+            _luzSolar.transform.rotation = Quaternion.Euler(46f, 155f, 0f);
         }
+
+        if (_luzNocheRioGrupo != null && _luzNocheRioGrupo.gameObject.activeSelf)
+            _luzNocheRioGrupo.gameObject.SetActive(false);
 
         var estela = ResolverActor("estela", _estelaActor);
         if (estela != null)
@@ -657,6 +697,11 @@ public class ModuloCinematicaFinal : SequenceModule
 
     private void PrepararEscenaRio()
     {
+        ResolverZonasSiFaltan();
+        if (_zonaSenderoRoot != null && _zonaSenderoRoot.activeSelf) _zonaSenderoRoot.SetActive(false);
+        if (_zonaPiedraRoot != null && _zonaPiedraRoot.activeSelf) _zonaPiedraRoot.SetActive(false);
+        if (_zonaRioRoot != null && !_zonaRioRoot.activeSelf) _zonaRioRoot.SetActive(true);
+
         AplicarAmbienteDia();
 
         var will = ResolverActor("will", _willActor);
@@ -680,6 +725,15 @@ public class ModuloCinematicaFinal : SequenceModule
 
         if (_canaPescarTobias != null && !_canaPescarTobias.activeSelf)
             _canaPescarTobias.SetActive(true);
+
+        if (_cuadernoDibujoTobias != null && !_cuadernoDibujoTobias.activeSelf)
+            _cuadernoDibujoTobias.SetActive(true);
+
+        if (_estrellasNocturnasRoot != null && _estrellasNocturnasRoot.activeSelf)
+            _estrellasNocturnasRoot.SetActive(false);
+
+        if (_estrellaTorcidaObjeto != null && _estrellaTorcidaObjeto.activeSelf)
+            _estrellaTorcidaObjeto.SetActive(false);
     }
 
     private IEnumerator Co_DeseoEnElAltar()
@@ -758,6 +812,7 @@ public class ModuloCinematicaFinal : SequenceModule
         if (_ventanaPortalPiedra != null) _ventanaPortalPiedra.SetActive(false);
         if (_portalUmbralPiedra != null) _portalUmbralPiedra.SetActive(false);
         if (_portalUmbralSendero != null) _portalUmbralSendero.SetActive(false);
+        if (_zonaPiedraRoot != null) _zonaPiedraRoot.SetActive(false);
 
         if (_rtPortalSendero != null)
         {
@@ -802,7 +857,7 @@ public class ModuloCinematicaFinal : SequenceModule
     {
         if (_rtPortalSendero == null)
         {
-            _rtPortalSendero = new RenderTexture(1920, 1080, 16, RenderTextureFormat.ARGB32)
+            _rtPortalSendero = new RenderTexture(1024, 1024, 16, RenderTextureFormat.ARGB32)
             {
                 name = "RT_Portal_Sendero",
                 filterMode = FilterMode.Bilinear
@@ -811,7 +866,7 @@ public class ModuloCinematicaFinal : SequenceModule
         }
         if (_rtPortalPiedra == null)
         {
-            _rtPortalPiedra = new RenderTexture(1920, 1080, 16, RenderTextureFormat.ARGB32)
+            _rtPortalPiedra = new RenderTexture(1024, 1024, 16, RenderTextureFormat.ARGB32)
             {
                 name = "RT_Portal_Piedra",
                 filterMode = FilterMode.Bilinear
@@ -848,7 +903,7 @@ public class ModuloCinematicaFinal : SequenceModule
         Shader sh = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Unlit/Texture") ?? Shader.Find("Sprites/Default");
         var mat = new Material(sh);
         mat.mainTexture = rt;
-        mat.color = Color.white;
+        mat.color = new Color(0.82f, 0.94f, 1.0f, 1.0f);
         mat.SetFloat("_Cull", 0f);
         mr.sharedMaterial = mat;
     }
@@ -893,11 +948,17 @@ public class ModuloCinematicaFinal : SequenceModule
 
     private IEnumerator Co_ConjuroResurreccionInicio()
     {
+        ResolverZonasSiFaltan();
+        if (_zonaSenderoRoot != null && !_zonaSenderoRoot.activeSelf) _zonaSenderoRoot.SetActive(true);
+        if (_zonaPiedraRoot != null && _zonaPiedraRoot.activeSelf) _zonaPiedraRoot.SetActive(false);
+        if (_zonaRioRoot != null && _zonaRioRoot.activeSelf) _zonaRioRoot.SetActive(false);
+
         var will = ResolverActor("will", _willActor);
         Vector3 posWill = will != null ? will.position : new Vector3(0f, 0f, 4.5f);
 
         if (_vfxCirculoConjuro != null)
         {
+            LimpiarSubemisoresDeFlechasEnVfx(_vfxCirculoConjuro);
             _vfxCirculoConjuro.transform.position = posWill + Vector3.up * 0.05f;
             if (!_vfxCirculoConjuro.activeSelf)
                 _vfxCirculoConjuro.SetActive(true);
@@ -905,7 +966,8 @@ public class ModuloCinematicaFinal : SequenceModule
 
         if (_vfxAuraConjuroWill != null)
         {
-            _vfxAuraConjuroWill.transform.position = posWill + Vector3.up * 0.9f;
+            LimpiarSubemisoresDeFlechasEnVfx(_vfxAuraConjuroWill);
+            _vfxAuraConjuroWill.transform.position = posWill + Vector3.up * 0.1f;
             if (!_vfxAuraConjuroWill.activeSelf)
                 _vfxAuraConjuroWill.SetActive(true);
         }
@@ -925,7 +987,8 @@ public class ModuloCinematicaFinal : SequenceModule
 
         if (_vfxResurreccion != null)
         {
-            _vfxResurreccion.transform.position = posLiam + Vector3.up * 0.25f;
+            LimpiarSubemisoresDeFlechasEnVfx(_vfxResurreccion);
+            _vfxResurreccion.transform.position = posLiam + Vector3.up * 0.15f;
             if (!_vfxResurreccion.activeSelf)
                 _vfxResurreccion.SetActive(true);
         }
@@ -942,11 +1005,10 @@ public class ModuloCinematicaFinal : SequenceModule
     {
         var will = ResolverActor("will", _willActor);
         var liam = ResolverActor("liam", _liamActor);
-        var estela = ResolverActor("estela", _estelaActor);
 
-        Vector3 posWill = will != null ? will.position : new Vector3(0f, 0f, 4.5f);
-        Vector3 posLiam = liam != null ? liam.position : new Vector3(-1.2f, 0f, 4.5f);
-        Vector3 posPortal = _portalUmbralTransform != null ? _portalUmbralTransform.position : new Vector3(0f, 0f, 9.5f);
+        Vector3 posWill = will != null ? will.position : new Vector3(0f, 0f, 4.2f);
+        Vector3 posLiam = liam != null ? liam.position : new Vector3(-1.2f, 0f, 4.2f);
+        Vector3 posPortal = _portalUmbralTransform != null ? _portalUmbralTransform.position : new Vector3(0f, 0f, 8.0f);
 
         if (_vfxPilarResurreccion != null)
         {
@@ -955,7 +1017,7 @@ public class ModuloCinematicaFinal : SequenceModule
                 _vfxPilarResurreccion.SetActive(true);
         }
 
-        CrearPulsoLuzTemporal(posWill + Vector3.up * 1.5f, new Color(1.0f, 0.95f, 0.65f), 16f, 28f, 2.2f);
+        CrearPulsoLuzTemporal(posWill + Vector3.up * 1.5f, new Color(1.0f, 0.95f, 0.65f), 14f, 24f, 2.2f);
         FeedbackService.CameraShake(0.85f, 1.2f);
 
         if (liam != null)
@@ -971,7 +1033,6 @@ public class ModuloCinematicaFinal : SequenceModule
                 liam.position = Vector3.Lerp(origen, destino, k);
                 yield return null;
             }
-            // Ocultar mallas para no desactivar el GameObject (evita error de corrutinas en NPCSimpleAnimator)
             var renderersLiam = liam.GetComponentsInChildren<Renderer>(true);
             for (int i = 0; i < renderersLiam.Length; i++)
                 if (renderersLiam[i] != null) renderersLiam[i].enabled = false;
@@ -983,11 +1044,12 @@ public class ModuloCinematicaFinal : SequenceModule
     private IEnumerator Co_ColapsoSendero()
     {
         var will = ResolverActor("will", _willActor);
-        Vector3 posWill = will != null ? will.position : new Vector3(0f, 0f, 4.5f);
+        Vector3 posWill = will != null ? will.position : new Vector3(0f, 0f, 4.2f);
 
         if (_vfxColapsoSendero != null)
         {
-            _vfxColapsoSendero.transform.position = posWill;
+            // Colocar el vórtice detrás de Will para no tapar su rostro durante el primer plano del grito
+            _vfxColapsoSendero.transform.position = posWill + new Vector3(0f, 1.2f, -3.5f);
             if (!_vfxColapsoSendero.activeSelf)
                 _vfxColapsoSendero.SetActive(true);
         }
@@ -1002,25 +1064,24 @@ public class ModuloCinematicaFinal : SequenceModule
         if (arch != null)
         {
             Vector3 posAparicion = arch.position;
-            if (posAparicion.y < 0.5f) posAparicion.y = 0.95f;
+            if (posAparicion.y < 0.2f) posAparicion.y = 0.25f;
             arch.position = posAparicion;
 
-            // Ocultar mallas mientras crece la luz celestial
-            foreach (var r in arch.GetComponentsInChildren<Renderer>(true))
-                if (r != null) r.enabled = false;
+            PrepararAspectoEspiritualArchimago(arch);
 
             if (!arch.gameObject.activeSelf)
                 arch.gameObject.SetActive(true);
 
-            // 1. Luz celestial previa que crece progresivamente
-            float tiempoLuz = 1.3f;
+            AudioService.Instance?.PlaySFX("Prologue_ActorAppear", 0.9f);
+
+            float tiempoLuz = 0.5f;
             float t = 0f;
             var goLuzCreciente = new GameObject("VFX_LuzCrecienteArchimago");
-            goLuzCreciente.transform.position = posAparicion + Vector3.up * 0.8f;
+            goLuzCreciente.transform.position = posAparicion + Vector3.up * 0.9f;
             var lightComp = goLuzCreciente.AddComponent<Light>();
             lightComp.type = LightType.Point;
             lightComp.color = new Color(1.0f, 0.94f, 0.72f);
-            lightComp.range = 3f;
+            lightComp.range = 4f;
             lightComp.intensity = 0f;
             _instanciasTemporales.Add(goLuzCreciente);
 
@@ -1028,29 +1089,22 @@ public class ModuloCinematicaFinal : SequenceModule
             {
                 t += Time.deltaTime;
                 float k = Mathf.SmoothStep(0f, 1f, t / tiempoLuz);
-                lightComp.intensity = k * 16f;
-                lightComp.range = 3f + k * 12f;
+                lightComp.intensity = k * 14f;
+                lightComp.range = 4f + k * 10f;
                 yield return null;
             }
 
-            // 2. Revelar aspecto espiritual translúcido y aura dorada
-            PrepararAspectoEspiritualArchimago(arch);
+            // Desactivar explícitamente cualquier VFX de flechas de buff sobre el Archimago
+            if (_vfxEspirituArchimago != null && _vfxEspirituArchimago.activeSelf)
+                _vfxEspirituArchimago.SetActive(false);
 
-            if (_vfxEspirituArchimago != null)
-            {
-                _vfxEspirituArchimago.transform.position = arch.position + Vector3.up * 1.0f;
-                if (!_vfxEspirituArchimago.activeSelf)
-                    _vfxEspirituArchimago.SetActive(true);
-            }
+            FeedbackService.CameraShake(0.18f, 0.35f);
 
-            FeedbackService.CameraShake(0.2f, 0.45f);
-
-            // Desvanecer luz creciente tras la manifestación
             float tFade = 0f;
-            while (tFade < 0.45f)
+            while (tFade < 0.3f)
             {
                 tFade += Time.deltaTime;
-                if (lightComp != null) lightComp.intensity = Mathf.Lerp(16f, 4f, tFade / 0.45f);
+                if (lightComp != null) lightComp.intensity = Mathf.Lerp(14f, 3.5f, tFade / 0.3f);
                 yield return null;
             }
             if (goLuzCreciente != null)
@@ -1063,37 +1117,31 @@ public class ModuloCinematicaFinal : SequenceModule
                 StopCoroutine(_corutinaFlotacionEspiritu);
             _corutinaFlotacionEspiritu = StartCoroutine(Co_FlotacionEspiritu(arch));
         }
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.10f);
     }
 
     private void PrepararAspectoEspiritualArchimago(Transform arch)
     {
         if (arch == null) return;
 
+        // Mantener los materiales opacos intactos (para no corromper el pelo ni las pestañas)
+        // y añadir un resplandor cálido dorado suave por emisión e iluminación puntual.
         foreach (var rend in arch.GetComponentsInChildren<Renderer>(true))
         {
-            if (rend != null)
+            if (rend == null) continue;
+            rend.enabled = true;
+            var mats = rend.materials;
+            for (int i = 0; i < mats.Length; i++)
             {
-                rend.enabled = true;
-                var mats = rend.materials;
-                for (int i = 0; i < mats.Length; i++)
+                var mat = mats[i];
+                if (mat == null) continue;
+                if (mat.HasProperty("_EmissionColor"))
                 {
-                    if (mats[i] == null) continue;
-                    var mat = mats[i];
-                    Color colorDorado = new Color(1.0f, 0.95f, 0.82f, 0.72f);
-                    if (mat.HasProperty("_BaseColor"))
-                        mat.SetColor("_BaseColor", colorDorado);
-                    else if (mat.HasProperty("_Color"))
-                        mat.SetColor("_Color", colorDorado);
-
-                    if (mat.HasProperty("_EmissionColor"))
-                    {
-                        mat.EnableKeyword("_EMISSION");
-                        mat.SetColor("_EmissionColor", new Color(1.0f, 0.85f, 0.45f) * 1.6f);
-                    }
+                    mat.EnableKeyword("_EMISSION");
+                    mat.SetColor("_EmissionColor", new Color(1.0f, 0.88f, 0.55f) * 0.38f);
                 }
-                rend.materials = mats;
             }
+            rend.materials = mats;
         }
 
         var luzAura = arch.Find("Luz_Aura_Archimago");
@@ -1102,7 +1150,7 @@ public class ModuloCinematicaFinal : SequenceModule
         {
             var goLuz = new GameObject("Luz_Aura_Archimago");
             goLuz.transform.SetParent(arch, false);
-            goLuz.transform.localPosition = new Vector3(0f, 1.4f, 0f);
+            goLuz.transform.localPosition = new Vector3(0.15f, 1.35f, 0.45f);
             lightComp = goLuz.AddComponent<Light>();
         }
         else
@@ -1112,9 +1160,9 @@ public class ModuloCinematicaFinal : SequenceModule
         if (lightComp != null)
         {
             lightComp.type = LightType.Point;
-            lightComp.color = new Color(1.0f, 0.92f, 0.65f);
-            lightComp.range = 8f;
-            lightComp.intensity = 3.2f;
+            lightComp.color = new Color(1.0f, 0.92f, 0.68f);
+            lightComp.range = 7.5f;
+            lightComp.intensity = 2.8f;
             lightComp.enabled = true;
         }
     }
@@ -1123,11 +1171,12 @@ public class ModuloCinematicaFinal : SequenceModule
     {
         if (arch == null) yield break;
         Vector3 basePos = arch.position;
+        if (basePos.y < 0.2f) basePos.y = 0.25f;
         float tiempo = 0f;
         while (arch != null && arch.gameObject.activeInHierarchy)
         {
             tiempo += Time.deltaTime;
-            float dy = Mathf.Sin(tiempo * 2.2f) * 0.10f;
+            float dy = Mathf.Sin(tiempo * 2.0f) * 0.08f;
             arch.position = new Vector3(basePos.x, basePos.y + dy, basePos.z);
             yield return null;
         }
@@ -1142,68 +1191,79 @@ public class ModuloCinematicaFinal : SequenceModule
         }
 
         var arch = ResolverActor("archimago", _archimagoActor);
-        float dur = 3.6f;
+        float dur = 3.4f;
         float t = 0f;
-        Vector3 inicio = arch != null ? arch.position : Vector3.zero;
-        Quaternion rotInicio = arch != null ? arch.rotation : Quaternion.identity;
-        Quaternion rotMirarCielo = Quaternion.Euler(-55f, rotInicio.eulerAngles.y, 0f);
+        Vector3 inicio = arch != null ? arch.position : new Vector3(200f, 0.3f, 3.6f);
 
-        CrearPulsoLuzTemporal(inicio + Vector3.up * 1.5f, new Color(1.0f, 0.95f, 0.75f), 14f, 22f, 3.8f);
+        CrearPulsoLuzTemporal(inicio + Vector3.up * 1.4f, new Color(1.0f, 0.95f, 0.75f), 14f, 22f, 3.4f);
 
-        var trailGo = new GameObject("VFX_EstelaAscensoArchimago");
-        trailGo.transform.position = inicio;
-        var tr = trailGo.AddComponent<TrailRenderer>();
-        tr.time = 1.2f;
-        tr.startWidth = 0.85f;
-        tr.endWidth = 0.05f;
+        // Esfera luminosa de estrella fugaz que envuelve al Archimago mientras asciende al cielo nocturno
+        var orbeGo = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        orbeGo.name = "VFX_EstrellaAscensoArchimago";
+        Destroy(orbeGo.GetComponent<Collider>());
+        orbeGo.transform.position = inicio + Vector3.up * 1.0f;
+        orbeGo.transform.localScale = Vector3.one * 0.15f;
         Shader sh = Shader.Find("Universal Render Pipeline/Unlit") ?? Shader.Find("Sprites/Default");
-        tr.sharedMaterial = new Material(sh) { color = new Color(1.0f, 0.92f, 0.65f, 0.95f) };
-        _instanciasTemporales.Add(trailGo);
+        var matOrbe = new Material(sh) { color = new Color(1.0f, 0.95f, 0.72f, 1.0f) };
+        var mrOrbe = orbeGo.GetComponent<MeshRenderer>();
+        if (mrOrbe != null)
+        {
+            mrOrbe.sharedMaterial = matOrbe;
+            mrOrbe.shadowCastingMode = ShadowCastingMode.Off;
+        }
+
+        var tr = orbeGo.AddComponent<TrailRenderer>();
+        tr.time = 1.3f;
+        tr.startWidth = 0.65f;
+        tr.endWidth = 0.02f;
+        tr.sharedMaterial = new Material(sh) { color = new Color(1.0f, 0.92f, 0.62f, 0.95f) };
+        _instanciasTemporales.Add(orbeGo);
 
         var renderers = arch != null ? arch.GetComponentsInChildren<Renderer>(true) : null;
+        bool mallasOcultadas = false;
+
+        AudioService.Instance?.PlaySFX("Hechizo_EstrellaFugaz", 1.0f);
 
         while (t < dur)
         {
             t += Time.deltaTime;
             float p = Mathf.Clamp01(t / dur);
-            float aceleracion = p * p * p;
+            float curvaSubida = p * p * (3f - 2f * p);
+            float altura = (p < 0.25f)
+                ? Mathf.Lerp(0f, 1.8f, p / 0.25f)
+                : Mathf.Lerp(1.8f, 38f, Mathf.Pow((p - 0.25f) / 0.75f, 1.8f));
+
+            if (orbeGo != null)
+            {
+                orbeGo.transform.position = inicio + new Vector3(0f, 1.0f + altura, -altura * 0.25f);
+                float escalaOrbe = (p < 0.3f) ? Mathf.Lerp(0.15f, 0.75f, p / 0.3f) : Mathf.Lerp(0.75f, 0.35f, (p - 0.3f) / 0.7f);
+                orbeGo.transform.localScale = Vector3.one * escalaOrbe;
+            }
 
             if (arch != null)
             {
-                float kRot = Mathf.Clamp01(t / 0.6f);
-                arch.rotation = Quaternion.Slerp(rotInicio, rotMirarCielo, kRot);
+                arch.position = inicio + new Vector3(0f, altura, -altura * 0.25f);
 
-                arch.position = inicio + Vector3.up * (aceleracion * 44f);
-                if (trailGo != null) trailGo.transform.position = arch.position + Vector3.up * 0.8f;
-
-                if (p > 0.45f && renderers != null)
+                // Al convertirse en haz de luz (p > 0.28), ocultar el cuerpo humano para que suba como estrella pura
+                if (p > 0.28f && !mallasOcultadas && renderers != null)
                 {
-                    float alpha = 1f - ((p - 0.45f) / 0.55f);
+                    mallasOcultadas = true;
                     for (int r = 0; r < renderers.Length; r++)
-                    {
-                        if (renderers[r] == null) continue;
-                        foreach (var m in renderers[r].materials)
-                        {
-                            if (m == null) continue;
-                            Color c = new Color(1f, 0.95f, 0.82f, alpha * 0.72f);
-                            if (m.HasProperty("_BaseColor")) m.SetColor("_BaseColor", c);
-                            else if (m.HasProperty("_Color")) m.SetColor("_Color", c);
-                        }
-                    }
+                        if (renderers[r] != null) renderers[r].enabled = false;
                 }
             }
             yield return null;
         }
 
-        if (arch != null)
-            CrearPulsoLuzTemporal(inicio + Vector3.up * 44f, new Color(1.0f, 0.98f, 0.85f), 18f, 35f, 1.2f);
+        if (orbeGo != null)
+            CrearPulsoLuzTemporal(orbeGo.transform.position, new Color(1.0f, 0.98f, 0.85f), 16f, 32f, 1.0f);
 
         FeedbackService.CameraShake(0.15f, 0.3f);
 
-        if (trailGo != null)
+        if (orbeGo != null)
         {
-            _instanciasTemporales.Remove(trailGo);
-            Destroy(trailGo, 1.5f);
+            _instanciasTemporales.Remove(orbeGo);
+            Destroy(orbeGo, 1.2f);
         }
 
         if (arch != null && arch.gameObject.activeSelf)
@@ -1220,24 +1280,26 @@ public class ModuloCinematicaFinal : SequenceModule
             if (!will.gameObject.activeSelf)
                 will.gameObject.SetActive(true);
 
-            var renderersWill = will.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderersWill.Length; i++)
-                if (renderersWill[i] != null) renderersWill[i].enabled = true;
+            // Asegurar que el envoltorio de secuencia y los renderers de Will vuelvan a estar visibles
+            var seqActor = _ctx?.GetActor("will") ?? _ctx?.GetActor("Player");
+            if (seqActor != null)
+            {
+                seqActor.SetRenderingVisible(true);
+            }
+
+            foreach (var r in will.GetComponentsInChildren<Renderer>(true))
+            {
+                if (r != null) r.forceRenderingOff = false;
+            }
 
             if (_cintaRojaWill != null && !_cintaRojaWill.activeSelf)
                 _cintaRojaWill.SetActive(true);
 
-            if (_vfxLlamaPequenaWill != null)
-            {
-                _vfxLlamaPequenaWill.transform.position = will.position + Vector3.up * 1.05f + will.forward * 0.35f;
-                if (!_vfxLlamaPequenaWill.activeSelf)
-                    _vfxLlamaPequenaWill.SetActive(true);
-            }
-
-            CrearPulsoLuzTemporal(will.position + Vector3.up * 1.1f, new Color(1.0f, 0.92f, 0.65f), 10f, 18f, 2.5f);
+            CrearPulsoLuzTemporal(will.position + Vector3.up * 1.1f, new Color(1.0f, 0.92f, 0.65f), 9f, 16f, 2.2f);
+            AudioService.Instance?.PlaySFX("Prologue_ActorAppear", 0.85f);
             FeedbackService.CameraShake(0.18f, 0.35f);
         }
-        yield return new WaitForSeconds(0.4f);
+        yield return new WaitForSeconds(0.35f);
     }
 
     private IEnumerator Co_EncadenarParte2()
@@ -1284,7 +1346,7 @@ public class ModuloCinematicaFinal : SequenceModule
             Vector3 startPos = estela.position;
             Vector3 targetPos = _orillaRioTransform != null
                 ? _orillaRioTransform.position
-                : startPos + estela.forward * 3.8f + Vector3.down * 0.55f;
+                : new Vector3(397.8f, -0.25f, -2.8f);
 
             float dur = 0.65f;
             float t = 0f;
@@ -1292,7 +1354,7 @@ public class ModuloCinematicaFinal : SequenceModule
             {
                 t += Time.deltaTime;
                 float p = Mathf.Clamp01(t / dur);
-                float height = Mathf.Sin(p * Mathf.PI) * 1.45f;
+                float height = Mathf.Sin(p * Mathf.PI) * 1.55f;
                 estela.position = Vector3.Lerp(startPos, targetPos, p) + Vector3.up * height;
                 yield return null;
             }
@@ -1302,8 +1364,11 @@ public class ModuloCinematicaFinal : SequenceModule
                 _vfxSalpicaduraRio.transform.position = targetPos + Vector3.up * 0.15f;
                 if (!_vfxSalpicaduraRio.activeSelf)
                     _vfxSalpicaduraRio.SetActive(true);
+                var ps = _vfxSalpicaduraRio.GetComponentInChildren<ParticleSystem>();
+                if (ps != null) ps.Play(true);
             }
-            FeedbackService.CameraShake(0.42f, 0.3f);
+            AudioService.Instance?.PlaySFX("Agua_Zambullida", 1.0f);
+            FeedbackService.CameraShake(0.45f, 0.35f);
         }
         yield return new WaitForSeconds(0.45f);
     }
@@ -1311,11 +1376,14 @@ public class ModuloCinematicaFinal : SequenceModule
     private IEnumerator Co_TransicionAtardecer()
     {
         if (_skyboxAtardecer != null)
+        {
             RenderSettings.skybox = _skyboxAtardecer;
+            ActualizarSkyboxCamaraPrincipal(_skyboxAtardecer);
+        }
 
         RenderSettings.fogColor = new Color(0.85f, 0.52f, 0.36f);
         RenderSettings.ambientLight = new Color(0.55f, 0.42f, 0.38f);
-        yield return Co_TransicionLuz(_colorSolAtardecer, 0.85f, 2.2f);
+        yield return Co_TransicionLuz(_colorSolAtardecer, 0.85f, 1.2f);
     }
 
     private IEnumerator Co_TransicionNoche()
@@ -1326,15 +1394,36 @@ public class ModuloCinematicaFinal : SequenceModule
         if (_canaPescarTobias != null && _canaPescarTobias.activeSelf)
             _canaPescarTobias.SetActive(false);
 
+        if (_cuadernoDibujoTobias != null && _cuadernoDibujoTobias.activeSelf)
+            _cuadernoDibujoTobias.SetActive(false);
+
         if (_skyboxNoche != null)
+        {
             RenderSettings.skybox = _skyboxNoche;
+            ActualizarSkyboxCamaraPrincipal(_skyboxNoche);
+        }
 
         if (_estrellasNocturnasRoot != null && !_estrellasNocturnasRoot.activeSelf)
             _estrellasNocturnasRoot.SetActive(true);
 
-        RenderSettings.fogColor = new Color(0.06f, 0.09f, 0.18f);
-        RenderSettings.ambientLight = new Color(0.22f, 0.28f, 0.44f);
-        yield return Co_TransicionLuz(_colorLuzNoche, 0.35f, 2.5f);
+        if (_estrellaTorcidaObjeto != null && !_estrellaTorcidaObjeto.activeSelf)
+            _estrellaTorcidaObjeto.SetActive(true);
+
+        if (_luzNocheRioGrupo != null && !_luzNocheRioGrupo.gameObject.activeSelf)
+            _luzNocheRioGrupo.gameObject.SetActive(true);
+
+        RenderSettings.fog = false;
+        RenderSettings.ambientMode = AmbientMode.Flat;
+        RenderSettings.ambientLight = new Color(0.24f, 0.30f, 0.48f);
+
+        if (_luzSolar != null)
+        {
+            _luzSolar.color = _colorLuzNoche;
+            _luzSolar.intensity = 0.55f;
+            _luzSolar.transform.rotation = Quaternion.Euler(48f, 165f, 0f);
+        }
+
+        yield return new WaitForSeconds(0.15f);
     }
 
     private IEnumerator Co_TransicionLuz(Color targetColor, float targetIntensity, float duration)
@@ -1355,13 +1444,40 @@ public class ModuloCinematicaFinal : SequenceModule
 
     private IEnumerator Co_EnfocarEstrella()
     {
+        if (_skyboxNoche != null)
+        {
+            RenderSettings.skybox = _skyboxNoche;
+            ActualizarSkyboxCamaraPrincipal(_skyboxNoche);
+        }
+
         if (_estrellasNocturnasRoot != null && !_estrellasNocturnasRoot.activeSelf)
             _estrellasNocturnasRoot.SetActive(true);
 
-        if (_estrellaTorcidaObjeto != null && !_estrellaTorcidaObjeto.activeSelf)
-            _estrellaTorcidaObjeto.SetActive(true);
+        if (_estrellaTorcidaObjeto != null)
+        {
+            if (!_estrellaTorcidaObjeto.activeSelf)
+                _estrellaTorcidaObjeto.SetActive(true);
 
-        yield return new WaitForSeconds(0.8f);
+            if (_corutinaPulsoEstrella != null)
+                StopCoroutine(_corutinaPulsoEstrella);
+            _corutinaPulsoEstrella = StartCoroutine(Co_PulsarEstrellaTorcida(_estrellaTorcidaObjeto.transform));
+        }
+
+        yield return new WaitForSeconds(0.6f);
+    }
+
+    private IEnumerator Co_PulsarEstrellaTorcida(Transform estrella)
+    {
+        if (estrella == null) yield break;
+        Vector3 escalaBase = estrella.localScale;
+        float t = 0f;
+        while (estrella != null && estrella.gameObject.activeInHierarchy)
+        {
+            t += Time.deltaTime;
+            float pulso = 1f + Mathf.Sin(t * 3.2f) * 0.14f;
+            estrella.localScale = escalaBase * pulso;
+            yield return null;
+        }
     }
 
     private IEnumerator Co_MostrarFraseFinalLibro()
@@ -1376,7 +1492,7 @@ public class ModuloCinematicaFinal : SequenceModule
             bubble.Show(
                 target: null,
                 text: textoFinal,
-                duration: 7.5f,
+                duration: 6.5f,
                 onComplete: null,
                 animTrigger: null,
                 emphasis: false,
@@ -1387,13 +1503,13 @@ public class ModuloCinematicaFinal : SequenceModule
                 colorDelNombre: Color.clear
             );
         }
-        yield return new WaitForSeconds(8.0f);
+        yield return new WaitForSeconds(6.8f);
         if (bubble != null) bubble.Hide();
     }
 
     private IEnumerator Co_IrACreditos()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.8f);
         if (Application.CanStreamedLevelBeLoaded("Credits"))
         {
             SceneManager.LoadScene("Credits");
@@ -1447,7 +1563,7 @@ public class ModuloCinematicaFinal : SequenceModule
         CrearAnilloLinea(root.transform, "AnilloInterior", 1.75f, 36, 0.05f, matCeleste);
         CrearEstrellaInscrita(root.transform, "HexagramaLuz", 2.45f, 0.045f, matDorado);
 
-        StartCoroutine(Co_RotarAnillosAnime(root.transform, 10.5f));
+        StartCoroutine(Co_RotarAnillosAnime(root.transform, 14.5f));
     }
 
     private void CrearAnilloLinea(Transform parent, string nombre, float radio, int segmentos, float grosor, Material mat)

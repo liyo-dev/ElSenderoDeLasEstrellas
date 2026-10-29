@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -31,6 +32,7 @@ public class BossHealthBar : MonoBehaviour
     // Estado de visibilidad: activo en batalla y si está suspendido por un menú
     private bool _battleActive    = false;
     private bool _suspendedByMenu = false;
+    private Coroutine _pendingShowCo;
 
     void Start()
     {
@@ -69,7 +71,18 @@ public class BossHealthBar : MonoBehaviour
         _barra.PonerRelleno(_currentFillAmount);
         // No auto-mostrar: BossArenaController llama a Show() cuando corresponde. Si ya lo ha
         // hecho antes de este Start, la barra aparece ahora.
-        if (_battleActive && !_suspendedByMenu) Fundir(1f, fadeInDuration);
+        if (_battleActive && !_suspendedByMenu)
+        {
+            if (QuestStartedBannerUI.IsShowing)
+            {
+                if (_pendingShowCo != null) StopCoroutine(_pendingShowCo);
+                _pendingShowCo = StartCoroutine(Co_EsperarBannerYMostrar());
+            }
+            else
+            {
+                Fundir(1f, fadeInDuration);
+            }
+        }
     }
 
     void OnEnable()
@@ -86,6 +99,7 @@ public class BossHealthBar : MonoBehaviour
 
     void OnDestroy()
     {
+        if (_pendingShowCo != null) { StopCoroutine(_pendingShowCo); _pendingShowCo = null; }
         if (_bossDamageable)
         {
             _bossDamageable.OnDamaged -= OnBossDamaged;
@@ -122,12 +136,38 @@ public class BossHealthBar : MonoBehaviour
             return;
         }
 
+        // Si el banner de nueva misión ("Derrota al Demonio") está activo,
+        // no solapar la barra encima: esperar a que termine de mostrarse para entrar limpia.
+        if (QuestStartedBannerUI.IsShowing)
+        {
+            if (_pendingShowCo != null) StopCoroutine(_pendingShowCo);
+            _pendingShowCo = StartCoroutine(Co_EsperarBannerYMostrar());
+            return;
+        }
+
         Fundir(1f, fadeInDuration);
+    }
+
+    private IEnumerator Co_EsperarBannerYMostrar()
+    {
+        float timeout = 3.5f;
+        while (QuestStartedBannerUI.IsShowing && timeout > 0f)
+        {
+            timeout -= Time.deltaTime;
+            yield return null;
+        }
+        _pendingShowCo = null;
+
+        if (_battleActive && !_suspendedByMenu && !MenuManager.AnyOpen())
+        {
+            Fundir(1f, fadeInDuration);
+        }
     }
 
     public void Hide()
     {
         _battleActive = false;
+        if (_pendingShowCo != null) { StopCoroutine(_pendingShowCo); _pendingShowCo = null; }
         Fundir(0f, fadeOutDuration);
     }
 
@@ -153,7 +193,17 @@ public class BossHealthBar : MonoBehaviour
     private void OnBossDamaged(float _)
     {
         UpdateHealthBar();
-        if (!_battleActive) Show(); // mostrar si por algún motivo no se había mostrado
+        if (_pendingShowCo != null)
+        {
+            StopCoroutine(_pendingShowCo);
+            _pendingShowCo = null;
+            QuestStartedBannerUI.DismissCurrent();
+            Fundir(1f, fadeInDuration);
+        }
+        else if (!_battleActive)
+        {
+            Show();
+        }
         _barra.DestelloDano();
     }
 

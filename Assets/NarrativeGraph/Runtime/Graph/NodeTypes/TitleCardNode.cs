@@ -34,13 +34,19 @@ public sealed class TitleCardNode : NarrativeNode
     const int OrdenDeDibujo = 9999;
 
     [NonSerialized] GameObject _rotulo;
+    private string ClaveTelon => "rotulo_" + guid;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
+        Telon.Cerrar(ClaveTelon);
         ctx.Runner.StartCoroutine(Co_Rotulo(onReadyToAdvance));
     }
 
-    public override void Exit(NarrativeContext ctx) => Quitar();
+    public override void Exit(NarrativeContext ctx)
+    {
+        Quitar();
+        Telon.Soltar(ClaveTelon);
+    }
 
     IEnumerator Co_Rotulo(Action onReadyToAdvance)
     {
@@ -56,6 +62,7 @@ public sealed class TitleCardNode : NarrativeNode
 
         Quitar();
         onReadyToAdvance?.Invoke();
+        Telon.Soltar(ClaveTelon);
     }
 
     TextMeshProUGUI Crear(string contenido)

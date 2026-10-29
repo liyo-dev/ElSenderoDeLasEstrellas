@@ -282,7 +282,7 @@ public sealed class GuionTexto
     /// Palabras sueltas que son opciones, no argumentos.
     public static readonly HashSet<string> Marcas = new()
     {
-        "sin_esperar", "seco", "congela", "aqui", "sin_pose", "picado", "contrapicado", "cruza", "oculto", "quieta", "solo"
+        "sin_esperar", "seco", "congela", "al_final", "ya", "aqui", "sin_pose", "picado", "contrapicado", "cruza", "oculto", "quieta", "solo"
     };
 
     private static bool LeerCuandoDePista(string t, Orden o)

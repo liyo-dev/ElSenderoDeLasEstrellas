@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: M_Demonio_LluviaSombras_Aviso
+  m_Shader: {fileID: 4800000, guid: c3a4b5c6d7e8f9012345678901234abc, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Ints: []
+    m_Floats:
+    - _FillAlpha: 0.4
+    - _GlobalAlpha: 1
+    - _PulseSpeed: 3.2
+    - _RingWidth: 0.08
+    m_Colors:
+    - _Color: {r: 0.26, g: 0.04, b: 0.42, a: 0.45}
+    - _RingColor: {r: 0.72, g: 0.16, b: 0.96, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
