@@ -110,7 +110,7 @@ namespace Game.NPC
             var allExecutors = NPCInteractiveNarrativeRegistry.GetAll();
             
             // Obtener el preset activo del GameBootService
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             
             foreach (var executor in allExecutors)
             {

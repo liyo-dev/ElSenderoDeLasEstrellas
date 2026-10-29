@@ -111,6 +111,10 @@ public class ActorHorneado
     [Tooltip("Hacia dónde mira cuando está quieto. Andando mira hacia donde anda.")]
     public List<ClaveDeMirada> miradas = new();
 
+    [Tooltip("Hacia dónde vuelve la cabeza, sin girar el cuerpo: a quien habla, o lo que diga " +
+             "«cabeza». Una clave de tipo Rumbo es «a nadie»: la cabeza vuelve al frente.")]
+    public List<ClaveDeMirada> cabezas = new();
+
     [Tooltip("Órdenes de animación, en orden de tiempo.")]
     public List<OrdenDeAnimacion> animacion = new();
 

@@ -35,7 +35,7 @@ public class WardrobeInventory : MonoBehaviour
 
     void HandleProfileReady()
     {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset != null)
             ApplyFromPreset(preset);
     }
@@ -282,7 +282,7 @@ public class WardrobeInventory : MonoBehaviour
     void SyncPresetUnlockedIds()
     {
         if (_currentPreset == null && GameBootService.IsAvailable)
-            _currentPreset = GameBootService.Profile?.GetActivePresetResolved();
+            _currentPreset = Partida.Preset;
         if (_currentPreset == null) return;
 
         if (_currentPreset.unlockedWardrobeIds == null)

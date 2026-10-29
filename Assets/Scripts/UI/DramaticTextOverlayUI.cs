@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using Sendero.UI;
 using Sendero.Core.Feedback;
 
 [Serializable]
@@ -27,10 +26,12 @@ public struct DramaticStylePreset
 }
 
 /// <summary>
-/// Overlay de pantalla completa para frases dramáticas: recuerdos, momentos épicos y llamadas urgentes.
-/// Debe vivir en el Canvas del HUD persistente (Start.unity). Singleton.
+/// El servicio único de texto grande en pantalla: frases dramáticas a pantalla completa
+/// (recuerdos, momentos épicos, llamadas urgentes), el nombre del jefe en su intro, el rótulo
+/// sobre la pantalla tapada del grafo y el rótulo breve de abajo (ver DramaticTextOverlayUI.Rotulos).
+/// Debe vivir en el Canvas persistente de Start.unity. Singleton.
 /// </summary>
-public class DramaticTextOverlayUI : MonoBehaviour
+public partial class DramaticTextOverlayUI : MonoBehaviour
 {
     public static DramaticTextOverlayUI Instance { get; private set; }
 
@@ -117,10 +118,9 @@ public class DramaticTextOverlayUI : MonoBehaviour
     Color _dreamGradientLeftPreWhite;
     Color _dreamGradientRightPreWhite;
 
-    // FIX: el overlay solo tapaba visualmente el HUD/minimapa/icono de tiempo con el fondo negro;
-    // no los ocultaba de verdad. Dependía de que el Canvas de este overlay se dibujara por encima
-    // del Canvas del HUD, algo no garantizado cuando ambos comparten Sorting Order (ver Start.unity) —
-    // funcionaba por casualidad en el editor y fallaba en build. Ahora se ocultan explícitamente.
+    // Mientras suenan frases se esconde lo que se esconde en una cinemática (HUD, minimapa, hora,
+    // avisos): el fondo del overlay no basta para taparlos porque el orden de dibujo entre lienzos
+    // no está garantizado.
     bool      _gameplayUiHidden;
 
     // ── Lifecycle ─────────────────────────────────────────────────────────
@@ -130,10 +130,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
         DontDestroyOnLoad(transform.root.gameObject);
-
-        // El canvas que nos contiene tiene SceneBoundUI; excluirlo para que BeginBossIntro
-        // no lo tape cuando mostramos el nombre del boss con animación KingdomHearts.
-        GetComponentInParent<SceneBoundUI>(true)?.ExcludeFromBossIntro();
+        NarrativeTitleCards.Register(this);
 
         if (_rootGroup == null)
         {
@@ -167,6 +164,8 @@ public class DramaticTextOverlayUI : MonoBehaviour
         if (Instance == this)
         {
             Instance = null;
+            NarrativeTitleCards.Unregister(this);
+            DestruirRotuloBreve();
             _bgPulseTween?.Kill();
             _rootGroup?.DOKill();
             _textContainer?.DOKill();
@@ -187,15 +186,10 @@ public class DramaticTextOverlayUI : MonoBehaviour
         }
 
         gameObject.SetActive(true); // debe estar activo antes de StartCoroutine
-        if (_playRoutine != null)
-        {
-            StopCoroutine(_playRoutine);
-            // StopCoroutine no ejecuta el finally de RunSequence: restaurar por si la secuencia
-            // anterior se cortó a mitad y dejó el HUD/minimapa/icono ocultos.
-            ShowGameplayUI();
-        }
+        CortarLoQueSuena();
         if (config.dreamMode) _dreamSparkles?.StartSparkles();
         _playRoutine = StartCoroutine(RunSequence(config, onComplete));
+        AvisarRotuloCortado();
     }
 
     /// <summary>
@@ -224,11 +218,7 @@ public class DramaticTextOverlayUI : MonoBehaviour
     /// <summary>Detiene la secuencia y oculta el overlay inmediatamente.</summary>
     public void ForceStop()
     {
-        if (_playRoutine != null)
-        {
-            StopCoroutine(_playRoutine);
-            _playRoutine = null;
-        }
+        CortarLoQueSuena();
         _dreamModeActive = false;
         _dreamSparkles?.StopSparkles();
         _dreamBackground?.StopDream();
@@ -240,27 +230,37 @@ public class DramaticTextOverlayUI : MonoBehaviour
         _rootGroup.blocksRaycasts = false;
         _isPlaying = false;
         gameObject.SetActive(false);
-        ShowGameplayUI();
+        AvisarRotuloCortado();
     }
 
-    /// <summary>Oculta el HUD, el minimapa y el icono del período del día mientras dura la secuencia.</summary>
+    /// Para lo que se esté reproduciendo. StopCoroutine no ejecuta los finally, así que aquí se
+    /// deshace a mano lo que la corrutina cortada pudiera haber dejado a medias.
+    void CortarLoQueSuena()
+    {
+        if (_playRoutine != null)
+        {
+            StopCoroutine(_playRoutine);
+            _playRoutine = null;
+        }
+        ShowGameplayUI();
+        var aviso = TerminarRotulo();
+        if (aviso != null) _rotuloCortado += aviso;
+    }
+
+    /// <summary>Esconde lo que se esconde durante una cinemática (registro OcultablesDeCinematica) mientras suenan frases.</summary>
     void HideGameplayUI()
     {
         if (_gameplayUiHidden) return;
         _gameplayUiHidden = true;
-        PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Ocultar(this);
-        TimeOfDayIndicator.Instance?.Hide();
+        OcultablesDeCinematica.OcultarTodos(this);
     }
 
-    /// <summary>Restaura el HUD, el minimapa y el icono del período del día al terminar la secuencia.</summary>
+    /// <summary>Vuelve a enseñar lo escondido por HideGameplayUI.</summary>
     void ShowGameplayUI()
     {
         if (!_gameplayUiHidden) return;
         _gameplayUiHidden = false;
-        PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Mostrar(this);
-        TimeOfDayIndicator.Instance?.Show();
+        OcultablesDeCinematica.MostrarTodos(this);
     }
 
     // ── Secuencia ─────────────────────────────────────────────────────────
@@ -794,8 +794,9 @@ public class DramaticTextOverlayUI : MonoBehaviour
     {
         if (string.IsNullOrEmpty(bossName)) { onComplete?.Invoke(); return; }
         gameObject.SetActive(true);
-        if (_playRoutine != null) StopCoroutine(_playRoutine);
+        CortarLoQueSuena();
         _playRoutine = StartCoroutine(Co_BossName(bossName, gradLeft, gradRight, duration, onComplete));
+        AvisarRotuloCortado();
     }
 
     IEnumerator Co_BossName(string name, Color gradLeft, Color gradRight,

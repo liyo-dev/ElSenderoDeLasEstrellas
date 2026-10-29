@@ -321,33 +321,12 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         }
     }
 
-    private void ApplyAoEImpact()
-    {
-        int hitCount = Physics.OverlapSphereNonAlloc(transform.position, _aoeRadius, _playerDetectionBuffer, _playerLayerMask);
-        for (int i = 0; i < hitCount; i++)
-        {
-            var hit = _playerDetectionBuffer[i];
-
-            var shield = hit.GetComponentInParent<PlayerShieldController>();
-            if (shield != null && shield.IsDefending)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[EnemyProjectile] 🛡️ Daño de área bloqueado por escudo");
-#endif
-                continue;
-            }
-
-            var playerHealth = hit.GetComponent<PlayerHealthSystem>() ?? hit.GetComponentInParent<PlayerHealthSystem>();
-            if (playerHealth != null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[EnemyProjectile] 💥 Daño de área: {_aoeDamage} (ignora invulnerabilidad)");
-#endif
-                playerHealth.TakeDamage(_aoeDamage, ignoreInvulnerability: true);
-                return;
-            }
-        }
-    }
+    /// Daño de área al caer (lluvia de rocas): alcanza a todo el grupo que toque la esfera, cada
+    /// uno con su vida (DanoEnZona). Ignora la invulnerabilidad tras un golpe, pero no las reglas
+    /// de daño (la defensa de la B la filtra como cualquier golpe).
+    private void ApplyAoEImpact() =>
+        DanoEnZona.GolpearEnEsfera(transform.position, _aoeRadius, _aoeDamage, instigador: Lanzador,
+            ignorarInvulnerabilidad: true);
 
     // Permite registrar VFX asociados al proyectil para que se destruyan cuando este desaparezca
     public void RegisterAttachedVFX(GameObject vfx, bool parentToProjectile = true)
@@ -385,7 +364,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     /// <summary>
     /// Detecta si el proyectil está cerca del player o aliados por distancia directa.
     /// Necesario porque CharacterController no dispara OnTriggerEnter de forma confiable.
-    /// También respeta el escudo del jugador y detecta compañeros de party.
+    /// La defensa del jugador la aplica su PlayerHealthSystem (FiltroDeDefensa) al recibir el golpe.
     /// </summary>
     private void CheckPlayerProximity()
     {
@@ -439,7 +418,7 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
     }
 
     /// <summary>
-    /// Evalúa un collider detectado (por proximidad o por sweep) y aplica daño/bloqueo si es el jugador.
+    /// Evalúa un collider detectado (por proximidad o por sweep) y aplica daño si es el jugador.
     /// Devuelve true si el proyectil impactó y ya fue destruido.
     /// </summary>
     private bool TryResolvePlayerHit(Collider hit)
@@ -447,21 +426,11 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         if (hit == null) return false;
         if (_groundChargeDuration > 0f) return false;
 
+        // El golpe pasa por PlayerHealthSystem: su defensa (FiltroDeDefensa) decide si la B lo
+        // anula o el escudo lo reduce.
         var playerHealth = hit.GetComponent<PlayerHealthSystem>() ?? hit.GetComponentInParent<PlayerHealthSystem>();
         if (playerHealth != null)
         {
-            // Respetar escudo: si el jugador está defendiendo, bloquear sin dañar
-            var shield = hit.GetComponentInParent<PlayerShieldController>();
-            if (shield != null && shield.IsDefending)
-            {
-                hasHit = true;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[EnemyProjectile] 🛡️ Bloqueado por escudo (proximity)");
-#endif
-                DestroyProjectile();
-                return true;
-            }
-
             hasHit = true;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[EnemyProjectile] 🎯 Impacto JUGADOR por proximidad: {damage} daño");
@@ -476,13 +445,6 @@ public class EnemyProjectile : MonoBehaviour, IDevolvible
         {
             if (checkTransform.CompareTag(GameTags.Player))
             {
-                var shield = checkTransform.GetComponentInChildren<PlayerShieldController>();
-                if (shield != null && shield.IsDefending)
-                {
-                    hasHit = true;
-                    DestroyProjectile();
-                    return true;
-                }
                 hasHit = true;
                 ApplyDamage(checkTransform.gameObject);
                 DestroyProjectile();

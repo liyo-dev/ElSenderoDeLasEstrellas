@@ -31,19 +31,19 @@ public sealed class NarrativeNodeInfoAttribute : Attribute
 /// <summary>Tipos de clave que el editor sabe resolver contra el proyecto.</summary>
 public enum NarrativeKeyKind
 {
-    /// <summary>ID de quest (QuestData.questId).</summary>
+    /// <summary>Id de una misión.</summary>
     Quest,
     /// <summary>conditionId de un paso de la quest referenciada por el campo hermano indicado.</summary>
     QuestStep,
-    /// <summary>Clave de señal custom (DefaultNarrativeSignals).</summary>
+    /// <summary>Clave de señal custom (INarrativeSignals).</summary>
     Signal,
-    /// <summary>persistenceId de un NPC (NPCBehaviourManagerV2).</summary>
+    /// <summary>Id persistente de un actor.</summary>
     Actor,
-    /// <summary>Clave de localización (Resources/Localization/*.json).</summary>
+    /// <summary>Clave de un texto localizable.</summary>
     LocKey,
-    /// <summary>Flag narrativo persistente (preset.flags, prefijo NARRATIVE_FLAG:).</summary>
+    /// <summary>Flag narrativo persistente (NarrativeFlags).</summary>
     Flag,
-    /// <summary>anchorId de un SpawnAnchor.</summary>
+    /// <summary>Marca con nombre del mundo (punto de aparición).</summary>
     Anchor,
     /// <summary>Clave libre (solo texto), sin resolución.</summary>
     None
@@ -55,7 +55,7 @@ public enum NarrativeKeyKind
 /// </summary>
 public enum SignalRole
 {
-    /// <summary>No se declara (el índice lo deduce por el nombre del campo, como antes).</summary>
+    /// <summary>No se declara (el índice lo deduce por el nombre del campo).</summary>
     Ninguno,
     /// <summary>El componente levanta esta señal.</summary>
     Emite,

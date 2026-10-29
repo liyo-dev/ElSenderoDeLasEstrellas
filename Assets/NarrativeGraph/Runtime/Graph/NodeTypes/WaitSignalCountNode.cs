@@ -31,6 +31,13 @@ public sealed class WaitSignalCountNode : NarrativeNode
 
     private string CountKey => $"__count_{guid}";
 
+    public override void Describe(INarrativeNodeDescriber d)
+    {
+        d.Signal(eventKey, SignalRole.Escucha);
+        d.Field("veces", count.ToString());
+        if (!string.IsNullOrEmpty(questId)) d.Quest(questId, "Marca un paso por señal en");
+    }
+
     public override void CollectWarnings(List<string> warnings)
     {
         if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("No hay señal que contar");

@@ -838,9 +838,6 @@ public class MainMenuController : MonoBehaviour
 
     void LoadTargetSceneNow(string sceneName)
     {
-        // Asegurar que timeScale esté a 1 al salir del menú principal
-        Time.timeScale = 1f;
-
         bool useOverlay = !string.IsNullOrEmpty(loadingOverlayScene);
 
         if (useOverlay)

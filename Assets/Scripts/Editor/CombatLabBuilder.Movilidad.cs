@@ -60,7 +60,7 @@ public static partial class CombatLabBuilder
         CrearTexto("Saltos y volteretas", r, new Vector3(17f, 4f, 26f), 0f);
 
         // ── Lanzadores en cadena ──
-        var lanzador = AssetDatabase.LoadAssetAtPath<GameObject>(VolteretaDelJugadorBuilder.RutaLanzador);
+        var lanzador = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Exploracion/LanzadorDeSalto.prefab");
         if (lanzador == null)
             avisos.Add("Falta el prefab del lanzador: ejecuta antes «Montar voltereta del jugador y sus usos» y regenera el LAB.");
         else

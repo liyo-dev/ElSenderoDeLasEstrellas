@@ -354,6 +354,8 @@ public class NPCSimpleAnimator : MonoBehaviour
         _lastPosition = transform.position;
         _targetRotation = transform.rotation;
 
+        SombraDeContacto.Asegurar(gameObject);
+
         // La animación de andar ya no depende de las velocidades de la configuración (walkSpeed,
         // runSpeed, partyConfig): se calcula con la velocidad real en m/s, igual para todos. Con
         // las de party (5 y 10 m/s), Oliver andando a 2 m/s daba 0,2 en el blend tree y se

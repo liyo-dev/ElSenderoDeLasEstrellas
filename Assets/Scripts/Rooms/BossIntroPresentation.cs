@@ -3,11 +3,11 @@ using UnityEngine;
 using TMPro;
 using DG.Tweening;
 using Sendero.Core.Feedback;
-using Sendero.UI;
 
 /// <summary>
-/// Presentación cinemática de boss. Muestra el nombre con animación KingdomHearts + degradado,
-/// oculta toda la UI con SceneBoundUI durante la intro y la restaura al terminar.
+/// Presentación cinemática de boss. Muestra el nombre con animación KingdomHearts + degradado.
+/// Durante la intro esconde lo mismo que una cinemática (OcultablesDeCinematica: HUD, minimapa,
+/// hora y avisos) y lo devuelve al terminar.
 /// </summary>
 public class BossIntroPresentation : MonoBehaviour
 {
@@ -78,19 +78,11 @@ public class BossIntroPresentation : MonoBehaviour
         // al enfocar a Eldran) coalesca el handoff en vez de dejar un hueco de gameplay visible.
         CameraDirectorService.Claim(this);
 
-        // Ocultar toda la UI persistente (SceneBoundUI) con fade
-        SceneBoundUI.BeginBossIntro(0.25f);
-        // FIX: el HUD principal (PlayerHUDV2) queda excluido del snapshot genérico de
-        // SceneBoundUI (ver PlayerHUDV2.Awake) porque compite por el mismo CanvasGroup que su
-        // propio HideHUD()/ShowHUD() con fade. Lo ocultamos aquí explícitamente y en el mismo
-        // "par" que el resto de la UI, para que no se quede a medio fade si esta presentación
-        // arranca pegada a una cinemática que todavía estuviera mostrando el HUD.
-        PlayerHUDV2.Instance?.HideHUD(this, 0.25f);
+        // Se esconde lo mismo que en una cinemática, con esta presentación como clave.
+        OcultablesDeCinematica.OcultarTodos(this);
 
-        // IMPORTANTE: todo lo que sigue va envuelto en try/finally. Si cualquier boss concreto
-        // lanza una excepción a mitad de la presentación (p.ej. referencia nula específica de
-        // ese prefab), el finally garantiza que el HUD/UI se restaure igualmente. Sin esto, un
-        // fallo aislado en un boss dejaba el HUD oculto para siempre durante toda la batalla.
+        // Todo lo que sigue va envuelto en try/finally: si un boss concreto lanza una excepción a
+        // mitad de la presentación, el finally devuelve el HUD y los avisos igualmente.
         try
         {
             // 1. Fade a negro (se salta si la pantalla ya está cubierta, ej: venimos de una cinemática)
@@ -185,9 +177,8 @@ public class BossIntroPresentation : MonoBehaviour
                 FeedbackService.SetScreenFadeImmediate(Color.clear);
             }
 
-            // Restaurar toda la UI persistente con fade, pase lo que pase durante la presentación.
-            SceneBoundUI.EndBossIntro(0.35f);
-            PlayerHUDV2.Instance?.ShowHUD(this, 0.35f);
+            // Devolver lo escondido, pase lo que pase durante la presentación.
+            OcultablesDeCinematica.MostrarTodos(this);
 
             if (PlayerLockService.HasInstance) PlayerLockService.Instance.Release(this);
 

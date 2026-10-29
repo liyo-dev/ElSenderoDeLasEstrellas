@@ -22,6 +22,10 @@ MonoBehaviour:
   companionAnimationTrigger: MagicSpecial
   playerAnimationTrigger: MagicSpecial
   gestureSeconds: 0.6
+  coreografia: 2
+  sfxDelHechizo: SpecialAttack_Meteoros
+  sfxDelImpacto: SpecialAttack_Impacto
+  hijoDelAgujeroEnElVfx: VFX_AgujeroNegro
   vfxPrefab: {fileID: 8391809938131462424, guid: 57e4b2e553eb2764287890f55a67367b, type: 3}
   elevacionDelVfx: 0.15
   castSFXKey: SpecialAttack_Estela
@@ -33,4 +37,8 @@ MonoBehaviour:
   damage: 110
   aoeRadius: 9.5
   knockbackForce: 20
+  statusEffect: 2
+  statusDuration: 3.5
+  statusStrength: 0
+  abreProteccionSegundos: 6
   shakeCameraOnCast: 1

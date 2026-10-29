@@ -1,12 +1,14 @@
-﻿﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
-/// Servicio singleton que gestiona el sistema de colisión de proyectiles.
-/// Persiste entre escenas y se registra en el ServiceLocator.
+/// Servicio singleton que aplica la configuración del choque de proyectiles
+/// (ProjectileCollisionSettingsSO) a ProjectileCollisionHandler al arrancar.
+/// Persiste entre escenas y se registra en el ServiceLocator. Vive en Start.unity; la clase se
+/// llama como el archivo para que Unity pueda cargar el componente.
 /// 
 /// CONFIGURACIÓN:
 /// 1. Añade este componente a un GameObject en la escena START
-/// 2. Crea un ProjectileCollisionSettings (Create > Game > Projectile Collision Settings)
+/// 2. Crea un ProjectileCollisionSettings (Create ▸ El Sendero ▸ Ataques ▸ Projectile Collision Settings)
 /// 3. Arrastra el settings al campo 'Settings' en el Inspector
 /// 4. Configura el VFX de colisión en el settings
 /// 
@@ -14,9 +16,9 @@
 /// </summary>
 [DefaultExecutionOrder(-500)]
 [DisallowMultipleComponent]
-public class ProjectileCollisionService : MonoBehaviour
+public class ProjectileCollisionInitializer : MonoBehaviour
 {
-    public static ProjectileCollisionService Instance { get; private set; }
+    public static ProjectileCollisionInitializer Instance { get; private set; }
     
     #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -43,7 +45,7 @@ public class ProjectileCollisionService : MonoBehaviour
         if (Instance != null && Instance != this)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollisionService] Instancia duplicada detectada en '{name}'. Se destruye el duplicado.");
+            Debug.LogWarning($"[ProjectileCollisionInitializer] Instancia duplicada detectada en '{name}'. Se destruye el duplicado.");
 #endif
             Destroy(gameObject);
             return;
@@ -86,26 +88,16 @@ public class ProjectileCollisionService : MonoBehaviour
     {
         if (settings != null)
         {
-            var config = settings.ToConfig();
-            ProjectileCollisionHandler.Initialize(config);
-            // Debug.Log("[ProjectileCollisionService] ✅ Sistema de colisión de proyectiles inicializado con settings");
-            
-            // Log de configuración para debugging
-            if (settings.collisionVFX != null)
-            {
-                // Debug.Log($"[ProjectileCollisionService] VFX configurado: {settings.collisionVFX.name}");
-            }
-            else
-            {
+            ProjectileCollisionHandler.Initialize(settings.ToConfig());
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[ProjectileCollisionService] ⚠️ No hay VFX de colisión asignado");
+            if (settings.collisionVFX == null)
+                Debug.LogWarning("[ProjectileCollisionInitializer] ⚠️ No hay VFX de colisión asignado");
 #endif
-            }
         }
         else
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[ProjectileCollisionService] ⚠️ No hay settings asignado - usando configuración por defecto");
+            Debug.LogWarning("[ProjectileCollisionInitializer] ⚠️ No hay settings asignado - usando configuración por defecto");
 #endif
             // El handler usará configuración por defecto automáticamente
         }
@@ -121,7 +113,7 @@ public class ProjectileCollisionService : MonoBehaviour
         settings = newSettings;
         InitializeCollisionSystem();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[ProjectileCollisionService] Configuración actualizada en runtime");
+        Debug.Log("[ProjectileCollisionInitializer] Configuración actualizada en runtime");
 #endif
     }
     

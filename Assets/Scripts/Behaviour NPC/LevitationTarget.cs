@@ -55,7 +55,7 @@ public class LevitationTarget : MonoBehaviour
     [SerializeField] private GameObject levitationVFXPrefab;
     [Tooltip("Prefab del efecto visual en el punto de impacto al chocar tras ser lanzado.")]
     [SerializeField] private GameObject impactVFXPrefab;
-    [Tooltip("Tiempo en segundos antes de destruir el VFX de impacto (0 = se autodestruye).")]
+    [Tooltip("Segundos que dura el VFX de impacto antes de volver al pool (0 = la duración por defecto del pool).")]
     [Min(0f)] [SerializeField] private float impactVFXLifetime = 2f;
     [Tooltip("Offset de posición para el VFX respecto al centro del objeto.")]
     [SerializeField] private Vector3 vfxOffset = Vector3.up;
@@ -510,11 +510,8 @@ public class LevitationTarget : MonoBehaviour
             }
         }
 
-        if (impactVFXPrefab != null)
-        {
-            var vfx = Instantiate(impactVFXPrefab, contact.point, Quaternion.LookRotation(contact.normal));
-            if (impactVFXLifetime > 0f) Destroy(vfx, impactVFXLifetime);
-        }
+        if (impactVFXPrefab != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(impactVFXPrefab, contact.point, Quaternion.LookRotation(contact.normal), impactVFXLifetime);
     }
 
     // ── VFX ─────────────────────────────────────────────────────────────────

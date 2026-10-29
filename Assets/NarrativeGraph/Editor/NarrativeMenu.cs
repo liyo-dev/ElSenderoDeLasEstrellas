@@ -2,11 +2,11 @@ using UnityEditor;
 using UnityEngine;
 using GraphAsset = global::NarrativeGraph;
 
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     public static class NarrativeMenu
     {
-        [MenuItem("El Sendero/Narrativa/Nuevo Grafo")]
+        [MenuItem("Tools/Narrative Graph/Nuevo grafo")]
         public static void CreateGraph()
         {
             var g = ScriptableObject.CreateInstance<GraphAsset>();

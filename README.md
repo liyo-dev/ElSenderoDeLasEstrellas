@@ -73,7 +73,7 @@ Detalle completo del arranque (incluido el paso `Start → MainMenu` vía `BootL
 - **ScriptableObjects como datos** — configuración de NPCs, quests, hechizos y presets. Nunca lógica.
 - **Eventos C# (`Action<T>`)** — comunicación desacoplada entre sistemas, sin referencias directas entre managers.
 - **FSM de NPCs:** `NPCBehaviourManagerV2 → NPCBrain → NPCStateContext → INPCState` (`Assets/Scripts/Behaviour NPC/`).
-- **Narrativa:** `NarrativeGraph` (grafo de nodos, sistema activo para todo NPC/quest nueva) conviviendo con el executor legacy `NPCInteractiveNarrativeExecutor` (congelado, sin nuevos NPCs) — política formal completa en `TDD.md` § 10.
+- **Narrativa:** `NarrativeGraph` (grafo de nodos, sistema activo para todo NPC/quest nueva; núcleo genérico que habla con el juego por puertos de `NarrativeServices`, con los adaptadores en `Scripts/NarrativeIntegration/`) conviviendo con el executor legacy `NPCInteractiveNarrativeExecutor` (congelado, sin nuevos NPCs) — política formal completa en `TDD.md` § 10.
 
 Detalle completo de cada sistema, reglas de rendimiento y bugs conocidos: ver `TDD.md`.
 
@@ -87,11 +87,12 @@ Assets/
 │   ├── Cinematics/     ← cinemáticas y prólogo
 │   └── Test/           ← escenas de prueba
 ├── Scripts/
-│   ├── Core/               ← GameBootService, ServiceLocator, PlayerService, SaveSystem
+│   ├── Core/               ← GameBootService, Partida/, ServiceLocator, PlayerService, SaveSystem
 │   ├── Behaviour NPC/      ← FSM de NPCs
 │   ├── Narrative/          ← sistema legacy "Interactive"
+│   ├── NarrativeIntegration/ ← el juego conectado al grafo: adaptadores y nodos propios
 │   ├── Quests/, Dialogue/, Audio/, Inventory/, Puzzle/, UI/, ...
-├── NarrativeGraph/      ← Runtime/, Editor/ y assets del grafo (MainNarrative*.asset)
+├── NarrativeGraph/      ← núcleo genérico del grafo (Runtime/, Editor/) y assets del grafo
 ├── _BootProfile/        ← presets de testing (ScriptableObjects)
 ├── Resources/Localization/  ← JSON de localización (ES/EN)
 └── Plugins/             ← Invector 3rd Person Controller, DOTween, etc.
@@ -128,6 +129,7 @@ QuestManager.OnQuestCompleted += HandleQuestComplete;
 ## 🔧 Herramientas de desarrollo
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
+- `Tools/Narrative Graph/Abrir editor` (Ctrl+Mayús+N) — editor del grafo narrativo
 - `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` — valida que quests/eventos no estén referenciados a la vez por el grafo y por el sistema legacy (política completa en `TDD.md` § 10)
 
 ## 🚢 Publicación

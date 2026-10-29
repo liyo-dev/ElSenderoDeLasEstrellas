@@ -102,7 +102,7 @@ public sealed class GuionTexto
     private static readonly HashSet<string> VerbosDeActor = new()
     {
         "en", "anda", "corre", "huye", "mira", "gesto", "bucle", "reposo", "cara", "dice",
-        "aparece", "desaparece", "charla", "pasea", "desliza", "sienta", "levanta", "coge", "deja"
+        "aparece", "desaparece", "charla", "pasea", "desliza", "sienta", "levanta", "coge", "deja", "cabeza"
     };
 
     public static bool EsVerboDeActor(string v) => VerbosDeActor.Contains(v);

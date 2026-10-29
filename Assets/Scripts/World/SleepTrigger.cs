@@ -468,14 +468,14 @@ public class SleepTrigger : MonoBehaviour
 #endif
             return false;
         }
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         return preset?.flags != null && preset.flags.Contains(FlagKey());
     }
 
     private void MarkAsPlayed()
     {
         if (string.IsNullOrEmpty(persistenceId)) return;
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null) return;
         preset.flags ??= new System.Collections.Generic.List<string>();
         if (!preset.flags.Contains(FlagKey()))

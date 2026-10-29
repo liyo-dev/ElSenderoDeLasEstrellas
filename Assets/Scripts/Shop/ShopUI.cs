@@ -147,7 +147,7 @@ public class ShopUI : MonoBehaviour
             CancelInvoke(nameof(RestoreGameplayInputs));
             RestoreGameplayInputsImmediate();
             GameState.Pop(GamePhase.Shop);
-            Time.timeScale = 1f;
+            TimeScaleArbiterService.Release(this);
             Core.PlayerInputManager.Instance?.PopUIMode();
             MenuManager.Close(MenuKind.Shop);
             _isOpen = false;
@@ -335,18 +335,13 @@ public class ShopUI : MonoBehaviour
         _ignoreInputUntil = Time.unscaledTime + ignoreDuration;
 
         GameState.Push(GamePhase.Shop);
-        Time.timeScale = 0f;
+        TimeScaleArbiterService.Request(this, 0f);
 
-        // FIX (INC): ShopUI nunca llamaba a PushUIMode(), a diferencia de DialogueManager,
-        // QuestMenuManager, TeleportUI, ConfirmationPopupUI, etc. PlayerInputManager arranca
-        // con el mapa "UI" del Input System deshabilitado (solo "GamePlay" activo por defecto),
-        // y es ese mapa "UI" el que alimenta al InputSystemUIInputModule (Point/Click/Submit/
-        // Cancel/Navigate) que el EventSystem usa para procesar ratón y teclado. Sin activarlo,
-        // los clics de ratón y las teclas no llegan a ningún botón de la tienda. El mando
-        // "funcionaba" solo porque GamepadInputReader.PollHardwareFallback lee el hardware del
-        // gamepad directamente, sin pasar por el InputActionAsset — ratón y teclado no tienen
-        // ese atajo. Mismo patrón que el resto de menús: PushUIMode() aquí, PopUIMode() en Close()
-        // y en el cleanup de OnDisable().
+        // PlayerInputManager arranca con el mapa "UI" del Input System apagado, y es ese mapa el
+        // que alimenta al InputSystemUIInputModule (ratón y teclado). Sin PushUIMode() los clics
+        // y las teclas no llegan a la tienda (el mando sí, porque GamepadInputReader lee el
+        // hardware directamente). Mismo patrón que el resto de menús: PushUIMode() aquí,
+        // PopUIMode() en Close() y en OnDisable().
         Core.PlayerInputManager.Instance?.PushUIMode();
 
         // IMPORTANTE: Suprimir inputs de gameplay mientras la tienda está abierta
@@ -364,7 +359,7 @@ public class ShopUI : MonoBehaviour
         _isOpen = false;
         
         GameState.Pop(GamePhase.Shop);
-        Time.timeScale = 1f;
+        TimeScaleArbiterService.Release(this);
         ResetBuyButtonFeedback();
 
         // Pareja de PushUIMode() en Open(): sin esto el refCount de PlayerInputManager queda

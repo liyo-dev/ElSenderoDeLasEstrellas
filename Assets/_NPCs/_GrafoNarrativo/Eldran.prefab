@@ -11643,24 +11643,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c81648c51f84d818f09c59e67dc37da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.EldranIdleCommentary
-  minInterval: 32
-  maxInterval: 70
-  ambientComments:
-  - "No os alej\xE9is demasiado, que luego cuesta reagruparse."
-  - Con estos huesos, cada paso cuenta el doble que antes.
-  - "Este camino... me recuerda a otros que ya no deber\xEDa recordar tan bien."
-  - "Mientras sigamos juntos, todo ir\xE1 bien. Eso digo yo, al menos."
-  searchLines:
-  - "Un momento... \xBFd\xF3nde he dejado el b\xE1culo?"
-  - "Jurar\xEDa que lo llevaba en la otra mano."
-  - "Ah, no, aqu\xED est\xE1. Falsa alarma."
-  - A mi edad, hasta uno mismo se pierde de vista.
-  searchGestureState: Question02
-  searchDuration: 3
-  bubbleDuration: 3
-  weightComment: 3
-  weightSearch: 2
-  debugMode: 0
+  intervaloMinimo: 32
+  intervaloMaximo: 70
+  duracionDeLaFrase: 3
+  numeritos:
+  - etiqueta: 
+    tipo: 0
+    peso: 3
+    claves:
+    - IDLE_ELDRAN_COMENTARIO_01
+    - IDLE_ELDRAN_COMENTARIO_02
+    - IDLE_ELDRAN_COMENTARIO_03
+    - IDLE_ELDRAN_COMENTARIO_04
+    duracion: 3
+    gesto: 
+    actividad: 0
+    distanciaDelante: 2.2
+    tiempoMaximoAndando: 6
+  - etiqueta: 
+    tipo: 1
+    peso: 2
+    claves:
+    - IDLE_ELDRAN_BACULO_01
+    - IDLE_ELDRAN_BACULO_02
+    - IDLE_ELDRAN_BACULO_03
+    - IDLE_ELDRAN_BACULO_04
+    duracion: 3
+    gesto: Question02
+    actividad: 0
+    distanciaDelante: 2.2
+    tiempoMaximoAndando: 6
+  reacciones: []
+  depurar: 0
 --- !u!114 &1273344385334190010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11731,9 +11745,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.DiscusionEnBucle
   miId: NPC_Eldran
   conQuienId: NPC_Victoria
-  empiezaCon: OLIVER_GREETING_START
-  oConLaMision: ELDRAN_MISSION1
-  terminaCon: PERAS_START
+  tramo:
+    empiezaConSenal:
+    - OLIVER_GREETING_START
+    - PROLOGUE_DONE
+    - HOOK_DISCUSION_START
+    empiezaConMisionActiva:
+    - ELDRAN_MISSION1
+    - WILL_MISSION0
+    acabaConSenal:
+    - PERAS_START
+    acabaConMisionIniciada: []
+    acabaConMisionCompletada:
+    - ELDRAN_MISSION1
+  empiezaCon: 
+  oConLaMision: 
+  terminaCon: 
   replica:
   - Laugh01
   - HeadShake01

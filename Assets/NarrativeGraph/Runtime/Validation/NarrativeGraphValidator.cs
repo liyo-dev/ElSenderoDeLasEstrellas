@@ -30,8 +30,7 @@ public static class NarrativeGraphValidator
                 }
             }
             
-            // Reducir ruido: solo mostrar warnings si hay errores o si se habilita explícitamente
-            // Para evitar spam en la consola durante el desarrollo normal
+            // Los avisos son informativos: solo salen en editor o con instrumentación.
             if (Warnings.Count > 0)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -86,14 +85,11 @@ public static class NarrativeGraphValidator
             result.Errors.Add($"Hay GUIDs duplicados: {string.Join(", ", duplicateGuids)}");
         }
         
-        // Validar nodos específicos
-        ValidateWaitQuestNodes(graph, result);
-        ValidateWaitCustomEventNodes(graph, result);
-        ValidateStartQuestNodes(graph, result);
-        ValidateCompleteQuestStepsNodes(graph, result);
+        // Lo demás lo declara cada nodo sobre sí mismo; el validador no conoce tipos de nodo.
         ValidateSavePoints(graph, result);
         CollectNodeWarnings(graph, result);
-        
+        ValidateQuestStarts(graph, result);
+
         return result;
     }
     
@@ -175,83 +171,53 @@ public static class NarrativeGraphValidator
         return guids.Where(kv => kv.Value > 1).Select(kv => kv.Key).ToList();
     }
     
-    static void ValidateWaitQuestNodes(NarrativeGraph graph, ValidationResult result)
+    /// <summary>
+    /// Una misión que inician varios nodos suele ser un despiste (copiar y pegar un tramo). Lo
+    /// que inicia cada nodo se sabe proyectando su efecto (INarrativeStateEffect), sin ejecutarlo.
+    /// </summary>
+    static void ValidateQuestStarts(NarrativeGraph graph, ValidationResult result)
     {
-        foreach (var node in graph.nodes.OfType<WaitQuestCompleteNode>())
+        var recorder = new QuestStartRecorder();
+        foreach (var node in graph.nodes)
         {
-            if (string.IsNullOrEmpty(node.questId))
+            if (node is not INarrativeStateEffect effect) continue;
+            recorder.Begin();
+            try { effect.Project(recorder); }
+            catch (System.Exception e)
             {
-                result.Warnings.Add($"WaitQuestCompleteNode tiene questId vacío");
-            }
-        }
-    }
-    
-    static void ValidateWaitCustomEventNodes(NarrativeGraph graph, ValidationResult result)
-    {
-        var eventKeys = new HashSet<string>();
-        
-        foreach (var node in graph.nodes.OfType<WaitCustomEventNode>())
-        {
-            if (string.IsNullOrEmpty(node.eventKey))
-            {
-                result.Warnings.Add($"WaitCustomEventNode tiene eventKey vacío");
-            }
-            else
-            {
-                eventKeys.Add(node.eventKey);
-            }
-        }
-        
-        // Advertir si hay eventos que nunca se emiten
-        // (esto es solo una advertencia porque los eventos pueden venir de otras partes del juego)
-        if (eventKeys.Count > 0)
-        {
-            result.Warnings.Add($"Grafo espera {eventKeys.Count} evento(s) custom: {string.Join(", ", eventKeys)}. Verifica que estos eventos se emiten en algún lugar.");
-        }
-    }
-    
-    static void ValidateStartQuestNodes(NarrativeGraph graph, ValidationResult result)
-    {
-        var questIds = new HashSet<string>();
-        
-        foreach (var node in graph.nodes.OfType<StartQuestNode>())
-        {
-            if (string.IsNullOrEmpty(node.questId))
-            {
-                result.Warnings.Add($"StartQuestNode tiene questId vacío");
-            }
-            else
-            {
-                if (questIds.Contains(node.questId))
-                {
-                    result.Warnings.Add($"La quest '{node.questId}' se inicia múltiples veces en el grafo");
-                }
-                questIds.Add(node.questId);
-            }
-        }
-    }
-    
-    static void ValidateCompleteQuestStepsNodes(NarrativeGraph graph, ValidationResult result)
-    {
-        foreach (var node in graph.nodes.OfType<CompleteQuestStepsNode>())
-        {
-            if (string.IsNullOrEmpty(node.questId))
-            {
-                result.Warnings.Add("CompleteQuestStepsNode tiene questId vacío");
+                result.Warnings.Add($"«{node.displayTitle}»: no se pudo proyectar su efecto ({e.Message})");
                 continue;
             }
-
-            bool hasSteps = node.steps != null && node.steps.Count > 0;
-            if (!hasSteps && !node.completeQuest)
+            foreach (var questId in recorder.StartedByThisNode)
             {
-                result.Warnings.Add($"CompleteQuestStepsNode para '{node.questId}' no tiene pasos configurados ni completará la quest.");
-            }
-
-            if (hasSteps && node.steps.Any(step => step < 0))
-            {
-                result.Warnings.Add($"CompleteQuestStepsNode para '{node.questId}' contiene índices de paso negativos.");
+                if (!recorder.StartedBefore.Add(questId))
+                    result.Warnings.Add($"La quest '{questId}' la inicia más de un nodo del grafo");
             }
         }
+    }
+
+    /// <summary>Escritor de estado que solo anota qué misiones inicia cada nodo.</summary>
+    sealed class QuestStartRecorder : INarrativeStateWriter
+    {
+        public readonly HashSet<string> StartedBefore = new();
+        public readonly HashSet<string> StartedByThisNode = new();
+
+        public void Begin() => StartedByThisNode.Clear();
+
+        public void StartQuest(string questId)
+        {
+            if (!string.IsNullOrWhiteSpace(questId)) StartedByThisNode.Add(questId);
+        }
+
+        public bool GetFlag(string key) => false;
+        public void SetFlag(string key, bool value) { }
+        public void CompleteQuestSteps(string questId, IReadOnlyList<string> stepConditionIds, IReadOnlyList<int> stepIndices) { }
+        public void CompleteQuest(string questId) { }
+        public void AddItem(string itemId, int amount) { }
+        public void PlaceActor(string actorId, NarrativeLocation location) { }
+        public void SetActorActive(string actorId, bool active) { }
+        public void Note(string message) { }
+        public bool TryGetExtension<T>(out T extension) where T : class { extension = null; return false; }
     }
 
     static void ValidateSavePoints(NarrativeGraph graph, ValidationResult result)

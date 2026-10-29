@@ -1,8 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-/// Paso del cierre de batalla: suma a las estadísticas del grupo el premio de estadísticas del encuentro
-/// (BattleEncounterSO.premioEstadisticas) y anota en el resultado lo que ha subido, para el informe. Ver INC-470.
+/// Paso del cierre de batalla: da la Sintonía Estelar del encuentro y suma a las estadísticas el premio
+/// del encuentro (BattleEncounterSO.premioEstadisticas) con EstadisticasDelPersonaje.Sumar (la vida y el
+/// maná, a los tres personajes por SaludDelGrupo). Anota en el resultado lo que ha subido al que va al
+/// mando, para el informe. Ver INC-470.
 public sealed class PasoPremioDeEstadisticas : IPasoDeCierre
 {
     public int Orden => 0;

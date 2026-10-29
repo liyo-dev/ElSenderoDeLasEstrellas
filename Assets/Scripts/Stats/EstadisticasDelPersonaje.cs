@@ -6,13 +6,14 @@ using UnityEngine;
 ///
 ///  - Inicial: con lo que empieza el personaje, de su ficha (FichaDePersonaje, en el componente
 ///    Personaje del cuerpo). Ver INC-483.
-///  - Base: lo que tiene por sí mismo. Sube al ganar combates (PasoPremioDeEstadisticas) y se
-///    guarda con la partida. La vida y la magia de base son la vida y la magia máximas del cuerpo
-///    (PlayerHealthSystem / ManaPool, y maxHP / maxMP en el preset); el ataque y la defensa se
-///    guardan en el preset (ataque, defensa). Mientras haya un solo cuerpo jugable, el preset
-///    guarda una sola base: la comparten los tres personajes.
-///  - Bonos: lo que suman las fuentes registradas (IFuenteDeBonos: equipo...). No se guardan; las
-///    vuelve a registrar quien las da.
+///  - Base: lo que tiene por sí mismo. Sube al ganar combates (PasoPremioDeEstadisticas) y con la
+///    Sintonía Estelar, siempre con <see cref="Sumar"/>. La vida y la magia son de cada personaje y
+///    las lleva SaludDelGrupo (único dueño: <see cref="Sumar"/> le pasa lo que suben, para los
+///    tres); aquí no se escriben. El ataque y la defensa se guardan en el preset (ataque, defensa)
+///    y de momento los comparten los tres.
+///  - Bonos: lo que suman las fuentes registradas (IFuenteDeBonos: la ropa del cuerpo del jugador).
+///    No se guardan; las vuelve a registrar quien las da. SaludDelGrupo escucha
+///    <see cref="Cambiadas"/> para sumar los de vida y magia al personaje que va al mando.
 ///  - Total = Base + Bonos. Es lo que se usa en juego: vida y magia máximas, daño de los
 ///    hechizos (ataque, ver CombateDelPersonaje) y daño recibido (defensa).
 public static class EstadisticasDelPersonaje
@@ -70,9 +71,16 @@ public static class EstadisticasDelPersonaje
             // que los hechizos no hagan 0 de daño.
             if (p == null) { var ini = Iniciales; return new Estadisticas(0f, 0f, ini.ataque, ini.defensa); }
             AsegurarAtaqueYDefensa(p);
-            var bonos = Bonos;
-            float vida = PlayerService.TryGetComponent(out PlayerHealthSystem salud) ? salud.MaxHealth - bonos.vida : p.maxHP;
-            float magia = PlayerService.TryGetComponent(out ManaPool mana) ? mana.Max - bonos.magia : p.maxMP;
+            // La vida y la magia del que va al mando, de SaludDelGrupo; sin grupo en la escena, las
+            // de Will guardadas en el preset.
+            float vida = p.maxHP, magia = p.maxMP;
+            var grupo = SaludDelGrupo.Instance;
+            if (grupo != null && grupo.EstaListo)
+            {
+                var activo = ControlDelJugador.Activo;
+                vida = grupo.VidaMaxBase(activo);
+                magia = grupo.ManaMaxBase(activo);
+            }
             return new Estadisticas(vida, magia, p.ataque, p.defensa);
         }
     }
@@ -89,8 +97,9 @@ public static class EstadisticasDelPersonaje
         return total - actuales + pieza.Bonos;
     }
 
-    /// Suma a la base (un premio de combate, por ejemplo) y lo aplica al jugador. Devuelve el
-    /// total de antes y el de después, para contarlo en el informe.
+    /// Suma a la base (un premio de combate, un don de Sintonía): el ataque y la defensa aquí, la
+    /// vida y la magia a los tres personajes por SaludDelGrupo. Devuelve el total de antes y el de
+    /// después del que va al mando, para contarlo en el informe.
     public static (Estadisticas antes, Estadisticas despues) Sumar(Estadisticas delta)
     {
         var p = UnlockService.GetActivePreset();
@@ -99,7 +108,14 @@ public static class EstadisticasDelPersonaje
         var antes = Total;
         p.ataque += delta.ataque;
         p.defensa += delta.defensa;
-        CambiarMaximos(p, delta.vida, delta.magia);
+        if (delta.vida != 0f || delta.magia != 0f)
+        {
+            var grupo = SaludDelGrupo.Instance;
+            bool hecho = grupo != null && grupo.AumentarMaximosDelGrupo(delta.vida, delta.magia);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            if (!hecho) Debug.LogWarning($"[EstadisticasDelPersonaje] Sin SaludDelGrupo lista en la escena: no se suben vida {delta.vida} ni magia {delta.magia}.");
+#endif
+        }
         var despues = Total;
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -109,69 +125,24 @@ public static class EstadisticasDelPersonaje
         return (antes, despues);
     }
 
+    // El ataque y la defensa se leen al vuelo (Total). La vida y la magia máximas las mueve
+    // SaludDelGrupo al oír Cambiadas.
     public static void RegistrarFuente(IFuenteDeBonos fuente)
     {
         if (fuente == null || _fuentes.Contains(fuente)) return;
         _fuentes.Add(fuente);
-        AplicarBonosAlJugador(fuente.Bonos);
+        Cambiadas?.Invoke();
     }
 
     public static void QuitarFuente(IFuenteDeBonos fuente)
     {
         if (fuente == null || !_fuentes.Remove(fuente)) return;
-        var b = fuente.Bonos;
-        AplicarBonosAlJugador(new Estadisticas(-b.vida, -b.magia, -b.ataque, -b.defensa));
-    }
-
-    /// Una fuente ya registrada va a cambiar lo que suma (se cambia de pieza): llamar a esto con
-    /// la diferencia (nuevo - viejo) justo después del cambio.
-    public static void AvisarCambioDeBonos(Estadisticas diferencia) => AplicarBonosAlJugador(diferencia);
-
-    // El ataque y la defensa se leen al vuelo (Total); la vida y la magia máximas son de los
-    // componentes del jugador y hay que moverlas. El preset no se toca: guarda solo la base.
-    private static void AplicarBonosAlJugador(Estadisticas diferencia)
-    {
-        if (PlayerService.TryGetComponent(out PlayerHealthSystem salud) && diferencia.vida != 0f)
-        {
-            salud.SetMaxHealth(Mathf.Max(1f, salud.MaxHealth + diferencia.vida));
-            if (diferencia.vida > 0f) salud.Heal(diferencia.vida);
-        }
-        if (PlayerService.TryGetComponent(out ManaPool mana) && diferencia.magia != 0f)
-            mana.Init(Mathf.Max(0f, mana.Max + diferencia.magia), mana.Current + Mathf.Max(0f, diferencia.magia));
         Cambiadas?.Invoke();
     }
 
-    private static void CambiarMaximos(PlayerPresetSO p, float masVida, float masMagia)
-    {
-        if (PlayerService.TryGetComponent(out PlayerHealthSystem salud))
-        {
-            if (masVida != 0f)
-            {
-                salud.SetMaxHealth(Mathf.Max(1f, salud.MaxHealth + masVida));
-                if (masVida > 0f) salud.Heal(masVida);   // lo que sube el máximo se gana también de vida
-            }
-            p.maxHP = salud.MaxHealth - Bonos.vida;
-            p.currentHP = salud.CurrentHealth;
-        }
-        else
-        {
-            p.maxHP = Mathf.Max(1f, p.maxHP + masVida);
-            p.currentHP = Mathf.Clamp(p.currentHP + Mathf.Max(0f, masVida), 0f, p.maxHP);
-        }
-
-        if (PlayerService.TryGetComponent(out ManaPool mana))
-        {
-            if (masMagia != 0f)
-                mana.Init(Mathf.Max(0f, mana.Max + masMagia), mana.Current + Mathf.Max(0f, masMagia));
-            p.maxMP = mana.Max - Bonos.magia;
-            p.currentMP = mana.Current;
-        }
-        else
-        {
-            p.maxMP = Mathf.Max(0f, p.maxMP + masMagia);
-            p.currentMP = Mathf.Clamp(p.currentMP + Mathf.Max(0f, masMagia), 0f, p.maxMP);
-        }
-    }
+    /// Una fuente ya registrada ha cambiado lo que suma (se cambia de pieza): llamar a esto justo
+    /// después del cambio; quien escucha vuelve a leer <see cref="Bonos"/>.
+    public static void AvisarCambioDeBonos() => Cambiadas?.Invoke();
 
     /// Con lo que empieza el personaje que lleva el jugador: su ficha, o los valores por defecto si
     /// el cuerpo no tiene.

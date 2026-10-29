@@ -64,14 +64,16 @@ namespace Sendero.UI
         [SerializeField] private float panelFadeOutDuration = 0.3f;
         [SerializeField] private float panelSlideOffset = 40f;
 
-        [Header("Nombres para identificar compañeros en el party")]
-        [SerializeField] private string liamDisplayName = "Liam";
-        [SerializeField] private string estelaDisplayName = "Estela";
-
         private RetratoDelGrupo[] _retratos; // 0=Liam, 1=Will, 2=Estela
         private readonly bool[] _presente = new bool[3];
         private readonly Color[] _colores = new Color[3];
-        private readonly string[] _nombres = { "LIAM", "WILL", "ESTELA" };
+        // Nombre de cada personaje en mayúsculas, del dueño de los nombres (ControlDelJugador).
+        private static readonly string[] _nombres =
+        {
+            ControlDelJugador.Nombre(Slot.Liam).ToUpperInvariant(),
+            ControlDelJugador.Nombre(Slot.Will).ToUpperInvariant(),
+            ControlDelJugador.Nombre(Slot.Estela).ToUpperInvariant(),
+        };
         private int _activoMostrado = -1;
         private readonly bool[] _saludMostrada = new bool[3];
         private readonly bool[] _cansadoMostrado = new bool[3];
@@ -198,9 +200,7 @@ namespace Sendero.UI
             Configurar();
             var pcm = PartyControlManager.Instance;
             int activo = pcm != null ? pcm.ActiveIndex : (int)Slot.Will;
-            _presente[(int)Slot.Liam] = IsInParty(liamDisplayName);
-            _presente[(int)Slot.Will] = true;
-            _presente[(int)Slot.Estela] = IsInParty(estelaDisplayName);
+            for (int i = 0; i < _presente.Length; i++) _presente[i] = ControlDelJugador.EnElGrupo((Slot)i);
 
             int izquierda = pcm != null ? pcm.SlotVecino(activo, -1) : -1;
             int derecha = pcm != null ? pcm.SlotVecino(activo, 1) : -1;
@@ -338,11 +338,6 @@ namespace Sendero.UI
             followStatusText.text = LocalizationManager.Instance != null
                 ? LocalizationManager.Instance.Get(key, fallback)
                 : fallback;
-        }
-
-        private bool IsInParty(string displayName)
-        {
-            return PlayerParty.Instance?.GetMemberByName(displayName) != null;
         }
 
 #if UNITY_EDITOR

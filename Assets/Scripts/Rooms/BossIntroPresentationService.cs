@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using Sendero.Core.Feedback;
-using Sendero.UI;
 
 /// <summary>
 /// Servicio global de presentación cinemática de bosses (INC-207). Se auto-crea al arrancar el
@@ -83,8 +82,8 @@ public class BossIntroPresentationService : MonoBehaviour
         // durante los SetActive() de cámara de esta presentación.
         CameraDirectorService.Claim(this);
 
-        SceneBoundUI.BeginBossIntro(0.25f);
-        PlayerHUDV2.Instance?.HideHUD(this, 0.25f);
+        // Se esconde lo mismo que en una cinemática, con esta presentación como clave.
+        OcultablesDeCinematica.OcultarTodos(this);
 
         // Todo lo que sigue va envuelto en try/finally: si un boss concreto lanza una excepción a
         // mitad de la presentación, el HUD/UI se restaura igualmente en vez de quedar oculto para
@@ -168,8 +167,7 @@ public class BossIntroPresentationService : MonoBehaviour
                 FeedbackService.SetScreenFadeImmediate(Color.clear);
             }
 
-            SceneBoundUI.EndBossIntro(0.35f);
-            PlayerHUDV2.Instance?.ShowHUD(this, 0.35f);
+            OcultablesDeCinematica.MostrarTodos(this);
 
             if (PlayerLockService.HasInstance) PlayerLockService.Instance.Release(this);
 

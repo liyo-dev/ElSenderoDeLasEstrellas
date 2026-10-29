@@ -161,11 +161,11 @@ namespace Game.NPC.States
             }
 
             // 3c. Oficio ambiental: va a su ruta de trabajo antes de plantearse vagar.
-            if (_rutaDeTrabajo != null && !context.IsPinnedByParty)
+            if (_rutaDeTrabajo != null && !context.EstaAnclado)
                 return new WorkState(_rutaDeTrabajo);
 
             // 4. Lógica de Patrulla (Wander) - bloqueada si el NPC está anclado por el sistema de party
-            if (context.Config != null && context.Config.enableWander && !context.IsPinnedByParty)
+            if (context.Config != null && context.Config.enableWander && !context.EstaAnclado)
             {
                 if (_idleTimer >= _idleDuration)
                 {
@@ -183,7 +183,7 @@ namespace Game.NPC.States
         /// </summary>
         private static NPCWorkRoute BuscarRutaDeTrabajo(NPCStateContext context)
         {
-            if (context.IsPinnedByParty) return null;
+            if (context.EstaAnclado) return null;
 
             var ambient = context.Config?.ambientConfig;
             if (ambient == null || !ambient.permitirTrabajo || string.IsNullOrEmpty(ambient.puestoId))

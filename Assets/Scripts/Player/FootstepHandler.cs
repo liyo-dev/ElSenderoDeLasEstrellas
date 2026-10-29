@@ -46,6 +46,12 @@ namespace Game.Player
         private bool _rightDescending;
         private Vector3 _lastStepRootPos;
         private bool _hasStep;
+        private Vector3 _raizAnterior;
+        private bool _hayRaizAnterior;
+
+        /// Más que esto en un fotograma no es andar: es que lo han colocado en otro sitio (una
+        /// cinemática que cambia de escena, un teletransporte). Ver INC-866.
+        private const float SaltoDeColocacion = 1f;
 
         private readonly RaycastHit[] _hitBuffer = new RaycastHit[1];
 
@@ -73,6 +79,23 @@ namespace Game.Player
         {
             float dt = Time.deltaTime;
             if (dt <= 0f) return;
+
+            // Si lo acaban de colocar en otro sitio, los pies «bajan» al ponerse en su pose nueva
+            // (sentarse, el suelo de la nueva posición) y sonaba una pisada: la distancia desde la
+            // última pisada se cuenta desde aquí, y los pies parten de donde están.
+            Vector3 raiz = transform.position;
+            if (_hayRaizAnterior && (raiz - _raizAnterior).sqrMagnitude > SaltoDeColocacion * SaltoDeColocacion)
+            {
+                _lastStepRootPos = raiz;
+                _hasStep = true;
+                _leftDescending = _rightDescending = false;
+                if (_leftFoot != null) _leftPrevY = _leftFoot.position.y;
+                if (_rightFoot != null) _rightPrevY = _rightFoot.position.y;
+                _raizAnterior = raiz;
+                return;
+            }
+            _raizAnterior = raiz;
+            _hayRaizAnterior = true;
 
             CheckFoot(_leftFoot, ref _leftPrevY, ref _leftDescending, dt);
             CheckFoot(_rightFoot, ref _rightPrevY, ref _rightDescending, dt);

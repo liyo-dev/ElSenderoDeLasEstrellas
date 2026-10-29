@@ -218,7 +218,7 @@ public static class TeleportRegistry
     {
         try
         {
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset != null)
             {
                 preset.unlockedTeleportPoints = ToSaveData();

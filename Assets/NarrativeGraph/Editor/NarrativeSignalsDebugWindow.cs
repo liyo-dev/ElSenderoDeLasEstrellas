@@ -5,11 +5,11 @@ using UnityEngine;
 
 /// <summary>
 /// Ventana de debug para monitorizar en tiempo real todos los eventos de DefaultNarrativeSignals.
-/// Abre desde Window > Narrativa > Signal Monitor.
+/// Se abre desde Tools ▸ Narrative Graph ▸ Monitor de señales.
 /// </summary>
 public class NarrativeSignalsDebugWindow : EditorWindow
 {
-    [MenuItem("El Sendero/Narrativa/Signal Monitor")]
+    [MenuItem("Tools/Narrative Graph/Monitor de señales")]
     static void Open() => GetWindow<NarrativeSignalsDebugWindow>("Signal Monitor");
 
     // ── Colores por estado ────────────────────────────────────────
@@ -234,7 +234,7 @@ public class NarrativeSignalsDebugWindow : EditorWindow
     static string ShortCaller(string caller)
     {
         if (string.IsNullOrEmpty(caller)) return "";
-        // "NPCInteractiveNarrativeExecutor.SendNarrativeEvent()  [File.cs:1455]"
+        // "MiComponente.Emitir()  [MiComponente.cs:120]"
         // → mostrar solo hasta el primer "[" para la columna corta
         int bracket = caller.IndexOf('[');
         return bracket > 0 ? caller.Substring(0, bracket).TrimEnd() : caller;

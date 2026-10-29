@@ -59,9 +59,11 @@ public static class PrologoPostprocesoSueno
         ArchivarPerfilSinUso();
     }
 
+    /// Crea los perfiles de día, amenaza y clímax solo si faltan: una vez creados, se ajustan en el
+    /// propio asset y la preparación del prólogo no los vuelve a tocar.
     public static void CrearPerfiles()
     {
-        CrearDia();
+        if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(Dia) == null) CrearDia();
         if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(Amenaza) == null) Crear(Amenaza, 1);
         if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(Climax) == null) Crear(Climax, 2);
         AssetDatabase.SaveAssets();

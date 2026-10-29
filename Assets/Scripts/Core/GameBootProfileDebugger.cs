@@ -185,15 +185,15 @@ public class GameBootProfileDebugger : MonoBehaviour
         {
             DrawPresetInfo("Default Preset", profile.defaultPlayerPreset);
             DrawPresetInfo("Boot Preset", profile.bootPreset);
-            DrawPresetInfo("Runtime Preset (activo)", profile.runtimePreset, isActive: true);
+            DrawPresetInfo("Partida en curso", Partida.PresetEnMemoria, isActive: true);
         });
 
         // === SECCIÓN: Estado Runtime Actual ===
-        if (profile.runtimePreset)
+        if (Partida.PresetEnMemoria)
         {
             DrawSection("Estado Runtime Actual", () =>
             {
-                var p = profile.runtimePreset;
+                var p = Partida.PresetEnMemoria;
                 
                 DrawKeyValue("Spawn Anchor", p.spawnAnchorId ?? "(sin definir)");
                 DrawKeyValue("Level", p.level.ToString());
@@ -320,12 +320,12 @@ public class GameBootProfileDebugger : MonoBehaviour
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("🔄 Update Runtime from State"))
             {
-                profile.UpdateRuntimePresetFromCurrentState();
+                Partida.VolcarEstadoDelJuego();
                 LogOperation("Update Runtime", "Sincronizado con sistemas vivos", LogType.Log);
             }
             if (GUILayout.Button("💾 Force Save"))
             {
-                if (saveSystem && profile.SaveCurrentGameState(saveSystem, SaveRequestContext.Manual))
+                if (saveSystem && Partida.Guardar(saveSystem, SaveRequestContext.Manual))
                 {
                     LogOperation("Force Save", "Guardado manual ejecutado", LogType.Log);
                 }
@@ -339,7 +339,7 @@ public class GameBootProfileDebugger : MonoBehaviour
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("📂 Load Save"))
             {
-                if (saveSystem && profile.LoadProfile(saveSystem))
+                if (saveSystem && Partida.Cargar(saveSystem))
                 {
                     LogOperation("Load Save", "Carga exitosa", LogType.Log);
                 }

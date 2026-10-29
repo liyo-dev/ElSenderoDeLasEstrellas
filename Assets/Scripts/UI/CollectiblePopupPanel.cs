@@ -3,6 +3,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+/// <summary>
+/// Un aviso de «objeto conseguido» de la pila de <see cref="CollectiblePopupQueue"/>: entra con
+/// una pequeña escala, se ve unos segundos (más si se le suma cantidad) y se desvanece. Mientras
+/// está congelado (la cola ha perdido el turno por un menú o una cinemática), su tiempo no corre.
+/// </summary>
 [RequireComponent(typeof(CanvasGroup))]
 public class CollectiblePopupPanel : MonoBehaviour
 {
@@ -15,159 +20,81 @@ public class CollectiblePopupPanel : MonoBehaviour
     [SerializeField] private float fadeOutDuration = 0.2f;
 
     [Header("Slide")]
-    [SerializeField] private float slideDistance = 24f;
     [SerializeField] private float slideInDuration = 0.18f;
 
     [Header("Layout")]
     [SerializeField] private float minPreferredHeight = 100f;
-    
+
     [Header("Safety")]
-    [Tooltip("Timeout máximo de seguridad para destruir el popup si algo falla (segundos)")]
+    [Tooltip("Tiempo máximo (segundos a la vista) antes de retirar el aviso aunque se le siga sumando cantidad.")]
     [SerializeField] private float maxLifetime = 10f;
 
     private CanvasGroup _cg;
 
-    // Runtime state for aggregation
     private string _itemId;
     private string _itemName;
     private int _currentAmount;
     private float _displayDuration;
-    private float _expiryTime;
-    private float _creationTime;
+    // Segundos a la vista que le quedan y que lleva en total; solo avanzan sin congelar.
+    private float _restante;
+    private float _vivido;
+    private bool _congelado;
+
+    /// Se dispara al destruirse el aviso (acabado o retirado).
+    public event System.Action<CollectiblePopupPanel> Acabado;
+
+    public string ItemId => _itemId;
 
     void Awake()
     {
         _cg = GetComponent<CanvasGroup>();
-        if (_cg == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ El GameObject '{gameObject.name}' no tiene componente CanvasGroup - añadiéndolo automáticamente");
-#endif
-            _cg = gameObject.AddComponent<CanvasGroup>();
-        }
+        if (_cg == null) _cg = gameObject.AddComponent<CanvasGroup>();
     }
 
-    public string ItemId => _itemId;
+    void OnDestroy()
+    {
+        Acabado?.Invoke(this);
+        Acabado = null;
+    }
 
     public void Init(ItemData item, int amount, float displayDuration)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] Init called for {item?.displayName} amount={amount} displayDuration={displayDuration}");
-#endif
-
         _itemId = item != null ? (item.itemId ?? item.displayName) : "__null__";
         _itemName = item != null ? item.GetLocalizedName() : "";
         _currentAmount = amount;
         _displayDuration = displayDuration;
-        _creationTime = Time.realtimeSinceStartup;
+        _restante = displayDuration;
+        _vivido = 0f;
 
-        var rt = transform as RectTransform;
+        if (nameText != null) nameText.text = _itemName;
+        if (iconImage != null) iconImage.sprite = item != null ? item.icon : null;
+        ActualizarCantidad();
 
-        if (item != null)
-        {
-            if (nameText == null)
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[CollectiblePopupPanel] nameText is not assigned on prefab.");
-                #endif
-            }
-            else nameText.text = _itemName;
-
-            if (iconImage == null)
-            {
-                #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[CollectiblePopupPanel] iconImage is not assigned on prefab.");
-                #endif
-            }
-            else iconImage.sprite = item.icon;
-        }
-        else
-        {
-            if (nameText != null) nameText.text = "";
-            if (iconImage != null) iconImage.sprite = null;
-        }
-
-        if (amountText == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CollectiblePopupPanel] amountText is not assigned on prefab.");
-#endif
-        }
-        else ActualizarCantidad();
-
-        // Ensure LayoutElement exists and provides a preferred height so the VerticalLayoutGroup can size children correctly
-        LayoutElement le = GetComponent<LayoutElement>();
-        if (le == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ El GameObject '{gameObject.name}' no tiene componente LayoutElement - añadiéndolo automáticamente");
-#endif
-            le = gameObject.AddComponent<LayoutElement>();
-        }
-
-        // La altura del prefab puede ser provisional; la tarjeta visible mide 100 unidades.
+        // El VerticalLayoutGroup del contenedor necesita una altura preferida para colocarlo.
+        var le = GetComponent<LayoutElement>();
+        if (le == null) le = gameObject.AddComponent<LayoutElement>();
         le.preferredHeight = Mathf.Max(100f, minPreferredHeight);
-
-        // Force rebuild of parent layout so the layout system accounts for the preferredHeight immediately
-        if (rt != null && rt.parent is RectTransform parentRect)
-        {
+        if (transform.parent is RectTransform parentRect)
             LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-        }
 
-        // Make sure it's active and visible
-        if (!gameObject.activeInHierarchy)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[CollectiblePopupPanel] GameObject not activeInHierarchy - activating");
-#endif
-            gameObject.SetActive(true);
-        }
-        
-        // Asegurar que el componente esté habilitado para ejecutar coroutines
-        if (!enabled)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CollectiblePopupPanel] Componente deshabilitado en {gameObject.name} - habilitándolo");
-#endif
-            enabled = true;
-        }
+        if (!gameObject.activeInHierarchy) gameObject.SetActive(true);
+        if (!enabled) enabled = true;
 
         if (_cg != null) _cg.alpha = 0f;
-
-        // set expiry
-        _expiryTime = Time.realtimeSinceStartup + _displayDuration;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] Init() completado para {_itemId}, llamando a StartCoroutine(PlayLifecycle) - expiry: {_expiryTime}");
-#endif
         StartCoroutine(PlayLifecycle());
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] StartCoroutine(PlayLifecycle) llamado para {_itemId}");
-#endif
-    }
-    
-    void OnDestroy()
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] OnDestroy() llamado para {_itemId}");
-#endif
     }
 
-    /// <summary>
-    /// Adds amount to the popup (called when we want to aggregate multiple quick pickups).
-    /// Extends the visible time.
-    /// </summary>
+    /// <summary>Suma cantidad al aviso (otra entrada del mismo objeto) y alarga su tiempo en pantalla.</summary>
     public void AddAmount(int extra)
     {
         if (extra <= 0) return;
         _currentAmount += extra;
         ActualizarCantidad();
-        // extend expiry
-        _expiryTime = Time.realtimeSinceStartup + _displayDuration;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] AddAmount called for {_itemId}, newAmount={_currentAmount}, extended expiry by {_displayDuration}s");
-#endif
+        _restante = _displayDuration;
     }
+
+    /// <summary>Para (o reanuda) el tiempo en pantalla mientras la pila no está a la vista.</summary>
+    public void Congelar(bool congelado) => _congelado = congelado;
 
     private void ActualizarCantidad()
     {
@@ -181,99 +108,41 @@ public class CollectiblePopupPanel : MonoBehaviour
 
     private IEnumerator PlayLifecycle()
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] PlayLifecycle START for {_itemId}");
-#endif
-        
-        // Wait a frame so layout groups can place this element correctly
+        // Un frame para que el layout del contenedor lo coloque.
         yield return null;
-        Canvas.ForceUpdateCanvases();
 
         var rt = transform as RectTransform;
-        if (rt != null)
-        {
-            rt.localScale = Vector3.one * 0.85f;
-        }
+        if (rt != null) rt.localScale = Vector3.one * 0.85f;
 
         float t = 0f;
-        // animate slide + scale + fade in
         while (t < slideInDuration)
         {
             t += Time.unscaledDeltaTime;
             float f = Mathf.Clamp01(t / slideInDuration);
-            float sf = Mathf.SmoothStep(0f, 1f, f);
-            if (rt != null)
-            {
-                rt.localScale = Vector3.Lerp(Vector3.one * 0.85f, Vector3.one, sf);
-            }
-            if (_cg != null) _cg.alpha = Mathf.Lerp(0f, 1f, f);
+            if (rt != null) rt.localScale = Vector3.Lerp(Vector3.one * 0.85f, Vector3.one, Mathf.SmoothStep(0f, 1f, f));
+            if (_cg != null) _cg.alpha = f;
             yield return null;
         }
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] Fade in complete for {_itemId}, waiting until expiry ({_expiryTime})");
-#endif
-        
-        // Wait visible until expiry time (which may be extended by AddAmount calls)
-        float startWaitTime = Time.realtimeSinceStartup;
-        float logTimer = 0f;
-        while (Time.realtimeSinceStartup < _expiryTime)
+        while (_restante > 0f && _vivido < maxLifetime)
         {
-            // ✅ SAFETY: Timeout máximo para evitar que se queden permanentemente
-            float lifetime = Time.realtimeSinceStartup - _creationTime;
-            if (lifetime >= maxLifetime)
+            if (!_congelado)
             {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning($"[CollectiblePopupPanel] ⚠️ {_itemId} alcanzó el timeout máximo de {maxLifetime}s, forzando destrucción");
-#endif
-                break;
-            }
-            
-            logTimer += Time.unscaledDeltaTime;
-            if (logTimer >= 1f) // Log cada segundo
-            {
-                float remaining = _expiryTime - Time.realtimeSinceStartup;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[CollectiblePopupPanel] {_itemId} still waiting, {remaining:F1}s remaining until expiry (lifetime: {lifetime:F1}s)");
-#endif
-                logTimer = 0f;
+                _restante -= Time.unscaledDeltaTime;
+                _vivido += Time.unscaledDeltaTime;
             }
             yield return null;
         }
 
-        float totalWaitTime = Time.realtimeSinceStartup - startWaitTime;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] Expiry reached for {_itemId} after {totalWaitTime:F2}s, starting fade out");
-#endif
-
-        // fade out
         t = 0f;
         float startAlpha = _cg != null ? _cg.alpha : 1f;
         while (t < fadeOutDuration)
         {
-            t += Time.unscaledDeltaTime;
-            float f = Mathf.Clamp01(t / fadeOutDuration);
-            if (_cg != null) _cg.alpha = Mathf.Lerp(startAlpha, 0f, f);
+            if (!_congelado) t += Time.unscaledDeltaTime;
+            if (_cg != null) _cg.alpha = Mathf.Lerp(startAlpha, 0f, Mathf.Clamp01(t / fadeOutDuration));
             yield return null;
         }
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupPanel] Fade out complete for {_itemId}, destroying GameObject");
-#endif
-        
-        // Asegurar que el GameObject existe antes de destruirlo
-        if (gameObject != null)
-        {
-            Destroy(gameObject);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[CollectiblePopupPanel] GameObject destroyed for {_itemId}");
-#endif
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[CollectiblePopupPanel] GameObject was already null for {_itemId}");
-#endif
-        }
+        Destroy(gameObject);
     }
 }

@@ -759,13 +759,13 @@ public abstract class CinematicSequencerBase : MonoBehaviour
             return false;
         }
 
-        var preset = GameBootService.Profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         return preset != null && preset.flags != null && preset.flags.Contains($"CINEMATIC_SEEN:Cinematic_{id}");
     }
 
     protected static void MarkCinematicAsSeen(string id)
     {
-        var preset = GameBootService.Profile != null ? GameBootService.Profile.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset == null) return;
         if (preset.flags == null) preset.flags = new System.Collections.Generic.List<string>();
         string flag = $"CINEMATIC_SEEN:Cinematic_{id}";

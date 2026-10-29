@@ -1675,6 +1675,206 @@
         {
             "key": "DLG_ERIKA_VICTORIA_03",
             "value": "Y no lo pierdas por el camino."
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_INICIO",
+            "value": "¡Will! ¡El Sendero se derrumba detrás de nosotros! ¡Abre camino hacia el Umbral!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_COLAPSO_CERCA",
+            "value": "¡Will! ¡El vacío cósmico está justo detrás! ¡No te detengas!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_CRISTALES",
+            "value": "¡Will! ¡Los cristales del Sendero bloquean el camino! ¡Usa tus ataques para destruirlos!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_OBSIDIANA",
+            "value": "¡Un derrumbe de obsidiana astral! ¡Will, usa tu magia para destruirlo!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_SELLO",
+            "value": "¡El paso al Umbral está sellado! ¡Activa la Runa del Megalito!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_ANTESALA",
+            "value": "¡Will! ¡El Umbral de la Tierra! ¡Crucemos el portal!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_CRISTALES_ROTOS",
+            "value": "¡Bien hecho, Will! ¡Camino despejado! ¡Vamos!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_OBSIDIANA_ROTA",
+            "value": "¡Buen disparo! ¡Liam, ya casi lo logramos!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_SELLO_ABIERTO",
+            "value": "¡El sello se ha disipado! ¡Corre al Umbral de la Tierra!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_WILL_SALIMOS",
+            "value": "¡Lo hemos conseguido... Hemos salido!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_INICIO",
+            "value": "¡El Sendero colapsa! ¡Abre paso a Estela para que cruce con Liam!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_CRISTALES",
+            "value": "¡Destruye la barrera de cristales astrales para abrir paso!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_OBSIDIANA",
+            "value": "¡Dispara magia para destruir la barrera de obsidiana!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_SELLO",
+            "value": "¡Golpea la Runa del Megalito para abrir el paso al Umbral!"
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_01",
+            "value": "No os alejéis demasiado, que luego cuesta reagruparse."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_02",
+            "value": "Con estos huesos, cada paso cuenta el doble que antes."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_03",
+            "value": "Este camino... me recuerda a otros que ya no debería recordar tan bien."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_04",
+            "value": "Mientras sigamos juntos, todo irá bien. Eso digo yo, al menos."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_01",
+            "value": "Un momento... ¿dónde he dejado el báculo?"
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_02",
+            "value": "Juraría que lo llevaba en la otra mano."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_03",
+            "value": "Ah, no, aquí está. Falsa alarma."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_04",
+            "value": "A mi edad, hasta uno mismo se pierde de vista."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_01",
+            "value": "¿Cuánto queda para llegar?"
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_02",
+            "value": "Todo esto sigue pareciéndome raro, la verdad."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_03",
+            "value": "Menos mal que no vengo solo en esto."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_04",
+            "value": "A veces creo que ya he estado en un sitio así antes... no sé por qué."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_01",
+            "value": "¿Dónde habré puesto esto...?"
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_02",
+            "value": "Juraría que lo tenía aquí mismo."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_03",
+            "value": "Qué manía tengo de perderlo todo."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_04",
+            "value": "Un momento... no, nada, falsa alarma."
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_01",
+            "value": "¿Cuánto queda ya?"
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_02",
+            "value": "Qué callados vais todos..."
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_03",
+            "value": "Se está bien caminando así, ¿eh?"
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_04",
+            "value": "Oye, ¿y si paramos a descansar un rato?"
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_01",
+            "value": "Tengo hambre..."
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_02",
+            "value": "¿Nadie más tiene hambre? Yo sí."
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_03",
+            "value": "Con lo bien que se comía en el último pueblo..."
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_01",
+            "value": "¡Me aburro! ¿Podemos hacer algo?"
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_02",
+            "value": "Esto es un rollo, ¿no os parece?"
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_03",
+            "value": "¿Ya hemos llegado? ¿Y ahora? ¿Y ahora?"
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_01",
+            "value": "¡Tengo hambre, no es mi culpa!"
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_02",
+            "value": "Un segundo más, pesado."
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_03",
+            "value": "Vale, vale, ya voy... qué genio."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_01",
+            "value": "Deberíamos ir más rápido."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_02",
+            "value": "..."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_03",
+            "value": "No hace falta comentar cada cosa que vemos, ¿sabéis?"
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_04",
+            "value": "Sigo pensando que hay una ruta mejor que esta."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_01",
+            "value": "Estela, levanta. No es el momento."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_02",
+            "value": "¿En serio? Ahora no, vamos."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_03",
+            "value": "Ya comerás luego. Arriba."
         }
     ]
 }

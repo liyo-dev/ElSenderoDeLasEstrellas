@@ -58,7 +58,7 @@ public sealed class CombatLabPartyPanel : MonoBehaviour, ISeccionDelLab
 
         if (GameBootService.Profile != null)
         {
-            _activePreset = GameBootService.Profile.GetActivePresetResolved();
+            _activePreset = Partida.Preset;
             if (_activePreset != null && _activePreset.partyMemberIds != null)
                 _savedPartyIds.AddRange(_activePreset.partyMemberIds);
         }

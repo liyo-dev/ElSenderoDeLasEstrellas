@@ -6,17 +6,18 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 /// <summary>
-/// Muestra un popup cuando se desbloquea una habilidad.
-/// Aparece en el lado derecho con animación DOTween y se cierra automáticamente.
-/// Solo aparece una vez por habilidad — el flag se persiste en el preset.
+/// Popup que entra por la derecha cuando se desbloquea una habilidad o un hechizo y se cierra
+/// solo. Cada uno sale una vez por partida (el flag se guarda en el preset).
 ///
-/// Implementa ISceneBoundUIHideGuard: mientras el popup está en pantalla (_isShowing == true),
-/// el SceneBoundUI de este mismo GameObject no lo apagará aunque un cambio de escena/cámara
-/// (viaje entre mundos, pantalla de carga, etc.) ocurra en ese instante — es información
-/// importante (ej. desbloqueo de "Bola Prisma" / "Llama Astral") y el jugador debe poder leerla
-/// sí o sí, sin depender de que el corte de cámara le dé tiempo.
+/// Es un aviso del canal Lateral (<see cref="ArbitroDeAvisos"/>): si llegan varios desbloqueos a
+/// la vez salen uno detrás de otro, y mientras hay un menú, una cinemática o la intro de un jefe
+/// esperan con la cuenta atrás parada.
+///
+/// Implementa ISceneBoundUIHideGuard: mientras el popup está en pantalla, el SceneBoundUI de este
+/// GameObject no lo apaga por un cambio de escena o de cámara; es información que el jugador
+/// tiene que poder leer.
 /// </summary>
-public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
+public class AbilityUnlockPopupUI : MonoBehaviour, IAvisoEnPantalla, ISceneBoundUIHideGuard
 {
     [Header("UI")]
     [SerializeField] private RectTransform popupRoot;
@@ -34,31 +35,44 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
     [SerializeField] private float slideOffscreenX = 450f;
     [SerializeField] private float animInDuration = 0.45f;
     [SerializeField] private float animOutDuration = 0.3f;
+    [Tooltip("Segundos que se ve cada popup (solo cuentan mientras está a la vista).")]
     [SerializeField] private float displayDuration = 3.5f;
 
-    private AbilityId? _pendingAbility;
-    private AbilityKey? _pendingAbilityKey;
-    private SpellId? _pendingSpell;
+    [Header("Turno")]
+    [Tooltip("Prioridad dentro del canal Lateral.")]
+    [SerializeField] private int prioridad = 10;
+
+    private struct Desbloqueo
+    {
+        public string titulo;
+        public string descripcion;
+        public Sprite icono;
+    }
+
+    private readonly Queue<Desbloqueo> _pendientes = new();
     private readonly HashSet<string> _shownFlags = new();
     private bool _flagsLoaded;
-    private Coroutine _autoDismissCoroutine;
-    private bool _isShowing;
-    // True si ShowPopup() ya preparó los textos/flag pero difirió AnimateIn() porque la intro de
-    // un boss estaba ocultando la UI persistente (ver SceneBoundUI.BeginBossIntro/EndBossIntro).
-    private bool _awaitingBossIntroEnd;
-    // Oculto temporalmente porque hay un menú (pausa, equipo, tienda...) abierto encima.
-    private bool _hiddenByMenu;
-    // SceneBoundUI del mismo GameObject (si lo tiene): se usa para liberar, vía
-    // ReapplySceneState(), un ocultado por cambio de escena que quedó pospuesto mientras
-    // BlocksSceneHide() devolvía true.
+    private Coroutine _cuentaCo;
+    // Hay un popup a medio enseñar: al recuperar el turno continúa donde estaba.
+    private bool _enCurso;
+    // Tiene el turno y nada lo tapa: la cuenta atrás corre.
+    private bool _aLaVista;
+    // El popup ocupa la pantalla (desde que entra hasta que acaba de salir).
+    private bool _enPantalla;
+    // SceneBoundUI del mismo GameObject: al terminar se le pide que aplique un ocultado por cambio
+    // de escena que quedó pospuesto mientras BlocksSceneHide() devolvía true.
     private SceneBoundUI _sceneBoundUI;
 
     const string AbilityFlagPrefix = "ABILITY_POPUP_ID:";
     const string AbilityKeyFlagPrefix = "ABILITY_POPUP_KEY:";
     const string SpellFlagPrefix = "SPELL_POPUP_ID:";
 
+    public CanalDeAviso Canal => CanalDeAviso.Lateral;
+    public int Prioridad => prioridad;
+    public bool Pasajero => true;
+
     /// <summary>ISceneBoundUIHideGuard: mientras el popup esté en pantalla, no se apaga por cambio de escena.</summary>
-    public bool BlocksSceneHide() => _isShowing;
+    public bool BlocksSceneHide() => _enPantalla;
 
     void Awake()
     {
@@ -74,13 +88,8 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         UnlockService.OnAbilityUnlocked += HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey += HandleAbilityUnlockedKey;
         UnlockService.OnSpellUnlocked += HandleSpellUnlocked;
-        SceneBoundUI.OnBossIntroStarted += HandleBossIntroStarted;
-        SceneBoundUI.OnBossIntroEnded += HandleBossIntroEnded;
-        // Mismo sistema que ya usan BossHealthBar/MinimapController: ocultarse mientras
-        // hay un menú abierto (pausa incluida) y restaurarse al cerrar el último.
-        MenuManager.MenuOpened += OnMenuOpened;
-        MenuManager.MenuClosed += OnMenuClosed;
         ReloadShownFlags();
+        if (_pendientes.Count > 0) ArbitroDeAvisos.Pedir(this);
     }
 
     void OnDisable()
@@ -89,16 +98,15 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
         UnlockService.OnAbilityUnlocked -= HandleAbilityUnlocked;
         UnlockService.OnAbilityUnlockedKey -= HandleAbilityUnlockedKey;
         UnlockService.OnSpellUnlocked -= HandleSpellUnlocked;
-        SceneBoundUI.OnBossIntroStarted -= HandleBossIntroStarted;
-        SceneBoundUI.OnBossIntroEnded -= HandleBossIntroEnded;
-        MenuManager.MenuOpened -= OnMenuOpened;
-        MenuManager.MenuClosed -= OnMenuClosed;
+        ArbitroDeAvisos.Terminar(this);
+        PararCuenta();
+        Recoger();
     }
 
     void OnDestroy()
     {
-        if (popupRoot != null) popupRoot.DOKill();
-        if (popupCanvasGroup != null) popupCanvasGroup.DOKill();
+        ArbitroDeAvisos.Terminar(this);
+        MatarTweens();
     }
 
     // ── Recarga de flags al cambiar de preset ──────────────────────────────────
@@ -113,147 +121,89 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     private void HandleAbilityUnlocked(AbilityId ability)
     {
-        GameLog.Log("AbilityUnlockPopupUI", $"Evento recibido: AbilityUnlocked({ability})");
-        _pendingAbility = ability;
-        _pendingAbilityKey = null;
-        _pendingSpell = null;
-        ShowPopup();
+        string flag = GetAbilityFlag(ability);
+        if (!MarcarSiEsNuevo(flag)) return;
+        var p = AbilityPresentationLookup.Resolve(ability, abilityPresentations);
+        Encolar(p.title, p.description, p.icon);
     }
 
     private void HandleAbilityUnlockedKey(AbilityKey key)
     {
-        // FIX 4 sep 2026 (petición de Raúl: "cuando hablo con Erika esta saliendo en el pop up lo
-        // del escudo y dijimos de quitarlo"): el Escudo se desbloquea automáticamente en el mismo
-        // instante que Bola Prisma, justo al ganar la batalla con Erika (ver
-        // PlayerShieldController.OnSpellUnlocked, INC-078). El desbloqueo funcional NO cambia (el
-        // jugador sigue obteniendo la protección de inmediato) — solo se suprime el popup de
-        // anuncio para esta habilidad en concreto, que Raúl ya había pedido quitar.
-        if (key == AbilityKey.Shield)
-        {
-            GameLog.Log("AbilityUnlockPopupUI", "Evento recibido: AbilityUnlockedKey(Shield) — popup suprimido a propósito (ver fix 4 sep 2026).");
-            return;
-        }
-
-        GameLog.Log("AbilityUnlockPopupUI", $"Evento recibido: AbilityUnlockedKey({key})");
-        _pendingAbilityKey = key;
-        _pendingAbility = null;
-        _pendingSpell = null;
-        ShowPopup();
+        string flag = GetAbilityKeyFlag(key);
+        if (!MarcarSiEsNuevo(flag)) return;
+        var p = AbilityPresentationKeyLookup.Resolve(key, abilityKeyPresentations);
+        Encolar(p.title, p.description, p.icon);
     }
 
     private void HandleSpellUnlocked(SpellId spell)
     {
-        GameLog.Log("AbilityUnlockPopupUI", $"Evento recibido: SpellUnlocked({spell})");
-        _pendingSpell = spell;
-        _pendingAbility = null;
-        _pendingAbilityKey = null;
-        ShowPopup();
+        string flag = GetSpellFlag(spell);
+        if (!MarcarSiEsNuevo(flag)) return;
+        var p = SpellPresentationLookup.Resolve(spell, spellPresentations);
+        Encolar(p.title, p.description, p.icon);
     }
 
-    // ── Lógica de popup ────────────────────────────────────────────────────────
-
-    private void ShowPopup()
+    /// True si el popup de este flag no había salido nunca (y lo marca como visto).
+    private bool MarcarSiEsNuevo(string flag)
     {
-        if (_pendingAbility == null && _pendingAbilityKey == null && _pendingSpell == null) return;
-        ReloadShownFlags();
+        if (HasSeenFlag(flag))
+        {
+            GameLog.Log("AbilityUnlockPopupUI", $"Ya mostrado ({flag}), saltando.");
+            return false;
+        }
+        MarkFlag(flag);
+        return true;
+    }
 
-        if (_pendingAbility != null)
+    private void Encolar(string titulo, string descripcion, Sprite icono)
+    {
+        _pendientes.Enqueue(new Desbloqueo { titulo = titulo, descripcion = descripcion, icono = icono });
+        ArbitroDeAvisos.Pedir(this);
+    }
+
+    // ── IAvisoEnPantalla ───────────────────────────────────────────────────────
+
+    public void AlTenerTurno()
+    {
+        _aLaVista = true;
+        if (_enCurso)
         {
-            string flag = GetAbilityFlag(_pendingAbility.Value);
-            if (HasSeenFlag(flag))
-            {
-                GameLog.Log("AbilityUnlockPopupUI", $"Ya mostrado ({flag}), saltando.");
-                _pendingAbility = null;
-                return;
-            }
-            var p = AbilityPresentationLookup.Resolve(_pendingAbility.Value, abilityPresentations);
-            MarkFlag(flag);
-            SetTexts(p.title, p.description, p.icon);
-        }
-        else if (_pendingAbilityKey != null)
-        {
-            string flag = GetAbilityKeyFlag(_pendingAbilityKey.Value);
-            if (HasSeenFlag(flag))
-            {
-                GameLog.Log("AbilityUnlockPopupUI", $"Ya mostrado ({flag}), saltando.");
-                _pendingAbilityKey = null;
-                return;
-            }
-            var p = AbilityPresentationKeyLookup.Resolve(_pendingAbilityKey.Value, abilityKeyPresentations);
-            MarkFlag(flag);
-            SetTexts(p.title, p.description, p.icon);
-        }
-        else if (_pendingSpell != null)
-        {
-            string flag = GetSpellFlag(_pendingSpell.Value);
-            if (HasSeenFlag(flag))
-            {
-                GameLog.Log("AbilityUnlockPopupUI", $"Ya mostrado ({flag}), saltando.");
-                _pendingSpell = null;
-                return;
-            }
-            var p = SpellPresentationLookup.Resolve(_pendingSpell.Value, spellPresentations);
-            MarkFlag(flag);
-            SetTexts(p.title, p.description, p.icon);
-        }
-        else
-        {
+            // Vuelve a entrar deslizándose, como la primera vez.
+            Entrar();
             return;
         }
-
-        if (SceneBoundUI.IsBossIntroActive)
-        {
-            // No animar durante la intro del boss: BeginBossIntro la dejaría a alpha 0 igualmente
-            // y el timer de AutoDismiss() correría en tiempo real mientras el popup es invisible.
-            // Esperar a OnBossIntroEnded para que aparezca ya con la escena/diálogo normal en marcha.
-            _awaitingBossIntroEnd = true;
-            GameLog.Log("AbilityUnlockPopupUI", "Intro de boss activa: difiriendo popup hasta que termine.");
-            return;
-        }
-
-        AnimateIn();
+        MostrarSiguiente();
     }
 
-    private void HandleBossIntroStarted()
+    public void AlPerderTurno()
     {
-        if (!_isShowing) return;
-        _awaitingBossIntroEnd = true;
-        HidePopup();
-    }
-
-    private void HandleBossIntroEnded()
-    {
-        if (!_awaitingBossIntroEnd) return;
-        _awaitingBossIntroEnd = false;
-        AnimateIn();
-    }
-
-    // ── MenuManager (pausa / cualquier menú) ────────────────────────────────────
-
-    /// <summary>Oculta el popup mientras haya un menú (pausa incluida) abierto encima.</summary>
-    private void OnMenuOpened(MenuKind kind)
-    {
-        if (!_isShowing || _hiddenByMenu || popupCanvasGroup == null) return;
-        _hiddenByMenu = true;
+        _aLaVista = false;
+        if (!_enCurso || popupCanvasGroup == null) return;
         popupCanvasGroup.DOKill();
         popupCanvasGroup.DOFade(0f, 0.15f).SetUpdate(true);
         popupCanvasGroup.blocksRaycasts = false;
     }
 
-    /// <summary>Restaura el popup al cerrarse el último menú abierto, si seguía en pantalla.</summary>
-    private void OnMenuClosed(MenuKind kind)
+    public void AlDescartar()
     {
-        if (!_hiddenByMenu) return;
-        if (MenuManager.AnyOpen()) return; // todavía queda otro menú abierto
-        _hiddenByMenu = false;
+        _aLaVista = false;
+        _pendientes.Clear();
+        PararCuenta();
+        if (_enCurso) AnimateOut();
+    }
 
-        if (!_isShowing || popupCanvasGroup == null) return;
-        popupRoot.DOKill();
-        popupRoot.anchoredPosition = new Vector2(slideOffscreenX, popupRoot.anchoredPosition.y);
-        popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
-        popupCanvasGroup.DOKill();
-        popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
-        popupCanvasGroup.blocksRaycasts = true;
+    private void MostrarSiguiente()
+    {
+        if (_pendientes.Count == 0 || popupRoot == null || !isActiveAndEnabled)
+        {
+            if (popupRoot == null) GameLog.Error("AbilityUnlockPopupUI", "popupRoot es null — asignar en el Inspector.");
+            _pendientes.Clear();
+            ArbitroDeAvisos.Terminar(this);
+            return;
+        }
+        var d = _pendientes.Dequeue();
+        SetTexts(d.titulo, d.descripcion, d.icono);
+        AnimateIn();
     }
 
     private void SetTexts(string title, string description, Sprite icon)
@@ -310,80 +260,94 @@ public class AbilityUnlockPopupUI : MonoBehaviour, ISceneBoundUIHideGuard
 
     private void AnimateIn()
     {
-        if (popupRoot == null)
-        {
-            GameLog.Error("AbilityUnlockPopupUI", "popupRoot es null — asignar en el Inspector.");
-            return;
-        }
-
-        GameLog.Log("AbilityUnlockPopupUI", $"AnimateIn — root activo: {gameObject.activeInHierarchy}, popupRoot activo: {popupRoot.gameObject.activeInHierarchy}");
-
-        if (_autoDismissCoroutine != null) StopCoroutine(_autoDismissCoroutine);
-        popupRoot.DOKill();
-        if (popupCanvasGroup != null) popupCanvasGroup.DOKill();
-
-        // Posicionar fuera de pantalla (derecha) y transparente
+        PararCuenta();
         popupRoot.gameObject.SetActive(true);
+        _enCurso = true;
+        _enPantalla = true;
+        Entrar();
+        _cuentaCo = StartCoroutine(Co_Cuenta());
+    }
+
+    // Desliza el popup desde fuera de la pantalla (derecha) hasta su sitio.
+    private void Entrar()
+    {
+        MatarTweens();
         popupRoot.anchoredPosition = new Vector2(slideOffscreenX, popupRoot.anchoredPosition.y);
-        if (popupCanvasGroup != null) popupCanvasGroup.alpha = 0f;
-
-        _isShowing = true;
-
-        if (MenuManager.AnyOpen())
+        popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
+        if (popupCanvasGroup != null)
         {
-            _hiddenByMenu = true;
-            if (popupCanvasGroup != null) popupCanvasGroup.alpha = 0f;
+            popupCanvasGroup.alpha = 0f;
+            popupCanvasGroup.blocksRaycasts = true;
+            popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
+        }
+    }
+
+    // El tiempo en pantalla solo corre mientras el popup está a la vista. Al acabar sale y, si
+    // hay otro desbloqueo pendiente, entra detrás sin soltar el turno.
+    private IEnumerator Co_Cuenta()
+    {
+        float visto = 0f;
+        while (visto < displayDuration)
+        {
+            if (_aLaVista) visto += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        AnimateOut();
+        if (_pendientes.Count > 0)
+        {
+            yield return new WaitForSecondsRealtime(animOutDuration);
+            _cuentaCo = null;
+            if (_aLaVista) MostrarSiguiente();
         }
         else
         {
-            _hiddenByMenu = false;
-            popupRoot.DOAnchorPosX(0f, animInDuration).SetEase(Ease.OutBack).SetUpdate(true);
-            if (popupCanvasGroup != null)
-                popupCanvasGroup.DOFade(1f, animInDuration * 0.7f).SetUpdate(true);
+            _cuentaCo = null;
+            ArbitroDeAvisos.Terminar(this);
         }
-
-        _autoDismissCoroutine = StartCoroutine(AutoDismiss());
     }
 
-    private IEnumerator AutoDismiss()
+    private void AnimateOut()
     {
-        float timer = 0f;
-        while (timer < displayDuration)
-        {
-            if (!_hiddenByMenu && !MenuManager.AnyOpen())
-            {
-                timer += Time.unscaledDeltaTime;
-            }
-            yield return null;
-        }
-        HidePopup();
-    }
+        _enCurso = false;
+        if (popupRoot == null) return;
 
-    public void HidePopup()
-    {
-        if (popupRoot == null || !_isShowing) return;
-
-        _isShowing = false;
-        _pendingAbility = null;
-        _pendingAbilityKey = null;
-        _pendingSpell = null;
-
-        if (_autoDismissCoroutine != null) { StopCoroutine(_autoDismissCoroutine); _autoDismissCoroutine = null; }
-
-        popupRoot.DOKill();
-        if (popupCanvasGroup != null) popupCanvasGroup.DOKill();
-
+        MatarTweens();
         popupRoot.DOAnchorPosX(slideOffscreenX, animOutDuration).SetEase(Ease.InBack).SetUpdate(true)
             .OnComplete(() =>
             {
+                if (_enCurso) return; // ya ha entrado el siguiente
                 if (popupRoot != null) popupRoot.gameObject.SetActive(false);
-                // Si un cambio de escena intentó apagar este objeto mientras el popup seguía en
-                // pantalla, SceneBoundUI lo pospuso (BlocksSceneHide() daba true). Ahora que ya
-                // terminó de mostrarse, se reintenta para que ese ocultado no se quede sin aplicar.
+                _enPantalla = false;
+                // Si un cambio de escena quiso apagar este objeto mientras el popup seguía en
+                // pantalla, SceneBoundUI lo pospuso: se reintenta ahora.
                 _sceneBoundUI?.ReapplySceneState();
             });
         if (popupCanvasGroup != null)
+        {
+            popupCanvasGroup.blocksRaycasts = false;
             popupCanvasGroup.DOFade(0f, animOutDuration).SetUpdate(true);
+        }
+    }
+
+    private void PararCuenta()
+    {
+        if (_cuentaCo != null) { StopCoroutine(_cuentaCo); _cuentaCo = null; }
+    }
+
+    // Deja el popup recogido sin animación (al desactivarse el objeto).
+    private void Recoger()
+    {
+        MatarTweens();
+        _enCurso = false;
+        _aLaVista = false;
+        _enPantalla = false;
+        if (popupRoot != null) popupRoot.gameObject.SetActive(false);
+    }
+
+    private void MatarTweens()
+    {
+        if (popupRoot != null) popupRoot.DOKill();
+        if (popupCanvasGroup != null) popupCanvasGroup.DOKill();
     }
 
     // ── Flags (persistencia de "ya mostrado") ──────────────────────────────────

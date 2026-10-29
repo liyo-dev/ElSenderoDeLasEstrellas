@@ -1675,6 +1675,206 @@
         {
             "key": "DLG_ERIKA_VICTORIA_03",
             "value": "And do not lose it along the way."
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_INICIO",
+            "value": "Will! The Path is collapsing behind us! Clear the way to the Threshold!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_COLAPSO_CERCA",
+            "value": "Will! The cosmic void is right behind us! Don't stop!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_CRISTALES",
+            "value": "Will! The Path's crystals are blocking the way! Use your attacks to destroy them!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_OBSIDIANA",
+            "value": "A landslide of astral obsidian! Will, use your magic to destroy it!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_SELLO",
+            "value": "The way to the Threshold is sealed! Activate the Megalith Rune!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_ANTESALA",
+            "value": "Will! The Threshold of the Earth! Let's go through the portal!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_CRISTALES_ROTOS",
+            "value": "Well done, Will! The way is clear! Let's go!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_OBSIDIANA_ROTA",
+            "value": "Nice shot! Liam, we're almost there!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_ESTELA_SELLO_ABIERTO",
+            "value": "The seal has faded! Run to the Threshold of the Earth!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_WILL_SALIMOS",
+            "value": "We made it... We're out!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_INICIO",
+            "value": "The Path is collapsing! Clear the way so Estela can cross with Liam!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_CRISTALES",
+            "value": "Destroy the barrier of astral crystals to clear the way!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_OBSIDIANA",
+            "value": "Shoot magic to destroy the obsidian barrier!"
+        },
+        {
+            "key": "ESCAPE_SENDERO_AYUDA_SELLO",
+            "value": "Strike the Megalith Rune to open the way to the Threshold!"
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_01",
+            "value": "Don't wander too far, it's hard to regroup afterwards."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_02",
+            "value": "With these old bones, every step counts twice what it used to."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_03",
+            "value": "This road... reminds me of others I shouldn't remember so well anymore."
+        },
+        {
+            "key": "IDLE_ELDRAN_COMENTARIO_04",
+            "value": "As long as we stay together, all will be well. Or so I say, at least."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_01",
+            "value": "Wait a moment... where did I leave my staff?"
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_02",
+            "value": "I could have sworn I had it in my other hand."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_03",
+            "value": "Ah, no, here it is. False alarm."
+        },
+        {
+            "key": "IDLE_ELDRAN_BACULO_04",
+            "value": "At my age, one even loses sight of oneself."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_01",
+            "value": "How much further is it?"
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_02",
+            "value": "All of this still feels strange to me, honestly."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_03",
+            "value": "Good thing I'm not doing this alone."
+        },
+        {
+            "key": "IDLE_WILL_COMENTARIO_04",
+            "value": "Sometimes I feel like I've been somewhere like this before... I don't know why."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_01",
+            "value": "Now where did I put this...?"
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_02",
+            "value": "I could have sworn I had it right here."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_03",
+            "value": "I always end up losing everything."
+        },
+        {
+            "key": "IDLE_WILL_REBUSCAR_04",
+            "value": "Wait a second... no, never mind, false alarm."
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_01",
+            "value": "Are we nearly there yet?"
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_02",
+            "value": "You're all so quiet..."
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_03",
+            "value": "It's nice walking like this, isn't it?"
+        },
+        {
+            "key": "IDLE_ESTELA_COMENTARIO_04",
+            "value": "Hey, what if we stopped to rest for a bit?"
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_01",
+            "value": "I'm hungry..."
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_02",
+            "value": "Isn't anyone else hungry? I am."
+        },
+        {
+            "key": "IDLE_ESTELA_HAMBRE_03",
+            "value": "The food was so good in that last village..."
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_01",
+            "value": "I'm bored! Can we do something?"
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_02",
+            "value": "This is so dull, don't you think?"
+        },
+        {
+            "key": "IDLE_ESTELA_ABURRIDA_03",
+            "value": "Are we there yet? How about now? Now?"
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_01",
+            "value": "I'm hungry, it's not my fault!"
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_02",
+            "value": "One more second, you pest."
+        },
+        {
+            "key": "IDLE_ESTELA_REPLICA_LIAM_03",
+            "value": "Okay, okay, I'm coming... what a temper."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_01",
+            "value": "We should move faster."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_02",
+            "value": "..."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_03",
+            "value": "We don't need to comment on everything we see, you know."
+        },
+        {
+            "key": "IDLE_LIAM_COMENTARIO_04",
+            "value": "I still think there's a better route than this one."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_01",
+            "value": "Estela, get up. Now's not the time."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_02",
+            "value": "Seriously? Not now, come on."
+        },
+        {
+            "key": "IDLE_LIAM_LEVANTA_ESTELA_03",
+            "value": "You can eat later. Up you get."
         }
     ]
 }

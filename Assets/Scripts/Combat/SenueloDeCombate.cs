@@ -3,11 +3,11 @@ using UnityEngine;
 
 /// Un aliado que puede atraer a un jefe (provocarle) para que el jugador le ataque por la espalda.
 /// Es el jefe quien decide cuándo va a por un señuelo (p. ej. GolemBossAI, «dos objetivos»);
-/// el señuelo solo se anuncia y aguanta: mientras le provocan no recibe daño (los aliados nunca
-/// lo reciben, ver CombatTargetProvider) y levanta su escudo (NPCShieldController, si tiene; si
-/// no, 'vfxProvocando'). Tiene que estar en el prefab del aliado, para que su Damageable (que se
-/// crea al arrancar) lo encuentre como regla de daño.
-/// Ver INC-489.
+/// el señuelo solo se anuncia y aguanta: mientras le provocan no recibe daño (es una regla de daño
+/// de su vida, el Damageable de su <see cref="CuerpoDelGrupo"/>; fuera de la provocación recibe
+/// los golpes como cualquier compañero) y levanta su escudo (NPCShieldController, si tiene; si
+/// no, 'vfxProvocando'). Va en el prefab del aliado, para que su cuerpo del grupo lo encuentre
+/// entre sus reglas de daño al prepararse. Ver INC-489, INC-717.
 [DisallowMultipleComponent]
 public sealed class SenueloDeCombate : MonoBehaviour, IFiltroDeDano
 {

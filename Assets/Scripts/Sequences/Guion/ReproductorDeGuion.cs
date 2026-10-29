@@ -105,7 +105,7 @@ public sealed class ReproductorDeGuion
             Avanzar(_t);
             yield return null;
             if (_ctx.RelojRetenido) continue;
-            float paso = Time.unscaledDeltaTime;
+            float paso = _ctx.RelojAlCompasDelTiempo ? Time.deltaTime : Time.unscaledDeltaTime;
             _t += paso > TironMaximo ? PasoTrasTiron : paso;
         }
         Avanzar(_g.duracion);
@@ -397,7 +397,18 @@ public sealed class ReproductorDeGuion
         private NavMeshAgent _agente;
         private bool _agenteEstabaActivo;
         private bool _manualMovimiento, _manualGiro;
-        private int _iAnim, _iCara, _iMirada;
+        private int _iAnim, _iCara, _iMirada, _iCabeza;
+        private int _cabezaAplicada = -1;
+        private DialogueHeadLook _cabeza;
+        private Transform _marcaDeCabeza;
+        private float _yawPrevio, _cortePrevio, _pesoPrevio;
+        private bool _alcanceCambiado;
+
+        // En las cinemáticas la cabeza llega más lejos que en una conversación (sentado se mira a
+        // quien está al lado) y se nota más; al soltar al actor se devuelve lo que tenía.
+        private const float YawDeCabeza = 65f;
+        private const float CorteDeCabeza = 45f;
+        private const float PesoDeCabeza = 0.85f;
         private float _rumbo;
         private bool _moviendo;
         private bool _visible = true;
@@ -452,6 +463,7 @@ public sealed class ReproductorDeGuion
 
         public void Soltar()
         {
+            SoltarCabeza();
             if (Actor?.Transform == null) return;
             if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
             if (Datos.visible != null && Datos.visible.Count > 0)
@@ -530,6 +542,8 @@ public sealed class ReproductorDeGuion
             _iAnim = 0;
             _iCara = 0;
             _iMirada = 0;
+            _iCabeza = 0;
+            _cabezaAplicada = -1;
             _moviendo = false;
             if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
             Actor.ReleasePose(true);
@@ -560,6 +574,8 @@ public sealed class ReproductorDeGuion
                 else Actor.SetEmotion(emocion);
             }
             while (_iMirada + 1 < Datos.miradas.Count && Datos.miradas[_iMirada + 1].t <= t) _iMirada++;
+            if (Datos.cabezas != null)
+                while (_iCabeza + 1 < Datos.cabezas.Count && Datos.cabezas[_iCabeza + 1].t <= t) _iCabeza++;
 
             // Posición: la del camino horneado, sin más.
             Vector3 velocidad = Vector3.zero;
@@ -595,6 +611,58 @@ public sealed class ReproductorDeGuion
             _rumbo = Mathf.MoveTowardsAngle(_rumbo, objetivo, (moviendo ? GiroAndando : GiroQuieto) * dt);
             tr.rotation = Quaternion.Euler(0f, _rumbo, 0f);
             Actor.SyncRotation();
+            ActualizarCabeza(t, moviendo, todos);
+        }
+
+        /// La cabeza, sin el cuerpo: hacia quien habla o hacia lo que pida el guion. Andando mira al
+        /// frente. Solo se toca al cambiar de clave: entre medias manda quien la haya cambiado
+        /// (un módulo que hace mirar a alguien en un momento concreto).
+        private void ActualizarCabeza(float t, bool moviendo, Dictionary<string, Interprete> todos)
+        {
+            if (Datos.cabezas == null || Datos.cabezas.Count == 0) return;
+            int clave = !moviendo && Datos.cabezas[_iCabeza].t <= t ? _iCabeza : -1;
+            if (clave == _cabezaAplicada) return;
+            _cabezaAplicada = clave;
+
+            Transform hacia = null;
+            if (clave >= 0)
+            {
+                var c = Datos.cabezas[clave];
+                if (c.tipo == TipoDeMirada.Actor && todos.TryGetValue(c.actor, out var otro) && otro.Actor?.Transform != null)
+                    hacia = otro.Actor.Transform;
+                else if (c.tipo == TipoDeMirada.Punto)
+                {
+                    if (_marcaDeCabeza == null) _marcaDeCabeza = new GameObject($"Guion · cabeza de {Datos.alias}").transform;
+                    _marcaDeCabeza.position = c.punto;
+                    hacia = _marcaDeCabeza;
+                }
+            }
+            if (hacia == null && _cabeza == null) return;
+            if (_cabeza == null)
+            {
+                _cabeza = Actor.Transform.GetComponent<DialogueHeadLook>();
+                if (_cabeza == null) _cabeza = Actor.Transform.gameObject.AddComponent<DialogueHeadLook>();
+            }
+            if (!_alcanceCambiado)
+            {
+                _alcanceCambiado = true;
+                _yawPrevio = _cabeza.MaxYaw; _cortePrevio = _cabeza.YawCutoffMargin; _pesoPrevio = _cabeza.MaxWeight;
+                _cabeza.FijarAlcance(YawDeCabeza, CorteDeCabeza, PesoDeCabeza);
+            }
+            _cabeza.SetTarget(hacia);
+        }
+
+        private void SoltarCabeza()
+        {
+            if (_cabeza != null)
+            {
+                _cabeza.SetTarget(null);
+                if (_alcanceCambiado) _cabeza.FijarAlcance(_yawPrevio, _cortePrevio, _pesoPrevio);
+            }
+            _alcanceCambiado = false;
+            _cabezaAplicada = -1;
+            if (_marcaDeCabeza != null) Object.Destroy(_marcaDeCabeza.gameObject);
+            _marcaDeCabeza = null;
         }
 
         private void Ejecutar(OrdenDeAnimacion o)

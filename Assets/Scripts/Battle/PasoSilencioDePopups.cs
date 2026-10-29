@@ -13,11 +13,11 @@ public sealed class PasoSilencioDePopups : IPasoDeCierre, IPasoConInicioDeBatall
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Registrar() => CierreDeBatalla.Registrar(new PasoSilencioDePopups());
 
-    public void Iniciar(ResultadoDeBatalla resultado) => CollectiblePopupQueue.Silenciar(this);
+    public void Iniciar(ResultadoDeBatalla resultado) => ArbitroDeAvisos.CerrarCanal(CanalDeAviso.Objetos, this);
 
     public IEnumerator Ejecutar(ResultadoDeBatalla resultado) => null;
 
-    public void Terminar(ResultadoDeBatalla resultado) => CollectiblePopupQueue.Reanudar(this);
+    public void Terminar(ResultadoDeBatalla resultado) => ArbitroDeAvisos.AbrirCanal(CanalDeAviso.Objetos, this);
 
-    public void Cancelar(ResultadoDeBatalla resultado) => CollectiblePopupQueue.Reanudar(this);
+    public void Cancelar(ResultadoDeBatalla resultado) => ArbitroDeAvisos.AbrirCanal(CanalDeAviso.Objetos, this);
 }

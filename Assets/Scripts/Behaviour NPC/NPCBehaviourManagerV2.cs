@@ -504,18 +504,11 @@ namespace Game.NPC
                 || _context.IsInteracting
                 || _context.ShouldSeekShelter
                 || IsAlly
-                // FIX (25 ago 2026) — "Will no camina ni anima, aparece a saltos cerca del
-                // jugador": IsAlly exige NPCPartyMember.IsInParty, pero el NPC instanciado de
-                // Will (ActiveCharacterSwapper.WillNpcInstance) sigue al jugador a propósito SIN
-                // pasar por PlayerParty.AddMember/JoinParty (ver comentario en
-                // NPCPartyMember.OnJoinedParty y en DialogueCinematicController). Sin este OR,
-                // solo Will podía quedarse "dormido" (EnterFarState desactiva el NavMeshAgent y
-                // se salta Brain.Update entero) si se alejaba lo suficiente antes de que el
-                // teletransporte de emergencia de PlayerParty.CheckMemberDistances lo alcanzara,
-                // mientras Liam/Estela (sí IsAlly) nunca dormían y por tanto seguían siempre con
-                // normalidad. IsActivelyFollowingPlayer cubre este caso — y cualquier otro
-                // compañero temporal futuro que use el mismo patrón — sin acoplar este chequeo a
-                // los detalles de PlayerParty.
+                // IsAlly exige NPCPartyMember.IsInParty, pero el NPC de Will cuando otro va al
+                // mando (ControlDelJugador.NpcDe) sigue al jugador sin pasar por JoinParty. Sin
+                // esto podría «dormirse» lejos (EnterFarState apaga el NavMeshAgent y Brain.Update)
+                // y reaparecer a saltos. IsActivelyFollowingPlayer cubre a cualquier compañero que
+                // siga al jugador sin estar en PlayerParty.
                 || _context.IsActivelyFollowingPlayer;
         }
 
@@ -1143,7 +1136,9 @@ namespace Game.NPC
         public bool TryGetStandingLine(out DialogueAsset dialogue)
         {
             dialogue = null;
-            return !string.IsNullOrEmpty(PersistenceId) && NarrativeStandingLines.TryFind(PersistenceId, out dialogue);
+            if (string.IsNullOrEmpty(PersistenceId) || !NarrativeStandingLines.TryFind(PersistenceId, out var frase)) return false;
+            dialogue = frase as DialogueAsset;
+            return dialogue != null;
         }
 
         public bool TryHandleInteraction(GameObject interactor)

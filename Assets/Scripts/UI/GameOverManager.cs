@@ -93,6 +93,9 @@ public class GameOverManager : MonoBehaviour
     private Camera _mainCamera;
     private float _originalFOV;
     private Tween _zoomTween;
+    private Tween _camaraLentaTween;
+    // Escala que pide ahora la cámara lenta de la muerte (la anima _camaraLentaTween).
+    private float _escalaPedida = 1f;
     private vThirdPersonCamera _thirdPersonCamera;
     private PlayerHealthSystem _deadPlayer;
 
@@ -173,6 +176,15 @@ public class GameOverManager : MonoBehaviour
     {
         _zoomTween?.Kill();
         _zoomTween = null;
+        SoltarCamaraLenta();
+    }
+
+    /// Para la rampa de cámara lenta y suelta su petición al árbitro del tiempo.
+    private void SoltarCamaraLenta()
+    {
+        _camaraLentaTween?.Kill();
+        _camaraLentaTween = null;
+        TimeScaleArbiterService.Release(this);
     }
 
     private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -191,7 +203,6 @@ public class GameOverManager : MonoBehaviour
 
         CleanupTweens();
         _isGameOverActive = false;
-        Time.timeScale = 1f;
 
         // Restaurar FOV si es necesario
         if (_mainCamera != null && _originalFOV > 0)
@@ -305,8 +316,8 @@ public class GameOverManager : MonoBehaviour
         // cortar a la transición, usando tiempo real porque Time.timeScale está modificado
         yield return WaitForPlayerToLand();
 
-        // 7. Restaurar Time.timeScale antes de preguntar
-        Time.timeScale = 1f;
+        // 7. Fuera la cámara lenta antes de preguntar
+        SoltarCamaraLenta();
 
         // 8. Continuar desde el último guardado o salir al menú
         OfrecerContinuar();
@@ -345,7 +356,7 @@ public class GameOverManager : MonoBehaviour
     /// mundo, deja los sistemas como en el guardado (el mismo «Continuar» del menú) y carga el mundo.
     private void ContinuarDesdeElGuardado()
     {
-        Time.timeScale = 1f;
+        SoltarCamaraLenta();
         SceneTransitionLoader.LoadWithOverlay(continueScene, loadingOverlayScene, () =>
         {
             GameBootService.ResetTransientSessionState();
@@ -464,10 +475,13 @@ public class GameOverManager : MonoBehaviour
         Debug.Log($"[GameOverManager] 🐌 Iniciando slow-mo: {Time.timeScale} -> {slowMotionScale} en {slowMotionRampDuration}s");
 #endif
         
-        // Usar DOTween para animar el timeScale
-        DOTween.To(
-            () => Time.timeScale,
-            x => Time.timeScale = x,
+        // La rampa pide cada paso al árbitro con esta misma clave: convive con las demás
+        // peticiones de tiempo en vez de escribir timeScale a mano.
+        _camaraLentaTween?.Kill();
+        TimeScaleArbiterService.TryGetRequest(this, out _escalaPedida);
+        _camaraLentaTween = DOTween.To(
+            () => _escalaPedida,
+            x => { _escalaPedida = x; TimeScaleArbiterService.Request(this, x); },
             slowMotionScale,
             slowMotionRampDuration
         ).SetEase(Ease.OutQuad).SetUpdate(true);
@@ -605,7 +619,6 @@ public class GameOverManager : MonoBehaviour
             Debug.LogError("[GameOverManager] ❌ No se pudo crear/encontrar ninguna instancia.");
 #endif
             // Fallback: cargar menú principal directamente
-            Time.timeScale = 1f;
             SceneManager.LoadScene("MainMenu");
             return;
         }

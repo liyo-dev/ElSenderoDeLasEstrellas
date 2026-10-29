@@ -54,22 +54,8 @@ public sealed class AudioService : MonoBehaviour
     float _gananciaDeVozDb;
     float _gananciaDeDuckingDb;
     float GananciaDeVozTotalDb => _gananciaDeVozDb + _gananciaDeDuckingDb;
-    readonly AudioGraphProfile.VoiceDuckSettings _duckCinematico = new()
-    {
-        musicDb = -8f, ambienceDb = -10f, sfxDb = -6f, voiceGainDb = 0f,
-        attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
-    };
     PresetDeVoz _presetDeVozActual = PresetDeVoz.Ninguno;
-    readonly AudioGraphProfile.VoiceDuckSettings _duckEpico = new()
-    {
-        musicDb = -6f, // Durante conjuros épicos la música se aparta lo justo: el lecho ritual va aparte
-        ambienceDb = -12f,
-        sfxDb = -4f,
-        voiceGainDb = 0f,
-        attackSeconds = 0.08f,
-        releaseSeconds = 0.65f,
-        holdAfterVoiceSeconds = 0.5f
-    };
+    // Ajustes de atenuación de la voz que suena; se eligen del perfil al lanzarla.
     AudioGraphProfile.VoiceDuckSettings _ajustesDeVozActiva;
     readonly Dictionary<string, Vector3> _mezclas = new();
     readonly float[] _muestrasDeVoz = new float[256];
@@ -102,15 +88,13 @@ public sealed class AudioService : MonoBehaviour
     readonly Dictionary<string, float> _duckRequests = new();
     readonly Dictionary<AudioSource, float> _sourceVolumes = new();
     readonly HashSet<AudioSource> _ambienceSources = new();
-    // Vuelta al pool de cada SFX de un solo uso, para poder cancelarla si el sonido se para antes
-    // de que termine (p. ej. una explosión que se alarga más que la secuencia).
-    readonly Dictionary<AudioSource, Coroutine> _sfxReturnRoutines = new();
-    readonly AudioGraphProfile.VoiceDuckSettings _defaultVoiceDuck = new();
     Coroutine _voiceDuckRoutine;
     uint _voiceToken;
     bool _voiceDuckActive, _applicationPaused;
-    AudioGraphProfile.VoiceDuckSettings VoiceDuck => _ajustesDeVozActiva ??
-        (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck);
+    // La atenuación bajo las voces solo se lee del perfil: sin perfil no hay atenuación.
+    AudioGraphProfile.VoiceDuckSettings VoiceDuck => _ajustesDeVozActiva ?? (profile != null ? profile.voiceDuck : null);
+    float AtaqueDeAtenuacion => VoiceDuck?.attackSeconds ?? 0f;
+    float RelajacionDeAtenuacion => VoiceDuck?.releaseSeconds ?? 0f;
     bool _battleActive;
     // FIX (5 sep 2026): id de la batalla cuya música está activa ahora mismo. Ver guard
     // en BeginBattleMusic() — BATTLE_START:{id} llega dos veces por diseño (señal narrativa
@@ -734,71 +718,15 @@ public sealed class AudioService : MonoBehaviour
             return;
         }
         
-        // Restaurar loop
+        // La música del minijuego puede no hacer bucle; la del lugar sí.
         _musicA.loop = true;
         _musicB.loop = true;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AudioService] 🔄 Loop restaurado en AudioSources de música después de minijuego");
-#endif
-        
-        // PRIORIDAD 1: Si hay una AmbientZone activa, restaurar su música
-        var activeAmbientZone = AmbientZone.CurrentActiveZone;
-        if (activeAmbientZone != null && !string.IsNullOrEmpty(activeAmbientZone.MusicZoneId))
-        {
-            var zoneRule = profile?.GetAmbientZoneRule(activeAmbientZone.MusicZoneId);
-            if (zoneRule?.music != null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[AudioService] Restaurando música de AmbientZone '{activeAmbientZone.MusicZoneId}' después de minijuego");
-#endif
-                PlayMusic(zoneRule.music, r.fade);
-                if (_musicStack.Count > 0) _musicStack.Pop();
-                _minigameActive = false;
-                return;
-            }
-        }
-        
-        // PRIORIDAD 2: Restaurar música del stack o de la escena
         if (_musicStack.Count > 0) _musicStack.Pop();
-        
-        if (!RestoreSceneMusic(r.fade))
-        {
-            StopMusic(r.fade);
-        }
         _minigameActive = false;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[AudioService] 🎮 Música de minijuego '{r.minigameId}' finalizada, música restaurada");
-#endif
-    }
-    
-    /// <summary>
-    /// Inicia la música de un minijuego por ID (llamado manualmente si no se usa señales)
-    /// </summary>
-    public void BeginMinigameById(string minigameId)
-    {
-        var rule = profile?.GetMinigameRule(minigameId);
-        if (rule != null)
-        {
-            BeginMinigameMusic(rule);
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[AudioService] No se encontró regla de música para minijuego '{minigameId}'");
-#endif
-        }
-    }
-    
-    /// <summary>
-    /// Finaliza la música de un minijuego por ID (llamado manualmente si no se usa señales)
-    /// </summary>
-    public void EndMinigameById(string minigameId)
-    {
-        var rule = profile?.GetMinigameRule(minigameId);
-        if (rule != null)
-        {
-            OnMinigameEndRestoreMusic(rule);
-        }
+
+        // Como al acabar un combate: la música del lugar (zona, interior o escena) se pide, no
+        // se pone, para que una cinemática que venga detrás entre directamente con la suya.
+        PedirMusicaDelLugar(r.fade);
     }
     
     // --- Helpers para lookup de batallas por id (exacto y fallback substring) ---
@@ -959,9 +887,18 @@ public sealed class AudioService : MonoBehaviour
         if (fuente != null && fuente.clip != null && fuente.isPlaying)
             _posicionesDeMusica[fuente.clip] = fuente.timeSamples;
     }
-    public void PlayMusic(AudioClip clip, float fadeSeconds = -1f, bool continuarDondeIba = true)
+    /// <param name="desdeSegundo">Si es 0 o más, la pista arranca en ese segundo (manda sobre
+    /// <paramref name="continuarDondeIba"/>). Sirve para que el clímax de un tema caiga en un
+    /// momento concreto de una cinemática. Ver INC-864.</param>
+    public void PlayMusic(AudioClip clip, float fadeSeconds = -1f, bool continuarDondeIba = true, float desdeSegundo = -1f)
     {
         if (!clip) return;
+        // Un tema que se acaba no vuelve a empezar al terminar (SequenceRule.sinBucle).
+        bool bucle = profile == null || !profile.EsTemaQueAcaba(clip);
+        int muestraPedida = desdeSegundo >= 0f
+            ? Mathf.Clamp(Mathf.RoundToInt(desdeSegundo * clip.frequency), 0, Mathf.Max(0, clip.samples - 1))
+            : -1;
+        if (muestraPedida >= 0) continuarDondeIba = true;
         CancelarMusicaDelLugarPendiente();
         if (clip != _jingleSonando) _jingleSonando = null;
         if (fadeSeconds < 0f) fadeSeconds = defaultFade;
@@ -977,6 +914,12 @@ public sealed class AudioService : MonoBehaviour
             if (current.clip == clip) current.timeSamples = 0;
             if (other.clip == clip) other.timeSamples = 0;
         }
+        else if (muestraPedida >= 0)
+        {
+            _posicionesDeMusica[clip] = muestraPedida;
+            if (current.clip == clip) current.timeSamples = muestraPedida;
+            if (other.clip == clip) other.timeSamples = muestraPedida;
+        }
 
         // 1) Si YA está sonando este mismo clip, no reiniciamos.
         //    Solo aseguramos volumen (con ducking aplicado) y salimos.
@@ -984,6 +927,7 @@ public sealed class AudioService : MonoBehaviour
         {
             float target = 1f;
 
+            current.loop = bucle;
             // si por lo que sea está parado (pausa/crossfade previo), reanudar sin resetear tiempo
             if (!current.isPlaying)
                 current.Play();
@@ -1012,6 +956,7 @@ public sealed class AudioService : MonoBehaviour
         if (other.clip == clip && other.isPlaying)
         {
             float target = 1f;
+            other.loop = bucle;
             StopMusicCoroutines();
 
             // BUGFIX: 'other' es la fuente que de verdad queremos activa a partir de ahora.
@@ -1046,6 +991,7 @@ public sealed class AudioService : MonoBehaviour
         RecordarMusica(to);
         to.Stop();
         to.clip = clip;
+        to.loop = bucle;
         SetSourceVolume(to, 0f);
         to.timeSamples = continuarDondeIba && _posicionesDeMusica.TryGetValue(clip, out int muestra)
             ? Mathf.Clamp(muestra, 0, Mathf.Max(0, clip.samples - 1)) : 0;
@@ -1141,14 +1087,14 @@ public sealed class AudioService : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(source)) return;
         _duckRequests[source] = DbMultiplier(db);
-        RefreshDuck(VoiceDuck.attackSeconds);
+        RefreshDuck(AtaqueDeAtenuacion);
     }
 
     /// Libera únicamente la petición del propietario indicado.
     public void EndDuck(string source)
     {
         if (string.IsNullOrWhiteSpace(source) || !_duckRequests.Remove(source)) return;
-        RefreshDuck(VoiceDuck.releaseSeconds);
+        RefreshDuck(RelajacionDeAtenuacion);
     }
 
     /// Atenúa música, SFX y ambiente por propietario, con fundido en tiempo real.
@@ -1173,7 +1119,7 @@ public sealed class AudioService : MonoBehaviour
         Vector3 target = Vector3.one;
         foreach (var request in _duckRequests.Values) target.x = Mathf.Min(target.x, request);
         foreach (var request in _mezclas.Values) target = Vector3.Min(target, request);
-        if (_voiceDuckActive && settings.enabled)
+        if (_voiceDuckActive && settings != null && settings.enabled)
         {
             target.x = Mathf.Min(target.x, DbMultiplier(settings.musicDb));
             target.y = Mathf.Min(target.y, DbMultiplier(settings.ambienceDb));
@@ -1279,7 +1225,8 @@ public sealed class AudioService : MonoBehaviour
                     && _voiceSource.clip.loadState == AudioDataLoadState.Loading)))))
             yield return null;
         float elapsed = 0f;
-        while (token == _voiceToken && elapsed < Mathf.Max(0f, VoiceDuck.holdAfterVoiceSeconds))
+        float espera = Mathf.Max(0f, VoiceDuck?.holdAfterVoiceSeconds ?? 0f);
+        while (token == _voiceToken && elapsed < espera)
         {
             if (!_applicationPaused && !AudioListener.pause) elapsed += Time.unscaledDeltaTime;
             yield return null;
@@ -1288,7 +1235,7 @@ public sealed class AudioService : MonoBehaviour
         _voiceDuckActive = false;
         _gananciaDeDuckingDb = 0f;
         ActualizarGananciaDeDialogo();
-        RefreshDuck(VoiceDuck.releaseSeconds);
+        RefreshDuck(RelajacionDeAtenuacion);
         _ajustesDeVozActiva = null;
         _voiceDuckRoutine = null;
     }
@@ -1347,7 +1294,7 @@ public sealed class AudioService : MonoBehaviour
     /// <summary>
     /// Reproduce un SFX por clave de evento configurada en el AudioGraphProfile.
     /// Ejemplo: PlaySFX("Ambience_Cave"), PlaySFX("Spell01"), PlaySFX("FootStep00")
-    /// Devuelve la fuente para poder pararla antes de que termine con StopSFX.
+    /// Devuelve la fuente que lo reproduce (null si no hay clip para la clave).
     /// </summary>
     public AudioSource PlaySFX(string eventKey, float volume = 1f, Vector3? worldPosition = null, float tono = 1f)
     {
@@ -1380,26 +1327,6 @@ public sealed class AudioService : MonoBehaviour
     /// Handler de FootstepHandler.OnFootstep (ver suscripción en Awake). worldPos ya viene
     /// calculado por FootstepHandler (punto de impacto del raycast al suelo bajo el pie).
     void HandlePlayerFootstep(Vector3 worldPos) => PlayFootstep(1f, worldPos);
-    
-    /// <summary>
-    /// Reproduce un spell SFX por número.
-    /// Ejemplo: PlaySpell(2) → reproduce Spell_02
-    /// </summary>
-    public void PlaySpell(int spellNumber, float volume = 1f, Vector3? worldPosition = null)
-    {
-        string key = $"Spell0{spellNumber}";
-        PlaySFX(key, volume, worldPosition);
-    }
-    
-    /// <summary>
-    /// Reproduce un SFX de ambiente por clave.
-    /// Ejemplo: PlayAmbience("Ambience_Cave")
-    /// </summary>
-    public void PlayAmbience(string ambienceKey, float volume = 1f, Vector3? worldPosition = null)
-    {
-        var clip = FindSfxClipByKey(ambienceKey);
-        if (clip != null) PlayEffect(clip, volume, worldPosition, true);
-    }
     
     /// <summary>
     /// Busca un AudioClip en el profile por clave de evento.
@@ -1512,38 +1439,6 @@ public sealed class AudioService : MonoBehaviour
             src.Stop();
             _musicaRitual.Remove(src);
         }
-    }
-
-    /// <summary>
-    /// Detiene antes de tiempo un SFX de un solo uso lanzado con PlaySFX (por ejemplo, una
-    /// explosión que se alarga más que la secuencia). Con fadeOut &gt; 0 hace un fundido; la
-    /// fuente vuelve al pool.
-    /// </summary>
-    public void StopSFX(AudioSource src, float fadeOut = 0f)
-    {
-        if (src == null || !src.isPlaying) return;
-
-        if (_sfxReturnRoutines.TryGetValue(src, out var routine))
-        {
-            if (routine != null) StopCoroutine(routine);
-            _sfxReturnRoutines.Remove(src);
-        }
-
-        if (fadeOut > 0f) StartCoroutine(FadeOutAndRelease(src, fadeOut));
-        else ReleaseSource(src);
-    }
-
-    IEnumerator FadeOutAndRelease(AudioSource src, float duration)
-    {
-        float startVolume = BaseVolume(src);
-        float t = 0f;
-        while (src != null && src.isPlaying && t < duration)
-        {
-            t += Time.unscaledDeltaTime;
-            SetSourceVolume(src, Mathf.Lerp(startVolume, 0f, Mathf.Clamp01(t / duration)));
-            yield return null;
-        }
-        ReleaseSource(src);
     }
 
     /// <summary>
@@ -1856,7 +1751,7 @@ public sealed class AudioService : MonoBehaviour
         src.clip = clip;
         src.Play();
         var pool = worldPosition.HasValue ? _pool3D : _pool2D;
-        _sfxReturnRoutines[src] = StartCoroutine(ReturnWhenDone(src, pool));
+        StartCoroutine(ReturnWhenDone(src, pool));
         return src;
     }
     void PlaySfxForKey(string key)
@@ -1933,7 +1828,6 @@ public sealed class AudioService : MonoBehaviour
     void ReleaseSource(AudioSource src, Queue<AudioSource> pool = null)
     {
         if (src == null) return;
-        _sfxReturnRoutines.Remove(src);
         _truenos.Remove(src);
         src.priority = 128;
         src.Stop();
@@ -2073,40 +1967,68 @@ public sealed class AudioService : MonoBehaviour
     }
 
     // ===========================================================
-    // API compatible con AudioManager (para narrative nodes)
+    // Volumen por bus
+    // El parámetro del mixer de cada bus recibe el volumen que eligió el jugador multiplicado
+    // por la atenuación más fuerte que esté pidiendo alguien (p. ej. un nodo del grafo). Así
+    // nadie pisa el volumen del jugador y, al soltar la última petición, el bus vuelve
+    // exactamente a él.
+    readonly Dictionary<AudioBus, float> _volumenDelJugador = new();
+    readonly Dictionary<(AudioBus bus, string clave), float> _atenuacionesDeBus = new();
 
+    string ParametroDeBus(AudioBus bus) => bus switch
+    {
+        AudioBus.Master => masterVolumeParam,
+        AudioBus.Music => musicVolumeParam,
+        AudioBus.Sfx => sfxVolumeParam,
+        AudioBus.Dialogue => dialogueVolumeParam,
+        _ => null
+    };
+
+    /// Fija el volumen que elige el jugador para un bus (0..1). Lo usa PlayerSettings.
     public void SetVolume(AudioBus bus, float volume01)
     {
-        if (mixer == null) return;
-        string param = bus switch
-        {
-            AudioBus.Master => masterVolumeParam,
-            AudioBus.Music => musicVolumeParam,
-            AudioBus.Sfx => sfxVolumeParam,
-            AudioBus.Dialogue => dialogueVolumeParam,
-            _ => null
-        };
-        if (!string.IsNullOrEmpty(param))
-            SetExposedVolume(param, volume01);
+        _volumenDelJugador[bus] = Mathf.Clamp01(volume01);
+        AplicarVolumenDeBus(bus);
     }
 
-    public float GetVolume(AudioBus bus)
+    /// Volumen que eligió el jugador para el bus, sin atenuaciones.
+    public float GetVolume(AudioBus bus) => VolumenDelJugador(bus);
+
+    /// Baja el bus a una fracción del volumen del jugador mientras la clave mantenga la
+    /// petición; repetir con la misma clave actualiza la fracción. Con varias claves manda la
+    /// más baja.
+    public void AtenuarBus(string clave, AudioBus bus, float fraccion01)
     {
-        if (mixer == null) return 1f;
-        string param = bus switch
-        {
-            AudioBus.Master => masterVolumeParam,
-            AudioBus.Music => musicVolumeParam,
-            AudioBus.Sfx => sfxVolumeParam,
-            AudioBus.Dialogue => dialogueVolumeParam,
-            _ => null
-        };
-        return !string.IsNullOrEmpty(param) ? GetExposedVolume01(param) : 1f;
+        if (string.IsNullOrWhiteSpace(clave)) return;
+        _atenuacionesDeBus[(bus, clave)] = Mathf.Clamp01(fraccion01);
+        AplicarVolumenDeBus(bus);
     }
 
-    public void Mute(AudioBus bus, bool mute)
+    /// Quita la petición de la clave en ese bus; sin peticiones vuelve al volumen del jugador.
+    public void SoltarAtenuacionDeBus(string clave, AudioBus bus)
     {
-        SetVolume(bus, mute ? 0f : 1f);
+        if (string.IsNullOrWhiteSpace(clave) || !_atenuacionesDeBus.Remove((bus, clave))) return;
+        AplicarVolumenDeBus(bus);
+    }
+
+    float VolumenDelJugador(AudioBus bus)
+    {
+        if (_volumenDelJugador.TryGetValue(bus, out float volumen)) return volumen;
+        // Bus que el jugador no ha tocado: su volumen es el que trae el mixer.
+        string param = ParametroDeBus(bus);
+        volumen = string.IsNullOrEmpty(param) ? 1f : GetExposedVolume01(param);
+        _volumenDelJugador[bus] = volumen;
+        return volumen;
+    }
+
+    void AplicarVolumenDeBus(AudioBus bus)
+    {
+        string param = ParametroDeBus(bus);
+        if (mixer == null || string.IsNullOrEmpty(param)) return;
+        float fraccion = 1f;
+        foreach (var peticion in _atenuacionesDeBus)
+            if (peticion.Key.bus == bus) fraccion = Mathf.Min(fraccion, peticion.Value);
+        SetExposedVolume(param, VolumenDelJugador(bus) * fraccion);
     }
 
     public void PlayVoice(AudioClip clip, float volume = 1f)
@@ -2117,17 +2039,34 @@ public sealed class AudioService : MonoBehaviour
         _voiceSource.clip = clip;
         _voiceSource.volume = Mathf.Clamp01(volume);
         _voiceSource.Play();
-        _ajustesDeVozActiva = _presetDeVozActual == PresetDeVoz.Epico
-            ? _duckEpico
-            : (CinematicSequencerBase.AnySequenceActive
-                ? (profile != null && profile.cinematicVoiceDuck != null ? profile.cinematicVoiceDuck : _duckCinematico)
-                : (profile != null && profile.voiceDuck != null ? profile.voiceDuck : _defaultVoiceDuck));
-        _voiceDuckActive = VoiceDuck.enabled;
-        _gananciaDeDuckingDb = _voiceDuckActive ? Mathf.Max(0f, VoiceDuck.voiceGainDb) : 0f;
+        _ajustesDeVozActiva = AjustesDeAtenuacionParaLaVoz();
+        _voiceDuckActive = _ajustesDeVozActiva != null && _ajustesDeVozActiva.enabled;
+        _gananciaDeDuckingDb = _voiceDuckActive ? Mathf.Max(0f, _ajustesDeVozActiva.voiceGainDb) : 0f;
         ActualizarGananciaDeDialogo();
-        RefreshDuck(VoiceDuck.attackSeconds);
+        RefreshDuck(AtaqueDeAtenuacion);
         _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken));
     }
+
+    // Elige del perfil la atenuación según el efecto de voz y si hay una cinemática en marcha.
+    AudioGraphProfile.VoiceDuckSettings AjustesDeAtenuacionParaLaVoz()
+    {
+        if (profile == null)
+        {
+#if UNITY_EDITOR
+            if (!_avisoSinPerfilDado)
+            {
+                _avisoSinPerfilDado = true;
+                Debug.LogWarning("[AudioService] Sin AudioGraphProfile asignado: las voces suenan sin atenuar la música.", this);
+            }
+#endif
+            return null;
+        }
+        if (_presetDeVozActual == PresetDeVoz.Epico) return profile.epicVoiceDuck;
+        return CinematicSequencerBase.AnySequenceActive ? profile.cinematicVoiceDuck : profile.voiceDuck;
+    }
+#if UNITY_EDITOR
+    bool _avisoSinPerfilDado;
+#endif
 
     /// Indica si la fuente de voz está sonando.
     public bool HayVozSonando => _voiceSource != null && _voiceSource.isPlaying;
@@ -2153,10 +2092,5 @@ public sealed class AudioService : MonoBehaviour
         if (!_voiceDuckActive || _voiceSource == null) return;
         CancelVoiceMonitor();
         _voiceDuckRoutine = StartCoroutine(MonitorVoice(_voiceToken, false));
-    }
-
-    public void PlaySfx(AudioClip clip, float volume = 1f)
-    {
-        PlaySFX(clip, volume);
     }
 }

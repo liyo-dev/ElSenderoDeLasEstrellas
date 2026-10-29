@@ -51,7 +51,7 @@ static void ResetStatics() { _instance = null; OnMyStaticEvent = null; }
 
 ## 4. Invariantes del grafo narrativo — NO violar (detalle y las 5 reglas completas: TDD.md § 10)
 
-El grafo narrativo (`MainNarrative.asset`) y sus runners son `DontDestroyOnLoad`. Antes de tocar `GameBootService.PrepareActivePreset()`/`ReloadTestPreset()`, `NarrativeRunner.StartFromStartNode`/`StartFromNode`, `WaitQuestCompleteNode`, la fork detection, o `DefaultNarrativeSignals._raised` — **leer TDD.md § 10 primero**. Son las reglas más fáciles de romper sin darse cuenta y las más caras de depurar después.
+El grafo narrativo (`MainNarrative.asset`) y sus runners son `DontDestroyOnLoad`. Antes de tocar el arranque y la carga de la partida (`GameBootService.ReloadTestPreset()`/`PrepararContinuar()`, `Partida.AplicarPartidaCargada`/`ReiniciarSesionNarrativa`), `NarrativeRunner.StartFromStartNode`/`StartFromNode`, `WaitQuestCompleteNode`, la fork detection, o `DefaultNarrativeSignals._raised` — **leer TDD.md § 10 primero**. Son las reglas más fáciles de romper sin darse cuenta y las más caras de depurar después.
 
 ## 5. Convivencia Interactive ↔ Grafo narrativo (política completa: TDD.md § 10)
 
@@ -71,7 +71,8 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Portada del repo | `README.md` |
 | Configuración de NPCs, quests, hechizos | Assets SO en `_NPCs/`, `_QUEST/`, `_SPELLS/` |
 | FSM de NPCs | `Assets/Scripts/Behaviour NPC/` |
-| Grafo narrativo (runtime) | `Assets/NarrativeGraph/Runtime/` |
+| Grafo narrativo (núcleo genérico) | `Assets/NarrativeGraph/` |
+| El juego conectado al grafo (adaptadores, nodos propios) | `Assets/Scripts/NarrativeIntegration/` |
 | Debug visual en runtime | F3 (NPCs), F4 (panel general) |
 
 ## 8. Reglas de trabajo para sesiones de IA (desde el 25 sep 2026 — auditoría INC-447)
@@ -93,6 +94,10 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 |---|---|---|
 | Post-procesado de escena y cinemáticas | `PostprocesoDeEscena` (+ `PostprocesoBeat`) | Volumes globales que se pisan sin control; valores de look en código |
 | Historia, misiones, señales | `NarrativeGraph` (StartQuestNode, CompleteQuestStepsNode, Wait*/Raise*) | `NPCInteractiveNarrativeExecutor`, `NPCQuestConfig`, `NPCQuestActionExecutor`, micro-componentes `Quest*` |
+| La partida en curso: preset en memoria, guardar, cargar, partida nueva | `Partida` (`Core/Partida/`: `Preset`, `Guardar`, `Cargar`, `PrepararNueva`, `VolcarEstadoDelJuego`); `GameBootService` decide cuándo; `GameBootProfile` solo datos (TDD § 9) | lógica en `GameBootProfile`; leer o escribir el guardado por otro camino |
+| Componentes que solo actúan en un tramo de la historia (oficios, discusiones, barreras) | campo `TramoDeHistoria` (señales y misiones de inicio y fin; `EnCurso()`/`HaAcabado()`; consulta, no escucha) (TDD § 3) | campos sueltos «solo si señal/misión»; condiciones de historia escritas en código |
+| Dependencias del grafo con el juego | puertos de `NarrativeGraph/Runtime/Integration/Ports/` pedidos con `NarrativeServices.TryGet`; adaptadores y nodos del juego en `Scripts/NarrativeIntegration/` (registro en `NarrativeGameServices`) (TDD § 10) | clases del juego dentro de `Assets/NarrativeGraph/` |
+| Qué toca y cómo se ve un nodo en el editor | `NarrativeNode.Describe` (+ `CollectWarnings`, `IsGraphEntry`, `IsAnnotation`, `BranchesInParallel`); extensiones del editor en `Editor/Extensions/` | `switch` por tipo de nodo en ventanas y herramientas |
 | Cinemáticas | `SequencePlayer` + `SequenceDefinition`, lanzadas con `PlayCinematicNode` (campo `secuencia` para montarlas en vivo) | `*Sequencer.cs` escritos a mano, `SimpleCinematicDirector` |
 | Cámara | `CameraDirectorService` (Claim/Release) | apagar `Camera.main` o `vThirdPersonCamera` a mano |
 | Mover / girar NPCs en escenas | `SequenceActor` + `SequenceMovement` | helpers propios en cada sistema |
@@ -102,28 +107,35 @@ Seguimiento (ID, estado, prioridad) en `TRACKER.md`. Detalle técnico largo (cau
 | Tapar lo que hay en pantalla durante una cinemática (HUD, minimapa, hora) | `IOcultableDuranteCinematica` + el registro `OcultablesDeCinematica`: el sistema se apunta en su `Awake` y se esconde con su clave | llamar al HUD y al minimapa a mano desde la cinemática |
 | Seguir a un NPC (escolta jugable) | `GuiarJugadorNode` (tope de velocidad con `TopeDeVelocidadDelJugador`, charla por el camino con `CharlaEnBocadillos`) | escoltas de `NPCInteractiveNarrativeExecutor` |
 | Iconos sobre la cabeza | `NPCAlertIconController` (quests vía `NarrativeActor`) | `NPCQuestIconManager`, `NPCPersistentIconController` |
-| Texto | `PresentadorDeLinea` (el camino único de las frases de cinemática: traduce, elige el estilo, enseña el bocadillo y suelta la voz) sobre `SpeechBubbleUI` (bocadillo o subtítulo según `SayBeat.presentacion` / `SequenceDefinition.presentacionDeTexto`; bandas con `BandasDeCineBeat`) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
+| Texto | `PresentadorDeLinea.Decir` (el camino único de las frases: traduce, elige el estilo, enseña el bocadillo y suelta la voz) sobre `SpeechBubbleUI` (bocadillo o subtítulo según `SayBeat.presentacion` / `SequenceDefinition.presentacionDeTexto`; bandas con `BandasDeCineBeat`) · `DialogueManager` (caja, la avanza el jugador) | `DialogueCameraController` |
+| Avisos en pantalla (misión nueva, barra del jefe, desbloqueos, objetos, rótulos) | `IAvisoEnPantalla` + `ArbitroDeAvisos` (`Pedir`/`Terminar`; un aviso por canal, prioridad, calla con menús y cinemáticas) (TDD § 11) | cada aviso escuchando menús o cinemáticas por su cuenta; colas propias |
+| Comentarios y numeritos del grupo al seguir al jugador | `ComentariosEnReposo` (numeritos y reacciones como datos; frases por `PresentadorDeLinea`) (TDD § 3) | lógica propia en cada `*IdleCommentary` |
 | Tiempo (`timeScale`) | `TimeScaleArbiterService` | escribir `Time.timeScale` directamente |
 | Botones de combate del jugador (X, LB…) | `PlayerCombatInput` | leer botones de magia en cada sistema; reflexión en `vThirdPersonInput` |
-| Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`) | leer B en otro sitio; bloquear daño con `if` en cada IA |
+| Defensa y contraataque (B) | `PlayerShieldController` (+ `FiltroDeDefensa`; el escudo lo desbloquea solo el grafo) | leer B en otro sitio; bloquear daño con `if` en cada IA; reglas de historia en el escudo |
+| Daño de área de enemigos al grupo | `DanoEnZona` (`GolpearEnCilindro`/`GolpearEnEsfera`; al mando por `PlayerHealthSystem`, compañeros por `CuerpoDelGrupo`) (TDD § 4) | recorrer colisionadores y llamar a `TakeDamage` en cada ataque de zona |
 | Combo mágico (Y) | `ComboCastController` (`IsComposing` para callar a los demás lectores) | abrir paneles de secuencia propios; leer A/B/X/Y mientras se teclea |
 | Carga de equipo, dúos y trío (LT+RT) | `DuoSpecialAttackSystem` (en `GrupoDelJugador`) | medidores por compañero; ataques de equipo fuera de `SpecialAttackSO` |
 | Lanzar un hechizo del jugador | `MagicCaster.Cast` (coste, giro, bloqueo, aire, gesto) → `MagicProjectileSpawner` | lanzar desde otro componente o instanciar el proyectil a mano |
-| Música al terminar algo (cinemática, combate) | `AudioService.PedirMusicaDelLugar` (relevo con gracia, como la cámara) | `PlayMusic`/`RestoreSceneMusic` directos al acabar |
+| Música al terminar algo (cinemática, combate, minijuego, texto dramático) | `AudioService.PedirMusicaDelLugar` (relevo con gracia, como la cámara) | `PlayMusic`/`RestoreSceneMusic` directos al acabar |
+| Volumen de los buses (música, SFX, diálogo) | `AudioService.SetVolume` = volumen del jugador; bajarlo un rato con `AtenuarBus(clave, bus, fracción)` / `SoltarAtenuacionDeBus(clave, bus)`; la atenuación bajo las voces, solo en `AudioGraphProfile` (TDD § 6) | `Mute(bus)`; escribir el volumen del jugador desde nodos o cinemáticas; valores de atenuación en código |
 | Qué deja cambiado un nodo / cómo está el mundo en un nodo | `INarrativeStateEffect` + `NarrativeStateProjector` (TDD § 10) | `switch` por tipo de nodo en herramientas |
 | Guardar que un objeto de escena se ha movido o retirado (entregado, consumido) | `ObjetoPersistente` (`Retirar()` para quitarlo; ID con `IdDePersistencia`) | `Destroy` directo de objetos de misión; IDs de posición escritos a mano en cada sistema |
 | Voltereta del jugador (desde el suelo o en el aire) | `VolteretaDelJugador` (`DesdeElSuelo`, `EnElAire`) | parábolas o volteretas propias en cada sistema |
 | Avisar al jugador del momento justo (devolver, recuperarse, esquivar) | `AmenazasAlJugador` (proyectiles registrados; `Anunciar` para golpes) + `AvisoDeAmenazas` | iconos o textos de aviso propios en cada enemigo |
 | Ambiente de noche (ventanas, faroles, estrellas fugaces) | `VentanasIluminadas` (emisión de materiales compartidos), `LuzNocturna` (Light), `EstrellasFugaces`, todos con `DayNightCycle.NocheActual` | encender luces o emisiones por hora en cada sistema |
 | Partículas de ambiente fijas en el mundo (luciérnagas, niebla de bosque, humo) | heredar de `ParticulasDeAmbiente` (`LuciernagasNocturnas`, `NieblaNocturna`, `HumoDeChimenea`) | `ParticleSystem` sueltos con su propia activación por distancia |
-| Clima (lluvia, tormenta, nieve, viento, niebla) y su efecto en el jugador | `DayNightCycle` + cielo `El Sendero/Cielo` y materiales por franja en `TimeOfDaySettings.skybox`; sol y luna con `DayNightCycle.HoraDelDia`, dibujados por el cielo y publicados por `SolYLunaEnElCielo` (+ `VfxDeClima` si no hay prefab, `ClimaSobreElJugador` para frenar/arrastrar con viento y tiritar con frío) | partículas de clima, empujes del viento o reacciones del jugador al clima por su cuenta en cada sistema |
+| Clima (lluvia, tormenta, nieve, viento, niebla) y su efecto en el jugador | `DayNightCycle` + cielo `El Sendero/Cielo` y materiales por franja en `TimeOfDaySettings.skybox`; sol y luna con `DayNightCycle.HoraDelDia`, dibujados por el cielo y publicados por `SolYLunaEnElCielo` (+ `VfxDeClima` si no hay prefab, `ClimaSobreElJugador` para frenar/arrastrar con viento y tiritar con frío) | partículas de clima, empujes del viento o reacciones del jugador al clima por su cuenta en cada sistema; sortear lluvia fuera del sorteo de `DayNightCycle` (las nubes sueltas solo informan su cobertura) |
 | Vestir MainWorld (suelos de calle, capital y muralla, pavimento, vegetación, laguna, detalles, ruinas entre zonas) | `VestidoDelMundo` (*El Sendero ▸ Escenario ▸ MainWorld: vestir…*, TDD § 23): lo generado se rehace en cada ejecución, se retoca en sus tablas y reglas; lo que estorba se retira con `Retirar` (registro que *quitar* repone) | colocar a mano bajo «Vestido del mundo (generado)»; generadores de pueblos o plantadores de árboles aparte; borrar o desactivar a mano lo de la escena que estorba |
 | Vida, maná y caídas de cada personaje del grupo; quién va al mando | `SaludDelGrupo` (vida y maná por personaje, caer, relevo del mando, levantarse) + `ControlDelJugador` (quién va al mando y qué cuerpo tiene cada uno) | preguntar a `ActiveCharacterSwapper.HiddenNpc` / `WillNpcInstance`; vida de compañeros por su cuenta |
 | Tesoros (cofres y puntos con requisito, registro, mapas) | `Tesoro` + `RequisitoDeAcceso`; `RegistroDeTesoros` / `CatalogoDeTesoros`; `MarcaDeMapaDelTesoro` | `ChestInteractable` + `WorldPickup` como cofre |
 | Abrir la protección de algo con un hechizo (Amanecer: jefes, cristales, sellos, guardianes) | `IProteccionQueSeAbre` + `ProteccionQueSeAbre` (campo `abreProteccionSegundos` del `MagicSpellSO`; con `SoloDanoCuandoExpuesto`) | flags o `if` a medida por jefe o sello |
 | Enemigos del mundo (no jefes) | heredar de `EnemigoDelMundo` (objetivo con `CombatTargetProvider`, daño con `Damageable`, avisos con `AmenazasAlJugador`, Esencia con `OrbDropper`); reglas de daño propias como `IFiltroDeDano` (`ReveladoPorLuz`…) | IA de enemigo escrita desde cero en cada uno |
 | Retratos del grupo en el HUD (busto, reacciones, retratos vivos) | `RetratoDelGrupo` + `IFuenteDeRetrato` (`JuegoDeRetratos` horneado con *Hornear retratos del grupo*, `EstudioDeRetratos` en vivo); la vida y las caídas solo vía `EstadoDelGrupoParaRetratos` (TDD § 11) | sprites, alfas o imágenes de IA puestos a mano en `PartyHUDPanel` |
-| Oficios ambientales de NPCs (mover cajas de un lado a otro, puestos con ida y vuelta) | `NPCWorkRoute` + `WorkState` + `NPCAmbientConfig.permitirTrabajo`/`puestoId` (TDD § 3) | IA de oficio escrita desde cero en cada NPC; activar el wander para que no estén quietos |
+| Oficios ambientales de NPCs (mover cajas de un lado a otro, puestos con ida y vuelta) | `NPCWorkRoute` (con su `tramo`) + `WorkState` + `NPCAmbientConfig.permitirTrabajo`/`puestoId` (TDD § 3) | IA de oficio escrita desde cero en cada NPC; activar el wander para que no estén quietos |
+| Contorno de los modelos (siluetas y pliegues) | `ContornoDeTinta` (Volume) + `ContornoDeTintaFeature` en `PC_Renderer`: un pase de pantalla que lee profundidad y normales (TDD § 26) | outline por geometría de Quibli (`_OutlineEnabled`, inverted hull) en materiales del mundo |
+| Sombra bajo los personajes | `SombraDeContacto` (se añade sola desde `NPCSimpleAnimator` y `EnemigoDelMundo`; para quitarla, ponerla desactivada) | sombras de personaje propias en cada sistema |
+| Cámaras de retratos e iconos | renderer `Retratos_Renderer` (sin SSAO ni post), por nombre desde `EstudioDeRetratos.RendererDeRetratos` | cámaras auxiliares con el renderer principal |
 
 ---
 

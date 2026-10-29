@@ -6,7 +6,7 @@ using UnityEngine;
 /// <see cref="vThirdPersonCamera.lockCameraForCinematic"/>).
 ///
 /// Motivación: hoy cada sistema de cámara (CinematicCameraDriver, FocusCameraNode,
-/// KingdomExitTransitionNode, BossIntroPresentation, etc.) pone y quita ese flag por su cuenta.
+/// BossIntroPresentation, etc.) pone y quita ese flag por su cuenta.
 /// Cuando dos sistemas se entregan el control casi en el mismo instante (ej: una secuencia
 /// termina y, uno o dos frames después, un nodo del grafo narrativo corta a otro plano),
 /// el hueco entre "suelto el flag" y "el siguiente sistema lo vuelve a tomar" lo ocupa
@@ -103,10 +103,9 @@ public static class CameraDirectorService
     /// seguros de sesión que GameBootService.ResetTransientSessionState() (MainMenu, arranque de
     /// partida): ahí es seguro asumir que no hay ninguna cámara bloqueada legítimamente en curso,
     /// así que no hace falta (ni conviene) respetar el ownership actual como sí hace Release().
-    /// Sin esto, un owner de una sesión anterior que nunca llegó a soltar (ej:
-    /// KingdomExitTransitionNode.CloseDemo(), que deja el candado true a propósito porque la
-    /// escena va a cambiar) dejaría s_currentOwner apuntando para siempre a un objeto ya
-    /// destruido de la sesión anterior.
+    /// Sin esto, un owner de una sesión anterior que nunca llegó a soltar (por ejemplo, porque
+    /// la escena cambió en plena cinemática) dejaría s_currentOwner apuntando para siempre a un
+    /// objeto ya destruido de la sesión anterior.
     public static void ForceResetState()
     {
         CancelPendingRelease();
@@ -145,8 +144,7 @@ public static class CameraDirectorService
 
         // DIAGNÓSTICO (20 sept 2026, Raúl: "al terminar todas las secuencias siempre se queda
         // mal la cámara y debe cambiar a la de gameplay"): por lectura de código no se ha
-        // encontrado ningún sistema que reclame la cámara sin pasar por Claim()/Release() (salvo
-        // KingdomExitTransitionNode, a propósito, documentado arriba) — pero SI un segundo owner
+        // encontrado ningún sistema que reclame la cámara sin pasar por Claim()/Release() — pero SI un segundo owner
         // se hubiera colado como dueño actual sin que este owner se enterase, Release() haría
         // aquí un `return` COMPLETAMENTE SILENCIOSO y el flag se quedaría bloqueado para
         // siempre, con "cámara que nunca vuelve al gameplay" como único síntoma visible. Este

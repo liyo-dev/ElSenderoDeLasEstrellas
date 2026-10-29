@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,11 +23,11 @@ public class CastleDoorController : MonoBehaviour
     public UnityEvent OnDoorsOpenedRestored;
 
     bool _isOpen;
-
-    string FlagKey => $"DOOR_OPEN_{ResolveId()}";
+    FlagDePartida _abierta;
 
     void Awake()
     {
+        _abierta = new FlagDePartida(nameof(CastleDoorController), () => $"DOOR_OPEN_{ResolveId()}", AlCargarAbierta);
         if (startsLocked)
         {
             leftDoor?.Close();
@@ -42,32 +41,14 @@ public class CastleDoorController : MonoBehaviour
 
     void OnEnable()
     {
-        GameBootService.OnProfileReady += OnProfileReady;
-        PlayerPresetService.OnPresetApplied += OnPresetApplied;
-        ProfileReadyDiagnostics.RegisterSubscriber(nameof(CastleDoorController));
-
-        if (GameBootService.IsAvailable)
-            OnProfileReady();
-        else if (PlayerPresetService.HasAppliedPreset)
-            OnPresetApplied();
+        if (persistState) _abierta.Escuchar();
     }
 
-    void OnDisable()
-    {
-        GameBootService.OnProfileReady -= OnProfileReady;
-        PlayerPresetService.OnPresetApplied -= OnPresetApplied;
-    }
+    void OnDisable() => _abierta.DejarDeEscuchar();
 
-    void OnProfileReady()
+    void AlCargarAbierta()
     {
-        if (persistState && IsFlagSet())
-            ApplyOpenInstant();
-    }
-
-    void OnPresetApplied()
-    {
-        if (persistState && !_isOpen && IsFlagSet())
-            ApplyOpenInstant();
+        if (!_isOpen) ApplyOpenInstant();
     }
 
     public void OpenDoors()
@@ -76,7 +57,7 @@ public class CastleDoorController : MonoBehaviour
         _isOpen = true;
         leftDoor?.Open();
         rightDoor?.Open();
-        if (persistState) SetFlag();
+        if (persistState) _abierta.Marcar();
         OnDoorsOpened?.Invoke();
     }
 
@@ -85,7 +66,7 @@ public class CastleDoorController : MonoBehaviour
         _isOpen = false;
         leftDoor?.Close();
         rightDoor?.Close();
-        if (persistState) ClearFlag();
+        if (persistState) _abierta.Borrar();
     }
 
     void ApplyOpenInstant()
@@ -94,31 +75,6 @@ public class CastleDoorController : MonoBehaviour
         leftDoor?.OpenInstant();
         rightDoor?.OpenInstant();
         OnDoorsOpenedRestored?.Invoke();
-    }
-
-    void SetFlag()
-    {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
-        if (preset == null) return;
-        preset.flags ??= new List<string>();
-        var flag = FlagKey;
-        if (!preset.flags.Contains(flag))
-            preset.flags.Add(flag);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CastleDoorController] Flag '{flag}' añadida al preset.");
-#endif
-    }
-
-    void ClearFlag()
-    {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
-        preset?.flags?.Remove(FlagKey);
-    }
-
-    bool IsFlagSet()
-    {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
-        return preset?.flags != null && preset.flags.Contains(FlagKey);
     }
 
     string ResolveId()

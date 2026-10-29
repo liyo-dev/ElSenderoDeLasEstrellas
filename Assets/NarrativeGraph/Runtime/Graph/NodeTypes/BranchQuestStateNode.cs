@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Bifurca según el estado de una quest. Es el nodo que faltaba para expresar "el NPC dice
-/// una cosa u otra según cómo vaya la misión" sin el sistema Interactive (ver TDD § 15.7).
+/// Bifurca según el estado de una quest: «el personaje dice una cosa u otra según cómo vaya la
+/// misión».
 ///
 /// Puertos: No iniciada / Activa / Pasos listos / Completada.
 /// "Pasos listos" = activa con todos los pasos completados pero sin entregar todavía.
@@ -19,6 +19,8 @@ public sealed class BranchQuestStateNode : NarrativeNode
 
     static readonly string[] Ports = { "No iniciada", "Activa", "Pasos listos", "Completada" };
     public override string[] GetOutputPorts() => Ports;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Bifurca según");
 
     public override string DescribeDecision()
         => $"Según estado de quest \"{displayTitle}\" (guid {guid}): quest '{questId}'. Salidas: No iniciada / Activa / Pasos listos / Completada.";

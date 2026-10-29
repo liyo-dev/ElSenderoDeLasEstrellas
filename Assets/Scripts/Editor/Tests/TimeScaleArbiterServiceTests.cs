@@ -13,6 +13,7 @@ public class TimeScaleArbiterServiceTests
     readonly object _hitstopA = new object();
     readonly object _hitstopB = new object();
     readonly object _pausa = new object();
+    readonly object _acelerar = new object();
 
     [SetUp]
     public void SetUp() => TimeScaleArbiterService.SetBaseline(1f);
@@ -23,6 +24,7 @@ public class TimeScaleArbiterServiceTests
         TimeScaleArbiterService.Release(_hitstopA);
         TimeScaleArbiterService.Release(_hitstopB);
         TimeScaleArbiterService.Release(_pausa);
+        TimeScaleArbiterService.Release(_acelerar);
         TimeScaleArbiterService.SetBaseline(1f);
     }
 
@@ -98,5 +100,51 @@ public class TimeScaleArbiterServiceTests
 
         TimeScaleArbiterService.SetBaseline(1f);
         Assert.AreEqual(0.5f, Time.timeScale, Tolerancia, "Al quitar la pausa sigue la petición activa.");
+    }
+
+    [Test]
+    public void Acelerar_SoloManda_SiNadieVaMasLento()
+    {
+        TimeScaleArbiterService.Request(_acelerar, 1.5f);
+        Assert.AreEqual(1.5f, Time.timeScale, Tolerancia);
+
+        TimeScaleArbiterService.Request(_hitstopA, 0.2f);
+        Assert.AreEqual(0.2f, Time.timeScale, Tolerancia, "Ir más lento gana a acelerar.");
+
+        TimeScaleArbiterService.Release(_hitstopA);
+        Assert.AreEqual(1.5f, Time.timeScale, Tolerancia);
+    }
+
+    [Test]
+    public void TryGetRequest_DevuelveLoPedidoPorEsaClave()
+    {
+        TimeScaleArbiterService.Request(_hitstopA, 0.4f);
+        TimeScaleArbiterService.Request(_pausa, 0f);
+
+        Assert.IsTrue(TimeScaleArbiterService.TryGetRequest(_hitstopA, out float escala));
+        Assert.AreEqual(0.4f, escala, Tolerancia, "Lo pedido no depende de lo que manda ahora.");
+        Assert.IsFalse(TimeScaleArbiterService.TryGetRequest(_hitstopB, out _));
+    }
+
+    [Test]
+    public void ClaveDestruida_SuPeticionSeDescarta()
+    {
+        var go = new GameObject("ClaveDePrueba");
+        TimeScaleArbiterService.Request(go, 0f);
+        Assert.AreEqual(0f, Time.timeScale, Tolerancia);
+
+        UnityEngine.Object.DestroyImmediate(go);
+        TimeScaleArbiterService.Request(_hitstopA, 0.5f);
+        Assert.AreEqual(0.5f, Time.timeScale, Tolerancia, "La pausa de una clave destruida no se queda puesta.");
+    }
+
+    [Test]
+    public void ReleaseAll_VuelveAlReposo()
+    {
+        TimeScaleArbiterService.SetBaseline(0f);
+        TimeScaleArbiterService.Request(_hitstopA, 0.1f);
+
+        TimeScaleArbiterService.ReleaseAll();
+        Assert.AreEqual(1f, Time.timeScale, Tolerancia);
     }
 }

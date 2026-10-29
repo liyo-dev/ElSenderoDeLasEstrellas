@@ -437,7 +437,7 @@ namespace Game.NPC.Modules
             // ✅ También verificar si está en la lista de completadas del preset (persistencia)
             if (_config != null && _config.persistState && !string.IsNullOrEmpty(GetEffectivePersistenceId()))
             {
-                var preset = GameBootService.Profile?.runtimePreset;
+                var preset = Partida.PresetEnMemoria;
                 if (preset != null && preset.completedInteractiveNarratives != null)
                 {
                     string narrativeId = GetConditionalNarrativeId(System.Array.IndexOf(_config.conditionalNarratives, narrative));
@@ -2074,7 +2074,7 @@ namespace Game.NPC.Modules
         {
             string effectiveId = GetEffectivePersistenceId();
             if (string.IsNullOrEmpty(effectiveId)) return;
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset == null) return;
 
             preset.completedInteractiveNarratives ??= new System.Collections.Generic.List<string>();
@@ -2105,7 +2105,7 @@ namespace Game.NPC.Modules
         {
             string effectiveId = GetEffectivePersistenceId();
             if (string.IsNullOrEmpty(effectiveId)) return;
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset?.completedInteractiveNarratives == null) return;
 
             _hasBeenUsed = preset.completedInteractiveNarratives.Contains(effectiveId);

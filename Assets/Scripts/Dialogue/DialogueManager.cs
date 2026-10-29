@@ -242,27 +242,6 @@ public class DialogueManager : MonoBehaviour
             group.interactable = false;
         }
 
-        // FIX (5 sept 2026 — incidencia Raúl: diálogo de Eldran sin cuadro/letras justo tras la
-        // presentación del demonio, reproducible saltando la cinemática previa del Despertar de la
-        // Estrella): este Canvas lleva un SceneBoundUI (uniqueId "DialogueManager") que, al no estar
-        // excluido, queda sujeto al snapshot/restauración genérico de SceneBoundUI.BeginBossIntro()/
-        // EndBossIntro() — exactamente el mismo CanvasGroup que StartDialogue()/Close() gestionan a
-        // mano con asignaciones directas (nunca tweens). EndBossIntro() lanza su propio DOTween.DOFade
-        // hacia el alpha capturado antes de la intro (0.35s por defecto) al terminar la presentación
-        // del boss; si un StartDialogue() para la línea de aviso de Eldran llega mientras ese tween
-        // sigue vivo, gana el tween en cada frame siguiente y pisa el alpha=1 recién puesto por
-        // StartDialogue() — el typewriter y el sonido letra a letra siguen su curso con normalidad
-        // (no dependen del CanvasGroup), pero el cuadro nunca llega a verse. Mismo patrón de bug ya
-        // diagnosticado y corregido para PlayerHUDV2 (ver su Awake(): "justo al entrar en combate
-        // contra un boss que arranca pegado a una cinemática") — aplicamos aquí la misma exclusión,
-        // dejando que StartDialogue()/Close() sean la única fuente de verdad sobre este CanvasGroup.
-        // NOTA: el CanvasGroup/SceneBoundUI viven en el GameObject hijo "Canvas" (donde
-        // también cuelga "Panel/boton A" = submitHint), no en el GameObject raíz de este
-        // script — a diferencia de PlayerHUDV2, donde SceneBoundUI sí vive en el mismo
-        // GameObject que el script. Por eso se consulta sobre group.gameObject, no sobre
-        // GetComponent() directo (que no encontraría nada y sería un no-op silencioso).
-        group?.GetComponent<SceneBoundUI>()?.ExcludeFromBossIntro();
-
         // Asegurar choices ocultos por defecto
         if (choicesRoot != null)
         {
@@ -306,6 +285,8 @@ public class DialogueManager : MonoBehaviour
         // Defensivo: si el objeto se desactiva/destruye a mitad de un diálogo (cierre de sesión,
         // teardown de escena) evita dejar el handler colgado suscrito a un componente inerte.
         NarrativeSkipHub.UnregisterSkipHandler(HandleSkipRequested);
+        // La pausa del diálogo no sobrevive al objeto que la pidió.
+        TimeScaleArbiterService.Release(this);
     }
 
     /// Handler registrado en NarrativeSkipHub mientras hay un diálogo abierto (ver StartDialogue/
@@ -543,10 +524,9 @@ public class DialogueManager : MonoBehaviour
         // NO mostrar el submitHint al inicio - se mostrará cuando termine de escribir la primera línea
         SetSubmitHintActive(false);
             
-        if (pauseGameWhileOpen) Time.timeScale = 0f;
+        if (pauseGameWhileOpen) TimeScaleArbiterService.Request(this, 0f);
 
-
-        // NUEVO: Activar modo DialogueActive en PlayerActionManager
+        // Modo DialogueActive en PlayerActionManager mientras la caja está abierta.
         ActivateDialogueMode(true);
 
         // Activar sistema cinematográfico SOLO si es un NPC real (no objetos como cartas, save points, etc.)
@@ -628,20 +608,17 @@ public class DialogueManager : MonoBehaviour
         else
             _currentNpcDialogueCharacterId = null;
 
-        // FIX (20 ago 2026): igual que en DialogueCinematicController.StartCinematic (mismo
-        // incidente, ver comentario allí) — si 'npc' resulta ser el propio personaje activo
-        // oculto (ActiveCharacterSwapper.HiddenNpc, p.ej. un NPCInteractiveNarrativeExecutor
-        // colgado de _ESTELA disparando su propia línea mientras el jugador la controla), su
-        // transform real está oculto y congelado en la posición de otro cambio de personaje.
-        // Solo afecta al TRANSFORM usado para posicionar al equipo aquí abajo — _currentNpc y
-        // _currentNpcDialogueCharacterId (arriba) se quedan como estaban, siguen identificando
-        // al personaje correcto para nombre/portrait y para quien escuche OnDialogueStarted.
+        // Igual que en DialogueCinematicController.StartCinematic: si 'npc' es el NPC del
+        // personaje que lleva el jugador (p. ej. un ejecutor colgado de _ESTELA disparando su
+        // propia línea mientras el jugador la controla), su cuerpo está oculto y congelado donde
+        // se hizo el relevo; el cuerpo que se ve es el del jugador. Solo cambia el transform con
+        // el que se coloca al equipo aquí abajo: _currentNpc y _currentNpcDialogueCharacterId
+        // siguen identificando al personaje para nombre, retrato y OnDialogueStarted.
         Transform npcForPositioning = npc;
-        var activeSwapper = ActiveCharacterSwapper.Instance;
-        if (activeSwapper != null && activeSwapper.HiddenNpc != null && npc == activeSwapper.HiddenNpc.transform
-            && PlayerService.TryGetPlayer(out var activeCharacterGo) && activeCharacterGo != null)
+        if (npc != null && ControlDelJugador.RepresentadoPorElJugador(npc.GetComponent<Game.NPC.NPCPartyMember>())
+            && ControlDelJugador.CuerpoDelJugador != null)
         {
-            npcForPositioning = activeCharacterGo.transform;
+            npcForPositioning = ControlDelJugador.CuerpoDelJugador.transform;
         }
 
         // Posicionar party members ANTES de iniciar la cámara cinematográfica
@@ -853,7 +830,7 @@ public class DialogueManager : MonoBehaviour
         NarrativeSkipHub.UnregisterSkipHandler(HandleSkipRequested);
 
         // Ocultar UI
-        if (pauseGameWhileOpen) Time.timeScale = 1f;
+        TimeScaleArbiterService.Release(this);
         if (group != null)
         {
             group.alpha = 0f;
@@ -905,7 +882,7 @@ public class DialogueManager : MonoBehaviour
 
         _currentNpc = null;
 
-        // NUEVO: Desactivar modo DialogueActive en PlayerActionManager
+        // Fuera el modo DialogueActive en PlayerActionManager.
         ActivateDialogueMode(false);
 
         SetSubmitHintActive(false);
@@ -926,9 +903,9 @@ public class DialogueManager : MonoBehaviour
 
     public void FinalizeChoiceNoFollowUp()
     {
-        if (pauseGameWhileOpen) Time.timeScale = 1f;
+        TimeScaleArbiterService.Release(this);
 
-        // NUEVO: Desactivar modo DialogueActive
+        // Fuera el modo DialogueActive.
         ActivateDialogueMode(false);
 
         if (group != null)
@@ -967,7 +944,7 @@ public class DialogueManager : MonoBehaviour
         _onYes = null; _onNo = null;
         SetSubmitHintActive(false);
         
-        // NUEVO: Desactivar modo DialogueActive si no hay diálogo activo
+        // Fuera el modo DialogueActive si no queda diálogo abierto.
         if (restoreGameplay && !IsOpen)
         {
             ActivateDialogueMode(false);
@@ -1006,10 +983,10 @@ public class DialogueManager : MonoBehaviour
         }
         if (portraitImage) portraitImage.enabled = false;
         
-        // NUEVO: Activar modo DialogueActive
+        // Modo DialogueActive mientras se muestran las opciones.
         ActivateDialogueMode(true);
-        
-        if (pauseGameWhileOpen) Time.timeScale = 0f;
+
+        if (pauseGameWhileOpen) TimeScaleArbiterService.Request(this, 0f);
         SetSubmitHintActive(false);
 
         if (messageLabel != null && !string.IsNullOrEmpty(message))
@@ -1641,25 +1618,18 @@ public class DialogueManager : MonoBehaviour
                           line.isPlayerSpeaking ? "Player" : "MainNPC";
         bool speakerIsPlayer = line.isPlayerSpeaking || speakerId == "Player";
 
-        // FIX "el personaje activo se vuelve invisible al hablar" (mismo bug ya corregido para la
-        // cámara/mirada grupal en DialogueCinematicController.FindSpeakerTransform, ver su propio
-        // comentario): las líneas de diálogo están escritas asumiendo un player fijo, así que un
-        // personaje como Liam o Estela siempre trae isPlayerSpeaking=false, incluso cuando en esa
-        // partida concreta lo está controlando el jugador. Si speakerId identifica al party member
-        // que ActiveCharacterSwapper tiene oculto ahora mismo (el jugador YA representa físicamente
-        // a ese personaje), el hablante real y visible es el player, no ese NPCPartyMember con los
-        // renderers apagados — sin esto, la animación de hablar se dispara sobre un cuerpo invisible
-        // y el que se ve en pantalla se queda en Idle.
-        // 'promotedFromHiddenDecoy' distingue POR QUÉ speakerIsPlayer es true: true real (línea de
-        // Will, o speakerId=="Player") vs. promovida aquí abajo porque el speaker es el party member
-        // que ActiveCharacterSwapper tiene oculto (Liam/Estela siendo controlados). Sin esta
-        // distinción, el guard de "línea de Will" de más abajo no podía diferenciar ambos casos y
-        // secuestraba también las líneas propias de Liam/Estela — INC-147, ver commit de hoy.
+        // Las líneas están escritas asumiendo un jugador fijo: Liam o Estela traen siempre
+        // isPlayerSpeaking=false, aunque en esta partida los lleve el jugador. Si speakerId es el
+        // miembro del grupo que el jugador representa ahora (su NPC está oculto), el hablante
+        // visible es el cuerpo del jugador; si no, la animación de hablar se dispararía sobre un
+        // cuerpo invisible (mismo criterio que DialogueCinematicController.FindSpeakerTransform).
+        // 'promotedFromHiddenDecoy' distingue por qué speakerIsPlayer es true: línea de Will de
+        // verdad, o promovida aquí por ser del personaje al mando. Ver INC-147.
         bool promotedFromHiddenDecoy = false;
-        if (!speakerIsPlayer && ActiveCharacterSwapper.Instance != null)
+        if (!speakerIsPlayer)
         {
-            var hiddenNpc = ActiveCharacterSwapper.Instance.HiddenNpc;
-            if (hiddenNpc != null && hiddenNpc.NPCManager != null)
+            var hiddenNpc = ControlDelJugador.MiembroDe(ControlDelJugador.Activo);
+            if (ControlDelJugador.RepresentadoPorElJugador(hiddenNpc) && hiddenNpc.NPCManager != null)
             {
                 var hiddenMgr = hiddenNpc.NPCManager;
                 bool isHiddenSpeaker = (!string.IsNullOrEmpty(hiddenMgr.DialogueCharacterId) && hiddenMgr.DialogueCharacterId == speakerId)
@@ -1673,25 +1643,16 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        // FIX (1 sep 2026, INC-136/INC-138 seguimiento) "línea de Will anima al personaje físico
-        // controlado en vez de a Will": las líneas marcadas isPlayerSpeaking (o speakerId=="Player")
-        // están escritas asumiendo que Will ES el player — igual que el fix de más arriba asume que
-        // un NPC con el DialogueCharacterId del personaje activo oculto es en realidad el player.
-        // Pero cuando el player físico está controlando a Liam o Estela, Will deja de ser ese cuerpo:
-        // pasa a ser un NPCPartyMember visible aparte (ActiveCharacterSwapper.WillNpcInstance, no
-        // nulo exactamente en ese caso — ver SwitchCharacter() paso 6, "instanciar al alejarse de
-        // Will, destruir al volver"). Sin este guard, SetPlayerTalkingAnimation() animaba el cuerpo
-        // físico controlado (p.ej. Liam) para una línea que en pantalla se atribuye a Will.
-        //
-        // FIX (1 sep 2026, INC-147) "'!promotedFromHiddenDecoy' añadido": este guard usaba solo
-        // 'speakerIsPlayer', así que también disparaba para la propia línea de Liam/Estela cuando
-        // el fix de arriba la promociona a speakerIsPlayer=true (ella siendo el hidden decoy). Eso
-        // secuestraba la animación de Estela/Liam y la redirigía a Will, dejando al personaje
-        // realmente hablando (visible en pantalla) en Idle. Repro: hablar con el Rey controlando a
-        // Estela — su línea "Ya verás cuando te pille" animaba a Will en vez de a ella.
-        if (speakerIsPlayer && !promotedFromHiddenDecoy && ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.WillNpcInstance != null)
+        // Las líneas de Will (isPlayerSpeaking o speakerId=="Player") asumen que Will es el cuerpo
+        // del jugador. Si el jugador lleva a Liam o Estela, Will es un NPC aparte y es él quien
+        // habla; si no, se animaría el cuerpo controlado para una línea de Will. No se aplica a
+        // las líneas promovidas arriba (son del personaje al mando, no de Will). Ver INC-136, INC-147.
+        var willNpc = speakerIsPlayer && !promotedFromHiddenDecoy
+            ? ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will)
+            : null;
+        if (willNpc != null)
         {
-            var willAnimator = ActiveCharacterSwapper.Instance.WillNpcInstance.GetComponent<NPCSimpleAnimator>();
+            var willAnimator = willNpc.GetComponent<NPCSimpleAnimator>();
             if (willAnimator != null)
             {
                 if (!_activeDialogueSpeakerIsPlayer && _activeDialogueSpeakerAnimator == willAnimator)

@@ -298,9 +298,9 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         // ✅ CRÍTICO: Actualizar el runtimePreset con el estado ACTUAL de todos los sistemas
         // Esto captura las quests, inventario, wardrobe, etc. desde los managers vivos
         Debug.Log("[PlayerPresetSOEditor] 🔄 Actualizando runtimePreset desde el estado actual...");
-        profile.UpdateRuntimePresetFromCurrentState();
+        Partida.VolcarEstadoDelJuego();
         
-        var activePreset = profile.GetActivePresetResolved();
+        var activePreset = Partida.Preset;
         if (activePreset == null)
         {
             EditorUtility.DisplayDialog("Error", "No hay preset activo en el GameBootProfile.", "OK");
@@ -448,9 +448,9 @@ public class PlayerPresetSOEditor : UnityEditor.Editor
         
         // Actualizar el runtimePreset con el estado actual
         Debug.Log("[PlayerPresetSOEditor] 🔄 Actualizando runtimePreset desde el estado actual...");
-        profile.UpdateRuntimePresetFromCurrentState();
+        Partida.VolcarEstadoDelJuego();
         
-        var activePreset = profile.GetActivePresetResolved();
+        var activePreset = Partida.Preset;
         if (activePreset == null)
         {
             EditorUtility.DisplayDialog("Error", "No hay preset activo en el GameBootProfile.", "OK");

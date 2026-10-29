@@ -37,13 +37,13 @@ public class PlatformElevator : MonoBehaviour
     [Tooltip("Clave de SFX al terminar de moverse")]
     [SerializeField] private string movementStopSfxKey = "Platform_Move_Stop";
     
-    [Tooltip("VFX que se instancia al comenzar a moverse")]
+    [Tooltip("VFX que acompaña a la plataforma mientras se mueve (del pool de VFX)")]
     [SerializeField] private GameObject movementVFX;
     
     [Tooltip("Transform donde se instancia el VFX (si es null, usa la posición de la plataforma)")]
     [SerializeField] private Transform vfxSpawnPoint;
     
-    [Tooltip("Duración del VFX antes de destruirse automáticamente")]
+    [Tooltip("Segundos que sigue el VFX tras parar la plataforma, para que termine su animación, antes de volver al pool")]
     [SerializeField] private float vfxLifetime = 3f;
     
     [Header("Estado")]
@@ -54,7 +54,8 @@ public class PlatformElevator : MonoBehaviour
     private Rigidbody _rb;
     private bool _isMoving;
     private Coroutine _moveCoroutine;
-    private GameObject _currentVFX; // VFX activo actual
+    private Transform _currentVFX; // VFX del movimiento en curso
+    private ulong _usoDelVFX;
 
     private void Awake()
     {
@@ -169,7 +170,7 @@ public class PlatformElevator : MonoBehaviour
         float elapsed = 0f;
         
         // Feedback al comenzar (sin VFX si es reversión)
-        PlayMovementStartFeedback(isReversion);
+        PlayMovementStartFeedback(duration, isReversion);
         
         // Mover la plataforma en el paso de física (lo que va encima la acompaña sin tirones)
         var paso = new WaitForFixedUpdate();
@@ -222,7 +223,7 @@ public class PlatformElevator : MonoBehaviour
     /// <summary>
     /// Reproduce feedback al comenzar a moverse
     /// </summary>
-    private void PlayMovementStartFeedback(bool isReversion = false)
+    private void PlayMovementStartFeedback(float duracion, bool isReversion = false)
     {
         // SFX (siempre, reversión o no)
         if (!string.IsNullOrEmpty(movementStartSfxKey))
@@ -237,18 +238,23 @@ public class PlatformElevator : MonoBehaviour
             FeedbackService.CameraShake(0.2f, 0.3f);
         }
         
-        // VFX - Solo si NO es reversión
-        if (!isReversion && movementVFX != null)
+        // VFX - Solo si NO es reversión. Va colgado de la plataforma y vuelve al pool cuando acaba
+        // el movimiento más vfxLifetime; si un movimiento nuevo corta al anterior, se recoge ya.
+        if (!isReversion && movementVFX != null && VfxPoolService.Instance != null)
         {
-            // Destruir VFX anterior si existe
-            if (_currentVFX != null)
-            {
-                Destroy(_currentVFX);
-            }
-            
+            RecogerVFX();
+
             Vector3 spawnPos = vfxSpawnPoint != null ? vfxSpawnPoint.position : transform.position;
-            _currentVFX = Instantiate(movementVFX, spawnPos, Quaternion.identity, transform);
+            _currentVFX = VfxPoolService.Instance.Play(movementVFX, spawnPos, Quaternion.identity, duracion + vfxLifetime, transform);
+            _usoDelVFX = VfxPoolService.Instance.ObtenerUso(_currentVFX);
         }
+    }
+
+    private void RecogerVFX()
+    {
+        if (_currentVFX != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Recoger(_currentVFX, _usoDelVFX);
+        _currentVFX = null;
     }
 
     /// <summary>
@@ -262,12 +268,8 @@ public class PlatformElevator : MonoBehaviour
             AudioService.Instance?.PlaySFX(movementStopSfxKey, worldPosition: transform.position);
         }
         
-        // Destruir VFX cuando termina el movimiento (si había VFX)
-        if (_currentVFX != null)
-        {
-            Destroy(_currentVFX, vfxLifetime); // Delay configurable para que termine la animación
-            _currentVFX = null;
-        }
+        // El VFX sigue vfxLifetime más (ya programado en el pool) para que termine su animación.
+        _currentVFX = null;
     }
 
     /// <summary>

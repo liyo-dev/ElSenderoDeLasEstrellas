@@ -21,7 +21,33 @@ namespace Game.NPC.Common
         public bool IsInCombat { get; set; }
         public bool IsInCinematic { get; set; }
         public bool WasDefeatedInCombat { get; set; } // NPC ha sido derrotado
-        public bool IsPinnedByParty { get; set; }    // NPC anclado al salir del party (no debe vagar)
+
+        // Quién tiene anclado al NPC. Cada sistema ancla y suelta solo con su clave, así ninguno
+        // deshace el ancla de otro (p. ej. bajar del barco no suelta el modo Libre del grupo).
+        private readonly System.Collections.Generic.HashSet<object> _anclas =
+            new System.Collections.Generic.HashSet<object>();
+
+        /// <summary>
+        /// El NPC está anclado: se queda donde está, sin vagar, sin seguir al jugador, sin entrar
+        /// en combate y sin teletransportarse con el grupo. Lo anclan, cada uno con su clave, el
+        /// modo Libre del grupo, salir del grupo y el puesto en el barco.
+        /// </summary>
+        public bool EstaAnclado => _anclas.Count > 0;
+
+        /// <summary>Ancla al NPC en nombre de <paramref name="quien"/> (repetirlo no suma).</summary>
+        public void Anclar(object quien)
+        {
+            if (quien != null) _anclas.Add(quien);
+        }
+
+        /// <summary>Quita el ancla de <paramref name="quien"/>; las de los demás siguen.</summary>
+        public void Soltar(object quien)
+        {
+            if (quien != null) _anclas.Remove(quien);
+        }
+
+        /// <summary>El NPC lleva el ancla de <paramref name="quien"/>.</summary>
+        public bool EstaAncladoPor(object quien) => quien != null && _anclas.Contains(quien);
 
         /// <summary>
         /// True mientras este NPC esté activamente en FollowPlayerState (siguiendo al jugador

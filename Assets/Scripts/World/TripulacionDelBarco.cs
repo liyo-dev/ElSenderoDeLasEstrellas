@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.NPC;
@@ -12,23 +13,34 @@ using Slot = PartyControlManager.CharacterSlot;
 /// timón, cada uno en uno de los dos puestos de cubierta.
 ///
 /// Da igual quién conduzca: quien lleva el mando se queda en el puesto de conducción y los otros
-/// dos se reparten babor y estribor. Estela se sienta y Will y Liam se quedan de pie, apoyados.
+/// dos se reparten babor y estribor en el orden de <see cref="tripulacion"/>, cada uno con su pose
+/// (por defecto Estela se sienta y Will y Liam se quedan de pie, apoyados).
 ///
 /// Para llevarlos hasta el casco se usa el sistema oficial
 /// <see cref="NPCPartyMember.MoveToDialoguePosition"/>; al llegar se les toma el control (agente
 /// parado, rotación automática apagada y estado de diálogo anclado), se les cuelga de su puesto
-/// —que es hijo del barco, así que se mueven con él— y miran hacia la proa. Mientras están a bordo quedan
-/// anclados (<see cref="Game.NPC.Common.NPCStateContext.IsPinnedByParty"/>), para que ni el
-/// seguimiento del grupo ni el cambio de personaje los muevan de su sitio.
+/// —que es hijo del barco, así que se mueven con él— y miran hacia la proa. Mientras están a bordo
+/// el barco los ancla con su clave (<see cref="Game.NPC.Common.NPCStateContext.Anclar"/>), para que
+/// ni el seguimiento del grupo ni el cambio de personaje los muevan de su sitio.
 /// </summary>
 [DisallowMultipleComponent]
 public class TripulacionDelBarco : MonoBehaviour
 {
     [Header("Puestos a bordo")]
-    [Tooltip("Puesto de babor: lo ocupa el primer compañero que sube (Estela, si está en el grupo).")]
+    [Tooltip("Puesto de babor: lo ocupa el primer compañero que sube (el primero de la tripulación que esté en el grupo).")]
     [SerializeField, FormerlySerializedAs("puestoDeEstela")] private Transform puestoDeBabor;
     [Tooltip("Puesto de estribor: lo ocupa el segundo compañero que sube.")]
     [SerializeField, FormerlySerializedAs("puestoDeLiam")] private Transform puestoDeEstribor;
+
+    [Header("Tripulación")]
+    [Tooltip("Orden de embarque: los que no van al timón ocupan babor y estribor en este orden, " +
+             "cada uno con su pose en el puesto.")]
+    [SerializeField] private List<Tripulante> tripulacion = new List<Tripulante>
+    {
+        new Tripulante { personaje = Slot.Estela, pose = NPCAmbientActivity.SitLow },
+        new Tripulante { personaje = Slot.Will, pose = NPCAmbientActivity.None },
+        new Tripulante { personaje = Slot.Liam, pose = NPCAmbientActivity.None },
+    };
 
     [Header("Embarque")]
     [Tooltip("Punto del casco donde se suben (al costado, a la altura del agua).")]
@@ -46,6 +58,16 @@ public class TripulacionDelBarco : MonoBehaviour
     [Tooltip("Segundos que dura el salto.")]
     [SerializeField] private float duracionDelSalto = 0.4f;
 
+    /// <summary>Un personaje de la tripulación y la pose que adopta en su puesto.</summary>
+    [Serializable]
+    private sealed class Tripulante
+    {
+        [Tooltip("Personaje del grupo.")]
+        public Slot personaje = Slot.Will;
+        [Tooltip("Pose en su puesto a bordo. None = de pie, apoyado (idle normal).")]
+        public NPCAmbientActivity pose = NPCAmbientActivity.None;
+    }
+
     /// <summary>Un compañero que sube al barco y todo lo que hay que devolverle al bajar.</summary>
     private sealed class Pasajero
     {
@@ -54,13 +76,11 @@ public class TripulacionDelBarco : MonoBehaviour
         public NPCSimpleAnimator Animador;
         public Transform Puesto;
         public Transform PadreOriginal;
-        public bool Sentado;
+        public NPCAmbientActivity Pose;
         public bool AgenteEstabaActivo;
-        public bool EstabaAnclado;
-    }
 
-    /// <summary>Orden de embarque: Estela primero para que conserve siempre babor.</summary>
-    private static readonly Slot[] OrdenDeEmbarque = { Slot.Estela, Slot.Will, Slot.Liam };
+        public bool DePie => Pose == NPCAmbientActivity.None;
+    }
 
     private BarcoNavegable _barco;
     private Coroutine _subida;
@@ -105,7 +125,7 @@ public class TripulacionDelBarco : MonoBehaviour
 
     /// <summary>
     /// Baja a los compañeros del barco y los deja en <paramref name="destino"/>, el mismo sitio al
-    /// que baja el jugador. Devuelve a cada uno su agente, su anclaje y su seguimiento.
+    /// que baja el jugador. Devuelve a cada uno su agente y su seguimiento, y suelta el ancla del barco.
     /// </summary>
     public void BajarATripulacion(Vector3 destino)
     {
@@ -130,9 +150,10 @@ public class TripulacionDelBarco : MonoBehaviour
         Transform[] puestos = { puestoDeBabor, puestoDeEstribor };
         int siguiente = 0;
 
-        for (int i = 0; i < OrdenDeEmbarque.Length; i++)
+        for (int i = 0; i < tripulacion.Count; i++)
         {
-            Slot personaje = OrdenDeEmbarque[i];
+            if (tripulacion[i] == null) continue;
+            Slot personaje = tripulacion[i].personaje;
             if (personaje == ControlDelJugador.Activo) continue;
             if (!ControlDelJugador.EnElGrupo(personaje)) continue;
 
@@ -148,9 +169,8 @@ public class TripulacionDelBarco : MonoBehaviour
                 Animador = npc.GetComponentInChildren<NPCSimpleAnimator>(),
                 Puesto = puestos[siguiente],
                 PadreOriginal = npc.transform.parent,
-                Sentado = personaje == Slot.Estela,
+                Pose = tripulacion[i].pose,
                 AgenteEstabaActivo = agente != null && agente.enabled,
-                EstabaAnclado = npc.NPCManager?.Context?.IsPinnedByParty ?? false,
             });
             siguiente++;
         }
@@ -186,7 +206,7 @@ public class TripulacionDelBarco : MonoBehaviour
         // venía de combate, deja de estarlo: a bordo manda el barco, no AllyCombatState.
         if (npc.NPCManager?.Context != null)
         {
-            npc.NPCManager.Context.IsPinnedByParty = true;
+            npc.NPCManager.Context.Anclar(this);
             npc.NPCManager.Context.IsInCombat = false;
         }
 
@@ -239,7 +259,7 @@ public class TripulacionDelBarco : MonoBehaviour
             if (!string.IsNullOrEmpty(estadoDelSalto))
                 animador.PlayOneShot(estadoDelSalto, 0, () =>
                 {
-                    if (!pasajero.Sentado) DejarDePieEnElPuesto(pasajero);
+                    if (pasajero.DePie) DejarDePieEnElPuesto(pasajero);
                 });
         }
 
@@ -279,9 +299,9 @@ public class TripulacionDelBarco : MonoBehaviour
             animador.ForzarEnElSuelo();
             animador.QuitarRootMotion();
 
-            // Con salto, la pose de pie la pone su one-shot al acabar (DejarDePieEnElPuesto); la
-            // sentada se pone ya, como siempre.
-            if (pasajero.Sentado) animador.PlayAmbientActivity(NPCAmbientActivity.SitLow);
+            // Con salto, la pose de pie la pone su one-shot al acabar (DejarDePieEnElPuesto); una
+            // pose de actividad (sentarse) se pone ya: lleva su propio tramo de entrada.
+            if (!pasajero.DePie) animador.PlayAmbientActivity(pasajero.Pose);
             else if (string.IsNullOrEmpty(estadoDelSalto)) DejarDePieEnElPuesto(pasajero);
         }
 
@@ -342,8 +362,8 @@ public class TripulacionDelBarco : MonoBehaviour
         if (npc == null) return;
 
         // La postura a bordo se apaga antes de devolverlo al grupo: si no, se queda sentado.
-        if (pasajero.Sentado && pasajero.Animador != null)
-            pasajero.Animador.StopAmbientActivity(NPCAmbientActivity.SitLow);
+        if (!pasajero.DePie && pasajero.Animador != null)
+            pasajero.Animador.StopAmbientActivity(pasajero.Pose);
 
         npc.transform.SetParent(pasajero.PadreOriginal, true);
 
@@ -378,13 +398,14 @@ public class TripulacionDelBarco : MonoBehaviour
             pasajero.Animador.EnableAutoRotation();
         }
 
-        if (npc.NPCManager?.Context != null)
-            npc.NPCManager.Context.IsPinnedByParty = pasajero.EstabaAnclado;
+        // Suelta solo el ancla del barco: si otro sistema lo tenía anclado (modo Libre), sigue.
+        var contexto = npc.NPCManager != null ? npc.NPCManager.Context : null;
+        contexto?.Soltar(this);
 
         bool siguiendo = PartyControlManager.Instance == null
                          || PartyControlManager.Instance.IsPartyFollowing;
 
-        if (!siguiendo || pasajero.EstabaAnclado)
+        if (!siguiendo || (contexto != null && contexto.EstaAnclado))
         {
             npc.NPCManager?.ForceIdle();
             return;

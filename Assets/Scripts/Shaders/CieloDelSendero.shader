@@ -88,7 +88,9 @@ Shader "El Sendero/Cielo"
         cielo=lerp(cielo,nube,densidad);
         float radioSol=max(0.0001,_CieloTamanoDelSol);
         float2 discoSol=coordenadasDelAstro(d,sol);
-        float angulo=atan2(discoSol.y,discoSol.x)+_Time.y*0.008;
+        // Sin astros publicados (escena sin ciclo día/noche) el disco es (0,0) y atan2(0,0) da NaN en la
+        // GPU: el cielo se pinta negro y el bloom convierte ese NaN en un lavado blanco. Ver INC-864.
+        float angulo=(dot(discoSol,discoSol)>1e-12 ? atan2(discoSol.y,discoSol.x) : 0)+_Time.y*0.008;
         float rayos=pow(abs(cos(angulo*4)),28)*exp(-angSol/(radioSol*4))*smoothstep(radioSol*0.5,radioSol*1.4,angSol);
         float nucleo=1-smoothstep(radioSol*0.8,radioSol*1.15,angSol);
         float corona=exp(-angSol/(radioSol*2.5));

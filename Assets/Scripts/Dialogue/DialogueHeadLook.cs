@@ -136,6 +136,19 @@ public class DialogueHeadLook : MonoBehaviour
     /// <summary>
     /// Asigna el objetivo de mirada. null → fade out y el componente se duerme solo.
     /// </summary>
+    public float MaxYaw => maxYaw;
+    public float YawCutoffMargin => yawCutoffMargin;
+    public float MaxWeight => maxWeight;
+
+    /// Cambia el alcance del giro. Las cinemáticas con guion lo amplían (alguien sentado mira a
+    /// quien tiene al lado) y lo devuelven al acabar.
+    public void FijarAlcance(float yaw, float margenDeCorte, float peso)
+    {
+        maxYaw = yaw;
+        yawCutoffMargin = margenDeCorte;
+        maxWeight = Mathf.Clamp01(peso);
+    }
+
     public void SetTarget(Transform target)
     {
         if (target == transform) target = null; // nunca mirarse a uno mismo

@@ -39,7 +39,6 @@ public class ConfirmationPopupUI : MonoBehaviour
     private Action _onCancel;
     private bool _cancelWithBack = true;
     private bool _isShown;
-    private float _savedTimeScale;
     private bool _confirmSelected = false;
     private float _shownAt;
     private GameObject _previousSelected;
@@ -66,6 +65,8 @@ public class ConfirmationPopupUI : MonoBehaviour
     void OnDisable()
     {
         StopSelectionAnimation();
+        // Si el objeto se apaga con el popup abierto, la pausa no se queda puesta.
+        TimeScaleArbiterService.Release(this);
     }
 
     /// <param name="confirmText">Texto del botón de confirmar. Vacío = «Sí».</param>
@@ -82,8 +83,9 @@ public class ConfirmationPopupUI : MonoBehaviour
         _onConfirm = onConfirm;
         _onCancel = onCancel;
         _cancelWithBack = cancelWithBack;
-        _savedTimeScale = Time.timeScale;
-        Time.timeScale = 0f;
+        // El juego se para mientras se decide; el árbitro reparte el tiempo con los demás
+        // sistemas que lo piden a la vez (cerrar el popup no anula otra pausa en curso).
+        TimeScaleArbiterService.Request(this, 0f);
 
         // Sin esto, el mapa de acciones GamePlay seguía activo mientras el popup estaba
         // abierto: el D-Pad usado para navegar Sí/No también cambiaba de personaje
@@ -343,7 +345,7 @@ public class ConfirmationPopupUI : MonoBehaviour
     {
         _isShown = false;
         StopSelectionAnimation();
-        Time.timeScale = _savedTimeScale;
+        TimeScaleArbiterService.Release(this);
         Core.PlayerInputManager.Instance?.PopUIMode();
 
         // Libera el freeze de movimiento adquirido en Show(). Seguro de llamar aunque Show()

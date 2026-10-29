@@ -143,7 +143,7 @@ public sealed class CelebracionEnGrupo
             // Si otro sistema ya lo lleva (una cinemática) o se ha quedado anclado en modo Libre,
             // no sale en la foto.
             if (manager == null || manager.Context == null) continue;
-            if (manager.Context.IsInCinematic || manager.Context.IsPinnedByParty) continue;
+            if (manager.Context.IsInCinematic || manager.Context.EstaAnclado) continue;
             if (!SequenceActor.TryResolve(manager.PersistenceId, out var actor)) continue;
 
             actor.Hold();

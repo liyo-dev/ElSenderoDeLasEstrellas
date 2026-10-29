@@ -75,17 +75,8 @@ public class NPCWorkRoute : MonoBehaviour
     public float pausaAntesDeVolver = 0.6f;
 
     [Header("Narrativa")]
-    [Tooltip("Si tiene texto, la ruta solo está disponible cuando esa señal se ha levantado alguna vez.")]
-    public string soloSiSenal;
-
-    [Tooltip("Si tiene texto, la ruta solo está disponible cuando esa quest está activa.")]
-    public string soloSiQuest;
-
-    [Tooltip("Si tiene texto, la ruta deja de estar disponible cuando esa señal se ha levantado.")]
-    public string dejaDeSiSenal;
-
-    [Tooltip("Si tiene texto, la ruta deja de estar disponible cuando esa quest está activa o completada.")]
-    public string dejaDeSiQuest;
+    [Tooltip("Parte de la historia en la que la ruta está disponible.")]
+    public TramoDeHistoria tramo = new();
 
     [Header("Punto de carga (CarryPoint frontal)")]
     [Tooltip("Posición local del punto de carga frontal respecto al NPC mientras transporta la caja.")]
@@ -93,13 +84,6 @@ public class NPCWorkRoute : MonoBehaviour
 
     [Tooltip("Rotación local de la caja en el punto de carga.")]
     public Vector3 rotacionCargaFrontal = Vector3.zero;
-
-    [Header("Caja en la mano (compatibilidad legacy)")]
-    [Tooltip("Posición local legacy respecto al hueso de la mano derecha.")]
-    public Vector3 offsetEnMano = new Vector3(-0.154f, -0.365f, -0.262f);
-
-    [Tooltip("Rotación local legacy respecto al hueso de la mano derecha.")]
-    public Vector3 giroEnMano = new Vector3(18.2f, 122.4f, 87.5f);
 
     [Header("Finalización de la rutina")]
     [Tooltip("Si es true, cuando la pila de origen se vacía la rutina se da por terminada y no se invierte el recorrido.")]
@@ -193,33 +177,7 @@ public class NPCWorkRoute : MonoBehaviour
         if (_terminada) return false;
         if (puntoRecogida == null || puntoEntrega == null) return false;
 
-        var senales = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
-        if (senales == null)
-        {
-            if (!string.IsNullOrEmpty(soloSiSenal) || !string.IsNullOrEmpty(soloSiQuest))
-                return false;
-            return true;
-        }
-
-        if (!string.IsNullOrEmpty(soloSiSenal) && !senales.HasEverRaised(soloSiSenal)) return false;
-
-        if (!string.IsNullOrEmpty(soloSiQuest))
-        {
-            var estado = senales.GetQuestState(soloSiQuest);
-            if (estado != NarrativeQuestState.Active)
-                return false;
-        }
-
-        if (!string.IsNullOrEmpty(dejaDeSiSenal) && senales.HasEverRaised(dejaDeSiSenal)) return false;
-
-        if (!string.IsNullOrEmpty(dejaDeSiQuest))
-        {
-            var estado = senales.GetQuestState(dejaDeSiQuest);
-            if (estado == NarrativeQuestState.Active || estado == NarrativeQuestState.Completed)
-                return false;
-        }
-
-        return true;
+        return tramo == null || tramo.EnCurso();
     }
 
     public bool TryOcupar(Transform npc)
@@ -259,18 +217,10 @@ public class NPCWorkRoute : MonoBehaviour
         _cajasOrigen.RemoveAt(ultimo);
         if (caja == null) return null;
 
-        // Si el socket es el CarryPoint frontal (estilo PlayerCarrySystem), se acopla centrado
-        if (socketCarga.name.Contains("CarryPoint"))
-        {
-            caja.SetParent(socketCarga, worldPositionStays: false);
-            caja.localPosition = Vector3.zero;
-            caja.localRotation = Quaternion.Euler(rotacionCargaFrontal);
-        }
-        else
-        {
-            // Fallback para hueso legacy de mano derecha
-            NPCWorldPoint.ColocarPropEnMano(caja, socketCarga, offsetEnMano, giroEnMano);
-        }
+        // La caja va centrada en el punto de carga frontal (como PlayerCarrySystem).
+        caja.SetParent(socketCarga, worldPositionStays: false);
+        caja.localPosition = Vector3.zero;
+        caja.localRotation = Quaternion.Euler(rotacionCargaFrontal);
 
         _cajaEnMano = caja;
         return caja;

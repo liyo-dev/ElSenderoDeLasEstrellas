@@ -102,7 +102,7 @@ public class PlayerPresetService : MonoBehaviour
         EnsureAppearanceBuilderReference();
         // Debug.Log($"[PlayerPresetService] Componentes encontrados -> spawner={( _spawner != null ? _spawner.GetType().Name : "null" )}, magicCaster={( _magicCaster != null ? _magicCaster.GetType().Name : "null" )}, manaPool={( _manaPool != null ? _manaPool.GetType().Name : "null" )}, actionManager={( _actionManager != null ? _actionManager.GetType().Name : "null" )}, appearanceBuilder={( _appearanceBuilder != null ? _appearanceBuilder.GetType().Name : "null" )}, inventory={( _inventory != null ? _inventory.GetType().Name : "null" )}");
 
-        var preset = profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (!preset) 
         { 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -312,26 +312,14 @@ public class PlayerPresetService : MonoBehaviour
         var estelaApp = registry.GetAppearance(PartyControlManager.CharacterSlot.Estela);
         var liamApp   = registry.GetAppearance(PartyControlManager.CharacterSlot.Liam);
 
-        // FIX (20 ago 2026) — bug "dos Estelas y un Will" (ver también ActiveCharacterSwapper,
-        // que ya documentaba y mitigaba una variante distinta del mismo bug con
-        // EnsureHiddenNpcSuppressed). Reportado por Raúl con logs reales: tras cargar partida,
-        // "[CharacterAppearanceRegistry] 📸 Pre-snapshot Will tomado: [Body:Body09,
-        // Head:Head02_Female, Hair:Hair08, Eyes:Eye02, Mouth:Mouth02, Accessory:AC09_Ribbon]" —
-        // esa es la apariencia de ESTELA, no la de Will. willSnap se toma de lo que el builder
-        // muestra en el momento del boot (SnapshotWillFromBuilderIfNeeded), ANTES de aplicar
-        // nada; si por lo que sea el builder arranca mostrando ya la apariencia de Estela/Liam,
-        // esta referencia queda corrompida ELLA MISMA. A partir de ahí, la selección REAL y
-        // correcta del preset (Body05/Head01_Male/Hair01... de Will) "difiere del snapshot" en
-        // todas sus partes, así que basta con que 2 de ellas coincidan con partes genéricas
-        // compartidas por otro personaje (p.ej. Eyes/Mouth por defecto, reutilizados entre
-        // personajes) para que el preset —el único dato correcto de los dos— se descartara como
-        // "corrupto" y se re-aplicara el snapshot malo, dejando el controller (Will) vestido de
-        // Estela para siempre mientras la Estela real del equipo también sigue visible: de ahí
-        // las "dos Estelas". Antes de usar willSnap como referencia, comprobar que el propio
-        // snapshot no se parece ya a Estela/Liam — si se parece, no es un punto de comparación
-        // fiable y se omite la detección de corrupción por completo, confiando en
-        // preset.appearance (que SnapshotAppearanceToPreset() solo escribe cuando el personaje
-        // activo es Will, ver comentario ahí — por diseño debería llegar limpio).
+        // willSnap se toma de lo que muestra el builder al arrancar (SnapshotWillFromBuilderIfNeeded),
+        // antes de aplicar nada. Si en ese momento el builder ya enseñaba la apariencia de Estela o
+        // Liam, la propia referencia está corrompida: la selección correcta del preset difiere de
+        // ella en todo, bastan dos partes genéricas compartidas (ojos, boca) para darla por
+        // «corrupta», y se reaplicaría el snapshot malo (Will vestido de Estela junto a la Estela
+        // real del grupo: «dos Estelas y un Will»). Si el snapshot se parece a otro personaje no es
+        // una referencia fiable: se omite la detección y se confía en preset.appearance, que
+        // SnapshotAppearanceToPreset() solo escribe con Will al mando.
         if (LooksLikeOtherCharacter(willSnap, estelaApp, liamApp))
         {
             #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -421,7 +409,7 @@ public class PlayerPresetService : MonoBehaviour
             return;
         }
 
-        var preset = profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -685,7 +673,7 @@ public class PlayerPresetService : MonoBehaviour
 #endif
             return;
         }
-        var preset = GameBootService.Profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (!preset)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

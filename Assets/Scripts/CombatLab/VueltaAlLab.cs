@@ -25,13 +25,13 @@ public sealed class VueltaAlLab : MonoBehaviour, IRespuestaALaDerrota
     public static void VolverALaZonaDeJefes()
     {
         ZonaDeJefesDelLab.EmpezarEnLaZonaAlCargar();
-        Time.timeScale = 1f;
+        PanelDelLab.Cerrar();
         SceneManager.LoadScene(EscenaDelLab);
     }
 
     public static void SalirAlMenu()
     {
-        Time.timeScale = 1f;
+        PanelDelLab.Cerrar();
         SceneManager.LoadScene(EscenaDelMenu);
     }
 }

@@ -1,21 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-#pragma warning disable 618 // se referencian nodos [Obsolete] a propósito para seguir mostrando grafos viejos
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Panel lateral derecho del editor: muestra y edita el nodo seleccionado.
     ///
-    /// Tres bloques: (1) los campos del nodo con los desplegables de NarrativeKeyDrawer;
-    /// (2) el CONTENIDO resuelto — guion completo del diálogo, ficha de la quest con sus pasos,
-    /// quién emite/escucha una señal — para no tener que abrir el asset aparte; (3) conexiones
-    /// entrantes y salientes con botones para saltar a ellas.
+    /// Tres bloques: (1) los campos del nodo con los desplegables de NarrativeKeyDrawer (y las
+    /// listas de enum marcadas con [NarrativeChipList] como etiquetas); (2) el CONTENIDO resuelto
+    /// de lo que declara el nodo en NarrativeNode.Describe — guion completo del diálogo, ficha de la
+    /// quest con sus pasos, quién emite/escucha una señal — para no tener que abrir el asset aparte;
+    /// (3) conexiones entrantes y salientes con botones para saltar a ellas.
     /// </summary>
     public sealed class NarrativeInspectorPanel : VisualElement
     {
@@ -87,8 +88,13 @@ namespace Sendero.Narrative.Editor
                 var name = child.name;
                 if (name == "guid" || name == "position" || name == "outputs") continue;
                 if (name == "inputAnchor" || name == "outputAnchor" || name == "overrideNodeColor" || name == "nodeColor") continue;
-                // UnlockAbilitiesNode tiene su editor propio de chips más abajo.
-                if (model is UnlockAbilitiesNode && (name == "abilityKeysToUnlock" || name == "spellsToUnlock")) continue;
+
+                var chipField = ChipListField(model.GetType(), name, out var chipAttr);
+                if (chipField != null)
+                {
+                    BuildChipList(fields, model, chipField, chipAttr, view);
+                    continue;
+                }
 
                 var pf = new PropertyField(child.Copy());
                 if (name == "displayTitle") pf.label = "Etiqueta";
@@ -106,8 +112,6 @@ namespace Sendero.Narrative.Editor
                 });
                 fields.Add(pf);
             }
-
-            if (model is UnlockAbilitiesNode unlock) BuildUnlockEditor(fields, unlock, view);
 
             _suppressChangeEvents = true;
             schedule.Execute(() => _suppressChangeEvents = false).ExecuteLater(50);
@@ -158,22 +162,54 @@ namespace Sendero.Narrative.Editor
             return fold;
         }
 
-        // ─── Editor de habilidades de UnlockAbilitiesNode ───────────────
+        // ─── Listas de enum como etiquetas ([NarrativeChipList]) ────────
 
         /// <summary>
-        /// Sustituye las listas en crudo de habilidades/hechizos por chips con botón de quitar y
-        /// un desplegable para añadir. Se aplica al ejecutar el nodo; aquí solo se edita la lista.
+        /// Campo List&lt;enum&gt; marcado con [NarrativeChipList], o null si el campo no lo es.
         /// </summary>
-        void BuildUnlockEditor(VisualElement root, UnlockAbilitiesNode node, NodeView view)
+        static FieldInfo ChipListField(Type type, string fieldName, out NarrativeChipListAttribute attr)
         {
+            attr = null;
+            for (var t = type; t != null && t != typeof(NarrativeNode); t = t.BaseType)
+            {
+                var f = t.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+                if (f == null) continue;
+                attr = f.GetCustomAttribute<NarrativeChipListAttribute>();
+                if (attr == null) return null;
+                var ft = f.FieldType;
+                bool isEnumList = ft.IsGenericType && ft.GetGenericTypeDefinition() == typeof(List<>) && ft.GetGenericArguments()[0].IsEnum;
+                return isEnumList ? f : null;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sustituye una lista de enum en crudo por etiquetas con botón de quitar y un desplegable
+        /// para añadir (sin repetir valores ni ofrecer «None»).
+        /// </summary>
+        void BuildChipList(VisualElement root, NarrativeNode node, FieldInfo field, NarrativeChipListAttribute attr, NodeView view)
+        {
+            var enumType = field.FieldType.GetGenericArguments()[0];
             var box = new VisualElement();
             box.AddToClassList("unlock-editor");
             root.Add(box);
             Rebuild();
 
-            void Changed(string undo)
+            System.Collections.IList CurrentList()
+            {
+                var list = field.GetValue(node) as System.Collections.IList;
+                if (list == null)
+                {
+                    list = (System.Collections.IList)Activator.CreateInstance(field.FieldType);
+                    field.SetValue(node, list);
+                }
+                return list;
+            }
+
+            void Change(string undo, Action<System.Collections.IList> apply)
             {
                 Undo.RecordObject(_graph, undo);
+                apply(CurrentList());
                 EditorUtility.SetDirty(_graph);
                 _so.Update();
                 NodeFieldChanged?.Invoke(view);
@@ -183,63 +219,27 @@ namespace Sendero.Narrative.Editor
             void Rebuild()
             {
                 box.Clear();
+                box.Add(SectionLabel(attr.Title ?? ObjectNames.NicifyVariableName(field.Name)));
 
-                box.Add(SectionLabel("Habilidades a desbloquear"));
-                var abilityChips = new VisualElement();
-                abilityChips.AddToClassList("unlock-editor__chips");
-                if (node.abilityKeysToUnlock == null) node.abilityKeysToUnlock = new List<AbilityKey>();
-                for (int i = 0; i < node.abilityKeysToUnlock.Count; i++)
+                var list = CurrentList();
+                var chips = new VisualElement();
+                chips.AddToClassList("unlock-editor__chips");
+                for (int i = 0; i < list.Count; i++)
                 {
                     int index = i;
-                    var key = node.abilityKeysToUnlock[i];
-                    var chip = new Button(() =>
-                    {
-                        node.abilityKeysToUnlock.RemoveAt(index);
-                        Changed("Quitar habilidad");
-                    }) { text = key + "  ×", tooltip = "Quitar del nodo" };
+                    var chip = new Button(() => Change("Quitar de la lista", l => l.RemoveAt(index)))
+                        { text = list[i] + "  ×", tooltip = "Quitar del nodo" };
                     chip.AddToClassList("unlock-editor__chip");
-                    abilityChips.Add(chip);
+                    chips.Add(chip);
                 }
-                if (node.abilityKeysToUnlock.Count == 0) abilityChips.Add(Muted("Ninguna."));
-                box.Add(abilityChips);
+                if (list.Count == 0) chips.Add(Muted("Ninguno."));
+                box.Add(chips);
 
-                var abilityOptions = Enum.GetValues(typeof(AbilityKey)).Cast<AbilityKey>()
-                    .Where(k => !node.abilityKeysToUnlock.Contains(k)).ToList();
-                if (abilityOptions.Count > 0)
-                    box.Add(AddRow(abilityOptions.Select(o => o.ToString()).ToList(), "Añadir habilidad", choice =>
-                    {
-                        node.abilityKeysToUnlock.Add((AbilityKey)Enum.Parse(typeof(AbilityKey), choice));
-                        Changed("Añadir habilidad");
-                    }));
-
-                box.Add(SectionLabel("Hechizos a desbloquear"));
-                var spellChips = new VisualElement();
-                spellChips.AddToClassList("unlock-editor__chips");
-                if (node.spellsToUnlock == null) node.spellsToUnlock = new List<SpellId>();
-                for (int i = 0; i < node.spellsToUnlock.Count; i++)
-                {
-                    int index = i;
-                    var spell = node.spellsToUnlock[i];
-                    var chip = new Button(() =>
-                    {
-                        node.spellsToUnlock.RemoveAt(index);
-                        Changed("Quitar hechizo");
-                    }) { text = spell + "  ×", tooltip = "Quitar del nodo" };
-                    chip.AddToClassList("unlock-editor__chip");
-                    spellChips.Add(chip);
-                }
-                if (node.spellsToUnlock.Count == 0) spellChips.Add(Muted("Ninguno."));
-                box.Add(spellChips);
-
-                var spellOptions = Enum.GetValues(typeof(SpellId)).Cast<SpellId>()
-                    .Where(s => s != SpellId.None && !node.spellsToUnlock.Contains(s))
-                    .Select(s => s.ToString()).ToList();
-                if (spellOptions.Count > 0)
-                    box.Add(AddRow(spellOptions, "Añadir hechizo", choice =>
-                    {
-                        node.spellsToUnlock.Add((SpellId)Enum.Parse(typeof(SpellId), choice));
-                        Changed("Añadir hechizo");
-                    }));
+                var options = Enum.GetValues(enumType).Cast<object>()
+                    .Where(v => v.ToString() != "None" && !list.Contains(v))
+                    .Select(v => v.ToString()).ToList();
+                if (options.Count > 0)
+                    box.Add(AddRow(options, "Añadir", choice => Change("Añadir a la lista", l => l.Add(Enum.Parse(enumType, choice)))));
             }
         }
 
@@ -267,75 +267,93 @@ namespace Sendero.Narrative.Editor
 
         void BuildContent(VisualElement root, NarrativeNode model)
         {
-            switch (model)
-            {
-                case PlayDialogueNode pd: DialogueContent(root, pd.dialogue); break;
-                case StartQuestNode sq: QuestContent(root, sq.questId, null); break;
-                case WaitQuestCompleteNode wq: QuestContent(root, wq.questId, null); break;
-                case BranchQuestStateNode bq: QuestContent(root, bq.questId, null); break;
-                case CompleteQuestStepsNode cq: QuestContent(root, cq.questId, cq.stepConditionIds); break;
-                case DeliverQuestCompleteNode dq: QuestContent(root, dq.questId, null); break;
-                case RequireInventoryItemNode rq when !string.IsNullOrEmpty(rq.questId): QuestContent(root, rq.questId, null); break;
-                case WaitCustomEventNode we: SignalContent(root, we.eventKey); break;
-                case RaiseCustomEventNode re: SignalContent(root, re.eventKey); break;
-                case PlayCinematicNode pc:
-                    SignalContent(root, pc.signalIn); SignalContent(root, pc.signalDone);
-                    if (!string.IsNullOrEmpty(pc.signalFailed)) SignalContent(root, pc.signalFailed);
-                    break;
-                case WaitNpcInteractionNode wn: ActorContent(root, wn.npcId); SignalContent(root, WaitNpcInteractionNode.SignalKeyFor(wn.npcId)); break;
-                case ShowSpeechBubbleNode sb: LocContent(root, sb.textId, sb.text); break;
-                case TutorialPromptNode tp: LocContent(root, tp.textId, tp.text); break;
-                case DialogueChoiceNode dc:
-                    LocContent(root, dc.promptTextId, dc.promptText);
-                    LocContent(root, dc.optionATextId, dc.optionAText);
-                    LocContent(root, dc.optionBTextId, dc.optionBText);
-                    break;
-                default:
-                    root.Add(Muted("Este nodo no referencia contenido externo."));
-                    break;
-            }
+            model.Describe(new ContentDescriber(this, root));
+            if (root.childCount == 0) root.Add(Muted("Este nodo no referencia contenido externo."));
         }
 
-        void DialogueContent(VisualElement root, DialogueAsset asset)
+        /// <summary>
+        /// Pinta en el panel el contenido resuelto de las referencias que declara el nodo. La
+        /// presentación de la tarjeta (líneas, campos, etiquetas) no se repite aquí.
+        /// </summary>
+        sealed class ContentDescriber : INarrativeNodeDescriber
         {
-            if (asset == null) { root.Add(Muted("Sin DialogueAsset asignado.")); return; }
+            readonly NarrativeInspectorPanel _panel;
+            readonly VisualElement _root;
+            VisualElement _script;
+            int _lineNumber;
+
+            public ContentDescriber(NarrativeInspectorPanel panel, VisualElement root) { _panel = panel; _root = root; }
+
+            public void Quest(string questId, string verb, IReadOnlyList<string> steps = null) => _panel.QuestContent(_root, questId, steps);
+            public void Signal(string key, SignalRole role, string label = null) => SignalContent(_root, key);
+            public void Actor(string actorId, string verb) => ActorContent(_root, actorId);
+            public void Flag(string key, string shownAs = null) { }
+            public void Anchor(string anchorId) { }
+
+            public void Asset(UnityEngine.Object asset, string kind, string detail = null)
+            {
+                _script = null;
+                _lineNumber = 0;
+                AssetContent(_root, asset, kind, detail);
+            }
+
+            public void DialogueLine(string speakerId, bool isPlayer, string textId, string text, string detail = null)
+            {
+                if (_script == null)
+                {
+                    _script = new VisualElement();
+                    _script.AddToClassList("narrative-inspector__script");
+                    _root.Add(_script);
+                }
+                var row = new VisualElement(); row.AddToClassList("narrative-inspector__script-line");
+                var num = new Label((++_lineNumber).ToString()); num.AddToClassList("narrative-inspector__script-num");
+                row.Add(num);
+                var body = new VisualElement(); body.style.flexGrow = 1;
+                NodeSummary.DialogueLineRow(body, speakerId, isPlayer, textId, text, full: true);
+                var meta = new List<string>();
+                if (!string.IsNullOrEmpty(textId)) meta.Add(textId);
+                if (!string.IsNullOrEmpty(detail)) meta.Add(detail);
+                if (!string.IsNullOrEmpty(textId) && !NarrativeProjectIndex.HasLoc(textId)) meta.Add($"⚠ sin traducción {NarrativeProjectIndex.PrimaryLanguage}");
+                if (meta.Count > 0) body.Add(Muted(string.Join(" · ", meta)));
+                row.Add(body);
+                _script.Add(row);
+            }
+
+            public void Item(UnityEngine.Object item, int amount, string verb) => AssetContent(_root, item, "objeto", $"{verb} ×{amount}");
+
+            public string Text(string locKey, string fallback)
+            {
+                LocContent(_root, locKey, fallback);
+                return NarrativeProjectIndex.Loc(locKey, fallback);
+            }
+
+            public void Line(string text, NarrativeTextTone tone = NarrativeTextTone.Normal) { }
+            public void Speaker(string name) { }
+            public void Field(string label, string value) { }
+            public void Tag(string text) { }
+        }
+
+        static void AssetContent(VisualElement root, UnityEngine.Object asset, string kind, string detail)
+        {
+            if (asset == null) { root.Add(Muted($"Sin {kind} asignado.")); return; }
             var head = new VisualElement(); head.AddToClassList("narrative-inspector__row");
             var name = new Label(asset.name); name.AddToClassList("narrative-inspector__asset-name");
             head.Add(name);
             head.Add(new Button(() => { Selection.activeObject = asset; EditorGUIUtility.PingObject(asset); }) { text = "Abrir asset" });
             root.Add(head);
+            if (!string.IsNullOrEmpty(detail)) root.Add(Muted(detail));
 
-            var users = NarrativeProjectIndex.DialogueUsers(asset);
-            if (users.Count > 1) root.Add(Muted($"Usado también en: {string.Join(" · ", users.Where(u => true).Take(4))}"));
-
-            if (asset.lines == null || asset.lines.Length == 0) { root.Add(Muted("Diálogo vacío.")); return; }
-            var script = new VisualElement(); script.AddToClassList("narrative-inspector__script");
-            for (int i = 0; i < asset.lines.Length; i++)
-            {
-                var line = asset.lines[i];
-                var row = new VisualElement(); row.AddToClassList("narrative-inspector__script-line");
-                var num = new Label((i + 1).ToString()); num.AddToClassList("narrative-inspector__script-num");
-                row.Add(num);
-                var body = new VisualElement(); body.style.flexGrow = 1;
-                NodeSummary.DialogueLineRow(body, line, full: true);
-                var meta = new List<string>();
-                if (!string.IsNullOrEmpty(line.textId)) meta.Add(line.textId);
-                if (line.emotion != default) meta.Add("emoción: " + line.emotion);
-                if (!string.IsNullOrEmpty(line.textId) && !NarrativeProjectIndex.HasLoc(line.textId)) meta.Add("⚠ sin traducción ES");
-                if (meta.Count > 0) body.Add(Muted(string.Join(" · ", meta)));
-                row.Add(body);
-                script.Add(row);
-            }
-            root.Add(script);
+            var users = NarrativeProjectIndex.AssetUsers(asset);
+            if (users.Count > 1) root.Add(Muted($"Usado también en: {string.Join(" · ", users.Take(4))}"));
         }
 
-        void QuestContent(VisualElement root, string questId, List<string> highlight)
+        void QuestContent(VisualElement root, string questId, IReadOnlyList<string> highlight)
         {
             if (string.IsNullOrEmpty(questId)) { root.Add(Muted("Sin questId.")); return; }
             var q = NarrativeProjectIndex.FindQuest(questId);
             if (q == null)
             {
-                root.Add(Error($"No existe ningún QuestData con questId '{questId}'."));
+                root.Add(Error($"No existe ninguna misión con id '{questId}'."));
                 var similar = NarrativeProjectIndex.Quests.Keys.Where(k => k.IndexOf(questId, StringComparison.OrdinalIgnoreCase) >= 0 || questId.IndexOf(k, StringComparison.OrdinalIgnoreCase) >= 0).Take(5).ToList();
                 if (similar.Count > 0) root.Add(Muted("¿Querías decir? " + string.Join(", ", similar)));
                 return;
@@ -346,7 +364,7 @@ namespace Sendero.Narrative.Editor
             head.Add(new Button(() => { Selection.activeObject = q.asset; EditorGUIUtility.PingObject(q.asset); }) { text = "Abrir asset" });
             root.Add(head);
             root.Add(Muted(q.questId + " · " + q.path));
-            var desc = NarrativeProjectIndex.Loc(q.asset.descriptionId, q.asset.description);
+            var desc = q.description;
             if (!string.IsNullOrEmpty(desc)) root.Add(new Label(desc) { name = "quest-desc" });
 
             if (q.stepConditionIds.Length == 0) { root.Add(Muted("Sin pasos.")); }
@@ -360,22 +378,10 @@ namespace Sendero.Narrative.Editor
             }
 
             // Quién más toca esta quest en los grafos
-            var refs = new List<string>();
-            foreach (var g in NarrativeProjectIndex.Graphs)
-                foreach (var n in g.nodes)
-                {
-                    if (n == null || n == _current?.Model) continue;
-                    string qid = n switch
-                    {
-                        StartQuestNode s => s.questId,
-                        WaitQuestCompleteNode w => w.questId,
-                        CompleteQuestStepsNode c => c.questId,
-                        BranchQuestStateNode b => b.questId,
-                        DeliverQuestCompleteNode d => d.questId,
-                        _ => null
-                    };
-                    if (qid == questId) refs.Add($"{g.name} › {NarrativeNodeCatalog.TitleOf(n.GetType())}{(string.IsNullOrEmpty(n.displayTitle) ? "" : " '" + n.displayTitle + "'")}");
-                }
+            var refs = NarrativeProjectIndex.QuestUsers(questId)
+                .Where(u => u.Node != _current?.Model)
+                .Select(u => u.Label)
+                .ToList();
             if (refs.Count > 0)
             {
                 root.Add(Muted("Otros nodos que la tocan:"));
@@ -383,7 +389,7 @@ namespace Sendero.Narrative.Editor
             }
         }
 
-        void SignalContent(VisualElement root, string key)
+        static void SignalContent(VisualElement root, string key)
         {
             if (string.IsNullOrEmpty(key)) return;
             var s = NarrativeProjectIndex.FindSignal(key);
@@ -394,23 +400,23 @@ namespace Sendero.Narrative.Editor
             root.Add(Muted(s.listeners.Count == 0 ? "La escucha: nadie" : "La escucha: " + string.Join(" · ", s.listeners.Distinct())));
         }
 
-        void ActorContent(VisualElement root, string id)
+        static void ActorContent(VisualElement root, string id)
         {
             if (string.IsNullOrEmpty(id)) { root.Add(Muted("Sin npcId.")); return; }
             var a = NarrativeProjectIndex.FindActor(id);
-            if (a == null) { root.Add(Error($"Ningún prefab de NPC tiene persistenceId '{id}'.")); return; }
+            if (a == null) { root.Add(Error($"Ningún actor del proyecto tiene el id '{id}'.")); return; }
             var head = new VisualElement(); head.AddToClassList("narrative-inspector__row");
             head.Add(new Label($"🧑 {a.displayName}") { name = "actor-name" });
             head.Add(new Button(() =>
             {
-                var go = AssetDatabase.LoadAssetAtPath<GameObject>(a.source);
-                if (go != null) { Selection.activeObject = go; EditorGUIUtility.PingObject(go); }
-            }) { text = "Abrir prefab" });
+                var source = AssetDatabase.LoadMainAssetAtPath(a.source);
+                if (source != null) { Selection.activeObject = source; EditorGUIUtility.PingObject(source); }
+            }) { text = "Abrir" });
             root.Add(head);
             root.Add(Muted(a.source));
         }
 
-        void LocContent(VisualElement root, string id, string fallback)
+        static void LocContent(VisualElement root, string id, string fallback)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -420,8 +426,10 @@ namespace Sendero.Narrative.Editor
             var es = NarrativeProjectIndex.Loc(id);
             var en = NarrativeProjectIndex.LocEn(id);
             root.Add(new Label(id) { name = "loc-key" });
-            root.Add(es != null ? new Label("ES: " + es) : Error("ES: falta en dialogues_es.json / ui_es.json"));
-            root.Add(en != null ? Muted("EN: " + en) : Error("EN: falta"));
+            var primary = NarrativeProjectIndex.PrimaryLanguage;
+            var secondary = NarrativeProjectIndex.SecondaryLanguage;
+            root.Add(es != null ? new Label($"{primary}: {es}") : Error($"{primary}: falta la traducción"));
+            root.Add(en != null ? Muted($"{secondary}: {en}") : Error($"{secondary}: falta"));
         }
 
         // ─── Conexiones ─────────────────────────────────────────────────

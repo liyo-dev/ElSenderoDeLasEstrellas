@@ -87,7 +87,7 @@ public sealed class ObjetoPersistente : MonoBehaviour
 
     /// <summary>
     /// Anota en el preset dónde están los objetos que se han movido de su sitio de partida.
-    /// Lo llama <see cref="GameBootProfile.UpdateRuntimePresetFromCurrentState"/> al guardar.
+    /// Lo llama <see cref="Partida.VolcarEstadoDelJuego"/> al guardar.
     /// Los objetos de escenas no cargadas conservan lo que ya tenían. Devuelve cuántas entradas hay.
     /// </summary>
     public static int CapturarEstado(PlayerPresetSO preset)
@@ -142,7 +142,7 @@ public sealed class ObjetoPersistente : MonoBehaviour
 
     private static List<Estado> ListaDelPreset()
     {
-        var preset = GameBootService.Profile != null ? GameBootService.Profile.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset == null) return null;
         preset.objetosDelMundo ??= new List<Estado>();
         return preset.objetosDelMundo;

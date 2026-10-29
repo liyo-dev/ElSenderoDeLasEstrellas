@@ -7,8 +7,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-#pragma warning disable 618 // se referencian nodos [Obsolete] a propósito para seguir mostrando grafos viejos
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Editor visual del grafo narrativo — "el único sitio" del guion.
@@ -23,7 +22,7 @@ namespace Sendero.Narrative.Editor
         const string StylesPath = "Assets/NarrativeGraph/Editor/NarrativeGraphStyles.uss";
         const string AllChaptersLabel = "Todos";
         const string NoChapterKey = "__none__";
-        const string PrefLastGraph = "Sendero.Narrative.LastGraph";
+        const string PrefLastGraph = "NarrativeGraph.LastGraph";
 
         NarrativeGraph _graph;
         SerializedObject _so;
@@ -52,19 +51,18 @@ namespace Sendero.Narrative.Editor
         float _lastZoom = -1f;
         bool _wasPlaying;
 
-        // Panel derecho con pestañas: nodo / prueba.
-        NarrativeTestPanel _testPanel;
+        // Panel derecho con pestañas: nodo, las que aporte el juego (NarrativeGraphSideTab) y en vivo.
         NarrativeLivePanel _livePanel;
         VisualElement _sidePanel;
-        Button _tabNode;
-        Button _tabTest;
-        Button _tabLive;
+        VisualElement _sideTabsBar;
+        readonly List<(Button button, VisualElement content)> _sideTabs = new();
+        readonly List<NarrativeGraphSideTab> _gameTabs = new();
         ToolbarButton _playButton;
         ToolbarButton _stopButton;
         string _lastCurrentGuid;
         readonly HashSet<string> _visitedNodes = new();
 
-        [MenuItem("El Sendero/Narrativa/Abrir Editor %#n")]
+        [MenuItem("Tools/Narrative Graph/Abrir editor %#n")]
         public static void OpenWindow()
         {
             var w = GetWindow<NarrativeGraphWindow>();
@@ -126,32 +124,28 @@ namespace Sendero.Narrative.Editor
             _sidePanel = new VisualElement();
             _sidePanel.AddToClassList("narrative-side");
 
-            var tabs = new VisualElement();
-            tabs.AddToClassList("narrative-side__tabs");
-            _tabNode = new Button(() => ShowSideTab(0)) { text = "Nodo" };
-            _tabTest = new Button(() => ShowSideTab(1)) { text = "Prueba" };
-            _tabLive = new Button(() => ShowSideTab(2)) { text = "En vivo" };
-            _tabNode.AddToClassList("narrative-side__tab");
-            _tabTest.AddToClassList("narrative-side__tab");
-            _tabLive.AddToClassList("narrative-side__tab");
-            tabs.Add(_tabNode);
-            tabs.Add(_tabTest);
-            tabs.Add(_tabLive);
-            _sidePanel.Add(tabs);
+            _sideTabsBar = new VisualElement();
+            _sideTabsBar.AddToClassList("narrative-side__tabs");
+            _sidePanel.Add(_sideTabsBar);
+            _sideTabs.Clear();
+            _gameTabs.Clear();
 
             _inspector = new NarrativeInspectorPanel();
             _inspector.NodeFieldChanged += OnNodeFieldChanged;
             _inspector.NavigateToNode += FocusNode;
-            _sidePanel.Add(_inspector);
+            AddSideTab("Nodo", _inspector);
 
-            _testPanel = new NarrativeTestPanel();
-            _sidePanel.Add(_testPanel);
+            foreach (var gameTab in NarrativeEditorExtensions.CreateAll<NarrativeGraphSideTab>().OrderBy(t => t.Order))
+            {
+                _gameTabs.Add(gameTab);
+                AddSideTab(gameTab.TabTitle, gameTab);
+            }
 
             _livePanel = new NarrativeLivePanel();
             _livePanel.FocusNodeRequested += FocusNode;
-            _sidePanel.Add(_livePanel);
+            AddSideTab("En vivo", _livePanel);
             right.Add(_sidePanel);
-            ShowSideTab(0);
+            ShowSideTab(_inspector);
 
             NodeView.StartChanged += OnStartChanged;
             NarrativeProjectIndex.Rebuilt += OnIndexRebuilt;
@@ -182,24 +176,46 @@ namespace Sendero.Narrative.Editor
             if (_livePanel != null) _livePanel.FocusNodeRequested -= FocusNode;
         }
 
-        void ShowSideTab(int tab)
+        void AddSideTab(string title, VisualElement content)
         {
-            if (_testPanel == null || _inspector == null || _livePanel == null) return;
-            bool node = tab == 0;
-            bool test = tab == 1;
-            bool live = tab == 2;
-            _inspector.style.display = node ? DisplayStyle.Flex : DisplayStyle.None;
-            _testPanel.style.display = test ? DisplayStyle.Flex : DisplayStyle.None;
-            _livePanel.style.display = live ? DisplayStyle.Flex : DisplayStyle.None;
-            _tabNode?.EnableInClassList("is-selected", node);
-            _tabTest?.EnableInClassList("is-selected", test);
-            _tabLive?.EnableInClassList("is-selected", live);
-            if (test) _testPanel.SetTarget(_lastSelected);
-            if (live)
+            var button = new Button(() => ShowSideTab(content)) { text = title };
+            button.AddToClassList("narrative-side__tab");
+            _sideTabsBar.Add(button);
+            _sidePanel.Add(content);
+            _sideTabs.Add((button, content));
+        }
+
+        void ShowSideTab(VisualElement panel)
+        {
+            if (panel == null) return;
+            foreach (var (button, content) in _sideTabs)
+            {
+                bool visible = content == panel;
+                content.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+                button.EnableInClassList("is-selected", visible);
+            }
+            if (panel is NarrativeGraphSideTab gameTab)
+            {
+                gameTab.SetSelectedNode(_lastSelected?.Model);
+                gameTab.OnShown();
+            }
+            if (panel == _livePanel)
             {
                 _livePanel.RefreshNow();
                 _livePanel.Refresh(_graph, _lastSelected, true);
             }
+        }
+
+        /// <summary>Pide a las pestañas del juego que lancen una prueba desde el nodo; enseña la que la atiende.</summary>
+        void PlayFrom(string nodeGuid)
+        {
+            foreach (var tab in _gameTabs)
+            {
+                if (!tab.TryPlayFrom(_graph, nodeGuid)) continue;
+                ShowSideTab(tab);
+                return;
+            }
+            SetStatus("Este proyecto no tiene ninguna pestaña que lance pruebas desde un nodo.");
         }
 
         void PollLiveState()
@@ -240,8 +256,6 @@ namespace Sendero.Narrative.Editor
 
         void OnPlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.EnteredEditMode)
-                NarrativeTestLauncher.RestoreIfNeeded();
             RefreshPlayButtons();
         }
 
@@ -254,7 +268,6 @@ namespace Sendero.Narrative.Editor
             RefreshPlayButtons();
             if (!playing)
             {
-                NarrativeTestLauncher.RestoreIfNeeded();
                 _lastCurrentGuid = null;
                 // El rastro de nodos visitados se conserva al salir de Play para poder revisar
                 // por dónde pasó la sesión; se limpia al empezar la siguiente.
@@ -284,11 +297,7 @@ namespace Sendero.Narrative.Editor
             }
         }
 
-        void PlayFromSelection()
-        {
-            ShowSideTab(1);
-            _testPanel?.PlayFrom(_lastSelected?.Model?.guid);
-        }
+        void PlayFromSelection() => PlayFrom(_lastSelected?.Model?.guid);
 
         void StopPlay()
         {
@@ -307,9 +316,8 @@ namespace Sendero.Narrative.Editor
             _view.AddToSelection(nv);
             _lastSelected = nv;
             _inspector.Show(nv);
-            ShowSideTab(1);
-            _testPanel?.SetTarget(nv);
-            _testPanel?.PlayFrom(nv.Model.guid);
+            foreach (var tab in _gameTabs) tab.SetSelectedNode(nv.Model);
+            PlayFrom(nv.Model.guid);
         }
 
         void BuildToolbar()
@@ -370,11 +378,11 @@ namespace Sendero.Narrative.Editor
             _statusLabel.style.textOverflow = TextOverflow.Ellipsis;
             toolbar.Add(_statusLabel);
 
-            _playButton = new ToolbarButton(PlayFromSelection) { text = "▶", tooltip = "Probar desde el nodo seleccionado con la configuración de la pestaña Prueba" };
+            _playButton = new ToolbarButton(PlayFromSelection) { text = "▶", tooltip = "Probar desde el nodo seleccionado (lo atiende la pestaña de pruebas del proyecto)" };
             _playButton.AddToClassList("narrative-toolbar__play-btn");
             toolbar.Add(_playButton);
 
-            _stopButton = new ToolbarButton(StopPlay) { text = "■", tooltip = "Parar la prueba y restaurar el boot preset" };
+            _stopButton = new ToolbarButton(StopPlay) { text = "■", tooltip = "Parar la prueba" };
             _stopButton.AddToClassList("narrative-toolbar__stop-btn");
             toolbar.Add(_stopButton);
 
@@ -492,7 +500,7 @@ namespace Sendero.Narrative.Editor
 
         void CreateNewGraph()
         {
-            var path = EditorUtility.SaveFilePanelInProject("Nuevo grafo narrativo", "Cap1", "asset", "Elige nombre y carpeta", "Assets/NarrativeGraph");
+            var path = EditorUtility.SaveFilePanelInProject("Nuevo grafo narrativo", "NuevoGrafo", "asset", "Elige nombre y carpeta", "Assets/NarrativeGraph");
             if (string.IsNullOrEmpty(path)) return;
             var g = ScriptableObject.CreateInstance<NarrativeGraph>();
             var start = new StartNode { displayTitle = "Inicio", position = Vector2.zero };
@@ -521,7 +529,7 @@ namespace Sendero.Narrative.Editor
             {
                 _suppressGraphCallbacks = false;
                 _inspector.SetGraph(null, null);
-                _testPanel?.SetGraph(null);
+                foreach (var tab in _gameTabs) tab.SetGraph(null);
                 RebuildChapterMenu();
                 RebuildGraphMenu();
                 return;
@@ -538,7 +546,7 @@ namespace Sendero.Narrative.Editor
             _view.FrameAll();
             _suppressGraphCallbacks = false;
             _inspector.SetGraph(_graph, _so);
-            _testPanel?.SetGraph(_graph);
+            foreach (var tab in _gameTabs) tab.SetGraph(_graph);
             RebuildChapterMenu();
             RebuildGraphMenu();
             ApplyChapterFilter();
@@ -632,7 +640,7 @@ namespace Sendero.Narrative.Editor
 
             Undo.RecordObject(_graph, "Añadir nodo");
             _graph.nodes.Add(node);
-            if (string.IsNullOrEmpty(_graph.startNodeGuid) || (node is StartNode && !_graph.nodes.Any(n => n is StartNode && n != node)))
+            if (string.IsNullOrEmpty(_graph.startNodeGuid) || (node.IsGraphEntry && !_graph.nodes.Any(n => n != null && n != node && n.IsGraphEntry)))
                 _graph.startNodeGuid = node.guid;
             EditorUtility.SetDirty(_graph);
             _so.Update();
@@ -820,7 +828,7 @@ namespace Sendero.Narrative.Editor
             {
                 _lastSelected = sel;
                 _inspector.Show(sel);
-                _testPanel?.SetTarget(sel);
+                foreach (var tab in _gameTabs) tab.SetSelectedNode(sel?.Model);
                 RefreshEdgeHighlight();
             }
         }
@@ -978,35 +986,30 @@ namespace Sendero.Narrative.Editor
         // Búsqueda
         // ─────────────────────────────────────────────────────────────────
 
+        static readonly NarrativeNodeReferences _searchRefs = new();
+
+        /// Busca en el tipo, la etiqueta y el capítulo del nodo y en todo lo que declara
+        /// (NarrativeNode.Describe), con las claves resueltas: nombre de la quest, texto traducido…
         static bool NodeMatchesSearch(NarrativeNode node, string q)
         {
             bool Has(string s) => !string.IsNullOrEmpty(s) && s.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
             if (Has(node.GetType().Name) || Has(NarrativeNodeCatalog.TitleOf(node.GetType())) || Has(node.displayTitle) || Has(node.chapter)) return true;
-            switch (node)
+
+            var refs = _searchRefs.Collect(node);
+            foreach (var quest in refs.Quests)
             {
-                case PlayDialogueNode pd:
-                    if (pd.dialogue != null)
-                    {
-                        if (Has(pd.dialogue.name)) return true;
-                        if (pd.dialogue.lines != null)
-                            foreach (var l in pd.dialogue.lines)
-                                if (Has(l.textId) || Has(NarrativeProjectIndex.LineText(l))) return true;
-                    }
-                    return Has(pd.npcId);
-                case StartQuestNode s: return Has(s.questId) || Has(NarrativeProjectIndex.FindQuest(s.questId)?.displayName);
-                case WaitQuestCompleteNode w: return Has(w.questId) || Has(NarrativeProjectIndex.FindQuest(w.questId)?.displayName);
-                case CompleteQuestStepsNode c: return Has(c.questId) || c.stepConditionIds.Any(Has);
-                case BranchQuestStateNode b: return Has(b.questId);
-                case WaitCustomEventNode we: return Has(we.eventKey);
-                case RaiseCustomEventNode re: return Has(re.eventKey);
-                case PlayCinematicNode pc: return Has(pc.cinematicName) || Has(pc.signalIn) || Has(pc.signalDone);
-                case WaitNpcInteractionNode wn: return Has(wn.npcId);
-                case SetFlagNode sf: return Has(sf.flagKey);
-                case BranchFlagNode bf: return Has(bf.flagKey);
-                case CheckpointNode cp: return Has(cp.checkpointId);
-                case ShowSpeechBubbleNode sb: return Has(sb.textId) || Has(sb.text) || Has(NarrativeProjectIndex.Loc(sb.textId));
-                case GraphNoteNode gn: return Has(gn.note);
+                if (Has(quest.QuestId) || Has(NarrativeProjectIndex.FindQuest(quest.QuestId)?.displayName)) return true;
+                if (quest.Steps != null && quest.Steps.Any(Has)) return true;
             }
+            foreach (var signal in refs.Signals) if (Has(signal.Key)) return true;
+            foreach (var actor in refs.Actors) if (Has(actor.ActorId) || Has(NarrativeProjectIndex.FindActor(actor.ActorId)?.displayName)) return true;
+            foreach (var flag in refs.Flags) if (Has(flag)) return true;
+            foreach (var anchor in refs.Anchors) if (Has(anchor)) return true;
+            foreach (var asset in refs.Assets) if (Has(asset.name)) return true;
+            foreach (var item in refs.Items) if (item.Item != null && Has(item.Item.name)) return true;
+            foreach (var line in refs.Lines) if (Has(line.TextId) || Has(NarrativeProjectIndex.LineText(line.TextId, line.Text))) return true;
+            foreach (var text in refs.Texts) if (Has(text.Key) || Has(text.Fallback) || Has(NarrativeProjectIndex.Loc(text.Key))) return true;
+            foreach (var caption in refs.Captions) if (Has(caption)) return true;
             return false;
         }
 
@@ -1089,18 +1092,11 @@ namespace Sendero.Narrative.Editor
 
             var byGuidForCycles = _graph.nodes.Where(n => n != null).ToDictionary(n => n.guid);
 
-            // ─── Detectar aristas de vuelta (bucles reales, p. ej. un reintento tipo
-            // "AWAKEN_FAILED" que vuelve a "AWAKEN_START") con DFS blanco/gris/negro ──────
-            // Antes, el cálculo de profundidad de más abajo era un BFS de "camino más largo"
-            // con un contador de visitas tope en 50 para cortar ciclos. Con un bucle real en
-            // el grafo, eso dejaba dar hasta 50 vueltas completas antes de cortar, e inflaba
-            // en cientos de niveles la profundidad de todo lo que viene después del bucle —
-            // cada nivel son 380px de separación en X, así que el resto del grafo terminaba
-            // clavado a decenas de miles de píxeles a la derecha (visto en Cap1.asset: el
-            // bucle de AWAKEN_START/AWAKEN_FAILED empujaba "Fin Cap. 1" a x=46360). Al
-            // identificar de antemano las aristas que cierran un ciclo y excluirlas del
-            // cálculo de profundidad (siguen dibujándose igual en el lienzo, solo no cuentan
-            // para el layout), el grafo restante es acíclico y no hace falta ningún tope.
+            // ─── Detectar aristas de vuelta (bucles reales, p. ej. un reintento que vuelve
+            // al inicio de una cinemática) con DFS blanco/gris/negro ──────────────────────
+            // Las aristas que cierran un ciclo se excluyen del cálculo de profundidad (se siguen
+            // dibujando en el lienzo, solo no cuentan para el layout): así el grafo restante es
+            // acíclico y la profundidad no se infla vuelta tras vuelta de un bucle.
             var backEdges = new HashSet<(string from, string to)>();
             {
                 var state = new Dictionary<string, int>(); // 0 implícito = blanco, 1 = gris (en la pila), 2 = negro

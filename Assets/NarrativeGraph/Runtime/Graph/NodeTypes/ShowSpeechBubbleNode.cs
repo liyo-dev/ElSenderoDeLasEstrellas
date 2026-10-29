@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Muestra un bocadillo de cómic flotante sobre un personaje.
-/// Si duration > 0 y waitForCompletion, el grafo espera a que se oculte automáticamente.
+/// Muestra un bocadillo flotante sobre un personaje (INarrativeSpeechBubbles: traduce, enseña y
+/// suelta la voz si la hay). Si duration > 0 y waitForCompletion, el grafo espera a que se oculte.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Bocadillo", "Frase corta sobre la cabeza de un personaje.")]
@@ -15,11 +15,11 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
     [TextArea(1, 3)]
     public string text;
 
-    [Tooltip("ID de localización. Si no está vacío, sobreescribe 'text'.")]
+    [Tooltip("Clave de localización del texto y de su voz. Si está traducida, manda sobre 'text'.")]
     [NarrativeKey(NarrativeKeyKind.LocKey)]
     public string textId;
 
-    [Tooltip("Segundos antes de que el bocadillo desaparezca automáticamente. 0 = permanece.")]
+    [Tooltip("Segundos que el bocadillo está en pantalla antes de desaparecer solo (nunca menos de lo que se tarda en leerlo ni de lo que dura su voz). 0 = permanece.")]
     [Min(0f)]
     public float duration = 3f;
 
@@ -33,25 +33,25 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
     [Tooltip("Si true, usa el sprite de énfasis (burbuja explosiva) en lugar del normal.")]
     public bool emphasis;
 
-    [Tooltip("Nombre del personaje que habla (ej: 'Will', 'Estela'). Opcional — si se rellena, aparece como primera línea dentro del bocadillo para dejar claro quién habla cuando hay varios NPCs juntos. Vacío = comportamiento de siempre, sin nombre.")]
+    [Tooltip("Nombre de quien habla. Opcional: se enseña encima del texto cuando la frase sale fija en pantalla o en subtítulo; en el bocadillo con pico, el pico ya señala a quien habla.")]
     public string speakerName;
 
-    // Runtime-only: handler activo registrado en NarrativeSkipHub mientras este nodo espera su
-    // bocadillo (ver Enter/Exit). No es dato de diseño del grafo — Action no es serializable por
-    // Unity de todas formas, pero se documenta como tal para que quede claro que no debe tratarse
-    // como campo de configuración del nodo.
-    [NonSerialized] private Action _activeSkipHandler;
-    [NonSerialized] private AudioClip _voiceClip;
+    // Frase que el grafo está esperando, para cortarla si se abandona el nodo antes de que termine.
+    [NonSerialized] private INarrativeLineHandle _activeLine;
+
+    public override void Describe(INarrativeNodeDescriber d)
+    {
+        d.Speaker(!string.IsNullOrEmpty(speakerName) ? speakerName : targetTag == "Player" ? "Jugador" : targetTag);
+        var t = d.Text(textId, text);
+        d.Line(string.IsNullOrEmpty(t) ? "(sin texto)" : "«" + t + "»");
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
-        var ui = SpeechBubbleUI.Instance;
-
-        if (ui == null)
+        if (!NarrativeServices.TryGet(out INarrativeSpeechBubbles bubbles, nameof(ShowSpeechBubbleNode)) || !bubbles.IsAvailable)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError("[ShowSpeechBubbleNode] ❌ SpeechBubbleUI.Instance es NULL. " +
-                           "Añade el prefab al Canvas persistente en Start.unity.");
+            Debug.LogError("[ShowSpeechBubbleNode] No se pueden enseñar bocadillos ahora (falta la interfaz en pantalla).");
 #endif
             onReadyToAdvance?.Invoke();
             return;
@@ -64,84 +64,55 @@ public sealed class ShowSpeechBubbleNode : NarrativeNode
         if (target == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[ShowSpeechBubbleNode] ❌ No se encontró objeto con tag '{targetTag}'.");
+            Debug.LogError($"[ShowSpeechBubbleNode] No se encontró objeto con tag '{targetTag}'.");
 #endif
             onReadyToAdvance?.Invoke();
             return;
         }
 
-        string resolved = string.IsNullOrEmpty(textId)
-            ? text
-            : LocalizationManager.Instance?.Get(textId, text) ?? text;
+        bool willWait = waitForCompletion && duration > 0f;
+        bool done = false;
+        var line = new NarrativeBubbleLine
+        {
+            TextKey = textId,
+            Text = text,
+            Anchor = target.transform,
+            Duration = duration,
+            UntilHidden = duration <= 0f,
+            SpeakerName = speakerName,
+            Gesture = animTrigger,
+            Emphasis = emphasis,
+        };
 
-        float voiceDuration = VoiceLines.TryPlay(textId);
-        _voiceClip = null;
-        if (voiceDuration > 0f) VoiceLines.TryGet(textId, out _voiceClip);
-        float showDuration = duration;
-        // Mantiene la toma completa visible sin alterar los bocadillos permanentes.
-        if (waitForCompletion && duration > 0f && voiceDuration > 0f)
-            showDuration = Mathf.Max(duration, voiceDuration + 0.3f);
-        bool willWait = waitForCompletion && showDuration > 0f;
-        Action callback = null;
-
+        // Si el grafo espera el bocadillo, el botón de saltar del juego puede cortarlo; el aviso
+        // llega una sola vez, termine solo o se salte.
+        Action onHidden = null;
         if (willWait)
         {
-            // FIX (16/08/2026): registrar en NarrativeSkipHub mientras el grafo está bloqueado
-            // esperando este bocadillo — sin esto, un bocadillo sin LockPlayerNode emparejado (el
-            // jugador sigue moviéndose, pero el grafo sigue parado igual) no tenía forma de
-            // saltarse: nadie empujaba ActionMode.Cinematic (viejo criterio de visibilidad) y
-            // NarrativeSkipHub tampoco tenía a nadie registrado (nuevo criterio), así que el botón
-            // global de skip nunca aparecía aunque SÍ había algo saltable en curso.
-            //
-            // Guardado en el campo de instancia (no en una variable local) para que Exit() pueda
-            // desregistrarlo si el runner interrumpe este nodo (StopExecution(), cambio de grafo,
-            // etc.) ANTES de que el bocadillo termine solo o se salte — si no, el registro se
-            // quedaría huérfano para siempre y NarrativeSkipHub.AnySkippable se quedaría en true
-            // permanentemente (botón de skip visible sin nada real que saltar).
-            _activeSkipHandler = () =>
+            onHidden = () =>
             {
-                StopOwnVoice();
-                SpeechBubbleUI.Instance?.SkipCurrent();
-            };
-
-            // El callback que le pasamos a Show() se desregistra a sí mismo la primera vez que se
-            // dispare, sea por la vía normal (el bocadillo termina solo) o por skip (SkipCurrent()
-            // fuerza el mismo callback antes de tiempo) — SpeechBubbleUI garantiza no invocarlo dos
-            // veces (ver AutoHide/SkipCurrent), así que este desregistro también ocurre una sola vez.
-            Action wrappedCallback = () =>
-            {
-                NarrativeSkipHub.UnregisterSkipHandler(_activeSkipHandler);
-                _activeSkipHandler = null;
+                done = true;
+                _activeLine = null;
                 onReadyToAdvance?.Invoke();
             };
-
-            NarrativeSkipHub.RegisterSkipHandler(_activeSkipHandler);
-            callback = wrappedCallback;
         }
+        var handle = bubbles.Say(line, onHidden);
 
-        ui.Show(target.transform, resolved, showDuration, callback, animTrigger, emphasis, speakerName);
-
-        if (!willWait)
+        if (!willWait || handle == null)
+        {
+            // Sin espera, o sin frase que esperar (texto vacío): se sigue ya.
             onReadyToAdvance?.Invoke();
+            return;
+        }
+        if (!done) _activeLine = handle;
     }
 
-    private void StopOwnVoice()
-    {
-        var audio = AudioService.Instance;
-        if (audio != null && audio.IsVoicePlaying(_voiceClip)) audio.StopVoice();
-        _voiceClip = null;
-    }
-
-    /// Red de seguridad: si el runner interrumpe/abandona este nodo (StopExecution(), GoTo() a
-    /// otro nodo por una vía distinta a nuestro propio onReadyToAdvance, cambio de escena) mientras
-    /// seguíamos esperando el bocadillo, el callback normal de Show() nunca llega a dispararse.
-    /// Sin este Exit(), _activeSkipHandler se quedaría registrado en NarrativeSkipHub para
-    /// siempre — ver comentario en Enter().
+    /// Si el runner abandona este nodo (StopExecution, cambio de escena…) mientras espera el
+    /// bocadillo, el aviso de fin no llega: aquí se deja de esperar y se calla la voz.
     public override void Exit(NarrativeContext ctx)
     {
-        if (_activeSkipHandler == null) return;
-        StopOwnVoice();
-        NarrativeSkipHub.UnregisterSkipHandler(_activeSkipHandler);
-        _activeSkipHandler = null;
+        if (_activeLine == null) return;
+        _activeLine.Cancel();
+        _activeLine = null;
     }
 }

@@ -153,7 +153,7 @@ public class SavePoint : MonoBehaviour
             if (manaPool != null)
             {
                 // No rellenar maná si el preset actual indica que el jugador no tiene magia
-                var preset = GameBootService.Profile?.GetActivePresetResolved();
+                var preset = Partida.Preset;
                 if (preset != null && preset.abilities != null && !preset.abilities.magic)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -175,7 +175,7 @@ public class SavePoint : MonoBehaviour
             // sin modo testeo más adelante. Esto permite "capturar" el progreso desde un preset.
             bool wasTestingMode = GameBootService.IsPresetOverrideActive;
             
-            bool success = bootProfile.SaveCurrentGameState(saveSystem);
+            bool success = Partida.Guardar(saveSystem);
 
             if (success)
             {

@@ -4,7 +4,8 @@ using UnityEngine;
 /// Zona de jefes del CombatLab: una entrada con un portal por jefe y una arena grande con su
 /// círculo. Al tocar un portal, el jugador pasa al centro de la arena y empieza el encuentro con
 /// la arena del juego (BossArenaController en modo radio), con su música, su guía y su informe.
-/// Al ganar vuelve a la entrada con la vida llena (paso de cierre de batalla); al caer, el
+/// Al ganar vuelve a la entrada con el grupo curado (SaludDelGrupo.CurarATodos, paso de cierre de
+/// batalla); al caer, el
 /// laboratorio se recarga y empieza en la entrada (VueltaAlLab).
 public sealed class ZonaDeJefesDelLab : MonoBehaviour, IPasoDeCierre
 {
@@ -91,8 +92,7 @@ public sealed class ZonaDeJefesDelLab : MonoBehaviour, IPasoDeCierre
         var jugador = PlayerService.Player;
         if (jugador != null)
         {
-            var salud = jugador.GetComponent<PlayerHealthSystem>();
-            if (salud != null) salud.Revive(1f);
+            SaludDelGrupo.Instance?.CurarATodos();
             if (entrada != null) yield return Co_Llevar(jugador, entrada);
         }
         _enCurso = false;

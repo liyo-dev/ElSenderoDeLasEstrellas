@@ -168,14 +168,10 @@ public class PlayerShieldController : MonoBehaviour
 
         if (_ownsControls)
             _controls.Enable();
-
-        UnlockService.OnSpellUnlocked += OnSpellUnlocked;
     }
 
     void OnDisable()
     {
-        UnlockService.OnSpellUnlocked -= OnSpellUnlocked;
-
         CloseParryWindow();
         StopDefending();
         SalirDePreparacion();
@@ -184,15 +180,6 @@ public class PlayerShieldController : MonoBehaviour
         _fundidoHasta = 0f;
         ResetUpperBodyWeight();
         if (_controls != null && _ownsControls) _controls.Disable();
-    }
-
-    // INC-078: la proteccion contra magia enemiga se desbloquea en el mismo momento en que
-    // se desbloquea Bola Prisma (justo al ganar la batalla con Erika), sin tener que tocar
-    // los campos serializados del nodo UnlockAbilitiesNode del grafo.
-    private void OnSpellUnlocked(SpellId spell)
-    {
-        if (spell == SpellId.Plasmaball)
-            UnlockService.UnlockAbility(AbilityKey.Shield);
     }
 
     void Update()

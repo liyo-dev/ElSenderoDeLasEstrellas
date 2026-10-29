@@ -64,6 +64,7 @@ public abstract class EnemigoDelMundo : MonoBehaviour
         if (_apuntable == null) _apuntable = gameObject.AddComponent<Targetable>();
         if (GetComponent<EnemyMarker>() == null) gameObject.AddComponent<EnemyMarker>();
         _colisiones = GetComponentsInChildren<Collider>(true);
+        SombraDeContacto.Asegurar(gameObject);
     }
 
     protected virtual void OnEnable()

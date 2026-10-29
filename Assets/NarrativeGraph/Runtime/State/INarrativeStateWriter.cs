@@ -3,9 +3,9 @@ using System.Collections.Generic;
 /// Lugar del mundo expresado por nombre, sin referencias de escena.
 ///
 /// Dos tipos:
-///  - World: una marca global del mundo (en este proyecto, el anchorId de un SpawnAnchor).
-///  - Scoped: una marca que solo tiene sentido dentro de un contexto con nombre (en este proyecto,
-///    las marcas del SequenceStage de una secuencia). Un Scoped sin contexto ("marca local") lo
+///  - World: una marca global del mundo (p. ej. un punto de aparición con nombre).
+///  - Scoped: una marca que solo tiene sentido dentro de un contexto con nombre (p. ej. las marcas
+///    del escenario de una secuencia). Un Scoped sin contexto ("marca local") lo
 ///    completa quien envuelve al emisor: ver ScopedNarrativeStateWriter. FallbackScope es el
 ///    contexto del que toma prestadas las marcas si el suyo no existe (una secuencia montada en
 ///    vivo usa el escenario de su plantilla).

@@ -435,7 +435,7 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
         if (!_aturdir) yield return Co_Escapar();
     }
 
-    /// Pozo gravitatorio mortal: atrae al jugador con fuerza creciente y MATA DEL TIRÓN si se pisa el centro.
+    /// Pozo gravitatorio: atrae al grupo con fuerza creciente y quema a quien pisa el núcleo.
     private IEnumerator Co_Pozo()
     {
         _pozoListo = Time.time + cadaPozo;
@@ -459,8 +459,8 @@ public sealed class MagoOscuroBossAI : MonoBehaviour, IJefeConFases, IExpuestoAl
             vfxImplosion = vfxImplosionPozo,
             sfxCarga = "SFX_Prologo_AgujeroNegro_Carga",
             sfxImplosion = "SFX_Prologo_Explosion",
-            muerteInstantaneaAlPisar = true,
-            radioMortal = 1.8f
+            danoPorSegundoEnElNucleo = PozoGravitatorio.DanoDelNucleoPorDefecto,
+            radioDelNucleo = 1.8f
         });
 
         yield return Esperar(cargaPozo + 0.3f);

@@ -1,28 +1,45 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Árbitro central de <see cref="Time.timeScale"/> (FIX C6, auditoría 2026-08-07).
+/// Dueño único de <see cref="Time.timeScale"/>. Nadie más lo escribe: cada sistema que necesita
+/// otra velocidad del tiempo (pausa de un menú, hitstop, cámara lenta de una cinemática o de la
+/// muerte) la pide con su clave y la suelta al terminar, y el árbitro decide cuál manda.
 ///
-/// Antes, al menos 4 actores independientes leían y escribían Time.timeScale directamente, cada
-/// uno capturando "el valor de antes" y restaurándolo al terminar, sin coordinarse entre ellos:
-/// SimpleHitStopProvider (hitstop de golpes), DeathCameraEffect (slowmotion de muerte),
-/// CinematicSequencerBase (slowmotion por paso de cinemática) y NPCCombatLifecycleHandler.OnDestroy
-/// (salvaguarda que forzaba timeScale=1 "por si acaso"). Dos hitstops solapados (trivial en
-/// combate, menos de 0.2s entre golpes) dejaban el juego en cámara lenta permanente: A capturaba
-/// 1.0, B capturaba el 0.1 que había puesto A, A restauraba 1.0, B restauraba 0.1 encima. Y las
-/// restauraciones "a 1 por si acaso" de DeathCameraEffect/NPCCombatLifecycleHandler competían con
-/// cualquier pausa u otro efecto activo en ese momento, rompiéndolo.
+/// Uso:
+/// <list type="bullet">
+/// <item><see cref="Request"/>(clave, escala) mientras se necesite. Pedir otra vez con la misma
+/// clave actualiza su valor (no se acumula): así se anima una rampa (cámara lenta que entra
+/// poco a poco) pidiendo cada fotograma el valor del momento.</item>
+/// <item><see cref="Release"/>(clave) al terminar, y también en OnDisable/OnDestroy: es seguro
+/// llamarlo aunque no hubiera petición.</item>
+/// <item><see cref="TryGetRequest"/> para leer lo que pidió una clave (p. ej. el punto de
+/// partida de una rampa) sin depender del valor efectivo, que puede estar pisado por otro.</item>
+/// </list>
 ///
-/// Mismo patrón que PlayerActionManager.PushMode/PopMode (pila de peticiones con dueño): cada
-/// actor pide un timeScale con <see cref="Request"/> mientras lo necesite, y lo libera con
-/// <see cref="Release"/> cuando termina. Time.timeScale siempre iguala a la petición ACTIVA MÁS
-/// BAJA (la más lenta gana — apropiado aquí, donde 0 pausa del todo y valores intermedios son
-/// "más lentos"; nunca se pisa una pausa por un hitstop que termina, ni al revés). Sin ninguna
-/// petición activa, se usa el <see cref="SetBaseline">baseline</see> (1 por defecto).
+/// Regla de reparto: manda la petición más lenta, contando el <see cref="SetBaseline">baseline</see>
+/// (1 por defecto). Una pausa (0) nunca la levanta un hitstop que termina ni al revés, y dos
+/// hitstops solapados no dejan cámara lenta permanente. Las peticiones por encima de 1
+/// (acelerar) solo se aplican cuando nadie pide ir más lento: entonces manda la más rápida.
+///
+/// Claves que mueren: si la clave es un <see cref="UnityEngine.Object"/> destruido (un menú de una
+/// escena descargada, una cinemática que se destruye a mitad), su petición se descarta sola en el
+/// siguiente reparto, y el reparto se repite al descargarse cada escena. Así una escena que se va
+/// no puede dejar el juego en pausa o en cámara lenta, sin que nadie tenga que forzar el tiempo a 1
+/// «por si acaso» (lo que anularía la pausa legítima de otro sistema).
+///
+/// <see cref="ReleaseAll"/> es solo para la recuperación de emergencia (deja el tiempo en reposo
+/// sin ninguna petición). Ver C6 en TDD § 19.
 /// </summary>
 public static class TimeScaleArbiterService
 {
+    /// Velocidad normal del juego: por debajo es ir más lento; por encima, acelerar.
+    private const float VelocidadNormal = 1f;
+
+    /// Tope de Unity para Time.timeScale.
+    private const float EscalaMaxima = 100f;
+
     private class RequestEntry
     {
         public object Owner;
@@ -30,28 +47,36 @@ public static class TimeScaleArbiterService
     }
 
     private static readonly List<RequestEntry> _requests = new();
-    private static float _baseline = 1f;
+    private static float _baseline = VelocidadNormal;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()
     {
         _requests.Clear();
-        _baseline = 1f;
-        Time.timeScale = 1f;
+        _baseline = VelocidadNormal;
+        Time.timeScale = VelocidadNormal;
     }
 #endif
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void EscucharDescargasDeEscena()
+    {
+        SceneManager.sceneUnloaded -= AlDescargarEscena;
+        SceneManager.sceneUnloaded += AlDescargarEscena;
+    }
+
+    // Las claves destruidas con la escena se descartan al repartir.
+    private static void AlDescargarEscena(Scene _) => Apply();
+
     /// <summary>
-    /// Pide un timeScale concreto mientras <paramref name="owner"/> lo mantenga activo. Si el
-    /// mismo owner ya tenía una petición activa, se actualiza su valor (no se acumulan
-    /// peticiones del mismo owner) — así un director de cinemática puede pedir un timeScale
-    /// distinto por cada paso con una simple llamada, sin tener que Release+Request cada vez.
-    /// Aplica el timeScale resultante de inmediato.
+    /// Pide un timeScale mientras <paramref name="owner"/> lo mantenga. Si esa clave ya tenía una
+    /// petición, se actualiza su valor. Aplica el resultado de inmediato.
     /// </summary>
     public static void Request(object owner, float scale)
     {
         if (owner == null) return;
+        scale = Mathf.Clamp(scale, 0f, EscalaMaxima);
 
         for (int i = 0; i < _requests.Count; i++)
         {
@@ -68,9 +93,8 @@ public static class TimeScaleArbiterService
     }
 
     /// <summary>
-    /// Libera la petición de <paramref name="owner"/>, si tenía alguna activa. Es un no-op seguro
-    /// si no la tenía — se puede llamar "por si acaso" en rutas de limpieza/OnDestroy sin
-    /// comprobar antes si realmente había algo que liberar. Reaplica el timeScale resultante.
+    /// Libera la petición de <paramref name="owner"/>, si la tenía. No hace nada si no la tenía,
+    /// así que se puede llamar en cualquier ruta de limpieza sin comprobar antes.
     /// </summary>
     public static void Release(object owner)
     {
@@ -88,26 +112,58 @@ public static class TimeScaleArbiterService
     }
 
     /// <summary>
-    /// Cambia el timeScale "de reposo" para cuando no hay ninguna petición activa. Pensado para
-    /// el menú de pausa u otros sistemas que hoy fuerzan Time.timeScale=0/1 directamente: usar
-    /// esto en vez de tocar Time.timeScale a pelo evita pisar una petición activa de otro actor
-    /// (p.ej. abrir el menú de pausa en mitad de un hitstop no debe hacer que, al cerrarlo, el
-    /// hitstop siga vivo con un timeScale de pausa ya liberado).
+    /// Lo que pide ahora <paramref name="owner"/>. False si no tiene petición activa.
+    /// </summary>
+    public static bool TryGetRequest(object owner, out float scale)
+    {
+        scale = VelocidadNormal;
+        if (owner == null) return false;
+        for (int i = 0; i < _requests.Count; i++)
+        {
+            if (!ReferenceEquals(_requests[i].Owner, owner)) continue;
+            scale = _requests[i].Scale;
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Cambia el timeScale de reposo, el que manda cuando nadie pide ir más lento. Entra en el
+    /// reparto como una petición más: un baseline de 0 no lo levanta ninguna petición.
     /// </summary>
     public static void SetBaseline(float scale)
     {
-        _baseline = scale;
+        _baseline = Mathf.Clamp(scale, 0f, EscalaMaxima);
+        Apply();
+    }
+
+    /// <summary>
+    /// Recuperación de emergencia: descarta todas las peticiones y vuelve el baseline a la
+    /// velocidad normal. Solo para cuando el jugador se ha quedado bloqueado sin salida; en el
+    /// flujo normal cada sistema suelta lo suyo con <see cref="Release"/>.
+    /// </summary>
+    public static void ReleaseAll()
+    {
+        _requests.Clear();
+        _baseline = VelocidadNormal;
         Apply();
     }
 
     private static void Apply()
     {
-        float effective = _baseline;
-        for (int i = 0; i < _requests.Count; i++)
+        float masLenta = _baseline;
+        float masRapida = _baseline;
+        for (int i = _requests.Count - 1; i >= 0; i--)
         {
-            if (_requests[i].Scale < effective)
-                effective = _requests[i].Scale;
+            if (_requests[i].Owner is UnityEngine.Object clave && clave == null)
+            {
+                _requests.RemoveAt(i);
+                continue;
+            }
+            float escala = _requests[i].Scale;
+            if (escala < masLenta) masLenta = escala;
+            if (escala > masRapida) masRapida = escala;
         }
-        Time.timeScale = effective;
+        Time.timeScale = masLenta < VelocidadNormal ? masLenta : masRapida;
     }
 }

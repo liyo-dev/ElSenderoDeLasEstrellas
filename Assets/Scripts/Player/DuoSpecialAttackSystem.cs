@@ -131,14 +131,11 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
     public SpecialChargeMeter TeamGauge => teamGauge;
 
     /// <summary>Hay al menos un compañero en el grupo (sin compañeros no hay dúos ni trío).</summary>
-    public bool HasAnyCompanion
-    {
-        get
-        {
-            var party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
-            return party != null && party.Members != null && party.Members.Count > 0;
-        }
-    }
+    public bool HasAnyCompanion =>
+        ControlDelJugador.EnElGrupo(Slot.Estela) || ControlDelJugador.EnElGrupo(Slot.Liam);
+
+    /// <summary>Por qué LT+RT no ha lanzado nada.</summary>
+    private enum MotivoDeRechazo { Ocupado, NadieCerca, FaltaCarga }
 
     /// <summary>Se lanzó un ataque de equipo (el ataque).</summary>
     public event Action<SpecialAttackSO> OnTeamAttack;
@@ -231,9 +228,6 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
 
     // ── Reglas ─────────────────────────────────────────────────────────────
 
-    private static Slot ActiveSlot =>
-        PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveSlot : Slot.Will;
-
     /// <summary>Ataque del dúo entre estos dos personajes, o null si no hay.</summary>
     public SpecialAttackSO FindDuo(Slot a, Slot b)
     {
@@ -248,11 +242,9 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
 
     private void TryTeamAttack()
     {
-        if (!TrySelectAttack(out var attack, out float cost, out var firstPartner, out var secondPartner, out string reason))
+        if (!TrySelectAttack(out var attack, out float cost, out var firstPartner, out var secondPartner, out var motivo))
         {
-            string key = reason == "Falta carga de equipo." ? "TEAM_DENIED_CHARGE"
-                : reason == "No hay ningún compañero cerca." ? "TEAM_DENIED_NOBODY" : "TEAM_DENIED_BUSY";
-            Deny(reason, key, reason);
+            Deny(motivo);
             return;
         }
         _partners.Clear();
@@ -262,18 +254,18 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
     }
 
     private bool TrySelectAttack(out SpecialAttackSO attack, out float cost,
-        out Transform firstPartner, out Transform secondPartner, out string reason)
+        out Transform firstPartner, out Transform secondPartner, out MotivoDeRechazo motivo)
     {
         attack = null;
         cost = duoCost;
         firstPartner = secondPartner = null;
-        reason = "Ahora no se puede.";
+        motivo = MotivoDeRechazo.Ocupado;
         if (!isActiveAndEnabled || _isExecuting || !GameState.CanProcessGameplayInput || ComboCastController.IsComposing) return false;
         ResolveCaster();
         if (magicCaster == null || !magicCaster.CanBeginTeamGesture) return false;
-        Slot active = ActiveSlot;
+        Slot active = ControlDelJugador.Activo;
         _nearby.Clear();
-        for (int s = 0; s < 3; s++)
+        for (int s = 0; s < ControlDelJugador.Personajes; s++)
         {
             var slot = (Slot)s;
             if (slot == active) continue;
@@ -283,7 +275,7 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
             if (TryGetPartnerDistance(slot, active, out Transform t, out float d) && d <= maxDistance)
                 _nearby.Add((slot, t, d));
         }
-        reason = "No hay ningún compañero cerca.";
+        motivo = MotivoDeRechazo.NadieCerca;
         if (_nearby.Count == 0) return false;
         if (_nearby.Count == 2 && _nearby[1].distance < _nearby[0].distance)
             (_nearby[0], _nearby[1]) = (_nearby[1], _nearby[0]);
@@ -301,7 +293,7 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
             var partner = _nearby[i];
             var duo = FindDuo(active, partner.slot);
             if (duo == null || partner.distance > duo.companionMaxDistance) continue;
-            reason = "Falta carga de equipo.";
+            motivo = MotivoDeRechazo.FaltaCarga;
             if (teamGauge == null || teamGauge.CurrentCharge < duoCost - 0.001f) return false;
             attack = duo;
             firstPartner = partner.t;
@@ -352,31 +344,12 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
             if (hit.TryGetComponent<IDamageable>(out var damageable))
                 damageable.TakeDamage(attack.damage);
 
-            // Mecánicas diferenciadas según el dúo o trío:
-            // 1. Will + Estela: Ralentiza a los enemigos en el área
-            if (attack.IsDuoOf(Slot.Will, Slot.Estela) && hit.TryGetComponent<Damageable>(out var dmgWillEstela))
-            {
-                EstadosDeCombate.Aplicar(dmgWillEstela, EstadoDeCombate.Ralentizar, 4f, 0.4f, center, null);
-            }
-            // 2. Will + Liam: Succiona, daña y los EXPULSA violentamente con onda gravitacional
-            else if (attack.IsDuoOf(Slot.Will, Slot.Liam) && hit.TryGetComponent<Damageable>(out var dmgWillLiam))
-            {
-                EstadosDeCombate.Aplicar(dmgWillLiam, EstadoDeCombate.Empujar, 1.2f, 26f, center, null);
-            }
-            // 3. Estela + Liam: Rompe escudos y protecciones e inmoviliza
-            else if (attack.IsDuoOf(Slot.Estela, Slot.Liam))
-            {
-                ProteccionQueSeAbre.De(hit)?.AbrirProteccion(6f, gameObject, null);
-                if (hit.TryGetComponent<Damageable>(out var dmgEstelaLiam))
-                    EstadosDeCombate.Aplicar(dmgEstelaLiam, EstadoDeCombate.Inmovilizar, 3.5f, 0f, center, null);
-            }
-            // 4. Trío: Rompe todas las protecciones e inmoviliza
-            else if (attack.isTrio)
-            {
-                ProteccionQueSeAbre.De(hit)?.AbrirProteccion(8f, gameObject, null);
-                if (hit.TryGetComponent<Damageable>(out var dmgTrio))
-                    EstadosDeCombate.Aplicar(dmgTrio, EstadoDeCombate.Inmovilizar, 4f, 0f, center, null);
-            }
+            // Lo que cada ataque deja en el enemigo (ralentizar, empujar, abrir su protección...)
+            // es dato del SpecialAttackSO.
+            if (attack.abreProteccionSegundos > 0f)
+                ProteccionQueSeAbre.De(hit)?.AbrirProteccion(attack.abreProteccionSegundos, gameObject, null);
+            if (attack.statusEffect != EstadoDeCombate.Ninguno && hit.TryGetComponent<Damageable>(out var conEstado))
+                EstadosDeCombate.Aplicar(conEstado, attack.statusEffect, attack.statusDuration, attack.statusStrength, center, null);
 
             if (attack.knockbackForce > 0f && hit.TryGetComponent<Rigidbody>(out var rb))
             {
@@ -421,8 +394,15 @@ public partial class DuoSpecialAttackSystem : MonoBehaviour
         if (actor != null) actor.PlaySpellCastSpecial();
     }
 
-    private void Deny(string reason, string messageKey, string fallback)
+    private void Deny(MotivoDeRechazo motivo)
     {
+        string messageKey, fallback;
+        switch (motivo)
+        {
+            case MotivoDeRechazo.FaltaCarga: messageKey = "TEAM_DENIED_CHARGE"; fallback = "Falta carga de equipo."; break;
+            case MotivoDeRechazo.NadieCerca: messageKey = "TEAM_DENIED_NOBODY"; fallback = "No hay ningún compañero cerca."; break;
+            default: messageKey = "TEAM_DENIED_BUSY"; fallback = "Ahora no se puede."; break;
+        }
         string msg = LocalizationManager.Instance != null ? LocalizationManager.Instance.Get(messageKey, fallback) : fallback;
         OnDenied?.Invoke(msg);
         if (!string.IsNullOrEmpty(notAvailableSFXKey) && AudioService.Instance != null)

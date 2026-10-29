@@ -1,37 +1,24 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Carga o descarga una escena en aditivo DESDE EL PROPIO GRAFO.
+/// Carga o descarga una escena en aditivo desde el propio grafo, para que se vea en él qué escena
+/// trae cada tramo y en qué orden: primero se carga la escena (sus Awake/OnEnable ya han corrido,
+/// así que lo que haya dentro ya escucha) y después el grafo sigue, p. ej. con la señal que la
+/// pone en marcha.
 ///
-/// ── Por qué existe (17 sep 2026) ──────────────────────────────────────────────────────────────
-/// Hasta ahora, una escena aditiva de narrativa se cargaba con `SignalAdditiveSceneLoader`: un
-/// componente colocado en `Start.unity`, configurado con la señal que la dispara. Eso tenía tres
-/// problemas, y los tres los resuelve tener un nodo:
-///
-///   1. **Era invisible en el grafo.** Que `PROLOGUE_START` además cargara `Prologo_Valle` no se
-///      veía en ningún nodo — vivía dentro de un GameObject de `Start.unity`.
-///   2. **Obligaba a un apaño en el bus de señales.** El loader CONSUMÍA la señal de arranque, y el
-///      `SequencePlayer` que vive DENTRO de la escena cargada necesitaba esa misma señal para
-///      arrancar sus fases; de ahí el `RequeueCustom()` de `SignalAdditiveSceneLoader`. Con este
-///      nodo el orden es explícito y no hay carrera: primero se carga la escena (y sus Awake() ya
-///      se han ejecutado, así que el `SequencePlayer` ya está suscrito), y DESPUÉS un
-///      `RaiseCustomEventNode` levanta la señal. Un único consumidor.
-///   3. **Cada escena aditiva nueva obligaba a tocar `Start.unity`**, que es la escena más delicada
-///      del proyecto (todos los managers persistentes).
-///
-/// NO sustituye a `WorldBootstrap.AnchorHomeScene` ni a `InteriorPortalTrigger`: esos cargan
-/// interiores por razones de spawn y de gameplay, no de narrativa. Este nodo es una pieza que se
-/// suma, no una unificación.
+/// Si la pantalla está tapada al empezar la carga, el telón (INarrativeScreen) la mantiene tapada
+/// hasta que la escena está lista. Con la escena cargada se avisa al juego
+/// (INarrativeSceneHooks) por si tiene que poblarla.
 ///
 /// La escena tiene que estar en Build Settings. Si no lo está, o el nombre está vacío, el nodo
-/// avisa y AVANZA IGUALMENTE — un nodo nunca debe dejar el grafo colgado.
+/// avisa y avanza igualmente: un nodo nunca debe dejar el grafo colgado.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Mundo", "Escena aditiva (cargar/descargar)",
-    "Carga o descarga una escena en aditivo desde el grafo, sin depender de un componente en Start.unity.")]
+    "Carga o descarga una escena en aditivo desde el grafo.")]
 public sealed class AdditiveSceneNode : NarrativeNode
 {
     public enum Operacion
@@ -46,13 +33,12 @@ public sealed class AdditiveSceneNode : NarrativeNode
     [Tooltip("Qué hacer con la escena.")]
     public Operacion operacion = Operacion.Cargar;
 
-    [Tooltip("Nombre de la escena, sin ruta ni extensión (p. ej. 'Prologo_Valle'). Debe estar en Build Settings.")]
+    [Tooltip("Nombre de la escena, sin ruta ni extensión. Debe estar en Build Settings.")]
     public string sceneName;
 
     [Tooltip("Esperar a que la carga/descarga termine antes de avanzar al nodo siguiente. Déjalo " +
-             "marcado si lo siguiente que hace el grafo depende de que la escena ya esté ahí — que " +
-             "es el caso normal: cargar el valle y justo después levantar la señal que arranca su " +
-             "secuencia.")]
+             "marcado si lo siguiente que hace el grafo depende de que la escena ya esté ahí, que " +
+             "es el caso normal: cargar la escena y justo después emitir la señal que la pone en marcha.")]
     public bool waitForCompletion = true;
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
@@ -88,16 +74,15 @@ public sealed class AdditiveSceneNode : NarrativeNode
             yield break;
         }
 
-        // (21 sep) Si la pantalla está en negro (arranque de partida, una carga), se mantiene en
-        // negro hasta que esta escena esté cargada: es lo que impedía ver la habitación de Will y
-        // el valle a medio montar antes del prólogo. En pleno juego no tapa nada — Mantener solo
-        // alarga un telón que ya estaba cerrado. Ver Telon.
+        // Si la pantalla está tapada (arranque de partida, una carga), sigue tapada hasta que esta
+        // escena esté cargada, para no enseñar el mundo a medio montar. En pleno juego no tapa
+        // nada: solo alarga un telón que ya estaba cerrado.
         string claveTelon = "grafo:" + sceneName;
-        Telon.Mantener(claveTelon);
+        var pantalla = NarrativeServices.Get<INarrativeScreen>();
+        pantalla?.KeepCurtainClosed(claveTelon);
 
-        // El try/catch se queda FUERA del yield a propósito: C# no permite 'yield return' ni
-        // 'yield break' dentro del cuerpo de un catch (CS1631), así que el fallo se anota en una
-        // variable y se resuelve después, ya fuera del bloque.
+        // El try/catch queda fuera del yield: C# no permite 'yield' dentro de un catch (CS1631),
+        // así que el fallo se anota en una variable y se resuelve después.
         AsyncOperation op = null;
         try
         {
@@ -112,7 +97,7 @@ public sealed class AdditiveSceneNode : NarrativeNode
         {
             Debug.LogError($"[AdditiveSceneNode:{guid}] No se pudo cargar '{sceneName}' — " +
                 "¿está en Build Settings? Se avanza igualmente para no colgar el grafo.");
-            Telon.Soltar(claveTelon);
+            pantalla?.ReleaseCurtain(claveTelon);
             onReadyToAdvance?.Invoke();
             yield break;
         }
@@ -125,22 +110,14 @@ public sealed class AdditiveSceneNode : NarrativeNode
         Debug.Log($"[AdditiveSceneNode:{guid}] ✅ '{sceneName}' cargada en aditivo.");
 #endif
 
-        // FIX (18 sep 2026): NpcSpawner.SpawnAllFromResources() solo se llamaba una vez, desde
-        // WorldBootstrap.InitializeWorld() -- es decir, SOLO para lo que ya está cargado en el
-        // arranque de MainWorld. Una escena que se añade más tarde por este nodo (como
-        // Prologo_Valle) trae sus propios NpcSpawnPoint, pero esos marcadores se registran en su
-        // OnEnable() DESPUÉS de que WorldBootstrap ya haya intentado emparejarlos con el roster --
-        // así que cualquier NpcRosterSO.Entry cuyo spawnId viva en una escena aditiva nunca llegaba
-        // a instanciarse (NpcSpawnRegistry.Get devolvía null en su único intento, en silencio salvo
-        // por un warning). Volver a llamar aquí, con la escena ya cargada y sus OnEnable ya
-        // ejecutados, es seguro y no duplica nada: NpcSpawner._spawned ya evita reinstanciar lo que
-        // el arranque de MainWorld colocó.
-        NpcSpawner.SpawnAllFromResources();
+        // Lo que la escena necesite del juego al llegar (p. ej. instanciar sus personajes) se hace
+        // ahora, con sus marcadores ya registrados en su OnEnable.
+        NarrativeServices.Get<INarrativeSceneHooks>()?.OnAdditiveSceneLoaded(sceneName);
 
-        // Primero se avanza y DESPUÉS se suelta: si el nodo siguiente arranca una cinemática, en
+        // Primero se avanza y después se suelta: si el nodo siguiente arranca una cinemática, en
         // ese mismo fotograma ya ha recogido el telón y la pantalla no llega a destaparse.
         if (waitForCompletion) onReadyToAdvance?.Invoke();
-        Telon.Soltar(claveTelon);
+        pantalla?.ReleaseCurtain(claveTelon);
     }
 
     private IEnumerator Co_Descargar(Action onReadyToAdvance)

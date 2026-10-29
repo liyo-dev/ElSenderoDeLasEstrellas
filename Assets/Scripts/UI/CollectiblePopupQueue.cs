@@ -1,94 +1,92 @@
-﻿﻿﻿using UnityEngine;
-
-// Necesario para feedback de desbloqueo de vestuario
-using System; // solo para Serializable wrappers si se requieren en el futuro
-using UnityEngine.UI;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
-/// Listens to the player's Inventory changes and spawns collectible popup panels.
-/// Attach this to a UI Canvas object and assign a popup prefab (with CollectiblePopupPanel).
+/// Saca un aviso de «objeto conseguido» cada vez que entra algo en el inventario del jugador (o
+/// una prenda en el armario). Varias entradas seguidas del mismo objeto se juntan en un solo
+/// aviso con la cantidad sumada.
+///
+/// Es un aviso del canal Objetos (<see cref="ArbitroDeAvisos"/>): mientras hay un menú, una
+/// cinemática o la intro de un jefe, lo que llega espera y los avisos que ya estaban se esconden
+/// con la cuenta atrás parada. Lo ganado en batalla no saca aviso (lo cuenta el informe de
+/// victoria): mientras dura, la batalla tiene cerrado el canal y lo que llega se descarta.
+/// Ver INC-642.
 /// </summary>
-public class CollectiblePopupQueue : MonoBehaviour
+public class CollectiblePopupQueue : MonoBehaviour, IAvisoEnPantalla
 {
     [Header("References")]
-    [Tooltip("Prefab that contains a CollectiblePopupPanel component.")]
+    [Tooltip("Prefab con un CollectiblePopupPanel.")]
     public GameObject popupPrefab;
 
-    [Tooltip("Parent transform where popups will be instantiated (usually a panel under a Canvas)")]
+    [Tooltip("Contenedor donde se crean los avisos (normalmente un panel con VerticalLayoutGroup bajo un Canvas).")]
     public Transform popupParent;
 
     [Header("Settings")]
+    [Tooltip("Segundos que se ve cada aviso (solo cuentan mientras está a la vista).")]
     public float displayDuration = 1.25f;
 
-    [Tooltip("When true new popups will be inserted as first sibling (top). When false they are added as last sibling (bottom) — adjust your VerticalLayoutGroup accordingly to stack from bottom.")]
+    [Tooltip("True: los avisos nuevos se colocan arriba de la pila. False: abajo (ajustar el VerticalLayoutGroup para apilar desde abajo).")]
     public bool spawnAtTop = false;
 
     [Header("Grouping")]
-    [Tooltip("Time window (seconds) to group multiple quick additions of the same item into a single popup.")]
+    [Tooltip("Ventana (segundos) en la que varias entradas seguidas del mismo objeto se juntan en un solo aviso.")]
     public float groupingWindow = 0.4f;
 
-    [Header("Deduplication")]
-    [Tooltip("Short window (seconds) that suppresses immediate duplicate spawns for the same item id (defensive).")]
-    public float dedupeWindow = 0.25f;
+    [Header("Turno")]
+    [Tooltip("Prioridad dentro del canal Objetos.")]
+    [SerializeField] private int prioridad = 0;
+
+    private struct Pendiente
+    {
+        public ItemData item;
+        public int cantidad;
+    }
 
     private Inventory _inventory;
-    bool _popupsEnabled;
-    Coroutine _enableRoutine;
-    bool _pendingEnable;
+    private bool _popupsEnabled;
+    private Coroutine _enableRoutine;
+    private bool _pendingEnable;
+    private CanvasGroup _grupoDelContenedor;
+    private bool _aLaVista;
 
-    // pending aggregated amounts per itemId
-    private readonly Dictionary<string, int> _pending = new();
-
-    // last spawn times per itemId to prevent near-simultaneous duplicates
-    private readonly Dictionary<string, float> _lastSpawnTime = new();
-
-    // keys for items that are active or currently being created to avoid race duplicates
-    private readonly HashSet<string> _activeOrCreating = new();
-
-    // small buffer (seconds) added to removal scheduling to ensure panel has time to fade out
-    private const float RemovalBuffer = 0.12f;
-
-    // Quien pide silencio (una batalla, por ejemplo). Mientras haya alguno, lo que entra al
-    // inventario no saca pop-up y se descarta: no se enseña después.
-    private static readonly HashSet<object> _silenciadores = new();
+    // Cantidades que se están juntando durante la ventana de agrupado, por objeto.
+    private readonly Dictionary<string, int> _agrupando = new();
+    // Avisos que esperan turno (menú, cinemática…), en orden de llegada.
+    private readonly List<Pendiente> _esperando = new();
+    // Avisos en pantalla.
+    private readonly List<CollectiblePopupPanel> _vivos = new();
 
     private static CollectiblePopupQueue _activa;
 
-    /// <summary>La cola que está activa en escena, o null. Una copia desactivada no puede lanzar pop-ups.</summary>
+    /// <summary>La cola que está activa en escena, o null. Una copia desactivada no puede lanzar avisos.</summary>
     public static CollectiblePopupQueue Activa => _activa != null && _activa.isActiveAndEnabled ? _activa : null;
 
-    /// <summary>True mientras algún sistema tenga silenciados los pop-ups de objetos.</summary>
-    public static bool Silenciada => _silenciadores.Count > 0;
-
-    /// <summary>Silencia los pop-ups de objetos hasta que <paramref name="quien"/> llame a <see cref="Reanudar"/>.</summary>
-    public static void Silenciar(object quien)
-    {
-        if (quien != null) _silenciadores.Add(quien);
-    }
-
-    /// <summary>Retira el silencio que pidió <paramref name="quien"/>. Llamarlo de más no hace nada.</summary>
-    public static void Reanudar(object quien)
-    {
-        if (quien != null) _silenciadores.Remove(quien);
-    }
+    public CanalDeAviso Canal => CanalDeAviso.Objetos;
+    public int Prioridad => prioridad;
+    public bool Pasajero => true;
 
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { _silenciadores.Clear(); _activa = null; }
+    static void ResetStatics() { _activa = null; }
 #endif
 
     void Awake()
     {
-        // Log eliminado - binding normal no necesita log
         PlayerPresetService.OnPresetApplying += HandlePresetApplying;
         PlayerPresetService.OnPresetApplied += HandlePresetApplied;
+
+        Transform contenedor = popupParent != null ? popupParent : transform;
+        _grupoDelContenedor = contenedor.GetComponent<CanvasGroup>();
+        if (_grupoDelContenedor == null) _grupoDelContenedor = contenedor.gameObject.AddComponent<CanvasGroup>();
+        _grupoDelContenedor.alpha = 0f;
+
         // Habilitada por defecto (también en escenas que no aplican preset, como el CombatLab);
         // solo se apaga mientras se aplica un preset o se carga partida. Ver INC-642.
         _popupsEnabled = false;
         _pendingEnable = false;
         StartEnableRoutine();
-        // Try bind to registered player inventory
         TryBindToPlayer();
         PlayerService.OnPlayerRegistered += OnPlayerRegistered;
     }
@@ -101,16 +99,7 @@ public class CollectiblePopupQueue : MonoBehaviour
             _pendingEnable = false;
             StartEnableRoutine();
         }
-    }
-
-    void OnDestroy()
-    {
-        UnbindFromInventory();
-        PlayerService.OnPlayerRegistered -= OnPlayerRegistered;
-        PlayerPresetService.OnPresetApplying -= HandlePresetApplying;
-        PlayerPresetService.OnPresetApplied -= HandlePresetApplied;
-        if (_enableRoutine != null)
-            StopCoroutine(_enableRoutine);
+        if (_esperando.Count > 0 || _vivos.Count > 0) ArbitroDeAvisos.Pedir(this);
     }
 
     void OnDisable()
@@ -121,15 +110,22 @@ public class CollectiblePopupQueue : MonoBehaviour
             StopCoroutine(_enableRoutine);
             _enableRoutine = null;
         }
+        // Las corrutinas de agrupado se paran con el objeto: lo que se estaba juntando se pierde.
+        _agrupando.Clear();
+        ArbitroDeAvisos.Terminar(this);
+        _aLaVista = false;
     }
 
-    private void OnPlayerRegistered(UnityEngine.GameObject player)
+    void OnDestroy()
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[CollectiblePopupQueue] OnPlayerRegistered called");
-#endif
-        TryBindToPlayer();
+        UnbindFromInventory();
+        PlayerService.OnPlayerRegistered -= OnPlayerRegistered;
+        PlayerPresetService.OnPresetApplying -= HandlePresetApplying;
+        PlayerPresetService.OnPresetApplied -= HandlePresetApplied;
+        ArbitroDeAvisos.Terminar(this);
     }
+
+    private void OnPlayerRegistered(GameObject player) => TryBindToPlayer();
 
     private void TryBindToPlayer()
     {
@@ -138,76 +134,49 @@ public class CollectiblePopupQueue : MonoBehaviour
         {
             _inventory = inv;
             _inventory.OnItemAdded += OnItemAdded;
-            // Do not subscribe to OnInventoryChanged to avoid duplicate spawns (OnItemAdded is the authoritative event)
-            //Debug.Log($"[CollectiblePopupQueue] Bound to Inventory on '{inv.gameObject.name}'");
-        }
-        else
-        {
-            //Debug.Log("[CollectiblePopupQueue] Inventory not found via PlayerService");
         }
     }
 
     private void UnbindFromInventory()
     {
-        if (_inventory != null)
-        {
-            _inventory.OnItemAdded -= OnItemAdded;
-            // Previously also unsubscribed OnInventoryChanged; removed since we don't subscribe to it.
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log("[CollectiblePopupQueue] Unbound from Inventory");
-#endif
-            _inventory = null;
-        }
-    }
-
-    private void OnInventoryChanged(ItemData item, int newAmount)
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupQueue] OnInventoryChanged called for {item?.displayName} newAmount={newAmount}");
-#endif
-        // fallback: show the new total (used only if OnItemAdded isn't provided by publisher)
-        SpawnPopup(item, newAmount);
+        if (_inventory == null) return;
+        _inventory.OnItemAdded -= OnItemAdded;
+        _inventory = null;
     }
 
     private void OnItemAdded(ItemData item, int addedAmount, int newTotal)
     {
-        if (!_popupsEnabled || Silenciada || !isActiveAndEnabled) return;
+        if (!_popupsEnabled || !ArbitroDeAvisos.CanalAbierto(CanalDeAviso.Objetos) || !isActiveAndEnabled) return;
         if (item == null || addedAmount <= 0) return;
 
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[CollectiblePopupQueue] OnItemAdded called for {item?.displayName} added={addedAmount} total={newTotal}");
-#endif
-
-        // Aggregate multiple quick additions for the same item into one popup
-        var id = item.itemId ?? item.displayName ?? "__null__";
-        if (_pending.TryGetValue(id, out var cur))
-            _pending[id] = cur + addedAmount;
+        var id = Clave(item);
+        if (_agrupando.TryGetValue(id, out var cur))
+        {
+            _agrupando[id] = cur + addedAmount;
+        }
         else
         {
-            _pending[id] = addedAmount;
+            _agrupando[id] = addedAmount;
             StartCoroutine(FlushGroupedPopup(id, item, groupingWindow));
         }
     }
 
     void HandlePresetApplying()
     {
-        // Cargar partida empieza de cero: un silencio que nadie retiró (una batalla que no se
-        // cerró) no debe sobrevivir a la carga.
-        _silenciadores.Clear();
         _popupsEnabled = false;
         if (_enableRoutine != null)
         {
             StopCoroutine(_enableRoutine);
             _enableRoutine = null;
         }
-        ClearPendingState();
+        _agrupando.Clear();
+        _esperando.Clear();
         DestroyActivePopups();
+        ArbitroDeAvisos.Terminar(this);
+        _aLaVista = false;
     }
 
-    void HandlePresetApplied()
-    {
-        StartEnableRoutine();
-    }
+    void HandlePresetApplied() => StartEnableRoutine();
 
     void StartEnableRoutine()
     {
@@ -221,7 +190,7 @@ public class CollectiblePopupQueue : MonoBehaviour
         _enableRoutine = StartCoroutine(EnablePopupsDelayed());
     }
 
-    System.Collections.IEnumerator EnablePopupsDelayed()
+    IEnumerator EnablePopupsDelayed()
     {
         yield return null;
         yield return null;
@@ -229,244 +198,165 @@ public class CollectiblePopupQueue : MonoBehaviour
         _enableRoutine = null;
     }
 
-    private System.Collections.IEnumerator FlushGroupedPopup(string itemId, ItemData item, float delay)
+    private IEnumerator FlushGroupedPopup(string itemId, ItemData item, float delay)
     {
         yield return new WaitForSecondsRealtime(delay);
 
-        int amount = 0;
-        if (_pending.TryGetValue(itemId, out var v))
-        {
-            amount = v;
-            _pending.Remove(itemId);
-        }
+        if (!_agrupando.TryGetValue(itemId, out var amount)) yield break;
+        _agrupando.Remove(itemId);
 
-        if (amount > 0 && !Silenciada)
-            SpawnPopup(item, amount);
+        if (amount > 0 && ArbitroDeAvisos.CanalAbierto(CanalDeAviso.Objetos))
+            Encolar(item, amount);
     }
 
-    public void TestSpawn(ItemData item, int amount)
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[CollectiblePopupQueue] TestSpawn called");
-#endif
-        SpawnPopup(item, amount);
-    }
+    public void TestSpawn(ItemData item, int amount) => Encolar(item, amount);
 
     /// <summary>
-    /// Permite disparar un popup usando datos de vestuario sin requerir un ItemData real.
+    /// Saca un aviso con los datos de una prenda del armario, sin necesitar un ItemData real.
     /// </summary>
     public void SpawnWardrobePopup(WardrobeItemSO wardrobeItem, int amount = 1)
     {
         if (wardrobeItem == null || !isActiveAndEnabled) return;
 
-        // Crear un ItemData efímero para reutilizar el flujo de popups existente
+        // ItemData efímero para reutilizar el mismo aviso.
         var temp = ScriptableObject.CreateInstance<ItemData>();
         temp.itemId = $"WARDROBE:{wardrobeItem.WardrobeId}";
         temp.displayName = wardrobeItem.GetLocalizedDisplayName();
         temp.icon = wardrobeItem.Icon;
 
-        SpawnPopup(temp, amount);
+        Encolar(temp, amount);
     }
 
-    void ClearPendingState()
+    // ── IAvisoEnPantalla ───────────────────────────────────────────────────────
+
+    public void AlTenerTurno()
     {
-        _pending.Clear();
-        _activeOrCreating.Clear();
-        _lastSpawnTime.Clear();
+        _aLaVista = true;
+        _grupoDelContenedor.alpha = 1f;
+        for (int i = 0; i < _vivos.Count; i++)
+            if (_vivos[i] != null) _vivos[i].Congelar(false);
+
+        for (int i = 0; i < _esperando.Count; i++)
+            SpawnPopup(_esperando[i].item, _esperando[i].cantidad);
+        _esperando.Clear();
+
+        if (_vivos.Count == 0) ArbitroDeAvisos.Terminar(this);
     }
 
-    void DestroyActivePopups()
+    public void AlPerderTurno()
     {
-        if (popupParent == null) return;
-        var panels = popupParent.GetComponentsInChildren<CollectiblePopupPanel>(true);
-        for (int i = 0; i < panels.Length; i++)
+        _aLaVista = false;
+        _grupoDelContenedor.alpha = 0f;
+        for (int i = 0; i < _vivos.Count; i++)
+            if (_vivos[i] != null) _vivos[i].Congelar(true);
+    }
+
+    public void AlDescartar()
+    {
+        _aLaVista = false;
+        _esperando.Clear();
+        DestroyActivePopups();
+    }
+
+    // ── Avisos ─────────────────────────────────────────────────────────────────
+
+    private void Encolar(ItemData item, int amount)
+    {
+        if (item == null || amount <= 0) return;
+
+        if (_aLaVista)
         {
-            if (panels[i] != null)
-                Destroy(panels[i].gameObject);
+            SpawnPopup(item, amount);
+            return;
         }
+
+        var key = Clave(item);
+        for (int i = 0; i < _esperando.Count; i++)
+        {
+            if (Clave(_esperando[i].item) != key) continue;
+            var p = _esperando[i];
+            p.cantidad += amount;
+            _esperando[i] = p;
+            ArbitroDeAvisos.Pedir(this);
+            return;
+        }
+        _esperando.Add(new Pendiente { item = item, cantidad = amount });
+        ArbitroDeAvisos.Pedir(this);
     }
 
     private void SpawnPopup(ItemData item, int amountToShow)
     {
-        if (item != null)
+        var key = Clave(item);
+
+        // Si ya hay un aviso de este objeto en pantalla, se le suma la cantidad.
+        for (int i = 0; i < _vivos.Count; i++)
         {
-            var key = item.itemId ?? item.displayName ?? "__null__";
-
-            // If there's a pending grouped flush for this item, skip spawning now; the flush will spawn the aggregated popup.
-            if (_pending.ContainsKey(key))
+            var vivo = _vivos[i];
+            if (vivo != null && vivo.ItemId == key)
             {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[CollectiblePopupQueue] Spawn suppressed because a grouped flush is pending for {key}");
-#endif
+                vivo.AddAmount(amountToShow);
                 return;
-            }
-
-            // If already active or being created, aggregate into existing
-            if (_activeOrCreating.Contains(key))
-            {
-                if (popupParent != null)
-                {
-                    var existing = popupParent.GetComponentsInChildren<CollectiblePopupPanel>(true);
-                    foreach (var p in existing)
-                    {
-                        if (p != null && p.ItemId == key)
-                        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                            Debug.Log($"[CollectiblePopupQueue] Aggregating into already-creating popup for {key} (adding {amountToShow})");
-#endif
-                            p.AddAmount(amountToShow);
-                            return;
-                        }
-                    }
-                }
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log($"[CollectiblePopupQueue] Deferring spawn because {key} is being created");
-#endif
-                return;
-            }
-            _activeOrCreating.Add(key);
-
-            if (_lastSpawnTime.TryGetValue(key, out var last))
-            {
-                if (Time.realtimeSinceStartup - last < dedupeWindow)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[CollectiblePopupQueue] Suppressed duplicate popup for {key} (within dedupe window {dedupeWindow}s)");
-#endif
-                    // remove creation reservation since we won't create
-                    _activeOrCreating.Remove(key);
-                    return;
-                }
-            }
-            _lastSpawnTime[key] = Time.realtimeSinceStartup;
-
-            // If there's already an active popup for this item, aggregate into it instead of spawning a new one.
-            if (popupParent != null)
-            {
-                var existing = popupParent.GetComponentsInChildren<CollectiblePopupPanel>(true);
-                foreach (var p in existing)
-                {
-                    if (p != null && p.ItemId == key)
-                    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                        Debug.Log($"[CollectiblePopupQueue] Aggregating into existing popup for {key} (adding {amountToShow})");
-#endif
-                        p.AddAmount(amountToShow);
-                        _activeOrCreating.Remove(key);
-                        return;
-                    }
-                }
             }
         }
 
         if (popupPrefab == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CollectiblePopupQueue] popupPrefab is null — cannot spawn popup.");
+            Debug.LogWarning("[CollectiblePopupQueue] popupPrefab es null: no se puede sacar el aviso.");
 #endif
-            // ensure we release reservation if present
-            if (item != null)
-            {
-                var key = item.itemId ?? item.displayName ?? "__null__";
-                lock (_activeOrCreating) { _activeOrCreating.Remove(key); }
-            }
             return;
         }
 
         Transform parent = popupParent != null ? popupParent : transform;
         var go = Instantiate(popupPrefab, parent);
-        if (go == null)
+        var panel = go.GetComponent<CollectiblePopupPanel>();
+        if (panel == null) panel = go.GetComponentInChildren<CollectiblePopupPanel>();
+        if (panel == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CollectiblePopupQueue] Instantiate returned null");
+            Debug.LogWarning("[CollectiblePopupQueue] El prefab del aviso no tiene CollectiblePopupPanel.");
 #endif
-            if (item != null)
-            {
-                var key = item.itemId ?? item.displayName ?? "__null__";
-                lock (_activeOrCreating) { _activeOrCreating.Remove(key); }
-            }
+            Destroy(go);
             return;
         }
 
-        // Ensure proper sibling order according to setting
-        if (spawnAtTop)
-            go.transform.SetAsFirstSibling();
-        else
-            go.transform.SetAsLastSibling();
+        if (spawnAtTop) go.transform.SetAsFirstSibling();
+        else go.transform.SetAsLastSibling();
 
         // El layout del contenedor decide la posición de cada aviso.
-        var rt = go.GetComponent<RectTransform>();
-        if (rt != null)
+        if (go.transform is RectTransform rt)
         {
             rt.localScale = Vector3.one;
             rt.localRotation = Quaternion.identity;
         }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CollectiblePopupQueue] Spawned popup root has no RectTransform (not a UI element). It may not be visible inside a Canvas.");
-#endif
-        }
+        if (!go.activeSelf) go.SetActive(true);
 
-        if (!go.activeInHierarchy)
-            go.SetActive(true);
-
-        var panel = go.GetComponent<CollectiblePopupPanel>();
-        if (panel != null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[CollectiblePopupQueue] Spawned popup for {item?.displayName} amount={amountToShow}");
-#endif
-            panel.Init(item, amountToShow, displayDuration);
-            if (parent is RectTransform parentRect)
-                LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
-
-            // schedule removal of creation reservation after expected life (displayDuration + small buffer)
-            if (item != null)
-            {
-                var key = item.itemId ?? item.displayName ?? "__null__";
-                float delay = displayDuration + RemovalBuffer + 0.5f; // safe extra margin
-                StartCoroutine(RemoveActiveAfter(key, delay));
-            }
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[CollectiblePopupQueue] popupPrefab has no CollectiblePopupPanel component. Inspecting children...");
-#endif
-            var panelChild = go.GetComponentInChildren<CollectiblePopupPanel>();
-            if (panelChild != null)
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.Log("[CollectiblePopupQueue] Found CollectiblePopupPanel in children — initializing");
-#endif
-                panelChild.Init(item, amountToShow, displayDuration);
-
-                if (item != null)
-                {
-                    var key = item.itemId ?? item.displayName ?? "__null__";
-                    float delay = displayDuration + RemovalBuffer + 0.5f;
-                    StartCoroutine(RemoveActiveAfter(key, delay));
-                }
-            }
-            else
-            {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                Debug.LogWarning("[CollectiblePopupQueue] No CollectiblePopupPanel found on popup prefab. Destroying instance.");
-#endif
-                if (item != null)
-                {
-                    var key = item.itemId ?? item.displayName ?? "__null__";
-                    _activeOrCreating.Remove(key);
-                }
-                Destroy(go);
-            }
-        }
+        panel.Acabado += AlAcabarUnAviso;
+        _vivos.Add(panel);
+        panel.Init(item, amountToShow, displayDuration);
+        if (parent is RectTransform parentRect)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect);
     }
 
-    private System.Collections.IEnumerator RemoveActiveAfter(string key, float seconds)
+    private void AlAcabarUnAviso(CollectiblePopupPanel panel)
     {
-        yield return new WaitForSecondsRealtime(seconds);
-        _activeOrCreating.Remove(key);
+        _vivos.Remove(panel);
+        for (int i = _vivos.Count - 1; i >= 0; i--)
+            if (_vivos[i] == null) _vivos.RemoveAt(i);
+        if (_vivos.Count == 0 && _esperando.Count == 0) ArbitroDeAvisos.Terminar(this);
     }
+
+    void DestroyActivePopups()
+    {
+        for (int i = 0; i < _vivos.Count; i++)
+        {
+            var panel = _vivos[i];
+            if (panel == null) continue;
+            panel.Acabado -= AlAcabarUnAviso;
+            Destroy(panel.gameObject);
+        }
+        _vivos.Clear();
+    }
+
+    private static string Clave(ItemData item) => item != null ? (item.itemId ?? item.displayName ?? "__null__") : "__null__";
 }

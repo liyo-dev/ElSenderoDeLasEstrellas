@@ -31,35 +31,10 @@ public static class BarraDeJefeBuilder
 
     private static readonly Color Crema = new Color32(0xFF, 0xF4, 0xDC, 0xFF);
 
-    [InitializeOnLoadMethod]
-    private static void AutoRegenerarSiEsNecesario()
-    {
-        EditorApplication.delayCall += () =>
-        {
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath);
-            if (prefab == null)
-            {
-                ConstruirYGuardar(silencioso: true);
-                return;
-            }
-            var ui = prefab.GetComponent<BarraDeJefeUI>();
-            if (ui == null || !ui.TieneMascaraConfigurada)
-            {
-                ConstruirYGuardar(silencioso: true);
-            }
-        };
-    }
-
     [MenuItem("El Sendero/UI/Crear o regenerar la barra de jefe (INC-645)")]
     public static void Montar()
     {
         ConstruirYGuardar(silencioso: false);
-    }
-
-    [MenuItem("El Sendero/UI/Regenerar barra de jefe (silencioso)")]
-    public static void MontarSilencioso()
-    {
-        ConstruirYGuardar(silencioso: true);
     }
 
     public static void ConstruirYGuardar(bool silencioso)

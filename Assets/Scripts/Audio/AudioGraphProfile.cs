@@ -48,9 +48,9 @@ public class AudioGraphProfile : ScriptableObject
     public class VoiceDuckSettings
     {
         public bool enabled = true;
-        [Range(-80f, 0f)] public float musicDb = -12f;
-        [Range(-80f, 0f)] public float ambienceDb = -8f;
-        [Range(-80f, 0f)] public float sfxDb = -5f;
+        [Range(-80f, 0f)] public float musicDb;
+        [Range(-80f, 0f)] public float ambienceDb;
+        [Range(-80f, 0f)] public float sfxDb;
         [Tooltip("Ganancia en dB para realzar el canal de diálogo durante las voces")]
         [Range(0f, 12f)] public float voiceGainDb = 0f;
         [Min(0f)] public float attackSeconds = 0.15f;
@@ -58,14 +58,32 @@ public class AudioGraphProfile : ScriptableObject
         [Min(0f)] public float holdAfterVoiceSeconds = 0.25f;
     }
 
+    // Los tres ajustes de atenuación bajo las voces viven solo aquí: AudioService no guarda
+    // valores propios y, sin perfil, no atenúa. Los valores por defecto son la mezcla vigente,
+    // para que un perfil nuevo suene igual que el del juego.
+
     [Header("Atenuación durante las voces")]
-    public VoiceDuckSettings voiceDuck = new();
+    [Tooltip("Cuánto se apartan música, ambiente y efectos mientras suena una voz fuera de cinemática.")]
+    public VoiceDuckSettings voiceDuck = new()
+    {
+        musicDb = -6f, ambienceDb = -6f, sfxDb = -4f, voiceGainDb = 0f,
+        attackSeconds = 0.15f, releaseSeconds = 0.6f, holdAfterVoiceSeconds = 0.25f
+    };
 
     [Header("Atenuación de voces en cinemáticas")]
+    [Tooltip("Cuánto se apartan música, ambiente y efectos mientras suena una voz durante una cinemática.")]
     public VoiceDuckSettings cinematicVoiceDuck = new()
     {
-        musicDb = -16f, ambienceDb = -10f, sfxDb = -6f, voiceGainDb = 4f,
-        attackSeconds = 0.12f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
+        musicDb = -3f, ambienceDb = -6f, sfxDb = -4f, voiceGainDb = 0f,
+        attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
+    };
+
+    [Header("Atenuación de voces con efecto épico")]
+    [Tooltip("Cuánto se apartan música, ambiente y efectos mientras suena una voz con el efecto Épico (conjuros). La música ritual va aparte y no se atenúa.")]
+    public VoiceDuckSettings epicVoiceDuck = new()
+    {
+        musicDb = -6f, ambienceDb = -12f, sfxDb = -4f, voiceGainDb = 0f,
+        attackSeconds = 0.08f, releaseSeconds = 0.65f, holdAfterVoiceSeconds = 0.5f
     };
 
     public List<BattleRule> battles = new();
@@ -80,6 +98,18 @@ public class AudioGraphProfile : ScriptableObject
         public AudioClip music;
         [Min(0f)] public float fadeIn  = 0.5f;
         [Min(0f)] public float fadeOut = 0.8f;
+        [Tooltip("El tema suena una vez y se acaba: al terminar no vuelve a empezar (un tema de " +
+                 "cinemática que tiene su final). Vale para cualquier sitio que lo ponga.")]
+        public bool sinBucle;
+    }
+
+    /// ¿Es un tema que se acaba (suena una vez, sin bucle)? Ver SequenceRule.sinBucle.
+    public bool EsTemaQueAcaba(AudioClip clip)
+    {
+        if (clip == null) return false;
+        foreach (var rule in sequences)
+            if (rule != null && rule.sinBucle && rule.music == clip) return true;
+        return false;
     }
 
     public List<SceneMusic> sceneMusic = new();
@@ -136,24 +166,6 @@ public class AudioGraphProfile : ScriptableObject
             if (string.IsNullOrEmpty(rule.zoneId)) continue;
             if (zoneId.Contains(rule.zoneId, StringComparison.OrdinalIgnoreCase) ||
                 rule.zoneId.Contains(zoneId, StringComparison.OrdinalIgnoreCase))
-            {
-                return rule;
-            }
-        }
-        return null;
-    }
-    
-    /// <summary>
-    /// Busca la regla de música para un minijuego específico
-    /// </summary>
-    public MinigameRule GetMinigameRule(string minigameId)
-    {
-        if (string.IsNullOrEmpty(minigameId)) return null;
-        
-        foreach (var rule in minigames)
-        {
-            if (string.IsNullOrEmpty(rule.minigameId)) continue;
-            if (string.Equals(rule.minigameId, minigameId, StringComparison.OrdinalIgnoreCase))
             {
                 return rule;
             }

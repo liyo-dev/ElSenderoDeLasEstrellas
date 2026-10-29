@@ -86,18 +86,6 @@ namespace Sendero.UI
             _isVisible = true;
             _ocultadoPor.Clear();
 
-            // FIX: este Canvas también lleva un SceneBoundUI (para ocultarse/mostrarse según la
-            // escena activa), y SceneBoundUI.BeginBossIntro/EndBossIntro operan sobre el MISMO
-            // CanvasGroup capturando su alpha actual y restaurándolo después. Si BeginBossIntro
-            // se disparaba mientras HideHUD()/ShowHUD() todavía tenía un fade a medias (ej: justo
-            // al entrar en combate contra un boss que arranca pegado a una cinemática, como el
-            // Gólem), capturaba un alpha intermedio y lo dejaba "restaurado" ahí para siempre —
-            // el HUD se quedaba prácticamente invisible el resto del combate. Excluimos este
-            // Canvas del snapshot genérico de SceneBoundUI (mismo patrón que
-            // DramaticTextOverlayUI.Awake()) y dejamos que HideHUD()/ShowHUD() sean la única
-            // fuente de verdad sobre su visibilidad.
-            GetComponent<SceneBoundUI>()?.ExcludeFromBossIntro();
-            
             // Validar referencias críticas
             ValidateReferences();
 

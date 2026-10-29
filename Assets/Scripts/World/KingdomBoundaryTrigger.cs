@@ -3,25 +3,17 @@ using UnityEngine;
 /// <summary>
 /// Trigger de zona colocado en el límite visual del Reino (puente, arco, última casa
 /// del pueblo). Al cruzarlo el jugador, emite un evento narrativo custom que el grafo
-/// puede esperar con un WaitCustomEventNode para encadenar la transición de salida
-/// (ver KingdomExitTransitionNode).
+/// puede esperar con un WaitCustomEventNode para encadenar la transición de salida.
 ///
 /// Sigue el mismo patrón que PortalTrigger/OnTriggerEnter_Event: Collider en modo
 /// trigger + filtro por tag "Player" + emisión de señal narrativa.
 ///
 /// Bloqueo físico: igual que DayOnlyInspectionTrigger, adquiere el lock de movimiento
-/// (PlayerLockService) justo antes de emitir el evento, como puente hasta que el sistema
-/// narrativo (diálogo/cinemática) tome el control con su propio PushMode(ActionMode.Cinematic).
-/// Sin esto el jugador seguía moviéndose libremente mientras el grafo procesaba el evento.
-///
-/// FIX (Agosto 2026): el puente ya NO se libera a los "un frame después" a ciegas — eso dejaba
-/// una ventana en la que el freeze se soltaba antes de que el grafo llegara de verdad a empujar
-/// ActionMode.Cinematic (NarrativeRunner.RunSubGraph cede como mínimo 1 frame por cada nodo
-/// intermedio entre el WaitCustomEventNode que consume este evento y el nodo que realmente
-/// bloquea, aunque cada uno resuelva al instante). Ahora usa
-/// PlayerLockService.AcquireBridgeUntilCinematic(), que espera a que Cinematic esté realmente
-/// activo (con un timeout de seguridad) desde una corrutina alojada en el propio
-/// PlayerLockService (persistente), no en este trigger.
+/// (PlayerLockService.AcquireBridgeUntilCinematic) justo antes de emitir el evento, como
+/// puente hasta que el sistema narrativo (diálogo/cinemática) tome el control con su propio
+/// PushMode(ActionMode.Cinematic). El puente espera a que Cinematic esté activo de verdad
+/// (con un tiempo máximo de seguridad), porque el grafo tarda al menos un frame por nodo
+/// intermedio en llegar al nodo que bloquea.
 /// </summary>
 [RequireComponent(typeof(Collider))]
 public sealed class KingdomBoundaryTrigger : MonoBehaviour

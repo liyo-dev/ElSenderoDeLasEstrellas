@@ -725,7 +725,7 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-0
         position: {x: 7220, y: 368}
         outputs:
-        - cap2-prepara-viaje-erika-combate
+        - cap2-prepara-viaje-erika-desbloqueo
         npcId: NPC_Erika
         acceptEarlierInteraction: 0
         questIcon: {fileID: 0}
@@ -1072,13 +1072,13 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-combate
         position: {x: 7600, y: 372}
         outputs:
-        - cap2-prepara-viaje-erika-desbloqueo
+        - cap2-prepara-viaje-erika-item
         eventKey: ERIKA_ENTRENAMIENTO_DERROTADA
         acceptEarlierEvent: 1
     - rid: 5630202718439342303
       type: {class: UnlockAbilitiesNode, ns: , asm: Assembly-CSharp}
       data:
-        displayTitle: "23b-2.- Aprender Bola Prisma y Protecci\xF3n"
+        displayTitle: "22b-1.- Aprender Protecci\xF3n"
         chapter: Cap. 2
         blockSaving: 0
         inputAnchor: 0
@@ -1088,10 +1088,10 @@ MonoBehaviour:
         guid: cap2-prepara-viaje-erika-desbloqueo
         position: {x: 7980, y: 372}
         outputs:
-        - cap2-prepara-viaje-erika-item
+        - cap2-prepara-viaje-erika-combate
         abilityKeysToUnlock: 06000000i
         abilitiesToUnlock: 
-        spellsToUnlock: 02000000i
+        spellsToUnlock: 
         assignSpellsToEmptySlot: 1
         forceWillBeforeSpellUnlock: 1
         oneShotFlag: 

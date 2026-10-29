@@ -464,14 +464,7 @@ public class NarrativeFactBrowserWindow : EditorWindow
 
     private void ScanPlayerStateRuntime()
     {
-        var bootProfile = FindBootProfile();
-        if (bootProfile == null) return;
-
-        var getPreset = bootProfile.GetType().GetMethod("GetActivePresetResolved",
-            BindingFlags.Public | BindingFlags.Instance);
-        if (getPreset == null) return;
-
-        var preset = getPreset.Invoke(bootProfile, null) as PlayerPresetSO;
+        var preset = Partida.Preset;
         if (preset == null) return;
 
         AddFact("player.level", "Nivel", FactSource.PlayerState, FactValueType.Int, preset.level.ToString(), "Jugador", "", isEditable: true);
@@ -691,15 +684,6 @@ public class NarrativeFactBrowserWindow : EditorWindow
             case "float": return FactValueType.Float;
             default: return FactValueType.String;
         }
-    }
-
-    private static UnityEngine.Object FindBootProfile()
-    {
-        var type = Type.GetType("GameBootService, Assembly-CSharp");
-        if (type == null) return null;
-        var profileProp = type.GetProperty("Profile", BindingFlags.Public | BindingFlags.Static);
-        if (profileProp == null) return null;
-        return profileProp.GetValue(null) as UnityEngine.Object;
     }
 
     // ─── Filtering ───

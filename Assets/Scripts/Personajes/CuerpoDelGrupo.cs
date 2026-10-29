@@ -77,7 +77,8 @@ public sealed class CuerpoDelGrupo : MonoBehaviour, IFiltroDeDano
         if (Vida == null) return;
         if (caido || vida <= 0f)
         {
-            if (Caido) return;
+            // Ya en el suelo: solo se actualiza el máximo, para levantarse con la vida que toca.
+            if (Caido) { Vida.SetMaxHealth(vidaMaxima); return; }
             Vida.SetMaxAndCurrent(vidaMaxima, vidaMaxima);
             Vida.Kill();   // pasa por AlMorir: suelo, colisionador apagado y aviso
             return;

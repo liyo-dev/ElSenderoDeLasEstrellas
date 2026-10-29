@@ -61,7 +61,7 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             var blackboard = new SimpleBlackboard();
             blackboard.ImportFromSerializable(slot.initialBlackboardValues);
 
-            // Configurar el runner SIN ejecutarlo automáticamente
+            // Se configura sin ejecutarlo: los grafos arrancan con NarrativeGraphStarter.
             runner.graph = slot.graph;
             runner.Blackboard = blackboard;
             runner.SetSignalsProvider(signals);
@@ -71,11 +71,10 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             if (!_runnersByLabel.ContainsKey(slot.label ?? string.Empty))
                 _runnersByLabel.Add(slot.label ?? string.Empty, runner);
 
-            // Debug.Log($"[NarrativeGraphHub] Grafo '{slot.label}' registrado.");
         }
 
         if (signals == null)
-            Debug.LogWarning("[NarrativeGraphHub] No se encontró DefaultNarrativeSignals. Los nodos que dependan de señales no funcionarán.");
+            Debug.LogWarning("[NarrativeGraphHub] No hay DefaultNarrativeSignals. Los nodos que dependan de señales no funcionarán.");
 
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
         ValidateGraphsForScene(SceneManager.GetActiveScene().name);
@@ -122,7 +121,6 @@ public sealed class NarrativeGraphHub : MonoBehaviour
 
             if (!GraphAppliesToScene(slot.graph, sceneName))
             {
-                // Debug.Log($"[NarrativeGraphHub] Validación de '{label}' omitida: escena '{sceneName}' fuera del alcance configurado.");
                 continue;
             }
 
@@ -148,7 +146,7 @@ public sealed class NarrativeGraphHub : MonoBehaviour
     }
 
     /// <summary>
-    /// Detiene la ejecución de todos los runners. Llamar antes de recargar un preset
+    /// Detiene la ejecución de todos los runners. Llamar antes de recargar una partida
     /// para evitar que corrutinas de la sesión anterior interfieran con la nueva.
     /// </summary>
     public void StopAllRunners()
@@ -173,7 +171,6 @@ public sealed class NarrativeGraphHub : MonoBehaviour
             if (runner.Blackboard != null)
             {
                 runner.Blackboard.Clear();
-                // Debug.Log($"[NarrativeGraphHub] Blackboard limpiado: {runner.name}");
             }
         }
     }
@@ -191,7 +188,6 @@ public sealed class NarrativeGraphHub : MonoBehaviour
         }
         
         runner.StartFromStartNode();
-        // Debug.Log($"[NarrativeGraphHub] Grafo '{label}' iniciado.");
     }
     
     /// <summary>
@@ -206,119 +202,71 @@ public sealed class NarrativeGraphHub : MonoBehaviour
     }
     
     /// <summary>
-    /// Captura el estado actual de todos los blackboards para guardado.
+    /// Estado actual de los blackboards con datos, para guardar la partida. Uno por grafo, con la
+    /// etiqueta con la que está registrado aquí.
     /// </summary>
-    public List<PlayerSaveData.NarrativeBlackboardSnapshot> CaptureBlackboards()
+    public List<NarrativeBlackboardRecord> CaptureBlackboardRecords()
     {
-        var snapshots = new List<PlayerSaveData.NarrativeBlackboardSnapshot>();
-        
-        // Debug.Log($"[NarrativeGraphHub] CaptureBlackboards - revisando {_runnersByLabel.Count} runners registrados");
-        
+        var records = new List<NarrativeBlackboardRecord>();
         foreach (var kvp in _runnersByLabel)
         {
-            var label = kvp.Key;
             var runner = kvp.Value;
-            
-            if (runner == null || runner.Blackboard == null)
-            {
-                // Debug.LogWarning($"[NarrativeGraphHub] Runner '{label}' o su Blackboard es null - saltando");
-                continue;
-            }
-            
-            var blackboardData = runner.Blackboard.ExportToSerializable();
-            
-            // Log detallado: mostrar nodo actual y algunas entradas clave
-            var currentNodeGuid = runner.Blackboard.Get<string>("__currentNodeGuid", null);
-            var currentNodeName = "N/A";
-            if (!string.IsNullOrEmpty(currentNodeGuid))
-            {
-                var node = runner.graph?.FindNode(currentNodeGuid);
-                if (node != null)
-                    currentNodeName = $"{node.GetType().Name}";
-            }
+            if (runner == null || runner.Blackboard == null) continue;
 
-            // Debug.Log($"[NarrativeGraphHub] Runner '{label}' - blackboard tiene {(blackboardData != null ? blackboardData.Count : 0)} entradas | Nodo actual: {currentNodeName} ({ShortGuid(currentNodeGuid)}...)");
-            
-            // Solo guardar si hay datos en el blackboard
-            if (blackboardData != null && blackboardData.Count > 0)
-            {
-                snapshots.Add(new PlayerSaveData.NarrativeBlackboardSnapshot
-                {
-                    graphLabel = label,
-                    blackboardData = blackboardData
-                });
-                
-                // Debug.Log($"[NarrativeGraphHub] ✅ Snapshot añadido para '{label}' (nodo: {currentNodeName})");
-            }
+            var data = runner.Blackboard.ExportToSerializable();
+            if (data != null && data.Count > 0)
+                records.Add(new NarrativeBlackboardRecord(kvp.Key, data));
         }
-        
-        // Debug.Log($"[NarrativeGraphHub] Capturados {snapshots.Count} blackboards con estado");
-        return snapshots;
+        return records;
     }
-    
-    /// <summary>
-    /// Restaura los blackboards desde un snapshot guardado.
-    /// </summary>
-    public void RestoreBlackboards(List<PlayerSaveData.NarrativeBlackboardSnapshot> snapshots)
+
+    /// <summary>Vuelca en cada grafo el blackboard guardado con su etiqueta.</summary>
+    public void RestoreBlackboardRecords(IEnumerable<NarrativeBlackboardRecord> records)
     {
-        if (snapshots == null || snapshots.Count == 0)
+        if (records == null)
         {
-    #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log("[NarrativeGraphHub] No hay blackboards guardados para restaurar");
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            Debug.Log("[NarrativeGraphHub] No hay blackboards guardados para restaurar");
 #endif
             return;
         }
-        
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NarrativeGraphHub] RestoreBlackboards llamado con {snapshots.Count} snapshot(s)");
-#endif
-        
+
+        int total = 0;
         int restored = 0;
-        foreach (var snapshot in snapshots)
+        foreach (var record in records)
         {
-            if (string.IsNullOrEmpty(snapshot.graphLabel))
+            total++;
+            if (string.IsNullOrEmpty(record.GraphLabel))
             {
-                Debug.LogWarning("[NarrativeGraphHub] Snapshot con graphLabel vacío - saltando");
+                Debug.LogWarning("[NarrativeGraphHub] Blackboard guardado sin etiqueta de grafo - saltando");
                 continue;
-            }
-            
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NarrativeGraphHub] Intentando restaurar '{snapshot.graphLabel}' con {(snapshot.blackboardData != null ? snapshot.blackboardData.Count : 0)} entradas");
-#endif
-            
-            var runner = GetRunner(snapshot.graphLabel);
-            if (runner == null)
-            {
-                Debug.LogWarning($"[NarrativeGraphHub] No se encontró runner para grafo '{snapshot.graphLabel}'");
-                continue;
-            }
-            
-            if (runner.Blackboard == null)
-            {
-                Debug.LogWarning($"[NarrativeGraphHub] Runner '{snapshot.graphLabel}' no tiene blackboard");
-                continue;
-            }
-            
-            runner.Blackboard.ImportFromSerializable(snapshot.blackboardData);
-            restored++;
-            
-            // Log detallado: mostrar nodo guardado
-            var currentNodeGuid = runner.Blackboard.Get<string>("__currentNodeGuid", null);
-            var currentNodeName = "N/A";
-            if (!string.IsNullOrEmpty(currentNodeGuid))
-            {
-                var node = runner.graph?.FindNode(currentNodeGuid);
-                if (node != null)
-                    currentNodeName = $"{node.GetType().Name}";
             }
 
+            var runner = GetRunner(record.GraphLabel);
+            if (runner == null)
+            {
+                Debug.LogWarning($"[NarrativeGraphHub] No se encontró runner para grafo '{record.GraphLabel}'");
+                continue;
+            }
+
+            if (runner.Blackboard == null)
+            {
+                Debug.LogWarning($"[NarrativeGraphHub] Runner '{record.GraphLabel}' no tiene blackboard");
+                continue;
+            }
+
+            runner.Blackboard.ImportFromSerializable(record.Entries);
+            restored++;
+
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[NarrativeGraphHub] ✅ Blackboard restaurado para grafo '{snapshot.graphLabel}' | Nodo guardado: {currentNodeName} ({ShortGuid(currentNodeGuid)}...)");
+            var currentNodeGuid = runner.Blackboard.Get<string>(NarrativeRunner.CurrentNodeKey, null);
+            var node = string.IsNullOrEmpty(currentNodeGuid) ? null : runner.graph?.FindNode(currentNodeGuid);
+            Debug.Log($"[NarrativeGraphHub] Blackboard restaurado para grafo '{record.GraphLabel}' | Nodo guardado: {(node != null ? node.GetType().Name : "N/A")} ({ShortGuid(currentNodeGuid)}...)");
 #endif
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NarrativeGraphHub] Restaurados {restored}/{snapshots.Count} blackboards");
+        Debug.Log($"[NarrativeGraphHub] Restaurados {restored}/{total} blackboards");
 #endif
     }
 

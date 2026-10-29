@@ -8,15 +8,16 @@ using Sendero.Core.Feedback;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// <summary>
-/// Puesta en escena de los ataques de equipo. Cada ataque es una corrutina que dura de principio a
+/// Puesta en escena de los ataques de equipo, según la <see cref="SpecialAttackSO.coreografia"/>
+/// de cada ataque (y sus sonidos, también del SO). Cada ataque es una corrutina que dura de principio a
 /// fin y es la dueña del reloj: el impacto, el cierre y la vuelta al suelo ocurren dentro de ella,
 /// así que nadie queda a medias de una pose o en el aire.
 /// <list type="bullet">
-/// <item>Dúo con Estela: los dos corren, saltan y quedan suspendidos en cámara lenta con los brazos
+/// <item>En el aire: los dos corren, saltan y quedan suspendidos en cámara lenta con los brazos
 /// arriba, en el centro del círculo, mientras caen los meteoros alrededor.</item>
-/// <item>Dúo con Liam (y Estela + Liam): cara a cara en la pose de la Y; a la vez pasan a brazos
-/// arriba y sobre sus cabezas se abre el agujero negro, que atrae a los enemigos: los que chocan con
-/// él mueren o, si les queda vida, salen escupidos.</item>
+/// <item>Cara a cara (y con agujero negro): en la pose de la Y; a la vez pasan a brazos arriba y cae
+/// el hechizo. Con agujero negro, sobre sus cabezas se abre el agujero, que atrae a los enemigos:
+/// los que chocan con él mueren o, si les queda vida, salen escupidos.</item>
 /// <item>Trío: tres franjas con las caras y la pose de «aquí hemos llegado»; saltan los tres y, al
 /// caer, cada uno adopta su pose y la magia sale por todas partes.</item>
 /// </list>
@@ -28,8 +29,6 @@ public partial class DuoSpecialAttackSystem
 {
     // Altura (m sobre el suelo) a la que queda el agujero negro, sobre la cabeza de los dos.
     private const float AlturaDelAgujero = 2.8f;
-    // El prefab del ataque nombra así a su agujero negro (hijo directo de la raíz).
-    private const string NombreDelAgujeroEnElPrefab = "VFX_AgujeroNegro";
     private const float SeparacionDelDuo = 0.8f;
     private const float DistanciaDeImpulso = 2.2f;
     private const float VelocidadDeAtraccion = 16f;
@@ -39,6 +38,8 @@ public partial class DuoSpecialAttackSystem
     private sealed class ActorDeEquipo
     {
         public Transform t;
+        public bool esPersonaje;   // es uno de los tres personajes del grupo (ControlDelJugador)
+        public Slot personaje;
         public Animator anim;
         public NPCSimpleAnimator npc;
         public Invector.vCharacterController.vThirdPersonController motor; // solo el jugador
@@ -67,9 +68,9 @@ public partial class DuoSpecialAttackSystem
     {
         if (_isExecuting) return;
         ResolveCaster();
-        if (magicCaster == null) { Deny("Sin MagicCaster", "TEAM_DENIED_BUSY", "Ahora no se puede."); return; }
-        if (!magicCaster.BeginTeamGesture(attack.gestureSeconds, MagicCastStyle.TwoHanded, out Vector3 facing)) { Deny("El personaje no puede lanzar ahora", "TEAM_DENIED_BUSY", "Ahora no se puede."); return; }
-        if (!teamGauge.TryConsume(cost)) { Deny("Carga insuficiente", "TEAM_DENIED_CHARGE", "Falta carga de equipo."); return; }
+        if (magicCaster == null) { Deny(MotivoDeRechazo.Ocupado); return; }
+        if (!magicCaster.BeginTeamGesture(attack.gestureSeconds, MagicCastStyle.TwoHanded, out Vector3 facing)) { Deny(MotivoDeRechazo.Ocupado); return; }
+        if (!teamGauge.TryConsume(cost)) { Deny(MotivoDeRechazo.FaltaCarga); return; }
 
         StartCoroutine(Co_Execute(attack, facing));
         OnTeamAttack?.Invoke(attack);
@@ -97,15 +98,26 @@ public partial class DuoSpecialAttackSystem
         if (!string.IsNullOrEmpty(attack.castSFXKey) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(attack.castSFXKey);
 
-        if (attack.isTrio && _actores.Count >= 3)
+        var coreografia = CoreografiaPosible(attack);
+        if (coreografia == CoreografiaDeEquipo.Trio)
             yield return Co_Trio(attack, fwd);
-        else if (_actores.Count >= 2 && attack.IsDuoOf(Slot.Will, Slot.Estela))
-            yield return Co_DuoEstela(attack, fwd, PuntoDelGolpe(body, fwd));
-        else if (_actores.Count >= 2)
-            yield return Co_DuoCaraACara(attack, fwd, attack.IsDuoOf(Slot.Will, Slot.Liam));
+        else if (coreografia == CoreografiaDeEquipo.EnElAire)
+            yield return Co_DuoEnElAire(attack, fwd, PuntoDelGolpe(body, fwd));
+        else if (coreografia != CoreografiaDeEquipo.SinDefinir)
+            yield return Co_DuoCaraACara(attack, fwd, coreografia == CoreografiaDeEquipo.AgujeroNegro);
 
         LimpiarPuestaEnEscena();
         _isExecuting = false;
+    }
+
+    /// La coreografía del ataque que cabe con los actores que hay: el trío necesita a los tres
+    /// (si no, cara a cara) y cualquier dúo, a dos. SinDefinir = no hay con quién.
+    private CoreografiaDeEquipo CoreografiaPosible(SpecialAttackSO attack)
+    {
+        var c = attack.coreografia;
+        if (c == CoreografiaDeEquipo.Trio && _actores.Count < 3) c = CoreografiaDeEquipo.CaraACara;
+        if (_actores.Count < 2 || c == CoreografiaDeEquipo.SinDefinir) return CoreografiaDeEquipo.SinDefinir;
+        return c;
     }
 
     /// Dónde cae el golpe: sobre el objetivo si está al alcance, o delante. Siempre a 3 m o más.
@@ -123,9 +135,9 @@ public partial class DuoSpecialAttackSystem
         return centro;
     }
 
-    // ── Dúo con Estela ─────────────────────────────────────────────────────
+    // ── En el aire (espalda con espalda) ───────────────────────────────────
 
-    private IEnumerator Co_DuoEstela(SpecialAttackSO attack, Vector3 fwd, Vector3 centro)
+    private IEnumerator Co_DuoEnElAire(SpecialAttackSO attack, Vector3 fwd, Vector3 centro)
     {
         ActorDeEquipo a = _actores[0], b = _actores[1];
         Vector3 media = (a.t.position + b.t.position) * 0.5f;
@@ -163,7 +175,7 @@ public partial class DuoSpecialAttackSystem
         PonerBase(a, poseEnElAire); PonerBase(b, poseEnElAire);
         PonerPose(a, poseInvocacionDuoEstela); PonerPose(b, poseInvocacionDuoEstela);
         PlayTeamVfx(attack, centro, dir, a.t);
-        if (AudioService.Instance != null) AudioService.Instance.PlaySFX("SpecialAttack_Meteoros");
+        TocarSfx(attack.sfxDelHechizo);
         float h = alturaSaltoDuoEstela;
         Vector3 aireA = metaA + Vector3.up * h, aireB = metaB + Vector3.up * h;
         yield return Co_Tramo(0.45f, t =>
@@ -217,7 +229,7 @@ public partial class DuoSpecialAttackSystem
         }, true);
     }
 
-    // ── Dúos con Liam: cara a cara y agujero negro ─────────────────────────
+    // ── Cara a cara (con o sin agujero negro) ──────────────────────────────
 
     private IEnumerator Co_DuoCaraACara(SpecialAttackSO attack, Vector3 fwd, bool conAgujero)
     {
@@ -264,7 +276,7 @@ public partial class DuoSpecialAttackSystem
         TimeScaleArbiterService.Request(this, 0.6f);
         Transform vfx = PlayTeamVfx(attack, centro, eje, a.t);
         if (conAgujero) ElevarAgujero(vfx, attack);
-        if (AudioService.Instance != null) AudioService.Instance.PlaySFX(conAgujero ? "SpecialAttack_AgujeroNegro" : "SpecialAttack_Meteoros");
+        TocarSfx(attack.sfxDelHechizo);
         FeedbackService.CameraShake(0.3f, 0.4f);
         _ultimaAbsorcion = -1f;
         yield return Co_Tramo(conAgujero ? segundosDelAgujero : 1.2f, t =>
@@ -316,14 +328,15 @@ public partial class DuoSpecialAttackSystem
         }
     }
 
-    /// El prefab del ataque trae el agujero a una altura fija; se sube sobre la cabeza de los dos.
+    /// El VFX del ataque trae el agujero a una altura fija; se sube sobre la cabeza de los dos. El
+    /// hijo que es el agujero lo dice el SO (hijoDelAgujeroEnElVfx).
     private static void ElevarAgujero(Transform raiz, SpecialAttackSO attack)
     {
-        if (raiz == null) return;
+        if (raiz == null || string.IsNullOrEmpty(attack.hijoDelAgujeroEnElVfx)) return;
         for (int i = 0; i < raiz.childCount; i++)
         {
             Transform hijo = raiz.GetChild(i);
-            if (!hijo.name.StartsWith(NombreDelAgujeroEnElPrefab, StringComparison.Ordinal)) continue;
+            if (!hijo.name.StartsWith(attack.hijoDelAgujeroEnElVfx, StringComparison.Ordinal)) continue;
             Vector3 local = hijo.localPosition;
             hijo.localPosition = new Vector3(local.x, AlturaDelAgujero - attack.elevacionDelVfx, local.z);
         }
@@ -443,13 +456,13 @@ public partial class DuoSpecialAttackSystem
         }
 
         PlayTeamVfx(attack, centro, frente, w.t);
-        if (AudioService.Instance != null) AudioService.Instance.PlaySFX("SpecialAttack_Meteoros");
+        TocarSfx(attack.sfxDelHechizo);
         FinalizarImpacto(attack, centro, frente, w.t);
         for (int i = 0; i < 3; i++)
         {
             PonerPose(actores[i], null);
             VolverAIdle(actores[i]);
-            PonerPose(actores[i], PoseDeAterrizajeTrio(actores[i].t));
+            PonerPose(actores[i], PoseDeAterrizajeTrio(actores[i]));
         }
         TimeScaleArbiterService.Request(this, 0.4f);
         yield return Co_Tramo(1.5f, t =>
@@ -462,11 +475,10 @@ public partial class DuoSpecialAttackSystem
         }, true);
     }
 
-    private string PoseDeAterrizajeTrio(Transform t)
+    private string PoseDeAterrizajeTrio(ActorDeEquipo a)
     {
-        string nombre = t.name;
-        if (nombre.IndexOf("Estela", StringComparison.OrdinalIgnoreCase) >= 0) return poseAterrizajeEstela;
-        if (nombre.IndexOf("Liam", StringComparison.OrdinalIgnoreCase) >= 0) return poseAterrizajeLiam;
+        if (a.esPersonaje && a.personaje == Slot.Estela) return poseAterrizajeEstela;
+        if (a.esPersonaje && a.personaje == Slot.Liam) return poseAterrizajeLiam;
         return poseAterrizajeWill;
     }
 
@@ -474,12 +486,13 @@ public partial class DuoSpecialAttackSystem
 
     private void FinalizarImpacto(SpecialAttackSO attack, Vector3 center, Vector3 facing, Transform body)
     {
-        // Impacto final: Trío (cataclismo), Liam (supernova) o Estela (sísmico)
-        GameObject impactoPrefab = attack.isTrio
-            ? (impactoRemateTrio != null ? impactoRemateTrio : impactoRemateEstela)
-            : (attack.IsDuoOf(Slot.Will, Slot.Liam)
-                ? (impactoRemateLiam != null ? impactoRemateLiam : impactoRemateEstela)
-                : impactoRemateEstela);
+        // Remate según la coreografía: cataclismo (trío), supernova (agujero negro) o sísmico.
+        GameObject impactoPrefab = attack.coreografia switch
+        {
+            CoreografiaDeEquipo.Trio => impactoRemateTrio != null ? impactoRemateTrio : impactoRemateEstela,
+            CoreografiaDeEquipo.AgujeroNegro => impactoRemateLiam != null ? impactoRemateLiam : impactoRemateEstela,
+            _ => impactoRemateEstela
+        };
 
         if (impactoPrefab != null && VfxPoolService.Instance != null)
         {
@@ -490,8 +503,7 @@ public partial class DuoSpecialAttackSystem
                 attack.isTrio ? 3.5f : 2.5f);
         }
 
-        if (AudioService.Instance != null)
-            AudioService.Instance.PlaySFX("SpecialAttack_Impacto");
+        TocarSfx(attack.sfxDelImpacto);
 
         ApplyAoeDamage(attack, center);
 
@@ -515,6 +527,7 @@ public partial class DuoSpecialAttackSystem
     {
         if (t == null) return;
         var a = new ActorDeEquipo { t = t, sueloY = t.position.y };
+        a.esPersonaje = ControlDelJugador.PersonajeDe(t.gameObject, out a.personaje);
         a.anim = t.GetComponent<Animator>();
         if (a.anim == null) a.anim = t.GetComponentInChildren<Animator>();
         t.TryGetComponent(out a.npc);
@@ -767,6 +780,12 @@ public partial class DuoSpecialAttackSystem
         CameraDirectorService.Release(this);
     }
 
+    private static void TocarSfx(string clave)
+    {
+        if (!string.IsNullOrEmpty(clave) && AudioService.Instance != null)
+            AudioService.Instance.PlaySFX(clave);
+    }
+
     private static IEnumerator Co_Tramo(float duracion, Action<float> paso, bool sinEscala)
     {
         float t = 0f;
@@ -786,8 +805,8 @@ public partial class DuoSpecialAttackSystem
         {
             Transform t = _actores[i].t;
             if (t == null) continue;
-            bool esEstela = t.name.IndexOf("Estela", StringComparison.OrdinalIgnoreCase) >= 0;
-            bool esLiam = t.name.IndexOf("Liam", StringComparison.OrdinalIgnoreCase) >= 0;
+            bool esEstela = _actores[i].esPersonaje && _actores[i].personaje == Slot.Estela;
+            bool esLiam = _actores[i].esPersonaje && _actores[i].personaje == Slot.Liam;
 
             if (esEstela)
             {

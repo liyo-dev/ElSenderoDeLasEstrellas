@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "El Sendero/Narrativa/Graph", fileName = "NarrativeGraph")]
+[CreateAssetMenu(menuName = "Narrative Graph/Grafo", fileName = "NarrativeGraph")]
 public class NarrativeGraph : ScriptableObject
 {
     public string startNodeGuid;
@@ -11,7 +11,7 @@ public class NarrativeGraph : ScriptableObject
 
     private void OnValidate()
     {
-        // Clean up null nodes that may have been created by serialization issues
+        // Quita nodos nulos (tipos de nodo borrados o renombrados que ya no se pueden deserializar).
         nodes?.RemoveAll(n => n == null);
     }
 

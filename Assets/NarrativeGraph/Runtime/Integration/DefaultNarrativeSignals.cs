@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Bus de señales del grafo narrativo (ver INarrativeSignals). Las señales sin oyente se guardan
+/// hasta que alguien las espere («sticky»). Lo de misiones lo delega en el <see cref="IQuestService"/>
+/// que el juego registre en <see cref="NarrativeServices"/>.
+/// </summary>
 public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 {
     public static DefaultNarrativeSignals Instance { get; private set; }
@@ -15,12 +20,13 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     }
     #endif
 
+    /// <summary>La instancia activa; si no hay ninguna, crea una persistente.</summary>
     public static DefaultNarrativeSignals EnsureInstance()
     {
         if (Instance != null)
             return Instance;
 
-        var existing = ServiceLocator.Get<DefaultNarrativeSignals>(false);
+        var existing = FindAnyObjectByType<DefaultNarrativeSignals>(FindObjectsInactive.Include);
         if (existing != null)
         {
             Instance = existing;
@@ -31,15 +37,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
             DontDestroyOnLoad(go);
             Instance = go.AddComponent<DefaultNarrativeSignals>();
         }
-
-        Instance.EnsureQuestServiceProvider();
         return Instance;
     }
-
-    [Tooltip("Componente que implementa IQuestService (p.ej., QuestServiceAdapter)")]
-    public MonoBehaviour questServiceProvider;
-
-    IQuestService _qs;
 
     // Suscriptores por clave
     readonly Dictionary<string, Action> _custom = new();
@@ -50,19 +49,16 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     // Solo se limpia en reset completo (nueva partida).
     readonly HashSet<string> _raised = new();
 
-    // Registro durable de "¿esta key se ha disparado alguna vez en esta partida?", a diferencia
-    // de _pending/_raised (que se vacían al ser consumidos por el primer suscriptor). Pensado para
-    // que código fuera del grafo narrativo (p.ej. NarrativeCondition, que mantiene su propio caché
-    // local por instancia) pueda auto-corregirse sin depender de haber estado suscrito en el
-    // instante exacto del disparo. No sustituye a _raised: no participa en la entrega "sticky" a
-    // OnCustom, solo responde a la pregunta "¿alguna vez?". Sobrevive a ResetState(preservePending:true)
-    // igual que _raised; se limpia solo en reset completo (nueva partida).
+    // Registro durable de «¿esta clave se ha disparado alguna vez en esta partida?», a diferencia
+    // de _pending/_raised (que se vacían al consumirlos el primer suscriptor). Sirve a quien
+    // pregunta por un hecho pasado sin haber estado suscrito en el instante del disparo. No
+    // participa en la entrega sticky de OnCustom. Sobrevive a ResetState(preservePending:true)
+    // igual que _raised; se limpia solo en el reset completo (nueva partida).
     readonly HashSet<string> _everRaised = new();
 
     /// <summary>
-    /// Se dispara justo después de cualquier llamada a ResetState().
-    /// Permite que otros sistemas (p.ej. NPCInteractiveNarrativeExecutor) se re-suscriban
-    /// tras el borrado de _custom que hace el reset del grafo narrativo.
+    /// Se dispara justo después de cualquier llamada a ResetState(). Permite que otros sistemas
+    /// vuelvan a suscribirse tras el borrado de suscriptores que hace el reset.
     /// </summary>
     public static event Action OnAfterReset;
 
@@ -164,40 +160,6 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
             return;
         }
         Instance = this;
-        ServiceLocator.Register(this);
-        EnsureQuestServiceProvider();
-    }
-
-    public void EnsureQuestServiceProvider()
-    {
-        if (questServiceProvider is IQuestService)
-            return;
-
-        if (questServiceProvider == null)
-        {
-            var local = GetComponent<IQuestService>();
-            if (local is MonoBehaviour mbLocal)
-            {
-                questServiceProvider = mbLocal;
-                return;
-            }
-        }
-
-        if (questServiceProvider == null)
-        {
-            var existing = ServiceLocator.Get<QuestServiceAdapter>(false);
-            if (existing != null)
-            {
-                questServiceProvider = existing;
-                return;
-            }
-        }
-
-        if (questServiceProvider == null)
-        {
-            var adapter = GetComponent<QuestServiceAdapter>() ?? gameObject.AddComponent<QuestServiceAdapter>();
-            questServiceProvider = adapter;
-        }
     }
 
     public void UnraiseCustom(string key)
@@ -219,13 +181,25 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
         => !string.IsNullOrWhiteSpace(key) && _custom.ContainsKey(key);
 
     /// <summary>
-    /// True si esta key se ha disparado (RaiseCustom) alguna vez en la partida actual, con
+    /// True si esta clave se ha disparado (RaiseCustom) alguna vez en la partida actual, con
     /// independencia de si tuvo oyentes en el momento o de si ya fue consumida por _pending/_raised.
-    /// Fuente de verdad durable para código externo al grafo que necesite preguntar "¿ya pasó esto?"
-    /// sin mantener su propio flag local (p.ej. NarrativeCondition).
+    /// Fuente de verdad durable para quien necesite preguntar «¿ya pasó esto?» sin mantener su
+    /// propio flag.
     /// </summary>
     public bool HasEverRaised(string key)
         => !string.IsNullOrWhiteSpace(key) && _everRaised.Contains(key);
+
+    /// Señales emitidas alguna vez en esta partida, para guardarlas con ella.
+    public IReadOnlyCollection<string> EverRaisedKeys => _everRaised;
+
+    /// Recupera el «ya pasó» de una partida guardada. Solo alimenta <see cref="HasEverRaised"/>:
+    /// no deja nada pendiente ni despierta a ningún suscriptor.
+    public void RestoreEverRaised(IEnumerable<string> keys)
+    {
+        if (keys == null) return;
+        foreach (var k in keys)
+            if (!string.IsNullOrWhiteSpace(k)) _everRaised.Add(k);
+    }
 
     /// <summary>
     /// True si esta key se ha disparado y está esperando a su primer oyente (en _pending o
@@ -241,8 +215,8 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 
     /// Olvida las señales de la partida anterior (emitidas, pendientes y batallas) sin tocar a los
     /// suscriptores: las secuencias y nodos que ya escuchan siguen escuchando. Es lo que necesita
-    /// «Nueva partida» sin cerrar el juego (INC-448): sin esto, la partida nueva consumía señales
-    /// de la vieja (NPC_INTERACT_*, ESTRELLA_COMPRADA…).
+    /// «Nueva partida» sin cerrar el juego, para que la partida nueva no consuma señales de la
+    /// vieja. Ver INC-448.
     public void OlvidarSenalesDePartida()
     {
         _pending.Clear();
@@ -283,31 +257,17 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
 #endif
         }
         _battleSubscribers.Clear();
-        _qs = null;
 
         try { OnAfterReset?.Invoke(); }
         catch (Exception e) { Debug.LogError($"[Signals] Error en OnAfterReset: {e}"); }
     }
 
-    IQuestService QS
-    {
-        get
-        {
-            if (_qs != null) return _qs;
-            _qs = questServiceProvider as IQuestService
-                  ?? GetComponent<IQuestService>()
-                  ?? ServiceLocator.Get<QuestServiceAdapter>(false);
-            return _qs;
-        }
-    }
+    IQuestService QS => NarrativeServices.TryGet(out IQuestService qs, nameof(DefaultNarrativeSignals)) ? qs : null;
 
     void OnDestroy()
     {
         if (Instance == this)
-        {
-            ServiceLocator.Unregister(this);
             Instance = null;
-        }
     }
     
     // ===================== QUEST =====================
@@ -411,10 +371,9 @@ public class DefaultNarrativeSignals : MonoBehaviour, INarrativeSignals
     /// <summary>
     /// Devuelve una señal a _pending/_raised sin invocar suscriptores activos. Diferente de
     /// RaiseCustom, que despacha de inmediato si hay oyentes. Útil cuando un suscriptor consumió
-    /// la señal desde OnCustom() pero decide que no era para él: sin requeue se perdería para
-    /// cualquier suscriptor posterior (p.ej. el WaitCustomEventNode del grafo, que se suscribe
-    /// después del executor legacy en la carga). Es seguro llamarlo desde dentro del propio
-    /// callback que consumió la señal porque no invoca nada.
+    /// la señal desde OnCustom() pero decide que no era para él: sin devolverla se perdería para
+    /// cualquier suscriptor posterior. Es seguro llamarlo desde dentro del propio callback que
+    /// consumió la señal porque no invoca nada.
     /// </summary>
     public void RequeueCustom(string key)
     {

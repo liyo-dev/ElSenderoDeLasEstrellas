@@ -32,12 +32,17 @@ public class SolYLunaEnElCielo : MonoBehaviour
     private static SolYLunaEnElCielo s_publicador;
     private Transform _luzDeEscena;
 
+    /// Sol y luna puestos a mano por una escena que se rueda sin ciclo día/noche (la noche de una
+    /// cinemática con escena propia). Mientras tiene valor manda sobre el ciclo y la luz de la escena.
+    public static (Vector3 sol, Vector3 luna)? AstrosImpuestos { get; set; }
+
 #if UNITY_EDITOR
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStatics()
     {
         s_camara = null;
         s_publicador = null;
+        AstrosImpuestos = null;
         System.Array.Clear(Camaras, 0, Camaras.Length);
         ApagarAstros();
     }
@@ -92,13 +97,19 @@ public class SolYLunaEnElCielo : MonoBehaviour
     {
         DayNightCycle ciclo = Application.isPlaying ? DayNightCycle.Instance : null;
         Transform luz = DayNightCycle.Sun != null ? DayNightCycle.Sun : _luzDeEscena;
-        if (ciclo == null && luz == null)
+        var impuestos = Application.isPlaying ? AstrosImpuestos : null;
+        if (ciclo == null && luz == null && !impuestos.HasValue)
         {
             if (s_publicador == this) ApagarAstros();
             return;
         }
-        Vector3 sol = ciclo != null ? ciclo.DireccionDelSol : -luz.forward;
+        Vector3 sol = ciclo != null ? ciclo.DireccionDelSol : (luz != null ? -luz.forward : Vector3.down);
         Vector3 luna = ciclo != null ? ciclo.DireccionDeLaLuna : -sol;
+        if (impuestos.HasValue)
+        {
+            sol = impuestos.Value.sol;
+            luna = impuestos.Value.luna;
+        }
         if (SolForzado.DireccionDelDisco.HasValue) sol = SolForzado.DireccionDelDisco.Value;
         if (sol.sqrMagnitude > 0.000001f) sol.Normalize();
         if (luna.sqrMagnitude > 0.000001f) luna.Normalize();

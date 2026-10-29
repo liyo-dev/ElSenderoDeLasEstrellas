@@ -899,7 +899,7 @@ public class Interactable : MonoBehaviour
         if (!GameBootService.IsAvailable || !singleUse)
             return;
 
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null)
             return;
 
@@ -917,7 +917,7 @@ public class Interactable : MonoBehaviour
         if (!singleUse || used)
             return;
 
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null || preset.consumedInteractableIds == null)
             return;
 

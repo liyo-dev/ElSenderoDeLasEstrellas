@@ -112,7 +112,7 @@ public class ModularAutoBuilder : MonoBehaviour, IFuenteDeBonos
             suma += BonosDeCategoria(seleccion.Key);
         var diferencia = suma - _bonos;
         _bonos = suma;
-        if (_fuenteRegistrada && !diferencia.EsCero) EstadisticasDelPersonaje.AvisarCambioDeBonos(diferencia);
+        if (_fuenteRegistrada && !diferencia.EsCero) EstadisticasDelPersonaje.AvisarCambioDeBonos();
     }
 
     void Awake()

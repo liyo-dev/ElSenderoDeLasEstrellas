@@ -405,15 +405,6 @@ namespace Game.NPC.States
             {
                 if (config.waitForAlertDialogue) _waitingForDialogue = true;
 
-                // Si es Erika, asegurar desbloqueo y equipamiento de Bola Prisma y Protección antes del combate (INC-851)
-                var mgr = context.Transform != null ? context.Transform.GetComponent<NPCBehaviourManagerV2>() : null;
-                if (mgr != null && mgr.PersistenceId == "NPC_Erika")
-                {
-                    AbilityUnlockPopupUI.ResetFlag("SPELL_UNLOCKED_Plasmaball");
-                    UnlockService.UnlockSpell(SpellId.Plasmaball, assignToEmptySlot: true);
-                    UnlockService.UnlockAbility(AbilityKey.Shield);
-                }
-
                 DialogueManager.Instance?.StartBattleDialogue(config.dialogueOnAlert, context.Transform, () =>
                 {
                     _waitingForDialogue = false;

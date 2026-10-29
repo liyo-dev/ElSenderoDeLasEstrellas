@@ -399,11 +399,11 @@ public class SequencePlayer : CinematicSequencerBase
     }
 
     /// Cambia la música a mitad de secuencia. Usado por MusicBeat.
-    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f)
+    public void PlayMusic(string musicId, bool continuarDondeIba = true, float fadeIn = 0f, float desdeSegundo = -1f)
     {
         var regla = ResolveAudioProfile()?.GetSequenceRule(musicId);
         if (regla?.music != null && AudioService.Instance != null)
-            AudioService.Instance.PlayMusic(regla.music, fadeIn > 0f ? fadeIn : regla.fadeIn, continuarDondeIba);
+            AudioService.Instance.PlayMusic(regla.music, fadeIn > 0f ? fadeIn : regla.fadeIn, continuarDondeIba, desdeSegundo);
         else PlaySequenceMusic(musicId);
     }
 
@@ -725,9 +725,9 @@ public class SequencePlayer : CinematicSequencerBase
 
         // Red de seguridad del tiempo: si la escena iba en cámara lenta y su beat de vuelta no se
         // llegó a ejecutar (una rama que salió antes, un beat mal puesto), la partida se quedaría
-        // al 20% de velocidad para siempre. Es un fallo caro y silencioso, así que no se confía en
-        // que el asset se acuerde.
-        Time.timeScale = 1f;
+        // al 20% de velocidad para siempre. Se suelta la petición de la secuencia (TimeScaleBeat
+        // pide con el reproductor como clave), sin tocar las pausas de otros sistemas.
+        TimeScaleArbiterService.Release(this);
 
         // Dejar a todos los actores parados y en Idle antes de devolver el control a la FSM.
         foreach (var actor in _context.ResolvedActors)
@@ -834,7 +834,7 @@ public class SequencePlayer : CinematicSequencerBase
         RunScreenCleanups();
         RunPendingCleanups();
         SpeechBubbleUI.Instance?.Hide();
-        Time.timeScale = 1f;
+        TimeScaleArbiterService.Release(this);
         // Si el guion se cerró sin soltar la cámara (una excepción a mitad), el driver se la
         // queda cedida y la cámara de juego no vuelve nunca.
         ActiveCamera?.DevolverElControl();

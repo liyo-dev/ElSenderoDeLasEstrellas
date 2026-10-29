@@ -13,7 +13,14 @@ using Slot = PartyControlManager.CharacterSlot;
 /// - los demás, en el Damageable de su NPC (<see cref="CuerpoDelGrupo"/>); su maná se regenera aquí
 ///   y lo gasta su IA al lanzar (<see cref="GastarManaDe"/>).
 /// En el preset, los de Will son maxHP/currentHP/maxMP/currentMP y los de Estela y Liam van en
-/// companionHealth (sin entrada = los máximos de su ficha).
+/// companionHealth (sin entrada = los máximos de su ficha). Es el único que escribe esos campos
+/// mientras se juega y el único que cambia los máximos (<see cref="AumentarMaximosDelGrupo"/>).
+///
+/// Bonos de equipo (EstadisticasDelPersonaje.Bonos): los da la ropa del cuerpo del jugador, así que
+/// se suman solo al personaje que va al mando, sea cual sea, y se le quitan al dejar el mando. En el
+/// preset se guarda siempre el máximo sin bonos; la vida y el maná actuales, tal cual se ven. Al
+/// cambiar los bonos se conserva lo que le falta para estar lleno (ponerse una prenda de +vida sube
+/// el máximo y la vida a la vez).
 ///
 /// Caídas: un compañero a 0 se queda en el suelo. Si cae el que va al mando y queda alguien en
 /// pie, el mando pasa a él (<see cref="IntentarRelevo"/>, desde PlayerHealthSystem); si no queda
@@ -61,6 +68,8 @@ public sealed class SaludDelGrupo : MonoBehaviour
     private PlayerHealthSystem _salud;
     private ManaPool _mana;
     private Slot _activo = Slot.Will;
+    // Bonos de equipo que lleva sumados ahora el cuerpo del jugador (los del que va al mando).
+    private Estadisticas _bonos;
     private bool _iniciado;
     private bool _relevoEnCurso;
     private float _sinEnemigosDesde = -1f;
@@ -81,6 +90,11 @@ public sealed class SaludDelGrupo : MonoBehaviour
     public float VidaMax(Slot p) => p == _activo && _salud != null ? _salud.MaxHealth : _estado[(int)p].vidaMax;
     public float Mana(Slot p) => p == _activo && _mana != null ? _mana.Current : _estado[(int)p].mana;
     public float ManaMax(Slot p) => p == _activo && _mana != null ? _mana.Max : _estado[(int)p].manaMax;
+    /// Vida y maná máximos de ese personaje sin los bonos de equipo (lo que suben los premios).
+    public float VidaMaxBase(Slot p) => VidaMax(p) - (p == _activo ? _bonos.vida : 0f);
+    public float ManaMaxBase(Slot p) => ManaMax(p) - (p == _activo ? _bonos.magia : 0f);
+    /// Ya ha leído la partida: las consultas devuelven valores reales.
+    public bool EstaListo => _iniciado;
     public bool Caido(Slot p) => _estado[(int)p].caido;
     /// Está en el grupo y no ha caído.
     public bool EnPie(Slot p) => !_estado[(int)p].caido && ControlDelJugador.EnElGrupo(p);
@@ -120,6 +134,7 @@ public sealed class SaludDelGrupo : MonoBehaviour
         GameBootService.OnProfileReady += AlCargarPerfil;
         ActiveCombatRegistry.OnNPCExitedCombat += AlSalirDelCombate;
         BossArenaController.OnAnyBattleEnded += AlGanarBatalla;
+        EstadisticasDelPersonaje.Cambiadas += AlCambiarEstadisticas;
     }
 
     private void OnDisable()
@@ -130,6 +145,7 @@ public sealed class SaludDelGrupo : MonoBehaviour
         GameBootService.OnProfileReady -= AlCargarPerfil;
         ActiveCombatRegistry.OnNPCExitedCombat -= AlSalirDelCombate;
         BossArenaController.OnAnyBattleEnded -= AlGanarBatalla;
+        EstadisticasDelPersonaje.Cambiadas -= AlCambiarEstadisticas;
         SoltarJugador();
         for (int i = 0; i < _cuerpos.Length; i++) SoltarCuerpo(i);
         _relevoEnCurso = false;
@@ -180,23 +196,24 @@ public sealed class SaludDelGrupo : MonoBehaviour
         var preset = Preset();
         for (int i = 0; i < _estado.Length; i++) _estado[i] = LeerDelPreset((Slot)i, preset);
         _activo = ControlDelJugador.Activo;
+        _bonos = EstadisticasDelPersonaje.Bonos;
+        TomarElMando(_activo);
         _iniciado = true;
         EnlazarJugador();
-        // Con Will al mando, PlayerHealthSystem y ManaPool ya cargan su vida del preset.
-        if (_activo != Slot.Will) CargarEnElJugador(_activo);
+        CargarCuerpoDelJugador();
         EnlazarCuerpos();
         for (int i = 0; i < _estado.Length; i++) SaludCambiada?.Invoke((Slot)i);
     }
 
+    // Lo guardado son máximos sin bonos: se lee igual para los tres.
     private Estado LeerDelPreset(Slot p, PlayerPresetSO preset)
     {
         var e = new Estado();
         if (p == Slot.Will)
         {
-            var bonos = EstadisticasDelPersonaje.Bonos;
-            e.vidaMax = preset != null ? preset.maxHP + bonos.vida : 100f;
+            e.vidaMax = preset != null ? preset.maxHP : 100f;
             e.vida = preset != null ? preset.currentHP : e.vidaMax;
-            e.manaMax = preset != null ? Mathf.Max(0f, preset.maxMP + bonos.magia) : 50f;
+            e.manaMax = preset != null ? Mathf.Max(0f, preset.maxMP) : 50f;
             e.mana = preset != null ? preset.currentMP : e.manaMax;
         }
         else
@@ -242,8 +259,11 @@ public sealed class SaludDelGrupo : MonoBehaviour
         return false;
     }
 
+    // Un cuerpo de jugador recién enlazado recibe la vida y el maná del que va al mando: trae los
+    // del preset, sin los bonos de equipo.
     private void EnlazarJugador()
     {
+        bool nuevo = false;
         PlayerService.TryGetComponent(out PlayerHealthSystem salud, allowSceneLookup: false);
         if (salud != _salud)
         {
@@ -253,6 +273,7 @@ public sealed class SaludDelGrupo : MonoBehaviour
             {
                 _salud.OnHealthPercentageChanged += AlCambiarVidaDelJugador;
                 _salud.OnDamageReceived += AlDanarJugador;
+                nuevo = true;
             }
         }
         PlayerService.TryGetComponent(out ManaPool mana, allowSceneLookup: false);
@@ -264,8 +285,26 @@ public sealed class SaludDelGrupo : MonoBehaviour
             {
                 _mana.OnManaChanged ??= new UnityEngine.Events.UnityEvent<float>();
                 _mana.OnManaChanged.AddListener(AlCambiarManaDelJugador);
+                nuevo = true;
             }
         }
+        if (nuevo && _iniciado) CargarCuerpoDelJugador();
+    }
+
+    // Al cargar la partida o enlazar un cuerpo nuevo: la vida se pone desde aquí (PlayerHealthSystem
+    // lee del preset la vida sin bonos y, al recargar la partida, no vuelve a leerla). El maná de Will
+    // al mando lo pone PlayerPresetService con las reglas del preset (sin magia, maná 0; sin maná
+    // guardado, el que piden sus hechizos), así que se toma del cuerpo; avisa al cambiar.
+    private void CargarCuerpoDelJugador()
+    {
+        var e = _estado[(int)_activo];
+        if (_salud != null) _salud.CargarPersonaje(e.vidaMax, e.caido ? 0f : e.vida);
+        if (_mana == null) return;
+        if (_activo != Slot.Will) { _mana.Init(e.manaMax, e.mana); return; }
+        int i = (int)_activo;
+        _estado[i].manaMax = _mana.Max;
+        _estado[i].mana = _mana.Current;
+        _manaAvisado[i] = _mana.Current;
     }
 
     private void SoltarJugador()
@@ -356,7 +395,7 @@ public sealed class SaludDelGrupo : MonoBehaviour
         int i = (int)_activo;
         _estado[i].manaMax = _mana.Max;
         _estado[i].mana = _mana.Current;
-        if (_activo != Slot.Will) EscribirEnPreset(_activo);
+        EscribirEnPreset(_activo);
         SaludCambiada?.Invoke(_activo);
     }
 
@@ -432,37 +471,96 @@ public sealed class SaludDelGrupo : MonoBehaviour
         var nuevo = (Slot)indice;
         if (nuevo == _activo) { Enlazar(); return; }
 
-        GuardarDelJugador(_activo);
+        var saliente = _activo;
+        LeerDelJugador();
+        if (_estado[(int)saliente].vida <= 0f) _estado[(int)saliente].caido = true;
+        DejarElMando(saliente);
         _activo = nuevo;
+        EscribirEnPreset(saliente);
+        TomarElMando(nuevo);
         EnlazarJugador();
-        CargarEnElJugador(nuevo);
+        PonerEnElJugador();
         EnlazarCuerpos();
+        SaludCambiada?.Invoke(saliente);
         SaludCambiada?.Invoke(nuevo);
     }
 
-    private void GuardarDelJugador(Slot p)
+    // El que va al mando lleva sus valores en el cuerpo del jugador: se copian a su estado.
+    private void LeerDelJugador()
     {
-        int i = (int)p;
+        int i = (int)_activo;
         if (_salud != null)
         {
             _estado[i].vidaMax = _salud.MaxHealth;
             _estado[i].vida = _salud.CurrentHealth;
-            if (_estado[i].vida <= 0f) _estado[i].caido = true;
         }
         if (_mana != null)
         {
             _estado[i].manaMax = _mana.Max;
             _estado[i].mana = _mana.Current;
         }
-        _manaAvisado[i] = _estado[i].mana;
-        EscribirEnPreset(p);
     }
 
-    private void CargarEnElJugador(Slot p)
+    // Al dejar el mando se le quitan los bonos de equipo y al tomarlo se le suman, conservando lo
+    // que le falta para estar lleno.
+    private void DejarElMando(Slot p) => SumarAlEstado(p, -_bonos.vida, -_bonos.magia, conservarLoQueFalta: true);
+    private void TomarElMando(Slot p) => SumarAlEstado(p, _bonos.vida, _bonos.magia, conservarLoQueFalta: true);
+
+    /// Cambia los máximos de un personaje. Con <paramref name="conservarLoQueFalta"/> la vida y el
+    /// maná actuales se mueven igual que el máximo (bonos de equipo); si no, solo ganan lo que sube
+    /// (premios: lo que sube el máximo se gana también de vida).
+    private void SumarAlEstado(Slot p, float masVida, float masMana, bool conservarLoQueFalta)
     {
-        var e = _estado[(int)p];
-        if (_salud != null) _salud.CargarPersonaje(e.vidaMax, e.vida);
+        int i = (int)p;
+        var e = _estado[i];
+        e.vidaMax = Mathf.Max(1f, e.vidaMax + masVida);
+        if (!e.caido && e.vida > 0f)
+        {
+            float cambio = conservarLoQueFalta ? masVida : Mathf.Max(0f, masVida);
+            e.vida = Mathf.Clamp(e.vida + cambio, 1f, e.vidaMax);
+        }
+        e.manaMax = Mathf.Max(0f, e.manaMax + masMana);
+        float cambioDeMana = conservarLoQueFalta ? masMana : Mathf.Max(0f, masMana);
+        e.mana = Mathf.Clamp(e.mana + cambioDeMana, 0f, e.manaMax);
+        _estado[i] = e;
+        _manaAvisado[i] = e.mana;
+    }
+
+    // Pone en el cuerpo del jugador la vida y el maná del que va al mando.
+    private void PonerEnElJugador()
+    {
+        var e = _estado[(int)_activo];
+        if (_salud != null) _salud.CargarPersonaje(e.vidaMax, e.caido ? 0f : e.vida);
         if (_mana != null) _mana.Init(e.manaMax, e.mana);
+    }
+
+    // Pone en su cuerpo (el del jugador o su NPC) la vida guardada de ese personaje.
+    private void AplicarAlCuerpo(Slot p)
+    {
+        if (p == _activo) { PonerEnElJugador(); return; }
+        var c = _cuerpos[(int)p];
+        if (c == null) return;
+        var e = _estado[(int)p];
+        c.Aplicar(e.vidaMax, e.vida, e.caido);
+        ActualizarListaDeCaidos(c);
+    }
+
+    // Los bonos de equipo del cuerpo del jugador han cambiado (otra prenda, o la ropa del personaje
+    // que acaba de tomar el mando): se mueven los máximos del que va al mando.
+    private void AlCambiarEstadisticas()
+    {
+        if (!_iniciado) return;
+        var nuevos = EstadisticasDelPersonaje.Bonos;
+        float masVida = nuevos.vida - _bonos.vida;
+        float masMana = nuevos.magia - _bonos.magia;
+        _bonos = nuevos;
+        if (Mathf.Approximately(masVida, 0f) && Mathf.Approximately(masMana, 0f)) return;
+        EnlazarJugador();
+        LeerDelJugador();
+        SumarAlEstado(_activo, masVida, masMana, conservarLoQueFalta: true);
+        PonerEnElJugador();
+        EscribirEnPreset(_activo);
+        SaludCambiada?.Invoke(_activo);
     }
 
     /// Vuelve a poner en el ManaPool el maná del personaje al mando (lo pide PlayerPresetService
@@ -477,7 +575,7 @@ public sealed class SaludDelGrupo : MonoBehaviour
 
     // ─── Preset ────────────────────────────────────────────────────────────
 
-    private static PlayerPresetSO Preset() => GameBootService.Profile != null ? GameBootService.Profile.GetActivePresetResolved() : null;
+    private static PlayerPresetSO Preset() => Partida.Preset;
 
     private static PlayerPresetSO.SaludDeCompanero BuscarEntrada(PlayerPresetSO preset, Slot p, bool crear)
     {
@@ -493,84 +591,82 @@ public sealed class SaludDelGrupo : MonoBehaviour
 
     private void EscribirEnPreset(Slot p) => EscribirEnPreset(p, Preset());
 
+    // Máximos sin bonos de equipo (solo los lleva el que va al mando); vida y maná actuales tal cual.
     private void EscribirEnPreset(Slot p, PlayerPresetSO preset)
     {
         if (preset == null) return;
         var e = _estado[(int)p];
+        bool alMando = p == _activo;
+        float vidaMax = Mathf.Max(1f, e.vidaMax - (alMando ? _bonos.vida : 0f));
+        float manaMax = Mathf.Max(0f, e.manaMax - (alMando ? _bonos.magia : 0f));
+        float vida = e.caido ? 0f : e.vida;
         if (p == Slot.Will)
         {
-            // Con Will al mando, PlayerHealthSystem escribe su vida y GameBootProfile su maná.
-            if (_activo == Slot.Will) return;
-            var bonos = EstadisticasDelPersonaje.Bonos;
-            preset.maxHP = Mathf.Max(1f, e.vidaMax - bonos.vida);
-            preset.currentHP = e.caido ? 0f : e.vida;
-            preset.maxMP = Mathf.Max(0f, e.manaMax - bonos.magia);
+            preset.maxHP = vidaMax;
+            preset.currentHP = vida;
+            preset.maxMP = manaMax;
             preset.currentMP = e.mana;
             return;
         }
         var entrada = BuscarEntrada(preset, p, crear: true);
-        entrada.maxHP = e.vidaMax;
-        entrada.currentHP = e.caido ? 0f : e.vida;
-        entrada.maxMP = e.manaMax;
+        entrada.maxHP = vidaMax;
+        entrada.currentHP = vida;
+        entrada.maxMP = manaMax;
         entrada.currentMP = e.mana;
     }
 
-    /// Deja en el preset la vida y el maná de cada uno. Lo llama GameBootProfile al guardar,
-    /// después de copiar los del cuerpo del jugador en los campos de Will.
+    /// Deja en el preset la vida y el maná de cada uno. Lo llama Partida al guardar.
     public void VolcarEnPreset(PlayerPresetSO preset)
     {
         if (!_iniciado || preset == null) return;
-        int a = (int)_activo;
-        if (_salud != null) { _estado[a].vidaMax = _salud.MaxHealth; _estado[a].vida = _salud.CurrentHealth; }
-        if (_mana != null) { _estado[a].manaMax = _mana.Max; _estado[a].mana = _mana.Current; }
+        LeerDelJugador();
         for (int i = 0; i < _estado.Length; i++) EscribirEnPreset((Slot)i, preset);
     }
 
-    /// <summary>
-    /// Aumenta de forma permanente la vida y/o maná máximos de todos los miembros del grupo (INC-847, Sintonía Estelar).
-    /// </summary>
-    public void AumentarMaximosDelGrupo(float masVida, float masMana)
+    /// Sube (o baja, con valores negativos) para siempre la vida y el maná máximos de los tres
+    /// personajes; lo que sube se gana también de vida y de maná. Es el único camino para cambiar
+    /// los máximos: lo usan los premios de estadísticas y la Sintonía Estelar (vía
+    /// EstadisticasDelPersonaje.Sumar). False si aún no hay partida que leer.
+    public bool AumentarMaximosDelGrupo(float masVida, float masMana)
     {
-        var preset = UnlockService.GetActivePreset();
+        if (!_iniciado && GameBootService.IsAvailable) Inicializar();
+        if (!_iniciado) return false;
+        if (masVida == 0f && masMana == 0f) return true;
+        EnlazarJugador();
+        LeerDelJugador();
         for (int i = 0; i < _estado.Length; i++)
         {
             var p = (Slot)i;
-            if (p == _activo)
-            {
-                if (_salud != null)
-                {
-                    _estado[i].vidaMax = _salud.MaxHealth;
-                    _estado[i].vida = _salud.CurrentHealth;
-                }
-                if (_mana != null)
-                {
-                    _estado[i].manaMax = _mana.Max;
-                    _estado[i].mana = _mana.Current;
-                }
-            }
-            else
-            {
-                if (masVida > 0f)
-                {
-                    _estado[i].vidaMax += masVida;
-                    _estado[i].vida += masVida;
-                    if (_cuerpos[i] != null && _cuerpos[i].Vida != null)
-                    {
-                        _cuerpos[i].Vida.SetMaxHealth(_estado[i].vidaMax);
-                        _cuerpos[i].Vida.Heal(masVida);
-                    }
-                }
-                if (masMana > 0f)
-                {
-                    _estado[i].manaMax += masMana;
-                    _estado[i].mana += masMana;
-                }
-                if (preset != null)
-                {
-                    EscribirEnPreset(p, preset);
-                }
-            }
+            SumarAlEstado(p, masVida, masMana, conservarLoQueFalta: false);
+            AplicarAlCuerpo(p);
+            EscribirEnPreset(p);
             SaludCambiada?.Invoke(p);
+        }
+        return true;
+    }
+
+    /// Vida y maná llenos para los tres, levantando a los caídos (pruebas del LAB, vuelta de una
+    /// batalla de prueba).
+    public void CurarATodos()
+    {
+        if (!_iniciado && GameBootService.IsAvailable) Inicializar();
+        if (!_iniciado) return;
+        EnlazarJugador();
+        LeerDelJugador();
+        for (int i = 0; i < _estado.Length; i++)
+        {
+            var p = (Slot)i;
+            bool estabaCaido = _estado[i].caido;
+            _estado[i].caido = false;
+            _estado[i].vida = _estado[i].vidaMax;
+            _estado[i].mana = _estado[i].manaMax;
+            _manaAvisado[i] = _estado[i].mana;
+            // El cuerpo del jugador muerto (Game Over) necesita revivir, no solo recibir vida.
+            if (p == _activo && _salud != null && !_salud.IsAlive) _salud.Revive(1f);
+            AplicarAlCuerpo(p);
+            EscribirEnPreset(p);
+            SaludCambiada?.Invoke(p);
+            if (estabaCaido) SeLevanto?.Invoke(p);
         }
     }
 

@@ -122,16 +122,15 @@ namespace Game.NPC
             if (_currentMode == PromptMode.Follow)
             {
                 HidePrompt();
-                if (_npcManager?.Context != null)
-                    _npcManager.Context.IsPinnedByParty = false;
+                // «Sígueme» saca a este compañero del modo Libre del grupo.
+                _npcManager?.Context?.Soltar(PartyControlManager.AnclaDelModoLibre);
                 _partyMember?.StartFollowing();
             }
             else if (_currentMode == PromptMode.StopFollow)
             {
                 HidePrompt();
                 _partyMember?.StopFollowing();
-                if (_npcManager?.Context != null)
-                    _npcManager.Context.IsPinnedByParty = true;
+                _npcManager?.Context?.Anclar(PartyControlManager.AnclaDelModoLibre);
             }
         }
 
@@ -175,7 +174,7 @@ namespace Game.NPC
                 bool partyInLibreMode = !(PartyControlManager.Instance?.IsPartyFollowing ?? true);
                 bool isActivelyFollowing = partyInLibreMode &&
                                            _partyMember.IsInParty &&
-                                           _npcManager?.Context?.IsPinnedByParty == false;
+                                           _npcManager?.Context?.EstaAnclado == false;
 
                 if (isActivelyFollowing)
                 {
@@ -189,7 +188,7 @@ namespace Game.NPC
                     bool isAvailable = fullParty &&
                                        partyInLibreMode &&
                                        _partyMember.IsInParty &&
-                                       _npcManager?.Context?.IsPinnedByParty == true;
+                                       _npcManager?.Context?.EstaAnclado == true;
 
                     if (isAvailable && !AnyOtherMemberActivelyFollowing())
                         desired = PromptMode.Follow;
@@ -225,7 +224,7 @@ namespace Game.NPC
             _iconController?.HideAlertIcon();
         }
 
-        // Verifica si algún otro miembro del party está siguiendo activamente (IsInParty && !IsPinnedByParty)
+        // Verifica si algún otro miembro del party está siguiendo activamente (IsInParty && !EstaAnclado)
         private bool AnyOtherMemberActivelyFollowing()
         {
             var playerParty = PlayerParty.Instance;
@@ -235,7 +234,7 @@ namespace Game.NPC
             {
                 var m = members[i];
                 if (m == null || m == _partyMember) continue;
-                if (m.IsInParty && m.NPCManager?.Context?.IsPinnedByParty == false)
+                if (m.IsInParty && m.NPCManager?.Context?.EstaAnclado == false)
                     return true;
             }
             return false;

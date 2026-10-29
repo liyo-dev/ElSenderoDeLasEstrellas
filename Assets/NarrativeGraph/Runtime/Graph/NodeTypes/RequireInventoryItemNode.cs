@@ -2,15 +2,15 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Verifica que el jugador tenga un item en inventario, opcionalmente lo consume y actualiza una quest/step.
-/// Puede derivar el flujo a otra salida cuando falta el item.
+/// Comprueba que el jugador tenga un objeto (INarrativeInventory), opcionalmente lo consume y
+/// actualiza una quest o un paso. Si falta el objeto puede seguir por otra salida.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Objetos", "Requiere objeto", "Comprueba/consume un objeto del inventario; salida alternativa si falta.")]
 public sealed class RequireInventoryItemNode : NarrativeNode
 {
     [Header("Item requerido")]
-    public ItemData item;
+    public NarrativeItemAsset item;
     [Min(1)] public int requiredAmount = 1;
     public bool consumeOnSuccess = true;
     public bool logWarnings = true;
@@ -35,8 +35,14 @@ public sealed class RequireInventoryItemNode : NarrativeNode
     /// Decide por índice desde Enter() (ForceJumpToOutput) aunque no tenga puertos con nombre.
     public override int ProjectionPort => ProjectionStops;
 
+    public override void Describe(INarrativeNodeDescriber d)
+    {
+        d.Item(item, requiredAmount, consumeOnSuccess ? "requiere y consume" : "requiere");
+        if (!string.IsNullOrEmpty(questId)) d.Quest(questId, "Quest");
+    }
+
     public override string DescribeDecision()
-        => $"Requiere objeto \"{displayTitle}\" (guid {guid}): necesita '{(item != null ? item.itemId : "<sin objeto>")}' x{requiredAmount}.";
+        => $"Requiere objeto \"{displayTitle}\" (guid {guid}): necesita '{(item != null ? item.ItemId : "<sin objeto>")}' x{requiredAmount}.";
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
@@ -48,15 +54,15 @@ public sealed class RequireInventoryItemNode : NarrativeNode
             return;
         }
 
-        if (!PlayerService.TryGetComponent<Inventory>(out var inventory, includeInactive: true, allowSceneLookup: true) || inventory == null)
+        if (!NarrativeServices.TryGet(out INarrativeInventory inventory, nameof(RequireInventoryItemNode)) || !inventory.IsAvailable)
         {
             if (logWarnings)
-                Debug.LogWarning("[RequireInventoryItemNode] Inventory no encontrado en el Player.");
+                Debug.LogWarning("[RequireInventoryItemNode] No hay inventario del jugador.");
             HandleMissing(ctx, onReadyToAdvance);
             return;
         }
 
-        if (inventory.HasItem(item, requiredAmount))
+        if (inventory.Has(item, requiredAmount))
         {
             if (consumeOnSuccess)
             {
@@ -67,7 +73,7 @@ public sealed class RequireInventoryItemNode : NarrativeNode
                 }
             }
 
-            ApplyQuestProgress();
+            ApplyQuestProgress(ctx);
             onReadyToAdvance?.Invoke();
         }
         else
@@ -90,37 +96,35 @@ public sealed class RequireInventoryItemNode : NarrativeNode
         readyCallback?.Invoke();
     }
 
-    void ApplyQuestProgress()
+    void ApplyQuestProgress(NarrativeContext ctx)
     {
         if (string.IsNullOrEmpty(questId))
             return;
 
-        var qm = QuestManager.Instance;
-        if (qm == null)
+        var signals = ctx?.Signals;
+        if (signals == null)
         {
             if (logWarnings)
-                Debug.LogWarning("[RequireInventoryItemNode] QuestManager.Instance es null. No se actualiza progreso de misión.");
+                Debug.LogWarning("[RequireInventoryItemNode] Sin proveedor de señales: no se actualiza el progreso de la misión.");
             return;
         }
 
         if (completeQuestInstead)
         {
-            qm.CompleteQuest(questId);
+            signals.CompleteQuest(questId);
             return;
         }
 
         if (questStepIndex >= 0)
         {
-            if (autoStartQuestIfInactive && qm.GetState(questId) == QuestState.Inactive)
-                qm.StartQuest(questId);
+            if (autoStartQuestIfInactive && signals.GetQuestState(questId) == NarrativeQuestState.NotStarted)
+                signals.StartQuest(questId, null);
 
-            qm.MarkStepDone(questId, questStepIndex);
+            signals.CompleteQuestStep(questId, questStepIndex);
             return;
         }
 
         if (autoStartQuestIfInactive)
-        {
-            qm.StartQuest(questId);
-        }
+            signals.StartQuest(questId, null);
     }
 }

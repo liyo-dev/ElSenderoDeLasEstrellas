@@ -1,4 +1,3 @@
-using Game.NPC;
 using UnityEngine;
 
 /// Pestaña «Trucos» del LAB: invencible, maná infinito, cámara lenta y curar al grupo. Solo
@@ -59,15 +58,11 @@ public sealed class TrucosDelLab : MonoBehaviour, ISeccionDelLab
         GUILayout.Label("La cámara lenta va a menos de la mitad; se nota al cerrar el panel.", EstiloDelLab.Nota);
     }
 
-    private void CurarGrupo()
+    private static void CurarGrupo()
     {
-        if (_salud != null) _salud.Revive(1f);
-        if (PlayerParty.HasInstance)
-            foreach (var m in PlayerParty.Instance.Members)
-            {
-                var vida = m != null ? m.GetComponent<Damageable>() : null;
-                if (vida != null) vida.Heal(vida.Max);
-            }
+        var grupo = SaludDelGrupo.Instance;
+        if (grupo == null) { PanelDelLab.Aviso("No hay SaludDelGrupo en la escena"); return; }
+        grupo.CurarATodos();
         PanelDelLab.Aviso("Grupo curado");
     }
 }

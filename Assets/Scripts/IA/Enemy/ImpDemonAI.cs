@@ -1538,10 +1538,10 @@ public partial class ImpDemonAI : MonoBehaviour, IJefeConFases, IInicioDeCombate
         // La arena/batalla no se entera de esto por Damageable.OnDied (nunca se dispara aquí) --
         // hay que avisarla explícitamente para que abra la salida, pare la música de jefe y marque
         // la batalla como ganada exactamente igual que con una muerte normal.
-        var arena = FindAnyObjectByType<BossArenaController>();
-        if (arena != null) arena.NotifyBossDefeatedByAlternateEnding();
+        if (BossArenaController.TryGetArenaDelJefe(gameObject, out var arena))
+            arena.NotifyBossDefeatedByAlternateEnding();
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        else Debug.LogWarning("[ImpDemonAI] Aro roto pero no se encontró ningún BossArenaController en la escena -- la arena no se desbloqueará.");
+        else Debug.LogWarning("[ImpDemonAI] Aro roto pero ninguna arena registrada tiene a este demonio como su jefe -- la arena no se desbloqueará.");
 #endif
 
         OnFellByCollarBreak?.Invoke();

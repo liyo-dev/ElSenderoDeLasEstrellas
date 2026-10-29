@@ -112,6 +112,14 @@ public sealed class SequenceContext
     public void RetenerReloj() => _relojRetenido++;
     public void SoltarReloj() => _relojRetenido = Math.Max(0, _relojRetenido - 1);
 
+    private int _relojAlCompas;
+    /// Mientras alguien lo pida, el reloj del guion horneado corre con el tiempo del juego
+    /// (Time.deltaTime) en vez del real: una cámara lenta frena también los caminos, los planos y
+    /// los efectos del guion, no solo las animaciones.
+    public bool RelojAlCompasDelTiempo => _relojAlCompas > 0;
+    public void AcompasarRelojAlTiempo() => _relojAlCompas++;
+    public void SoltarRelojAlCompas() => _relojAlCompas = Math.Max(0, _relojAlCompas - 1);
+
     public SequenceContext(SequencePlayer player, SequenceStage stage)
     {
         Player = player;

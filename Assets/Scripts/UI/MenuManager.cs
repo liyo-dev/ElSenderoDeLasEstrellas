@@ -226,8 +226,8 @@ public static class MenuManager
         // 4. Restaurar GamepadInputReader: limpiar supresiones de gameplay huérfanas
         Core.GamepadInputReader.ForceRestoreGameplaySuppression();
 
-        // 5. Restaurar timeScale por si algún menú pausó el tiempo
-        Time.timeScale = 1f;
+        // 5. Descartar todas las peticiones de tiempo por si algún menú dejó el juego en pausa
+        TimeScaleArbiterService.ReleaseAll();
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.LogWarning("[MenuManager] ForceFullRecovery completado.");

@@ -196,6 +196,25 @@ MonoBehaviour:
   impactoRemateTrio: {fileID: 5739765518032061657, guid: bfdb70d9a05f23b43a461078a7e3a494, type: 3}
   targetReach: 9
   frontDistance: 2.5
+  poseBrazosArriba: Cheer01
+  poseSostenerMagia: CastingIdle01
+  poseInvocacionDuoEstela: MagicRight
+  poseDeLaY: ComboIdle
+  poseEnElAire: JumpAir_InPlace_NoWeapon
+  poseCarrera: Run
+  poseAterrizajeDuoEstela: Idle_Battle_NoWeapon
+  poseLlegadaTrio: Challenging_NoWeapon
+  poseAterrizajeWill: Idle_Battle_NoWeapon
+  poseAterrizajeEstela: MagicSpecial
+  poseAterrizajeLiam: HumanM@MagicAttackOmni01 - Cast
+  velocidadDeCarrera: 11
+  alturaSaltoDuoEstela: 2.4
+  alturaSaltoTrio: 3.4
+  escalaDeTiempoEnElAire: 0.45
+  segundosEnLoAltoDuo: 1.5
+  segundosDelAgujero: 1.8
+  radioDeChoqueDelAgujero: 2
+  segundosDeLasCaras: 1.8
   notAvailableSFXKey: ui_denied
   showDebugLogs: 0
 --- !u!114 &4396209073108528636
@@ -231,3 +250,7 @@ MonoBehaviour:
   radio: 1.8
   segundos: 2
   anillo: {fileID: 21300000, guid: 4966736b19064a95a5f29a9ae43293fa, type: 3}
+  poseAlReanimar: MagicSpecial
+  vfxAlReanimar: {fileID: 1260526242777962756, guid: 0979ea3a7af4cbf42bacf5c3928596fc, type: 3}
+  duracionDelVfx: 2
+  sfxAlReanimar: Hechizo_BrisaSanadora

@@ -433,9 +433,9 @@ public class PlayerLevitationController : MonoBehaviour
 
     void SpawnReleaseVFX(Vector3 position)
     {
-        if (_activeSpell == null || _activeSpell.levitationReleaseVFX == null) return;
-        var vfx = Instantiate(_activeSpell.levitationReleaseVFX, position, Quaternion.identity);
-        if (_activeSpell.vfxLifetime > 0f) Destroy(vfx, _activeSpell.vfxLifetime);
+        if (_activeSpell == null || _activeSpell.levitationReleaseVFX == null || VfxPoolService.Instance == null) return;
+        // Sin duración en el hechizo, el pool usa la suya por defecto.
+        VfxPoolService.Instance.Play(_activeSpell.levitationReleaseVFX, position, Quaternion.identity, _activeSpell.vfxLifetime);
     }
 
     // ── Ciclo de vida ────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-[NarrativeNodeInfo("Quests", "Iniciar quest", "Arranca la quest en el QuestManager (aparece en el diario). Si se indica quién la encarga, ese personaje dice su frase de «mientras tanto» cuando se le habla con la quest en curso.")]
+[NarrativeNodeInfo("Quests", "Iniciar quest", "Arranca la quest en el sistema de misiones del juego (aparece en el diario). Si se indica quién la encarga, ese personaje dice su frase de «mientras tanto» cuando se le habla con la quest en curso.")]
 public sealed class StartQuestNode : NarrativeNode, INarrativeStateEffect, INarrativeStandingLine
 {
     [NarrativeKey(NarrativeKeyKind.Quest)]
@@ -15,13 +15,13 @@ public sealed class StartQuestNode : NarrativeNode, INarrativeStateEffect, INarr
     public string giverId;
 
     [Tooltip("Lo que dice quien encarga la quest si se le habla mientras sigue en curso (p. ej. una pista de qué hay que hacer).")]
-    public DialogueAsset inProgressDialogue;
+    public NarrativeDialogueAsset inProgressDialogue;
 
     [Tooltip("Márcalo solo si nadie encarga la quest (se la propone el propio jugador). Si no, toda quest necesita quién la encarga y su diálogo de mientras tanto: ningún personaje se queda sin decir nada.")]
     public bool noGiver;
 
     public string StandingActorId => giverId;
-    public DialogueAsset StandingDialogue => inProgressDialogue;
+    public NarrativeDialogueAsset StandingDialogue => inProgressDialogue;
 
     public bool IsStandingLineActive(INarrativeSignals signals)
     {
@@ -30,8 +30,12 @@ public sealed class StartQuestNode : NarrativeNode, INarrativeStateEffect, INarr
         return state == NarrativeQuestState.Active || state == NarrativeQuestState.StepsReady;
     }
 
+    public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Se inicia");
+
     public override void CollectWarnings(List<string> warnings)
     {
+        if (string.IsNullOrWhiteSpace(questId)) warnings.Add("questId vacío");
+
         bool hayQuien = !string.IsNullOrWhiteSpace(giverId);
         bool hayDialogo = inProgressDialogue != null;
 

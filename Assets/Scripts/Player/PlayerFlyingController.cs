@@ -129,7 +129,9 @@ public class PlayerFlyingController : MonoBehaviour
     [SerializeField] private GameObject trailPrefab;
     [SerializeField] private float trailSpeedThreshold = 1.5f;
     [SerializeField] private GameObject boostVfxPrefab;
+    [Tooltip("Efecto de un solo uso al aterrizar (pool de VFX). Vacío = nada.")]
     [SerializeField] private GameObject landingVfxPrefab;
+    [SerializeField, Min(0.1f)] private float duracionVfxDeAterrizaje = 2f;
      [Header("Vuelo - Movimiento visual")]
      [Tooltip("Amplitud (metros) del movimiento vertical oscilante mientras el jugador está en vuelo.")]
      [SerializeField] private float flightBobAmplitude = 0.8f;
@@ -878,9 +880,9 @@ public class PlayerFlyingController : MonoBehaviour
 
     void PlayLandingVfx()
     {
-        if (landingVfxPrefab == null) return;
+        if (landingVfxPrefab == null || VfxPoolService.Instance == null) return;
         var parent = vfxAttach != null ? vfxAttach : transform;
-        Instantiate(landingVfxPrefab, parent.position, parent.rotation);
+        VfxPoolService.Instance.Play(landingVfxPrefab, parent.position, parent.rotation, duracionVfxDeAterrizaje);
     }
 
     void StopFlightVfx()

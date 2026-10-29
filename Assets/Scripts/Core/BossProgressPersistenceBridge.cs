@@ -98,7 +98,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
         var profile = GameBootService.Profile;
         if (profile == null) return;
 
-        var preset = profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null) return;
 
         var tracker = BossProgressTracker.Instance;
@@ -111,7 +111,7 @@ public class BossProgressPersistenceBridge : MonoBehaviour
         var profile = GameBootService.Profile;
         if (profile == null) return;
 
-        var preset = profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null) return;
 
         if (preset.defeatedBossIds == null)

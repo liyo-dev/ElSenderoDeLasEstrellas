@@ -154,7 +154,7 @@ public class ProfileReadyDiagnosticsEditor : EditorWindow
             "private void HandleProfileReady()\n" +
             "{\n" +
             "    // Inicializar usando GameBootService.Profile\n" +
-            "    var preset = GameBootService.Profile?.GetActivePresetResolved();\n" +
+            "    var preset = Partida.Preset;\n" +
             "    if (preset != null)\n" +
             "    {\n" +
             "        // Tu lógica de inicialización\n" +

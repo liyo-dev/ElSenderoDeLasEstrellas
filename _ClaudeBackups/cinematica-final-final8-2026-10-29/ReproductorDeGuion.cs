@@ -1,0 +1,674 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using Game.NPC.Common;
+
+/// Reproduce un GuionHorneado segundo a segundo. No decide nada: lee la tabla.
+///
+/// - Los personajes van exactamente por el camino horneado (sin NavMeshAgent mientras dura el
+///   guion: ni esquivan, ni se empujan, ni se atascan). La animación de andar sale de su velocidad
+///   real, con el mismo criterio que el resto del juego (NavMeshAgentUtility.FactorDeLocomocion).
+/// - Las frases empiezan en su segundo y duran lo que dura su voz.
+/// - Las cámaras las mueve Cinemachine (ver CamarasDeGuion) con la posición horneada.
+/// - Los efectos (VFX, sonidos, cut-ins...) son los beats de siempre, lanzados en su segundo.
+public sealed class ReproductorDeGuion
+{
+    private readonly GuionHorneado _g;
+    private readonly SequenceContext _ctx;
+    private readonly float _inicio;
+    private readonly List<Interprete> _interpretes = new();
+    private readonly Dictionary<string, Interprete> _porId = new();
+    private CamarasDeGuion _camaras;
+    private GameObject _puntos;
+    private int _iLinea, _iPlano, _iEfecto;
+    private bool _terminado;
+    private bool _preparado;
+    private bool _pausado;
+    private float _t;
+    private float _saltoPedido = -1f;
+    private LineaHorneada _lineaEnCurso;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+    private float _tFoto = float.MaxValue;
+#endif
+    private int _nPlano;
+    private float _tRevision;
+    private readonly HashSet<string> _desviados = new();
+
+    public ReproductorDeGuion(GuionHorneado guion, SequenceContext ctx, float inicio)
+    {
+        _g = guion;
+        _ctx = ctx;
+        _inicio = inicio;
+    }
+
+    // Un fotograma que tarda más que esto es un tirón (el editor, una pausa, una carga) y no un
+    // juego lento: cuenta como PasoTrasTiron para no saltarse planos ni frases. Los fotogramas
+    // normales, aunque haya pocos por segundo, avanzan su tiempo real. Ver INC-628.
+    const float TironMaximo = 0.5f;
+    const float PasoTrasTiron = 0.1f;
+
+    /// El guion que se está reproduciendo.
+    public GuionHorneado Guion => _g;
+
+    /// La secuencia que reproduce este guion.
+    public SequencePlayer Player => _ctx?.Player;
+
+    /// Duración total del guion, en segundos.
+    public float Duracion => _g != null ? _g.duracion : 0f;
+
+    /// El segundo del guion que se está viendo ahora mismo.
+    public float Tiempo => _t;
+
+    /// ¿Está el guion montado y sin terminar?
+    public bool EnMarcha => _preparado && !_terminado;
+
+    /// ¿Está el reloj del guion detenido?
+    public bool Pausado => _pausado;
+
+    /// El plano que cubre el segundo actual: el que se está viendo.
+    public PlanoHorneado PlanoActual
+    {
+        get
+        {
+            if (_g?.planos == null) return null;
+            PlanoHorneado p = null;
+            foreach (var q in _g.planos) if (q.t0 <= _t) p = q;
+            return p;
+        }
+    }
+
+    /// La frase que se está diciendo en el segundo actual, si la hay.
+    public LineaHorneada LineaActual
+    {
+        get
+        {
+            if (_g?.lineas == null) return null;
+            foreach (var l in _g.lineas) if (l.t0 <= _t && _t < l.t1) return l;
+            return null;
+        }
+    }
+
+    public IEnumerator Reproducir()
+    {
+        Preparar();
+        _t = _inicio;
+
+        while (_t < _g.duracion && !_terminado)
+        {
+            if (_saltoPedido >= 0f)
+            {
+                float destino = _saltoPedido;
+                _saltoPedido = -1f;
+                SaltarA(destino);
+            }
+            Avanzar(_t);
+            yield return null;
+            if (_ctx.RelojRetenido) continue;
+            float paso = Time.unscaledDeltaTime;
+            _t += paso > TironMaximo ? PasoTrasTiron : paso;
+        }
+        Avanzar(_g.duracion);
+    }
+
+    /// Pide saltar a un segundo exacto. El salto se hace en el siguiente fotograma, con la escena
+    /// ya montada, para que no se vea un salto a pelo.
+    public void PedirSalto(float t) => _saltoPedido = Mathf.Max(0f, t);
+
+    /// Va a un segundo exacto: deja a los actores donde toca a ese instante, vuelve a aplicar el
+    /// estado del mundo y coloca la cámara en el plano que cubre ese momento.
+    ///
+    /// Funciona también hacia atrás. Para eso los cursores vuelven al principio y el estado se
+    /// vuelve a aplicar desde el segundo 0: es lo único que hay en la información horneada, así
+    /// que rebobinar es «repetir hasta aquí».
+    public void SaltarA(float t)
+    {
+        if (_terminado || _g == null) return;
+        t = Mathf.Clamp(t, 0f, _g.duracion);
+
+        CerrarLinea();
+
+        _iLinea = 0;
+        _iPlano = 0;
+        _iEfecto = 0;
+        foreach (var i in _interpretes) i.Rebobinar();
+
+        _t = t;
+        SaltarHasta(t);
+    }
+
+    /// Detiene el reloj del guion: la escena se queda quieta en el segundo actual.
+    public void Pausar()
+    {
+        if (_pausado || _terminado) return;
+        _pausado = true;
+        _ctx?.RetenerReloj();
+    }
+
+    /// Vuelve a dejar avanzar el reloj del guion.
+    public void Reanudar()
+    {
+        if (!_pausado) return;
+        _pausado = false;
+        _ctx?.SoltarReloj();
+    }
+
+    // ── Preparación y cierre ────────────────────────────────────────────────────────────────
+
+    /// Coloca a los actores y les pone su estado del segundo inicial. Se llama con la pantalla
+    /// cubierta (ver GuionBeat.Preparar) para que la escena aparezca ya compuesta; si no, se llama
+    /// desde Reproducir. Idempotente: la segunda vez no hace nada.
+    public void Preparar()
+    {
+        if (_preparado) return;
+        _preparado = true;
+        _t = _inicio;
+
+        foreach (var efecto in _g.efectos)
+            efecto.beat?.PrepararEnManos(_ctx);
+        foreach (var datos in _g.actores)
+        {
+            var actor = _ctx.GetActor(datos.id);
+            if (actor?.Transform == null)
+            {
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[Guion] No encuentro a '{datos.id}' ({datos.alias}) en la escena: " +
+                    "no va a aparecer. ¿Está en el roster de NPCs de esta escena?");
+#endif
+                continue;
+            }
+            var interprete = new Interprete(datos, actor);
+            interprete.Tomar();
+            _interpretes.Add(interprete);
+            _porId[datos.id] = interprete;
+        }
+
+        var transformPorId = new Dictionary<string, Transform>();
+        foreach (var kv in _porId) transformPorId[kv.Key] = kv.Value.Actor.Transform;
+        // Objetos del decorado que algún plano sigue (el globo que sube).
+        foreach (var plano in _g.planos)
+            foreach (var id in plano.sujetos)
+                if (!transformPorId.ContainsKey(id))
+                {
+                    var prop = _ctx.GetActor(id);
+                    if (prop?.Transform != null) transformPorId[id] = prop.Transform;
+                }
+        _camaras = new CamarasDeGuion(_g, transformPorId);
+
+        // Los puntos del guion valen como marcas para los efectos (un VFX «en=choque»).
+        if (_ctx.Stage != null && _g.puntos != null && _g.puntos.Count > 0)
+        {
+            _puntos = new GameObject("Guion · puntos");
+            foreach (var p in _g.puntos)
+            {
+                var t = new GameObject(p.nombre).transform;
+                t.SetParent(_puntos.transform, false);
+                t.position = p.posicion;
+                _ctx.Stage.PonerMarcaTemporal(p.nombre, t);
+            }
+        }
+        _camaras.Preparar(_ctx.Player != null ? _ctx.Player.CachedCamera : Camera.main);
+        Sendero.Core.Feedback.FeedbackService.SetCameraShakeProvider(_camaras);
+        // El guion lleva la cámara con Cinemachine, así que el driver de la secuencia deja de
+        // escribir en ella mientras dure. Sin este relevo, un plano calculado a mitad de guion se
+        // pelearía con el plano horneado por la misma cámara.
+        _ctx.Player?.ActiveCamera?.CederElControl();
+        GuionEnMarcha.Registrar(this);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.Fase("Guion: " + _g.nombre);
+#endif
+
+        // También en el segundo 0: el guion puede empezar con alguien ya sentado o tumbado y la
+        // escena tiene que aparecer así desde el primer fotograma, no recomponerse a la vista.
+        SaltarHasta(_inicio);
+    }
+
+    public void Terminar()
+    {
+        if (_terminado) return;
+        _terminado = true;
+        Reanudar();
+        CerrarLinea();
+        SpeechBubbleUI.Instance?.Hide();
+        Sendero.Core.Feedback.FeedbackService.SetCameraShakeProvider(null);
+        _camaras?.Terminar();
+        _ctx.Player?.ActiveCamera?.DevolverElControl();
+        GuionEnMarcha.Quitar(this);
+        _ctx.Stage?.QuitarMarcasTemporales();
+        if (_puntos != null) Object.Destroy(_puntos);
+        foreach (var i in _interpretes) i.Soltar();
+        _interpretes.Clear();
+        _porId.Clear();
+    }
+
+    // ── Bucle ───────────────────────────────────────────────────────────────────────────────
+
+    private void Avanzar(float t)
+    {
+        // Planos primero: un corte y la frase que lo acompaña caen en el mismo fotograma.
+        while (_iPlano < _g.planos.Count && _g.planos[_iPlano].t0 <= t)
+        {
+            var plano = _g.planos[_iPlano++];
+            _camaras.Activar(plano);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+            InformeDeRodaje.PlanoNuevo(plano.descripcion, null, null, plano.sujetos.Count > 0 ? plano.sujetos[0] : null);
+            _nPlano = _iPlano;
+            _tFoto = Mathf.Lerp(plano.t0, plano.t1, 0.35f);
+            _desviados.Clear();
+#endif
+        }
+
+        while (_iEfecto < _g.efectos.Count && _g.efectos[_iEfecto].t <= t)
+            Lanzar(_g.efectos[_iEfecto++]);
+
+        if (_lineaEnCurso != null && t >= _lineaEnCurso.t1) CerrarLinea();
+        while (_iLinea < _g.lineas.Count && _g.lineas[_iLinea].t0 <= t)
+            AbrirLinea(_g.lineas[_iLinea++]);
+
+        foreach (var i in _interpretes) i.Actualizar(t, _porId);
+        _camaras.Actualizar(t);
+
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (t >= _tFoto) { _tFoto = float.MaxValue; InformeDeRodaje.Foto($"plano{_nPlano:000}"); }
+        // ¿Alguien se ha salido del camino horneado (le empuja algo, otro script lo mueve)?
+        if (t >= _tRevision)
+        {
+            _tRevision = t + 0.5f;
+            foreach (var i in _interpretes)
+            {
+                if (i.Actor?.Transform == null || i.Datos.posiciones.Count == 0) continue;
+                Vector3 debe = Interpolar.Posicion(i.Datos.posiciones, t), esta = i.Actor.Transform.position;
+                float d = new Vector2(debe.x - esta.x, debe.z - esta.z).magnitude;
+                if (d > 0.35f && _desviados.Add(i.Datos.id))
+                    InformeDeRodaje.Aviso($"{i.Datos.alias} va {d:0.00} m fuera de su camino en {t:0.0} s");
+            }
+        }
+#endif
+    }
+
+    /// Para probar desde la mitad: coloca a todos y pone el estado (hora, música...) sin
+    /// reproducir lo que ya pasó.
+    private void SaltarHasta(float t)
+    {
+        if (t <= 0f) return;
+        while (_iEfecto < _g.efectos.Count && _g.efectos[_iEfecto].t < t)
+        {
+            var e = _g.efectos[_iEfecto++];
+            if (e.beat != null && EsDeEstado(e.beat)) Lanzar(e);
+        }
+        while (_iLinea < _g.lineas.Count && _g.lineas[_iLinea].t1 <= t) _iLinea++;
+        while (_iPlano + 1 < _g.planos.Count && _g.planos[_iPlano + 1].t0 <= t) _iPlano++;
+        foreach (var i in _interpretes) i.SaltarHasta(t);
+    }
+
+    private static bool EsDeEstado(SequenceBeat beat)
+        => beat != null && beat.CambiaElEscenario;
+
+    private bool CumpleCondicion(string onlyIfFlag, string skipIfFlag)
+        => (string.IsNullOrWhiteSpace(onlyIfFlag) || _ctx.GetFlag(onlyIfFlag))
+           && (string.IsNullOrWhiteSpace(skipIfFlag) || !_ctx.GetFlag(skipIfFlag));
+
+    private void Lanzar(EfectoHorneado e)
+    {
+        if (e.beat == null || _ctx.Player == null || !CumpleCondicion(e.onlyIfFlag, e.skipIfFlag)) return;
+        try
+        {
+            var rutina = _ctx.Player.StartCoroutine(Proteger(e));
+            _ctx.Player.TrackBackgroundRoutine(rutina);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[Guion] El efecto de la línea {e.linea} ({e.beat.Describe()}) ha fallado: {ex.Message}");
+        }
+    }
+
+    private IEnumerator Proteger(EfectoHorneado e)
+    {
+        IEnumerator rutina;
+        try { rutina = e.beat.Run(_ctx); }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[Guion] Efecto de la línea {e.linea}: {ex.Message}");
+            yield break;
+        }
+        while (true)
+        {
+            object actual;
+            try
+            {
+                if (!rutina.MoveNext()) yield break;
+                actual = rutina.Current;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[Guion] Efecto de la línea {e.linea} ({e.beat.Describe()}): {ex.Message}");
+                yield break;
+            }
+            yield return actual;
+        }
+    }
+
+    // ── Frases ──────────────────────────────────────────────────────────────────────────────
+
+    private void AbrirLinea(LineaHorneada linea)
+    {
+        if (!CumpleCondicion(linea.onlyIfFlag, linea.skipIfFlag)) return;
+        CerrarLinea();
+        _lineaEnCurso = linea;
+        _porId.TryGetValue(linea.actor, out var quien);
+        var datos = quien?.Datos;
+        var actor = quien?.Actor;
+        if (actor != null) _ctx.MarcarHabla(actor, true);
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        InformeDeRodaje.Linea(linea.actor, linea.clave);
+#endif
+
+        // El guion y los beats de diálogo enseñan las frases por el mismo camino, para que se
+        // vean y se oigan igual (ver PresentadorDeLinea).
+        if (actor?.Transform != null)
+        {
+            string texto = PresentadorDeLinea.Texto(linea.clave);
+            string nombre = PresentadorDeLinea.NombreDelHablante(datos?.claveDelNombre);
+            var presentacion = linea.presentacion >= 0 ? (PresentacionDeTexto)linea.presentacion : _g.presentacion;
+            _ctx.CambiarPresentacionDeLinea(presentacion);
+            PresentadorDeLinea.Mostrar(actor.Transform, texto, (linea.t1 - linea.t0) + 0.35f,
+                presentacion, nombre, datos != null ? datos.colorDelNombre : default,
+                new Vector3(0f, actor.HeadTopHeight + 0.05f, 0f));
+        }
+
+        PresentadorDeLinea.SonarLaVoz(linea.clave);
+    }
+
+    private void CerrarLinea()
+    {
+        if (_lineaEnCurso == null) return;
+        if (_porId.TryGetValue(_lineaEnCurso.actor, out var quien) && quien.Actor != null)
+            _ctx.MarcarHabla(quien.Actor, false);
+        _lineaEnCurso = null;
+        SpeechBubbleUI.Instance?.Hide();
+    }
+
+    // ── Un personaje ────────────────────────────────────────────────────────────────────────
+
+    private sealed class Interprete
+    {
+        public readonly ActorHorneado Datos;
+        public readonly SequenceActor Actor;
+        private NavMeshAgent _agente;
+        private bool _agenteEstabaActivo;
+        private bool _manualMovimiento, _manualGiro;
+        private int _iAnim, _iCara, _iMirada;
+        private float _rumbo;
+        private bool _moviendo;
+        private bool _visible = true;
+        private bool _hablando;
+        private bool _caraDesconocidaAvisada;
+
+        private const float GiroAndando = 360f;   // grados por segundo
+        private const float GiroQuieto = 220f;
+
+        public Interprete(ActorHorneado datos, SequenceActor actor)
+        {
+            Datos = datos;
+            Actor = actor;
+        }
+
+        public void Tomar()
+        {
+            var t = Actor.Transform;
+            _agente = Actor.Agent;
+            if (_agente != null)
+            {
+                _agenteEstabaActivo = _agente.enabled;
+                if (_agente.enabled && _agente.isOnNavMesh) _agente.ResetPath();
+                _agente.enabled = false;
+            }
+            var npc = Actor.NpcAnimator;
+            if (npc != null)
+            {
+                if (!npc.enabled) npc.enabled = true;
+                _manualMovimiento = npc.AllowManualMovement;
+                _manualGiro = npc.AllowManualRotation;
+                npc.AllowManualMovement = true;
+                npc.AllowManualRotation = true;
+                npc.DisableAutoRotation();
+                npc.ResetMovement();
+            }
+            var player = Actor.PlayerAnimator;
+            if (player != null && !player.enabled) player.enabled = true;
+            Actor.ReleasePose(true);
+
+            if (Datos.posiciones.Count > 0)
+            {
+                Actor.AvisarDeQueLoTomaUnaEscena();
+                t.position = Datos.posiciones[0].p;
+            }
+            _rumbo = RumboInicial();
+            t.rotation = Quaternion.Euler(0f, _rumbo, 0f);
+            Actor.SyncRotation();
+            AplicarVisible(EsVisible(0f));
+            Actor.ForzarEnElSuelo();
+        }
+
+        public void Soltar()
+        {
+            if (Actor?.Transform == null) return;
+            if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
+            if (Datos.visible != null && Datos.visible.Count > 0)
+                AplicarVisible(_visible);
+            else
+                AplicarVisible(true);
+            Actor.ResetMovement();
+            if (Actor.IsPlayer)
+            {
+                var motor = Actor.Motor;
+                if (motor != null)
+                {
+                    motor.overrideInputMagnitude = -1f;
+                    if (motor is Invector.vCharacterController.vThirdPersonAnimator tpAnim)
+                        tpAnim.UpdateAnimator();
+                }
+            }
+            var npc = Actor.NpcAnimator;
+            if (npc != null)
+            {
+                npc.ResetMovement();
+                npc.AllowManualMovement = _manualMovimiento;
+                npc.AllowManualRotation = _manualGiro;
+                npc.EnableAutoRotation();
+                npc.SyncTargetRotation();
+            }
+            if (_agente != null && _agenteEstabaActivo)
+            {
+                _agente.enabled = true;
+                if (_agente.isOnNavMesh) _agente.Warp(Actor.Transform.position);
+                else if (NavMesh.SamplePosition(Actor.Transform.position, out var hit, 2f, NavMesh.AllAreas))
+                    _agente.Warp(hit.position);
+            }
+        }
+
+        public void SaltarHasta(float t)
+        {
+            // Solo el último estado de animación y de cara que tocaba en t.
+            string bucle = null;
+            while (_iAnim < Datos.animacion.Count && Datos.animacion[_iAnim].t <= t)
+            {
+                var o = Datos.animacion[_iAnim++];
+                if (o.tipo == TipoDeAnimacion.Bucle) bucle = o.estado;
+                else if (o.tipo == TipoDeAnimacion.Reposo) bucle = null;
+            }
+            // Sin fundido: es el estado con el que la escena ya tiene que aparecer.
+            if (bucle != null) Actor.HoldPose(bucle, fundido: 0f);
+            else Actor.ForzarEnElSuelo();
+            NPCEmotion cara = NPCEmotion.None;
+            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t) cara = CaraDe(Datos.caras[_iCara++].emocion);
+            if (cara != NPCEmotion.None) Actor.SetEmotion(cara);
+            if (Datos.posiciones.Count > 0) Actor.Transform.position = Interpolar.Posicion(Datos.posiciones, t);
+        }
+
+        /// Traduce la palabra de la cara a la cara del juego. Si el juego no la reconoce, se avisa
+        /// una vez y la frase se queda sin cara: es mejor una cara de más que un aviso por fotograma.
+        private NPCEmotion CaraDe(string palabra)
+        {
+            if (CarasDelGuion.Intentar(palabra, out var e)) return e;
+            if (!_caraDesconocidaAvisada)
+            {
+                _caraDesconocidaAvisada = true;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+                Debug.LogWarning($"[Guion] Cara desconocida «{palabra}»: este juego no la reconoce. " +
+                    "La frase se queda sin cara. (¿Está en CarasDelGuion?)");
+#endif
+            }
+            return NPCEmotion.None;
+        }
+
+        /// Devuelve al actor a un estado neutro y rebobina sus órdenes. Al saltar a otro punto
+        /// del guion, las órdenes de animación, cara y mirada que ya se habían gastado vuelven a
+        /// empezar desde el principio: las que tocan a partir de ese instante se aplican de nuevo.
+        public void Rebobinar()
+        {
+            _iAnim = 0;
+            _iCara = 0;
+            _iMirada = 0;
+            _moviendo = false;
+            if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
+            Actor.ReleasePose(true);
+            Actor.ResetMovement();
+            _visible = true;
+            Actor.SetRenderingVisible(true);
+            Actor.ForzarEnElSuelo();
+        }
+
+        public void Actualizar(float t, Dictionary<string, Interprete> todos)
+        {
+            var tr = Actor.Transform;
+            if (tr == null) return;
+            float dt = Mathf.Max(Time.unscaledDeltaTime, 1e-4f);
+
+            bool visible = EsVisible(t);
+            if (visible != _visible) AplicarVisible(visible);
+
+            // Órdenes de animación y cara que tocan ya.
+            while (_iAnim < Datos.animacion.Count && Datos.animacion[_iAnim].t <= t)
+                Ejecutar(Datos.animacion[_iAnim++]);
+            while (_iCara < Datos.caras.Count && Datos.caras[_iCara].t <= t)
+            {
+                var c = Datos.caras[_iCara++];
+                var emocion = CaraDe(c.emocion);
+                if (emocion == NPCEmotion.None) continue;
+                if (c.dura > 0f) Actor.Reaccionar(emocion, c.dura);
+                else Actor.SetEmotion(emocion);
+            }
+            while (_iMirada + 1 < Datos.miradas.Count && Datos.miradas[_iMirada + 1].t <= t) _iMirada++;
+
+            // Posición: la del camino horneado, sin más.
+            Vector3 velocidad = Vector3.zero;
+            if (Datos.posiciones.Count > 0)
+            {
+                tr.position = Interpolar.Posicion(Datos.posiciones, t);
+                velocidad = Interpolar.Velocidad(Datos.posiciones, t);
+            }
+            float rapidez = velocidad.magnitude;
+            bool desliza = EnTramo(Datos.deslizando, t);
+            bool moviendo = rapidez > 0.08f && !desliza;
+            var npc = Actor.NpcAnimator;
+            // Al echar a andar se corta el gesto que hubiera: si no, se desliza con él puesto (INC-602).
+            if (moviendo && !_moviendo)
+            {
+                if (npc != null && npc.IsPlayingAnimation())
+                    npc.CortarGestoParaAndar();
+                Actor.ReleasePose(true);
+                Actor.PlayerAnimator?.ReturnToLocomotion(0.15f);
+            }
+            Actor.SetMovementSpeed(moviendo ? NavMeshAgentUtility.FactorDeLocomocion(rapidez) : 0f);
+            if (moviendo != _moviendo)
+            {
+                _moviendo = moviendo;
+                if (!moviendo) Actor.ResetMovement();
+            }
+
+            // Giro: andando mira a donde va; quieto, a lo que diga su mirada.
+            float objetivo = _rumbo;
+            if (moviendo) objetivo = Mathf.Atan2(velocidad.x, velocidad.z) * Mathf.Rad2Deg;
+            else if (Datos.miradas.Count > 0 && Datos.miradas[_iMirada].t <= t)
+                objetivo = RumboDeMirada(Datos.miradas[_iMirada], tr.position, todos, _rumbo);
+            _rumbo = Mathf.MoveTowardsAngle(_rumbo, objetivo, (moviendo ? GiroAndando : GiroQuieto) * dt);
+            tr.rotation = Quaternion.Euler(0f, _rumbo, 0f);
+            Actor.SyncRotation();
+        }
+
+        private void Ejecutar(OrdenDeAnimacion o)
+        {
+            switch (o.tipo)
+            {
+                case TipoDeAnimacion.Reposo:
+                    if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
+                    Actor.ReleasePose(true);
+                    Actor.ForzarEnElSuelo();
+                    break;
+                case TipoDeAnimacion.Bucle:
+                    Actor.HoldPose(o.estado, o.congelar, o.fundido > 0f ? o.fundido : 0.12f, o.alFinal);
+                    break;
+                case TipoDeAnimacion.Gesto:
+                    Actor.PlayGesture(o.estado);
+                    break;
+                case TipoDeAnimacion.HablaEmpieza:
+                    Actor.BeginInteraction();
+                    Actor.SetTalking(true);
+                    _hablando = true;
+                    break;
+                case TipoDeAnimacion.HablaTermina:
+                    if (_hablando) { Actor.SetTalking(false); Actor.EndInteraction(); _hablando = false; }
+                    break;
+            }
+        }
+
+        private float RumboInicial()
+        {
+            if (Datos.miradas.Count > 0 && Datos.miradas[0].tipo == TipoDeMirada.Rumbo) return Datos.miradas[0].rumbo;
+            if (Datos.miradas.Count > 0 && Datos.miradas[0].tipo == TipoDeMirada.Punto && Datos.posiciones.Count > 0)
+            {
+                Vector3 d = Datos.miradas[0].punto - Datos.posiciones[0].p;
+                if (d.sqrMagnitude > 0.01f) return Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg;
+            }
+            return Actor.Transform.eulerAngles.y;
+        }
+
+        private static float RumboDeMirada(ClaveDeMirada m, Vector3 desde, Dictionary<string, Interprete> todos, float actual)
+        {
+            Vector3 punto;
+            switch (m.tipo)
+            {
+                case TipoDeMirada.Rumbo: return m.rumbo;
+                case TipoDeMirada.Actor:
+                    if (!todos.TryGetValue(m.actor, out var otro) || otro.Actor?.Transform == null) return actual;
+                    punto = otro.Actor.Transform.position;
+                    break;
+                default: punto = m.punto; break;
+            }
+            Vector3 d = punto - desde;
+            d.y = 0f;
+            return d.sqrMagnitude < 0.04f ? actual : Mathf.Atan2(d.x, d.z) * Mathf.Rad2Deg;
+        }
+
+        private static bool EnTramo(List<TramoVisible> tramos, float t)
+        {
+            if (tramos == null) return false;
+            foreach (var v in tramos) if (t >= v.desde && t < v.hasta) return true;
+            return false;
+        }
+
+        private bool EsVisible(float t)
+        {
+            if (Datos.visible == null || Datos.visible.Count == 0) return true;
+            foreach (var v in Datos.visible) if (t >= v.desde && t < v.hasta) return true;
+            return false;
+        }
+
+        private void AplicarVisible(bool visible)
+        {
+            _visible = visible;
+            Actor.SetRenderingVisible(visible);
+        }
+    }
+}

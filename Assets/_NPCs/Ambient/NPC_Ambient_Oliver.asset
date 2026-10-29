@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.NPC.Modules.NPCAmbientConfig
   moduleName: 
   description: 
-  enableWander: 1
+  enableWander: 0
   wanderRadius: 6
   minIdleTime: 1.2
   maxIdleTime: 3

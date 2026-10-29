@@ -219,17 +219,15 @@ public class ComboCastController : MonoBehaviour
         _repertoire.Clear();
 
         // Con Estela o Liam al mando, sus combos son los de su ficha (p. ej. Sello del Pacto de Liam).
-        var pcm = PartyControlManager.Instance;
-        if (pcm != null && pcm.ActiveSlot != PartyControlManager.CharacterSlot.Will)
+        var activo = ControlDelJugador.Activo;
+        if (activo != PartyControlManager.CharacterSlot.Will)
         {
-            string name = pcm.ActiveSlot == PartyControlManager.CharacterSlot.Liam ? "Liam" : "Estela";
-            var party = Game.NPC.PlayerParty.HasInstance ? Game.NPC.PlayerParty.Instance : null;
-            var member = party != null ? party.GetMemberByName(name) : null;
+            var member = ControlDelJugador.MiembroDe(activo);
             if (member != null)
                 foreach (var s in member.EffectiveSpells)
                     if (s != null && s.HasCombo && !_repertoire.Contains(s)) _repertoire.Add(s);
             // Los de su ficha (INC-496) y los que haya aprendido del grimorio (INC-503).
-            foreach (var s in GrimorioDelPersonaje.CombosDisponibles(pcm.ActiveSlot))
+            foreach (var s in GrimorioDelPersonaje.CombosDisponibles(activo))
                 if (!_repertoire.Contains(s)) _repertoire.Add(s);
             return;
         }

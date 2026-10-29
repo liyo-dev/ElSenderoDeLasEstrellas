@@ -101,6 +101,7 @@ internal sealed class ActorH
 
     public readonly List<ClaveDePosicion> pos = new();
     public readonly List<ClaveDeMirada> miradas = new();
+    public readonly List<ClaveDeMirada> cabezas = new();   // hacia dónde vuelve la cabeza (sin el cuerpo)
     public readonly List<OrdenDeAnimacion> anim = new();
     public readonly List<OrdenDeCara> caras = new();
     public readonly List<(float t, bool visible)> visibilidad = new();
@@ -221,6 +222,17 @@ internal sealed class ActorH
         miradas.Add(m);
     }
 
+    /// La cabeza se vuelve hacia m desde t (y deja de valer lo que hubiera pedido después).
+    public void GirarCabeza(float t, ClaveDeMirada m)
+    {
+        m.t = t;
+        cabezas.RemoveAll(k => k.t >= t - 1e-4f);
+        cabezas.Add(m);
+    }
+
+    /// «A nadie»: la cabeza vuelve al frente.
+    public static ClaveDeMirada CabezaAlFrente => new() { tipo = TipoDeMirada.Rumbo };
+
     public void Animar(float t, TipoDeAnimacion tipo, string estado = null, bool congelar = false, float fundido = 0f, bool alFinal = false)
     {
         anim.Add(new OrdenDeAnimacion { t = t, tipo = tipo, estado = estado, congelar = congelar, fundido = fundido, alFinal = alFinal });
@@ -245,6 +257,7 @@ internal sealed partial class Horno
     private readonly List<EfectoHorneado> _efectos = new();
     private readonly List<PlanoPedido> _planosPedidos = new();
     private readonly Dictionary<string, (float tiempo, string gesto)> _ultimasReaccionesPorActor = new();
+    private readonly HashSet<(string actor, float t)> _cabezaPedida = new();   // frases con «mira=» o «cabeza=»
     private GuionHorneado _salida;
     private float _fin;
     private string _carpetaSalida;
@@ -596,7 +609,7 @@ internal sealed partial class Horno
         if (o.actor != null)
         {
             if (!_actores.TryGetValue(o.actor, out var a)) { Error($"{o}: '{o.actor}' no está en el REPARTO"); return 0f; }
-            if (o.verbo != "cara" && o.verbo != "mira") a.comandos.Add(t);
+            if (o.verbo != "cara" && o.verbo != "mira" && o.verbo != "cabeza") a.comandos.Add(t);
             return ProcesarActor(a, o, t, dePista);
         }
         switch (o.verbo)
@@ -675,6 +688,15 @@ internal sealed partial class Horno
                 if (Objetivo(o.args.FirstOrDefault(), o.linea, out var m)) a.Mirar(t, m);
                 return 0f;
             }
+            case "cabeza":
+            {
+                // Solo la cabeza, sin girar el cuerpo: vale sentado. «nadie» la devuelve al frente.
+                string a_quien = o.args.FirstOrDefault();
+                if (a_quien == "nadie" || a_quien == "frente") a.GirarCabeza(t, ActorH.CabezaAlFrente);
+                else if (Objetivo(a_quien, o.linea, out var mc) && mc.tipo != TipoDeMirada.Rumbo) a.GirarCabeza(t, mc);
+                else Error($"{o}: ¿hacia quién vuelve la cabeza? (un personaje, un punto o «nadie»)");
+                return 0f;
+            }
             case "gesto":
             {
                 string estado = o.args.FirstOrDefault();
@@ -698,6 +720,8 @@ internal sealed partial class Horno
                 a.Animar(t, TipoDeAnimacion.Bucle, estado, congela, o.OpF("fundido", 0f), alFinal);
                 a.bucle = estado;
                 a.bucleDeCuerpo = a.estados[estado].cuerpoEntero;
+                // Tumbado, la cabeza no sigue a nadie (se torcería contra el suelo).
+                if (Tumbado(a)) a.GirarCabeza(t, ActorH.CabezaAlFrente);
                 return o.opciones.ContainsKey("dura") ? o.OpF("dura", 0f) : 0f;
             }
             case "reposo":
@@ -830,7 +854,20 @@ internal sealed partial class Horno
             a.Animar(t + 0.08f, TipoDeAnimacion.Gesto, g);
         }
         // Sentado no se gira el cuerpo para hablar: se quedaría de lado en la silla.
-        if (o.opciones.TryGetValue("mira", out var x) && Objetivo(x, o.linea, out var m) && !Sentado(a)) a.Mirar(t, m);
+        if (o.opciones.TryGetValue("mira", out var x) && Objetivo(x, o.linea, out var m))
+        {
+            if (!Sentado(a) && !EnPoseDeSuelo(a)) a.Mirar(t, m);
+            if (!Tumbado(a) && m.tipo != TipoDeMirada.Rumbo) a.GirarCabeza(t, m);
+        }
+        if (o.opciones.ContainsKey("mira") || o.opciones.ContainsKey("cabeza")) _cabezaPedida.Add((a.id, t));
+        // «cabeza=will,liam»: mientras habla, la cabeza va de uno a otro (a partes iguales).
+        if (o.opciones.TryGetValue("cabeza", out var cabezas) && !Tumbado(a))
+        {
+            var destinos = cabezas.Split(',').Select(n => n.Trim()).Where(n => n.Length > 0).ToList();
+            for (int i = 0; i < destinos.Count; i++)
+                if (Objetivo(destinos[i], o.linea, out var mc) && mc.tipo != TipoDeMirada.Rumbo)
+                    a.GirarCabeza(t + dura * i / destinos.Count, mc);
+        }
         if (o.opciones.TryGetValue("cara", out var c))
         {
             string palabra = Emocion(c, o);
@@ -858,8 +895,13 @@ internal sealed partial class Horno
         string textoFrase = TextoDe(clave);
         foreach (var b in oyentes)
         {
-            if (b == a || b.AndandoEn(t) || Sentado(b)) continue;
-            b.Mirar(t + 0.15f + (k++ % 4) * 0.12f, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
+            if (b == a || b.AndandoEn(t)) continue;
+            // La cabeza sigue a quien habla, también sentado (el cuerpo no se gira en el asiento);
+            // tumbado, no. Cada uno a su ritmo.
+            float tGiro = t + 0.15f + (k++ % 4) * 0.12f;
+            if (!Tumbado(b)) b.GirarCabeza(tGiro - 0.05f, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
+            if (Sentado(b) || EnPoseDeSuelo(b)) continue;
+            b.Mirar(tGiro, new ClaveDeMirada { tipo = TipoDeMirada.Actor, actor = a.id });
 
             // Reacción corporal y facial del oyente si no está hablando él a la vez
             if (!b.habla.Any(h => t < h.t1 && t + dura > h.t0))
@@ -894,6 +936,58 @@ internal sealed partial class Horno
             }
         }
         return dura;
+    }
+
+    /// Tumbado, sentado en el suelo o de rodillas (un bucle de cuerpo entero de esos): quien escucha
+    /// así no se gira ni hace gestos de oyente, que le pondrían de pie un instante (se veía un
+    /// parpadeo) y le harían rodar por el suelo. Ver INC-866.
+    /// Quien habla sin «mira=» ni «cabeza=» vuelve la cabeza hacia aquel con quien habla: el que le
+    /// contesta justo después o, si no, el que le acaba de hablar (cerca y a la vista). Sin esto se
+    /// quedaba mirando al último que había hablado antes, aunque ahora hablara con otro.
+    private void CabezaDeQuienHabla(ActorH a)
+    {
+        foreach (var h in a.habla)
+        {
+            if (_cabezaPedida.Contains((a.id, h.t0)) || TumbadoEn(a, h.t0)) continue;
+            ActorH con = null;
+            float mejor = float.MaxValue;
+            foreach (var b in _actores.Values)
+            {
+                if (b == a || !b.VisibleEn(h.t0) || Vector3.Distance(b.PosEn(h.t0), a.PosEn(h.t0)) > 12f) continue;
+                foreach (var hb in b.habla)
+                {
+                    float d;
+                    if (hb.t0 >= h.t1 - 0.2f) d = hb.t0 - h.t1;                 // le contesta
+                    else if (hb.t1 <= h.t0 + 0.2f) d = h.t0 - hb.t1 + 0.5f;     // le acaba de hablar
+                    else continue;
+                    if (d < 6f && d < mejor) { mejor = d; con = b; }
+                }
+            }
+            if (con != null)
+                a.cabezas.Add(new ClaveDeMirada { t = h.t0 + 0.05f, tipo = TipoDeMirada.Actor, actor = con.id });
+        }
+    }
+
+    private static bool TumbadoEn(ActorH a, float t)
+    {
+        string e = BucleEn(a, t);
+        return e != null && (e.Contains("Knockdown") || e.Contains("Sleeping") || e.Contains("Die0") || e.Contains("Swimming") || e.Contains("Stun"));
+    }
+
+    /// Tumbado, dormido, caído o nadando: la cabeza no sigue a nadie.
+    private static bool Tumbado(ActorH b)
+    {
+        if (b.bucle == null || !b.bucleDeCuerpo) return false;
+        string e = b.bucle;
+        return e.Contains("Knockdown") || e.Contains("Sleeping") || e.Contains("Die0") || e.Contains("Swimming") || e.Contains("Stun");
+    }
+
+    private static bool EnPoseDeSuelo(ActorH b)
+    {
+        if (b.bucle == null || !b.bucleDeCuerpo) return false;
+        string e = b.bucle;
+        return e.Contains("Knockdown") || e.Contains("SitGround") || e.Contains("Sleeping") || e.Contains("Die0")
+            || e.Contains("Cry01") || e.Contains("Swimming") || e.Contains("Stun");
     }
 
     private float DuracionDeVoz(string clave, GuionTexto.Orden o)
@@ -1015,9 +1109,11 @@ internal sealed partial class Horno
                     t += ch.cada * (0.75f + (float)rnd.NextDouble() * 0.6f);
                 }
             }
+            CabezaDeQuienHabla(a);
             a.anim.Sort((x, y) => x.t.CompareTo(y.t));
             a.caras.Sort((x, y) => x.t.CompareTo(y.t));
             a.miradas.Sort((x, y) => x.t.CompareTo(y.t));
+            a.cabezas.Sort((x, y) => x.t.CompareTo(y.t));
             a.visibilidad.Sort((x, y) => x.t.CompareTo(y.t));
         }
         _lineas.Sort((x, y) => x.t0.CompareTo(y.t0));

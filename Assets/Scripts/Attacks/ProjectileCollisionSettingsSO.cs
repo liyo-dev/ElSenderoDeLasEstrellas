@@ -1,8 +1,9 @@
-﻿﻿﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Configuración global para las colisiones entre proyectiles del jugador y enemigos.
-/// Crea un asset de este tipo en Project > Create > Game > Projectile Collision Settings
+/// Se crea en Create ▸ El Sendero ▸ Ataques ▸ Projectile Collision Settings; lo aplica
+/// ProjectileCollisionInitializer (en Start.unity) al arrancar.
 /// </summary>
 [CreateAssetMenu(menuName = "El Sendero/Ataques/Projectile Collision Settings", fileName = "ProjectileCollisionSettings")]
 public class ProjectileCollisionSettingsSO : ScriptableObject
@@ -16,10 +17,6 @@ public class ProjectileCollisionSettingsSO : ScriptableObject
     public float vfxLifetime = 2f;
     
     [Header("Fuerzas de Empuje")]
-    [Tooltip("Fuerza aplicada al jugador cuando su proyectil colisiona")]
-    [Min(0f)]
-    public float playerKnockbackForce = 8f;
-    
     [Tooltip("Fuerza aplicada al NPC cuando su proyectil colisiona")]
     [Min(0f)]
     public float npcKnockbackForce = 8f;
@@ -37,24 +34,6 @@ public class ProjectileCollisionSettingsSO : ScriptableObject
     [Tooltip("Clave del SFX para la colisión de proyectiles")]
     public string collisionSFXKey = "ProjectileClash";
 
-    [Header("Lanzamiento Aéreo del Jugador (estilo Kingdom Hearts)")]
-    [Tooltip("Distancia horizontal hacia atrás del lanzamiento aéreo del jugador")]
-    [Min(0f)]
-    public float playerAerialKnockbackDistance = 3.5f;
-
-    [Tooltip("Altura máxima del arco del lanzamiento aéreo del jugador")]
-    [Min(0f)]
-    public float playerAerialKnockbackHeight = 2.2f;
-
-    [Tooltip("Duración total del lanzamiento aéreo del jugador (subida + caída)")]
-    [Min(0.05f)]
-    public float playerAerialKnockbackDuration = 0.6f;
-
-    [Header("Mecánica en pruebas (Agosto 2026)")]
-    [Tooltip("false (por defecto) = cuando dos hechizos chocan, el jugador reproduce su animación de daño estándar y pierde vida = SOLO el daño del hechizo enemigo (el propio ya no se suma; ver FIX balance 2026-08-13). " +
-             "true = comportamiento antiguo, el jugador sale lanzado por el aire.")]
-    public bool usePlayerAerialLaunch = false;
-
     /// <summary>
     /// Convierte este ScriptableObject en la configuración para el handler
     /// </summary>
@@ -64,18 +43,10 @@ public class ProjectileCollisionSettingsSO : ScriptableObject
         {
             collisionVFX = collisionVFX,
             vfxLifetime = vfxLifetime,
-            playerKnockbackForce = playerKnockbackForce,
             npcKnockbackForce = npcKnockbackForce,
             cameraShakeIntensity = cameraShakeIntensity,
             cameraShakeDuration = cameraShakeDuration,
-            collisionSFXKey = collisionSFXKey,
-            // Animación solo para el player
-            playerCollisionAnimation = "RollBWD_Battle_RM_NoWeapon",
-            enableCollisionAnimations = true,
-            playerAerialKnockbackDistance = playerAerialKnockbackDistance,
-            playerAerialKnockbackHeight = playerAerialKnockbackHeight,
-            playerAerialKnockbackDuration = playerAerialKnockbackDuration,
-            usePlayerAerialLaunch = usePlayerAerialLaunch
+            collisionSFXKey = collisionSFXKey
         };
     }
 }

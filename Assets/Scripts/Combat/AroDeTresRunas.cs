@@ -1,4 +1,3 @@
-using Game.NPC;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
 
@@ -124,7 +123,8 @@ public sealed class AroDeTresRunas : MonoBehaviour, IFiltroDeDano, IExpuestoAlDa
         if (Expuesto) return cantidad;
         if (RunasEnteras == 0) { Exponer(); return cantidad; }
 
-        if (!PersonajeQueGolpea(instigador, out var slot)) return 0f; // golpe sin dueño (trampa, caída…)
+        // Quién da el golpe: el cuerpo del jugador lleva al personaje activo; un compañero, el suyo.
+        if (!ControlDelJugador.PersonajeDe(instigador, out var slot)) return 0f; // golpe sin dueño (trampa, caída…)
         int i = Indice(slot);
         ref var r = ref _runas[i];
 
@@ -148,28 +148,6 @@ public sealed class AroDeTresRunas : MonoBehaviour, IFiltroDeDano, IExpuestoAlDa
             else AvisosDeCombate.RomperseDefensa(gameObject);
         }
         return 0f;
-    }
-
-    /// Quién da el golpe: el cuerpo del jugador lleva al personaje activo; un compañero, el suyo.
-    public static bool PersonajeQueGolpea(GameObject instigador, out Slot slot)
-    {
-        slot = Slot.Will;
-        if (instigador == null) return false;
-
-        var jugador = PlayerService.Player;
-        if (jugador != null && instigador.transform.root == jugador.transform.root)
-        {
-            slot = PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveSlot : Slot.Will;
-            return true;
-        }
-
-        var aliado = instigador.GetComponentInParent<NPCPartyMember>();
-        if (aliado == null) return false;
-        string nombre = aliado.DisplayName;
-        if (nombre == "Estela") { slot = Slot.Estela; return true; }
-        if (nombre == "Liam") { slot = Slot.Liam; return true; }
-        if (nombre == "Will") { slot = Slot.Will; return true; }
-        return false;
     }
 
     private void Exponer()
@@ -200,13 +178,8 @@ public sealed class AroDeTresRunas : MonoBehaviour, IFiltroDeDano, IExpuestoAlDa
     /// La runa de un personaje que no está en el grupo no cuenta (Will siempre está).
     private void RevisarGrupo()
     {
-        var grupo = PlayerParty.Instance;
         for (int i = 0; i < Orden.Length; i++)
-        {
-            if (Orden[i] == Slot.Will) { _enGrupo[i] = true; continue; }
-            string nombre = Orden[i] == Slot.Estela ? "Estela" : "Liam";
-            _enGrupo[i] = grupo == null || grupo.GetMemberByName(nombre) != null;
-        }
+            _enGrupo[i] = ControlDelJugador.EnElGrupo(Orden[i]);
     }
 
     private static int Indice(Slot slot) => slot == Slot.Will ? 0 : slot == Slot.Estela ? 1 : 2;

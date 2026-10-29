@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Marca uno o varios pasos de una quest como completados y, opcionalmente, cierra la quest.
 /// Útil cuando un NPC otorga una recompensa que también debe avanzar la misión.
-/// Ahora soporta completar steps por Condition ID (recomendado) o por índice.
+/// Los pasos se indican por id de condición (recomendado) o por índice.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Quests", "Completar pasos de quest", "Marca pasos como hechos y, opcionalmente, cierra la quest.")]
@@ -15,10 +15,10 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
     [NarrativeKey(NarrativeKeyKind.Actor)]
     public string standingActorId;
     [Tooltip("Frase del actor cuando se le habla después de este encargo.")]
-    public DialogueAsset standingDialogue;
+    public NarrativeDialogueAsset standingDialogue;
     private string StandingFlag => "STEPS_COMPLETED_" + guid;
     public string StandingActorId => standingActorId;
-    public DialogueAsset StandingDialogue => standingDialogue;
+    public NarrativeDialogueAsset StandingDialogue => standingDialogue;
     public bool IsStandingLineActive(INarrativeSignals signals) => NarrativeFlags.Has(StandingFlag);
     [Header("Quest")]
     [Tooltip("ID de la quest que se actualizará.")]
@@ -26,11 +26,11 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
     public string questId;
 
     [Header("Completar Steps por Condition ID (Recomendado)")]
-    [Tooltip("Lista de Step Condition IDs que se marcarán como completados. Ej: 'QUEST_ELDRAN_MISSION5_STEP_00'")]
+    [Tooltip("Lista de Step Condition IDs que se marcarán como completados. Ej: 'QUEST_PUENTE_STEP_00'")]
     [NarrativeKey(NarrativeKeyKind.QuestStep, "questId")]
     public List<string> stepConditionIds = new();
 
-    [Header("Completar Steps por Índice (Legacy)")]
+    [Header("Completar Steps por Índice (si no hay Condition IDs)")]
     [Tooltip("Lista de índices de pasos que se marcarán como completados. Solo se usa si stepConditionIds está vacío.")]
     public List<int> steps = new();
 
@@ -40,6 +40,24 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
 
     [Tooltip("Muestra advertencias cuando los datos son inválidos.")]
     public bool logWarnings = true;
+
+    public override void Describe(INarrativeNodeDescriber d)
+        => d.Quest(questId, completeQuest ? "Completa pasos y CIERRA" : "Completa pasos", stepConditionIds);
+
+    public override void CollectWarnings(List<string> warnings)
+    {
+        if (string.IsNullOrWhiteSpace(questId))
+        {
+            warnings.Add("questId vacío");
+            return;
+        }
+        bool porCondicion = stepConditionIds != null && stepConditionIds.Count > 0;
+        bool porIndice = steps != null && steps.Count > 0;
+        if (!porCondicion && !porIndice && !completeQuest)
+            warnings.Add("No marca ningún paso ni cierra la quest");
+        if (!porCondicion && porIndice && steps.Exists(step => step < 0))
+            warnings.Add("Hay índices de paso negativos");
+    }
 
     public void Project(INarrativeStateWriter state)
     {
@@ -63,7 +81,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
         bool anyAction = false;
         bool warnedNoSteps = false;
 
-        // Prioridad 1: Completar por Condition ID (arquitectura correcta)
+        // Prioridad 1: por id de condición (no depende del orden de los pasos)
         if (stepConditionIds != null && stepConditionIds.Count > 0)
         {
             var processed = new HashSet<string>();
@@ -79,8 +97,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
                 if (!processed.Add(conditionId))
                     continue; // evitar repetir llamadas para el mismo ID
 
-                // Pasa siempre por ctx.Signals (INarrativeSignals), nunca por QuestManager.Instance
-                // directamente: mantiene el grafo desacoplado de la clase concreta del quest system.
+                // Siempre por ctx.Signals: el grafo no conoce el sistema de misiones del juego.
                 if (ctx.Signals != null)
                 {
                     ctx.Signals.CompleteQuestStepByConditionId(questId, conditionId);
@@ -94,7 +111,7 @@ public sealed class CompleteQuestStepsNode : NarrativeNode, INarrativeStateEffec
                 }
             }
         }
-        // Prioridad 2: Completar por índice (fallback legacy)
+        // Prioridad 2: por índice, solo si no hay ids de condición
         else if (steps != null && steps.Count > 0)
         {
             var processed = new HashSet<int>();

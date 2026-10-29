@@ -4,9 +4,11 @@ using UnityEngine;
 
 /// Pozo que atrae al jugador hacia su centro mientras se carga y al final implosiona: hace daño y
 /// aparta a quien siga cerca. La atracción es más lenta que correr, así que escapa quien corre en
-/// contra. Sirve para cualquier ataque de enemigo de este tipo (el agujero negro del Mago Oscuro).
-/// Hace daño al jugador (PlayerHealthSystem), nunca a los aliados. Se crea con Crear() y se
-/// destruye solo al acabar.
+/// contra. Mientras se carga, pisar su núcleo quema (daño periódico). Sirve para cualquier ataque
+/// de enemigo de este tipo (el agujero negro del Mago Oscuro). El daño va por DanoEnZona: alcanza
+/// al que va al mando y a los compañeros, cada uno con su vida (GDD § 6.1); la atracción solo
+/// mueve al cuerpo del jugador (a los compañeros los mueve su navegación). Se crea con Crear() y
+/// se destruye solo al acabar.
 public sealed class PozoGravitatorio : MonoBehaviour
 {
     public struct Config
@@ -25,11 +27,21 @@ public sealed class PozoGravitatorio : MonoBehaviour
         public GameObject vfxImplosion;
         public string sfxCarga;
         public string sfxImplosion;
-        public bool muerteInstantaneaAlPisar; // Si es true, pisar el núcleo mata del tirón
-        public float radioMortal;             // Radio interior letal (default 1.8m)
+        public float danoPorSegundoEnElNucleo; // daño mientras se pisa el núcleo durante la carga (0 = no quema)
+        public float radioDelNucleo;           // radio del núcleo que quema (0 = 1,8 m)
+
     }
 
+    /// Daño por segundo del núcleo cuando quien lanza el pozo no lo indica con un número.
+    public const float DanoDelNucleoPorDefecto = 30f;
+
     private const float DuracionImplosion = 0.18f;
+    private const float RadioDelNucleoPorDefecto = 1.8f;
+    // El núcleo quema a golpes, no en cada paso de física: cada golpe pasa por las reglas de daño
+    // (invulnerabilidad tras un golpe incluida) y se ve y se siente.
+    private const float IntervaloDelNucleo = 0.25f;
+    // Por debajo del centro, más allá de esto (otro piso) no alcanza.
+    private const float ProfundidadMax = 2f;
 
     private Config _c;
     private Transform _jugador;
@@ -37,11 +49,13 @@ public sealed class PozoGravitatorio : MonoBehaviour
     private PlayerHealthSystem _salud;
     private Transform _vfx;
     private bool _atrayendo;
+    private float _siguienteGolpeDelNucleo;
 
     /// Ya ha implosionado.
     public bool Terminado { get; private set; }
 
     private float AlturaMax => _c.alturaMax > 0f ? _c.alturaMax : 4f;
+    private float RadioDelNucleo => _c.radioDelNucleo > 0f ? _c.radioDelNucleo : RadioDelNucleoPorDefecto;
 
     public static PozoGravitatorio Crear(Vector3 centro, Config config)
     {
@@ -100,6 +114,11 @@ public sealed class PozoGravitatorio : MonoBehaviour
             t += Time.deltaTime;
             if (_vfx != null)
                 _vfx.localScale = Vector3.one * Mathf.Lerp(_c.escalaInicial, _c.escalaFinal, Mathf.SmoothStep(0f, 1f, t / _c.carga));
+            if (_c.danoPorSegundoEnElNucleo > 0f && Time.time >= _siguienteGolpeDelNucleo)
+            {
+                _siguienteGolpeDelNucleo = Time.time + IntervaloDelNucleo;
+                QuemarEnElNucleo();
+            }
             yield return null;
         }
         _atrayendo = false;
@@ -135,15 +154,6 @@ public sealed class PozoGravitatorio : MonoBehaviour
         if (-haciaElCentro.y > AlturaMax) return;
         haciaElCentro.y = 0f;
         float distancia = haciaElCentro.magnitude;
-
-        // Si pisa el núcleo del vórtice, recibe daño periódico severo en vez de muerte instantánea sin feedback
-        float radioMuerte = _c.radioMortal > 0f ? _c.radioMortal : 1.8f;
-        if (_c.muerteInstantaneaAlPisar && distancia <= radioMuerte && _salud != null)
-        {
-            FeedbackService.CameraShake(0.2f, 0.1f);
-            _salud.TakeDamage(30f * Time.fixedDeltaTime);
-        }
-
         if (distancia > _c.radioAtraccion || distancia < 0.6f) return;
 
         float cercania = 1f - distancia / _c.radioAtraccion;
@@ -153,16 +163,19 @@ public sealed class PozoGravitatorio : MonoBehaviour
         else _jugador.position += paso;
     }
 
-    private void Golpear()
+    /// Un golpe del núcleo a quien lo pise; el temblor, solo si le toca al que va al mando.
+    private void QuemarEnElNucleo()
     {
-        if (_salud == null || _jugador == null) return;
-        Vector3 fuera = _jugador.position - transform.position;
-        if (fuera.y > AlturaMax || fuera.y < -2f) return;
-        fuera.y = 0f;
-        if (fuera.sqrMagnitude > _c.radioImplosion * _c.radioImplosion) return;
-
-        _salud.TakeDamage(_c.dano);
-        if (_c.empuje > 0f)
-            _salud.Empujar(fuera.sqrMagnitude > 0.01f ? fuera.normalized : -_jugador.forward, _c.empuje);
+        float dano = _c.danoPorSegundoEnElNucleo * IntervaloDelNucleo;
+        int n = DanoEnZona.CuerposDelGrupo(out var cuerpos);
+        for (int i = 0; i < n; i++)
+        {
+            var c = cuerpos[i];
+            if (!DanoEnZona.EnCilindro(c.Posicion, transform.position, RadioDelNucleo, AlturaMax, ProfundidadMax)) continue;
+            if (DanoEnZona.Danar(c, dano) && c.EsElJugador) FeedbackService.CameraShake(0.2f, 0.1f);
+        }
     }
+
+    private void Golpear() =>
+        DanoEnZona.GolpearEnCilindro(transform.position, _c.radioImplosion, AlturaMax, ProfundidadMax, _c.dano, _c.empuje);
 }

@@ -1,5 +1,4 @@
-﻿﻿using UnityEngine;
-using DG.Tweening;
+using UnityEngine;
 
 /// <summary>
 /// Sistema que maneja las colisiones entre proyectiles del jugador y enemigos.
@@ -14,9 +13,6 @@ public static class ProjectileCollisionHandler
     public class CollisionConfig
     {
         [Header("Fuerzas de Empuje")]
-        [Tooltip("OBSOLETO: ya no se usa para el jugador (ver 'Lanzamiento Aéreo' más abajo). Se mantiene solo por compatibilidad con assets ya serializados.")]
-        public float playerKnockbackForce = 8f;
-        
         [Tooltip("Fuerza aplicada al NPC cuando su proyectil colisiona")]
         public float npcKnockbackForce = 8f;
         
@@ -37,28 +33,6 @@ public static class ProjectileCollisionHandler
         [Header("Audio")]
         [Tooltip("Clave del SFX para la colisión de proyectiles")]
         public string collisionSFXKey = "ProjectileClash";
-        
-        [Header("Animaciones")]
-        [Tooltip("Nombre de la animación que se reproduce en el jugador al colisionar")]
-        public string playerCollisionAnimation = "RollBWD_Battle_RM_NoWeapon";
-
-        [Tooltip("Habilitar reproducción de animaciones al colisionar")]
-        public bool enableCollisionAnimations = true;
-
-        [Header("Lanzamiento Aéreo del Jugador (estilo Kingdom Hearts)")]
-        [Tooltip("Distancia horizontal hacia atrás del lanzamiento aéreo del jugador")]
-        public float playerAerialKnockbackDistance = 3.5f;
-
-        [Tooltip("Altura máxima del arco del lanzamiento aéreo del jugador")]
-        public float playerAerialKnockbackHeight = 2.2f;
-
-        [Tooltip("Duración total del lanzamiento aéreo del jugador (subida + caída)")]
-        public float playerAerialKnockbackDuration = 0.6f;
-
-        [Header("Mecánica en pruebas (Agosto 2026)")]
-        [Tooltip("false (por defecto) = cuando dos hechizos chocan, el jugador reproduce su animación de daño estándar y pierde vida = SOLO el daño del hechizo enemigo (el propio ya no se suma; ver FIX balance 2026-08-13). " +
-                 "true = comportamiento antiguo, el jugador sale lanzado por el aire (ver ApplyAerialLaunch). Se mantiene el código del lanzamiento aéreo por si se revierte esta prueba.")]
-        public bool usePlayerAerialLaunch = false;
     }
     
     private static CollisionConfig _config;
@@ -81,18 +55,11 @@ public static class ProjectileCollisionHandler
             // Configuración por defecto
             _config = new CollisionConfig
             {
-                playerKnockbackForce = 8f,
                 npcKnockbackForce = 8f,
                 vfxLifetime = 2f,
                 cameraShakeIntensity = 0.5f,
                 cameraShakeDuration = 0.3f,
                 collisionSFXKey = "ProjectileClash",
-                playerCollisionAnimation = "RollBWD_Battle_RM_NoWeapon",
-                enableCollisionAnimations = true,
-                playerAerialKnockbackDistance = 3.5f,
-                playerAerialKnockbackHeight = 2.2f,
-                playerAerialKnockbackDuration = 0.6f,
-                usePlayerAerialLaunch = false
             };
         }
         return _config;
@@ -115,11 +82,8 @@ public static class ProjectileCollisionHandler
         Debug.Log($"[ProjectileCollision] 💥 Colisión detectada en {collisionPoint}");
 #endif
 
-        // FIX (balance, 2026-08-13): antes se sumaba el daño de AMBOS hechizos (el propio del
-        // jugador + el del enemigo), lo que penalizaba doblemente al jugador por su propio
-        // hechizo fallido y hacía que el choque quitara demasiada vida. Ahora solo se aplica el
-        // daño del hechizo ENEMIGO. Se lee antes de destruir los proyectiles en el paso 6, para no
-        // perder el acceso a sus componentes.
+        // El choque solo quita al jugador el daño del hechizo enemigo (no el suyo propio). Se lee
+        // antes de destruir los proyectiles en el paso 6, para no perder sus componentes.
         float enemyDamage = GetProjectileDamage(enemyProjectile);
 
         // 1. Reproducir VFX en el punto de colisión
@@ -132,12 +96,9 @@ public static class ProjectileCollisionHandler
         ApplyCameraShake(config);
 
         // 4. Reacción del jugador: animación de daño + pérdida de vida
-        if (config.enableCollisionAnimations)
-        {
-            ApplyPlayerReaction(enemyDamage, config);
-        }
+        ApplyPlayerReaction(enemyDamage);
 
-        // 5. Aplicar knockback a jugador y NPC
+        // 5. Aplicar knockback al NPC
         ApplyKnockbackToEntities(playerProjectile, enemyProjectile, collisionPoint, config);
 
         // 6. Destruir ambos proyectiles
@@ -207,35 +168,17 @@ public static class ProjectileCollisionHandler
     }
     
     /// <summary>
-    /// Reacción del jugador ante un choque de hechizos. Mecánica en pruebas (Agosto 2026):
-    /// por defecto (usePlayerAerialLaunch = false) el jugador recibe daño = SOLO el daño del
-    /// hechizo enemigo (FIX balance 2026-08-13: antes se sumaba también el daño propio del
-    /// jugador, lo que quitaba demasiada vida) y reproduce su animación de daño estándar vía
-    /// PlayerHealthSystem.TakeDamage (que ya gestiona animación, VFX, sonido, invulnerabilidad y
-    /// knockback simple). Si usePlayerAerialLaunch = true se conserva el comportamiento antiguo:
-    /// el jugador sale lanzado por el aire (ver ApplyAerialLaunch).
+    /// Reacción del jugador ante un choque de hechizos: recibe el daño del hechizo enemigo por
+    /// PlayerHealthSystem.TakeDamage, que ya gestiona sus reglas de daño, animación, VFX, sonido,
+    /// invulnerabilidad y empuje.
     /// </summary>
-    private static void ApplyPlayerReaction(float enemyDamage, CollisionConfig config)
+    private static void ApplyPlayerReaction(float enemyDamage)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🎬 ApplyPlayerReaction INICIADO (usePlayerAerialLaunch={config.usePlayerAerialLaunch}, enemyDamage={enemyDamage})");
-#endif
-
         if (!PlayerService.TryGetPlayer(out var playerGo, allowSceneLookup: true) || playerGo == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.LogWarning($"[ProjectileCollision] ⚠️ Player NO encontrado");
 #endif
-            return;
-        }
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] ✅ Player encontrado: '{playerGo.name}'");
-#endif
-
-        if (config.usePlayerAerialLaunch)
-        {
-            PlayAnimationOnTarget(playerGo, config.playerCollisionAnimation, "Player", config);
             return;
         }
 
@@ -254,236 +197,14 @@ public static class ProjectileCollisionHandler
 #endif
     }
 
-    /// <summary>
-    /// Reproduce una animación en un GameObject objetivo (Player o NPC).
-    /// Solo se usa cuando CollisionConfig.usePlayerAerialLaunch = true (comportamiento antiguo).
-    /// </summary>
-    private static void PlayAnimationOnTarget(GameObject target, string animationName, string targetType, CollisionConfig config)
-    {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🎬 PlayAnimationOnTarget INICIADO para {targetType}");
-        Debug.Log($"[ProjectileCollision]   - Target: {(target != null ? $"'{target.name}'" : "NULL")}");
-        Debug.Log($"[ProjectileCollision]   - Animation: '{animationName}'");
-#endif
-        
-        if (string.IsNullOrEmpty(animationName))
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollision] ⚠️ No hay animación configurada para {targetType}");
-#endif
-            return;
-        }
-        
-        if (target == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollision] ⚠️ Target {targetType} es null");
-#endif
-            return;
-        }
-        
-        // Obtener el Animator del target
-        var animator = target.GetComponent<Animator>();
-        if (animator == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] No hay Animator en root, buscando en hijos...");
-#endif
-            animator = target.GetComponentInChildren<Animator>();
-        }
-        
-        if (animator == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogError($"[ProjectileCollision] ❌ {targetType} '{target.name}' NO TIENE ANIMATOR en ninguna parte");
-#endif
-            return;
-        }
-        
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] ✅ Animator encontrado en '{animator.gameObject.name}'");
-        Debug.Log($"[ProjectileCollision]   - Animator enabled: {animator.enabled}");
-        Debug.Log($"[ProjectileCollision]   - Animator isActiveAndEnabled: {animator.isActiveAndEnabled}");
-#endif
-        
-        // Reproducir la animación usando PlayInFixedTime para forzar reproducción inmediata
-        animator.PlayInFixedTime(animationName, 0, 0f);
-        
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🎬✅ Animación '{animationName}' REPRODUCIDA en {targetType} '{target.name}'");
-#endif
-
-        // ✅ El JUGADOR sale volando hacia atrás por el aire (ver AerialKnockbackReceiver);
-        // el resto de objetivos (NPCs, si algún día se reactiva) usan el desplazamiento simple.
-        if (targetType == "Player")
-            ApplyAerialLaunch(target, config);
-        else
-            ApplyKnockbackMovement(target, targetType);
-    }
-
-    /// <summary>
-    /// Lanza al jugador hacia atrás por el aire (estilo Kingdom Hearts) usando
-    /// AerialKnockbackReceiver. La dirección se calcula SIEMPRE respecto al propio forward del
-    /// jugador en el momento del impacto: nunca dependemos de la posición del proyectil o del
-    /// punto de colisión, que es lo que antes podía hacer que el roll se fuera hacia el lado.
-    /// </summary>
-    private static void ApplyAerialLaunch(GameObject player, CollisionConfig config)
-    {
-        if (player == null) return;
-
-        var receiver = player.GetComponent<AerialKnockbackReceiver>();
-        if (receiver == null)
-            receiver = player.AddComponent<AerialKnockbackReceiver>();
-
-        Vector3 backward = -player.transform.forward;
-
-        receiver.Launch(
-            backward,
-            config.playerAerialKnockbackDistance,
-            config.playerAerialKnockbackHeight,
-            config.playerAerialKnockbackDuration);
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🚀 Lanzamiento aéreo hacia atrás aplicado al jugador (distancia={config.playerAerialKnockbackDistance}m, altura={config.playerAerialKnockbackHeight}m)");
-#endif
-    }
-
-    /// <summary>
-    /// Aplica un desplazamiento hacia atrás al objetivo (para que el roll se vea físicamente)
-    /// </summary>
-    private static void ApplyKnockbackMovement(GameObject target, string targetType)
-    {
-        const float knockbackDistance = 3f; // Metros hacia atrás
-        const float knockbackDuration = 0.5f; // Duración del desplazamiento
-        
-        // Dirección hacia atrás del objetivo
-        Vector3 backwardDirection = -target.transform.forward;
-        Vector3 targetPos = target.transform.position + (backwardDirection * knockbackDistance);
-        
-        // Intentar mover con NavMeshAgent si existe (NPCs)
-        var agent = target.GetComponent<UnityEngine.AI.NavMeshAgent>();
-        if (agent != null && agent.isActiveAndEnabled && agent.isOnNavMesh)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] 🏃 Aplicando desplazamiento a {targetType} con NavMeshAgent");
-#endif
-            
-            // Validar posición en NavMesh
-            if (UnityEngine.AI.NavMesh.SamplePosition(targetPos, out var hit, knockbackDistance + 2f, UnityEngine.AI.NavMesh.AllAreas))
-            {
-                targetPos = hit.position;
-            }
-            
-            // Desactivar temporalmente el agente y moverlo con DOTween
-            agent.isStopped = true;
-            agent.updatePosition = false;
-            agent.updateRotation = false;
-            
-            target.transform.DOMove(targetPos, knockbackDuration)
-                .SetEase(Ease.OutQuad)
-                .OnComplete(() =>
-                {
-                    if (agent != null && agent.isActiveAndEnabled)
-                    {
-                        agent.isStopped = false;
-                        agent.updatePosition = true;
-                        agent.updateRotation = true;
-                    }
-                });
-            
-            return;
-        }
-        
-        // Si no hay NavMeshAgent, intentar con CharacterController (Player)
-        var controller = target.GetComponent<CharacterController>();
-        if (controller != null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] 🏃 Aplicando desplazamiento a {targetType} con CharacterController");
-#endif
-            
-            // Mover el transform directamente (CharacterController se ajustará)
-            target.transform.DOMove(targetPos, knockbackDuration).SetEase(Ease.OutQuad);
-            return;
-        }
-        
-        // Si no hay NavMeshAgent ni CharacterController, intentar con Rigidbody
-        var rb = target.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] 🏃 Aplicando impulso a {targetType} con Rigidbody");
-#endif
-            rb.AddForce(backwardDirection * knockbackDistance * 2f, ForceMode.Impulse);
-            return;
-        }
-        
-        // Último recurso: mover el transform directamente con DOTween
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🏃 Moviendo {targetType} directamente con Transform");
-#endif
-        target.transform.DOMove(targetPos, knockbackDuration).SetEase(Ease.OutQuad);
-    }
-    
-    /// <summary>
-    /// Busca el NPC más cercano al proyectil enemigo usando el registro de combate activo
-    /// ⭐ DEPRECATED - Ya no se usa porque el NPC no hace roll
-    /// </summary>
-    [System.Obsolete("Ya no se usa - el NPC no hace animación de roll")]
-    private static GameObject FindNearbyNPC(GameObject enemyProjectile)
-    {
-        if (enemyProjectile == null)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning("[ProjectileCollision] ⚠️ Proyectil enemigo es null, no se puede buscar NPC");
-#endif
-            return null;
-        }
-        
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[ProjectileCollision] 🔍 FindNearbyNPC: Buscando NPC en combate cercano a '{enemyProjectile.name}'");
-        Debug.Log($"[ProjectileCollision]   - Posición proyectil: {enemyProjectile.transform.position}");
-        Debug.Log($"[ProjectileCollision]   - NPCs registrados en combate: {ActiveCombatRegistry.Count}");
-#endif
-        
-        // ✅ Usar el registro de combate para encontrar NPCs activos
-        GameObject npc = ActiveCombatRegistry.GetClosestCombatNPC(
-            enemyProjectile.transform.position, 
-            maxDistance: 50f
-        );
-        
-        if (npc != null)
-        {
-            float dist = Vector3.Distance(npc.transform.position, enemyProjectile.transform.position);
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[ProjectileCollision] ✅ NPC en combate encontrado: '{npc.name}' a {dist:F1}m");
-            Debug.Log($"[ProjectileCollision]   - Posición NPC: {npc.transform.position}");
-#endif
-        }
-        else
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.LogWarning($"[ProjectileCollision] ⚠️ NO hay NPCs en combate cerca del proyectil");
-            Debug.LogWarning($"[ProjectileCollision]   - Verifica que el NPC haya llamado a EnterCombat()");
-            Debug.LogWarning($"[ProjectileCollision]   - Verifica que el NPC tenga NPCBehaviourManagerV2");
-#endif
-        }
-        
-        return npc;
-    }
-    
     private static void ApplyKnockbackToEntities(
         GameObject playerProjectile,
         GameObject enemyProjectile,
         Vector3 collisionPoint,
         CollisionConfig config)
     {
-        // ⚠️ El knockback del JUGADOR ya NO se aplica aquí con un impulso de Rigidbody: ese cálculo
-        // usaba el vector (posición del proyectil del jugador − punto de colisión), que no tiene
-        // relación con el forward del jugador y podía apuntar hacia el lado. Ahora el jugador sale
-        // volando hacia atrás por el aire vía AerialKnockbackReceiver, disparado desde
-        // PlayAnimationOnTarget() con una dirección estrictamente -transform.forward (ver
-        // ApplyAerialLaunch). Aquí solo queda el knockback del NPC.
+        // El jugador ya se aparta con el empuje de PlayerHealthSystem al recibir el daño
+        // (ApplyPlayerReaction); aquí solo se empuja al NPC.
         Vector3 enemyDirection = (enemyProjectile.transform.position - collisionPoint).normalized;
         ApplyKnockbackToNPC(enemyProjectile, enemyDirection, config.npcKnockbackForce);
     }

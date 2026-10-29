@@ -1483,29 +1483,21 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             
             if (isPlayer || isAlly)
             {
-                // ✅ VERIFICAR SI ESTÁ DEFENDIENDO
-                var shieldController = hit.GetComponent<PlayerShieldController>();
-                if (shieldController != null && shieldController.IsDefending)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 🛡️ {hit.name} está DEFENDIENDO - ¡Puñetazo BLOQUEADO!");
-#endif
-                    continue; // No aplicar daño
-                }
-                
                 // Calcular dirección del knockback
                 Vector3 knockbackDir = (hit.transform.position - transform.position).normalized;
                 knockbackDir.y = 0.2f;
                 knockbackDir.Normalize();
-                
-                // ✅ FIX: Aplicar daño con ambos sistemas (PlayerHealthSystem y Damageable)
+
+                // El jugador recibe el golpe por PlayerHealthSystem (su defensa lo filtra: la
+                // ventana de la B lo anula y desvía, el escudo deja pasar una parte); los
+                // compañeros, por su Damageable.
                 bool damageApplied = false;
-                
-                // Intentar PlayerHealthSystem primero (para jugador)
+
                 var playerHealth = hit.GetComponent<PlayerHealthSystem>();
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(punchDamage * MultDano);
+                    // Un golpe que la defensa anula no derriba ni empuja.
+                    if (!playerHealth.TakeDamage(punchDamage * MultDano)) continue;
                     damageApplied = true;
                     Log($"👊 Puñetazo golpeó a {hit.name} por {punchDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1514,7 +1506,6 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 }
                 else
                 {
-                    // Fallback: Damageable (para NPCs aliados)
                     var hitDamageable = hit.GetComponent<Damageable>();
                     if (hitDamageable != null)
                     {
@@ -1765,30 +1756,20 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
             
             if (isPlayer || isAlly)
             {
-                // ✅ VERIFICAR SI ESTÁ DEFENDIENDO
-                var shieldController = hit.GetComponent<PlayerShieldController>();
-                if (shieldController != null && shieldController.IsDefending)
-                {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-                    Debug.Log($"[GolemBossAI] 🛡️ {hit.name} está DEFENDIENDO - ¡Onda expansiva BLOQUEADA!");
-#endif
-                    // Reproducir efecto de bloqueo si existe
-                    continue; // No aplicar daño
-                }
-                
                 // Calcular dirección del knockback (desde el centro hacia el objetivo)
                 Vector3 knockbackDir = (hit.transform.position - center).normalized;
                 knockbackDir.y = 0.3f; // Añadir componente vertical para que salte un poco
                 knockbackDir.Normalize();
-                
-                // ✅ FIX: Aplicar daño con ambos sistemas (PlayerHealthSystem y Damageable)
+
+                // El jugador recibe la onda por PlayerHealthSystem (su defensa la filtra); los
+                // compañeros, por su Damageable.
                 bool damageApplied = false;
-                
-                // Intentar PlayerHealthSystem primero (para jugador)
+
                 var playerHealth = hit.GetComponent<PlayerHealthSystem>();
                 if (playerHealth != null)
                 {
-                    playerHealth.TakeDamage(shockwaveDamage * MultDano);
+                    // Una onda que la defensa anula no derriba ni empuja.
+                    if (!playerHealth.TakeDamage(shockwaveDamage * MultDano)) continue;
                     damageApplied = true;
                     Log($"💥 Onda dañó a {hit.name} por {shockwaveDamage}");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1797,7 +1778,6 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
                 }
                 else
                 {
-                    // Fallback: Damageable (para NPCs aliados)
                     var hitDamageable = hit.GetComponent<Damageable>();
                     if (hitDamageable != null)
                     {
@@ -1886,17 +1866,7 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
     private void ApplyContactDamage()
     {
         if (player == null) return;
-        
-        // ✅ VERIFICAR SI ESTÁ DEFENDIENDO
-        var shieldController = player.GetComponent<PlayerShieldController>();
-        if (shieldController != null && shieldController.IsDefending)
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[GolemBossAI] 🛡️ Jugador está DEFENDIENDO - ¡Daño por contacto BLOQUEADO!");
-#endif
-            return; // No aplicar daño
-        }
-        
+
         // Calcular daño (aumentado durante embestida)
         float damage = contactDamage * MultDano;
         if (_isCharging)
@@ -1907,13 +1877,14 @@ public partial class GolemBossAI : MonoBehaviour, IJefeConFases, IJefeConObjetiv
 #endif
         }
         
-        // ✅ FIX: Intentar ambos sistemas de daño (PlayerHealthSystem y Damageable)
+        // El golpe pasa por PlayerHealthSystem, cuya defensa lo filtra (la ventana de la B lo
+        // anula y desvía; el escudo deja pasar una parte). Si no entra, la embestida no derriba.
         var playerHealth = player.GetComponent<PlayerHealthSystem>();
         if (playerHealth != null)
         {
-            playerHealth.TakeDamage(damage);
+            bool entra = playerHealth.TakeDamage(damage);
             _lastContactDamageTime = Time.time;
-            if (_isCharging) DerribarAlJugador(player.gameObject, transform.position);
+            if (entra && _isCharging) DerribarAlJugador(player.gameObject, transform.position);
             
             Log($"💥 Daño por contacto: {damage} (Embestida: {_isCharging})");
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

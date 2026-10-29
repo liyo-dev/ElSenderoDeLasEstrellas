@@ -7,14 +7,14 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Tarjeta visual de un nodo en el grafo.
     ///
-    /// Diseño (Octubre 2026): cabecera con color de categoría + etiqueta editable + capítulo;
-    /// cuerpo con un RESUMEN legible del contenido real (texto del diálogo, nombre y pasos de la
-    /// quest, quién emite/escucha una señal...) construido por NodeSummary. Los puertos son bolitas
+    /// Cabecera con color de categoría + etiqueta editable + capítulo; cuerpo con un RESUMEN legible
+    /// del contenido real (texto del diálogo, nombre y pasos de la quest, quién emite/escucha una
+    /// señal...) construido por NodeSummary a partir de lo que declara el nodo. Los puertos son bolitas
     /// en el borde de la tarjeta —no una franja— y solo ocupan filas propias cuando el nodo declara
     /// puertos con nombre (Sí/No...). Cada salida tiene su propia bolita para que las líneas nazcan
     /// ordenadas por la posición del destino y no se crucen al salir.
@@ -52,7 +52,7 @@ namespace Sendero.Narrative.Editor
             var entry = NarrativeNodeCatalog.Get(type);
             var category = entry?.category ?? "Otros";
             var color = NarrativeNodeCatalog.ColorOf(category);
-            bool isNote = model is GraphNoteNode;
+            bool isNote = model.IsAnnotation;
 
             AddToClassList("narrative-node");
             AddToClassList("narrative-node--" + Slug(category));
@@ -106,7 +106,7 @@ namespace Sendero.Narrative.Editor
             _labelField = new TextField { isDelayed = true, multiline = false };
             _labelField.AddToClassList("narrative-node__label-field");
             _labelField.value = model.displayTitle ?? "";
-            _labelField.tooltip = "Etiqueta del nodo (texto libre). Ej: '2.- Hablar con Eldran'";
+            _labelField.tooltip = "Etiqueta del nodo (texto libre). Ej: '2.- Hablar con el herrero'";
             _labelField.RegisterValueChangedCallback(evt =>
             {
                 if (_graph == null) return;
@@ -148,8 +148,7 @@ namespace Sendero.Narrative.Editor
 
         void BuildPorts()
         {
-            bool isNote = Model is GraphNoteNode;
-            if (isNote) return;
+            if (Model.IsAnnotation) return;
 
             Input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Multi, typeof(bool));
             Input.portName = "";
@@ -382,8 +381,8 @@ namespace Sendero.Narrative.Editor
                 _forkBadge.style.display = DisplayStyle.None;
                 return;
             }
-            _forkBadge.text = Model is ForkNode ? $"⑂ {edgeCount} ramas" : $"⑂ FORK ×{edgeCount}";
-            _forkBadge.tooltip = Model is ForkNode
+            _forkBadge.text = Model.BranchesInParallel ? $"⑂ {edgeCount} ramas" : $"⑂ FORK ×{edgeCount}";
+            _forkBadge.tooltip = Model.BranchesInParallel
                 ? "Todas las ramas corren en paralelo."
                 : "Varias aristas desde un nodo normal = las ramas corren EN PARALELO. Si querías una bifurcación, usa 'Según estado de quest' / 'Según flag' / 'Pregunta con respuestas'.";
             _forkBadge.style.display = DisplayStyle.Flex;
@@ -404,9 +403,9 @@ namespace Sendero.Narrative.Editor
                 _graph.startNodeGuid = Model.guid;
                 EditorUtility.SetDirty(_graph);
                 StartChanged?.Invoke();
-            }, _ => Model is StartNode ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
+            }, _ => Model.IsGraphEntry ? DropdownMenuAction.Status.Normal : DropdownMenuAction.Status.Disabled);
 
-            if (Model is not GraphNoteNode)
+            if (!Model.IsAnnotation)
                 evt.menu.AppendAction("Probar desde aquí", _ => TestRequested?.Invoke(this));
             evt.menu.AppendSeparator();
             base.BuildContextualMenu(evt);

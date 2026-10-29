@@ -97,6 +97,8 @@ public class PlayerPresetSO : ScriptableObject
 
     [Header("Estado de grafos narrativos")]
     public List<PlayerSaveData.NarrativeBlackboardSnapshot> narrativeBlackboards = new();
+    [Tooltip("Señales narrativas emitidas alguna vez en la partida (lo que consultan los tramos de historia).")]
+    public List<string> senalesEmitidas = new();
 
     [Serializable]
     public struct NpcPosEntry

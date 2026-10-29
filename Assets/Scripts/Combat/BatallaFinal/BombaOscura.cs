@@ -5,7 +5,8 @@ using UnityEngine;
 /// <summary>
 /// Bomba oscura conjurada por el Mago Oscuro (estilo Sephiroth en KH2).
 /// Flota en el aire, emite un zumbido creciente y pulsa de púrpura a rojo inestable.
-/// Si expira su temporizador o el jugador se acerca demasiado, EXPLOTA en un radio amplio.
+/// Si expira su temporizador o alguien del grupo se acerca demasiado, EXPLOTA en un radio amplio
+/// y daña a todo el grupo que alcance (DanoEnZona; cada personaje con su vida, GDD § 6.1).
 /// Si el jugador le dispara a tiempo con magia, se destruye de forma segura.
 /// </summary>
 public sealed class BombaOscura : MonoBehaviour
@@ -24,10 +25,10 @@ public sealed class BombaOscura : MonoBehaviour
 
     private float _creadaEn;
     private bool _detonada;
-    private Transform _jugador;
-    private PlayerHealthSystem _saludJugador;
     private Damageable _damageable;
-    private static readonly Collider[] _colBuffer = new Collider[16];
+
+    // Elevación del empuje de la explosión (0 = horizontal).
+    private const float ElevacionDelEmpuje = 0.35f;
 
     public static BombaOscura Crear(Vector3 posicion, GameObject vfxBomba = null, GameObject vfxExplosion = null)
     {
@@ -84,11 +85,6 @@ public sealed class BombaOscura : MonoBehaviour
     private void Start()
     {
         _creadaEn = Time.time;
-        if (PlayerService.TryGetPlayer(out var j) && j != null)
-        {
-            _jugador = j.transform;
-            _saludJugador = j.GetComponent<PlayerHealthSystem>();
-        }
 
         if (!string.IsNullOrEmpty(sfxZumbido) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxZumbido, 0.8f, transform.position);
@@ -105,15 +101,11 @@ public sealed class BombaOscura : MonoBehaviour
         float pulso = 1f + 0.2f * Mathf.Sin(tiempoTranscurrido * Mathf.Lerp(4f, 22f, factor));
         transform.localScale = Vector3.one * pulso;
 
-        // Proximidad inmediata: si el jugador se acerca demasiado, explota en el acto
-        if (_jugador != null)
+        // Proximidad inmediata: si alguien del grupo se acerca demasiado, explota en el acto
+        if (DanoEnZona.AlguienEnEsfera(transform.position, radioProximidadInmediata))
         {
-            float dSqr = (transform.position - _jugador.position).sqrMagnitude;
-            if (dSqr <= radioProximidadInmediata * radioProximidadInmediata)
-            {
-                Detonar();
-                return;
-            }
+            Detonar();
+            return;
         }
 
         // Fin de cuenta atrás
@@ -140,22 +132,7 @@ public sealed class BombaOscura : MonoBehaviour
         if (!string.IsNullOrEmpty(sfxExplosion) && AudioService.Instance != null)
             AudioService.Instance.PlaySFX(sfxExplosion, 1f, pos);
 
-        // Daño de área al jugador
-        int hits = Physics.OverlapSphereNonAlloc(pos, radioExplosion, _colBuffer);
-        for (int i = 0; i < hits; i++)
-        {
-            var col = _colBuffer[i];
-            if (col == null) continue;
-            var salud = col.GetComponentInParent<PlayerHealthSystem>();
-            if (salud != null)
-            {
-                salud.TakeDamage(dano);
-                Vector3 empujeDir = (salud.transform.position - pos).normalized;
-                empujeDir.y = 0.35f;
-                salud.Empujar(empujeDir.normalized, empuje);
-                break;
-            }
-        }
+        DanoEnZona.GolpearEnEsfera(pos, radioExplosion, dano, empuje, ElevacionDelEmpuje);
 
         Destroy(gameObject);
     }

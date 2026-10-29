@@ -443,13 +443,12 @@ namespace Game.NPC
         {
             if (_playerTransform == null) return;
 
-            var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
             for (int i = 0; i < _members.Count; i++)
             {
                 var member = _members[i];
-                if (member == null || member == hiddenNpc) continue;
+                if (member == null || ControlDelJugador.RepresentadoPorElJugador(member)) continue;
                 // En modo libre, solo se teletransportan los que están siguiendo activamente
-                if (member.NPCManager?.Context?.IsPinnedByParty == true) continue;
+                if (member.NPCManager?.Context?.EstaAnclado == true) continue;
                 TeleportMemberToPlayer(member, i, forzar, avisar);
             }
         }
@@ -617,21 +616,19 @@ namespace Game.NPC
         /// <summary>
         /// Recopila los miembros que deben reposicionarse para un diálogo, aplicando los mismos
         /// filtros que siempre: activos, no ocultos por character swap, no anclados en modo Libre
-        /// (IsPinnedByParty) y con posicionamiento habilitado en su PartyConfig.
+        /// (EstaAnclado) y con posicionamiento habilitado en su PartyConfig.
         /// </summary>
         private List<NPCPartyMember> CollectMembersForDialoguePositioning()
         {
-            var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
             var membersToPosition = new List<NPCPartyMember>();
             foreach (var member in _members)
             {
                 if (member == null || !member.IsActiveInParty || member.PartyConfig == null) continue;
-                if (member == hiddenNpc) continue;
-                // FIX: en modo Libre (IsPinnedByParty) el miembro está disuelto y no debe
-                // teletransportarse para posicionarse en un diálogo — antes esto se saltaba
-                // y un simple mensaje de "bloqueado" (p.ej. RoomExitBlocker en el agua) reagrupaba
-                // al equipo entero aunque el jugador hubiera ido por libre.
-                if (member.NPCManager?.Context?.IsPinnedByParty == true)
+                if (ControlDelJugador.RepresentadoPorElJugador(member)) continue;
+                // Un miembro anclado (modo Libre, barco) no se teletransporta para un diálogo:
+                // un simple mensaje de «bloqueado» (p. ej. RoomExitBlocker en el agua) no debe
+                // reagrupar al equipo que el jugador ha dejado repartido.
+                if (member.NPCManager?.Context?.EstaAnclado == true)
                 {
                     Log($"  ↳ {member.DisplayName}: anclado (modo Libre), no se reposiciona para diálogo");
                     continue;
@@ -875,7 +872,7 @@ namespace Game.NPC
 #endif
             
             // Notificar al Will NPC instanciado (no está en _members pero debe asistir en combate)
-            var willNpc = ActiveCharacterSwapper.Instance?.WillNpcInstance;
+            var willNpc = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
             if (willNpc != null && willNpc.PartyConfig != null && willNpc.PartyConfig.autoJoinPlayerCombat)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -897,7 +894,7 @@ namespace Game.NPC
             }
             
             // Notificar al Will NPC instanciado
-            var willNpc = ActiveCharacterSwapper.Instance?.WillNpcInstance;
+            var willNpc = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
             if (willNpc != null)
             {
                 willNpc.OnPlayerExitedCombat();
@@ -999,7 +996,7 @@ namespace Game.NPC
                 return;
             }
             
-            var preset = profile.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset == null)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1282,7 +1279,7 @@ namespace Game.NPC
             // RemoveMemberFromDestroy preservó el preset intacto, así que los IDs siguen ahí.
             if (_members.Count == 0 && _pendingMemberIds.Count == 0)
             {
-                var preset = GameBootService.Profile?.GetActivePresetResolved();
+                var preset = Partida.Preset;
                 if (preset?.partyMemberIds != null && preset.partyMemberIds.Count > 0)
                 {
                     foreach (var id in preset.partyMemberIds)
@@ -1357,7 +1354,6 @@ namespace Game.NPC
         private void TeleportFarMembersForCombat()
         {
             const float combatTeleportThreshold = 15f; // Si está más lejos de 15m, teletransportar
-            var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
 
             for (int i = 0; i < _members.Count; i++)
             {
@@ -1366,10 +1362,10 @@ namespace Game.NPC
 
                 // Un miembro anclado (barco, asiento, modo Libre) no se teletransporta al
                 // combate: si no, se lo lleva de su puesto y empieza a pelear allí (INC-808).
-                if (member.NPCManager?.Context?.IsPinnedByParty ?? false) continue;
+                if (member.NPCManager?.Context?.EstaAnclado ?? false) continue;
 
                 // No operar sobre el NPC oculto (controlado por el jugador vía character swap)
-                if (member == hiddenNpc) continue;
+                if (ControlDelJugador.RepresentadoPorElJugador(member)) continue;
 
                 // No teletransportar miembros en cinemática (escoltas, secuencias, etc.)
                 if (member.NPCManager != null && member.NPCManager.IsInCinematic) continue;
@@ -1479,20 +1475,19 @@ namespace Game.NPC
             // No teletransportar mientras el jugador vuela: el destino estará fuera del NavMesh
             if (_playerActionManager != null && _playerActionManager.Top == ActionMode.Flying) return;
 
-            var hiddenNpc = ActiveCharacterSwapper.Instance?.HiddenNpc;
             for (int i = 0; i < _members.Count; i++)
             {
                 var member = _members[i];
                 if (member == null || !member.IsActiveInParty) continue;
 
                 // No operar sobre el NPC oculto (controlado por el jugador vía character swap)
-                if (member == hiddenNpc) continue;
+                if (ControlDelJugador.RepresentadoPorElJugador(member)) continue;
 
                 // No teletransportar miembros en cinemática (escoltas, secuencias, etc.)
                 if (member.NPCManager != null && member.NPCManager.IsInCinematic) continue;
 
-                // En modo Libre (IsPinnedByParty) el personaje puede ir donde quiera — sin auto-teleport
-                if (member.NPCManager?.Context?.IsPinnedByParty == true) continue;
+                // Anclado (modo Libre, barco): se queda donde está, sin teletransporte automático
+                if (member.NPCManager?.Context?.EstaAnclado == true) continue;
 
                 float distance = Vector3.Distance(member.transform.position, _playerTransform.position);
 
@@ -1507,19 +1502,18 @@ namespace Game.NPC
             }
 
             // Teleportar el Will NPC si no está en _members (party lleno) pero existe en el mundo
-            var willNpcSwapper = ActiveCharacterSwapper.Instance;
-            var willNpc = willNpcSwapper?.WillNpcInstance;
+            var willNpc = ControlDelJugador.NpcDe(PartyControlManager.CharacterSlot.Will);
             if (willNpc != null && !(willNpc.NPCManager?.IsInCinematic ?? false))
             {
                 // En modo Libre, Will NPC tampoco se teletransporta
-                if (willNpc.NPCManager?.Context?.IsPinnedByParty == true) return;
+                if (willNpc.NPCManager?.Context?.EstaAnclado == true) return;
 
                 float willDist = Vector3.Distance(willNpc.transform.position, _playerTransform.position);
                 float willThreshold = willNpc.PartyConfig?.distanciaParaTeletransporte ?? 15f;
                 if (willDist > willThreshold)
                 {
                     Log($"⚡ Will NPC demasiado lejos ({willDist:F1}m > {willThreshold:F1}m), teletransportando...");
-                    willNpcSwapper.TeleportWillNpcToPlayer();
+                    ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer();
                 }
             }
         }
@@ -1703,7 +1697,7 @@ namespace Game.NPC
                     return;
                 }
 
-                var preset = profile.GetActivePresetResolved();
+                var preset = Partida.Preset;
                 if (preset == null)
                 {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -1722,9 +1716,8 @@ namespace Game.NPC
 
                 preset.partyMemberIds = memberIds;
 
-                // NOTA: activeCharacterSlot NO se actualiza aquí para no sobreescribir
-                // el slot guardado durante el OnProfileReady, antes de que PartyControlManager
-                // lo lea. Se sincroniza en UpdateRuntimePresetFromCurrentState() antes de guardar.
+                // activeCharacterSlot no se toca aquí, para no pisar el slot guardado antes de que
+                // PartyControlManager lo lea: lo escribe Partida.VolcarEstadoDelJuego al guardar.
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[PlayerParty] ✅ Party sincronizado con preset '{preset.name}': {preset.partyMemberIds.Count} miembros [{string.Join(", ", memberIds)}]");
@@ -1769,7 +1762,7 @@ namespace Game.NPC
                 var profile = GameBootService.Profile;
                 if (profile != null)
                 {
-                    var preset = profile.GetActivePresetResolved();
+                    var preset = Partida.Preset;
                     if (preset != null && preset.partyMemberIds != null && preset.partyMemberIds.Count > 0)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

@@ -463,7 +463,6 @@ public class NarrativeCrossReferenceWindow : EditorWindow
         ScanNPCConfigs();
         ScanDialogueAssets();
         ScanQuestAssets();
-        ScanUnlockNodes();
 
         int totalEvents = _events.Count;
         int orphanEmitters = _events.Values.Count(e => e.consumers.Count == 0);
@@ -552,7 +551,7 @@ public class NarrativeCrossReferenceWindow : EditorWindow
                 if (node is PlayDialogueNode playDlgNode)
                 {
                     if (playDlgNode.dialogue != null)
-                        AddDialogueUsage(playDlgNode.dialogue, $"{graph.name} → PlayDialogueNode \"{node.displayTitle}\"");
+                        AddDialogueUsage(playDlgNode.dialogue as DialogueAsset, $"{graph.name} → PlayDialogueNode \"{node.displayTitle}\"");
                 }
             }
         }
@@ -756,38 +755,6 @@ public class NarrativeCrossReferenceWindow : EditorWindow
             if (!_quests.Any(q => q.quest == quest))
             {
                 _quests.Add(new QuestInfo { quest = quest });
-            }
-        }
-    }
-
-    private void ScanUnlockNodes()
-    {
-        // Already scanned in ScanNarrativeGraphs for graph-based unlocks
-        // Now scan UnlockTrigger scene objects (best effort - prefabs)
-        var prefabGuids = AssetDatabase.FindAssets("t:Prefab");
-        foreach (var guid in prefabGuids)
-        {
-            var path = AssetDatabase.GUIDToAssetPath(guid);
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (prefab == null) continue;
-
-            var triggers = prefab.GetComponentsInChildren<UnlockTrigger>(true);
-            foreach (var trigger in triggers)
-            {
-                if (trigger.abilitiesToUnlock != null)
-                {
-                    foreach (var ab in trigger.abilitiesToUnlock)
-                    {
-                        AddUnlock("Ability", ab.ToString(), $"UnlockTrigger en prefab \"{prefab.name}\"");
-                    }
-                }
-                if (trigger.spellsToUnlock != null)
-                {
-                    foreach (var sp in trigger.spellsToUnlock)
-                    {
-                        AddUnlock("Spell", sp.ToString(), $"UnlockTrigger en prefab \"{prefab.name}\"");
-                    }
-                }
             }
         }
     }

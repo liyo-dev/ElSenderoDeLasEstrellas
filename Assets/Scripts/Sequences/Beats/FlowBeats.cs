@@ -38,14 +38,16 @@ public sealed class PostprocesoBeat : SequenceBeat
 
 /// Cambia la velocidad del tiempo del juego: cámara lenta y vuelta a la normalidad.
 ///
-/// El SequencePlayer restaura el tiempo a 1 al terminar la secuencia y también si se salta, así
-/// que no hay forma de dejar la partida en cámara lenta por olvidar el beat de vuelta — que es
-/// exactamente el tipo de error que este sistema existe para hacer imposible.
+/// La velocidad se pide a <see cref="TimeScaleArbiterService"/> con el reproductor como clave, así
+/// que convive con las pausas de otros sistemas (un menú abierto, un popup) en vez de pisarlas. El
+/// SequencePlayer suelta esa petición al terminar la secuencia y también si se salta o se destruye:
+/// no hay forma de dejar la partida en cámara lenta por olvidar el beat de vuelta.
 [Serializable]
 public class TimeScaleBeat : SequenceBeat
 {
     [Tooltip("Velocidad del tiempo. 1 = normal, 0,2 = cámara lenta marcada, 0 = congelado " +
-             "(cuidado: con 0 cualquier espera por tiempo escalado no avanza nunca).")]
+             "(cuidado: con 0 cualquier espera por tiempo escalado no avanza nunca). Por encima " +
+             "de 1 acelera, solo mientras ningún otro sistema pida ir más lento.")]
     [Range(0f, 2f)]
     public float timeScale = 1f;
 
@@ -59,23 +61,27 @@ public class TimeScaleBeat : SequenceBeat
 
     public override IEnumerator Run(SequenceContext ctx)
     {
+        var clave = ctx.Player;
+        if (clave == null) yield break;
         float target = Mathf.Clamp(timeScale, 0f, 2f);
 
         if (rampDuration <= 0f)
         {
-            Time.timeScale = target;
+            TimeScaleArbiterService.Request(clave, target);
             yield break;
         }
 
-        float start = Time.timeScale;
+        // La rampa sale de lo que pedía esta secuencia, no del tiempo efectivo (que puede estar
+        // en pausa por otro sistema).
+        TimeScaleArbiterService.TryGetRequest(clave, out float start);
         float elapsed = 0f;
         while (elapsed < rampDuration)
         {
             elapsed += Time.unscaledDeltaTime;
-            Time.timeScale = Mathf.Lerp(start, target, elapsed / rampDuration);
+            TimeScaleArbiterService.Request(clave, Mathf.Lerp(start, target, elapsed / rampDuration));
             yield return null;
         }
-        Time.timeScale = target;
+        TimeScaleArbiterService.Request(clave, target);
     }
 }
 
@@ -385,6 +391,10 @@ public class MusicBeat : SequenceBeat
     [Tooltip("Segundos de desvanecido al parar. Solo se usa cuando 'musicId' está vacío.")]
     public float fadeOut = 0.5f;
 
+    [Tooltip("Segundo de la pista en el que arranca (manda sobre 'continuarDondeIba'). Menor que 0 = no se usa. " +
+             "Para que el clímax de un tema caiga en un momento concreto: arrancarlo N segundos antes con «desde @etiqueta-N».")]
+    public float desdeSegundo = -1f;
+
     public override string Describe()
         => string.IsNullOrEmpty(musicId) ? $"Música: parar ({fadeOut}s)" : $"Música: {musicId}";
 
@@ -397,7 +407,7 @@ public class MusicBeat : SequenceBeat
         if (player == null) yield break;
 
         if (string.IsNullOrWhiteSpace(musicId)) player.StopMusicNow(fadeOut);
-        else player.PlayMusic(musicId, continuarDondeIba, fadeIn);
+        else player.PlayMusic(musicId, continuarDondeIba, fadeIn, desdeSegundo);
 
         yield break;
     }

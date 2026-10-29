@@ -1985,10 +1985,10 @@ public class TagMinigameController : MonoBehaviour
             var saveSystem = GameBootService.SaveSystem;
             if (bootProfile != null && saveSystem != null)
             {
-                bootProfile.LoadProfile(saveSystem);
+                Partida.Cargar(saveSystem);
 
                 // FIX (16 ago 2026): "el popup del minijuego de Estela reaparece tras salir y se
-                // queda en bucle roto". bootProfile.LoadProfile(saveSystem) aquí SOLO recarga los
+                // queda en bucle roto". Partida.Cargar(saveSystem) aquí SOLO recarga los
                 // datos de partida (posición, quests, inventario...) en el runtimePreset — nunca
                 // disparaba OnProfileReady. NarrativeGraphStarter.RestoreBlackboardsFromPreset()
                 // solo se ejecuta UNA vez por sesión (ver _hasRestoredBlackboardsThisSession) y ese
@@ -2012,12 +2012,9 @@ public class TagMinigameController : MonoBehaviour
                 GameBootService.NotifyProfileReady();
             }
         }
-        Time.timeScale = 1f;
 
-        // FIX (16 ago 2026): la recarga de escena al abortar puede tardar un poco — antes se hacía
-        // con Load() a secas y la pantalla se quedaba congelada mientras tanto. Usamos el overlay de
-        // carga (mismo que usan LoadScene/PortalTrigger) para que se vea la pantalla de carga en vez
-        // de un parón.
+        // La recarga al abortar puede tardar: con el overlay de carga (el mismo de LoadScene y
+        // PortalTrigger) se ve la pantalla de carga en vez de un parón.
         if (!string.IsNullOrEmpty(abortLoadingOverlayScene))
             SceneTransitionLoader.LoadWithOverlay(_minigameSceneName, abortLoadingOverlayScene);
         else
@@ -2807,7 +2804,7 @@ public class TagMinigameController : MonoBehaviour
     /// </summary>
     public bool IsAlreadyCompleted()
     {
-        var preset = GameBootService.IsAvailable ? GameBootService.Profile?.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset?.completedInteractiveNarratives == null) return false;
         return preset.completedInteractiveNarratives.Contains(minigameId);
     }
@@ -2817,7 +2814,7 @@ public class TagMinigameController : MonoBehaviour
     /// </summary>
     private void MarkAsCompleted()
     {
-        var preset = GameBootService.IsAvailable ? GameBootService.Profile?.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

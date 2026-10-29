@@ -178,15 +178,15 @@ public class WorldBootstrap : MonoBehaviour
         // 1) Modo PRESET (test): SIEMPRE tiene prioridad sobre saves
         if (bootProfile.ShouldBootFromPreset())
         {
-            bootProfile.EnsureRuntimePresetFromTemplate(bootProfile.bootPreset);
+            Partida.CargarDesdePlantilla(bootProfile.bootPreset);
 
             // ✅ El anchor ya fue establecido por SpawnManager.HandleProfileReady()
-            var anchor = bootProfile.GetStartAnchorOrDefault();
+            var anchor = Partida.AnclaDeInicio;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[WorldBootstrap] 📍 Modo PRESET - Anchor desde profile: '{anchor}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
 
-            var testPreset = bootProfile.GetActivePresetResolved();
+            var testPreset = Partida.Preset;
             if (testPreset != null)
             {
                 // Restaurar quests
@@ -203,7 +203,7 @@ public class WorldBootstrap : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[WorldBootstrap] 🎯 Aplicando posiciones de {testPreset.npcPositions?.Count ?? 0} NPCs desde preset (modo testeo)");
 #endif
-                bootProfile.ApplyNpcPositionsToScene(testPreset);
+                Partida.AplicarPosicionesDeNpcs(testPreset);
             }
 
             // Aplicar entorno del anchor de spawn antes de esperar al jugador
@@ -213,18 +213,18 @@ public class WorldBootstrap : MonoBehaviour
             return;
         }
 
-        // 2) Flujo normal: El runtimePreset ya está configurado por GameBootService.PrepareActivePreset()
+        // 2) Flujo normal: el preset de la partida ya lo ha preparado Partida (al arrancar o al cargar)
         // Simplemente aplicar el preset al jugador sin recargar el save
-        string anchorId = bootProfile.GetStartAnchorOrDefault();
+        string anchorId = Partida.AnclaDeInicio;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
         Debug.Log($"[WorldBootstrap] 📍 Modo NORMAL - Anchor desde profile: '{anchorId}', CurrentAnchorId: '{SpawnManager.CurrentAnchorId}'");
 #endif
         
-        var runtimePreset = bootProfile.GetActivePresetResolved();
+        var runtimePreset = Partida.Preset;
         if (runtimePreset != null)
         {
             // Aplicar posiciones de NPCs usando el método robusto de GameBootProfile
-            bootProfile.ApplyNpcPositionsToScene(runtimePreset);
+            Partida.AplicarPosicionesDeNpcs(runtimePreset);
             
             // Aplicar el preset al jugador (incluye inventario y abilities)
             if (PlayerService.TryGetComponent<PlayerPresetService>(out var presetService, includeInactive: true, allowSceneLookup: true))

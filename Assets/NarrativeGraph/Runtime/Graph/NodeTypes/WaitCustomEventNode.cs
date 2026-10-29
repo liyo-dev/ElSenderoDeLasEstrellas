@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -11,6 +12,13 @@ public sealed class WaitCustomEventNode : NarrativeNode
 
     [Tooltip("Si está marcado (por defecto), una señal ocurrida ANTES de llegar a este nodo también cuenta (comportamiento sticky). Si se desmarca, se descarta cualquier emisión previa y solo avanza si la señal ocurre mientras este nodo está esperando.")]
     public bool acceptEarlierEvent = true;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Signal(eventKey, SignalRole.Escucha);
+
+    public override void CollectWarnings(List<string> warnings)
+    {
+        if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("eventKey vacío");
+    }
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {

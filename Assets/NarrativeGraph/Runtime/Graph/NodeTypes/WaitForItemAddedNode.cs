@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Espera a que se añada un item específico al inventario del jugador.
-/// Útil para completar misiones cuando el jugador recoge/compra un item.
+/// Espera a que entre un objeto concreto en el inventario del jugador (INarrativeInventory), p. ej.
+/// al recogerlo o comprarlo.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Objetos", "Esperar objeto", "Espera a que el jugador consiga un objeto.")]
@@ -11,21 +11,23 @@ using UnityEngine;
 public sealed class WaitForItemAddedNode : NarrativeNode
 {
     [Header("Item Configuration")]
-    [Tooltip("El item que debe ser añadido al inventario")]
-    public ItemData itemToWaitFor;
-    
+    [Tooltip("El objeto que debe entrar en el inventario")]
+    public NarrativeItemAsset itemToWaitFor;
+
     [Tooltip("Cantidad mínima que debe añadirse de una sola vez (0 = cualquier cantidad)")]
     [Min(0)] public int minimumAmount = 0;
-    
+
     [Header("Options")]
-    [Tooltip("Si está activo, se completa inmediatamente si el item ya está en el inventario")]
+    [Tooltip("Si está activo, se completa inmediatamente si el objeto ya está en el inventario")]
     public bool completeIfAlreadyOwned = false;
-    
+
     [Tooltip("Activar logs de debug")]
     public bool debugLogs = false;
 
-    private Action<ItemData, int, int> _itemAddedHandler;
-    private Inventory _inventory;
+    [NonSerialized] private Action<NarrativeItemAsset, int, int> _itemAddedHandler;
+    [NonSerialized] private INarrativeInventory _inventory;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Item(itemToWaitFor, minimumAmount, "espera");
 
     void Log(string msg)
     {
@@ -42,50 +44,49 @@ public sealed class WaitForItemAddedNode : NarrativeNode
             return;
         }
 
-        // Buscar el inventario del jugador
-        if (!PlayerService.TryGetComponent<Inventory>(out _inventory, includeInactive: true, allowSceneLookup: true) || _inventory == null)
+        if (!NarrativeServices.TryGet(out INarrativeInventory inventory, nameof(WaitForItemAddedNode)) || !inventory.IsAvailable)
         {
-            Debug.LogWarning($"[WaitForItemAdded:{guid}] No se encontró Inventory en el Player, avanzando inmediatamente");
+            Debug.LogWarning($"[WaitForItemAdded:{guid}] No hay inventario del jugador, avanzando inmediatamente");
             onReadyToAdvance?.Invoke();
             return;
         }
 
-        // Verificar si ya tiene el item (si está configurado)
         if (completeIfAlreadyOwned)
         {
-            int currentCount = _inventory.Count(itemToWaitFor.itemId);
+            int currentCount = inventory.Count(itemToWaitFor);
             if (currentCount > 0)
             {
-                Log($"El jugador ya tiene {currentCount}x {itemToWaitFor.displayName}, completando inmediatamente");
+                Log($"El jugador ya tiene {currentCount}x {itemToWaitFor.name}, completando inmediatamente");
                 onReadyToAdvance?.Invoke();
                 return;
             }
         }
 
-        // Crear handler que escucha el evento OnItemAdded
         _itemAddedHandler = (addedItem, addedAmount, newTotal) =>
         {
-            // Verificar si es el item correcto
-            if (addedItem == null || addedItem.itemId != itemToWaitFor.itemId)
+            if (addedItem == null || addedItem.ItemId != itemToWaitFor.ItemId)
                 return;
 
-            // Verificar cantidad mínima si está configurada
             if (minimumAmount > 0 && addedAmount < minimumAmount)
             {
-                Log($"Se añadió {addedAmount}x {addedItem.displayName} pero se requieren al menos {minimumAmount}, esperando más...");
+                Log($"Se añadió {addedAmount}x {addedItem.name} pero se requieren al menos {minimumAmount}, esperando más...");
                 return;
             }
 
-            Log($"¡Item añadido! {addedAmount}x {addedItem.displayName} (total: {newTotal}) → completando nodo");
-            
-            // Desuscribirse y avanzar
+            Log($"¡Objeto añadido! {addedAmount}x {addedItem.name} (total: {newTotal}) → completando nodo");
             Cleanup();
             onReadyToAdvance?.Invoke();
         };
 
-        // Suscribirse al evento
-        _inventory.OnItemAdded += _itemAddedHandler;
-        Log($"Esperando a que se añada {itemToWaitFor.displayName}" + (minimumAmount > 0 ? $" (mínimo {minimumAmount})" : ""));
+        if (!inventory.WatchItemAdded(_itemAddedHandler))
+        {
+            _itemAddedHandler = null;
+            Debug.LogWarning($"[WaitForItemAdded:{guid}] No se puede vigilar el inventario, avanzando inmediatamente");
+            onReadyToAdvance?.Invoke();
+            return;
+        }
+        _inventory = inventory;
+        Log($"Esperando a que se añada {itemToWaitFor.name}" + (minimumAmount > 0 ? $" (mínimo {minimumAmount})" : ""));
     }
 
     public override void Exit(NarrativeContext ctx)
@@ -97,8 +98,8 @@ public sealed class WaitForItemAddedNode : NarrativeNode
     {
         if (_itemAddedHandler != null && _inventory != null)
         {
-            _inventory.OnItemAdded -= _itemAddedHandler;
-            Log("Desuscrito del evento OnItemAdded");
+            _inventory.UnwatchItemAdded(_itemAddedHandler);
+            Log("Desuscrito del inventario");
         }
         _itemAddedHandler = null;
         _inventory = null;

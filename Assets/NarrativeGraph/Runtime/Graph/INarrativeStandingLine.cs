@@ -16,7 +16,7 @@ public interface INarrativeStandingLine
     string StandingActorId { get; }
 
     /// <summary>Qué dice. Null = el nodo no deja frase.</summary>
-    DialogueAsset StandingDialogue { get; }
+    NarrativeDialogueAsset StandingDialogue { get; }
 
     /// <summary>True si la frase vale en este momento de la partida.</summary>
     bool IsStandingLineActive(INarrativeSignals signals);

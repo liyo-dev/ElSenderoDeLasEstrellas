@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 /// <see cref="NpcSpawnPoint"/> que haya registrados en la escena.
 ///
 /// Se llama desde <c>WorldBootstrap.InitializeWorld()</c>, y es CRÍTICO que sea ANTES de
-/// <c>GameBootProfile.ApplyNpcPositionsToScene()</c>: esa función hace un FindObjectsByType en
+/// <c>Partida.AplicarPosicionesDeNpcs()</c>: esa función hace un FindObjectsByType en
 /// vivo, así que un NPC instanciado unas líneas antes ya entra en la consulta y recibe su
 /// posición guardada. Ese es todo el enganche con el guardado — el marcador dice dónde EMPIEZA
 /// un NPC, y el save, si existe, manda.

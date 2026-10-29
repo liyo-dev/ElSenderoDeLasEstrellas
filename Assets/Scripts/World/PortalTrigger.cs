@@ -78,7 +78,7 @@ public class PortalTrigger : MonoBehaviour
     {
         if (_restoredUnlocked || string.IsNullOrEmpty(setFlagOnEnter)) return;
 
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset?.flags == null || !preset.flags.Contains(setFlagOnEnter)) return;
 
         _restoredUnlocked = true;
@@ -119,7 +119,7 @@ public class PortalTrigger : MonoBehaviour
             return;
         }
 
-        var preset = bootProfile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION

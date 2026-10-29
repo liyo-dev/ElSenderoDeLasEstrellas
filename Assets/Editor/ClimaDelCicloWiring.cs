@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public static class ClimaDelCicloWiring
 {
-
     private static readonly string[] RutasDeLluvia =
     {
         "Assets/VFX/RealisticRain/Prefabs/VFX_NoScript/VFX_Realistic_Rain_Unlit_(NoColision).prefab",
@@ -19,7 +18,7 @@ public static class ClimaDelCicloWiring
     [MenuItem("El Sendero/Mundo: completar el clima de las escenas abiertas")]
     public static void Menu()
     {
-        int n = Ejecutar(avisar: true) + RetirarComponentesSinScript() + CompletarCielos() + AsegurarEstadoDeTaparse();
+        int n = Ejecutar(avisar: true) + CompletarCielos() + AsegurarEstadoDeTaparse();
         if (n > 0) EditorSceneManager.SaveOpenScenes();
         EditorUtility.DisplayDialog("Clima",
             n == 0
@@ -29,12 +28,6 @@ public static class ClimaDelCicloWiring
     }
 
     private const string ControladorDelJugador = "Assets/Plugins/Invector-3rdPersonController_LITE/Animator/Invector@BasicLocomotion.controller";
-
-    [InitializeOnLoadMethod]
-    private static void AutoAsegurarAlCompilar()
-    {
-        EditorApplication.delayCall += () => AsegurarEstadoDeTaparse();
-    }
 
     /// Estado en bucle de la capa UpperBody para taparse del viento (ClimaSobreElJugador): el mismo
     /// clip que Fear01, pero sin salida, para que dure mientras sople. Ver INC-699.
@@ -50,7 +43,7 @@ public static class ClimaDelCicloWiring
         var maquina = capa.stateMachine;
         if (maquina.states.Any(s => s.state.name == ClimaSobreElJugador.EstadoDeTaparse)) return 0;
 
-        AnimatorState miedo = Buscar(maquina, "Fear01");
+        AnimatorState miedo = AnimatorControllerEstados.Buscar(controlador, "Fear01");
         if (miedo == null || miedo.motion == null)
         {
             Debug.LogWarning("[Clima] No encuentro el estado Fear01 de UpperBody para copiar su clip.");
@@ -63,40 +56,6 @@ public static class ClimaDelCicloWiring
         AssetDatabase.SaveAssets();
         Debug.Log("[Clima] Añadido UpperBody." + ClimaSobreElJugador.EstadoDeTaparse + " (taparse del viento en bucle).");
         return 1;
-    }
-
-    private static AnimatorState Buscar(AnimatorStateMachine maquina, string nombre)
-    {
-        foreach (var hijo in maquina.states)
-            if (hijo.state.name == nombre) return hijo.state;
-        foreach (var sub in maquina.stateMachines)
-        {
-            var estado = Buscar(sub.stateMachine, nombre);
-            if (estado != null) return estado;
-        }
-        return null;
-    }
-
-    /// Quita del objeto de cada ciclo los componentes cuyo script ya no existe (el techo de nubes de
-    /// tormenta, retirado porque el cielo ya cubre hasta el horizonte). Ver INC-695.
-    public static int RetirarComponentesSinScript()
-    {
-        int quitados = 0;
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            var escena = SceneManager.GetSceneAt(i);
-            if (!escena.isLoaded) continue;
-            foreach (var raiz in escena.GetRootGameObjects())
-            foreach (var ciclo in raiz.GetComponentsInChildren<DayNightCycle>(true))
-            {
-                int n = GameObjectUtility.RemoveMonoBehavioursWithMissingScript(ciclo.gameObject);
-                if (n == 0) continue;
-                quitados += n;
-                EditorSceneManager.MarkSceneDirty(escena);
-                Debug.Log($"[Clima] '{escena.name}': quitados {n} componente(s) sin script del ciclo (techo de nubes antiguo).");
-            }
-        }
-        return quitados;
     }
 
     private static Material CrearCielo(string nombre, Color cenit, Color horizonte, Color suelo,

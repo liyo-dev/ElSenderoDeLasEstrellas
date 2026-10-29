@@ -6,9 +6,9 @@ using DG.Tweening;
 using Sendero.Core.Feedback;
 
 /// <summary>
-/// Pantalla de créditos que cierra la demo: Logo (KingdomExitTransitionNode) → Créditos → Título.
+/// Pantalla de créditos: Créditos → Título.
 ///
-/// Construye su UI por código en Awake (mismo patrón que TitleLogoController): Canvas, fondo
+/// Construye su UI por código en Awake (mismo patrón que DramaticTextOverlayUI): Canvas, fondo
 /// y bloque de créditos. No hace falta montar nada más en el Editor salvo, opcionalmente,
 /// los campos de abajo.
 ///
@@ -311,7 +311,7 @@ public class CreditsSceneController : MonoBehaviour
         // Centrado en pantalla, independiente del bloque que hace scroll: no se mueve con él,
         // solo aparece (fade-in) cuando el bloque termina de subir. Empieza invisible.
         //
-        // El fade usa un CanvasGroup (igual que TitleLogoController/DramaticTextOverlayUI) en
+        // El fade usa un CanvasGroup (igual que DramaticTextOverlayUI) en
         // vez de animar el alpha del color de TMP directamente: un TextMeshProUGUI creado con
         // alpha=0 desde el primer frame puede quedar con cullTransparentMesh sin generar malla
         // nunca, y subir el alpha después no lo hace reaparecer. CanvasGroup no tiene ese problema.

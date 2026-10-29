@@ -22,7 +22,7 @@ public abstract class NarrativeNode
     [Tooltip("Si esta marcado, el jugador NO podra guardar partida mientras esta en este nodo narrativo.")]
     public bool blockSaving = false;
 
-    // Campos legacy (ocultos) para mantener compatibilidad con grafos existentes.
+    // Campos ocultos que conservan los grafos guardados; el editor no los usa.
     [HideInInspector] public PortAnchor inputAnchor = PortAnchor.Left;
     [HideInInspector] public PortAnchor outputAnchor = PortAnchor.Right;
     [HideInInspector] public bool overrideNodeColor;
@@ -37,27 +37,49 @@ public abstract class NarrativeNode
     public virtual void Exit(NarrativeContext ctx) {}
 
     /// <summary>
-    /// Avisos de contenido que declara el propio nodo (algo a medias, algo que falta). Los muestran
-    /// la tarjeta del editor y el validador del grafo sin conocer el tipo de nodo.
+    /// Avisos de contenido que declara el propio nodo (algo a medias, un campo obligatorio vacío).
+    /// Los muestran la tarjeta del editor y el validador del grafo sin conocer el tipo de nodo.
     /// </summary>
     public virtual void CollectWarnings(List<string> warnings) {}
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Puertos de salida con nombre (Septiembre 2026 — sistema narrativo único)
-    //
-    // Hasta ahora un nodo tenía UN solo puerto de salida y varias aristas desde él
-    // significaban FORK (todas las ramas corren en paralelo). Eso hacía imposible
-    // expresar una bifurcación real ("si la quest está activa → A, si no → B").
-    //
-    // Un nodo que devuelva aquí un array de nombres declara N puertos de salida
-    // independientes: `outputs[i]` es el destino del puerto i (cadena vacía = sin
-    // conectar). El nodo elige por qué puerto avanzar llamando a
-    // AdvanceThrough(ctx, ready, i). El runner NUNCA trata esos nodos como fork.
-    //
-    // null (por defecto) = comportamiento legacy: un puerto, multi-arista = fork.
+    // Lo que el nodo cuenta a las herramientas (editor, índice, validadores, pruebas).
+    // Ninguna herramienta pregunta por el tipo concreto de nodo: cada uno declara aquí
+    // lo suyo y un nodo nuevo funciona en todas sin tocarlas.
     // ─────────────────────────────────────────────────────────────────────────
 
-    /// <summary>Nombres de los puertos de salida, o null si el nodo usa el puerto único legacy.</summary>
+    /// <summary>
+    /// Describe el nodo: qué misiones, señales, actores, flags, textos y assets toca, y unas líneas
+    /// de resumen para su tarjeta (ver INarrativeNodeDescriber). Por defecto no declara nada y la
+    /// tarjeta enseña sus primeros campos.
+    /// </summary>
+    public virtual void Describe(INarrativeNodeDescriber d) {}
+
+    /// <summary>true si el nodo es un punto de entrada del grafo (el que se marca como inicio).</summary>
+    public virtual bool IsGraphEntry => false;
+
+    /// <summary>true si el nodo solo anota el grafo: sin puertos, no se ejecuta ni se prueba desde él.</summary>
+    public virtual bool IsAnnotation => false;
+
+    /// <summary>
+    /// true si varias aristas desde su puerto único son un fork buscado. En cualquier otro nodo
+    /// el editor lo marca como posible despiste.
+    /// </summary>
+    public virtual bool BranchesInParallel => false;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Puertos de salida con nombre
+    //
+    // Un nodo que devuelve aquí un array de nombres declara N puertos de salida
+    // independientes: `outputs[i]` es el destino del puerto i (cadena vacía = sin
+    // conectar). El nodo elige por qué puerto avanzar llamando a
+    // AdvanceThrough(ctx, ready, i). El runner nunca trata esos nodos como fork.
+    //
+    // null (por defecto) = un solo puerto; varias aristas desde él son un fork
+    // (todas las ramas corren en paralelo).
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /// <summary>Nombres de los puertos de salida, o null si el nodo usa un solo puerto.</summary>
     public virtual string[] GetOutputPorts() => null;
 
     /// <summary>true si el nodo declara puertos con nombre (bifurcación real, nunca fork).</summary>

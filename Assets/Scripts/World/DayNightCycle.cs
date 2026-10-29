@@ -50,7 +50,7 @@ public class DayNightCycle : MonoBehaviour
 #if UNITY_EDITOR
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void ResetStatics() { Instance = null; Sun = null; s_anclaDeClima = null; SorteoDeClimaEnPausa = false; }
+    static void ResetStatics() { Instance = null; Sun = null; s_anclaDeClima = null; SorteoDeClimaEnPausa = false; s_plantillaDelRayo = null; s_materialDelRayo = null; }
 #endif
 
     public bool AutoAdvance
@@ -217,10 +217,10 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Volumen del loop de la nevada (0-1). Bajo: la nieve apenas suena.")]
     [SerializeField, Range(0f, 1f)] private float snowLoopVolume = 0.18f;
 
-    [Header("Clima - Tormenta / Rayos (30 ago 2026)")]
+    [Header("Clima - Tormenta / Rayos")]
     [Tooltip("Una tormenta es lluvia normal (mismas partículas/oscurecimiento/niebla de siempre, ver StartThunderstorm) más rayos periódicos. Rango (min, max) en segundos entre un rayo y el siguiente mientras dura la tormenta.")]
     [SerializeField] private Vector2 thunderstormLightningIntervalRange = new Vector2(8f, 22f);
-    [Tooltip("Intensidad (Light.intensity) del destello de cada rayo. Es una luz direccional NUEVA y temporal creada solo para el destello (ver FlashLightningRoutine), no un multiplicador sobre la luz principal — así no interfiere con el oscurecimiento por lluvia (rainLightIntensityMultiplier), que ya recalcula la luz principal cada frame en LateUpdate y se pelearía con cualquier cambio directo sobre directionalLight.intensity.")]
+    [Tooltip("Intensidad (Light.intensity) del destello de cada rayo. Es una luz direccional propia del destello, no un multiplicador sobre la luz principal: así no se pelea con el oscurecimiento por lluvia (rainLightIntensityMultiplier), que recalcula la luz principal cada frame en LateUpdate.")]
     [SerializeField] private float thunderstormFlashIntensity = 3.5f;
     [Tooltip("Segundos que dura visible cada destello de rayo.")]
     [SerializeField] private float thunderstormFlashDuration = 0.12f;
@@ -230,24 +230,20 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float volumenDelTrueno = 1f;
     [Tooltip("Retraso (min, max) en segundos entre el destello del rayo y el trueno — la luz llega antes que el sonido, igual que en la realidad") ]
     [SerializeField] private Vector2 thunderstormThunderDelayRange = new Vector2(0.3f, 1.8f);
-    [Tooltip("Altura (unidades de mundo) desde la que 'cae' el rayo visible, por encima de la posición del jugador. No depende de ningún terreno/collider real (no se hace Raycast): el extremo inferior del rayo se dibuja a la altura actual del jugador, como aproximación razonable del suelo cercano.")]
+    [Tooltip("Altura (unidades de mundo) desde la que 'cae' el rayo visible, por encima de su punto de caída. No se hace Raycast: el extremo inferior del rayo se dibuja a la altura del punto de referencia, como aproximación razonable del suelo cercano.")]
     [SerializeField] private float thunderstormBoltHeight = 220f;
     [Tooltip("Distancia horizontal (min, max) a la que 'cae' cada rayo respecto al jugador, en una dirección aleatoria — para que se vea caer en el paisaje, no encima del jugador ni siempre en el mismo sitio.")]
     [SerializeField] private Vector2 thunderstormBoltDistanceRange = new Vector2(18f, 55f);
-    [Tooltip("Grosor visual del rayo (LineRenderer.widthMultiplier).")]
-    [SerializeField] private float thunderstormBoltWidth = 1.4f;
-    [Tooltip("Color del rayo — blanco azulado brillante. Canales por encima de 1 a propósito (con Bloom activo aporta el brillo extra del propio rayo), igual que otros elementos emisivos de este proyecto (p.ej. NightSkyStarSpawner.starColor).")]
+    [Tooltip("Color del rayo — blanco azulado brillante. Canales por encima de 1 a propósito (con Bloom activo aporta el brillo extra del propio rayo).")]
     [SerializeField] private Color thunderstormBoltColor = new Color(2.2f, 2.3f, 2.7f);
-    [Tooltip("Número de segmentos del zigzag del rayo — más segmentos = forma más quebrada/detallada.")]
-    [SerializeField, Range(2, 16)] private int thunderstormBoltSegments = 7;
-    [Tooltip("Desplazamiento horizontal aleatorio máximo (unidades de mundo) de cada segmento respecto a la línea recta cielo-suelo, para la silueta quebrada característica de un rayo.")]
-    [SerializeField] private float thunderstormBoltJitter = 7f;
-    [Tooltip("Cuánto tiempo (segundos) queda visible el trazo del rayo en sí, independiente de thunderstormFlashDuration (que solo controla el destello de luz ambiental). 0.12s resultaba casi imperceptible — un solo parpadeo de un frame o dos.")]
-    [SerializeField] private float thunderstormBoltVisibleDuration = 0.3f;
+    [Tooltip("Prefab OPCIONAL del trazo de cada rayo, con ProceduralLightningBoltVfx (se lanza por VfxPoolService). Vacío = rayo generado en código con halo, una rama y parpadeo.")]
+    [SerializeField] private GameObject prefabDelRayo;
 
     [Header("Clima - Peligro de Rayo en Tormenta")]
-    [Tooltip("Prefab del aviso circular en el suelo antes de la caída del rayo (RainShadowIndicator).")]
+    [Tooltip("Prefab del aviso circular en el suelo antes de la caída del rayo (RainShadowIndicator). Vacío = la tormenta no lanza rayos peligrosos: nunca cae un rayo con daño sin aviso.")]
     [SerializeField] private GameObject dangerLightningTelegraphPrefab;
+    [Tooltip("Event Key del AudioGraphProfile que suena con el aviso en el suelo del rayo peligroso. Vacío = sin sonido de aviso.")]
+    [SerializeField] private string avisoDeRayoSfxKey = "PlasmaSphere";
     [Tooltip("Intervalo (min, max) en segundos entre rayos con aviso dirigidos al suelo durante la tormenta.")]
     [SerializeField] private Vector2 dangerLightningIntervalRange = new Vector2(14f, 26f);
     [Tooltip("Radio de la explosión del rayo en metros.")]
@@ -257,7 +253,7 @@ public class DayNightCycle : MonoBehaviour
     [Tooltip("Tiempo de aviso (segundos) de la marca en el suelo antes de que caiga el rayo.")]
     [SerializeField] private float dangerLightningTelegraphDuration = 1.8f;
 
-    [Header("Clima — sorteo independiente del periodo (30 ago 2026, ver comentario de clase)")]
+    [Header("Clima — sorteo independiente del periodo")]
     [Tooltip("Cada cuánto se vuelve a intentar un cambio de clima (sorteo de lluvia/niebla/viento/tormenta), en segundos — se elige un valor aleatorio dentro de este rango cada vez, para que no sea predecible. Corre en un temporizador propio, totalmente independiente de a qué periodo del día (amanecer/día/atardecer/noche) corresponda ese instante — el clima puede empezar, seguir o terminar en cualquier periodo, incluso a mitad de uno.")]
     [SerializeField] private Vector2 weatherCheckIntervalRange = new Vector2(45f, 110f);
     [Tooltip("Si es falso, el clima no se sortea solo: solo cambia cuando se pide (cinemáticas, LAB).")]
@@ -266,6 +262,8 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float thunderstormChancePerCheck = 0.05f;
     [Tooltip("Probabilidad (0-1) de que arranque a llover (lluvia normal, sin rayos) en cada sorteo — solo se comprueba si el sorteo de tormenta de ese mismo intento no salió.")]
     [SerializeField, Range(0f, 1f)] private float rainChancePerCheck = 0.18f;
+    [Tooltip("Probabilidad extra de lluvia en cada sorteo con el cielo totalmente cubierto de nubes sueltas: se suma a rainChancePerCheck en proporción a la cobertura que informa AmbientCloudDirector (InformarCoberturaDeNubes).")]
+    [SerializeField, Range(0f, 1f)] private float lluviaExtraConCieloCubierto = 0.35f;
     [Tooltip("Probabilidad (0-1) de que empiece a nevar en cada sorteo — solo se comprueba si ni tormenta ni lluvia salieron en ese mismo intento.")]
     [SerializeField, Range(0f, 1f)] private float snowChancePerCheck = 0.08f;
     [Tooltip("Probabilidad (0-1) de que arranque viento en cada sorteo — solo se comprueba si ni tormenta, ni lluvia, ni nieve salieron en ese mismo intento.")]
@@ -649,7 +647,13 @@ public class DayNightCycle : MonoBehaviour
     private Coroutine _dangerLightningCoroutine;
     private readonly Collider[] _lightningHitBuffer = new Collider[16];
 
-    private Material _lightningBoltMaterial;
+    // Plantilla en código del trazo de rayo cuando no hay prefabDelRayo; compartida entre escenas
+    // (vive fuera de ellas) para que el pool de VfxPoolService sea siempre el mismo.
+    private static GameObject s_plantillaDelRayo;
+    private static Material s_materialDelRayo;
+    private Light _luzDelDestello;
+    private float _destelloHasta;
+    private float _coberturaDeNubes;
 
     private bool _zoneMistForced;
 
@@ -687,8 +691,6 @@ public class DayNightCycle : MonoBehaviour
             RenderSettings.ambientMode = AmbientMode.Flat;
 
         RenderSettings.fog = controlFog;
-
-        _lightningBoltMaterial = new Material(Shader.Find("Sprites/Default"));
     }
 
     void OnDestroy()
@@ -703,11 +705,6 @@ public class DayNightCycle : MonoBehaviour
             _runtimeSkybox = null;
         }
         if (_cieloDeSalida != null) Destroy(_cieloDeSalida);
-        if (_lightningBoltMaterial != null)
-        {
-            Destroy(_lightningBoltMaterial);
-            _lightningBoltMaterial = null;
-        }
     }
 
     void OnEnable()
@@ -739,6 +736,11 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
+    /// Cobertura (0-1) de las nubes sueltas de buen tiempo. La informa quien las mueve
+    /// (AmbientCloudDirector) y solo sube la probabilidad de lluvia del sorteo de TryRollWeather:
+    /// el sorteo del clima es uno solo y vive aquí.
+    public void InformarCoberturaDeNubes(float cobertura) => _coberturaDeNubes = Mathf.Clamp01(cobertura);
+
     void TryRollWeather()
     {
         if (IsRaining || _isCloudBuildingUp || IsMisty || IsWindy || IsThunderstorm || IsSnowing) return;
@@ -751,7 +753,7 @@ public class DayNightCycle : MonoBehaviour
         {
             StartThunderstorm(UnityEngine.Random.Range(rainDurationRange.x, rainDurationRange.y));
         }
-        else if (UnityEngine.Random.value < rainChancePerCheck)
+        else if (UnityEngine.Random.value < Mathf.Clamp01(rainChancePerCheck + _coberturaDeNubes * lluviaExtraConCieloCubierto))
         {
             StartRain(UnityEngine.Random.Range(rainDurationRange.x, rainDurationRange.y));
         }
@@ -820,6 +822,8 @@ public class DayNightCycle : MonoBehaviour
         IsThunderstorm = false;
         _thunderstormCoroutine = null;
         _lightningCoroutine = null;
+        _dangerLightningCoroutine = null;
+        if (_luzDelDestello != null) _luzDelDestello.enabled = false;
 
         IsSnowing = false;
         _snowCoroutine = null;
@@ -1911,6 +1915,9 @@ public class DayNightCycle : MonoBehaviour
             StopCoroutine(_dangerLightningCoroutine);
             _dangerLightningCoroutine = null;
         }
+
+        // Parar el bucle de rayos puede cortar un destello a medias: que no se quede encendido.
+        if (_luzDelDestello != null) _luzDelDestello.enabled = false;
     }
 
     IEnumerator LightningLoop(bool firstStrikeImmediate = false)
@@ -1938,6 +1945,8 @@ public class DayNightCycle : MonoBehaviour
 
     IEnumerator DangerLightningLoop()
     {
+        if (!PuedeLanzarRayoPeligroso()) yield break;
+
         yield return new WaitForSeconds(UnityEngine.Random.Range(5f, 9f));
 
         while (IsThunderstorm)
@@ -1968,25 +1977,32 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
+    // El rayo peligroso solo existe con su aviso en el suelo: sin prefab de aviso (o sin pool donde
+    // lanzarlo) no cae ninguno, para que nunca haya daño sin aviso.
+    private bool PuedeLanzarRayoPeligroso()
+    {
+        if (dangerLightningTelegraphPrefab != null && VfxPoolService.Instance != null) return true;
+#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
+        if (dangerLightningTelegraphPrefab == null)
+            Debug.LogWarning($"[DayNightCycle] '{name}' no tiene dangerLightningTelegraphPrefab (RainShadowIndicator): esta tormenta no lanzará rayos peligrosos.", this);
+#endif
+        return false;
+    }
+
     private IEnumerator Co_EjecutarRayoPeligroso(Vector3 targetPos)
     {
-        GameObject telegraphPrefab = dangerLightningTelegraphPrefab;
-#if UNITY_EDITOR
-        if (telegraphPrefab == null)
-            telegraphPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/VFX/RainShadowIndicator.prefab");
-#endif
-        Transform telegraph = null;
-        if (telegraphPrefab != null && VfxPoolService.Instance != null)
-        {
-            Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
-            telegraph = VfxPoolService.Instance.Play(telegraphPrefab, targetPos + Vector3.up * 0.04f, rot, dangerLightningTelegraphDuration);
-        }
+        if (!PuedeLanzarRayoPeligroso()) yield break;
 
-        AudioService.Instance?.PlaySFX("PlasmaSphere", 0.7f, worldPosition: targetPos);
+        Quaternion rot = Quaternion.Euler(90f, 0f, 0f);
+        Transform telegraph = VfxPoolService.Instance.Play(dangerLightningTelegraphPrefab, targetPos + Vector3.up * 0.04f, rot, dangerLightningTelegraphDuration);
+        if (telegraph == null) yield break;
+
+        if (!string.IsNullOrWhiteSpace(avisoDeRayoSfxKey))
+            AudioService.Instance?.PlaySFX(avisoDeRayoSfxKey, 0.7f, worldPosition: targetPos);
 
         float elapsed = 0f;
-        Vector3 endScale = telegraph != null ? telegraph.localScale : Vector3.one;
-        if (telegraph != null) telegraph.localScale = Vector3.zero;
+        Vector3 endScale = telegraph.localScale;
+        telegraph.localScale = Vector3.zero;
 
         while (elapsed < dangerLightningTelegraphDuration)
         {
@@ -2021,15 +2037,13 @@ public class DayNightCycle : MonoBehaviour
         }
     }
 
-    void SpawnLightningBolt(Vector3? punto = null, bool destello = true)
-    {
-        if (_lightningBoltMaterial == null)
-            return;
+    // Duración en pantalla del trazo de un rayo: lo que dura el parpadeo de la plantilla en código.
+    const float DuracionDelRayo = 0.5f;
+    static readonly float[] ParpadeoDelRayo = { 0.08f, 0.05f, 0.13f, 0.06f, 0.16f };
 
-        GenerarRayo(destello, punto);
-    }
-
-    private void GenerarRayo(bool destello = true, Vector3? punto = null)
+    // Dibuja un rayo: dirigido a `punto` si se da; si no, de fondo en el encuadre de la cámara o, si
+    // no cabe, a unas decenas de metros del jugador. El trazo es un ProceduralLightningBoltVfx del pool.
+    private void TrazarRayo(Vector3? punto = null, bool destello = true)
     {
         Camera cam = SolYLunaEnElCielo.CamaraActual();
         if (cam == null) cam = Camera.main;
@@ -2039,14 +2053,13 @@ public class DayNightCycle : MonoBehaviour
 
         if (punto.HasValue)
         {
-            // Rayo dirigido a un punto concreto en el mundo (suelo, marca, etc.)
             abajo = punto.Value;
             arriba = punto.Value + Vector3.up * thunderstormBoltHeight + UnityEngine.Random.insideUnitSphere * 4f;
             if (arriba.y < abajo.y + 15f) arriba.y = abajo.y + 15f;
         }
         else if (cam != null && cam.isActiveAndEnabled && cam.transform.forward.y > -0.65f)
         {
-            // Rayo de fondo en el encuadre de la cámara (técnica cinematográfica con halo y ramas)
+            // De fondo, en un lateral del encuadre, lejos de la cámara.
             float lejos = Mathf.Min(UnityEngine.Random.Range(120f, 190f), cam.farClipPlane * 0.85f);
             if (lejos >= 30f)
             {
@@ -2061,7 +2074,7 @@ public class DayNightCycle : MonoBehaviour
 
         if (!punto.HasValue && !enCuadro)
         {
-            // Fallback en espacio de mundo en frente del jugador/cámara
+            // En el mundo, delante y a un lado del jugador (o de la cámara).
             Transform reference = AnclaDeClima != null ? AnclaDeClima :
                                   PlayerService.Player != null ? PlayerService.Player.transform :
                                   cam != null ? cam.transform : transform;
@@ -2076,81 +2089,47 @@ public class DayNightCycle : MonoBehaviour
             if (arriba.y < abajo.y + 15f) arriba.y = abajo.y + 15f;
         }
 
-        Vector3 dir = (abajo - arriba).normalized;
-        float largo = Vector3.Distance(arriba, abajo);
-        Vector3 lado = cam != null ? cam.transform.right : Vector3.Cross(dir, Vector3.up).normalized;
-        if (lado.sqrMagnitude < 0.01f) lado = Vector3.right;
-
-        var raiz = new GameObject("[ThunderstormLightningBolt]");
-
-        const int tramos = 12;
-        var puntos = new Vector3[tramos + 1];
-        float desvio = 0f;
-        for (int i = 0; i <= tramos; i++)
-        {
-            float t = (float)i / tramos;
-            if (i != 0 && i != tramos) desvio = desvio * 0.35f + UnityEngine.Random.Range(-1f, 1f) * largo * 0.06f;
-            else desvio = 0f;
-            puntos[i] = Vector3.Lerp(arriba, abajo, t) + lado * desvio;
-        }
-
+        // Grosor según la distancia a la cámara, para que se lea igual de cerca que de lejos.
         float distCam = cam != null ? Vector3.Distance(cam.transform.position, (arriba + abajo) * 0.5f) : 100f;
         float grosor = Mathf.Clamp(distCam * 0.0065f, 0.25f, 2.5f);
 
-        // Doble trazo cinematográfico: halo translúcido + núcleo brillante puro
-        TrazoDelRayo(raiz, puntos, grosor * 4.5f, new Color(0.55f, 0.65f, 1f, 0.22f), -1);   // halo
-        TrazoDelRayo(raiz, puntos, grosor, thunderstormBoltColor, 0);                         // núcleo
-
-        // Ramificación lateral del rayo
-        int desde = UnityEngine.Random.Range(tramos / 4, tramos / 2);
-        float haciaFuera = (cam != null && cam.WorldToViewportPoint(abajo).x < 0.5f) ? -1f : 1f;
-        var rama = new Vector3[6];
-        rama[0] = puntos[desde];
-        Vector3 bajada = dir * (largo * 0.07f);
-        for (int i = 1; i < rama.Length; i++)
-            rama[i] = rama[i - 1] + bajada + lado * (haciaFuera * largo * UnityEngine.Random.Range(0.02f, 0.06f));
-        TrazoDelRayo(raiz, rama, grosor * 2.6f, new Color(0.55f, 0.65f, 1f, 0.15f), -1);
-        TrazoDelRayo(raiz, rama, grosor * 0.55f, thunderstormBoltColor * 0.9f, 0);
-
-        // Parpadeo estroboscópico realista (5 pulsos)
-        StartCoroutine(Co_ParpadeoDelRayoEnCuadro(raiz));
+        var pool = VfxPoolService.Instance;
+        if (pool != null)
+        {
+            GameObject plantilla = prefabDelRayo != null ? prefabDelRayo : PlantillaDelRayo();
+            Transform rayo = pool.Play(plantilla, abajo, Quaternion.identity, DuracionDelRayo);
+            if (rayo != null && rayo.TryGetComponent(out ProceduralLightningBoltVfx vfx))
+                vfx.Lanzar(arriba, abajo, grosor, thunderstormBoltColor);
+        }
 
         // Fogonazo en pantalla completa
         if (destello) Sendero.Core.Feedback.FeedbackService.ScreenFlash(new Color(0.82f, 0.88f, 1f, 0.16f), 0.12f);
     }
 
-    void TrazoDelRayo(GameObject raiz, Vector3[] puntos, float ancho, Color color, int orden)
+    // Aspecto del rayo de tormenta cuando la escena no asigna prefabDelRayo: núcleo con halo azulado,
+    // una rama que se abre hacia un lado, más fino al llegar al suelo y con parpadeo de cinco pulsos.
+    private static GameObject PlantillaDelRayo()
     {
-        var go = new GameObject("Trazo");
-        go.transform.SetParent(raiz.transform, false);
-        var line = go.AddComponent<LineRenderer>();
-        line.useWorldSpace = true;
-        line.material = _lightningBoltMaterial;
-        line.startColor = color;
-        line.endColor = color;
-        line.widthMultiplier = ancho;
-        line.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.4f));
-        line.numCapVertices = 2;
-        line.numCornerVertices = 1;
-        line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-        line.receiveShadows = false;
-        line.sortingOrder = orden;
-        line.positionCount = puntos.Length;
-        line.SetPositions(puntos);
-    }
+        if (s_plantillaDelRayo != null) return s_plantillaDelRayo;
 
-    IEnumerator Co_ParpadeoDelRayoEnCuadro(GameObject raiz)
-    {
-        float[] pasos = { 0.08f, 0.05f, 0.13f, 0.06f, 0.16f };
-        bool on = true;
-        foreach (float p in pasos)
+        if (s_materialDelRayo == null)
+            s_materialDelRayo = new Material(Shader.Find("Sprites/Default")) { hideFlags = HideFlags.DontSave };
+
+        s_plantillaDelRayo = ProceduralLightningBoltVfx.CrearPlantilla("[PlantillaRayoDeTormenta]", new ProceduralLightningBoltVfx.Ajustes
         {
-            if (raiz == null) yield break;
-            raiz.SetActive(on);
-            yield return new WaitForSecondsRealtime(p);
-            on = !on;
-        }
-        if (raiz != null) Destroy(raiz);
+            material = s_materialDelRayo,
+            segmentos = 12,
+            desvioRelativo = 0.06f,
+            ramas = 1,
+            aperturaDeRamas = 0.6f,
+            anchoEnElImpacto = 0.4f,
+            opacidadEnElImpacto = 1f,
+            anchoDelHalo = 4.5f,
+            colorDelHalo = new Color(0.55f, 0.65f, 1f, 0.22f),
+            parpadeo = ParpadeoDelRayo,
+            intensidadDeLuz = 0f,
+        });
+        return s_plantillaDelRayo;
     }
 
     public string ClaveDeTrueno => string.IsNullOrWhiteSpace(thunderstormThunderSfxKey) ? TruenoPorDefecto : thunderstormThunderSfxKey;
@@ -2158,7 +2137,7 @@ public class DayNightCycle : MonoBehaviour
     public void LanzarRayo(Vector3 punto, bool conTrueno = true, string trueno = null, float volumen = 1f, bool destello = true)
     {
         if (!isActiveAndEnabled) return;
-        SpawnLightningBolt(punto, destello);
+        TrazarRayo(punto, destello);
         if (conTrueno) ProgramarTrueno(trueno, volumen);
         if (destello) StartCoroutine(DestelloDelRayo());
     }
@@ -2171,7 +2150,7 @@ public class DayNightCycle : MonoBehaviour
     }
     IEnumerator FlashLightningRoutine()
     {
-        SpawnLightningBolt();
+        TrazarRayo();
 
         if (AnclaDeClima == null && truenosDeTormenta != null && truenosDeTormenta.Length > 0)
             ProgramarTrueno(truenosDeTormenta[UnityEngine.Random.Range(0, truenosDeTormenta.Length)], volumenDelTrueno);
@@ -2179,19 +2158,29 @@ public class DayNightCycle : MonoBehaviour
             ProgramarTrueno();
         yield return DestelloDelRayo();
     }
+    // Destello de luz ambiental del rayo: una luz direccional propia, creada una vez y apagada entre
+    // rayos. Si dos destellos se solapan, la luz se apaga cuando acaba el último.
     private IEnumerator DestelloDelRayo()
     {
-        var flashObj = new GameObject("[ThunderstormLightningFlash]");
-        var flash = flashObj.AddComponent<Light>();
-        flash.type = LightType.Directional;
-        flash.color = Color.white;
-        flash.intensity = thunderstormFlashIntensity;
-        flash.shadows = LightShadows.None;
-        if (directionalLight != null) flashObj.transform.rotation = directionalLight.transform.rotation;
+        if (_luzDelDestello == null)
+        {
+            var go = new GameObject("[DestelloDeRayo]");
+            go.transform.SetParent(transform, false);
+            _luzDelDestello = go.AddComponent<Light>();
+            _luzDelDestello.type = LightType.Directional;
+            _luzDelDestello.color = Color.white;
+            _luzDelDestello.shadows = LightShadows.None;
+        }
 
-        Destroy(flashObj, Mathf.Max(0.01f, thunderstormFlashDuration));
-        yield return new WaitForSecondsRealtime(Mathf.Max(0.01f, thunderstormFlashDuration));
-        if (flashObj != null) Destroy(flashObj);
+        float duracion = Mathf.Max(0.01f, thunderstormFlashDuration);
+        _luzDelDestello.intensity = thunderstormFlashIntensity;
+        if (directionalLight != null) _luzDelDestello.transform.rotation = directionalLight.transform.rotation;
+        _destelloHasta = Time.realtimeSinceStartup + duracion;
+        _luzDelDestello.enabled = true;
+
+        yield return new WaitForSecondsRealtime(duracion);
+        if (_luzDelDestello != null && Time.realtimeSinceStartup >= _destelloHasta)
+            _luzDelDestello.enabled = false;
     }
     const string TruenoPorDefecto = "Weather_Thunder";
 

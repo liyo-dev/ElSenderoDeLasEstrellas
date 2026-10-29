@@ -455,9 +455,4 @@ public class NarrativeQuickTestWindow : EditorWindow
         var label = Sendero.Narrative.Editor.NarrativeTestLauncher.DetectGraphLabel(graph);
         if (!string.IsNullOrEmpty(label)) _graphLabel = label;
     }
-
-    /// <summary>Compatibilidad con VerificarCapitulosEncadenados: delega en el lanzador único.</summary>
-    internal static List<Sendero.Narrative.Editor.NarrativeTestLauncher.CapituloPrevio> CapitulosPrevios(
-        NarrativeGraph grafo, ref string objetivoGuid)
-        => Sendero.Narrative.Editor.NarrativeTestLauncher.CapitulosPrevios(grafo, ref objetivoGuid);
 }

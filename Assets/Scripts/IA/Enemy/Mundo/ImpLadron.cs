@@ -262,21 +262,7 @@ public sealed class ImpLadron : EnemigoDelMundo
     private void SoltarOrbe(ItemData item, int cantidad)
     {
         Vector2 c = Random.insideUnitCircle * 0.4f;
-        var go = Instantiate(orbeDelBotin, transform.position + new Vector3(c.x, 0f, c.y), Quaternion.identity);
-        if (!go.TryGetComponent<BattleOrb>(out var orbe))
-        {
-            // El prefab es arte puro, como en OrbDropper: la lógica del orbe se añade aquí.
-            if (!go.TryGetComponent<Collider>(out _))
-            {
-                var col = go.AddComponent<SphereCollider>();
-                col.radius = 0.3f;
-                col.isTrigger = true;
-            }
-            if (!go.TryGetComponent<Rigidbody>(out _)) go.AddComponent<Rigidbody>();
-            orbe = go.AddComponent<BattleOrb>();
-            orbe.Configure(OrbType.Currency, 0f);
-        }
-        orbe.ConfigureCurrency(item, cantidad, sfxRecuperar);
+        OrbDropper.SoltarMoneda(orbeDelBotin, transform.position + new Vector3(c.x, 0f, c.y), item, cantidad, sfxRecuperar);
     }
 
     private void RecogerBotinVisible()

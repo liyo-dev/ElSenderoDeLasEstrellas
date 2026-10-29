@@ -3,14 +3,15 @@ using UnityEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NarrativeGraphEditor;
 
 /// <summary>
-/// Narrative Timeline — Vista temporal estilo editor de vídeo de toda la historia.
-/// Muestra cada NarrativeGraph como un track horizontal con nodos ordenados
-/// topológicamente. Los nodos se colorean por tipo y las dependencias entre
-/// grafos (eventos Raise/Wait) se dibujan como líneas cruzadas.
-///
-/// Menú: Tools → Narrativa → Narrative Timeline
+/// Narrative Timeline — vista temporal, estilo editor de vídeo, de toda la historia.
+/// Muestra cada NarrativeGraph como un track horizontal con los nodos ordenados
+/// topológicamente. Cada nodo toma el color de su categoría ([NarrativeNodeInfo], vía
+/// NarrativeNodeCatalog) y su detalle de lo que declara en NarrativeNode.Describe; las
+/// dependencias entre grafos (un nodo emite una señal que otro grafo espera) se dibujan como
+/// líneas cruzadas. Ningún tipo de nodo se conoce por su nombre.
 /// </summary>
 public class NarrativeTimelineWindow : EditorWindow
 {
@@ -27,90 +28,24 @@ public class NarrativeTimelineWindow : EditorWindow
     private const float TopMargin = 40f;
     private const float ForkVerticalOffset = 56f;
 
-    // ─── Node categories & colors ───
-
-    private enum NodeCategory
-    {
-        Start,
-        Dialogue,
-        Quest,
-        EventWait,
-        EventRaise,
-        Cinematic,
-        Battle,
-        Unlock,
-        Inventory,
-        Audio,
-        Branch,
-        World,
-        Other
-    }
-
-    private static readonly Dictionary<NodeCategory, Color> CategoryColors = new Dictionary<NodeCategory, Color>
-    {
-        { NodeCategory.Start,      new Color(0.30f, 0.75f, 0.30f) },
-        { NodeCategory.Dialogue,   new Color(0.30f, 0.65f, 0.90f) },
-        { NodeCategory.Quest,      new Color(0.95f, 0.75f, 0.20f) },
-        { NodeCategory.EventWait,  new Color(0.85f, 0.45f, 0.55f) },
-        { NodeCategory.EventRaise, new Color(0.95f, 0.55f, 0.35f) },
-        { NodeCategory.Cinematic,  new Color(0.70f, 0.45f, 0.85f) },
-        { NodeCategory.Battle,     new Color(0.90f, 0.25f, 0.25f) },
-        { NodeCategory.Unlock,     new Color(0.40f, 0.80f, 0.70f) },
-        { NodeCategory.Inventory,  new Color(0.65f, 0.75f, 0.40f) },
-        { NodeCategory.Audio,      new Color(0.55f, 0.55f, 0.75f) },
-        { NodeCategory.Branch,     new Color(0.75f, 0.75f, 0.50f) },
-        { NodeCategory.World,      new Color(0.60f, 0.60f, 0.45f) },
-        { NodeCategory.Other,      new Color(0.55f, 0.55f, 0.55f) },
-    };
-
-    private static readonly Dictionary<string, NodeCategory> TypeToCategory = new Dictionary<string, NodeCategory>
-    {
-        { "StartNode",                NodeCategory.Start },
-        { "PlayDialogueNode",         NodeCategory.Dialogue },
-        { "StartQuestNode",           NodeCategory.Quest },
-        { "CompleteQuestStepsNode",   NodeCategory.Quest },
-        { "WaitQuestCompleteNode",    NodeCategory.Quest },
-        { "OfferQuestNode",           NodeCategory.Quest },
-        { "WaitCustomEventNode",      NodeCategory.EventWait },
-        { "RaiseCustomEventNode",     NodeCategory.EventRaise },
-        { "PlayCinematicNode",        NodeCategory.Cinematic },
-        { "PlayTimelineNode",         NodeCategory.Cinematic },
-        { "FocusCameraNode",          NodeCategory.Cinematic },
-        { "StartBattleNode",          NodeCategory.Battle },
-        { "WaitBattleWinNode",        NodeCategory.Battle },
-        { "UnlockAbilitiesNode",      NodeCategory.Unlock },
-        { "UnlockTriggerNode",        NodeCategory.Unlock },
-        { "UnlockWardrobeItemNode",   NodeCategory.Unlock },
-        { "GiveInventoryItemNode",    NodeCategory.Inventory },
-        { "RequireInventoryItemNode", NodeCategory.Inventory },
-        { "DeliverItemProximityNode", NodeCategory.Inventory },
-        { "DeliverQuestCompleteNode", NodeCategory.Inventory },
-        { "WaitForItemAddedNode",     NodeCategory.Inventory },
-        { "PlayMusicNode",            NodeCategory.Audio },
-        { "PlaySfxNode",              NodeCategory.Audio },
-        { "PlayVoiceNode",            NodeCategory.Audio },
-        { "StopMusicNode",            NodeCategory.Audio },
-        { "SetAudioVolumeNode",       NodeCategory.Audio },
-        { "MuteAudioNode",            NodeCategory.Audio },
-        { "BranchBoolNode",           NodeCategory.Branch },
-        { "ShowLorePopupNode",        NodeCategory.World },
-        { "ActivateGameObjectNode",   NodeCategory.World },
-        { "StartTagMinigameNode",     NodeCategory.World },
-    };
-
     // ─── Internal data model ───
 
     private class TimelineNode
     {
         public NarrativeNode node;
-        public NodeCategory category;
+        public string category;
+        public Color color;
         public string label;
         public string subtitle;
         public int column;
         public int row;
         public Rect rect;
         public int graphIndex;
-        public string eventKey;
+        /// Señales que el nodo emite y espera (de su Describe).
+        public readonly List<string> emits = new List<string>();
+        public readonly List<string> waits = new List<string>();
+        /// Resumen de sus señales para el menú, el tooltip y la búsqueda («↑ A  ↓ B»).
+        public string signals;
     }
 
     private class GraphTrack
@@ -145,6 +80,10 @@ public class NarrativeTimelineWindow : EditorWindow
     private TimelineNode _hoveredNode;
     private bool _showLegend = true;
     private bool _showCrossLinks = true;
+
+    // Categorías presentes en los tracks, en el orden de NarrativeNodeCatalog (leyenda).
+    private readonly List<string> _usedCategories = new List<string>();
+    private readonly NarrativeNodeReferences _refs = new NarrativeNodeReferences();
 
     // Runtime
     private string _runtimeCurrentNodeGuid;
@@ -182,6 +121,7 @@ public class NarrativeTimelineWindow : EditorWindow
     {
         _tracks.Clear();
         _crossLinks.Clear();
+        _usedCategories.Clear();
         _selectedNode = null;
         _hoveredNode = null;
 
@@ -205,6 +145,7 @@ public class NarrativeTimelineWindow : EditorWindow
 
         BuildCrossGraphLinks();
         ComputeLayout();
+        _usedCategories.Sort((a, b) => NarrativeNodeCatalog.CategoryOrder(a).CompareTo(NarrativeNodeCatalog.CategoryOrder(b)));
         _hasBuilt = true;
     }
 
@@ -241,19 +182,7 @@ public class NarrativeTimelineWindow : EditorWindow
 
             if (!nodeMap.TryGetValue(guid, out var node)) continue;
 
-            var category = GetCategory(node);
-            var tn = new TimelineNode
-            {
-                node = node,
-                category = category,
-                label = GetNodeLabel(node),
-                subtitle = GetNodeSubtitle(node),
-                column = col,
-                row = row,
-                graphIndex = graphIndex,
-                eventKey = GetEventKey(node)
-            };
-
+            var tn = CreateTimelineNode(node, col, row, graphIndex);
             track.nodes.Add(tn);
             if (col > maxCol) maxCol = col;
             if (row > maxRow) maxRow = row;
@@ -275,18 +204,7 @@ public class NarrativeTimelineWindow : EditorWindow
         {
             if (n == null || visited.Contains(n.guid)) continue;
             maxCol++;
-            var category = GetCategory(n);
-            track.nodes.Add(new TimelineNode
-            {
-                node = n,
-                category = category,
-                label = GetNodeLabel(n),
-                subtitle = GetNodeSubtitle(n),
-                column = maxCol,
-                row = 0,
-                graphIndex = graphIndex,
-                eventKey = GetEventKey(n)
-            });
+            track.nodes.Add(CreateTimelineNode(n, maxCol, 0, graphIndex));
         }
 
         track.maxColumn = maxCol;
@@ -302,18 +220,17 @@ public class NarrativeTimelineWindow : EditorWindow
         {
             foreach (var tn in track.nodes)
             {
-                if (string.IsNullOrEmpty(tn.eventKey)) continue;
-                if (tn.category == NodeCategory.EventRaise)
+                foreach (var key in tn.emits)
                 {
-                    if (!raisersByKey.ContainsKey(tn.eventKey))
-                        raisersByKey[tn.eventKey] = new List<TimelineNode>();
-                    raisersByKey[tn.eventKey].Add(tn);
+                    if (!raisersByKey.TryGetValue(key, out var raisers))
+                        raisersByKey[key] = raisers = new List<TimelineNode>();
+                    raisers.Add(tn);
                 }
-                else if (tn.category == NodeCategory.EventWait)
+                foreach (var key in tn.waits)
                 {
-                    if (!waitersByKey.ContainsKey(tn.eventKey))
-                        waitersByKey[tn.eventKey] = new List<TimelineNode>();
-                    waitersByKey[tn.eventKey].Add(tn);
+                    if (!waitersByKey.TryGetValue(key, out var waiters))
+                        waitersByKey[key] = waiters = new List<TimelineNode>();
+                    waiters.Add(tn);
                 }
             }
         }
@@ -359,11 +276,35 @@ public class NarrativeTimelineWindow : EditorWindow
 
     // ─── Helpers ───
 
-    private static NodeCategory GetCategory(NarrativeNode node)
+    /// <summary>Tarjeta de la línea temporal con lo que el nodo declara de sí mismo.</summary>
+    private TimelineNode CreateTimelineNode(NarrativeNode node, int col, int row, int graphIndex)
     {
-        if (node == null) return NodeCategory.Other;
-        var typeName = node.GetType().Name;
-        return TypeToCategory.TryGetValue(typeName, out var cat) ? cat : NodeCategory.Other;
+        var type = node.GetType();
+        var category = NarrativeNodeCatalog.CategoryOf(type);
+        if (!_usedCategories.Contains(category)) _usedCategories.Add(category);
+
+        var tn = new TimelineNode
+        {
+            node = node,
+            category = category,
+            color = NarrativeNodeCatalog.ColorOf(category),
+            label = GetNodeLabel(node),
+            column = col,
+            row = row,
+            graphIndex = graphIndex,
+        };
+
+        _refs.Collect(node);
+        foreach (var signal in _refs.Signals)
+        {
+            if (string.IsNullOrEmpty(signal.Key)) continue;
+            if (signal.Role == SignalRole.Emite) tn.emits.Add(signal.Key);
+            else if (signal.Role == SignalRole.Escucha) tn.waits.Add(signal.Key);
+        }
+        var parts = tn.emits.Select(k => "↑ " + k).Concat(tn.waits.Select(k => "↓ " + k)).ToList();
+        tn.signals = parts.Count > 0 ? string.Join("  ", parts) : null;
+        tn.subtitle = GetNodeSubtitle(node, _refs);
+        return tn;
     }
 
     private static string GetNodeLabel(NarrativeNode node)
@@ -374,55 +315,24 @@ public class NarrativeTimelineWindow : EditorWindow
             var title = node.displayTitle;
             return title.Length > 22 ? title.Substring(0, 19) + "..." : title;
         }
-        return node.GetType().Name.Replace("Node", "");
+        return NarrativeNodeCatalog.TitleOf(node.GetType());
     }
 
-    private static string GetNodeSubtitle(NarrativeNode node)
+    /// <summary>
+    /// Detalle de la tarjeta: su señal principal, si no la misión que toca, si no el asset que
+    /// usa, si no cualquier señal; sin nada de eso, el nombre del tipo de nodo.
+    /// </summary>
+    private static string GetNodeSubtitle(NarrativeNode node, NarrativeNodeReferences refs)
     {
-        if (node == null) return "";
-        var typeName = node.GetType().Name;
-        switch (typeName)
-        {
-            case "WaitCustomEventNode":
-                return GetFieldValue<string>(node, "eventKey") ?? "";
-            case "RaiseCustomEventNode":
-                return GetFieldValue<string>(node, "eventKey") ?? "";
-            case "StartQuestNode":
-            case "CompleteQuestStepsNode":
-            case "WaitQuestCompleteNode":
-            case "OfferQuestNode":
-                return GetFieldValue<string>(node, "questId") ?? "";
-            case "PlayDialogueNode":
-                var dlg = GetFieldValue<DialogueAsset>(node, "dialogue");
-                return dlg != null ? dlg.name : "";
-            case "StartBattleNode":
-            case "WaitBattleWinNode":
-                return "";
-            default:
-                return typeName.Replace("Node", "");
-        }
-    }
-
-    private static string GetEventKey(NarrativeNode node)
-    {
-        if (node == null) return null;
-        var typeName = node.GetType().Name;
-        if (typeName == "WaitCustomEventNode" || typeName == "RaiseCustomEventNode")
-            return GetFieldValue<string>(node, "eventKey");
-        return null;
-    }
-
-    private static T GetFieldValue<T>(object obj, string fieldName)
-    {
-        if (obj == null) return default;
-        var field = obj.GetType().GetField(fieldName,
-            System.Reflection.BindingFlags.Public |
-            System.Reflection.BindingFlags.NonPublic |
-            System.Reflection.BindingFlags.Instance);
-        if (field == null) return default;
-        var val = field.GetValue(obj);
-        if (val is T typed) return typed;
-        return default;
+        foreach (var s in refs.Signals)
+            if (!string.IsNullOrEmpty(s.Key) && s.Label == null) return s.Key;
+        foreach (var q in refs.Quests)
+            if (!string.IsNullOrEmpty(q.QuestId)) return q.QuestId;
+        foreach (var a in refs.Assets)
+            if (a != null) return a.name;
+        foreach (var s in refs.Signals)
+            if (!string.IsNullOrEmpty(s.Key)) return s.Key;
+        return NarrativeNodeCatalog.TitleOf(node.GetType());
     }
 
     // ─── Runtime ───
@@ -627,7 +537,7 @@ public class NarrativeTimelineWindow : EditorWindow
         if (isHovered) _hoveredNode = tn;
 
         // Node background
-        var catColor = CategoryColors[tn.category];
+        var catColor = tn.color;
         if (isSelected)
             catColor = Color.Lerp(catColor, Color.white, 0.3f);
         else if (isHovered)
@@ -738,10 +648,10 @@ public class NarrativeTimelineWindow : EditorWindow
             });
         }
 
-        if (!string.IsNullOrEmpty(tn.eventKey))
+        if (!string.IsNullOrEmpty(tn.signals))
         {
             menu.AddSeparator("");
-            menu.AddDisabledItem(new GUIContent($"Evento: {tn.eventKey}"));
+            menu.AddDisabledItem(new GUIContent($"Señales: {tn.signals}"));
         }
 
         menu.ShowAsContext();
@@ -749,7 +659,7 @@ public class NarrativeTimelineWindow : EditorWindow
 
     private void OpenInGraphEditor(NarrativeGraph graph, NarrativeNode node)
     {
-        var window = GetWindow<Sendero.Narrative.Editor.NarrativeGraphWindow>();
+        var window = GetWindow<NarrativeGraphWindow>();
         window.LoadGraph(graph);
         window.Focus();
     }
@@ -859,7 +769,7 @@ public class NarrativeTimelineWindow : EditorWindow
     private void DrawLegend()
     {
         float legendWidth = 160;
-        float legendHeight = CategoryColors.Count * 18 + 28;
+        float legendHeight = _usedCategories.Count * 18 + 28;
         float x = position.width / _zoom - legendWidth - 20;
         float y = position.height / _zoom - legendHeight - 20;
 
@@ -878,11 +788,11 @@ public class NarrativeTimelineWindow : EditorWindow
         GUI.Label(new Rect(8, 4, legendWidth - 16, 16), "Leyenda", titleStyle);
 
         int i = 0;
-        foreach (var kvp in CategoryColors)
+        foreach (var category in _usedCategories)
         {
             float iy = 24 + i * 18;
-            EditorGUI.DrawRect(new Rect(8, iy + 2, 12, 12), kvp.Value);
-            GUI.Label(new Rect(24, iy, legendWidth - 32, 16), kvp.Key.ToString(), EditorStyles.miniLabel);
+            EditorGUI.DrawRect(new Rect(8, iy + 2, 12, 12), NarrativeNodeCatalog.ColorOf(category));
+            GUI.Label(new Rect(24, iy, legendWidth - 32, 16), category, EditorStyles.miniLabel);
             i++;
         }
 
@@ -900,10 +810,10 @@ public class NarrativeTimelineWindow : EditorWindow
         // Build tooltip text
         var lines = new List<string>();
         lines.Add(tn.node.displayTitle ?? tn.node.GetType().Name);
-        lines.Add($"Tipo: {tn.node.GetType().Name}");
-        if (!string.IsNullOrEmpty(tn.eventKey))
-            lines.Add($"Evento: {tn.eventKey}");
-        if (!string.IsNullOrEmpty(tn.subtitle) && tn.subtitle != tn.node.GetType().Name.Replace("Node", ""))
+        lines.Add($"Tipo: {NarrativeNodeCatalog.TitleOf(tn.node.GetType())} ({tn.category})");
+        if (!string.IsNullOrEmpty(tn.signals))
+            lines.Add($"Señales: {tn.signals}");
+        if (!string.IsNullOrEmpty(tn.subtitle) && tn.subtitle != NarrativeNodeCatalog.TitleOf(tn.node.GetType()))
             lines.Add($"Detalle: {tn.subtitle}");
         lines.Add($"GUID: {tn.node.guid.Substring(0, Mathf.Min(8, tn.node.guid.Length))}...");
 
@@ -939,7 +849,7 @@ public class NarrativeTimelineWindow : EditorWindow
         var filter = _searchFilter.ToLowerInvariant();
         if (tn.label != null && tn.label.ToLowerInvariant().Contains(filter)) return true;
         if (tn.subtitle != null && tn.subtitle.ToLowerInvariant().Contains(filter)) return true;
-        if (tn.eventKey != null && tn.eventKey.ToLowerInvariant().Contains(filter)) return true;
+        if (tn.signals != null && tn.signals.ToLowerInvariant().Contains(filter)) return true;
         if (tn.node.displayTitle != null && tn.node.displayTitle.ToLowerInvariant().Contains(filter)) return true;
         if (tn.node.GetType().Name.ToLowerInvariant().Contains(filter)) return true;
         return false;

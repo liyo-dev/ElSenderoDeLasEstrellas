@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,15 +22,12 @@ public class NarrativeRunner : MonoBehaviour
     NarrativeContext _ctx;
     NarrativeNode _current;
 
-    // FIX (Agosto 2026): generación activa por nodo-fork. Cada vez que un fork se (re)lanza —ya sea
-    // la primera vez, al reanudar tras una recarga, o al re-forkear en vivo por un bucle de
-    // reintento (ej. AWAKEN_START/AWAKEN_FAILED en la secuencia del Despertar, ver comentario en
-    // RunSubGraph)— se incrementa el contador de esa guid. Las ramas que quedan de una generación
-    // anterior se descartan en cuanto se detectan obsoletas, en vez de seguir avanzando y duplicar
-    // el tramo de éxito si el evento que esperaban (p. ej. AWAKEN_DONE) termina llegando igualmente
-    // para una rama ya abandonada. Vive solo en memoria: no necesita persistir porque una recarga
-    // reconstruye los forks desde cero vía RelaunchForkBranches, que también bombea su propia
-    // generación nueva.
+    // Generación activa por nodo fork. Cada vez que un fork se (re)lanza (la primera vez, al
+    // reanudar tras una recarga o al volver a él en vivo por un bucle de reintento) se incrementa
+    // el contador de su guid. Las ramas de una generación anterior se descartan en cuanto se ven
+    // obsoletas, en vez de seguir avanzando y duplicar el tramo de éxito si el evento que esperaban
+    // llega igualmente para una rama ya abandonada. Vive solo en memoria: una recarga reconstruye
+    // los forks desde cero con RelaunchForkBranches, que también abre generación nueva.
     readonly Dictionary<string, int> _forkGeneration = new();
 
     int BumpForkGeneration(string forkGuid)
@@ -43,23 +40,17 @@ public class NarrativeRunner : MonoBehaviour
     bool IsForkGenerationStale(string forkGuid, int gen)
         => _forkGeneration.TryGetValue(forkGuid, out var current) && current != gen;
 
-    // FIX A6 (auditoría 2026-08-07): nodos de ramas de fork que están actualmente "esperando" un
-    // callback (ver RunSubGraph). El camino principal (_current) ya recibía Exit() al interrumpirse
-    // vía StopExecution(); las ramas de fork nunca lo recibían — si un nodo esperaba un callback
-    // externo (WaitQuestCompleteNode._cb, StartBattleNode._onBattleWonCb) y esos campos viven en el
-    // NarrativeNode serializado del asset COMPARTIDO (no por-runner), quedaban suscritos para
-    // siempre tras StopAllRunners/recarga, y podían disparar side effects reales (completar una
-    // quest, dar por ganada una batalla) de una sesión ya muerta cuando una re-entrada posterior
-    // pisaba el mismo campo. No resuelve el problema de raíz (el estado de suscripción sigue
-    // viviendo en el asset compartido), pero cierra el escenario concreto que StopExecution() debe
-    // garantizar: nada queda escuchando tras parar la ejecución de este runner.
+    // Nodos de ramas de fork que están esperando su callback (ver RunSubGraph). StopExecution()
+    // les llama a Exit() igual que al nodo del flujo principal: los nodos guardan su suscripción en
+    // el asset compartido, y sin Exit() seguirían escuchando tras parar el runner y podrían
+    // completar algo (una misión, una batalla) de una sesión ya terminada.
     readonly HashSet<NarrativeNode> _activeBranchNodes = new();
 
     // ─────────────────────────────────────────────────────────────────────────
-    // Puertos con nombre (Septiembre 2026 — sistema narrativo único).
+    // Puertos con nombre.
     // Un nodo con GetOutputPorts() != null elige su salida con SelectOutput(); el runner
-    // consume esa elección justo al avanzar (TakeSelectedOutput). Vive por runner (no en el
-    // asset compartido) para no repetir el problema de estado runtime en ScriptableObjects.
+    // consume esa elección justo al avanzar (TakeSelectedOutput). Vive en el runner (no en el
+    // asset compartido) para no guardar estado de ejecución en el ScriptableObject.
     // ─────────────────────────────────────────────────────────────────────────
     readonly Dictionary<NarrativeNode, int> _selectedOutputs = new();
 
@@ -101,11 +92,9 @@ public class NarrativeRunner : MonoBehaviour
         return next;
     }
 
-    // ✅ API pública para acceder al nodo actual y su estado
+    /// <summary>Nodo del flujo principal en curso (null si espera en ramas de un fork o terminó).</summary>
     public NarrativeNode CurrentNode => _current;
     public bool IsCurrentNodeBlockingSave => _current != null && _current.blockSaving;
-
-    // Ya no hay auto-start. Los grafos se activan mediante señales/eventos.
 
     /// <summary>
     /// Detiene toda ejecución en curso: para corrutinas huérfanas y limpia el nodo actual.
@@ -121,7 +110,6 @@ public class NarrativeRunner : MonoBehaviour
         }
         _current = null;
 
-        // FIX A6 (auditoría 2026-08-07): ver comentario de _activeBranchNodes.
         if (_ctx != null && _activeBranchNodes.Count > 0)
         {
             foreach (var node in _activeBranchNodes)
@@ -311,7 +299,7 @@ public class NarrativeRunner : MonoBehaviour
             return;
         }
 
-        // Si hay una sola salida, comportarse como antes
+        // Una sola salida: paso normal.
         if (outs.Count == 1)
         {
             var nextGuid = outs.FirstOrDefault(g => !string.IsNullOrEmpty(g));
@@ -407,7 +395,7 @@ public class NarrativeRunner : MonoBehaviour
                 continue;
             }
 
-            // Si no hay estado guardado (save anterior al fix), relanzar desde el inicio de la rama
+            // Sin estado guardado de la rama, se relanza desde su inicio
             string resumeGuid = !string.IsNullOrEmpty(savedNodeGuid) ? savedNodeGuid : branchStartGuid;
             var resumeNode = graph.FindNode(resumeGuid);
 
@@ -436,16 +424,8 @@ public class NarrativeRunner : MonoBehaviour
     }
 
     /// <summary>
-    /// Ejecuta una rama de nodos secuencialmente a partir de 'start'.
-    /// Rastrea el progreso en el blackboard para permitir guardar y reanudar.
-    /// </summary>
-    /// <summary>
-    /// Llama a Exit() de un nodo al abandonarlo, igual que hace GoTo() en el flujo principal.
-    /// FIX (16 sept 2026): RunSubGraph avanzaba de nodo SIN llamar a Exit(), así que cualquier
-    /// limpieza de nodo (desuscripciones, y sobre todo WaitNpcInteractionNode.HideIcon()) no se
-    /// ejecutaba nunca dentro de una rama de fork. Consecuencia visible: el icono de quest sobre la
-    /// cabeza del NPC se quedaba "pedido" para siempre y reaparecía solo al cerrarse cada diálogo
-    /// — incidencia "icono de quest visible durante la conversación".
+    /// Llama a Exit() de un nodo al abandonarlo dentro de una rama, igual que hace GoTo() en el
+    /// flujo principal, para que el nodo deshaga lo suyo (suscripciones, marcas sobre actores…).
     /// </summary>
     void ExitNodeSafe(NarrativeNode node)
     {
@@ -457,6 +437,10 @@ public class NarrativeRunner : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ejecuta una rama de nodos secuencialmente a partir de 'start'.
+    /// Rastrea el progreso en el blackboard para permitir guardar y reanudar.
+    /// </summary>
     System.Collections.IEnumerator RunSubGraph(NarrativeNode start, string forkGuid, int branchIndex, int forkGeneration = 0)
     {
         bool track = !string.IsNullOrEmpty(forkGuid) && branchIndex >= 0;
@@ -478,13 +462,11 @@ public class NarrativeRunner : MonoBehaviour
                     // esta corrutina ARRANCA en este fork porque se está reanudando desde el
                     // blackboard (recarga/guardado). Ahí sí toca reanudar subramas persistidas.
                     //
-                    // Si en cambio llegamos a este mismo nodo por avance EN VIVO dentro de esta
-                    // misma sesión (p. ej. un bucle de reintento cuya salida de fallo vuelve a
-                    // apuntar a este fork), no se puede tratar como resume: RelaunchForkBranches
-                    // volvería a resolver esta rama al mismo nodo sin ningún yield de por medio,
-                    // entrando en recursión síncrona infinita (StackOverflowException — bug
-                    // reproducido con el reintento de StarAwakening). En ese caso hay que
-                    // re-forkear limpio en vez de "resumir".
+                    // Si en cambio se llega a este mismo nodo avanzando en vivo dentro de la misma
+                    // sesión (p. ej. un bucle de reintento cuya salida de fallo vuelve a este
+                    // fork), no se puede tratar como reanudación: RelaunchForkBranches resolvería
+                    // esta rama al mismo nodo sin ningún yield de por medio y entraría en recursión
+                    // síncrona infinita. En ese caso se vuelve a lanzar el fork limpio.
                     if (node == start)
                     {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -512,10 +494,8 @@ public class NarrativeRunner : MonoBehaviour
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[NarrativeRunner] ▶ SubGraph[{branchIndex}] → {node.GetType().Name} '{node.displayTitle}' ({node.guid})");
 #endif
-            // FIX A6 (auditoría 2026-08-07): registrar este nodo como "esperando" mientras dure el
-            // WaitUntil de abajo, para que StopExecution() pueda encontrarlo y llamar a su Exit()
-            // si el runner se detiene/recarga mientras esta rama está a mitad de espera. Ver
-            // comentario de _activeBranchNodes.
+            // El nodo queda registrado como «esperando» mientras dure el WaitUntil de abajo, para
+            // que StopExecution() le llame a Exit() si el runner se para a mitad de espera.
             _activeBranchNodes.Add(node);
             try
             {
@@ -540,12 +520,9 @@ public class NarrativeRunner : MonoBehaviour
             // "esperando", deja de estar sujeto al Exit() de StopExecution.
             _activeBranchNodes.Remove(node);
 
-            // FIX (Agosto 2026): si este fork se re-lanzó con una generación más nueva mientras esta
-            // rama esperaba (bucle de reintento que re-entra en el mismo nodo fork — ver comentario
-            // en el bloque "revisitado en vivo" más abajo), esta rama es de una generación obsoleta.
-            // Descartarla evita ejecutar dos veces el tramo de éxito (ej. UnlockAbilitiesNode →
-            // StartQuestNode → StartBattleNode) si el evento que esperaba (ej. AWAKEN_DONE) termina
-            // llegando igualmente para una rama ya abandonada.
+            // Si el fork se volvió a lanzar con una generación más nueva mientras esta rama esperaba
+            // (bucle de reintento que vuelve al mismo fork), esta rama es obsoleta: se descarta para
+            // no ejecutar dos veces el tramo de éxito si el evento que esperaba llega igualmente.
             if (forkGeneration != 0 && IsForkGenerationStale(forkGuid, forkGeneration))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -646,8 +623,6 @@ public class NarrativeRunner : MonoBehaviour
 
         GoTo(next);
     }
-
-    // Snapshot export/import eliminado: la progresión depende de flags/misiones
 
     public void SetSignalsProvider(DefaultNarrativeSignals provider)
     {

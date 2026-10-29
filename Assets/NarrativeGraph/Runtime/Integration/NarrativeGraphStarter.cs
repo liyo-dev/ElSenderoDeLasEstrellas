@@ -24,36 +24,14 @@ public class NarrativeGraphStarter : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool logDebug = true;
 
-    // FIX C4 (auditoría 2026-08-07): RestoreBlackboardsFromPreset() se llamaba antes en CADA
-    // StartGraphs() — es decir, cada vez que se cargaba una escena de gameplay con este
-    // componente, no solo al continuar una partida real. Pero preset.narrativeBlackboards solo
-    // se refresca al guardar en un SavePoint: si el jugador guarda, avanza el grafo (recibe un
-    // ítem vía GiveInventoryItemNode), y cambia de escena SIN volver a guardar, el blackboard EN
-    // VIVO de la escena nueva retrocedía al snapshot del último save — el flag que marcaba el
-    // ítem como entregado desaparecía sin que el inventario se revirtiera, y el nodo lo volvía a
-    // entregar (mismo patrón que INC-020). Restaurar como mucho una vez por sesión, justo cuando
-    // GameBootService.OnProfileReady confirma que hay datos de sesión reales listos (arranque,
-    // "continuar" o recarga de preset de testing), evita el retroceso en cambios de escena
-    // normales sin tocar el comportamiento en el momento en que sí hace falta restaurar.
-    private static bool _hasRestoredBlackboardsThisSession;
+    // Los blackboards guardados se restauran como mucho una vez por partida cargada (arranque,
+    // continuar o recarga de pruebas). Si se restauraran en cada escena con este componente, el
+    // estado vivo retrocedería al último guardado al cambiar de escena sin guardar: un nodo que ya
+    // entregó un objeto lo volvería a entregar. Ver INC-020.
+    private static int s_restoredLoadCount = -1;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    private static void ResetNarrativeGraphStarterStatics()
-    {
-        _hasRestoredBlackboardsThisSession = false;
-        // -= antes de += para que quede idempotente sin importar cuántas veces se ejecute este
-        // método (se ejecuta en cada entrada a PlayMode, con o sin domain reload) ni el orden
-        // respecto al propio reset de GameBootService.OnProfileReady. Necesario en builds
-        // también (no solo editor): es la única vía por la que este flag se limpia en cada
-        // sesión/recarga real.
-        GameBootService.OnProfileReady -= HandleProfileReadyForBlackboardRestore;
-        GameBootService.OnProfileReady += HandleProfileReadyForBlackboardRestore;
-    }
-
-    private static void HandleProfileReadyForBlackboardRestore()
-    {
-        _hasRestoredBlackboardsThisSession = false;
-    }
+    private static void ResetStatics() => s_restoredLoadCount = -1;
 
     void Start()
     {
@@ -69,9 +47,8 @@ public class NarrativeGraphStarter : MonoBehaviour
     /// </summary>
     private System.Collections.IEnumerator WaitForHubAndStart()
     {
-        // Esperar al menos un frame para que Start() de todos los componentes se complete.
-        // Esto garantiza que NPCInteractiveNarrativeExecutor.Start() → RestoreState() corra
-        // antes de que el runner empiece a ejecutar StartQuestNode y dispare OnQuestStarted.
+        // Un fotograma de espera para que todos los Start() de la escena hayan corrido antes de
+        // que el grafo empiece a ejecutar nodos.
         yield return null;
 
         // Esperar hasta que el Hub esté disponible
@@ -103,15 +80,13 @@ public class NarrativeGraphStarter : MonoBehaviour
     }
 
     /// <summary>
-    /// Inicia todos los grafos configurados en la lista.
-    /// Si hay un estado guardado previo, lo restaura primero.
+    /// Inicia todos los grafos configurados en la lista. Antes restaura, una vez por partida
+    /// cargada, el estado guardado de sus blackboards.
     /// </summary>
     public void StartGraphs()
     {
         if (requireActiveScene && SceneManager.GetActiveScene() != gameObject.scene)
         {
-            // if (logDebug)
-            //     Debug.Log($"[NarrativeGraphStarter] Escena '{gameObject.scene.name}' no es la activa. Inicio de grafos omitido.");
             return;
         }
 
@@ -123,8 +98,6 @@ public class NarrativeGraphStarter : MonoBehaviour
 
         if (graphLabels == null || graphLabels.Length == 0)
         {
-            // if (logDebug)
-            //     Debug.LogWarning("[NarrativeGraphStarter] No hay grafos configurados para iniciar.");
             return;
         }
 
@@ -135,18 +108,12 @@ public class NarrativeGraphStarter : MonoBehaviour
             return;
         }
 
-        // Restaurar blackboards guardados si existen (desde el preset)
-        RestoreBlackboardsFromPreset(hub);
-
-        // if (logDebug)
-        //     Debug.Log($"[NarrativeGraphStarter] Iniciando {graphLabels.Length} grafo(s) en escena '{gameObject.scene.name}'");
+        RestoreSavedBlackboards(hub);
 
         foreach (var label in graphLabels)
         {
             if (string.IsNullOrEmpty(label))
             {
-                // if (logDebug)
-                //     Debug.LogWarning("[NarrativeGraphStarter] Etiqueta vacía en la lista, saltando...");
                 continue;
             }
 
@@ -156,58 +123,39 @@ public class NarrativeGraphStarter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Restaura los blackboards desde el preset guardado.
-    /// </summary>
-    private void RestoreBlackboardsFromPreset(NarrativeGraphHub hub)
+    /// <summary>Restaura los blackboards de la partida cargada, si aún no se ha hecho para esta carga.</summary>
+    private void RestoreSavedBlackboards(NarrativeGraphHub hub)
     {
-        // FIX C4: ver comentario de _hasRestoredBlackboardsThisSession más arriba. Ya se
-        // restauró una vez en esta sesión (arranque/continuar/recarga de preset) — no volver a
-        // pisar el blackboard en vivo con el snapshot del último save en cada cambio de escena.
-        if (_hasRestoredBlackboardsThisSession)
+        if (!NarrativeServices.TryGet(out INarrativeSaveData save, nameof(NarrativeGraphStarter)))
             return;
 
-        if (!GameBootService.IsAvailable)
+        // Sin partida cargada todavía no se marca nada: se reintenta en el próximo StartGraphs().
+        if (!save.IsLoaded)
         {
-            Debug.LogWarning("[NarrativeGraphStarter] ⚠️ GameBootService no disponible - no hay blackboards para restaurar");
-            return; // no marcar como restaurado: GameBootService puede no estar listo aún, reintentar en el próximo StartGraphs()
-        }
-
-        // A partir de aquí, cualquiera que sea el resultado (incluso si el preset no tiene
-        // blackboards que restaurar), esta sesión ya ha hecho su intento real de restauración.
-        _hasRestoredBlackboardsThisSession = true;
-
-        var profile = GameBootService.Profile;
-        if (profile == null)
-        {
-            Debug.LogWarning("[NarrativeGraphStarter] ⚠️ GameBootProfile es null");
+            Debug.LogWarning("[NarrativeGraphStarter] Todavía no hay partida cargada: no hay blackboards que restaurar.");
             return;
         }
 
-        var preset = profile.GetActivePresetResolved();
-        if (preset == null)
+        if (save.LoadCount == s_restoredLoadCount)
+            return;
+        s_restoredLoadCount = save.LoadCount;
+
+        var records = save.GetSavedBlackboards();
+        if (records == null)
         {
-            Debug.LogWarning("[NarrativeGraphStarter] ⚠️ Preset es null");
+            Debug.LogWarning("[NarrativeGraphStarter] La partida cargada no tiene datos: los grafos empiezan desde su inicio.");
             return;
         }
-
-        if (preset.narrativeBlackboards == null)
+        if (records.Count == 0)
         {
-            Debug.LogWarning($"[NarrativeGraphStarter] ⚠️ preset.narrativeBlackboards es null para preset '{preset.name}' - Los grafos iniciarán desde el nodo Start");
-            return;
-        }
-
-        if (preset.narrativeBlackboards.Count == 0)
-        {
-            Debug.LogWarning($"[NarrativeGraphStarter] ⚠️ preset.narrativeBlackboards está vacío para preset '{preset.name}' - Los grafos iniciarán desde el nodo Start");
+            Debug.LogWarning("[NarrativeGraphStarter] La partida no guardó blackboards: los grafos empiezan desde su inicio.");
             return;
         }
 
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[NarrativeGraphStarter] 🔄 Restaurando blackboards desde preset '{preset.name}' ({preset.narrativeBlackboards.Count} grafos)");
+        Debug.Log($"[NarrativeGraphStarter] Restaurando blackboards de la partida ({records.Count} grafos)");
 #endif
-
-        hub.RestoreBlackboards(preset.narrativeBlackboards);
+        hub.RestoreBlackboardRecords(records);
     }
 
     /// <summary>

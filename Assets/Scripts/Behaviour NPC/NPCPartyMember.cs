@@ -256,31 +256,21 @@ namespace Game.NPC
             {
                 _nextIdleCheck = Time.time + 0.5f;
 
-                if (ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.HiddenNpc == this)
+                if (ControlDelJugador.RepresentadoPorElJugador(this))
                     return;
 
                 var currentState = _npcManager.Brain.CurrentState;
-                // ✅ FIX: comprobar también CinematicSequencerBase.AnySequenceActive (mismo patrón
-                // que CompanionFollowPrompt, comentario "FIX INC-059"). Context.IsInCinematic solo se
-                // activa vía CinematicState de la FSM; TabernaSequencer sienta a los NPCs pausando
-                // NPCBehaviourManagerV2 directamente (ForceIdle() + enabled=false) sin pasar por esa
-                // FSM, así que Context.IsInCinematic nunca llega a true durante la secuencia. Como
-                // ForceIdle() deja al Brain en el estado "Idle", este chequeo (que corre en
-                // NPCPartyMember.Update(), un componente aparte que sigue activo aunque
-                // NPCBehaviourManagerV2 esté deshabilitado) veía "Idle" + "no cinemática" y llamaba a
-                // StartFollowing() a mitad de la secuencia de la taberna — deshaciendo el sentado de
-                // Estela de forma intermitente (según el instante en que caía este chequeo de 0.5s
-                // respecto al SeatNPC). Eldran no sufría esto porque en esta partida no figura como
-                // miembro activo del party (ver PlayerParty), así que este bucle nunca se ejecutaba
-                // para él.
+                // Además de Context.IsInCinematic (solo lo pone CinematicState de la FSM), mira
+                // CinematicSequencerBase.AnySequenceActive: los secuenciadores sientan a los NPCs
+                // pausando NPCBehaviourManagerV2 (ForceIdle() + enabled=false) sin pasar por la
+                // FSM, y este componente sigue corriendo. Ver INC-059.
                 if (currentState != null && currentState.StateName == "Idle"
                     && !_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                     && !CinematicSequencerBase.AnySequenceActive
                     && (PartyControlManager.Instance?.IsPartyFollowing ?? true)
-                    // Un NPC anclado (barco, asiento, modo Libre) no debe volver a seguir aunque
-                    // su cerebro esté en Idle: el ancla manda. Sin esto, este chequeo de 0,5 s
-                    // deshace el anclaje y lo devuelve a caminar en el sitio.
-                    && !(_npcManager.Context?.IsPinnedByParty ?? false)
+                    // Un NPC anclado (barco, modo Libre) no vuelve a seguir aunque su cerebro
+                    // esté en Idle: el ancla manda.
+                    && !(_npcManager.Context?.EstaAnclado ?? false)
                     && GetDistanceToPlayer() <= 40f)
                 {
                     StartFollowing();
@@ -441,12 +431,11 @@ namespace Game.NPC
         {
             if (_npcManager?.Brain == null || EstaCaido) return;
 
-            // Un NPC anclado (barco, asiento, modo Libre) no vuelve a seguir aunque otro
-            // sistema llame aquí directamente: el ancla manda y se libera explícitamente.
-            if (_npcManager.Context?.IsPinnedByParty ?? false) return;
+            // Un NPC anclado (barco, modo Libre) no vuelve a seguir aunque otro sistema llame
+            // aquí directamente: el ancla manda y la suelta quien la puso.
+            if (_npcManager.Context?.EstaAnclado ?? false) return;
 
-            // Solo cambiar a FollowState si no estamos en combate/cinemática.
-            // ✅ FIX: añadido AnySequenceActive — ver comentario detallado en Update().
+            // Solo cambiar a FollowState si no estamos en combate/cinemática (ver Update()).
             if (!_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                 && !CinematicSequencerBase.AnySequenceActive)
             {
@@ -463,9 +452,8 @@ namespace Game.NPC
             if (_npcManager?.Brain == null || EstaCaido) return;
 
             // Mismo invariante que StartFollowing: el ancla manda.
-            if (_npcManager.Context?.IsPinnedByParty ?? false) return;
+            if (_npcManager.Context?.EstaAnclado ?? false) return;
 
-            // ✅ FIX: añadido AnySequenceActive — ver comentario detallado en Update().
             if (!_npcManager.Context.IsInCombat && !_npcManager.Context.IsInCinematic
                 && !CinematicSequencerBase.AnySequenceActive)
                 _npcManager.Brain.ChangeState(new FollowPlayerState(this, skipPartyCheck: true));
@@ -578,15 +566,17 @@ namespace Game.NPC
                 ? activeSlot
                 : null;
 
-            // Limpiar anclaje al rejoinearse al party
+            // Al unirse sigue al jugador: suelta el ancla de estar fuera del grupo y la del modo
+            // Libre (como al pulsar «Sígueme»). Las de otros sistemas (el barco) siguen.
             if (_npcManager?.Context != null)
-                _npcManager.Context.IsPinnedByParty = false;
+            {
+                _npcManager.Context.Soltar(this);
+                _npcManager.Context.Soltar(PartyControlManager.AnclaDelModoLibre);
+            }
 
-            // Asegurar que los renderers están visibles (pueden haber sido ocultados por HideNonPartyNPCs)
-            // EXCEPTO si este NPC es el oculto (controlado por el jugador vía character swap)
-            bool isHiddenBySwapper = ActiveCharacterSwapper.Instance != null
-                                     && ActiveCharacterSwapper.Instance.HiddenNpc == this;
-            if (!isHiddenBySwapper)
+            // Renderers visibles (HideNonPartyNPCs los apaga a quien no está en el grupo), salvo
+            // si el jugador lleva a este personaje: esa visibilidad es del relevo de personaje.
+            if (!ControlDelJugador.RepresentadoPorElJugador(this))
             {
                 foreach (var r in GetComponentsInChildren<Renderer>(true))
                     r.enabled = true;
@@ -628,9 +618,8 @@ namespace Game.NPC
 
             Log("👋 Abandonó el equipo");
 
-            // Anclar al NPC: queda fijo donde está sin vagar hasta que rejoinee el party
-            if (_npcManager?.Context != null)
-                _npcManager.Context.IsPinnedByParty = true;
+            // Fuera del grupo se queda donde está, sin vagar, hasta que vuelva a unirse.
+            _npcManager?.Context?.Anclar(this);
 
             // Forzar Idle directamente (no restaurar estado anterior que podría ser WanderState)
             _npcManager?.ForceIdle();
@@ -663,7 +652,7 @@ namespace Game.NPC
             // Un NPC anclado (barco, asiento, modo Libre) no entra en combate: si no, el
             // AllyCombatState lo saca del puesto y lo pone a lanzar hechizos en bucle encima
             // del barco (ver INC-808).
-            if (_npcManager.Context?.IsPinnedByParty ?? false)
+            if (_npcManager.Context?.EstaAnclado ?? false)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCPartyMember:{name}] ⚓ Ignorando combate: NPC anclado");
@@ -672,7 +661,7 @@ namespace Game.NPC
             }
 
             // No interrumpir si el jugador está controlando directamente este NPC
-            if (ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.HiddenNpc == this)
+            if (ControlDelJugador.RepresentadoPorElJugador(this))
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.Log($"[NPCPartyMember:{name}] ℹ️ Ignorando combate: personaje bajo control del jugador");
@@ -700,6 +689,9 @@ namespace Game.NPC
         /// Está caído en combate (CuerpoDelGrupo, INC-717): no lucha ni sigue hasta que lo levantan.
         /// </summary>
         public bool EstaCaido => TryGetComponent(out CuerpoDelGrupo cuerpo) && cuerpo.Caido;
+
+        /// <summary>Su cerebro está siguiendo al jugador (FollowPlayerState).</summary>
+        public bool EstaSiguiendo => _npcManager?.Brain?.CurrentState is FollowPlayerState;
 
         /// <summary>
         /// Tras levantarse de una caída: vuelve al combate si sigue habiendo enemigos, o a seguir
@@ -730,7 +722,7 @@ namespace Game.NPC
 
             // Si está anclado, solo se limpia el flag de combate: sigue en su puesto y no
             // vuelve a seguir ni a Idle (ver INC-808).
-            if (_npcManager.Context?.IsPinnedByParty ?? false)
+            if (_npcManager.Context?.EstaAnclado ?? false)
             {
                 _npcManager.ExitCombat();
                 return;

@@ -1,138 +1,281 @@
 using UnityEngine;
 
 /// <summary>
-/// VFX de rayo/trueno generado ENTERAMENTE por código, sin depender de ningún asset de terceros —
-/// pensado para sustituir a lightImpactVfx/darkImpactVfx en la secuencia del prólogo (pedido de
-/// Raúl, 12/09/2026: "en el centro debe salir el rayo", en vez del orbe actual). Genera un
-/// LineRenderer en zigzag desde justo encima del punto de impacto hasta su posición, más 1-2
-/// ramas secundarias más finas, y un flash de luz puntual que decae.
+/// Rayo generado entero por código (sin assets de terceros): un trazo en zigzag desde arriba hasta
+/// el punto de impacto, ramas secundarias más finas, halo translúcido opcional, parpadeo opcional y
+/// un destello de luz puntual que decae. Lo usan los rayos de la secuencia del prólogo
+/// (VFX_RayoColision_Claro / _Oscuro, cada uno con su color) y los rayos de tormenta de
+/// DayNightCycle.
 ///
-/// FIX (12 sep 2026): "MissingReferenceException... ObjectPool.Get()" — reportado justo después
-/// de que el rayo ya se viera bien en el centro. Causa: lightImpactVfx/darkImpactVfx se reproducen
-/// vía VfxPoolService (ver Co_Collision/Co_WarFlashes en la secuencia del prólogo), que NUNCA
-/// destruye sus instancias — las pre-crea una vez (ObjectPool.CreateNewObject) y luego solo hace
-/// SetActive(true)/SetActive(false) para reutilizarlas. La primera versión de este script llamaba
-/// Destroy(gameObject, lifetime) en Awake() — pero Awake() ya se dispara en el PRE-WARM del pool
-/// (4 instancias creadas por adelantado antes de que nadie las "reproduzca"), así que esas 4
-/// instancias se autodestruían solas ~0.35s después de crearse el pool, mucho antes de que
-/// Co_Collision/Co_WarFlashes llegaran a pedir una — pool.Get() intentaba reactivar un Transform ya
-/// destruido y explotaba en el SetActive(true) de ObjectPool.cs:100. Ahora el prefab NUNCA se
-/// destruye a sí mismo: construye los LineRenderer/luz UNA vez en Awake() y los REGENERA (nueva
-/// forma en zigzag, luz a intensidad completa) en OnEnable() — que es lo que de verdad se dispara
-/// cada vez que el pool lo reactiva —, dejando que sea VfxPoolService quien decida cuándo
-/// desactivarlo (SetActive(false) vía pool.Return()), exactamente igual que espera de cualquier
-/// prefab pooled.
+/// Está hecho para VfxPoolService: el pool crea las instancias por adelantado y luego solo las
+/// activa y desactiva, así que el rayo nunca se destruye a sí mismo. Los LineRenderer y la luz se
+/// construyen una vez en Awake y la forma se regenera en OnEnable (cada vez que el pool reactiva la
+/// instancia). Cuándo desaparece lo decide quien llama a VfxPoolService.Play(..., lifetime).
 ///
-/// Se generan dos prefabs con este mismo script (VFX_RayoColision_Claro / _Oscuro, en
-/// Assets/_VFX/Prologue), cada uno con su propio 'boltColor' — así se conserva la distinción
-/// visual "energía clara de Will" / "energía oscura del Mago Oscuro" que ya tenían lightFlashColor/
-/// darkFlashColor en el sequencer, ahora también en el propio rayo.
+/// Dos formas de lanzarlo:
+///   - Tal cual: VfxPoolService.Play(prefab, impacto, rot) → rayo vertical de boltHeight sobre el
+///     punto, con el aspecto del prefab.
+///   - Entre dos puntos: tras Play, <see cref="Lanzar"/>(desde, hasta, ancho, color) recoloca el
+///     rayo, escala su forma al largo pedido y le da ancho y color propios.
+/// Sin prefab, <see cref="CrearPlantilla"/> construye en código una plantilla inactiva que se pasa a
+/// VfxPoolService.Play igual que un prefab.
 /// </summary>
 [DisallowMultipleComponent]
 public class ProceduralLightningBoltVfx : MonoBehaviour
 {
     [Header("Forma")]
+    [Tooltip("Altura (m) del rayo cuando se lanza tal cual. Con Lanzar, la forma entera se escala al largo pedido tomando esta altura como referencia.")]
     [SerializeField] private float boltHeight = 2.2f;
     [SerializeField] private int segments = 9;
+    [Tooltip("Desvío lateral máximo de cada quiebro del zigzag (m), para un rayo de boltHeight de alto.")]
     [SerializeField] private float jitterAmount = 0.22f;
     [SerializeField] private int branchCount = 2;
+    [Tooltip("Cuánto se abren las ramas hacia un lado según bajan, en fracción de su largo. 0 = bajan rectas.")]
+    [SerializeField, Range(0f, 1f)] private float aperturaDeRamas = 0f;
 
     [Header("Aspecto")]
     [SerializeField] private Color boltColor = new Color(1f, 0.95f, 0.8f, 1f);
     [SerializeField] private float boltWidth = 0.06f;
-    [Tooltip("Opcional — si se deja vacío, usa un material additivo compartido generado en runtime (Sprites/Default o similar), sin depender de ningún asset del proyecto.")]
+    [Tooltip("Opcional — si se deja vacío, usa un material additivo compartido generado en runtime, sin depender de ningún asset del proyecto.")]
     [SerializeField] private Material boltMaterial;
+    [Tooltip("Ancho del trazo en el punto de impacto, en fracción del ancho de arriba (1 = igual de ancho todo el rayo).")]
+    [SerializeField, Range(0.05f, 1f)] private float anchoEnElImpacto = 1f;
+    [Tooltip("Opacidad del trazo en el punto de impacto, en fracción de la de arriba (0 = se desvanece al llegar).")]
+    [SerializeField, Range(0f, 1f)] private float opacidadEnElImpacto = 0f;
+    [Tooltip("Ancho del halo translúcido de cada trazo, en veces el ancho del trazo. 0 = sin halo.")]
+    [SerializeField, Min(0f)] private float anchoDelHalo = 0f;
+    [Tooltip("Color (con su transparencia) del halo.")]
+    [SerializeField] private Color colorDelHalo = new Color(0.55f, 0.65f, 1f, 0.22f);
+
+    [Header("Parpadeo")]
+    [Tooltip("Tramos (segundos de tiempo real) en los que el rayo se alterna encendido y apagado, empezando encendido; tras el último queda apagado. Vacío = visible todo el rato.")]
+    [SerializeField] private float[] parpadeo = new float[0];
 
     [Header("Luz")]
+    [Tooltip("Intensidad del destello de luz puntual en el impacto. 0 = sin luz.")]
     [SerializeField] private float flashLightIntensity = 6f;
     [SerializeField] private float flashLightRange = 5f;
     [Tooltip("Velocidad (por segundo) a la que decae la intensidad de la luz tras cada reactivación — no controla cuánto dura el VFX en pantalla, eso lo decide quien llama a VfxPoolService.Play(..., lifetime).")]
     [SerializeField] private float flashDecaySpeed = 12f;
 
+    /// Aspecto de una plantilla creada en código (<see cref="CrearPlantilla"/>). El largo, el ancho y
+    /// el color se dan en cada <see cref="Lanzar"/>; el desvío va en fracción del largo.
+    public struct Ajustes
+    {
+        public Material material;
+        public int segmentos;
+        public float desvioRelativo;
+        public int ramas;
+        public float aperturaDeRamas;
+        public float anchoEnElImpacto;
+        public float opacidadEnElImpacto;
+        public float anchoDelHalo;
+        public Color colorDelHalo;
+        public float[] parpadeo;
+        public float intensidadDeLuz;
+    }
+
+    private struct Trazo
+    {
+        public LineRenderer nucleo;
+        public LineRenderer halo;
+    }
+
     private Light _flashLight;
-    private LineRenderer _mainBoltLr;
-    private LineRenderer[] _branchRenderers;
-    private Transform[] _branchRoots;
+    private Trazo _principal;
+    private Trazo[] _ramas;
+    private float _tiempoEncendido;
+    private bool _visible = true;
     private static Material _sharedRuntimeMat;
+
+    /// Crea una plantilla inactiva (fuera de escena, sobrevive a cambios de escena) con el aspecto
+    /// indicado, para usarla como prefab en VfxPoolService.Play. Al estar inactiva no construye
+    /// nada: cada copia del pool lo hace en su propio Awake.
+    public static GameObject CrearPlantilla(string nombre, in Ajustes ajustes)
+    {
+        var go = new GameObject(nombre);
+        go.SetActive(false);
+        DontDestroyOnLoad(go);
+
+        var vfx = go.AddComponent<ProceduralLightningBoltVfx>();
+        vfx.boltHeight = 1f;
+        vfx.jitterAmount = ajustes.desvioRelativo;
+        vfx.segments = Mathf.Max(2, ajustes.segmentos);
+        vfx.branchCount = Mathf.Max(0, ajustes.ramas);
+        vfx.aperturaDeRamas = Mathf.Clamp01(ajustes.aperturaDeRamas);
+        vfx.boltMaterial = ajustes.material;
+        vfx.anchoEnElImpacto = Mathf.Clamp(ajustes.anchoEnElImpacto, 0.05f, 1f);
+        vfx.opacidadEnElImpacto = Mathf.Clamp01(ajustes.opacidadEnElImpacto);
+        vfx.anchoDelHalo = Mathf.Max(0f, ajustes.anchoDelHalo);
+        vfx.colorDelHalo = ajustes.colorDelHalo;
+        vfx.parpadeo = ajustes.parpadeo ?? new float[0];
+        vfx.flashLightIntensity = Mathf.Max(0f, ajustes.intensidadDeLuz);
+        return go;
+    }
 
     void Awake()
     {
-        _mainBoltLr = CreateBoltRenderer(transform, "Bolt");
+        _principal = CrearTrazo(transform, "Bolt");
 
-        _branchRenderers = new LineRenderer[Mathf.Max(0, branchCount)];
-        _branchRoots = new Transform[_branchRenderers.Length];
-        for (int b = 0; b < _branchRenderers.Length; b++)
+        _ramas = new Trazo[Mathf.Max(0, branchCount)];
+        for (int b = 0; b < _ramas.Length; b++)
+            _ramas[b] = CrearTrazo(transform, "BranchBolt");
+
+        if (flashLightIntensity > 0f)
         {
-            var branchRoot = new GameObject("Branch").transform;
-            branchRoot.SetParent(transform, false);
-            _branchRoots[b] = branchRoot;
-            _branchRenderers[b] = CreateBoltRenderer(branchRoot, "BranchBolt");
+            _flashLight = gameObject.AddComponent<Light>();
+            _flashLight.type = LightType.Point;
+            _flashLight.range = flashLightRange;
+            _flashLight.shadows = LightShadows.None;
         }
-
-        _flashLight = gameObject.AddComponent<Light>();
-        _flashLight.type = LightType.Point;
-        _flashLight.range = flashLightRange;
-        _flashLight.shadows = LightShadows.None;
     }
 
     // Se dispara cada vez que el pool reactiva esta instancia (SetActive(true)) — aquí es donde
-    // hay que "relanzar" el efecto, no en Awake() (eso solo pasa una vez, en el pre-warm).
-    void OnEnable()
+    // hay que relanzar el efecto, no en Awake (eso solo pasa una vez, al crear la instancia).
+    void OnEnable() => Generar(boltHeight, boltWidth, boltColor);
+
+    /// Coloca el rayo entre dos puntos (cae de `desde` a `hasta`), escala su forma a ese largo y lo
+    /// regenera con el ancho y el color dados. Se llama justo después de VfxPoolService.Play.
+    public void Lanzar(Vector3 desde, Vector3 hasta, float ancho, Color color)
     {
-        RandomizeBolt(_mainBoltLr, boltHeight, jitterAmount, 1f);
+        Vector3 eje = desde - hasta;
+        float largo = eje.magnitude;
+        if (largo < 0.01f) return;
 
-        for (int b = 0; b < _branchRenderers.Length; b++)
-        {
-            float t = Random.Range(0.25f, 0.7f);
-            _branchRoots[b].localPosition = Vector3.up * boltHeight * (1f - t);
-            RandomizeBolt(_branchRenderers[b], Mathf.Max(0.3f, boltHeight * (1f - t) * 0.5f),
-                jitterAmount * 0.6f, 0.55f);
-        }
-
-        if (_flashLight != null)
-        {
-            _flashLight.color = boltColor;
-            _flashLight.intensity = flashLightIntensity;
-        }
+        transform.SetPositionAndRotation(hasta, Quaternion.FromToRotation(Vector3.up, eje / largo));
+        Generar(largo, ancho, color);
     }
 
     void Update()
     {
         if (_flashLight != null && _flashLight.intensity > 0f)
             _flashLight.intensity = Mathf.Lerp(_flashLight.intensity, 0f, Time.deltaTime * flashDecaySpeed);
+
+        if (parpadeo == null || parpadeo.Length == 0) return;
+        _tiempoEncendido += Time.unscaledDeltaTime;
+        PonerVisible(VisibleEnElParpadeo(_tiempoEncendido));
     }
 
-    private LineRenderer CreateBoltRenderer(Transform root, string name)
+    private bool VisibleEnElParpadeo(float t)
     {
-        var go = new GameObject(name);
-        go.transform.SetParent(root, false);
+        bool encendido = true;
+        for (int i = 0; i < parpadeo.Length; i++)
+        {
+            t -= parpadeo[i];
+            if (t < 0f) return encendido;
+            encendido = !encendido;
+        }
+        return false;
+    }
+
+    private void Generar(float altura, float ancho, Color color)
+    {
+        if (_principal.nucleo == null) return;
+
+        float escala = altura / Mathf.Max(0.01f, boltHeight);
+        float desvio = jitterAmount * escala;
+        int tramos = Mathf.Max(2, segments);
+
+        // Trazo principal: de arriba (altura) al impacto (origen local).
+        PrepararTrazo(_principal, tramos + 1, ancho, color);
+        for (int i = 0; i <= tramos; i++)
+        {
+            float t = (float)i / tramos;
+            Vector3 p = Vector3.up * (altura * (1f - t));
+            if (i != 0 && i != tramos)
+                p += new Vector3(Random.Range(-desvio, desvio), 0f, Random.Range(-desvio, desvio));
+            PonerPunto(_principal, i, p);
+        }
+
+        // Ramas: salen de un quiebro del trazo principal y bajan abriéndose hacia un lado.
+        for (int b = 0; b < _ramas.Length; b++)
+        {
+            int desde = Mathf.Clamp(Mathf.RoundToInt(Random.Range(0.25f, 0.7f) * tramos), 1, tramos - 1);
+            Vector3 inicio = _principal.nucleo.GetPosition(desde);
+            float largo = Mathf.Max(0.3f * escala, inicio.y * 0.5f);
+            Vector2 lado2D = Random.insideUnitCircle.normalized;
+            Vector3 lado = new Vector3(lado2D.x, 0f, lado2D.y);
+
+            int tramosDeRama = Mathf.Max(2, tramos / 2);
+            PrepararTrazo(_ramas[b], tramosDeRama + 1, ancho * 0.55f, color);
+            for (int i = 0; i <= tramosDeRama; i++)
+            {
+                float t = (float)i / tramosDeRama;
+                Vector3 p = inicio + Vector3.down * (largo * t) + lado * (largo * aperturaDeRamas * t);
+                if (i != 0)
+                    p += new Vector3(Random.Range(-desvio, desvio), 0f, Random.Range(-desvio, desvio)) * 0.6f;
+                PonerPunto(_ramas[b], i, p);
+            }
+        }
+
+        if (_flashLight != null)
+        {
+            _flashLight.color = color;
+            _flashLight.intensity = flashLightIntensity;
+        }
+
+        _tiempoEncendido = 0f;
+        _visible = false;
+        PonerVisible(true);
+    }
+
+    private void PrepararTrazo(Trazo trazo, int puntos, float ancho, Color color)
+    {
+        trazo.nucleo.positionCount = puntos;
+        trazo.nucleo.widthMultiplier = ancho;
+        trazo.nucleo.startColor = color;
+        trazo.nucleo.endColor = new Color(color.r, color.g, color.b, color.a * opacidadEnElImpacto);
+
+        if (trazo.halo == null) return;
+        trazo.halo.positionCount = puntos;
+        trazo.halo.widthMultiplier = ancho * anchoDelHalo;
+        trazo.halo.startColor = colorDelHalo;
+        trazo.halo.endColor = new Color(colorDelHalo.r, colorDelHalo.g, colorDelHalo.b, colorDelHalo.a * opacidadEnElImpacto);
+    }
+
+    private static void PonerPunto(Trazo trazo, int indice, Vector3 punto)
+    {
+        trazo.nucleo.SetPosition(indice, punto);
+        if (trazo.halo != null) trazo.halo.SetPosition(indice, punto);
+    }
+
+    private void PonerVisible(bool visible)
+    {
+        if (_visible == visible) return;
+        _visible = visible;
+        Mostrar(_principal, visible);
+        for (int b = 0; b < _ramas.Length; b++) Mostrar(_ramas[b], visible);
+    }
+
+    private static void Mostrar(Trazo trazo, bool visible)
+    {
+        if (trazo.nucleo != null) trazo.nucleo.enabled = visible;
+        if (trazo.halo != null) trazo.halo.enabled = visible;
+    }
+
+    private Trazo CrearTrazo(Transform raiz, string nombre)
+    {
+        var trazo = new Trazo { nucleo = CrearLinea(raiz, nombre, 0) };
+        if (anchoDelHalo > 0f) trazo.halo = CrearLinea(raiz, nombre + "Halo", -1);
+        return trazo;
+    }
+
+    private LineRenderer CrearLinea(Transform raiz, string nombre, int orden)
+    {
+        var go = new GameObject(nombre);
+        go.transform.SetParent(raiz, false);
 
         var lr = go.AddComponent<LineRenderer>();
         lr.useWorldSpace = false;
         lr.material = boltMaterial != null ? boltMaterial : GetRuntimeMaterial();
-        lr.startColor = boltColor;
-        lr.endColor = new Color(boltColor.r, boltColor.g, boltColor.b, 0f);
         lr.numCapVertices = 2;
         lr.numCornerVertices = 2;
+        lr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        lr.receiveShadows = false;
+        lr.sortingOrder = orden;
+        if (anchoEnElImpacto < 1f)
+            lr.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, anchoEnElImpacto));
         return lr;
-    }
-
-    private void RandomizeBolt(LineRenderer lr, float height, float jitter, float widthScale)
-    {
-        int segCount = Mathf.Max(2, segments);
-        lr.widthMultiplier = boltWidth * widthScale;
-        lr.positionCount = segCount + 1;
-
-        Vector3 start = Vector3.up * height;
-        Vector3 end = Vector3.zero;
-        for (int i = 0; i <= segCount; i++)
-        {
-            float t = (float)i / segCount;
-            Vector3 p = Vector3.Lerp(start, end, t);
-            if (i != 0 && i != segCount)
-                p += new Vector3(Random.Range(-jitter, jitter), 0f, Random.Range(-jitter, jitter));
-            lr.SetPosition(i, p);
-        }
     }
 
     private static Material GetRuntimeMaterial()

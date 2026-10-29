@@ -1,27 +1,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using DG.Tweening;
 
 /// <summary>
 /// Implementado por componentes que viven en el mismo GameObject que un SceneBoundUI y que
-/// necesitan poder posponer su ocultado automático por cambio de escena mientras muestran
-/// contenido importante que el jugador todavía no ha tenido tiempo de ver/leer (ej:
-/// AbilityUnlockPopupUI mientras el popup de "Bola Prisma" / "Llama Astral" está en pantalla).
-/// Mientras BlocksSceneHide() devuelva true, SceneBoundUI.ApplySceneState() NO llamará a
-/// gameObject.SetActive(false) aunque la escena activa ya no esté en allowedScenes — el corte de
-/// cámara/carga de escena que dispara ese evento no debe poder tragarse un popup a medio leer.
-/// Por el mismo motivo, SceneBoundUI.BeginBossIntro() tampoco opacará este objeto a alpha 0
-/// mientras BlocksSceneHide() devuelva true (ver comentario en BeginBossIntro): el desbloqueo de
-/// un hechizo puede encadenar síncronamente con el arranque de la intro de un boss en el mismo
-/// frame (ej: "Despertar de la Estrella" → la secuencia → UnlockAbilitiesNode →
-/// StartBattleNode → BossIntroPresentation), y el popup no debe perderse por esa carrera.
+/// necesitan posponer su ocultado automático por cambio de escena mientras enseñan algo que el
+/// jugador todavía no ha tenido tiempo de leer (p. ej. AbilityUnlockPopupUI con el popup de un
+/// hechizo en pantalla). Mientras BlocksSceneHide() devuelva true, SceneBoundUI no apaga el
+/// GameObject aunque la escena activa ya no esté en allowedScenes: un corte de cámara o una carga
+/// de escena no deben tragarse un aviso a medio leer.
 /// </summary>
 public interface ISceneBoundUIHideGuard
 {
     bool BlocksSceneHide();
 }
 
+/// <summary>
+/// UI persistente (Start.unity) que solo se ve en ciertas escenas: se enciende y se apaga sola al
+/// cambiar de escena o al aparecer la pantalla de carga. Esconderla durante una cinemática o la
+/// intro de un jefe no es cosa suya: eso va por <see cref="OcultablesDeCinematica"/>.
+/// </summary>
 public class SceneBoundUI : MonoBehaviour
 {
     [SerializeField] private string uniqueId = string.Empty;
@@ -29,36 +27,14 @@ public class SceneBoundUI : MonoBehaviour
     [SerializeField] private bool allowWhenListEmpty = true;
     [SerializeField] private bool persistAcrossScenes = true;
     [SerializeField] private bool detachFromParent = true;
-    [Tooltip("Si true, no se oculta durante la intro de boss (ej: DramaticTextOverlayUI).")]
-    [SerializeField] private bool excludeFromBossIntroHide = false;
 
     private static readonly Dictionary<string, SceneBoundUI> Instances = new();
-    private static bool _bossIntroActive = false;
     private string instanceKey;
-    private float _preBossAlpha = -1f;
     private ISceneBoundUIHideGuard _hideGuard;
     // True cuando un cambio de escena habría ocultado este objeto pero _hideGuard lo bloqueó.
-    // El guard debe llamar a ReapplySceneState() en cuanto deje de bloquear para que el ocultado
-    // pendiente (si sigue aplicando) se ejecute entonces, en vez de quedarse nunca aplicado.
+    // El guard llama a ReapplySceneState() en cuanto deja de bloquear para que el ocultado
+    // pendiente (si sigue aplicando) se ejecute entonces.
     private bool _pendingHide;
-    // Igual que _pendingHide pero para BeginBossIntro(): true cuando la intro de un boss quiso
-    // opacar este objeto a alpha 0 pero _hideGuard lo bloqueó (popup a medio leer). Ver comentario
-    // en BeginBossIntro() sobre por qué esto puede pasar en el MISMO frame que el propio popup
-    // empieza a mostrarse.
-    private bool _pendingBossIntroHide;
-
-    /// <summary>True mientras una intro de boss tiene la UI persistente oculta (entre BeginBossIntro y EndBossIntro).</summary>
-    public static bool IsBossIntroActive => _bossIntroActive;
-
-    /// <summary>Se dispara al iniciar BeginBossIntro para que avisos activos puedan replegarse.</summary>
-    public static event System.Action OnBossIntroStarted;
-
-    /// <summary>
-    /// Se dispara justo al terminar EndBossIntro (UI restaurada). Pensado para que sistemas como
-    /// AbilityUnlockPopupUI puedan diferir una animación hasta que la intro del boss haya acabado
-    /// del todo, en vez de "gastar" su ventana de visibilidad oculta a alpha 0 durante la intro.
-    /// </summary>
-    public static event System.Action OnBossIntroEnded;
 
     /// <summary>Permite una escena solo durante la sesión actual y reaplica su visibilidad.</summary>
     public static bool AllowSceneFor(string id, string sceneName)
@@ -78,92 +54,9 @@ public class SceneBoundUI : MonoBehaviour
     static void ResetStatics()
     {
         Instances.Clear();
-        _bossIntroActive = false;
-        OnBossIntroEnded = null;
     }
     #endif
 
-    // ── API de boss intro ──────────────────────────────────────────────────
-
-    /// <summary>
-    /// Oculta con DOTween todos los elementos UI activos con SceneBoundUI.
-    /// Llamar al inicio de la intro de un boss para limpiar la pantalla.
-    /// </summary>
-    public static void BeginBossIntro(float fadeDuration = 0.3f)
-    {
-        _bossIntroActive = true;
-        OnBossIntroStarted?.Invoke();
-        foreach (var inst in Instances.Values)
-        {
-            if (inst == null || !inst.gameObject.activeSelf) continue;
-            if (inst.excludeFromBossIntroHide) continue;
-
-            var cg = inst.GetOrAddCanvasGroup();
-            inst._preBossAlpha = cg.alpha;
-            cg.DOKill();
-            cg.DOFade(0f, fadeDuration).SetUpdate(true);
-        }
-    }
-
-    /// <summary>
-    /// Restaura con DOTween los elementos UI que corresponden a la escena actual.
-    /// Llamar al finalizar la intro del boss.
-    /// </summary>
-    public static void EndBossIntro(float fadeDuration = 0.35f)
-    {
-        _bossIntroActive = false;
-        foreach (var inst in Instances.Values)
-        {
-            if (inst == null) continue;
-
-            // FIX (INC-180, 6 sept 2026): una instancia excluida de BeginBossIntro()
-            // (excludeFromBossIntroHide=true, ej. DialogueManager, DramaticTextOverlayUI) nunca
-            // pasa por la rama de BeginBossIntro que captura _preBossAlpha — se queda para
-            // siempre en su valor centinela -1. Antes de este fix, EndBossIntro() procesaba
-            // TODAS las instancias sin mirar excludeFromBossIntroHide, así que para estas
-            // instancias excluidas caía siempre en el fallback "targetAlpha = 1f" de más abajo y
-            // las forzaba a alpha=1 (visibles) en cuanto terminaba la intro de CUALQUIER boss —
-            // aunque nunca hubieran sido ocultadas por BeginBossIntro ni tuvieran contenido real
-            // asignado en ese momento. Confirmado en directo con NewTextLeakWatcher: el
-            // placeholder sin traducir "New Text" del DialogueManager (excluido a propósito, ver
-            // su Awake()) aparecía encima del HUD justo al terminar la intro de cada batalla de
-            // jefe — exactamente el patrón que describía Raúl ("solo sale con los boss"). Si
-            // esta instancia nunca fue tocada por BeginBossIntro(), EndBossIntro() no debe
-            // tocarla tampoco: su visibilidad ya la gestiona su propio sistema (p.ej.
-            // DialogueManager.StartDialogue()/Close()).
-            if (inst.excludeFromBossIntroHide)
-            {
-                inst._pendingBossIntroHide = false;
-                continue;
-            }
-
-            // Si seguía pendiente de opacar (el guard bloqueó durante toda la intro, ver
-            // BeginBossIntro), su CanvasGroup nunca se tocó — queda en su alpha normal, que es
-            // justo el estado en el que debe quedar ahora que la intro termina. Solo hace falta
-            // limpiar el flag.
-            inst._pendingBossIntroHide = false;
-            bool allowed = inst.IsAllowedInCurrentScene();
-            if (!allowed) { inst.gameObject.SetActive(false); continue; }
-            inst.gameObject.SetActive(true);
-            var cg = inst.GetOrAddCanvasGroup();
-            cg.DOKill();
-            float targetAlpha = inst._preBossAlpha >= 0f ? inst._preBossAlpha : 1f;
-            cg.DOFade(targetAlpha, fadeDuration).SetUpdate(true);
-            inst._preBossAlpha = -1f;
-        }
-
-        OnBossIntroEnded?.Invoke();
-    }
-
-    /// <summary>Marca este SceneBoundUI para no ser ocultado durante la intro de boss.</summary>
-    public void ExcludeFromBossIntro() => excludeFromBossIntroHide = true;
-
-    private CanvasGroup GetOrAddCanvasGroup()
-    {
-        var cg = GetComponent<CanvasGroup>();
-        if (cg == null) cg = gameObject.AddComponent<CanvasGroup>();
-        return cg;
-    }
 
     private bool IsAllowedInCurrentScene()
     {
@@ -220,16 +113,11 @@ public class SceneBoundUI : MonoBehaviour
 
     private void ApplySceneState()
     {
-        // Durante la intro de un boss, el estado lo controla BeginBossIntro/EndBossIntro
-        if (_bossIntroActive) return;
-
         bool allowed = IsAllowedInCurrentScene();
 
-        // No cortar en seco contenido importante que el jugador todavía está viendo (ej: el
-        // popup de desbloqueo de habilidad). El corte de cámara / carga de escena que dispara
-        // este evento no es motivo para tragarse un popup a medio leer: se deja el GameObject
-        // activo y se marca el ocultado como pendiente — el propio guard debe llamar a
-        // ReapplySceneState() en cuanto termine de mostrar su contenido.
+        // No cortar en seco algo que el jugador todavía está leyendo: se deja el GameObject activo
+        // y se marca el ocultado como pendiente; el propio guard llama a ReapplySceneState() en
+        // cuanto termina.
         if (!allowed && gameObject.activeSelf && _hideGuard != null && _hideGuard.BlocksSceneHide())
         {
             _pendingHide = true;
@@ -242,28 +130,11 @@ public class SceneBoundUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Reintenta aplicar el estado de escena si había un ocultado pendiente (ver ApplySceneState),
-    /// y aplica el fundido a 0 de una intro de boss si BeginBossIntro() lo dejó pendiente (ver
-    /// BeginBossIntro). Debe llamarla el propio ISceneBoundUIHideGuard en cuanto BlocksSceneHide()
-    /// deje de devolver true, para que ninguno de los dos ocultados pospuestos se quede sin aplicar
-    /// nunca (ej: AbilityUnlockPopupUI.HidePopup() al terminar de mostrar el popup).
+    /// Reintenta aplicar el estado de escena si había un ocultado pendiente (ver ApplySceneState).
+    /// La llama el ISceneBoundUIHideGuard en cuanto BlocksSceneHide() deja de devolver true.
     /// </summary>
     public void ReapplySceneState()
     {
         if (_pendingHide) ApplySceneState();
-
-        if (_pendingBossIntroHide)
-        {
-            _pendingBossIntroHide = false;
-            // Solo aplicar el fundido a 0 si la intro del boss sigue en marcha — si ya terminó,
-            // EndBossIntro() ya limpió el flag y dejó el CanvasGroup en su estado normal.
-            if (_bossIntroActive)
-            {
-                var cg = GetOrAddCanvasGroup();
-                _preBossAlpha = cg.alpha;
-                cg.DOKill();
-                cg.DOFade(0f, 0.25f).SetUpdate(true);
-            }
-        }
     }
 }

@@ -14,6 +14,14 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
     [SerializeField, Min(0.2f)] private float segundos = 2f;
     [Tooltip("Anillo del aviso. Vacío = el del aviso de combate.")]
     [SerializeField] private Sprite anillo;
+    [Tooltip("Estado del Animator que sostiene el personaje al mando mientras mantiene A (pose de canalizar).")]
+    [SerializeField] private string poseAlReanimar = "MagicSpecial";
+    [Tooltip("Efecto de un uso sobre el caído al levantarse (prefab de la Brisa Sanadora). Vacío = sin efecto.")]
+    [SerializeField] private GameObject vfxAlReanimar;
+    [Tooltip("Segundos que dura vfxAlReanimar antes de volver al pool.")]
+    [SerializeField, Min(0.1f)] private float duracionDelVfx = 2f;
+    [Tooltip("Event Key del AudioGraphProfile que suena al levantarse el caído.")]
+    [SerializeField] private string sfxAlReanimar = "Hechizo_BrisaSanadora";
 
     private AvisoDeReanimarUI _aviso;
     private CuerpoDelGrupo _objetivo;
@@ -21,11 +29,14 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
     private PlayerHealthSystem _salud;
     private PlayerActionManager _modos;
     private GameObject _cuerpoCacheado;
+    private NPCSimpleAnimator _animador;
+    private NPCSimpleAnimator _animadorEnPose;
 
     private void OnDisable()
     {
         _progreso = 0f;
         _objetivo = null;
+        SoltarPose();
         if (_aviso != null) _aviso.Ocultar();
     }
 
@@ -47,12 +58,9 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
         bool pulsado = GamepadInputReader.JumpHeld;
         _progreso = pulsado ? _progreso + paso : Mathf.Max(0f, _progreso - paso * 2f);
 
-        // Gesto del personaje al canalizar la reanimación
-        if (pulsado && _progreso > 0.1f)
-        {
-            var actor = jugador.GetComponent<NPCSimpleAnimator>();
-            if (actor != null) actor.PlaySpellCastSpecial();
-        }
+        // Pose de canalizar: se pone una vez al empezar a mantener A y se suelta al dejar de hacerlo.
+        if (pulsado) SostenerPose();
+        else SoltarPose();
 
         if (_aviso == null) _aviso = AvisoDeReanimarUI.Crear(transform, anillo);
         _aviso.Mostrar(caido.transform, _progreso);
@@ -62,16 +70,11 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
         grupo.Reanimar(caido);
 
         // Efectos de reanimación completada
-        if (AudioService.Instance != null)
-            AudioService.Instance.PlaySFX("Hechizo_BrisaSanadora", 1f, caido.transform.position);
-
-        var vfxBrisa = Resources.Load<GameObject>("BrisaSanadora");
-#if UNITY_EDITOR
-        if (vfxBrisa == null)
-            vfxBrisa = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_SPELLS/Prefabs/BrisaSanadora.prefab");
-#endif
-        if (vfxBrisa != null)
-            VfxPoolService.Instance.Play(vfxBrisa, caido.transform.position, Quaternion.identity, 2f);
+        SoltarPose();
+        if (AudioService.Instance != null && !string.IsNullOrEmpty(sfxAlReanimar))
+            AudioService.Instance.PlaySFX(sfxAlReanimar, 1f, caido.transform.position);
+        if (vfxAlReanimar != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(vfxAlReanimar, caido.transform.position, Quaternion.identity, duracionDelVfx);
 
         _objetivo = null;
         _aviso.Ocultar();
@@ -81,7 +84,24 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
     {
         _objetivo = null;
         _progreso = 0f;
+        SoltarPose();
         if (_aviso != null) _aviso.Ocultar();
+    }
+
+    private void SostenerPose()
+    {
+        if (_animadorEnPose != null || _animador == null || string.IsNullOrEmpty(poseAlReanimar)) return;
+        _animadorEnPose = _animador;
+        _animadorEnPose.HoldPose(poseAlReanimar, congelarAlFinal: true);
+    }
+
+    // Suelta solo la parte de arriba del cuerpo (SoltarPoseDeCarga): las piernas siguen con su
+    // locomoción, igual que con el gesto de hechizo.
+    private void SoltarPose()
+    {
+        if (_animadorEnPose == null) return;
+        _animadorEnPose.SoltarPoseDeCarga();
+        _animadorEnPose = null;
     }
 
     private bool PuedeReanimarAhora(GameObject jugador)
@@ -89,6 +109,8 @@ public sealed class ReanimarManteniendoA : MonoBehaviour
         if (jugador != _cuerpoCacheado)
         {
             _cuerpoCacheado = jugador;
+            SoltarPose();
+            _animador = jugador.GetComponent<NPCSimpleAnimator>();
             _salud = jugador.GetComponentInChildren<PlayerHealthSystem>(true);
             _modos = jugador.GetComponentInParent<PlayerActionManager>();
             if (_modos == null) _modos = jugador.GetComponentInChildren<PlayerActionManager>(true);

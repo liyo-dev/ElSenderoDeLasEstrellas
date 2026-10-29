@@ -127,27 +127,44 @@ public class OrbDropper : MonoBehaviour
 
         Vector2 circle = Random.insideUnitCircle * p.spawnRadius;
         float   h      = Random.Range(p.spawnHeightMin, p.spawnHeightMax);
-        var go = Instantiate(prefab, origin + new Vector3(circle.x, h, circle.y), Quaternion.identity);
+        Vector3 posicion = origin + new Vector3(circle.x, h, circle.y);
 
-        if (!go.TryGetComponent<BattleOrb>(out var orb))
-        {
-            // El prefab es arte puro: inyectar componentes de lógica en runtime
-            if (!go.TryGetComponent<Collider>(out _))
-            {
-                var col = go.AddComponent<SphereCollider>();
-                col.radius    = 0.3f;
-                col.isTrigger = true;
-            }
-            if (!go.TryGetComponent<Rigidbody>(out _))
-                go.AddComponent<Rigidbody>();
-
-            orb = go.AddComponent<BattleOrb>();
-            float amount = orbType == OrbType.Health ? p.healthOrbAmount : p.manaOrbAmount;
-            orb.Configure(orbType, amount);
-        }
-
-        if (orbType == OrbType.Currency) orb.ConfigureCurrency(p.currencyItem, currencyAmount, pickupSound);
+        BattleOrb orb;
+        if (orbType == OrbType.Currency)
+            orb = SoltarMoneda(prefab, posicion, p.currencyItem, currencyAmount, pickupSound);
+        else
+            orb = CrearOrbe(prefab, posicion, orbType, orbType == OrbType.Health ? p.healthOrbAmount : p.manaOrbAmount);
         orb.SetAudioKeys(p.orbSpawnSFXKey, p.orbAttractSFXKey);
+    }
+
+    /// Crea un orbe recogible en `posicion`. Si el prefab es arte puro (sin BattleOrb), le añade la
+    /// lógica (collider de recogida, Rigidbody y BattleOrb configurado con `tipo` y `cantidad`); si ya
+    /// trae su BattleOrb, se respeta su configuración. Lo usa cualquier sistema que suelte orbes.
+    public static BattleOrb CrearOrbe(GameObject prefab, Vector3 posicion, OrbType tipo, float cantidad)
+    {
+        var go = Instantiate(prefab, posicion, Quaternion.identity);
+        if (go.TryGetComponent<BattleOrb>(out var orb)) return orb;
+
+        if (!go.TryGetComponent<Collider>(out _))
+        {
+            var col = go.AddComponent<SphereCollider>();
+            col.radius    = 0.3f;
+            col.isTrigger = true;
+        }
+        if (!go.TryGetComponent<Rigidbody>(out _))
+            go.AddComponent<Rigidbody>();
+
+        orb = go.AddComponent<BattleOrb>();
+        orb.Configure(tipo, cantidad);
+        return orb;
+    }
+
+    /// Suelta en `posicion` un orbe que, al recogerlo, da `cantidad` de la moneda `moneda`.
+    public static BattleOrb SoltarMoneda(GameObject prefab, Vector3 posicion, ItemData moneda, int cantidad, string sonidoAlRecoger)
+    {
+        var orb = CrearOrbe(prefab, posicion, OrbType.Currency, 0f);
+        orb.ConfigureCurrency(moneda, cantidad, sonidoAlRecoger);
+        return orb;
     }
 
 }

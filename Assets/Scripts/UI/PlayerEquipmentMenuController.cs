@@ -850,7 +850,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         // Ocultar el HUD y el icono de estado del tiempo mientras el menú está abierto
         // (ahora se ve el mundo real detrás de Will, así que estorbarían en pantalla).
         Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
-        Sendero.UI.TimeOfDayIndicator.Instance?.Hide();
+        Sendero.UI.TimeOfDayIndicator.Instance?.Ocultar(this);
 
         // Cachear colores originales de HP/MP si no se han cacheado aún
         if (!_hpColorCached && hpText != null)
@@ -916,7 +916,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         // Restaurar el HUD y el icono de estado del tiempo al cerrar el menú
         Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
-        Sendero.UI.TimeOfDayIndicator.Instance?.Show();
+        Sendero.UI.TimeOfDayIndicator.Instance?.Mostrar(this);
         _spellView?.CancelSlotSelection(true);
         TimeScaleArbiterService.Release(this);
         
@@ -1594,7 +1594,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
 
         PlayerPresetSO preset = null;
         if (GameBootService.IsAvailable && GameBootService.Profile != null)
-            preset = GameBootService.Profile.GetActivePresetResolved();
+            preset = Partida.Preset;
 
         if (hasStatsText)
         {
@@ -2892,7 +2892,7 @@ public class PlayerEquipmentMenuController : MonoBehaviour
         public void Refresh()
         {
             _preset = GameBootService.IsAvailable && GameBootService.Profile != null
-                ? GameBootService.Profile.GetActivePresetResolved()
+                ? Partida.Preset
                 : null;
             if (_preset != null)
                 PlayerService.TryGetComponent(out _presetService, includeInactive: true, allowSceneLookup: true);

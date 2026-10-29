@@ -13,8 +13,8 @@ using DG.Tweening;
 /// Credits.unity (el crawl cinemático que cierra la demo — se deja intacto, sigue existiendo para
 /// esa función), se despliega un panel lateral con scroll manual sin salir del menú, estilo PEAK.
 ///
-/// Construye toda su UI por código en Awake (mismo patrón que CreditsSceneController/
-/// TitleLogoController: Canvas propio con sortingOrder alto, nada que montar en el Editor salvo
+/// Construye toda su UI por código en Awake (mismo patrón que CreditsSceneController:
+/// Canvas propio con sortingOrder alto, nada que montar en el Editor salvo
 /// los pasos de abajo). No toca MainMenu.unity ni el botón CRÉDITOS existente en el Editor:
 /// en Start() se localiza el botón por nombre/texto (o por <see cref="creditsButtonOverride"/> si
 /// se asigna a mano) y se le reemplazan sus listeners en runtime, así que no hace falta editar el
@@ -152,7 +152,7 @@ public class CreditsFlyoutPanel : MonoBehaviour
         // por defecto, y el botón/panel de MainMenu.unity puede no estar activo todavía en el mismo
         // frame en que este Start() se ejecuta (depende del orden de ejecución de scripts frente a
         // lo que active el panel de botones — animación de entrada, MainMenuFlyingCompanion,
-        // TitleLogoController, etc. — que no está garantizado respecto a este componente). Si ese
+        // etc. — que no está garantizado respecto a este componente). Si ese
         // frame concreto el botón todavía estaba inactivo, FindCreditsButton() no lo encontraba,
         // se quedaba en el Debug.LogWarning silencioso de abajo y el botón CRÉDITOS se quedaba con
         // el listener original (o sin ninguno) para el resto de la sesión — de ahí la

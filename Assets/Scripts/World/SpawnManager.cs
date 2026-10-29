@@ -47,15 +47,15 @@ public class SpawnManager : MonoBehaviour
         var bootProfile = GameBootService.Profile;
         if (bootProfile != null)
         {
-            var activePreset = bootProfile.GetActivePresetResolved();
-            var startAnchor = bootProfile.GetStartAnchorOrDefault();
+            var activePreset = Partida.Preset;
+            var startAnchor = Partida.AnclaDeInicio;
             
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
             Debug.Log($"[SpawnManager] 🔍 Profile: {bootProfile.name}");
             Debug.Log($"[SpawnManager] 🔍 ActivePreset: {(activePreset != null ? activePreset.name : "NULL")}");
             Debug.Log($"[SpawnManager] 🔍 StartAnchor obtenido: '{startAnchor}'");
             Debug.Log($"[SpawnManager] 🔍 ShouldBootFromPreset: {bootProfile.ShouldBootFromPreset()}");
-            Debug.Log($"[SpawnManager] 🔍 HasLoadedSaveData: {(bootProfile.GetActivePresetResolved()?.name.Contains("Runtime") ?? false)}");
+            Debug.Log($"[SpawnManager] 🔍 HasLoadedSaveData: {(Partida.Preset?.name.Contains("Runtime") ?? false)}");
 #endif
             
             if (!string.IsNullOrEmpty(startAnchor))
@@ -95,7 +95,7 @@ public class SpawnManager : MonoBehaviour
         var profile = GameBootService.Profile;
         if (profile != null)
         {
-            var preset = profile.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset != null)
             {
                 preset.spawnAnchorId = id;

@@ -39,10 +39,6 @@ public class PartyControlManager : MonoBehaviour
     #endregion
 
     #region Inspector
-    [Header("Nombres en el party (deben coincidir con NPCPartyConfig.displayName)")]
-    [SerializeField] private string liamDisplayName = "Liam";
-    [SerializeField] private string estelaDisplayName = "Estela";
-
     [Tooltip("Al llegar a un extremo, DPad sigue por el otro (de Liam a la izquierda se pasa a Estela). " +
              "Así los retratos del HUD pueden poner siempre al que va al mando en el centro.")]
     [SerializeField] private bool cambioCircular = true;
@@ -52,11 +48,19 @@ public class PartyControlManager : MonoBehaviour
     private int _activeIndex = (int)CharacterSlot.Will;
     private bool _isPartyFollowing = true;
     private bool _switchingLocked;
-    private int _pendingSlotToRestore = -1;
-    // FIX A12 (auditoría 2026-08-07): resuelto perezosamente vía ServiceLocator (mismo patrón que
-    // CinematicSequencerBase.ResolveActionManager) para poder gatear el swap de personaje por
-    // ActionMode — ver IsPartyChangeAllowedByCurrentMode más abajo.
+    // Se resuelve perezosamente por ServiceLocator para decidir por ActionMode si se puede cambiar
+    // el grupo (ver IsPartyChangeAllowedByCurrentMode).
     private PlayerActionManager _actionManager;
+    private readonly List<NPCPartyMember> _companeros = new List<NPCPartyMember>(4);
+    #endregion
+
+    #region Anclas
+    /// <summary>
+    /// Clave con la que el modo Libre (DPad abajo) ancla a cada compañero donde está
+    /// (<see cref="Game.NPC.Common.NPCStateContext.Anclar"/>). Solo la suelta el modo seguir
+    /// (o «Sígueme» para uno), así no pisa las anclas de otros sistemas como el barco.
+    /// </summary>
+    public static readonly object AnclaDelModoLibre = new object();
     #endregion
 
     #region Events
@@ -115,7 +119,6 @@ public class PartyControlManager : MonoBehaviour
         GamepadInputReader.OnInput -= HandleInput;
         GameBootService.OnProfileReady -= HandleProfileReady;
         WillOnlyMomentManager.OnSwitchLockChanged -= SetSwitchingLocked;
-        PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
         if (Instance == this) Instance = null;
     }
     #endregion
@@ -146,12 +149,8 @@ public class PartyControlManager : MonoBehaviour
     /// <summary>
     /// El modo activo permite cambiar el grupo: relevo o modo seguir. Solo en el reposo normal
     /// (Default) o en combate; en vuelo, nado, carga, aturdimiento, cinemática, barco o uso de
-    /// punto del mundo, no.
-    ///
-    /// FIX A12 (auditoría 2026-08-07): antes HandleInput solo comprobaba IsInUIMode antes de
-    /// permitir el swap — se podía cambiar de personaje en pleno vuelo/nado/carry/knockback,
-    /// aplicando el controller a un personaje que quizá no tiene esa habilidad activa, con los
-    /// modos de PlayerActionManager aún apilados sobre el personaje anterior.
+    /// punto del mundo, no: el cuerpo pasaría a un personaje con los modos de PlayerActionManager
+    /// apilados sobre el anterior.
     ///
     /// El modo seguir también teletransporta al grupo, así que se bloquea igual: en el barco
     /// saca a la tripulación de su puesto (INC-808).
@@ -237,9 +236,7 @@ public class PartyControlManager : MonoBehaviour
     {
         // A un personaje caído no se le puede pasar el mando hasta que se levante (INC-717).
         if (SaludDelGrupo.EstaCaido((CharacterSlot)index)) return false;
-        if (index == (int)CharacterSlot.Will) return true;
-        string name = index == (int)CharacterSlot.Liam ? liamDisplayName : estelaDisplayName;
-        return PlayerParty.Instance?.GetMemberByName(name) != null;
+        return ControlDelJugador.EnElGrupo((CharacterSlot)index);
     }
 
     private void SwitchToCharacter(int newIndex)
@@ -283,66 +280,85 @@ public class PartyControlManager : MonoBehaviour
         OnFollowModeChanged?.Invoke(_isPartyFollowing);
     }
 
+    /// <summary>
+    /// Aplica el modo del grupo a los compañeros que lleva la IA (el personaje al mando no). En
+    /// Libre cada uno se queda anclado donde está; siguiendo, se sueltan y se reagrupan con el
+    /// jugador (quien no pueda llegar por una pared o una reja va andando, con aviso; INC-819).
+    /// </summary>
     private void ApplyFollowModeToParty()
     {
-        var party = PlayerParty.Instance;
-        if (party == null) return;
-
-        var swapper = ActiveCharacterSwapper.Instance;
-        var hiddenNpc = swapper?.HiddenNpc;
-
+        var companeros = CompanerosQueLlevaLaIA();
         if (_isPartyFollowing)
         {
-            // Quitar el anclaje antes de teletransportar para que OnTeleportedToPlayer arranque el seguimiento
-            foreach (var member in party.Members)
-            {
-                if (member == null || member == hiddenNpc) continue;
-                if (member.NPCManager?.Context != null)
-                    member.NPCManager.Context.IsPinnedByParty = false;
-            }
+            // Se sueltan antes de reagrupar para que el teletransporte los ponga a seguir.
+            for (int i = 0; i < companeros.Count; i++)
+                companeros[i].NPCManager?.Context?.Soltar(AnclaDelModoLibre);
 
-            // Teletransportar a todos al personaje activo. Es un reagrupado explícito del jugador:
-            // si alguien no puede cruzar una pared o una reja, se avisa por el toast del HUD.
-            // Ver INC-819.
-            party.TeleportAllMembersToPlayer(avisar: true);
+            if (PlayerParty.HasInstance) PlayerParty.Instance.TeleportAllMembersToPlayer(avisar: true);
+            ActiveCharacterSwapper.Instance?.TeleportWillNpcToPlayer(avisar: true);
 
-            // Will NPC fuera del party: solo seguir si hay compañeros activos (excluyendo el NPC oculto)
-            var willNpc = swapper?.WillNpcInstance;
-            if (willNpc != null && willNpc != hiddenNpc)
-            {
-                bool hasNonHiddenMember = false;
-                foreach (var member in party.Members)
-                {
-                    if (member != null && member != hiddenNpc) { hasNonHiddenMember = true; break; }
-                }
-                if (hasNonHiddenMember)
-                {
-                    if (willNpc.NPCManager?.Context != null)
-                        willNpc.NPCManager.Context.IsPinnedByParty = false;
-                    swapper.TeleportWillNpcToPlayer(avisar: true);
-                    willNpc.StartFollowingIgnorePartyCheck();
-                }
-            }
+            for (int i = 0; i < companeros.Count; i++)
+                if (!companeros[i].EstaSiguiendo) Seguir(companeros[i]);
         }
         else
         {
-            foreach (var member in party.Members)
+            for (int i = 0; i < companeros.Count; i++)
             {
-                if (member == null || member == hiddenNpc) continue;
-                member.StopFollowing();
-                if (member.NPCManager?.Context != null)
-                    member.NPCManager.Context.IsPinnedByParty = true;
-            }
-
-            // Will NPC fuera del party
-            var willNpc = swapper?.WillNpcInstance;
-            if (willNpc != null && willNpc != hiddenNpc)
-            {
-                willNpc.StopFollowing();
-                if (willNpc.NPCManager?.Context != null)
-                    willNpc.NPCManager.Context.IsPinnedByParty = true;
+                companeros[i].StopFollowing();
+                companeros[i].NPCManager?.Context?.Anclar(AnclaDelModoLibre);
             }
         }
+    }
+
+    /// <summary>
+    /// Pone a un compañero en el modo actual del grupo: siguiendo, lo suelta y lo pone a seguir;
+    /// en Libre, lo ancla donde está. Lo usa el relevo de personaje al devolver un cuerpo a la IA.
+    /// </summary>
+    public static void PonerEnModoDelGrupo(NPCPartyMember npc)
+    {
+        if (npc == null) return;
+        var contexto = npc.NPCManager != null ? npc.NPCManager.Context : null;
+        if (Instance == null || Instance._isPartyFollowing)
+        {
+            contexto?.Soltar(AnclaDelModoLibre);
+            Seguir(npc);
+        }
+        else
+        {
+            npc.StopFollowing();
+            contexto?.Anclar(AnclaDelModoLibre);
+        }
+    }
+
+    // Un miembro del grupo sigue como tal; el NPC de Will no es miembro y sigue sin esa comprobación.
+    private static void Seguir(NPCPartyMember npc)
+    {
+        if (npc.IsInParty) npc.StartFollowing();
+        else npc.StartFollowingIgnorePartyCheck();
+    }
+
+    /// <summary>
+    /// Los compañeros que lleva la IA: el NPC de cada personaje que no va al mando
+    /// (<see cref="ControlDelJugador.NpcDe"/>) y los invitados del grupo que no son personajes.
+    /// </summary>
+    private List<NPCPartyMember> CompanerosQueLlevaLaIA()
+    {
+        _companeros.Clear();
+        for (int i = 0; i < ControlDelJugador.Personajes; i++)
+        {
+            var npc = ControlDelJugador.NpcDe((CharacterSlot)i);
+            if (npc != null) _companeros.Add(npc);
+        }
+        if (PlayerParty.HasInstance)
+        {
+            var miembros = PlayerParty.Instance.Members;
+            for (int i = 0; i < miembros.Count; i++)
+            {
+                var m = miembros[i];
+                if (m != null && !ControlDelJugador.SlotDeNombre(m.DisplayName, out _)) _companeros.Add(m);
+            }
+        }
+        return _companeros;
     }
     #endregion
 
@@ -377,18 +393,9 @@ public class PartyControlManager : MonoBehaviour
         Debug.Log($"[PartyControlManager] 🔄 GameBootService.OnProfileReady recibido. _activeIndex={_activeIndex} ({(CharacterSlot)_activeIndex}). Reinicializando estado del party.");
 #endif
 
-        // Cancelar cualquier restauración diferida de una sesión anterior
-        PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
-        _pendingSlotToRestore = -1;
-
-        // FIX: WillOnlyMomentManager es DontDestroyOnLoad y su bloqueo de switching (_activeMoments)
-        // no se limpiaba nunca al cargar partida. Si un TagMinigameController con requiresWill=true
-        // se interrumpía sin pasar por WinMinigame()/StopMinigame() (p.ej. el jugador moría en combate
-        // durante el minijuego, o cualquier otra ruta no contemplada), el momento quedaba "activo" para
-        // siempre — el cambio de personaje se bloqueaba de forma permanente en TODAS las partidas
-        // cargadas después, incluida una completamente distinta. ClearAllMoments() ya existía para
-        // este propósito exacto (su propio comentario dice "útil al cargar escenas o reiniciar el
-        // estado del juego") pero nunca se llamaba desde ningún sitio.
+        // WillOnlyMomentManager es DontDestroyOnLoad: un momento «solo Will» interrumpido sin
+        // cerrarse (p. ej. morir durante un minijuego) dejaría el cambio de personaje bloqueado en
+        // todas las partidas cargadas después.
         WillOnlyMomentManager.Instance?.ClearAllMoments();
 
         // Al cargar partida siempre se arranca como Will
@@ -397,32 +404,5 @@ public class PartyControlManager : MonoBehaviour
 
         _isPartyFollowing = true;
         ForceRefreshFollowMode();
-    }
-
-    private void TryRestoreSavedSlot(IReadOnlyList<NPCPartyMember> _)
-    {
-        if (_pendingSlotToRestore < 0) return;
-        if (!IsSlotAvailable(_pendingSlotToRestore)) return;
-        // Si el swapper aún no inicializó su Start(), SwitchCharacter falla silenciosamente.
-        // Mantener la suscripción a OnPartyChanged y esperar a OnSwapperReady().
-        if (ActiveCharacterSwapper.Instance == null || !ActiveCharacterSwapper.Instance.IsReady) return;
-
-        PlayerParty.OnPartyChanged -= TryRestoreSavedSlot;
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[PartyControlManager] Party listo. Restaurando personaje guardado: {(CharacterSlot)_pendingSlotToRestore}");
-#endif
-        int slotToRestore = _pendingSlotToRestore;
-        _pendingSlotToRestore = -1;
-        SwitchToCharacter(slotToRestore);
-    }
-
-    /// <summary>
-    /// Llamado por ActiveCharacterSwapper cuando su Start() termina y _ready pasa a true.
-    /// Reintenta la restauración diferida del slot guardado si aún está pendiente.
-    /// </summary>
-    public void OnSwapperReady()
-    {
-        if (_pendingSlotToRestore >= 0)
-            TryRestoreSavedSlot(null);
     }
 }

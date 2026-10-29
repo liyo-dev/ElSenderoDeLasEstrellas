@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Catálogo de tipos de nodo para el editor: descubre por reflection (solo editor) todas las
     /// clases NarrativeNode no abstractas ni obsoletas, y expone categoría / título / descripción
-    /// / color a partir de [NarrativeNodeInfo]. Es la única fuente de colores del editor — antes
-    /// había dos paletas a mano que habían divergido (NodeView.ExplicitPalette vs timeline).
+    /// / color a partir de [NarrativeNodeInfo], que declara cada nodo. Es la única fuente de
+    /// colores del editor.
     /// </summary>
     public static class NarrativeNodeCatalog
     {

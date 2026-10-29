@@ -7,13 +7,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Pestaña «En vivo»: lo que el juego está haciendo ahora mismo mientras se prueba el grafo.
-    /// Lee el estado real (sin duplicarlo) del NarrativeGraphHub, del grupo, de las quests, de los
-    /// flags y de los NPC de las escenas cargadas. Fuera de Play Mode explica que no hay estado
-    /// real y remite a la pestaña Prueba.
+    /// Lee el estado real (sin duplicarlo) del NarrativeGraphHub, de los flags y del blackboard; lo
+    /// propio del juego (grupo, misiones, actores en escena…) lo aportan sus INarrativeLiveSection.
+    /// Fuera de Play Mode explica que no hay estado real y, si el juego aporta un
+    /// INarrativeArrivalPreview, permite simular dónde queda cada actor al llegar al nodo.
     /// </summary>
     public sealed class NarrativeLivePanel : VisualElement
     {
@@ -21,20 +22,16 @@ namespace Sendero.Narrative.Editor
         readonly Label _headline;
         readonly Label _current;
         readonly Button _focusButton;
-        readonly Label _player;
-        readonly Label _loadout;
         readonly Label _notPlaying;
         readonly Button _projectButton;
         readonly VisualElement _projectedBox;
         readonly VisualElement _playingBox;
-        readonly VisualElement _actorsBox;
-        readonly VisualElement _questsBox;
         readonly VisualElement _flagsBox;
         readonly VisualElement _blackboardBox;
-        readonly Foldout _actorsFold;
-        readonly Foldout _questsFold;
         readonly Foldout _flagsFold;
         readonly Foldout _blackboardFold;
+        readonly INarrativeArrivalPreview _arrivalPreview;
+        readonly List<(INarrativeLiveSection section, Foldout fold, VisualElement box, List<string> rows)> _sections = new();
 
         NarrativeGraph _graph;
         NodeView _selected;
@@ -61,7 +58,7 @@ namespace Sendero.Narrative.Editor
             _scroll.Add(title);
 
             _notPlaying = new Label("Entra en Play para ver el estado real del juego. En el lienzo, el ▶ de " +
-                                    "cada tarjeta lanza una prueba desde ese nodo con la configuración de la pestaña Prueba.");
+                                    "cada tarjeta lanza una prueba desde ese nodo.");
             _notPlaying.AddToClassList("narrative-live__hint");
             _scroll.Add(_notPlaying);
 
@@ -92,16 +89,13 @@ namespace Sendero.Narrative.Editor
             _focusButton.AddToClassList("narrative-test__small-button");
             _playingBox.Add(_focusButton);
 
-            _player = new Label();
-            _player.AddToClassList("narrative-live__line");
-            _playingBox.Add(_player);
+            _arrivalPreview = NarrativeEditorExtensions.CreateFirst<INarrativeArrivalPreview>();
 
-            _loadout = new Label();
-            _loadout.AddToClassList("narrative-live__line");
-            _playingBox.Add(_loadout);
-
-            _actorsFold = Fold("NPCs en escena", out _actorsBox);
-            _questsFold = Fold("Quests", out _questsBox);
+            foreach (var section in NarrativeEditorExtensions.CreateAll<INarrativeLiveSection>().OrderBy(x => x.Order))
+            {
+                var fold = Fold(section.Title, out var box);
+                _sections.Add((section, fold, box, new List<string>()));
+            }
             _flagsFold = Fold("Flags narrativos", out _flagsBox);
             _blackboardFold = Fold("Blackboard del grafo", out _blackboardBox);
 
@@ -145,10 +139,9 @@ namespace Sendero.Narrative.Editor
                 CurrentNodeGuid = null;
                 _playingBox.style.display = DisplayStyle.None;
                 _notPlaying.style.display = DisplayStyle.Flex;
-                _projectButton.style.display = DisplayStyle.Flex;
+                _projectButton.style.display = _arrivalPreview != null ? DisplayStyle.Flex : DisplayStyle.None;
                 _projectedBox.style.display = DisplayStyle.Flex;
-                _actorsFold.style.display = DisplayStyle.None;
-                _questsFold.style.display = DisplayStyle.None;
+                foreach (var entry in _sections) entry.fold.style.display = DisplayStyle.None;
                 _flagsFold.style.display = DisplayStyle.None;
                 _blackboardFold.style.display = DisplayStyle.None;
                 return;
@@ -162,8 +155,7 @@ namespace Sendero.Narrative.Editor
 
             _playingBox.style.display = DisplayStyle.Flex;
             _notPlaying.style.display = DisplayStyle.None;
-            _actorsFold.style.display = DisplayStyle.Flex;
-            _questsFold.style.display = DisplayStyle.Flex;
+            foreach (var entry in _sections) entry.fold.style.display = DisplayStyle.Flex;
             _flagsFold.style.display = DisplayStyle.Flex;
             _blackboardFold.style.display = DisplayStyle.Flex;
 
@@ -179,73 +171,15 @@ namespace Sendero.Narrative.Editor
             sb.Append("C|").Append(CurrentNodeGuid).Append('|').Append(node?.GetType().Name).Append('|')
               .Append(node?.displayTitle).Append('\n');
 
-            // Jugador
-            var active = ControlDelJugador.Activo;
-            var salud = SaludDelGrupo.Instance;
-            if (salud != null)
+            // Secciones del juego
+            for (int i = 0; i < _sections.Count; i++)
             {
-                sb.Append("P|").Append(active).Append('|');
-                foreach (var slot in new[] { PartyControlManager.CharacterSlot.Will, PartyControlManager.CharacterSlot.Liam, PartyControlManager.CharacterSlot.Estela })
-                {
-                    if (!ControlDelJugador.EnElGrupo(slot)) continue;
-                    sb.Append(slot).Append(':').Append(salud.Vida(slot).ToString("0")).Append('/')
-                      .Append(salud.VidaMax(slot).ToString("0")).Append(';');
-                    sb.Append(salud.Mana(slot).ToString("0")).Append('/').Append(salud.ManaMax(slot).ToString("0")).Append('|');
-                }
-                sb.Append('\n');
+                var entry = _sections[i];
+                entry.rows.Clear();
+                try { entry.section.Collect(entry.rows); }
+                catch (Exception e) { entry.rows.Add("(error: " + e.Message + ")"); }
+                foreach (var row in entry.rows) sb.Append('S').Append(i).Append('|').Append(row).Append('\n');
             }
-            else
-            {
-                sb.Append("P|").Append(active).Append("|sin SaludDelGrupo\n");
-            }
-
-            var preset = GameBootService.Profile != null ? GameBootService.Profile.GetActivePresetResolved() : null;
-            if (preset != null)
-            {
-                sb.Append("L|");
-                if (preset.abilities != null)
-                {
-                    var a = preset.abilities;
-                    if (a.jump) sb.Append("saltar,");
-                    if (a.swim) sb.Append("nadar,");
-                    if (a.climb) sb.Append("trepar,");
-                    if (a.fly) sb.Append("volar,");
-                    if (a.sprint) sb.Append("sprint,");
-                    if (a.shield) sb.Append("escudo,");
-                    if (a.magic) sb.Append("magia,");
-                }
-                sb.Append('|').Append(string.Join(",", preset.basicSpellIds ?? new List<SpellId>()));
-                sb.Append('|').Append(string.Join(",", preset.unlockedSpells ?? new List<SpellId>()));
-                sb.Append('\n');
-            }
-
-            // NPCs
-            var actors = UnityEngine.Object.FindObjectsByType<NarrativeActor>(FindObjectsInactive.Exclude)
-                .Where(a => a != null)
-                .Select(a =>
-                {
-                    var id = string.IsNullOrEmpty(a.ActorId) ? a.name : a.ActorId;
-                    var p = a.transform.position;
-                    var sceneName = a.gameObject.scene.name;
-                    return $"{id}|{sceneName}|{p.x:0.0},{p.y:0.0},{p.z:0.0}";
-                })
-                .OrderBy(s => s, StringComparer.OrdinalIgnoreCase)
-                .ToList();
-            foreach (var a in actors) sb.Append("A|").Append(a).Append('\n');
-
-            // Quests
-            var qm = QuestManager.Instance;
-            var quests = new List<string>();
-            if (qm != null)
-            {
-                foreach (var q in qm.GetAll())
-                {
-                    if (q == null) continue;
-                    quests.Add($"{q.Data?.displayName ?? q.Id}|{q.State}|{q.Id}");
-                }
-            }
-            quests.Sort(StringComparer.OrdinalIgnoreCase);
-            foreach (var q in quests) sb.Append("Q|").Append(q).Append('\n');
 
             // Flags
             var flags = NarrativeFlags.All().OrderBy(f => f, StringComparer.OrdinalIgnoreCase).ToList();
@@ -260,16 +194,17 @@ namespace Sendero.Narrative.Editor
             if (!force && signature == _lastSignature) return;
             _lastSignature = signature;
 
-            Apply(scene.name, node, active, salud, preset, actors, quests, flags, bb);
+            Apply(scene.name, node, flags, bb);
         }
 
         /// <summary>
-        /// Fuera de Play también se puede saber dónde debería estar cada NPC al llegar al nodo:
-        /// se proyecta el camino con el mismo Fast-Forward de Quick Test y se listan las marcas.
+        /// Fuera de Play también se puede saber dónde debería estar cada actor al llegar al nodo:
+        /// lo simula el INarrativeArrivalPreview del juego y aquí se listan las marcas.
         /// </summary>
         void ProjectSelectedNode()
         {
             _projectedBox.Clear();
+            if (_arrivalPreview == null) return;
             if (_graph == null || _selected?.Model == null)
             {
                 var hint = new Label("Selecciona un nodo en el lienzo para simular el estado al llegar a él.");
@@ -278,8 +213,10 @@ namespace Sendero.Narrative.Editor
                 return;
             }
 
-            var preview = NarrativeTestLauncher.Preview(_graph, _selected.Model.guid, NarrativeTestConfig.Load());
-            if (preview.actors.Count == 0 && preview.warnings.Count == 0)
+            var actors = new List<string>();
+            var warnings = new List<string>();
+            _arrivalPreview.Preview(_graph, _selected.Model.guid, actors, warnings);
+            if (actors.Count == 0 && warnings.Count == 0)
             {
                 var hint = new Label("No hay actores colocados en el camino hasta este nodo.");
                 hint.AddToClassList("narrative-live__muted");
@@ -287,13 +224,13 @@ namespace Sendero.Narrative.Editor
                 return;
             }
 
-            foreach (var a in preview.actors)
+            foreach (var a in actors)
             {
                 var l = new Label("· " + a);
                 l.AddToClassList("narrative-live__row");
                 _projectedBox.Add(l);
             }
-            foreach (var w in preview.warnings)
+            foreach (var w in warnings)
             {
                 var l = new Label("⚠ " + w);
                 l.AddToClassList("narrative-test__preview-line");
@@ -308,9 +245,7 @@ namespace Sendero.Narrative.Editor
             return NarrativeGraphHub.Instance.GetAllRunners()?.FirstOrDefault(r => r != null && r.graph == graph);
         }
 
-        void Apply(string sceneName, NarrativeNode node, PartyControlManager.CharacterSlot active,
-            SaludDelGrupo salud, PlayerPresetSO preset, List<string> actors, List<string> quests,
-            List<string> flags, List<SimpleBlackboard.Entry> bb)
+        void Apply(string sceneName, NarrativeNode node, List<string> flags, List<SimpleBlackboard.Entry> bb)
         {
             _headline.text = $"EN PLAY · {(_graph != null ? _graph.name : "sin grafo")} · {sceneName}";
             var shown = node;
@@ -326,43 +261,8 @@ namespace Sendero.Narrative.Editor
                 : "Sin nodo actual: el grafo no ha empezado o ya terminó.";
             _focusButton.SetEnabled(!string.IsNullOrEmpty(CurrentNodeGuid));
 
-            _player.text = salud != null
-                ? $"Al mando: {active}   ·   {PartyLine(salud, active)}"
-                : $"Al mando: {active}   ·   (SaludDelGrupo no disponible)";
-
-            if (preset != null)
-            {
-                var abilities = new List<string>();
-                var a = preset.abilities ?? new PlayerAbilities();
-                if (a.jump) abilities.Add("saltar");
-                if (a.swim) abilities.Add("nadar");
-                if (a.climb) abilities.Add("trepar");
-                if (a.fly) abilities.Add("volar");
-                if (a.sprint) abilities.Add("sprint");
-                if (a.shield) abilities.Add("escudo");
-                if (a.magic) abilities.Add("magia");
-                var spells = preset.basicSpellIds ?? new List<SpellId>();
-                var unlocked = preset.unlockedSpells ?? new List<SpellId>();
-                _loadout.text = $"Habilidades: {(abilities.Count == 0 ? "ninguna" : string.Join(", ", abilities))}\n" +
-                                $"Hechizos equipados: {(spells.Count == 0 ? "ninguno" : string.Join(", ", spells))}\n" +
-                                $"Hechizos desbloqueados: {(unlocked.Count == 0 ? "ninguno" : string.Join(", ", unlocked))}";
-            }
-            else
-            {
-                _loadout.text = "Habilidades y hechizos: (sin preset activo)";
-            }
-
-            Fill(_actorsBox, actors, "No hay NPCs con NarrativeActor en las escenas cargadas.", s =>
-            {
-                var parts = s.Split('|');
-                return $"{parts[0]}  ·  {parts[1]}  ·  ({parts[2]})";
-            });
-
-            Fill(_questsBox, quests, "No hay quests en curso.", s =>
-            {
-                var parts = s.Split('|');
-                return $"{parts[0]}  [{parts[1]}]";
-            });
+            foreach (var entry in _sections)
+                Fill(entry.box, entry.rows, entry.section.EmptyText, row => row);
 
             Fill(_flagsBox, flags, "No hay flags narrativos activos.", s => s);
 
@@ -386,18 +286,6 @@ namespace Sendero.Narrative.Editor
                 l.AddToClassList("narrative-live__row");
                 box.Add(l);
             }
-        }
-
-        static string PartyLine(SaludDelGrupo salud, PartyControlManager.CharacterSlot active)
-        {
-            var parts = new List<string>();
-            foreach (var slot in new[] { PartyControlManager.CharacterSlot.Will, PartyControlManager.CharacterSlot.Liam, PartyControlManager.CharacterSlot.Estela })
-            {
-                if (!ControlDelJugador.EnElGrupo(slot)) continue;
-                string mark = slot == active ? "▶ " : "";
-                parts.Add($"{mark}{slot} {salud.Vida(slot):0}/{salud.VidaMax(slot):0} · maná {salud.Mana(slot):0}/{salud.ManaMax(slot):0}");
-            }
-            return string.Join("   ", parts);
         }
     }
 }

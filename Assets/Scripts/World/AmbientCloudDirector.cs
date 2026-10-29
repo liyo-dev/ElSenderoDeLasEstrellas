@@ -4,6 +4,8 @@ using UnityEngine;
 
 /// Mantiene las nubes de buen tiempo y responde a CloudsBuildingUp y CloudsClearing.
 /// La cobertura del cielo depende de DayNightCycle.DuracionDeNublarse.
+/// No decide el clima: informa a DayNightCycle de su cobertura (InformarCoberturaDeNubes) y es el
+/// sorteo de clima de DayNightCycle el que, con más nubes, tiene más probabilidad de lluvia.
 public class AmbientCloudDirector : MonoBehaviour
 {
     #region Singleton
@@ -57,10 +59,6 @@ public class AmbientCloudDirector : MonoBehaviour
     [Header("Paseo aleatorio de cobertura")]
     [Tooltip("Cobertura (0-1) a partir de la cual la frecuencia de nubes sueltas ya está al máximo (busySpawnIntervalRange).")]
     [SerializeField, Range(0.05f, 1f)] private float lightCloudThreshold = 0.4f;
-    [Tooltip("Cobertura a partir de la cual, en cada paso, hay una tirada para pasar a tormenta de verdad (StartRain).")]
-    [SerializeField, Range(0.1f, 1f)] private float stormThreshold = 0.8f;
-    [Tooltip("Probabilidad de esa tirada por cada paso que la cobertura pase de stormThreshold. Que no sea 1 evita que SIEMPRE acabe lloviendo nada más rozar el umbral.")]
-    [SerializeField, Range(0f, 1f)] private float stormRollChance = 0.35f;
     [SerializeField] private Vector2 walkStepIntervalRange = new Vector2(10f, 25f);
     [Tooltip("Máximo cambio aleatorio de cobertura por paso (hacia arriba o hacia abajo).")]
     [SerializeField] private float walkStepSize = 0.15f;
@@ -139,6 +137,8 @@ public class AmbientCloudDirector : MonoBehaviour
 
         if (_walkRoutine != null) { StopCoroutine(_walkRoutine); _walkRoutine = null; }
         if (_spawnRoutine != null) { StopCoroutine(_spawnRoutine); _spawnRoutine = null; }
+
+        if (dayNightCycle != null) dayNightCycle.InformarCoberturaDeNubes(0f);
     }
 
     void HandleStormStarting() => _stormActive = true;
@@ -147,6 +147,7 @@ public class AmbientCloudDirector : MonoBehaviour
     {
         _stormActive = false;
         _coverage = Mathf.Max(_coverage, postRainResidualCoverage);
+        if (dayNightCycle != null) dayNightCycle.InformarCoberturaDeNubes(_coverage);
     }
 
     void HandleInteriorEntered()
@@ -212,9 +213,7 @@ public class AmbientCloudDirector : MonoBehaviour
             float delta = UnityEngine.Random.Range(-walkStepSize, walkStepSize);
             _coverage = Mathf.Clamp01(_coverage + delta);
             _coverage = Mathf.MoveTowards(_coverage, 0f, coverageDecayPerStep);
-
-            if (_coverage >= stormThreshold && UnityEngine.Random.value < stormRollChance && dayNightCycle.PuedeSortearClima)
-                dayNightCycle.StartRain();
+            dayNightCycle.InformarCoberturaDeNubes(_coverage);
         }
     }
 

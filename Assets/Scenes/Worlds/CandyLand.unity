@@ -88333,6 +88333,7 @@ MonoBehaviour:
   - Misiones Secundarias
   startOnAwake: 1
   requireActiveScene: 1
+  localRunner: {fileID: 0}
   logDebug: 0
 --- !u!1001 &1246795938
 PrefabInstance:
@@ -92840,6 +92841,7 @@ MonoBehaviour:
   windDurationRange: {x: 30, y: 90}
   windFadeOutTime: 3
   windRampDuration: 4
+  windVelocidadConViento: 2.6
   windVelocidadContra: 1.8
   windArrastreQuieto: 0.9
   windLoopVolume: 0.5
@@ -92861,15 +92863,19 @@ MonoBehaviour:
   thunderstormThunderDelayRange: {x: 0.3, y: 1.8}
   thunderstormBoltHeight: 220
   thunderstormBoltDistanceRange: {x: 18, y: 55}
-  thunderstormBoltWidth: 1.4
   thunderstormBoltColor: {r: 2.2, g: 2.3, b: 2.7, a: 1}
-  thunderstormBoltSegments: 7
-  thunderstormBoltJitter: 7
-  thunderstormBoltVisibleDuration: 0.3
+  prefabDelRayo: {fileID: 0}
+  dangerLightningTelegraphPrefab: {fileID: 4236288790194385793, guid: 4dfcf0e52c48e0c41bf1d3df088e501d, type: 3}
+  avisoDeRayoSfxKey: PlasmaSphere
+  dangerLightningIntervalRange: {x: 14, y: 26}
+  dangerLightningRadius: 3.6
+  dangerLightningDamage: 25
+  dangerLightningTelegraphDuration: 1.8
   weatherCheckIntervalRange: {x: 45, y: 110}
   sortearClima: 1
   thunderstormChancePerCheck: 0.05
   rainChancePerCheck: 0.18
+  lluviaExtraConCieloCubierto: 0.35
   snowChancePerCheck: 0.08
   windChancePerCheck: 0.15
   mistChancePerCheck: 0.12

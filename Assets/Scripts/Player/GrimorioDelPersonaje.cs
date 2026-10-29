@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Game.NPC;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// <summary>
@@ -47,8 +46,7 @@ public static class GrimorioDelPersonaje
     public static FichaDePersonaje Ficha(Slot slot)
     {
         if (slot == Slot.Will) return null;
-        var party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
-        var member = party != null ? party.GetMemberByName(slot == Slot.Liam ? "Liam" : "Estela") : null;
+        var member = ControlDelJugador.MiembroDe(slot);
         var personaje = member != null ? member.GetComponent<Personaje>() : null;
         if (personaje != null && personaje.Ficha != null) return personaje.Ficha;
         return FichaDePersonaje.Buscar(slot);
@@ -173,16 +171,13 @@ public static class GrimorioDelPersonaje
     {
         if (slot == Slot.Will) return; // Will: PlayerPresetService.ApplyCurrentPreset
         var basicos = BasicosEquipados(slot);
-        Slot activo = PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveSlot : Slot.Will;
-
-        if (activo == slot)
+        if (ControlDelJugador.Activo == slot)
         {
             if (PlayerService.TryGetComponent<MagicCaster>(out var caster, includeInactive: true, allowSceneLookup: true) && caster != null)
                 caster.SetBasicSpells(basicos);
         }
 
-        var party = PlayerParty.HasInstance ? PlayerParty.Instance : null;
-        var member = party != null ? party.GetMemberByName(slot == Slot.Liam ? "Liam" : "Estela") : null;
+        var member = ControlDelJugador.MiembroDe(slot);
         if (member != null)
         {
             var ficha = Ficha(slot);
@@ -231,11 +226,7 @@ public static class GrimorioDelPersonaje
         return string.Join(" · ", parts);
     }
 
-    /// "Básico de Estela" / "Combo de Liam: Y · B · X" — para avisos y el grimorio.
-    public static string Nombre(Slot slot) => slot switch
-    {
-        Slot.Liam => "Liam",
-        Slot.Estela => "Estela",
-        _ => "Will"
-    };
+    /// "Básico de Estela" / "Combo de Liam: Y · B · X" — para avisos y el grimorio. El nombre es
+    /// el de <see cref="ControlDelJugador.Nombre"/>.
+    public static string Nombre(Slot slot) => ControlDelJugador.Nombre(slot);
 }

@@ -7,7 +7,8 @@ using UnityEngine;
 /// jugador sigue jugando: lo que se cuentan por el camino al seguir a un NPC, por ejemplo. Se
 /// escribe como cualquier diálogo (speakerNameId + textId por línea). Solo avanza mientras
 /// 'puedeHablar' lo permite (el jugador va cerca, no hay un menú abierto); si una línea se corta a
-/// medias, se repite cuando se puede volver a hablar. Ver INC-537.
+/// medias, se repite cuando se puede volver a hablar. Cada línea sale por PresentadorDeLinea
+/// (traducción, bocadillo y voz). Ver INC-537.
 public sealed class CharlaEnBocadillos
 {
     private const float PausaEntreLineas = 0.5f;
@@ -36,14 +37,15 @@ public sealed class CharlaEnBocadillos
 
         while (!Terminada)
         {
-            var ui = SpeechBubbleUI.Instance;
-            if (ui == null) yield break;
+            if (!PresentadorDeLinea.Disponible) yield break;
             if (puedeHablar != null && !puedeHablar()) { yield return null; continue; }
 
             var linea = _dialogo.lines[_linea];
             Transform quien = Hablante(linea);
-            string texto = Texto(linea);
-            if (quien == null || string.IsNullOrWhiteSpace(texto))
+            var dicha = quien != null
+                ? PresentadorDeLinea.Decir(new FraseADecir { clave = linea.textId, textoPorDefecto = linea.text, ancla = quien })
+                : LineaDicha.Nada;
+            if (!dicha.Dicha)
             {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 Debug.LogWarning($"[CharlaEnBocadillos] {_dialogo.name}, línea {_linea + 1}: " +
@@ -52,21 +54,13 @@ public sealed class CharlaEnBocadillos
                 _linea++;
                 continue;
             }
-
-            float duracion = 0f;
-            foreach (var pagina in ui.Paginar(texto)) duracion += ui.TiempoDeLectura(pagina);
-            float voz = VoiceLines.TryPlay(linea.textId);
-            if (voz > 0f)
-            {
-                VoiceLines.TryGet(linea.textId, out _voz);
-                duracion = Mathf.Max(duracion, voz + 0.3f);
-            }
-            _turno = ui.Show(quien, texto, duracion);
+            _turno = dicha.Turno;
+            _voz = dicha.Voz;
             _mostrando = true;
 
             // Si otro sistema pone su bocadillo encima (o quita el nuestro), la línea no se ha
             // leído: se repite cuando el bocadillo vuelva a estar libre. Ver INC-613.
-            float fin = Time.unscaledTime + duracion;
+            float fin = Time.unscaledTime + dicha.Duracion;
             bool cortada = false;
             bool quitada = false;
             while (Time.unscaledTime < fin)
@@ -74,7 +68,8 @@ public sealed class CharlaEnBocadillos
                 if (puedeHablar != null && !puedeHablar()) { cortada = true; break; }
                 // El cierre propio por tiempo puede llegar un fotograma antes que 'fin' (otro reloj):
                 // solo cuenta como quitado si faltaba un buen trozo.
-                if (ui.Turno != _turno || (!ui.Mostrando && fin - Time.unscaledTime > MargenDeCierre))
+                if (PresentadorDeLinea.TurnoActual != _turno ||
+                    (!PresentadorDeLinea.HayAlgoEnPantalla && fin - Time.unscaledTime > MargenDeCierre))
                 { quitada = true; break; }
                 yield return null;
             }
@@ -85,10 +80,10 @@ public sealed class CharlaEnBocadillos
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 // Diagnóstico de INC-613: se quita al cerrar la incidencia.
                 Debug.Log($"[CharlaEnBocadillos] {_dialogo.name}, línea {_linea + 1}: se corta (jugador lejos, " +
-                          $"menú abierto o el NPC le está llamando) a los {duracion - (fin - Time.unscaledTime):F1} s de {duracion:F1} s.");
+                          $"menú abierto o el NPC le está llamando) a los {dicha.Duracion - (fin - Time.unscaledTime):F1} s de {dicha.Duracion:F1} s.");
 #endif
                 PararVoz();
-                ui.Hide(_turno);
+                PresentadorDeLinea.Esconder(_turno);
                 continue;
             }
             if (quitada)
@@ -96,14 +91,14 @@ public sealed class CharlaEnBocadillos
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
                 // Diagnóstico de INC-613: se quita al cerrar la incidencia.
                 Debug.LogWarning($"[CharlaEnBocadillos] {_dialogo.name}, línea {_linea + 1}: otro sistema " +
-                                 $"{(ui.Turno != _turno ? "ha puesto su bocadillo" : "ha quitado el bocadillo")} " +
-                                 $"a los {duracion - (fin - Time.unscaledTime):F1} s de {duracion:F1} s. Se repite.");
+                                 $"{(PresentadorDeLinea.TurnoActual != _turno ? "ha puesto su bocadillo" : "ha quitado el bocadillo")} " +
+                                 $"a los {dicha.Duracion - (fin - Time.unscaledTime):F1} s de {dicha.Duracion:F1} s. Se repite.");
 #endif
                 PararVoz();
                 // Se espera a que el otro bocadillo acabe, con tope: uno sin duración no puede
                 // dejar la charla (y al nodo que la espera) parada para siempre.
                 float limite = Time.unscaledTime + EsperaMaximaAlBocadilloAjeno;
-                while (ui.Mostrando && Time.unscaledTime < limite) yield return null;
+                while (PresentadorDeLinea.HayAlgoEnPantalla && Time.unscaledTime < limite) yield return null;
                 yield return new WaitForSecondsRealtime(PausaEntreLineas);
                 continue;
             }
@@ -118,22 +113,13 @@ public sealed class CharlaEnBocadillos
         if (!_mostrando) return;
         _mostrando = false;
         PararVoz();
-        SpeechBubbleUI.Instance?.Hide(_turno);
+        PresentadorDeLinea.Esconder(_turno);
     }
 
     private void PararVoz()
     {
-        var audio = AudioService.Instance;
-        if (audio != null && audio.IsVoicePlaying(_voz)) audio.StopVoice();
+        PresentadorDeLinea.CallarLaVoz(_voz);
         _voz = null;
-    }
-
-    private static string Texto(DialogueLine linea)
-    {
-        if (string.IsNullOrEmpty(linea.textId)) return linea.text;
-        return LocalizationManager.Instance != null
-            ? LocalizationManager.Instance.Get(linea.textId, linea.text)
-            : linea.text;
     }
 
     /// El jugador si la línea es suya; si no, el NPC principal, un compañero del grupo o cualquier

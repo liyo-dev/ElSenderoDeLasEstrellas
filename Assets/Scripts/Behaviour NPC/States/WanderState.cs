@@ -39,7 +39,7 @@ namespace Game.NPC.States
         {
             base.OnEnter(context);
 
-            if (context.IsPinnedByParty)
+            if (context.EstaAnclado)
             {
                 context.Brain.ChangeState(new IdleState());
                 return;

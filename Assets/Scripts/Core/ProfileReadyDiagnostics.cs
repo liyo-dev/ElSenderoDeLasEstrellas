@@ -36,9 +36,6 @@ public class ProfileReadyDiagnostics : MonoBehaviour
         "PlayerParty",
         "NPCInteractiveNarrativeExecutor",
         
-        // ✅ Triggers y unlocks
-        "UnlockTrigger",
-        
         // Añadir aquí cualquier otro sistema que DEBA suscribirse
     };
 

@@ -62,7 +62,40 @@ public static class MontarCinematicaFinal
     /// </summary>
     public static void Asegurar()
     {
+        AsegurarMusicaDelFinal();
         PrepararEscena(forzar: false);
+    }
+
+    private const string RutaPerfilDeAudio = "Assets/_AUDIOPROFILE/AudioGraphProfile.asset";
+
+    /// Músicas del final que no tienen regla en el perfil de audio: se añaden si faltan, para que
+    /// el guion las pueda pedir con «musica ID». Ver INC-864.
+    private static void AsegurarMusicaDelFinal()
+    {
+        var perfil = AssetDatabase.LoadAssetAtPath<AudioGraphProfile>(RutaPerfilDeAudio);
+        if (perfil == null)
+        {
+            Debug.LogWarning($"[Cinemática Final] No encuentro el perfil de audio en '{RutaPerfilDeAudio}'.");
+            return;
+        }
+
+        bool cambiado = AsegurarReglaDeMusica(perfil, "FINAL_ARCHIMAGO", "Assets/Audio/Music/Zonas/Umbral Entre Estrellas.mp3", 2.5f, 3f);
+        if (!cambiado) return;
+        EditorUtility.SetDirty(perfil);
+        AssetDatabase.SaveAssetIfDirty(perfil);
+    }
+
+    private static bool AsegurarReglaDeMusica(AudioGraphProfile perfil, string id, string rutaClip, float fadeIn, float fadeOut)
+    {
+        if (perfil.GetSequenceRule(id) != null) return false;
+        var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(rutaClip);
+        if (clip == null)
+        {
+            Debug.LogWarning($"[Cinemática Final] No encuentro la música '{rutaClip}' para la regla {id}.");
+            return false;
+        }
+        perfil.sequences.Add(new AudioGraphProfile.SequenceRule { sequenceId = id, music = clip, fadeIn = fadeIn, fadeOut = fadeOut, sinBucle = true });
+        return true;
     }
 
     public static void PrepararEscena(bool forzar = false)
@@ -144,6 +177,7 @@ public static class MontarCinematicaFinal
         sunLight.color = new Color(0.88f, 0.92f, 1.0f);
         sunLight.intensity = 1.25f;
         sunLight.shadows = LightShadows.Soft;
+        AsegurarPostprocesoDeLaEscena(lightingRoot.transform);
 
         var camGo = new GameObject("Main Camera");
         camGo.tag = "MainCamera";
@@ -224,17 +258,7 @@ public static class MontarCinematicaFinal
         InstanciarEfectosEscena(
             rootVfx.transform,
             altarTr,
-            portalTr,
-            out GameObject vfxDeseoAltar,
-            out GameObject vfxPortal,
-            out GameObject vfxEmpujeLuz,
-            out GameObject vfxCirculoConjuro,
-            out GameObject vfxAuraConjuroWill,
             out GameObject vfxPilarResurreccion,
-            out GameObject vfxResurreccion,
-            out GameObject vfxColapsoSendero,
-            out GameObject vfxEspirituArchimago,
-            out GameObject vfxLlamaWill,
             out GameObject vfxSalpicaduraRio);
 
         // 7. Crear/actualizar assets de SequenceDefinition y configurar SequencePlayer + SequenceStage + ModuloCinematicaFinal
@@ -274,16 +298,7 @@ public static class MontarCinematicaFinal
             portalTr,
             piedraTr,
             orillaAguaTr,
-            vfxDeseoAltar,
-            vfxPortal,
-            vfxEmpujeLuz,
-            vfxCirculoConjuro,
-            vfxAuraConjuroWill,
             vfxPilarResurreccion,
-            vfxResurreccion,
-            vfxColapsoSendero,
-            vfxEspirituArchimago,
-            vfxLlamaWill,
             cintaRojaWill,
             canaWill,
             canaTobias,
@@ -918,15 +933,6 @@ public static class MontarCinematicaFinal
                 AplicarMaterialLuminosoPortal(quadSendero, new Color(0.38f, 0.78f, 1.0f, 0.92f));
                 quadSendero.SetActive(false);
                 ventanaPortalSenderoGo = quadSendero;
-
-                var prefabPortalVfx = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Portals/Portal blue.prefab");
-                if (prefabPortalVfx != null)
-                {
-                    var vfxUmbralPiedra = (GameObject)PrefabUtility.InstantiatePrefab(prefabPortalVfx, portalPiedraGo.transform);
-                    vfxUmbralPiedra.name = "VFX_Portal_Piedra";
-                    vfxUmbralPiedra.transform.localPosition = new Vector3(0f, 1.6f, 0.08f);
-                    vfxUmbralPiedra.transform.localRotation = Quaternion.identity;
-                }
             }
             else
             {
@@ -1146,42 +1152,10 @@ public static class MontarCinematicaFinal
         luzNocheRioGrupo.range = 14f;
         goLuzNoche.SetActive(false);
 
-        // 4. Vegetación y rocas de ribera usando los prefabs de Fantasy Kingdom de MainWorld
-        const string FKVeg = "Assets/Art/World/Fantasy_Kingdom_Pack/Prefabs/Vegetation/";
-        const string FKRock = "Assets/Art/World/Fantasy_Kingdom_Pack/Prefabs/Rock/";
-
-        // Rocas de orilla flanqueando la zona de pesca (fuera del eje de cámaras X = -3.8..+3.8)
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a01.prefab", new Vector3(-5.2f, -0.08f, -1.2f), 25f, 1.05f);
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a02.prefab", new Vector3(5.0f, -0.08f, -1.2f), -40f, 1.0f);
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a03.prefab", new Vector3(-6.4f, 0.0f, 1.5f), 80f, 1.15f);
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a01.prefab", new Vector3(6.2f, 0.0f, 1.8f), 140f, 1.1f);
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a02.prefab", new Vector3(-2.6f, 0.0f, 4.6f), 55f, 0.85f);
-        ColocarPropDecorativo(contenedor.transform, FKRock + "Rock01_a03.prefab", new Vector3(2.8f, 0.0f, 4.8f), -70f, 0.85f);
-
-        // Juncos y nenúfares en el agua (bajos < 0.35m o en los flancos para embellecer sin tapar)
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Grass01_a02.prefab", new Vector3(-4.6f, -0.12f, -1.6f), 15f, 1.0f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Grass01_a03.prefab", new Vector3(4.5f, -0.12f, -1.6f), 65f, 1.0f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Plant06_a01.prefab", new Vector3(-3.4f, -0.09f, -3.2f), 40f, 1.0f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Plant06_a02.prefab", new Vector3(3.2f, -0.09f, -3.5f), 120f, 1.0f);
-
-        // Flores silvestres y hierba en la pradera detrás y alrededor de los personajes (Z = +1.0 .. +5.5)
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Flower02_b01.prefab", new Vector3(-3.2f, 0f, 1.4f), 0f, 0.95f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Flower05_a01.prefab", new Vector3(3.1f, 0f, 1.5f), 45f, 0.95f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Flower02_b02.prefab", new Vector3(-1.4f, 0f, 2.2f), 90f, 0.9f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Flower05_a02.prefab", new Vector3(1.5f, 0f, 2.3f), 130f, 0.9f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Flower02_b01.prefab", new Vector3(0.0f, 0f, 2.8f), 25f, 0.95f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Grass01_a02.prefab", new Vector3(-2.2f, 0f, 3.4f), 40f, 0.9f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Grass01_a03.prefab", new Vector3(2.3f, 0f, 3.5f), 110f, 0.9f);
-
-        // Arboleda pintoresca al fondo de la pradera norte (Z = +5.2 .. +11.5) para que todos los planos
-        // que miran desde el río hacia los personajes tengan un bosque frondoso y vivo de fondo
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_e01.prefab", new Vector3(-5.2f, 0.0f, 5.6f), 20f, 0.85f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_a03.prefab", new Vector3(5.4f, 0.0f, 5.5f), -35f, 0.85f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_d03.prefab", new Vector3(-2.4f, 0.0f, 6.4f), 50f, 0.82f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_b02.prefab", new Vector3(2.5f, 0.0f, 6.5f), 110f, 0.82f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_e02.prefab", new Vector3(0.0f, 0.0f, 7.6f), 15f, 0.88f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_a04.prefab", new Vector3(-7.8f, 0.0f, 8.2f), -25f, 0.95f);
-        ColocarPropDecorativo(contenedor.transform, FKVeg + "Tree04_e01.prefab", new Vector3(7.8f, 0.0f, 8.4f), 65f, 0.95f);
+        // 4. Vegetación y rocas de ribera (Fantasy Kingdom, el mismo pack que MainWorld). El grupo
+        // ocupa x -2,5..+2,6, z -1..+1,6: todo lo decorado queda fuera de ese hueco y de la línea
+        // de las cámaras, que miran desde el agua (z negativa) y desde la pradera (z positiva).
+        DecorarRibera(contenedor.transform);
 
             // 5. Puntos de asiento en el suelo (NPCWorldPoint con SitGround) bien espaciados en la orilla llana
         var asientoRioTobias = CrearAsientoDeSuelo(rootZonaRio, "Asiento_Rio_Tobias", new Vector3(0.3f, 0f, 0.0f), 175f);
@@ -1196,6 +1170,162 @@ public static class MontarCinematicaFinal
         var marcaEscenario = new GameObject("M_Centro_Piedra");
         marcaEscenario.transform.SetParent(rootZonaRio.parent, false);
         marcaEscenario.transform.position = CentroZonaPiedra;
+    }
+
+    private const string FKVeg = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Vegetation/";
+    private const string FKRock = "Assets/Art/World/Fantasy_Kingdom_Pack/Perfabs/Rock/";
+
+    /// La ribera vestida: arboleda detrás y a los lados, rocas y juncos en la orilla, flores, hierba
+    /// y setas por la pradera, y la otra orilla con su arboleda al fondo, al otro lado del agua.
+    private static void DecorarRibera(Transform contenedor)
+    {
+        var azar = new System.Random(20261029);
+        float Azar(float a, float b) => a + (float)azar.NextDouble() * (b - a);
+        // Sitios de cámara del guion del río que quedan fuera del hueco del grupo: nada encima.
+        Vector2[] camaras = { new(4.5f, 3.8f), new(-5.8f, -0.9f), new(-3.8f, -0.6f) };
+        bool Libre(float x, float z)
+        {
+            foreach (var c in camaras) if ((new Vector2(x, z) - c).sqrMagnitude < 2.2f) return false;
+            return true;
+        }
+
+        // La otra orilla: una franja de pradera más allá del agua.
+        var otraOrilla = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        otraOrilla.name = "Otra_Orilla";
+        UnityEngine.Object.DestroyImmediate(otraOrilla.GetComponent<Collider>());
+        otraOrilla.transform.SetParent(contenedor, false);
+        otraOrilla.transform.localPosition = new Vector3(0f, 0.02f, -30f);
+        otraOrilla.transform.localScale = new Vector3(9f, 1f, 1.3f);
+        var sh = Shader.Find("Universal Render Pipeline/Lit");
+        if (sh != null)
+            otraOrilla.GetComponent<MeshRenderer>().sharedMaterial = new Material(sh) { name = "Pradera_Otra_Orilla", color = new Color(0.42f, 0.66f, 0.33f) };
+
+        // Arboleda: detrás de la pradera (al fondo de los planos que miran desde el agua), a los
+        // lados, y en la otra orilla.
+        string[] arboles = { "Tree01_a01", "Tree01_b01", "Tree02_a01", "Tree02_c01", "Tree02_e01", "Tree03_a01", "Tree03_c01", "Tree03_e01", "Tree04_a01", "Tree04_c01", "Tree04_d03", "Tree04_e01", "Tree05_a01", "Tree06_a01", "Tree07_a01" };
+        for (int i = 0; i < 22; i++)
+        {
+            float x = Azar(-16f, 16f), z = Azar(5.5f, 15f);
+            if (!Libre(x, z)) continue;
+            ColocarPropDecorativo(contenedor, FKVeg + arboles[azar.Next(arboles.Length)] + ".prefab", new Vector3(x, 0f, z), Azar(0f, 360f), Azar(0.8f, 1.15f));
+        }
+        foreach (float lado in new[] { -1f, 1f })
+            for (int i = 0; i < 6; i++)
+                ColocarPropDecorativo(contenedor, FKVeg + arboles[azar.Next(arboles.Length)] + ".prefab",
+                    new Vector3(lado * Azar(8f, 14f), 0f, Azar(-0.5f, 5f)), Azar(0f, 360f), Azar(0.85f, 1.1f));
+        for (int i = 0; i < 26; i++)
+            ColocarPropDecorativo(contenedor, FKVeg + arboles[azar.Next(arboles.Length)] + ".prefab",
+                new Vector3(Azar(-30f, 30f), 0.02f, Azar(-27f, -33f)), Azar(0f, 360f), Azar(0.9f, 1.3f));
+
+        // Rocas en la orilla, a los lados del grupo, y alguna medio metida en el agua.
+        for (int i = 0; i < 14; i++)
+        {
+            float x = Azar(7.5f, 14f) * (i % 2 == 0 ? 1f : -1f), z = Azar(-2.4f, -0.8f);
+            ColocarPropDecorativo(contenedor, FKRock + $"Rock0{1 + azar.Next(4)}_a0{1 + azar.Next(8)}.prefab", new Vector3(x, -0.08f, z), Azar(0f, 360f), Azar(0.6f, 1.2f));
+        }
+        // Juncos y plantas de agua en la orilla, fuera del hueco de la pesca.
+        string[] agua = { "Plant06_a01", "Plant06_b01", "Grass02_a01", "Grass02_a02", "Grass03_a01" };
+        for (int i = 0; i < 18; i++)
+        {
+            float x = Azar(7.5f, 15f) * (i % 2 == 0 ? 1f : -1f), z = Azar(-2.8f, -1.2f);
+            ColocarPropDecorativo(contenedor, FKVeg + agua[azar.Next(agua.Length)] + ".prefab", new Vector3(x, -0.1f, z), Azar(0f, 360f), Azar(0.8f, 1.2f));
+        }
+        // Pradera: hierba, flores y setas alrededor del grupo (sin meterse en su hueco).
+        string[] pradera = { "Grass01_a01", "Grass01_a02", "Grass02_a01", "Grass02_a02", "Grass03_a01", "Flower01_a01", "Flower01_b01", "Flower01_c01", "Flower02_a01", "Flower02_b01", "Flower03_a01", "Flower04_a01", "Flower04_a02", "Flower05_a01", "Flower05_a02", "Plant04_a01", "Plant04_b01", "Mushroom03_a01", "Mushroom04_a01" };
+        int puestos = 0;
+        for (int intento = 0; intento < 400 && puestos < 110; intento++)
+        {
+            float x = Azar(-13f, 13f), z = Azar(-0.9f, 6f);
+            if (x > -3.6f && x < 3.8f && z < 4.6f) continue;   // el hueco del grupo y sus cámaras
+            if (!Libre(x, z)) continue;
+            ColocarPropDecorativo(contenedor, FKVeg + pradera[azar.Next(pradera.Length)] + ".prefab", new Vector3(x, 0f, z), Azar(0f, 360f), Azar(0.75f, 1.2f));
+            puestos++;
+        }
+        // Unas pocas flores bajas dentro del hueco, donde no estorban (detrás del grupo).
+        for (int i = 0; i < 8; i++)
+            ColocarPropDecorativo(contenedor, FKVeg + pradera[5 + azar.Next(10)] + ".prefab", new Vector3(Azar(-2.6f, 2.6f), 0f, Azar(4.7f, 5.6f)), Azar(0f, 360f), Azar(0.7f, 0.9f));
+
+        AdornarLaOrilla(contenedor);
+    }
+
+    /// Sitios de cámara del guion del río sobre la orilla (en local de la zona): ahí no se pone nada.
+    private static readonly Vector2[] CamarasSobreLaOrilla =
+    {
+        new(-3.0f, -1.9f), new(-3.8f, -0.6f), new(-2.3f, -1.0f), new(-1.3f, -2.5f), new(-0.1f, -2.4f), new(-0.1f, -1.8f),
+        new(0.15f, -3.9f), new(0.3f, -2.3f), new(1.9f, -2.0f), new(3.2f, -1.7f), new(2.9f, -2.3f), new(-2.4f, -2.0f),
+        new(-1.4f, -0.8f), new(1.1f, -1.4f), new(0.6f, -2.2f), new(0.5f, -1.0f), new(0f, -3.2f),
+    };
+
+    /// El borde del agua: la pradera ya no se corta en seco contra el río. Una franja de arena
+    /// húmeda que baja hasta el agua, una línea de matas de hierba donde acaba la pradera, guijarros
+    /// en la arena y juncos en el agua a los lados. Con su propia semilla, para no mover lo demás.
+    private static void AdornarLaOrilla(Transform contenedor)
+    {
+        var azar = new System.Random(20261030);
+        float Azar(float a, float b) => a + (float)azar.NextDouble() * (b - a);
+        bool Libre(float x, float z, float radio)
+        {
+            foreach (var c in CamarasSobreLaOrilla) if ((new Vector2(x, z) - c).sqrMagnitude < radio * radio) return false;
+            return true;
+        }
+
+        // La arena: un plano inclinado de z -1,1 (un pelo sobre la pradera) a z -2,3 (bajo el agua,
+        // que está a -0,10). Corta el agua hacia z -2,15: ahí queda la línea del agua.
+        const float zArriba = -1.1f, zAbajo = -2.3f, yArriba = 0.015f, yAbajo = -0.115f;
+        var arena = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        arena.name = "Arena_De_La_Orilla";
+        UnityEngine.Object.DestroyImmediate(arena.GetComponent<Collider>());
+        arena.transform.SetParent(contenedor, false);
+        float largo = new Vector2(zArriba - zAbajo, yArriba - yAbajo).magnitude;
+        float inclinacion = Mathf.Atan2(yArriba - yAbajo, zArriba - zAbajo) * Mathf.Rad2Deg;
+        arena.transform.localPosition = new Vector3(0f, (yArriba + yAbajo) * 0.5f, (zArriba + zAbajo) * 0.5f);
+        arena.transform.localRotation = Quaternion.Euler(90f - inclinacion, 0f, 0f);
+        arena.transform.localScale = new Vector3(48f, largo, 1f);
+        var sh = Shader.Find("Universal Render Pipeline/Lit");
+        var mr = arena.GetComponent<MeshRenderer>();
+        if (sh != null)
+        {
+            var mat = new Material(sh) { name = "Arena_Humeda_Orilla", color = new Color(0.66f, 0.58f, 0.41f) };
+            if (mat.HasProperty("_Smoothness")) mat.SetFloat("_Smoothness", 0.35f);
+            mr.sharedMaterial = mat;
+        }
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+        // Matas de hierba donde acaba la pradera (tapan el borde de la arena). Más bajas cerca del
+        // grupo para no tapar los planos.
+        string[] matas = { "Grass01_a01", "Grass01_a02", "Grass02_a01", "Grass02_a02", "Grass03_a01" };
+        for (float x = -22f; x <= 22f; x += Azar(0.28f, 0.42f))
+        {
+            float z = Azar(-1.28f, -0.98f);
+            if (!Libre(x, z, 0.65f)) continue;
+            bool cerca = Mathf.Abs(x) < 5f;
+            ColocarPropDecorativo(contenedor, FKVeg + matas[azar.Next(matas.Length)] + ".prefab", new Vector3(x, 0f, z), Azar(0f, 360f),
+                cerca ? Azar(0.5f, 0.75f) : Azar(0.8f, 1.2f));
+        }
+        // Alguna flor entre las matas, lejos del grupo.
+        string[] flores = { "Flower01_a01", "Flower02_a01", "Flower03_a01", "Flower04_a01", "Flower05_a01" };
+        for (int i = 0; i < 16; i++)
+        {
+            float x = Azar(4.5f, 20f) * (i % 2 == 0 ? 1f : -1f), z = Azar(-1.15f, -0.9f);
+            ColocarPropDecorativo(contenedor, FKVeg + flores[azar.Next(flores.Length)] + ".prefab", new Vector3(x, 0f, z), Azar(0f, 360f), Azar(0.6f, 0.85f));
+        }
+        // Guijarros en la arena.
+        for (int i = 0; i < 46; i++)
+        {
+            float x = Azar(-20f, 20f), z = Azar(-2.0f, -1.3f);
+            if (!Libre(x, z, 0.7f)) continue;
+            float y = Mathf.Lerp(yArriba, yAbajo, (zArriba - z) / (zArriba - zAbajo)) - 0.02f;
+            ColocarPropDecorativo(contenedor, FKRock + $"Rock0{1 + azar.Next(4)}_a0{1 + azar.Next(8)}.prefab", new Vector3(x, y, z), Azar(0f, 360f),
+                Mathf.Abs(x) < 5f ? Azar(0.12f, 0.2f) : Azar(0.18f, 0.35f));
+        }
+        // Juncos en la línea del agua, a los lados (donde no cae Estela ni miran las cámaras).
+        string[] juncos = { "Plant06_a01", "Plant06_b01", "Grass03_a01" };
+        for (int i = 0; i < 30; i++)
+        {
+            float x = Azar(4.2f, 20f) * (i % 2 == 0 ? 1f : -1f), z = Azar(-2.35f, -1.95f);
+            if (!Libre(x, z, 0.8f)) continue;
+            ColocarPropDecorativo(contenedor, FKVeg + juncos[azar.Next(juncos.Length)] + ".prefab", new Vector3(x, -0.12f, z), Azar(0f, 360f), Azar(0.75f, 1.1f));
+        }
     }
 
     private static GameObject CrearAsientoDeSuelo(Transform parentZona, string nombre, Vector3 localPos, float rumboGrados)
@@ -1761,40 +1891,110 @@ public static class MontarCinematicaFinal
     private static void InstanciarEfectosEscena(
         Transform parent,
         Transform altarTr,
-        Transform portalTr,
-        out GameObject vfxDeseoAltar,
-        out GameObject vfxPortal,
-        out GameObject vfxEmpujeLuz,
-        out GameObject vfxCirculoConjuro,
-        out GameObject vfxAuraConjuroWill,
         out GameObject vfxPilarResurreccion,
-        out GameObject vfxResurreccion,
-        out GameObject vfxColapsoSendero,
-        out GameObject vfxEspirituArchimago,
-        out GameObject vfxLlamaWill,
         out GameObject vfxSalpicaduraRio)
     {
-        Vector3 posAltarLuz = altarTr != null ? altarTr.position + Vector3.up * 1.1f : new Vector3(0f, 1.2f, 2.5f);
-        Vector3 posPortalLuz = portalTr != null ? portalTr.position + Vector3.up * 1.6f : new Vector3(0f, 1.6f, 8.2f);
-
-        vfxDeseoAltar = InstanciarVfx(parent, "VFX_DeseoAltar", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", posAltarLuz);
-        vfxPortal = InstanciarVfx(parent, "VFX_PortalUmbral", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Portals/Portal blue.prefab", posPortalLuz);
-        vfxPortal.SetActive(true);
-        vfxEmpujeLuz = InstanciarVfx(parent, "VFX_EmpujeLuz", "Assets/_VFX/Prologo/VFX_LuzProtectora.prefab", posPortalLuz);
-
-        // Usar Magic circle y FX_LightPillar en lugar de Healing circle / Buff.prefab para que NUNCA salgan iconos de flechas RPG [↑]
-        vfxCirculoConjuro = InstanciarVfx(parent, "VFX_CirculoConjuroAnime", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab", new Vector3(0f, 0.05f, 4.2f));
-        vfxAuraConjuroWill = InstanciarVfx(parent, "VFX_AuraConjuroWill", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", new Vector3(0f, 0.05f, 4.2f));
         vfxPilarResurreccion = InstanciarVfx(parent, "VFX_PilarResurreccion", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab", new Vector3(-1.2f, 0.05f, 4.2f));
-        vfxResurreccion = InstanciarVfx(parent, "VFX_ResurreccionLiam", "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/Magic circles/Magic circle.prefab", new Vector3(-1.2f, 0.1f, 4.2f));
-        vfxColapsoSendero = InstanciarVfx(parent, "VFX_ColapsoSendero", "Assets/Prefabs/Effects/SpecialAttack/VFX_TormentaArcana.prefab", new Vector3(0f, 1.2f, 0.5f));
-        vfxEspirituArchimago = new GameObject("VFX_EspirituArchimago");
-        vfxEspirituArchimago.transform.SetParent(parent, false);
-        vfxEspirituArchimago.SetActive(false);
 
-        // Will regresa en persona bajo las estrellas; no se coloca humo ni hogueras de VFX de fuego procedural
-        vfxLlamaWill = null;
         vfxSalpicaduraRio = InstanciarVfx(parent, "VFX_SalpicaduraRio", "Assets/JMO Assets/Cartoon FX Remaster/CFXR Prefabs/Water/CFXR2 Water Splash.prefab", CentroZonaRio);
+    }
+
+    // La fuente del rótulo «A la mañana siguiente…» del grafo, para que los rótulos del final se vean igual.
+    private const string GuidFuenteDeRotulo = "812c7b0dc56552d4aaa2319860b0c738";
+    private const string RutaDibujoDeTobias = "Assets/Art/Cinematics/Final/DibujoDeTobias_Will.png";
+    private const string Hovl = "Assets/VFX/Hovl Studio/Magic effects pack/Prefabs/";
+    private const string Aguiar = "Assets/VFX/GabrielAguiarProductions 1/FreeQuickEffectsVol1/Prefabs/";
+
+    /// Los efectos que el módulo lanza a lo largo de la cinemática (prefabs, no instancias).
+    private const string PerfilPorDefecto = "Assets/DefaultVolumeProfile.asset";
+    public const string PerfilNocheDelRio = "Assets/_SEQUENCES/Perfiles/Final_NocheDelRio.asset";
+
+    /// El post-procesado de la escena lo lleva PostprocesoDeEscena (el guion lo cambia con
+    /// «postproceso»): de día el perfil de siempre; de noche en el río, el de la noche.
+    private static void AsegurarPostprocesoDeLaEscena(Transform padre)
+    {
+        var go = new GameObject("POSTPROCESO_FINAL");
+        go.transform.SetParent(padre, false);
+        var vol = go.AddComponent<Volume>();
+        vol.isGlobal = true;
+        vol.priority = 10;
+        vol.weight = 1f;
+        var perfilBase = AssetDatabase.LoadAssetAtPath<VolumeProfile>(PerfilPorDefecto);
+        vol.sharedProfile = perfilBase;
+        var post = go.AddComponent<PostprocesoDeEscena>();
+        post.perfilInicial = perfilBase;
+        post.exclusivo = true;
+        post.entrada = 0f;
+        CrearPerfilDeNoche(perfilBase);
+    }
+
+    /// Copia del perfil de siempre con la noche encima: menos exposición, azulada y más apagada.
+    private static void CrearPerfilDeNoche(VolumeProfile perfilBase)
+    {
+        if (AssetDatabase.LoadAssetAtPath<VolumeProfile>(PerfilNocheDelRio) != null)
+            AssetDatabase.DeleteAsset(PerfilNocheDelRio);
+        Directory.CreateDirectory(Path.GetDirectoryName(PerfilNocheDelRio));
+        var perfil = ScriptableObject.CreateInstance<VolumeProfile>();
+        AssetDatabase.CreateAsset(perfil, PerfilNocheDelRio);
+        if (perfilBase != null)
+        {
+            foreach (var original in perfilBase.components)
+            {
+                if (original == null) continue;
+                var copia = UnityEngine.Object.Instantiate(original);
+                copia.name = original.name;
+                copia.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+                perfil.components.Add(copia);
+                AssetDatabase.AddObjectToAsset(copia, perfil);
+            }
+        }
+        if (!perfil.TryGet(out ColorAdjustments color))
+        {
+            color = perfil.Add<ColorAdjustments>();
+            color.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            AssetDatabase.AddObjectToAsset(color, perfil);
+        }
+        color.active = true;
+        color.postExposure.Override(-1.5f);
+        color.colorFilter.Override(new Color(0.6f, 0.7f, 1f));
+        color.saturation.Override(-35f);
+        color.contrast.Override(10f);
+        if (!perfil.TryGet(out Vignette vineta))
+        {
+            vineta = perfil.Add<Vignette>();
+            vineta.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            AssetDatabase.AddObjectToAsset(vineta, perfil);
+        }
+        vineta.active = true;
+        vineta.intensity.Override(0.38f);
+        vineta.smoothness.Override(0.5f);
+        vineta.color.Override(new Color(0.02f, 0.03f, 0.08f));
+        EditorUtility.SetDirty(perfil);
+        AssetDatabase.SaveAssets();
+    }
+
+    private static void AsignarPrefabsDeEfectos(SerializedObject soModulo)
+    {
+        Asignar(soModulo, "_prefabEstallidoDeEstrella", Hovl + "Hits and explosions/Star hit.prefab");
+        Asignar(soModulo, "_prefabExplosion", Hovl + "Hits and explosions/Explosion.prefab");
+        Asignar(soModulo, "_prefabCirculoMagico", Hovl + "Magic circles/Magic circle.prefab");
+        Asignar(soModulo, "_prefabCirculoMagico2", Hovl + "Magic circles/Magic circle 2.prefab");
+        Asignar(soModulo, "_prefabAuraEstelar", Hovl + "Character auras/Star aura.prefab");
+        Asignar(soModulo, "_prefabGolpeSagrado", Hovl + "Hits and explosions/Holy hit.prefab");
+        Asignar(soModulo, "_prefabTeletransporte", Hovl + "Environment/Teleport.prefab");
+        Asignar(soModulo, "_prefabPilarDeLuz", "Assets/VFX/Free Game VFX/Prefab/FX_LightPillar.prefab");
+        Asignar(soModulo, "_prefabTornado", Aguiar + "vfx_Tornado_01.prefab");
+        Asignar(soModulo, "_prefabOndaExpansiva", Aguiar + "vfx_Shockwave_01.prefab");
+        Asignar(soModulo, "_prefabImplosion", Aguiar + "vfx_Implosion_01.prefab");
+        Asignar(soModulo, "_prefabLluviaDeEstrellas", "Assets/VFX/Matthew Guz/Spell Area of Effect FREE/Prefab/AoE Stars.prefab");
+    }
+
+    private static void Asignar(SerializedObject so, string campo, string rutaPrefab)
+    {
+        var prop = so.FindProperty(campo);
+        var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(rutaPrefab);
+        if (prefab == null) Debug.LogWarning($"[MontarCinematicaFinal] No encuentro el efecto {rutaPrefab} para {campo}.");
+        if (prop != null) prop.objectReferenceValue = prefab;
     }
 
     private static GameObject InstanciarVfx(Transform parent, string nombre, string rutaPrefab, Vector3 pos)
@@ -1839,16 +2039,7 @@ public static class MontarCinematicaFinal
         Transform portalTr,
         Transform piedraTr,
         Transform orillaAguaTr,
-        GameObject vfxDeseoAltar,
-        GameObject vfxPortal,
-        GameObject vfxEmpujeLuz,
-        GameObject vfxCirculoConjuro,
-        GameObject vfxAuraConjuroWill,
         GameObject vfxPilarResurreccion,
-        GameObject vfxResurreccion,
-        GameObject vfxColapsoSendero,
-        GameObject vfxEspirituArchimago,
-        GameObject vfxLlamaWill,
         GameObject cintaRojaWill,
         GameObject canaWill,
         GameObject canaTobias,
@@ -1922,18 +2113,13 @@ public static class MontarCinematicaFinal
         soModulo.FindProperty("_zonaSenderoRoot").objectReferenceValue = GameObject.Find("ZONA_1_EL_SENDERO");
         soModulo.FindProperty("_zonaPiedraRoot").objectReferenceValue = GameObject.Find("ZONA_2_PIEDRA_ANCESTRAL");
         soModulo.FindProperty("_zonaRioRoot").objectReferenceValue = GameObject.Find("ZONA_3_EL_RIO");
-
-        soModulo.FindProperty("_vfxDeseoAltar").objectReferenceValue = vfxDeseoAltar;
-        soModulo.FindProperty("_vfxPortal").objectReferenceValue = vfxPortal;
-        soModulo.FindProperty("_vfxEmpujeLuz").objectReferenceValue = vfxEmpujeLuz;
-        soModulo.FindProperty("_vfxCirculoConjuro").objectReferenceValue = vfxCirculoConjuro;
-        soModulo.FindProperty("_vfxAuraConjuroWill").objectReferenceValue = vfxAuraConjuroWill;
         soModulo.FindProperty("_vfxPilarResurreccion").objectReferenceValue = vfxPilarResurreccion;
-        soModulo.FindProperty("_vfxResurreccion").objectReferenceValue = vfxResurreccion;
-        soModulo.FindProperty("_vfxColapsoSendero").objectReferenceValue = vfxColapsoSendero;
-
-        soModulo.FindProperty("_vfxEspirituArchimago").objectReferenceValue = vfxEspirituArchimago;
         soModulo.FindProperty("_cintaRojaWill").objectReferenceValue = cintaRojaWill;
+        AsignarPrefabsDeEfectos(soModulo);
+        soModulo.FindProperty("_shaderVentanaDePortal").objectReferenceValue = Shader.Find("El Sendero/Ventana de portal");
+        soModulo.FindProperty("_fuenteDeRotulo").objectReferenceValue =
+            AssetDatabase.LoadAssetAtPath<TMPro.TMP_FontAsset>(AssetDatabase.GUIDToAssetPath(GuidFuenteDeRotulo));
+        soModulo.FindProperty("_dibujoDeTobias").objectReferenceValue = AssetDatabase.LoadAssetAtPath<Texture2D>(RutaDibujoDeTobias);
 
         soModulo.FindProperty("_canaPescarWill").objectReferenceValue = canaWill;
         soModulo.FindProperty("_canaPescarTobias").objectReferenceValue = canaTobias;

@@ -65,7 +65,7 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
         // Restaurar estado de uso desde el preset para que no se dispare de nuevo al recargar
         if (disableAfterUse && !string.IsNullOrEmpty(narrativeEventKey) && GameBootService.IsAvailable)
         {
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset?.flags != null && preset.flags.Contains(GetUsedFlagKey()))
             {
                 _used = true;
@@ -124,7 +124,7 @@ public class DayOnlyInspectionTrigger : MonoBehaviour
         // Persistir que este trigger ya fue usado para que no se repita tras recargar partida
         if (disableAfterUse && !string.IsNullOrEmpty(narrativeEventKey) && GameBootService.IsAvailable)
         {
-            var preset = GameBootService.Profile?.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset != null)
             {
                 preset.flags ??= new System.Collections.Generic.List<string>();

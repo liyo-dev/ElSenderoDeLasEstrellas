@@ -1,99 +1,93 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Nodo que reproduce un diálogo directamente desde el grafo narrativo.
-/// Permite centralizar el control de diálogos sin tener que asignarlos
-/// en los módulos de los NPCs.
-/// Si se indica un npcId, busca el NPC en el NPCRegistry para usar
-/// la cámara cinematográfica y las animaciones de diálogo.
+/// Reproduce un diálogo desde el grafo (INarrativeDialoguePlayer) y espera a que se cierre. Si se
+/// indica un actor, el diálogo se hace con él (cámara y animaciones de conversación).
 /// </summary>
 [Serializable]
-[NarrativeNodeInfo("Diálogo", "Diálogo", "Reproduce un DialogueAsset (con cámara sobre el NPC si se indica npcId).")]
+[NarrativeNodeInfo("Diálogo", "Diálogo", "Reproduce un diálogo (con cámara sobre el actor si se indica uno).")]
 public sealed class PlayDialogueNode : NarrativeNode
 {
     [Header("Diálogo")]
     [Tooltip("El asset de diálogo a reproducir")]
-    public DialogueAsset dialogue;
+    public NarrativeDialogueAsset dialogue;
 
-    [Header("NPC (opcional)")]
-    [Tooltip("ID narrativo del NPC interlocutor (para cámara y animaciones). " +
+    [Header("Actor (opcional)")]
+    [Tooltip("Id persistente del actor interlocutor (para cámara y animaciones). " +
              "Si está vacío, el diálogo se muestra sin cámara cinematográfica.")]
     [NarrativeKey(NarrativeKeyKind.Actor)]
     public string npcId;
 
-    [Header("One-shot (opcional)")]
+    [Header("Una sola vez (opcional)")]
     [Tooltip("Si se establece, este diálogo solo se reproducirá una vez. " +
              "Se guarda en el blackboard del grafo.")]
     public string oneShotFlag;
 
     private string OneShotKey => $"__dialogue_{guid}_{oneShotFlag}_played";
 
+    public override void Describe(INarrativeNodeDescriber d)
+    {
+        d.Asset(dialogue, "diálogo", dialogue != null ? dialogue.Summary : null);
+        if (!string.IsNullOrEmpty(npcId)) d.Actor(npcId, "Con");
+        if (dialogue != null) dialogue.DescribeLines(d);
+    }
+
+    public override void CollectWarnings(List<string> warnings)
+    {
+        if (dialogue == null) warnings.Add("Sin diálogo asignado");
+    }
+
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {
-        if (dialogue == null || dialogue.lines == null || dialogue.lines.Length == 0)
+        if (dialogue == null || dialogue.LineCount == 0)
         {
             Debug.LogWarning("[PlayDialogueNode] Diálogo vacío o no asignado → avanzando");
             onReadyToAdvance?.Invoke();
             return;
         }
 
-        if (!string.IsNullOrEmpty(oneShotFlag))
+        if (!string.IsNullOrEmpty(oneShotFlag) && ctx.Blackboard.Get<bool>(OneShotKey, false))
         {
-            if (ctx.Blackboard.Get<bool>(OneShotKey, false))
-            {
-                NarrativeLog.Info($"[PlayDialogueNode] Diálogo ya reproducido (flag: {oneShotFlag}) → saltando");
-                onReadyToAdvance?.Invoke();
-                return;
-            }
-        }
-
-        if (DialogueManager.Instance == null)
-        {
-            Debug.LogError("[PlayDialogueNode] DialogueManager.Instance es null → avanzando");
+            NarrativeLog.Info($"[PlayDialogueNode] Diálogo ya reproducido (flag: {oneShotFlag}) → saltando");
             onReadyToAdvance?.Invoke();
             return;
         }
 
-        ctx.Runner.StartCoroutine(PlayAndAdvance(ctx, onReadyToAdvance));
+        if (!NarrativeServices.TryGet(out INarrativeDialoguePlayer player, nameof(PlayDialogueNode)))
+        {
+            onReadyToAdvance?.Invoke();
+            return;
+        }
+
+        ctx.Runner.StartCoroutine(PlayAndAdvance(ctx, player, onReadyToAdvance));
     }
 
-    private IEnumerator PlayAndAdvance(NarrativeContext ctx, Action onReadyToAdvance)
+    private IEnumerator PlayAndAdvance(NarrativeContext ctx, INarrativeDialoguePlayer player, Action onReadyToAdvance)
     {
-        Transform npcTransform = null;
-
-        if (!string.IsNullOrEmpty(npcId) && Game.NPC.NPCRegistry.HasInstance)
+        Transform speaker = null;
+        if (!string.IsNullOrEmpty(npcId))
         {
-            var npcManager = Game.NPC.NPCRegistry.Instance.GetNPCByID(npcId);
-            if (npcManager != null)
-            {
-                npcTransform = npcManager.transform;
-            }
-            else
-            {
-                Debug.LogWarning($"[PlayDialogueNode] NPC con ID '{npcId}' no encontrado en NPCRegistry");
-            }
+            speaker = NarrativeServices.Get<INarrativeActorDirectory>()?.FindActor(npcId);
+            if (speaker == null)
+                Debug.LogWarning($"[PlayDialogueNode] Actor '{npcId}' no encontrado en las escenas cargadas");
         }
 
         bool completed = false;
-
-        if (npcTransform != null)
+        if (!player.TryPlay(dialogue, speaker, () => completed = true))
         {
-            DialogueManager.Instance.StartDialogue(dialogue, npcTransform, () => completed = true);
-        }
-        else
-        {
-            DialogueManager.Instance.StartDialogue(dialogue, () => completed = true);
+            Debug.LogError("[PlayDialogueNode] No se pudo abrir el diálogo → avanzando");
+            onReadyToAdvance?.Invoke();
+            yield break;
         }
 
         while (!completed)
             yield return null;
 
         if (!string.IsNullOrEmpty(oneShotFlag))
-        {
             ctx.Blackboard.Set(OneShotKey, true);
-        }
 
         yield return null;
 

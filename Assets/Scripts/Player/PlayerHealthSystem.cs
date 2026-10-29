@@ -194,7 +194,7 @@ public class PlayerHealthSystem : MonoBehaviour
 
         // Inicializar desde GameBootProfile
         var bootProfile = GameBootService.Profile;
-        var preset = bootProfile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         
         if (preset != null)
         {
@@ -454,7 +454,7 @@ public class PlayerHealthSystem : MonoBehaviour
         var bootProfile = GameBootService.Profile;
         if (bootProfile != null)
         {
-            var preset = bootProfile.GetActivePresetResolved();
+            var preset = Partida.Preset;
             if (preset != null)
             {
                 preset.currentHP = _currentHp;

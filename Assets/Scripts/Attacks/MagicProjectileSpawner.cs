@@ -723,10 +723,7 @@ public class MagicProjectileSpawner : MonoBehaviour
         if (cc != null) cc.enabled = true;
 
         if (spell.prefab)
-        {
-            var arrival = Instantiate(spell.prefab, destino.Value, rot);
-            Destroy(arrival, spell.vfxLifetime > 0f ? spell.vfxLifetime : 2f);
-        }
+            VfxPoolService.Instance.Play(spell.prefab, destino.Value, rot, spell.vfxLifetime > 0f ? spell.vfxLifetime : 2f);
     }
 
     private static bool HayParedEntre(Vector3 a, Vector3 b, GameObject ignorar)

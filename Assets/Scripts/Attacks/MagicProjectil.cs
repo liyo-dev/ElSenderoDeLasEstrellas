@@ -382,15 +382,6 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
 
     void OnTriggerEnter(Collider other)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // DEBUG TEMPORAL (quitar tras diagnosticar el bug de arañas sin daño a corta distancia):
-        // registra CADA overlap de trigger que recibe el proyectil, incluso los que la grace
-        // period va a descartar, para ver si OnTriggerEnter llega a dispararse a bocajarro.
-        Debug.Log($"[DEBUG-HIT] OnTriggerEnter con '{(other ? other.gameObject.name : "NULL")}' " +
-                  $"(layer={(other ? LayerMask.LayerToName(other.gameObject.layer) : "?")}) " +
-                  $"Time.time={Time.time:F3} spawnGraceEnd={_spawnGraceEnd:F3} " +
-                  $"dentroDeGracia={Time.time < _spawnGraceEnd}");
-#endif
         if (Time.time < _spawnGraceEnd) return;
         Vector3 hitPoint = transform.position;
         
@@ -416,51 +407,30 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
         ResolveHit(col, transform.position);
     }
 
+    // Capas integradas de Unity: 1 = TransparentFX, 2 = Ignore Raycast.
+    const int CapaTransparentFX = 1;
+    const int CapaIgnoreRaycast = 2;
+    // Capa de los proyectiles del grupo; se resuelve una vez (no cambia en juego).
+    static int _capaProyectil = int.MinValue;
+
     void ResolveHit(Collider other, Vector3 hitPoint)
     {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        // DEBUG TEMPORAL (quitar tras diagnosticar el bug de arañas sin daño a corta distancia):
-        // registra CADA llamada a ResolveHit, incluso las que se van a filtrar más abajo, con
-        // los motivos exactos por los que se ignora (_ended/null aquí; shouldIgnore/escudo más abajo).
-        Debug.Log($"[DEBUG-HIT] ResolveHit llamado con '{(other ? other.gameObject.name : "NULL")}' " +
-                  $"_ended={_ended} otherNull={other == null}");
-#endif
         if (_ended || other == null) return;
 
         int otherLayer = other.gameObject.layer;
-        string objectName = other.gameObject.name;
+
+        // Lo que nunca detiene un hechizo: las capas TransparentFX e Ignore Raycast, los demás
+        // proyectiles aliados (capa Projectile) y el área de una arena de combate (el trigger de
+        // BossArenaController delimita la zona; no es un muro).
+        if (otherLayer == CapaTransparentFX || otherLayer == CapaIgnoreRaycast) return;
+        if (_capaProyectil == int.MinValue) _capaProyectil = LayerMask.NameToLayer("Projectile");
+        if (otherLayer == _capaProyectil) return;
+        if (other.isTrigger && other.TryGetComponent(out BossArenaController _)) return;
+
         string layerName = LayerMask.LayerToName(otherLayer);
 
-        // ✅ IGNORAR: Battle Arenas, objetos TransparentFX, proyectiles propios, y objetos de batalla
-        // Las arenas de batalla tienen colliders que no deben bloquear proyectiles de aliados
-        bool isBattleArena = objectName.Contains("BattleArena") ||
-                             objectName.Contains("Arena") ||
-                             objectName.Contains("BossArena") ||
-                             objectName.StartsWith("Battle");
-        bool isTransparentOrIgnored = layerName == "TransparentFX" ||
-                                       layerName == "Ignore Raycast" ||
-                                       otherLayer == 1 ||
-                                       otherLayer == 2; // IgnoreRaycast layer
-        bool isOtherProjectile = layerName == "Projectile"; // Ignorar colisión con otros proyectiles aliados
-
-        bool shouldIgnore = isBattleArena || isTransparentOrIgnored || isOtherProjectile;
-
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[DEBUG-HIT] '{objectName}' layer={layerName} isBattleArena={isBattleArena} " +
-                  $"isTransparentOrIgnored={isTransparentOrIgnored} isOtherProjectile={isOtherProjectile} " +
-                  $"shouldIgnore={shouldIgnore}");
-#endif
-
-        if (shouldIgnore) return;
-
         // Escudo NPC activo: bloquear antes de cualquier lógica de daño.
-        if (TryHandleNpcShieldBlock(other, hitPoint))
-        {
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DEBUG-HIT] Bloqueado por TryHandleNpcShieldBlock contra '{objectName}'");
-#endif
-            return;
-        }
+        if (TryHandleNpcShieldBlock(other, hitPoint)) return;
 
         // Magia enemiga contra el jugador: solo si 'hitLayers' incluye expresamente la capa del
         // jugador (los hechizos del jugador y de sus aliados nunca la incluyen). El jugador no usa
@@ -481,7 +451,7 @@ public class MagicProjectile : MonoBehaviour, IDevolvible
 
         // 🔍 DEBUG: Log de cada colisión (solo si no se ignora)
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-        Debug.Log($"[MagicProjectile] OnHit: {objectName} (Layer: {layerName}, Tag: {other.tag})");
+        Debug.Log($"[MagicProjectile] OnHit: {other.gameObject.name} (Layer: {layerName}, Tag: {other.tag})");
 #endif
 
         // ✅ PRIORIDAD 1: Detectar colisión con proyectiles enemigos (layer "ProjectileEnemy" o "EnemyProjectile")

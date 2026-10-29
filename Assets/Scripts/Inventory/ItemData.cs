@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// Objeto del juego. Hereda de NarrativeItemAsset para que el grafo narrativo pueda darlo, pedirlo
+/// o esperarlo sin conocer el inventario.
 [CreateAssetMenu(menuName = "El Sendero/Juego/Item", fileName = "IT_NewItem")]
-public class ItemData : ScriptableObject
+public class ItemData : NarrativeItemAsset
 {
     public enum ItemUsageKind
     {
@@ -13,6 +15,7 @@ public class ItemData : ScriptableObject
     }
 
     public string itemId;
+    public override string ItemId => itemId;
     [Tooltip("ID de localización para el nombre (ej: 'ITEM_COIN_NAME'). Si está vacío, usa displayName.")]
     public string displayNameId;
     public string displayName;

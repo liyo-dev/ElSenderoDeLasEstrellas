@@ -63,6 +63,13 @@ namespace Sendero.UI
         [Tooltip("Cada cuántos segundos se copia la ropa del personaje real mientras se ve.")]
         [SerializeField] private float sincronizarRopaCada = 2f;
         [SerializeField] private float fundido = 0.15f;
+        [Tooltip("Dibuja un solo retrato por fotograma, por turnos: con tres a la vista cada uno se " +
+                 "refresca a un tercio de la frecuencia del juego y se ahorran cuatro cámaras por fotograma.")]
+        [SerializeField] private bool repartirEntreFotogramas = true;
+
+        /// Renderer sin efectos (ni SSAO ni post) con el que dibujan las cámaras del estudio; si el
+        /// pipeline no lo tiene, usan el de por defecto. Ver INC-865.
+        public const string RendererDeRetratos = "Retratos_Renderer";
 
         private sealed class Copia
         {
@@ -87,6 +94,7 @@ namespace Sendero.UI
         private Light _solApagado;
         private int _camarasVisibles;
         private float _proximaRopa;
+        private int _turno;
 
         // ─── IFuenteDeRetrato ──────────────────────────────────────────────────
 
@@ -113,6 +121,8 @@ namespace Sendero.UI
             if (c.raiz.activeSelf != visible) c.raiz.SetActive(visible);
             c.camara.enabled = visible;
             c.camaraDelFondo.enabled = visible;
+            // El que acaba de aparecer es el siguiente en dibujarse.
+            if (visible) _turno = ((int)personaje + _copias.Length - 1) % _copias.Length;
             if (visible) { PonerEstado(c, c.estadoBase, 0f); SincronizarRopa((int)personaje, c); }
         }
 
@@ -174,6 +184,7 @@ namespace Sendero.UI
         private void Update()
         {
             if (_camarasVisibles <= 0) return;
+            if (repartirEntreFotogramas) RepartirTurno();
             float ahora = Time.unscaledTime;
             for (int i = 0; i < _copias.Length; i++)
             {
@@ -186,6 +197,35 @@ namespace Sendero.UI
             _proximaRopa = ahora + Mathf.Max(0.25f, sincronizarRopaCada);
             for (int i = 0; i < _copias.Length; i++)
                 if (_copias[i] != null && _copias[i].visible) SincronizarRopa(i, _copias[i]);
+        }
+
+        /// Deja encendidas solo las dos cámaras del retrato al que le toca este fotograma.
+        private void RepartirTurno()
+        {
+            int n = _copias.Length;
+            for (int paso = 1; paso <= n; paso++)
+            {
+                int i = (_turno + paso) % n;
+                if (_copias[i] != null && _copias[i].visible) { _turno = i; break; }
+            }
+            for (int i = 0; i < n; i++)
+            {
+                var c = _copias[i];
+                if (c == null || c.camara == null || c.camaraDelFondo == null) continue;
+                bool dibuja = c.visible && i == _turno;
+                if (c.camara.enabled != dibuja) c.camara.enabled = dibuja;
+                if (c.camaraDelFondo.enabled != dibuja) c.camaraDelFondo.enabled = dibuja;
+            }
+        }
+
+        private static int IndiceDelRendererDeRetratos()
+        {
+            var pipeline = UniversalRenderPipeline.asset;
+            if (pipeline == null) return -1;
+            var lista = pipeline.rendererDataList;
+            for (int i = 0; i < lista.Length; i++)
+                if (lista[i] != null && lista[i].name == RendererDeRetratos) return i;
+            return -1;
         }
 
         // ─── Copias ────────────────────────────────────────────────────────────
@@ -270,6 +310,8 @@ namespace Sendero.UI
             datos.requiresColorOption = CameraOverrideOption.Off;
             datos.requiresDepthOption = CameraOverrideOption.Off;
             datos.volumeLayerMask = 0;
+            int renderer = IndiceDelRendererDeRetratos();
+            if (renderer >= 0) datos.SetRenderer(renderer);
             textura = new RenderTexture(resolucion, resolucion, 24, RenderTextureFormat.ARGB32)
                 { name = "Retrato vivo de " + nombre, antiAliasing = 4 };
             textura.Create();
@@ -379,11 +421,7 @@ namespace Sendero.UI
         /// La ropa del cuerpo real de ese personaje: el del jugador si va al mando; si no, el de su NPC.
         private static ModularAutoBuilder RopaReal(int slot)
         {
-            int activo = PartyControlManager.Instance != null ? PartyControlManager.Instance.ActiveIndex : (int)Slot.Will;
-            GameObject cuerpo = null;
-            if (slot == activo) cuerpo = PlayerService.Player;
-            else if (slot == (int)Slot.Will && ActiveCharacterSwapper.Instance != null && ActiveCharacterSwapper.Instance.WillNpcInstance != null)
-                cuerpo = ActiveCharacterSwapper.Instance.WillNpcInstance.gameObject;
+            var cuerpo = ControlDelJugador.CuerpoDe((Slot)slot);
             return cuerpo != null ? cuerpo.GetComponentInChildren<ModularAutoBuilder>(true) : null;
         }
 

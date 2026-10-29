@@ -43,7 +43,7 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
     [Tooltip("VFX que aparece al quemar (fuego, chispas, etc.)")]
     [SerializeField] private GameObject burnVFX;
     
-    [Tooltip("Tiempo de vida del VFX de quemado")]
+    [Tooltip("Segundos que dura el VFX de quemado antes de volver al pool")]
     [SerializeField] private float vfxLifetime = 3f;
     
     [Tooltip("Clave de audio que se reproduce al quemar")]
@@ -99,12 +99,9 @@ public class Burnable : MonoBehaviour, IReaccionaAMagia
         
         isBurned = true;
         
-        // Reproducir VFX
-        if (burnVFX != null)
-        {
-            var fx = Instantiate(burnVFX, hitPoint, Quaternion.identity);
-            Destroy(fx, vfxLifetime);
-        }
+        // VFX de un uso, del pool
+        if (burnVFX != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(burnVFX, hitPoint, Quaternion.identity, vfxLifetime);
         
         // Reproducir SFX
         if (!string.IsNullOrEmpty(burnSfxKey))

@@ -641,6 +641,7 @@ MonoBehaviour:
   luzDeRelleno: 0.5
   sincronizarRopaCada: 2
   fundido: 0.15
+  repartirEntreFotogramas: 1
 --- !u!4 &22572040
 Transform:
   m_ObjectHideFlags: 0
@@ -1953,7 +1954,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!114 &114623700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3074,7 +3074,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &193604635
 GameObject:
   m_ObjectHideFlags: 0
@@ -3213,7 +3212,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!114 &206708488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3349,8 +3347,6 @@ MonoBehaviour:
   panelVisibleDuration: 1
   panelFadeOutDuration: 0.3
   panelSlideOffset: 40
-  liamDisplayName: Liam
-  estelaDisplayName: Estela
 --- !u!114 &206708494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4482,7 +4478,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &289486042
 GameObject:
   m_ObjectHideFlags: 0
@@ -8083,6 +8078,7 @@ MonoBehaviour:
   animOutDuration: 0.3
   displayDuration: 2.8
   iconPunchScale: 0.25
+  prioridad: 20
   sfxEventKey: 
 --- !u!114 &586117495
 MonoBehaviour:
@@ -8103,7 +8099,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!224 &586117496
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8956,7 +8951,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &629161250
 GameObject:
   m_ObjectHideFlags: 0
@@ -9280,8 +9274,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca353b69510c94344977520afa87da60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyControlManager
-  liamDisplayName: Liam
-  estelaDisplayName: Estela
   cambioCircular: 1
 --- !u!4 &672242975
 Transform:
@@ -9697,7 +9689,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 1
 --- !u!1 &718997811
 GameObject:
   m_ObjectHideFlags: 0
@@ -18819,7 +18810,7 @@ MonoBehaviour:
   displayDuration: 2
   spawnAtTop: 0
   groupingWindow: 0.4
-  dedupeWindow: 0.25
+  prioridad: 0
 --- !u!114 &1361025561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19430,7 +19421,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &1418805903
 GameObject:
   m_ObjectHideFlags: 0
@@ -20076,6 +20066,7 @@ MonoBehaviour:
   animInDuration: 0.45
   animOutDuration: 0.3
   displayDuration: 5
+  prioridad: 10
 --- !u!114 &1454978124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20095,7 +20086,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!114 &1454978125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24043,7 +24033,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!114 &1699594925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24905,7 +24894,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &1745447932
 GameObject:
   m_ObjectHideFlags: 0
@@ -26332,7 +26320,6 @@ MonoBehaviour:
   allowWhenListEmpty: 1
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!1 &1892306325
 GameObject:
   m_ObjectHideFlags: 0
@@ -26529,50 +26516,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &1894362554
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1894362556}
-  - component: {fileID: 1894362555}
-  m_Layer: 0
-  m_Name: PartyStatsManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1894362555
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894362554}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c86224d37783ba4eafb862457a09e67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PartyStatsManager
---- !u!4 &1894362556
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1894362554}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1900574390
 GameObject:
   m_ObjectHideFlags: 0
@@ -37185,7 +37128,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!114 &6045157560421566120
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41679,7 +41621,6 @@ MonoBehaviour:
   allowWhenListEmpty: 0
   persistAcrossScenes: 1
   detachFromParent: 1
-  excludeFromBossIntroHide: 0
 --- !u!224 &9167354916732093906
 RectTransform:
   m_ObjectHideFlags: 0
@@ -41857,7 +41798,6 @@ SceneRoots:
   - {fileID: 206708491}
   - {fileID: 287315781}
   - {fileID: 1454978122}
-  - {fileID: 1894362556}
   - {fileID: 1060315182}
   - {fileID: 1406461266}
   - {fileID: 1818632615}

@@ -22,6 +22,10 @@ MonoBehaviour:
   companionAnimationTrigger: MagicSpecial
   playerAnimationTrigger: MagicSpecial
   gestureSeconds: 0.7
+  coreografia: 3
+  sfxDelHechizo: SpecialAttack_AgujeroNegro
+  sfxDelImpacto: SpecialAttack_Impacto
+  hijoDelAgujeroEnElVfx: VFX_AgujeroNegro
   vfxPrefab: {fileID: 3554967480066199438, guid: 1fcd3dfc3f0e4804b9fd842f2c4fc9d2, type: 3}
   elevacionDelVfx: 0.15
   castSFXKey: SpecialAttack_Liam
@@ -33,4 +37,8 @@ MonoBehaviour:
   damage: 130
   aoeRadius: 10
   knockbackForce: 25
+  statusEffect: 4
+  statusDuration: 1.2
+  statusStrength: 26
+  abreProteccionSegundos: 0
   shakeCameraOnCast: 1

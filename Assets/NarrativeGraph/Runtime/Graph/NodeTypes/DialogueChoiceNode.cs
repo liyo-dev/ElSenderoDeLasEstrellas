@@ -2,11 +2,8 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Pregunta con dos respuestas y una salida por respuesta. Es la forma de que "si el diálogo
-/// tiene contestación, qué ocurre" se vea como flechas en el grafo.
-///
-/// Usa DialogueManager.ShowWithChoices (el panel sí/no que ya existe en el juego). Cuando la
-/// UI soporte N opciones, este nodo crecerá a N puertos sin cambiar el grafo.
+/// Pregunta con dos respuestas y una salida por respuesta: lo que ocurre según la contestación se
+/// ve como flechas en el grafo. La pregunta la enseña el INarrativeChoicePresenter del juego.
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Diálogo", "Pregunta con respuestas", "Muestra una pregunta con dos opciones; cada opción es una salida distinta.")]
@@ -41,11 +38,13 @@ public sealed class DialogueChoiceNode : NarrativeNode
         return fallback;
     }
 
-    static string Localize(string id, string fallback)
+    public override void Describe(INarrativeNodeDescriber d)
     {
-        if (!string.IsNullOrEmpty(id) && LocalizationManager.Instance != null)
-            return LocalizationManager.Instance.Get(id, fallback);
-        return fallback;
+        var prompt = d.Text(promptTextId, promptText);
+        d.Line("❓ " + (string.IsNullOrEmpty(prompt) ? "(sin texto)" : "«" + prompt + "»"), NarrativeTextTone.Strong);
+        d.Line("A → " + (d.Text(optionATextId, optionAText) ?? "A"));
+        d.Line("B → " + (d.Text(optionBTextId, optionBText) ?? "B"));
+        if (!string.IsNullOrWhiteSpace(rememberAsFlag)) d.Flag(rememberAsFlag, $"{rememberAsFlag} = eligió A");
     }
 
     public override string DescribeDecision()
@@ -53,28 +52,27 @@ public sealed class DialogueChoiceNode : NarrativeNode
 
     public override void Enter(NarrativeContext ctx, Action ready)
     {
-        var dm = DialogueManager.Instance;
-        if (dm == null)
+        string prompt = NarrativeText.Resolve(promptTextId, promptText);
+        string a = NarrativeText.Resolve(optionATextId, optionAText);
+        string b = NarrativeText.Resolve(optionBTextId, optionBText);
+
+        bool shown = NarrativeServices.TryGet(out INarrativeChoicePresenter presenter, nameof(DialogueChoiceNode))
+            && presenter.TryShowChoice(prompt, a, b,
+                onA: () =>
+                {
+                    if (!string.IsNullOrWhiteSpace(rememberAsFlag)) NarrativeFlags.Set(rememberAsFlag, true);
+                    AdvanceThrough(ctx, ready, 0);
+                },
+                onB: () =>
+                {
+                    if (!string.IsNullOrWhiteSpace(rememberAsFlag)) NarrativeFlags.Set(rememberAsFlag, false);
+                    AdvanceThrough(ctx, ready, 1);
+                });
+
+        if (!shown)
         {
-            Debug.LogError($"[DialogueChoiceNode:{guid}] DialogueManager.Instance es null → salida A por defecto.");
+            Debug.LogError($"[DialogueChoiceNode:{guid}] No se puede enseñar la pregunta → salida A por defecto.");
             AdvanceThrough(ctx, ready, 0);
-            return;
         }
-
-        string prompt = Localize(promptTextId, promptText);
-        string a = Localize(optionATextId, optionAText);
-        string b = Localize(optionBTextId, optionBText);
-
-        dm.ShowWithChoices(prompt, a, b,
-            onYes: () =>
-            {
-                if (!string.IsNullOrWhiteSpace(rememberAsFlag)) NarrativeFlags.Set(rememberAsFlag, true);
-                AdvanceThrough(ctx, ready, 0);
-            },
-            onNo: () =>
-            {
-                if (!string.IsNullOrWhiteSpace(rememberAsFlag)) NarrativeFlags.Set(rememberAsFlag, false);
-                AdvanceThrough(ctx, ready, 1);
-            });
     }
 }

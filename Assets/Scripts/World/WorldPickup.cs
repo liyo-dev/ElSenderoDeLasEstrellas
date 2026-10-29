@@ -241,7 +241,7 @@ public class WorldPickup : MonoBehaviour
         _legacyFlagsCleaned = true;
 
         var profile = GameBootService.Profile;
-        var preset = profile != null ? profile.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset == null || preset.flags == null) return;
 
         int removed = preset.flags.RemoveAll(flag =>
@@ -267,7 +267,7 @@ public class WorldPickup : MonoBehaviour
         var profile = GameBootService.Profile;
         if (profile == null) return;
 
-        var preset = profile.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null) return;
 
         if (preset.flags == null) preset.flags = new List<string>();
@@ -281,7 +281,7 @@ public class WorldPickup : MonoBehaviour
         if (!persistState) return false;
 
         var profile = GameBootService.Profile;
-        var preset = profile != null ? profile.GetActivePresetResolved() : null;
+        var preset = Partida.Preset;
         if (preset == null || preset.flags == null) return false;
 
         // Solo verificar el flag generado por posición (nuevo sistema)

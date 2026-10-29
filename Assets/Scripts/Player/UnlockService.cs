@@ -18,7 +18,7 @@ public static class UnlockService
 #endif
             return null;
         }
-        return GameBootService.Profile.GetActivePresetResolved();
+        return Partida.Preset;
     }
 
     /// Desbloquea una habilidad en el preset activo. Devuelve true si se modificó el preset (lista u otros datos asociados).

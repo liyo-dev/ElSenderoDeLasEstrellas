@@ -4,29 +4,24 @@ using UnityEngine.Serialization;
 
 namespace Game.NPC
 {
-    /// Dos NPCs que discuten en bucle, en tono amistoso, mientras la historia lo pide. Ver INC-363 e INC-696.
+    /// Dos NPCs que discuten en bucle, en tono amistoso, mientras dura su tramo de la historia
+    /// (<see cref="TramoDeHistoria"/>). Ver INC-363 e INC-696.
     ///
     /// Se ponen de cara, se turnan (uno replica con un gesto mientras el otro le habla, y al revés),
     /// llevan la cara de `animo` y los dos tienen encima el bocadillo con el circulito de discusión.
-    /// Va en el prefab de Eldran del roster y maneja a los dos.
-    ///
-    /// CUÁNDO: desde que arranca el saludo de Oliver (o si la misión «Busca a Eldran» ya está en
-    /// marcha, que es lo que hay al cargar una partida a medias) hasta PERAS_START, que es cuando
-    /// Will llega y arranca la secuencia de las peras. Las señales se CONSULTAN (HasEverRaised), no
-    /// se escuchan con OnCustom: una señal que nadie ha consumido todavía se la quedaría el primero
-    /// que se suscribe, y aquí eso sería robársela al SequencePlayer que la espera.
-    ///
-    /// Mientras discuten están retenidos como en una cinemática (SequenceActor.Hold): no pasean,
-    /// no se apartan y no enseñan el icono de interactuar.
+    /// Va en uno de los dos NPCs y maneja a ambos. Mientras discuten están retenidos como en una
+    /// cinemática (SequenceActor.Hold): no pasean, no se apartan y no enseñan el icono de interactuar.
+    /// En cuanto acaba el tramo se les suelta, para que lo que venga después (una secuencia) los coja
+    /// sin que nadie los retenga.
     public class DiscusionEnBucle : MonoBehaviour
     {
-        [SerializeField] private string miId = "NPC_Eldran";
-        [SerializeField] private string conQuienId = "NPC_Victoria";
+        [Tooltip("Id del NPC que lleva este componente (SequenceActor).")]
+        [SerializeField] private string miId = "";
+        [Tooltip("Id del NPC con el que discute.")]
+        [SerializeField] private string conQuienId = "";
 
         [Header("Cuándo")]
-        [SerializeField] private string empiezaCon = "OLIVER_GREETING_START";
-        [SerializeField] private string oConLaMision = "ELDRAN_MISSION1";
-        [SerializeField] private string terminaCon = "PERAS_START";
+        [SerializeField] private TramoDeHistoria tramo = new();
 
         [Header("Cómo")]
         [Tooltip("Gestos con los que replica el que escucha, por turnos.")]
@@ -74,27 +69,9 @@ namespace Game.NPC
             if (_discutiendo) Terminar();
         }
 
-        private bool TocaDiscutir()
-        {
-            var s = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
-            if (s == null || YaSeAcabo()) return false;
+        private bool TocaDiscutir() => tramo.EnCurso();
 
-            bool empezo = s.HasEverRaised(empiezaCon)
-                          || s.HasEverRaised("PROLOGUE_DONE")
-                          || s.HasEverRaised("HOOK_DISCUSION_START");
-            bool misionActiva = (!string.IsNullOrEmpty(oConLaMision) && s.GetQuestState(oConLaMision) == NarrativeQuestState.Active)
-                                || s.GetQuestState("WILL_MISSION0") == NarrativeQuestState.Active;
-            return empezo || misionActiva;
-        }
-
-        private bool YaSeAcabo()
-        {
-            var s = DefaultNarrativeSignals.Instance ?? DefaultNarrativeSignals.EnsureInstance();
-            if (s == null) return false;
-            if (s.HasEverRaised(terminaCon)) return true;
-            return !string.IsNullOrEmpty(oConLaMision)
-                   && s.GetQuestState(oConLaMision) == NarrativeQuestState.Completed;
-        }
+        private bool YaSeAcabo() => tramo.HaAcabado();
 
         private void Empezar()
         {
@@ -123,7 +100,7 @@ namespace Game.NPC
             _paso = 0;
             _siguienteTurno = 0f;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DiscusionEnBucle] {miId} y {conQuienId} empiezan a discutir (hasta {terminaCon}).");
+            Debug.Log($"[DiscusionEnBucle] {miId} y {conQuienId} empiezan a discutir.");
 #endif
         }
 
@@ -152,7 +129,7 @@ namespace Game.NPC
             _otro?.Release();
             _yo = _otro = null;
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[DiscusionEnBucle] Se acabó la discusión ({terminaCon}).");
+            Debug.Log($"[DiscusionEnBucle] Se acabó la discusión.");
 #endif
         }
 

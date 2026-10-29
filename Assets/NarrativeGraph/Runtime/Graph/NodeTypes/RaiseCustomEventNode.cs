@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +14,13 @@ public sealed class RaiseCustomEventNode : NarrativeNode
     [Tooltip("Clave del evento a emitir (ej: EVT_MOUNTAIN, EVT_BOSS_DEFEATED)")]
     [NarrativeKey(NarrativeKeyKind.Signal)]
     public string eventKey;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Signal(eventKey, SignalRole.Emite);
+
+    public override void CollectWarnings(List<string> warnings)
+    {
+        if (string.IsNullOrWhiteSpace(eventKey)) warnings.Add("eventKey vacío");
+    }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)
     {

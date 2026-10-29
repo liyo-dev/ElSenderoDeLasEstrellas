@@ -4,7 +4,6 @@ using UnityEngine;
 /// <summary>
 /// Bifurca según un flag narrativo persistente (SetFlagNode) o, si no existe como flag, según
 /// si la señal con esa misma clave se disparó alguna vez (Signals.HasEverRaised).
-/// Sustituye al BranchBoolNode legacy (que nunca bifurcaba de verdad).
 /// </summary>
 [Serializable]
 [NarrativeNodeInfo("Flujo", "Según flag", "Bifurca Sí/No según un flag narrativo (o una señal ya disparada).")]
@@ -20,6 +19,8 @@ public sealed class BranchFlagNode : NarrativeNode
 
     static readonly string[] Ports = { "Sí", "No" };
     public override string[] GetOutputPorts() => Ports;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Flag(flagKey, $"¿{flagKey}?{(invert ? " (invertido)" : "")}");
 
     public override string DescribeDecision()
         => $"Según flag \"{displayTitle}\" (guid {guid}): comprueba '{flagKey}'{(invert ? " (invertido)" : "")}. Salidas: Sí / No.";

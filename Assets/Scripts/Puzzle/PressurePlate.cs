@@ -24,6 +24,8 @@ public class PressurePlate : MonoBehaviour
     [Header("VFX (opcional)")]
     [SerializeField] private GameObject activateVfxPrefab;
     [SerializeField] private GameObject deactivateVfxPrefab;
+    [Tooltip("Segundos que dura cada VFX de activar/desactivar antes de volver al pool.")]
+    [SerializeField, Min(0.1f)] private float vfxLifetime = 2f;
 
     [Header("Audio")]
     [SerializeField] private string activateSfxKey = "PressurePlate_Activate";
@@ -211,8 +213,8 @@ public class PressurePlate : MonoBehaviour
         }
 
         AudioService.Instance?.PlaySFX(activateSfxKey, worldPosition: transform.position);
-        if (activateVfxPrefab != null)
-            Instantiate(activateVfxPrefab, transform.position, Quaternion.identity);
+        if (activateVfxPrefab != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(activateVfxPrefab, transform.position, Quaternion.identity, vfxLifetime);
         onActivated.Invoke();
         SendMessageUpwards("OnPlateStateChanged", this, SendMessageOptions.DontRequireReceiver);
     }
@@ -248,8 +250,8 @@ public class PressurePlate : MonoBehaviour
         }
 
         AudioService.Instance?.PlaySFX(deactivateSfxKey, worldPosition: transform.position);
-        if (deactivateVfxPrefab != null)
-            Instantiate(deactivateVfxPrefab, transform.position, Quaternion.identity);
+        if (deactivateVfxPrefab != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(deactivateVfxPrefab, transform.position, Quaternion.identity, vfxLifetime);
         onDeactivated.Invoke();
         SendMessageUpwards("OnPlateStateChanged", this, SendMessageOptions.DontRequireReceiver);
     }

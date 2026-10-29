@@ -3,7 +3,7 @@
 **Motor:** Unity 6 (6000.6.2f1)  
 **Pipeline:** URP  
 **Input:** Unity Input System (nuevo) + Invector (movimiento base del jugador)  
-**Última revisión documental:** 10 de septiembre de 2026 (nivelación de resumen y rutas; no es una nueva auditoría de código).
+**Última revisión documental:** 29 de octubre de 2026 (rediseño de dueños de sistemas, ver § 27; no es una nueva auditoría de código).
 **Última auditoría general documentada:** 12 de agosto de 2026 — ver § 19.4. El estado actual de las incidencias y su validación se consulta en `TRACKER.md`.
 
 ---
@@ -33,6 +33,10 @@
 21. [Diseño: Vestir MainWorld con el "look" de las demos de Quibli (árboles, hierba, rayos de sol, outline)](#21-diseño-vestir-mainworld-con-el-look-de-las-demos-de-quibli-árboles-hierba-rayos-de-sol-outline)
 22. [Secuencias con guion horneado](#22-secuencias-con-guion-horneado-inc-588-a-inc-590)
 23. [Vestido de MainWorld: suelos, capital, vegetación, laguna y parajes](#23-vestido-de-mainworld-suelos-capital-vegetación-laguna-y-parajes-inc-671-inc-676)
+24. [Barcos: vehículo navegable](#24-barcos-vehículo-navegable-inc-792)
+25. [El sistema de cinemáticas como producto reutilizable](#25-el-sistema-de-cinemáticas-como-producto-reutilizable)
+26. [Render: contorno de tinta, sombra de contacto y ajustes de rendimiento](#26-render-contorno-de-tinta-sombra-de-contacto-y-ajustes-de-rendimiento-inc-865)
+27. [Rediseño del 29 oct 2026: dueños nuevos](#27-rediseño-del-29-oct-2026-dueños-nuevos-inc-867)
 
 ---
 
@@ -69,7 +73,9 @@ Puedes hacer Play desde cualquier escena (MainWorld, Woods, etc.) sin configurac
 | Localización (ES/EN) | `Assets/Resources/Localization/*.json` |
 | Managers persistentes | `Assets/Scripts/Core/` |
 | FSM de NPCs | `Assets/Scripts/Behaviour NPC/` |
-| Grafo narrativo (runtime) | `Assets/NarrativeGraph/Runtime/` |
+| Grafo narrativo (runtime) | `Assets/NarrativeGraph/Runtime/` (núcleo genérico) |
+| Conexión del juego con el grafo (adaptadores, nodos del juego, herramientas propias) | `Assets/Scripts/NarrativeIntegration/` |
+| Partida en curso (preset en memoria, guardar/cargar) | `Assets/Scripts/Core/Partida/` |
 | Escenas de test | `Assets/Scenes/Test/` |
 | Presets de testing | `Assets/_BootProfile/` |
 | Debug visual en runtime | F3 (NPCs), F4 (panel general) |
@@ -77,15 +83,16 @@ Puedes hacer Play desde cualquier escena (MainWorld, Woods, etc.) sin configurac
 ### Herramientas de desarrollo
 
 - **F3** — debug visual de NPCs · **F4** — panel de debug general
+- `Tools/Narrative Graph/Abrir editor` (Ctrl+Mayús+N) — editor del grafo narrativo; en el mismo submenú, *Monitor de señales*, *Dividir por capítulo...* y *Nuevo grafo* (ver § 10 — El grafo como paquete)
 - `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` — valida que quests/eventos no estén referenciados a la vez por el grafo y por el sistema legacy (ver § 10 — Política formal: convivencia Interactive ↔ Grafo narrativo)
 
 ### Presets de testing vs partida guardada
 
-`GameBootService` decide el origen de datos al iniciar:
-- Si hay un `testingPreset` asignado en el inspector y el flag de testing está activo → usa el ScriptableObject.
-- En caso contrario → carga el save JSON del disco.
+`GameBootService` decide el origen de datos al iniciar, según el `GameBootProfile` (`Assets/_BootProfile/GameBootProfile.asset`, solo datos):
+- Si `usePresetInsteadOfSave` está activo y hay `bootPreset` (`ShouldBootFromPreset()`) → la partida se prepara desde una copia de ese preset.
+- Si no → carga el save JSON del disco; sin guardado, una copia de `defaultPlayerPreset`.
 
-El flujo de inicialización es idéntico en ambos casos; la única diferencia es el objeto de datos fuente.
+En los tres casos la partida en curso es el preset en memoria de `Partida` (§ 9); el flujo de inicialización es idéntico y solo cambia de dónde sale la copia.
 
 ---
 
@@ -102,12 +109,14 @@ El flujo de inicialización es idéntico en ambos casos; la única diferencia es
 - **ScriptableObjects como datos:** configuración de NPCs, quests, hechizos, presets de jugador. Nunca lógica.
 - **Eventos C# (`Action<T>`)** para comunicación desacoplada entre sistemas.
 - **`DontDestroyOnLoad` solo en managers de Start.** El resto de objetos pertenece a su escena.
+- **Un dueño por responsabilidad:** cada cosa (guardar la partida, la vida del grupo, el daño en área, los avisos en pantalla, las frases, el volumen de los buses…) tiene un único sistema que la escribe; los demás le piden. Tabla de dueños en `AGENTS.md`/`CLAUDE.md` § 8 y los del rediseño de octubre en § 27.
+- **El grafo narrativo no conoce el juego:** el núcleo (`Assets/NarrativeGraph/`) habla con el juego solo por los puertos de `NarrativeServices`; lo propio de El Sendero vive en `Assets/Scripts/NarrativeIntegration/` (§ 10).
 
 ### Escena Start — managers persistentes
 
 | Manager | Archivo | Responsabilidad |
 |---------|---------|-----------------|
-| GameBootService | `Core/GameBootService.cs` | Inicialización global, profile activo |
+| GameBootService | `Core/GameBootService.cs` | Arranque y ciclo de vida de la partida (Continuar, Nueva partida, recargar preset de pruebas); la partida en sí es la clase estática `Partida` (`Core/Partida/`) |
 | PlayerService | `Core/PlayerService.cs` | Referencia global al GameObject del jugador |
 | QuestManager | `Quests/QuestManager.cs` | Estado y progreso de misiones |
 | DialogueManager | `Dialogue/DialogueManager.cs` | Reproducción de diálogos |
@@ -133,14 +142,15 @@ Configurado en Project Settings → Script Execution Order.
 
 ```
 Frame 0:  Start.unity carga (o AutoBootstrapOnPlay la carga aditiva)
-Frame 0:  GameBootService.Awake() → lee preset/JSON, asigna IsAvailable = true
+Frame 0:  NarrativeGameServices (BeforeSceneLoad) → registra los adaptadores del grafo en NarrativeServices
+Frame 0:  GameBootService.Awake() → prepara Partida (preset de pruebas, guardado o preset por defecto), IsAvailable = true
 Frame 0:  WorldBootstrap.OnEnable() → suscribe a OnProfileReady
           Si IsAvailable ya es true → llama HandleProfileReady directamente
-Frame 1:  GameBootService.NotifyProfileReadyDelayed() → dispara OnProfileReady
-Frame 1+: SpawnManager, WorldBootstrap y demás reciben el evento y se inicializan
+Frame 1:  GameBootService (corrutina de un frame) → dispara OnProfileReady
+Frame 1+: SpawnManager, WorldBootstrap y demás reciben el evento y se inicializan desde Partida.Preset
 ```
 
-El delay de un frame en `NotifyProfileReadyDelayed` garantiza que todos los `OnEnable` del frame 0 hayan suscrito antes de que el evento se dispare.
+El frame de margen antes de `OnProfileReady` garantiza que todos los `OnEnable` del frame 0 hayan suscrito antes de que el evento se dispare.
 
 ### Estructura de carpetas
 
@@ -152,11 +162,12 @@ Assets/
 │   ├── Cinematics/     ← cinemáticas y prólogo
 │   └── Test/           ← escenas de prueba
 ├── Scripts/
-│   ├── Core/               ← GameBootService, ServiceLocator, PlayerService, SaveSystem
+│   ├── Core/               ← GameBootService, Partida/, ServiceLocator, PlayerService, SaveSystem
 │   ├── Behaviour NPC/      ← FSM de NPCs
 │   ├── Narrative/          ← sistema legacy "Interactive"
+│   ├── NarrativeIntegration/ ← el juego conectado al grafo: adaptadores, Nodes/ del juego, Editor/ propio
 │   ├── Quests/, Dialogue/, Audio/, Inventory/, Puzzle/, UI/, ...
-├── NarrativeGraph/      ← Runtime/, Editor/ y assets del grafo (MainNarrative*.asset)
+├── NarrativeGraph/      ← núcleo genérico del grafo: Runtime/ (puertos en Integration/Ports/), Editor/ (extensiones en Editor/Extensions/) y assets del grafo
 ├── _BootProfile/        ← presets de testing (ScriptableObjects)
 ├── Resources/Localization/  ← JSON de localización (ES/EN)
 └── Plugins/             ← Invector 3rd Person Controller, DOTween, etc.
@@ -207,12 +218,39 @@ NPCBehaviourManagerV2          ← orquestador principal
 
 Los NPCs que deben quedarse en una zona pero no estar quietos (Victoria, Eldran y Oliver moviendo cajas en el mercado del Cap. 1) usan una **ruta de trabajo**:
 
-- `NPCWorkRoute` (componente de escena, `Assets/Scripts/Behaviour NPC/NPCWorkRoute.cs`): dos puntos de parada (`puntoRecogida`, `puntoEntrega`), dos pilas de cajas construidas al arrancar, el `puestoId` que la identifica y las condiciones narrativas opcionales (señal de entrada/salida y quest que la retira).
+- `NPCWorkRoute` (componente de escena, `Assets/Scripts/Behaviour NPC/NPCWorkRoute.cs`): dos puntos de parada (`puntoRecogida`, `puntoEntrega`), dos pilas de cajas construidas al arrancar, el `puestoId` que la identifica y su `tramo` (`TramoDeHistoria`, ver abajo): la ruta solo está disponible mientras el tramo está en curso (`tramo == null || tramo.EnCurso()`); un tramo vacío vale desde el principio.
 - `NPCAmbientConfig.permitirTrabajo` + `puestoId`: el NPC se apunta a esa ruta. No hace falta `enableWander` ni cambiar su `behaviourType`; el NPC no vaga, solo hace su oficio dentro de la zona.
 - `WorkState` (FSM): recoge una caja, camina a la otra pila, la deja, espera y vuelve. Cuando la pila de origen se vacía, invierte el recorrido. Si lo interrumpen (diálogo, combate, cinemática, party), devuelve la caja a su pila y sale.
 - `IdleState` busca una ruta libre cada 0,5 s y entra en `WorkState`. Las rutas ocupadas o desactivadas por la narrativa se ignoran. `WanderState` respeta `enableWander = false` también al volver de un encuentro social, así que el NPC no se va a vagar y retoma su ruta.
 - Las cajas son el prop visual `Goods03_a02` (el mismo mesh que `Goods_Interactable`), sin `PickupObject`/`Interactable`: el jugador puede coger las cajas interactivas normales, pero no las que el NPC está moviendo. Se reparentan de la pila a la mano derecha y de vuelta; no hay físicas, interacción ni persistencia. Al cargar partida, la escena vuelve a su estado original.
-- Puesta en escena: `El Sendero/NPCs/Oficios/1 · Configurar Victoria y Eldran` crea y asigna los `NPCAmbientConfig`; `2 · Montar rutas en MainWorld` crea las dos rutas junto a sus spawns. Los puntos se ajustan a mano en la Scene View (el forward de cada punto mira a su pila). Oliver tiene su propia ruta, pero en el Cap. 1 **no** se retrasa su entrada al grupo: se une antes de la discusión de las peras y `PERAS_START` lo saca del grupo (`PartyMembershipSignal` de su prefab, INC-842). Retrasar la unión hacía que el `PERAS_START` pasara antes y Oliver siguiera a Will por el bosque. La charla del camino (`DG_ELDRAN_CHARLA_VICTORIA`) se queda sin su réplica para que no hable desde el mercado. Su oficio se ve antes del saludo; después se queda con Victoria.
+- Puesta en escena: las rutas de MainWorld ya están montadas en la escena con su tramo guardado (los menús que las crearon, `OficiosDelMercado`, están archivados en `Versiones antiguas/Herramientas de un solo uso (2026-10-29)/`). Los puntos y el tramo se ajustan a mano en la Scene View y el Inspector (el forward de cada punto mira a su pila). Oliver tiene su propia ruta, pero en el Cap. 1 **no** se retrasa su entrada al grupo: se une antes de la discusión de las peras y `PERAS_START` lo saca del grupo (`PartyMembershipSignal` de su prefab, INC-842). Retrasar la unión hacía que el `PERAS_START` pasara antes y Oliver siguiera a Will por el bosque. La charla del camino (`DG_ELDRAN_CHARLA_VICTORIA`) se queda sin su réplica para que no hable desde el mercado. Su oficio se ve antes del saludo; después se queda con Victoria.
+
+### Tramos de historia (`TramoDeHistoria`)
+
+Un componente del mundo que solo debe actuar durante una parte de la historia (un oficio, una discusión, una barrera) no escribe sus condiciones en código: lleva un campo `TramoDeHistoria` (`Assets/NarrativeGraph/Runtime/Integration/TramoDeHistoria.cs`, `[Serializable]`, genérico) y pregunta `EnCurso()` o `HaAcabado()`.
+
+- **Empieza** con cualquiera de `empiezaConSenal` (señal emitida alguna vez) o `empiezaConMisionActiva` (misión en curso). Sin ninguna, vale desde el principio.
+- **Acaba** con cualquiera de `acabaConSenal`, `acabaConMisionIniciada` (en curso o completada) o `acabaConMisionCompletada`.
+- **Las señales se consultan** (`DefaultNarrativeSignals.HasEverRaised`), nunca se escuchan: así no se le roba una señal pendiente a quien la espera. Las misiones se leen con `GetQuestState`.
+- **Lo usan** `NPCWorkRoute.tramo` (oficios) y `DiscusionEnBucle.tramo` (abajo). Un componente nuevo con la misma necesidad añade su propio campo `TramoDeHistoria`; no se vuelven a escribir campos sueltos de «solo si señal / deja de si misión».
+
+### Discusión en bucle al despertar (`DiscusionEnBucle`)
+
+`DiscusionEnBucle` (`Behaviour NPC/`, en el prefab de Eldran) retiene a dos NPCs encarados mientras su `tramo` está en curso: se turnan para hablar (`hablar`) y replicar con un gesto (`replica`) cada `turno` segundos, con la cara de `animo` y el icono de charla (`iconoDePelea`) encima de los dos, retenidos con `SequenceActor.Hold` (no pasean ni enseñan el icono de interactuar). Arranca comprobando el tramo dos veces por segundo y, en cuanto el tramo acaba, los suelta en ese mismo fotograma para que la secuencia que venga detrás (las peras) los coja. En MainWorld el tramo de Eldran y Victoria empieza al despertar Will tras el prólogo y acaba al empezar la secuencia de las peras (INC-862, INC-696).
+
+### Comentarios en reposo del grupo (`ComentariosEnReposo`)
+
+`Behaviour NPC/ComentariosEnReposo.cs` es la única implementación de la «vida del grupo» mientras un compañero sigue al jugador (§ 17, parte D.2). Lo que hace cada personaje son datos del componente:
+
+- **`numeritos`** (`NumeritoEnReposo`, elegidos por peso cada `intervaloMinimo`–`intervaloMaximo` s): `Comentario` (una frase sin dejar de andar), `Pararse` (gesto del Animator y/o actividad como sentarse, durante `duracion`) o `PlantarseDelante` (va delante del jugador, se gira y habla). `etiqueta` permite que otros reaccionen.
+- **`reacciones`** (`ReaccionEnReposo`): cuando otro compañero empieza un numerito con `etiquetaDelOtro` (evento estático `NumeritoEmpezado`), con cierta `probabilidad` y espera, se gira, dice una de `clavesPropias`, el otro replica con `clavesDeRespuesta` y, si `cortarSuNumerito`, el otro corta el suyo (`CortarNumerito`).
+- **Frases** por `PresentadorDeLinea` (§ 11), con claves de localización; cada frase dura al menos `duracionDeLaFrase`, su lectura y su voz.
+- **Cuándo actúa:** solo siguiendo al jugador con normalidad (en el grupo, sin llevarlo el jugador según `ControlDelJugador`, equipo en modo Siguiendo, `FollowPlayerState`, sobre NavMesh y sin menús). Pararse y plantarse corren como secuencia de `CinematicState`, para que `NPCPartyMember` no los ponga a seguir a media frase.
+- `WillIdleCommentary`, `EstelaIdleCommentary`, `LiamIdleCommentary` y `EldranIdleCommentary` son subclases finas que solo ponen sus datos por defecto en el constructor (los prefabs los llevan y no se tocan); los datos se retocan en el Inspector. Un personaje nuevo no necesita subclase: basta el componente base con sus datos.
+
+### Retener a un NPC en su sitio (anclas del contexto)
+
+`NPCStateContext.Anclar(quien)` / `Soltar(quien)` / `EstaAnclado` / `EstaAncladoPor(quien)`: cualquier sistema que necesite que un NPC no se mueva pide un ancla con su propia clave y la suelta al acabar; el NPC sigue anclado mientras quede alguna. Lo usan el modo libre del grupo (`PartyControlManager.AnclaDelModoLibre`, también desde el sígueme de `CompanionFollowPrompt`; `PartyControlManager.PonerEnModoDelGrupo(npc)` deja a un compañero en el modo que tenga el grupo) `NPCPartyMember` (con su propia clave) y el barco (`TripulacionDelBarco`, § 24: mientras van a bordo, ni el seguimiento del grupo ni el cambio de personaje los mueven de su puesto).
 
 ### Módulos del NPC
 
@@ -248,6 +286,33 @@ Herramientas en *El Sendero ▸ Personajes ▸ Animaciones*:
 - **Aplicar / Revertir**: sustituye las referencias en `NPC_NoWeapon`, `Invector@BasicLocomotion`, `ArrowsCTRL` y `BowsCTRL`, o las devuelve a los originales.
 
 Criterios: umbral de cabeza 0,5 cm y de torso 2 cm; el cuello ≥55° se informa pero no se corrige (la medida mezcla giro y esfuerzo). La tanda de octubre de 2026 dejó 1063 clips auditados, 75 copias, 32 referencias en 4 controllers y los 132 clips humanoides usados sin penetraciones; las dos volteretas sin usar (`HumanM@Roll01` y `[RM]`) quedan en 2,3 cm (antes 17,6 cm). Informes: `docs/auditoria-animaciones-completa.md`, `docs/auditoria-animaciones-usadas.md` y `docs/correccion-animaciones.md`.
+
+### Temas que se acaban (INC-866)
+
+Las fuentes de música de `AudioService` están en bucle, así que un tema de cinemática que tenía su final («Último Incantazione» al acabar el conjuro de Will) volvía a empezar. Ahora cada regla de secuencia del `AudioGraphProfile` tiene **`sinBucle`**: si está marcada, ese clip suena una vez y se acaba, lo ponga quien lo ponga (`AudioService.PlayMusic` lo mira con `AudioGraphProfile.EsTemaQueAcaba`). Marcadas: `ULTIMO_INCANTAZIONE`, `EPILOGUE` y `FINAL_ARCHIMAGO`. Si un tema debe acabar, se marca ahí y no hay que hacer nada más.
+
+### Pisadas al colocar a un personaje (INC-866)
+
+`FootstepHandler` disparaba una pisada cuando a un personaje lo colocaban en otro sitio (el cambio de la parte 1 a la 2 del final, con el rótulo «Unas semanas después» en negro): al ponerse en su pose nueva el pie «bajaba» y la distancia desde la última pisada era enorme. Si la raíz se mueve más de 1 m en un fotograma, ahora cuenta como colocación: no suena nada y la distancia de la siguiente pisada se mide desde ahí.
+
+### Poses de suelo: cuánto se hunden los personajes (INC-866)
+
+Las animaciones de sentarse en el suelo, tumbarse, dormir y caer dejan el cuerpo por debajo de la raíz: con la raíz a ras de suelo, el personaje se mete en la hierba. Medido en la cinemática final (octubre de 2026) con la malla deformada de verdad (`SkinnedMeshRenderer.BakeMesh`, el vértice más bajo de las mallas visibles), en metros que hay que subir la raíz para que nada quede bajo el suelo:
+
+| Estado | Will | Estela | Liam | Tobías |
+|---|---|---|---|---|
+| `SitGround_Loop` | 0,21 | 0,21 | 0,14 | 0,22 |
+| `SitGround_Begin` / `SitGround_Exit` | 0,12 | 0,13 | 0,14 | 0,13 |
+| `Knockdown01_Ground` (boca arriba) | 0,18 | 0,18 | 0,17 | — |
+| `Sleeping_NoWeapon` (de lado) | — | — | — | 0,22 |
+| `Die01Stay_NoWeapon` | — | — | 0,07–0,10 | — |
+| `Cry01_Loop` (de rodillas) | — | 0,005 | — | — |
+
+- Cifras máximas vistas, con las transiciones incluidas; con el mismo rig chibi sirven de referencia para el resto del reparto (calcular de nuevo si cambia el cuerpo o el clip).
+- Cómo se corrige en la cinemática: `ModuloCinematicaFinal.Poses.cs`. En `LateUpdate`, con la pose ya evaluada, se mide el vértice más bajo cada 4 fotogramas, se lanza un rayo al suelo bajo la raíz (sin contar colliders de personajes) y se sube la raíz lo que falte, con suavizado y un tope de 0,45 m. La subida no se acumula: si nadie ha movido la raíz desde el fotograma anterior, se parte de la posición sin subir. Los sentados, además, enderezan cuello y cabeza (las de sentado los llevan gachos). En el editor, el registro de cada rodaje queda en `Logs/Rodaje/poses_de_suelo.txt`.
+- **Error que no hay que repetir:** `SkinnedMeshRenderer.bounds` no sirve para esto: es la caja de la pose de reposo pegada al hueso raíz, no la pose animada. Daba ~0,5 m para todo y, con el tope, el personaje subía y bajaba medio metro en fotogramas alternos (los «temblores» del vídeo Final_def).
+- **Tumbados quietos:** `Knockdown01_Ground` y `Die01Stay_NoWeapon` son clips en bucle; la pose sostenida de los NPC (`NPCSimpleAnimator.SostenerPose`) solo congela clips que no son bucle, y además `NPCSimpleAnimator` vuelve a poner `animator.speed = 1` en cada `Update` cuando el NPC está quieto. Resultado: el bucle seguía (las piernas se cerraban y abrían) y, al acabar cada vuelta, `Knockdown01_Ground` salía sola por su transición con tiempo de salida a `Idle_Normal_NoWeapon` (un instante de pie: el parpadeo) y la pose sostenida la volvía a meter. La cinemática los congela en una corrutina (después de los `Update`, antes de que se evalúe la animación): los fija en el 95 % del clip con velocidad 0 y anula esa salida a `Idle_Normal_NoWeapon` mientras el NPC sigue sosteniendo la pose; las transiciones que pide el guion (incorporarse, otra pose, reposo) se dejan correr. El jugador ya lo hacía bien (`SostenerPoseDelJugador`).
+- Para el juego: los asientos de suelo (`NPCWorldPoint` con `SitGround`) y las camas tienen el mismo problema. Lo directo es subir la raíz con las cifras de la tabla por estado; lo general, llevar la medida de `ModuloCinematicaFinal.Poses.cs` a un componente de personaje. Si un NPC tiene que quedarse tumbado fuera de las cinemáticas, hay que congelarlo igual (o quitar el `loopTime` de esos clips y la transición con tiempo de salida de `Knockdown01_Ground`).
 
 ### Configuración vía ScriptableObjects
 
@@ -345,7 +410,11 @@ El detalle reserva una zona independiente para la descripción, la comparación 
 
 ### Sistema de cambio de personaje activo
 
-`ActiveCharacterSwapper.cs` permite controlar a Liam o Estela en lugar de Will.
+`ActiveCharacterSwapper.cs` permite controlar a Liam o Estela en lugar de Will. Es el único dueño de la visibilidad del NPC oculto (el del personaje al mando).
+
+**Puerta única: `ControlDelJugador`** (`Personajes/ControlDelJugador.cs`, estático). Quién va al mando (`Activo`), el cuerpo que mueve el jugador (`CuerpoDelJugador`), el cuerpo y el NPC de cada personaje (`CuerpoDe`, `NpcDe`, `MiembroDe`), si un NPC está representado ahora por el jugador (`RepresentadoPorElJugador`), de quién es un cuerpo (`PersonajeDe`), pasar el mando (`PasarElMandoA`) y el nombre de cada personaje (`Nombre`, `SlotDeNombre`). Ningún sistema pregunta a `ActiveCharacterSwapper.HiddenNpc`/`WillNpcInstance` ni a `PlayerParty` por su cuenta (INC-717). Hoy hay un solo cuerpo jugable (`_WILL`, que se disfraza del personaje al mando); cuando cada personaje tenga su cuerpo, solo cambia esta clase.
+
+**Vida, maná y bonos del grupo: `SaludDelGrupo`** (`Personajes/SaludDelGrupo.cs`, en `GrupoDelJugador`). Cada personaje tiene su vida y su maná, al mando o con IA; es el único que escribe esos campos del preset mientras se juega (`VolcarEnPreset` al guardar) y el único que cambia los máximos. Los bonos de la ropa (`EstadisticasDelPersonaje.Bonos`) se suman solo al personaje al mando y se le quitan al dejarlo; en el preset se guarda el máximo sin bonos. `CurarATodos()` deja a los tres con vida y maná llenos y levanta a los caídos (pruebas del LAB, vuelta de una batalla de prueba). `EstadisticasDelPersonaje` ya no escribe vida ni maná: lleva ataque y defensa y pasa a `SaludDelGrupo` lo que suben vida y maná.
 
 Cada personaje del grupo tiene una **ficha** (`FichaDePersonaje`, en `Assets/_PERSONAJES/`): estadísticas y hechizos con los que empieza. Su cuerpo la lleva en el componente `Personaje`. Los hechizos de Estela y Liam salen de ahí (ya no de `NPCPartyConfig`, que solo describe cómo siguen al jugador). Ver INC-483.
 
@@ -392,7 +461,7 @@ Un solo lector de botones y un solo punto de lanzamiento. Cualquier mecánica nu
 - **`MagicCaster`**: hasta `BasicSlotCount` (4) básicos en orden de rotación (`SetBasicSpells`, `ActiveBasic`, `OnLoadoutChanged`). `Cast(spell, hand, damageMultiplier, precise)` es el único camino: `CanCast` (permisos de `PlayerActionManager`, escudo, pared en tierra, maná), cobra, `CommitToAction` + `HoldAirborne` + `PlayUpperBodyAction` en el controlador, y `MagicProjectileSpawner.Cast`. Serie: paso 0 derecha, 1 izquierda, 2 centro (`finisherDamageMultiplier`, 1,5); la serie se reinicia tras `seriesWindow` (1,1 s) o al rotar.
 - **`CastHand`** (Left, Right, Center) sustituye a `MagicSlot`: indica la mano y el gesto, no una ranura.
 - **`MagicProjectileSpawner`**: solo materializa (`Cast`, `SpawnNow`, `SpawnForCinematic(spell, hand, …)`), sin hechizos equipados.
-- **Datos**: `PlayerPresetSO.basicSpellIds` y `PlayerSaveData.basicSpellIds`. Los presets del proyecto ya están convertidos; los campos antiguos izquierda/derecha/especial solo quedan en `PlayerSaveData` para convertir partidas guardadas antes de este cambio (`GameBootProfile`). Los hechizos `SpecialOnly` no se equipan como básicos: serán combos.
+- **Datos**: `PlayerPresetSO.basicSpellIds` y `PlayerSaveData.basicSpellIds`. Los presets del proyecto ya están convertidos; los campos antiguos izquierda/derecha/especial solo quedan en `PlayerSaveData` para convertir partidas guardadas antes de este cambio (`Partida.CargarDesdeGuardado`). Los hechizos `SpecialOnly` no se equipan como básicos: serán combos.
 - **Plugins sin reflexión**: `vThirdPersonInput` lee `CharacterControllerBridge.Input` (`ICharacterInputSource`), que registra `Core.CharacterControllerBridgeSetup` al arrancar (incluye inversión de cámara y la supresión con UI abierta); los SFX del controlador van por `CharacterControllerBridge.PlaySfx`.
 - **Giro con rayitas**: `CommitToAction` gira a `commitTurnSpeed` (1800°/s) en `ControlRotationType` y lanza `OnCommitTurnStarted`; `TurnStreakFeedback` saca `GiroRapido.prefab` por `VfxPoolService` en giros de más de 90°.
 - **Mando**: LB rota hechizos; correr solo con L3 (Mayúsculas en teclado); RB pasa al siguiente objetivo fijado.
@@ -437,9 +506,9 @@ Icono sobre la cabeza del jugador cuando una acción de combate funciona *ahora*
 - **Montaje:** `El Sendero/Combate/Montar avisos de combate (INC-666)`. Añade el componente a `_WILL`, crea el prefab y añade la fila de Ajustes.
 - **Montaje** (ya ejecutado, archivado en `El Sendero/Archivo/Combate/`): quita scripts perdidos, añade y enlaza `PlayerCombatInput` y `TurnStreakFeedback` y crea el efecto de giro.
 - **HUD de combate** (INC-485): `Sendero.UI.CombatButtonsHUD` en `PlayerHUD_Canvas/CombatButtons` (Start.unity), abajo a la derecha, un círculo por botón en su posición del mando. X: `ActiveBasic` en grande, los demás básicos en pequeño en orden de rotación (`(ActiveBasicIndex + k) % n`), glifo de LB, tres puntos con `NextSeriesStep` y tinte si `ManaPool.Current < manaCost`; se repinta con `OnLoadoutChanged` y se reengancha con `PlayerPresetService.OnPresetApplied` y `PartyControlManager.OnActiveCharacterChanged`. Y: sello del combo y anillo de enfriamiento (`SetComboCooldown(0..1)`). B: escudo. Glifos por `InputGlyphIcon`. La visibilidad la lleva el `CanvasGroup` de `PlayerHUDV2`, que ya solo pinta vida y maná. Lo monta `CombatHudBuilder` (`El Sendero/Archivo/UI/Montar HUD de combate (INC-485)`), idempotente.
-- **Ataques de equipo** (INC-491): `DuoSpecialAttackSystem` (en `GrupoDelJugador`) lleva una sola carga de equipo (`SpecialChargeMeter`, 3 tramos) que se llena con el daño del grupo a quien no es del grupo (`Damageable.AlRecibirDanoCualquiera`), orbes y objetos. LT+RT (pulsados con menos de `chordWindow` de diferencia; en teclado los dos son Ctrl) = `TryTeamAttack`: con los compañeros que estén a `companionMaxDistance`, uno = dúo (1 tramo), los dos y carga llena = trío, los dos sin carga llena = dúo con el más cercano. Para elegir se acerca uno o se usa el sígueme. El gesto va por `MagicCaster.BeginTeamGesture`; el golpe es de remate (`GolpeDeRemate`) y cae sobre el objetivo si está a 9 m o menos. Los ataques son `SpecialAttackSO` con `first`/`second` o `isTrio`. La barra la pinta `TeamGaugeHUD` (panel de estado). El escudo es mantener B. `GrupoDelJugador.Awake` mantiene activo el componente de entrada de ataques de equipo; el montaje del prefab hace lo mismo (INC-739). El lanzador se resuelve desde PlayerService para seguir al cuerpo activo al cambiar de personaje.
+- **Ataques de equipo** (INC-491): `DuoSpecialAttackSystem` (en `GrupoDelJugador`) lleva una sola carga de equipo (`SpecialChargeMeter`, 3 tramos) que se llena con el daño del grupo a quien no es del grupo (`Damageable.AlRecibirDanoCualquiera`), orbes y objetos. LT+RT (pulsados con menos de `chordWindow` de diferencia; en teclado los dos son Ctrl) = `TryTeamAttack`: con los compañeros que estén a `companionMaxDistance`, uno = dúo (1 tramo), los dos y carga llena = trío, los dos sin carga llena = dúo con el más cercano. Para elegir se acerca uno o se usa el sígueme. El gesto va por `MagicCaster.BeginTeamGesture`; el golpe es de remate (`GolpeDeRemate`) y cae sobre el objetivo si está a 9 m o menos. Los ataques son `SpecialAttackSO` con `first`/`second` o `isTrio`; cada asset declara su `coreografia` (`CoreografiaDeEquipo`: trío, en el aire, agujero negro, cara a cara…; `SinDefinir` la deduce de la pareja), sus claves de sonido (`sfxDelHechizo`, `sfxDelImpacto`) y el estado que deja (`statusEffect`…), en vez de decidirlo el sistema por los nombres de los personajes. La barra la pinta `TeamGaugeHUD` (panel de estado). El escudo es mantener B. `GrupoDelJugador.Awake` mantiene activo el componente de entrada de ataques de equipo; el montaje del prefab hace lo mismo (INC-739). El lanzador se resuelve desde PlayerService para seguir al cuerpo activo al cambiar de personaje.
 - **Pose al lanzar en vuelo** (INC-492): `PlayerFlyingController` pone `Falling` al lanzar y lo mantiene hasta que el jugador avanza y lleva `castPoseRelease` sin disparar; entonces vuelve con fundido al estado de vuelo. No cambia el movimiento.
-- **Defensa en la B** (INC-493, INC-689): `PlayerShieldController` lee B (`GamepadInputReader.AttackMagicRightHeld`). Pulsar abre `parryWindow` (0,25 s) y reproduce preparación en la capa superior; el escudo aparece solo al mantener B más allá de esa ventana. `ScanForParry` recorre `AmenazasAlJugador.Proyectiles`: captura `IDevolvible` cuando faltan ≤ 0,3 s hasta el pecho o está dentro del radio mínimo de 1,2 m, mediante `AmenazasAlJugador.SegundosHastaAlcanzar`. `AvisoDeAmenazas` usa el mismo cálculo y tiene en cuenta el tiempo de ventana que abre pulsar B. `ProyectilDevuelto` toma el mismo objeto, retira el comportamiento hostil, regresa con guiado a velocidad ×1,3 y aplica mínimo 20 o daño entrante ×2 mediante `MagicProjectile.AplicarImpactoDirecto` (defensa NPC, fórmulas y Damageable compartidos). Tinte con MaterialPropertyBlock, estela dorada y pop de escala. `MagicCaster.BeginCounterGesture` gira, bloquea y sostiene en el aire con el gesto a dos manos; el acierto no reproduce DefendHit. `FiltroDeDefensa` anula cuerpo a cuerpo durante la ventana (voltereta de desvío) y deja pasar `meleeBlockFactor` con el escudo. Ventana fallida = `parryWhiffCooldown`; salida de pose con CrossFade y fundido de peso. Eventos `OnCounter`, `AlContraatacar` y `AlDevolverAtaque` conservan HUD, presentación y reacción del Mago. `CargaDeDisparo` mantiene la bola sin colisiones ni registro en vuelo, la hace crecer, anuncia carga + vuelo estimado y entrega al tirador su inicialización; la lanzadera del LAB lo usa durante 0,6 s. Menú `El Sendero/Combate/Aplicar ajustes nuevos de la B (INC-689)` fija los valores serializados de _WILL y valida sus estados.
+- **Defensa en la B** (INC-493, INC-689): `PlayerShieldController` lee B (`GamepadInputReader.AttackMagicRightHeld`). Pulsar abre `parryWindow` (0,25 s) y reproduce preparación en la capa superior; el escudo aparece solo al mantener B más allá de esa ventana. `ScanForParry` recorre `AmenazasAlJugador.Proyectiles`: captura `IDevolvible` cuando faltan ≤ 0,3 s hasta el pecho o está dentro del radio mínimo de 1,2 m, mediante `AmenazasAlJugador.SegundosHastaAlcanzar`. `AvisoDeAmenazas` usa el mismo cálculo y tiene en cuenta el tiempo de ventana que abre pulsar B. `ProyectilDevuelto` toma el mismo objeto, retira el comportamiento hostil, regresa con guiado a velocidad ×1,3 y aplica mínimo 20 o daño entrante ×2 mediante `MagicProjectile.AplicarImpactoDirecto` (defensa NPC, fórmulas y Damageable compartidos). Tinte con MaterialPropertyBlock, estela dorada y pop de escala. `MagicCaster.BeginCounterGesture` gira, bloquea y sostiene en el aire con el gesto a dos manos; el acierto no reproduce DefendHit. `FiltroDeDefensa` anula cuerpo a cuerpo durante la ventana (voltereta de desvío) y deja pasar `meleeBlockFactor` con el escudo. Ventana fallida = `parryWhiffCooldown`; salida de pose con CrossFade y fundido de peso. Eventos `OnCounter`, `AlContraatacar` y `AlDevolverAtaque` conservan HUD, presentación y reacción del Mago. `CargaDeDisparo` mantiene la bola sin colisiones ni registro en vuelo, la hace crecer, anuncia carga + vuelo estimado y entrega al tirador su inicialización; la lanzadera del LAB lo usa durante 0,6 s. Menú `El Sendero/Combate/Aplicar ajustes nuevos de la B (INC-689)` fija los valores serializados de _WILL y valida sus estados. **Ningún enemigo mira el escudo por su cuenta:** proyectiles (`EnemyProjectile`, también su daño de área), puñetazos y ondas del Gólem (`GolemBossAI`) golpean por `PlayerHealthSystem`, y es su `FiltroDeDefensa` el que decide si la ventana de la B anula el golpe o el escudo lo reduce (un golpe anulado no derriba ni empuja). **Desbloqueo:** el escudo es `AbilityKey.Shield` (`PlayerActionManager.AllowShield`) y solo lo da la historia, con un `UnlockAbilitiesNode` del grafo (en Cap2, Erika enseña la Protección antes de su combate; Bola Prisma la enseña Eldran en su rama); saca su popup de desbloqueo como cualquier habilidad. `PlayerShieldController` no contiene reglas de historia.
 - **Menú de hechizos** (INC-485): `PlayerEquipmentMenuController.SpellView` con `SlotCount` ranuras (3 fijas + `fourthSlot*` opcional) que editan `basicSpellIds[i]`; icono del hechizo en cada ranura; los combos muestran su secuencia (`SPELL_COMBO_LABEL`). Controles: `ControlsSchemeConfig.BuildDefaultEntries` con el reparto nuevo.
 - **Combo mágico en la Y** (INC-494): `ComboCastController` abre el círculo con Y, lee A/B/X/Y (`TryReadButton`), compara con `MagicSpellSO.comboSequence` por prefijo y lanza con `MagicCaster.Cast(spell, CastHand.Center)`. `ComboCastController.IsComposing` (también el fotograma de cierre) lo consultan `PlayerCombatInput`, `PlayerLevitationController`, `PlayerShieldController`, `DuoSpecialAttackSystem` y el salto del puente (`GamepadCharacterInput.JumpPressed`). Eventos `OnOpened`/`OnInput`/`OnClosed` para `ComboPanelUI`; `CooldownNormalized` para el anillo de la Y (`CombatButtonsHUD`). Pose sostenida con `HoldUpperBodyPose` y salida con `PlayUpperBodyAction(ComboExit)`. La capa base se sostiene en `Falling` con `vThirdPersonController.HoldAirbornePose` (`IsGrounded` del Animator a false mientras dura) y se suelta con `ReleaseAirbornePose`; al volver `IsGrounded` real, el Animator sale por Falling → LandLow → locomoción (INC-688). Mientras está abierto pide `escalaDeTiempo` al `TimeScaleArbiterService` (reloj del combo en `Time.unscaledTime`) y `FiltroDelCombo` (`IFiltroDeDano` en el objeto de `PlayerHealthSystem`) anula el daño (INC-693). Lo que se ve y se oye lo pone `PresentacionDelCombo` desde esos mismos eventos (círculo propio con un anillo por botón, chispas, polvo, luz, viento, frenazo de `TimeScaleArbiterService`) y eleva el modelo con `ElevacionVisual`, que desplaza la cadera humanoide en `LateUpdate` sin mover la cápsula; las manos sostienen un orbe por IK con `ManosIK` (genérico; necesita «IK Pass» en la capa UpperBody) (INC-643); el agarre se ancla delante del pecho en largos de brazo (`delante`, `bajoHombros`, desde `animator.bodyPosition`, sin leer huesos en OnAnimatorIK) y la cabeza mira al frente con LookAt (`cabezaAlFrente`) (INC-694).
 - **Proyectil mejorado** (INC-497): cuatro opciones en `MagicSpellSO` que por defecto no cambian nada. `bounceCount`/`bounceRange`: tras impactar, `MagicProjectile.TryContinueAfterHit` relanza (`Launch`) hacia el enemigo vivo más cercano de Enemy/Boss que no haya tocado. `pierceCount` (-1 = todos): sigue volando. Un `HashSet` de raíces (la del `Damageable`) evita dañar dos veces al mismo. `spreadCount`/`spreadAngle`: `MagicProjectileSpawner.LaunchProjectile` lanza N copias giradas alrededor del eje vertical (`LaunchOne`). `impactZone`: `End(true)` llama a `MagicProjectileSpawner.SpawnZoneAt` (estático, sin gesto ni maná), que apoya la zona en el suelo y la configura como `SpawnZoneNow`. Solo el proyectil del jugador (`MagicProjectile`); los de enemigos no lo usan.
@@ -460,6 +529,13 @@ Icono sobre la cabeza del jugador cuando una acción de combate funciona *ahora*
 A dentro del tramo 0,15–0,9 corta el arco en ese fotograma: `Restaurar()` devuelve Rigidbody y gravedad, velocidad a cero, controlador, root motion y `PopMode(Stunned)`, y cierra el aviso de recuperación. Después `Impulsar(6, Vector3.zero, devolverSaltosEnElAire:false)` devuelve movimiento normal en el aire sin girar al jugador. El arrastre opcional se aplica directamente al Rigidbody y vale 0 m/s por defecto: sin entrada `AirVelocity` lo frena, pero con entrada lo redirige hacia donde mira el cuerpo; `VolteretaDelJugador.EnElAire(estadoDeRecuperacion)` pone la animación y bloquea Falling durante el giro. La comprobación de suelo de la voltereta solo cuenta con el controlador activo. `PlayerHealthSystem.HacerInvulnerable(0,4, false)` amplía `_invulnerableUntil` sin parpadeo; VFX mediante `VfxPoolService` con `duracionDelVfxDeRecuperacion` (1 s), SFX configurado. `fraccionDelClipEnVuelo` conserva el valor serializado del nombre anterior mediante `FormerlySerializedAs`. `SeRecupero` conserva el resultado. Sin A, el derribo conserva las animaciones de suelo y levantarse. `OnDisable` detiene todas las corrutinas y utiliza la misma restauración idempotente.
 
 `DerriboDelJugador` es una configuración serializable reutilizable (`activo`, 4 m, 2 m, 0,7 s), con `Estandar` y `Aplicar(objetivo, origen)` delegando al receptor oficial. Gólem y placa del LAB lo utilizan; no se habilita en otros enemigos. La placa utiliza la altura del cuerpo del jugador y el eje horizontal de la placa como origen, y se monta en (32, 0, 41), con rótulos junto a ella y espacio de vuelo hacia −Z. El choque de hechizos conserva su dirección propia y solo comparte la recuperación. Montaje y prueba visual pendientes: ver TRACKER INC-687 (INC-686 está ocupado por Clima).
+
+### Daño en área, caídas y reanimar (INC-717)
+
+- **`DanoEnZona`** (`Combat/DanoEnZona.cs`, estático) es el camino único del daño de área de los enemigos a los personajes del grupo: `ZonaDanina`, `PozoGravitatorio`, `BombaOscura`, `SueloImpisable` y el daño de área de `EnemyProjectile` (lluvia de rocas). Cada pieza decide su forma (`GolpearEnCilindro`, `GolpearEnEsfera`, `AlguienEnEsfera`, o `CuerposDelGrupo` + `EnCilindro`/`EnEsfera` + `Danar`/`Empujar` para formas propias) y aquí se resuelve a quién alcanza: recorre los tres personajes con `ControlDelJugador` (sin consultas de física, y los compañeros cuentan aunque su colisionador esté en otra capa); el que va al mando recibe el golpe por `PlayerHealthSystem` (pasa por la defensa de la B, el modo cinemática y la invulnerabilidad) y los que lleva la IA por su `CuerpoDelGrupo`. Los caídos no cuentan. Un ataque de zona nuevo usa `DanoEnZona`; no recorre colisionadores ni llama a `TakeDamage` por su cuenta.
+- **`PozoGravitatorio`**: además de atraer, quema mientras se pisa su núcleo durante la carga (`danoPorSegundoEnElNucleo`, `radioDelNucleo`; 0 = sin quemar / 1,8 m).
+- **Reanimar con A** (`ReanimarManteniendoA`, en `GrupoDelJugador` junto a `SaludDelGrupo`): el personaje al mando mantiene A junto a un caído (sin protección: se le puede golpear). Sostiene una pose mientras dura (`HoldPose` al empezar; se suelta al acabar, al soltar A y en `OnDisable`) y al levantarlo suena `sfxAlReanimar` y sale `vfxAlReanimar` por `VfxPoolService` (en `GrupoDelJugador`, la Brisa Sanadora).
+- **Nivel de escape del Sendero** (`NivelEscapeSendero`, batalla final): prohíbe volar con `PlayerActionManager.AnadirBloqueo(PlayerAbility.Fly, this)` sin tocar las habilidades de la partida, oculta HUD y minimapa con su clave y lo libera todo en `OnDisable`; sus textos son claves `ESCAPE_SENDERO_*` localizadas.
 
 ### Compromiso al atacar y puntería (INC-484)
 
@@ -498,14 +574,18 @@ var health = ServiceLocator.Get<PlayerHealthSystem>(false);
 
 `Assets/Scripts/Core/GameBootService.cs`
 
-Punto de entrada de todo el sistema de inicialización. Responsable de:
-- Leer el perfil activo (preset de testing o JSON del save).
-- Distribuir el perfil a todos los managers vía el evento `OnProfileReady`.
-- Gestionar el perfil en memoria durante la sesión.
+Arranque del juego y ciclo de vida de la partida (vive en Start). No guarda estado de partida: la partida en curso es `Partida` (§ 9) y la configuración, el `GameBootProfile` (solo datos).
+
+- **Al despertar** prepara la partida: preset de pruebas si `Profile.ShouldBootFromPreset()` (`Partida.CargarDesdePlantilla` + `Partida.AplicarPartidaCargada`), si no el guardado (`Partida.Cargar`), y si no hay guardado el preset por defecto. Un frame después dispara `OnProfileReady`.
+- **API pública:** `Profile`, `SaveSystem`, `OnProfileReady`, `IsAvailable`, `IsPresetOverrideActive`, `ResetTransientSessionState()` (olvida estado de sesión en estáticos: cámara bloqueada, teletransporte, HUD oculto), `ReloadTestPreset()`, `NewGameReset()` (`Partida.PrepararNueva`, o el preset de pruebas en modo pruebas), `NotifyProfileReady()`, `PuedeContinuar()` y `PrepararContinuar()` (el «Continuar» del menú principal, del Game Over y de abandonar un minijuego).
 
 **Script Execution Order: -1000.** Debe ejecutarse antes que cualquier otro manager.
 
 **Invariante importante:** `IsAvailable` pasa a `true` en `Awake`. Cualquier sistema que necesite el perfil puede hacer `while (!GameBootService.IsAvailable) yield return null;` de forma segura.
+
+### TimeScaleArbiterService
+
+`Assets/Scripts/Core/TimeScaleArbiterService.cs` (estático) es el dueño único de `Time.timeScale`. Cada sistema pide una escala con su clave (`Request(clave, escala)`; repetir con la misma clave actualiza el valor) y la suelta al terminar (`Release`, también en `OnDisable`). Manda la petición más lenta (contando el baseline); las de más de 1 solo se aplican si nadie pide ir más lento. `TryGetRequest` lee lo que pidió una clave sin depender del valor efectivo. Las peticiones cuya clave es un `UnityEngine.Object` destruido se descartan solas, y el reparto se repite al descargar cada escena. `ReleaseAll` es solo para recuperación de emergencia. Tests en `Scripts/Editor/Tests/TimeScaleArbiterServiceTests.cs`.
 
 ### Variables estáticas y PlayMode en Editor
 
@@ -542,22 +622,43 @@ El jugador registrado es siempre **el cuerpo** (el objeto con `vThirdPersonContr
 
 `Assets/Scripts/Audio/AudioService.cs`
 
-Gestión centralizada de música y SFX con:
+Dueño único del audio del juego (música, SFX, voces y volumen de los buses), con:
 - Pool de `AudioSource` 2D y 3D (configurable en inspector).
-- Stack de música (para batalla/victoria/minijuego y vuelta a ambiente).
-- Ducking automático de SFX durante música.
+- Stack de música (para batalla/victoria/minijuego y vuelta a ambiente). Combates y minijuegos se abren y cierran por las señales y reglas de `AudioGraphProfile` (`battles`, `minigames`); al acabar, la música del lugar se pide (abajo).
+- Atenuación de la música bajo las voces, con los ajustes del perfil (abajo).
 - Crossfades configurables.
 
 ### API principal
 
 ```csharp
-AudioService.Instance.PlayMusic(clipId, fadeSeconds);
+AudioService.Instance.PlayMusic(clip, fadeSeconds);
 AudioService.Instance.StopMusic(fadeSeconds);
-AudioService.Instance.PlaySFX(clipId, volume, position);   // 3D
-AudioService.Instance.PlaySFX2D(clipId, volume);           // 2D
-AudioService.Instance.BeginBattleMusic(battleId);
-AudioService.Instance.OnBattleWonRestoreMusic(battleId);
+AudioService.Instance.PedirMusicaDelLugar(fade);            // al terminar algo (ver «Relevos de música»)
+AudioService.Instance.PlaySFX(eventKey, volume, worldPos);  // sin worldPos = 2D
+AudioService.Instance.PlayEvent(audioEventSO, worldPos);    // evento por capas (AudioEventSO)
+AudioService.Instance.PlayVoice(clip);
+AudioService.Instance.BeginBattleById(id); / EndBattleById(id);
+AudioService.Instance.SetVolume(AudioBus.Music, 0.8f);      // volumen del jugador
+AudioService.Instance.AtenuarBus("miClave", AudioBus.Music, 0.3f);
+AudioService.Instance.SoltarAtenuacionDeBus("miClave", AudioBus.Music);
 ```
+
+No existen (no reintroducir): `Mute(bus, bool)`, `PlaySpell`, `PlayAmbience`, `BeginMinigameById`/`EndMinigameById`, `StopSFX` ni el alias `PlaySfx`. El grafo narrativo no llama a `AudioService`: pide por los puertos `INarrativeAudio`/`INarrativeAudioMix` (§ 10), que atiende `AudioServiceNarrativeAdapter`.
+
+### Volumen y atenuación por bus
+
+- **`SetVolume(bus, v)` / `GetVolume(bus)`** son el volumen que elige el jugador (Ajustes); un bus que el jugador no ha tocado vale lo que trae el mixer. Nadie más escribe el volumen de un bus.
+- **`AtenuarBus(clave, bus, fraccion)`** baja temporalmente un bus a una fracción del volumen del jugador mientras la clave mantenga la petición (repetir con la misma clave actualiza la fracción); con varias claves se aplica la más fuerte (la fracción más baja). **`SoltarAtenuacionDeBus(clave, bus)`** quita la de esa clave; sin peticiones el bus vuelve exactamente al volumen del jugador.
+- Los nodos del grafo **Silenciar** (`MuteAudioNode`) y **Volumen** (`SetAudioVolumeNode`) piden atenuación con su `clave` (por defecto compartida, así que uno deshace lo que dejó el otro con la misma clave): silenciar = fracción 0; volumen 1 = soltar. Nunca pisan el volumen del jugador. Un nodo sin clave sale con aviso.
+- Lo usan también las cinemáticas (p. ej. la voz que se aleja al final, INC-866).
+
+### Atenuación de la música bajo las voces
+
+Los ajustes viven **solo** en `AudioGraphProfile`: `voiceDuck` (voz en juego), `cinematicVoiceDuck` (voz con una cinemática en marcha) y `epicVoiceDuck` (voz con el efecto `PresetDeVoz.Epico`, conjuros; la música ritual va aparte y no se atenúa). Cada uno (`VoiceDuckSettings`) da los dB de música, ambiente y SFX, la ganancia de la voz, ataque, relajación y sostén tras la voz. `AudioService.AjustesDeAtenuacionParaLaVoz()` elige uno al empezar cada voz; `AudioService` no guarda valores propios, y sin perfil no hay atenuación (aviso una vez en el editor).
+
+### Sonidos de los hechizos
+
+Una sola herramienta: *El Sendero/Audio/Sonidos de los hechizos (claves y eventos por capas)* (`Assets/Editor/Audio/SonidosDeHechizos.cs`). Da de alta las claves `Hechizo_<Asset>` (lanzamiento) e `Impacto_<Elemento>_<Pequeno|Grande>` en el perfil, las pone en cada hechizo y rehace los eventos por capas (`AudioEventSO` en `Assets/_SPELLS/Eventos/`). Es idempotente: el resultado es siempre su tabla.
 
 ### Voces de secuencias
 
@@ -581,36 +682,21 @@ Una voz nueva sustituye a la anterior en la fuente 2D del bus Dialogue. El beat 
 
 ### Relevos de música: la del lugar se pide, no se pone (INC-486)
 
-Mismo criterio que `CameraDirectorService` con la cámara. Quien termina algo (una cinemática en `CinematicSequencerBase.RestoreMusic()`, un combate en `OnBattleWonRestoreMusic`/`RestoreAfterBattle`) no pone la música del lugar al instante: llama a `AudioService.PedirMusicaDelLugar(fade, incluirEscena)`, que la pone a los 0,3 s (prioridad zona → interior → escena → silencio). Cualquier `PlayMusic`/`StopMusic` en ese margen cancela la petición, así que en una cadena secuencia → jefe, secuencia → secuencia o combate → secuencia la música pasa directamente de una a otra, sin colar la de gameplay en medio. Si al cumplirse hay una cinemática activa no hace nada (su propio `RestoreMusic` la pedirá); con el telón cerrado espera a que se abra.
+Mismo criterio que `CameraDirectorService` con la cámara. Quien termina algo (una cinemática en `CinematicSequencerBase.RestoreMusic()`, un combate en `OnBattleWonRestoreMusic`/`RestoreAfterBattle`, un minijuego al ganarse o terminar, un texto dramático del grafo con `DramaticTextNode.restoreSceneMusicWhenDone`) no pone la música del lugar al instante: llama a `AudioService.PedirMusicaDelLugar(fade, incluirEscena)`, que la pone a los 0,3 s (prioridad zona → interior → escena → silencio). Cualquier `PlayMusic`/`StopMusic` en ese margen cancela la petición, así que en una cadena secuencia → jefe, secuencia → secuencia o combate → secuencia la música pasa directamente de una a otra, sin colar la de gameplay en medio. Si al cumplirse hay una cinemática activa no hace nada (su propio `RestoreMusic` la pedirá); con el telón cerrado espera a que se abra.
 
 Crossfades: si un `PlayMusic` llega a mitad de otro fundido, se reutiliza la fuente que menos suena (la que más suena se apaga, nunca se corta). La canción que sale tarda como mínimo `FundidoMinimoDeSalida` (1 s) en apagarse; la que entra respeta su fundido (con 0 entra de golpe, como las `BattleRule`).
 
-**Regla:** ningún sistema nuevo debe restaurar música de lugar llamando a `PlayMusic`/`RestoreSceneMusic` directamente al terminar algo; debe pasar por `PedirMusicaDelLugar`.
+**Regla:** ningún sistema nuevo debe restaurar música de lugar llamando a `PlayMusic`/`RestoreSceneMusic` directamente al terminar algo; debe pasar por `PedirMusicaDelLugar` (en el grafo, `INarrativeAudio.RequestLocationMusic`). La música que pone el nodo `PlayMusicNode` va siempre en bucle (no tiene opción de no repetir).
 
 **Fin de combate con victoria (INC-500).** La música del combate sigue hasta que la releva el jingle de victoria (`PlayVictoryForBattle`, desde la celebración). El jingle suena una vez y, al acabar, él mismo cierra el combate (pila de música) y pide la música del lugar con `FundidoDeLugar`. Mientras suena, `EndBattleById`, `RestoreAfterBattle` y la señal BattleWon no hacen nada, y `OnBattleWonRestoreMusic` solo cierra el combate que está activo (es idempotente: llega por la señal y por `EndBattleById`). Así ni se cuela la música del lugar debajo del jingle ni hay silencio mientras se lee el informe. `BossArenaController` da el combate por cerrado en `AvisarBatallaGanada`, después del cierre de batalla, no al morir el jefe.
 
-### Bug crítico — StopAllCoroutines mata el pool SFX
+### Corrutinas de música y pool de SFX
 
-`PlayMusic()`, `StopMusic()` y `RestartMusicClipFromBeginning()` llaman a `StopAllCoroutines()`. Esto destruye las corrutinas `ReturnWhenDone` de los SFX activos: los `AudioSource` nunca se devuelven al pool y se acumulan GameObjects hijo con el tiempo.
+Las corrutinas de música (fundidos, crossfades) se guardan en referencias explícitas y se paran una a una; `AudioService` nunca llama a `StopAllCoroutines()`, que mataría las corrutinas que devuelven los `AudioSource` de los SFX al pool.
 
-**Solución pendiente:** reemplazar `StopAllCoroutines()` por corrutinas con referencias explícitas:
+### Conversión de volumen
 
-```csharp
-private Coroutine _crossfadeRoutine;
-private Coroutine _fadeOutRoutine;
-
-// En lugar de StopAllCoroutines():
-if (_crossfadeRoutine != null) StopCoroutine(_crossfadeRoutine);
-_crossfadeRoutine = StartCoroutine(CrossfadeRoutine(...));
-```
-
-### Conversión de volumen (bug menor)
-
-La conversión lineal→dB actual usa interpolación lineal entre -80 y 0, que no es perceptualmente uniforme. A 0.5 de volumen el oyente esperaría ~-6dB, pero obtiene -40dB. La conversión correcta es:
-
-```csharp
-float dB = linear01 <= 0f ? -80f : 20f * Mathf.Log10(linear01);
-```
+Lineal → dB con `20 · log10(v)` (0 = −80 dB) en `SetExposedVolume`, y la inversa en `GetExposedVolume01`; así 0,5 suena a unos −6 dB, no a −40.
 
 ---
 
@@ -672,6 +758,9 @@ foreach (var kv in _runtime)
 El subtítulo usa un canvas overlay creado por SpeechBubbleUI, ancho del 70 % de pantalla, texto blanco con contorno y nombre menor en negrita y color. Se coloca dentro de la banda inferior cuando cabe; durante su entrada o sin bandas usa una franja negra con alpha 0,45. El tamaño normal se ajusta al alto de banda solicitado para alojar dos líneas y el nombre sin deformar la fuente. SubtituloGrande ocupa el centro, sin nombre, con tamaño 2,2 veces el normal y escala de entrada 1,15 → 1 en 0,15 s.
 
 `SequenceDefinition.presentacionDeTexto` vale Bocadillo por defecto. `SayBeat.presentacion` (`PresentacionDeLinea`) hereda ese campo o fuerza Bocadillo, Subtitulo o SubtituloGrande; `colorDelNombre` se pasa a la UI. SayBeat pagina con la presentación resuelta antes de repartir el tiempo de la voz. El constructor `ConstruirPrologoUltimaNoche` configura subtítulos para el prólogo y SubtituloGrande para PROLOGO_HECHIZO; asigna Archimago #FFD27A, Mago Oscuro #B48CFF, Liora #FFB3C7 y resto #E8E8E8. La reconstrucción guarda mediante AssetDatabase.
+
+Las frases no llaman a `SpeechBubbleUI` cada una por su lado: pasan por `PresentadorDeLinea` (§ 11), que traduce, resuelve el estilo (`PresentacionDeLinea.Resolver`), enseña el texto y suelta la voz.
+
 ### DialogueManager
 
 `Assets/Scripts/Dialogue/DialogueManager.cs`
@@ -685,7 +774,7 @@ Gestiona la reproducción de `DialogueAsset` (SO con líneas localizadas). Respo
 
 ### DialogueAsset
 
-SO con lista de `DialogueLine`. Cada línea tiene:
+SO con lista de `DialogueLine`; hereda de `NarrativeDialogueAsset` (base abstracta del núcleo del grafo, `Runtime/Integration/Ports/`), así que los nodos del grafo lo referencian sin conocer la clase del juego. Cada línea tiene:
 - `speakerId` — nombre del speaker (se busca en NPC activo, party, o escena).
 - `textKey` — clave de localización.
 - `emotion` — estado emocional para el animator.
@@ -735,28 +824,26 @@ SenalesDeHabla comunica el hablante y la duración. SpeechBubbleUI y DialogueMan
 
 `Assets/Scripts/Core/SaveSystem.cs`
 
-Serializa el `GameBootProfile` a JSON y lo escribe en `Application.persistentDataPath/save.json`.
+Lee y escribe el `PlayerSaveData` (JSON) en `Application.persistentDataPath/save.json`. No sabe qué hay dentro: quien guarda y carga es `Partida`.
 
-**Bug crítico — escritura no atómica:** `File.WriteAllText` sobreescribe directamente el archivo. Si el proceso se interrumpe (crash, cierre de app) a mitad de escritura, el save queda corrupto y el jugador pierde la partida.
+**Escritura atómica:** escribe en `save.json.tmp` y lo sustituye con `File.Replace` (o `File.Move` si no había guardado). Si `save.json` falta o está corrupto pero queda un `.tmp` de un guardado interrumpido, lo recupera desde ahí.
 
-**Solución pendiente:**
+### Partida (la partida en curso)
 
-```csharp
-var tmpPath = SavePath + ".tmp";
-File.WriteAllText(tmpPath, json);
-if (File.Exists(SavePath)) File.Delete(SavePath);
-File.Move(tmpPath, SavePath);
-```
+`Assets/Scripts/Core/Partida/` — clase estática parcial `Partida`, dueña única de la partida en curso:
 
-### GameBootProfile
+- **`Partida.Preset`**: el preset en memoria (`PlayerPresetSO` creado en tiempo de ejecución, `HideFlags.DontSave`; nunca se escribe en un asset del proyecto) que todos los sistemas leen y escriben mientras se juega. Si aún no hay ninguno, se prepara desde el preset de pruebas (si está activo) o desde el preset por defecto. `PresetEnMemoria` lo da sin prepararlo (inspectores y depuración). `AnclaDeInicio` = `spawnAnchorId` del preset o `Bedroom`.
+- **Plantilla y guardado** (`Partida.cs`, `Partida.Datos.cs`): `CargarDesdePlantilla(preset)` copia una plantilla en el preset en memoria; `CargarDesdeGuardado(PlayerSaveData)` vuelca un guardado (incluida la conversión de partidas antiguas: hechizos izquierda/derecha → `basicSpellIds`); `GuardadoVacio()`.
+- **Guardar / cargar** (`Partida.Guardado.cs`): `Guardar(SaveSystem, contexto)` vuelca el estado vivo y escribe en disco (los auto-guardados, solo si `GameBootProfile.allowAutoSaves`); `Cargar(SaveSystem)` lee el guardado, lo deja como preset y lo aplica; `AplicarPartidaCargada(aplicarPosicionesDeNpcs)` deja los sistemas como dice el preset (sesión narrativa reiniciada, ancla, misiones, teletransportes, relaciones, pizarras de los grafos y, si el mundo ya está cargado, posiciones de NPCs; si no, las aplica `WorldBootstrap`). Lo usan `SavePoint`, el preset de pruebas y «Continuar».
+- **Volcado antes de guardar** (`Partida.Volcado.cs`, `VolcarEstadoDelJuego`): ancla actual; vida y maná de los tres vía `SaludDelGrupo.VolcarEnPreset`; misiones (marcas `QUEST_*` rehechas desde `QuestManager`); habilidades; inventario saneado; armario; apariencia de Will (vaya quien vaya al mando); jefes derrotados; posiciones de NPCs; objetos persistentes (`ObjetoPersistente.CapturarEstado`); pizarras de los grafos; grupo y personaje al mando; teletransportes; relaciones entre NPCs.
+- **NPCs** (`Partida.Npcs.cs`): captura y aplica posición, giro y estado activo de los NPCs con `persistLastPosition` (`AplicarPosicionesDeNpcs`); conserva las entradas de NPCs de otras escenas.
+- **Partida nueva** (`Partida.Nueva.cs`, `PrepararNueva(SaveSystem)`): borra el guardado, copia el preset por defecto, deja la magia bloqueada y olvida NPCs, cinemáticas vistas, pizarras, narrativas, avisos de lore, teletransportes y grupo.
+- **`ReiniciarSesionNarrativa()`**: para los runners, borra las pizarras en memoria y olvida las señales de la partida (`DefaultNarrativeSignals.OlvidarSenalesDePartida`, sin tocar a los suscriptores) y el registro del sistema Interactive. Las pizarras de la partida se restauran desde el preset al arrancar los grafos.
+- `GameBootService` (§ 5) decide cuándo se llama a cada cosa; el grafo narrativo lee y escribe la partida por el puerto `INarrativeSaveData`/`INarrativeFlagStore`, que atiende `PartidaNarrativeData` (§ 10).
 
-SO serializable que contiene todo el estado del jugador:
-- Posición y ancla de spawn (`currentAnchorId`).
-- Flags de quests, narrativa y mundo.
-- Inventario, wardrobe, hechizos equipados.
-- Miembros del party activo.
+### GameBootProfile (configuración de arranque)
 
-El profile es la única fuente de verdad para restaurar el estado entre sesiones.
+`Assets/Scripts/Core/GameBootProfile.cs` — ScriptableObject **solo de datos** (`Assets/_BootProfile/GameBootProfile.asset`): `sceneToLoad`, `defaultPlayerPreset` (con qué empieza una partida nueva), `usePresetInsteadOfSave` + `bootPreset` (arrancar desde un preset de pruebas en vez del guardado; `ShouldBootFromPreset()`) y `allowAutoSaves`. No contiene estado de partida ni lógica: lo que antes hacía (preset en memoria, volcado, guardado, carga) es `Partida`.
 
 ### IDs de persistencia de mundo
 
@@ -783,7 +870,7 @@ Todos estos scripts exponen un campo override **opcional**. Si está vacío, el 
 `ObjetoPersistente` (`Assets/Scripts/World/ObjetoPersistente.cs`) guarda en la partida si un objeto de escena se ha **movido** o se ha **retirado** (entregado, consumido…), y lo deja igual al cargar. Lo guarda en `PlayerPresetSO.objetosDelMundo` / `PlayerSaveData.objetosDelMundo`: una entrada por objeto que ya no está como lo dejó la escena.
 
 - **ID:** `IdDePersistencia` con la posición **de partida** (la que tiene en `Awake`), así que no cambia aunque el objeto se mueva.
-- **Movido:** `GameBootProfile.UpdateRuntimePresetFromCurrentState()` llama a `ObjetoPersistente.CapturarEstado(preset)` al guardar. Anota posición y giro de los que se han movido y borra la entrada de los que han vuelto a su sitio. Los objetos de escenas no cargadas conservan su entrada.
+- **Movido:** `Partida.VolcarEstadoDelJuego()` llama a `ObjetoPersistente.CapturarEstado(preset)` al guardar. Anota posición y giro de los que se han movido y borra la entrada de los que han vuelto a su sitio. Los objetos de escenas no cargadas conservan su entrada.
 - **Retirado:** quien quita un objeto del mundo llama a `ObjetoPersistente.Retirar(objeto)`, **nunca a `Destroy` directo**. Lo anota en el acto y lo destruye. Lo usan `WaitItemDeliveryNode` y `NPCItemDetector`.
 - **Al cargar:** cada objeto se aplica su entrada en `Awake` (o en `OnProfileReady` si el perfil aún no estaba). Si está retirado, se destruye; si está movido, se coloca.
 - **Quién lo lleva:** `PickupObject` lo añade solo, así que todo lo que se lleva en brazos queda cubierto sin tocar prefabs. En cualquier otro objeto (bloques empujables, piezas de puzle…) se pone a mano.
@@ -792,7 +879,7 @@ Todos estos scripts exponen un campo override **opcional**. Si está vacío, el 
 
 ### Presets de testing
 
-`PlayerPresetSO` es un profile con datos fijos para testing. Se asigna en el inspector de `GameBootService`. Al entrar en PlayMode con un preset, el juego inicializa exactamente ese estado sin tocar el save del jugador.
+`PlayerPresetSO` es un profile con datos fijos para testing. Se asigna en `GameBootProfile.bootPreset` y se activa con `usePresetInsteadOfSave`. Al entrar en PlayMode con un preset, el juego trabaja sobre una copia en memoria (`Partida.Preset`) con exactamente ese estado, sin tocar el save del jugador ni el asset del preset.
 
 **Precaución con blackboards de preset:** si el preset fue capturado después de que un trigger narrativo ya se había activado, contendrá el flag `__event_XXX_received = 1`. Esto hace que el grafo narrativo salte ese nodo sin esperar. Para resetear una sección narrativa, eliminar manualmente ese flag del asset del preset.
 
@@ -806,7 +893,7 @@ El grafo narrativo de `MainNarrative.asset` es el director de la historia. Cada 
 
 Los eventos entre el mundo y el grafo se comunican vía `DefaultNarrativeSignals`. El sistema soporta eventos "pendientes": si un trigger se activa antes de que el grafo tenga un listener suscrito, el evento se guarda en `_pending` y se consume cuando el grafo llega al nodo correspondiente.
 
-**Invariante crítica:** `NarrativeAutoSetup.ResetForLoadedProfile()` usa `preservePending: true` para no limpiar eventos pendientes al cargar un perfil. Esto garantiza que triggers que se activan antes de la inicialización del grafo no se pierdan.
+**Reinicio de la sesión narrativa:** al cargar una partida, al arrancar desde el preset de pruebas y en una partida nueva, `Partida.ReiniciarSesionNarrativa()` para los runners, borra las pizarras en memoria y olvida las señales de la partida anterior (`DefaultNarrativeSignals.OlvidarSenalesDePartida`: emitidas, pendientes y «alguna vez»), **sin tocar a los suscriptores**. Después se restauran las pizarras del preset. Las señales que se emitan a partir de ahí, aunque sea antes de que el grafo tenga un oyente, quedan pendientes como siempre.
 
 ### Velocidad durante escoltas (INC-736)
 
@@ -959,10 +1046,10 @@ Este desglose se escribe primero (como documento o mensaje) y luego se traduce a
 El grafo narrativo (`MainNarrative.asset`) y sus runners son `DontDestroyOnLoad`. Estas reglas son críticas:
 
 **Regla 1 — Test mode = vuelco EXACTO del bootPreset, sin mezcla con JSON.**
-En `GameBootService.PrepareActivePreset()` modo testeo NUNCA leer el JSON. Solo `EnsureRuntimePresetFromTemplate(bootPreset)` + `ApplyPresetAsLoadedGame()`.
+Al arrancar en modo pruebas (`GameBootProfile.ShouldBootFromPreset()`), `GameBootService` NUNCA lee el JSON. Solo `Partida.CargarDesdePlantilla(bootPreset)` + `Partida.AplicarPartidaCargada(...)`.
 
 **Regla 2 — Al "cargar partida" en test mode, siempre recargar desde bootPreset.**
-`GameBootService.ReloadTestPreset()` hace: (1) `hub.StopAllRunners()`, (2) `EnsureRuntimePresetFromTemplate(bootPreset)`, (3) `ApplyPresetAsLoadedGame()`. `MainMenuController.OnClickContinue()` lo llama en test mode.
+`GameBootService.ReloadTestPreset()` hace `Partida.CargarDesdePlantilla(bootPreset)` + `Partida.AplicarPartidaCargada(...)` (que empieza por `ReiniciarSesionNarrativa`: para los runners) y dispara `OnProfileReady`. `GameBootService.PrepararContinuar()` —el «Continuar» del menú principal y del Game Over— lo llama en test mode.
 
 **Regla 3 — `NarrativeRunner.StartFromStartNode` / `StartFromNode` deben llamar `StopExecution()` primero.**
 Sin esto se acumulan runners paralelos que ejecutan nodos en la sesión incorrecta.
@@ -971,7 +1058,7 @@ Sin esto se acumulan runners paralelos que ejecutan nodos en la sesión incorrec
 El `Advance()` ya maneja fork detection. El `WaitCustomEventNode` ya tiene su mecanismo `__event_{guid}_{key}_received`. Consultar § 13 (Bugs Conocidos Pendientes) antes de tocar nodos narrativos.
 
 **Regla 5 — `DefaultNarrativeSignals._raised` es el backup persistente de señales.**
-`RaiseCustom` añade a `_pending` y `_raised`. `ResetState(preservePending:true)` preserva los dos. No eliminar `_raised`.
+`RaiseCustom` añade a `_pending` y `_raised` (y a `_everRaised`, que no se vacía al consumirse). `ResetState(preservePending:true)` preserva los dos; `OlvidarSenalesDePartida()` (cambio de partida) los vacía sin tocar a los suscriptores. No eliminar `_raised`.
 
 **Sobre presets de testing:** si un preset fue capturado después de que un trigger se activó, contiene el flag `__event_XXX_received = 1` en el blackboard. El runner saltará ese nodo. Para resetear, eliminar el flag manualmente del asset del preset.
 
@@ -980,7 +1067,7 @@ El `Advance()` ya maneja fork detection. El `WaitCustomEventNode` ya tiene su me
 Código en `Assets/NarrativeGraph/Runtime/State/` (núcleo genérico, sin nada de este juego). Ver INC-481.
 
 - **`INarrativeStateEffect`**: lo implementa todo nodo (o beat de secuencia) que deja el mundo cambiado de forma duradera. `Project(INarrativeStateWriter)` describe el cambio sin ejecutar nada (no emite señales, no toca la escena).
-- **`INarrativeStateWriter`**: contrato genérico del estado (flags, misiones, objetos, dónde está cada actor, activo/inactivo, avisos). Lo propio de un juego se pide con `TryGetExtension<T>()` a una interfaz del juego (aquí `IPlayerLoadoutState`: habilidades y hechizos).
+- **`INarrativeStateWriter`**: contrato genérico del estado (flags, misiones, objetos, dónde está cada actor, activo/inactivo, avisos). Lo propio de un juego se pide con `TryGetExtension<T>()` a una interfaz del juego (aquí `IPlayerLoadoutState`, en `Assets/Scripts/NarrativeIntegration/`: habilidades y hechizos).
 - **`NarrativeLocation`**: lugar por nombre. `World(marca)` = SpawnAnchor; `Local(marca)` = marca del contexto actual, que `ScopedNarrativeStateWriter` liga a un contexto con nombre (la secuencia, con la plantilla como reserva si se monta en vivo). Lo convierte en posición un `INarrativeLocationResolver` del juego.
 - **`NarrativeStateProjector.Project(grafo, nodoObjetivo, escritor)`**: recorre en anchura desde el StartNode y proyecta cada nodo hasta el objetivo, **sin proyectar el objetivo** (se va a ejecutar). Cada nodo decide por dónde se sigue con `NarrativeNode.ProjectionPort` (`ProjectAllOutputs`, un índice, o `ProjectionStops` si es una decisión real). Las decisiones no se adivinan: se listan con `DescribeDecision()`.
 - **Uso actual:** Quick Test (`PresetNarrativeStateWriter` + `OpenScenesNarrativeWorld`) escribe el resultado en el preset temporal, incluidas las posiciones de los actores en `npcPositions` (el mismo camino que la partida guardada). Las marcas se buscan en las escenas abiertas; los actores, en ellas o, si los instancia `NpcSpawner` al arrancar (no existen en el Editor), en los `NpcRosterSO` (`gameObjectName` es la clave del guardado). Si la última marca de un actor no se resuelve, usa la anterior y lo avisa.
@@ -997,13 +1084,57 @@ Ver INC-514. Quien encarga una misión tiene que decir algo si se le habla mient
 - **Obligatorio en todas las quests:** un «Iniciar quest» sin quién la encarga ni su diálogo sale con aviso, salvo que se marque `noGiver` (quest propia del jugador). El aviso lo declara el propio nodo en `NarrativeNode.CollectWarnings`, que leen la tarjeta del editor (`NodeSummary`) y `NarrativeGraphValidator` (se pasa al dar Play) sin conocer el tipo de nodo.
 - **Regla:** un tipo de nodo nuevo que deje una frase así implementa `INarrativeStandingLine`; si tiene avisos propios de contenido, sobrescribe `CollectWarnings`.
 
+### El grafo como paquete: núcleo genérico, puertos y adaptadores del juego
+
+El grafo narrativo se diseña como producto reutilizable (regla 9 de `AGENTS.md` § 8). La línea entre el núcleo y el juego es física: **`Assets/NarrativeGraph/`** no conoce ninguna clase de El Sendero; **`Assets/Scripts/NarrativeIntegration/`** es el juego conectado al grafo.
+
+**1. Cada nodo se describe a sí mismo (editor sin `switch` por tipo).** Las herramientas preguntan al nodo en vez de reconocerlo por su clase:
+
+- `NarrativeNode.Describe(INarrativeNodeDescriber d)` declara **referencias** —`Quest(id, verbo, pasos)`, `Signal(clave, SignalRole.Emite|Escucha, etiqueta)`, `Actor(id, verbo)`, `Flag(clave)`, `Anchor(marca)`, `Asset(obj, tipo, detalle)`, `DialogueLine(...)`, `Item(obj, cantidad, verbo)`, `Text(clave, porDefecto)`— y **presentación** para la tarjeta —`Line(texto, NarrativeTextTone)`, `Speaker`, `Field(etiqueta, valor)`, `Tag`—. Las referencias obligatorias se declaran aunque estén vacías (la tarjeta enseña «sin …»).
+- Propiedades del nodo: `IsGraphEntry` (punto de entrada), `IsAnnotation` (nota sin puertos), `BranchesInParallel` (varias aristas desde su puerto son un fork buscado), `CollectWarnings(lista)` (campos obligatorios vacíos, contenido a medias). Siguen igual `GetOutputPorts`, `ProjectionPort`, `DescribeDecision`, `INarrativeStateEffect` e `INarrativeStandingLine`.
+- `NarrativeNodeReferences` recoge lo declarado como datos (índice del proyecto, validadores, búsqueda, lanzador de pruebas). Metadatos de editor: `[NarrativeNodeInfo(categoría, título, descripción)]` en la clase y `[NarrativeChipList("Título")]` para editar un `List<enum>` como etiquetas.
+- La tarjeta (`NodeSummary`), el panel lateral (`NarrativeInspectorPanel`), `NarrativeProjectIndex`, `NarrativeGraphValidator` (sin `OfType` por tipo; «misión iniciada varias veces» se calcula proyectando `INarrativeStateEffect`), `ChapterSplitWindow` y `NarrativeTimelineWindow` usan solo `Describe` y estas propiedades. **Añadir un tipo de nodo no exige tocar ninguna ventana.**
+
+**2. Puertos: el núcleo pide, el juego atiende.** Un nodo que necesita algo del juego lo pide por una interfaz pequeña de `Runtime/Integration/Ports/` a **`NarrativeServices`** (`Runtime/Integration/NarrativeServices.cs`, estático): `Register<T>` / `Unregister<T>` / `Get<T>` / `TryGet<T>(out, quien)`. Si falta la implementación, `TryGet` avisa una vez por puerto (editor o instrumentación) y el nodo sigue sin colgar el grafo. Se vacía en `SubsystemRegistration`.
+
+| Puerto | Para qué |
+|---|---|
+| `IQuestService` | misiones |
+| `INarrativeFlagStore` | dónde se guardan los flags narrativos (los nodos pasan por la fachada `NarrativeFlags`) |
+| `INarrativeSaveData` | pizarras guardadas y aviso de carga de partida |
+| `INarrativeTextLocalizer` | traducir claves (`NarrativeText.Resolve`) |
+| `INarrativeScreen` | fundidos, telón, destapar con transición |
+| `INarrativeAudio` / `INarrativeAudioMix` (`NarrativeAudioBus`) | música, SFX, voz, música del lugar / atenuar y soltar un bus con clave |
+| `INarrativePlayerControl` | bloquear y soltar al jugador |
+| `INarrativeActorDirectory` / `INarrativeAttentionMarkers` / `INarrativeActorPlacement` | encontrar actores, iconos de atención, colocar actores |
+| `INarrativeDialoguePlayer` / `INarrativeChoicePresenter` | reproducir un diálogo, presentar una elección |
+| `INarrativeInventory` | dar, pedir y esperar objetos |
+| `INarrativeCameraFocus` | enfocar la cámara |
+| `INarrativeSpeechBubbles` (`INarrativeLineHandle`) | frases en bocadillo |
+| `INarrativeSceneHooks` | lo que hace el juego al cargar una escena aditiva (opcional) |
+| `INarrativeTitleCardPresenter` | rótulos sobre el telón (`TitleCardNode`) |
+
+Bases abstractas para los assets: `NarrativeDialogueAsset` (hereda `DialogueAsset`) y `NarrativeItemAsset` (hereda `ItemData`).
+
+**3. Adaptadores del juego** (`Assets/Scripts/NarrativeIntegration/`), registrados todos en **`NarrativeGameServices.cs`** (`[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]`; es el único sitio que hay que mirar para saber qué sistema atiende cada puerto): `PartidaNarrativeData` (flags y pizarras sobre `Partida.Preset`), `AudioServiceNarrativeAdapter`, `ScreenNarrativeAdapter`, `LocalizationNarrativeAdapter`, `PlayerNarrativeAdapter` (control e inventario), `NpcNarrativeAdapter` (actores, marcadores y colocación), `DialogueNarrativeAdapter` (diálogo y elecciones), `CameraFocusNarrativeAdapter`, `SpeechBubbleNarrativeAdapter`, `WorldNarrativeSceneHooks` y `QuestServiceAdapter`. El presentador de rótulos lo registra `DramaticTextOverlayUI` al despertar (`DramaticTextOverlayUI.Rotulos.cs`). Los adaptadores no guardan referencias: buscan el singleton en cada llamada, así que da igual el orden de despertar de Start.
+
+**4. Nodos y piezas del juego**, fuera del paquete y con el mismo nombre de clase (los grafos Cap1, Cap2 y Secundary cargan igual): `NarrativeIntegration/Nodes/` — `UnlockAbilitiesNode`, `StartBattleNode`, `StartNpcCombatNode`, `StartTagMinigameNode`, `TutorialPromptNode`, `GuiarJugadorNode`, `WaitItemDeliveryNode`, `PlayCinematicNode`, `DramaticTextNode`, `ShowLorePopupNode`, `UnlockWardrobeItemNode`, `SetTimeOfDayNode`. También del juego: `NarrativeActor`, `SignalEmitter`, `InteractableToNarrativeEvent`, `IPlayerLoadoutState` (en `NarrativeIntegration/`), `PlayerLockService` (`Scripts/Player/`) y las herramientas `NarrativeTestLauncher`, `NarrativeTestPanel` y `CrossSystemNarrativeValidator` (`NarrativeIntegration/Editor/`). Los nodos genéricos (misiones, señales, flags, diálogos, audio, pantalla, cámara, colocar actor…) siguen en `Assets/NarrativeGraph/Runtime/Graph/NodeTypes/`.
+
+**5. Extensiones del editor** (`Assets/NarrativeGraph/Editor/Extensions/NarrativeEditorExtensions.cs`, namespace `NarrativeGraphEditor`): el editor encuentra solas, con `TypeCache`, las clases del juego que heredan o implementan `NarrativeGraphSideTab` (pestaña lateral propia; aquí `NarrativeTestPanel`, «Prueba»), `INarrativeLiveSection` (secciones de la pestaña «En vivo»; aquí grupo, actores y misiones en `SenderoLiveSections.cs`), `INarrativeArrivalPreview` (cómo queda el mundo al llegar a un nodo; aquí `NarrativeTestArrivalPreview`) e `INarrativeProjectCatalog` (misiones, actores, textos y señales que solo el juego sabe leer; aquí `SenderoProjectCatalog`).
+
+**6. Menús del paquete:** `Tools/Narrative Graph/Abrir editor` (Ctrl+Mayús+N), `Tools/Narrative Graph/Monitor de señales`, `Tools/Narrative Graph/Dividir por capítulo...`, `Tools/Narrative Graph/Nuevo grafo` y *Create ▸ Narrative Graph ▸ Grafo*. Del juego, sin cambios: `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)`, `El Sendero/Narrativa/Narrative Timeline` y `El Sendero/Narrativa/Cross-Reference`.
+
+**Retirados** (en `Versiones antiguas/Codigo sin uso (2026-10-29)/`): los ocho nodos obsoletos `DeliverItemProximityNode`, `DeliverQuestCompleteNode`, `BranchBoolNode`, `ActivateGameObjectNode`, `UnlockTriggerNode`, `PlayTimelineNode`, `WaitBattleWinNode` y `OfferQuestNode`; `QuestEventBootstrap` y `NarrativeAutoSetup`.
+
+**Reglas:** un nodo nuevo declara lo que toca en `Describe` y sus avisos en `CollectWarnings`; si necesita algo del juego, lo pide por un puerto (o se añade un puerto nuevo con su adaptador en `NarrativeGameServices`); si es propio de este juego, va en `Scripts/NarrativeIntegration/Nodes/`. Nada de nombres de personajes, capítulos o escenas en `Assets/NarrativeGraph/`.
+
 ### Política formal: convivencia Interactive ↔ Grafo narrativo
 
 El proyecto tiene **dos motores narrativos en paralelo**: `NarrativeGraph`/`NarrativeRunner` y el sistema legacy "Interactive" (`NPCInteractiveNarrativeExecutor` + `NPCInteractiveNarrativeConfig`/`ConditionalNarrative`/`NarrativeCondition`), más `NPCQuestConfig` para diálogo-por-estado-de-quest fuera del grafo. Un intento de unificarlos en un único sistema rompió el juego (Agosto 2026); con el proyecto tan avanzado, **no se intenta fusionarlos**. En su lugar:
 
 - **`NPCInteractiveNarrativeExecutor` queda congelado.** No añadir `NarrativeActionType` nuevos ni NPCs nuevos a su catálogo (`ConditionalNarrative`/`NPCInteractiveNarrativeConfig`).
 - **Todo NPC o quest nueva se construye en `NarrativeGraph`.** Usa los nodos ya existentes (`StartQuestNode`, `CompleteQuestStepsNode`, `PlayDialogueNode`, `WaitCustomEventNode`, etc.). El puente `NPCBrain.HandleInteraction()` ya emite `NPC_INTERACT_{persistenceId}` por `DefaultNarrativeSignals` en cada interacción, así que un grafo puede reaccionar a "hablar con NPC X" sin tocar el executor legacy.
-- **Antes de dar por buena una entrega**, correr `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` (`Assets/NarrativeGraph/Editor/Validation/CrossSystemNarrativeValidator.cs`). Avisa si la misma quest o el mismo evento custom está referenciado a la vez por el grafo y por el sistema Interactive sin estar enlazado — el mismo patrón que causó INC-020 (consumo duplicado de ítems de quest en dos sitios que no se conocían entre sí).
+- **Antes de dar por buena una entrega**, correr `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)` (`Assets/Scripts/NarrativeIntegration/Editor/CrossSystemNarrativeValidator.cs`; es del juego, no del núcleo del grafo). Avisa si la misma quest o el mismo evento custom está referenciado a la vez por el grafo y por el sistema Interactive sin estar enlazado — el mismo patrón que causó INC-020 (consumo duplicado de ítems de quest en dos sitios que no se conocían entre sí).
 - Los NPCs existentes que ya funcionan con `NPCQuestConfig`/`NPCInteractiveNarrativeConfig` **no se migran** salvo que se toquen por otro motivo. No es deuda urgente, es una decisión de arquitectura aceptada.
 
 **Actualización — 12 de septiembre de 2026:** para el detalle de qué componente legacy concreto sustituye cada nodo del grafo (tabla de equivalencias, catálogo completo de los 37 tipos de nodo con los 7 marcados `Obsolete`, y la lista honesta de huecos que aún faltan por construir), ver `claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md` en el Project. Este documento es la referencia viva del día a día; se actualiza a medida que se construyen nodos nuevos, mientras que esta sección solo recoge la política general.
@@ -1057,15 +1188,31 @@ Selector del grupo del panel de estado: bustos de Liam, Will y Estela que asoman
 - **Montaje**, en este orden: *El Sendero ▸ UI ▸ Montar retratos del grupo (INC-719)* → *Hornear retratos del grupo (INC-730)* → *Montar retratos vivos (INC-731)*. Los tres son idempotentes y trabajan con `AssetDatabase`/`EditorSceneManager`.
 - **Colores** de cada personaje: `FichaDePersonaje.ColorDelPersonaje` (alfa 0 = sin configurar).
 
-### CollectiblePopupQueue
+### Avisos en pantalla: `ArbitroDeAvisos` (cola de avisos)
 
-`Assets/Scripts/UI/CollectiblePopupQueue.cs`
+`Assets/Scripts/UI/Avisos/`. Todo aviso que aparece durante el juego implementa **`IAvisoEnPantalla`** (`Canal`, `Prioridad`, `Pasajero`, `AlTenerTurno`, `AlPerderTurno`, `AlDescartar`) y pide turno al árbitro estático **`ArbitroDeAvisos`** (`Pedir`, `Terminar`, `Adelantar`, `SeEstaViendo`). El aviso no conoce a los demás ni sabe si hay un menú o una cinemática.
 
-Gestiona la cola de popups de coleccionables. 
+| Canal (`CanalDeAviso`) | Avisos |
+|---|---|
+| `Cabecera` (arriba, centro) | banner de misión nueva (`QuestStartedBannerUI`) y barra del jefe (`BossHealthBar`), uno detrás de otro |
+| `Lateral` (derecha) | popup de habilidad o hechizo desbloqueado (`AbilityUnlockPopupUI`) |
+| `Objetos` | pila de objetos conseguidos (`CollectiblePopupQueue`) |
+| `Rotulo` (abajo) | mensajes cortos del juego (`HudToastService`, auto-creado; el texto lo dibuja `DramaticTextOverlayUI`) |
 
-**Nota:** el código actual usa `lock` sobre colecciones en código single-threaded. Los locks son innecesarios (no hay threads) y añaden overhead de Monitor. Pueden eliminarse con seguridad.
+- **En cada canal se ve uno:** el de prioridad más alta y, a igualdad, el que pidió antes. Uno más importante aparta al que se veía, que vuelve cuando queda libre; `Adelantar` despide a los pasajeros en vez de hacerlos volver fuera de contexto. Avisos de canales distintos conviven.
+- **Silencio:** mientras hay un menú abierto (`MenuManager`) o algo tapa la pantalla (cinemática, intro de jefe, texto dramático: el árbitro se apunta en nombre de todos al registro `OcultablesDeCinematica`), nadie tiene turno; los avisos esperan con la cuenta atrás parada y salen después. `Silenciar(quien)`/`Reanudar(quien)` para otros casos. Así ningún aviso se pierde por estar tapado.
+- **Canales cerrados:** `CerrarCanal(canal, quien)` / `AbrirCanal` / `CanalAbierto` son reglas del juego del tipo «lo ganado en batalla no saca aviso, lo cuenta el informe de victoria»; lo comprueba quien recibe lo que hay que avisar (`CollectiblePopupQueue` descarta lo que llega con `Objetos` cerrado).
+- **Regla:** un aviso nuevo implementa `IAvisoEnPantalla` y pasa por el árbitro; no escucha `MenuManager` ni las cinemáticas por su cuenta.
 
-`Canvas.ForceUpdateCanvases()` en `PlayLifecycle` fuerza rebuild de todos los canvases activos. Reemplazar por `LayoutRebuilder.ForceRebuildLayoutImmediate(parentRect)`.
+### Frases en pantalla: `PresentadorDeLinea`
+
+`Assets/Scripts/Dialogue/PresentadorDeLinea.cs` (estático) es el camino único por el que se dice una frase en el bocadillo o el subtítulo (`SpeechBubbleUI`): resuelve la clave de localización, elige el estilo, enseña el texto y suelta su voz (`VoiceLines`), de modo que todas se ven y se oyen igual.
+
+- **`Decir(in FraseADecir)`** → `LineaDicha`: la frase completa (clave, texto por defecto, ancla, duración —nunca menos que su lectura ni que su voz más `MargenTrasLaVoz`—, presentación, nombre y color del hablante, fijo en pantalla, sin voz…). Es lo que usa casi todo el mundo.
+- **`Mostrar` + `SonarLaVoz`** por separado, para quien ya pagina y temporiza por su cuenta (beats de diálogo, guion horneado); `Texto`, `NombreDelHablante`, `Voz`, `CallarLaVoz`, `TiempoDeLectura`, `Esconder(turno)`, `SaltarLaActual`, `TurnoActual`, `HayAlgoEnPantalla`.
+- **Lo usan:** `DialogueBeats` (`SayBeat`) y `ReproductorDeGuion` de las cinemáticas, los nodos del grafo por `SpeechBubbleNarrativeAdapter` (bocadillo) y `GuiarJugadorNode`, `CharlaEnBocadillos` y `ComentariosEnReposo`.
+- `PresentacionDeLinea` (`Sequences/PresentacionDeLinea.cs`) es el estilo de una frase (los tres de la UI más «heredar de la secuencia»); la conversión al estilo de la UI vive solo en `PresentacionDeLinea.Resolver`.
+- **Regla:** una frase nueva en pantalla pasa por `PresentadorDeLinea`; nadie llama a `SpeechBubbleUI.Show` por su cuenta. Quedan llamadas directas por pasar: `Bocadillos.Decir` (batalla final y `NivelEscapeSendero`), `GuiaDeCombate`, `FinalDelConducto`, `SenalDeCompra`, `SavePointTeleportTrigger` y `CinematicSequencerBase` (este, con la fase de cinemáticas pendiente, § 27).
 
 ### LanguageSelectPanel (selector de idioma de primer arranque)
 
@@ -1172,7 +1319,7 @@ comentarios, documentación y mensajes de commit **en español**.
   if (vfx != null) vfx.localScale = Vector3.one * radio;
   ```
   Migrado ya en: `MagicProjectil.cs` (impactVFX/despawnVFX), `GolemBossAI.cs` (punchImpactVFX/shockwaveVFX/landingDustVFX — resueltos los 3 TODOs de pooling en la fase 3), `SlowMotionFireProjectile.cs`, `BattleOrb.cs`, `StarAwakeningSequencer.cs`, `DuoSpecialAttackSystem.cs` (vfxPrefab del ataque especial dúo), `NPCCombatLifecycleHandler.cs` (Agosto 2026 — `deathVFXPrefab`/`disappearVFXPrefab`/`disappearOnArrivalVFX`, los 7 sitios que hacían `Instantiate` suelto sin destruir nunca la instancia; era la causa de los anillos de VFX de muerte que quedaban flotando en el suelo indefinidamente tras terminar el combate, ver INC nuevo).
-  **Pendiente de migrar** (mismo patrón `Instantiate`+`Destroy` o `Instantiate` suelto, candidatos directos): VFX de impacto/muerte en `ImpDemonAI.cs`, `EnemyProjectile.cs`, `LevitationTarget.cs`, `Damageable.cs`, `Burnable.cs`, `ChestInteractable.cs`, `WorldPickup.cs`, `PressurePlate.cs`, `UnlockTrigger.cs`. Migrar con el mismo patrón de arriba cuando se toquen esos archivos.
+  También van por el pool los VFX de impacto/muerte de `ImpDemonAI`, `EnemyProjectile`, `Damageable` y `ChestInteractable`; los de `Burnable`, `PressurePlate` (antes se acumulaban), `PlatformElevator` y el impacto de `LevitationTarget`; y los rayos de tormenta y el aviso del rayo peligroso de `DayNightCycle` (§ 16). Son instancias persistentes a propósito (no un solo uso): el aura de furia de `ImpDemonAI` y el efecto de levitación mientras dura. **Pendiente de migrar:** el VFX de recogida de `WorldPickup` (`Instantiate` suelto).
 - Los proyectiles en sí (el `GameObject` que vuela, no solo su VFX de impacto) todavía usan `Instantiate/Destroy` directo (`MagicProjectileSpawner`, `ImpDemonAI`, `NPCCombatBrain`, `AllyCombatState`, `GolemBossAI` rocas). Pendiente: requiere pool con reset de estado (velocidad, target, `_ended`, buffers) — más delicado que un VFX y no migrado todavía.
 - UI lists (ShopUI, QuestLogListUI, PlayerAbilitiesUI) que hacen Destroy+Instantiate en cada refresh deben migrar a pattern de reutilización: actualizar los elementos existentes, ocultar los sobrantes.
 - Prefabs de escudo en `PlayerShieldController`: pre-instanciar en `Awake` y usar `SetActive` en lugar de `Instantiate/Destroy`.
@@ -1307,7 +1454,7 @@ Auditoría de conflictos entre Quests / grafo narrativo / FSM de NPCs, más limp
 
 - **INC-148 (1 sept 2026) — la animación de vuelo "se quita y se pone" en bucle, tanto del jugador como de los compañeros de party que vuelan con él — `PlayerFlyingController.cs` / `FollowPlayerState.cs`.** Reportado por Raúl en el mismo mensaje que INC-096/INC-097. **Causa raíz:** `PlayerFlyingController.Update()` llama a `IsGrounded()` (un `Physics.CheckCapsule` contra el propio collider del jugador, con `GroundCheckBuffer = 0.2f`) en cada frame mientras `_isFlying` es `true`, y en cuanto da `true` una sola vez llama a `ExitFlight()` de inmediato — sin ningún margen. Volar a baja altura o rozar el terreno es parte normal del mecanismo (picados con `fly_dive`, vuelo rasante), así que un único frame de solape con el suelo bastaba para disparar una salida de vuelo real: `ExitFlight()` desactiva el `vThirdPersonController`, restaura la gravedad del `Rigidbody` y hace `PlayerActionManager.PopMode(ActionMode.Flying)` — el jugador empieza a caer aunque siga con intención de volar, y para seguir volando tiene que volver a entrar (doble salto) — de ahí el "se quita y se pone" en bucle que describe Raúl. Esto explica también por qué los compañeros de party parpadean igual: `FollowPlayerState.OnUpdate()` decide cada frame si necesita seguimiento especial de vuelo leyendo `_playerActionManager.Top == ActionMode.Flying`, así que cada ciclo de salida/reentrada de vuelo del jugador dispara `ExitSpecialFollow()`/`OnSpecialModeEnter()` en cadena sobre ellos también, en sincronía exacta con el parpadeo del propio jugador. **Arreglado:** nuevo campo `_groundedWhileFlyingTimer` y constante `ExitFlightGroundedGrace = 0.12f` en `PlayerFlyingController` — `IsGrounded()` debe dar `true` de forma sostenida durante ese margen (no solo un frame) antes de aceptarlo como aterrizaje real y llamar a `ExitFlight()`; un roce de menos de 0.12s se ignora y el vuelo continúa con normalidad. Mismo patrón de histéresis que ya usa el proyecto para filtrar detecciones de un solo frame (`FollowPlayerState._isFollowingSticky`, INC-097). No se ha tocado `CanEnterFlight()` (usa su propio `IsGrounded()` para decidir si se puede ENTRAR en vuelo, un caso distinto sin el mismo problema de falsos positivos en bucle). **Pendiente de confirmar por Raúl en juego:** volar a baja altura/rozando el suelo y en picados cortos sin que la animación se corte sola, con y sin compañeros de party volando detrás.
 
-**Herramienta nueva:** `Assets/NarrativeGraph/Editor/Validation/CrossSystemNarrativeValidator.cs` — menú `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)`. Recorre todos los `NarrativeGraph`, `NPCQuestConfig` y `NPCInteractiveNarrativeConfig` del proyecto vía `AssetDatabase` y avisa (no bloquea, no modifica nada) cuando: la misma quest está referenciada a la vez por un nodo del grafo (`StartQuestNode`/`CompleteQuestStepsNode`/etc.) y por `NPCQuestConfig.questChain` o `NarrativeCondition.targetQuest`; o el mismo evento custom es esperado por un `WaitCustomEventNode` y también usado por una `NarrativeCondition`/`ConditionalNarrative` del sistema Interactive. Es la red de seguridad para no repetir el patrón de INC-020 (estado duplicado sin vínculo entre los dos sistemas). Pensada para correr manualmente antes de una entrega, no en cada carga de escena.
+**Herramienta nueva:** `Assets/NarrativeGraph/Editor/Validation/CrossSystemNarrativeValidator.cs` (hoy en `Assets/Scripts/NarrativeIntegration/Editor/`) — menú `El Sendero/Narrativa/Validar Interactive vs Grafo (proyecto completo)`. Recorre todos los `NarrativeGraph`, `NPCQuestConfig` y `NPCInteractiveNarrativeConfig` del proyecto vía `AssetDatabase` y avisa (no bloquea, no modifica nada) cuando: la misma quest está referenciada a la vez por un nodo del grafo (`StartQuestNode`/`CompleteQuestStepsNode`/etc.) y por `NPCQuestConfig.questChain` o `NarrativeCondition.targetQuest`; o el mismo evento custom es esperado por un `WaitCustomEventNode` y también usado por una `NarrativeCondition`/`ConditionalNarrative` del sistema Interactive. Es la red de seguridad para no repetir el patrón de INC-020 (estado duplicado sin vínculo entre los dos sistemas). Pensada para correr manualmente antes de una entrega, no en cada carga de escena.
 
 **Política formal (ver también § 10 — Política formal: convivencia Interactive ↔ Grafo narrativo):** los dos motores narrativos (`NarrativeGraph` y `NPCInteractiveNarrativeExecutor`) siguen coexistiendo a propósito — un intento previo de unificarlos rompió el juego y el proyecto está demasiado avanzado para asumir ese riesgo ahora. `NPCInteractiveNarrativeExecutor` queda congelado: no se le añaden `NarrativeActionType` nuevos ni NPCs nuevos a su catálogo. Todo NPC o quest nueva se construye en `NarrativeGraph`. Antes de dar por buena una entrega, correr `El Sendero/Narrativa/Validar Interactive vs Grafo`.
 
@@ -1363,11 +1510,11 @@ Auditoría de conflictos entre Quests / grafo narrativo / FSM de NPCs, más limp
 
 ### Música de batalla que no vuelve al ambiente
 
-El stack de música de `AudioService` debe equilibrarse: cada `BeginBattleMusic` debe tener su correspondiente `OnBattleWonRestoreMusic` o `OnBattleAbortedRestoreMusic`. Si el stack se desbalancea, la música de ambiente no vuelve. Verificar que `NPCCombatLifecycleHandler` emite el evento correcto en todos los caminos de finalización de combate (victoria, huida, transición de escena).
+El stack de música de `AudioService` debe equilibrarse: cada combate que abre su música (señal de inicio de `AudioGraphProfile.battles` o `BeginBattleById`) tiene que cerrarse (victoria, `EndBattleById` o `RestoreAfterBattle`), y al cerrarse pide la música del lugar (`PedirMusicaDelLugar`). Si el stack se desbalancea, la música de ambiente no vuelve; `ForceEndBattleState()` es la salida de emergencia. Verificar que `NPCCombatLifecycleHandler` emite el evento correcto en todos los caminos de finalización de combate (victoria, huida, transición de escena).
 
 ### SFX que dejan de sonar / pool de audio agotado
 
-Causa del bug C1 (StopAllCoroutines en PlayMusic). Hasta que se corrija, evitar cambios de música mientras haya muchos SFX activos. En builds de desarrollo, el pool hace log cuando se expande dinámicamente — si aparecen logs `[AudioService] SFX2D_dyn creado` con frecuencia, el pool se está agotando.
+`AudioService` ya no llama a `StopAllCoroutines` (§ 6), así que un cambio de música no deja fuentes sin devolver. Si aun así faltan fuentes: en builds de desarrollo, el pool hace log cuando se expande dinámicamente — si aparecen logs `[AudioService] SFX2D_dyn creado` con frecuencia, el pool se está agotando.
 
 ### Preset con datos de un estado incorrecto del juego
 
@@ -1512,7 +1659,7 @@ Hecho, verificado por referencias cruzadas en el código (no solo propuesto):
 - **Búsqueda por texto**: añadida a `NarrativeGraphWindow` (caja de búsqueda + Enter/Shift+Enter para saltar entre coincidencias, resalta el nodo con borde dorado usando `FrameSelection()`).
 - **Fase 1**: `CompleteQuestStepsNode` y `StartBattleNode` ya no llaman a `QuestManager.Instance` ni usan reflection — todo pasa por `ctx.Signals` (`INarrativeSignals.CompleteQuestStepByConditionId`, nuevo). `StartBattleNode` perdió ~150 líneas de reflection muerta contra un `MissionManager` que no existe en el proyecto (confirmado por búsqueda global). `QuestServiceAdapter.Offer()`/`Complete()` pasaron de `GetMethod(...).Invoke(...)` a llamadas tipadas directas.
 - **Fase 2**: `DefaultNarrativeSignals` tiene ahora un registro durable `_everRaised`/`HasEverRaised(key)` (no se vacía al consumirse, a diferencia de `_pending`/`_raised`, que siguen intactos) — `NarrativeCondition` lo usa como respaldo de su caché local de "evento custom recibido", cerrando el caso donde una suscripción tardía perdía el evento en silencio. `IsPartyMemberMatch`/`ExtractNarrativeBaseName`, que estaban copiados letra por letra en `QuestManager.cs` y `NPCQuestConfig.cs`, ahora viven en `Assets/Scripts/Quests/QuestMatchingUtils.cs` y ambos delegan ahí. Se encontró y cerró una variante real (no hipotética) del bug INC-020: `NPCQuestConfig.HandleQuestState()` consumía los ítems requeridos directamente y sin guardia de idempotencia, y a continuación `FinishQuest()` llamaba a `QuestManager.CompleteQuest()`, que los consume otra vez (esta vez con guardia, pero tarde). Se quitaron las tres llamadas duplicadas y el método que reimplementaba el consumo.
-- **Fase 4**: nueva herramienta de editor `Assets/NarrativeGraph/Editor/ChapterSplitWindow.cs` (`El Sendero/Narrativa/Dividir por Capítulo...`). `MainNarrative.asset` ya tiene 88 nodos reales etiquetados en 6 capítulos (Cap. 1–6), así que no hay que inventar dónde cortar. La herramienta extrae todos los nodos de un capítulo elegido a un `NarrativeGraph` nuevo, sustituye las aristas que cruzan la frontera por pares `RaiseCustomEventNode`/`WaitCustomEventNode` (en ambas direcciones), intenta asignar el `StartNode` del capítulo nuevo, corre `NarrativeGraphValidator` sobre los dos grafos resultantes y muestra un reporte. No toca el YAML a mano — opera en memoria sobre `NarrativeGraph.nodes` y deja que Unity serialice, igual que hace el propio editor de grafo. Deliberadamente NO registra el nuevo grafo como `GraphSlot` en el `NarrativeGraphHub` de `Start.unity` (eso requiere la escena abierta y una decisión de nombre/orden) ni asigna el Start cuando hay más de un punto de entrada — ambas cosas quedan como paso manual señalado en el reporte de la propia herramienta. Recomendación: haced commit antes de correrla (la propia herramienta lo pide con un diálogo de confirmación) y revisad el resultado visualmente antes de dar la separación por buena.
+- **Fase 4**: nueva herramienta de editor `Assets/NarrativeGraph/Editor/ChapterSplitWindow.cs` (`El Sendero/Narrativa/Dividir por Capítulo...`; hoy `Tools/Narrative Graph/Dividir por capítulo...`). `MainNarrative.asset` ya tiene 88 nodos reales etiquetados en 6 capítulos (Cap. 1–6), así que no hay que inventar dónde cortar. La herramienta extrae todos los nodos de un capítulo elegido a un `NarrativeGraph` nuevo, sustituye las aristas que cruzan la frontera por pares `RaiseCustomEventNode`/`WaitCustomEventNode` (en ambas direcciones), intenta asignar el `StartNode` del capítulo nuevo, corre `NarrativeGraphValidator` sobre los dos grafos resultantes y muestra un reporte. No toca el YAML a mano — opera en memoria sobre `NarrativeGraph.nodes` y deja que Unity serialice, igual que hace el propio editor de grafo. Deliberadamente NO registra el nuevo grafo como `GraphSlot` en el `NarrativeGraphHub` de `Start.unity` (eso requiere la escena abierta y una decisión de nombre/orden) ni asigna el Start cuando hay más de un punto de entrada — ambas cosas quedan como paso manual señalado en el reporte de la propia herramienta. Recomendación: haced commit antes de correrla (la propia herramienta lo pide con un diálogo de confirmación) y revisad el resultado visualmente antes de dar la separación por buena.
 - **Fase 3 — hallazgo importante que cambia el plan**: añadí un puente aditivo y seguro (`NPCBrain.HandleInteraction()` ahora emite siempre `NPC_INTERACT_{persistenceId}` vía `DefaultNarrativeSignals`, sin condicionar ni cambiar el comportamiento existente) — es el mecanismo que le faltaba al grafo para poder reaccionar a "el jugador habló con el NPC X" sin pasar por `NPCInteractiveNarrativeExecutor`. Pero al buscar un NPC piloto sencillo para migrar de verdad (revisé los 12 `NPCInteractiveNarrativeConfig` del proyecto; el más simple con contenido real es `Victoria`, 2 líneas de diálogo condicionadas al estado de una quest, sin combate ni movimiento) me encontré con esto: el catálogo de nodos actual **no tiene forma de expresar "diálogo distinto según el estado de la quest, re-evaluado cada vez que hablas con el NPC"** — que es exactamente el patrón de `ConditionalNarrative`/`NPCInteractiveNarrativeExecutor.TryExecuteNarrative()` (re-chequea condiciones en cada interacción y elige la primera que aplica). El grafo es lineal/uno-de-una-vez por diseño; no hay un nodo tipo "branch por estado de quest" (`BranchBoolNode` existe pero está roto — según el análisis anterior, siempre avanza sin mirar el valor) ni un mecanismo de "esperar la próxima interacción y volver a evaluar" con bucle. Conclusión honesta: fusionar `NPCInteractiveNarrativeExecutor` en el grafo no es solo mover datos NPC a NPC como decía el plan original — primero hace falta construir 1-2 tipos de nodo nuevos (`BranchOnQuestStateNode` y algo como `WaitForNPCInteractionNode` con reentrada) antes de que la primera migración real tenga sentido. No lo he hecho a ciegas porque diseñar y verificar un nodo con lógica de bucle sin poder abrir el Editor y probarlo en juego es justo el tipo de cambio que no debería intentar sin que lo veas tú primero. Recomendación: cuando quieras seguir con esto, empezamos diseñando esos 1-2 nodos juntos (con Play Mode a mano para probarlos) antes de tocar el asset de ningún NPC real.
 
 **Nota de corrección — 12 de septiembre de 2026:** los dos nodos que este análisis de julio daba por no construidos ya existen. `BranchOnQuestStateNode` se construyó como `BranchQuestStateNode` y el "esperar la próxima interacción con reentrada" se construyó como `WaitNpcInteractionNode` (ambos, 11 de septiembre de 2026) — confirmado leyendo el código, no por lo que dice esta sección. `WaitNpcInteractionNode` recibió además soporte para mostrar el icono de quest (cabeza + minimapa) el 12 de septiembre, vía `NarrativeActor.ShowQuestIcon`/`HideQuestIcon` (INC-196). El diagnóstico de fondo de este apartado — que el catálogo de julio no permitía expresar "diálogo/estado re-evaluado en cada interacción" — ya no aplica: no se leáis como plan pendiente. Detalle actualizado en `claude/catalogo-sistemas-legacy-vs-grafo-nuevo-2026-09-12.md`.
@@ -1613,6 +1760,13 @@ Cada una es una herramienta sólida y bien escrita — el problema no es la cali
 > **Fix aplicado:** añadida la misma llamada a `ReturnAnimatorToLocomotion()` en `ReturnToGroundAndUnlock()`, justo después de `RestoreCC()` y antes de `PopMode()` — mismo orden que ya usa `ForceStopActivityImmediate()`. Para actividades con exit state propio (`Sit*`), `ReturnToGroundAndUnlock()` se llama *después* de que `PlayExitAndUnlock()` ya reprodujo el clip de salida completo, así que esta llamada añadida ahí es un refuerzo inofensivo (asegura que se acaba en locomoción pase lo que pase), no un cambio de comportamiento. Archivo tocado: `Assets/Scripts/Player/PlayerAmbientActivityHandler.cs`.
 >
 > **Pendiente de confirmar en juego** — probar de nuevo la cama y comprobar que, al levantarse, Will vuelve a la animación de andar/idle normal en vez de quedarse con la pose de dormir puesta.
+
+### 10. Estado actual de la separación núcleo / juego (octubre de 2026)
+
+De los obstáculos del apartado 5, el estado vigente (detalle en § 10 — El grafo como paquete, y § 27):
+
+- **Hecho:** el núcleo (`Assets/NarrativeGraph/`) ya no conoce clases del juego; los nodos piden por puertos a `NarrativeServices` y el juego registra sus adaptadores en `Assets/Scripts/NarrativeIntegration/NarrativeGameServices.cs`. Los doce nodos propios de El Sendero (batalla, minijuego, cinemática, guía, tutoriales, hechizos, vestuario, lore, hora del día…) viven en `Scripts/NarrativeIntegration/Nodes/`. `PlayerLockService` está en `Scripts/Player/`; `NarrativeActor`, `SignalEmitter`, `InteractableToNarrativeEvent` e `IPlayerLoadoutState`, en `Scripts/NarrativeIntegration/`; las herramientas propias (lanzador y panel de pruebas, validador cruzado), en `Scripts/NarrativeIntegration/Editor/`. El editor no tiene `switch` por tipo de nodo (`NarrativeNode.Describe`) y el juego se le enchufa con extensiones descubiertas por `TypeCache`. Los ocho nodos obsoletos, `NarrativeAutoSetup` (y su reflexión sobre `NarrativeRunner`) y `QuestEventBootstrap` están archivados. Los menús del paquete están en `Tools/Narrative Graph/`.
+- **Queda:** extraerlo como paquete UPM local, una migración versionada de esquema, la documentación y el paquete de ejemplo para la Asset Store.
 
 ---
 
@@ -1937,7 +2091,7 @@ Todo lee `DayNightCycle.NocheActual` (el `PesoDeNoche` del ciclo cargado, 0 si n
 - **Coste:** ~50 luces puntuales sin sombra (Forward+ en PC; en Mobile, Forward con 4 luces por objeto) y una zona de partículas activa por cada bosque cercano.
 ### Clima vigente: cielo por franja, nubosidad, astros, nieve y viento (INC-685, INC-686, INC-690)
 
-`DayNightCycle` es el único sistema de clima. Un sorteo cada `weatherCheckIntervalRange` prueba, en este orden y excluyentes: tormenta, lluvia, nieve, viento y niebla. Las partículas cuelgan de `AnclaDeClima` en cinemáticas o del jugador y se apagan y enmudecen en interiores. `WeatherBeat` permite lanzar los tipos de clima desde una secuencia.
+`DayNightCycle` es el único sistema de clima y el único que sortea. Un sorteo cada `weatherCheckIntervalRange` prueba, en este orden y excluyentes: tormenta (`thunderstormChancePerCheck`), lluvia, nieve, viento y niebla. La probabilidad de lluvia es `rainChancePerCheck + cobertura × lluviaExtraConCieloCubierto`: la cobertura de nubes sueltas la informa `AmbientCloudDirector` con `InformarCoberturaDeNubes` (más nubes, más probabilidad de lluvia), pero no decide nada. Las partículas cuelgan de `AnclaDeClima` en cinemáticas o del jugador y se apagan y enmudecen en interiores. `WeatherBeat` permite lanzar los tipos de clima desde una secuencia.
 
 - **Cielo por franja:** `TimeOfDaySettings.skybox` contiene un material `El Sendero/Cielo` para Amanecer, Día, Atardecer o Noche. El shader procedural usa colores y floats, sin texturas, en un pase compatible con Mobile. Pinta degradado, bruma, resplandor, nubes de cuatro octavas y discos HDR de sol y luna con ocultación por nubes; sus globales de astros mantienen visibilidad cero hasta que otro sistema las configura. Los assets de Quibli conservan sus otros usos; el ciclo no escribe `_Overcast`.
 - **Fundido:** una instancia `_runtimeSkybox` y una copia reutilizable `_cieloDeSalida` permiten `Material.Lerp` con SmoothStep durante `duracionDelFundidoDelCielo` (45 s), independiente de la luz (`transitionDuration`). Una interrupción parte del estado actual. Las aplicaciones inmediatas copian el destino. El fundido continúa dentro de interiores; al salir se restaura la referencia. `DynamicGI.UpdateEnvironment` se solicita al completar el cambio, nunca durante cada paso. Ambas copias se destruyen con el ciclo. La previsualización de Editor usa el cielo de la franja.
@@ -1945,14 +2099,15 @@ Todo lee `DayNightCycle.NocheActual` (el `PesoDeNoche` del ciclo cargado, 0 si n
 - **Frente y horizonte:** la cobertura procedural se apila por perspectiva hasta el horizonte y tiñe también el suelo del cielo. Cobertura 1 mantiene variación suave y móvil. El frente llega desde `DireccionDelViento` (sorteada si no hay viento), crece durante la primera mitad de la formación y desaparece al completarse. La velocidad global aumenta con `FuerzaDelViento` y `PesoDeTormenta`.
 - **Color meteorológico:** lluvia gris azulado, tormenta gris pizarra y nieve gris perla se mezclan con `PesoDeTormenta` y `PesoDeNieve`, suavizados. El resultado se multiplica por la luminancia de `_ColorHorizonte` del cielo en uso y con un mínimo de 0,18 y por un factor nocturno que llega a 0,75 (las nubes de noche se leen, no salen negras). La sombra usa el 65 % de ese color. `LateUpdate` escribe siempre `_Nubosidad`, `_ColorDeNubesDeClima`, `_ColorDeNubesDeClimaEnSombra` y `_AvanceDelFrente` después del fundido, sin nuevas asignaciones por frame.
 - **Luz y niebla:** se calculan desde las bases del periodo, sin componer valores entre frames. `PesoDePrecipitacion` (0–1, suavizado como `Nublado`, 1 con lluvia, tormenta o nieve) lleva la atenuación fuerte de la luz, los multiplicadores de densidad de lluvia y nieve y el giro del color de la niebla hacia el horizonte encapotado, para que terreno lejano y cielo se fundan. `Nublado` solo resta hasta un 10 % de luz: viento y niebla ocasional nublan el cielo sin oscurecer como la lluvia. En interiores se mantiene el control del entorno.
-- **Nubes y estrellas:** las nubes de clima las pinta solo el cielo. Las nubes Quibli de buen tiempo que cruzan el cielo (`AmbientCloudDirector` + `AmbientCloudDrifter`) se pausan con `HayNubesDePrecipitacion`, vuelven con `CloudsClearing` y solo inician lluvia por su cuenta si `PuedeSortearClima`. El techo 3D de tormenta (`CloudCoverSpawner`) se retiró en INC-695. Estrellas y constelaciones multiplican su alfa por `1 - Nublado`.
+- **Nubes y estrellas:** las nubes de clima las pinta solo el cielo. Las nubes Quibli de buen tiempo que cruzan el cielo (`AmbientCloudDirector` + `AmbientCloudDrifter`) se pausan con `HayNubesDePrecipitacion` y vuelven con `CloudsClearing`; nunca inician lluvia por su cuenta: solo informan de su cobertura al sorteo de `DayNightCycle`. El techo 3D de tormenta (`CloudCoverSpawner`) se retiró en INC-695. Estrellas y constelaciones multiplican su alfa por `1 - Nublado`.
 - **Sol y luna (`HoraDelDia`):** cada franja ocupa un tramo de reloj fijo (Amanecer 6–9, Día 9–18, Atardecer 18–20,5, Noche 20,5–6) y la hora avanza con `TimeProgress`; un salto explícito (`SetTimeOfDay`) entra en la franja al 35 %. El sol sale a las 6 por `rumboDelAmanecer`, culmina a `alturaMaximaDelSol` (55°) y se pone a las 20 por el lado opuesto; la luna sale a las 20 y se pone a las 6 (`alturaMaximaDeLaLuna`, 50°). `DireccionDelSol`/`DireccionDeLaLuna` son las reales. La luz direccional sigue al astro activo (mezcla por `PesoDeNoche`) con la elevación recortada a `alturaMinimaDeLaLuz` (18°) para contener las sombras, y baja hasta un 40 % en el relevo sol→luna. `SolForzado` sigue mandando sobre la luz y el disco en cinemáticas.
 - **Astros en el cielo:** `El Sendero/Cielo` dibuja el sol (núcleo HDR, corona y ocho rayos finos que giran despacio; naranja pegado al horizonte) y la luna (cráteres procedurales, limbo y halo plateado-dorado), siempre detrás del relieve y tapados píxel a píxel por las nubes. `SolYLunaEnElCielo` solo publica las globales `_CieloDireccion*`, `_CieloColor*` (a = visibilidad, fundida bajo el horizonte) y `_CieloTamano*`; conserva `LejosActual` y `CamaraActual()` para las herramientas de secuencias.
 - **Estrellas fugaces (`EstrellasFugaces`):** salen delante de la cámara (±60° de su rumbo), a 10–35° de altura, cada 8–25 s desde noche 0,75, con estela HDR y una cabeza corta que destella; solo con `PesoDePrecipitacion` < 0,1 y `Nublado` < 0,35. El menú de clima actualiza los valores antiguos serializados (12–40 s, 30–65°) sin pisar ajustes propios.
 - **Montaje:** *El Sendero/Mundo: completar el clima de las escenas abiertas* crea solo los materiales ausentes en `Assets/Art/Cielo/Cielo_{Amanecer,Dia,Atardecer,Noche}.mat`, asigna cada franja mediante `SerializedObject` a todos los ciclos abiertos y guarda assets y escenas. Es idempotente y conserva los valores de materiales existentes. También completa la lluvia y quita del objeto del ciclo los componentes sin script.
 - **Nieve y viento:** copos de `snowPrefab` o `VfxDeClima.CrearNieve`; lluvia y nieve no se solapan. El viento sortea dirección y suaviza fuerza; genera rachas y hojas si no hay prefab. `VfxDeClima.Iluminar` tiñe las partículas con la luz del periodo.
 - **El jugador y el clima (`ClimaSobreElJugador`, INC-699):** con viento la velocidad máxima baja a `windVelocidadConViento` (2,6 m/s a toda fuerza) y de cara al viento hasta `windVelocidadContra`; quieto lo arrastra (`windArrastreQuieto`). Quieto o andando se tapa la cara en bucle con el estado `UpperBody.ClimaTaparse` (clip de Fear01 sin salida; lo crea el menú de clima; sin él cae a Fear01, que dura un momento). Con lluvia o nieve cayendo, al aire libre, quieto y con el torso libre, encoge los hombros, pega los brazos, agacha la cabeza y tirita: postura procedural sobre los huesos humanoides en `DayNightCycle.LateUpdate` (`AplicarFrio`), sin animación propia porque el proyecto no tiene ninguna de frío; andando no cambia nada. Solo con el jugador libre (suelo, modo Default, sin `PlayerLockService`).
-- **Rayos:** en juego, los truenos se toman de `truenosDeTormenta`; en cinemáticas se usa `ClaveDeTrueno`.
+- **Rayos:** en juego, los truenos se toman de `truenosDeTormenta`; en cinemáticas se usa `ClaveDeTrueno`. El trazo de cada rayo de tormenta sale por `VfxPoolService` como un `ProceduralLightningBoltVfx` (`Lanzar(desde, hasta, ancho, color)`: núcleo, halo, una rama y parpadeo). `prefabDelRayo` es opcional; sin él se usa una plantilla creada en código (`ProceduralLightningBoltVfx.CrearPlantilla`), compartida entre escenas para que el pool sea siempre el mismo. `DayNightCycle` no usa `AssetDatabase`.
+- **Rayo peligroso (con daño):** durante la tormenta, cada `dangerLightningIntervalRange` cae un rayo dirigido al suelo cerca del jugador, **siempre con aviso**: antes sale en el suelo `dangerLightningTelegraphPrefab` (RainShadowIndicator, por el pool) durante `dangerLightningTelegraphDuration` y suena `avisoDeRayoSfxKey`; luego daña en `dangerLightningRadius`. Sin prefab de aviso no hay rayo peligroso (aviso en consola): nunca cae un rayo con daño sin avisar. Asignado en CandyLand, MainWorld, Lab y Sendero_PruebaWill.
 - **Sorteo y LAB (INC-691):** `SorteoAutomatico` (`sortearClima`) apaga el sorteo propio sin tocar `SorteoDeClimaEnPausa`, que es de las cinemáticas; `LluviaPedida`/`NievePedida` cuentan también el cielo que aún se está cubriendo. El LAB lleva una copia del objeto del ciclo de MainWorld (`CombatLabBuilder.Clima.cs`, raíz `LAB_CLIMA`) y la pestaña «Clima» de su panel (`ClimaDelLab`) pone y quita hora y climas sobre `DayNightCycle.Instance`.
 
 ## 17. Diseño: Refugio de NPCs bajo la lluvia + Relaciones sociales dinámicas
@@ -2309,6 +2464,8 @@ El proyecto ya tiene un patrón claro y probado para "estado runtime de NPCs que
 2. `PlayerPresetSO.cs` — su propio `NpcPosEntry` espejo, que es el estado "vivo" durante la sesión.
 3. `GameBootProfile.cs` — copia entre ambos en `SetRuntimePresetFromSave()` (~línea 214-222), en la construcción del save (~línea 364-370) y en la ruta de test mode (~línea 405-420).
 
+> **Estado vigente:** esa copia ya no está en `GameBootProfile` (hoy solo datos): vive en `Partida` (§ 9): `Partida.Datos.cs` (guardado ↔ preset), `Partida.Volcado.cs` (estado vivo → preset) y `Partida.Guardado.cs` (preset → sistemas al cargar). `npcRelationships` ya va por esos tres puntos.
+
 Para relaciones, replicar exactamente esa estructura:
 
 1. **`PlayerSaveData.cs`** — nuevo struct y lista:
@@ -2493,6 +2650,8 @@ de modos o en un sistema aparte que se dispare cuando el modo activo es el de ex
 > documentar la dependencia, y era él mismo la causa del bug. Ninguno de los cuatro prefabs tenía el
 > componente grabado en disco (solo vivía en memoria durante Play Mode), así que no hizo falta tocar
 > YAML de nuevo. Detalle completo: `TRACKER.md` INC-151.
+
+> **Estado vigente:** los cuatro componentes son hoy subclases finas de `ComentariosEnReposo`, que tiene toda la lógica y lleva los numeritos y reacciones como datos; el evento `EstelaSatDownHungry` y `RequestStandUp()` ya no existen (la reacción de Liam es una `ReaccionEnReposo` sobre la etiqueta del numerito de Estela). Ver § 3 — Comentarios en reposo del grupo.
 
 **D.3 — Reacciones ambientales puntuales al pasar cerca de un NPC**
 Caminando por el pueblo, un NPC suelta un comentario al azar y Estela (u otro compañero) le
@@ -2991,6 +3150,8 @@ Todo indica que este archivo es un intento de centralizar el movimiento que se e
 #### 3. Nodos del grafo narrativo marcados `[Obsolete]` — la higiene ya existe, un paso más la completa
 
 `Assets/NarrativeGraph/Runtime/Graph/NodeTypes/`: `DeliverItemProximityNode`, `DeliverQuestCompleteNode`, `BranchBoolNode`, `ActivateGameObjectNode`, `UnlockTriggerNode`, `PlayTimelineNode`, `WaitBattleWinNode`, `OfferQuestNode`.
+
+> **Estado vigente:** los ocho están archivados en `Versiones antiguas/Codigo sin uso (2026-10-29)/` (ver § 27).
 
 Esto es al revés de un problema: es la parte del proyecto donde la deprecación está **mejor hecha**. Cada uno tiene el atributo `[Obsolete("...")]` con una explicación de qué usar en su lugar, y `NarrativeGraphWindow` los filtra del menú "Añadir Nodo" para que nadie los arrastre por error a un grafo nuevo. `BranchBoolNode` incluso documenta en un comentario por qué está roto (*"no bifurca de verdad... confirmado sin uso en ningún grafo del proyecto (Agosto 2026)"*).
 
@@ -3640,6 +3801,7 @@ Desde el 5 de octubre de 2026 el prólogo (`SEQ_Prologo_UltimaNoche`) ya no se m
 - **Coger y dejar objetos:** «eldran coge PROP_Aro [mano=izquierda] [offset=x;y;z] [giro=x;y;z]» engancha el objeto del `SequenceStage` al hueso de la mano (por defecto la derecha) y lo enciende si estaba apagado. «eldran deja PROP_Aro en apoyo [gesto=Estado]» hace un gesto de alcanzar y, en el fotograma en que la mano queda más cerca del apoyo, suelta el objeto: pasa de la mano al apoyo en 0,25 s (`PropEnManoBeat.segundosDeApoyo`) y queda apoyado por la base de sus mallas. Sin `gesto`, el horno prueba los gestos de alcanzar del catálogo del actor y elige el que más acerca la mano; el informe lo apunta con el tanteo de cada uno y avisa si la mano se queda a más de 0,3 m (hay que acercar al personaje o el apoyo al borde del mueble). Si la secuencia se salta, el objeto acaba en su apoyo final, nunca colgado de una mano. Runtime: `PropEnManoBeat` (`Scripts/Sequences/Beats`); horno: `HornoProps.cs`.
 - **Planos de alguien tumbado:** si la cabeza de la pose horneada queda por debajo de la mitad de la altura de cara de pie, el foco del plano es la cabeza real de la pose (medida en el horneado), no la altura de pie. Sirve para picados sobre alguien recostado o dormido.
 - **Puntos con altura:** un apoyo sobre un mueble se escribe con su altura en PUNTOS («apoyo_aro 115.0 3.1 0.691»).
+- **La cabeza sigue a quien habla (INC-866):** en cada frase, los que escuchan vuelven la cabeza hacia quien habla (cada uno con un pequeño retraso), también sentados, que no giran el cuerpo; tumbados, dormidos o nadando, no. Se hornea en `ActorHorneado.cabezas` y en runtime lo aplica `ReproductorDeGuion` con `DialogueHeadLook`: solo cuando cambia la clave, andando la cabeza va al frente, y en las cinemáticas el alcance es mayor que en una conversación (65° de giro, corte a 110°, peso 0,85; al soltar al actor se devuelve el suyo). Quien habla con `mira=` vuelve también la cabeza hacia ahí, aunque esté sentado. Quien habla sin `mira=` ni `cabeza=` vuelve la cabeza hacia aquel con quien habla: el que le contesta justo después o, si no, el que le acaba de hablar (a menos de 12 m y a la vista); sin esto se quedaba mirando al último que había hablado antes (Estela hablando con el Archimago pero mirando a Liam). `cabeza=will,liam` en un «dice» reparte la frase mirando a uno y luego al otro («¿Os casasteis?»). Orden suelta: «tobias cabeza will» / «tobias cabeza p_punto» / «tobias cabeza nadie» (vuelve al frente). Los guiones ya horneados no cambian hasta volver a hornearlos.
 
 ### 22.6 Reproductor con barra de tiempo (INC-809)
 
@@ -4085,3 +4247,73 @@ El núcleo **no necesita** Cinemachine (solo la capa de guiones), Timeline, Text
 - **22 oct 2026** (INC-812): `IOcultableDuranteCinematica` + registro. El reproductor deja de llamar al HUD, al minimapa y al indicador de la hora; ahora pide que se escondan los sistemas apuntados, y cada uno se esconde con su clave.
 - **22 oct 2026** (INC-813): el texto sale por un solo camino (`PresentadorDeLinea`), que usan tanto los beats de diálogo como el reproductor de guiones. Se retira la conversión `(PresentacionDeTexto)((int)presentacion - 1)`, que era el tipo de conversión que se cuela sin que nadie se entere.
 - **22 oct 2026** (INC-813): DOTween era una dependencia vestigial del driver de cámara: el `Ease` se pasaba y nunca se aplicaba (el movimiento usa smoothstep). Retirado.
+
+## 26. Render: contorno de tinta, sombra de contacto y ajustes de rendimiento (INC-865)
+
+Propuesta y diagnóstico completos: doc de proyecto `propuesta-outline-quibli-y-revision-urp-60fps-2026-10-29.md`.
+
+### 26.1 Contorno de tinta
+- `ContornoDeTintaFeature` (en `PC_Renderer`) inserta un pase de Render Graph en `AfterRenderingSkybox`. Lee `_CameraDepthTexture` y `_CameraNormalsTexture` (ya existen porque el SSAO usa *Depth Normals*: no hay prepass extra) y oscurece el color multiplicándolo por `tinta` en siluetas (salto de profundidad relativo) y pliegues (cambio de normal). El resultado sustituye al color de cámara (`cameraColor`), sin copia de vuelta.
+- Ajustes en el Volume `ContornoDeTinta` (*El Sendero ▸ Contorno de tinta*). Sus valores por defecto son el look del juego: se aplica aunque ningún perfil lo tenga; un perfil o un `PostprocesoBeat` lo cambia, y con `intensidad` 0 no se dibuja.
+- Se salta: cámaras sin post-procesado, cámaras que no son de juego/escena, y cámaras con MSAA (el color multimuestra no se puede sustituir). Por eso el pipeline va sin MSAA y la cámara del jugador usa SMAA alto, que además suaviza la línea.
+- Transparentes (agua, partículas, VFX) se dibujan después: no tienen contorno. Se desvanece entre `inicioDelDesvanecido` y `finDelDesvanecido` para no rayar el fondo que Stylized Detail difumina.
+- El outline por geometría de Quibli sigue desaconsejado a escala de mundo (§ 21.8). Si un personaje necesitara más silueta, solo en héroes y jefes.
+
+### 26.2 Sombra de contacto
+- `SombraDeContacto`: disco difuminado (shader `El Sendero/Sombra de contacto`, multiplicativo, instanciado) que se apoya en el suelo con un raycast hacia abajo desde los pies; se encoge y aclara con la altura y se oculta sin suelo. Fuera de pantalla solo revisa uno de cada ocho fotogramas.
+- Se añade sola en `NPCSimpleAnimator.Awake` y `EnemigoDelMundo.Awake` (`SombraDeContacto.Asegurar`). Un personaje que no la quiera la lleva puesta y desactivada.
+- Motivo: la cámara del jugador no dibuja sombras en tiempo real (`m_RenderShadows: 0`, heredado de la integración de Quibli del 8 ago, commit `ca65280e4`) y 110 de 135 materiales Quibli no las reciben. La sombra de contacto ancla a los personajes al suelo por un coste casi nulo.
+
+### 26.3 Ajustes de rendimiento
+- `PC_RPAsset`: MSAA 1 (antes 4). `CamaraDelJugador`: SMAA alto (antes FXAA, junto al MSAA 4x).
+- `Volumen Profile`: Depth of Field (Bokeh) apagado; el desenfoque de fondo es el de Stylized Detail. Los perfiles del prólogo (`Prologo_Dia`, `Prologo_Atardecer`) mantienen su Bokeh a propósito por ahora.
+- `enableFrameTimingStats` activado: las capturas F9 ya pueden dar ms de GPU y CPU.
+- Retratos vivos: renderer `Retratos_Renderer` (copia de `PC_Renderer` sin features) en la lista de `PC_RPAsset`; `EstudioDeRetratos` lo busca por nombre y dibuja un retrato por fotograma por turnos (`repartirEntreFotogramas`): 2 cámaras por fotograma en vez de hasta 6, sin SSAO.
+- El menú que aplicó todo esto vive archivado en *El Sendero ▸ Archivo ▸ Render: aplicar contorno…* (idempotente).
+
+---
+
+## 27. Rediseño del 29 oct 2026: dueños nuevos (INC-867)
+
+Revisión de código en busca de basura, duplicados y contradicciones, seguida de un rediseño por fases para que cada responsabilidad tenga **un solo dueño**. Seguimiento y pruebas en juego: `TRACKER.md` INC-867. Lo retirado está en `Versiones antiguas/Herramientas de un solo uso (2026-10-29)/` y `Versiones antiguas/Codigo sin uso (2026-10-29)/`.
+
+### 27.1 Sistemas nuevos o con dueño nuevo
+
+| Sistema | Qué es | Dónde vive | Cómo se usa | Sustituye a |
+|---|---|---|---|---|
+| `Partida` | La partida en curso: preset en memoria, guardar, cargar, partida nueva, volcado del estado vivo, posiciones de NPCs, reinicio de la sesión narrativa (§ 9) | `Scripts/Core/Partida/*.cs` (clase estática parcial) | `Partida.Preset`; `Partida.Guardar(saveSystem)`, `Partida.Cargar(saveSystem)`, `Partida.PrepararNueva(saveSystem)`; `GameBootService` decide cuándo | La lógica de ~1.300 líneas de `GameBootProfile` (hoy solo datos) y `NarrativeAutoSetup` |
+| `TramoDeHistoria` | Parte de la historia descrita con señales y misiones (§ 3) | `NarrativeGraph/Runtime/Integration/TramoDeHistoria.cs` | Campo serializado en el componente; `tramo.EnCurso()` / `HaAcabado()` | `soloSiQuest`/`soloSiSenal`/`dejaDeSi*` de `NPCWorkRoute`, `empiezaCon`/`terminaCon` de `DiscusionEnBucle` y condiciones escritas en código |
+| `DanoEnZona` | Daño de área de los enemigos a los tres personajes del grupo (§ 4) | `Scripts/Combat/DanoEnZona.cs` | `GolpearEnCilindro`/`GolpearEnEsfera`, o `CuerposDelGrupo` + `Danar` | Bucles de colisionadores y `TakeDamage` propios en `ZonaDanina`, `PozoGravitatorio`, `BombaOscura`, `SueloImpisable` y `EnemyProjectile` |
+| Defensa en un solo sitio | Todo golpe al jugador pasa por `PlayerHealthSystem` + `FiltroDeDefensa`; el escudo lo da solo el grafo (§ 4) | `PlayerShieldController`, `FiltroDeDefensa` | Nada que hacer en cada enemigo | Atajos de escudo en `GolemBossAI` y `EnemyProjectile`; desbloqueo del escudo con Bola Prisma (`OnSpellUnlocked`) y bloque de Erika en `AlertState` |
+| `ArbitroDeAvisos` | Cola única de avisos en pantalla por canal y prioridad, con silencio en menús y cinemáticas (§ 11) | `Scripts/UI/Avisos/` (+ `IAvisoEnPantalla`, `HudToastService`) | El aviso implementa `IAvisoEnPantalla` y llama a `Pedir`/`Terminar` | Cada aviso escuchando menús y cinemáticas por su cuenta; `Core/HudToastService` |
+| `PresentadorDeLinea` | Camino único de una frase en pantalla: traduce, estilo, bocadillo, voz (§ 11) | `Scripts/Dialogue/PresentadorDeLinea.cs` (+ `Sequences/PresentacionDeLinea.cs`) | `Decir(in FraseADecir)`, o `Mostrar` + `SonarLaVoz` | Copias de esa lógica en beats, guion, nodos, charlas y comentarios; `Sequences/PresentadorDeLinea.cs` |
+| `ComentariosEnReposo` | Vida del grupo al seguir al jugador: numeritos y reacciones como datos (§ 3) | `Scripts/Behaviour NPC/ComentariosEnReposo.cs` | Componente con listas `numeritos` y `reacciones` | Cuatro `*IdleCommentary` con lógica copiada (hoy subclases de datos) |
+| Volumen y atenuación por bus | Volumen del jugador por bus y atenuaciones temporales con clave (§ 6) | `AudioService.SetVolume/GetVolume`, `AtenuarBus`, `SoltarAtenuacionDeBus` | Pedir con una clave propia y soltarla al acabar | `Mute(bus, bool)` y nodos que pisaban el volumen del jugador |
+| Atenuación bajo las voces | Tres ajustes en el perfil: `voiceDuck`, `cinematicVoiceDuck`, `epicVoiceDuck` (§ 6) | `AudioGraphProfile` | Se ajusta en el asset del perfil | Valores propios en `AudioService` (`_duckCinematico`…) |
+| Clima con un sorteo | Un solo sorteo de lluvia; las nubes sueltas solo informan; rayos por el pool; rayo peligroso siempre con aviso (§ 16) | `DayNightCycle`, `AmbientCloudDirector.InformarCoberturaDeNubes`, `ProceduralLightningBoltVfx` | `rainChancePerCheck`, `lluviaExtraConCieloCubierto`, `dangerLightningTelegraphPrefab` | Segundo sorteo de lluvia en `AmbientCloudDirector` (`stormRollChance`), rayos instanciados a mano, `AssetDatabase` en runtime |
+| `NarrativeServices` + puertos | El núcleo del grafo pide al juego por interfaces (§ 10) | `NarrativeGraph/Runtime/Integration/NarrativeServices.cs`, `…/Ports/` | `NarrativeServices.TryGet(out IPuerto p, quien)` en el nodo | Llamadas directas del núcleo a singletons del juego |
+| Adaptadores del juego | Implementación de cada puerto con los sistemas de El Sendero (§ 10) | `Scripts/NarrativeIntegration/` (registro en `NarrativeGameServices.cs`) | Un adaptador por puerto, registrado en `BeforeSceneLoad` | — (nuevo); nodos del juego movidos a `NarrativeIntegration/Nodes/` |
+| `NarrativeNode.Describe` | El nodo declara lo que toca y cómo se ve (§ 10) | `NarrativeGraph/Runtime/Graph/` (`INarrativeNodeDescriber`, `NarrativeNodeReferences`) | Sobrescribir `Describe` y `CollectWarnings` en cada nodo | `switch` por tipo de nodo en tarjeta, panel, índice, validador y herramientas |
+| Extensiones del editor | El juego añade pestañas, secciones en vivo, vista de llegada y catálogo al editor del grafo (§ 10) | `NarrativeGraph/Editor/Extensions/` | Heredar/implementar; se descubren con `TypeCache` | Referencias del editor del paquete a clases del juego |
+| Anclas del contexto del NPC | Retener a un NPC con clave propia (§ 3) | `NPCStateContext.Anclar/Soltar/EstaAnclado` | `Anclar(this)` … `Soltar(this)` | `NPCStateContext.IsPinnedByParty` (un bool compartido: bajar del barco soltaba el modo Libre del grupo) |
+| Sonidos de los hechizos | Una sola herramienta para claves y eventos por capas (§ 6) | `Editor/Audio/SonidosDeHechizos.cs` | *El Sendero/Audio/Sonidos de los hechizos…* | `CrearEventosDeHechizo` |
+
+### 27.2 Otros cambios de dueño
+
+- **Grupo y control:** `ControlDelJugador` es la puerta única para quién va al mando y qué cuerpo tiene cada personaje; `PartyControlManager.AnclaDelModoLibre` y `PonerEnModoDelGrupo`. `SaludDelGrupo` es el único que escribe vida y maná (bonos del equipo solo al personaje al mando; `CurarATodos`); `EstadisticasDelPersonaje` ya no los escribe. `TripulacionDelBarco` lleva la lista de tripulación y ancla a los que van a bordo. `PartyStatsManager` (singleton vacío) está retirado.
+- **Ataques de equipo:** `SpecialAttackSO.coreografia` (`CoreografiaDeEquipo`), `sfxDelHechizo`/`sfxDelImpacto` y su estado: cada ataque se describe en su asset.
+- **Tiempo:** `TimeScaleArbiterService.TryGetRequest`, `ReleaseAll` (solo emergencia) y limpieza de las peticiones con clave destruida (§ 5).
+- **Rótulos:** el grafo los pide por `INarrativeTitleCardPresenter` (`Ports/`); los dibuja `DramaticTextOverlayUI.Rotulos.cs`.
+- **Puertas y flags de mundo:** `CastleDoorController` usa `FlagDePartida`.
+- **Enemigos:** `OrbDropper.CrearOrbe`/`SoltarMoneda` son públicos y los usa `ImpLadron` para soltar lo robado; `ImpDemonAI` encuentra su arena con `BossArenaController.TryGetArenaDelJefe` (sin `FindAnyObjectByType`).
+- **VFX al pool:** `Burnable`, `PressurePlate`, `PlatformElevator`, impacto de `LevitationTarget` (§ 12). `ReanimarManteniendoA` con VFX, SFX y pose sostenida (§ 4).
+- **Audio:** fin de minijuego y `DramaticTextNode` piden la música del lugar; `MuteAudioNode`/`SetAudioVolumeNode` piden atenuación con clave; `PlayMusicNode` siempre en bucle; fuera `PlaySpell`, `PlayAmbience`, `BeginMinigameById`/`EndMinigameById`, `StopSFX` y el alias `PlaySfx`.
+- **Grafo:** menús del paquete en `Tools/Narrative Graph/` (el validador cruzado y *Narrative Timeline* no cambian de menú); `NarrativeGraphValidator` sin `OfType` por tipo.
+
+### 27.3 Pendiente
+
+- **Cinemáticas (fase 6, aplazada mientras otra sesión trabaja en la cinemática final):** limpiar `CinematicSequencerBase`, un solo camino para los planos colocados a mano (`CinematicShot…`), pasar las cuatro secuencias de Cap1 que quedan a guion y retirar `ShotComposer`, y ordenar los módulos finales. Con ella, `CinematicSequencerBase` dejará de llamar a `SpeechBubbleUI` directamente (§ 11).
+- **Frases que aún no pasan por `PresentadorDeLinea`:** ver la lista en § 11.
+- `Assets/Editor/Guion/RecursosDelPrologo.cs` repite los valores de la atenuación cinemática: se quita cuando la otra sesión suelte el guion.
+- Los eventos de impacto por capas de `Assets/_SPELLS/Eventos/` tienen paneo 1 (todo a la derecha) hasta que se pase el menú de *Sonidos de los hechizos*.
+- **Decisiones de diseño abiertas:** si el suelo impisable daña también a los compañeros; si el escudo bloquea los proyectiles al 100 %; ataque/defensa y progresión.

@@ -6,77 +6,29 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-#pragma warning disable 618 // se referencian nodos [Obsolete] a propósito para seguir mostrando grafos viejos
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Construye el resumen legible que se muestra DENTRO de la tarjeta de cada nodo (texto real de
     /// los diálogos, nombre y pasos de la quest, quién emite/escucha una señal...) y la lista de
-    /// avisos de validación del nodo. Todo se resuelve contra NarrativeProjectIndex.
+    /// avisos de validación del nodo. Lo que se enseña lo declara cada nodo en
+    /// NarrativeNode.Describe; aquí solo se pinta, resolviendo las claves contra NarrativeProjectIndex.
+    /// Un nodo que no se describe enseña sus primeros campos.
     /// </summary>
     public static class NodeSummary
     {
         const int MaxDialogueLinesInCard = 3;
         const int MaxCharsPerLine = 90;
+        const int MaxCharsPerFreeLine = 160;
 
         public static VisualElement Build(NarrativeNode node, NarrativeGraph graph)
         {
             var root = new VisualElement();
             root.AddToClassList("narrative-summary");
 
-            switch (node)
-            {
-                case PlayDialogueNode pd: BuildDialogue(root, pd); break;
-                case DialogueChoiceNode dc: BuildChoice(root, dc); break;
-                case ShowSpeechBubbleNode sb:
-                    Speaker(root, string.IsNullOrEmpty(sb.speakerName) ? (sb.targetTag == "Player" ? "Will" : sb.targetTag) : sb.speakerName);
-                    Line(root, Quote(NarrativeProjectIndex.Loc(sb.textId, sb.text)));
-                    break;
-                case TutorialPromptNode tp:
-                    Line(root, "🎮 " + (NarrativeProjectIndex.Loc(tp.textId, tp.text) ?? ""));
-                    if (!string.IsNullOrEmpty(tp.buttonName)) Chip(root, tp.buttonName, "chip--muted");
-                    break;
-                case StartQuestNode sq: BuildQuest(root, sq.questId, null, "Se inicia"); break;
-                case WaitQuestCompleteNode wq: BuildQuest(root, wq.questId, null, "Espera a que se complete"); break;
-                case BranchQuestStateNode bq: BuildQuest(root, bq.questId, null, "Bifurca según"); break;
-                case CompleteQuestStepsNode cq: BuildQuest(root, cq.questId, cq.stepConditionIds, cq.completeQuest ? "Completa pasos y CIERRA" : "Completa pasos"); break;
-                case DeliverQuestCompleteNode dq: BuildQuest(root, dq.questId, null, "Entrega"); break;
-                case RequireInventoryItemNode rq:
-                    ItemLine(root, rq.item, rq.requiredAmount, rq.consumeOnSuccess ? "requiere y consume" : "requiere");
-                    if (!string.IsNullOrEmpty(rq.questId)) BuildQuest(root, rq.questId, null, "Quest");
-                    break;
-                case GiveInventoryItemNode gi: ItemLine(root, gi.item, gi.amount, "da"); break;
-                case WaitForItemAddedNode wi: ItemLine(root, wi.itemToWaitFor, wi.minimumAmount, "espera"); break;
-                case WaitCustomEventNode we: BuildSignal(root, we.eventKey, listening: true); break;
-                case RaiseCustomEventNode re: BuildSignal(root, re.eventKey, listening: false); break;
-                case WaitNpcInteractionNode wn: BuildActor(root, wn.npcId, "Espera a que el jugador hable con"); break;
-                case PlayCinematicNode pc:
-                    Line(root, "🎬 " + (string.IsNullOrEmpty(pc.cinematicName) ? "(sin nombre)" : pc.cinematicName), "summary__strong");
-                    KeyValue(root, "entra", pc.signalIn); KeyValue(root, "hecho", pc.signalDone);
-                    if (!string.IsNullOrEmpty(pc.signalFailed)) KeyValue(root, "fallo", pc.signalFailed);
-                    break;
-                case SetFlagNode sf: Line(root, $"⚑ {sf.flagKey} = {(sf.value ? "sí" : "no")}"); break;
-                case BranchFlagNode bf: Line(root, $"⚑ ¿{bf.flagKey}?{(bf.invert ? " (invertido)" : "")}"); break;
-                case CheckpointNode cp:
-                    Line(root, "⚑ " + (string.IsNullOrEmpty(cp.checkpointId) ? "(sin id)" : cp.checkpointId), "summary__strong");
-                    if (!string.IsNullOrEmpty(cp.spawnAnchorId)) KeyValue(root, "anchor", cp.spawnAnchorId);
-                    if (!string.IsNullOrEmpty(cp.sceneName)) KeyValue(root, "escena", cp.sceneName);
-                    break;
-                case StartBattleNode sbn:
-                    Line(root, "⚔ " + (string.IsNullOrEmpty(sbn.battleId) ? "(sin battleId)" : sbn.battleId), "summary__strong");
-                    break;
-                case GraphNoteNode note:
-                    var nl = new Label(note.note ?? "");
-                    nl.AddToClassList("summary__note");
-                    root.Add(nl);
-                    break;
-                case StartNode:
-                case ForkNode:
-                    break;
-                default:
-                    BuildGeneric(root, node);
-                    break;
-            }
+            var card = new CardDescriber(root);
+            node.Describe(card);
+            if (root.childCount == 0) BuildGeneric(root, node);
 
             if (node is INarrativeStandingLine frase && !string.IsNullOrEmpty(frase.StandingActorId))
             {
@@ -87,62 +39,111 @@ namespace Sendero.Narrative.Editor
             return root.childCount > 0 ? root : null;
         }
 
-        // ─── constructores por tipo ─────────────────────────────────────
-
-        static void BuildDialogue(VisualElement root, PlayDialogueNode pd)
+        /// <summary>Pinta en la tarjeta lo que declara el nodo.</summary>
+        sealed class CardDescriber : INarrativeNodeDescriber
         {
-            if (pd.dialogue == null)
-            {
-                Line(root, "(sin DialogueAsset)", "summary__muted");
-                return;
-            }
-            var header = new VisualElement();
-            header.AddToClassList("summary__dialogue-header");
-            var name = new Label(pd.dialogue.name);
-            name.AddToClassList("summary__asset-name");
-            header.Add(name);
-            int count = pd.dialogue.lines?.Length ?? 0;
-            var meta = new Label($"{count} línea{(count == 1 ? "" : "s")}{(pd.dialogue.isGroupConversation ? " · grupal" : "")}{(!string.IsNullOrEmpty(pd.npcId) ? " · " + pd.npcId : "")}");
-            meta.AddToClassList("summary__muted");
-            header.Add(meta);
-            root.Add(header);
+            readonly VisualElement _root;
+            int _dialogueLines;
+            Label _moreLines;
 
-            if (pd.dialogue.lines == null) return;
-            int shown = 0;
-            foreach (var line in pd.dialogue.lines)
+            public CardDescriber(VisualElement root) { _root = root; }
+
+            public void Quest(string questId, string verb, IReadOnlyList<string> steps = null) => BuildQuest(_root, questId, steps, verb);
+
+            public void Signal(string key, SignalRole role, string label = null)
             {
-                if (shown++ >= MaxDialogueLinesInCard)
-                {
-                    Line(root, $"… +{count - MaxDialogueLinesInCard} más", "summary__muted");
-                    break;
-                }
-                DialogueLineRow(root, line);
+                if (label != null) KeyValue(_root, label, key);
+                else BuildSignal(_root, key, listening: role == SignalRole.Escucha);
             }
+
+            public void Actor(string actorId, string verb) => BuildActor(_root, actorId, verb);
+
+            public void Flag(string key, string shownAs = null) => NodeSummary.Line(_root, "⚑ " + (shownAs ?? key));
+
+            public void Anchor(string anchorId) => KeyValue(_root, "anchor", anchorId);
+
+            public void Asset(UnityEngine.Object asset, string kind, string detail = null)
+            {
+                _dialogueLines = 0;
+                _moreLines = null;
+                if (asset == null)
+                {
+                    NodeSummary.Line(_root, $"(sin {kind})", "summary__muted");
+                    return;
+                }
+                var header = new VisualElement();
+                header.AddToClassList("summary__dialogue-header");
+                var name = new Label(asset.name);
+                name.AddToClassList("summary__asset-name");
+                header.Add(name);
+                if (!string.IsNullOrEmpty(detail))
+                {
+                    var meta = new Label(detail);
+                    meta.AddToClassList("summary__muted");
+                    header.Add(meta);
+                }
+                _root.Add(header);
+            }
+
+            public void DialogueLine(string speakerId, bool isPlayer, string textId, string text, string detail = null)
+            {
+                _dialogueLines++;
+                if (_dialogueLines <= MaxDialogueLinesInCard)
+                {
+                    DialogueLineRow(_root, speakerId, isPlayer, textId, text);
+                    return;
+                }
+                if (_moreLines == null)
+                {
+                    _moreLines = new Label();
+                    _moreLines.AddToClassList("summary__text");
+                    _moreLines.AddToClassList("summary__muted");
+                    _root.Add(_moreLines);
+                }
+                _moreLines.text = $"… +{_dialogueLines - MaxDialogueLinesInCard} más";
+            }
+
+            public void Item(UnityEngine.Object item, int amount, string verb) => ItemLine(_root, item, amount, verb);
+
+            public string Text(string locKey, string fallback) => NarrativeProjectIndex.Loc(locKey, fallback);
+
+            public void Line(string text, NarrativeTextTone tone = NarrativeTextTone.Normal)
+            {
+                if (tone == NarrativeTextTone.Note)
+                {
+                    var nl = new Label(text ?? "");
+                    nl.AddToClassList("summary__note");
+                    _root.Add(nl);
+                    return;
+                }
+                string cls = tone == NarrativeTextTone.Strong ? "summary__strong" : tone == NarrativeTextTone.Muted ? "summary__muted" : null;
+                NodeSummary.Line(_root, Truncate(text, MaxCharsPerFreeLine), cls);
+            }
+
+            public void Speaker(string name) => NodeSummary.Speaker(_root, name);
+            public void Field(string label, string value) => KeyValue(_root, label, value);
+            public void Tag(string text) => Chip(_root, text, "chip--muted");
         }
 
-        public static void DialogueLineRow(VisualElement root, DialogueLine line, bool full = false)
+        // ─── piezas de la tarjeta ───────────────────────────────────────
+
+        /// <summary>Fila «Hablante: texto» de una línea de diálogo, resuelta contra la localización.</summary>
+        public static void DialogueLineRow(VisualElement root, string speakerId, bool isPlayer, string textId, string text, bool full = false)
         {
             var row = new VisualElement();
             row.AddToClassList("summary__line");
-            var speaker = new Label(NarrativeProjectIndex.SpeakerName(line.speakerNameId, line.isPlayerSpeaking) + ":");
+            var speaker = new Label(NarrativeProjectIndex.SpeakerName(speakerId, isPlayer) + ":");
             speaker.AddToClassList("summary__speaker");
-            speaker.AddToClassList(line.isPlayerSpeaking ? "summary__speaker--player" : "summary__speaker--npc");
+            speaker.AddToClassList(isPlayer ? "summary__speaker--player" : "summary__speaker--npc");
             row.Add(speaker);
-            var text = NarrativeProjectIndex.LineText(line);
-            var t = new Label(full ? text : Truncate(text, MaxCharsPerLine));
+            var resolved = NarrativeProjectIndex.LineText(textId, text);
+            var t = new Label(full ? resolved : Truncate(resolved, MaxCharsPerLine));
             t.AddToClassList("summary__text");
             row.Add(t);
             root.Add(row);
         }
 
-        static void BuildChoice(VisualElement root, DialogueChoiceNode dc)
-        {
-            Line(root, "❓ " + Quote(NarrativeProjectIndex.Loc(dc.promptTextId, dc.promptText)), "summary__strong");
-            Line(root, "A → " + (NarrativeProjectIndex.Loc(dc.optionATextId, dc.optionAText) ?? "A"));
-            Line(root, "B → " + (NarrativeProjectIndex.Loc(dc.optionBTextId, dc.optionBText) ?? "B"));
-        }
-
-        static void BuildQuest(VisualElement root, string questId, List<string> highlightSteps, string verb)
+        static void BuildQuest(VisualElement root, string questId, IReadOnlyList<string> highlightSteps, string verb)
         {
             if (string.IsNullOrEmpty(questId))
             {
@@ -153,7 +154,7 @@ namespace Sendero.Narrative.Editor
             if (q == null)
             {
                 Line(root, $"{verb}: {questId}");
-                Line(root, "no existe ningún QuestData con ese id", "summary__error");
+                Line(root, "no existe ninguna misión con ese id", "summary__error");
                 return;
             }
             var head = new Label($"{verb}: {q.displayName}");
@@ -209,7 +210,7 @@ namespace Sendero.Narrative.Editor
             if (a != null && a.displayName != id) Line(root, id, "summary__muted");
         }
 
-        static void ItemLine(VisualElement root, ItemData item, int amount, string verb)
+        static void ItemLine(VisualElement root, UnityEngine.Object item, int amount, string verb)
         {
             string name = item != null ? item.name : "(sin objeto)";
             Line(root, $"🎒 {verb} ×{amount} {name}");
@@ -224,14 +225,14 @@ namespace Sendero.Narrative.Editor
                 if (f.GetCustomAttribute<HideInInspector>() != null) continue;
                 object v;
                 try { v = f.GetValue(node); } catch { continue; }
-                string text = Describe(v);
+                string text = DescribeValue(v);
                 if (string.IsNullOrEmpty(text)) continue;
                 KeyValue(root, ObjectNames.NicifyVariableName(f.Name), text);
                 if (++shown >= 5) break;
             }
         }
 
-        static string Describe(object v)
+        static string DescribeValue(object v)
         {
             switch (v)
             {
@@ -282,8 +283,6 @@ namespace Sendero.Narrative.Editor
             root.Add(c);
         }
 
-        static string Quote(string s) => string.IsNullOrEmpty(s) ? "(sin texto)" : "«" + Truncate(s, MaxCharsPerLine) + "»";
-
         public static string Truncate(string s, int max)
         {
             if (string.IsNullOrEmpty(s)) return "";
@@ -318,17 +317,6 @@ namespace Sendero.Narrative.Editor
                         if (!string.IsNullOrEmpty(item) && !NarrativeProjectIndex.Resolves(key.Kind, item, questId))
                             issues.Add($"'{item}' no es un paso de {questId ?? "?"}");
                 }
-            }
-
-            switch (node)
-            {
-                case PlayDialogueNode pd when pd.dialogue == null: issues.Add("Sin DialogueAsset"); break;
-                case StartQuestNode sq when string.IsNullOrEmpty(sq.questId): issues.Add("questId vacío"); break;
-                case WaitCustomEventNode we when string.IsNullOrEmpty(we.eventKey): issues.Add("eventKey vacío"); break;
-                case RaiseCustomEventNode re when string.IsNullOrEmpty(re.eventKey): issues.Add("eventKey vacío"); break;
-                case WaitNpcInteractionNode wn when string.IsNullOrEmpty(wn.npcId): issues.Add("npcId vacío"); break;
-                case PlayCinematicNode pc when string.IsNullOrEmpty(pc.signalIn) || string.IsNullOrEmpty(pc.signalDone): issues.Add("Faltan señales de entrada/fin"); break;
-                case CheckpointNode cp when string.IsNullOrEmpty(cp.checkpointId): issues.Add("checkpointId vacío"); break;
             }
 
             node.CollectWarnings(issues);

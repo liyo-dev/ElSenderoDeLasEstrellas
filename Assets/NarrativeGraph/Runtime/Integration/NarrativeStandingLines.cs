@@ -9,7 +9,7 @@ using UnityEngine;
 public static class NarrativeStandingLines
 {
     /// <summary>Busca la frase que tiene ahora el actor. False si no tiene ninguna.</summary>
-    public static bool TryFind(string actorId, out DialogueAsset dialogue)
+    public static bool TryFind(string actorId, out NarrativeDialogueAsset dialogue)
     {
         dialogue = null;
         if (string.IsNullOrEmpty(actorId)) return false;
@@ -45,11 +45,10 @@ public static class NarrativeStandingLines
     /// </summary>
     public static bool TryPlay(string actorId, Transform speaker)
     {
-        var dialogueManager = DialogueManager.Instance;
-        if (dialogueManager == null || dialogueManager.IsOpen) return false;
+        if (!NarrativeServices.TryGet(out INarrativeDialoguePlayer dialogues, nameof(NarrativeStandingLines))) return false;
+        if (dialogues.IsOpen) return false;
         if (!TryFind(actorId, out var dialogue)) return false;
 
-        dialogueManager.StartDialogue(dialogue, speaker);
-        return true;
+        return dialogues.TryPlay(dialogue, speaker, null);
     }
 }

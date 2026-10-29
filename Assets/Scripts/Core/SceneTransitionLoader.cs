@@ -256,8 +256,9 @@ public static class SceneTransitionLoader
         // Llegados aquí, la escena destino está activa
         loadingUI?.SetProgress(1f);
 
-        // Seguridad: asegurar que timeScale esté a 1 al cargar una escena
-        Time.timeScale = 1f;
+        // El tiempo no se toca aquí: las pausas o cámaras lentas pedidas por objetos de la escena
+        // descargada las descarta TimeScaleArbiterService al descargarse (sus claves mueren), y
+        // forzar 1 anularía la pausa legítima de un sistema persistente.
 
         // 4) La pantalla ya está en negro (se puso antes de activar la escena).
         //    Pasamos directamente a apagar la overlay.

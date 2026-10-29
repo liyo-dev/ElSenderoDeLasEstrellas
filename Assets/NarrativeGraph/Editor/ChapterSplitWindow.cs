@@ -4,22 +4,20 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Sendero.Narrative.Editor
+namespace NarrativeGraphEditor
 {
     /// <summary>
     /// Divide un NarrativeGraph en dos assets según el campo 'chapter' de los nodos.
     ///
     /// Extrae todos los nodos de un capítulo elegido a un NarrativeGraph nuevo, sustituyendo las
     /// aristas que cruzan la frontera por pares RaiseCustomEventNode (grafo origen) /
-    /// WaitCustomEventNode (grafo nuevo) — el mismo patrón que ya separa MainNarrative.asset de
-    /// Secundary.asset en este proyecto. No es un mecanismo nuevo, solo automatiza un procedimiento
-    /// que ya se hizo a mano una vez.
+    /// WaitCustomEventNode (grafo nuevo): dos grafos encadenados por señales.
     ///
     /// No toca el YAML del asset directamente: opera sobre la lista de nodos en memoria y deja que
     /// Unity serialice ([SerializeReference]) al guardar, igual que hace NarrativeGraphWindow.
     ///
     /// Lo que NO hace automáticamente (requiere un paso manual, señalado en el reporte):
-    ///   - Registrar el grafo nuevo como GraphSlot en el NarrativeGraphHub de Start.unity.
+    ///   - Registrar el grafo nuevo como GraphSlot en el NarrativeGraphHub de la escena de arranque.
     ///   - Decidir si el StartNode del capítulo nuevo es el correcto cuando hay más de una arista
     ///     de entrada (en ese caso, pide asignarlo a mano con "Set as Start").
     /// </summary>
@@ -30,7 +28,7 @@ namespace Sendero.Narrative.Editor
         private string _lastReport = "";
         private Vector2 _scroll;
 
-        [MenuItem("El Sendero/Narrativa/Dividir por Capítulo...")]
+        [MenuItem("Tools/Narrative Graph/Dividir por capítulo...")]
         public static void OpenWindow()
         {
             var w = GetWindow<ChapterSplitWindow>();
@@ -43,8 +41,8 @@ namespace Sendero.Narrative.Editor
         {
             EditorGUILayout.HelpBox(
                 "Extrae todos los nodos de un capítulo a un NarrativeGraph nuevo. Las aristas que " +
-                "cruzan la frontera se sustituyen por un par RaiseCustomEventNode / WaitCustomEventNode " +
-                "(el mismo patrón que ya separa MainNarrative de Secundary). Haz commit/backup del " +
+                "cruzan la frontera se sustituyen por un par RaiseCustomEventNode / WaitCustomEventNode. " +
+                "Haz commit/backup del " +
                 "grafo origen antes de ejecutar — esto modifica el asset original.",
                 MessageType.Warning);
 
@@ -215,23 +213,32 @@ namespace Sendero.Narrative.Editor
             }
 
             // 3. Nodo de inicio para el capítulo nuevo
-            var hasStartNode = dest.nodes.OfType<StartNode>().Any();
-            if (hasStartNode)
+            var entryNode = dest.nodes.FirstOrDefault(n => n != null && n.IsGraphEntry);
+            if (entryNode != null)
             {
-                dest.startNodeGuid = dest.nodes.OfType<StartNode>().First().guid;
+                dest.startNodeGuid = entryNode.guid;
             }
             else
             {
-                var entryPoints = dest.nodes.OfType<WaitCustomEventNode>()
-                    .Where(w => w.eventKey != null
-                                && w.eventKey.StartsWith($"CH_{chapterKey}_")
-                                && !w.eventKey.Contains("_BACK_"))
-                    .ToList();
+                // Nodos que esperan la señal de entrada de un puente creado arriba.
+                var refs = new NarrativeNodeReferences();
+                var entryPoints = new List<(NarrativeNode node, string key)>();
+                foreach (var n in dest.nodes)
+                {
+                    if (n == null) continue;
+                    foreach (var signal in refs.Collect(n).Signals)
+                        if (signal.Role == SignalRole.Escucha && signal.Key != null
+                            && signal.Key.StartsWith($"CH_{chapterKey}_") && !signal.Key.Contains("_BACK_"))
+                        {
+                            entryPoints.Add((n, signal.Key));
+                            break;
+                        }
+                }
 
                 if (entryPoints.Count == 1)
                 {
-                    dest.startNodeGuid = entryPoints[0].guid;
-                    report.AppendLine($"  StartNode del nuevo grafo: WaitCustomEventNode de entrada ('{entryPoints[0].eventKey}').");
+                    dest.startNodeGuid = entryPoints[0].node.guid;
+                    report.AppendLine($"  Inicio del nuevo grafo: el nodo que espera la señal de entrada ('{entryPoints[0].key}').");
                 }
                 else
                 {
@@ -258,7 +265,7 @@ namespace Sendero.Narrative.Editor
 
             report.AppendLine();
             report.AppendLine("Pendiente manual: registrar el grafo nuevo como GraphSlot en el " +
-                               "NarrativeGraphHub de Start.unity, y revisar visualmente el resultado " +
+                               "NarrativeGraphHub de la escena de arranque, y revisar visualmente el resultado " +
                                "(editor de grafo + Narrative Timeline) antes de dar por buena la separación.");
 
             _lastReport = report.ToString();

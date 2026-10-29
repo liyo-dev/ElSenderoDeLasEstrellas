@@ -132,6 +132,7 @@ internal sealed partial class Horno
             };
             h.posiciones.AddRange(Comprimir(a.pos));
             h.miradas.AddRange(a.miradas);
+            h.cabezas.AddRange(a.cabezas);
             h.animacion.AddRange(a.anim);
             h.caras.AddRange(a.caras);
             foreach (var d in a.deslizando) h.deslizando.Add(new TramoVisible { desde = d.t0, hasta = d.t1 });

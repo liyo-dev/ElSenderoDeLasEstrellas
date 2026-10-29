@@ -231,7 +231,7 @@ public class SayBeat : SequenceBeat
         var bubble = SpeechBubbleUI.Instance;
         int turnoDelBocadillo = 0;
         ctx.Player?.RegisterCleanup(() => { if (bubble != null) bubble.Hide(turnoDelBocadillo); });
-        var estilo = PresentadorDeLinea.Estilo(presentacion,
+        var estilo = presentacion.Resolver(
             ctx.Player?.Definition != null ? ctx.Player.Definition.presentacionDeTexto : PresentacionDeTexto.Bocadillo);
         ctx.CambiarPresentacionDeLinea(estilo);
         var pages = new System.Collections.Generic.List<string>();

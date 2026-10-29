@@ -1,18 +1,18 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
 /// Gestiona la progresión del jugador mediante Sintonía Estelar (GDD § 1 y § 6.1, INC-847).
 ///
 /// Sin niveles numéricos clásicos: al derrotar enemigos y purificar amenazas se acumulan puntos
-/// de Sintonía Estelar. Al completarse la barra, se alcanza un hito de expansión y el jugador
-/// elige libremente entre dos dones:
+/// de Sintonía Estelar. Al completarse la barra se alcanza un hito, que queda pendiente hasta que
+/// el jugador lo elige desde el menú de Equipo (PopupEleccionSintoniaUI) entre dos dones:
 ///  - Vigor (+15 Vida Máxima para todo el grupo)
 ///  - Flujo (+10 Maná Máximo para todo el grupo)
+/// Los dones suben los máximos por el camino de siempre (EstadisticasDelPersonaje.Sumar, que los
+/// pasa a SaludDelGrupo para los tres personajes).
 ///
-/// Si se alcanza un hito durante combate o secuencias cinemáticas, el hito queda pendiente y se
-/// abre automáticamente al salir de peligro o recuperar el control.
+/// Se crea solo antes de cargar la primera escena (<see cref="AutoCrear"/>): no está montado en
+/// Start.unity y no tiene nada que configurar en escena.
 /// </summary>
 public class SintoniaEstelarService : MonoBehaviour
 {
@@ -32,27 +32,19 @@ public class SintoniaEstelarService : MonoBehaviour
         Flujo  // +10 Maná Máximo
     }
 
+    private const float VidaPorVigor = 15f;
+    private const float ManaPorFlujo = 10f;
+
     [Header("Configuración de Umbrales")]
     [Tooltip("Puntos base necesarios para el primer hito de sintonía.")]
     [SerializeField, Min(10)] private int puntosBasePrimerHito = 100;
     [Tooltip("Incremento de puntos necesarios por cada hito alcanzado.")]
     [SerializeField, Min(0)] private int incrementoPuntosPorHito = 50;
 
-    [Header("Tiempos de seguridad")]
-    [Tooltip("Segundos de calma tras salir de combate antes de mostrar el popup.")]
-    [SerializeField, Min(0f)] private float segundosDeCalmaPostCombate = 1.0f;
-
     // Estado en memoria
     private int _puntosActuales;
     private int _hitosAlcanzados;
     private int _hitosPendientes;
-    private float _ultimoMomentoEnCombate = -999f;
-
-    /// <summary>Puntos actuales hacia el siguiente hito y total necesario para completarlo.</summary>
-    public event Action<int, int> OnProgresoModificado;
-
-    /// <summary>Se ha alcanzado un hito y está disponible para ser elegido (pasa la cantidad de hitos pendientes).</summary>
-    public event Action<int> OnHitoDisponible;
 
     // ─── Consultas públicas ──────────────────────────────────────────────────
 
@@ -62,6 +54,8 @@ public class SintoniaEstelarService : MonoBehaviour
     public int HitosAlcanzados => _hitosAlcanzados;
     public int HitosPendientes => _hitosPendientes;
 
+    // Servicio de partida sin datos de escena: se crea por código para que exista en cualquier
+    // escena de prueba, sin depender de que Start.unity lo traiga montado.
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void AutoCrear()
     {
@@ -83,25 +77,9 @@ public class SintoniaEstelarService : MonoBehaviour
         CargarDesdePreset();
     }
 
-    private void OnEnable()
-    {
-        GameBootService.OnProfileReady += CargarDesdePreset;
-        ActiveCombatRegistry.OnNPCExitedCombat += AlSalirNPCDeCombate;
-    }
+    private void OnEnable() => GameBootService.OnProfileReady += CargarDesdePreset;
 
-    private void OnDisable()
-    {
-        GameBootService.OnProfileReady -= CargarDesdePreset;
-        ActiveCombatRegistry.OnNPCExitedCombat -= AlSalirNPCDeCombate;
-    }
-
-    private void Update()
-    {
-        if (EstaEnCombate())
-        {
-            _ultimoMomentoEnCombate = Time.unscaledTime;
-        }
-    }
+    private void OnDisable() => GameBootService.OnProfileReady -= CargarDesdePreset;
 
     // ─── Fórmulas y umbrales ────────────────────────────────────────────────
 
@@ -131,37 +109,32 @@ public class SintoniaEstelarService : MonoBehaviour
         }
 
         GuardarEnPreset();
-        OnProgresoModificado?.Invoke(_puntosActuales, PuntosParaSiguienteHito);
 
         if (nuevoHito)
         {
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[SintoniaEstelarService] ✨ ¡Nuevo hito alcanzado! Total hitos: {_hitosAlcanzados}, Pendientes: {_hitosPendientes}");
+            Debug.Log($"[SintoniaEstelarService] Nuevo hito alcanzado. Total hitos: {_hitosAlcanzados}, pendientes: {_hitosPendientes}");
 #endif
             if (HudToastService.Instance != null)
             {
                 HudToastService.Instance.ShowRaw("✨ ¡Nueva Sintonía Estelar disponible! (Menú de Equipo)", 3.5f);
             }
-
-            OnHitoDisponible?.Invoke(_hitosPendientes);
         }
     }
 
     /// <summary>
-    /// Fuerza un hito inmediato (útil para pruebas y debug).
+    /// Fuerza un hito inmediato y abre la elección (pruebas y depuración).
     /// </summary>
     public void ForzarHito()
     {
         _hitosAlcanzados++;
         _hitosPendientes++;
         GuardarEnPreset();
-        OnProgresoModificado?.Invoke(_puntosActuales, PuntosParaSiguienteHito);
-        OnHitoDisponible?.Invoke(_hitosPendientes);
         PopupEleccionSintoniaUI.Abrir();
     }
 
     /// <summary>
-    /// Aplica la elección de expansión del jugador (+15 Vida o +10 Maná).
+    /// Aplica la elección de expansión del jugador (+15 Vida o +10 Maná para los tres).
     /// </summary>
     public void AplicarEleccion(TipoEleccionSintonia eleccion)
     {
@@ -170,30 +143,13 @@ public class SintoniaEstelarService : MonoBehaviour
             _hitosPendientes--;
         }
 
-        if (eleccion == TipoEleccionSintonia.Vigor)
-        {
-            const float incrementoVida = 15f;
-            EstadisticasDelPersonaje.Sumar(new Estadisticas(incrementoVida, 0f, 0f, 0f));
-            if (SaludDelGrupo.Instance != null)
-            {
-                SaludDelGrupo.Instance.AumentarMaximosDelGrupo(incrementoVida, 0f);
-            }
+        var don = eleccion == TipoEleccionSintonia.Vigor
+            ? new Estadisticas(VidaPorVigor, 0f, 0f, 0f)
+            : new Estadisticas(0f, ManaPorFlujo, 0f, 0f);
+        EstadisticasDelPersonaje.Sumar(don);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[SintoniaEstelarService] 💚 Elegido Vigor (+{incrementoVida} Vida Máxima)");
+        Debug.Log($"[SintoniaEstelarService] Elegido {eleccion} (+{don.vida} vida, +{don.magia} maná)");
 #endif
-        }
-        else if (eleccion == TipoEleccionSintonia.Flujo)
-        {
-            const float incrementoMana = 10f;
-            EstadisticasDelPersonaje.Sumar(new Estadisticas(0f, incrementoMana, 0f, 0f));
-            if (SaludDelGrupo.Instance != null)
-            {
-                SaludDelGrupo.Instance.AumentarMaximosDelGrupo(0f, incrementoMana);
-            }
-#if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
-            Debug.Log($"[SintoniaEstelarService] 💙 Elegido Flujo (+{incrementoMana} Maná Máximo)");
-#endif
-        }
 
         GuardarEnPreset();
 
@@ -201,57 +157,13 @@ public class SintoniaEstelarService : MonoBehaviour
         {
             Sendero.UI.PlayerHUDV2.Instance.ForceRefresh();
         }
-
-        // Si aún quedan más hitos acumulados, abrir la siguiente elección tras un breve respiro
-        if (_hitosPendientes > 0 && PuedeMostrarPopup())
-        {
-            StartCoroutine(Co_AbrirSiguienteHito());
-        }
     }
 
-    private IEnumerator Co_AbrirSiguienteHito()
-    {
-        yield return new WaitForSecondsRealtime(0.5f);
-        if (_hitosPendientes > 0 && PuedeMostrarPopup() && !PopupEleccionSintoniaUI.EstaAbierto)
-        {
-            NotificarHitoDisponible();
-        }
-    }
-
-    public void NotificarHitoDisponible()
-    {
-        if (_hitosPendientes <= 0) return;
-        OnHitoDisponible?.Invoke(_hitosPendientes);
-    }
-
-    // ─── Detección de combate y seguridad ───────────────────────────────────
-
+    /// <summary>Hay combate en curso (lo enseña el menú de depuración de Sintonía).</summary>
     public bool EstaEnCombate()
     {
         if (ActiveCombatRegistry.Count > 0) return true;
-        if (PlayerService.TryGetComponent(out PlayerActionManager am) && am.IsInMode(ActionMode.Combat))
-            return true;
-        return false;
-    }
-
-    public bool PuedeMostrarPopup()
-    {
-        if (EstaEnCombate()) return false;
-        if (DialogueManager.Instance != null && DialogueManager.Instance.IsOpen) return false;
-        if (PlayerService.TryGetComponent(out PlayerActionManager am))
-        {
-            if (am.IsInMode(ActionMode.Cinematic) || am.IsInMode(ActionMode.Combat))
-                return false;
-        }
-        return true;
-    }
-
-    private void AlSalirNPCDeCombate(GameObject npc)
-    {
-        if (!EstaEnCombate() && _hitosPendientes > 0)
-        {
-            _ultimoMomentoEnCombate = Time.unscaledTime;
-        }
+        return PlayerService.TryGetComponent(out PlayerActionManager am) && am.IsInMode(ActionMode.Combat);
     }
 
     // ─── Persistencia ───────────────────────────────────────────────────────
@@ -274,6 +186,5 @@ public class SintoniaEstelarService : MonoBehaviour
         _puntosActuales = preset.sintoniaPuntos;
         _hitosAlcanzados = preset.sintoniaHitos;
         _hitosPendientes = preset.sintoniaHitosPendientes;
-        OnProgresoModificado?.Invoke(_puntosActuales, PuntosParaSiguienteHito);
     }
 }

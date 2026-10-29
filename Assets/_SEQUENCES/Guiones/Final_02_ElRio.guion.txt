@@ -1,8 +1,16 @@
 # ═══════════════════════════════════════════════════════════════════════════════════════════
-#  CINEMÁTICA FINAL — PARTE 2: EL RÍO CON TOBÍAS Y LA FRASE FINAL DE LA NOVELA
-#  Basado fielmente en el desenlace del capítulo XXVIII de la novela canónica.
-#  Zona 3: Ribera escénica de la Laguna/Río (Centro 400, 0).
-#  Todas las líneas cuentan con doblaje de voz 100% real y encuadres dinámicos multi-cámara.
+#  CINEMÁTICA FINAL — PARTE 2: EL RÍO Y LA FRASE FINAL
+#  Zona 3: la orilla del río (centro 400, 0; el agua hacia z negativa).
+#
+#  De día pescan: Will de pie en la orilla con su caña, Liam sentado con la otra, Tobías dibuja.
+#  El anzuelo de Will engancha a Estela y la tira al río. Ríen, la cámara se aleja y mira al
+#  cielo mientras anochece. De noche, tumbados en la hierba, la estrella de madera sigue allí.
+#
+#  Música:
+#    De día ............ Mañana del valle (PROLOGUE_DREAM).
+#    De noche .......... Umbral Entre Estrellas (FINAL_ARCHIMAGO, el tema de quien es ahora esa
+#                        estrella), desde el segundo que calcula el módulo para que su última
+#                        frase llegue con la frase final del libro (@frase).
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 
 GUION Final_02_ElRio
@@ -19,204 +27,393 @@ liam       Actor_Liam       nombre=Liam color=9EDBFF prefab=Assets/Prefabs/_LIAM
 tobias     Actor_Tobias     nombre=Tobías color=FFE3A8 prefab=Assets/_NPCs/_GrafoNarrativo/Tobi.prefab
 
 PUNTOS
-# ── ZONA 3: LA ORILLA DEL RÍO (Centro 400, 0) ──
-# Asientos con NPCWorldPoint (SitGround) en la escena para evitar giros en el suelo
 s_rio_tobias         Asiento_Rio_Tobias
 s_rio_liam           Asiento_Rio_Liam
-s_noche_will         Asiento_Noche_Will
-s_noche_estela       Asiento_Noche_Estela
-s_noche_tobias       Asiento_Noche_Tobias
-s_noche_liam         Asiento_Noche_Liam
 
-# Puntos de posición de pie y agua (en una línea frontal limpia Z = -0.3 .. 0.0 para que nadie tape a nadie)
-p_orilla_estela      397.1  0.0
-p_orilla_will        398.2 -0.3
-p_orilla_estela_sale 399.2 -0.2
-p_rio_agua           397.4 -2.5
-p_mirada_rio         400.0 -8.0
+# ── De día ──
+p_r_centro           399.8 -0.6
+p_r_rio              399.5 -8.0
+p_orilla_will        398.4 -0.8
+p_estela_mira        398.9  0.9
+p_estela_vuelo       398.4 -1.0
+p_rio_agua           397.9 -3.4
+p_tobias_dibujo      399.25 -0.45
+p_estela_empuja      399.05 -0.95
+p_will_empujado      397.75 -0.5
+p_estela_sentada     399.45  0.3
+p_protesta           400.3 -0.3
+p_actua_will         398.65  0.1
+p_estela_detras_t    400.3  0.95
+p_estela_detras_l    402.2  0.9
+p_actua_liam         402.6 -0.35
+p_r_actua            400.15 -0.3
+p_will_lado_tobias   399.45 -0.15
+p_liam_lado_tobias   401.15 -0.15
 
-# Cámaras de Acto 1 y Acto 2 (Día junto al río, mirando desde el agua hacia la orilla soleada)
-cam_rio_general      399.5 -5.4
-cam_rio_hermanos     400.9 -3.2
-cam_rio_dibujo       399.9 -4.0
-cam_rio_will_cana    398.1 -3.3
-cam_rio_chapuzon     394.8 -2.5
-cam_rio_risa_grupo   399.6 -4.6
-cam_rio_estela_habla 399.1 -3.0
-cam_rio_chicos_no    399.8 -4.2
-cam_rio_tobias_solo  400.8 -3.0
+cam_r_general        404.5  3.8
+cam_r_liam_tobias    403.2 -1.7
+cam_r_will           397.0 -1.9
+cam_r_lado           394.2 -0.9
+cam_r_agua           397.2 -5.8
+cam_r_reaccion       402.9 -2.3
+cam_r_estela_agua    397.7 -1.0
+cam_r_risa_a         400.0 -3.2
+cam_r_risa_b         400.0 -6.5
+cam_r_cielo          399.0  2.0
+cam_r_dibujo         398.7 -2.5
+p_dibujo             398.85 -0.6
+cam_r_empujon        398.6  0.9
+cam_r_cuento         399.9 -2.4
+cam_r_cuento_b       399.9 -1.8
+cam_r_actua          400.15 -3.9
+cam_r_protesta       400.3 -2.3
+cam_r_estela_casi    401.9 -2.0
 
-# Cámaras de Acto 3 y Acto 4 (Noche estrellada en la hierba y ascenso a la estrella de madera)
-cam_noche_general    400.0 -4.8
-cam_noche_will_est   398.8 -3.1
-cam_noche_hermanos   401.3 -3.1
-cam_noche_will_solo  398.6 -2.9
-cam_cielo_ascenso    400.0 -2.2 2.40
-cam_cielo_ascenso_fin 400.0 -3.2 2.80
-mira_cielo_ascenso   400.0 -28.0 18.00
+# ── De noche ──
+p_will_noche         398.0  0.3
+p_estela_noche       399.2  0.3
+p_liam_noche         400.6  0.25
+p_tobias_noche       401.6  0.75
+p_tobias_acurrucado  401.3  0.55
+p_will_delante       401.0 -0.6
+p_will_cuenta        402.45 0.1
+p_estela_detras      400.6  1.9
+p_estela_escucha     402.6  1.5
+p_will_hacia_estela  399.6 -0.3
+p_estela_hacia_will  397.6 -0.3
+p_r_dos              398.6  0.6
+p_r_noche_centro     399.9  0.2
+p_r_cuenta           401.8  0.6
+p_constelacion_rio   406.0 -22.0 24.0
+
+cam_r_noche_cenital  400.0  2.2
+cam_r_will_sentado   397.6 -2.0
+cam_r_pov            398.6  1.7
+cam_r_dos_noche      398.6 -0.8
+cam_r_tobias_liam    401.1 -1.4
+cam_r_alejarse_a     400.6 -2.2
+cam_r_alejarse_b     400.6 -7.5
+cam_r_final          400.5 -1.0
 
 HILO
 @inicio
 bandas muestra
-musica EPILOGUE fadeIn=1.5 continuarDondeIba=true
 fundido cubre 0.01
 efecto ModuleBeat routine=PrepararRioDia
 tobias en s_rio_tobias
 tobias sienta s_rio_tobias ya
 liam en s_rio_liam
 liam sienta s_rio_liam ya
-will en p_orilla_will mirando p_mirada_rio
-estela en p_orilla_estela mirando will
+will en p_orilla_will mirando p_r_rio
+estela en p_estela_mira mirando will
 
-# Cartel de transición temporal: "Semanas después..." con plano general de la ribera soleada
-plano conjunto will estela tobias liam desde=cam_rio_general altura=1.40 altura_foco=0.80 lente=36 suave=0.0
+# «Unas semanas después…», sobre negro (el telón que deja la parte 1); con él entra, despacio,
+# la música de la mañana.
 efecto ModuleBeat routine=TarjetaSemanasDespues
-fundido entra 1.2 color=000000
-espera 1.20
+espera 0.6
+musica PROLOGUE_DREAM fadeIn=4.0 continuarDondeIba=false
+espera 4.4
 
-# ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 1: EN LA ORILLA DEL RÍO — Liam y Tobías aprendiendo a pescar y el dibujo de Will
-# ───────────────────────────────────────────────────────────────────────────────────────────
-plano dos liam tobias solo desde=cam_rio_hermanos altura=1.05 altura_foco=0.68 lente=30 suave=0.4
+# La orilla: pescan.
+plano general will estela tobias liam desde=cam_r_general mira=p_r_centro altura=2.6 altura_foco=0.6 lente=44 suave=0
+efecto ModuleBeat routine=QuitarTelon
+fundido entra 1.6
+espera 2.6
+
+plano dos liam tobias solo desde=cam_r_liam_tobias altura=0.9 altura_foco=0.68 lente=38 suave=0.4
 liam cara alegre
 liam dice FINAL_LIAM_RIO_01 dura=2.6
-espera 0.10
-
+espera 0.1
 tobias cara alegre
 tobias dice FINAL_TOBIAS_RIO_01 dura=3.4
-espera 0.10
+espera 0.2
 
-# Tobías levanta el cuaderno de dibujo, mira a Will con la caña y le pide que se esté quieto
-plano conjunto tobias liam will desde=cam_rio_dibujo altura=1.20 altura_foco=0.78 lente=34 suave=0.35
+# Tobías se levanta y le cuenta a Will que le hizo un dibujo mientras estaban de viaje.
+tobias levanta
+tobias anda a p_tobias_dibujo ritmo=normal llega_mirando=will
+will mira tobias
+plano dos tobias will desde=cam_r_dibujo mira=p_dibujo altura=1.0 altura_foco=0.8 lente=42 suave=0.3
 tobias cara alegre
-will cara picaro
-tobias dice FINAL_TOBIAS_RIO_02 dura=3.5
-espera 0.15
+& will cara sorpresa
+tobias dice FINAL_TOBIAS_RIO_02 gesto=Talk01
 
-# ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 2: EL CHAPUZÓN DE ESTELA Y LA HISTORIA DEL SIROPE
-# ───────────────────────────────────────────────────────────────────────────────────────────
-# Will nota un tirón en la caña y tira hacia atrás con demasiada fuerza
-plano medio will solo desde=cam_rio_will_cana altura=1.30 altura_foco=1.00 lente=30 suave=0.3
-will gesto CastingEnter01
-espera 0.10
-will cara sorpresa
-will dice FINAL_WILL_RIO_01 dura=2.8
-espera 0.10
-
-# El anzuelo engancha la capa de Estela y la lanza por los aires al agua con un gran chapuzón
-plano conjunto estela will desde=cam_rio_chapuzon mira=p_rio_agua altura=1.35 altura_foco=0.75 suave=0.25
-estela cara sorpresa
-efecto ModuleBeat routine=SaltoRioEstela
-sonido Agua_Zambullida volume=1.0
-espera 0.85
-
-# Estela sale del río empapada mientras Will, Liam y Tobías se mueren de risa
-plano conjunto estela will tobias liam desde=cam_rio_risa_grupo altura=1.35 altura_foco=0.80 lente=36 suave=0.35
-sonido Agua_SalirAFlote volume=0.8
-estela anda a p_orilla_estela_sale ritmo=prisa llega_mirando=p_mirada_rio
-estela cara enfado
+# El dibujo, a toda pantalla; encima, los comentarios de todos.
+efecto ModuleBeat routine=DibujoDeTobias
+espera 0.6
 will cara alegre
+will dice FINAL_WILL_RIO_04 sin_pose
+espera 0.1
+estela cara picaro
+estela dice FINAL_ESTELA_RIO_04 sin_pose
+espera 0.1
+liam cara picaro
+liam dice FINAL_LIAM_RIO_04 sin_pose
+espera 0.1
+estela cara enfado
+estela dice FINAL_ESTELA_RIO_05 sin_pose
+espera 0.3
+@fin_dibujo
+espera 0.4
+tobias sienta s_rio_tobias
+will mira p_r_rio
+espera 0.6
+
+# ¡Pica!
+plano medio will solo desde=cam_r_will altura=1.1 altura_foco=1.0 lente=39 suave=0.3
+will cara sorpresa
+will dice FINAL_WILL_RIO_01 gesto=SenseSomethingStart_NoWeapon dura=2.8
+espera 0.1
+
+# Will tira con todo... el anzuelo engancha a Estela y la lanza al río.
+plano general will estela desde=cam_r_lado mira=p_estela_vuelo altura=1.3 altura_foco=1.2 lente=44 suave=0
+efecto ModuleBeat routine=TironDeLaCana
+espera 0.6
+estela cara sorpresa
+estela bucle Falling
+estela desliza p_estela_vuelo altura=2.4 dura=0.55
+estela desliza p_rio_agua altura=-0.75 dura=0.5 seco
+estela bucle Swimming_Floating_NoWeapon
+espera 0.3
+
+# El agua, revuelta.
+plano conjunto estela desde=cam_r_agua mira=p_rio_agua altura=0.5 altura_foco=0.1 lente=38 suave=0
+espera 1.4
+
+# «Oh, oh…»: los tres a la vez (la que les va a caer).
+plano conjunto will tobias liam desde=cam_r_reaccion altura=1.2 altura_foco=0.8 lente=38 suave=0.3
+will cara miedo
+& tobias cara miedo
+& liam cara miedo
+tobias dice FINAL_TOBIAS_RIO_04 sin_pose
+espera 0.3
+
+# Estela sale del agua hecha una furia, va derecha a Will y le aparta de un empujón.
+plano medio estela solo desde=cam_r_estela_agua altura=0.6 altura_foco=0.6 lente=39 suave=0.2
+efecto ModuleBeat routine=EstelaSaleDelAgua
+estela bucle Idle01
+estela desliza p_rio_agua altura=-0.25 dura=0.8
+estela cara enfado
+estela gesto Angry02
+estela dice FINAL_ESTELA_RIO_00 sin_pose cara=enfado
+espera 0.3
+estela anda a p_estela_empuja ritmo=prisa llega_mirando=will
+& will mira estela
+& will cara miedo
+
+plano dos estela will desde=cam_r_empujon altura=1.1 altura_foco=0.95 lente=40 suave=0.2
+estela gesto Push_InPlace_NoWeapon
+estela dice FINAL_ESTELA_RIO_00B sin_pose cara=enfado
+& will gesto TakeDamage
+& will desliza p_will_empujado dura=0.45
+espera 0.3
+
+# Se sienta junto a Tobías, toda dignidad, y se lo cuenta: con retintín.
+estela anda a p_estela_sentada ritmo=normal llega_mirando=tobias
+estela gesto SitGround_Begin
+estela bucle SitGround_Loop
+will mira estela
+efecto ModuleBeat routine=TobiasMiraAEstela
+plano dos estela tobias desde=cam_r_cuento altura=0.85 altura_foco=0.6 lente=40 suave=0.3
+estela cara picaro
+& tobias cara sorpresa
+estela dice FINAL_ESTELA_RIO_01 sin_pose
+espera 0.1
+
+plano medio will solo desde=cam_r_will altura=1.1 altura_foco=1.0 lente=39 suave=0.2
+will cara miedo
+will dice FINAL_WILL_LIAM_RIO_01 gesto=HeadShake01
+espera 0.1
+
+# Se lo cuenta como un cuento... y acaba representándolo: se levanta, corre hacia Will (la
+# novia) y luego hacia Liam (el del cartel). Tobías se parte de risa.
+plano dos estela tobias desde=cam_r_cuento mover=cam_r_cuento_b altura=0.85 altura_foco=0.6 lente=40 suave=0.4
+estela cara alegre
+& tobias cara ilusionado
+estela dice FINAL_ESTELA_RIO_02A sin_pose gesto=Talk02
+espera 0.1
+
+plano conjunto will estela tobias liam desde=cam_r_actua mira=p_r_actua altura=1.3 altura_foco=0.8 lente=50 suave=0.4
+estela bucle SitGround_Exit congela
+espera 0.9
+estela reposo
+estela corre a p_actua_will ritmo=prisa llega_mirando=tobias
+estela dice FINAL_ESTELA_RIO_02B sin_pose gesto=Talk03 cara=alegre
++1.5 will cara enfado
+& tobias gesto Laugh01
+espera 0.1
+estela corre a p_estela_detras_t p_estela_detras_l p_actua_liam ritmo=prisa llega_mirando=tobias
+estela dice FINAL_ESTELA_RIO_02C sin_pose gesto=Talk02 cara=picaro
++0.5 sonido Final_Tobias_Carcajada volume=0.9
+& tobias cara alegre
+& tobias gesto Laugh01 veces=3
++1.6 liam levanta
+& liam cara enfado
+espera 0.1
+
+# Liam y Will, uno a cada lado de Tobías, dándole explicaciones a la vez.
+liam anda a p_liam_lado_tobias ritmo=prisa llega_mirando=tobias
+& will anda a p_will_lado_tobias ritmo=prisa llega_mirando=tobias
+efecto ModuleBeat routine=TobiasDejaDeMirar
+plano conjunto will tobias liam desde=cam_r_protesta mira=p_protesta altura=1.15 altura_foco=0.8 lente=44 suave=0.2
+# Una sola frase con las dos voces a la vez (FINAL_WILL_RIO_03 es la mezcla).
+will dice FINAL_WILL_RIO_03 sin_pose gesto=HeadShake02 cara=enfado
+& liam gesto Angry01
+& liam cara enfado dura=3.2
+espera 0.1
+# Se miran entre ellos.
+will mira liam
+& liam mira will
+espera 0.5
+tobias cara sorpresa
+tobias dice FINAL_TOBIAS_RIO_03 sin_pose cabeza=will,liam
+espera 0.1
+
+plano medio estela solo desde=cam_r_estela_casi mira=p_actua_liam altura=1.15 altura_foco=1.0 lente=36 suave=0.2
+estela cara picaro
+estela dice FINAL_ESTELA_RIO_03 sin_pose gesto=Laugh01
+espera 0.2
+
+# Se ríen todos (y se oye) mientras empieza a anochecer; la cámara se aleja sobre el agua.
+plano general will estela tobias liam desde=cam_r_risa_a mover=cam_r_risa_b mira=p_r_centro altura=1.6 altura_foco=0.7 lente=40 suave=0.5
+sonido Final_Risas_Todos volume=0.95
+efecto ModuleBeat routine=Anochecer
+postproceso Assets/_SEQUENCES/Perfiles/Final_NocheDelRio.asset transicion=9
+will cara alegre
+& estela cara alegre
 & liam cara alegre
 & tobias cara alegre
+will gesto Laugh01 veces=2
+& estela gesto Laugh01 veces=2
+& liam gesto Laugh01 veces=2
+& tobias gesto Laugh01 veces=2
+espera 0.4
+silencio 4.0
+espera 1.2
+
+# La cámara mira al cielo: se hace de noche y la estrella de Will va saliendo.
+plano fijo desde=cam_r_cielo mira=p_constelacion_rio altura=1.0 altura_foco=0 lente=50 suave=1.0
+efecto ModuleBeat routine=MusicaDeLaNoche
+# Mientras miramos arriba, cada uno se coloca para la noche (no se les ve tumbarse). Estela
+# siguió contando la historia y Tobías se quedó dormido, de lado (como Will al empezar el juego);
+# Liam también, boca arriba. Will y Estela, tumbados mirando el cielo.
+will en p_will_noche mirando p_r_rio
+will bucle Knockdown01_Ground congela ya
+estela en p_estela_noche mirando p_r_rio
+estela bucle Knockdown01_Ground congela ya
+tobias en p_tobias_noche mirando p_r_rio
+tobias bucle Sleeping_NoWeapon ya
+efecto ModuleBeat routine=TobiasDuerme
+liam en p_liam_noche mirando p_r_rio
+liam bucle Knockdown01_Ground congela ya
+efecto ModuleBeat routine=LiamSinSentido
+espera 6.4
+efecto ModuleBeat routine=NocheEnElRio
+sonido Ambience_Prologo_Rio volume=0.35
+
+# ───────────────────────────────────────────────────────────────────────────────────────────
+# DE NOCHE: tumbados en la hierba. El cielo de esa noche.
+# ───────────────────────────────────────────────────────────────────────────────────────────
+plano general will estela tobias liam desde=cam_r_noche_cenital mira=p_r_noche_centro altura=5.2 altura_foco=0 lente=44 suave=0.6
+espera 3.4
+
+# ¿Y mi estrella? Se incorpora mientras lo dice.
+plano medio will solo desde=cam_r_will_sentado mira=p_will_noche altura=0.85 altura_foco=0.45 lente=40 suave=0.3
+will cara sorpresa
+will dice FINAL_WILL_NOCHE_00 sin_pose
+& will bucle SitGround_Loop fundido=1.2
+& will mira p_will_hacia_estela
+espera 0.4
+
+# Allí arriba: la estrella torcida de madera, hecha constelación.
+plano fijo desde=cam_r_pov mira=p_constelacion_rio altura=0.5 altura_foco=0 lente=40 suave=0.8
+espera 3.0
+
+plano medio will solo desde=cam_r_will_sentado mira=p_will_noche altura=0.85 altura_foco=0.65 lente=34 suave=0.3
+will cara alegre
+will dice FINAL_WILL_NOCHE_03 sin_pose dura=2.4
+espera 0.4
+
+# Estela se incorpora mientras le contesta.
+plano dos will estela desde=cam_r_dos_noche mira=p_r_dos altura=1.8 altura_foco=0.35 lente=42 suave=0.3
+estela cara alegre
+estela dice FINAL_ESTELA_NOCHE_01 sin_pose dura=3.9
+& estela bucle SitGround_Loop fundido=1.2
+& estela mira p_estela_hacia_will
+espera 0.6
+
+# Tobías se despierta (se durmió con la historia) y se incorpora: quiere oírla otra vez. Pero
+# Liam también se ha dormido (zetas y ronquidos).
+efecto ModuleBeat routine=LiamDuerme
+sonido Final_Liam_Ronquido volume=0.55
+plano dos tobias liam solo desde=cam_r_tobias_liam altura=0.9 altura_foco=0.5 lente=35 suave=0.3
+efecto ModuleBeat routine=TobiasDespierta
+tobias cara cansado
+& tobias bucle SitGround_Loop fundido=1.4
+espera 0.9
+tobias dice FINAL_TOBIAS_NOCHE_01 sin_pose dura=4.8
+espera 1.0
+
+# Will y Estela ven a Liam dormido, se miran y se ríen bajito.
+plano dos will estela desde=cam_r_dos_noche mira=p_r_dos altura=1.8 altura_foco=0.35 lente=42 suave=0.3
+will mira liam
+& estela mira liam
+espera 0.8
+efecto ModuleBeat routine=WillYEstelaSeMiran
+will cara alegre
+& estela cara alegre
 will gesto Laugh01
-espera 0.25
+& estela gesto Laugh01
+sonido Final_Will_Risa volume=0.7
+sonido Final_Estela_Risa volume=0.7
+espera 1.4
+sonido Final_Liam_Ronquido volume=0.4
+espera 1.6
+efecto ModuleBeat routine=NadieMiraConLaCabeza
 
-# Estela se venga contando a Tobías la historia del sirope y los "recién casados"
-plano medio estela solo desde=cam_rio_estela_habla altura=1.30 altura_foco=1.02 lente=28 suave=0.25
-estela cara picaro
-estela dice FINAL_ESTELA_RIO_01 gesto=Talk01 oyentes=tobias dura=2.8
-espera 0.10
-
-# Plano de reacción de Will y Liam entrando en pánico al unísono
-plano conjunto will estela tobias liam desde=cam_rio_chicos_no altura=1.30 altura_foco=0.82 lente=34 suave=0.2
-will cara miedo
-& liam cara miedo
-will dice FINAL_WILL_LIAM_RIO_01 gesto=HeadShake01 oyentes=tobias dura=1.8
-espera 0.10
-
-# Estela se recrea contando todos los detalles a Tobías
-plano medio estela solo desde=cam_rio_estela_habla altura=1.30 altura_foco=1.02 lente=28 suave=0.25
-estela cara alegre
-will gesto SenseSomethingStart_NoWeapon
-estela dice FINAL_ESTELA_RIO_02 gesto=Talk02 oyentes=tobias dura=6.6
-espera 0.10
-
-# Primer plano de Tobías maravillado preguntando si se casaron
-plano dos tobias liam solo desde=cam_rio_tobias_solo altura=1.02 altura_foco=0.66 lente=28 suave=0.25
-tobias cara sorpresa
-tobias dice FINAL_TOBIAS_RIO_03 oyentes=tobias dura=2.4
-espera 0.10
-
-# Will y Liam niegan desesperados otra vez
-plano conjunto will estela tobias liam desde=cam_rio_chicos_no altura=1.30 altura_foco=0.82 lente=34 suave=0.2
-will cara enfado
-& liam cara enfado
-will dice FINAL_WILL_LIAM_RIO_02 gesto=Angry01 oyentes=tobias dura=1.8
-espera 0.10
-
-# Estela remata con una sonrisa pícara: "Casi."
-plano medio estela solo desde=cam_rio_estela_habla altura=1.28 altura_foco=1.05 lente=24 suave=0.2
-estela cara picaro
-estela dice FINAL_ESTELA_RIO_03 gesto=Laugh01 oyentes=tobias dura=2.2
-espera 0.25
-
-# ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 3: LA NOCHE ESTRELLADA — La estrella de madera de cinco puntas
-# ───────────────────────────────────────────────────────────────────────────────────────────
-fundido cubre 1.0 color=000000
-espera 0.10
-efecto ModuleBeat routine=TransicionNoche
-sonido Ambience_Prologo_Rio volume=0.4
-will sienta s_noche_will ya
-estela sienta s_noche_estela ya
-tobias sienta s_noche_tobias ya
-liam sienta s_noche_liam ya
-
-plano conjunto will estela tobias liam desde=cam_noche_general altura=1.20 altura_foco=0.65 lente=34 suave=0.0
-fundido entra 1.2 color=000000
-espera 0.20
-
-# Will descubre en el cielo su estrella de cinco puntas un poco torcida brillando más que las demás
+# Como Liam duerme, Will se levanta y se sienta junto a Tobías, con sitio, para contársela;
+# Estela se acerca a escuchar también.
+plano general will estela tobias liam desde=cam_r_alejarse_a mira=p_r_noche_centro altura=1.6 altura_foco=0.5 lente=46 suave=0.5
+will bucle SitGround_Exit congela
+& estela bucle SitGround_Exit congela
+espera 1.2
+will reposo
+& estela reposo
+will anda a p_will_delante p_will_cuenta ritmo=paseo llega_mirando=tobias
+& estela anda a p_estela_detras p_estela_escucha ritmo=paseo llega_mirando=tobias
+will gesto SitGround_Begin
+& estela gesto SitGround_Begin
+will bucle SitGround_Loop
+& estela bucle SitGround_Loop
+plano dos will tobias desde=cam_r_tobias_liam altura=0.9 altura_foco=0.6 lente=38 suave=0.3
 will cara alegre
-will dice FINAL_WILL_NOCHE_01 dura=3.1
-espera 0.10
+will dice FINAL_WILL_NOCHE_02 sin_pose dura=2.8
+espera 0.3
 
-# Plano cercano de Estela y Will: "Pues te la ha cambiado por una vida. Sales ganando."
-plano dos estela will solo desde=cam_noche_will_est altura=1.00 altura_foco=0.65 lente=28 suave=0.3
-estela cara alegre
-estela dice FINAL_ESTELA_NOCHE_01 dura=3.9
-espera 0.10
+# La cámara se aleja mientras Will cuenta la historia; su voz se va con ella. Tobías, escuchando,
+# se acurruca de lado junto a Liam y se le van cerrando los ojos.
+plano general will estela tobias liam desde=cam_r_alejarse_a mover=cam_r_alejarse_b mira=p_r_cuenta altura=1.4 altura_foco=0.6 lente=40 suave=0.6
+efecto ModuleBeat routine=VozQueSeAleja
+will dice FINAL_WILL_HISTORIA_01 sin_pose dura=5.2
++1.2 tobias bucle Sleeping_NoWeapon fundido=1.8
+& tobias desliza p_tobias_acurrucado dura=1.8
+espera 0.4
+efecto ModuleBeat routine=TobiasDuerme
+will dice FINAL_WILL_HISTORIA_02 sin_pose dura=4.4
+espera 0.4
+will dice FINAL_WILL_HISTORIA_03 sin_pose dura=3.2
+espera 0.6
 
-# Plano cálido de Tobías apoyado junto a su hermano Liam pidiendo la historia una vez más
-plano dos tobias liam solo desde=cam_noche_hermanos altura=1.00 altura_foco=0.65 lente=28 suave=0.3
-tobias cara alegre
-tobias dice FINAL_TOBIAS_NOCHE_01 dura=3.2
-espera 0.10
-
-liam cara alegre
-liam dice FINAL_LIAM_NOCHE_01 dura=3.3
-espera 0.10
-
-# Plano medio de Will sonriendo antes de empezar a contar la historia desde el principio
-plano dos will estela solo desde=cam_noche_will_solo altura=0.98 altura_foco=0.65 lente=26 suave=0.3
-will cara alegre
-will dice FINAL_WILL_NOCHE_02 dura=3.8
-espera 0.30
-
-# ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 4: LA ESTRELLA EN EL CIELO Y LA ÚLTIMA FRASE DEL LIBRO
-# ───────────────────────────────────────────────────────────────────────────────────────────
-plano fijo desde=cam_cielo_ascenso mover=cam_cielo_ascenso_fin mira=mira_cielo_ascenso altura=0 altura_foco=0 lente=42 suave=2.2
+# La estrella, y la frase del libro con la última frase del tema.
+plano fijo desde=cam_r_final mira=p_constelacion_rio altura=0.6 altura_foco=0 lente=46 suave=1.5
 efecto ModuleBeat routine=EnfocarEstrella
-sonido Hechizo_EstrellaFugaz volume=0.85
-espera 1.80
-
-# Frase final canónica de la novela brillando bajo el cielo estrellado antes de pasar a créditos
-efecto ModuleBeat routine=MostrarFraseFinalLibro
-espera 4.80
-
-fundido cubre 1.8 color=000000
-espera 0.30
+espera 2.6
+@frase
+efecto ModuleBeat routine=FraseFinal
+espera 6.4
+fundido cubre 5.0
+espera 5.4
 bandas quita
+efecto ModuleBeat routine=RotuloFin
+espera 8.4
 efecto ModuleBeat routine=IrACreditos
+espera 1.0

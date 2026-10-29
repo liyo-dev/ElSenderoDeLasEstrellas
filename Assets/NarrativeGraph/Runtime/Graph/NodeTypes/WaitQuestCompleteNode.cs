@@ -1,5 +1,5 @@
-// WaitQuestCompleteNode.cs
 using System;
+using System.Collections.Generic;
 
 [Serializable]
 [NarrativeNodeInfo("Quests", "Esperar quest completada", "Se queda esperando hasta que la quest esté completada.")]
@@ -15,6 +15,13 @@ public sealed class WaitQuestCompleteNode : NarrativeNode
     {
         if (debugLogs)
             NarrativeLog.Info($"[WaitQuestCompleteNode] {msg}");
+    }
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Quest(questId, "Espera a que se complete");
+
+    public override void CollectWarnings(List<string> warnings)
+    {
+        if (string.IsNullOrWhiteSpace(questId)) warnings.Add("questId vacío");
     }
 
     public override void Enter(NarrativeContext ctx, Action onReadyToAdvance)

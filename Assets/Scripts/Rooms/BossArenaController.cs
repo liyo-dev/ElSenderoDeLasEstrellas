@@ -1566,6 +1566,22 @@ public class BossArenaController : MonoBehaviour
         return s_arenaRegistry.TryGetValue(id, out arena) && arena != null;
     }
 
+    /// Arena registrada cuyo jefe en combate es `jefe` (o lo contiene): la que lo ha sacado o
+    /// encontrado en su sala. Para que un jefe avise a SU arena aunque haya otras cargadas.
+    public static bool TryGetArenaDelJefe(GameObject jefe, out BossArenaController arena)
+    {
+        arena = null;
+        if (jefe == null) return false;
+        foreach (var candidata in s_arenaRegistry.Values)
+        {
+            if (candidata == null || candidata._activeBossMarker == null) continue;
+            if (!jefe.transform.IsChildOf(candidata._activeBossMarker.transform)) continue;
+            arena = candidata;
+            return true;
+        }
+        return false;
+    }
+
     // =================== Arena creada en runtime (INC-207, "nada en la escena") ===================
 
     /// <summary>True si esta arena fue creada en runtime por <see cref="CreateRuntimeArena"/>.</summary>

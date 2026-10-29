@@ -139,7 +139,7 @@ namespace Game.NPC.States
             if (context.WasDefeatedInCombat) return new DeadState();
             if (context.IsInCombat) return new CombatState();
             if (context.IsInteracting) return new IdleState();
-            if (context.IsPinnedByParty) return new IdleState();
+            if (context.EstaAnclado) return new IdleState();
 
             var ambient = context.Config?.ambientConfig;
             if (ambient == null || !ambient.permitirTrabajo ||

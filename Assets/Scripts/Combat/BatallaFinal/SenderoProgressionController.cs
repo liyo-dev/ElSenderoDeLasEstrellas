@@ -47,8 +47,12 @@ public class SenderoProgressionController : MonoBehaviour
     [SerializeField] private GameObject _portalLiam;
 
     [Header("VFX y Efectos de Transición")]
+    [Tooltip("Efecto de un solo uso al cerrarse un portal (pool de VFX).")]
     [SerializeField] private GameObject _vfxColapsoPrefab;
+    [Tooltip("Efecto de un solo uso al aparecer un portal (pool de VFX).")]
     [SerializeField] private GameObject _vfxAparicionPrefab;
+    [Tooltip("Segundos que dura cada efecto de transición antes de volver al pool.")]
+    [SerializeField, Min(0.1f)] private float _duracionVfx = 3f;
 
     [Header("Escenas de Pruebas")]
     [SerializeField] private string _escenaPruebaWill = "Sendero_PruebaWill";
@@ -101,27 +105,39 @@ public class SenderoProgressionController : MonoBehaviour
         }
     }
 
+    // El cuerpo del jugador lo da PlayerService: se toma al activarse y se renueva cuando se
+    // registra otro (recarga de escena, relevo de cuerpo).
+    private void OnEnable()
+    {
+        PlayerService.OnPlayerRegistered += AlRegistrarJugador;
+        PlayerService.OnPlayerUnregistered += AlQuitarJugador;
+        AlRegistrarJugador(PlayerService.Player);
+    }
+
+    private void OnDisable()
+    {
+        PlayerService.OnPlayerRegistered -= AlRegistrarJugador;
+        PlayerService.OnPlayerUnregistered -= AlQuitarJugador;
+    }
+
+    private void AlRegistrarJugador(GameObject jugador) => _jugadorTransform = jugador != null ? jugador.transform : null;
+
+    private void AlQuitarJugador() => _jugadorTransform = null;
+
     private void Update()
     {
-        if (_enRespawn) return;
+        if (_enRespawn || _jugadorTransform == null) return;
 
-        if (_jugadorTransform == null)
-        {
-            if (PlayerService.PlayerTransform != null)
-            {
-                _jugadorTransform = PlayerService.PlayerTransform;
-            }
-            else
-            {
-                var willGo = GameObject.Find("_WILL");
-                if (willGo != null) _jugadorTransform = willGo.transform;
-            }
-        }
-
-        if (_jugadorTransform != null && _jugadorTransform.position.y < _alturaCaidaVacio)
+        if (_jugadorTransform.position.y < _alturaCaidaVacio)
         {
             StartCoroutine(Co_RespawnJugador());
         }
+    }
+
+    private void ReproducirVfx(GameObject prefab, Vector3 posicion)
+    {
+        if (prefab != null && VfxPoolService.Instance != null)
+            VfxPoolService.Instance.Play(prefab, posicion, Quaternion.identity, _duracionVfx);
     }
 
     private IEnumerator Co_RespawnJugador()
@@ -197,10 +213,7 @@ public class SenderoProgressionController : MonoBehaviour
         if (_portalOrigenTierra != null && _portalOrigenTierra.activeSelf)
         {
             Vector3 pos = _portalOrigenTierra.transform.position;
-            if (_vfxColapsoPrefab != null)
-            {
-                Instantiate(_vfxColapsoPrefab, pos, Quaternion.identity);
-            }
+            ReproducirVfx(_vfxColapsoPrefab, pos);
 
             _portalOrigenTierra.SetActive(false);
 #if UNITY_EDITOR || UNITY_INCLUDE_INSTRUMENTATION
@@ -221,10 +234,7 @@ public class SenderoProgressionController : MonoBehaviour
         if (_portalWill != null && !_portalWill.activeSelf)
         {
             _portalWill.SetActive(true);
-            if (_vfxAparicionPrefab != null)
-            {
-                Instantiate(_vfxAparicionPrefab, _portalWill.transform.position, Quaternion.identity);
-            }
+            ReproducirVfx(_vfxAparicionPrefab, _portalWill.transform.position);
         }
     }
 
@@ -256,10 +266,7 @@ public class SenderoProgressionController : MonoBehaviour
         if (_portalEstela != null && !_portalEstela.activeSelf)
         {
             _portalEstela.SetActive(true);
-            if (_vfxAparicionPrefab != null)
-            {
-                Instantiate(_vfxAparicionPrefab, _portalEstela.transform.position, Quaternion.identity);
-            }
+            ReproducirVfx(_vfxAparicionPrefab, _portalEstela.transform.position);
         }
     }
 
@@ -291,10 +298,7 @@ public class SenderoProgressionController : MonoBehaviour
         if (_portalLiam != null && !_portalLiam.activeSelf)
         {
             _portalLiam.SetActive(true);
-            if (_vfxAparicionPrefab != null)
-            {
-                Instantiate(_vfxAparicionPrefab, _portalLiam.transform.position, Quaternion.identity);
-            }
+            ReproducirVfx(_vfxAparicionPrefab, _portalLiam.transform.position);
         }
     }
 
@@ -343,10 +347,7 @@ public class SenderoProgressionController : MonoBehaviour
         if (portal != null && portal.activeSelf)
         {
             Vector3 pos = portal.transform.position;
-            if (_vfxColapsoPrefab != null)
-            {
-                Instantiate(_vfxColapsoPrefab, pos, Quaternion.identity);
-            }
+            ReproducirVfx(_vfxColapsoPrefab, pos);
 
             yield return new WaitForSeconds(0.6f);
             portal.SetActive(false);

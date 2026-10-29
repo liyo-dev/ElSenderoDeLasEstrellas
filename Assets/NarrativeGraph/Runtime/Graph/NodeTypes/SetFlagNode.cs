@@ -2,12 +2,11 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Marca (o borra) un flag narrativo persistente. Se guarda en preset.flags con prefijo
-/// NARRATIVE_FLAG:, así que sobrevive al guardado/carga sin configurar nada más.
-/// Consultable con BranchFlagNode.
+/// Marca (o borra) un flag narrativo persistente (NarrativeFlags): se guarda con la partida y se
+/// consulta con BranchFlagNode.
 /// </summary>
 [Serializable]
-[NarrativeNodeInfo("Flujo", "Poner flag", "Guarda un hecho persistente ('CAP1_TERMINADO') consultable con 'Según flag'.")]
+[NarrativeNodeInfo("Flujo", "Poner flag", "Guarda un hecho persistente ('PUENTE_REPARADO') consultable con 'Según flag'.")]
 [SavePoint("Instantáneo")]
 public sealed class SetFlagNode : NarrativeNode, INarrativeStateEffect
 {
@@ -17,6 +16,8 @@ public sealed class SetFlagNode : NarrativeNode, INarrativeStateEffect
 
     [Tooltip("true = activar el flag; false = borrarlo.")]
     public bool value = true;
+
+    public override void Describe(INarrativeNodeDescriber d) => d.Flag(flagKey, $"{flagKey} = {(value ? "sí" : "no")}");
 
     public void Project(INarrativeStateWriter state)
     {

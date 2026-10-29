@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,6 +10,9 @@ namespace Sendero.UI
     /// Muestra un icono en el HUD que cambia según el período del día.
     /// Cuando llueve, sobreescribe el icono con rainSprite hasta que para la lluvia.
     /// Busca DayNightCycle automáticamente cada vez que se carga una escena nueva.
+    ///
+    /// Se esconde con clave (Ocultar(quien)/Mostrar(quien)), como el HUD y el minimapa: no vuelve
+    /// a verse hasta que lo suelten todos los que lo pidieron.
     /// </summary>
     public class TimeOfDayIndicator : MonoBehaviour, IOcultableDuranteCinematica
     {
@@ -34,6 +38,12 @@ namespace Sendero.UI
 
         private DayNightCycle _dayNight;
         private DayNightCycle.TimeOfDay _currentPeriod;
+        private Sprite _spriteActual;
+        private readonly HashSet<object> _ocultadoPor = new();
+
+        // Claves de quien lo esconde sin pasar una propia.
+        private static readonly object PorLlamadaSinClave = new();
+        private static readonly object PorAvisoDeViaje = new();
 
         private void Awake()
         {
@@ -63,28 +73,28 @@ namespace Sendero.UI
             OcultablesDeCinematica.Quitar(this);
         }
 
-        /// <summary>
-        /// Oculta el icono de estado del tiempo (p.ej. mientras está abierto el menú de equipamiento).
-        /// </summary>
-        public void Hide()
+        /// <summary>Esconde el icono hasta que <paramref name="quien"/> llame a <see cref="Mostrar"/>.</summary>
+        public void Ocultar(object quien)
         {
-            if (iconImage != null) iconImage.enabled = false;
+            if (quien == null || !_ocultadoPor.Add(quien)) return;
+            Refrescar();
         }
 
-        /// <summary>
-        /// Restaura el icono de estado del tiempo con el sprite que le corresponda (lluvia o período actual).
-        /// </summary>
-        public void Show()
+        /// <summary>Retira la petición de <paramref name="quien"/>; el icono vuelve si nadie más lo esconde.</summary>
+        public void Mostrar(object quien)
         {
-            if (iconImage == null) return;
-            if (_dayNight != null && _dayNight.IsRaining)
-                ApplySprite(rainSprite);
-            else
-                ApplySprite(SpriteForPeriod(_currentPeriod));
+            if (quien == null || !_ocultadoPor.Remove(quien)) return;
+            Refrescar();
         }
 
-        void IOcultableDuranteCinematica.Ocultar(object quien) => Hide();
-        void IOcultableDuranteCinematica.Mostrar(object quien) => Show();
+        /// <summary>Esconde el icono con una clave compartida. Mejor <see cref="Ocultar"/> con clave propia.</summary>
+        public void Hide() => Ocultar(PorLlamadaSinClave);
+
+        /// <summary>Suelta la clave compartida de <see cref="Hide"/>.</summary>
+        public void Show() => Mostrar(PorLlamadaSinClave);
+
+        void IOcultableDuranteCinematica.Ocultar(object quien) => Ocultar(quien);
+        void IOcultableDuranteCinematica.Mostrar(object quien) => Mostrar(quien);
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
@@ -142,24 +152,21 @@ namespace Sendero.UI
 
         private void ApplySprite(Sprite sprite)
         {
+            _spriteActual = sprite;
+            Refrescar();
+        }
+
+        // El icono se ve si tiene sprite y nadie lo tiene escondido.
+        private void Refrescar()
+        {
             if (iconImage == null) return;
-            iconImage.sprite  = sprite;
-            iconImage.enabled = sprite != null;
+            iconImage.sprite  = _spriteActual;
+            iconImage.enabled = _spriteActual != null && _ocultadoPor.Count == 0;
         }
 
-        private void OnTeleportHintShown()
-        {
-            if (iconImage != null) iconImage.enabled = false;
-        }
+        private void OnTeleportHintShown() => Ocultar(PorAvisoDeViaje);
 
-        private void OnTeleportHintHidden()
-        {
-            // Restaurar el sprite que corresponde al período actual (o lluvia)
-            if (_dayNight != null && _dayNight.IsRaining)
-                ApplySprite(rainSprite);
-            else
-                ApplySprite(SpriteForPeriod(_currentPeriod));
-        }
+        private void OnTeleportHintHidden() => Mostrar(PorAvisoDeViaje);
 
 #if UNITY_EDITOR
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

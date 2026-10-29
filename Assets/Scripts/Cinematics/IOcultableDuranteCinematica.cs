@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// Lo que se esconde mientras se reproduce una cinemática (el HUD, el minimapa, el indicador
-/// de la hora) declara esta interfaz y se apunta en el registro de abajo.
+/// de la hora, los avisos de ArbitroDeAvisos) declara esta interfaz y se apunta en el registro
+/// de abajo. Lo usan igual las cinemáticas, la intro de un jefe y los textos dramáticos.
 ///
 /// Cada sistema lleva su propia cuenta de ocultados, así que pueden coexistir varias razones
 /// para taparlo a la vez: una cinemática, un aviso, el icono de saltar.
 public interface IOcultableDuranteCinematica
 {
-    /// Pide que este sistema se esconda. La clave identifies quién lo pide, para poder
+    /// Pide que este sistema se esconda. La clave identifica quién lo pide, para poder
     /// liberarlo después sin afectar a los demás.
     void Ocultar(object quien);
 
@@ -18,7 +19,7 @@ public interface IOcultableDuranteCinematica
 
 /// El registro de los sistemas que se esconden durante una cinemática.
 ///
-/// El reproductor no los conoce: se limita a pedir que se escondan todos los que estén
+/// Quien tapa la pantalla no los conoce: se limita a pedir que se escondan todos los que estén
 /// apuntados. Un sistema nuevo se esconde solo simplemente implementando la interfaz y
 /// apuntándose aquí, sin tocar el reproductor.
 public static class OcultablesDeCinematica

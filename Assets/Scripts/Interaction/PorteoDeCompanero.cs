@@ -326,53 +326,44 @@ public class PorteoDeCompanero : MonoBehaviour
     }
 
     /// <summary>
-    /// Activa la malla de ojos cerrados (Eye09) y desactiva las demás mallas de ojos del cuerpo.
-    /// Funciona tanto en runtime como en EditMode directamente sobre las mallas.
+    /// Cierra los ojos del cuerpo con su controlador de emociones (la malla de ojos cerrados).
+    /// Fuera de Play el controlador no ha cacheado sus mallas, así que la vista previa del editor
+    /// enciende la malla directamente.
     /// </summary>
     public static void CerrarOjos(Transform objetivoCuerpo, string nombreOjos = "Eye09")
     {
         if (objetivoCuerpo == null) return;
-
+#if UNITY_EDITOR
+        if (!Application.isPlaying) { VistaPreviaDeOjos(objetivoCuerpo, nombreOjos); return; }
+#endif
         var emotion = Game.NPC.Common.EmotionControllerResolver.Resolve(objetivoCuerpo.gameObject);
-        if (emotion != null)
-        {
-            emotion.AplicarOjos(nombreOjos);
-        }
-
-        // Garantizar activación en EditMode y PlayMode
-        var renderers = objetivoCuerpo.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-        for (int i = 0; i < renderers.Length; i++)
-        {
-            string n = renderers[i].gameObject.name;
-            if (n.StartsWith("Eye", StringComparison.OrdinalIgnoreCase))
-            {
-                bool esOjoCerrado = n.Equals(nombreOjos, StringComparison.OrdinalIgnoreCase);
-                renderers[i].gameObject.SetActive(esOjoCerrado);
-            }
-        }
+        if (emotion != null) emotion.AplicarOjos(nombreOjos);
     }
 
+    /// <summary>Devuelve la cara de reposo del cuerpo (ojos abiertos) con su controlador de emociones.</summary>
     public static void RestaurarOjos(Transform objetivoCuerpo)
     {
         if (objetivoCuerpo == null) return;
-
+#if UNITY_EDITOR
+        if (!Application.isPlaying) { VistaPreviaDeOjos(objetivoCuerpo, "Eye01"); return; }
+#endif
         var emotion = Game.NPC.Common.EmotionControllerResolver.Resolve(objetivoCuerpo.gameObject);
-        if (emotion != null)
-        {
-            emotion.VolverAReposo();
-            return;
-        }
+        if (emotion != null) emotion.VolverAReposo();
+    }
 
+#if UNITY_EDITOR
+    // Solo para la vista previa fuera de Play: deja activa una malla de ojos y apaga las demás.
+    private static void VistaPreviaDeOjos(Transform objetivoCuerpo, string mallaActiva)
+    {
         var renderers = objetivoCuerpo.GetComponentsInChildren<SkinnedMeshRenderer>(true);
         for (int i = 0; i < renderers.Length; i++)
         {
             string n = renderers[i].gameObject.name;
-            if (n.StartsWith("Eye", StringComparison.OrdinalIgnoreCase))
-            {
-                renderers[i].gameObject.SetActive(n.Equals("Eye01", StringComparison.OrdinalIgnoreCase));
-            }
+            if (n.StartsWith("Eye", StringComparison.Ordinal) && n.Length > 3 && char.IsDigit(n[3]))
+                renderers[i].gameObject.SetActive(n.Equals(mallaActiva, StringComparison.OrdinalIgnoreCase));
         }
     }
+#endif
 
 #if UNITY_EDITOR
     [ContextMenu("Probar Cargar (En Brazos)")]

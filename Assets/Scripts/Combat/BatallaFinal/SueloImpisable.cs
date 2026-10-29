@@ -5,7 +5,8 @@ using UnityEngine;
 /// <summary>
 /// Mecánica de combate: El Mar del Abismo / Suelo Impisable.
 /// Inunda el suelo de la arena con oscuridad corrupta y fuerza al jugador a volar.
-/// Pisar o descender al suelo mientras está activo causa daño letal abrasador.
+/// Pisar o descender al suelo mientras está activo causa daño letal abrasador a quien del grupo
+/// lo toque (DanoEnZona; cada personaje con su vida, GDD § 6.1).
 /// </summary>
 public sealed class SueloImpisable : MonoBehaviour
 {
@@ -21,10 +22,14 @@ public sealed class SueloImpisable : MonoBehaviour
 
     private bool _activo;
     private Transform _jugador;
-    private PlayerHealthSystem _saludJugador;
     private PlayerFlyingController _vueloJugador;
     private GameObject _marVisual;
     private float _ultimoDano;
+
+    // Segundos entre golpes del suelo; cada golpe quita danoPorSegundo × este intervalo.
+    private const float IntervaloDeDano = 0.2f;
+    // Margen horizontal más allá del radio en el que el suelo aún quema.
+    private const float MargenDeRadio = 2f;
 
     public static SueloImpisable Activar(Vector3 centro, float radio, GameObject vfxMar = null)
     {
@@ -45,7 +50,6 @@ public sealed class SueloImpisable : MonoBehaviour
         if (PlayerService.TryGetPlayer(out var j) && j != null)
         {
             _jugador = j.transform;
-            _saludJugador = j.GetComponent<PlayerHealthSystem>();
             _vueloJugador = j.GetComponent<PlayerFlyingController>();
         }
 
@@ -76,33 +80,36 @@ public sealed class SueloImpisable : MonoBehaviour
 
     private void Update()
     {
-        if (!_activo || _jugador == null || _saludJugador == null || !_saludJugador.IsAlive) return;
+        if (!_activo) return;
 
-        // Comprobar si el jugador está dentro del radio de la arena
-        Vector3 dif = _jugador.position - transform.position;
-        float dHorizontal = new Vector2(dif.x, dif.z).magnitude;
-        if (dHorizontal > radio + 2f) return;
+        // Si el jugador no está volando y toca el suelo, impulsarlo hacia arriba para recordarle volar
+        if (_jugador != null && _vueloJugador != null && !_vueloJugador.IsFlying && TocaElSuelo(_jugador.position))
+            _vueloJugador.ForzarVuelo(4.0f);
 
-        // Comprobar si está tocando el suelo o rozando la superficie corrupta
-        bool cercaDelSuelo = _jugador.position.y <= alturaSuelo + margenSeguridad;
-
-        if (cercaDelSuelo)
+        // Daño letal continuo a quien del grupo toque el suelo corrompido
+        if (Time.time - _ultimoDano < IntervaloDeDano) return;
+        _ultimoDano = Time.time;
+        int n = DanoEnZona.CuerposDelGrupo(out var cuerpos);
+        for (int i = 0; i < n; i++)
         {
-            // Daño letal continuo
-            if (Time.time - _ultimoDano >= 0.2f)
+            var c = cuerpos[i];
+            if (!TocaElSuelo(c.Posicion)) continue;
+            if (DanoEnZona.Danar(c, danoPorSegundo * IntervaloDeDano) && c.EsElJugador)
             {
-                _ultimoDano = Time.time;
-                _saludJugador.TakeDamage(danoPorSegundo * 0.2f);
                 FeedbackService.CameraShake(0.4f, 0.15f);
                 FeedbackService.Vibrar(0.5f, 0.5f, 0.2f);
             }
-
-            // Si el jugador no está volando, impulsarlo hacia arriba para recordarle volar
-            if (_vueloJugador != null && !_vueloJugador.IsFlying)
-            {
-                _vueloJugador.ForzarVuelo(4.0f);
-            }
         }
+    }
+
+    /// Un punto está sobre la arena y tocando (o rozando) la superficie corrupta.
+    private bool TocaElSuelo(Vector3 punto)
+    {
+        if (punto.y > alturaSuelo + margenSeguridad) return false;
+        Vector3 dif = punto - transform.position;
+        dif.y = 0f;
+        float alcance = radio + MargenDeRadio;
+        return dif.sqrMagnitude <= alcance * alcance;
     }
 
     private void CrearVisualDeSombra()

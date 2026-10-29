@@ -1,9 +1,15 @@
 # ═══════════════════════════════════════════════════════════════════════════════════════════
-#  CINEMÁTICA FINAL — PARTE 1: EL SACRIFICIO, EL CONJURO DE RESURRECCIÓN Y EL REGRESO
-#  Basado fielmente en los capítulos XXVII y XXVIII de la novela canónica.
-#  Arranca en el umbral: Will acaba de empujar a Estela fuera del portal a La Piedra Ancestral.
-#  Zona 1: Umbral Astral de El Sendero (Portal de salida en Z=8.2)
-#  Zona 2: Santuario de la Piedra Ancestral — DE NOCHE (Centro 200, 0)
+#  CINEMÁTICA FINAL — PARTE 1: EL SACRIFICIO, EL CONJURO Y EL REGRESO
+#  Zona 1: el Sendero (se está deshaciendo). Zona 2: la Piedra Ancestral, de noche.
+#
+#  Música:
+#    Acto 1  El portal ............... La Melodía de Liam; se apaga con la explosión (silencio).
+#    Acto 2  El conjuro .............. Ultimo Incantazione, entero (se apaga solo con el fundido).
+#    Acto 3  Liam vuelve ............. silencio; vuelve la Melodía de Liam donde se quedó.
+#    Acto 4  El Archimago ............ Tema Principal, desde el segundo que calcula el módulo para
+#    Acto 5  Will vuelve ............. que la subida (1:55) caiga en @carrera y el estallido (2:03)
+#                                      en @llegan, el abrazo de los tres.
+#  La carrera va en cámara lenta: el módulo frena el tiempo lo justo para llegar con la música.
 # ═══════════════════════════════════════════════════════════════════════════════════════════
 
 GUION Final_01_ElSacrificio
@@ -20,345 +26,479 @@ liam       Actor_Liam       nombre=Liam color=9EDBFF prefab=Assets/Prefabs/_LIAM
 archimago  Actor_Archimago  nombre=Archimago color=FFD27A prefab=Assets/Prefabs/_WILL_ORIGINAL.prefab oculto
 
 PUNTOS
-# ── ZONA 1: EL SENDERO ASTRAL ──
+# ── ZONA 1: EL SENDERO ──
 p_liam_caido                  -1.2  4.2
 p_will_umbral                  0.0  4.6
 p_will_conjuro                 0.0  4.2
+p_will_a2_inicio               1.9  5.9
 p_portal_salida                0.0  8.2
+p_a1_sendero_centro            0.0  5.2
+p_a2_centro                   -0.5  4.2
 
-# Cámaras de Zona 1 (Sendero)
+cam_a1_hombro_will            -1.0  1.4
 cam_will_umbral_frente         0.35 7.2
-cam_will_umbral_cerca          0.25 6.8
-cam_sendero_conjuro_general    0.0  0.6
-cam_sendero_conjuro_perfil    -3.6  4.2
-cam_sendero_conjuro_cenital    0.0  1.4
-cam_will_climax                0.20 6.5
+cam_will_umbral_cerca          0.25 6.6
+cam_a1_sendero_alto            6.5  1.0
+cam_a2_general                 6.0 -2.0
+cam_a2_will_frente            -1.1  2.8
+cam_a2_contrapicado            2.6  2.0
+cam_a2_orbita_a                2.6  6.4
+cam_a2_orbita_b               -2.9  5.8
+cam_a2_climax_frente          -1.4  3.0
+cam_a2_general_bajo            4.5  1.0
+cam_a2_will_cerca             -1.6  3.4
+cam_a2_final                   5.0 -4.0
 
-# ── ZONA 2: LA PIEDRA ANCESTRAL — NOCHE (Centro 200, 0; monolito en Z=-2.5, umbral en Z=0.4) ──
+# ── ZONA 2: LA PIEDRA ANCESTRAL (centro 200, 0; el portal en z 0,4) ──
 p_piedra_portal              200.0  0.4
 p_piedra_estela              200.0  4.8
-p_piedra_estela_cae          201.2  5.4
-p_piedra_liam                198.8  5.4
-p_piedra_liam_consuelo       199.5  5.5
-p_piedra_archimago           200.0  2.6
-p_piedra_will_llega          200.0  2.4
-p_piedra_abrazo_estela       200.85 2.55
-p_piedra_abrazo_liam         199.15 2.55
+p_a1_entre                   200.0  2.6
+p_piedra_liam                198.6  5.6
+p_a3_centro                  199.3  5.2
+p_piedra_archimago           199.5 10.4
+p_estela_a4                  200.5  7.6
+p_liam_a4                    198.9  7.8
+p_a4_cielo                   199.5 14.0  6.0
+p_constelacion               199.5 24.0 17.0
+p_a5_caras                   199.7  7.7
+p_will_sale_portal           200.0  0.9
+p_piedra_will_llega          200.0  1.8
+p_abrazo_estela              200.15 2.3
+p_abrazo_liam                199.45 2.55
+p_abrazo_centro              200.0  2.1
+p_estela_separada            200.4  2.8
+p_liam_separado              199.1  3.0
+p_liam_abrazo_final          199.55 2.45
+p_abrazo_final               200.1  2.3
 p_archimago_espera           215.0 -10.0
 
-# Cámaras de Zona 2 (La Piedra Ancestral)
-cam_estela_umbral_frente     199.6  2.1
+cam_a1_lateral               203.9  3.0
+cam_a1_hombro_estela         200.6  6.6
 cam_estela_umbral_cerca      199.7  2.6
-cam_estela_hacia_portal      201.4  6.6
-cam_piedra_orbita_inicio     198.2  8.2
-cam_piedra_orbita_fin        201.8  8.2
-cam_despertar_liam           199.2  2.7
-cam_despertar_estela         200.8  2.7
-cam_despertar_conjunto       200.0  1.2
-cam_archimago_conjunto       194.8  4.6
-cam_archimago_frente         200.0  4.8
-cam_estela_archimago         200.8  2.7
-cam_archimago_ascenso        200.0  7.4  1.80
-mira_archimago_cielo         200.0 -6.0 16.00
-cam_consuelo_dos             200.4  2.5
-cam_piedra_will_regreso      200.0  4.8
-cam_piedra_abrazo_trio       200.0  5.6
-cam_estela_will_reencuentro  200.4  4.8
-cam_piedra_cierre_trio       199.8  6.0
+cam_a1_estela_alcanza        202.3  4.2
+cam_a1_cenital               200.3  7.6
+cam_a1_estela_llora          200.7  3.5
+cam_a3_general               201.8  9.0
+cam_a4_espaldas              199.6  2.8
+cam_archimago_frente         199.65 7.2
+cam_a4_estela                200.3 10.3
+cam_a4_liam                  199.0 10.4
+cam_a4_contrapicado          199.9  5.6
+cam_a4_cielo                 199.7  6.4
+cam_a5_frente                199.8  9.8
+cam_a5_espaldas              199.7  9.2
+cam_piedra_will_regreso      200.0  4.2
+cam_a5_estela_cerca          200.4  5.1
+cam_carrera_lado             203.6  5.6
+cam_carrera_lado_b           203.6  3.8
+cam_abrazo_orbita_a          201.7  4.0
+cam_abrazo_orbita_b          201.6 -0.3
+cam_abrazo_orbita_c          198.5 -0.4
+cam_a5_liam_cerca            198.8  6.1
+cam_grua_a                   202.6  4.6
+cam_grua_b                   199.0  3.6  6.5
+cam_estela_will_reencuentro  202.1  1.55
 
 HILO
 @inicio
 bandas muestra
-musica ULTIMO_INCANTAZIONE fadeIn=1.2
+musica LIAM_CRYSTAL fadeIn=3.0 continuarDondeIba=false
 fundido cubre 0.01
 efecto ModuleBeat routine=AmbientePiedra
 efecto ModuleBeat routine=AbrirPortalUmbral
+efecto ModuleBeat routine=ColapsoDelSendero
 will en p_will_umbral mirando p_portal_salida
 estela en p_piedra_estela mirando p_piedra_portal
 estela cara miedo
 liam en p_liam_caido mirando p_portal_salida
 liam bucle Die01Stay_NoWeapon congela
+efecto ModuleBeat routine=LiamSinSentido
 archimago en p_archimago_espera
 archimago desaparece
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 1: EL UMBRAL — LA DESPEDIDA A TRAVÉS DEL PORTAL Y EL CIERRE DEFINITIVO (NOCHE)
+# ACTO 1: EL PORTAL. Estela en la Piedra, de noche; al otro lado, Will en un Sendero que se
+# deshace: estrellas que revientan, losas que caen al vacío.
 # ───────────────────────────────────────────────────────────────────────────────────────────
-plano medio estela solo desde=cam_estela_umbral_frente altura=1.10 altura_foco=1.05 suave=0.0
-fundido entra 0.8
-espera 0.10
+# Estela ante el portal; dentro se ve el Sendero cayéndose a pedazos.
+plano general estela solo desde=cam_a1_lateral mira=p_a1_entre altura=1.5 altura_foco=1.35 lente=42 suave=0
+fundido entra 2.2
+espera 2.6
 
-cutin estela encuadre=Ojos lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-estela dice FINAL_ESTELA_PORTAL_01 gesto=Beg01 cara=miedo oyentes=will dura=3.5
-espera 0.10
+# Por encima del hombro de Estela: Will, al otro lado del portal.
+plano conjunto estela solo desde=cam_a1_hombro_estela mira=p_piedra_portal altura=1.5 altura_foco=1.6 lente=36 suave=0.3
+# Will la mira a ella a través del portal: hacia su lado del portal, no hacia donde está Estela de verdad
+# (en otra zona, a 200 m): «oyentes=nadie» para que nadie se gire hacia ella.
+estela dice FINAL_ESTELA_PORTAL_01 gesto=Beg01 cara=miedo oyentes=nadie dura=2.6
+espera 0.4
 
-# Corte a Will dentro del Sendero mirando a Estela a través del umbral
-plano medio will solo desde=cam_will_umbral_frente altura=1.10 altura_foco=1.05 suave=0.25
-will dice FINAL_WILL_PORTAL_01 gesto=Talk01 cara=decidido oyentes=estela dura=3.0
-espera 0.10
+# Will, con el Sendero rompiéndose a su espalda.
+plano medio will solo desde=cam_will_umbral_frente altura=1.10 altura_foco=1.05 suave=0.25 lente=39
+will cara triste
+will dice FINAL_WILL_PORTAL_01 gesto=Talk01 cara=decidido dura=2.2
+espera 0.3
 
-# Plano medio de frente a Estela: impotencia y rabia
-plano medio estela solo desde=cam_estela_umbral_frente altura=1.10 altura_foco=1.05 suave=0.25
-estela dice FINAL_ESTELA_PORTAL_02 gesto=Angry02 cara=triste oyentes=will dura=3.5
-espera 0.10
+# Por encima del hombro de Will: Estela en la Piedra, a través del portal.
+plano conjunto will solo desde=cam_a1_hombro_will mira=p_portal_salida altura=1.9 altura_foco=1.5 lente=42 suave=0.3
+estela dice FINAL_ESTELA_PORTAL_02 gesto=Angry02 cara=triste
+espera 0.2
 
-cutin estela encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-plano primer estela solo desde=cam_estela_umbral_cerca altura=1.10 altura_foco=1.05 suave=0.2
-estela dice FINAL_ESTELA_PORTAL_03 gesto=Beg01 cara=triste oyentes=will dura=4.5
-espera 0.10
+plano primer estela solo desde=cam_estela_umbral_cerca altura=1.10 altura_foco=1.05 suave=0.2 lente=32
+estela dice FINAL_ESTELA_PORTAL_03 gesto=Beg01 cara=triste dura=4.5
+espera 0.3
 
-# Última despedida de Will mientras el portal colapsa: asentimiento firme y promesa sin saludar
-plano primer will solo desde=cam_will_umbral_cerca altura=1.10 altura_foco=1.05 suave=0.25
-will dice FINAL_WILL_PORTAL_02 sin_pose gesto=HeadNod01 cara=triste oyentes=estela dura=4.8
-+2.4 efecto ModuleBeat routine=CerrarPortalSendero
-espera 0.15
+# El Sendero entero: el camino se va cayendo alrededor de Will.
+plano general will liam desde=cam_a1_sendero_alto mira=p_a1_sendero_centro altura=4.2 altura_foco=0.8 lente=46 suave=0.4
+sacudida 0.3 1.2
+espera 2.2
 
-# Estela ve cerrarse el portal: grito, disparo a la piedra y derrumbe en llanto
-plano conjunto estela solo desde=cam_estela_hacia_portal mira=p_piedra_portal altura=1.35 altura_foco=1.10 suave=0.2
-destello FFFFFFFF 0.4
-sacudida 0.8 1.4
-cutin estela encuadre=Ojos lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-estela cara enfado
-estela gesto Attack1
-sonido Prologue_SpellRelease en=estela volume=1.0
-sonido SFX_Prologo_ExplosionFinal volume=0.8
-espera 0.30
+plano primer will solo desde=cam_will_umbral_cerca altura=1.10 altura_foco=1.05 suave=0.25 lente=32
+will dice FINAL_WILL_PORTAL_02 sin_pose gesto=HeadNod01 cara=triste dura=4.8
+espera 0.3
 
-plano medio estela solo desde=cam_estela_umbral_frente altura=1.05 altura_foco=0.95 suave=0.35
-estela en p_piedra_estela_cae mirando p_piedra_portal
-estela bucle Cry01_Loop
+# Por encima del hombro de Estela: el Sendero revienta detrás de Will y el portal se cierra.
+plano conjunto estela solo desde=cam_a1_hombro_estela mira=p_piedra_portal altura=1.5 altura_foco=1.6 lente=34 suave=0
+efecto ModuleBeat routine=ExplosionEnElPortal
+espera 0.95
+destello FFFFFFFF 0.35
+silencio 0.8
+plano general estela solo desde=cam_a1_lateral mira=p_a1_entre altura=1.5 altura_foco=1.2 lente=42 suave=0
+estela gesto DefendHit_NoWeapon
+estela cara miedo
+espera 1.8
+
+# Silencio. Estela, con el brazo tendido hacia donde estaba el portal.
+plano medio estela solo desde=cam_a1_estela_alcanza altura=1.3 altura_foco=1.15 lente=39 suave=0
+efecto ModuleBeat routine=EstelaAlcanzaElPortal
+estela cara miedo
+espera 2.4
+estela dice FINAL_ESTELA_PORTAL_04 sin_pose cara=triste
+espera 1.0
+
+# El grito, desde arriba: sola en la noche.
+plano general estela solo desde=cam_a1_cenital mira=p_piedra_estela altura=6.5 altura_foco=0.6 lente=40 suave=0
+# El grito se le rompe en llanto: la voz sigue sollozando sobre el plano siguiente.
+efecto ModuleBeat routine=EstelaDejaDeAlcanzar
+estela bucle Cry01_Loop fundido=0.5
+estela dice FINAL_ESTELA_PORTAL_05 sin_pose cara=triste dura=2.0
+espera 0.2
+
+# Rota de dolor.
+plano medio estela solo desde=cam_a1_estela_llora altura=0.3 altura_foco=0.8 suave=0.4 lente=39
 estela cara triste
-espera 0.45
+espera 2.2
+# Sigue llorando sin corte (el llanto entra antes de que acabe el grito) y se apaga sobre el
+# negro, antes de que empiece el conjuro.
+sonido Final_Estela_Llanto volume=0.75
+espera 2.6
+fundido cubre 2.5
+espera 4.7
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 2: EL SENDERO ASTRAL — EL CLÍMAX DEL CONJURO DE RESURRECCIÓN DE WILL (ESTILO ANIME)
+# ACTO 2: EL CONJURO. Del Sendero queda un trozo de camino. Will va hacia Liam, conjura, levita con
+# el viento subiendo, devuelve a Liam y se va deshaciendo en luz.
 # ───────────────────────────────────────────────────────────────────────────────────────────
-efecto ModuleBeat routine=AmbienteSendero
-plano general will liam desde=cam_sendero_conjuro_perfil altura=1.50 altura_foco=0.90 suave=0.4
+efecto ModuleBeat routine=SenderoDestruido
+will en p_will_a2_inicio mirando p_liam_caido
+will reposo
+liam en p_liam_caido mirando p_will_conjuro
+liam bucle Die01Stay_NoWeapon congela
+efecto ModuleBeat routine=LiamSinSentido
+efecto ModuleBeat routine=MusicaDelConjuro
+
+# Will, de pie entre lo que queda del Sendero, va hacia Liam.
+plano general will liam desde=cam_a2_general mira=p_a2_centro altura=5.0 altura_foco=0.5 lente=44 suave=0.6
+fundido entra 2.0
+espera 1.0
 will anda a p_will_conjuro ritmo=paseo llega_mirando=p_liam_caido
-espera 0.10
-will bucle CastingIdle01
+espera 0.3
 
-# Inicio del conjuro: encuadre abierto, concentración, voz normal sin eco en la 1ª frase
-plano conjunto will liam desde=cam_sendero_conjuro_general altura=1.40 altura_foco=0.95 suave=0.4
-efecto ModuleBeat routine=ConjuroResurreccionInicio
-cutin will encuadre=Ojos lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-efecto LineasDeConcentracionBeat mostrar=true duracion=2.0
-sonido Prologo_MagiaLevitar en=will volume=0.8
+plano medio will solo desde=cam_a2_will_frente altura=1.0 altura_foco=1.0 suave=0.4 lente=39
+will bucle CastingIdle01
+will cara decidido
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-will bucle CastingIdle01
-will dice FINAL_WILL_CONJURO_01 cara=decidido oyentes=will dura=4.5
-espera 0.15
+will dice FINAL_WILL_CONJURO_01 cara=decidido dura=4.5
+espera 0.6
 
-# Frase 2: Inicio de la fórmula mágica ancestral — entra el eco épico
-plano conjunto will liam desde=cam_sendero_conjuro_cenital altura=2.30 altura_foco=0.90 suave=0.5
-will bucle CastingIdle01
+# Los círculos se encienden bajo Will y Liam y el viento empieza a subir.
+plano general will liam desde=cam_a2_contrapicado mira=p_will_conjuro altura=0.35 altura_foco=1.9 lente=46 suave=0.5
+efecto ModuleBeat routine=ConjuroCirculos
+efecto ModuleBeat routine=LevitarWill
 sonido SFX_Prologo_Trueno_Lejano volume=0.45
 efecto EfectoDeVozBeat preset=Epico gananciaDb=4
-will dice FINAL_WILL_CONJURO_02 cara=decidido oyentes=will dura=6.0
-espera 0.15
+will dice FINAL_WILL_CONJURO_02 cara=decidido dura=6.0
+espera 0.8
 
-# Frase 3: Transferencia de luz y levitación en plano general claro
-plano general will liam desde=cam_sendero_conjuro_perfil altura=1.50 altura_foco=1.00 suave=0.4
-will bucle CastingIdle01
+# Alrededor de Will, que ya flota.
+plano conjunto will liam desde=cam_a2_orbita_a mover=cam_a2_orbita_b mira=p_will_conjuro altura=1.7 altura_foco=2.3 lente=40 suave=0.4
 sonido Prologo_Carga volume=0.8
-sacudida 0.5 1.5
-will dice FINAL_WILL_CONJURO_03 cara=decidido oyentes=will dura=6.0
-+2.0 will desliza aqui altura=1.2 dura=2.0
-+2.0 efecto ModuleBeat routine=ConjuroResurreccionCarga
-espera 0.15
+sacudida 0.4 1.5
+will dice FINAL_WILL_CONJURO_03 cara=decidido dura=6.0
+espera 0.8
 
-# Frase 4: Clímax épico — Carga mágica definitiva y colapso del Sendero
-cutin will encuadre=Cara lado=Derecha duracion=1.6 sonido=SFX_Prologo_CutIn
-plano medio will solo desde=cam_will_climax contrapicado altura=1.80 altura_foco=1.00 suave=0.2
-efecto LineasDeConcentracionBeat mostrar=true duracion=3.5
-will bucle CastingIdle01
-will dice FINAL_WILL_CONJURO_04 cara=decidido oyentes=will dura=3.5
-efecto ModuleBeat routine=ConjuroResurreccionClimax
-sonido SFX_Prologo_ExplosionFinal volume=1.0
-destello FFFFFFFF 0.6
-sacudida 0.9 2.0
-efecto ModuleBeat routine=ColapsoSendero
+# El grito.
+plano medio will solo desde=cam_a2_climax_frente mira=p_will_conjuro altura=0.9 altura_foco=2.45 lente=36 suave=0.2
+efecto RespiroBeat musicaDb=-6 ambienteDb=-16 sfxDb=-8 duracion=0.8 ataque=0.2 fundido=0.3 esperar=false
+espera 0.6
+will dice FINAL_WILL_CONJURO_04 cara=decidido dura=3.5
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-espera 0.35
 
-fundido cubre 1.1 color=FFFFFF
-espera 0.20
+# La luz se lleva a Liam.
+plano general will liam desde=cam_a2_general_bajo mira=p_a2_centro altura=1.0 altura_foco=1.4 lente=50 suave=0
+efecto ModuleBeat routine=ConjuroClimax
+sonido SFX_Prologo_ExplosionFinal volume=1.0
+destello FFFFFFFF 0.5
+espera 3.0
+
+# Will se queda sin luz.
+plano medio will solo desde=cam_a2_will_cerca mira=p_will_conjuro altura=2.0 altura_foco=2.5 lente=36 suave=0.6
+efecto ModuleBeat routine=WillSeDesvanece
+will cara alegre
+espera 3.6
+plano general will desde=cam_a2_final mira=p_will_conjuro altura=7.0 altura_foco=1.6 lente=40 suave=1.0
+espera 4.2
+fundido cubre 2.4
+espera 2.0
+# Aquí acaba el tema del conjuro (suena una sola vez).
+@fin_conjuro
+silencio 1.0
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 3: EL DESPERTAR EN EL SANTUARIO DE LA PIEDRA ANCESTRAL (NOCHE)
+# ACTO 3: LIAM VUELVE. La Piedra, de noche. Estela llora donde estaba el portal; una columna de
+# luz baja del cielo y en ella se forma Liam.
 # ───────────────────────────────────────────────────────────────────────────────────────────
 efecto ModuleBeat routine=AmbientePiedra
-musica EPILOGUE fadeIn=2.0
-liam aparece en p_piedra_liam mirando estela
-liam bucle Die01Stay_NoWeapon congela
-estela en p_piedra_estela_cae mirando liam
+efecto ModuleBeat routine=OcultarLiam
+will desaparece
+estela en p_piedra_estela mirando p_piedra_portal
 estela bucle Cry01_Loop
-archimago desaparece
+liam en p_piedra_liam mirando estela
+liam bucle Die01Stay_NoWeapon congela
+efecto ModuleBeat routine=LiamSinSentido
 
-fundido entra 1.1 color=FFFFFF
-plano dos liam estela altura=1.15 suave=0.6 lente=34
-espera 0.15
-
-# Importante: soltar el bucle Die01Stay_NoWeapon con gesto GetUp_NoWeapon e instalar directamente el bucle Idle01 de pie
+plano general estela liam desde=cam_a3_general mira=p_a3_centro altura=2.4 altura_foco=0.6 lente=40 suave=0.6
+fundido entra 2.2
+sonido Final_Estela_Llanto volume=0.6
+espera 1.6
+efecto ModuleBeat routine=LiamSeMaterializa
 sonido Hechizo_BrisaSanadora volume=0.85
+espera 3.8
+
+# Liam se levanta y vuelve su melodía, donde se quedó.
+musica LIAM_CRYSTAL fadeIn=3.0 continuarDondeIba=true
+efecto ModuleBeat routine=LiamDespierta
 liam bucle Idle01
 liam gesto GetUp_NoWeapon
-espera 0.55
+espera 1.0
 liam cara sorpresa
-plano medio liam solo desde=cam_despertar_liam altura=1.10 altura_foco=1.02 suave=0.3
+plano hombro estela liam lente=30 suave=0.3 distancia=2.8
+# Estela, que seguía llorando de espaldas, se vuelve al oírle.
 liam dice FINAL_LIAM_AWAKE_01 sin_pose gesto=Question01 dura=3.0
-espera 0.10
+& estela mira liam
+& estela cara sorpresa
+espera 0.2
 
-# Estela suelta el bucle de llanto y se incorpora emocionada al ver a Liam vivo
 estela bucle Idle01
 estela gesto GetUp_NoWeapon
-cutin estela encuadre=Cara lado=Izquierda duracion=1.6 sonido=SFX_Prologo_CutIn
-plano medio estela solo desde=cam_despertar_estela altura=1.12 altura_foco=1.05 suave=0.3
+plano hombro liam estela lente=30 suave=0.3 distancia=2.8
 estela cara alegre
 estela dice FINAL_ESTELA_AWAKE_01 sin_pose gesto=Beg01 dura=3.5
-espera 0.10
+espera 0.2
 
-plano medio liam solo desde=cam_despertar_liam altura=1.10 altura_foco=1.02 suave=0.25
+plano hombro estela liam lente=30 suave=0.25 distancia=2.8
 liam cara sorpresa
-liam dice FINAL_LIAM_AWAKE_02 sin_pose gesto=Question01 dura=2.8
-espera 0.10
+liam dice FINAL_LIAM_AWAKE_02 sin_pose gesto=Question01
+espera 0.3
 
-plano medio estela solo desde=cam_despertar_estela altura=1.12 altura_foco=1.05 suave=0.25
+# La alegría se rompe.
+plano hombro liam estela lente=30 suave=0.25 distancia=2.8
 estela cara triste
 estela dice FINAL_ESTELA_AWAKE_02 sin_pose gesto=HeadShake01 dura=5.5
-espera 0.10
+espera 0.3
 
-plano medio liam solo desde=cam_despertar_liam altura=1.10 altura_foco=1.02 suave=0.25
+plano hombro estela liam lente=30 suave=0.25 distancia=2.8
 liam cara triste
 liam dice FINAL_LIAM_AWAKE_03 sin_pose gesto=Angry01 dura=3.5
-espera 0.15
+espera 0.2
+silencio 2.0
+espera 0.2
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 4: LA DESPEDIDA DEL ESPÍRITU DEL ARCHIMAGO — LUZ, LEVITACIÓN Y ESTRELLA FUGAZ AL CIELO
+# ACTO 4: EL ARCHIMAGO. Aparece su espíritu, flotando, translúcido y dorado. Al despedirse sube,
+# se deshace en cinco luces y se hace constelación: la estrella de madera de Will.
 # ───────────────────────────────────────────────────────────────────────────────────────────
-archimago aparece en p_piedra_archimago mirando estela
+archimago aparece en p_piedra_archimago mirando p_estela_a4
 archimago bucle fly_idle
 efecto ModuleBeat routine=EspirituArchimago
+efecto ModuleBeat routine=MusicaDelArchimago
 estela mira archimago
 & liam mira archimago
-plano conjunto archimago estela liam desde=cam_archimago_conjunto altura=1.35 altura_foco=1.00 suave=0.35
+plano conjunto archimago estela liam desde=cam_a4_espaldas mira=p_piedra_archimago altura=1.5 altura_foco=1.7 lente=38 suave=0.4
 estela cara sorpresa
 & liam cara sorpresa
-estela dice FINAL_ESTELA_ARCHIMAGO_01 sin_pose gesto=Question01 oyentes=archimago cara=sorpresa dura=3.5
-espera 0.10
+espera 2.4
+estela anda a p_estela_a4 ritmo=paseo llega_mirando=archimago
+& liam anda a p_liam_a4 ritmo=paseo llega_mirando=archimago
+estela bucle Idle01
+& liam bucle Idle01
 
-# Archimago habla en plano limpio (solo + desde=cam_archimago_frente, sin cabezas tapando el encuadre)
-plano medio archimago solo desde=cam_archimago_frente altura=1.22 altura_foco=1.05 lente=34 suave=0.35
+plano medio estela solo desde=cam_a4_estela altura=1.25 altura_foco=1.05 suave=0.3 lente=39
+estela dice FINAL_ESTELA_ARCHIMAGO_01 sin_pose gesto=Question01 cara=sorpresa dura=3.5
+espera 0.2
+
+plano medio archimago solo desde=cam_archimago_frente mira=p_piedra_archimago altura=1.8 altura_foco=1.85 lente=44 suave=0.35
 efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
 archimago cara neutral
-archimago dice FINAL_ARCHIMAGO_01 dura=3.2
-espera 0.10
+archimago dice FINAL_ARCHIMAGO_01
+espera 0.2
 
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-plano medio estela solo desde=cam_estela_archimago altura=1.12 altura_foco=1.05 suave=0.3
+plano medio estela solo desde=cam_a4_estela altura=1.25 altura_foco=1.05 suave=0.3 lente=39
 estela cara sorpresa
 estela dice FINAL_ESTELA_ARCHIMAGO_02 sin_pose gesto=Question01 dura=2.8
-espera 0.10
+espera 0.2
 
-plano medio archimago solo desde=cam_archimago_frente altura=1.22 altura_foco=1.05 lente=34 suave=0.3
+plano medio archimago solo desde=cam_archimago_frente mira=p_piedra_archimago altura=1.8 altura_foco=1.85 lente=44 suave=0.3
 efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
 archimago cara alegre
 archimago dice FINAL_ARCHIMAGO_02 dura=5.0
-espera 0.10
+espera 0.2
+plano medio liam solo desde=cam_a4_liam altura=1.2 altura_foco=1.0 suave=0.3 lente=39
+liam cara triste
 archimago dice FINAL_ARCHIMAGO_03 dura=5.5
-espera 0.10
+espera 0.2
 
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-plano medio estela solo desde=cam_estela_archimago altura=1.12 altura_foco=1.05 suave=0.3
+plano medio estela solo desde=cam_a4_estela altura=1.25 altura_foco=1.05 suave=0.3 lente=39
 estela cara triste
 estela dice FINAL_ESTELA_ARCHIMAGO_03 sin_pose gesto=HeadShake01 dura=2.8
-espera 0.10
+espera 0.2
 
-plano medio archimago solo desde=cam_archimago_frente altura=1.22 altura_foco=1.05 lente=34 suave=0.3
+plano medio archimago solo desde=cam_archimago_frente mira=p_piedra_archimago altura=1.8 altura_foco=1.85 lente=44 suave=0.3
 efecto EfectoDeVozBeat preset=Plegaria gananciaDb=1.5
 archimago cara alegre
 archimago dice FINAL_ARCHIMAGO_04 gesto=HandWave02 dura=6.2
 efecto EfectoDeVozBeat preset=Ninguno gananciaDb=0
-espera 0.15
+espera 0.2
 
-# Ascenso celestial: la cámara encuadra el cielo nocturno sobre el monolito mientras sube como estrella fugaz
-plano fijo desde=cam_archimago_ascenso mira=mira_archimago_cielo altura=0 altura_foco=0 lente=44 suave=1.6
-efecto ModuleBeat routine=DespedidaArchimago
-espera 1.50
+# «Ya puedo irme con ellos»: sube y se hace estrella.
+plano general archimago estela liam desde=cam_a4_contrapicado mira=p_a4_cielo altura=0.7 altura_foco=0 lente=50 suave=0
+efecto ModuleBeat routine=ArchimagoSeHaceEstrella
+estela mira p_constelacion
+& liam mira p_constelacion
+espera 3.6
 archimago desaparece
-espera 0.15
+plano fijo desde=cam_a4_cielo mira=p_constelacion altura=1.3 altura_foco=0 lente=44 suave=1.2
+espera 5.6
 
 # ───────────────────────────────────────────────────────────────────────────────────────────
-# ACTO 5: EL REGRESO DE WILL — LA CINTA ROJA Y EL ABRAZO DEL TRÍO (NOCHE)
+# ACTO 5: WILL VUELVE. Se quedan mirando la estrella; una voz a su espalda. Will sale de la luz
+# con la cinta roja. Estela no se lo cree... y corre. Abrazo de los tres con el tema.
 # ───────────────────────────────────────────────────────────────────────────────────────────
-plano dos estela liam desde=cam_consuelo_dos altura=1.15 altura_foco=1.00 suave=0.4
-liam anda a p_piedra_liam_consuelo ritmo=paseo llega_mirando=estela
-liam bucle Idle01
+plano dos estela liam desde=cam_a5_frente mira=p_a5_caras altura=1.3 altura_foco=1.15 lente=42 suave=0.5
 estela cara triste
 & liam cara triste
-espera 0.20
+espera 2.4
 
-# Voz de Will fuera de plano: Estela y Liam se quedan helados
-will bucle Idle01
+# La voz de Will, a su espalda.
+will en p_will_sale_portal mirando p_estela_a4
+efecto RespiroBeat musicaDb=-9 ambienteDb=-12 sfxDb=-6 duracion=2.6 ataque=0.3 fundido=0.8 esperar=false
 will dice FINAL_WILL_RETURN_01 sin_pose dura=2.6
-espera 0.10
-
-cutin estela encuadre=Cara lado=Izquierda duracion=1.5 sonido=SFX_Prologo_CutIn
+espera 0.3
 estela cara sorpresa
-estela mira p_piedra_will_llega
-& liam mira p_piedra_will_llega
-liam cara sorpresa
-will aparece en p_piedra_will_llega mirando cam_piedra_will_regreso
-will bucle Idle01
-espera 0.10
+& liam cara sorpresa
+estela mira p_will_sale_portal
+& liam mira p_will_sale_portal
+espera 0.9
 
-# Plano medio frontal limpio de Will apareciendo delante de la Piedra Ancestral con la cinta roja tendida
-efecto ModuleBeat routine=RegresoWill
-plano medio will solo desde=cam_piedra_will_regreso altura=1.15 altura_foco=1.02 suave=0.0
+# Sale de la luz donde estuvo el portal.
+plano conjunto estela liam will desde=cam_a5_espaldas mira=p_will_sale_portal altura=1.4 altura_foco=1.1 lente=34 suave=0
+will aparece en p_will_sale_portal mirando p_estela_a4
+efecto ModuleBeat routine=PortalDeRegreso
+espera 2.6
+
+plano medio will solo desde=cam_piedra_will_regreso contrapicado altura=0.85 altura_foco=1.10 lente=42 suave=0.0
 will cara alegre
+will anda a p_piedra_will_llega ritmo=paseo llega_mirando=p_estela_a4
 will dice FINAL_WILL_RETURN_02 sin_pose gesto=Greeting01_NoWeapon dura=4.2
-espera 0.15
+espera 0.3
 
-# Estela corre hacia Will y salta a abrazarlo con fuerza
-plano conjunto will estela liam desde=cam_piedra_abrazo_trio altura=1.30 altura_foco=1.00 suave=0.35
-estela corre a p_piedra_abrazo_estela llega_mirando=will
-estela bucle Idle01
-estela cara alegre
-estela gesto HandWave01
-will gesto DefendHit_NoWeapon
-espera 0.20
-
-# Liam corre tras ellos y se une al reencuentro en semicírculo abierto
-liam corre a p_piedra_abrazo_liam llega_mirando=will
-liam bucle Idle01
-liam cara alegre
-liam dice FINAL_LIAM_RETURN_01 sin_pose gesto=Question01 dura=2.8
-espera 0.15
-
-plano conjunto will estela liam desde=cam_piedra_abrazo_trio altura=1.22 altura_foco=1.02 lente=30 suave=0.25
-will mira estela
-estela mira will
-& liam mira will
-will cara alegre
-will dice FINAL_WILL_RETURN_03 sin_pose gesto=Talk01 oyentes=estela dura=4.9
-espera 0.15
-
-# Frase doblada de Estela ("Idiota... No te atrevas a volver a hacer algo así.") y sonrisa cómplice de Will
-plano dos estela will solo desde=cam_estela_will_reencuentro altura=1.15 altura_foco=1.00 lente=32 suave=0.25
-estela mira will
-will mira estela
+# Estela no se lo cree; Liam tampoco.
+plano primer estela solo desde=cam_a5_estela_cerca altura=1.2 altura_foco=1.05 lente=35 suave=0.2
 estela cara aliviado
-estela dice FINAL_ESTELA_RETURN_01 sin_pose gesto=Angry01 oyentes=will cara=aliviado dura=5.7
-espera 0.10
+estela dice FINAL_ESTELA_RETURN_00 sin_pose
+espera 0.2
+plano primer liam solo desde=cam_a5_liam_cerca altura=1.2 altura_foco=1.05 lente=35 suave=0.2
+liam cara sorpresa
+liam dice FINAL_LIAM_RETURN_00 sin_pose
+espera 0.2
+efecto ModuleBeat routine=EsperarSubidaDelTema
+espera 0.4
+plano dos estela liam desde=cam_a5_frente mira=p_a5_caras altura=1.3 altura_foco=1.15 lente=40 suave=0.2
+estela cara alegre
+& liam cara alegre
+estela dice FINAL_ESTELA_RETURN_00B sin_pose cara=alegre
+espera 0.15
+
+# La carrera: en cámara lenta, a compás de la subida del tema. Corren felices y las lágrimas se
+# les quedan atrás.
+@carrera
+efecto ModuleBeat routine=CarreraAlAbrazo
+efecto ModuleBeat routine=LagrimasAlCorrer
+plano conjunto estela liam desde=cam_carrera_lado mover=cam_carrera_lado_b altura=1.1 altura_foco=1.0 lente=45 suave=0.3
+estela cara alegre
+& liam cara alegre
+estela corre a p_abrazo_estela ritmo=trote llega_mirando=will
+& liam corre a p_abrazo_liam ritmo=trote llega_mirando=will
+@llegan
+estela bucle Idle01
+& liam bucle Idle01
+destello FFFFFFFF 0.25
+sonido Prologue_ActorAppear volume=0.5
+
+# Los tres, abrazados: la cámara gira a su alrededor sin parar y, sin dejar de girar, se separan
+# un paso para mirarse. Solo entonces hablan.
+plano dos will estela desde=cam_abrazo_orbita_a mover=cam_abrazo_orbita_b mira=p_abrazo_centro altura=1.9 altura_foco=1.1 lente=40 suave=0.3
+estela cara aliviado
+& will cara alegre
+& liam cara alegre
+espera 4.0
+plano dos will estela desde=cam_abrazo_orbita_b mover=cam_abrazo_orbita_c mira=p_abrazo_centro altura=1.9 altura_foco=1.1 lente=40 suave=0
+espera 1.2
+efecto ModuleBeat routine=SoltarAbrazo
+estela desliza p_estela_separada dura=0.9
+& liam desliza p_liam_separado dura=0.9
+espera 1.4
+
+plano hombro estela liam lente=30 suave=0.3 distancia=2.8
+liam dice FINAL_LIAM_RETURN_01 sin_pose dura=2.8
+espera 0.3
+plano hombro estela will lente=30 suave=0.25 distancia=2.8
+will dice FINAL_WILL_RETURN_03 sin_pose oyentes=liam dura=4.9
+espera 0.3
+
+plano dos estela will solo desde=cam_estela_will_reencuentro altura=1.15 altura_foco=1.00 lente=40 suave=0.25
+estela mira will
+will mira estela
+estela dice FINAL_ESTELA_RETURN_01 sin_pose gesto=Angry01 cara=aliviado dura=4.5
+espera 0.2
 will cara alegre
-will gesto HeadNod01 oyentes=estela
-espera 0.35
+will dice FINAL_WILL_RETURN_04 sin_pose gesto=HeadNod01 dura=1.4
+espera 0.3
 
-# Encuadre final del trío reunido bajo la noche estrellada
-plano conjunto will estela liam desde=cam_piedra_cierre_trio altura=1.35 altura_foco=1.00 lente=34 suave=0.9
-espera 0.80
-
-fundido cubre 1.4 color=000000
+# Es de los tres: Will y Estela se abrazan, Liam llega y los abraza a los dos. La cámara sube
+# girando hasta verlos desde arriba, y fundido a negro.
+plano general will estela liam desde=cam_grua_a mover=cam_grua_b mira=p_abrazo_final altura=1.4 altura_foco=0.9 lente=42 suave=0.3
+efecto ModuleBeat routine=AbrazoEstelaWill
+espera 0.8
+liam anda a p_liam_abrazo_final ritmo=paseo llega_mirando=p_abrazo_final
+efecto ModuleBeat routine=AbrazoFinalDeLosTres
+liam cara alegre
+espera 2.6
+silencio 4.0
+efecto ModuleBeat routine=TelonANegro
+fundido cubre 3.0
+espera 3.4
+efecto ModuleBeat routine=SoltarAbrazo
 bandas quita
 efecto ModuleBeat routine=EncadenarParte2

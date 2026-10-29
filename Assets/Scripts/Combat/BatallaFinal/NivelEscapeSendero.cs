@@ -8,6 +8,12 @@ using Sendero.UI;
 /// Controlador del nivel jugable de huida del Sendero de las Estrellas mientras colapsa.
 /// Will abre camino por delante resolviendo fracturas y barreras para que Estela avance
 /// caminando con Liam en brazos, mientras un vórtice de colapso cósmico los persigue desde atrás.
+///
+/// Mientras está activo, el nivel prohíbe volar (bloqueo de PlayerActionManager, sin tocar las
+/// habilidades de la partida) y oculta el HUD y el minimapa con su clave; todo se libera en
+/// OnDisable. Las habilidades que pide (saltar, trepar, magia) vienen de la partida. Los textos
+/// son claves de localización (ESCAPE_SENDERO_*): los bocadillos pasan por Bocadillos.Decir, que
+/// traduce y busca la voz.
 /// </summary>
 public class NivelEscapeSendero : MonoBehaviour
 {
@@ -65,6 +71,10 @@ public class NivelEscapeSendero : MonoBehaviour
     private bool _obstaculo2Resuelto;
     private bool _obstaculo3Resuelto;
 
+    private PlayerActionManager _accionesBloqueadas;
+    private bool _interfazOculta;
+    private bool _empezado;
+
     private Animator _animatorEstela;
     private NPCSimpleAnimator _npcAnimEstela;
     private Coroutine _movimientoEstela;
@@ -100,6 +110,14 @@ public class NivelEscapeSendero : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        // La primera vez lo prepara Start, cuando el jugador y el HUD ya están registrados.
+        if (_empezado) PrepararJugadorEInterfaz();
+    }
+
+    private void OnDisable() => LiberarJugadorEInterfaz();
+
     private void Start()
     {
         DesactivarInteractuables();
@@ -107,29 +125,8 @@ public class NivelEscapeSendero : MonoBehaviour
         if (jugador == null && PlayerService.Player != null)
             jugador = PlayerService.Player.transform;
 
-        // Desactivar vuelo en Will obligatoriamente para plataformeo atlético
-        if (jugador != null)
-        {
-            var flying = jugador.GetComponentInChildren<PlayerFlyingController>(true);
-            if (flying != null) flying.enabled = false;
-        }
-
-        var preset = UnlockService.GetActivePreset();
-        if (preset != null && preset.abilities != null)
-        {
-            preset.abilities.fly = false;
-            preset.abilities.jump = true;
-            preset.abilities.magic = true;
-            preset.abilities.climb = true;
-            preset.abilities.sprint = true;
-            preset.abilities.shield = true;
-            if (preset.maxMP < 100f) preset.maxMP = 100f;
-            preset.currentMP = preset.maxMP;
-        }
-
-        // Ocultar minimapa y HUD de combate para máxima inmersión
-        Sendero.UI.PlayerHUDV2.Instance?.HideHUD(this);
-        MinimapController.Ocultar("EscapeSendero");
+        PrepararJugadorEInterfaz();
+        _empezado = true;
 
         // Iniciar con Estela llevando a Liam en brazos
         if (porteoEstela != null)
@@ -150,6 +147,41 @@ public class NivelEscapeSendero : MonoBehaviour
 
         alIniciarEscape?.Invoke();
         StartCoroutine(Co_SecuenciaInicial());
+    }
+
+    // Plataformeo atlético sin vuelo (si entra volando, cae) e interfaz limpia para la huida.
+    private void PrepararJugadorEInterfaz()
+    {
+        if (_accionesBloqueadas == null && PlayerService.TryGetComponent(out PlayerActionManager acciones, allowSceneLookup: false))
+        {
+            _accionesBloqueadas = acciones;
+            acciones.AnadirBloqueo(PlayerAbility.Fly, this);
+            var vuelo = acciones.GetComponentInChildren<PlayerFlyingController>();
+            if (vuelo != null && vuelo.IsFlying) vuelo.TerminarVuelo();
+        }
+
+        if (!_interfazOculta)
+        {
+            _interfazOculta = true;
+            PlayerHUDV2.Instance?.HideHUD(this);
+            MinimapController.Ocultar(this);
+        }
+    }
+
+    private void LiberarJugadorEInterfaz()
+    {
+        if (_accionesBloqueadas != null)
+        {
+            _accionesBloqueadas.QuitarBloqueo(PlayerAbility.Fly, this);
+            _accionesBloqueadas = null;
+        }
+
+        if (_interfazOculta)
+        {
+            _interfazOculta = false;
+            PlayerHUDV2.Instance?.ShowHUD(this);
+            MinimapController.Mostrar(this);
+        }
     }
 
     private void InmovilizarLiam()
@@ -175,10 +207,8 @@ public class NivelEscapeSendero : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         InmovilizarLiam();
 
-        TutorialPromptUI.Instance?.Show("¡El Sendero colapsa! ¡Abre paso a Estela para que cruce con Liam!");
-        DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-            "¡Will! ¡El Sendero se derrumba detrás de nosotros! ¡Abre camino hacia el Umbral!",
-            "Estela", 4.0f);
+        MostrarAyuda("ESCAPE_SENDERO_AYUDA_INICIO");
+        DecirEstela("ESCAPE_SENDERO_ESTELA_INICIO", 4.0f);
 
         // Estela comienza a andar hacia el primer punto de espera (frente a la barrera de cristales)
         yield return new WaitForSeconds(1.2f);
@@ -241,8 +271,7 @@ public class NivelEscapeSendero : MonoBehaviour
                     _siguienteAvisoColapso = Time.time + 6.0f;
                     FeedbackService.CameraShake(0.35f, 0.6f);
                     FeedbackService.ScreenFlash(new Color(0.22f, 0.04f, 0.35f, 0.55f), 0.5f);
-                    DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-                        "¡Will! ¡El vacío cósmico está justo detrás! ¡No te detengas!", "Estela", 3.0f);
+                    DecirEstela("ESCAPE_SENDERO_ESTELA_COLAPSO_CERCA", 3.0f);
                 }
             }
             // El colapso alcanza al jugador
@@ -273,10 +302,8 @@ public class NivelEscapeSendero : MonoBehaviour
             case 0: // Llegada frente a la barrera de cristales (Z=227)
                 if (!_obstaculo1Resuelto)
                 {
-                    DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-                        "¡Will! ¡Los cristales del Sendero bloquean el camino! ¡Usa tus ataques para destruirlos!",
-                        "Estela", 4.2f);
-                    TutorialPromptUI.Instance?.Show("¡Destruye la barrera de cristales astrales para abrir paso!");
+                    DecirEstela("ESCAPE_SENDERO_ESTELA_CRISTALES", 4.2f);
+                    MostrarAyuda("ESCAPE_SENDERO_AYUDA_CRISTALES");
                 }
                 else
                 {
@@ -287,10 +314,8 @@ public class NivelEscapeSendero : MonoBehaviour
             case 1: // Llegada frente al desfiladero de obsidiana (Z=148)
                 if (!_obstaculo2Resuelto)
                 {
-                    DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-                        "¡Un derrumbe de obsidiana astral! ¡Will, usa tu magia para destruirlo!",
-                        "Estela", 4.2f);
-                    TutorialPromptUI.Instance?.Show("¡Dispara magia para destruir la barrera de obsidiana!");
+                    DecirEstela("ESCAPE_SENDERO_ESTELA_OBSIDIANA", 4.2f);
+                    MostrarAyuda("ESCAPE_SENDERO_AYUDA_OBSIDIANA");
                 }
                 else
                 {
@@ -301,10 +326,8 @@ public class NivelEscapeSendero : MonoBehaviour
             case 2: // Llegada al Santuario de las Memorias (Z=64)
                 if (!_obstaculo3Resuelto)
                 {
-                    DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-                        "¡El paso al Umbral está sellado! ¡Activa la Runa del Megalito!",
-                        "Estela", 4.0f);
-                    TutorialPromptUI.Instance?.Show("¡Golpea la Runa del Megalito para abrir el paso al Umbral!");
+                    DecirEstela("ESCAPE_SENDERO_ESTELA_SELLO", 4.0f);
+                    MostrarAyuda("ESCAPE_SENDERO_AYUDA_SELLO");
                 }
                 else
                 {
@@ -313,9 +336,7 @@ public class NivelEscapeSendero : MonoBehaviour
                 break;
 
             case 3: // Llegada a la antesala del Umbral (Z=-4)
-                DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-                    "¡Will! ¡El Umbral de la Tierra! ¡Crucemos el portal!",
-                    "Estela", 3.5f);
+                DecirEstela("ESCAPE_SENDERO_ESTELA_ANTESALA", 3.5f);
                 break;
         }
     }
@@ -337,9 +358,7 @@ public class NivelEscapeSendero : MonoBehaviour
         FeedbackService.ScreenFlash(new Color(1f, 0.85f, 0.4f, 0.5f), 0.4f);
         TutorialPromptUI.Instance?.Hide();
 
-        DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-            "¡Bien hecho, Will! ¡Camino despejado! ¡Vamos!",
-            "Estela", 3.5f);
+        DecirEstela("ESCAPE_SENDERO_ESTELA_CRISTALES_ROTOS", 3.5f);
 
         alSuperarObstaculo1?.Invoke();
         AvanzarEstelaHaciaSeccion(1);
@@ -362,9 +381,7 @@ public class NivelEscapeSendero : MonoBehaviour
         FeedbackService.ScreenFlash(new Color(0.8f, 0.9f, 1f, 0.5f), 0.35f);
         TutorialPromptUI.Instance?.Hide();
 
-        DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-            "¡Buen disparo! ¡Liam, ya casi lo logramos!",
-            "Estela", 3.5f);
+        DecirEstela("ESCAPE_SENDERO_ESTELA_OBSIDIANA_ROTA", 3.5f);
 
         alSuperarObstaculo2?.Invoke();
         AvanzarEstelaHaciaSeccion(2);
@@ -387,9 +404,7 @@ public class NivelEscapeSendero : MonoBehaviour
         FeedbackService.ScreenFlash(new Color(0.6f, 1f, 0.8f, 0.5f), 0.4f);
         TutorialPromptUI.Instance?.Hide();
 
-        DecirBocadillo(porteoEstela != null ? porteoEstela.transform : null,
-            "¡El sello se ha disipado! ¡Corre al Umbral de la Tierra!",
-            "Estela", 3.5f);
+        DecirEstela("ESCAPE_SENDERO_ESTELA_SELLO_ABIERTO", 3.5f);
 
         alSuperarObstaculo3?.Invoke();
         AvanzarEstelaHaciaSeccion(3);
@@ -406,7 +421,7 @@ public class NivelEscapeSendero : MonoBehaviour
         FeedbackService.ScreenFlash(Color.white, 2.0f);
         FeedbackService.CameraShake(0.7f, 1.2f);
         TutorialPromptUI.Instance?.Hide();
-        DecirBocadillo(jugador, "¡Lo hemos conseguido... Hemos salido!", "Will", 4f);
+        if (jugador != null) Bocadillos.Decir(jugador, "ESCAPE_SENDERO_WILL_SALIMOS", "Will", 4f);
         alLlegarAlUmbral?.Invoke();
 
         DefaultNarrativeSignals.Instance?.RaiseCustom("SENDERO_UMBRAL_ALCANZADO", name);
@@ -524,18 +539,17 @@ public class NivelEscapeSendero : MonoBehaviour
         _enRespawn = false;
     }
 
-    private void DecirBocadillo(Transform quien, string texto, string nombre, float duracion)
+    // Estela habla sobre su cabeza; sin ella en escena, no se dice nada (no hay a quién atarlo).
+    private void DecirEstela(string clave, float duracion)
     {
-        var bubble = SpeechBubbleUI.Instance;
-        if (bubble != null && quien != null)
-        {
-            bubble.Show(quien, texto, duration: duracion, speakerName: nombre);
-        }
+        if (porteoEstela != null) Bocadillos.Decir(porteoEstela.transform, clave, "Estela", duracion);
     }
 
-    private void OnDestroy()
+    private static void MostrarAyuda(string clave)
     {
-        Sendero.UI.PlayerHUDV2.Instance?.ShowHUD(this);
-        MinimapController.Mostrar("EscapeSendero");
+        var ayuda = TutorialPromptUI.Instance;
+        if (ayuda == null) return;
+        var idioma = LocalizationManager.Instance;
+        ayuda.Show(idioma != null ? idioma.Get(clave, clave) : clave);
     }
 }

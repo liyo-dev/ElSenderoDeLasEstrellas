@@ -1,10 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-/// Una zona del suelo que primero avisa (una sombra que crece) y después hace daño al jugador
-/// mientras esté dentro. Sirve para cualquier ataque de área de un enemigo: grietas, novas,
-/// lluvias, suelo corrompido. Hace daño al jugador (PlayerHealthSystem), nunca a los aliados.
-/// Se crea con Crear(); se destruye sola al acabar. Ver INC-509.
+/// Una zona del suelo que primero avisa (una sombra que crece) y después hace daño a quien del
+/// grupo esté dentro. Sirve para cualquier ataque de área de un enemigo: grietas, novas,
+/// lluvias, suelo corrompido. El daño va por DanoEnZona: alcanza al que va al mando y a los
+/// compañeros, cada uno con su vida (GDD § 6.1). Se crea con Crear(); se destruye sola al acabar.
+/// Ver INC-509.
 public sealed class ZonaDanina : MonoBehaviour
 {
     public struct Config
@@ -21,9 +22,12 @@ public sealed class ZonaDanina : MonoBehaviour
         public float escalaVfx;      // escala del VFX por metro de radio (0 = 1)
     }
 
+    // Por debajo del centro, más allá de esto (otro piso) no alcanza.
+    private const float ProfundidadMax = 2f;
+
     private Config _c;
-    private PlayerHealthSystem _salud;
-    private Transform _jugador;
+
+    private float AlturaMax => _c.alturaMax > 0f ? _c.alturaMax : 3f;
 
     /// La zona puede estar ya haciendo daño (pasó el aviso).
     public bool Activa { get; private set; }
@@ -40,12 +44,6 @@ public sealed class ZonaDanina : MonoBehaviour
 
     private IEnumerator Vivir()
     {
-        if (PlayerService.TryGetPlayer(out var jugador) && jugador != null)
-        {
-            _jugador = jugador.transform;
-            _salud = jugador.GetComponent<PlayerHealthSystem>();
-        }
-
         float escala = _c.radio * (_c.escalaVfx > 0f ? _c.escalaVfx : 1f);
         var pool = VfxPoolService.Instance;
 
@@ -88,6 +86,7 @@ public sealed class ZonaDanina : MonoBehaviour
             }
         }
         if (discoSuelo != null) Destroy(discoSuelo);
+        if (matAviso != null) Destroy(matAviso);
 
         Activa = true;
         if (_c.vfxActiva != null && pool != null)
@@ -118,26 +117,10 @@ public sealed class ZonaDanina : MonoBehaviour
         Destroy(gameObject);
     }
 
-    /// El jugador está dentro: en el círculo y sin haberse elevado por encima de la zona.
-    public bool Contiene(Vector3 punto)
-    {
-        Vector3 d = punto - transform.position;
-        float alto = _c.alturaMax > 0f ? _c.alturaMax : 3f;
-        if (d.y > alto || d.y < -2f) return false;
-        d.y = 0f;
-        return d.sqrMagnitude <= _c.radio * _c.radio;
-    }
+    /// Un punto está dentro: en el círculo y sin haberse elevado por encima de la zona.
+    public bool Contiene(Vector3 punto) =>
+        DanoEnZona.EnCilindro(punto, transform.position, _c.radio, AlturaMax, ProfundidadMax);
 
-    private void Golpear()
-    {
-        if (_salud == null || _jugador == null || !Contiene(_jugador.position)) return;
-        _salud.TakeDamage(_c.dano);
-        if (_c.empuje > 0f)
-        {
-            Vector3 fuera = _jugador.position - transform.position;
-            fuera.y = 0f;
-            if (fuera.sqrMagnitude < 0.01f) fuera = -_jugador.forward;
-            _salud.Empujar(fuera.normalized, _c.empuje);
-        }
-    }
+    private void Golpear() =>
+        DanoEnZona.GolpearEnCilindro(transform.position, _c.radio, AlturaMax, ProfundidadMax, _c.dano, _c.empuje);
 }

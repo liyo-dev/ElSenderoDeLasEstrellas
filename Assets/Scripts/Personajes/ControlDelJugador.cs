@@ -1,16 +1,21 @@
+using System;
 using Game.NPC;
 using UnityEngine;
 using Slot = PartyControlManager.CharacterSlot;
 
 /// Quién lleva el jugador y qué cuerpo representa a cada personaje del grupo en este momento.
-/// Es la puerta única para el resto del juego: los sistemas nuevos preguntan aquí en lugar de
-/// mirar `ActiveCharacterSwapper`, `PlayerParty` o el NPC de Will cada uno por su lado. Hoy hay
-/// un solo cuerpo jugable (el de `_WILL`, que se disfraza del personaje al mando) y los demás son
-/// NPCs; cuando cada personaje tenga su cuerpo propio solo cambia esta clase. Ver INC-717.
+/// Es la puerta única para el resto del juego: los sistemas preguntan aquí en lugar de mirar
+/// `ActiveCharacterSwapper`, `PlayerParty` o el NPC de Will cada uno por su lado. Hoy hay un solo
+/// cuerpo jugable (el de `_WILL`, que se disfraza del personaje al mando) y los demás son NPCs;
+/// cuando cada personaje tenga su cuerpo propio solo cambia esta clase. Ver INC-717.
+///
+/// También es el dueño del nombre de cada personaje: el que lleva su `NPCPartyConfig.displayName`
+/// y con el que `PlayerParty` lo encuentra.
 public static class ControlDelJugador
 {
     public const int Personajes = 3;
 
+    private const string NombreDeWill = "Will";
     private const string NombreDeLiam = "Liam";
     private const string NombreDeEstela = "Estela";
 
@@ -25,8 +30,16 @@ public static class ControlDelJugador
     public static bool EnElGrupo(Slot personaje)
     {
         if (personaje == Slot.Will) return true;
-        if (!PlayerParty.HasInstance) return false;
-        return PlayerParty.Instance.GetMemberByName(Nombre(personaje)) != null;
+        return MiembroDe(personaje) != null;
+    }
+
+    /// El miembro del grupo que pone cuerpo a Estela o a Liam, lo lleve la IA o esté oculto porque
+    /// el jugador va con ese personaje. Will no es miembro del grupo: null. Null también si no se
+    /// ha unido.
+    public static NPCPartyMember MiembroDe(Slot personaje)
+    {
+        if (personaje == Slot.Will || !PlayerParty.HasInstance) return null;
+        return PlayerParty.Instance.GetMemberByName(Nombre(personaje));
     }
 
     /// El cuerpo que representa ahora a ese personaje: el del jugador si es el activo, su NPC si
@@ -44,16 +57,24 @@ public static class ControlDelJugador
     {
         if (personaje == Activo) return null;
         var swapper = ActiveCharacterSwapper.Instance;
-        NPCPartyMember npc;
-        if (personaje == Slot.Will)
-            npc = swapper != null ? swapper.WillNpcInstance : null;
-        else
-            npc = PlayerParty.HasInstance ? PlayerParty.Instance.GetMemberByName(Nombre(personaje)) : null;
-        if (npc == null || (swapper != null && swapper.HiddenNpc == npc)) return null;
+        NPCPartyMember npc = personaje == Slot.Will
+            ? (swapper != null ? swapper.WillNpcInstance : null)
+            : MiembroDe(personaje);
+        if (npc == null || RepresentadoPorElJugador(npc)) return null;
         return npc;
     }
 
-    /// Qué personaje es un cuerpo del grupo (el del jugador o el NPC de un compañero).
+    /// El NPC está oculto porque el jugador lleva a su personaje (su cuerpo lo pone el del
+    /// jugador). Quien encienda renderers, mueva o despierte a un compañero lo pregunta antes:
+    /// la visibilidad de ese NPC es del relevo de personaje (`ActiveCharacterSwapper`).
+    public static bool RepresentadoPorElJugador(NPCPartyMember npc)
+    {
+        var swapper = ActiveCharacterSwapper.Instance;
+        return npc != null && swapper != null && swapper.HiddenNpc == npc;
+    }
+
+    /// Qué personaje es un cuerpo del grupo (el del jugador o el NPC de un compañero, por la ficha
+    /// de su componente `Personaje`).
     public static bool PersonajeDe(GameObject cuerpo, out Slot personaje)
     {
         personaje = Slot.Will;
@@ -85,10 +106,26 @@ public static class ControlDelJugador
         return pcm.ActiveSlot == personaje;
     }
 
+    /// Nombre del personaje: el de su `NPCPartyConfig.displayName` y el que se muestra.
     public static string Nombre(Slot personaje) => personaje switch
     {
         Slot.Liam => NombreDeLiam,
         Slot.Estela => NombreDeEstela,
-        _ => "Will"
+        _ => NombreDeWill
     };
+
+    /// Qué personaje lleva ese nombre (sin distinguir mayúsculas). False si no es del grupo.
+    public static bool SlotDeNombre(string nombre, out Slot personaje)
+    {
+        personaje = Slot.Will;
+        if (string.IsNullOrEmpty(nombre)) return false;
+        for (int i = 0; i < Personajes; i++)
+        {
+            var slot = (Slot)i;
+            if (!string.Equals(nombre, Nombre(slot), StringComparison.OrdinalIgnoreCase)) continue;
+            personaje = slot;
+            return true;
+        }
+        return false;
+    }
 }

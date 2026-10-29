@@ -1,12 +1,16 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Barra de vida de un jefe: sigue su Damageable y sus fases (IJefeConFases) y se oculta mientras
-/// haya un menú o diálogo abierto. BossArenaController llama a Show() cuando empieza el combate.
-/// Lo que se ve es BarraDeJefeUI (prefab Resources/UI/BarraDeJefe, con el arte del HUD).
+/// Barra de vida de un jefe: sigue su Damageable y sus fases (IJefeConFases). BossArenaController
+/// llama a Show() cuando empieza el combate y Hide() al acabar. Lo que se ve es BarraDeJefeUI
+/// (prefab Resources/UI/BarraDeJefe, con el arte del HUD).
+///
+/// Es un aviso del canal Cabecera (<see cref="ArbitroDeAvisos"/>) que dura todo el combate: el
+/// árbitro la esconde mientras hay un menú o una cinemática, y la aparta mientras se ve un aviso
+/// más importante del mismo canal (el banner de misión nueva), que entra antes que ella (INC-859).
+/// Si el jefe recibe un golpe antes de que le llegue el turno, pide paso con prisa.
 /// </summary>
-public class BossHealthBar : MonoBehaviour
+public class BossHealthBar : MonoBehaviour, IAvisoEnPantalla
 {
     [Header("Configuración")]
     [Tooltip("ID de localización para el nombre del boss (ej: 'BOSS_DEMONIO_NAME'). Si está vacío, usa bossName.")]
@@ -22,6 +26,10 @@ public class BossHealthBar : MonoBehaviour
     [SerializeField] private float fadeInDuration       = 0.4f;
     [SerializeField] private float fadeOutDuration      = 0.5f;
 
+    [Header("Turno")]
+    [Tooltip("Prioridad dentro del canal Cabecera. Más baja que la del banner de misión nueva para entrar detrás de él.")]
+    [SerializeField] private int prioridad = 10;
+
     private Damageable    _bossDamageable;
     private BarraDeJefeUI _barra;
     private IJefeConFases _fases;
@@ -29,10 +37,16 @@ public class BossHealthBar : MonoBehaviour
     private float _targetFillAmount  = 1f;
     private float _currentFillAmount = 1f;
 
-    // Estado de visibilidad: activo en batalla y si está suspendido por un menú
-    private bool _battleActive    = false;
-    private bool _suspendedByMenu = false;
-    private Coroutine _pendingShowCo;
+    // En combate (entre Show y Hide o la muerte del jefe).
+    private bool _battleActive;
+    // Tiene el turno y nada la tapa.
+    private bool _aLaVista;
+    // Ya ha entrado en pantalla en este combate.
+    private bool _haEntrado;
+
+    public CanalDeAviso Canal => CanalDeAviso.Cabecera;
+    public int Prioridad => prioridad;
+    public bool Pasajero => false;
 
     void Start()
     {
@@ -69,37 +83,26 @@ public class BossHealthBar : MonoBehaviour
         UpdateHealthBar();
         _currentFillAmount = _targetFillAmount;
         _barra.PonerRelleno(_currentFillAmount);
-        // No auto-mostrar: BossArenaController llama a Show() cuando corresponde. Si ya lo ha
-        // hecho antes de este Start, la barra aparece ahora.
-        if (_battleActive && !_suspendedByMenu)
-        {
-            if (QuestStartedBannerUI.IsShowing)
-            {
-                if (_pendingShowCo != null) StopCoroutine(_pendingShowCo);
-                _pendingShowCo = StartCoroutine(Co_EsperarBannerYMostrar());
-            }
-            else
-            {
-                Fundir(1f, fadeInDuration);
-            }
-        }
+        // BossArenaController puede haber llamado a Show() antes de este Start: si ya tiene el
+        // turno, la barra aparece ahora que existe.
+        if (_aLaVista) Fundir(1f, fadeInDuration);
     }
 
     void OnEnable()
     {
-        MenuManager.MenuOpened += OnMenuOpened;
-        MenuManager.MenuClosed += OnMenuClosed;
+        if (_battleActive) ArbitroDeAvisos.Pedir(this);
     }
 
     void OnDisable()
     {
-        MenuManager.MenuOpened -= OnMenuOpened;
-        MenuManager.MenuClosed -= OnMenuClosed;
+        ArbitroDeAvisos.Terminar(this);
+        _aLaVista = false;
+        Fundir(0f, 0f);
     }
 
     void OnDestroy()
     {
-        if (_pendingShowCo != null) { StopCoroutine(_pendingShowCo); _pendingShowCo = null; }
+        ArbitroDeAvisos.Terminar(this);
         if (_bossDamageable)
         {
             _bossDamageable.OnDamaged -= OnBossDamaged;
@@ -112,7 +115,7 @@ public class BossHealthBar : MonoBehaviour
 
     void Update()
     {
-        if (!_battleActive || _suspendedByMenu || !_barra) return;
+        if (!_aLaVista || !_barra) return;
         if (Mathf.Abs(_currentFillAmount - _targetFillAmount) <= 0.001f) return;
 
         _currentFillAmount = Mathf.Lerp(_currentFillAmount, _targetFillAmount,
@@ -124,86 +127,53 @@ public class BossHealthBar : MonoBehaviour
 
     // ── API pública ────────────────────────────────────────────────────────
 
+    /// Empieza el combate: la barra pide su turno y aparece en cuanto el árbitro se lo da.
     public void Show()
     {
-        _battleActive    = true;
-        _suspendedByMenu = false;
-
-        // Si hay un menú abierto, esperar a que cierre
-        if (MenuManager.AnyOpen())
-        {
-            _suspendedByMenu = true;
-            return;
-        }
-
-        // Si el banner de nueva misión ("Derrota al Demonio") está activo,
-        // no solapar la barra encima: esperar a que termine de mostrarse para entrar limpia.
-        if (QuestStartedBannerUI.IsShowing)
-        {
-            if (_pendingShowCo != null) StopCoroutine(_pendingShowCo);
-            _pendingShowCo = StartCoroutine(Co_EsperarBannerYMostrar());
-            return;
-        }
-
-        Fundir(1f, fadeInDuration);
-    }
-
-    private IEnumerator Co_EsperarBannerYMostrar()
-    {
-        float timeout = 3.5f;
-        while (QuestStartedBannerUI.IsShowing && timeout > 0f)
-        {
-            timeout -= Time.deltaTime;
-            yield return null;
-        }
-        _pendingShowCo = null;
-
-        if (_battleActive && !_suspendedByMenu && !MenuManager.AnyOpen())
-        {
-            Fundir(1f, fadeInDuration);
-        }
+        if (!enabled) return; // sin Damageable o sin prefab de la barra (ver Start)
+        if (!_battleActive) _haEntrado = false;
+        _battleActive = true;
+        ArbitroDeAvisos.Pedir(this);
     }
 
     public void Hide()
     {
         _battleActive = false;
-        if (_pendingShowCo != null) { StopCoroutine(_pendingShowCo); _pendingShowCo = null; }
+        ArbitroDeAvisos.Terminar(this);
+        _aLaVista = false;
         Fundir(0f, fadeOutDuration);
     }
 
-    // ── MenuManager ────────────────────────────────────────────────────────
+    // ── IAvisoEnPantalla ───────────────────────────────────────────────────
 
-    private void OnMenuOpened(MenuKind kind)
+    public void AlTenerTurno()
     {
-        if (!_battleActive) return;
-        _suspendedByMenu = true;
+        _aLaVista = true;
+        _haEntrado = true;
+        // La vida ha podido cambiar mientras estaba escondida: entra ya con el valor real.
+        _currentFillAmount = _targetFillAmount;
+        if (_barra) _barra.PonerRelleno(_currentFillAmount);
+        Fundir(1f, fadeInDuration);
+    }
+
+    public void AlPerderTurno()
+    {
+        _aLaVista = false;
         Fundir(0f, fadeOutDuration * 0.7f);
     }
 
-    private void OnMenuClosed(MenuKind kind)
-    {
-        if (!_battleActive || !_suspendedByMenu) return;
-        if (MenuManager.AnyOpen()) return; // todavía hay otro menú abierto
-        _suspendedByMenu = false;
-        Fundir(1f, fadeInDuration);
-    }
+    // No es pasajera: el árbitro nunca la descarta.
+    public void AlDescartar() => AlPerderTurno();
 
     // ── Eventos del boss ───────────────────────────────────────────────────
 
     private void OnBossDamaged(float _)
     {
         UpdateHealthBar();
-        if (_pendingShowCo != null)
-        {
-            StopCoroutine(_pendingShowCo);
-            _pendingShowCo = null;
-            QuestStartedBannerUI.DismissCurrent();
-            Fundir(1f, fadeInDuration);
-        }
-        else if (!_battleActive)
-        {
-            Show();
-        }
+        // Primer golpe del combate con la barra aún esperando turno (p. ej. detrás del banner de
+        // misión nueva): el combate ya está en marcha y la barra no espera más.
+        if (!_battleActive) Show();
+        if (_battleActive && !_haEntrado && !ArbitroDeAvisos.Silenciado) ArbitroDeAvisos.Adelantar(this);
         _barra.DestelloDano();
     }
 
@@ -219,6 +189,8 @@ public class BossHealthBar : MonoBehaviour
     {
         UpdateHealthBar();
         _battleActive = false;
+        ArbitroDeAvisos.Terminar(this);
+        _aLaVista = false;
         _currentFillAmount = _targetFillAmount;
         _barra.PonerRelleno(_currentFillAmount);
         _barra.Fundido(0f, fadeOutDuration, 2f);

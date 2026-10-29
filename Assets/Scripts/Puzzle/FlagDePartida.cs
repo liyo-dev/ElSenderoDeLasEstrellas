@@ -61,13 +61,13 @@ public sealed class FlagDePartida
 
     public static bool EstaPuesto(string clave)
     {
-        var flags = GameBootService.Profile?.GetActivePresetResolved()?.flags;
+        var flags = Partida.Preset?.flags;
         return flags != null && !string.IsNullOrEmpty(clave) && flags.Contains(clave);
     }
 
     public static bool Marcar(string clave)
     {
-        var preset = GameBootService.Profile?.GetActivePresetResolved();
+        var preset = Partida.Preset;
         if (preset == null || string.IsNullOrEmpty(clave)) return false;
         preset.flags ??= new List<string>();
         if (preset.flags.Contains(clave)) return false;
@@ -77,14 +77,14 @@ public sealed class FlagDePartida
 
     public static bool Borrar(string clave)
     {
-        var flags = GameBootService.Profile?.GetActivePresetResolved()?.flags;
+        var flags = Partida.Preset?.flags;
         return flags != null && flags.Remove(clave);
     }
 
     /// <summary>Borra todos los flags que empiezan por el prefijo. Devuelve cuántos.</summary>
     public static int BorrarConPrefijo(string prefijo)
     {
-        var flags = GameBootService.Profile?.GetActivePresetResolved()?.flags;
+        var flags = Partida.Preset?.flags;
         if (flags == null || string.IsNullOrEmpty(prefijo)) return 0;
         return flags.RemoveAll(f => f != null && f.StartsWith(prefijo, StringComparison.Ordinal));
     }
